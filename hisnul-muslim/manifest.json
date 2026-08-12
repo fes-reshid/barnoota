@@ -1,0 +1,20 @@
+{
+  "name": "Hisnul Muslim — حصن المسلم",
+  "short_name": "Hisnul Muslim",
+  "description": "Du'aa'ii fi zikrii guyyaa guyyaa jireenya Muslimaa keessatti barbaachisan, Afaan Arabaafi Afaan Oromootiin.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e9e2cd",
+  "theme_color": "#1c2b46",
+  "lang": "om",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
