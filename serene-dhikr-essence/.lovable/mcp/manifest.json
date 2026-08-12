@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "hisnul-muslim-mcp",
+      "version": "0.1.0",
+      "title": "Hisnul Muslim MCP"
+    },
+    "tools": [
+      {
+        "name": "list_chapters",
+        "title": "List chapters",
+        "description": "List Hisnul Muslim chapters (adhkar/du'a categories) with their number, Arabic title, Oromo title, and du'a count.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "description": "Optional maximum number of chapters to return.",
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "offset": {
+              "description": "Optional number of chapters to skip.",
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_chapter",
+        "title": "Get chapter",
+        "description": "Get a single Hisnul Muslim chapter by its number, including all Arabic du'as and their Oromo (Afaan Oromoo) translations.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "num": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "description": "Chapter number (1-based)."
+            }
+          },
+          "required": [
+            "num"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_chapters",
+        "title": "Search chapters",
+        "description": "Search Hisnul Muslim chapters and du'as by keyword (matches Oromo, Arabic, or chapter number). Returns matching chapters with their du'as.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search term in Oromo, Arabic, or a chapter number."
+            },
+            "limit": {
+              "description": "Optional maximum number of matching chapters to return.",
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
