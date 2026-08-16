@@ -56,8 +56,8 @@
   function isFavorite(num) { return readFavorites().indexOf(num) !== -1; }
 
   function loadFontScale() {
-    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1");
-    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1;
+    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.15");
+    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.15;
   }
   var fontScale = loadFontScale();
   function applyFontScale() {
@@ -846,6 +846,7 @@
   })();
 
   // ---------------- Init ----------------
+  applyFontScale();
   navigate();
 
   if ("serviceWorker" in navigator) {
