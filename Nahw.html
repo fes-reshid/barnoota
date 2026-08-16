@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards: أحكام الكلمة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --scale:1.1;
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-bg:#e4efe6;
+    --red:#9c3d3d; --red-bg:#f4e0df;
+    --pink:#c9598a; --pink-bg:#fbe4ee;
+    --blue:#5b8fc9; --blue-bg:#dfeaf7;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:26px 14px 60px; background:#e9e2cd;
+    font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+  }
+  .wrap{ max-width:640px; margin:0 auto; }
+
+  .card-outer{
+    background:var(--parchment); border:3px solid var(--gold);
+    outline:1px solid var(--gold-soft); outline-offset:6px; border-radius:8px;
+    padding:28px 24px 30px; box-shadow:0 12px 36px rgba(60,45,20,.2);
+  }
+
+  .font-control{
+    position:fixed; top:16px; right:16px; z-index:30;
+    display:flex; align-items:center; gap:4px;
+    background:var(--parchment-deep); border:1px solid var(--gold-soft); border-radius:20px;
+    padding:5px 8px; box-shadow:0 6px 16px rgba(60,45,20,.2);
+  }
+  .font-control button{
+    width:30px; height:30px; border-radius:50%; border:1px solid var(--gold-soft);
+    background:#fff; color:var(--gold); font-weight:700; font-size:15px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .font-control button:hover{ background:var(--gold); color:#fff8ea; transform:scale(1.15); }
+  .font-control .readout{ font-size:12px; color:var(--ink-brown); min-width:34px; text-align:center; }
+  .font-control .label{ font-size:11px; color:#8a7a5c; padding-inline-end:2px; }
+  .font-control.sound-control{ top:58px; }
+
+  header{ text-align:center; margin-bottom:16px; }
+  .eyebrow{ font-family:'Reem Kufi'; color:var(--gold); font-size:calc(14px * var(--scale)); margin:0 0 4px; }
+  h1{ font-family:'Reem Kufi'; font-size:calc(26px * var(--scale)); color:var(--ink-navy); margin:0; }
+  .subtitle{ font-size:calc(14px * var(--scale)); color:#6b5a3f; font-style:italic; margin:6px 0 0; }
+
+  .progress-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin:16px 0 8px; font-size:calc(13.5px * var(--scale)); color:var(--ink-navy); font-weight:600;
+  }
+  .progress-track{ flex:1; height:7px; background:#e3d5ab; border-radius:5px; overflow:hidden; margin:0 10px; }
+  .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--gold-soft),var(--gold)); transition:width .4s ease; }
+
+  .time-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin:16px 0 4px; font-size:calc(13.5px * var(--scale)); color:var(--ink-navy); font-weight:600;
+  }
+  .time-track{ flex:1; height:9px; background:#e3d5ab; border-radius:5px; overflow:hidden; margin:0 10px; }
+  .time-fill{
+    height:100%; width:100%; background:linear-gradient(90deg,var(--green),#4a8f77);
+    transition:width 1s linear, background .4s ease;
+  }
+  .time-row.time-low .time-fill{ background:linear-gradient(90deg,var(--red),#c0554f); }
+  .time-row.time-low .time-readout{ color:var(--red); animation:timePulse 1s ease infinite; }
+  @keyframes timePulse{ 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+  #quiz-screen.rtl-mode .time-row{ direction:rtl; }
+
+  .stage{ perspective:1400px; margin:18px 0 6px; }
+  .flip-card{
+    position:relative; width:100%; min-height:280px;
+    cursor:pointer; transition:transform .5s cubic-bezier(.22,1,.36,1);
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped{ transform:rotateY(180deg); }
+
+  .face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:26px 22px; text-align:center; box-shadow:0 10px 26px rgba(60,45,20,.18);
+  }
+  .face-front{
+    background:linear-gradient(160deg,#fff,var(--parchment-deep));
+    border:2px solid var(--gold-soft);
+  }
+  .face-back{
+    background:linear-gradient(160deg,var(--green-bg),#fff);
+    border:2px solid var(--green); transform:rotateY(180deg); direction:ltr; text-align:center;
+  }
+  .cat-tag{
+    position:absolute; top:14px; left:14px; font-family:'Reem Kufi'; font-size:11px;
+    background:var(--gold); color:#fff8ea; padding:4px 10px; border-radius:12px;
+  }
+  .cat-tag.pink{ background:var(--pink); }
+  .cat-tag.blue{ background:var(--blue); }
+  .cat-tag.green{ background:var(--green); }
+
+  .term-ar{ font-family:'Amiri', serif; font-size:calc(34px * var(--scale)); font-weight:700; color:var(--ink-navy); direction:rtl; margin:0 0 8px; }
+  .term-example{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:#6b5a3f; direction:rtl; margin:0; }
+  .flip-hint{ position:absolute; bottom:12px; font-size:11px; color:#a5966f; letter-spacing:.03em; }
+
+  .back-title{ font-family:'Reem Kufi'; font-size:calc(15px * var(--scale)); color:var(--green); margin:0 0 10px; letter-spacing:.02em; }
+  .back-text{ font-size:calc(17px * var(--scale)); line-height:1.55; color:var(--ink-brown); margin:0; }
+  .back-example{ margin-top:12px; font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--green); direction:rtl; }
+
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:20px; }
+  .nav-btn{
+    background:#fff; color:var(--ink-navy); border:2px solid var(--gold-soft); border-radius:22px;
+    padding:9px 20px; font-size:calc(15px * var(--scale)); font-family:'Cormorant Garamond'; font-weight:700; cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .nav-btn:hover{ background:var(--parchment-deep); transform:scale(1.03); }
+  .nav-btn:active{ transform:scale(.94); }
+
+  .assess-row{ display:none; gap:10px; margin-top:16px; justify-content:center; }
+  .assess-row.show{ display:flex; }
+  .assess-btn{
+    flex:1; max-width:220px; border:none; border-radius:22px; padding:11px 14px;
+    font-family:'Cormorant Garamond'; font-weight:700; font-size:calc(15px * var(--scale));
+    cursor:pointer; color:#fff8ea; transition:transform .15s ease, opacity .15s ease;
+  }
+  .assess-btn:hover{ transform:scale(1.03); }
+  .assess-btn:active{ transform:scale(.95); }
+  .assess-btn.know{ background:var(--green); }
+  .assess-btn.review{ background:var(--red); }
+
+  .shuffle-row{ text-align:center; margin-top:18px; }
+  .shuffle-btn{
+    background:none; border:1.5px dashed var(--gold-soft); color:var(--gold);
+    border-radius:20px; padding:7px 18px; font-family:'Cormorant Garamond'; font-weight:700;
+    font-size:calc(13.5px * var(--scale)); cursor:pointer; transition:background .15s ease;
+  }
+  .shuffle-btn:hover{ background:var(--parchment-deep); }
+
+  .deck-dots{ display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin-top:16px; }
+  .deck-dot{ width:9px; height:9px; border-radius:50%; background:#e3d5ab; border:1px solid var(--gold-soft); cursor:pointer; }
+  .deck-dot.known{ background:var(--green); border-color:var(--green); }
+  .deck-dot.review{ background:var(--red); border-color:var(--red); }
+  .deck-dot.current{ transform:scale(1.4); border-color:var(--ink-navy); }
+
+  @keyframes popIn{ from{opacity:0; transform:scale(.85);} to{opacity:1; transform:scale(1);} }
+  .summary{
+    display:none; text-align:center; background:var(--parchment-deep); border:2px solid var(--gold);
+    border-radius:14px; padding:26px 20px; margin-top:6px;
+  }
+  .summary.show{ display:block; animation:popIn .5s cubic-bezier(.2,1.4,.4,1) both; }
+  .summary h2{ font-family:'Reem Kufi'; color:var(--ink-navy); font-size:calc(24px * var(--scale)); margin:0 0 14px; }
+  .summary-stats{ display:flex; justify-content:center; gap:26px; margin:14px 0 20px; }
+  .stat{ text-align:center; }
+  .stat .num{ font-family:'Reem Kufi'; font-size:calc(34px * var(--scale)); }
+  .stat .lbl{ font-size:calc(13px * var(--scale)); color:#6b5a3f; }
+  .stat.known .num{ color:var(--green); }
+  .stat.review .num{ color:var(--red); }
+  .summary-buttons{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .summary-buttons button{
+    border:none; border-radius:20px; padding:10px 20px; font-family:'Cormorant Garamond'; font-weight:700;
+    font-size:calc(14.5px * var(--scale)); cursor:pointer; transition:transform .15s ease;
+  }
+  .summary-buttons button:hover{ transform:scale(1.04); }
+  .btn-restart{ background:var(--gold); color:#fff8ea; }
+  .btn-review-only{ background:var(--red); color:#fff8ea; }
+
+  /* mode select */
+  .mode-select{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:20px 0 6px; }
+  .mode-btn{
+    flex:1; min-width:220px; background:#fff; border:2px solid var(--gold-soft); border-radius:14px;
+    padding:18px 16px; cursor:pointer; font-family:'Cormorant Garamond'; text-align:center;
+    display:flex; flex-direction:column; gap:6px; align-items:center;
+    transition:background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .mode-btn:hover{ background:var(--parchment-deep); border-color:var(--gold); transform:translateY(-2px); }
+  .mode-btn:active{ transform:scale(.97); }
+  .mode-btn-title{ font-size:calc(19px * var(--scale)); font-weight:700; color:var(--ink-navy); }
+  .mode-btn-desc{ font-size:calc(13px * var(--scale)); color:#6b5a3f; }
+  .mode-btn.quiz{ border-color:var(--blue); }
+  .mode-btn.quiz:hover{ background:var(--blue-bg); }
+  .mode-btn.quiz-ar{ border-color:var(--pink); font-family:'Amiri', serif; }
+  .mode-btn.quiz-ar:hover{ background:var(--pink-bg); }
+  .mode-btn.quiz-ar .mode-btn-title{ font-family:'Amiri', serif; }
+  .mode-btn.flashcard-ar{ border-color:var(--gold); font-family:'Amiri', serif; }
+  .mode-btn.flashcard-ar:hover{ background:var(--parchment-deep); }
+  .mode-btn.flashcard-ar .mode-btn-title{ font-family:'Amiri', serif; }
+
+  #flashcard-screen.rtl-mode{ direction:rtl; font-family:'Amiri', serif; }
+  #flashcard-screen.rtl-mode .nav-row{ flex-direction:row-reverse; }
+  #flashcard-screen.rtl-mode .term-ar,
+  #flashcard-screen.rtl-mode .term-example{ direction:rtl; }
+  #flashcard-screen.rtl-mode .cat-tag{ left:auto; right:14px; }
+  #flashcard-screen.rtl-mode .back-example{ direction:rtl; }
+  .mode-back{
+    display:inline-flex; align-items:center; gap:6px;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:18px;
+    padding:7px 16px; font-size:calc(13px * var(--scale)); color:var(--gold); font-weight:700;
+    cursor:pointer; margin:0 0 14px; user-select:none; transition:background .15s ease, transform .15s ease;
+  }
+  .mode-back:hover{ background:var(--parchment-deep); transform:scale(1.03); }
+
+  .flashcard-instruction{
+    text-align:center; font-size:calc(13.5px * var(--scale)); color:var(--gold);
+    font-style:italic; margin:0 0 14px;
+  }
+
+  .name-gate{ max-width:420px; margin:20px auto 0; text-align:center; }
+  .name-gate label{ display:block; font-size:calc(15px * var(--scale)); margin-bottom:10px; color:var(--ink-brown); }
+  .name-gate input{
+    width:100%; padding:12px 16px; border:2px solid var(--gold-soft); border-radius:10px;
+    font-family:inherit; font-size:calc(17px * var(--scale)); text-align:center; background:#fff;
+    color:var(--ink-navy); transition:border-color .15s ease;
+  }
+  .name-gate input:focus{ outline:none; border-color:var(--gold); }
+  .name-warning{ color:var(--red); font-size:calc(13px * var(--scale)); margin-top:8px; }
+  #name-start-btn{
+    margin-top:16px; background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:11px 30px; font-size:calc(15.5px * var(--scale)); font-family:inherit; font-weight:700; cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+  }
+  #name-start-btn:hover{ background:#8f691e; transform:scale(1.04); }
+  .name-gate-back{
+    display:inline-flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--gold-soft);
+    border-radius:18px; padding:6px 14px; font-size:calc(12.5px * var(--scale)); color:var(--gold); font-weight:700;
+    cursor:pointer; margin-bottom:14px;
+  }
+  .name-gate-back:hover{ background:var(--parchment-deep); }
+  #name-gate.rtl-mode{ direction:rtl; font-family:'Amiri', serif; }
+
+  .home-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:20px;
+    padding:9px 22px; font-family:inherit; font-weight:700; font-size:calc(14px * var(--scale));
+    cursor:pointer; transition:background .15s ease, transform .15s ease;
+  }
+  .home-btn:hover{ background:#8f691e; transform:scale(1.04); }
+
+  /* quiz engine */
+  .q-stage{ position:relative; min-height:220px; }
+  @keyframes slideInNextQ{ from{opacity:0; transform:translateX(30px);} to{opacity:1; transform:translateX(0);} }
+  @keyframes slideInPrevQ{ from{opacity:0; transform:translateX(-30px);} to{opacity:1; transform:translateX(0);} }
+  @keyframes slideOutNextQ{ from{opacity:1; transform:translateX(0);} to{opacity:0; transform:translateX(-30px);} }
+  @keyframes slideOutPrevQ{ from{opacity:1; transform:translateX(0);} to{opacity:0; transform:translateX(30px);} }
+  .quiz-question{
+    background:#fff; border:1px solid var(--gold-soft); border-radius:14px;
+    padding:20px 22px; animation:slideInNextQ .4s cubic-bezier(.22,1,.36,1) both;
+  }
+  .quiz-question.anim-prev{ animation-name:slideInPrevQ; }
+  .quiz-question.leaving-next{ animation:slideOutNextQ .26s ease both; }
+  .quiz-question.leaving-prev{ animation:slideOutPrevQ .26s ease both; }
+  .q-head{ display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; }
+  .q-num{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%; background:var(--blue);
+    color:#fff8ea; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px;
+  }
+  .q-text{ font-weight:700; font-size:calc(18px * var(--scale)); line-height:1.5; padding-top:2px; }
+  .q-options{ display:flex; flex-direction:column; gap:9px; }
+  .q-option{
+    display:flex; align-items:center; gap:10px; border:1.5px solid var(--gold-soft);
+    border-radius:8px; padding:10px 14px; cursor:pointer; background:var(--parchment);
+    font-size:calc(16px * var(--scale)); transition:background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .q-option:hover{ background:var(--parchment-deep); transform:translateX(3px); }
+  .q-option .letter{ font-weight:700; color:var(--blue); flex-shrink:0; }
+  @keyframes selectPopQ{ 0%{transform:scale(1);} 40%{transform:scale(1.03);} 100%{transform:scale(1);} }
+  .q-option.selected{ background:var(--green-bg); border-color:var(--green); border-width:2px; animation:selectPopQ .25s ease; }
+  .q-option.selected .letter{ color:var(--green); }
+
+  #quiz-screen.rtl-mode{ direction:rtl; text-align:right; font-family:'Amiri', serif; }
+  #quiz-screen.rtl-mode .q-head{ direction:rtl; }
+  #quiz-screen.rtl-mode .q-num{ margin-inline-end:0; }
+  #quiz-screen.rtl-mode .nav-row{ flex-direction:row-reverse; }
+  #quiz-screen.rtl-mode .review-detail{ text-align:right; direction:rtl; }
+  #quiz-screen.rtl-mode .rq-explanation{ border-inline-start:none; border-inline-end:4px solid var(--gold); }
+
+  .quiz-summary{ display:none; text-align:center; }
+  .quiz-summary.show{ display:block; animation:popIn .5s cubic-bezier(.2,1.4,.4,1) both; }
+  .quiz-summary h2{ font-family:'Reem Kufi'; color:var(--ink-navy); font-size:calc(24px * var(--scale)); margin:0 0 8px; }
+  .quiz-final-pct{ font-family:'Reem Kufi'; font-size:calc(48px * var(--scale)); color:var(--ink-navy); margin:6px 0; }
+  .quiz-final-msg{ font-size:calc(15px * var(--scale)); color:#5b4c37; margin-bottom:10px; }
+
+  .review-list{ text-align:center; margin-top:18px; }
+  .review-title{ font-family:'Reem Kufi'; font-size:calc(17px * var(--scale)); color:var(--ink-navy); margin:0 0 4px; }
+  .review-hint{ font-size:calc(12.5px * var(--scale)); color:#8a7a5c; margin:0 0 12px; }
+  .review-grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:6px; }
+  .review-num{
+    width:34px; height:34px; border-radius:50%; border:none; font-weight:700; cursor:pointer;
+    font-family:'Cormorant Garamond'; font-size:14px; color:#fff8ea;
+    display:flex; align-items:center; justify-content:center; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .review-num.correct-num{ background:var(--green); }
+  .review-num.wrong-num{ background:var(--red); }
+  .review-num:hover{ transform:scale(1.12); }
+  .review-num.active{ box-shadow:0 0 0 3px var(--ink-navy); transform:scale(1.12); }
+  @keyframes fadeInRD{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+  .review-detail{
+    display:none; text-align:left; background:#fff; border:1px solid var(--gold-soft); border-radius:10px;
+    padding:16px 18px; margin-top:14px; animation:fadeInRD .3s ease both;
+  }
+  .review-detail.show{ display:block; }
+  .review-detail .rq-text{ font-weight:700; font-size:calc(16px * var(--scale)); margin:0 0 8px; }
+  .review-detail .rq-answer{ font-size:calc(14.5px * var(--scale)); margin:4px 0; }
+  .review-detail .rq-answer.wrong-answer{ color:var(--red); }
+  .review-detail .rq-answer.correct-answer{ color:var(--green); }
+  .review-detail .rq-answer.correct-line{ color:var(--green); }
+  .review-detail .rq-explanation{
+    margin-top:8px; font-size:calc(14px * var(--scale)); line-height:1.6; color:#5b4c37;
+    background:var(--parchment-deep); border-inline-start:4px solid var(--gold); border-radius:6px; padding:9px 12px;
+  }
+
+  @keyframes bannerPopQ{ from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);} }
+  .unanswered-banner{
+    display:none; background:var(--red-bg); border:2px solid var(--red); border-radius:12px;
+    padding:16px 18px; margin:16px 0; animation:bannerPopQ .4s ease both;
+  }
+  .unanswered-banner.show{ display:block; }
+  .unanswered-title{ margin:0 0 10px; font-weight:700; color:var(--red); font-size:calc(15px * var(--scale)); }
+  .unanswered-list{ display:flex; flex-wrap:wrap; gap:8px; }
+  .unanswered-list button{
+    background:#fff; color:var(--red); border:1.5px solid var(--red); border-radius:18px;
+    padding:7px 16px; font-size:calc(13.5px * var(--scale)); font-family:'Cormorant Garamond'; font-weight:700; cursor:pointer;
+  }
+  .unanswered-list button:hover{ background:var(--red); color:#fff8ea; }
+</style>
+</head>
+<body>
+
+<div class="font-control">
+  <span class="label">Size</span>
+  <button id="font-dec">－</button>
+  <span class="readout" id="font-readout">110%</span>
+  <button id="font-inc">＋</button>
+</div>
+<div class="font-control sound-control">
+  <span class="label">Sound</span>
+  <button id="sound-toggle">🔔</button>
+</div>
+
+<div class="wrap">
+  <div class="card-outer">
+    <header>
+      <p class="eyebrow">أحكام الكلمة</p>
+      <h1>Rulings of the Word</h1>
+      <p class="subtitle" id="mode-select-subtitle">Choose how you'd like to study</p>
+    </header>
+
+    <div class="mode-select" id="mode-select">
+      <button class="mode-btn" id="mode-flashcard-en-btn">
+        <span class="mode-btn-title">📇 Flashcard Practice</span>
+        <span class="mode-btn-desc">24 cards • English • Flip to reveal</span>
+      </button>
+      <button class="mode-btn flashcard-ar" id="mode-flashcard-ar-btn">
+        <span class="mode-btn-title">📇 بطاقات تعليمية</span>
+        <span class="mode-btn-desc">٢٤ بطاقة • عربي • اقلب للكشف</span>
+      </button>
+      <button class="mode-btn quiz" id="mode-quiz-en-btn">
+        <span class="mode-btn-title">📝 Test Your Knowledge</span>
+        <span class="mode-btn-desc">15 questions • English • Multiple choice</span>
+      </button>
+      <button class="mode-btn quiz-ar" id="mode-quiz-ar-btn">
+        <span class="mode-btn-title">📝 اختبر معلوماتك</span>
+        <span class="mode-btn-desc">١٥ سؤالاً • عربي • اختيار من متعدد</span>
+      </button>
+    </div>
+
+    <div id="name-gate" style="display:none;">
+      <p class="name-gate-back" id="name-gate-back">🏠 Home</p>
+      <div class="name-gate">
+        <label for="student-name-input" id="name-gate-label">Enter your name to begin:</label>
+        <input type="text" id="student-name-input" placeholder="Your name" autocomplete="off">
+        <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first</p>
+        <button id="name-start-btn">Start</button>
+      </div>
+    </div>
+
+    <div id="flashcard-screen" style="display:none;">
+      <p class="mode-back" id="flashcard-back">🏠 Home</p>
+      <p class="flashcard-instruction" id="flashcard-instruction">💡 Click on the card to reveal its meaning</p>
+      <div class="progress-row">
+        <span id="progress-text">Card 1 / 24</span>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <span id="progress-pct">0%</span>
+      </div>
+
+      <div id="deck-area">
+        <div class="stage">
+          <div class="flip-card" id="flip-card">
+            <div class="face face-front">
+              <span class="cat-tag" id="cat-tag-front">Category</span>
+              <p class="term-ar" id="term-ar"></p>
+              <p class="term-example" id="term-example"></p>
+              <span class="flip-hint" id="flip-hint">Tap to reveal</span>
+            </div>
+            <div class="face face-back">
+              <p class="back-title" id="back-title">Meaning</p>
+              <p class="back-text" id="back-text"></p>
+              <p class="back-example" id="back-example"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="assess-row" id="assess-row">
+          <button class="assess-btn review" id="btn-review">Still Learning</button>
+          <button class="assess-btn know" id="btn-know">Got It ✓</button>
+        </div>
+
+        <div class="nav-row">
+          <button class="nav-btn" id="prev-btn">← Previous</button>
+          <button class="nav-btn" id="next-btn">Next →</button>
+        </div>
+
+        <div class="deck-dots" id="deck-dots"></div>
+
+        <div class="shuffle-row">
+          <button class="shuffle-btn" id="shuffle-btn">🔀 Shuffle Deck</button>
+        </div>
+      </div>
+
+      <div class="summary" id="summary">
+        <h2 id="deck-summary-title">Deck Complete!</h2>
+        <div class="summary-stats">
+          <div class="stat known"><div class="num" id="known-count">0</div><div class="lbl" id="known-lbl">Got It</div></div>
+          <div class="stat review"><div class="num" id="review-count">0</div><div class="lbl" id="review-lbl">Still Learning</div></div>
+        </div>
+        <div class="summary-buttons">
+          <button class="btn-review-only" id="btn-review-only">Review "Still Learning" Only</button>
+          <button class="btn-restart" id="btn-restart">Restart Full Deck</button>
+          <button class="home-btn" id="flashcard-summary-home-btn">🏠 Home</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-screen" style="display:none;">
+      <p class="mode-back" id="quiz-back">🏠 Home</p>
+
+      <div class="time-row" id="time-row">
+        <span class="time-label" id="time-label">⏱ Time Remaining</span>
+        <div class="time-track"><div class="time-fill" id="time-fill"></div></div>
+        <span class="time-readout" id="time-readout">15:00</span>
+      </div>
+
+      <div class="progress-row">
+        <span id="quiz-score-text">Answered: 0 / 15</span>
+        <div class="progress-track"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+        <span id="quiz-score-pct">0%</span>
+      </div>
+
+      <div class="q-stage" id="q-stage"></div>
+
+      <div class="nav-row">
+        <button class="nav-btn" id="quiz-prev-btn">← Previous</button>
+        <button class="nav-btn primary" id="quiz-next-btn" disabled>Next →</button>
+      </div>
+
+      <div class="deck-dots" id="quiz-dots"></div>
+
+      <div class="unanswered-banner" id="unanswered-banner">
+        <p class="unanswered-title" id="unanswered-title">⚠️ You haven't answered some questions yet:</p>
+        <div class="unanswered-list" id="unanswered-list"></div>
+      </div>
+
+      <div class="quiz-summary" id="quiz-summary">
+        <h2 id="quiz-summary-title">Quiz Complete!</h2>
+        <p class="quiz-final-pct" id="quiz-final-pct">0%</p>
+        <p class="quiz-final-msg" id="quiz-final-msg"></p>
+        <div class="review-list" id="review-list"></div>
+        <div class="summary-buttons">
+          <button class="btn-restart" id="quiz-retake-btn">Retake Quiz</button>
+          <button class="home-btn" id="quiz-summary-home-btn">🏠 Home</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+var englishCards = [
+  {
+    ar: "أحكام الكلمة",
+    example: "",
+    category: "Overview",
+    catClass: "",
+    title: "Rulings of the Word",
+    text: "The branch of Arabic grammar covering how words are classified, and how the endings of words behave depending on their role in a sentence.",
+    ex: ""
+  },
+  {
+    ar: "المعرب والمبني",
+    example: "",
+    category: "Overview",
+    catClass: "",
+    title: "Declinable vs. Indeclinable",
+    text: "Mu'rab (المعرب) words change their ending according to their grammatical position in the sentence. Mabni (المبني) words keep a fixed ending no matter their position.",
+    ex: ""
+  },
+  {
+    ar: "معرفة",
+    example: "",
+    category: "Noun",
+    catClass: "green",
+    title: "Definite Noun",
+    text: "A noun that refers to one specific, known thing — the opposite of an indefinite noun. Arabic has several ways to make a noun definite.",
+    ex: ""
+  },
+  {
+    ar: "نكرة",
+    example: "كل اسم يقبل (ال)",
+    category: "Noun",
+    catClass: "green",
+    title: "Indefinite Noun",
+    text: "Any noun that is not specific — grammatically defined as any noun that can accept the definite article (ال) being added to it.",
+    ex: "كتابٌ (a book)"
+  },
+  {
+    ar: "المضاف",
+    example: "يضاف إلى معرفة",
+    category: "Definite noun type",
+    catClass: "green",
+    title: "The Annexed Noun (Idafa)",
+    text: "A noun made definite by being connected to another definite noun right after it — the possessive/genitive construction in Arabic.",
+    ex: "كتابُ الطالبِ (the student's book)"
+  },
+  {
+    ar: "المعرّف بـ(ال)",
+    example: "",
+    category: "Definite noun type",
+    catClass: "green",
+    title: "Defined by 'Al-'",
+    text: "A noun made definite simply by attaching the definite article ال to the front of it.",
+    ex: "الكتابُ (the book)"
+  },
+  {
+    ar: "الاسم الموصول",
+    example: "الذي، التي، هؤلاء",
+    category: "Definite noun type",
+    catClass: "green",
+    title: "Relative Pronoun",
+    text: "A word that introduces a relative clause, connecting it back to a noun mentioned before it — equivalent to 'who,' 'which,' or 'that' in English.",
+    ex: "الذي (who/which, masc.) · التي (who/which, fem.)"
+  },
+  {
+    ar: "اسم الإشارة",
+    example: "هذا، هذه، هؤلاء",
+    category: "Definite noun type",
+    catClass: "green",
+    title: "Demonstrative Pronoun",
+    text: "A word used to point to something specific — equivalent to 'this,' 'that,' 'these,' or 'those' in English.",
+    ex: "هذا (this, masc.) · هذه (this, fem.)"
+  },
+  {
+    ar: "العلم",
+    example: "",
+    category: "Definite noun type",
+    catClass: "green",
+    title: "Proper Noun",
+    text: "The specific name of a particular person, place, or thing — inherently definite without needing ال or any other marker.",
+    ex: "مُحَمَّد · مكة"
+  },
+  {
+    ar: "الضمير",
+    example: "",
+    category: "Definite noun type",
+    catClass: "pink",
+    title: "Pronoun",
+    text: "A word that stands in place of a noun, referring to the speaker, the listener, or someone/something already mentioned. Splits into two families: detached and attached.",
+    ex: ""
+  },
+  {
+    ar: "منفصلة",
+    example: "",
+    category: "Pronoun",
+    catClass: "pink",
+    title: "Detached Pronoun",
+    text: "An independent pronoun that stands alone as its own word in the sentence, not attached to anything else.",
+    ex: ""
+  },
+  {
+    ar: "متصلة",
+    example: "",
+    category: "Pronoun",
+    catClass: "pink",
+    title: "Attached Pronoun",
+    text: "A pronoun suffix that attaches directly onto a verb, a noun, or a preposition — it cannot stand alone as a separate word.",
+    ex: ""
+  },
+  {
+    ar: "منفصلة — للرفع",
+    example: "أنا، أنت، هو",
+    category: "Detached pronoun",
+    catClass: "pink",
+    title: "Detached — Nominative",
+    text: "Detached pronouns used when the pronoun is the subject (doer) of the sentence.",
+    ex: "أنا طالبٌ (I am a student)"
+  },
+  {
+    ar: "منفصلة — للنصب",
+    example: "إياي، إياك، إياه",
+    category: "Detached pronoun",
+    catClass: "pink",
+    title: "Detached — Accusative",
+    text: "Detached pronouns used when the pronoun is the direct object of the sentence, and it needs to stand alone rather than attach to the verb.",
+    ex: "إياك نعبد (You alone we worship)"
+  },
+  {
+    ar: "متصلة — للرفع",
+    example: "ث، تا، ون",
+    category: "Attached pronoun",
+    catClass: "pink",
+    title: "Attached — Nominative",
+    text: "Attached subject markers that fuse onto a verb to show who performed the action — commonly seen as verb endings.",
+    ex: "كتبتُ (I wrote) · كتبوا (they wrote)"
+  },
+  {
+    ar: "متصلة — للنصب والجر",
+    example: "ه، ك، ي، نا",
+    category: "Attached pronoun",
+    catClass: "pink",
+    title: "Attached — Accusative & Genitive",
+    text: "Attached pronoun suffixes used for the object of a verb (accusative) or after a preposition/as a possessive (genitive).",
+    ex: "كتابُهُ (his book) · رآهُ (he saw him)"
+  },
+  {
+    ar: "نا المتكلِّمين",
+    example: "للرفع والنصب والجر: نا",
+    category: "Special case",
+    catClass: "pink",
+    title: "The Special 'Nā' (We/Us/Our)",
+    text: "Unlike other attached pronouns, نا is unique — it functions across all three cases: nominative, accusative, AND genitive, depending on what it's attached to.",
+    ex: "فعلنا (we did — نصب) · رآنا (he saw us — نصب) · كتابنا (our book — جر)"
+  },
+  {
+    ar: "أنواع الكلمة",
+    example: "",
+    category: "Overview",
+    catClass: "",
+    title: "Types of the Word",
+    text: "Every single word in Arabic falls into exactly one of three categories: noun, verb, or particle.",
+    ex: ""
+  },
+  {
+    ar: "اسم",
+    example: "",
+    category: "Word type",
+    catClass: "green",
+    title: "Noun",
+    text: "A word referring to a person, animal, place, thing, or idea — the largest and most flexible of the three word types.",
+    ex: "بيت (house) · شجرة (tree)"
+  },
+  {
+    ar: "فعل",
+    example: "",
+    category: "Word type",
+    catClass: "blue",
+    title: "Verb",
+    text: "A word expressing an action or state, tied to a particular time — past, present/future, or command.",
+    ex: ""
+  },
+  {
+    ar: "حرف",
+    example: "",
+    category: "Word type",
+    catClass: "green",
+    title: "Particle",
+    text: "A word with no independent meaning of its own — it only makes sense in relation to the words around it, such as prepositions and conjunctions.",
+    ex: "في (in) · من (from) · على (on)"
+  },
+  {
+    ar: "فعل ماضٍ",
+    example: "",
+    category: "Verb type",
+    catClass: "blue",
+    title: "Past-Tense Verb",
+    text: "Indicates an action that has already been completed. Past-tense verbs are always mabni (indeclinable), most commonly built on a fatha ending.",
+    ex: "كَتَبَ (he wrote)"
+  },
+  {
+    ar: "فعل مضارع",
+    example: "",
+    category: "Verb type",
+    catClass: "blue",
+    title: "Present/Future Verb",
+    text: "Indicates an ongoing or future action. Unlike the past tense, the present-tense verb is mu'rab (declinable) — its ending changes with grammatical context.",
+    ex: "يَكْتُبُ (he writes / will write)"
+  },
+  {
+    ar: "فعل أمر",
+    example: "",
+    category: "Verb type",
+    catClass: "blue",
+    title: "Imperative Verb",
+    text: "A command form, instructing someone to do something. Like the past tense, it is always mabni (indeclinable).",
+    ex: "اُكْتُبْ (write!)"
+  }
+];
+
+var arabicCards = [
+  {
+    ar: "أحكام الكلمة",
+    example: "",
+    category: "نظرة عامة",
+    catClass: "",
+    title: "أحكام الكلمة",
+    text: "الباب النحوي الذي يبحث في تصنيف الكلمات، وكيف تتغيّر أو تثبت أواخرها بحسب موقعها في الجملة.",
+    ex: ""
+  },
+  {
+    ar: "المعرب والمبني",
+    example: "",
+    category: "نظرة عامة",
+    catClass: "",
+    title: "المعرب والمبني",
+    text: "الكلمة المعربة تتغيّر حركة آخرها حسب موقعها في الجملة، أما الكلمة المبنية فتبقى على حالة واحدة مهما تغيّر موقعها.",
+    ex: ""
+  },
+  {
+    ar: "معرفة",
+    example: "",
+    category: "الاسم",
+    catClass: "green",
+    title: "الاسم المعرفة",
+    text: "اسم يدلّ على شيء محدد ومعروف بعينه، بعكس النكرة. وللعربية عدة طرق لتعريف الاسم.",
+    ex: ""
+  },
+  {
+    ar: "نكرة",
+    example: "كل اسم يقبل (ال)",
+    category: "الاسم",
+    catClass: "green",
+    title: "الاسم النكرة",
+    text: "كل اسم غير محدد، ويُعرَّف نحوياً بأنه كل اسم يقبل دخول (ال) عليه.",
+    ex: "كتابٌ"
+  },
+  {
+    ar: "المضاف",
+    example: "يضاف إلى معرفة",
+    category: "نوع من المعرفة",
+    catClass: "green",
+    title: "المضاف",
+    text: "اسم يصبح معرفة بإضافته إلى اسم معرفة يليه مباشرة — وهو تركيب الإضافة في العربية.",
+    ex: "كتابُ الطالبِ"
+  },
+  {
+    ar: "المعرّف بـ(ال)",
+    example: "",
+    category: "نوع من المعرفة",
+    catClass: "green",
+    title: "المعرَّف بـ (ال)",
+    text: "اسم يصبح معرفة بمجرد دخول أداة التعريف (ال) على أوله.",
+    ex: "الكتابُ"
+  },
+  {
+    ar: "الاسم الموصول",
+    example: "الذي، التي، هؤلاء",
+    category: "نوع من المعرفة",
+    catClass: "green",
+    title: "الاسم الموصول",
+    text: "كلمة تربط جملة الصلة بما قبلها من الأسماء، وتقابل في الإنجليزية (who / which / that).",
+    ex: "الذي · التي"
+  },
+  {
+    ar: "اسم الإشارة",
+    example: "هذا، هذه، هؤلاء",
+    category: "نوع من المعرفة",
+    catClass: "green",
+    title: "اسم الإشارة",
+    text: "كلمة تُستخدم للإشارة إلى شيء محدد، وتقابل في الإنجليزية (this / that / these / those).",
+    ex: "هذا · هذه"
+  },
+  {
+    ar: "العلم",
+    example: "",
+    category: "نوع من المعرفة",
+    catClass: "green",
+    title: "العلم",
+    text: "اسم خاص بشخص أو مكان أو شيء معيّن، وهو معرفة بذاته دون حاجة إلى (ال) أو أي أداة أخرى.",
+    ex: "مُحَمَّد · مكة"
+  },
+  {
+    ar: "الضمير",
+    example: "",
+    category: "نوع من المعرفة",
+    catClass: "pink",
+    title: "الضمير",
+    text: "كلمة تحل محل الاسم، وتشير إلى المتكلم أو المخاطب أو الغائب. وينقسم إلى قسمين: منفصل ومتصل.",
+    ex: ""
+  },
+  {
+    ar: "منفصلة",
+    example: "",
+    category: "الضمير",
+    catClass: "pink",
+    title: "الضمير المنفصل",
+    text: "ضمير مستقل يقف وحده ككلمة منفصلة في الجملة، ولا يلتصق بغيره.",
+    ex: ""
+  },
+  {
+    ar: "متصلة",
+    example: "",
+    category: "الضمير",
+    catClass: "pink",
+    title: "الضمير المتصل",
+    text: "ضمير يلتصق مباشرة بفعل أو اسم أو حرف، ولا يمكن أن يقف مستقلاً بذاته.",
+    ex: ""
+  },
+  {
+    ar: "منفصلة — للرفع",
+    example: "أنا، أنت، هو",
+    category: "ضمير منفصل",
+    catClass: "pink",
+    title: "المنفصل للرفع",
+    text: "ضمائر منفصلة تُستخدم حين يكون الضمير هو الفاعل (الذي قام بالفعل) في الجملة.",
+    ex: "أنا طالبٌ"
+  },
+  {
+    ar: "منفصلة — للنصب",
+    example: "إياي، إياك، إياه",
+    category: "ضمير منفصل",
+    catClass: "pink",
+    title: "المنفصل للنصب",
+    text: "ضمائر منفصلة تُستخدم حين يكون الضمير مفعولاً به، ويحتاج أن يقف مستقلاً بدل الالتصاق بالفعل.",
+    ex: "إياك نعبد"
+  },
+  {
+    ar: "متصلة — للرفع",
+    example: "ث، تا، ون",
+    category: "ضمير متصل",
+    catClass: "pink",
+    title: "المتصل للرفع",
+    text: "علامات فاعل متصلة تلتصق بالفعل لتدلّ على من قام بالفعل، وتظهر غالباً كلاحقة في آخر الفعل.",
+    ex: "كتبتُ · كتبوا"
+  },
+  {
+    ar: "متصلة — للنصب والجر",
+    example: "ه، ك، ي، نا",
+    category: "ضمير متصل",
+    catClass: "pink",
+    title: "المتصل للنصب والجر",
+    text: "ضمائر متصلة تُستخدم كمفعول به بعد الفعل (نصب)، أو بعد حرف الجر أو للدلالة على الملكية (جر).",
+    ex: "كتابُهُ · رآهُ"
+  },
+  {
+    ar: "نا المتكلِّمين",
+    example: "للرفع والنصب والجر: نا",
+    category: "حالة خاصة",
+    catClass: "pink",
+    title: "نا المتكلمين الخاصة",
+    text: "بخلاف باقي الضمائر المتصلة، يعمل (نا) في الحالات الثلاث معاً: الرفع والنصب والجر، بحسب ما يلتصق به.",
+    ex: "فعلنا (رفع) · رآنا (نصب) · كتابنا (جر)"
+  },
+  {
+    ar: "أنواع الكلمة",
+    example: "",
+    category: "نظرة عامة",
+    catClass: "",
+    title: "أنواع الكلمة",
+    text: "كل كلمة في اللغة العربية تنتمي إلى واحد من ثلاثة أنواع فقط: اسم، أو فعل، أو حرف.",
+    ex: ""
+  },
+  {
+    ar: "اسم",
+    example: "",
+    category: "نوع الكلمة",
+    catClass: "green",
+    title: "الاسم",
+    text: "كلمة تدلّ على إنسان أو حيوان أو مكان أو شيء أو فكرة — وهو أوسع أنواع الكلمة وأكثرها مرونة.",
+    ex: "بيت · شجرة"
+  },
+  {
+    ar: "فعل",
+    example: "",
+    category: "نوع الكلمة",
+    catClass: "blue",
+    title: "الفعل",
+    text: "كلمة تدلّ على حدث أو حالة مرتبطة بزمن معيّن: ماضٍ، أو مضارع/مستقبل، أو أمر.",
+    ex: ""
+  },
+  {
+    ar: "حرف",
+    example: "",
+    category: "نوع الكلمة",
+    catClass: "green",
+    title: "الحرف",
+    text: "كلمة لا معنى مستقلاً لها بذاتها، وإنما يظهر معناها من خلال علاقتها بما حولها، مثل حروف الجر والعطف.",
+    ex: "في · من · على"
+  },
+  {
+    ar: "فعل ماضٍ",
+    example: "",
+    category: "نوع الفعل",
+    catClass: "blue",
+    title: "الفعل الماضي",
+    text: "يدلّ على حدث وقع وانتهى في الزمن الماضي. وهو فعل مبني دائماً، وغالباً ما يُبنى على الفتح.",
+    ex: "كَتَبَ"
+  },
+  {
+    ar: "فعل مضارع",
+    example: "",
+    category: "نوع الفعل",
+    catClass: "blue",
+    title: "الفعل المضارع",
+    text: "يدلّ على حدث مستمر أو مستقبلي. وبخلاف الماضي، فهو معرب؛ تتغيّر حركة آخره حسب موقعه في الجملة.",
+    ex: "يَكْتُبُ"
+  },
+  {
+    ar: "فعل أمر",
+    example: "",
+    category: "نوع الفعل",
+    catClass: "blue",
+    title: "فعل الأمر",
+    text: "صيغة تدلّ على طلب القيام بعمل ما. وهو مبني دائماً مثل الفعل الماضي.",
+    ex: "اُكْتُبْ"
+  }
+];
+
+var FLASHCARD_I18N = {
+  en: {
+    cardOf: function(cur, total){ return 'Card ' + cur + ' / ' + total; },
+    tapToReveal: 'Tap to reveal',
+    stillLearning: 'Still Learning',
+    gotIt: 'Got It ✓',
+    prev: '← Previous',
+    next: 'Next →',
+    shuffle: '🔀 Shuffle Deck',
+    instruction: '💡 Click on the card to reveal its meaning',
+    gotItLbl: 'Got It',
+    stillLearningLbl: 'Still Learning',
+    reviewOnly: 'Review "Still Learning" Only',
+    restart: 'Restart Full Deck',
+    deckTitle: function(name){ return 'Well done, ' + name + '!'; },
+    speak: function(name, known, review){
+      return "Well done, " + name + "! You got " + known + " cards, and marked " + review + " for further review.";
+    },
+    speechLang: 'en-US'
+  },
+  ar: {
+    cardOf: function(cur, total){ return 'البطاقة ' + cur + ' / ' + total; },
+    tapToReveal: 'انقر للكشف',
+    stillLearning: 'لا أزال أتعلم',
+    gotIt: 'عرفتها ✓',
+    prev: 'السابق',
+    next: 'التالي',
+    shuffle: '🔀 خلط البطاقات',
+    instruction: '💡 انقر على البطاقة لكشف معناها',
+    gotItLbl: 'عرفتها',
+    stillLearningLbl: 'لا أزال أتعلم',
+    reviewOnly: 'راجع "لا أزال أتعلم" فقط',
+    restart: 'أعد البطاقات من البداية',
+    deckTitle: function(name){ return 'أحسنت يا ' + name + '!'; },
+    speak: function(name, known, review){
+      return 'أحسنت يا ' + name + '. عرفت ' + known + ' بطاقة، وحدّدت ' + review + ' بطاقة للمراجعة.';
+    },
+    speechLang: 'ar-SA'
+  }
+};
+
+var flashcardLang = 'en';
+var cards = englishCards;
+function ft(key){ return FLASHCARD_I18N[flashcardLang][key]; }
+
+var order = cards.map(function(_, i){ return i; });
+var currentPos = 0;
+var cardStatus = new Array(cards.length).fill(null);
+var isFlipped = false;
+
+var flipCard = document.getElementById('flip-card');
+var termAr = document.getElementById('term-ar');
+var termExample = document.getElementById('term-example');
+var catTagFront = document.getElementById('cat-tag-front');
+var backTitle = document.getElementById('back-title');
+var backText = document.getElementById('back-text');
+var backExample = document.getElementById('back-example');
+var assessRow = document.getElementById('assess-row');
+var progressText = document.getElementById('progress-text');
+var progressPct = document.getElementById('progress-pct');
+var progressFill = document.getElementById('progress-fill');
+var deckDots = document.getElementById('deck-dots');
+var deckArea = document.getElementById('deck-area');
+var summary = document.getElementById('summary');
+
+var soundEnabled = true;
+var audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+  if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+  return audioCtx;
+}
+function playNote(ctx, freq, startTime, duration, type, peakGain){
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(peakGain || 0.2, startTime + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.05);
+}
+function playFlipSound(){
+  if(!soundEnabled) return;
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  playNote(ctx, 480, t, 0.08, 'sine', 0.12);
+}
+function playKnowSound(){
+  if(!soundEnabled) return;
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  playNote(ctx, 659.25, t, 0.14, 'sine', 0.18);
+  playNote(ctx, 987.77, t + 0.08, 0.2, 'sine', 0.18);
+}
+function playReviewSound(){
+  if(!soundEnabled) return;
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  playNote(ctx, 233.08, t, 0.16, 'triangle', 0.14);
+}
+function playDoneSound(){
+  if(!soundEnabled) return;
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  [523.25, 659.25, 783.99, 1046.50].forEach(function(freq, i){
+    playNote(ctx, freq, t + i * 0.11, 0.3, 'triangle', 0.18);
+  });
+}
+document.getElementById('sound-toggle').addEventListener('click', function(){
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔔' : '🔕';
+  if(soundEnabled){ getAudioCtx(); }
+});
+
+function renderCard(){
+  var idx = order[currentPos];
+  var c = cards[idx];
+  isFlipped = false;
+  flipCard.classList.remove('flipped');
+
+  termAr.textContent = c.ar;
+  termExample.textContent = c.example || '';
+  catTagFront.textContent = c.category;
+  catTagFront.className = 'cat-tag' + (c.catClass ? ' ' + c.catClass : '');
+  backTitle.textContent = c.title;
+  backText.textContent = c.text;
+  backExample.textContent = c.ex || '';
+  backExample.style.display = c.ex ? 'block' : 'none';
+  document.getElementById('flip-hint').textContent = ft('tapToReveal');
+
+  assessRow.classList.remove('show');
+
+  updateProgress();
+  renderDots();
+}
+
+function updateProgress(){
+  var answeredCount = cardStatus.filter(function(s){ return s !== null; }).length;
+  progressText.textContent = ft('cardOf')(currentPos + 1, order.length);
+  var pct = order.length ? Math.round((answeredCount / order.length) * 100) : 0;
+  progressPct.textContent = pct + '%';
+  progressFill.style.width = pct + '%';
+}
+
+function renderDots(){
+  deckDots.innerHTML = '';
+  order.forEach(function(cardIdx, pos){
+    var dot = document.createElement('div');
+    dot.className = 'deck-dot';
+    if(cardStatus[cardIdx] === 'known') dot.classList.add('known');
+    if(cardStatus[cardIdx] === 'review') dot.classList.add('review');
+    if(pos === currentPos) dot.classList.add('current');
+    dot.title = ft('cardOf')(pos + 1, order.length);
+    dot.addEventListener('click', function(){ goToPos(pos); });
+    deckDots.appendChild(dot);
+  });
+}
+
+function goToPos(pos){
+  if(pos < 0 || pos >= order.length) return;
+  currentPos = pos;
+  renderCard();
+}
+
+flipCard.addEventListener('click', function(){
+  isFlipped = !isFlipped;
+  flipCard.classList.toggle('flipped', isFlipped);
+  playFlipSound();
+  if(isFlipped){
+    assessRow.classList.add('show');
+  }
+});
+
+document.getElementById('btn-know').addEventListener('click', function(e){
+  e.stopPropagation();
+  var idx = order[currentPos];
+  cardStatus[idx] = 'known';
+  playKnowSound();
+  advanceOrFinish();
+});
+
+document.getElementById('btn-review').addEventListener('click', function(e){
+  e.stopPropagation();
+  var idx = order[currentPos];
+  cardStatus[idx] = 'review';
+  playReviewSound();
+  advanceOrFinish();
+});
+
+function advanceOrFinish(){
+  updateProgress();
+  renderDots();
+  if(currentPos < order.length - 1){
+    setTimeout(function(){ goToPos(currentPos + 1); }, 220);
+  } else {
+    setTimeout(showSummary, 300);
+  }
+}
+
+document.getElementById('prev-btn').addEventListener('click', function(){
+  if(currentPos > 0){ goToPos(currentPos - 1); }
+});
+document.getElementById('next-btn').addEventListener('click', function(){
+  if(currentPos < order.length - 1){ goToPos(currentPos + 1); }
+});
+
+document.getElementById('shuffle-btn').addEventListener('click', function(){
+  for(var i = order.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
+  currentPos = 0;
+  renderCard();
+});
+
+function showSummary(){
+  playDoneSound();
+  deckArea.style.display = 'none';
+  summary.classList.add('show');
+  var knownCount = 0, reviewCount = 0;
+  order.forEach(function(idx){
+    if(cardStatus[idx] === 'known') knownCount++;
+    if(cardStatus[idx] === 'review') reviewCount++;
+  });
+  document.getElementById('deck-summary-title').textContent = ft('deckTitle')(studentName);
+  document.getElementById('known-count').textContent = knownCount;
+  document.getElementById('review-count').textContent = reviewCount;
+  document.getElementById('known-lbl').textContent = ft('gotItLbl');
+  document.getElementById('review-lbl').textContent = ft('stillLearningLbl');
+  document.getElementById('btn-review-only').textContent = ft('reviewOnly');
+  document.getElementById('btn-restart').textContent = ft('restart');
+
+  var reviewOnlyBtn = document.getElementById('btn-review-only');
+  reviewOnlyBtn.style.display = reviewCount > 0 ? 'inline-block' : 'none';
+
+  setTimeout(function(){ speakFlashcardResult(knownCount, reviewCount); }, 500);
+}
+
+function applyFlashcardStaticText(){
+  document.getElementById('btn-know').textContent = ft('gotIt');
+  document.getElementById('btn-review').textContent = ft('stillLearning');
+  document.getElementById('prev-btn').textContent = ft('prev');
+  document.getElementById('next-btn').textContent = ft('next');
+  document.getElementById('shuffle-btn').textContent = ft('shuffle');
+  document.getElementById('flashcard-instruction').textContent = ft('instruction');
+}
+
+// ===== Voice selection: prefer a male voice for the given language =====
+var cachedVoices = [];
+function loadVoicesCache(){
+  if('speechSynthesis' in window){
+    cachedVoices = window.speechSynthesis.getVoices();
+  }
+}
+if('speechSynthesis' in window){
+  loadVoicesCache();
+  window.speechSynthesis.addEventListener('voiceschanged', loadVoicesCache);
+}
+
+function getMaleVoice(langPrefix){
+  if(!cachedVoices || !cachedVoices.length){ loadVoicesCache(); }
+  var candidates = cachedVoices.filter(function(v){
+    return v.lang && v.lang.toLowerCase().indexOf(langPrefix.toLowerCase()) === 0;
+  });
+  if(!candidates.length) return null;
+
+  var maleNamed = candidates.find(function(v){
+    var n = v.name.toLowerCase();
+    return n.indexOf('male') !== -1 && n.indexOf('female') === -1;
+  });
+  if(maleNamed) return maleNamed;
+
+  // Common known male voice names across platforms
+  var knownMaleNames = ['david', 'mark', 'james', 'daniel', 'fred', 'alex', 'george', 'guy', 'naayf', 'hamed', 'majed'];
+  var knownMale = candidates.find(function(v){
+    var n = v.name.toLowerCase();
+    return knownMaleNames.some(function(nm){ return n.indexOf(nm) !== -1; });
+  });
+  if(knownMale) return knownMale;
+
+  // Fall back to any voice not explicitly marked female
+  var notFemale = candidates.find(function(v){
+    return v.name.toLowerCase().indexOf('female') === -1;
+  });
+  return notFemale || candidates[0];
+}
+
+function speakFlashcardResult(knownCount, reviewCount){
+  if(!('speechSynthesis' in window)) return;
+  var text = ft('speak')(studentName, knownCount, reviewCount);
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang = ft('speechLang');
+  utter.rate = 0.95;
+  var voice = getMaleVoice(flashcardLang === 'ar' ? 'ar' : 'en');
+  if(voice){ utter.voice = voice; }
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+
+document.getElementById('btn-restart').addEventListener('click', function(){
+  order = cards.map(function(_, i){ return i; });
+  cardStatus = new Array(cards.length).fill(null);
+  currentPos = 0;
+  summary.classList.remove('show');
+  deckArea.style.display = 'block';
+  renderCard();
+});
+
+document.getElementById('btn-review-only').addEventListener('click', function(){
+  var reviewIndices = [];
+  order.forEach(function(idx){ if(cardStatus[idx] === 'review') reviewIndices.push(idx); });
+  order = reviewIndices;
+  cardStatus = new Array(cards.length).fill(null);
+  currentPos = 0;
+  summary.classList.remove('show');
+  deckArea.style.display = 'block';
+  renderCard();
+});
+
+var scale = 1.1;
+var minScale = 0.8, maxScale = 1.5, step = 0.1;
+var fontReadout = document.getElementById('font-readout');
+function applyScale(){
+  document.documentElement.style.setProperty('--scale', scale.toFixed(2));
+  fontReadout.textContent = Math.round(scale * 100) + '%';
+}
+document.getElementById('font-inc').addEventListener('click', function(){
+  scale = Math.min(maxScale, +(scale + step).toFixed(2));
+  applyScale();
+});
+document.getElementById('font-dec').addEventListener('click', function(){
+  scale = Math.max(minScale, +(scale - step).toFixed(2));
+  applyScale();
+});
+
+// ===== Mode selection =====
+var modeSelect = document.getElementById('mode-select');
+var modeSelectSubtitle = document.getElementById('mode-select-subtitle');
+var flashcardScreen = document.getElementById('flashcard-screen');
+var quizScreen = document.getElementById('quiz-screen');
+var nameGate = document.getElementById('name-gate');
+var flashcardStarted = false;
+var studentName = '';
+var pendingMode = null;   // 'flashcard' | 'quiz'
+var pendingLang = 'en';   // 'en' | 'ar' (only relevant for quiz)
+
+var NAME_GATE_I18N = {
+  en: {
+    label: "Enter your name to begin:",
+    placeholder: "Your name",
+    warning: "Please enter your name first",
+    start: "Start",
+    home: "🏠 Home"
+  },
+  ar: {
+    label: "اكتب اسمك قبل البدء:",
+    placeholder: "اسمك",
+    warning: "من فضلك اكتب اسمك أولاً",
+    start: "ابدأ",
+    home: "🏠 الرئيسية"
+  }
+};
+
+function showNameGate(mode, lang){
+  pendingMode = mode;
+  pendingLang = lang || 'en';
+  modeSelect.style.display = 'none';
+  modeSelectSubtitle.style.display = 'none';
+
+  var gateLang = (lang === 'ar') ? 'ar' : 'en';
+  var strings = NAME_GATE_I18N[gateLang];
+  nameGate.classList.toggle('rtl-mode', gateLang === 'ar');
+  document.getElementById('name-gate-label').textContent = strings.label;
+  document.getElementById('student-name-input').placeholder = strings.placeholder;
+  document.getElementById('name-warning').textContent = strings.warning;
+  document.getElementById('name-warning').style.display = 'none';
+  document.getElementById('name-start-btn').textContent = strings.start;
+  document.getElementById('name-gate-back').textContent = strings.home;
+  document.getElementById('student-name-input').value = studentName;
+
+  nameGate.style.display = 'block';
+  document.getElementById('student-name-input').focus();
+}
+
+document.getElementById('mode-flashcard-en-btn').addEventListener('click', function(){
+  showNameGate('flashcard', 'en');
+});
+
+document.getElementById('mode-flashcard-ar-btn').addEventListener('click', function(){
+  showNameGate('flashcard', 'ar');
+});
+
+document.getElementById('mode-quiz-en-btn').addEventListener('click', function(){
+  showNameGate('quiz', 'en');
+});
+
+document.getElementById('mode-quiz-ar-btn').addEventListener('click', function(){
+  showNameGate('quiz', 'ar');
+});
+
+document.getElementById('name-start-btn').addEventListener('click', function(){
+  var input = document.getElementById('student-name-input');
+  var name = input.value.trim();
+  if(!name){
+    document.getElementById('name-warning').style.display = 'block';
+    input.focus();
+    return;
+  }
+  document.getElementById('name-warning').style.display = 'none';
+  studentName = name;
+  nameGate.style.display = 'none';
+
+  if(pendingMode === 'flashcard'){
+    flashcardLang = pendingLang;
+    cards = (flashcardLang === 'ar') ? arabicCards : englishCards;
+    order = cards.map(function(_, i){ return i; });
+    currentPos = 0;
+    cardStatus = new Array(cards.length).fill(null);
+    document.getElementById('flashcard-screen').classList.toggle('rtl-mode', flashcardLang === 'ar');
+    applyFlashcardStaticText();
+    summary.classList.remove('show');
+    deckArea.style.display = 'block';
+    flashcardScreen.style.display = 'block';
+    flashcardStarted = true;
+    renderCard();
+  } else if(pendingMode === 'quiz'){
+    quizScreen.style.display = 'block';
+    initQuiz(pendingLang);
+  }
+});
+
+document.getElementById('student-name-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
+});
+
+function backToMenu(){
+  stopQuizTimer();
+  flashcardScreen.style.display = 'none';
+  quizScreen.style.display = 'none';
+  nameGate.style.display = 'none';
+  modeSelect.style.display = 'flex';
+  modeSelectSubtitle.style.display = 'block';
+}
+document.getElementById('flashcard-back').addEventListener('click', backToMenu);
+document.getElementById('quiz-back').addEventListener('click', backToMenu);
+document.getElementById('name-gate-back').addEventListener('click', backToMenu);
+document.getElementById('flashcard-summary-home-btn').addEventListener('click', backToMenu);
+document.getElementById('quiz-summary-home-btn').addEventListener('click', backToMenu);
+
+// ===== Test Your Knowledge quiz engine =====
+var englishQuizQuestions = [
+  {
+    q: "What are the three main types of a word (كلمة) in Arabic?",
+    options: ["Noun, Adjective, Verb", "Noun, Verb, Particle", "Subject, Object, Verb", "Definite, Indefinite, Proper"],
+    correct: 1,
+    explanation: "Every Arabic word is classified as either اسم (noun), فعل (verb), or حرف (particle) — there is no fourth category."
+  },
+  {
+    q: "What is the difference between مُعرَب (mu'rab) and مبني (mabni)?",
+    options: ["Mu'rab words never change; mabni words always change", "Mu'rab words change their ending based on grammatical position; mabni words keep a fixed ending", "They mean the same thing", "Mu'rab refers only to verbs; mabni refers only to nouns"],
+    correct: 1,
+    explanation: "Mu'rab (declinable) word endings shift depending on their role in the sentence. Mabni (indeclinable) word endings stay fixed no matter the grammatical position."
+  },
+  {
+    q: "Which of these makes a noun definite by attaching it to another definite noun?",
+    options: ["العلم", "نكرة", "المضاف", "اسم الإشارة"],
+    correct: 2,
+    explanation: "المضاف (the annexed noun / idafa construction) becomes definite through its connection to a following definite noun, e.g. كتابُ الطالبِ (the student's book)."
+  },
+  {
+    q: "What is الاسم الموصول?",
+    options: ["A demonstrative pronoun", "A relative pronoun (who/which/that)", "A proper noun", "An attached pronoun"],
+    correct: 1,
+    explanation: "الاسم الموصول is the relative pronoun — words like الذي and التي, which introduce a relative clause referring back to a preceding noun."
+  },
+  {
+    q: "Which of these is a demonstrative pronoun (اسم الإشارة)?",
+    options: ["الذي", "هذا", "أنا", "نا"],
+    correct: 1,
+    explanation: "هذا (this) is a demonstrative pronoun, used to point directly to something specific."
+  },
+  {
+    q: "How is a نكرة (indefinite noun) defined grammatically?",
+    options: ["Any noun already carrying ال", "Any noun that CAN accept ال being added to it", "A proper name", "A type of pronoun"],
+    correct: 1,
+    explanation: "A نكرة is grammatically defined as any noun that is capable of accepting the definite article (ال) — whether or not it currently has it."
+  },
+  {
+    q: "What are the two families of الضمير (pronoun)?",
+    options: ["Definite and indefinite", "Detached (منفصلة) and attached (متصلة)", "Masculine and feminine", "Singular and plural"],
+    correct: 1,
+    explanation: "Pronouns split into منفصلة (detached, standing alone as their own word) and متصلة (attached, fused onto a verb, noun, or preposition)."
+  },
+  {
+    q: "Which of these is a detached (منفصلة) pronoun?",
+    options: ["ه", "نا", "أنا", "ون"],
+    correct: 2,
+    explanation: "أنا (I) is a detached pronoun — it stands alone as an independent word, unlike ه، نا، and ون which are attached suffixes."
+  },
+  {
+    q: "Which of these is an attached (متصلة) pronoun?",
+    options: ["أنت", "هو", "ك", "إياك"],
+    correct: 2,
+    explanation: "ك is an attached pronoun suffix (e.g. كتابُكَ — your book), while أنت، هو، and إياك are all detached pronouns that stand alone."
+  },
+  {
+    q: "What's special about the attached pronoun نا?",
+    options: ["It's only used with past-tense verbs", "It functions across all three cases: nominative, accusative, and genitive", "It's actually a detached pronoun", "It's only used with proper nouns"],
+    correct: 1,
+    explanation: "Unlike most attached pronouns, which are tied to a single case, نا works in all three: فعلنا (nominative), رآنا (accusative), and كتابنا (genitive)."
+  },
+  {
+    q: "Which of these is used as an attached NOMINATIVE marker (متصلة للرفع)?",
+    options: ["ك", "ه", "نا", "ون"],
+    correct: 3,
+    explanation: "ون is one of the attached nominative (رفع) markers, alongside ث and تا — these attach to verbs to mark the subject."
+  },
+  {
+    q: "Which of the following is NOT one of the three word types in Arabic?",
+    options: ["اسم", "فعل", "حرف", "جملة"],
+    correct: 3,
+    explanation: "جملة means \"sentence,\" not a word type. Every individual word falls under اسم, فعل, or حرف."
+  },
+  {
+    q: "Which verb type is always mabni (indeclinable) and expresses a completed action?",
+    options: ["فعل مضارع", "فعل ماضٍ", "فعل أمر", "اسم"],
+    correct: 1,
+    explanation: "فعل ماضٍ (the past-tense verb) is always mabni, and it indicates an action that has already happened."
+  },
+  {
+    q: "Which verb type is mu'rab (declinable), unlike the other two verb forms?",
+    options: ["فعل ماضٍ", "فعل أمر", "فعل مضارع", "None — all verbs are mabni"],
+    correct: 2,
+    explanation: "فعل مضارع (the present/future-tense verb) is mu'rab — its ending changes depending on grammatical context, unlike the past tense and imperative, which are always mabni."
+  },
+  {
+    q: "What does فعل أمر express?",
+    options: ["A past action", "An ongoing action", "A command", "A proper noun"],
+    correct: 2,
+    explanation: "فعل أمر is the imperative verb form, used to give a command — e.g. اُكْتُبْ (\"write!\")."
+  }
+];
+
+var arabicQuizQuestions = [
+  {
+    q: "ما هي الأنواع الثلاثة الرئيسية للكلمة في اللغة العربية؟",
+    options: ["اسم، صفة، فعل", "اسم، فعل، حرف", "فاعل، مفعول، فعل", "معرفة، نكرة، علم"],
+    correct: 1,
+    explanation: "كل كلمة في العربية تُصنَّف إما اسماً أو فعلاً أو حرفاً، ولا يوجد نوع رابع."
+  },
+  {
+    q: "ما الفرق بين المُعرَب والمبني؟",
+    options: ["المعرب لا يتغيّر أبداً، والمبني يتغيّر دائماً", "المعرب تتغيّر أواخره حسب موقعه في الجملة، والمبني يبقى على حالة واحدة", "هما بمعنى واحد", "المعرب خاص بالأفعال فقط، والمبني خاص بالأسماء فقط"],
+    correct: 1,
+    explanation: "الكلمة المعربة تتغيّر حركة آخرها حسب موقعها في الجملة، أمّا الكلمة المبنية فتبقى على حالة واحدة مهما تغيّر موقعها."
+  },
+  {
+    q: "أي مما يلي يجعل الاسم معرفة بإضافته إلى اسم معرفة آخر؟",
+    options: ["العلم", "النكرة", "المضاف", "اسم الإشارة"],
+    correct: 2,
+    explanation: "المضاف يصبح معرفة من خلال إضافته إلى اسم معرفة يليه، مثل: كتابُ الطالبِ."
+  },
+  {
+    q: "ما هو الاسم الموصول؟",
+    options: ["ضمير إشارة", "اسم يربط جملة بما قبلها مثل (الذي، التي)", "اسم علم", "ضمير متصل"],
+    correct: 1,
+    explanation: "الاسم الموصول مثل (الذي، التي) يربط جملة الصلة بالاسم الذي قبله."
+  },
+  {
+    q: "أي مما يلي اسم إشارة؟",
+    options: ["الذي", "هذا", "أنا", "نا"],
+    correct: 1,
+    explanation: "(هذا) من أسماء الإشارة التي تُستخدم للإشارة إلى شيء محدد."
+  },
+  {
+    q: "كيف تُعرَّف النكرة نحوياً؟",
+    options: ["كل اسم يحمل (ال) بالفعل", "كل اسم يقبل دخول (ال) عليه", "اسم علم", "نوع من الضمائر"],
+    correct: 1,
+    explanation: "النكرة هي كل اسم يقبل دخول (ال) عليه، سواء كانت موجودة عليه فعلاً أم لا."
+  },
+  {
+    q: "ما هما نوعا الضمير؟",
+    options: ["معرفة ونكرة", "منفصلة ومتصلة", "مذكر ومؤنث", "مفرد وجمع"],
+    correct: 1,
+    explanation: "ينقسم الضمير إلى منفصل (يقف وحده ككلمة مستقلة) ومتصل (يلتصق بفعل أو اسم أو حرف)."
+  },
+  {
+    q: "أي مما يلي ضمير منفصل؟",
+    options: ["ه", "نا", "أنا", "ون"],
+    correct: 2,
+    explanation: "(أنا) ضمير منفصل يقف وحده ككلمة مستقلة، بخلاف (ه، نا، ون) وهي ضمائر متصلة."
+  },
+  {
+    q: "أي مما يلي ضمير متصل؟",
+    options: ["أنت", "هو", "ك", "إياك"],
+    correct: 2,
+    explanation: "(ك) ضمير متصل يلتصق بكلمة أخرى، مثل: كتابُكَ، بخلاف (أنت، هو، إياك) وهي ضمائر منفصلة."
+  },
+  {
+    q: "ما الذي يميّز الضمير المتصل (نا)؟",
+    options: ["يُستخدم فقط مع الفعل الماضي", "يعمل في الرفع والنصب والجر معاً", "هو ضمير منفصل في الحقيقة", "يُستخدم فقط مع الأعلام"],
+    correct: 1,
+    explanation: "بخلاف معظم الضمائر المتصلة المرتبطة بحالة واحدة، يعمل (نا) في الحالات الثلاث: فعلنا (رفع)، رآنا (نصب)، كتابنا (جر)."
+  },
+  {
+    q: "أي مما يلي يُستخدم كعلامة رفع متصلة؟",
+    options: ["ك", "ه", "نا", "ون"],
+    correct: 3,
+    explanation: "(ون) من علامات الرفع المتصلة، إلى جانب (ث) و(تا)، وتلتصق بالفعل لتدلّ على الفاعل."
+  },
+  {
+    q: "أي مما يلي ليس من أنواع الكلمة الثلاثة؟",
+    options: ["اسم", "فعل", "حرف", "جملة"],
+    correct: 3,
+    explanation: "(جملة) تعني تركيباً من عدة كلمات، وليست نوعاً من أنواع الكلمة الثلاثة (اسم، فعل، حرف)."
+  },
+  {
+    q: "أي أنواع الفعل يكون مبنياً دائماً ويدل على حدث تم؟",
+    options: ["فعل مضارع", "فعل ماضٍ", "فعل أمر", "اسم"],
+    correct: 1,
+    explanation: "الفعل الماضي مبني دائماً، ويدلّ على حدث وقع وانتهى."
+  },
+  {
+    q: "أي أنواع الفعل يكون معرباً، بخلاف النوعين الآخرين؟",
+    options: ["فعل ماضٍ", "فعل أمر", "فعل مضارع", "لا يوجد — كل الأفعال مبنية"],
+    correct: 2,
+    explanation: "الفعل المضارع معرب؛ تتغيّر حركة آخره حسب موقعه، بخلاف الماضي والأمر وهما مبنيان دائماً."
+  },
+  {
+    q: "ماذا يدلّ عليه فعل الأمر؟",
+    options: ["حدثاً ماضياً", "حدثاً مستمراً", "طلباً أو أمراً", "اسم علم"],
+    correct: 2,
+    explanation: "فعل الأمر يدلّ على طلب القيام بعمل، مثل: اُكْتُبْ."
+  }
+];
+
+var QUIZ_I18N = {
+  en: {
+    answered: "Answered: ", of: " / ", finalPct: "%",
+    prev: "← Previous", next: "Next →", finish: "Finish Quiz",
+    unansweredTitle: "⚠️ You haven't answered some questions yet:",
+    questionLabel: "Question ",
+    reviewTitle: "Review Your Answers",
+    reviewHint: "Tap a number to see that question's explanation",
+    yourAnswer: "Your answer: ", correctAnswer: "Correct answer: ", noAnswer: "(no answer)",
+    letters: ["A", "B", "C", "D"],
+    msgExcellent: "Excellent! You've truly mastered these rulings.",
+    msgGreat: "Great work! Just a little more review and you'll have it locked in.",
+    msgOk: "Good effort — review the ones you missed and try again.",
+    msgKeepGoing: "Keep at it — go back through the flashcards and try the quiz again.",
+    retake: "Retake Quiz",
+    summaryTitle: function(name){ return "Well done, " + name + "!"; },
+    speak: function(name, correct, total, pct){
+      return "Well done, " + name + "! You scored " + correct + " out of " + total + ", which is " + pct + " percent.";
+    },
+    speechLang: 'en-US',
+    timeLabel: '⏱ Time Remaining'
+  },
+  ar: {
+    answered: "الإجابات: ", of: " / ", finalPct: "٪",
+    prev: "السابق", next: "التالي", finish: "إنهاء الاختبار",
+    unansweredTitle: "⚠️ لم تُجب على بعض الأسئلة بعد:",
+    questionLabel: "السؤال ",
+    reviewTitle: "راجع إجاباتك",
+    reviewHint: "انقر على الرقم لرؤية تفسير السؤال",
+    yourAnswer: "إجابتك: ", correctAnswer: "الإجابة الصحيحة: ", noAnswer: "(لم تُجب)",
+    letters: ["أ", "ب", "ج", "د"],
+    msgExcellent: "ممتاز! لقد أتقنت هذه الأحكام حقاً.",
+    msgGreat: "عمل رائع! تحتاج فقط إلى مراجعة بسيطة لتثبيت الفهم.",
+    msgOk: "مجهود جيد — راجع الأسئلة التي أخطأت فيها وحاول مرة أخرى.",
+    msgKeepGoing: "استمر في المحاولة — راجع البطاقات التعليمية وحاول الاختبار مرة أخرى.",
+    retake: "إعادة الاختبار",
+    summaryTitle: function(name){ return "أحسنت يا " + name + "!"; },
+    speak: function(name, correct, total, pct){
+      return "أحسنت يا " + name + '. حصلت على ' + correct + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.';
+    },
+    speechLang: 'ar-SA',
+    timeLabel: '⏱ الوقت المتبقي'
+  }
+};
+
+var quizLang = 'en';
+var activeQuizQuestions = englishQuizQuestions;
+function qt(key){ return QUIZ_I18N[quizLang][key]; }
+
+var quizCurrentIndex = 0;
+var quizAnswered = new Array(activeQuizQuestions.length).fill(false);
+var quizSelected = new Array(activeQuizQuestions.length).fill(null);
+var quizCorrectCount = 0;
+var quizSubmitted = false;
+var quizTransitioning = false;
+
+var qStage = document.getElementById('q-stage');
+var quizScoreText = document.getElementById('quiz-score-text');
+var quizScorePct = document.getElementById('quiz-score-pct');
+var quizProgressFill = document.getElementById('quiz-progress-fill');
+var quizPrevBtn = document.getElementById('quiz-prev-btn');
+var quizNextBtn = document.getElementById('quiz-next-btn');
+var quizDots = document.getElementById('quiz-dots');
+var quizSummaryEl = document.getElementById('quiz-summary');
+
+function initQuiz(lang){
+  quizLang = lang || 'en';
+  activeQuizQuestions = (quizLang === 'ar') ? arabicQuizQuestions : englishQuizQuestions;
+  document.getElementById('quiz-screen').classList.toggle('rtl-mode', quizLang === 'ar');
+
+  quizCurrentIndex = 0;
+  quizAnswered = new Array(activeQuizQuestions.length).fill(false);
+  quizSelected = new Array(activeQuizQuestions.length).fill(null);
+  quizCorrectCount = 0;
+  quizSubmitted = false;
+  quizSummaryEl.classList.remove('show');
+  document.getElementById('unanswered-banner').classList.remove('show');
+  document.querySelector('#quiz-screen .nav-row').style.display = '';
+  quizDots.style.display = '';
+  qStage.style.display = '';
+  document.getElementById('time-label').textContent = qt('timeLabel');
+  updateQuizScore();
+  renderQuizQuestion();
+  startQuizTimer();
+}
+
+var QUIZ_DURATION_SECONDS = 15 * 60;
+var quizTimeRemaining = QUIZ_DURATION_SECONDS;
+var quizTimerInterval = null;
+var timeRow = document.getElementById('time-row');
+var timeFill = document.getElementById('time-fill');
+var timeReadout = document.getElementById('time-readout');
+
+function formatQuizTime(totalSeconds){
+  var m = Math.floor(totalSeconds / 60);
+  var s = totalSeconds % 60;
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function updateQuizTimeDisplay(){
+  timeReadout.textContent = formatQuizTime(Math.max(0, quizTimeRemaining));
+  var pct = Math.max(0, Math.round((quizTimeRemaining / QUIZ_DURATION_SECONDS) * 100));
+  timeFill.style.width = pct + '%';
+  timeRow.classList.toggle('time-low', quizTimeRemaining <= 60);
+}
+
+function startQuizTimer(){
+  quizTimeRemaining = QUIZ_DURATION_SECONDS;
+  timeRow.style.display = '';
+  updateQuizTimeDisplay();
+  clearInterval(quizTimerInterval);
+  quizTimerInterval = setInterval(function(){
+    quizTimeRemaining--;
+    updateQuizTimeDisplay();
+    if(quizTimeRemaining <= 0){
+      clearInterval(quizTimerInterval);
+      quizTimerInterval = null;
+      if(!quizSubmitted){ finalizeQuiz(); }
+    }
+  }, 1000);
+}
+
+function stopQuizTimer(){
+  clearInterval(quizTimerInterval);
+  quizTimerInterval = null;
+}
+
+function buildQuizQuestionEl(){
+  var item = activeQuizQuestions[quizCurrentIndex];
+  var qDiv = document.createElement('div');
+  qDiv.className = 'quiz-question';
+
+  var headDiv = document.createElement('div');
+  headDiv.className = 'q-head';
+  headDiv.innerHTML = '<span class="q-num">' + (quizCurrentIndex + 1) + '</span><span class="q-text">' + item.q + '</span>';
+  qDiv.appendChild(headDiv);
+
+  var optsDiv = document.createElement('div');
+  optsDiv.className = 'q-options';
+
+  item.options.forEach(function(optText, oIndex){
+    var optDiv = document.createElement('div');
+    optDiv.className = 'q-option';
+    optDiv.innerHTML = '<span class="letter">' + qt('letters')[oIndex] + '.</span><span>' + optText + '</span>';
+    if(oIndex === quizSelected[quizCurrentIndex]){
+      optDiv.classList.add('selected');
+    }
+    optDiv.addEventListener('click', function(){ selectQuizAnswer(oIndex); });
+    optsDiv.appendChild(optDiv);
+  });
+
+  qDiv.appendChild(optsDiv);
+  return qDiv;
+}
+
+function renderQuizQuestion(direction){
+  var existing = qStage.querySelector('.quiz-question');
+
+  if(!existing || !direction){
+    var freshDiv = buildQuizQuestionEl();
+    if(direction === 'prev'){ freshDiv.classList.add('anim-prev'); }
+    qStage.innerHTML = '';
+    qStage.appendChild(freshDiv);
+    updateQuizNavButtons();
+    renderQuizDots();
+    return;
+  }
+
+  quizTransitioning = true;
+  quizPrevBtn.disabled = true;
+  quizNextBtn.disabled = true;
+  existing.classList.add(direction === 'prev' ? 'leaving-prev' : 'leaving-next');
+
+  var settled = false;
+  function swapIn(){
+    if(settled) return;
+    settled = true;
+    var newDiv = buildQuizQuestionEl();
+    if(direction === 'prev'){ newDiv.classList.add('anim-prev'); }
+    qStage.innerHTML = '';
+    qStage.appendChild(newDiv);
+    quizTransitioning = false;
+    updateQuizNavButtons();
+    renderQuizDots();
+  }
+  existing.addEventListener('animationend', swapIn, {once:true});
+  setTimeout(swapIn, 300);
+}
+
+function updateQuizNavButtons(){
+  quizPrevBtn.disabled = (quizCurrentIndex === 0);
+  quizPrevBtn.textContent = qt('prev');
+  var isLast = (quizCurrentIndex === activeQuizQuestions.length - 1);
+  quizNextBtn.disabled = !quizAnswered[quizCurrentIndex];
+  quizNextBtn.textContent = isLast ? qt('finish') : qt('next');
+}
+
+function selectQuizAnswer(oIndex){
+  if(quizSubmitted || quizTransitioning) return;
+  quizAnswered[quizCurrentIndex] = true;
+  quizSelected[quizCurrentIndex] = oIndex;
+  playFlipSound();
+  renderQuizQuestion();
+  updateQuizScore();
+}
+
+function updateQuizScore(){
+  var answeredCount = quizAnswered.filter(Boolean).length;
+  var pct = Math.round((answeredCount / activeQuizQuestions.length) * 100);
+  quizScoreText.textContent = qt('answered') + answeredCount + qt('of') + activeQuizQuestions.length;
+  quizScorePct.textContent = pct + qt('finalPct');
+  quizProgressFill.style.width = pct + '%';
+}
+
+function renderQuizDots(){
+  quizDots.innerHTML = '';
+  activeQuizQuestions.forEach(function(_, i){
+    var dot = document.createElement('div');
+    dot.className = 'deck-dot';
+    if(quizAnswered[i]) dot.classList.add('known');
+    if(i === quizCurrentIndex) dot.classList.add('current');
+    dot.title = qt('questionLabel') + (i + 1);
+    dot.addEventListener('click', function(){ goToQuizQuestion(i); });
+    quizDots.appendChild(dot);
+  });
+}
+
+function goToQuizQuestion(index){
+  if(quizTransitioning) return;
+  if(index < 0 || index >= activeQuizQuestions.length) return;
+  if(index === quizCurrentIndex) return;
+  var direction = index > quizCurrentIndex ? 'next' : 'prev';
+  quizCurrentIndex = index;
+  renderQuizQuestion(direction);
+  document.getElementById('unanswered-banner').classList.remove('show');
+}
+
+quizPrevBtn.addEventListener('click', function(){
+  if(quizTransitioning) return;
+  if(quizCurrentIndex > 0){ goToQuizQuestion(quizCurrentIndex - 1); }
+});
+
+quizNextBtn.addEventListener('click', function(){
+  if(quizTransitioning) return;
+  if(!quizAnswered[quizCurrentIndex]) return;
+  var isLast = (quizCurrentIndex === activeQuizQuestions.length - 1);
+  if(isLast){
+    attemptQuizFinish();
+  } else {
+    goToQuizQuestion(quizCurrentIndex + 1);
+  }
+});
+
+function attemptQuizFinish(){
+  var missing = [];
+  quizAnswered.forEach(function(isAnswered, i){ if(!isAnswered) missing.push(i); });
+
+  if(missing.length > 0){
+    var banner = document.getElementById('unanswered-banner');
+    document.getElementById('unanswered-title').textContent = qt('unansweredTitle');
+    var list = document.getElementById('unanswered-list');
+    list.innerHTML = '';
+    missing.forEach(function(qIndex){
+      var btn = document.createElement('button');
+      btn.textContent = qt('questionLabel') + (qIndex + 1);
+      btn.addEventListener('click', function(){ goToQuizQuestion(qIndex); });
+      list.appendChild(btn);
+    });
+    banner.classList.add('show');
+    banner.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  finalizeQuiz();
+}
+
+function finalizeQuiz(){
+  if(quizSubmitted) return;
+  quizSubmitted = true;
+  stopQuizTimer();
+  quizCorrectCount = 0;
+  activeQuizQuestions.forEach(function(item, i){
+    if(quizSelected[i] === item.correct) quizCorrectCount++;
+  });
+  var pct = Math.round((quizCorrectCount / activeQuizQuestions.length) * 100);
+  showQuizFinal(pct);
+}
+
+function showQuizFinal(pct){
+  playDoneSound();
+  document.getElementById('unanswered-banner').classList.remove('show');
+  document.querySelector('#quiz-screen .nav-row').style.display = 'none';
+  quizDots.style.display = 'none';
+  qStage.style.display = 'none';
+  timeRow.style.display = 'none';
+  quizSummaryEl.classList.add('show');
+  document.getElementById('quiz-summary-title').textContent = qt('summaryTitle')(studentName);
+  document.getElementById('quiz-final-pct').textContent = pct + qt('finalPct');
+  var msg;
+  if(pct >= 90) msg = qt('msgExcellent');
+  else if(pct >= 75) msg = qt('msgGreat');
+  else if(pct >= 50) msg = qt('msgOk');
+  else msg = qt('msgKeepGoing');
+  document.getElementById('quiz-final-msg').textContent = msg;
+  document.getElementById('quiz-retake-btn').textContent = qt('retake');
+  buildQuizReviewList();
+  setTimeout(function(){ speakQuizResult(pct); }, 500);
+}
+
+function speakQuizResult(pct){
+  if(!('speechSynthesis' in window)) return;
+  var text = qt('speak')(studentName, quizCorrectCount, activeQuizQuestions.length, pct);
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang = qt('speechLang');
+  utter.rate = 0.95;
+  var voice = getMaleVoice(quizLang === 'ar' ? 'ar' : 'en');
+  if(voice){ utter.voice = voice; }
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+
+function buildQuizReviewList(){
+  var reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  var title = document.createElement('p');
+  title.className = 'review-title';
+  title.textContent = qt('reviewTitle');
+  reviewList.appendChild(title);
+
+  var hint = document.createElement('p');
+  hint.className = 'review-hint';
+  hint.textContent = qt('reviewHint');
+  reviewList.appendChild(hint);
+
+  var grid = document.createElement('div');
+  grid.className = 'review-grid';
+  reviewList.appendChild(grid);
+
+  var detail = document.createElement('div');
+  detail.className = 'review-detail';
+  detail.id = 'quiz-review-detail';
+  reviewList.appendChild(detail);
+
+  activeQuizQuestions.forEach(function(item, i){
+    var userChoice = quizSelected[i];
+    var isCorrect = userChoice === item.correct;
+    var numBtn = document.createElement('button');
+    numBtn.className = 'review-num ' + (isCorrect ? 'correct-num' : 'wrong-num');
+    numBtn.textContent = (i + 1);
+    numBtn.addEventListener('click', function(){ showQuizReviewDetail(i, numBtn); });
+    grid.appendChild(numBtn);
+  });
+}
+
+function showQuizReviewDetail(i, numBtn){
+  var item = activeQuizQuestions[i];
+  var userChoice = quizSelected[i];
+  var isCorrect = userChoice === item.correct;
+  var detail = document.getElementById('quiz-review-detail');
+
+  document.querySelectorAll('#review-list .review-num').forEach(function(btn){ btn.classList.remove('active'); });
+  numBtn.classList.add('active');
+
+  var yourText = (userChoice === null || userChoice === undefined) ? qt('noAnswer') : qt('letters')[userChoice] + '. ' + item.options[userChoice];
+  var html = '<p class="rq-text">' + (i + 1) + '. ' + item.q + '</p>';
+  html += '<p class="rq-answer ' + (isCorrect ? 'correct-answer' : 'wrong-answer') + '">' + qt('yourAnswer') + yourText + '</p>';
+  if(!isCorrect){
+    html += '<p class="rq-answer correct-line">' + qt('correctAnswer') + qt('letters')[item.correct] + '. ' + item.options[item.correct] + '</p>';
+  }
+  html += '<div class="rq-explanation">' + item.explanation + '</div>';
+  detail.innerHTML = html;
+  detail.classList.remove('show');
+  void detail.offsetWidth;
+  detail.classList.add('show');
+  detail.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+document.getElementById('quiz-retake-btn').addEventListener('click', function(){
+  initQuiz(quizLang);
+});
+</script>
+
+</body>
+</html>
