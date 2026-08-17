@@ -52,7 +52,7 @@
   --gradient-hero: radial-gradient(at 20% 0%, color-mix(in oklab, var(--gold) 18%, transparent), transparent 50%),
                    radial-gradient(at 90% 100%, color-mix(in oklab, var(--primary-glow) 25%, transparent), transparent 50%),
                    linear-gradient(180deg, var(--background), var(--background));
-  --reading-scale: 1;
+  --reading-scale: 1.15;
 }
 
 html.dark {
@@ -224,6 +224,22 @@ input { font-family: inherit; }
 .play-btn.playing { transform: scale(1.05); }
 .play-btn:hover { color: var(--primary-foreground) !important; }
 
+.dl-btn {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--muted-foreground); transition: color .15s ease;
+}
+.dl-btn:hover { color: var(--gold); }
+.dl-btn[data-dl-state="done"] { color: var(--accent, #2e6b58); }
+.dl-btn[data-dl-state="error"] { color: var(--destructive); }
+.dl-btn.spinning svg { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.audio-error {
+  margin-top: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--destructive) 12%, transparent);
+  color: var(--destructive); font-size: 0.8rem; line-height: 1.4;
+}
+
 .seek-wrap { margin-top: 0.75rem; }
 .seek-wrap input[type="range"] {
   display: block; width: 100%; cursor: pointer; height: 6px; border-radius: 9999px;
@@ -306,7 +322,7 @@ input { font-family: inherit; }
 .sagalee-item { border-radius: var(--radius-2xl); padding: 0.75rem; }
 .sagalee-row { display: flex; width: 100%; align-items: center; gap: 0.75rem; text-align: left; }
 .sagalee-play {
-  flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: var(--radius-2xl); color: var(--primary-foreground) !important;
+  flex-shrink: 0; width: 2.75rem; height: 2.75rem; padding: 0; border-radius: var(--radius-2xl); color: var(--primary-foreground) !important;
   background: var(--gradient-gold); box-shadow: var(--shadow-gold); display: flex; align-items: center; justify-content: center;
 }
 .sagalee-text { min-width: 0; flex: 1; }

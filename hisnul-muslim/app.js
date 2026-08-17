@@ -25,7 +25,10 @@
     x: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
-    speakerOn: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
+    download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
+    checkCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>',
+    loader: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
+    alertCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -56,8 +59,8 @@
   function isFavorite(num) { return readFavorites().indexOf(num) !== -1; }
 
   function loadFontScale() {
-    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1");
-    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1;
+    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.15");
+    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.15;
   }
   var fontScale = loadFontScale();
   function applyFontScale() {
@@ -284,11 +287,12 @@
           '<div class="dua-idx">' + n + "</div>" +
           '<div class="dua-actions">' +
             '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" +
-            '<button data-action="tts" data-text="' + esc(d.arabic).replace(/"/g, "&quot;") + '" aria-label="Speak">' + icon("speakerOn", 16) + "</button>" +
+            '<button class="dl-btn" data-action="download-dua" aria-label="Bilbila kee irratti ol kaa\'i">' + icon("download2", 16) + "</button>" +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
           "</div>" +
         "</div>" +
         '<div class="seek-wrap" hidden></div>' +
+        '<p class="audio-error" hidden></p>' +
         '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + esc(d.arabic) + "</p>" +
         (d.oromo ? '<p class="dua-oromo">' + esc(d.oromo) + "</p>" : "") +
         '<div class="counter-row">' +
@@ -319,13 +323,15 @@
       card.querySelector('[data-action="counter-minus"]').addEventListener("click", function () { count = Math.max(0, count - 1); counterVal.textContent = count; });
       card.querySelector('[data-action="counter-plus"]').addEventListener("click", function () { count += 1; counterVal.textContent = count; });
 
-      var ttsBtn = card.querySelector('[data-action="tts"]');
-      bindTTSButton(ttsBtn);
-
       card.querySelector('[data-action="share"]').addEventListener("click", function (e) {
         var btn = e.currentTarget;
         shareText(btn.getAttribute("data-title"), btn.getAttribute("data-arabic") + "\n\n" + btn.getAttribute("data-oromo") + "\n\n— Hisnul Muslim");
       });
+
+      var duaIdx = parseInt(card.getAttribute("data-dua-idx"), 10);
+      var duaRange = rangeForDua(chapter.num, duaIdx);
+      var duaUrls = duaRange ? urlsForChapter(chapter.num).slice(duaRange.start, duaRange.end + 1) : [];
+      bindDownloadButton(card.querySelector('[data-action="download-dua"]'), duaUrls);
     });
 
     var urls = urlsForChapter(chapter.num);
@@ -372,6 +378,13 @@
         seekWrap.hidden = true;
         seekWrap.innerHTML = "";
       }
+      var errEl = card.querySelector(".audio-error");
+      if (st.error && inRange) {
+        errEl.hidden = false;
+        errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi, ykn gadi buusii kaa'i (⬇) yeroo booda dhaggeeffachuuf.";
+      } else {
+        errEl.hidden = true;
+      }
     });
   }
 
@@ -379,13 +392,15 @@
   function createAudioController(urls, onUpdate) {
     var audioEl = new Audio();
     audioEl.preload = "auto";
-    audioEl.crossOrigin = "anonymous";
+    // Deliberately no crossOrigin="anonymous": these hosts aren't guaranteed
+    // to send CORS headers, plain playback doesn't need them, and forcing
+    // CORS mode would make the browser refuse the opaque (no-cors) responses
+    // stored by the offline-download feature below.
     var preloadEl = new Audio();
     preloadEl.preload = "auto";
-    preloadEl.crossOrigin = "anonymous";
     preloadEl.muted = true;
 
-    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false };
+    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false, error: false };
 
     function emit() { onUpdate(state); }
 
@@ -409,14 +424,21 @@
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().catch(function () { state.playing = false; state.loading = false; emit(); }).finally(function () {
+      audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
         state.advancing = false;
         preloadNext();
       });
     }
 
     audioEl.addEventListener("ended", advance);
-    audioEl.addEventListener("error", function () { if (state.urls.length) advance(); else { state.playing = false; state.loading = false; emit(); } });
+    audioEl.addEventListener("error", function () {
+      // A track genuinely failed (bad URL, offline, blocked, etc). Try the
+      // next track in the queue so one bad file doesn't stall a whole du'a;
+      // only surface a hard error once there's nowhere left to go.
+      var hasNext = state.idx < state.urls.length - 1 || state.repeat;
+      if (hasNext) { advance(); }
+      else { state.playing = false; state.loading = false; state.error = true; emit(); }
+    });
     audioEl.addEventListener("playing", function () { state.loading = false; state.playing = true; emit(); });
     audioEl.addEventListener("pause", function () { state.playing = false; emit(); });
     audioEl.addEventListener("loadedmetadata", function () { state.duration = audioEl.duration || 0; emit(); });
@@ -431,10 +453,10 @@
       if (!state.urls.length) return;
       state.idx = fromIdx || 0;
       audioEl.src = state.urls[state.idx];
-      state.loading = true; state.current = 0; state.duration = 0; state.progress = 0;
+      state.loading = true; state.error = false; state.current = 0; state.duration = 0; state.progress = 0;
       emit();
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().then(function () { preloadNext(); }).catch(function () { state.loading = false; emit(); });
+      audioEl.play().then(function () { preloadNext(); }).catch(function () { state.loading = false; state.error = true; emit(); });
     };
     state.pause = function () { audioEl.pause(); };
     state.seek = function (t) { if (isFinite(t)) { audioEl.currentTime = t; state.current = t; emit(); } };
@@ -443,29 +465,51 @@
     return state;
   }
 
-  // ---------------- Arabic TTS ----------------
-  function pickArabicVoice() {
-    if (typeof speechSynthesis === "undefined") return null;
-    var voices = speechSynthesis.getVoices();
-    return voices.find(function (v) { return /^ar(-|_|$)/i.test(v.lang); }) || null;
+  // ---------------- Offline audio download ----------------
+  function setDownloadBtnState(btn, s) {
+    btn.setAttribute("data-dl-state", s);
+    btn.classList.toggle("spinning", s === "downloading" || s === "checking");
+    if (s === "downloading" || s === "checking") btn.innerHTML = icon("loader", 16);
+    else if (s === "done") btn.innerHTML = icon("checkCircle", 16);
+    else if (s === "error") btn.innerHTML = icon("alertCircle", 16);
+    else btn.innerHTML = icon("download2", 16);
   }
-  function bindTTSButton(btn) {
-    if (!("speechSynthesis" in window)) { btn.style.display = "none"; return; }
-    var playing = false;
-    btn.addEventListener("click", function () {
-      var synth = window.speechSynthesis;
-      if (playing) { synth.cancel(); playing = false; btn.innerHTML = icon("speakerOn", 16); return; }
-      synth.cancel();
-      var text = btn.getAttribute("data-text");
-      var utt = new SpeechSynthesisUtterance(text);
-      var voice = pickArabicVoice();
-      utt.lang = (voice && voice.lang) || "ar-SA";
-      if (voice) utt.voice = voice;
-      utt.rate = 0.85;
-      utt.onend = function () { playing = false; };
-      utt.onerror = function () { playing = false; };
-      synth.speak(utt);
-      playing = true;
+
+  function bindDownloadButton(btn, urls) {
+    if (!btn) return;
+    if (!AudioCacheAPI.supported() || !urls || !urls.length) { btn.style.display = "none"; return; }
+
+    setDownloadBtnState(btn, "checking");
+    AudioCacheAPI.areAllCached(urls).then(function (all) {
+      setDownloadBtnState(btn, all ? "done" : "idle");
+    });
+
+    btn.addEventListener("click", async function () {
+      var cur = btn.getAttribute("data-dl-state");
+      if (cur === "downloading" || cur === "checking") return;
+
+      if (cur === "done") {
+        var wantsRemove = confirm("Sagalee kana bilbila kee irraa haquu barbaaddaa?");
+        if (wantsRemove) {
+          await AudioCacheAPI.remove(urls);
+          setDownloadBtnState(btn, "idle");
+        }
+        return;
+      }
+
+      var wantsDownload = confirm(
+        "Sagalee kana (" + urls.length + (urls.length === 1 ? " faayilii" : " faayiloota") + ") " +
+        "bilbila kee irratti ol kaa'uu barbaaddaa? Kunis booda interneeta malee dhaggeeffachuu si dandeessisa."
+      );
+      if (!wantsDownload) return;
+
+      setDownloadBtnState(btn, "downloading");
+      try {
+        var result = await AudioCacheAPI.download(urls);
+        setDownloadBtnState(btn, result.failed.length ? "error" : "done");
+      } catch (e) {
+        setDownloadBtnState(btn, "error");
+      }
     });
   }
 
@@ -599,12 +643,14 @@
     var items = CHAPTERS.map(function (c) {
       return (
         '<li class="glass sagalee-item animate-fade-in" data-chapter="' + c.num + '">' +
-          '<button type="button" class="sagalee-row" data-action="sagalee-toggle" data-num="' + c.num + '">' +
-            '<span class="sagalee-play">' + icon("play", 20) + "</span>" +
+          '<div class="sagalee-row">' +
+            '<button type="button" class="sagalee-play" data-action="sagalee-toggle" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 20) + "</button>" +
             '<span class="sagalee-text"><span class="om">' + esc(c.oromoTitle) + '</span><span class="ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</span></span>" +
+            '<button class="dl-btn" data-action="download-chapter" data-num="' + c.num + '" aria-label="Bilbila kee irratti ol kaa\'i"></button>' +
             '<span class="sagalee-num">#' + String(c.num).padStart(3, "0") + "</span>" +
-          "</button>" +
+          "</div>" +
           '<div class="seek-wrap" hidden></div>' +
+          '<p class="audio-error" hidden></p>' +
         "</li>"
       );
     }).join("");
@@ -632,7 +678,6 @@
     document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
         var num = parseInt(btn.getAttribute("data-num"), 10);
-        var li = btn.closest("li");
         if (sagaleeState && sagaleeState.currentChapter === num) {
           sagaleeState.pause();
           return;
@@ -645,6 +690,11 @@
         sagaleeState.play(0);
       });
     });
+
+    document.querySelectorAll('[data-action="download-chapter"]').forEach(function (btn) {
+      var num = parseInt(btn.getAttribute("data-num"), 10);
+      bindDownloadButton(btn, urlsForChapter(num));
+    });
   }
   function updateSagaleeUI(num, st) {
     document.querySelectorAll(".sagalee-item").forEach(function (li) {
@@ -652,9 +702,11 @@
       var isThis = liNum === num;
       var playBtn = li.querySelector(".sagalee-play");
       var seekWrap = li.querySelector(".seek-wrap");
+      var errEl = li.querySelector(".audio-error");
       if (!isThis) {
         playBtn.innerHTML = icon("play", 20);
         seekWrap.hidden = true; seekWrap.innerHTML = "";
+        errEl.hidden = true;
         return;
       }
       var playing = st.playing;
@@ -672,6 +724,8 @@
       } else {
         seekWrap.hidden = true; seekWrap.innerHTML = "";
       }
+      errEl.hidden = !st.error;
+      if (st.error) errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi, ykn gadi buusii kaa'i (⬇) yeroo booda dhaggeeffachuuf.";
     });
   }
 
@@ -717,6 +771,12 @@
       "</section>" +
 
       '<section class="glass settings-section">' +
+        '<div class="settings-section-head">' + icon("download2", 16) + "<span>Sagalee ol kaa\'ame</span></div>" +
+        '<p class="page-sub" style="margin-top:0.5rem;">Du\'aa\'ii ⬇ tuqxee ol kaayye interneeta malees ni dhaggeeffatama.</p>' +
+        '<button class="font-reset" id="settings-clear-audio" style="margin-top:0.75rem;">Sagalee ol kaa\'ame hunda haqi</button>' +
+      "</section>" +
+
+      '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon("heart", 16) + "<span>Appii biroo / Qoodi</span></div>" +
         '<div class="share-grid">' +
           '<button id="settings-share">' + icon("share2", 16) + " Hiriyyootatti qoodi</button>" +
@@ -748,6 +808,12 @@
       } else if (navigator.clipboard) {
         navigator.clipboard.writeText(url).catch(function () {});
       }
+    });
+    var clearAudioBtn = document.getElementById("settings-clear-audio");
+    if (clearAudioBtn) clearAudioBtn.addEventListener("click", async function () {
+      if (!confirm("Sagalee bilbila kee irratti ol kaa'ame hunda haquu barbaaddaa?")) return;
+      await AudioCacheAPI.clearAll();
+      alert("Sagaleen ol kaa'ame haqameera.");
     });
   }
 
@@ -846,6 +912,7 @@
   })();
 
   // ---------------- Init ----------------
+  applyFontScale();
   navigate();
 
   if ("serviceWorker" in navigator) {
