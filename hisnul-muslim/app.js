@@ -25,7 +25,6 @@
     x: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
-    speakerOn: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
     download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
     checkCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>',
     loader: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
@@ -289,7 +288,6 @@
           '<div class="dua-actions">' +
             '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" +
             '<button class="dl-btn" data-action="download-dua" aria-label="Bilbila kee irratti ol kaa\'i">' + icon("download2", 16) + "</button>" +
-            '<button data-action="tts" data-text="' + esc(d.arabic).replace(/"/g, "&quot;") + '" aria-label="Speak">' + icon("speakerOn", 16) + "</button>" +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
           "</div>" +
         "</div>" +
@@ -324,9 +322,6 @@
       card.querySelector('[data-action="counter-reset"]').addEventListener("click", function () { count = 0; counterVal.textContent = count; });
       card.querySelector('[data-action="counter-minus"]').addEventListener("click", function () { count = Math.max(0, count - 1); counterVal.textContent = count; });
       card.querySelector('[data-action="counter-plus"]').addEventListener("click", function () { count += 1; counterVal.textContent = count; });
-
-      var ttsBtn = card.querySelector('[data-action="tts"]');
-      bindTTSButton(ttsBtn);
 
       card.querySelector('[data-action="share"]').addEventListener("click", function (e) {
         var btn = e.currentTarget;
@@ -515,32 +510,6 @@
       } catch (e) {
         setDownloadBtnState(btn, "error");
       }
-    });
-  }
-
-  // ---------------- Arabic TTS ----------------
-  function pickArabicVoice() {
-    if (typeof speechSynthesis === "undefined") return null;
-    var voices = speechSynthesis.getVoices();
-    return voices.find(function (v) { return /^ar(-|_|$)/i.test(v.lang); }) || null;
-  }
-  function bindTTSButton(btn) {
-    if (!("speechSynthesis" in window)) { btn.style.display = "none"; return; }
-    var playing = false;
-    btn.addEventListener("click", function () {
-      var synth = window.speechSynthesis;
-      if (playing) { synth.cancel(); playing = false; btn.innerHTML = icon("speakerOn", 16); return; }
-      synth.cancel();
-      var text = btn.getAttribute("data-text");
-      var utt = new SpeechSynthesisUtterance(text);
-      var voice = pickArabicVoice();
-      utt.lang = (voice && voice.lang) || "ar-SA";
-      if (voice) utt.voice = voice;
-      utt.rate = 0.85;
-      utt.onend = function () { playing = false; };
-      utt.onerror = function () { playing = false; };
-      synth.speak(utt);
-      playing = true;
     });
   }
 
