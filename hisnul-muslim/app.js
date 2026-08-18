@@ -222,12 +222,10 @@
     return /\d+\s*[ـ\-]+/.test(a);
   }
 
-  var chapterAudioState = null; // { chapterNum, audioEl, preloadEl, urls, idx, playing, loading, current, duration, progress }
+  var chapterAudioState = null; // { chapterNum, urls, idx, playing, loading, current, duration, progress }
 
   function stopChapterAudio() {
-    if (chapterAudioState && chapterAudioState.audioEl) {
-      chapterAudioState.audioEl.pause();
-    }
+    if (chapterAudioState) chapterAudioState.destroy();
     chapterAudioState = null;
   }
 
@@ -389,6 +387,11 @@
   }
 
   // ---------------- Generic HTMLAudio sequential-queue controller ----------------
+  // Only one audio controller (chapter view, sagalee view, whichever) may be
+  // playing anywhere in the app at once. Every controller checks in here
+  // before starting playback, so starting one always stops any other.
+  var activeAudioController = null;
+
   function createAudioController(urls, onUpdate) {
     var audioEl = new Audio();
     audioEl.preload = "auto";
@@ -400,11 +403,17 @@
     preloadEl.preload = "auto";
     preloadEl.muted = true;
 
-    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false, error: false };
+    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false, error: false, destroyed: false };
 
-    function emit() { onUpdate(state); }
+    // emit()/preloadNext()/advance() all short-circuit once destroyed, so a
+    // torn-down controller can't resurrect itself: clearing audioEl.src in
+    // destroy() below fires a real "error" event on the old element, which
+    // would otherwise be treated as "this track failed, try the next one"
+    // and keep it silently playing/fetching in the background forever.
+    function emit() { if (state.destroyed) return; onUpdate(state); }
 
     function preloadNext() {
+      if (state.destroyed) return;
       var nextIdx = state.idx + 1;
       var nextUrl = nextIdx < state.urls.length ? state.urls[nextIdx] : (state.repeat ? state.urls[0] : null);
       if (!nextUrl) { preloadEl.removeAttribute("src"); return; }
@@ -412,7 +421,7 @@
     }
 
     function advance() {
-      if (state.advancing) return;
+      if (state.destroyed || state.advancing) return;
       var atEnd = state.idx >= state.urls.length - 1;
       if (atEnd && !state.repeat) {
         state.playing = false; state.current = 0; state.duration = 0; state.progress = 0;
@@ -451,6 +460,10 @@
 
     state.play = function (fromIdx) {
       if (!state.urls.length) return;
+      if (activeAudioController && activeAudioController !== state) {
+        activeAudioController.pause();
+      }
+      activeAudioController = state;
       state.idx = fromIdx || 0;
       audioEl.src = state.urls[state.idx];
       state.loading = true; state.error = false; state.current = 0; state.duration = 0; state.progress = 0;
@@ -460,7 +473,13 @@
     };
     state.pause = function () { audioEl.pause(); };
     state.seek = function (t) { if (isFinite(t)) { audioEl.currentTime = t; state.current = t; emit(); } };
-    state.destroy = function () { audioEl.pause(); audioEl.src = ""; };
+    state.destroy = function () {
+      state.destroyed = true;
+      audioEl.pause();
+      audioEl.removeAttribute("src");
+      try { audioEl.load(); } catch (e) {}
+      if (activeAudioController === state) activeAudioController = null;
+    };
 
     return state;
   }
@@ -829,6 +848,7 @@
 
   function navigate() {
     stopChapterAudio();
+    if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
     var r = parseHash();
     var html = "";
     if (r.parts[0] === "categories" || r.parts.length === 0) html = pageCategories();
