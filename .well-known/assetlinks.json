@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.fes_reshid.twa",
+    "sha256_cert_fingerprints": ["C9:0D:A8:5C:DC:88:D4:A8:68:9C:21:B7:DA:9B:68:C0:96:35:19:20:5F:F3:00:4A:37:77:23:D1:B9:6E:59:87"]
+  }
+}]
