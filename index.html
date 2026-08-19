@@ -89,18 +89,43 @@
       radial-gradient(circle at 85% 15%, rgba(46,107,88,.12), transparent 45%),
       var(--parchment);
   }
-  .hero::before, .hero::after{
-    content:""; position:absolute; width:340px; height:340px; border:1.5px solid var(--gold-soft);
-    border-radius:50%; opacity:.35;
+  .hero-glow{
+    position:absolute; inset:-15%; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(169,124,37,.18), transparent 42%),
+      radial-gradient(circle at 80% 20%, rgba(46,107,88,.16), transparent 46%),
+      radial-gradient(circle at 50% 95%, rgba(169,124,37,.12), transparent 42%);
+    background-size:140% 140%;
+    animation:glowDrift 16s ease-in-out infinite;
   }
-  .hero::before{ top:-140px; left:-120px; }
-  .hero::after{ bottom:-160px; right:-100px; }
+  @keyframes glowDrift{
+    0%, 100%{ background-position:0% 0%, 100% 0%, 50% 100%; }
+    50%{ background-position:12% 12%, 88% 14%, 46% 88%; }
+  }
+  .hero::before, .hero::after{
+    content:""; position:absolute; width:460px; height:460px; border:1.5px solid var(--gold-soft);
+    border-radius:50%; opacity:.32; z-index:0;
+    animation:heroCircleDrift 9s ease-in-out infinite;
+  }
+  .hero::before{ top:-180px; left:-160px; }
+  .hero::after{ bottom:-200px; right:-140px; animation-delay:2.4s; }
+  @keyframes heroCircleDrift{
+    0%, 100%{ transform:translate(0,0) scale(1); opacity:.28; }
+    50%{ transform:translate(14px,-10px) scale(1.08); opacity:.48; }
+  }
   .hero-inner{
-    position:relative; max-width:1100px; margin:0 auto;
+    position:relative; z-index:1; max-width:1100px; margin:0 auto;
     display:flex; align-items:center; justify-content:space-between; gap:48px;
   }
   .hero-content{ flex:1 1 460px; min-width:0; }
-  .hero .bism{ font-family:'Amiri'; font-size:22px; color:var(--gold); margin:0 0 18px; }
+  .hero .bism{
+    font-family:'Amiri'; font-size:clamp(32px,4.4vw,46px); color:var(--gold); margin:0 0 22px;
+    animation:bismGlow 3.6s ease-in-out infinite;
+  }
+  @keyframes bismGlow{
+    0%, 100%{ text-shadow:0 0 0 rgba(169,124,37,0); }
+    50%{ text-shadow:0 0 20px rgba(169,124,37,.5); }
+  }
   .hero h1{
     font-family:'Marcellus'; font-size:clamp(30px,4.6vw,48px); color:var(--ink-navy);
     margin:0 0 18px; line-height:1.15;
@@ -147,7 +172,8 @@
     50%{ opacity:1; transform:scale(1.15); }
   }
   @media (prefers-reduced-motion: reduce){
-    .book-float, .glow-pulse, .rise-left, .rise-right, .twinkle, .twinkle-slow, .twinkle-slower{
+    .book-float, .glow-pulse, .rise-left, .rise-right, .twinkle, .twinkle-slow, .twinkle-slower,
+    .hero-glow, .hero::before, .hero::after, .hero .bism{
       animation:none !important;
     }
   }
@@ -251,6 +277,7 @@
 </header>
 
 <section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
   <div class="hero-inner">
     <div class="hero-content">
       <p class="bism arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
