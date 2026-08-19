@@ -29,56 +29,33 @@
     line-height:1.65;
   }
   a{ color:inherit; }
-  .arabic{ font-family:'Amiri', serif; }
+  .wrap{ max-width:760px; margin:0 auto; padding:18px 16px 60px; }
 
-  /* ---------- shared name-gate (same key + look as nahw.html) ---------- */
-  .name-gate{ max-width:420px; margin:60px auto 0; text-align:center; padding:0 20px; }
-  .name-gate label{ display:block; font-size:16px; margin-bottom:10px; color:var(--ink-brown); }
-  .name-gate input{
-    width:100%; padding:11px 14px; border-radius:10px; border:1.5px solid var(--gold-soft);
-    font-family:inherit; font-size:17px; text-align:center; background:#fff;
-  }
-  .name-gate input:focus{ outline:none; border-color:var(--gold); }
-  .name-warning{ color:var(--red); font-size:13px; margin-top:8px; }
-  #name-start-btn{
-    margin-top:14px; background:var(--gold); color:#fff8ea; border:none; border-radius:24px;
-    padding:11px 30px; font-size:16px; font-family:inherit; font-weight:700; cursor:pointer;
-    transition:background .15s ease, transform .15s ease;
-  }
-  #name-start-btn:hover{ background:#8f691e; transform:scale(1.04); }
-
-  .welcome-bar{
-    max-width:900px; margin:14px auto 0; padding:10px 20px; text-align:center;
-    font-size:14px; color:var(--green-dark);
-  }
-  .welcome-bar .switch-link{ color:var(--gold); text-decoration:underline; margin-inline-start:10px; }
-
+  /* ---------- shared back-home + footer (same look as nahw.html) ---------- */
   .back-home{
     position:fixed; top:16px; left:16px; z-index:31; display:flex; align-items:center; gap:6px;
     background:#f2e6c9; border:1px solid #d3ac5c; border-radius:20px; padding:6px 14px;
     font-family:'Cormorant Garamond',serif; font-weight:700; font-size:14px; color:#3c2f26;
     text-decoration:none; box-shadow:0 6px 16px rgba(60,45,20,.2);
   }
-
   .site-footer{ background:var(--ink-navy); color:#c9d2e0; padding:30px 20px 20px; text-align:center; margin-top:20px; }
   .site-footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 14px; font-size:14px; }
   .site-footer .flinks a{ text-decoration:none; color:#c9d2e0; }
   .site-footer .flinks a:hover{ color:#faf3e0; }
   .site-footer .fine{ font-size:12px; color:#8b96ab; margin:0; }
-
-  .wrap{ max-width:760px; margin:0 auto; padding:18px 16px 60px; }
+  .switch-link{ display:inline-block; margin-top:8px; color:var(--gold); text-decoration:underline; font-size:calc(13px * var(--scale)); }
 
   /* ===== Sticky top bar ===== */
   .topbar{
     position:sticky; top:0; z-index:20; background:var(--parchment);
     border-bottom:2px solid var(--gold-soft); padding:12px 16px;
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    box-shadow:0 2px 10px rgba(60,47,38,0.06);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 2px 10px rgba(60,47,38,0.06); text-align:center;
   }
-  .topbar-title{ display:flex; flex-direction:column; line-height:1.2; }
+  .topbar-title{ display:flex; flex-direction:column; line-height:1.2; align-items:center; }
   .topbar-title .ar{ font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); color:var(--gold); }
   .topbar-title .en{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(15px * var(--scale)); color:var(--ink-navy); }
-  .lang-toggle{ display:flex; gap:6px; flex-shrink:0; }
+  .lang-toggle{ display:flex; gap:6px; flex-shrink:0; justify-content:center; }
   .lang-pill{
     background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px;
     padding:6px 14px; font-size:calc(12.5px * var(--scale)); font-family:'Cormorant Garamond', serif; font-weight:700;
@@ -86,6 +63,39 @@
   }
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
+
+  /* ===== Name gate ===== */
+  #name-gate{ display:flex; justify-content:center; padding:40px 10px; }
+  .name-gate-box{
+    max-width:420px; width:100%; text-align:center; background:#fff;
+    border:2px solid var(--gold-soft); border-radius:16px; padding:30px 26px;
+    box-shadow:0 4px 16px rgba(60,47,38,0.08);
+  }
+  #name-gate-label{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin:0 0 14px; font-weight:700; }
+  #student-name-input{
+    width:100%; padding:12px 16px; border:1.5px solid var(--gold-soft); border-radius:10px;
+    font-family:'Cormorant Garamond', serif; font-size:calc(16px * var(--scale)); text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+  }
+  #student-name-input:focus{ outline:none; border-color:var(--gold); }
+  .name-warning{ color:var(--red); font-size:calc(13px * var(--scale)); margin:-6px 0 12px; }
+  #name-start-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:11px 32px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(15px * var(--scale)); cursor:pointer; transition:transform .15s ease;
+  }
+  #name-start-btn:hover{ transform:scale(1.04); }
+
+  /* ===== Welcome banner ===== */
+  .welcome-banner{
+    max-width:560px; margin:6px auto 22px; text-align:center;
+    background:var(--green-bg); border:1.5px solid var(--green); border-radius:14px;
+    padding:14px 22px;
+  }
+  .welcome-line{ margin:0; font-size:calc(15.5px * var(--scale)); font-weight:700; color:var(--green); }
+  .welcome-quote{ margin:8px 0 0; font-size:calc(13px * var(--scale)); color:var(--ink-brown); font-style:italic; line-height:1.6; }
+  .welcome-quote .quote-ar{ display:block; font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); direction:rtl; margin-bottom:3px; }
+  .welcome-quote .quote-en{ display:block; }
 
   /* ===== Hero ===== */
   .hero{ text-align:center; padding:28px 10px 20px; }
@@ -190,15 +200,6 @@
   .tag-damma{ background:var(--purple-bg); color:#5b3d80; }
   .tag-varies{ background:var(--parchment-deep); color:var(--ink-brown); }
 
-  /* ===== Fun-fact / note box ===== */
-  .note-box{
-    background:var(--green-bg); border:1.5px solid var(--green); border-radius:12px;
-    padding:16px 20px; margin-top:10px;
-  }
-  .note-box .note-title{ font-weight:700; color:var(--green); margin:0 0 8px; font-size:calc(14.5px * var(--scale)); }
-  .note-box p{ margin:0; font-size:calc(14px * var(--scale)); }
-  .note-box .term-pair{ font-family:'Amiri', serif; direction:rtl; display:inline-block; }
-
   hr.divider{ border:none; border-top:2px dashed var(--gold-soft); margin:38px 0; }
 
   /* ===== Stepper ===== */
@@ -293,6 +294,7 @@
 
   .quiz-summary{ display:none; text-align:center; }
   .quiz-summary.show{ display:block; }
+  .quiz-summary .score-title{ font-size:calc(17px * var(--scale)); font-weight:700; color:var(--green); margin:0 0 4px; }
   .quiz-summary .score-pct{ font-family:'Amiri', serif; font-weight:700; font-size:calc(46px * var(--scale)); color:var(--ink-navy); margin:6px 0; }
   .quiz-summary .score-msg{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin-bottom:18px; }
   .review-grid{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:16px 0; }
@@ -320,34 +322,38 @@
 
 <a href="/" class="back-home">← Diin Islaam</a>
 
-<div id="name-gate">
-  <div class="name-gate">
-    <label for="student-name-input">Enter your name to begin · اكتب اسمك قبل البدء</label>
-    <input type="text" id="student-name-input" placeholder="Your name · اسمك" autocomplete="off">
-    <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
-    <button id="name-start-btn">Start · ابدأ</button>
+<div class="topbar">
+  <div class="topbar-title">
+    <span class="ar">بَابُ الْمُعْرَبِ وَالْمَبْنِيّ</span>
+    <span class="en">Week 2 · Declinable &amp; Indeclinable Words</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-pill" id="lang-en-btn">English</button>
+    <button class="lang-pill" id="lang-ar-btn">العربية</button>
   </div>
 </div>
 
-<div id="main-content" style="display:none;">
+<div class="wrap">
 
-  <p class="welcome-bar" id="welcome-bar">
-    <span id="welcome-line"></span>
-    <a href="nahw.html" class="switch-link">🔀 Switch to Week 1 · أحكام الكلمة (Ahkam al-Kalimah)</a>
-  </p>
-
-  <div class="topbar">
-    <div class="topbar-title">
-      <span class="ar">بَابُ الْمُعْرَبِ وَالْمَبْنِيّ</span>
-      <span class="en">Week 2 · Declinable &amp; Indeclinable Words</span>
-    </div>
-    <div class="lang-toggle">
-      <button class="lang-pill" id="lang-en-btn">English</button>
-      <button class="lang-pill" id="lang-ar-btn">العربية</button>
+  <div id="name-gate">
+    <div class="name-gate-box">
+      <label for="student-name-input" id="name-gate-label">Enter your name to begin · اكتب اسمك قبل البدء</label>
+      <input type="text" id="student-name-input" placeholder="Your name · اسمك" autocomplete="off">
+      <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
+      <button id="name-start-btn">Start · ابدأ</button>
     </div>
   </div>
 
-  <div class="wrap">
+  <div class="welcome-banner" id="welcome-banner" style="display:none;">
+    <p class="welcome-line" id="welcome-line"></p>
+    <p class="welcome-quote" id="welcome-quote">
+      <span class="quote-ar" id="welcome-quote-ar"></span>
+      <span class="quote-en" id="welcome-quote-en"></span>
+    </p>
+    <a href="nahw.html" class="switch-link">🔀 Switch to Week 1 · أحكام الكلمة (Ahkam al-Kalimah)</a>
+  </div>
+
+  <div id="main-content" style="display:none;">
 
     <div class="step-progress-row">
       <span id="step-progress-text">Step 1 / 11</span>
@@ -362,58 +368,22 @@
     </div>
 
     <footer class="foot">أحكام الكلمة · باب المعرب والمبني</footer>
-  </div>
 
-  <footer class="site-footer">
-    <div class="flinks">
-      <a href="nahw.html">Week 1 · Ahkam al-Kalimah</a>
-      <a href="apps.html">Apps</a>
-      <a href="mailto:fesbackups@gmail.com">Contact</a>
-    </div>
-    <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
-  </footer>
+    <footer class="site-footer">
+      <div class="flinks">
+        <a href="nahw.html">Week 1 · Ahkam al-Kalimah</a>
+        <a href="apps.html">Apps</a>
+        <a href="mailto:fesbackups@gmail.com">Contact</a>
+      </div>
+      <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+    </footer>
+
+  </div>
 
 </div>
 
 <script>
 document.getElementById('year') && (document.getElementById('year').textContent = new Date().getFullYear());
-
-/* ---------- shared name (same key nahw.html uses) ---------- */
-var NAHW_NAME_KEY = 'diinislaam_nahw_name';
-var nameGate = document.getElementById('name-gate');
-var mainContent = document.getElementById('main-content');
-var studentName = '';
-
-function revealMainContent(){
-  nameGate.style.display = 'none';
-  mainContent.style.display = 'block';
-  document.getElementById('welcome-line').textContent = '🌟 Welcome back, ' + studentName + '! أهلاً بك ·';
-}
-
-var savedName = localStorage.getItem(NAHW_NAME_KEY);
-if (savedName){
-  studentName = savedName;
-  revealMainContent();
-} else {
-  document.getElementById('student-name-input').focus();
-}
-
-document.getElementById('name-start-btn').addEventListener('click', function(){
-  var input = document.getElementById('student-name-input');
-  var name = input.value.trim();
-  if (!name){
-    document.getElementById('name-warning').style.display = 'block';
-    input.focus();
-    return;
-  }
-  document.getElementById('name-warning').style.display = 'none';
-  studentName = name;
-  localStorage.setItem(NAHW_NAME_KEY, name);
-  revealMainContent();
-});
-document.getElementById('student-name-input').addEventListener('keydown', function(e){
-  if (e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
-});
 
 /* ===================== SOUND ENGINE ===================== */
 var audioCtx = null;
@@ -452,6 +422,91 @@ function playWrongSound(){
   playNote(ctx, 196.00, t, 0.2, 'sawtooth', 0.11);
   playNote(ctx, 174.61, t + 0.13, 0.24, 'sawtooth', 0.11);
 }
+
+/* ===================== SHARED LOGIN (same key + look as nahw.html) ===================== */
+var NAHW_NAME_KEY = 'diinislaam_nahw_name';
+var studentName = '';
+
+var ENCOURAGEMENT_QUOTES = [
+  { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "“Whoever follows a path in seeking knowledge, Allah makes easy for him a path to Paradise.” — Sahih Muslim" },
+  { ar: "وَقُل رَّبِّ زِدْنِي عِلْمًا", en: "“My Lord, increase me in knowledge.” — Qur'an 20:114" },
+  { ar: "طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ", en: "“Seeking knowledge is an obligation upon every Muslim.” — Ibn Mājah" },
+  { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "“The best among you are those who learn the Qur'an and teach it.” — Sahih al-Bukhari" },
+  { ar: "الْعِلْمُ نُورٌ", en: "“Knowledge is light.”" },
+  { ar: "يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ", en: "“Allah will raise those who have believed among you and those who were given knowledge, in degrees.” — Qur'an 58:11" },
+  { ar: "إِنَّمَا يَخْشَى اللَّهَ مِنْ عِبَادِهِ الْعُلَمَاءُ", en: "“It is only those with knowledge among His servants who truly fear Allah.” — Qur'an 35:28" },
+  { ar: "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي وَعَلِّمْنِي مَا يَنْفَعُنِي وَزِدْنِي عِلْمًا", en: "“O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.” — Ibn Mājah" }
+];
+
+var lastQuoteIndex = -1;
+function pickQuote(){
+  var idx;
+  do { idx = Math.floor(Math.random() * ENCOURAGEMENT_QUOTES.length); } while(idx === lastQuoteIndex);
+  lastQuoteIndex = idx;
+  return ENCOURAGEMENT_QUOTES[idx];
+}
+
+var WELCOME_LINE_TEMPLATES_EN = [
+  function(n){ return "🌟 Well done for showing up, " + n + "! أحسنت"; },
+  function(n){ return "🌟 Keep going, " + n + "! أنت رائع"; },
+  function(n){ return "🌟 Proud of you, " + n + "! بالتوفيق"; }
+];
+var WELCOME_LINE_TEMPLATES_AR = [
+  function(n){ return "🌟 بالتوفيق يا " + n + "! Keep going"; },
+  function(n){ return "🌟 أحسنت يا " + n + "! Well done"; },
+  function(n){ return "🌟 استمر يا " + n + "! You're doing great"; }
+];
+
+function showWelcomeBanner(){
+  var templates = (currentLang === 'ar') ? WELCOME_LINE_TEMPLATES_AR : WELCOME_LINE_TEMPLATES_EN;
+  var line = templates[Math.floor(Math.random() * templates.length)](studentName);
+  var quote = pickQuote();
+  document.getElementById('welcome-line').textContent = line;
+  document.getElementById('welcome-quote-ar').textContent = quote.ar;
+  document.getElementById('welcome-quote-en').textContent = quote.en;
+  document.getElementById('welcome-banner').style.display = 'block';
+}
+
+function speakResult(name, correctCount, total, pct, lang){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  var text, voiceLang;
+  if(lang === 'ar'){
+    text = 'أحسنت يا ' + name + '! لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.';
+    voiceLang = 'ar-SA';
+  } else {
+    text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+    voiceLang = 'en-US';
+  }
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang = voiceLang;
+  utter.rate = 0.95;
+  window.speechSynthesis.speak(utter);
+}
+
+function revealMainContent(){
+  document.getElementById('name-gate').style.display = 'none';
+  document.getElementById('main-content').style.display = '';
+  showWelcomeBanner();
+  renderStep(0);
+}
+
+document.getElementById('name-start-btn').addEventListener('click', function(){
+  var input = document.getElementById('student-name-input');
+  var name = input.value.trim();
+  if(!name){
+    document.getElementById('name-warning').style.display = 'block';
+    input.focus();
+    return;
+  }
+  document.getElementById('name-warning').style.display = 'none';
+  studentName = name;
+  localStorage.setItem(NAHW_NAME_KEY, name);
+  revealMainContent();
+});
+document.getElementById('student-name-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
+});
 
 var LESSONS_EN = [
 `<div class="hero">
@@ -805,111 +860,111 @@ var tenNounsAR = [
 
 
 var module1QuizEN = [
-  { q: "Every word in Arabic is classified, regarding its ending, into two categories. What are they?", options: ["Singular / plural", "Muʿrab / Mabni (declinable / indeclinable)", "Definite / indefinite", "Noun / verb"], correct: 1, explanation: "Every word is first classified as either مُعرَب (its ending changes) or مبني (its ending stays fixed)." },
-  { q: "What defines a مُعرَب (declinable) word?", options: ["It is always a noun", "It always ends in sukūn", "It cannot take a preposition", "Its ending changes according to its grammatical position"], correct: 3, explanation: "مُعرَب: كلمة يتغيّر آخرها بتغيّر موقعها، نحو: محمدٌ يذهبُ (رفع)، لن يذهبَ (نصب)، لم يذهبْ (جزم)." },
-  { q: "What defines a مبني (indeclinable) word?", options: ["Its ending never changes, no matter its position", "It only appears in the past tense", "It always ends in ḍamm", "It cannot be a pronoun"], correct: 0, explanation: "مبني: كلمة تلزم حالة واحدة ثابتة، نحو: (هذا) تبقى كما هي في: هذا ذهبَ، وسلّمتُ على هذا." },
-  { q: "Which of these categories is ALWAYS mabni, without exception?", options: ["Only proper nouns", "Nouns (الأسماء)", "Present-tense verbs (الفعل المضارع)", "Particles (الحروف), past-tense verbs, and imperative verbs"], correct: 3, explanation: "الحروف وأفعال الماضي والأمر كلها مبنية دائماً؛ أما الأسماء والمضارع فبعضها معرب وبعضها مبني." },
-  { q: "Which particles are built on sukūn?", options: ["لام الجر، باء الجر", "سوف، واو العطف", "مِن، قَدْ، لَنْ، يا", "مُنْذُ"], correct: 2, explanation: "مِن وقَدْ ولَنْ ويا كلها حروف مبنية على السكون." },
-  { q: "Which particles are built on fatḥ?", options: ["لام الجر، باء الجر، لام الأمر", "سَوْفَ، واو العطف، همزة الاستفهام", "مُنْذُ", "مِن، قَدْ"], correct: 1, explanation: "سَوْفَ وواو العطف وهمزة الاستفهام حروف مبنية على الفتح." },
-  { q: "Which particles are built on kasr?", options: ["سَوْفَ", "مُنْذُ", "مِن، قَدْ، لَنْ", "لام الجر، باء الجر، لام الأمر"], correct: 3, explanation: "لام الجر وباء الجر ولام الأمر حروف مبنية على الكسر." },
+  { q: "Every word in Arabic is classified, regarding its ending, into two categories. What are they?", options: ["Definite / indefinite", "Singular / plural", "Muʿrab / Mabni (declinable / indeclinable)", "Noun / verb"], correct: 2, explanation: "Every word is first classified as either مُعرَب (declinable) or مبني (indeclinable)." },
+  { q: "What defines a مُعرَب (declinable) word?", options: ["It always ends in sukūn", "Its ending changes according to its grammatical position", "It is always a noun", "It cannot take a preposition"], correct: 1, explanation: "مُعرَب: a word whose final vowel/ending changes depending on its role in the sentence." },
+  { q: "What defines a مبني (indeclinable) word?", options: ["Its ending never changes, no matter its position", "It cannot be a pronoun", "It only appears in the past tense", "It always ends in ḍamm"], correct: 0, explanation: "مبني: a word that keeps one fixed ending regardless of its role, e.g. هذا stays the same in هذا ذهبَ and سلّمتُ على هذا." },
+  { q: "Which of these categories is ALWAYS mabni, without exception?", options: ["Nouns (الأسماء)", "Present-tense verbs (الفعل المضارع)", "Particles (الحروف), past-tense verbs, and imperative verbs", "Only proper nouns"], correct: 2, explanation: "الحروف وأفعال الماضي والأمر كلها مبنية دائماً؛ أما الأسماء والمضارع فبعضها معرب وبعضها مبني." },
+  { q: "Which particles are built on sukūn?", options: ["مُنْذُ", "سوف، واو العطف", "مِن، قَدْ، لَنْ، يا", "لام الجر، باء الجر"], correct: 2, explanation: "مِن وقَدْ ولَنْ ويا كلها حروف مبنية على السكون." },
+  { q: "Which particles are built on fatḥ?", options: ["سَوْفَ، واو العطف، همزة الاستفهام", "مِن، قَدْ", "لام الجر، باء الجر، لام الأمر", "مُنْذُ"], correct: 0, explanation: "سَوْفَ وواو العطف وهمزة الاستفهام حروف مبنية على الفتح." },
+  { q: "Which particles are built on kasr?", options: ["مِن، قَدْ، لَنْ", "سَوْفَ", "مُنْذُ", "لام الجر، باء الجر، لام الأمر"], correct: 3, explanation: "لام الجر وباء الجر ولام الأمر حروف مبنية على الكسر." },
   { q: "Which particle is built on ḍamm?", options: ["مُنْذُ", "سَوْفَ", "يا", "لَنْ"], correct: 0, explanation: "مُنْذُ هو الحرف المبني على الضم من بين هذه الحروف." },
-  { q: "What is the default (visible) building case for the past-tense verb?", options: ["Sukūn", "Kasr", "Fatḥ (ظاهر)", "Ḍamm"], correct: 2, explanation: "الأصل في الفعل الماضي أن يُبنى على الفتح الظاهر، نحو: سَجَدَ، دَحْرَجَ." },
-  { q: "A past-tense verb ending in alif, like دَعا, is built on:", options: ["Sukūn", "Estimated (hidden) fatḥ", "Kasr", "Ḍamm"], correct: 1, explanation: "إذا كان آخر الماضي ألفاً، يُبنى على الفتح المقدّر لتعذر ظهوره على الألف، نحو: دَعا، صَلَّى." },
-  { q: "When واو الجماعة is attached to a past verb, like سَجَدُوا, the verb is built on:", options: ["Kasr", "Sukūn", "Ḍamm", "Estimated fatḥ"], correct: 3, explanation: "اتصال واو الجماعة يجعل الماضي مبنياً على الفتح المقدّر، نحو: سَجَدُوا، دَحْرَجُوا." },
-  { q: "When a moving nominative pronoun (تاء الفاعل, نا, or نون النسوة) attaches to a past verb, like سَجَدْتُ, it is built on:", options: ["Estimated fatḥ", "Kasr", "Ḍamm", "Sukūn"], correct: 3, explanation: "اتصال ضمير الرفع المتحرك يجعل الماضي مبنياً على السكون، نحو: سَجَدْتُ، سَجَدْنا، سَجَدْنَ." },
-  { q: "If the imperative's present-tense form is one of the 'five verbs' (like تفعلون), the imperative is built by:", options: ["Dropping the weak letter", "Sukūn", "Dropping the nūn", "Fatḥ"], correct: 2, explanation: "إذا كان المضارع من الأفعال الخمسة، يُبنى الأمر على حذف النون، نحو: اسجدوا، اسجدي." },
-  { q: "If the imperative's present-tense form ends in a weak letter (معتل الآخر), like يدعو, the imperative is built by:", options: ["Dropping the weak letter", "Fatḥ", "Sukūn", "Dropping the nūn"], correct: 0, explanation: "إذا كان المضارع معتل الآخر، يُبنى الأمر على حذف حرف العلة، نحو: ادعُ، اقضِ، اخشَ." },
-  { q: "In every other case (no five-verbs form, not weak-ended, no confirming nūn), the imperative is built on:", options: ["Kasr", "Ḍamm", "Sukūn", "Fatḥ"], correct: 2, explanation: "الأصل في بناء فعل الأمر خارج الحالات الثلاث السابقة هو السكون، نحو: اسجُدْ، اذهبْ." }
+  { q: "What is the default (visible) building case for the past-tense verb?", options: ["Sukūn", "Ḍamm", "Fatḥ (ظاهر)", "Kasr"], correct: 2, explanation: "الأصل في الفعل الماضي أن يُبنى على الفتح الظاهر، نحو: سَجَدَ، دَحْرَجَ." },
+  { q: "A past-tense verb ending in alif, like دَعا, is built on:", options: ["Kasr", "Estimated (hidden) fatḥ", "Sukūn", "Ḍamm"], correct: 1, explanation: "إذا كان آخر الماضي ألفاً، يُبنى على الفتح المقدّر لتعذر ظهوره على الألف، نحو: دَعا، صَلَّى." },
+  { q: "When واو الجماعة is attached to a past verb, like سَجَدُوا, the verb is built on:", options: ["Sukūn", "Kasr", "Ḍamm", "Estimated fatḥ"], correct: 3, explanation: "اتصال واو الجماعة يجعل الماضي مبنياً على الفتح المقدّر، نحو: سَجَدُوا، دَحْرَجُوا." },
+  { q: "When a moving nominative pronoun (تاء الفاعل, نا, or نون النسوة) attaches to a past verb, like سَجَدْتُ, it is built on:", options: ["Estimated fatḥ", "Sukūn", "Kasr", "Ḍamm"], correct: 1, explanation: "اتصال ضمير الرفع المتحرك يجعل الماضي مبنياً على السكون، نحو: سَجَدْتُ، سَجَدْنا، سَجَدْنَ." },
+  { q: "If the imperative's present-tense form is one of the 'five verbs' (like تفعلون), the imperative is built by:", options: ["Sukūn", "Dropping the nūn", "Fatḥ", "Dropping the weak letter"], correct: 1, explanation: "إذا كان المضارع من الأفعال الخمسة، يُبنى الأمر على حذف النون، نحو: اسجدوا، اسجدي." },
+  { q: "If the imperative's present-tense form ends in a weak letter (معتل الآخر), like يدعو, the imperative is built by:", options: ["Dropping the weak letter", "Sukūn", "Fatḥ", "Dropping the nūn"], correct: 0, explanation: "إذا كان المضارع معتل الآخر، يُبنى الأمر على حذف حرف العلة، نحو: ادعُ، اقضِ، اخشَ." },
+  { q: "In every other case (no five-verbs form, not weak-ended, no confirming nūn), the imperative is built on:", options: ["Fatḥ", "Kasr", "Ḍamm", "Sukūn"], correct: 3, explanation: "الأصل في بناء فعل الأمر خارج الحالات الثلاث السابقة هو السكون، نحو: اسجُدْ، اذهبْ." }
 ];
 
 var module1QuizAR = [
-  { q: "تنقسم الكلمة في العربية بحسب آخرها إلى قسمين، ما هما؟", options: ["مفرد وجمع", "معرب ومبني", "معرفة ونكرة", "اسم وفعل"], correct: 1, explanation: "تنقسم الكلمة أولاً إلى معرب (يتغيّر آخرها) ومبني (يلزم آخرها حالة واحدة)." },
-  { q: "ما تعريف الكلمة المُعرَبة؟", options: ["هي دائماً اسم", "تنتهي دائماً بالسكون", "لا يدخل عليها حرف جر", "يتغيّر آخرها بحسب موقعها الإعرابي"], correct: 3, explanation: "مُعرَب: كلمة يتغيّر آخرها بتغيّر موقعها، نحو: محمدٌ يذهبُ (رفع)، لن يذهبَ (نصب)، لم يذهبْ (جزم)." },
-  { q: "ما تعريف الكلمة المبنية؟", options: ["لا يتغيّر آخرها مهما تغيّر موقعها", "لا تكون إلا فعلاً ماضياً", "تنتهي دائماً بالضم", "لا يمكن أن تكون ضميراً"], correct: 0, explanation: "مبني: كلمة تلزم حالة واحدة ثابتة، نحو: (هذا) تبقى كما هي في: هذا ذهبَ، وسلّمتُ على هذا." },
-  { q: "أي من هذه الفئات مبنية دائماً بلا استثناء؟", options: ["الأعلام فقط", "الأسماء", "الفعل المضارع", "الحروف والفعل الماضي وفعل الأمر"], correct: 3, explanation: "الحروف وأفعال الماضي والأمر كلها مبنية دائماً؛ أما الأسماء والمضارع فبعضها معرب وبعضها مبني." },
-  { q: "أي الحروف مبنية على السكون؟", options: ["لام الجر، باء الجر", "سوف، واو العطف", "مِن، قَدْ، لَنْ، يا", "مُنْذُ"], correct: 2, explanation: "مِن وقَدْ ولَنْ ويا كلها حروف مبنية على السكون." },
-  { q: "أي الحروف مبنية على الفتح؟", options: ["لام الجر، باء الجر، لام الأمر", "سَوْفَ، واو العطف، همزة الاستفهام", "مُنْذُ", "مِن، قَدْ"], correct: 1, explanation: "سَوْفَ وواو العطف وهمزة الاستفهام حروف مبنية على الفتح." },
-  { q: "أي الحروف مبنية على الكسر؟", options: ["سَوْفَ", "مُنْذُ", "مِن، قَدْ، لَنْ", "لام الجر، باء الجر، لام الأمر"], correct: 3, explanation: "لام الجر وباء الجر ولام الأمر حروف مبنية على الكسر." },
+  { q: "تنقسم الكلمة في العربية بحسب آخرها إلى قسمين، ما هما؟", options: ["معرفة ونكرة", "مفرد وجمع", "معرب ومبني", "اسم وفعل"], correct: 2, explanation: "تنقسم الكلمة أولاً إلى معرب (يتغيّر آخرها) ومبني (يلزم آخرها حالة واحدة)." },
+  { q: "ما تعريف الكلمة المُعرَبة؟", options: ["تنتهي دائماً بالسكون", "يتغيّر آخرها بحسب موقعها الإعرابي", "هي دائماً اسم", "لا يدخل عليها حرف جر"], correct: 1, explanation: "المُعرَب: كلمة يتغيّر آخرها بتغيّر موقعها، نحو: محمدٌ يذهبُ (رفع)، لن يذهبَ (نصب)، لم يذهبْ (جزم)." },
+  { q: "ما تعريف الكلمة المبنية؟", options: ["لا يتغيّر آخرها مهما تغيّر موقعها", "لا يمكن أن تكون ضميراً", "لا تكون إلا فعلاً ماضياً", "تنتهي دائماً بالضم"], correct: 0, explanation: "المبني: كلمة تلزم حالة واحدة ثابتة، نحو: (هذا) تبقى كما هي في: هذا ذهبَ، وسلّمتُ على هذا." },
+  { q: "أي من هذه الفئات مبنية دائماً بلا استثناء؟", options: ["الأسماء", "الفعل المضارع", "الحروف والفعل الماضي وفعل الأمر", "الأعلام فقط"], correct: 2, explanation: "الحروف وأفعال الماضي والأمر كلها مبنية دائماً؛ أما الأسماء والمضارع فبعضها معرب وبعضها مبني." },
+  { q: "أي الحروف مبنية على السكون؟", options: ["مُنْذُ", "سوف، واو العطف", "مِن، قَدْ، لَنْ، يا", "لام الجر، باء الجر"], correct: 2, explanation: "مِن وقَدْ ولَنْ ويا كلها حروف مبنية على السكون." },
+  { q: "أي الحروف مبنية على الفتح؟", options: ["سَوْفَ، واو العطف، همزة الاستفهام", "مِن، قَدْ", "لام الجر، باء الجر، لام الأمر", "مُنْذُ"], correct: 0, explanation: "سَوْفَ وواو العطف وهمزة الاستفهام حروف مبنية على الفتح." },
+  { q: "أي الحروف مبنية على الكسر؟", options: ["مِن، قَدْ، لَنْ", "سَوْفَ", "مُنْذُ", "لام الجر، باء الجر، لام الأمر"], correct: 3, explanation: "لام الجر وباء الجر ولام الأمر حروف مبنية على الكسر." },
   { q: "أي حرف مبني على الضم؟", options: ["مُنْذُ", "سَوْفَ", "يا", "لَنْ"], correct: 0, explanation: "مُنْذُ هو الحرف المبني على الضم من بين هذه الحروف." },
-  { q: "ما هي حالة بناء الفعل الماضي الأصلية (الظاهرة)؟", options: ["السكون", "الكسر", "الفتح الظاهر", "الضم"], correct: 2, explanation: "الأصل في الفعل الماضي أن يُبنى على الفتح الظاهر، نحو: سَجَدَ، دَحْرَجَ." },
-  { q: "الفعل الماضي الذي ينتهي بألف، مثل (دَعا)، يُبنى على:", options: ["السكون", "الفتح المقدّر", "الكسر", "الضم"], correct: 1, explanation: "إذا كان آخر الماضي ألفاً، يُبنى على الفتح المقدّر لتعذر ظهوره على الألف، نحو: دَعا، صَلَّى." },
-  { q: "إذا اتصلت واو الجماعة بالفعل الماضي، كما في (سَجَدُوا)، يُبنى الفعل على:", options: ["الكسر", "السكون", "الضم", "الفتح المقدّر"], correct: 3, explanation: "اتصال واو الجماعة يجعل الماضي مبنياً على الفتح المقدّر، نحو: سَجَدُوا، دَحْرَجُوا." },
-  { q: "إذا اتصل بالفعل الماضي ضمير رفع متحرك (تاء الفاعل أو نا أو نون النسوة)، كما في (سَجَدْتُ)، يُبنى على:", options: ["الفتح المقدّر", "الكسر", "الضم", "السكون"], correct: 3, explanation: "اتصال ضمير الرفع المتحرك يجعل الماضي مبنياً على السكون، نحو: سَجَدْتُ، سَجَدْنا، سَجَدْنَ." },
-  { q: "إذا كان مضارع فعل الأمر من الأفعال الخمسة (مثل تفعلون)، يُبنى الأمر على:", options: ["حذف حرف العلة", "السكون", "حذف النون", "الفتح"], correct: 2, explanation: "إذا كان المضارع من الأفعال الخمسة، يُبنى الأمر على حذف النون، نحو: اسجدوا، اسجدي." },
-  { q: "إذا كان مضارع فعل الأمر معتل الآخر (مثل يدعو)، يُبنى الأمر على:", options: ["حذف حرف العلة", "الفتح", "السكون", "حذف النون"], correct: 0, explanation: "إذا كان المضارع معتل الآخر، يُبنى الأمر على حذف حرف العلة، نحو: ادعُ، اقضِ، اخشَ." },
-  { q: "فيما عدا الحالات السابقة، يُبنى فعل الأمر على:", options: ["الكسر", "الضم", "السكون", "الفتح"], correct: 2, explanation: "الأصل في بناء فعل الأمر خارج الحالات الثلاث السابقة هو السكون، نحو: اسجُدْ، اذهبْ." }
+  { q: "ما هي حالة بناء الفعل الماضي الأصلية (الظاهرة)؟", options: ["السكون", "الضم", "الفتح الظاهر", "الكسر"], correct: 2, explanation: "الأصل في الفعل الماضي أن يُبنى على الفتح الظاهر، نحو: سَجَدَ، دَحْرَجَ." },
+  { q: "الفعل الماضي الذي ينتهي بألف، مثل (دَعا)، يُبنى على:", options: ["الكسر", "الفتح المقدّر", "السكون", "الضم"], correct: 1, explanation: "إذا كان آخر الماضي ألفاً، يُبنى على الفتح المقدّر لتعذر ظهوره على الألف، نحو: دَعا، صَلَّى." },
+  { q: "إذا اتصلت واو الجماعة بالفعل الماضي، كما في (سَجَدُوا)، يُبنى الفعل على:", options: ["السكون", "الكسر", "الضم", "الفتح المقدّر"], correct: 3, explanation: "اتصال واو الجماعة يجعل الماضي مبنياً على الفتح المقدّر، نحو: سَجَدُوا، دَحْرَجُوا." },
+  { q: "إذا اتصل بالفعل الماضي ضمير رفع متحرك (تاء الفاعل أو نا أو نون النسوة)، كما في (سَجَدْتُ)، يُبنى على:", options: ["الفتح المقدّر", "السكون", "الكسر", "الضم"], correct: 1, explanation: "اتصال ضمير الرفع المتحرك يجعل الماضي مبنياً على السكون، نحو: سَجَدْتُ، سَجَدْنا، سَجَدْنَ." },
+  { q: "إذا كان مضارع فعل الأمر من الأفعال الخمسة (مثل تفعلون)، يُبنى الأمر على:", options: ["السكون", "حذف النون", "الفتح", "حذف حرف العلة"], correct: 1, explanation: "إذا كان المضارع من الأفعال الخمسة، يُبنى الأمر على حذف النون، نحو: اسجدوا، اسجدي." },
+  { q: "إذا كان مضارع فعل الأمر معتل الآخر (مثل يدعو)، يُبنى الأمر على:", options: ["حذف حرف العلة", "السكون", "الفتح", "حذف النون"], correct: 0, explanation: "إذا كان المضارع معتل الآخر، يُبنى الأمر على حذف حرف العلة، نحو: ادعُ، اقضِ، اخشَ." },
+  { q: "فيما عدا الحالات السابقة، يُبنى فعل الأمر على:", options: ["الفتح", "الكسر", "الضم", "السكون"], correct: 3, explanation: "الأصل في بناء فعل الأمر خارج الحالات الثلاث السابقة هو السكون، نحو: اسجُدْ، اذهبْ." }
 ];
 
 var module2QuizEN = [
-  { q: "The present-tense verb (الفعل المضارع) is, by default:", options: ["Always mabni", "Always ending in sukūn", "Only used with commands", "Muʿrab (declinable)"], correct: 3, explanation: "الفعل المضارع معرب في الأصل، نحو: خالدٌ يذهبُ، ولن يذهبَ، ولم يذهبْ." },
-  { q: "When نون النسوة attaches to a present-tense verb, like يَسْجُدْنَ, it becomes mabni on:", options: ["Ḍamm", "Sukūn", "Fatḥ", "Kasr"], correct: 1, explanation: "اتصال نون النسوة يجعل المضارع مبنياً على السكون." },
-  { q: "When نون التوكيد attaches to a present-tense verb, like هل تسجدَنَّ؟, it becomes mabni on:", options: ["Sukūn", "Ḍamm", "Kasr", "Fatḥ"], correct: 3, explanation: "اتصال نون التوكيد يجعل المضارع مبنياً على الفتح." },
-  { q: "Which of these is one of the ten categories of mabni nouns?", options: ["Broken plurals", "Pronouns (الضمائر)", "Diminutive nouns", "Proper nouns (الأعلام) in general"], correct: 1, explanation: "الضمائر هي النوع الأول من الأسماء العشرة المبنية." },
-  { q: "Demonstrative nouns (اسم الإشارة) are mabni EXCEPT:", options: ["The singular forms", "The plural forms", "The dual forms (هذانِ، هاتانِ)", "They are never an exception"], correct: 2, explanation: "أسماء الإشارة كلها مبنية إلا المثنى (هذانِ وهاتانِ)، فهو معرب إعراب المثنى." },
-  { q: "Relative nouns (الأسماء الموصولة), like الذي and التي, are mabni EXCEPT:", options: ["The feminine forms", "The plural forms", "The dual forms (اللذانِ، اللتانِ)", "There is no exception"], correct: 2, explanation: "الأسماء الموصولة كلها مبنية إلا المثنى (اللذانِ واللتانِ)، فهو معرب إعراب المثنى." },
-  { q: "Interrogative nouns (أسماء الاستفهام) are all mabni EXCEPT:", options: ["أيّ", "مَن", "كيف", "ما"], correct: 0, explanation: "أسماء الاستفهام مبنية كلها عدا (أيّ)، فهي معربة بالحركات الأصلية." },
-  { q: "Which of these is an example of اسم الفعل (a verb-noun)?", options: ["الذي", "مَن", "هذا", "هيهاتَ"], correct: 3, explanation: "هيهاتَ من أسماء الأفعال، وهي ألفاظ أسماء لكنّ معناها معنى الفعل." },
-  { q: "Which noun type is mabni on kasr because it ends in ـويه (like سيبويه)?", options: ["A proper noun ending in ويه", "Compound numbers", "Verb-nouns", "Compound adverbs"], correct: 0, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه، خالويه." },
-  { q: "Compound numbers from 11 to 19 (except 12) are built on:", options: ["Kasr on both parts", "Fatḥ on both parts", "Ḍamm on both parts", "Sukūn on both parts"], correct: 1, explanation: "الأعداد المركبة مثل (أحد عشر) تُبنى على فتح الجزأين معاً." },
+  { q: "The present-tense verb (الفعل المضارع) is, by default:", options: ["Only used with commands", "Muʿrab (declinable)", "Always ending in sukūn", "Always mabni"], correct: 1, explanation: "الفعل المضارع معرب في الأصل، نحو: خالدٌ يذهبُ، ولن يذهبَ، ولم يذهبْ." },
+  { q: "When نون النسوة attaches to a present-tense verb, like يَسْجُدْنَ, it becomes mabni on:", options: ["Sukūn", "Kasr", "Ḍamm", "Fatḥ"], correct: 0, explanation: "اتصال نون النسوة يجعل المضارع مبنياً على السكون." },
+  { q: "When نون التوكيد attaches to a present-tense verb, like هل تسجدَنَّ؟, it becomes mabni on:", options: ["Ḍamm", "Sukūn", "Fatḥ", "Kasr"], correct: 2, explanation: "اتصال نون التوكيد يجعل المضارع مبنياً على الفتح." },
+  { q: "Which of these is one of the ten categories of mabni nouns?", options: ["Diminutive nouns", "Proper nouns (الأعلام) in general", "Pronouns (الضمائر)", "Broken plurals"], correct: 2, explanation: "الضمائر هي النوع الأول من الأسماء العشرة المبنية." },
+  { q: "Demonstrative nouns (اسم الإشارة) are mabni EXCEPT:", options: ["The singular forms", "The dual forms (هذانِ، هاتانِ)", "The plural forms", "They are never an exception"], correct: 1, explanation: "أسماء الإشارة كلها مبنية إلا المثنى (هذانِ وهاتانِ)، فهو معرب إعراب المثنى." },
+  { q: "Relative nouns (الأسماء الموصولة), like الذي and التي, are mabni EXCEPT:", options: ["The feminine forms", "There is no exception", "The plural forms", "The dual forms (اللذانِ، اللتانِ)"], correct: 3, explanation: "الأسماء الموصولة كلها مبنية إلا المثنى (اللذانِ واللتانِ)، فهو معرب إعراب المثنى." },
+  { q: "Interrogative nouns (أسماء الاستفهام) are all mabni EXCEPT:", options: ["ما", "كيف", "مَن", "أيّ"], correct: 3, explanation: "أسماء الاستفهام مبنية كلها عدا (أيّ)، فهي معربة بالحركات الأصلية." },
+  { q: "Which of these is an example of اسم الفعل (a verb-noun)?", options: ["هذا", "هيهاتَ", "الذي", "مَن"], correct: 1, explanation: "هيهاتَ من أسماء الأفعال، وهي ألفاظ أسماء لكنّ معناها معنى الفعل." },
+  { q: "Which noun type is mabni on kasr because it ends in ـويه (like سيبويه)?", options: ["Verb-nouns", "Compound numbers", "A proper noun ending in ويه", "Compound adverbs"], correct: 2, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه، خالويه." },
+  { q: "Compound numbers from 11 to 19 (except 12) are built on:", options: ["Fatḥ on both parts", "Ḍamm on both parts", "Kasr on both parts", "Sukūn on both parts"], correct: 0, explanation: "الأعداد المركبة مثل (أحد عشر) تُبنى على فتح الجزأين معاً." },
   { q: "Compound adverbs, like لَيْلَ نَهارَ, are built on:", options: ["Ḍamm on both parts", "Sukūn on both parts", "Fatḥ on both parts", "Kasr on both parts"], correct: 2, explanation: "الظروف المركبة تُبنى على فتح الجزأين، نحو: ليلَ نهارَ، صباحَ مساءَ." },
-  { q: "Among the individual (non-compound) adverbs, حَيْثُ is built on:", options: ["Sukūn", "Kasr", "Fatḥ", "Ḍamm"], correct: 3, explanation: "حَيْثُ من الظروف المفردة المبنية، وهي مبنية على الضم." },
-  { q: "Among the individual adverbs, إذا and إذْ are built on:", options: ["Ḍamm", "Sukūn", "Kasr", "Fatḥ"], correct: 1, explanation: "إذا وإذْ من الظروف المفردة المبنية على السكون." },
-  { q: "What is the key terminology difference in how the grammatical ruling itself is named for muʿrab vs. mabni words?", options: ["Mabni words have no grammatical role at all", "Muʿrab uses 'marfūʿ/manṣūb/majrūr/majzūm'; mabni uses 'in the position of raf'/naṣb/jarr/jazm'", "There is no difference", "Only muʿrab words can be a subject"], correct: 1, explanation: "المعرب يوصف بـ(مرفوع، منصوب، مجرور، مجزوم)، أما المبني فيوصف بـ(في محل رفع، في محل نصب...) لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
-  { q: "How do the names of the vowels/sukūn differ between muʿrab and mabni words?", options: ["There is no difference in the names", "Only muʿrab words can take a sukūn", "Muʿrab: ḍammah/fatḥah/kasrah/sukūn (with ة); Mabni: ḍamm/fatḥ/kasr/sukūn (without ة)", "Mabni words use entirely different vowels"], correct: 2, explanation: "المعرب حركاته: ضمة، فتحة، كسرة، سكون. والمبني حركاته: ضم، فتح، كسر، سكون — بلا تاء مربوطة." }
+  { q: "Among the individual (non-compound) adverbs, حَيْثُ is built on:", options: ["Sukūn", "Ḍamm", "Kasr", "Fatḥ"], correct: 1, explanation: "حَيْثُ من الظروف المفردة المبنية، وهي مبنية على الضم." },
+  { q: "Among the individual adverbs, إذا and إذْ are built on:", options: ["Sukūn", "Ḍamm", "Kasr", "Fatḥ"], correct: 0, explanation: "إذا وإذْ من الظروف المفردة المبنية على السكون." },
+  { q: "What is the key terminology difference in how the grammatical ruling itself is named for muʿrab vs. mabni words?", options: ["Muʿrab uses 'marfūʿ/manṣūb/majrūr/majzūm'; mabni uses 'in the position of raf'/naṣb/jarr/jazm'", "Mabni words have no grammatical role at all", "There is no difference", "Only muʿrab words can be a subject"], correct: 0, explanation: "المعرب يوصف بـ(مرفوع، منصوب، مجرور، مجزوم)، أما المبني فيوصف بـ(في محل رفع، في محل نصب...) لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
+  { q: "How do the names of the vowels/sukūn differ between muʿrab and mabni words?", options: ["Mabni words use entirely different vowels", "There is no difference in the names", "Only muʿrab words can take a sukūn", "Muʿrab: ḍammah/fatḥah/kasrah/sukūn (with ة); Mabni: ḍamm/fatḥ/kasr/sukūn (without ة)"], correct: 3, explanation: "المعرب حركاته: ضمة، فتحة، كسرة، سكون. والمبني حركاته: ضم، فتح، كسر، سكون — بلا تاء مربوطة." }
 ];
 
 var module2QuizAR = [
-  { q: "الفعل المضارع في الأصل:", options: ["مبني دائماً", "ينتهي بالسكون دائماً", "خاص بالأمر فقط", "معرب"], correct: 3, explanation: "الفعل المضارع معرب في الأصل، نحو: خالدٌ يذهبُ، ولن يذهبَ، ولم يذهبْ." },
-  { q: "إذا اتصلت نون النسوة بالفعل المضارع، كما في (يَسْجُدْنَ)، يُصبح مبنياً على:", options: ["الضم", "السكون", "الفتح", "الكسر"], correct: 1, explanation: "اتصال نون النسوة يجعل المضارع مبنياً على السكون." },
-  { q: "إذا اتصلت نون التوكيد بالفعل المضارع، كما في (هل تسجدَنَّ؟)، يُصبح مبنياً على:", options: ["السكون", "الضم", "الكسر", "الفتح"], correct: 3, explanation: "اتصال نون التوكيد يجعل المضارع مبنياً على الفتح." },
-  { q: "أي مما يلي من الأسماء العشرة المبنية؟", options: ["جمع التكسير", "الضمائر", "اسم التصغير", "الأعلام عموماً"], correct: 1, explanation: "الضمائر هي النوع الأول من الأسماء العشرة المبنية." },
-  { q: "أسماء الإشارة مبنية إلا:", options: ["المفرد منها", "الجمع منها", "المثنى منها (هذانِ، هاتانِ)", "لا يوجد استثناء"], correct: 2, explanation: "أسماء الإشارة كلها مبنية إلا المثنى (هذانِ وهاتانِ)، فهو معرب إعراب المثنى." },
-  { q: "الأسماء الموصولة، مثل الذي والتي، مبنية إلا:", options: ["المؤنث منها", "الجمع منها", "المثنى منها (اللذانِ، اللتانِ)", "لا يوجد استثناء"], correct: 2, explanation: "الأسماء الموصولة كلها مبنية إلا المثنى (اللذانِ واللتانِ)، فهو معرب إعراب المثنى." },
-  { q: "أسماء الاستفهام كلها مبنية إلا:", options: ["أيّ", "مَن", "كيف", "ما"], correct: 0, explanation: "أسماء الاستفهام مبنية كلها عدا (أيّ)، فهي معربة بالحركات الأصلية." },
-  { q: "أي مما يلي مثال على اسم الفعل؟", options: ["الذي", "مَن", "هذا", "هيهاتَ"], correct: 3, explanation: "هيهاتَ من أسماء الأفعال، وهي ألفاظ أسماء لكنّ معناها معنى الفعل." },
-  { q: "أي نوع من الأسماء يُبنى على الكسر لأنه ينتهي بـ(ويه) مثل (سيبويه)؟", options: ["العلم المختوم بـ(ويه)", "الأعداد المركبة", "أسماء الأفعال", "الظروف المركبة"], correct: 0, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه، خالويه." },
-  { q: "الأعداد المركبة من ١١ إلى ١٩ (عدا ١٢) تُبنى على:", options: ["الكسر في الجزأين", "الفتح في الجزأين", "الضم في الجزأين", "السكون في الجزأين"], correct: 1, explanation: "الأعداد المركبة مثل (أحد عشر) تُبنى على فتح الجزأين معاً." },
+  { q: "الفعل المضارع في الأصل:", options: ["خاص بالأمر فقط", "معرب", "ينتهي بالسكون دائماً", "مبني دائماً"], correct: 1, explanation: "الفعل المضارع معرب في الأصل، نحو: خالدٌ يذهبُ، ولن يذهبَ، ولم يذهبْ." },
+  { q: "إذا اتصلت نون النسوة بالفعل المضارع، كما في (يَسْجُدْنَ)، يُصبح مبنياً على:", options: ["السكون", "الكسر", "الضم", "الفتح"], correct: 0, explanation: "اتصال نون النسوة يجعل المضارع مبنياً على السكون." },
+  { q: "إذا اتصلت نون التوكيد بالفعل المضارع، كما في (هل تسجدَنَّ؟)، يُصبح مبنياً على:", options: ["الضم", "السكون", "الفتح", "الكسر"], correct: 2, explanation: "اتصال نون التوكيد يجعل المضارع مبنياً على الفتح." },
+  { q: "أي مما يلي من الأسماء العشرة المبنية؟", options: ["اسم التصغير", "الأعلام عموماً", "الضمائر", "جمع التكسير"], correct: 2, explanation: "الضمائر هي النوع الأول من الأسماء العشرة المبنية." },
+  { q: "أسماء الإشارة مبنية إلا:", options: ["المفرد منها", "المثنى منها (هذانِ، هاتانِ)", "الجمع منها", "لا يوجد استثناء"], correct: 1, explanation: "أسماء الإشارة كلها مبنية إلا المثنى (هذانِ وهاتانِ)، فهو معرب إعراب المثنى." },
+  { q: "الأسماء الموصولة، مثل الذي والتي، مبنية إلا:", options: ["المؤنث منها", "لا يوجد استثناء", "الجمع منها", "المثنى منها (اللذانِ، اللتانِ)"], correct: 3, explanation: "الأسماء الموصولة كلها مبنية إلا المثنى (اللذانِ واللتانِ)، فهو معرب إعراب المثنى." },
+  { q: "أسماء الاستفهام كلها مبنية إلا:", options: ["ما", "كيف", "مَن", "أيّ"], correct: 3, explanation: "أسماء الاستفهام مبنية كلها عدا (أيّ)، فهي معربة بالحركات الأصلية." },
+  { q: "أي مما يلي مثال على اسم الفعل؟", options: ["هذا", "هيهاتَ", "الذي", "مَن"], correct: 1, explanation: "هيهاتَ من أسماء الأفعال، وهي ألفاظ أسماء لكنّ معناها معنى الفعل." },
+  { q: "أي نوع من الأسماء يُبنى على الكسر لأنه ينتهي بـ(ويه) مثل (سيبويه)؟", options: ["أسماء الأفعال", "الأعداد المركبة", "العلم المختوم بـ(ويه)", "الظروف المركبة"], correct: 2, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه، خالويه." },
+  { q: "الأعداد المركبة من ١١ إلى ١٩ (عدا ١٢) تُبنى على:", options: ["الفتح في الجزأين", "الضم في الجزأين", "الكسر في الجزأين", "السكون في الجزأين"], correct: 0, explanation: "الأعداد المركبة مثل (أحد عشر) تُبنى على فتح الجزأين معاً." },
   { q: "الظروف المركبة، مثل (لَيْلَ نَهارَ)، تُبنى على:", options: ["الضم في الجزأين", "السكون في الجزأين", "الفتح في الجزأين", "الكسر في الجزأين"], correct: 2, explanation: "الظروف المركبة تُبنى على فتح الجزأين، نحو: ليلَ نهارَ، صباحَ مساءَ." },
-  { q: "من بين الظروف المفردة، تُبنى (حَيْثُ) على:", options: ["السكون", "الكسر", "الفتح", "الضم"], correct: 3, explanation: "حَيْثُ من الظروف المفردة المبنية، وهي مبنية على الضم." },
-  { q: "من بين الظروف المفردة، تُبنى (إذا) و(إذْ) على:", options: ["الضم", "السكون", "الكسر", "الفتح"], correct: 1, explanation: "إذا وإذْ من الظروف المفردة المبنية على السكون." },
-  { q: "ما الفرق في المصطلح بين الكلمة المعربة والمبنية في تسمية الحكم الإعرابي نفسه؟", options: ["المبني لا وظيفة إعرابية له أصلاً", "يقال في المعرب: مرفوع/منصوب/مجرور/مجزوم، وفي المبني: في محل رفع/نصب/جر/جزم", "لا فرق بينهما", "المعرب فقط يصلح أن يكون فاعلاً"], correct: 1, explanation: "المعرب يوصف بـ(مرفوع، منصوب، مجرور، مجزوم)، أما المبني فيوصف بـ(في محل رفع، في محل نصب...) لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
-  { q: "ما الفرق بين مصطلحات أسماء الحركات في المعرب والمبني؟", options: ["لا فرق في الأسماء", "المعرب فقط يقبل السكون", "المعرب: ضمة/فتحة/كسرة/سكون (بالتاء)، والمبني: ضم/فتح/كسر/سكون (بلا تاء)", "المبني يستخدم حركات مختلفة تماماً"], correct: 2, explanation: "المعرب حركاته: ضمة، فتحة، كسرة، سكون. والمبني حركاته: ضم، فتح، كسر، سكون — بلا تاء مربوطة." }
+  { q: "من بين الظروف المفردة، تُبنى (حَيْثُ) على:", options: ["السكون", "الضم", "الكسر", "الفتح"], correct: 1, explanation: "حَيْثُ من الظروف المفردة المبنية، وهي مبنية على الضم." },
+  { q: "من بين الظروف المفردة، تُبنى (إذا) و(إذْ) على:", options: ["السكون", "الضم", "الكسر", "الفتح"], correct: 0, explanation: "إذا وإذْ من الظروف المفردة المبنية على السكون." },
+  { q: "ما الفرق في المصطلح بين الكلمة المعربة والمبنية في تسمية الحكم الإعرابي نفسه؟", options: ["يقال في المعرب: مرفوع/منصوب/مجرور/مجزوم، وفي المبني: في محل رفع/نصب/جر/جزم", "المبني لا وظيفة إعرابية له أصلاً", "لا فرق بينهما", "المعرب فقط يصلح أن يكون فاعلاً"], correct: 0, explanation: "المعرب يوصف بـ(مرفوع، منصوب، مجرور، مجزوم)، أما المبني فيوصف بـ(في محل رفع، في محل نصب...) لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
+  { q: "ما الفرق بين مصطلحات أسماء الحركات في المعرب والمبني؟", options: ["المبني يستخدم حركات مختلفة تماماً", "لا فرق في الأسماء", "المعرب فقط يقبل السكون", "المعرب: ضمة/فتحة/كسرة/سكون (بالتاء)، والمبني: ضم/فتح/كسر/سكون (بلا تاء)"], correct: 3, explanation: "المعرب حركاته: ضمة، فتحة، كسرة، سكون. والمبني حركاته: ضم، فتح، كسر، سكون — بلا تاء مربوطة." }
 ];
 
 var finalQuizEN = [
-  { q: "In the sentence مُحَمَّدٌ يَذْهَبُ, the verb يَذْهَبُ is:", options: ["Mabni, because it's a verb", "Muʿrab, because it's a present-tense verb with nothing special attached", "Mabni on fatḥ", "Mabni on sukūn"], correct: 1, explanation: "الفعل المضارع معرب في الأصل ما لم تتصل به نون النسوة أو نون التوكيد." },
-  { q: "Which of these words is muʿrab, not mabni?", options: ["كتابٌ", "هذا", "الذي", "مِن"], correct: 0, explanation: "كتابٌ اسم عادٍ معرب؛ أما هذا (اسم إشارة) والذي (اسم موصول) ومِن (حرف) فكلها مبنية." },
-  { q: "In سَجَدْتُ (I prostrated), what is the grammatical role of the attached تُ, and what is the verb built on?", options: ["رفع فاعل؛ الفعل مبني على السكون", "لا محل له؛ الفعل مبني على الضم", "جر مضاف إليه؛ الفعل معرب", "نصب مفعول به؛ الفعل مبني على الفتح"], correct: 0, explanation: "التاء ضمير رفع متحرك في محل رفع فاعل، واتصاله يجعل الفعل الماضي مبنياً على السكون." },
-  { q: "Why is دَعَا (he called) built on estimated, not visible, fatḥ?", options: ["Because it's an imperative", "Because it's muʿrab", "Because it ends in alif, and fatḥ can't visibly appear on alif", "Because a pronoun is attached"], correct: 2, explanation: "الألف لا يمكن أن تظهر عليها حركة الفتح، فيُقدَّر الفتح تعذراً." },
-  { q: "What links the building of فعل الأمر to the present-tense verb?", options: ["The imperative is always mabni on fatḥ regardless of the present form", "The imperative is always identical to the past tense", "No connection at all", "The imperative is built exactly like its present-tense form would appear in the jussive (جزم)"], correct: 3, explanation: "فعل الأمر يُبنى على مثل ما يُجزم به مضارعه — فإن كان مضارعه يُجزم بحذف النون، بُني الأمر على حذف النون، وهكذا." },
-  { q: "Which word is the odd one out — not built on the same vowel as the other three?", options: ["مِن", "قَدْ", "يا", "مُنْذُ"], correct: 3, explanation: "مُنْذُ مبني على الضم، بينما مِن وقَدْ ويا كلها مبنية على السكون." },
-  { q: "A present-tense verb becomes mabni in exactly two situations. What are they?", options: ["When it's in the past or future", "When it starts a sentence, or when it's negated", "When نون النسوة or نون التوكيد is attached", "It never becomes mabni"], correct: 2, explanation: "المضارع يُبنى فقط إذا اتصلت به نون النسوة (سكون) أو نون التوكيد (فتح)." },
-  { q: "Which of these noun categories has an exception for the dual form?", options: ["Compound numbers", "Verb-nouns (أسماء الأفعال)", "Proper nouns ending in ويه", "Demonstrative and relative nouns (اسم الإشارة والاسم الموصول)"], correct: 3, explanation: "أسماء الإشارة والأسماء الموصولة مبنية إلا في صورة المثنى، فتُعرب حينئذ إعراب المثنى." },
-  { q: "Which of these noun categories has an exception for the word أيّ specifically?", options: ["Demonstrative nouns", "Interrogative and conditional nouns (أسماء الاستفهام والشرط)", "Compound adverbs", "Verb-nouns"], correct: 1, explanation: "أسماء الاستفهام والشرط كلها مبنية إلا (أيّ)، فهي معربة بالحركات الأصلية." },
-  { q: "In رَآهُ (he saw him), what is هُ built on, and why?", options: ["It doesn't take a building vowel; it's simply in the position of naṣb as a pronoun", "Kasr, because it follows a preposition", "It's not mabni — it's a separate muʿrab word", "Ḍamm, because it's a pronoun"], correct: 0, explanation: "الضمائر المتصلة مبنية دائماً، والهاء هنا في محل نصب مفعول به." },
-  { q: "Which pair correctly matches a mabni category with its building vowel?", options: ["Compound numbers 11–19 (except 12) → kasr on both parts", "A proper noun ending in ويه → kasr", "حَيْثُ → fatḥ", "Compound adverbs → ḍamm on both parts"], correct: 1, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه. أما الأعداد المركبة والظروف المركبة فعلى فتح الجزأين، وحَيْثُ على الضم." },
-  { q: "What is the difference between saying 'مرفوع' and saying 'في محل رفع'?", options: ["'مرفوع' is only used for mabni words", "'في محل رفع' is only used for verbs", "'مرفوع' describes a muʿrab word whose ending visibly shows rafʿ; 'في محل رفع' describes a mabni word that fills a rafʿ position without its ending changing", "No difference — they're interchangeable for any word"], correct: 2, explanation: "المعرب يوصف بالحالة مباشرة (مرفوع)، والمبني يوصف بموضعه (في محل رفع) لأن آخره لا يتغيّر ليُظهر الإعراب." },
+  { q: "In the sentence مُحَمَّدٌ يَذْهَبُ, the verb يَذْهَبُ is:", options: ["Mabni on sukūn", "Mabni, because it's a verb", "Mabni on fatḥ", "Muʿrab, because it's a present-tense verb with nothing special attached"], correct: 3, explanation: "الفعل المضارع معرب في الأصل ما لم تتصل به نون النسوة أو نون التوكيد." },
+  { q: "Which of these words is muʿrab, not mabni?", options: ["كتابٌ", "مِن", "هذا", "الذي"], correct: 0, explanation: "كتابٌ اسم عادٍ معرب؛ أما هذا (اسم إشارة) والذي (اسم موصول) ومِن (حرف) فكلها مبنية." },
+  { q: "In سَجَدْتُ (I prostrated), what is the grammatical role of the attached تُ, and what is the verb built on?", options: ["نصب مفعول به؛ الفعل مبني على الفتح", "لا محل له؛ الفعل مبني على الضم", "رفع فاعل؛ الفعل مبني على السكون", "جر مضاف إليه؛ الفعل معرب"], correct: 2, explanation: "التاء ضمير رفع متحرك في محل رفع فاعل، واتصاله يجعل الفعل الماضي مبنياً على السكون." },
+  { q: "Why is دَعَا (he called) built on estimated, not visible, fatḥ?", options: ["Because it's an imperative", "Because it ends in alif, and fatḥ can't visibly appear on alif", "Because it's muʿrab", "Because a pronoun is attached"], correct: 1, explanation: "الألف لا يمكن أن تظهر عليها حركة الفتح، فيُقدَّر الفتح تعذراً." },
+  { q: "What links the building of فعل الأمر to the present-tense verb?", options: ["No connection at all", "The imperative is always identical to the past tense", "The imperative is built exactly like its present-tense form would appear in the jussive (جزم)", "The imperative is always mabni on fatḥ regardless of the present form"], correct: 2, explanation: "فعل الأمر يُبنى على مثل ما يُجزم به مضارعه — فإن كان مضارعه يُجزم بحذف النون، بُني الأمر على حذف النون، وهكذا." },
+  { q: "Which word is the odd one out — not built on the same vowel as the other three?", options: ["مُنْذُ", "يا", "قَدْ", "مِن"], correct: 0, explanation: "مُنْذُ مبني على الضم، بينما مِن وقَدْ ويا كلها مبنية على السكون." },
+  { q: "A present-tense verb becomes mabni in exactly two situations. What are they?", options: ["When it starts a sentence, or when it's negated", "When it's in the past or future", "When نون النسوة or نون التوكيد is attached", "It never becomes mabni"], correct: 2, explanation: "المضارع يُبنى فقط إذا اتصلت به نون النسوة (سكون) أو نون التوكيد (فتح)." },
+  { q: "Which of these noun categories has an exception for the dual form?", options: ["Proper nouns ending in ويه", "Compound numbers", "Verb-nouns (أسماء الأفعال)", "Demonstrative and relative nouns (اسم الإشارة والاسم الموصول)"], correct: 3, explanation: "أسماء الإشارة والأسماء الموصولة مبنية إلا في صورة المثنى، فتُعرب حينئذ إعراب المثنى." },
+  { q: "Which of these noun categories has an exception for the word أيّ specifically?", options: ["Compound adverbs", "Interrogative and conditional nouns (أسماء الاستفهام والشرط)", "Verb-nouns", "Demonstrative nouns"], correct: 1, explanation: "أسماء الاستفهام والشرط كلها مبنية إلا (أيّ)، فهي معربة بالحركات الأصلية." },
+  { q: "In رَآهُ (he saw him), what is هُ built on, and why?", options: ["It doesn't take a building vowel of its own; it's an attached pronoun mabni by nature, in the position of naṣb", "It's not mabni — it's a separate muʿrab word", "Kasr, because it follows a preposition", "Ḍamm, because it's a pronoun"], correct: 0, explanation: "الضمائر المتصلة مبنية دائماً، والهاء هنا في محل نصب مفعول به." },
+  { q: "Which pair correctly matches a mabni category with its building vowel?", options: ["حَيْثُ → fatḥ", "A proper noun ending in ويه → kasr", "Compound adverbs → ḍamm on both parts", "Compound numbers 11–19 (except 12) → kasr on both parts"], correct: 1, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه. أما الأعداد المركبة والظروف المركبة فعلى فتح الجزأين، وحَيْثُ على الضم." },
+  { q: "What is the difference between saying 'مرفوع' and saying 'في محل رفع'?", options: ["'مرفوع' describes a muʿrab word whose ending visibly shows rafʿ; 'في محل رفع' describes a mabni word that fills a rafʿ position without its ending changing", "'مرفوع' is only used for mabni words", "'في محل رفع' is only used for verbs", "No difference — they're interchangeable for any word"], correct: 0, explanation: "المعرب يوصف بالحالة مباشرة (مرفوع)، والمبني يوصف بموضعه (في محل رفع) لأن آخره لا يتغيّر ليُظهر الإعراب." },
   { q: "Which of these is TRUE about the word أيّ?", options: ["It is a particle, not a noun", "It only appears in the past tense", "It is always mabni like the rest of the interrogative nouns", "It is the one exception that stays muʿrab among the interrogative and conditional nouns"], correct: 3, explanation: "أيّ اسم معرب بالحركات الأصلية، بخلاف بقية أسماء الاستفهام والشرط التي هي مبنية." },
-  { q: "Which statement correctly summarizes the whole chapter's core idea?", options: ["Only nouns can be either muʿrab or mabni", "All Arabic words are muʿrab", "All Arabic words are mabni", "Particles, past verbs and imperatives are always mabni; nouns and present verbs are usually muʿrab but each has its own set of mabni exceptions"], correct: 3, explanation: "هذا هو صلب الباب: الحروف والماضي والأمر مبنية دائماً، والاسم والمضارع معربان في الأصل إلا فيما استُثني." },
-  { q: "A student says: \"Since هذا never changes its ending, it must be mabni.\" Is this reasoning correct?", options: ["Yes — that fixed, unchanging ending is exactly the definition of mabni", "No — endings changing has nothing to do with mabni", "It depends on the sentence", "No — هذا is actually muʿrab"], correct: 0, explanation: "هذا استدلال صحيح تماماً، فالمبني هو ما يلزم آخره حالة واحدة ثابتة مهما تغيّر موقعه، وهذا بالضبط حال (هذا)." }
+  { q: "Which statement correctly summarizes the whole chapter's core idea?", options: ["Only nouns can be either muʿrab or mabni", "Particles, past verbs and imperatives are always mabni; nouns and present verbs are usually muʿrab but each has its own set of mabni exceptions", "All Arabic words are muʿrab", "All Arabic words are mabni"], correct: 1, explanation: "هذا هو صلب الباب: الحروف والماضي والأمر مبنية دائماً، والاسم والمضارع معربان في الأصل إلا فيما استُثني." },
+  { q: "A student says: \"Since هذا never changes its ending, it must be mabni.\" Is this reasoning correct?", options: ["No — هذا is actually muʿrab", "It depends on the sentence", "Yes — that fixed, unchanging ending is exactly the definition of mabni", "No — endings changing has nothing to do with mabni"], correct: 2, explanation: "هذا استدلال صحيح تماماً، فالمبني هو ما يلزم آخره حالة واحدة ثابتة مهما تغيّر موقعه، وهذا بالضبط حال (هذا)." }
 ];
 
 var finalQuizAR = [
-  { q: "في جملة (مُحَمَّدٌ يَذْهَبُ)، الفعل (يَذْهَبُ):", options: ["مبني لأنه فعل", "معرب لأنه فعل مضارع لم يتصل به شيء خاص", "مبني على الفتح", "مبني على السكون"], correct: 1, explanation: "الفعل المضارع معرب في الأصل ما لم تتصل به نون النسوة أو نون التوكيد." },
-  { q: "أي من هذه الكلمات معربة وليست مبنية؟", options: ["كتابٌ", "هذا", "الذي", "مِن"], correct: 0, explanation: "كتابٌ اسم عادٍ معرب؛ أما هذا (اسم إشارة) والذي (اسم موصول) ومِن (حرف) فكلها مبنية." },
-  { q: "في (سَجَدْتُ)، ما إعراب التاء المتصلة، وعلامَ يُبنى الفعل؟", options: ["رفع فاعل؛ الفعل مبني على السكون", "لا محل له؛ الفعل مبني على الضم", "جر مضاف إليه؛ الفعل معرب", "نصب مفعول به؛ الفعل مبني على الفتح"], correct: 0, explanation: "التاء ضمير رفع متحرك في محل رفع فاعل، واتصاله يجعل الفعل الماضي مبنياً على السكون." },
-  { q: "لماذا يُبنى (دَعَا) على الفتح المقدّر لا الظاهر؟", options: ["لأنه فعل أمر", "لأنه معرب", "لأنه ينتهي بألف، والفتح يتعذّر ظهوره على الألف", "لأنه اتصل به ضمير"], correct: 2, explanation: "الألف لا يمكن أن تظهر عليها حركة الفتح، فيُقدَّر الفتح تعذراً." },
-  { q: "ما العلاقة بين بناء فعل الأمر والفعل المضارع؟", options: ["الأمر مبني على الفتح دائماً بصرف النظر عن المضارع", "الأمر مطابق دائماً للماضي", "لا علاقة بينهما", "يُبنى الأمر مثل حالة مضارعه في الجزم تماماً"], correct: 3, explanation: "فعل الأمر يُبنى على مثل ما يُجزم به مضارعه — فإن كان مضارعه يُجزم بحذف النون، بُني الأمر على حذف النون، وهكذا." },
-  { q: "أي هذه الكلمات مختلفة عن البقية في حركة البناء؟", options: ["مِن", "قَدْ", "يا", "مُنْذُ"], correct: 3, explanation: "مُنْذُ مبني على الضم، بينما مِن وقَدْ ويا كلها مبنية على السكون." },
-  { q: "يُصبح الفعل المضارع مبنياً في حالتين فقط، ما هما؟", options: ["إذا كان في الماضي أو المستقبل", "إذا بدأ به الجملة، أو إذا نُفي", "إذا اتصلت به نون النسوة أو نون التوكيد", "لا يصبح مبنياً أبداً"], correct: 2, explanation: "المضارع يُبنى فقط إذا اتصلت به نون النسوة (سكون) أو نون التوكيد (فتح)." },
-  { q: "أي من هذه الأنواع له استثناء في حالة المثنى؟", options: ["الأعداد المركبة", "أسماء الأفعال", "الأعلام المختومة بـ(ويه)", "اسم الإشارة والاسم الموصول"], correct: 3, explanation: "أسماء الإشارة والأسماء الموصولة مبنية إلا في صورة المثنى، فتُعرب حينئذ إعراب المثنى." },
-  { q: "أي من هذه الأنواع له استثناء خاص بكلمة (أيّ)؟", options: ["أسماء الإشارة", "أسماء الاستفهام والشرط", "الظروف المركبة", "أسماء الأفعال"], correct: 1, explanation: "أسماء الاستفهام والشرط كلها مبنية إلا (أيّ)، فهي معربة بالحركات الأصلية." },
-  { q: "في (رَآهُ)، هل لضمير الهاء حركة بناء خاصة، ولماذا؟", options: ["الضمائر المتصلة مبنية بذاتها، وهي هنا في محل نصب مفعول به", "الكسر، لأنه تلا حرف جر", "ليس مبنياً؛ هو كلمة معربة مستقلة", "الضم، لأنه ضمير"], correct: 0, explanation: "الضمائر المتصلة مبنية دائماً، والهاء هنا في محل نصب مفعول به." },
-  { q: "أي زوج يطابق النوع المبني مع حركة بنائه الصحيحة؟", options: ["الأعداد المركبة ١١–١٩ (عدا ١٢) ← الكسر في الجزأين", "العلم المختوم بـ(ويه) ← الكسر", "حَيْثُ ← الفتح", "الظروف المركبة ← الضم في الجزأين"], correct: 1, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه. أما الأعداد المركبة والظروف المركبة فعلى فتح الجزأين، وحَيْثُ على الضم." },
-  { q: "ما الفرق بين قولنا (مرفوع) وقولنا (في محل رفع)؟", options: ["(مرفوع) خاصة بالكلمات المبنية", "(في محل رفع) خاصة بالأفعال فقط", "(مرفوع) تصف كلمة معربة ظهر الرفع على آخرها؛ و(في محل رفع) تصف كلمة مبنية تشغل موضع الرفع دون أن يتغيّر آخرها", "لا فرق، يُستخدمان لأي كلمة"], correct: 2, explanation: "المعرب يوصف بالحالة مباشرة (مرفوع)، والمبني يوصف بموضعه (في محل رفع) لأن آخره لا يتغيّر ليُظهر الإعراب." },
+  { q: "في جملة (مُحَمَّدٌ يَذْهَبُ)، الفعل (يَذْهَبُ):", options: ["مبني على السكون", "مبني لأنه فعل", "مبني على الفتح", "معرب لأنه فعل مضارع لم يتصل به شيء خاص"], correct: 3, explanation: "الفعل المضارع معرب في الأصل ما لم تتصل به نون النسوة أو نون التوكيد." },
+  { q: "أي من هذه الكلمات معربة وليست مبنية؟", options: ["كتابٌ", "مِن", "هذا", "الذي"], correct: 0, explanation: "كتابٌ اسم عادٍ معرب؛ أما هذا (اسم إشارة) والذي (اسم موصول) ومِن (حرف) فكلها مبنية." },
+  { q: "في (سَجَدْتُ)، ما إعراب التاء المتصلة، وعلامَ يُبنى الفعل؟", options: ["نصب مفعول به؛ الفعل مبني على الفتح", "لا محل له؛ الفعل مبني على الضم", "رفع فاعل؛ الفعل مبني على السكون", "جر مضاف إليه؛ الفعل معرب"], correct: 2, explanation: "التاء ضمير رفع متحرك في محل رفع فاعل، واتصاله يجعل الفعل الماضي مبنياً على السكون." },
+  { q: "لماذا يُبنى (دَعَا) على الفتح المقدّر لا الظاهر؟", options: ["لأنه فعل أمر", "لأنه ينتهي بألف، والفتح يتعذّر ظهوره على الألف", "لأنه معرب", "لأنه اتصل به ضمير"], correct: 1, explanation: "الألف لا يمكن أن تظهر عليها حركة الفتح، فيُقدَّر الفتح تعذراً." },
+  { q: "ما العلاقة بين بناء فعل الأمر والفعل المضارع؟", options: ["لا علاقة بينهما", "الأمر مطابق دائماً للماضي", "يُبنى الأمر مثل حالة مضارعه في الجزم تماماً", "الأمر مبني على الفتح دائماً بصرف النظر عن المضارع"], correct: 2, explanation: "فعل الأمر يُبنى على مثل ما يُجزم به مضارعه — فإن كان مضارعه يُجزم بحذف النون، بُني الأمر على حذف النون، وهكذا." },
+  { q: "أي هذه الكلمات مختلفة عن البقية في حركة البناء؟", options: ["مُنْذُ", "يا", "قَدْ", "مِن"], correct: 0, explanation: "مُنْذُ مبني على الضم، بينما مِن وقَدْ ويا كلها مبنية على السكون." },
+  { q: "يُصبح الفعل المضارع مبنياً في حالتين فقط، ما هما؟", options: ["إذا بدأ به الجملة، أو إذا نُفي", "إذا كان في الماضي أو المستقبل", "إذا اتصلت به نون النسوة أو نون التوكيد", "لا يصبح مبنياً أبداً"], correct: 2, explanation: "المضارع يُبنى فقط إذا اتصلت به نون النسوة (سكون) أو نون التوكيد (فتح)." },
+  { q: "أي من هذه الأنواع له استثناء في حالة المثنى؟", options: ["الأعلام المختومة بـ(ويه)", "الأعداد المركبة", "أسماء الأفعال", "اسم الإشارة والاسم الموصول"], correct: 3, explanation: "أسماء الإشارة والأسماء الموصولة مبنية إلا في صورة المثنى، فتُعرب حينئذ إعراب المثنى." },
+  { q: "أي من هذه الأنواع له استثناء خاص بكلمة (أيّ)؟", options: ["الظروف المركبة", "أسماء الاستفهام والشرط", "أسماء الأفعال", "أسماء الإشارة"], correct: 1, explanation: "أسماء الاستفهام والشرط كلها مبنية إلا (أيّ)، فهي معربة بالحركات الأصلية." },
+  { q: "في (رَآهُ)، هل لضمير الهاء حركة بناء خاصة، ولماذا؟", options: ["الضمائر المتصلة مبنية بذاتها، وهي هنا في محل نصب مفعول به", "ليس مبنياً؛ هو كلمة معربة مستقلة", "الكسر، لأنه تلا حرف جر", "الضم، لأنه ضمير"], correct: 0, explanation: "الضمائر المتصلة مبنية دائماً، والهاء هنا في محل نصب مفعول به." },
+  { q: "أي زوج يطابق النوع المبني مع حركة بنائه الصحيحة؟", options: ["حَيْثُ ← الفتح", "العلم المختوم بـ(ويه) ← الكسر", "الظروف المركبة ← الضم في الجزأين", "الأعداد المركبة ١١–١٩ (عدا ١٢) ← الكسر في الجزأين"], correct: 1, explanation: "العلم المختوم بـ(ويه) يُبنى على الكسر، نحو: سيبويه. أما الأعداد المركبة والظروف المركبة فعلى فتح الجزأين، وحَيْثُ على الضم." },
+  { q: "ما الفرق بين قولنا (مرفوع) وقولنا (في محل رفع)؟", options: ["(مرفوع) تصف كلمة معربة ظهر الرفع على آخرها؛ و(في محل رفع) تصف كلمة مبنية تشغل موضع الرفع دون أن يتغيّر آخرها", "(مرفوع) خاصة بالكلمات المبنية", "(في محل رفع) خاصة بالأفعال فقط", "لا فرق، يُستخدمان لأي كلمة"], correct: 0, explanation: "المعرب يوصف بالحالة مباشرة (مرفوع)، والمبني يوصف بموضعه (في محل رفع) لأن آخره لا يتغيّر ليُظهر الإعراب." },
   { q: "أي مما يلي صحيح عن كلمة (أيّ)؟", options: ["هي حرف لا اسم", "لا تُستخدم إلا في الماضي", "هي مبنية دائماً كبقية أسماء الاستفهام", "هي الاستثناء الذي يبقى معرباً بين أسماء الاستفهام والشرط"], correct: 3, explanation: "أيّ اسم معرب بالحركات الأصلية، بخلاف بقية أسماء الاستفهام والشرط التي هي مبنية." },
-  { q: "أي عبارة تلخّص الفكرة الأساسية لهذا الباب بشكل صحيح؟", options: ["الأسماء فقط يمكن أن تكون معربة أو مبنية", "كل الكلمات العربية معربة", "كل الكلمات العربية مبنية", "الحروف والأفعال الماضية والأمر مبنية دائماً؛ والأسماء والمضارع معربة غالباً مع استثناءات مبنية لكل منهما"], correct: 3, explanation: "هذا هو صلب الباب: الحروف والماضي والأمر مبنية دائماً، والاسم والمضارع معربان في الأصل إلا فيما استُثني." },
-  { q: "قال طالب: \"بما أن (هذا) لا يتغيّر آخرها، فهي إذن مبنية.\" هل هذا الاستدلال صحيح؟", options: ["نعم، فثبات الآخر هو بالضبط تعريف المبني", "لا، تغيّر الآخر لا علاقة له بالبناء", "يعتمد على الجملة", "لا، فـ(هذا) في الحقيقة معربة"], correct: 0, explanation: "هذا استدلال صحيح تماماً، فالمبني هو ما يلزم آخره حالة واحدة ثابتة مهما تغيّر موقعه، وهذا بالضبط حال (هذا)." }
+  { q: "أي عبارة تلخّص الفكرة الأساسية لهذا الباب بشكل صحيح؟", options: ["الأسماء فقط يمكن أن تكون معربة أو مبنية", "الحروف والأفعال الماضية والأمر مبنية دائماً؛ والأسماء والمضارع معربة غالباً مع استثناءات مبنية لكل منهما", "كل الكلمات العربية معربة", "كل الكلمات العربية مبنية"], correct: 1, explanation: "هذا هو صلب الباب: الحروف والماضي والأمر مبنية دائماً، والاسم والمضارع معربان في الأصل إلا فيما استُثني." },
+  { q: "قال طالب: \"بما أن (هذا) لا يتغيّر آخرها، فهي إذن مبنية.\" هل هذا الاستدلال صحيح؟", options: ["لا، فـ(هذا) في الحقيقة معربة", "يعتمد على الجملة", "نعم، فثبات الآخر هو بالضبط تعريف المبني", "لا، تغيّر الآخر لا علاقة له بالبناء"], correct: 2, explanation: "هذا استدلال صحيح تماماً، فالمبني هو ما يلزم آخره حالة واحدة ثابتة مهما تغيّر موقعه، وهذا بالضبط حال (هذا)." }
 ];
 
 
@@ -940,24 +995,18 @@ var STEP_DEFS = [
 ];
 
 function renderBigTable(){
-  var bodyEn = document.getElementById('big-table-body-en');
-  var bodyAr = document.getElementById('big-table-body-ar');
-  if(bodyEn){
-    bodyEn.innerHTML = tenNounsEN.map(function(row, i){
-      return '<tr><td><span class="rownum">' + (i+1) + '</span></td>' +
-             '<td>' + row.cat + '</td>' +
-             '<td class="ar-ex">' + row.ex + '</td>' +
-             '<td><span class="case-tag ' + row.tag + '">' + row.built + '</span></td></tr>';
-    }).join('');
-  }
-  if(bodyAr){
-    bodyAr.innerHTML = tenNounsAR.map(function(row, i){
-      return '<tr><td><span class="rownum">' + (i+1) + '</span></td>' +
-             '<td>' + row.cat + '</td>' +
-             '<td class="ar-ex">' + row.ex + '</td>' +
-             '<td><span class="case-tag ' + row.tag + '">' + row.built + '</span></td></tr>';
-    }).join('');
-  }
+  var tables = { en: tenNounsEN, ar: tenNounsAR };
+  ['en', 'ar'].forEach(function(lg){
+    var body = document.getElementById('big-table-body-' + lg);
+    if(body){
+      body.innerHTML = tables[lg].map(function(row, i){
+        return '<tr><td><span class="rownum">' + (i+1) + '</span></td>' +
+               '<td>' + row.cat + '</td>' +
+               '<td class="ar-ex">' + row.ex + '</td>' +
+               '<td><span class="case-tag ' + row.tag + '">' + row.built + '</span></td></tr>';
+      }).join('');
+    }
+  });
 }
 
 function updateStepProgress(){
@@ -969,6 +1018,17 @@ function updateStepProgress(){
   document.getElementById('step-progress-fill').style.width = pct + '%';
 }
 
+var activeQuizInstance = null;
+
+var NAV_STRINGS = {
+  en: { back: 'Back', next: 'Next' },
+  ar: { back: 'السابق', next: 'التالي' }
+};
+
+function pickLang(en, ar){
+  return (currentLang === 'ar') ? ar : en;
+}
+
 function renderStep(i){
   currentStepIndex = i;
   var def = STEP_DEFS[i];
@@ -977,7 +1037,7 @@ function renderStep(i){
   var backBtn = document.getElementById('step-back-btn');
 
   backBtn.classList.toggle('show', i > 0);
-  backBtn.textContent = (currentLang === 'ar') ? 'السابق' : 'Back';
+  backBtn.textContent = NAV_STRINGS[currentLang].back;
 
   if(def.type === 'lesson'){
     var lessons = (currentLang === 'ar') ? LESSONS_AR : LESSONS_EN;
@@ -985,14 +1045,15 @@ function renderStep(i){
     renderBigTable();
     nextBtn.style.display = '';
     nextBtn.disabled = false;
-    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+    nextBtn.textContent = NAV_STRINGS[currentLang].next;
+    activeQuizInstance = null;
   } else if(def.type === 'quiz'){
-    var title = (currentLang === 'ar') ? def.titleAr : def.titleEn;
-    var lead = (currentLang === 'ar') ? def.leadAr : def.leadEn;
+    var title = pickLang(def.titleEn, def.titleAr);
+    var lead = pickLang(def.leadEn, def.leadAr);
     viewport.innerHTML =
       '<div class="section">' +
-        '<h2 class="section-title"><span class="num">📝</span>' + title + '</h2>' +
-        '<p class="lead">' + lead + '</p>' +
+        '<h2 class="section-title"><span class="num">📝</span><span id="active-quiz-title">' + title + '</span></h2>' +
+        '<p class="lead" id="active-quiz-lead">' + lead + '</p>' +
         '<div class="quiz-shell" id="active-quiz-slot"></div>' +
       '</div>';
     var slot = document.getElementById('active-quiz-slot');
@@ -1001,17 +1062,39 @@ function renderStep(i){
     var arQArr = window[def.arQ];
     var isLastStep = (i === STEP_DEFS.length - 1);
     nextBtn.style.display = 'none';
-    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
-    var quizInst = createQuizInstance('sq', enQArr, arQArr, function(){
+    nextBtn.textContent = NAV_STRINGS[currentLang].next;
+    activeQuizInstance = createQuizInstance('sq', enQArr, arQArr, function(){
       if(!isLastStep){ nextBtn.style.display = ''; }
     }, function(){
       nextBtn.style.display = 'none';
     }, !!def.immediate);
-    quizInst.setLanguage(currentLang);
+    activeQuizInstance.setLanguage(currentLang);
   }
 
   updateStepProgress();
   document.querySelector('.wrap').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function refreshCurrentStepLanguage(){
+  var def = STEP_DEFS[currentStepIndex];
+  var nextBtn = document.getElementById('step-next-btn');
+  var backBtn = document.getElementById('step-back-btn');
+  backBtn.textContent = NAV_STRINGS[currentLang].back;
+
+  if(def.type === 'lesson'){
+    var lessons = (currentLang === 'ar') ? LESSONS_AR : LESSONS_EN;
+    document.getElementById('step-viewport').innerHTML = lessons[def.idx];
+    renderBigTable();
+    nextBtn.textContent = NAV_STRINGS[currentLang].next;
+  } else if(def.type === 'quiz'){
+    var titleEl = document.getElementById('active-quiz-title');
+    var leadEl = document.getElementById('active-quiz-lead');
+    if(titleEl){ titleEl.textContent = pickLang(def.titleEn, def.titleAr); }
+    if(leadEl){ leadEl.textContent = pickLang(def.leadEn, def.leadAr); }
+    nextBtn.textContent = NAV_STRINGS[currentLang].next;
+    if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
+  }
+  updateStepProgress();
 }
 
 function setLanguage(lang){
@@ -1020,7 +1103,8 @@ function setLanguage(lang){
   document.documentElement.lang = lang;
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
   document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
-  renderStep(currentStepIndex);
+  if(studentName){ showWelcomeBanner(); }
+  refreshCurrentStepLanguage();
 }
 
 document.getElementById('lang-en-btn').addEventListener('click', function(){ playClickSound(); setLanguage('en'); });
@@ -1079,6 +1163,7 @@ function quizShellTemplate(prefix){
       '<div class="quiz-dots" id="' + prefix + '-dots"></div>' +
     '</div>' +
     '<div class="quiz-summary" id="' + prefix + '-summary">' +
+      '<div class="score-title" id="' + prefix + '-score-title"></div>' +
       '<div class="score-pct" id="' + prefix + '-score-pct">0%</div>' +
       '<div class="score-msg" id="' + prefix + '-score-msg"></div>' +
       '<div id="' + prefix + '-review-grid" class="review-grid"></div>' +
@@ -1094,6 +1179,10 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
   var justAnsweredAnimate = false;
   var els = {};
 
+  function pickQuestions(){
+    return (lang === 'ar') ? arQ : enQ;
+  }
+
   function cacheEls(){
     els.activeArea = document.getElementById(prefix + '-active-area');
     els.summary = document.getElementById(prefix + '-summary');
@@ -1104,6 +1193,7 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     els.pctText = document.getElementById(prefix + '-pct-text');
     els.prevBtn = document.getElementById(prefix + '-prev-btn');
     els.nextBtn = document.getElementById(prefix + '-next-btn');
+    els.scoreTitle = document.getElementById(prefix + '-score-title');
     els.scorePct = document.getElementById(prefix + '-score-pct');
     els.scoreMsg = document.getElementById(prefix + '-score-msg');
     els.reviewGrid = document.getElementById(prefix + '-review-grid');
@@ -1198,6 +1288,16 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
 
     els.activeArea.style.display = 'none';
     els.summary.classList.add('show');
+
+    var name = studentName || '';
+    if(els.scoreTitle){
+      var titleText = '';
+      if(name){
+        if(lang === 'ar'){ titleText = 'أحسنت يا ' + name + '! 🌟'; }
+        else { titleText = 'Well done, ' + name + '! 🌟'; }
+      }
+      els.scoreTitle.textContent = titleText;
+    }
     els.scorePct.textContent = pct + '%';
 
     var msg = '';
@@ -1218,6 +1318,8 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     });
     els.reviewDetail.classList.remove('show');
     els.retakeBtn.textContent = t('retake');
+
+    if(name){ speakResult(name, correctCount, questions.length, pct, lang); }
 
     if(typeof onFinish === 'function'){ onFinish(); }
   }
@@ -1265,10 +1367,21 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
   return {
     setLanguage: function(newLang){
       lang = newLang;
-      questions = (lang === 'ar') ? arQ : enQ;
+      questions = pickQuestions();
       cacheEls();
       bindNav();
       reset();
+    },
+    refreshLanguage: function(newLang){
+      lang = newLang;
+      questions = pickQuestions();
+      els.prevBtn.textContent = t('prev');
+      if(els.summary.classList.contains('show')){
+        finish();
+      } else {
+        els.nextBtn.textContent = (index === questions.length - 1) ? t('finish') : t('next');
+        renderQuestion();
+      }
     }
   };
 }
@@ -1276,7 +1389,14 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
 /* ===================== INIT ===================== */
 document.body.classList.remove('rtl-active');
 document.getElementById('lang-en-btn').classList.add('active');
-renderStep(0);
+
+var savedName = localStorage.getItem(NAHW_NAME_KEY);
+if (savedName) {
+  studentName = savedName;
+  revealMainContent();
+} else {
+  document.getElementById('student-name-input').focus();
+}
 
 </script>
 </body>
