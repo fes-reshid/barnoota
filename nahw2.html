@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards: مبني ومعرب</title>
+<meta name="description" content="Mabnī and Muʿrab — indeclinable and declinable words in Arabic grammar. Lessons and a self-check quiz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --red:#9c3d3d; --red-bg:#f4e0df;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  .name-gate{ max-width:420px; margin:60px auto 0; text-align:center; padding:0 20px; }
+  .name-gate label{ display:block; font-size:16px; margin-bottom:10px; color:var(--ink-brown); }
+  .name-gate input{
+    width:100%; padding:11px 14px; border-radius:10px; border:1.5px solid var(--gold-soft);
+    font-family:inherit; font-size:17px; text-align:center; background:#fff;
+  }
+  .name-gate input:focus{ outline:none; border-color:var(--gold); }
+  .name-warning{ color:var(--red); font-size:13px; margin-top:8px; }
+  #name-start-btn{
+    margin-top:14px; background:var(--gold); color:#fff8ea; border:none; border-radius:24px;
+    padding:11px 30px; font-size:16px; font-family:inherit; font-weight:700; cursor:pointer;
+    transition:background .15s ease, transform .15s ease;
+  }
+  #name-start-btn:hover{ background:#8f691e; transform:scale(1.04); }
+
+  .welcome-banner{
+    max-width:560px; margin:0 auto 8px; background:var(--green-bg); border:1px solid var(--green);
+    border-radius:14px; padding:14px 20px; text-align:center;
+  }
+  .welcome-line{ margin:0; font-size:16px; font-weight:700; color:var(--green-dark); }
+  .welcome-sub{ margin:6px 0 0; font-size:14px; color:var(--ink-brown); }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; max-width:var(--maxw); margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none;
+  }
+  .brand-text{ font-family:'Reem Kufi'; font-size:20px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:12px; color:var(--gold); font-weight:400; }
+  nav.main-links{ display:flex; align-items:center; gap:24px; }
+  nav.main-links a{
+    text-decoration:none; font-size:16px; color:var(--ink-brown); font-weight:600;
+    padding:6px 2px; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  nav.main-links a:hover{ color:var(--green); border-color:var(--gold-soft); }
+
+  .page-head{ text-align:center; padding:44px 20px 6px; }
+  .eyebrow{ font-family:'Reem Kufi'; color:var(--gold); font-size:15px; margin:0 0 6px; }
+  .page-head h1{ font-family:'Reem Kufi'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 12px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; font-style:italic; max-width:600px; margin:0 auto; }
+
+  .switch-topic{ text-align:center; margin:14px 0 0; }
+  .switch-topic a{ font-size:14px; color:var(--gold); text-decoration:underline; }
+
+  .mode-tabs{ display:flex; justify-content:center; gap:10px; margin:26px auto 0; }
+  .mode-tab{
+    font-family:'Reem Kufi'; font-size:15px; background:#fff; border:1.5px solid var(--gold-soft);
+    color:var(--ink-brown); padding:10px 26px; border-radius:24px; cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .mode-tab.active{ background:var(--green); color:#faf3e0; border-color:var(--green); }
+  .mode-panel{ display:none; }
+  .mode-panel.active{ display:block; }
+
+  /* lessons */
+  .lessons-wrap{ max-width:var(--maxw); margin:0 auto; padding:36px 20px 90px; }
+  .category-block{ margin-bottom:40px; }
+  .category-title{
+    font-family:'Reem Kufi'; font-size:21px; color:var(--ink-navy); margin:0 0 6px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .category-title .ar{ color:var(--gold); font-size:19px; }
+  .category-note{ font-size:16px; color:#6b5a3f; margin:0 0 18px; line-height:1.55; }
+  .rule-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px; }
+  .rule-card{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px;
+    padding:20px 22px; box-shadow:0 5px 14px rgba(60,45,20,.07);
+  }
+  .rule-card .names{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .rule-card h3{ font-family:'Reem Kufi'; font-size:17px; color:var(--ink-navy); margin:0; }
+  .rule-card .ar-name{ font-size:19px; color:var(--gold); }
+  .rule-card .desc{ font-size:15.5px; color:#6b5a3f; line-height:1.55; margin:0 0 12px; }
+  .rule-card .example{ font-size:15px; color:var(--ink-brown); border-top:1px dashed var(--gold-soft); padding-top:10px; }
+  .rule-card .example .ex-ar{ font-family:'Amiri'; font-size:19px; display:block; margin-bottom:2px; direction:rtl; }
+  .rule-card .example .ex-en{ color:#8a7a5c; font-style:italic; }
+
+  /* quiz */
+  .quiz-shell{ max-width:640px; margin:0 auto; padding:36px 20px 90px; }
+  .quiz-progress{ text-align:center; font-size:14px; color:#8a7a5c; margin-bottom:8px; font-family:'Reem Kufi'; }
+  .quiz-card{
+    background:var(--parchment); border:2px solid var(--gold); border-radius:16px;
+    padding:30px 26px; box-shadow:0 10px 26px rgba(60,45,20,.14); text-align:center;
+  }
+  .quiz-q{ font-size:20px; color:var(--ink-navy); line-height:1.5; margin:0 0 22px; }
+  .quiz-q .arabic{ font-size:26px; color:var(--gold); display:block; margin-bottom:8px; direction:rtl; }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+  .quiz-opt{
+    text-align:left; font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 18px;
+    cursor:pointer; transition:border-color .15s, background .15s;
+  }
+  .quiz-opt:hover{ border-color:var(--gold); }
+  .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+  .quiz-opt.wrong{ background:var(--red-bg); border-color:var(--red); color:var(--red); }
+  .quiz-opt[disabled]{ cursor:default; }
+  .quiz-explain{
+    text-align:left; font-size:15px; color:#6b5a3f; background:var(--parchment-deep);
+    border-radius:10px; padding:12px 16px; margin-top:14px; line-height:1.5; display:none;
+  }
+  .quiz-explain.show{ display:block; }
+  .quiz-nextrow{ margin-top:18px; }
+  .btn{
+    display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary:hover{ background:var(--green-dark); }
+  .quiz-result{ text-align:center; }
+  .quiz-result .score{ font-family:'Reem Kufi'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
+  .quiz-result p{ font-size:17px; color:#6b5a3f; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<a href="/" style="position:fixed;top:16px;left:16px;z-index:31;display:flex;align-items:center;gap:6px;background:#f2e6c9;border:1px solid #d3ac5c;border-radius:20px;padding:6px 14px;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:14px;color:#3c2f26;text-decoration:none;box-shadow:0 6px 16px rgba(60,45,20,.2);">← Diin Islaam</a>
+
+<div id="name-gate">
+  <div class="name-gate">
+    <label for="student-name-input">Enter your name to begin · اكتب اسمك قبل البدء</label>
+    <input type="text" id="student-name-input" placeholder="Your name · اسمك" autocomplete="off">
+    <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
+    <button id="name-start-btn">Start · ابدأ</button>
+  </div>
+</div>
+
+<div id="main-content" style="display:none;">
+
+  <header class="site">
+    <div class="nav-row">
+      <a class="brand" href="/">
+        <span class="brand-mark arabic">د</span>
+        <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+      </a>
+      <nav class="main-links">
+        <a href="/#classes">Classes</a>
+        <a href="apps.html">Apps</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-head">
+    <p class="eyebrow">مبني ومعرب</p>
+    <h1>Mabnī &amp; Muʿrab</h1>
+    <p>Indeclinable and declinable words — the rules that decide whether a word's ending changes.</p>
+    <div class="welcome-banner" style="margin-top:20px;">
+      <p class="welcome-line" id="welcome-line"></p>
+      <p class="welcome-sub">بالتوفيق! Let's continue building on أحكام الكلمة.</p>
+    </div>
+    <p class="switch-topic"><a href="nahw.html">🔀 Switch Topic · أحكام الكلمة (Ahkam al-Kalimah)</a></p>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="lessons">📖 Lessons</button>
+    <button class="mode-tab" data-mode="quiz">📝 Quiz</button>
+  </div>
+
+  <div class="mode-panel active" id="panel-lessons"></div>
+  <div class="mode-panel" id="panel-quiz">
+    <div class="quiz-shell" id="quizShell"></div>
+  </div>
+
+  <footer>
+    <div class="flinks">
+      <a href="nahw.html">Ahkam al-Kalimah</a>
+      <a href="apps.html">Apps</a>
+      <a href="mailto:fesbackups@gmail.com">Contact</a>
+    </div>
+    <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+  </footer>
+
+</div>
+
+<script>
+document.getElementById('year') && (document.getElementById('year').textContent = new Date().getFullYear());
+
+/* ---------- shared name (same key nahw.html uses) ---------- */
+var NAHW_NAME_KEY = 'diinislaam_nahw_name';
+var nameGate = document.getElementById('name-gate');
+var mainContent = document.getElementById('main-content');
+var studentName = '';
+
+function revealMainContent(){
+  nameGate.style.display = 'none';
+  mainContent.style.display = 'block';
+  document.getElementById('welcome-line').textContent = '🌟 Welcome back, ' + studentName + '! أهلاً بك';
+}
+
+var savedName = localStorage.getItem(NAHW_NAME_KEY);
+if (savedName){
+  studentName = savedName;
+  revealMainContent();
+} else {
+  document.getElementById('student-name-input').focus();
+}
+
+document.getElementById('name-start-btn').addEventListener('click', function(){
+  var input = document.getElementById('student-name-input');
+  var name = input.value.trim();
+  if (!name){
+    document.getElementById('name-warning').style.display = 'block';
+    input.focus();
+    return;
+  }
+  document.getElementById('name-warning').style.display = 'none';
+  studentName = name;
+  localStorage.setItem(NAHW_NAME_KEY, name);
+  revealMainContent();
+});
+document.getElementById('student-name-input').addEventListener('keydown', function(e){
+  if (e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
+});
+
+/* ---------- nav (mobile menu not needed here, but keep links tidy) ---------- */
+
+/* ---------- lesson data ---------- */
+const CATEGORIES = [
+  {
+    title: 'الإعراب والبناء',
+    ar: "Iʿrāb & Binā'",
+    note: "Every Arabic noun and verb is either muʿrab (its ending changes with grammatical position) or mabnī (its ending is fixed no matter what).",
+    rules: [
+      { name: "Iʿrāb (declension)", ar: 'الإعراب', desc: "A change in a word's final ending caused by the different grammatical positions (governing factors, عوامل) acting on it — such as being a subject, object, or object of a preposition.", ex_ar: 'جَاءَ الطَّالِبُ، رَأَيْتُ الطَّالِبَ، مَرَرْتُ بِالطَّالِبِ', ex_en: "The word الطالب changes ending (ـُ / ـَ / ـِ) depending on its role — that's iʿrāb." },
+      { name: "Binā' (fixed building)", ar: 'البناء', desc: "The word's ending stays the same regardless of its grammatical position — it never changes no matter what governs it.", ex_ar: 'جَاءَ هَذَا، رَأَيْتُ هَذَا، مَرَرْتُ بِهَذَا', ex_en: "هذا keeps the same ending in every position — that's binā'." },
+    ]
+  },
+  {
+    title: 'الأسماء المبنية',
+    ar: 'Mabnī Nouns',
+    note: 'These categories of nouns are always mabnī — their ending never changes, no matter their role in the sentence.',
+    rules: [
+      { name: 'Pronouns', ar: 'الضمائر', desc: 'All personal pronouns, attached and separate, are mabnī.', ex_ar: 'أَنَا، أَنْتَ، هُوَ، ـهُ، ـكَ', ex_en: 'I, you, he, his/it, your' },
+      { name: 'Demonstrative Nouns', ar: 'أسماء الإشارة', desc: "Always mabnī — except the dual forms هذان / هاتان, which are muʿrab.", ex_ar: 'هَذَا، هَذِهِ، هَؤُلَاءِ، ذَلِكَ', ex_en: 'this, this (f.), these, that' },
+      { name: 'Relative Nouns', ar: 'الأسماء الموصولة', desc: "Always mabnī — except the dual forms اللذان / اللتان, which are muʿrab.", ex_ar: 'الَّذِي، الَّتِي، الَّذِينَ', ex_en: 'who/which (m.), who/which (f.), who (pl.)' },
+      { name: 'Interrogative & Conditional Nouns', ar: 'أسماء الاستفهام والشرط', desc: 'Question words and conditional nouns are mabnī.', ex_ar: 'مَنْ، مَا، مَتَى، أَيْنَ، مَهْمَا', ex_en: 'who, what, when, where, whatever' },
+      { name: 'Some Adverbs', ar: 'بعض الظروف', desc: 'A number of time/place adverbs are mabnī by default.', ex_ar: 'إِذْ، إِذَا، الْآنَ، حَيْثُ', ex_en: 'when (past), when/if, now, where' },
+      { name: 'Compound Numbers 11–19', ar: 'الأعداد المركبة', desc: "The numbers eleven through nineteen are mabnī (with a partial exception for 12, اثنا عشر, which behaves like a dual).", ex_ar: 'أَحَدَ عَشَرَ، ثَلَاثَةَ عَشَرَ', ex_en: 'eleven, thirteen' },
+    ]
+  },
+  {
+    title: 'الأفعال',
+    ar: 'Verbs',
+    note: 'Verbs are split by tense — two forms are always mabnī, and the third is muʿrab, with one key exception.',
+    rules: [
+      { name: 'Past Tense Verb', ar: 'الفعل الماضي', desc: 'Always mabnī — on fatḥah, sukūn, or ḍammah depending on what follows it.', ex_ar: 'كَتَبَ، كَتَبْتُ، كَتَبُوا', ex_en: 'he wrote, I wrote, they wrote — all mabnī' },
+      { name: 'Imperative Verb', ar: 'فعل الأمر', desc: 'Always mabnī, on whatever letter its jussive (majzūm) form would end with.', ex_ar: 'اُكْتُبْ، اِقْرَأْ', ex_en: 'write!, read!' },
+      { name: 'Present Tense Verb', ar: 'الفعل المضارع', desc: "Muʿrab by default — UNLESS a nūn of confirmation (نون التوكيد) or the feminine-plural nūn (نون النسوة) is attached, in which case it becomes mabnī.", ex_ar: 'يَكْتُبُ (معرب) — يَكْتُبَنَّ، يَكْتُبْنَ (مبني)', ex_en: 'he writes (muʿrab) vs. he will surely write / they (f.) write (mabnī)' },
+    ]
+  },
+  {
+    title: 'الحروف',
+    ar: 'Particles',
+    note: 'There is no exception here: every particle in Arabic is mabnī. Particles never take case endings.',
+    rules: [
+      { name: 'All Particles', ar: 'جميع الحروف', desc: 'Prepositions, conjunctions, and every other particle are always mabnī — they never carry iʿrāb.', ex_ar: 'مِنْ، إِلَى، وَ، فَ، لَنْ، لَمْ', ex_en: 'from, to, and, so, will not, did not' },
+    ]
+  },
+  {
+    title: 'أنواع البناء',
+    ar: 'Types of Binā',
+    note: "Mabnī words are 'built' on one of four fixed endings.",
+    rules: [
+      { name: 'Sukūn', ar: 'البناء على السكون', desc: 'Built with no vowel on the final letter.', ex_ar: 'مَنْ، كَمْ', ex_en: 'who, how many' },
+      { name: 'Fatḥah', ar: 'البناء على الفتح', desc: 'Built with a fatḥah on the final letter.', ex_ar: 'أَيْنَ، كَيْفَ', ex_en: 'where, how' },
+      { name: 'Ḍammah', ar: 'البناء على الضم', desc: 'Built with a ḍammah on the final letter.', ex_ar: 'حَيْثُ، مُنْذُ', ex_en: 'where, since' },
+      { name: 'Kasrah', ar: 'البناء على الكسر', desc: 'Built with a kasrah on the final letter — the rarest of the four.', ex_ar: 'أَمْسِ', ex_en: 'yesterday (رأيتُ زيدًا أمسِ)' },
+    ]
+  },
+  {
+    title: 'أنواع الإعراب',
+    ar: 'Types of Iʿrāb',
+    note: 'Muʿrab words take one of four case/mood markers, depending on their grammatical role.',
+    rules: [
+      { name: 'Rafʿ (Nominative)', ar: 'الرفع', desc: 'For nouns and present verbs — typically marked with ḍammah.', ex_ar: 'الطَّالِبُ يَكْتُبُ', ex_en: 'the student writes' },
+      { name: 'Naṣb (Accusative)', ar: 'النصب', desc: 'For nouns and present verbs — typically marked with fatḥah.', ex_ar: 'رَأَيْتُ الطَّالِبَ — لَنْ يَكْتُبَ', ex_en: 'I saw the student — he will not write' },
+      { name: 'Jarr (Genitive)', ar: 'الجر', desc: 'For NOUNS ONLY — typically marked with kasrah. Never applies to verbs.', ex_ar: 'مَرَرْتُ بِالطَّالِبِ', ex_en: 'I passed by the student' },
+      { name: 'Jazm (Jussive)', ar: 'الجزم', desc: 'For PRESENT VERBS ONLY — typically marked with sukūn. Never applies to nouns.', ex_ar: 'لَمْ يَكْتُبْ', ex_en: 'he did not write' },
+    ]
+  },
+];
+
+const QUIZ = [
+  { q: "What is the key difference between muʿrab and mabnī words?", opts: ["Muʿrab words are always nouns; mabnī words are always verbs", "Muʿrab endings change with grammatical position; mabnī endings stay fixed", "Mabnī words only appear in the Qur'ān", "There is no real difference"], a: 1, ex: "Iʿrāb (in muʿrab words) means the ending changes based on the word's role; binā' (in mabnī words) means it never changes." },
+  { q: "Which of these noun categories is (almost) always mabnī?", opts: ["Proper names", "Personal pronouns (الضمائر)", "Broken plurals", "Verbal nouns (مصادر)"], a: 1, ex: "Pronouns — attached and separate — are always mabnī." },
+  { q: "هذان and هاتان (the dual demonstrative nouns) are an exception because they are:", opts: ["Mabnī, unlike the rest of أسماء الإشارة", "Muʿrab, unlike the rest of أسماء الإشارة", "Not real Arabic words", "Only used in poetry"], a: 1, ex: "Almost all demonstrative nouns are mabnī, but the dual forms هذان/هاتان (and اللذان/اللتان among relative nouns) are muʿrab." },
+  { q: "Is the past tense verb (الفعل الماضي) mabnī or muʿrab?", opts: ["Always muʿrab", "Always mabnī", "Mabnī only in questions", "Depends on the subject"], a: 1, ex: "The past tense verb is always mabnī, built on fatḥah, sukūn, or ḍammah depending on context." },
+  { q: "The present tense verb (الفعل المضارع) is normally muʿrab. When does it become mabnī?", opts: ["When it starts a sentence", "When a نون التوكيد or نون النسوة is attached to it", "When it is negated with لا", "It is always muʿrab, with no exceptions"], a: 1, ex: "Attaching the confirming nūn (نون التوكيد) or the feminine-plural nūn (نون النسوة) makes an otherwise-muʿrab present verb mabnī." },
+  { q: "Which of the following is always mabnī, with no exceptions at all?", opts: ["Nouns", "Present tense verbs", "Particles (الحروف)", "Broken plurals"], a: 2, ex: "Every particle — prepositions, conjunctions, and so on — is always mabnī. This is the one category with zero exceptions." },
+  { q: "What is فعل الأمر (the imperative verb)?", opts: ["Always muʿrab", "Always mabnī", "Sometimes mabnī, sometimes muʿrab", "Only used with pronouns"], a: 1, ex: "The imperative verb is always mabnī, built on the letter its jussive (majzūm) form would end with." },
+  { q: "أينَ (\"where\") is built on which vowel?", opts: ["Sukūn", "Ḍammah", "Fatḥah", "Kasrah"], a: 2, ex: "أينَ is mabnī ʿalā al-fatḥ (built on fatḥah)." },
+  { q: "حيثُ (\"where\", used differently from أين) is built on which vowel?", opts: ["Sukūn", "Ḍammah", "Fatḥah", "Kasrah"], a: 1, ex: "حيثُ is mabnī ʿalā al-ḍamm (built on ḍammah) — one of the few words built this way." },
+  { q: "Which case/mood marking applies to NOUNS ONLY, never to verbs?", opts: ["Rafʿ", "Naṣb", "Jarr", "Jazm"], a: 2, ex: "Jarr (genitive, typically kasrah) is exclusive to nouns — verbs are never in the جر case." },
+  { q: "Which case/mood marking applies to PRESENT VERBS ONLY, never to nouns?", opts: ["Rafʿ", "Naṣb", "Jarr", "Jazm"], a: 3, ex: "Jazm (jussive, typically sukūn) only applies to present tense verbs — nouns are never majzūm." },
+  { q: "Which two case markings can apply to BOTH nouns and present verbs?", opts: ["Jarr and Jazm", "Rafʿ and Naṣb", "Rafʿ and Jazm", "Naṣb and Jarr"], a: 1, ex: "Rafʿ (nominative) and Naṣb (accusative) are shared between nouns and present verbs — that's what makes Jarr (nouns-only) and Jazm (verbs-only) distinctive." },
+  { q: "The compound numbers 11–19 (eleven through nineteen) are generally:", opts: ["Muʿrab", "Mabnī", "Always feminine", "Never used with nouns"], a: 1, ex: "أحد عشر through تسعة عشر are mabnī (with a partial exception for اثنا عشر, 12, which behaves like a dual)." },
+  { q: "أمسِ (\"yesterday\", in the classical usage) is built on which vowel — the rarest of the four?", opts: ["Sukūn", "Fatḥah", "Ḍammah", "Kasrah"], a: 3, ex: "أمسِ is mabnī ʿalā al-kasr (built on kasrah) — the least common of the four building vowels." },
+];
+
+/* ---------- render lessons ---------- */
+const lessonsPanel = document.getElementById('panel-lessons');
+lessonsPanel.innerHTML = `<div class="lessons-wrap">` + CATEGORIES.map(cat => `
+  <div class="category-block">
+    <h2 class="category-title">${cat.title} <span class="ar">${cat.ar}</span></h2>
+    <p class="category-note">${cat.note}</p>
+    <div class="rule-grid">
+      ${cat.rules.map(r => `
+        <div class="rule-card">
+          <div class="names">
+            <h3>${r.name}</h3>
+            <span class="ar-name arabic">${r.ar}</span>
+          </div>
+          <p class="desc">${r.desc}</p>
+          <div class="example">
+            <span class="ex-ar arabic">${r.ex_ar}</span>
+            <span class="ex-en">${r.ex_en}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+`).join('') + `</div>`;
+
+/* ---------- quiz engine ---------- */
+let quizOrder = [];
+let quizIndex = 0;
+let quizScore = 0;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(){
+  quizOrder = shuffle(QUIZ.map((_, i) => i));
+  quizIndex = 0;
+  quizScore = 0;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const shell = document.getElementById('quizShell');
+  if (quizIndex >= quizOrder.length){
+    shell.innerHTML = `
+      <div class="quiz-card quiz-result">
+        <p class="eyebrow" style="margin:0;">Quiz Complete</p>
+        <div class="score">${quizScore} / ${quizOrder.length}</div>
+        <p>${quizScore === quizOrder.length ? 'Perfect score — excellent work!' : 'Review the lessons above and try again.'}</p>
+        <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
+      </div>
+    `;
+    document.getElementById('restartBtn').addEventListener('click', startQuiz);
+    return;
+  }
+  const item = QUIZ[quizOrder[quizIndex]];
+  shell.innerHTML = `
+    <p class="quiz-progress">Question ${quizIndex + 1} of ${quizOrder.length} · Score: ${quizScore}</p>
+    <div class="quiz-card">
+      <p class="quiz-q">${item.q}</p>
+      <div class="quiz-options">
+        ${item.opts.map((opt, i) => `<button class="quiz-opt" data-i="${i}">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-explain" id="quizExplain">${item.ex}</div>
+      <div class="quiz-nextrow" id="quizNextRow" style="display:none;">
+        <button class="btn btn-primary" id="nextBtn">Next Question</button>
+      </div>
+    </div>
+  `;
+  const buttons = shell.querySelectorAll('.quiz-opt');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const chosen = Number(btn.dataset.i);
+      buttons.forEach(b => b.disabled = true);
+      if (chosen === item.a){
+        btn.classList.add('correct');
+        quizScore++;
+      } else {
+        btn.classList.add('wrong');
+        buttons[item.a].classList.add('correct');
+      }
+      document.getElementById('quizExplain').classList.add('show');
+      document.getElementById('quizNextRow').style.display = 'block';
+    });
+  });
+  shell.querySelector('#quizNextRow')?.addEventListener('click', (e) => {
+    if (e.target.id === 'nextBtn'){
+      quizIndex++;
+      renderQuizQuestion();
+    }
+  });
+}
+
+startQuiz();
+
+/* ---------- mode tabs ---------- */
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.mode).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
