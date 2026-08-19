@@ -134,7 +134,34 @@
   .hero p.lead{ font-size:20px; color:#6b5a3f; line-height:1.6; margin:0 0 30px; max-width:560px; }
   .hero-ctas{ display:flex; gap:14px; justify-content:flex-start; flex-wrap:wrap; }
   .hero-art{ flex:1 1 360px; display:flex; justify-content:center; align-items:center; min-width:0; }
-  .hero-art svg{ width:100%; max-width:380px; height:auto; overflow:visible; }
+  .photo-frame{ position:relative; width:100%; max-width:400px; padding:30px 14px 14px; }
+  .photo-glow{
+    position:absolute; inset:0; z-index:0; border-radius:50%;
+    background:radial-gradient(circle, rgba(211,172,92,.55) 0%, rgba(211,172,92,.2) 45%, transparent 72%);
+    filter:blur(12px);
+    animation:glowPulse 3.2s ease-in-out infinite;
+  }
+  .hero-photo{
+    position:relative; z-index:1; display:block; width:100%; aspect-ratio:5/4; object-fit:cover;
+    border-radius:16px; border:3px solid var(--gold); outline:1px solid var(--gold-soft); outline-offset:6px;
+    box-shadow:0 22px 48px rgba(60,45,20,.38);
+  }
+  .photo-labels{
+    position:absolute; top:0; left:0; right:0; z-index:2;
+    display:flex; justify-content:space-between; padding:0 40px; pointer-events:none;
+  }
+  .photo-labels .arabic{
+    font-family:'Amiri', serif; font-size:26px; font-weight:700; color:var(--gold);
+    text-shadow:0 0 14px rgba(211,172,92,.65), 0 2px 4px rgba(60,45,20,.4);
+  }
+  .photo-star{
+    position:absolute; z-index:2; width:6px; height:6px; border-radius:50%; background:var(--gold-soft);
+    box-shadow:0 0 10px 3px rgba(211,172,92,.85);
+  }
+  .star-a{ top:10px; left:10%; }
+  .star-b{ top:6px; right:14%; }
+  .star-c{ bottom:16%; left:2%; }
+  .photo-crescent{ position:absolute; z-index:2; width:32px; height:32px; top:-4px; right:0; }
 
   @media (max-width:900px){
     .hero-inner{ flex-direction:column; text-align:center; }
@@ -295,74 +322,24 @@
     </div>
 
     <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="goldTextGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#d3ac5c"/>
-            <stop offset="100%" stop-color="#a97c25"/>
-          </linearGradient>
-          <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#d3ac5c" stop-opacity="0.55"/>
-            <stop offset="100%" stop-color="#d3ac5c" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#3c2f26" stop-opacity="0.22"/>
-            <stop offset="100%" stop-color="#3c2f26" stop-opacity="0"/>
-          </radialGradient>
-          <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3.2" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <mask id="crescentMask">
-            <rect x="0" y="0" width="400" height="300" fill="#fff"/>
-            <circle cx="371" cy="31" r="8.5" fill="#000"/>
+      <div class="photo-frame">
+        <div class="photo-glow"></div>
+        <div class="photo-labels">
+          <span class="rise-left arabic">القرآن</span>
+          <span class="rise-right arabic">الحديث</span>
+        </div>
+        <img class="hero-photo book-float" src="images/hero-quran.jpg" alt="An open, illuminated Qur'ān glowing softly beside lantern light">
+        <span class="twinkle photo-star star-a"></span>
+        <span class="twinkle-slow photo-star star-b"></span>
+        <span class="twinkle-slower photo-star star-c"></span>
+        <svg class="photo-crescent" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <mask id="crescentMaskSmall">
+            <rect width="40" height="40" fill="#fff"/>
+            <circle cx="24" cy="14" r="8" fill="#000"/>
           </mask>
-        </defs>
-
-        <ellipse class="glow-pulse" cx="200" cy="70" rx="150" ry="65" fill="url(#glowGrad)"/>
-
-        <g class="book-float">
-          <ellipse cx="200" cy="255" rx="130" ry="16" fill="url(#shadowGrad)"/>
-          <path d="M196,75 L204,75 L204,175 L200,168 L196,175 Z" fill="#2e6b58" opacity="0.85"/>
-
-          <path d="M200,80 C140,60 80,65 40,90 L40,235 C80,212 140,208 200,228 Z"
-                fill="#faf3e0" stroke="#d3ac5c" stroke-width="2"/>
-          <path d="M200,80 C260,60 320,65 360,90 L360,235 C320,212 260,208 200,228 Z"
-                fill="#f2e6c9" stroke="#d3ac5c" stroke-width="2"/>
-          <path d="M200,80 L200,228" stroke="#a97c25" stroke-width="2.5" opacity="0.6"/>
-
-          <g stroke="#a97c25" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
-            <line x1="70" y1="112" x2="178" y2="122"/>
-            <line x1="64" y1="134" x2="182" y2="142"/>
-            <line x1="60" y1="156" x2="184" y2="162"/>
-            <line x1="63" y1="178" x2="180" y2="182"/>
-            <line x1="70" y1="200" x2="172" y2="200"/>
-          </g>
-          <g stroke="#a97c25" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
-            <line x1="330" y1="112" x2="222" y2="122"/>
-            <line x1="336" y1="134" x2="218" y2="142"/>
-            <line x1="340" y1="156" x2="216" y2="162"/>
-            <line x1="337" y1="178" x2="220" y2="182"/>
-            <line x1="330" y1="200" x2="228" y2="200"/>
-          </g>
-        </g>
-
-        <circle class="twinkle" cx="55" cy="40" r="3" fill="#d3ac5c"/>
-        <circle class="twinkle-slow" cx="345" cy="50" r="2.6" fill="#d3ac5c"/>
-        <circle class="twinkle-slower" cx="200" cy="15" r="2.2" fill="#d3ac5c"/>
-        <circle class="twinkle-slow" cx="130" cy="95" r="2" fill="#d3ac5c"/>
-        <circle class="twinkle" cx="275" cy="98" r="2.4" fill="#d3ac5c"/>
-
-        <circle cx="371" cy="31" r="11" fill="#d3ac5c" opacity="0.6" mask="url(#crescentMask)"/>
-
-        <text class="rise-left" x="115" y="58" text-anchor="middle" dir="rtl"
-              font-family="Amiri, serif" font-size="32" fill="url(#goldTextGrad)" filter="url(#softGlow)">القرآن</text>
-        <text class="rise-right" x="290" y="62" text-anchor="middle" dir="rtl"
-              font-family="Amiri, serif" font-size="28" fill="url(#goldTextGrad)" filter="url(#softGlow)">الحديث</text>
-      </svg>
+          <circle cx="20" cy="14" r="10" fill="#d3ac5c" opacity="0.75" mask="url(#crescentMaskSmall)"/>
+        </svg>
+      </div>
     </div>
   </div>
 </section>
