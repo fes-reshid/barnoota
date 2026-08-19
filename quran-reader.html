@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qur'ān Reader (Beta) — Diin Islaam</title>
+<meta name="description" content="Test page: read Al-Fatihah and Al-Baqarah, loaded live from the Quran.com API.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --red:#9c3d3d; --red-bg:#f4e0df;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; max-width:1120px; margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none;
+  }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  nav.main-links{ display:flex; align-items:center; gap:28px; }
+  nav.main-links a{
+    text-decoration:none; font-size:17px; color:var(--ink-brown); font-weight:600;
+    padding:6px 2px; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  nav.main-links a:hover{ color:var(--green); border-color:var(--gold-soft); }
+  nav.main-links a.active{ color:var(--green); border-color:var(--green); }
+  .menu-btn{ display:none; }
+  @media (max-width:820px){
+    nav.main-links{
+      display:none; position:absolute; top:100%; left:0; right:0; flex-direction:column; align-items:stretch;
+      background:var(--parchment); border-bottom:1px solid var(--gold-soft);
+      padding:10px 20px 18px; gap:4px; box-shadow:0 12px 20px rgba(60,45,20,.12);
+    }
+    nav.main-links.open{ display:flex; }
+    nav.main-links a{ padding:10px 4px; border-bottom:1px solid rgba(169,124,37,.15); }
+    .menu-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border-radius:8px; border:1px solid var(--gold-soft);
+      background:#fff; cursor:pointer; flex-direction:column; gap:4px; padding:0;
+    }
+    .menu-btn span{ width:20px; height:2px; background:var(--ink-brown); display:block; }
+  }
+
+  .beta-banner{
+    background:var(--gold-soft); color:#fff; text-align:center; font-family:'Marcellus';
+    font-size:13px; letter-spacing:.04em; padding:8px 16px;
+  }
+
+  .page-head{ text-align:center; padding:44px 20px 8px; }
+  .eyebrow{
+    font-family:'Marcellus'; color:var(--gold); font-size:14px; letter-spacing:.12em;
+    text-transform:uppercase; margin:0 0 8px;
+  }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 12px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.6; max-width:600px; margin:0 auto; }
+
+  .surah-tabs{ display:flex; justify-content:center; gap:10px; margin:28px auto 0; flex-wrap:wrap; padding:0 20px; }
+  .surah-tab{
+    font-family:'Marcellus'; font-size:15px; background:#fff; border:1.5px solid var(--gold-soft);
+    color:var(--ink-brown); padding:10px 22px; border-radius:24px; cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .surah-tab.active{ background:var(--green); color:#faf3e0; border-color:var(--green); }
+
+  .reader{ max-width:var(--maxw); margin:0 auto; padding:32px 20px 90px; }
+
+  .surah-header{ text-align:center; margin-bottom:28px; }
+  .surah-header .name-ar{ font-family:'Amiri'; font-size:36px; color:var(--ink-navy); margin:0 0 6px; }
+  .surah-header .name-en{ font-size:19px; color:var(--gold); margin:0 0 4px; }
+  .surah-header .meta{ font-size:14px; color:#8a7a5c; }
+
+  .state-box{
+    max-width:520px; margin:20px auto 0; text-align:center; background:var(--parchment);
+    border:1.5px dashed var(--gold-soft); border-radius:16px; padding:40px 28px;
+  }
+  .state-box.error{ border-color:var(--red); background:var(--red-bg); }
+  .state-box h3{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 10px; }
+  .state-box.error h3{ color:var(--red); }
+  .state-box p{ font-size:15.5px; color:#6b5a3f; line-height:1.6; margin:0 0 16px; }
+  .state-box code{ background:#fff; padding:2px 6px; border-radius:4px; font-size:13px; }
+
+  .verse{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px;
+    padding:22px 26px; margin-bottom:14px; box-shadow:0 4px 12px rgba(60,45,20,.06);
+  }
+  .verse-num{
+    display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px;
+    border-radius:50%; background:var(--green-bg); color:var(--green); font-family:'Marcellus';
+    font-size:13px; margin-bottom:12px;
+  }
+  .verse-ar{
+    font-family:'Amiri'; font-size:28px; line-height:2.1; text-align:right; direction:rtl;
+    color:var(--ink-navy); margin:0 0 14px;
+  }
+  .verse-en{ font-size:16px; color:#6b5a3f; line-height:1.6; font-style:italic; margin:0; }
+
+  .btn{
+    display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary:hover{ background:var(--green-dark); }
+
+  .attribution{ text-align:center; font-size:13px; color:#8a7a5c; margin-top:30px; }
+  .attribution a{ color:var(--green); text-decoration:underline; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<div class="beta-banner">🧪 Beta test page — Qur'ān text loaded live from the Quran.com API, limited to Al-Fātiḥah &amp; Al-Baqarah</div>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-links" id="mainNav">
+      <a href="/#classes" class="active">Classes</a>
+      <a href="apps.html">Apps</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">Qur'ān Studies · Test</p>
+  <h1>Qur'ān Reader</h1>
+  <p>A small test of pulling Qur'ān text live from Quran.com, limited to two Sūrahs for now.</p>
+</div>
+
+<div class="surah-tabs">
+  <button class="surah-tab active" data-chapter="1">Al-Fātiḥah</button>
+  <button class="surah-tab" data-chapter="2">Al-Baqarah</button>
+</div>
+
+<div class="reader" id="reader"></div>
+
+<footer>
+  <div class="flinks">
+    <a href="quran.html">Qur'ān Classes</a>
+    <a href="apps.html">Apps</a>
+    <a href="mailto:fesbackups@gmail.com">Contact</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- nav ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mainNav = document.getElementById('mainNav');
+menuBtn.addEventListener('click', () => {
+  const open = mainNav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  mainNav.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}));
+
+/*
+  ============================================================
+  Quran.com API v4 (https://api.quran.com/api/v4)
+  This is a live client-side fetch — nothing is stored on our
+  server, so it depends on Quran.com's API being reachable and
+  CORS-enabled for browser requests at runtime. If it ever stops
+  working, that's the first thing to check.
+
+  Translation resource 131 = Saheeh International (English).
+  ============================================================
+*/
+const API_BASE = 'https://api.quran.com/api/v4';
+const TRANSLATION_ID = 131;
+const cache = {};
+const reader = document.getElementById('reader');
+
+async function loadChapter(chapterNumber){
+  if (cache[chapterNumber]){
+    renderChapter(cache[chapterNumber]);
+    return;
+  }
+
+  reader.innerHTML = `
+    <div class="state-box">
+      <h3>Loading…</h3>
+      <p>Fetching text from Quran.com.</p>
+    </div>
+  `;
+
+  try {
+    const [chapterRes, versesRes, translationRes] = await Promise.all([
+      fetch(`${API_BASE}/chapters/${chapterNumber}?language=en`),
+      fetch(`${API_BASE}/quran/verses/uthmani?chapter_number=${chapterNumber}`),
+      fetch(`${API_BASE}/quran/translations/${TRANSLATION_ID}?chapter_number=${chapterNumber}`),
+    ]);
+
+    if (!chapterRes.ok || !versesRes.ok || !translationRes.ok){
+      throw new Error(`API responded with an error (chapter: ${chapterRes.status}, verses: ${versesRes.status}, translation: ${translationRes.status})`);
+    }
+
+    const chapterData = await chapterRes.json();
+    const versesData = await versesRes.json();
+    const translationData = await translationRes.json();
+
+    const verses = versesData.verses || [];
+    const translations = translationData.translations || [];
+
+    const combined = verses.map((v, i) => ({
+      key: v.verse_key,
+      number: v.verse_key ? v.verse_key.split(':')[1] : (i + 1),
+      arabic: v.text_uthmani,
+      english: translations[i] ? stripHtml(translations[i].text) : '',
+    }));
+
+    const data = { chapter: chapterData.chapter, verses: combined };
+    cache[chapterNumber] = data;
+    renderChapter(data);
+  } catch (err) {
+    reader.innerHTML = `
+      <div class="state-box error">
+        <h3>Couldn't load this Sūrah</h3>
+        <p>The request to Quran.com's API failed: <code>${escapeHtml(err.message)}</code></p>
+        <p>This is usually a network issue, a CORS restriction, or the API being temporarily unavailable. Try again, or check the browser console for details.</p>
+        <button class="btn btn-primary" id="retryBtn">Try Again</button>
+      </div>
+    `;
+    document.getElementById('retryBtn').addEventListener('click', () => loadChapter(chapterNumber));
+  }
+}
+
+function stripHtml(str){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = str || '';
+  return tmp.textContent || tmp.innerText || '';
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderChapter(data){
+  const c = data.chapter;
+  const header = c ? `
+    <div class="surah-header">
+      <p class="name-ar arabic">${c.name_arabic || ''}</p>
+      <p class="name-en">${c.name_simple || ''} — ${c.translated_name ? c.translated_name.name : ''}</p>
+      <p class="meta">${c.verses_count || data.verses.length} verses · ${c.revelation_place ? (c.revelation_place === 'makkah' ? 'Meccan' : 'Medinan') : ''}</p>
+    </div>
+  ` : '';
+
+  const versesHtml = data.verses.map(v => `
+    <div class="verse">
+      <span class="verse-num">${v.number}</span>
+      <p class="verse-ar arabic">${v.arabic}</p>
+      ${v.english ? `<p class="verse-en">${escapeHtml(v.english)}</p>` : ''}
+    </div>
+  `).join('');
+
+  reader.innerHTML = `
+    ${header}
+    ${versesHtml}
+    <p class="attribution">Text and translation via the <a href="https://quran.com" target="_blank" rel="noopener">Quran.com</a> API.</p>
+  `;
+}
+
+document.querySelectorAll('.surah-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.surah-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    loadChapter(tab.dataset.chapter);
+  });
+});
+
+loadChapter('1');
+</script>
+</body>
+</html>
