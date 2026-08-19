@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tajwīd — Diin Islaam</title>
+<meta name="description" content="Learn the rules of Tajwīd — Nūn Sākinah &amp; Tanwīn, Mīm Sākinah, Qalqalah, Madd and Ghunnah — with lessons and a self-check quiz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --red:#9c3d3d; --red-bg:#f4e0df;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  /* header (shared pattern) */
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; max-width:var(--maxw); margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none;
+  }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  nav.main-links{ display:flex; align-items:center; gap:28px; }
+  nav.main-links a{
+    text-decoration:none; font-size:17px; color:var(--ink-brown); font-weight:600;
+    padding:6px 2px; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  nav.main-links a:hover{ color:var(--green); border-color:var(--gold-soft); }
+  nav.main-links a.active{ color:var(--green); border-color:var(--green); }
+  .menu-btn{ display:none; }
+  @media (max-width:820px){
+    nav.main-links{
+      display:none; position:absolute; top:100%; left:0; right:0; flex-direction:column; align-items:stretch;
+      background:var(--parchment); border-bottom:1px solid var(--gold-soft);
+      padding:10px 20px 18px; gap:4px; box-shadow:0 12px 20px rgba(60,45,20,.12);
+    }
+    nav.main-links.open{ display:flex; }
+    nav.main-links a{ padding:10px 4px; border-bottom:1px solid rgba(169,124,37,.15); }
+    .menu-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border-radius:8px; border:1px solid var(--gold-soft);
+      background:#fff; cursor:pointer; flex-direction:column; gap:4px; padding:0;
+    }
+    .menu-btn span{ width:20px; height:2px; background:var(--ink-brown); display:block; }
+  }
+
+  .page-head{ text-align:center; padding:56px 20px 8px; }
+  .eyebrow{
+    font-family:'Marcellus'; color:var(--gold); font-size:14px; letter-spacing:.12em;
+    text-transform:uppercase; margin:0 0 8px;
+  }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(28px,4vw,42px); color:var(--ink-navy); margin:0 0 14px; }
+  .page-head p{ font-size:19px; color:#6b5a3f; line-height:1.6; max-width:640px; margin:0 auto; }
+
+  /* mode tabs */
+  .mode-tabs{ display:flex; justify-content:center; gap:10px; margin:32px auto 0; }
+  .mode-tab{
+    font-family:'Marcellus'; font-size:15px; background:#fff; border:1.5px solid var(--gold-soft);
+    color:var(--ink-brown); padding:10px 24px; border-radius:24px; cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .mode-tab.active{ background:var(--green); color:#faf3e0; border-color:var(--green); }
+  .mode-panel{ display:none; max-width:var(--maxw); margin:0 auto; padding:36px 20px 90px; }
+  .mode-panel.active{ display:block; }
+
+  /* lessons */
+  .category-block{ margin-bottom:40px; }
+  .category-title{
+    font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 6px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .category-title .ar{ color:var(--gold); font-size:19px; }
+  .category-note{ font-size:16px; color:#6b5a3f; margin:0 0 18px; line-height:1.55; }
+  .rule-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px; }
+  .rule-card{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px;
+    padding:20px 22px; box-shadow:0 5px 14px rgba(60,45,20,.07);
+  }
+  .rule-card .names{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .rule-card h3{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); margin:0; }
+  .rule-card .ar-name{ font-size:20px; color:var(--gold); }
+  .rule-card .desc{ font-size:15.5px; color:#6b5a3f; line-height:1.55; margin:0 0 12px; }
+  .rule-card .letters{
+    font-family:'Amiri'; font-size:20px; letter-spacing:4px; color:var(--green);
+    background:var(--green-bg); border-radius:8px; padding:6px 10px; display:inline-block; margin-bottom:10px;
+  }
+  .rule-card .example{ font-size:15px; color:var(--ink-brown); border-top:1px dashed var(--gold-soft); padding-top:10px; }
+  .rule-card .example .ex-ar{ font-family:'Amiri'; font-size:19px; display:block; margin-bottom:2px; }
+  .rule-card .example .ex-en{ color:#8a7a5c; font-style:italic; }
+
+  /* quiz */
+  .quiz-shell{ max-width:640px; margin:0 auto; }
+  .quiz-progress{ text-align:center; font-size:14px; color:#8a7a5c; margin-bottom:8px; font-family:'Marcellus'; }
+  .quiz-card{
+    background:var(--parchment); border:2px solid var(--gold); border-radius:16px;
+    padding:30px 26px; box-shadow:0 10px 26px rgba(60,45,20,.14); text-align:center;
+  }
+  .quiz-q{ font-size:21px; color:var(--ink-navy); line-height:1.5; margin:0 0 22px; }
+  .quiz-q .arabic{ font-size:26px; color:var(--gold); display:block; margin-bottom:8px; }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+  .quiz-opt{
+    text-align:left; font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 18px;
+    cursor:pointer; transition:border-color .15s, background .15s;
+  }
+  .quiz-opt:hover{ border-color:var(--gold); }
+  .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+  .quiz-opt.wrong{ background:var(--red-bg); border-color:var(--red); color:var(--red); }
+  .quiz-opt[disabled]{ cursor:default; }
+  .quiz-explain{
+    text-align:left; font-size:15px; color:#6b5a3f; background:var(--parchment-deep);
+    border-radius:10px; padding:12px 16px; margin-top:14px; line-height:1.5; display:none;
+  }
+  .quiz-explain.show{ display:block; }
+  .quiz-nextrow{ margin-top:18px; }
+  .btn{
+    display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary:hover{ background:var(--green-dark); }
+  .quiz-result{ text-align:center; }
+  .quiz-result .score{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
+  .quiz-result p{ font-size:17px; color:#6b5a3f; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-links" id="mainNav">
+      <a href="/#classes" class="active">Classes</a>
+      <a href="apps.html">Apps</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">Qur'ān Studies · Tajwīd</p>
+  <h1>Tajwīd — Rules of Recitation</h1>
+  <p>Learn the core rules that govern correct Qur'ānic recitation, then check your understanding with a self-paced quiz.</p>
+</div>
+
+<div class="mode-tabs">
+  <button class="mode-tab active" data-mode="lessons">Lessons</button>
+  <button class="mode-tab" data-mode="quiz">Quiz</button>
+</div>
+
+<div class="mode-panel active" id="panel-lessons"></div>
+<div class="mode-panel" id="panel-quiz">
+  <div class="quiz-shell" id="quizShell"></div>
+</div>
+
+<footer>
+  <div class="flinks">
+    <a href="quran.html">Qur'ān Classes</a>
+    <a href="apps.html">Apps</a>
+    <a href="mailto:fesbackups@gmail.com">Contact</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- nav ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mainNav = document.getElementById('mainNav');
+menuBtn.addEventListener('click', () => {
+  const open = mainNav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  mainNav.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}));
+
+/* ---------- data ---------- */
+const CATEGORIES = [
+  {
+    id: 'nun',
+    title: 'Nūn Sākinah (نْ) & Tanwīn (ـً ـٍ ـٌ)',
+    ar: 'أحكام النون الساكنة والتنوين',
+    note: "When a still nūn or a tanwīn is followed by another letter, one of four rules applies, based on which letter comes next.",
+    rules: [
+      { name:'Iẓhār Ḥalqī', ar:'الإظهار الحلقي', desc:'Clear pronunciation. The nūn/tanwīn is pronounced fully and distinctly, with no nasal merging into the next letter.', letters:'ء ه ع ح غ خ', ex_ar:'مَنْ ءَامَنَ', ex_en:'man āmana — "whoever believes"' },
+      { name:'Idghām (with Ghunnah)', ar:'الإدغام بغنة', desc:'The nūn/tanwīn merges into the following letter with a 2-count nasal sound (ghunnah).', letters:'ي ن م و', ex_ar:'مَن يَقُولُ', ex_en:'may yaqūl — "whoever says"' },
+      { name:'Idghām (without Ghunnah)', ar:'الإدغام بلا غنة', desc:'The nūn/tanwīn merges completely into the following letter with no nasal sound.', letters:'ل ر', ex_ar:'مِن رَّبِّهِمْ', ex_en:'mir-rabbihim — "from their Lord"' },
+      { name:"Iqlāb", ar:'الإقلاب', desc:"The nūn/tanwīn is converted into a hidden mīm sound (with ghunnah) before this one letter.", letters:'ب', ex_ar:'مِنۢ بَعْدِ', ex_en:'mim ba’di — "after"' },
+      { name:"Ikhfā'", ar:'الإخفاء الحقيقي', desc:'Concealment — pronounced with a nasal sound between clear and merged, tongue near (not touching) the next letter’s point of articulation. Applies to the remaining 15 letters.', letters:'ت ث ج د ذ ز س ش ص ض ط ظ ف ق ك', ex_ar:'مِن قَبْلُ', ex_en:'min qablu — "before"' },
+    ]
+  },
+  {
+    id: 'meem',
+    title: 'Mīm Sākinah (مْ)',
+    ar: 'أحكام الميم الساكنة',
+    note: 'When a still mīm is followed by another letter, one of three rules applies.',
+    rules: [
+      { name:"Ikhfā' Shafawī", ar:'الإخفاء الشفوي', desc:'Lip concealment — a light, nasalized closing of the lips before ب, without full contact.', letters:'ب', ex_ar:'تَرْمِيهِم بِحِجَارَةٍ', ex_en:'tarmīhim bi-ḥijārah — "pelting them with stones"' },
+      { name:'Idghām Shafawī', ar:'الإدغام الشفوي', desc:'The mīm merges into a following mīm with a 2-count nasal sound.', letters:'م', ex_ar:'لَهُم مَّا', ex_en:'lahum-mā — "for them is what..."' },
+      { name:'Iẓhār Shafawī', ar:'الإظهار الشفوي', desc:'Clear pronunciation with lips closed briefly, before any of the remaining 26 letters — extra care is needed before و and ف so the mīm isn’t blurred into them.', letters:'all other letters', ex_ar:'أَنتُمْ فِيهِ', ex_en:'antum fīhi — "you (pl.) in it"' },
+    ]
+  },
+  {
+    id: 'qalqalah',
+    title: 'Qalqalah',
+    ar: 'القلقلة',
+    note: 'An echoing, bouncing sound produced when one of five letters carries a sukūn — either its own sukūn mid-word, or a sukūn created by stopping at the end of a word.',
+    rules: [
+      { name:'Qalqalah Ṣughrā (minor)', ar:'قلقلة صغرى', desc:'The qalqalah letter has sukūn in the middle of a word — a light bounce.', letters:'ق ط ب ج د', ex_ar:'يَقْطَعُونَ', ex_en:'yaqṭaʿūn — "they cut off"' },
+      { name:'Qalqalah Kubrā (major)', ar:'قلقلة كبرى', desc:'The qalqalah letter falls at the end of a word and receives sukūn from stopping (waqf) — a stronger, more pronounced bounce.', letters:'ق ط ب ج د', ex_ar:'الفَلَقْ', ex_en:'al-falaq (on stopping) — "the daybreak"' },
+    ]
+  },
+  {
+    id: 'madd',
+    title: 'Madd — Elongation',
+    ar: 'المد',
+    note: 'The madd letters (ا و ي) lengthen the vowel sound. Natural madd is a fixed 2 counts; secondary madd varies by cause.',
+    rules: [
+      { name:"Madd Ṭabī'ī (natural)", ar:'المد الطبيعي', desc:'A madd letter preceded by its matching short vowel, with nothing after it requiring extra length. Held for 2 counts (ḥarakāt).', letters:'ا و ي', ex_ar:'قَالَ', ex_en:'qāla — "he said"' },
+      { name:'Madd Muttaṣil (connected)', ar:'المد المتصل', desc:'A madd letter is followed by a hamzah within the same word. Held for 4–5 counts.', letters:'ا و ي + ء', ex_ar:'السَّمَاءِ', ex_en:'as-samāʾ — "the sky"' },
+      { name:'Madd Munfaṣil (separated)', ar:'المد المنفصل', desc:'A word ends in a madd letter and the next word begins with a hamzah. Held for 4–5 counts (varies by riwāyah).', letters:'ا و ي | ء', ex_ar:'يَا أَيُّهَا', ex_en:'yā ayyuhā — "O you..."' },
+      { name:'Madd Lāzim (necessary)', ar:'المد اللازم', desc:'A madd letter is followed by a permanent sukūn (often a doubled letter). Held for a full 6 counts, in all cases.', letters:'ا و ي + سكون لازم', ex_ar:'الضَّالِّينَ', ex_en:'aḍ-ḍāllīn — "those who are astray"' },
+      { name:"Madd 'Āriḍ lis-Sukūn", ar:'المد العارض للسكون', desc:'A madd letter is followed by a letter that only becomes sākin because the reciter stops there. Held for 2, 4, or 6 counts, reciter’s choice.', letters:'ا و ي + سكون عارض', ex_ar:'نَسْتَعِينُ', ex_en:'nastaʿīn (on stopping) — "we seek help"' },
+    ]
+  },
+  {
+    id: 'ghunnah',
+    title: 'Ghunnah',
+    ar: 'الغنة',
+    note: 'A nasal sound inherent to ن and م, held for 2 counts wherever it is emphasized.',
+    rules: [
+      { name:'Ghunnah Mushaddadah', ar:'غنة مشددة', desc:'A ن or م carrying a shaddah (doubling) is always held with a full, clear 2-count nasal sound — the strongest form of ghunnah.', letters:'نّ مّ', ex_ar:'إِنَّ', ex_en:'inna — "indeed"' },
+      { name:'Ghunnah in Other Rules', ar:'الغنة في أحكام أخرى', desc:'Ghunnah is also carried through Idghām with Ghunnah, Iqlāb, Ikhfā’, Ikhfā’ Shafawī, and Idghām Shafawī — wherever those rules apply.', letters:'ـن / ـم', ex_ar:'مِن بَعْدِ', ex_en:'mim baʿdi — "after" (Iqlāb)' },
+    ]
+  },
+];
+
+const QUIZ = [
+  { q:"A nūn sākinah is followed by the letter ب, as in مِنْ بَعْدِ. Which rule applies?", opts:["Iẓhār Ḥalqī","Iqlāb","Ikhfā'","Idghām with Ghunnah"], a:1, ex:"Iqlāb applies only before ب — the nūn/tanwīn sound is converted into a hidden mīm with ghunnah." },
+  { q:"Which letters trigger Idghām without Ghunnah?", opts:["ي ن م و","ل ر","ء ه ع ح غ خ","ب"], a:1, ex:"لر (ل and ر) cause the nūn/tanwīn to merge completely, with no nasal sound." },
+  { q:"How many letters are the throat letters (ḥurūf al-ḥalq) that trigger Iẓhār Ḥalqī?", opts:["4","5","6","7"], a:2, ex:"There are six: ء ه ع ح غ خ." },
+  { q:"مَن يَقُولُ — which rule governs the nūn here?", opts:["Iẓhār Ḥalqī","Idghām with Ghunnah","Idghām without Ghunnah","Ikhfā'"], a:1, ex:"ي is one of the four Idghām-with-Ghunnah letters (ينمو)." },
+  { q:"What is Ikhfā' Shafawī?", opts:["Merging a mīm sākinah into a following mīm","A light nasalized closing of the lips before ب when preceded by مْ","Clear pronunciation of mīm sākinah before most letters","Elongating a vowel for 2 counts"], a:1, ex:"Ikhfā' Shafawī is specific to مْ followed by ب." },
+  { q:"Which two letters demand extra care with Iẓhār Shafawī, so the mīm sākinah isn't blurred?", opts:["ت and ث","و and ف","ق and ك","س and ش"], a:1, ex:"و and ف are articulated close to the lips, like م itself, so clarity takes extra attention." },
+  { q:"What are the Qalqalah letters?", opts:["ق ط ب ج د","ل ر م ن و","ء ه ع ح غ خ","ت ث ج د ذ"], a:0, ex:"Remembered by the mnemonic “قُطْبُ جَدٍّ” — ق ط ب ج د." },
+  { q:"When does Qalqalah Kubrā (major) occur, rather than Ṣughrā (minor)?", opts:["When the letter has sukūn in the middle of a word","When the letter falls at the end of a word and gets sukūn from stopping (waqf)","When two qalqalah letters appear together","It never occurs in the Qur'ān"], a:1, ex:"Stopping on a qalqalah letter produces a stronger, more audible bounce — that's the Kubrā (major) form." },
+  { q:"How many counts (ḥarakāt) is Madd Ṭabī'ī (natural madd) held for?", opts:["1","2","4","6"], a:1, ex:"Natural madd is always exactly 2 counts — no more, no less." },
+  { q:"السَّمَاءِ has a madd letter followed by a hamzah in the same word. Which madd is this?", opts:["Madd Munfaṣil","Madd Lāzim","Madd Muttaṣil","Madd 'Āriḍ lis-Sukūn"], a:2, ex:"Muttaṣil ('connected') is when the madd letter and the hamzah are joined within one word." },
+  { q:"Which madd is always held for a full 6 counts, with no variation?", opts:["Madd Ṭabī'ī","Madd Munfaṣil","Madd 'Āriḍ lis-Sukūn","Madd Lāzim"], a:3, ex:"Madd Lāzim ('necessary') is fixed at 6 counts in every riwāyah, due to the permanent sukūn that follows it." },
+  { q:"A word ends in a madd letter, and the next word begins with a hamzah, as in يَا أَيُّهَا. Which madd is this?", opts:["Madd Muttaṣil","Madd Munfaṣil","Madd Lāzim","Madd 'Āriḍ lis-Sukūn"], a:1, ex:"Munfaṣil ('separated') is when the madd letter ends one word and the hamzah begins the next." },
+  { q:"What triggers Madd 'Āriḍ lis-Sukūn?", opts:["A permanent sukūn from a shaddah","A sukūn that only appears because the reciter stops (waqf) there","A hamzah in the same word","A hamzah at the start of the next word"], a:1, ex:"'Āriḍ means 'temporary' — the sukūn only exists because of stopping, so it's the reciter's choice: 2, 4, or 6 counts." },
+  { q:"How long is Ghunnah held when a ن or م carries a shaddah (إِنَّ)?", opts:["1 count","2 counts","4 counts","It is silent"], a:1, ex:"A shaddah on ن or م always carries a full, clear 2-count ghunnah — the strongest form." },
+  { q:"مِنۢ بَعْدِ — a small mīm is written above the نْ. What does this notation indicate?", opts:["Ikhfā'", "Iqlāb","Idghām","Iẓhār"], a:1, ex:"That small mīm mark is the Qur'ān script's way of showing Iqlāb — the nūn sound is replaced with a hidden mīm before ب." },
+];
+
+/* ---------- render lessons ---------- */
+const lessonsPanel = document.getElementById('panel-lessons');
+lessonsPanel.innerHTML = CATEGORIES.map(cat => `
+  <div class="category-block">
+    <h2 class="category-title">${cat.title} <span class="ar arabic">${cat.ar}</span></h2>
+    <p class="category-note">${cat.note}</p>
+    <div class="rule-grid">
+      ${cat.rules.map(r => `
+        <div class="rule-card">
+          <div class="names">
+            <h3>${r.name}</h3>
+            <span class="ar-name arabic">${r.ar}</span>
+          </div>
+          <p class="desc">${r.desc}</p>
+          <span class="letters">${r.letters}</span>
+          <div class="example">
+            <span class="ex-ar arabic">${r.ex_ar}</span>
+            <span class="ex-en">${r.ex_en}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+`).join('');
+
+/* ---------- quiz engine ---------- */
+let quizOrder = [];
+let quizIndex = 0;
+let quizScore = 0;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(){
+  quizOrder = shuffle(QUIZ.map((_, i) => i));
+  quizIndex = 0;
+  quizScore = 0;
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const shell = document.getElementById('quizShell');
+  if (quizIndex >= quizOrder.length){
+    shell.innerHTML = `
+      <div class="quiz-card quiz-result">
+        <p class="eyebrow" style="margin:0;">Quiz Complete</p>
+        <div class="score">${quizScore} / ${quizOrder.length}</div>
+        <p>${quizScore === quizOrder.length ? 'Perfect score — excellent work!' : 'Review the lessons above and try again.'}</p>
+        <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
+      </div>
+    `;
+    document.getElementById('restartBtn').addEventListener('click', startQuiz);
+    return;
+  }
+  const item = QUIZ[quizOrder[quizIndex]];
+  shell.innerHTML = `
+    <p class="quiz-progress">Question ${quizIndex + 1} of ${quizOrder.length} · Score: ${quizScore}</p>
+    <div class="quiz-card">
+      <p class="quiz-q">${item.q}</p>
+      <div class="quiz-options">
+        ${item.opts.map((opt, i) => `<button class="quiz-opt" data-i="${i}">${opt}</button>`).join('')}
+      </div>
+      <div class="quiz-explain" id="quizExplain">${item.ex}</div>
+      <div class="quiz-nextrow" id="quizNextRow" style="display:none;">
+        <button class="btn btn-primary" id="nextBtn">Next Question</button>
+      </div>
+    </div>
+  `;
+  const buttons = shell.querySelectorAll('.quiz-opt');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const chosen = Number(btn.dataset.i);
+      buttons.forEach(b => b.disabled = true);
+      if (chosen === item.a){
+        btn.classList.add('correct');
+        quizScore++;
+      } else {
+        btn.classList.add('wrong');
+        buttons[item.a].classList.add('correct');
+      }
+      document.getElementById('quizExplain').classList.add('show');
+      document.getElementById('quizNextRow').style.display = 'block';
+    });
+  });
+  shell.querySelector('#quizNextRow')?.addEventListener('click', (e) => {
+    if (e.target.id === 'nextBtn'){
+      quizIndex++;
+      renderQuizQuestion();
+    }
+  });
+}
+
+startQuiz();
+
+/* ---------- mode tabs ---------- */
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.mode).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
