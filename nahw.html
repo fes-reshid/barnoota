@@ -419,9 +419,10 @@
 <div class="wrap">
   <div class="card-outer">
     <header>
-      <p class="eyebrow">أحكام الكلمة</p>
-      <h1>Rulings of the Word</h1>
+      <p class="eyebrow" id="page-eyebrow">النحو</p>
+      <h1 id="page-title">Naḥw — Arabic Grammar</h1>
       <p class="subtitle" id="mode-select-subtitle">Choose how you'd like to study</p>
+      <p class="subtitle" id="topic-select-subtitle" style="display:none;">Choose a topic · اختر موضوعًا</p>
       <div class="welcome-banner" id="welcome-banner" style="display:none;">
         <p class="welcome-line" id="welcome-line"></p>
         <p class="welcome-quote" id="welcome-quote">
@@ -431,6 +432,9 @@
       </div>
     </header>
 
+    <p id="switch-topic-link" style="display:none; text-align:center; margin:-4px 0 14px;">
+      <a href="#" id="switch-topic-btn" style="font-size:14px; color:var(--gold); text-decoration:underline;">🔀 Switch Topic · تبديل الموضوع</a>
+    </p>
     <div class="mode-select" id="mode-select">
       <button class="mode-btn" id="mode-flashcard-btn">
         <span class="mode-btn-title">📇 Flashcard Practice — بطاقات تعليمية</span>
@@ -453,6 +457,17 @@
         <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
         <button id="name-start-btn">Start · ابدأ</button>
       </div>
+    </div>
+
+    <div class="mode-select" id="topic-select" style="display:none;">
+      <button class="mode-btn" id="topic-ahkam-btn">
+        <span class="mode-btn-title">📖 أحكام الكلمة — Ahkam al-Kalimah</span>
+        <span class="mode-btn-desc">Rulings of the Word · flashcards, practice &amp; quiz</span>
+      </button>
+      <button class="mode-btn practice-mixed" id="topic-mabni-btn">
+        <span class="mode-btn-title">🌿 مبني ومعرب — Mabni &amp; Mu'rab</span>
+        <span class="mode-btn-desc">Indeclinable &amp; declinable words · lessons &amp; quiz</span>
+      </button>
     </div>
 
 
@@ -1369,6 +1384,47 @@ var welcomeBanner = document.getElementById('welcome-banner');
 var flashcardStarted = false;
 var studentName = '';
 
+// ===== Topic selection (shared name across Ahkam al-Kalimah / Mabni & Mu'rab) =====
+var NAHW_NAME_KEY = 'diinislaam_nahw_name';
+var topicSelect = document.getElementById('topic-select');
+var topicSelectSubtitle = document.getElementById('topic-select-subtitle');
+var switchTopicLink = document.getElementById('switch-topic-link');
+var pageEyebrow = document.getElementById('page-eyebrow');
+var pageTitle = document.getElementById('page-title');
+
+function showTopicSelect(){
+  nameGate.style.display = 'none';
+  modeSelect.style.display = 'none';
+  modeSelectSubtitle.style.display = 'none';
+  switchTopicLink.style.display = 'none';
+  flashcardScreen.style.display = 'none';
+  quizScreen.style.display = 'none';
+  pageEyebrow.textContent = 'النحو';
+  pageTitle.textContent = "Naḥw — Arabic Grammar";
+  topicSelect.style.display = 'flex';
+  topicSelectSubtitle.style.display = 'block';
+  showWelcomeBanner();
+}
+
+function enterAhkamAlKalimah(){
+  topicSelect.style.display = 'none';
+  topicSelectSubtitle.style.display = 'none';
+  pageEyebrow.textContent = 'أحكام الكلمة';
+  pageTitle.textContent = 'Rulings of the Word';
+  modeSelect.style.display = 'flex';
+  modeSelectSubtitle.style.display = 'block';
+  switchTopicLink.style.display = 'block';
+}
+
+document.getElementById('topic-ahkam-btn').addEventListener('click', enterAhkamAlKalimah);
+document.getElementById('topic-mabni-btn').addEventListener('click', function(){
+  window.location.href = 'nahw2.html';
+});
+document.getElementById('switch-topic-btn').addEventListener('click', function(e){
+  e.preventDefault();
+  showTopicSelect();
+});
+
 var ENCOURAGEMENT_QUOTES = [
   { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "\u201cWhoever follows a path in seeking knowledge, Allah makes easy for him a path to Paradise.\u201d — Sahih Muslim" },
   { ar: "وَقُل رَّبِّ زِدْنِي عِلْمًا", en: "\u201cMy Lord, increase me in knowledge.\u201d — Qur'an 20:114" },
@@ -1473,10 +1529,8 @@ document.getElementById('name-start-btn').addEventListener('click', function(){
   }
   document.getElementById('name-warning').style.display = 'none';
   studentName = name;
-  nameGate.style.display = 'none';
-  modeSelect.style.display = 'flex';
-  modeSelectSubtitle.style.display = 'block';
-  showWelcomeBanner();
+  localStorage.setItem(NAHW_NAME_KEY, name);
+  showTopicSelect();
 });
 
 document.getElementById('student-name-input').addEventListener('keydown', function(e){
@@ -1504,7 +1558,17 @@ document.getElementById('quiz-summary-home-btn').addEventListener('click', backT
 // Initial state: ask for name once, before anything else
 modeSelect.style.display = 'none';
 modeSelectSubtitle.style.display = 'none';
-document.getElementById('student-name-input').focus();
+topicSelect.style.display = 'none';
+topicSelectSubtitle.style.display = 'none';
+switchTopicLink.style.display = 'none';
+
+var savedName = localStorage.getItem(NAHW_NAME_KEY);
+if(savedName){
+  studentName = savedName;
+  showTopicSelect();
+} else {
+  document.getElementById('student-name-input').focus();
+}
 
 
 // ===== Test Your Knowledge quiz engine =====
