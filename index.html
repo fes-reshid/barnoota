@@ -83,7 +83,7 @@
 
   /* ---------- Hero ---------- */
   .hero{
-    position:relative; overflow:hidden; padding:72px 20px 90px; text-align:center;
+    position:relative; overflow:hidden; padding:72px 20px 90px;
     background:
       radial-gradient(circle at 15% 20%, rgba(169,124,37,.10), transparent 40%),
       radial-gradient(circle at 85% 15%, rgba(46,107,88,.12), transparent 45%),
@@ -95,15 +95,62 @@
   }
   .hero::before{ top:-140px; left:-120px; }
   .hero::after{ bottom:-160px; right:-100px; }
-  .hero-inner{ position:relative; max-width:760px; margin:0 auto; }
+  .hero-inner{
+    position:relative; max-width:1100px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:48px;
+  }
+  .hero-content{ flex:1 1 460px; min-width:0; }
   .hero .bism{ font-family:'Amiri'; font-size:22px; color:var(--gold); margin:0 0 18px; }
   .hero h1{
-    font-family:'Marcellus'; font-size:clamp(30px,5vw,50px); color:var(--ink-navy);
+    font-family:'Marcellus'; font-size:clamp(30px,4.6vw,48px); color:var(--ink-navy);
     margin:0 0 18px; line-height:1.15;
   }
   .hero h1 em{ font-style:normal; color:var(--green); }
-  .hero p.lead{ font-size:20px; color:#6b5a3f; line-height:1.6; margin:0 auto 30px; max-width:600px; }
-  .hero-ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .hero p.lead{ font-size:20px; color:#6b5a3f; line-height:1.6; margin:0 0 30px; max-width:560px; }
+  .hero-ctas{ display:flex; gap:14px; justify-content:flex-start; flex-wrap:wrap; }
+  .hero-art{ flex:1 1 360px; display:flex; justify-content:center; align-items:center; min-width:0; }
+  .hero-art svg{ width:100%; max-width:380px; height:auto; overflow:visible; }
+
+  @media (max-width:900px){
+    .hero-inner{ flex-direction:column; text-align:center; }
+    .hero-content{ order:1; }
+    .hero-art{ order:0; max-width:280px; margin:0 auto 8px; }
+    .hero p.lead{ margin-left:auto; margin-right:auto; }
+    .hero-ctas, .hero .badges{ justify-content:center; }
+    .hero .badges{ margin-left:auto; margin-right:auto; }
+  }
+
+  /* ---- Hero illustration: open book + rising calligraphy ---- */
+  .book-float{ animation:bookFloat 6s ease-in-out infinite; transform-origin:center; }
+  .glow-pulse{ animation:glowPulse 3.2s ease-in-out infinite; }
+  .rise-left{ animation:riseFade 4.5s ease-in-out infinite; transform-origin:center; }
+  .rise-right{ animation:riseFade 4.5s ease-in-out infinite; animation-delay:.9s; transform-origin:center; }
+  .twinkle{ animation:twinkle 2.6s ease-in-out infinite; }
+  .twinkle-slow{ animation:twinkle 3.6s ease-in-out infinite; animation-delay:.6s; }
+  .twinkle-slower{ animation:twinkle 4.2s ease-in-out infinite; animation-delay:1.4s; }
+
+  @keyframes bookFloat{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-9px); }
+  }
+  @keyframes glowPulse{
+    0%, 100%{ opacity:.55; }
+    50%{ opacity:1; }
+  }
+  @keyframes riseFade{
+    0%{ transform:translateY(4px); opacity:.65; }
+    50%{ transform:translateY(-6px); opacity:1; }
+    100%{ transform:translateY(4px); opacity:.65; }
+  }
+  @keyframes twinkle{
+    0%, 100%{ opacity:.2; transform:scale(.8); }
+    50%{ opacity:1; transform:scale(1.15); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .book-float, .glow-pulse, .rise-left, .rise-right, .twinkle, .twinkle-slow, .twinkle-slower{
+      animation:none !important;
+    }
+  }
   .btn{
     display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif;
     font-weight:700; font-size:18px; padding:13px 30px; border-radius:30px;
@@ -116,7 +163,7 @@
   .btn-ghost:hover{ border-color:var(--gold); }
 
   .badges{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:34px auto 0; max-width:640px;
+    display:flex; flex-wrap:wrap; justify-content:flex-start; gap:10px; margin:34px 0 0; max-width:640px;
   }
   .badge{
     background:#fff; border:1px solid var(--gold-soft); color:var(--ink-brown);
@@ -205,17 +252,90 @@
 
 <section class="hero">
   <div class="hero-inner">
-    <p class="bism arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-    <h1>Learn the <em>Qur'ān</em>, Ḥadīth &amp; Naḥw — <em>Anywhere</em></h1>
-    <p class="lead">Diin Islaam is a home for free, self-paced Islamic learning — interactive Qur'ān &amp; Arabic study tools, grammar practice, and daily adhkar, built for Arabic and Oromo speakers alike.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-primary" href="#classes">Explore Classes</a>
-      <a class="btn btn-ghost" href="apps.html">Explore Apps</a>
+    <div class="hero-content">
+      <p class="bism arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <h1>Learn the <em>Qur'ān</em>, Ḥadīth &amp; Naḥw — <em>Anywhere</em></h1>
+      <p class="lead">Diin Islaam is a home for free, self-paced Islamic learning — interactive Qur'ān &amp; Arabic study tools, grammar practice, and daily adhkar, built for Arabic and Oromo speakers alike.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#classes">Explore Classes</a>
+        <a class="btn btn-ghost" href="apps.html">Explore Apps</a>
+      </div>
+      <div class="badges">
+        <span class="badge">Free &amp; Self-Paced</span>
+        <span class="badge">Arabic + Oromo Support</span>
+        <span class="badge">New Content Added Regularly</span>
+      </div>
     </div>
-    <div class="badges">
-      <span class="badge">Free &amp; Self-Paced</span>
-      <span class="badge">Arabic + Oromo Support</span>
-      <span class="badge">New Content Added Regularly</span>
+
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="goldTextGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d3ac5c"/>
+            <stop offset="100%" stop-color="#a97c25"/>
+          </linearGradient>
+          <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#d3ac5c" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#d3ac5c" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#3c2f26" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#3c2f26" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="3.2" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <mask id="crescentMask">
+            <rect x="0" y="0" width="400" height="300" fill="#fff"/>
+            <circle cx="371" cy="31" r="8.5" fill="#000"/>
+          </mask>
+        </defs>
+
+        <ellipse class="glow-pulse" cx="200" cy="70" rx="150" ry="65" fill="url(#glowGrad)"/>
+
+        <g class="book-float">
+          <ellipse cx="200" cy="255" rx="130" ry="16" fill="url(#shadowGrad)"/>
+          <path d="M196,75 L204,75 L204,175 L200,168 L196,175 Z" fill="#2e6b58" opacity="0.85"/>
+
+          <path d="M200,80 C140,60 80,65 40,90 L40,235 C80,212 140,208 200,228 Z"
+                fill="#faf3e0" stroke="#d3ac5c" stroke-width="2"/>
+          <path d="M200,80 C260,60 320,65 360,90 L360,235 C320,212 260,208 200,228 Z"
+                fill="#f2e6c9" stroke="#d3ac5c" stroke-width="2"/>
+          <path d="M200,80 L200,228" stroke="#a97c25" stroke-width="2.5" opacity="0.6"/>
+
+          <g stroke="#a97c25" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
+            <line x1="70" y1="112" x2="178" y2="122"/>
+            <line x1="64" y1="134" x2="182" y2="142"/>
+            <line x1="60" y1="156" x2="184" y2="162"/>
+            <line x1="63" y1="178" x2="180" y2="182"/>
+            <line x1="70" y1="200" x2="172" y2="200"/>
+          </g>
+          <g stroke="#a97c25" stroke-width="2.6" stroke-linecap="round" opacity="0.45">
+            <line x1="330" y1="112" x2="222" y2="122"/>
+            <line x1="336" y1="134" x2="218" y2="142"/>
+            <line x1="340" y1="156" x2="216" y2="162"/>
+            <line x1="337" y1="178" x2="220" y2="182"/>
+            <line x1="330" y1="200" x2="228" y2="200"/>
+          </g>
+        </g>
+
+        <circle class="twinkle" cx="55" cy="40" r="3" fill="#d3ac5c"/>
+        <circle class="twinkle-slow" cx="345" cy="50" r="2.6" fill="#d3ac5c"/>
+        <circle class="twinkle-slower" cx="200" cy="15" r="2.2" fill="#d3ac5c"/>
+        <circle class="twinkle-slow" cx="130" cy="95" r="2" fill="#d3ac5c"/>
+        <circle class="twinkle" cx="275" cy="98" r="2.4" fill="#d3ac5c"/>
+
+        <circle cx="371" cy="31" r="11" fill="#d3ac5c" opacity="0.6" mask="url(#crescentMask)"/>
+
+        <text class="rise-left" x="115" y="58" text-anchor="middle" dir="rtl"
+              font-family="Amiri, serif" font-size="32" fill="url(#goldTextGrad)" filter="url(#softGlow)">القرآن</text>
+        <text class="rise-right" x="290" y="62" text-anchor="middle" dir="rtl"
+              font-family="Amiri, serif" font-size="28" fill="url(#goldTextGrad)" filter="url(#softGlow)">الحديث</text>
+      </svg>
     </div>
   </div>
 </section>
