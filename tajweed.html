@@ -149,6 +149,54 @@
   .quiz-result .score{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
   .quiz-result p{ font-size:17px; color:#6b5a3f; }
 
+  /* ===== Auth gate (enroll / login) ===== */
+  #auth-gate{ display:flex; justify-content:center; padding:20px 20px 10px; }
+  .name-gate-box{
+    max-width:420px; width:100%; text-align:center; background:#fff;
+    border:2px solid var(--gold-soft); border-radius:16px; padding:30px 26px;
+    box-shadow:0 6px 18px rgba(60,45,20,.08);
+  }
+  .auth-gate-label{ font-size:16px; color:var(--ink-brown); margin:0 0 18px; font-weight:700; }
+  .auth-gate-title{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 16px; }
+  .auth-input{
+    width:100%; padding:12px 16px; border:1.5px solid var(--gold-soft); border-radius:10px;
+    font-family:'Cormorant Garamond', serif; font-size:17px; text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:12px;
+  }
+  .auth-input:focus{ outline:none; border-color:var(--gold); }
+  .auth-error{ color:var(--red); font-size:14px; margin:-4px 0 12px; }
+  .auth-success{ color:var(--green); font-size:14px; margin:-4px 0 12px; }
+  .auth-primary-btn{
+    width:100%; background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; cursor:pointer; transition:transform .15s ease;
+  }
+  .auth-primary-btn:hover{ transform:scale(1.03); }
+  .auth-primary-btn:disabled{ opacity:.6; cursor:default; transform:none; }
+  .auth-secondary-btn{
+    width:100%; background:#fff; color:var(--ink-brown); border:1.5px solid var(--gold-soft); border-radius:22px;
+    padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; cursor:pointer; transition:transform .15s ease, background .15s ease;
+    margin-top:10px;
+  }
+  .auth-secondary-btn:hover{ background:var(--parchment-deep); transform:scale(1.03); }
+  .auth-link-btn{
+    display:block; background:none; border:none; color:var(--gold); text-decoration:underline; cursor:pointer;
+    font-family:'Cormorant Garamond', serif; font-size:14.5px; margin:10px auto 0; padding:0;
+  }
+  #auth-loading p{ font-size:15px; color:var(--ink-brown); margin:0; }
+  #account-bar{
+    display:none; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+    max-width:520px; margin:10px auto 0; font-size:14px; color:var(--ink-brown);
+  }
+  #account-email{ font-weight:700; }
+  #logout-btn{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 14px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:13px;
+    color:var(--ink-brown); cursor:pointer; transition:background .15s ease, transform .15s ease;
+  }
+  #logout-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
+
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
   footer .flinks a{ text-decoration:none; color:#c9d2e0; }
@@ -181,6 +229,49 @@
   <p>Learn the core rules that govern correct Qur'ānic recitation, then check your understanding with a self-paced quiz.</p>
 </div>
 
+<div id="auth-gate">
+
+  <div class="name-gate-box" id="auth-loading">
+    <p>Loading your account…</p>
+  </div>
+
+  <div class="name-gate-box" id="auth-landing" style="display:none;">
+    <p class="auth-gate-label">Create an account or log in to begin</p>
+    <button class="auth-primary-btn" id="show-enroll-btn">Enroll</button>
+    <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
+  </div>
+
+  <div class="name-gate-box" id="enroll-form" style="display:none;">
+    <p class="auth-gate-title">Create Your Account</p>
+    <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
+    <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
+    <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
+    <p class="auth-error" id="enroll-error" style="display:none;"></p>
+    <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+    <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+    <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
+  </div>
+
+  <div class="name-gate-box" id="login-form" style="display:none;">
+    <p class="auth-gate-title">Log In</p>
+    <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
+    <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
+    <p class="auth-error" id="login-error" style="display:none;"></p>
+    <p class="auth-success" id="login-info" style="display:none;"></p>
+    <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
+    <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+    <button class="auth-link-btn" id="login-back-btn">← Back</button>
+  </div>
+
+</div>
+
+<div id="account-bar">
+  <span id="account-email"></span>
+  <button id="logout-btn">Log Out</button>
+</div>
+
+<div id="course-content" style="display:none;">
+
 <div class="mode-tabs">
   <button class="mode-tab active" data-mode="lessons">Lessons</button>
   <button class="mode-tab" data-mode="quiz">Quiz</button>
@@ -189,6 +280,8 @@
 <div class="mode-panel active" id="panel-lessons"></div>
 <div class="mode-panel" id="panel-quiz">
   <div class="quiz-shell" id="quizShell"></div>
+</div>
+
 </div>
 
 <footer>
@@ -205,6 +298,50 @@
 
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- auth ---------- */
+var studentName = '';
+var studentEmail = '';
+var currentUID = null;
+
+function showAuthPanel(id){
+  ['auth-loading','auth-landing','enroll-form','login-form'].forEach(function(pid){
+    document.getElementById(pid).style.display = (pid === id) ? '' : 'none';
+  });
+}
+document.getElementById('show-enroll-btn').addEventListener('click', function(){
+  document.getElementById('enroll-error').style.display = 'none';
+  document.getElementById('enroll-goto-login-btn').style.display = 'none';
+  showAuthPanel('enroll-form');
+  document.getElementById('enroll-name').focus();
+});
+document.getElementById('show-login-btn').addEventListener('click', function(){
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-info').style.display = 'none';
+  showAuthPanel('login-form');
+  document.getElementById('login-email').focus();
+});
+document.getElementById('enroll-back-btn').addEventListener('click', function(){
+  showAuthPanel('auth-landing');
+});
+document.getElementById('login-back-btn').addEventListener('click', function(){
+  showAuthPanel('auth-landing');
+});
+
+function enterCourse(uid, email, data){
+  currentUID = uid;
+  studentEmail = email;
+  studentName = (data && data.fullName) ? data.fullName : email;
+
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('course-content').style.display = '';
+  document.getElementById('account-bar').style.display = 'flex';
+  document.getElementById('account-email').textContent = email;
+}
+
+document.getElementById('logout-btn').addEventListener('click', function(){
+  if(window.__fbSignOut){ window.__fbSignOut(); }
+});
 
 /* ---------- nav ---------- */
 const menuBtn = document.getElementById('menuBtn');
@@ -355,6 +492,9 @@ function renderQuizQuestion(){
       </div>
     `;
     document.getElementById('restartBtn').addEventListener('click', startQuiz);
+    if(currentUID && window.__fbSaveProgress){
+      window.__fbSaveProgress(currentUID, Math.round((quizScore / quizOrder.length) * 100));
+    }
     return;
   }
   const item = QUIZ[quizOrder[quizIndex]];
@@ -407,5 +547,176 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
   });
 });
 </script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAon9aeq2S5gL_Pe7OcI-HSWL41yswBCl8",
+  authDomain: "diinislaam-8fdeb.firebaseapp.com",
+  projectId: "diinislaam-8fdeb",
+  storageBucket: "diinislaam-8fdeb.firebasestorage.app",
+  messagingSenderId: "326572350344",
+  appId: "1:326572350344:web:d75552f91d11d3d227783d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const COLLECTION = 'tajweed_students';
+
+var ERR_MESSAGES = {
+  'auth/email-already-in-use': 'This email is already registered.',
+  'auth/invalid-email': 'Please enter a valid email address.',
+  'auth/weak-password': 'Password must be at least 6 characters.',
+  'auth/user-not-found': 'Incorrect email or password.',
+  'auth/wrong-password': 'Incorrect email or password.',
+  'auth/invalid-credential': 'Incorrect email or password.',
+  'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.'
+};
+function authErrorMessage(code){ return ERR_MESSAGES[code] || 'Something went wrong. Please try again.'; }
+
+function showErr(el, msg){
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function defaultStudentDoc(fullName, email){
+  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastQuizScorePct: null, lastAttemptAt: null };
+}
+
+var enrollBtn = document.getElementById('enroll-submit-btn');
+var loginBtn = document.getElementById('login-submit-btn');
+var enrollErrorEl = document.getElementById('enroll-error');
+var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
+
+enrollBtn.addEventListener('click', function(){
+  enrollErrorEl.style.display = 'none';
+  gotoLoginBtn.style.display = 'none';
+  var name = document.getElementById('enroll-name').value.trim();
+  var email = document.getElementById('enroll-email').value.trim();
+  var password = document.getElementById('enroll-password').value;
+
+  if(!name){ showErr(enrollErrorEl, 'Please enter your full name.'); return; }
+  if(!email){ showErr(enrollErrorEl, 'Please enter your email.'); return; }
+  if(password.length < 6){ showErr(enrollErrorEl, 'Password must be at least 6 characters.'); return; }
+
+  enrollBtn.disabled = true;
+  enrollBtn.textContent = '…';
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(function(cred){
+      return updateProfile(cred.user, { displayName: name }).then(function(){
+        var data = defaultStudentDoc(name, email);
+        return setDoc(doc(db, COLLECTION, cred.user.uid), data).then(function(){
+          return { uid: cred.user.uid, data: data };
+        });
+      });
+    })
+    .then(function(result){
+      window.enterCourse(result.uid, email, result.data);
+    })
+    .catch(function(e){
+      showErr(enrollErrorEl, authErrorMessage(e.code));
+      if(e.code === 'auth/email-already-in-use'){
+        gotoLoginBtn.style.display = '';
+        gotoLoginBtn.onclick = function(){
+          document.getElementById('login-email').value = email;
+          window.showAuthPanel('login-form');
+          document.getElementById('login-password').focus();
+        };
+      }
+    })
+    .finally(function(){
+      enrollBtn.disabled = false;
+      enrollBtn.textContent = 'Create Account';
+    });
+});
+
+var loginErrorEl = document.getElementById('login-error');
+var loginInfoEl = document.getElementById('login-info');
+
+loginBtn.addEventListener('click', function(){
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+
+  if(!email || !password){ showErr(loginErrorEl, 'Please enter your email and password.'); return; }
+
+  loginBtn.disabled = true;
+  loginBtn.textContent = '…';
+  signInWithEmailAndPassword(auth, email, password)
+    .then(function(cred){
+      return getDoc(doc(db, COLLECTION, cred.user.uid)).then(function(snap){
+        var data = snap.exists() ? snap.data() : defaultStudentDoc(cred.user.displayName || email, email);
+        window.enterCourse(cred.user.uid, email, data);
+      });
+    })
+    .catch(function(e){
+      showErr(loginErrorEl, authErrorMessage(e.code));
+    })
+    .finally(function(){
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Log In';
+    });
+});
+
+document.getElementById('forgot-password-btn').addEventListener('click', function(){
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
+  var email = document.getElementById('login-email').value.trim();
+  if(!email){ showErr(loginErrorEl, 'Please enter your email above first.'); document.getElementById('login-email').focus(); return; }
+  sendPasswordResetEmail(auth, email)
+    .then(function(){
+      loginInfoEl.textContent = 'Password reset email sent — check your inbox.';
+      loginInfoEl.style.display = 'block';
+    })
+    .catch(function(e){
+      showErr(loginErrorEl, authErrorMessage(e.code));
+    });
+});
+
+['enroll-name','enroll-email','enroll-password'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ enrollBtn.click(); }
+  });
+});
+['login-email','login-password'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ loginBtn.click(); }
+  });
+});
+
+window.__fbSignOut = function(){
+  signOut(auth).then(function(){ window.location.reload(); });
+};
+
+window.__fbSaveProgress = function(uid, lastQuizScorePct){
+  setDoc(doc(db, COLLECTION, uid), { lastQuizScorePct: lastQuizScorePct, lastAttemptAt: new Date().toISOString() }, { merge: true })
+    .catch(function(e){ console.error('Progress save failed:', e); });
+};
+
+onAuthStateChanged(auth, function(user){
+  if(user){
+    getDoc(doc(db, COLLECTION, user.uid)).then(function(snap){
+      var data = snap.exists() ? snap.data() : defaultStudentDoc(user.displayName || user.email, user.email);
+      window.enterCourse(user.uid, user.email, data);
+    }).catch(function(e){
+      console.error('Could not load account:', e);
+      window.showAuthPanel('auth-landing');
+    });
+  } else {
+    window.showAuthPanel('auth-landing');
+  }
+});
+</script>
+
 </body>
 </html>
