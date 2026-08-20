@@ -1695,6 +1695,7 @@ var AUTH_STRINGS = {
       'auth/wrong-password': 'Incorrect email or password.',
       'auth/invalid-credential': 'Incorrect email or password.',
       'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.',
+      'permission-denied': 'Your login worked, but the database rejected the request — the Firestore security rules likely need to be updated for this course\'s collection.',
       'default': 'Something went wrong. Please try again.'
     }
   },
@@ -1721,6 +1722,7 @@ var AUTH_STRINGS = {
       'auth/wrong-password': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
       'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
       'auth/too-many-requests': 'محاولات كثيرة جداً، الرجاء الانتظار قليلاً ثم المحاولة مرة أخرى.',
+      'permission-denied': 'تم تسجيل الدخول بنجاح، لكن قاعدة البيانات رفضت الطلب — على الأرجح تحتاج قواعد الأمان في Firestore إلى تحديث لهذه الدورة.',
       'default': 'حدث خطأ ما. حاول مرة أخرى.'
     }
   }
@@ -2076,7 +2078,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 function t(key){ return window.AUTH_STRINGS[window.currentLang][key]; }
-function authErrorMessage(code){ return t('err')[code] || t('err')['default']; }
+function authErrorMessage(code){ return t('err')[code] || (t('err')['default'] + ' (' + code + ')'); }
 
 function showErr(el, msg){
   el.textContent = msg;
