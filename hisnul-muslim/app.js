@@ -786,6 +786,7 @@
           '<p>Hojii fi qopheessuun appichaa <strong>Feysel Mustefa</strong> tiin gaggeeffame. Akka aakhiraatti hojii gaarii naa galmeessu, namni fayyadame <strong>du\'aa\'ii</strong> naaf akka godhu kabajaan gaafadha.</p>' +
           '<p style="color:var(--muted-foreground);">Yaada, dogoggora, ykn fooyya\'iinsaaf:</p>' +
           '<a class="mail-btn" href="mailto:fes900@yahoo.com?subject=Hisnul%20Muslim%20App%20Feedback">' + icon("mail", 16) + " fes900@yahoo.com</a>" +
+          '<p style="margin-top:0.5rem;"><a href="privacy.html" target="_blank" rel="noreferrer" class="link">Imaammata Iccitii (Privacy Policy)</a></p>' +
         "</div>" +
       "</section>" +
 
