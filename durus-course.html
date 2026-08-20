@@ -135,6 +135,7 @@
   }
   .auth-input:focus{ outline:none; border-color:var(--gold); }
   .auth-error{ color:var(--red); font-size:calc(13px * var(--scale)); margin:-4px 0 12px; }
+  .auth-success{ color:var(--green-dark); font-size:calc(13px * var(--scale)); margin:-4px 0 12px; }
   .auth-primary-btn{
     width:100%; background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
     padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
@@ -151,8 +152,8 @@
   .auth-secondary-btn:hover{ background:var(--parchment-deep); transform:scale(1.03); }
   .auth-landing-btns{ display:flex; flex-direction:column; }
   .auth-link-btn{
-    background:none; border:none; color:var(--gold); text-decoration:underline; cursor:pointer;
-    font-family:'Cormorant Garamond', serif; font-size:calc(13.5px * var(--scale)); margin-top:14px; padding:0;
+    display:block; background:none; border:none; color:var(--gold); text-decoration:underline; cursor:pointer;
+    font-family:'Cormorant Garamond', serif; font-size:calc(13.5px * var(--scale)); margin:10px auto 0; padding:0;
   }
   #auth-loading p{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0; }
 
@@ -439,6 +440,8 @@
   body.rtl-active .back-to-weeks-btn{ left:auto; right:14px; }
   body.rtl-active .font-size-control{ right:auto; left:14px; }
   body.rtl-active .auth-gate-label, body.rtl-active .auth-gate-title, body.rtl-active .auth-error,
+  body.rtl-active .auth-success, body.rtl-active #auth-loading p, body.rtl-active .auth-input,
+  body.rtl-active .auth-primary-btn, body.rtl-active .auth-secondary-btn, body.rtl-active .auth-link-btn,
   body.rtl-active #account-bar{ font-family:'Amiri', serif; }
 
   @media print{
@@ -492,41 +495,44 @@
   <div id="auth-gate">
 
     <div class="name-gate-box" id="auth-loading">
-      <p>Loading your account… · جارٍ تحميل حسابك…</p>
+      <p id="auth-loading-text">Loading your account…</p>
     </div>
 
     <div class="name-gate-box" id="auth-landing" style="display:none;">
-      <p class="auth-gate-label">Create an account or log in to begin · أنشئ حسابًا أو سجّل الدخول لتبدأ</p>
+      <p class="auth-gate-label" id="auth-landing-label">Create an account or log in to begin</p>
       <div class="auth-landing-btns">
-        <button class="auth-primary-btn" id="show-enroll-btn">Enroll · اشترك</button>
-        <button class="auth-secondary-btn" id="show-login-btn">Log In · تسجيل الدخول</button>
+        <button class="auth-primary-btn" id="show-enroll-btn">Enroll</button>
+        <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
       </div>
     </div>
 
     <div class="name-gate-box" id="enroll-form" style="display:none;">
-      <p class="auth-gate-title">Create Your Account · أنشئ حسابك</p>
-      <input type="text" class="auth-input" id="enroll-name" placeholder="Full name · الاسم الكامل" autocomplete="name">
-      <input type="email" class="auth-input" id="enroll-email" placeholder="Email · البريد الإلكتروني" autocomplete="email">
-      <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters) · كلمة المرور" autocomplete="new-password">
+      <p class="auth-gate-title" id="enroll-title">Create Your Account</p>
+      <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
+      <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
+      <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
       <p class="auth-error" id="enroll-error" style="display:none;"></p>
-      <button class="auth-primary-btn" id="enroll-submit-btn">Create Account · إنشاء الحساب</button>
-      <button class="auth-link-btn" id="enroll-back-btn">← Back · رجوع</button>
+      <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+      <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+      <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
     </div>
 
     <div class="name-gate-box" id="login-form" style="display:none;">
-      <p class="auth-gate-title">Log In · تسجيل الدخول</p>
-      <input type="email" class="auth-input" id="login-email" placeholder="Email · البريد الإلكتروني" autocomplete="email">
-      <input type="password" class="auth-input" id="login-password" placeholder="Password · كلمة المرور" autocomplete="current-password">
+      <p class="auth-gate-title" id="login-title">Log In</p>
+      <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
+      <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
       <p class="auth-error" id="login-error" style="display:none;"></p>
-      <button class="auth-primary-btn" id="login-submit-btn">Log In · تسجيل الدخول</button>
-      <button class="auth-link-btn" id="login-back-btn">← Back · رجوع</button>
+      <p class="auth-success" id="login-info" style="display:none;"></p>
+      <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
+      <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+      <button class="auth-link-btn" id="login-back-btn">← Back</button>
     </div>
 
   </div>
 
   <div id="account-bar">
     <span id="account-email"></span>
-    <button id="logout-btn">Log Out · تسجيل الخروج</button>
+    <button id="logout-btn">Log Out</button>
   </div>
 
   <div class="welcome-banner" id="welcome-banner" style="display:none;">
@@ -697,11 +703,16 @@ function speakResult(name, correctCount, total, pct, lang){
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   var text, voiceLang;
+  var praise = (pct >= 50);
   if(lang === 'ar'){
-    text = 'أحسنت يا ' + name + '! لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.';
+    text = (praise ? ('أحسنت يا ' + name + '! ') : (name + '، ')) +
+      'لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.' +
+      (praise ? '' : ' راجع الدرس وحاول مرة أخرى.');
     voiceLang = 'ar-SA';
   } else {
-    text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+    text = (praise ? ('Well done, ' + name + '! ') : (name + ', ')) +
+      'You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.' +
+      (praise ? '' : ' Review the lesson and try again.');
     voiceLang = 'en-US';
   }
   var utter = new SpeechSynthesisUtterance(text);
@@ -718,12 +729,14 @@ function showAuthPanel(id){
 document.getElementById('show-enroll-btn').addEventListener('click', function(){
   playClickSound();
   document.getElementById('enroll-error').style.display = 'none';
+  document.getElementById('enroll-goto-login-btn').style.display = 'none';
   showAuthPanel('enroll-form');
   document.getElementById('enroll-name').focus();
 });
 document.getElementById('show-login-btn').addEventListener('click', function(){
   playClickSound();
   document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-info').style.display = 'none';
   showAuthPanel('login-form');
   document.getElementById('login-email').focus();
 });
@@ -1664,12 +1677,91 @@ function refreshCurrentStepLanguage(){
   updateStepProgress();
 }
 
+/* ===================== AUTH UI STRINGS (mono-lingual — follows the toggle) ===================== */
+var AUTH_STRINGS = {
+  en: {
+    loading: 'Loading your account…',
+    landingLabel: 'Create an account or log in to begin',
+    enrollBtn: 'Enroll', loginBtn: 'Log In',
+    enrollTitle: 'Create Your Account',
+    namePlaceholder: 'Full name', emailPlaceholder: 'Email', passwordPlaceholder: 'Password (6+ characters)',
+    createAccountBtn: 'Create Account', back: '← Back',
+    loginTitle: 'Log In', loginPasswordPlaceholder: 'Password', forgotPassword: 'Forgot your password?',
+    logout: 'Log Out', gotoLogin: 'Go to Login',
+    resetSent: 'Password reset email sent — check your inbox.',
+    enterEmailFirst: 'Please enter your email above first.',
+    errRequireName: 'Please enter your full name.',
+    errRequireEmail: 'Please enter your email.',
+    errPasswordLen: 'Password must be at least 6 characters.',
+    errRequireBoth: 'Please enter your email and password.',
+    err: {
+      'auth/email-already-in-use': 'This email is already registered.',
+      'auth/invalid-email': 'Please enter a valid email address.',
+      'auth/weak-password': 'Password must be at least 6 characters.',
+      'auth/user-not-found': 'Incorrect email or password.',
+      'auth/wrong-password': 'Incorrect email or password.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+      'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.',
+      'default': 'Something went wrong. Please try again.'
+    }
+  },
+  ar: {
+    loading: 'جارٍ تحميل حسابك…',
+    landingLabel: 'أنشئ حسابًا أو سجّل الدخول لتبدأ',
+    enrollBtn: 'اشترك', loginBtn: 'تسجيل الدخول',
+    enrollTitle: 'أنشئ حسابك',
+    namePlaceholder: 'الاسم الكامل', emailPlaceholder: 'البريد الإلكتروني', passwordPlaceholder: 'كلمة المرور (٦ أحرف أو أكثر)',
+    createAccountBtn: 'إنشاء الحساب', back: 'رجوع',
+    loginTitle: 'تسجيل الدخول', loginPasswordPlaceholder: 'كلمة المرور', forgotPassword: 'هل نسيت كلمة المرور؟',
+    logout: 'تسجيل الخروج', gotoLogin: 'الذهاب لتسجيل الدخول',
+    resetSent: 'تم إرسال رابط إعادة تعيين كلمة المرور — تحقق من بريدك الإلكتروني.',
+    enterEmailFirst: 'الرجاء إدخال بريدك الإلكتروني أعلاه أولًا.',
+    errRequireName: 'الرجاء إدخال اسمك الكامل.',
+    errRequireEmail: 'الرجاء إدخال بريدك الإلكتروني.',
+    errPasswordLen: 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
+    errRequireBoth: 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.',
+    err: {
+      'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجَّل بالفعل.',
+      'auth/invalid-email': 'الرجاء إدخال بريد إلكتروني صحيح.',
+      'auth/weak-password': 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
+      'auth/user-not-found': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/wrong-password': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/too-many-requests': 'محاولات كثيرة جداً، الرجاء الانتظار قليلاً ثم المحاولة مرة أخرى.',
+      'default': 'حدث خطأ ما. حاول مرة أخرى.'
+    }
+  }
+};
+
+function refreshAuthLanguage(){
+  var s = AUTH_STRINGS[currentLang];
+  document.getElementById('auth-loading-text').textContent = s.loading;
+  document.getElementById('auth-landing-label').textContent = s.landingLabel;
+  document.getElementById('show-enroll-btn').textContent = s.enrollBtn;
+  document.getElementById('show-login-btn').textContent = s.loginBtn;
+  document.getElementById('enroll-title').textContent = s.enrollTitle;
+  document.getElementById('enroll-name').placeholder = s.namePlaceholder;
+  document.getElementById('enroll-email').placeholder = s.emailPlaceholder;
+  document.getElementById('enroll-password').placeholder = s.passwordPlaceholder;
+  document.getElementById('enroll-submit-btn').textContent = s.createAccountBtn;
+  document.getElementById('enroll-back-btn').textContent = s.back;
+  document.getElementById('enroll-goto-login-btn').textContent = s.gotoLogin;
+  document.getElementById('login-title').textContent = s.loginTitle;
+  document.getElementById('login-email').placeholder = s.emailPlaceholder;
+  document.getElementById('login-password').placeholder = s.loginPasswordPlaceholder;
+  document.getElementById('login-submit-btn').textContent = s.loginBtn;
+  document.getElementById('forgot-password-btn').textContent = s.forgotPassword;
+  document.getElementById('login-back-btn').textContent = s.back;
+  document.getElementById('logout-btn').textContent = s.logout;
+}
+
 function setLanguage(lang){
   currentLang = lang;
   document.body.classList.toggle('rtl-active', lang === 'ar');
   document.documentElement.lang = lang;
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
   document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
+  refreshAuthLanguage();
   if(studentName && document.getElementById('welcome-banner').style.display !== 'none'){ showWelcomeBanner(false); }
   if(document.getElementById('main-content').style.display !== 'none'){ refreshCurrentStepLanguage(); }
 }
@@ -1861,7 +1953,11 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     if(els.scoreTitle){
       var titleText = '';
       if(name){
-        titleText = (lang === 'ar') ? ('أحسنت يا ' + name + '! 🌟') : ('Well done, ' + name + '! 🌟');
+        if(pct >= 50){
+          titleText = (lang === 'ar') ? ('أحسنت يا ' + name + '! 🌟') : ('Well done, ' + name + '! 🌟');
+        } else {
+          titleText = (lang === 'ar') ? ('واصل يا ' + name + '، بإمكانك تحسين نتيجتك.') : ('Keep going, ' + name + ' — you can improve your score.');
+        }
       }
       els.scoreTitle.textContent = titleText;
     }
@@ -1960,13 +2056,14 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
 /* ===================== INIT ===================== */
 document.body.classList.remove('rtl-active');
 document.getElementById('lang-en-btn').classList.add('active');
+refreshAuthLanguage();
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
 import {
   getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  onAuthStateChanged, signOut, updateProfile
+  onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc
@@ -1985,18 +2082,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-function authErrorMessage(code){
-  var map = {
-    'auth/email-already-in-use': 'This email is already registered — try logging in instead. · هذا البريد مسجَّل بالفعل، جرّب تسجيل الدخول.',
-    'auth/invalid-email': 'Please enter a valid email address. · الرجاء إدخال بريد إلكتروني صحيح.',
-    'auth/weak-password': 'Password must be at least 6 characters. · يجب ألا تقل كلمة المرور عن 6 أحرف.',
-    'auth/user-not-found': 'Incorrect email or password. · البريد الإلكتروني أو كلمة المرور غير صحيحة.',
-    'auth/wrong-password': 'Incorrect email or password. · البريد الإلكتروني أو كلمة المرور غير صحيحة.',
-    'auth/invalid-credential': 'Incorrect email or password. · البريد الإلكتروني أو كلمة المرور غير صحيحة.',
-    'auth/too-many-requests': 'Too many attempts — please wait a moment and try again. · محاولات كثيرة جداً، الرجاء الانتظار قليلاً ثم المحاولة مرة أخرى.'
-  };
-  return map[code] || ('Something went wrong. Please try again. · حدث خطأ ما، حاول مرة أخرى. (' + code + ')');
-}
+function t(key){ return window.AUTH_STRINGS[window.currentLang][key]; }
+function authErrorMessage(code){ return t('err')[code] || t('err')['default']; }
 
 function showErr(el, msg){
   el.textContent = msg;
@@ -2015,17 +2102,19 @@ function defaultStudentDoc(fullName, email){
 
 var enrollBtn = document.getElementById('enroll-submit-btn');
 var loginBtn = document.getElementById('login-submit-btn');
+var enrollErrorEl = document.getElementById('enroll-error');
+var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
 
 enrollBtn.addEventListener('click', function(){
-  var errEl = document.getElementById('enroll-error');
-  errEl.style.display = 'none';
+  enrollErrorEl.style.display = 'none';
+  gotoLoginBtn.style.display = 'none';
   var name = document.getElementById('enroll-name').value.trim();
   var email = document.getElementById('enroll-email').value.trim();
   var password = document.getElementById('enroll-password').value;
 
-  if(!name){ showErr(errEl, 'Please enter your full name. · الرجاء إدخال اسمك الكامل.'); return; }
-  if(!email){ showErr(errEl, 'Please enter your email. · الرجاء إدخال بريدك الإلكتروني.'); return; }
-  if(password.length < 6){ showErr(errEl, 'Password must be at least 6 characters. · يجب ألا تقل كلمة المرور عن 6 أحرف.'); return; }
+  if(!name){ showErr(enrollErrorEl, t('errRequireName')); return; }
+  if(!email){ showErr(enrollErrorEl, t('errRequireEmail')); return; }
+  if(password.length < 6){ showErr(enrollErrorEl, t('errPasswordLen')); return; }
 
   enrollBtn.disabled = true;
   enrollBtn.textContent = '…';
@@ -2043,21 +2132,33 @@ enrollBtn.addEventListener('click', function(){
       window.enterCourse(result.uid, email, result.data, false);
     })
     .catch(function(e){
-      showErr(errEl, authErrorMessage(e.code));
+      showErr(enrollErrorEl, authErrorMessage(e.code));
+      if(e.code === 'auth/email-already-in-use'){
+        gotoLoginBtn.style.display = '';
+        gotoLoginBtn.onclick = function(){
+          window.playClickSound && window.playClickSound();
+          document.getElementById('login-email').value = email;
+          window.showAuthPanel('login-form');
+          document.getElementById('login-password').focus();
+        };
+      }
     })
     .finally(function(){
       enrollBtn.disabled = false;
-      enrollBtn.textContent = 'Create Account · إنشاء الحساب';
+      enrollBtn.textContent = t('createAccountBtn');
     });
 });
 
+var loginErrorEl = document.getElementById('login-error');
+var loginInfoEl = document.getElementById('login-info');
+
 loginBtn.addEventListener('click', function(){
-  var errEl = document.getElementById('login-error');
-  errEl.style.display = 'none';
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
   var email = document.getElementById('login-email').value.trim();
   var password = document.getElementById('login-password').value;
 
-  if(!email || !password){ showErr(errEl, 'Please enter your email and password. · الرجاء إدخال البريد الإلكتروني وكلمة المرور.'); return; }
+  if(!email || !password){ showErr(loginErrorEl, t('errRequireBoth')); return; }
 
   loginBtn.disabled = true;
   loginBtn.textContent = '…';
@@ -2070,11 +2171,27 @@ loginBtn.addEventListener('click', function(){
       });
     })
     .catch(function(e){
-      showErr(errEl, authErrorMessage(e.code));
+      showErr(loginErrorEl, authErrorMessage(e.code));
     })
     .finally(function(){
       loginBtn.disabled = false;
-      loginBtn.textContent = 'Log In · تسجيل الدخول';
+      loginBtn.textContent = t('loginBtn');
+    });
+});
+
+document.getElementById('forgot-password-btn').addEventListener('click', function(){
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
+  var email = document.getElementById('login-email').value.trim();
+  if(!email){ showErr(loginErrorEl, t('enterEmailFirst')); document.getElementById('login-email').focus(); return; }
+  sendPasswordResetEmail(auth, email)
+    .then(function(){
+      window.playClickSound && window.playClickSound();
+      loginInfoEl.textContent = t('resetSent');
+      loginInfoEl.style.display = 'block';
+    })
+    .catch(function(e){
+      showErr(loginErrorEl, authErrorMessage(e.code));
     });
 });
 
