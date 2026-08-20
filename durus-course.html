@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدروس المهمة — Durūs al-Muhimmah (6-Week Course)</title>
+<meta name="description" content="Durūs al-Muhimmah lil ʿĀmmah — Important Lessons for Every Muslim. A 6-week interactive course with weekly quizzes, a midterm, a final exam, and a certificate of completion.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --scale:1.15;
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --red:#9c3d3d; --red-bg:#f4e0df;
+    --blue:#5b8fc9; --blue-bg:#dfeaf7;
+    --pink:#c9598a; --pink-bg:#fbe4ee;
+    --purple:#7d5ba6; --purple-bg:#ece3f5;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ overflow-x:clip; }
+  body{
+    margin:0; background:var(--parchment); color:var(--ink-brown);
+    font-family:'Cormorant Garamond', serif; font-size:calc(17px * var(--scale));
+    line-height:1.65;
+  }
+  a{ color:inherit; }
+  .arabic{ font-family:'Amiri', serif; }
+  .wrap{ max-width:760px; margin:0 auto; padding:18px 16px 60px; }
+
+  /* ===== Main site header ===== */
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  header.site .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; max-width:1120px; margin:0 auto;
+  }
+  header.site .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  header.site .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none;
+  }
+  header.site .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  header.site .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  header.site nav.site-links{ display:flex; align-items:center; gap:28px; }
+  header.site nav.site-links a{
+    text-decoration:none; font-size:17px; color:var(--ink-brown); font-weight:600;
+    padding:6px 2px; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  header.site nav.site-links a:hover{ color:var(--green); border-color:var(--gold-soft); }
+  header.site nav.site-links a.active{ color:var(--green); border-color:var(--green); }
+  header.site .menu-btn{ display:none; }
+  @media (max-width:820px){
+    header.site nav.site-links{
+      display:none; position:absolute; top:100%; left:0; right:0; flex-direction:column; align-items:stretch;
+      background:var(--parchment); border-bottom:1px solid var(--gold-soft);
+      padding:10px 20px 18px; gap:4px; box-shadow:0 12px 20px rgba(60,45,20,.12);
+    }
+    header.site nav.site-links.open{ display:flex; }
+    header.site nav.site-links a{ padding:10px 4px; border-bottom:1px solid rgba(169,124,37,.15); }
+    header.site .menu-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border-radius:8px; border:1px solid var(--gold-soft);
+      background:#fff; cursor:pointer; flex-direction:column; gap:4px; padding:0;
+    }
+    header.site .menu-btn span{ width:20px; height:2px; background:var(--ink-brown); display:block; }
+  }
+
+  /* ===== Sticky top bar (course-level) ===== */
+  .topbar{
+    position:sticky; top:71px; z-index:20; background:var(--parchment);
+    border-bottom:2px solid var(--gold-soft); padding:12px 16px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    box-shadow:0 2px 10px rgba(60,47,38,0.06); text-align:center;
+  }
+  .font-size-control{
+    position:absolute; top:10px; right:14px; z-index:21;
+    display:flex; align-items:center; gap:6px;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:18px;
+    padding:4px 10px;
+  }
+  .font-size-control button{
+    width:22px; height:22px; border-radius:50%; border:1.5px solid var(--gold-soft);
+    background:var(--parchment); color:var(--ink-brown); font-size:15px; font-weight:700;
+    line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:background .15s ease, transform .15s ease; padding:0;
+  }
+  .font-size-control button:hover{ background:var(--parchment-deep); transform:scale(1.08); }
+  .font-size-control button:disabled{ opacity:.4; cursor:default; transform:none; }
+  #font-size-readout{ font-size:12px; font-weight:700; color:var(--ink-brown); min-width:34px; text-align:center; }
+
+  .back-to-weeks-btn{
+    position:absolute; top:10px; left:14px; z-index:21;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:18px;
+    padding:6px 12px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); cursor:pointer;
+    display:flex; align-items:center; gap:5px; transition:background .15s ease, transform .15s ease;
+  }
+  .back-to-weeks-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
+
+  .topbar-title{ display:flex; flex-direction:column; line-height:1.25; align-items:center; }
+  .topbar-title .ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); }
+  .topbar-title .en{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); color:var(--ink-navy); }
+
+  /* ===== Name gate ===== */
+  #name-gate{ display:flex; justify-content:center; padding:40px 10px; }
+  .name-gate-box{
+    max-width:420px; width:100%; text-align:center; background:#fff;
+    border:2px solid var(--gold-soft); border-radius:16px; padding:30px 26px;
+    box-shadow:0 4px 16px rgba(60,47,38,0.08);
+  }
+  #name-gate-label{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin:0 0 14px; font-weight:700; }
+  #student-name-input{
+    width:100%; padding:12px 16px; border:1.5px solid var(--gold-soft); border-radius:10px;
+    font-family:'Cormorant Garamond', serif; font-size:calc(16px * var(--scale)); text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+  }
+  #student-name-input:focus{ outline:none; border-color:var(--gold); }
+  .name-warning{ color:var(--red); font-size:calc(13px * var(--scale)); margin:-6px 0 12px; }
+  #name-start-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:11px 32px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(15px * var(--scale)); cursor:pointer; transition:transform .15s ease;
+  }
+  #name-start-btn:hover{ transform:scale(1.04); }
+
+  /* ===== Week select hub ===== */
+  #week-select{ max-width:520px; margin:10px auto 0; text-align:center; }
+  .week-select-lead{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); font-weight:700; margin:0 0 16px; }
+  .week-select-grid{ display:flex; flex-direction:column; gap:12px; }
+  .week-select-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:14px 24px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(16px * var(--scale)); cursor:pointer; transition:transform .15s ease, background .15s ease;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .week-select-btn:hover{ transform:scale(1.03); background:#b8862c; }
+  .week-select-btn.milestone{ background:var(--ink-navy); }
+  .week-select-btn.milestone:hover{ background:#28395c; }
+  .week-select-btn.finale{ background:var(--green); }
+  .week-select-btn.finale:hover{ background:var(--green-dark); }
+  .week-select-btn .wsb-ar{ font-family:'Amiri', serif; opacity:.9; }
+  .week-select-btn .wsb-en::after{ content:' ·'; opacity:.7; }
+
+  /* ===== Welcome banner ===== */
+  .welcome-banner{
+    max-width:560px; margin:6px auto 22px; text-align:center;
+    background:var(--green-bg); border:1.5px solid var(--green); border-radius:14px;
+    padding:14px 22px;
+  }
+  .welcome-line{ margin:0; font-size:calc(15.5px * var(--scale)); font-weight:700; color:var(--green); }
+  .welcome-quote{ margin:8px 0 0; font-size:calc(13px * var(--scale)); color:var(--ink-brown); font-style:italic; line-height:1.6; }
+  .welcome-quote .quote-ar{ display:block; font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); direction:rtl; margin-bottom:3px; }
+  .welcome-quote .quote-en{ display:block; }
+
+  /* ===== Hero ===== */
+  .hero{ text-align:center; padding:28px 10px 20px; }
+  .hero-eyebrow{ color:var(--gold); font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); margin:0 0 6px; }
+  .week-badge{
+    display:inline-block; background:var(--ink-navy); color:#fdf6e3; font-weight:700;
+    font-size:calc(13px * var(--scale)); padding:5px 16px; border-radius:14px; margin:0 0 16px;
+  }
+  .hero h1{
+    font-family:'Amiri', serif; font-weight:700; font-size:calc(30px * var(--scale));
+    margin:0 0 8px; color:var(--ink-navy);
+  }
+  .hero h1.en-title{ font-family:'Cormorant Garamond', serif; font-size:calc(26px * var(--scale)); }
+  .hero p{ color:var(--ink-brown); font-size:calc(16px * var(--scale)); max-width:520px; margin:0 auto; }
+
+  /* ===== Section ===== */
+  .section{ margin:34px 0; }
+  .section-title{
+    display:flex; align-items:center; gap:10px; margin:0 0 16px;
+    font-family:'Amiri', serif; font-weight:700; font-size:calc(20px * var(--scale)); color:var(--ink-navy);
+  }
+  .section-title .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%; background:var(--gold); color:#fff8ea;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(15px * var(--scale)); flex-shrink:0;
+  }
+  .lead{ color:var(--ink-brown); margin:0 0 16px; }
+
+  /* ===== Definition / info cards ===== */
+  .def-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media(min-width:560px){ .def-grid{ grid-template-columns:1fr 1fr; } }
+  .def-grid.cols-3{ grid-template-columns:1fr; }
+  @media(min-width:640px){ .def-grid.cols-3{ grid-template-columns:1fr 1fr 1fr; } }
+  .def-card{ border-radius:14px; padding:18px 20px; border:2px solid; }
+  .def-card.c-blue{ background:var(--blue-bg); border-color:var(--blue); }
+  .def-card.c-pink{ background:var(--pink-bg); border-color:var(--pink); }
+  .def-card.c-purple{ background:var(--purple-bg); border-color:var(--purple); }
+  .def-card.c-green{ background:var(--green-bg); border-color:var(--green); }
+  .def-card.c-red{ background:var(--red-bg); border-color:var(--red); }
+  .def-card h3{ margin:0 0 8px; font-family:'Amiri', serif; font-size:calc(18px * var(--scale)); }
+  .def-card.c-blue h3{ color:#2c5482; }
+  .def-card.c-pink h3{ color:#93356a; }
+  .def-card.c-purple h3{ color:#5b3d80; }
+  .def-card.c-green h3{ color:var(--green-dark); }
+  .def-card.c-red h3{ color:var(--red); }
+  .def-card p{ margin:0 0 10px; font-size:calc(14.5px * var(--scale)); }
+  .def-card .ex{
+    font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); background:rgba(255,255,255,0.55);
+    border-radius:8px; padding:8px 12px; direction:rtl; text-align:center;
+  }
+
+  /* ===== Rule callout ===== */
+  .rule-box{
+    background:var(--parchment-deep); border-left:4px solid var(--gold); border-radius:10px;
+    padding:16px 20px; margin:0 0 18px;
+  }
+  .rule-box ul{ margin:8px 0 0; padding-inline-start:20px; }
+  .rule-box li{ margin-bottom:6px; font-size:calc(14.5px * var(--scale)); }
+
+  /* ===== Numbered sub-rules ===== */
+  .sub-rules{ display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+  .sub-rule{
+    display:flex; gap:12px; align-items:flex-start; background:#fff;
+    border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 14px;
+  }
+  .sub-rule .srnum{
+    flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--gold-soft);
+    color:#fff8ea; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:calc(13px * var(--scale));
+  }
+  .sub-rule .srbody{ font-size:calc(14.5px * var(--scale)); }
+  .sub-rule .srbody b{ color:var(--ink-navy); }
+  .sub-rule .srex{ font-family:'Amiri', serif; direction:rtl; color:#5c4a30; font-size:calc(15px * var(--scale)); margin-top:4px; }
+
+  /* ===== Note box ===== */
+  .note-box{
+    background:var(--green-bg); border:1.5px solid var(--green); border-radius:12px;
+    padding:16px 20px; margin-top:10px;
+  }
+  .note-box .note-title{ font-weight:700; color:var(--green-dark); margin:0 0 8px; font-size:calc(14.5px * var(--scale)); }
+  .note-box p{ margin:0; font-size:calc(14px * var(--scale)); }
+  .note-box .term-pair{ font-family:'Amiri', serif; direction:rtl; display:inline-block; }
+
+  hr.divider{ border:none; border-top:2px dashed var(--gold-soft); margin:38px 0; }
+
+  /* ===== Stepper ===== */
+  .step-progress-row{
+    display:flex; align-items:center; gap:12px; margin:18px 0 26px;
+    font-size:calc(13px * var(--scale)); color:var(--ink-brown); font-weight:700;
+  }
+  .step-progress-track{ flex:1; height:8px; background:var(--parchment-deep); border-radius:5px; overflow:hidden; }
+  .step-progress-fill{ height:100%; background:var(--gold); border-radius:5px; transition:width .35s ease; width:0%; }
+  #step-viewport{ min-height:200px; animation:step-fade-in .35s ease; }
+  @keyframes step-fade-in{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+  .step-nav-row{
+    display:flex; justify-content:space-between; align-items:center; margin:30px 0 10px;
+    position:sticky; bottom:0; background:var(--parchment); padding:12px 0 6px;
+  }
+  #step-back-btn{ visibility:hidden; }
+  #step-back-btn.show{ visibility:visible; }
+  .qbtn.solid#step-next-btn{ padding:12px 30px; font-size:calc(15.5px * var(--scale)); }
+
+  /* ===== Quiz section (reused engine) ===== */
+  .quiz-shell{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:20px;
+    box-shadow:0 4px 16px rgba(60,47,38,0.08);
+  }
+  .quiz-progress-row{ display:flex; justify-content:space-between; align-items:center; font-size:calc(13px * var(--scale)); margin-bottom:14px; color:var(--ink-brown); }
+  .quiz-bar-track{ flex:1; height:8px; background:var(--parchment-deep); border-radius:5px; margin:0 12px; overflow:hidden; }
+  .quiz-bar-fill{ height:100%; background:var(--gold); border-radius:5px; transition:width .3s ease; width:0%; }
+  .q-head{ display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; }
+  .q-num{
+    flex-shrink:0; width:28px; height:28px; border-radius:50%; background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:calc(13.5px * var(--scale));
+  }
+  .q-text{ font-weight:700; font-size:calc(16px * var(--scale)); color:var(--ink-navy); }
+  .q-options{ display:flex; flex-direction:column; gap:9px; position:relative; }
+  .q-option{
+    display:flex; align-items:center; gap:10px; border:1.5px solid var(--gold-soft);
+    border-radius:8px; padding:10px 14px; cursor:pointer; background:var(--parchment);
+    font-size:calc(15px * var(--scale)); transition:background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .q-option:hover{ background:var(--parchment-deep); transform:translateX(3px); }
+  .q-option .letter{ font-weight:700; color:var(--blue); flex-shrink:0; }
+  .q-option.selected{ background:var(--green-bg); border-color:var(--green); border-width:2px; }
+  .q-option.selected .letter{ color:var(--green); }
+  .q-option.opt-correct{ border-color:var(--green) !important; background:var(--green-bg) !important; }
+  .q-option.opt-wrong{ border-color:var(--red) !important; background:var(--red-bg) !important; }
+  .q-options.locked .q-option{ cursor:default; }
+  .q-options.locked .q-option:hover{ transform:none; background:var(--parchment); }
+  .q-options.locked .q-option.opt-correct:hover,
+  .q-options.locked .q-option.opt-wrong:hover{ background:inherit; }
+  .rq-explanation-inline{
+    margin-top:14px; padding:12px 16px; border-radius:10px;
+    background:var(--green-bg); border:1.5px solid var(--green);
+    font-size:calc(13.5px * var(--scale)); color:#2f5233; line-height:1.7; text-align:start;
+  }
+  @keyframes celebrate-pop{
+    0%{ transform:scale(1); } 35%{ transform:scale(1.03); } 60%{ transform:scale(0.99); } 100%{ transform:scale(1); }
+  }
+  .q-option.opt-correct.celebrate{ animation:celebrate-pop .45s ease; }
+  @keyframes shake-wrong{
+    0%, 100%{ transform:translateX(0); } 20%{ transform:translateX(-6px); } 40%{ transform:translateX(5px); }
+    60%{ transform:translateX(-4px); } 80%{ transform:translateX(3px); }
+  }
+  .q-option.opt-wrong.shake{ animation:shake-wrong .4s ease; }
+  .quiz-nav-row{ display:flex; justify-content:space-between; margin-top:18px; gap:10px; }
+  .qbtn{
+    border:none; border-radius:22px; padding:10px 20px; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:calc(14.5px * var(--scale)); cursor:pointer; transition:transform .15s ease, opacity .15s ease;
+  }
+  .qbtn:hover{ transform:scale(1.03); }
+  .qbtn:disabled{ opacity:.4; cursor:default; transform:none; }
+  .qbtn.ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
+  .qbtn.solid{ background:var(--gold); color:#fff8ea; }
+  .quiz-dots{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:16px; }
+  .quiz-dot{ width:10px; height:10px; border-radius:50%; background:var(--parchment-deep); border:1px solid var(--gold-soft); }
+  .quiz-dot.dot-current{ background:var(--gold); }
+  .quiz-dot.dot-answered{ background:var(--gold-soft); }
+
+  .quiz-summary{ display:none; text-align:center; }
+  .quiz-summary.show{ display:block; }
+  .quiz-summary .score-title{ font-size:calc(17px * var(--scale)); font-weight:700; color:var(--green); margin:0 0 4px; }
+  .quiz-summary .score-pct{ font-family:'Amiri', serif; font-weight:700; font-size:calc(44px * var(--scale)); color:var(--ink-navy); margin:6px 0; }
+  .quiz-summary .score-msg{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin-bottom:18px; }
+  .review-grid{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:16px 0; }
+  .review-num{
+    width:34px; height:34px; border-radius:50%; border:none; cursor:pointer; font-weight:700;
+    color:#fff; font-family:'Cormorant Garamond', serif; font-size:calc(13.5px * var(--scale));
+  }
+  .review-num.rn-correct{ background:var(--green); }
+  .review-num.rn-wrong{ background:var(--red); }
+  .review-detail{
+    text-align:start; background:var(--parchment); border-radius:10px; padding:16px; margin-top:10px;
+    display:none; font-size:calc(13.5px * var(--scale));
+  }
+  .review-detail.show{ display:block; }
+  .review-detail .rd-q{ font-weight:700; color:var(--ink-navy); margin-bottom:8px; }
+  .review-detail .rd-your{ color:var(--red); margin-bottom:4px; }
+  .review-detail .rd-correct{ color:var(--green); margin-bottom:8px; }
+  .review-detail .rd-expl{ background:#fff; border-radius:8px; padding:10px 12px; }
+  .retake-btn{ background:var(--gold); color:#fff8ea; border:none; border-radius:22px; padding:11px 26px; font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); cursor:pointer; margin-top:10px; }
+  .cert-cta{ margin-top:18px; }
+  .cert-cta .qbtn.solid{ background:var(--green); }
+  .lock-msg{ margin-top:16px; font-size:calc(14px * var(--scale)); color:var(--red); font-weight:700; }
+
+  /* ===== Certificate ===== */
+  #certificate-wrap{ display:flex; justify-content:center; padding:6px 0 20px; }
+  .cert-card{
+    width:100%; max-width:640px; background:var(--parchment);
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-20px;
+    border-radius:6px; padding:44px 34px 36px; text-align:center; position:relative;
+    box-shadow:0 10px 30px rgba(60,47,38,0.15);
+  }
+  .cert-seal{
+    width:64px; height:64px; border-radius:50%; background:var(--green); color:#faf3e0;
+    display:flex; align-items:center; justify-content:center; font-family:'Amiri'; font-size:30px;
+    margin:0 auto 14px; border:3px solid var(--gold-soft);
+  }
+  .cert-eyebrow{ font-family:'Amiri', serif; color:var(--gold); font-size:calc(16px * var(--scale)); margin:0 0 4px; }
+  .cert-title{ font-family:'Marcellus'; font-size:calc(26px * var(--scale)); color:var(--ink-navy); margin:0 0 18px; letter-spacing:.02em; }
+  .cert-line{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0 0 6px; }
+  .cert-name{ font-family:'Amiri', serif; font-weight:700; font-size:calc(32px * var(--scale)); color:var(--green-dark); margin:6px 0 16px; border-bottom:2px solid var(--gold-soft); display:inline-block; padding:0 10px 6px; }
+  .cert-course{ font-family:'Marcellus'; font-size:calc(17px * var(--scale)); color:var(--ink-navy); margin:0 0 2px; }
+  .cert-course-ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); margin:0 0 20px; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin:18px 0 6px; font-size:calc(13px * var(--scale)); color:var(--ink-brown); }
+  .cert-meta-row b{ color:var(--ink-navy); display:block; font-size:calc(13.5px * var(--scale)); }
+  .cert-footer{ margin-top:26px; padding-top:14px; border-top:1px solid var(--gold-soft); font-size:calc(12.5px * var(--scale)); color:var(--gold); }
+  .cert-actions{ text-align:center; margin-top:20px; }
+  .cert-actions .qbtn{ margin:0 6px; }
+
+  footer.foot{ text-align:center; color:var(--gold); font-size:calc(12px * var(--scale)); margin-top:40px; }
+
+  @media print{
+    header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ max-width:none; padding:0; }
+    .cert-card{ box-shadow:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark" style="font-family:'Amiri',serif;">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <button class="menu-btn" id="siteMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="site-links" id="siteMainNav">
+      <a href="quran.html">Qur'ān</a>
+      <a href="hadeeth.html" class="active">Ḥadīth</a>
+      <a href="arabic.html">Arabic</a>
+      <a href="seeraa.html">Seerah</a>
+      <a href="apps.html">Apps</a>
+    </nav>
+  </div>
+</header>
+
+<div class="topbar">
+  <button class="back-to-weeks-btn" id="back-to-weeks-btn" style="display:none;">☰ Weeks</button>
+  <div class="font-size-control" id="font-size-control">
+    <button id="font-decrease-btn" aria-label="Decrease font size">−</button>
+    <span id="font-size-readout">100%</span>
+    <button id="font-increase-btn" aria-label="Increase font size">+</button>
+  </div>
+  <div class="topbar-title">
+    <span class="ar">الدروس المهمة لعامة الأمة</span>
+    <span class="en">Durūs al-Muhimmah — 6-Week Course</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div id="name-gate">
+    <div class="name-gate-box">
+      <label for="student-name-input" id="name-gate-label">Enter your name to begin</label>
+      <input type="text" id="student-name-input" placeholder="Your name" autocomplete="off">
+      <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first</p>
+      <button id="name-start-btn">Start the Course</button>
+    </div>
+  </div>
+
+  <div class="welcome-banner" id="welcome-banner" style="display:none;">
+    <p class="welcome-line" id="welcome-line"></p>
+    <p class="welcome-quote" id="welcome-quote">
+      <span class="quote-ar" id="welcome-quote-ar"></span>
+      <span class="quote-en" id="welcome-quote-en"></span>
+    </p>
+  </div>
+
+  <div id="week-select" style="display:none;">
+    <p class="week-select-lead">Choose where you'd like to start</p>
+    <div class="week-select-grid">
+      <button class="week-select-btn" data-step="0"><span class="wsb-en">Week 1</span><span class="wsb-ar">القرآن</span></button>
+      <button class="week-select-btn" data-step="2"><span class="wsb-en">Week 2</span><span class="wsb-ar">الإسلام والإيمان والإحسان</span></button>
+      <button class="week-select-btn" data-step="4"><span class="wsb-en">Week 3</span><span class="wsb-ar">التوحيد والشرك</span></button>
+      <button class="week-select-btn milestone" data-step="6"><span class="wsb-en">Midterm Exam</span><span class="wsb-ar">اختبار منتصف الفصل</span></button>
+      <button class="week-select-btn" data-step="7"><span class="wsb-en">Week 4</span><span class="wsb-ar">الصلاة</span></button>
+      <button class="week-select-btn" data-step="9"><span class="wsb-en">Week 5</span><span class="wsb-ar">الطهارة والزكاة والصيام والحج</span></button>
+      <button class="week-select-btn" data-step="11"><span class="wsb-en">Week 6</span><span class="wsb-ar">الأخلاق والجنائز</span></button>
+      <button class="week-select-btn milestone" data-step="13"><span class="wsb-en">Final Exam</span><span class="wsb-ar">الاختبار النهائي</span></button>
+      <button class="week-select-btn finale" data-step="14"><span class="wsb-en">Certificate</span><span class="wsb-ar">الشهادة</span></button>
+    </div>
+  </div>
+
+  <div id="main-content" style="display:none;">
+
+    <div class="step-progress-row">
+      <span id="step-progress-text">Step 1 / 15</span>
+      <div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div>
+    </div>
+
+    <div id="step-viewport"></div>
+
+    <div class="step-nav-row" id="step-nav-row">
+      <button class="qbtn ghost" id="step-back-btn">Back</button>
+      <button class="qbtn solid" id="step-next-btn" style="display:none;">Next</button>
+    </div>
+
+  </div>
+
+  <footer class="foot">الدروس المهمة لعامة الأمة · Durūs al-Muhimmah</footer>
+</div>
+
+<script>
+const siteMenuBtn = document.getElementById('siteMenuBtn');
+const siteMainNav = document.getElementById('siteMainNav');
+siteMenuBtn.addEventListener('click', () => {
+  const open = siteMainNav.classList.toggle('open');
+  siteMenuBtn.setAttribute('aria-expanded', open);
+});
+siteMainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  siteMainNav.classList.remove('open');
+  siteMenuBtn.setAttribute('aria-expanded', 'false');
+}));
+
+/* ===================== FONT SIZE CONTROL ===================== */
+var FONT_SCALE_MIN = 0.8;
+var FONT_SCALE_MAX = 1.5;
+var FONT_SCALE_STEP = 0.1;
+var currentFontScale = 1.15;
+
+function applyFontScale(){
+  document.documentElement.style.setProperty('--scale', currentFontScale.toFixed(2));
+  document.getElementById('font-size-readout').textContent = Math.round(currentFontScale * 100) + '%';
+  document.getElementById('font-decrease-btn').disabled = (currentFontScale <= FONT_SCALE_MIN + 0.001);
+  document.getElementById('font-increase-btn').disabled = (currentFontScale >= FONT_SCALE_MAX - 0.001);
+}
+document.getElementById('font-decrease-btn').addEventListener('click', function(){
+  currentFontScale = Math.max(FONT_SCALE_MIN, +(currentFontScale - FONT_SCALE_STEP).toFixed(2));
+  applyFontScale();
+});
+document.getElementById('font-increase-btn').addEventListener('click', function(){
+  currentFontScale = Math.min(FONT_SCALE_MAX, +(currentFontScale + FONT_SCALE_STEP).toFixed(2));
+  applyFontScale();
+});
+applyFontScale();
+
+/* ===================== SOUND ENGINE ===================== */
+var audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+  if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+  return audioCtx;
+}
+function playNote(ctx, freq, startTime, duration, type, gainPeak){
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(gainPeak || 0.15, startTime + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.02);
+}
+function playClickSound(){
+  var ctx = getAudioCtx();
+  playNote(ctx, 720, ctx.currentTime, 0.09, 'sine', 0.10);
+}
+function playCorrectSound(){
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  [523.25, 659.25, 783.99].forEach(function(freq, i){
+    playNote(ctx, freq, t + i * 0.08, 0.2, 'triangle', 0.14);
+  });
+}
+function playWrongSound(){
+  var ctx = getAudioCtx();
+  var t = ctx.currentTime;
+  playNote(ctx, 196.00, t, 0.2, 'sawtooth', 0.11);
+  playNote(ctx, 174.61, t + 0.13, 0.24, 'sawtooth', 0.11);
+}
+
+/* ===================== STUDENT NAME / ENCOURAGEMENT ===================== */
+var studentName = '';
+
+var ENCOURAGEMENT_QUOTES = [
+  { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "“Whoever follows a path in seeking knowledge, Allah makes easy for him a path to Paradise.” — Sahih Muslim" },
+  { ar: "وَقُل رَّبِّ زِدْنِي عِلْمًا", en: "“My Lord, increase me in knowledge.” — Qur'an 20:114" },
+  { ar: "طَلَبُ الْعِلْمِ فَرِيضَةٌ عَلَى كُلِّ مُسْلِمٍ", en: "“Seeking knowledge is an obligation upon every Muslim.” — Ibn Mājah" },
+  { ar: "الدِّينُ النَّصِيحَةُ", en: "“The dīn is sincerity/advice.” — Sahih Muslim" },
+  { ar: "مَنْ يُرِدِ اللَّهُ بِهِ خَيْرًا يُفَقِّهْهُ فِي الدِّينِ", en: "“Whomever Allah wishes good for, He gives him understanding of the religion.” — Sahih al-Bukhari" },
+  { ar: "يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ", en: "“Allah will raise those who have believed among you and those who were given knowledge, in degrees.” — Qur'an 58:11" },
+  { ar: "إِنَّمَا يَخْشَى اللَّهَ مِنْ عِبَادِهِ الْعُلَمَاءُ", en: "“It is only those with knowledge among His servants who truly fear Allah.” — Qur'an 35:28" },
+  { ar: "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي وَعَلِّمْنِي مَا يَنْفَعُنِي وَزِدْنِي عِلْمًا", en: "“O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.” — Ibn Mājah" }
+];
+
+var lastQuoteIndex = -1;
+function pickQuote(){
+  var idx;
+  do { idx = Math.floor(Math.random() * ENCOURAGEMENT_QUOTES.length); } while(idx === lastQuoteIndex);
+  lastQuoteIndex = idx;
+  return ENCOURAGEMENT_QUOTES[idx];
+}
+
+var WELCOME_LINE_TEMPLATES = [
+  function(n){ return "🌟 Well done for showing up, " + n + "!"; },
+  function(n){ return "🌟 Keep going, " + n + "! May Allah make it easy for you."; },
+  function(n){ return "🌟 Proud of you, " + n + "! بارك الله فيك"; }
+];
+
+function showWelcomeBanner(){
+  var line = WELCOME_LINE_TEMPLATES[Math.floor(Math.random() * WELCOME_LINE_TEMPLATES.length)](studentName);
+  var quote = pickQuote();
+  document.getElementById('welcome-line').textContent = line;
+  document.getElementById('welcome-quote-ar').textContent = quote.ar;
+  document.getElementById('welcome-quote-en').textContent = quote.en;
+  document.getElementById('welcome-banner').style.display = 'block';
+}
+
+function speakResult(name, correctCount, total, pct){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  var text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.95;
+  window.speechSynthesis.speak(utter);
+}
+
+document.getElementById('name-start-btn').addEventListener('click', function(){
+  var input = document.getElementById('student-name-input');
+  var name = input.value.trim();
+  if(!name){
+    document.getElementById('name-warning').style.display = 'block';
+    input.focus();
+    return;
+  }
+  document.getElementById('name-warning').style.display = 'none';
+  studentName = name;
+  document.getElementById('name-gate').style.display = 'none';
+  document.getElementById('week-select').style.display = 'block';
+  showWelcomeBanner();
+});
+document.getElementById('student-name-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
+});
+
+document.getElementById('back-to-weeks-btn').addEventListener('click', function(){
+  playClickSound();
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('back-to-weeks-btn').style.display = 'none';
+  document.getElementById('week-select').style.display = 'block';
+  window.scrollTo(0,0);
+});
+
+document.getElementById('step-next-btn').addEventListener('click', function(){
+  playClickSound();
+  if(currentStepIndex < STEP_DEFS.length - 1){ renderStep(currentStepIndex + 1); }
+});
+document.getElementById('step-back-btn').addEventListener('click', function(){
+  playClickSound();
+  if(currentStepIndex > 0){ renderStep(currentStepIndex - 1); }
+});
+
+var currentStepIndex = 0;
+var PASS_THRESHOLD = 70;
+
+/* ===================== LESSON CONTENT ===================== */
+var WEEK1_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">القرآن الكريم</p>' +
+    '<h1>The Qur\'an — Learning It, Reciting It, Reflecting On It</h1>' +
+    '<p>Lesson One of Durūs al-Muhimmah: Al-Fātiḥah, the short sūrahs, and how the earliest generation of Muslims approached the Qur\'an.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>How the Companions Learned the Qur\'an</h2>' +
+    '<p class="lead">The Companions did not rush. They took the Qur\'an <b>a little at a time</b> — commonly ten verses at once — and would not move on until they had memorized those verses, understood their meaning, and begun acting upon them.</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li>Recite the portion correctly to a qualified teacher first — recitation is taken from the mouth, not only from a page.</li>' +
+      '<li>Memorize it firmly before adding more.</li>' +
+      '<li>Read a concise, reliable tafsīr alongside it — so memorization is paired with understanding.</li>' +
+      '<li>Act upon what is learned, seeking Allah\'s help throughout.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>Al-Fātiḥah — The Opening</h2>' +
+    '<p class="lead">Seven verses, recited in every single rakʿah of every prayer. It is also called <span class="arabic">أُمُّ الْكِتَاب</span> ("The Mother of the Book") and <span class="arabic">السَّبْعُ الْمَثَانِي</span> ("The Oft-Repeated Seven").</p>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-green"><h3>Its Content</h3><p>Praise of Allah, affirmation of His Lordship and the Last Day, and a direct plea: guide us to the Straight Path — the path of those You have favored, not of those who earned Your anger or went astray.</p></div>' +
+      '<div class="def-card c-blue"><h3>Why It Matters</h3><p>No prayer is valid without it. Every worshipper repeats this supplication at least seventeen times a day — it is the believer\'s daily renewal of guidance.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>The Short Sūrahs</h2>' +
+    '<p class="lead">Beginners are advised to start memorizing from the <b>end of the Qur\'an</b> — from Sūrah Az-Zalzalah through to Sūrah An-Nās — since these sūrahs are short, frequently recited in prayer, and cover foundational themes: the Day of Judgment, monotheism, the unseen, and seeking refuge in Allah.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>Which Tafsīr to Begin With</h2>' +
+    '<p class="lead">The recommended starting point is <b>Tafsīr as-Saʿdī</b> — <span class="arabic">تَيْسِيرُ الْكَرِيمِ الرَّحْمَٰنِ فِي تَفْسِيرِ كَلَامِ الْمَنَّان</span> — by Shaykh ʿAbd al-Raḥmān ibn Nāṣir as-Saʿdī.</p>' +
+    '<div class="note-box"><p class="note-title">Why As-Saʿdī First?</p><p>It is concise and clear, free of unnecessary complexity for a new student; it constantly draws out practical lessons for how to live; and it emphasizes Tawḥīd — the single most important theme running through the entire Qur\'an.</p></div>' +
+  '</div>';
+
+var WEEK2_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الإسلام، الإيمان، الإحسان</p>' +
+    '<h1>Islam, Īmān &amp; Iḥsān — The Three Levels of the Dīn</h1>' +
+    '<p>Lessons Two, Three &amp; Five: the famous Ḥadīth of Jibrīl (peace be upon him) organizes the entire religion into three levels.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>The Pillars of Islam (Five)</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody"><b>The Two Testimonies (Shahādatayn)</b> — that none has the right to be worshipped but Allah, and that Muḥammad ﷺ is His messenger.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody"><b>Establishing the Prayer (Ṣalāh)</b> — five times daily.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody"><b>Paying Zakāh</b> — the obligatory charity on qualifying wealth.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody"><b>Fasting Ramaḍān</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">5</span><div class="srbody"><b>Pilgrimage (Ḥajj)</b> to the House, for whoever is able.</div></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>The Pillars of Īmān (Six)</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody">Belief in <b>Allah</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody">Belief in <b>His angels</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody">Belief in <b>His Books</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody">Belief in <b>His messengers</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">5</span><div class="srbody">Belief in <b>the Last Day</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">6</span><div class="srbody">Belief in <b>al-Qadar</b> — the divine decree, its good and its bad.</div></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>Iḥsān — Excellence</h2>' +
+    '<div class="note-box"><p class="note-title">The Prophet\'s ﷺ Definition</p><p>"<b>That you worship Allah as though you see Him, and while you do not see Him, He surely sees you.</b>" This single sentence is the summit of the religion — it turns every act of worship into something sincere and watchful, whether or not another person is present.</p></div>' +
+  '</div>';
+
+var WEEK3_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">التوحيد والشرك</p>' +
+    '<h1>Tawḥīd &amp; the Categories of Shirk</h1>' +
+    '<p>Lesson Four: the single most repeated theme of the Qur\'an, and its opposite.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>The Three Categories of Tawḥīd</h2>' +
+    '<div class="def-grid cols-3">' +
+      '<div class="def-card c-blue"><h3>Rubūbiyyah</h3><p>Lordship. Believing Allah alone creates, owns, and manages the affairs of everything that exists, with no partner.</p></div>' +
+      '<div class="def-card c-green"><h3>Ulūhiyyah</h3><p>Worship. Directing every act of worship — duʿāʾ, sacrifice, vows, reliance, fear, hope — to Allah alone.</p></div>' +
+      '<div class="def-card c-purple"><h3>Al-Asmāʾ wa-ṣ-Ṣifāt</h3><p>Names &amp; Attributes. Affirming what Allah affirmed for Himself in the Qur\'an and Sunnah, without distortion, denial, or resemblance to creation.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span><span class="arabic">لَا إِلَٰهَ إِلَّا اللَّه</span> — Meaning, Pillars &amp; Conditions</h2>' +
+    '<p class="lead">The testimony has two halves: <b>negation</b> (there is no god) and <b>affirmation</b> (except Allah). Scholars summarize seven conditions that must be met for it to benefit the one who says it:</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li><b>Knowledge</b> — of its meaning, negating any ignorance.</li>' +
+      '<li><b>Certainty</b> — free of doubt.</li>' +
+      '<li><b>Acceptance</b> — of what it requires.</li>' +
+      '<li><b>Submission</b> — acting upon it.</li>' +
+      '<li><b>Truthfulness</b> — free of lying.</li>' +
+      '<li><b>Sincerity</b> — free of shirk.</li>' +
+      '<li><b>Love</b> — for the statement and what it entails.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>Major &amp; Minor Shirk</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-red"><h3>Major Shirk</h3><p>Directing an act of worship to other than Allah — e.g. supplicating to the dead, or sacrificing for other than Allah. It expels a person from Islam if done knowingly and willingly.</p></div>' +
+      '<div class="def-card c-pink"><h3>Minor Shirk</h3><p>A serious sin that does not expel a person from Islam but threatens their Tawḥīd — the clearest example being <b>Riyāʾ</b>, showing off in an act of worship so that people see and praise it.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>Love for the Sake of Allah</h2>' +
+    '<p class="lead">Love is divided into categories: love <i>of</i> Allah (worship, obligatory), love <i>for</i> Allah\'s sake (loving good people and good deeds), and natural love (for family, food, etc. — permissible, so long as it never rivals one\'s love of Allah). Loving anyone <b>exactly as</b> one loves Allah is major shirk in love.</p>' +
+  '</div>';
+
+var WEEK4_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الصلاة</p>' +
+    '<h1>The Prayer (Ṣalāh)</h1>' +
+    '<p>Lessons Six through Eleven: conditions, pillars, obligations, the Tashahhud, and what nullifies the prayer.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>Conditions of the Prayer</h2>' +
+    '<p class="lead">These must be fulfilled <i>before</i> the prayer begins — without them, the prayer is not even entered into validly.</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li>Being Muslim, sane, and having reached the age of discernment.</li>' +
+      '<li>Purification from minor and major impurity (wuḍūʾ / ghusl).</li>' +
+      '<li>A clean body, clothing, and place of prayer.</li>' +
+      '<li>Covering the ʿawrah.</li>' +
+      '<li>Facing the Qiblah.</li>' +
+      '<li>The prayer time having entered.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>Pillars, Obligations &amp; Sunnahs — the Difference</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-blue"><h3>Pillar (Rukn)</h3><p>Essential to the prayer\'s structure — e.g. standing, Takbīrat al-Iḥrām, reciting Al-Fātiḥah, rukūʿ, sujūd. Missing one, even forgetfully, invalidates that rakʿah unless made up.</p></div>' +
+      '<div class="def-card c-purple"><h3>Obligation (Wājib)</h3><p>Required, but if forgotten, is compensated for with Sujūd as-Sahw (the prostration of forgetfulness) rather than repeating the rakʿah — e.g. saying "<span class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيم</span>" in rukūʿ.</p></div>' +
+      '<div class="def-card c-green"><h3>Sunnah</h3><p>Recommended additions that perfect the prayer but whose omission — even deliberately — does not require Sujūd as-Sahw at all.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>The Tashahhud</h2>' +
+    '<p class="lead">Recited while seated, after every two rakʿahs:</p>' +
+    '<div class="note-box"><p class="term-pair" style="direction:rtl; display:block; font-size:calc(16px * var(--scale)); margin-bottom:8px;">التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ، السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّهِ الصَّالِحِينَ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ</p><p>"All greetings, prayers, and good things are due to Allah. Peace be upon you, O Prophet, and the mercy of Allah and His blessings. Peace be upon us and upon the righteous slaves of Allah. I bear witness that none has the right to be worshipped but Allah, and I bear witness that Muḥammad is His slave and messenger."</p></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>Nullifiers of the Prayer</h2>' +
+    '<div class="rule-box"><ul>' +
+      '<li>Deliberately speaking words unrelated to the prayer.</li>' +
+      '<li>Eating or drinking.</li>' +
+      '<li>Excessive, non-prayer-related movement.</li>' +
+      '<li>Laughing out loud.</li>' +
+      '<li>Losing wuḍūʾ (e.g. breaking wind).</li>' +
+      '<li>The ʿawrah becoming uncovered.</li>' +
+      '<li>Turning the chest away from the Qiblah.</li>' +
+    '</ul></div>' +
+  '</div>';
+
+var WEEK5_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الطهارة، الزكاة، الصيام، الحج</p>' +
+    '<h1>Purification, Zakāh, Fasting &amp; Ḥajj</h1>' +
+    '<p>Lessons Twelve through Fourteen and the appendices on the remaining pillars of Islam.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>Wuḍūʾ — Conditions, Obligatory Acts &amp; Nullifiers</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-blue"><h3>Conditions</h3><p>Being Muslim, discerning, having the intention, using pure water, and removing anything on the skin that would prevent water from reaching it.</p></div>' +
+      '<div class="def-card c-green"><h3>Obligatory Acts</h3><p>Washing the face, washing the arms to the elbows, wiping the head, and washing the feet to the ankles — done in order, without long delay between them, following the description in Sūrah Al-Māʾidah (5:6).</p></div>' +
+      '<div class="def-card c-red"><h3>Nullifiers</h3><p>Anything exiting from the two private openings, deep sleep, loss of consciousness, and (according to the most authentic view) eating camel meat.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>Zakāh</h2>' +
+    '<p class="lead">An obligatory portion of qualifying wealth (gold, silver, cash, trade goods, livestock, and produce) given once a lunar year has passed over it, once it reaches the minimum threshold (<i>niṣāb</i>). It is distributed among eight categories of recipients named in Sūrah At-Tawbah (9:60) — chiefly the poor and needy.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>Fasting (Ṣawm)</h2>' +
+    '<p class="lead">Abstaining from food, drink, and intercourse from the break of dawn until sunset throughout Ramaḍān, out of sincere intention. It is nullified by eating, drinking, or intercourse done deliberately — but a genuine, forgetful slip does not break the fast.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>Ḥajj</h2>' +
+    '<p class="lead">Obligatory once in a lifetime upon whoever is able. Its pillars are: entering <i>Iḥrām</i> with the intention, standing at ʿArafah on the 9th of Dhul-Ḥijjah, <i>Ṭawāf al-Ifāḍah</i> around the Kaʿbah, and <i>Saʿy</i> between Ṣafā and Marwah.</p>' +
+  '</div>';
+
+var WEEK6_LESSON =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الأخلاق والجنائز</p>' +
+    '<h1>Islamic Character, Avoiding Shirk &amp; Sins, and the Funeral</h1>' +
+    '<p>Lessons Fifteen through Eighteen: how a Muslim carries the dīn into daily life, and how the dīn is carried out at the end of life.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>Having Islamic Qualities</h2>' +
+    '<p class="lead">"The most complete of the believers in faith are those best in character." Truthfulness, trustworthiness, modesty (ḥayāʾ), patience, and good treatment of one\'s family and neighbors are all counted as part of the dīn — not separate from it.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>Practicing Islamic Etiquette</h2>' +
+    '<div class="rule-box"><ul>' +
+      '<li>Spreading the greeting of salām.</li>' +
+      '<li>Saying <span class="arabic">بِسْمِ اللَّه</span> before eating, and eating with the right hand.</li>' +
+      '<li>Seeking permission before entering another\'s home.</li>' +
+      '<li>Good manners when using the toilet and when sneezing/yawning.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>Warning Against Shirk &amp; Sins</h2>' +
+    '<p class="lead">Among the greatest major sins after shirk: sorcery/magic, unlawfully killing a soul, consuming ribā (usury), consuming an orphan\'s wealth, fleeing the battlefield, and falsely accusing chaste believing women. The believer takes all sin seriously, minor or major, and hastens to repent.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>Preparing the Deceased</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody"><b>Washing (Ghusl)</b> — the body is washed, typically an odd number of times.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody"><b>Shrouding (Kafan)</b> — wrapped in clean white cloth.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody"><b>The Funeral Prayer (Ṣalāt al-Janāzah)</b> — performed standing, with no rukūʿ or sujūd: four takbīrs, with Al-Fātiḥah after the first, ṣalāh upon the Prophet ﷺ after the second, duʿāʾ for the deceased after the third, then taslīm after the fourth.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody"><b>Burial</b> — laid on the right side, facing the Qiblah.</div></div>' +
+    '</div>' +
+  '</div>';
+
+/* ===================== QUIZ QUESTION BANKS ===================== */
+var week1Quiz = [
+  { q: "How many verses does Al-Fātiḥah have?", options: ["Five","Six","Seven","Nine"], correct: 2, explanation: "Al-Fātiḥah has seven verses, which is why it is also called As-Sabʿ al-Mathānī, \"the Oft-Repeated Seven.\"" },
+  { q: "Which of the following is one of Al-Fātiḥah's names, referring to its central place in every prayer?", options: ["Umm al-Kitāb","Al-Ikhlāṣ","Al-Kawthar","An-Nās"], correct: 0, explanation: "Al-Fātiḥah is called Umm al-Kitāb, \"The Mother of the Book,\" because no prayer is valid without it." },
+  { q: "Beginners are advised to start memorizing the Qur'an from which range of sūrahs?", options: ["Al-Baqarah to An-Nās","Az-Zalzalah to An-Nās","Al-Fātiḥah to Al-Baqarah","Yā-Sīn to An-Nās"], correct: 1, explanation: "The short, frequently-recited sūrahs from Az-Zalzalah to An-Nās are the traditional starting point for new memorizers." },
+  { q: "Which tafsīr is recommended for a student just beginning to study the Qur'an?", options: ["Tafsīr Ibn Kathīr","Tafsīr as-Saʿdī","Tafsīr aṭ-Ṭabarī","Tafsīr al-Qurṭubī"], correct: 1, explanation: "Tafsīr as-Saʿdī (Taysīr al-Karīm ar-Raḥmān) is recommended because it is concise, clear, practical, and centers on Tawḥīd." },
+  { q: "How did the Companions typically approach memorizing the Qur'an?", options: ["All at once, from cover to cover","Ten verses at a time, mastering each portion before moving on","Only by listening, without ever reciting to a teacher","Only the short sūrahs, skipping the rest"], correct: 1, explanation: "They took it gradually — memorizing, understanding, and acting upon a small portion before adding more." },
+  { q: "According to the lesson, what should accompany memorization of the Qur'an?", options: ["Only speed of recitation","A concise tafsīr and acting upon what is learned","Translating it into other languages only","Nothing else is required"], correct: 1, explanation: "Memorization is paired with understanding (via tafsīr) and with action — this is what makes it beneficial." },
+  { q: "True or False: Al-Fātiḥah is recited in every single rakʿah of the prayer.", options: ["True","False"], correct: 0, explanation: "Al-Fātiḥah is a pillar of the prayer and must be recited in every rakʿah." },
+  { q: "Why is Tafsīr as-Saʿdī especially suited to a new student, according to the lesson?", options: ["It is the longest and most detailed available","It is concise, clear, practical, and emphasizes the Oneness of Allah","It was the very first tafsīr ever written","It contains no Arabic text at all"], correct: 1, explanation: "Scholars recommend it precisely because of its clarity, brevity, and its constant emphasis on Tawḥīd." }
+];
+
+var week2Quiz = [
+  { q: "How many pillars does Islam have?", options: ["Three","Four","Five","Six"], correct: 2, explanation: "Islam has five pillars: the two testimonies, prayer, zakāh, fasting, and Ḥajj." },
+  { q: "How many pillars does Īmān have?", options: ["Five","Six","Seven","Eight"], correct: 1, explanation: "Īmān has six pillars, ending with belief in al-Qadar (the divine decree)." },
+  { q: "What is the first and greatest pillar of Islam?", options: ["Establishing the prayer","The Two Testimonies (Shahādatayn)","Paying Zakāh","Fasting Ramaḍān"], correct: 1, explanation: "The Shahādatayn — testifying that none has the right to be worshipped but Allah and that Muḥammad ﷺ is His messenger — is the foundation everything else rests upon." },
+  { q: "Which of the following is NOT one of the six pillars of Īmān?", options: ["Belief in Allah","Belief in His angels","Belief in the Last Day","Belief in performing Ḥajj"], correct: 3, explanation: "Ḥajj is a pillar of Islam (an outward act of worship), not one of the six pillars of Īmān (matters of belief)." },
+  { q: "How does the Prophet ﷺ define Iḥsān?", options: ["Praying five times a day without fail", "Worshipping Allah as though you see Him, and knowing that if you do not see Him, He sees you", "Giving charity generously", "Memorizing the entire Qur'an"], correct: 1, explanation: "This hadith definition makes Iḥsān about sincerity and awareness in every act of worship, seen or unseen." },
+  { q: "Complete the hadith of Iḥsān: \"...and while you do not see Him, ___\"", options: ["He does not see you","He surely sees you","you must imagine Him","it does not matter"], correct: 1, explanation: "\"He surely sees you\" — Allah's watchfulness does not depend on whether we can see Him." },
+  { q: "True or False: Zakāh is one of the six pillars of Īmān.", options: ["True","False"], correct: 1, explanation: "False — Zakāh is one of the five pillars of Islam, not one of the six pillars of Īmān." },
+  { q: "Which pillar of Islam involves testifying that Muḥammad ﷺ is Allah's messenger?", options: ["The prayer","The Two Testimonies (Shahādatayn)","Zakāh","Ḥajj"], correct: 1, explanation: "The second half of the Shahādatayn is the testimony of Muḥammad's ﷺ messengership." }
+];
+
+var week3Quiz = [
+  { q: "How many categories of Tawḥīd are there?", options: ["Two","Three","Four","Five"], correct: 1, explanation: "Rubūbiyyah, Ulūhiyyah, and al-Asmāʾ wa-ṣ-Ṣifāt — three categories." },
+  { q: "Tawḥīd ar-Rubūbiyyah refers to belief that Allah alone:", options: ["Deserves to be worshipped", "Creates and manages the affairs of everything that exists", "Has attributes we can compare to His creation", "Sent only one prophet"], correct: 1, explanation: "Rubūbiyyah is Tawḥīd of Lordship — Allah alone is Creator and Sustainer." },
+  { q: "Tawḥīd al-Ulūhiyyah requires that:", options: ["Every act of worship be directed to Allah alone", "Only some acts of worship be directed to Allah", "Worship may be directed to righteous intermediaries", "Belief in Allah's existence is sufficient on its own"], correct: 0, explanation: "Ulūhiyyah is Tawḥīd of Worship — every act of ʿibādah must go to Allah alone." },
+  { q: "How many conditions are commonly enumerated for \"Lā ilāha illallāh\" to truly benefit its speaker?", options: ["Five","Six","Seven","Eight"], correct: 2, explanation: "Knowledge, certainty, acceptance, submission, truthfulness, sincerity, and love — seven conditions." },
+  { q: "Which of the following is a classic example of minor shirk?", options: ["Sacrificing an animal for other than Allah", "Riyāʾ — showing off in an act of worship", "Denying that Allah exists", "Praying toward a grave instead of the Qiblah"], correct: 1, explanation: "Riyāʾ (showing off in worship) is the example the scholars most often give of minor shirk." },
+  { q: "If a person commits major shirk knowingly and willingly, what is the ruling?", options: ["It is disliked but does not affect their Islam", "It expels them from Islam", "It only reduces their reward", "It has no ruling at all"], correct: 1, explanation: "Major shirk is what takes a person outside the fold of Islam." },
+  { q: "True or False: Loving someone exactly as one loves Allah is a form of major shirk in love.", options: ["True","False"], correct: 0, explanation: "Equating one's love for a created being with one's love for Allah is major shirk." },
+  { q: "The negation half of \"Lā ilāha illallāh\" (Lā ilāha) means:", options: ["There is no god at all, in any sense", "There is nothing worthy of worship", "Allah does not exist", "There is only one prophet"], correct: 1, explanation: "The negation clears away worship of anything besides Allah; the affirmation (illallāh) then directs all worship to Him alone." }
+];
+
+var week4Quiz = [
+  { q: "Facing the Qiblah is classified as a ___ of the prayer.", options: ["Condition","Pillar","Obligation","Sunnah"], correct: 0, explanation: "Facing the Qiblah must be fulfilled before the prayer even begins — it is a condition, not a pillar performed during it." },
+  { q: "If a worshipper forgets to perform a wājib (obligation) of the prayer, what should they do?", options: ["Repeat the entire prayer", "Perform Sujūd as-Sahw (prostration of forgetfulness)", "Nothing — it is simply overlooked", "Repeat that rakʿah only"], correct: 1, explanation: "Forgetting an obligation is compensated for with Sujūd as-Sahw, unlike forgetting a pillar." },
+  { q: "What happens if a pillar (rukn) of the prayer is missed, even forgetfully?", options: ["Sujūd as-Sahw is sufficient", "That rakʿah must be made up", "It does not matter at all", "The prayer is still complete"], correct: 1, explanation: "A missing pillar cannot be compensated for by Sujūd as-Sahw alone — the rakʿah must be completed properly." },
+  { q: "When is the Tashahhud recited?", options: ["Only at the very start of the prayer", "While seated, after every two rakʿahs", "Only while standing", "Only in Jumuʿah prayer"], correct: 1, explanation: "The Tashahhud is recited seated, after every two rakʿahs (and again at the end before the final taslīm)." },
+  { q: "Which of the following breaks the prayer?", options: ["Reciting Al-Fātiḥah", "Deliberately eating or drinking", "Saying the Tashahhud", "Performing rukūʿ"], correct: 1, explanation: "Deliberately eating or drinking is one of the clear nullifiers of the prayer." },
+  { q: "Reciting Al-Fātiḥah in every rakʿah is classified as a:", options: ["Sunnah","Condition","Pillar","Obligation"], correct: 2, explanation: "Al-Fātiḥah is one of the pillars of the prayer — omitting it invalidates that rakʿah." },
+  { q: "True or False: Excessive, non-prayer-related movement invalidates the prayer.", options: ["True","False"], correct: 0, explanation: "Excessive extraneous movement is one of the nullifiers of the prayer." },
+  { q: "Saying \"Subḥāna Rabbiyal ʿAẓīm\" in rukūʿ is classified as a:", options: ["Pillar","Condition","Obligation (Wājib)","Nullifier"], correct: 2, explanation: "This tasbīḥ in rukūʿ is a wājib — required, but compensated for with Sujūd as-Sahw if forgotten." }
+];
+
+var week5Quiz = [
+  { q: "Which of the following is one of the obligatory acts of wuḍūʾ?", options: ["Washing the face", "Wiping the ears three times", "Rinsing the mouth three times", "Saying a specific duʿāʾ aloud"], correct: 0, explanation: "Washing the face is one of the obligatory acts of wuḍūʾ described in Sūrah Al-Māʾidah (5:6)." },
+  { q: "Deep sleep is considered:", options: ["A pillar of wuḍūʾ", "A nullifier of wuḍūʾ", "A condition of wuḍūʾ", "Irrelevant to wuḍūʾ"], correct: 1, explanation: "Deep sleep, where one loses awareness of what is happening, nullifies wuḍūʾ." },
+  { q: "Zakāh becomes due on qualifying wealth once it:", options: ["Reaches the Niṣāb and a lunar year has passed over it", "Is simply owned, regardless of amount", "Is spent on anything at all", "Reaches the Niṣāb only, with no time condition"], correct: 0, explanation: "Both conditions must be met: the wealth reaches the minimum threshold (Niṣāb), and a full lunar year passes over it." },
+  { q: "What breaks the fast if done deliberately?", options: ["Forgetting one has begun the fast", "Eating, drinking, or intercourse", "Feeling thirsty", "Sleeping during the day"], correct: 1, explanation: "Deliberate eating, drinking, or intercourse during the fasting hours breaks the fast." },
+  { q: "According to the lesson, how many pillars does Ḥajj have?", options: ["Two","Three","Four","Five"], correct: 2, explanation: "Iḥrām with intention, standing at ʿArafah, Ṭawāf al-Ifāḍah, and Saʿy — four pillars." },
+  { q: "Standing at ʿArafah takes place on which date?", options: ["The 8th of Dhul-Ḥijjah", "The 9th of Dhul-Ḥijjah", "The 10th of Dhul-Ḥijjah", "The 1st of Dhul-Ḥijjah"], correct: 1, explanation: "The 9th of Dhul-Ḥijjah is the day of standing at ʿArafah, the central pillar of Ḥajj." },
+  { q: "True or False: A forgetful bite of food breaks the fast.", options: ["True","False"], correct: 1, explanation: "False — genuine forgetfulness while fasting does not break the fast, by the mercy of Allah." },
+  { q: "The obligatory acts of wuḍūʾ must be performed:", options: ["In any order, whenever convenient", "In order, without long delay between them", "Only once in a lifetime", "Only before Jumuʿah prayer"], correct: 1, explanation: "Following the order and continuity described in the Qur'an is part of performing wuḍūʾ correctly." }
+];
+
+var week6Quiz = [
+  { q: "According to the hadith, the most complete believers are those best in:", options: ["Wealth","Character","Physical strength","Knowledge of grammar"], correct: 1, explanation: "\"The most complete of the believers in faith are those best in character.\"" },
+  { q: "How many takbīrs are said in the funeral prayer (Ṣalāt al-Janāzah)?", options: ["Two","Three","Four","Five"], correct: 2, explanation: "The funeral prayer consists of four takbīrs, with no rukūʿ or sujūd." },
+  { q: "Al-Fātiḥah is recited after which takbīr in the funeral prayer?", options: ["The first","The second","The third","The fourth"], correct: 0, explanation: "Al-Fātiḥah follows the first takbīr; ṣalāh upon the Prophet ﷺ follows the second; duʿāʾ for the deceased follows the third." },
+  { q: "Unlike the five daily prayers, the funeral prayer has no:", options: ["Takbīrs","Standing","Rukūʿ or sujūd","Salām"], correct: 2, explanation: "The funeral prayer is performed entirely standing, with no rukūʿ or sujūd." },
+  { q: "The deceased is placed in the grave lying on which side, facing the Qiblah?", options: ["The left side","The right side","Flat on the back","Face down"], correct: 1, explanation: "The body is laid on its right side, facing the Qiblah." },
+  { q: "Which of the following is considered among the greatest major sins after shirk?", options: ["Giving charity", "Consuming ribā (usury)", "Praying on time", "Fasting Ramaḍān"], correct: 1, explanation: "Ribā is repeatedly warned against in the Qur'an and counted among the gravest major sins." },
+  { q: "True or False: Spreading the greeting of salām is part of Islamic etiquette encouraged in the lesson.", options: ["True","False"], correct: 0, explanation: "Spreading salām is explicitly encouraged as part of good Islamic etiquette." },
+  { q: "What are the first two steps in preparing the deceased, in order?", options: ["Burial, then washing", "Shrouding, then washing", "Washing, then shrouding (kafan)", "Funeral prayer, then washing"], correct: 2, explanation: "The body is washed first, then shrouded in clean white cloth, then the funeral prayer is performed, then burial follows." }
+];
+
+var midtermQuiz = [
+  { q: "Al-Fātiḥah is also known by which of these names?", options: ["Umm al-Kitāb","Al-Kawthar","Al-Ikhlāṣ","Al-Falaq"], correct: 0, explanation: "Umm al-Kitāb, \"The Mother of the Book\" — because every prayer requires it." },
+  { q: "Which tafsīr is recommended as a starting point for new students of the Qur'an?", options: ["Tafsīr aṭ-Ṭabarī","Tafsīr as-Saʿdī","Tafsīr al-Qurṭubī","Tafsīr al-Bayḍāwī"], correct: 1, explanation: "Tafsīr as-Saʿdī — concise, clear, and centered on Tawḥīd." },
+  { q: "The Companions typically memorized the Qur'an:", options: ["All in one sitting", "A small portion at a time, mastering it before moving on", "By translation only", "Without any teacher"], correct: 1, explanation: "They paired gradual memorization with understanding and action." },
+  { q: "How many pillars does Islam have?", options: ["Four","Five","Six","Seven"], correct: 1, explanation: "Five: the two testimonies, prayer, zakāh, fasting, and Ḥajj." },
+  { q: "How many pillars does Īmān have?", options: ["Five","Six","Seven","Eight"], correct: 1, explanation: "Six, ending with belief in al-Qadar." },
+  { q: "\"To worship Allah as though you see Him\" is the definition of:", options: ["Islam","Īmān","Iḥsān","Tawḥīd"], correct: 2, explanation: "This is the Prophet's ﷺ definition of Iḥsān from the Ḥadīth of Jibrīl." },
+  { q: "Which of these is NOT a pillar of Īmān?", options: ["Belief in the angels","Belief in the Books","Belief in performing Ḥajj","Belief in al-Qadar"], correct: 2, explanation: "Ḥajj is a pillar of Islam, not one of the six pillars of Īmān." },
+  { q: "How many categories does Tawḥīd have?", options: ["Two","Three","Four","Five"], correct: 1, explanation: "Rubūbiyyah, Ulūhiyyah, and al-Asmāʾ wa-ṣ-Ṣifāt." },
+  { q: "Tawḥīd al-Ulūhiyyah means:", options: ["Believing Allah alone creates and sustains", "Directing all worship to Allah alone", "Affirming Allah's names without distortion", "Believing in the angels"], correct: 1, explanation: "Ulūhiyyah is Tawḥīd of worship." },
+  { q: "Which is the classic example given of minor shirk?", options: ["Sacrificing for other than Allah", "Riyāʾ (showing off in worship)", "Praying to the deceased", "Denying the Qur'an"], correct: 1, explanation: "Riyāʾ is the scholars' standard example of minor shirk." },
+  { q: "How many conditions are commonly given for \"Lā ilāha illallāh\"?", options: ["Five","Six","Seven","Eight"], correct: 2, explanation: "Knowledge, certainty, acceptance, submission, truthfulness, sincerity, and love." },
+  { q: "True or False: Major shirk, if committed knowingly and willingly, expels a person from Islam.", options: ["True","False"], correct: 0, explanation: "This is the defining ruling of major shirk." },
+  { q: "Loving a created being exactly as one loves Allah is:", options: ["Permissible", "Minor shirk only", "Major shirk in love", "Not addressed in the lesson"], correct: 2, explanation: "Equal love for a creation alongside Allah is major shirk in love." },
+  { q: "True or False: Zakāh is one of the pillars of Īmān.", options: ["True","False"], correct: 1, explanation: "False — Zakāh is a pillar of Islam." },
+  { q: "The negation half of the Shahādah (\"Lā ilāha\") clears away:", options: ["Belief in angels", "Worship of anything besides Allah", "Belief in the Last Day", "The obligation of prayer"], correct: 1, explanation: "\"There is no god\" negates worship of anything other than Allah, before affirming Him alone." }
+];
+
+var finalQuiz = [
+  { q: "How many verses does Al-Fātiḥah have?", options: ["Six","Seven","Eight","Nine"], correct: 1, explanation: "Seven verses — hence its name As-Sabʿ al-Mathānī." },
+  { q: "Which sūrahs are recommended as a starting point for memorization?", options: ["Al-Baqarah to An-Nās", "Az-Zalzalah to An-Nās", "Yā-Sīn to Al-Fātiḥah", "Only Al-Ikhlāṣ"], correct: 1, explanation: "The short sūrahs from the end of the Qur'an, Az-Zalzalah to An-Nās." },
+  { q: "What is recommended to accompany Qur'an memorization?", options: ["Speed reading only", "A concise tafsīr and acting upon it", "Nothing further", "Only listening to recordings"], correct: 1, explanation: "Understanding through tafsīr and acting upon the meaning are both essential companions to memorization." },
+  { q: "How many pillars does Islam have?", options: ["Four","Five","Six","Seven"], correct: 1, explanation: "Five pillars of Islam." },
+  { q: "How many pillars does Īmān have?", options: ["Five","Six","Seven","Eight"], correct: 1, explanation: "Six pillars of Īmān." },
+  { q: "The Prophet's ﷺ definition of Iḥsān centers on:", options: ["Fasting extra days", "Worshipping Allah with full sincerity, as though seeing Him", "Memorizing hadith", "Giving the largest charity possible"], correct: 1, explanation: "Iḥsān is about sincerity and awareness — worshipping as though you see Him." },
+  { q: "How many categories of Tawḥīd are there?", options: ["Two","Three","Four","Five"], correct: 1, explanation: "Rubūbiyyah, Ulūhiyyah, and al-Asmāʾ wa-ṣ-Ṣifāt." },
+  { q: "Riyāʾ (showing off in worship) is an example of:", options: ["Major shirk", "Minor shirk", "A pillar of Islam", "A condition of the prayer"], correct: 1, explanation: "Riyāʾ is the classic example of minor shirk." },
+  { q: "How many conditions are commonly given for the Shahādah to benefit its speaker?", options: ["Five","Six","Seven","Eight"], correct: 2, explanation: "Seven conditions: knowledge, certainty, acceptance, submission, truthfulness, sincerity, love." },
+  { q: "Facing the Qiblah before prayer is classified as a:", options: ["Pillar","Condition","Sunnah","Nullifier"], correct: 1, explanation: "It is one of the conditions that must be met before the prayer begins." },
+  { q: "Forgetting a wājib (obligation) of the prayer is compensated for by:", options: ["Repeating the whole prayer", "Sujūd as-Sahw", "Nothing at all", "Fasting an extra day"], correct: 1, explanation: "Sujūd as-Sahw, the prostration of forgetfulness, compensates for a forgotten obligation." },
+  { q: "Missing a pillar (rukn) of the prayer, even forgetfully, requires:", options: ["Sujūd as-Sahw only", "Making up that rakʿah", "Nothing further", "Repeating only the Tashahhud"], correct: 1, explanation: "A missing pillar cannot be compensated for by Sujūd as-Sahw alone." },
+  { q: "The Tashahhud is recited:", options: ["Standing, at the start of prayer", "Seated, after every two rakʿahs", "Only in Witr prayer", "Only by the Imām"], correct: 1, explanation: "Seated, after every two rakʿahs, and again before the final taslīm." },
+  { q: "Which of these nullifies the prayer?", options: ["Reciting Al-Fātiḥah", "Deliberately eating or drinking", "Performing sujūd", "Saying the Tashahhud"], correct: 1, explanation: "Deliberate eating or drinking breaks the prayer." },
+  { q: "One of the obligatory acts of wuḍūʾ is:", options: ["Washing the face", "Wiping the ears three times separately", "Facing the Qiblah", "Saying the Adhān"], correct: 0, explanation: "Washing the face is described in Sūrah Al-Māʾidah (5:6) as an obligatory act of wuḍūʾ." },
+  { q: "Zakāh is due once wealth:", options: ["Is simply owned, with no threshold", "Reaches the Niṣāb and a lunar year has passed over it", "Is spent on trade", "Reaches the Niṣāb, regardless of time"], correct: 1, explanation: "Both the Niṣāb threshold and the passing of a lunar year are required." },
+  { q: "How many pillars does Ḥajj have?", options: ["Two","Three","Four","Five"], correct: 2, explanation: "Iḥrām with intention, standing at ʿArafah, Ṭawāf al-Ifāḍah, and Saʿy." },
+  { q: "How many takbīrs are said in the funeral prayer?", options: ["Two","Three","Four","Five"], correct: 2, explanation: "Four takbīrs, with no rukūʿ or sujūd." },
+  { q: "The deceased is buried lying on:", options: ["The left side, facing away from the Qiblah", "The right side, facing the Qiblah", "The back, facing upward", "Either side, it does not matter"], correct: 1, explanation: "The body is laid on its right side, facing the Qiblah." },
+  { q: "According to the hadith cited in the lesson, the most complete believers in faith are those best in:", options: ["Wealth","Lineage","Character","Recitation speed"], correct: 2, explanation: "\"The most complete of the believers in faith are those best in character.\"" }
+];
+
+/* ===================== STEP DEFINITIONS ===================== */
+var STEP_DEFS = [
+  { type: 'lesson', html: 'WEEK1_LESSON', weekLabel: 'Week 1' },
+  { type: 'quiz', bank: 'week1Quiz', immediate: true, weekLabel: 'Week 1',
+    title: 'Week 1 Quiz — The Qur\'an',
+    lead: '8 questions on Al-Fātiḥah, the short sūrahs, and how to approach memorization. The answer and explanation appear right after each question.' },
+
+  { type: 'lesson', html: 'WEEK2_LESSON', weekLabel: 'Week 2' },
+  { type: 'quiz', bank: 'week2Quiz', immediate: true, weekLabel: 'Week 2',
+    title: 'Week 2 Quiz — Islam, Īmān &amp; Iḥsān',
+    lead: '8 questions on the pillars of Islam, the pillars of Īmān, and the meaning of Iḥsān.' },
+
+  { type: 'lesson', html: 'WEEK3_LESSON', weekLabel: 'Week 3' },
+  { type: 'quiz', bank: 'week3Quiz', immediate: true, weekLabel: 'Week 3',
+    title: 'Week 3 Quiz — Tawḥīd &amp; Shirk',
+    lead: '8 questions on the categories of Tawḥīd, the conditions of the Shahādah, and major vs. minor shirk.' },
+
+  { type: 'quiz', bank: 'midtermQuiz', immediate: false, weekLabel: 'Midterm', milestone: true, passGate: true, isFinalExam: false,
+    title: 'Midterm Exam — Weeks 1–3',
+    lead: 'A 15-question review covering the Qur\'an, Islam, Īmān, Iḥsān, Tawḥīd, and Shirk. Answers and explanations appear together at the end. Score 70% or higher to continue.' },
+
+  { type: 'lesson', html: 'WEEK4_LESSON', weekLabel: 'Week 4' },
+  { type: 'quiz', bank: 'week4Quiz', immediate: true, weekLabel: 'Week 4',
+    title: 'Week 4 Quiz — The Prayer',
+    lead: '8 questions on the conditions, pillars, obligations, and nullifiers of the prayer.' },
+
+  { type: 'lesson', html: 'WEEK5_LESSON', weekLabel: 'Week 5' },
+  { type: 'quiz', bank: 'week5Quiz', immediate: true, weekLabel: 'Week 5',
+    title: 'Week 5 Quiz — Purification, Zakāh, Fasting &amp; Ḥajj',
+    lead: '8 questions on wuḍūʾ, Zakāh, fasting, and the pillars of Ḥajj.' },
+
+  { type: 'lesson', html: 'WEEK6_LESSON', weekLabel: 'Week 6' },
+  { type: 'quiz', bank: 'week6Quiz', immediate: true, weekLabel: 'Week 6',
+    title: 'Week 6 Quiz — Character &amp; Funeral Rites',
+    lead: '8 questions on Islamic character, etiquette, and the preparation of the deceased.' },
+
+  { type: 'quiz', bank: 'finalQuiz', immediate: false, weekLabel: 'Final Exam', milestone: true, passGate: true, isFinalExam: true,
+    title: 'Final Exam — Durūs al-Muhimmah',
+    lead: 'A comprehensive 20-question review covering the entire course. Answers and explanations appear together at the end. Score 70% or higher to earn your certificate.' },
+
+  { type: 'certificate', weekLabel: 'Certificate' }
+];
+
+function weekBadgeHTML(def){
+  return def.weekLabel ? ('<div class="week-badge">' + def.weekLabel + '</div>') : '';
+}
+
+function updateStepProgress(){
+  document.getElementById('step-progress-text').textContent = 'Step ' + (currentStepIndex + 1) + ' / ' + STEP_DEFS.length;
+  var pct = Math.round((currentStepIndex / (STEP_DEFS.length - 1)) * 100);
+  document.getElementById('step-progress-fill').style.width = pct + '%';
+}
+
+var activeQuizInstance = null;
+var finalExamScorePct = null;
+
+function renderCertificateStep(){
+  var viewport = document.getElementById('step-viewport');
+  var nextBtn = document.getElementById('step-next-btn');
+  nextBtn.style.display = 'none';
+
+  var passed = (finalExamScorePct !== null && finalExamScorePct >= PASS_THRESHOLD);
+  if(!passed){
+    viewport.innerHTML = weekBadgeHTML(STEP_DEFS[currentStepIndex]) +
+      '<div class="hero"><p class="hero-eyebrow">الشهادة</p><h1>Certificate of Completion</h1>' +
+      '<p>Complete the Final Exam with a score of ' + PASS_THRESHOLD + '% or higher to unlock your certificate.</p></div>' +
+      '<div style="text-align:center;"><button class="qbtn solid" id="go-to-final-btn">Go to Final Exam</button></div>';
+    var goBtn = document.getElementById('go-to-final-btn');
+    if(goBtn){
+      goBtn.addEventListener('click', function(){
+        playClickSound();
+        renderStep(STEP_DEFS.length - 2);
+      });
+    }
+    return;
+  }
+
+  var today = new Date();
+  var dateStr = today.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  var certId = 'DM-' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + '-' + Math.floor(1000 + Math.random()*9000);
+
+  viewport.innerHTML =
+    '<div id="certificate-wrap">' +
+      '<div class="cert-card">' +
+        '<div class="cert-seal">د</div>' +
+        '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
+        '<h1 class="cert-title">Certificate of Completion</h1>' +
+        '<p class="cert-line">This certifies that</p>' +
+        '<div class="cert-name">' + escapeHTML(studentName) + '</div>' +
+        '<p class="cert-line">has successfully completed the course</p>' +
+        '<p class="cert-course">Durūs al-Muhimmah lil ʿĀmmah</p>' +
+        '<p class="cert-course-ar arabic">الدروس المهمة لعامة الأمة</p>' +
+        '<div class="cert-meta-row">' +
+          '<div>Final Score<b>' + finalExamScorePct + '%</b></div>' +
+          '<div>Date<b>' + dateStr + '</b></div>' +
+          '<div>Certificate ID<b>' + certId + '</b></div>' +
+        '</div>' +
+        '<div class="cert-footer">Diin Islaam · diinislaam.com</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cert-actions no-print">' +
+      '<button class="qbtn solid" id="print-cert-btn">🖨️ Print / Save as PDF</button>' +
+    '</div>';
+
+  var printBtn = document.getElementById('print-cert-btn');
+  if(printBtn){ printBtn.addEventListener('click', function(){ playClickSound(); window.print(); }); }
+}
+
+function escapeHTML(str){
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderStep(i){
+  currentStepIndex = i;
+  var def = STEP_DEFS[i];
+  var viewport = document.getElementById('step-viewport');
+  var nextBtn = document.getElementById('step-next-btn');
+  var backBtn = document.getElementById('step-back-btn');
+
+  backBtn.classList.toggle('show', i > 0);
+  backBtn.textContent = 'Back';
+
+  if(def.type === 'lesson'){
+    viewport.innerHTML = weekBadgeHTML(def) + window[def.html];
+    nextBtn.style.display = '';
+    nextBtn.disabled = false;
+    nextBtn.textContent = 'Next';
+    activeQuizInstance = null;
+  } else if(def.type === 'quiz'){
+    viewport.innerHTML = weekBadgeHTML(def) +
+      '<div class="section">' +
+        '<h2 class="section-title"><span class="num">📝</span><span>' + def.title + '</span></h2>' +
+        '<p class="lead">' + def.lead + '</p>' +
+        '<div class="quiz-shell" id="active-quiz-slot"></div>' +
+      '</div>';
+    var slot = document.getElementById('active-quiz-slot');
+    slot.innerHTML = quizShellTemplate('sq');
+    var bank = window[def.bank];
+    nextBtn.style.display = 'none';
+    nextBtn.textContent = 'Next';
+    activeQuizInstance = createQuizInstance('sq', bank, function(pct){
+      if(def.isFinalExam){ finalExamScorePct = pct; }
+      if(def.passGate){
+        if(pct >= PASS_THRESHOLD){
+          nextBtn.style.display = '';
+          nextBtn.textContent = def.isFinalExam ? 'View Certificate' : 'Next';
+        } else {
+          nextBtn.style.display = 'none';
+        }
+      } else {
+        nextBtn.style.display = '';
+      }
+    }, function(){
+      nextBtn.style.display = 'none';
+    }, !!def.immediate);
+  } else if(def.type === 'certificate'){
+    renderCertificateStep();
+  }
+
+  updateStepProgress();
+  document.querySelector('.wrap').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.querySelectorAll('.week-select-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    playClickSound();
+    var targetStep = parseInt(btn.getAttribute('data-step'), 10);
+    document.getElementById('week-select').style.display = 'none';
+    document.getElementById('main-content').style.display = '';
+    document.getElementById('back-to-weeks-btn').style.display = 'flex';
+    renderStep(targetStep);
+  });
+});
+
+/* ===================== QUIZ ENGINE ===================== */
+var QUIZ_STRINGS = {
+  letters: ['A','B','C','D'],
+  scoreMsgs: [
+    [90, "Excellent! You've truly mastered this section."],
+    [75, "Great work! Just a little more review and you'll have it locked in."],
+    [50, "Good effort — review what you missed and try again."],
+    [0,  "Keep at it — go back through the lesson and try again."]
+  ]
+};
+
+function quizShellTemplate(prefix){
+  return '' +
+    '<div id="' + prefix + '-active-area">' +
+      '<div class="quiz-progress-row">' +
+        '<span id="' + prefix + '-progress-text"></span>' +
+        '<div class="quiz-bar-track"><div class="quiz-bar-fill" id="' + prefix + '-bar-fill"></div></div>' +
+        '<span id="' + prefix + '-pct-text"></span>' +
+      '</div>' +
+      '<div id="' + prefix + '-stage"></div>' +
+      '<div class="quiz-nav-row">' +
+        '<button class="qbtn ghost" id="' + prefix + '-prev-btn">Previous</button>' +
+        '<button class="qbtn solid" id="' + prefix + '-next-btn">Next</button>' +
+      '</div>' +
+      '<div class="quiz-dots" id="' + prefix + '-dots"></div>' +
+    '</div>' +
+    '<div class="quiz-summary" id="' + prefix + '-summary">' +
+      '<div class="score-title" id="' + prefix + '-score-title"></div>' +
+      '<div class="score-pct" id="' + prefix + '-score-pct">0%</div>' +
+      '<div class="score-msg" id="' + prefix + '-score-msg"></div>' +
+      '<div id="' + prefix + '-lock-msg" class="lock-msg" style="display:none;"></div>' +
+      '<div id="' + prefix + '-review-grid" class="review-grid"></div>' +
+      '<div id="' + prefix + '-review-detail" class="review-detail"></div>' +
+      '<button class="retake-btn" id="' + prefix + '-retake-btn">Retake Quiz</button>' +
+    '</div>';
+}
+
+function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
+  var index = 0, answered = [], selected = [];
+  var justAnsweredAnimate = false;
+  var els = {};
+
+  function cacheEls(){
+    els.activeArea = document.getElementById(prefix + '-active-area');
+    els.summary = document.getElementById(prefix + '-summary');
+    els.stage = document.getElementById(prefix + '-stage');
+    els.dots = document.getElementById(prefix + '-dots');
+    els.barFill = document.getElementById(prefix + '-bar-fill');
+    els.progressText = document.getElementById(prefix + '-progress-text');
+    els.pctText = document.getElementById(prefix + '-pct-text');
+    els.prevBtn = document.getElementById(prefix + '-prev-btn');
+    els.nextBtn = document.getElementById(prefix + '-next-btn');
+    els.scoreTitle = document.getElementById(prefix + '-score-title');
+    els.scorePct = document.getElementById(prefix + '-score-pct');
+    els.scoreMsg = document.getElementById(prefix + '-score-msg');
+    els.lockMsg = document.getElementById(prefix + '-lock-msg');
+    els.reviewGrid = document.getElementById(prefix + '-review-grid');
+    els.reviewDetail = document.getElementById(prefix + '-review-detail');
+    els.retakeBtn = document.getElementById(prefix + '-retake-btn');
+  }
+
+  function renderDots(){
+    els.dots.innerHTML = '';
+    for(var i = 0; i < questions.length; i++){
+      var dot = document.createElement('span');
+      dot.className = 'quiz-dot';
+      if(i === index) dot.classList.add('dot-current');
+      else if(answered[i]) dot.classList.add('dot-answered');
+      els.dots.appendChild(dot);
+    }
+  }
+
+  function renderQuestion(){
+    var item = questions[index];
+    els.progressText.textContent = 'Question ' + (index + 1) + ' / ' + questions.length;
+    var pct = Math.round((index / questions.length) * 100);
+    els.barFill.style.width = pct + '%';
+    els.pctText.textContent = pct + '%';
+
+    var qDiv = document.createElement('div');
+    var headDiv = document.createElement('div');
+    headDiv.className = 'q-head';
+    headDiv.innerHTML = '<span class="q-num">' + (index + 1) + '</span><span class="q-text">' + item.q + '</span>';
+    qDiv.appendChild(headDiv);
+
+    var isAnswered = !!answered[index];
+    var showFeedback = immediate && isAnswered;
+    var wasCorrect = (selected[index] === item.correct);
+    var playAnim = showFeedback && justAnsweredAnimate;
+    justAnsweredAnimate = false;
+
+    var optsDiv = document.createElement('div');
+    optsDiv.className = 'q-options' + (showFeedback ? ' locked' : '');
+    item.options.forEach(function(optText, oIndex){
+      var optDiv = document.createElement('div');
+      optDiv.className = 'q-option';
+      optDiv.innerHTML = '<span class="letter">' + QUIZ_STRINGS.letters[oIndex] + '.</span><span>' + optText + '</span>';
+      if(oIndex === selected[index]){ optDiv.classList.add('selected'); }
+      if(showFeedback){
+        if(oIndex === item.correct){ optDiv.classList.add('opt-correct'); }
+        else if(oIndex === selected[index]){ optDiv.classList.add('opt-wrong'); }
+        if(playAnim && oIndex === selected[index]){
+          optDiv.classList.add(wasCorrect ? 'celebrate' : 'shake');
+        }
+      }
+      optDiv.addEventListener('click', function(){ selectOption(oIndex); });
+      optsDiv.appendChild(optDiv);
+    });
+    qDiv.appendChild(optsDiv);
+
+    if(showFeedback){
+      var explDiv = document.createElement('div');
+      explDiv.className = 'rq-explanation-inline';
+      explDiv.textContent = item.explanation;
+      qDiv.appendChild(explDiv);
+    }
+
+    els.stage.innerHTML = '';
+    els.stage.appendChild(qDiv);
+
+    els.prevBtn.disabled = (index === 0);
+    els.nextBtn.textContent = (index === questions.length - 1) ? 'Finish' : 'Next';
+    renderDots();
+  }
+
+  function selectOption(oIndex){
+    if(immediate && answered[index]) return;
+    answered[index] = true;
+    selected[index] = oIndex;
+    if(immediate){
+      var item = questions[index];
+      justAnsweredAnimate = true;
+      if(oIndex === item.correct){ playCorrectSound(); } else { playWrongSound(); }
+    } else {
+      playClickSound();
+    }
+    renderQuestion();
+  }
+
+  function finish(){
+    var correctCount = 0;
+    questions.forEach(function(item, i){ if(selected[i] === item.correct) correctCount++; });
+    var pct = Math.round((correctCount / questions.length) * 100);
+
+    els.activeArea.style.display = 'none';
+    els.summary.classList.add('show');
+
+    var name = studentName || '';
+    els.scoreTitle.textContent = name ? ('Well done, ' + name + '! 🌟') : '';
+    els.scorePct.textContent = pct + '%';
+
+    var msg = '';
+    for(var i = 0; i < QUIZ_STRINGS.scoreMsgs.length; i++){
+      if(pct >= QUIZ_STRINGS.scoreMsgs[i][0]){ msg = QUIZ_STRINGS.scoreMsgs[i][1]; break; }
+    }
+    els.scoreMsg.textContent = msg;
+
+    if(els.lockMsg){
+      els.lockMsg.style.display = 'none';
+    }
+
+    els.reviewGrid.innerHTML = '';
+    questions.forEach(function(item, i){
+      var correct = (selected[i] === item.correct);
+      var btn = document.createElement('button');
+      btn.className = 'review-num ' + (correct ? 'rn-correct' : 'rn-wrong');
+      btn.textContent = (i + 1);
+      btn.addEventListener('click', function(){ playClickSound(); showDetail(i); });
+      els.reviewGrid.appendChild(btn);
+    });
+    els.reviewDetail.classList.remove('show');
+    els.retakeBtn.textContent = 'Retake Quiz';
+
+    if(name){ speakResult(name, correctCount, questions.length, pct); }
+
+    if(typeof onFinish === 'function'){ onFinish(pct); }
+  }
+
+  function showDetail(i){
+    var item = questions[i];
+    var yourIdx = selected[i];
+    var yourText = (yourIdx === null || yourIdx === undefined) ? '(no answer)' : item.options[yourIdx];
+    var html = '<div class="rd-q">' + (i + 1) + '. ' + item.q + '</div>';
+    html += '<div class="rd-your">Your answer: ' + yourText + '</div>';
+    html += '<div class="rd-correct">Correct answer: ' + item.options[item.correct] + '</div>';
+    html += '<div class="rd-expl">' + item.explanation + '</div>';
+    els.reviewDetail.innerHTML = html;
+    els.reviewDetail.classList.remove('show');
+    void els.reviewDetail.offsetWidth;
+    els.reviewDetail.classList.add('show');
+    els.reviewDetail.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  function reset(){
+    index = 0;
+    answered = new Array(questions.length).fill(false);
+    selected = new Array(questions.length).fill(null);
+    els.summary.classList.remove('show');
+    els.activeArea.style.display = '';
+    els.prevBtn.textContent = 'Previous';
+    els.nextBtn.textContent = 'Next';
+    renderQuestion();
+    if(typeof onReset === 'function'){ onReset(); }
+  }
+
+  function bindNav(){
+    els.prevBtn.addEventListener('click', function(){
+      playClickSound();
+      if(index > 0){ index--; renderQuestion(); }
+    });
+    els.nextBtn.addEventListener('click', function(){
+      playClickSound();
+      if(index < questions.length - 1){ index++; renderQuestion(); }
+      else { finish(); }
+    });
+    els.retakeBtn.addEventListener('click', function(){ playClickSound(); reset(); });
+  }
+
+  cacheEls();
+  bindNav();
+  reset();
+
+  return {};
+}
+
+/* ===================== INIT ===================== */
+document.getElementById('student-name-input').focus();
+</script>
+
+</body>
+</html>
