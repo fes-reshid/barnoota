@@ -2160,9 +2160,16 @@ loginBtn.addEventListener('click', function(){
   signInWithEmailAndPassword(auth, email, password)
     .then(function(cred){
       return getDoc(doc(db, 'students', cred.user.uid)).then(function(snap){
-        var data = snap.exists() ? snap.data() : defaultStudentDoc(cred.user.displayName || email, email);
-        window.playClickSound && window.playClickSound();
-        window.enterCourse(cred.user.uid, email, data, true);
+        if(snap.exists()){
+          window.playClickSound && window.playClickSound();
+          window.enterCourse(cred.user.uid, email, snap.data(), true);
+          return;
+        }
+        var data = defaultStudentDoc(cred.user.displayName || email, email);
+        return setDoc(doc(db, 'students', cred.user.uid), data).then(function(){
+          window.playClickSound && window.playClickSound();
+          window.enterCourse(cred.user.uid, email, data, true);
+        });
       });
     })
     .catch(function(e){
@@ -2213,8 +2220,14 @@ window.__fbSaveProgress = function(uid, stepDone, finalExamScorePct){
 onAuthStateChanged(auth, function(user){
   if(user){
     getDoc(doc(db, 'students', user.uid)).then(function(snap){
-      var data = snap.exists() ? snap.data() : defaultStudentDoc(user.displayName || user.email, user.email);
-      window.enterCourse(user.uid, user.email, data, true);
+      if(snap.exists()){
+        window.enterCourse(user.uid, user.email, snap.data(), true);
+        return;
+      }
+      var data = defaultStudentDoc(user.displayName || user.email, user.email);
+      setDoc(doc(db, 'students', user.uid), data).then(function(){
+        window.enterCourse(user.uid, user.email, data, true);
+      });
     }).catch(function(e){
       console.error('Could not load account:', e);
       window.showAuthPanel('auth-landing');

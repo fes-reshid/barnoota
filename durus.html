@@ -1164,8 +1164,14 @@ loginBtn.addEventListener('click', function(){
   signInWithEmailAndPassword(auth, email, password)
     .then(function(cred){
       return getDoc(doc(db, COLLECTION, cred.user.uid)).then(function(snap){
-        var data = snap.exists() ? snap.data() : defaultStudentDoc(cred.user.displayName || email, email);
-        window.enterCourse(cred.user.uid, email, data);
+        if(snap.exists()){
+          window.enterCourse(cred.user.uid, email, snap.data());
+          return;
+        }
+        var data = defaultStudentDoc(cred.user.displayName || email, email);
+        return setDoc(doc(db, COLLECTION, cred.user.uid), data).then(function(){
+          window.enterCourse(cred.user.uid, email, data);
+        });
       });
     })
     .catch(function(e){
@@ -1215,8 +1221,14 @@ window.__fbSaveProgress = function(uid, lastScorePct){
 onAuthStateChanged(auth, function(user){
   if(user){
     getDoc(doc(db, COLLECTION, user.uid)).then(function(snap){
-      var data = snap.exists() ? snap.data() : defaultStudentDoc(user.displayName || user.email, user.email);
-      window.enterCourse(user.uid, user.email, data);
+      if(snap.exists()){
+        window.enterCourse(user.uid, user.email, snap.data());
+        return;
+      }
+      var data = defaultStudentDoc(user.displayName || user.email, user.email);
+      setDoc(doc(db, COLLECTION, user.uid), data).then(function(){
+        window.enterCourse(user.uid, user.email, data);
+      });
     }).catch(function(e){
       console.error('Could not load account:', e);
       window.showAuthPanel('auth-landing');
