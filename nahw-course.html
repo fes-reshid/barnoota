@@ -253,6 +253,24 @@
   .case-card .case-items{ font-family:'Amiri', serif; font-size:calc(15.5px * var(--scale)); direction:rtl; color:var(--ink-navy); margin-bottom:4px; }
   .case-card .case-example{ font-size:calc(13px * var(--scale)); color:var(--ink-brown); font-style:italic; }
 
+  /* ===== Islamic-sciences map cards (Foundations overview) ===== */
+  .sci-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin:0 0 16px; }
+  @media(min-width:560px){ .sci-grid.cols-2{ grid-template-columns:1fr 1fr; } }
+  @media(min-width:640px){ .sci-grid.cols-4{ grid-template-columns:repeat(4,1fr); } }
+  .sci-card{ border-radius:12px; padding:14px 16px; border:2px solid; text-align:center; }
+  .sci-card h4{ margin:0 0 6px; font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); }
+  .sci-card p{ margin:0; font-size:calc(13px * var(--scale)); }
+  .sci-card.c-blue{ background:var(--blue-bg); border-color:var(--blue); }
+  .sci-card.c-blue h4{ color:#2c5482; }
+  .sci-card.c-green{ background:var(--green-bg); border-color:var(--green); }
+  .sci-card.c-green h4{ color:var(--green); }
+  .sci-card.c-purple{ background:var(--purple-bg); border-color:var(--purple); }
+  .sci-card.c-purple h4{ color:#5a3f80; }
+  .sci-card.c-gold{ background:var(--parchment-deep); border-color:var(--gold); }
+  .sci-card.c-gold h4{ color:#8a5f1c; }
+  .sci-card.c-red{ background:var(--red-bg); border-color:var(--red); }
+  .sci-card.c-red h4{ color:var(--red); }
+
   /* ===== Numbered sub-rules (verb sections) ===== */
   .sub-rules{ display:flex; flex-direction:column; gap:10px; margin:14px 0; }
   .sub-rule{
@@ -517,16 +535,16 @@
       <button class="week-select-btn" id="week-select-foundations" data-step="0">
         <span class="wsb-en">Foundations</span><span class="wsb-ar">الأساسيات</span>
       </button>
-      <button class="week-select-btn" id="week-select-w1" data-step="1">
+      <button class="week-select-btn" id="week-select-w1" data-step="2">
         <span class="wsb-en">Week 1</span><span class="wsb-ar">الأسبوع الأول</span>
       </button>
-      <button class="week-select-btn" id="week-select-w2" data-step="3">
+      <button class="week-select-btn" id="week-select-w2" data-step="4">
         <span class="wsb-en">Week 2</span><span class="wsb-ar">الأسبوع الثاني</span>
       </button>
-      <button class="week-select-btn" id="week-select-w3" data-step="5">
+      <button class="week-select-btn" id="week-select-w3" data-step="6">
         <span class="wsb-en">Week 3</span><span class="wsb-ar">الأسبوع الثالث</span>
       </button>
-      <button class="week-select-btn" id="week-select-w4" data-step="8">
+      <button class="week-select-btn" id="week-select-w4" data-step="9">
         <span class="wsb-en">Week 4</span><span class="wsb-ar">الأسبوع الرابع</span>
       </button>
     </div>
@@ -535,7 +553,7 @@
   <div id="main-content" style="display:none;">
 
     <div class="step-progress-row">
-      <span id="step-progress-text">Step 1 / 11</span>
+      <span id="step-progress-text">Step 1 / 20</span>
       <div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div>
     </div>
 
@@ -846,6 +864,111 @@ var LESSONS_FOUNDATIONS_EN = [
     <p>The four weeks that follow build this science from the ground up: first the big map of what Naḥw covers, then how to classify any word you see, then how definiteness works, and finally the single most important distinction in the whole subject — مُعرَب versus مبني. Each idea is a tool you'll keep using in every chapter after it.</p>
   </div>
 </div>
+`,
+`<div class="hero">
+  <p class="hero-eyebrow">فَهْمُ الأَدَوَاتِ يُعِينُ عَلَى فَهْمِ المَقَاصِدِ</p>
+  <h1 class="en-title">Where Naḥw Fits: The Map of Islamic Sciences</h1>
+  <p>Understanding the tools helps you understand the objectives. Before going any further, it helps to see the whole map of Islamic knowledge once — and to find exactly where Naḥw sits on it.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">1</span>Two Categories of Islamic Knowledge</h2>
+  <div class="sci-grid cols-2">
+    <div class="sci-card c-blue">
+      <h4>عُلُومُ الغَايَة · Goal Sciences</h4>
+      <p>Sciences sought for their own sake: the Qur'an, the Ḥadīth, Fiqh, Tafsīr, and the Qirā'āt (recitation styles).</p>
+    </div>
+    <div class="sci-card c-green">
+      <h4>عُلُومُ الآلَة · Tool Sciences</h4>
+      <p>Sciences that help you reach and correctly understand the Goal Sciences: Arabic Language Sciences, Uṣūl al-Fiqh, Muṣṭalaḥ al-Ḥadīth, Tajwīd, and Uṣūl al-Tafsīr.</p>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">Naḥw is not an end in itself — it is a <b>tool science</b>. Its entire purpose is to protect your understanding of the Qur'an, the Sunnah, and every book built on them.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">2</span>The Four Arabic Language Sciences</h2>
+  <div class="sci-grid cols-4">
+    <div class="sci-card c-purple">
+      <h4>النَّحْو · Naḥw</h4>
+      <p>Word-ending rulings, sentence structure, and declension rules.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>الصَّرْف · Ṣarf</h4>
+      <p>Word structure and roots, and converting one form into another.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>البَلَاغَة · Balāghah</h4>
+      <p>Eloquence and beauty of speech, and its precise meanings.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>العَرُوض · ʿArūḍ</h4>
+      <p>The meters of poetry and the rules of rhyme.</p>
+    </div>
+  </div>
+  <div class="note-box">
+    <p class="note-title">This course</p>
+    <p>Of these four, this course is dedicated entirely to the first: <span class="term-pair">النَّحْو</span> — Naḥw.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">3</span>The Two Halves of Naḥw</h2>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">1</span>
+      <div class="srbody"><b>أحكام الكلمة — Rulings of the Word.</b> How to classify any single word: its type (اسم / فعل / حرف), whether it is definite or indefinite (النكرة والمعرفة), and whether its ending changes at all (المعرب والمبني).</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">2</span>
+      <div class="srbody"><b>أحكام الكلام — Rulings of Speech.</b> How words combine into a correct sentence: the nominal sentence (الجملة الاسمية), the verbal sentence (الجملة الفعلية), the words that complete either one (مكملات الجملتين), and the declension of the present-tense verb (إعراب المضارع).</div>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">This is exactly the roadmap of the four weeks ahead: Week 1 is the big map, Week 2 is the types of the word, Week 3 is definite versus indefinite, and Week 4 is مُعرَب versus مبني.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">4</span>A Preview: the "Completers" of the Two Sentences</h2>
+  <p class="lead">Later in your Naḥw studies you'll meet three families of words that step into a nominal sentence and change its case endings. A first glimpse:</p>
+  <div class="case-grid">
+    <div class="case-card">
+      <span class="case-label">كَانَ وَأَخَوَاتُهَا</span>
+      <div class="case-items">كَانَ · أَصْبَحَ · أَضْحَى · أَمْسَى · ظَلَّ · بَاتَ · صَارَ · لَيْسَ · مَا زَالَ · مَا دَامَ</div>
+      <div class="case-example">raise the predicate, drop the subject into the accusative</div>
+    </div>
+    <div class="case-card">
+      <span class="case-label">إِنَّ وَأَخَوَاتُهَا</span>
+      <div class="case-items">إِنَّ · أَنَّ · كَأَنَّ · لَيْتَ · لَكِنَّ · لَعَلَّ</div>
+      <div class="case-example">drop the subject into the accusative, raise the predicate</div>
+    </div>
+    <div class="case-card">
+      <span class="case-label">ظَنَّ وَأَخَوَاتُهَا</span>
+      <div class="case-items">ظَنَّ · حَسِبَ · خَالَ · زَعَمَ · رَأَى · عَلِمَ · وَجَدَ · دَرَى</div>
+      <div class="case-example">put both the subject and the predicate into the accusative</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">5</span>Why Any of This Matters</h2>
+  <div class="rule-box">
+    <ul>
+      <li>Understanding the Book of Allah and the Sunnah of His Messenger as they were correctly understood.</li>
+      <li>Soundness of understanding, safe from error and distortion.</li>
+      <li>Reaching the rulings of the Sharīʿah from their original sources.</li>
+      <li>Protecting the religion from doubts and deviations.</li>
+      <li>Mastering the tongue and expressing yourself well.</li>
+    </ul>
+  </div>
+  <div class="note-box">
+    <p class="note-title">اَلْعِلْمُ قَبْلَ القَوْلِ وَالعَمَلِ</p>
+    <p>"Knowledge before speech and action" — the title Imam al-Bukhārī gave to a chapter of his Ṣaḥīḥ, drawn from Allah's words: <span class="term-pair">فَاعْلَمْ أَنَّهُ لَا إِلَٰهَ إِلَّا اللَّهُ</span> ("So know that there is no god but Allah" — Qur'an 47:19). Every tool you pick up in this course serves that one goal: knowing before saying, and knowing before doing.</p>
+  </div>
+</div>
 `
 ];
 
@@ -896,6 +1019,110 @@ var LESSONS_FOUNDATIONS_AR = [
   <div class="note-box">
     <p class="note-title">إلى أين يتّجه هذا المقرر</p>
     <p>تبني الأسابيع الأربعة القادمة هذا العلم من الأساس: أولاً الخريطة الكبرى لما يغطيه النحو، ثم كيفية تصنيف أي كلمة تراها، ثم كيف يعمل التعريف والتنكير، وأخيرًا أهم تفريق في هذا العلم كله — بين المُعرَب والمبني. كل فكرة هنا أداة ستستخدمها في كل باب بعدها.</p>
+  </div>
+</div>
+`,
+`<div class="hero">
+  <h1>أين يقع النحو؟ خريطة العلوم الإسلامية</h1>
+  <p>فهم الأدوات يعين على فهم المقاصد. قبل المتابعة، من المفيد أن نرى خريطة العلوم الإسلامية كاملة مرة واحدة — ونحدد بالضبط أين يقع النحو منها.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">١</span>قسمان للعلوم الإسلامية</h2>
+  <div class="sci-grid cols-2">
+    <div class="sci-card c-blue">
+      <h4>عُلُومُ الغَايَة</h4>
+      <p>العلوم المقصودة لذاتها: القرآن الكريم، والحديث الشريف، والفقه، والتفسير، والقراءات.</p>
+    </div>
+    <div class="sci-card c-green">
+      <h4>عُلُومُ الآلَة</h4>
+      <p>العلوم التي تساعد على الوصول إلى علوم الغاية وفهمها بشكل صحيح: علوم اللغة العربية، وأصول الفقه، ومصطلح الحديث، والتجويد، وأصول التفسير.</p>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">النحو ليس غاية في ذاته، بل هو <b>عِلْمُ آلَة</b>. كل غايته أن يحمي فهمك للقرآن والسنة، ولكل كتاب بُني عليهما.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٢</span>علوم اللغة العربية الأربعة</h2>
+  <div class="sci-grid cols-4">
+    <div class="sci-card c-purple">
+      <h4>النَّحْو</h4>
+      <p>أحكام أواخر الكلمات، وتركيب الجمل، وقواعد الإعراب.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>الصَّرْف</h4>
+      <p>بنية الكلمة وأصولها، والتحويل من صيغة إلى أخرى.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>البَلَاغَة</h4>
+      <p>فصاحة الكلام وجماله، وفهم معانيه الدقيقة.</p>
+    </div>
+    <div class="sci-card c-purple">
+      <h4>العَرُوض</h4>
+      <p>أوزان الشعر وقواعد القافية.</p>
+    </div>
+  </div>
+  <div class="note-box">
+    <p class="note-title">هذا المقرر</p>
+    <p>من بين هذه العلوم الأربعة، يُخصَّص هذا المقرر بالكامل لأولها: <span class="term-pair">النَّحْو</span>.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٣</span>قسما النحو</h2>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">١</span>
+      <div class="srbody"><b>أحكام الكلمة.</b> كيفية تصنيف أي كلمة مفردة: نوعها (اسم / فعل / حرف)، وهل هي نكرة أم معرفة، وهل تتغيّر حركة آخرها أصلاً (المعرب والمبني).</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">٢</span>
+      <div class="srbody"><b>أحكام الكلام.</b> كيفية تركيب الكلمات في جملة صحيحة: الجملة الاسمية، والجملة الفعلية، والكلمات التي تدخل على إحداهما فتُكمّلها (مكملات الجملتين)، وإعراب الفعل المضارع.</div>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">هذه بالضبط خريطة الأسابيع الأربعة القادمة: الأسبوع الأول الخريطة الكبرى، والثاني أنواع الكلمة، والثالث النكرة والمعرفة، والرابع المعرب والمبني.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٤</span>لمحة: مكمّلات الجملتين</h2>
+  <p class="lead">ستتعرّف لاحقًا في دراستك للنحو على ثلاث مجموعات من الكلمات تدخل على الجملة الاسمية فتغيّر حركات إعرابها. لمحة أولى عنها:</p>
+  <div class="case-grid">
+    <div class="case-card">
+      <span class="case-label">كَانَ وَأَخَوَاتُهَا</span>
+      <div class="case-items">كَانَ · أَصْبَحَ · أَضْحَى · أَمْسَى · ظَلَّ · بَاتَ · صَارَ · لَيْسَ · مَا زَالَ · مَا دَامَ</div>
+      <div class="case-example">ترفع المبتدأ وتنصب الخبر</div>
+    </div>
+    <div class="case-card">
+      <span class="case-label">إِنَّ وَأَخَوَاتُهَا</span>
+      <div class="case-items">إِنَّ · أَنَّ · كَأَنَّ · لَيْتَ · لَكِنَّ · لَعَلَّ</div>
+      <div class="case-example">تنصب المبتدأ وترفع الخبر</div>
+    </div>
+    <div class="case-card">
+      <span class="case-label">ظَنَّ وَأَخَوَاتُهَا</span>
+      <div class="case-items">ظَنَّ · حَسِبَ · خَالَ · زَعَمَ · رَأَى · عَلِمَ · وَجَدَ · دَرَى</div>
+      <div class="case-example">تنصب المبتدأ والخبر معاً</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٥</span>لماذا يهمّ كل هذا</h2>
+  <div class="rule-box">
+    <ul>
+      <li>فهم كتاب الله وسنة رسوله ﷺ كما فهمهما الصحابة رضي الله عنهم.</li>
+      <li>سلامة الفهم من الخطأ والتحريف.</li>
+      <li>الوصول إلى الأحكام الشرعية من مصادرها الأصلية.</li>
+      <li>حماية الدين من الشبهات والانحرافات.</li>
+      <li>إتقان اللسان وحسن التعبير.</li>
+    </ul>
+  </div>
+  <div class="note-box">
+    <p class="note-title">اَلْعِلْمُ قَبْلَ القَوْلِ وَالعَمَلِ</p>
+    <p>هذا هو العنوان الذي وضعه الإمام البخاري لأحد أبواب صحيحه، مستنبطًا إياه من قول الله تعالى: <span class="term-pair">فَاعْلَمْ أَنَّهُ لَا إِلَٰهَ إِلَّا اللَّهُ</span> (سورة محمد: ١٩). فكل أداة تتعلمها في هذا المقرر إنما تخدم هذه الغاية الواحدة: العلم قبل القول، والعلم قبل العمل.</p>
   </div>
 </div>
 `
@@ -1951,6 +2178,7 @@ var currentStepIndex = 0;
 var STEP_DEFS = [
   // ===== Foundations =====
   { type: 'lesson', arrEN: 'LESSONS_FOUNDATIONS_EN', arrAR: 'LESSONS_FOUNDATIONS_AR', idx: 0, weekEn: 'Foundations', weekAr: 'الأساسيات' },
+  { type: 'lesson', arrEN: 'LESSONS_FOUNDATIONS_EN', arrAR: 'LESSONS_FOUNDATIONS_AR', idx: 1 },
 
   // ===== Week 1: The Subject of Naḥw =====
   { type: 'lesson', arrEN: 'LESSONS_W1_EN', arrAR: 'LESSONS_W1_AR', idx: 0, weekEn: 'Week 1', weekAr: 'الأسبوع الأول' },
