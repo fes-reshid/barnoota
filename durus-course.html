@@ -104,10 +104,20 @@
     display:flex; align-items:center; gap:5px; transition:background .15s ease, transform .15s ease;
   }
   .back-to-weeks-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
+  .back-to-weeks-btn .btw-ar{ font-family:'Amiri', serif; }
+  .back-to-weeks-btn .btw-en::after{ content:' ·'; opacity:.6; }
 
   .topbar-title{ display:flex; flex-direction:column; line-height:1.25; align-items:center; }
   .topbar-title .ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); }
   .topbar-title .en{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); color:var(--ink-navy); }
+  .lang-toggle{ display:flex; gap:6px; flex-shrink:0; justify-content:center; direction:ltr; margin-top:2px; }
+  .lang-pill{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px;
+    padding:5px 13px; font-size:calc(12px * var(--scale)); font-family:'Cormorant Garamond', serif; font-weight:700;
+    color:var(--ink-brown); cursor:pointer; transition:background .15s ease, color .15s ease, transform .15s ease;
+  }
+  .lang-pill:hover{ transform:scale(1.04); }
+  .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
 
   /* ===== Name gate ===== */
   #name-gate{ display:flex; justify-content:center; padding:40px 10px; }
@@ -388,6 +398,19 @@
 
   footer.foot{ text-align:center; color:var(--gold); font-size:calc(12px * var(--scale)); margin-top:40px; }
 
+  /* ===== RTL mode ===== */
+  body.rtl-active{ direction:rtl; }
+  body.rtl-active, body.rtl-active .lead, body.rtl-active .def-card p, body.rtl-active .sub-rule .srbody,
+  body.rtl-active .note-box p, body.rtl-active .rule-box li, body.rtl-active .q-text, body.rtl-active .q-option,
+  body.rtl-active .progress-row, body.rtl-active .cert-line, body.rtl-active .cert-course{ font-family:'Amiri', serif; }
+  body.rtl-active .rule-box{ border-left:none; border-right:4px solid var(--gold); }
+  body.rtl-active .rule-box ul{ padding-inline-start:0; padding-inline-end:20px; }
+  body.rtl-active .q-option:hover{ transform:translateX(-3px); }
+  body.rtl-active .step-nav-row,
+  body.rtl-active .quiz-nav-row{ flex-direction:row-reverse; }
+  body.rtl-active .back-to-weeks-btn{ left:auto; right:14px; }
+  body.rtl-active .font-size-control{ right:auto; left:14px; }
+
   @media print{
     header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, .no-print{ display:none !important; }
     body{ background:#fff; }
@@ -416,7 +439,9 @@
 </header>
 
 <div class="topbar">
-  <button class="back-to-weeks-btn" id="back-to-weeks-btn" style="display:none;">☰ Weeks</button>
+  <button class="back-to-weeks-btn" id="back-to-weeks-btn" style="display:none;">
+    <span class="btw-en">☰ Weeks</span><span class="btw-ar">الأسابيع</span>
+  </button>
   <div class="font-size-control" id="font-size-control">
     <button id="font-decrease-btn" aria-label="Decrease font size">−</button>
     <span id="font-size-readout">100%</span>
@@ -426,16 +451,20 @@
     <span class="ar">الدروس المهمة لعامة الأمة</span>
     <span class="en">Durūs al-Muhimmah — 6-Week Course</span>
   </div>
+  <div class="lang-toggle">
+    <button class="lang-pill" id="lang-en-btn">English</button>
+    <button class="lang-pill" id="lang-ar-btn">العربية</button>
+  </div>
 </div>
 
 <div class="wrap">
 
   <div id="name-gate">
     <div class="name-gate-box">
-      <label for="student-name-input" id="name-gate-label">Enter your name to begin</label>
-      <input type="text" id="student-name-input" placeholder="Your name" autocomplete="off">
-      <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first</p>
-      <button id="name-start-btn">Start the Course</button>
+      <label for="student-name-input" id="name-gate-label">Enter your name to begin · اكتب اسمك قبل البدء</label>
+      <input type="text" id="student-name-input" placeholder="Your name · اسمك" autocomplete="off">
+      <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
+      <button id="name-start-btn">Start the Course · ابدأ</button>
     </div>
   </div>
 
@@ -448,7 +477,7 @@
   </div>
 
   <div id="week-select" style="display:none;">
-    <p class="week-select-lead">Choose where you'd like to start</p>
+    <p class="week-select-lead">Choose where you'd like to start · اختر من أين تريد أن تبدأ</p>
     <div class="week-select-grid">
       <button class="week-select-btn" data-step="0"><span class="wsb-en">Week 1</span><span class="wsb-ar">القرآن</span></button>
       <button class="week-select-btn" data-step="2"><span class="wsb-en">Week 2</span><span class="wsb-ar">الإسلام والإيمان والإحسان</span></button>
@@ -575,15 +604,25 @@ function pickQuote(){
   return ENCOURAGEMENT_QUOTES[idx];
 }
 
-var WELCOME_LINE_TEMPLATES = [
+var currentLang = 'en';
+
+var WELCOME_LINE_TEMPLATES_EN = [
   function(n){ return "🌟 Well done for showing up, " + n + "!"; },
   function(n){ return "🌟 Keep going, " + n + "! May Allah make it easy for you."; },
   function(n){ return "🌟 Proud of you, " + n + "! بارك الله فيك"; }
 ];
+var WELCOME_LINE_TEMPLATES_AR = [
+  function(n){ return "🌟 أحسنتَ على حضورك يا " + n + "!"; },
+  function(n){ return "🌟 استمر يا " + n + "! أعانك الله."; },
+  function(n){ return "🌟 نحن فخورون بك يا " + n + "! May Allah bless you"; }
+];
 
 function showWelcomeBanner(isReturning){
-  var line = WELCOME_LINE_TEMPLATES[Math.floor(Math.random() * WELCOME_LINE_TEMPLATES.length)](studentName);
-  if(isReturning){ line += ' — welcome back, resuming your progress.'; }
+  var templates = (currentLang === 'ar') ? WELCOME_LINE_TEMPLATES_AR : WELCOME_LINE_TEMPLATES_EN;
+  var line = templates[Math.floor(Math.random() * templates.length)](studentName);
+  if(isReturning){
+    line += (currentLang === 'ar') ? ' — مرحبًا بعودتك، سنكمل من حيث توقفت.' : ' — welcome back, resuming your progress.';
+  }
   var quote = pickQuote();
   document.getElementById('welcome-line').textContent = line;
   document.getElementById('welcome-quote-ar').textContent = quote.ar;
@@ -591,12 +630,19 @@ function showWelcomeBanner(isReturning){
   document.getElementById('welcome-banner').style.display = 'block';
 }
 
-function speakResult(name, correctCount, total, pct){
+function speakResult(name, correctCount, total, pct, lang){
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
-  var text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+  var text, voiceLang;
+  if(lang === 'ar'){
+    text = 'أحسنت يا ' + name + '! لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.';
+    voiceLang = 'ar-SA';
+  } else {
+    text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+    voiceLang = 'en-US';
+  }
   var utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'en-US';
+  utter.lang = voiceLang;
   utter.rate = 0.95;
   window.speechSynthesis.speak(utter);
 }
@@ -634,6 +680,9 @@ document.getElementById('back-to-weeks-btn').addEventListener('click', function(
   window.scrollTo(0,0);
 });
 
+document.getElementById('lang-en-btn').addEventListener('click', function(){ playClickSound(); setLanguage('en'); });
+document.getElementById('lang-ar-btn').addEventListener('click', function(){ playClickSound(); setLanguage('ar'); });
+
 document.getElementById('step-next-btn').addEventListener('click', function(){
   playClickSound();
   if(currentStepIndex < STEP_DEFS.length - 1){ renderStep(currentStepIndex + 1); }
@@ -647,10 +696,10 @@ var currentStepIndex = 0;
 var PASS_THRESHOLD = 70;
 
 /* ===================== LESSON CONTENT ===================== */
-var WEEK1_LESSON =
+var WEEK1_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">القرآن الكريم</p>' +
-    '<h1>The Qur\'an — Learning It, Reciting It, Reflecting On It</h1>' +
+    '<h1 class="en-title">The Qur\'an — Learning It, Reciting It, Reflecting On It</h1>' +
     '<p>Lesson One of Durūs al-Muhimmah: Al-Fātiḥah, the short sūrahs, and how the earliest generation of Muslims approached the Qur\'an.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -681,10 +730,10 @@ var WEEK1_LESSON =
     '<div class="note-box"><p class="note-title">Why As-Saʿdī First?</p><p>It is concise and clear, free of unnecessary complexity for a new student; it constantly draws out practical lessons for how to live; and it emphasizes Tawḥīd — the single most important theme running through the entire Qur\'an.</p></div>' +
   '</div>';
 
-var WEEK2_LESSON =
+var WEEK2_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">الإسلام، الإيمان، الإحسان</p>' +
-    '<h1>Islam, Īmān &amp; Iḥsān — The Three Levels of the Dīn</h1>' +
+    '<h1 class="en-title">Islam, Īmān &amp; Iḥsān — The Three Levels of the Dīn</h1>' +
     '<p>Lessons Two, Three &amp; Five: the famous Ḥadīth of Jibrīl (peace be upon him) organizes the entire religion into three levels.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -713,10 +762,10 @@ var WEEK2_LESSON =
     '<div class="note-box"><p class="note-title">The Prophet\'s ﷺ Definition</p><p>"<b>That you worship Allah as though you see Him, and while you do not see Him, He surely sees you.</b>" This single sentence is the summit of the religion — it turns every act of worship into something sincere and watchful, whether or not another person is present.</p></div>' +
   '</div>';
 
-var WEEK3_LESSON =
+var WEEK3_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">التوحيد والشرك</p>' +
-    '<h1>Tawḥīd &amp; the Categories of Shirk</h1>' +
+    '<h1 class="en-title">Tawḥīd &amp; the Categories of Shirk</h1>' +
     '<p>Lesson Four: the single most repeated theme of the Qur\'an, and its opposite.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -752,10 +801,10 @@ var WEEK3_LESSON =
     '<p class="lead">Love is divided into categories: love <i>of</i> Allah (worship, obligatory), love <i>for</i> Allah\'s sake (loving good people and good deeds), and natural love (for family, food, etc. — permissible, so long as it never rivals one\'s love of Allah). Loving anyone <b>exactly as</b> one loves Allah is major shirk in love.</p>' +
   '</div>';
 
-var WEEK4_LESSON =
+var WEEK4_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">الصلاة</p>' +
-    '<h1>The Prayer (Ṣalāh)</h1>' +
+    '<h1 class="en-title">The Prayer (Ṣalāh)</h1>' +
     '<p>Lessons Six through Eleven: conditions, pillars, obligations, the Tashahhud, and what nullifies the prayer.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -796,10 +845,10 @@ var WEEK4_LESSON =
     '</ul></div>' +
   '</div>';
 
-var WEEK5_LESSON =
+var WEEK5_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">الطهارة، الزكاة، الصيام، الحج</p>' +
-    '<h1>Purification, Zakāh, Fasting &amp; Ḥajj</h1>' +
+    '<h1 class="en-title">Purification, Zakāh, Fasting &amp; Ḥajj</h1>' +
     '<p>Lessons Twelve through Fourteen and the appendices on the remaining pillars of Islam.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -823,10 +872,10 @@ var WEEK5_LESSON =
     '<p class="lead">Obligatory once in a lifetime upon whoever is able. Its pillars are: entering <i>Iḥrām</i> with the intention, standing at ʿArafah on the 9th of Dhul-Ḥijjah, <i>Ṭawāf al-Ifāḍah</i> around the Kaʿbah, and <i>Saʿy</i> between Ṣafā and Marwah.</p>' +
   '</div>';
 
-var WEEK6_LESSON =
+var WEEK6_LESSON_EN =
   '<div class="hero">' +
     '<p class="hero-eyebrow">الأخلاق والجنائز</p>' +
-    '<h1>Islamic Character, Avoiding Shirk &amp; Sins, and the Funeral</h1>' +
+    '<h1 class="en-title">Islamic Character, Avoiding Shirk &amp; Sins, and the Funeral</h1>' +
     '<p>Lessons Fifteen through Eighteen: how a Muslim carries the dīn into daily life, and how the dīn is carried out at the end of life.</p>' +
   '</div>' +
   '<div class="section">' +
@@ -856,8 +905,217 @@ var WEEK6_LESSON =
     '</div>' +
   '</div>';
 
+var WEEK1_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">القرآن الكريم</p>' +
+    '<h1>القرآن الكريم — تعلّمه وتلاوته وتدبّره</h1>' +
+    '<p>الدرس الأول من الدروس المهمة: الفاتحة والسور القصار، ومنهج أول جيل من المسلمين في التعامل مع القرآن.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>كيف تعلّم الصحابة القرآن</h2>' +
+    '<p class="lead">لم يكن الصحابة يتعجّلون. كانوا يأخذون القرآن شيئًا فشيئًا — عشر آيات في الغالب — ولا ينتقلون إلى غيرها حتى يحفظوا تلك الآيات، ويفهموا معناها، ويبدؤوا بالعمل بها.</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li>اقرأ الجزء المطلوب على معلّم مؤهَّل أولًا — فالتلاوة تُؤخذ بالمشافهة لا من الصفحة وحدها.</li>' +
+      '<li>احفظه حفظًا متقنًا قبل أن تضيف إليه شيئًا آخر.</li>' +
+      '<li>اقرأ تفسيرًا موجزًا وموثوقًا معه — ليقترن الحفظ بالفهم.</li>' +
+      '<li>اعمل بما تعلّمت، مستعينًا بالله في ذلك كله.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>الفاتحة — فاتحة الكتاب</h2>' +
+    '<p class="lead">سبع آيات، تُقرأ في كل ركعة من كل صلاة. وتُسمّى أيضًا <span class="arabic">أُمُّ الْكِتَاب</span>، و<span class="arabic">السَّبْعُ الْمَثَانِي</span>.</p>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-green"><h3>محتواها</h3><p>حمدُ الله، وإثباتُ ربوبيته واليوم الآخر، ودعاءٌ مباشر: اهدنا الصراط المستقيم — صراط الذين أنعمتَ عليهم، غير المغضوب عليهم ولا الضالين.</p></div>' +
+      '<div class="def-card c-blue"><h3>أهميتها</h3><p>لا تصح صلاة بدونها. يكرر كل مصلٍّ هذا الدعاء سبع عشرة مرة يوميًا على الأقل — فهي تجديد يومي لطلب الهداية.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>السور القصار</h2>' +
+    '<p class="lead">يُنصح المبتدئ بأن يبدأ حفظه من <b>آخر القرآن</b> — من سورة الزلزلة إلى سورة الناس — لأنها سور قصيرة، كثيرة التكرار في الصلاة، وتغطي موضوعات أساسية: يوم القيامة، والتوحيد، والغيب، والاستعاذة بالله.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>أي تفسير يُبدأ به؟</h2>' +
+    '<p class="lead">التفسير الموصى به للبدء هو <b>تفسير السعدي</b> — <span class="arabic">تَيْسِيرُ الْكَرِيمِ الرَّحْمَٰنِ فِي تَفْسِيرِ كَلَامِ الْمَنَّان</span> — للشيخ عبد الرحمن بن ناصر السعدي.</p>' +
+    '<div class="note-box"><p class="note-title">لماذا تفسير السعدي أولًا؟</p><p>لأنه مختصر وواضح، خالٍ من التعقيد الذي لا يحتاجه المبتدئ؛ ولأنه يستخرج باستمرار الفوائد العملية للحياة؛ ولأنه يركّز على التوحيد — وهو أعظم موضوع يجري في القرآن كله.</p></div>' +
+  '</div>';
+
+var WEEK2_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الإسلام، الإيمان، الإحسان</p>' +
+    '<h1>الإسلام والإيمان والإحسان — مراتب الدين الثلاث</h1>' +
+    '<p>الدروس الثاني والثالث والخامس: حديث جبريل عليه السلام المشهور يقسّم الدين كله إلى ثلاث مراتب.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>أركان الإسلام الخمسة</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody"><b>الشهادتان</b> — أن لا إله إلا الله وأن محمدًا رسول الله.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody"><b>إقامة الصلاة</b> — خمس مرات كل يوم.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody"><b>إيتاء الزكاة</b> — الصدقة الواجبة في المال الذي بلغ النصاب.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody"><b>صوم رمضان</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">5</span><div class="srbody"><b>حج البيت</b> لمن استطاع إليه سبيلًا.</div></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>أركان الإيمان الستة</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody">الإيمان <b>بالله</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody">الإيمان <b>بملائكته</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody">الإيمان <b>بكتبه</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody">الإيمان <b>برسله</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">5</span><div class="srbody">الإيمان <b>باليوم الآخر</b>.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">6</span><div class="srbody">الإيمان <b>بالقدر</b> خيره وشره.</div></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>الإحسان — الإتقان</h2>' +
+    '<div class="note-box"><p class="note-title">تعريف النبي ﷺ</p><p><b>"أن تعبد الله كأنك تراه، فإن لم تكن تراه فإنه يراك."</b> هذه الجملة الواحدة هي ذروة الدين — تجعل كل عبادة صادقة ومراقَبة، سواء رآك أحد أم لم يرك.</p></div>' +
+  '</div>';
+
+var WEEK3_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">التوحيد والشرك</p>' +
+    '<h1>التوحيد وأقسام الشرك</h1>' +
+    '<p>الدرس الرابع: أعظم موضوع تكرر في القرآن، وضده.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>أقسام التوحيد الثلاثة</h2>' +
+    '<div class="def-grid cols-3">' +
+      '<div class="def-card c-blue"><h3>الربوبية</h3><p>الإيمان بأن الله وحده يخلق ويملك ويدبر أمر كل شيء موجود، لا شريك له.</p></div>' +
+      '<div class="def-card c-green"><h3>الألوهية</h3><p>صرف كل أنواع العبادة — الدعاء، والذبح، والنذر، والتوكل، والخوف، والرجاء — لله وحده.</p></div>' +
+      '<div class="def-card c-purple"><h3>الأسماء والصفات</h3><p>إثبات ما أثبته الله لنفسه في القرآن والسنة، من غير تحريف ولا تعطيل ولا تشبيه بالمخلوقين.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span><span class="arabic">لَا إِلَٰهَ إِلَّا اللَّه</span> — المعنى والركنان والشروط</h2>' +
+    '<p class="lead">للشهادة نصفان: <b>نفي</b> (لا إله) و<b>إثبات</b> (إلا الله). ويلخّص العلماء سبعة شروط لا بد من تحققها ليَنتفع بها قائلها:</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li><b>العلم</b> — بمعناها، نافيًا للجهل.</li>' +
+      '<li><b>اليقين</b> — الخالي من الشك.</li>' +
+      '<li><b>القبول</b> — لما تقتضيه.</li>' +
+      '<li><b>الانقياد</b> — بالعمل بها.</li>' +
+      '<li><b>الصدق</b> — الخالي من الكذب.</li>' +
+      '<li><b>الإخلاص</b> — الخالي من الشرك.</li>' +
+      '<li><b>المحبة</b> — لهذه الكلمة ولما تستلزمه.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>الشرك الأكبر والأصغر</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-red"><h3>الشرك الأكبر</h3><p>صرف نوع من أنواع العبادة لغير الله — كدعاء الأموات أو الذبح لغير الله. وهو يُخرج من الملة إذا فُعل عن علم واختيار.</p></div>' +
+      '<div class="def-card c-pink"><h3>الشرك الأصغر</h3><p>ذنب عظيم لا يُخرج من الملة لكنه يهدد توحيد صاحبه — وأوضح مثال عليه <b>الرياء</b>: أن يُظهر العبد العبادة ليراه الناس ويمدحوه.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>المحبة في الله</h2>' +
+    '<p class="lead">تنقسم المحبة إلى أقسام: محبة الله (وهي العبادة، وهي واجبة)، والمحبة في الله (محبة الصالحين والأعمال الصالحة)، والمحبة الطبيعية (كمحبة الأهل والطعام — جائزة ما لم تُزاحم محبة الله). ومحبة أي مخلوق كمحبة الله تمامًا شركٌ أكبر في المحبة.</p>' +
+  '</div>';
+
+var WEEK4_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الصلاة</p>' +
+    '<h1>الصلاة</h1>' +
+    '<p>الدروس من السادس إلى الحادي عشر: الشروط، والأركان، والواجبات، والتشهد، ومبطلات الصلاة.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>شروط الصلاة</h2>' +
+    '<p class="lead">هذه لا بد من تحققها قبل الدخول في الصلاة — فبدونها لا تصح الصلاة أصلًا.</p>' +
+    '<div class="rule-box"><ul>' +
+      '<li>الإسلام والعقل وبلوغ سن التمييز.</li>' +
+      '<li>الطهارة من الحدثين الأصغر والأكبر (الوضوء والغسل).</li>' +
+      '<li>طهارة البدن والثوب والمكان.</li>' +
+      '<li>ستر العورة.</li>' +
+      '<li>استقبال القبلة.</li>' +
+      '<li>دخول الوقت.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>الفرق بين الركن والواجب والسنة</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-blue"><h3>الركن</h3><p>أساسي في بنية الصلاة — كالقيام، وتكبيرة الإحرام، وقراءة الفاتحة، والركوع، والسجود. تركه ولو سهوًا يُبطل تلك الركعة إلا أن تُستدرك.</p></div>' +
+      '<div class="def-card c-purple"><h3>الواجب</h3><p>مطلوب، لكن تركه سهوًا يُجبر بسجود السهو بدل إعادة الركعة — كقول <span class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيم</span> في الركوع.</p></div>' +
+      '<div class="def-card c-green"><h3>السنة</h3><p>زيادات مستحبة تُكمّل الصلاة، لكن تركها ولو عمدًا لا يستلزم سجود السهو أصلًا.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>التشهد</h2>' +
+    '<p class="lead">يُقرأ جالسًا بعد كل ركعتين:</p>' +
+    '<div class="note-box"><p class="term-pair" style="direction:rtl; display:block; font-size:calc(16px * var(--scale)); margin-bottom:8px;">التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ، السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّهِ الصَّالِحِينَ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ</p><p>التحيات كلها لله، والصلوات والطيبات كلها له سبحانه. السلام عليك أيها النبي ورحمة الله وبركاته. السلام علينا وعلى عباد الله الصالحين. أشهد أن لا إله إلا الله، وأشهد أن محمدًا عبده ورسوله.</p></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>مبطلات الصلاة</h2>' +
+    '<div class="rule-box"><ul>' +
+      '<li>الكلام عمدًا بغير ما يخص الصلاة.</li>' +
+      '<li>الأكل أو الشرب.</li>' +
+      '<li>الحركة الكثيرة التي لا علاقة لها بالصلاة.</li>' +
+      '<li>الضحك بصوت مرتفع.</li>' +
+      '<li>الحدث الذي ينقض الوضوء.</li>' +
+      '<li>انكشاف العورة.</li>' +
+      '<li>استدبار القبلة بالصدر.</li>' +
+    '</ul></div>' +
+  '</div>';
+
+var WEEK5_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الطهارة، الزكاة، الصيام، الحج</p>' +
+    '<h1>الطهارة والزكاة والصيام والحج</h1>' +
+    '<p>الدروس من الثاني عشر إلى الرابع عشر، والملاحق الخاصة ببقية أركان الإسلام.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>الوضوء — الشروط والواجبات والنواقض</h2>' +
+    '<div class="def-grid">' +
+      '<div class="def-card c-blue"><h3>الشروط</h3><p>الإسلام، والتمييز، والنية، وطهارة الماء، وإزالة ما يمنع وصول الماء إلى الجلد.</p></div>' +
+      '<div class="def-card c-green"><h3>الواجبات</h3><p>غسل الوجه، وغسل اليدين إلى المرفقين، ومسح الرأس، وغسل الرجلين إلى الكعبين — بالترتيب، ومن غير تأخير طويل بينها، اتباعًا لما جاء في سورة المائدة (٥:٦).</p></div>' +
+      '<div class="def-card c-red"><h3>النواقض</h3><p>كل ما يخرج من السبيلين، والنوم العميق، وزوال العقل، وأكل لحم الإبل على الراجح من أقوال أهل العلم.</p></div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>الزكاة</h2>' +
+    '<p class="lead">جزء واجب من المال الذي بلغ النصاب (الذهب والفضة والنقود وعروض التجارة والمواشي والزروع)، تُخرج بعد مرور حول قمري كامل عليه. وتُصرف في ثمانية أصناف مذكورة في سورة التوبة (٩:٦٠) — أهمها الفقراء والمساكين.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>الصيام</h2>' +
+    '<p class="lead">الإمساك عن الطعام والشراب والجماع من طلوع الفجر إلى غروب الشمس طوال شهر رمضان، بنية صادقة. ويُفسده الأكل أو الشرب أو الجماع عمدًا — أما من أكل أو شرب ناسيًا فصيامه صحيح.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>الحج</h2>' +
+    '<p class="lead">واجب مرة واحدة في العمر على من استطاع إليه سبيلًا. وأركانه: الإحرام مع النية، والوقوف بعرفة يوم التاسع من ذي الحجة، وطواف الإفاضة حول الكعبة، والسعي بين الصفا والمروة.</p>' +
+  '</div>';
+
+var WEEK6_LESSON_AR =
+  '<div class="hero">' +
+    '<p class="hero-eyebrow">الأخلاق والجنائز</p>' +
+    '<h1>الأخلاق الإسلامية، والتحذير من الشرك والمعاصي، والجنائز</h1>' +
+    '<p>الدروس من الخامس عشر إلى الثامن عشر: كيف يحمل المسلم الدين في حياته اليومية، وكيف يُقام الدين عند نهاية الحياة.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">1</span>التخلق بالأخلاق الإسلامية</h2>' +
+    '<p class="lead">"أكمل المؤمنين إيمانًا أحسنهم خلقًا." الصدق، والأمانة، والحياء، والصبر، وحسن معاملة الأهل والجيران، كلها من الدين — لا شيء منها منفصل عنه.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">2</span>التأدب بالآداب الإسلامية</h2>' +
+    '<div class="rule-box"><ul>' +
+      '<li>إفشاء السلام.</li>' +
+      '<li>التسمية قبل الأكل، والأكل باليمين.</li>' +
+      '<li>الاستئذان قبل دخول بيوت الآخرين.</li>' +
+      '<li>حسن الأدب عند قضاء الحاجة وعند العطاس والتثاؤب.</li>' +
+    '</ul></div>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">3</span>التحذير من الشرك والمعاصي</h2>' +
+    '<p class="lead">من أعظم الكبائر بعد الشرك: السحر، وقتل النفس بغير حق، وأكل الربا، وأكل مال اليتيم، والفرار من الزحف، وقذف المحصنات الغافلات المؤمنات. والمؤمن يأخذ كل ذنب بجدية، صغيرًا كان أو كبيرًا، ويبادر إلى التوبة.</p>' +
+  '</div>' +
+  '<div class="section">' +
+    '<h2 class="section-title"><span class="num">4</span>تجهيز الميت</h2>' +
+    '<div class="sub-rules">' +
+      '<div class="sub-rule"><span class="srnum">1</span><div class="srbody"><b>الغسل</b> — يُغسَّل الميت، وغالبًا وترًا.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">2</span><div class="srbody"><b>التكفين</b> — يُلَفّ في قماش أبيض نظيف.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">3</span><div class="srbody"><b>صلاة الجنازة</b> — تُصلّى قائمة بلا ركوع ولا سجود: أربع تكبيرات، بعد الأولى الفاتحة، وبعد الثانية الصلاة على النبي ﷺ، وبعد الثالثة الدعاء للميت، ثم التسليم بعد الرابعة.</div></div>' +
+      '<div class="sub-rule"><span class="srnum">4</span><div class="srbody"><b>الدفن</b> — يوضع على جنبه الأيمن مستقبلًا القبلة.</div></div>' +
+    '</div>' +
+  '</div>';
+
 /* ===================== QUIZ QUESTION BANKS ===================== */
-var week1Quiz = [
+var week1QuizEN = [
   { q: "How many verses does Al-Fātiḥah have?", options: ["Five","Six","Seven","Nine"], correct: 2, explanation: "Al-Fātiḥah has seven verses, which is why it is also called As-Sabʿ al-Mathānī, \"the Oft-Repeated Seven.\"" },
   { q: "Which of the following is one of Al-Fātiḥah's names, referring to its central place in every prayer?", options: ["Umm al-Kitāb","Al-Ikhlāṣ","Al-Kawthar","An-Nās"], correct: 0, explanation: "Al-Fātiḥah is called Umm al-Kitāb, \"The Mother of the Book,\" because no prayer is valid without it." },
   { q: "Beginners are advised to start memorizing the Qur'an from which range of sūrahs?", options: ["Al-Baqarah to An-Nās","Az-Zalzalah to An-Nās","Al-Fātiḥah to Al-Baqarah","Yā-Sīn to An-Nās"], correct: 1, explanation: "The short, frequently-recited sūrahs from Az-Zalzalah to An-Nās are the traditional starting point for new memorizers." },
@@ -868,7 +1126,7 @@ var week1Quiz = [
   { q: "Why is Tafsīr as-Saʿdī especially suited to a new student, according to the lesson?", options: ["It is the longest and most detailed available","It is concise, clear, practical, and emphasizes the Oneness of Allah","It was the very first tafsīr ever written","It contains no Arabic text at all"], correct: 1, explanation: "Scholars recommend it precisely because of its clarity, brevity, and its constant emphasis on Tawḥīd." }
 ];
 
-var week2Quiz = [
+var week2QuizEN = [
   { q: "How many pillars does Islam have?", options: ["Three","Four","Five","Six"], correct: 2, explanation: "Islam has five pillars: the two testimonies, prayer, zakāh, fasting, and Ḥajj." },
   { q: "How many pillars does Īmān have?", options: ["Five","Six","Seven","Eight"], correct: 1, explanation: "Īmān has six pillars, ending with belief in al-Qadar (the divine decree)." },
   { q: "What is the first and greatest pillar of Islam?", options: ["Establishing the prayer","The Two Testimonies (Shahādatayn)","Paying Zakāh","Fasting Ramaḍān"], correct: 1, explanation: "The Shahādatayn — testifying that none has the right to be worshipped but Allah and that Muḥammad ﷺ is His messenger — is the foundation everything else rests upon." },
@@ -879,7 +1137,7 @@ var week2Quiz = [
   { q: "Which pillar of Islam involves testifying that Muḥammad ﷺ is Allah's messenger?", options: ["The prayer","The Two Testimonies (Shahādatayn)","Zakāh","Ḥajj"], correct: 1, explanation: "The second half of the Shahādatayn is the testimony of Muḥammad's ﷺ messengership." }
 ];
 
-var week3Quiz = [
+var week3QuizEN = [
   { q: "How many categories of Tawḥīd are there?", options: ["Two","Three","Four","Five"], correct: 1, explanation: "Rubūbiyyah, Ulūhiyyah, and al-Asmāʾ wa-ṣ-Ṣifāt — three categories." },
   { q: "Tawḥīd ar-Rubūbiyyah refers to belief that Allah alone:", options: ["Deserves to be worshipped", "Creates and manages the affairs of everything that exists", "Has attributes we can compare to His creation", "Sent only one prophet"], correct: 1, explanation: "Rubūbiyyah is Tawḥīd of Lordship — Allah alone is Creator and Sustainer." },
   { q: "Tawḥīd al-Ulūhiyyah requires that:", options: ["Every act of worship be directed to Allah alone", "Only some acts of worship be directed to Allah", "Worship may be directed to righteous intermediaries", "Belief in Allah's existence is sufficient on its own"], correct: 0, explanation: "Ulūhiyyah is Tawḥīd of Worship — every act of ʿibādah must go to Allah alone." },
@@ -890,7 +1148,7 @@ var week3Quiz = [
   { q: "The negation half of \"Lā ilāha illallāh\" (Lā ilāha) means:", options: ["There is no god at all, in any sense", "There is nothing worthy of worship", "Allah does not exist", "There is only one prophet"], correct: 1, explanation: "The negation clears away worship of anything besides Allah; the affirmation (illallāh) then directs all worship to Him alone." }
 ];
 
-var week4Quiz = [
+var week4QuizEN = [
   { q: "Facing the Qiblah is classified as a ___ of the prayer.", options: ["Condition","Pillar","Obligation","Sunnah"], correct: 0, explanation: "Facing the Qiblah must be fulfilled before the prayer even begins — it is a condition, not a pillar performed during it." },
   { q: "If a worshipper forgets to perform a wājib (obligation) of the prayer, what should they do?", options: ["Repeat the entire prayer", "Perform Sujūd as-Sahw (prostration of forgetfulness)", "Nothing — it is simply overlooked", "Repeat that rakʿah only"], correct: 1, explanation: "Forgetting an obligation is compensated for with Sujūd as-Sahw, unlike forgetting a pillar." },
   { q: "What happens if a pillar (rukn) of the prayer is missed, even forgetfully?", options: ["Sujūd as-Sahw is sufficient", "That rakʿah must be made up", "It does not matter at all", "The prayer is still complete"], correct: 1, explanation: "A missing pillar cannot be compensated for by Sujūd as-Sahw alone — the rakʿah must be completed properly." },
@@ -901,7 +1159,7 @@ var week4Quiz = [
   { q: "Saying \"Subḥāna Rabbiyal ʿAẓīm\" in rukūʿ is classified as a:", options: ["Pillar","Condition","Obligation (Wājib)","Nullifier"], correct: 2, explanation: "This tasbīḥ in rukūʿ is a wājib — required, but compensated for with Sujūd as-Sahw if forgotten." }
 ];
 
-var week5Quiz = [
+var week5QuizEN = [
   { q: "Which of the following is one of the obligatory acts of wuḍūʾ?", options: ["Washing the face", "Wiping the ears three times", "Rinsing the mouth three times", "Saying a specific duʿāʾ aloud"], correct: 0, explanation: "Washing the face is one of the obligatory acts of wuḍūʾ described in Sūrah Al-Māʾidah (5:6)." },
   { q: "Deep sleep is considered:", options: ["A pillar of wuḍūʾ", "A nullifier of wuḍūʾ", "A condition of wuḍūʾ", "Irrelevant to wuḍūʾ"], correct: 1, explanation: "Deep sleep, where one loses awareness of what is happening, nullifies wuḍūʾ." },
   { q: "Zakāh becomes due on qualifying wealth once it:", options: ["Reaches the Niṣāb and a lunar year has passed over it", "Is simply owned, regardless of amount", "Is spent on anything at all", "Reaches the Niṣāb only, with no time condition"], correct: 0, explanation: "Both conditions must be met: the wealth reaches the minimum threshold (Niṣāb), and a full lunar year passes over it." },
@@ -912,7 +1170,7 @@ var week5Quiz = [
   { q: "The obligatory acts of wuḍūʾ must be performed:", options: ["In any order, whenever convenient", "In order, without long delay between them", "Only once in a lifetime", "Only before Jumuʿah prayer"], correct: 1, explanation: "Following the order and continuity described in the Qur'an is part of performing wuḍūʾ correctly." }
 ];
 
-var week6Quiz = [
+var week6QuizEN = [
   { q: "According to the hadith, the most complete believers are those best in:", options: ["Wealth","Character","Physical strength","Knowledge of grammar"], correct: 1, explanation: "\"The most complete of the believers in faith are those best in character.\"" },
   { q: "How many takbīrs are said in the funeral prayer (Ṣalāt al-Janāzah)?", options: ["Two","Three","Four","Five"], correct: 2, explanation: "The funeral prayer consists of four takbīrs, with no rukūʿ or sujūd." },
   { q: "Al-Fātiḥah is recited after which takbīr in the funeral prayer?", options: ["The first","The second","The third","The fourth"], correct: 0, explanation: "Al-Fātiḥah follows the first takbīr; ṣalāh upon the Prophet ﷺ follows the second; duʿāʾ for the deceased follows the third." },
@@ -923,7 +1181,7 @@ var week6Quiz = [
   { q: "What are the first two steps in preparing the deceased, in order?", options: ["Burial, then washing", "Shrouding, then washing", "Washing, then shrouding (kafan)", "Funeral prayer, then washing"], correct: 2, explanation: "The body is washed first, then shrouded in clean white cloth, then the funeral prayer is performed, then burial follows." }
 ];
 
-var midtermQuiz = [
+var midtermQuizEN = [
   { q: "Al-Fātiḥah is also known by which of these names?", options: ["Umm al-Kitāb","Al-Kawthar","Al-Ikhlāṣ","Al-Falaq"], correct: 0, explanation: "Umm al-Kitāb, \"The Mother of the Book\" — because every prayer requires it." },
   { q: "Which tafsīr is recommended as a starting point for new students of the Qur'an?", options: ["Tafsīr aṭ-Ṭabarī","Tafsīr as-Saʿdī","Tafsīr al-Qurṭubī","Tafsīr al-Bayḍāwī"], correct: 1, explanation: "Tafsīr as-Saʿdī — concise, clear, and centered on Tawḥīd." },
   { q: "The Companions typically memorized the Qur'an:", options: ["All in one sitting", "A small portion at a time, mastering it before moving on", "By translation only", "Without any teacher"], correct: 1, explanation: "They paired gradual memorization with understanding and action." },
@@ -941,7 +1199,7 @@ var midtermQuiz = [
   { q: "The negation half of the Shahādah (\"Lā ilāha\") clears away:", options: ["Belief in angels", "Worship of anything besides Allah", "Belief in the Last Day", "The obligation of prayer"], correct: 1, explanation: "\"There is no god\" negates worship of anything other than Allah, before affirming Him alone." }
 ];
 
-var finalQuiz = [
+var finalQuizEN = [
   { q: "How many verses does Al-Fātiḥah have?", options: ["Six","Seven","Eight","Nine"], correct: 1, explanation: "Seven verses — hence its name As-Sabʿ al-Mathānī." },
   { q: "Which sūrahs are recommended as a starting point for memorization?", options: ["Al-Baqarah to An-Nās", "Az-Zalzalah to An-Nās", "Yā-Sīn to Al-Fātiḥah", "Only Al-Ikhlāṣ"], correct: 1, explanation: "The short sūrahs from the end of the Qur'an, Az-Zalzalah to An-Nās." },
   { q: "What is recommended to accompany Qur'an memorization?", options: ["Speed reading only", "A concise tafsīr and acting upon it", "Nothing further", "Only listening to recordings"], correct: 1, explanation: "Understanding through tafsīr and acting upon the meaning are both essential companions to memorization." },
@@ -964,58 +1222,173 @@ var finalQuiz = [
   { q: "According to the hadith cited in the lesson, the most complete believers in faith are those best in:", options: ["Wealth","Lineage","Character","Recitation speed"], correct: 2, explanation: "\"The most complete of the believers in faith are those best in character.\"" }
 ];
 
+var week1QuizAR = [
+  { q: "كم عدد آيات سورة الفاتحة؟", options: ["خمس","ست","سبع","تسع"], correct: 2, explanation: "سورة الفاتحة سبع آيات، ولهذا سُمّيت بالسبع المثاني." },
+  { q: "أي الأسماء التالية من أسماء الفاتحة، ويشير إلى مكانتها المركزية في كل صلاة؟", options: ["أم الكتاب","الإخلاص","الكوثر","الناس"], correct: 0, explanation: "تُسمّى الفاتحة أمّ الكتاب لأن الصلاة لا تصح بدونها." },
+  { q: "من أي سورة إلى أي سورة يُنصح المبتدئ أن يبدأ حفظه؟", options: ["من البقرة إلى الناس","من الزلزلة إلى الناس","من الفاتحة إلى البقرة","من يس إلى الناس"], correct: 1, explanation: "السور القصيرة الكثيرة التكرار من الزلزلة إلى الناس هي نقطة البداية التقليدية للحافظ الجديد." },
+  { q: "أي تفسير يُنصح به الطالب المبتدئ؟", options: ["تفسير ابن كثير","تفسير السعدي","تفسير الطبري","تفسير القرطبي"], correct: 1, explanation: "يُنصح بتفسير السعدي (تيسير الكريم الرحمن) لأنه مختصر وواضح ويركّز على التوحيد." },
+  { q: "كيف كان الصحابة يتعاملون عادة مع حفظ القرآن؟", options: ["دفعة واحدة من أوله إلى آخره","عشر آيات في كل مرة، مع إتقان كل جزء قبل الانتقال","بالاستماع فقط دون عرض على معلّم","السور القصار فقط دون غيرها"], correct: 1, explanation: "كانوا يأخذونه تدريجيًا — حفظًا وفهمًا وعملًا — قبل أن يضيفوا المزيد." },
+  { q: "بحسب الدرس، ما الذي ينبغي أن يصاحب حفظ القرآن؟", options: ["سرعة التلاوة فقط","تفسير موجز والعمل بما تعلّم","الترجمة إلى لغات أخرى فقط","لا شيء آخر مطلوب"], correct: 1, explanation: "يقترن الحفظ بالفهم (عن طريق التفسير) والعمل — وهذا ما يجعله نافعًا." },
+  { q: "صواب أم خطأ: تُقرأ الفاتحة في كل ركعة من كل صلاة.", options: ["صواب","خطأ"], correct: 0, explanation: "الفاتحة ركن من أركان الصلاة، ويجب قراءتها في كل ركعة." },
+  { q: "لماذا يُناسب تفسير السعدي المبتدئ بشكل خاص، بحسب الدرس؟", options: ["لأنه أطول التفاسير وأكثرها تفصيلًا","لأنه مختصر وواضح وعملي ويركّز على توحيد الله","لأنه أول تفسير كُتب على الإطلاق","لأنه لا يحتوي على نص عربي"], correct: 1, explanation: "يوصي العلماء به لوضوحه واختصاره وتركيزه المستمر على التوحيد." }
+];
+
+var week2QuizAR = [
+  { q: "كم عدد أركان الإسلام؟", options: ["ثلاثة","أربعة","خمسة","ستة"], correct: 2, explanation: "للإسلام خمسة أركان: الشهادتان، والصلاة، والزكاة، والصوم، والحج." },
+  { q: "كم عدد أركان الإيمان؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 1, explanation: "للإيمان ستة أركان، وآخرها الإيمان بالقدر." },
+  { q: "ما أول أركان الإسلام وأعظمها؟", options: ["إقامة الصلاة","الشهادتان","إيتاء الزكاة","صوم رمضان"], correct: 1, explanation: "الشهادتان — شهادة أن لا إله إلا الله وأن محمدًا رسول الله — هي الأساس الذي يقوم عليه كل شيء آخر." },
+  { q: "أي مما يلي ليس من أركان الإيمان الستة؟", options: ["الإيمان بالله","الإيمان بملائكته","الإيمان باليوم الآخر","الإيمان بأداء الحج"], correct: 3, explanation: "الحج ركن من أركان الإسلام (عمل ظاهر)، وليس من أركان الإيمان الستة (اعتقادات)." },
+  { q: "كيف يعرّف النبي ﷺ الإحسان؟", options: ["الصلاة خمس مرات كل يوم دون تفريط","أن تعبد الله كأنك تراه، وأنك إن لم تكن تراه فإنه يراك","إعطاء الصدقة بسخاء","حفظ القرآن كاملًا"], correct: 1, explanation: "هذا التعريف النبوي يجعل الإحسان قائمًا على الإخلاص والمراقبة في كل عبادة، ظاهرة كانت أو خفية." },
+  { q: "أكمل الحديث: \"...وإن لم تكن تراه فـ___\"", options: ["إنه لا يراك","إنه يراك","عليك أن تتخيله","لا يهم ذلك"], correct: 1, explanation: "\"فإنه يراك\" — فمراقبة الله لا تتوقف على قدرتنا على رؤيته." },
+  { q: "صواب أم خطأ: الزكاة من أركان الإيمان الستة.", options: ["صواب","خطأ"], correct: 1, explanation: "خطأ — الزكاة من أركان الإسلام الخمسة، وليست من أركان الإيمان." },
+  { q: "أي ركن من أركان الإسلام يتضمن الشهادة بأن محمدًا ﷺ رسول الله؟", options: ["الصلاة","الشهادتان","الزكاة","الحج"], correct: 1, explanation: "الشطر الثاني من الشهادتين هو الشهادة برسالة محمد ﷺ." }
+];
+
+var week3QuizAR = [
+  { q: "كم عدد أقسام التوحيد؟", options: ["اثنان","ثلاثة","أربعة","خمسة"], correct: 1, explanation: "الربوبية، والألوهية، والأسماء والصفات — ثلاثة أقسام." },
+  { q: "توحيد الربوبية هو الإيمان بأن الله وحده:", options: ["يستحق العبادة","يخلق ويدبر أمر كل شيء موجود","له صفات تُشبّه بصفات خلقه","أرسل نبيًا واحدًا فقط"], correct: 1, explanation: "الربوبية هي توحيد الخلق والتدبير — الله وحده هو الخالق والمدبّر." },
+  { q: "توحيد الألوهية يقتضي أن:", options: ["تُصرف كل أنواع العبادة لله وحده","تُصرف بعض العبادة لله فقط","يجوز صرف العبادة لوسطاء صالحين","يكفي الإيمان بوجود الله دون غيره"], correct: 0, explanation: "الألوهية هي توحيد العبادة — يجب أن تُصرف كل عبادة لله وحده." },
+  { q: "كم عدد الشروط التي يذكرها العلماء عادةً حتى تنفع كلمة \"لا إله إلا الله\" قائلها؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 2, explanation: "العلم، واليقين، والقبول، والانقياد، والصدق، والإخلاص، والمحبة — سبعة شروط." },
+  { q: "أي مما يلي مثال كلاسيكي على الشرك الأصغر؟", options: ["الذبح لغير الله","الرياء — إظهار العبادة ليراه الناس","إنكار وجود الله","الصلاة إلى قبر بدلًا من القبلة"], correct: 1, explanation: "الرياء هو المثال الذي يذكره العلماء غالبًا للشرك الأصغر." },
+  { q: "إذا وقع الإنسان في الشرك الأكبر عن علم واختيار، فما الحكم؟", options: ["مكروه لكنه لا يؤثر على إسلامه","يُخرجه من الإسلام","ينقص أجره فقط","لا حكم له أصلًا"], correct: 1, explanation: "الشرك الأكبر هو ما يُخرج صاحبه من دائرة الإسلام." },
+  { q: "صواب أم خطأ: محبة مخلوق كمحبة الله تمامًا شرك أكبر في المحبة.", options: ["صواب","خطأ"], correct: 0, explanation: "مساواة محبة مخلوق بمحبة الله شرك أكبر." },
+  { q: "نفي كلمة \"لا إله إلا الله\" (لا إله) يعني:", options: ["لا يوجد إله بأي معنى من المعاني","لا يستحق العبادة أحد سوى الله","الله غير موجود","لا يوجد سوى نبي واحد"], correct: 1, explanation: "النفي يُزيل عبادة كل ما سوى الله، ثم يأتي الإثبات (إلا الله) ليوجّه كل العبادة له وحده." }
+];
+
+var week4QuizAR = [
+  { q: "استقبال القبلة يُصنَّف ___ من الصلاة.", options: ["شرطًا","ركنًا","واجبًا","سنة"], correct: 0, explanation: "استقبال القبلة يجب تحققه قبل الدخول في الصلاة أصلًا — فهو شرط لا ركن يُؤدَّى أثناءها." },
+  { q: "إذا نسي المصلي واجبًا من واجبات الصلاة، فماذا عليه أن يفعل؟", options: ["يعيد الصلاة كلها","يسجد سجود السهو","لا شيء، يُتجاوز الأمر","يعيد تلك الركعة فقط"], correct: 1, explanation: "نسيان الواجب يُجبر بسجود السهو." },
+  { q: "ماذا يحدث إذا تُرك ركن من أركان الصلاة، ولو سهوًا؟", options: ["يكفي سجود السهو","يجب إعادة تلك الركعة","لا يهم الأمر أصلًا","الصلاة تامة كما هي"], correct: 1, explanation: "الركن الذي فات لا يُجبر بسجود السهو وحده — لا بد من إتمام الركعة على الوجه الصحيح." },
+  { q: "متى يُقرأ التشهد؟", options: ["فقط في بداية الصلاة","جالسًا بعد كل ركعتين","فقط أثناء القيام","فقط في صلاة الجمعة"], correct: 1, explanation: "يُقرأ التشهد جالسًا بعد كل ركعتين (وأيضًا في آخر الصلاة قبل التسليم)." },
+  { q: "أي مما يلي يُبطل الصلاة؟", options: ["قراءة الفاتحة","الأكل أو الشرب عمدًا","التشهد","الركوع"], correct: 1, explanation: "الأكل أو الشرب عمدًا يُبطل الصلاة." },
+  { q: "قراءة الفاتحة في كل ركعة تُصنَّف:", options: ["سنة","شرطًا","ركنًا","واجبًا"], correct: 2, explanation: "الفاتحة ركن من أركان الصلاة — تركها يُبطل تلك الركعة." },
+  { q: "صواب أم خطأ: الحركة الكثيرة التي لا علاقة لها بالصلاة تُبطلها.", options: ["صواب","خطأ"], correct: 0, explanation: "الحركة الكثيرة من غير حاجة من مبطلات الصلاة." },
+  { q: "قول \"سبحان ربي العظيم\" في الركوع يُصنَّف:", options: ["ركنًا","شرطًا","واجبًا","مبطلًا"], correct: 2, explanation: "هذا التسبيح في الركوع واجب — يُجبر تركه سهوًا بسجود السهو." }
+];
+
+var week5QuizAR = [
+  { q: "أي مما يلي من واجبات الوضوء؟", options: ["غسل الوجه","مسح الأذنين ثلاثًا","المضمضة ثلاثًا","الدعاء بدعاء معين بصوت مرتفع"], correct: 0, explanation: "غسل الوجه من واجبات الوضوء المذكورة في سورة المائدة (٥:٦)." },
+  { q: "النوم العميق يُعدّ:", options: ["ركنًا من أركان الوضوء","ناقضًا من نواقض الوضوء","شرطًا من شروط الوضوء","لا علاقة له بالوضوء"], correct: 1, explanation: "النوم العميق الذي يفقد فيه الإنسان الشعور بما حوله ينقض الوضوء." },
+  { q: "تجب الزكاة في المال الذي بلغ النصاب:", options: ["بعد بلوغ النصاب ومرور حول قمري كامل عليه","بمجرد امتلاكه أيًا كان مقداره","إذا أُنفق منه على أي شيء","ببلوغ النصاب فقط دون شرط زمني"], correct: 0, explanation: "لا بد من تحقق الشرطين معًا: بلوغ النصاب، ومرور حول قمري كامل." },
+  { q: "ما الذي يُفسد الصيام إذا فُعل عمدًا؟", options: ["نسيان أن الصائم بدأ صيامه","الأكل أو الشرب أو الجماع","الشعور بالعطش","النوم أثناء النهار"], correct: 1, explanation: "الأكل أو الشرب أو الجماع عمدًا أثناء ساعات الصيام يُفسده." },
+  { q: "بحسب الدرس، كم عدد أركان الحج؟", options: ["اثنان","ثلاثة","أربعة","خمسة"], correct: 2, explanation: "الإحرام مع النية، والوقوف بعرفة، وطواف الإفاضة، والسعي — أربعة أركان." },
+  { q: "متى يكون الوقوف بعرفة؟", options: ["الثامن من ذي الحجة","التاسع من ذي الحجة","العاشر من ذي الحجة","الأول من ذي الحجة"], correct: 1, explanation: "التاسع من ذي الحجة هو يوم الوقوف بعرفة، وهو الركن الأعظم في الحج." },
+  { q: "صواب أم خطأ: من أكل ناسيًا وهو صائم فسد صيامه.", options: ["صواب","خطأ"], correct: 1, explanation: "خطأ — من أكل ناسيًا وهو صائم فصيامه صحيح، برحمة الله." },
+  { q: "يجب أداء واجبات الوضوء:", options: ["بأي ترتيب وفي أي وقت يناسب","بالترتيب، ومن غير تأخير طويل بينها","مرة واحدة في العمر فقط","فقط قبل صلاة الجمعة"], correct: 1, explanation: "اتباع الترتيب والموالاة كما ورد وصفهما في القرآن جزء من صحة الوضوء." }
+];
+
+var week6QuizAR = [
+  { q: "بحسب الحديث، أكمل المؤمنين إيمانًا هم أحسنهم:", options: ["مالًا","خُلقًا","قوة بدنية","معرفة بالنحو"], correct: 1, explanation: "\"أكمل المؤمنين إيمانًا أحسنهم خلقًا.\"" },
+  { q: "كم عدد التكبيرات في صلاة الجنازة؟", options: ["اثنتان","ثلاث","أربع","خمس"], correct: 2, explanation: "تتكون صلاة الجنازة من أربع تكبيرات، بلا ركوع ولا سجود." },
+  { q: "بعد أي تكبيرة تُقرأ الفاتحة في صلاة الجنازة؟", options: ["الأولى","الثانية","الثالثة","الرابعة"], correct: 0, explanation: "تُقرأ الفاتحة بعد التكبيرة الأولى؛ والصلاة على النبي ﷺ بعد الثانية؛ والدعاء للميت بعد الثالثة." },
+  { q: "بخلاف الصلوات الخمس، لا يوجد في صلاة الجنازة:", options: ["تكبيرات","قيام","ركوع ولا سجود","سلام"], correct: 2, explanation: "تُؤدَّى صلاة الجنازة كلها قائمة، من غير ركوع ولا سجود." },
+  { q: "يوضع الميت في القبر على أي جنب، مستقبلًا القبلة؟", options: ["الجنب الأيسر","الجنب الأيمن","على ظهره","على وجهه"], correct: 1, explanation: "يوضع الميت على جنبه الأيمن مستقبلًا القبلة." },
+  { q: "أي مما يلي يُعدّ من أعظم الكبائر بعد الشرك؟", options: ["الصدقة","أكل الربا","الصلاة في وقتها","صوم رمضان"], correct: 1, explanation: "حُذّر من الربا مرارًا في القرآن، وهو من أعظم الكبائر." },
+  { q: "صواب أم خطأ: إفشاء السلام من الآداب الإسلامية التي حث عليها الدرس.", options: ["صواب","خطأ"], correct: 0, explanation: "إفشاء السلام مما حُثّ عليه صراحة في آداب الإسلام." },
+  { q: "ما أول خطوتين في تجهيز الميت، بالترتيب؟", options: ["الدفن ثم الغسل","التكفين ثم الغسل","الغسل ثم التكفين","صلاة الجنازة ثم الغسل"], correct: 2, explanation: "يُغسَّل الميت أولًا، ثم يُكفَّن بقماش أبيض نظيف، ثم تُصلّى عليه صلاة الجنازة، ثم يُدفن." }
+];
+
+var midtermQuizAR = [
+  { q: "الفاتحة تُعرف أيضًا بأي من هذه الأسماء؟", options: ["أم الكتاب","الكوثر","الإخلاص","الفلق"], correct: 0, explanation: "أم الكتاب — لأن كل صلاة تتطلبها." },
+  { q: "أي تفسير يُنصح به كنقطة بداية للطلاب الجدد في القرآن؟", options: ["تفسير الطبري","تفسير السعدي","تفسير القرطبي","تفسير البيضاوي"], correct: 1, explanation: "تفسير السعدي — مختصر وواضح ويركّز على التوحيد." },
+  { q: "كان الصحابة يحفظون القرآن عادةً:", options: ["دفعة واحدة","جزءًا صغيرًا في كل مرة، مع إتقانه قبل الانتقال","بالترجمة فقط","دون معلّم على الإطلاق"], correct: 1, explanation: "كانوا يجمعون بين الحفظ التدريجي والفهم والعمل." },
+  { q: "كم عدد أركان الإسلام؟", options: ["أربعة","خمسة","ستة","سبعة"], correct: 1, explanation: "خمسة: الشهادتان، والصلاة، والزكاة، والصوم، والحج." },
+  { q: "كم عدد أركان الإيمان؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 1, explanation: "ستة، وآخرها الإيمان بالقدر." },
+  { q: "\"أن تعبد الله كأنك تراه\" هو تعريف:", options: ["الإسلام","الإيمان","الإحسان","التوحيد"], correct: 2, explanation: "هذا تعريف النبي ﷺ للإحسان في حديث جبريل." },
+  { q: "أي مما يلي ليس من أركان الإيمان؟", options: ["الإيمان بالملائكة","الإيمان بالكتب","الإيمان بأداء الحج","الإيمان بالقدر"], correct: 2, explanation: "الحج ركن من أركان الإسلام، وليس من أركان الإيمان الستة." },
+  { q: "كم عدد أقسام التوحيد؟", options: ["اثنان","ثلاثة","أربعة","خمسة"], correct: 1, explanation: "الربوبية، والألوهية، والأسماء والصفات." },
+  { q: "توحيد الألوهية يعني:", options: ["الإيمان بأن الله وحده يخلق ويدبر","صرف كل العبادة لله وحده","إثبات أسماء الله من غير تحريف","الإيمان بالملائكة"], correct: 1, explanation: "الألوهية هي توحيد العبادة." },
+  { q: "ما المثال الكلاسيكي المذكور للشرك الأصغر؟", options: ["الذبح لغير الله","الرياء — إظهار العبادة أمام الناس","الدعاء للأموات","إنكار القرآن"], correct: 1, explanation: "الرياء هو المثال المعتاد الذي يذكره العلماء للشرك الأصغر." },
+  { q: "كم عدد الشروط المذكورة عادةً لـ\"لا إله إلا الله\"؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 2, explanation: "العلم، واليقين، والقبول، والانقياد، والصدق، والإخلاص، والمحبة." },
+  { q: "صواب أم خطأ: الشرك الأكبر، إذا وقع عن علم واختيار، يُخرج صاحبه من الإسلام.", options: ["صواب","خطأ"], correct: 0, explanation: "هذا هو الحكم الأساسي للشرك الأكبر." },
+  { q: "محبة مخلوق كمحبة الله تمامًا هي:", options: ["جائزة","شرك أصغر فقط","شرك أكبر في المحبة","لم يتطرق إليها الدرس"], correct: 2, explanation: "مساواة محبة مخلوق بمحبة الله شرك أكبر في المحبة." },
+  { q: "صواب أم خطأ: الزكاة من أركان الإيمان.", options: ["صواب","خطأ"], correct: 1, explanation: "خطأ — الزكاة من أركان الإسلام." },
+  { q: "نفي الشهادة (\"لا إله\") يُزيل:", options: ["الإيمان بالملائكة","عبادة أي شيء سوى الله","الإيمان باليوم الآخر","وجوب الصلاة"], correct: 1, explanation: "\"لا إله\" تنفي عبادة كل ما سوى الله، قبل أن يأتي الإثبات (إلا الله) موجّهًا كل العبادة له وحده." }
+];
+
+var finalQuizAR = [
+  { q: "كم عدد آيات سورة الفاتحة؟", options: ["ست","سبع","ثمان","تسع"], correct: 1, explanation: "سبع آيات — ولهذا سُمّيت السبع المثاني." },
+  { q: "ما السور المُوصى بها كنقطة بداية للحفظ؟", options: ["من البقرة إلى الناس","من الزلزلة إلى الناس","من يس إلى الفاتحة","الإخلاص فقط"], correct: 1, explanation: "السور القصار من آخر القرآن، من الزلزلة إلى الناس." },
+  { q: "بماذا يُنصح أن يُقرن حفظ القرآن؟", options: ["سرعة القراءة فقط","تفسير موجز والعمل به","الاستماع للتسجيلات فقط","لا شيء آخر"], correct: 1, explanation: "الفهم عن طريق التفسير والعمل بالمعنى كلاهما ضروري مع الحفظ." },
+  { q: "كم عدد أركان الإسلام؟", options: ["أربعة","خمسة","ستة","سبعة"], correct: 1, explanation: "خمسة أركان للإسلام." },
+  { q: "كم عدد أركان الإيمان؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 1, explanation: "ستة أركان للإيمان." },
+  { q: "تعريف النبي ﷺ للإحسان يتمحور حول:", options: ["صيام أيام إضافية","عبادة الله بإخلاص تام، كأنك تراه","حفظ الحديث","إعطاء أكبر صدقة ممكنة"], correct: 1, explanation: "الإحسان هو الإخلاص والمراقبة — أن تعبد الله كأنك تراه." },
+  { q: "كم عدد أقسام التوحيد؟", options: ["اثنان","ثلاثة","أربعة","خمسة"], correct: 1, explanation: "الربوبية، والألوهية، والأسماء والصفات." },
+  { q: "الرياء (إظهار العبادة ليراه الناس) مثال على:", options: ["الشرك الأكبر","الشرك الأصغر","ركن من أركان الإسلام","شرط من شروط الصلاة"], correct: 1, explanation: "الرياء هو المثال الكلاسيكي للشرك الأصغر." },
+  { q: "كم عدد الشروط المذكورة عادةً حتى تنفع الشهادة قائلها؟", options: ["خمسة","ستة","سبعة","ثمانية"], correct: 2, explanation: "سبعة شروط: العلم، واليقين، والقبول، والانقياد، والصدق، والإخلاص، والمحبة." },
+  { q: "استقبال القبلة قبل الصلاة يُصنَّف:", options: ["ركنًا","شرطًا","سنة","مبطلًا"], correct: 1, explanation: "هو أحد الشروط الواجب تحققها قبل الدخول في الصلاة." },
+  { q: "نسيان واجب من واجبات الصلاة يُجبر بـ:", options: ["إعادة الصلاة كاملة","سجود السهو","لا شيء أصلًا","صيام يوم إضافي"], correct: 1, explanation: "سجود السهو، وهو سجود النسيان، يجبر الواجب المنسي." },
+  { q: "ترك ركن من أركان الصلاة، ولو سهوًا، يستلزم:", options: ["سجود السهو فقط","إتمام تلك الركعة على الوجه الصحيح","لا شيء آخر","إعادة التشهد فقط"], correct: 1, explanation: "لا يُجبر الركن الفائت بسجود السهو وحده." },
+  { q: "يُقرأ التشهد:", options: ["قائمًا في بداية الصلاة","جالسًا بعد كل ركعتين","فقط في صلاة الوتر","فقط من الإمام"], correct: 1, explanation: "جالسًا بعد كل ركعتين، وأيضًا في آخر الصلاة قبل التسليم." },
+  { q: "أي مما يلي يُبطل الصلاة؟", options: ["قراءة الفاتحة","الأكل أو الشرب عمدًا","السجود","التشهد"], correct: 1, explanation: "الأكل أو الشرب عمدًا يُبطل الصلاة." },
+  { q: "من واجبات الوضوء:", options: ["غسل الوجه","مسح الأذنين ثلاثًا منفصلة","استقبال القبلة","قول الأذان"], correct: 0, explanation: "غسل الوجه من واجبات الوضوء الواردة في سورة المائدة (٥:٦)." },
+  { q: "تجب الزكاة عندما يكون المال:", options: ["مملوكًا فقط دون حد أدنى","بالغًا النصاب ومرّ عليه حول قمري كامل","يُنفق منه في تجارة","بالغًا النصاب بغض النظر عن الزمن"], correct: 1, explanation: "لا بد من الشرطين معًا: بلوغ النصاب ومرور الحول." },
+  { q: "كم عدد أركان الحج؟", options: ["اثنان","ثلاثة","أربعة","خمسة"], correct: 2, explanation: "الإحرام مع النية، والوقوف بعرفة، وطواف الإفاضة، والسعي." },
+  { q: "كم عدد التكبيرات في صلاة الجنازة؟", options: ["اثنتان","ثلاث","أربع","خمس"], correct: 2, explanation: "أربع تكبيرات، بلا ركوع ولا سجود." },
+  { q: "يُدفن الميت وهو مستلقٍ على:", options: ["جنبه الأيسر، مستدبرًا القبلة","جنبه الأيمن، مستقبلًا القبلة","ظهره، وجهه لأعلى","أي جنب، لا فرق"], correct: 1, explanation: "يوضع على جنبه الأيمن مستقبلًا القبلة." },
+  { q: "بحسب الحديث المذكور في الدرس، أكمل المؤمنين إيمانًا هم أحسنهم:", options: ["مالًا","نسبًا","خُلقًا","سرعة في التلاوة"], correct: 2, explanation: "\"أكمل المؤمنين إيمانًا أحسنهم خلقًا.\"" }
+];
+
 /* ===================== STEP DEFINITIONS ===================== */
 var STEP_DEFS = [
-  { type: 'lesson', html: 'WEEK1_LESSON', weekLabel: 'Week 1' },
-  { type: 'quiz', bank: 'week1Quiz', immediate: true, weekLabel: 'Week 1',
-    title: 'Week 1 Quiz — The Qur\'an',
-    lead: '8 questions on Al-Fātiḥah, the short sūrahs, and how to approach memorization. The answer and explanation appear right after each question.' },
+  { type: 'lesson', htmlEN: 'WEEK1_LESSON_EN', htmlAR: 'WEEK1_LESSON_AR', weekLabelEn: 'Week 1', weekLabelAr: 'الأسبوع الأول' },
+  { type: 'quiz', bankEN: 'week1QuizEN', bankAR: 'week1QuizAR', immediate: true, weekLabelEn: 'Week 1', weekLabelAr: 'الأسبوع الأول',
+    titleEn: 'Week 1 Quiz — The Qur\'an', titleAr: 'اختبار الأسبوع الأول — القرآن الكريم',
+    leadEn: '8 questions on Al-Fātiḥah, the short sūrahs, and how to approach memorization. The answer and explanation appear right after each question.',
+    leadAr: '٨ أسئلة عن الفاتحة والسور القصار ومنهج الحفظ. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
 
-  { type: 'lesson', html: 'WEEK2_LESSON', weekLabel: 'Week 2' },
-  { type: 'quiz', bank: 'week2Quiz', immediate: true, weekLabel: 'Week 2',
-    title: 'Week 2 Quiz — Islam, Īmān &amp; Iḥsān',
-    lead: '8 questions on the pillars of Islam, the pillars of Īmān, and the meaning of Iḥsān.' },
+  { type: 'lesson', htmlEN: 'WEEK2_LESSON_EN', htmlAR: 'WEEK2_LESSON_AR', weekLabelEn: 'Week 2', weekLabelAr: 'الأسبوع الثاني' },
+  { type: 'quiz', bankEN: 'week2QuizEN', bankAR: 'week2QuizAR', immediate: true, weekLabelEn: 'Week 2', weekLabelAr: 'الأسبوع الثاني',
+    titleEn: 'Week 2 Quiz — Islam, Īmān &amp; Iḥsān', titleAr: 'اختبار الأسبوع الثاني — الإسلام والإيمان والإحسان',
+    leadEn: '8 questions on the pillars of Islam, the pillars of Īmān, and the meaning of Iḥsān.',
+    leadAr: '٨ أسئلة عن أركان الإسلام وأركان الإيمان ومعنى الإحسان.' },
 
-  { type: 'lesson', html: 'WEEK3_LESSON', weekLabel: 'Week 3' },
-  { type: 'quiz', bank: 'week3Quiz', immediate: true, weekLabel: 'Week 3',
-    title: 'Week 3 Quiz — Tawḥīd &amp; Shirk',
-    lead: '8 questions on the categories of Tawḥīd, the conditions of the Shahādah, and major vs. minor shirk.' },
+  { type: 'lesson', htmlEN: 'WEEK3_LESSON_EN', htmlAR: 'WEEK3_LESSON_AR', weekLabelEn: 'Week 3', weekLabelAr: 'الأسبوع الثالث' },
+  { type: 'quiz', bankEN: 'week3QuizEN', bankAR: 'week3QuizAR', immediate: true, weekLabelEn: 'Week 3', weekLabelAr: 'الأسبوع الثالث',
+    titleEn: 'Week 3 Quiz — Tawḥīd &amp; Shirk', titleAr: 'اختبار الأسبوع الثالث — التوحيد والشرك',
+    leadEn: '8 questions on the categories of Tawḥīd, the conditions of the Shahādah, and major vs. minor shirk.',
+    leadAr: '٨ أسئلة عن أقسام التوحيد وشروط الشهادة والفرق بين الشرك الأكبر والأصغر.' },
 
-  { type: 'quiz', bank: 'midtermQuiz', immediate: false, weekLabel: 'Midterm', milestone: true, passGate: true, isFinalExam: false,
-    title: 'Midterm Exam — Weeks 1–3',
-    lead: 'A 15-question review covering the Qur\'an, Islam, Īmān, Iḥsān, Tawḥīd, and Shirk. Answers and explanations appear together at the end. Score 70% or higher to continue.' },
+  { type: 'quiz', bankEN: 'midtermQuizEN', bankAR: 'midtermQuizAR', immediate: false, weekLabelEn: 'Midterm', weekLabelAr: 'اختبار منتصف الفصل', milestone: true, passGate: true, isFinalExam: false,
+    titleEn: 'Midterm Exam — Weeks 1–3', titleAr: 'اختبار منتصف الفصل — الأسابيع ١-٣',
+    leadEn: 'A 15-question review covering the Qur\'an, Islam, Īmān, Iḥsān, Tawḥīd, and Shirk. Answers and explanations appear together at the end. Score 70% or higher to continue.',
+    leadAr: 'مراجعة من ١٥ سؤالًا تغطي القرآن والإسلام والإيمان والإحسان والتوحيد والشرك. تظهر الإجابات والتفسيرات معًا في النهاية. يلزم تحقيق ٧٠٪ على الأقل للمتابعة.' },
 
-  { type: 'lesson', html: 'WEEK4_LESSON', weekLabel: 'Week 4' },
-  { type: 'quiz', bank: 'week4Quiz', immediate: true, weekLabel: 'Week 4',
-    title: 'Week 4 Quiz — The Prayer',
-    lead: '8 questions on the conditions, pillars, obligations, and nullifiers of the prayer.' },
+  { type: 'lesson', htmlEN: 'WEEK4_LESSON_EN', htmlAR: 'WEEK4_LESSON_AR', weekLabelEn: 'Week 4', weekLabelAr: 'الأسبوع الرابع' },
+  { type: 'quiz', bankEN: 'week4QuizEN', bankAR: 'week4QuizAR', immediate: true, weekLabelEn: 'Week 4', weekLabelAr: 'الأسبوع الرابع',
+    titleEn: 'Week 4 Quiz — The Prayer', titleAr: 'اختبار الأسبوع الرابع — الصلاة',
+    leadEn: '8 questions on the conditions, pillars, obligations, and nullifiers of the prayer.',
+    leadAr: '٨ أسئلة عن شروط الصلاة وأركانها وواجباتها ومبطلاتها.' },
 
-  { type: 'lesson', html: 'WEEK5_LESSON', weekLabel: 'Week 5' },
-  { type: 'quiz', bank: 'week5Quiz', immediate: true, weekLabel: 'Week 5',
-    title: 'Week 5 Quiz — Purification, Zakāh, Fasting &amp; Ḥajj',
-    lead: '8 questions on wuḍūʾ, Zakāh, fasting, and the pillars of Ḥajj.' },
+  { type: 'lesson', htmlEN: 'WEEK5_LESSON_EN', htmlAR: 'WEEK5_LESSON_AR', weekLabelEn: 'Week 5', weekLabelAr: 'الأسبوع الخامس' },
+  { type: 'quiz', bankEN: 'week5QuizEN', bankAR: 'week5QuizAR', immediate: true, weekLabelEn: 'Week 5', weekLabelAr: 'الأسبوع الخامس',
+    titleEn: 'Week 5 Quiz — Purification, Zakāh, Fasting &amp; Ḥajj', titleAr: 'اختبار الأسبوع الخامس — الطهارة والزكاة والصيام والحج',
+    leadEn: '8 questions on wuḍūʾ, Zakāh, fasting, and the pillars of Ḥajj.',
+    leadAr: '٨ أسئلة عن الوضوء والزكاة والصيام وأركان الحج.' },
 
-  { type: 'lesson', html: 'WEEK6_LESSON', weekLabel: 'Week 6' },
-  { type: 'quiz', bank: 'week6Quiz', immediate: true, weekLabel: 'Week 6',
-    title: 'Week 6 Quiz — Character &amp; Funeral Rites',
-    lead: '8 questions on Islamic character, etiquette, and the preparation of the deceased.' },
+  { type: 'lesson', htmlEN: 'WEEK6_LESSON_EN', htmlAR: 'WEEK6_LESSON_AR', weekLabelEn: 'Week 6', weekLabelAr: 'الأسبوع السادس' },
+  { type: 'quiz', bankEN: 'week6QuizEN', bankAR: 'week6QuizAR', immediate: true, weekLabelEn: 'Week 6', weekLabelAr: 'الأسبوع السادس',
+    titleEn: 'Week 6 Quiz — Character &amp; Funeral Rites', titleAr: 'اختبار الأسبوع السادس — الأخلاق وأحكام الجنائز',
+    leadEn: '8 questions on Islamic character, etiquette, and the preparation of the deceased.',
+    leadAr: '٨ أسئلة عن الأخلاق الإسلامية والآداب وتجهيز الميت.' },
 
-  { type: 'quiz', bank: 'finalQuiz', immediate: false, weekLabel: 'Final Exam', milestone: true, passGate: true, isFinalExam: true,
-    title: 'Final Exam — Durūs al-Muhimmah',
-    lead: 'A comprehensive 20-question review covering the entire course. Answers and explanations appear together at the end. Score 70% or higher to earn your certificate.' },
+  { type: 'quiz', bankEN: 'finalQuizEN', bankAR: 'finalQuizAR', immediate: false, weekLabelEn: 'Final Exam', weekLabelAr: 'الاختبار النهائي', milestone: true, passGate: true, isFinalExam: true,
+    titleEn: 'Final Exam — Durūs al-Muhimmah', titleAr: 'الاختبار النهائي — الدروس المهمة لعامة الأمة',
+    leadEn: 'A comprehensive 20-question review covering the entire course. Answers and explanations appear together at the end. Score 70% or higher to earn your certificate.',
+    leadAr: 'مراجعة شاملة من ٢٠ سؤالًا تغطي المقرر كاملًا. تظهر الإجابات والتفسيرات معًا في النهاية. يلزم تحقيق ٧٠٪ على الأقل للحصول على الشهادة.' },
 
-  { type: 'certificate', weekLabel: 'Certificate' }
+  { type: 'certificate', weekLabelEn: 'Certificate', weekLabelAr: 'الشهادة' }
 ];
 
 var COURSE_UNITS = [
-  { label: 'Week 1', steps: [0,1], jumpStep: 0 },
-  { label: 'Week 2', steps: [2,3], jumpStep: 2 },
-  { label: 'Week 3', steps: [4,5], jumpStep: 4 },
-  { label: 'Midterm Exam', steps: [6], jumpStep: 6 },
-  { label: 'Week 4', steps: [7,8], jumpStep: 7 },
-  { label: 'Week 5', steps: [9,10], jumpStep: 9 },
-  { label: 'Week 6', steps: [11,12], jumpStep: 11 },
-  { label: 'Final Exam', steps: [13], jumpStep: 13 }
+  { labelEn: 'Week 1', labelAr: 'الأسبوع الأول', steps: [0,1], jumpStep: 0 },
+  { labelEn: 'Week 2', labelAr: 'الأسبوع الثاني', steps: [2,3], jumpStep: 2 },
+  { labelEn: 'Week 3', labelAr: 'الأسبوع الثالث', steps: [4,5], jumpStep: 4 },
+  { labelEn: 'Midterm Exam', labelAr: 'اختبار منتصف الفصل', steps: [6], jumpStep: 6 },
+  { labelEn: 'Week 4', labelAr: 'الأسبوع الرابع', steps: [7,8], jumpStep: 7 },
+  { labelEn: 'Week 5', labelAr: 'الأسبوع الخامس', steps: [9,10], jumpStep: 9 },
+  { labelEn: 'Week 6', labelAr: 'الأسبوع السادس', steps: [11,12], jumpStep: 11 },
+  { labelEn: 'Final Exam', labelAr: 'الاختبار النهائي', steps: [13], jumpStep: 13 }
 ];
 
 /* ===================== PROGRESS TRACKING (recorded per student, per browser) ===================== */
@@ -1048,11 +1421,15 @@ function unitComplete(unit){
 }
 
 function weekBadgeHTML(def){
-  return def.weekLabel ? ('<div class="week-badge">' + def.weekLabel + '</div>') : '';
+  var label = (currentLang === 'ar') ? def.weekLabelAr : def.weekLabelEn;
+  return label ? ('<div class="week-badge">' + label + '</div>') : '';
 }
 
 function updateStepProgress(){
-  document.getElementById('step-progress-text').textContent = 'Step ' + (currentStepIndex + 1) + ' / ' + STEP_DEFS.length;
+  var text = (currentLang === 'ar')
+    ? ('الخطوة ' + (currentStepIndex + 1) + ' / ' + STEP_DEFS.length)
+    : ('Step ' + (currentStepIndex + 1) + ' / ' + STEP_DEFS.length);
+  document.getElementById('step-progress-text').textContent = text;
   var pct = Math.round((currentStepIndex / (STEP_DEFS.length - 1)) * 100);
   document.getElementById('step-progress-fill').style.width = pct + '%';
 }
@@ -1065,25 +1442,28 @@ function renderCertificateStep(){
   var nextBtn = document.getElementById('step-next-btn');
   nextBtn.style.display = 'none';
 
+  var isAr = (currentLang === 'ar');
   var finalExamStepIndex = STEP_DEFS.length - 2;
   var passed = stepDone[finalExamStepIndex] === true;
   if(!passed){
     var incomplete = COURSE_UNITS.filter(function(u){ return !unitComplete(u); });
     var introText = incomplete.length
-      ? 'You haven\'t finished the following yet — complete each one to unlock your certificate:'
-      : 'Score ' + PASS_THRESHOLD + '% or higher on the Final Exam to unlock your certificate.';
+      ? (isAr ? 'لم تُنهِ بعد الأقسام التالية — أكمل كل قسم لفتح شهادتك:' : 'You haven\'t finished the following yet — complete each one to unlock your certificate:')
+      : (isAr ? ('احصل على ' + PASS_THRESHOLD + '٪ أو أعلى في الاختبار النهائي لفتح شهادتك.') : ('Score ' + PASS_THRESHOLD + '% or higher on the Final Exam to unlock your certificate.'));
 
     var listHtml = COURSE_UNITS.map(function(u){
       var done = unitComplete(u);
+      var label = isAr ? u.labelAr : u.labelEn;
       return '<div class="progress-row ' + (done ? 'pr-done' : 'pr-pending') + '">' +
         '<span class="pr-icon">' + (done ? '✅' : '⛔') + '</span>' +
-        '<span class="pr-label">' + u.label + '</span>' +
-        (done ? '' : '<button class="pr-jump-btn" data-jump="' + u.jumpStep + '">Continue</button>') +
+        '<span class="pr-label">' + label + '</span>' +
+        (done ? '' : ('<button class="pr-jump-btn" data-jump="' + u.jumpStep + '">' + (isAr ? 'متابعة' : 'Continue') + '</button>')) +
       '</div>';
     }).join('');
 
+    var certTitle = isAr ? 'شهادة إتمام الدورة' : 'Certificate of Completion';
     viewport.innerHTML = weekBadgeHTML(STEP_DEFS[currentStepIndex]) +
-      '<div class="hero"><p class="hero-eyebrow">الشهادة</p><h1>Certificate of Completion</h1>' +
+      '<div class="hero"><p class="hero-eyebrow">الشهادة</p><h1' + (isAr ? '' : ' class="en-title"') + '>' + certTitle + '</h1>' +
       '<p>' + introText + '</p></div>' +
       '<div class="progress-list">' + listHtml + '</div>';
 
@@ -1097,7 +1477,7 @@ function renderCertificateStep(){
   }
 
   var today = new Date();
-  var dateStr = today.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  var dateStr = today.toLocaleDateString(isAr ? 'ar-SA-u-nu-latn' : 'en-US', { year:'numeric', month:'long', day:'numeric' });
   var certId = 'DM-' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + '-' + Math.floor(1000 + Math.random()*9000);
 
   viewport.innerHTML =
@@ -1105,22 +1485,22 @@ function renderCertificateStep(){
       '<div class="cert-card">' +
         '<div class="cert-seal">د</div>' +
         '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
-        '<h1 class="cert-title">Certificate of Completion</h1>' +
-        '<p class="cert-line">This certifies that</p>' +
+        '<h1 class="cert-title"' + (isAr ? ' style="font-family:\'Amiri\',serif;"' : '') + '>' + (isAr ? 'شهادة إتمام الدورة' : 'Certificate of Completion') + '</h1>' +
+        '<p class="cert-line">' + (isAr ? 'تشهد هذه الوثيقة بأن' : 'This certifies that') + '</p>' +
         '<div class="cert-name">' + escapeHTML(studentName) + '</div>' +
-        '<p class="cert-line">has successfully completed the course</p>' +
+        '<p class="cert-line">' + (isAr ? 'قد أتم بنجاح دورة' : 'has successfully completed the course') + '</p>' +
         '<p class="cert-course">Durūs al-Muhimmah lil ʿĀmmah</p>' +
         '<p class="cert-course-ar arabic">الدروس المهمة لعامة الأمة</p>' +
         '<div class="cert-meta-row">' +
-          '<div>Final Score<b>' + finalExamScorePct + '%</b></div>' +
-          '<div>Date<b>' + dateStr + '</b></div>' +
-          '<div>Certificate ID<b>' + certId + '</b></div>' +
+          '<div>' + (isAr ? 'الدرجة النهائية' : 'Final Score') + '<b>' + finalExamScorePct + '%</b></div>' +
+          '<div>' + (isAr ? 'التاريخ' : 'Date') + '<b>' + dateStr + '</b></div>' +
+          '<div>' + (isAr ? 'رقم الشهادة' : 'Certificate ID') + '<b>' + certId + '</b></div>' +
         '</div>' +
         '<div class="cert-footer">Diin Islaam · diinislaam.com</div>' +
       '</div>' +
     '</div>' +
     '<div class="cert-actions no-print">' +
-      '<button class="qbtn solid" id="print-cert-btn">🖨️ Print / Save as PDF</button>' +
+      '<button class="qbtn solid" id="print-cert-btn">🖨️ ' + (isAr ? 'طباعة / حفظ كملف PDF' : 'Print / Save as PDF') + '</button>' +
     '</div>';
 
   var printBtn = document.getElementById('print-cert-btn');
@@ -1141,35 +1521,39 @@ function renderStep(i){
   var backBtn = document.getElementById('step-back-btn');
 
   backBtn.classList.toggle('show', i > 0);
-  backBtn.textContent = 'Back';
+  backBtn.textContent = (currentLang === 'ar') ? 'السابق' : 'Back';
 
   if(def.type === 'lesson'){
-    viewport.innerHTML = weekBadgeHTML(def) + window[def.html];
+    var html = window[(currentLang === 'ar') ? def.htmlAR : def.htmlEN];
+    viewport.innerHTML = weekBadgeHTML(def) + html;
     nextBtn.style.display = '';
     nextBtn.disabled = false;
-    nextBtn.textContent = 'Next';
+    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     activeQuizInstance = null;
     stepDone[i] = true;
     saveProgress();
   } else if(def.type === 'quiz'){
+    var title = (currentLang === 'ar') ? def.titleAr : def.titleEn;
+    var lead = (currentLang === 'ar') ? def.leadAr : def.leadEn;
     viewport.innerHTML = weekBadgeHTML(def) +
       '<div class="section">' +
-        '<h2 class="section-title"><span class="num">📝</span><span>' + def.title + '</span></h2>' +
-        '<p class="lead">' + def.lead + '</p>' +
+        '<h2 class="section-title"><span class="num">📝</span><span id="active-quiz-title">' + title + '</span></h2>' +
+        '<p class="lead" id="active-quiz-lead">' + lead + '</p>' +
         '<div class="quiz-shell" id="active-quiz-slot"></div>' +
       '</div>';
     var slot = document.getElementById('active-quiz-slot');
     slot.innerHTML = quizShellTemplate('sq');
-    var bank = window[def.bank];
+    var enQArr = window[def.bankEN];
+    var arQArr = window[def.bankAR];
     nextBtn.style.display = 'none';
-    nextBtn.textContent = 'Next';
-    activeQuizInstance = createQuizInstance('sq', bank, function(pct){
+    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+    activeQuizInstance = createQuizInstance('sq', enQArr, arQArr, function(pct){
       if(def.isFinalExam){ finalExamScorePct = pct; }
       if(def.passGate){
         if(pct >= PASS_THRESHOLD){
           stepDone[i] = true;
           nextBtn.style.display = '';
-          nextBtn.textContent = def.isFinalExam ? 'View Certificate' : 'Next';
+          nextBtn.textContent = def.isFinalExam ? ((currentLang === 'ar') ? 'عرض الشهادة' : 'View Certificate') : ((currentLang === 'ar') ? 'التالي' : 'Next');
         } else {
           nextBtn.style.display = 'none';
         }
@@ -1181,12 +1565,46 @@ function renderStep(i){
     }, function(){
       nextBtn.style.display = 'none';
     }, !!def.immediate);
+    activeQuizInstance.setLanguage(currentLang);
   } else if(def.type === 'certificate'){
     renderCertificateStep();
   }
 
   updateStepProgress();
   document.querySelector('.wrap').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function refreshCurrentStepLanguage(){
+  var def = STEP_DEFS[currentStepIndex];
+  var nextBtn = document.getElementById('step-next-btn');
+  var backBtn = document.getElementById('step-back-btn');
+  backBtn.textContent = (currentLang === 'ar') ? 'السابق' : 'Back';
+
+  if(def.type === 'lesson'){
+    var html = window[(currentLang === 'ar') ? def.htmlAR : def.htmlEN];
+    document.getElementById('step-viewport').innerHTML = weekBadgeHTML(def) + html;
+    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+  } else if(def.type === 'quiz'){
+    var titleEl = document.getElementById('active-quiz-title');
+    var leadEl = document.getElementById('active-quiz-lead');
+    if(titleEl){ titleEl.textContent = (currentLang === 'ar') ? def.titleAr : def.titleEn; }
+    if(leadEl){ leadEl.textContent = (currentLang === 'ar') ? def.leadAr : def.leadEn; }
+    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+    if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
+  } else if(def.type === 'certificate'){
+    renderCertificateStep();
+  }
+  updateStepProgress();
+}
+
+function setLanguage(lang){
+  currentLang = lang;
+  document.body.classList.toggle('rtl-active', lang === 'ar');
+  document.documentElement.lang = lang;
+  document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
+  if(studentName && document.getElementById('welcome-banner').style.display !== 'none'){ showWelcomeBanner(false); }
+  if(document.getElementById('main-content').style.display !== 'none'){ refreshCurrentStepLanguage(); }
 }
 
 document.querySelectorAll('.week-select-btn').forEach(function(btn){
@@ -1200,15 +1618,32 @@ document.querySelectorAll('.week-select-btn').forEach(function(btn){
   });
 });
 
-/* ===================== QUIZ ENGINE ===================== */
+/* ===================== QUIZ ENGINE (multi-instance factory, bilingual) ===================== */
 var QUIZ_STRINGS = {
-  letters: ['A','B','C','D'],
-  scoreMsgs: [
-    [90, "Excellent! You've truly mastered this section."],
-    [75, "Great work! Just a little more review and you'll have it locked in."],
-    [50, "Good effort — review what you missed and try again."],
-    [0,  "Keep at it — go back through the lesson and try again."]
-  ]
+  en: {
+    question: 'Question', of: '/', prev: 'Previous', next: 'Next', finish: 'Finish',
+    letters: ['A','B','C','D'],
+    scoreMsgs: [
+      [90, "Excellent! You've truly mastered this section."],
+      [75, "Great work! Just a little more review and you'll have it locked in."],
+      [50, "Good effort — review what you missed and try again."],
+      [0,  "Keep at it — go back through the lesson and try again."]
+    ],
+    yourAnswer: 'Your answer: ', correctAnswer: 'Correct answer: ', noAnswer: '(no answer)',
+    retake: 'Retake Quiz'
+  },
+  ar: {
+    question: 'سؤال', of: '/', prev: 'السابق', next: 'التالي', finish: 'إنهاء الاختبار',
+    letters: ['أ','ب','ج','د'],
+    scoreMsgs: [
+      [90, "ممتاز! لقد أتقنتَ هذا الجزء تمامًا."],
+      [75, "عمل رائع! القليل من المراجعة وستتقنه تمامًا."],
+      [50, "مجهود جيد — راجع ما أخطأت فيه وحاول مرة أخرى."],
+      [0,  "استمر — راجع الدرس من جديد وحاول مرة أخرى."]
+    ],
+    yourAnswer: 'إجابتك: ', correctAnswer: 'الإجابة الصحيحة: ', noAnswer: '(لم تُجب)',
+    retake: 'إعادة المحاولة'
+  }
 };
 
 function quizShellTemplate(prefix){
@@ -1237,10 +1672,18 @@ function quizShellTemplate(prefix){
     '</div>';
 }
 
-function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
+function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
+  var lang = 'en';
+  var questions = enQ;
   var index = 0, answered = [], selected = [];
   var justAnsweredAnimate = false;
   var els = {};
+
+  function pickQuestions(){
+    return (lang === 'ar') ? arQ : enQ;
+  }
+
+  function t(key){ return QUIZ_STRINGS[lang][key]; }
 
   function cacheEls(){
     els.activeArea = document.getElementById(prefix + '-active-area');
@@ -1274,7 +1717,7 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
 
   function renderQuestion(){
     var item = questions[index];
-    els.progressText.textContent = 'Question ' + (index + 1) + ' / ' + questions.length;
+    els.progressText.textContent = t('question') + ' ' + (index + 1) + ' ' + t('of') + ' ' + questions.length;
     var pct = Math.round((index / questions.length) * 100);
     els.barFill.style.width = pct + '%';
     els.pctText.textContent = pct + '%';
@@ -1296,7 +1739,7 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
     item.options.forEach(function(optText, oIndex){
       var optDiv = document.createElement('div');
       optDiv.className = 'q-option';
-      optDiv.innerHTML = '<span class="letter">' + QUIZ_STRINGS.letters[oIndex] + '.</span><span>' + optText + '</span>';
+      optDiv.innerHTML = '<span class="letter">' + t('letters')[oIndex] + '.</span><span>' + optText + '</span>';
       if(oIndex === selected[index]){ optDiv.classList.add('selected'); }
       if(showFeedback){
         if(oIndex === item.correct){ optDiv.classList.add('opt-correct'); }
@@ -1321,7 +1764,7 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
     els.stage.appendChild(qDiv);
 
     els.prevBtn.disabled = (index === 0);
-    els.nextBtn.textContent = (index === questions.length - 1) ? 'Finish' : 'Next';
+    els.nextBtn.textContent = (index === questions.length - 1) ? t('finish') : t('next');
     renderDots();
   }
 
@@ -1348,12 +1791,19 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
     els.summary.classList.add('show');
 
     var name = studentName || '';
-    els.scoreTitle.textContent = name ? ('Well done, ' + name + '! 🌟') : '';
+    if(els.scoreTitle){
+      var titleText = '';
+      if(name){
+        titleText = (lang === 'ar') ? ('أحسنت يا ' + name + '! 🌟') : ('Well done, ' + name + '! 🌟');
+      }
+      els.scoreTitle.textContent = titleText;
+    }
     els.scorePct.textContent = pct + '%';
 
     var msg = '';
-    for(var i = 0; i < QUIZ_STRINGS.scoreMsgs.length; i++){
-      if(pct >= QUIZ_STRINGS.scoreMsgs[i][0]){ msg = QUIZ_STRINGS.scoreMsgs[i][1]; break; }
+    var msgs = t('scoreMsgs');
+    for(var i = 0; i < msgs.length; i++){
+      if(pct >= msgs[i][0]){ msg = msgs[i][1]; break; }
     }
     els.scoreMsg.textContent = msg;
 
@@ -1371,9 +1821,9 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
       els.reviewGrid.appendChild(btn);
     });
     els.reviewDetail.classList.remove('show');
-    els.retakeBtn.textContent = 'Retake Quiz';
+    els.retakeBtn.textContent = t('retake');
 
-    if(name){ speakResult(name, correctCount, questions.length, pct); }
+    if(name){ speakResult(name, correctCount, questions.length, pct, lang); }
 
     if(typeof onFinish === 'function'){ onFinish(pct); }
   }
@@ -1381,10 +1831,10 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
   function showDetail(i){
     var item = questions[i];
     var yourIdx = selected[i];
-    var yourText = (yourIdx === null || yourIdx === undefined) ? '(no answer)' : item.options[yourIdx];
+    var yourText = (yourIdx === null || yourIdx === undefined) ? t('noAnswer') : item.options[yourIdx];
     var html = '<div class="rd-q">' + (i + 1) + '. ' + item.q + '</div>';
-    html += '<div class="rd-your">Your answer: ' + yourText + '</div>';
-    html += '<div class="rd-correct">Correct answer: ' + item.options[item.correct] + '</div>';
+    html += '<div class="rd-your">' + t('yourAnswer') + yourText + '</div>';
+    html += '<div class="rd-correct">' + t('correctAnswer') + item.options[item.correct] + '</div>';
     html += '<div class="rd-expl">' + item.explanation + '</div>';
     els.reviewDetail.innerHTML = html;
     els.reviewDetail.classList.remove('show');
@@ -1399,8 +1849,8 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
     selected = new Array(questions.length).fill(null);
     els.summary.classList.remove('show');
     els.activeArea.style.display = '';
-    els.prevBtn.textContent = 'Previous';
-    els.nextBtn.textContent = 'Next';
+    els.prevBtn.textContent = t('prev');
+    els.nextBtn.textContent = t('next');
     renderQuestion();
     if(typeof onReset === 'function'){ onReset(); }
   }
@@ -1418,14 +1868,31 @@ function createQuizInstance(prefix, questions, onFinish, onReset, immediate){
     els.retakeBtn.addEventListener('click', function(){ playClickSound(); reset(); });
   }
 
-  cacheEls();
-  bindNav();
-  reset();
-
-  return {};
+  return {
+    setLanguage: function(newLang){
+      lang = newLang;
+      questions = pickQuestions();
+      cacheEls();
+      bindNav();
+      reset();
+    },
+    refreshLanguage: function(newLang){
+      lang = newLang;
+      questions = pickQuestions();
+      els.prevBtn.textContent = t('prev');
+      if(els.summary.classList.contains('show')){
+        finish();
+      } else {
+        els.nextBtn.textContent = (index === questions.length - 1) ? t('finish') : t('next');
+        renderQuestion();
+      }
+    }
+  };
 }
 
 /* ===================== INIT ===================== */
+document.body.classList.remove('rtl-active');
+document.getElementById('lang-en-btn').classList.add('active');
 document.getElementById('student-name-input').focus();
 </script>
 
