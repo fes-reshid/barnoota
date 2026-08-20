@@ -116,27 +116,56 @@
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
 
-  /* ===== Name gate ===== */
-  #name-gate{ display:flex; justify-content:center; padding:40px 10px; }
+  /* ===== Auth gate (enroll / login) ===== */
+  #auth-gate{ display:flex; justify-content:center; padding:40px 10px; }
   .name-gate-box{
     max-width:420px; width:100%; text-align:center; background:#fff;
     border:2px solid var(--gold-soft); border-radius:16px; padding:30px 26px;
     box-shadow:0 4px 16px rgba(60,47,38,0.08);
   }
-  #name-gate-label{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin:0 0 14px; font-weight:700; }
-  #student-name-input{
+  .auth-gate-label{ font-size:calc(15px * var(--scale)); color:var(--ink-brown); margin:0 0 18px; font-weight:700; }
+  .auth-gate-title{ font-family:'Marcellus'; font-size:calc(18px * var(--scale)); color:var(--ink-navy); margin:0 0 16px; }
+  .auth-input{
     width:100%; padding:12px 16px; border:1.5px solid var(--gold-soft); border-radius:10px;
     font-family:'Cormorant Garamond', serif; font-size:calc(16px * var(--scale)); text-align:center;
-    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:12px;
   }
-  #student-name-input:focus{ outline:none; border-color:var(--gold); }
-  .name-warning{ color:var(--red); font-size:calc(13px * var(--scale)); margin:-6px 0 12px; }
-  #name-start-btn{
-    background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
-    padding:11px 32px; font-family:'Cormorant Garamond', serif; font-weight:700;
+  .auth-input:focus{ outline:none; border-color:var(--gold); }
+  .auth-error{ color:var(--red); font-size:calc(13px * var(--scale)); margin:-4px 0 12px; }
+  .auth-success{ color:var(--green); font-size:calc(13px * var(--scale)); margin:-4px 0 12px; }
+  .auth-primary-btn{
+    width:100%; background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
+    padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
     font-size:calc(15px * var(--scale)); cursor:pointer; transition:transform .15s ease;
   }
-  #name-start-btn:hover{ transform:scale(1.04); }
+  .auth-primary-btn:hover{ transform:scale(1.03); }
+  .auth-primary-btn:disabled{ opacity:.6; cursor:default; transform:none; }
+  .auth-secondary-btn{
+    width:100%; background:#fff; color:var(--ink-brown); border:1.5px solid var(--gold-soft); border-radius:22px;
+    padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(15px * var(--scale)); cursor:pointer; transition:transform .15s ease, background .15s ease;
+    margin-top:10px;
+  }
+  .auth-secondary-btn:hover{ background:var(--parchment-deep); transform:scale(1.03); }
+  .auth-landing-btns{ display:flex; flex-direction:column; }
+  .auth-link-btn{
+    display:block; background:none; border:none; color:var(--gold); text-decoration:underline; cursor:pointer;
+    font-family:'Cormorant Garamond', serif; font-size:calc(13.5px * var(--scale)); margin:10px auto 0; padding:0;
+  }
+  #auth-loading p{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0; }
+
+  /* ===== Account bar ===== */
+  #account-bar{
+    display:none; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+    max-width:520px; margin:6px auto 0; font-size:calc(13px * var(--scale)); color:var(--ink-brown);
+  }
+  #account-email{ font-weight:700; }
+  #logout-btn{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 14px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(12.5px * var(--scale));
+    color:var(--ink-brown); cursor:pointer; transition:background .15s ease, transform .15s ease;
+  }
+  #logout-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
 
   /* ===== Week select hub ===== */
   #week-select{ max-width:520px; margin:10px auto 0; text-align:center; }
@@ -309,6 +338,10 @@
   body.rtl-active .rule-box ul{ padding-inline-start:0; padding-inline-end:20px; }
   body.rtl-active, body.rtl-active .lead, body.rtl-active .def-card p, body.rtl-active .sub-rule .srbody,
   body.rtl-active .case-card, body.rtl-active .note-box p{ font-family:'Amiri', serif; }
+  body.rtl-active .auth-gate-label, body.rtl-active .auth-gate-title, body.rtl-active .auth-error,
+  body.rtl-active .auth-success, body.rtl-active #auth-loading p, body.rtl-active .auth-input,
+  body.rtl-active .auth-primary-btn, body.rtl-active .auth-secondary-btn, body.rtl-active .auth-link-btn,
+  body.rtl-active #account-bar{ font-family:'Amiri', serif; }
 
   /* ===== Quiz section (reused pattern) ===== */
   .quiz-shell{
@@ -435,13 +468,47 @@
 
 <div class="wrap">
 
-  <div id="name-gate">
-    <div class="name-gate-box">
-      <label for="student-name-input" id="name-gate-label">Enter your name to begin · اكتب اسمك قبل البدء</label>
-      <input type="text" id="student-name-input" placeholder="Your name · اسمك" autocomplete="off">
-      <p class="name-warning" id="name-warning" style="display:none;">Please enter your name first · من فضلك اكتب اسمك أولاً</p>
-      <button id="name-start-btn">Start · ابدأ</button>
+  <div id="auth-gate">
+
+    <div class="name-gate-box" id="auth-loading">
+      <p id="auth-loading-text">Loading your account…</p>
     </div>
+
+    <div class="name-gate-box" id="auth-landing" style="display:none;">
+      <p class="auth-gate-label" id="auth-landing-label">Create an account or log in to begin</p>
+      <div class="auth-landing-btns">
+        <button class="auth-primary-btn" id="show-enroll-btn">Enroll</button>
+        <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
+      </div>
+    </div>
+
+    <div class="name-gate-box" id="enroll-form" style="display:none;">
+      <p class="auth-gate-title" id="enroll-title">Create Your Account</p>
+      <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
+      <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
+      <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
+      <p class="auth-error" id="enroll-error" style="display:none;"></p>
+      <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+      <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+      <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
+    </div>
+
+    <div class="name-gate-box" id="login-form" style="display:none;">
+      <p class="auth-gate-title" id="login-title">Log In</p>
+      <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
+      <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
+      <p class="auth-error" id="login-error" style="display:none;"></p>
+      <p class="auth-success" id="login-info" style="display:none;"></p>
+      <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
+      <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+      <button class="auth-link-btn" id="login-back-btn">← Back</button>
+    </div>
+
+  </div>
+
+  <div id="account-bar">
+    <span id="account-email"></span>
+    <button id="logout-btn">Log Out</button>
   </div>
 
   <div class="welcome-banner" id="welcome-banner" style="display:none;">
@@ -556,6 +623,8 @@ function playWrongSound(){
 
 /* ===================== STUDENT NAME / ENCOURAGEMENT ===================== */
 var studentName = '';
+var studentEmail = '';
+var currentUID = null;
 
 var ENCOURAGEMENT_QUOTES = [
   { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "“Whoever follows a path in seeking knowledge, Allah makes easy for him a path to Paradise.” — Sahih Muslim" },
@@ -587,9 +656,12 @@ var WELCOME_LINE_TEMPLATES_AR = [
   function(n){ return "🌟 استمر يا " + n + "! You're doing great"; }
 ];
 
-function showWelcomeBanner(){
+function showWelcomeBanner(isReturning){
   var templates = (currentLang === 'ar') ? WELCOME_LINE_TEMPLATES_AR : WELCOME_LINE_TEMPLATES_EN;
   var line = templates[Math.floor(Math.random() * templates.length)](studentName);
+  if(isReturning){
+    line += (currentLang === 'ar') ? ' — مرحبًا بعودتك، سنكمل من حيث توقفت.' : ' — welcome back, resuming your progress.';
+  }
   var quote = pickQuote();
   document.getElementById('welcome-line').textContent = line;
   document.getElementById('welcome-quote-ar').textContent = quote.ar;
@@ -614,23 +686,58 @@ function speakResult(name, correctCount, total, pct, lang){
   window.speechSynthesis.speak(utter);
 }
 
-document.getElementById('name-start-btn').addEventListener('click', function(){
-  var input = document.getElementById('student-name-input');
-  var name = input.value.trim();
-  if(!name){
-    document.getElementById('name-warning').style.display = 'block';
-    input.focus();
-    return;
-  }
-  document.getElementById('name-warning').style.display = 'none';
-  studentName = name;
-  document.getElementById('name-gate').style.display = 'none';
+function showAuthPanel(id){
+  ['auth-loading','auth-landing','enroll-form','login-form'].forEach(function(pid){
+    document.getElementById(pid).style.display = (pid === id) ? '' : 'none';
+  });
+}
+document.getElementById('show-enroll-btn').addEventListener('click', function(){
+  playClickSound();
+  document.getElementById('enroll-error').style.display = 'none';
+  document.getElementById('enroll-goto-login-btn').style.display = 'none';
+  showAuthPanel('enroll-form');
+  document.getElementById('enroll-name').focus();
+});
+document.getElementById('show-login-btn').addEventListener('click', function(){
+  playClickSound();
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-info').style.display = 'none';
+  showAuthPanel('login-form');
+  document.getElementById('login-email').focus();
+});
+document.getElementById('enroll-back-btn').addEventListener('click', function(){
+  playClickSound();
+  showAuthPanel('auth-landing');
+});
+document.getElementById('login-back-btn').addEventListener('click', function(){
+  playClickSound();
+  showAuthPanel('auth-landing');
+});
+
+function enterCourse(uid, email, data, isReturning){
+  currentUID = uid;
+  studentEmail = email;
+  studentName = (data && data.fullName) ? data.fullName : email;
+  var savedStepDone = (data && Array.isArray(data.stepDone)) ? data.stepDone : null;
+  stepDone = (savedStepDone && savedStepDone.length === STEP_DEFS.length) ? savedStepDone.slice() : new Array(STEP_DEFS.length).fill(false);
+
+  document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('week-select').style.display = 'block';
-  showWelcomeBanner();
+  document.getElementById('account-bar').style.display = 'flex';
+  document.getElementById('account-email').textContent = email;
+  showWelcomeBanner(isReturning && stepDone.some(function(d){ return d; }));
+}
+
+document.getElementById('logout-btn').addEventListener('click', function(){
+  playClickSound();
+  if(window.__fbSignOut){ window.__fbSignOut(); }
 });
-document.getElementById('student-name-input').addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
-});
+
+var stepDone = [];
+function saveProgress(){
+  if(!currentUID) return;
+  if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone); }
+}
 
 document.querySelectorAll('.week-select-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
@@ -1915,6 +2022,8 @@ function renderStep(i){
     nextBtn.disabled = false;
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     activeQuizInstance = null;
+    stepDone[i] = true;
+    saveProgress();
   } else if(def.type === 'quiz'){
     var title = (currentLang === 'ar') ? def.titleAr : def.titleEn;
     var lead = (currentLang === 'ar') ? def.leadAr : def.leadEn;
@@ -1933,6 +2042,8 @@ function renderStep(i){
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     activeQuizInstance = createQuizInstance('sq', enQArr, arQArr, function(){
       if(!isLastStep){ nextBtn.style.display = ''; }
+      stepDone[i] = true;
+      saveProgress();
     }, function(){
       nextBtn.style.display = 'none';
     }, !!def.immediate);
@@ -1965,13 +2076,92 @@ function refreshCurrentStepLanguage(){
   updateStepProgress();
 }
 
+/* ===================== AUTH UI STRINGS (mono-lingual — follows the toggle) ===================== */
+var AUTH_STRINGS = {
+  en: {
+    loading: 'Loading your account…',
+    landingLabel: 'Create an account or log in to begin',
+    enrollBtn: 'Enroll', loginBtn: 'Log In',
+    enrollTitle: 'Create Your Account',
+    namePlaceholder: 'Full name', emailPlaceholder: 'Email', passwordPlaceholder: 'Password (6+ characters)',
+    createAccountBtn: 'Create Account', back: '← Back',
+    loginTitle: 'Log In', loginPasswordPlaceholder: 'Password', forgotPassword: 'Forgot your password?',
+    logout: 'Log Out', gotoLogin: 'Go to Login',
+    resetSent: 'Password reset email sent — check your inbox.',
+    enterEmailFirst: 'Please enter your email above first.',
+    errRequireName: 'Please enter your full name.',
+    errRequireEmail: 'Please enter your email.',
+    errPasswordLen: 'Password must be at least 6 characters.',
+    errRequireBoth: 'Please enter your email and password.',
+    err: {
+      'auth/email-already-in-use': 'This email is already registered.',
+      'auth/invalid-email': 'Please enter a valid email address.',
+      'auth/weak-password': 'Password must be at least 6 characters.',
+      'auth/user-not-found': 'Incorrect email or password.',
+      'auth/wrong-password': 'Incorrect email or password.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+      'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.',
+      'default': 'Something went wrong. Please try again.'
+    }
+  },
+  ar: {
+    loading: 'جارٍ تحميل حسابك…',
+    landingLabel: 'أنشئ حسابًا أو سجّل الدخول لتبدأ',
+    enrollBtn: 'اشترك', loginBtn: 'تسجيل الدخول',
+    enrollTitle: 'أنشئ حسابك',
+    namePlaceholder: 'الاسم الكامل', emailPlaceholder: 'البريد الإلكتروني', passwordPlaceholder: 'كلمة المرور (٦ أحرف أو أكثر)',
+    createAccountBtn: 'إنشاء الحساب', back: 'رجوع',
+    loginTitle: 'تسجيل الدخول', loginPasswordPlaceholder: 'كلمة المرور', forgotPassword: 'هل نسيت كلمة المرور؟',
+    logout: 'تسجيل الخروج', gotoLogin: 'الذهاب لتسجيل الدخول',
+    resetSent: 'تم إرسال رابط إعادة تعيين كلمة المرور — تحقق من بريدك الإلكتروني.',
+    enterEmailFirst: 'الرجاء إدخال بريدك الإلكتروني أعلاه أولًا.',
+    errRequireName: 'الرجاء إدخال اسمك الكامل.',
+    errRequireEmail: 'الرجاء إدخال بريدك الإلكتروني.',
+    errPasswordLen: 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
+    errRequireBoth: 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.',
+    err: {
+      'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجَّل بالفعل.',
+      'auth/invalid-email': 'الرجاء إدخال بريد إلكتروني صحيح.',
+      'auth/weak-password': 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
+      'auth/user-not-found': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/wrong-password': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+      'auth/too-many-requests': 'محاولات كثيرة جداً، الرجاء الانتظار قليلاً ثم المحاولة مرة أخرى.',
+      'default': 'حدث خطأ ما. حاول مرة أخرى.'
+    }
+  }
+};
+
+function refreshAuthLanguage(){
+  var s = AUTH_STRINGS[currentLang];
+  document.getElementById('auth-loading-text').textContent = s.loading;
+  document.getElementById('auth-landing-label').textContent = s.landingLabel;
+  document.getElementById('show-enroll-btn').textContent = s.enrollBtn;
+  document.getElementById('show-login-btn').textContent = s.loginBtn;
+  document.getElementById('enroll-title').textContent = s.enrollTitle;
+  document.getElementById('enroll-name').placeholder = s.namePlaceholder;
+  document.getElementById('enroll-email').placeholder = s.emailPlaceholder;
+  document.getElementById('enroll-password').placeholder = s.passwordPlaceholder;
+  document.getElementById('enroll-submit-btn').textContent = s.createAccountBtn;
+  document.getElementById('enroll-back-btn').textContent = s.back;
+  document.getElementById('enroll-goto-login-btn').textContent = s.gotoLogin;
+  document.getElementById('login-title').textContent = s.loginTitle;
+  document.getElementById('login-email').placeholder = s.emailPlaceholder;
+  document.getElementById('login-password').placeholder = s.loginPasswordPlaceholder;
+  document.getElementById('login-submit-btn').textContent = s.loginBtn;
+  document.getElementById('forgot-password-btn').textContent = s.forgotPassword;
+  document.getElementById('login-back-btn').textContent = s.back;
+  document.getElementById('logout-btn').textContent = s.logout;
+}
+
 function setLanguage(lang){
   currentLang = lang;
   document.body.classList.toggle('rtl-active', lang === 'ar');
   document.documentElement.lang = lang;
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
   document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
-  if(studentName){ showWelcomeBanner(); }
+  refreshAuthLanguage();
+  if(studentName){ showWelcomeBanner(false); }
   refreshCurrentStepLanguage();
 }
 
@@ -2256,8 +2446,179 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
 /* ===================== INIT ===================== */
 document.body.classList.remove('rtl-active');
 document.getElementById('lang-en-btn').classList.add('active');
-document.getElementById('student-name-input').focus();
-
+refreshAuthLanguage();
 </script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAon9aeq2S5gL_Pe7OcI-HSWL41yswBCl8",
+  authDomain: "diinislaam-8fdeb.firebaseapp.com",
+  projectId: "diinislaam-8fdeb",
+  storageBucket: "diinislaam-8fdeb.firebasestorage.app",
+  messagingSenderId: "326572350344",
+  appId: "1:326572350344:web:d75552f91d11d3d227783d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const COLLECTION = 'nahw_students';
+
+function t(key){ return window.AUTH_STRINGS[window.currentLang][key]; }
+function authErrorMessage(code){ return t('err')[code] || t('err')['default']; }
+
+function showErr(el, msg){
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function defaultStudentDoc(fullName, email){
+  return {
+    fullName: fullName,
+    email: email,
+    createdAt: new Date().toISOString(),
+    stepDone: new Array(window.STEP_DEFS.length).fill(false)
+  };
+}
+
+var enrollBtn = document.getElementById('enroll-submit-btn');
+var loginBtn = document.getElementById('login-submit-btn');
+var enrollErrorEl = document.getElementById('enroll-error');
+var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
+
+enrollBtn.addEventListener('click', function(){
+  enrollErrorEl.style.display = 'none';
+  gotoLoginBtn.style.display = 'none';
+  var name = document.getElementById('enroll-name').value.trim();
+  var email = document.getElementById('enroll-email').value.trim();
+  var password = document.getElementById('enroll-password').value;
+
+  if(!name){ showErr(enrollErrorEl, t('errRequireName')); return; }
+  if(!email){ showErr(enrollErrorEl, t('errRequireEmail')); return; }
+  if(password.length < 6){ showErr(enrollErrorEl, t('errPasswordLen')); return; }
+
+  enrollBtn.disabled = true;
+  enrollBtn.textContent = '…';
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(function(cred){
+      return updateProfile(cred.user, { displayName: name }).then(function(){
+        var data = defaultStudentDoc(name, email);
+        return setDoc(doc(db, COLLECTION, cred.user.uid), data).then(function(){
+          return { uid: cred.user.uid, data: data };
+        });
+      });
+    })
+    .then(function(result){
+      window.playClickSound && window.playClickSound();
+      window.enterCourse(result.uid, email, result.data, false);
+    })
+    .catch(function(e){
+      showErr(enrollErrorEl, authErrorMessage(e.code));
+      if(e.code === 'auth/email-already-in-use'){
+        gotoLoginBtn.style.display = '';
+        gotoLoginBtn.onclick = function(){
+          window.playClickSound && window.playClickSound();
+          document.getElementById('login-email').value = email;
+          window.showAuthPanel('login-form');
+          document.getElementById('login-password').focus();
+        };
+      }
+    })
+    .finally(function(){
+      enrollBtn.disabled = false;
+      enrollBtn.textContent = t('createAccountBtn');
+    });
+});
+
+var loginErrorEl = document.getElementById('login-error');
+var loginInfoEl = document.getElementById('login-info');
+
+loginBtn.addEventListener('click', function(){
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+
+  if(!email || !password){ showErr(loginErrorEl, t('errRequireBoth')); return; }
+
+  loginBtn.disabled = true;
+  loginBtn.textContent = '…';
+  signInWithEmailAndPassword(auth, email, password)
+    .then(function(cred){
+      return getDoc(doc(db, COLLECTION, cred.user.uid)).then(function(snap){
+        var data = snap.exists() ? snap.data() : defaultStudentDoc(cred.user.displayName || email, email);
+        window.playClickSound && window.playClickSound();
+        window.enterCourse(cred.user.uid, email, data, true);
+      });
+    })
+    .catch(function(e){
+      showErr(loginErrorEl, authErrorMessage(e.code));
+    })
+    .finally(function(){
+      loginBtn.disabled = false;
+      loginBtn.textContent = t('loginBtn');
+    });
+});
+
+document.getElementById('forgot-password-btn').addEventListener('click', function(){
+  loginErrorEl.style.display = 'none';
+  loginInfoEl.style.display = 'none';
+  var email = document.getElementById('login-email').value.trim();
+  if(!email){ showErr(loginErrorEl, t('enterEmailFirst')); document.getElementById('login-email').focus(); return; }
+  sendPasswordResetEmail(auth, email)
+    .then(function(){
+      window.playClickSound && window.playClickSound();
+      loginInfoEl.textContent = t('resetSent');
+      loginInfoEl.style.display = 'block';
+    })
+    .catch(function(e){
+      showErr(loginErrorEl, authErrorMessage(e.code));
+    });
+});
+
+['enroll-name','enroll-email','enroll-password'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ enrollBtn.click(); }
+  });
+});
+['login-email','login-password'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ loginBtn.click(); }
+  });
+});
+
+window.__fbSignOut = function(){
+  signOut(auth).then(function(){ window.location.reload(); });
+};
+
+window.__fbSaveProgress = function(uid, stepDone){
+  setDoc(doc(db, COLLECTION, uid), { stepDone: stepDone }, { merge: true })
+    .catch(function(e){ console.error('Progress save failed:', e); });
+};
+
+onAuthStateChanged(auth, function(user){
+  if(user){
+    getDoc(doc(db, COLLECTION, user.uid)).then(function(snap){
+      var data = snap.exists() ? snap.data() : defaultStudentDoc(user.displayName || user.email, user.email);
+      window.enterCourse(user.uid, user.email, data, true);
+    }).catch(function(e){
+      console.error('Could not load account:', e);
+      window.showAuthPanel('auth-landing');
+    });
+  } else {
+    window.showAuthPanel('auth-landing');
+  }
+});
+</script>
+
 </body>
 </html>
