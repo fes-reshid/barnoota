@@ -344,6 +344,23 @@
   .cert-cta .qbtn.solid{ background:var(--green); }
   .lock-msg{ margin-top:16px; font-size:calc(14px * var(--scale)); color:var(--red); font-weight:700; }
 
+  /* ===== Certificate progress checklist ===== */
+  .progress-list{ max-width:440px; margin:10px auto 0; display:flex; flex-direction:column; gap:10px; }
+  .progress-row{
+    display:flex; align-items:center; gap:10px; background:#fff; border:1.5px solid var(--gold-soft);
+    border-radius:10px; padding:10px 14px; font-size:calc(14.5px * var(--scale));
+  }
+  .progress-row.pr-done{ border-color:var(--green); background:var(--green-bg); }
+  .progress-row.pr-pending{ border-color:var(--red); background:var(--red-bg); }
+  .pr-icon{ flex-shrink:0; }
+  .pr-label{ flex:1; font-weight:700; color:var(--ink-navy); }
+  .pr-jump-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:16px; padding:6px 14px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(12.5px * var(--scale));
+    cursor:pointer; transition:transform .15s ease;
+  }
+  .pr-jump-btn:hover{ transform:scale(1.05); }
+
   /* ===== Certificate ===== */
   #certificate-wrap{ display:flex; justify-content:center; padding:6px 0 20px; }
   .cert-card{
@@ -564,8 +581,9 @@ var WELCOME_LINE_TEMPLATES = [
   function(n){ return "🌟 Proud of you, " + n + "! بارك الله فيك"; }
 ];
 
-function showWelcomeBanner(){
+function showWelcomeBanner(isReturning){
   var line = WELCOME_LINE_TEMPLATES[Math.floor(Math.random() * WELCOME_LINE_TEMPLATES.length)](studentName);
+  if(isReturning){ line += ' — welcome back, resuming your progress.'; }
   var quote = pickQuote();
   document.getElementById('welcome-line').textContent = line;
   document.getElementById('welcome-quote-ar').textContent = quote.ar;
@@ -593,9 +611,16 @@ document.getElementById('name-start-btn').addEventListener('click', function(){
   }
   document.getElementById('name-warning').style.display = 'none';
   studentName = name;
+  var restored = loadProgress(studentName);
+  var isReturning = false;
+  if(restored){
+    stepDone = restored.stepDone.slice();
+    finalExamScorePct = (typeof restored.finalExamScorePct === 'number') ? restored.finalExamScorePct : null;
+    isReturning = stepDone.some(function(d){ return d; });
+  }
   document.getElementById('name-gate').style.display = 'none';
   document.getElementById('week-select').style.display = 'block';
-  showWelcomeBanner();
+  showWelcomeBanner(isReturning);
 });
 document.getElementById('student-name-input').addEventListener('keydown', function(e){
   if(e.key === 'Enter'){ document.getElementById('name-start-btn').click(); }
@@ -982,6 +1007,46 @@ var STEP_DEFS = [
   { type: 'certificate', weekLabel: 'Certificate' }
 ];
 
+var COURSE_UNITS = [
+  { label: 'Week 1', steps: [0,1], jumpStep: 0 },
+  { label: 'Week 2', steps: [2,3], jumpStep: 2 },
+  { label: 'Week 3', steps: [4,5], jumpStep: 4 },
+  { label: 'Midterm Exam', steps: [6], jumpStep: 6 },
+  { label: 'Week 4', steps: [7,8], jumpStep: 7 },
+  { label: 'Week 5', steps: [9,10], jumpStep: 9 },
+  { label: 'Week 6', steps: [11,12], jumpStep: 11 },
+  { label: 'Final Exam', steps: [13], jumpStep: 13 }
+];
+
+/* ===================== PROGRESS TRACKING (recorded per student, per browser) ===================== */
+var stepDone = new Array(STEP_DEFS.length).fill(false);
+
+function progressKey(name){ return 'durusProgress_' + name.trim().toLowerCase(); }
+
+function saveProgress(){
+  if(!studentName) return;
+  try{
+    localStorage.setItem(progressKey(studentName), JSON.stringify({
+      stepDone: stepDone,
+      finalExamScorePct: finalExamScorePct
+    }));
+  } catch(e){ /* localStorage unavailable — progress just won't persist */ }
+}
+
+function loadProgress(name){
+  try{
+    var raw = localStorage.getItem(progressKey(name));
+    if(!raw) return null;
+    var data = JSON.parse(raw);
+    if(!data || !Array.isArray(data.stepDone) || data.stepDone.length !== STEP_DEFS.length) return null;
+    return data;
+  } catch(e){ return null; }
+}
+
+function unitComplete(unit){
+  return unit.steps.every(function(s){ return !!stepDone[s]; });
+}
+
 function weekBadgeHTML(def){
   return def.weekLabel ? ('<div class="week-badge">' + def.weekLabel + '</div>') : '';
 }
@@ -1000,19 +1065,34 @@ function renderCertificateStep(){
   var nextBtn = document.getElementById('step-next-btn');
   nextBtn.style.display = 'none';
 
-  var passed = (finalExamScorePct !== null && finalExamScorePct >= PASS_THRESHOLD);
+  var finalExamStepIndex = STEP_DEFS.length - 2;
+  var passed = stepDone[finalExamStepIndex] === true;
   if(!passed){
+    var incomplete = COURSE_UNITS.filter(function(u){ return !unitComplete(u); });
+    var introText = incomplete.length
+      ? 'You haven\'t finished the following yet — complete each one to unlock your certificate:'
+      : 'Score ' + PASS_THRESHOLD + '% or higher on the Final Exam to unlock your certificate.';
+
+    var listHtml = COURSE_UNITS.map(function(u){
+      var done = unitComplete(u);
+      return '<div class="progress-row ' + (done ? 'pr-done' : 'pr-pending') + '">' +
+        '<span class="pr-icon">' + (done ? '✅' : '⛔') + '</span>' +
+        '<span class="pr-label">' + u.label + '</span>' +
+        (done ? '' : '<button class="pr-jump-btn" data-jump="' + u.jumpStep + '">Continue</button>') +
+      '</div>';
+    }).join('');
+
     viewport.innerHTML = weekBadgeHTML(STEP_DEFS[currentStepIndex]) +
       '<div class="hero"><p class="hero-eyebrow">الشهادة</p><h1>Certificate of Completion</h1>' +
-      '<p>Complete the Final Exam with a score of ' + PASS_THRESHOLD + '% or higher to unlock your certificate.</p></div>' +
-      '<div style="text-align:center;"><button class="qbtn solid" id="go-to-final-btn">Go to Final Exam</button></div>';
-    var goBtn = document.getElementById('go-to-final-btn');
-    if(goBtn){
-      goBtn.addEventListener('click', function(){
+      '<p>' + introText + '</p></div>' +
+      '<div class="progress-list">' + listHtml + '</div>';
+
+    viewport.querySelectorAll('.pr-jump-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
         playClickSound();
-        renderStep(STEP_DEFS.length - 2);
+        renderStep(parseInt(btn.getAttribute('data-jump'), 10));
       });
-    }
+    });
     return;
   }
 
@@ -1069,6 +1149,8 @@ function renderStep(i){
     nextBtn.disabled = false;
     nextBtn.textContent = 'Next';
     activeQuizInstance = null;
+    stepDone[i] = true;
+    saveProgress();
   } else if(def.type === 'quiz'){
     viewport.innerHTML = weekBadgeHTML(def) +
       '<div class="section">' +
@@ -1085,14 +1167,17 @@ function renderStep(i){
       if(def.isFinalExam){ finalExamScorePct = pct; }
       if(def.passGate){
         if(pct >= PASS_THRESHOLD){
+          stepDone[i] = true;
           nextBtn.style.display = '';
           nextBtn.textContent = def.isFinalExam ? 'View Certificate' : 'Next';
         } else {
           nextBtn.style.display = 'none';
         }
       } else {
+        stepDone[i] = true;
         nextBtn.style.display = '';
       }
+      saveProgress();
     }, function(){
       nextBtn.style.display = 'none';
     }, !!def.immediate);
