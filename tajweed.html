@@ -579,9 +579,10 @@ var ERR_MESSAGES = {
   'auth/user-not-found': 'Incorrect email or password.',
   'auth/wrong-password': 'Incorrect email or password.',
   'auth/invalid-credential': 'Incorrect email or password.',
-  'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.'
+  'auth/too-many-requests': 'Too many attempts — please wait a moment and try again.',
+  'permission-denied': 'Your login worked, but the database rejected the request — the Firestore security rules likely need to be updated for this course\'s collection.'
 };
-function authErrorMessage(code){ return ERR_MESSAGES[code] || 'Something went wrong. Please try again.'; }
+function authErrorMessage(code){ return ERR_MESSAGES[code] || ('Something went wrong. Please try again. (' + code + ')'); }
 
 function showErr(el, msg){
   el.textContent = msg;
