@@ -142,6 +142,14 @@
   .empty-state p{ font-size:16px; color:#6b5a3f; line-height:1.6; margin:0; }
   .no-results{ text-align:center; font-size:17px; color:#8a7a5c; padding:30px 20px; }
 
+  .external-frame-wrap{ max-width:var(--maxw); margin:0 auto; }
+  .external-frame-wrap iframe{
+    width:100%; height:80vh; min-height:520px; border:1.5px solid var(--gold-soft);
+    border-radius:16px; background:#fff; display:block;
+  }
+  .external-frame-note{ text-align:center; font-size:14px; color:#8a7a5c; margin:14px 0 0; }
+  .external-frame-note a{ color:var(--green); font-weight:700; text-decoration:underline; }
+
   .btn{
     display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
     font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px;
@@ -259,6 +267,12 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 */
 const SHEIKHS = ['Sh. Jannee', 'Sh. Yusuf Nuuree', 'Sh. Mohammed Rashad', 'Sh. Muhammad Waadoo'];
 
+// Scholars whose lessons live on an external site — shown as an embedded frame
+// instead of the usual audio-episode list for that tab.
+const EXTERNAL_SHEIKH_FRAMES = {
+  'Sh. Mohammed Rashad': 'https://tvislaamaa.org/tafsiira-shk-muhammad-rashaad'
+};
+
 const EPISODES = [
   // Add episodes here.
 ];
@@ -288,11 +302,26 @@ sheikhRow.querySelectorAll('.sheikh-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     selectedSheikh = tab.dataset.sheikh;
     sheikhRow.querySelectorAll('.sheikh-tab').forEach(t => t.classList.toggle('active', t === tab));
-    searchRow.style.display = 'block';
-    searchBox.value = '';
-    render('');
+    const externalUrl = EXTERNAL_SHEIKH_FRAMES[selectedSheikh];
+    if (externalUrl){
+      searchRow.style.display = 'none';
+      renderExternalFrame(externalUrl);
+    } else {
+      searchRow.style.display = 'block';
+      searchBox.value = '';
+      render('');
+    }
   });
 });
+
+function renderExternalFrame(url){
+  library.innerHTML = `
+    <div class="external-frame-wrap">
+      <iframe src="${url}" loading="lazy" title="Tafsīr — ${escapeHtml(selectedSheikh)}"></iframe>
+      <p class="external-frame-note">If the lesson doesn't load above, <a href="${url}" target="_blank" rel="noopener">open it in a new tab ↗</a>.</p>
+    </div>
+  `;
+}
 
 function escapeHtml(str){
   const div = document.createElement('div');
