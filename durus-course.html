@@ -691,6 +691,31 @@ function showWelcomeBanner(isReturning){
   document.getElementById('welcome-banner').style.display = 'block';
 }
 
+var cachedVoices = [];
+function cacheVoices(){ if('speechSynthesis' in window){ cachedVoices = window.speechSynthesis.getVoices() || []; } }
+if('speechSynthesis' in window){
+  cacheVoices();
+  window.speechSynthesis.onvoiceschanged = cacheVoices;
+}
+var MALE_VOICE_HINTS = ['male','david','daniel','alex','fred','george','james','mark','tom','guy','ryan','matthew','majed','hamed','tarik','yousef','ahmed'];
+var FEMALE_VOICE_HINTS = ['female','zira','samantha','victoria','susan','karen','moira','tessa','salli','joanna','amira','laila','hoda','fiona','veena','kyoko'];
+function pickMaleVoice(voiceLang){
+  if(!cachedVoices.length) return null;
+  var langPrefix = voiceLang.split('-')[0].toLowerCase();
+  var candidates = cachedVoices.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(langPrefix) === 0; });
+  if(!candidates.length) return null;
+  var maleMatch = candidates.filter(function(v){
+    var n = v.name.toLowerCase();
+    return MALE_VOICE_HINTS.some(function(h){ return n.indexOf(h) !== -1; });
+  })[0];
+  if(maleMatch) return maleMatch;
+  var nonFemale = candidates.filter(function(v){
+    var n = v.name.toLowerCase();
+    return !FEMALE_VOICE_HINTS.some(function(h){ return n.indexOf(h) !== -1; });
+  })[0];
+  return nonFemale || null;
+}
+
 function speakResult(name, correctCount, total, pct, lang){
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
@@ -710,6 +735,8 @@ function speakResult(name, correctCount, total, pct, lang){
   var utter = new SpeechSynthesisUtterance(text);
   utter.lang = voiceLang;
   utter.rate = 0.95;
+  var maleVoice = pickMaleVoice(voiceLang);
+  if(maleVoice){ utter.voice = maleVoice; }
   window.speechSynthesis.speak(utter);
 }
 
