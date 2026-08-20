@@ -661,20 +661,52 @@ function showWelcomeBanner(isReturning){
   document.getElementById('welcome-banner').style.display = 'block';
 }
 
+var cachedVoices = [];
+function cacheVoices(){ if('speechSynthesis' in window){ cachedVoices = window.speechSynthesis.getVoices() || []; } }
+if('speechSynthesis' in window){
+  cacheVoices();
+  window.speechSynthesis.onvoiceschanged = cacheVoices;
+}
+var MALE_VOICE_HINTS = ['male','david','daniel','alex','fred','george','james','mark','tom','guy','ryan','matthew','majed','hamed','tarik','yousef','ahmed'];
+var FEMALE_VOICE_HINTS = ['female','zira','samantha','victoria','susan','karen','moira','tessa','salli','joanna','amira','laila','hoda','fiona','veena','kyoko'];
+function pickMaleVoice(voiceLang){
+  if(!cachedVoices.length) return null;
+  var langPrefix = voiceLang.split('-')[0].toLowerCase();
+  var candidates = cachedVoices.filter(function(v){ return v.lang && v.lang.toLowerCase().indexOf(langPrefix) === 0; });
+  if(!candidates.length) return null;
+  var maleMatch = candidates.filter(function(v){
+    var n = v.name.toLowerCase();
+    return MALE_VOICE_HINTS.some(function(h){ return n.indexOf(h) !== -1; });
+  })[0];
+  if(maleMatch) return maleMatch;
+  var nonFemale = candidates.filter(function(v){
+    var n = v.name.toLowerCase();
+    return !FEMALE_VOICE_HINTS.some(function(h){ return n.indexOf(h) !== -1; });
+  })[0];
+  return nonFemale || null;
+}
+
 function speakResult(name, correctCount, total, pct, lang){
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   var text, voiceLang;
+  var praise = (pct >= 50);
   if(lang === 'ar'){
-    text = 'أحسنت يا ' + name + '! لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.';
+    text = (praise ? ('أحسنت يا ' + name + '! ') : (name + '، ')) +
+      'لقد أجبتَ بشكل صحيح عن ' + correctCount + ' من ' + total + '، بنسبة ' + pct + ' بالمئة.' +
+      (praise ? '' : ' راجع الدرس وحاول مرة أخرى.');
     voiceLang = 'ar-SA';
   } else {
-    text = 'Well done, ' + name + '! You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.';
+    text = (praise ? ('Well done, ' + name + '! ') : (name + ', ')) +
+      'You scored ' + correctCount + ' out of ' + total + ', which is ' + pct + ' percent.' +
+      (praise ? '' : ' Review the lesson and try again.');
     voiceLang = 'en-US';
   }
   var utter = new SpeechSynthesisUtterance(text);
   utter.lang = voiceLang;
   utter.rate = 0.95;
+  var maleVoice = pickMaleVoice(voiceLang);
+  if(maleVoice){ utter.voice = maleVoice; }
   window.speechSynthesis.speak(utter);
 }
 
@@ -2346,7 +2378,11 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     if(els.scoreTitle){
       var titleText = '';
       if(name){
-        titleText = (lang === 'ar') ? ('أحسنت يا ' + name + '! 🌟') : ('Well done, ' + name + '! 🌟');
+        if(pct >= 50){
+          titleText = (lang === 'ar') ? ('أحسنت يا ' + name + '! 🌟') : ('Well done, ' + name + '! 🌟');
+        } else {
+          titleText = (lang === 'ar') ? ('واصل يا ' + name + '، بإمكانك تحسين نتيجتك.') : ('Keep going, ' + name + ' — you can improve your score.');
+        }
       }
       els.scoreTitle.textContent = titleText;
     }
