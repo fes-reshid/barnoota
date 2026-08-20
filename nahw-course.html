@@ -59,6 +59,14 @@
   .back-to-weeks-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
   .back-to-weeks-btn .btw-ar{ font-family:'Amiri', serif; }
   .back-to-weeks-btn .btw-en::after{ content:' ·'; opacity:.6; }
+  .back-home-pill{
+    position:absolute; top:10px; left:14px; z-index:21; direction:ltr;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:18px;
+    padding:6px 12px; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); text-decoration:none;
+    display:flex; align-items:center; transition:background .15s ease, transform .15s ease;
+  }
+  .back-home-pill:hover{ background:var(--parchment-deep); transform:scale(1.04); }
 
   .topbar-title{ display:flex; flex-direction:column; line-height:1.2; align-items:center; }
   .topbar-title .ar{ font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); color:var(--gold); }
@@ -354,6 +362,7 @@
 <body>
 
 <div class="topbar">
+  <a href="/" class="back-home-pill" id="back-home-pill">← Diin Islaam</a>
   <button class="back-to-weeks-btn" id="back-to-weeks-btn" style="display:none;">
     <span class="btw-en">☰ Weeks</span><span class="btw-ar">الأسابيع</span>
   </button>
@@ -578,6 +587,7 @@ document.querySelectorAll('.week-select-btn').forEach(function(btn){
     document.getElementById('week-select').style.display = 'none';
     document.getElementById('main-content').style.display = '';
     document.getElementById('back-to-weeks-btn').style.display = 'flex';
+    document.getElementById('back-home-pill').style.display = 'none';
     renderStep(targetStep);
   });
 });
@@ -586,6 +596,7 @@ document.getElementById('back-to-weeks-btn').addEventListener('click', function(
   playClickSound();
   document.getElementById('main-content').style.display = 'none';
   document.getElementById('back-to-weeks-btn').style.display = 'none';
+  document.getElementById('back-home-pill').style.display = 'flex';
   document.getElementById('week-select').style.display = 'block';
   window.scrollTo({top: 0, behavior: 'smooth'});
 });
