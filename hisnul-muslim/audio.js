@@ -6,8 +6,9 @@
 // the reciter merged two du'as into one file, or split one du'a across several,
 // the count diverges and EVERY du'a after that point plays the wrong audio.
 //
-// TRACK_COUNT_OVERRIDES corrects those spots. Use /audio-check.html to find them
-// by ear, then paste the exported table here.
+// TRACK_OVERRIDES pins specific du'as to specific tracks. Numbering resumes
+// sequentially from wherever an override ends, so one correction re-aligns
+// everything downstream. Use /audio-check.html to find them by ear.
 
 function audioUrl(num) {
   return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
@@ -18,16 +19,17 @@ var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
   return "https://everyayah.com/data/Alafasy_128kbps/003" + n + ".mp3";
 });
 
-// How many consecutive archive.org tracks a given du'a consumes.
+// Which track(s) a given du'a uses.
 //   key   "<chapterNum>:<duaIndex>"   (duaIndex is 0-based within the chapter)
-//   value number of tracks
-//     1  = default, never needs an entry
-//     2+ = the reciter split this du'a across that many files
-//     0  = this du'a shares the previous file (reciter read them together)
-var TRACK_COUNT_OVERRIDES = {
+//   value "n21"      -> that single track
+//         "n21-n25"  -> that inclusive range
+// Numbering continues sequentially from the end of the range. To make two
+// du'as share one file (the reciter read them together), give them both the
+// same track — e.g. "n40" and "n40".
+var TRACK_OVERRIDES = {
   // Chapter 15 (adhan adhkar): five sequential adhan-response du'as are shown
   // as one merged entry in the text, but the recording keeps all five files.
-  "15:0": 5
+  "15:0": "n21-n25"
 };
 
 function isTopicHeader(d) {
@@ -44,16 +46,48 @@ function isAlimranCombinedDua(d) {
   return d.arabic.normalize("NFC").indexOf("خَلْقِ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ وَٱخْتِلَٰفِ".normalize("NFC")) !== -1;
 }
 
+// Accepts "n3", "3", "n3-n4", "n3 - n4", "3-4". Returns {start, end} track
+// numbers, or null if it isn't parseable.
+function parseTrackRange(value) {
+  if (value == null) return null;
+  if (typeof value === "number") return null; // legacy count form, handled below
+  var s = String(value).trim().toLowerCase().replace(/\s+/g, "");
+  var m = s.match(/^n?(\d+)(?:[-–—]n?(\d+))?$/);
+  if (!m) return null;
+  var a = parseInt(m[1], 10);
+  var b = m[2] ? parseInt(m[2], 10) : a;
+  if (!isFinite(a) || a < 1) return null;
+  if (!isFinite(b) || b < a) b = a;
+  return { start: a, end: b };
+}
+
+function formatTrackRange(start, end) {
+  return end > start ? "n" + start + "-n" + end : "n" + start;
+}
+
 // Build the whole chapter -> {urls, duaRanges} map from a given override table.
 // Exposed so the calibration page can rebuild live as overrides are edited.
-function buildAudioMap(overrides, startTrack) {
+function buildAudioMap(overrides) {
   overrides = overrides || {};
   var map = {};
-  var track = typeof startTrack === "number" ? startTrack : 0;
+  var track = 0; // highest archive.org track number consumed so far
 
   CHAPTERS.forEach(function (c) {
     var urls = [];
     var duaRanges = [];
+    var trackToIdx = {}; // track number -> index in this chapter's urls
+
+    function useTracks(from, to) {
+      var idxs = [];
+      for (var n = from; n <= to; n++) {
+        if (trackToIdx[n] === undefined) {
+          trackToIdx[n] = urls.length;
+          urls.push(audioUrl(n));
+        }
+        idxs.push(trackToIdx[n]);
+      }
+      return { start: Math.min.apply(null, idxs), end: Math.max.apply(null, idxs) };
+    }
 
     c.duas.forEach(function (d, i) {
       if (isTopicHeader(d)) {
@@ -69,22 +103,31 @@ function buildAudioMap(overrides, startTrack) {
       }
 
       var key = c.num + ":" + i;
-      var count = Object.prototype.hasOwnProperty.call(overrides, key) ? overrides[key] : 1;
+      var raw = Object.prototype.hasOwnProperty.call(overrides, key) ? overrides[key] : null;
+      var rng = parseTrackRange(raw);
 
-      if (count <= 0) {
-        // Shares the previous track: point at whatever the last one was, and
-        // don't advance the counter.
-        var prev = urls.length - 1;
-        duaRanges.push(prev >= 0 ? { start: prev, end: prev } : null);
+      if (rng) {
+        duaRanges.push(useTracks(rng.start, rng.end));
+        // Resume sequential numbering after this range.
+        if (rng.end > track) track = rng.end;
         return;
       }
 
-      var startB = urls.length;
-      for (var k = 0; k < count; k++) {
-        track += 1;
-        urls.push(audioUrl(track));
+      // Legacy numeric form: a count of consecutive tracks.
+      if (typeof raw === "number") {
+        if (raw <= 0) {
+          var prev = urls.length - 1;
+          duaRanges.push(prev >= 0 ? { start: prev, end: prev } : null);
+          return;
+        }
+        var lo = track + 1;
+        track += raw;
+        duaRanges.push(useTracks(lo, track));
+        return;
       }
-      duaRanges.push({ start: startB, end: urls.length - 1 });
+
+      track += 1;
+      duaRanges.push(useTracks(track, track));
     });
 
     map[c.num] = { urls: urls, duaRanges: duaRanges };
@@ -93,7 +136,7 @@ function buildAudioMap(overrides, startTrack) {
   return map;
 }
 
-var audioByChapter = buildAudioMap(TRACK_COUNT_OVERRIDES);
+var audioByChapter = buildAudioMap(TRACK_OVERRIDES);
 
 function urlsForChapter(num) {
   return (audioByChapter[num] && audioByChapter[num].urls) || [];
