@@ -153,7 +153,8 @@ transition:background .15s ease, font-size .25s ease, transform .15s ease;
 }
 #account-name{ font-weight:700; }
 #logout-btn{
-  background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:5px 14px;
+  display:block; margin:30px auto 0;
+  background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:6px 16px;
   font-family:'Cormorant Garamond'; font-weight:700; font-size:calc(13px * var(--scale));
   color:var(--ink-brown); cursor:pointer; transition:background .15s ease, transform .15s ease;
 }
@@ -395,7 +396,6 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
 
 <div id="account-bar">
   <span id="account-name"></span>
-  <button id="logout-btn">Log Out</button>
 </div>
 
 <div id="quiz-screen" style="display:none;">
@@ -437,6 +437,8 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
     <button class="primary-reset" id="reset-btn">Retake Quiz</button>
   </div>
 </div>
+
+<button id="logout-btn" style="display:none;">Log Out</button>
 
   </div>
 </div>
@@ -1051,6 +1053,7 @@ function enterCourse(uid, email, data){
 
   document.getElementById('account-bar').style.display = 'flex';
   document.getElementById('account-name').textContent = studentName;
+  document.getElementById('logout-btn').style.display = '';
 
   getAudioCtx();
   unlockAudioElements();
