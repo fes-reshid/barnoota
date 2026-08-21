@@ -26,6 +26,8 @@
   .arabic{ font-family:'Amiri', serif; }
   .container{ max-width:var(--maxw); margin:0 auto; padding:0 20px; }
 
+  #bg-canvas{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; }
+
   header.site{
     position:sticky; top:0; z-index:50;
     background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
@@ -124,6 +126,8 @@
 </head>
 <body>
 
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
 <header class="site">
   <div class="nav-row">
     <a class="brand" href="/">
@@ -135,7 +139,6 @@
       <a href="quran.html">Qur'ān</a>
       <a href="hadeeth.html">Ḥadīth</a>
       <a href="arabic.html" class="active">Arabic</a>
-      <a href="seeraa.html">Seerah</a>
       <a href="apps.html">Apps</a>
     </nav>
   </div>
@@ -174,7 +177,6 @@
     <a href="quran.html">Qur'ān</a>
     <a href="hadeeth.html">Ḥadīth</a>
     <a href="arabic.html">Arabic</a>
-    <a href="seeraa.html">Seerah</a>
     <a href="apps.html">Apps</a>
     <a href="mailto:fesbackups@gmail.com">Contact</a>
   </div>
@@ -193,6 +195,112 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   mainNav.classList.remove('open');
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
+
+(function(){
+  var canvas = document.getElementById('bg-canvas');
+  if(!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var LETTERS = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر'];
+  var COLORS = ['169,124,37', '46,107,88', '28,43,70'];
+  var letters = [], particles = [];
+  var W = 0, H = 0;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function rand(min, max){ return min + Math.random() * (max - min); }
+
+  function resize(){
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  function makeLetters(){
+    letters = [];
+    var count = Math.max(12, Math.round((W * H) / 60000));
+    for(var i = 0; i < count; i++){
+      letters.push({
+        ch: LETTERS[Math.floor(Math.random() * LETTERS.length)],
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        x: rand(0, W), y: rand(0, H),
+        size: rand(34, 78),
+        vx: rand(-0.06, 0.06), vy: rand(-0.10, -0.03),
+        rot: rand(0, Math.PI * 2), vr: rand(-0.0015, 0.0015),
+        alpha: rand(0.05, 0.13)
+      });
+    }
+  }
+
+  function makeParticles(){
+    particles = [];
+    var count = Math.max(30, Math.round((W * H) / 16000));
+    for(var i = 0; i < count; i++){
+      particles.push({
+        x: rand(0, W), y: rand(0, H),
+        r: rand(0.8, 2.4),
+        vy: rand(-0.25, -0.08), vx: rand(-0.05, 0.05),
+        phase: rand(0, Math.PI * 2), speed: rand(0.01, 0.03),
+        baseAlpha: rand(0.15, 0.45)
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    letters.forEach(function(l){
+      l.x += l.vx; l.y += l.vy; l.rot += l.vr;
+      if(l.y < -100){ l.y = H + 100; l.x = rand(0, W); }
+      if(l.x < -100) l.x = W + 100;
+      if(l.x > W + 100) l.x = -100;
+      ctx.save();
+      ctx.translate(l.x, l.y);
+      ctx.rotate(l.rot);
+      ctx.font = l.size + 'px Amiri, serif';
+      ctx.fillStyle = 'rgba(' + l.color + ',' + l.alpha + ')';
+      ctx.fillText(l.ch, 0, 0);
+      ctx.restore();
+    });
+
+    particles.forEach(function(p){
+      p.phase += p.speed;
+      p.y += p.vy;
+      p.x += p.vx + Math.sin(p.phase) * 0.15;
+      if(p.y < -10){ p.y = H + 10; p.x = rand(0, W); }
+      var tw = (Math.sin(p.phase) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(46,107,88,' + (p.baseAlpha * (0.5 + 0.5 * tw)) + ')';
+      ctx.fill();
+    });
+  }
+
+  function loop(){
+    draw();
+    if(!reduceMotion) requestAnimationFrame(loop);
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      resize(); makeLetters(); makeParticles();
+    }, 200);
+  });
+
+  resize();
+  makeLetters();
+  makeParticles();
+  draw();
+  if(!reduceMotion) requestAnimationFrame(loop);
+})();
 </script>
 </body>
 </html>
