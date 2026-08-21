@@ -28,7 +28,8 @@
     download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
     checkCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>',
     loader: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
-    alertCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>'
+    alertCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>',
+    bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -749,9 +750,28 @@
   }
 
   // ---------------- Settings ----------------
+  function fmtClock(d) {
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+  }
+  function reminderStatusText() {
+    if (!window.RemindersAPI || !RemindersAPI.isEnabled()) return "Yaadachiisni zikrii cufaadha.";
+    var t = RemindersAPI.todaysTimes();
+    if (!t) return "Yaadachiisni banaadha.";
+    return "Banaadha — har'a Faajrii " + fmtClock(t.fajr) + ", Maghrib " + fmtClock(t.maghrib) + ".";
+  }
+  function reminderErrorText(reason) {
+    switch (reason) {
+      case "geo-denied": return "Eeyyama bakka argamuu hin arganne. Qindaa'ina browser/appii keessatti bakka argamuu (location) eeyyamaaf.";
+      case "geo-unsupported": return "Bilbilli ykn browserichi kun bakka argamuu hin deeggaru.";
+      case "notif-denied": return "Eeyyama beeksisaa hin argamne. Qindaa'ina browser/appii keessatti beeksisa (notification) appii kanaaf eeyyamaa.";
+      case "notif-unsupported": return "Browserichi kun beeksisa hin deeggaru.";
+      default: return "Wanti tokko dogongore. Irra deebi'aa yaalaa.";
+    }
+  }
   function pageSettings() {
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
+    var reminderOn = window.RemindersAPI && RemindersAPI.isEnabled();
     setTimeout(function () { bindSettingsEvents(theme); }, 0);
     return (
       '<header class="animate-fade-in">' +
@@ -788,6 +808,15 @@
           '<a class="mail-btn" href="mailto:fes900@yahoo.com?subject=Hisnul%20Muslim%20App%20Feedback">' + icon("mail", 16) + " fes900@yahoo.com</a>" +
           '<p style="margin-top:0.5rem;"><a href="privacy.html" target="_blank" rel="noreferrer" class="link">Imaammata Iccitii (Privacy Policy)</a></p>' +
         "</div>" +
+      "</section>" +
+
+      '<section class="glass settings-section">' +
+        '<div class="settings-section-head">' + icon("bell", 16) + "<span>Yaadachiisa Zikrii</span></div>" +
+        '<p class="page-sub" style="margin-top:0.5rem;">Bakka bilbilli keessan jiru irratti hundaa\'uudhaan, yeroo Faajrii (zikrii ganamaa) fi Maghrib (zikrii galgalaa) ga\'utti beeksisa siif erga.</p>' +
+        '<button class="font-reset" id="settings-reminder-toggle" data-on="' + (reminderOn ? "1" : "0") + '" style="margin-top:0.75rem;">' +
+          (reminderOn ? "Yaadachiisa dhaamsi" : "Yaadachiisa banii") +
+        "</button>" +
+        '<p class="reminder-status" id="settings-reminder-status" style="margin-top:0.5rem;color:var(--muted-foreground);font-size:0.85rem;">' + esc(reminderStatusText()) + "</p>" +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -834,6 +863,24 @@
       if (!confirm("Sagalee bilbila kee irratti ol kaa'ame hunda haquu barbaaddaa?")) return;
       await AudioCacheAPI.clearAll();
       alert("Sagaleen ol kaa'ame haqameera.");
+    });
+
+    var remBtn = document.getElementById("settings-reminder-toggle");
+    if (remBtn && window.RemindersAPI) remBtn.addEventListener("click", async function () {
+      var status = document.getElementById("settings-reminder-status");
+      if (remBtn.getAttribute("data-on") === "1") {
+        RemindersAPI.disable();
+        navigate(location.hash, true);
+        return;
+      }
+      remBtn.disabled = true;
+      var res = await RemindersAPI.enable();
+      remBtn.disabled = false;
+      if (res.ok) {
+        navigate(location.hash, true);
+      } else if (status) {
+        status.textContent = reminderErrorText(res.reason);
+      }
     });
   }
 
@@ -939,6 +986,11 @@
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
       navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+    navigator.serviceWorker.addEventListener("message", function (event) {
+      if (event.data && event.data.type === "navigate" && event.data.hash) {
+        location.hash = event.data.hash;
+      }
     });
   }
 })();
