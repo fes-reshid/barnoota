@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Audio alignment — Hisnul Muslim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f5ef; --card:#fff; --ink:#20242c; --muted:#6b6255;
+    --line:#e3ded1; --green:#1f6d4f; --gold:#b8863b; --red:#a33b3b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0 0 96px; background:var(--bg); color:var(--ink);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+  }
+  header{
+    position:sticky; top:0; z-index:10; background:var(--green); color:#fff;
+    padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.18);
+  }
+  header h1{ margin:0 0 4px; font-size:1.05rem; }
+  header p{ margin:0; font-size:.78rem; opacity:.9; line-height:1.45; }
+  .bar{
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    padding:10px 16px; background:var(--card); border-bottom:1px solid var(--line);
+    position:sticky; top:0; z-index:9;
+  }
+  .bar button{
+    font:inherit; font-size:.8rem; font-weight:600; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; padding:7px 12px;
+  }
+  .bar button.primary{ background:var(--green); color:#fff; border-color:var(--green); }
+  .bar .stat{ font-size:.78rem; color:var(--muted); margin-left:auto; }
+  .wrap{ max-width:760px; margin:0 auto; padding:12px; }
+
+  .row{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:12px; margin-bottom:10px;
+  }
+  .row.changed{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold); }
+  .row.playing{ border-color:var(--green); box-shadow:0 0 0 2px rgba(31,109,79,.25); }
+  .meta{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:.72rem; color:var(--muted); }
+  .chip{ background:#eee9dc; border-radius:20px; padding:2px 8px; font-weight:600; color:#4a4335; }
+  .chip.track{ background:#e3efe8; color:var(--green); font-family:ui-monospace,Menlo,Consolas,monospace; }
+  .chip.zero{ background:#f6e5e5; color:var(--red); }
+  .title{ font-size:.84rem; font-weight:600; margin:6px 0 2px; }
+  .ar{
+    font-family:Amiri,serif; direction:rtl; text-align:right;
+    font-size:1.35rem; line-height:2.1; margin:6px 0 10px; white-space:pre-line;
+  }
+  .om{ font-size:.82rem; color:var(--muted); line-height:1.5; margin:0 0 10px; }
+  .ctrls{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .play{
+    border:none; cursor:pointer; background:var(--gold); color:#fff;
+    width:40px; height:40px; border-radius:50%; font-size:1rem; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .play.playing{ background:var(--green); }
+  .count{ display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .count label{ font-size:.74rem; color:var(--muted); }
+  .count button{
+    width:30px; height:30px; border-radius:6px; border:1px solid var(--line);
+    background:#fff; font:inherit; font-weight:700; cursor:pointer; color:var(--ink);
+  }
+  .count .val{ min-width:26px; text-align:center; font-weight:700; font-size:.9rem; }
+  .hint{ font-size:.7rem; color:var(--muted); margin-top:8px; line-height:1.45; }
+
+  dialog{
+    border:none; border-radius:12px; padding:0; max-width:640px; width:92vw;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  dialog::backdrop{ background:rgba(0,0,0,.45); }
+  .dlg{ padding:16px; }
+  .dlg h2{ margin:0 0 8px; font-size:1rem; }
+  .dlg p{ font-size:.82rem; color:var(--muted); line-height:1.5; margin:0 0 10px; }
+  textarea{
+    width:100%; height:220px; font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:.78rem; border:1px solid var(--line); border-radius:8px; padding:10px;
+    resize:vertical; background:#fbfaf6; color:var(--ink);
+  }
+  .dlg .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+  .dlg .actions button{
+    font:inherit; font-size:.82rem; font-weight:600; cursor:pointer;
+    border-radius:8px; padding:8px 14px; border:1px solid var(--line); background:#fff;
+  }
+  .dlg .actions button.primary{ background:var(--green); color:#fff; border-color:var(--green); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Audio alignment check</h1>
+  <p>Play each du'a in order. While the audio matches the Arabic on screen, keep going. The moment it stops matching, fix the <strong>count</strong> on the du'a where the drift started, then carry on — everything after it re-numbers automatically.</p>
+</header>
+
+<div class="bar">
+  <button id="exportBtn" class="primary">Export corrections</button>
+  <button id="resetBtn">Reset all</button>
+  <span class="stat" id="stat"></span>
+</div>
+
+<div class="wrap" id="list"></div>
+
+<dialog id="exportDlg">
+  <div class="dlg">
+    <h2>Corrections</h2>
+    <p>Copy this and send it to Claude (or paste it into <code>audio.js</code>, replacing the existing <code>TRACK_COUNT_OVERRIDES</code> block).</p>
+    <textarea id="exportText" readonly></textarea>
+    <div class="actions">
+      <button id="copyBtn">Copy</button>
+      <button id="closeDlg" class="primary">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="data.js"></script>
+<script src="audio.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var STORE = "hisn:audioalign:v1";
+  var overrides = {};
+  try {
+    var raw = localStorage.getItem(STORE);
+    if (raw) overrides = JSON.parse(raw) || {};
+  } catch (e) { overrides = {}; }
+
+  // Seed from the defaults shipped in audio.js the first time through, so the
+  // known-good corrections aren't silently lost.
+  if (!Object.keys(overrides).length) {
+    overrides = JSON.parse(JSON.stringify(TRACK_COUNT_OVERRIDES));
+  }
+
+  var map = null;
+  var rows = [];        // flat list of {chapter, duaIndex, dua, key}
+  var audioEl = new Audio();
+  audioEl.preload = "none";
+  var playingKey = null;
+
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify(overrides)); } catch (e) {}
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function countFor(key) {
+    return Object.prototype.hasOwnProperty.call(overrides, key) ? overrides[key] : 1;
+  }
+
+  function rebuild() {
+    map = buildAudioMap(overrides);
+  }
+
+  function buildRows() {
+    rows = [];
+    CHAPTERS.forEach(function (c) {
+      c.duas.forEach(function (d, i) {
+        if (isTopicHeader(d)) return;
+        rows.push({ chapter: c, duaIndex: i, dua: d, key: c.num + ":" + i });
+      });
+    });
+  }
+
+  function urlsFor(row) {
+    var r = map[row.chapter.num] && map[row.chapter.num].duaRanges[row.duaIndex];
+    if (!r) return [];
+    return map[row.chapter.num].urls.slice(r.start, r.end + 1);
+  }
+
+  function trackLabel(row) {
+    var urls = urlsFor(row);
+    if (!urls.length) return "—";
+    var nums = urls.map(function (u) {
+      var m = u.match(/n(\d+)\.mp3/);
+      if (m) return "n" + m[1];
+      var a = u.match(/003(\d+)\.mp3/);
+      return a ? "3:" + a[1] : "?";
+    });
+    if (nums.length === 1) return nums[0];
+    return nums[0] + "–" + nums[nums.length - 1];
+  }
+
+  function render() {
+    rebuild();
+    var html = rows.map(function (row) {
+      var count = countFor(row.key);
+      var isDefault = count === 1;
+      var isAlimran = isAlimranCombinedDua(row.dua);
+      var cls = "row" + (isDefault ? "" : " changed") + (playingKey === row.key ? " playing" : "");
+      return '<div class="' + cls + '" data-key="' + row.key + '">' +
+        '<div class="meta">' +
+          '<span class="chip">ch ' + row.chapter.num + ' &middot; du\'a ' + (row.duaIndex + 1) + '</span>' +
+          '<span class="chip track' + (count === 0 ? " zero" : "") + '">' + trackLabel(row) + '</span>' +
+          (isAlimran ? '<span class="chip">separate source</span>' : '') +
+        '</div>' +
+        '<div class="title">' + esc(row.chapter.oromoTitle) + '</div>' +
+        '<div class="ar" lang="ar" dir="rtl">' + esc(row.dua.arabic) + '</div>' +
+        (row.dua.oromo ? '<p class="om">' + esc(row.dua.oromo) + '</p>' : '') +
+        '<div class="ctrls">' +
+          '<button class="play' + (playingKey === row.key ? " playing" : "") + '" data-play="' + row.key + '">' +
+            (playingKey === row.key ? "&#10073;&#10073;" : "&#9654;") +
+          '</button>' +
+          (isAlimran ? '<span class="hint" style="margin:0;">Fixed 11-ayah passage — not part of the sequential numbering.</span>' :
+          '<span class="count">' +
+            '<label>tracks</label>' +
+            '<button data-dec="' + row.key + '">&minus;</button>' +
+            '<span class="val">' + count + '</span>' +
+            '<button data-inc="' + row.key + '">+</button>' +
+          '</span>') +
+        '</div>' +
+        (count === 0 ? '<p class="hint">0 = shares the previous track (reciter read them together).</p>' : '') +
+      '</div>';
+    }).join("");
+    document.getElementById("list").innerHTML = html;
+
+    var changed = Object.keys(overrides).filter(function (k) { return overrides[k] !== 1; }).length;
+    document.getElementById("stat").textContent = rows.length + " du'as · " + changed + " correction" + (changed === 1 ? "" : "s");
+  }
+
+  function stopAudio() {
+    audioEl.pause();
+    playingKey = null;
+  }
+
+  function playRow(key) {
+    var row = rows.filter(function (r) { return r.key === key; })[0];
+    if (!row) return;
+    var urls = urlsFor(row);
+    if (!urls.length) return;
+
+    if (playingKey === key) { stopAudio(); render(); return; }
+
+    stopAudio();
+    var idx = 0;
+    function playAt(i) {
+      if (i >= urls.length) { stopAudio(); render(); return; }
+      audioEl.src = urls[i];
+      audioEl.play().catch(function () { stopAudio(); render(); });
+    }
+    audioEl.onended = function () { idx += 1; playAt(idx); };
+    audioEl.onerror = function () { stopAudio(); render(); };
+    playingKey = key;
+    playAt(0);
+    render();
+    var el = document.querySelector('[data-key="' + key + '"]');
+    if (el) el.scrollIntoView({ block: "nearest" });
+  }
+
+  function adjust(key, delta) {
+    var next = Math.max(0, Math.min(20, countFor(key) + delta));
+    if (next === 1) delete overrides[key];
+    else overrides[key] = next;
+    save();
+    render();
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-play],[data-inc],[data-dec]");
+    if (!t) return;
+    if (t.hasAttribute("data-play")) playRow(t.getAttribute("data-play"));
+    else if (t.hasAttribute("data-inc")) adjust(t.getAttribute("data-inc"), +1);
+    else if (t.hasAttribute("data-dec")) adjust(t.getAttribute("data-dec"), -1);
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (!confirm("Discard all corrections and start over?")) return;
+    overrides = JSON.parse(JSON.stringify(TRACK_COUNT_OVERRIDES));
+    save();
+    stopAudio();
+    render();
+  });
+
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    var keys = Object.keys(overrides).filter(function (k) { return overrides[k] !== 1; });
+    keys.sort(function (a, b) {
+      var pa = a.split(":").map(Number), pb = b.split(":").map(Number);
+      return pa[0] - pb[0] || pa[1] - pb[1];
+    });
+    var lines = keys.map(function (k) { return '  "' + k + '": ' + overrides[k]; });
+    var text = "var TRACK_COUNT_OVERRIDES = {\n" + lines.join(",\n") + "\n};";
+    document.getElementById("exportText").value = text;
+    document.getElementById("exportDlg").showModal();
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", function () {
+    var ta = document.getElementById("exportText");
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    if (navigator.clipboard) navigator.clipboard.writeText(ta.value).catch(function () {});
+    this.textContent = "Copied";
+    var self = this;
+    setTimeout(function () { self.textContent = "Copy"; }, 1500);
+  });
+
+  document.getElementById("closeDlg").addEventListener("click", function () {
+    document.getElementById("exportDlg").close();
+  });
+
+  buildRows();
+  render();
+})();
+</script>
+</body>
+</html>
