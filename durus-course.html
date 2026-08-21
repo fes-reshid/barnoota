@@ -120,6 +120,19 @@
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
   #account-name{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
 
+  @media (max-width:480px){
+    .topbar-title{ display:none; }
+    .lang-toggle{
+      display:grid; grid-template-columns:1fr auto auto;
+      grid-template-areas:"name en ar" "logout logout logout";
+      width:100%; row-gap:8px; margin-top:40px;
+    }
+    #account-name{ grid-area:name; justify-self:start; align-self:center; }
+    #lang-en-btn{ grid-area:en; }
+    #lang-ar-btn{ grid-area:ar; }
+    #logout-btn{ grid-area:logout; justify-self:center; }
+  }
+
   /* ===== Auth gate (enroll / login) ===== */
   #auth-gate{ display:flex; justify-content:center; padding:40px 10px; }
   .name-gate-box{
