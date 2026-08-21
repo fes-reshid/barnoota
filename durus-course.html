@@ -112,8 +112,7 @@
   .topbar-title .en{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); color:var(--ink-navy); }
   .lang-toggle{
     display:grid; grid-template-columns:1fr auto auto;
-    grid-template-areas:"name en ar" "logout logout logout";
-    width:100%; max-width:400px; margin:2px auto 0; row-gap:8px; direction:ltr;
+    width:100%; max-width:400px; margin:2px auto 0; direction:ltr;
   }
   .lang-pill{
     background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px;
@@ -122,10 +121,7 @@
   }
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
-  #account-name{ grid-area:name; justify-self:start; align-self:center; font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
-  #lang-en-btn{ grid-area:en; }
-  #lang-ar-btn{ grid-area:ar; }
-  #logout-btn{ grid-area:logout; justify-self:center; }
+  #account-name{ justify-self:start; align-self:center; font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
 
   @media (max-width:480px){
     .topbar-title{ display:none; }
@@ -171,8 +167,9 @@
   #auth-loading p{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0; }
 
   #logout-btn{
-    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 13px;
-    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(12px * var(--scale));
+    display:block; margin:30px auto 0;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:6px 16px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(13px * var(--scale));
     color:var(--ink-brown); cursor:pointer; transition:background .15s ease, transform .15s ease;
   }
   #logout-btn:hover{ background:var(--parchment-deep); transform:scale(1.04); }
@@ -452,7 +449,7 @@
   body.rtl-active #account-name, body.rtl-active #logout-btn{ font-family:'Amiri', serif; }
 
   @media print{
-    header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, .no-print{ display:none !important; }
+    header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, #logout-btn, .no-print{ display:none !important; }
     body{ background:#fff; }
     .wrap{ max-width:none; padding:0; }
     .cert-card{ box-shadow:none; }
@@ -495,7 +492,6 @@
     <span id="account-name" style="display:none;"></span>
     <button class="lang-pill" id="lang-en-btn">English</button>
     <button class="lang-pill" id="lang-ar-btn">العربية</button>
-    <button id="logout-btn" style="display:none;">Log Out</button>
   </div>
 </div>
 
@@ -577,6 +573,8 @@
     </div>
 
   </div>
+
+  <button id="logout-btn" style="display:none;">Log Out</button>
 
   <footer class="foot">الدروس المهمة لعامة الأمة · Durūs al-Muhimmah</footer>
 </div>
