@@ -110,7 +110,11 @@
   .topbar-title{ display:flex; flex-direction:column; line-height:1.25; align-items:center; }
   .topbar-title .ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); }
   .topbar-title .en{ font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); color:var(--ink-navy); }
-  .lang-toggle{ display:flex; align-items:center; gap:8px; flex-shrink:0; justify-content:center; direction:ltr; margin-top:2px; }
+  .lang-toggle{
+    display:grid; grid-template-columns:1fr auto auto;
+    grid-template-areas:"name en ar" "logout logout logout";
+    width:100%; max-width:400px; margin:2px auto 0; row-gap:8px; direction:ltr;
+  }
   .lang-pill{
     background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px;
     padding:5px 13px; font-size:calc(12px * var(--scale)); font-family:'Cormorant Garamond', serif; font-weight:700;
@@ -118,19 +122,14 @@
   }
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
-  #account-name{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
+  #account-name{ grid-area:name; justify-self:start; align-self:center; font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
+  #lang-en-btn{ grid-area:en; }
+  #lang-ar-btn{ grid-area:ar; }
+  #logout-btn{ grid-area:logout; justify-self:center; }
 
   @media (max-width:480px){
     .topbar-title{ display:none; }
-    .lang-toggle{
-      display:grid; grid-template-columns:1fr auto auto;
-      grid-template-areas:"name en ar" "logout logout logout";
-      width:100%; row-gap:8px; margin-top:40px;
-    }
-    #account-name{ grid-area:name; justify-self:start; align-self:center; }
-    #lang-en-btn{ grid-area:en; }
-    #lang-ar-btn{ grid-area:ar; }
-    #logout-btn{ grid-area:logout; justify-self:center; }
+    .lang-toggle{ margin-top:40px; }
   }
 
   /* ===== Auth gate (enroll / login) ===== */
