@@ -1,4 +1,4 @@
-const CACHE_NAME = "hisnul-muslim-v3";
+const CACHE_NAME = "hisnul-muslim-v4";
 const AUDIO_CACHE_NAME = "hisnul-audio-v1";
 const ASSETS = [
   "./",
@@ -8,6 +8,8 @@ const ASSETS = [
   "./data.js",
   "./audio.js",
   "./audiocache.js",
+  "./prayertimes.js",
+  "./reminders.js",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-256.png",
@@ -71,6 +73,29 @@ self.addEventListener("fetch", function (event) {
       }).catch(function () {
         if (event.request.mode === "navigate") return caches.match("./index.html");
       });
+    })
+  );
+});
+
+// Reminder notifications (see reminders.js) carry the chapter to jump to in
+// notification.data.url. Focus an already-open tab and tell it to navigate
+// there via postMessage (keeps it a same-page SPA hash change), or open a
+// fresh tab at that URL if nothing is open.
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+  var hash = (event.notification.data && event.notification.data.url) || "#/";
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var client = list[i];
+        if ("focus" in client) {
+          client.postMessage({ type: "navigate", hash: hash });
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(new URL("./", self.registration.scope).href + hash);
+      }
     })
   );
 });
