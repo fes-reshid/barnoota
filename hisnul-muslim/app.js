@@ -26,9 +26,6 @@
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
     download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
-    checkCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8.5 12.5 2.5 2.5 5-5"/></svg>',
-    loader: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/></svg>',
-    alertCircle: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>',
     bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
   };
   function icon(name, size, extra) {
@@ -286,7 +283,6 @@
           '<div class="dua-idx">' + n + "</div>" +
           '<div class="dua-actions">' +
             '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" +
-            '<button class="dl-btn" data-action="download-dua" aria-label="Bilbila kee irratti ol kaa\'i">' + icon("download2", 16) + "</button>" +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
           "</div>" +
         "</div>" +
@@ -326,11 +322,6 @@
         var btn = e.currentTarget;
         shareText(btn.getAttribute("data-title"), btn.getAttribute("data-arabic") + "\n\n" + btn.getAttribute("data-oromo") + "\n\n— Hisnul Muslim");
       });
-
-      var duaIdx = parseInt(card.getAttribute("data-dua-idx"), 10);
-      var duaRange = rangeForDua(chapter.num, duaIdx);
-      var duaUrls = duaRange ? urlsForChapter(chapter.num).slice(duaRange.start, duaRange.end + 1) : [];
-      bindDownloadButton(card.querySelector('[data-action="download-dua"]'), duaUrls);
     });
 
     var urls = urlsForChapter(chapter.num);
@@ -380,7 +371,7 @@
       var errEl = card.querySelector(".audio-error");
       if (st.error && inRange) {
         errEl.hidden = false;
-        errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi, ykn gadi buusii kaa'i (⬇) yeroo booda dhaggeeffachuuf.";
+        errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi.";
       } else {
         errEl.hidden = true;
       }
@@ -483,54 +474,6 @@
     };
 
     return state;
-  }
-
-  // ---------------- Offline audio download ----------------
-  function setDownloadBtnState(btn, s) {
-    btn.setAttribute("data-dl-state", s);
-    btn.classList.toggle("spinning", s === "downloading" || s === "checking");
-    if (s === "downloading" || s === "checking") btn.innerHTML = icon("loader", 16);
-    else if (s === "done") btn.innerHTML = icon("checkCircle", 16);
-    else if (s === "error") btn.innerHTML = icon("alertCircle", 16);
-    else btn.innerHTML = icon("download2", 16);
-  }
-
-  function bindDownloadButton(btn, urls) {
-    if (!btn) return;
-    if (!AudioCacheAPI.supported() || !urls || !urls.length) { btn.style.display = "none"; return; }
-
-    setDownloadBtnState(btn, "checking");
-    AudioCacheAPI.areAllCached(urls).then(function (all) {
-      setDownloadBtnState(btn, all ? "done" : "idle");
-    });
-
-    btn.addEventListener("click", async function () {
-      var cur = btn.getAttribute("data-dl-state");
-      if (cur === "downloading" || cur === "checking") return;
-
-      if (cur === "done") {
-        var wantsRemove = confirm("Sagalee kana bilbila kee irraa haquu barbaaddaa?");
-        if (wantsRemove) {
-          await AudioCacheAPI.remove(urls);
-          setDownloadBtnState(btn, "idle");
-        }
-        return;
-      }
-
-      var wantsDownload = confirm(
-        "Sagalee kana (" + urls.length + (urls.length === 1 ? " faayilii" : " faayiloota") + ") " +
-        "bilbila kee irratti ol kaa'uu barbaaddaa? Kunis booda interneeta malee dhaggeeffachuu si dandeessisa."
-      );
-      if (!wantsDownload) return;
-
-      setDownloadBtnState(btn, "downloading");
-      try {
-        var result = await AudioCacheAPI.download(urls);
-        setDownloadBtnState(btn, result.failed.length ? "error" : "done");
-      } catch (e) {
-        setDownloadBtnState(btn, "error");
-      }
-    });
   }
 
   function shareText(title, text) {
@@ -666,7 +609,6 @@
           '<div class="sagalee-row">' +
             '<button type="button" class="sagalee-play" data-action="sagalee-toggle" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 20) + "</button>" +
             '<span class="sagalee-text"><span class="om">' + esc(c.oromoTitle) + '</span><span class="ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</span></span>" +
-            '<button class="dl-btn" data-action="download-chapter" data-num="' + c.num + '" aria-label="Bilbila kee irratti ol kaa\'i"></button>' +
             '<span class="sagalee-num">#' + String(c.num).padStart(3, "0") + "</span>" +
           "</div>" +
           '<div class="seek-wrap" hidden></div>' +
@@ -710,11 +652,6 @@
         sagaleeState.play(0);
       });
     });
-
-    document.querySelectorAll('[data-action="download-chapter"]').forEach(function (btn) {
-      var num = parseInt(btn.getAttribute("data-num"), 10);
-      bindDownloadButton(btn, urlsForChapter(num));
-    });
   }
   function updateSagaleeUI(num, st) {
     document.querySelectorAll(".sagalee-item").forEach(function (li) {
@@ -745,7 +682,7 @@
         seekWrap.hidden = true; seekWrap.innerHTML = "";
       }
       errEl.hidden = !st.error;
-      if (st.error) errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi, ykn gadi buusii kaa'i (⬇) yeroo booda dhaggeeffachuuf.";
+      if (st.error) errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi.";
     });
   }
 
@@ -821,7 +758,7 @@
 
       '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon("download2", 16) + "<span>Sagalee ol kaa\'ame</span></div>" +
-        '<p class="page-sub" style="margin-top:0.5rem;">Du\'aa\'ii ⬇ tuqxee ol kaayye interneeta malees ni dhaggeeffatama.</p>' +
+        '<p class="page-sub" style="margin-top:0.5rem;">Sagaleen dhageeffattan hundi ofumaan bilbila kee irratti ol kaa\'ama, kanaafuu booda interneeta malees ni dhaggeeffatama.</p>' +
         '<button class="font-reset" id="settings-clear-audio" style="margin-top:0.75rem;">Sagalee ol kaa\'ame hunda haqi</button>' +
       "</section>" +
 

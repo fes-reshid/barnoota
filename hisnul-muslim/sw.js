@@ -17,9 +17,35 @@ const ASSETS = [
 ];
 
 // Hosts the app streams du'a audio from. Requests to these are served from
-// the audio cache when present (populated only by an explicit, user-confirmed
-// download — see audiocache.js), otherwise passed straight to the network.
+// the audio cache when present; otherwise played straight from the network
+// and, in the background, saved to the audio cache so the same track plays
+// offline next time — no separate "download" step needed.
 const AUDIO_HOSTS = ["archive.org", "everyayah.com"];
+
+// Fetches a full (non-Range) copy of an audio URL and stores it in the audio
+// cache, if it isn't there already. Used in the background after a live
+// play, never blocks playback. Deliberately fetches the plain URL rather
+// than reusing the triggering request: <audio> elements often request with
+// a "Range" header, and the Cache Storage API refuses to store 206 Partial
+// Content responses — fetching the URL fresh always gets the full file.
+function cacheAudioFile(cache, url) {
+  return cache.match(url).then(function (already) {
+    if (already) return;
+    return fetch(url, { mode: "cors" }).then(function (res) {
+      if (res && res.ok) return res;
+      throw new Error("bad status");
+    }).catch(function () {
+      // No CORS headers from the host — fine for playback, and still
+      // cacheable as an opaque response.
+      return fetch(url, { mode: "no-cors" });
+    }).then(function (res) {
+      return cache.put(url, res);
+    }).catch(function () {
+      // Offline, blocked, or genuinely unavailable — leave it uncached;
+      // it'll just try again the next time this track plays.
+    });
+  });
+}
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
@@ -50,7 +76,9 @@ self.addEventListener("fetch", function (event) {
     event.respondWith(
       caches.open(AUDIO_CACHE_NAME).then(function (cache) {
         return cache.match(event.request).then(function (cached) {
-          return cached || fetch(event.request);
+          if (cached) return cached;
+          event.waitUntil(cacheAudioFile(cache, event.request.url));
+          return fetch(event.request);
         });
       })
     );
