@@ -594,7 +594,14 @@
       if (hasNext) { state.repeatsLeft = 1; advance(); }
       else { state.playing = false; state.loading = false; state.error = true; emit(); }
     });
-    audioEl.addEventListener("playing", function () { state.loading = false; state.playing = true; emit(); });
+    audioEl.addEventListener("playing", function () {
+      // Real playback starting is the one signal that's never ambiguous:
+      // clear a stale error left over from an earlier track in this same
+      // session (advance() moving on to try the next track doesn't reset
+      // it, so without this an error banner from one bad file could keep
+      // showing even after a later track started playing fine).
+      state.loading = false; state.playing = true; state.error = false; emit();
+    });
     audioEl.addEventListener("pause", function () { state.playing = false; emit(); });
     audioEl.addEventListener("loadedmetadata", function () { state.duration = audioEl.duration || 0; emit(); });
     audioEl.addEventListener("timeupdate", function () {
