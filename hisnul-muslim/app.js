@@ -1094,5 +1094,16 @@
         location.hash = event.data.hash;
       }
     });
+    // A new service worker taking over (after a deploy) doesn't retroactively
+    // update the JS already running in this tab — someone who leaves the app
+    // open across a deploy stays on old code indefinitely, silently drifting
+    // out of sync with a fresh visit until they happen to fully reload.
+    // Reload once, automatically, the moment the new worker takes control.
+    var refreshingForNewWorker = false;
+    navigator.serviceWorker.addEventListener("controllerchange", function () {
+      if (refreshingForNewWorker) return;
+      refreshingForNewWorker = true;
+      location.reload();
+    });
   }
 })();
