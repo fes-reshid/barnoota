@@ -71,6 +71,13 @@
     font-size:1.35rem; line-height:2.1; margin:6px 0 10px; white-space:pre-line;
   }
   .om{ font-size:.82rem; color:var(--muted); line-height:1.5; margin:0 0 10px; }
+  .ayah-open, .ayah-close{ color:var(--gold); font-size:1.1em; }
+  .ayah-end{ color:var(--gold); margin:0 2px; }
+  .bismillah{ display:block; color:var(--gold); font-size:.7em; opacity:.85; margin-top:.6em; }
+  .ar .ayah-open + .bismillah{ margin-top:0; }
+  .surah-block + .surah-block{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+  .surah-block .ar{ margin-bottom:4px; }
+  .surah-om{ margin:0 0 10px; }
   .ctrls{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .play{
     border:none; cursor:pointer; background:var(--gold); color:#fff;
@@ -174,6 +181,43 @@
     return Object.prototype.hasOwnProperty.call(overrides, key);
   }
 
+  // Mirrors app.js's ayah-ornament rendering, so this looks the same as
+  // what's shipping while you're checking it against the audio.
+  var BISMILLAH = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+  function isQuranicAyat(arabic) { return arabic.indexOf("ٱ") !== -1; }
+  function countBismillah(arabic) {
+    var n = 0;
+    arabic.split(/\n\n+/).forEach(function (v) { if (v.trim() === BISMILLAH) n++; });
+    return n;
+  }
+  function renderAyatBlock(verses) {
+    var body = verses.map(function (v) {
+      if (v === BISMILLAH) return '<span class="bismillah">' + esc(v) + "</span>";
+      return esc(v) + ' <span class="ayah-end" aria-hidden="true">&#9733;</span>';
+    }).join(" ");
+    return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
+  }
+  function renderArabicText(arabic) {
+    if (!isQuranicAyat(arabic)) return esc(arabic);
+    var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    return renderAyatBlock(verses);
+  }
+  function renderMultiSurah(arabic, oromo) {
+    var segs = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var arGroups = [];
+    segs.forEach(function (v) {
+      if (v === BISMILLAH || !arGroups.length) arGroups.push([]);
+      arGroups[arGroups.length - 1].push(v);
+    });
+    var omGroups = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    return arGroups.map(function (group, i) {
+      return '<div class="surah-block">' +
+        '<div class="ar" lang="ar" dir="rtl">' + renderAyatBlock(group) + "</div>" +
+        (omGroups[i] ? '<p class="om surah-om">' + esc(omGroups[i]) + "</p>" : "") +
+      "</div>";
+    }).join("");
+  }
+
   function rebuild() {
     map = buildAudioMap(overrides);
   }
@@ -255,8 +299,11 @@
           trackControl +
         '</div>' +
         '<div class="title">' + esc(row.chapter.oromoTitle) + '</div>' +
-        '<div class="ar" lang="ar" dir="rtl">' + esc(row.dua.arabic) + '</div>' +
-        (row.dua.oromo ? '<p class="om">' + esc(row.dua.oromo) + '</p>' : '') +
+        (countBismillah(row.dua.arabic) > 1 ?
+          renderMultiSurah(row.dua.arabic, row.dua.oromo || "") :
+          '<div class="ar" lang="ar" dir="rtl">' + renderArabicText(row.dua.arabic) + '</div>' +
+          (row.dua.oromo ? '<p class="om">' + esc(row.dua.oromo) + '</p>' : '')
+        ) +
         '<div class="ctrls">' +
           (unassigned ? "" :
           '<button class="play' + (playingKey === row.key ? " playing" : "") + '" data-play="' + row.key + '">' +

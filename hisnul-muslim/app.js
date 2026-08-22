@@ -287,17 +287,45 @@
     return arabic.indexOf("ٱ") !== -1;
   }
   var BISMILLAH = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-  function renderArabicText(arabic) {
-    if (!isQuranicAyat(arabic)) return esc(arabic);
-    var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+  function countBismillah(arabic) {
+    var n = 0;
+    arabic.split(/\n\n+/).forEach(function (v) { if (v.trim() === BISMILLAH) n++; });
+    return n;
+  }
+  // Wraps one surah's (or one standalone passage's) ayat in ornate brackets,
+  // with a small star after every verse except Bismillah, which reads as a
+  // heading rather than a numbered ayah.
+  function renderAyatBlock(verses) {
     var body = verses.map(function (v) {
-      // Bismillah introduces a surah rather than being one of its numbered
-      // verses, so it gets its own heading-like treatment instead of an
-      // end-of-ayah mark.
       if (v === BISMILLAH) return '<span class="bismillah">' + esc(v) + "</span>";
       return esc(v) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
     }).join(" ");
     return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
+  }
+  function renderArabicText(arabic) {
+    if (!isQuranicAyat(arabic)) return esc(arabic);
+    var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    return renderAyatBlock(verses);
+  }
+  // Several short surahs bundled into one du'a (e.g. the three Quls): each
+  // gets its own bracket pair, with its Oromo translation directly under it
+  // rather than one combined translation at the very end. Relies on the
+  // data pairing them up 1:1 — one Bismillah-led group in the Arabic per
+  // blank-line-separated paragraph in the Oromo.
+  function renderMultiSurah(arabic, oromo) {
+    var segs = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var arGroups = [];
+    segs.forEach(function (v) {
+      if (v === BISMILLAH || !arGroups.length) arGroups.push([]);
+      arGroups[arGroups.length - 1].push(v);
+    });
+    var omGroups = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    return arGroups.map(function (group, i) {
+      return '<div class="surah-block">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderAyatBlock(group) + "</p>" +
+        (omGroups[i] ? '<p class="dua-oromo surah-oromo">' + esc(omGroups[i]) + "</p>" : "") +
+      "</div>";
+    }).join("");
   }
 
   function duaCardHTML(chapter, d, n, i, hasAudio) {
@@ -312,8 +340,11 @@
         "</div>" +
         '<div class="seek-wrap" hidden></div>' +
         '<p class="audio-error" hidden></p>' +
-        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
-        (d.oromo ? '<p class="dua-oromo">' + esc(d.oromo) + "</p>" : "") +
+        (countBismillah(d.arabic) > 1 ?
+          renderMultiSurah(d.arabic, d.oromo || "") :
+          '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
+          (d.oromo ? '<p class="dua-oromo">' + esc(d.oromo) + "</p>" : "")
+        ) +
         '<div class="counter-row">' +
           '<span class="counter-label">Lakkooftuu</span>' +
           '<div class="counter-controls">' +
