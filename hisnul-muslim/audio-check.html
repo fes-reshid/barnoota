@@ -57,6 +57,9 @@
   input.track-input:focus{ outline:none; border-color:var(--green); background:#fff; }
   input.track-input.pinned{ background:#f6eddb; color:#8a6414; border-color:#dcc188; }
   input.track-input.bad{ background:#f6e5e5; color:var(--red); border-color:var(--red); }
+  input.track-input.unassigned{ background:#f6e5e5; color:var(--red); border:1px dashed var(--red); font-weight:600; }
+  input.track-input.unassigned::placeholder{ color:var(--red); opacity:.65; font-weight:400; }
+  .row.unassigned{ border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
   .clearpin{
     border:none; background:none; cursor:pointer; color:var(--muted);
     font-size:.95rem; line-height:1; padding:2px 4px;
@@ -222,13 +225,21 @@
     var html = rows.map(function (row) {
       var pinned = isPinned(row.key);
       var isAlimran = isAlimranCombinedDua(row.dua);
-      var cls = "row" + (pinned ? " changed" : "") + (playingKey === row.key ? " playing" : "");
+      var unassigned = overrides[row.key] === "none";
+      var cls = "row" + (pinned ? " changed" : "") + (unassigned ? " unassigned" : "") + (playingKey === row.key ? " playing" : "");
       var label = trackLabel(row);
 
       var trackControl;
       if (isAlimran) {
         trackControl = '<span class="chip track">' + esc(label) + '</span>' +
           '<span class="chip">separate source</span>';
+      } else if (unassigned) {
+        trackControl =
+          '<input class="track-input unassigned" type="text" ' +
+            'inputmode="text" autocomplete="off" spellcheck="false" ' +
+            'value="" placeholder="type track…" data-track="' + row.key + '" ' +
+            'aria-label="Track for chapter ' + row.chapter.num + ' du\'a ' + (row.duaIndex + 1) + '">' +
+          '<span class="chip zero">no audio yet</span>';
       } else {
         trackControl =
           '<input class="track-input' + (pinned ? " pinned" : "") + '" type="text" ' +
@@ -247,10 +258,12 @@
         '<div class="ar" lang="ar" dir="rtl">' + esc(row.dua.arabic) + '</div>' +
         (row.dua.oromo ? '<p class="om">' + esc(row.dua.oromo) + '</p>' : '') +
         '<div class="ctrls">' +
+          (unassigned ? "" :
           '<button class="play' + (playingKey === row.key ? " playing" : "") + '" data-play="' + row.key + '">' +
             (playingKey === row.key ? "&#10073;&#10073;" : "&#9654;") +
-          '</button>' +
-          (isAlimran ? '<span class="hint" style="margin:0;">Fixed 11-ayah passage — not part of the sequential numbering.</span>' :
+          '</button>') +
+          (unassigned ? '<span class="hint" style="margin:0;">No recording is linked yet. Play the du\'as just before and after this one — when you find the gap between them where this belongs, type its track number above.</span>' :
+          isAlimran ? '<span class="hint" style="margin:0;">Fixed 11-ayah passage — not part of the sequential numbering.</span>' :
           '<span class="count">' +
             '<label>tracks</label>' +
             '<button data-dec="' + row.key + '">&minus;</button>' +
