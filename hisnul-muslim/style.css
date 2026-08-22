@@ -224,16 +224,6 @@ input { font-family: inherit; }
 .play-btn.playing { transform: scale(1.05); }
 .play-btn:hover { color: var(--primary-foreground) !important; }
 
-.dl-btn {
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  color: var(--muted-foreground); transition: color .15s ease;
-}
-.dl-btn:hover { color: var(--gold); }
-.dl-btn[data-dl-state="done"] { color: var(--accent, #2e6b58); }
-.dl-btn[data-dl-state="error"] { color: var(--destructive); }
-.dl-btn.spinning svg { animation: spin 1s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
 .audio-error {
   margin-top: 0.75rem; padding: 0.6rem 0.75rem; border-radius: var(--radius-md);
   background: color-mix(in oklab, var(--destructive) 12%, transparent);
@@ -257,6 +247,12 @@ input { font-family: inherit; }
 .dua-arabic {
   margin-top: 1rem; white-space: pre-line; line-height: 2.3; color: var(--foreground);
   font-size: calc(1.55rem * var(--reading-scale));
+}
+.ayah-open, .ayah-close {
+  color: var(--gold); font-size: 1.15em; vertical-align: -0.05em;
+}
+.ayah-end {
+  display: inline-flex; color: var(--gold); margin: 0 0.15em; vertical-align: 0.05em;
 }
 .dua-oromo {
   margin-top: 1rem; white-space: pre-line; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent);

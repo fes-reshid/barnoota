@@ -10,13 +10,26 @@
 // sequentially from wherever an override ends, so one correction re-aligns
 // everything downstream. Use /audio-check.html to find them by ear.
 
+// Most tracks are self-hosted on a GitHub Release for faster loading than
+// streaming every file from archive.org directly. A handful of tracks
+// weren't included in that release (upload gaps) — those still stream from
+// archive.org, same as before. If the release is ever completed, just
+// empty out MISSING_FROM_RELEASE.
+var GITHUB_AUDIO_BASE = "https://github.com/fes-reshid/barnoota/releases/download/audio-v1/";
+var MISSING_FROM_RELEASE = [71, 95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
+var MISSING_FROM_RELEASE_SET = {};
+MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
+
 function audioUrl(num) {
-  return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
+  if (MISSING_FROM_RELEASE_SET[num]) {
+    return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
+  }
+  return GITHUB_AUDIO_BASE + "n" + num + ".mp3";
 }
 
 var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
   var n = 190 + i;
-  return "https://everyayah.com/data/Alafasy_128kbps/003" + n + ".mp3";
+  return GITHUB_AUDIO_BASE + "ayah-" + n + ".mp3";
 });
 
 // Which track(s) a given du'a uses.
@@ -29,7 +42,11 @@ var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
 var TRACK_OVERRIDES = {
   // Chapter 15 (adhan adhkar): five sequential adhan-response du'as are shown
   // as one merged entry in the text, but the recording keeps all five files.
-  "15:0": "n21-n25"
+  "15:0": "n21-n25",
+  // Chapter 25 du'a 5 (the three Quls, Al-Ikhlas/Al-Falaq/An-Nas) was added
+  // to the text from the reference PDF but isn't in the existing archive.org
+  // recording — no track to point it at, so it plays nothing for now.
+  "25:4": "none"
 };
 
 function isTopicHeader(d) {
@@ -104,6 +121,15 @@ function buildAudioMap(overrides) {
 
       var key = c.num + ":" + i;
       var raw = Object.prototype.hasOwnProperty.call(overrides, key) ? overrides[key] : null;
+
+      if (raw === "none") {
+        // No recording exists for this du'a yet (text added after the
+        // narration was tracked) — skip it without consuming a track
+        // number, so everything after it keeps its calibrated alignment.
+        duaRanges.push(null);
+        return;
+      }
+
       var rng = parseTrackRange(raw);
 
       if (rng) {
