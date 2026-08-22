@@ -10,13 +10,26 @@
 // sequentially from wherever an override ends, so one correction re-aligns
 // everything downstream. Use /audio-check.html to find them by ear.
 
+// Most tracks are self-hosted on a GitHub Release for faster loading than
+// streaming every file from archive.org directly. A handful of tracks
+// weren't included in that release (upload gaps) — those still stream from
+// archive.org, same as before. If the release is ever completed, just
+// empty out MISSING_FROM_RELEASE.
+var GITHUB_AUDIO_BASE = "https://github.com/fes-reshid/barnoota/releases/download/audio-v1/";
+var MISSING_FROM_RELEASE = [71, 95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
+var MISSING_FROM_RELEASE_SET = {};
+MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
+
 function audioUrl(num) {
-  return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
+  if (MISSING_FROM_RELEASE_SET[num]) {
+    return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
+  }
+  return GITHUB_AUDIO_BASE + "n" + num + ".mp3";
 }
 
 var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
   var n = 190 + i;
-  return "https://everyayah.com/data/Alafasy_128kbps/003" + n + ".mp3";
+  return GITHUB_AUDIO_BASE + "ayah-" + n + ".mp3";
 });
 
 // Which track(s) a given du'a uses.
