@@ -254,6 +254,11 @@ input { font-family: inherit; }
 .ayah-end {
   display: inline-flex; color: var(--gold); margin: 0 0.15em; vertical-align: 0.05em;
 }
+.bismillah {
+  display: block; color: var(--gold); font-size: 0.72em; line-height: 1.8;
+  margin-top: 0.75em; opacity: 0.85;
+}
+.ayah-open + .bismillah { margin-top: 0; }
 .dua-oromo {
   margin-top: 1rem; white-space: pre-line; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding-top: 1rem; line-height: 1.65; color: var(--muted-foreground);
