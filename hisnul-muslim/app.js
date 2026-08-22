@@ -26,7 +26,8 @@
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
     download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
-    bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+    bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+    ayahEnd: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M12 2l2.4 5.2L20 9l-4.8 3.4L17 18l-5-3.3L7 18l1.8-5.6L4 9l5.6-1.8z"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -249,7 +250,7 @@
         "</div>";
       }
       n += 1;
-      return duaCardHTML(chapter, d, n, i);
+      return duaCardHTML(chapter, d, n, i, !!rangeForDua(chapter.num, i));
     }).join("");
 
     setTimeout(function () { bindCategoryPageEvents(chapter); }, 0);
@@ -276,19 +277,37 @@
     );
   }
 
-  function duaCardHTML(chapter, d, n, i) {
+  // Quranic ayat (as opposed to hadith-phrased du'a text) are written with
+  // Uthmani orthography (alef wasla "ٱ") and one verse per paragraph — a
+  // convention only used for direct Qur'an quotations in this data (Ayat
+  // al-Kursi, the three Quls, the Al-Imran closing verses). Detecting that
+  // lets rendering add the traditional ornamental start/end-of-ayah marks
+  // without having to hand-flag every entry.
+  function isQuranicAyat(arabic) {
+    return arabic.indexOf("ٱ") !== -1;
+  }
+  function renderArabicText(arabic) {
+    if (!isQuranicAyat(arabic)) return esc(arabic);
+    var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var body = verses.map(function (v) {
+      return esc(v) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
+    }).join(" ");
+    return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
+  }
+
+  function duaCardHTML(chapter, d, n, i, hasAudio) {
     return (
       '<article class="glass dua-card animate-fade-in" data-dua-idx="' + i + '">' +
         '<div class="dua-card-top">' +
           '<div class="dua-idx">' + n + "</div>" +
           '<div class="dua-actions">' +
-            '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" +
+            (hasAudio ? '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" : "") +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
           "</div>" +
         "</div>" +
         '<div class="seek-wrap" hidden></div>' +
         '<p class="audio-error" hidden></p>' +
-        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + esc(d.arabic) + "</p>" +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
         (d.oromo ? '<p class="dua-oromo">' + esc(d.oromo) + "</p>" : "") +
         '<div class="counter-row">' +
           '<span class="counter-label">Lakkooftuu</span>' +
@@ -332,7 +351,8 @@
     document.querySelectorAll('[data-action="play-dua"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
         var duaIdx = parseInt(btn.getAttribute("data-idx"), 10);
-        var range = rangeForDua(chapter.num, duaIdx) || { start: 0, end: 0 };
+        var range = rangeForDua(chapter.num, duaIdx);
+        if (!range) return;
         var st = chapterAudioState;
         var inRange = st.idx >= range.start && st.idx <= range.end;
         if (st.playing && inRange) {
@@ -352,8 +372,10 @@
       var playing = st.playing && inRange;
       var loading = st.loading && inRange;
       var btn = card.querySelector('[data-action="play-dua"]');
-      btn.classList.toggle("playing", playing);
-      btn.innerHTML = loading ? icon("volume2", 14) : playing ? icon("pause", 14) : icon("play", 14);
+      if (btn) {
+        btn.classList.toggle("playing", playing);
+        btn.innerHTML = loading ? icon("volume2", 14) : playing ? icon("pause", 14) : icon("play", 14);
+      }
       card.classList.toggle("playing", playing);
       var seekWrap = card.querySelector(".seek-wrap");
       if (playing || loading) {
