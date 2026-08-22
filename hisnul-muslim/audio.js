@@ -39,16 +39,20 @@ var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
 // Numbering continues sequentially from the end of the range. To make two
 // du'as share one file (the reciter read them together), give them both the
 // same track — e.g. "n40" and "n40".
+// Calibrated by ear via audio-check.html. Chapter 15's merged adhan-response
+// entry turned out to be a single file (n22), not the five-track range
+// originally assumed.
 var TRACK_OVERRIDES = {
-  // Chapter 15 (adhan adhkar): five sequential adhan-response du'as are shown
-  // as one merged entry in the text, but the recording keeps all five files.
-  "15:0": "n21-n25",
-  // Chapter 25 du'a 5 (the three Quls, Al-Ikhlas/Al-Falaq/An-Nas): confirmed
-  // by ear to be n66. Note du'a 2 ("Dhugaan gabbaramaan Rabbiin...") also
-  // currently defaults to n66, which is a separate, pre-existing alignment
-  // bug (n66 is genuinely the Quls, not du'a 2) — not caused by this pin,
-  // and not yet fixed since du'a 2's real track isn't known yet.
-  "25:4": "n66"
+  "2:0": "n5",
+  "15:0": "n22",
+  "25:4": "n66",
+  "26:2": "n71",
+  "27:0": "n71",
+  "27:1": "n72",
+  "27:2": "n66",
+  "27:3": "n74",
+  "27:19": "n89",
+  "27:20": "n90"
 };
 
 function isTopicHeader(d) {

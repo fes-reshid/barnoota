@@ -177,6 +177,18 @@
     });
   }
 
+  // Mirrors app.js: the source text has single line breaks baked in for a
+  // narrow print column, which read as broken sentences on screen. Collapse
+  // those into spaces, keep real blank-line paragraph breaks.
+  function normalizeText(s) {
+    if (!s) return s;
+    var PARA = "@@PARA@@";
+    return s
+      .replace(/\n{2,}/g, PARA)
+      .replace(/\s*\n\s*/g, " ")
+      .split(PARA).join("\n\n");
+  }
+
   function isPinned(key) {
     return Object.prototype.hasOwnProperty.call(overrides, key);
   }
@@ -204,7 +216,7 @@
     return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
   function renderArabicText(arabic) {
-    if (!isQuranicAyat(arabic)) return esc(arabic);
+    if (!isQuranicAyat(arabic)) return esc(normalizeText(arabic));
     var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
     return renderAyatBlock(verses);
   }
@@ -219,7 +231,7 @@
     return arGroups.map(function (group, i) {
       return '<div class="surah-block">' +
         '<div class="ar" lang="ar" dir="rtl">' + renderAyatBlock(group) + "</div>" +
-        (omGroups[i] ? '<p class="om surah-om">' + esc(omGroups[i]) + "</p>" : "") +
+        (omGroups[i] ? '<p class="om surah-om">' + esc(normalizeText(omGroups[i])) + "</p>" : "") +
       "</div>";
     }).join("");
   }
@@ -308,7 +320,7 @@
         (countBismillah(row.dua.arabic) > 1 ?
           renderMultiSurah(row.dua.arabic, row.dua.oromo || "") :
           '<div class="ar" lang="ar" dir="rtl">' + renderArabicText(row.dua.arabic) + '</div>' +
-          (row.dua.oromo ? '<p class="om">' + esc(row.dua.oromo) + '</p>' : '')
+          (row.dua.oromo ? '<p class="om">' + esc(normalizeText(row.dua.oromo)) + '</p>' : '')
         ) +
         '<div class="ctrls">' +
           (unassigned ? "" :

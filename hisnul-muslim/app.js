@@ -96,6 +96,20 @@
     });
   }
 
+  // The source text has single line breaks baked in purely for a narrow
+  // print column — on screen (especially at the Arabic font's larger size)
+  // they land well short of the actual line width and read as broken
+  // sentences. Collapse those into spaces so text reflows normally, while
+  // keeping genuine blank-line paragraph/verse breaks intact.
+  function normalizeText(s) {
+    if (!s) return s;
+    var PARA = "@@PARA@@";
+    return s
+      .replace(/\n{2,}/g, PARA)
+      .replace(/\s*\n\s*/g, " ")
+      .split(PARA).join("\n\n");
+  }
+
   // ---------------- Top bar ----------------
   function renderTopbar() {
     var favCount = readFavorites().length;
@@ -245,8 +259,8 @@
         var cleanAr = d.arabic.replace(/^\s*\d+\.?\s*/, "");
         return '<div class="topic-header animate-fade-in">' +
           '<p class="eyebrow">Mata-duree</p>' +
-          '<p class="om">' + esc(d.oromo) + '</p>' +
-          '<p class="ar font-arabic" lang="ar" dir="rtl">' + esc(cleanAr) + "</p>" +
+          '<p class="om">' + esc(normalizeText(d.oromo)) + '</p>' +
+          '<p class="ar font-arabic" lang="ar" dir="rtl">' + esc(normalizeText(cleanAr)) + "</p>" +
         "</div>";
       }
       n += 1;
@@ -275,6 +289,55 @@
         (next ? '<a href="#/category/' + next.num + '" class="glass next"><span class="t">' + esc(next.oromoTitle) + '</span><span class="ico rot">' + icon("chevronRight", 16) + "</span></a>" : "") +
       "</nav>"
     );
+  }
+
+  // Several du'as name how many times they're meant to be repeated (e.g.
+  // "(ثلاث مرات)" = 3 times). Detected from the actual set of phrasings used
+  // in this book's text (istighfar 3x, tasbih 33x, etc.) rather than a
+  // general Arabic-number parser, matched after stripping diacritics so
+  // wording differences between entries don't matter.
+  //
+  // Deliberately excludes "مائة مرة" (100 times): that phrase also shows up
+  // inside plain hadith narrations about someone's habitual dhikr count
+  // (e.g. ch.129/130, "fadaa'il" chapters), not as a "recite this now"
+  // instruction attached to a specific formula, so matching it blindly
+  // would auto-repeat audio on du'as that were never meant to be repeated
+  // at all.
+  function stripTashkeel(s) {
+    return s.replace(/[ً-ْٰۖ-ۭ]/g, "");
+  }
+  var REPEAT_RULES = [
+    [/ثلاث[اى]?\s*وثلاثين/, 33],
+    [/اربع[اى]?\s*وثلاثين/, 34],
+    [/عشر\s*مرات/, 10],
+    [/سبع\s*مرات/, 7],
+    [/ست\s*مرات/, 6],
+    [/خمس\s*مرات/, 5],
+    [/اربع\s*مرات/, 4],
+    [/ثلاث\s*مرات/, 3],
+    [/\(\s*ثلاث[اى]?\s*\)/, 3]
+  ];
+  function repeatCountFor(arabic) {
+    var s = stripTashkeel(arabic).replace(/[إأآ]/g, "ا").replace(/\n/g, " ");
+    for (var i = 0; i < REPEAT_RULES.length; i++) {
+      if (REPEAT_RULES[i][0].test(s)) return REPEAT_RULES[i][1];
+    }
+    return 1;
+  }
+
+  // Array parallel to a chapter's audio urls: how many times in a row to
+  // play the track at each position, from the repeat count named in the
+  // du'a text it belongs to (1 = play once, the normal case).
+  function repeatCountsForChapter(chapter) {
+    var counts = new Array(urlsForChapter(chapter.num).length).fill(1);
+    chapter.duas.forEach(function (d, i) {
+      var range = rangeForDua(chapter.num, i);
+      if (!range) return;
+      var n = repeatCountFor(d.arabic);
+      if (n <= 1) return;
+      for (var idx = range.start; idx <= range.end; idx++) counts[idx] = n;
+    });
+    return counts;
   }
 
   // Quranic ayat (as opposed to hadith-phrased du'a text) are written with
@@ -310,7 +373,7 @@
     return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
   function renderArabicText(arabic) {
-    if (!isQuranicAyat(arabic)) return esc(arabic);
+    if (!isQuranicAyat(arabic)) return esc(normalizeText(arabic));
     var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
     return renderAyatBlock(verses);
   }
@@ -330,7 +393,7 @@
     return arGroups.map(function (group, i) {
       return '<div class="surah-block">' +
         '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderAyatBlock(group) + "</p>" +
-        (omGroups[i] ? '<p class="dua-oromo surah-oromo">' + esc(omGroups[i]) + "</p>" : "") +
+        (omGroups[i] ? '<p class="dua-oromo surah-oromo">' + esc(normalizeText(omGroups[i])) + "</p>" : "") +
       "</div>";
     }).join("");
   }
@@ -350,7 +413,7 @@
         (countBismillah(d.arabic) > 1 ?
           renderMultiSurah(d.arabic, d.oromo || "") :
           '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
-          (d.oromo ? '<p class="dua-oromo">' + esc(d.oromo) + "</p>" : "")
+          (d.oromo ? '<p class="dua-oromo">' + esc(normalizeText(d.oromo)) + "</p>" : "")
         ) +
         '<div class="counter-row">' +
           '<span class="counter-label">Lakkooftuu</span>' +
@@ -389,7 +452,7 @@
     var urls = urlsForChapter(chapter.num);
     chapterAudioState = createAudioController(urls, function (state) {
       updateDuaPlayUI(chapter, state);
-    });
+    }, repeatCountsForChapter(chapter));
 
     document.querySelectorAll('[data-action="play-dua"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -449,7 +512,10 @@
   // before starting playback, so starting one always stops any other.
   var activeAudioController = null;
 
-  function createAudioController(urls, onUpdate) {
+  // repeatCounts (optional): array parallel to urls, giving how many times
+  // in a row to play the track at each position before moving on — for
+  // du'as whose text names a repeat count (e.g. "three times").
+  function createAudioController(urls, onUpdate, repeatCounts) {
     var audioEl = new Audio();
     audioEl.preload = "auto";
     // Deliberately no crossOrigin="anonymous": these hosts aren't guaranteed
@@ -460,7 +526,11 @@
     preloadEl.preload = "auto";
     preloadEl.muted = true;
 
-    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false, error: false, destroyed: false };
+    var state = { urls: urls, idx: 0, playing: false, loading: false, current: 0, duration: 0, progress: 0, repeat: false, advancing: false, error: false, destroyed: false, repeatsLeft: 1, repeatTotal: 1 };
+
+    function repeatCountAt(idx) {
+      return (repeatCounts && repeatCounts[idx]) || 1;
+    }
 
     // emit()/preloadNext()/advance() all short-circuit once destroyed, so a
     // torn-down controller can't resurrect itself: clearing audioEl.src in
@@ -479,6 +549,22 @@
 
     function advance() {
       if (state.destroyed || state.advancing) return;
+
+      // The just-finished track names a repeat count and hasn't been played
+      // that many times yet — play it again from the start instead of
+      // moving forward.
+      if (state.repeatsLeft > 1) {
+        state.repeatsLeft -= 1;
+        state.advancing = true;
+        state.current = 0;
+        audioEl.currentTime = 0;
+        emit();
+        audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+          state.advancing = false;
+        });
+        return;
+      }
+
       var atEnd = state.idx >= state.urls.length - 1;
       if (atEnd && !state.repeat) {
         state.playing = false; state.current = 0; state.duration = 0; state.progress = 0;
@@ -487,6 +573,8 @@
       }
       state.advancing = true;
       state.idx = atEnd ? 0 : state.idx + 1;
+      state.repeatTotal = repeatCountAt(state.idx);
+      state.repeatsLeft = state.repeatTotal;
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
@@ -500,9 +588,10 @@
     audioEl.addEventListener("error", function () {
       // A track genuinely failed (bad URL, offline, blocked, etc). Try the
       // next track in the queue so one bad file doesn't stall a whole du'a;
-      // only surface a hard error once there's nowhere left to go.
+      // only surface a hard error once there's nowhere left to go. Skip any
+      // remaining repeats of this same (broken) track — retrying it won't help.
       var hasNext = state.idx < state.urls.length - 1 || state.repeat;
-      if (hasNext) { advance(); }
+      if (hasNext) { state.repeatsLeft = 1; advance(); }
       else { state.playing = false; state.loading = false; state.error = true; emit(); }
     });
     audioEl.addEventListener("playing", function () { state.loading = false; state.playing = true; emit(); });
@@ -522,6 +611,8 @@
       }
       activeAudioController = state;
       state.idx = fromIdx || 0;
+      state.repeatTotal = repeatCountAt(state.idx);
+      state.repeatsLeft = state.repeatTotal;
       audioEl.src = state.urls[state.idx];
       state.loading = true; state.error = false; state.current = 0; state.duration = 0; state.progress = 0;
       emit();
@@ -710,8 +801,9 @@
           return;
         }
         if (sagaleeState) sagaleeState.destroy();
+        var chapter = CHAPTERS.find(function (c) { return c.num === num; });
         var urls = urlsForChapter(num);
-        sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); });
+        sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
         sagaleeState.currentChapter = num;
         sagaleeState.repeat = repeatOn;
         sagaleeState.play(0);
