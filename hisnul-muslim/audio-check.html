@@ -191,11 +191,17 @@
     return n;
   }
   function renderAyatBlock(verses) {
-    var body = verses.map(function (v) {
-      if (v === BISMILLAH) return '<span class="bismillah">' + esc(v) + "</span>";
+    var heading = "";
+    var ayat = [];
+    verses.forEach(function (v) {
+      if (v === BISMILLAH) heading += '<span class="bismillah">' + esc(v) + "</span>";
+      else ayat.push(v);
+    });
+    if (!ayat.length) return heading;
+    var body = ayat.map(function (v) {
       return esc(v) + ' <span class="ayah-end" aria-hidden="true">&#9733;</span>';
     }).join(" ");
-    return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
+    return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
   function renderArabicText(arabic) {
     if (!isQuranicAyat(arabic)) return esc(arabic);
