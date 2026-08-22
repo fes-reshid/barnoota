@@ -259,6 +259,12 @@ input { font-family: inherit; }
   margin-top: 0.75em; opacity: 0.85;
 }
 .ayah-open + .bismillah { margin-top: 0; }
+.surah-block + .surah-block { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.surah-block .dua-arabic { margin-top: 0; }
+.surah-oromo {
+  margin-top: 0.6rem; white-space: pre-line; border-top: none; padding-top: 0;
+  line-height: 1.65; color: var(--muted-foreground); font-size: calc(0.95rem * var(--reading-scale));
+}
 .dua-oromo {
   margin-top: 1rem; white-space: pre-line; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding-top: 1rem; line-height: 1.65; color: var(--muted-foreground);
@@ -359,7 +365,13 @@ input { font-family: inherit; }
 /* ---------- Bottom nav ---------- */
 .bottomnav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; padding-bottom: env(safe-area-inset-bottom); }
 .bottomnav-inner { max-width: 36rem; margin: 0 auto; padding: 0 0.75rem 0.75rem; }
-.bottomnav-glass { border-radius: var(--radius-3xl); padding: 0.5rem; box-shadow: var(--shadow-elegant); }
+.bottomnav-glass {
+  border-radius: var(--radius-3xl); padding: 0.5rem; box-shadow: var(--shadow-elegant);
+  /* Solid rather than the usual translucent .glass look — this sits over
+     scrolling du'a text, and a see-through nav read as content "merging"
+     with whatever was scrolling underneath it. */
+  background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
 .bottomnav-grid { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0; padding: 0; gap: 0; }
 .bottomnav-grid a {
   display: flex; flex-direction: column; align-items: center; gap: 0.25rem; border-radius: var(--radius-2xl);
