@@ -600,7 +600,15 @@
     audioEl.addEventListener("timeupdate", function () {
       state.current = audioEl.currentTime;
       if (audioEl.duration > 0) state.progress = (audioEl.currentTime / audioEl.duration) * 100;
-      if (audioEl.duration > 0 && audioEl.currentTime >= audioEl.duration - 0.35 && !audioEl.seeking && !state.advancing) advance();
+      // Only use this early trigger for a genuine track-to-track transition.
+      // For a track that still has repeats left, jumping the gun here (the
+      // 0.35s margin can exceed the whole length of a short one-phrase
+      // clip) would restart it before it actually finished, and restarting
+      // playback while a previous play() is still settling makes the
+      // browser reject it outright ("interrupted by a new load request"),
+      // surfacing as a false "audio failed to load" error. The reliable
+      // "ended" event covers the repeat case instead.
+      if (state.repeatsLeft <= 1 && audioEl.duration > 0 && audioEl.currentTime >= audioEl.duration - 0.35 && !audioEl.seeking && !state.advancing) advance();
       emit();
     });
 
