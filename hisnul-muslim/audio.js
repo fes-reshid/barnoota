@@ -42,7 +42,11 @@ var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
 var TRACK_OVERRIDES = {
   // Chapter 15 (adhan adhkar): five sequential adhan-response du'as are shown
   // as one merged entry in the text, but the recording keeps all five files.
-  "15:0": "n21-n25"
+  "15:0": "n21-n25",
+  // Chapter 25 du'a 5 (the three Quls, Al-Ikhlas/Al-Falaq/An-Nas) was added
+  // to the text from the reference PDF but isn't in the existing archive.org
+  // recording — no track to point it at, so it plays nothing for now.
+  "25:4": "none"
 };
 
 function isTopicHeader(d) {
@@ -117,6 +121,15 @@ function buildAudioMap(overrides) {
 
       var key = c.num + ":" + i;
       var raw = Object.prototype.hasOwnProperty.call(overrides, key) ? overrides[key] : null;
+
+      if (raw === "none") {
+        // No recording exists for this du'a yet (text added after the
+        // narration was tracked) — skip it without consuming a track
+        // number, so everything after it keeps its calibrated alignment.
+        duaRanges.push(null);
+        return;
+      }
+
       var rng = parseTrackRange(raw);
 
       if (rng) {
