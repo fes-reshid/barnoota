@@ -285,7 +285,7 @@ input { font-family: inherit; }
 .counter-value { min-width: 2.5rem; text-align: center; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 
 .chapter-nav { margin-top: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.chapter-nav a { flex: 1; display: flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-2xl); padding: 0.75rem 1rem; font-size: 0.875rem; color: var(--foreground); }
+.chapter-nav a { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-2xl); padding: 0.75rem 1rem; font-size: 0.875rem; color: var(--foreground); }
 .chapter-nav a:hover { color: var(--gold); }
 .chapter-nav a.next { justify-content: flex-end; }
 .chapter-nav a span.t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
