@@ -41,7 +41,9 @@ var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
 // same track — e.g. "n40" and "n40".
 // Calibrated by ear via audio-check.html. Chapter 15's merged adhan-response
 // entry turned out to be a single file (n22), not the five-track range
-// originally assumed.
+// originally assumed. Chapter 132 (the book's closing etiquette/colophon
+// text) has no matching recording at all - both its entries are pinned
+// "none" so they don't try to claim a track.
 var TRACK_OVERRIDES = {
   "2:0": "n5",
   "15:0": "n22",
@@ -52,7 +54,41 @@ var TRACK_OVERRIDES = {
   "27:2": "n66",
   "27:3": "n74",
   "27:19": "n89",
-  "27:20": "n90"
+  "27:20": "n90",
+  "31:1": "n110",
+  "31:2": "n110",
+  "31:3": "n110",
+  "31:4": "n110",
+  "32:0": "n111",
+  "40:1": "n128",
+  "40:2": "n128",
+  "45:1": "n135",
+  "45:2": "n135",
+  "49:0": "n140",
+  "49:1": "n141",
+  "50:0": "n141",
+  "51:0": "n142",
+  "107:2": "n214",
+  "107:3": "n214",
+  "107:4": "n214",
+  "108:0": "n214",
+  "108:1": "n214",
+  "108:2": "n214",
+  "109:0": "n215",
+  "111:0": "n216",
+  "112:0": "n218",
+  "114:0": "n220",
+  "115:0": "n221",
+  "116:0": "n222",
+  "123:0": "n229",
+  "129:1": "n235",
+  "129:2": "n235",
+  "129:3": "n235",
+  "129:4": "n235",
+  "129:5": "n235",
+  "130:9": "n244",
+  "132:0": "none",
+  "132:1": "none"
 };
 
 function isTopicHeader(d) {
