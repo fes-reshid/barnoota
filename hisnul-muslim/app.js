@@ -293,14 +293,21 @@
     return n;
   }
   // Wraps one surah's (or one standalone passage's) ayat in ornate brackets,
-  // with a small star after every verse except Bismillah, which reads as a
-  // heading rather than a numbered ayah.
+  // with a small star after every verse. Bismillah sits ahead of the
+  // brackets as its own heading — it introduces the surah rather than being
+  // one of its numbered verses, so it isn't part of the quoted-verse block.
   function renderAyatBlock(verses) {
-    var body = verses.map(function (v) {
-      if (v === BISMILLAH) return '<span class="bismillah">' + esc(v) + "</span>";
+    var heading = "";
+    var ayat = [];
+    verses.forEach(function (v) {
+      if (v === BISMILLAH) heading += '<span class="bismillah">' + esc(v) + "</span>";
+      else ayat.push(v);
+    });
+    if (!ayat.length) return heading;
+    var body = ayat.map(function (v) {
       return esc(v) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
     }).join(" ");
-    return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
+    return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
   function renderArabicText(arabic) {
     if (!isQuranicAyat(arabic)) return esc(arabic);
