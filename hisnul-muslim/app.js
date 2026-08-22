@@ -286,10 +286,15 @@
   function isQuranicAyat(arabic) {
     return arabic.indexOf("ٱ") !== -1;
   }
+  var BISMILLAH = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
   function renderArabicText(arabic) {
     if (!isQuranicAyat(arabic)) return esc(arabic);
     var verses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
     var body = verses.map(function (v) {
+      // Bismillah introduces a surah rather than being one of its numbered
+      // verses, so it gets its own heading-like treatment instead of an
+      // end-of-ayah mark.
+      if (v === BISMILLAH) return '<span class="bismillah">' + esc(v) + "</span>";
       return esc(v) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
     }).join(" ");
     return '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
