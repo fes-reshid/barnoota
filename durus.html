@@ -13,7 +13,7 @@
     --ink-navy:#1c2b46; --ink-brown:#3c2f26;
     --parchment:#faf3e0; --parchment-deep:#f2e6c9;
     --gold:#a97c25; --gold-soft:#d3ac5c;
-    --green:#2e6b58; --green-bg:#e4efe6;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
     --red:#9c3d3d; --red-bg:#f4e0df;
   }
   *{box-sizing:border-box;}
@@ -100,6 +100,58 @@ h1{ font-family:'Marcellus'; font-size:calc(30px * var(--scale)); color:var(--in
 .byline{ font-size:calc(13px * var(--scale)); color:var(--gold); margin:8px 0 0; transition:font-size .25s ease; }
 .student-line{ font-size:calc(16px * var(--scale)); color:var(--ink-navy); margin:10px 0 0; font-weight:700; transition:font-size .25s ease; }
 
+/* ===== Course hero (before enrollment) ===== */
+.course-hero{
+  max-width:920px; margin:0 auto; padding:20px 20px 8px;
+  display:flex; flex-wrap:wrap-reverse; align-items:center; justify-content:center; gap:32px;
+}
+.course-hero-text{ flex:1 1 380px; min-width:280px; text-align:center; }
+@media(min-width:680px){ .course-hero-text{ text-align:start; } }
+.course-hero-tag{
+  display:inline-block; background:var(--green); color:#fff8ea; font-family:'Cormorant Garamond', serif;
+  font-weight:700; font-size:calc(12.5px * var(--scale)); letter-spacing:.07em; text-transform:uppercase;
+  padding:5px 14px; border-radius:14px; margin:0 0 14px;
+}
+.course-hero-title{ font-family:'Marcellus'; font-size:calc(28px * var(--scale)); color:var(--ink-navy); margin:0 0 6px; line-height:1.2; }
+.course-hero-sub{ font-family:'Amiri', serif; font-size:calc(18px * var(--scale)); color:var(--gold); margin:0 0 14px; }
+.course-hero-desc{ font-size:calc(15.5px * var(--scale)); color:var(--ink-brown); line-height:1.65; margin:0 auto; max-width:480px; }
+@media(min-width:680px){ .course-hero-desc{ margin-inline-start:0; } }
+
+.course-badge{
+  flex:0 0 auto; width:170px; height:190px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  padding:14px 10px 20px;
+  background:linear-gradient(160deg, var(--gold-soft), var(--gold));
+  clip-path:polygon(50% 0%, 100% 22%, 100% 78%, 50% 100%, 0% 78%, 0% 22%);
+  box-shadow:0 12px 26px rgba(60,45,20,.18);
+}
+.course-badge .badge-circle{
+  width:56px; height:56px; border-radius:50%; background:#fff8ea; color:var(--green-dark);
+  display:flex; align-items:center; justify-content:center; font-family:'Amiri', serif; font-size:26px;
+  margin-bottom:10px; box-shadow:0 3px 8px rgba(60,45,20,.15);
+}
+.course-badge .badge-name{ font-family:'Marcellus'; font-size:14px; color:#fff8ea; margin:0 0 2px; line-height:1.25; }
+.course-badge .badge-sub{
+  font-family:'Cormorant Garamond', serif; font-weight:700; font-size:11px; letter-spacing:.06em;
+  color:#fff8ea; opacity:.9; margin:0; text-transform:uppercase;
+}
+
+.course-benefits{
+  max-width:920px; margin:30px auto 0; padding:0 20px 40px;
+  display:grid; grid-template-columns:1fr; gap:20px;
+}
+@media(min-width:720px){ .course-benefits{ grid-template-columns:1fr 1fr 1fr; } }
+.benefit-col{
+  background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:22px 22px 24px; text-align:center;
+}
+.benefit-icon{
+  width:46px; height:46px; border-radius:50%; background:var(--green-bg); color:var(--green-dark);
+  display:flex; align-items:center; justify-content:center; font-size:21px; margin:0 auto 14px;
+}
+.benefit-col h3{ font-family:'Marcellus'; font-size:calc(16.5px * var(--scale)); color:var(--ink-navy); margin:0 0 10px; }
+.benefit-col p{ font-size:calc(14px * var(--scale)); color:var(--ink-brown); line-height:1.6; margin:0; }
+hr.hero-divider{ border:none; border-top:2px dashed var(--gold-soft); max-width:920px; margin:0 auto; }
+
 .name-entry{ max-width:420px; margin:22px auto 0; text-align:center; }
 .name-entry label{ display:block; font-size:calc(16px * var(--scale)); margin-bottom:10px; color:var(--ink-brown); transition:font-size .25s ease; }
 .name-entry input{
@@ -184,14 +236,14 @@ transition:font-size .25s ease;
 
 .question{
 background:#fff; border:1px solid var(--gold-soft); border-radius:12px;
-padding:20px 22px; margin-bottom:0;
+padding:26px 28px; margin-bottom:0;
 animation:slideInNext .4s cubic-bezier(.22,1,.36,1) both;
 }
 .question.anim-prev{ animation-name: slideInPrev; }
 .question.leaving-next{ animation:slideOutNext .28s ease both; }
 .question.leaving-prev{ animation:slideOutPrev .28s ease both; }
 
-.q-head{ display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; }
+.q-head{ display:flex; gap:10px; align-items:flex-start; margin-bottom:18px; }
 .q-num{
 flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--gold);
 color:#fff8ea; font-weight:700; display:flex; align-items:center; justify-content:center;
@@ -199,10 +251,10 @@ font-size:calc(15px * var(--scale)); transition:font-size .25s ease, transform .
 }
 .q-text{ font-weight:700; font-size:calc(20px * var(--scale)); line-height:1.5; padding-top:4px; transition:font-size .25s ease; }
 
-.options{ display:flex; flex-direction:column; gap:9px; }
+.options{ display:flex; flex-direction:column; gap:13px; }
 .option{
 display:flex; align-items:center; gap:10px; border:1.5px solid var(--gold-soft);
-border-radius:8px; padding:11px 16px; cursor:pointer; background:var(--parchment);
+border-radius:8px; padding:14px 18px; cursor:pointer; background:var(--parchment);
 font-size:calc(17px * var(--scale));
 transition:background .15s ease, border-color .15s ease, font-size .25s ease, transform .15s ease;
 }
@@ -329,7 +381,6 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
       <a href="quran.html">Qur'ān</a>
       <a href="hadeeth.html">Ḥadīth</a>
       <a href="arabic.html">Arabic</a>
-      <a href="seeraa.html">Seerah</a>
       <a href="apps.html">Apps</a>
     </nav>
   </div>
@@ -351,12 +402,40 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
   <div class="card-outer">
 
 <div id="intro-screen">
-  <header>
-    <p class="eyebrow">Foundational Islamic Studies</p>
-    <h1>Durūs al-Muhimmah lil ʿĀmmah</h1>
-    <p class="subtitle">25 questions — one at a time. Choose an answer, then continue to the next.</p>
-    <p class="byline">Adult Quiz &nbsp;•&nbsp; Taught by Sh. Baharuddin &nbsp;•&nbsp; App and questions prepared by Feysel Reshid</p>
-  </header>
+  <div id="course-hero-section">
+    <div class="course-hero">
+      <div class="course-hero-text">
+        <span class="course-hero-tag">Free · Self-Check Quiz</span>
+        <h1 class="course-hero-title">Durūs al-Muhimmah lil ʿĀmmah</h1>
+        <p class="course-hero-sub">الدروس المهمة لعامة الأمة</p>
+        <p class="course-hero-desc">25 questions covering the essentials every Muslim must know, in one sitting — perfect if you want a single comprehensive self-check instead of the full multi-week course.</p>
+        <p class="byline">Adult Quiz &nbsp;•&nbsp; Taught by Sh. Baharuddin &nbsp;•&nbsp; App and questions prepared by Feysel Reshid</p>
+      </div>
+      <div class="course-badge">
+        <span class="badge-circle">د</span>
+        <p class="badge-name">Durūs al-Muhimmah</p>
+        <p class="badge-sub">Adult Quiz</p>
+      </div>
+    </div>
+    <hr class="hero-divider">
+    <div class="course-benefits">
+      <div class="benefit-col">
+        <span class="benefit-icon">🎓</span>
+        <h3>Who's It For</h3>
+        <p>Adults who already have some grounding and want a quick, honest self-check — or anyone who prefers one straight-through quiz instead of a multi-week course.</p>
+      </div>
+      <div class="benefit-col">
+        <span class="benefit-icon">📖</span>
+        <h3>What You'll Learn</h3>
+        <p>The same core essentials as the full course — the three levels of the dīn, the pillars of Islam and īmān, tawḥīd, purification, prayer, zakāh, fasting, and ḥajj — condensed into 25 questions.</p>
+      </div>
+      <div class="benefit-col">
+        <span class="benefit-icon">🌱</span>
+        <h3>What It Prepares You For</h3>
+        <p>A clear picture of where you stand on the fundamentals, with your score saved to your account.</p>
+      </div>
+    </div>
+  </div>
   <div id="auth-gate">
 
     <div class="auth-panel" id="auth-loading">
