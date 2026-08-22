@@ -202,11 +202,64 @@
   .hero h1.en-title{ font-family:'Cormorant Garamond', serif; font-size:calc(28px * var(--scale)); }
   .hero p{ color:var(--ink-brown); font-size:calc(16px * var(--scale)); max-width:520px; margin:0 auto; }
 
+  /* ===== Course hero (before enrollment) ===== */
+  .course-hero{
+    max-width:920px; margin:0 auto; padding:40px 20px 8px;
+    display:flex; flex-wrap:wrap-reverse; align-items:center; justify-content:center; gap:32px;
+  }
+  .course-hero-text{ flex:1 1 380px; min-width:280px; text-align:center; }
+  @media(min-width:680px){ .course-hero-text{ text-align:start; } }
+  .course-hero-tag{
+    display:inline-block; background:var(--green); color:#fff8ea; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:calc(12.5px * var(--scale)); letter-spacing:.07em; text-transform:uppercase;
+    padding:5px 14px; border-radius:14px; margin:0 0 14px;
+  }
+  .course-hero-title{ font-family:'Marcellus'; font-size:calc(30px * var(--scale)); color:var(--ink-navy); margin:0 0 6px; line-height:1.2; }
+  .course-hero-sub{ font-family:'Amiri', serif; font-size:calc(18px * var(--scale)); color:var(--gold); margin:0 0 14px; }
+  .course-hero-desc{ font-size:calc(15.5px * var(--scale)); color:var(--ink-brown); line-height:1.65; margin:0 auto; max-width:480px; }
+  @media(min-width:680px){ .course-hero-desc{ margin-inline-start:0; } }
+
+  .course-badge{
+    flex:0 0 auto; width:170px; height:190px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    padding:14px 10px 20px;
+    background:linear-gradient(160deg, var(--gold-soft), var(--gold));
+    clip-path:polygon(50% 0%, 100% 22%, 100% 78%, 50% 100%, 0% 78%, 0% 22%);
+    box-shadow:0 12px 26px rgba(60,45,20,.18);
+  }
+  .course-badge .badge-circle{
+    width:56px; height:56px; border-radius:50%; background:#fff8ea; color:var(--green-dark);
+    display:flex; align-items:center; justify-content:center; font-family:'Amiri', serif; font-size:26px;
+    margin-bottom:10px; box-shadow:0 3px 8px rgba(60,45,20,.15);
+  }
+  .course-badge .badge-name{ font-family:'Marcellus'; font-size:14px; color:#fff8ea; margin:0 0 2px; line-height:1.25; }
+  .course-badge .badge-sub{
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:11px; letter-spacing:.06em;
+    color:#fff8ea; opacity:.9; margin:0; text-transform:uppercase;
+  }
+
+  .course-benefits{
+    max-width:920px; margin:30px auto 0; padding:0 20px 40px;
+    display:grid; grid-template-columns:1fr; gap:20px;
+  }
+  @media(min-width:720px){ .course-benefits{ grid-template-columns:1fr 1fr 1fr; } }
+  .benefit-col{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:22px 22px 24px; text-align:center;
+  }
+  .benefit-icon{
+    width:46px; height:46px; border-radius:50%; background:var(--green-bg); color:var(--green-dark);
+    display:flex; align-items:center; justify-content:center; font-size:21px; margin:0 auto 14px;
+  }
+  .benefit-col h3{ font-family:'Marcellus'; font-size:calc(16.5px * var(--scale)); color:var(--ink-navy); margin:0 0 10px; }
+  .benefit-col p{ font-size:calc(14px * var(--scale)); color:var(--ink-brown); line-height:1.6; margin:0; }
+  hr.hero-divider{ border:none; border-top:2px dashed var(--gold-soft); max-width:920px; margin:0 auto; }
+
   /* ===== Section ===== */
-  .section{ margin:34px 0; }
+  .section{ margin:44px 0; }
+  .section + .section{ border-top:2px dashed var(--gold-soft); padding-top:38px; }
   .section-title{
-    display:flex; align-items:center; gap:10px; margin:0 0 16px;
-    font-family:'Amiri', serif; font-weight:700; font-size:calc(21px * var(--scale)); color:var(--ink-navy);
+    display:flex; align-items:center; gap:10px; margin:0 0 20px;
+    font-family:'Amiri', serif; font-weight:700; font-size:calc(23px * var(--scale)); color:var(--ink-navy);
   }
   .section-title .num{
     display:inline-flex; align-items:center; justify-content:center;
@@ -216,17 +269,17 @@
   .lead{ color:var(--ink-brown); margin:0 0 16px; }
 
   /* ===== Definition cards ===== */
-  .def-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  .def-grid{ display:grid; grid-template-columns:1fr; gap:18px; }
   @media(min-width:560px){ .def-grid{ grid-template-columns:1fr 1fr; } }
   .def-card{
-    border-radius:14px; padding:18px 20px; border:2px solid;
+    border-radius:14px; padding:22px 26px; border:2px solid;
   }
   .def-card.murab{ background:var(--blue-bg); border-color:var(--blue); }
   .def-card.mabni{ background:var(--pink-bg); border-color:var(--pink); }
-  .def-card h3{ margin:0 0 8px; font-family:'Amiri', serif; font-size:calc(19px * var(--scale)); }
+  .def-card h3{ margin:0 0 10px; font-family:'Amiri', serif; font-size:calc(19px * var(--scale)); }
   .def-card.murab h3{ color:#2c5482; }
   .def-card.mabni h3{ color:#93356a; }
-  .def-card p{ margin:0 0 10px; font-size:calc(14.5px * var(--scale)); }
+  .def-card p{ margin:0 0 12px; font-size:calc(14.5px * var(--scale)); line-height:1.6; }
   .def-card .ex{
     font-family:'Amiri', serif; font-size:calc(15px * var(--scale)); background:rgba(255,255,255,0.55);
     border-radius:8px; padding:8px 12px; direction:rtl; text-align:center;
@@ -235,17 +288,18 @@
   /* ===== Rule callout ===== */
   .rule-box{
     background:var(--parchment-deep); border-left:4px solid var(--gold); border-radius:10px;
-    padding:16px 20px; margin:0 0 18px;
+    padding:20px 24px; margin:0 0 22px;
   }
   body.rtl-active .rule-box{ border-left:none; border-right:4px solid var(--gold); }
-  .rule-box ul{ margin:8px 0 0; padding-inline-start:20px; }
-  .rule-box li{ margin-bottom:6px; font-size:calc(14.5px * var(--scale)); }
+  .rule-box ul{ margin:12px 0 0; padding-inline-start:20px; }
+  .rule-box li{ margin-bottom:11px; font-size:calc(14.5px * var(--scale)); line-height:1.6; }
+  .rule-box li:last-child{ margin-bottom:0; }
 
   /* ===== Case cards (particles / verb-building) ===== */
-  .case-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 6px; }
+  .case-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:0 0 10px; }
   @media(max-width:480px){ .case-grid{ grid-template-columns:1fr; } }
   .case-card{
-    background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 14px;
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px; padding:16px 18px;
   }
   .case-card .case-label{
     display:inline-block; font-weight:700; font-size:calc(12px * var(--scale));
@@ -255,10 +309,10 @@
   .case-card .case-example{ font-size:calc(13px * var(--scale)); color:var(--ink-brown); font-style:italic; }
 
   /* ===== Islamic-sciences map cards (Foundations overview) ===== */
-  .sci-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin:0 0 16px; }
+  .sci-grid{ display:grid; grid-template-columns:1fr; gap:16px; margin:0 0 20px; }
   @media(min-width:560px){ .sci-grid.cols-2{ grid-template-columns:1fr 1fr; } }
   @media(min-width:640px){ .sci-grid.cols-4{ grid-template-columns:repeat(4,1fr); } }
-  .sci-card{ border-radius:12px; padding:14px 16px; border:2px solid; text-align:center; }
+  .sci-card{ border-radius:12px; padding:18px 20px; border:2px solid; text-align:center; }
   .sci-card h4{ margin:0 0 6px; font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); }
   .sci-card p{ margin:0; font-size:calc(13px * var(--scale)); }
   .sci-card.c-blue{ background:var(--blue-bg); border-color:var(--blue); }
@@ -273,18 +327,18 @@
   .sci-card.c-red h4{ color:var(--red); }
 
   /* ===== Numbered sub-rules (verb sections) ===== */
-  .sub-rules{ display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+  .sub-rules{ display:flex; flex-direction:column; gap:16px; margin:18px 0; }
   .sub-rule{
     display:flex; gap:12px; align-items:flex-start; background:#fff;
-    border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 14px;
+    border:1.5px solid var(--gold-soft); border-radius:10px; padding:16px 18px;
   }
   .sub-rule .srnum{
     flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--gold-soft);
     color:#fff8ea; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:calc(13px * var(--scale));
   }
-  .sub-rule .srbody{ font-size:calc(14.5px * var(--scale)); }
+  .sub-rule .srbody{ font-size:calc(14.5px * var(--scale)); line-height:1.6; }
   .sub-rule .srbody b{ color:var(--ink-navy); }
-  .sub-rule .srex{ font-family:'Amiri', serif; direction:rtl; color:#5c4a30; font-size:calc(15px * var(--scale)); margin-top:4px; }
+  .sub-rule .srex{ font-family:'Amiri', serif; direction:rtl; color:#5c4a30; font-size:calc(15px * var(--scale)); margin-top:6px; }
 
   /* ===== Big beautiful table ===== */
   .table-wrap{ overflow-x:auto; border-radius:14px; border:2px solid var(--gold-soft); box-shadow:0 4px 14px rgba(60,47,38,0.08); }
@@ -316,7 +370,7 @@
   /* ===== Fun-fact / note box ===== */
   .note-box{
     background:var(--green-bg); border:1.5px solid var(--green); border-radius:12px;
-    padding:16px 20px; margin-top:10px;
+    padding:20px 24px; margin-top:16px;
   }
   .note-box .note-title{ font-weight:700; color:var(--green); margin:0 0 8px; font-size:calc(14.5px * var(--scale)); }
   .note-box p{ margin:0; font-size:calc(14px * var(--scale)); }
@@ -455,7 +509,6 @@
       <a href="quran.html">Qur'ān</a>
       <a href="hadeeth.html">Ḥadīth</a>
       <a href="arabic.html" class="active">Arabic</a>
-      <a href="seeraa.html">Seerah</a>
       <a href="apps.html">Apps</a>
     </nav>
   </div>
@@ -482,6 +535,40 @@
 </div>
 
 <div class="wrap">
+
+  <div id="course-hero-section">
+    <div class="course-hero">
+      <div class="course-hero-text">
+        <span class="course-hero-tag">Free · 4-Week Course</span>
+        <h1 class="course-hero-title">Foundations of Naḥw</h1>
+        <p class="course-hero-sub">مَبَادِئُ النَّحْوِ</p>
+        <p class="course-hero-desc">A 4-week introduction to Arabic grammar — how words behave, how sentences are built, and why it all matters for reading the Qur'ān and Sunnah correctly.</p>
+      </div>
+      <div class="course-badge">
+        <span class="badge-circle">ن</span>
+        <p class="badge-name">Foundations of Naḥw</p>
+        <p class="badge-sub">4-Week Course</p>
+      </div>
+    </div>
+    <hr class="hero-divider">
+    <div class="course-benefits">
+      <div class="benefit-col">
+        <span class="benefit-icon">🎓</span>
+        <h3>Who's It For</h3>
+        <p>Anyone starting Arabic grammar from zero, especially students who want to read the Qur'ān and classical texts with real understanding.</p>
+      </div>
+      <div class="benefit-col">
+        <span class="benefit-icon">📖</span>
+        <h3>What You'll Learn</h3>
+        <p>How to classify any Arabic word, the difference between definite and indefinite, and the single most important distinction in the subject — مُعرَب versus مبني.</p>
+      </div>
+      <div class="benefit-col">
+        <span class="benefit-icon">🌱</span>
+        <h3>What It Prepares You For</h3>
+        <p>Every later chapter of Naḥw, and reading Islamic texts in Arabic with far greater precision.</p>
+      </div>
+    </div>
+  </div>
 
   <div id="auth-gate">
 
@@ -766,6 +853,7 @@ function enterCourse(uid, email, data, isReturning){
   stepDone = (savedStepDone && savedStepDone.length === STEP_DEFS.length) ? savedStepDone.slice() : new Array(STEP_DEFS.length).fill(false);
 
   document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('course-hero-section').style.display = 'none';
   document.getElementById('week-select').style.display = 'block';
   document.getElementById('account-name').style.display = '';
   document.getElementById('account-name').textContent = studentName;
