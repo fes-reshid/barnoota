@@ -8,6 +8,7 @@
     chevronLeft: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
     chevronRight: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
     bookOpen: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>',
+    home: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/></svg>',
     circleDot: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>',
     volume2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7 6.3 8.4H3a1 1 0 0 0-1 1v5.2a1 1 0 0 0 1 1h3.3L11 19.3a.5.5 0 0 0 .8-.4V5.1a.5.5 0 0 0-.8-.4Z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>',
     settings: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.7 3.2a2 2 0 0 1 4.6 0l.2.9a2 2 0 0 0 2.6 1.4l.9-.3a2 2 0 0 1 2.3 3.2l-.6.7a2 2 0 0 0 0 2.6l.6.7a2 2 0 0 1-2.3 3.2l-.9-.3a2 2 0 0 0-2.6 1.4l-.2.9a2 2 0 0 1-4.6 0l-.2-.9a2 2 0 0 0-2.6-1.4l-.9.3a2 2 0 0 1-2.3-3.2l.6-.7a2 2 0 0 0 0-2.6l-.6-.7A2 2 0 0 1 6 5.2l.9.3A2 2 0 0 0 9.5 4.1z"/><circle cx="12" cy="12" r="3"/></svg>',
@@ -130,9 +131,10 @@
 
   // ---------------- Bottom nav ----------------
   var NAV_ITEMS = [
+    { to: "#/home", label: "Mana", icon: "home" },
     { to: "#/categories", label: "Zikrii", icon: "bookOpen" },
-    { to: "#/tasbih", label: "Tasbiih", icon: "circleDot" },
     { to: "#/sagalee", label: "Sagalee", icon: "volume2" },
+    { to: "#/tasbih", label: "Tasbiih", icon: "circleDot" },
     { to: "#/settings", label: "Qindaa'ina", icon: "settings" }
   ];
   function renderBottomNav(activePath) {
@@ -189,6 +191,88 @@
         '<h1 class="page-title">Filannoo <span class="gold-text">Kee</span></h1>' +
       "</header>" + body
     );
+  }
+
+  // ---------------- Home (Mana) ----------------
+  var homeState = null;
+  function homeFavCardHTML(c) {
+    return (
+      '<a href="#/category/' + c.num + '" class="home-fav-card" data-chapter="' + c.num + '">' +
+        '<button class="home-fav-remove" data-action="home-remove" data-num="' + c.num + '" aria-label="Filannoo irraa balleessi">' + icon("x", 14) + "</button>" +
+        '<p class="home-fav-num">#' + String(c.num).padStart(2, "0") + "</p>" +
+        '<h3 class="home-fav-title">' + esc(c.oromoTitle) + "</h3>" +
+        '<p class="home-fav-ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</p>" +
+        '<div class="home-fav-footer">' +
+          '<span class="home-fav-count">' + c.duas.length + " du'aa'ii</span>" +
+          '<button class="home-fav-play" data-action="home-play" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 14) + "</button>" +
+        "</div>" +
+      "</a>"
+    );
+  }
+  function pageHome() {
+    document.title = "Mana — Hisnul Muslim";
+    var ids = readFavorites();
+    var favs = CHAPTERS.filter(function (c) { return ids.indexOf(c.num) !== -1; });
+    setTimeout(bindHomeEvents, 0);
+    var body;
+    if (!favs.length) {
+      body =
+        '<div class="glass empty-panel">' +
+          '<div class="empty-icon">' + icon("heart", 24) + "</div>" +
+          '<p class="title">Hin jiru</p>' +
+          '<p class="sub">Gosa fudhachuuf, ♡ tuqi.</p>' +
+          '<a href="#/categories" class="cta">Gosoota ilaali</a>' +
+        "</div>";
+    } else {
+      body =
+        '<div class="home-fav-grid">' +
+          favs.map(homeFavCardHTML).join("") +
+          '<a href="#/categories" class="home-fav-add"><span class="ico">' + icon("plus", 22) + '</span><span>Kan biraa dabali</span></a>' +
+        "</div>";
+    }
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Du’aa’ii <span class="gold-text">barbaachisoo</span></h1>' +
+        '<p class="page-sub">Kanneen yeroo hunda fayyadamtu asitti qabadhu.</p>' +
+      "</header>" + body
+    );
+  }
+  function bindHomeEvents() {
+    document.querySelectorAll('[data-action="home-remove"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFavorite(parseInt(btn.getAttribute("data-num"), 10));
+        renderTopbar();
+        navigate();
+      });
+    });
+    document.querySelectorAll('[data-action="home-play"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var num = parseInt(btn.getAttribute("data-num"), 10);
+        if (homeState && homeState.currentChapter === num) {
+          homeState.pause();
+          return;
+        }
+        if (homeState) homeState.destroy();
+        var chapter = CHAPTERS.find(function (c) { return c.num === num; });
+        var urls = urlsForChapter(num);
+        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
+        homeState.currentChapter = num;
+        homeState.play(0);
+      });
+    });
+  }
+  function updateHomeUI(num, st) {
+    document.querySelectorAll(".home-fav-card").forEach(function (card) {
+      var btn = card.querySelector('[data-action="home-play"]');
+      if (!btn) return;
+      var isThis = parseInt(card.getAttribute("data-chapter"), 10) === num;
+      btn.innerHTML = isThis && st.loading ? icon("volume2", 14) : isThis && st.playing ? icon("pause", 14) : icon("play", 14);
+    });
   }
 
   function pageSearch(initialQuery) {
@@ -1006,9 +1090,11 @@
   function navigate() {
     stopChapterAudio();
     if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
+    if (homeState) { homeState.destroy(); homeState = null; }
     var r = parseHash();
     var html = "";
-    if (r.parts[0] === "categories" || r.parts.length === 0) html = pageCategories();
+    if (r.parts[0] === "home") html = pageHome();
+    else if (r.parts[0] === "categories" || r.parts.length === 0) html = pageCategories();
     else if (r.parts[0] === "favorites") html = pageFavorites();
     else if (r.parts[0] === "search") html = pageSearch(r.query);
     else if (r.parts[0] === "tasbih") html = pageTasbih();
