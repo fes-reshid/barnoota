@@ -179,6 +179,43 @@ input { font-family: inherit; }
 .category-count { font-size: 0.625rem; font-weight: 500; color: var(--muted-foreground); flex-shrink: 0; }
 .category-chevron { color: var(--muted-foreground); flex-shrink: 0; }
 
+/* ---------- Home (Mana) ---------- */
+.home-fav-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.home-fav-card {
+  position: relative; display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 9.5rem; border-radius: var(--radius-2xl); padding: 1rem;
+  background: var(--gradient-primary); color: var(--primary-foreground);
+  box-shadow: var(--shadow-elegant); transition: box-shadow .15s ease;
+}
+.home-fav-card:hover { box-shadow: var(--shadow-gold); }
+.home-fav-remove {
+  position: absolute; z-index: 2; top: 0.6rem; right: 0.6rem; width: 1.5rem; height: 1.5rem; border-radius: 9999px;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in oklab, black 20%, transparent); color: var(--primary-foreground);
+}
+.home-fav-remove:hover { background: color-mix(in oklab, black 35%, transparent); }
+/* Block-level <p> would otherwise stretch to the flex column's full width
+   (the visible "#16" text only fills the left edge of that box), so its
+   invisible right-hand portion would sit on top of the remove button and
+   swallow its clicks - align-self keeps the box tight around the text. */
+.home-fav-num { align-self: flex-start; margin: 0; font-size: 0.7rem; letter-spacing: 0.15em; opacity: 0.75; }
+.home-fav-title { margin: 0.35rem 0 0; font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.25; }
+.home-fav-ar { margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--gold-soft); }
+.home-fav-footer { margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; }
+.home-fav-count { font-size: 0.65rem; opacity: 0.75; }
+.home-fav-play {
+  flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 9999px;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in oklab, white 18%, transparent); color: var(--primary-foreground);
+}
+.home-fav-play:hover { background: color-mix(in oklab, white 30%, transparent); }
+.home-fav-add {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
+  min-height: 9.5rem; border-radius: var(--radius-2xl); border: 2px dashed var(--border);
+  color: var(--muted-foreground); font-size: 0.8rem; text-align: center; grid-column: span 2;
+}
+.home-fav-add:hover { border-color: var(--gold); color: var(--gold); }
+
 /* ---------- Search ---------- */
 .search-box { margin-top: 1.25rem; display: flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-2xl); padding: 0.75rem 1rem; }
 .search-box svg { color: var(--muted-foreground); flex-shrink: 0; }
@@ -372,9 +409,9 @@ input { font-family: inherit; }
      with whatever was scrolling underneath it. */
   background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 }
-.bottomnav-grid { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0; padding: 0; gap: 0; }
+.bottomnav-grid { display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; margin: 0; padding: 0; gap: 0; }
 .bottomnav-grid a {
-  display: flex; flex-direction: column; align-items: center; gap: 0.25rem; border-radius: var(--radius-2xl);
+  width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; border-radius: var(--radius-2xl);
   padding: 0.5rem 0; font-size: 0.625rem; font-weight: 500; color: var(--muted-foreground); transition: all .15s ease;
 }
 .bottomnav-grid a.active { color: var(--primary-foreground); background: var(--primary); box-shadow: var(--shadow-elegant); }
