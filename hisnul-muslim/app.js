@@ -41,10 +41,19 @@
   var THEME_KEY = "hisn:theme:v1";
   var TASBIH_KEY = "hisn:tasbih:v1";
 
+  // First-ever visit (the key has literally never been written) seeds a
+  // starter set of favorites, same as the reference design ships with -
+  // once written, this never runs again, so deliberately clearing all
+  // favorites later stays empty rather than snapping back to these.
+  var DEFAULT_FAVORITES = [16, 25, 27, 28];
   function readFavorites() {
     try {
       var raw = localStorage.getItem(FAV_KEY);
-      return raw ? JSON.parse(raw) : [];
+      if (raw === null) {
+        writeFavorites(DEFAULT_FAVORITES);
+        return DEFAULT_FAVORITES.slice();
+      }
+      return JSON.parse(raw);
     } catch (e) { return []; }
   }
   function writeFavorites(ids) {
