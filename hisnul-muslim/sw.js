@@ -16,14 +16,15 @@ const ASSETS = [
   "./icons/icon-512.png"
 ];
 
-// Hosts the app streams du'a audio from — the GitHub Release most tracks are
-// self-hosted on (see audio.js), plus archive.org/everyayah.com as the
-// fallback for the handful of tracks that release doesn't have. Requests to
-// any of these are served from the audio cache when present; otherwise
-// played straight from the network and, in the background, saved to the
-// audio cache so the same track plays offline next time — no separate
-// "download" step needed.
-const AUDIO_HOSTS = ["github.com", "archive.org", "everyayah.com"];
+// External hosts the app streams du'a audio from — archive.org/everyayah.com,
+// the fallback for the handful of tracks not included in the local audio/
+// folder (see audio.js; most tracks are same-origin now and don't need any
+// of this, same-origin requests are handled by the generic branch below).
+// Requests to any of these are served from the audio cache when present;
+// otherwise played straight from the network and, in the background, saved
+// to the audio cache so the same track plays offline next time — no
+// separate "download" step needed.
+const AUDIO_HOSTS = ["archive.org", "everyayah.com"];
 
 // Fetches a full (non-Range) copy of an audio URL and stores it in the audio
 // cache, if it isn't there already. Used in the background after a live
