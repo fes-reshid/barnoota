@@ -10,12 +10,20 @@
 // sequentially from wherever an override ends, so one correction re-aligns
 // everything downstream. Use /audio-check.html to find them by ear.
 
-// Most tracks are self-hosted on a GitHub Release for faster loading than
-// streaming every file from archive.org directly. A handful of tracks
-// weren't included in that release (upload gaps) — those still stream from
-// archive.org, same as before. If the release is ever completed, just
-// empty out MISSING_FROM_RELEASE.
-var GITHUB_AUDIO_BASE = "https://github.com/fes-reshid/barnoota/releases/download/audio-v1/";
+// Most tracks are self-hosted as plain static files in this repo (served
+// by GitHub Pages alongside the rest of the app) rather than as GitHub
+// Release assets. Release assets are always served with
+// "Content-Type: application/octet-stream", "Content-Disposition:
+// attachment", and "X-Content-Type-Options: nosniff" - a combination
+// desktop browsers mostly shrug off but iOS Safari takes literally,
+// treating the file as a forced download instead of playable inline
+// audio and failing every <audio> playback silently. Plain static files
+// get a correct "audio/mpeg" Content-Type and no attachment header, same
+// as any other asset on the site. A handful of tracks weren't included
+// in that migration (upload gaps) — those still stream from archive.org,
+// same as before. If that gap is ever closed, just empty out
+// MISSING_FROM_RELEASE.
+var LOCAL_AUDIO_BASE = "audio/";
 var MISSING_FROM_RELEASE = [71, 95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
 var MISSING_FROM_RELEASE_SET = {};
 MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
@@ -24,12 +32,12 @@ function audioUrl(num) {
   if (MISSING_FROM_RELEASE_SET[num]) {
     return "https://archive.org/download/peacefulmankind_Hisnul_Muslim/n" + num + ".mp3";
   }
-  return GITHUB_AUDIO_BASE + "n" + num + ".mp3";
+  return LOCAL_AUDIO_BASE + "n" + num + ".mp3";
 }
 
 var ALIMRAN_AYAH_URLS = Array.from({ length: 11 }, function (_, i) {
   var n = 190 + i;
-  return GITHUB_AUDIO_BASE + "ayah-" + n + ".mp3";
+  return LOCAL_AUDIO_BASE + "ayah-" + n + ".mp3";
 });
 
 // Which track(s) a given du'a uses.
