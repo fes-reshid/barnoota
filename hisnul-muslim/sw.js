@@ -1,4 +1,4 @@
-const CACHE_NAME = "hisnul-muslim-v5";
+const CACHE_NAME = "hisnul-muslim-v6";
 const AUDIO_CACHE_NAME = "hisnul-audio-v1";
 const ASSETS = [
   "./",
