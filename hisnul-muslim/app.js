@@ -985,6 +985,10 @@
     if (!t) return "Yaadachiisni banaadha.";
     return "Banaadha — har'a Faajrii " + fmtClock(t.fajr) + ", Maghrib " + fmtClock(t.maghrib) + ".";
   }
+  function bedtimeStatusText() {
+    if (!window.RemindersAPI || !RemindersAPI.isBedtimeEnabled()) return "Yaadachiisni hirribaa cufaadha.";
+    return "Banaadha — guyyuma sa'aatii " + RemindersAPI.bedtimeTime() + " tti beeksisa siif erga.";
+  }
   function reminderErrorText(reason) {
     switch (reason) {
       case "geo-denied": return "Eeyyama bakka argamuu hin arganne. Qindaa'ina browser/appii keessatti bakka argamuu (location) eeyyamaaf.";
@@ -998,6 +1002,8 @@
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
     var reminderOn = window.RemindersAPI && RemindersAPI.isEnabled();
+    var bedtimeOn = window.RemindersAPI && RemindersAPI.isBedtimeEnabled();
+    var bedtimeTime = window.RemindersAPI ? RemindersAPI.bedtimeTime() : "22:00";
     setTimeout(function () { bindSettingsEvents(theme); }, 0);
     return (
       '<header class="animate-fade-in">' +
@@ -1043,6 +1049,14 @@
           (reminderOn ? "Yaadachiisa dhaamsi" : "Yaadachiisa banii") +
         "</button>" +
         '<p class="reminder-status" id="settings-reminder-status" style="margin-top:0.5rem;color:var(--muted-foreground);font-size:0.85rem;">' + esc(reminderStatusText()) + "</p>" +
+        '<div class="reminder-divider">' +
+          '<p class="page-sub">Yeroo hirribaatti seentanitti (Zikriiwwan hirribaa) beeksisa siif erga — sa\'aatii ofii keessan filadhaa.</p>' +
+          '<input type="time" id="settings-bedtime-time" class="bedtime-time-input" value="' + esc(bedtimeTime) + '">' +
+          '<button class="font-reset" id="settings-bedtime-toggle" data-on="' + (bedtimeOn ? "1" : "0") + '" style="margin-top:0.75rem;">' +
+            (bedtimeOn ? "Yaadachiisa hirribaa dhaamsi" : "Yaadachiisa hirribaa banii") +
+          "</button>" +
+          '<p class="reminder-status" id="settings-bedtime-status" style="margin-top:0.5rem;color:var(--muted-foreground);font-size:0.85rem;">' + esc(bedtimeStatusText()) + "</p>" +
+        "</div>" +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -1102,6 +1116,32 @@
       remBtn.disabled = true;
       var res = await RemindersAPI.enable();
       remBtn.disabled = false;
+      if (res.ok) {
+        navigate(location.hash, true);
+      } else if (status) {
+        status.textContent = reminderErrorText(res.reason);
+      }
+    });
+
+    var bedtimeInput = document.getElementById("settings-bedtime-time");
+    if (bedtimeInput && window.RemindersAPI) bedtimeInput.addEventListener("change", function () {
+      if (!bedtimeInput.value) return;
+      RemindersAPI.setBedtimeTime(bedtimeInput.value);
+      var status = document.getElementById("settings-bedtime-status");
+      if (status) status.textContent = bedtimeStatusText();
+    });
+
+    var bedtimeBtn = document.getElementById("settings-bedtime-toggle");
+    if (bedtimeBtn && window.RemindersAPI) bedtimeBtn.addEventListener("click", async function () {
+      var status = document.getElementById("settings-bedtime-status");
+      if (bedtimeBtn.getAttribute("data-on") === "1") {
+        RemindersAPI.disableBedtime();
+        navigate(location.hash, true);
+        return;
+      }
+      bedtimeBtn.disabled = true;
+      var res = await RemindersAPI.enableBedtime();
+      bedtimeBtn.disabled = false;
       if (res.ok) {
         navigate(location.hash, true);
       } else if (status) {
