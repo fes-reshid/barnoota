@@ -308,6 +308,19 @@ input { font-family: inherit; }
   font-size: calc(0.95rem * var(--reading-scale));
 }
 
+.ayah-citation {
+  display: inline-block; margin-top: 1rem; padding: 0.25rem 0.75rem; border-radius: 9999px;
+  background: color-mix(in oklab, var(--gold) 15%, transparent); color: var(--gold);
+  font-size: calc(0.72rem * var(--reading-scale)); font-weight: 600; letter-spacing: 0.02em;
+}
+.ayah-citation + .ayah-block .dua-arabic { margin-top: 0.75rem; }
+.ayah-block + .ayah-block { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.ayah-block .dua-arabic { margin-top: 0; }
+.ayah-oromo {
+  margin-top: 0.6rem; white-space: pre-line; border-top: none; padding-top: 0;
+  line-height: 1.65; color: var(--muted-foreground); font-size: calc(0.95rem * var(--reading-scale));
+}
+
 .counter-row {
   margin-top: 1.25rem; display: flex; align-items: center; justify-content: space-between;
   border-radius: var(--radius-2xl); background: color-mix(in oklab, var(--accent) 60%, transparent);

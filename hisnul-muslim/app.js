@@ -491,6 +491,28 @@
     }).join("");
   }
 
+  // Khawatim Aali-'Imraan (3:190-200): a single continuous passage, not
+  // several bundled surahs, so each individual ayah gets its own bracket
+  // pair with that ayah's Oromo translation directly beneath it — as
+  // opposed to renderMultiSurah's one-block-per-surah grouping. Detected
+  // the same way audio.js's isAlimranCombinedDua does (kept as an
+  // independent copy here since rendering has no reason to depend on the
+  // audio module, or vice versa).
+  function isAlimranCombinedDua(d) {
+    return d.arabic.normalize("NFC").indexOf("خَلْقِ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ وَٱخْتِلَٰفِ".normalize("NFC")) !== -1;
+  }
+  function renderAyahByAyah(arabic, oromo) {
+    var arVerses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var omVerses = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var body = arVerses.map(function (v, idx) {
+      return '<div class="ayah-block">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderAyatBlock([v]) + "</p>" +
+        (omVerses[idx] ? '<p class="dua-oromo ayah-oromo">' + esc(normalizeText(omVerses[idx])) + "</p>" : "") +
+      "</div>";
+    }).join("");
+    return '<div class="ayah-citation">Aal-\'Imraan 190-200</div>' + body;
+  }
+
   function duaCardHTML(chapter, d, n, i, hasAudio) {
     return (
       '<article class="glass dua-card animate-fade-in" data-dua-idx="' + i + '">' +
@@ -503,7 +525,9 @@
         "</div>" +
         '<div class="seek-wrap" hidden></div>' +
         '<p class="audio-error" hidden></p>' +
-        (countBismillah(d.arabic) > 1 ?
+        (isAlimranCombinedDua(d) ?
+          renderAyahByAyah(d.arabic, d.oromo || "") :
+          countBismillah(d.arabic) > 1 ?
           renderMultiSurah(d.arabic, d.oromo || "") :
           '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
           (d.oromo ? '<p class="dua-oromo">' + esc(normalizeText(d.oromo)) + "</p>" : "")
