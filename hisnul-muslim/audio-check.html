@@ -78,6 +78,10 @@
   .surah-block + .surah-block{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
   .surah-block .ar{ margin-bottom:4px; }
   .surah-om{ margin:0 0 10px; }
+  .ayah-citation{ display:inline-block; margin-bottom:6px; padding:2px 10px; border-radius:999px; background:color-mix(in oklab, var(--gold) 15%, transparent); color:var(--gold); font-size:.7em; font-weight:600; }
+  .ayah-block + .ayah-block{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+  .ayah-block .ar{ margin-bottom:4px; }
+  .ayah-om{ margin:0 0 10px; }
   .ctrls{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .play{
     border:none; cursor:pointer; background:var(--gold); color:#fff;
@@ -235,6 +239,22 @@
       "</div>";
     }).join("");
   }
+  // Mirrors app.js's isAlimranCombinedDua / renderAyahByAyah, so the
+  // Khawatim Aali-'Imraan entry previews here the same way it ships.
+  function isAlimranCombinedDua(d) {
+    return d.arabic.normalize("NFC").indexOf("خَلْقِ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ وَٱخْتِلَٰفِ".normalize("NFC")) !== -1;
+  }
+  function renderAyahByAyah(arabic, oromo) {
+    var arVerses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var omVerses = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var body = arVerses.map(function (v, idx) {
+      return '<div class="ayah-block">' +
+        '<div class="ar" lang="ar" dir="rtl">' + renderAyatBlock([v]) + "</div>" +
+        (omVerses[idx] ? '<p class="om ayah-om">' + esc(normalizeText(omVerses[idx])) + "</p>" : "") +
+      "</div>";
+    }).join("");
+    return '<div class="ayah-citation">Aal-\'Imraan 190-200</div>' + body;
+  }
 
   function rebuild() {
     map = buildAudioMap(overrides);
@@ -317,7 +337,9 @@
           trackControl +
         '</div>' +
         '<div class="title">' + esc(row.chapter.oromoTitle) + '</div>' +
-        (countBismillah(row.dua.arabic) > 1 ?
+        (isAlimranCombinedDua(row.dua) ?
+          renderAyahByAyah(row.dua.arabic, row.dua.oromo || "") :
+          countBismillah(row.dua.arabic) > 1 ?
           renderMultiSurah(row.dua.arabic, row.dua.oromo || "") :
           '<div class="ar" lang="ar" dir="rtl">' + renderArabicText(row.dua.arabic) + '</div>' +
           (row.dua.oromo ? '<p class="om">' + esc(normalizeText(row.dua.oromo)) + '</p>' : '')
