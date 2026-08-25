@@ -1027,10 +1027,10 @@
         '<div class="settings-section-head">' + icon("info", 16) + "<span>Waa'ee Appii</span></div>" +
         '<div class="about-body">' +
           "<p>Appiin kun <span class=\"gold-text\" style=\"font-weight:600;\">Hisnul Muslim</span> — kitaaba zikriifi du'aa'ii Musliimaa, Afaan Oromootiin akka salphaatti dubbifamuufi dhaggeeffatamu kan qopha'e dha.</p>" +
-          '<p>Kitaabni <a href="https://islamhouse.com" target="_blank" rel="noreferrer" class="link">islamhouse.com</a> irraahi.</p>' +
+          '<p>Kitaabni <a href="https://islamhouse.com" target="_blank" rel="noreferrer" class="link">islamhouse.com</a> irraa kan Afaan Oromootiin PDF hiikkamte irraa hojjatame.</p>' +
           '<p>Audio immoo <a href="https://archive.org" target="_blank" rel="noreferrer" class="link">archive.org</a> irraahi.</p>' +
-          '<p>Hojii fi qopheessuun appichaa <strong>Feysel Mustefa</strong> tiin gaggeeffame. Akka aakhiraatti hojii gaarii naa galmeessu, namni fayyadame <strong>du\'aa\'ii</strong> naaf akka godhu kabajaan gaafadha.</p>' +
-          '<p style="color:var(--muted-foreground);">Yaada, dogoggora, ykn fooyya\'iinsaaf:</p>' +
+          '<p>App kan hojjate <strong>Feeysal Musxafaa</strong>ti.</p>' +
+          '<p style="color:var(--muted-foreground);">Yaada yoo qabaattan email armaan gadii kanaan na qunnamaa.</p>' +
           '<a class="mail-btn" href="mailto:fes900@yahoo.com?subject=Hisnul%20Muslim%20App%20Feedback">' + icon("mail", 16) + " fes900@yahoo.com</a>" +
           '<p style="margin-top:0.5rem;"><a href="privacy.html" target="_blank" rel="noreferrer" class="link">Imaammata Iccitii (Privacy Policy)</a></p>' +
         "</div>" +
