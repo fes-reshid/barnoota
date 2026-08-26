@@ -24,7 +24,7 @@
 // same as before. If that gap is ever closed, just empty out
 // MISSING_FROM_RELEASE.
 var LOCAL_AUDIO_BASE = "audio/";
-var MISSING_FROM_RELEASE = [71, 95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
+var MISSING_FROM_RELEASE = [95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
 var MISSING_FROM_RELEASE_SET = {};
 MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
 
@@ -56,7 +56,8 @@ var TRACK_OVERRIDES = {
   "2:0": "n5",
   "15:0": "n22",
   "25:4": "n66",
-  "26:2": "n71",
+  "26:1": "none",
+  "26:2": "none",
   "27:0": "n71",
   "27:1": "n72",
   "27:2": "n66",

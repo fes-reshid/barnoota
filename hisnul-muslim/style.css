@@ -244,6 +244,7 @@ input { font-family: inherit; }
 .topic-header .ar { margin-top: 0.25rem; color: var(--gold); font-size: calc(1.15rem * var(--reading-scale)); }
 
 .dua-section { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.guidance-divider { width: 100%; border: none; border-top: 1px dashed color-mix(in oklab, var(--border) 80%, transparent); margin: 0; }
 .dua-card { border-radius: var(--radius-3xl); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: box-shadow .15s ease; }
 .dua-card.playing { box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 40%, transparent); }
 .dua-card-top { display: flex; align-items: center; justify-content: space-between; }
