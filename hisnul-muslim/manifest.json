@@ -21,9 +21,12 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "screenshots": [
-    { "src": "screenshots/categories.png", "sizes": "824x1830", "type": "image/png", "form_factor": "narrow", "label": "Gosoota zikrii — the du'a categories list" },
-    { "src": "screenshots/chapter.png", "sizes": "824x1830", "type": "image/png", "form_factor": "narrow", "label": "A chapter with Arabic text, translation, and a tally counter" },
-    { "src": "screenshots/settings.png", "sizes": "824x1830", "type": "image/png", "form_factor": "narrow", "label": "App settings — theme, font size, and reminders" }
+    { "src": "screenshots/mana.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Mana — your saved favorites at a glance" },
+    { "src": "screenshots/zikrii.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Gosoota zikrii — the du'a categories list" },
+    { "src": "screenshots/chapter.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "A chapter with Arabic text, translation, and a tally counter" },
+    { "src": "screenshots/tasbih.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Tasbiih — the dhikr counter" },
+    { "src": "screenshots/sagalee.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Sagalee — the audio library" },
+    { "src": "screenshots/settings.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "App settings — theme, font size, and reminders" }
   ],
   "shortcuts": [
     {
