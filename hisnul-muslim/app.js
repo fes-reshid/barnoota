@@ -162,6 +162,7 @@
   // slot ID each unit is given once created.
   var AD_SLOT_HOME = "0000000000";
   var AD_SLOT_ZIKRII = "0000000000";
+  var AD_SLOT_SAGALEE = "0000000000";
   function adSlotHTML(slot) {
     return '<div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="' +
       ADSENSE_CLIENT + '" data-ad-slot="' + slot + '" data-ad-format="auto" data-full-width-responsive="true"></ins></div>';
@@ -193,8 +194,8 @@
         '<h1 class="page-title">Gosoota <span class="gold-text">Zikrii</span></h1>' +
         '<p class="page-sub">Lakkoofsi tartiiba kitaaba Hisnul Muslim hordofa.</p>' +
       "</header>" +
-      adSlotHTML(AD_SLOT_ZIKRII) +
-      '<div class="category-list">' + CHAPTERS.map(categoryCardHTML).join("") + "</div>"
+      '<div class="category-list">' + CHAPTERS.map(categoryCardHTML).join("") + "</div>" +
+      adSlotHTML(AD_SLOT_ZIKRII)
     );
   }
 
@@ -910,7 +911,7 @@
   var sagaleeState = null;
   function pageSagalee() {
     document.title = "Sagalee — Hisnul Muslim";
-    setTimeout(bindSagaleeEvents, 0);
+    setTimeout(function () { bindSagaleeEvents(); pushAd(); }, 0);
     var items = CHAPTERS.map(function (c) {
       return (
         '<li class="glass sagalee-item animate-fade-in" data-chapter="' + c.num + '">' +
@@ -933,7 +934,8 @@
         "</div>" +
         '<p class="page-sub">Sagalee du\'aa dhaggeeffadhu. Tuqi ▶︎ jalqabuuf.</p>' +
       "</header>" +
-      '<ul class="sagalee-list">' + items + "</ul>"
+      '<ul class="sagalee-list">' + items + "</ul>" +
+      adSlotHTML(AD_SLOT_SAGALEE)
     );
   }
   function bindSagaleeEvents() {
