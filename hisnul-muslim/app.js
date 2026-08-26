@@ -155,6 +155,24 @@
     document.getElementById("bottomnav-grid").innerHTML = html;
   }
 
+  // ---------------- AdSense ----------------
+  var ADSENSE_CLIENT = "ca-pub-7778012722329637";
+  // Ad unit slot IDs from the AdSense dashboard (Ads > By ad unit > Display
+  // ads) — one unit per placement. These are placeholders; swap in the real
+  // slot ID each unit is given once created.
+  var AD_SLOT_HOME = "0000000000";
+  var AD_SLOT_ZIKRII = "0000000000";
+  function adSlotHTML(slot) {
+    return '<div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="' +
+      ADSENSE_CLIENT + '" data-ad-slot="' + slot + '" data-ad-format="auto" data-full-width-responsive="true"></ins></div>';
+  }
+  // Each SPA navigation replaces the DOM with a fresh, unfilled <ins> tag —
+  // unlike a normal multi-page site, adsbygoogle.push() has to be called
+  // again after every render, not just once at initial page load.
+  function pushAd() {
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+  }
+
   // ---------------- Category card ----------------
   function categoryCardHTML(c) {
     return '<a href="#/category/' + c.num + '" class="glass category-card">' +
@@ -168,12 +186,14 @@
   // ---------------- Pages ----------------
   function pageCategories() {
     document.title = "Gosoota Zikrii — Hisnul Muslim";
+    setTimeout(pushAd, 0);
     return (
       '<header class="animate-fade-in">' +
         '<p class="eyebrow">Hundi ' + CHAPTERS.length + "</p>" +
         '<h1 class="page-title">Gosoota <span class="gold-text">Zikrii</span></h1>' +
         '<p class="page-sub">Lakkoofsi tartiiba kitaaba Hisnul Muslim hordofa.</p>' +
       "</header>" +
+      adSlotHTML(AD_SLOT_ZIKRII) +
       '<div class="category-list">' + CHAPTERS.map(categoryCardHTML).join("") + "</div>"
     );
   }
@@ -222,7 +242,7 @@
     document.title = "Mana — Hisnul Muslim";
     var ids = readFavorites();
     var favs = CHAPTERS.filter(function (c) { return ids.indexOf(c.num) !== -1; });
-    setTimeout(bindHomeEvents, 0);
+    setTimeout(function () { bindHomeEvents(); pushAd(); }, 0);
     var body;
     if (!favs.length) {
       body =
@@ -244,7 +264,7 @@
         '<p class="eyebrow">Hisnul Muslim</p>' +
         '<h1 class="page-title">Du’aa’ii <span class="gold-text">barbaachisoo</span></h1>' +
         '<p class="page-sub">Kanneen yeroo hunda fayyadamtu asitti qabadhu.</p>' +
-      "</header>" + body
+      "</header>" + body + adSlotHTML(AD_SLOT_HOME)
     );
   }
   function bindHomeEvents() {
