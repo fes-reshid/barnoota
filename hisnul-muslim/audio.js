@@ -24,7 +24,7 @@
 // same as before. If that gap is ever closed, just empty out
 // MISSING_FROM_RELEASE.
 var LOCAL_AUDIO_BASE = "audio/";
-var MISSING_FROM_RELEASE = [71, 95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
+var MISSING_FROM_RELEASE = [95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 217, 219, 229, 247, 248, 249];
 var MISSING_FROM_RELEASE_SET = {};
 MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
 

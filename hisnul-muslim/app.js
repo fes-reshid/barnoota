@@ -349,6 +349,13 @@
     return /\d+\s*[ـ\-]+/.test(a);
   }
 
+  // Chapter 26 (Istikhaaraa): only the first entry is the actual du'a to
+  // recite — the next two are supporting guidance/citation text (a wisdom
+  // saying and a Qur'an verse about consultation), not further du'as. Kept
+  // as ordinary cards (with their calibrated audio intact) rather than
+  // topic-header blocks, just visually separated from the real du'a.
+  var GUIDANCE_DIVIDER_BEFORE = { "26:1": true };
+
   var chapterAudioState = null; // { chapterNum, urls, idx, playing, loading, current, duration, progress }
 
   function stopChapterAudio() {
@@ -369,16 +376,17 @@
 
     var n = 0;
     var duaHTML = chapter.duas.map(function (d, i) {
+      var divider = GUIDANCE_DIVIDER_BEFORE[chapter.num + ":" + i] ? '<hr class="guidance-divider">' : "";
       if (isTopicHeaderText(d)) {
         var cleanAr = d.arabic.replace(/^\s*\d+\.?\s*/, "");
-        return '<div class="topic-header animate-fade-in">' +
+        return divider + '<div class="topic-header animate-fade-in">' +
           '<p class="eyebrow">Mata-duree</p>' +
           '<p class="om">' + esc(normalizeText(d.oromo)) + '</p>' +
           '<p class="ar font-arabic" lang="ar" dir="rtl">' + esc(normalizeText(cleanAr)) + "</p>" +
         "</div>";
       }
       n += 1;
-      return duaCardHTML(chapter, d, n, i, !!rangeForDua(chapter.num, i));
+      return divider + duaCardHTML(chapter, d, n, i, !!rangeForDua(chapter.num, i));
     }).join("");
 
     setTimeout(function () { bindCategoryPageEvents(chapter); }, 0);
