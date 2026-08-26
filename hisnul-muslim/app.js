@@ -1056,6 +1056,7 @@
         '<div class="about-body">' +
           "<p>Appiin kun <span class=\"gold-text\" style=\"font-weight:600;\">Hisnul Muslim</span> — kitaaba zikriifi du'aa'ii Musliimaa, Afaan Oromootiin akka salphaatti dubbifamuufi dhaggeeffatamu kan qopha'e dha.</p>" +
           '<p>Kitaabni <a href="https://islamhouse.com" target="_blank" rel="noreferrer" class="link">islamhouse.com</a> irraa kan Afaan Oromootiin PDF hiikkamte irraa hojjatame.</p>' +
+          '<p>Kan hiike: <strong>Gaalii Abbaaboor Abbaaguumaa</strong>. Gulaala: <strong>Ustaz Jamaal Muhammad Ahmad</strong>.</p>' +
           '<p>Audio immoo <a href="https://archive.org" target="_blank" rel="noreferrer" class="link">archive.org</a> irraahi.</p>' +
           '<p>App kan hojjate <strong>Feeysal Musxafaa</strong>ti.</p>' +
           '<p style="color:var(--muted-foreground);">Yaada yoo qabaattan email armaan gadii kanaan na qunnamaa.</p>' +
