@@ -47,5 +47,12 @@
 <script src="prayertimes.js"></script>
 <script src="reminders.js"></script>
 <script src="app.js"></script>
+<script>
+  // Inline and immediate so static PWA analyzers (e.g. PWABuilder) that
+  // don't execute app.js's window-load-deferred registration still see
+  // this page register a service worker. Harmless to also register from
+  // app.js — both calls resolve against the same registration.
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
+</script>
 </body>
 </html>
