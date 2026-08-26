@@ -2,13 +2,6 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "io.github.fes_reshid.twa",
-    "sha256_cert_fingerprints": ["C9:0D:A8:5C:DC:88:D4:A8:68:9C:21:B7:DA:9B:68:C0:96:35:19:20:5F:F3:00:4A:37:77:23:D1:B9:6E:59:87"]
-  }
-}, {
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
     "package_name": "com.diinislaam.twa",
     "sha256_cert_fingerprints": ["BE:C6:4B:7E:4D:85:F6:BD:F2:E5:36:89:0E:95:E4:2F:13:0B:37:68:48:ED:8F:EE:09:89:9F:92:AF:77:66:01"]
   }
