@@ -489,8 +489,13 @@
       else ayat.push(v);
     });
     if (!ayat.length) return heading;
+    // Some long ayat have single line-breaks in the source data (mid-verse
+    // formatting), unlike the \n\n that separates one verse from the next.
+    // normalizeText collapses those to spaces so a single verse always
+    // flows and wraps as one unit — only the \n\n already used to split
+    // `verses` should ever force a break.
     var body = ayat.map(function (v) {
-      return esc(v) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
+      return esc(normalizeText(v)) + ' <span class="ayah-end" aria-hidden="true">' + icon("ayahEnd", 11) + "</span>";
     }).join(" ");
     return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
