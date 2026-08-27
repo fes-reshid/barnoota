@@ -379,7 +379,8 @@ input { font-family: inherit; }
 .repeat-toggle.active { color: var(--primary-foreground); background: var(--primary); box-shadow: var(--shadow-elegant); }
 .sagalee-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; list-style: none; padding: 0; }
 .sagalee-item { border-radius: var(--radius-2xl); padding: 0.75rem; }
-.sagalee-row { display: flex; width: 100%; align-items: center; gap: 0.75rem; text-align: left; }
+.sagalee-row { display: flex; width: 100%; align-items: center; gap: 0.75rem; text-align: left; cursor: pointer; }
+.sagalee-row:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: var(--radius-2xl); }
 .sagalee-play {
   flex-shrink: 0; width: 2.75rem; height: 2.75rem; padding: 0; border-radius: var(--radius-2xl); color: var(--primary-foreground) !important;
   background: var(--gradient-gold); box-shadow: var(--shadow-gold); display: flex; align-items: center; justify-content: center;
