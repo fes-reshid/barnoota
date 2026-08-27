@@ -540,6 +540,54 @@
   function isAlimranCombinedDua(d) {
     return d.arabic.normalize("NFC").indexOf("خَلْقِ ٱلسَّمَٰوَٰتِ وَٱلْأَرْضِ وَٱخْتِلَٰفِ".normalize("NFC")) !== -1;
   }
+
+  // Some du'as narrate an action ("he cups his hands, then recites...") that
+  // quotes actual Qur'an verses in the middle of otherwise plain hadith
+  // text, rather than being pure Qur'an quotation themselves — e.g. the
+  // bedtime dhikr that quotes the three Quls. A per-chunk isQuranicAyat
+  // check isn't reliable here: some genuine mid-surah verses (e.g. "لَمْ
+  // يَلِدْ وَلَمْ يُولَدْ") happen to contain no wasla alef at all, so
+  // they'd be misread as "plain" and wrongly split the surah apart. Once
+  // inside a Bismillah-led verse group, a chunk stays part of that Qur'an
+  // group unless it contains a paren — this book's convention for
+  // narration/annotation asides (e.g. "(ثَلَاثَ مَرَّاتٍ)") — which never
+  // appears inside an actual ayah in this data.
+  function classifyDuaChunks(arabic) {
+    var chunks = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    var blocks = [];
+    var inQuran = false;
+    chunks.forEach(function (c) {
+      if (c === BISMILLAH) {
+        blocks.push({ type: "quran", verses: [c] });
+        inQuran = true;
+        return;
+      }
+      if (inQuran && !/[()]/.test(c)) {
+        blocks[blocks.length - 1].verses.push(c);
+        return;
+      }
+      blocks.push({ type: "plain", text: c });
+      inQuran = false;
+    });
+    return blocks;
+  }
+  function isMixedDua(arabic) {
+    var blocks = classifyDuaChunks(arabic);
+    return blocks.some(function (b) { return b.type === "quran"; }) &&
+      blocks.some(function (b) { return b.type === "plain"; });
+  }
+  function renderMixedDua(arabic, oromo) {
+    var blocks = classifyDuaChunks(arabic);
+    var omParas = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
+    return blocks.map(function (b, idx) {
+      var arHtml = b.type === "quran" ? renderAyatBlock(b.verses) : esc(normalizeText(b.text));
+      var omHtml = omParas[idx] ? '<p class="dua-oromo surah-oromo">' + esc(normalizeText(omParas[idx])) + "</p>" : "";
+      return '<div class="surah-block">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + arHtml + "</p>" +
+        omHtml +
+      "</div>";
+    }).join("");
+  }
   function renderAyahByAyah(arabic, oromo) {
     var arVerses = arabic.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
     var omVerses = oromo.split(/\n\n+/).map(function (v) { return v.trim(); }).filter(Boolean);
@@ -566,6 +614,8 @@
         '<p class="audio-error" hidden></p>' +
         (isAlimranCombinedDua(d) ?
           renderAyahByAyah(d.arabic, d.oromo || "") :
+          isMixedDua(d.arabic) ?
+          renderMixedDua(d.arabic, d.oromo || "") :
           countBismillah(d.arabic) > 1 ?
           renderMultiSurah(d.arabic, d.oromo || "") :
           '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + renderArabicText(d.arabic) + "</p>" +
