@@ -290,7 +290,7 @@
         if (homeState) homeState.destroy();
         var chapter = CHAPTERS.find(function (c) { return c.num === num; });
         var urls = urlsForChapter(num);
-        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
+        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
         homeState.currentChapter = num;
         homeState.play(0);
       });
@@ -658,7 +658,7 @@
     var urls = urlsForChapter(chapter.num);
     chapterAudioState = createAudioController(urls, function (state) {
       updateDuaPlayUI(chapter, state);
-    }, repeatCountsForChapter(chapter));
+    }, repeatCountsForChapter(chapter), chapter.oromoTitle);
 
     document.querySelectorAll('[data-action="play-dua"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -721,7 +721,14 @@
   // repeatCounts (optional): array parallel to urls, giving how many times
   // in a row to play the track at each position before moving on — for
   // du'as whose text names a repeat count (e.g. "three times").
-  function createAudioController(urls, onUpdate, repeatCounts) {
+  //
+  // title (optional): shown in the OS/lock-screen media controls via the
+  // Media Session API below — this is also what keeps playback going when
+  // the tab is backgrounded or the screen locks. Without a registered media
+  // session, mobile browsers (iOS Safari in particular) treat background
+  // audio as unimportant and suspend it; with one, the OS knows this is a
+  // real, ongoing playback session the user asked for and leaves it alone.
+  function createAudioController(urls, onUpdate, repeatCounts, title) {
     var audioEl = new Audio();
     audioEl.preload = "auto";
     // Deliberately no crossOrigin="anonymous": these hosts aren't guaranteed
@@ -736,6 +743,24 @@
 
     function repeatCountAt(idx) {
       return (repeatCounts && repeatCounts[idx]) || 1;
+    }
+
+    // The Media Session API is a single global slot — whichever controller
+    // last registered its handlers "owns" the OS-level play/pause/seek
+    // controls. That's fine here: state.play() already pauses any other
+    // active controller before starting, so only one is ever really live.
+    var hasMediaSession = typeof navigator !== "undefined" && "mediaSession" in navigator;
+    if (hasMediaSession) {
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: title || "Hisnul Muslim", artist: "Hisnul Muslim" });
+      } catch (e) {}
+      navigator.mediaSession.setActionHandler("play", function () { audioEl.play().catch(function () {}); });
+      navigator.mediaSession.setActionHandler("pause", function () { audioEl.pause(); });
+      try { navigator.mediaSession.setActionHandler("nexttrack", function () { state.repeatsLeft = 1; advance(); }); } catch (e) {}
+    }
+    function syncMediaSessionState() {
+      if (!hasMediaSession) return;
+      try { navigator.mediaSession.playbackState = state.playing ? "playing" : "paused"; } catch (e) {}
     }
 
     // emit()/preloadNext()/advance() all short-circuit once destroyed, so a
@@ -807,8 +832,9 @@
       // it, so without this an error banner from one bad file could keep
       // showing even after a later track started playing fine).
       state.loading = false; state.playing = true; state.error = false; emit();
+      syncMediaSessionState();
     });
-    audioEl.addEventListener("pause", function () { state.playing = false; emit(); });
+    audioEl.addEventListener("pause", function () { state.playing = false; emit(); syncMediaSessionState(); });
     audioEl.addEventListener("loadedmetadata", function () { state.duration = audioEl.duration || 0; emit(); });
     audioEl.addEventListener("timeupdate", function () {
       state.current = audioEl.currentTime;
@@ -848,6 +874,17 @@
       audioEl.removeAttribute("src");
       try { audioEl.load(); } catch (e) {}
       if (activeAudioController === state) activeAudioController = null;
+      // Only clear the OS media session if this controller still owns it —
+      // a newer controller may already have taken over (and registered its
+      // own handlers) by the time this one gets torn down.
+      if (hasMediaSession && activeAudioController === null) {
+        try {
+          navigator.mediaSession.playbackState = "none";
+          navigator.mediaSession.setActionHandler("play", null);
+          navigator.mediaSession.setActionHandler("pause", null);
+          navigator.mediaSession.setActionHandler("nexttrack", null);
+        } catch (e) {}
+      }
     };
 
     return state;
@@ -1024,7 +1061,7 @@
       if (sagaleeState) sagaleeState.destroy();
       var chapter = CHAPTERS.find(function (c) { return c.num === num; });
       var urls = urlsForChapter(num);
-      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
+      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
       sagaleeState.currentChapter = num;
       sagaleeState.repeat = repeatOn;
       sagaleeState.play(0);
