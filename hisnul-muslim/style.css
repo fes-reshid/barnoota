@@ -175,8 +175,8 @@ input { font-family: inherit; }
   color: var(--primary-foreground); background: var(--gradient-primary);
 }
 .category-text { min-width: 0; flex: 1; }
-.category-text h3 { margin: 0; font-size: calc(1rem * var(--reading-scale)); font-weight: 500; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.category-text p { margin: 0.125rem 0 0; font-size: calc(0.875rem * var(--reading-scale)); color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.category-text h3 { margin: 0; font-size: calc(1rem * var(--reading-scale)); font-weight: 500; color: var(--foreground); }
+.category-text p { margin: 0.125rem 0 0; font-size: calc(0.875rem * var(--reading-scale)); color: var(--muted-foreground); }
 .category-count { font-size: calc(0.625rem * var(--reading-scale)); font-weight: 500; color: var(--muted-foreground); flex-shrink: 0; }
 .category-chevron { color: var(--muted-foreground); flex-shrink: 0; }
 

@@ -215,7 +215,7 @@
     });
     if (!ayat.length) return heading;
     var body = ayat.map(function (v) {
-      return esc(v) + ' <span class="ayah-end" aria-hidden="true">&#9733;</span>';
+      return esc(normalizeText(v)) + ' <span class="ayah-end" aria-hidden="true">&#9733;</span>';
     }).join(" ");
     return heading + '<span class="ayah-open" aria-hidden="true">﴿</span>' + body + '<span class="ayah-close" aria-hidden="true">﴾</span>';
   }
