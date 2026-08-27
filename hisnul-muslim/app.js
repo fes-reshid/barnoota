@@ -928,8 +928,8 @@
     var items = CHAPTERS.map(function (c) {
       return (
         '<li class="glass sagalee-item animate-fade-in" data-chapter="' + c.num + '">' +
-          '<div class="sagalee-row">' +
-            '<button type="button" class="sagalee-play" data-action="sagalee-toggle" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 20) + "</button>" +
+          '<div class="sagalee-row" data-action="sagalee-toggle" data-num="' + c.num + '" role="button" tabindex="0">' +
+            '<span class="sagalee-play" aria-hidden="true">' + icon("play", 20) + "</span>" +
             '<span class="sagalee-text"><span class="om">' + esc(c.oromoTitle) + '</span><span class="ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</span></span>" +
             '<span class="sagalee-num">#' + String(c.num).padStart(3, "0") + "</span>" +
           "</div>" +
@@ -960,20 +960,24 @@
       if (sagaleeState) sagaleeState.repeat = repeatOn;
     });
 
-    document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var num = parseInt(btn.getAttribute("data-num"), 10);
-        if (sagaleeState && sagaleeState.currentChapter === num) {
-          sagaleeState.pause();
-          return;
-        }
-        if (sagaleeState) sagaleeState.destroy();
-        var chapter = CHAPTERS.find(function (c) { return c.num === num; });
-        var urls = urlsForChapter(num);
-        sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
-        sagaleeState.currentChapter = num;
-        sagaleeState.repeat = repeatOn;
-        sagaleeState.play(0);
+    function toggleSagalee(row) {
+      var num = parseInt(row.getAttribute("data-num"), 10);
+      if (sagaleeState && sagaleeState.currentChapter === num) {
+        sagaleeState.pause();
+        return;
+      }
+      if (sagaleeState) sagaleeState.destroy();
+      var chapter = CHAPTERS.find(function (c) { return c.num === num; });
+      var urls = urlsForChapter(num);
+      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
+      sagaleeState.currentChapter = num;
+      sagaleeState.repeat = repeatOn;
+      sagaleeState.play(0);
+    }
+    document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (row) {
+      row.addEventListener("click", function () { toggleSagalee(row); });
+      row.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSagalee(row); }
       });
     });
   }
