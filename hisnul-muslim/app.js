@@ -439,10 +439,15 @@
     [/ثلاث\s*مرات/, 3],
     [/\(\s*ثلاث[اى]?\s*\)/, 3]
   ];
+  // A named count above this would mean playing the same few-second clip a
+  // very long time before moving on (e.g. tasbih recited 33/34 times) — cap
+  // playback repeats at 10 and advance to the next track after that, same
+  // as the audio can already replay when the reader re-taps play manually.
+  var MAX_AUDIO_REPEATS = 10;
   function repeatCountFor(arabic) {
     var s = stripTashkeel(arabic).replace(/[إأآ]/g, "ا").replace(/\n/g, " ");
     for (var i = 0; i < REPEAT_RULES.length; i++) {
-      if (REPEAT_RULES[i][0].test(s)) return REPEAT_RULES[i][1];
+      if (REPEAT_RULES[i][0].test(s)) return Math.min(REPEAT_RULES[i][1], MAX_AUDIO_REPEATS);
     }
     return 1;
   }
