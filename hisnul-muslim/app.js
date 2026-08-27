@@ -439,10 +439,15 @@
     [/ثلاث\s*مرات/, 3],
     [/\(\s*ثلاث[اى]?\s*\)/, 3]
   ];
+  // A named count above this would mean playing the same few-second clip a
+  // very long time before moving on (e.g. tasbih recited 33/34 times) — cap
+  // playback repeats at 10 and advance to the next track after that, same
+  // as the audio can already replay when the reader re-taps play manually.
+  var MAX_AUDIO_REPEATS = 10;
   function repeatCountFor(arabic) {
     var s = stripTashkeel(arabic).replace(/[إأآ]/g, "ا").replace(/\n/g, " ");
     for (var i = 0; i < REPEAT_RULES.length; i++) {
-      if (REPEAT_RULES[i][0].test(s)) return REPEAT_RULES[i][1];
+      if (REPEAT_RULES[i][0].test(s)) return Math.min(REPEAT_RULES[i][1], MAX_AUDIO_REPEATS);
     }
     return 1;
   }
@@ -928,8 +933,8 @@
     var items = CHAPTERS.map(function (c) {
       return (
         '<li class="glass sagalee-item animate-fade-in" data-chapter="' + c.num + '">' +
-          '<div class="sagalee-row">' +
-            '<button type="button" class="sagalee-play" data-action="sagalee-toggle" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 20) + "</button>" +
+          '<div class="sagalee-row" data-action="sagalee-toggle" data-num="' + c.num + '" role="button" tabindex="0">' +
+            '<span class="sagalee-play" aria-hidden="true">' + icon("play", 20) + "</span>" +
             '<span class="sagalee-text"><span class="om">' + esc(c.oromoTitle) + '</span><span class="ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</span></span>" +
             '<span class="sagalee-num">#' + String(c.num).padStart(3, "0") + "</span>" +
           "</div>" +
@@ -960,20 +965,24 @@
       if (sagaleeState) sagaleeState.repeat = repeatOn;
     });
 
-    document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var num = parseInt(btn.getAttribute("data-num"), 10);
-        if (sagaleeState && sagaleeState.currentChapter === num) {
-          sagaleeState.pause();
-          return;
-        }
-        if (sagaleeState) sagaleeState.destroy();
-        var chapter = CHAPTERS.find(function (c) { return c.num === num; });
-        var urls = urlsForChapter(num);
-        sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
-        sagaleeState.currentChapter = num;
-        sagaleeState.repeat = repeatOn;
-        sagaleeState.play(0);
+    function toggleSagalee(row) {
+      var num = parseInt(row.getAttribute("data-num"), 10);
+      if (sagaleeState && sagaleeState.currentChapter === num) {
+        sagaleeState.pause();
+        return;
+      }
+      if (sagaleeState) sagaleeState.destroy();
+      var chapter = CHAPTERS.find(function (c) { return c.num === num; });
+      var urls = urlsForChapter(num);
+      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null);
+      sagaleeState.currentChapter = num;
+      sagaleeState.repeat = repeatOn;
+      sagaleeState.play(0);
+    }
+    document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (row) {
+      row.addEventListener("click", function () { toggleSagalee(row); });
+      row.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSagalee(row); }
       });
     });
   }
