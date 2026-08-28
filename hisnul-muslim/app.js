@@ -286,7 +286,8 @@
         e.stopPropagation();
         var num = parseInt(btn.getAttribute("data-num"), 10);
         if (homeState && homeState.currentChapter === num) {
-          homeState.pause();
+          if (homeState.playing || homeState.loading) homeState.pause();
+          else homeState.resume();
           return;
         }
         if (homeState) homeState.destroy();
@@ -680,7 +681,10 @@
         if (!range) return;
         var st = chapterAudioState;
         var inRange = st.idx >= range.start && st.idx <= range.end;
-        if (st.playing && inRange) {
+        // Include "loading" so a tap that lands while this track is still
+        // buffering pauses it, rather than being read as "not playing yet"
+        // and calling play() again on top of the in-flight attempt.
+        if ((st.playing || st.loading) && inRange) {
           st.pause();
         } else {
           st.play(range.start);
@@ -1134,7 +1138,14 @@
             '<span class="sagalee-text"><span class="om">' + esc(c.oromoTitle) + '</span><span class="ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</span></span>" +
             '<span class="sagalee-num">#' + String(c.num).padStart(3, "0") + "</span>" +
           "</div>" +
-          '<div class="seek-wrap" hidden></div>' +
+          '<div class="seek-wrap" hidden>' +
+            '<input class="seek-input" type="range" min="0" max="0" step="0.1" value="0">' +
+            '<div class="seek-times"><span class="seek-current">0:00</span><span class="seek-remaining">0:00</span></div>' +
+            '<div class="seek-controls">' +
+              '<button class="skip-btn" data-action="sagalee-prev" aria-label="Kan dabre" hidden>' + icon("skipPrev", 16) + "</button>" +
+              '<button class="skip-btn" data-action="sagalee-next" aria-label="Kan itti aanu" hidden>' + icon("skipNext", 16) + "</button>" +
+            "</div>" +
+          "</div>" +
           '<p class="audio-error" hidden></p>' +
         "</li>"
       );
@@ -1164,7 +1175,10 @@
     function toggleSagalee(row) {
       var num = parseInt(row.getAttribute("data-num"), 10);
       if (sagaleeState && sagaleeState.currentChapter === num) {
-        sagaleeState.pause();
+        // Same chapter already loaded: pause if it's active (playing or
+        // still buffering), otherwise this is a genuine resume tap.
+        if (sagaleeState.playing || sagaleeState.loading) sagaleeState.pause();
+        else sagaleeState.resume();
         return;
       }
       if (sagaleeState) sagaleeState.destroy();
@@ -1181,6 +1195,25 @@
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSagalee(row); }
       });
     });
+
+    // Seek input and skip buttons are static markup (see pageSagalee), bound
+    // once here rather than rebuilt with the rest of seek-wrap's innerHTML
+    // on every progress tick — a full-innerHTML rebuild ~4x/second while
+    // playing was replacing these elements out from under an in-flight tap,
+    // making Play/Pause/Next presses land on a stale, about-to-be-removed
+    // node and appear to silently do nothing.
+    document.querySelectorAll(".sagalee-item").forEach(function (li) {
+      var input = li.querySelector(".seek-input");
+      input.addEventListener("input", function () { if (sagaleeState) sagaleeState.seek(parseFloat(input.value)); });
+      li.querySelector('[data-action="sagalee-prev"]').addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (sagaleeState) sagaleeState.previous();
+      });
+      li.querySelector('[data-action="sagalee-next"]').addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (sagaleeState) sagaleeState.next();
+      });
+    });
   }
   function updateSagaleeUI(num, st) {
     document.querySelectorAll(".sagalee-item").forEach(function (li) {
@@ -1189,35 +1222,30 @@
       var playBtn = li.querySelector(".sagalee-play");
       var seekWrap = li.querySelector(".seek-wrap");
       var errEl = li.querySelector(".audio-error");
+      var prevBtn = li.querySelector('[data-action="sagalee-prev"]');
+      var nextBtn = li.querySelector('[data-action="sagalee-next"]');
       if (!isThis) {
         playBtn.innerHTML = icon("play", 20);
-        seekWrap.hidden = true; seekWrap.innerHTML = "";
+        seekWrap.hidden = true;
+        prevBtn.hidden = true; nextBtn.hidden = true;
         errEl.hidden = true;
         return;
       }
       var playing = st.playing;
       var loading = st.loading;
       playBtn.innerHTML = loading ? icon("volume2", 20) : playing ? icon("pause", 20) : icon("play", 20);
-      if (playing || loading) {
-        seekWrap.hidden = false;
-        seekWrap.innerHTML =
-          '<input type="range" min="0" max="' + (st.duration || 0) + '" step="0.1" value="' + st.current + '" ' +
-          'style="background:linear-gradient(to right, var(--gold) ' + st.progress + '%, color-mix(in oklab, var(--primary) 20%, transparent) ' + st.progress + '%)">' +
-          '<div class="seek-times"><span>' + fmtTime(st.current) + "</span><span>" +
-            (st.urls.length > 1 ? (st.idx + 1) + "/" + st.urls.length + " · " : "") + fmtTime(st.duration) + "</span></div>" +
-          (st.urls.length > 1 ?
-            '<div class="seek-controls">' +
-              '<button class="skip-btn" data-action="sagalee-prev" aria-label="Kan dabre">' + icon("skipPrev", 16) + "</button>" +
-              '<button class="skip-btn" data-action="sagalee-next" aria-label="Kan itti aanu">' + icon("skipNext", 16) + "</button>" +
-            "</div>" : "");
-        var input = seekWrap.querySelector("input");
-        input.addEventListener("input", function () { sagaleeState.seek(parseFloat(input.value)); });
-        var prevBtn = seekWrap.querySelector('[data-action="sagalee-prev"]');
-        if (prevBtn) prevBtn.addEventListener("click", function (e) { e.stopPropagation(); sagaleeState.previous(); });
-        var nextBtn = seekWrap.querySelector('[data-action="sagalee-next"]');
-        if (nextBtn) nextBtn.addEventListener("click", function (e) { e.stopPropagation(); sagaleeState.next(); });
-      } else {
-        seekWrap.hidden = true; seekWrap.innerHTML = "";
+      var active = playing || loading;
+      seekWrap.hidden = !active;
+      var showSkip = active && st.urls.length > 1;
+      prevBtn.hidden = !showSkip;
+      nextBtn.hidden = !showSkip;
+      if (active) {
+        var input = seekWrap.querySelector(".seek-input");
+        input.max = st.duration || 0;
+        input.value = st.current;
+        input.style.background = "linear-gradient(to right, var(--gold) " + st.progress + "%, color-mix(in oklab, var(--primary) 20%, transparent) " + st.progress + "%)";
+        seekWrap.querySelector(".seek-current").textContent = fmtTime(st.current);
+        seekWrap.querySelector(".seek-remaining").textContent = (st.urls.length > 1 ? (st.idx + 1) + "/" + st.urls.length + " · " : "") + fmtTime(st.duration);
       }
       errEl.hidden = !st.error;
       if (st.error) errEl.textContent = "Sagaleen argamuu dadhabe — interneeta kee mirkaneessi.";
