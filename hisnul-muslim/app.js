@@ -236,7 +236,11 @@
         '<p class="home-fav-ar font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</p>" +
         '<div class="home-fav-footer">' +
           '<span class="home-fav-count">' + c.duas.length + " du'aa'ii</span>" +
-          '<button class="home-fav-play" data-action="home-play" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 14) + "</button>" +
+          '<div class="home-fav-controls">' +
+            '<button class="skip-btn" data-action="home-prev" data-num="' + c.num + '" aria-label="Kan dabre" hidden>' + icon("skipPrev", 14) + "</button>" +
+            '<button class="home-fav-play" data-action="home-play" data-num="' + c.num + '" aria-label="Taphachiisi">' + icon("play", 14) + "</button>" +
+            '<button class="skip-btn" data-action="home-next" data-num="' + c.num + '" aria-label="Kan itti aanu" hidden>' + icon("skipNext", 14) + "</button>" +
+          "</div>" +
         "</div>" +
       "</a>"
     );
@@ -298,13 +302,32 @@
         homeState.play(0);
       });
     });
+    document.querySelectorAll('[data-action="home-prev"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (homeState) homeState.previous();
+      });
+    });
+    document.querySelectorAll('[data-action="home-next"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (homeState) homeState.next();
+      });
+    });
   }
   function updateHomeUI(num, st) {
     document.querySelectorAll(".home-fav-card").forEach(function (card) {
       var btn = card.querySelector('[data-action="home-play"]');
       if (!btn) return;
       var isThis = parseInt(card.getAttribute("data-chapter"), 10) === num;
-      btn.innerHTML = isThis && st.loading ? icon("volume2", 14) : isThis && st.playing ? icon("pause", 14) : icon("play", 14);
+      var playing = isThis && st.playing;
+      var loading = isThis && st.loading;
+      btn.innerHTML = loading ? icon("volume2", 14) : playing ? icon("pause", 14) : icon("play", 14);
+      var showSkip = (playing || loading) && st.urls.length > 1;
+      var prevBtn = card.querySelector('[data-action="home-prev"]');
+      if (prevBtn) prevBtn.hidden = !showSkip;
+      var nextBtn = card.querySelector('[data-action="home-next"]');
+      if (nextBtn) nextBtn.hidden = !showSkip;
     });
   }
 
