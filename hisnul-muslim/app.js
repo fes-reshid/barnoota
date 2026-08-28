@@ -361,6 +361,13 @@
 
   var chapterAudioState = null; // { chapterNum, urls, idx, playing, loading, current, duration, progress }
 
+  // Set right before navigating to the next chapter because the previous
+  // one's audio finished on its own (see createAudioController's onEnded),
+  // so bindCategoryPageEvents below knows to start playback immediately
+  // instead of waiting for a tap — a continuous, hands-free listening flow
+  // (e.g. while driving) rather than one chapter at a time.
+  var autoAdvanceChapter = false;
+
   function stopChapterAudio() {
     if (chapterAudioState) chapterAudioState.destroy();
     chapterAudioState = null;
@@ -468,6 +475,18 @@
       for (var idx = range.start; idx <= range.end; idx++) counts[idx] = n;
     });
     return counts;
+  }
+
+  // The next chapter after fromNum that actually has audio to play — skips
+  // over any chapter whose tracks are all "none" so continuous, hands-free
+  // listening (see createAudioController's onEnded) doesn't stall on a
+  // silent chapter. Returns null once nothing further in the book has audio.
+  function nextChapterWithAudio(fromNum) {
+    var idx = CHAPTERS.findIndex(function (c) { return c.num === fromNum; });
+    for (var i = idx + 1; i < CHAPTERS.length; i++) {
+      if (urlsForChapter(CHAPTERS[i].num).length) return CHAPTERS[i];
+    }
+    return null;
   }
 
   // Quranic ayat (as opposed to hadith-phrased du'a text) are written with
@@ -663,9 +682,38 @@
     });
 
     var urls = urlsForChapter(chapter.num);
+    // Tracks which du'a card is currently the "active" one so playback can
+    // auto-scroll the page to follow along (useful hands-free, e.g. while
+    // driving) without re-scrolling on every progress tick — only when the
+    // active du'a actually changes.
+    var lastActiveDuaIdx = -1;
     chapterAudioState = createAudioController(urls, function (state) {
       updateDuaPlayUI(chapter, state);
-    }, repeatCountsForChapter(chapter), chapter.oromoTitle);
+      if (state.playing || state.loading) {
+        var activeIdx = -1;
+        for (var i = 0; i < chapter.duas.length; i++) {
+          var r = rangeForDua(chapter.num, i);
+          if (r && state.idx >= r.start && state.idx <= r.end) { activeIdx = i; break; }
+        }
+        if (activeIdx !== -1 && activeIdx !== lastActiveDuaIdx) {
+          lastActiveDuaIdx = activeIdx;
+          var card = document.querySelector('.dua-card[data-dua-idx="' + activeIdx + '"]');
+          if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    }, repeatCountsForChapter(chapter), chapter.oromoTitle, function () {
+      // The whole chapter's audio just finished on its own — continue into
+      // the next chapter that has audio instead of just stopping.
+      var next = nextChapterWithAudio(chapter.num);
+      if (next) {
+        autoAdvanceChapter = true;
+        location.hash = "#/category/" + next.num;
+      }
+    });
+    if (autoAdvanceChapter) {
+      autoAdvanceChapter = false;
+      chapterAudioState.play(0);
+    }
 
     document.querySelectorAll('[data-action="dua-prev"]').forEach(function (btn) {
       btn.addEventListener("click", function (e) { e.stopPropagation(); if (chapterAudioState) chapterAudioState.previous(); });
@@ -751,7 +799,12 @@
   // session, mobile browsers (iOS Safari in particular) treat background
   // audio as unimportant and suspend it; with one, the OS knows this is a
   // real, ongoing playback session the user asked for and leaves it alone.
-  function createAudioController(urls, onUpdate, repeatCounts, title) {
+  //
+  // onEnded (optional): fired once, the moment the whole queue finishes on
+  // its own (the last track ends and repeat is off) — not on a user pause,
+  // and not on each individual track finishing. Callers use this to chain
+  // into the next chapter for hands-free, continuous listening.
+  function createAudioController(urls, onUpdate, repeatCounts, title, onEnded) {
     var audioEl = new Audio();
     audioEl.preload = "auto";
     // Deliberately no crossOrigin="anonymous": these hosts aren't guaranteed
@@ -848,6 +901,7 @@
       if (atEnd && !state.repeat) {
         state.playing = false; state.current = 0; state.duration = 0; state.progress = 0;
         emit();
+        if (typeof onEnded === "function") onEnded();
         return;
       }
       state.advancing = true;
@@ -1172,6 +1226,23 @@
       if (sagaleeState) sagaleeState.repeat = repeatOn;
     });
 
+    function playSagaleeChapter(num) {
+      if (sagaleeState) sagaleeState.destroy();
+      var chapter = CHAPTERS.find(function (c) { return c.num === num; });
+      var urls = urlsForChapter(num);
+      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null, function () {
+        // This chapter's audio finished on its own — keep going into the
+        // next one with audio instead of stopping, so a whole listening
+        // session (e.g. while driving) plays straight through.
+        var next = nextChapterWithAudio(num);
+        if (next) playSagaleeChapter(next.num);
+      });
+      sagaleeState.currentChapter = num;
+      sagaleeState.repeat = repeatOn;
+      sagaleeState.play(0);
+      var row = document.querySelector('.sagalee-item[data-chapter="' + num + '"]');
+      if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
     function toggleSagalee(row) {
       var num = parseInt(row.getAttribute("data-num"), 10);
       if (sagaleeState && sagaleeState.currentChapter === num) {
@@ -1181,13 +1252,7 @@
         else sagaleeState.resume();
         return;
       }
-      if (sagaleeState) sagaleeState.destroy();
-      var chapter = CHAPTERS.find(function (c) { return c.num === num; });
-      var urls = urlsForChapter(num);
-      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
-      sagaleeState.currentChapter = num;
-      sagaleeState.repeat = repeatOn;
-      sagaleeState.play(0);
+      playSagaleeChapter(num);
     }
     document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (row) {
       row.addEventListener("click", function () { toggleSagalee(row); });
