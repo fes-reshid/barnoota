@@ -292,9 +292,8 @@
         if (homeState) homeState.destroy();
         var chapter = CHAPTERS.find(function (c) { return c.num === num; });
         var urls = urlsForChapter(num);
-        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); renderMiniPlayer(); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
+        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
         homeState.currentChapter = num;
-        nowPlayingChapter = chapter || null;
         homeState.play(0);
       });
     });
@@ -609,7 +608,11 @@
         '<div class="dua-card-top">' +
           '<div class="dua-idx">' + n + "</div>" +
           '<div class="dua-actions">' +
-            (hasAudio ? '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" : "") +
+            (hasAudio ?
+              '<button class="skip-btn" data-action="dua-prev" aria-label="Kan dabre" hidden>' + icon("skipPrev", 14) + "</button>" +
+              '<button class="play-btn" data-action="play-dua" data-idx="' + i + '" aria-label="Sagalee dhageeffadhu">' + icon("play", 14) + "</button>" +
+              '<button class="skip-btn" data-action="dua-next" aria-label="Kan itti aanu" hidden>' + icon("skipNext", 14) + "</button>"
+              : "") +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
           "</div>" +
         "</div>" +
@@ -661,9 +664,14 @@
     var urls = urlsForChapter(chapter.num);
     chapterAudioState = createAudioController(urls, function (state) {
       updateDuaPlayUI(chapter, state);
-      renderMiniPlayer();
     }, repeatCountsForChapter(chapter), chapter.oromoTitle);
-    nowPlayingChapter = chapter;
+
+    document.querySelectorAll('[data-action="dua-prev"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) { e.stopPropagation(); if (chapterAudioState) chapterAudioState.previous(); });
+    });
+    document.querySelectorAll('[data-action="dua-next"]').forEach(function (btn) {
+      btn.addEventListener("click", function (e) { e.stopPropagation(); if (chapterAudioState) chapterAudioState.next(); });
+    });
 
     document.querySelectorAll('[data-action="play-dua"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -693,6 +701,12 @@
         btn.classList.toggle("playing", playing);
         btn.innerHTML = loading ? icon("volume2", 14) : playing ? icon("pause", 14) : icon("play", 14);
       }
+      var active = playing || loading;
+      var showSkip = active && st.urls.length > 1;
+      var prevBtn = card.querySelector('[data-action="dua-prev"]');
+      if (prevBtn) prevBtn.hidden = !showSkip;
+      var nextBtn = card.querySelector('[data-action="dua-next"]');
+      if (nextBtn) nextBtn.hidden = !showSkip;
       card.classList.toggle("playing", playing);
       var seekWrap = card.querySelector(".seek-wrap");
       if (playing || loading) {
@@ -722,10 +736,6 @@
   // playing anywhere in the app at once. Every controller checks in here
   // before starting playback, so starting one always stops any other.
   var activeAudioController = null;
-  // Whichever chapter that controller belongs to — set alongside it at each
-  // of the three play-trigger sites (Mana, Sagalee, chapter page), purely
-  // so the mini-player below has a title to show.
-  var nowPlayingChapter = null;
 
   // repeatCounts (optional): array parallel to urls, giving how many times
   // in a row to play the track at each position before moving on — for
@@ -787,6 +797,11 @@
       if (document.visibilityState !== "visible" || state.destroyed) return;
       if (state.interruptedExternally) {
         state.interruptedExternally = false;
+        // Silent retry, unlike state.resume() — failing to auto-resume here
+        // isn't a real error worth showing the "audio failed to load"
+        // banner for, it just means whatever interrupted playback (a call
+        // that hasn't actually ended yet, audio focus taken by another app)
+        // is still holding on; nothing more to do until the next attempt.
         audioEl.play().catch(function () {});
       }
     }
@@ -865,7 +880,24 @@
     });
     audioEl.addEventListener("pause", function () {
       state.playing = false;
-      if (!pausedByUs && !state.advancing) state.interruptedExternally = true;
+      // audioEl.ended is already true here if this pause is just the normal
+      // side effect of a track finishing on its own (advance()'s "ended"
+      // listener runs right after) — not a real interruption, so leave it
+      // alone rather than fighting the natural end-of-track handoff.
+      if (!pausedByUs && !state.advancing && !audioEl.ended) {
+        state.interruptedExternally = true;
+        // Retry playback immediately rather than waiting for the tab to
+        // become visible again. Simply minimizing the window/app doesn't
+        // take away the audio focus the Media Session registration above
+        // secured, so this retry succeeds at once and the pause is never
+        // really perceptible. A genuine interruption — an incoming call,
+        // another app grabbing audio focus — does take the focus away, so
+        // the OS refuses this and playback stays paused; onVisibilityChange
+        // below retries again once the tab is visible (the call has ended).
+        // Silent on failure, same reasoning as onVisibilityChange below —
+        // a still-ongoing interruption isn't a real playback error.
+        audioEl.play().catch(function () {});
+      }
       pausedByUs = false;
       emit();
       syncMediaSessionState();
@@ -903,8 +935,8 @@
     };
     state.pause = function () { pausedByUs = true; audioEl.pause(); };
     // Resumes from the current position (unlike state.play, which always
-    // restarts a track from 0) — used by the mini-player's play button and
-    // the OS media-session "play" control.
+    // restarts a track from 0) — used by the OS media-session "play"
+    // control (lock screen / notification).
     state.resume = function () {
       if (state.destroyed) return;
       audioEl.play().catch(function () { state.error = true; emit(); });
@@ -965,55 +997,6 @@
     };
 
     return state;
-  }
-
-  // ---------------- Mini-player (persistent play/pause/skip bar) ----------------
-  // Mirrors whichever controller is currently active (Mana, chapter page, or
-  // Sagalee — only one ever plays at a time), so it's rendered from a single
-  // shared place instead of duplicated in each of those three views. Called
-  // from every controller's onUpdate callback plus once from navigate() so
-  // it disappears immediately when the page playing audio is left.
-  var miniPlayerBound = false;
-  function renderMiniPlayer() {
-    var el = document.getElementById("mini-player");
-    if (!el) return;
-    var st = activeAudioController;
-    if (!st || !nowPlayingChapter) {
-      el.hidden = true;
-      el.innerHTML = "";
-      return;
-    }
-    el.hidden = false;
-    var trackLabel = st.urls.length > 1 ? (st.idx + 1) + " / " + st.urls.length : "";
-    el.innerHTML =
-      '<div class="mini-player-inner glass">' +
-        '<a class="mini-player-info" href="#/category/' + nowPlayingChapter.num + '">' +
-          '<p class="mini-player-title">' + esc(nowPlayingChapter.oromoTitle) + "</p>" +
-          (trackLabel ? '<p class="mini-player-track">' + trackLabel + "</p>" : "") +
-        "</a>" +
-        '<div class="mini-player-controls">' +
-          '<button class="mini-player-btn" data-mini-action="previous" aria-label="Previous">' + icon("skipPrev", 20) + "</button>" +
-          '<button class="mini-player-btn mini-player-btn-main" data-mini-action="toggle" aria-label="' + (st.playing ? "Pause" : "Play") + '">' +
-            (st.loading ? icon("volume2", 22) : st.playing ? icon("pause", 22) : icon("play", 22)) +
-          "</button>" +
-          '<button class="mini-player-btn" data-mini-action="next" aria-label="Next">' + icon("skipNext", 20) + "</button>" +
-        "</div>" +
-      "</div>";
-    if (!miniPlayerBound) {
-      miniPlayerBound = true;
-      el.addEventListener("click", function (e) {
-        var btn = e.target.closest("[data-mini-action]");
-        if (!btn || !activeAudioController) return;
-        e.preventDefault();
-        var action = btn.getAttribute("data-mini-action");
-        if (action === "previous") activeAudioController.previous();
-        else if (action === "next") activeAudioController.next();
-        else if (action === "toggle") {
-          if (activeAudioController.playing) activeAudioController.pause();
-          else activeAudioController.resume();
-        }
-      });
-    }
   }
 
   function shareText(title, text) {
@@ -1187,10 +1170,9 @@
       if (sagaleeState) sagaleeState.destroy();
       var chapter = CHAPTERS.find(function (c) { return c.num === num; });
       var urls = urlsForChapter(num);
-      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); renderMiniPlayer(); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
+      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
       sagaleeState.currentChapter = num;
       sagaleeState.repeat = repeatOn;
-      nowPlayingChapter = chapter || null;
       sagaleeState.play(0);
     }
     document.querySelectorAll('[data-action="sagalee-toggle"]').forEach(function (row) {
@@ -1222,9 +1204,18 @@
           '<input type="range" min="0" max="' + (st.duration || 0) + '" step="0.1" value="' + st.current + '" ' +
           'style="background:linear-gradient(to right, var(--gold) ' + st.progress + '%, color-mix(in oklab, var(--primary) 20%, transparent) ' + st.progress + '%)">' +
           '<div class="seek-times"><span>' + fmtTime(st.current) + "</span><span>" +
-            (st.urls.length > 1 ? (st.idx + 1) + "/" + st.urls.length + " · " : "") + fmtTime(st.duration) + "</span></div>";
+            (st.urls.length > 1 ? (st.idx + 1) + "/" + st.urls.length + " · " : "") + fmtTime(st.duration) + "</span></div>" +
+          (st.urls.length > 1 ?
+            '<div class="seek-controls">' +
+              '<button class="skip-btn" data-action="sagalee-prev" aria-label="Kan dabre">' + icon("skipPrev", 16) + "</button>" +
+              '<button class="skip-btn" data-action="sagalee-next" aria-label="Kan itti aanu">' + icon("skipNext", 16) + "</button>" +
+            "</div>" : "");
         var input = seekWrap.querySelector("input");
         input.addEventListener("input", function () { sagaleeState.seek(parseFloat(input.value)); });
+        var prevBtn = seekWrap.querySelector('[data-action="sagalee-prev"]');
+        if (prevBtn) prevBtn.addEventListener("click", function (e) { e.stopPropagation(); sagaleeState.previous(); });
+        var nextBtn = seekWrap.querySelector('[data-action="sagalee-next"]');
+        if (nextBtn) nextBtn.addEventListener("click", function (e) { e.stopPropagation(); sagaleeState.next(); });
       } else {
         seekWrap.hidden = true; seekWrap.innerHTML = "";
       }
@@ -1423,8 +1414,6 @@
     stopChapterAudio();
     if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
     if (homeState) { homeState.destroy(); homeState = null; }
-    nowPlayingChapter = null;
-    renderMiniPlayer();
     var r = parseHash();
     var html = "";
     if (r.parts[0] === "home") html = pageHome();
