@@ -1,0 +1,19 @@
+node_modules/
+
+# Regenerated from ../hisnul-muslim by `npx cap sync` - don't duplicate 56MB
+# of audio into git history.
+android/app/src/main/assets/public/
+
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/.idea/
+android/*.iml
+android/app/*.iml
+android/captures/
+
+ios/App/Pods/
+ios/App/App/public/
+ios/App/build/
+ios/.idea/
