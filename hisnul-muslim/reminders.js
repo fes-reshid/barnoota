@@ -26,6 +26,30 @@
 
   var CHAPTER_BY_WHICH = { fajr: REMINDER_CHAPTER, maghrib: REMINDER_CHAPTER, bedtime: BEDTIME_CHAPTER };
 
+  // Inside the native app wrapper (see hisnul-app/), the plain Web
+  // Notification API can't reliably deliver a notification while the app is
+  // backgrounded or closed - a WebView just doesn't get woken for that.
+  // @capacitor/local-notifications schedules with the OS instead (Android's
+  // AlarmManager), so it fires on time regardless of whether the app is
+  // running. Falls back to the existing setTimeout-while-open behavior when
+  // running as the plain web PWA, where LocalNotifications doesn't exist.
+  function isNative() {
+    return !!(global.Capacitor && global.Capacitor.isNativePlatform && global.Capacitor.isNativePlatform());
+  }
+  function nativeLN() {
+    return global.Capacitor && global.Capacitor.Plugins && global.Capacitor.Plugins.LocalNotifications;
+  }
+  var NATIVE_IDS_KEY = "hisn:reminders:nativeids";
+  function loadNativeIds() { try { return JSON.parse(localStorage.getItem(NATIVE_IDS_KEY) || "[]"); } catch (e) { return []; } }
+  function saveNativeIds(ids) { try { localStorage.setItem(NATIVE_IDS_KEY, JSON.stringify(ids)); } catch (e) {} }
+  var WHICH_ID_SUFFIX = { fajr: 1, maghrib: 2, bedtime: 3 };
+  // A stable id from (which, dateKey) so re-scheduling can cancel exactly
+  // the notifications it previously set, not guess. "2026-08-30" -> a plain
+  // int well under Android's notification-id range.
+  function notifId(which, key) {
+    return parseInt(key.replace(/-/g, ""), 10) * 10 + WHICH_ID_SUFFIX[which];
+  }
+
   var MESSAGES = {
     fajr: {
       title: "Yeroon zikrii ganamaa ga'e",
@@ -133,9 +157,12 @@
     }
   }
 
-  function scheduleNext() {
-    if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
-
+  // Every not-yet-fired reminder due today or tomorrow, across whichever
+  // categories are enabled. Shared by the web setTimeout scheduler (which
+  // only ever needs the soonest one) and the native scheduler (which
+  // schedules all of them at once, since the OS delivers each independently
+  // whether or not the app is open in between).
+  function upcomingCandidates() {
     var now = Date.now();
     var candidates = [];
     if (isEnabled()) {
@@ -157,9 +184,17 @@
         }
       });
     }
-    if (!candidates.length) return;
     candidates.sort(function (a, b) { return a.at - b.at; });
+    return candidates;
+  }
+
+  function scheduleNext() {
+    if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+
+    var candidates = upcomingCandidates();
+    if (!candidates.length) return;
     var next = candidates[0];
+    var now = Date.now();
 
     pendingTimer = setTimeout(function () {
       markFired(next.key, next.which);
@@ -168,14 +203,68 @@
     }, Math.max(0, next.at.getTime() - now));
   }
 
-  async function enable() {
-    if (!("geolocation" in navigator)) return { ok: false, reason: "geo-unsupported" };
-    if (!("Notification" in global)) return { ok: false, reason: "notif-unsupported" };
+  // Cancels whatever this app previously scheduled natively and schedules
+  // fresh notifications for every upcoming candidate - not just the soonest,
+  // since each one fires independently at the OS level regardless of
+  // whether the app is ever reopened in between. Re-run on every app
+  // open/resume and whenever settings change, so it stays in sync with
+  // today's actual prayer times.
+  function scheduleNextNative() {
+    var ln = nativeLN();
+    if (!ln) return;
+    var prevIds = loadNativeIds();
+    (prevIds.length ? ln.cancel({ notifications: prevIds.map(function (id) { return { id: id }; }) }) : Promise.resolve())
+      .catch(function () {})
+      .then(function () {
+        var candidates = upcomingCandidates();
+        if (!candidates.length) { saveNativeIds([]); return; }
+        var notifications = candidates.map(function (c) {
+          var msg = MESSAGES[c.which];
+          return {
+            id: notifId(c.which, c.key),
+            title: msg.title,
+            body: msg.body,
+            schedule: { at: c.at, allowWhileIdle: true },
+            extra: { url: "#/category/" + CHAPTER_BY_WHICH[c.which] }
+          };
+        });
+        ln.schedule({ notifications: notifications })
+          .then(function () { saveNativeIds(notifications.map(function (n) { return n.id; })); })
+          .catch(function () {});
+      });
+  }
 
+  function refreshSchedule() {
+    if (isNative()) scheduleNextNative();
+    else { checkCatchUp(); scheduleNext(); }
+  }
+
+  // On native, the OS-level permission dialog goes through LocalNotifications
+  // instead of the Web Notification API (which a WebView can't reliably
+  // surface as a real system prompt anyway). Returns "granted", "denied", or
+  // "unsupported" (only possible on the plain web path).
+  async function requestNotifPermission() {
+    var ln = nativeLN();
+    if (ln) {
+      try {
+        var res = await ln.requestPermissions();
+        return res && res.display === "granted" ? "granted" : "denied";
+      } catch (e) {
+        return "denied";
+      }
+    }
+    if (!("Notification" in global)) return "unsupported";
     var perm = Notification.permission;
     if (perm === "default") {
       try { perm = await Notification.requestPermission(); } catch (e) { perm = "denied"; }
     }
+    return perm;
+  }
+
+  async function enable() {
+    if (!("geolocation" in navigator)) return { ok: false, reason: "geo-unsupported" };
+    var perm = await requestNotifPermission();
+    if (perm === "unsupported") return { ok: false, reason: "notif-unsupported" };
     if (perm !== "granted") return { ok: false, reason: "notif-denied" };
 
     var pos;
@@ -189,50 +278,52 @@
 
     saveCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude, ts: Date.now() });
     setEnabled(true);
-    checkCatchUp();
-    scheduleNext();
+    refreshSchedule();
     return { ok: true };
   }
 
   function disable() {
     setEnabled(false);
-    scheduleNext(); // re-clears/re-picks the timer; a bedtime reminder may still be pending
+    refreshSchedule(); // re-clears/re-picks the timer; a bedtime reminder may still be pending
   }
 
   // Bedtime only needs notification permission, not location.
   async function enableBedtime() {
-    if (!("Notification" in global)) return { ok: false, reason: "notif-unsupported" };
-    var perm = Notification.permission;
-    if (perm === "default") {
-      try { perm = await Notification.requestPermission(); } catch (e) { perm = "denied"; }
-    }
+    var perm = await requestNotifPermission();
+    if (perm === "unsupported") return { ok: false, reason: "notif-unsupported" };
     if (perm !== "granted") return { ok: false, reason: "notif-denied" };
 
     setBedtimeEnabled(true);
-    checkCatchUp();
-    scheduleNext();
+    refreshSchedule();
     return { ok: true };
   }
 
   function disableBedtime() {
     setBedtimeEnabled(false);
-    scheduleNext();
+    refreshSchedule();
   }
 
   function setBedtimeTime(v) {
     saveBedtimeTime(v);
-    if (isBedtimeEnabled()) { checkCatchUp(); scheduleNext(); }
+    if (isBedtimeEnabled()) refreshSchedule();
   }
 
   function init() {
-    checkCatchUp();
-    scheduleNext();
+    refreshSchedule();
     document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "visible") {
-        checkCatchUp();
-        scheduleNext();
-      }
+      if (document.visibilityState === "visible") refreshSchedule();
     });
+
+    // Native notification taps don't go through sw.js's notificationclick
+    // (that's web-push/service-worker only) - LocalNotifications has its
+    // own tap event instead.
+    var ln = nativeLN();
+    if (ln && ln.addListener) {
+      ln.addListener("localNotificationActionPerformed", function (action) {
+        var url = action && action.notification && action.notification.extra && action.notification.extra.url;
+        if (url) location.hash = url;
+      });
+    }
   }
 
   global.RemindersAPI = {
