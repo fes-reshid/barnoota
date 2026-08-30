@@ -31,7 +31,9 @@
     skipNext: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M6 5v14l10-7z"/><rect x="17" y="5" width="2.5" height="14" rx="0.5"/></svg>',
     skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>',
     sunrise: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
-    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>'
+    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
+    mihrab: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V11c0-3 2-6 5-8 3 2 5 5 5 8v10"/><path d="M3 21h18"/></svg>',
+    kaaba: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10.5h16"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -48,7 +50,9 @@
   // starter set of favorites, same as the reference design ships with -
   // once written, this never runs again, so deliberately clearing all
   // favorites later stays empty rather than snapping back to these.
-  var DEFAULT_FAVORITES = [16, 25, 27, 28];
+  // Four topics: Prayer (16), Morning (27), Evening (28), Du'a after Salah
+  // (25) — everything else is left for the user to add themselves from Zikrii.
+  var DEFAULT_FAVORITES = [16, 27, 28, 25];
   function readFavorites() {
     try {
       var raw = localStorage.getItem(FAV_KEY);
@@ -71,8 +75,8 @@
   function isFavorite(num) { return readFavorites().indexOf(num) !== -1; }
 
   function loadFontScale() {
-    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.15");
-    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.15;
+    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.25");
+    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.25;
   }
   var fontScale = loadFontScale();
   function applyFontScale() {
@@ -178,14 +182,23 @@
   }
 
   // ---------------- Category card ----------------
-  // Zikrii Ganamaa (Morning, #27) and Zikrii Galgalaa (Evening, #28) get a
-  // sunrise/sunset badge instead of the plain chapter-number one, echoing
-  // how other adhkar apps mark these two out at a glance.
-  var DAYPART_BADGE = { 27: { icon: "sunrise", cls: "sunrise" }, 28: { icon: "sunset", cls: "sunset" } };
+  // A few especially common chapters get a themed badge instead of the
+  // plain chapter-number one, echoing how other adhkar apps mark these out
+  // at a glance: Zikrii Ganamaa/Galgalaa (Morning/Evening, #27/#28), the
+  // opening prayer du'a (#16), the dhikr said after finishing salah (#25),
+  // and the Hajj/Umrah Talbiyah (#116, not a default favorite but still
+  // themed if the user adds it themselves).
+  var THEME_BADGE = {
+    16: { icon: "mihrab", cls: "prayer" },
+    25: { icon: "circleDot", cls: "afterprayer" },
+    27: { icon: "sunrise", cls: "sunrise" },
+    28: { icon: "sunset", cls: "sunset" },
+    116: { icon: "kaaba", cls: "hajj" }
+  };
   function categoryCardHTML(c) {
-    var daypart = DAYPART_BADGE[c.num];
-    var badge = daypart
-      ? '<div class="category-num category-num-' + daypart.cls + '">' + icon(daypart.icon, 22) + "</div>"
+    var theme = THEME_BADGE[c.num];
+    var badge = theme
+      ? '<div class="category-num category-num-' + theme.cls + '">' + icon(theme.icon, 22) + "</div>"
       : '<div class="category-num">' + c.num + "</div>";
     return '<a href="#/category/' + c.num + '" class="glass category-card">' +
       badge +
@@ -237,10 +250,10 @@
   // ---------------- Home (Mana) ----------------
   var homeState = null;
   function homeFavCardHTML(c) {
-    var daypart = DAYPART_BADGE[c.num];
+    var theme = THEME_BADGE[c.num];
     return (
-      '<a href="#/category/' + c.num + '" class="home-fav-card' + (daypart ? " home-fav-" + daypart.cls : "") + '" data-chapter="' + c.num + '">' +
-        (daypart ? '<span class="home-fav-decor" aria-hidden="true">' + icon(daypart.icon, 96) + "</span>" : "") +
+      '<a href="#/category/' + c.num + '" class="home-fav-card' + (theme ? " home-fav-" + theme.cls : "") + '" data-chapter="' + c.num + '">' +
+        (theme ? '<span class="home-fav-decor" aria-hidden="true">' + icon(theme.icon, 96) + "</span>" : "") +
         '<button class="home-fav-remove" data-action="home-remove" data-num="' + c.num + '" aria-label="Filannoo irraa balleessi">' + icon("x", 14) + "</button>" +
         '<p class="home-fav-num">#' + String(c.num).padStart(2, "0") + "</p>" +
         '<h3 class="home-fav-title">' + esc(c.oromoTitle) + "</h3>" +
@@ -1130,12 +1143,21 @@
   }
 
   // ---------------- Tasbih ----------------
+  // "audio" points to the matching recitation already recorded elsewhere in
+  // the book for this exact phrase (see audio.js) - e.g. Astaghfirullah's
+  // audio is the same track used for the identical du'a in Zikrii
+  // Ganamaa/Galgalaa (ch.27/28, du'a 23). The trio (SubhanAllah/Alhamdulillah/
+  // Allahu akbar) has no standalone per-phrase recording anywhere in the
+  // book, so all three share the one track that recites all three in
+  // sequence (ch.29's bedtime tasbih, du'a 8) - the closest match available.
+  // Salawat has no matching recording in the book at all, so it has none.
   var TASBIH_PRESETS = [
-    { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
-    { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33 },
-    { label: "Allāhu akbar", arabic: "اللَّهُ أَكْبَرُ", target: 34 },
-    { label: "Lā ilāha illā Allāh", arabic: "لَا إِلَهَ إِلَّا اللَّهُ", target: 100 },
-    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ", target: 100 },
+    { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33, audio: "audio/n102.mp3" },
+    { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33, audio: "audio/n102.mp3" },
+    { label: "Allāhu akbar", arabic: "اللَّهُ أَكْبَرُ", target: 34, audio: "audio/n102.mp3" },
+    { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100, audio: "audio/n89.mp3" },
+    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100, audio: "audio/n92.mp3" },
+    { label: "SubḥānAllāhi wa biḥamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100, audio: "audio/n88.mp3" },
     { label: "Ṣall Allāhu ʿalā Muḥammad", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", target: 100 }
   ];
 
@@ -1162,6 +1184,57 @@
     );
   }
 
+  // Loops preset.audio up to preset.target times when tapped - a listening
+  // companion for the recitation, independent of the tap counter below (the
+  // counter still only advances by hand, matching how someone actually
+  // counts while listening). Kept as a plain in-memory Audio object rather
+  // than an <audio> element in the panel markup so it survives the panel's
+  // innerHTML being replaced on every tap.
+  var tasbihAudio = null;
+  var tasbihAudioPresetIdx = null;
+  var tasbihAudioPlays = 0;
+
+  function stopTasbihAudio() {
+    if (tasbihAudio) { tasbihAudio.pause(); tasbihAudio.currentTime = 0; }
+    tasbihAudio = null;
+    tasbihAudioPresetIdx = null;
+    tasbihAudioPlays = 0;
+  }
+
+  function updateTasbihPlayBtn(presetIdx) {
+    var btn = document.getElementById("tasbih-play");
+    if (!btn) return;
+    var playing = tasbihAudioPresetIdx === presetIdx;
+    btn.innerHTML = icon(playing ? "pause" : "play", 18);
+    btn.classList.toggle("is-playing", playing);
+  }
+
+  function toggleTasbihAudio(presetIdx) {
+    var preset = TASBIH_PRESETS[presetIdx];
+    if (!preset.audio) return;
+    if (tasbihAudioPresetIdx === presetIdx) {
+      stopTasbihAudio();
+      updateTasbihPlayBtn(presetIdx);
+      return;
+    }
+    stopTasbihAudio();
+    tasbihAudioPresetIdx = presetIdx;
+    tasbihAudioPlays = 0;
+    tasbihAudio = new Audio(preset.audio);
+    tasbihAudio.addEventListener("ended", function () {
+      tasbihAudioPlays++;
+      if (tasbihAudioPresetIdx === presetIdx && tasbihAudioPlays < preset.target) {
+        tasbihAudio.currentTime = 0;
+        tasbihAudio.play().catch(function () {});
+      } else {
+        stopTasbihAudio();
+        updateTasbihPlayBtn(presetIdx);
+      }
+    });
+    tasbihAudio.play().catch(function () {});
+    updateTasbihPlayBtn(presetIdx);
+  }
+
   function renderTasbihPanel(presetIdx, count) {
     var preset = TASBIH_PRESETS[presetIdx];
     var progress = Math.min(100, (count / preset.target) * 100);
@@ -1170,6 +1243,11 @@
     var circumference = 276.46;
     var panel = document.getElementById("tasbih-panel");
     panel.innerHTML =
+      (preset.audio
+        ? '<button class="tasbih-play-btn' + (tasbihAudioPresetIdx === presetIdx ? " is-playing" : "") + '" id="tasbih-play" aria-label="Taphachiisi sagalee">' +
+            icon(tasbihAudioPresetIdx === presetIdx ? "pause" : "play", 18) +
+          "</button>"
+        : "") +
       '<p class="tasbih-arabic font-arabic" lang="ar" dir="rtl">' + esc(preset.arabic) + "</p>" +
       '<p class="tasbih-progress-label">' + (round > 0 ? "Cikkii " + round + " • " : "") + inRound + " / " + preset.target + "</p>" +
       '<div class="tasbih-ring-wrap">' +
@@ -1188,6 +1266,9 @@
 
     document.getElementById("tasbih-tap").addEventListener("click", function () { tasbihTap(presetIdx, count, function (c) { count = c; renderTasbihPanel(presetIdx, count); }); });
     document.getElementById("tasbih-reset").addEventListener("click", function () { count = 0; saveTasbih(presetIdx, count); renderTasbihPanel(presetIdx, count); });
+    if (preset.audio) {
+      document.getElementById("tasbih-play").addEventListener("click", function () { toggleTasbihAudio(presetIdx); });
+    }
   }
 
   function saveTasbih(presetIdx, count) {
@@ -1237,6 +1318,7 @@
         var i = parseInt(chip.getAttribute("data-preset-idx"), 10);
         document.querySelectorAll(".preset-chip").forEach(function (c) { c.classList.remove("active"); });
         chip.classList.add("active");
+        stopTasbihAudio();
         saveTasbih(i, 0);
         renderTasbihPanel(i, 0);
       });
@@ -1616,6 +1698,7 @@
 
   function navigate() {
     stopChapterAudio();
+    stopTasbihAudio();
     if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
     if (homeState) { homeState.destroy(); homeState = null; }
     var r = parseHash();
