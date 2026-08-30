@@ -30,7 +30,9 @@
     bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
     ayahEnd: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M12 2l2.4 5.2L20 9l-4.8 3.4L17 18l-5-3.3L7 18l1.8-5.6L4 9l5.6-1.8z"/></svg>',
     skipNext: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M6 5v14l10-7z"/><rect x="17" y="5" width="2.5" height="14" rx="0.5"/></svg>',
-    skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>'
+    skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>',
+    sunrise: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
+    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -177,9 +179,17 @@
   }
 
   // ---------------- Category card ----------------
+  // Zikrii Ganamaa (Morning, #27) and Zikrii Galgalaa (Evening, #28) get a
+  // sunrise/sunset badge instead of the plain chapter-number one, echoing
+  // how other adhkar apps mark these two out at a glance.
+  var DAYPART_BADGE = { 27: { icon: "sunrise", cls: "sunrise" }, 28: { icon: "sunset", cls: "sunset" } };
   function categoryCardHTML(c) {
+    var daypart = DAYPART_BADGE[c.num];
+    var badge = daypart
+      ? '<div class="category-num category-num-' + daypart.cls + '">' + icon(daypart.icon, 22) + "</div>"
+      : '<div class="category-num">' + c.num + "</div>";
     return '<a href="#/category/' + c.num + '" class="glass category-card">' +
-      '<div class="category-num">' + c.num + "</div>" +
+      badge +
       '<div class="category-text"><h3>' + esc(c.oromoTitle) + '</h3><p class="font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</p></div>" +
       '<div class="category-count">' + c.duas.length + "</div>" +
       '<span class="category-chevron">' + icon("chevronLeft", 16) + "</span>" +
