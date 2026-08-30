@@ -210,6 +210,12 @@ input { font-family: inherit; }
   background: color-mix(in oklab, white 18%, transparent); color: var(--primary-foreground);
 }
 .home-fav-play:hover { background: color-mix(in oklab, white 30%, transparent); }
+.home-fav-controls { display: flex; align-items: center; gap: 0.35rem; }
+.home-fav-controls .skip-btn {
+  width: 1.5rem; height: 1.5rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+  background: color-mix(in oklab, white 18%, transparent); color: var(--primary-foreground);
+}
+.home-fav-controls .skip-btn:hover { background: color-mix(in oklab, white 30%, transparent); }
 .home-fav-add {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
   min-height: 9.5rem; border-radius: var(--radius-2xl); border: 2px dashed var(--border);
