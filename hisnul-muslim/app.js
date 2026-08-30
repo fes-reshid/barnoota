@@ -1211,14 +1211,13 @@
   // the book for this exact phrase (see audio.js) - e.g. Astaghfirullah's
   // audio is the same track used for the identical du'a in Zikrii
   // Ganamaa/Galgalaa (ch.27/28, du'a 23). SubhanAllah/Alhamdulillah/Allahu
-  // akbar are said together as a single combined phrase (ch.25, du'a 4) and
-  // its audio recites exactly that wording, so they're one preset rather
-  // than three.
+  // akbar are said together as a single combined phrase, so they're one
+  // preset rather than three; its audio is ch.29's bedtime tasbih (du'a 8).
   // Salawat's audio is chapter 27's closing du'a (the same wording, recited
   // 10x there); the target here is kept at 100 by request rather than
   // matching that chapter's own 10x instruction.
   var TASBIH_PRESETS = [
-    { label: "SubḥānAllāh, alḥamdulillāh, Allāhu akbar", arabic: "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ", target: 33, audio: "audio/n65.mp3" },
+    { label: "SubḥānAllāh, alḥamdulillāh, Allāhu akbar", arabic: "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ", target: 33, audio: "audio/n102.mp3" },
     { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100, audio: "audio/n89.mp3" },
     { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100, audio: "audio/n92.mp3" },
     { label: "SubḥānAllāhi wa biḥamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100, audio: "audio/n88.mp3" },
