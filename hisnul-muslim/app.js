@@ -320,8 +320,8 @@
         }
         if (homeState) homeState.destroy();
         var chapter = CHAPTERS.find(function (c) { return c.num === num; });
-        var urls = urlsForChapter(num);
-        homeState = createAudioController(urls, function (st) { updateHomeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null);
+        var playlist = chapter ? playlistForChapter(chapter) : { urls: urlsForChapter(num), repeatCounts: null };
+        homeState = createAudioController(playlist.urls, function (st) { updateHomeUI(num, st); }, playlist.repeatCounts, chapter ? chapter.oromoTitle : null);
         homeState.currentChapter = num;
         homeState.play(0);
       });
@@ -501,18 +501,24 @@
   // 100x after salah) - unlike elsewhere in the book, safe to match here.
   var HUNDRED_TIMES_RE = /مائة\s*مر/;
   var HUNDRED_TIMES_CHAPTERS = { 27: true, 28: true };
-  // A named count above this would mean playing the same few-second clip a
-  // very long time before moving on (e.g. tasbih recited 33/34 times) — cap
-  // playback repeats at 10 and advance to the next track after that, same
-  // as the audio can already replay when the reader re-taps play manually.
-  var MAX_AUDIO_REPEATS = 10;
-  function repeatCountFor(arabic, chapterNum) {
+  // The number of times the text actually names for a du'a, with no cap.
+  function rawRepeatCountFor(arabic, chapterNum) {
     var s = stripTashkeel(arabic).replace(/[إأآ]/g, "ا").replace(/\n/g, " ");
     for (var i = 0; i < REPEAT_RULES.length; i++) {
-      if (REPEAT_RULES[i][0].test(s)) return Math.min(REPEAT_RULES[i][1], MAX_AUDIO_REPEATS);
+      if (REPEAT_RULES[i][0].test(s)) return REPEAT_RULES[i][1];
     }
-    if (HUNDRED_TIMES_CHAPTERS[chapterNum] && HUNDRED_TIMES_RE.test(s)) return MAX_AUDIO_REPEATS;
+    if (HUNDRED_TIMES_CHAPTERS[chapterNum] && HUNDRED_TIMES_RE.test(s)) return 100;
     return 1;
+  }
+  // A straight-through listen caps every du'a at this many repeats so it
+  // never stalls on one clip for long (e.g. tasbih recited 33/34 times, or
+  // istighfar 100 times) — same as the audio can already replay when the
+  // reader re-taps play manually. ch.27/28 make up whatever's left over in
+  // a dedicated catch-up pass instead of losing it outright — see
+  // playlistForChapter, used everywhere chapter audio plays.
+  var FIRST_PASS_CAP = 3;
+  function repeatCountFor(arabic, chapterNum) {
+    return Math.min(rawRepeatCountFor(arabic, chapterNum), FIRST_PASS_CAP);
   }
 
   // Array parallel to a chapter's audio urls: how many times in a row to
@@ -528,6 +534,49 @@
       for (var idx = range.start; idx <= range.end; idx++) counts[idx] = n;
     });
     return counts;
+  }
+
+  // ch.27/28 are the only chapters with du'as meant to be recited more than
+  // a few times in a row (4x/7x/10x/100x). A plain listen-through would cap
+  // each at FIRST_PASS_CAP and just move on, cutting the rest of the count
+  // short - so for these two chapters specifically, append make-up plays
+  // for exactly those du'as after the normal pass, and never auto-advance
+  // into the next chapter once it's done (see the onEnded callbacks below),
+  // since that would cut the catch-up pass off too. Every surface that
+  // plays chapter audio (Zikrii reading page, Sagalee tab, Home's inline
+  // play) builds its playlist through here so the behavior is the same
+  // everywhere.
+  var CATCHUP_CHAPTERS = { 27: true, 28: true };
+  function playlistForChapter(chapter) {
+    var urls = urlsForChapter(chapter.num).slice();
+    var repeatCounts = repeatCountsForChapter(chapter).slice();
+    // Which original du'a index each playlist position "belongs to", so the
+    // per-du'a UI (active play button, auto-scroll) still tracks correctly
+    // during the catch-up pass, not just the first one.
+    var duaIndexForIdx = urls.map(function (_, k) {
+      for (var i = 0; i < chapter.duas.length; i++) {
+        var r = rangeForDua(chapter.num, i);
+        if (r && k >= r.start && k <= r.end) return i;
+      }
+      return -1;
+    });
+
+    if (CATCHUP_CHAPTERS[chapter.num]) {
+      chapter.duas.forEach(function (d, i) {
+        var raw = rawRepeatCountFor(d.arabic, chapter.num);
+        if (raw <= FIRST_PASS_CAP) return;
+        var range = rangeForDua(chapter.num, i);
+        if (!range) return;
+        var extra = raw - FIRST_PASS_CAP;
+        for (var idx = range.start; idx <= range.end; idx++) {
+          urls.push(urls[idx]);
+          repeatCounts.push(extra);
+          duaIndexForIdx.push(i);
+        }
+      });
+    }
+
+    return { urls: urls, repeatCounts: repeatCounts, duaIndexForIdx: duaIndexForIdx };
   }
 
   // The next chapter after fromNum that actually has audio to play — skips
@@ -734,29 +783,27 @@
       });
     });
 
-    var urls = urlsForChapter(chapter.num);
+    var playlist = playlistForChapter(chapter);
     // Tracks which du'a card is currently the "active" one so playback can
     // auto-scroll the page to follow along (useful hands-free, e.g. while
     // driving) without re-scrolling on every progress tick — only when the
     // active du'a actually changes.
     var lastActiveDuaIdx = -1;
-    chapterAudioState = createAudioController(urls, function (state) {
-      updateDuaPlayUI(chapter, state);
+    chapterAudioState = createAudioController(playlist.urls, function (state) {
+      updateDuaPlayUI(chapter, state, playlist.duaIndexForIdx);
       if (state.playing || state.loading) {
-        var activeIdx = -1;
-        for (var i = 0; i < chapter.duas.length; i++) {
-          var r = rangeForDua(chapter.num, i);
-          if (r && state.idx >= r.start && state.idx <= r.end) { activeIdx = i; break; }
-        }
-        if (activeIdx !== -1 && activeIdx !== lastActiveDuaIdx) {
+        var activeIdx = playlist.duaIndexForIdx[state.idx];
+        if (activeIdx !== undefined && activeIdx !== -1 && activeIdx !== lastActiveDuaIdx) {
           lastActiveDuaIdx = activeIdx;
           var card = document.querySelector('.dua-card[data-dua-idx="' + activeIdx + '"]');
           if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }
-    }, repeatCountsForChapter(chapter), chapter.oromoTitle, function () {
-      // The whole chapter's audio just finished on its own — continue into
-      // the next chapter that has audio instead of just stopping.
+    }, playlist.repeatCounts, chapter.oromoTitle, function () {
+      // The whole chapter's audio just finished on its own. ch.27/28 just
+      // finished their catch-up pass (see playlistForChapter) - staying put
+      // here IS the point, so skip the usual continue-into-next-chapter.
+      if (CATCHUP_CHAPTERS[chapter.num]) return;
       var next = nextChapterWithAudio(chapter.num);
       if (next) {
         autoAdvanceChapter = true;
@@ -794,11 +841,21 @@
     });
   }
 
-  function updateDuaPlayUI(chapter, st) {
+  // duaIndexForIdx (optional): from playlistForChapter, when the playlist
+  // includes ch.27/28's catch-up pass — a du'a's playlist position(s) aren't
+  // just its original contiguous range once that pass appends extra plays
+  // of it later on, so this maps playlist position -> du'a index directly
+  // instead of the plain range check.
+  function updateDuaPlayUI(chapter, st, duaIndexForIdx) {
     document.querySelectorAll(".dua-card").forEach(function (card) {
       var i = parseInt(card.getAttribute("data-dua-idx"), 10);
-      var range = rangeForDua(chapter.num, i) || { start: -1, end: -1 };
-      var inRange = st.idx >= range.start && st.idx <= range.end && range.start !== -1;
+      var inRange;
+      if (duaIndexForIdx) {
+        inRange = duaIndexForIdx[st.idx] === i;
+      } else {
+        var range = rangeForDua(chapter.num, i) || { start: -1, end: -1 };
+        inRange = st.idx >= range.start && st.idx <= range.end && range.start !== -1;
+      }
       var playing = st.playing && inRange;
       var loading = st.loading && inRange;
       var btn = card.querySelector('[data-action="play-dua"]');
@@ -1384,11 +1441,14 @@
     function playSagaleeChapter(num) {
       if (sagaleeState) sagaleeState.destroy();
       var chapter = CHAPTERS.find(function (c) { return c.num === num; });
-      var urls = urlsForChapter(num);
-      sagaleeState = createAudioController(urls, function (st) { updateSagaleeUI(num, st); }, chapter ? repeatCountsForChapter(chapter) : null, chapter ? chapter.oromoTitle : null, function () {
+      var playlist = chapter ? playlistForChapter(chapter) : { urls: urlsForChapter(num), repeatCounts: null };
+      sagaleeState = createAudioController(playlist.urls, function (st) { updateSagaleeUI(num, st); }, playlist.repeatCounts, chapter ? chapter.oromoTitle : null, function () {
         // This chapter's audio finished on its own — keep going into the
         // next one with audio instead of stopping, so a whole listening
-        // session (e.g. while driving) plays straight through.
+        // session (e.g. while driving) plays straight through. ch.27/28 just
+        // finished their catch-up pass (see playlistForChapter) - staying
+        // put here IS the point, so skip the usual continue-on behavior.
+        if (CATCHUP_CHAPTERS[num]) return;
         var next = nextChapterWithAudio(num);
         if (next) playSagaleeChapter(next.num);
       });
