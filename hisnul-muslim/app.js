@@ -476,12 +476,12 @@
   // general Arabic-number parser, matched after stripping diacritics so
   // wording differences between entries don't matter.
   //
-  // Deliberately excludes "مائة مرة" (100 times): that phrase also shows up
-  // inside plain hadith narrations about someone's habitual dhikr count
-  // (e.g. ch.129/130, "fadaa'il" chapters), not as a "recite this now"
-  // instruction attached to a specific formula, so matching it blindly
-  // would auto-repeat audio on du'as that were never meant to be repeated
-  // at all.
+  // Deliberately excludes "مائة مرة" (100 times) everywhere except ch.27/28
+  // below: that phrase also shows up inside plain hadith narrations about
+  // someone's habitual dhikr count elsewhere in the book (e.g. ch.129/130,
+  // "fadaa'il" chapters), not as a "recite this now" instruction attached to
+  // a specific formula, so matching it blindly would auto-repeat audio on
+  // du'as that were never meant to be repeated at all.
   function stripTashkeel(s) {
     return s.replace(/[ً-ْٰۖ-ۭ]/g, "");
   }
@@ -496,16 +496,22 @@
     [/ثلاث\s*مرات/, 3],
     [/\(\s*ثلاث[اى]?\s*\)/, 3]
   ];
+  // ch.27/28 (Zikrii Ganamaa/Galgalaa) are exactly where "100 times"
+  // recite-now instructions actually live (istighfar, tahlil, tasbih said
+  // 100x after salah) - unlike elsewhere in the book, safe to match here.
+  var HUNDRED_TIMES_RE = /مائة\s*مر/;
+  var HUNDRED_TIMES_CHAPTERS = { 27: true, 28: true };
   // A named count above this would mean playing the same few-second clip a
   // very long time before moving on (e.g. tasbih recited 33/34 times) — cap
   // playback repeats at 10 and advance to the next track after that, same
   // as the audio can already replay when the reader re-taps play manually.
   var MAX_AUDIO_REPEATS = 10;
-  function repeatCountFor(arabic) {
+  function repeatCountFor(arabic, chapterNum) {
     var s = stripTashkeel(arabic).replace(/[إأآ]/g, "ا").replace(/\n/g, " ");
     for (var i = 0; i < REPEAT_RULES.length; i++) {
       if (REPEAT_RULES[i][0].test(s)) return Math.min(REPEAT_RULES[i][1], MAX_AUDIO_REPEATS);
     }
+    if (HUNDRED_TIMES_CHAPTERS[chapterNum] && HUNDRED_TIMES_RE.test(s)) return MAX_AUDIO_REPEATS;
     return 1;
   }
 
@@ -517,7 +523,7 @@
     chapter.duas.forEach(function (d, i) {
       var range = rangeForDua(chapter.num, i);
       if (!range) return;
-      var n = repeatCountFor(d.arabic);
+      var n = repeatCountFor(d.arabic, chapter.num);
       if (n <= 1) return;
       for (var idx = range.start; idx <= range.end; idx++) counts[idx] = n;
     });
