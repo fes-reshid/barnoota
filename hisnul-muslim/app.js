@@ -511,12 +511,13 @@
     return 1;
   }
   // A straight-through listen caps every du'a at this many repeats so it
-  // never stalls on one clip for long (e.g. tasbih recited 33/34 times, or
-  // istighfar 100 times) — same as the audio can already replay when the
-  // reader re-taps play manually. ch.27/28 make up whatever's left over in
-  // a dedicated catch-up pass instead of losing it outright — see
-  // playlistForChapter, used everywhere chapter audio plays.
-  var FIRST_PASS_CAP = 3;
+  // never stalls on one clip for long (e.g. tasbih recited 33/34 times) —
+  // same as the audio can already replay when the reader re-taps play
+  // manually. Only the ch.27/28 du'as instructed to repeat more than this
+  // (the 100x ones) make up the rest in a dedicated catch-up pass instead
+  // of losing it outright — see playlistForChapter, used everywhere chapter
+  // audio plays.
+  var FIRST_PASS_CAP = 10;
   function repeatCountFor(arabic, chapterNum) {
     return Math.min(rawRepeatCountFor(arabic, chapterNum), FIRST_PASS_CAP);
   }
@@ -537,15 +538,15 @@
   }
 
   // ch.27/28 are the only chapters with du'as meant to be recited more than
-  // a few times in a row (4x/7x/10x/100x). A plain listen-through would cap
-  // each at FIRST_PASS_CAP and just move on, cutting the rest of the count
-  // short - so for these two chapters specifically, append make-up plays
-  // for exactly those du'as after the normal pass, and never auto-advance
-  // into the next chapter once it's done (see the onEnded callbacks below),
-  // since that would cut the catch-up pass off too. Every surface that
-  // plays chapter audio (Zikrii reading page, Sagalee tab, Home's inline
-  // play) builds its playlist through here so the behavior is the same
-  // everywhere.
+  // FIRST_PASS_CAP times in a row (the 100x ones - istighfar, tahlil,
+  // tasbih). A plain listen-through would cap each at FIRST_PASS_CAP and
+  // just move on, cutting the rest of the count short - so for these two
+  // chapters specifically, append make-up plays for exactly those du'as
+  // after the normal pass, and never auto-advance into the next chapter
+  // once it's done (see the onEnded callbacks below), since that would cut
+  // the catch-up pass off too. Every surface that plays chapter audio
+  // (Zikrii reading page, Sagalee tab, Home's inline play) builds its
+  // playlist through here so the behavior is the same everywhere.
   var CATCHUP_CHAPTERS = { 27: true, 28: true };
   function playlistForChapter(chapter) {
     var urls = urlsForChapter(chapter.num).slice();
