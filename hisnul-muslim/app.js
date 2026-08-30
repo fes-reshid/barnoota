@@ -237,8 +237,10 @@
   // ---------------- Home (Mana) ----------------
   var homeState = null;
   function homeFavCardHTML(c) {
+    var daypart = DAYPART_BADGE[c.num];
     return (
-      '<a href="#/category/' + c.num + '" class="home-fav-card" data-chapter="' + c.num + '">' +
+      '<a href="#/category/' + c.num + '" class="home-fav-card' + (daypart ? " home-fav-" + daypart.cls : "") + '" data-chapter="' + c.num + '">' +
+        (daypart ? '<span class="home-fav-decor" aria-hidden="true">' + icon(daypart.icon, 96) + "</span>" : "") +
         '<button class="home-fav-remove" data-action="home-remove" data-num="' + c.num + '" aria-label="Filannoo irraa balleessi">' + icon("x", 14) + "</button>" +
         '<p class="home-fav-num">#' + String(c.num).padStart(2, "0") + "</p>" +
         '<h3 class="home-fav-title">' + esc(c.oromoTitle) + "</h3>" +
