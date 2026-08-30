@@ -1,4 +1,4 @@
-const CACHE_NAME = "hisnul-muslim-v27";
+const CACHE_NAME = "hisnul-muslim-v28";
 const AUDIO_CACHE_NAME = "hisnul-audio-v1";
 const ASSETS = [
   "./",
@@ -36,6 +36,15 @@ const MISSING_FROM_RELEASE = [95, 105, 106, 110, 134, 139, 179, 193, 213, 214, 2
 const MISSING_FROM_RELEASE_SET = {};
 MISSING_FROM_RELEASE.forEach(function (n) { MISSING_FROM_RELEASE_SET[n] = true; });
 
+// Filenames from audio.js's LOCAL_OVERRIDES (one-off re-recordings that
+// replace a specific du'a's usual track) — duplicated here for the same
+// reason as MISSING_FROM_RELEASE above.
+const LOCAL_OVERRIDE_FILES = [
+  "Ch16d3.mp3", "Ch16d6.mp3",
+  "Ch24d3.mp3", "Ch24d5.mp3", "Ch24d6.mp3", "Ch24d8.mp3", "Ch24d9.mp3", "Ch24d10.mp3",
+  "Ch28d4.mp3", "Ch28d5.mp3", "Ch28d7.mp3", "Ch28d8.mp3", "Ch28d16.mp3", "Ch28d17.mp3"
+];
+
 // Every audio file the app ships with — self-hosted plus the handful still
 // on archive.org — so the whole library can be downloaded up front (see
 // precacheAllAudio below) instead of only after each track is played once.
@@ -49,6 +58,10 @@ const AUDIO_MANIFEST = (function () {
   // The Aal-'Imraan 190-200 combined du'a's per-ayah audio (see audio.js's
   // ALIMRAN_AYAH_URLS) — outside the n<N>.mp3 sequence entirely.
   for (var a = 190; a <= 200; a++) list.push("audio/ayah-" + a + ".mp3");
+  // One-off re-recordings outside the nXX numbering (see audio.js's
+  // LOCAL_OVERRIDES, kept in sync with this by hand for the same reason as
+  // MISSING_FROM_RELEASE above).
+  LOCAL_OVERRIDE_FILES.forEach(function (f) { list.push("audio/" + f); });
   return list;
 })();
 
