@@ -912,6 +912,29 @@
       if (preloadEl.src !== nextUrl) { preloadEl.src = nextUrl; try { preloadEl.load(); } catch (e) {} }
     }
 
+    // Attempts audioEl.play(), retrying a couple of times (reloading first)
+    // before giving up — a real mobile connection can reject the very next
+    // play() call right after switching tracks with a transient error (a
+    // brief tower handoff, a slow buffer, momentary congestion) that a
+    // fast/local connection never surfaces. onSettled(true/false) fires
+    // once, after the whole retry sequence concludes either way.
+    function playWithRetry(retriesLeft, onSettled) {
+      audioEl.play().then(function () {
+        onSettled(true);
+      }).catch(function () {
+        if (state.destroyed) { onSettled(false); return; }
+        if (retriesLeft > 0) {
+          setTimeout(function () {
+            if (state.destroyed) { onSettled(false); return; }
+            try { audioEl.load(); } catch (e) {}
+            playWithRetry(retriesLeft - 1, onSettled);
+          }, 600);
+          return;
+        }
+        onSettled(false);
+      });
+    }
+
     function advance() {
       if (state.destroyed || state.advancing) return;
 
@@ -924,7 +947,8 @@
         state.current = 0;
         audioEl.currentTime = 0;
         emit();
-        audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+        playWithRetry(2, function (ok) {
+          if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
           state.advancing = false;
         });
         return;
@@ -944,7 +968,8 @@
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+      playWithRetry(2, function (ok) {
+        if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
         state.advancing = false;
         preloadNext();
       });
@@ -997,15 +1022,16 @@
     audioEl.addEventListener("timeupdate", function () {
       state.current = audioEl.currentTime;
       if (audioEl.duration > 0) state.progress = (audioEl.currentTime / audioEl.duration) * 100;
-      // Only use this early trigger for a genuine track-to-track transition.
-      // For a track that still has repeats left, jumping the gun here (the
-      // 0.35s margin can exceed the whole length of a short one-phrase
-      // clip) would restart it before it actually finished, and restarting
-      // playback while a previous play() is still settling makes the
-      // browser reject it outright ("interrupted by a new load request"),
-      // surfacing as a false "audio failed to load" error. The reliable
-      // "ended" event covers the repeat case instead.
-      if (state.repeatsLeft <= 1 && audioEl.duration > 0 && audioEl.currentTime >= audioEl.duration - 0.35 && !audioEl.seeking && !state.advancing) advance();
+      // Track-to-track advancement relies solely on the "ended" event below.
+      // An earlier version jumped the gun here, calling advance() (and so
+      // audioEl.load()) up to 0.35s before the track actually finished —
+      // while it was still audibly playing. On a real mobile connection
+      // (unlike a fast local/desktop one) that collided with the still-
+      // settling previous play() often enough to make the browser reject
+      // the next one outright ("interrupted by a new load request"),
+      // surfacing as a false "audio failed to load" error on real devices.
+      // preloadNext() already fetches the next track's bytes well ahead of
+      // time, so waiting for the real "ended" event costs no perceptible gap.
       emit();
     });
 
@@ -1022,7 +1048,10 @@
       state.loading = true; state.error = false; state.current = 0; state.duration = 0; state.progress = 0;
       emit();
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().then(function () { preloadNext(); }).catch(function () { state.loading = false; state.error = true; emit(); });
+      playWithRetry(2, function (ok) {
+        if (ok) { preloadNext(); }
+        else { state.loading = false; state.error = true; emit(); }
+      });
     };
     state.pause = function () { pausedByUs = true; audioEl.pause(); };
     // Resumes from the current position (unlike state.play, which always
@@ -1061,7 +1090,8 @@
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+      playWithRetry(2, function (ok) {
+        if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
         state.advancing = false;
       });
     };
