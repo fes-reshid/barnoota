@@ -50,9 +50,9 @@
   // starter set of favorites, same as the reference design ships with -
   // once written, this never runs again, so deliberately clearing all
   // favorites later stays empty rather than snapping back to these.
-  // Four topics: Prayer (16), Morning (27), Evening (28), Hajj/Umrah (116)
-  // — everything else is left for the user to add themselves from Zikrii.
-  var DEFAULT_FAVORITES = [16, 27, 28, 116];
+  // Four topics: Prayer (16), Morning (27), Evening (28), Du'a after Salah
+  // (25) — everything else is left for the user to add themselves from Zikrii.
+  var DEFAULT_FAVORITES = [16, 27, 28, 25];
   function readFavorites() {
     try {
       var raw = localStorage.getItem(FAV_KEY);
@@ -185,9 +185,12 @@
   // A few especially common chapters get a themed badge instead of the
   // plain chapter-number one, echoing how other adhkar apps mark these out
   // at a glance: Zikrii Ganamaa/Galgalaa (Morning/Evening, #27/#28), the
-  // opening prayer du'a (#16), and the Hajj/Umrah Talbiyah (#116).
+  // opening prayer du'a (#16), the dhikr said after finishing salah (#25),
+  // and the Hajj/Umrah Talbiyah (#116, not a default favorite but still
+  // themed if the user adds it themselves).
   var THEME_BADGE = {
     16: { icon: "mihrab", cls: "prayer" },
+    25: { icon: "circleDot", cls: "afterprayer" },
     27: { icon: "sunrise", cls: "sunrise" },
     28: { icon: "sunset", cls: "sunset" },
     116: { icon: "kaaba", cls: "hajj" }
@@ -1140,12 +1143,21 @@
   }
 
   // ---------------- Tasbih ----------------
+  // "audio" points to the matching recitation already recorded elsewhere in
+  // the book for this exact phrase (see audio.js) - e.g. Astaghfirullah's
+  // audio is the same track used for the identical du'a in Zikrii
+  // Ganamaa/Galgalaa (ch.27/28, du'a 23). The trio (SubhanAllah/Alhamdulillah/
+  // Allahu akbar) has no standalone per-phrase recording anywhere in the
+  // book, so all three share the one track that recites all three in
+  // sequence (ch.29's bedtime tasbih, du'a 8) - the closest match available.
+  // Salawat has no matching recording in the book at all, so it has none.
   var TASBIH_PRESETS = [
-    { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
-    { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33 },
-    { label: "Allāhu akbar", arabic: "اللَّهُ أَكْبَرُ", target: 34 },
-    { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100 },
-    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100 },
+    { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33, audio: "audio/n102.mp3" },
+    { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33, audio: "audio/n102.mp3" },
+    { label: "Allāhu akbar", arabic: "اللَّهُ أَكْبَرُ", target: 34, audio: "audio/n102.mp3" },
+    { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100, audio: "audio/n89.mp3" },
+    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100, audio: "audio/n92.mp3" },
+    { label: "SubḥānAllāhi wa biḥamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100, audio: "audio/n88.mp3" },
     { label: "Ṣall Allāhu ʿalā Muḥammad", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", target: 100 }
   ];
 
@@ -1172,6 +1184,57 @@
     );
   }
 
+  // Loops preset.audio up to preset.target times when tapped - a listening
+  // companion for the recitation, independent of the tap counter below (the
+  // counter still only advances by hand, matching how someone actually
+  // counts while listening). Kept as a plain in-memory Audio object rather
+  // than an <audio> element in the panel markup so it survives the panel's
+  // innerHTML being replaced on every tap.
+  var tasbihAudio = null;
+  var tasbihAudioPresetIdx = null;
+  var tasbihAudioPlays = 0;
+
+  function stopTasbihAudio() {
+    if (tasbihAudio) { tasbihAudio.pause(); tasbihAudio.currentTime = 0; }
+    tasbihAudio = null;
+    tasbihAudioPresetIdx = null;
+    tasbihAudioPlays = 0;
+  }
+
+  function updateTasbihPlayBtn(presetIdx) {
+    var btn = document.getElementById("tasbih-play");
+    if (!btn) return;
+    var playing = tasbihAudioPresetIdx === presetIdx;
+    btn.innerHTML = icon(playing ? "pause" : "play", 18);
+    btn.classList.toggle("is-playing", playing);
+  }
+
+  function toggleTasbihAudio(presetIdx) {
+    var preset = TASBIH_PRESETS[presetIdx];
+    if (!preset.audio) return;
+    if (tasbihAudioPresetIdx === presetIdx) {
+      stopTasbihAudio();
+      updateTasbihPlayBtn(presetIdx);
+      return;
+    }
+    stopTasbihAudio();
+    tasbihAudioPresetIdx = presetIdx;
+    tasbihAudioPlays = 0;
+    tasbihAudio = new Audio(preset.audio);
+    tasbihAudio.addEventListener("ended", function () {
+      tasbihAudioPlays++;
+      if (tasbihAudioPresetIdx === presetIdx && tasbihAudioPlays < preset.target) {
+        tasbihAudio.currentTime = 0;
+        tasbihAudio.play().catch(function () {});
+      } else {
+        stopTasbihAudio();
+        updateTasbihPlayBtn(presetIdx);
+      }
+    });
+    tasbihAudio.play().catch(function () {});
+    updateTasbihPlayBtn(presetIdx);
+  }
+
   function renderTasbihPanel(presetIdx, count) {
     var preset = TASBIH_PRESETS[presetIdx];
     var progress = Math.min(100, (count / preset.target) * 100);
@@ -1180,6 +1243,11 @@
     var circumference = 276.46;
     var panel = document.getElementById("tasbih-panel");
     panel.innerHTML =
+      (preset.audio
+        ? '<button class="tasbih-play-btn' + (tasbihAudioPresetIdx === presetIdx ? " is-playing" : "") + '" id="tasbih-play" aria-label="Taphachiisi sagalee">' +
+            icon(tasbihAudioPresetIdx === presetIdx ? "pause" : "play", 18) +
+          "</button>"
+        : "") +
       '<p class="tasbih-arabic font-arabic" lang="ar" dir="rtl">' + esc(preset.arabic) + "</p>" +
       '<p class="tasbih-progress-label">' + (round > 0 ? "Cikkii " + round + " • " : "") + inRound + " / " + preset.target + "</p>" +
       '<div class="tasbih-ring-wrap">' +
@@ -1198,6 +1266,9 @@
 
     document.getElementById("tasbih-tap").addEventListener("click", function () { tasbihTap(presetIdx, count, function (c) { count = c; renderTasbihPanel(presetIdx, count); }); });
     document.getElementById("tasbih-reset").addEventListener("click", function () { count = 0; saveTasbih(presetIdx, count); renderTasbihPanel(presetIdx, count); });
+    if (preset.audio) {
+      document.getElementById("tasbih-play").addEventListener("click", function () { toggleTasbihAudio(presetIdx); });
+    }
   }
 
   function saveTasbih(presetIdx, count) {
@@ -1247,6 +1318,7 @@
         var i = parseInt(chip.getAttribute("data-preset-idx"), 10);
         document.querySelectorAll(".preset-chip").forEach(function (c) { c.classList.remove("active"); });
         chip.classList.add("active");
+        stopTasbihAudio();
         saveTasbih(i, 0);
         renderTasbihPanel(i, 0);
       });
@@ -1626,6 +1698,7 @@
 
   function navigate() {
     stopChapterAudio();
+    stopTasbihAudio();
     if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
     if (homeState) { homeState.destroy(); homeState = null; }
     var r = parseHash();
