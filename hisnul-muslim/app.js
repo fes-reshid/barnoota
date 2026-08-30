@@ -1427,8 +1427,7 @@
 
       '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon("download2", 16) + "<span>Sagalee ol kaa\'ame</span></div>" +
-        '<p class="page-sub" style="margin-top:0.5rem;">Sagaleen dhageeffattan hundi ofumaan bilbila kee irratti ol kaa\'ama, kanaafuu booda interneeta malees ni dhaggeeffatama.</p>' +
-        '<button class="font-reset" id="settings-clear-audio" style="margin-top:0.75rem;">Sagalee ol kaa\'ame hunda haqi</button>' +
+        '<p class="page-sub" style="margin-top:0.5rem;">Sagaleen kitaabaa hundi appicha waliin ofumaan bilbila kee irratti ol kaa\'ama, kanaafuu interneeta malees ni dhaggeeffatama.</p>' +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -1464,13 +1463,6 @@
         navigator.clipboard.writeText(url).catch(function () {});
       }
     });
-    var clearAudioBtn = document.getElementById("settings-clear-audio");
-    if (clearAudioBtn) clearAudioBtn.addEventListener("click", async function () {
-      if (!confirm("Sagalee bilbila kee irratti ol kaa'ame hunda haquu barbaaddaa?")) return;
-      await AudioCacheAPI.clearAll();
-      alert("Sagaleen ol kaa'ame haqameera.");
-    });
-
     var remBtn = document.getElementById("settings-reminder-toggle");
     if (remBtn && window.RemindersAPI) remBtn.addEventListener("click", async function () {
       var status = document.getElementById("settings-reminder-status");
@@ -1518,7 +1510,7 @@
 
   // ---------------- Router ----------------
   function parseHash() {
-    var hash = location.hash.replace(/^#/, "") || "/categories";
+    var hash = location.hash.replace(/^#/, "") || "/home";
     var qIdx = hash.indexOf("?");
     var query = "";
     if (qIdx !== -1) { query = decodeURIComponent(hash.slice(qIdx + 1)); hash = hash.slice(0, qIdx); }
