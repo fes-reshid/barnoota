@@ -26,7 +26,6 @@
     x: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
-    download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
     bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
     ayahEnd: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M12 2l2.4 5.2L20 9l-4.8 3.4L17 18l-5-3.3L7 18l1.8-5.6L4 9l5.6-1.8z"/></svg>',
     skipNext: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M6 5v14l10-7z"/><rect x="17" y="5" width="2.5" height="14" rx="0.5"/></svg>',
@@ -1463,11 +1462,6 @@
           "</button>" +
           '<p class="reminder-status" id="settings-bedtime-status" style="margin-top:0.5rem;color:var(--muted-foreground);font-size:0.85rem;">' + esc(bedtimeStatusText()) + "</p>" +
         "</div>" +
-      "</section>" +
-
-      '<section class="glass settings-section">' +
-        '<div class="settings-section-head">' + icon("download2", 16) + "<span>Sagalee ol kaa\'ame</span></div>" +
-        '<p class="page-sub" style="margin-top:0.5rem;">Sagaleen kitaabaa hundi appicha waliin ofumaan bilbila kee irratti ol kaa\'ama, kanaafuu interneeta malees ni dhaggeeffatama.</p>' +
       "</section>" +
 
       '<section class="glass settings-section">' +
