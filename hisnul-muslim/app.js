@@ -1150,7 +1150,9 @@
   // Allahu akbar) has no standalone per-phrase recording anywhere in the
   // book, so all three share the one track that recites all three in
   // sequence (ch.29's bedtime tasbih, du'a 8) - the closest match available.
-  // Salawat has no matching recording in the book at all, so it has none.
+  // Salawat's audio is chapter 27's closing du'a (the same wording, recited
+  // 10x there); the target here is kept at 100 by request rather than
+  // matching that chapter's own 10x instruction.
   var TASBIH_PRESETS = [
     { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33, audio: "audio/n102.mp3" },
     { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33, audio: "audio/n102.mp3" },
@@ -1158,7 +1160,7 @@
     { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100, audio: "audio/n89.mp3" },
     { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100, audio: "audio/n92.mp3" },
     { label: "SubḥānAllāhi wa biḥamdihi", arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", target: 100, audio: "audio/n88.mp3" },
-    { label: "Ṣall Allāhu ʿalā Muḥammad", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", target: 100 }
+    { label: "Ṣall Allāhu ʿalā Muḥammad", arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبَيِّنَا مُحَمَّدٍ", target: 100, audio: "audio/n94.mp3" }
   ];
 
   function pageTasbih() {
