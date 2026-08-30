@@ -179,9 +179,11 @@ input { font-family: inherit; }
    both the light and dark app themes, so a light icon reads clearly on
    either, unlike --primary-foreground which is tuned for --gradient-primary
    and would go near-black in dark mode. */
-.category-num-sunrise, .category-num-sunset { color: #fffaf0 !important; }
+.category-num-sunrise, .category-num-sunset, .category-num-prayer, .category-num-hajj { color: #fffaf0 !important; }
 .category-num-sunrise { background: linear-gradient(160deg, #fde08a 0%, #f6ad55 55%, #ea7c3c 100%); }
 .category-num-sunset { background: linear-gradient(160deg, #f6ad55 0%, #d9668b 55%, #5b4b9a 100%); }
+.category-num-prayer { background: linear-gradient(160deg, #2dd4bf 0%, #0e7490 55%, #164e63 100%); }
+.category-num-hajj { background: linear-gradient(160deg, #52525b 0%, #27272a 55%, #09090b 100%); color: #f5d78e !important; }
 .category-text { min-width: 0; flex: 1; }
 .category-text h3 { margin: 0; font-size: calc(1rem * var(--reading-scale)); font-weight: 500; color: var(--foreground); }
 .category-text p { margin: 0.125rem 0 0; font-size: calc(0.875rem * var(--reading-scale)); color: var(--muted-foreground); }
@@ -206,16 +208,18 @@ input { font-family: inherit; }
    home-fav-card gradient already does. */
 .home-fav-sunrise { background: linear-gradient(160deg, #d97706 0%, #c2410c 55%, #9a3412 100%); }
 .home-fav-sunset { background: linear-gradient(160deg, #c2410c 0%, #9d174d 55%, #4c1d95 100%); }
-.home-fav-sunrise, .home-fav-sunset { color: #fffaf0; }
-.home-fav-sunrise .home-fav-ar, .home-fav-sunset .home-fav-ar { color: color-mix(in oklab, #fffaf0 80%, transparent); }
+.home-fav-prayer { background: linear-gradient(160deg, #2dd4bf 0%, #0e7490 55%, #164e63 100%); }
+.home-fav-hajj { background: linear-gradient(160deg, #52525b 0%, #27272a 55%, #09090b 100%); }
+.home-fav-sunrise, .home-fav-sunset, .home-fav-prayer, .home-fav-hajj { color: #fffaf0; }
+.home-fav-sunrise .home-fav-ar, .home-fav-sunset .home-fav-ar, .home-fav-prayer .home-fav-ar, .home-fav-hajj .home-fav-ar { color: color-mix(in oklab, #fffaf0 80%, transparent); }
 .home-fav-decor {
   position: absolute; top: -1rem; right: -1rem; opacity: 0.18; color: #fffaf0;
   pointer-events: none; line-height: 0;
 }
-.home-fav-sunrise .home-fav-remove, .home-fav-sunset .home-fav-remove { background: color-mix(in oklab, black 15%, transparent); }
-.home-fav-sunrise .home-fav-remove:hover, .home-fav-sunset .home-fav-remove:hover { background: color-mix(in oklab, black 28%, transparent); }
-.home-fav-sunrise .home-fav-play, .home-fav-sunset .home-fav-play { background: color-mix(in oklab, white 20%, transparent); }
-.home-fav-sunrise .home-fav-play:hover, .home-fav-sunset .home-fav-play:hover { background: color-mix(in oklab, white 32%, transparent); }
+.home-fav-sunrise .home-fav-remove, .home-fav-sunset .home-fav-remove, .home-fav-prayer .home-fav-remove, .home-fav-hajj .home-fav-remove { background: color-mix(in oklab, black 15%, transparent); }
+.home-fav-sunrise .home-fav-remove:hover, .home-fav-sunset .home-fav-remove:hover, .home-fav-prayer .home-fav-remove:hover, .home-fav-hajj .home-fav-remove:hover { background: color-mix(in oklab, black 28%, transparent); }
+.home-fav-sunrise .home-fav-play, .home-fav-sunset .home-fav-play, .home-fav-prayer .home-fav-play, .home-fav-hajj .home-fav-play { background: color-mix(in oklab, white 20%, transparent); }
+.home-fav-sunrise .home-fav-play:hover, .home-fav-sunset .home-fav-play:hover, .home-fav-prayer .home-fav-play:hover, .home-fav-hajj .home-fav-play:hover { background: color-mix(in oklab, white 32%, transparent); }
 .home-fav-remove {
   position: absolute; z-index: 2; top: 0.6rem; right: 0.6rem; width: 1.5rem; height: 1.5rem; border-radius: 9999px;
   display: flex; align-items: center; justify-content: center;

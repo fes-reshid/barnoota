@@ -31,7 +31,9 @@
     skipNext: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M6 5v14l10-7z"/><rect x="17" y="5" width="2.5" height="14" rx="0.5"/></svg>',
     skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>',
     sunrise: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
-    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>'
+    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
+    mihrab: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V11c0-3 2-6 5-8 3 2 5 5 5 8v10"/><path d="M3 21h18"/></svg>',
+    kaaba: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10.5h16"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -48,7 +50,9 @@
   // starter set of favorites, same as the reference design ships with -
   // once written, this never runs again, so deliberately clearing all
   // favorites later stays empty rather than snapping back to these.
-  var DEFAULT_FAVORITES = [16, 25, 27, 28];
+  // Four topics: Prayer (16), Morning (27), Evening (28), Hajj/Umrah (116)
+  // — everything else is left for the user to add themselves from Zikrii.
+  var DEFAULT_FAVORITES = [16, 27, 28, 116];
   function readFavorites() {
     try {
       var raw = localStorage.getItem(FAV_KEY);
@@ -71,8 +75,8 @@
   function isFavorite(num) { return readFavorites().indexOf(num) !== -1; }
 
   function loadFontScale() {
-    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.15");
-    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.15;
+    var v = parseFloat(localStorage.getItem(FONT_KEY) || "1.25");
+    return isFinite(v) ? Math.min(1.8, Math.max(0.8, v)) : 1.25;
   }
   var fontScale = loadFontScale();
   function applyFontScale() {
@@ -178,14 +182,20 @@
   }
 
   // ---------------- Category card ----------------
-  // Zikrii Ganamaa (Morning, #27) and Zikrii Galgalaa (Evening, #28) get a
-  // sunrise/sunset badge instead of the plain chapter-number one, echoing
-  // how other adhkar apps mark these two out at a glance.
-  var DAYPART_BADGE = { 27: { icon: "sunrise", cls: "sunrise" }, 28: { icon: "sunset", cls: "sunset" } };
+  // A few especially common chapters get a themed badge instead of the
+  // plain chapter-number one, echoing how other adhkar apps mark these out
+  // at a glance: Zikrii Ganamaa/Galgalaa (Morning/Evening, #27/#28), the
+  // opening prayer du'a (#16), and the Hajj/Umrah Talbiyah (#116).
+  var THEME_BADGE = {
+    16: { icon: "mihrab", cls: "prayer" },
+    27: { icon: "sunrise", cls: "sunrise" },
+    28: { icon: "sunset", cls: "sunset" },
+    116: { icon: "kaaba", cls: "hajj" }
+  };
   function categoryCardHTML(c) {
-    var daypart = DAYPART_BADGE[c.num];
-    var badge = daypart
-      ? '<div class="category-num category-num-' + daypart.cls + '">' + icon(daypart.icon, 22) + "</div>"
+    var theme = THEME_BADGE[c.num];
+    var badge = theme
+      ? '<div class="category-num category-num-' + theme.cls + '">' + icon(theme.icon, 22) + "</div>"
       : '<div class="category-num">' + c.num + "</div>";
     return '<a href="#/category/' + c.num + '" class="glass category-card">' +
       badge +
@@ -237,10 +247,10 @@
   // ---------------- Home (Mana) ----------------
   var homeState = null;
   function homeFavCardHTML(c) {
-    var daypart = DAYPART_BADGE[c.num];
+    var theme = THEME_BADGE[c.num];
     return (
-      '<a href="#/category/' + c.num + '" class="home-fav-card' + (daypart ? " home-fav-" + daypart.cls : "") + '" data-chapter="' + c.num + '">' +
-        (daypart ? '<span class="home-fav-decor" aria-hidden="true">' + icon(daypart.icon, 96) + "</span>" : "") +
+      '<a href="#/category/' + c.num + '" class="home-fav-card' + (theme ? " home-fav-" + theme.cls : "") + '" data-chapter="' + c.num + '">' +
+        (theme ? '<span class="home-fav-decor" aria-hidden="true">' + icon(theme.icon, 96) + "</span>" : "") +
         '<button class="home-fav-remove" data-action="home-remove" data-num="' + c.num + '" aria-label="Filannoo irraa balleessi">' + icon("x", 14) + "</button>" +
         '<p class="home-fav-num">#' + String(c.num).padStart(2, "0") + "</p>" +
         '<h3 class="home-fav-title">' + esc(c.oromoTitle) + "</h3>" +
@@ -1134,8 +1144,8 @@
     { label: "SubḥānAllāh", arabic: "سُبْحَانَ اللَّهِ", target: 33 },
     { label: "Alḥamdulillāh", arabic: "الحَمْدُ لِلَّهِ", target: 33 },
     { label: "Allāhu akbar", arabic: "اللَّهُ أَكْبَرُ", target: 34 },
-    { label: "Lā ilāha illā Allāh", arabic: "لَا إِلَهَ إِلَّا اللَّهُ", target: 100 },
-    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ", target: 100 },
+    { label: "Lā ilāha illā Allāh", arabic: "لاَ إِلَهَ إِلاَّ اللَّهُ، وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", target: 100 },
+    { label: "Astaghfirullāh", arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", target: 100 },
     { label: "Ṣall Allāhu ʿalā Muḥammad", arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", target: 100 }
   ];
 
