@@ -1402,6 +1402,58 @@
       default: return "Wanti tokko dogongore. Irra deebi'aa yaalaa.";
     }
   }
+
+  // ---------------- Offline audio download status ----------------
+  // Purely a status readout — the actual downloading is the service
+  // worker's job (see sw.js's precacheAllAudio, which starts automatically
+  // on first launch). Reads the audio cache directly from the page side
+  // rather than duplicating the service worker's file list, so this always
+  // reflects exactly what the app itself needs to play — every track any
+  // chapter currently resolves to.
+  var AUDIO_CACHE_NAME = "hisnul-audio-v1"; // must match sw.js's AUDIO_CACHE_NAME
+  function allAudioUrls() {
+    var seen = {};
+    var urls = [];
+    CHAPTERS.forEach(function (c) {
+      urlsForChapter(c.num).forEach(function (u) {
+        if (!seen[u]) { seen[u] = true; urls.push(u); }
+      });
+    });
+    return urls;
+  }
+  function refreshAudioDownloadStatus() {
+    var textEl = document.getElementById("settings-audio-status-text");
+    if (!textEl) return; // navigated away from Settings already
+    if (!("caches" in window)) {
+      textEl.textContent = "Bilbilli/browserichi kun ol kaa'uu sagalee offline hin deeggaru.";
+      return;
+    }
+    var urls = allAudioUrls();
+    caches.open(AUDIO_CACHE_NAME).then(function (cache) {
+      return Promise.all(urls.map(function (u) { return cache.match(u).then(function (m) { return !!m; }); }));
+    }).then(function (results) {
+      var textEl2 = document.getElementById("settings-audio-status-text");
+      var trackEl = document.getElementById("settings-audio-progress");
+      var fillEl = document.getElementById("settings-audio-progress-fill");
+      if (!textEl2 || !trackEl || !fillEl) return; // left Settings meanwhile
+      var done = results.filter(Boolean).length;
+      var total = urls.length;
+      if (done >= total) {
+        textEl2.textContent = "Sagaleen hundi (" + total + ") bilbila kee irratti jira — interneeta malees ni dhaggeeffatama.";
+        trackEl.hidden = true;
+        return;
+      }
+      var pct = total ? Math.round((done / total) * 100) : 0;
+      textEl2.textContent = "Sagalee ol kaa'aa jira: " + done + "/" + total + " (" + pct + "%)";
+      trackEl.hidden = false;
+      fillEl.style.width = pct + "%";
+      setTimeout(refreshAudioDownloadStatus, 3000);
+    }).catch(function () {
+      var textEl3 = document.getElementById("settings-audio-status-text");
+      if (textEl3) textEl3.textContent = "Haala ol kaa'uu sagalee mirkaneessuu hin dandeenye.";
+    });
+  }
+
   function pageSettings() {
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
@@ -1462,6 +1514,12 @@
           "</button>" +
           '<p class="reminder-status" id="settings-bedtime-status" style="margin-top:0.5rem;color:var(--muted-foreground);font-size:0.85rem;">' + esc(bedtimeStatusText()) + "</p>" +
         "</div>" +
+      "</section>" +
+
+      '<section class="glass settings-section" id="settings-audio-status">' +
+        '<div class="settings-section-head">' + icon("download", 16) + "<span>Sagalee Offline</span></div>" +
+        '<p class="page-sub" id="settings-audio-status-text" style="margin-top:0.5rem;">Sakatta\'aa jira…</p>' +
+        '<div class="audio-progress-track" id="settings-audio-progress" hidden><div class="audio-progress-fill" id="settings-audio-progress-fill"></div></div>' +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -1540,6 +1598,8 @@
         status.textContent = reminderErrorText(res.reason);
       }
     });
+
+    refreshAudioDownloadStatus();
   }
 
   // ---------------- Router ----------------
