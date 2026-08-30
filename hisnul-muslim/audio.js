@@ -138,6 +138,35 @@ var TRACK_OVERRIDES = {
   "133:1": "none"
 };
 
+// Real, dedicated recordings for specific du'as, replacing whatever track
+// they'd otherwise resolve to (an archive.org number via TRACK_OVERRIDES or
+// the plain sequential counter) — used for one-off re-recordings, not for
+// the archive.org "nXX" numbering scheme. Unlike TRACK_OVERRIDES, applying
+// one of these never advances or otherwise touches the sequential track
+// counter, so nothing after it shifts (see useTracks in buildAudioMap).
+//
+// Chapters 27/28 (Zikrii Ganamaa/Galgalaa) started out as an exact copy of
+// the same 25 du'as with the morning recording as a placeholder for all of
+// them (see TRACK_OVERRIDES above); these six are the day/night-reworded
+// du'as (4, 5, 7, 8, 16, 17) now replaced with their own real evening
+// recordings.
+var LOCAL_OVERRIDES = {
+  "16:2": "Ch16d3.mp3",
+  "16:5": "Ch16d6.mp3",
+  "24:2": "Ch24d3.mp3",
+  "24:4": "Ch24d5.mp3",
+  "24:5": "Ch24d6.mp3",
+  "24:7": "Ch24d8.mp3",
+  "24:8": "Ch24d9.mp3",
+  "24:9": "Ch24d10.mp3",
+  "28:3": "Ch28d4.mp3",
+  "28:4": "Ch28d5.mp3",
+  "28:6": "Ch28d7.mp3",
+  "28:7": "Ch28d8.mp3",
+  "28:15": "Ch28d16.mp3",
+  "28:16": "Ch28d17.mp3"
+};
+
 function isTopicHeader(d) {
   var a = d.arabic.trimStart();
   if (a.startsWith("(") || a.startsWith("«") || a.startsWith('"')) return false;
@@ -183,12 +212,13 @@ function buildAudioMap(overrides) {
     var duaRanges = [];
     var trackToIdx = {}; // track number -> index in this chapter's urls
 
-    function useTracks(from, to) {
+    function useTracks(from, to, duaIndex) {
+      var localFile = duaIndex != null ? LOCAL_OVERRIDES[c.num + ":" + duaIndex] : null;
       var idxs = [];
       for (var n = from; n <= to; n++) {
         if (trackToIdx[n] === undefined) {
           trackToIdx[n] = urls.length;
-          urls.push(audioUrl(n));
+          urls.push(localFile ? (LOCAL_AUDIO_BASE + localFile) : audioUrl(n));
         }
         idxs.push(trackToIdx[n]);
       }
@@ -222,7 +252,7 @@ function buildAudioMap(overrides) {
       var rng = parseTrackRange(raw);
 
       if (rng) {
-        duaRanges.push(useTracks(rng.start, rng.end));
+        duaRanges.push(useTracks(rng.start, rng.end, i));
         // Resume sequential numbering after this range.
         if (rng.end > track) track = rng.end;
         return;
@@ -237,12 +267,12 @@ function buildAudioMap(overrides) {
         }
         var lo = track + 1;
         track += raw;
-        duaRanges.push(useTracks(lo, track));
+        duaRanges.push(useTracks(lo, track, i));
         return;
       }
 
       track += 1;
-      duaRanges.push(useTracks(track, track));
+      duaRanges.push(useTracks(track, track, i));
     });
 
     map[c.num] = { urls: urls, duaRanges: duaRanges };
