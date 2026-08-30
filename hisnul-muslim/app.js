@@ -1165,7 +1165,10 @@
     document.title = "Tasbiih — Hisnul Muslim";
     var saved = {};
     try { saved = JSON.parse(localStorage.getItem(TASBIH_KEY) || "{}"); } catch (e) {}
-    var presetIdx = saved.presetIdx || 0;
+    // A saved index can point past the end after a preset-list change (e.g.
+    // three presets merged into one) - fall back to the first preset rather
+    // than rendering nothing.
+    var presetIdx = saved.presetIdx >= 0 && saved.presetIdx < TASBIH_PRESETS.length ? saved.presetIdx : 0;
     var count = saved.count || 0;
 
     setTimeout(function () { bindTasbihEvents(presetIdx, count); }, 0);
