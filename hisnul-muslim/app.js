@@ -26,11 +26,12 @@
     x: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     download: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/></svg>',
-    download2: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
     bell: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
     ayahEnd: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M12 2l2.4 5.2L20 9l-4.8 3.4L17 18l-5-3.3L7 18l1.8-5.6L4 9l5.6-1.8z"/></svg>',
     skipNext: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M6 5v14l10-7z"/><rect x="17" y="5" width="2.5" height="14" rx="0.5"/></svg>',
-    skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>'
+    skipPrev: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="currentColor"><path d="M18 5v14L8 12z"/><rect x="4.5" y="5" width="2.5" height="14" rx="0.5"/></svg>',
+    sunrise: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
+    sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -177,9 +178,17 @@
   }
 
   // ---------------- Category card ----------------
+  // Zikrii Ganamaa (Morning, #27) and Zikrii Galgalaa (Evening, #28) get a
+  // sunrise/sunset badge instead of the plain chapter-number one, echoing
+  // how other adhkar apps mark these two out at a glance.
+  var DAYPART_BADGE = { 27: { icon: "sunrise", cls: "sunrise" }, 28: { icon: "sunset", cls: "sunset" } };
   function categoryCardHTML(c) {
+    var daypart = DAYPART_BADGE[c.num];
+    var badge = daypart
+      ? '<div class="category-num category-num-' + daypart.cls + '">' + icon(daypart.icon, 22) + "</div>"
+      : '<div class="category-num">' + c.num + "</div>";
     return '<a href="#/category/' + c.num + '" class="glass category-card">' +
-      '<div class="category-num">' + c.num + "</div>" +
+      badge +
       '<div class="category-text"><h3>' + esc(c.oromoTitle) + '</h3><p class="font-arabic" lang="ar" dir="rtl">' + esc(c.arabicTitle) + "</p></div>" +
       '<div class="category-count">' + c.duas.length + "</div>" +
       '<span class="category-chevron">' + icon("chevronLeft", 16) + "</span>" +
@@ -228,8 +237,10 @@
   // ---------------- Home (Mana) ----------------
   var homeState = null;
   function homeFavCardHTML(c) {
+    var daypart = DAYPART_BADGE[c.num];
     return (
-      '<a href="#/category/' + c.num + '" class="home-fav-card" data-chapter="' + c.num + '">' +
+      '<a href="#/category/' + c.num + '" class="home-fav-card' + (daypart ? " home-fav-" + daypart.cls : "") + '" data-chapter="' + c.num + '">' +
+        (daypart ? '<span class="home-fav-decor" aria-hidden="true">' + icon(daypart.icon, 96) + "</span>" : "") +
         '<button class="home-fav-remove" data-action="home-remove" data-num="' + c.num + '" aria-label="Filannoo irraa balleessi">' + icon("x", 14) + "</button>" +
         '<p class="home-fav-num">#' + String(c.num).padStart(2, "0") + "</p>" +
         '<h3 class="home-fav-title">' + esc(c.oromoTitle) + "</h3>" +
@@ -902,6 +913,29 @@
       if (preloadEl.src !== nextUrl) { preloadEl.src = nextUrl; try { preloadEl.load(); } catch (e) {} }
     }
 
+    // Attempts audioEl.play(), retrying a couple of times (reloading first)
+    // before giving up — a real mobile connection can reject the very next
+    // play() call right after switching tracks with a transient error (a
+    // brief tower handoff, a slow buffer, momentary congestion) that a
+    // fast/local connection never surfaces. onSettled(true/false) fires
+    // once, after the whole retry sequence concludes either way.
+    function playWithRetry(retriesLeft, onSettled) {
+      audioEl.play().then(function () {
+        onSettled(true);
+      }).catch(function () {
+        if (state.destroyed) { onSettled(false); return; }
+        if (retriesLeft > 0) {
+          setTimeout(function () {
+            if (state.destroyed) { onSettled(false); return; }
+            try { audioEl.load(); } catch (e) {}
+            playWithRetry(retriesLeft - 1, onSettled);
+          }, 600);
+          return;
+        }
+        onSettled(false);
+      });
+    }
+
     function advance() {
       if (state.destroyed || state.advancing) return;
 
@@ -914,7 +948,8 @@
         state.current = 0;
         audioEl.currentTime = 0;
         emit();
-        audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+        playWithRetry(2, function (ok) {
+          if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
           state.advancing = false;
         });
         return;
@@ -934,7 +969,8 @@
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+      playWithRetry(2, function (ok) {
+        if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
         state.advancing = false;
         preloadNext();
       });
@@ -987,15 +1023,16 @@
     audioEl.addEventListener("timeupdate", function () {
       state.current = audioEl.currentTime;
       if (audioEl.duration > 0) state.progress = (audioEl.currentTime / audioEl.duration) * 100;
-      // Only use this early trigger for a genuine track-to-track transition.
-      // For a track that still has repeats left, jumping the gun here (the
-      // 0.35s margin can exceed the whole length of a short one-phrase
-      // clip) would restart it before it actually finished, and restarting
-      // playback while a previous play() is still settling makes the
-      // browser reject it outright ("interrupted by a new load request"),
-      // surfacing as a false "audio failed to load" error. The reliable
-      // "ended" event covers the repeat case instead.
-      if (state.repeatsLeft <= 1 && audioEl.duration > 0 && audioEl.currentTime >= audioEl.duration - 0.35 && !audioEl.seeking && !state.advancing) advance();
+      // Track-to-track advancement relies solely on the "ended" event below.
+      // An earlier version jumped the gun here, calling advance() (and so
+      // audioEl.load()) up to 0.35s before the track actually finished —
+      // while it was still audibly playing. On a real mobile connection
+      // (unlike a fast local/desktop one) that collided with the still-
+      // settling previous play() often enough to make the browser reject
+      // the next one outright ("interrupted by a new load request"),
+      // surfacing as a false "audio failed to load" error on real devices.
+      // preloadNext() already fetches the next track's bytes well ahead of
+      // time, so waiting for the real "ended" event costs no perceptible gap.
       emit();
     });
 
@@ -1012,7 +1049,10 @@
       state.loading = true; state.error = false; state.current = 0; state.duration = 0; state.progress = 0;
       emit();
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().then(function () { preloadNext(); }).catch(function () { state.loading = false; state.error = true; emit(); });
+      playWithRetry(2, function (ok) {
+        if (ok) { preloadNext(); }
+        else { state.loading = false; state.error = true; emit(); }
+      });
     };
     state.pause = function () { pausedByUs = true; audioEl.pause(); };
     // Resumes from the current position (unlike state.play, which always
@@ -1051,7 +1091,8 @@
       audioEl.src = state.urls[state.idx];
       state.current = 0; state.duration = 0; state.progress = 0;
       try { audioEl.load(); } catch (e) {}
-      audioEl.play().catch(function () { state.playing = false; state.loading = false; state.error = true; emit(); }).finally(function () {
+      playWithRetry(2, function (ok) {
+        if (!ok) { state.playing = false; state.loading = false; state.error = true; emit(); }
         state.advancing = false;
       });
     };
@@ -1363,6 +1404,58 @@
       default: return "Wanti tokko dogongore. Irra deebi'aa yaalaa.";
     }
   }
+
+  // ---------------- Offline audio download status ----------------
+  // Purely a status readout — the actual downloading is the service
+  // worker's job (see sw.js's precacheAllAudio, which starts automatically
+  // on first launch). Reads the audio cache directly from the page side
+  // rather than duplicating the service worker's file list, so this always
+  // reflects exactly what the app itself needs to play — every track any
+  // chapter currently resolves to.
+  var AUDIO_CACHE_NAME = "hisnul-audio-v1"; // must match sw.js's AUDIO_CACHE_NAME
+  function allAudioUrls() {
+    var seen = {};
+    var urls = [];
+    CHAPTERS.forEach(function (c) {
+      urlsForChapter(c.num).forEach(function (u) {
+        if (!seen[u]) { seen[u] = true; urls.push(u); }
+      });
+    });
+    return urls;
+  }
+  function refreshAudioDownloadStatus() {
+    var textEl = document.getElementById("settings-audio-status-text");
+    if (!textEl) return; // navigated away from Settings already
+    if (!("caches" in window)) {
+      textEl.textContent = "Bilbilli/browserichi kun ol kaa'uu sagalee offline hin deeggaru.";
+      return;
+    }
+    var urls = allAudioUrls();
+    caches.open(AUDIO_CACHE_NAME).then(function (cache) {
+      return Promise.all(urls.map(function (u) { return cache.match(u).then(function (m) { return !!m; }); }));
+    }).then(function (results) {
+      var textEl2 = document.getElementById("settings-audio-status-text");
+      var trackEl = document.getElementById("settings-audio-progress");
+      var fillEl = document.getElementById("settings-audio-progress-fill");
+      if (!textEl2 || !trackEl || !fillEl) return; // left Settings meanwhile
+      var done = results.filter(Boolean).length;
+      var total = urls.length;
+      if (done >= total) {
+        textEl2.textContent = "Sagaleen hundi (" + total + ") bilbila kee irratti jira — interneeta malees ni dhaggeeffatama.";
+        trackEl.hidden = true;
+        return;
+      }
+      var pct = total ? Math.round((done / total) * 100) : 0;
+      textEl2.textContent = "Sagalee ol kaa'aa jira: " + done + "/" + total + " (" + pct + "%)";
+      trackEl.hidden = false;
+      fillEl.style.width = pct + "%";
+      setTimeout(refreshAudioDownloadStatus, 3000);
+    }).catch(function () {
+      var textEl3 = document.getElementById("settings-audio-status-text");
+      if (textEl3) textEl3.textContent = "Haala ol kaa'uu sagalee mirkaneessuu hin dandeenye.";
+    });
+  }
+
   function pageSettings() {
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
@@ -1425,9 +1518,10 @@
         "</div>" +
       "</section>" +
 
-      '<section class="glass settings-section">' +
-        '<div class="settings-section-head">' + icon("download2", 16) + "<span>Sagalee ol kaa\'ame</span></div>" +
-        '<p class="page-sub" style="margin-top:0.5rem;">Sagaleen kitaabaa hundi appicha waliin ofumaan bilbila kee irratti ol kaa\'ama, kanaafuu interneeta malees ni dhaggeeffatama.</p>' +
+      '<section class="glass settings-section" id="settings-audio-status">' +
+        '<div class="settings-section-head">' + icon("download", 16) + "<span>Sagalee Offline</span></div>" +
+        '<p class="page-sub" id="settings-audio-status-text" style="margin-top:0.5rem;">Sakatta\'aa jira…</p>' +
+        '<div class="audio-progress-track" id="settings-audio-progress" hidden><div class="audio-progress-fill" id="settings-audio-progress-fill"></div></div>' +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -1506,6 +1600,8 @@
         status.textContent = reminderErrorText(res.reason);
       }
     });
+
+    refreshAudioDownloadStatus();
   }
 
   // ---------------- Router ----------------

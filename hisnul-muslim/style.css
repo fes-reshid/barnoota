@@ -174,6 +174,14 @@ input { font-family: inherit; }
   font-family: var(--font-display); font-size: calc(1.125rem * var(--reading-scale)); font-weight: 600;
   color: var(--primary-foreground); background: var(--gradient-primary);
 }
+/* Fixed light icon color rather than the theme-flipping --primary-foreground
+   used above — these gradients are the same warm, mid-to-light tones in
+   both the light and dark app themes, so a light icon reads clearly on
+   either, unlike --primary-foreground which is tuned for --gradient-primary
+   and would go near-black in dark mode. */
+.category-num-sunrise, .category-num-sunset { color: #fffaf0 !important; }
+.category-num-sunrise { background: linear-gradient(160deg, #fde08a 0%, #f6ad55 55%, #ea7c3c 100%); }
+.category-num-sunset { background: linear-gradient(160deg, #f6ad55 0%, #d9668b 55%, #5b4b9a 100%); }
 .category-text { min-width: 0; flex: 1; }
 .category-text h3 { margin: 0; font-size: calc(1rem * var(--reading-scale)); font-weight: 500; color: var(--foreground); }
 .category-text p { margin: 0.125rem 0 0; font-size: calc(0.875rem * var(--reading-scale)); color: var(--muted-foreground); }
@@ -183,12 +191,31 @@ input { font-family: inherit; }
 /* ---------- Home (Mana) ---------- */
 .home-fav-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .home-fav-card {
-  position: relative; display: flex; flex-direction: column; justify-content: space-between;
+  position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
   min-width: 0; min-height: 9.5rem; border-radius: var(--radius-2xl); padding: 1rem;
   background: var(--gradient-primary); color: var(--primary-foreground);
   box-shadow: var(--shadow-elegant); transition: box-shadow .15s ease;
 }
 .home-fav-card:hover { box-shadow: var(--shadow-gold); }
+/* Zikrii Ganamaa/Galgalaa (morning/evening) get a themed sunrise/sunset
+   background instead of the plain primary gradient, echoing the same
+   treatment in the Zikrii category list. */
+/* Richer/darker than the small category badge's gradient (below) — this
+   covers the whole card behind the title text, so it needs enough depth
+   for light text to stay readable throughout, the way every other
+   home-fav-card gradient already does. */
+.home-fav-sunrise { background: linear-gradient(160deg, #d97706 0%, #c2410c 55%, #9a3412 100%); }
+.home-fav-sunset { background: linear-gradient(160deg, #c2410c 0%, #9d174d 55%, #4c1d95 100%); }
+.home-fav-sunrise, .home-fav-sunset { color: #fffaf0; }
+.home-fav-sunrise .home-fav-ar, .home-fav-sunset .home-fav-ar { color: color-mix(in oklab, #fffaf0 80%, transparent); }
+.home-fav-decor {
+  position: absolute; top: -1rem; right: -1rem; opacity: 0.18; color: #fffaf0;
+  pointer-events: none; line-height: 0;
+}
+.home-fav-sunrise .home-fav-remove, .home-fav-sunset .home-fav-remove { background: color-mix(in oklab, black 15%, transparent); }
+.home-fav-sunrise .home-fav-remove:hover, .home-fav-sunset .home-fav-remove:hover { background: color-mix(in oklab, black 28%, transparent); }
+.home-fav-sunrise .home-fav-play, .home-fav-sunset .home-fav-play { background: color-mix(in oklab, white 20%, transparent); }
+.home-fav-sunrise .home-fav-play:hover, .home-fav-sunset .home-fav-play:hover { background: color-mix(in oklab, white 32%, transparent); }
 .home-fav-remove {
   position: absolute; z-index: 2; top: 0.6rem; right: 0.6rem; width: 1.5rem; height: 1.5rem; border-radius: 9999px;
   display: flex; align-items: center; justify-content: center;
@@ -418,6 +445,8 @@ input { font-family: inherit; }
 .font-reset { margin-top: 0.5rem; width: 100%; border-radius: var(--radius-xl); border: 1px solid var(--border); background: transparent; padding: 0.375rem 0.75rem; font-size: 0.75rem; color: var(--muted-foreground); }
 .font-reset:hover { color: var(--foreground); }
 .reminder-divider { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.audio-progress-track { margin-top: 0.75rem; height: 6px; border-radius: 9999px; background: color-mix(in oklab, var(--primary) 15%, transparent); overflow: hidden; }
+.audio-progress-fill { height: 100%; width: 0%; border-radius: 9999px; background: var(--gradient-gold); transition: width .3s ease; }
 .bedtime-time-input {
   margin-top: 0.75rem; width: 100%; border-radius: var(--radius-xl); border: 1px solid var(--border);
   background: var(--background); color: var(--foreground); padding: 0.5rem 0.75rem;
