@@ -506,6 +506,29 @@
   }
   function savePrayerCoords(c) { try { localStorage.setItem(PRAYERTIMES_COORDS_KEY, JSON.stringify(c)); } catch (e) {} }
 
+  // Hand-entered times (e.g. matching the reader's own mosque schedule)
+  // take priority over the GPS/calculated ones entirely - set, they mean
+  // no location is needed at all. { fajr: "05:06", dhuhr: "12:27", ... } in
+  // 24h "HH:MM", one entry per AZAN_PRAYERS key (sunrise isn't a prayer, so
+  // it's never hand-entered - only shown when times come from calculation).
+  var PRAYERTIMES_MANUAL_KEY = "hisn:prayertimes:manual";
+  function loadManualPrayerTimes() {
+    try { return JSON.parse(localStorage.getItem(PRAYERTIMES_MANUAL_KEY) || "null"); } catch (e) { return null; }
+  }
+  function saveManualPrayerTimes(times) { try { localStorage.setItem(PRAYERTIMES_MANUAL_KEY, JSON.stringify(times)); } catch (e) {} }
+  function clearManualPrayerTimes() { try { localStorage.removeItem(PRAYERTIMES_MANUAL_KEY); } catch (e) {} }
+  function manualTimesToDate(manual, baseDate) {
+    var out = {};
+    AZAN_PRAYERS.forEach(function (k) {
+      var v = manual[k];
+      if (!v) return;
+      var m = /^(\d{1,2}):(\d{2})$/.exec(v);
+      if (!m) return;
+      out[k] = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), parseInt(m[1], 10), parseInt(m[2], 10), 0, 0);
+    });
+    return out;
+  }
+
   var PRAYER_ORDER = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"];
   var PRAYER_LABELS = { fajr: "Faajrii", sunrise: "Baji’a Aduu", dhuhr: "Zuhrii", asr: "Asrii", maghrib: "Magrib", isha: "Ishaa’a" };
   // Which of PRAYER_ORDER an azan alert actually fires for - sunrise isn't a
@@ -525,12 +548,27 @@
     return new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
   }
 
+  function manualEntryFormHTML(manual) {
+    var rows = AZAN_PRAYERS.map(function (k) {
+      return '<div class="prayer-manual-row"><label for="manual-' + k + '">' + PRAYER_LABELS[k] + '</label>' +
+        '<input type="time" id="manual-' + k + '" value="' + esc((manual && manual[k]) || "") + '"></div>';
+    }).join("");
+    return (
+      '<div class="prayer-manual-form" id="prayer-manual-form"' + (manual ? "" : " hidden") + '>' +
+        rows +
+        '<button class="cta" id="prayer-manual-save" style="margin-top:0.75rem;">Ol kaa\'i</button>' +
+        '<p class="qibla-error" id="prayer-manual-error" hidden></p>' +
+      "</div>"
+    );
+  }
+
   function pagePrayerTimes() {
     document.title = "Yeroo Salaataa — Hisnul Muslim";
-    var coords = loadPrayerCoords();
-    setTimeout(function () { bindPrayerTimesEvents(coords); }, 0);
+    var manual = loadManualPrayerTimes();
+    var coords = manual ? null : loadPrayerCoords();
+    setTimeout(function () { bindPrayerTimesEvents(coords, manual); }, 0);
 
-    if (!coords) {
+    if (!manual && !coords) {
       return (
         '<header class="animate-fade-in">' +
           '<p class="eyebrow">Yeroo Salaataa</p>' +
@@ -539,28 +577,32 @@
         '<div class="glass empty-panel">' +
           '<div class="empty-icon">' + icon("bell", 24) + "</div>" +
           '<p class="title">Bakka argamuu barbaachisa</p>' +
-          '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyamuu qabda.</p>' +
+          '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyami - yookiin yeroowwan ofii galchi.</p>' +
           '<button class="cta" id="prayertimes-request-loc">Bakka argamuu eeyyami</button>' +
+          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.75rem;">Yeroo ofii galchi</button>' +
           '<p class="qibla-error" id="prayertimes-error" hidden></p>' +
-        "</div>"
+        "</div>" +
+        manualEntryFormHTML(null)
       );
     }
 
     var now = new Date();
-    var times = PrayerTimes.computeTimes(localMidnightUTCFor(now), coords.lat, coords.lon);
+    var times = manual ? manualTimesToDate(manual, now) : PrayerTimes.computeTimes(localMidnightUTCFor(now), coords.lat, coords.lon);
     if (!times) {
       return (
         '<header class="animate-fade-in">' +
           '<p class="eyebrow">Yeroo Salaataa</p>' +
           '<h1 class="page-title">Yeroo <span class="gold-text">Salaataa</span></h1>' +
         "</header>" +
-        '<div class="glass empty-panel"><p class="title">Herregachuu hin dandeenye</p><p class="sub">Bakki kee (naannoo qorraa cimaa) yeroo kana herreguuf hin dandeenye.</p></div>'
+        '<div class="glass empty-panel"><p class="title">Herregachuu hin dandeenye</p><p class="sub">Bakki kee (naannoo qorraa cimaa) yeroo kana herreguuf hin dandeenye. Yeroo ofii galchuu yaalaa.</p></div>' +
+        manualEntryFormHTML(manual)
       );
     }
 
     var azanOn = isAzanEnabled();
-    var nextIdx = PRAYER_ORDER.findIndex(function (k) { return times[k].getTime() > now.getTime(); });
-    var rowsHTML = PRAYER_ORDER.map(function (k, i) {
+    var order = manual ? AZAN_PRAYERS : PRAYER_ORDER;
+    var nextIdx = order.findIndex(function (k) { return times[k] && times[k].getTime() > now.getTime(); });
+    var rowsHTML = order.map(function (k, i) {
       return '<div class="prayer-row' + (i === nextIdx ? " is-next" : "") + '">' +
         '<span class="prayer-name">' + PRAYER_LABELS[k] + "</span>" +
         '<span class="prayer-time">' + fmt12(times[k]) + "</span>" +
@@ -581,12 +623,57 @@
           "</button>" +
         "</div>" +
         '<p class="qibla-note">Kun bilbila salphaa yeroo salaataa ga’utti si beeksisu dha (dhugaa azaanaa miti), yeroo appiin banamee jiru.</p>' +
-        '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
-      "</section>"
+        (manual ?
+          '<button class="font-reset" id="prayer-manual-edit" style="margin-top:0.75rem;">Yeroo ofii gulaali</button>' +
+          '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
+          :
+          '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
+          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>'
+        ) +
+      "</section>" +
+      manualEntryFormHTML(manual)
     );
   }
 
-  function bindPrayerTimesEvents(coords) {
+  function readManualFormValues() {
+    var values = {};
+    var missing = [];
+    AZAN_PRAYERS.forEach(function (k) {
+      var el = document.getElementById("manual-" + k);
+      var v = el ? el.value : "";
+      if (!v) missing.push(PRAYER_LABELS[k]);
+      values[k] = v;
+    });
+    return { values: values, missing: missing };
+  }
+
+  function bindPrayerTimesEvents(coords, manual) {
+    var manualOpenBtn = document.getElementById("prayer-manual-open");
+    var manualEditBtn = document.getElementById("prayer-manual-edit");
+    var manualForm = document.getElementById("prayer-manual-form");
+    if (manualOpenBtn && manualForm) manualOpenBtn.addEventListener("click", function () { manualForm.hidden = false; manualForm.scrollIntoView({ behavior: "smooth", block: "center" }); });
+    if (manualEditBtn && manualForm) manualEditBtn.addEventListener("click", function () { manualForm.hidden = false; manualForm.scrollIntoView({ behavior: "smooth", block: "center" }); });
+
+    var manualSaveBtn = document.getElementById("prayer-manual-save");
+    if (manualSaveBtn) manualSaveBtn.addEventListener("click", function () {
+      var result = readManualFormValues();
+      var errEl = document.getElementById("prayer-manual-error");
+      if (result.missing.length) {
+        if (errEl) { errEl.hidden = false; errEl.textContent = "Yeroo kanneen guuti: " + result.missing.join(", "); }
+        return;
+      }
+      saveManualPrayerTimes(result.values);
+      scheduleNextAzan();
+      navigate(location.hash, true);
+    });
+
+    var manualClearBtn = document.getElementById("prayer-manual-clear");
+    if (manualClearBtn) manualClearBtn.addEventListener("click", function () {
+      clearManualPrayerTimes();
+      scheduleNextAzan();
+      navigate(location.hash, true);
+    });
+
     var reqBtn = document.getElementById("prayertimes-request-loc");
     if (reqBtn) {
       reqBtn.addEventListener("click", function () {
@@ -603,7 +690,6 @@
           if (errEl) { errEl.hidden = false; errEl.textContent = "Bakka argamuu argachuu hin dandeenye. Eeyyama browserii/appii mirkaneessi."; }
         }, { timeout: 15000, maximumAge: 3600000 });
       });
-      return;
     }
 
     var refreshBtn = document.getElementById("prayertimes-refresh-loc");
@@ -637,16 +723,17 @@
   function scheduleNextAzan() {
     stopPrayerAzanSchedule();
     if (!isAzanEnabled()) return;
-    var coords = loadPrayerCoords();
-    if (!coords) return;
+    var manual = loadManualPrayerTimes();
+    var coords = manual ? null : loadPrayerCoords();
+    if (!manual && !coords) return;
     var now = new Date();
     var candidates = [];
     [0, 1].forEach(function (offset) {
       var day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
-      var times = PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
+      var times = manual ? manualTimesToDate(manual, day) : PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
       if (!times) return;
       AZAN_PRAYERS.forEach(function (k) {
-        if (times[k].getTime() > now.getTime()) candidates.push(times[k]);
+        if (times[k] && times[k].getTime() > now.getTime()) candidates.push(times[k]);
       });
     });
     if (!candidates.length) return;
@@ -2182,12 +2269,12 @@
     document.title = "Qindaa'ina — Hisnul Muslim";
     var items = [
       { href: "#/settings-app", ic: "settings", label: "Qindaa'ina" },
-      { href: "#/qibla", ic: "compass", label: "Qiblaa" },
-      { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" },
       { href: "#/waaee-appii", ic: "info", label: "Waa'ee Appii" },
       { href: "#/dursa", ic: "bookOpen", label: "Dursa" },
       { href: "#/yaadaa-gulaalaa", ic: "edit", label: "Yaadaa Gulaalaa" },
-      { href: "#/faayidaa-zikrii", ic: "sparkles", label: "Faayidaa Zikrii Qabu" }
+      { href: "#/faayidaa-zikrii", ic: "sparkles", label: "Faayidaa Zikrii Qabu" },
+      { href: "#/qibla", ic: "compass", label: "Qiblaa" },
+      { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" }
     ];
     var cards = items.map(function (item) {
       return '<a href="' + item.href + '" class="glass menu-page-card">' +
