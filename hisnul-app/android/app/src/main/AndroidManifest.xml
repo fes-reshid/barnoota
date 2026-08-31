@@ -28,12 +28,9 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
 
-        <!-- Google's official test App ID - swap for the real one from the
-             AdMob console (Apps > your app > App settings > App ID) before
-             a release build, or ads will always be Google's test ads. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-7778012722329637~3858826243" />
     </application>
 
     <!-- Permissions -->
