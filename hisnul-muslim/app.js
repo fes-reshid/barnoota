@@ -1896,8 +1896,29 @@
   // reading pages (Dursa, Faayidaa Zikrii Qabu) rather than the app's usual
   // plain "glass" card.
   var MANUSCRIPT_CORNER_SVG =
-    '<svg viewBox="0 0 60 60"><path d="M4 4c0 24 24 24 24 48M4 4c24 0 24 24 48 24" fill="none" stroke="currentColor" stroke-width="2"/>' +
-    '<circle cx="4" cy="4" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+    '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M20 2 H100" stroke-width="1"/>' +
+      '<path d="M2 20 V100" stroke-width="1"/>' +
+      '<path d="M20 2 C 11 2, 5 6, 3 13" stroke-width="1"/>' +
+      '<path d="M2 20 C 2 11, 6 5, 13 3" stroke-width="1"/>' +
+      '<path d="M4 4 C 22 6, 30 18, 46 22 C 56 24.5, 62 20, 60 14"/>' +
+      '<path d="M4 4 C 6 22, 18 30, 22 46 C 24.5 56, 20 62, 14 60"/>' +
+      '<circle cx="4" cy="4" r="2.4" fill="currentColor" stroke="none"/>' +
+      '<path d="M4 4 m -6,0 a 6,6 0 1,1 12,0 a 6,6 0 1,1 -12,0" stroke-width="0.8" opacity="0.7"/>' +
+      '<path d="M22 12 C 26 6, 34 6, 36 12 C 38 17, 32 20, 28 16"/>' +
+      '<path d="M22 12 C 18 8, 18 2, 24 2"/>' +
+      '<circle cx="36" cy="12" r="1.4" fill="currentColor" stroke="none"/>' +
+      '<path d="M12 22 C 6 26, 6 34, 12 36 C 17 38, 20 32, 16 28"/>' +
+      '<path d="M12 22 C 8 18, 2 18, 2 24"/>' +
+      '<circle cx="12" cy="36" r="1.4" fill="currentColor" stroke="none"/>' +
+      '<path d="M46 22 C 50 17, 57 18, 58 24 C 59 29, 53 31, 50 27"/>' +
+      '<circle cx="58" cy="24" r="1.2" fill="currentColor" stroke="none"/>' +
+      '<path d="M22 46 C 17 50, 18 57, 24 58 C 29 59, 31 53, 27 50"/>' +
+      '<circle cx="24" cy="58" r="1.2" fill="currentColor" stroke="none"/>' +
+      '<path d="M60 14 C 63 11, 63 6, 58 6 C 55 6, 54 9, 57 10"/>' +
+      '<path d="M14 60 C 11 63, 6 63, 6 58 C 6 55, 9 54, 10 57"/>' +
+      '<path d="M16 16 C 22 20, 20 28, 26 32" stroke-width="0.9" opacity="0.85"/>' +
+    "</svg>";
   function manuscriptCardHTML(innerHTML) {
     return (
       '<section class="manuscript-card">' +
