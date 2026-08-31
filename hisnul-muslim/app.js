@@ -255,12 +255,13 @@
   // synced, the same way reminders.js reaches LocalNotifications, so no
   // bundler/import is needed for this buildless app.
   //
-  // ADMOB_BANNER_UNIT_ID is Google's official Android test banner unit -
-  // every impression is a genuine Google test ad, not real inventory, so
-  // there's no invalid-traffic risk while this is in place. Swap it for the
-  // real ad unit ID from the AdMob console (and the App ID in
-  // AndroidManifest.xml, and drop initializeForTesting below) before a
-  // release build.
+  // AndroidManifest.xml's APPLICATION_ID is already the real one from the
+  // AdMob console. ADMOB_BANNER_UNIT_ID below is still Google's official
+  // Android test banner unit, though - safe to mix with a real App ID,
+  // every impression is a genuine Google test ad, not real inventory. Swap
+  // it for the real banner ad unit ID once created in the AdMob console
+  // (Apps > Hisnul Muslim > Ad units), and drop initializeForTesting below,
+  // before a release build.
   var ADMOB_BANNER_UNIT_ID = "ca-app-pub-3940256099942544/6300978111";
   function admobPlugin() {
     return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
