@@ -127,15 +127,15 @@ var TRACK_OVERRIDES = {
   "115:0": "n220",
   "116:0": "n221",
   "117:0": "n222",
-  "124:0": "n229",
+  "124:0": "none",
   "130:1": "n235",
   "130:2": "n235",
   "130:3": "n235",
   "130:4": "n235",
   "130:5": "n235",
   "131:9": "n244",
-  "133:0": "none",
-  "133:1": "none"
+  "132:0": "none",
+  "132:1": "none"
 };
 
 // Real, dedicated recordings for specific du'as, replacing whatever track
