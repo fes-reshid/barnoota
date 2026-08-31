@@ -16,7 +16,22 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/icon-32.png" sizes="32x32">
 <link rel="icon" href="icons/icon-192.png" sizes="192x192">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<script>
+// AdSense is for content viewed in a real browser - Google's program
+// policies prohibit it inside a packaged app (AdMob is the product for
+// that), and serving it from within the Capacitor-wrapped native build
+// risks the whole AdSense account being suspended for invalid traffic.
+// window.Capacitor is present synchronously in the native shell, so the
+// script tag itself is only injected on the actual web/PWA path - it
+// never loads, and never pings Google's ad servers, inside the app.
+if (!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
+  var adsenseScript = document.createElement("script");
+  adsenseScript.async = true;
+  adsenseScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637";
+  adsenseScript.crossOrigin = "anonymous";
+  document.head.appendChild(adsenseScript);
+}
+</script>
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
