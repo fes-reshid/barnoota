@@ -4,6 +4,7 @@
   "private": true,
   "description": "Native app wrapper (Capacitor) for the Hisnul Muslim web app",
   "dependencies": {
+    "@capacitor-community/admob": "^8.1.0",
     "@capacitor/android": "^8.5.0",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",

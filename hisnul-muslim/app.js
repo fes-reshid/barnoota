@@ -248,6 +248,36 @@
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
 
+  // ---------------- AdMob (native app only) ----------------
+  // AdSense is web-only (see above); the native Android/iOS build uses AdMob
+  // instead, via the @capacitor-community/admob plugin - Capacitor
+  // auto-registers it on window.Capacitor.Plugins.AdMob once installed and
+  // synced, the same way reminders.js reaches LocalNotifications, so no
+  // bundler/import is needed for this buildless app.
+  //
+  // ADMOB_BANNER_UNIT_ID is Google's official Android test banner unit -
+  // every impression is a genuine Google test ad, not real inventory, so
+  // there's no invalid-traffic risk while this is in place. Swap it for the
+  // real ad unit ID from the AdMob console (and the App ID in
+  // AndroidManifest.xml, and drop initializeForTesting below) before a
+  // release build.
+  var ADMOB_BANNER_UNIT_ID = "ca-app-pub-3940256099942544/6300978111";
+  function admobPlugin() {
+    return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
+  }
+  function initAdMob() {
+    var AdMob = admobPlugin();
+    if (!AdMob) return;
+    AdMob.initialize({ initializeForTesting: true }).then(function () {
+      return AdMob.showBanner({
+        adId: ADMOB_BANNER_UNIT_ID,
+        adSize: "ADAPTIVE_BANNER",
+        position: "BOTTOM_CENTER",
+        margin: 0
+      });
+    }).catch(function () {});
+  }
+
   // ---------------- Category card ----------------
   // A few especially common chapters get a themed badge instead of the
   // plain chapter-number one, echoing how other adhkar apps mark these out
@@ -2747,6 +2777,7 @@
   applyFontScale();
   navigate();
   scheduleNextAzan();
+  initAdMob();
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") scheduleNextAzan();
   });
