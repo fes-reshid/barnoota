@@ -229,7 +229,14 @@
   var AD_SLOT_HOME = "0000000000";
   var AD_SLOT_ZIKRII = "0000000000";
   var AD_SLOT_SAGALEE = "0000000000";
+  // AdSense is web-only (see index.html's guard on the script tag itself) —
+  // isNativeApp() keeps these two in sync so the native build never renders
+  // an ad slot or calls into a library it never loaded.
+  function isNativeApp() {
+    return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  }
   function adSlotHTML(slot) {
+    if (isNativeApp()) return "";
     return '<div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="' +
       ADSENSE_CLIENT + '" data-ad-slot="' + slot + '" data-ad-format="auto" data-full-width-responsive="true"></ins></div>';
   }
@@ -237,6 +244,7 @@
   // unlike a normal multi-page site, adsbygoogle.push() has to be called
   // again after every render, not just once at initial page load.
   function pushAd() {
+    if (isNativeApp()) return;
     try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
   }
 
