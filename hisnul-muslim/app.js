@@ -209,7 +209,7 @@
     { to: "#/categories", label: "Zikrii", icon: "bookOpen" },
     { to: "#/sagalee", label: "Sagalee", icon: "volume2" },
     { to: "#/tasbih", label: "Tasbiih", icon: "circleDot" },
-    { to: "#/settings", label: "Qindaa'ina", icon: "settings" }
+    { to: "#/settings", label: "Qindaa'ina", icon: "menu" }
   ];
   function renderBottomNav(activePath) {
     var html = NAV_ITEMS.map(function (item) {
@@ -2012,6 +2012,56 @@
     );
   }
 
+  // The bottom-nav "Qindaa'ina" tab lands here: a menu of destinations
+  // (the real settings, About, and the three book-excerpt pages) rather
+  // than jumping straight into settings controls.
+  function pageSettingsMenu() {
+    document.title = "Qindaa'ina — Hisnul Muslim";
+    var items = [
+      { href: "#/settings-app", ic: "settings", label: "Qindaa'ina" },
+      { href: "#/waaee-appii", ic: "info", label: "Waa'ee Appii" },
+      { href: "#/dursa", ic: "bookOpen", label: "Dursa" },
+      { href: "#/yaadaa-gulaalaa", ic: "edit", label: "Yaadaa Gulaalaa" },
+      { href: "#/faayidaa-zikrii", ic: "sparkles", label: "Faayidaa Zikrii Qabu" }
+    ];
+    var cards = items.map(function (item) {
+      return '<a href="' + item.href + '" class="glass menu-page-card">' +
+        '<span class="menu-page-icon">' + icon(item.ic, 22) + "</span>" +
+        '<span class="menu-page-label">' + item.label + "</span>" +
+        '<span class="menu-page-chevron">' + icon("chevronLeft", 18) + "</span>" +
+      "</a>";
+    }).join("");
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Qindaa\'ina <span class="gold-text">fi Odeeffannoo</span></h1>' +
+      "</header>" +
+      '<div class="menu-page-list">' + cards + "</div>"
+    );
+  }
+
+  function pageWaaeeAppii() {
+    document.title = "Waa'ee Appii — Hisnul Muslim";
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Waa\'ee <span class="gold-text">Appii</span></h1>' +
+      "</header>" +
+      '<section class="glass settings-section">' +
+        '<div class="about-body">' +
+          "<p>Appiin kun <span class=\"gold-text\" style=\"font-weight:600;\">Hisnul Muslim</span> — kitaaba zikriifi du'aa'ii Musliimaa, Afaan Oromootiin akka salphaatti dubbifamuufi dhaggeeffatamu kan qopha'e dha.</p>" +
+          '<p>Kitaabni <a href="https://islamhouse.com" target="_blank" rel="noreferrer" class="link">islamhouse.com</a> irraa kan Afaan Oromootiin PDF hiikkamte irraa hojjatame.</p>' +
+          '<p>Kan hiike: <strong>Gaalii Abbaaboor Abbaaguumaa</strong>. Gulaala: <strong>Ustaz Jamaal Muhammad Ahmad</strong>.</p>' +
+          '<p>Audio immoo <a href="https://archive.org" target="_blank" rel="noreferrer" class="link">archive.org</a> irraahi.</p>' +
+          '<p>App kan hojjate <strong>Feeysal Musxafaa</strong>ti.</p>' +
+          '<p style="color:var(--muted-foreground);">Yaada yoo qabaattan email armaan gadii kanaan na qunnamaa.</p>' +
+          '<a class="mail-btn" href="mailto:fes900@yahoo.com?subject=Hisnul%20Muslim%20App%20Feedback">' + icon("mail", 16) + " fes900@yahoo.com</a>" +
+          '<p style="margin-top:0.5rem;"><a href="privacy.html" target="_blank" rel="noreferrer" class="link">Imaammata Iccitii (Privacy Policy)</a></p>' +
+        "</div>" +
+      "</section>"
+    );
+  }
+
   function pageSettings() {
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
@@ -2020,21 +2070,10 @@
     var bedtimeTime = window.RemindersAPI ? RemindersAPI.bedtimeTime() : "22:00";
     setTimeout(function () { bindSettingsEvents(theme); }, 0);
     return (
-      '<header class="animate-fade-in settings-header">' +
-        '<div>' +
-          '<p class="eyebrow">Qindaa\'ina</p>' +
-          '<h1 class="page-title">App <span class="gold-text">qindeessi</span></h1>' +
-        "</div>" +
-        '<button class="settings-menu-btn" id="settings-menu-btn" aria-label="Baalinsa" aria-expanded="false">' + icon("menu", 20) + "</button>" +
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Qindaa\'ina</p>' +
+        '<h1 class="page-title">App <span class="gold-text">qindeessi</span></h1>' +
       "</header>" +
-
-      '<div class="settings-menu-dropdown glass" id="settings-menu-dropdown" hidden>' +
-        '<button class="settings-menu-item" data-action="settings-menu-close">' + icon("settings", 16) + "<span>Qindaa'ina</span></button>" +
-        '<button class="settings-menu-item" data-action="settings-menu-about">' + icon("info", 16) + "<span>Waa'ee Appii</span></button>" +
-        '<a class="settings-menu-item" href="#/dursa">' + icon("bookOpen", 16) + "<span>Dursa</span></a>" +
-        '<a class="settings-menu-item" href="#/yaadaa-gulaalaa">' + icon("edit", 16) + "<span>Yaadaa Gulaalaa</span></a>" +
-        '<a class="settings-menu-item" href="#/faayidaa-zikrii">' + icon("sparkles", 16) + "<span>Faayidaa Zikrii Qabu</span></a>" +
-      "</div>" +
 
       '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon(theme === "dark" ? "moon" : "sun", 16) + "<span>Halluu (Theme)</span></div>" +
@@ -2052,20 +2091,6 @@
           '<button class="plus" data-action="settings-font-inc">+</button>' +
         "</div>" +
         '<button class="font-reset" data-action="settings-font-reset">Deebisi gara 100%</button>' +
-      "</section>" +
-
-      '<section class="glass settings-section" id="settings-about-section">' +
-        '<div class="settings-section-head">' + icon("info", 16) + "<span>Waa'ee Appii</span></div>" +
-        '<div class="about-body">' +
-          "<p>Appiin kun <span class=\"gold-text\" style=\"font-weight:600;\">Hisnul Muslim</span> — kitaaba zikriifi du'aa'ii Musliimaa, Afaan Oromootiin akka salphaatti dubbifamuufi dhaggeeffatamu kan qopha'e dha.</p>" +
-          '<p>Kitaabni <a href="https://islamhouse.com" target="_blank" rel="noreferrer" class="link">islamhouse.com</a> irraa kan Afaan Oromootiin PDF hiikkamte irraa hojjatame.</p>' +
-          '<p>Kan hiike: <strong>Gaalii Abbaaboor Abbaaguumaa</strong>. Gulaala: <strong>Ustaz Jamaal Muhammad Ahmad</strong>.</p>' +
-          '<p>Audio immoo <a href="https://archive.org" target="_blank" rel="noreferrer" class="link">archive.org</a> irraahi.</p>' +
-          '<p>App kan hojjate <strong>Feeysal Musxafaa</strong>ti.</p>' +
-          '<p style="color:var(--muted-foreground);">Yaada yoo qabaattan email armaan gadii kanaan na qunnamaa.</p>' +
-          '<a class="mail-btn" href="mailto:fes900@yahoo.com?subject=Hisnul%20Muslim%20App%20Feedback">' + icon("mail", 16) + " fes900@yahoo.com</a>" +
-          '<p style="margin-top:0.5rem;"><a href="privacy.html" target="_blank" rel="noreferrer" class="link">Imaammata Iccitii (Privacy Policy)</a></p>' +
-        "</div>" +
       "</section>" +
 
       '<section class="glass settings-section">' +
@@ -2102,24 +2127,6 @@
     );
   }
   function bindSettingsEvents(theme) {
-    var menuBtn = document.getElementById("settings-menu-btn");
-    var menuDropdown = document.getElementById("settings-menu-dropdown");
-    if (menuBtn && menuDropdown) {
-      menuBtn.addEventListener("click", function () {
-        var open = menuDropdown.hidden;
-        menuDropdown.hidden = !open;
-        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-      var aboutBtn = menuDropdown.querySelector('[data-action="settings-menu-about"]');
-      if (aboutBtn) aboutBtn.addEventListener("click", function () {
-        menuDropdown.hidden = true;
-        var section = document.getElementById("settings-about-section");
-        if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-      var closeBtn = menuDropdown.querySelector('[data-action="settings-menu-close"]');
-      if (closeBtn) closeBtn.addEventListener("click", function () { menuDropdown.hidden = true; });
-    }
-
     document.querySelectorAll("[data-theme-btn]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var t = btn.getAttribute("data-theme-btn");
@@ -2213,7 +2220,9 @@
     else if (r.parts[0] === "search") html = pageSearch(r.query);
     else if (r.parts[0] === "tasbih") html = pageTasbih();
     else if (r.parts[0] === "sagalee") html = pageSagalee();
-    else if (r.parts[0] === "settings") html = pageSettings();
+    else if (r.parts[0] === "settings") html = pageSettingsMenu();
+    else if (r.parts[0] === "settings-app") html = pageSettings();
+    else if (r.parts[0] === "waaee-appii") html = pageWaaeeAppii();
     else if (r.parts[0] === "qibla") html = pageQibla();
     else if (r.parts[0] === "dursa") html = pageDursa();
     else if (r.parts[0] === "yaadaa-gulaalaa") html = pageYaadaaGulaalaa();
