@@ -36,7 +36,9 @@
     kaaba: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10.5h16"/></svg>',
     edit: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
     compass: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg>',
-    flame: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/></svg>'
+    flame: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
+    sparkles: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -1889,6 +1891,79 @@
     });
   }
 
+  // A page styled after the source book's own printed pages - an ornamental
+  // vine flourish in each corner, gold-on-green - used for the long-form
+  // reading pages (Dursa, Faayidaa Zikrii Qabu) rather than the app's usual
+  // plain "glass" card.
+  var MANUSCRIPT_CORNER_SVG =
+    '<svg viewBox="0 0 60 60"><path d="M4 4c0 24 24 24 24 48M4 4c24 0 24 24 48 24" fill="none" stroke="currentColor" stroke-width="2"/>' +
+    '<circle cx="4" cy="4" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+  function manuscriptCardHTML(innerHTML) {
+    return (
+      '<section class="manuscript-card">' +
+        '<span class="manuscript-corner tl">' + MANUSCRIPT_CORNER_SVG + "</span>" +
+        '<span class="manuscript-corner tr">' + MANUSCRIPT_CORNER_SVG + "</span>" +
+        '<span class="manuscript-corner bl">' + MANUSCRIPT_CORNER_SVG + "</span>" +
+        '<span class="manuscript-corner br">' + MANUSCRIPT_CORNER_SVG + "</span>" +
+        '<div class="manuscript-body">' + innerHTML + "</div>" +
+      "</section>"
+    );
+  }
+
+  function pageDursa() {
+    document.title = "Dursa — Hisnul Muslim";
+    var body =
+      '<p>Dhugumatti faaruun hunduu kan Rabbiiti. Isa faarsina. Isa gargaarsifannas. Araaramas isarraa barbaanna. Hamtuu lubbuu keenyaatiifi yakka hojii keenyaa irraa Rabbitti maganfanna. Nama Rabbiin isa qajeelche wanti jallisu hin jiru. Nama inni jallise wanti qajeelchu hin jiru. &ldquo;Dhugaan gabbaramaan Isa malee hin jiru; Inni tokkicha hiriyaa hin qabne&rdquo; jechuu ragaan baha. Akkasuma Muhammad ﷺ gabricha Rabbiifi ergamaa Isaa ta&rsquo;uu ragaan baha. Rahmanni Rabbiifi nageenyi Isaa isaan, maatii isaanii, sahaabota isaaniifi warra hanga Guyyaa Qiyaamaatti haala gaariin isaan hordofan irra haa jiraatu.</p>' +
+      '<p>Ittiin aansuudhaan kun kitaaba gabaabaa ani kitaaba kiyya isa dheeraa &ldquo;Zikrii, du&rsquo;aa&rsquo;iifi ruqaa Qur&rsquo;aanaafi hadiisaa&rdquo; jedhamu irraa gabaabseedha. Akka imala keessatti baadhachuun isaa salphatuufin kutaa zikrii qofa irraa gabaabse.</p>' +
+      '<p>Barruu zikrii qofarrattin gabaabbadhe. Wabii isaa kitaaba jalqabaa irratti argame keessaa tokko yookiin lama dubbachuu irrattin gabaabbadhe. Namni sahaabaa hadiisicha odeesse yookiin wabii dabalataa baruu fedhe gara kitaaba isa jalqabaatti deebi&rsquo;uu qaba. Rabbii guddaa maqoolee Isaa gaggaariifi amaloota Isaa ol aanaa ta&rsquo;een akka inni waan Isaaf jecha hojjatame, jiruu kiyya keessattiifi ergan du&rsquo;eellee kan ani itti fayyadamu, nama dubbiseefi maxxansellee fayyadu taasisu kadha. Kan kana godhuu danda&rsquo;u Isa qofa waan ta&rsquo;eef. Rahmanni Rabbiifi nageenyi Isaa Nabiyyii, maatii isaanii, sahaabota isaaniifi warra hanga Guyyaa Qiyaamaatti haala gaariin isaan hordofan irra haa jiraatu.</p>' +
+      '<p class="manuscript-signoff">Qopheessaa<br><strong>Sa&rsquo;iid bin Alii bin Wahf Al-Qahxaanii</strong></p>';
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Dursa <span class="gold-text">Kitaabaa</span></h1>' +
+      "</header>" +
+      manuscriptCardHTML(body)
+    );
+  }
+
+  function pageFaayidaaZikrii() {
+    document.title = "Faayidaa Zikrii — Hisnul Muslim";
+    var ayat = [
+      { ar: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", om: "&ldquo;Na yaadadhaa; anis isinin yaadadha. Na galateeffadhaa natti hin kafarinaa.&rdquo;", cite: "Al-Baqaraa: 152" },
+      { ar: "يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا", om: "&ldquo;Yaa warra amantan, yaadannoo baay&rsquo;ee Rabbiin yaadadhaa.&rdquo;", cite: "Al-Ahzaab: 41" },
+      { ar: "إِنَّ الْمُسْلِمِينَ وَالْمُسْلِمَاتِ ... وَالذَّاكِرِينَ اللَّهَ كَثِيرًا وَالذَّاكِرَاتِ أَعَدَّ اللَّهُ لَهُم مَّغْفِرَةً وَأَجْرًا عَظِيمًا", om: "&ldquo;Dhiirota baay&rsquo;ee Rabbiin yaadataniifi dubartii Rabbiin yaadatan, Rabbiin araaramaafi mindaa guddaa isaaniif qopheesseera.&rdquo;", cite: "Al-Ahzaab: 35" },
+      { ar: "وَاذْكُر رَّبَّكَ فِي نَفْسِكَ تَضَرُّعًا وَخِيفَةً وَدُونَ الْجَهْرِ مِنَ الْقَوْلِ بِالْغُدُوِّ وَالْآصَالِ وَلَا تَكُن مِّنَ الْغَافِلِينَ", om: "&ldquo;Lubbuu kee keessatti gadi of qabaafi sodaataa, sagalee ol hin fudhatiniin ganamaafi galgala Gooftaa kee faarsi. Dagattoota irraas hin ta&rsquo;in.&rdquo;", cite: "Al-A&rsquo;raaf: 205" }
+    ];
+    var ayatHTML = ayat.map(function (a) {
+      return '<div class="manuscript-ayah">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">' + a.ar + "</p>" +
+        '<p class="manuscript-om"><em>' + a.om + "</em> (" + a.cite + ")</p>" +
+      "</div>";
+    }).join("");
+
+    var hadithHTML =
+      '<div class="manuscript-ayah">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">مَثَلُ الْبَيْتِ الَّذِي يُذْكَرُ اللَّهُ فِيهِ وَالْبَيْتِ الَّذِي لَا يُذْكَرُ اللَّهُ فِيهِ مَثَلُ الْحَيِّ وَالْمَيِّتِ</p>' +
+        '<p class="manuscript-om">Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Fakkeenyi nama Rabbii isaa yaadatuufi isa Rabbii isaa hin yaadannee, fakkeenya jiraataafi du&rsquo;aati.&rdquo; <span class="manuscript-src">(Bukhaariifi Muslimtu gabaasan)</span></p>' +
+      "</div>" +
+      '<p>Ammas Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Dhaga&rsquo;aa! Mee caalaa hojii keessanii, Rabbii keessan biratti akkaan qulqulluu, sadarkaa keessanis kan akkaan ol kaaftu, warqiifi meeta sadaqachuurra kan isiniif caaltuufi isin diina keessan qunnamtanii morma isaanii rukutuufi isaan morma keessan rukutuu irra kan isiniif caalu isinitti himuu?&rdquo; Eeyyee jedhan. &ldquo;Inni zikrii Rabbii ol ta&rsquo;eeti&rdquo; jedhan.</p>' +
+      '<p>Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Rabbiin ol ta&rsquo;e ni jedha: &lsquo;Ani bakka gabrichi kiyya itti na yaaden jira. Ani yeroo inni na yaadate isa waliin jira. Yoo inni lubbuu isaa keessatti na yaadate, lubbuu kiyya keessattin isa yaadadha. Yoo inni jamaa&rsquo;aa keessatti na yaadate, jamaa&rsquo;aa isaan caalan keessattin isa yaadadha. Yoo inni taakkuu natti dhihaate, dhundhuman itti dhihaadha. Yoo inni dhundhuma natti dhihaate, harka guutuun isatti dhihaadha. Yoo deemaa natti dhufe, sussukkiinin isatti dhufa.&rsquo;&rdquo;</p>' +
+      '<p>Abdullaah bin Busr irraa odeeffamee (ra) ni jedhe: namni tokko &ldquo;Yaa Ergamaa Rabbii, sharii&rsquo;aan Islaamaa narratti baay&rsquo;attee waan ani qabadhu natti himi&rdquo; jedhe. Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Arrabni kee Rabbiin zikkaruu irraa hin qoorin.&rdquo;</p>' +
+      '<p>Ammas Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Kitaaba Rabbii irraa namni qubee tokko dubbise mindaa tokko qaba. Mindaan immoo fakkii ishee kudhaniin kaffalamti. &lsquo;Alif Laam Miim&rsquo; qubee tokko hin jedhu; garuu Alif qubeedha, Laamis qubee, Miimis qubeedha.&rdquo;</p>' +
+      '<p>Uqbaa bin Aamir irraa odeeffamee (ra) ni jedhe: Ergamaan Rabbii ﷺ osoo nuti warra Suffaa keessa jirruu nurratti bahanii &ldquo;Isin keessaa eenyutu guyyaa hundaa gara Buxhaan yookiin Aqiiq dhaqee, haala yakkaafi firooma kutuu hin qabneen, gaala gooba dhedheertuu lama fudhatee dhufuu jaalata?&rdquo; jedhan. &ldquo;Yaa Ergamaa Rabbii, sana ni jaalanna&rdquo; jenne. Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Tokkoon keessan gara masjidaa deemee kitaaba Rabbii irraa aayata lama barachuun yookiin qara&rsquo;uun gaala lama isaaf caala; sadii, gaala sadii irra caala; afuris, gaala afur irra caala. Gaala lakkoofsa hanga isaanii ni caalu.&rdquo;</p>' +
+      '<p>Ammas Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Namni taa&rsquo;icha tokko taa&rsquo;ee isa keessatti Rabbiin hin zikkarin, hoongoon Rabbiin biraa ta&rsquo;e isa mudata. Namni ciisicha wahii isa keessatti Rabbiin hin zikkarin, gaabbii Rabbiin biraa ta&rsquo;etu isarra jiraata.&rdquo;</p>' +
+      '<p>Ergamaan Rabbii ﷺ ni jedhan: &ldquo;Ummanni taa&rsquo;icha isa keessatti Rabbiin hin zikkarreefi Nabiyyii irratti rahmata hin buusin ta&rsquo;an, hoongoon Rabbi biraa ta&rsquo;e isaan irra jiraatu malee hin hafu&hellip;&rdquo;</p>' +
+      '<p class="manuscript-note">— Gabaabbina kitaabichaa irraa fudhatame. Guutuun isaa kitaaba jalqabaa &ldquo;Zikrii, du&rsquo;aa&rsquo;iifi ruqaa Qur&rsquo;aanaafi hadiisaa&rdquo; keessatti argama.</p>';
+
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Faayidaa <span class="gold-text">Zikrii Qabu</span></h1>' +
+      "</header>" +
+      manuscriptCardHTML('<h2 class="manuscript-heading">Sadarkaa Zikriin Qabu</h2>' + ayatHTML + hadithHTML)
+    );
+  }
+
   function pageSettings() {
     document.title = "Qindaa'ina — Hisnul Muslim";
     var theme = loadTheme();
@@ -1897,10 +1972,20 @@
     var bedtimeTime = window.RemindersAPI ? RemindersAPI.bedtimeTime() : "22:00";
     setTimeout(function () { bindSettingsEvents(theme); }, 0);
     return (
-      '<header class="animate-fade-in">' +
-        '<p class="eyebrow">Qindaa\'ina</p>' +
-        '<h1 class="page-title">App <span class="gold-text">qindeessi</span></h1>' +
+      '<header class="animate-fade-in settings-header">' +
+        '<div>' +
+          '<p class="eyebrow">Qindaa\'ina</p>' +
+          '<h1 class="page-title">App <span class="gold-text">qindeessi</span></h1>' +
+        "</div>" +
+        '<button class="settings-menu-btn" id="settings-menu-btn" aria-label="Baalinsa" aria-expanded="false">' + icon("menu", 20) + "</button>" +
       "</header>" +
+
+      '<div class="settings-menu-dropdown glass" id="settings-menu-dropdown" hidden>' +
+        '<button class="settings-menu-item" data-action="settings-menu-close">' + icon("settings", 16) + "<span>Qindaa'ina</span></button>" +
+        '<button class="settings-menu-item" data-action="settings-menu-about">' + icon("info", 16) + "<span>Waa'ee Appii</span></button>" +
+        '<a class="settings-menu-item" href="#/dursa">' + icon("bookOpen", 16) + "<span>Dursa</span></a>" +
+        '<a class="settings-menu-item" href="#/faayidaa-zikrii">' + icon("sparkles", 16) + "<span>Faayidaa Zikrii Qabu</span></a>" +
+      "</div>" +
 
       '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon(theme === "dark" ? "moon" : "sun", 16) + "<span>Halluu (Theme)</span></div>" +
@@ -1920,7 +2005,7 @@
         '<button class="font-reset" data-action="settings-font-reset">Deebisi gara 100%</button>' +
       "</section>" +
 
-      '<section class="glass settings-section">' +
+      '<section class="glass settings-section" id="settings-about-section">' +
         '<div class="settings-section-head">' + icon("info", 16) + "<span>Waa'ee Appii</span></div>" +
         '<div class="about-body">' +
           "<p>Appiin kun <span class=\"gold-text\" style=\"font-weight:600;\">Hisnul Muslim</span> — kitaaba zikriifi du'aa'ii Musliimaa, Afaan Oromootiin akka salphaatti dubbifamuufi dhaggeeffatamu kan qopha'e dha.</p>" +
@@ -1968,6 +2053,24 @@
     );
   }
   function bindSettingsEvents(theme) {
+    var menuBtn = document.getElementById("settings-menu-btn");
+    var menuDropdown = document.getElementById("settings-menu-dropdown");
+    if (menuBtn && menuDropdown) {
+      menuBtn.addEventListener("click", function () {
+        var open = menuDropdown.hidden;
+        menuDropdown.hidden = !open;
+        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      var aboutBtn = menuDropdown.querySelector('[data-action="settings-menu-about"]');
+      if (aboutBtn) aboutBtn.addEventListener("click", function () {
+        menuDropdown.hidden = true;
+        var section = document.getElementById("settings-about-section");
+        if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      var closeBtn = menuDropdown.querySelector('[data-action="settings-menu-close"]');
+      if (closeBtn) closeBtn.addEventListener("click", function () { menuDropdown.hidden = true; });
+    }
+
     document.querySelectorAll("[data-theme-btn]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var t = btn.getAttribute("data-theme-btn");
@@ -2063,6 +2166,8 @@
     else if (r.parts[0] === "sagalee") html = pageSagalee();
     else if (r.parts[0] === "settings") html = pageSettings();
     else if (r.parts[0] === "qibla") html = pageQibla();
+    else if (r.parts[0] === "dursa") html = pageDursa();
+    else if (r.parts[0] === "faayidaa-zikrii") html = pageFaayidaaZikrii();
     else if (r.parts[0] === "category" && r.parts[1]) html = pageCategory(parseInt(r.parts[1], 10));
     else html = pageCategories();
 
