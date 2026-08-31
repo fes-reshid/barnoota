@@ -1913,6 +1913,10 @@
   function pageDursa() {
     document.title = "Dursa — Hisnul Muslim";
     var body =
+      '<h2 class="manuscript-heading">Dursa</h2>' +
+      '<div class="manuscript-ayah">' +
+        '<p class="dua-arabic font-arabic" lang="ar" dir="rtl">الحمد لله رب العالمين الصلاة والسلام على رسول الله نبينا محمد وعلي آله وصحبه أجمعين</p>' +
+      "</div>" +
       '<p>Dhugumatti faaruun hunduu kan Rabbiiti. Isa faarsina. Isa gargaarsifannas. Araaramas isarraa barbaanna. Hamtuu lubbuu keenyaatiifi yakka hojii keenyaa irraa Rabbitti maganfanna. Nama Rabbiin isa qajeelche wanti jallisu hin jiru. Nama inni jallise wanti qajeelchu hin jiru. &ldquo;Dhugaan gabbaramaan Isa malee hin jiru; Inni tokkicha hiriyaa hin qabne&rdquo; jechuu ragaan baha. Akkasuma Muhammad ﷺ gabricha Rabbiifi ergamaa Isaa ta&rsquo;uu ragaan baha. Rahmanni Rabbiifi nageenyi Isaa isaan, maatii isaanii, sahaabota isaaniifi warra hanga Guyyaa Qiyaamaatti haala gaariin isaan hordofan irra haa jiraatu.</p>' +
       '<p>Ittiin aansuudhaan kun kitaaba gabaabaa ani kitaaba kiyya isa dheeraa &ldquo;Zikrii, du&rsquo;aa&rsquo;iifi ruqaa Qur&rsquo;aanaafi hadiisaa&rdquo; jedhamu irraa gabaabseedha. Akka imala keessatti baadhachuun isaa salphatuufin kutaa zikrii qofa irraa gabaabse.</p>' +
       '<p>Barruu zikrii qofarrattin gabaabbadhe. Wabii isaa kitaaba jalqabaa irratti argame keessaa tokko yookiin lama dubbachuu irrattin gabaabbadhe. Namni sahaabaa hadiisicha odeesse yookiin wabii dabalataa baruu fedhe gara kitaaba isa jalqabaatti deebi&rsquo;uu qaba. Rabbii guddaa maqoolee Isaa gaggaariifi amaloota Isaa ol aanaa ta&rsquo;een akka inni waan Isaaf jecha hojjatame, jiruu kiyya keessattiifi ergan du&rsquo;eellee kan ani itti fayyadamu, nama dubbiseefi maxxansellee fayyadu taasisu kadha. Kan kana godhuu danda&rsquo;u Isa qofa waan ta&rsquo;eef. Rahmanni Rabbiifi nageenyi Isaa Nabiyyii, maatii isaanii, sahaabota isaaniifi warra hanga Guyyaa Qiyaamaatti haala gaariin isaan hordofan irra haa jiraatu.</p>' +
