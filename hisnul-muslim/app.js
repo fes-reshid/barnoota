@@ -389,10 +389,12 @@
         '<div class="glass empty-panel">' +
           '<div class="empty-icon">' + icon("compass", 24) + "</div>" +
           '<p class="title">Bakka argamuu barbaachisa</p>' +
-          '<p class="sub">Kallattii Qiblaa (gara Mak.kaa) siif argachuuf, bakka ati jirtu eeyyamuu qabda.</p>' +
+          '<p class="sub">Kallattii Qiblaa (gara Mak.kaa) siif argachuuf, bakka ati jirtu eeyyami yookiin magaalaa kee filadhu.</p>' +
           '<button class="cta" id="qibla-request-loc">Bakka argamuu eeyyami</button>' +
+          '<button class="font-reset" id="qibla-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
           '<p class="qibla-error" id="qibla-error" hidden></p>' +
-        "</div>"
+        "</div>" +
+        cityGroupSelectHTML("qibla")
       );
     }
 
@@ -418,7 +420,9 @@
           "Yoo kompaasiin hin banamin, bilbila kee gara Kaabaa dhugaa qajeelchi (kompaasii biroo fayyadamuun), ergasii mallattoon armaan olii Qiblaa siif agarsiisa." +
         "</p>" +
         '<button class="font-reset" id="qibla-refresh-loc">Bakka argamuu haaromsi</button>' +
-      "</section>"
+        '<button class="font-reset" id="qibla-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
+      "</section>" +
+      cityGroupSelectHTML("qibla")
     );
   }
 
@@ -447,6 +451,10 @@
           if (errEl) { errEl.hidden = false; errEl.textContent = "Bakka argamuu argachuu hin dandeenye. Eeyyama browserii/appii mirkaneessi."; }
         }, { timeout: 15000, maximumAge: 3600000 });
       });
+      bindCityGroupSelect("qibla", "qibla-city-open", function (city) {
+        saveQiblaCoords({ lat: city.lat, lon: city.lon });
+        navigate(location.hash, true);
+      });
       return;
     }
 
@@ -457,6 +465,11 @@
         saveQiblaCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
         navigate(location.hash, true);
       }, function () {}, { timeout: 15000 });
+    });
+
+    bindCityGroupSelect("qibla", "qibla-city-open", function (city) {
+      saveQiblaCoords({ lat: city.lat, lon: city.lon });
+      navigate(location.hash, true);
     });
 
     var needle = document.getElementById("qibla-needle");
@@ -722,7 +735,7 @@
       "</header>" +
       '<section class="glass prayer-panel">' +
         '<div class="prayer-list">' + rowsHTML + "</div>" +
-        '<p class="qibla-note">' + icon("bell", 13) + ' gara salaataa kee jala tuqi akka salaanni sun yeroo ga’utti bilbila salphaan si beeksisu (dhugaa azaanaa miti), yeroo appiin banamee jiru.</p>' +
+        '<p class="qibla-note">' + icon("bell", 13) + ' gara salaataa kee jala tuqi akka salaanni sun yeroo ga’utti bilbila salphaan si beeksisu (dhugaa azaanaa miti), yeroo appiin banamee jiru. Dabalataanis, daqiiqaa 10 booda, zikrii salaamtaa booda dubbisuuf si yaadachiisa.</p>' +
         (manual ?
           '<button class="font-reset" id="prayer-manual-edit" style="margin-top:0.75rem;">Yeroo ofii gulaali</button>' +
           '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
@@ -806,7 +819,11 @@
     document.querySelectorAll('[data-action="prayer-azan-toggle"]').forEach(function (btn) {
       btn.addEventListener("click", function () {
         var k = btn.getAttribute("data-prayer");
-        setAzanEnabledFor(k, !isAzanEnabledFor(k));
+        var enabling = !isAzanEnabledFor(k);
+        setAzanEnabledFor(k, enabling);
+        if (enabling && "Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission().catch(function () {});
+        }
         scheduleNextAzan();
         navigate(location.hash, true);
       });
@@ -824,6 +841,30 @@
   // Adhan, which this app has no licensed recording of. Only runs while the
   // app is open, same as the rest of the reminders system before its native
   // LocalNotifications upgrade.
+  //
+  // A short while after each of those, it also nudges the reader toward
+  // ch.25 ("Zikrii yeroo salaata irraa salaamtaa bahanii" - the dhikr said
+  // on finishing a prayer) - as a real system notification when permission
+  // for one has already been granted, falling back to the same chime
+  // otherwise so it's never a silent no-op while the app is open.
+  var POST_SALAH_DELAY_MS = 10 * 60 * 1000;
+  var POST_SALAH_CHAPTER = 25;
+  function firePostSalahReminder(prayerKey) {
+    if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) {
+      playChime();
+      return;
+    }
+    navigator.serviceWorker.ready.then(function (reg) {
+      return reg.showNotification("Zikrii Salaata " + PRAYER_LABELS[prayerKey] + " Booda", {
+        body: "Erga salaata xumurtee, zikrii salaamtaa booda dubbisi.",
+        icon: "icons/icon-192.png",
+        badge: "icons/icon-192.png",
+        tag: "hisn-postsalah-" + prayerKey,
+        data: { url: "#/category/" + POST_SALAH_CHAPTER }
+      });
+    }).catch(function () { playChime(); });
+  }
+
   var prayerAzanTimer = null;
   function stopPrayerAzanSchedule() {
     if (prayerAzanTimer) { clearTimeout(prayerAzanTimer); prayerAzanTimer = null; }
@@ -841,16 +882,19 @@
       var times = manual ? manualTimesToDate(manual, day) : PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
       if (!times) return;
       AZAN_PRAYERS.forEach(function (k) {
-        if (isAzanEnabledFor(k) && times[k] && times[k].getTime() > now.getTime()) candidates.push(times[k]);
+        if (!isAzanEnabledFor(k) || !times[k]) return;
+        if (times[k].getTime() > now.getTime()) candidates.push({ at: times[k], fn: playChime });
+        var postAt = new Date(times[k].getTime() + POST_SALAH_DELAY_MS);
+        if (postAt.getTime() > now.getTime()) candidates.push({ at: postAt, fn: function () { firePostSalahReminder(k); } });
       });
     });
     if (!candidates.length) return;
-    candidates.sort(function (a, b) { return a - b; });
+    candidates.sort(function (a, b) { return a.at - b.at; });
     var next = candidates[0];
     prayerAzanTimer = setTimeout(function () {
-      playChime();
+      next.fn();
       scheduleNextAzan();
-    }, Math.max(0, next.getTime() - now.getTime()));
+    }, Math.max(0, next.at.getTime() - now.getTime()));
   }
 
   function homeFavCardHTML(c) {
