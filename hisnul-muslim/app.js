@@ -391,7 +391,7 @@
           '<p class="title">Bakka argamuu barbaachisa</p>' +
           '<p class="sub">Kallattii Qiblaa (gara Mak.kaa) siif argachuuf, bakka ati jirtu eeyyami yookiin magaalaa kee filadhu.</p>' +
           '<button class="cta" id="qibla-request-loc">Bakka argamuu eeyyami</button>' +
-          '<button class="font-reset" id="qibla-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
+          '<button class="city-open-btn" id="qibla-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
           '<p class="qibla-error" id="qibla-error" hidden></p>' +
         "</div>" +
         cityGroupSelectHTML("qibla")
@@ -420,7 +420,7 @@
           "Yoo kompaasiin hin banamin, bilbila kee gara Kaabaa dhugaa qajeelchi (kompaasii biroo fayyadamuun), ergasii mallattoon armaan olii Qiblaa siif agarsiisa." +
         "</p>" +
         '<button class="font-reset" id="qibla-refresh-loc">Bakka argamuu haaromsi</button>' +
-        '<button class="font-reset" id="qibla-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
+        '<button class="city-open-btn" id="qibla-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
       "</section>" +
       cityGroupSelectHTML("qibla")
     );
@@ -691,7 +691,7 @@
           '<p class="title">Bakka argamuu barbaachisa</p>' +
           '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyami, magaalaa kee filadhu, yookiin yeroowwan ofii galchi.</p>' +
           '<button class="cta" id="prayertimes-request-loc">Bakka argamuu eeyyami</button>' +
-          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
+          '<button class="city-open-btn" id="prayer-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
           '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>' +
           '<p class="qibla-error" id="prayertimes-error" hidden></p>' +
         "</div>" +
@@ -741,7 +741,7 @@
           '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
           :
           '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
-          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
+          '<button class="city-open-btn" id="prayer-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
           '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>'
         ) +
       "</section>" +

@@ -598,6 +598,12 @@ input { font-family: inherit; }
 .prayer-azan-btn.is-on { color: var(--gold); opacity: 1; }
 .prayer-row.is-next .prayer-azan-btn.is-on { color: var(--gold); }
 .prayer-azan-spacer { display: block; width: 2rem; height: 2rem; flex-shrink: 0; }
+.city-open-btn {
+  display: block; width: 100%; border-radius: 9999px; border: none;
+  padding: 0.5rem 1.25rem; font-size: calc(0.875rem * var(--reading-scale)); font-weight: 500;
+  color: var(--primary-foreground); background: var(--gradient-primary); box-shadow: var(--shadow-elegant);
+}
+.city-open-btn:hover { filter: brightness(1.05); }
 .city-picker {
   margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem;
 }
