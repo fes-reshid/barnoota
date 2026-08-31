@@ -627,7 +627,7 @@
   }
 
   var PRAYER_ORDER = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"];
-  var PRAYER_LABELS = { fajr: "Faajrii", sunrise: "Baji’a Aduu", dhuhr: "Zuhrii", asr: "Asrii", maghrib: "Magrib", isha: "Ishaa’a" };
+  var PRAYER_LABELS = { fajr: "Fajrii", sunrise: "Baha Aduu", dhuhr: "Zuhrii", asr: "Asrii", maghrib: "Maghriiba", isha: "Ishaa’ii" };
   // Which of PRAYER_ORDER an azan alert actually fires for - sunrise isn't a
   // prayer time, so it's shown in the list but never alerted on.
   var AZAN_PRAYERS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
@@ -2226,7 +2226,7 @@
     if (!window.RemindersAPI || !RemindersAPI.isEnabled()) return "Yaadachiisni zikrii cufaadha.";
     var t = RemindersAPI.todaysTimes();
     if (!t) return "Yaadachiisni banaadha.";
-    return "Banaadha — har'a Faajrii " + fmtClock(t.fajr) + ", Maghrib " + fmtClock(t.maghrib) + ".";
+    return "Banaadha — har'a Fajrii " + fmtClock(t.fajr) + ", Maghriiba " + fmtClock(t.maghrib) + ".";
   }
   function bedtimeStatusText() {
     if (!window.RemindersAPI || !RemindersAPI.isBedtimeEnabled()) return "Yaadachiisni hirribaa cufaadha.";
@@ -2500,7 +2500,7 @@
 
       '<section class="glass settings-section">' +
         '<div class="settings-section-head">' + icon("bell", 16) + "<span>Yaadachiisa Zikrii</span></div>" +
-        '<p class="page-sub" style="margin-top:0.5rem;">Bakka bilbilli keessan jiru irratti hundaa\'uudhaan, yeroo Faajrii (zikrii ganamaa) fi Maghrib (zikrii galgalaa) ga\'utti beeksisa siif erga.</p>' +
+        '<p class="page-sub" style="margin-top:0.5rem;">Bakka bilbilli keessan jiru irratti hundaa\'uudhaan, yeroo Fajrii (zikrii ganamaa) fi Maghriiba (zikrii galgalaa) ga\'utti beeksisa siif erga.</p>' +
         '<button class="font-reset" id="settings-reminder-toggle" data-on="' + (reminderOn ? "1" : "0") + '" style="margin-top:0.75rem;">' +
           (reminderOn ? "Yaadachiisa dhaamsi" : "Yaadachiisa banii") +
         "</button>" +

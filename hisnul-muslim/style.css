@@ -579,12 +579,15 @@ input { font-family: inherit; }
 .prayer-panel { margin-top: 1.5rem; border-radius: var(--radius-3xl); padding: 1.5rem; }
 .prayer-list { display: flex; flex-direction: column; gap: 0.4rem; }
 .prayer-row {
-  display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-xl);
-  padding: 0.75rem 1rem; font-size: calc(0.95rem * var(--reading-scale));
+  display: grid; grid-template-columns: 1fr auto 2rem; align-items: center; column-gap: 0.75rem;
+  border-radius: var(--radius-xl); padding: 0.75rem 1rem; font-size: calc(0.95rem * var(--reading-scale));
 }
 .prayer-row.is-next { background: var(--gradient-primary); color: var(--primary-foreground); box-shadow: var(--shadow-elegant); }
 .prayer-name { font-weight: 500; }
-.prayer-time { font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums; }
+.prayer-time {
+  font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums;
+  min-width: 5.5rem; text-align: right;
+}
 .prayer-azan-btn {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 2rem; height: 2rem; border-radius: 999px; border: none; background: transparent;
