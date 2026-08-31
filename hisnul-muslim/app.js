@@ -495,6 +495,169 @@
       });
     }
   }
+  // ---------------- Yeroo Salaataa (Prayer Times) ----------------
+  var PRAYERTIMES_COORDS_KEY = "hisn:prayertimes:coords";
+  function loadPrayerCoords() {
+    try {
+      var own = JSON.parse(localStorage.getItem(PRAYERTIMES_COORDS_KEY) || "null");
+      if (own) return own;
+    } catch (e) {}
+    return loadQiblaCoords(); // reuse Qibla's location if that was already granted
+  }
+  function savePrayerCoords(c) { try { localStorage.setItem(PRAYERTIMES_COORDS_KEY, JSON.stringify(c)); } catch (e) {} }
+
+  var PRAYER_ORDER = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"];
+  var PRAYER_LABELS = { fajr: "Faajrii", sunrise: "Baji’a Aduu", dhuhr: "Zuhrii", asr: "Asrii", maghrib: "Magrib", isha: "Ishaa’a" };
+  // Which of PRAYER_ORDER an azan alert actually fires for - sunrise isn't a
+  // prayer time, so it's shown in the list but never alerted on.
+  var AZAN_PRAYERS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+  var AZAN_KEY = "hisn:azan:enabled";
+  function isAzanEnabled() { try { return localStorage.getItem(AZAN_KEY) === "1"; } catch (e) { return false; } }
+  function setAzanEnabled(v) { try { localStorage.setItem(AZAN_KEY, v ? "1" : "0"); } catch (e) {} }
+
+  function fmt12(d) {
+    var h = d.getHours(), m = d.getMinutes();
+    var ap = h >= 12 ? "PM" : "AM";
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ":" + String(m).padStart(2, "0") + " " + ap;
+  }
+  function localMidnightUTCFor(day) {
+    return new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()));
+  }
+
+  function pagePrayerTimes() {
+    document.title = "Yeroo Salaataa — Hisnul Muslim";
+    var coords = loadPrayerCoords();
+    setTimeout(function () { bindPrayerTimesEvents(coords); }, 0);
+
+    if (!coords) {
+      return (
+        '<header class="animate-fade-in">' +
+          '<p class="eyebrow">Yeroo Salaataa</p>' +
+          '<h1 class="page-title">Yeroo <span class="gold-text">Salaataa</span></h1>' +
+        "</header>" +
+        '<div class="glass empty-panel">' +
+          '<div class="empty-icon">' + icon("bell", 24) + "</div>" +
+          '<p class="title">Bakka argamuu barbaachisa</p>' +
+          '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyamuu qabda.</p>' +
+          '<button class="cta" id="prayertimes-request-loc">Bakka argamuu eeyyami</button>' +
+          '<p class="qibla-error" id="prayertimes-error" hidden></p>' +
+        "</div>"
+      );
+    }
+
+    var now = new Date();
+    var times = PrayerTimes.computeTimes(localMidnightUTCFor(now), coords.lat, coords.lon);
+    if (!times) {
+      return (
+        '<header class="animate-fade-in">' +
+          '<p class="eyebrow">Yeroo Salaataa</p>' +
+          '<h1 class="page-title">Yeroo <span class="gold-text">Salaataa</span></h1>' +
+        "</header>" +
+        '<div class="glass empty-panel"><p class="title">Herregachuu hin dandeenye</p><p class="sub">Bakki kee (naannoo qorraa cimaa) yeroo kana herreguuf hin dandeenye.</p></div>'
+      );
+    }
+
+    var azanOn = isAzanEnabled();
+    var nextIdx = PRAYER_ORDER.findIndex(function (k) { return times[k].getTime() > now.getTime(); });
+    var rowsHTML = PRAYER_ORDER.map(function (k, i) {
+      return '<div class="prayer-row' + (i === nextIdx ? " is-next" : "") + '">' +
+        '<span class="prayer-name">' + PRAYER_LABELS[k] + "</span>" +
+        '<span class="prayer-time">' + fmt12(times[k]) + "</span>" +
+      "</div>";
+    }).join("");
+
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Yeroo Salaataa</p>' +
+        '<h1 class="page-title">Yeroo <span class="gold-text">Salaataa</span></h1>' +
+      "</header>" +
+      '<section class="glass prayer-panel">' +
+        '<div class="prayer-list">' + rowsHTML + "</div>" +
+        '<div class="prayer-azan-row">' +
+          '<span>' + icon("bell", 16) + " Beeksisa yeroo salaataa</span>" +
+          '<button class="font-reset" id="prayertimes-azan-toggle" data-on="' + (azanOn ? "1" : "0") + '">' +
+            (azanOn ? "Banaadha" : "Cufaadha") +
+          "</button>" +
+        "</div>" +
+        '<p class="qibla-note">Kun bilbila salphaa yeroo salaataa ga’utti si beeksisu dha (dhugaa azaanaa miti), yeroo appiin banamee jiru.</p>' +
+        '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
+      "</section>"
+    );
+  }
+
+  function bindPrayerTimesEvents(coords) {
+    var reqBtn = document.getElementById("prayertimes-request-loc");
+    if (reqBtn) {
+      reqBtn.addEventListener("click", function () {
+        var errEl = document.getElementById("prayertimes-error");
+        if (errEl) errEl.hidden = true;
+        if (!("geolocation" in navigator)) {
+          if (errEl) { errEl.hidden = false; errEl.textContent = "Bilbilli kee bakka argamuu hin deeggaru."; }
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(function (pos) {
+          savePrayerCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+          navigate(location.hash, true);
+        }, function () {
+          if (errEl) { errEl.hidden = false; errEl.textContent = "Bakka argamuu argachuu hin dandeenye. Eeyyama browserii/appii mirkaneessi."; }
+        }, { timeout: 15000, maximumAge: 3600000 });
+      });
+      return;
+    }
+
+    var refreshBtn = document.getElementById("prayertimes-refresh-loc");
+    if (refreshBtn) refreshBtn.addEventListener("click", function () {
+      if (!("geolocation" in navigator)) return;
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        savePrayerCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        navigate(location.hash, true);
+      }, function () {}, { timeout: 15000 });
+    });
+
+    var azanBtn = document.getElementById("prayertimes-azan-toggle");
+    if (azanBtn) azanBtn.addEventListener("click", function () {
+      var on = azanBtn.getAttribute("data-on") === "1";
+      setAzanEnabled(!on);
+      scheduleNextAzan();
+      navigate(location.hash, true);
+    });
+  }
+
+  // Fires a plain alert chime (see playChime, used the same way for the
+  // Tasbiih 100-count completion) at each of the day's five prayer times -
+  // a "prayer time reached" notice, not an attempt at reciting the actual
+  // Adhan, which this app has no licensed recording of. Only runs while the
+  // app is open, same as the rest of the reminders system before its native
+  // LocalNotifications upgrade.
+  var prayerAzanTimer = null;
+  function stopPrayerAzanSchedule() {
+    if (prayerAzanTimer) { clearTimeout(prayerAzanTimer); prayerAzanTimer = null; }
+  }
+  function scheduleNextAzan() {
+    stopPrayerAzanSchedule();
+    if (!isAzanEnabled()) return;
+    var coords = loadPrayerCoords();
+    if (!coords) return;
+    var now = new Date();
+    var candidates = [];
+    [0, 1].forEach(function (offset) {
+      var day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+      var times = PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
+      if (!times) return;
+      AZAN_PRAYERS.forEach(function (k) {
+        if (times[k].getTime() > now.getTime()) candidates.push(times[k]);
+      });
+    });
+    if (!candidates.length) return;
+    candidates.sort(function (a, b) { return a - b; });
+    var next = candidates[0];
+    prayerAzanTimer = setTimeout(function () {
+      playChime();
+      scheduleNextAzan();
+    }, Math.max(0, next.getTime() - now.getTime()));
+  }
+
   function homeFavCardHTML(c) {
     var theme = THEME_BADGE[c.num];
     return (
@@ -2019,6 +2182,8 @@
     document.title = "Qindaa'ina — Hisnul Muslim";
     var items = [
       { href: "#/settings-app", ic: "settings", label: "Qindaa'ina" },
+      { href: "#/qibla", ic: "compass", label: "Qiblaa" },
+      { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" },
       { href: "#/waaee-appii", ic: "info", label: "Waa'ee Appii" },
       { href: "#/dursa", ic: "bookOpen", label: "Dursa" },
       { href: "#/yaadaa-gulaalaa", ic: "edit", label: "Yaadaa Gulaalaa" },
@@ -2224,6 +2389,7 @@
     else if (r.parts[0] === "settings-app") html = pageSettings();
     else if (r.parts[0] === "waaee-appii") html = pageWaaeeAppii();
     else if (r.parts[0] === "qibla") html = pageQibla();
+    else if (r.parts[0] === "prayer-times") html = pagePrayerTimes();
     else if (r.parts[0] === "dursa") html = pageDursa();
     else if (r.parts[0] === "yaadaa-gulaalaa") html = pageYaadaaGulaalaa();
     else if (r.parts[0] === "faayidaa-zikrii") html = pageFaayidaaZikrii();
@@ -2304,6 +2470,10 @@
   // ---------------- Init ----------------
   applyFontScale();
   navigate();
+  scheduleNextAzan();
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") scheduleNextAzan();
+  });
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {

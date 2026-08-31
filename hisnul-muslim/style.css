@@ -575,6 +575,23 @@ input { font-family: inherit; }
 .qibla-error { margin-top: 0.75rem; font-size: calc(0.8rem * var(--reading-scale)); color: var(--destructive); }
 #qibla-refresh-loc { margin-top: 0.75rem; }
 
+/* ---------- Yeroo Salaataa (Prayer Times) ---------- */
+.prayer-panel { margin-top: 1.5rem; border-radius: var(--radius-3xl); padding: 1.5rem; }
+.prayer-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.prayer-row {
+  display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-xl);
+  padding: 0.75rem 1rem; font-size: calc(0.95rem * var(--reading-scale));
+}
+.prayer-row.is-next { background: var(--gradient-primary); color: var(--primary-foreground); box-shadow: var(--shadow-elegant); }
+.prayer-name { font-weight: 500; }
+.prayer-time { font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums; }
+.prayer-azan-row {
+  margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+}
+.prayer-azan-row span { display: flex; align-items: center; gap: 0.5rem; font-size: calc(0.9rem * var(--reading-scale)); font-weight: 500; }
+.prayer-azan-row .font-reset { flex-shrink: 0; width: auto; margin-top: 0; }
+
 /* ---------- Manuscript (Dursa, Faayidaa Zikrii Qabu) ---------- */
 /* Styled after the printed book's own pages - an ornamental vine flourish
    in each corner, gold-on-green - rather than the app's usual plain glass
