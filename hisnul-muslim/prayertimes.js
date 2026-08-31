@@ -11,9 +11,11 @@
   function rtd(r) { return (r * 180) / Math.PI; }
   function sin_(d) { return Math.sin(dtr(d)); }
   function cos_(d) { return Math.cos(dtr(d)); }
+  function tan_(d) { return Math.tan(dtr(d)); }
   function asin_(x) { return rtd(Math.asin(Math.max(-1, Math.min(1, x)))); }
   function acos_(x) { return rtd(Math.acos(Math.max(-1, Math.min(1, x)))); }
   function atan2_(y, x) { return rtd(Math.atan2(y, x)); }
+  function acot_(x) { return atan2_(1, x); }
   function fixAngle(a) { a = a % 360; return a < 0 ? a + 360 : a; }
   function fixHour(h) { h = h % 24; return h < 0 ? h + 24 : h; }
 
@@ -49,19 +51,32 @@
     return acos_(cosH) / 15;
   }
 
-  // Returns { fajr: Date, maghrib: Date } for the given calendar date (read
-  // in UTC) and location, or null near the poles when the sun doesn't reach
-  // the needed angle that day. `fajrAngle` defaults to 18° (Muslim World
-  // League convention); maghrib is geometric sunset (~0.833° for refraction).
-  function computeTimes(date, lat, lon, fajrAngle) {
-    fajrAngle = fajrAngle == null ? 18 : fajrAngle;
+  // Returns { fajr, sunrise, dhuhr, asr, maghrib, isha: Date } for the given
+  // calendar date (read in UTC) and location, or null near the poles when
+  // the sun doesn't reach the needed angle that day. Defaults follow the
+  // Muslim World League convention (Fajr 18°, Isha 17°) and the majority
+  // (Shafi'i/Maliki/Hanbali) Asr shadow factor of 1 - pass `opts` to
+  // override any of fajrAngle/ishaAngle/asrFactor. Maghrib is geometric
+  // sunset (~0.833° for refraction).
+  function computeTimes(date, lat, lon, opts) {
+    opts = opts || {};
+    var fajrAngle = opts.fajrAngle == null ? 18 : opts.fajrAngle;
+    var ishaAngle = opts.ishaAngle == null ? 17 : opts.ishaAngle;
+    var asrFactor = opts.asrFactor == null ? 1 : opts.asrFactor;
     var jd = julianDay(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
     var sun = sunPosition(jd);
     var solarNoonUTC = fixHour(12 - lon / 15 - sun.equation);
 
     var hFajr = hourAngle(fajrAngle, lat, sun.declination);
     var hSunset = hourAngle(0.833, lat, sun.declination);
-    if (hFajr == null || hSunset == null) return null;
+    var hIsha = hourAngle(ishaAngle, lat, sun.declination);
+    // Same "hours from solar noon where the sun reaches this angle" formula
+    // as Fajr/Isha, just with a negative (above-horizon) angle instead of a
+    // below-horizon one - see the PrayTimes.org reference algorithm this is
+    // adapted from.
+    var asrAngle = -acot_(asrFactor + Math.abs(tan_(lat - sun.declination)));
+    var hAsr = hourAngle(asrAngle, lat, sun.declination);
+    if (hFajr == null || hSunset == null || hIsha == null || hAsr == null) return null;
 
     function toDate(hoursUTC) {
       var d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
@@ -71,7 +86,11 @@
 
     return {
       fajr: toDate(solarNoonUTC - hFajr),
-      maghrib: toDate(solarNoonUTC + hSunset)
+      sunrise: toDate(solarNoonUTC - hSunset),
+      dhuhr: toDate(solarNoonUTC + 1 / 60),
+      asr: toDate(solarNoonUTC + hAsr),
+      maghrib: toDate(solarNoonUTC + hSunset),
+      isha: toDate(solarNoonUTC + hIsha)
     };
   }
 
