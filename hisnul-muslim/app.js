@@ -1460,7 +1460,7 @@
 
       card.querySelector('[data-action="share"]').addEventListener("click", function (e) {
         var btn = e.currentTarget;
-        shareText(btn.getAttribute("data-title"), btn.getAttribute("data-arabic") + "\n\n" + btn.getAttribute("data-oromo") + "\n\n— Hisnul Muslim");
+        shareText(btn.getAttribute("data-title"), btn.getAttribute("data-arabic") + "\n\n" + btn.getAttribute("data-oromo") + "\n\n— Hisnul Muslim, Afaan Oromoo\nhttp://diinislaam.com/apps.html");
       });
 
       var duaIdx = parseInt(card.getAttribute("data-dua-idx"), 10);
