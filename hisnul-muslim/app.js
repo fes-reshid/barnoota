@@ -33,7 +33,10 @@
     sunrise: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m16 6-4 4-4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
     sunset: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 5 4 4 4-4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>',
     mihrab: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V11c0-3 2-6 5-8 3 2 5 5 5 8v10"/><path d="M3 21h18"/></svg>',
-    kaaba: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10.5h16"/></svg>'
+    kaaba: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="1"/><path d="M4 10.5h16"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
+    compass: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -45,6 +48,59 @@
   var FONT_KEY = "hisn:fontscale:v1";
   var THEME_KEY = "hisn:theme:v1";
   var TASBIH_KEY = "hisn:tasbih:v1";
+  var NOTES_KEY = "hisn:notes:v1";
+  var STREAK_KEY = "hisn:streak:v1";
+
+  // Personal notes on a specific du'a, keyed "<chapterNum>:<duaIndex>".
+  function loadNotes() {
+    try { return JSON.parse(localStorage.getItem(NOTES_KEY) || "{}"); } catch (e) { return {}; }
+  }
+  function noteFor(chapterNum, duaIdx) {
+    return loadNotes()[chapterNum + ":" + duaIdx] || "";
+  }
+  function saveNote(chapterNum, duaIdx, text) {
+    var notes = loadNotes();
+    var key = chapterNum + ":" + duaIdx;
+    if (text) notes[key] = text;
+    else delete notes[key];
+    try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); } catch (e) {}
+  }
+
+  // Daily adhkar streak: a running count of consecutive days on which the
+  // reader opened Zikrii Ganamaa or Galgalaa (ch.27/28), shown on Home.
+  var STREAK_CHAPTERS = { 27: true, 28: true };
+  function dateKeyLocal(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function loadStreakDays() {
+    try { return JSON.parse(localStorage.getItem(STREAK_KEY) || "[]"); } catch (e) { return []; }
+  }
+  function markStreakDay() {
+    var days = loadStreakDays();
+    var today = dateKeyLocal(new Date());
+    if (days.indexOf(today) !== -1) return;
+    days.push(today);
+    days.sort();
+    // A running streak only ever needs to look back a bit over a year -
+    // trim so this doesn't grow forever for a long-time reader.
+    if (days.length > 400) days = days.slice(days.length - 400);
+    try { localStorage.setItem(STREAK_KEY, JSON.stringify(days)); } catch (e) {}
+  }
+  // Counts backward from today. If today isn't marked yet, starts from
+  // yesterday instead, so yesterday's streak keeps showing (as an incentive
+  // to keep it alive) right up until a full day is actually missed.
+  function currentStreak() {
+    var set = {};
+    loadStreakDays().forEach(function (d) { set[d] = true; });
+    var cursor = new Date();
+    if (!set[dateKeyLocal(cursor)]) cursor.setDate(cursor.getDate() - 1);
+    var streak = 0;
+    while (set[dateKeyLocal(cursor)]) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+  }
 
   // First-ever visit (the key has literally never been written) seeds a
   // starter set of favorites, same as the reference design ships with -
@@ -249,6 +305,194 @@
 
   // ---------------- Home (Mana) ----------------
   var homeState = null;
+
+  // Gregorian -> Hijri, via the standard tabular ("civil") Islamic calendar
+  // algorithm (Julian day number as the common intermediate). This is an
+  // arithmetic approximation - real Hijri dates follow local moon sighting
+  // and can differ from it by a day - but it needs no network access and no
+  // yearly data file, which matters for an app that's meant to work fully
+  // offline.
+  function gregorianToJDN(y, m, d) {
+    var a = Math.floor((14 - m) / 12);
+    var y2 = y + 4800 - a;
+    var m2 = m + 12 * a - 3;
+    return d + Math.floor((153 * m2 + 2) / 5) + 365 * y2 + Math.floor(y2 / 4) - Math.floor(y2 / 100) + Math.floor(y2 / 400) - 32045;
+  }
+  function jdnToHijri(jdn) {
+    var l = jdn - 1948440 + 10632;
+    var n = Math.floor((l - 1) / 10631);
+    l = l - 10631 * n + 354;
+    var j = Math.floor((10985 - l) / 5316) * Math.floor((50 * l) / 17719) + Math.floor(l / 5670) * Math.floor((43 * l) / 15238);
+    l = l - Math.floor((30 - j) / 15) * Math.floor((17719 * j) / 50) - Math.floor(j / 16) * Math.floor((15238 * j) / 43) + 29;
+    var month = Math.floor((24 * l) / 709);
+    var day = l - Math.floor((709 * month) / 24);
+    var year = 30 * n + j - 30;
+    return { year: year, month: month, day: day };
+  }
+  var HIJRI_MONTHS = [
+    "Muharram", "Safar", "Rabi'ul Awwal", "Rabi'ul Aakhir", "Jumaadal Uulaa", "Jumaadal Aakhiraa",
+    "Rajab", "Sha'baan", "Ramadaan", "Shawwaal", "Zul-Qi'daa", "Zul-Hijjaa"
+  ];
+  var HIJRI_RAMADAN_MONTH = 9;
+  function todaysHijri() {
+    var now = new Date();
+    var jdn = gregorianToJDN(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    return jdnToHijri(jdn);
+  }
+  function hijriDateString(h) {
+    return h.day + " " + HIJRI_MONTHS[h.month - 1] + " " + h.year;
+  }
+
+  // ---------------- Qiblaa ----------------
+  var QIBLA_LAT = 21.4225, QIBLA_LON = 39.8262; // the Kaaba, Makkah
+  var QIBLA_COORDS_KEY = "hisn:qibla:coords";
+  function loadQiblaCoords() {
+    try { return JSON.parse(localStorage.getItem(QIBLA_COORDS_KEY) || "null"); } catch (e) { return null; }
+  }
+  function saveQiblaCoords(c) { try { localStorage.setItem(QIBLA_COORDS_KEY, JSON.stringify(c)); } catch (e) {} }
+
+  // Initial great-circle bearing from (lat1,lon1) to the Kaaba, degrees from
+  // true North, 0-360.
+  function bearingToQibla(lat1, lon1) {
+    var toRad = Math.PI / 180, toDeg = 180 / Math.PI;
+    var phi1 = lat1 * toRad, phi2 = QIBLA_LAT * toRad;
+    var deltaLambda = (QIBLA_LON - lon1) * toRad;
+    var y = Math.sin(deltaLambda) * Math.cos(phi2);
+    var x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLambda);
+    return (Math.atan2(y, x) * toDeg + 360) % 360;
+  }
+  function distanceToQiblaKm(lat1, lon1) {
+    var toRad = Math.PI / 180, R = 6371;
+    var phi1 = lat1 * toRad, phi2 = QIBLA_LAT * toRad;
+    var dPhi = (QIBLA_LAT - lat1) * toRad;
+    var dLambda = (QIBLA_LON - lon1) * toRad;
+    var a = Math.sin(dPhi / 2) * Math.sin(dPhi / 2) + Math.cos(phi1) * Math.cos(phi2) * Math.sin(dLambda / 2) * Math.sin(dLambda / 2);
+    return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+  }
+  var COMPASS_DIRS = ["Kaabaa", "Kaabaa-Bahaa", "Bahaa", "Kibba-Bahaa", "Kibbaa", "Kibba-Lixaa", "Lixaa", "Kaabaa-Lixaa"];
+  function compassLabel(deg) { return COMPASS_DIRS[Math.round(deg / 45) % 8]; }
+
+  function pageQibla() {
+    document.title = "Qiblaa — Hisnul Muslim";
+    var coords = loadQiblaCoords();
+    setTimeout(function () { bindQiblaEvents(coords); }, 0);
+
+    if (!coords) {
+      return (
+        '<header class="animate-fade-in">' +
+          '<p class="eyebrow">Qiblaa</p>' +
+          '<h1 class="page-title">Kallattii <span class="gold-text">Qiblaa</span></h1>' +
+        "</header>" +
+        '<div class="glass empty-panel">' +
+          '<div class="empty-icon">' + icon("compass", 24) + "</div>" +
+          '<p class="title">Bakka argamuu barbaachisa</p>' +
+          '<p class="sub">Kallattii Qiblaa (gara Mak.kaa) siif argachuuf, bakka ati jirtu eeyyamuu qabda.</p>' +
+          '<button class="cta" id="qibla-request-loc">Bakka argamuu eeyyami</button>' +
+          '<p class="qibla-error" id="qibla-error" hidden></p>' +
+        "</div>"
+      );
+    }
+
+    var bearing = bearingToQibla(coords.lat, coords.lon);
+    var distance = distanceToQiblaKm(coords.lat, coords.lon);
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Qiblaa</p>' +
+        '<h1 class="page-title">Kallattii <span class="gold-text">Qiblaa</span></h1>' +
+        '<p class="page-sub">Mak.kaa irraa kilomeetira ' + distance + " fagaatta.</p>" +
+      "</header>" +
+      '<section class="glass qibla-panel">' +
+        '<div class="qibla-compass">' +
+          '<div class="qibla-ring">' +
+            '<span class="qibla-mark qibla-n">K</span><span class="qibla-mark qibla-e">B</span>' +
+            '<span class="qibla-mark qibla-s">Kib</span><span class="qibla-mark qibla-w">L</span>' +
+            '<div class="qibla-needle" id="qibla-needle" style="transform: rotate(' + bearing + 'deg)">' + icon("kaaba", 20) + "</div>" +
+          "</div>" +
+        "</div>" +
+        '<p class="qibla-readout">' + Math.round(bearing) + "° — " + compassLabel(bearing) + "</p>" +
+        '<button class="font-reset" id="qibla-compass-enable">Kompaasii Bani</button>' +
+        '<p class="qibla-note" id="qibla-compass-status">' +
+          "Yoo kompaasiin hin banamin, bilbila kee gara Kaabaa dhugaa qajeelchi (kompaasii biroo fayyadamuun), ergasii mallattoon armaan olii Qiblaa siif agarsiisa." +
+        "</p>" +
+        '<button class="font-reset" id="qibla-refresh-loc">Bakka argamuu haaromsi</button>' +
+      "</section>"
+    );
+  }
+
+  var qiblaOrientationHandler = null;
+  function stopQiblaCompass() {
+    if (!qiblaOrientationHandler) return;
+    window.removeEventListener("deviceorientationabsolute", qiblaOrientationHandler, true);
+    window.removeEventListener("deviceorientation", qiblaOrientationHandler, true);
+    qiblaOrientationHandler = null;
+  }
+
+  function bindQiblaEvents(coords) {
+    var reqBtn = document.getElementById("qibla-request-loc");
+    if (reqBtn) {
+      reqBtn.addEventListener("click", function () {
+        var errEl = document.getElementById("qibla-error");
+        if (errEl) errEl.hidden = true;
+        if (!("geolocation" in navigator)) {
+          if (errEl) { errEl.hidden = false; errEl.textContent = "Bilbilli kee bakka argamuu hin deeggaru."; }
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(function (pos) {
+          saveQiblaCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+          navigate(location.hash, true);
+        }, function () {
+          if (errEl) { errEl.hidden = false; errEl.textContent = "Bakka argamuu argachuu hin dandeenye. Eeyyama browserii/appii mirkaneessi."; }
+        }, { timeout: 15000, maximumAge: 3600000 });
+      });
+      return;
+    }
+
+    var refreshBtn = document.getElementById("qibla-refresh-loc");
+    if (refreshBtn) refreshBtn.addEventListener("click", function () {
+      if (!("geolocation" in navigator)) return;
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        saveQiblaCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        navigate(location.hash, true);
+      }, function () {}, { timeout: 15000 });
+    });
+
+    var needle = document.getElementById("qibla-needle");
+    var bearing = bearingToQibla(coords.lat, coords.lon);
+    var enableBtn = document.getElementById("qibla-compass-enable");
+    var statusEl = document.getElementById("qibla-compass-status");
+
+    function applyHeading(heading) {
+      if (!needle) return;
+      needle.style.transform = "rotate(" + ((bearing - heading + 360) % 360) + "deg)";
+    }
+    function onOrientation(e) {
+      var heading = typeof e.webkitCompassHeading === "number" ? e.webkitCompassHeading
+        : (e.alpha != null ? (360 - e.alpha) % 360 : null);
+      if (heading != null) applyHeading(heading);
+    }
+    function startCompass() {
+      stopQiblaCompass();
+      qiblaOrientationHandler = onOrientation;
+      window.addEventListener("deviceorientationabsolute", onOrientation, true);
+      window.addEventListener("deviceorientation", onOrientation, true);
+      if (statusEl) statusEl.textContent = "Kompaasiin baname — bilbila kee naannessuudhaan Qiblaa argadhu.";
+      if (enableBtn) enableBtn.hidden = true;
+    }
+    if (enableBtn) {
+      enableBtn.addEventListener("click", function () {
+        if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+          DeviceOrientationEvent.requestPermission().then(function (state) {
+            if (state === "granted") startCompass();
+            else if (statusEl) statusEl.textContent = "Eeyyamni kompaasii hin kennamne.";
+          }).catch(function () {});
+        } else if (typeof DeviceOrientationEvent !== "undefined") {
+          startCompass();
+        } else if (statusEl) {
+          statusEl.textContent = "Bilbilli kee kompaasii hin deeggaru — lakkoofsa digrii armaan olii fayyadami.";
+        }
+      });
+    }
+  }
   function homeFavCardHTML(c) {
     var theme = THEME_BADGE[c.num];
     return (
@@ -290,12 +534,29 @@
           '<a href="#/categories" class="home-fav-add"><span class="ico">' + icon("plus", 22) + '</span><span>Kan biraa dabali</span></a>' +
         "</div>";
     }
+    var streak = currentStreak();
+    var hijri = todaysHijri();
+    var statusRow =
+      '<div class="home-status-row">' +
+        (streak > 0 ?
+          '<div class="home-status-pill home-status-streak">' + icon("flame", 16) + '<span>' + streak + " guyyoota walitti aanan</span></div>"
+          : "") +
+        '<a href="#/qibla" class="home-status-pill home-status-qibla">' + icon("compass", 16) + "<span>Qiblaa</span></a>" +
+        '<div class="home-status-pill home-status-hijri">' + icon("moon", 16) + "<span>" + esc(hijriDateString(hijri)) + "</span></div>" +
+      "</div>" +
+      (hijri.month === HIJRI_RAMADAN_MONTH ?
+        '<a href="#/category/76" class="glass home-ramadan-banner">' +
+          '<span class="ico">' + icon("moon", 20) + "</span>" +
+          '<span class="txt"><strong>Ramadaana keessa jirta.</strong> Du\'aa\'ii soomaa ilaali.</span>' +
+          icon("chevronLeft", 16) +
+        "</a>"
+        : "");
     return (
       '<header class="animate-fade-in">' +
         '<p class="eyebrow">Hisnul Muslim</p>' +
         '<h1 class="page-title">Du’aa’ii <span class="gold-text">barbaachisoo</span></h1>' +
         '<p class="page-sub">Kanneen yeroo hunda fayyadamtu asitti qabadhu.</p>' +
-      "</header>" + body + adSlotHTML(AD_SLOT_HOME)
+      "</header>" + statusRow + body + adSlotHTML(AD_SLOT_HOME)
     );
   }
   function bindHomeEvents() {
@@ -425,6 +686,10 @@
     if (!chapter) {
       return '<div class="empty-panel glass"><p class="title">Argamuu baate</p><a class="cta" href="#/categories">Gosoota ilaali</a></div>';
     }
+    // Morning/Evening dhikr (ch.27/28) is the "did today's adhkar" signal
+    // the Home page streak counter is built on - reading either counts,
+    // same as either one alone would in practice.
+    if (STREAK_CHAPTERS[num]) markStreakDay();
     document.title = chapter.oromoTitle + " — Hisnul Muslim";
     var idx = CHAPTERS.findIndex(function (c) { return c.num === chapter.num; });
     var prev = CHAPTERS[idx - 1];
@@ -737,6 +1002,7 @@
               '<button class="skip-btn" data-action="dua-next" aria-label="Kan itti aanu" hidden>' + icon("skipNext", 14) + "</button>"
               : "") +
             '<button data-action="share" data-arabic="' + esc(d.arabic) + '" data-oromo="' + esc(d.oromo) + '" data-title="' + esc(chapter.oromoTitle) + '" aria-label="Share">' + icon("share2", 16) + "</button>" +
+            '<button class="note-btn' + (noteFor(chapter.num, i) ? " has-note" : "") + '" data-action="toggle-note" aria-label="Yaada">' + icon("edit", 15) + "</button>" +
           "</div>" +
         "</div>" +
         '<div class="seek-wrap" hidden></div>' +
@@ -758,6 +1024,9 @@
             '<span class="counter-value">0</span>' +
             '<button class="counter-plus" data-action="counter-plus" aria-label="+">' + icon("plus", 16) + "</button>" +
           "</div>" +
+        "</div>" +
+        '<div class="note-wrap"' + (noteFor(chapter.num, i) ? "" : " hidden") + '>' +
+          '<textarea class="note-input" data-action="note-input" placeholder="Yaada kee asitti barreessi…">' + esc(noteFor(chapter.num, i)) + "</textarea>" +
         "</div>" +
       "</article>"
     );
@@ -781,6 +1050,19 @@
       card.querySelector('[data-action="share"]').addEventListener("click", function (e) {
         var btn = e.currentTarget;
         shareText(btn.getAttribute("data-title"), btn.getAttribute("data-arabic") + "\n\n" + btn.getAttribute("data-oromo") + "\n\n— Hisnul Muslim");
+      });
+
+      var duaIdx = parseInt(card.getAttribute("data-dua-idx"), 10);
+      var noteBtn = card.querySelector('[data-action="toggle-note"]');
+      var noteWrap = card.querySelector(".note-wrap");
+      var noteInput = card.querySelector('[data-action="note-input"]');
+      noteBtn.addEventListener("click", function () {
+        noteWrap.hidden = !noteWrap.hidden;
+        if (!noteWrap.hidden) noteInput.focus();
+      });
+      noteInput.addEventListener("input", function () {
+        saveNote(chapter.num, duaIdx, noteInput.value.trim());
+        noteBtn.classList.toggle("has-note", !!noteInput.value.trim());
       });
     });
 
@@ -1768,6 +2050,7 @@
   function navigate() {
     stopChapterAudio();
     stopTasbihAudio();
+    stopQiblaCompass();
     if (sagaleeState) { sagaleeState.destroy(); sagaleeState = null; }
     if (homeState) { homeState.destroy(); homeState = null; }
     var r = parseHash();
@@ -1779,6 +2062,7 @@
     else if (r.parts[0] === "tasbih") html = pageTasbih();
     else if (r.parts[0] === "sagalee") html = pageSagalee();
     else if (r.parts[0] === "settings") html = pageSettings();
+    else if (r.parts[0] === "qibla") html = pageQibla();
     else if (r.parts[0] === "category" && r.parts[1]) html = pageCategory(parseInt(r.parts[1], 10));
     else html = pageCategories();
 
