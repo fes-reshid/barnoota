@@ -391,7 +391,7 @@
           '<p class="title">Bakka argamuu barbaachisa</p>' +
           '<p class="sub">Kallattii Qiblaa (gara Mak.kaa) siif argachuuf, bakka ati jirtu eeyyami yookiin magaalaa kee filadhu.</p>' +
           '<button class="cta" id="qibla-request-loc">Bakka argamuu eeyyami</button>' +
-          '<button class="font-reset" id="qibla-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
+          '<button class="solid-action-btn" id="qibla-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
           '<p class="qibla-error" id="qibla-error" hidden></p>' +
         "</div>" +
         cityGroupSelectHTML("qibla")
@@ -420,7 +420,7 @@
           "Yoo kompaasiin hin banamin, bilbila kee gara Kaabaa dhugaa qajeelchi (kompaasii biroo fayyadamuun), ergasii mallattoon armaan olii Qiblaa siif agarsiisa." +
         "</p>" +
         '<button class="font-reset" id="qibla-refresh-loc">Bakka argamuu haaromsi</button>' +
-        '<button class="font-reset" id="qibla-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
+        '<button class="solid-action-btn" id="qibla-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
       "</section>" +
       cityGroupSelectHTML("qibla")
     );
@@ -667,6 +667,10 @@
     }).join("");
     return (
       '<div class="prayer-manual-form" id="prayer-manual-form"' + (manual ? "" : " hidden") + '>' +
+        '<div class="prayer-manual-head">' +
+          '<span class="prayer-manual-title">Yeroo Ofii Galchi</span>' +
+          '<button class="prayer-manual-close" id="prayer-manual-close" aria-label="Cufi">' + icon("x", 14) + "</button>" +
+        "</div>" +
         rows +
         '<button class="cta" id="prayer-manual-save" style="margin-top:0.75rem;">Ol kaa\'i</button>' +
         '<p class="qibla-error" id="prayer-manual-error" hidden></p>' +
@@ -691,8 +695,8 @@
           '<p class="title">Bakka argamuu barbaachisa</p>' +
           '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyami, magaalaa kee filadhu, yookiin yeroowwan ofii galchi.</p>' +
           '<button class="cta" id="prayertimes-request-loc">Bakka argamuu eeyyami</button>' +
-          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
-          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>' +
+          '<button class="solid-action-btn" id="prayer-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
+          '<button class="solid-action-btn" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>' +
           '<p class="qibla-error" id="prayertimes-error" hidden></p>' +
         "</div>" +
         cityGroupSelectHTML("prayer") +
@@ -741,8 +745,8 @@
           '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
           :
           '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
-          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
-          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>'
+          '<button class="solid-action-btn" id="prayer-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
+          '<button class="solid-action-btn" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>'
         ) +
       "</section>" +
       cityGroupSelectHTML("prayer") +
@@ -768,6 +772,9 @@
     var manualForm = document.getElementById("prayer-manual-form");
     if (manualOpenBtn && manualForm) manualOpenBtn.addEventListener("click", function () { manualForm.hidden = false; manualForm.scrollIntoView({ behavior: "smooth", block: "center" }); });
     if (manualEditBtn && manualForm) manualEditBtn.addEventListener("click", function () { manualForm.hidden = false; manualForm.scrollIntoView({ behavior: "smooth", block: "center" }); });
+
+    var manualCloseBtn = document.getElementById("prayer-manual-close");
+    if (manualCloseBtn && manualForm) manualCloseBtn.addEventListener("click", function () { manualForm.hidden = true; });
 
     var manualSaveBtn = document.getElementById("prayer-manual-save");
     if (manualSaveBtn) manualSaveBtn.addEventListener("click", function () {
