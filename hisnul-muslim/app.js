@@ -38,7 +38,8 @@
     compass: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg>',
     flame: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
     menu: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
-    sparkles: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg>'
+    sparkles: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg>',
+    grid: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -495,6 +496,89 @@
       });
     }
   }
+  // ---------------- Magaalaa filachuu (city/country picker) ----------------
+  // A curated fallback for anyone who can't or won't grant GPS location -
+  // Ethiopian regional cities first (this app's core audience), then a
+  // spread of other cities relevant to the Oromo/Horn-of-Africa diaspora
+  // and the wider Muslim world. Not exhaustive; just enough that most
+  // readers find their own city or a close-enough one.
+  var CITY_GROUPS = [
+    { country: "Itoophiyaa", cities: [
+      { name: "Finfinnee (Addis Ababa)", lat: 9.0250, lon: 38.7469 },
+      { name: "Adaamaa (Adama)", lat: 8.5400, lon: 39.2700 },
+      { name: "Jimma", lat: 7.6730, lon: 36.8340 },
+      { name: "Baahir Dar", lat: 11.5940, lon: 37.3900 },
+      { name: "Meqelee (Mekelle)", lat: 13.4967, lon: 39.4753 },
+      { name: "Harar", lat: 9.3100, lon: 42.1200 },
+      { name: "Dirree Dhawaa (Dire Dawa)", lat: 9.5931, lon: 41.8661 },
+      { name: "Naqamtee (Nekemte)", lat: 9.0900, lon: 36.5300 },
+      { name: "Shaashamannee (Shashamane)", lat: 7.2000, lon: 38.6000 },
+      { name: "Gondar", lat: 12.6000, lon: 37.4667 },
+      { name: "Jijiga", lat: 9.3500, lon: 42.8000 },
+      { name: "Asallaa (Asella)", lat: 7.9500, lon: 39.1333 },
+      { name: "Wolqixxee (Wolkite)", lat: 8.2833, lon: 37.7833 }
+    ] },
+    { country: "Sa'uudi Arabiyaa", cities: [
+      { name: "Makkaa (Mecca)", lat: 21.4225, lon: 39.8262 },
+      { name: "Madiinaa (Medina)", lat: 24.4672, lon: 39.6111 },
+      { name: "Riyaad (Riyadh)", lat: 24.7136, lon: 46.6753 },
+      { name: "Jeddaa (Jeddah)", lat: 21.4858, lon: 39.1925 }
+    ] },
+    { country: "Biyoota Gaanfa Afrikaa fi Gidduugala (Horn of Africa & Middle East)", cities: [
+      { name: "Muqdishoo (Mogadishu)", lat: 2.0469, lon: 45.3182 },
+      { name: "Jibuutii (Djibouti)", lat: 11.5721, lon: 43.1456 },
+      { name: "Kaartuum (Khartoum)", lat: 15.5007, lon: 32.5599 },
+      { name: "Naayiroobii (Nairobi)", lat: -1.2921, lon: 36.8219 },
+      { name: "Kampaalaa (Kampala)", lat: 0.3476, lon: 32.5825 },
+      { name: "Kaayiroo (Cairo)", lat: 30.0444, lon: 31.2357 },
+      { name: "Istaanbul (Istanbul)", lat: 41.0082, lon: 28.9784 },
+      { name: "Dooha (Doha)", lat: 25.2854, lon: 51.5310 },
+      { name: "Duubaayi (Dubai)", lat: 25.2048, lon: 55.2708 }
+    ] },
+    { country: "Ameerikaa fi Awurooppaa (US, Europe & elsewhere)", cities: [
+      { name: "Minnesootaa (Minneapolis, MN)", lat: 44.9778, lon: -93.2650 },
+      { name: "Kolombas (Columbus, OH)", lat: 39.9612, lon: -82.9988 },
+      { name: "Siyaatil (Seattle, WA)", lat: 47.6062, lon: -122.3321 },
+      { name: "Waashingitan D.C.", lat: 38.9072, lon: -77.0369 },
+      { name: "Landan (London)", lat: 51.5074, lon: -0.1278 },
+      { name: "Toroontoo (Toronto)", lat: 43.6532, lon: -79.3832 },
+      { name: "Meelboorn (Melbourne)", lat: -37.8136, lon: 144.9631 }
+    ] }
+  ];
+  function cityGroupSelectHTML(idPrefix) {
+    var options = CITY_GROUPS.map(function (g, gi) {
+      var opts = g.cities.map(function (c, ci) {
+        return '<option value="' + gi + ":" + ci + '">' + esc(c.name) + "</option>";
+      }).join("");
+      return '<optgroup label="' + esc(g.country) + '">' + opts + "</optgroup>";
+    }).join("");
+    return (
+      '<div class="city-picker" id="' + idPrefix + '-city-picker" hidden>' +
+        '<select id="' + idPrefix + '-city-select"><option value="">— Magaalaa filadhu —</option>' + options + "</select>" +
+        '<button class="cta" id="' + idPrefix + '-city-confirm" style="margin-top:0.75rem;">Filadhu</button>' +
+      "</div>"
+    );
+  }
+  // onPick(city) is called with { name, lat, lon } once the reader confirms
+  // a selection from the dropdown.
+  function bindCityGroupSelect(idPrefix, onOpenBtnId, onPick) {
+    var openBtn = document.getElementById(onOpenBtnId);
+    var wrap = document.getElementById(idPrefix + "-city-picker");
+    if (openBtn && wrap) openBtn.addEventListener("click", function () {
+      wrap.hidden = false;
+      wrap.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    var confirmBtn = document.getElementById(idPrefix + "-city-confirm");
+    var select = document.getElementById(idPrefix + "-city-select");
+    if (confirmBtn && select) confirmBtn.addEventListener("click", function () {
+      var v = select.value;
+      if (!v) return;
+      var parts = v.split(":");
+      var city = CITY_GROUPS[parseInt(parts[0], 10)].cities[parseInt(parts[1], 10)];
+      onPick(city);
+    });
+  }
+
   // ---------------- Yeroo Salaataa (Prayer Times) ----------------
   var PRAYERTIMES_COORDS_KEY = "hisn:prayertimes:coords";
   function loadPrayerCoords() {
@@ -535,8 +619,23 @@
   // prayer time, so it's shown in the list but never alerted on.
   var AZAN_PRAYERS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
   var AZAN_KEY = "hisn:azan:enabled";
-  function isAzanEnabled() { try { return localStorage.getItem(AZAN_KEY) === "1"; } catch (e) { return false; } }
-  function setAzanEnabled(v) { try { localStorage.setItem(AZAN_KEY, v ? "1" : "0"); } catch (e) {} }
+  function loadAzanSettings() {
+    try {
+      var v = JSON.parse(localStorage.getItem(AZAN_KEY) || "null");
+      if (v && typeof v === "object") return v;
+    } catch (e) {}
+    return {};
+  }
+  function isAzanEnabledFor(k) { return !!loadAzanSettings()[k]; }
+  function setAzanEnabledFor(k, v) {
+    var s = loadAzanSettings();
+    s[k] = v;
+    try { localStorage.setItem(AZAN_KEY, JSON.stringify(s)); } catch (e) {}
+  }
+  function anyAzanEnabled() {
+    var s = loadAzanSettings();
+    return AZAN_PRAYERS.some(function (k) { return s[k]; });
+  }
 
   function fmt12(d) {
     var h = d.getHours(), m = d.getMinutes();
@@ -577,11 +676,13 @@
         '<div class="glass empty-panel">' +
           '<div class="empty-icon">' + icon("bell", 24) + "</div>" +
           '<p class="title">Bakka argamuu barbaachisa</p>' +
-          '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyami - yookiin yeroowwan ofii galchi.</p>' +
+          '<p class="sub">Yeroowwan salaataa shanan guyyaa keessaa siif argachuuf, bakka ati jirtu eeyyami, magaalaa kee filadhu, yookiin yeroowwan ofii galchi.</p>' +
           '<button class="cta" id="prayertimes-request-loc">Bakka argamuu eeyyami</button>' +
-          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.75rem;">Yeroo ofii galchi</button>' +
+          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.75rem;">Magaalaa filadhu</button>' +
+          '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>' +
           '<p class="qibla-error" id="prayertimes-error" hidden></p>' +
         "</div>" +
+        cityGroupSelectHTML("prayer") +
         manualEntryFormHTML(null)
       );
     }
@@ -594,18 +695,23 @@
           '<p class="eyebrow">Yeroo Salaataa</p>' +
           '<h1 class="page-title">Yeroo <span class="gold-text">Salaataa</span></h1>' +
         "</header>" +
-        '<div class="glass empty-panel"><p class="title">Herregachuu hin dandeenye</p><p class="sub">Bakki kee (naannoo qorraa cimaa) yeroo kana herreguuf hin dandeenye. Yeroo ofii galchuu yaalaa.</p></div>' +
+        '<div class="glass empty-panel"><p class="title">Herregachuu hin dandeenye</p><p class="sub">Bakki kee (naannoo qorraa cimaa) yeroo kana herreguuf hin dandeenye. Magaalaa filachuu yookiin yeroo ofii galchuu yaalaa.</p></div>' +
+        cityGroupSelectHTML("prayer") +
         manualEntryFormHTML(manual)
       );
     }
 
-    var azanOn = isAzanEnabled();
     var order = manual ? AZAN_PRAYERS : PRAYER_ORDER;
     var nextIdx = order.findIndex(function (k) { return times[k] && times[k].getTime() > now.getTime(); });
     var rowsHTML = order.map(function (k, i) {
+      var isPrayer = AZAN_PRAYERS.indexOf(k) !== -1;
+      var azanOn = isPrayer && isAzanEnabledFor(k);
       return '<div class="prayer-row' + (i === nextIdx ? " is-next" : "") + '">' +
         '<span class="prayer-name">' + PRAYER_LABELS[k] + "</span>" +
         '<span class="prayer-time">' + fmt12(times[k]) + "</span>" +
+        (isPrayer ?
+          '<button class="prayer-azan-btn' + (azanOn ? " is-on" : "") + '" data-action="prayer-azan-toggle" data-prayer="' + k + '" aria-label="Beeksisa ' + esc(PRAYER_LABELS[k]) + '">' + icon("bell", 15) + "</button>"
+          : '<span class="prayer-azan-spacer"></span>') +
       "</div>";
     }).join("");
 
@@ -616,21 +722,17 @@
       "</header>" +
       '<section class="glass prayer-panel">' +
         '<div class="prayer-list">' + rowsHTML + "</div>" +
-        '<div class="prayer-azan-row">' +
-          '<span>' + icon("bell", 16) + " Beeksisa yeroo salaataa</span>" +
-          '<button class="font-reset" id="prayertimes-azan-toggle" data-on="' + (azanOn ? "1" : "0") + '">' +
-            (azanOn ? "Banaadha" : "Cufaadha") +
-          "</button>" +
-        "</div>" +
-        '<p class="qibla-note">Kun bilbila salphaa yeroo salaataa ga’utti si beeksisu dha (dhugaa azaanaa miti), yeroo appiin banamee jiru.</p>' +
+        '<p class="qibla-note">' + icon("bell", 13) + ' gara salaataa kee jala tuqi akka salaanni sun yeroo ga’utti bilbila salphaan si beeksisu (dhugaa azaanaa miti), yeroo appiin banamee jiru.</p>' +
         (manual ?
           '<button class="font-reset" id="prayer-manual-edit" style="margin-top:0.75rem;">Yeroo ofii gulaali</button>' +
           '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
           :
           '<button class="font-reset" id="prayertimes-refresh-loc" style="margin-top:0.75rem;">Bakka argamuu haaromsi</button>' +
+          '<button class="font-reset" id="prayer-city-open" style="margin-top:0.5rem;">Magaalaa filadhu</button>' +
           '<button class="font-reset" id="prayer-manual-open" style="margin-top:0.5rem;">Yeroo ofii galchi</button>'
         ) +
       "</section>" +
+      cityGroupSelectHTML("prayer") +
       manualEntryFormHTML(manual)
     );
   }
@@ -701,11 +803,17 @@
       }, function () {}, { timeout: 15000 });
     });
 
-    var azanBtn = document.getElementById("prayertimes-azan-toggle");
-    if (azanBtn) azanBtn.addEventListener("click", function () {
-      var on = azanBtn.getAttribute("data-on") === "1";
-      setAzanEnabled(!on);
-      scheduleNextAzan();
+    document.querySelectorAll('[data-action="prayer-azan-toggle"]').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var k = btn.getAttribute("data-prayer");
+        setAzanEnabledFor(k, !isAzanEnabledFor(k));
+        scheduleNextAzan();
+        navigate(location.hash, true);
+      });
+    });
+
+    bindCityGroupSelect("prayer", "prayer-city-open", function (city) {
+      savePrayerCoords({ lat: city.lat, lon: city.lon });
       navigate(location.hash, true);
     });
   }
@@ -722,7 +830,7 @@
   }
   function scheduleNextAzan() {
     stopPrayerAzanSchedule();
-    if (!isAzanEnabled()) return;
+    if (!anyAzanEnabled()) return;
     var manual = loadManualPrayerTimes();
     var coords = manual ? null : loadPrayerCoords();
     if (!manual && !coords) return;
@@ -733,7 +841,7 @@
       var times = manual ? manualTimesToDate(manual, day) : PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
       if (!times) return;
       AZAN_PRAYERS.forEach(function (k) {
-        if (times[k] && times[k].getTime() > now.getTime()) candidates.push(times[k]);
+        if (isAzanEnabledFor(k) && times[k] && times[k].getTime() > now.getTime()) candidates.push(times[k]);
       });
     });
     if (!candidates.length) return;
@@ -2274,7 +2382,8 @@
       { href: "#/yaadaa-gulaalaa", ic: "edit", label: "Yaadaa Gulaalaa" },
       { href: "#/faayidaa-zikrii", ic: "sparkles", label: "Faayidaa Zikrii Qabu" },
       { href: "#/qibla", ic: "compass", label: "Qiblaa" },
-      { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" }
+      { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" },
+      { href: "http://diinislaam.com/apps.html", ic: "grid", label: "Appii Biroo" }
     ];
     var cards = items.map(function (item) {
       return '<a href="' + item.href + '" class="glass menu-page-card">' +
