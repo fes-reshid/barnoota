@@ -1926,6 +1926,25 @@
     );
   }
 
+  function pageYaadaaGulaalaa() {
+    document.title = "Yaadaa Gulaalaa — Hisnul Muslim";
+    var body =
+      '<p>Kitaabni Hisnul Muslim jedhamu kuni irra filatamaa kitaabban waayee du&rsquo;aa&rsquo;iifi zikrii keessatti qopheeffame keessaa isa tokko. Abbaan isa qopheesse sheekha guddaa beekamaa D/r Sa&rsquo;iid bin Alii bin Wahfi Al-Qahxaanii, Rabbi irraa haa jaalatu. Ustaaz Gaalii Abbaaboor carraaqa jabaa godhee afaan keenya, afaan Oromootti hiikee, akka ummanni keenya waayee du&rsquo;aa&rsquo;ii kanaadhaa Rabbii murteessituu tana afaan isaatiin dubbisee hubatu godhe.</p>' +
+      '<p>Rabbiin kan qopheesseefi kan hiikes isaan lameenuu irraa haa jaalatu, jannataanis galata haa galchuuf. Nutis gulaallee maxxansaafi karaa interneetiinis raabsinee akka ummata keenya bira ga&rsquo;u goone. Rabbiin nurraa haa qeebalu.</p>' +
+      '<p>Dhumarratti ummata keenya hundaan, keessaattu dargaggootaafi barattootaan, kitaaba kana akka dubbistanii irraa barattan isinii dhaamsa dabarsina. Jaarraan jirru jaarraa beekkomsaa, saayinsiifi teeknoloojii waan ta&rsquo;eef barnoota Islaamaarratti akka jajjabaattan isiniin jennaa. Barnootaafi ogummaa qabdaniinis diin keessan akka tajaajiltan isin yaadachiisna.</p>' +
+      '<p class="manuscript-signoff">Shekh Jamaal Shekh Muhammad<br>' +
+        '<a href="mailto:shekhjamal@yahoo.com">shekhjamal@yahoo.com</a><br>' +
+        'F/B: Abu Saalih Almuhajiri<br>' +
+        "00966505697461, KSA Riyadh</p>";
+    return (
+      '<header class="animate-fade-in">' +
+        '<p class="eyebrow">Hisnul Muslim</p>' +
+        '<h1 class="page-title">Yaadaa <span class="gold-text">Gulaalaa</span></h1>' +
+      "</header>" +
+      manuscriptCardHTML(body)
+    );
+  }
+
   function pageFaayidaaZikrii() {
     document.title = "Faayidaa Zikrii — Hisnul Muslim";
     var ayat = [
@@ -1988,6 +2007,7 @@
         '<button class="settings-menu-item" data-action="settings-menu-close">' + icon("settings", 16) + "<span>Qindaa'ina</span></button>" +
         '<button class="settings-menu-item" data-action="settings-menu-about">' + icon("info", 16) + "<span>Waa'ee Appii</span></button>" +
         '<a class="settings-menu-item" href="#/dursa">' + icon("bookOpen", 16) + "<span>Dursa</span></a>" +
+        '<a class="settings-menu-item" href="#/yaadaa-gulaalaa">' + icon("edit", 16) + "<span>Yaadaa Gulaalaa</span></a>" +
         '<a class="settings-menu-item" href="#/faayidaa-zikrii">' + icon("sparkles", 16) + "<span>Faayidaa Zikrii Qabu</span></a>" +
       "</div>" +
 
@@ -2171,6 +2191,7 @@
     else if (r.parts[0] === "settings") html = pageSettings();
     else if (r.parts[0] === "qibla") html = pageQibla();
     else if (r.parts[0] === "dursa") html = pageDursa();
+    else if (r.parts[0] === "yaadaa-gulaalaa") html = pageYaadaaGulaalaa();
     else if (r.parts[0] === "faayidaa-zikrii") html = pageFaayidaaZikrii();
     else if (r.parts[0] === "category" && r.parts[1]) html = pageCategory(parseInt(r.parts[1], 10));
     else html = pageCategories();

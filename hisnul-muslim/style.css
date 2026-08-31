@@ -600,7 +600,8 @@ input { font-family: inherit; }
 .manuscript-ayah .dua-arabic { color: var(--gold-soft); margin-bottom: 0.6rem; }
 .manuscript-om { margin: 0; font-size: calc(0.9rem * var(--reading-scale)); line-height: 1.7; color: color-mix(in oklab, var(--primary-foreground) 92%, transparent); }
 .manuscript-src { display: block; margin-top: 0.35rem; font-size: calc(0.75rem * var(--reading-scale)); color: color-mix(in oklab, var(--primary-foreground) 65%, transparent); }
-.manuscript-signoff { margin-top: 1.5rem !important; text-align: center; color: var(--gold-soft) !important; }
+.manuscript-signoff { margin-top: 1.5rem !important; text-align: center; color: var(--gold-soft) !important; line-height: 1.8 !important; }
+.manuscript-signoff a { color: inherit; text-decoration: underline; }
 .manuscript-note { margin-top: 1.5rem !important; padding-top: 1rem; border-top: 1px solid color-mix(in oklab, var(--gold) 30%, transparent); font-size: calc(0.8rem * var(--reading-scale)) !important; font-style: italic; color: color-mix(in oklab, var(--primary-foreground) 70%, transparent) !important; }
 
 /* ---------- Misc ---------- */
