@@ -192,6 +192,22 @@ input { font-family: inherit; }
 .category-chevron { color: var(--muted-foreground); flex-shrink: 0; }
 
 /* ---------- Home (Mana) ---------- */
+.home-status-row { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.home-status-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem; border-radius: 9999px; padding: 0.4rem 0.85rem;
+  font-size: calc(0.75rem * var(--reading-scale)); font-weight: 500; color: var(--foreground);
+  background: var(--card); border: 1px solid var(--border);
+}
+.home-status-streak { color: #ea580c; border-color: color-mix(in oklab, #ea580c 35%, var(--border)); }
+.home-status-qibla:hover { border-color: var(--gold); color: var(--gold); }
+.home-ramadan-banner {
+  margin-top: 0.75rem; display: flex; align-items: center; gap: 0.75rem; border-radius: var(--radius-xl); padding: 0.85rem 1rem;
+  color: var(--foreground);
+}
+.home-ramadan-banner .ico { color: var(--gold); flex-shrink: 0; }
+.home-ramadan-banner .txt { flex: 1; font-size: calc(0.85rem * var(--reading-scale)); line-height: 1.4; }
+.home-ramadan-banner svg:last-child { flex-shrink: 0; transform: rotate(180deg); color: var(--muted-foreground); }
+
 .home-fav-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .home-fav-card {
   position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
@@ -308,6 +324,15 @@ input { font-family: inherit; }
   background: color-mix(in oklab, var(--destructive) 12%, transparent);
   color: var(--destructive); font-size: calc(0.8rem * var(--reading-scale)); line-height: 1.4;
 }
+
+.note-btn.has-note { color: var(--gold); }
+.note-wrap { margin-top: 0.75rem; }
+.note-input {
+  width: 100%; min-height: 4.5rem; resize: vertical; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--background); color: var(--foreground);
+  padding: 0.6rem 0.75rem; font-size: calc(0.85rem * var(--reading-scale)); font-family: inherit; line-height: 1.5;
+}
+.note-input:focus { outline: none; border-color: var(--gold); }
 
 .seek-wrap { margin-top: 0.75rem; }
 .seek-wrap input[type="range"] {
@@ -504,6 +529,36 @@ input { font-family: inherit; }
 .install-text p.sub { margin-top: 0.25rem; font-size: calc(0.75rem * var(--reading-scale)); line-height: 1.5; color: var(--muted-foreground); }
 .install-close { flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: var(--muted-foreground); }
 .install-close:hover { color: var(--foreground); }
+
+/* ---------- Qiblaa ---------- */
+.qibla-panel { margin-top: 1.5rem; border-radius: var(--radius-3xl); padding: 1.5rem; text-align: center; }
+.qibla-compass { display: flex; justify-content: center; }
+.qibla-ring {
+  position: relative; width: 14rem; height: 14rem; border-radius: 9999px;
+  background: var(--gradient-primary); box-shadow: var(--shadow-elegant);
+}
+.qibla-mark {
+  position: absolute; font-size: calc(0.7rem * var(--reading-scale)); font-weight: 600; color: var(--primary-foreground);
+  opacity: 0.7;
+}
+.qibla-n { top: 0.6rem; left: 50%; transform: translateX(-50%); }
+.qibla-s { bottom: 0.6rem; left: 50%; transform: translateX(-50%); }
+.qibla-e { right: 0.6rem; top: 50%; transform: translateY(-50%); }
+.qibla-w { left: 0.6rem; top: 50%; transform: translateY(-50%); }
+.qibla-needle {
+  position: absolute; top: 50%; left: 50%; width: 3px; height: 42%; transform-origin: bottom center;
+  margin-left: -1.5px; margin-top: -42%; display: flex; justify-content: center; transition: transform .2s ease-out;
+  background: linear-gradient(to top, transparent, var(--gold)); border-radius: 9999px;
+}
+.qibla-needle::after {
+  content: ""; position: absolute; bottom: -0.4rem; left: 50%; transform: translateX(-50%);
+  width: 0.6rem; height: 0.6rem; border-radius: 9999px; background: var(--gold);
+}
+.qibla-needle svg { position: absolute; top: -0.9rem; color: var(--gold); filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+.qibla-readout { margin-top: 1.25rem; font-family: var(--font-display); font-size: calc(1.5rem * var(--reading-scale)); font-weight: 600; color: var(--foreground); }
+.qibla-note { margin-top: 1rem; font-size: calc(0.8rem * var(--reading-scale)); line-height: 1.5; color: var(--muted-foreground); }
+.qibla-error { margin-top: 0.75rem; font-size: calc(0.8rem * var(--reading-scale)); color: var(--destructive); }
+#qibla-refresh-loc { margin-top: 0.75rem; }
 
 /* ---------- Misc ---------- */
 [hidden] { display: none !important; }
