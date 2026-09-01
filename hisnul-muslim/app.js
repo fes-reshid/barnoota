@@ -2802,14 +2802,18 @@
   initAdMob();
 
   // Fade out the native-only branded splash overlay (see index.html) now
-  // that the Home page has actually rendered - a fixed delay would either
-  // cut off early on a slow cold start or linger pointlessly on a fast one.
+  // that the Home page has actually rendered. 1200ms (not a shorter delay)
+  // is deliberate: the OS-level splash (styles.xml, capacitor.config.json's
+  // launchShowDuration) covers everything for its own brief window first,
+  // during which this timer is already running in the background - too
+  // short a delay here and this overlay's fade finishes before the OS
+  // splash even lifts, so it's never actually seen.
   var nativeSplash = document.getElementById("native-splash");
   if (nativeSplash && !nativeSplash.hidden) {
     setTimeout(function () {
       nativeSplash.classList.add("hide");
       setTimeout(function () { nativeSplash.remove(); }, 500);
-    }, 400);
+    }, 1200);
   }
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") scheduleNextAzan();
