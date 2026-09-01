@@ -37,8 +37,44 @@ if (!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* Native-app-only branded splash overlay - shown instantly (no
+     dependency on app.js or style.css finishing) and removed by app.js
+     once the Home page has rendered. The OS-level splash screen (Android
+     12+) only supports an icon + solid color by platform design, so this
+     is the only way to show the fuller "Hisnul Muslim" moment - never
+     shown on the plain web/PWA path, which loads fast enough not to need it.
+  */
+  #native-splash {
+    position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    background: linear-gradient(135deg, #0c4429, #175e3c);
+    transition: opacity 0.4s ease;
+  }
+  #native-splash.hide { opacity: 0; pointer-events: none; }
+  #native-splash .ns-arabic {
+    font-family: "Amiri", serif; direction: rtl; font-size: 3.2rem; line-height: 1.2;
+    color: #e8ce96; text-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  }
+  #native-splash .ns-divider { width: 8rem; height: 2px; margin: 0.9rem 0; background: linear-gradient(90deg, transparent, #d4a853, transparent); }
+  #native-splash .ns-latin { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 1.6rem; color: #faf6ed; }
+  #native-splash .ns-latin span { color: #d4a853; }
+  #native-splash .ns-tagline { margin-top: 0.4rem; font-family: "Inter", sans-serif; font-weight: 600; font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase; color: #e8ce96; opacity: 0.9; }
+</style>
 </head>
 <body>
+
+<div id="native-splash" hidden>
+  <div class="ns-arabic">حِصْنُ المُسْلِم</div>
+  <div class="ns-divider"></div>
+  <div class="ns-latin">Hisnul <span>Muslim</span></div>
+  <div class="ns-tagline">Afaan Oromoo</div>
+</div>
+<script>
+  if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    document.getElementById("native-splash").hidden = false;
+  }
+</script>
 
 <div id="app">
   <div class="shell-inner">
