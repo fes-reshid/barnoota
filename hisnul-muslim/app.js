@@ -269,10 +269,13 @@
     var AdMob = admobPlugin();
     if (!AdMob) return;
     AdMob.initialize().then(function () {
+      // TOP_CENTER, not BOTTOM_CENTER - a bottom banner overlaid the app's
+      // own fixed bottom nav bar (Mana/Zikrii/Sagalee/...) instead of
+      // pushing it up, leaving those tabs untouchable.
       return AdMob.showBanner({
         adId: ADMOB_BANNER_UNIT_ID,
         adSize: "ADAPTIVE_BANNER",
-        position: "BOTTOM_CENTER",
+        position: "TOP_CENTER",
         margin: 0
       });
     }).catch(function () {});
