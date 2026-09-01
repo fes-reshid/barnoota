@@ -4,8 +4,7 @@
   "webDir": "../hisnul-muslim",
   "plugins": {
     "SplashScreen": {
-      "launchShowDuration": 0,
-      "launchAutoHide": true,
+      "launchAutoHide": false,
       "backgroundColor": "#0c4429",
       "androidScaleType": "CENTER_CROP",
       "splashFullScreen": true,
