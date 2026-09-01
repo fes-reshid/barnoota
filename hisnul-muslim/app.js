@@ -278,7 +278,23 @@
         position: "TOP_CENTER",
         margin: 0
       });
+    }).then(function () {
+      // showBanner() always makes it visible first - immediately hide it
+      // again if the app didn't cold-start on Home, so it isn't a floating
+      // presence on every screen (see syncAdMobBanner, called from
+      // navigate() on every route change thereafter).
+      if (parseHash().parts[0] !== "home") return AdMob.hideBanner();
     }).catch(function () {});
+  }
+  // The banner is genuinely an overlay (see the position options above) -
+  // there's no way to have it scroll inline with a page's content, so
+  // instead of it floating over every screen, it only shows on Home and is
+  // hidden everywhere else.
+  function syncAdMobBanner(routeName) {
+    var AdMob = admobPlugin();
+    if (!AdMob) return;
+    if (routeName === "home") AdMob.resumeBanner().catch(function () {});
+    else AdMob.hideBanner().catch(function () {});
   }
 
   // ---------------- Category card ----------------
@@ -2712,6 +2728,7 @@
     renderTopbar();
     renderBottomNav(r.hash);
     window.scrollTo(0, 0);
+    syncAdMobBanner(r.parts[0]);
   }
 
   window.addEventListener("hashchange", navigate);
