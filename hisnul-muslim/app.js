@@ -230,6 +230,7 @@
   var AD_SLOT_HOME = "0000000000";
   var AD_SLOT_ZIKRII = "0000000000";
   var AD_SLOT_SAGALEE = "0000000000";
+  var AD_SLOT_QINDAAINA = "0000000000";
   // AdSense is web-only (see index.html's guard on the script tag itself) —
   // isNativeApp() keeps these two in sync so the native build never renders
   // an ad slot or calls into a library it never loaded.
@@ -2484,6 +2485,7 @@
   // than jumping straight into settings controls.
   function pageSettingsMenu() {
     document.title = "Qindaa'ina — Hisnul Muslim";
+    setTimeout(function () { pushAd(); }, 0);
     var items = [
       { href: "#/settings-app", ic: "settings", label: "Qindaa'ina" },
       { href: "#/waaee-appii", ic: "info", label: "Waa'ee Appii" },
@@ -2492,7 +2494,6 @@
       { href: "#/faayidaa-zikrii", ic: "sparkles", label: "Faayidaa Zikrii Qabu" },
       { href: "#/qibla", ic: "compass", label: "Qiblaa" },
       { href: "#/prayer-times", ic: "bell", label: "Yeroo Salaataa" },
-      { href: "privacy.html", ic: "shield", label: "Imaammata Iccitii" },
       { href: "http://diinislaam.com/apps.html", ic: "grid", label: "Appii Biroo" }
     ];
     var cards = items.map(function (item) {
@@ -2507,7 +2508,8 @@
         '<p class="eyebrow">Hisnul Muslim</p>' +
         '<h1 class="page-title">Qindaa\'ina <span class="gold-text">fi Odeeffannoo</span></h1>' +
       "</header>" +
-      '<div class="menu-page-list">' + cards + "</div>"
+      '<div class="menu-page-list">' + cards + "</div>" +
+      adSlotHTML(AD_SLOT_QINDAAINA)
     );
   }
 
