@@ -262,6 +262,10 @@
   // serving" until the app is published and passes Google's app review, per
   // the AdMob dashboard).
   var ADMOB_BANNER_UNIT_ID = "ca-app-pub-7778012722329637/3029065509";
+  // The banner is genuinely an overlay (no way to have it scroll inline
+  // with a page's content - see the position option below), so instead of
+  // it floating over every screen it's limited to just these routes.
+  var ADMOB_BANNER_ROUTES = ["home", "settings"];
   function admobPlugin() {
     return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
   }
@@ -290,20 +294,16 @@
       });
     }).then(function () {
       // showBanner() always makes it visible first - immediately hide it
-      // again if the app didn't cold-start on Home, so it isn't a floating
-      // presence on every screen (see syncAdMobBanner, called from
-      // navigate() on every route change thereafter).
-      if (parseHash().parts[0] !== "home") return AdMob.hideBanner();
+      // again if the app didn't cold-start on a page that wants it, so it
+      // isn't a floating presence on every screen (see syncAdMobBanner,
+      // called from navigate() on every route change thereafter).
+      if (ADMOB_BANNER_ROUTES.indexOf(parseHash().parts[0]) === -1) return AdMob.hideBanner();
     }).catch(function () {});
   }
-  // The banner is genuinely an overlay (see the position options above) -
-  // there's no way to have it scroll inline with a page's content, so
-  // instead of it floating over every screen, it only shows on Home and is
-  // hidden everywhere else.
   function syncAdMobBanner(routeName) {
     var AdMob = admobPlugin();
     if (!AdMob) return;
-    if (routeName === "home") AdMob.resumeBanner().catch(function () {});
+    if (ADMOB_BANNER_ROUTES.indexOf(routeName) !== -1) AdMob.resumeBanner().catch(function () {});
     else AdMob.hideBanner().catch(function () {});
   }
 
