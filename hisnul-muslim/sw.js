@@ -1,8 +1,9 @@
-const CACHE_NAME = "hisnul-muslim-v62";
+const CACHE_NAME = "hisnul-muslim-v63";
 const AUDIO_CACHE_NAME = "hisnul-audio-v1";
 const ASSETS = [
   "./",
   "./index.html",
+  "./privacy.html",
   "./style.css",
   "./app.js",
   "./data.js",
