@@ -38,6 +38,38 @@ and `android/app/build.gradle` (`applicationId`) before publishing if you
 want a different one — it can't be changed after the first Play Store
 upload.
 
+## Publishing to Google Play
+
+One-time prep:
+- A [Google Play Developer account](https://play.google.com/console/signup)
+  ($25 one-time registration fee).
+- `../hisnul-muslim/privacy.html` needs to be live at a public URL (e.g.
+  `http://diinislaam.com/hisnul-muslim/privacy.html`) — Play Console checks
+  that it actually loads.
+- Store listing assets: a 512×512 icon, a 1024×500 feature graphic, and at
+  least 2 phone screenshots.
+
+Build the release bundle in Android Studio: **Build > Generate Signed
+Bundle / APK > Android App Bundle**. First time, click **Create new...** to
+make a signing keystore — pick a strong password, 25+ year validity, and
+**back the keystore file and its passwords up somewhere safe**. Losing it
+means never being able to publish an update to this same app listing again.
+Output lands at `android/app/release/app-release.aab`.
+
+In Play Console, **Create app**, then work through everything under **App
+content** before a release is allowed:
+- **Privacy policy** — the URL above
+- **Ads** — Yes (AdMob; see below)
+- **App access** — all functionality available without special access
+- **Content rating**, **Target audience**, **Data safety** — fill out
+  honestly; Data safety should mirror `privacy.html` (advertising ID via
+  AdMob, everything else stored only on-device)
+- Government apps / COVID-19 / Financial features / News apps — all No
+
+Then **Release > Testing > Internal testing** (recommended first) or
+**Production**, create a release, upload the `.aab`, and roll out. First
+review typically takes hours to a few days.
+
 ## iOS
 
 Requires a Mac with Xcode. From a Mac:
@@ -51,6 +83,21 @@ npx cap open ios
 
 Then archive and upload from Xcode as usual, or via
 [App Store Connect](https://appstoreconnect.apple.com/).
+
+## AdMob
+
+The native app shows ads via `@capacitor-community/admob` (the website
+uses AdSense instead — see `hisnul-muslim/app.js`'s `isNativeApp()` guard,
+which keeps the two from ever running in the same place). Two IDs, both
+real, both from the [AdMob console](https://admob.google.com):
+- **App ID** — `android/app/src/main/AndroidManifest.xml`'s
+  `com.google.android.gms.ads.APPLICATION_ID` meta-data
+- **Banner ad unit ID** — `ADMOB_BANNER_UNIT_ID` in `../hisnul-muslim/app.js`
+
+`initAdMob()` (also in `app.js`) initializes the SDK and shows a bottom
+adaptive banner on every page, once at boot. Ad serving is limited by
+Google until the app is published on Play and passes review — a blank or
+empty banner before then is expected, not a bug.
 
 ## Prayer-time reminder notifications
 
