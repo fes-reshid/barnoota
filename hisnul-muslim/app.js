@@ -2780,6 +2780,17 @@
   navigate();
   scheduleNextAzan();
   initAdMob();
+
+  // Fade out the native-only branded splash overlay (see index.html) now
+  // that the Home page has actually rendered - a fixed delay would either
+  // cut off early on a slow cold start or linger pointlessly on a fast one.
+  var nativeSplash = document.getElementById("native-splash");
+  if (nativeSplash && !nativeSplash.hidden) {
+    setTimeout(function () {
+      nativeSplash.classList.add("hide");
+      setTimeout(function () { nativeSplash.remove(); }, 500);
+    }, 400);
+  }
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") scheduleNextAzan();
   });
