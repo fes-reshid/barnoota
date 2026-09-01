@@ -265,6 +265,16 @@
   function admobPlugin() {
     return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
   }
+
+  // The native splash (styles.xml windowSplashScreenAnimatedIcon, already
+  // branded with the "Hisnul Muslim" wordmark) is the only splash screen -
+  // capacitor.config.json sets launchAutoHide:false so it stays up past
+  // Android's own brief default instead of dropping to a blank WebView
+  // frame, and this hides it once Home has actually rendered.
+  function hideNativeSplash() {
+    var SplashScreen = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen;
+    if (SplashScreen) SplashScreen.hide().catch(function () {});
+  }
   function initAdMob() {
     var AdMob = admobPlugin();
     if (!AdMob) return;
@@ -2800,21 +2810,8 @@
   navigate();
   scheduleNextAzan();
   initAdMob();
+  hideNativeSplash();
 
-  // Fade out the native-only branded splash overlay (see index.html) now
-  // that the Home page has actually rendered. 1200ms (not a shorter delay)
-  // is deliberate: the OS-level splash (styles.xml, capacitor.config.json's
-  // launchShowDuration) covers everything for its own brief window first,
-  // during which this timer is already running in the background - too
-  // short a delay here and this overlay's fade finishes before the OS
-  // splash even lifts, so it's never actually seen.
-  var nativeSplash = document.getElementById("native-splash");
-  if (nativeSplash && !nativeSplash.hidden) {
-    setTimeout(function () {
-      nativeSplash.classList.add("hide");
-      setTimeout(function () { nativeSplash.remove(); }, 500);
-    }, 1200);
-  }
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") scheduleNextAzan();
   });
