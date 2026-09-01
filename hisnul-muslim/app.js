@@ -39,7 +39,8 @@
     flame: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
     menu: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
     sparkles: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg>',
-    grid: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>'
+    grid: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -229,6 +230,7 @@
   var AD_SLOT_HOME = "0000000000";
   var AD_SLOT_ZIKRII = "0000000000";
   var AD_SLOT_SAGALEE = "0000000000";
+  var AD_SLOT_QINDAAINA = "0000000000";
   // AdSense is web-only (see index.html's guard on the script tag itself) —
   // isNativeApp() keeps these two in sync so the native build never renders
   // an ad slot or calls into a library it never loaded.
@@ -2483,6 +2485,7 @@
   // than jumping straight into settings controls.
   function pageSettingsMenu() {
     document.title = "Qindaa'ina — Hisnul Muslim";
+    setTimeout(function () { pushAd(); }, 0);
     var items = [
       { href: "#/settings-app", ic: "settings", label: "Qindaa'ina" },
       { href: "#/waaee-appii", ic: "info", label: "Waa'ee Appii" },
@@ -2505,7 +2508,8 @@
         '<p class="eyebrow">Hisnul Muslim</p>' +
         '<h1 class="page-title">Qindaa\'ina <span class="gold-text">fi Odeeffannoo</span></h1>' +
       "</header>" +
-      '<div class="menu-page-list">' + cards + "</div>"
+      '<div class="menu-page-list">' + cards + "</div>" +
+      adSlotHTML(AD_SLOT_QINDAAINA)
     );
   }
 
