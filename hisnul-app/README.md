@@ -72,17 +72,40 @@ review typically takes hours to a few days.
 
 ## iOS
 
-Requires a Mac with Xcode. From a Mac:
+Requires a Mac with Xcode (Apple doesn't allow building iOS apps anywhere
+else). The `ios/` platform folder is already committed and set up
+(`@capacitor/ios`, permission strings, app icon, launch screen) - from a Mac:
 
 ```
+git pull
+cd hisnul-app
 npm install
-npx cap add ios
-npx cap sync
+npx cap sync ios
 npx cap open ios
 ```
 
-Then archive and upload from Xcode as usual, or via
-[App Store Connect](https://appstoreconnect.apple.com/).
+That last command opens the project in Xcode. First-time setup in Xcode:
+
+- **Signing & Capabilities** tab: select your Apple Developer team so Xcode
+  can code-sign the build. Requires an active
+  [Apple Developer Program](https://developer.apple.com/programs/) membership
+  ($99/year).
+- **AdMob App ID**: `ios/App/App/Info.plist` has a placeholder
+  `GADApplicationIdentifier` (`ca-app-pub-REPLACE-WITH-YOUR-IOS-APP-ID`). In
+  the [AdMob console](https://apps.admob.com/), add a *new* iOS app (separate
+  from the Android one - each platform gets its own App ID and banner ad unit
+  ID even for the "same" app) and paste the real iOS App ID in over the
+  placeholder. Also update `ADMOB_BANNER_UNIT_ID` in `hisnul-muslim/app.js`
+  if you want a distinct iOS banner unit, or reuse the Android one to start.
+- Build and run on a connected iPhone or the simulator (▶ button) to test
+  before archiving.
+
+To publish: **Product > Archive**, then use the Organizer window's
+**Distribute App** button to upload to
+[App Store Connect](https://appstoreconnect.apple.com/), where you fill in
+the store listing (reuse the description/screenshots already made for
+Google Play - Apple wants its own screenshot sizes though, taken on an
+actual iPhone/simulator) and submit for review.
 
 ## AdMob
 
