@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.barnoota.noorshield.ui.screens.ActivityLogScreen
 import com.barnoota.noorshield.ui.screens.BlocklistScreen
 import com.barnoota.noorshield.ui.screens.DashboardScreen
 import com.barnoota.noorshield.ui.screens.HadithFeedScreen
@@ -40,6 +42,7 @@ private sealed class Destination(val route: String, val label: String) {
     data object Blocklist : Destination("blocklist", "Block Site")
     data object Hadith : Destination("hadith", "Hadith")
     data object Journal : Destination("journal", "Journal")
+    data object Activity : Destination("activity", "Activity")
     data object Settings : Destination("settings", "About")
 }
 
@@ -48,6 +51,7 @@ private val destinations = listOf(
     Destination.Blocklist,
     Destination.Hadith,
     Destination.Journal,
+    Destination.Activity,
     Destination.Settings,
 )
 
@@ -82,6 +86,7 @@ private fun NoorShieldApp() {
             composable(Destination.Blocklist.route) { BlocklistScreen() }
             composable(Destination.Hadith.route) { HadithFeedScreen() }
             composable(Destination.Journal.route) { JournalScreen() }
+            composable(Destination.Activity.route) { ActivityLogScreen() }
             composable(Destination.Settings.route) { SettingsScreen() }
         }
     }
@@ -109,6 +114,7 @@ private fun NoorShieldBottomBar(navController: NavHostController) {
                             Destination.Blocklist -> Icons.Filled.Block
                             Destination.Hadith -> Icons.Filled.Book
                             Destination.Journal -> Icons.Filled.EditNote
+                            Destination.Activity -> Icons.Filled.History
                             Destination.Settings -> Icons.Filled.Settings
                         },
                         contentDescription = destination.label,

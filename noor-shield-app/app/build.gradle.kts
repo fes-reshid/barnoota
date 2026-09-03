@@ -60,4 +60,12 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
+    // Encrypted-at-rest storage for the SMTP password (Activity Log email report).
+    implementation("androidx.security:security-crypto:1.0.0")
+
+    // SMTP client for the on-request email report. Plain javax.mail/jakarta.mail doesn't run on
+    // Android (no built-in javax.activation); this is the standard Android-compatible fork pairing.
+    implementation("com.sun.mail:android-mail:1.6.8")
+    implementation("com.sun.mail:android-activation:1.6.8")
 }
