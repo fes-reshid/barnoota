@@ -174,6 +174,25 @@ $('filter-toggle').addEventListener('click', async () => {
 
 async function refreshStatus() {
   const status = await api.getStatus();
+  const serviceWarning = $('service-warning');
+
+  if (status.serviceUnreachable) {
+    serviceWarning.hidden = false;
+    $('service-warning-title').textContent = 'Protection service not running';
+    $('service-warning-detail').textContent =
+      `${status.error} Reopening Noor Shield as Administrator installs and starts it automatically.`;
+
+    $('status-pill').textContent = 'Unknown';
+    $('status-pill').className = 'statuspill off';
+    $('status-detail').textContent = 'Cannot reach the protection service to check whether this PC is protected.';
+    $('filter-toggle').disabled = true;
+    $('filter-toggle').textContent = 'Unavailable';
+    $('admin-warning').hidden = true;
+    $('lockdot').className = 'lockdot';
+    $('parent-state-label').textContent = 'Unknown';
+    return;
+  }
+  serviceWarning.hidden = true;
 
   const pill = $('status-pill');
   const detail = $('status-detail');
@@ -252,11 +271,21 @@ async function addBlockedSite() {
 
 async function renderBlocklist() {
   const data = await api.listBlocklist();
-  $('seed-count').textContent = data.seedCount;
-  $('custom-count').textContent = data.custom.length;
-
   const list = $('custom-list');
   list.textContent = '';
+
+  if (data.serviceUnreachable) {
+    $('seed-count').textContent = '—';
+    $('custom-count').textContent = '—';
+    const empty = document.createElement('p');
+    empty.className = 'empty';
+    empty.textContent = 'The protection service is not reachable right now.';
+    list.appendChild(empty);
+    return;
+  }
+
+  $('seed-count').textContent = data.seedCount;
+  $('custom-count').textContent = data.custom.length;
 
   if (data.custom.length === 0) {
     const empty = document.createElement('p');
@@ -379,9 +408,13 @@ async function renderJournal() {
 
 async function renderSettings() {
   const status = await api.parentStatus();
-  const unlocked = status.configured ? status.unlocked : true;
+  const unlocked = !status.serviceUnreachable && (status.configured ? status.unlocked : true);
   $('settings-locked').hidden = unlocked;
   $('settings-body').hidden = !unlocked;
+  if (status.serviceUnreachable) {
+    $('settings-locked').querySelector('p').textContent =
+      'The protection service is not reachable. Reopen Noor Shield as Administrator.';
+  }
 }
 
 $('settings-unlock').addEventListener('click', () => {
@@ -411,8 +444,30 @@ $('pw-save').addEventListener('click', async () => {
   }
 });
 
-$('quit-app').addEventListener('click', async () => {
-  await callGated(() => api.quitApp(), 'Enter the parent password to quit and stop protecting this PC.');
+$('remove-protection').addEventListener('click', async () => {
+  const message = $('remove-message');
+  const password = $('remove-password').value;
+
+  if (!password) {
+    message.textContent = 'Enter the parent password to confirm.';
+    message.className = 'error';
+    return;
+  }
+
+  $('remove-protection').disabled = true;
+  message.textContent = 'Removing protection…';
+  message.className = 'hint';
+
+  const result = await api.removeProtection(password);
+
+  $('remove-protection').disabled = false;
+  message.textContent = result.ok
+    ? 'Protection removed. The service has been uninstalled from this PC.'
+    : result.error;
+  message.className = result.ok ? 'success' : 'error';
+  if (result.ok) $('remove-password').value = '';
+
+  refreshStatus();
 });
 
 /* ------------------------------------------------------------------ *
@@ -420,9 +475,21 @@ $('quit-app').addEventListener('click', async () => {
  * ------------------------------------------------------------------ */
 
 async function boot() {
-  const status = await api.parentStatus();
+  // On a fresh install the main process is installing/starting the
+  // protection service concurrently with this page loading, so give it a
+  // few seconds before deciding "unreachable" — otherwise a normal first
+  // launch would flash the setup gate before settling on the real state.
+  let status = await api.parentStatus();
+  for (let attempt = 0; attempt < 6 && status.serviceUnreachable; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    status = await api.parentStatus();
+  }
 
-  if (!status.configured) {
+  if (status.serviceUnreachable) {
+    // Let the dashboard's own warning banner explain it rather than asking
+    // for a password the service isn't there to receive.
+    $('shell').hidden = false;
+  } else if (!status.configured) {
     // Nothing works until a parent password exists.
     $('setup-gate').hidden = false;
     $('setup-password').focus();

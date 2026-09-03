@@ -1,12 +1,18 @@
 {
   "name": "noor-shield-pc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Noor Shield for Windows — device-wide adult-content filter with Islamic reminders and a parent-controlled lock",
+  "description": "Noor Shield for Windows — device-wide adult-content filter with Islamic reminders, an always-on protection service, and a parent-controlled lock",
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
+    "service": "node service/filterService.js",
+    "service:install": "node -e \"require('./service/install').install().then(()=>console.log('installed')).catch(e=>{console.error(e);process.exit(1)})\"",
+    "service:uninstall": "node -e \"require('./service/uninstall').uninstall().then(()=>console.log('uninstalled')).catch(e=>{console.error(e);process.exit(1)})\"",
     "dist": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "node-windows": "1.0.0-beta.8"
   },
   "devDependencies": {
     "electron": "^31.3.1",
@@ -17,11 +23,10 @@
     "productName": "Noor Shield",
     "files": [
       "src/**/*",
+      "service/**/*",
       "resources/**/*"
     ],
-    "extraResources": [
-      "resources/blocklist_domains.txt"
-    ],
+    "asar": false,
     "win": {
       "target": "nsis",
       "requestedExecutionLevel": "requireAdministrator"

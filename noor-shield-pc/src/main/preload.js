@@ -29,13 +29,26 @@ contextBridge.exposeInMainWorld('noor', {
   parentResetWithRecoveryKey: (recoveryKey, newPassword) =>
     ipcRenderer.invoke('parent:resetWithRecoveryKey', { recoveryKey, newPassword }),
 
-  // Parent-gated (main process rejects these when locked)
+  // Parent-gated (the protection service rejects these when locked, not this process)
   enableFilter: () => ipcRenderer.invoke('filter:enable'),
   disableFilter: () => ipcRenderer.invoke('filter:disable'),
   addBlockedSite: (input) => ipcRenderer.invoke('blocklist:add', { input }),
   removeBlockedSite: (domain) => ipcRenderer.invoke('blocklist:remove', { domain }),
   updateSettings: (patch) => ipcRenderer.invoke('settings:update', patch),
-  quitApp: () => ipcRenderer.invoke('app:quit'),
+
+  // Not gated: only ever restores DNS, never changes what protection is
+  // supposed to do, so there's no reason to require the parent for it.
+  repairDns: () => ipcRenderer.invoke('dns:repair'),
+
+  // Fully removes the Windows service. Verified twice: once by the service
+  // itself (the password check in service.prepareUninstall) and once by
+  // Windows (deleting a service is an admin-only operation regardless of
+  // what this app thinks).
+  removeProtection: (password) => ipcRenderer.invoke('app:removeProtection', { password }),
+
+  // Whether the always-on protection service is installed and reachable —
+  // it can be running (or not) independently of whether this window is open.
+  ensureService: () => ipcRenderer.invoke('app:ensureService'),
 
   openExternal: (url) => ipcRenderer.invoke('app:openExternal', { url }),
 });

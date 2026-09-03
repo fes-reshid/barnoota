@@ -97,8 +97,13 @@
       <section class="view active" data-view="dashboard">
         <header class="viewhead">
           <h1>Protection</h1>
-          <p class="sub">Filtering every app on this PC through a local resolver.</p>
+          <p class="sub">Filtering every app on this PC through a background service.</p>
         </header>
+
+        <div class="panel warnpanel" id="service-warning" hidden>
+          <h3 id="service-warning-title">Protection service not detected</h3>
+          <p id="service-warning-detail">Checking whether the always-on protection service is installed…</p>
+        </div>
 
         <div class="statusrow">
           <div class="panel statusmain" id="status-panel">
@@ -125,9 +130,9 @@
         <div class="panel notepanel">
           <h3>What this protects, honestly</h3>
           <ul>
-            <li>Every browser and app on this PC resolves through Noor Shield, so blocking isn't limited to one browser.</li>
-            <li>Protection is active only while Noor Shield is running. Closing the window keeps it running in the notification area; quitting needs the parent password.</li>
-            <li>A user with their own administrator account can still change Windows' DNS back. This raises the barrier; it isn't an unbreakable lock.</li>
+            <li>Every browser and app on this PC resolves through the Noor Shield service, so blocking isn't limited to one browser.</li>
+            <li>Protection runs as a Windows service, independently of this window. Closing or quitting the app does not stop it — it keeps running after logoff and across reboots, and restarts itself automatically if it crashes.</li>
+            <li>A user with their own administrator account can still stop or remove the service. This raises the barrier; it isn't an unbreakable lock. Give the child a standard (non-admin) Windows account.</li>
             <li>Sites reached by raw IP address, or through a browser using its own encrypted DNS, can bypass domain filtering.</li>
           </ul>
         </div>
@@ -247,12 +252,17 @@
           </div>
 
           <div class="panel dangerpanel">
-            <h3>Quit Noor Shield</h3>
+            <h3>Remove protection from this PC</h3>
             <p>
-              Quitting stops the filter and restores Windows' DNS settings, leaving this PC
-              unprotected until Noor Shield is started again.
+              This restores Windows' DNS settings and completely removes the always-on protection
+              service — not just this app window. Closing or quitting Noor Shield does <b>not</b> do
+              this; protection is designed to keep running without the app open. Use this only if you
+              want to stop protecting this PC altogether.
             </p>
-            <button class="btn danger" id="quit-app">Turn off protection and quit</button>
+            <label for="remove-password">Parent password</label>
+            <input type="password" id="remove-password" autocomplete="current-password">
+            <button class="btn danger" id="remove-protection">Remove protection completely</button>
+            <p class="hint" id="remove-message"></p>
           </div>
         </div>
       </section>
