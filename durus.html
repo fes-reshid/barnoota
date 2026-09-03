@@ -448,27 +448,27 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
       <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
     </div>
 
-    <div class="auth-panel" id="enroll-form" style="display:none;">
+    <form class="auth-panel" id="enroll-form" style="display:none;">
       <p class="auth-gate-title">Create Your Account</p>
       <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
       <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
       <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
       <p class="auth-error" id="enroll-error" style="display:none;"></p>
-      <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
-      <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
-      <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
-    </div>
+      <button type="button" class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+      <button type="submit" class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+      <button type="button" class="auth-link-btn" id="enroll-back-btn">← Back</button>
+    </form>
 
-    <div class="auth-panel" id="login-form" style="display:none;">
+    <form class="auth-panel" id="login-form" style="display:none;">
       <p class="auth-gate-title">Log In</p>
       <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
       <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
       <p class="auth-error" id="login-error" style="display:none;"></p>
       <p class="auth-success" id="login-info" style="display:none;"></p>
-      <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
-      <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
-      <button class="auth-link-btn" id="login-back-btn">← Back</button>
-    </div>
+      <button type="submit" class="auth-primary-btn" id="login-submit-btn">Log In</button>
+      <button type="button" class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+      <button type="button" class="auth-link-btn" id="login-back-btn">← Back</button>
+    </form>
 
   </div>
 </div>
@@ -1215,7 +1215,8 @@ var loginBtn = document.getElementById('login-submit-btn');
 var enrollErrorEl = document.getElementById('enroll-error');
 var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
 
-enrollBtn.addEventListener('click', function(){
+document.getElementById('enroll-form').addEventListener('submit', function(e){
+  e.preventDefault();
   enrollErrorEl.style.display = 'none';
   gotoLoginBtn.style.display = 'none';
   var name = document.getElementById('enroll-name').value.trim();
@@ -1260,7 +1261,8 @@ enrollBtn.addEventListener('click', function(){
 var loginErrorEl = document.getElementById('login-error');
 var loginInfoEl = document.getElementById('login-info');
 
-loginBtn.addEventListener('click', function(){
+document.getElementById('login-form').addEventListener('submit', function(e){
+  e.preventDefault();
   loginErrorEl.style.display = 'none';
   loginInfoEl.style.display = 'none';
   var email = document.getElementById('login-email').value.trim();
