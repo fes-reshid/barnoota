@@ -636,7 +636,7 @@
         <span class="wsb-en">Week 4 · Declinable &amp; Indeclinable</span><span class="wsb-ar">الأسبوع الرابع · المعرب والمبني</span>
       </button>
       <button class="week-select-btn" id="week-select-w5" data-step="19">
-        <span class="wsb-en">Week 5 · Coming Soon</span><span class="wsb-ar">الأسبوع الخامس · قريباً</span>
+        <span class="wsb-en">Week 5 · The I'rab Rulings</span><span class="wsb-ar">الأسبوع الخامس · الأحكام الإعرابية</span>
       </button>
     </div>
   </div>
@@ -644,7 +644,7 @@
   <div id="main-content" style="display:none;">
 
     <div class="step-progress-row">
-      <span id="step-progress-text">Step 1 / 21</span>
+      <span id="step-progress-text">Step 1 / 22</span>
       <div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div>
     </div>
 
@@ -2176,17 +2176,310 @@ var finalQuizAR = [
 
 var LESSONS_W5_EN = [
 `<div class="hero">
-  <p class="hero-eyebrow">قَرِيباً</p>
-  <h1 class="en-title">Week 5 — Coming Soon</h1>
-  <p>This week's lesson is being prepared and will be added shortly. Check back soon!</p>
+  <p class="hero-eyebrow">فَصْلٌ فِي الْأَحْكَامِ الْإِعْرَابِيَّةِ</p>
+  <h1 class="en-title">The Four I'rab Rulings</h1>
+  <p>Now that you can tell muʿrab from mabni, it's time to meet the four rulings themselves — rafʿ, naṣb, jarr, and jazm — and learn exactly which words each one is allowed to touch.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">1</span>The Four Rulings</h2>
+  <div class="rule-box">
+    <p style="margin:0;">The i'rab rulings (الأحكام الإعرابية) are four:</p>
+    <ul>
+      <li><b>رَفْع</b> — rafʿ</li>
+      <li><b>نَصْب</b> — naṣb</li>
+      <li><b>جَرّ</b> — jarr</li>
+      <li><b>جَزْم</b> — jazm</li>
+    </ul>
+  </div>
+  <div class="note-box">
+    <p class="note-title">Not every word takes one</p>
+    <p>These four rulings only ever apply to <b>nouns</b> and <b>present-tense verbs</b>. They never touch particles, the past-tense verb, or the imperative verb — no matter what.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">2</span>Nouns: Rafʿ, Naṣb, or Jarr — Never Jazm</h2>
+  <p class="lead">Every noun — whether muʿrab or mabni — can only ever carry rafʿ, naṣb, or jarr. Jazm never touches a noun.</p>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;"><b>مُحَمَّدٌ</b> (rafʿ) <b>يُكْرِمُ الضَّيْفَ</b> (naṣb) <b>بِحَفَاوَةٍ</b> (jarr)</p>
+    <p style="margin:0; font-style:italic;">"Muhammad (rafʿ) honors the guest (naṣb) with hospitality (jarr)."</p>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;"><b>وَهَذَا</b> (rafʿ) <b>يُكْرِمُ سِيبَوَيْهِ</b> (naṣb) <b>بِالَّذِي</b> (jarr) يُحِبُّ</p>
+    <p style="margin:0; font-style:italic;">"And this one (rafʿ) honors Sibawayh (naṣb) with the one he loves (jarr)."</p>
+  </div>
+  <p class="lead">The first example uses fully muʿrab nouns; the second uses mabni nouns (هَذَا and الَّذِي) — yet in both, the same three rulings apply.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">3</span>Present-Tense Verbs: Rafʿ, Naṣb, or Jazm — Never Jarr</h2>
+  <p class="lead">Every present-tense verb — muʿrab or mabni — can only ever carry rafʿ, naṣb, or jazm. Jarr never touches a verb.</p>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;"><b>أَجْتَهِدُ</b> (rafʿ) <b>وَلَمْ أُهْمِلْ</b> (jazm) <b>وَلَنْ أُهْمِلَ</b> (naṣb)</p>
+    <p style="margin:0; font-style:italic;">"I strive (rafʿ), and I have not been negligent (jazm), and I will not be negligent (naṣb)."</p>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;"><b>وَالطَّالِبَاتُ يَجْتَهِدْنَ</b> (rafʿ) <b>وَلَمْ يُهْمِلْنَ</b> (jazm) <b>وَلَنْ يُهْمِلْنَ</b> (naṣb)</p>
+    <p style="margin:0; font-style:italic;">"And the female students strive (rafʿ), and they have not been negligent (jazm), and they will not be negligent (naṣb)."</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="note-box">
+    <p class="note-title">Particles, the Past Tense, and the Imperative — No Ruling at All</p>
+    <p>These three take <b>no i'rab ruling whatsoever</b> — no rafʿ, no naṣb, no jarr, no jazm. When you parse one, you simply say: <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span> — "it has no locus in i'rab."</p>
+  </div>
+</div>
+`,
+`<div class="hero">
+  <p class="hero-eyebrow">فَصْلٌ فِي خَطِّ الْإِعْرَابِ</p>
+  <h1 class="en-title">The Line of I'rab</h1>
+  <p>Picture every word in Arabic sorted by a single dividing line: on one side sit words that never take an i'rab ruling; on the other, words that always must.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">1</span>What the Line Separates</h2>
+  <div class="def-grid">
+    <div class="def-card mabni">
+      <h3>Before the Line</h3>
+      <p>Particles, the past-tense verb, and the imperative verb. These never take an i'rab ruling — we always say <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span>.</p>
+    </div>
+    <div class="def-card murab">
+      <h3>After the Line</h3>
+      <p>Nouns and present-tense verbs. These always carry one of the four rulings you just learned — rafʿ, naṣb, jarr, or jazm.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">2</span>Parsing a Word "Before the Line"</h2>
+  <p class="lead">Since these words never change, parsing them always follows the same three steps:</p>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">1</span>
+      <div class="srbody">State its <b>type</b>.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">2</span>
+      <div class="srbody">State the <b>vowel it's built on</b> (its mabni marker).</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">3</span>
+      <div class="srbody">State its i'rab ruling — which is always <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span>, "no locus in i'rab."</div>
+    </div>
+  </div>
+  <div class="note-box">
+    <p class="note-title">Example — «هَلْ ذَهَبَ؟»، «اذْهَبْ»</p>
+    <p style="margin:0 0 6px;"><b>هَلْ:</b> interrogative particle, mabni on sukūn, no locus in i'rab.</p>
+    <p style="margin:0 0 6px;"><b>ذَهَبَ:</b> past-tense verb, mabni on fatḥa, no locus in i'rab.</p>
+    <p style="margin:0;"><b>اذْهَبْ:</b> imperative verb, mabni on sukūn, no locus in i'rab.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">3</span>Parsing a Word "After the Line"</h2>
+  <p class="lead">Nouns and present-tense verbs need three different steps:</p>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">1</span>
+      <div class="srbody">For a present-tense verb, state its <b>type</b>. For a noun, state its <b>role in the sentence</b> (subject, object, and so on).</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">2</span>
+      <div class="srbody">State its <b>i'rab ruling</b>.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">3</span>
+      <div class="srbody">State its <b>marker</b> (the vowel, or — for a mabni word — what it's built on).</div>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;">If the word is <b>muʿrab</b>, we say — according to its ruling:</p>
+    <ul>
+      <li><b>marfūʿ</b>, and its rafʿ marker is <b>ḍamma</b></li>
+      <li>or <b>manṣūb</b>, and its naṣb marker is <b>fatḥa</b></li>
+      <li>or <b>majrūr</b>, and its jarr marker is <b>kasra</b></li>
+      <li>or <b>majzūm</b>, and its jazm marker is <b>sukūn</b></li>
+    </ul>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;">If the word is <b>mabni</b>, we say — according to its ruling:</p>
+    <ul>
+      <li>in the position of <b>rafʿ</b>, mabni on such-and-such</li>
+      <li>or in the position of <b>naṣb</b>, mabni on such-and-such</li>
+      <li>or in the position of <b>jarr</b>, mabni on such-and-such</li>
+      <li>or in the position of <b>jazm</b>, mabni on such-and-such</li>
+    </ul>
+  </div>
+  <p class="lead">Whether muʿrab or mabni, every noun and every present-tense verb must have its i'rab ruling identified when you parse it.</p>
+
+  <div class="note-box">
+    <p class="note-title">Example (muʿrab) — «يَنْصُرُ (رفع) الْمُسْلِمُ (رفع) الْحَقَّ (نصب)»</p>
+    <p style="margin:0 0 6px;"><b>يَنْصُرُ:</b> present-tense verb, marfūʿ, its rafʿ marker is ḍamma.</p>
+    <p style="margin:0 0 6px;"><b>الْمُسْلِمُ:</b> subject (fāʿil), marfūʿ, its rafʿ marker is ḍamma.</p>
+    <p style="margin:0;"><b>الْحَقَّ:</b> object (mafʿūl bih), manṣūb, its naṣb marker is fatḥa.</p>
+  </div>
+
+  <div class="note-box">
+    <p class="note-title">Example (mabni) — «هَؤُلَاءِ (رفع) يُكْرِمْنَ (رفع) هَذَا (نصب)»</p>
+    <p style="margin:0 0 6px;"><b>هَؤُلَاءِ:</b> subject (mubtadaʾ), in the position of rafʿ, mabni on kasr.</p>
+    <p style="margin:0 0 6px;"><b>يُكْرِمْنَ:</b> present-tense verb, in the position of rafʿ, mabni on sukūn because a nūn of the feminine plural is attached to it.</p>
+    <p style="margin:0 0 6px;"><b>نُون النِّسْوَة</b> (the feminine-plural nūn): subject (fāʿil), in the position of rafʿ, mabni on fatḥa — and the sentence <span class="term-pair">يُكْرِمْنَ</span> is the predicate (khabar) of the mubtadaʾ, in the position of rafʿ.</p>
+    <p style="margin:0;"><b>هَذَا:</b> object (mafʿūl bih), in the position of naṣb, mabni on sukūn.</p>
+  </div>
 </div>
 `
 ];
 
 var LESSONS_W5_AR = [
 `<div class="hero">
-  <h1>الأسبوع الخامس — قريباً</h1>
-  <p>درس هذا الأسبوع قيد الإعداد، وسيُضاف قريباً. تابعونا!</p>
+  <h1>الْأَحْكَامُ الْإِعْرَابِيَّةُ</h1>
+  <p>بعدما تعلّمتَ التفريق بين المعرَب والمبني، حان الوقت لنتعرّف على الأحكام الإعرابية نفسها — الرفع والنصب والجر والجزم — ولنعرف بالضبط أيَّ الكلمات يدخلها كلُّ حكم منها.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">١</span>الأحكام الإعرابية الأربعة</h2>
+  <div class="rule-box">
+    <p style="margin:0;">الأحكام الإعرابية أربعة، وهي:</p>
+    <ul>
+      <li><b>الرَّفْعُ</b></li>
+      <li><b>النَّصْبُ</b></li>
+      <li><b>الْجَرُّ</b></li>
+      <li><b>الْجَزْمُ</b></li>
+    </ul>
+  </div>
+  <div class="note-box">
+    <p class="note-title">لا تدخل على كل الكلمات</p>
+    <p>هذه الأحكام الأربعة لا تدخل إلا على <b>الأسماء</b> و<b>الأفعال المضارعة</b> فقط، ولا تدخل أبداً على الحروف ولا الفعل الماضي ولا فعل الأمر.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٢</span>الأسماء: رفعٌ أو نصبٌ أو جرٌّ — لا جزمَ أبداً</h2>
+  <p class="lead">كل اسم — معرَباً كان أو مبنياً — لا يدخله إلا الرفع أو النصب أو الجر. أما الجزم فلا يدخل الأسماء أبداً.</p>
+  <div class="rule-box">
+    <p style="margin:0;">مُحَمَّدٌ (رفع) يُكْرِمُ الضَّيْفَ (نصب) بِحَفَاوَةٍ (جر).</p>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">وَهَذَا (رفع) يُكْرِمُ سِيبَوَيْهِ (نصب) بِالَّذِي (جر) يُحِبُّ.</p>
+  </div>
+  <p class="lead">المثال الأول أسماؤه معربة، والثاني فيه اسمان مبنيان (هذا والذي) — ومع ذلك دخلتهما الأحكام الثلاثة نفسها.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٣</span>الأفعال المضارعة: رفعٌ أو نصبٌ أو جزمٌ — لا جرَّ أبداً</h2>
+  <p class="lead">كل فعل مضارع — معرباً كان أو مبنياً — لا يدخله إلا الرفع أو النصب أو الجزم. أما الجر فلا يدخل الأفعال أبداً.</p>
+  <div class="rule-box">
+    <p style="margin:0;">أَجْتَهِدُ (رفع) وَلَمْ أُهْمِلْ (جزم) وَلَنْ أُهْمِلَ (نصب).</p>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0;">وَالطَّالِبَاتُ يَجْتَهِدْنَ (رفع) وَلَمْ يُهْمِلْنَ (جزم) وَلَنْ يُهْمِلْنَ (نصب).</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="note-box">
+    <p class="note-title">الحروف والماضي والأمر — لا حكم لها أبداً</p>
+    <p>هذه الأنواع الثلاثة <b>لا يدخلها أي حكم إعرابي</b> — لا رفع ولا نصب ولا جر ولا جزم. وعند إعرابها يُقال: <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span>.</p>
+  </div>
+</div>
+`,
+`<div class="hero">
+  <h1>خَطُّ الْإِعْرَابِ</h1>
+  <p>تخيَّل كل كلمة في العربية موزَّعة على جانبَي خطٍّ واحد: في جانبٍ الكلماتُ التي لا يدخلها حكمٌ إعرابي أبداً، وفي الجانب الآخر الكلماتُ التي لا بد أن يدخلها حكمٌ إعرابي دائماً.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">١</span>ما الذي يفصله الخط؟</h2>
+  <div class="def-grid">
+    <div class="def-card mabni">
+      <h3>قبل الخط</h3>
+      <p>الحروف، والفعل الماضي، وفعل الأمر. هذه لا يدخلها حكم إعرابي أبداً — ويُقال فيها دائماً: <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span>.</p>
+    </div>
+    <div class="def-card murab">
+      <h3>بعد الخط</h3>
+      <p>الأسماء والأفعال المضارعة. هذه يدخلها دائماً أحد الأحكام الأربعة التي تعلّمتَها للتوّ: الرفع أو النصب أو الجر أو الجزم.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٢</span>إعراب الكلمة "قبل الخط"</h2>
+  <p class="lead">بما أن هذه الكلمات ثابتة لا تتغيّر، فإعرابها يسير دائماً على ثلاثة أركان:</p>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">١</span>
+      <div class="srbody">بيانُ <b>نوعها</b>.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">٢</span>
+      <div class="srbody">بيانُ <b>حركة بنائها</b>.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">٣</span>
+      <div class="srbody">بيانُ حكمها الإعرابي — وهو دائماً: <span class="term-pair">لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ</span>.</div>
+    </div>
+  </div>
+  <div class="note-box">
+    <p class="note-title">مثالها: «هَلْ ذَهَبَ؟»، «اذْهَبْ»</p>
+    <p style="margin:0 0 6px;"><b>هَلْ:</b> حرف استفهام، مبني على السكون، لا محل له من الإعراب.</p>
+    <p style="margin:0 0 6px;"><b>ذَهَبَ:</b> فعل ماضٍ، مبني على الفتح، لا محل له من الإعراب.</p>
+    <p style="margin:0;"><b>اذْهَبْ:</b> فعل أمر، مبني على السكون، لا محل له من الإعراب.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">٣</span>إعراب الكلمة "بعد الخط"</h2>
+  <p class="lead">الأسماء والأفعال المضارعة تحتاج ثلاثة أركان مختلفة:</p>
+  <div class="sub-rules">
+    <div class="sub-rule">
+      <span class="srnum">١</span>
+      <div class="srbody">بيانُ نوع المضارع، أو بيانُ موقع الاسم من الجملة.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">٢</span>
+      <div class="srbody">بيانُ <b>الحكم الإعرابي</b>.</div>
+    </div>
+    <div class="sub-rule">
+      <span class="srnum">٣</span>
+      <div class="srbody">بيانُ <b>الحركة</b> (أو ما بُني عليه إن كانت مبنية).</div>
+    </div>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;">فإن كان الاسم أو المضارع <b>معرَباً</b> قيل — بحسب حكمه الإعرابي:</p>
+    <ul>
+      <li><b>مرفوعٌ</b>، وعلامة رفعه الضمة</li>
+      <li>أو <b>منصوبٌ</b>، وعلامة نصبه الفتحة</li>
+      <li>أو <b>مجرورٌ</b>، وعلامة جره الكسرة</li>
+      <li>أو <b>مجزومٌ</b>، وعلامة جزمه السكون</li>
+    </ul>
+  </div>
+  <div class="rule-box">
+    <p style="margin:0 0 8px;">وإن كانا <b>مبنيَّين</b> قيل — بحسب الحكم الإعرابي:</p>
+    <ul>
+      <li>في محل <b>رفعٍ</b>، مبني على كذا</li>
+      <li>أو في محل <b>نصبٍ</b>، مبني على كذا</li>
+      <li>أو في محل <b>جرٍّ</b>، مبني على كذا</li>
+      <li>أو في محل <b>جزمٍ</b>، مبني على كذا</li>
+    </ul>
+  </div>
+  <p class="lead">فالأسماء والأفعال المضارعة لا بد من معرفة حكمها الإعرابي عند إعرابها.</p>
+
+  <div class="note-box">
+    <p class="note-title">مثالها في المعرَب: «يَنْصُرُ (رفع) الْمُسْلِمُ (رفع) الْحَقَّ (نصب)»</p>
+    <p style="margin:0 0 6px;"><b>يَنْصُرُ:</b> فعل مضارع، مرفوع، وعلامة رفعه الضمة.</p>
+    <p style="margin:0 0 6px;"><b>الْمُسْلِمُ:</b> فاعل، مرفوع، وعلامة رفعه الضمة.</p>
+    <p style="margin:0;"><b>الْحَقَّ:</b> مفعول به، منصوب، وعلامة نصبه الفتحة.</p>
+  </div>
+
+  <div class="note-box">
+    <p class="note-title">ومثالها في المبني: «هَؤُلَاءِ (رفع) يُكْرِمْنَ (رفع) هَذَا (نصب)»</p>
+    <p style="margin:0 0 6px;"><b>هَؤُلَاءِ:</b> مبتدأ، في محل رفع، مبني على الكسر.</p>
+    <p style="margin:0 0 6px;"><b>يُكْرِمْنَ:</b> فعل مضارع، في محل رفع، مبني على السكون؛ لاتصاله بنون النسوة.</p>
+    <p style="margin:0 0 6px;"><b>نون النسوة:</b> فاعل، في محل رفع، مبني على الفتح. وجملة (يُكْرِمْنَ) خبر المبتدأ، في محل رفع.</p>
+    <p style="margin:0;"><b>هَذَا:</b> مفعول به، في محل نصب، مبني على السكون.</p>
+  </div>
 </div>
 `
 ];
@@ -2333,6 +2626,7 @@ var STEP_DEFS = [
 
   // ===== Week 5 (placeholder — content to be added) =====
   { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 0, weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
+  { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 1 },
 
   { type: 'quiz', enQ: 'finalQuizEN', arQ: 'finalQuizAR', immediate: false,
     titleEn: 'Test Your Knowledge', titleAr: 'اختبر معلوماتك',
