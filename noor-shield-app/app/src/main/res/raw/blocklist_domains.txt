@@ -1,0 +1,31 @@
+# Starter domain blocklist for BlockVpnService.
+#
+# This is a small seed list only, meant to prove the filtering pipeline end
+# to end. It is NOT comprehensive and will NOT catch most adult content on
+# its own. For real protection, replace this file (or merge into it) with a
+# maintained, regularly-updated list such as:
+#   - The Blocklist Project: https://github.com/blocklistproject/Lists (porn.txt)
+#   - StevenBlack/hosts, "fakenews-gambling-porn-social" variant
+#   - A commercial category feed (e.g. from a DNS filtering provider)
+#
+# Best practice: fetch one of those lists on a schedule (e.g. weekly, via a
+# WorkManager job over HTTPS) and regenerate this resource, or load it from
+# app-private storage instead of a compiled raw resource so it can update
+# without a Play Store release. One domain per line; "#" starts a comment.
+# Subdomains of any listed domain are blocked automatically.
+
+pornhub.com
+xvideos.com
+xnxx.com
+xhamster.com
+redtube.com
+youporn.com
+onlyfans.com
+brazzers.com
+chaturbate.com
+livejasmin.com
+spankbang.com
+tube8.com
+motherless.com
+thumbzilla.com
+sex.com
