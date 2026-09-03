@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Noor Shield</string>
+
+    <string name="filter_channel_name">Content filter status</string>
+    <string name="filter_notification_title">Noor Shield is protecting this device</string>
+    <string name="filter_notification_body">Blocking known adult-content domains network-wide</string>
+
+    <string name="reminder_channel_name">Hadith reminders</string>
+    <string name="reminder_notification_title">A reminder</string>
+
+    <string name="screen_guard_description">Watches the screen for explicit images and covers them with a
+        reminder. Noor Shield does not record, store, or transmit anything it sees — detection happens
+        entirely on this device.</string>
+
+    <string name="overlay_title">Lower your gaze — for your own sake</string>
+</resources>
