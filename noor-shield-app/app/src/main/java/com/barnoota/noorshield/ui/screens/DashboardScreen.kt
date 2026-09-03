@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.barnoota.noorshield.filter.BlockVpnService
 import com.barnoota.noorshield.settings.NoorShieldPreferences
 import com.barnoota.noorshield.ui.PermissionStatus
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 private data class ProtectionStep(val title: String, val detail: String, val granted: Boolean, val action: () -> Unit)
@@ -50,7 +51,9 @@ fun DashboardScreen() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    var filterEnabled by remember { mutableStateOf(false) }
+    // Protection is on by default (see NoorShieldPreferences) — the only thing that genuinely
+    // needs the user's hand is Android's own VPN consent dialog, which no app can skip.
+    var filterEnabled by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         NoorShieldPreferences.observeFilterEnabled(context).collect { filterEnabled = it }
     }
@@ -82,6 +85,25 @@ fun DashboardScreen() {
         }
     }
 
+    // Auto-trigger Android's VPN consent dialog once, the first time this screen is ever shown,
+    // so a fresh install starts protecting the device without the user having to find a switch.
+    // We only do this once (tracked in DataStore) so declining it isn't a nag on every open —
+    // the setup checklist below stays available to finish it later.
+    LaunchedEffect(Unit) {
+        val alreadyPrompted = NoorShieldPreferences.observeVpnConsentPrompted(context).first()
+        if (!alreadyPrompted && !PermissionStatus.isVpnPrepared(context)) {
+            NoorShieldPreferences.setVpnConsentPrompted(context, true)
+            val intent = VpnService.prepare(context)
+            if (intent != null) vpnLauncher.launch(intent)
+        }
+    }
+
+    // Once the permission is actually granted, make sure the service is actually running —
+    // covers both the auto-prompt above and the user granting it later from the checklist.
+    LaunchedEffect(filterEnabled, vpnPrepared) {
+        if (filterEnabled && vpnPrepared) BlockVpnService.start(context)
+    }
+
     LazyColumn(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -91,7 +113,13 @@ fun DashboardScreen() {
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Text(if (filterEnabled) "Active" else "Off")
+                        Text(
+                            when {
+                                filterEnabled && vpnPrepared -> "Active"
+                                filterEnabled -> "Waiting on VPN permission below"
+                                else -> "Off"
+                            }
+                        )
                         Switch(
                             checked = filterEnabled,
                             onCheckedChange = { checked ->
