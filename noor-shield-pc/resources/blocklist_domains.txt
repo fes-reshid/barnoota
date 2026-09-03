@@ -1,0 +1,79 @@
+# Seed domain blocklist for Noor Shield PC.
+#
+# Kept deliberately identical to the Android app's copy at
+# noor-shield-app/app/src/main/res/raw/blocklist_domains.txt — if you edit one,
+# edit both, so a family running Noor Shield on the phone and the PC gets the
+# same answer for the same domain.
+#
+# This is a curated seed list, NOT an exhaustive one. There is no practical way
+# for an app to automatically discover every adult site; new ones appear
+# constantly. For real coverage, merge in a maintained feed:
+#   - The Blocklist Project: https://github.com/blocklistproject/Lists (porn.txt)
+#   - StevenBlack/hosts, "fakenews-gambling-porn-social" variant
+#   - A commercial category feed from a DNS filtering provider
+#
+# One domain per line; "#" starts a comment. Subdomains of any listed domain
+# are blocked automatically. The parent can add more from inside the app.
+
+# Tube / streaming
+pornhub.com
+xvideos.com
+xvideos2.com
+xnxx.com
+xhamster.com
+xhamster2.com
+redtube.com
+youporn.com
+tube8.com
+beeg.com
+beeg.porn
+drtuber.com
+eporner.com
+gotporn.com
+keezmovies.com
+porndig.com
+porntrex.com
+porn300.com
+tnaflix.com
+txxx.com
+vporn.com
+xtube.com
+xxxbunker.com
+tubegalore.com
+hqporner.com
+4tube.com
+spankbang.com
+motherless.com
+thumbzilla.com
+sex.com
+
+# Studios / subscription / creator platforms
+onlyfans.com
+brazzers.com
+bangbros.com
+realitykings.com
+mofos.com
+digitalplayground.com
+naughtyamerica.com
+teamskeet.com
+
+# Cam / live
+chaturbate.com
+livejasmin.com
+stripchat.com
+bongacams.com
+myfreecams.com
+cam4.com
+camsoda.com
+imlive.com
+
+# Erotica / forums / dating-for-affairs
+literotica.com
+adultfriendfinder.com
+
+# Hentai / adult anime & manga
+hentaihaven.xxx
+nhentai.net
+rule34.xxx
+e-hentai.org
+luscious.net

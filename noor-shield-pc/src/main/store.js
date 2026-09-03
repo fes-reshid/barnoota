@@ -1,0 +1,68 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Small JSON store in Electron's userData directory. Everything Noor Shield
+ * keeps — the parent's password hash, custom blocked domains, the tawbah
+ * journal — lives here on the machine. Nothing is uploaded anywhere.
+ */
+
+const DEFAULTS = {
+  parent: null, // { salt, hash, recoverySalt, recoveryHash, createdAt }
+  filterEnabled: true, // protection is on by default, as on Android
+  customDomains: [], // [{ domain, addedAt }]
+  journal: [], // [{ id, timestamp, note, istighfarCount }]
+  previousDns: null, // saved adapter DNS config, for restore
+  reminderIntervalHours: 4,
+  failedUnlocks: { count: 0, lockedUntil: 0 },
+};
+
+class Store {
+  constructor(userDataPath) {
+    this.file = path.join(userDataPath, 'noor-shield.json');
+    this.data = { ...DEFAULTS };
+    this.load();
+  }
+
+  load() {
+    try {
+      const raw = fs.readFileSync(this.file, 'utf8');
+      this.data = { ...DEFAULTS, ...JSON.parse(raw) };
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        console.error(`[store] could not read ${this.file}: ${err.message}`);
+      }
+      this.data = { ...DEFAULTS };
+    }
+  }
+
+  save() {
+    try {
+      fs.mkdirSync(path.dirname(this.file), { recursive: true });
+      // Write-then-rename so a crash mid-write can't truncate the real file.
+      const tmp = `${this.file}.tmp`;
+      fs.writeFileSync(tmp, JSON.stringify(this.data, null, 2), 'utf8');
+      fs.renameSync(tmp, this.file);
+    } catch (err) {
+      console.error(`[store] could not write ${this.file}: ${err.message}`);
+    }
+  }
+
+  get(key) {
+    return this.data[key];
+  }
+
+  set(key, value) {
+    this.data[key] = value;
+    this.save();
+  }
+
+  update(patch) {
+    Object.assign(this.data, patch);
+    this.save();
+  }
+}
+
+module.exports = { Store, DEFAULTS };

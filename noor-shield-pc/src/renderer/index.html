@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:;">
+  <title>Noor Shield</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- First run: the parent sets the password before anything else -->
+  <div class="gate" id="setup-gate" hidden>
+    <div class="gate-card">
+      <h1>Set the parent password</h1>
+      <p>
+        This password protects Noor Shield's settings. Without it, the filter can't be turned off,
+        and blocked sites can't be removed. Anyone using this PC can still see the status,
+        the Hadith reminders, and their own tawbah journal.
+      </p>
+      <label for="setup-password">Parent password</label>
+      <input type="password" id="setup-password" autocomplete="new-password" placeholder="At least 6 characters">
+      <label for="setup-confirm">Confirm password</label>
+      <input type="password" id="setup-confirm" autocomplete="new-password">
+      <p class="error" id="setup-error" hidden></p>
+      <button class="btn primary" id="setup-submit">Set password and start protecting</button>
+    </div>
+  </div>
+
+  <!-- Shown once, immediately after setup -->
+  <div class="gate" id="recovery-gate" hidden>
+    <div class="gate-card">
+      <h1>Write this recovery key down</h1>
+      <p>
+        This is the only time it will be shown. If the parent password is ever forgotten, this key
+        is the only way back in without reinstalling. Keep it somewhere a child won't find it.
+      </p>
+      <div class="recovery-key" id="recovery-key">—</div>
+      <label class="checkline">
+        <input type="checkbox" id="recovery-ack">
+        <span>I have written down the recovery key</span>
+      </label>
+      <button class="btn primary" id="recovery-continue" disabled>Continue</button>
+    </div>
+  </div>
+
+  <!-- Parent login, shown on demand when a locked action is attempted -->
+  <div class="gate" id="unlock-gate" hidden>
+    <div class="gate-card">
+      <h1>Parent password</h1>
+      <p id="unlock-reason">Enter the parent password to change this setting.</p>
+      <label for="unlock-password">Password</label>
+      <input type="password" id="unlock-password" autocomplete="current-password">
+      <p class="error" id="unlock-error" hidden></p>
+      <div class="gate-actions">
+        <button class="btn primary" id="unlock-submit">Unlock</button>
+        <button class="btn ghost" id="unlock-cancel">Cancel</button>
+      </div>
+      <button class="linkbtn" id="unlock-forgot">Forgot password? Use recovery key</button>
+
+      <div id="recover-form" hidden>
+        <label for="recover-key">Recovery key</label>
+        <input type="text" id="recover-key" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off">
+        <label for="recover-newpass">New parent password</label>
+        <input type="password" id="recover-newpass" autocomplete="new-password">
+        <button class="btn primary" id="recover-submit">Set new password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main application shell -->
+  <div class="shell" id="shell" hidden>
+    <aside class="sidebar">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12,1L3,5v6c0,5.55 3.84,10.74 9,12c5.16,-1.26 9,-6.45 9,-12V5L12,1zM12,11.99h7c-0.53,4.12 -3.28,7.79 -7,8.94V12H5V6.3l7,-3.11v8.8z"/></svg>
+        <span>Noor Shield</span>
+      </div>
+
+      <nav id="nav">
+        <button class="navitem active" data-view="dashboard">Protection</button>
+        <button class="navitem" data-view="blocklist">Blocked sites</button>
+        <button class="navitem" data-view="hadith">Hadith</button>
+        <button class="navitem" data-view="journal">Tawbah journal</button>
+        <button class="navitem" data-view="settings">Parent settings</button>
+      </nav>
+
+      <div class="parent-state" id="parent-state">
+        <span class="lockdot" id="lockdot"></span>
+        <span id="parent-state-label">Locked</span>
+        <button class="linkbtn" id="parent-toggle">Unlock</button>
+      </div>
+    </aside>
+
+    <main class="content">
+
+      <!-- Protection -->
+      <section class="view active" data-view="dashboard">
+        <header class="viewhead">
+          <h1>Protection</h1>
+          <p class="sub">Filtering every app on this PC through a local resolver.</p>
+        </header>
+
+        <div class="statusrow">
+          <div class="panel statusmain" id="status-panel">
+            <div class="statuspill" id="status-pill">Checking…</div>
+            <p id="status-detail">Reading this PC's DNS configuration…</p>
+            <button class="btn primary" id="filter-toggle" disabled>…</button>
+          </div>
+
+          <div class="panel metrics">
+            <div class="metric"><span class="mvalue" id="stat-blocked">0</span><span class="mlabel">Blocked today</span></div>
+            <div class="metric"><span class="mvalue" id="stat-queries">0</span><span class="mlabel">Lookups seen</span></div>
+            <div class="metric"><span class="mvalue" id="stat-domains">0</span><span class="mlabel">Domains on list</span></div>
+          </div>
+        </div>
+
+        <div class="panel warnpanel" id="admin-warning" hidden>
+          <h3>Not running as Administrator</h3>
+          <p>
+            Changing this PC's DNS settings needs administrator rights. Close Noor Shield, right-click
+            it, and choose <b>Run as administrator</b> — otherwise the filter can't be switched on.
+          </p>
+        </div>
+
+        <div class="panel notepanel">
+          <h3>What this protects, honestly</h3>
+          <ul>
+            <li>Every browser and app on this PC resolves through Noor Shield, so blocking isn't limited to one browser.</li>
+            <li>Protection is active only while Noor Shield is running. Closing the window keeps it running in the notification area; quitting needs the parent password.</li>
+            <li>A user with their own administrator account can still change Windows' DNS back. This raises the barrier; it isn't an unbreakable lock.</li>
+            <li>Sites reached by raw IP address, or through a browser using its own encrypted DNS, can bypass domain filtering.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Blocked sites -->
+      <section class="view" data-view="blocklist">
+        <header class="viewhead">
+          <h1>Blocked sites</h1>
+          <p class="sub">The built-in list plus anything the parent adds. Subdomains are covered automatically.</p>
+        </header>
+
+        <div class="panel">
+          <h3>Add a site</h3>
+          <div class="inputrow">
+            <input type="text" id="block-input" placeholder="example.com" autocomplete="off">
+            <button class="btn primary" id="block-add">Add</button>
+          </div>
+          <p class="hint" id="block-message"></p>
+          <p class="hint">Enter a domain — a full address like <code>https://www.example.com/page</code> works too.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Added by the parent (<span id="custom-count">0</span>)</h3>
+          <div id="custom-list" class="domainlist"></div>
+        </div>
+
+        <div class="panel notepanel">
+          <h3>Built-in list</h3>
+          <p>
+            <span id="seed-count">0</span> domains ship with the app, kept identical to the Android version.
+            This is a curated seed list, not an exhaustive one — no app can automatically find every
+            adult site. For broader coverage, merge in a maintained feed such as The Blocklist Project.
+          </p>
+        </div>
+      </section>
+
+      <!-- Hadith -->
+      <section class="view" data-view="hadith">
+        <header class="viewhead">
+          <h1>Hadith</h1>
+          <p class="sub">Reminders on lowering the gaze, tawbah, istighfar, and the Akhirah.</p>
+        </header>
+        <div id="hadith-list"></div>
+        <div class="panel notepanel">
+          <h3>On these translations</h3>
+          <p>
+            Common English renderings used for reminder purposes, with the source collection and
+            grading noted. Verify against sunnah.com or a qualified scholar before relying on them
+            beyond in-app reminders.
+          </p>
+        </div>
+      </section>
+
+      <!-- Journal -->
+      <section class="view" data-view="journal">
+        <header class="viewhead">
+          <h1>Tawbah journal</h1>
+          <p class="sub">Private to this PC. Never uploaded, and not visible to anyone remotely.</p>
+        </header>
+
+        <div class="statusrow">
+          <div class="panel">
+            <h3>Log a moment of tawbah</h3>
+            <label for="journal-note">Note (optional)</label>
+            <input type="text" id="journal-note" placeholder="What happened, in your own words" autocomplete="off">
+            <label for="journal-count">Istighfar count</label>
+            <input type="number" id="journal-count" value="33" min="0" max="100000">
+            <button class="btn primary" id="journal-add">Log tawbah</button>
+            <p class="hint">This does not need the parent password — it is between you and Allah.</p>
+          </div>
+          <div class="panel metrics single">
+            <div class="metric">
+              <span class="mvalue" id="journal-total">0</span>
+              <span class="mlabel">Total istighfar logged</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Recent entries</h3>
+          <div id="journal-list" class="journallist"></div>
+        </div>
+      </section>
+
+      <!-- Parent settings -->
+      <section class="view" data-view="settings">
+        <header class="viewhead">
+          <h1>Parent settings</h1>
+          <p class="sub">Everything here needs the parent password.</p>
+        </header>
+
+        <div class="panel lockedpanel" id="settings-locked">
+          <h3>Locked</h3>
+          <p>Unlock with the parent password to change these settings.</p>
+          <button class="btn primary" id="settings-unlock">Unlock</button>
+        </div>
+
+        <div id="settings-body" hidden>
+          <div class="panel">
+            <h3>Reminder frequency</h3>
+            <div class="inputrow">
+              <input type="number" id="reminder-hours" min="1" max="24" value="4">
+              <button class="btn primary" id="reminder-save">Save</button>
+            </div>
+            <p class="hint" id="reminder-message">Hours between Hadith reminder notifications (1–24).</p>
+          </div>
+
+          <div class="panel">
+            <h3>Change parent password</h3>
+            <label for="pw-current">Current password</label>
+            <input type="password" id="pw-current" autocomplete="current-password">
+            <label for="pw-new">New password</label>
+            <input type="password" id="pw-new" autocomplete="new-password">
+            <button class="btn primary" id="pw-save">Change password</button>
+            <p class="hint" id="pw-message"></p>
+          </div>
+
+          <div class="panel dangerpanel">
+            <h3>Quit Noor Shield</h3>
+            <p>
+              Quitting stops the filter and restores Windows' DNS settings, leaving this PC
+              unprotected until Noor Shield is started again.
+            </p>
+            <button class="btn danger" id="quit-app">Turn off protection and quit</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

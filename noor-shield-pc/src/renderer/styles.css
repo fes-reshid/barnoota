@@ -1,0 +1,282 @@
+/* Noor Shield desktop — same palette as the Android app's Theme.kt. */
+
+:root {
+  --sand: #f6f5f0;
+  --surface: #ffffff;
+  --surface-2: #edeae1;
+  --ink: #16241d;
+  --ink-soft: #4b5a52;
+  --ink-faint: #8a968e;
+  --green: #1b5e4f;
+  --green-deep: #0a1a14;
+  --green-dim: #2a6f5e;
+  --gold: #c9a24b;
+  --good: #2e7d32;
+  --warn: #b26a00;
+  --danger: #a3352b;
+  --line: #ddd8cb;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--sand);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+}
+
+h1, h2, h3 { margin: 0; }
+p { margin: 0; }
+[hidden] { display: none !important; }
+
+/* ---------- gates (setup / recovery / unlock) ---------- */
+
+.gate {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 26, 20, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 24px;
+}
+
+.gate-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 28px 30px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 24px 60px -20px rgba(10, 26, 20, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gate-card h1 { font-size: 1.25rem; }
+.gate-card p { color: var(--ink-soft); line-height: 1.55; }
+.gate-actions { display: flex; gap: 10px; }
+
+.recovery-key {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  background: var(--surface-2);
+  border: 1px dashed var(--green-dim);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 6px 0;
+  user-select: all;
+}
+
+.checkline { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); }
+.checkline input { width: auto; margin: 0; }
+
+/* ---------- shell ---------- */
+
+.shell { display: flex; height: 100%; }
+
+.sidebar {
+  width: 232px;
+  flex: none;
+  background: var(--green-deep);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px 14px;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 20px; }
+.brand svg { width: 22px; height: 22px; fill: var(--gold); }
+.brand span { font-size: 1.05rem; font-weight: 600; letter-spacing: 0.01em; }
+
+nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+.navitem {
+  all: unset;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.92rem;
+}
+.navitem:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+.navitem.active { background: var(--green); color: #fff; font-weight: 600; }
+.navitem:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.parent-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+.lockdot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); flex: none; }
+.lockdot.unlocked { background: var(--good); }
+
+/* ---------- content ---------- */
+
+.content { flex: 1; overflow-y: auto; padding: 28px 32px 40px; }
+
+.view { display: none; flex-direction: column; gap: 16px; max-width: 900px; }
+.view.active { display: flex; }
+
+.viewhead h1 { font-size: 1.5rem; }
+.viewhead .sub { color: var(--ink-soft); margin-top: 4px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel h3 { font-size: 0.95rem; }
+.panel p, .panel li { color: var(--ink-soft); line-height: 1.6; }
+.panel ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+.notepanel { background: var(--surface-2); border-color: transparent; }
+.warnpanel { border-left: 4px solid var(--warn); }
+.dangerpanel { border-left: 4px solid var(--danger); }
+.lockedpanel { border-left: 4px solid var(--gold); }
+
+.statusrow { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .statusrow { grid-template-columns: 1fr; } }
+
+.statusmain { align-items: flex-start; }
+
+.statuspill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+}
+.statuspill.on { background: rgba(46, 125, 50, 0.14); color: var(--good); }
+.statuspill.off { background: rgba(178, 106, 0, 0.16); color: var(--warn); }
+
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.metrics.single { grid-template-columns: 1fr; }
+.metric { display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.mvalue { font-size: 1.5rem; font-weight: 600; color: var(--green); font-variant-numeric: tabular-nums; }
+.mlabel { font-size: 0.72rem; color: var(--ink-faint); }
+
+/* ---------- controls ---------- */
+
+label { font-size: 0.8rem; color: var(--ink-faint); }
+
+input[type="text"], input[type="password"], input[type="number"] {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  width: 100%;
+}
+input:focus-visible { outline: 2px solid var(--green-dim); outline-offset: 1px; }
+
+.inputrow { display: flex; gap: 8px; align-items: center; }
+.inputrow input { flex: 1; }
+
+.btn {
+  all: unset;
+  cursor: pointer;
+  text-align: center;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  align-self: flex-start;
+}
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.btn.primary { background: var(--green); color: #fff; }
+.btn.primary:disabled { background: var(--ink-faint); cursor: default; }
+.btn.ghost { border: 1px solid var(--line); color: var(--ink-soft); }
+.btn.danger { background: var(--danger); color: #fff; }
+
+.linkbtn {
+  all: unset;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+.linkbtn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.hint { font-size: 0.8rem; color: var(--ink-faint); }
+.error { color: var(--danger); font-size: 0.84rem; }
+.success { color: var(--good); font-size: 0.84rem; }
+
+code {
+  font-family: Consolas, "Courier New", monospace;
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* ---------- lists ---------- */
+
+.domainlist, .journallist { display: flex; flex-direction: column; }
+
+.domainrow, .journalrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--line);
+  gap: 12px;
+}
+.domainrow:last-child, .journalrow:last-child { border-bottom: none; }
+.domainrow span { font-family: Consolas, "Courier New", monospace; font-size: 0.88rem; }
+.journalrow .when { font-size: 0.86rem; font-weight: 500; }
+.journalrow .note { font-size: 0.8rem; color: var(--ink-faint); margin-top: 1px; }
+.journalrow .count {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.84rem;
+  color: var(--green-dim);
+  flex: none;
+}
+
+.empty { color: var(--ink-faint); font-size: 0.86rem; padding: 6px 2px; }
+
+/* ---------- hadith cards ---------- */
+
+.hadithcard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.hadithcard .tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gold);
+  background: rgba(201, 162, 75, 0.15);
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.hadithcard .text { line-height: 1.65; }
+.hadithcard .source {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  font-style: italic;
+}
