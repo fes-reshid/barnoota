@@ -50,5 +50,16 @@ contextBridge.exposeInMainWorld('noor', {
   // it can be running (or not) independently of whether this window is open.
   ensureService: () => ipcRenderer.invoke('app:ensureService'),
 
+  // Activity log: blocked attempts only (see README). Gated by the service.
+  listActivity: () => ipcRenderer.invoke('activity:list'),
+  clearActivity: () => ipcRenderer.invoke('activity:clear'),
+
+  // Email report: on-request only, no schedule. Gated by the shared parent
+  // session (checked against the service, since this process holds no
+  // password state of its own).
+  getEmailSettings: () => ipcRenderer.invoke('email:getSettings'),
+  saveEmailSettings: (settings) => ipcRenderer.invoke('email:saveSettings', settings),
+  sendEmailReport: () => ipcRenderer.invoke('email:sendReport'),
+
   openExternal: (url) => ipcRenderer.invoke('app:openExternal', { url }),
 });

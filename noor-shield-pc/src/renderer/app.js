@@ -63,6 +63,7 @@ $('nav').addEventListener('click', (event) => {
 
   if (view === 'blocklist') renderBlocklist();
   if (view === 'journal') renderJournal();
+  if (view === 'activity') renderActivity();
   if (view === 'settings') renderSettings();
 });
 
@@ -123,6 +124,7 @@ $('unlock-submit').addEventListener('click', async () => {
   if (retry) await retry();
   refreshStatus();
   renderSettings();
+  renderActivity();
 });
 
 $('unlock-password').addEventListener('keydown', (event) => {
@@ -403,6 +405,133 @@ async function renderJournal() {
 }
 
 /* ------------------------------------------------------------------ *
+ * Activity log view
+ * ------------------------------------------------------------------ */
+
+async function renderActivity() {
+  const status = await api.parentStatus();
+  const unlocked = !status.serviceUnreachable && (status.configured ? status.unlocked : true);
+  $('activity-locked').hidden = unlocked;
+  $('activity-body').hidden = !unlocked;
+  if (status.serviceUnreachable) {
+    $('activity-locked').querySelector('p').textContent =
+      'The protection service is not reachable. Reopen Noor Shield as Administrator.';
+    return;
+  }
+  if (!unlocked) return;
+
+  const activity = await api.listActivity();
+  const list = $('activity-list');
+  list.textContent = '';
+
+  if (activity.ok) {
+    $('activity-count').textContent = activity.totalCount;
+    if (activity.entries.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'empty';
+      empty.textContent = 'No blocked attempts recorded.';
+      list.appendChild(empty);
+    } else {
+      for (const entry of activity.entries.slice(0, 100)) {
+        const row = document.createElement('div');
+        row.className = 'journalrow';
+        const when = document.createElement('div');
+        when.className = 'when';
+        when.textContent = new Date(entry.timestampMs).toLocaleString();
+        const domain = document.createElement('div');
+        domain.className = 'count';
+        domain.textContent = entry.domain;
+        row.append(when, domain);
+        list.appendChild(row);
+      }
+      if (activity.totalCount > 100) {
+        const note = document.createElement('p');
+        note.className = 'hint';
+        note.textContent = `Showing the most recent 100 of ${activity.totalCount}.`;
+        list.appendChild(note);
+      }
+    }
+  }
+
+  const email = await api.getEmailSettings();
+  if (email.ok) {
+    $('email-host').value = email.host;
+    $('email-port').value = email.port;
+    $('email-secure').checked = email.secure;
+    $('email-user').value = email.user;
+    $('email-from').value = email.from;
+    $('email-recipient').value = email.recipient;
+    $('email-password-hint').textContent = email.hasPassword ? '(a password is saved)' : '(none saved yet)';
+    if (!email.secureStorageAvailable) {
+      $('email-save-message').textContent =
+        'This PC has no secure credential storage available — the SMTP password cannot be saved.';
+      $('email-save-message').className = 'error';
+    }
+  }
+}
+
+$('activity-unlock').addEventListener('click', () => {
+  showUnlock('Enter the parent password to view the activity log.', null);
+});
+
+$('activity-clear').addEventListener('click', async () => {
+  if (!confirm('Clear the activity log? This cannot be undone.')) return;
+  const result = await callGated(() => api.clearActivity(), 'Enter the parent password to clear the log.');
+  if (result && result.ok) renderActivity();
+});
+
+function collectEmailSettingsPayload() {
+  return {
+    host: $('email-host').value,
+    port: Number($('email-port').value) || 587,
+    secure: $('email-secure').checked,
+    user: $('email-user').value,
+    from: $('email-from').value,
+    recipient: $('email-recipient').value,
+    password: $('email-password').value,
+  };
+}
+
+$('email-save').addEventListener('click', async () => {
+  const message = $('email-save-message');
+  const result = await callGated(
+    () => api.saveEmailSettings(collectEmailSettingsPayload()),
+    'Enter the parent password to change email settings.'
+  );
+  if (!result) return;
+
+  message.textContent = result.ok ? 'Saved.' : result.error;
+  message.className = result.ok ? 'success' : 'error';
+  if (result.ok) $('email-password').value = '';
+  renderActivity();
+});
+
+$('email-send').addEventListener('click', async () => {
+  const message = $('email-send-message');
+  message.textContent = 'Sending…';
+  message.className = 'hint';
+
+  // The recipient field lives in this panel but is saved as part of the
+  // same settings object, so sending also persists whatever is currently typed.
+  const saveResult = await callGated(
+    () => api.saveEmailSettings(collectEmailSettingsPayload()),
+    'Enter the parent password to send a report.'
+  );
+  if (!saveResult) return;
+  if (!saveResult.ok) {
+    message.textContent = saveResult.error;
+    message.className = 'error';
+    return;
+  }
+
+  const result = await api.sendEmailReport();
+  message.textContent = result.ok
+    ? `Sent a report covering ${result.sentCount} blocked attempt(s).`
+    : result.error;
+  message.className = result.ok ? 'success' : 'error';
+});
+
+/* ------------------------------------------------------------------ *
  * Parent settings view
  * ------------------------------------------------------------------ */
 
@@ -500,6 +629,7 @@ async function boot() {
   await renderHadith();
   await renderBlocklist();
   await renderJournal();
+  await renderActivity();
   await renderSettings();
   await refreshStatus();
 

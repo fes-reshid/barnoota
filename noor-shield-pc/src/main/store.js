@@ -17,6 +17,10 @@ const DEFAULTS = {
   previousDns: null, // saved adapter DNS config, for restore
   reminderIntervalHours: 4,
   failedUnlocks: { count: 0, lockedUntil: 0 },
+  activityLog: [], // [{ id, domain, timestampMs }] — blocked attempts only; service-owned
+  emailSmtp: null, // { host, port, secure, user, from } — GUI-owned, password stored separately (encrypted)
+  emailSmtpPasswordEnc: null, // base64 ciphertext from Electron's safeStorage, or null
+  emailRecipient: null,
 };
 
 class Store {

@@ -4,6 +4,27 @@ const path = require('path');
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 
+// Bounds the log so a machine left running for months doesn't grow it
+// without limit. Oldest entries drop off first.
+const MAX_ACTIVITY_ENTRIES = 2000;
+
+/**
+ * Records one blocked attempt. Called from filterService.js's DnsProxy
+ * 'blocked' listener — kept here, not inline there, so the cap/shape logic
+ * has one home and is covered by the same tests as everything else in this
+ * file.
+ */
+function appendActivity(store, domain) {
+  const log = store.get('activityLog') || [];
+  log.unshift({
+    id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
+    domain,
+    timestampMs: Date.now(),
+  });
+  if (log.length > MAX_ACTIVITY_ENTRIES) log.length = MAX_ACTIVITY_ENTRIES;
+  store.set('activityLog', log);
+}
+
 /**
  * The RPC methods the always-on service exposes over the pipe (see
  * pipeTransport.js). This is the actual enforcement logic — the code that
@@ -124,6 +145,20 @@ function createHandlers(ctx) {
       seedCount: seedDomains.length,
     }),
 
+    // Blocked attempts only, by design (see README): not a full browsing
+    // history. Gated like everything else that reveals what the child has
+    // been doing, even though it can't itself change protection.
+    'activity.list': parentOnly(async () => ({
+      ok: true,
+      entries: (store.get('activityLog') || []).slice(0, 500),
+      totalCount: (store.get('activityLog') || []).length,
+    })),
+
+    'activity.clear': parentOnly(async () => {
+      store.set('activityLog', []);
+      return { ok: true };
+    }),
+
     'parent.status': async () => ({ ok: true, ...parentAuth.status() }),
     'parent.setup': async ({ password }) => parentAuth.setup(password),
     'parent.unlock': async ({ password }) => parentAuth.unlock(password),
@@ -191,4 +226,4 @@ function createHandlers(ctx) {
   return { rpc, startFilter, stopFilter };
 }
 
-module.exports = { createHandlers };
+module.exports = { createHandlers, appendActivity, MAX_ACTIVITY_ENTRIES };

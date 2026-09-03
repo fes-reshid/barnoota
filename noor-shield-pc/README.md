@@ -60,6 +60,9 @@ machine except ordinary DNS lookups to the upstream resolver.
 | Windows DNS apply/restore, admin detection | `src/main/systemDns.js` |
 | Seed + parent-added domain matching | `src/main/blocklist.js` |
 | Parent password, recovery key, lockout | `src/main/parentAuth.js` |
+| Activity log (blocked attempts) | `service/handlers.js` (`appendActivity`, `activity.*`) |
+| Email report (on request, no schedule) | `src/main/emailReport.js` |
+| Encrypted SMTP password storage | `src/main/secretStore.js` |
 | GUI: thin client, journal, reminders | `src/main/main.js`, `src/main/serviceClient.js` |
 | UI | `src/renderer/` |
 
@@ -71,6 +74,7 @@ the service) and gates:
 - turning the filter on or off
 - adding or removing blocked sites
 - removing the protection service entirely
+- viewing or clearing the activity log, and the email report settings/sending
 
 Left deliberately open, with no password: seeing the protection status,
 reading the Hadith, writing in the tawbah journal, changing the reminder
@@ -111,6 +115,34 @@ Other details that matter:
   service process, or using "Remove protection completely" in Settings
   (which is the intended, parent-gated way to turn this off for good).
 
+## Activity log and email reports
+
+The Activity Log tab shows **blocked attempts only** — domains the filter
+actually stopped — not a full browsing history of every site visited. This is
+a deliberate scope choice: it answers "what has the filter been catching"
+without keeping a complete log of everything the child looked at.
+
+- Recorded by the service itself, the moment `DnsProxy` emits a `blocked`
+  event (`service/handlers.js`'s `appendActivity`), capped at the most recent
+  2000 entries so a PC left running for months doesn't grow the log without
+  bound.
+- Viewing or clearing the log requires the parent password, same as
+  everything else that reveals what the child has been doing.
+- **Emailing a report is on-request only** — there is no schedule and nothing
+  is sent automatically. The parent configures an SMTP account once (an app
+  password from Gmail/Outlook/etc. works well) and clicks "Send report now"
+  whenever they want a copy.
+- The SMTP password is encrypted at rest via Electron's `safeStorage` (OS
+  keychain / Windows DPAPI) — never written to the plaintext settings file.
+  If a machine has no OS-level secure storage available (rare, but possible
+  in some locked-down environments), saving a password is refused outright
+  rather than silently falling back to plaintext; the UI says so.
+- The recipient address and non-secret SMTP settings (host, port, username)
+  live in the GUI's own per-user store, not the service's — this is
+  configuration for how a report leaves the machine, not a protection
+  setting, but it's still gated behind the same parent session (checked
+  against the service, since the GUI holds no password state of its own).
+
 ## Honest limitations — read before trusting this
 
 1. **A user with their own administrator account can still stop or remove the
@@ -132,6 +164,15 @@ Other details that matter:
    isolated from any desktop, so Hadith reminders come from the GUI process,
    not the service — they pause while the GUI isn't running, which is fine
    for reminders but is why they're architecturally separate from filtering.
+6. **The activity log only knows about DNS-level blocks.** A site reached via
+   raw IP, or bypassing DNS filtering some other way (see #2), won't appear
+   in the log even though it wasn't actually blocked — the log reflects what
+   the filter caught, not a full record of everything accessed.
+7. **The parent's own inbox is a new place this data lives.** Emailing a
+   report moves a list of blocked domains off the PC and onto whatever mail
+   provider the parent used — worth choosing a recipient address the parent
+   actually controls, for the same reason the SMTP password is encrypted at
+   rest rather than left in plain text.
 
 ## If the PC loses internet ("DNS not responding")
 
@@ -212,7 +253,7 @@ actually registering a service with the SCM) are necessarily unverified here —
 `systemDns.js` shells out to `powershell.exe`, and `service/install.js`
 requires `node-windows`, neither of which exist on Linux.
 
-Everything platform-independent is exercised by three scripts (not checked
+Everything platform-independent is exercised by four scripts (not checked
 into this repo, but reproducible from their descriptions):
 
 - DNS packet parsing/NXDOMAIN construction, subdomain and suffix-lookalike
@@ -220,18 +261,28 @@ into this repo, but reproducible from their descriptions):
 - The DNS proxy end-to-end against a stub upstream, including two concurrent
   queries sharing one transaction id (proving the id-remapping prevents
   crossed replies) and a live blocklist swap while running (8 checks).
+- `appendActivity`'s cap-and-order behavior, the email report's text/HTML
+  formatting (including that it escapes its input rather than injecting it
+  raw), and `secretStore` failing with a clear error — rather than crashing
+  or silently storing plaintext — when run outside a real Electron process
+  with no OS keychain available (10 checks).
 - **The real service**, forked as an actual child process exactly as
   node-windows' wrapper would run it, driven entirely over the real pipe
   transport: setup, the parent gate refusing mutations while locked (checked
-  directly against the pipe, not through the GUI), wrong-password rejection,
-  the unlock persisting across a brand-new pipe connection (proving the gate
-  lives in the service), the recovery-key reset flow, and a clean SIGTERM
-  shutdown that doesn't hang even when the DNS-restore call fails fast on a
-  non-Windows host (14 checks).
+  directly against the pipe, not through the GUI, and including the activity
+  log specifically), wrong-password rejection, the unlock persisting across
+  a brand-new pipe connection (proving the gate lives in the service), the
+  recovery-key reset flow, a pre-seeded activity entry round-tripping through
+  `activity.list`/`activity.clear`, and a clean SIGTERM shutdown that doesn't
+  hang even when the DNS-restore call fails fast on a non-Windows host
+  (17 checks).
 
-42 checks passing across all three. What remains genuinely unverified: the
+55 checks passing across all four. What remains genuinely unverified: the
 actual `Set-DnsClientServerAddress` PowerShell calls, actually registering
-with the Windows Service Control Manager, and the packaged NSIS installer.
+with the Windows Service Control Manager, the packaged NSIS installer, and
+sending a real email through a real SMTP server (nodemailer's `sendMail` API
+was confirmed against the actual installed package rather than assumed, but
+no test here talks to a real mail server).
 Expect to fix small things on first real run — particularly the tray icon
 (`src/renderer/assets/tray.png` is referenced but not yet added; `createTray()`
 degrades gracefully without it) and the exact PowerShell output shapes on your

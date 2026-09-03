@@ -9,7 +9,7 @@ const { DnsProxy } = require(path.join(__dirname, '..', 'src', 'main', 'dnsProxy
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { loadSeedDomains } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const { createServer } = require('./pipeTransport');
-const { createHandlers } = require('./handlers');
+const { createHandlers, appendActivity } = require('./handlers');
 
 /**
  * The process that actually runs "always": installed as a Windows service
@@ -61,6 +61,9 @@ async function main() {
     createProxy: (blocklist) => {
       proxy = new DnsProxy({ blocklist });
       proxy.on('error', (err) => console.error(`[dnsProxy] ${err.message}`));
+      // The activity log the parent reviews (and can email themselves a
+      // report of) — blocked attempts only, not every site visited.
+      proxy.on('blocked', ({ domain }) => appendActivity(store, domain));
       return proxy;
     },
     onStateChange: () => {}, // hook point if a future UI wants push updates

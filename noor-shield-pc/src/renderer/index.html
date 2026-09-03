@@ -81,6 +81,7 @@
         <button class="navitem" data-view="blocklist">Blocked sites</button>
         <button class="navitem" data-view="hadith">Hadith</button>
         <button class="navitem" data-view="journal">Tawbah journal</button>
+        <button class="navitem" data-view="activity">Activity log</button>
         <button class="navitem" data-view="settings">Parent settings</button>
       </nav>
 
@@ -215,6 +216,66 @@
         <div class="panel">
           <h3>Recent entries</h3>
           <div id="journal-list" class="journallist"></div>
+        </div>
+      </section>
+
+      <!-- Activity log -->
+      <section class="view" data-view="activity">
+        <header class="viewhead">
+          <h1>Activity log</h1>
+          <p class="sub">Sites the filter has blocked. Not a full browsing history.</p>
+        </header>
+
+        <div class="panel lockedpanel" id="activity-locked">
+          <h3>Locked</h3>
+          <p>Unlock with the parent password to view or email this log.</p>
+          <button class="btn primary" id="activity-unlock">Unlock</button>
+        </div>
+
+        <div id="activity-body" hidden>
+          <div class="panel">
+            <div class="inputrow" style="justify-content:space-between;">
+              <h3>Blocked attempts (<span id="activity-count">0</span>)</h3>
+              <button class="btn ghost" id="activity-clear">Clear log</button>
+            </div>
+            <div id="activity-list" class="journallist"></div>
+          </div>
+
+          <div class="panel">
+            <h3>Email settings</h3>
+            <p class="hint">
+              Configure an SMTP account (e.g. an app password from your own email provider) once, then
+              send a report on request — nothing is emailed automatically or on a schedule.
+            </p>
+            <label for="email-host">SMTP server</label>
+            <input type="text" id="email-host" placeholder="smtp.gmail.com" autocomplete="off">
+            <div class="inputrow">
+              <div style="flex:1;">
+                <label for="email-port">Port</label>
+                <input type="number" id="email-port" value="587">
+              </div>
+              <label class="checkline" style="margin-top:20px;">
+                <input type="checkbox" id="email-secure">
+                <span>Use TLS</span>
+              </label>
+            </div>
+            <label for="email-user">SMTP username</label>
+            <input type="text" id="email-user" autocomplete="off">
+            <label for="email-password">SMTP password <span id="email-password-hint" class="hint"></span></label>
+            <input type="password" id="email-password" placeholder="Leave blank to keep the saved password" autocomplete="off">
+            <label for="email-from">"From" address (optional, defaults to the username)</label>
+            <input type="text" id="email-from" autocomplete="off">
+            <button class="btn primary" id="email-save">Save email settings</button>
+            <p class="hint" id="email-save-message"></p>
+          </div>
+
+          <div class="panel">
+            <h3>Send report</h3>
+            <label for="email-recipient">Send to</label>
+            <input type="text" id="email-recipient" placeholder="parent@example.com" autocomplete="off">
+            <button class="btn primary" id="email-send">Send report now</button>
+            <p class="hint" id="email-send-message"></p>
+          </div>
         </div>
       </section>
 
