@@ -29,6 +29,12 @@ sure that only happens once, not on every launch. If it's declined, the "Protect
 `BlockVpnService` itself refuses to start (and won't show its "protecting this device" notification)
 until that permission is actually granted, so the UI never claims to be filtering when it isn't.
 
+The Dashboard also re-checks every permission (accessibility, overlay, VPN) each time the app
+resumes — e.g. after the user comes back from the system Settings screen where the Accessibility
+Service toggle lives. That accessibility re-check always runs before the VPN-prompt decision, so
+returning from granting one permission doesn't also throw the VPN consent dialog at the user in the
+same breath.
+
 The Accessibility Service (screen guard) and "display over other apps" (overlay) permissions work
 the same way in principle but can't be auto-triggered at all — Android only exposes those as a
 manual toggle inside system Settings, reachable via an intent, never a direct consent dialog. The

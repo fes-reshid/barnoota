@@ -61,21 +61,6 @@ fun DashboardScreen() {
     var overlayGranted by remember { mutableStateOf(PermissionStatus.canDrawOverlays(context)) }
     var accessibilityGranted by remember { mutableStateOf(PermissionStatus.isAccessibilityServiceEnabled(context)) }
 
-    // Settings toggles for accessibility/overlay happen in the system Settings app, outside our
-    // process, so re-check them whenever the user comes back to this screen.
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                vpnPrepared = PermissionStatus.isVpnPrepared(context)
-                overlayGranted = PermissionStatus.canDrawOverlays(context)
-                accessibilityGranted = PermissionStatus.isAccessibilityServiceEnabled(context)
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
-
     val vpnLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         vpnPrepared = PermissionStatus.isVpnPrepared(context)
         if (vpnPrepared) {
@@ -89,13 +74,34 @@ fun DashboardScreen() {
     // so a fresh install starts protecting the device without the user having to find a switch.
     // We only do this once (tracked in DataStore) so declining it isn't a nag on every open —
     // the setup checklist below stays available to finish it later.
-    LaunchedEffect(Unit) {
+    suspend fun maybePromptVpnConsent() {
         val alreadyPrompted = NoorShieldPreferences.observeVpnConsentPrompted(context).first()
         if (!alreadyPrompted && !PermissionStatus.isVpnPrepared(context)) {
             NoorShieldPreferences.setVpnConsentPrompted(context, true)
             val intent = VpnService.prepare(context)
             if (intent != null) vpnLauncher.launch(intent)
         }
+    }
+
+    LaunchedEffect(Unit) { maybePromptVpnConsent() }
+
+    // Settings toggles for accessibility/overlay happen in the system Settings app, outside our
+    // process, so re-check them whenever the user comes back to this screen. The accessibility
+    // check runs first, before we decide whether the VPN prompt is still owed — someone returning
+    // from the Accessibility Settings screen shouldn't also get the VPN dialog thrown at them in
+    // the same breath.
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                accessibilityGranted = PermissionStatus.isAccessibilityServiceEnabled(context)
+                overlayGranted = PermissionStatus.canDrawOverlays(context)
+                vpnPrepared = PermissionStatus.isVpnPrepared(context)
+                scope.launch { maybePromptVpnConsent() }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     // Once the permission is actually granted, make sure the service is actually running —
