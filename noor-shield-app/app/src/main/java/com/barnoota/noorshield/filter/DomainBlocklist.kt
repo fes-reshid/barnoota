@@ -2,8 +2,10 @@ package com.barnoota.noorshield.filter
 
 import android.content.Context
 import com.barnoota.noorshield.R
+import com.barnoota.noorshield.journal.AppDatabase
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlinx.coroutines.runBlocking
 
 /**
  * Domain-level blocklist used by [BlockVpnService] to reject DNS lookups for
@@ -32,6 +34,14 @@ class DomainBlocklist private constructor(private val blocked: Set<String>) {
     val size: Int get() = blocked.size
 
     companion object {
+        val EMPTY = DomainBlocklist(emptySet())
+
+        /**
+         * Loads the built-in seed list plus every domain the user has added themselves
+         * (see [CustomBlockedDomainDao]). Reading the user's additions is a small,
+         * one-off synchronous DB query done once when the VPN service (re)starts —
+         * not on the packet-forwarding hot path.
+         */
         fun load(context: Context): DomainBlocklist {
             val domains = mutableSetOf<String>()
             context.resources.openRawResource(R.raw.blocklist_domains).use { input ->
@@ -40,6 +50,10 @@ class DomainBlocklist private constructor(private val blocked: Set<String>) {
                     if (line.isNotEmpty()) domains.add(line)
                 }
             }
+            val customDomains = runBlocking {
+                AppDatabase.get(context).customBlockedDomainDao().allDomainsOnce()
+            }
+            domains.addAll(customDomains.map { it.trim().lowercase() })
             return DomainBlocklist(domains)
         }
     }

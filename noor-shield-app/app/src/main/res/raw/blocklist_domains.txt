@@ -14,18 +14,65 @@
 # without a Play Store release. One domain per line; "#" starts a comment.
 # Subdomains of any listed domain are blocked automatically.
 
+# Tube / streaming
 pornhub.com
 xvideos.com
+xvideos2.com
 xnxx.com
 xhamster.com
+xhamster2.com
 redtube.com
 youporn.com
-onlyfans.com
-brazzers.com
-chaturbate.com
-livejasmin.com
-spankbang.com
 tube8.com
+beeg.com
+beeg.porn
+drtuber.com
+eporner.com
+gotporn.com
+keezmovies.com
+porndig.com
+porntrex.com
+porn300.com
+tnaflix.com
+txxx.com
+vporn.com
+xtube.com
+xxxbunker.com
+tubegalore.com
+hqporner.com
+4tube.com
+spankbang.com
 motherless.com
 thumbzilla.com
 sex.com
+
+# Studios / subscription / creator platforms
+onlyfans.com
+brazzers.com
+bangbros.com
+realitykings.com
+mofos.com
+digitalplayground.com
+naughtyamerica.com
+teamskeet.com
+
+# Cam / live
+chaturbate.com
+livejasmin.com
+stripchat.com
+bongacams.com
+myfreecams.com
+cam4.com
+camsoda.com
+imlive.com
+
+# Erotica / forums / dating-for-affairs
+literotica.com
+adultfriendfinder.com
+
+# Hentai / adult anime & manga
+hentaihaven.xxx
+nhentai.net
+rule34.xxx
+e-hentai.org
+luscious.net

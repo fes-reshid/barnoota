@@ -11,6 +11,7 @@ forgiveness). Built as a standalone Gradle/Kotlin project inside this repo
 | Feature | How | Coverage |
 |---|---|---|
 | Network content filter | `BlockVpnService` — a local VPN that answers DNS lookups itself, returns NXDOMAIN for domains on the blocklist, forwards everything else to a real resolver (1.1.1.1) | Every app on the device, Android 8+ |
+| User-added blocklist | "Block Site" tab (`BlocklistScreen` + `BlocklistRepository`) — a text input where the user adds any site they've personally encountered; stored in Room, merged into the domain list `BlockVpnService` enforces, applied live via `BlockVpnService.reload()` if the filter is already on | Every app on the device, same as above |
 | On-screen image guard | `ScreenGuardAccessibilityService` — periodically calls the platform `takeScreenshot()` API, classifies the frame, blanks the screen with a Hadith reminder if flagged | Android 11+ only (API limitation, see below) |
 | Hadith reminders | `ReminderWorker` (WorkManager) posts a notification every few hours, rotating through lowering-the-gaze, tawbah, istighfar, and Akhirah hadith | All supported versions |
 | Tawbah journal & istighfar counter | Room-backed, fully on-device, nothing ever leaves the phone | All supported versions |
@@ -22,11 +23,15 @@ forgiveness). Built as a standalone Gradle/Kotlin project inside this repo
    here is both a support headache and, in the app's own terms, a form of
    dishonesty to avoid.
 2. **The domain blocklist (`app/src/main/res/raw/blocklist_domains.txt`) is a
-   tiny seed list.** For real coverage, merge in a maintained list such as
+   curated seed list, not an exhaustive one.** There is no practical way for
+   an app to automatically discover "every" adult site — new ones appear
+   constantly. For real coverage, merge in a maintained list such as
    [The Blocklist Project's porn list](https://github.com/blocklistproject/Lists)
-   or a StevenBlack hosts variant, and ideally refresh it periodically (a
+   or a StevenBlack hosts variant, ideally refreshed periodically (a
    WorkManager job that fetches an updated list over HTTPS and rewrites it to
-   app-private storage instead of a compiled resource).
+   app-private storage instead of a compiled resource). The "Block Site" tab
+   lets the user fill gaps manually as they run into them, but it's a
+   complement to a real feed, not a substitute for one.
 3. **The image classifier is a placeholder.** `HeuristicSkinToneClassifier`
    uses a crude skin-tone-ratio heuristic so the detect → blur → log pipeline
    exists and can be exercised end to end. It will misfire on beach photos,

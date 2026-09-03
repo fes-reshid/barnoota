@@ -41,9 +41,20 @@ class BlockVpnService : VpnService() {
 
     private var vpnInterface: ParcelFileDescriptor? = null
     private val running = AtomicBoolean(false)
-    private lateinit var blocklist: DomainBlocklist
+
+    @Volatile private var blocklist: DomainBlocklist = DomainBlocklist.EMPTY
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == ACTION_RELOAD) {
+            // Domain list changed (user added/removed one) while the filter is already running —
+            // swap it in without tearing down the TUN interface, so DNS keeps flowing.
+            if (!running.get()) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
+            blocklist = DomainBlocklist.load(applicationContext)
+            return START_STICKY
+        }
         if (running.get()) return START_STICKY
         blocklist = DomainBlocklist.load(applicationContext)
         startForeground(NOTIFICATION_ID, buildNotification())
@@ -169,12 +180,19 @@ class BlockVpnService : VpnService() {
         private const val FAKE_DNS_SERVER = "10.111.222.1"
         private const val UPSTREAM_DNS = "1.1.1.1"
 
+        const val ACTION_RELOAD = "com.barnoota.noorshield.action.RELOAD_BLOCKLIST"
+
         fun start(context: Context) {
             context.startService(Intent(context, BlockVpnService::class.java))
         }
 
         fun stop(context: Context) {
             context.stopService(Intent(context, BlockVpnService::class.java))
+        }
+
+        /** Re-reads the seed + custom blocklist into a service that's already running. No-op if it isn't. */
+        fun reload(context: Context) {
+            context.startService(Intent(context, BlockVpnService::class.java).setAction(ACTION_RELOAD))
         }
     }
 }
