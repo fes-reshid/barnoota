@@ -10,6 +10,11 @@ import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.barnoota.noorshield.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.DatagramPacket
@@ -44,6 +49,11 @@ class BlockVpnService : VpnService() {
 
     @Volatile private var blocklist: DomainBlocklist = DomainBlocklist.EMPTY
 
+    // For writing to the activity log off the packet-forwarding thread. A blocked lookup is
+    // relatively rare (compared to the packet loop's hot path), so a plain IO-dispatched
+    // coroutine per event is cheap enough — no need for a batching/queueing layer.
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_RELOAD) {
             // Domain list changed (user added/removed one) while the filter is already running —
@@ -71,6 +81,7 @@ class BlockVpnService : VpnService() {
 
     override fun onDestroy() {
         stopVpn()
+        serviceScope.cancel()
         super.onDestroy()
     }
 
@@ -126,6 +137,8 @@ class BlockVpnService : VpnService() {
 
             val responsePayload: ByteArray = if (query != null && blocklist.isBlocked(query.question)) {
                 Log.i(TAG, "Blocked DNS lookup: ${query.question}")
+                val domain = query.question
+                serviceScope.launch { ActivityLogRepository.record(applicationContext, domain) }
                 DnsMessage.buildNxDomainResponse(dnsPayload, dnsPayload.size)
             } else {
                 forwardToUpstream(dnsPayload, upstreamDns) ?: continue

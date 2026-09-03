@@ -15,6 +15,8 @@ forgiveness). Built as a standalone Gradle/Kotlin project inside this repo
 | On-screen image guard | `ScreenGuardAccessibilityService` — periodically calls the platform `takeScreenshot()` API, classifies the frame, blanks the screen with a Hadith reminder if flagged | Android 11+ only (API limitation, see below) |
 | Hadith reminders | `ReminderWorker` (WorkManager) posts a notification every few hours, rotating through lowering-the-gaze, tawbah, istighfar, and Akhirah hadith | All supported versions |
 | Tawbah journal & istighfar counter | Room-backed, fully on-device, nothing ever leaves the phone | All supported versions |
+| Activity log | `ActivityLogRepository` — every domain `BlockVpnService` actually blocks, capped at 2000 entries; viewing/clearing it is behind a parent password (`ParentAuth`) | Every app on the device, same as the filter |
+| Email report on request | `EmailReportRepository` + `EmailReportSender` — a parent configures SMTP once, taps "Send report now"; nothing sent automatically or on a schedule | Needs network access to the configured SMTP server |
 
 ## On by default
 
@@ -39,6 +41,49 @@ The Accessibility Service (screen guard) and "display over other apps" (overlay)
 the same way in principle but can't be auto-triggered at all — Android only exposes those as a
 manual toggle inside system Settings, reachable via an intent, never a direct consent dialog. The
 setup checklist links straight to the right Settings screen for each.
+
+## Activity log, the parent lock, and email reports
+
+Noor Shield can tell a parent what it's been blocking, on request:
+
+- **`ParentAuth`** is a password gate, set up on first visit to the Activity
+  tab. It mirrors the PC app's design (one-time recovery key, 5-attempt
+  lockout, a 10-minute unlock session) but hashes with
+  **PBKDF2WithHmacSHA256** (120,000 iterations) instead of scrypt — that's
+  what's built into the standard Java/Android crypto providers with no new
+  dependency, since scrypt has no first-party Android implementation.
+  Verified against a real `javax.crypto` run (not just read for correctness):
+  reproducible hashing, different salts producing different hashes for the
+  same password, a one-character-different password correctly failing, and
+  1000/1000 generated salts coming back unique.
+- **Scope decision, stated plainly**: unlike the PC app, this gate currently
+  protects only the **Activity Log and email settings** — not the filter
+  toggle or blocklist edits, which remain open as they were before this
+  feature existed. Extending the same gate to those would reuse `ParentAuth`
+  directly; it wasn't done here to keep this change scoped to what was asked.
+- **The activity log records blocked attempts only** (see `ActivityLogEntry`)
+  — not a full browsing history of every site visited, the same scope
+  decision as the PC app. `BlockVpnService` writes an entry the moment it
+  answers NXDOMAIN for a query, off the packet-forwarding thread via a small
+  IO-dispatched coroutine so logging never adds latency to DNS resolution.
+  Capped at 2000 entries (`ActivityLogRepository.MAX_ENTRIES`); the exact
+  Room `DELETE` query that enforces the cap was verified against a real
+  SQLite engine (not just Room's compile-time query validation, which needs
+  the Android Gradle build this sandbox can't run) — trimming to N leaves
+  exactly the newest N rows, and both "cap larger than the table" and
+  "cap of zero" edge cases behave correctly.
+- **The SMTP password is encrypted at rest** via `SecretStore`
+  (`androidx.security:security-crypto`'s `EncryptedSharedPreferences`,
+  backed by the Android Keystore) — never written to a plaintext file. This
+  is the Android equivalent of the PC app's use of Electron's `safeStorage`
+  for the same purpose.
+- **Sending is on-request only**, via `EmailReportSender` using Jakarta
+  Mail's Android port (`com.sun.mail:android-mail` + `android-activation` —
+  plain `javax.mail`/`jakarta.mail` doesn't run on Android, which has no
+  built-in `javax.activation`). There is no shared code with the PC app's
+  `nodemailer`-based sender — Node and a Kotlin/Android app share no
+  runtime — but the report format (plain-text + HTML multipart, same
+  subject line shape) deliberately matches.
 
 ## Honest limitations — read this before telling anyone it "blocks all nudity"
 
@@ -76,6 +121,21 @@ setup checklist links straight to the right Settings screen for each.
 6. **Android 8–10 (API 26–29) get network filtering only** — `takeScreenshot()`
    was added in API 30, so the accessibility-service image guard silently
    no-ops below that.
+7. **The activity log only knows about DNS-level blocks.** A site reached via
+   raw IP, or bypassing DNS filtering some other way (see #5), won't appear
+   in the log even though it wasn't actually blocked — the log reflects what
+   the filter caught, not a full record of everything accessed.
+8. **A parent's own inbox is a new place this data lives.** Emailing a
+   report moves a list of blocked domains off the phone and onto whatever
+   mail provider the parent used. The SMTP password is encrypted at rest for
+   the same reason — worth choosing a recipient address the parent actually
+   controls.
+9. **Anyone who can unlock the app can unlock the Activity Log too.** The
+   phone itself isn't locked down by this feature — a child who knows (or
+   guesses, or watches) the parent password can view or clear the log same
+   as the parent. A password is a real barrier against casual snooping or
+   an accidental clear, not a guarantee against a determined, technically
+   capable child who has the parent's password.
 
 ## Upgrading the classifier
 
@@ -138,6 +198,45 @@ was authored in — it had no network access to Google's Maven repo
 Run `./gradlew assembleDebug` locally or in CI with normal internet access
 before relying on it; fix any dependency-version mismatches that surface
 (AGP/Kotlin/Compose-compiler compatibility drifts as new versions ship).
+
+The two new dependencies for the Activity Log (`com.sun.mail:android-mail`/
+`android-activation` 1.6.8, `androidx.security:security-crypto` 1.0.0) were
+chosen and version-pinned with real registry lookups where reachable —
+Maven Central (`repo1.maven.org`) is not behind the same block as
+`dl.google.com` in this sandbox, and its metadata confirmed both
+`com.sun.mail` artifacts' available versions directly. `security-crypto` is
+on Google's Maven, which redirects to the blocked `dl.google.com`, so its
+version is pinned to the long-stable, extensively-documented `1.0.0`
+release specifically to avoid guessing at a newer version's API surface
+(1.1.x renamed some classes) without being able to check.
+
+### What was actually verified here, and how
+
+No Kotlin compiler or Android SDK exists in this sandbox, so nothing Kotlin
+was compiled. What could be checked was checked against real, non-mocked
+engines wherever the underlying logic doesn't require the Android runtime:
+
+- **`ParentAuth`'s PBKDF2 hashing** — reproduced line-for-line in Java
+  (identical `javax.crypto` APIs Android exposes) and run for real: hashing
+  is deterministic and the right length, different salts for the same
+  password produce different hashes, a one-character-different password is
+  correctly rejected, the recovery key format and its case-sensitivity are
+  correct, and 1000 generated salts came back with zero collisions.
+- **`ActivityLogDao`'s trim query** — the exact SQL string
+  (`DELETE FROM activity_log WHERE id IN (SELECT id ... LIMIT -1 OFFSET
+  :keep)`) run against a real SQLite engine (Python's bundled `sqlite3`
+  module, which wraps the same SQLite C library Android ships): trimming
+  to N leaves exactly the newest N rows, and both a cap larger than the
+  table and a cap of zero behave correctly rather than erroring.
+- **`ReportFormatter`'s HTML escaping** — confirmed the escape order (`&`
+  before `<`/`>`/`"`) doesn't double-escape, and that injected markup comes
+  back neutralized.
+
+What remains genuinely unverified: everything that actually needs the
+Android runtime — Room's compile-time query validation against the real
+entity schema, Compose recomposition behavior in `ActivityLogScreen`,
+`EncryptedSharedPreferences` actually round-tripping through a real Android
+Keystore, and a real SMTP send via Jakarta Mail.
 
 ## Hadith sourcing
 
