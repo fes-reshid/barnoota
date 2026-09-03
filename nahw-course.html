@@ -145,9 +145,9 @@
     width:100%; background:#fff; color:var(--ink-brown); border:1.5px solid var(--gold-soft); border-radius:22px;
     padding:11px 20px; font-family:'Cormorant Garamond', serif; font-weight:700;
     font-size:calc(15px * var(--scale)); cursor:pointer; transition:transform .15s ease, background .15s ease;
-    margin-top:10px;
   }
   .auth-secondary-btn:hover{ background:var(--parchment-deep); transform:scale(1.03); }
+  .auth-landing-btns > button + button{ margin-top:10px; }
   .auth-landing-btns{ display:flex; flex-direction:column; }
   .auth-link-btn{
     display:block; background:none; border:none; color:var(--gold); text-decoration:underline; cursor:pointer;
@@ -174,8 +174,9 @@
     display:flex; align-items:center; justify-content:center; gap:10px;
   }
   .week-select-btn:hover{ transform:scale(1.03); background:#b8862c; }
-  .week-select-btn .wsb-ar{ font-family:'Amiri', serif; opacity:.9; }
-  .week-select-btn .wsb-en::after{ content:' ·'; opacity:.7; }
+  .week-select-btn .wsb-ar{ font-family:'Amiri', serif; }
+  body.rtl-active .week-select-btn .wsb-en{ display:none; }
+  body:not(.rtl-active) .week-select-btn .wsb-ar{ display:none; }
 
   /* ===== Welcome banner ===== */
   .welcome-banner{
@@ -579,8 +580,8 @@
     <div class="name-gate-box" id="auth-landing" style="display:none;">
       <p class="auth-gate-label" id="auth-landing-label">Create an account or log in to begin</p>
       <div class="auth-landing-btns">
-        <button class="auth-primary-btn" id="show-enroll-btn">Enroll</button>
         <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
+        <button class="auth-primary-btn" id="show-enroll-btn">Enroll</button>
       </div>
     </div>
 
@@ -623,16 +624,19 @@
         <span class="wsb-en">Foundations</span><span class="wsb-ar">الأساسيات</span>
       </button>
       <button class="week-select-btn" id="week-select-w1" data-step="2">
-        <span class="wsb-en">Week 1</span><span class="wsb-ar">الأسبوع الأول</span>
+        <span class="wsb-en">Week 1 · The Subject of Naḥw</span><span class="wsb-ar">الأسبوع الأول · موضوع النحو</span>
       </button>
       <button class="week-select-btn" id="week-select-w2" data-step="4">
-        <span class="wsb-en">Week 2</span><span class="wsb-ar">الأسبوع الثاني</span>
+        <span class="wsb-en">Week 2 · Types of the Word</span><span class="wsb-ar">الأسبوع الثاني · أنواع الكلمة</span>
       </button>
       <button class="week-select-btn" id="week-select-w3" data-step="6">
-        <span class="wsb-en">Week 3</span><span class="wsb-ar">الأسبوع الثالث</span>
+        <span class="wsb-en">Week 3 · Indefinite &amp; Definite</span><span class="wsb-ar">الأسبوع الثالث · النكرة والمعرفة</span>
       </button>
       <button class="week-select-btn" id="week-select-w4" data-step="9">
-        <span class="wsb-en">Week 4</span><span class="wsb-ar">الأسبوع الرابع</span>
+        <span class="wsb-en">Week 4 · Declinable &amp; Indeclinable</span><span class="wsb-ar">الأسبوع الرابع · المعرب والمبني</span>
+      </button>
+      <button class="week-select-btn" id="week-select-w5" data-step="19">
+        <span class="wsb-en">Week 5 · Coming Soon</span><span class="wsb-ar">الأسبوع الخامس · قريباً</span>
       </button>
     </div>
   </div>
@@ -640,7 +644,7 @@
   <div id="main-content" style="display:none;">
 
     <div class="step-progress-row">
-      <span id="step-progress-text">Step 1 / 20</span>
+      <span id="step-progress-text">Step 1 / 21</span>
       <div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div>
     </div>
 
@@ -2170,6 +2174,23 @@ var finalQuizAR = [
   { q: "قال طالب: \"بما أن (هذا) لا يتغيّر آخرها، فهي إذن مبنية.\" هل هذا الاستدلال صحيح؟", options: ["لا، فـ(هذا) في الحقيقة معربة", "يعتمد على الجملة", "نعم، فثبات الآخر هو بالضبط تعريف المبني", "لا، تغيّر الآخر لا علاقة له بالبناء"], correct: 2, explanation: "هذا استدلال صحيح تماماً، فالمبني هو ما يلزم آخره حالة واحدة ثابتة مهما تغيّر موقعه، وهذا بالضبط حال (هذا)." }
 ];
 
+var LESSONS_W5_EN = [
+`<div class="hero">
+  <p class="hero-eyebrow">قَرِيباً</p>
+  <h1 class="en-title">Week 5 — Coming Soon</h1>
+  <p>This week's lesson is being prepared and will be added shortly. Check back soon!</p>
+</div>
+`
+];
+
+var LESSONS_W5_AR = [
+`<div class="hero">
+  <h1>الأسبوع الخامس — قريباً</h1>
+  <p>درس هذا الأسبوع قيد الإعداد، وسيُضاف قريباً. تابعونا!</p>
+</div>
+`
+];
+
 var week1QuizEN = [
   { q: "Naḥw is built from two major parts. What are they?", options: ["نكرة ومعرفة", "اسم وفعل فقط", "أحكام الكلمة (word rulings) and أحكام الكلام (sentence rulings)", "معرب ومبني"], correct: 2, explanation: "النحو مكوّن من جزأين: أحكام الكلمة (الكلمة المفردة) وأحكام الكلام (الجملة)." },
   { q: "How many topics are studied under أحكام الكلمة (rulings of the word)?", options: ["Three", "Two", "Four", "Seven"], correct: 0, explanation: "تحت أحكام الكلمة تُدرَس ثلاثة مباحث: أنواع الكلمة، وانقسام الاسم، وانقسام الكلمة إلى معرب ومبني." },
@@ -2309,6 +2330,10 @@ var STEP_DEFS = [
     titleEn: 'Module 2 Quiz — Lessons 6–8', titleAr: 'اختبار الوحدة الثانية — الدروس ٦–٨',
     leadEn: '15 questions covering the present-tense verb, the ten mabni noun types, and the terminology note. The answer and explanation appear right after each question.',
     leadAr: '١٥ سؤالاً تغطي الفعل المضارع، والأسماء العشرة المبنية، وفائدة المصطلح. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+
+  // ===== Week 5 (placeholder — content to be added) =====
+  { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 0, weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
+
   { type: 'quiz', enQ: 'finalQuizEN', arQ: 'finalQuizAR', immediate: false,
     titleEn: 'Test Your Knowledge', titleAr: 'اختبر معلوماتك',
     leadEn: 'A final 15-question review covering the whole chapter. Answers and explanations appear together at the end.',
