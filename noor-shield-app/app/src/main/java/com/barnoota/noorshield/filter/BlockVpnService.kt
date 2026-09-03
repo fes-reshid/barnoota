@@ -56,6 +56,13 @@ class BlockVpnService : VpnService() {
             return START_STICKY
         }
         if (running.get()) return START_STICKY
+        if (prepare(applicationContext) != null) {
+            // The user hasn't granted the VPN permission yet (or revoked it) — don't claim to be
+            // protecting the device with a foreground notification when we can't actually filter.
+            Log.w(TAG, "VPN permission not granted; not starting the filter")
+            stopSelf()
+            return START_NOT_STICKY
+        }
         blocklist = DomainBlocklist.load(applicationContext)
         startForeground(NOTIFICATION_ID, buildNotification())
         startVpn()

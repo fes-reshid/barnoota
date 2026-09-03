@@ -16,6 +16,24 @@ forgiveness). Built as a standalone Gradle/Kotlin project inside this repo
 | Hadith reminders | `ReminderWorker` (WorkManager) posts a notification every few hours, rotating through lowering-the-gaze, tawbah, istighfar, and Akhirah hadith | All supported versions |
 | Tawbah journal & istighfar counter | Room-backed, fully on-device, nothing ever leaves the phone | All supported versions |
 
+## On by default
+
+The network filter's *intent* is on from first install (`NoorShieldPreferences.observeFilterEnabled`
+defaults to `true`) — there's no separate "turn on protection" step to remember. The one thing no
+app can skip is Android's own VPN consent dialog: the OS requires the person holding the phone to
+personally approve any app acting as a VPN, every time, with no way for an app to pre-approve
+itself. `DashboardScreen` triggers that system dialog automatically the first time the app is
+opened, so approving it is the only tap needed; a `DataStore` flag (`vpn_consent_prompted`) makes
+sure that only happens once, not on every launch. If it's declined, the "Protection" card shows
+"Waiting on VPN permission" and the setup checklist below stays available to finish it later.
+`BlockVpnService` itself refuses to start (and won't show its "protecting this device" notification)
+until that permission is actually granted, so the UI never claims to be filtering when it isn't.
+
+The Accessibility Service (screen guard) and "display over other apps" (overlay) permissions work
+the same way in principle but can't be auto-triggered at all — Android only exposes those as a
+manual toggle inside system Settings, reachable via an intent, never a direct consent dialog. The
+setup checklist links straight to the right Settings screen for each.
+
 ## Honest limitations — read this before telling anyone it "blocks all nudity"
 
 1. **No app can guarantee that.** This is a barrier and a reminder, not a
