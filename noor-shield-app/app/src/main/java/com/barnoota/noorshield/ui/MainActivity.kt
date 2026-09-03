@@ -9,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Security
@@ -27,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.barnoota.noorshield.ui.screens.BlocklistScreen
 import com.barnoota.noorshield.ui.screens.DashboardScreen
 import com.barnoota.noorshield.ui.screens.HadithFeedScreen
 import com.barnoota.noorshield.ui.screens.JournalScreen
@@ -35,12 +37,19 @@ import com.barnoota.noorshield.ui.theme.NoorShieldTheme
 
 private sealed class Destination(val route: String, val label: String) {
     data object Dashboard : Destination("dashboard", "Shield")
+    data object Blocklist : Destination("blocklist", "Block Site")
     data object Hadith : Destination("hadith", "Hadith")
     data object Journal : Destination("journal", "Journal")
     data object Settings : Destination("settings", "About")
 }
 
-private val destinations = listOf(Destination.Dashboard, Destination.Hadith, Destination.Journal, Destination.Settings)
+private val destinations = listOf(
+    Destination.Dashboard,
+    Destination.Blocklist,
+    Destination.Hadith,
+    Destination.Journal,
+    Destination.Settings,
+)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +79,7 @@ private fun NoorShieldApp() {
             modifier = Modifier.padding(padding),
         ) {
             composable(Destination.Dashboard.route) { DashboardScreen() }
+            composable(Destination.Blocklist.route) { BlocklistScreen() }
             composable(Destination.Hadith.route) { HadithFeedScreen() }
             composable(Destination.Journal.route) { JournalScreen() }
             composable(Destination.Settings.route) { SettingsScreen() }
@@ -96,6 +106,7 @@ private fun NoorShieldBottomBar(navController: NavHostController) {
                     Icon(
                         imageVector = when (destination) {
                             Destination.Dashboard -> Icons.Filled.Security
+                            Destination.Blocklist -> Icons.Filled.Block
                             Destination.Hadith -> Icons.Filled.Book
                             Destination.Journal -> Icons.Filled.EditNote
                             Destination.Settings -> Icons.Filled.Settings
