@@ -92,6 +92,25 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 
+  // Defense-in-depth alongside app.js's own on-page error overlay: these
+  // cover failures the renderer script can never see itself — the preload
+  // script throwing before contextBridge runs, or index.html failing to
+  // load at all — either of which would otherwise just leave a window with
+  // nothing in it and no visible sign of why.
+  mainWindow.webContents.on('preload-error', (event, preloadPath, error) => {
+    dialog.showErrorBox(
+      'Noor Shield failed to start correctly',
+      `The app's preload script failed:\n\n${error.message}\n\nTry reinstalling Noor Shield.`
+    );
+  });
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    if (errorCode === -3) return; // ERR_ABORTED — a normal navigation cancel, not a real failure
+    dialog.showErrorBox(
+      'Noor Shield failed to load its window',
+      `${errorDescription} (${errorCode})\n\nTry reinstalling Noor Shield.`
+    );
+  });
+
   // Closing the window no longer needs to be intercepted for protection's
   // sake — the service keeps filtering regardless. It still hides to the
   // tray rather than fully quitting, purely so reminders/status stay one
