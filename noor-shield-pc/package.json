@@ -1,6 +1,6 @@
 {
   "name": "noor-shield-pc",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "description": "Noor Shield for Windows — device-wide adult-content filter with Islamic reminders, an always-on protection service, and a parent-controlled lock",
   "main": "src/main/main.js",

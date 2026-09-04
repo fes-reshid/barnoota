@@ -13,6 +13,19 @@ const path = require('path');
 // fix, and it must happen before app.whenReady() to take effect.
 app.disableHardwareAcceleration();
 
+// Disabling GPU acceleration alone didn't fix a second tester's totally
+// blank window (content never renders, and even "Toggle Developer Tools"
+// from the menu does nothing) — the next most common cause of exactly that
+// combination is Chromium's OS-level renderer sandbox itself failing to
+// initialize. That happens on some Windows machines where antivirus/EDR
+// software hooks process creation, or restrictive group policy blocks the
+// low-privilege AppContainer Chromium's sandbox relies on — the renderer
+// process never actually starts, so nothing can ever paint and DevTools has
+// nothing to attach to. --no-sandbox disables that OS-level sandboxing
+// globally; contextIsolation + nodeIntegration:false (still set below) stay
+// on and remain the app's real security boundary against renderer content.
+app.commandLine.appendSwitch('no-sandbox');
+
 const { Store } = require('./store');
 const hadith = require('./hadith');
 const serviceClient = require('./serviceClient');
@@ -96,7 +109,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: true,
+      sandbox: false,
     },
   });
 
