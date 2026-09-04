@@ -260,31 +260,7 @@ html,body{margin:0;padding:0;background:var(--parchment);color:var(--ink);font-f
 .complete-banner p{color:rgba(255,255,255,0.75);font-size:14px;margin:0;}
 #confetti-canvas{position:fixed;inset:0;z-index:200;pointer-events:none;}
 
-/* ---------- course select screen ---------- */
-#course-screen{position:fixed;inset:0;z-index:99;background:var(--parchment);display:none;align-items:center;justify-content:center;padding:20px;}
-#course-screen.show{display:flex;animation:fadeUp 0.5s ease;}
-.course-wrap{max-width:640px;width:100%;text-align:center;}
-.course-bismillah{font-size:28px;color:var(--gold);margin-bottom:6px;}
-.course-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
-.course-title{font-size:26px;font-weight:700;color:var(--emerald-dark);margin:0 0 10px;line-height:1.3;}
-.course-desc{font-size:14.5px;color:var(--slate);max-width:480px;margin:0 auto 34px;}
-.course-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-@media (max-width:560px){.course-grid{grid-template-columns:1fr;}}
-.course-card{background:var(--white);border:1px solid var(--parchment-3);border-radius:10px;padding:30px 24px 26px;cursor:pointer;text-align:left;position:relative;overflow:hidden;transition:transform 0.22s cubic-bezier(.2,.8,.2,1),border-color 0.22s,box-shadow 0.22s;}
-.course-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 16px 34px rgba(31,93,76,0.14);}
-.course-card::before{content:"";position:absolute;top:-30px;right:-30px;width:110px;height:110px;border:1px solid rgba(184,134,58,0.18);border-radius:50%;}
-.course-card-icon{width:44px;height:44px;margin-bottom:16px;}
-.course-card-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-.course-card-title{font-size:19px;font-weight:700;color:var(--emerald-dark);margin-bottom:8px;line-height:1.3;}
-.course-card-title .arabic{font-size:16px;color:var(--gold);display:block;margin-top:3px;}
-.course-card-desc{font-size:13px;color:var(--slate);line-height:1.55;margin-bottom:16px;}
-.course-card-cta{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:var(--emerald-dark);display:flex;align-items:center;gap:6px;}
-.course-card-cta .arrow{transition:transform 0.2s;}
-.course-card:hover .course-card-cta .arrow{transform:translateX(4px);}
-.course-card.disabled{cursor:default;opacity:0.72;}
-.course-card.disabled:hover{transform:none;border-color:var(--parchment-3);box-shadow:none;}
-.course-card.disabled .course-card-cta{color:var(--slate);}
-.course-soon-badge{position:absolute;top:16px;right:16px;background:var(--parchment-2);color:var(--slate);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;padding:4px 9px;border-radius:20px;}
+
 </style>
 </head>
 <body>
@@ -301,32 +277,6 @@ html,body{margin:0;padding:0;background:var(--parchment);color:var(--ink);font-f
   <div class="splash-title">Seenaa Ergamaa Rabbii (S.A.W)<br>Kutaa 1ffaa</div>
   <div class="splash-sub">Barnoota 17 — Dhaloota hanga Hijraatti</div>
   <button class="splash-enter" id="splash-enter">Barnoota Eegali</button>
-</div>
-
-<div id="course-screen">
-  <div class="course-wrap">
-    <div class="course-bismillah arabic">﷽</div>
-    <div class="course-eyebrow">Madda Barnoota Islaamaa</div>
-    <div class="course-title">Barnoota Islaamaa Afaan Oromootiin Baradhu</div>
-    <div class="course-desc">Kutaa barnootaa lamaan keessaa filadhu — Seenaa Ergamaa Rabbii (S.A.W) ykn Ad-Durusul Muhimmah — barnoota kee eegaluuf.</div>
-    <div class="course-grid">
-      <div class="course-card" id="course-siirah">
-        <svg class="course-card-icon" viewBox="0 0 44 44"><path d="M22 4 L40 22 L22 40 L4 22 Z" fill="none" stroke="#b8863a" stroke-width="2"/><path d="M22 14 L32 22 L22 32 L12 22 Z" fill="none" stroke="#1f5d4c" stroke-width="1.5"/></svg>
-        <div class="course-card-tag">Barnoota Interactive</div>
-        <div class="course-card-title">Siiraa<span class="arabic">السيرة النبوية</span></div>
-        <div class="course-card-desc">Seenaa Ergamaa Rabbii (S.A.W) Kutaa 1ffaa — barnoota 17, dhaloota isaatirraa hanga Hijraatti.</div>
-        <div class="course-card-cta">Barnoota Eegali <span class="arrow">&rarr;</span></div>
-      </div>
-      <div class="course-card disabled" id="course-durus">
-        <div class="course-soon-badge">Dhiyaatee jira</div>
-        <svg class="course-card-icon" viewBox="0 0 44 44"><rect x="8" y="6" width="28" height="32" rx="2" fill="none" stroke="#5b6b67" stroke-width="2"/><line x1="14" y1="16" x2="30" y2="16" stroke="#5b6b67" stroke-width="1.5"/><line x1="14" y1="22" x2="30" y2="22" stroke="#5b6b67" stroke-width="1.5"/><line x1="14" y1="28" x2="24" y2="28" stroke="#5b6b67" stroke-width="1.5"/></svg>
-        <div class="course-card-tag">Barnoota Fiqhii</div>
-        <div class="course-card-title">Ad-Durusul Muhimmah<span class="arabic">الدروس المهمة</span></div>
-        <div class="course-card-desc">Barnoota bu'uura Aqiidaa fi Fiqhii — Shaykh Ibn Baaz irraa. Dhiyeenya kana ni banama.</div>
-        <div class="course-card-cta">Dhiyaatee jira</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div id="name-screen">
@@ -854,10 +804,6 @@ async function switchLearner(){
 
 document.getElementById('splash-enter').addEventListener('click', async () => {
   document.getElementById('splash').classList.add('hide');
-  showCourseScreen();
-});
-document.getElementById('course-siirah').addEventListener('click', async () => {
-  document.getElementById('course-screen').classList.remove('show');
   await goToProfileOrName();
 });
 document.getElementById('name-submit').addEventListener('click', submitName);
@@ -874,11 +820,6 @@ document.getElementById('profile-new-btn').addEventListener('click', () => {
   document.getElementById('name-screen').classList.add('show');
   setTimeout(()=>document.getElementById('name-input').focus(), 200);
 });
-
-function showCourseScreen(){
-  state.view = 'course';
-  document.getElementById('course-screen').classList.add('show');
-}
 
 async function goToProfileOrName(){
   const profiles = await listProfiles();
@@ -906,7 +847,7 @@ async function submitName(){
 setTimeout(() => {
   document.getElementById('splash').classList.add('hide');
   if(state.view === 'splash'){
-    showCourseScreen();
+    goToProfileOrName();
   }
 }, 9000);
 
