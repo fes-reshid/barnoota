@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow, ipcMain, Notification, Tray, Menu, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Notification, Tray, Menu, shell, dialog } = require('electron');
 const path = require('path');
 
 const { Store } = require('./store');
@@ -8,6 +8,32 @@ const hadith = require('./hadith');
 const serviceClient = require('./serviceClient');
 const secretStore = require('./secretStore');
 const emailReport = require('./emailReport');
+const { isElevated, relaunchElevated } = require('./elevation');
+
+// node-windows performs some of its setup (creating its own "daemon" work
+// folder under Program Files) with a raw fs callback rather than a promise,
+// so a permission failure there throws asynchronously outside of any
+// try/catch or .catch() we could otherwise wrap it in — it would otherwise
+// surface as Electron's default, unhelpful "A JavaScript error occurred in
+// the main process" dialog. This is a safety net for that (and anything
+// else that manages to slip past our own error handling); the real fix is
+// the elevation check below, which stops it from happening in the first
+// place.
+process.on('uncaughtException', (err) => {
+  console.error('[main] uncaughtException:', err);
+  try {
+    dialog.showErrorBox(
+      'Noor Shield ran into a problem',
+      'Something went wrong while setting up protection:\n\n' +
+        `${err.message}\n\n` +
+        'Please close Noor Shield, right-click its icon, and choose ' +
+        '"Run as administrator". If this keeps happening, uninstall and ' +
+        'reinstall Noor Shield.'
+    );
+  } catch (_) {
+    // Too early for a dialog (e.g. before app is ready) — nothing more we can do.
+  }
+});
 
 /**
  * The Electron process is now a thin control panel. All the actual
@@ -339,7 +365,17 @@ function registerLocalIpc() {
  * Boot
  * ------------------------------------------------------------------ */
 
-if (!app.requestSingleInstanceLock()) {
+if (process.platform === 'win32' && app.isPackaged && !isElevated()) {
+  // The packaged .exe is meant to always run elevated (build config sets
+  // requestedExecutionLevel: requireAdministrator), but that only takes
+  // effect if the manifest embedding step actually ran during packaging.
+  // Checking here — and self-relaunching elevated if it didn't — means a
+  // build where that step silently failed still works instead of crashing
+  // the moment it tries to install the service (see the EPERM mkdir under
+  // Program Files\...\node-windows\lib\daemon that motivated this check).
+  relaunchElevated();
+  app.exit(0);
+} else if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   app.on('second-instance', showWindow);
