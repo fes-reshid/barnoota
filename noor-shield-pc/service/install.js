@@ -44,6 +44,19 @@ function buildService() {
     abortOnError: false,
     stopparentfirst: 'yes',
     stoptimeout: 15,
+    // node-windows has no separate Node.js to point at in a packaged
+    // Electron app — it defaults `execPath` to process.execPath, which here
+    // is "Noor Shield.exe" itself (see winsw.js: `config.execPath ||
+    // process.execPath`). Launching that normally opens the full GUI, not
+    // wrapper.js/filterService.js as a script — the service was effectively
+    // starting extra copies of the app window rather than the filter logic.
+    // ELECTRON_RUN_AS_NODE makes Electron's own binary behave as a plain
+    // Node runtime instead, which is exactly what running a script headlessly
+    // as a Windows service needs.
+    env: {
+      name: 'ELECTRON_RUN_AS_NODE',
+      value: '1',
+    },
   });
 }
 
