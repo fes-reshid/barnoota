@@ -254,6 +254,15 @@
           log off, or restart the computer.</td>
       </tr>
       <tr>
+        <td><b>Phishing, scam &amp; ad/tracker blocking</b></td>
+        <td>Also blocks known phishing and scam domains (always on), plus advertising and tracking
+          domains (on by default, can be turned off from the app if it ever breaks a site you
+          need). These are separate, regularly-refreshed lists from the same source as the
+          adult-content one. This blocks known-<i>bad domains</i> — it is <b>not</b> antivirus
+          software and cannot scan files already on the PC; see
+          <a href="#limitations">below</a>.</td>
+      </tr>
+      <tr>
         <td><b>A reminder page, not a broken connection</b></td>
         <td>A blocked site shows a Hadith reminder instead of an error, on both regular
           (<code>http://</code>) and secure (<code>https://</code>) sites. Making that work cleanly
@@ -298,6 +307,10 @@
       Please don't present it to a family as a guarantee.
     </div>
     <ul>
+      <li><b>This is not antivirus software.</b> It blocks known malware-distribution and phishing
+        <i>domains</i> — the site itself never loads. It cannot scan files already on the PC,
+        remove an existing infection, or watch what running programs do. Keep Windows' built-in
+        Microsoft Defender turned on; that's what actually covers those.</li>
       <li><b>The website list is a starting point, not a complete one.</b> No software can
         automatically discover every adult website that exists — new ones appear constantly.
         You can add specific sites yourself once you notice them.</li>
@@ -352,14 +365,14 @@
     <h3>Verifying the download (optional, for the technically inclined)</h3>
     <p>
       A checksum file sits next to the installer on the Apps page download link
-      (<code>Noor-Shield-Setup-0.3.0-beta.1.exe.sha256.txt</code>). If you want to confirm your
+      (<code>Noor-Shield-Setup-0.4.0-beta.1.exe.sha256.txt</code>). If you want to confirm your
       download wasn't corrupted or altered in transit, open PowerShell and run:
     </p>
-    <pre>Get-FileHash "Noor Shield Setup 0.3.0.exe" -Algorithm SHA256</pre>
+    <pre>Get-FileHash "Noor Shield Setup 0.4.0.exe" -Algorithm SHA256</pre>
     <p>The result should match the value in that checksum file.</p>
 
     <div class="cta-row" style="justify-content:center; margin-top:28px;">
-      <a class="btn btn-primary" href="downloads/noor-shield-pc/Noor-Shield-Setup-0.3.0-beta.1.exe">Download for Windows</a>
+      <a class="btn btn-primary" href="downloads/noor-shield-pc/Noor-Shield-Setup-0.4.0-beta.1.exe">Download for Windows</a>
     </div>
   </section>
 
