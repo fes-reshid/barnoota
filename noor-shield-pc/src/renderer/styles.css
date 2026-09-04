@@ -280,3 +280,21 @@ code {
   color: var(--ink-faint);
   font-style: italic;
 }
+
+/* Small one-off layout tweaks, kept as classes rather than inline style
+   attributes so they comply with the page's style-src 'self' CSP. */
+.inputrow-spread { justify-content: space-between; }
+.flex1 { flex: 1; }
+.mt20 { margin-top: 20px; }
+
+#fatal-error-overlay {
+  position: fixed;
+  inset: 0;
+  background: #fff8f0;
+  color: #5a1a1a;
+  padding: 24px;
+  font: 13px/1.5 monospace;
+  white-space: pre-wrap;
+  overflow: auto;
+  z-index: 99999;
+}

@@ -234,7 +234,7 @@
 
         <div id="activity-body" hidden>
           <div class="panel">
-            <div class="inputrow" style="justify-content:space-between;">
+            <div class="inputrow inputrow-spread">
               <h3>Blocked attempts (<span id="activity-count">0</span>)</h3>
               <button class="btn ghost" id="activity-clear">Clear log</button>
             </div>
@@ -250,11 +250,11 @@
             <label for="email-host">SMTP server</label>
             <input type="text" id="email-host" placeholder="smtp.gmail.com" autocomplete="off">
             <div class="inputrow">
-              <div style="flex:1;">
+              <div class="flex1">
                 <label for="email-port">Port</label>
                 <input type="number" id="email-port" value="587">
               </div>
-              <label class="checkline" style="margin-top:20px;">
+              <label class="checkline mt20">
                 <input type="checkbox" id="email-secure">
                 <span>Use TLS</span>
               </label>

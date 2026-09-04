@@ -18,11 +18,11 @@ function showFatalError(err) {
   const message = (err && err.stack) || (err && err.message) || String(err);
   let overlay = document.getElementById('fatal-error-overlay');
   if (!overlay) {
+    // Styled via #fatal-error-overlay in styles.css, not an inline style —
+    // the page's CSP (style-src 'self') blocks inline styles, including
+    // ones set through .style/.style.cssText from script.
     overlay = document.createElement('div');
     overlay.id = 'fatal-error-overlay';
-    overlay.style.cssText =
-      'position:fixed;inset:0;background:#fff8f0;color:#5a1a1a;padding:24px;' +
-      'font:13px/1.5 monospace;white-space:pre-wrap;overflow:auto;z-index:99999;';
     document.body.appendChild(overlay);
   }
   overlay.textContent = 'Noor Shield hit an error and could not finish loading:\n\n' + message;
