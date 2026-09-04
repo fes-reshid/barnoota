@@ -147,4 +147,5 @@ module.exports = {
   restore,
   flushCache,
   isRedirected,
+  powershell, // reused by certAuthority.js for the same PowerShell-over-execFile pattern
 };

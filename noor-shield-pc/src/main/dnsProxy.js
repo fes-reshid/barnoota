@@ -2,19 +2,27 @@
 
 const dgram = require('dgram');
 const EventEmitter = require('events');
-const { parseQuestion, buildNxDomainResponse } = require('./dnsMessage');
+const { parseQuestion, buildNxDomainResponse, buildARecordResponse } = require('./dnsMessage');
 
 const DNS_PORT = 53;
 const LISTEN_ADDRESS = '127.0.0.1';
 const DEFAULT_UPSTREAM = '1.1.1.1';
 const UPSTREAM_TIMEOUT_MS = 4000;
+const REMINDER_PAGE_ADDRESS = '127.0.0.1';
 
 /**
- * A local DNS resolver that answers NXDOMAIN for blocklisted domains and
- * forwards everything else to a real upstream resolver. Windows' system DNS is
+ * A local DNS resolver that answers for blocklisted domains and forwards
+ * everything else to a real upstream resolver. Windows' system DNS is
  * pointed at 127.0.0.1 (see systemDns.js), so every app and browser on the
  * machine resolves through here — the desktop equivalent of the Android
  * BlockVpnService.
+ *
+ * A blocked domain's A query gets answered with 127.0.0.1 (routing the
+ * connection to reminderServer.js's reminder page) when a reminder server is
+ * available; otherwise it falls back to NXDOMAIN, same as before that
+ * feature existed. AAAA queries for blocked domains always get NXDOMAIN
+ * regardless — deliberately never answered with an address — so a
+ * dual-stack client doesn't try (and prefer) IPv6 first.
  *
  * Binding port 53 requires administrator rights; start() rejects with a clear
  * EACCES/EADDRINUSE error otherwise so the UI can explain what to do.
@@ -22,12 +30,19 @@ const UPSTREAM_TIMEOUT_MS = 4000;
  * Emits: 'blocked' ({ domain }), 'error' (Error), 'listening'
  */
 class DnsProxy extends EventEmitter {
-  constructor({ blocklist, upstream = DEFAULT_UPSTREAM, upstreamPort = DNS_PORT, listenPort = DNS_PORT }) {
+  constructor({
+    blocklist,
+    upstream = DEFAULT_UPSTREAM,
+    upstreamPort = DNS_PORT,
+    listenPort = DNS_PORT,
+    reminderPageAvailable = false,
+  }) {
     super();
     this.blocklist = blocklist;
     this.upstream = upstream;
     this.upstreamPort = upstreamPort;
     this.listenPort = listenPort;
+    this.reminderPageAvailable = reminderPageAvailable;
     this.server = null;
     this.upstreamSocket = null;
     this.pending = new Map(); // our outbound id -> { clientId, rinfo, timer }
@@ -38,6 +53,11 @@ class DnsProxy extends EventEmitter {
   /** Swap in a new blocklist without dropping the socket, so edits apply live. */
   setBlocklist(blocklist) {
     this.blocklist = blocklist;
+  }
+
+  /** Toggled by filterService.js once reminderServer.js confirms it's actually listening. */
+  setReminderPageAvailable(available) {
+    this.reminderPageAvailable = Boolean(available);
   }
 
   get isRunning() {
@@ -105,7 +125,11 @@ class DnsProxy extends EventEmitter {
     if (parsed && this.blocklist.isBlocked(parsed.question)) {
       this.stats.blocked += 1;
       this.emit('blocked', { domain: parsed.question });
-      const reply = buildNxDomainResponse(msg, parsed);
+      const QTYPE_A = 1;
+      const reply =
+        this.reminderPageAvailable && parsed.qType === QTYPE_A
+          ? buildARecordResponse(msg, parsed, REMINDER_PAGE_ADDRESS)
+          : buildNxDomainResponse(msg, parsed);
       this.server.send(reply, rinfo.port, rinfo.address);
       return;
     }

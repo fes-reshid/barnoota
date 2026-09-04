@@ -135,7 +135,21 @@
             <li>Protection runs as a Windows service, independently of this window. Closing or quitting the app does not stop it — it keeps running after logoff and across reboots, and restarts itself automatically if it crashes.</li>
             <li>A user with their own administrator account can still stop or remove the service. This raises the barrier; it isn't an unbreakable lock. Give the child a standard (non-admin) Windows account.</li>
             <li>Sites reached by raw IP address, or through a browser using its own encrypted DNS, can bypass domain filtering.</li>
+            <li id="reminder-page-note">A blocked site shows a Hadith reminder page instead of a broken connection, on both http:// and https:// — see below for how.</li>
           </ul>
+        </div>
+
+        <div class="panel notepanel">
+          <h3>How the reminder page works on https:// sites</h3>
+          <p>
+            Showing a proper page (instead of a certificate warning) on an https:// site needs a small
+            local certificate authority, created once on this PC and added to Windows' list of trusted
+            authorities. It's used for exactly one thing: signing a certificate for whatever blocked
+            site your browser tried to reach, so it can show our reminder page instead of a warning.
+            It cannot see or intercept traffic for any site that isn't already blocked — nothing else on
+            this PC is decrypted or inspected. Removing protection (Parent settings) removes it from
+            Windows too.
+          </p>
         </div>
       </section>
 

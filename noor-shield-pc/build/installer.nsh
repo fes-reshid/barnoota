@@ -22,9 +22,22 @@
 ; and its WinSW wrapper .exe would still be locked when we try to delete
 ; it. Stopping and deleting it here, before file removal, avoids both.
 ; Best-effort: if the service was never installed, these simply no-op.
+;
+; Also removes the local certificate authority (certAuthority.js) from
+; Windows' trust store — normally service.prepareUninstall does this when
+; uninstall goes through the app's own "Remove protection completely" flow,
+; but that RPC never runs on this path (Control Panel straight to the
+; uninstaller), and a stray trusted root CA left behind after the app that
+; installed it is gone is exactly the kind of thing that must never happen.
+; Matched by subject name rather than a cached thumbprint, since this script
+; has no access to certAuthority.js's JSON metadata file — safe because
+; nothing else on a family PC would coincidentally use this exact CN.
 !macro customUnInit
   DetailPrint "Stopping Noor Shield protection service..."
   ExecWait 'sc.exe stop "noorshieldfilter"'
   Sleep 5000
   ExecWait 'sc.exe delete "noorshieldfilter"'
+  DetailPrint "Removing Noor Shield's local certificate authority..."
+  ExecWait 'certutil.exe -delstore Root "Noor Shield Local Filter CA"'
+  ExecWait 'certutil.exe -delstore My "Noor Shield Local Filter CA"'
 !macroend

@@ -9,6 +9,8 @@ const { DnsProxy } = require(path.join(__dirname, '..', 'src', 'main', 'dnsProxy
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { loadSeedDomains } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const feedBlocklist = require('./feedBlocklist');
+const certAuthority = require('./certAuthority');
+const { ReminderServer } = require('./reminderServer');
 const { createServer } = require('./pipeTransport');
 const { createHandlers, appendActivity } = require('./handlers');
 
@@ -53,11 +55,43 @@ function readVersion() {
   }
 }
 
+/**
+ * Sets up the local CA and the reminder-page HTTP/HTTPS servers, so a
+ * blocked site shows a Hadith reminder instead of failing outright. This is
+ * deliberately best-effort and independent of the filter's on/off state:
+ * it runs once at service startup and stays up for as long as the service
+ * does. Nothing reaches it unless the DNS proxy has separately redirected a
+ * blocked domain to 127.0.0.1 — which only happens once this setup reports
+ * available: true (see DnsProxy's reminderPageAvailable flag) — so a
+ * failure here just means blocked sites fall back to the plain NXDOMAIN
+ * behavior that existed before this feature, never a reason to stop the
+ * service from protecting the PC at all.
+ */
+async function setupReminderPage() {
+  if (process.platform !== 'win32') return { server: null, available: false };
+  try {
+    const caMeta = await certAuthority.ensureCaInstalled(dataDir());
+    const server = new ReminderServer({ dataDir: dataDir(), caThumbprint: caMeta.thumbprint });
+    const { httpOk, httpsOk } = await server.start();
+    const available = Boolean(httpOk || httpsOk);
+    if (!available) {
+      console.error('[reminderPage] neither port 80 nor 443 could bind — falling back to NXDOMAIN for blocked sites.');
+    } else if (!httpsOk) {
+      console.error('[reminderPage] HTTPS port 443 could not bind — blocked HTTPS sites will fail to connect rather than show the reminder page; HTTP still works.');
+    }
+    return { server, available };
+  } catch (err) {
+    console.error(`[reminderPage] setup failed, falling back to NXDOMAIN for blocked sites: ${err.message}`);
+    return { server: null, available: false };
+  }
+}
+
 async function main() {
   const store = new Store(dataDir());
   const parentAuth = new ParentAuth(store);
   const seedDomains = loadSeedDomains();
   const feedDomains = feedBlocklist.loadCachedFeed(dataDir());
+  const { server: reminderServer, available: reminderPageAvailable } = await setupReminderPage();
 
   let proxy = null;
   const ctx = {
@@ -69,13 +103,14 @@ async function main() {
     version: readVersion(),
     getProxy: () => proxy,
     createProxy: (blocklist) => {
-      proxy = new DnsProxy({ blocklist });
+      proxy = new DnsProxy({ blocklist, reminderPageAvailable });
       proxy.on('error', (err) => console.error(`[dnsProxy] ${err.message}`));
       // The activity log the parent reviews (and can email themselves a
       // report of) — blocked attempts only, not every site visited.
       proxy.on('blocked', ({ domain }) => appendActivity(store, domain));
       return proxy;
     },
+    reminderPageAvailable,
     onStateChange: () => {}, // hook point if a future UI wants push updates
   };
 
@@ -137,6 +172,9 @@ async function main() {
       server.close();
     } catch (_) {
       /* already closed */
+    }
+    if (reminderServer) {
+      await reminderServer.stop().catch(() => {});
     }
     // Best-effort, bounded: a hung PowerShell call must not block the service
     // from stopping when the SCM asks it to.

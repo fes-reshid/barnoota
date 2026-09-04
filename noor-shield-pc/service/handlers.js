@@ -4,6 +4,7 @@ const path = require('path');
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const feedBlocklist = require('./feedBlocklist');
+const certAuthority = require('./certAuthority');
 
 // Bounds the log so a machine left running for months doesn't grow it
 // without limit. Oldest entries drop off first.
@@ -161,6 +162,7 @@ function createHandlers(ctx) {
         feedCount: feedMeta.count,
         feedFetchedAt: feedMeta.fetchedAt,
         feedLastError: feedMeta.lastError,
+        reminderPageAvailable: Boolean(ctx.reminderPageAvailable),
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
       };
@@ -258,10 +260,15 @@ function createHandlers(ctx) {
     // this one, which is what node-windows' stop-then-uninstall sequence
     // expects; doing it from inside the very service being torn down is a
     // self-referential mess this deliberately avoids. This handler's job is
-    // just the part that has to happen here: verify the parent password and
-    // put DNS back before anything is removed.
+    // just the part that has to happen here: verify the parent password,
+    // put DNS back, and remove the local certificate authority (see
+    // certAuthority.js) from Windows' trust store — leaving that behind
+    // after protection is otherwise gone would be a stray, unexplained
+    // trusted root cert, which is exactly the kind of thing that should
+    // never outlive the app that installed it.
     'service.prepareUninstall': parentOnly(async () => {
       await stopFilter();
+      await certAuthority.removeCa(ctx.dataDir).catch(() => {});
       return { ok: true };
     }),
   };

@@ -229,10 +229,19 @@ async function refreshStatus() {
   pill.className = `statuspill ${running ? 'on' : 'off'}`;
 
   detail.textContent = running
-    ? 'Every app on this PC resolves through Noor Shield. Blocked domains do not resolve.'
+    ? status.reminderPageAvailable
+      ? 'Every app on this PC resolves through Noor Shield. Blocked sites show a Hadith reminder page.'
+      : 'Every app on this PC resolves through Noor Shield. Blocked domains do not resolve.'
     : status.filterEnabled
       ? 'Protection is meant to be on, but the local resolver is not running. Check the warnings below.'
       : 'The filter is off. Nothing on this PC is being blocked right now.';
+
+  const reminderNote = $('reminder-page-note');
+  if (reminderNote) {
+    reminderNote.textContent = status.reminderPageAvailable
+      ? "A blocked site shows a Hadith reminder page instead of a broken connection, on both http:// and https:// — see below for how."
+      : "Blocked sites currently fail to connect rather than showing a reminder page (the local certificate setup this needs didn't succeed — see the app's logs, or try reopening Noor Shield as Administrator).";
+  }
 
   toggle.textContent = status.filterEnabled ? 'Turn protection off' : 'Turn protection on';
   toggle.disabled = false;
