@@ -50,6 +50,13 @@ function showUnlock(reason, retry) {
   $('unlock-password').focus();
 }
 
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('[data-open-external]');
+  if (!link) return;
+  event.preventDefault();
+  api.openExternal(link.dataset.openExternal);
+});
+
 function hideError(el) {
   el.hidden = true;
   el.textContent = '';
@@ -281,16 +288,34 @@ $('block-input').addEventListener('keydown', (event) => {
 });
 
 $('feed-refresh').addEventListener('click', async () => {
-  $('feed-status').textContent = 'Refreshing… this can take a moment for a large list.';
+  for (const key of ['adult', 'security', 'ads']) {
+    $(`feed-status-${key}`).textContent = 'Refreshing… this can take a moment for a large list.';
+  }
   await api.refreshBlocklistFeed();
-  // The fetch itself keeps running in the background service — poll a few
-  // times rather than waiting on one slow request, since a ~25MB download
-  // can take longer than any single round trip we'd want to block on.
+  // The fetches keep running in the background service — poll a few times
+  // rather than waiting on one slow request, since these are large enough
+  // downloads to take longer than any single round trip we'd want to block on.
   for (let attempt = 0; attempt < 12; attempt += 1) {
     await new Promise((resolve) => setTimeout(resolve, 3000));
     await renderBlocklist();
   }
 });
+
+async function setFeedCategory(category, enabled) {
+  const result = await callGated(
+    () => api.setBlocklistCategory(category, enabled),
+    `Enter the parent password to change ${category === 'ads' ? 'ad & tracker' : 'malware & phishing'} blocking.`
+  );
+  if (!result || !result.ok) {
+    // Revert the checkbox if the change didn't actually take (locked, or an error).
+    $(`feed-toggle-${category}`).checked = !enabled;
+  }
+  refreshStatus();
+  renderBlocklist();
+}
+
+$('feed-toggle-security').addEventListener('change', (event) => setFeedCategory('security', event.target.checked));
+$('feed-toggle-ads').addEventListener('change', (event) => setFeedCategory('ads', event.target.checked));
 
 async function addBlockedSite() {
   const input = $('block-input').value;
@@ -324,7 +349,9 @@ async function renderBlocklist() {
   if (data.serviceUnreachable) {
     $('seed-count').textContent = '—';
     $('custom-count').textContent = '—';
-    $('feed-status').textContent = 'The protection service is not reachable right now.';
+    for (const key of ['adult', 'security', 'ads']) {
+      $(`feed-status-${key}`).textContent = 'The protection service is not reachable right now.';
+    }
     const empty = document.createElement('p');
     empty.className = 'empty';
     empty.textContent = 'The protection service is not reachable right now.';
@@ -335,18 +362,29 @@ async function renderBlocklist() {
   $('seed-count').textContent = data.seedCount;
   $('custom-count').textContent = data.custom.length;
 
-  const feedStatus = $('feed-status');
-  if (data.feedCount > 0) {
-    const when = data.feedFetchedAt ? new Date(data.feedFetchedAt).toLocaleString() : 'unknown time';
-    feedStatus.textContent = data.feedLastError
-      ? `${data.feedCount.toLocaleString()} domains from a live feed, last refreshed ${when}. ` +
-        `Most recent refresh attempt failed (${data.feedLastError}) — still using that last successful fetch.`
-      : `${data.feedCount.toLocaleString()} domains from a live feed (The Blocklist Project), last refreshed ${when}. ` +
-        'Refreshes automatically about once a day.';
-  } else if (data.feedLastError) {
-    feedStatus.textContent = `Could not fetch the live feed yet (${data.feedLastError}). Using the built-in list only until it succeeds.`;
-  } else {
-    feedStatus.textContent = 'Fetching the live feed for the first time — this can take a moment.';
+  for (const key of ['adult', 'security', 'ads']) {
+    const cat = data.feedCategories && data.feedCategories[key];
+    const el = $(`feed-status-${key}`);
+    const toggle = $(`feed-toggle-${key}`);
+    if (!cat) {
+      el.textContent = 'Not available.';
+      continue;
+    }
+    if (toggle) toggle.checked = cat.enabled;
+
+    if (!cat.enabled) {
+      el.textContent = 'Turned off.';
+    } else if (cat.count > 0) {
+      const when = cat.fetchedAt ? new Date(cat.fetchedAt).toLocaleString() : 'unknown time';
+      el.textContent = cat.lastError
+        ? `${cat.count.toLocaleString()} domains, last refreshed ${when}. Most recent refresh attempt ` +
+          `failed (${cat.lastError}) — still using that last successful fetch.`
+        : `${cat.count.toLocaleString()} domains, last refreshed ${when}.`;
+    } else if (cat.lastError) {
+      el.textContent = `Could not fetch yet (${cat.lastError}). Using the built-in list only until it succeeds.`;
+    } else {
+      el.textContent = 'Fetching for the first time — this can take a moment.';
+    }
   }
 
   if (data.custom.length === 0) {

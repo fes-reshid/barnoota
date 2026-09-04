@@ -185,9 +185,54 @@
         </div>
 
         <div class="panel notepanel">
-          <h3>Live feed</h3>
-          <p id="feed-status">Checking…</p>
+          <h3>Live feeds</h3>
+          <p class="hint">
+            Refreshed automatically about once a day from The Blocklist Project's public lists.
+            <a href="#" data-open-external="https://github.com/blocklistproject/Lists">About this feed</a>
+          </p>
+
+          <div class="feedrow">
+            <div>
+              <b>Adult content</b>
+              <p class="hint" id="feed-status-adult">Checking…</p>
+            </div>
+          </div>
+
+          <div class="feedrow">
+            <div>
+              <b>Malware &amp; phishing sites</b>
+              <p class="hint" id="feed-status-security">Checking…</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="feed-toggle-security" checked>
+              <span></span>
+            </label>
+          </div>
+
+          <div class="feedrow">
+            <div>
+              <b>Ads &amp; trackers</b>
+              <p class="hint" id="feed-status-ads">Checking…</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="feed-toggle-ads" checked>
+              <span></span>
+            </label>
+          </div>
+
           <button class="btn ghost" id="feed-refresh">Refresh now</button>
+        </div>
+
+        <div class="panel notepanel">
+          <h3>About virus protection</h3>
+          <p>
+            Noor Shield blocks known malware-distribution and phishing <i>domains</i> — it will stop
+            this PC from reaching a site already known to spread malware or steal passwords. It is
+            <b>not</b> antivirus software: it cannot scan files already on this PC, remove an
+            existing infection, or watch running programs. Windows' own built-in
+            <a href="#" data-open-external="https://www.microsoft.com/en-us/windows/comprehensive-security">Microsoft Defender</a>
+            handles that, and should stay turned on alongside this.
+          </p>
         </div>
       </section>
 

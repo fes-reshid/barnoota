@@ -7,41 +7,89 @@ const https = require('https');
 const { isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 
 /**
- * Periodically-refreshed public domain feed, layered on top of the small
+ * Periodically-refreshed public domain feeds, layered on top of the small
  * bundled seed list (resources/blocklist_domains.txt). No static file
- * shipped with the app can keep up with new adult sites — this fetches The
- * Blocklist Project's actively-maintained porn list (~950k domains as of
- * writing) and caches the parsed result to disk, so:
- *   - a PC with no internet, or where the fetch fails, keeps using whatever
- *     was last cached (or just the seed list, if it's never succeeded yet)
- *   - the ~25MB raw feed is parsed once per fetch, not once per service
- *     restart — the cache is our own compact one-domain-per-line format
+ * shipped with the app can keep up with new sites — this fetches several of
+ * The Blocklist Project's actively-maintained lists and caches each parsed
+ * result to disk, so:
+ *   - a PC with no internet, or where a fetch fails, keeps using whatever
+ *     was last cached for that category (or nothing, if it's never
+ *     succeeded — the seed list and any still-working categories still
+ *     apply regardless)
+ *   - each ~raw list is parsed once per fetch, not once per service restart
+ *     — the cache is our own compact one-domain-per-line format
+ *
+ * Deliberately excludes The Blocklist Project's own "malware" list: at
+ * ~2.6 million domains it alone would cost this background service roughly
+ * 700MB of RAM and a ~70MB daily download — disproportionate for a family
+ * PC given "phishing" and "scam" already cover most of the same ground far
+ * more cheaply. Real malware *scanning* (files already on the PC) is a
+ * different problem entirely, one Windows' built-in Defender already
+ * handles — this only ever blocks known-bad domains, the same as
+ * everything else here.
  */
 
-const FEED_URL = 'https://raw.githubusercontent.com/blocklistproject/Lists/master/porn.txt';
-const CACHE_FILENAME = 'feed-domains.txt';
+const FEEDS = {
+  adult: {
+    url: 'https://raw.githubusercontent.com/blocklistproject/Lists/master/porn.txt',
+    label: 'Adult content',
+  },
+  phishing: {
+    url: 'https://raw.githubusercontent.com/blocklistproject/Lists/master/phishing.txt',
+    label: 'Phishing',
+  },
+  scam: {
+    url: 'https://raw.githubusercontent.com/blocklistproject/Lists/master/scam.txt',
+    label: 'Scam',
+  },
+  ads: {
+    url: 'https://raw.githubusercontent.com/blocklistproject/Lists/master/ads.txt',
+    label: 'Advertising',
+  },
+  tracking: {
+    url: 'https://raw.githubusercontent.com/blocklistproject/Lists/master/tracking.txt',
+    label: 'Tracking',
+  },
+};
+
+// User-facing grouping: which feed keys count toward which toggle in the UI.
+// "adult" is always active (this app's core purpose, not something to
+// casually switch off); "security" and "ads" are parent-toggleable.
+const CATEGORY_GROUPS = {
+  adult: ['adult'],
+  security: ['phishing', 'scam'],
+  ads: ['ads', 'tracking'],
+};
+
 const FETCH_TIMEOUT_MS = 30000;
 const MAX_REDIRECTS = 3;
 
-function cachePath(dataDir) {
-  return path.join(dataDir, CACHE_FILENAME);
+function cachePath(dataDir, feedKey) {
+  return path.join(dataDir, `feed-${feedKey}.txt`);
 }
 
 /** Reads the last successfully-fetched (and parsed) feed from disk, if any. */
-function loadCachedFeed(dataDir) {
+function loadCachedFeed(dataDir, feedKey) {
   try {
-    const text = fs.readFileSync(cachePath(dataDir), 'utf8');
+    const text = fs.readFileSync(cachePath(dataDir, feedKey), 'utf8');
     return text.split('\n').map((line) => line.trim()).filter((line) => line.length > 0);
   } catch (_) {
     return [];
   }
 }
 
-function saveCachedFeed(dataDir, domains) {
+function loadAllCachedFeeds(dataDir) {
+  const result = {};
+  for (const key of Object.keys(FEEDS)) result[key] = loadCachedFeed(dataDir, key);
+  return result;
+}
+
+function saveCachedFeed(dataDir, feedKey, domains) {
   fs.mkdirSync(dataDir, { recursive: true });
-  const tmp = `${cachePath(dataDir)}.tmp`;
+  const target = cachePath(dataDir, feedKey);
+  const tmp = `${target}.tmp`;
   fs.writeFileSync(tmp, domains.join('\n') + '\n', 'utf8');
-  fs.renameSync(tmp, cachePath(dataDir));
+  fs.renameSync(tmp, target);
 }
 
 /** Parses a hosts-file-format list ("0.0.0.0 domain.tld" per line) into a deduped domain array. */
@@ -82,20 +130,46 @@ function fetchText(url, redirectsLeft) {
 }
 
 /**
- * Fetches, parses, and caches the current feed. Never throws — a failure
- * (no internet, feed host down, etc.) is expected and unremarkable; the
- * caller keeps using whatever was already loaded.
+ * Fetches, parses, and caches one named feed. Never throws — a failure (no
+ * internet, feed host down, etc.) is expected and unremarkable; the caller
+ * keeps using whatever was already loaded for that feed.
  */
-async function refreshFeed(dataDir) {
+async function refreshFeed(dataDir, feedKey) {
+  const feed = FEEDS[feedKey];
+  if (!feed) return { ok: false, error: `Unknown feed: ${feedKey}` };
   try {
-    const text = await fetchText(FEED_URL, MAX_REDIRECTS);
+    const text = await fetchText(feed.url, MAX_REDIRECTS);
     const domains = parseHostsFormat(text);
     if (domains.length === 0) throw new Error('Feed fetch returned no valid domains');
-    saveCachedFeed(dataDir, domains);
+    saveCachedFeed(dataDir, feedKey, domains);
     return { ok: true, count: domains.length, domains, fetchedAt: Date.now() };
   } catch (err) {
     return { ok: false, error: err.message };
   }
 }
 
-module.exports = { FEED_URL, loadCachedFeed, saveCachedFeed, parseHostsFormat, refreshFeed, cachePath };
+/**
+ * Refreshes every feed, one at a time (not in parallel) — these are large
+ * downloads, and there's no reason to hit the feed host with several at
+ * once. Returns a { [feedKey]: result } map; a failure for one feed doesn't
+ * stop the others from being attempted.
+ */
+async function refreshAllFeeds(dataDir) {
+  const results = {};
+  for (const key of Object.keys(FEEDS)) {
+    results[key] = await refreshFeed(dataDir, key);
+  }
+  return results;
+}
+
+module.exports = {
+  FEEDS,
+  CATEGORY_GROUPS,
+  loadCachedFeed,
+  loadAllCachedFeeds,
+  saveCachedFeed,
+  parseHostsFormat,
+  refreshFeed,
+  refreshAllFeeds,
+  cachePath,
+};

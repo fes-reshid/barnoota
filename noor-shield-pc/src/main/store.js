@@ -21,6 +21,11 @@ const DEFAULTS = {
   emailSmtp: null, // { host, port, secure, user, from } — GUI-owned, password stored separately (encrypted)
   emailSmtpPasswordEnc: null, // base64 ciphertext from Electron's safeStorage, or null
   emailRecipient: null,
+  // Adult content is always filtered — this app's core purpose, not a
+  // toggle. Malware/phishing and ad/tracker blocking (see feedBlocklist.js)
+  // are on by default but parent-toggleable, since ad blocking in
+  // particular can occasionally break a site's layout or functionality.
+  filterCategories: { security: true, ads: true },
 };
 
 class Store {

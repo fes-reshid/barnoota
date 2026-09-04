@@ -14,10 +14,10 @@ const { ReminderServer } = require('./reminderServer');
 const { createServer } = require('./pipeTransport');
 const { createHandlers, appendActivity } = require('./handlers');
 
-// How often the public feed (see feedBlocklist.js) is re-fetched. New adult
-// sites appear constantly, but this is a large (~25MB) download — daily is
-// frequent enough to matter and infrequent enough not to be rude to the
-// feed's host.
+// How often the public feeds (see feedBlocklist.js) are re-fetched. New bad
+// sites appear constantly, but these are large downloads (tens of MB
+// combined) — daily is frequent enough to matter and infrequent enough not
+// to be rude to the feeds' host.
 const FEED_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 /**
@@ -90,7 +90,7 @@ async function main() {
   const store = new Store(dataDir());
   const parentAuth = new ParentAuth(store);
   const seedDomains = loadSeedDomains();
-  const feedDomains = feedBlocklist.loadCachedFeed(dataDir());
+  const feedDomains = feedBlocklist.loadAllCachedFeeds(dataDir());
   const { server: reminderServer, available: reminderPageAvailable } = await setupReminderPage();
 
   let proxy = null;
@@ -114,7 +114,7 @@ async function main() {
     onStateChange: () => {}, // hook point if a future UI wants push updates
   };
 
-  const { rpc, startFilter, stopFilter, refreshFeedFromRemote } = createHandlers(ctx);
+  const { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote } = createHandlers(ctx);
 
   /**
    * Startup reconciliation resumes the service's own previously-saved
@@ -157,9 +157,9 @@ async function main() {
   // here (no internet yet, feed host unreachable) just means the service
   // keeps running on the seed list plus whatever feed snapshot was already
   // cached — never a reason to delay listening on the pipe or fail to start.
-  refreshFeedFromRemote().catch((err) => console.error(`[feed] initial refresh failed: ${err.message}`));
+  refreshAllFeedsFromRemote().catch((err) => console.error(`[feed] initial refresh failed: ${err.message}`));
   const feedTimer = setInterval(() => {
-    refreshFeedFromRemote().catch((err) => console.error(`[feed] refresh failed: ${err.message}`));
+    refreshAllFeedsFromRemote().catch((err) => console.error(`[feed] refresh failed: ${err.message}`));
   }, FEED_REFRESH_INTERVAL_MS);
   feedTimer.unref(); // never keep the process alive on its own
 

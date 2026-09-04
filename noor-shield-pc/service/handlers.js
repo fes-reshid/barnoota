@@ -46,15 +46,69 @@ function appendActivity(store, domain) {
 function createHandlers(ctx) {
   const { store, parentAuth, seedDomains } = ctx;
 
-  // Mutable: replaced wholesale each time refreshFeedFromRemote() succeeds.
-  // Starts from whatever was cached from the last successful fetch (possibly
-  // none, on a fresh install or one that's never been online).
-  let feedDomains = ctx.feedDomains || [];
-  let feedMeta = { fetchedAt: null, count: feedDomains.length, lastError: null };
+  // Raw per-feed domain arrays (adult, phishing, scam, ads, tracking — see
+  // feedBlocklist.FEEDS), mutated in place as each one refreshes. Starts
+  // from whatever was cached from the last successful fetch of each
+  // (possibly none, on a fresh install that's never been online).
+  const feedsByKey = { ...(ctx.feedDomains || {}) };
+  const feedMetaByKey = {};
+  for (const key of Object.keys(feedBlocklist.FEEDS)) {
+    feedMetaByKey[key] = { fetchedAt: null, count: (feedsByKey[key] || []).length, lastError: null };
+  }
+
+  function categoriesEnabled() {
+    return { security: true, ads: true, ...store.get('filterCategories') };
+  }
+
+  // The single array Blocklist actually matches against — everything from
+  // "adult" (always on: this app's core purpose) plus whichever
+  // parent-toggleable groups (security, ads) are currently enabled.
+  // Recomputed whenever a feed refreshes or a toggle changes, not on every
+  // isBlocked() check — these arrays can be hundreds of thousands of
+  // entries long.
+  let mergedFeedDomains = [];
+
+  function recomputeMergedFeed() {
+    const enabled = categoriesEnabled();
+    const activeKeys = new Set(feedBlocklist.CATEGORY_GROUPS.adult);
+    if (enabled.security) for (const k of feedBlocklist.CATEGORY_GROUPS.security) activeKeys.add(k);
+    if (enabled.ads) for (const k of feedBlocklist.CATEGORY_GROUPS.ads) activeKeys.add(k);
+
+    const merged = new Set();
+    for (const key of activeKeys) {
+      for (const domain of feedsByKey[key] || []) merged.add(domain);
+    }
+    mergedFeedDomains = Array.from(merged);
+  }
+  recomputeMergedFeed();
+
+  /** Summarizes one user-facing group (adult/security/ads) for status.get/blocklist.list. */
+  function groupSummary(groupKey) {
+    let count = 0;
+    let fetchedAt = null;
+    let lastError = null;
+    for (const key of feedBlocklist.CATEGORY_GROUPS[groupKey]) {
+      count += (feedsByKey[key] || []).length;
+      const meta = feedMetaByKey[key];
+      if (!meta) continue;
+      if (meta.fetchedAt && (!fetchedAt || meta.fetchedAt > fetchedAt)) fetchedAt = meta.fetchedAt;
+      if (meta.lastError) lastError = meta.lastError;
+    }
+    return { count, fetchedAt, lastError };
+  }
+
+  function feedCategoriesSummary() {
+    const enabled = categoriesEnabled();
+    return {
+      adult: { ...groupSummary('adult'), enabled: true, toggleable: false },
+      security: { ...groupSummary('security'), enabled: enabled.security, toggleable: true },
+      ads: { ...groupSummary('ads'), enabled: enabled.ads, toggleable: true },
+    };
+  }
 
   function buildBlocklist() {
     const custom = (store.get('customDomains') || []).map((entry) => entry.domain);
-    return new Blocklist(seedDomains, custom, feedDomains);
+    return new Blocklist(seedDomains, custom, mergedFeedDomains);
   }
 
   function refreshBlocklist() {
@@ -63,20 +117,31 @@ function createHandlers(ctx) {
   }
 
   /**
-   * Fetches the current public feed and, on success, swaps it into the live
-   * blocklist immediately. Safe to call anytime (startup, on a timer, or by
-   * request) — a failure just leaves feedDomains/feedMeta as they were.
+   * Fetches one named feed and, on success, folds it into the live
+   * blocklist immediately (if its group is currently enabled). Safe to call
+   * anytime (startup, on a timer, or by request) — a failure just leaves
+   * that feed's cached domains and metadata as they were.
    */
-  async function refreshFeedFromRemote() {
-    const result = await feedBlocklist.refreshFeed(ctx.dataDir);
+  async function refreshFeedFromRemote(feedKey) {
+    const result = await feedBlocklist.refreshFeed(ctx.dataDir, feedKey);
     if (result.ok) {
-      feedDomains = result.domains;
-      feedMeta = { fetchedAt: result.fetchedAt, count: result.count, lastError: null };
+      feedsByKey[feedKey] = result.domains;
+      feedMetaByKey[feedKey] = { fetchedAt: result.fetchedAt, count: result.count, lastError: null };
+      recomputeMergedFeed();
       refreshBlocklist();
     } else {
-      feedMeta = { ...feedMeta, lastError: result.error };
+      feedMetaByKey[feedKey] = { ...feedMetaByKey[feedKey], lastError: result.error };
     }
     return result;
+  }
+
+  /** Refreshes every feed, one at a time — see feedBlocklist.refreshAllFeeds for why. */
+  async function refreshAllFeedsFromRemote() {
+    const results = {};
+    for (const key of Object.keys(feedBlocklist.FEEDS)) {
+      results[key] = await refreshFeedFromRemote(key);
+    }
+    return results;
   }
 
   async function startFilter() {
@@ -159,9 +224,8 @@ function createHandlers(ctx) {
         stats: proxy ? proxy.stats : { queries: 0, blocked: 0, forwarded: 0, failed: 0 },
         seedCount: seedDomains.length,
         customCount: (store.get('customDomains') || []).length,
-        feedCount: feedMeta.count,
-        feedFetchedAt: feedMeta.fetchedAt,
-        feedLastError: feedMeta.lastError,
+        feedCount: mergedFeedDomains.length,
+        feedCategories: feedCategoriesSummary(),
         reminderPageAvailable: Boolean(ctx.reminderPageAvailable),
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
@@ -172,26 +236,37 @@ function createHandlers(ctx) {
       ok: true,
       custom: store.get('customDomains') || [],
       seedCount: seedDomains.length,
-      feedCount: feedMeta.count,
-      feedFetchedAt: feedMeta.fetchedAt,
-      feedLastError: feedMeta.lastError,
+      feedCount: mergedFeedDomains.length,
+      feedCategories: feedCategoriesSummary(),
     }),
 
-    // Not parent-gated: this only pulls in a public list, the same one
+    // Not parent-gated: this only pulls in public lists, the same ones
     // anyone could download themselves — nothing it does requires the
     // parent password, unlike anything that actually changes what's
     // protected in a way a child could exploit.
     //
-    // Deliberately doesn't await the fetch: the pipe's own call timeout
-    // (a few seconds — see pipeTransport.js) is far shorter than a ~25MB
-    // download can take, so waiting here would report "timed out" over an
+    // Deliberately doesn't await the fetches: the pipe's own call timeout
+    // (a few seconds — see pipeTransport.js) is far shorter than these
+    // downloads can take, so waiting here would report "timed out" over an
     // attempt that's actually still running. Firing it in the background
     // and returning immediately lets the next status/blocklist.list poll
     // (the renderer already polls every few seconds) pick up the result.
     'blocklist.refreshFeed': async () => {
-      refreshFeedFromRemote().catch(() => {});
+      refreshAllFeedsFromRemote().catch(() => {});
       return { ok: true, started: true };
     },
+
+    // Toggling ad/tracker or malware/phishing blocking off — never adult
+    // content, that's this app's whole purpose and isn't exposed here.
+    'blocklist.setCategory': parentOnly(({ category, enabled }) => {
+      if (category !== 'security' && category !== 'ads') {
+        return { ok: false, error: 'Unknown category.' };
+      }
+      store.set('filterCategories', { ...categoriesEnabled(), [category]: Boolean(enabled) });
+      recomputeMergedFeed();
+      refreshBlocklist();
+      return { ok: true };
+    }),
 
     // Blocked attempts only, by design (see README): not a full browsing
     // history. Gated like everything else that reveals what the child has
@@ -276,7 +351,7 @@ function createHandlers(ctx) {
   // Exposed unwrapped for the service's own startup reconciliation and its
   // periodic feed-refresh timer, neither of which is a request going through
   // the RPC/parentOnly() path.
-  return { rpc, startFilter, stopFilter, refreshFeedFromRemote };
+  return { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote };
 }
 
 module.exports = { createHandlers, appendActivity, MAX_ACTIVITY_ENTRIES };
