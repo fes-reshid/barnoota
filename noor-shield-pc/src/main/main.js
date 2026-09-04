@@ -3,6 +3,16 @@
 const { app, BrowserWindow, ipcMain, Notification, Tray, Menu, shell, dialog } = require('electron');
 const path = require('path');
 
+// A tester's PC showed a completely blank window with DevTools unable to
+// open at all — not just our page failing, but Chromium's own rendering/
+// DevTools pipeline not functioning. That pattern (blank window + DevTools
+// silently refusing to open) is a known Electron failure mode on some
+// Windows setups (blocked or buggy GPU drivers, remote desktop/VDI
+// sessions, some locked-down corporate laptops) where hardware-accelerated
+// rendering fails silently. Forcing software rendering is the standard
+// fix, and it must happen before app.whenReady() to take effect.
+app.disableHardwareAcceleration();
+
 const { Store } = require('./store');
 const hadith = require('./hadith');
 const serviceClient = require('./serviceClient');
