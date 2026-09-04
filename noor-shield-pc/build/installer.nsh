@@ -33,6 +33,14 @@
 ; has no access to certAuthority.js's JSON metadata file — safe because
 ; nothing else on a family PC would coincidentally use this exact CN.
 !macro customUnInit
+  ; Runs first and unconditionally, before anything else: a PC left with no
+  ; working DNS after uninstall is the worst possible outcome, worse than
+  ; any other uninstall step failing. This does NOT depend on the
+  ; protection service shutting down gracefully (see dns-restore.ps1 for
+  ; why that path alone isn't reliable enough) — it directly resets any
+  ; adapter still pointed at 127.0.0.1 back to automatic DNS.
+  DetailPrint "Restoring Windows DNS settings..."
+  ExecWait 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$INSTDIR\resources\app\resources\dns-restore.ps1"'
   DetailPrint "Stopping Noor Shield protection service..."
   ExecWait 'sc.exe stop "noorshieldfilter"'
   Sleep 5000
