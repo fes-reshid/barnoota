@@ -588,7 +588,7 @@ const FINAL_EXAM = {
 
 
 
-const state = { current: 1, completed: new Set(), view: 'splash', userName: '', soundOn: true, fontScale: 1 };
+const state = { current: 1, completed: new Set(), view: 'splash', userName: '', soundOn: true, fontScale: 1, completedAt: null };
 const examState = { type: null, index: 0, score: 0, answered: [] };
 
 /* ---------- sound ---------- */
@@ -705,7 +705,27 @@ function updateFontDisplay(){
 }
 document.addEventListener('DOMContentLoaded', initSettings);
 
-/* ---------- profile storage (window.storage) ---------- */
+/* ---------- profile storage (window.storage, backed by localStorage) ---------- */
+window.storage = {
+  async list(prefix){
+    const keys = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf(prefix) === 0) keys.push(k);
+    }
+    return { keys };
+  },
+  async get(key){
+    const v = localStorage.getItem(key);
+    return v === null ? null : { value: v };
+  },
+  async set(key, value){
+    localStorage.setItem(key, value);
+  },
+  async delete(key){
+    localStorage.removeItem(key);
+  }
+};
 function profileKeyFor(name){
   const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);
   return 'profile:' + (slug || 'learner-' + Date.now());
@@ -741,7 +761,7 @@ function renderProfileList(profiles){
     const doneCount = (p.completed || []).length;
     item.innerHTML = `
       <div class="profile-item-name">${escapeHtml(p.name)}</div>
-      <div class="profile-item-progress">${doneCount}/17</div>
+      <div class="profile-item-progress">${doneCount === 17 ? '✓ Xumurame' : doneCount + '/17'}</div>
       <button class="profile-item-del" title="Haqi">✕</button>
     `;
     item.addEventListener('click', async (e) => {
@@ -762,6 +782,7 @@ async function resumeProfile(p){
   state.profileKey = p.key;
   state.completed = new Set(p.completed || []);
   state.fontScale = p.fontScale || 1;
+  state.completedAt = p.completedAt || null;
   applyFontScale();
   updateSettingsName();
   document.getElementById('profile-screen').classList.remove('show');
@@ -774,6 +795,7 @@ async function loadProfileInto(key){
       const data = JSON.parse(rec.value);
       state.completed = new Set(data.completed || []);
       state.fontScale = data.fontScale || 1;
+      state.completedAt = data.completedAt || null;
       applyFontScale();
     }
   }catch(e){ /* no existing record yet */ }
@@ -785,6 +807,7 @@ async function saveCurrentProfile(){
       name: state.userName,
       completed: Array.from(state.completed),
       fontScale: state.fontScale,
+      completedAt: state.completedAt || null,
       updatedAt: Date.now()
     };
     await window.storage.set(state.profileKey, JSON.stringify(data), false);
@@ -915,8 +938,19 @@ function renderUserGreeting(){
     <div>
       <div class="user-greeting-name">Akkam, ${escapeHtml(state.userName)}!</div>
       <div class="user-greeting-msg">${encouragementMessage(done)}</div>
+      ${done === 17 ? '<button class="nav-btn" id="view-cert-btn" style="margin-top:10px;background:var(--gold);color:var(--emerald-dark);">🎓 Waraqaa Ragaa Ilaali</button>' : ''}
     </div>
   `;
+  if(done === 17){
+    document.getElementById('view-cert-btn').addEventListener('click', viewCertificate);
+  }
+}
+function viewCertificate(){
+  state.view = 'lesson';
+  document.getElementById('map-screen').classList.remove('show');
+  document.getElementById('app').classList.add('show');
+  showCompletion();
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 function buildExamCard(type){
   const exam = type === 'mid' ? MID_EXAM : FINAL_EXAM;
@@ -1117,12 +1151,14 @@ function handleAnswer(i, lesson, evt){
     fb.classList.add('right');
     fb.innerHTML = `<b>Sirrii dha.</b> ${lesson.quiz.explain}`;
     state.completed.add(state.current);
+    const justFinished = state.completed.size===17 && wasComplete!==17;
+    if(justFinished) state.completedAt = Date.now();
     buildSidebar(); updateProgress();
     const rect = evt.target.getBoundingClientRect();
     burstConfetti(40, rect.left+rect.width/2, rect.top, 6);
     playSuccess();
     saveCurrentProfile();
-    if(state.completed.size===17 && wasComplete!==17){ setTimeout(showCompletion, 900); }
+    if(justFinished){ setTimeout(showCompletion, 900); }
   } else {
     fb.classList.add('wrong');
     fb.innerHTML = `<b>Sirrii miti.</b> ${lesson.quiz.explain}`;
@@ -1139,7 +1175,7 @@ function updateProgress(){
 function showCompletion(){
   const view = document.getElementById('lesson-view');
   const name = (state.userName || '').trim();
-  const dateStr = new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  const dateStr = new Date(state.completedAt || Date.now()).toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
   view.innerHTML = `
     <div class="complete-wrap">
       <div class="complete-banner">
