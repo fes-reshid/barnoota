@@ -247,10 +247,18 @@
       <tr><th>Feature</th><th>What it means in practice</th></tr>
       <tr>
         <td><b>Website filter</b></td>
-        <td>Blocks a curated list of known adult-content domains for the <i>whole PC</i> — every
-          browser, every app — not just one browser's settings. Runs as a Windows background
-          service, so it keeps working even after you close the app window, log off, or restart
-          the computer.</td>
+        <td>Blocks a large, regularly-refreshed list of known adult-content domains (a bundled
+          starter list plus a live feed of roughly 950,000 domains, updated about once a day) for
+          the <i>whole PC</i> — every browser, every app — not just one browser's settings. Runs as
+          a Windows background service, so it keeps working even after you close the app window,
+          log off, or restart the computer.</td>
+      </tr>
+      <tr>
+        <td><b>A reminder page, not a broken connection</b></td>
+        <td>A blocked site shows a Hadith reminder instead of an error, on both regular
+          (<code>http://</code>) and secure (<code>https://</code>) sites. Making that work cleanly
+          on <code>https://</code> sites needs a small local certificate — see
+          <a href="#limitations">below</a> for exactly what that means.</td>
       </tr>
       <tr>
         <td><b>Parent password</b></td>
@@ -307,6 +315,15 @@
       <li><b>Emailing yourself a report sends that list to your email provider.</b> Choose a
         recipient address you actually control, since that's now a second place this
         information lives.</li>
+      <li><b>The reminder page on https:// sites needs a small local certificate.</b> To show that
+        page instead of a browser security warning, Noor Shield creates one certificate authority
+        on your PC and adds it to Windows' trusted list — the same mechanism your browser already
+        uses to trust every other website, just for one purpose here: signing a certificate for
+        whatever blocked site you tried to reach, so the reminder page can load normally. It is
+        never used for anything else, and can't see or affect traffic to any site that isn't
+        already on the blocked list — DNS only ever sends an already-blocked domain there in the
+        first place. It's removed automatically when you use "Remove protection completely" in
+        Parent settings, or when you uninstall Noor Shield.</li>
     </ul>
   </section>
 
@@ -335,14 +352,14 @@
     <h3>Verifying the download (optional, for the technically inclined)</h3>
     <p>
       A checksum file sits next to the installer on the Apps page download link
-      (<code>Noor-Shield-Setup-0.2.8-beta.1.exe.sha256.txt</code>). If you want to confirm your
+      (<code>Noor-Shield-Setup-0.3.0-beta.1.exe.sha256.txt</code>). If you want to confirm your
       download wasn't corrupted or altered in transit, open PowerShell and run:
     </p>
-    <pre>Get-FileHash "Noor Shield Setup 0.2.8.exe" -Algorithm SHA256</pre>
+    <pre>Get-FileHash "Noor Shield Setup 0.3.0.exe" -Algorithm SHA256</pre>
     <p>The result should match the value in that checksum file.</p>
 
     <div class="cta-row" style="justify-content:center; margin-top:28px;">
-      <a class="btn btn-primary" href="downloads/noor-shield-pc/Noor-Shield-Setup-0.2.8-beta.1.exe">Download for Windows</a>
+      <a class="btn btn-primary" href="downloads/noor-shield-pc/Noor-Shield-Setup-0.3.0-beta.1.exe">Download for Windows</a>
     </div>
   </section>
 
