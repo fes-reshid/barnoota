@@ -341,6 +341,15 @@ border-radius:14px; padding:24px 20px; margin-top:10px; display:none;
 .final-panel .pct{ font-family:'Marcellus'; font-size:calc(52px * var(--scale)); color:var(--ink-navy); margin:6px 0; transition:font-size .25s ease; }
 .final-panel .msg{ font-size:calc(16px * var(--scale)); color:#5b4c37; margin-bottom:16px; transition:font-size .25s ease; }
 
+.quiz-attempts{ margin:0 0 16px; }
+.attempts-label{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); margin:0 0 6px; }
+.attempts-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.attempt-chip{
+  background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:5px 12px;
+  font-size:calc(12.5px * var(--scale)); color:var(--ink-brown);
+}
+.attempt-chip.current{ border-color:var(--green); color:var(--green-dark); font-weight:700; }
+
 .send-buttons{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:14px; }
 .send-buttons button{
 background:#fff; color:var(--ink-navy); border:1.5px solid var(--gold-soft); border-radius:20px;
@@ -510,6 +519,7 @@ animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-m
     <p class="student-final-name" id="student-final-name"></p>
     <p class="pct" id="final-pct">0%</p>
     <p class="msg" id="final-msg"></p>
+    <div id="quiz-attempts" class="quiz-attempts"></div>
     <div class="send-buttons">
       <button id="copy-result">Copy Result</button>
     </div>
@@ -695,6 +705,7 @@ var questions = [
 var studentName = "";
 var studentEmail = "";
 var currentUID = null;
+var quizAttempts = [];
 var currentIndex = 0;
 var answered = new Array(questions.length).fill(false);
 var selectedOption = new Array(questions.length).fill(null);
@@ -1033,10 +1044,23 @@ function showFinal(pct){
   else if(pct >= 75) msg = "Very good! You just need a light review of a few points.";
   else msg = "You passed! Good work, but review the questions you missed to strengthen your understanding.";
   finalMsg.textContent = msg;
+
+  quizAttempts.push({ pct: pct, at: new Date().toISOString() });
+  var attemptsEl = document.getElementById('quiz-attempts');
+  if(attemptsEl){
+    var html = '<div class="attempts-label">Your Attempts</div><div class="attempts-row">';
+    quizAttempts.forEach(function(a, idx){
+      var isCurrent = (idx === quizAttempts.length - 1);
+      html += '<span class="attempt-chip' + (isCurrent ? ' current' : '') + '">Attempt ' + (idx + 1) + ': ' + a.pct + '%</span>';
+    });
+    html += '</div>';
+    attemptsEl.innerHTML = html;
+  }
+
   finalPanel.scrollIntoView({behavior:'smooth', block:'center'});
   if(pct >= 50) launchConfetti();
   setTimeout(function(){ speakResult(studentName, correctCount, questions.length, pct); }, 500);
-  if(currentUID && window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, pct); }
+  if(currentUID && window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, pct, quizAttempts); }
 }
 
 function launchConfetti(){
@@ -1128,6 +1152,7 @@ function enterCourse(uid, email, data){
   currentUID = uid;
   studentEmail = email;
   studentName = (data && data.fullName) ? data.fullName : email;
+  quizAttempts = (data && Array.isArray(data.quizAttempts)) ? data.quizAttempts.slice() : [];
   document.getElementById('student-name-display').textContent = studentName;
 
   document.getElementById('account-bar').style.display = 'flex';
@@ -1207,7 +1232,7 @@ function showErr(el, msg){
 }
 
 function defaultStudentDoc(fullName, email){
-  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastScorePct: null, lastAttemptAt: null };
+  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastScorePct: null, lastAttemptAt: null, quizAttempts: [] };
 }
 
 var enrollBtn = document.getElementById('enroll-submit-btn');
@@ -1324,8 +1349,8 @@ window.__fbSignOut = function(){
   signOut(auth).then(function(){ window.location.reload(); });
 };
 
-window.__fbSaveProgress = function(uid, lastScorePct){
-  setDoc(doc(db, COLLECTION, uid), { lastScorePct: lastScorePct, lastAttemptAt: new Date().toISOString() }, { merge: true })
+window.__fbSaveProgress = function(uid, lastScorePct, quizAttempts){
+  setDoc(doc(db, COLLECTION, uid), { lastScorePct: lastScorePct, lastAttemptAt: new Date().toISOString(), quizAttempts: quizAttempts || [] }, { merge: true })
     .catch(function(e){ console.error('Progress save failed:', e); });
 };
 
