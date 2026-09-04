@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "deploy": "npm run build && npx firebase-tools deploy --only hosting",
+    "deploy:all": "npm run build && npx firebase-tools deploy"
   },
   "dependencies": {
     "firebase": "^11.3.1",

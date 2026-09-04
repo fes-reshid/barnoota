@@ -46,8 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
             return;
           }
-          const users = await usersRepo.list(DEMO_SCHOOL_ID);
-          const match = users.find((u) => u.authUid === fbUser.uid) ?? null;
+          // The user's profile document is keyed by their Firebase Auth uid
+          // (see createStaffAccount / setById) so this is a single cheap
+          // get() rather than a collection scan — which also lets Firestore
+          // security rules allow "read your own profile" without exposing
+          // the rest of the users collection.
+          const match = await usersRepo.get(fbUser.uid);
           if (!cancelled) {
             setCurrentUser(match);
             setLoading(false);
@@ -82,8 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async login(email, password) {
         if (isFirebaseConfigured && auth) {
           const cred = await signInWithEmailAndPassword(auth, email, password);
-          const users = await usersRepo.list(DEMO_SCHOOL_ID);
-          const match = users.find((u) => u.authUid === cred.user.uid);
+          const match = await usersRepo.get(cred.user.uid);
           if (!match) throw new Error('No profile found for this account. Contact your school admin.');
           setCurrentUser(match);
           return match;

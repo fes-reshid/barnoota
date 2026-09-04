@@ -3,6 +3,8 @@ import { Plus } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoList } from '@/lib/useRepoList';
 import { usersRepo, DEMO_SCHOOL_ID } from '@/lib/services';
+import { createStaffAccount } from '@/lib/createStaffAccount';
+import { isFirebaseConfigured } from '@/firebase/config';
 import type { AppUser } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
@@ -26,14 +28,12 @@ export default function AdminsPage() {
   async function handleCreate() {
     setSaving(true);
     try {
-      await usersRepo.create({
-        schoolId: DEMO_SCHOOL_ID,
-        authUid: `manual-${crypto.randomUUID()}`,
-        role: 'school_admin',
-        active: true,
-        ...form,
-      });
-      showToast('Administrator added.');
+      await createStaffAccount({ schoolId: DEMO_SCHOOL_ID, role: 'school_admin', ...form });
+      showToast(
+        isFirebaseConfigured
+          ? 'Administrator added. A password setup email has been sent to them.'
+          : 'Administrator added.',
+      );
       setOpen(false);
       setForm(emptyForm);
       reload();

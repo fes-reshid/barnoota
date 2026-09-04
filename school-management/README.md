@@ -13,10 +13,55 @@ The app opens with **demo mode** enabled automatically: since no Firebase projec
 
 ## Connecting a real Firebase project
 
-1. Create a Firebase project with **Authentication** (Email/Password), **Firestore**, and **Storage** enabled.
-2. Copy `.env.example` to `.env.local` and fill in your project's SDK config.
-3. Restart the dev server. The app automatically switches from demo mode to Firebase — no code changes required, because every screen reads and writes through the repository layer in `src/lib/repository.ts`.
-4. Configure Firestore security rules to scope each collection by `schoolId` and the signed-in user's role (see the domain model in `src/types/index.ts` for the collections used).
+### 1. Create the project
+
+1. Go to [console.firebase.google.com](https://console.firebase.google.com) and click **Add project**. Name it (e.g. "barnoota-campus"), and you can decline Google Analytics — it isn't needed.
+2. In the left sidebar, open **Build → Authentication → Get started**, then enable the **Email/Password** sign-in provider.
+3. Open **Build → Firestore Database → Create database**. Choose a region close to your users, and start in **production mode** (this repo's `firestore.rules` will lock it down properly on deploy).
+4. Open **Build → Storage → Get started**, and accept the default bucket/rules prompt (this repo's `storage.rules` replaces it on deploy).
+5. Open **Project settings → General**, scroll to "Your apps", click the **Web** icon (`</>`), register an app (nickname doesn't matter, skip Firebase Hosting setup here), and copy the `firebaseConfig` object it shows you.
+
+### 2. Wire the config into the app
+
+Copy `.env.example` to `.env.local` inside `school-management/` and fill in the values from the config object:
+
+```bash
+cp .env.example .env.local
+```
+
+```
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+Also update `.firebaserc` — replace `REPLACE_WITH_YOUR_FIREBASE_PROJECT_ID` with your actual project id (the `projectId` value above).
+
+Restart the dev server. The app automatically switches from demo mode to Firebase — no code changes required, since every screen reads/writes through the repository layer in `src/lib/repository.ts`. On first run in Firebase mode there is no seed data and no user profiles yet, so you'll need to create your first School Admin account directly in the Firebase console:
+1. **Authentication → Users → Add user** — create an account with your email/password.
+2. **Firestore Database → Start collection** → collection id `schools`, then create a document (any id) with at least `name`, and `islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true }`. Note its document id — that's your `schoolId`.
+3. Create a `users` collection, and add a document **whose document ID is the Auth user's UID** (find it on the Authentication → Users page) with fields: `schoolId` (the id from step 2), `name`, `email`, `role: "school_admin"`, `active: true`. From then on, every other account (teachers, admins) can be created from inside the app itself — it provisions Firebase Auth accounts and profile documents automatically and emails the new user a "set your password" link.
+
+### 3. Deploy security rules and Firestore/Storage
+
+```bash
+cd school-management
+npx firebase-tools login          # opens a browser to sign into your Google account
+npx firebase-tools deploy --only firestore:rules,storage
+```
+
+`firestore.rules` and `storage.rules` in this folder scope every collection to `schoolId` and role — review them against your school's privacy needs before going live.
+
+### 4. Deploy the app to Firebase Hosting (to get a public URL)
+
+```bash
+npm run deploy
+```
+
+This builds the app and deploys `dist/` to Firebase Hosting, printing a URL like `https://your-project-id.web.app` you can open in any browser. Run it again any time you want to publish a new build. (`npm run deploy:all` also redeploys the Firestore/Storage rules in the same step.)
 
 ## Project structure
 

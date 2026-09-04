@@ -1,0 +1,209 @@
+rules_version = '2';
+
+// Security model
+// ----------------
+// Every collection in this app stores a `schoolId` field, and every signed
+// in user has a profile document at /users/{uid} (the doc id is their
+// Firebase Auth uid — see src/lib/createStaffAccount.ts) carrying their
+// `role` and `schoolId`. Rules below scope every read/write to "same
+// school" and gate writes by role. Students/parents get read-only access
+// to their own records; staff (teacher/school_admin/super_admin) can
+// read and write everything within their school.
+//
+// This is a solid starting point for a small multi-tenant deployment, not
+// an exhaustive audit — review it against your school's actual privacy
+// requirements (e.g. you may want teachers scoped to only their own
+// classes) before relying on it for sensitive data in production.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function myRole() {
+      return isSignedIn() ? myProfile().role : null;
+    }
+
+    function mySchoolId() {
+      return isSignedIn() ? myProfile().schoolId : null;
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() && myRole() == 'super_admin';
+    }
+
+    // school_admin or teacher — the two staff roles scoped to one school.
+    function isSchoolStaff() {
+      return isSignedIn() && (myRole() == 'school_admin' || myRole() == 'teacher');
+    }
+
+    function inMySchool(schoolId) {
+      return isSignedIn() && mySchoolId() == schoolId;
+    }
+
+    function isMyStudent(studentId) {
+      return isSignedIn() && myProfile().studentId == studentId;
+    }
+
+    function isMyChild(studentId) {
+      return isSignedIn() && ('childrenIds' in myProfile()) && myProfile().childrenIds.hasAny([studentId]);
+    }
+
+    // A record the owning student or their parent may read, in addition
+    // to staff in the same school.
+    function canReadStudentScoped(data) {
+      return (isSchoolStaff() && inMySchool(data.schoolId)) || isMyStudent(data.studentId) || isMyChild(data.studentId);
+    }
+
+    function canWriteInMySchool(data) {
+      return isSchoolStaff() && inMySchool(data.schoolId);
+    }
+
+    // Schools: super admins manage every school; school staff can read
+    // and edit their own school's document (branding, module toggles).
+    match /schools/{schoolId} {
+      allow read: if isSuperAdmin() || inMySchool(schoolId);
+      allow write: if isSuperAdmin() || (isSchoolStaff() && inMySchool(schoolId));
+    }
+
+    // User profiles: anyone can read their own; staff can read/write every
+    // profile in their school. Nobody can change `role` or `schoolId`
+    // except staff, preventing self-escalation.
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || (isSchoolStaff() && inMySchool(resource.data.schoolId)));
+      allow list: if isSchoolStaff();
+      allow create, update, delete: if isSchoolStaff() && inMySchool(request.resource.data.schoolId);
+    }
+
+    // Students: staff manage; a student can read their own record, a
+    // parent can read their linked children's records.
+    match /students/{studentId} {
+      allow read: if canWriteInMySchool(resource.data) || isMyStudent(studentId) || isMyChild(studentId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    match /studentDocuments/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    // Reference data every signed-in school member can read; only staff
+    // can write it.
+    match /teachers/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /academicYears/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /classes/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /subjects/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /timetable/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /examTypes/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /exams/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /feeCategories/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /feeStructures/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /books/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /transportRoutes/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    // Per-student records: staff read/write everything in their school; the
+    // owning student or their parent can read their own.
+    match /attendance/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /homework/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /submissions/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow create: if canWriteInMySchool(request.resource.data) || isMyStudent(request.resource.data.studentId);
+      allow update, delete: if canWriteInMySchool(request.resource.data) || isMyStudent(resource.data.studentId);
+    }
+    match /results/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /feeInvoices/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /payments/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /loans/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /quranProgress/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /iqraProgress/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /islamicStudies/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /oromoProgress/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    // Announcements: staff write; everyone in the school can read (the
+    // client filters by audience).
+    match /announcements/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    // Messaging: only participants in the thread can read/write it.
+    match /messageThreads/{docId} {
+      allow read, update: if isSignedIn() && resource.data.participantIds.hasAny([request.auth.uid]);
+      allow create: if isSignedIn() && request.resource.data.participantIds.hasAny([request.auth.uid]);
+    }
+    match /messages/{docId} {
+      allow read: if isSignedIn()
+        && get(/databases/$(database)/documents/messageThreads/$(resource.data.threadId)).data.participantIds.hasAny([request.auth.uid]);
+      allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid;
+    }
+  }
+}

@@ -4,6 +4,8 @@ import { FormField } from '@/components/ui/FormField';
 import { useToast } from '@/components/ui/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { teachersRepo } from '@/lib/services';
+import { createStaffAccount } from '@/lib/createStaffAccount';
+import { isFirebaseConfigured } from '@/firebase/config';
 import type { Subject, Teacher } from '@/types';
 
 interface Props {
@@ -63,10 +65,18 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
         showToast('Teacher updated.');
       } else {
         const count = (await teachersRepo.list(schoolId)).length;
-        await teachersRepo.create({
+        const newTeacher = await teachersRepo.create({
           schoolId, teacherCode: `T-${1000 + count + 1}`, classIds: [], status: 'active', ...form,
         });
-        showToast('Teacher added.');
+        await createStaffAccount({
+          schoolId, role: 'teacher', teacherId: newTeacher.id,
+          name: `${form.firstName} ${form.lastName}`, email: form.email, phone: form.phone,
+        });
+        showToast(
+          isFirebaseConfigured
+            ? 'Teacher added. A password setup email has been sent to them.'
+            : 'Teacher added.',
+        );
       }
       onSaved();
       onClose();

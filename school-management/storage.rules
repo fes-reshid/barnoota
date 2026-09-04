@@ -1,0 +1,18 @@
+rules_version = '2';
+
+// Files are organized as /schools/{schoolId}/... so we can scope access by
+// path segment without an extra Firestore lookup. Any signed-in user may
+// read (the app itself decides what to show); only staff members may
+// upload or delete. Tighten this further (e.g. per-student folders) once
+// you know your school's document-sharing needs.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /schools/{schoolId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.size < 20 * 1024 * 1024
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.schoolId == schoolId
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['school_admin', 'teacher', 'super_admin'];
+    }
+  }
+}
