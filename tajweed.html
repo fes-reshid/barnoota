@@ -201,6 +201,11 @@
   .quiz-result{ text-align:center; }
   .quiz-result .score{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
   .quiz-result p{ font-size:17px; color:#6b5a3f; }
+  .quiz-attempts{ margin:0 0 16px; }
+  .attempts-label{ font-size:13px; font-weight:700; color:var(--ink-brown); margin:0 0 6px; }
+  .attempts-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .attempt-chip{ background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:5px 12px; font-size:13px; color:var(--ink-brown); }
+  .attempt-chip.current{ border-color:var(--green); color:var(--green-dark); font-weight:700; }
 
   /* ===== Auth gate (enroll / login) ===== */
   #auth-gate{ display:flex; justify-content:center; padding:20px 20px 10px; }
@@ -413,6 +418,7 @@ function enterCourse(uid, email, data){
   currentUID = uid;
   studentEmail = email;
   studentName = (data && data.fullName) ? data.fullName : email;
+  quizAttempts = (data && Array.isArray(data.quizAttempts)) ? data.quizAttempts.slice() : [];
 
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
@@ -546,6 +552,7 @@ lessonsPanel.innerHTML = CATEGORIES.map(cat => `
 let quizOrder = [];
 let quizIndex = 0;
 let quizScore = 0;
+let quizAttempts = [];
 
 function shuffle(arr){
   const a = arr.slice();
@@ -566,17 +573,28 @@ function startQuiz(){
 function renderQuizQuestion(){
   const shell = document.getElementById('quizShell');
   if (quizIndex >= quizOrder.length){
+    const pct = Math.round((quizScore / quizOrder.length) * 100);
+    quizAttempts.push({ pct: pct, at: new Date().toISOString() });
+    const attemptsHtml = `
+      <div class="quiz-attempts">
+        <div class="attempts-label">Your Attempts</div>
+        <div class="attempts-row">
+          ${quizAttempts.map((a, idx) => `<span class="attempt-chip${idx === quizAttempts.length - 1 ? ' current' : ''}">Attempt ${idx + 1}: ${a.pct}%</span>`).join('')}
+        </div>
+      </div>
+    `;
     shell.innerHTML = `
       <div class="quiz-card quiz-result">
         <p class="eyebrow" style="margin:0;">Quiz Complete</p>
         <div class="score">${quizScore} / ${quizOrder.length}</div>
         <p>${quizScore === quizOrder.length ? 'Perfect score — excellent work!' : 'Review the lessons above and try again.'}</p>
+        ${attemptsHtml}
         <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
       </div>
     `;
     document.getElementById('restartBtn').addEventListener('click', startQuiz);
     if(currentUID && window.__fbSaveProgress){
-      window.__fbSaveProgress(currentUID, Math.round((quizScore / quizOrder.length) * 100));
+      window.__fbSaveProgress(currentUID, pct, quizAttempts);
     }
     return;
   }
@@ -673,7 +691,7 @@ function showErr(el, msg){
 }
 
 function defaultStudentDoc(fullName, email){
-  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastQuizScorePct: null, lastAttemptAt: null };
+  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastQuizScorePct: null, lastAttemptAt: null, quizAttempts: [] };
 }
 
 var enrollBtn = document.getElementById('enroll-submit-btn');
@@ -790,8 +808,8 @@ window.__fbSignOut = function(){
   signOut(auth).then(function(){ window.location.reload(); });
 };
 
-window.__fbSaveProgress = function(uid, lastQuizScorePct){
-  setDoc(doc(db, COLLECTION, uid), { lastQuizScorePct: lastQuizScorePct, lastAttemptAt: new Date().toISOString() }, { merge: true })
+window.__fbSaveProgress = function(uid, lastQuizScorePct, quizAttempts){
+  setDoc(doc(db, COLLECTION, uid), { lastQuizScorePct: lastQuizScorePct, lastAttemptAt: new Date().toISOString(), quizAttempts: quizAttempts || [] }, { merge: true })
     .catch(function(e){ console.error('Progress save failed:', e); });
 };
 
