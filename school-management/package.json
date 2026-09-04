@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "deploy": "npm run build && npx firebase-tools deploy --only hosting",
+    "deploy:functions": "npx firebase-tools deploy --only functions",
     "deploy:all": "npm run build && npx firebase-tools deploy"
   },
   "dependencies": {

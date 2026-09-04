@@ -63,6 +63,47 @@ npm run deploy
 
 This builds the app and deploys `dist/` to Firebase Hosting, printing a URL like `https://your-project-id.web.app` you can open in any browser. Run it again any time you want to publish a new build. (`npm run deploy:all` also redeploys the Firestore/Storage rules in the same step.)
 
+## Email notifications (Gmail SMTP)
+
+Cloud Functions in `functions/` send email through a plain Gmail account whenever certain events happen:
+
+| Event | Emailed to | 
+| --- | --- |
+| New announcement posted | Teachers / parents / everyone, depending on the announcement's audience |
+| Homework assigned | Guardians of every student in that class (via each student's `guardianEmail`) |
+| Student marked absent or late | That student's guardian |
+| New fee invoice assigned | That student's guardian |
+| Payment recorded | That student's guardian (receipt) |
+| New teacher/admin account created | That person — via Firebase Auth's built-in password-setup email (no Gmail involved) |
+
+Parent/student notifications go to the **`guardianEmail` already stored on the student record** — parents don't need an app login for this to work. Teacher notifications use the teacher's own `email` field.
+
+### Set it up
+
+**1. Get a Gmail App Password** (a regular Gmail account works — this is free, but Gmail caps sending at ~500 emails/day, which is plenty for a small school):
+1. Go to your Google Account → **Security**.
+2. Turn on **2-Step Verification** if it isn't already on (required for App Passwords).
+3. Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), create one named "Barnoota Campus", and copy the 16-character password it shows you (spaces don't matter).
+
+**2. Upgrade the Firebase project to the Blaze plan.** Cloud Functions cannot deploy at all on the free Spark plan — Google requires Blaze (pay-as-you-go) even though the free monthly quota (2M invocations, etc.) means a small school will realistically pay **$0**. In the Firebase console: **⚙ Project settings → Usage and billing → Modify plan → Blaze**.
+
+**3. Store the Gmail credentials as Cloud Functions secrets** (never put these in `.env` files or commit them):
+```bash
+cd school-management
+npx firebase-tools functions:secrets:set GMAIL_USER
+# paste your Gmail address when prompted
+
+npx firebase-tools functions:secrets:set GMAIL_APP_PASSWORD
+# paste the 16-character App Password when prompted
+```
+
+**4. Deploy the functions:**
+```bash
+npm run deploy:functions
+```
+
+That's it — from then on, the events in the table above send automatically. Check `npx firebase-tools functions:log` if an email doesn't arrive (most often: Blaze plan not enabled yet, or a typo in the App Password).
+
 ## Project structure
 
 - `src/types` — domain model shared by every screen and the data layer.
