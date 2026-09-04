@@ -240,7 +240,7 @@ async function refreshStatus() {
 
   $('stat-blocked').textContent = status.stats.blocked;
   $('stat-queries').textContent = status.stats.queries;
-  $('stat-domains').textContent = status.seedCount + status.customCount;
+  $('stat-domains').textContent = status.seedCount + status.customCount + (status.feedCount || 0);
 
   $('admin-warning').hidden = status.elevated || status.platform !== 'win32';
 
@@ -269,6 +269,18 @@ $('parent-toggle').addEventListener('click', async () => {
 $('block-add').addEventListener('click', addBlockedSite);
 $('block-input').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') addBlockedSite();
+});
+
+$('feed-refresh').addEventListener('click', async () => {
+  $('feed-status').textContent = 'Refreshing… this can take a moment for a large list.';
+  await api.refreshBlocklistFeed();
+  // The fetch itself keeps running in the background service — poll a few
+  // times rather than waiting on one slow request, since a ~25MB download
+  // can take longer than any single round trip we'd want to block on.
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await renderBlocklist();
+  }
 });
 
 async function addBlockedSite() {
@@ -303,6 +315,7 @@ async function renderBlocklist() {
   if (data.serviceUnreachable) {
     $('seed-count').textContent = '—';
     $('custom-count').textContent = '—';
+    $('feed-status').textContent = 'The protection service is not reachable right now.';
     const empty = document.createElement('p');
     empty.className = 'empty';
     empty.textContent = 'The protection service is not reachable right now.';
@@ -312,6 +325,20 @@ async function renderBlocklist() {
 
   $('seed-count').textContent = data.seedCount;
   $('custom-count').textContent = data.custom.length;
+
+  const feedStatus = $('feed-status');
+  if (data.feedCount > 0) {
+    const when = data.feedFetchedAt ? new Date(data.feedFetchedAt).toLocaleString() : 'unknown time';
+    feedStatus.textContent = data.feedLastError
+      ? `${data.feedCount.toLocaleString()} domains from a live feed, last refreshed ${when}. ` +
+        `Most recent refresh attempt failed (${data.feedLastError}) — still using that last successful fetch.`
+      : `${data.feedCount.toLocaleString()} domains from a live feed (The Blocklist Project), last refreshed ${when}. ` +
+        'Refreshes automatically about once a day.';
+  } else if (data.feedLastError) {
+    feedStatus.textContent = `Could not fetch the live feed yet (${data.feedLastError}). Using the built-in list only until it succeeds.`;
+  } else {
+    feedStatus.textContent = 'Fetching the live feed for the first time — this can take a moment.';
+  }
 
   if (data.custom.length === 0) {
     const empty = document.createElement('p');

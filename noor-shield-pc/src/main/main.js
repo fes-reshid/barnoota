@@ -208,6 +208,7 @@ function createTray() {
 const SERVICE_PROXY_CHANNELS = {
   'status:get': 'status.get',
   'blocklist:list': 'blocklist.list',
+  'blocklist:refreshFeed': 'blocklist.refreshFeed',
   'parent:status': 'parent.status',
   'parent:lock': 'parent.lock',
   'filter:enable': 'filter.enable',

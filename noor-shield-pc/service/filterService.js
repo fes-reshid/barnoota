@@ -8,8 +8,15 @@ const { ParentAuth } = require(path.join(__dirname, '..', 'src', 'main', 'parent
 const { DnsProxy } = require(path.join(__dirname, '..', 'src', 'main', 'dnsProxy'));
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { loadSeedDomains } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
+const feedBlocklist = require('./feedBlocklist');
 const { createServer } = require('./pipeTransport');
 const { createHandlers, appendActivity } = require('./handlers');
+
+// How often the public feed (see feedBlocklist.js) is re-fetched. New adult
+// sites appear constantly, but this is a large (~25MB) download — daily is
+// frequent enough to matter and infrequent enough not to be rude to the
+// feed's host.
+const FEED_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 /**
  * The process that actually runs "always": installed as a Windows service
@@ -50,12 +57,15 @@ async function main() {
   const store = new Store(dataDir());
   const parentAuth = new ParentAuth(store);
   const seedDomains = loadSeedDomains();
+  const feedDomains = feedBlocklist.loadCachedFeed(dataDir());
 
   let proxy = null;
   const ctx = {
     store,
     parentAuth,
     seedDomains,
+    feedDomains,
+    dataDir: dataDir(),
     version: readVersion(),
     getProxy: () => proxy,
     createProxy: (blocklist) => {
@@ -69,7 +79,7 @@ async function main() {
     onStateChange: () => {}, // hook point if a future UI wants push updates
   };
 
-  const { rpc, startFilter, stopFilter } = createHandlers(ctx);
+  const { rpc, startFilter, stopFilter, refreshFeedFromRemote } = createHandlers(ctx);
 
   /**
    * Startup reconciliation resumes the service's own previously-saved
@@ -107,6 +117,16 @@ async function main() {
     return handler(params);
   });
   console.log(`[filterService] listening (pid ${process.pid}, data dir ${dataDir()})`);
+
+  // Fire-and-forget: never block startup on a large network fetch. A failure
+  // here (no internet yet, feed host unreachable) just means the service
+  // keeps running on the seed list plus whatever feed snapshot was already
+  // cached — never a reason to delay listening on the pipe or fail to start.
+  refreshFeedFromRemote().catch((err) => console.error(`[feed] initial refresh failed: ${err.message}`));
+  const feedTimer = setInterval(() => {
+    refreshFeedFromRemote().catch((err) => console.error(`[feed] refresh failed: ${err.message}`));
+  }, FEED_REFRESH_INTERVAL_MS);
+  feedTimer.unref(); // never keep the process alive on its own
 
   let shuttingDown = false;
   async function shutdown(reason) {

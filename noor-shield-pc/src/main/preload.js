@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('noor', {
   getStatus: () => ipcRenderer.invoke('status:get'),
   listHadith: () => ipcRenderer.invoke('hadith:list'),
   listBlocklist: () => ipcRenderer.invoke('blocklist:list'),
+  refreshBlocklistFeed: () => ipcRenderer.invoke('blocklist:refreshFeed'),
   listJournal: () => ipcRenderer.invoke('journal:list'),
   addJournalEntry: (note, istighfarCount) =>
     ipcRenderer.invoke('journal:add', { note, istighfarCount }),

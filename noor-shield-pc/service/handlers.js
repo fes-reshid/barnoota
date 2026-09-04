@@ -3,6 +3,7 @@
 const path = require('path');
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
+const feedBlocklist = require('./feedBlocklist');
 
 // Bounds the log so a machine left running for months doesn't grow it
 // without limit. Oldest entries drop off first.
@@ -44,14 +45,37 @@ function appendActivity(store, domain) {
 function createHandlers(ctx) {
   const { store, parentAuth, seedDomains } = ctx;
 
+  // Mutable: replaced wholesale each time refreshFeedFromRemote() succeeds.
+  // Starts from whatever was cached from the last successful fetch (possibly
+  // none, on a fresh install or one that's never been online).
+  let feedDomains = ctx.feedDomains || [];
+  let feedMeta = { fetchedAt: null, count: feedDomains.length, lastError: null };
+
   function buildBlocklist() {
     const custom = (store.get('customDomains') || []).map((entry) => entry.domain);
-    return new Blocklist(seedDomains, custom);
+    return new Blocklist(seedDomains, custom, feedDomains);
   }
 
   function refreshBlocklist() {
     const proxy = ctx.getProxy();
     if (proxy) proxy.setBlocklist(buildBlocklist());
+  }
+
+  /**
+   * Fetches the current public feed and, on success, swaps it into the live
+   * blocklist immediately. Safe to call anytime (startup, on a timer, or by
+   * request) — a failure just leaves feedDomains/feedMeta as they were.
+   */
+  async function refreshFeedFromRemote() {
+    const result = await feedBlocklist.refreshFeed(ctx.dataDir);
+    if (result.ok) {
+      feedDomains = result.domains;
+      feedMeta = { fetchedAt: result.fetchedAt, count: result.count, lastError: null };
+      refreshBlocklist();
+    } else {
+      feedMeta = { ...feedMeta, lastError: result.error };
+    }
+    return result;
   }
 
   async function startFilter() {
@@ -134,6 +158,9 @@ function createHandlers(ctx) {
         stats: proxy ? proxy.stats : { queries: 0, blocked: 0, forwarded: 0, failed: 0 },
         seedCount: seedDomains.length,
         customCount: (store.get('customDomains') || []).length,
+        feedCount: feedMeta.count,
+        feedFetchedAt: feedMeta.fetchedAt,
+        feedLastError: feedMeta.lastError,
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
       };
@@ -143,7 +170,26 @@ function createHandlers(ctx) {
       ok: true,
       custom: store.get('customDomains') || [],
       seedCount: seedDomains.length,
+      feedCount: feedMeta.count,
+      feedFetchedAt: feedMeta.fetchedAt,
+      feedLastError: feedMeta.lastError,
     }),
+
+    // Not parent-gated: this only pulls in a public list, the same one
+    // anyone could download themselves — nothing it does requires the
+    // parent password, unlike anything that actually changes what's
+    // protected in a way a child could exploit.
+    //
+    // Deliberately doesn't await the fetch: the pipe's own call timeout
+    // (a few seconds — see pipeTransport.js) is far shorter than a ~25MB
+    // download can take, so waiting here would report "timed out" over an
+    // attempt that's actually still running. Firing it in the background
+    // and returning immediately lets the next status/blocklist.list poll
+    // (the renderer already polls every few seconds) pick up the result.
+    'blocklist.refreshFeed': async () => {
+      refreshFeedFromRemote().catch(() => {});
+      return { ok: true, started: true };
+    },
 
     // Blocked attempts only, by design (see README): not a full browsing
     // history. Gated like everything else that reveals what the child has
@@ -220,10 +266,10 @@ function createHandlers(ctx) {
     }),
   };
 
-  // Exposed unwrapped for the service's own startup reconciliation, which
-  // resumes a previously-saved intent rather than acting on a new request —
-  // it has no parent session to check and shouldn't go through parentOnly().
-  return { rpc, startFilter, stopFilter };
+  // Exposed unwrapped for the service's own startup reconciliation and its
+  // periodic feed-refresh timer, neither of which is a request going through
+  // the RPC/parentOnly() path.
+  return { rpc, startFilter, stopFilter, refreshFeedFromRemote };
 }
 
 module.exports = { createHandlers, appendActivity, MAX_ACTIVITY_ENTRIES };

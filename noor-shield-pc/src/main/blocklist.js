@@ -4,22 +4,24 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * The set of domains the DNS proxy refuses to resolve: a bundled seed list
- * plus whatever the parent has added. Mirrors the Android DomainBlocklist,
- * including subdomain matching — blocking "example.com" also blocks
- * "cdn.example.com".
+ * The set of domains the DNS proxy refuses to resolve: a bundled seed list,
+ * whatever the parent has added, and (on PC) a periodically-refreshed public
+ * feed (see feedBlocklist.js) for coverage no static list can keep up with.
+ * Mirrors the Android DomainBlocklist, including subdomain matching —
+ * blocking "example.com" also blocks "cdn.example.com".
  */
 class Blocklist {
-  constructor(seedDomains, customDomains) {
+  constructor(seedDomains, customDomains, feedDomains) {
     this.seed = new Set(seedDomains);
     this.custom = new Set(customDomains);
+    this.feed = new Set(feedDomains || []);
   }
 
   /** True if host, or any parent domain of host, is blocked. */
   isBlocked(host) {
     let candidate = String(host || '').replace(/\.+$/, '').toLowerCase();
     while (candidate.length > 0) {
-      if (this.seed.has(candidate) || this.custom.has(candidate)) return true;
+      if (this.seed.has(candidate) || this.custom.has(candidate) || this.feed.has(candidate)) return true;
       const dot = candidate.indexOf('.');
       if (dot < 0) return false;
       candidate = candidate.slice(dot + 1);
@@ -28,7 +30,7 @@ class Blocklist {
   }
 
   get size() {
-    return new Set([...this.seed, ...this.custom]).size;
+    return new Set([...this.seed, ...this.custom, ...this.feed]).size;
   }
 }
 
