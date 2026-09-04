@@ -12,7 +12,7 @@
     --ink-navy:#1c2b46; --ink-brown:#3c2f26;
     --parchment:#faf3e0; --parchment-deep:#f2e6c9;
     --gold:#a97c25; --gold-soft:#d3ac5c;
-    --green:#2e6b58; --green-bg:#e4efe6;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
     --red:#9c3d3d; --red-bg:#f4e0df;
     --pink:#c9598a; --pink-bg:#fbe4ee;
     --blue:#5b8fc9; --blue-bg:#dfeaf7;
@@ -168,6 +168,7 @@
   .week-select-lead{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); font-weight:700; margin:0 0 16px; }
   .week-select-grid{ display:flex; flex-direction:column; gap:12px; }
   .week-select-btn{
+    position:relative;
     background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
     padding:14px 24px; font-family:'Cormorant Garamond', serif; font-weight:700;
     font-size:calc(16px * var(--scale)); cursor:pointer; transition:transform .15s ease, background .15s ease;
@@ -177,6 +178,21 @@
   .week-select-btn .wsb-ar{ font-family:'Amiri', serif; }
   body.rtl-active .week-select-btn .wsb-en{ display:none; }
   body:not(.rtl-active) .week-select-btn .wsb-ar{ display:none; }
+  .wsb-check{
+    position:absolute; top:-8px; inset-inline-end:-8px; width:26px; height:26px; border-radius:50%;
+    background:var(--green); color:#fff8ea; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,.22); border:2px solid var(--parchment);
+  }
+
+  /* ===== Quiz attempt history ===== */
+  .quiz-attempts{ margin:14px 0 0; }
+  .attempts-label{ font-weight:700; font-size:calc(13px * var(--scale)); color:var(--ink-brown); margin:0 0 8px; }
+  .attempts-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .attempt-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:5px 12px;
+    font-size:calc(12.5px * var(--scale)); color:var(--ink-brown);
+  }
+  .attempt-chip.current{ border-color:var(--green); color:var(--green-dark); font-weight:700; }
 
   /* ===== Welcome banner ===== */
   .welcome-banner{
@@ -855,6 +871,7 @@ function enterCourse(uid, email, data, isReturning){
   studentName = (data && data.fullName) ? data.fullName : email;
   var savedStepDone = (data && Array.isArray(data.stepDone)) ? data.stepDone : null;
   stepDone = (savedStepDone && savedStepDone.length === STEP_DEFS.length) ? savedStepDone.slice() : new Array(STEP_DEFS.length).fill(false);
+  quizAttempts = (data && data.quizAttempts && typeof data.quizAttempts === 'object') ? data.quizAttempts : {};
 
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
@@ -862,6 +879,7 @@ function enterCourse(uid, email, data, isReturning){
   document.getElementById('account-name').style.display = '';
   document.getElementById('account-name').textContent = studentName;
   document.getElementById('logout-btn').style.display = '';
+  updateWeekCompletionBadges();
   showWelcomeBanner(isReturning && stepDone.some(function(d){ return d; }));
 }
 
@@ -871,9 +889,49 @@ document.getElementById('logout-btn').addEventListener('click', function(){
 });
 
 var stepDone = [];
+var quizAttempts = {};
+var ARABIC_DIGITS = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+function toArabicDigits(n){ return String(n).replace(/[0-9]/g, function(d){ return ARABIC_DIGITS[+d]; }); }
+
+function computeWeekCompletion(){
+  var weeks = {};
+  var currentWeek = null;
+  STEP_DEFS.forEach(function(def, i){
+    if(def.weekEn){ currentWeek = def.weekEn; }
+    if(!currentWeek) return;
+    if(!weeks[currentWeek]) weeks[currentWeek] = [];
+    weeks[currentWeek].push(i);
+  });
+  var completion = {};
+  Object.keys(weeks).forEach(function(wk){
+    completion[wk] = weeks[wk].every(function(i){ return !!stepDone[i]; });
+  });
+  return completion;
+}
+
+function updateWeekCompletionBadges(){
+  var completion = computeWeekCompletion();
+  document.querySelectorAll('.week-select-btn').forEach(function(btn){
+    var idx = parseInt(btn.dataset.step, 10);
+    var def = STEP_DEFS[idx];
+    var wk = def && def.weekEn;
+    var done = !!(wk && completion[wk]);
+    var badge = btn.querySelector('.wsb-check');
+    if(done && !badge){
+      badge = document.createElement('span');
+      badge.className = 'wsb-check';
+      badge.textContent = '✓';
+      btn.appendChild(badge);
+    } else if(!done && badge){
+      badge.remove();
+    }
+  });
+}
+
 function saveProgress(){
   if(!currentUID) return;
-  if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone); }
+  updateWeekCompletionBadges();
+  if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone, quizAttempts); }
 }
 
 document.querySelectorAll('.week-select-btn').forEach(function(btn){
@@ -2708,7 +2766,7 @@ function renderStep(i){
       saveProgress();
     }, function(){
       nextBtn.style.display = 'none';
-    }, !!def.immediate);
+    }, !!def.immediate, def.enQ);
     activeQuizInstance.setLanguage(currentLang);
   }
 
@@ -2888,13 +2946,14 @@ function quizShellTemplate(prefix){
       '<div class="score-title" id="' + prefix + '-score-title"></div>' +
       '<div class="score-pct" id="' + prefix + '-score-pct">0%</div>' +
       '<div class="score-msg" id="' + prefix + '-score-msg"></div>' +
+      '<div id="' + prefix + '-attempts" class="quiz-attempts"></div>' +
       '<div id="' + prefix + '-review-grid" class="review-grid"></div>' +
       '<div id="' + prefix + '-review-detail" class="review-detail"></div>' +
       '<button class="retake-btn" id="' + prefix + '-retake-btn">Retake Quiz</button>' +
     '</div>';
 }
 
-function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
+function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate, quizId){
   var lang = 'en';
   var questions = enQ;
   var index = 0, answered = [], selected = [];
@@ -2921,6 +2980,7 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     els.reviewGrid = document.getElementById(prefix + '-review-grid');
     els.reviewDetail = document.getElementById(prefix + '-review-detail');
     els.retakeBtn = document.getElementById(prefix + '-retake-btn');
+    els.attempts = document.getElementById(prefix + '-attempts');
   }
 
   function t(key){ return QUIZ_STRINGS[lang][key]; }
@@ -3044,6 +3104,28 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     els.reviewDetail.classList.remove('show');
     els.retakeBtn.textContent = t('retake');
 
+    if(quizId){
+      if(!quizAttempts[quizId]) quizAttempts[quizId] = [];
+      quizAttempts[quizId].push({ pct: pct, at: new Date().toISOString() });
+    }
+    if(els.attempts){
+      if(quizId && quizAttempts[quizId] && quizAttempts[quizId].length){
+        var list = quizAttempts[quizId];
+        var label = (lang === 'ar') ? 'محاولاتك' : 'Your Attempts';
+        var html = '<div class="attempts-label">' + label + '</div><div class="attempts-row">';
+        list.forEach(function(a, idx){
+          var num = (lang === 'ar') ? toArabicDigits(idx + 1) : String(idx + 1);
+          var attemptLabel = (lang === 'ar') ? ('المحاولة ' + num) : ('Attempt ' + num);
+          var isCurrent = (idx === list.length - 1);
+          html += '<span class="attempt-chip' + (isCurrent ? ' current' : '') + '">' + attemptLabel + ': ' + a.pct + '%</span>';
+        });
+        html += '</div>';
+        els.attempts.innerHTML = html;
+      } else {
+        els.attempts.innerHTML = '';
+      }
+    }
+
     if(name){ speakResult(name, correctCount, questions.length, pct, lang); }
 
     if(typeof onFinish === 'function'){ onFinish(); }
@@ -3154,7 +3236,8 @@ function defaultStudentDoc(fullName, email){
     fullName: fullName,
     email: email,
     createdAt: new Date().toISOString(),
-    stepDone: new Array(window.STEP_DEFS.length).fill(false)
+    stepDone: new Array(window.STEP_DEFS.length).fill(false),
+    quizAttempts: {}
   };
 }
 
@@ -3277,8 +3360,8 @@ window.__fbSignOut = function(){
   signOut(auth).then(function(){ window.location.reload(); });
 };
 
-window.__fbSaveProgress = function(uid, stepDone){
-  setDoc(doc(db, COLLECTION, uid), { stepDone: stepDone }, { merge: true })
+window.__fbSaveProgress = function(uid, stepDone, quizAttempts){
+  setDoc(doc(db, COLLECTION, uid), { stepDone: stepDone, quizAttempts: quizAttempts || {} }, { merge: true })
     .catch(function(e){ console.error('Progress save failed:', e); });
 };
 
