@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Practice — Kids Corner</title>
-<meta name="description" content="Grade-by-grade English practice for kids, from Foundation to Grade 6: ABCs, sight words, rhymes, vocabulary, grammar and reading.">
+<meta name="description" content="Australian Curriculum-aligned English practice for kids, Foundation to Year 6: phonics, sight words, rhymes, vocabulary, grammar and reading — the basis for NAPLAN literacy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -56,6 +56,12 @@
     background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
   }
   .grade-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+  .naplan-badge{
+    display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
+    border-radius:8px; background:var(--gold); color:#fff; margin-left:5px; vertical-align:middle;
+  }
+  .grade-btn.active .naplan-badge{ background:#fff; color:var(--violet); }
+  .curriculum-note{ text-align:center; font-size:13px; color:#8a7654; max-width:480px; margin:0 auto 6px; line-height:1.5; }
   .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
 
   .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 20px 90px; }
@@ -155,8 +161,10 @@
 <div class="page-head">
   <p class="eyebrow">🔤 English Practice</p>
   <h1>Reading &amp; Words</h1>
-  <p>Pick your class, from Foundation to Grade 6, and practice at your own level.</p>
+  <p>Pick your class, from Foundation to Year 6, and practice at your own level.</p>
 </div>
+
+<p class="curriculum-note">Aligned with the Australian Curriculum (Foundation–Year 6), the basis for NAPLAN. NAPLAN itself only tests Years 3, 5, 7 &amp; 9 — those levels are marked below.</p>
 
 <div class="grade-row" id="grade-row"></div>
 <p class="grade-desc" id="grade-desc"></p>
@@ -412,7 +420,13 @@ const G3_BANK = [
   { q:"Which word means the same as 'begin'?", options:['start','end','stop','finish'], correct:0 },
   { q:"Which word means the opposite of 'day'?", options:['night','sun','bright','noon'], correct:0 },
   { q:"Which word means the same as 'shout'?", options:['yell','whisper','sing','ask'], correct:0 },
-  { q:"Which word means the opposite of 'full'?", options:['empty','big','heavy','deep'], correct:0 }
+  { q:"Which word means the opposite of 'full'?", options:['empty','big','heavy','deep'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['because','becuase','becaus','becouse'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['friend','freind','frend','friand'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['beautiful','beautifull','butiful','beutiful'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['people','peple','peapel','poeple'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['different','diffrent','diferent','differant'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['favourite','favorate','favrite','favourate'], correct:0 }
 ];
 
 const G4_BANK = [
@@ -467,13 +481,13 @@ const G6_BANK = [
 ];
 
 const GRADES = [
-  { id:'foundation', label:'Foundation', title:'Foundation — ABC & Phonics', desc:'Learn your letters with flashcards, then try the quiz.' },
-  { id:'g1', label:'Grade 1', title:'Grade 1 — Sight Words', desc:'Listen carefully, then choose the word you heard.' },
-  { id:'g2', label:'Grade 2', title:'Grade 2 — Rhyming Words', desc:'Find the word that rhymes.' },
-  { id:'g3', label:'Grade 3', title:'Grade 3 — Synonyms & Antonyms', desc:'Words that mean the same, or the opposite.' },
-  { id:'g4', label:'Grade 4', title:'Grade 4 — Parts of Speech', desc:'Spot the noun, verb, adjective, or adverb.' },
-  { id:'g5', label:'Grade 5', title:'Grade 5 — Reading Comprehension', desc:'Read short passages and answer questions about them.' },
-  { id:'g6', label:'Grade 6', title:'Grade 6 — Grammar & Punctuation', desc:'Correct words, punctuation, and verb tenses.' }
+  { id:'foundation', label:'Foundation', title:'Foundation — Phonics & Letter Sounds', desc:'Learn your letters with flashcards, then try the quiz.' },
+  { id:'g1', label:'Year 1', title:'Year 1 — High-Frequency Words', desc:'Listen carefully, then choose the word you heard.' },
+  { id:'g2', label:'Year 2', title:'Year 2 — Rhyme & Phonological Awareness', desc:'Find the word that rhymes.' },
+  { id:'g3', label:'Year 3', title:'Year 3 — Vocabulary & Spelling', desc:'Synonyms, antonyms, and NAPLAN-style spelling.', naplan:true },
+  { id:'g4', label:'Year 4', title:'Year 4 — Grammar: Parts of Speech', desc:'Spot the noun, verb, adjective, or adverb.' },
+  { id:'g5', label:'Year 5', title:'Year 5 — Reading Comprehension', desc:'Read short passages and answer questions about them.', naplan:true },
+  { id:'g6', label:'Year 6', title:'Year 6 — Grammar & Punctuation', desc:'Correct words, punctuation, and verb tenses.' }
 ];
 const BANKS = { g1:G1_BANK, g2:G2_BANK, g3:G3_BANK, g4:G4_BANK, g5:G5_BANK, g6:G6_BANK };
 
@@ -487,7 +501,7 @@ function renderGradeRow(){
   GRADES.forEach(g => {
     const btn = document.createElement('button');
     btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
-    btn.textContent = g.label;
+    btn.innerHTML = g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
     btn.addEventListener('click', () => {
       currentGrade = g.id;
       localStorage.setItem('kids-english-grade', currentGrade);
