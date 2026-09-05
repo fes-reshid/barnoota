@@ -273,7 +273,7 @@
         <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
         <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
         <div class="cert-bismillah arabic">﷽</div>
-        <div class="cert-eyebrow">Certificate of Achievement</div>
+        <div class="cert-eyebrow" id="cert-eyebrow">Certificate of Achievement</div>
         <div class="cert-given">This certifies that</div>
         <div class="cert-name" id="cert-name"></div>
         <div class="cert-body" id="cert-body"></div>
@@ -688,6 +688,7 @@ function showSummary(){
               pct >= 70 ? "Great job! Keep practicing to get even better." :
               "Good try! Play again to beat your score.";
   document.getElementById('final-msg').textContent = msg;
+  document.getElementById('cert-btn').classList.toggle('hidden', !isSpecial);
   document.getElementById('session-summary').classList.add('show');
   markWeekDone(activeTerm, activeWeek);
 }
@@ -708,10 +709,13 @@ function startRound(){
 function showCertificate(){
   const g = GRADES.find(x => x.id === currentGrade);
   const name = learnerName || 'Explorer';
-  const isSpecial = activeWeek === 11;
-  const weekPart = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Term ' + activeTerm + ' Project & Test') : ('Term ' + activeTerm + ', Week ' + activeWeek);
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of ' + g.label + ' Math (Terms 1–4), aligned with the Australian Curriculum.'
+    : 'has successfully completed Term ' + activeTerm + ' of ' + g.title + ' math, aligned with the Australian Curriculum.';
   document.getElementById('cert-name').textContent = name;
-  document.getElementById('cert-body').textContent = 'has successfully completed ' + weekPart + ' of ' + g.title + ' math, aligned with the Australian Curriculum.';
+  document.getElementById('cert-body').textContent = bodyText;
   document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
   document.getElementById('cert-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
   document.getElementById('session-summary').classList.remove('show');
