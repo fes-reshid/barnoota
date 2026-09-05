@@ -37,5 +37,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: noor-shield-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          # actions/upload-artifact's `path` is relative to the workspace
+          # root, not the job's `working-directory` default (that only
+          # applies to `run:` shell steps) — needs the full path from repo root.
+          path: noor-shield-app/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
