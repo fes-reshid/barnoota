@@ -4,26 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page Not Found</title>
-<script>
-  // GitHub Pages has no server-side rewrites, so a deep link into the
-  // Oromo Resource Centre SPA (e.g. /oromo-resource-center/azan) 404s on
-  // direct load or refresh. For paths under that app's folder only,
-  // redirect to its index.html with the intended path encoded in a query
-  // string; a bootstrap script there restores it via history.replaceState
-  // before the app's router reads the URL. Everything else just shows a
-  // plain 404 below, since this repo also hosts several unrelated
-  // static pages/apps that should 404 normally.
-  (function () {
-    var MARKER = '/oromo-resource-center/';
-    var path = window.location.pathname;
-    var idx = path.indexOf(MARKER);
-    if (idx === -1) return;
-    var appBase = path.slice(0, idx + MARKER.length);
-    var rest = path.slice(idx + MARKER.length);
-    var redirect = encodeURIComponent('/' + rest + window.location.search + window.location.hash);
-    window.location.replace(appBase + 'index.html?redirect=' + redirect);
-  })();
-</script>
 </head>
 <body>
 <h1>404</h1>
