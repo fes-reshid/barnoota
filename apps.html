@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
 <title>Apps &amp; Courses — Diin Islaam</title>
-<meta name="description" content="Free apps from Diin Islaam: the Husnul Muslim adhkar app and the interactive Seerah course.">
+<meta name="description" content="Free apps from Diin Islaam: the Husnul Muslim adhkar app, the interactive Seerah course, and Noor Shield, a family content filter with Islamic reminders.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -108,6 +109,15 @@
   .btn:hover{ transform:translateY(-2px); }
   .btn-primary{ background:var(--green); color:#faf3e0; }
   .btn-primary:hover{ background:var(--green-dark); }
+  .btn-ghost{ background:transparent; color:var(--green-dark); border:1.5px solid var(--gold-soft); padding:8.5px 20px; }
+  .btn-ghost:hover{ background:var(--green-bg); }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:10px; align-self:flex-start; }
+  .beta-badge{
+    display:inline-block; font-family:'Marcellus'; font-size:11px; letter-spacing:.08em;
+    text-transform:uppercase; color:#8a5a00; background:#fdeecb; border:1px solid var(--gold-soft);
+    border-radius:999px; padding:3px 10px; margin-bottom:10px;
+  }
+  .app-note{ font-size:14px; color:#8a7654; line-height:1.5; margin:12px 0 0; }
 
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
@@ -129,6 +139,7 @@
       <a href="quran.html">Qur'ān</a>
       <a href="hadeeth.html">Ḥadīth</a>
       <a href="arabic.html">Arabic</a>
+      <a href="kids.html">Kids</a>
       <a href="apps.html" class="active">Apps</a>
     </nav>
   </div>
@@ -138,7 +149,7 @@
   <p class="eyebrow">Diin Islaam Apps</p>
   <h1>Free Apps for Everyday Learning</h1>
   <p>Study on the go — no accounts, no paywalls. Just open and learn.</p>
-  <p class="about">Daily adhkar and an interactive Seerah course, built for Arabic and Oromo speakers alike.</p>
+  <p class="about">Daily adhkar, an interactive Seerah course, and Noor Shield — a family content filter — built for Arabic and Oromo speakers alike.</p>
 </div>
 
 <div class="apps-grid">
@@ -171,6 +182,32 @@
     </div>
   </div>
 
+  <div class="app-card">
+    <div class="app-body">
+      <span class="beta-badge">Early Beta</span>
+      <div class="app-icon-wrap">
+        <div class="app-icon letter arabic">ن</div>
+        <div class="app-title">
+          <h3>Noor Shield</h3>
+          <span>Windows PC</span>
+        </div>
+      </div>
+      <p>A device-wide filter that blocks known adult-content sites, paired with reminders on lowering
+        the gaze, tawbah, and istighfar. Includes a parent-password-protected activity log you can
+        email yourself on request.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="downloads/noor-shield-pc/Noor-Shield-Setup-0.8.1-beta.1.exe">Download for Windows</a>
+        <a class="btn btn-ghost" href="noor-shield.html">Learn more</a>
+      </div>
+      <p class="app-note">
+        Early beta — please test it yourself before relying on it. Requires Windows 10/11 and
+        Administrator rights to install; unsigned, so Windows SmartScreen will warn once
+        (choose "More info → Run anyway"). Full setup steps, what it does, and its honest
+        limitations are in the guide above.
+      </p>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -178,6 +215,7 @@
     <a href="quran.html">Qur'ān</a>
     <a href="hadeeth.html">Ḥadīth</a>
     <a href="arabic.html">Arabic</a>
+    <a href="kids.html">Kids</a>
     <a href="apps.html">Apps</a>
     <a href="mailto:fesbackups@gmail.com">Contact</a>
   </div>
@@ -197,5 +235,6 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
 </script>
+<script src="/cursor.js" defer></script>
 </body>
 </html>

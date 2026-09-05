@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
 <title>الدروس المهمة — Durūs al-Muhimmah (6-Week Course)</title>
 <meta name="description" content="Durūs al-Muhimmah lil ʿĀmmah — Important Lessons for Every Muslim. A 6-week interactive course with weekly quizzes, a midterm, a final exam, and a certificate of completion.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,6 +180,7 @@
   .week-select-lead{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); font-weight:700; margin:0 0 16px; }
   .week-select-grid{ display:flex; flex-direction:column; gap:12px; }
   .week-select-btn{
+    position:relative;
     background:var(--gold); color:#fff8ea; border:none; border-radius:22px;
     padding:14px 24px; font-family:'Cormorant Garamond', serif; font-weight:700;
     font-size:calc(16px * var(--scale)); cursor:pointer; transition:transform .15s ease, background .15s ease;
@@ -191,6 +193,19 @@
   .week-select-btn.finale:hover{ background:var(--green-dark); }
   .week-select-btn .wsb-ar{ font-family:'Amiri', serif; opacity:.9; }
   .week-select-btn .wsb-en::after{ content:' ·'; opacity:.7; }
+  .wsb-check{
+    position:absolute; top:-8px; inset-inline-end:-8px; width:26px; height:26px; border-radius:50%;
+    background:var(--green); color:#fff8ea; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,.22); border:2px solid var(--parchment);
+  }
+  .quiz-attempts{ margin:14px 0 0; }
+  .attempts-label{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); margin:0 0 6px; }
+  .attempts-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .attempt-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:5px 12px;
+    font-size:calc(12.5px * var(--scale)); color:var(--ink-brown);
+  }
+  .attempt-chip.current{ border-color:var(--green); color:var(--green-dark); font-weight:700; }
 
   /* ===== Welcome banner ===== */
   .welcome-banner{
@@ -598,27 +613,27 @@
       </div>
     </div>
 
-    <div class="name-gate-box" id="enroll-form" style="display:none;">
+    <form class="name-gate-box" id="enroll-form" style="display:none;">
       <p class="auth-gate-title" id="enroll-title">Create Your Account</p>
       <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
       <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
       <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
       <p class="auth-error" id="enroll-error" style="display:none;"></p>
-      <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
-      <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
-      <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
-    </div>
+      <button type="button" class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+      <button type="submit" class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+      <button type="button" class="auth-link-btn" id="enroll-back-btn">← Back</button>
+    </form>
 
-    <div class="name-gate-box" id="login-form" style="display:none;">
+    <form class="name-gate-box" id="login-form" style="display:none;">
       <p class="auth-gate-title" id="login-title">Log In</p>
       <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
       <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
       <p class="auth-error" id="login-error" style="display:none;"></p>
       <p class="auth-success" id="login-info" style="display:none;"></p>
-      <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
-      <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
-      <button class="auth-link-btn" id="login-back-btn">← Back</button>
-    </div>
+      <button type="submit" class="auth-primary-btn" id="login-submit-btn">Log In</button>
+      <button type="button" class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+      <button type="button" class="auth-link-btn" id="login-back-btn">← Back</button>
+    </form>
 
   </div>
 
@@ -872,6 +887,7 @@ function enterCourse(uid, email, data, isReturning){
   var savedStepDone = (data && Array.isArray(data.stepDone)) ? data.stepDone : null;
   stepDone = (savedStepDone && savedStepDone.length === STEP_DEFS.length) ? savedStepDone.slice() : new Array(STEP_DEFS.length).fill(false);
   finalExamScorePct = (data && typeof data.finalExamScorePct === 'number') ? data.finalExamScorePct : null;
+  quizAttempts = (data && data.quizAttempts && typeof data.quizAttempts === 'object') ? data.quizAttempts : {};
 
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
@@ -880,6 +896,7 @@ function enterCourse(uid, email, data, isReturning){
   document.getElementById('account-name').textContent = studentName;
   document.getElementById('logout-btn').style.display = '';
   showWelcomeBanner(isReturning && stepDone.some(function(d){ return d; }));
+  updateWeekCompletionBadges();
 }
 
 document.getElementById('logout-btn').addEventListener('click', function(){
@@ -1608,14 +1625,35 @@ var COURSE_UNITS = [
 
 /* ===================== PROGRESS TRACKING (recorded per student account, in Firestore) ===================== */
 var stepDone = new Array(STEP_DEFS.length).fill(false);
+var quizAttempts = {};
+var ARABIC_DIGITS = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+function toArabicDigits(n){ return String(n).replace(/[0-9]/g, function(d){ return ARABIC_DIGITS[+d]; }); }
 
 function saveProgress(){
   if(!currentUID) return;
-  if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone, finalExamScorePct); }
+  updateWeekCompletionBadges();
+  if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone, finalExamScorePct, quizAttempts); }
 }
 
 function unitComplete(unit){
   return unit.steps.every(function(s){ return !!stepDone[s]; });
+}
+
+function updateWeekCompletionBadges(){
+  document.querySelectorAll('.week-select-btn').forEach(function(btn){
+    var jumpStep = parseInt(btn.getAttribute('data-step'), 10);
+    var unit = COURSE_UNITS.filter(function(u){ return u.jumpStep === jumpStep; })[0];
+    var done = !!(unit && unitComplete(unit));
+    var badge = btn.querySelector('.wsb-check');
+    if(done && !badge){
+      badge = document.createElement('span');
+      badge.className = 'wsb-check';
+      badge.textContent = '✓';
+      btn.appendChild(badge);
+    } else if(!done && badge){
+      badge.remove();
+    }
+  });
 }
 
 function weekBadgeHTML(def){
@@ -1762,7 +1800,7 @@ function renderStep(i){
       saveProgress();
     }, function(){
       nextBtn.style.display = 'none';
-    }, !!def.immediate);
+    }, !!def.immediate, def.bankEN);
     activeQuizInstance.setLanguage(currentLang);
   } else if(def.type === 'certificate'){
     renderCertificateStep();
@@ -1945,13 +1983,14 @@ function quizShellTemplate(prefix){
       '<div class="score-pct" id="' + prefix + '-score-pct">0%</div>' +
       '<div class="score-msg" id="' + prefix + '-score-msg"></div>' +
       '<div id="' + prefix + '-lock-msg" class="lock-msg" style="display:none;"></div>' +
+      '<div id="' + prefix + '-attempts" class="quiz-attempts"></div>' +
       '<div id="' + prefix + '-review-grid" class="review-grid"></div>' +
       '<div id="' + prefix + '-review-detail" class="review-detail"></div>' +
       '<button class="retake-btn" id="' + prefix + '-retake-btn">Retake Quiz</button>' +
     '</div>';
 }
 
-function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
+function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate, quizId){
   var lang = 'en';
   var questions = enQ;
   var index = 0, answered = [], selected = [];
@@ -1981,6 +2020,7 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     els.reviewGrid = document.getElementById(prefix + '-review-grid');
     els.reviewDetail = document.getElementById(prefix + '-review-detail');
     els.retakeBtn = document.getElementById(prefix + '-retake-btn');
+    els.attempts = document.getElementById(prefix + '-attempts');
   }
 
   function renderDots(){
@@ -2106,6 +2146,28 @@ function createQuizInstance(prefix, enQ, arQ, onFinish, onReset, immediate){
     els.reviewDetail.classList.remove('show');
     els.retakeBtn.textContent = t('retake');
 
+    if(quizId){
+      if(!quizAttempts[quizId]) quizAttempts[quizId] = [];
+      quizAttempts[quizId].push({ pct: pct, at: new Date().toISOString() });
+    }
+    if(els.attempts){
+      if(quizId && quizAttempts[quizId] && quizAttempts[quizId].length){
+        var list = quizAttempts[quizId];
+        var label = (lang === 'ar') ? 'محاولاتك' : 'Your Attempts';
+        var html = '<div class="attempts-label">' + label + '</div><div class="attempts-row">';
+        list.forEach(function(a, idx){
+          var num = (lang === 'ar') ? toArabicDigits(idx + 1) : String(idx + 1);
+          var attemptLabel = (lang === 'ar') ? ('المحاولة ' + num) : ('Attempt ' + num);
+          var isCurrent = (idx === list.length - 1);
+          html += '<span class="attempt-chip' + (isCurrent ? ' current' : '') + '">' + attemptLabel + ': ' + a.pct + '%</span>';
+        });
+        html += '</div>';
+        els.attempts.innerHTML = html;
+      } else {
+        els.attempts.innerHTML = '';
+      }
+    }
+
     if(name){ speakResult(name, correctCount, questions.length, pct, lang); }
 
     if(typeof onFinish === 'function'){ onFinish(pct); }
@@ -2216,7 +2278,8 @@ function defaultStudentDoc(fullName, email){
     email: email,
     createdAt: new Date().toISOString(),
     stepDone: new Array(window.STEP_DEFS.length).fill(false),
-    finalExamScorePct: null
+    finalExamScorePct: null,
+    quizAttempts: {}
   };
 }
 
@@ -2225,7 +2288,8 @@ var loginBtn = document.getElementById('login-submit-btn');
 var enrollErrorEl = document.getElementById('enroll-error');
 var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
 
-enrollBtn.addEventListener('click', function(){
+document.getElementById('enroll-form').addEventListener('submit', function(e){
+  e.preventDefault();
   enrollErrorEl.style.display = 'none';
   gotoLoginBtn.style.display = 'none';
   var name = document.getElementById('enroll-name').value.trim();
@@ -2272,7 +2336,8 @@ enrollBtn.addEventListener('click', function(){
 var loginErrorEl = document.getElementById('login-error');
 var loginInfoEl = document.getElementById('login-info');
 
-loginBtn.addEventListener('click', function(){
+document.getElementById('login-form').addEventListener('submit', function(e){
+  e.preventDefault();
   loginErrorEl.style.display = 'none';
   loginInfoEl.style.display = 'none';
   var email = document.getElementById('login-email').value.trim();
@@ -2337,8 +2402,8 @@ window.__fbSignOut = function(){
   signOut(auth).then(function(){ window.location.reload(); });
 };
 
-window.__fbSaveProgress = function(uid, stepDone, finalExamScorePct){
-  setDoc(doc(db, 'students', uid), { stepDone: stepDone, finalExamScorePct: finalExamScorePct }, { merge: true })
+window.__fbSaveProgress = function(uid, stepDone, finalExamScorePct, quizAttempts){
+  setDoc(doc(db, 'students', uid), { stepDone: stepDone, finalExamScorePct: finalExamScorePct, quizAttempts: quizAttempts || {} }, { merge: true })
     .catch(function(e){ console.error('Progress save failed:', e); });
 };
 
@@ -2363,5 +2428,6 @@ onAuthStateChanged(auth, function(user){
 });
 </script>
 
+<script src="/cursor.js" defer></script>
 </body>
 </html>

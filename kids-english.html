@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>English Practice — Kids Corner</title>
+<meta name="description" content="Australian Curriculum-aligned English practice for kids, Foundation to Year 6: phonics, sight words, rhymes, vocabulary, grammar and reading — the basis for NAPLAN literacy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --violet:#7a5aa8; --violet-dark:#5a4080; --danger:#8a3324;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:40px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--violet); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .grade-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:22px 0 6px; }
+  .grade-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.03em;
+    padding:8px 14px; border-radius:18px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .grade-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+  .naplan-badge{
+    display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
+    border-radius:8px; background:var(--gold); color:#fff; margin-left:5px; vertical-align:middle;
+  }
+  .grade-btn.active .naplan-badge{ background:#fff; color:var(--violet); }
+  .curriculum-note{ text-align:center; font-size:13px; color:#8a7654; max-width:480px; margin:0 auto 6px; line-height:1.5; }
+  .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 20px 90px; }
+
+  /* ---- foundation flashcards ---- */
+  .flash-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px; }
+  .flashcard{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:16px 10px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .flashcard:hover{ transform:translateY(-3px); border-color:var(--violet); }
+  .flashcard .big-letter{ font-family:'Marcellus'; font-size:38px; color:var(--ink-navy); line-height:1; }
+  .flashcard .emoji{ font-size:30px; margin:6px 0; }
+  .flashcard .word{ font-size:14px; color:var(--violet-dark); font-weight:700; }
+  .mode-row{ display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+  .mode-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
+    padding:9px 18px; border-radius:20px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .mode-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+
+  /* ---- quiz (shared by grades 1-6) ---- */
+  .center-wrap{ max-width:560px; margin:0 auto; }
+  .start-card{ text-align:center; background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px; }
+  .start-card .icon{ font-size:44px; margin-bottom:10px; }
+  .start-card h2{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 10px; }
+  .start-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; }
+
+  .lesson-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:32px 28px; text-align:center;
+  }
+  .lesson-card .icon{ font-size:40px; margin-bottom:8px; }
+  .lesson-card h2{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0 0 12px; }
+  .lesson-card p{ font-size:16px; color:#6b5a3f; line-height:1.6; margin:0 0 16px; text-align:left; }
+  .example-box{
+    background:var(--parchment); border:1.5px dashed var(--gold-soft); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15.5px; color:var(--ink-navy); margin:0 0 22px; line-height:1.7;
+  }
+  .example-box div{ margin-bottom:4px; }
+
+  /* ---- certificate ---- */
+  .cert-wrap{ margin-top:26px; }
+  .certificate{
+    position:relative; background:#fffdf7; border:3px double var(--gold); border-radius:6px;
+    padding:36px 30px; text-align:center; max-width:480px; margin:0 auto;
+  }
+  .cert-corner{ position:absolute; width:22px; height:22px; border:2px solid var(--gold); }
+  .cert-tl{ top:8px; left:8px; border-right:none; border-bottom:none; }
+  .cert-tr{ top:8px; right:8px; border-left:none; border-bottom:none; }
+  .cert-bl{ bottom:8px; left:8px; border-right:none; border-top:none; }
+  .cert-br{ bottom:8px; right:8px; border-left:none; border-top:none; }
+  .cert-bismillah{ font-size:24px; color:var(--gold); margin-bottom:6px; }
+  .cert-eyebrow{ font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .cert-given{ font-size:15px; color:#6b5a3f; margin-bottom:6px; }
+  .cert-name{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin-bottom:14px; border-bottom:1px solid var(--gold-soft); display:inline-block; padding-bottom:6px; }
+  .cert-body{ font-size:15px; color:var(--ink-brown); line-height:1.6; margin-bottom:22px; }
+  .cert-footer{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+  .cert-col{ flex:1; }
+  .cert-line{ border-top:1px solid var(--ink-brown); margin-bottom:6px; }
+  .cert-label{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#8a7654; }
+  .cert-value{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); }
+  .cert-seal{ font-size:34px; }
+  .cert-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:22px; }
+  @media print{
+    header, footer, .page-head, .curriculum-note, .grade-row, .grade-desc, .learner-banner, .mode-row, .flash-grid,
+    #start-block, #term-week-screen, #foundation-week-label, #foundation-project, #lesson-block, .stat-row,
+    #quiz-panel, #abc-quiz-panel, #session-summary, #abc-session-summary, .no-print{ display:none !important; }
+    .cert-wrap{ margin:40px 0 0; }
+  }
+
+  .learner-banner{
+    max-width:560px; margin:0 auto 20px; background:var(--violet); color:#fff; border-radius:16px;
+    padding:14px 22px; text-align:center; font-family:'Marcellus'; font-size:16px;
+  }
+  .learner-banner a{ display:block; margin-top:6px; font-family:'Cormorant Garamond', serif; font-size:13px; color:#e6dcf5; text-decoration:underline; }
+  .term-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .term-btn{
+    font-family:'Marcellus'; font-size:14px; padding:9px 20px; border-radius:18px; cursor:pointer;
+    border:1.5px solid var(--gold-soft); background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .term-btn.active{ background:var(--ink-navy); border-color:var(--ink-navy); color:#fff; }
+  .term-progress{ text-align:center; font-size:13px; color:#8a7654; margin:0 0 20px; }
+  .week-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:12px; max-width:720px; margin:0 auto; }
+  .week-node{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px 10px; text-align:center; cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .week-node:hover{ transform:translateY(-3px); border-color:var(--violet); }
+  .week-node.done{ border-color:var(--green); background:var(--green-bg); }
+  .week-node.special{ background:#fdeecb; border-color:var(--gold); }
+  .week-node.special.done{ background:var(--green-bg); border-color:var(--green); }
+  .week-node .wk-num{ font-family:'JetBrains Mono', monospace, monospace; font-size:11px; color:var(--gold); }
+  .week-node .wk-label{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); margin-top:4px; }
+  .week-node .wk-check{ margin-top:4px; font-size:15px; }
+  .back-link{
+    display:block; text-align:center; margin-top:26px; font-size:14px; color:var(--gold); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+  .project-box{
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15px; color:var(--ink-navy); margin:0 0 22px; line-height:1.6;
+  }
+  .project-box b{ display:block; margin-bottom:4px; color:var(--gold-dark, #8a5a00); }
+
+  .stat-row{ display:flex; justify-content:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:8px 18px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--violet); }
+
+  .quiz-panel{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:30px 26px;
+    text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
+  }
+  .passage-box{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px;
+    font-size:15.5px; line-height:1.6; color:var(--ink-brown); text-align:left; margin:0 0 20px;
+  }
+  .quiz-emoji{ font-size:56px; margin-bottom:10px; }
+  .quiz-question{ font-size:18px; font-weight:700; color:var(--ink-navy); margin:0 0 20px; }
+  .hear-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; padding:8px 16px; border-radius:18px;
+    border:1.5px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy); cursor:pointer; margin-bottom:18px;
+  }
+  .answer-list{ display:flex; flex-direction:column; gap:10px; }
+  .answer-btn{
+    text-align:left; font-family:'Cormorant Garamond', serif; font-size:16.5px; padding:13px 18px;
+    border-radius:12px; border:1.5px solid var(--gold-soft); background:var(--parchment); color:var(--ink-brown);
+    cursor:pointer; transition:border-color .15s ease, background .15s ease;
+  }
+  .answer-btn:hover:not(:disabled){ border-color:var(--violet); }
+  .answer-btn:disabled{ cursor:default; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); }
+  .feedback{ min-height:26px; margin-top:16px; font-size:16px; font-weight:700; }
+  .feedback.right{ color:var(--green-dark); }
+  .feedback.wrong{ color:var(--danger); }
+
+  .session-summary{ display:none; text-align:center; }
+  .session-summary.show{ display:block; animation:popIn .4s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes popIn{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .session-summary h2{ font-family:'Marcellus'; color:var(--violet-dark); margin:0 0 8px; font-size:26px; }
+  .session-summary .score-big{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:8px 0; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--violet); color:#fff; transition:transform .15s ease, background .15s ease; margin-top:8px;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--violet-dark); }
+  .hidden{ display:none !important; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html" id="back-pill">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🔤 English Practice</p>
+  <h1>Reading &amp; Words</h1>
+  <p>Pick your class, from Foundation to Year 6, and practice at your own level.</p>
+</div>
+
+<p class="curriculum-note">Aligned with the Australian Curriculum (Foundation–Year 6), the basis for NAPLAN. NAPLAN itself only tests Years 3, 5, 7 &amp; 9 — those levels are marked below.</p>
+
+<div class="learner-banner hidden" id="learner-banner"></div>
+<div class="grade-row" id="grade-row"></div>
+<p class="grade-desc" id="grade-desc"></p>
+
+<div class="wrap">
+
+  <div id="start-block" class="start-card">
+    <div class="icon" id="start-icon">📘</div>
+    <p id="start-greeting" class="hidden" style="font-weight:700; color:var(--violet-dark); margin:0 0 6px;"></p>
+    <h2 id="start-title"></h2>
+    <p id="start-desc"></p>
+    <button class="btn" id="start-btn">See Terms &amp; Weeks →</button>
+  </div>
+
+  <div id="term-week-screen" class="hidden">
+    <div class="term-row" id="term-row"></div>
+    <p class="term-progress" id="term-progress"></p>
+    <div class="week-grid" id="week-grid"></div>
+    <button class="back-link" id="back-to-classcard-btn">← Choose a different class</button>
+  </div>
+
+  <div id="foundation-block" class="hidden">
+    <p id="foundation-week-label" style="text-align:center; font-weight:700; color:var(--violet-dark); margin:0 0 10px;"></p>
+    <div class="project-box hidden" id="foundation-project" style="max-width:520px; margin:0 auto 20px;"></div>
+    <div class="example-box" style="max-width:520px; margin:0 auto 20px;">Every letter has a sound. Learning the sound each letter makes helps you read and spell new words — tap a flashcard to hear it, then try the quiz!</div>
+    <div class="mode-row">
+      <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
+      <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
+    </div>
+    <div class="flash-grid" id="flash-grid"></div>
+    <div class="center-wrap quiz-wrap hidden" id="abc-quiz-wrap">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="abc-q-count">1</b> / <span id="abc-q-total">10</span></div>
+        <div class="stat-chip">Score: <b id="abc-score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="abc-quiz-panel">
+        <div class="quiz-emoji" id="abc-quiz-emoji"></div>
+        <p class="quiz-question">Which letter does this word start with?</p>
+        <div class="answer-list" id="abc-answer-list" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+        <div class="feedback" id="abc-feedback"></div>
+      </div>
+      <div class="session-summary" id="abc-session-summary">
+        <h2 id="abc-summary-title">🎉 Quiz Complete!</h2>
+        <div class="score-big" id="abc-final-score"></div>
+        <p id="abc-final-msg"></p>
+        <button class="btn" id="abc-cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
+        <button class="btn" id="abc-play-again-btn">Play Again</button>
+        <button class="btn" id="abc-back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
+      </div>
+
+      <div class="cert-wrap hidden" id="abc-cert-wrap">
+        <div class="certificate" id="abc-certificate">
+          <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+          <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+          <div class="cert-bismillah arabic">﷽</div>
+          <div class="cert-eyebrow" id="abc-cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-given">This certifies that</div>
+          <div class="cert-name" id="abc-cert-name"></div>
+          <div class="cert-body" id="abc-cert-body"></div>
+          <div class="cert-footer">
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Date</div><div class="cert-value" id="abc-cert-date"></div></div>
+            <div class="cert-seal">🌟</div>
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Score</div><div class="cert-value" id="abc-cert-score"></div></div>
+          </div>
+        </div>
+        <div class="cert-actions no-print">
+          <button class="btn" id="abc-print-cert-btn">🖨️ Print Certificate</button>
+          <button class="btn" id="abc-close-cert-btn" style="background:var(--gold-soft); color:var(--ink-navy);">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="grade-block" class="center-wrap hidden">
+    <div id="lesson-block" class="lesson-card hidden">
+      <div class="icon">📘</div>
+      <p id="lesson-week-label" style="font-weight:700; color:var(--violet-dark); margin:0 0 6px;"></p>
+      <h2 id="lesson-title"></h2>
+      <p id="lesson-body"></p>
+      <div class="example-box" id="lesson-examples"></div>
+      <div class="project-box hidden" id="lesson-project"></div>
+      <button class="btn" id="to-quiz-btn">Take the Quiz →</button>
+    </div>
+
+    <div id="quiz-block" class="hidden">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
+        <div class="stat-chip">Score: <b id="score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="quiz-panel">
+        <div id="passage-holder"></div>
+        <button class="hear-btn hidden" id="hear-btn">🔊 Hear it again</button>
+        <p class="quiz-question" id="quiz-question"></p>
+        <div class="answer-list" id="answer-list"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div class="session-summary" id="session-summary">
+        <h2 id="summary-title">🎉 Round Complete!</h2>
+        <div class="score-big" id="final-score"></div>
+        <p id="final-msg"></p>
+        <button class="btn" id="cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
+        <button class="btn" id="play-again-btn">Play Again</button>
+        <button class="btn" id="back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
+        <button class="btn" id="change-grade-btn" style="background:var(--gold-soft); color:var(--ink-navy);">Choose Another Class</button>
+      </div>
+
+      <div class="cert-wrap hidden" id="cert-wrap">
+        <div class="certificate" id="certificate">
+          <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+          <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+          <div class="cert-bismillah arabic">﷽</div>
+          <div class="cert-eyebrow" id="cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-given">This certifies that</div>
+          <div class="cert-name" id="cert-name"></div>
+          <div class="cert-body" id="cert-body"></div>
+          <div class="cert-footer">
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Date</div><div class="cert-value" id="cert-date"></div></div>
+            <div class="cert-seal">🌟</div>
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Score</div><div class="cert-value" id="cert-score"></div></div>
+          </div>
+        </div>
+        <div class="cert-actions no-print">
+          <button class="btn" id="print-cert-btn">🖨️ Print Certificate</button>
+          <button class="btn" id="close-cert-btn" style="background:var(--gold-soft); color:var(--ink-navy);">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ================= shared helpers ================= */
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.85;
+    u.pitch = 1.1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+/* ================= Foundation: ABC flashcards + quiz ================= */
+const WORDS = [
+  {letter:'A', word:'Apple', emoji:'🍎'}, {letter:'B', word:'Ball', emoji:'⚽'},
+  {letter:'C', word:'Cat', emoji:'🐱'}, {letter:'D', word:'Dog', emoji:'🐶'},
+  {letter:'E', word:'Elephant', emoji:'🐘'}, {letter:'F', word:'Fish', emoji:'🐟'},
+  {letter:'G', word:'Grapes', emoji:'🍇'}, {letter:'H', word:'House', emoji:'🏠'},
+  {letter:'I', word:'Ice Cream', emoji:'🍦'}, {letter:'J', word:'Juice', emoji:'🧃'},
+  {letter:'K', word:'Kite', emoji:'🪁'}, {letter:'L', word:'Lion', emoji:'🦁'},
+  {letter:'M', word:'Moon', emoji:'🌙'}, {letter:'N', word:'Nest', emoji:'🪺'},
+  {letter:'O', word:'Orange', emoji:'🍊'}, {letter:'P', word:'Pencil', emoji:'✏️'},
+  {letter:'Q', word:'Queen', emoji:'👑'}, {letter:'R', word:'Rainbow', emoji:'🌈'},
+  {letter:'S', word:'Star', emoji:'⭐'}, {letter:'T', word:'Tree', emoji:'🌳'},
+  {letter:'U', word:'Umbrella', emoji:'☂️'}, {letter:'V', word:'Violin', emoji:'🎻'},
+  {letter:'W', word:'Watermelon', emoji:'🍉'}, {letter:'X', word:'Xylophone', emoji:'🎼'},
+  {letter:'Y', word:'Yo-yo', emoji:'🪀'}, {letter:'Z', word:'Zebra', emoji:'🦓'}
+];
+
+function renderFlashcards(){
+  const grid = document.getElementById('flash-grid');
+  grid.innerHTML = '';
+  WORDS.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'flashcard';
+    card.innerHTML = `<div class="big-letter">${w.letter}</div><div class="emoji">${w.emoji}</div><div class="word">${w.word}</div>`;
+    card.addEventListener('click', () => speak(w.letter + ' is for ' + w.word));
+    grid.appendChild(card);
+  });
+}
+
+let ABC_TOTAL = 10;
+let abcQIndex = 0, abcScore = 0, abcCurrent = null, abcLocked = false;
+
+function makeAbcQuestion(){
+  const item = WORDS[randInt(0, WORDS.length - 1)];
+  const options = new Set([item.letter]);
+  while(options.size < 4) options.add(WORDS[randInt(0, WORDS.length - 1)].letter);
+  return { item, options: shuffle(Array.from(options)) };
+}
+function renderAbcQuestion(){
+  abcCurrent = makeAbcQuestion();
+  abcLocked = false;
+  document.getElementById('abc-quiz-emoji').textContent = abcCurrent.item.emoji;
+  document.getElementById('abc-feedback').textContent = '';
+  document.getElementById('abc-feedback').className = 'feedback';
+  const list = document.getElementById('abc-answer-list');
+  list.innerHTML = '';
+  abcCurrent.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.style.textAlign = 'center';
+    btn.style.fontFamily = "'Marcellus'";
+    btn.style.fontSize = '24px';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAbcAnswer(opt, btn));
+    list.appendChild(btn);
+  });
+  document.getElementById('abc-q-count').textContent = abcQIndex + 1;
+}
+function handleAbcAnswer(opt, btn){
+  if(abcLocked) return;
+  abcLocked = true;
+  const buttons = document.querySelectorAll('#abc-answer-list .answer-btn');
+  const fb = document.getElementById('abc-feedback');
+  const correct = opt === abcCurrent.item.letter;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === abcCurrent.item.letter) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){ abcScore++; playRight(); fb.textContent = 'Great job! 🌟'; fb.classList.add('right'); }
+  else { playWrong(); fb.textContent = abcCurrent.item.word + ' starts with ' + abcCurrent.item.letter + '.'; fb.classList.add('wrong'); }
+  document.getElementById('abc-score-count').textContent = abcScore;
+  setTimeout(() => {
+    abcQIndex++;
+    if(abcQIndex >= ABC_TOTAL){ showAbcSummary(); }
+    else { renderAbcQuestion(); }
+  }, 1100);
+}
+function showAbcSummary(){
+  playDone();
+  document.getElementById('abc-quiz-panel').style.display = 'none';
+  const pct = Math.round((abcScore / ABC_TOTAL) * 100);
+  const isSpecial = activeWeek === 11;
+  document.getElementById('abc-summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Quiz Complete!';
+  document.getElementById('abc-final-score').textContent = abcScore + ' / ' + ABC_TOTAL;
+  document.getElementById('abc-final-msg').textContent = pct === 100 ? "Perfect — you know your ABCs! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Look at the flashcards, then try again.";
+  document.getElementById('abc-cert-btn').classList.toggle('hidden', !isSpecial);
+  document.getElementById('abc-session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
+}
+function startAbcQuiz(){
+  abcQIndex = 0; abcScore = 0;
+  document.getElementById('abc-q-count').textContent = 1;
+  document.getElementById('abc-q-total').textContent = ABC_TOTAL;
+  document.getElementById('abc-score-count').textContent = 0;
+  document.getElementById('abc-quiz-panel').style.display = '';
+  document.getElementById('abc-session-summary').classList.remove('show');
+  renderAbcQuestion();
+}
+document.getElementById('abc-play-again-btn').addEventListener('click', startAbcQuiz);
+document.getElementById('mode-cards-btn').addEventListener('click', () => {
+  document.getElementById('mode-cards-btn').classList.add('active');
+  document.getElementById('mode-quiz-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.remove('hidden');
+  document.getElementById('abc-quiz-wrap').classList.add('hidden');
+});
+document.getElementById('mode-quiz-btn').addEventListener('click', () => {
+  document.getElementById('mode-quiz-btn').classList.add('active');
+  document.getElementById('mode-cards-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.add('hidden');
+  document.getElementById('abc-quiz-wrap').classList.remove('hidden');
+  startAbcQuiz();
+});
+renderFlashcards();
+
+/* ================= Grades 1-6: content banks ================= */
+const SIGHT_WORDS = ['the','and','said','you','was','they','are','here','come','little','one','down','big','look','went'];
+const G1_BANK = SIGHT_WORDS.map(word => ({ type:'listen', word }));
+
+const G2_BANK = [
+  { q:"Which word rhymes with 'cat'?", options:['hat','dog','sun','box'], correct:0 },
+  { q:"Which word rhymes with 'dog'?", options:['log','cat','pen','moon'], correct:0 },
+  { q:"Which word rhymes with 'sun'?", options:['fun','king','bell','car'], correct:0 },
+  { q:"Which word rhymes with 'pen'?", options:['hen','cake','fox','ring'], correct:0 },
+  { q:"Which word rhymes with 'box'?", options:['fox','bell','moon','sun'], correct:0 },
+  { q:"Which word rhymes with 'car'?", options:['star','dog','pen','king'], correct:0 },
+  { q:"Which word rhymes with 'bell'?", options:['shell','cat','box','sun'], correct:0 },
+  { q:"Which word rhymes with 'cake'?", options:['lake','dog','ring','box'], correct:0 },
+  { q:"Which word rhymes with 'king'?", options:['ring','cat','moon','pen'], correct:0 },
+  { q:"Which word rhymes with 'moon'?", options:['spoon','dog','cake','star'], correct:0 }
+];
+
+const G3_BANK = [
+  { q:"Which word means the same as 'happy'?", options:['glad','sad','tired','angry'], correct:0 },
+  { q:"Which word means the opposite of 'big'?", options:['small','huge','tall','wide'], correct:0 },
+  { q:"Which word means the same as 'fast'?", options:['quick','slow','tired','quiet'], correct:0 },
+  { q:"Which word means the opposite of 'hot'?", options:['cold','warm','sunny','wet'], correct:0 },
+  { q:"Which word means the same as 'small'?", options:['tiny','huge','wide','long'], correct:0 },
+  { q:"Which word means the opposite of 'happy'?", options:['sad','glad','calm','kind'], correct:0 },
+  { q:"Which word means the same as 'smart'?", options:['clever','silly','lazy','shy'], correct:0 },
+  { q:"Which word means the opposite of 'up'?", options:['down','high','top','over'], correct:0 },
+  { q:"Which word means the same as 'begin'?", options:['start','end','stop','finish'], correct:0 },
+  { q:"Which word means the opposite of 'day'?", options:['night','sun','bright','noon'], correct:0 },
+  { q:"Which word means the same as 'shout'?", options:['yell','whisper','sing','ask'], correct:0 },
+  { q:"Which word means the opposite of 'full'?", options:['empty','big','heavy','deep'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['because','becuase','becaus','becouse'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['friend','freind','frend','friand'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['beautiful','beautifull','butiful','beutiful'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['people','peple','peapel','poeple'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['different','diffrent','diferent','differant'], correct:0 },
+  { q:'Which word is spelled correctly?', options:['favourite','favorate','favrite','favourate'], correct:0 }
+];
+
+const G4_BANK = [
+  { q:'"The dog runs fast." Which word is the verb?', options:['dog','runs','fast','the'], correct:1 },
+  { q:'"She has a red bag." Which word is the adjective?', options:['she','has','red','bag'], correct:2 },
+  { q:'"Birds fly in the sky." Which word is the verb?', options:['birds','fly','sky','the'], correct:1 },
+  { q:'"The tall boy jumped high." Which word is the adjective?', options:['boy','tall','jumped','high'], correct:1 },
+  { q:'"My cat sleeps quietly." Which word is the noun?', options:['cat','sleeps','quietly','my'], correct:0 },
+  { q:'"The children played happily." Which word is the adverb?', options:['children','played','happily','the'], correct:2 },
+  { q:'"He quickly closed the door." Which word is the verb?', options:['quickly','closed','door','the'], correct:1 },
+  { q:'"The bright sun warmed the sand." Which word is the adjective?', options:['sun','bright','warmed','sand'], correct:1 },
+  { q:'"We walked to the old bridge." Which word is the noun?', options:['walked','to','old','bridge'], correct:3 },
+  { q:'"The baby giggled loudly." Which word is the adverb?', options:['baby','giggled','loudly','the'], correct:2 }
+];
+
+const G5_BANK = [
+  { passage:"Amina woke up early on Saturday morning. She helped her mother bake bread before the sun rose fully. After breakfast, she read two pages of the Qur'an with her little brother.",
+    q:'What did Amina do before breakfast?', options:['Helped bake bread','Played outside','Went to school','Watched TV'], correct:0 },
+  { passage:"Amina woke up early on Saturday morning. She helped her mother bake bread before the sun rose fully. After breakfast, she read two pages of the Qur'an with her little brother.",
+    q:'Who did Amina read Qur’an with?', options:['Her little brother','Her teacher','Her friend','Alone'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:'What was the camel carrying?', options:['Bags of dates','Bags of rice','Water jugs','Wood'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:"What is the camel's owner's name?", options:['Yusuf','Amina','Bilal','Zayd'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:'What did Yusuf give the camel?', options:['Cool water','Extra bags','A blanket','Nothing'], correct:0 },
+  { passage:"Every Friday, Omar's family goes to the masjid together for Jumuʿah prayer. Omar likes sitting near the front to hear the khutbah clearly. Afterward, they usually share a meal with their neighbors.",
+    q:"What day does Omar's family go to the masjid together?", options:['Friday','Sunday','Monday','Saturday'], correct:0 },
+  { passage:"Every Friday, Omar's family goes to the masjid together for Jumuʿah prayer. Omar likes sitting near the front to hear the khutbah clearly. Afterward, they usually share a meal with their neighbors.",
+    q:'What does Omar like to hear clearly?', options:['The khutbah','The adhan','Music','Nothing'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'What did Layla plant?', options:['An olive tree','A rose bush','A vegetable','An apple tree'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'How often did she water it?', options:['Every morning','Once a week','Only in summer','Never'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'How long until the tree grew its first olives?', options:['Two years','One month','Ten years','One week'], correct:0 }
+];
+
+const G6_BANK = [
+  { q:'Choose the correct word: "___ going to the masjid today."', options:["They're",'Their','There','Thear'], correct:0 },
+  { q:'Choose the correct word: "That is ___ book."', options:['their','there',"they're",'thare'], correct:0 },
+  { q:'Choose the correct word: "___ a beautiful day."', options:["It's",'Its','Is',"I's"], correct:0 },
+  { q:'Choose the correct word: "The dog wagged ___ tail."', options:['its',"it's","its'",'it is'], correct:0 },
+  { q:'Which sentence is punctuated correctly?', options:['Can you help me?','Can you help me.','can you help me?','Can you help me'], correct:0 },
+  { q:'Which sentence uses the correct verb tense?', options:['Yesterday, I walked to school.','Yesterday, I walk to school.','Yesterday, I walking to school.','Yesterday, I walks to school.'], correct:0 },
+  { q:'Choose the correct word: "___ my best friend."', options:["You're",'Your','Yore','Ur'], correct:0 },
+  { q:'Which of these should end with a question mark?', options:['Where are you going','I am going home','She is my sister','We ate dinner'], correct:0 },
+  { q:'Choose the correctly capitalized sentence.', options:['My name is Ahmad.','my name is ahmad.','My Name Is Ahmad.','my Name is Ahmad.'], correct:0 },
+  { q:'Which word completes: "She ___ to the store yesterday."', options:['went','goes','going','go'], correct:0 },
+  { q:'Which word completes: "There are three ___ on the table."', options:['apples','apple','applies','appels'], correct:0 },
+  { q:'Choose the correct word: "___ car is parked outside."', options:['Their','There',"They're",'Thear'], correct:0 }
+];
+
+const GRADES = [
+  { id:'foundation', label:'Foundation', title:'Foundation — Phonics & Letter Sounds', desc:'Learn your letters with flashcards, then try the quiz.' },
+  { id:'g1', label:'Year 1', title:'Year 1 — High-Frequency Words', desc:'Listen carefully, then choose the word you heard.',
+    lesson:{ body:'High-frequency (sight) words appear so often in books that it helps to recognise them instantly, without having to sound them out letter by letter.',
+      examples:['the, and, said, you','was, they, are, here'] } },
+  { id:'g2', label:'Year 2', title:'Year 2 — Rhyme & Phonological Awareness', desc:'Find the word that rhymes.',
+    lesson:{ body:'Rhyming words end with the same sound, even if they start differently. Noticing rhymes helps you hear the small sounds inside words, which makes reading and spelling easier.',
+      examples:['cat rhymes with hat and bat','sun rhymes with fun and run'] } },
+  { id:'g3', label:'Year 3', title:'Year 3 — Vocabulary & Spelling', desc:'Synonyms, antonyms, and NAPLAN-style spelling.', naplan:true,
+    lesson:{ body:'Synonyms are words that mean the same thing, and antonyms mean the opposite. Good spellers look closely at tricky letter patterns instead of guessing.',
+      examples:['happy = glad (synonym)','big ↔ small (antonym)','friend, not "freind"'] } },
+  { id:'g4', label:'Year 4', title:'Year 4 — Grammar: Parts of Speech', desc:'Spot the noun, verb, adjective, or adverb.',
+    lesson:{ body:'A noun names a person, place, or thing. A verb is an action word. An adjective describes a noun, and an adverb describes how an action happens.',
+      examples:['The (adjective) dog (noun) runs (verb) quickly (adverb).'] } },
+  { id:'g5', label:'Year 5', title:'Year 5 — Reading Comprehension', desc:'Read short passages and answer questions about them.', naplan:true,
+    lesson:{ body:'When you read a passage, look for the main idea and the small details that answer questions like who, what, when, and where.',
+      examples:['If a story says "Amina baked bread on Saturday," the detail that answers "when?" is Saturday.'] } },
+  { id:'g6', label:'Year 6', title:'Year 6 — Grammar & Punctuation', desc:'Correct words, punctuation, and verb tenses.',
+    lesson:{ body:'Sentences need correct punctuation to make sense — question marks for questions, capital letters to start sentences, and correct word choices like their/there/they’re.',
+      examples:['Their book is on the table.','They’re going to the park.'] } }
+];
+const BANKS = { g1:G1_BANK, g2:G2_BANK, g3:G3_BANK, g4:G4_BANK, g5:G5_BANK, g6:G6_BANK };
+
+const urlYear = new URLSearchParams(location.search).get('year');
+const urlYearValid = urlYear && GRADES.some(g => g.id === urlYear);
+let currentGrade = urlYearValid ? urlYear : (localStorage.getItem('kids-english-grade') || 'foundation');
+if(urlYearValid) localStorage.setItem('kids-english-grade', currentGrade);
+const learnerName = localStorage.getItem('kids-school-name') || '';
+if(urlYearValid){
+  const backPill = document.getElementById('back-pill');
+  backPill.href = 'kids-school.html';
+  backPill.textContent = '← Classes';
+}
+let TOTAL_QUESTIONS = 10;
+let qIndex = 0, score = 0, current = null, locked = false, roundItems = [];
+
+const TERMS = [1,2,3,4];
+let activeTerm = 1, activeWeek = 1;
+const PROJECT_KEY = 'kids-english-term-progress';
+const PROJECTS = {
+  foundation: 'Find 5 things at home that start with the same letter, and say them out loud to a family member.',
+  g1: 'Write down 5 sight words you know on a piece of paper and read them to someone at home.',
+  g2: 'Find 3 pairs of rhyming words around your house (like "mat" and "cat") and say them out loud.',
+  g3: 'Pick 3 words and write a synonym and an antonym for each one.',
+  g4: 'Write 3 sentences of your own, and circle the noun, verb, adjective, and adverb in each.',
+  g5: 'Read a short story or page from a book and tell someone the main idea and one detail.',
+  g6: 'Write a short paragraph (3-4 sentences) using correct punctuation and their/there/they’re correctly.'
+};
+
+function loadTermProgress(){
+  try{ return JSON.parse(localStorage.getItem(PROJECT_KEY) || '{}'); }catch(e){ return {}; }
+}
+function saveTermProgress(p){ try{ localStorage.setItem(PROJECT_KEY, JSON.stringify(p)); }catch(e){} }
+function isWeekDone(term, week){
+  const p = loadTermProgress();
+  return !!(p[currentGrade] && p[currentGrade]['t'+term] && p[currentGrade]['t'+term][week]);
+}
+function markWeekDone(term, week){
+  const p = loadTermProgress();
+  if(!p[currentGrade]) p[currentGrade] = {};
+  if(!p[currentGrade]['t'+term]) p[currentGrade]['t'+term] = {};
+  p[currentGrade]['t'+term][week] = true;
+  saveTermProgress(p);
+}
+
+function renderGradeRow(){
+  const row = document.getElementById('grade-row');
+  row.innerHTML = '';
+  GRADES.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
+    btn.innerHTML = g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
+    btn.addEventListener('click', () => {
+      currentGrade = g.id;
+      localStorage.setItem('kids-english-grade', currentGrade);
+      renderGradeRow();
+      showStartCard();
+    });
+    row.appendChild(btn);
+  });
+  document.getElementById('grade-desc').textContent = GRADES.find(x => x.id === currentGrade).desc;
+}
+
+function updateLearnerBanner(){
+  const banner = document.getElementById('learner-banner');
+  const g = GRADES.find(x => x.id === currentGrade);
+  if(urlYearValid && learnerName){
+    banner.innerHTML = '🎓 Hi ' + learnerName + '! You are in <b>' + g.label + '</b> English.' +
+      '<a href="kids-school.html">← Choose a different class</a>';
+    banner.classList.remove('hidden');
+    document.getElementById('grade-row').classList.add('hidden');
+    document.getElementById('grade-desc').classList.add('hidden');
+  } else {
+    banner.classList.add('hidden');
+    document.getElementById('grade-row').classList.remove('hidden');
+    document.getElementById('grade-desc').classList.remove('hidden');
+  }
+}
+
+function showStartCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  document.getElementById('grade-desc').textContent = g.desc;
+  document.getElementById('start-icon').textContent = currentGrade === 'foundation' ? '🔤' : '📘';
+  document.getElementById('start-title').textContent = g.title;
+  document.getElementById('start-desc').textContent = g.desc;
+  const greeting = document.getElementById('start-greeting');
+  if(learnerName){
+    greeting.textContent = 'Hi ' + learnerName + '! 👋';
+    greeting.classList.remove('hidden');
+  } else {
+    greeting.classList.add('hidden');
+  }
+  updateLearnerBanner();
+  document.getElementById('start-block').classList.remove('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+}
+
+function renderTermWeekScreen(){
+  const row = document.getElementById('term-row');
+  row.innerHTML = '';
+  TERMS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'term-btn' + (t === activeTerm ? ' active' : '');
+    btn.textContent = 'Term ' + t;
+    btn.addEventListener('click', () => { activeTerm = t; renderTermWeekScreen(); });
+    row.appendChild(btn);
+  });
+  let doneCount = 0;
+  for(let w = 1; w <= 11; w++){ if(isWeekDone(activeTerm, w)) doneCount++; }
+  document.getElementById('term-progress').textContent = doneCount + ' / 11 weeks complete';
+
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  for(let w = 1; w <= 11; w++){
+    const isSpecial = w === 11;
+    const done = isWeekDone(activeTerm, w);
+    const node = document.createElement('div');
+    node.className = 'week-node' + (isSpecial ? ' special' : '') + (done ? ' done' : '');
+    const label = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Lesson ' + w);
+    node.innerHTML = '<div class="wk-num">WEEK ' + w + '</div><div class="wk-label">' + label + '</div>' + (done ? '<div class="wk-check">✅</div>' : '');
+    node.addEventListener('click', () => selectWeek(activeTerm, w));
+    grid.appendChild(node);
+  }
+}
+
+function showTermWeekScreen(){
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.remove('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+  renderTermWeekScreen();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function selectWeek(term, week){
+  activeTerm = term; activeWeek = week;
+  if(currentGrade === 'foundation'){
+    ABC_TOTAL = (week === 11) ? 20 : 10;
+    showFoundationWeek();
+  } else {
+    TOTAL_QUESTIONS = (week === 11) ? 20 : 10;
+    showLessonCard();
+  }
+}
+
+function showFoundationWeek(){
+  const isSpecial = activeWeek === 11;
+  document.getElementById('foundation-week-label').textContent = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  const projectBox = document.getElementById('foundation-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS.foundation;
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  document.getElementById('mode-cards-btn').classList.add('active');
+  document.getElementById('mode-quiz-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.remove('hidden');
+  document.getElementById('abc-quiz-wrap').classList.add('hidden');
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.remove('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showLessonCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const isSpecial = activeWeek === 11;
+  const weekLabel = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  document.getElementById('lesson-week-label').textContent = weekLabel;
+  document.getElementById('lesson-title').textContent = g.title;
+  document.getElementById('lesson-body').textContent = g.lesson.body;
+  document.getElementById('lesson-examples').innerHTML = g.lesson.examples.map(e => '<div>• ' + e + '</div>').join('');
+  const projectBox = document.getElementById('lesson-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS[currentGrade];
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  document.getElementById('to-quiz-btn').textContent = 'Take the ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Test') : 'Quiz') + ' (' + TOTAL_QUESTIONS + ' Questions) →';
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.remove('hidden');
+  document.getElementById('lesson-block').classList.remove('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function buildRoundItems(){
+  const bank = BANKS[currentGrade];
+  let items = [];
+  while(items.length < TOTAL_QUESTIONS){ items = items.concat(shuffle(bank)); }
+  return items.slice(0, TOTAL_QUESTIONS);
+}
+
+function renderGenericQuestion(){
+  current = roundItems[qIndex];
+  locked = false;
+  const passageHolder = document.getElementById('passage-holder');
+  const hearBtn = document.getElementById('hear-btn');
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+
+  if(current.type === 'listen'){
+    passageHolder.innerHTML = '';
+    hearBtn.classList.remove('hidden');
+    hearBtn.onclick = () => speak(current.word);
+    document.getElementById('quiz-question').textContent = 'Listen — which word did you hear?';
+    setTimeout(() => speak(current.word), 300);
+    const options = new Set([current.word]);
+    while(options.size < 4) options.add(SIGHT_WORDS[randInt(0, SIGHT_WORDS.length - 1)]);
+    current._options = shuffle(Array.from(options));
+    current._correct = current.word;
+  } else if(current.passage){
+    passageHolder.innerHTML = '<div class="passage-box">' + current.passage + '</div>';
+    hearBtn.classList.add('hidden');
+    document.getElementById('quiz-question').textContent = current.q;
+    current._options = current.options;
+    current._correct = current.options[current.correct];
+  } else {
+    passageHolder.innerHTML = '';
+    hearBtn.classList.add('hidden');
+    document.getElementById('quiz-question').textContent = current.q;
+    current._options = current.options;
+    current._correct = current.options[current.correct];
+  }
+
+  const list = document.getElementById('answer-list');
+  list.innerHTML = '';
+  current._options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleGenericAnswer(opt, btn));
+    list.appendChild(btn);
+  });
+  document.getElementById('q-count').textContent = qIndex + 1;
+}
+
+function handleGenericAnswer(opt, btn){
+  if(locked) return;
+  locked = true;
+  const buttons = document.querySelectorAll('#answer-list .answer-btn');
+  const fb = document.getElementById('feedback');
+  const correct = opt === current._correct;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === current._correct) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){
+    score++; playRight();
+    fb.textContent = ['Great job! 🌟','Correct! 🎉','You got it! 👍'][randInt(0,2)];
+    fb.classList.add('right');
+  } else {
+    playWrong();
+    fb.textContent = 'Not quite — the answer was "' + current._correct + '".';
+    fb.classList.add('wrong');
+  }
+  document.getElementById('score-count').textContent = score;
+  setTimeout(() => {
+    qIndex++;
+    if(qIndex >= roundItems.length){ showGenericSummary(); }
+    else { renderGenericQuestion(); }
+  }, 1300);
+}
+
+function showGenericSummary(){
+  playDone();
+  document.getElementById('quiz-panel').style.display = 'none';
+  const pct = Math.round((score / roundItems.length) * 100);
+  const isSpecial = activeWeek === 11;
+  document.getElementById('summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Round Complete!';
+  document.getElementById('final-score').textContent = score + ' / ' + roundItems.length;
+  document.getElementById('final-msg').textContent = pct === 100 ? "Perfect score — amazing work! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Play again to improve.";
+  document.getElementById('cert-btn').classList.toggle('hidden', !isSpecial);
+  document.getElementById('session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
+}
+
+function startGenericRound(){
+  qIndex = 0; score = 0;
+  roundItems = buildRoundItems();
+  document.getElementById('score-count').textContent = 0;
+  document.getElementById('quiz-panel').style.display = '';
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.remove('hidden');
+  renderGenericQuestion();
+}
+
+function showCertificate(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const name = learnerName || 'Explorer';
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of ' + g.label + ' English (Terms 1–4), aligned with the Australian Curriculum.'
+    : 'has successfully completed Term ' + activeTerm + ' of ' + g.title + ' English practice, aligned with the Australian Curriculum.';
+  document.getElementById('cert-name').textContent = name;
+  document.getElementById('cert-body').textContent = bodyText;
+  document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('cert-score').textContent = score + ' / ' + roundItems.length;
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function showAbcCertificate(){
+  const name = learnerName || 'Explorer';
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('abc-cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of Foundation — Phonics & Letter Sounds English (Terms 1–4).'
+    : 'has successfully completed Term ' + activeTerm + ' of the Foundation — Phonics & Letter Sounds English practice.';
+  document.getElementById('abc-cert-name').textContent = name;
+  document.getElementById('abc-cert-body').textContent = bodyText;
+  document.getElementById('abc-cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('abc-cert-score').textContent = abcScore + ' / ' + ABC_TOTAL;
+  document.getElementById('abc-session-summary').classList.remove('show');
+  document.getElementById('abc-cert-wrap').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('to-quiz-btn').addEventListener('click', startGenericRound);
+document.getElementById('play-again-btn').addEventListener('click', startGenericRound);
+document.getElementById('back-to-classcard-btn').addEventListener('click', showStartCard);
+document.getElementById('back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('abc-back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('change-grade-btn').addEventListener('click', showStartCard);
+document.getElementById('cert-btn').addEventListener('click', showCertificate);
+document.getElementById('print-cert-btn').addEventListener('click', () => window.print());
+document.getElementById('close-cert-btn').addEventListener('click', () => {
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('session-summary').classList.add('show');
+});
+document.getElementById('abc-cert-btn').addEventListener('click', showAbcCertificate);
+document.getElementById('abc-print-cert-btn').addEventListener('click', () => window.print());
+document.getElementById('abc-close-cert-btn').addEventListener('click', () => {
+  document.getElementById('abc-cert-wrap').classList.add('hidden');
+  document.getElementById('abc-session-summary').classList.add('show');
+});
+
+renderGradeRow();
+showStartCard();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>

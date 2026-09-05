@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Games — Kids Corner</title>
+<meta name="description" content="Fun games for kids: an Arabic letter memory-matching game and a Good Deeds catching game.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --coral-dark:#b8552a;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:44px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--coral); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .games-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:24px;
+    max-width:760px; margin:0 auto; padding:30px 20px 90px;
+  }
+  .game-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:28px 22px;
+    text-align:center; text-decoration:none; color:var(--ink-brown);
+    box-shadow:0 8px 20px rgba(60,45,20,.09); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .game-card:hover{ transform:translateY(-6px) rotate(-.5deg); box-shadow:0 18px 34px rgba(60,45,20,.16); border-color:var(--coral); }
+  .game-card-icon{
+    width:84px; height:84px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:40px; margin-bottom:18px; background:#fbe6dc;
+  }
+  .game-card h3{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 8px; }
+  .game-card p{ font-size:15.5px; color:#6b5a3f; line-height:1.5; margin:0 0 16px; flex:1; }
+  .game-card .go{ font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--coral); font-weight:700; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🎮 Games</p>
+  <h1>Pick a Game</h1>
+  <p>Two fun ways to play and learn — which one will you try first?</p>
+</div>
+
+<div class="games-grid">
+
+  <a class="game-card" href="kids-game-match.html">
+    <div class="game-card-icon">🧠</div>
+    <h3>Arabic Letter Match</h3>
+    <p>Flip the cards and find every matching pair of Arabic letters and their names.</p>
+    <span class="go">Play Now →</span>
+  </a>
+
+  <a class="game-card" href="kids-game-catch.html">
+    <div class="game-card-icon">🧺</div>
+    <h3>Good Deeds Catch</h3>
+    <p>Move your basket to catch good deeds falling from the sky — don't catch the distractions!</p>
+    <span class="go">Play Now →</span>
+  </a>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>

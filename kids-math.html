@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Math Practice — Kids Corner</title>
+<meta name="description" content="Australian Curriculum-aligned math practice for kids, Foundation to Year 6: counting, addition, multiplication, fractions, and more — the basis for NAPLAN numeracy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#2e86ab; --sky-dark:#215f78; --danger:#8a3324;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:40px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--sky); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .wrap{ max-width:560px; margin:0 auto; padding:24px 20px 90px; }
+
+  .grade-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .grade-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.03em;
+    padding:8px 14px; border-radius:18px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .grade-btn.active{ background:var(--sky); border-color:var(--sky); color:#fff; }
+  .naplan-badge{
+    display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
+    border-radius:8px; background:var(--gold); color:#fff; margin-left:5px; vertical-align:middle;
+  }
+  .grade-btn.active .naplan-badge{ background:#fff; color:var(--sky); }
+  .curriculum-note{ text-align:center; font-size:13px; color:#8a7654; max-width:460px; margin:0 auto 18px; line-height:1.5; }
+  .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
+
+  .start-card{ text-align:center; background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px; }
+  .start-card .icon{ font-size:44px; margin-bottom:10px; }
+  .start-card h2{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 10px; }
+  .start-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; }
+
+  .lesson-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:32px 28px; text-align:center;
+  }
+  .lesson-card .icon{ font-size:40px; margin-bottom:8px; }
+  .lesson-card h2{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0 0 12px; }
+  .lesson-card p{ font-size:16px; color:#6b5a3f; line-height:1.6; margin:0 0 16px; text-align:left; }
+  .example-box{
+    background:var(--parchment); border:1.5px dashed var(--gold-soft); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15.5px; color:var(--ink-navy); margin:0 0 22px; line-height:1.7;
+  }
+  .example-box div{ margin-bottom:4px; }
+
+  /* ---- certificate ---- */
+  .cert-wrap{ margin-top:26px; }
+  .certificate{
+    position:relative; background:#fffdf7; border:3px double var(--gold); border-radius:6px;
+    padding:36px 30px; text-align:center; max-width:480px; margin:0 auto;
+  }
+  .cert-corner{ position:absolute; width:22px; height:22px; border:2px solid var(--gold); }
+  .cert-tl{ top:8px; left:8px; border-right:none; border-bottom:none; }
+  .cert-tr{ top:8px; right:8px; border-left:none; border-bottom:none; }
+  .cert-bl{ bottom:8px; left:8px; border-right:none; border-top:none; }
+  .cert-br{ bottom:8px; right:8px; border-left:none; border-top:none; }
+  .cert-bismillah{ font-size:24px; color:var(--gold); margin-bottom:6px; }
+  .cert-eyebrow{ font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-dark, var(--gold)); margin-bottom:14px; }
+  .cert-given{ font-size:15px; color:#6b5a3f; margin-bottom:6px; }
+  .cert-name{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin-bottom:14px; border-bottom:1px solid var(--gold-soft); display:inline-block; padding-bottom:6px; }
+  .cert-body{ font-size:15px; color:var(--ink-brown); line-height:1.6; margin-bottom:22px; }
+  .cert-footer{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+  .cert-col{ flex:1; }
+  .cert-line{ border-top:1px solid var(--ink-brown); margin-bottom:6px; }
+  .cert-label{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#8a7654; }
+  .cert-value{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); }
+  .cert-seal{ font-size:34px; }
+  .cert-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:22px; }
+  @media print{
+    header, footer, .page-head, .curriculum-note, .grade-row, .grade-desc, .learner-banner,
+    #start-block, #term-week-screen, #lesson-block, .stat-row, #quiz-panel, #session-summary, .no-print{ display:none !important; }
+    .cert-wrap{ margin:40px 0 0; }
+  }
+
+  .stat-row{ display:flex; justify-content:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:8px 18px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--sky); }
+
+  .quiz-panel{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px;
+    text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
+  }
+  .question{ font-family:'Marcellus'; font-size:clamp(28px,7vw,42px); color:var(--ink-navy); margin:0 0 26px; line-height:1.3; }
+  .question .objects{ font-size:clamp(22px,6vw,32px); letter-spacing:4px; display:block; margin-bottom:10px; }
+  .answer-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .answer-grid.two-col{ grid-template-columns:1fr 1fr; }
+  .answer-btn{
+    font-family:'Marcellus'; font-size:22px; padding:16px; border-radius:14px; cursor:pointer;
+    border:2px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy);
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .answer-btn:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--sky); }
+  .answer-btn:disabled{ cursor:default; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); color:var(--danger); }
+
+  .feedback{ min-height:26px; margin-top:18px; font-size:16px; font-weight:700; }
+  .feedback.right{ color:var(--green-dark); }
+  .feedback.wrong{ color:var(--danger); }
+
+  .session-summary{ display:none; text-align:center; }
+  .session-summary.show{ display:block; animation:popIn .4s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes popIn{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .session-summary h2{ font-family:'Marcellus'; color:var(--sky-dark); margin:0 0 8px; font-size:26px; }
+  .session-summary .score-big{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:8px 0; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--sky); color:#fff; transition:transform .15s ease, background .15s ease; margin-top:8px;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--sky-dark); }
+  .hidden{ display:none !important; }
+
+  .learner-banner{
+    max-width:560px; margin:0 auto 20px; background:var(--sky); color:#fff; border-radius:16px;
+    padding:14px 22px; text-align:center; font-family:'Marcellus'; font-size:16px;
+  }
+  .learner-banner a{ display:block; margin-top:6px; font-family:'Cormorant Garamond', serif; font-size:13px; color:#dcecf5; text-decoration:underline; }
+  .term-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .term-btn{
+    font-family:'Marcellus'; font-size:14px; padding:9px 20px; border-radius:18px; cursor:pointer;
+    border:1.5px solid var(--gold-soft); background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .term-btn.active{ background:var(--ink-navy); border-color:var(--ink-navy); color:#fff; }
+  .term-progress{ text-align:center; font-size:13px; color:#8a7654; margin:0 0 20px; }
+  .week-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:12px; max-width:720px; margin:0 auto; }
+  .week-node{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px 10px; text-align:center; cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .week-node:hover{ transform:translateY(-3px); border-color:var(--sky); }
+  .week-node.done{ border-color:var(--green); background:var(--green-bg); }
+  .week-node.special{ background:#fdeecb; border-color:var(--gold); }
+  .week-node.special.done{ background:var(--green-bg); border-color:var(--green); }
+  .week-node .wk-num{ font-family:'JetBrains Mono', monospace, monospace; font-size:11px; color:var(--gold); }
+  .week-node .wk-label{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); margin-top:4px; }
+  .week-node .wk-check{ margin-top:4px; font-size:15px; }
+  .back-link{
+    display:block; text-align:center; margin-top:26px; font-size:14px; color:var(--gold); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+  .project-box{
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15px; color:var(--ink-navy); margin:0 0 22px; line-height:1.6;
+  }
+  .project-box b{ display:block; margin-bottom:4px; color:var(--gold-dark, #8a5a00); }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html" id="back-pill">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🔢 Math Practice</p>
+  <h1>Number Fun</h1>
+  <p>Pick your class, then answer 10 quick questions made just for that level.</p>
+</div>
+
+<p class="curriculum-note">Aligned with the Australian Curriculum (Foundation–Year 6), the basis for NAPLAN. NAPLAN itself only tests Years 3, 5, 7 &amp; 9 — those levels are marked below.</p>
+
+<div class="wrap">
+  <div class="learner-banner hidden" id="learner-banner"></div>
+  <div class="grade-row" id="grade-row"></div>
+  <p class="grade-desc" id="grade-desc"></p>
+
+  <div id="start-block" class="start-card">
+    <div class="icon">🚀</div>
+    <p id="start-greeting" class="hidden" style="font-weight:700; color:var(--sky-dark); margin:0 0 6px;"></p>
+    <h2 id="start-title"></h2>
+    <p id="start-desc"></p>
+    <button class="btn" id="start-btn">See Terms &amp; Weeks →</button>
+  </div>
+
+  <div id="term-week-screen" class="hidden">
+    <div class="term-row" id="term-row"></div>
+    <p class="term-progress" id="term-progress"></p>
+    <div class="week-grid" id="week-grid"></div>
+    <button class="back-link" id="back-to-classcard-btn">← Choose a different class</button>
+  </div>
+
+  <div id="lesson-block" class="lesson-card hidden">
+    <div class="icon">📘</div>
+    <p id="lesson-week-label" style="font-weight:700; color:var(--sky-dark); margin:0 0 6px;"></p>
+    <h2 id="lesson-title"></h2>
+    <p id="lesson-body"></p>
+    <div class="example-box" id="lesson-examples"></div>
+    <div class="project-box hidden" id="lesson-project"></div>
+    <button class="btn" id="to-quiz-btn">Take the Quiz →</button>
+  </div>
+
+  <div id="quiz-block" class="hidden">
+    <div class="stat-row">
+      <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
+      <div class="stat-chip">Score: <b id="score-count">0</b></div>
+      <div class="stat-chip">Streak: <b id="streak-count">0</b></div>
+    </div>
+
+    <div class="quiz-panel" id="quiz-panel">
+      <div class="question" id="question"></div>
+      <div class="answer-grid" id="answer-grid"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="session-summary" id="session-summary">
+      <h2 id="summary-title">🎉 Round Complete!</h2>
+      <div class="score-big" id="final-score"></div>
+      <p id="final-msg"></p>
+      <button class="btn" id="cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
+      <button class="btn" id="play-again-btn">Play Again</button>
+      <button class="btn" id="back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
+      <button class="btn" id="change-grade-btn" style="background:var(--gold-soft); color:var(--ink-navy);">Choose Another Class</button>
+    </div>
+
+    <div class="cert-wrap hidden" id="cert-wrap">
+      <div class="certificate" id="certificate">
+        <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+        <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+        <div class="cert-bismillah arabic">﷽</div>
+        <div class="cert-eyebrow" id="cert-eyebrow">Certificate of Achievement</div>
+        <div class="cert-given">This certifies that</div>
+        <div class="cert-name" id="cert-name"></div>
+        <div class="cert-body" id="cert-body"></div>
+        <div class="cert-footer">
+          <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Date</div><div class="cert-value" id="cert-date"></div></div>
+          <div class="cert-seal">🌟</div>
+          <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Score</div><div class="cert-value" id="cert-score"></div></div>
+        </div>
+      </div>
+      <div class="cert-actions no-print">
+        <button class="btn" id="print-cert-btn">🖨️ Print Certificate</button>
+        <button class="btn" id="close-cert-btn" style="background:var(--gold-soft); color:var(--ink-navy);">← Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+let TOTAL_QUESTIONS = 10;
+const OBJECT_EMOJIS = ['🍎','⭐','🎈','🐟','🌸','🚗'];
+const TERMS = [1,2,3,4];
+let activeTerm = 1, activeWeek = 1;
+const PROJECT_KEY = 'kids-math-term-progress';
+const PROJECTS = {
+  foundation: 'Count how many shoes are in your house, then tell a family member the total number.',
+  g1: 'Skip count by 2s from 0 to 20 using your fingers or toys, and show someone at home.',
+  g2: 'Find 3 real groups of objects (like 4 groups of 3 spoons) and write the multiplication fact for each.',
+  g3: 'Pick one times table (like the 7 times table) and recite it from memory to a family member.',
+  g4: 'A packet has 24 lollies shared among 4 friends — work out how many each friend gets, and check with real objects.',
+  g5: 'Cut a piece of paper into quarters and thirds, and explain out loud what fraction each piece represents.',
+  g6: 'Write your own number sentence using at least two operations (like 3 + 4 × 2) and solve it step by step.'
+};
+
+function loadTermProgress(){
+  try{ return JSON.parse(localStorage.getItem(PROJECT_KEY) || '{}'); }catch(e){ return {}; }
+}
+function saveTermProgress(p){ try{ localStorage.setItem(PROJECT_KEY, JSON.stringify(p)); }catch(e){} }
+function isWeekDone(term, week){
+  const p = loadTermProgress();
+  return !!(p[currentGrade] && p[currentGrade]['t'+term] && p[currentGrade]['t'+term][week]);
+}
+function markWeekDone(term, week){
+  const p = loadTermProgress();
+  if(!p[currentGrade]) p[currentGrade] = {};
+  if(!p[currentGrade]['t'+term]) p[currentGrade]['t'+term] = {};
+  p[currentGrade]['t'+term][week] = true;
+  saveTermProgress(p);
+}
+
+const GRADES = [
+  { id:'foundation', label:'Foundation', title:'Foundation — Counting to 20', desc:'Count the pictures and pick the right number, up to 20.',
+    lesson:{ body:'Counting means saying numbers in order to find out how many things there are. Start at 1 and count each object once, moving from left to right so you don’t count anything twice.',
+      examples:['🍎🍎🍎 = 3 apples','⭐⭐⭐⭐⭐⭐ = 6 stars'] } },
+  { id:'g1', label:'Year 1', title:'Year 1 — Addition, Subtraction & Counting Patterns', desc:'Addition and subtraction to 20, plus counting by 2s, 5s and 10s.',
+    lesson:{ body:'Addition (+) means putting numbers together to make a bigger number. Subtraction (−) means taking away to find what’s left. Skip counting means counting in equal jumps instead of by ones.',
+      examples:['3 + 4 = 7','9 − 5 = 4','Counting by 2s: 2, 4, 6, 8, 10'] } },
+  { id:'g2', label:'Year 2', title:'Year 2 — Addition, Subtraction & Grouping', desc:'Addition and subtraction to 100, plus multiplication as equal groups.',
+    lesson:{ body:'When numbers get bigger, add or subtract the ones first, then the tens. Multiplication is a fast way to add equal groups — “4 groups of 5” means 5 + 5 + 5 + 5.',
+      examples:['34 + 28 = 62','4 groups of 5 = 20'] } },
+  { id:'g3', label:'Year 3', title:'Year 3 — Multiplication & Division', desc:'Times tables 1–10 and simple division facts.', naplan:true,
+    lesson:{ body:'Multiplication tables help you multiply quickly by memory instead of counting. Division is the opposite of multiplication — it splits a number into equal groups.',
+      examples:['6 × 7 = 42','42 ÷ 6 = 7'] } },
+  { id:'g4', label:'Year 4', title:'Year 4 — Bigger Multiplication & Division', desc:'2-digit × 1-digit multiplication and division with a remainder-free split.',
+    lesson:{ body:'To multiply a 2-digit number by a 1-digit number, multiply the ones first, then the tens, and add the two results together.',
+      examples:['23 × 4 = 92 (20×4=80, 3×4=12, 80+12=92)','36 ÷ 6 = 6'] } },
+  { id:'g5', label:'Year 5', title:'Year 5 — Fractions & Percentages', desc:'Adding simple fractions and finding percentages of numbers.', naplan:true,
+    lesson:{ body:'A fraction shows part of a whole — 3/4 means 3 out of 4 equal parts. A percentage means “out of 100”, so 50% of a number is exactly half of it.',
+      examples:['2/7 + 3/7 = 5/7','50% of 20 = 10'] } },
+  { id:'g6', label:'Year 6', title:'Year 6 — Order of Operations & Integers', desc:'Order of operations and working with negative numbers.',
+    lesson:{ body:'When a sum has more than one operation, do multiplication and division before addition and subtraction. Integers include negative numbers — numbers less than zero.',
+      examples:['3 + 4 × 2 = 11 (do 4×2 first, then add 3)','−5 + 8 = 3'] } }
+];
+
+const urlYear = new URLSearchParams(location.search).get('year');
+const urlYearValid = urlYear && GRADES.some(g => g.id === urlYear);
+let currentGrade = urlYearValid ? urlYear : (localStorage.getItem('kids-math-grade') || 'foundation');
+if(urlYearValid) localStorage.setItem('kids-math-grade', currentGrade);
+const learnerName = localStorage.getItem('kids-school-name') || '';
+if(urlYearValid){
+  const backPill = document.getElementById('back-pill');
+  backPill.href = 'kids-school.html';
+  backPill.textContent = '← Classes';
+}
+let qIndex = 0, score = 0, streak = 0, current = null, locked = false;
+
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function uniqueOptionsAround(answer, spread, count, minVal){
+  const floor = minVal === undefined ? -Infinity : minVal;
+  const options = new Set([answer]);
+  let guard = 0;
+  while(options.size < count && guard < 50){
+    guard++;
+    const delta = randInt(-spread, spread) || 1;
+    const val = answer + delta;
+    if(val >= floor) options.add(val);
+  }
+  return shuffle(Array.from(options));
+}
+
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+/* ---------- question generators, one per class (aligned to the Australian Curriculum) ---------- */
+function genFoundation(){
+  const n = randInt(1, 20);
+  const emoji = OBJECT_EMOJIS[randInt(0, OBJECT_EMOJIS.length - 1)];
+  return {
+    display: emoji.repeat(n),
+    text: 'How many are there?',
+    answer: n,
+    options: uniqueOptionsAround(n, 3, 4, 1)
+  };
+}
+function genSkipCount(){
+  const step = [2,5,10][randInt(0,2)];
+  const start = step * randInt(0,4);
+  const seq = [start, start+step, start+step*2, start+step*3];
+  const answer = start + step*4;
+  return { text: seq.join(', ') + ', ?  — what comes next?', answer, options: uniqueOptionsAround(answer, step, 4, 0) };
+}
+function genG1(){
+  if(Math.random() < 0.3) return genSkipCount();
+  const op = Math.random() < 0.5 ? '+' : '−';
+  let a, b, answer;
+  if(op === '+'){ a = randInt(0,15); b = randInt(0, 20 - a); answer = a + b; }
+  else { a = randInt(0,20); b = randInt(0,a); answer = a - b; }
+  return { text: a + ' ' + op + ' ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 4, 4, 0) };
+}
+function genGroups(){
+  const groups = randInt(2,5);
+  const size = [2,5,10][randInt(0,2)];
+  const answer = groups * size;
+  return { text: groups + ' groups of ' + size + ' = ?', answer, options: uniqueOptionsAround(answer, 8, 4, 0) };
+}
+function genG2(){
+  if(Math.random() < 0.35) return genGroups();
+  const op = Math.random() < 0.5 ? '+' : '−';
+  let a, b, answer;
+  if(op === '+'){ a = randInt(10,70); b = randInt(5, 100 - a); answer = a + b; }
+  else { a = randInt(20,100); b = randInt(0,a); answer = a - b; }
+  return { text: a + ' ' + op + ' ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 6, 4, 0) };
+}
+function genG3(){
+  if(Math.random() < 0.6){
+    const a = randInt(1,10), b = randInt(1,10);
+    const answer = a * b;
+    return { text: a + ' × ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 8, 4, 0) };
+  } else {
+    const b = randInt(2,10), answer = randInt(1,10), a = b * answer;
+    return { text: a + ' ÷ ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 3, 4, 0) };
+  }
+}
+function genG4(){
+  if(Math.random() < 0.6){
+    const a = randInt(10,99), b = randInt(2,9);
+    const answer = a * b;
+    return { text: a + ' × ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 15, 4, 0) };
+  } else {
+    const b = randInt(2,12), answer = randInt(3,15), a = b * answer;
+    return { text: a + ' ÷ ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 4, 4, 0) };
+  }
+}
+function genG5(){
+  if(Math.random() < 0.5){
+    const denom = randInt(4,10);
+    const n1 = randInt(1, denom - 2);
+    const n2 = randInt(1, denom - n1 - 1) || 1;
+    const answer = n1 + n2;
+    return { text: n1 + '⁄' + denom + ' + ' + n2 + '⁄' + denom + ' = ?⁄' + denom, answer, options: uniqueOptionsAround(answer, 2, 4, 1) };
+  } else {
+    const pct = [10,20,25,50][randInt(0,3)];
+    const multiple = pct === 25 ? 4 : pct === 50 ? 2 : pct === 20 ? 5 : 10;
+    const num = randInt(2,10) * multiple;
+    const answer = Math.round(num * pct / 100);
+    return { text: pct + '% of ' + num + ' = ?', answer, options: uniqueOptionsAround(answer, Math.max(2, Math.round(answer*0.3)), 4, 0) };
+  }
+}
+function genG6(){
+  if(Math.random() < 0.5){
+    const a = randInt(1,9), b = randInt(1,9), c = randInt(1,9);
+    const useMultFirst = Math.random() < 0.5;
+    let text, answer;
+    if(useMultFirst){ answer = a + b * c; text = a + ' + ' + b + ' × ' + c + ' = ?'; }
+    else { answer = a * b - c; text = a + ' × ' + b + ' − ' + c + ' = ?'; }
+    return { text, answer, options: uniqueOptionsAround(answer, 6, 4, undefined) };
+  } else {
+    const a = randInt(-10,10) || 3, b = randInt(1,10);
+    const op = Math.random() < 0.5 ? '+' : '−';
+    const answer = op === '+' ? a + b : a - b;
+    return { text: a + ' ' + op + ' ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 5, 4, undefined) };
+  }
+}
+
+const GENERATORS = { foundation: genFoundation, g1: genG1, g2: genG2, g3: genG3, g4: genG4, g5: genG5, g6: genG6 };
+
+function renderGradeRow(){
+  const row = document.getElementById('grade-row');
+  row.innerHTML = '';
+  GRADES.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
+    btn.innerHTML = g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
+    btn.addEventListener('click', () => {
+      currentGrade = g.id;
+      localStorage.setItem('kids-math-grade', currentGrade);
+      renderGradeRow();
+      showStartCard();
+    });
+    row.appendChild(btn);
+  });
+  const g = GRADES.find(x => x.id === currentGrade);
+  document.getElementById('grade-desc').textContent = g.desc;
+}
+
+function updateLearnerBanner(){
+  const banner = document.getElementById('learner-banner');
+  const g = GRADES.find(x => x.id === currentGrade);
+  if(urlYearValid && learnerName){
+    banner.innerHTML = '🎓 Hi ' + learnerName + '! You are in <b>' + g.label + '</b> Math.' +
+      '<a href="kids-school.html">← Choose a different class</a>';
+    banner.classList.remove('hidden');
+    document.getElementById('grade-row').classList.add('hidden');
+    document.getElementById('grade-desc').classList.add('hidden');
+  } else {
+    banner.classList.add('hidden');
+    document.getElementById('grade-row').classList.remove('hidden');
+    document.getElementById('grade-desc').classList.remove('hidden');
+  }
+}
+
+function showStartCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  document.getElementById('grade-desc').textContent = g.desc;
+  document.getElementById('start-title').textContent = g.title;
+  document.getElementById('start-desc').textContent = g.desc;
+  const greeting = document.getElementById('start-greeting');
+  if(learnerName){
+    greeting.textContent = 'Hi ' + learnerName + '! 👋';
+    greeting.classList.remove('hidden');
+  } else {
+    greeting.classList.add('hidden');
+  }
+  updateLearnerBanner();
+  document.getElementById('start-block').classList.remove('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+}
+
+function renderTermWeekScreen(){
+  const row = document.getElementById('term-row');
+  row.innerHTML = '';
+  TERMS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'term-btn' + (t === activeTerm ? ' active' : '');
+    btn.textContent = 'Term ' + t;
+    btn.addEventListener('click', () => { activeTerm = t; renderTermWeekScreen(); });
+    row.appendChild(btn);
+  });
+  let doneCount = 0;
+  for(let w = 1; w <= 11; w++){ if(isWeekDone(activeTerm, w)) doneCount++; }
+  document.getElementById('term-progress').textContent = doneCount + ' / 11 weeks complete';
+
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  for(let w = 1; w <= 11; w++){
+    const isSpecial = w === 11;
+    const done = isWeekDone(activeTerm, w);
+    const node = document.createElement('div');
+    node.className = 'week-node' + (isSpecial ? ' special' : '') + (done ? ' done' : '');
+    const label = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Lesson ' + w);
+    node.innerHTML = '<div class="wk-num">WEEK ' + w + '</div><div class="wk-label">' + label + '</div>' + (done ? '<div class="wk-check">✅</div>' : '');
+    node.addEventListener('click', () => selectWeek(activeTerm, w));
+    grid.appendChild(node);
+  }
+}
+
+function showTermWeekScreen(){
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.remove('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+  renderTermWeekScreen();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function selectWeek(term, week){
+  activeTerm = term; activeWeek = week;
+  TOTAL_QUESTIONS = (week === 11) ? 20 : 10;
+  showLessonCard();
+}
+
+function showLessonCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const isSpecial = activeWeek === 11;
+  const weekLabel = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  document.getElementById('lesson-week-label').textContent = weekLabel;
+  document.getElementById('lesson-title').textContent = g.title;
+  document.getElementById('lesson-body').textContent = g.lesson.body;
+  document.getElementById('lesson-examples').innerHTML = g.lesson.examples.map(e => '<div>• ' + e + '</div>').join('');
+  const projectBox = document.getElementById('lesson-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS[currentGrade];
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  document.getElementById('to-quiz-btn').textContent = 'Take the ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Test') : 'Quiz') + ' (' + TOTAL_QUESTIONS + ' Questions) →';
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('lesson-block').classList.remove('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+  current = GENERATORS[currentGrade]();
+  locked = false;
+  const qEl = document.getElementById('question');
+  qEl.innerHTML = (current.display ? '<span class="objects">' + current.display + '</span>' : '') + current.text;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  const grid = document.getElementById('answer-grid');
+  grid.innerHTML = '';
+  current.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(opt, btn));
+    grid.appendChild(btn);
+  });
+  document.getElementById('q-count').textContent = qIndex + 1;
+}
+
+function handleAnswer(opt, btn){
+  if(locked) return;
+  locked = true;
+  const buttons = document.querySelectorAll('#answer-grid .answer-btn');
+  const fb = document.getElementById('feedback');
+  const correct = opt === current.answer;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(Number(b.textContent) === current.answer) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){
+    score++; streak++;
+    playRight();
+    fb.textContent = ['Great job! 🌟','Correct! 🎉','You got it! 👍','Nice work! ✨'][randInt(0,3)];
+    fb.classList.add('right');
+  } else {
+    streak = 0;
+    playWrong();
+    fb.textContent = 'Not quite — the answer was ' + current.answer + '.';
+    fb.classList.add('wrong');
+  }
+  document.getElementById('score-count').textContent = score;
+  document.getElementById('streak-count').textContent = streak;
+
+  setTimeout(() => {
+    qIndex++;
+    if(qIndex >= TOTAL_QUESTIONS){ showSummary(); }
+    else { renderQuestion(); }
+  }, 1200);
+}
+
+function showSummary(){
+  playDone();
+  document.getElementById('quiz-panel').style.display = 'none';
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  document.getElementById('final-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
+  const isSpecial = activeWeek === 11;
+  document.getElementById('summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Round Complete!';
+  const msg = pct === 100 ? "Perfect score — you're a math star! 🌟" :
+              pct >= 70 ? "Great job! Keep practicing to get even better." :
+              "Good try! Play again to beat your score.";
+  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('cert-btn').classList.toggle('hidden', !isSpecial);
+  document.getElementById('session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
+}
+
+function startRound(){
+  qIndex = 0; score = 0; streak = 0;
+  document.getElementById('score-count').textContent = 0;
+  document.getElementById('streak-count').textContent = 0;
+  document.getElementById('quiz-panel').style.display = '';
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.remove('hidden');
+  renderQuestion();
+}
+
+function showCertificate(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const name = learnerName || 'Explorer';
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of ' + g.label + ' Math (Terms 1–4), aligned with the Australian Curriculum.'
+    : 'has successfully completed Term ' + activeTerm + ' of ' + g.title + ' math, aligned with the Australian Curriculum.';
+  document.getElementById('cert-name').textContent = name;
+  document.getElementById('cert-body').textContent = bodyText;
+  document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('cert-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('to-quiz-btn').addEventListener('click', startRound);
+document.getElementById('play-again-btn').addEventListener('click', startRound);
+document.getElementById('back-to-classcard-btn').addEventListener('click', showStartCard);
+document.getElementById('back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('change-grade-btn').addEventListener('click', showStartCard);
+document.getElementById('cert-btn').addEventListener('click', showCertificate);
+document.getElementById('print-cert-btn').addEventListener('click', () => window.print());
+document.getElementById('close-cert-btn').addEventListener('click', () => {
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('session-summary').classList.add('show');
+});
+
+renderGradeRow();
+showStartCard();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>

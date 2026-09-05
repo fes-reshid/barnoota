@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
 <title>Tajwīd — Diin Islaam</title>
 <meta name="description" content="Learn the rules of Tajwīd — Nūn Sākinah &amp; Tanwīn, Mīm Sākinah, Qalqalah, Madd and Ghunnah — with lessons and a self-check quiz.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -201,6 +202,11 @@
   .quiz-result{ text-align:center; }
   .quiz-result .score{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
   .quiz-result p{ font-size:17px; color:#6b5a3f; }
+  .quiz-attempts{ margin:0 0 16px; }
+  .attempts-label{ font-size:13px; font-weight:700; color:var(--ink-brown); margin:0 0 6px; }
+  .attempts-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .attempt-chip{ background:#fff; border:1.5px solid var(--gold-soft); border-radius:14px; padding:5px 12px; font-size:13px; color:var(--ink-brown); }
+  .attempt-chip.current{ border-color:var(--green); color:var(--green-dark); font-weight:700; }
 
   /* ===== Auth gate (enroll / login) ===== */
   #auth-gate{ display:flex; justify-content:center; padding:20px 20px 10px; }
@@ -271,6 +277,7 @@
       <a href="quran.html" class="active">Qur'ān</a>
       <a href="hadeeth.html">Ḥadīth</a>
       <a href="arabic.html">Arabic</a>
+      <a href="kids.html">Kids</a>
       <a href="apps.html">Apps</a>
     </nav>
   </div>
@@ -322,27 +329,27 @@
     <button class="auth-secondary-btn" id="show-login-btn">Log In</button>
   </div>
 
-  <div class="name-gate-box" id="enroll-form" style="display:none;">
+  <form class="name-gate-box" id="enroll-form" style="display:none;">
     <p class="auth-gate-title">Create Your Account</p>
     <input type="text" class="auth-input" id="enroll-name" placeholder="Full name" autocomplete="name">
     <input type="email" class="auth-input" id="enroll-email" placeholder="Email" autocomplete="email">
     <input type="password" class="auth-input" id="enroll-password" placeholder="Password (6+ characters)" autocomplete="new-password">
     <p class="auth-error" id="enroll-error" style="display:none;"></p>
-    <button class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
-    <button class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
-    <button class="auth-link-btn" id="enroll-back-btn">← Back</button>
-  </div>
+    <button type="button" class="auth-link-btn" id="enroll-goto-login-btn" style="display:none;">Go to Login</button>
+    <button type="submit" class="auth-primary-btn" id="enroll-submit-btn">Create Account</button>
+    <button type="button" class="auth-link-btn" id="enroll-back-btn">← Back</button>
+  </form>
 
-  <div class="name-gate-box" id="login-form" style="display:none;">
+  <form class="name-gate-box" id="login-form" style="display:none;">
     <p class="auth-gate-title">Log In</p>
     <input type="email" class="auth-input" id="login-email" placeholder="Email" autocomplete="email">
     <input type="password" class="auth-input" id="login-password" placeholder="Password" autocomplete="current-password">
     <p class="auth-error" id="login-error" style="display:none;"></p>
     <p class="auth-success" id="login-info" style="display:none;"></p>
-    <button class="auth-primary-btn" id="login-submit-btn">Log In</button>
-    <button class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
-    <button class="auth-link-btn" id="login-back-btn">← Back</button>
-  </div>
+    <button type="submit" class="auth-primary-btn" id="login-submit-btn">Log In</button>
+    <button type="button" class="auth-link-btn" id="forgot-password-btn">Forgot your password?</button>
+    <button type="button" class="auth-link-btn" id="login-back-btn">← Back</button>
+  </form>
 
 </div>
 
@@ -371,6 +378,7 @@
     <a href="quran.html">Qur'ān</a>
     <a href="hadeeth.html">Ḥadīth</a>
     <a href="arabic.html">Arabic</a>
+    <a href="kids.html">Kids</a>
     <a href="apps.html">Apps</a>
     <a href="mailto:fesbackups@gmail.com">Contact</a>
   </div>
@@ -413,6 +421,7 @@ function enterCourse(uid, email, data){
   currentUID = uid;
   studentEmail = email;
   studentName = (data && data.fullName) ? data.fullName : email;
+  quizAttempts = (data && Array.isArray(data.quizAttempts)) ? data.quizAttempts.slice() : [];
 
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
@@ -546,6 +555,7 @@ lessonsPanel.innerHTML = CATEGORIES.map(cat => `
 let quizOrder = [];
 let quizIndex = 0;
 let quizScore = 0;
+let quizAttempts = [];
 
 function shuffle(arr){
   const a = arr.slice();
@@ -566,17 +576,28 @@ function startQuiz(){
 function renderQuizQuestion(){
   const shell = document.getElementById('quizShell');
   if (quizIndex >= quizOrder.length){
+    const pct = Math.round((quizScore / quizOrder.length) * 100);
+    quizAttempts.push({ pct: pct, at: new Date().toISOString() });
+    const attemptsHtml = `
+      <div class="quiz-attempts">
+        <div class="attempts-label">Your Attempts</div>
+        <div class="attempts-row">
+          ${quizAttempts.map((a, idx) => `<span class="attempt-chip${idx === quizAttempts.length - 1 ? ' current' : ''}">Attempt ${idx + 1}: ${a.pct}%</span>`).join('')}
+        </div>
+      </div>
+    `;
     shell.innerHTML = `
       <div class="quiz-card quiz-result">
         <p class="eyebrow" style="margin:0;">Quiz Complete</p>
         <div class="score">${quizScore} / ${quizOrder.length}</div>
         <p>${quizScore === quizOrder.length ? 'Perfect score — excellent work!' : 'Review the lessons above and try again.'}</p>
+        ${attemptsHtml}
         <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
       </div>
     `;
     document.getElementById('restartBtn').addEventListener('click', startQuiz);
     if(currentUID && window.__fbSaveProgress){
-      window.__fbSaveProgress(currentUID, Math.round((quizScore / quizOrder.length) * 100));
+      window.__fbSaveProgress(currentUID, pct, quizAttempts);
     }
     return;
   }
@@ -673,7 +694,7 @@ function showErr(el, msg){
 }
 
 function defaultStudentDoc(fullName, email){
-  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastQuizScorePct: null, lastAttemptAt: null };
+  return { fullName: fullName, email: email, createdAt: new Date().toISOString(), lastQuizScorePct: null, lastAttemptAt: null, quizAttempts: [] };
 }
 
 var enrollBtn = document.getElementById('enroll-submit-btn');
@@ -681,7 +702,8 @@ var loginBtn = document.getElementById('login-submit-btn');
 var enrollErrorEl = document.getElementById('enroll-error');
 var gotoLoginBtn = document.getElementById('enroll-goto-login-btn');
 
-enrollBtn.addEventListener('click', function(){
+document.getElementById('enroll-form').addEventListener('submit', function(e){
+  e.preventDefault();
   enrollErrorEl.style.display = 'none';
   gotoLoginBtn.style.display = 'none';
   var name = document.getElementById('enroll-name').value.trim();
@@ -726,7 +748,8 @@ enrollBtn.addEventListener('click', function(){
 var loginErrorEl = document.getElementById('login-error');
 var loginInfoEl = document.getElementById('login-info');
 
-loginBtn.addEventListener('click', function(){
+document.getElementById('login-form').addEventListener('submit', function(e){
+  e.preventDefault();
   loginErrorEl.style.display = 'none';
   loginInfoEl.style.display = 'none';
   var email = document.getElementById('login-email').value.trim();
@@ -788,8 +811,8 @@ window.__fbSignOut = function(){
   signOut(auth).then(function(){ window.location.reload(); });
 };
 
-window.__fbSaveProgress = function(uid, lastQuizScorePct){
-  setDoc(doc(db, COLLECTION, uid), { lastQuizScorePct: lastQuizScorePct, lastAttemptAt: new Date().toISOString() }, { merge: true })
+window.__fbSaveProgress = function(uid, lastQuizScorePct, quizAttempts){
+  setDoc(doc(db, COLLECTION, uid), { lastQuizScorePct: lastQuizScorePct, lastAttemptAt: new Date().toISOString(), quizAttempts: quizAttempts || [] }, { merge: true })
     .catch(function(e){ console.error('Progress save failed:', e); });
 };
 
@@ -814,5 +837,6 @@ onAuthStateChanged(auth, function(user){
 });
 </script>
 
+<script src="/cursor.js" defer></script>
 </body>
 </html>

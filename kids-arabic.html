@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Arabic Practice — Kids Corner</title>
+<meta name="description" content="Arabic practice for kids, Foundation to Year 6: the alphabet, short vowels, simple words, numbers and colours, sentences, Islamic vocabulary, and basic grammar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-dark:#8a5a00; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --danger:#8a3324;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:40px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--gold-dark); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .grade-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:22px 0 6px; }
+  .grade-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.03em;
+    padding:8px 14px; border-radius:18px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .grade-btn.active{ background:var(--gold); border-color:var(--gold); color:#fff; }
+  .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 20px 90px; }
+
+  /* ---- foundation flashcards ---- */
+  .flash-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px; }
+  .flashcard{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:16px 10px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .flashcard:hover{ transform:translateY(-3px); border-color:var(--gold); }
+  .flashcard .big-letter{ font-family:'Amiri', serif; font-size:44px; color:var(--ink-navy); line-height:1; }
+  .flashcard .name{ font-size:14px; color:var(--gold-dark); font-weight:700; margin-top:6px; }
+  .flashcard .fc-emoji{ font-size:26px; margin:6px 0 2px; }
+  .flashcard .fc-word{ font-size:15px; color:var(--ink-navy); }
+  .mode-row{ display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+  .mode-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
+    padding:9px 18px; border-radius:20px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .mode-btn.active{ background:var(--gold); border-color:var(--gold); color:#fff; }
+
+  /* ---- quiz (shared by years 1-6) ---- */
+  .center-wrap{ max-width:560px; margin:0 auto; }
+  .start-card{ text-align:center; background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px; }
+  .start-card .icon{ font-size:44px; margin-bottom:10px; }
+  .start-card h2{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 10px; }
+  .start-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; }
+
+  .lesson-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:32px 28px; text-align:center;
+  }
+  .lesson-card .icon{ font-size:40px; margin-bottom:8px; }
+  .lesson-card h2{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0 0 12px; }
+  .lesson-card p{ font-size:16px; color:#6b5a3f; line-height:1.6; margin:0 0 16px; text-align:left; }
+  .example-box{
+    background:var(--parchment); border:1.5px dashed var(--gold-soft); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15.5px; color:var(--ink-navy); margin:0 0 22px; line-height:1.7;
+  }
+  .example-box div{ margin-bottom:4px; }
+  .example-box .arabic{ font-size:19px; }
+
+  /* ---- certificate ---- */
+  .cert-wrap{ margin-top:26px; }
+  .certificate{
+    position:relative; background:#fffdf7; border:3px double var(--gold); border-radius:6px;
+    padding:36px 30px; text-align:center; max-width:480px; margin:0 auto;
+  }
+  .cert-corner{ position:absolute; width:22px; height:22px; border:2px solid var(--gold); }
+  .cert-tl{ top:8px; left:8px; border-right:none; border-bottom:none; }
+  .cert-tr{ top:8px; right:8px; border-left:none; border-bottom:none; }
+  .cert-bl{ bottom:8px; left:8px; border-right:none; border-top:none; }
+  .cert-br{ bottom:8px; right:8px; border-left:none; border-top:none; }
+  .cert-bismillah{ font-size:24px; color:var(--gold); margin-bottom:6px; }
+  .cert-eyebrow{ font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-dark); margin-bottom:14px; }
+  .cert-given{ font-size:15px; color:#6b5a3f; margin-bottom:6px; }
+  .cert-name{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin-bottom:14px; border-bottom:1px solid var(--gold-soft); display:inline-block; padding-bottom:6px; }
+  .cert-body{ font-size:15px; color:var(--ink-brown); line-height:1.6; margin-bottom:22px; }
+  .cert-footer{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+  .cert-col{ flex:1; }
+  .cert-line{ border-top:1px solid var(--ink-brown); margin-bottom:6px; }
+  .cert-label{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#8a7654; }
+  .cert-value{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); }
+  .cert-seal{ font-size:34px; }
+  .cert-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:22px; }
+  @media print{
+    header, footer, .page-head, .grade-row, .grade-desc, .learner-banner, .mode-row, .flash-grid,
+    #start-block, #term-week-screen, #foundation-week-label, #foundation-project, #lesson-block, .stat-row,
+    #quiz-panel, #abc-quiz-panel, #session-summary, #abc-session-summary, .no-print{ display:none !important; }
+    .cert-wrap{ margin:40px 0 0; }
+  }
+
+  .learner-banner{
+    max-width:560px; margin:0 auto 20px; background:var(--gold); color:#fff; border-radius:16px;
+    padding:14px 22px; text-align:center; font-family:'Marcellus'; font-size:16px;
+  }
+  .learner-banner a{ display:block; margin-top:6px; font-family:'Cormorant Garamond', serif; font-size:13px; color:#fdeecb; text-decoration:underline; }
+  .term-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .term-btn{
+    font-family:'Marcellus'; font-size:14px; padding:9px 20px; border-radius:18px; cursor:pointer;
+    border:1.5px solid var(--gold-soft); background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .term-btn.active{ background:var(--ink-navy); border-color:var(--ink-navy); color:#fff; }
+  .term-progress{ text-align:center; font-size:13px; color:#8a7654; margin:0 0 20px; }
+  .week-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:12px; max-width:720px; margin:0 auto; }
+  .week-node{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px 10px; text-align:center; cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .week-node:hover{ transform:translateY(-3px); border-color:var(--gold); }
+  .week-node.done{ border-color:var(--green); background:var(--green-bg); }
+  .week-node.special{ background:#fdeecb; border-color:var(--gold-dark); }
+  .week-node.special.done{ background:var(--green-bg); border-color:var(--green); }
+  .week-node .wk-num{ font-family:'JetBrains Mono', monospace, monospace; font-size:11px; color:var(--gold-dark); }
+  .week-node .wk-label{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); margin-top:4px; }
+  .week-node .wk-check{ margin-top:4px; font-size:15px; }
+  .back-link{
+    display:block; text-align:center; margin-top:26px; font-size:14px; color:var(--gold-dark); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+  .project-box{
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15px; color:var(--ink-navy); margin:0 0 22px; line-height:1.6;
+  }
+  .project-box b{ display:block; margin-bottom:4px; color:var(--gold-dark); }
+
+  .stat-row{ display:flex; justify-content:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:8px 18px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--gold-dark); }
+
+  .quiz-panel{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:30px 26px;
+    text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
+  }
+  .quiz-arabic{ font-family:'Amiri', serif; font-size:clamp(32px,7vw,46px); color:var(--ink-navy); margin:0 0 8px; line-height:1.4; }
+  .quiz-hint{ font-size:30px; margin:0 0 14px; }
+  .quiz-question{ font-size:17px; font-weight:700; color:var(--ink-navy); margin:0 0 20px; }
+  .answer-list{ display:flex; flex-direction:column; gap:10px; }
+  .answer-btn{
+    text-align:left; font-family:'Cormorant Garamond', serif; font-size:16.5px; padding:13px 18px;
+    border-radius:12px; border:1.5px solid var(--gold-soft); background:var(--parchment); color:var(--ink-brown);
+    cursor:pointer; transition:border-color .15s ease, background .15s ease;
+  }
+  .answer-btn.arabic-opt{ font-family:'Amiri', serif; font-size:22px; text-align:center; }
+  .answer-btn:hover:not(:disabled){ border-color:var(--gold); }
+  .answer-btn:disabled{ cursor:default; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); }
+  .feedback{ min-height:26px; margin-top:16px; font-size:16px; font-weight:700; }
+  .feedback.right{ color:var(--green-dark); }
+  .feedback.wrong{ color:var(--danger); }
+
+  .session-summary{ display:none; text-align:center; }
+  .session-summary.show{ display:block; animation:popIn .4s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes popIn{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .session-summary h2{ font-family:'Marcellus'; color:var(--gold-dark); margin:0 0 8px; font-size:26px; }
+  .session-summary .score-big{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:8px 0; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--gold); color:#fff; transition:transform .15s ease, background .15s ease; margin-top:8px;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--gold-dark); }
+  .hidden{ display:none !important; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html" id="back-pill">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🕌 Arabic Practice</p>
+  <h1>Letters &amp; Words</h1>
+  <p>Pick your class, from Foundation to Year 6, and learn Arabic step by step.</p>
+</div>
+
+<div class="learner-banner hidden" id="learner-banner"></div>
+<div class="grade-row" id="grade-row"></div>
+<p class="grade-desc" id="grade-desc"></p>
+
+<div class="wrap">
+
+  <div id="start-block" class="start-card">
+    <div class="icon" id="start-icon">🕌</div>
+    <p id="start-greeting" class="hidden" style="font-weight:700; color:var(--gold-dark); margin:0 0 6px;"></p>
+    <h2 id="start-title"></h2>
+    <p id="start-desc"></p>
+    <button class="btn" id="start-btn">See Terms &amp; Weeks →</button>
+  </div>
+
+  <div id="term-week-screen" class="hidden">
+    <div class="term-row" id="term-row"></div>
+    <p class="term-progress" id="term-progress"></p>
+    <div class="week-grid" id="week-grid"></div>
+    <button class="back-link" id="back-to-classcard-btn">← Choose a different class</button>
+  </div>
+
+  <div id="foundation-block" class="hidden">
+    <p id="foundation-week-label" style="text-align:center; font-weight:700; color:var(--gold-dark); margin:0 0 10px;"></p>
+    <div class="project-box hidden" id="foundation-project" style="max-width:520px; margin:0 auto 20px;"></div>
+    <div class="example-box" id="foundation-lesson-box" style="max-width:520px; margin:0 auto 20px;"></div>
+    <div class="mode-row">
+      <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
+      <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
+    </div>
+    <div class="flash-grid" id="flash-grid"></div>
+    <div class="center-wrap quiz-wrap hidden" id="abc-quiz-wrap">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="abc-q-count">1</b> / <span id="abc-q-total">10</span></div>
+        <div class="stat-chip">Score: <b id="abc-score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="abc-quiz-panel">
+        <div class="quiz-arabic" id="abc-quiz-letter"></div>
+        <p class="quiz-question">What is this letter called?</p>
+        <div class="answer-list" id="abc-answer-list" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+        <div class="feedback" id="abc-feedback"></div>
+      </div>
+      <div class="session-summary" id="abc-session-summary">
+        <h2 id="abc-summary-title">🎉 Quiz Complete!</h2>
+        <div class="score-big" id="abc-final-score"></div>
+        <p id="abc-final-msg"></p>
+        <button class="btn" id="abc-cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
+        <button class="btn" id="abc-play-again-btn">Play Again</button>
+        <button class="btn" id="abc-back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
+      </div>
+
+      <div class="cert-wrap hidden" id="abc-cert-wrap">
+        <div class="certificate" id="abc-certificate">
+          <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+          <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+          <div class="cert-bismillah arabic">﷽</div>
+          <div class="cert-eyebrow" id="abc-cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-given">This certifies that</div>
+          <div class="cert-name" id="abc-cert-name"></div>
+          <div class="cert-body" id="abc-cert-body"></div>
+          <div class="cert-footer">
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Date</div><div class="cert-value" id="abc-cert-date"></div></div>
+            <div class="cert-seal">🌟</div>
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Score</div><div class="cert-value" id="abc-cert-score"></div></div>
+          </div>
+        </div>
+        <div class="cert-actions no-print">
+          <button class="btn" id="abc-print-cert-btn">🖨️ Print Certificate</button>
+          <button class="btn" id="abc-close-cert-btn" style="background:var(--gold-soft); color:var(--ink-navy);">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="grade-block" class="center-wrap hidden">
+    <div id="lesson-block" class="lesson-card hidden">
+      <div class="icon">📘</div>
+      <p id="lesson-week-label" style="font-weight:700; color:var(--gold-dark); margin:0 0 6px;"></p>
+      <h2 id="lesson-title"></h2>
+      <p id="lesson-body"></p>
+      <div class="example-box" id="lesson-examples"></div>
+      <div class="project-box hidden" id="lesson-project"></div>
+      <button class="btn" id="to-quiz-btn">Take the Quiz →</button>
+    </div>
+
+    <div id="quiz-block" class="hidden">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
+        <div class="stat-chip">Score: <b id="score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="quiz-panel">
+        <div class="quiz-arabic" id="quiz-arabic"></div>
+        <div class="quiz-hint hidden" id="quiz-hint"></div>
+        <p class="quiz-question" id="quiz-question"></p>
+        <div class="answer-list" id="answer-list"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div class="session-summary" id="session-summary">
+        <h2 id="summary-title">🎉 Round Complete!</h2>
+        <div class="score-big" id="final-score"></div>
+        <p id="final-msg"></p>
+        <button class="btn" id="cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
+        <button class="btn" id="play-again-btn">Play Again</button>
+        <button class="btn" id="back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
+        <button class="btn" id="change-grade-btn" style="background:var(--gold-soft); color:var(--ink-navy);">Choose Another Class</button>
+      </div>
+
+      <div class="cert-wrap hidden" id="cert-wrap">
+        <div class="certificate" id="certificate">
+          <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
+          <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
+          <div class="cert-bismillah arabic">﷽</div>
+          <div class="cert-eyebrow" id="cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-given">This certifies that</div>
+          <div class="cert-name" id="cert-name"></div>
+          <div class="cert-body" id="cert-body"></div>
+          <div class="cert-footer">
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Date</div><div class="cert-value" id="cert-date"></div></div>
+            <div class="cert-seal">🌟</div>
+            <div class="cert-col"><div class="cert-line"></div><div class="cert-label">Score</div><div class="cert-value" id="cert-score"></div></div>
+          </div>
+        </div>
+        <div class="cert-actions no-print">
+          <button class="btn" id="print-cert-btn">🖨️ Print Certificate</button>
+          <button class="btn" id="close-cert-btn" style="background:var(--gold-soft); color:var(--ink-navy);">← Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="arabic.html">Arabic (Main Site)</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ================= shared helpers ================= */
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+/* ================= Foundation: alphabet flashcards + quiz ================= */
+const LETTERS = [
+  {letter:'ا', name:'Alif', word:'أَرْنَب', emoji:'🐰'}, {letter:'ب', name:'Bāʼ', word:'بَيْت', emoji:'🏠'},
+  {letter:'ت', name:'Tāʼ', word:'تُفَّاح', emoji:'🍎'}, {letter:'ث', name:'Thāʼ', word:'ثَعْلَب', emoji:'🦊'},
+  {letter:'ج', name:'Jīm', word:'جَمَل', emoji:'🐫'}, {letter:'ح', name:'Ḥāʼ', word:'حِصَان', emoji:'🐴'},
+  {letter:'خ', name:'Khāʼ', word:'خُبْز', emoji:'🍞'}, {letter:'د', name:'Dāl', word:'دُبّ', emoji:'🐻'},
+  {letter:'ذ', name:'Dhāl', word:'ذِئْب', emoji:'🐺'}, {letter:'ر', name:'Rāʼ', word:'رَجُل', emoji:'👨'},
+  {letter:'ز', name:'Zāy', word:'زَهْرَة', emoji:'🌸'}, {letter:'س', name:'Sīn', word:'سَمَك', emoji:'🐟'},
+  {letter:'ش', name:'Shīn', word:'شَمْس', emoji:'☀️'}, {letter:'ص', name:'Ṣād', word:'صَقْر', emoji:'🦅'},
+  {letter:'ض', name:'Ḍād', word:'ضِفْدَع', emoji:'🐸'}, {letter:'ط', name:'Ṭāʼ', word:'طَبْل', emoji:'🥁'},
+  {letter:'ظ', name:'Ẓāʼ', word:'ظِلّ', emoji:'🌑'}, {letter:'ع', name:'ʿAyn', word:'عَيْن', emoji:'👁️'},
+  {letter:'غ', name:'Ghayn', word:'غَزَال', emoji:'🦌'}, {letter:'ف', name:'Fāʼ', word:'فِيل', emoji:'🐘'},
+  {letter:'ق', name:'Qāf', word:'قِطَّة', emoji:'🐱'}, {letter:'ك', name:'Kāf', word:'كِتَاب', emoji:'📖'},
+  {letter:'ل', name:'Lām', word:'لَيْمُون', emoji:'🍋'}, {letter:'م', name:'Mīm', word:'مَاء', emoji:'💧'},
+  {letter:'ن', name:'Nūn', word:'نَحْلَة', emoji:'🐝'}, {letter:'هـ', name:'Hāʼ', word:'هِلَال', emoji:'🌙'},
+  {letter:'و', name:'Wāw', word:'وَرْدَة', emoji:'🌹'}, {letter:'ي', name:'Yāʼ', word:'يَد', emoji:'✋'}
+];
+
+/* Term 1 teaches the alphabet week by week (2-3 new letters at a time); other terms review the full set. */
+const WEEKLY_LETTERS = {
+  1: LETTERS.slice(0, 3),   2: LETTERS.slice(3, 6),   3: LETTERS.slice(6, 9),
+  4: LETTERS.slice(9, 12),  5: LETTERS.slice(12, 15), 6: LETTERS.slice(15, 18),
+  7: LETTERS.slice(18, 21), 8: LETTERS.slice(21, 24), 9: LETTERS.slice(24, 26),
+  10: LETTERS.slice(26, 28)
+};
+function weekLetterPool(term, week){
+  if(term === 1 && WEEKLY_LETTERS[week]) return WEEKLY_LETTERS[week];
+  return LETTERS;
+}
+function foundationLessonHTML(term, week){
+  if(term === 1 && WEEKLY_LETTERS[week]){
+    const letters = WEEKLY_LETTERS[week];
+    const intro = 'This week you will learn ' + letters.length + ' new Arabic letter' + (letters.length > 1 ? 's' : '') + ':';
+    const rows = letters.map(l =>
+      '<div><span class="arabic" style="font-size:20px;">' + l.letter + '</span> (' + l.name + ') — starts <span class="arabic">' + l.word + '</span> ' + l.emoji + '</div>'
+    ).join('');
+    return '<div style="margin-bottom:10px; font-weight:700; color:var(--gold-dark);">' + intro + '</div>' + rows +
+      '<div style="margin-top:10px;">Tap each flashcard to see the letter clearly, then try the quiz to test yourself!</div>';
+  }
+  if(week === 11){
+    return '<div style="margin-bottom:8px; font-weight:700; color:var(--gold-dark);">Time to review the whole alphabet!</div>' +
+      '<div>Look through all 28 letters you have learned, then take the big test to show what you know.</div>';
+  }
+  return 'Arabic has 28 letters, written from right to left. Each letter has its own shape and sound — tap a flashcard to see it, then try the quiz!';
+}
+
+let currentAbcPool = LETTERS;
+
+function renderFlashcards(pool){
+  const grid = document.getElementById('flash-grid');
+  grid.innerHTML = '';
+  (pool || LETTERS).forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'flashcard';
+    card.innerHTML = `<div class="big-letter arabic">${w.letter}</div><div class="name">${w.name}</div><div class="fc-emoji">${w.emoji}</div><div class="fc-word arabic">${w.word}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+let ABC_TOTAL = 10;
+let abcQIndex = 0, abcScore = 0, abcCurrent = null, abcLocked = false;
+
+function makeAbcQuestion(pool){
+  const item = pool[randInt(0, pool.length - 1)];
+  const options = new Set([item.name]);
+  while(options.size < 4) options.add(LETTERS[randInt(0, LETTERS.length - 1)].name);
+  return { item, options: shuffle(Array.from(options)) };
+}
+function renderAbcQuestion(){
+  abcCurrent = makeAbcQuestion(currentAbcPool);
+  abcLocked = false;
+  document.getElementById('abc-quiz-letter').textContent = abcCurrent.item.letter;
+  document.getElementById('abc-feedback').textContent = '';
+  document.getElementById('abc-feedback').className = 'feedback';
+  const list = document.getElementById('abc-answer-list');
+  list.innerHTML = '';
+  abcCurrent.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAbcAnswer(opt, btn));
+    list.appendChild(btn);
+  });
+  document.getElementById('abc-q-count').textContent = abcQIndex + 1;
+}
+function handleAbcAnswer(opt, btn){
+  if(abcLocked) return;
+  abcLocked = true;
+  const buttons = document.querySelectorAll('#abc-answer-list .answer-btn');
+  const fb = document.getElementById('abc-feedback');
+  const correct = opt === abcCurrent.item.name;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === abcCurrent.item.name) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){ abcScore++; playRight(); fb.textContent = 'Great job! 🌟'; fb.classList.add('right'); }
+  else { playWrong(); fb.textContent = 'That letter is called ' + abcCurrent.item.name + '.'; fb.classList.add('wrong'); }
+  document.getElementById('abc-score-count').textContent = abcScore;
+  setTimeout(() => {
+    abcQIndex++;
+    if(abcQIndex >= ABC_TOTAL){ showAbcSummary(); }
+    else { renderAbcQuestion(); }
+  }, 1200);
+}
+function showAbcSummary(){
+  playDone();
+  document.getElementById('abc-quiz-panel').style.display = 'none';
+  const pct = Math.round((abcScore / ABC_TOTAL) * 100);
+  const isSpecial = activeWeek === 11;
+  document.getElementById('abc-summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Quiz Complete!';
+  document.getElementById('abc-final-score').textContent = abcScore + ' / ' + ABC_TOTAL;
+  document.getElementById('abc-final-msg').textContent = pct === 100 ? "Perfect — you know your letters! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Look at the flashcards, then try again.";
+  document.getElementById('abc-cert-btn').classList.toggle('hidden', !isSpecial);
+  document.getElementById('abc-session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
+}
+function startAbcQuiz(){
+  abcQIndex = 0; abcScore = 0;
+  document.getElementById('abc-q-count').textContent = 1;
+  document.getElementById('abc-q-total').textContent = ABC_TOTAL;
+  document.getElementById('abc-score-count').textContent = 0;
+  document.getElementById('abc-quiz-panel').style.display = '';
+  document.getElementById('abc-session-summary').classList.remove('show');
+  renderAbcQuestion();
+}
+document.getElementById('abc-play-again-btn').addEventListener('click', startAbcQuiz);
+document.getElementById('mode-cards-btn').addEventListener('click', () => {
+  document.getElementById('mode-cards-btn').classList.add('active');
+  document.getElementById('mode-quiz-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.remove('hidden');
+  document.getElementById('abc-quiz-wrap').classList.add('hidden');
+});
+document.getElementById('mode-quiz-btn').addEventListener('click', () => {
+  document.getElementById('mode-quiz-btn').classList.add('active');
+  document.getElementById('mode-cards-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.add('hidden');
+  document.getElementById('abc-quiz-wrap').classList.remove('hidden');
+  startAbcQuiz();
+});
+renderFlashcards();
+
+/* ================= Years 1-6: content banks ================= */
+const G1_BANK = [
+  { ar:'بَ', correct:'ba' }, { ar:'بِ', correct:'bi' }, { ar:'بُ', correct:'bu' },
+  { ar:'تَ', correct:'ta' }, { ar:'تِ', correct:'ti' }, { ar:'تُ', correct:'tu' },
+  { ar:'جَ', correct:'ja' }, { ar:'جِ', correct:'ji' }, { ar:'جُ', correct:'ju' },
+  { ar:'دَ', correct:'da' }, { ar:'دِ', correct:'di' }, { ar:'دُ', correct:'du' },
+  { ar:'رَ', correct:'ra' }, { ar:'رِ', correct:'ri' }, { ar:'رُ', correct:'ru' }
+].map(item => ({ ar:item.ar, q:'How do you read this?', correct:item.correct }));
+const G1_ALL_TRANSLITS = G1_BANK.map(i => i.correct);
+
+const G2_BANK = [
+  { ar:'بَيْت', hint:'🏠', options:['house','pen','book','sun'], correct:0 },
+  { ar:'قَلَم', hint:'✏️', options:['pen','door','water','boy'], correct:0 },
+  { ar:'كِتَاب', hint:'📖', options:['book','moon','girl','star'], correct:0 },
+  { ar:'شَمْس', hint:'☀️', options:['sun','house','pen','door'], correct:0 },
+  { ar:'قَمَر', hint:'🌙', options:['moon','book','water','star'], correct:0 },
+  { ar:'بَاب', hint:'🚪', options:['door','sun','boy','girl'], correct:0 },
+  { ar:'مَاء', hint:'💧', options:['water','moon','house','pen'], correct:0 },
+  { ar:'وَلَد', hint:'👦', options:['boy','girl','book','star'], correct:0 },
+  { ar:'بِنْت', hint:'👧', options:['girl','boy','door','sun'], correct:0 },
+  { ar:'نَجْمَة', hint:'⭐', options:['star','water','moon','house'], correct:0 }
+].map(item => ({ ar:item.ar, hint:item.hint, q:'What does this word mean?', options:item.options, correct:item.correct }));
+
+const G3_BANK = [
+  { ar:'وَاحِد', q:"What number is this?", options:['One','Two','Three','Four'], correct:0 },
+  { ar:'اِثْنَان', q:"What number is this?", options:['Two','One','Five','Six'], correct:0 },
+  { ar:'ثَلَاثَة', q:"What number is this?", options:['Three','Four','Seven','Eight'], correct:0 },
+  { ar:'أَرْبَعَة', q:"What number is this?", options:['Four','Three','Nine','Ten'], correct:0 },
+  { ar:'خَمْسَة', q:"What number is this?", options:['Five','Six','Two','One'], correct:0 },
+  { ar:'سِتَّة', q:"What number is this?", options:['Six','Five','Seven','Three'], correct:0 },
+  { ar:'عَشَرَة', q:"What number is this?", options:['Ten','Nine','Eight','Seven'], correct:0 },
+  { ar:'أَحْمَر', q:'What colour is this?', options:['Red','Blue','Green','Yellow'], correct:0 },
+  { ar:'أَزْرَق', q:'What colour is this?', options:['Blue','Red','White','Black'], correct:0 },
+  { ar:'أَخْضَر', q:'What colour is this?', options:['Green','Yellow','Blue','Red'], correct:0 },
+  { ar:'أَصْفَر', q:'What colour is this?', options:['Yellow','Green','White','Black'], correct:0 },
+  { ar:'أَبْيَض', q:'What colour is this?', options:['White','Black','Red','Blue'], correct:0 },
+  { ar:'أَسْوَد', q:'What colour is this?', options:['Black','White','Yellow','Green'], correct:0 }
+];
+
+const G4_BANK = [
+  { ar:'أَنَا طَالِبٌ', q:'What does this sentence mean?', options:['I am a student','You are a student','He is a teacher','We are students'], correct:0 },
+  { ar:'هُوَ مُعَلِّمٌ', q:'What does this sentence mean?', options:['He is a teacher','She is a doctor','I am happy','This is a book'], correct:0 },
+  { ar:'هِيَ طَبِيبَةٌ', q:'What does this sentence mean?', options:['She is a doctor','He is big','We are in the house','This is a girl'], correct:0 },
+  { ar:'هَذَا كِتَابٌ', q:'What does this sentence mean?', options:['This is a book','This is a girl','I am a student','She is small'], correct:0 },
+  { ar:'هَذِهِ بِنْتٌ', q:'What does this sentence mean?', options:['This is a girl','This is a book','He is a teacher','I am happy'], correct:0 },
+  { ar:'نَحْنُ فِي الْبَيْتِ', q:'What does this sentence mean?', options:['We are in the house','You are a student','She is a doctor','He is big'], correct:0 },
+  { ar:'أَنَا سَعِيدٌ', q:'What does this sentence mean?', options:['I am happy','I am a student','He is small','This is a book'], correct:0 },
+  { ar:'هُوَ كَبِيرٌ', q:'What does this sentence mean?', options:['He is big','She is small','We are in the house','This is a girl'], correct:0 },
+  { ar:'هِيَ صَغِيرَةٌ', q:'What does this sentence mean?', options:['She is small','He is big','I am happy','This is a book'], correct:0 },
+  { ar:'أَنْتَ طَالِبٌ', q:'What does this sentence mean?', options:['You are a student','I am a student','He is a teacher','She is a doctor'], correct:0 }
+];
+
+const G5_BANK = [
+  { ar:'اللّٰه', q:'What does this word mean?', options:['Allah (God)','Prophet','Prayer','Mosque'], correct:0 },
+  { ar:'الرَّحْمَن', q:'What does this word mean?', options:['The Most Merciful','The King','The Teacher','The Helper'], correct:0 },
+  { ar:'الْحَمْد', q:'What does this word mean?', options:['Praise','Peace','Mercy','Light'], correct:0 },
+  { ar:'رَبّ', q:'What does this word mean?', options:['Lord','Friend','Brother','Guest'], correct:0 },
+  { ar:'الصَّلَاة', q:'What does this word mean?', options:['Prayer','Fasting','Charity','Pilgrimage'], correct:0 },
+  { ar:'الْجَنَّة', q:'What does this word mean?', options:['Paradise','Desert','River','Mountain'], correct:0 },
+  { ar:'نَبِيّ', q:'What does this word mean?', options:['Prophet','King','Traveler','Teacher'], correct:0 },
+  { ar:'مَسْجِد', q:'What does this word mean?', options:['Mosque','House','School','Market'], correct:0 },
+  { ar:'قُرْآن', q:'What does this word mean?', options:["Qur'an","Book","Letter","Poem"], correct:0 },
+  { ar:'دُعَاء', q:'What does this word mean?', options:['Supplication (prayer to Allah)','Song','Story','Question'], correct:0 }
+];
+
+const G6_BANK = [
+  { q:"Which word means 'the book' (with 'the')?", options:['الْكِتَاب','كِتَاب','كِتَابٌ','كتب'], correct:0 },
+  { q:"Which word means 'the sun' (with 'the')?", options:['الشَّمْس','شَمْس','شموس','شمسة'], correct:0 },
+  { q:'Which of these words is feminine (usually ends in ة)?', options:['مُعَلِّمَة','مُعَلِّم','كِتَاب','بَاب'], correct:0 },
+  { q:'Which of these words is masculine?', options:['وَلَد','بِنْت','مُعَلِّمَة','طَالِبَة'], correct:0 },
+  { q:"What does the prefix 'الـ' (al-) mean?", options:['The','A','This','Not'], correct:0 },
+  { q:"Which word means 'a girl' (feminine, indefinite)?", options:['بِنْت','وَلَد','كِتَاب','بَيْت'], correct:0 },
+  { q:"Which word means 'the door' (with 'the')?", options:['الْبَاب','بَاب','أبواب','بابة'], correct:0 },
+  { q:'Which of these is feminine (ends in ة)?', options:['طَالِبَة','طَالِب','كِتَاب','قَلَم'], correct:0 },
+  { q:"What does 'هُوَ' mean?", options:['He','She','I','You'], correct:0 },
+  { q:"What does 'هِيَ' mean?", options:['She','He','We','They'], correct:0 }
+];
+
+const GRADES = [
+  { id:'foundation', label:'Foundation', title:'Foundation — The Arabic Alphabet', desc:'Learn letters with flashcards, then try the quiz.' },
+  { id:'g1', label:'Year 1', title:'Year 1 — Short Vowels (Ḥarakāt)', desc:'Read letters with fatḥah, kasrah, and ḍammah.',
+    lesson:{ body:'Ḥarakāt are small marks written above or below a letter that add a vowel sound: fatḥah ( َ ) sounds like "a", kasrah ( ِ ) sounds like "i", and ḍammah ( ُ ) sounds like "u".',
+      examples:['<span class="arabic">بَ</span> = ba','<span class="arabic">بِ</span> = bi','<span class="arabic">بُ</span> = bu'] } },
+  { id:'g2', label:'Year 2', title:'Year 2 — Simple Words', desc:'Match everyday Arabic words to their meanings.',
+    lesson:{ body:'Once you know letters and vowels, you can start reading whole words. Try sounding out each letter, then blend them together.',
+      examples:['<span class="arabic">بَيْت</span> = house 🏠','<span class="arabic">قَلَم</span> = pen ✏️'] } },
+  { id:'g3', label:'Year 3', title:'Year 3 — Numbers &amp; Colours', desc:'Arabic numbers 1–10 and basic colours.',
+    lesson:{ body:'Numbers and colours are some of the first words learners use every day, at home and at school.',
+      examples:['<span class="arabic">وَاحِد</span> = one','<span class="arabic">أَحْمَر</span> = red'] } },
+  { id:'g4', label:'Year 4', title:'Year 4 — Simple Sentences', desc:'Understand short, everyday Arabic sentences.',
+    lesson:{ body:'A simple sentence can describe who someone is, often starting with a pronoun like "أَنَا" (I), "هُوَ" (he), or "هِيَ" (she).',
+      examples:['<span class="arabic">أَنَا طَالِبٌ</span> = I am a student.'] } },
+  { id:'g5', label:'Year 5', title:'Year 5 — Islamic Vocabulary', desc:"Common words from the Qur'an and daily worship.",
+    lesson:{ body:'Many Arabic words are used every day in worship and appear often in the Qur’an — learning them helps you understand what you hear and recite.',
+      examples:['<span class="arabic">الصَّلَاة</span> = Prayer','<span class="arabic">مَسْجِد</span> = Mosque'] } },
+  { id:'g6', label:'Year 6', title:'Year 6 — Basic Grammar', desc:"The definite article 'al-' and masculine/feminine words.",
+    lesson:{ body:'The prefix "الـ" (al-) means "the." Feminine words often end in the letter ة (tāʼ marbūṭah), while masculine words usually don’t.',
+      examples:['<span class="arabic">كِتَاب</span> = a book → <span class="arabic">الْكِتَاب</span> = the book','<span class="arabic">مُعَلِّمَة</span> = a female teacher'] } }
+];
+const BANKS = { g1:G1_BANK, g2:G2_BANK, g3:G3_BANK, g4:G4_BANK, g5:G5_BANK, g6:G6_BANK };
+
+const urlYear = new URLSearchParams(location.search).get('year');
+const urlYearValid = urlYear && GRADES.some(g => g.id === urlYear);
+let currentGrade = urlYearValid ? urlYear : (localStorage.getItem('kids-arabic-grade') || 'foundation');
+if(urlYearValid) localStorage.setItem('kids-arabic-grade', currentGrade);
+const learnerName = localStorage.getItem('kids-school-name') || '';
+if(urlYearValid){
+  const backPill = document.getElementById('back-pill');
+  backPill.href = 'kids-school.html';
+  backPill.textContent = '← Classes';
+}
+
+let TOTAL_QUESTIONS = 10;
+let qIndex = 0, score = 0, current = null, locked = false, roundItems = [];
+
+const TERMS = [1,2,3,4];
+let activeTerm = 1, activeWeek = 1;
+const PROJECT_KEY = 'kids-arabic-term-progress';
+const PROJECTS = {
+  foundation: 'Write out as many of the 28 Arabic letters as you can remember, and say each one\'s name and its example word (like بَيْت for ب) to a family member.',
+  g1: 'Write 3 letters with fatḥah, kasrah, and ḍammah each, and read all 9 sounds out loud.',
+  g2: 'Find 3 objects at home and say their Arabic names (like بَيْت for house) to someone.',
+  g3: 'Count from 1 to 10 in Arabic out loud, and name the colour of 3 things around you.',
+  g4: 'Introduce yourself in a simple Arabic sentence, like "أَنَا طَالِبٌ" (I am a student).',
+  g5: 'Pick 3 Islamic words you learned (like صَلَاة or مَسْجِد) and explain what each one means to a family member.',
+  g6: 'Write 3 nouns and add "الـ" (al-) to each to make them mean "the", then say if each word is masculine or feminine.'
+};
+
+function loadTermProgress(){
+  try{ return JSON.parse(localStorage.getItem(PROJECT_KEY) || '{}'); }catch(e){ return {}; }
+}
+function saveTermProgress(p){ try{ localStorage.setItem(PROJECT_KEY, JSON.stringify(p)); }catch(e){} }
+function isWeekDone(term, week){
+  const p = loadTermProgress();
+  return !!(p[currentGrade] && p[currentGrade]['t'+term] && p[currentGrade]['t'+term][week]);
+}
+function markWeekDone(term, week){
+  const p = loadTermProgress();
+  if(!p[currentGrade]) p[currentGrade] = {};
+  if(!p[currentGrade]['t'+term]) p[currentGrade]['t'+term] = {};
+  p[currentGrade]['t'+term][week] = true;
+  saveTermProgress(p);
+}
+
+function renderGradeRow(){
+  const row = document.getElementById('grade-row');
+  row.innerHTML = '';
+  GRADES.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
+    btn.textContent = g.label;
+    btn.addEventListener('click', () => {
+      currentGrade = g.id;
+      localStorage.setItem('kids-arabic-grade', currentGrade);
+      renderGradeRow();
+      showStartCard();
+    });
+    row.appendChild(btn);
+  });
+  document.getElementById('grade-desc').textContent = GRADES.find(x => x.id === currentGrade).desc;
+}
+
+function updateLearnerBanner(){
+  const banner = document.getElementById('learner-banner');
+  const g = GRADES.find(x => x.id === currentGrade);
+  if(urlYearValid && learnerName){
+    banner.innerHTML = '🎓 Hi ' + learnerName + '! You are in <b>' + g.label + '</b> Arabic.' +
+      '<a href="kids-school.html">← Choose a different class</a>';
+    banner.classList.remove('hidden');
+    document.getElementById('grade-row').classList.add('hidden');
+    document.getElementById('grade-desc').classList.add('hidden');
+  } else {
+    banner.classList.add('hidden');
+    document.getElementById('grade-row').classList.remove('hidden');
+    document.getElementById('grade-desc').classList.remove('hidden');
+  }
+}
+
+function showStartCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  document.getElementById('grade-desc').textContent = g.desc;
+  document.getElementById('start-icon').textContent = currentGrade === 'foundation' ? '🔤' : '🕌';
+  document.getElementById('start-title').innerHTML = g.title;
+  document.getElementById('start-desc').innerHTML = g.desc;
+  const greeting = document.getElementById('start-greeting');
+  if(learnerName){
+    greeting.textContent = 'Hi ' + learnerName + '! 👋';
+    greeting.classList.remove('hidden');
+  } else {
+    greeting.classList.add('hidden');
+  }
+  updateLearnerBanner();
+  document.getElementById('start-block').classList.remove('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+}
+
+function renderTermWeekScreen(){
+  const row = document.getElementById('term-row');
+  row.innerHTML = '';
+  TERMS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'term-btn' + (t === activeTerm ? ' active' : '');
+    btn.textContent = 'Term ' + t;
+    btn.addEventListener('click', () => { activeTerm = t; renderTermWeekScreen(); });
+    row.appendChild(btn);
+  });
+  let doneCount = 0;
+  for(let w = 1; w <= 11; w++){ if(isWeekDone(activeTerm, w)) doneCount++; }
+  document.getElementById('term-progress').textContent = doneCount + ' / 11 weeks complete';
+
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  for(let w = 1; w <= 11; w++){
+    const isSpecial = w === 11;
+    const done = isWeekDone(activeTerm, w);
+    const node = document.createElement('div');
+    node.className = 'week-node' + (isSpecial ? ' special' : '') + (done ? ' done' : '');
+    const label = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Lesson ' + w);
+    node.innerHTML = '<div class="wk-num">WEEK ' + w + '</div><div class="wk-label">' + label + '</div>' + (done ? '<div class="wk-check">✅</div>' : '');
+    node.addEventListener('click', () => selectWeek(activeTerm, w));
+    grid.appendChild(node);
+  }
+}
+
+function showTermWeekScreen(){
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.remove('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+  renderTermWeekScreen();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function selectWeek(term, week){
+  activeTerm = term; activeWeek = week;
+  if(currentGrade === 'foundation'){
+    ABC_TOTAL = (week === 11) ? 20 : 10;
+    showFoundationWeek();
+  } else {
+    TOTAL_QUESTIONS = (week === 11) ? 20 : 10;
+    showLessonCard();
+  }
+}
+
+function showFoundationWeek(){
+  const isSpecial = activeWeek === 11;
+  document.getElementById('foundation-week-label').textContent = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  const projectBox = document.getElementById('foundation-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS.foundation;
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  currentAbcPool = weekLetterPool(activeTerm, activeWeek);
+  document.getElementById('foundation-lesson-box').innerHTML = foundationLessonHTML(activeTerm, activeWeek);
+  renderFlashcards(currentAbcPool);
+  document.getElementById('mode-cards-btn').classList.add('active');
+  document.getElementById('mode-quiz-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.remove('hidden');
+  document.getElementById('abc-quiz-wrap').classList.add('hidden');
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.remove('hidden');
+  document.getElementById('grade-block').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function showLessonCard(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const isSpecial = activeWeek === 11;
+  const weekLabel = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  document.getElementById('lesson-week-label').textContent = weekLabel;
+  document.getElementById('lesson-title').innerHTML = g.title;
+  document.getElementById('lesson-body').textContent = g.lesson.body;
+  document.getElementById('lesson-examples').innerHTML = g.lesson.examples.map(e => '<div>• ' + e + '</div>').join('');
+  const projectBox = document.getElementById('lesson-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS[currentGrade];
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  document.getElementById('to-quiz-btn').textContent = 'Take the ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Test') : 'Quiz') + ' (' + TOTAL_QUESTIONS + ' Questions) →';
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
+  document.getElementById('foundation-block').classList.add('hidden');
+  document.getElementById('grade-block').classList.remove('hidden');
+  document.getElementById('lesson-block').classList.remove('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function buildRoundItems(){
+  const bank = BANKS[currentGrade];
+  let items = [];
+  while(items.length < TOTAL_QUESTIONS){ items = items.concat(shuffle(bank)); }
+  return items.slice(0, TOTAL_QUESTIONS);
+}
+
+function renderGenericQuestion(){
+  current = roundItems[qIndex];
+  locked = false;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  const hintEl = document.getElementById('quiz-hint');
+
+  if(current.ar){
+    document.getElementById('quiz-arabic').textContent = current.ar;
+    document.getElementById('quiz-arabic').classList.remove('hidden');
+  } else {
+    document.getElementById('quiz-arabic').classList.add('hidden');
+  }
+  if(current.hint){
+    hintEl.textContent = current.hint;
+    hintEl.classList.remove('hidden');
+  } else {
+    hintEl.classList.add('hidden');
+  }
+  document.getElementById('quiz-question').textContent = current.q;
+
+  let optionList, correctVal;
+  if(currentGrade === 'g1'){
+    const opts = new Set([current.correct]);
+    while(opts.size < 4) opts.add(G1_ALL_TRANSLITS[randInt(0, G1_ALL_TRANSLITS.length - 1)]);
+    optionList = shuffle(Array.from(opts));
+    correctVal = current.correct;
+  } else {
+    optionList = current.options;
+    correctVal = current.options[current.correct];
+  }
+  current._correct = correctVal;
+
+  const list = document.getElementById('answer-list');
+  list.innerHTML = '';
+  const isArabicOptions = currentGrade === 'g6' && optionList.some(o => /[؀-ۿ]/.test(o));
+  optionList.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn' + (isArabicOptions ? ' arabic-opt' : '');
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleGenericAnswer(opt, btn));
+    list.appendChild(btn);
+  });
+  document.getElementById('q-count').textContent = qIndex + 1;
+}
+
+function handleGenericAnswer(opt, btn){
+  if(locked) return;
+  locked = true;
+  const buttons = document.querySelectorAll('#answer-list .answer-btn');
+  const fb = document.getElementById('feedback');
+  const correct = opt === current._correct;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === current._correct) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){
+    score++; playRight();
+    fb.textContent = ['Great job! 🌟','Correct! 🎉','You got it! 👍'][randInt(0,2)];
+    fb.classList.add('right');
+  } else {
+    playWrong();
+    fb.textContent = 'Not quite — the answer was "' + current._correct + '".';
+    fb.classList.add('wrong');
+  }
+  document.getElementById('score-count').textContent = score;
+  setTimeout(() => {
+    qIndex++;
+    if(qIndex >= roundItems.length){ showGenericSummary(); }
+    else { renderGenericQuestion(); }
+  }, 1300);
+}
+
+function showGenericSummary(){
+  playDone();
+  document.getElementById('quiz-panel').style.display = 'none';
+  const pct = Math.round((score / roundItems.length) * 100);
+  const isSpecial = activeWeek === 11;
+  document.getElementById('summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Round Complete!';
+  document.getElementById('final-score').textContent = score + ' / ' + roundItems.length;
+  document.getElementById('final-msg').textContent = pct === 100 ? "Perfect score — amazing work! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Play again to improve.";
+  document.getElementById('cert-btn').classList.toggle('hidden', !isSpecial);
+  document.getElementById('session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
+}
+
+function startGenericRound(){
+  qIndex = 0; score = 0;
+  roundItems = buildRoundItems();
+  document.getElementById('score-count').textContent = 0;
+  document.getElementById('quiz-panel').style.display = '';
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.remove('hidden');
+  renderGenericQuestion();
+}
+
+function showCertificate(){
+  const g = GRADES.find(x => x.id === currentGrade);
+  const name = learnerName || 'Explorer';
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of ' + g.label + ' Arabic (Terms 1–4).'
+    : 'has successfully completed Term ' + activeTerm + ' of ' + g.title + ' Arabic practice.';
+  document.getElementById('cert-name').textContent = name;
+  document.getElementById('cert-body').innerHTML = bodyText;
+  document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('cert-score').textContent = score + ' / ' + roundItems.length;
+  document.getElementById('session-summary').classList.remove('show');
+  document.getElementById('cert-wrap').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function showAbcCertificate(){
+  const name = learnerName || 'Explorer';
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('abc-cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of Foundation — Arabic Alphabet practice (Terms 1–4).'
+    : 'has successfully completed Term ' + activeTerm + ' of the Foundation — Arabic Alphabet practice.';
+  document.getElementById('abc-cert-name').textContent = name;
+  document.getElementById('abc-cert-body').textContent = bodyText;
+  document.getElementById('abc-cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('abc-cert-score').textContent = abcScore + ' / ' + ABC_TOTAL;
+  document.getElementById('abc-session-summary').classList.remove('show');
+  document.getElementById('abc-cert-wrap').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('start-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('to-quiz-btn').addEventListener('click', startGenericRound);
+document.getElementById('play-again-btn').addEventListener('click', startGenericRound);
+document.getElementById('back-to-classcard-btn').addEventListener('click', showStartCard);
+document.getElementById('back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('abc-back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
+document.getElementById('change-grade-btn').addEventListener('click', showStartCard);
+document.getElementById('cert-btn').addEventListener('click', showCertificate);
+document.getElementById('print-cert-btn').addEventListener('click', () => window.print());
+document.getElementById('close-cert-btn').addEventListener('click', () => {
+  document.getElementById('cert-wrap').classList.add('hidden');
+  document.getElementById('session-summary').classList.add('show');
+});
+document.getElementById('abc-cert-btn').addEventListener('click', showAbcCertificate);
+document.getElementById('abc-print-cert-btn').addEventListener('click', () => window.print());
+document.getElementById('abc-close-cert-btn').addEventListener('click', () => {
+  document.getElementById('abc-cert-wrap').classList.add('hidden');
+  document.getElementById('abc-session-summary').classList.add('show');
+});
+
+renderGradeRow();
+showStartCard();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>

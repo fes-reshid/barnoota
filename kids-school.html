@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Classes — Kids Corner</title>
+<meta name="description" content="Pick your class, from Foundation to Year 6, then choose English, Math, or Arabic to start practicing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#2e86ab; --violet:#7a5aa8; --coral:#e0703a;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:40px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--gold); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+  .curriculum-note{ text-align:center; font-size:13px; color:#8a7654; max-width:480px; margin:0 auto 6px; line-height:1.5; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:24px 20px 90px; }
+  .hidden{ display:none !important; }
+
+  /* ---- year grid ---- */
+  .year-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px;
+    max-width:820px; margin:0 auto;
+  }
+  .year-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:22px 16px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .year-card:hover{ transform:translateY(-4px); border-color:var(--gold); }
+  .year-card .icon{ font-size:32px; margin-bottom:8px; }
+  .year-card .label{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
+  .naplan-badge{
+    display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
+    border-radius:8px; background:var(--gold); color:#fff; margin-top:6px;
+  }
+
+  /* ---- name gate ---- */
+  .center-card{
+    max-width:420px; margin:0 auto; background:#fff; border:2px solid var(--gold-soft); border-radius:22px;
+    padding:40px 30px; text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.09);
+  }
+  .center-card .icon{ font-size:48px; margin-bottom:14px; }
+  .center-card h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 10px; }
+  .center-card p{ font-size:16px; color:#6b5a3f; line-height:1.5; margin:0 0 22px; }
+  .name-field{
+    width:100%; max-width:300px; padding:13px 16px; border-radius:14px; border:1.5px solid var(--gold-soft);
+    font-family:'Cormorant Garamond', serif; font-size:18px; text-align:center; margin-bottom:16px;
+    background:var(--parchment);
+  }
+  .name-field:focus{ outline:none; border-color:var(--green); }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:12px 30px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--green); color:#fff; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--green-dark); }
+  .link-btn{
+    display:block; margin-top:14px; background:none; border:none; color:var(--gold); text-decoration:underline;
+    cursor:pointer; font-family:'Cormorant Garamond', serif; font-size:14px;
+  }
+
+  /* ---- subject picker ---- */
+  .subject-head{ text-align:center; margin-bottom:24px; }
+  .subject-head h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-head p{ font-size:15.5px; color:#6b5a3f; margin:0; }
+  .subject-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:20px;
+    max-width:760px; margin:0 auto;
+  }
+  .subject-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:30px 20px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .subject-card:hover{ transform:translateY(-6px); box-shadow:0 16px 30px rgba(60,45,20,.14); border-color:var(--accent); }
+  .subject-card .icon{
+    width:70px; height:70px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center;
+    font-size:34px; background:var(--accent-bg);
+  }
+  .subject-card h3{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-card p{ font-size:14px; color:#8a7654; margin:0; }
+  .back-link{
+    display:block; text-align:center; margin-top:26px; font-size:14px; color:var(--gold); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🏫 Classes</p>
+  <h1>Pick Your Class</h1>
+  <p>Choose Foundation to Year 6, then pick English, Math, or Arabic to start.</p>
+</div>
+<p class="curriculum-note">English and Math are aligned with the Australian Curriculum &amp; NAPLAN (Foundation–Year 6). Arabic is a bonus subject for every class.</p>
+
+<div class="wrap">
+
+  <div id="year-screen">
+    <div class="year-grid" id="year-grid"></div>
+  </div>
+
+  <div id="name-screen" class="hidden">
+    <div class="center-card">
+      <div class="icon">✏️</div>
+      <h2>What's your name?</h2>
+      <p>We'll remember it so you don't have to type it again.</p>
+      <input type="text" id="name-input" class="name-field" placeholder="Your name" autocomplete="off">
+      <div><button class="btn" id="name-start-btn">Continue</button></div>
+    </div>
+  </div>
+
+  <div id="subject-screen" class="hidden">
+    <div class="subject-head">
+      <h2 id="subject-greeting"></h2>
+      <p id="subject-sub"></p>
+    </div>
+    <div class="subject-grid">
+      <div class="subject-card" data-subject="english" style="--accent:var(--violet); --accent-bg:#eae3f4;">
+        <div class="icon">🔤</div>
+        <h3>English</h3>
+        <p>Reading &amp; words</p>
+      </div>
+      <div class="subject-card" data-subject="math" style="--accent:var(--sky); --accent-bg:#dcecf5;">
+        <div class="icon">🔢</div>
+        <h3>Math</h3>
+        <p>Number practice</p>
+      </div>
+      <div class="subject-card" data-subject="arabic" style="--accent:var(--gold); --accent-bg:#fdeecb;">
+        <div class="icon">🕌</div>
+        <h3>Arabic</h3>
+        <p>Letters &amp; words</p>
+      </div>
+      <div class="subject-card" data-subject="games" style="--accent:var(--coral); --accent-bg:#fbe6dc;">
+        <div class="icon">🎮</div>
+        <h3>Games</h3>
+        <p>Fun mini-games</p>
+      </div>
+      <div class="subject-card" data-subject="seerah" style="--accent:var(--green); --accent-bg:var(--green-bg);">
+        <div class="icon">🕋</div>
+        <h3>Seerah Journey</h3>
+        <p>The Prophet's story ﷺ</p>
+      </div>
+    </div>
+    <button class="back-link" id="change-year-btn">← Choose a different class</button>
+  </div>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const YEARS = [
+  { id:'foundation', label:'Foundation', icon:'🌱' },
+  { id:'g1', label:'Year 1', icon:'1️⃣' },
+  { id:'g2', label:'Year 2', icon:'2️⃣' },
+  { id:'g3', label:'Year 3', icon:'3️⃣', naplan:true },
+  { id:'g4', label:'Year 4', icon:'4️⃣' },
+  { id:'g5', label:'Year 5', icon:'5️⃣', naplan:true },
+  { id:'g6', label:'Year 6', icon:'6️⃣' }
+];
+const NAME_KEY = 'kids-school-name';
+const SUBJECT_PAGES = { english:'kids-english.html', math:'kids-math.html', arabic:'kids-arabic.html', games:'kids-games.html', seerah:'kids-seerah-game.html' };
+const YEAR_GATED_SUBJECTS = ['english', 'math', 'arabic'];
+
+let selectedYear = null;
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function renderYearGrid(){
+  const grid = document.getElementById('year-grid');
+  grid.innerHTML = '';
+  YEARS.forEach(y => {
+    const card = document.createElement('div');
+    card.className = 'year-card';
+    card.innerHTML = `
+      <div class="icon">${y.icon}</div>
+      <div class="label">${y.label}</div>
+      ${y.naplan ? '<div class="naplan-badge">NAPLAN</div>' : ''}
+    `;
+    card.addEventListener('click', () => chooseYear(y.id));
+    grid.appendChild(card);
+  });
+}
+
+function chooseYear(yearId){
+  selectedYear = yearId;
+  const savedName = localStorage.getItem(NAME_KEY);
+  if(savedName){
+    showSubjectScreen(savedName);
+  } else {
+    showScreen('name-screen');
+    setTimeout(() => document.getElementById('name-input').focus(), 150);
+  }
+}
+
+function showScreen(id){
+  ['year-screen','name-screen','subject-screen'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const val = document.getElementById('name-input').value.trim();
+  const name = val || 'Explorer';
+  localStorage.setItem(NAME_KEY, name);
+  showSubjectScreen(name);
+});
+document.getElementById('name-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') document.getElementById('name-start-btn').click();
+});
+
+function showSubjectScreen(name){
+  const y = YEARS.find(x => x.id === selectedYear);
+  document.getElementById('subject-greeting').textContent = 'Hi ' + name + '! You picked ' + y.label + '.';
+  document.getElementById('subject-sub').textContent = 'Now choose what you\'d like to do.';
+  showScreen('subject-screen');
+}
+
+document.querySelectorAll('.subject-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const subject = card.dataset.subject;
+    const page = SUBJECT_PAGES[subject];
+    window.location.href = YEAR_GATED_SUBJECTS.includes(subject)
+      ? page + '?year=' + encodeURIComponent(selectedYear)
+      : page;
+  });
+});
+
+document.getElementById('change-year-btn').addEventListener('click', () => showScreen('year-screen'));
+
+renderYearGrid();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
