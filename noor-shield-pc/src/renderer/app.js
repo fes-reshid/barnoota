@@ -156,6 +156,7 @@ $('unlock-submit').addEventListener('click', async () => {
   refreshStatus();
   renderSettings();
   renderActivity();
+  renderBlocklist();
 });
 
 $('unlock-password').addEventListener('keydown', (event) => {
@@ -359,6 +360,8 @@ async function renderBlocklist() {
   list.textContent = '';
 
   if (data.serviceUnreachable) {
+    $('blocklist-locked').hidden = true;
+    $('blocklist-body').hidden = true;
     $('seed-count').textContent = '—';
     $('custom-count').textContent = '—';
     for (const key of ['adult', 'security', 'ads']) {
@@ -371,8 +374,12 @@ async function renderBlocklist() {
     return;
   }
 
+  const unlocked = !data.customHidden;
+  $('blocklist-locked').hidden = unlocked;
+  $('blocklist-body').hidden = !unlocked;
+
   $('seed-count').textContent = data.seedCount;
-  $('custom-count').textContent = data.custom.length;
+  $('custom-count').textContent = unlocked ? data.custom.length : '—';
 
   for (const key of ['adult', 'security', 'ads']) {
     const cat = data.feedCategories && data.feedCategories[key];
@@ -398,6 +405,8 @@ async function renderBlocklist() {
       el.textContent = 'Fetching for the first time — this can take a moment.';
     }
   }
+
+  if (!unlocked) return; // nothing more to render while locked — custom-list stays empty
 
   if (data.custom.length === 0) {
     const empty = document.createElement('p');
@@ -582,6 +591,10 @@ async function renderActivity() {
 
 $('activity-unlock').addEventListener('click', () => {
   showUnlock('Enter the parent password to view the activity log.', null);
+});
+
+$('blocklist-unlock').addEventListener('click', () => {
+  showUnlock('Enter the parent password to add or remove blocked sites.', null);
 });
 
 $('activity-clear').addEventListener('click', async () => {

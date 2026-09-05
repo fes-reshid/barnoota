@@ -166,19 +166,27 @@
           <p class="sub">The built-in list plus anything the parent adds. Subdomains are covered automatically.</p>
         </header>
 
-        <div class="panel">
-          <h3>Add a site</h3>
-          <div class="inputrow">
-            <input type="text" id="block-input" placeholder="example.com" autocomplete="off">
-            <button class="btn primary" id="block-add">Add</button>
-          </div>
-          <p class="hint" id="block-message"></p>
-          <p class="hint">Enter a domain — a full address like <code>https://www.example.com/page</code> works too.</p>
+        <div class="panel lockedpanel" id="blocklist-locked">
+          <h3>Locked</h3>
+          <p>Unlock with the parent password to add, view, or remove specific blocked sites.</p>
+          <button class="btn primary" id="blocklist-unlock">Unlock</button>
         </div>
 
-        <div class="panel">
-          <h3>Added by the parent (<span id="custom-count">0</span>)</h3>
-          <div id="custom-list" class="domainlist"></div>
+        <div id="blocklist-body" hidden>
+          <div class="panel">
+            <h3>Add a site</h3>
+            <div class="inputrow">
+              <input type="text" id="block-input" placeholder="example.com" autocomplete="off">
+              <button class="btn primary" id="block-add">Add</button>
+            </div>
+            <p class="hint" id="block-message"></p>
+            <p class="hint">Enter a domain — a full address like <code>https://www.example.com/page</code> works too.</p>
+          </div>
+
+          <div class="panel">
+            <h3>Added by the parent (<span id="custom-count">0</span>)</h3>
+            <div id="custom-list" class="domainlist"></div>
+          </div>
         </div>
 
         <div class="panel notepanel">

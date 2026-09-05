@@ -24,7 +24,14 @@
 ; reboot is the one step that's guaranteed to pick up both cleanly
 ; everywhere at once.
 !macro customInstall
-  MessageBox MB_OK|MB_ICONINFORMATION "Noor Shield is installed.$\r$\n$\r$\nFor best results, please restart this computer before relying on it — some apps that were already open won't see the new protection until then."
+  MessageBox MB_YESNO|MB_ICONQUESTION "Noor Shield is installed.$\r$\n$\r$\nRestart this computer now to make sure everything already open picks up the new protection? Choose No to restart later yourself." IDYES noor_restart_now IDNO noor_restart_later
+  noor_restart_now:
+    MessageBox MB_OK|MB_ICONINFORMATION "This computer will restart in 10 seconds. Save anything open now if you need to."
+    Exec 'shutdown.exe /r /t 10 /c "Restarting to finish setting up Noor Shield"'
+    Goto noor_restart_done
+  noor_restart_later:
+    MessageBox MB_OK|MB_ICONINFORMATION "OK — please restart this computer yourself when you get a chance, so every app picks up the new protection."
+  noor_restart_done:
 !macroend
 
 ; The protection service (service/serviceName.js: SERVICE_ID

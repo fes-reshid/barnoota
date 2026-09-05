@@ -250,9 +250,14 @@ function createHandlers(ctx) {
       };
     },
 
+    // The custom (parent-added) domain list is only included when unlocked
+    // — seeing exactly what's specifically blocked could itself help a
+    // child probe for gaps. seedCount/feedCount/feedCategories stay visible
+    // either way: they're just totals, not a list to check against.
     'blocklist.list': async () => ({
       ok: true,
-      custom: store.get('customDomains') || [],
+      custom: parentAuth.isUnlocked() ? store.get('customDomains') || [] : [],
+      customHidden: !parentAuth.isUnlocked(),
       seedCount: seedDomains.length,
       feedCount: mergedFeedDomains.length,
       feedCategories: feedCategoriesSummary(),
