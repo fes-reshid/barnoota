@@ -59,6 +59,11 @@
     background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
   }
   .grade-btn.active{ background:var(--sky); border-color:var(--sky); color:#fff; }
+  .grade-btn.locked{ background:#f2ede0; border-color:#e2d8bd; color:#a89a78; cursor:not-allowed; }
+  .lock-notice{
+    max-width:560px; margin:0 auto 16px; text-align:center; font-size:14.5px; color:#8a5a00;
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:14px; padding:12px 18px;
+  }
   .naplan-badge{
     display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
     border-radius:8px; background:var(--gold); color:#fff; margin-left:5px; vertical-align:middle;
@@ -218,6 +223,7 @@
 
 <div class="wrap">
   <div class="learner-banner hidden" id="learner-banner"></div>
+  <p class="lock-notice hidden" id="lock-notice"></p>
   <div class="grade-row" id="grade-row"></div>
   <p class="grade-desc" id="grade-desc"></p>
 
@@ -359,10 +365,34 @@ const GRADES = [
       examples:['3 + 4 × 2 = 11 (do 4×2 first, then add 3)','−5 + 8 = 3'] } }
 ];
 
+function isGradeFullyDone(gradeId){
+  const p = loadTermProgress();
+  return !!(p[gradeId] && p[gradeId]['t4'] && p[gradeId]['t4'][11]);
+}
+function isGradeUnlocked(gradeId){
+  const order = GRADES.map(g => g.id);
+  const idx = order.indexOf(gradeId);
+  if(idx <= 0) return true;
+  return isGradeFullyDone(order[idx - 1]);
+}
+function highestUnlockedGrade(){
+  const order = GRADES.map(g => g.id);
+  let result = order[0];
+  for(const id of order){ if(isGradeUnlocked(id)) result = id; else break; }
+  return result;
+}
+
 const urlYear = new URLSearchParams(location.search).get('year');
 const urlYearValid = urlYear && GRADES.some(g => g.id === urlYear);
 let currentGrade = urlYearValid ? urlYear : (localStorage.getItem('kids-math-grade') || 'foundation');
-if(urlYearValid) localStorage.setItem('kids-math-grade', currentGrade);
+let lockedRedirectLabel = null, lockedPrevLabel = null;
+if(!isGradeUnlocked(currentGrade)){
+  const order = GRADES.map(g => g.id);
+  lockedRedirectLabel = GRADES.find(g => g.id === currentGrade).label;
+  lockedPrevLabel = GRADES.find(g => g.id === order[order.indexOf(currentGrade) - 1]).label;
+  currentGrade = highestUnlockedGrade();
+}
+localStorage.setItem('kids-math-grade', currentGrade);
 const learnerName = localStorage.getItem('kids-school-name') || '';
 if(urlYearValid){
   const backPill = document.getElementById('back-pill');
@@ -511,11 +541,21 @@ function renderGradeRow(){
   const row = document.getElementById('grade-row');
   row.innerHTML = '';
   GRADES.forEach(g => {
+    const unlocked = isGradeUnlocked(g.id);
     const btn = document.createElement('button');
-    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
-    btn.innerHTML = g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
+    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '') + (unlocked ? '' : ' locked');
+    btn.innerHTML = (unlocked ? '' : '🔒 ') + g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
     btn.addEventListener('click', () => {
+      if(!unlocked){
+        const order = GRADES.map(x => x.id);
+        const prevLabel = GRADES.find(x => x.id === order[order.indexOf(g.id) - 1]).label;
+        lockedRedirectLabel = g.label;
+        lockedPrevLabel = prevLabel;
+        updateLockNotice();
+        return;
+      }
       currentGrade = g.id;
+      lockedRedirectLabel = null;
       localStorage.setItem('kids-math-grade', currentGrade);
       renderGradeRow();
       showStartCard();
@@ -526,9 +566,20 @@ function renderGradeRow(){
   document.getElementById('grade-desc').textContent = g.desc;
 }
 
+function updateLockNotice(){
+  const notice = document.getElementById('lock-notice');
+  if(lockedRedirectLabel){
+    notice.textContent = '🔒 ' + lockedRedirectLabel + ' isn\'t unlocked yet — finish all of ' + lockedPrevLabel + ' first! Showing ' + GRADES.find(x => x.id === currentGrade).label + ' instead.';
+    notice.classList.remove('hidden');
+  } else {
+    notice.classList.add('hidden');
+  }
+}
+
 function updateLearnerBanner(){
   const banner = document.getElementById('learner-banner');
   const g = GRADES.find(x => x.id === currentGrade);
+  updateLockNotice();
   if(urlYearValid && learnerName){
     banner.innerHTML = '🎓 Hi ' + learnerName + '! You are in <b>' + g.label + '</b> Math.' +
       '<a href="kids-school.html">← Choose a different class</a>';
