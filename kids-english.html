@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Flashcards — Kids Corner</title>
-<meta name="description" content="ABC flashcards kids can listen to, plus a fun quiz to practice letters and words.">
+<title>English Practice — Kids Corner</title>
+<meta name="description" content="Grade-by-grade English practice for kids, from Foundation to Grade 6: ABCs, sight words, rhymes, vocabulary, grammar and reading.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -44,21 +44,23 @@
   }
   .back-pill:hover{ background:var(--parchment-deep); }
 
-  .page-head{ text-align:center; padding:44px 20px 8px; }
+  .page-head{ text-align:center; padding:40px 20px 8px; }
   .eyebrow{ font-family:'Marcellus'; color:var(--violet); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
   .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
   .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
 
-  .mode-row{ display:flex; justify-content:center; gap:10px; margin:22px 0; }
-  .mode-btn{
-    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
-    padding:9px 18px; border-radius:20px; cursor:pointer; border:1.5px solid var(--gold-soft);
+  .grade-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:22px 0 6px; }
+  .grade-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12px; letter-spacing:.03em;
+    padding:8px 14px; border-radius:18px; cursor:pointer; border:1.5px solid var(--gold-soft);
     background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
   }
-  .mode-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+  .grade-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+  .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
 
   .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 20px 90px; }
 
+  /* ---- foundation flashcards ---- */
   .flash-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px; }
   .flashcard{
     background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:16px 10px;
@@ -68,10 +70,20 @@
   .flashcard .big-letter{ font-family:'Marcellus'; font-size:38px; color:var(--ink-navy); line-height:1; }
   .flashcard .emoji{ font-size:30px; margin:6px 0; }
   .flashcard .word{ font-size:14px; color:var(--violet-dark); font-weight:700; }
+  .mode-row{ display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+  .mode-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
+    padding:9px 18px; border-radius:20px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .mode-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
 
-  .quiz-wrap{ max-width:560px; margin:0 auto; display:none; }
-  .quiz-wrap.show{ display:block; }
-  .flash-grid.hidden{ display:none; }
+  /* ---- quiz (shared by grades 1-6) ---- */
+  .center-wrap{ max-width:560px; margin:0 auto; }
+  .start-card{ text-align:center; background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px; }
+  .start-card .icon{ font-size:44px; margin-bottom:10px; }
+  .start-card h2{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 10px; }
+  .start-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; }
 
   .stat-row{ display:flex; justify-content:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
   .stat-chip{
@@ -81,22 +93,30 @@
   .stat-chip b{ color:var(--violet); }
 
   .quiz-panel{
-    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px;
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:30px 26px;
     text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
   }
-  .quiz-emoji{ font-size:64px; margin-bottom:10px; }
-  .quiz-question{ font-size:17px; color:#6b5a3f; margin:0 0 22px; }
-  .answer-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .answer-btn{
-    font-family:'Marcellus'; font-size:26px; padding:16px; border-radius:14px; cursor:pointer;
-    border:2px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy);
-    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  .passage-box{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px;
+    font-size:15.5px; line-height:1.6; color:var(--ink-brown); text-align:left; margin:0 0 20px;
   }
-  .answer-btn:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--violet); }
+  .quiz-emoji{ font-size:56px; margin-bottom:10px; }
+  .quiz-question{ font-size:18px; font-weight:700; color:var(--ink-navy); margin:0 0 20px; }
+  .hear-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; padding:8px 16px; border-radius:18px;
+    border:1.5px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy); cursor:pointer; margin-bottom:18px;
+  }
+  .answer-list{ display:flex; flex-direction:column; gap:10px; }
+  .answer-btn{
+    text-align:left; font-family:'Cormorant Garamond', serif; font-size:16.5px; padding:13px 18px;
+    border-radius:12px; border:1.5px solid var(--gold-soft); background:var(--parchment); color:var(--ink-brown);
+    cursor:pointer; transition:border-color .15s ease, background .15s ease;
+  }
+  .answer-btn:hover:not(:disabled){ border-color:var(--violet); }
   .answer-btn:disabled{ cursor:default; }
-  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
-  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); color:var(--danger); }
-  .feedback{ min-height:26px; margin-top:18px; font-size:16px; font-weight:700; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); }
+  .feedback{ min-height:26px; margin-top:16px; font-size:16px; font-weight:700; }
   .feedback.right{ color:var(--green-dark); }
   .feedback.wrong{ color:var(--danger); }
 
@@ -111,6 +131,7 @@
     background:var(--violet); color:#fff; transition:transform .15s ease, background .15s ease; margin-top:8px;
   }
   .btn:hover{ transform:translateY(-2px); background:var(--violet-dark); }
+  .hidden{ display:none !important; }
 
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
@@ -132,37 +153,72 @@
 </header>
 
 <div class="page-head">
-  <p class="eyebrow">🔤 English</p>
-  <h1>ABC Flashcards</h1>
-  <p>Tap a card to hear it out loud, or try the quiz to test yourself!</p>
+  <p class="eyebrow">🔤 English Practice</p>
+  <h1>Reading &amp; Words</h1>
+  <p>Pick your class, from Foundation to Grade 6, and practice at your own level.</p>
 </div>
 
-<div class="mode-row">
-  <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
-  <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
-</div>
+<div class="grade-row" id="grade-row"></div>
+<p class="grade-desc" id="grade-desc"></p>
 
 <div class="wrap">
-  <div class="flash-grid" id="flash-grid"></div>
 
-  <div class="quiz-wrap" id="quiz-wrap">
-    <div class="stat-row">
-      <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
-      <div class="stat-chip">Score: <b id="score-count">0</b></div>
+  <div id="foundation-block" class="hidden">
+    <div class="mode-row">
+      <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
+      <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
     </div>
-    <div class="quiz-panel" id="quiz-panel">
-      <div class="quiz-emoji" id="quiz-emoji"></div>
-      <p class="quiz-question">Which letter does this word start with?</p>
-      <div class="answer-grid" id="answer-grid"></div>
-      <div class="feedback" id="feedback"></div>
-    </div>
-    <div class="session-summary" id="session-summary">
-      <h2>🎉 Quiz Complete!</h2>
-      <div class="score-big" id="final-score"></div>
-      <p id="final-msg"></p>
-      <button class="btn" id="play-again-btn">Play Again</button>
+    <div class="flash-grid" id="flash-grid"></div>
+    <div class="center-wrap quiz-wrap hidden" id="abc-quiz-wrap">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="abc-q-count">1</b> / 10</div>
+        <div class="stat-chip">Score: <b id="abc-score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="abc-quiz-panel">
+        <div class="quiz-emoji" id="abc-quiz-emoji"></div>
+        <p class="quiz-question">Which letter does this word start with?</p>
+        <div class="answer-list" id="abc-answer-list" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+        <div class="feedback" id="abc-feedback"></div>
+      </div>
+      <div class="session-summary" id="abc-session-summary">
+        <h2>🎉 Quiz Complete!</h2>
+        <div class="score-big" id="abc-final-score"></div>
+        <p id="abc-final-msg"></p>
+        <button class="btn" id="abc-play-again-btn">Play Again</button>
+      </div>
     </div>
   </div>
+
+  <div id="grade-block" class="center-wrap hidden">
+    <div id="start-card" class="start-card">
+      <div class="icon">📘</div>
+      <h2 id="start-title"></h2>
+      <p id="start-desc"></p>
+      <button class="btn" id="start-btn">Start Practicing</button>
+    </div>
+
+    <div id="quiz-block" class="hidden">
+      <div class="stat-row">
+        <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
+        <div class="stat-chip">Score: <b id="score-count">0</b></div>
+      </div>
+      <div class="quiz-panel" id="quiz-panel">
+        <div id="passage-holder"></div>
+        <button class="hear-btn hidden" id="hear-btn">🔊 Hear it again</button>
+        <p class="quiz-question" id="quiz-question"></p>
+        <div class="answer-list" id="answer-list"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div class="session-summary" id="session-summary">
+        <h2>🎉 Round Complete!</h2>
+        <div class="score-big" id="final-score"></div>
+        <p id="final-msg"></p>
+        <button class="btn" id="play-again-btn">Play Again</button>
+        <button class="btn" id="change-grade-btn" style="background:var(--gold-soft); color:var(--ink-navy);">Choose Another Class</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -177,22 +233,16 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const WORDS = [
-  {letter:'A', word:'Apple', emoji:'🍎'}, {letter:'B', word:'Ball', emoji:'⚽'},
-  {letter:'C', word:'Cat', emoji:'🐱'}, {letter:'D', word:'Dog', emoji:'🐶'},
-  {letter:'E', word:'Elephant', emoji:'🐘'}, {letter:'F', word:'Fish', emoji:'🐟'},
-  {letter:'G', word:'Grapes', emoji:'🍇'}, {letter:'H', word:'House', emoji:'🏠'},
-  {letter:'I', word:'Ice Cream', emoji:'🍦'}, {letter:'J', word:'Juice', emoji:'🧃'},
-  {letter:'K', word:'Kite', emoji:'🪁'}, {letter:'L', word:'Lion', emoji:'🦁'},
-  {letter:'M', word:'Moon', emoji:'🌙'}, {letter:'N', word:'Nest', emoji:'🪺'},
-  {letter:'O', word:'Orange', emoji:'🍊'}, {letter:'P', word:'Pencil', emoji:'✏️'},
-  {letter:'Q', word:'Queen', emoji:'👑'}, {letter:'R', word:'Rainbow', emoji:'🌈'},
-  {letter:'S', word:'Star', emoji:'⭐'}, {letter:'T', word:'Tree', emoji:'🌳'},
-  {letter:'U', word:'Umbrella', emoji:'☂️'}, {letter:'V', word:'Violin', emoji:'🎻'},
-  {letter:'W', word:'Watermelon', emoji:'🍉'}, {letter:'X', word:'Xylophone', emoji:'🎼'},
-  {letter:'Y', word:'Yo-yo', emoji:'🪀'}, {letter:'Z', word:'Zebra', emoji:'🦓'}
-];
-
+/* ================= shared helpers ================= */
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 function speak(text){
   try{
     if(!('speechSynthesis' in window)) return;
@@ -203,7 +253,6 @@ function speak(text){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-
 function getCtx(){
   if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
   return window.__actx;
@@ -225,129 +274,347 @@ function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sin
 function playWrong(){ beep(180, 0.2, 'sawtooth'); }
 function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
 
+/* ================= Foundation: ABC flashcards + quiz ================= */
+const WORDS = [
+  {letter:'A', word:'Apple', emoji:'🍎'}, {letter:'B', word:'Ball', emoji:'⚽'},
+  {letter:'C', word:'Cat', emoji:'🐱'}, {letter:'D', word:'Dog', emoji:'🐶'},
+  {letter:'E', word:'Elephant', emoji:'🐘'}, {letter:'F', word:'Fish', emoji:'🐟'},
+  {letter:'G', word:'Grapes', emoji:'🍇'}, {letter:'H', word:'House', emoji:'🏠'},
+  {letter:'I', word:'Ice Cream', emoji:'🍦'}, {letter:'J', word:'Juice', emoji:'🧃'},
+  {letter:'K', word:'Kite', emoji:'🪁'}, {letter:'L', word:'Lion', emoji:'🦁'},
+  {letter:'M', word:'Moon', emoji:'🌙'}, {letter:'N', word:'Nest', emoji:'🪺'},
+  {letter:'O', word:'Orange', emoji:'🍊'}, {letter:'P', word:'Pencil', emoji:'✏️'},
+  {letter:'Q', word:'Queen', emoji:'👑'}, {letter:'R', word:'Rainbow', emoji:'🌈'},
+  {letter:'S', word:'Star', emoji:'⭐'}, {letter:'T', word:'Tree', emoji:'🌳'},
+  {letter:'U', word:'Umbrella', emoji:'☂️'}, {letter:'V', word:'Violin', emoji:'🎻'},
+  {letter:'W', word:'Watermelon', emoji:'🍉'}, {letter:'X', word:'Xylophone', emoji:'🎼'},
+  {letter:'Y', word:'Yo-yo', emoji:'🪀'}, {letter:'Z', word:'Zebra', emoji:'🦓'}
+];
+
 function renderFlashcards(){
   const grid = document.getElementById('flash-grid');
   grid.innerHTML = '';
   WORDS.forEach(w => {
     const card = document.createElement('div');
     card.className = 'flashcard';
-    card.innerHTML = `
-      <div class="big-letter">${w.letter}</div>
-      <div class="emoji">${w.emoji}</div>
-      <div class="word">${w.word}</div>
-    `;
+    card.innerHTML = `<div class="big-letter">${w.letter}</div><div class="emoji">${w.emoji}</div><div class="word">${w.word}</div>`;
     card.addEventListener('click', () => speak(w.letter + ' is for ' + w.word));
     grid.appendChild(card);
   });
 }
 
-function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i = a.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+const ABC_TOTAL = 10;
+let abcQIndex = 0, abcScore = 0, abcCurrent = null, abcLocked = false;
 
-const TOTAL_QUESTIONS = 10;
-let qIndex = 0, score = 0, current = null, locked = false;
-
-function makeQuestion(){
+function makeAbcQuestion(){
   const item = WORDS[randInt(0, WORDS.length - 1)];
   const options = new Set([item.letter]);
-  while(options.size < 4){
-    options.add(WORDS[randInt(0, WORDS.length - 1)].letter);
-  }
+  while(options.size < 4) options.add(WORDS[randInt(0, WORDS.length - 1)].letter);
   return { item, options: shuffle(Array.from(options)) };
 }
+function renderAbcQuestion(){
+  abcCurrent = makeAbcQuestion();
+  abcLocked = false;
+  document.getElementById('abc-quiz-emoji').textContent = abcCurrent.item.emoji;
+  document.getElementById('abc-feedback').textContent = '';
+  document.getElementById('abc-feedback').className = 'feedback';
+  const list = document.getElementById('abc-answer-list');
+  list.innerHTML = '';
+  abcCurrent.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.style.textAlign = 'center';
+    btn.style.fontFamily = "'Marcellus'";
+    btn.style.fontSize = '24px';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAbcAnswer(opt, btn));
+    list.appendChild(btn);
+  });
+  document.getElementById('abc-q-count').textContent = abcQIndex + 1;
+}
+function handleAbcAnswer(opt, btn){
+  if(abcLocked) return;
+  abcLocked = true;
+  const buttons = document.querySelectorAll('#abc-answer-list .answer-btn');
+  const fb = document.getElementById('abc-feedback');
+  const correct = opt === abcCurrent.item.letter;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === abcCurrent.item.letter) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){ abcScore++; playRight(); fb.textContent = 'Great job! 🌟'; fb.classList.add('right'); }
+  else { playWrong(); fb.textContent = abcCurrent.item.word + ' starts with ' + abcCurrent.item.letter + '.'; fb.classList.add('wrong'); }
+  document.getElementById('abc-score-count').textContent = abcScore;
+  setTimeout(() => {
+    abcQIndex++;
+    if(abcQIndex >= ABC_TOTAL){ showAbcSummary(); }
+    else { renderAbcQuestion(); }
+  }, 1100);
+}
+function showAbcSummary(){
+  playDone();
+  document.getElementById('abc-quiz-panel').style.display = 'none';
+  const pct = Math.round((abcScore / ABC_TOTAL) * 100);
+  document.getElementById('abc-final-score').textContent = abcScore + ' / ' + ABC_TOTAL;
+  document.getElementById('abc-final-msg').textContent = pct === 100 ? "Perfect — you know your ABCs! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Look at the flashcards, then try again.";
+  document.getElementById('abc-session-summary').classList.add('show');
+}
+function startAbcQuiz(){
+  abcQIndex = 0; abcScore = 0;
+  document.getElementById('abc-score-count').textContent = 0;
+  document.getElementById('abc-quiz-panel').style.display = '';
+  document.getElementById('abc-session-summary').classList.remove('show');
+  renderAbcQuestion();
+}
+document.getElementById('abc-play-again-btn').addEventListener('click', startAbcQuiz);
+document.getElementById('mode-cards-btn').addEventListener('click', () => {
+  document.getElementById('mode-cards-btn').classList.add('active');
+  document.getElementById('mode-quiz-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.remove('hidden');
+  document.getElementById('abc-quiz-wrap').classList.add('hidden');
+});
+document.getElementById('mode-quiz-btn').addEventListener('click', () => {
+  document.getElementById('mode-quiz-btn').classList.add('active');
+  document.getElementById('mode-cards-btn').classList.remove('active');
+  document.getElementById('flash-grid').classList.add('hidden');
+  document.getElementById('abc-quiz-wrap').classList.remove('hidden');
+  startAbcQuiz();
+});
+renderFlashcards();
 
-function renderQuestion(){
-  current = makeQuestion();
+/* ================= Grades 1-6: content banks ================= */
+const SIGHT_WORDS = ['the','and','said','you','was','they','are','here','come','little','one','down','big','look','went'];
+const G1_BANK = SIGHT_WORDS.map(word => ({ type:'listen', word }));
+
+const G2_BANK = [
+  { q:"Which word rhymes with 'cat'?", options:['hat','dog','sun','box'], correct:0 },
+  { q:"Which word rhymes with 'dog'?", options:['log','cat','pen','moon'], correct:0 },
+  { q:"Which word rhymes with 'sun'?", options:['fun','king','bell','car'], correct:0 },
+  { q:"Which word rhymes with 'pen'?", options:['hen','cake','fox','ring'], correct:0 },
+  { q:"Which word rhymes with 'box'?", options:['fox','bell','moon','sun'], correct:0 },
+  { q:"Which word rhymes with 'car'?", options:['star','dog','pen','king'], correct:0 },
+  { q:"Which word rhymes with 'bell'?", options:['shell','cat','box','sun'], correct:0 },
+  { q:"Which word rhymes with 'cake'?", options:['lake','dog','ring','box'], correct:0 },
+  { q:"Which word rhymes with 'king'?", options:['ring','cat','moon','pen'], correct:0 },
+  { q:"Which word rhymes with 'moon'?", options:['spoon','dog','cake','star'], correct:0 }
+];
+
+const G3_BANK = [
+  { q:"Which word means the same as 'happy'?", options:['glad','sad','tired','angry'], correct:0 },
+  { q:"Which word means the opposite of 'big'?", options:['small','huge','tall','wide'], correct:0 },
+  { q:"Which word means the same as 'fast'?", options:['quick','slow','tired','quiet'], correct:0 },
+  { q:"Which word means the opposite of 'hot'?", options:['cold','warm','sunny','wet'], correct:0 },
+  { q:"Which word means the same as 'small'?", options:['tiny','huge','wide','long'], correct:0 },
+  { q:"Which word means the opposite of 'happy'?", options:['sad','glad','calm','kind'], correct:0 },
+  { q:"Which word means the same as 'smart'?", options:['clever','silly','lazy','shy'], correct:0 },
+  { q:"Which word means the opposite of 'up'?", options:['down','high','top','over'], correct:0 },
+  { q:"Which word means the same as 'begin'?", options:['start','end','stop','finish'], correct:0 },
+  { q:"Which word means the opposite of 'day'?", options:['night','sun','bright','noon'], correct:0 },
+  { q:"Which word means the same as 'shout'?", options:['yell','whisper','sing','ask'], correct:0 },
+  { q:"Which word means the opposite of 'full'?", options:['empty','big','heavy','deep'], correct:0 }
+];
+
+const G4_BANK = [
+  { q:'"The dog runs fast." Which word is the verb?', options:['dog','runs','fast','the'], correct:1 },
+  { q:'"She has a red bag." Which word is the adjective?', options:['she','has','red','bag'], correct:2 },
+  { q:'"Birds fly in the sky." Which word is the verb?', options:['birds','fly','sky','the'], correct:1 },
+  { q:'"The tall boy jumped high." Which word is the adjective?', options:['boy','tall','jumped','high'], correct:1 },
+  { q:'"My cat sleeps quietly." Which word is the noun?', options:['cat','sleeps','quietly','my'], correct:0 },
+  { q:'"The children played happily." Which word is the adverb?', options:['children','played','happily','the'], correct:2 },
+  { q:'"He quickly closed the door." Which word is the verb?', options:['quickly','closed','door','the'], correct:1 },
+  { q:'"The bright sun warmed the sand." Which word is the adjective?', options:['sun','bright','warmed','sand'], correct:1 },
+  { q:'"We walked to the old bridge." Which word is the noun?', options:['walked','to','old','bridge'], correct:3 },
+  { q:'"The baby giggled loudly." Which word is the adverb?', options:['baby','giggled','loudly','the'], correct:2 }
+];
+
+const G5_BANK = [
+  { passage:"Amina woke up early on Saturday morning. She helped her mother bake bread before the sun rose fully. After breakfast, she read two pages of the Qur'an with her little brother.",
+    q:'What did Amina do before breakfast?', options:['Helped bake bread','Played outside','Went to school','Watched TV'], correct:0 },
+  { passage:"Amina woke up early on Saturday morning. She helped her mother bake bread before the sun rose fully. After breakfast, she read two pages of the Qur'an with her little brother.",
+    q:'Who did Amina read Qur’an with?', options:['Her little brother','Her teacher','Her friend','Alone'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:'What was the camel carrying?', options:['Bags of dates','Bags of rice','Water jugs','Wood'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:"What is the camel's owner's name?", options:['Yusuf','Amina','Bilal','Zayd'], correct:0 },
+  { passage:"The old camel walked slowly across the hot desert sand. It carried heavy bags of dates to a small village. The camel's owner, Yusuf, gave it cool water to drink at every stop.",
+    q:'What did Yusuf give the camel?', options:['Cool water','Extra bags','A blanket','Nothing'], correct:0 },
+  { passage:"Every Friday, Omar's family goes to the masjid together for Jumuʿah prayer. Omar likes sitting near the front to hear the khutbah clearly. Afterward, they usually share a meal with their neighbors.",
+    q:"What day does Omar's family go to the masjid together?", options:['Friday','Sunday','Monday','Saturday'], correct:0 },
+  { passage:"Every Friday, Omar's family goes to the masjid together for Jumuʿah prayer. Omar likes sitting near the front to hear the khutbah clearly. Afterward, they usually share a meal with their neighbors.",
+    q:'What does Omar like to hear clearly?', options:['The khutbah','The adhan','Music','Nothing'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'What did Layla plant?', options:['An olive tree','A rose bush','A vegetable','An apple tree'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'How often did she water it?', options:['Every morning','Once a week','Only in summer','Never'], correct:0 },
+  { passage:"Layla planted a small olive tree in her garden. She watered it every morning and made sure it had enough sunlight. After two years, the tree finally grew its first olives, and Layla was overjoyed.",
+    q:'How long until the tree grew its first olives?', options:['Two years','One month','Ten years','One week'], correct:0 }
+];
+
+const G6_BANK = [
+  { q:'Choose the correct word: "___ going to the masjid today."', options:["They're",'Their','There','Thear'], correct:0 },
+  { q:'Choose the correct word: "That is ___ book."', options:['their','there',"they're",'thare'], correct:0 },
+  { q:'Choose the correct word: "___ a beautiful day."', options:["It's",'Its','Is',"I's"], correct:0 },
+  { q:'Choose the correct word: "The dog wagged ___ tail."', options:['its',"it's","its'",'it is'], correct:0 },
+  { q:'Which sentence is punctuated correctly?', options:['Can you help me?','Can you help me.','can you help me?','Can you help me'], correct:0 },
+  { q:'Which sentence uses the correct verb tense?', options:['Yesterday, I walked to school.','Yesterday, I walk to school.','Yesterday, I walking to school.','Yesterday, I walks to school.'], correct:0 },
+  { q:'Choose the correct word: "___ my best friend."', options:["You're",'Your','Yore','Ur'], correct:0 },
+  { q:'Which of these should end with a question mark?', options:['Where are you going','I am going home','She is my sister','We ate dinner'], correct:0 },
+  { q:'Choose the correctly capitalized sentence.', options:['My name is Ahmad.','my name is ahmad.','My Name Is Ahmad.','my Name is Ahmad.'], correct:0 },
+  { q:'Which word completes: "She ___ to the store yesterday."', options:['went','goes','going','go'], correct:0 },
+  { q:'Which word completes: "There are three ___ on the table."', options:['apples','apple','applies','appels'], correct:0 },
+  { q:'Choose the correct word: "___ car is parked outside."', options:['Their','There',"They're",'Thear'], correct:0 }
+];
+
+const GRADES = [
+  { id:'foundation', label:'Foundation', title:'Foundation — ABC & Phonics', desc:'Learn your letters with flashcards, then try the quiz.' },
+  { id:'g1', label:'Grade 1', title:'Grade 1 — Sight Words', desc:'Listen carefully, then choose the word you heard.' },
+  { id:'g2', label:'Grade 2', title:'Grade 2 — Rhyming Words', desc:'Find the word that rhymes.' },
+  { id:'g3', label:'Grade 3', title:'Grade 3 — Synonyms & Antonyms', desc:'Words that mean the same, or the opposite.' },
+  { id:'g4', label:'Grade 4', title:'Grade 4 — Parts of Speech', desc:'Spot the noun, verb, adjective, or adverb.' },
+  { id:'g5', label:'Grade 5', title:'Grade 5 — Reading Comprehension', desc:'Read short passages and answer questions about them.' },
+  { id:'g6', label:'Grade 6', title:'Grade 6 — Grammar & Punctuation', desc:'Correct words, punctuation, and verb tenses.' }
+];
+const BANKS = { g1:G1_BANK, g2:G2_BANK, g3:G3_BANK, g4:G4_BANK, g5:G5_BANK, g6:G6_BANK };
+
+let currentGrade = localStorage.getItem('kids-english-grade') || 'foundation';
+const TOTAL_QUESTIONS = 10;
+let qIndex = 0, score = 0, current = null, locked = false, roundItems = [];
+
+function renderGradeRow(){
+  const row = document.getElementById('grade-row');
+  row.innerHTML = '';
+  GRADES.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
+    btn.textContent = g.label;
+    btn.addEventListener('click', () => {
+      currentGrade = g.id;
+      localStorage.setItem('kids-english-grade', currentGrade);
+      renderGradeRow();
+      showGradeContent();
+    });
+    row.appendChild(btn);
+  });
+  document.getElementById('grade-desc').textContent = GRADES.find(x => x.id === currentGrade).desc;
+}
+
+function showGradeContent(){
+  const isFoundation = currentGrade === 'foundation';
+  document.getElementById('foundation-block').classList.toggle('hidden', !isFoundation);
+  document.getElementById('grade-block').classList.toggle('hidden', isFoundation);
+  if(!isFoundation){
+    const g = GRADES.find(x => x.id === currentGrade);
+    document.getElementById('start-title').textContent = g.title;
+    document.getElementById('start-desc').textContent = g.desc;
+    document.getElementById('start-card').classList.remove('hidden');
+    document.getElementById('quiz-block').classList.add('hidden');
+  }
+}
+
+function buildRoundItems(){
+  const bank = BANKS[currentGrade];
+  const shuffled = shuffle(bank);
+  return shuffled.slice(0, Math.min(TOTAL_QUESTIONS, shuffled.length));
+}
+
+function renderGenericQuestion(){
+  current = roundItems[qIndex];
   locked = false;
-  document.getElementById('quiz-emoji').textContent = current.item.emoji;
+  const passageHolder = document.getElementById('passage-holder');
+  const hearBtn = document.getElementById('hear-btn');
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
-  const grid = document.getElementById('answer-grid');
-  grid.innerHTML = '';
-  current.options.forEach(opt => {
+
+  if(current.type === 'listen'){
+    passageHolder.innerHTML = '';
+    hearBtn.classList.remove('hidden');
+    hearBtn.onclick = () => speak(current.word);
+    document.getElementById('quiz-question').textContent = 'Listen — which word did you hear?';
+    setTimeout(() => speak(current.word), 300);
+    const options = new Set([current.word]);
+    while(options.size < 4) options.add(SIGHT_WORDS[randInt(0, SIGHT_WORDS.length - 1)]);
+    current._options = shuffle(Array.from(options));
+    current._correct = current.word;
+  } else if(current.passage){
+    passageHolder.innerHTML = '<div class="passage-box">' + current.passage + '</div>';
+    hearBtn.classList.add('hidden');
+    document.getElementById('quiz-question').textContent = current.q;
+    current._options = current.options;
+    current._correct = current.options[current.correct];
+  } else {
+    passageHolder.innerHTML = '';
+    hearBtn.classList.add('hidden');
+    document.getElementById('quiz-question').textContent = current.q;
+    current._options = current.options;
+    current._correct = current.options[current.correct];
+  }
+
+  const list = document.getElementById('answer-list');
+  list.innerHTML = '';
+  current._options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'answer-btn';
     btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(opt, btn));
-    grid.appendChild(btn);
+    btn.addEventListener('click', () => handleGenericAnswer(opt, btn));
+    list.appendChild(btn);
   });
   document.getElementById('q-count').textContent = qIndex + 1;
 }
 
-function handleAnswer(opt, btn){
+function handleGenericAnswer(opt, btn){
   if(locked) return;
   locked = true;
-  const buttons = document.querySelectorAll('#answer-grid .answer-btn');
+  const buttons = document.querySelectorAll('#answer-list .answer-btn');
   const fb = document.getElementById('feedback');
-  const correct = opt === current.item.letter;
+  const correct = opt === current._correct;
   buttons.forEach(b => {
     b.disabled = true;
-    if(b.textContent === current.item.letter) b.classList.add('correct');
+    if(b.textContent === current._correct) b.classList.add('correct');
     else if(b === btn) b.classList.add('incorrect');
   });
   if(correct){
-    score++;
-    playRight();
+    score++; playRight();
     fb.textContent = ['Great job! 🌟','Correct! 🎉','You got it! 👍'][randInt(0,2)];
     fb.classList.add('right');
   } else {
     playWrong();
-    fb.textContent = current.item.word + ' starts with ' + current.item.letter + '.';
+    fb.textContent = 'Not quite — the answer was "' + current._correct + '".';
     fb.classList.add('wrong');
   }
   document.getElementById('score-count').textContent = score;
-
   setTimeout(() => {
     qIndex++;
-    if(qIndex >= TOTAL_QUESTIONS){ showSummary(); }
-    else { renderQuestion(); }
-  }, 1100);
+    if(qIndex >= roundItems.length){ showGenericSummary(); }
+    else { renderGenericQuestion(); }
+  }, 1300);
 }
 
-function showSummary(){
+function showGenericSummary(){
   playDone();
   document.getElementById('quiz-panel').style.display = 'none';
-  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
-  document.getElementById('final-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
-  const msg = pct === 100 ? "Perfect score — you know your ABCs! 🌟" :
-              pct >= 70 ? "Great job! Keep practicing your letters." :
-              "Good try! Look at the flashcards, then try again.";
-  document.getElementById('final-msg').textContent = msg;
+  const pct = Math.round((score / roundItems.length) * 100);
+  document.getElementById('final-score').textContent = score + ' / ' + roundItems.length;
+  document.getElementById('final-msg').textContent = pct === 100 ? "Perfect score — amazing work! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Play again to improve.";
   document.getElementById('session-summary').classList.add('show');
 }
 
-function startQuiz(){
+function startGenericRound(){
   qIndex = 0; score = 0;
+  roundItems = buildRoundItems();
   document.getElementById('score-count').textContent = 0;
   document.getElementById('quiz-panel').style.display = '';
   document.getElementById('session-summary').classList.remove('show');
-  renderQuestion();
+  document.getElementById('start-card').classList.add('hidden');
+  document.getElementById('quiz-block').classList.remove('hidden');
+  renderGenericQuestion();
 }
+document.getElementById('start-btn').addEventListener('click', startGenericRound);
+document.getElementById('play-again-btn').addEventListener('click', startGenericRound);
+document.getElementById('change-grade-btn').addEventListener('click', showGradeContent);
 
-document.getElementById('play-again-btn').addEventListener('click', startQuiz);
-
-const cardsBtn = document.getElementById('mode-cards-btn');
-const quizBtn = document.getElementById('mode-quiz-btn');
-const flashGrid = document.getElementById('flash-grid');
-const quizWrap = document.getElementById('quiz-wrap');
-cardsBtn.addEventListener('click', () => {
-  cardsBtn.classList.add('active'); quizBtn.classList.remove('active');
-  flashGrid.classList.remove('hidden'); quizWrap.classList.remove('show');
-});
-quizBtn.addEventListener('click', () => {
-  quizBtn.classList.add('active'); cardsBtn.classList.remove('active');
-  flashGrid.classList.add('hidden'); quizWrap.classList.add('show');
-  startQuiz();
-});
-
-renderFlashcards();
+renderGradeRow();
+showGradeContent();
 </script>
 <script src="/cursor.js" defer></script>
 </body>
