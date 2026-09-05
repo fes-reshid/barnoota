@@ -350,6 +350,8 @@ function init(){
   profile = loadProfile();
   if(!profile){
     showScreen('name-screen');
+    const savedName = localStorage.getItem('kids-school-name');
+    if(savedName) document.getElementById('name-input').value = savedName;
   } else {
     const doneCount = profile.stars.filter(Boolean).length;
     document.getElementById('welcome-title').textContent = 'Welcome back, ' + profile.name + '!';

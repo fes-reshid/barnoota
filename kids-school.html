@@ -14,7 +14,7 @@
     --parchment:#faf3e0; --parchment-deep:#f2e6c9;
     --gold:#a97c25; --gold-soft:#d3ac5c;
     --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
-    --sky:#2e86ab; --violet:#7a5aa8;
+    --sky:#2e86ab; --violet:#7a5aa8; --coral:#e0703a;
     --maxw:1120px;
   }
   *{box-sizing:border-box;}
@@ -182,6 +182,16 @@
         <h3>Arabic</h3>
         <p>Letters &amp; words</p>
       </div>
+      <div class="subject-card" data-subject="games" style="--accent:var(--coral); --accent-bg:#fbe6dc;">
+        <div class="icon">🎮</div>
+        <h3>Games</h3>
+        <p>Fun mini-games</p>
+      </div>
+      <div class="subject-card" data-subject="seerah" style="--accent:var(--green); --accent-bg:var(--green-bg);">
+        <div class="icon">🕋</div>
+        <h3>Seerah Journey</h3>
+        <p>The Prophet's story ﷺ</p>
+      </div>
     </div>
     <button class="back-link" id="change-year-btn">← Choose a different class</button>
   </div>
@@ -210,7 +220,8 @@ const YEARS = [
   { id:'g6', label:'Year 6', icon:'6️⃣' }
 ];
 const NAME_KEY = 'kids-school-name';
-const SUBJECT_PAGES = { english:'kids-english.html', math:'kids-math.html', arabic:'kids-arabic.html' };
+const SUBJECT_PAGES = { english:'kids-english.html', math:'kids-math.html', arabic:'kids-arabic.html', games:'kids-games.html', seerah:'kids-seerah-game.html' };
+const YEAR_GATED_SUBJECTS = ['english', 'math', 'arabic'];
 
 let selectedYear = null;
 
@@ -267,14 +278,17 @@ document.getElementById('name-input').addEventListener('keydown', (e) => {
 function showSubjectScreen(name){
   const y = YEARS.find(x => x.id === selectedYear);
   document.getElementById('subject-greeting').textContent = 'Hi ' + name + '! You picked ' + y.label + '.';
-  document.getElementById('subject-sub').textContent = 'Now choose a subject to practice.';
+  document.getElementById('subject-sub').textContent = 'Now choose what you\'d like to do.';
   showScreen('subject-screen');
 }
 
 document.querySelectorAll('.subject-card').forEach(card => {
   card.addEventListener('click', () => {
     const subject = card.dataset.subject;
-    window.location.href = SUBJECT_PAGES[subject] + '?year=' + encodeURIComponent(selectedYear);
+    const page = SUBJECT_PAGES[subject];
+    window.location.href = YEAR_GATED_SUBJECTS.includes(subject)
+      ? page + '?year=' + encodeURIComponent(selectedYear)
+      : page;
   });
 });
 
