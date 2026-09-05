@@ -297,7 +297,7 @@
           <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
           <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
           <div class="cert-bismillah arabic">﷽</div>
-          <div class="cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-eyebrow" id="abc-cert-eyebrow">Certificate of Achievement</div>
           <div class="cert-given">This certifies that</div>
           <div class="cert-name" id="abc-cert-name"></div>
           <div class="cert-body" id="abc-cert-body"></div>
@@ -353,7 +353,7 @@
           <div class="cert-corner cert-tl"></div><div class="cert-corner cert-tr"></div>
           <div class="cert-corner cert-bl"></div><div class="cert-corner cert-br"></div>
           <div class="cert-bismillah arabic">﷽</div>
-          <div class="cert-eyebrow">Certificate of Achievement</div>
+          <div class="cert-eyebrow" id="cert-eyebrow">Certificate of Achievement</div>
           <div class="cert-given">This certifies that</div>
           <div class="cert-name" id="cert-name"></div>
           <div class="cert-body" id="cert-body"></div>
@@ -512,6 +512,7 @@ function showAbcSummary(){
   document.getElementById('abc-summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Quiz Complete!';
   document.getElementById('abc-final-score').textContent = abcScore + ' / ' + ABC_TOTAL;
   document.getElementById('abc-final-msg').textContent = pct === 100 ? "Perfect — you know your ABCs! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Look at the flashcards, then try again.";
+  document.getElementById('abc-cert-btn').classList.toggle('hidden', !isSpecial);
   document.getElementById('abc-session-summary').classList.add('show');
   markWeekDone(activeTerm, activeWeek);
 }
@@ -929,6 +930,7 @@ function showGenericSummary(){
   document.getElementById('summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Round Complete!';
   document.getElementById('final-score').textContent = score + ' / ' + roundItems.length;
   document.getElementById('final-msg').textContent = pct === 100 ? "Perfect score — amazing work! 🌟" : pct >= 70 ? "Great job! Keep practicing." : "Good try! Play again to improve.";
+  document.getElementById('cert-btn').classList.toggle('hidden', !isSpecial);
   document.getElementById('session-summary').classList.add('show');
   markWeekDone(activeTerm, activeWeek);
 }
@@ -948,10 +950,13 @@ function startGenericRound(){
 function showCertificate(){
   const g = GRADES.find(x => x.id === currentGrade);
   const name = learnerName || 'Explorer';
-  const isSpecial = activeWeek === 11;
-  const weekPart = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Term ' + activeTerm + ' Project & Test') : ('Term ' + activeTerm + ', Week ' + activeWeek);
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of ' + g.label + ' English (Terms 1–4), aligned with the Australian Curriculum.'
+    : 'has successfully completed Term ' + activeTerm + ' of ' + g.title + ' English practice, aligned with the Australian Curriculum.';
   document.getElementById('cert-name').textContent = name;
-  document.getElementById('cert-body').textContent = 'has successfully completed ' + weekPart + ' of ' + g.title + ' English practice, aligned with the Australian Curriculum.';
+  document.getElementById('cert-body').textContent = bodyText;
   document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
   document.getElementById('cert-score').textContent = score + ' / ' + roundItems.length;
   document.getElementById('session-summary').classList.remove('show');
@@ -960,10 +965,13 @@ function showCertificate(){
 }
 function showAbcCertificate(){
   const name = learnerName || 'Explorer';
-  const isSpecial = activeWeek === 11;
-  const weekPart = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Term ' + activeTerm + ' Project & Test') : ('Term ' + activeTerm + ', Week ' + activeWeek);
+  const isGraduation = activeTerm === 4 && activeWeek === 11;
+  document.getElementById('abc-cert-eyebrow').textContent = isGraduation ? 'Certificate of Completion' : 'Certificate of Achievement';
+  const bodyText = isGraduation
+    ? 'has successfully completed all of Foundation — Phonics & Letter Sounds English (Terms 1–4).'
+    : 'has successfully completed Term ' + activeTerm + ' of the Foundation — Phonics & Letter Sounds English practice.';
   document.getElementById('abc-cert-name').textContent = name;
-  document.getElementById('abc-cert-body').textContent = 'has successfully completed ' + weekPart + ' of the Foundation — Phonics & Letter Sounds English practice.';
+  document.getElementById('abc-cert-body').textContent = bodyText;
   document.getElementById('abc-cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
   document.getElementById('abc-cert-score').textContent = abcScore + ' / ' + ABC_TOTAL;
   document.getElementById('abc-session-summary').classList.remove('show');
