@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good Deeds Catch — Kids Corner</title>
+<meta name="description" content="Move your basket to catch good deeds falling from the sky, and avoid catching the distractions!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --coral-dark:#b8552a; --danger:#8a3324;
+    --sky-top:#bfe0f0; --sky-bot:#eaf5ec;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:36px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--coral); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:16px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .game-wrap{ max-width:560px; margin:0 auto; padding:20px 20px 90px; }
+  .stat-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:7px 16px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--coral); }
+  .lives{ font-size:18px; letter-spacing:2px; }
+
+  .play-area{
+    position:relative; width:100%; height:420px; border-radius:18px; overflow:hidden;
+    background:linear-gradient(to bottom, var(--sky-top), var(--sky-bot));
+    border:3px solid var(--gold-soft); cursor:none; touch-action:none;
+    user-select:none;
+  }
+  .falling-item{
+    position:absolute; top:-40px; font-size:32px; line-height:1; pointer-events:none;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.15));
+  }
+  .basket{
+    position:absolute; bottom:10px; width:64px; height:48px; font-size:44px; line-height:48px;
+    text-align:center; pointer-events:none; transform:translateX(-50%);
+  }
+
+  .overlay{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(250,243,224,.94); text-align:center; padding:20px;
+  }
+  .overlay h2{ font-family:'Marcellus'; color:var(--ink-navy); font-size:26px; margin:0 0 10px; }
+  .overlay p{ font-size:16px; color:#6b5a3f; margin:0 0 20px; max-width:380px; }
+  .legend{ display:flex; gap:18px; justify-content:center; margin:0 0 20px; flex-wrap:wrap; }
+  .legend-item{ font-size:13px; color:var(--ink-brown); display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .legend-item .em{ font-size:26px; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 28px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--coral); color:#fff; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--coral-dark); }
+  .hint{ text-align:center; font-size:13.5px; color:#8a7654; margin-top:10px; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids-games.html">← Games</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🧺 Catching Game</p>
+  <h1>Good Deeds Catch</h1>
+  <p>Move your basket to catch the good deeds. Watch out — don't catch the distractions!</p>
+</div>
+
+<div class="game-wrap">
+  <div class="stat-row">
+    <div class="stat-chip">Score: <b id="score-count">0</b></div>
+    <div class="lives" id="lives-display">❤️❤️❤️</div>
+  </div>
+
+  <div class="play-area" id="play-area">
+    <div class="basket" id="basket">🧺</div>
+    <div class="overlay" id="start-overlay">
+      <h2>Ready to play?</h2>
+      <p>Move your mouse (or finger) left and right to slide the basket under the falling items.</p>
+      <div class="legend">
+        <div class="legend-item"><span class="em">🤝😊📖🕌🍎</span>Catch these! +1</div>
+        <div class="legend-item"><span class="em">📱🍬😴😡</span>Avoid these! −1 ❤️</div>
+      </div>
+      <button class="btn" id="start-btn">Start Game</button>
+    </div>
+    <div class="overlay" id="end-overlay" style="display:none;">
+      <h2 id="end-title">Game Over!</h2>
+      <p id="end-msg"></p>
+      <button class="btn" id="restart-btn">Play Again</button>
+    </div>
+  </div>
+  <p class="hint">Tip: you can also use the ← and → arrow keys.</p>
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids-games.html">Games</a>
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const GOOD = ['🤝','😊','📖','🕌','🍎'];
+const BAD = ['📱','🍬','😴','😡'];
+
+const playArea = document.getElementById('play-area');
+const basket = document.getElementById('basket');
+const startOverlay = document.getElementById('start-overlay');
+const endOverlay = document.getElementById('end-overlay');
+
+let score = 0;
+let lives = 3;
+let basketX = 0;
+let items = [];
+let running = false;
+let spawnTimer = null;
+let rafId = null;
+let elapsed = 0;
+
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playCatchGood(){ beep(660, 0.1, 'sine'); }
+function playCatchBad(){ beep(160, 0.22, 'sawtooth'); }
+function playOver(){ [392,330,262].forEach((f,i)=>setTimeout(()=>beep(f,0.25,'sine'), i*160)); }
+
+function setBasketX(x){
+  const rect = playArea.getBoundingClientRect();
+  const clamped = Math.max(30, Math.min(rect.width - 30, x));
+  basketX = clamped;
+  basket.style.left = clamped + 'px';
+}
+
+playArea.addEventListener('mousemove', (e) => {
+  const rect = playArea.getBoundingClientRect();
+  setBasketX(e.clientX - rect.left);
+});
+playArea.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  const rect = playArea.getBoundingClientRect();
+  const touch = e.touches[0];
+  setBasketX(touch.clientX - rect.left);
+}, {passive:false});
+document.addEventListener('keydown', (e) => {
+  if(!running) return;
+  if(e.key === 'ArrowLeft') setBasketX(basketX - 24);
+  if(e.key === 'ArrowRight') setBasketX(basketX + 24);
+});
+
+function updateStats(){
+  document.getElementById('score-count').textContent = score;
+  document.getElementById('lives-display').textContent = '❤️'.repeat(Math.max(lives,0)) + '🖤'.repeat(3 - Math.max(lives,0));
+}
+
+function spawnItem(){
+  const rect = playArea.getBoundingClientRect();
+  const isGood = Math.random() < 0.68;
+  const emoji = isGood ? GOOD[Math.floor(Math.random()*GOOD.length)] : BAD[Math.floor(Math.random()*BAD.length)];
+  const el = document.createElement('div');
+  el.className = 'falling-item';
+  el.textContent = emoji;
+  const x = 20 + Math.random() * (rect.width - 40);
+  el.style.left = x + 'px';
+  playArea.appendChild(el);
+  const speedBase = 1.6 + Math.min(elapsed / 12000, 2.2);
+  items.push({ el, x, y: -40, speed: speedBase + Math.random()*0.6, good: isGood });
+}
+
+function gameLoop(ts){
+  if(!running) return;
+  if(!gameLoop.last) gameLoop.last = ts;
+  const dt = ts - gameLoop.last;
+  gameLoop.last = ts;
+  elapsed += dt;
+
+  const rect = playArea.getBoundingClientRect();
+  const basketTop = rect.height - 58;
+
+  for(let i = items.length - 1; i >= 0; i--){
+    const item = items[i];
+    item.y += item.speed * (dt / 16.7);
+    item.el.style.top = item.y + 'px';
+
+    if(item.y >= basketTop){
+      const dx = Math.abs(item.x - basketX);
+      if(dx < 42){
+        if(item.good){ score++; playCatchGood(); }
+        else { lives--; playCatchBad(); updateLivesFlash(); }
+        updateStats();
+        item.el.remove();
+        items.splice(i, 1);
+        if(lives <= 0){ endGame(); return; }
+        continue;
+      }
+    }
+    if(item.y > rect.height + 20){
+      item.el.remove();
+      items.splice(i, 1);
+    }
+  }
+
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function updateLivesFlash(){
+  playArea.style.transition = 'none';
+  playArea.style.filter = 'brightness(0.85)';
+  setTimeout(() => { playArea.style.filter = ''; }, 150);
+}
+
+function startSpawning(){
+  const spawn = () => {
+    if(!running) return;
+    spawnItem();
+    const delay = Math.max(450, 1000 - elapsed / 20);
+    spawnTimer = setTimeout(spawn, delay);
+  };
+  spawn();
+}
+
+function startGame(){
+  score = 0; lives = 3; elapsed = 0; items.forEach(i => i.el.remove()); items = [];
+  gameLoop.last = null;
+  updateStats();
+  startOverlay.style.display = 'none';
+  endOverlay.style.display = 'none';
+  running = true;
+  setBasketX(playArea.getBoundingClientRect().width / 2);
+  startSpawning();
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function endGame(){
+  running = false;
+  if(spawnTimer) clearTimeout(spawnTimer);
+  if(rafId) cancelAnimationFrame(rafId);
+  playOver();
+  document.getElementById('end-title').textContent = 'Game Over!';
+  const msg = score >= 20 ? "Amazing! You're a good-deeds champion! 🌟" :
+              score >= 10 ? "Great job catching those good deeds! 👏" :
+              "Nice try! Play again and beat your score.";
+  document.getElementById('end-msg').textContent = 'Final score: ' + score + '. ' + msg;
+  endOverlay.style.display = 'flex';
+}
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('restart-btn').addEventListener('click', startGame);
+setBasketX(140);
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
