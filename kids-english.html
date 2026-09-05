@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Flashcards — Kids Corner</title>
+<meta name="description" content="ABC flashcards kids can listen to, plus a fun quiz to practice letters and words.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --violet:#7a5aa8; --violet-dark:#5a4080; --danger:#8a3324;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:44px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--violet); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:17px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .mode-row{ display:flex; justify-content:center; gap:10px; margin:22px 0; }
+  .mode-btn{
+    font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
+    padding:9px 18px; border-radius:20px; cursor:pointer; border:1.5px solid var(--gold-soft);
+    background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .mode-btn.active{ background:var(--violet); border-color:var(--violet); color:#fff; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 20px 90px; }
+
+  .flash-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px; }
+  .flashcard{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:16px 10px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .flashcard:hover{ transform:translateY(-3px); border-color:var(--violet); }
+  .flashcard .big-letter{ font-family:'Marcellus'; font-size:38px; color:var(--ink-navy); line-height:1; }
+  .flashcard .emoji{ font-size:30px; margin:6px 0; }
+  .flashcard .word{ font-size:14px; color:var(--violet-dark); font-weight:700; }
+
+  .quiz-wrap{ max-width:560px; margin:0 auto; display:none; }
+  .quiz-wrap.show{ display:block; }
+  .flash-grid.hidden{ display:none; }
+
+  .stat-row{ display:flex; justify-content:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:8px 18px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--violet); }
+
+  .quiz-panel{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px;
+    text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
+  }
+  .quiz-emoji{ font-size:64px; margin-bottom:10px; }
+  .quiz-question{ font-size:17px; color:#6b5a3f; margin:0 0 22px; }
+  .answer-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .answer-btn{
+    font-family:'Marcellus'; font-size:26px; padding:16px; border-radius:14px; cursor:pointer;
+    border:2px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy);
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .answer-btn:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--violet); }
+  .answer-btn:disabled{ cursor:default; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); color:var(--danger); }
+  .feedback{ min-height:26px; margin-top:18px; font-size:16px; font-weight:700; }
+  .feedback.right{ color:var(--green-dark); }
+  .feedback.wrong{ color:var(--danger); }
+
+  .session-summary{ display:none; text-align:center; }
+  .session-summary.show{ display:block; animation:popIn .4s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes popIn{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .session-summary h2{ font-family:'Marcellus'; color:var(--violet-dark); margin:0 0 8px; font-size:26px; }
+  .session-summary .score-big{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:8px 0; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--violet); color:#fff; transition:transform .15s ease, background .15s ease; margin-top:8px;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--violet-dark); }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🔤 English</p>
+  <h1>ABC Flashcards</h1>
+  <p>Tap a card to hear it out loud, or try the quiz to test yourself!</p>
+</div>
+
+<div class="mode-row">
+  <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
+  <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
+</div>
+
+<div class="wrap">
+  <div class="flash-grid" id="flash-grid"></div>
+
+  <div class="quiz-wrap" id="quiz-wrap">
+    <div class="stat-row">
+      <div class="stat-chip">Question: <b id="q-count">1</b> / 10</div>
+      <div class="stat-chip">Score: <b id="score-count">0</b></div>
+    </div>
+    <div class="quiz-panel" id="quiz-panel">
+      <div class="quiz-emoji" id="quiz-emoji"></div>
+      <p class="quiz-question">Which letter does this word start with?</p>
+      <div class="answer-grid" id="answer-grid"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="session-summary" id="session-summary">
+      <h2>🎉 Quiz Complete!</h2>
+      <div class="score-big" id="final-score"></div>
+      <p id="final-msg"></p>
+      <button class="btn" id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const WORDS = [
+  {letter:'A', word:'Apple', emoji:'🍎'}, {letter:'B', word:'Ball', emoji:'⚽'},
+  {letter:'C', word:'Cat', emoji:'🐱'}, {letter:'D', word:'Dog', emoji:'🐶'},
+  {letter:'E', word:'Elephant', emoji:'🐘'}, {letter:'F', word:'Fish', emoji:'🐟'},
+  {letter:'G', word:'Grapes', emoji:'🍇'}, {letter:'H', word:'House', emoji:'🏠'},
+  {letter:'I', word:'Ice Cream', emoji:'🍦'}, {letter:'J', word:'Juice', emoji:'🧃'},
+  {letter:'K', word:'Kite', emoji:'🪁'}, {letter:'L', word:'Lion', emoji:'🦁'},
+  {letter:'M', word:'Moon', emoji:'🌙'}, {letter:'N', word:'Nest', emoji:'🪺'},
+  {letter:'O', word:'Orange', emoji:'🍊'}, {letter:'P', word:'Pencil', emoji:'✏️'},
+  {letter:'Q', word:'Queen', emoji:'👑'}, {letter:'R', word:'Rainbow', emoji:'🌈'},
+  {letter:'S', word:'Star', emoji:'⭐'}, {letter:'T', word:'Tree', emoji:'🌳'},
+  {letter:'U', word:'Umbrella', emoji:'☂️'}, {letter:'V', word:'Violin', emoji:'🎻'},
+  {letter:'W', word:'Watermelon', emoji:'🍉'}, {letter:'X', word:'Xylophone', emoji:'🎼'},
+  {letter:'Y', word:'Yo-yo', emoji:'🪀'}, {letter:'Z', word:'Zebra', emoji:'🦓'}
+];
+
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.85;
+    u.pitch = 1.1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+function renderFlashcards(){
+  const grid = document.getElementById('flash-grid');
+  grid.innerHTML = '';
+  WORDS.forEach(w => {
+    const card = document.createElement('div');
+    card.className = 'flashcard';
+    card.innerHTML = `
+      <div class="big-letter">${w.letter}</div>
+      <div class="emoji">${w.emoji}</div>
+      <div class="word">${w.word}</div>
+    `;
+    card.addEventListener('click', () => speak(w.letter + ' is for ' + w.word));
+    grid.appendChild(card);
+  });
+}
+
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const TOTAL_QUESTIONS = 10;
+let qIndex = 0, score = 0, current = null, locked = false;
+
+function makeQuestion(){
+  const item = WORDS[randInt(0, WORDS.length - 1)];
+  const options = new Set([item.letter]);
+  while(options.size < 4){
+    options.add(WORDS[randInt(0, WORDS.length - 1)].letter);
+  }
+  return { item, options: shuffle(Array.from(options)) };
+}
+
+function renderQuestion(){
+  current = makeQuestion();
+  locked = false;
+  document.getElementById('quiz-emoji').textContent = current.item.emoji;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  const grid = document.getElementById('answer-grid');
+  grid.innerHTML = '';
+  current.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(opt, btn));
+    grid.appendChild(btn);
+  });
+  document.getElementById('q-count').textContent = qIndex + 1;
+}
+
+function handleAnswer(opt, btn){
+  if(locked) return;
+  locked = true;
+  const buttons = document.querySelectorAll('#answer-grid .answer-btn');
+  const fb = document.getElementById('feedback');
+  const correct = opt === current.item.letter;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b.textContent === current.item.letter) b.classList.add('correct');
+    else if(b === btn) b.classList.add('incorrect');
+  });
+  if(correct){
+    score++;
+    playRight();
+    fb.textContent = ['Great job! 🌟','Correct! 🎉','You got it! 👍'][randInt(0,2)];
+    fb.classList.add('right');
+  } else {
+    playWrong();
+    fb.textContent = current.item.word + ' starts with ' + current.item.letter + '.';
+    fb.classList.add('wrong');
+  }
+  document.getElementById('score-count').textContent = score;
+
+  setTimeout(() => {
+    qIndex++;
+    if(qIndex >= TOTAL_QUESTIONS){ showSummary(); }
+    else { renderQuestion(); }
+  }, 1100);
+}
+
+function showSummary(){
+  playDone();
+  document.getElementById('quiz-panel').style.display = 'none';
+  const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
+  document.getElementById('final-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
+  const msg = pct === 100 ? "Perfect score — you know your ABCs! 🌟" :
+              pct >= 70 ? "Great job! Keep practicing your letters." :
+              "Good try! Look at the flashcards, then try again.";
+  document.getElementById('final-msg').textContent = msg;
+  document.getElementById('session-summary').classList.add('show');
+}
+
+function startQuiz(){
+  qIndex = 0; score = 0;
+  document.getElementById('score-count').textContent = 0;
+  document.getElementById('quiz-panel').style.display = '';
+  document.getElementById('session-summary').classList.remove('show');
+  renderQuestion();
+}
+
+document.getElementById('play-again-btn').addEventListener('click', startQuiz);
+
+const cardsBtn = document.getElementById('mode-cards-btn');
+const quizBtn = document.getElementById('mode-quiz-btn');
+const flashGrid = document.getElementById('flash-grid');
+const quizWrap = document.getElementById('quiz-wrap');
+cardsBtn.addEventListener('click', () => {
+  cardsBtn.classList.add('active'); quizBtn.classList.remove('active');
+  flashGrid.classList.remove('hidden'); quizWrap.classList.remove('show');
+});
+quizBtn.addEventListener('click', () => {
+  quizBtn.classList.add('active'); cardsBtn.classList.remove('active');
+  flashGrid.classList.add('hidden'); quizWrap.classList.add('show');
+  startQuiz();
+});
+
+renderFlashcards();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
