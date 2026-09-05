@@ -19,7 +19,7 @@ import com.barnoota.noorshield.R
  */
 class BlurOverlayManager(private val context: Context) {
 
-    private val windowManager = context.getSystemService(Context.WINDOW_MANAGER_SERVICE) as WindowManager
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var overlayView: LinearLayout? = null
 
     fun canDrawOverlays(): Boolean = Settings.canDrawOverlays(context)
