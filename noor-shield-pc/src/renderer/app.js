@@ -230,8 +230,15 @@ $('filter-toggle').addEventListener('click', async () => {
   );
 
   if (result && !result.ok) {
-    $('status-detail').textContent = result.error;
+    // Don't call refreshStatus() here — it unconditionally rewrites
+    // status-detail from the current (unchanged, since this failed) state,
+    // which was wiping this exact error out before anyone could read it.
+    const detail = $('status-detail');
+    detail.textContent = result.error;
+    detail.classList.add('error');
+    return;
   }
+  $('status-detail').classList.remove('error');
   refreshStatus();
 });
 
@@ -257,9 +264,25 @@ async function refreshStatus() {
   }
   serviceWarning.hidden = true;
 
+  // The service can still be starting up (installing for the first time
+  // takes real time) when boot() first checks and gives up waiting, showing
+  // the dashboard directly rather than stalling indefinitely. If that
+  // happened before activation was known, catch up here on the next poll —
+  // otherwise a parent is stuck on a dashboard that can never turn
+  // protection on, with no way back to the product-key screen.
+  if (!status.activated) {
+    const gate = $('activation-gate');
+    if (gate.hidden) {
+      gate.hidden = false;
+      $('activation-key').focus();
+    }
+    return;
+  }
+
   const pill = $('status-pill');
   const detail = $('status-detail');
   const toggle = $('filter-toggle');
+  detail.classList.remove('error');
 
   const running = status.filterEnabled && status.proxyRunning;
   pill.textContent = running ? 'Protected' : status.filterEnabled ? 'Not enforcing' : 'Off';
@@ -796,7 +819,7 @@ async function boot() {
   // few seconds before deciding "unreachable" — otherwise a normal first
   // launch would flash the setup gate before settling on the real state.
   let status = await api.parentStatus();
-  for (let attempt = 0; attempt < 6 && status.serviceUnreachable; attempt += 1) {
+  for (let attempt = 0; attempt < 20 && status.serviceUnreachable; attempt += 1) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     status = await api.parentStatus();
   }
