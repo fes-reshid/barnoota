@@ -107,8 +107,8 @@
   .cert-seal{ font-size:34px; }
   .cert-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:22px; }
   @media print{
-    header, footer, .page-head, .curriculum-note, .grade-row, .grade-desc,
-    #start-block, #lesson-block, .stat-row, #quiz-panel, #session-summary, .no-print{ display:none !important; }
+    header, footer, .page-head, .curriculum-note, .grade-row, .grade-desc, .learner-banner,
+    #start-block, #term-week-screen, #lesson-block, .stat-row, #quiz-panel, #session-summary, .no-print{ display:none !important; }
     .cert-wrap{ margin:40px 0 0; }
   }
 
@@ -154,6 +154,40 @@
   .btn:hover{ transform:translateY(-2px); background:var(--sky-dark); }
   .hidden{ display:none !important; }
 
+  .learner-banner{
+    max-width:560px; margin:0 auto 20px; background:var(--sky); color:#fff; border-radius:16px;
+    padding:14px 22px; text-align:center; font-family:'Marcellus'; font-size:16px;
+  }
+  .learner-banner a{ display:block; margin-top:6px; font-family:'Cormorant Garamond', serif; font-size:13px; color:#dcecf5; text-decoration:underline; }
+  .term-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .term-btn{
+    font-family:'Marcellus'; font-size:14px; padding:9px 20px; border-radius:18px; cursor:pointer;
+    border:1.5px solid var(--gold-soft); background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
+  }
+  .term-btn.active{ background:var(--ink-navy); border-color:var(--ink-navy); color:#fff; }
+  .term-progress{ text-align:center; font-size:13px; color:#8a7654; margin:0 0 20px; }
+  .week-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(110px,1fr)); gap:12px; max-width:720px; margin:0 auto; }
+  .week-node{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px 10px; text-align:center; cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .week-node:hover{ transform:translateY(-3px); border-color:var(--sky); }
+  .week-node.done{ border-color:var(--green); background:var(--green-bg); }
+  .week-node.special{ background:#fdeecb; border-color:var(--gold); }
+  .week-node.special.done{ background:var(--green-bg); border-color:var(--green); }
+  .week-node .wk-num{ font-family:'JetBrains Mono', monospace, monospace; font-size:11px; color:var(--gold); }
+  .week-node .wk-label{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); margin-top:4px; }
+  .week-node .wk-check{ margin-top:4px; font-size:15px; }
+  .back-link{
+    display:block; text-align:center; margin-top:26px; font-size:14px; color:var(--gold); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+  .project-box{
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:12px; padding:14px 18px;
+    text-align:left; font-size:15px; color:var(--ink-navy); margin:0 0 22px; line-height:1.6;
+  }
+  .project-box b{ display:block; margin-bottom:4px; color:var(--gold-dark, #8a5a00); }
+
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
   footer .flinks a{ text-decoration:none; color:#c9d2e0; }
@@ -182,6 +216,7 @@
 <p class="curriculum-note">Aligned with the Australian Curriculum (Foundation–Year 6), the basis for NAPLAN. NAPLAN itself only tests Years 3, 5, 7 &amp; 9 — those levels are marked below.</p>
 
 <div class="wrap">
+  <div class="learner-banner hidden" id="learner-banner"></div>
   <div class="grade-row" id="grade-row"></div>
   <p class="grade-desc" id="grade-desc"></p>
 
@@ -190,15 +225,24 @@
     <p id="start-greeting" class="hidden" style="font-weight:700; color:var(--sky-dark); margin:0 0 6px;"></p>
     <h2 id="start-title"></h2>
     <p id="start-desc"></p>
-    <button class="btn" id="start-btn">Start the Lesson</button>
+    <button class="btn" id="start-btn">See Terms &amp; Weeks →</button>
+  </div>
+
+  <div id="term-week-screen" class="hidden">
+    <div class="term-row" id="term-row"></div>
+    <p class="term-progress" id="term-progress"></p>
+    <div class="week-grid" id="week-grid"></div>
+    <button class="back-link" id="back-to-classcard-btn">← Choose a different class</button>
   </div>
 
   <div id="lesson-block" class="lesson-card hidden">
     <div class="icon">📘</div>
+    <p id="lesson-week-label" style="font-weight:700; color:var(--sky-dark); margin:0 0 6px;"></p>
     <h2 id="lesson-title"></h2>
     <p id="lesson-body"></p>
     <div class="example-box" id="lesson-examples"></div>
-    <button class="btn" id="to-quiz-btn">Take the Quiz (10 Questions) →</button>
+    <div class="project-box hidden" id="lesson-project"></div>
+    <button class="btn" id="to-quiz-btn">Take the Quiz →</button>
   </div>
 
   <div id="quiz-block" class="hidden">
@@ -215,11 +259,12 @@
     </div>
 
     <div class="session-summary" id="session-summary">
-      <h2>🎉 Round Complete!</h2>
+      <h2 id="summary-title">🎉 Round Complete!</h2>
       <div class="score-big" id="final-score"></div>
       <p id="final-msg"></p>
       <button class="btn" id="cert-btn" style="background:var(--gold);">🎓 Get My Certificate</button>
       <button class="btn" id="play-again-btn">Play Again</button>
+      <button class="btn" id="back-to-weeks-btn" style="background:var(--ink-navy);">← Back to Weeks</button>
       <button class="btn" id="change-grade-btn" style="background:var(--gold-soft); color:var(--ink-navy);">Choose Another Class</button>
     </div>
 
@@ -258,8 +303,36 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const TOTAL_QUESTIONS = 10;
+let TOTAL_QUESTIONS = 10;
 const OBJECT_EMOJIS = ['🍎','⭐','🎈','🐟','🌸','🚗'];
+const TERMS = [1,2,3,4];
+let activeTerm = 1, activeWeek = 1;
+const PROJECT_KEY = 'kids-math-term-progress';
+const PROJECTS = {
+  foundation: 'Count how many shoes are in your house, then tell a family member the total number.',
+  g1: 'Skip count by 2s from 0 to 20 using your fingers or toys, and show someone at home.',
+  g2: 'Find 3 real groups of objects (like 4 groups of 3 spoons) and write the multiplication fact for each.',
+  g3: 'Pick one times table (like the 7 times table) and recite it from memory to a family member.',
+  g4: 'A packet has 24 lollies shared among 4 friends — work out how many each friend gets, and check with real objects.',
+  g5: 'Cut a piece of paper into quarters and thirds, and explain out loud what fraction each piece represents.',
+  g6: 'Write your own number sentence using at least two operations (like 3 + 4 × 2) and solve it step by step.'
+};
+
+function loadTermProgress(){
+  try{ return JSON.parse(localStorage.getItem(PROJECT_KEY) || '{}'); }catch(e){ return {}; }
+}
+function saveTermProgress(p){ try{ localStorage.setItem(PROJECT_KEY, JSON.stringify(p)); }catch(e){} }
+function isWeekDone(term, week){
+  const p = loadTermProgress();
+  return !!(p[currentGrade] && p[currentGrade]['t'+term] && p[currentGrade]['t'+term][week]);
+}
+function markWeekDone(term, week){
+  const p = loadTermProgress();
+  if(!p[currentGrade]) p[currentGrade] = {};
+  if(!p[currentGrade]['t'+term]) p[currentGrade]['t'+term] = {};
+  p[currentGrade]['t'+term][week] = true;
+  saveTermProgress(p);
+}
 
 const GRADES = [
   { id:'foundation', label:'Foundation', title:'Foundation — Counting to 20', desc:'Count the pictures and pick the right number, up to 20.',
@@ -452,6 +525,22 @@ function renderGradeRow(){
   document.getElementById('grade-desc').textContent = g.desc;
 }
 
+function updateLearnerBanner(){
+  const banner = document.getElementById('learner-banner');
+  const g = GRADES.find(x => x.id === currentGrade);
+  if(urlYearValid && learnerName){
+    banner.innerHTML = '🎓 Hi ' + learnerName + '! You are in <b>' + g.label + '</b> Math.' +
+      '<a href="kids-school.html">← Choose a different class</a>';
+    banner.classList.remove('hidden');
+    document.getElementById('grade-row').classList.add('hidden');
+    document.getElementById('grade-desc').classList.add('hidden');
+  } else {
+    banner.classList.add('hidden');
+    document.getElementById('grade-row').classList.remove('hidden');
+    document.getElementById('grade-desc').classList.remove('hidden');
+  }
+}
+
 function showStartCard(){
   const g = GRADES.find(x => x.id === currentGrade);
   document.getElementById('grade-desc').textContent = g.desc;
@@ -464,17 +553,74 @@ function showStartCard(){
   } else {
     greeting.classList.add('hidden');
   }
+  updateLearnerBanner();
   document.getElementById('start-block').classList.remove('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
   document.getElementById('lesson-block').classList.add('hidden');
   document.getElementById('quiz-block').classList.add('hidden');
 }
 
+function renderTermWeekScreen(){
+  const row = document.getElementById('term-row');
+  row.innerHTML = '';
+  TERMS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'term-btn' + (t === activeTerm ? ' active' : '');
+    btn.textContent = 'Term ' + t;
+    btn.addEventListener('click', () => { activeTerm = t; renderTermWeekScreen(); });
+    row.appendChild(btn);
+  });
+  let doneCount = 0;
+  for(let w = 1; w <= 11; w++){ if(isWeekDone(activeTerm, w)) doneCount++; }
+  document.getElementById('term-progress').textContent = doneCount + ' / 11 weeks complete';
+
+  const grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  for(let w = 1; w <= 11; w++){
+    const isSpecial = w === 11;
+    const done = isWeekDone(activeTerm, w);
+    const node = document.createElement('div');
+    node.className = 'week-node' + (isSpecial ? ' special' : '') + (done ? ' done' : '');
+    const label = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Lesson ' + w);
+    node.innerHTML = '<div class="wk-num">WEEK ' + w + '</div><div class="wk-label">' + label + '</div>' + (done ? '<div class="wk-check">✅</div>' : '');
+    node.addEventListener('click', () => selectWeek(activeTerm, w));
+    grid.appendChild(node);
+  }
+}
+
+function showTermWeekScreen(){
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.remove('hidden');
+  document.getElementById('lesson-block').classList.add('hidden');
+  document.getElementById('quiz-block').classList.add('hidden');
+  renderTermWeekScreen();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function selectWeek(term, week){
+  activeTerm = term; activeWeek = week;
+  TOTAL_QUESTIONS = (week === 11) ? 20 : 10;
+  showLessonCard();
+}
+
 function showLessonCard(){
   const g = GRADES.find(x => x.id === currentGrade);
+  const isSpecial = activeWeek === 11;
+  const weekLabel = 'Term ' + activeTerm + ' · ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Project & Test') : ('Week ' + activeWeek));
+  document.getElementById('lesson-week-label').textContent = weekLabel;
   document.getElementById('lesson-title').textContent = g.title;
   document.getElementById('lesson-body').textContent = g.lesson.body;
   document.getElementById('lesson-examples').innerHTML = g.lesson.examples.map(e => '<div>• ' + e + '</div>').join('');
+  const projectBox = document.getElementById('lesson-project');
+  if(isSpecial){
+    projectBox.innerHTML = '<b>🎯 Term Project Idea</b>' + PROJECTS[currentGrade];
+    projectBox.classList.remove('hidden');
+  } else {
+    projectBox.classList.add('hidden');
+  }
+  document.getElementById('to-quiz-btn').textContent = 'Take the ' + (isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Test') : 'Quiz') + ' (' + TOTAL_QUESTIONS + ' Questions) →';
   document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('term-week-screen').classList.add('hidden');
   document.getElementById('lesson-block').classList.remove('hidden');
   document.getElementById('quiz-block').classList.add('hidden');
   window.scrollTo({top:0, behavior:'smooth'});
@@ -536,11 +682,14 @@ function showSummary(){
   document.getElementById('quiz-panel').style.display = 'none';
   const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
   document.getElementById('final-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
+  const isSpecial = activeWeek === 11;
+  document.getElementById('summary-title').textContent = isSpecial ? (activeTerm === 4 ? '🏆 Final Test Complete!' : '🎉 Project & Test Complete!') : '🎉 Round Complete!';
   const msg = pct === 100 ? "Perfect score — you're a math star! 🌟" :
               pct >= 70 ? "Great job! Keep practicing to get even better." :
               "Good try! Play again to beat your score.";
   document.getElementById('final-msg').textContent = msg;
   document.getElementById('session-summary').classList.add('show');
+  markWeekDone(activeTerm, activeWeek);
 }
 
 function startRound(){
@@ -559,8 +708,10 @@ function startRound(){
 function showCertificate(){
   const g = GRADES.find(x => x.id === currentGrade);
   const name = learnerName || 'Explorer';
+  const isSpecial = activeWeek === 11;
+  const weekPart = isSpecial ? (activeTerm === 4 ? 'Final Test' : 'Term ' + activeTerm + ' Project & Test') : ('Term ' + activeTerm + ', Week ' + activeWeek);
   document.getElementById('cert-name').textContent = name;
-  document.getElementById('cert-body').textContent = 'has successfully completed the ' + g.title + ' math practice, aligned with the Australian Curriculum.';
+  document.getElementById('cert-body').textContent = 'has successfully completed ' + weekPart + ' of ' + g.title + ' math, aligned with the Australian Curriculum.';
   document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric', month:'long', year:'numeric'});
   document.getElementById('cert-score').textContent = score + ' / ' + TOTAL_QUESTIONS;
   document.getElementById('session-summary').classList.remove('show');
@@ -568,9 +719,11 @@ function showCertificate(){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-document.getElementById('start-btn').addEventListener('click', showLessonCard);
+document.getElementById('start-btn').addEventListener('click', showTermWeekScreen);
 document.getElementById('to-quiz-btn').addEventListener('click', startRound);
 document.getElementById('play-again-btn').addEventListener('click', startRound);
+document.getElementById('back-to-classcard-btn').addEventListener('click', showStartCard);
+document.getElementById('back-to-weeks-btn').addEventListener('click', showTermWeekScreen);
 document.getElementById('change-grade-btn').addEventListener('click', showStartCard);
 document.getElementById('cert-btn').addEventListener('click', showCertificate);
 document.getElementById('print-cert-btn').addEventListener('click', () => window.print());
