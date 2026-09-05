@@ -81,7 +81,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       currentUser,
       loading,
-      schoolId: DEMO_SCHOOL_ID,
+      // Falls back to the demo school only when nobody is signed in yet
+      // (e.g. brief render before ProtectedRoute redirects to /login).
+      // Every signed-in user's own schoolId drives what data they see.
+      schoolId: currentUser?.schoolId ?? DEMO_SCHOOL_ID,
 
       async login(email, password) {
         if (isFirebaseConfigured && auth) {
