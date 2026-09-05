@@ -125,6 +125,32 @@ async function main() {
 
   const { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote } = createHandlers(ctx);
 
+  // At boot, the Windows service can be started (by the SCM) before network
+  // adapters have finished initializing — a well-known race for anything
+  // that touches networking from a service. The first startFilter() attempt
+  // can fail for that reason alone even though nothing is actually wrong, so
+  // a single failed attempt must not be the final word: keep retrying in the
+  // background rather than leaving the PC stuck in "meant to be on, but
+  // isn't" until a parent notices and manually toggles the switch.
+  const STARTUP_RETRY_DELAY_MS = 5000;
+  const STARTUP_RETRY_MAX_ATTEMPTS = 24; // ~2 minutes total
+
+  function retryStartFilterInBackground(attempt = 1) {
+    setTimeout(async () => {
+      if (!store.get('filterEnabled')) return; // user (or a prior attempt) already resolved this
+      const result = await startFilter();
+      if (result.ok) {
+        console.log(`[startup] filter started on retry ${attempt}`);
+        return;
+      }
+      if (attempt >= STARTUP_RETRY_MAX_ATTEMPTS) {
+        console.error(`[startup] giving up starting filter after ${attempt} attempts: ${result.error}`);
+        return;
+      }
+      retryStartFilterInBackground(attempt + 1);
+    }, STARTUP_RETRY_DELAY_MS).unref();
+  }
+
   /**
    * Startup reconciliation resumes the service's own previously-saved
    * intent — it isn't a new request from anyone, so it calls startFilter()/
@@ -144,9 +170,10 @@ async function main() {
 
     if (shouldRun) {
       const result = await startFilter();
-      if (!result.ok && redirected) {
-        await systemDns.restore(store.get('previousDns')).catch(() => {});
-        console.error(`[startup] could not start filter: ${result.error}`);
+      if (!result.ok) {
+        if (redirected) await systemDns.restore(store.get('previousDns')).catch(() => {});
+        console.error(`[startup] could not start filter (attempt 1): ${result.error} — retrying in background`);
+        retryStartFilterInBackground();
       }
     } else if (redirected) {
       await systemDns.restore(store.get('previousDns')).catch(() => {});

@@ -95,8 +95,17 @@ async function handleLine(socket, line, onRequest) {
 /**
  * Connects as a client. `call(method, params)` returns a Promise of the
  * response body. `close()` ends the connection.
+ *
+ * `timeoutMs` only bounds the initial connect (the pipe either exists and
+ * accepts immediately, or it doesn't — a local IPC handshake has no reason
+ * to be slow). Waiting for a *reply* is a separate, much larger budget:
+ * some methods (filter.enable/disable in particular) run several sequential
+ * PowerShell invocations against real network adapters, each of which can
+ * easily take a second or more on real hardware, so reusing the connect
+ * timeout there caused genuine successes to be reported as failures to the
+ * GUI while the backend kept working anyway.
  */
-function connect({ timeoutMs = 3000 } = {}) {
+function connect({ timeoutMs = 3000, callTimeoutMs = 30000 } = {}) {
   return new Promise((resolve, reject) => {
     const socket = net.createConnection(transportPath());
     const pending = new Map();
@@ -128,7 +137,7 @@ function connect({ timeoutMs = 3000 } = {}) {
             const callTimer = setTimeout(() => {
               pending.delete(id);
               rej(new Error(`Timed out waiting for a reply to "${method}".`));
-            }, timeoutMs);
+            }, callTimeoutMs);
             pending.set(id, {
               resolve: (value) => {
                 clearTimeout(callTimer);
