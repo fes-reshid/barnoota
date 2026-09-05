@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Math Practice — Kids Corner</title>
-<meta name="description" content="Grade-by-grade math practice for kids, from Foundation to Grade 6: counting, addition, multiplication, fractions, and more.">
+<meta name="description" content="Australian Curriculum-aligned math practice for kids, Foundation to Year 6: counting, addition, multiplication, fractions, and more — the basis for NAPLAN numeracy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -58,6 +58,12 @@
     background:#fff; color:var(--ink-navy); transition:background .15s, color .15s;
   }
   .grade-btn.active{ background:var(--sky); border-color:var(--sky); color:#fff; }
+  .naplan-badge{
+    display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
+    border-radius:8px; background:var(--gold); color:#fff; margin-left:5px; vertical-align:middle;
+  }
+  .grade-btn.active .naplan-badge{ background:#fff; color:var(--sky); }
+  .curriculum-note{ text-align:center; font-size:13px; color:#8a7654; max-width:460px; margin:0 auto 18px; line-height:1.5; }
   .grade-desc{ text-align:center; font-size:14.5px; color:#8a7654; margin:0 0 20px; }
 
   .start-card{ text-align:center; background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:34px 26px; }
@@ -132,6 +138,8 @@
   <p>Pick your class, then answer 10 quick questions made just for that level.</p>
 </div>
 
+<p class="curriculum-note">Aligned with the Australian Curriculum (Foundation–Year 6), the basis for NAPLAN. NAPLAN itself only tests Years 3, 5, 7 &amp; 9 — those levels are marked below.</p>
+
 <div class="wrap">
   <div class="grade-row" id="grade-row"></div>
   <p class="grade-desc" id="grade-desc"></p>
@@ -182,13 +190,13 @@ const TOTAL_QUESTIONS = 10;
 const OBJECT_EMOJIS = ['🍎','⭐','🎈','🐟','🌸','🚗'];
 
 const GRADES = [
-  { id:'foundation', label:'Foundation', title:'Foundation — Counting', desc:'Count the pictures and pick the right number.' },
-  { id:'g1', label:'Grade 1', title:'Grade 1 — Add & Subtract to 20', desc:'Simple addition and subtraction up to 20.' },
-  { id:'g2', label:'Grade 2', title:'Grade 2 — Add & Subtract to 100', desc:'Addition and subtraction up to 100.' },
-  { id:'g3', label:'Grade 3', title:'Grade 3 — Multiplication & Division', desc:'Times tables 1–10 and simple division facts.' },
-  { id:'g4', label:'Grade 4', title:'Grade 4 — Bigger Multiplication', desc:'2-digit × 1-digit multiplication and division with a remainder-free split.' },
-  { id:'g5', label:'Grade 5', title:'Grade 5 — Fractions & Percent', desc:'Adding simple fractions and finding percentages of numbers.' },
-  { id:'g6', label:'Grade 6', title:'Grade 6 — Order of Operations', desc:'Order of operations and working with negative numbers.' }
+  { id:'foundation', label:'Foundation', title:'Foundation — Counting to 20', desc:'Count the pictures and pick the right number, up to 20.' },
+  { id:'g1', label:'Year 1', title:'Year 1 — Addition, Subtraction & Counting Patterns', desc:'Addition and subtraction to 20, plus counting by 2s, 5s and 10s.' },
+  { id:'g2', label:'Year 2', title:'Year 2 — Addition, Subtraction & Grouping', desc:'Addition and subtraction to 100, plus multiplication as equal groups.' },
+  { id:'g3', label:'Year 3', title:'Year 3 — Multiplication & Division', desc:'Times tables 1–10 and simple division facts.', naplan:true },
+  { id:'g4', label:'Year 4', title:'Year 4 — Bigger Multiplication & Division', desc:'2-digit × 1-digit multiplication and division with a remainder-free split.' },
+  { id:'g5', label:'Year 5', title:'Year 5 — Fractions & Percentages', desc:'Adding simple fractions and finding percentages of numbers.', naplan:true },
+  { id:'g6', label:'Year 6', title:'Year 6 — Order of Operations & Integers', desc:'Order of operations and working with negative numbers.' }
 ];
 
 let currentGrade = localStorage.getItem('kids-math-grade') || 'foundation';
@@ -237,9 +245,9 @@ function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sin
 function playWrong(){ beep(180, 0.2, 'sawtooth'); }
 function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
 
-/* ---------- question generators, one per grade ---------- */
+/* ---------- question generators, one per class (aligned to the Australian Curriculum) ---------- */
 function genFoundation(){
-  const n = randInt(1, 10);
+  const n = randInt(1, 20);
   const emoji = OBJECT_EMOJIS[randInt(0, OBJECT_EMOJIS.length - 1)];
   return {
     display: emoji.repeat(n),
@@ -248,14 +256,29 @@ function genFoundation(){
     options: uniqueOptionsAround(n, 3, 4, 1)
   };
 }
+function genSkipCount(){
+  const step = [2,5,10][randInt(0,2)];
+  const start = step * randInt(0,4);
+  const seq = [start, start+step, start+step*2, start+step*3];
+  const answer = start + step*4;
+  return { text: seq.join(', ') + ', ?  — what comes next?', answer, options: uniqueOptionsAround(answer, step, 4, 0) };
+}
 function genG1(){
+  if(Math.random() < 0.3) return genSkipCount();
   const op = Math.random() < 0.5 ? '+' : '−';
   let a, b, answer;
   if(op === '+'){ a = randInt(0,15); b = randInt(0, 20 - a); answer = a + b; }
   else { a = randInt(0,20); b = randInt(0,a); answer = a - b; }
   return { text: a + ' ' + op + ' ' + b + ' = ?', answer, options: uniqueOptionsAround(answer, 4, 4, 0) };
 }
+function genGroups(){
+  const groups = randInt(2,5);
+  const size = [2,5,10][randInt(0,2)];
+  const answer = groups * size;
+  return { text: groups + ' groups of ' + size + ' = ?', answer, options: uniqueOptionsAround(answer, 8, 4, 0) };
+}
 function genG2(){
+  if(Math.random() < 0.35) return genGroups();
   const op = Math.random() < 0.5 ? '+' : '−';
   let a, b, answer;
   if(op === '+'){ a = randInt(10,70); b = randInt(5, 100 - a); answer = a + b; }
@@ -321,7 +344,7 @@ function renderGradeRow(){
   GRADES.forEach(g => {
     const btn = document.createElement('button');
     btn.className = 'grade-btn' + (g.id === currentGrade ? ' active' : '');
-    btn.textContent = g.label;
+    btn.innerHTML = g.label + (g.naplan ? ' <span class="naplan-badge">NAPLAN</span>' : '');
     btn.addEventListener('click', () => {
       currentGrade = g.id;
       localStorage.setItem('kids-math-grade', currentGrade);
