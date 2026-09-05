@@ -30,6 +30,10 @@ const DEFAULTS = {
   // bedtime) — see schedule.js for exactly how days/startTime/endTime
   // combine, especially for a window that crosses midnight.
   schedule: { enabled: false, days: [0, 1, 2, 3, 4], startTime: '21:00', endTime: '07:00' },
+  // Product-key activation (see src/main/license.js). Separate on purpose
+  // from `parent` (the password/recovery-key system) — activation and
+  // account recovery are different concerns and shouldn't share a secret.
+  activated: false,
 };
 
 class Store {

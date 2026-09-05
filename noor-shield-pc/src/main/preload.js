@@ -13,6 +13,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('noor', {
   // Read-only
   getStatus: () => ipcRenderer.invoke('status:get'),
+  activateLicense: (key) => ipcRenderer.invoke('license:activate', { key }),
   listHadith: () => ipcRenderer.invoke('hadith:list'),
   listBlocklist: () => ipcRenderer.invoke('blocklist:list'),
   refreshBlocklistFeed: () => ipcRenderer.invoke('blocklist:refreshFeed'),

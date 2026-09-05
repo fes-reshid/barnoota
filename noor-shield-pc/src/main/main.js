@@ -225,6 +225,7 @@ function registerServiceProxies() {
     });
   }
 
+  ipcMain.handle('license:activate', (event, { key }) => serviceClient.call('license.activate', { key }));
   ipcMain.handle('parent:setup', (event, { password }) => serviceClient.call('parent.setup', { password }));
   ipcMain.handle('parent:unlock', (event, { password }) => serviceClient.call('parent.unlock', { password }));
   ipcMain.handle('parent:changePassword', (event, { currentPassword, newPassword }) =>

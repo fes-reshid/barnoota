@@ -9,6 +9,21 @@
 </head>
 <body>
 
+  <!-- Very first run, before anything else: activate with a product key -->
+  <div class="gate" id="activation-gate" hidden>
+    <div class="gate-card">
+      <h1>Enter your product key</h1>
+      <p>
+        Activate Noor Shield with the product key from your purchase. This only needs to be done
+        once on this PC.
+      </p>
+      <label for="activation-key">Product key</label>
+      <input type="text" id="activation-key" placeholder="NOOR-XXXXX-XXXXX-XXXXX" autocomplete="off">
+      <p class="error" id="activation-error" hidden></p>
+      <button class="btn primary" id="activation-submit">Activate</button>
+    </div>
+  </div>
+
   <!-- First run: the parent sets the password before anything else -->
   <div class="gate" id="setup-gate" hidden>
     <div class="gate-card">

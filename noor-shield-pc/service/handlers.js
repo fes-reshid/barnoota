@@ -5,6 +5,7 @@ const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns')
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
+const { isValidKey } = require(path.join(__dirname, '..', 'src', 'main', 'license'));
 const { isValidSchedule, isWithinSchedule, minutesUntilScheduleEnds } = require(path.join(
   __dirname,
   '..',
@@ -162,6 +163,9 @@ function createHandlers(ctx) {
   }
 
   async function startFilter() {
+    if (!store.get('activated')) {
+      return { ok: false, error: 'Enter your product key to activate Noor Shield before turning protection on.' };
+    }
     if (process.platform !== 'win32') {
       return { ok: false, error: 'The filter currently supports Windows only.' };
     }
@@ -245,6 +249,7 @@ function createHandlers(ctx) {
         feedCategories: feedCategoriesSummary(),
         reminderPageAvailable: Boolean(ctx.reminderPageAvailable),
         schedule: scheduleStatus(),
+        activated: Boolean(store.get('activated')),
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
       };
@@ -322,7 +327,21 @@ function createHandlers(ctx) {
       return { ok: true };
     }),
 
-    'parent.status': async () => ({ ok: true, ...parentAuth.status() }),
+    // Not parent-gated — there is no parent password yet the first time this
+    // runs (activation happens before parent setup). Deliberately separate
+    // from parentAuth: a product key activates the app; it never resets or
+    // substitutes for the parent password, which has its own one-time
+    // recovery key for that (see parentAuth.js).
+    'license.activate': async ({ key }) => {
+      if (store.get('activated')) return { ok: true, alreadyActivated: true };
+      if (!isValidKey(key)) {
+        return { ok: false, error: 'That product key isn\'t recognized. Double-check it and try again.' };
+      }
+      store.set('activated', true);
+      return { ok: true };
+    },
+
+    'parent.status': async () => ({ ok: true, activated: Boolean(store.get('activated')), ...parentAuth.status() }),
     'parent.setup': async ({ password }) => parentAuth.setup(password),
     'parent.unlock': async ({ password }) => parentAuth.unlock(password),
     'parent.lock': async () => {

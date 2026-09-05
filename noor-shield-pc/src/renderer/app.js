@@ -102,6 +102,35 @@ $('nav').addEventListener('click', (event) => {
  * First-run setup
  * ------------------------------------------------------------------ */
 
+$('activation-submit').addEventListener('click', async () => {
+  const key = $('activation-key').value;
+  hideError($('activation-error'));
+
+  if (!key.trim()) {
+    showError($('activation-error'), 'Enter your product key.');
+    return;
+  }
+
+  const result = await api.activateLicense(key);
+  if (!result.ok) {
+    showError($('activation-error'), result.error);
+    return;
+  }
+
+  $('activation-gate').hidden = true;
+  const status = await api.parentStatus();
+  if (!status.configured) {
+    $('setup-gate').hidden = false;
+    $('setup-password').focus();
+  } else {
+    $('shell').hidden = false;
+  }
+});
+
+$('activation-key').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') $('activation-submit').click();
+});
+
 $('setup-submit').addEventListener('click', async () => {
   const password = $('setup-password').value;
   const confirm = $('setup-confirm').value;
@@ -774,8 +803,12 @@ async function boot() {
 
   if (status.serviceUnreachable) {
     // Let the dashboard's own warning banner explain it rather than asking
-    // for a password the service isn't there to receive.
+    // for a password (or a product key) the service isn't there to receive.
     $('shell').hidden = false;
+  } else if (!status.activated) {
+    // Nothing works — not even parent setup — until a product key is entered.
+    $('activation-gate').hidden = false;
+    $('activation-key').focus();
   } else if (!status.configured) {
     // Nothing works until a parent password exists.
     $('setup-gate').hidden = false;
