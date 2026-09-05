@@ -64,11 +64,18 @@
     text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
   }
   .year-card:hover{ transform:translateY(-4px); border-color:var(--gold); }
+  .year-card.locked{ cursor:not-allowed; background:#f2ede0; border-color:#e2d8bd; }
+  .year-card.locked:hover{ transform:none; border-color:#e2d8bd; }
+  .year-card.locked .label{ color:#a89a78; }
   .year-card .icon{ font-size:32px; margin-bottom:8px; }
   .year-card .label{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
   .naplan-badge{
     display:inline-block; font-size:9px; letter-spacing:.03em; font-weight:700; padding:2px 6px;
     border-radius:8px; background:var(--gold); color:#fff; margin-top:6px;
+  }
+  .lock-notice{
+    max-width:560px; margin:0 auto 16px; text-align:center; font-size:14.5px; color:#8a5a00;
+    background:#fdeecb; border:1.5px dashed var(--gold); border-radius:14px; padding:12px 18px;
   }
 
   /* ---- name gate ---- */
@@ -148,7 +155,8 @@
 
 <div class="wrap">
 
-  <div id="year-screen">
+  <div id="year-screen" class="hidden">
+    <p class="lock-notice hidden" id="lock-notice"></p>
     <div class="year-grid" id="year-grid"></div>
   </div>
 
@@ -223,44 +231,61 @@ const YEARS = [
 const NAME_KEY = 'kids-school-name';
 const SUBJECT_PAGES = { english:'kids-english.html', math:'kids-math.html', arabic:'kids-arabic.html', games:'kids-games.html', seerah:'kids-seerah-game.html' };
 const YEAR_GATED_SUBJECTS = ['english', 'math', 'arabic'];
+const PROGRESS_KEYS = { math:'kids-math-term-progress', english:'kids-english-term-progress', arabic:'kids-arabic-term-progress' };
 
 let selectedYear = null;
 
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+function isGradeFullyDoneInSubject(subjectKey, gradeId){
+  try{
+    const p = JSON.parse(localStorage.getItem(PROGRESS_KEYS[subjectKey]) || '{}');
+    return !!(p[gradeId] && p[gradeId]['t4'] && p[gradeId]['t4'][11]);
+  }catch(e){ return false; }
+}
+function isYearFullyDone(gradeId){
+  return Object.keys(PROGRESS_KEYS).every(subjectKey => isGradeFullyDoneInSubject(subjectKey, gradeId));
+}
+function isYearUnlocked(gradeId){
+  const order = YEARS.map(y => y.id);
+  const idx = order.indexOf(gradeId);
+  if(idx <= 0) return true;
+  return isYearFullyDone(order[idx - 1]);
 }
 
 function renderYearGrid(){
   const grid = document.getElementById('year-grid');
   grid.innerHTML = '';
   YEARS.forEach(y => {
+    const unlocked = isYearUnlocked(y.id);
     const card = document.createElement('div');
-    card.className = 'year-card';
+    card.className = 'year-card' + (unlocked ? '' : ' locked');
     card.innerHTML = `
-      <div class="icon">${y.icon}</div>
+      <div class="icon">${unlocked ? y.icon : '🔒'}</div>
       <div class="label">${y.label}</div>
       ${y.naplan ? '<div class="naplan-badge">NAPLAN</div>' : ''}
     `;
-    card.addEventListener('click', () => chooseYear(y.id));
+    card.addEventListener('click', () => {
+      if(!unlocked){
+        const order = YEARS.map(x => x.id);
+        const prevLabel = YEARS.find(x => x.id === order[order.indexOf(y.id) - 1]).label;
+        const notice = document.getElementById('lock-notice');
+        notice.textContent = '🔒 ' + y.label + ' isn\'t unlocked yet — finish all of ' + prevLabel + ' (Math, English & Arabic) first!';
+        notice.classList.remove('hidden');
+        return;
+      }
+      document.getElementById('lock-notice').classList.add('hidden');
+      chooseYear(y.id);
+    });
     grid.appendChild(card);
   });
 }
 
 function chooseYear(yearId){
   selectedYear = yearId;
-  const savedName = localStorage.getItem(NAME_KEY);
-  if(savedName){
-    showSubjectScreen(savedName);
-  } else {
-    showScreen('name-screen');
-    setTimeout(() => document.getElementById('name-input').focus(), 150);
-  }
+  showSubjectScreen(localStorage.getItem(NAME_KEY));
 }
 
 function showScreen(id){
-  ['year-screen','name-screen','subject-screen'].forEach(s => {
+  ['name-screen','year-screen','subject-screen'].forEach(s => {
     document.getElementById(s).classList.toggle('hidden', s !== id);
   });
   window.scrollTo({top:0, behavior:'smooth'});
@@ -270,7 +295,8 @@ document.getElementById('name-start-btn').addEventListener('click', () => {
   const val = document.getElementById('name-input').value.trim();
   const name = val || 'Explorer';
   localStorage.setItem(NAME_KEY, name);
-  showSubjectScreen(name);
+  renderYearGrid();
+  showScreen('year-screen');
 });
 document.getElementById('name-input').addEventListener('keydown', (e) => {
   if(e.key === 'Enter') document.getElementById('name-start-btn').click();
@@ -293,9 +319,19 @@ document.querySelectorAll('.subject-card').forEach(card => {
   });
 });
 
-document.getElementById('change-year-btn').addEventListener('click', () => showScreen('year-screen'));
+document.getElementById('change-year-btn').addEventListener('click', () => {
+  renderYearGrid();
+  showScreen('year-screen');
+});
 
-renderYearGrid();
+const existingName = localStorage.getItem(NAME_KEY);
+if(existingName){
+  renderYearGrid();
+  showScreen('year-screen');
+} else {
+  showScreen('name-screen');
+  setTimeout(() => document.getElementById('name-input').focus(), 150);
+}
 </script>
 <script src="/cursor.js" defer></script>
 </body>
