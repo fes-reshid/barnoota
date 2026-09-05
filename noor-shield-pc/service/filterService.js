@@ -68,11 +68,15 @@ function readVersion() {
  * behavior that existed before this feature, never a reason to stop the
  * service from protecting the PC at all.
  */
-async function setupReminderPage() {
+async function setupReminderPage(store) {
   if (process.platform !== 'win32') return { server: null, available: false };
   try {
     const caMeta = await certAuthority.ensureCaInstalled(dataDir());
-    const server = new ReminderServer({ dataDir: dataDir(), caThumbprint: caMeta.thumbprint });
+    const server = new ReminderServer({
+      dataDir: dataDir(),
+      caThumbprint: caMeta.thumbprint,
+      getSchedule: () => store.get('schedule'),
+    });
     const { httpOk, httpsOk } = await server.start();
     const available = Boolean(httpOk || httpsOk);
     if (!available) {
@@ -92,7 +96,7 @@ async function main() {
   const parentAuth = new ParentAuth(store);
   const seedDomains = loadSeedDomains();
   const feedDomains = feedBlocklist.loadAllCachedFeeds(dataDir());
-  const { server: reminderServer, available: reminderPageAvailable } = await setupReminderPage();
+  const { server: reminderServer, available: reminderPageAvailable } = await setupReminderPage(store);
 
   let proxy = null;
   const ctx = {
