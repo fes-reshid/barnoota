@@ -22,6 +22,26 @@ const crypto = require('crypto');
 
 const KEY_HASHES = new Set(require('./licenseKeyHashes.json'));
 
+const TRIAL_DAYS = 7;
+const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
+
+/**
+ * Days left in the one-time free trial, counted from the first time the
+ * protection service ever ran on this PC (store.firstRunAt) — not from
+ * install, so reinstalling the app alone can't be used to keep resetting
+ * it. 0 once the trial has run out. Always 0 if firstRunAt isn't set yet
+ * (the caller is expected to set it before relying on this).
+ */
+function trialDaysRemaining(firstRunAt, now = Date.now()) {
+  if (!firstRunAt) return 0;
+  const remainingMs = TRIAL_MS - (now - firstRunAt);
+  return Math.max(0, Math.ceil(remainingMs / (24 * 60 * 60 * 1000)));
+}
+
+function isTrialActive(firstRunAt, now = Date.now()) {
+  return Boolean(firstRunAt) && now - firstRunAt < TRIAL_MS;
+}
+
 /** "NOOR-XXXXX-XXXXX-XXXXX" -> "NOORXXXXXXXXXXXXXXX", tolerant of case/whitespace/missing dashes. */
 function normalizeKey(rawInput) {
   return String(rawInput || '')
@@ -39,4 +59,4 @@ function isValidKey(rawInput) {
   return KEY_HASHES.has(hash);
 }
 
-module.exports = { normalizeKey, isValidKey };
+module.exports = { normalizeKey, isValidKey, trialDaysRemaining, isTrialActive, TRIAL_DAYS };

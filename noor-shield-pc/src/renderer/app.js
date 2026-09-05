@@ -34,6 +34,11 @@ window.addEventListener('unhandledrejection', (event) => showFatalError(event.re
 const $ = (id) => document.getElementById(id);
 const api = window.noor;
 
+/** True once the free trial has run out and no product key has been entered. */
+function needsActivation(status) {
+  return !status.activated && !(status.trialDaysRemaining > 0);
+}
+
 let pendingAction = null; // retried after a successful unlock
 
 /* ------------------------------------------------------------------ *
@@ -129,6 +134,32 @@ $('activation-submit').addEventListener('click', async () => {
 
 $('activation-key').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') $('activation-submit').click();
+});
+
+// Same action, reachable anytime from the About tab — not just when the
+// trial has run out — so a parent who already has a key isn't stuck
+// waiting for the trial to end, and re-entering the gate flow isn't the
+// only way in if it's ever needed again.
+$('about-activation-submit').addEventListener('click', async () => {
+  const key = $('about-activation-key').value;
+  hideError($('about-activation-error'));
+
+  if (!key.trim()) {
+    showError($('about-activation-error'), 'Enter your product key.');
+    return;
+  }
+
+  const result = await api.activateLicense(key);
+  if (!result.ok) {
+    showError($('about-activation-error'), result.error);
+    return;
+  }
+  $('about-activation-key').value = '';
+  refreshStatus();
+});
+
+$('about-activation-key').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') $('about-activation-submit').click();
 });
 
 $('setup-submit').addEventListener('click', async () => {
@@ -270,7 +301,7 @@ async function refreshStatus() {
   // happened before activation was known, catch up here on the next poll —
   // otherwise a parent is stuck on a dashboard that can never turn
   // protection on, with no way back to the product-key screen.
-  if (!status.activated) {
+  if (needsActivation(status)) {
     const gate = $('activation-gate');
     if (gate.hidden) {
       gate.hidden = false;
@@ -313,6 +344,31 @@ async function refreshStatus() {
   $('about-version').textContent = status.serviceVersion || '—';
 
   $('admin-warning').hidden = status.elevated || status.platform !== 'win32';
+
+  const trialBanner = $('trial-banner');
+  if (!status.activated && status.trialDaysRemaining > 0) {
+    trialBanner.hidden = false;
+    $('trial-banner-detail').textContent =
+      `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left. ` +
+      'Enter your product key anytime from the About tab.';
+  } else {
+    trialBanner.hidden = true;
+  }
+
+  const licenseStatus = $('license-status');
+  const licenseForm = $('license-form');
+  if (licenseStatus) {
+    if (status.activated) {
+      licenseStatus.textContent = 'Activated.';
+      licenseForm.hidden = true;
+    } else {
+      licenseStatus.textContent =
+        status.trialDaysRemaining > 0
+          ? `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left.`
+          : 'Free trial has ended.';
+      licenseForm.hidden = false;
+    }
+  }
 
   const scheduleWarning = $('schedule-warning');
   if (status.schedule && status.schedule.active) {
@@ -828,8 +884,9 @@ async function boot() {
     // Let the dashboard's own warning banner explain it rather than asking
     // for a password (or a product key) the service isn't there to receive.
     $('shell').hidden = false;
-  } else if (!status.activated) {
-    // Nothing works — not even parent setup — until a product key is entered.
+  } else if (needsActivation(status)) {
+    // The 7-day free trial (started the first time the service ever ran)
+    // has run out without a product key being entered.
     $('activation-gate').hidden = false;
     $('activation-key').focus();
   } else if (!status.configured) {

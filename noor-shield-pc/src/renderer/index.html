@@ -9,13 +9,13 @@
 </head>
 <body>
 
-  <!-- Very first run, before anything else: activate with a product key -->
+  <!-- Shown once the 7-day free trial has ended without a product key -->
   <div class="gate" id="activation-gate" hidden>
     <div class="gate-card">
-      <h1>Enter your product key</h1>
+      <h1>Your free trial has ended</h1>
       <p>
-        Activate Noor Shield with the product key from your purchase. This only needs to be done
-        once on this PC.
+        Enter the product key from your purchase to keep protection running on this PC. This only
+        needs to be done once.
       </p>
       <label for="activation-key">Product key</label>
       <input type="text" id="activation-key" placeholder="NOOR-XXXXX-XXXXX-XXXXX" autocomplete="off">
@@ -120,6 +120,10 @@
         <div class="panel warnpanel" id="service-warning" hidden>
           <h3 id="service-warning-title">Protection service not detected</h3>
           <p id="service-warning-detail">Checking whether the always-on protection service is installed…</p>
+        </div>
+
+        <div class="panel notepanel" id="trial-banner" hidden>
+          <p id="trial-banner-detail"></p>
         </div>
 
         <div class="statusrow">
@@ -472,6 +476,17 @@
             uploaded anywhere.
           </p>
           <p>Built by <b>Fes</b>.</p>
+        </div>
+
+        <div class="panel">
+          <h3>License</h3>
+          <p id="license-status">Checking…</p>
+          <div id="license-form">
+            <label for="about-activation-key">Product key</label>
+            <input type="text" id="about-activation-key" placeholder="NOOR-XXXXX-XXXXX-XXXXX" autocomplete="off">
+            <p class="error" id="about-activation-error" hidden></p>
+            <button class="btn primary" id="about-activation-submit">Activate</button>
+          </div>
         </div>
       </section>
 

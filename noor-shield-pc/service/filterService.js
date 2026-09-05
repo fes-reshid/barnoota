@@ -93,6 +93,7 @@ async function setupReminderPage(store) {
 
 async function main() {
   const store = new Store(dataDir());
+  if (!store.get('firstRunAt')) store.set('firstRunAt', Date.now());
   const parentAuth = new ParentAuth(store);
   const seedDomains = loadSeedDomains();
   const feedDomains = feedBlocklist.loadAllCachedFeeds(dataDir());
