@@ -83,6 +83,7 @@
         <button class="navitem" data-view="journal">Tawbah journal</button>
         <button class="navitem" data-view="activity">Activity log</button>
         <button class="navitem" data-view="settings">Parent settings</button>
+        <button class="navitem" data-view="about">About</button>
       </nav>
 
       <div class="parent-state" id="parent-state">
@@ -126,6 +127,11 @@
             Changing this PC's DNS settings needs administrator rights. Close Noor Shield, right-click
             it, and choose <b>Run as administrator</b> — otherwise the filter can't be switched on.
           </p>
+        </div>
+
+        <div class="panel warnpanel" id="schedule-warning" hidden>
+          <h3>Internet is currently off (schedule)</h3>
+          <p id="schedule-warning-detail"></p>
         </div>
 
         <div class="panel notepanel">
@@ -377,6 +383,41 @@
             <p class="hint" id="pw-message"></p>
           </div>
 
+          <div class="panel">
+            <h3>Internet schedule (bedtime / screen time)</h3>
+            <p class="hint">
+              During this window, <b>all</b> internet access on this PC is blocked — not just the
+              usual filtered sites — and shows the same Hadith reminder page.
+            </p>
+            <label class="checkline">
+              <input type="checkbox" id="schedule-enabled">
+              <span>Turn on the schedule</span>
+            </label>
+            <div class="dayrow" id="schedule-days">
+              <label><input type="checkbox" data-day="0"><span>Sun</span></label>
+              <label><input type="checkbox" data-day="1"><span>Mon</span></label>
+              <label><input type="checkbox" data-day="2"><span>Tue</span></label>
+              <label><input type="checkbox" data-day="3"><span>Wed</span></label>
+              <label><input type="checkbox" data-day="4"><span>Thu</span></label>
+              <label><input type="checkbox" data-day="5"><span>Fri</span></label>
+              <label><input type="checkbox" data-day="6"><span>Sat</span></label>
+            </div>
+            <p class="hint">Days above are the evening the window <i>starts</i> — a window that
+              crosses midnight (like 9pm–7am) continues into the next morning automatically.</p>
+            <div class="inputrow">
+              <div class="flex1">
+                <label for="schedule-start">Blocks internet starting at</label>
+                <input type="time" id="schedule-start" value="21:00">
+              </div>
+              <div class="flex1">
+                <label for="schedule-end">Until</label>
+                <input type="time" id="schedule-end" value="07:00">
+              </div>
+            </div>
+            <button class="btn primary" id="schedule-save">Save schedule</button>
+            <p class="hint" id="schedule-message"></p>
+          </div>
+
           <div class="panel dangerpanel">
             <h3>Remove protection from this PC</h3>
             <p>
@@ -390,6 +431,24 @@
             <button class="btn danger" id="remove-protection">Remove protection completely</button>
             <p class="hint" id="remove-message"></p>
           </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="view" data-view="about">
+        <header class="viewhead">
+          <h1>About Noor Shield</h1>
+          <p class="sub">Version <span id="about-version">—</span></p>
+        </header>
+
+        <div class="panel notepanel">
+          <p>
+            Noor Shield is a family content filter that pairs website blocking with reminders on
+            lowering the gaze, tawbah, and istighfār — a practical barrier alongside a spiritual
+            one. It runs entirely on this PC: nothing about what it blocks or what a child does is
+            uploaded anywhere.
+          </p>
+          <p>Built by <b>Fes</b>.</p>
         </div>
       </section>
 

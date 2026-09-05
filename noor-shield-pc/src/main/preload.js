@@ -17,6 +17,7 @@ contextBridge.exposeInMainWorld('noor', {
   listBlocklist: () => ipcRenderer.invoke('blocklist:list'),
   refreshBlocklistFeed: () => ipcRenderer.invoke('blocklist:refreshFeed'),
   setBlocklistCategory: (category, enabled) => ipcRenderer.invoke('blocklist:setCategory', { category, enabled }),
+  setSchedule: (schedule) => ipcRenderer.invoke('schedule:set', schedule),
   listJournal: () => ipcRenderer.invoke('journal:list'),
   addJournalEntry: (note, istighfarCount) =>
     ipcRenderer.invoke('journal:add', { note, istighfarCount }),

@@ -5,6 +5,13 @@ const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns')
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
+const { isValidSchedule, isWithinSchedule, minutesUntilScheduleEnds } = require(path.join(
+  __dirname,
+  '..',
+  'src',
+  'main',
+  'schedule'
+));
 
 // Bounds the log so a machine left running for months doesn't grow it
 // without limit. Oldest entries drop off first.
@@ -16,11 +23,12 @@ const MAX_ACTIVITY_ENTRIES = 2000;
  * has one home and is covered by the same tests as everything else in this
  * file.
  */
-function appendActivity(store, domain) {
+function appendActivity(store, domain, reason) {
   const log = store.get('activityLog') || [];
   log.unshift({
     id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
     domain,
+    reason: reason || 'blocklist', // 'blocklist' or 'schedule'
     timestampMs: Date.now(),
   });
   if (log.length > MAX_ACTIVITY_ENTRIES) log.length = MAX_ACTIVITY_ENTRIES;
@@ -103,6 +111,15 @@ function createHandlers(ctx) {
       adult: { ...groupSummary('adult'), enabled: true, toggleable: false },
       security: { ...groupSummary('security'), enabled: enabled.security, toggleable: true },
       ads: { ...groupSummary('ads'), enabled: enabled.ads, toggleable: true },
+    };
+  }
+
+  function scheduleStatus() {
+    const schedule = store.get('schedule');
+    return {
+      ...schedule,
+      active: isWithinSchedule(schedule),
+      minutesRemaining: minutesUntilScheduleEnds(schedule),
     };
   }
 
@@ -227,6 +244,7 @@ function createHandlers(ctx) {
         feedCount: mergedFeedDomains.length,
         feedCategories: feedCategoriesSummary(),
         reminderPageAvailable: Boolean(ctx.reminderPageAvailable),
+        schedule: scheduleStatus(),
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
       };
@@ -265,6 +283,23 @@ function createHandlers(ctx) {
       store.set('filterCategories', { ...categoriesEnabled(), [category]: Boolean(enabled) });
       recomputeMergedFeed();
       refreshBlocklist();
+      return { ok: true };
+    }),
+
+    // A recurring full-internet-off window (bedtime/screen-time). Enforced
+    // live by DnsProxy on every query (see isScheduleActive in
+    // filterService.js) — nothing here needs to start/stop the DNS proxy or
+    // touch Windows' DNS settings, since the schedule only changes what a
+    // query already flowing through the proxy gets answered with.
+    'schedule.set': parentOnly(({ enabled, days, startTime, endTime }) => {
+      const candidate = { enabled: Boolean(enabled), days, startTime, endTime };
+      if (candidate.enabled && !isValidSchedule(candidate)) {
+        return {
+          ok: false,
+          error: 'Pick at least one day and two different times before turning the schedule on.',
+        };
+      }
+      store.set('schedule', candidate);
       return { ok: true };
     }),
 

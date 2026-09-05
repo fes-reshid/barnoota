@@ -27,7 +27,13 @@ const REMINDER_PAGE_ADDRESS = '127.0.0.1';
  * Binding port 53 requires administrator rights; start() rejects with a clear
  * EACCES/EADDRINUSE error otherwise so the UI can explain what to do.
  *
- * Emits: 'blocked' ({ domain }), 'error' (Error), 'listening'
+ * A recurring schedule (schedule.js) can also block *everything* for its
+ * duration — a bedtime/screen-time window — independent of the domain
+ * blocklist. `isScheduleActive` is called fresh on every query rather than
+ * cached, since a schedule window starts and ends at exact clock times with
+ * no event to react to.
+ *
+ * Emits: 'blocked' ({ domain, reason }), 'error' (Error), 'listening'
  */
 class DnsProxy extends EventEmitter {
   constructor({
@@ -36,6 +42,7 @@ class DnsProxy extends EventEmitter {
     upstreamPort = DNS_PORT,
     listenPort = DNS_PORT,
     reminderPageAvailable = false,
+    isScheduleActive = () => false,
   }) {
     super();
     this.blocklist = blocklist;
@@ -43,6 +50,7 @@ class DnsProxy extends EventEmitter {
     this.upstreamPort = upstreamPort;
     this.listenPort = listenPort;
     this.reminderPageAvailable = reminderPageAvailable;
+    this.isScheduleActive = isScheduleActive;
     this.server = null;
     this.upstreamSocket = null;
     this.pending = new Map(); // our outbound id -> { clientId, rinfo, timer }
@@ -122,9 +130,12 @@ class DnsProxy extends EventEmitter {
     this.stats.queries += 1;
     const parsed = parseQuestion(msg);
 
-    if (parsed && this.blocklist.isBlocked(parsed.question)) {
+    const scheduleActive = this.isScheduleActive();
+    const blocked = parsed && (scheduleActive || this.blocklist.isBlocked(parsed.question));
+
+    if (blocked) {
       this.stats.blocked += 1;
-      this.emit('blocked', { domain: parsed.question });
+      this.emit('blocked', { domain: parsed.question, reason: scheduleActive ? 'schedule' : 'blocklist' });
       const QTYPE_A = 1;
       const reply =
         this.reminderPageAvailable && parsed.qType === QTYPE_A

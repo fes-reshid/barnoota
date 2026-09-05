@@ -8,6 +8,7 @@ const { ParentAuth } = require(path.join(__dirname, '..', 'src', 'main', 'parent
 const { DnsProxy } = require(path.join(__dirname, '..', 'src', 'main', 'dnsProxy'));
 const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns'));
 const { loadSeedDomains } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
+const { isWithinSchedule } = require(path.join(__dirname, '..', 'src', 'main', 'schedule'));
 const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
 const { ReminderServer } = require('./reminderServer');
@@ -103,11 +104,15 @@ async function main() {
     version: readVersion(),
     getProxy: () => proxy,
     createProxy: (blocklist) => {
-      proxy = new DnsProxy({ blocklist, reminderPageAvailable });
+      proxy = new DnsProxy({
+        blocklist,
+        reminderPageAvailable,
+        isScheduleActive: () => isWithinSchedule(store.get('schedule')),
+      });
       proxy.on('error', (err) => console.error(`[dnsProxy] ${err.message}`));
       // The activity log the parent reviews (and can email themselves a
       // report of) — blocked attempts only, not every site visited.
-      proxy.on('blocked', ({ domain }) => appendActivity(store, domain));
+      proxy.on('blocked', ({ domain, reason }) => appendActivity(store, domain, reason));
       return proxy;
     },
     reminderPageAvailable,

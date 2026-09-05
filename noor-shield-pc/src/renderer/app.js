@@ -257,8 +257,20 @@ async function refreshStatus() {
   $('stat-blocked').textContent = status.stats.blocked;
   $('stat-queries').textContent = status.stats.queries;
   $('stat-domains').textContent = status.seedCount + status.customCount + (status.feedCount || 0);
+  $('about-version').textContent = status.serviceVersion || '—';
 
   $('admin-warning').hidden = status.elevated || status.platform !== 'win32';
+
+  const scheduleWarning = $('schedule-warning');
+  if (status.schedule && status.schedule.active) {
+    scheduleWarning.hidden = false;
+    const hours = Math.floor((status.schedule.minutesRemaining || 0) / 60);
+    const mins = (status.schedule.minutesRemaining || 0) % 60;
+    $('schedule-warning-detail').textContent =
+      `All internet on this PC is blocked by the schedule for about ${hours > 0 ? `${hours}h ` : ''}${mins}m more.`;
+  } else {
+    scheduleWarning.hidden = true;
+  }
 
   // Sidebar lock indicator
   const unlocked = status.parent.configured ? status.parent.unlocked : true;
@@ -538,7 +550,7 @@ async function renderActivity() {
         when.textContent = new Date(entry.timestampMs).toLocaleString();
         const domain = document.createElement('div');
         domain.className = 'count';
-        domain.textContent = entry.domain;
+        domain.textContent = entry.reason === 'schedule' ? `${entry.domain} (schedule)` : entry.domain;
         row.append(when, domain);
         list.appendChild(row);
       }
@@ -641,7 +653,20 @@ async function renderSettings() {
   if (status.serviceUnreachable) {
     $('settings-locked').querySelector('p').textContent =
       'The protection service is not reachable. Reopen Noor Shield as Administrator.';
+    return;
   }
+  if (!unlocked) return;
+
+  const full = await api.getStatus();
+  const schedule = full.schedule;
+  if (!schedule) return;
+  $('schedule-enabled').checked = Boolean(schedule.enabled);
+  $('schedule-start').value = schedule.startTime || '21:00';
+  $('schedule-end').value = schedule.endTime || '07:00';
+  const days = new Set(schedule.days || []);
+  document.querySelectorAll('#schedule-days input[data-day]').forEach((box) => {
+    box.checked = days.has(Number(box.dataset.day));
+  });
 }
 
 $('settings-unlock').addEventListener('click', () => {
@@ -658,6 +683,28 @@ $('reminder-save').addEventListener('click', async () => {
 
   message.textContent = result.ok ? 'Saved.' : result.error;
   message.className = result.ok ? 'success' : 'error';
+});
+
+$('schedule-save').addEventListener('click', async () => {
+  const message = $('schedule-message');
+  const days = Array.from(document.querySelectorAll('#schedule-days input[data-day]:checked')).map((box) =>
+    Number(box.dataset.day)
+  );
+  const payload = {
+    enabled: $('schedule-enabled').checked,
+    days,
+    startTime: $('schedule-start').value,
+    endTime: $('schedule-end').value,
+  };
+  const result = await callGated(
+    () => api.setSchedule(payload),
+    'Enter the parent password to change the internet schedule.'
+  );
+  if (!result) return;
+
+  message.textContent = result.ok ? 'Saved.' : result.error;
+  message.className = result.ok ? 'success' : 'error';
+  refreshStatus();
 });
 
 $('pw-save').addEventListener('click', async () => {
