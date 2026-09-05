@@ -36,6 +36,25 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    // com.sun.mail:android-mail and android-activation (the Jakarta Mail
+    // port used by EmailReportSender — see its own comment for why
+    // javax.mail/jakarta.mail don't run on Android) both bundle the same
+    // META-INF license/notice files, which the packaging step otherwise
+    // rejects as duplicates. None of these affect app behavior; excluding
+    // them just picks one copy instead of failing the merge.
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/NOTICE.md",
+                "META-INF/LICENSE.md",
+                "META-INF/NOTICE.txt",
+                "META-INF/LICENSE.txt",
+                "META-INF/DEPENDENCIES",
+                "META-INF/INDEX.LIST",
+            )
+        }
+    }
 }
 
 dependencies {
