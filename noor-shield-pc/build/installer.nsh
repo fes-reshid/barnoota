@@ -14,26 +14,6 @@
   RequestExecutionLevel admin
 !macroend
 
-; Installing the local certificate authority (certAuthority.js) and
-; pointing Windows' DNS at the protection service both take effect
-; immediately — a restart isn't strictly required for Noor Shield itself to
-; work. It's still the safer recommendation for less technical parents:
-; some already-open apps and background processes (browsers especially)
-; cache DNS results or a system's trusted-certificate list in memory and
-; won't see either change until they're restarted anyway, and a full
-; reboot is the one step that's guaranteed to pick up both cleanly
-; everywhere at once.
-!macro customInstall
-  MessageBox MB_YESNO|MB_ICONQUESTION "Noor Shield is installed.$\r$\n$\r$\nRestart this computer now to make sure everything already open picks up the new protection? Choose No to restart later yourself." IDYES noor_restart_now IDNO noor_restart_later
-  noor_restart_now:
-    MessageBox MB_OK|MB_ICONINFORMATION "This computer will restart in 10 seconds. Save anything open now if you need to."
-    Exec 'shutdown.exe /r /t 10 /c "Restarting to finish setting up Noor Shield"'
-    Goto noor_restart_done
-  noor_restart_later:
-    MessageBox MB_OK|MB_ICONINFORMATION "OK — please restart this computer yourself when you get a chance, so every app picks up the new protection."
-  noor_restart_done:
-!macroend
-
 ; The protection service (service/serviceName.js: SERVICE_ID
 ; "noorshieldfilter") runs as LocalSystem, independent of the GUI, by
 ; design. If someone uninstalls via Control Panel instead of the app's own
