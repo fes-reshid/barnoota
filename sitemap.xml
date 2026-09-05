@@ -11,9 +11,19 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://diinislaam.com/quran-reader.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://diinislaam.com/hadeeth.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/tafseer.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://diinislaam.com/arabic.html</loc>
@@ -21,13 +31,28 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://diinislaam.com/tajweed.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://diinislaam.com/seeraa.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://diinislaam.com/apps.html</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://diinislaam.com/durus.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/durus-course.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/nahw-course.html</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
@@ -36,9 +61,49 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://diinislaam.com/recommended-books.html</loc>
+    <loc>https://diinislaam.com/kids.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-school.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-math.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-english.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-arabic.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-hadith.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-seerah-game.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/kids-games.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://diinislaam.com/apps.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://diinislaam.com/privacy-policy.html</loc>
