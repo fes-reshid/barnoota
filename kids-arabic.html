@@ -69,6 +69,8 @@
   .flashcard:hover{ transform:translateY(-3px); border-color:var(--gold); }
   .flashcard .big-letter{ font-family:'Amiri', serif; font-size:44px; color:var(--ink-navy); line-height:1; }
   .flashcard .name{ font-size:14px; color:var(--gold-dark); font-weight:700; margin-top:6px; }
+  .flashcard .fc-emoji{ font-size:26px; margin:6px 0 2px; }
+  .flashcard .fc-word{ font-size:15px; color:var(--ink-navy); }
   .mode-row{ display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
   .mode-btn{
     font-family:'JetBrains Mono', monospace, monospace; font-size:12.5px; letter-spacing:.04em; text-transform:uppercase;
@@ -252,7 +254,7 @@
   <div id="foundation-block" class="hidden">
     <p id="foundation-week-label" style="text-align:center; font-weight:700; color:var(--gold-dark); margin:0 0 10px;"></p>
     <div class="project-box hidden" id="foundation-project" style="max-width:520px; margin:0 auto 20px;"></div>
-    <div class="example-box" style="max-width:520px; margin:0 auto 20px;">Arabic has 28 letters, written from right to left. Each letter has its own shape and sound — tap a flashcard to see it, then try the quiz!</div>
+    <div class="example-box" id="foundation-lesson-box" style="max-width:520px; margin:0 auto 20px;"></div>
     <div class="mode-row">
       <button class="mode-btn active" id="mode-cards-btn">Flashcards</button>
       <button class="mode-btn" id="mode-quiz-btn">Quiz</button>
@@ -405,19 +407,59 @@ function playDone(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2
 
 /* ================= Foundation: alphabet flashcards + quiz ================= */
 const LETTERS = [
-  {letter:'ا', name:'Alif'}, {letter:'ب', name:'Bāʼ'}, {letter:'ت', name:'Tāʼ'}, {letter:'ث', name:'Thāʼ'},
-  {letter:'ج', name:'Jīm'}, {letter:'ح', name:'Ḥāʼ'}, {letter:'خ', name:'Khāʼ'}, {letter:'د', name:'Dāl'},
-  {letter:'ذ', name:'Dhāl'}, {letter:'ر', name:'Rāʼ'}, {letter:'ز', name:'Zāy'}, {letter:'س', name:'Sīn'},
-  {letter:'ش', name:'Shīn'}, {letter:'ص', name:'Ṣād'}
+  {letter:'ا', name:'Alif', word:'أَرْنَب', emoji:'🐰'}, {letter:'ب', name:'Bāʼ', word:'بَيْت', emoji:'🏠'},
+  {letter:'ت', name:'Tāʼ', word:'تُفَّاح', emoji:'🍎'}, {letter:'ث', name:'Thāʼ', word:'ثَعْلَب', emoji:'🦊'},
+  {letter:'ج', name:'Jīm', word:'جَمَل', emoji:'🐫'}, {letter:'ح', name:'Ḥāʼ', word:'حِصَان', emoji:'🐴'},
+  {letter:'خ', name:'Khāʼ', word:'خُبْز', emoji:'🍞'}, {letter:'د', name:'Dāl', word:'دُبّ', emoji:'🐻'},
+  {letter:'ذ', name:'Dhāl', word:'ذِئْب', emoji:'🐺'}, {letter:'ر', name:'Rāʼ', word:'رَجُل', emoji:'👨'},
+  {letter:'ز', name:'Zāy', word:'زَهْرَة', emoji:'🌸'}, {letter:'س', name:'Sīn', word:'سَمَك', emoji:'🐟'},
+  {letter:'ش', name:'Shīn', word:'شَمْس', emoji:'☀️'}, {letter:'ص', name:'Ṣād', word:'صَقْر', emoji:'🦅'},
+  {letter:'ض', name:'Ḍād', word:'ضِفْدَع', emoji:'🐸'}, {letter:'ط', name:'Ṭāʼ', word:'طَبْل', emoji:'🥁'},
+  {letter:'ظ', name:'Ẓāʼ', word:'ظِلّ', emoji:'🌑'}, {letter:'ع', name:'ʿAyn', word:'عَيْن', emoji:'👁️'},
+  {letter:'غ', name:'Ghayn', word:'غَزَال', emoji:'🦌'}, {letter:'ف', name:'Fāʼ', word:'فِيل', emoji:'🐘'},
+  {letter:'ق', name:'Qāf', word:'قِطَّة', emoji:'🐱'}, {letter:'ك', name:'Kāf', word:'كِتَاب', emoji:'📖'},
+  {letter:'ل', name:'Lām', word:'لَيْمُون', emoji:'🍋'}, {letter:'م', name:'Mīm', word:'مَاء', emoji:'💧'},
+  {letter:'ن', name:'Nūn', word:'نَحْلَة', emoji:'🐝'}, {letter:'هـ', name:'Hāʼ', word:'هِلَال', emoji:'🌙'},
+  {letter:'و', name:'Wāw', word:'وَرْدَة', emoji:'🌹'}, {letter:'ي', name:'Yāʼ', word:'يَد', emoji:'✋'}
 ];
 
-function renderFlashcards(){
+/* Term 1 teaches the alphabet week by week (2-3 new letters at a time); other terms review the full set. */
+const WEEKLY_LETTERS = {
+  1: LETTERS.slice(0, 3),   2: LETTERS.slice(3, 6),   3: LETTERS.slice(6, 9),
+  4: LETTERS.slice(9, 12),  5: LETTERS.slice(12, 15), 6: LETTERS.slice(15, 18),
+  7: LETTERS.slice(18, 21), 8: LETTERS.slice(21, 24), 9: LETTERS.slice(24, 26),
+  10: LETTERS.slice(26, 28)
+};
+function weekLetterPool(term, week){
+  if(term === 1 && WEEKLY_LETTERS[week]) return WEEKLY_LETTERS[week];
+  return LETTERS;
+}
+function foundationLessonHTML(term, week){
+  if(term === 1 && WEEKLY_LETTERS[week]){
+    const letters = WEEKLY_LETTERS[week];
+    const intro = 'This week you will learn ' + letters.length + ' new Arabic letter' + (letters.length > 1 ? 's' : '') + ':';
+    const rows = letters.map(l =>
+      '<div><span class="arabic" style="font-size:20px;">' + l.letter + '</span> (' + l.name + ') — starts <span class="arabic">' + l.word + '</span> ' + l.emoji + '</div>'
+    ).join('');
+    return '<div style="margin-bottom:10px; font-weight:700; color:var(--gold-dark);">' + intro + '</div>' + rows +
+      '<div style="margin-top:10px;">Tap each flashcard to see the letter clearly, then try the quiz to test yourself!</div>';
+  }
+  if(week === 11){
+    return '<div style="margin-bottom:8px; font-weight:700; color:var(--gold-dark);">Time to review the whole alphabet!</div>' +
+      '<div>Look through all 28 letters you have learned, then take the big test to show what you know.</div>';
+  }
+  return 'Arabic has 28 letters, written from right to left. Each letter has its own shape and sound — tap a flashcard to see it, then try the quiz!';
+}
+
+let currentAbcPool = LETTERS;
+
+function renderFlashcards(pool){
   const grid = document.getElementById('flash-grid');
   grid.innerHTML = '';
-  LETTERS.forEach(w => {
+  (pool || LETTERS).forEach(w => {
     const card = document.createElement('div');
     card.className = 'flashcard';
-    card.innerHTML = `<div class="big-letter arabic">${w.letter}</div><div class="name">${w.name}</div>`;
+    card.innerHTML = `<div class="big-letter arabic">${w.letter}</div><div class="name">${w.name}</div><div class="fc-emoji">${w.emoji}</div><div class="fc-word arabic">${w.word}</div>`;
     grid.appendChild(card);
   });
 }
@@ -425,14 +467,14 @@ function renderFlashcards(){
 let ABC_TOTAL = 10;
 let abcQIndex = 0, abcScore = 0, abcCurrent = null, abcLocked = false;
 
-function makeAbcQuestion(){
-  const item = LETTERS[randInt(0, LETTERS.length - 1)];
+function makeAbcQuestion(pool){
+  const item = pool[randInt(0, pool.length - 1)];
   const options = new Set([item.name]);
   while(options.size < 4) options.add(LETTERS[randInt(0, LETTERS.length - 1)].name);
   return { item, options: shuffle(Array.from(options)) };
 }
 function renderAbcQuestion(){
-  abcCurrent = makeAbcQuestion();
+  abcCurrent = makeAbcQuestion(currentAbcPool);
   abcLocked = false;
   document.getElementById('abc-quiz-letter').textContent = abcCurrent.item.letter;
   document.getElementById('abc-feedback').textContent = '';
@@ -623,7 +665,7 @@ const TERMS = [1,2,3,4];
 let activeTerm = 1, activeWeek = 1;
 const PROJECT_KEY = 'kids-arabic-term-progress';
 const PROJECTS = {
-  foundation: 'Draw and label 5 Arabic letters you know, then say each letter\'s name out loud to a family member.',
+  foundation: 'Write out as many of the 28 Arabic letters as you can remember, and say each one\'s name and its example word (like بَيْت for ب) to a family member.',
   g1: 'Write 3 letters with fatḥah, kasrah, and ḍammah each, and read all 9 sounds out loud.',
   g2: 'Find 3 objects at home and say their Arabic names (like بَيْت for house) to someone.',
   g3: 'Count from 1 to 10 in Arabic out loud, and name the colour of 3 things around you.',
@@ -760,6 +802,9 @@ function showFoundationWeek(){
   } else {
     projectBox.classList.add('hidden');
   }
+  currentAbcPool = weekLetterPool(activeTerm, activeWeek);
+  document.getElementById('foundation-lesson-box').innerHTML = foundationLessonHTML(activeTerm, activeWeek);
+  renderFlashcards(currentAbcPool);
   document.getElementById('mode-cards-btn').classList.add('active');
   document.getElementById('mode-quiz-btn').classList.remove('active');
   document.getElementById('flash-grid').classList.remove('hidden');
