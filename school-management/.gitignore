@@ -1,6 +1,7 @@
 node_modules
 dist
 *.tsbuildinfo
+.firebase
 dist-ssr
 *.local
 .env
