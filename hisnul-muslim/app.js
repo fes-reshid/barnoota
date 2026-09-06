@@ -40,7 +40,9 @@
     menu: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
     sparkles: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1"/></svg>',
     grid: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
-    shield: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg>'
+    shield: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5z"/></svg>',
+    iosShare: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/></svg>',
+    squarePlus: '<svg viewBox="0 0 24 24" width="{s}" height="{s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg>'
   };
   function icon(name, size, extra) {
     var svg = (ICONS[name] || "").replace(/\{s\}/g, size).replace(/\{fill\}/g, (extra && extra.fill) || "none");
@@ -2762,7 +2764,18 @@
     function show() {
       var body;
       if (platform === "ios") {
-        body = 'Safari keessatti Share tuqaa, ergasii <strong>"Add to Home Screen"</strong> filadhaa.';
+        // A plain sentence alone left readers unsure exactly where to
+        // tap - Safari's Share icon isn't always obvious - so this walks
+        // through it as two visual steps with the actual icon shapes
+        // instead (a generic recreation of Safari's share glyph and the
+        // "Add to Home Screen" menu icon, not an Apple screenshot).
+        body =
+          '<div class="install-steps">' +
+            '<div class="install-step"><span class="install-step-num">1</span>' + icon("iosShare", 20) + '<span>Share tuqi</span></div>' +
+            '<div class="install-step-arrow">' + icon("chevronRight", 16) + "</div>" +
+            '<div class="install-step"><span class="install-step-num">2</span>' + icon("squarePlus", 20) + '<span>Add to Home Screen</span></div>' +
+          "</div>" +
+          '<p class="install-steps-caption">Safari jala keessa jiru irratti Share tuqaa, ergasii gadi buusaa "Add to Home Screen" filadhaa.</p>';
       } else if (platform === "android" && deferred) {
         body = "Yaadachiisni sirritti akka hojjetu, akka appii dhugaatti dabaladhaa.";
       } else {
@@ -2771,7 +2784,7 @@
       container.innerHTML =
         '<div class="glass install-card animate-fade-in">' +
           '<div class="install-icon">' + icon("download", 20) + "</div>" +
-          '<div class="install-text"><p class="title">Appii kana <span class="gold-text">bilbila keessanitti</span> dabalaa</p><p class="sub">' + body + "</p></div>" +
+          '<div class="install-text"><p class="title">Appii kana <span class="gold-text">bilbila keessanitti</span> dabalaa</p><div class="sub">' + body + "</div></div>" +
           '<button class="install-close" id="install-close">' + icon("x", 16) + "</button>" +
         "</div>";
       container.hidden = false;
