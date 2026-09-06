@@ -92,4 +92,67 @@ function buildARecordResponse(request, parsed, ipAddress) {
   return Buffer.concat([header, questionSection, answer]);
 }
 
-module.exports = { parseQuestion, buildNxDomainResponse, buildARecordResponse };
+/** Builds an outbound A-record query for `hostname`, tagged with `id`. */
+function buildQuery(hostname, id) {
+  const labels = hostname.split('.').filter(Boolean);
+  const qname = Buffer.concat([
+    ...labels.map((label) => Buffer.concat([Buffer.from([label.length]), Buffer.from(label, 'ascii')])),
+    Buffer.from([0]),
+  ]);
+  const header = Buffer.alloc(12);
+  header.writeUInt16BE(id, 0);
+  header[2] = 0x01; // RD=1 (recursion desired)
+  header.writeUInt16BE(1, 4); // QDCOUNT
+  const qtypeClass = Buffer.alloc(4);
+  qtypeClass.writeUInt16BE(1, 0); // QTYPE A
+  qtypeClass.writeUInt16BE(1, 2); // QCLASS IN
+  return Buffer.concat([header, qname, qtypeClass]);
+}
+
+function skipName(buf, pos) {
+  while (true) {
+    const len = buf[pos];
+    if ((len & 0xc0) === 0xc0) return pos + 2; // compression pointer: always exactly 2 bytes
+    if (len === 0) return pos + 1;
+    pos += 1 + len;
+  }
+}
+
+/**
+ * Reads the first A record's address out of a raw DNS response, walking past
+ * any CNAME records first (a response for an alias hostname commonly chains
+ * through one or more CNAMEs before the final address). Returns null if the
+ * response has no A record at all, or isn't parseable.
+ */
+function parseFirstARecord(buf) {
+  if (buf.length < 12) return null;
+  const qdCount = buf.readUInt16BE(4);
+  const anCount = buf.readUInt16BE(6);
+  if (anCount < 1) return null;
+
+  let pos = 12;
+  for (let i = 0; i < qdCount; i += 1) {
+    pos = skipName(buf, pos) + 4; // + QTYPE/QCLASS
+  }
+  for (let i = 0; i < anCount; i += 1) {
+    pos = skipName(buf, pos);
+    if (pos + 10 > buf.length) return null;
+    const type = buf.readUInt16BE(pos);
+    const rdlength = buf.readUInt16BE(pos + 8);
+    const rdataStart = pos + 10;
+    if (rdataStart + rdlength > buf.length) return null;
+    if (type === 1 && rdlength === 4) {
+      return `${buf[rdataStart]}.${buf[rdataStart + 1]}.${buf[rdataStart + 2]}.${buf[rdataStart + 3]}`;
+    }
+    pos = rdataStart + rdlength;
+  }
+  return null;
+}
+
+module.exports = {
+  parseQuestion,
+  buildNxDomainResponse,
+  buildARecordResponse,
+  buildQuery,
+  parseFirstARecord,
+};

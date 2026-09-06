@@ -2,13 +2,54 @@
 
 const dgram = require('dgram');
 const EventEmitter = require('events');
-const { parseQuestion, buildNxDomainResponse, buildARecordResponse } = require('./dnsMessage');
+const {
+  parseQuestion,
+  buildNxDomainResponse,
+  buildARecordResponse,
+  buildQuery,
+  parseFirstARecord,
+} = require('./dnsMessage');
 
 const DNS_PORT = 53;
 const LISTEN_ADDRESS = '127.0.0.1';
 const DEFAULT_UPSTREAM = '1.1.1.1';
 const UPSTREAM_TIMEOUT_MS = 4000;
 const REMINDER_PAGE_ADDRESS = '127.0.0.1';
+const QTYPE_A = 1;
+const QTYPE_AAAA = 28;
+
+/**
+ * Forces the major search engines' own "safe mode" — the same technique
+ * OpenDNS FamilyShield and other DNS-level parental controls use. Each of
+ * these hostnames has a special "strict" alias that the provider itself
+ * guarantees filters explicit results; resolving the ordinary hostname to
+ * that alias's address (see _resolveAliasIp) makes the search engine police
+ * its own results, which no domain blocklist can do — Bing, Google Images,
+ * etc. are not adult sites themselves, so blocking them outright isn't an
+ * option, but their unfiltered results can still surface exactly the
+ * content this app exists to keep away from a child.
+ *
+ * Deliberately an explicit hostname list, not a ".google.com"-style suffix
+ * match: a suffix would also catch mail.google.com, drive.google.com, etc.
+ * and silently break them by pointing them at Search's alias instead of
+ * their own service.
+ */
+const SAFE_SEARCH_ALIASES = {
+  'google.com': 'forcesafesearch.google.com',
+  'www.google.com': 'forcesafesearch.google.com',
+  'google.co.uk': 'forcesafesearch.google.com',
+  'www.google.co.uk': 'forcesafesearch.google.com',
+  'google.ca': 'forcesafesearch.google.com',
+  'www.google.ca': 'forcesafesearch.google.com',
+  'bing.com': 'strict.bing.com',
+  'www.bing.com': 'strict.bing.com',
+  'cn.bing.com': 'strict.bing.com',
+  'duckduckgo.com': 'safe.duckduckgo.com',
+  'www.duckduckgo.com': 'safe.duckduckgo.com',
+  'youtube.com': 'restrict.youtube.com',
+  'www.youtube.com': 'restrict.youtube.com',
+  'm.youtube.com': 'restrict.youtube.com',
+};
 
 /**
  * A local DNS resolver that answers for blocklisted domains and forwards
@@ -129,14 +170,17 @@ class DnsProxy extends EventEmitter {
   _onClientQuery(msg, rinfo) {
     this.stats.queries += 1;
     const parsed = parseQuestion(msg);
+    if (!parsed) {
+      this._forward(msg, rinfo);
+      return;
+    }
 
     const scheduleActive = this.isScheduleActive();
-    const blocked = parsed && (scheduleActive || this.blocklist.isBlocked(parsed.question));
+    const blocked = scheduleActive || this.blocklist.isBlocked(parsed.question);
 
     if (blocked) {
       this.stats.blocked += 1;
       this.emit('blocked', { domain: parsed.question, reason: scheduleActive ? 'schedule' : 'blocklist' });
-      const QTYPE_A = 1;
       const reply =
         this.reminderPageAvailable && parsed.qType === QTYPE_A
           ? buildARecordResponse(msg, parsed, REMINDER_PAGE_ADDRESS)
@@ -145,7 +189,57 @@ class DnsProxy extends EventEmitter {
       return;
     }
 
+    const safeSearchAlias = SAFE_SEARCH_ALIASES[parsed.question.toLowerCase()];
+    if (safeSearchAlias) {
+      if (parsed.qType === QTYPE_AAAA) {
+        // NXDOMAIN rather than forwarding the real (unfiltered) IPv6 answer —
+        // we can only control what a client sees by substituting the A
+        // record below, so forcing the IPv4 path is what makes that stick.
+        this.server.send(buildNxDomainResponse(msg, parsed), rinfo.port, rinfo.address);
+        return;
+      }
+      if (parsed.qType === QTYPE_A) {
+        this._resolveAliasIp(safeSearchAlias).then((ip) => {
+          if (!this.server) return; // stopped while the alias lookup was in flight
+          if (ip) {
+            this.server.send(buildARecordResponse(msg, parsed, ip), rinfo.port, rinfo.address);
+          } else {
+            // Alias lookup failed — fail open to a normal forward rather than
+            // breaking the search engine outright over a transient failure.
+            this._forward(msg, rinfo);
+          }
+        });
+        return;
+      }
+    }
+
     this._forward(msg, rinfo);
+  }
+
+  /** Resolves `hostname`'s A record via the upstream resolver. Null on any failure. */
+  _resolveAliasIp(hostname) {
+    return new Promise((resolve) => {
+      if (!this.upstreamSocket) {
+        resolve(null);
+        return;
+      }
+      const outboundId = this.nextOutboundId;
+      this.nextOutboundId = (this.nextOutboundId + 1) & 0xffff || 1;
+
+      const timer = setTimeout(() => {
+        this.pending.delete(outboundId);
+        resolve(null);
+      }, UPSTREAM_TIMEOUT_MS);
+
+      this.pending.set(outboundId, { resolveAlias: resolve, timer });
+      this.upstreamSocket.send(buildQuery(hostname, outboundId), this.upstreamPort, this.upstream, (err) => {
+        if (err) {
+          clearTimeout(timer);
+          this.pending.delete(outboundId);
+          resolve(null);
+        }
+      });
+    });
   }
 
   /**
@@ -180,7 +274,7 @@ class DnsProxy extends EventEmitter {
   }
 
   _onUpstreamReply(msg) {
-    if (msg.length < 2 || !this.server) return;
+    if (msg.length < 2) return;
     const outboundId = msg.readUInt16BE(0);
     const entry = this.pending.get(outboundId);
     if (!entry) return; // late reply after timeout, or not ours
@@ -188,6 +282,12 @@ class DnsProxy extends EventEmitter {
     this.pending.delete(outboundId);
     clearTimeout(entry.timer);
 
+    if (entry.resolveAlias) {
+      entry.resolveAlias(parseFirstARecord(msg));
+      return;
+    }
+
+    if (!this.server) return;
     const reply = Buffer.from(msg);
     reply.writeUInt16BE(entry.clientId, 0);
     this.stats.forwarded += 1;
