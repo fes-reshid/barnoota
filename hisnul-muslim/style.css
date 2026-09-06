@@ -543,9 +543,17 @@ input { font-family: inherit; }
 .install-icon { flex-shrink: 0; width: 3rem; height: 3rem; border-radius: var(--radius-2xl); display: flex; align-items: center; justify-content: center; color: var(--primary-foreground); background: var(--gradient-primary); }
 .install-text { min-width: 0; flex: 1; }
 .install-text p.title { margin: 0; font-family: var(--font-display); font-size: calc(1rem * var(--reading-scale)); font-weight: 600; color: var(--foreground); }
-.install-text p.sub { margin-top: 0.25rem; font-size: calc(0.75rem * var(--reading-scale)); line-height: 1.5; color: var(--muted-foreground); }
+.install-text .sub { margin-top: 0.25rem; font-size: calc(0.75rem * var(--reading-scale)); line-height: 1.5; color: var(--muted-foreground); }
 .install-close { flex-shrink: 0; width: 2rem; height: 2rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: var(--muted-foreground); }
 .install-close:hover { color: var(--foreground); }
+
+/* iOS "Add to Home Screen" visual step guide inside the install prompt */
+.install-steps { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.35rem; }
+.install-step { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.6rem 0.4rem; border-radius: var(--radius-2xl); background: var(--accent); color: var(--foreground); }
+.install-step span:last-child { font-size: calc(0.7rem * var(--reading-scale)); font-weight: 600; text-align: center; line-height: 1.2; }
+.install-step-num { position: absolute; top: -0.35rem; left: -0.35rem; width: 1.15rem; height: 1.15rem; border-radius: 9999px; background: var(--gradient-gold); color: var(--primary-foreground); font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.install-step-arrow { flex-shrink: 0; color: var(--muted-foreground); }
+.install-steps-caption { margin-top: 0.5rem; font-size: calc(0.7rem * var(--reading-scale)); line-height: 1.5; color: var(--muted-foreground); }
 
 /* ---------- Qiblaa ---------- */
 .qibla-panel { margin-top: 1.5rem; border-radius: var(--radius-3xl); padding: 1.5rem; text-align: center; }
