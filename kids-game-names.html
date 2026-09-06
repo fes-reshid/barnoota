@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>99 Names Dash — Kids Corner</title>
+<meta name="description" content="A fast-paced quiz game about the beautiful Names of Allah (Al-Asma ul-Husna) — answer as many as you can before time runs out.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-dark:#8a5a00; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --danger:#8a3324;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:36px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--gold-dark); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:16px; color:#6b5a3f; line-height:1.5; max-width:520px; margin:0 auto; }
+
+  .game-wrap{ max-width:560px; margin:0 auto; padding:20px 20px 90px; }
+  .stat-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .stat-chip{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:7px 16px;
+    font-family:'JetBrains Mono', monospace, monospace; font-size:13px; color:var(--ink-navy); font-weight:700;
+  }
+  .stat-chip b{ color:var(--gold-dark); }
+  .stat-chip.timer{ background:var(--ink-navy); color:#fff; border-color:var(--ink-navy); }
+  .stat-chip.timer b{ color:#fdeecb; }
+
+  .quiz-panel{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:30px 26px;
+    text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.08);
+  }
+  .quiz-meaning{ font-size:15px; color:var(--gold-dark); font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin:0 0 6px; }
+  .quiz-question{ font-size:20px; font-weight:700; color:var(--ink-navy); margin:0 0 22px; }
+  .answer-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .answer-btn{
+    font-family:'Amiri', serif; font-size:20px; padding:16px 8px; border-radius:14px; cursor:pointer;
+    border:2px solid var(--gold-soft); background:var(--parchment); color:var(--ink-navy);
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .answer-btn .translit{ display:block; font-family:'Cormorant Garamond', serif; font-size:13px; color:#8a7654; margin-top:4px; }
+  .answer-btn:hover:not(:disabled){ transform:translateY(-2px); border-color:var(--gold); }
+  .answer-btn:disabled{ cursor:default; }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); }
+  .answer-btn.incorrect{ background:#f6e2dd; border-color:var(--danger); }
+
+  .feedback{ min-height:24px; margin-top:16px; font-size:15px; font-weight:700; }
+  .feedback.right{ color:var(--green-dark); }
+  .feedback.wrong{ color:var(--danger); }
+
+  .overlay{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px; text-align:center; padding:34px 24px;
+  }
+  .overlay h2{ font-family:'Marcellus'; color:var(--ink-navy); font-size:26px; margin:0 0 10px; }
+  .overlay p{ font-size:16px; color:#6b5a3f; margin:0 0 20px; max-width:420px; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 28px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--gold); color:#fff; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--gold-dark); }
+  .hidden{ display:none !important; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids-games.html">← Games</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">⭐ Quiz Dash</p>
+  <h1>99 Names Dash</h1>
+  <p>Match each meaning to the correct beautiful Name of Allah — answer as many as you can in 60 seconds!</p>
+</div>
+
+<div class="game-wrap">
+  <div id="start-block" class="overlay">
+    <div style="font-size:44px; margin-bottom:8px;">⭐</div>
+    <h2>Ready to play?</h2>
+    <p>You'll see what a Name of Allah means — tap the correct Name before the clock runs out. Get 3 correct in a row for a streak bonus!</p>
+    <button class="btn" id="start-btn">Start Dash</button>
+  </div>
+
+  <div id="play-block" class="hidden">
+    <div class="stat-row">
+      <div class="stat-chip timer">⏱ <b id="timer-count">60</b>s</div>
+      <div class="stat-chip">Score: <b id="score-count">0</b></div>
+      <div class="stat-chip">Streak: <b id="streak-count">0</b></div>
+    </div>
+    <div class="quiz-panel" id="quiz-panel">
+      <p class="quiz-meaning">This Name means...</p>
+      <p class="quiz-question" id="quiz-question"></p>
+      <div class="answer-grid" id="answer-grid"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <div id="end-block" class="overlay hidden">
+    <div style="font-size:44px; margin-bottom:8px;">🏆</div>
+    <h2>Time's Up!</h2>
+    <p id="end-msg"></p>
+    <button class="btn" id="restart-btn">Play Again</button>
+  </div>
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids-games.html">Games</a>
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const NAMES = [
+  { ar:'الرَّحْمَٰن', translit:'Ar-Rahman', meaning:'The Most Merciful' },
+  { ar:'الرَّحِيم', translit:'Ar-Raheem', meaning:'The Most Compassionate' },
+  { ar:'الْمَلِك', translit:'Al-Malik', meaning:'The King' },
+  { ar:'الْقُدُّوس', translit:'Al-Quddus', meaning:'The Most Holy' },
+  { ar:'السَّلَام', translit:'As-Salaam', meaning:'The Source of Peace' },
+  { ar:'الْخَالِق', translit:'Al-Khaliq', meaning:'The Creator' },
+  { ar:'الْغَفَّار', translit:'Al-Ghaffar', meaning:'The Great Forgiver' },
+  { ar:'الرَّزَّاق', translit:'Ar-Razzaq', meaning:'The Provider' },
+  { ar:'الْعَلِيم', translit:"Al-Aleem", meaning:'The All-Knowing' },
+  { ar:'السَّمِيع', translit:"As-Samee'", meaning:'The All-Hearing' },
+  { ar:'الْبَصِير', translit:'Al-Baseer', meaning:'The All-Seeing' },
+  { ar:'الْعَزِيز', translit:"Al-Azeez", meaning:'The Mighty' },
+  { ar:'اللَّطِيف', translit:'Al-Lateef', meaning:'The Gentle' },
+  { ar:'الْحَكِيم', translit:'Al-Hakeem', meaning:'The Wise' },
+  { ar:'الْكَرِيم', translit:'Al-Kareem', meaning:'The Generous' },
+  { ar:'الشَّكُور', translit:'Ash-Shakoor', meaning:'The Appreciative' },
+  { ar:'الْحَلِيم', translit:'Al-Haleem', meaning:'The Forbearing One' },
+  { ar:'الْوَدُود', translit:'Al-Wadood', meaning:'The Loving One' },
+  { ar:'الصَّبُور', translit:'As-Saboor', meaning:'The Patient One' },
+  { ar:'النُّور', translit:'An-Noor', meaning:'The Light' }
+];
+
+function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playRight(){ beep(660, 0.1, 'sine'); }
+function playStreak(){ beep(660, 0.1, 'sine'); setTimeout(()=>beep(880,0.14,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playTimeUp(){ [392,330,262].forEach((f,i)=>setTimeout(()=>beep(f,0.25,'sine'), i*160)); }
+
+let score = 0, streak = 0, timeLeft = 60, timerId = null, current = null, locked = false, running = false;
+
+function makeQuestion(){
+  const item = NAMES[randInt(0, NAMES.length - 1)];
+  const options = new Set([item]);
+  while(options.size < 4) options.add(NAMES[randInt(0, NAMES.length - 1)]);
+  return { item, options: shuffle(Array.from(options)) };
+}
+
+function renderQuestion(){
+  current = makeQuestion();
+  locked = false;
+  document.getElementById('quiz-question').textContent = '"' + current.item.meaning + '"';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  const grid = document.getElementById('answer-grid');
+  grid.innerHTML = '';
+  current.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = opt.ar + '<span class="translit">' + opt.translit + '</span>';
+    btn.addEventListener('click', () => handleAnswer(opt, btn));
+    grid.appendChild(btn);
+  });
+}
+
+function handleAnswer(opt, btn){
+  if(locked || !running) return;
+  locked = true;
+  const buttons = document.querySelectorAll('#answer-grid .answer-btn');
+  const fb = document.getElementById('feedback');
+  const correct = opt.translit === current.item.translit;
+  buttons.forEach(b => {
+    b.disabled = true;
+    if(b === btn && correct) b.classList.add('correct');
+    if(b === btn && !correct) b.classList.add('incorrect');
+  });
+  if(correct){
+    streak++;
+    const bonus = streak >= 3 ? 15 : 10;
+    score += bonus;
+    if(streak >= 3){ playStreak(); fb.textContent = '🔥 Streak x' + streak + '! +' + bonus; }
+    else { playRight(); fb.textContent = 'Correct! +' + bonus; }
+    fb.classList.add('right');
+  } else {
+    streak = 0;
+    playWrong();
+    fb.textContent = 'That was ' + current.item.ar + ' (' + current.item.translit + ').';
+    fb.classList.add('wrong');
+  }
+  document.getElementById('score-count').textContent = score;
+  document.getElementById('streak-count').textContent = streak;
+  setTimeout(() => { if(running) renderQuestion(); }, 900);
+}
+
+function tick(){
+  timeLeft--;
+  document.getElementById('timer-count').textContent = Math.max(timeLeft, 0);
+  if(timeLeft <= 0){ endGame(); }
+}
+
+function startGame(){
+  score = 0; streak = 0; timeLeft = 60; running = true;
+  document.getElementById('score-count').textContent = 0;
+  document.getElementById('streak-count').textContent = 0;
+  document.getElementById('timer-count').textContent = 60;
+  document.getElementById('start-block').classList.add('hidden');
+  document.getElementById('end-block').classList.add('hidden');
+  document.getElementById('play-block').classList.remove('hidden');
+  renderQuestion();
+  if(timerId) clearInterval(timerId);
+  timerId = setInterval(tick, 1000);
+}
+
+function endGame(){
+  running = false;
+  if(timerId) clearInterval(timerId);
+  playTimeUp();
+  document.getElementById('play-block').classList.add('hidden');
+  const msg = score >= 150 ? "MashaAllah — amazing! You really know Allah's beautiful Names! 🌟" :
+              score >= 70 ? "Great job! Keep learning more of the 99 Names." :
+              "Nice try! Play again to beat your score.";
+  document.getElementById('end-msg').textContent = 'Final score: ' + score + '. ' + msg;
+  document.getElementById('end-block').classList.remove('hidden');
+}
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+document.getElementById('restart-btn').addEventListener('click', startGame);
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
