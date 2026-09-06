@@ -59,6 +59,11 @@ function formatTime12h(hhmm) {
   return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
 }
 
+/** Same "7:00 AM" formatting as formatTime12h, but from a Date's local time. */
+function formatTime12hFromDate(date) {
+  return formatTime12h(`${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`);
+}
+
 const PAGE_STYLE_BASE = `
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
@@ -129,10 +134,20 @@ function renderReminderPage(hostname) {
 </html>`;
 }
 
-function renderSleepPage(hostname, schedule) {
+function renderSleepPage(hostname, schedule, remoteResumeAt) {
   const safeHost = escapeHtml(hostname || 'this site');
-  const resumeTime = schedule ? formatTime12h(schedule.endTime) : null;
-  const minutesLeft = schedule ? minutesUntilScheduleEnds(schedule) : null;
+  let resumeTime = null;
+  let minutesLeft = null;
+  if (remoteResumeAt) {
+    // A remotely-issued "enforce sleep now" (see cloudSync.js) has no fixed
+    // end-of-window clock time the way the weekly schedule does — it just
+    // lasts a fixed duration from whenever it was issued.
+    resumeTime = formatTime12hFromDate(remoteResumeAt);
+    minutesLeft = Math.max(0, Math.round((remoteResumeAt.getTime() - Date.now()) / 60000));
+  } else if (schedule) {
+    resumeTime = formatTime12h(schedule.endTime);
+    minutesLeft = minutesUntilScheduleEnds(schedule);
+  }
   const resumeLine = resumeTime
     ? `Internet resumes at <strong>${escapeHtml(resumeTime)}</strong>${
         typeof minutesLeft === 'number' && minutesLeft > 0
@@ -228,10 +243,11 @@ function renderSleepPage(hostname, schedule) {
 }
 
 class ReminderServer {
-  constructor({ dataDir, caThumbprint, getSchedule }) {
+  constructor({ dataDir, caThumbprint, getSchedule, getRemoteSleepUntil }) {
     this.dataDir = dataDir;
     this.caThumbprint = caThumbprint;
     this.getSchedule = typeof getSchedule === 'function' ? getSchedule : () => null;
+    this.getRemoteSleepUntil = typeof getRemoteSleepUntil === 'function' ? getRemoteSleepUntil : () => null;
     this.httpServer = null;
     this.httpsServer = null;
     this.contextCache = new Map(); // hostname -> tls.SecureContext
@@ -255,7 +271,12 @@ class ReminderServer {
     const requestListener = (req, res) => {
       const host = (req.headers.host || '').split(':')[0];
       const schedule = this.getSchedule();
-      const html = isWithinSchedule(schedule) ? renderSleepPage(host, schedule) : renderReminderPage(host);
+      const remoteSleepUntil = this.getRemoteSleepUntil();
+      const remoteSleepActive = typeof remoteSleepUntil === 'number' && remoteSleepUntil > Date.now();
+      const html =
+        isWithinSchedule(schedule) || remoteSleepActive
+          ? renderSleepPage(host, schedule, remoteSleepActive ? new Date(remoteSleepUntil) : null)
+          : renderReminderPage(host);
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Length': Buffer.byteLength(html) });
       res.end(html);
     };

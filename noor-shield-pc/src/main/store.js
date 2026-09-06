@@ -39,6 +39,19 @@ const DEFAULTS = {
   // by reinstalling the app; only a full "Remove protection completely"
   // (which deletes this whole data directory) starts a new trial.
   firstRunAt: null,
+  // Remote control pairing (see service/cloudSync.js). deviceSecret is a
+  // long random token this PC generated for itself and never shares except
+  // with the cloud project it's paired to — it's the only thing that proves
+  // "yes, this request really is from this PC" to the remote commands table.
+  // pendingPairing holds a not-yet-claimed code (cleared once claimed or on
+  // cancel); deviceId is set once a parent claims that code from the web
+  // dashboard, which is what "paired" means here.
+  cloud: { deviceId: null, deviceSecret: null, pendingPairing: null },
+  // A remotely-issued "enforce sleep now" sets this to a future timestamp
+  // (ms since epoch); the schedule check treats "now" as within the
+  // bedtime window for as long as this is in the future, independent of
+  // the PC's own configured weekly schedule. Null means no remote override.
+  forceSleepUntil: null,
 };
 
 class Store {

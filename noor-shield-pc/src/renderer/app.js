@@ -375,8 +375,10 @@ async function refreshStatus() {
     scheduleWarning.hidden = false;
     const hours = Math.floor((status.schedule.minutesRemaining || 0) / 60);
     const mins = (status.schedule.minutesRemaining || 0) % 60;
-    $('schedule-warning-detail').textContent =
-      `All internet on this PC is blocked by the schedule for about ${hours > 0 ? `${hours}h ` : ''}${mins}m more.`;
+    const remaining = `about ${hours > 0 ? `${hours}h ` : ''}${mins}m more`;
+    $('schedule-warning-detail').textContent = status.schedule.remoteOverrideActive
+      ? `All internet on this PC was blocked remotely (bedtime enforced from the family dashboard) for ${remaining}.`
+      : `All internet on this PC is blocked by the schedule for ${remaining}.`;
   } else {
     scheduleWarning.hidden = true;
   }
@@ -788,7 +790,77 @@ async function renderSettings() {
   document.querySelectorAll('#schedule-days input[data-day]').forEach((box) => {
     box.checked = days.has(Number(box.dataset.day));
   });
+
+  await renderCloudStatus();
 }
+
+let cloudPairingPollTimer = null;
+
+function stopCloudPairingPoll() {
+  if (cloudPairingPollTimer) {
+    clearInterval(cloudPairingPollTimer);
+    cloudPairingPollTimer = null;
+  }
+}
+
+async function renderCloudStatus() {
+  const cloud = await api.getCloudStatus();
+  if (!cloud.ok) return;
+
+  $('cloud-paired').hidden = !cloud.paired;
+  $('cloud-unpaired').hidden = cloud.paired;
+
+  if (cloud.paired) {
+    stopCloudPairingPoll();
+    return;
+  }
+
+  const pairingActive = $('cloud-pairing-active');
+  if (cloud.pendingCode) {
+    pairingActive.hidden = false;
+    $('cloud-pair-code').textContent = cloud.pendingCode;
+    if (!cloudPairingPollTimer) {
+      cloudPairingPollTimer = setInterval(renderCloudStatus, 4000);
+    }
+  } else {
+    pairingActive.hidden = true;
+    stopCloudPairingPoll();
+  }
+}
+
+$('cloud-pair-start').addEventListener('click', async () => {
+  const message = $('cloud-message');
+  hideError(message);
+  const result = await callGated(
+    () => api.startCloudPairing(),
+    'Enter the parent password to link this PC to a family account.'
+  );
+  if (!result) return;
+  if (!result.ok) {
+    showError(message, result.error);
+    return;
+  }
+  await renderCloudStatus();
+});
+
+$('cloud-pair-cancel').addEventListener('click', async () => {
+  const result = await callGated(
+    () => api.cancelCloudPairing(),
+    'Enter the parent password to cancel pairing.'
+  );
+  if (!result) return;
+  stopCloudPairingPoll();
+  await renderCloudStatus();
+});
+
+$('cloud-unpair').addEventListener('click', async () => {
+  const result = await callGated(
+    () => api.unpairCloud(),
+    'Enter the parent password to unlink this PC.'
+  );
+  if (!result) return;
+  await renderCloudStatus();
+});
 
 $('settings-unlock').addEventListener('click', () => {
   showUnlock('Enter the parent password to change settings.', null);

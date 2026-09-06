@@ -14,6 +14,7 @@ const certAuthority = require('./certAuthority');
 const { ReminderServer } = require('./reminderServer');
 const { createServer } = require('./pipeTransport');
 const { createHandlers, appendActivity } = require('./handlers');
+const cloudSync = require('./cloudSync');
 
 // How often the public feeds (see feedBlocklist.js) are re-fetched. New bad
 // sites appear constantly, but these are large downloads (tens of MB
@@ -76,6 +77,7 @@ async function setupReminderPage(store) {
       dataDir: dataDir(),
       caThumbprint: caMeta.thumbprint,
       getSchedule: () => store.get('schedule'),
+      getRemoteSleepUntil: () => store.get('forceSleepUntil'),
     });
     const { httpOk, httpsOk } = await server.start();
     const available = Boolean(httpOk || httpsOk);
@@ -112,7 +114,7 @@ async function main() {
       proxy = new DnsProxy({
         blocklist,
         reminderPageAvailable,
-        isScheduleActive: () => isWithinSchedule(store.get('schedule')),
+        isScheduleActive: () => isWithinSchedule(store.get('schedule')) || cloudSync.isForceSleepActive(store),
       });
       proxy.on('error', (err) => console.error(`[dnsProxy] ${err.message}`));
       // The activity log the parent reviews (and can email themselves a
@@ -199,6 +201,10 @@ async function main() {
     refreshAllFeedsFromRemote().catch((err) => console.error(`[feed] refresh failed: ${err.message}`));
   }, FEED_REFRESH_INTERVAL_MS);
   feedTimer.unref(); // never keep the process alive on its own
+
+  // Remote control: no-op unless a pairing is in progress or already
+  // paired (see cloudSync.js) — never reaches out on its own otherwise.
+  cloudSync.start(store);
 
   let shuttingDown = false;
   async function shutdown(reason) {

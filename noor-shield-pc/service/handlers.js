@@ -5,6 +5,7 @@ const systemDns = require(path.join(__dirname, '..', 'src', 'main', 'systemDns')
 const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirname, '..', 'src', 'main', 'blocklist'));
 const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
+const cloudSync = require('./cloudSync');
 const { isValidKey, trialDaysRemaining, isTrialActive } = require(path.join(
   __dirname,
   '..',
@@ -123,10 +124,21 @@ function createHandlers(ctx) {
 
   function scheduleStatus() {
     const schedule = store.get('schedule');
+    const scheduleActive = isWithinSchedule(schedule);
+    const remoteActive = cloudSync.isForceSleepActive(store);
+    const scheduleMinutesRemaining = minutesUntilScheduleEnds(schedule);
+    const remoteMinutesRemaining = remoteActive
+      ? Math.ceil((store.get('forceSleepUntil') - Date.now()) / 60000)
+      : null;
     return {
       ...schedule,
-      active: isWithinSchedule(schedule),
-      minutesRemaining: minutesUntilScheduleEnds(schedule),
+      active: scheduleActive || remoteActive,
+      minutesRemaining: remoteActive
+        ? scheduleActive
+          ? Math.max(scheduleMinutesRemaining, remoteMinutesRemaining)
+          : remoteMinutesRemaining
+        : scheduleMinutesRemaining,
+      remoteOverrideActive: remoteActive,
     };
   }
 
@@ -320,6 +332,38 @@ function createHandlers(ctx) {
         };
       }
       store.set('schedule', candidate);
+      return { ok: true };
+    }),
+
+    // Remote control (see cloudSync.js). Read-only status is safe to expose
+    // unlocked — it reveals nothing beyond "is this PC linked to a family
+    // account", never the device secret itself. Starting/cancelling a
+    // pairing or unpairing are gated: pairing links a whole new external
+    // control channel to this PC, which is exactly the kind of thing the
+    // parent password exists to protect.
+    'cloud.status': async () => {
+      const cloud = store.get('cloud') || {};
+      return {
+        ok: true,
+        paired: Boolean(cloud.deviceId),
+        pendingCode: cloud.pendingPairing ? cloud.pendingPairing.code : null,
+        remoteSleepActive: cloudSync.isForceSleepActive(store),
+      };
+    },
+    'cloud.startPairing': parentOnly(async () => {
+      try {
+        const { code } = await cloudSync.startPairing(store);
+        return { ok: true, code };
+      } catch (err) {
+        return { ok: false, error: `Could not start pairing: ${err.message}` };
+      }
+    }),
+    'cloud.cancelPairing': parentOnly(async () => {
+      cloudSync.cancelPairing(store);
+      return { ok: true };
+    }),
+    'cloud.unpair': parentOnly(async () => {
+      cloudSync.unpair(store);
       return { ok: true };
     }),
 

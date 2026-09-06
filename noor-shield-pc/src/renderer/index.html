@@ -445,6 +445,28 @@
             <p class="hint" id="schedule-message"></p>
           </div>
 
+          <div class="panel">
+            <h3>Remote control</h3>
+            <p class="hint">
+              Link this PC to a family account so bedtime can be enforced remotely, from a web
+              browser, even when you're not at this computer. Optional — everything else in Noor
+              Shield keeps working the same with or without this.
+            </p>
+            <div id="cloud-unpaired">
+              <button class="btn primary" id="cloud-pair-start">Get pairing code</button>
+              <div id="cloud-pairing-active" hidden>
+                <p class="recovery-key" id="cloud-pair-code"></p>
+                <p class="hint">Enter this code on the family dashboard within 10 minutes.</p>
+                <button class="btn ghost" id="cloud-pair-cancel">Cancel</button>
+              </div>
+            </div>
+            <div id="cloud-paired" hidden>
+              <p class="success">This PC is linked to a family account.</p>
+              <button class="btn danger" id="cloud-unpair">Unlink this PC</button>
+            </div>
+            <p class="hint" id="cloud-message"></p>
+          </div>
+
           <div class="panel dangerpanel">
             <h3>Remove protection from this PC</h3>
             <p>
