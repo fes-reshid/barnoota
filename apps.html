@@ -110,6 +110,8 @@
   .btn-primary{ background:var(--green); color:#faf3e0; }
   .btn-primary:hover{ background:var(--green-dark); }
   .btn-ghost{ background:transparent; color:var(--green-dark); border:1.5px solid var(--gold-soft); padding:8.5px 20px; }
+  .btn-play{ display:inline-flex; align-items:center; gap:8px; }
+  .btn-play .play-icon{ flex:none; }
   .btn-ghost:hover{ background:var(--green-bg); }
   .btn-row{ display:flex; flex-wrap:wrap; gap:10px; align-self:flex-start; }
   .beta-badge{
@@ -166,7 +168,20 @@
       <p>The Fortress of the Muslim — daily adhkar and duʿāʾ with Arabic text and Oromo translation. Installable as an app on your phone, works offline.</p>
       <div class="btn-row">
         <a class="btn btn-primary" href="hisnul-muslim/index.html">Open App</a>
-        <a class="btn btn-ghost" href="https://play.google.com/apps/testing/com.diinislaam.hisnulmuslim" target="_blank" rel="noopener">Test on Android (Beta)</a>
+        <a class="btn btn-ghost btn-play" href="https://play.google.com/apps/testing/com.diinislaam.hisnulmuslim" target="_blank" rel="noopener">
+          <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="playGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00d2ff"/>
+                <stop offset="50%" stop-color="#3ad29f"/>
+                <stop offset="100%" stop-color="#ffcd00"/>
+              </linearGradient>
+            </defs>
+            <rect width="24" height="24" rx="6" fill="url(#playGrad)"/>
+            <path d="M9 6l9 6-9 6V6z" fill="#fff"/>
+          </svg>
+          Test on Android (Beta)
+        </a>
       </div>
       <p class="app-note">
         Android beta — the link opens Google Play's testing page. Tap "Become a tester" there,
