@@ -239,6 +239,22 @@
     else { checkCatchUp(); scheduleNext(); }
   }
 
+  // Android 12+ (API 31+) has no runtime permission dialog for exact
+  // alarms - the reader has to flip it on themselves via a dedicated system
+  // settings screen (Settings > Apps > ... > Alarms & reminders). Without
+  // it, prayer-time reminders can be delayed or silently dropped under
+  // battery optimization instead of firing at the exact instant they're
+  // for, so - once notifications are actually granted and reminders are
+  // being turned on - send the reader straight to that settings screen
+  // instead of leaving them to find it on their own.
+  function maybeRequestExactAlarm() {
+    var ea = global.Capacitor && global.Capacitor.Plugins && global.Capacitor.Plugins.ExactAlarm;
+    if (!ea) return;
+    ea.canScheduleExactAlarms().then(function (res) {
+      if (res && res.value === false) ea.openSettings().catch(function () {});
+    }).catch(function () {});
+  }
+
   // On native, the OS-level permission dialog goes through LocalNotifications
   // instead of the Web Notification API (which a WebView can't reliably
   // surface as a real system prompt anyway). Returns "granted", "denied", or
@@ -279,6 +295,7 @@
     saveCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude, ts: Date.now() });
     setEnabled(true);
     refreshSchedule();
+    maybeRequestExactAlarm();
     return { ok: true };
   }
 
@@ -295,6 +312,7 @@
 
     setBedtimeEnabled(true);
     refreshSchedule();
+    maybeRequestExactAlarm();
     return { ok: true };
   }
 
