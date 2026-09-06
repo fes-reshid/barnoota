@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
+  GoogleAuthProvider,
   confirmPasswordReset as fbConfirmPasswordReset,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut as fbSignOut,
 } from 'firebase/auth';
 import { auth, isFirebaseConfigured } from '@/firebase/config';
@@ -16,6 +18,7 @@ interface AuthContextValue {
   loading: boolean;
   schoolId: string;
   login: (email: string, password: string) => Promise<AppUser>;
+  loginWithGoogle: () => Promise<AppUser>;
   logout: () => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
   confirmPasswordReset: (oobCode: string, newPassword: string) => Promise<void>;
@@ -103,6 +106,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const match = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
         if (!match) throw new Error('No account found with that email.');
         localStorage.setItem(DEMO_SESSION_KEY, match.id);
+        setCurrentUser(match);
+        return match;
+      },
+
+      async loginWithGoogle() {
+        if (!isFirebaseConfigured || !auth) {
+          throw new Error('Google sign-in requires a connected Firebase project — use a demo account instead.');
+        }
+        const cred = await signInWithPopup(auth, new GoogleAuthProvider());
+        const match = await usersRepo.get(cred.user.uid);
+        if (!match) {
+          // Firebase Auth created the account, but nobody provisioned a
+          // matching profile document — sign them back out rather than
+          // leaving them authenticated with no app access.
+          await fbSignOut(auth);
+          throw new Error('No profile found for this Google account. Contact your school admin to get access.');
+        }
         setCurrentUser(match);
         return match;
       },

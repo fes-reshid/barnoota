@@ -117,3 +117,7 @@ That's it — from then on, the events in the table above send automatically. Ch
 ## Roles
 
 Super Admin, School Admin, Teacher, Parent and Student each get a dedicated dashboard and a sidebar scoped to their permissions, enforced by `src/routes/ProtectedRoute.tsx`.
+
+## Google sign-in
+
+The login page shows a "Sign in with Google" button whenever a Firebase project is connected (it needs the **Google** provider enabled under Authentication → Sign-in method). One limitation to know about: a `users/{uid}` profile document is keyed by whichever Firebase Auth account signed in, and `createStaffAccount()` (used by "Add teacher"/"Add administrator") always creates an **email/password** account — so someone who signs in with Google for the first time will get a *different* uid than their email/password account, even with the same email, and see "No profile found." To let a specific person use Google: have them click "Sign in with Google" once (it'll fail with that message), find their new account under Authentication → Users by email to get its uid, then create (or move) their `users/{uid}` document to that uid.

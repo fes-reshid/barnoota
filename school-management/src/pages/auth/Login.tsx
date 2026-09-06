@@ -7,7 +7,7 @@ import { DEMO_ACCOUNTS, homePathForRole } from '@/lib/roles';
 import { isFirebaseConfigured } from '@/firebase/config';
 
 export default function Login() {
-  const { currentUser, login } = useAuth();
+  const { currentUser, login, loginWithGoogle } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
   if (currentUser) {
     const from = (location.state as { from?: Location })?.from?.pathname;
@@ -34,6 +35,20 @@ export default function Login() {
       setError(err instanceof Error ? err.message : 'Unable to sign in.');
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setError('');
+    setGoogleSubmitting(true);
+    try {
+      const user = await loginWithGoogle();
+      showToast(`Welcome back, ${user.name.split(' ')[0]}!`);
+      navigate(homePathForRole(user.role), { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to sign in with Google.');
+    } finally {
+      setGoogleSubmitting(false);
     }
   }
 
@@ -93,6 +108,25 @@ export default function Login() {
               Sign in
             </button>
           </form>
+
+          {isFirebaseConfigured && (
+            <>
+              <div className="my-4 flex items-center gap-3">
+                <div className="h-px flex-1 bg-slate-200" />
+                <span className="text-xs text-slate-400">or</span>
+                <div className="h-px flex-1 bg-slate-200" />
+              </div>
+              <button
+                type="button"
+                className="btn-secondary w-full"
+                disabled={googleSubmitting}
+                onClick={handleGoogleSignIn}
+              >
+                {googleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
+                Sign in with Google
+              </button>
+            </>
+          )}
         </div>
 
         {!isFirebaseConfigured && (
@@ -126,5 +160,16 @@ export default function Login() {
         )}
       </div>
     </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.82z" />
+      <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.88-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.11A12 12 0 0 0 12 24z" />
+      <path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28V6.61H1.26A12 12 0 0 0 0 12c0 1.94.46 3.77 1.26 5.39z" />
+      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.26 6.61l4.01 3.11C6.22 6.86 8.87 4.75 12 4.75z" />
+    </svg>
   );
 }
