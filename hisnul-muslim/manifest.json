@@ -3,7 +3,7 @@
   "name": "Hisnul Muslim — Zikrii Musliimaa",
   "short_name": "Hisnul Muslim",
   "description": "Fortress of the Muslim — adhkar with Arabic text and Oromo translation.",
-  "start_url": "./index.html",
+  "start_url": "./index.html#/home",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
