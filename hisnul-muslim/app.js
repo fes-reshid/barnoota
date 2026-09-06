@@ -2622,7 +2622,6 @@
         '<div class="settings-section-head">' + icon("heart", 16) + "<span>Appii biroo / Qoodi</span></div>" +
         '<div class="share-grid">' +
           '<button id="settings-share">' + icon("share2", 16) + " Hiriyyootatti qoodi</button>" +
-          '<a href="mailto:fes900@yahoo.com?subject=App%20Suggestion">Appii biroo gaafadhu</a>' +
         "</div>" +
         '<p class="copyright">© ' + new Date().getFullYear() + " — Feysel Mustefa</p>" +
       "</section>"
