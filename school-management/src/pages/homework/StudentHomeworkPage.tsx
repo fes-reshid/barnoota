@@ -7,7 +7,8 @@ import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Badge } from '@/components/ui/Badge';
 import { useToast } from '@/components/ui/Toast';
-import { Paperclip, ClipboardList } from 'lucide-react';
+import { FileLink } from '@/components/ui/FileLink';
+import { ClipboardList } from 'lucide-react';
 
 export default function StudentHomeworkPage() {
   usePageTitle('Homework');
@@ -55,11 +56,7 @@ export default function StudentHomeworkPage() {
             />
             <CardBody className="space-y-3">
               <p className="text-sm text-slate-600">{h.description}</p>
-              {h.attachmentUrl && (
-                <a href={h.attachmentUrl} target="_blank" rel="noreferrer" className="flex w-fit items-center gap-1 text-xs font-medium text-brand-700 hover:underline">
-                  <Paperclip className="h-3.5 w-3.5" /> Download attachment
-                </a>
-              )}
+              {h.attachmentUrl && <FileLink url={h.attachmentUrl} name="Download attachment" />}
               {submission?.grade && <p className="text-xs text-slate-500">Grade: <span className="font-medium text-slate-700">{submission.grade}</span></p>}
               {submission?.feedback && <p className="text-xs text-slate-500">Feedback: {submission.feedback}</p>}
               {!submitted && (

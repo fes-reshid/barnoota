@@ -13,6 +13,7 @@ import { DataTable, type Column } from '@/components/ui/DataTable';
 import { Pagination } from '@/components/ui/Pagination';
 import { SearchInput } from '@/components/ui/SearchInput';
 import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useToast } from '@/components/ui/Toast';
 import { StudentFormModal } from './StudentFormModal';
@@ -110,9 +111,7 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
       header: 'Student',
       render: (s) => (
         <Link to={`${s.id}`} className="flex items-center gap-3 hover:underline">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
-            {s.firstName[0]}{s.lastName[0]}
-          </div>
+          <Avatar photoUrl={s.photoUrl} initials={`${s.firstName[0]}${s.lastName[0]}`} />
           <div>
             <p className="font-medium text-slate-800">{s.firstName} {s.lastName}</p>
             <p className="text-xs text-slate-500">{s.studentCode}</p>

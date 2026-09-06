@@ -10,6 +10,7 @@ import { DataTable, type Column } from '@/components/ui/DataTable';
 import { Pagination } from '@/components/ui/Pagination';
 import { SearchInput } from '@/components/ui/SearchInput';
 import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useToast } from '@/components/ui/Toast';
 import { TeacherFormModal } from './TeacherFormModal';
@@ -43,9 +44,7 @@ export default function TeacherList() {
       header: 'Teacher',
       render: (t) => (
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-100 text-sm font-semibold text-sky-700">
-            {t.firstName[0]}{t.lastName[0]}
-          </div>
+          <Avatar photoUrl={t.photoUrl} initials={`${t.firstName[0]}${t.lastName[0]}`} tone="sky" />
           <div>
             <p className="font-medium text-slate-800">{t.firstName} {t.lastName}</p>
             <p className="text-xs text-slate-500">{t.teacherCode}</p>

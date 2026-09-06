@@ -1,17 +1,24 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon, Camera } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
+import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
 import {
   studentsRepo, classesRepo, attendanceRepo, homeworkRepo, homeworkSubmissionsRepo,
   examResultsRepo, examsRepo, subjectsRepo, feeInvoicesRepo, feeStructuresRepo,
   studentDocumentsRepo, quranProgressRepo, iqraProgressRepo, islamicStudiesRepo, oromoProgressRepo,
 } from '@/lib/services';
+import { studentDocumentPath, studentPhotoPath, uploadFile } from '@/lib/fileStorage';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Avatar } from '@/components/ui/Avatar';
+import { FileUpload } from '@/components/ui/FileUpload';
+import { FileLink } from '@/components/ui/FileLink';
+import { useToast } from '@/components/ui/Toast';
+import type { StudentDocument } from '@/types';
 
 const TABS = ['Overview', 'Attendance', 'Homework', 'Exams', 'Fees', 'Documents', 'Progress'] as const;
 type Tab = (typeof TABS)[number];
@@ -19,9 +26,12 @@ type Tab = (typeof TABS)[number];
 export default function StudentProfile() {
   usePageTitle('Student Profile');
   const { id } = useParams<{ id: string }>();
+  const { schoolId } = useAuth();
+  const { showToast } = useToast();
   const [tab, setTab] = useState<Tab>('Overview');
+  const [docCategory, setDocCategory] = useState<StudentDocument['category']>('other');
 
-  const { data: students, loading: l1 } = useRepoList(studentsRepo);
+  const { data: students, loading: l1, reload: reloadStudents } = useRepoList(studentsRepo);
   const { data: classes, loading: l2 } = useRepoList(classesRepo);
   const { data: attendance, loading: l3 } = useRepoList(attendanceRepo);
   const { data: homework, loading: l4 } = useRepoList(homeworkRepo);
@@ -31,7 +41,7 @@ export default function StudentProfile() {
   const { data: subjects, loading: l8 } = useRepoList(subjectsRepo);
   const { data: invoices, loading: l9 } = useRepoList(feeInvoicesRepo);
   const { data: feeStructures, loading: l10 } = useRepoList(feeStructuresRepo);
-  const { data: documents, loading: l11 } = useRepoList(studentDocumentsRepo);
+  const { data: documents, loading: l11, reload: reloadDocuments } = useRepoList(studentDocumentsRepo);
   const { data: quran, loading: l12 } = useRepoList(quranProgressRepo);
   const { data: iqra, loading: l13 } = useRepoList(iqraProgressRepo);
   const { data: islamic, loading: l14 } = useRepoList(islamicStudiesRepo);
@@ -72,8 +82,29 @@ export default function StudentProfile() {
       <Card>
         <CardBody className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xl font-semibold text-brand-700">
-              {student.firstName[0]}{student.lastName[0]}
+            <div className="relative">
+              <Avatar photoUrl={student.photoUrl} initials={`${student.firstName[0]}${student.lastName[0]}`} size="lg" />
+              <label className="absolute -bottom-1 -right-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 shadow-sm hover:text-brand-600">
+                <Camera className="h-3.5 w-3.5" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    e.target.value = '';
+                    if (!file) return;
+                    try {
+                      const uploaded = await uploadFile(studentPhotoPath(schoolId, student.id, file.name), file);
+                      await studentsRepo.update(student.id, { photoUrl: uploaded.url });
+                      showToast('Photo updated.');
+                      reloadStudents();
+                    } catch {
+                      showToast('Could not update photo.', 'error');
+                    }
+                  }}
+                />
+              </label>
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900">{student.firstName} {student.lastName}</h2>
@@ -231,14 +262,41 @@ export default function StudentProfile() {
 
       {tab === 'Documents' && (
         <Card>
-          <CardHeader title="Documents" />
+          <CardHeader
+            title="Documents"
+            action={
+              <div className="flex items-center gap-2">
+                <select
+                  className="input !w-auto !py-1.5 text-xs"
+                  value={docCategory}
+                  onChange={(e) => setDocCategory(e.target.value as StudentDocument['category'])}
+                >
+                  <option value="id">ID</option>
+                  <option value="medical">Medical</option>
+                  <option value="academic">Academic</option>
+                  <option value="other">Other</option>
+                </select>
+                <FileUpload
+                  label="Upload"
+                  buildPath={(fileName) => studentDocumentPath(schoolId, student.id, fileName)}
+                  onUploaded={async (file) => {
+                    await studentDocumentsRepo.create({
+                      schoolId, studentId: student.id, name: file.name, category: docCategory,
+                      fileUrl: file.url, uploadedAt: new Date().toISOString(),
+                    });
+                    reloadDocuments();
+                  }}
+                />
+              </div>
+            }
+          />
           {myDocuments.length === 0 ? (
             <EmptyState icon={FileText} title="No documents uploaded" description="Documents such as ID copies and medical records will appear here." />
           ) : (
             <CardBody className="!p-0 divide-y divide-slate-100">
               {myDocuments.map((d) => (
                 <div key={d.id} className="flex items-center justify-between px-5 py-3">
-                  <p className="text-sm text-slate-700">{d.name}</p>
+                  <FileLink url={d.fileUrl} name={d.name} className="text-sm text-slate-700 hover:text-brand-700 hover:underline" />
                   <Badge tone="sky">{d.category}</Badge>
                 </div>
               ))}

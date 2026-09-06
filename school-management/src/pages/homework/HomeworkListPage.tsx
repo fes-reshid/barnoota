@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Paperclip } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoList } from '@/lib/useRepoList';
 import { homeworkRepo, homeworkSubmissionsRepo, classesRepo, subjectsRepo, studentsRepo } from '@/lib/services';
@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Badge } from '@/components/ui/Badge';
+import { FileLink } from '@/components/ui/FileLink';
 import { HomeworkFormModal } from './HomeworkFormModal';
 
 export default function HomeworkListPage() {
@@ -47,11 +48,7 @@ export default function HomeworkListPage() {
                 />
                 <CardBody className="space-y-2">
                   <p className="text-sm text-slate-600">{h.description}</p>
-                  {h.attachmentUrl && (
-                    <a href={h.attachmentUrl} target="_blank" rel="noreferrer" className="flex w-fit items-center gap-1 text-xs font-medium text-brand-700 hover:underline">
-                      <Paperclip className="h-3.5 w-3.5" /> View attachment
-                    </a>
-                  )}
+                  {h.attachmentUrl && <FileLink url={h.attachmentUrl} name="View attachment" />}
                   <p className="text-xs text-slate-500">{submitted} of {classSize} students submitted</p>
                 </CardBody>
               </Card>

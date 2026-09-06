@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { FormField } from '@/components/ui/FormField';
+import { FileUpload } from '@/components/ui/FileUpload';
+import { Avatar } from '@/components/ui/Avatar';
 import { useToast } from '@/components/ui/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { teachersRepo } from '@/lib/services';
 import { createStaffAccount } from '@/lib/createStaffAccount';
+import { teacherPhotoPath } from '@/lib/fileStorage';
 import { isFirebaseConfigured } from '@/firebase/config';
 import type { Subject, Teacher } from '@/types';
 
@@ -25,6 +28,8 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
   const { schoolId } = useAuth();
   const { showToast } = useToast();
   const [form, setForm] = useState(emptyForm);
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>();
+  const [draftId, setDraftId] = useState('');
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -34,8 +39,11 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
         firstName: teacher.firstName, lastName: teacher.lastName, email: teacher.email, phone: teacher.phone,
         subjectIds: teacher.subjectIds, employmentType: teacher.employmentType, hireDate: teacher.hireDate,
       });
+      setPhotoUrl(teacher.photoUrl);
     } else {
       setForm(emptyForm);
+      setPhotoUrl(undefined);
+      setDraftId(crypto.randomUUID());
     }
     setErrors({});
   }, [teacher, open]);
@@ -61,12 +69,12 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
     setSaving(true);
     try {
       if (teacher) {
-        await teachersRepo.update(teacher.id, form);
+        await teachersRepo.update(teacher.id, { ...form, photoUrl });
         showToast('Teacher updated.');
       } else {
         const count = (await teachersRepo.list(schoolId)).length;
         const newTeacher = await teachersRepo.create({
-          schoolId, teacherCode: `T-${1000 + count + 1}`, classIds: [], status: 'active', ...form,
+          schoolId, teacherCode: `T-${1000 + count + 1}`, classIds: [], status: 'active', photoUrl, ...form,
         });
         await createStaffAccount({
           schoolId, role: 'teacher', teacherId: newTeacher.id,
@@ -93,6 +101,15 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
         <button className="btn-secondary" onClick={onClose}>Cancel</button>
         <button className="btn-primary" onClick={handleSave} disabled={saving}>{teacher ? 'Save changes' : 'Add teacher'}</button>
       </>}>
+      <div className="mb-4 flex items-center gap-3">
+        <Avatar photoUrl={photoUrl} initials={`${form.firstName[0] ?? '?'}${form.lastName[0] ?? ''}`} tone="sky" size="lg" />
+        <FileUpload
+          label={photoUrl ? 'Change photo' : 'Upload photo'}
+          accept="image/*"
+          buildPath={(fileName) => teacherPhotoPath(schoolId, teacher?.id ?? draftId, fileName)}
+          onUploaded={(file) => setPhotoUrl(file.url)}
+        />
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField label="First name" required error={errors.firstName}>
           <input className="input" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />

@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { FormField } from '@/components/ui/FormField';
+import { FileUpload } from '@/components/ui/FileUpload';
 import { useToast } from '@/components/ui/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { homeworkRepo } from '@/lib/services';
+import { homeworkAttachmentPath, type UploadedFile } from '@/lib/fileStorage';
 import type { SchoolClass, Subject } from '@/types';
 
 interface Props {
@@ -23,13 +26,15 @@ export function HomeworkFormModal({ open, onClose, onSaved, classes, subjects }:
   const { schoolId, currentUser } = useAuth();
   const { showToast } = useToast();
   const [form, setForm] = useState({ ...emptyForm, classId: classes[0]?.id ?? '', subjectId: subjects[0]?.id ?? '' });
-  const [attachment, setAttachment] = useState<File | null>(null);
+  const [attachment, setAttachment] = useState<UploadedFile | null>(null);
+  const [draftId, setDraftId] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open) {
       setForm({ ...emptyForm, classId: classes[0]?.id ?? '', subjectId: subjects[0]?.id ?? '' });
       setAttachment(null);
+      setDraftId(crypto.randomUUID());
     }
   }, [open, classes, subjects]);
 
@@ -41,7 +46,7 @@ export function HomeworkFormModal({ open, onClose, onSaved, classes, subjects }:
         schoolId,
         teacherId: currentUser?.teacherId ?? '',
         ...form,
-        attachmentUrl: attachment ? URL.createObjectURL(attachment) : undefined,
+        attachmentUrl: attachment?.url,
         assignedDate: new Date().toISOString().slice(0, 10),
       });
       showToast('Homework assigned.');
@@ -83,7 +88,20 @@ export function HomeworkFormModal({ open, onClose, onSaved, classes, subjects }:
           <input type="date" className="input" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} />
         </FormField>
         <FormField label="Attachment">
-          <input type="file" className="input" onChange={(e) => setAttachment(e.target.files?.[0] ?? null)} />
+          {attachment ? (
+            <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700">
+              <span className="truncate">{attachment.name}</span>
+              <button type="button" className="text-slate-400 hover:text-slate-600" onClick={() => setAttachment(null)}>
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <FileUpload
+              label="Attach a file"
+              buildPath={(fileName) => homeworkAttachmentPath(schoolId, draftId, fileName)}
+              onUploaded={setAttachment}
+            />
+          )}
         </FormField>
       </div>
     </Modal>

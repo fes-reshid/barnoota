@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { FormField } from '@/components/ui/FormField';
+import { FileUpload } from '@/components/ui/FileUpload';
+import { Avatar } from '@/components/ui/Avatar';
 import { useToast } from '@/components/ui/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { studentsRepo } from '@/lib/services';
+import { studentPhotoPath } from '@/lib/fileStorage';
 import type { SchoolClass, Student } from '@/types';
 
 interface StudentFormModalProps {
@@ -24,6 +27,8 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
   const { schoolId } = useAuth();
   const { showToast } = useToast();
   const [form, setForm] = useState(emptyForm);
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>();
+  const [draftId, setDraftId] = useState('');
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -36,8 +41,11 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
         emergencyContactName: student.emergencyContactName, emergencyContactPhone: student.emergencyContactPhone,
         medicalNotes: student.medicalNotes ?? '',
       });
+      setPhotoUrl(student.photoUrl);
     } else {
       setForm({ ...emptyForm, classId: classes[0]?.id ?? '' });
+      setPhotoUrl(undefined);
+      setDraftId(crypto.randomUUID());
     }
     setErrors({});
   }, [student, open, classes]);
@@ -60,7 +68,7 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
     try {
       const classObj = classes.find((c) => c.id === form.classId);
       if (student) {
-        await studentsRepo.update(student.id, { ...form, yearLevel: classObj?.yearLevel ?? student.yearLevel });
+        await studentsRepo.update(student.id, { ...form, photoUrl, yearLevel: classObj?.yearLevel ?? student.yearLevel });
         showToast('Student updated.');
       } else {
         const count = (await studentsRepo.list(schoolId)).length;
@@ -68,6 +76,7 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
           schoolId,
           studentCode: `S-${2000 + count + 1}`,
           ...form,
+          photoUrl,
           yearLevel: classObj?.yearLevel ?? '',
           enrollmentDate: new Date().toISOString().slice(0, 10),
           status: 'active',
@@ -98,6 +107,15 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
         </>
       }
     >
+      <div className="mb-4 flex items-center gap-3">
+        <Avatar photoUrl={photoUrl} initials={`${form.firstName[0] ?? '?'}${form.lastName[0] ?? ''}`} size="lg" />
+        <FileUpload
+          label={photoUrl ? 'Change photo' : 'Upload photo'}
+          accept="image/*"
+          buildPath={(fileName) => studentPhotoPath(schoolId, student?.id ?? draftId, fileName)}
+          onUploaded={(file) => setPhotoUrl(file.url)}
+        />
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField label="First name" required error={errors.firstName}>
           <input className="input" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
