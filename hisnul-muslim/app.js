@@ -2716,8 +2716,8 @@
     if (homeState) { homeState.destroy(); homeState = null; }
     var r = parseHash();
     var html = "";
-    if (r.parts[0] === "home") html = pageHome();
-    else if (r.parts[0] === "categories" || r.parts.length === 0) html = pageCategories();
+    if (r.parts[0] === "home" || r.parts.length === 0) html = pageHome();
+    else if (r.parts[0] === "categories") html = pageCategories();
     else if (r.parts[0] === "favorites") html = pageFavorites();
     else if (r.parts[0] === "search") html = pageSearch(r.query);
     else if (r.parts[0] === "tasbih") html = pageTasbih();
@@ -2811,6 +2811,20 @@
   scheduleNextAzan();
   initAdMob();
   hideNativeSplash();
+
+  // Fade out the iOS-only splash overlay (see index.html) now that Home
+  // has actually rendered. A short fixed delay, not "hide the instant
+  // navigate() returns" - the overlay's whole purpose is to be a real,
+  // visible branded moment covering for Safari's unreliable manifest-based
+  // splash, so it should stay up briefly even though the content
+  // underneath is already ready.
+  var iosSplash = document.getElementById("ios-splash");
+  if (iosSplash && !iosSplash.hidden) {
+    setTimeout(function () {
+      iosSplash.classList.add("hide");
+      setTimeout(function () { iosSplash.remove(); }, 500);
+    }, 900);
+  }
 
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") scheduleNextAzan();
