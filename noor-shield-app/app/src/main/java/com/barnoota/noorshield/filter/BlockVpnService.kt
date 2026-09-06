@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.VpnService
 import android.os.ParcelFileDescriptor
 import android.util.Log
@@ -46,6 +47,7 @@ class BlockVpnService : VpnService() {
 
     private var vpnInterface: ParcelFileDescriptor? = null
     private val running = AtomicBoolean(false)
+    private var networkDnsServers: List<InetAddress> = emptyList()
 
     @Volatile private var blocklist: DomainBlocklist = DomainBlocklist.EMPTY
 
@@ -91,6 +93,13 @@ class BlockVpnService : VpnService() {
     }
 
     private fun startVpn() {
+        // Read before establish(): once the VPN is up, this device's "active network" DNS
+        // servers reported here may reflect the VPN's own virtual DNS server instead of the
+        // real WiFi/cellular network's — capturing them now means the network's own resolver
+        // (the one thing its own router/carrier is guaranteed to let through) is available as
+        // an upstream option, not just the public resolvers in UPSTREAM_DNS_SERVERS.
+        networkDnsServers = currentNetworkDnsServers()
+
         val builder = Builder()
             .setSession(getString(R.string.app_name))
             .addAddress(TUN_ADDRESS, 24)
@@ -107,6 +116,19 @@ class BlockVpnService : VpnService() {
         thread(name = "noor-shield-dns-loop") { runPacketLoop() }
     }
 
+    /** The DNS servers the underlying network (WiFi/cellular) is actually configured to use. */
+    private fun currentNetworkDnsServers(): List<InetAddress> {
+        return try {
+            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val network = cm.activeNetwork ?: return emptyList()
+            val linkProperties = cm.getLinkProperties(network) ?: return emptyList()
+            linkProperties.dnsServers.filter { it.hostAddress != FAKE_DNS_SERVER }
+        } catch (e: Exception) {
+            Log.w(TAG, "could not read the network's own DNS servers: ${e.message}")
+            emptyList()
+        }
+    }
+
     private fun stopVpn() {
         running.set(false)
         vpnInterface?.close()
@@ -118,7 +140,15 @@ class BlockVpnService : VpnService() {
         val input = FileInputStream(tun.fileDescriptor)
         val output = FileOutputStream(tun.fileDescriptor)
         val buffer = ByteArray(32_767)
-        val upstreamDns = InetAddress.getByName(UPSTREAM_DNS)
+        // Some home routers/ISPs firewall or silently drop outbound UDP/53 to
+        // anything other than their own resolver — trying only one upstream
+        // server means every non-blocked domain fails to resolve on such a
+        // network, which looks indistinguishable from "everything is
+        // blocked" to whoever's using the app. The network's own DNS server
+        // goes first (the one thing its router/carrier is guaranteed to
+        // allow), then the public fallbacks for networks that don't hand
+        // out a usable resolver.
+        val upstreamServers = (networkDnsServers + UPSTREAM_DNS_SERVERS.map { InetAddress.getByName(it) }).distinct()
 
         while (running.get()) {
             val length = try {
@@ -141,7 +171,7 @@ class BlockVpnService : VpnService() {
                 serviceScope.launch { ActivityLogRepository.record(applicationContext, domain) }
                 DnsMessage.buildNxDomainResponse(dnsPayload, dnsPayload.size)
             } else {
-                forwardToUpstream(dnsPayload, upstreamDns) ?: continue
+                forwardToUpstream(dnsPayload, upstreamServers, query?.question) ?: continue
             }
 
             val responsePacket = Ipv4UdpPacket.build(
@@ -159,22 +189,32 @@ class BlockVpnService : VpnService() {
         }
     }
 
-    /** Forwards an unfiltered DNS query to a real resolver, protecting the socket from routing back into the VPN. */
-    private fun forwardToUpstream(query: ByteArray, upstream: InetAddress): ByteArray? {
-        return try {
-            DatagramSocket().use { socket ->
-                protect(socket)
-                socket.soTimeout = 3_000
-                socket.send(DatagramPacket(query, query.size, InetSocketAddress(upstream, 53)))
-                val replyBuf = ByteArray(4096)
-                val replyPacket = DatagramPacket(replyBuf, replyBuf.size)
-                socket.receive(replyPacket)
-                replyBuf.copyOf(replyPacket.length)
+    /**
+     * Forwards an unfiltered DNS query to a real resolver, protecting the socket from routing
+     * back into the VPN. Tries each of [upstreams] in turn (short timeout each) rather than one
+     * fixed server — see the comment on [runPacketLoop] for why.
+     */
+    private fun forwardToUpstream(query: ByteArray, upstreams: List<InetAddress>, question: String?): ByteArray? {
+        for (upstream in upstreams) {
+            try {
+                DatagramSocket().use { socket ->
+                    protect(socket)
+                    socket.soTimeout = UPSTREAM_TIMEOUT_MS
+                    socket.send(DatagramPacket(query, query.size, InetSocketAddress(upstream, 53)))
+                    val replyBuf = ByteArray(4096)
+                    val replyPacket = DatagramPacket(replyBuf, replyBuf.size)
+                    socket.receive(replyPacket)
+                    return replyBuf.copyOf(replyPacket.length)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "upstream DNS forward to ${upstream.hostAddress} failed: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "upstream DNS forward failed: ${e.message}")
-            null
         }
+        // Every configured resolver failed for this query — worth its own log line, distinct
+        // from "upstream DNS forward failed" above, since seeing this a lot points at the
+        // network (a firewall/router blocking DNS-over-UDP entirely) rather than any one server.
+        Log.e(TAG, "All upstream DNS servers failed for query${question?.let { " ($it)" } ?: ""}")
+        return null
     }
 
     private fun buildNotification(): Notification {
@@ -198,7 +238,11 @@ class BlockVpnService : VpnService() {
         private const val NOTIFICATION_ID = 1001
         private const val TUN_ADDRESS = "10.111.222.1"
         private const val FAKE_DNS_SERVER = "10.111.222.1"
-        private const val UPSTREAM_DNS = "1.1.1.1"
+        // Cloudflare, then Google, then Quad9 — distinct operators/anycast networks, so a
+        // network that blocks one specific provider's resolver likely still lets another
+        // through. Kept short: this list is walked serially per query.
+        private val UPSTREAM_DNS_SERVERS = listOf("1.1.1.1", "8.8.8.8", "9.9.9.9")
+        private const val UPSTREAM_TIMEOUT_MS = 1_500
 
         const val ACTION_RELOAD = "com.barnoota.noorshield.action.RELOAD_BLOCKLIST"
 
