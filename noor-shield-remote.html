@@ -168,6 +168,37 @@
   .device .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .empty { color: var(--ink-faint); font-size: 0.9rem; padding: 6px 2px; }
 
+  .managepanel {
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .managesection { display: flex; flex-direction: column; gap: 10px; }
+  .managesection h4 {
+    margin: 0; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--ink-faint);
+  }
+  .managesection .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .managesection select {
+    padding: 9px 12px; border-radius: 9px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); font-size: 0.9rem;
+  }
+
+  .addrow { display: flex; gap: 10px; }
+  .addrow input { flex: 1; }
+
+  .domainlist { display: flex; flex-direction: column; }
+  .domainrow {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--line); gap: 10px;
+  }
+  .domainrow:last-child { border-bottom: none; }
+  .domainrow span { font-family: "IBM Plex Mono", monospace; font-size: 0.86rem; word-break: break-all; }
+  .domainrow .linkbtn.removelink { color: var(--warn); font-weight: 600; font-size: 0.8rem; flex-shrink: 0; }
+  .domaincount { color: var(--ink-faint); font-weight: 600; }
+
   .refreshrow { display: flex; align-items: center; justify-content: space-between; }
   .refreshrow .linkbtn { font-weight: 500; color: var(--ink-faint); }
 
@@ -461,17 +492,110 @@
       return Math.floor(hours / 24) + "d ago";
     }
 
-    async function sendCommand(deviceId, kind, button) {
+    async function sendCommand(deviceId, kind, button, payload) {
       button.disabled = true;
       try {
         var user = (await sb.auth.getUser()).data.user;
-        var res = await sb.from("commands").insert({ device_id: deviceId, kind: kind, requested_by: user.id });
+        var res = await sb.from("commands").insert({
+          device_id: deviceId,
+          kind: kind,
+          requested_by: user.id,
+          payload: payload || {},
+        });
         if (res.error) throw res.error;
       } catch (err) {
         alert(err.message || "Could not send that command.");
       } finally {
         button.disabled = false;
       }
+    }
+
+    // Mirrors src/main/blocklist.js's normalizeDomain/isValidDomain exactly,
+    // so a site added here is stored in the same canonical form the PC's
+    // own "Add a site" screen would produce for the same input.
+    function normalizeDomain(rawInput) {
+      var value = String(rawInput || "").trim().toLowerCase();
+      var schemeIndex = value.indexOf("://");
+      if (schemeIndex >= 0) value = value.slice(schemeIndex + 3);
+      value = value.split("/")[0];
+      value = value.split(":")[0];
+      if (value.indexOf("www.") === 0) value = value.slice(4);
+      return value;
+    }
+    var HOSTNAME_RE = /^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+$/;
+    function isValidDomain(domain) {
+      return HOSTNAME_RE.test(domain);
+    }
+
+    async function loadDeviceDomains(device, listEl, countEl) {
+      listEl.innerHTML = '<p class="hint">Loading…</p>';
+      var res = await sb
+        .from("device_domains")
+        .select("domain")
+        .eq("device_id", device.id)
+        .order("added_at", { ascending: true });
+
+      if (res.error) {
+        listEl.innerHTML = "";
+        var errline = document.createElement("p");
+        errline.className = "hint";
+        errline.textContent = res.error.message || "Could not load the site list.";
+        listEl.appendChild(errline);
+        return;
+      }
+
+      var domains = (res.data || []).map(function (row) { return row.domain; });
+      countEl.textContent = domains.length;
+      listEl.innerHTML = "";
+
+      if (domains.length === 0) {
+        var empty = document.createElement("p");
+        empty.className = "hint";
+        empty.textContent = "No sites added yet.";
+        listEl.appendChild(empty);
+        return;
+      }
+
+      domains.forEach(function (domain) {
+        var row = document.createElement("div");
+        row.className = "domainrow";
+        var span = document.createElement("span");
+        span.textContent = domain;
+        var removeBtn = document.createElement("button");
+        removeBtn.className = "linkbtn removelink";
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", async function () {
+          removeBtn.disabled = true;
+          var delRes = await sb.from("device_domains").delete().eq("device_id", device.id).eq("domain", domain);
+          if (delRes.error) {
+            alert(delRes.error.message || "Could not remove that site.");
+            removeBtn.disabled = false;
+            return;
+          }
+          loadDeviceDomains(device, listEl, countEl);
+        });
+        row.appendChild(span);
+        row.appendChild(removeBtn);
+        listEl.appendChild(row);
+      });
+    }
+
+    async function addDeviceDomain(device, input, msgEl, listEl, countEl) {
+      var domain = normalizeDomain(input.value);
+      if (!isValidDomain(domain)) {
+        msgEl.textContent = "Enter a domain, like example.com.";
+        msgEl.className = "msg error";
+        return;
+      }
+      msgEl.textContent = "";
+      var res = await sb.from("device_domains").insert({ device_id: device.id, domain: domain });
+      if (res.error) {
+        msgEl.textContent = res.error.code === "23505" ? "That site is already on the list." : res.error.message;
+        msgEl.className = "msg error";
+        return;
+      }
+      input.value = "";
+      loadDeviceDomains(device, listEl, countEl);
     }
 
     function deviceCard(device) {
@@ -503,9 +627,113 @@
       cancelBtn.className = "btn ghost small";
       cancelBtn.textContent = "Cancel sleep";
       cancelBtn.addEventListener("click", function () { sendCommand(device.id, "cancel_sleep_now", cancelBtn); });
+      var manageBtn = document.createElement("button");
+      manageBtn.className = "btn ghost small";
+      manageBtn.textContent = "Manage";
       actions.appendChild(sleepBtn);
       actions.appendChild(cancelBtn);
+      actions.appendChild(manageBtn);
       el.appendChild(actions);
+
+      var panel = document.createElement("div");
+      panel.className = "managepanel";
+      panel.hidden = true;
+
+      // Sleep timer: same command as the quick "Enforce sleep now" button
+      // above, just with a duration the parent picks instead of the fixed
+      // default the server falls back to when no payload is sent.
+      var sleepSection = document.createElement("div");
+      sleepSection.className = "managesection";
+      var sleepHeading = document.createElement("h4");
+      sleepHeading.textContent = "Sleep timer";
+      var sleepRow = document.createElement("div");
+      sleepRow.className = "row";
+      var sleepSelect = document.createElement("select");
+      [1, 2, 4, 8, 12].forEach(function (h) {
+        var opt = document.createElement("option");
+        opt.value = String(h);
+        opt.textContent = h + (h === 1 ? " hour" : " hours");
+        if (h === 8) opt.selected = true;
+        sleepSelect.appendChild(opt);
+      });
+      var sleepForBtn = document.createElement("button");
+      sleepForBtn.className = "btn primary small";
+      sleepForBtn.textContent = "Enforce for this long";
+      sleepForBtn.addEventListener("click", function () {
+        sendCommand(device.id, "enforce_sleep_now", sleepForBtn, { hours: parseInt(sleepSelect.value, 10) });
+      });
+      sleepRow.appendChild(sleepSelect);
+      sleepRow.appendChild(sleepForBtn);
+      sleepSection.appendChild(sleepHeading);
+      sleepSection.appendChild(sleepRow);
+      panel.appendChild(sleepSection);
+
+      // Lock: takes effect the next time this PC checks in (usually within
+      // ~20 seconds), same as every other remote command.
+      var lockSection = document.createElement("div");
+      lockSection.className = "managesection";
+      var lockHeading = document.createElement("h4");
+      lockHeading.textContent = "Screen";
+      var lockBtn = document.createElement("button");
+      lockBtn.className = "btn ghost small";
+      lockBtn.textContent = "Lock computer now";
+      lockBtn.addEventListener("click", function () {
+        if (!confirm("Lock " + device.name + " now?")) return;
+        sendCommand(device.id, "lock_computer", lockBtn);
+      });
+      lockSection.appendChild(lockHeading);
+      lockSection.appendChild(lockBtn);
+      panel.appendChild(lockSection);
+
+      // Blocked sites for this PC specifically — separate from, and in
+      // addition to, whatever's been added from the PC's own app.
+      var sitesSection = document.createElement("div");
+      sitesSection.className = "managesection";
+      var sitesHeading = document.createElement("h4");
+      sitesHeading.textContent = "Blocked sites";
+      var addRow = document.createElement("div");
+      addRow.className = "addrow";
+      var siteInput = document.createElement("input");
+      siteInput.type = "text";
+      siteInput.placeholder = "example.com";
+      var addBtn = document.createElement("button");
+      addBtn.className = "btn primary small";
+      addBtn.textContent = "Add";
+      var siteMsg = document.createElement("p");
+      siteMsg.className = "msg";
+      var siteHint = document.createElement("p");
+      siteHint.className = "hint";
+      siteHint.textContent = "Subdomains are covered automatically.";
+      var countLine = document.createElement("p");
+      countLine.className = "hint";
+      countLine.innerHTML = 'Added by the parent (<span class="domaincount">0</span>)';
+      var domainList = document.createElement("div");
+      domainList.className = "domainlist";
+      var domainCount = countLine.querySelector(".domaincount");
+
+      addBtn.addEventListener("click", function () { addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount); });
+      siteInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount);
+      });
+
+      addRow.appendChild(siteInput);
+      addRow.appendChild(addBtn);
+      sitesSection.appendChild(sitesHeading);
+      sitesSection.appendChild(addRow);
+      sitesSection.appendChild(siteMsg);
+      sitesSection.appendChild(siteHint);
+      sitesSection.appendChild(countLine);
+      sitesSection.appendChild(domainList);
+      panel.appendChild(sitesSection);
+
+      el.appendChild(panel);
+
+      manageBtn.addEventListener("click", function () {
+        var opening = panel.hidden;
+        panel.hidden = !opening;
+        manageBtn.textContent = opening ? "Hide" : "Manage";
+        if (opening) loadDeviceDomains(device, domainList, domainCount);
+      });
 
       return el;
     }
