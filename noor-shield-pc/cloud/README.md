@@ -57,9 +57,11 @@ of these values.
   and re-wrap it.
 - **`../service/cloudSync.js`** — the PC-side half: generates the pairing
   code, polls for it being claimed, then polls for commands and applies
-  them (`enforce_sleep_now`, `cancel_sleep_now`). `shutdown` exists in the
-  schema for later but is deliberately not implemented yet — see the
-  comment at the top of that file for why.
+  them (`enforce_sleep_now`, `cancel_sleep_now`, `lock_computer`).
+  `shutdown` exists in the schema for later but is deliberately not
+  implemented yet — see the comment at the top of that file for why. Also
+  polls `get_device_domains` on the same interval and folds the result into
+  the PC's live blocklist (see `refreshBlocklist` in `handlers.js`).
 - **`seed_license_keys.sql`** — one `insert` per already-issued key hash
   (regenerated from `../src/main/licenseKeyHashes.json` by
   `../scripts/gen-seed-sql.js`, only needed again if a new batch of keys is
@@ -78,9 +80,23 @@ of these values.
 
 | Command | What it does |
 |---|---|
-| `enforce_sleep_now` | Sets `forceSleepUntil` 8 hours out. While active, `isScheduleActive` (in `filterService.js`) reports the schedule as on regardless of the PC's own configured weekly bedtime, and the reminder page (`reminderServer.js`) shows the sleeping-time page with a resume time computed from this, not the weekly schedule. |
+| `enforce_sleep_now` | Sets `forceSleepUntil` this many hours out (`payload.hours`, default 8 when absent — the dashboard's quick button sends no payload; its Manage panel's sleep-timer picker does). While active, `isScheduleActive` (in `filterService.js`) reports the schedule as on regardless of the PC's own configured weekly bedtime, and the reminder page (`reminderServer.js`) shows the sleeping-time page with a resume time computed from this, not the weekly schedule. |
 | `cancel_sleep_now` | Clears `forceSleepUntil`. |
+| `lock_computer` | Runs `rundll32.exe user32.dll,LockWorkStation` — the same effect as Win+L. Windows-only; fails immediately on any other platform. |
 | `shutdown` | Schema-only. `cloudSync.js` marks it `failed` immediately rather than leaving it pending forever. |
+
+## Per-PC blocked sites
+
+Separate from commands: the dashboard's Manage panel lets a parent add or
+remove sites for one specific paired PC, stored directly in
+`device_domains` (the parent's logged-in session writes to it under Row
+Level Security — no function needed, unlike the device-facing side). The PC
+reads its own list back through `get_device_domains`, polled alongside
+commands, and merges the result into its live blocklist (`buildBlocklist()`
+in `handlers.js`) alongside whatever's been added from the app itself. The
+function always returns the *current full list*, not just new additions,
+so a site the parent removes from the dashboard simply stops appearing on
+the PC's next poll — no separate "removed" signal needed.
 
 ## Extending it
 
