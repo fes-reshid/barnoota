@@ -220,6 +220,12 @@
   .refreshrow .linkbtn { font-weight: 500; color: var(--ink-faint); }
 
   footer { text-align: center; color: var(--ink-faint); font-size: 0.78rem; padding: 8px 0 30px; }
+
+  .securitynote {
+    max-width: 640px; margin: 0 auto; padding: 12px 24px 0;
+    color: var(--ink-faint); font-size: 0.82rem; line-height: 1.55; text-align: center;
+  }
+  .bottomsignout { display: flex; justify-content: center; padding-bottom: 40px; }
 </style>
 </head>
 <body>
@@ -290,6 +296,11 @@
     <button id="signout">Sign out · <span id="signed-in-as"></span></button>
   </div>
 
+  <div class="securitynote">
+    For security, you'll be signed out automatically after 3 minutes without any activity on this
+    page. Please sign out yourself once you're done setting up or making changes.
+  </div>
+
   <main>
     <section class="card">
       <div class="cardhead">
@@ -329,6 +340,9 @@
   </main>
 
   <footer>Commands reach a PC the next time it checks in, usually within 20 seconds.</footer>
+  <div class="bottomsignout">
+    <button class="btn ghost" id="signout-bottom">Sign out</button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -474,6 +488,7 @@
     });
 
     $("signout").addEventListener("click", function () { sb.auth.signOut(); });
+    $("signout-bottom").addEventListener("click", function () { sb.auth.signOut(); });
 
     $("pair-submit").addEventListener("click", async function () {
       var code = $("pair-code-input").value.trim();
@@ -911,18 +926,38 @@
       res.data.forEach(function (device) { list.appendChild(deviceCard(device)); });
     }
 
+    // Auto sign-out: this dashboard can lock/unlock and reach into a child's
+    // PC, so leaving it signed in and unattended (a shared family computer,
+    // a browser tab left open) is a real risk. Resets on any activity —
+    // this is an idle timeout, not "always logs out after 3 minutes" — so
+    // it doesn't cut off someone actually using the page.
+    var IDLE_LOGOUT_MS = 3 * 60 * 1000;
+    var idleTimer = null;
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(function () { sb.auth.signOut(); }, IDLE_LOGOUT_MS);
+    }
+    function stopIdleTimer() {
+      if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
+    }
+    ["mousemove", "mousedown", "keydown", "scroll", "touchstart"].forEach(function (evt) {
+      document.addEventListener(evt, function () { if (idleTimer) resetIdleTimer(); }, { passive: true });
+    });
+
     function showApp(session) {
       $("auth-screen").hidden = true;
       $("app-screen").hidden = false;
       $("signed-in-as").textContent = session.user.email;
       loadDevices();
       if (!deviceRefreshTimer) deviceRefreshTimer = setInterval(loadDevices, 10000);
+      resetIdleTimer();
     }
 
     function showAuth() {
       $("app-screen").hidden = true;
       $("auth-screen").hidden = false;
       if (deviceRefreshTimer) { clearInterval(deviceRefreshTimer); deviceRefreshTimer = null; }
+      stopIdleTimer();
     }
 
     sb.auth.onAuthStateChange(function (event, session) {
