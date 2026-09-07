@@ -1,18 +1,26 @@
-# Noor Shield remote control (backend)
+# Noor Shield remote control + licensing (backend)
 
-Lets a parent enforce bedtime on a paired PC from a web dashboard, without
-the PC ever holding a real login of its own. See the design comment at the
-top of `schema.sql` for the full rationale; this file is just the setup
-steps.
+Two independent features share this one Supabase project:
+
+- **Remote control** — lets a parent enforce bedtime on a paired PC from a
+  web dashboard, without the PC ever holding a real login of its own.
+- **Product-key licensing** — a real database of issued keys, so a key can't
+  be reused across unlimited PCs the way the old fully-offline check
+  allowed.
+
+See the design comment at the top of `schema.sql` for the full rationale on
+both; this file is just the setup steps.
 
 ## One-time setup (already done for this deployment)
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the SQL Editor, run `schema.sql` once. Safe to re-run.
+2. In the SQL Editor, run `schema.sql` once, then `seed_license_keys.sql`
+   once (seeds the 1000 already-issued keys). Both are safe to re-run.
 3. From Project Settings → API, take the **Project URL** and the **anon /
    publishable** key (never the `service_role` key — that one must stay
-   secret) and put them into:
-   - `service/cloudSync.js` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`)
+   secret) and put them into `service/supabaseConfig.js` (`SUPABASE_URL`,
+   `SUPABASE_ANON_KEY`) — the single place both `cloudSync.js` and
+   `../src/main/license.js` read them from — and into:
    - `dashboard.html` (`SUPABASE_URL`, `SUPABASE_KEY`, same values) — and
      wherever the deployed copy of it lives (see below)
 
@@ -46,6 +54,19 @@ of these values.
   them (`enforce_sleep_now`, `cancel_sleep_now`). `shutdown` exists in the
   schema for later but is deliberately not implemented yet — see the
   comment at the top of that file for why.
+- **`seed_license_keys.sql`** — one `insert` per already-issued key hash
+  (regenerated from `../src/main/licenseKeyHashes.json` by
+  `../scripts/gen-seed-sql.js`, only needed again if a new batch of keys is
+  ever generated). Populates `license_keys` so `activate_license_key` has
+  real keys to check against.
+- **`../src/main/license.js`** — the PC-side half of licensing:
+  `activateKeyOnline()` hashes the entered key and calls
+  `activate_license_key`, scoped to a random `deviceId` this PC generates
+  for itself once (`store.license.deviceId`) and reuses on every later
+  attempt — so reinstalling the app on the *same* PC still activates
+  cleanly, while a *different* PC trying the same key is rejected as
+  `already_used`. Deliberately "check once": this only ever runs at the
+  moment "Activate" is clicked, never again afterwards.
 
 ## Commands implemented so far
 

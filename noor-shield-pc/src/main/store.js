@@ -34,6 +34,13 @@ const DEFAULTS = {
   // from `parent` (the password/recovery-key system) — activation and
   // account recovery are different concerns and shouldn't share a secret.
   activated: false,
+  // A random id this PC generates for itself the first time it tries to
+  // activate a product key, and reuses on every later attempt (see
+  // license.js's activateKeyOnline). Lets Supabase tell "this same PC is
+  // reactivating its own key, e.g. after a reinstall" apart from "a
+  // different PC is trying to reuse someone else's key" — nothing to do
+  // with the separate `cloud.deviceId` used for remote-control pairing.
+  license: { deviceId: null },
   // Set once, the first time the protection service ever starts on this
   // PC — the anchor for the free trial window (see license.js). Not reset
   // by reinstalling the app; only a full "Remove protection completely"

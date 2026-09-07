@@ -55,9 +55,27 @@ create index if not exists commands_device_pending_idx
   on public.commands (device_id, status)
   where status = 'pending';
 
+-- Product keys. Replaces the old fully-offline scheme (a fixed list of 1000
+-- precomputed key hashes shipped inside the app, in licenseKeyHashes.json)
+-- with a real record of which keys exist and which PC each one activated —
+-- so the same key can no longer be reused across unlimited computers, and a
+-- key can be told apart from a made-up string. Only key_hash is stored,
+-- never the plaintext key, matching how the app already hashed keys before
+-- checking them locally.
+create table if not exists public.license_keys (
+  key_hash text primary key,
+  activated_device_id text,
+  activated_at timestamptz
+);
+
 alter table public.devices enable row level security;
 alter table public.pairing_codes enable row level security;
 alter table public.commands enable row level security;
+alter table public.license_keys enable row level security;
+
+-- No policies for license_keys either (same reasoning as pairing_codes
+-- below): every interaction goes through activate_license_key, so the raw
+-- table is never directly queryable, even by a logged-in user.
 
 -- ---------------------------------------------------------------------
 -- Row Level Security — the parent-facing (logged-in) side only.
@@ -217,5 +235,43 @@ begin
   where id = p_command_id
     and device_id = p_device_id
     and device_id in (select id from public.devices where id = p_device_id and device_secret = p_device_secret);
+end;
+$$;
+
+-- Called once by a PC when the parent clicks "Activate". p_device_id here is
+-- just a random id the PC generated for itself the first time it tried to
+-- activate (see license.js) — nothing to do with the `devices`/pairing
+-- system above, which only exists once a PC is paired for remote control.
+-- Returns 'ok' the first time a key is claimed, 'ok' again on every later
+-- call from the *same* device id (so reinstalling the app on the same PC
+-- keeps working), 'already_used' if a *different* device id already claimed
+-- it, and 'invalid' if the hash isn't a known key at all.
+create or replace function public.activate_license_key(p_key_hash text, p_device_id text)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_row public.license_keys;
+begin
+  select * into v_row from public.license_keys where key_hash = p_key_hash for update;
+
+  if not found then
+    return 'invalid';
+  end if;
+
+  if v_row.activated_device_id is null then
+    update public.license_keys
+    set activated_device_id = p_device_id, activated_at = now()
+    where key_hash = p_key_hash;
+    return 'ok';
+  end if;
+
+  if v_row.activated_device_id = p_device_id then
+    return 'ok';
+  end if;
+
+  return 'already_used';
 end;
 $$;

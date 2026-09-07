@@ -11,8 +11,8 @@ const crypto = require('crypto');
  * This PC never authenticates as a Supabase user — it only ever proves it
  * holds `deviceSecret`, a long random token it generated for itself at
  * pairing time and that only this PC and the paired Supabase project know.
- * SUPABASE_URL/SUPABASE_ANON_KEY below are safe to ship in the app: they
- * identify *which* Supabase project to talk to and grant only the same
+ * SUPABASE_URL/SUPABASE_ANON_KEY (see supabaseConfig.js) are safe to ship in
+ * the app: they identify *which* Supabase project to talk to and grant only the same
  * access any anonymous visitor to the pairing page would have — real access
  * control lives in the database functions (SECURITY DEFINER, checking
  * deviceSecret) and in Row Level Security for the parent's logged-in side,
@@ -25,8 +25,7 @@ const crypto = require('crypto');
  * up anything that can't be undone by just reopening the app.
  */
 
-const SUPABASE_URL = 'https://wjqxbjcmcrjgxnxcowxp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_J-N2ozRX6Rnk1-MI66ORGg_QXG3zJhV';
+const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('./supabaseConfig');
 
 const PAIRING_POLL_MS = 4_000;
 const PAIRING_TIMEOUT_MS = 10 * 60 * 1000; // matches schema.sql's pairing_codes.expires_at

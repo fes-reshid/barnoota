@@ -6,7 +6,8 @@ const { Blocklist, normalizeDomain, isValidDomain } = require(path.join(__dirnam
 const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
 const cloudSync = require('./cloudSync');
-const { isValidKey, trialDaysRemaining, isTrialActive } = require(path.join(
+const crypto = require('crypto');
+const { activateKeyOnline, trialDaysRemaining, isTrialActive } = require(path.join(
   __dirname,
   '..',
   'src',
@@ -388,9 +389,22 @@ function createHandlers(ctx) {
     // recovery key for that (see parentAuth.js).
     'license.activate': async ({ key }) => {
       if (store.get('activated')) return { ok: true, alreadyActivated: true };
-      if (!isValidKey(key)) {
-        return { ok: false, error: 'That product key isn\'t recognized. Double-check it and try again.' };
+
+      const license = store.get('license') || {};
+      const deviceId = license.deviceId || crypto.randomUUID();
+      if (!license.deviceId) store.set('license', { ...license, deviceId });
+
+      const result = await activateKeyOnline(key, deviceId);
+      if (!result.ok) {
+        const messages = {
+          bad_format: 'That product key isn\'t recognized. Double-check it and try again.',
+          invalid: 'That product key isn\'t recognized. Double-check it and try again.',
+          already_used: 'That product key is already activated on a different computer.',
+          network_error: 'Couldn\'t reach the activation server. Check your internet connection and try again.',
+        };
+        return { ok: false, error: messages[result.reason] || messages.invalid };
       }
+
       store.set('activated', true);
       return { ok: true };
     },

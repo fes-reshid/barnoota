@@ -1,26 +1,20 @@
 'use strict';
 
 const crypto = require('crypto');
+const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('../../service/supabaseConfig');
 
 /**
- * Product-key activation, checked entirely on-device against a fixed list
- * of hashes shipped with the app (licenseKeyHashes.json — one per issued
- * key, generated once by scripts/generate-keys.js).
+ * Product-key activation, checked against a real Supabase table
+ * (license_keys / activate_license_key — see cloud/schema.sql) so a key
+ * already claimed by another PC is actually rejected, not just a made-up
+ * or mistyped one. Deliberately "check once, then work offline forever":
+ * activateKeyOnline() is only ever called at the moment the parent clicks
+ * "Activate" — once store.activated is true, the filter keeps enforcing
+ * with no further need for internet, matching the rest of the app.
  *
- * Be clear about what this is and isn't: with no server to check
- * redemption against, this cannot stop the same key being used on more
- * than one PC, and cannot mark a key "used up" anywhere else. What it does
- * do is reject typos and made-up keys immediately — only a string that
- * hashes to one of the 1000 issued keys will ever pass. Real per-key
- * enforcement (and the ability to revoke a key) would need a small hosted
- * redemption service; this is deliberately not that.
- *
- * Keys are hashed rather than listed directly in the source specifically
- * so decompiling the app doesn't hand over usable keys — recovering a key
- * from its hash alone isn't feasible for a random 75-bit value.
+ * Keys are hashed before ever leaving this PC — only the SHA-256 hash is
+ * sent, never the plaintext key.
  */
-
-const KEY_HASHES = new Set(require('./licenseKeyHashes.json'));
 
 const TRIAL_DAYS = 7;
 const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
@@ -49,14 +43,58 @@ function normalizeKey(rawInput) {
     .replace(/[^A-Z0-9]/g, '');
 }
 
-function isValidKey(rawInput) {
+/** Hashes a key the same way scripts/generate-keys.js did, or null if the format is wrong. */
+function hashKey(rawInput) {
   const normalized = normalizeKey(rawInput);
-  if (normalized.length !== 19 || !normalized.startsWith('NOOR')) return false;
-  // Reconstruct the canonical dashed form the hashes were computed over.
+  if (normalized.length !== 19 || !normalized.startsWith('NOOR')) return null;
   const body = normalized.slice(4);
   const canonical = `NOOR-${body.slice(0, 5)}-${body.slice(5, 10)}-${body.slice(10, 15)}`;
-  const hash = crypto.createHash('sha256').update(canonical).digest('hex');
-  return KEY_HASHES.has(hash);
+  return crypto.createHash('sha256').update(canonical).digest('hex');
 }
 
-module.exports = { normalizeKey, isValidKey, trialDaysRemaining, isTrialActive, TRIAL_DAYS };
+/**
+ * Checks a key against Supabase's activate_license_key function, scoped to
+ * this PC's deviceId (see store.js's `license.deviceId`, generated once and
+ * reused on every later activation attempt — including reinstalls — so the
+ * same PC re-activating its own key never looks like reuse on another PC).
+ *
+ * Returns { ok: true } on success, or { ok: false, reason } where reason is
+ * 'invalid' (not a real key), 'already_used' (claimed by a different PC),
+ * 'bad_format' (didn't even look like a key), or 'network_error' (couldn't
+ * reach Supabase at all).
+ */
+async function activateKeyOnline(rawInput, deviceId) {
+  const hash = hashKey(rawInput);
+  if (!hash) return { ok: false, reason: 'bad_format' };
+
+  let res;
+  try {
+    res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/activate_license_key`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_key_hash: hash, p_device_id: deviceId }),
+    });
+  } catch {
+    return { ok: false, reason: 'network_error' };
+  }
+
+  if (!res.ok) return { ok: false, reason: 'network_error' };
+
+  const result = JSON.parse(await res.text());
+  if (result === 'ok') return { ok: true };
+  if (result === 'already_used') return { ok: false, reason: 'already_used' };
+  return { ok: false, reason: 'invalid' };
+}
+
+module.exports = {
+  normalizeKey,
+  hashKey,
+  activateKeyOnline,
+  trialDaysRemaining,
+  isTrialActive,
+  TRIAL_DAYS,
+};
