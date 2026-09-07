@@ -44,7 +44,7 @@ create table if not exists public.pairing_codes (
 create table if not exists public.commands (
   id uuid primary key default gen_random_uuid(),
   device_id uuid not null references public.devices(id) on delete cascade,
-  kind text not null check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer')),
+  kind text not null check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer', 'unlock_computer', 'set_schedule')),
   status text not null default 'pending' check (status in ('pending', 'done', 'failed')),
   requested_by uuid not null references auth.users(id),
   -- Small per-command extras that don't need their own column — currently
@@ -55,12 +55,12 @@ create table if not exists public.commands (
   completed_at timestamptz
 );
 
--- Re-run-safe: adds `payload` and the `lock_computer` kind to a commands
--- table created before this existed, without touching existing rows.
+-- Re-run-safe: adds `payload` and newer kinds to a commands table
+-- created before they existed, without touching existing rows.
 alter table public.commands add column if not exists payload jsonb not null default '{}'::jsonb;
 alter table public.commands drop constraint if exists commands_kind_check;
 alter table public.commands add constraint commands_kind_check
-  check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer'));
+  check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer', 'unlock_computer', 'set_schedule'));
 
 create index if not exists commands_device_pending_idx
   on public.commands (device_id, status)

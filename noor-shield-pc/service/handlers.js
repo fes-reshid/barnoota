@@ -353,6 +353,7 @@ function createHandlers(ctx) {
         paired: Boolean(cloud.deviceId),
         pendingCode: cloud.pendingPairing ? cloud.pendingPairing.code : null,
         remoteSleepActive: cloudSync.isForceSleepActive(store),
+        remoteLockActive: Boolean(store.get('remoteLockActive')),
       };
     },
     'cloud.startPairing': parentOnly(async () => {

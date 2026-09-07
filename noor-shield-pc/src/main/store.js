@@ -59,6 +59,13 @@ const DEFAULTS = {
   // bedtime window for as long as this is in the future, independent of
   // the PC's own configured weekly schedule. Null means no remote override.
   forceSleepUntil: null,
+  // Set by a remote lock_computer command, cleared by unlock_computer. The
+  // GUI (main.js) polls this and shows a full-screen "ask your parent"
+  // overlay while it's true — necessary because just locking the Windows
+  // session (which also happens immediately, see cloudSync.js) does
+  // nothing if the child has their own account and password to log back
+  // in with; this is what actually keeps them out afterwards.
+  remoteLockActive: false,
   // Sites the parent added for this specific PC from the web dashboard
   // (device_domains in Supabase — see service/cloudSync.js), synced down
   // and merged into the live blocklist alongside customDomains. Always

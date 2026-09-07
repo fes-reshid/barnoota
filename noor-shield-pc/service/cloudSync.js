@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const { exec } = require('child_process');
+const { isValidSchedule } = require('../src/main/schedule');
 
 /**
  * Remote control: lets a parent enforce bedtime or (later) other commands
@@ -19,11 +20,12 @@ const { exec } = require('child_process');
  * deviceSecret) and in Row Level Security for the parent's logged-in side,
  * not in keeping this key secret.
  *
- * Three commands are implemented end-to-end (enforce_sleep_now,
- * cancel_sleep_now, lock_computer). `shutdown` exists in the database
- * schema for later but is intentionally left unimplemented here — proving
- * the lower-stakes command pipe works first, before wiring up anything
- * that can't be undone by just reopening the app.
+ * Five commands are implemented end-to-end: enforce_sleep_now,
+ * cancel_sleep_now, lock_computer, unlock_computer, set_schedule.
+ * `shutdown` exists in the database schema for later but is intentionally
+ * left unimplemented here — proving the lower-stakes command pipe works
+ * first, before wiring up anything that can't be undone by just reopening
+ * the app.
  *
  * Also syncs one more thing besides commands: `device_domains`, sites the
  * parent added for this specific PC from the web dashboard. Polled on the
@@ -128,7 +130,15 @@ function isForceSleepActive(store) {
   return typeof until === 'number' && until > Date.now();
 }
 
-/** Locks the Windows session immediately — the same effect as Win+L. */
+/**
+ * Locks the Windows session immediately — the same effect as Win+L. On its
+ * own this only slows a child down for as long as it takes to type their
+ * own account's password back in, so lock_computer also sets
+ * remoteLockActive (see applyCommand below), which is what actually keeps
+ * them out afterwards: the GUI shows a full-screen "ask your parent"
+ * overlay for as long as that stays set, regardless of whose Windows
+ * session is active.
+ */
 function lockComputer() {
   return new Promise((resolve) => {
     if (process.platform !== 'win32') {
@@ -150,7 +160,18 @@ async function applyCommand(store, command) {
     return 'done';
   }
   if (command.kind === 'lock_computer') {
+    store.set('remoteLockActive', true);
     return lockComputer();
+  }
+  if (command.kind === 'unlock_computer') {
+    store.set('remoteLockActive', false);
+    return 'done';
+  }
+  if (command.kind === 'set_schedule') {
+    if (!isValidSchedule(command.payload)) return 'failed';
+    const { enabled, days, startTime, endTime } = command.payload;
+    store.set('schedule', { enabled: Boolean(enabled), days, startTime, endTime });
+    return 'done';
   }
   // 'shutdown' and anything else: not implemented yet, on purpose (see
   // module comment). Marking it failed rather than leaving it pending

@@ -72,6 +72,7 @@ process.on('uncaughtException', (err) => {
 let store; // per-user: journal + reminder interval only, not protection state
 let mainWindow = null;
 let splashWindow = null;
+let lockWindow = null;
 let tray = null;
 let reminderTimer = null;
 let quitting = false;
@@ -137,6 +138,73 @@ function revealMainWindow() {
   if (mainWindow && !mainWindow.isVisible()) {
     mainWindow.show();
   }
+}
+
+// Shown whenever a parent has remotely locked this PC (see cloudSync.js's
+// lock_computer). Locking the Windows session alone only slows a child down
+// for as long as it takes to type their own account's password back in —
+// this full-screen, unclosable window is what actually keeps them out
+// afterwards, for as long as remoteLockActive stays set.
+function createLockOverlayWindow() {
+  if (lockWindow) return;
+  lockWindow = new BrowserWindow({
+    fullscreen: true,
+    kiosk: true,
+    frame: false,
+    resizable: false,
+    movable: false,
+    closable: false,
+    backgroundColor: '#0E241C',
+    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: false },
+  });
+  lockWindow.setAlwaysOnTop(true, 'screen-saver');
+  lockWindow.loadFile(path.join(__dirname, '..', 'renderer', 'lock-overlay.html'));
+  // closable:false stops the titlebar/taskbar close action, but Alt+F4 and
+  // similar still fire a normal 'close' event — block that too. Our own
+  // destroyLockOverlayWindow() below uses .destroy(), which skips 'close'
+  // entirely, so the parent's "unlock" still works.
+  lockWindow.on('close', (event) => event.preventDefault());
+  lockWindow.on('closed', () => {
+    lockWindow = null;
+  });
+}
+
+function destroyLockOverlayWindow() {
+  if (lockWindow) {
+    lockWindow.destroy();
+    lockWindow = null;
+  }
+}
+
+/**
+ * Polls whether a parent has remotely locked this PC and shows/hides the
+ * overlay accordingly. Runs independently of the main window's visibility —
+ * a remote lock has to take effect even while the app is just sitting in
+ * the tray. Re-asserts focus/topmost on every tick while locked, since a
+ * child alt-tabbing or clicking past it is exactly the case this exists for.
+ */
+function startRemoteLockWatcher() {
+  const check = async () => {
+    let status;
+    try {
+      status = await serviceClient.call('cloud.status', {});
+    } catch {
+      return;
+    }
+    if (status && status.remoteLockActive) {
+      if (!lockWindow) createLockOverlayWindow();
+      else {
+        lockWindow.show();
+        lockWindow.focus();
+        lockWindow.moveTop();
+      }
+    } else {
+      destroyLockOverlayWindow();
+    }
+  };
+  check();
+  const timer = setInterval(check, 5_000);
+  timer.unref();
 }
 
 function createWindow() {
@@ -485,6 +553,7 @@ if (process.platform === 'win32' && app.isPackaged && !isElevated()) {
     createWindow();
     createTray();
     scheduleReminders();
+    startRemoteLockWatcher();
 
     // app.js calls this once boot() has picked and shown a gate (or the
     // dashboard). The timeout is a fallback only, in case that never
