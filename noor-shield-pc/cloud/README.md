@@ -82,10 +82,32 @@ of these values.
 |---|---|
 | `enforce_sleep_now` | Sets `forceSleepUntil` this many hours out (`payload.hours`, default 8 when absent — the dashboard's quick button sends no payload; its Manage panel's sleep-timer picker does). While active, `isScheduleActive` (in `filterService.js`) reports the schedule as on regardless of the PC's own configured weekly bedtime, and the reminder page (`reminderServer.js`) shows the sleeping-time page with a resume time computed from this, not the weekly schedule. |
 | `cancel_sleep_now` | Clears `forceSleepUntil`. |
-| `lock_computer` | Runs `rundll32.exe user32.dll,LockWorkStation` (Windows-only; fails on any other platform) **and** sets `remoteLockActive`. The Windows lock alone does nothing for a child with their own account — they just log back in — so `remoteLockActive` is what actually keeps them out: the GUI polls it independently of window visibility and shows a full-screen, unclosable "ask your parent" window (`src/renderer/lock-overlay.html`) for as long as it's set. |
-| `unlock_computer` | Clears `remoteLockActive`, which the GUI notices on its next poll (≤5s) and closes the overlay. |
+| `lock_computer` | Runs `rundll32.exe user32.dll,LockWorkStation` (Windows-only; fails on any other platform) **and** calls `setRemoteLockActive(store, true)`, which sets `remoteLockActive` and hides Windows' "Switch User" option (see below). The Windows lock alone does nothing for a child with their own account — they just log back in — so `remoteLockActive` is what actually keeps them out: the GUI polls it independently of window visibility and shows a full-screen, unclosable "ask your parent" window (`src/renderer/lock-overlay.html`) for as long as it's set. |
+| `unlock_computer` | Calls `setRemoteLockActive(store, false)`, which the GUI notices on its next poll (≤5s) and closes the overlay, and restores "Switch User". |
 | `set_schedule` | Validates `payload` with `isValidSchedule` (`src/main/schedule.js`) and, if valid, replaces the PC's local `schedule` outright — its own weekly bedtime setting from Parent settings, now settable remotely too. Invalid payloads (e.g. no days picked) are marked `failed` rather than silently ignored. |
 | `shutdown` | Schema-only. `cloudSync.js` marks it `failed` immediately rather than leaving it pending forever. |
+
+## The remote lock, in full
+
+The overlay window (`src/renderer/lock-overlay.html`) only exists inside the
+Windows session that was running when `lock_computer` arrived — Ctrl+Alt+Del
+→ "Switch User" opens a *different* session with no overlay in it at all,
+since Fast User Switching keeps the locked session running in the
+background instead of ending it. `setRemoteLockActive()` closes that hole by
+setting the `HideFastUserSwitching` registry policy (the same one Group
+Policy's "Hide entry points for Fast User Switching" uses) for as long as
+the lock is active, and clearing it again on unlock. A normal sign-out
+still works fine either way — it ends the session, so the next sign-in
+re-evaluates the lock from scratch.
+
+The overlay also has its own fallback, entirely separate from the cloud:
+tapping "Parent: enter the local password instead" on the lock screen and
+typing the same password used for Parent settings clears
+`remoteLockActive` directly through the service (`handlers.js`'s
+`cloud.localUnlock`, wired via `src/main/preload-lock.js`) — no internet, no
+Supabase round trip. This exists for exactly the case the remote unlock
+can't cover: no internet on this PC, Supabase unreachable, or the parent's
+phone being the thing that's dead.
 
 ## Per-PC blocked sites
 
