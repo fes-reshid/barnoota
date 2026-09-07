@@ -26,6 +26,11 @@ function showFatalError(err) {
     document.body.appendChild(overlay);
   }
   overlay.textContent = 'Noor Shield hit an error and could not finish loading:\n\n' + message;
+
+  // If this happened before boot() got a chance to call it itself, make
+  // sure the window still swaps in for the splash screen — showing this
+  // error beats leaving the user staring at "Noor Shield" with a spinner.
+  if (window.noor && typeof window.noor.notifyReady === 'function') window.noor.notifyReady();
 }
 
 window.addEventListener('error', (event) => showFatalError(event.error || event.message));
@@ -160,6 +165,30 @@ $('about-activation-submit').addEventListener('click', async () => {
 
 $('about-activation-key').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') $('about-activation-submit').click();
+});
+
+// Same activation flow again, inline on the Protection page's trial banner —
+// so activating doesn't require a trip to the About tab.
+$('trial-activation-submit').addEventListener('click', async () => {
+  const key = $('trial-activation-key').value;
+  hideError($('trial-activation-error'));
+
+  if (!key.trim()) {
+    showError($('trial-activation-error'), 'Enter your product key.');
+    return;
+  }
+
+  const result = await api.activateLicense(key);
+  if (!result.ok) {
+    showError($('trial-activation-error'), result.error);
+    return;
+  }
+  $('trial-activation-key').value = '';
+  refreshStatus();
+});
+
+$('trial-activation-key').addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') $('trial-activation-submit').click();
 });
 
 $('setup-submit').addEventListener('click', async () => {
@@ -346,11 +375,12 @@ async function refreshStatus() {
   $('admin-warning').hidden = status.elevated || status.platform !== 'win32';
 
   const trialBanner = $('trial-banner');
-  if (!status.activated && status.trialDaysRemaining > 0) {
+  if (!status.activated) {
     trialBanner.hidden = false;
     $('trial-banner-detail').textContent =
-      `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left. ` +
-      'Enter your product key anytime from the About tab.';
+      status.trialDaysRemaining > 0
+        ? `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left.`
+        : 'Free trial has ended. Enter your product key below to keep protection on.';
   } else {
     trialBanner.hidden = true;
   }
@@ -968,6 +998,12 @@ async function boot() {
   } else {
     $('shell').hidden = false;
   }
+
+  // Tell the main process it's safe to swap the splash screen for this
+  // window now — whichever gate or the dashboard is visible, there's no
+  // longer a blank page behind it. Don't wait on the panel renders below;
+  // those can keep filling in after the window is already on screen.
+  api.notifyReady();
 
   await renderHadith();
   await renderBlocklist();

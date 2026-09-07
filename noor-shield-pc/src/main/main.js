@@ -71,6 +71,7 @@ process.on('uncaughtException', (err) => {
 
 let store; // per-user: journal + reminder interval only, not protection state
 let mainWindow = null;
+let splashWindow = null;
 let tray = null;
 let reminderTimer = null;
 let quitting = false;
@@ -97,6 +98,47 @@ function scheduleReminders() {
  * Window & tray
  * ------------------------------------------------------------------ */
 
+// Shown the instant the app launches, while createWindow()'s window loads
+// index.html and app.js's boot() figures out which gate (or the dashboard
+// itself) to show — on a fresh install that can take several seconds while
+// the protection service is still being installed/started (see boot()'s own
+// retry loop). Without this, that whole wait is a plain, contentless window
+// (every gate in index.html starts `hidden`), which reads as "did this even
+// open?" rather than "it's starting up".
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 320,
+    height: 320,
+    frame: false,
+    resizable: false,
+    movable: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    backgroundColor: '#0E241C',
+    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: false },
+  });
+  splashWindow.loadFile(path.join(__dirname, '..', 'renderer', 'splash.html'));
+  splashWindow.on('closed', () => {
+    splashWindow = null;
+  });
+}
+
+// Called once app.js's boot() has decided what to show (a gate or the
+// dashboard) and actually shown it — see the 'app:ready' handler below —
+// so the window never becomes visible mid-decision. Also armed as a safety
+// timeout from app.whenReady() in case boot() never gets there (e.g. a
+// renderer crash), so the app can't get stuck hidden behind the splash
+// forever with no way to close it.
+function revealMainWindow() {
+  if (splashWindow) {
+    splashWindow.close();
+    splashWindow = null;
+  }
+  if (mainWindow && !mainWindow.isVisible()) {
+    mainWindow.show();
+  }
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,
@@ -105,6 +147,7 @@ function createWindow() {
     minHeight: 640,
     title: 'Noor Shield',
     backgroundColor: '#F6F5F0',
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -438,9 +481,17 @@ if (process.platform === 'win32' && app.isPackaged && !isElevated()) {
     registerServiceProxies();
     registerEmailIpc();
     registerLocalIpc();
+    createSplashWindow();
     createWindow();
     createTray();
     scheduleReminders();
+
+    // app.js calls this once boot() has picked and shown a gate (or the
+    // dashboard). The timeout is a fallback only, in case that never
+    // happens — a renderer crash, say — so the window can't stay hidden
+    // behind the splash indefinitely with no way to open it.
+    ipcMain.once('app:ready', revealMainWindow);
+    setTimeout(revealMainWindow, 15_000);
 
     const ensured = await serviceClient.ensureRunning();
     if (!ensured.ok) {

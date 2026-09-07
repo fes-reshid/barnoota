@@ -173,6 +173,16 @@ nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .panel ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
 
 .notepanel { background: var(--surface-2); border-color: transparent; }
+
+#trial-activation-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#trial-activation-form label { display: none; }
+#trial-activation-form input { flex: 1; min-width: 220px; }
+#trial-activation-form .error { flex-basis: 100%; margin: 0; }
 .warnpanel { border-left: 4px solid var(--warn); }
 .dangerpanel { border-left: 4px solid var(--danger); }
 .lockedpanel { border-left: 4px solid var(--gold); }

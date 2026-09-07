@@ -11,6 +11,11 @@ const { contextBridge, ipcRenderer } = require('electron');
  * every mutating call — the renderer can only ask, never claim.
  */
 contextBridge.exposeInMainWorld('noor', {
+  // Tells the main process boot() has picked and shown a gate (or the
+  // dashboard), so it can swap the splash screen for this window instead of
+  // showing it mid-decision. See main.js's createSplashWindow().
+  notifyReady: () => ipcRenderer.send('app:ready'),
+
   // Read-only
   getStatus: () => ipcRenderer.invoke('status:get'),
   activateLicense: (key) => ipcRenderer.invoke('license:activate', { key }),
