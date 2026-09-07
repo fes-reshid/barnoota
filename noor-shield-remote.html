@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Noor Shield Remote</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --sand: #f6f5f0;
+    --surface: #ffffff;
+    --surface-2: #edeae1;
+    --ink: #16241d;
+    --ink-soft: #4b5a52;
+    --ink-faint: #8a968e;
+    --green: #1b5e4f;
+    --green-deep: #0a1a14;
+    --green-dim: #2a6f5e;
+    --gold: #c9a24b;
+    --good: #2e7d32;
+    --good-bg: rgba(46, 125, 50, 0.12);
+    --warn: #b26a00;
+    --warn-bg: rgba(178, 106, 0, 0.14);
+    --danger: #a3352b;
+    --danger-bg: rgba(163, 53, 43, 0.1);
+    --line: #ddd8cb;
+    --shadow: 0 20px 50px -24px rgba(10, 26, 20, 0.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --sand: #0d1913;
+      --surface: #14251d;
+      --surface-2: #1b2f25;
+      --ink: #eef2ee;
+      --ink-soft: #b7c4bb;
+      --ink-faint: #7c8c82;
+      --green: #4fa78e;
+      --green-deep: #061009;
+      --green-dim: #3d8a74;
+      --gold: #dcb668;
+      --good: #6fcf7a;
+      --good-bg: rgba(111, 207, 122, 0.14);
+      --warn: #e0a548;
+      --warn-bg: rgba(224, 165, 72, 0.14);
+      --danger: #e07a6e;
+      --danger-bg: rgba(224, 122, 110, 0.14);
+      --line: #24382d;
+      --shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --sand: #0d1913;
+    --surface: #14251d;
+    --surface-2: #1b2f25;
+    --ink: #eef2ee;
+    --ink-soft: #b7c4bb;
+    --ink-faint: #7c8c82;
+    --green: #4fa78e;
+    --green-deep: #061009;
+    --green-dim: #3d8a74;
+    --gold: #dcb668;
+    --good: #6fcf7a;
+    --good-bg: rgba(111, 207, 122, 0.14);
+    --warn: #e0a548;
+    --warn-bg: rgba(224, 165, 72, 0.14);
+    --danger: #e07a6e;
+    --danger-bg: rgba(224, 122, 110, 0.14);
+    --line: #24382d;
+    --shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; min-height: 100%; background: var(--sand); color: var(--ink);
+    font-family: "Public Sans", system-ui, sans-serif; font-size: 15px; line-height: 1.5;
+  }
+  [hidden] { display: none !important; }
+  h1, h2, h3 { margin: 0; font-family: "Fraunces", Georgia, serif; text-wrap: balance; }
+  p { margin: 0; }
+  button, input { font-family: inherit; font-size: inherit; }
+
+  .topbar {
+    background: var(--green-deep); color: #f3f1e8;
+    padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand svg { width: 22px; height: 22px; flex: none; }
+  .brand .word { font-family: "Fraunces", Georgia, serif; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.01em; }
+  .brand .sub { font-size: 0.72rem; color: rgba(243, 241, 232, 0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1px; }
+  #signout {
+    all: unset; cursor: pointer; font-size: 0.82rem; color: rgba(243, 241, 232, 0.75);
+    padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(243, 241, 232, 0.25);
+  }
+  #signout:hover { color: #fff; border-color: rgba(243, 241, 232, 0.5); }
+
+  main { max-width: 640px; margin: 0 auto; padding: 40px 24px 80px; display: flex; flex-direction: column; gap: 28px; }
+
+  /* ---- auth screen ---- */
+  .authwrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .authcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 40px 36px; width: 100%; max-width: 400px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .authcard .brand { justify-content: center; margin-bottom: 4px; }
+  .authcard .brand svg { width: 30px; height: 30px; }
+  .authcard .brand .word { font-size: 1.4rem; color: var(--ink); }
+  .authcard .brand .sub { color: var(--ink-faint); }
+  .authcard h2 { font-size: 1.05rem; font-weight: 500; text-align: center; color: var(--ink-soft); }
+
+  label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  input[type="email"], input[type="password"], input[type="text"] {
+    border: 1px solid var(--line); border-radius: 9px; padding: 10px 13px;
+    background: var(--sand); color: var(--ink); width: 100%;
+  }
+  input:focus-visible, button:focus-visible { outline: 2px solid var(--green-dim); outline-offset: 2px; }
+
+  .btn {
+    all: unset; cursor: pointer; text-align: center; padding: 11px 18px; border-radius: 9px;
+    font-weight: 600; font-size: 0.9rem;
+  }
+  .btn.primary { background: var(--green); color: #fdfdfb; }
+  .btn.primary:disabled { background: var(--ink-faint); cursor: default; }
+  .btn.ghost { border: 1px solid var(--line); color: var(--ink-soft); }
+  .btn.danger { color: var(--danger); }
+  .btn.small { padding: 8px 14px; font-size: 0.82rem; }
+  .btn.block { display: block; width: 100%; }
+  .linkbtn { all: unset; cursor: pointer; color: var(--green-dim); font-size: 0.84rem; font-weight: 600; text-align: center; }
+
+  .msg { font-size: 0.84rem; min-height: 1.2em; }
+  .msg.error { color: var(--danger); }
+  .msg.success { color: var(--good); }
+
+  /* ---- dashboard cards ---- */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+  }
+  .cardhead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .cardhead h2 { font-size: 1.15rem; }
+  .eyebrow { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink-faint); font-weight: 600; }
+
+  .linkform { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+  .linkform .row { display: flex; gap: 10px; align-items: flex-end; }
+  .linkform .field.code { max-width: 160px; }
+  #pair-code-input {
+    font-family: "IBM Plex Mono", monospace; letter-spacing: 0.16em; font-size: 1.1rem;
+    text-align: center; font-weight: 600;
+  }
+  .hint { color: var(--ink-faint); font-size: 0.84rem; line-height: 1.55; }
+
+  .devicelist { display: flex; flex-direction: column; gap: 14px; }
+  .device {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
+  }
+  .device .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .device .name { font-family: "Fraunces", Georgia, serif; font-size: 1.05rem; font-weight: 600; }
+  .device .seen { font-size: 0.78rem; color: var(--ink-faint); margin-top: 2px; }
+  .pill {
+    font-size: 0.72rem; font-weight: 700; padding: 4px 11px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .pill.awake { background: var(--surface-2); color: var(--ink-soft); }
+  .pill.asleep { background: var(--warn-bg); color: var(--warn); }
+  .device .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .empty { color: var(--ink-faint); font-size: 0.9rem; padding: 6px 2px; }
+
+  .refreshrow { display: flex; align-items: center; justify-content: space-between; }
+  .refreshrow .linkbtn { font-weight: 500; color: var(--ink-faint); }
+
+  footer { text-align: center; color: var(--ink-faint); font-size: 0.78rem; padding: 8px 0 30px; }
+</style>
+</head>
+<body>
+
+<div id="auth-screen" class="authwrap">
+  <div class="authcard">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11V5l8-3z" fill="currentColor" opacity="0.12"/><path d="M12 2l8 3v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11V5l8-3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="word">Noor Shield</div>
+        <div class="sub">Remote</div>
+      </div>
+    </div>
+    <h2 id="auth-heading">Sign in to your family account</h2>
+
+    <div class="field">
+      <label for="auth-email">Email</label>
+      <input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label for="auth-password">Password</label>
+      <input type="password" id="auth-password" autocomplete="current-password" placeholder="At least 6 characters">
+    </div>
+    <button class="btn primary block" id="auth-submit">Sign in</button>
+    <button class="linkbtn" id="auth-toggle">Need an account? Create one</button>
+    <p class="msg" id="auth-msg"></p>
+  </div>
+</div>
+
+<div id="app-screen" hidden>
+  <div class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11V5l8-3z" fill="currentColor" opacity="0.16"/><path d="M12 2l8 3v6c0 5-3.4 8.6-8 11-4.6-2.4-8-6-8-11V5l8-3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <div>
+        <div class="word">Noor Shield</div>
+        <div class="sub">Remote</div>
+      </div>
+    </div>
+    <button id="signout">Sign out · <span id="signed-in-as"></span></button>
+  </div>
+
+  <main>
+    <section class="card">
+      <div class="cardhead">
+        <div>
+          <p class="eyebrow">Link a PC</p>
+          <h2>Enter its pairing code</h2>
+        </div>
+      </div>
+      <p class="hint">
+        On the PC, open Noor Shield → Parent settings → Remote control → "Get pairing code". The code
+        is only valid for 10 minutes.
+      </p>
+      <div class="linkform">
+        <div class="row">
+          <div class="field code">
+            <label for="pair-code-input">6-digit code</label>
+            <input type="text" id="pair-code-input" inputmode="numeric" maxlength="6" placeholder="000000">
+          </div>
+          <div class="field" style="flex:1">
+            <label for="pair-name-input">Name (optional)</label>
+            <input type="text" id="pair-name-input" placeholder="Living room PC">
+          </div>
+          <button class="btn primary" id="pair-submit">Link</button>
+        </div>
+        <p class="msg" id="pair-msg"></p>
+      </div>
+    </section>
+
+    <section>
+      <div class="refreshrow">
+        <p class="eyebrow">Paired devices</p>
+        <button class="linkbtn" id="refresh-devices">Refresh</button>
+      </div>
+      <div class="devicelist" id="device-list" style="margin-top:12px;"></div>
+      <p class="empty" id="device-empty" hidden>No devices linked yet — enter a pairing code above to add one.</p>
+    </section>
+  </main>
+
+  <footer>Commands reach a PC the next time it checks in, usually within 20 seconds.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  (function () {
+    var SUPABASE_URL = "https://wjqxbjcmcrjgxnxcowxp.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_J-N2ozRX6Rnk1-MI66ORGg_QXG3zJhV";
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var $ = function (id) { return document.getElementById(id); };
+    var isSignUp = false;
+    var deviceRefreshTimer = null;
+
+    function showAuthError(msg) {
+      var el = $("auth-msg");
+      el.textContent = msg;
+      el.className = "msg error";
+    }
+    function showAuthMsg(msg) {
+      var el = $("auth-msg");
+      el.textContent = msg;
+      el.className = "msg success";
+    }
+
+    $("auth-toggle").addEventListener("click", function () {
+      isSignUp = !isSignUp;
+      $("auth-heading").textContent = isSignUp ? "Create your family account" : "Sign in to your family account";
+      $("auth-submit").textContent = isSignUp ? "Create account" : "Sign in";
+      $("auth-toggle").textContent = isSignUp ? "Already have an account? Sign in" : "Need an account? Create one";
+      $("auth-msg").textContent = "";
+    });
+
+    $("auth-submit").addEventListener("click", async function () {
+      var email = $("auth-email").value.trim();
+      var password = $("auth-password").value;
+      if (!email || password.length < 6) {
+        showAuthError("Enter an email and a password of at least 6 characters.");
+        return;
+      }
+      $("auth-submit").disabled = true;
+      try {
+        if (isSignUp) {
+          var res = await sb.auth.signUp({ email: email, password: password });
+          if (res.error) throw res.error;
+          if (!res.data.session) {
+            showAuthMsg("Check your email to confirm the account, then sign in.");
+            return;
+          }
+        } else {
+          var res2 = await sb.auth.signInWithPassword({ email: email, password: password });
+          if (res2.error) throw res2.error;
+        }
+      } catch (err) {
+        showAuthError(err.message || "Something went wrong.");
+      } finally {
+        $("auth-submit").disabled = false;
+      }
+    });
+
+    $("signout").addEventListener("click", function () { sb.auth.signOut(); });
+
+    $("pair-submit").addEventListener("click", async function () {
+      var code = $("pair-code-input").value.trim();
+      var name = $("pair-name-input").value.trim();
+      var msg = $("pair-msg");
+      if (!/^\d{6}$/.test(code)) {
+        msg.textContent = "Enter the 6-digit code shown on the PC.";
+        msg.className = "msg error";
+        return;
+      }
+      $("pair-submit").disabled = true;
+      try {
+        var res = await sb.rpc("claim_pairing_code", { p_code: code, p_device_name_override: name || null });
+        if (res.error) throw res.error;
+        msg.textContent = "Linked! It'll appear below.";
+        msg.className = "msg success";
+        $("pair-code-input").value = "";
+        $("pair-name-input").value = "";
+        loadDevices();
+      } catch (err) {
+        msg.textContent = err.message || "That code didn't work.";
+        msg.className = "msg error";
+      } finally {
+        $("pair-submit").disabled = false;
+      }
+    });
+
+    $("refresh-devices").addEventListener("click", loadDevices);
+
+    function timeAgo(iso) {
+      if (!iso) return "never checked in";
+      var seconds = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+      if (seconds < 60) return "just now";
+      var minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return minutes + "m ago";
+      var hours = Math.floor(minutes / 60);
+      if (hours < 24) return hours + "h ago";
+      return Math.floor(hours / 24) + "d ago";
+    }
+
+    async function sendCommand(deviceId, kind, button) {
+      button.disabled = true;
+      try {
+        var user = (await sb.auth.getUser()).data.user;
+        var res = await sb.from("commands").insert({ device_id: deviceId, kind: kind, requested_by: user.id });
+        if (res.error) throw res.error;
+      } catch (err) {
+        alert(err.message || "Could not send that command.");
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function deviceCard(device) {
+      var el = document.createElement("div");
+      el.className = "device";
+
+      var top = document.createElement("div");
+      top.className = "top";
+      var left = document.createElement("div");
+      var name = document.createElement("div");
+      name.className = "name";
+      name.textContent = device.name;
+      var seen = document.createElement("div");
+      seen.className = "seen";
+      seen.textContent = "Last checked in " + timeAgo(device.last_seen_at);
+      left.appendChild(name);
+      left.appendChild(seen);
+      top.appendChild(left);
+      top.appendChild(makePill(device));
+      el.appendChild(top);
+
+      var actions = document.createElement("div");
+      actions.className = "actions";
+      var sleepBtn = document.createElement("button");
+      sleepBtn.className = "btn primary small";
+      sleepBtn.textContent = "Enforce sleep now";
+      sleepBtn.addEventListener("click", function () { sendCommand(device.id, "enforce_sleep_now", sleepBtn); });
+      var cancelBtn = document.createElement("button");
+      cancelBtn.className = "btn ghost small";
+      cancelBtn.textContent = "Cancel sleep";
+      cancelBtn.addEventListener("click", function () { sendCommand(device.id, "cancel_sleep_now", cancelBtn); });
+      actions.appendChild(sleepBtn);
+      actions.appendChild(cancelBtn);
+      el.appendChild(actions);
+
+      return el;
+    }
+
+    function makePill() {
+      // Kept simple on purpose: whether bedtime is currently enforced isn't
+      // exposed by the devices table itself (only commands are), so this
+      // pill reflects reachability, not sleep state, until a status column
+      // is worth adding.
+      var pill = document.createElement("span");
+      pill.className = "pill awake";
+      pill.textContent = "Linked";
+      return pill;
+    }
+
+    async function loadDevices() {
+      var res = await sb.from("devices").select("*").order("paired_at", { ascending: true });
+      var list = $("device-list");
+      list.innerHTML = "";
+      if (res.error || !res.data || res.data.length === 0) {
+        $("device-empty").hidden = false;
+        return;
+      }
+      $("device-empty").hidden = true;
+      res.data.forEach(function (device) { list.appendChild(deviceCard(device)); });
+    }
+
+    function showApp(session) {
+      $("auth-screen").hidden = true;
+      $("app-screen").hidden = false;
+      $("signed-in-as").textContent = session.user.email;
+      loadDevices();
+      if (!deviceRefreshTimer) deviceRefreshTimer = setInterval(loadDevices, 10000);
+    }
+
+    function showAuth() {
+      $("app-screen").hidden = true;
+      $("auth-screen").hidden = false;
+      if (deviceRefreshTimer) { clearInterval(deviceRefreshTimer); deviceRefreshTimer = null; }
+    }
+
+    sb.auth.onAuthStateChange(function (event, session) {
+      if (session) showApp(session); else showAuth();
+    });
+    sb.auth.getSession().then(function (res) {
+      if (res.data.session) showApp(res.data.session); else showAuth();
+    });
+  })();
+</script>
+</body>
+</html>
