@@ -187,17 +187,24 @@
     </div>
     <h2 id="auth-heading">Sign in to your family account</h2>
 
-    <div class="field">
-      <label for="auth-email">Email</label>
-      <input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com">
+    <div id="auth-fields">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="auth-password">Password</label>
+        <input type="password" id="auth-password" autocomplete="current-password" placeholder="At least 6 characters">
+      </div>
+      <button class="btn primary block" id="auth-submit">Sign in</button>
+      <button class="linkbtn" id="auth-toggle">Need an account? Create one</button>
+      <p class="msg" id="auth-msg"></p>
     </div>
-    <div class="field">
-      <label for="auth-password">Password</label>
-      <input type="password" id="auth-password" autocomplete="current-password" placeholder="At least 6 characters">
+
+    <div id="auth-success" hidden>
+      <p class="msg success">Account created successfully. Check your email to activate your account, then sign in.</p>
+      <button class="btn primary block" id="auth-success-back">Back to sign in</button>
     </div>
-    <button class="btn primary block" id="auth-submit">Sign in</button>
-    <button class="linkbtn" id="auth-toggle">Need an account? Create one</button>
-    <p class="msg" id="auth-msg"></p>
   </div>
 </div>
 
@@ -270,12 +277,6 @@
       el.textContent = msg;
       el.className = "msg error";
     }
-    function showAuthMsg(msg) {
-      var el = $("auth-msg");
-      el.textContent = msg;
-      el.className = "msg success";
-    }
-
     $("auth-toggle").addEventListener("click", function () {
       isSignUp = !isSignUp;
       $("auth-heading").textContent = isSignUp ? "Create your family account" : "Sign in to your family account";
@@ -297,7 +298,10 @@
           var res = await sb.auth.signUp({ email: email, password: password });
           if (res.error) throw res.error;
           if (!res.data.session) {
-            showAuthMsg("Check your email to confirm the account, then sign in.");
+            $("auth-email").value = "";
+            $("auth-password").value = "";
+            $("auth-fields").hidden = true;
+            $("auth-success").hidden = false;
             return;
           }
         } else {
@@ -309,6 +313,16 @@
       } finally {
         $("auth-submit").disabled = false;
       }
+    });
+
+    $("auth-success-back").addEventListener("click", function () {
+      isSignUp = false;
+      $("auth-heading").textContent = "Sign in to your family account";
+      $("auth-submit").textContent = "Sign in";
+      $("auth-toggle").textContent = "Need an account? Create one";
+      $("auth-msg").textContent = "";
+      $("auth-success").hidden = true;
+      $("auth-fields").hidden = false;
     });
 
     $("signout").addEventListener("click", function () { sb.auth.signOut(); });
