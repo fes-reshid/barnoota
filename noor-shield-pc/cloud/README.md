@@ -15,7 +15,13 @@ both; this file is just the setup steps.
 
 1. Create a free project at [supabase.com](https://supabase.com).
 2. In the SQL Editor, run `schema.sql` once, then `seed_license_keys.sql`
-   once (seeds the 1000 already-issued keys). Both are safe to re-run.
+   once (seeds every hash currently in `../src/main/licenseKeyHashes.json`,
+   i.e. every key whose plaintext someone actually has). Both are safe to
+   re-run — re-running `seed_license_keys.sql` after minting a new batch of
+   keys (see `../scripts/generate-keys.js`) only adds the new ones.
+   `cleanup_dead_keys.sql` is a one-off: it deletes the very first batch of
+   1000 keys, whose plaintext was lost before this workflow existed, so run
+   it once and then forget about it.
 3. From Project Settings → API, take the **Project URL** and the **anon /
    publishable** key (never the `service_role` key — that one must stay
    secret) and put them into `service/supabaseConfig.js` (`SUPABASE_URL`,
