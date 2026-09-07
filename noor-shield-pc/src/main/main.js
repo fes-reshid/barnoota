@@ -155,7 +155,12 @@ function createLockOverlayWindow() {
     movable: false,
     closable: false,
     backgroundColor: '#0E241C',
-    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: false },
+    webPreferences: {
+      preload: path.join(__dirname, 'preload-lock.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false,
+    },
   });
   lockWindow.setAlwaysOnTop(true, 'screen-saver');
   lockWindow.loadFile(path.join(__dirname, '..', 'renderer', 'lock-overlay.html'));
@@ -169,11 +174,40 @@ function createLockOverlayWindow() {
   });
 }
 
+// Kiosk + fullscreen + closable:false windows have a real history of
+// .destroy() not fully tearing the native window down on Windows if it's
+// still holding exclusive fullscreen — the JS reference goes away (leaving
+// `lockWindow` null) while the actual overlay stays stuck on screen,
+// unrecoverable until the session ends. Dropping kiosk/fullscreen and the
+// close-blocking listener first, before destroying, is what actually makes
+// this reliable.
 function destroyLockOverlayWindow() {
-  if (lockWindow) {
-    lockWindow.destroy();
-    lockWindow = null;
+  if (!lockWindow) return;
+  const win = lockWindow;
+  lockWindow = null;
+  try {
+    win.removeAllListeners('close');
+    win.setKiosk(false);
+    win.setFullScreen(false);
+    win.destroy();
+  } catch (err) {
+    console.error(`[lockOverlay] failed to close cleanly: ${err.message}`);
   }
+}
+
+// Fallback for when the remote lock can't be cleared the normal way (no
+// internet on this PC, Supabase unreachable, the parent's phone is what's
+// dead, etc.): the same local parent password that already gates everything
+// else in the app (Parent settings, the blocklist, ...) also clears the
+// overlay directly, with no network round trip at all. Deliberately not the
+// cloud account's email/password — that would need the very connection this
+// exists to work around. See handlers.js's 'cloud.localUnlock'.
+function registerLockIpc() {
+  ipcMain.handle('lock:unlock', async (event, { password }) => {
+    const result = await serviceClient.call('cloud.localUnlock', { password });
+    if (result.ok) destroyLockOverlayWindow();
+    return result;
+  });
 }
 
 /**
@@ -184,14 +218,16 @@ function destroyLockOverlayWindow() {
  * child alt-tabbing or clicking past it is exactly the case this exists for.
  */
 function startRemoteLockWatcher() {
+  // serviceClient.call() never throws — a service that's momentarily
+  // unreachable (e.g. still starting up right after a reboot) comes back
+  // as { ok: false, serviceUnreachable: true }, not an exception. Treating
+  // that the same as "confirmed unlocked" would tear down a genuinely
+  // still-locked overlay on nothing more than a single failed poll — only
+  // ever act on an actual ok:true answer.
   const check = async () => {
-    let status;
-    try {
-      status = await serviceClient.call('cloud.status', {});
-    } catch {
-      return;
-    }
-    if (status && status.remoteLockActive) {
+    const status = await serviceClient.call('cloud.status', {});
+    if (!status || !status.ok) return;
+    if (status.remoteLockActive) {
       if (!lockWindow) createLockOverlayWindow();
       else {
         lockWindow.show();
@@ -549,6 +585,7 @@ if (process.platform === 'win32' && app.isPackaged && !isElevated()) {
     registerServiceProxies();
     registerEmailIpc();
     registerLocalIpc();
+    registerLockIpc();
     createSplashWindow();
     createWindow();
     createTray();

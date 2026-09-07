@@ -20,6 +20,49 @@
   svg { width: 64px; height: 64px; fill: #D9C27E; }
   h1 { margin: 0; font-size: 1.4rem; font-weight: 600; }
   p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: rgba(246, 245, 240, 0.75); }
+
+  .fallback-link {
+    all: unset;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: rgba(246, 245, 240, 0.55);
+    text-decoration: underline;
+    margin-top: 8px;
+  }
+
+  .fallback-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 260px;
+    margin-top: 4px;
+  }
+  .fallback-form input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(246, 245, 240, 0.25);
+    background: rgba(246, 245, 240, 0.06);
+    color: #F6F5F0;
+    font-size: 0.95rem;
+  }
+  .fallback-form input::placeholder { color: rgba(246, 245, 240, 0.4); }
+  .fallback-form button {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    background: #D9C27E;
+    color: #0E241C;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  .fallback-form button:disabled { opacity: 0.6; cursor: default; }
+  .fallback-error {
+    min-height: 1.2em;
+    font-size: 0.82rem;
+    color: #e0a548;
+  }
 </style>
 </head>
 <body>
@@ -29,6 +72,52 @@
     </svg>
     <h1>This computer was locked by a parent.</h1>
     <p>Ask them to open it from the Noor Shield remote dashboard — this screen will disappear on its own the moment they do.</p>
+
+    <button class="fallback-link" id="fallback-toggle">Parent: enter the local password instead</button>
+
+    <div class="fallback-form" id="fallback-form" hidden>
+      <input type="password" id="fallback-password" placeholder="Parent password" autocomplete="off">
+      <button id="fallback-submit">Unlock</button>
+      <p class="fallback-error" id="fallback-error"></p>
+    </div>
   </div>
+
+  <script>
+    var toggle = document.getElementById("fallback-toggle");
+    var form = document.getElementById("fallback-form");
+    var input = document.getElementById("fallback-password");
+    var submit = document.getElementById("fallback-submit");
+    var errorEl = document.getElementById("fallback-error");
+
+    toggle.addEventListener("click", function () {
+      form.hidden = !form.hidden;
+      toggle.hidden = !form.hidden;
+      if (!form.hidden) input.focus();
+    });
+
+    async function tryUnlock() {
+      var password = input.value;
+      if (!password) return;
+      submit.disabled = true;
+      errorEl.textContent = "";
+      try {
+        var result = await window.noorLock.unlock(password);
+        if (!result.ok) {
+          errorEl.textContent = result.error || "Wrong password.";
+          submit.disabled = false;
+        }
+        // On success this window closes on its own (main.js destroys it) —
+        // nothing left to do here.
+      } catch (err) {
+        errorEl.textContent = "Could not check that password.";
+        submit.disabled = false;
+      }
+    }
+
+    submit.addEventListener("click", tryUnlock);
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") tryUnlock();
+    });
+  </script>
 </body>
 </html>

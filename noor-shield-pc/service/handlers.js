@@ -373,6 +373,20 @@ function createHandlers(ctx) {
       return { ok: true };
     }),
 
+    // Fallback for the full-screen remote-lock overlay (see main.js's
+    // lock-overlay.html) when the normal path — the parent clicking
+    // "Unlock" on the web dashboard — can't reach this PC (no internet
+    // here, Supabase down, etc.). Deliberately NOT wrapped in parentOnly:
+    // the whole point is checking a password to *become* unlocked, not
+    // requiring it already. Reuses the same local parent password as every
+    // other protected action, not the cloud account's — this needs to work
+    // with no network at all.
+    'cloud.localUnlock': async ({ password }) => {
+      const result = parentAuth.unlock(password);
+      if (result.ok) await cloudSync.setRemoteLockActive(store, false);
+      return result;
+    },
+
     // Blocked attempts only, by design (see README): not a full browsing
     // history. Gated like everything else that reveals what the child has
     // been doing, even though it can't itself change protection.

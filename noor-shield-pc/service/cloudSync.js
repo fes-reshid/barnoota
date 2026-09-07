@@ -149,6 +149,39 @@ function lockComputer() {
   });
 }
 
+// The overlay only exists inside the Windows session that was running when
+// the lock happened — Ctrl+Alt+Del → "Switch User" opens a completely
+// different session with no overlay in it at all, since Fast User
+// Switching keeps the locked session running in the background rather than
+// ending it. Hiding that option (the same registry key Group Policy's
+// "Hide entry points for Fast User Switching" sets) while locked closes
+// that specific hole; it doesn't touch normal sign-out/sign-in, which ends
+// the session and re-evaluates the lock from scratch on next login anyway.
+function setFastUserSwitchingBlocked(blocked) {
+  return new Promise((resolve) => {
+    if (process.platform !== 'win32') {
+      resolve();
+      return;
+    }
+    const key = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System';
+    const cmd = blocked
+      ? `reg add "${key}" /v HideFastUserSwitching /t REG_DWORD /d 1 /f`
+      : `reg delete "${key}" /v HideFastUserSwitching /f`;
+    exec(cmd, (err) => {
+      // "delete" on a value that's already gone errors too — not worth
+      // surfacing as a real failure either way, just log for troubleshooting.
+      if (err) console.error(`[cloudSync] could not ${blocked ? 'hide' : 'restore'} Switch User: ${err.message}`);
+      resolve();
+    });
+  });
+}
+
+/** The one place remoteLockActive is ever written, so the Switch User block always tracks it. */
+function setRemoteLockActive(store, active) {
+  store.set('remoteLockActive', active);
+  return setFastUserSwitchingBlocked(active);
+}
+
 async function applyCommand(store, command) {
   if (command.kind === 'enforce_sleep_now') {
     const hours = Number(command.payload && command.payload.hours) || DEFAULT_SLEEP_HOURS;
@@ -160,11 +193,11 @@ async function applyCommand(store, command) {
     return 'done';
   }
   if (command.kind === 'lock_computer') {
-    store.set('remoteLockActive', true);
+    await setRemoteLockActive(store, true);
     return lockComputer();
   }
   if (command.kind === 'unlock_computer') {
-    store.set('remoteLockActive', false);
+    await setRemoteLockActive(store, false);
     return 'done';
   }
   if (command.kind === 'set_schedule') {
@@ -286,6 +319,7 @@ module.exports = {
   checkPairingClaimed,
   unpair,
   isForceSleepActive,
+  setRemoteLockActive,
   pollCommandsOnce, // exported for tests
   pollDeviceDomainsOnce, // exported for tests
 };
