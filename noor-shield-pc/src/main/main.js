@@ -388,6 +388,7 @@ function registerServiceProxies() {
     serviceClient.call('blocklist.setCategory', { category, enabled })
   );
   ipcMain.handle('schedule:set', (event, schedule) => serviceClient.call('schedule.set', schedule));
+  ipcMain.handle('schedule:cancelRemoteSleep', () => serviceClient.call('schedule.cancelRemoteSleep', {}));
   ipcMain.handle('cloud:startPairing', () => serviceClient.call('cloud.startPairing', {}));
   ipcMain.handle('cloud:cancelPairing', () => serviceClient.call('cloud.cancelPairing', {}));
   ipcMain.handle('cloud:unpair', () => serviceClient.call('cloud.unpair', {}));

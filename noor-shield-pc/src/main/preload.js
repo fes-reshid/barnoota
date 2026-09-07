@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('noor', {
   refreshBlocklistFeed: () => ipcRenderer.invoke('blocklist:refreshFeed'),
   setBlocklistCategory: (category, enabled) => ipcRenderer.invoke('blocklist:setCategory', { category, enabled }),
   setSchedule: (schedule) => ipcRenderer.invoke('schedule:set', schedule),
+  cancelRemoteSleep: () => ipcRenderer.invoke('schedule:cancelRemoteSleep'),
   getCloudStatus: () => ipcRenderer.invoke('cloud:status'),
   startCloudPairing: () => ipcRenderer.invoke('cloud:startPairing'),
   cancelCloudPairing: () => ipcRenderer.invoke('cloud:cancelPairing'),

@@ -228,6 +228,17 @@ $('recovery-continue').addEventListener('click', async () => {
   refreshStatus();
 });
 
+// Local fallback for a remotely-enforced sleep that isn't clearing via the
+// dashboard's "Cancel sleep" — no network round trip needed, works from
+// this PC alone.
+$('cancel-remote-sleep-btn').addEventListener('click', async () => {
+  const result = await callGated(
+    () => api.cancelRemoteSleep(),
+    'Enter the parent password to cancel the remotely-enforced sleep.'
+  );
+  if (result && result.ok) refreshStatus();
+});
+
 /* ------------------------------------------------------------------ *
  * Unlock dialog
  * ------------------------------------------------------------------ */
@@ -401,6 +412,7 @@ async function refreshStatus() {
   }
 
   const scheduleWarning = $('schedule-warning');
+  const cancelRemoteSleepBtn = $('cancel-remote-sleep-btn');
   if (status.schedule && status.schedule.active) {
     scheduleWarning.hidden = false;
     const hours = Math.floor((status.schedule.minutesRemaining || 0) / 60);
@@ -409,8 +421,12 @@ async function refreshStatus() {
     $('schedule-warning-detail').textContent = status.schedule.remoteOverrideActive
       ? `All internet on this PC was blocked remotely (bedtime enforced from the family dashboard) for ${remaining}.`
       : `All internet on this PC is blocked by the schedule for ${remaining}.`;
+    // Only shown for a remote-enforced sleep — the PC's own weekly schedule
+    // has its own on/off toggle in Parent settings for that.
+    cancelRemoteSleepBtn.hidden = !status.schedule.remoteOverrideActive;
   } else {
     scheduleWarning.hidden = true;
+    cancelRemoteSleepBtn.hidden = true;
   }
 
   // Sidebar lock indicator

@@ -340,6 +340,17 @@ function createHandlers(ctx) {
       return { ok: true };
     }),
 
+    // Local escape hatch for a remotely-enforced sleep (see cloudSync.js's
+    // enforce_sleep_now) that isn't clearing via the dashboard's "Cancel
+    // sleep" — e.g. this PC's connection to the remote command pipe is
+    // stuck for some reason. Clears forceSleepUntil directly, no network
+    // round trip needed, same as everything else already gated by the
+    // parent password.
+    'schedule.cancelRemoteSleep': parentOnly(() => {
+      store.set('forceSleepUntil', null);
+      return { ok: true };
+    }),
+
     // Remote control (see cloudSync.js). Read-only status is safe to expose
     // unlocked — it reveals nothing beyond "is this PC linked to a family
     // account", never the device secret itself. Starting/cancelling a

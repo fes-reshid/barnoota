@@ -32,6 +32,27 @@
 ; Matched by subject name rather than a cached thumbprint, since this script
 ; has no access to certAuthority.js's JSON metadata file — safe because
 ; nothing else on a family PC would coincidentally use this exact CN.
+; Runs after this installer's files are copied to disk (both a fresh install
+; and an upgrade over an existing one). The protection service, if it was
+; already running from a previous install, is still executing whatever
+; service/*.js code was loaded into its process's memory when it last
+; started — overwriting those files on disk does absolutely nothing to code
+; already running. Left alone, every service-side fix or feature in this
+; release would silently not exist on this PC until either the whole
+; machine reboots (which restarts the service fresh) or someone manually
+; stops and starts it — exactly the kind of bug that looks like "the new
+; feature just doesn't work" with no obvious cause.
+;
+; Stopping it here, before the app auto-launches (runAfterFinish), makes
+; serviceClient.ensureRunning() find it unreachable on that very first
+; launch and start it again itself — against the files this installer just
+; wrote. No-op if the service was never installed (a first-time install).
+!macro customInstall
+  DetailPrint "Restarting Noor Shield protection service..."
+  ExecWait 'sc.exe stop "noorshieldfilter"'
+  Sleep 3000
+!macroend
+
 !macro customUnInit
   ; Runs first and unconditionally, before anything else: a PC left with no
   ; working DNS after uninstall is the worst possible outcome, worse than
