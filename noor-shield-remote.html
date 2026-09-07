@@ -199,6 +199,23 @@
   .domainrow .linkbtn.removelink { color: var(--warn); font-weight: 600; font-size: 0.8rem; flex-shrink: 0; }
   .domaincount { color: var(--ink-faint); font-weight: 600; }
 
+  .btn.flash { background: var(--good) !important; color: #fff !important; border-color: transparent !important; transition: background 0.15s ease; }
+  .btn.ghost.active { background: var(--surface-2); border-color: var(--green-dim); color: var(--green-dim); }
+
+  .checkrow { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; cursor: pointer; }
+  .checkrow input { margin: 0; }
+  .dayrow { display: flex; gap: 6px; flex-wrap: wrap; }
+  .daychip {
+    display: flex; align-items: center; gap: 5px; padding: 7px 10px;
+    border: 1px solid var(--line); border-radius: 8px; font-size: 0.8rem; cursor: pointer;
+    background: var(--surface);
+  }
+  .daychip input { margin: 0; }
+  .managesection input[type="time"] {
+    padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); font-size: 0.9rem;
+  }
+
   .refreshrow { display: flex; align-items: center; justify-content: space-between; }
   .refreshrow .linkbtn { font-weight: 500; color: var(--ink-faint); }
 
@@ -324,6 +341,11 @@
     var $ = function (id) { return document.getElementById(id); };
     var isSignUp = false;
     var deviceRefreshTimer = null;
+    // loadDevices() rebuilds every card from scratch every 10 seconds, so an
+    // open Manage panel would otherwise silently snap shut on the next
+    // refresh — this remembers which devices' panels are open across that
+    // rebuild so deviceCard() can restore them.
+    var openManagePanels = new Set();
 
     // Only enforced when creating an account — signing in accepts whatever
     // password the account already has, since tightening this rule later
@@ -492,6 +514,19 @@
       return Math.floor(hours / 24) + "d ago";
     }
 
+    // Turns a button green with a confirming label for a moment after
+    // something actually happened, then puts it back — the only feedback a
+    // click otherwise gets is nothing at all until the PC checks in.
+    function flashButton(button, label) {
+      var original = button.textContent;
+      button.textContent = label;
+      button.classList.add("flash");
+      setTimeout(function () {
+        button.textContent = original;
+        button.classList.remove("flash");
+      }, 1600);
+    }
+
     async function sendCommand(deviceId, kind, button, payload) {
       button.disabled = true;
       try {
@@ -503,6 +538,7 @@
           payload: payload || {},
         });
         if (res.error) throw res.error;
+        flashButton(button, "Sent ✓");
       } catch (err) {
         alert(err.message || "Could not send that command.");
       } finally {
@@ -580,7 +616,7 @@
       });
     }
 
-    async function addDeviceDomain(device, input, msgEl, listEl, countEl) {
+    async function addDeviceDomain(device, input, msgEl, listEl, countEl, button) {
       var domain = normalizeDomain(input.value);
       if (!isValidDomain(domain)) {
         msgEl.textContent = "Enter a domain, like example.com.";
@@ -595,6 +631,7 @@
         return;
       }
       input.value = "";
+      if (button) flashButton(button, "Added ✓");
       loadDeviceDomains(device, listEl, countEl);
     }
 
@@ -639,6 +676,92 @@
       panel.className = "managepanel";
       panel.hidden = true;
 
+      // Weekly bedtime: replaces this PC's own recurring schedule outright
+      // (whatever it had configured locally in Parent settings) the next
+      // time it checks in. Write-only from here — there's no channel yet
+      // for the dashboard to know what's currently set on the PC, so this
+      // always starts from the same sensible default rather than a
+      // possibly-stale remembered value.
+      var scheduleSection = document.createElement("div");
+      scheduleSection.className = "managesection";
+      var scheduleHeading = document.createElement("h4");
+      scheduleHeading.textContent = "Weekly bedtime";
+      var scheduleEnabledRow = document.createElement("label");
+      scheduleEnabledRow.className = "checkrow";
+      var scheduleEnabled = document.createElement("input");
+      scheduleEnabled.type = "checkbox";
+      scheduleEnabled.checked = true;
+      scheduleEnabledRow.appendChild(scheduleEnabled);
+      scheduleEnabledRow.appendChild(document.createTextNode(" Enabled"));
+
+      var dayLabels = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+      var weeknights = [0, 1, 2, 3, 4]; // Sun-Thu nights, the nights before a school day
+      var dayRow = document.createElement("div");
+      dayRow.className = "dayrow";
+      var dayChecks = dayLabels.map(function (label, i) {
+        var chip = document.createElement("label");
+        chip.className = "daychip";
+        var cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = weeknights.indexOf(i) >= 0;
+        chip.appendChild(cb);
+        chip.appendChild(document.createTextNode(label));
+        dayRow.appendChild(chip);
+        return cb;
+      });
+
+      var timeRow = document.createElement("div");
+      timeRow.className = "row";
+      var startInput = document.createElement("input");
+      startInput.type = "time";
+      startInput.value = "21:00";
+      var toLabel = document.createElement("span");
+      toLabel.className = "hint";
+      toLabel.textContent = "to";
+      var endInput = document.createElement("input");
+      endInput.type = "time";
+      endInput.value = "07:00";
+      timeRow.appendChild(startInput);
+      timeRow.appendChild(toLabel);
+      timeRow.appendChild(endInput);
+
+      var scheduleMsg = document.createElement("p");
+      scheduleMsg.className = "msg";
+      var saveScheduleBtn = document.createElement("button");
+      saveScheduleBtn.className = "btn primary small";
+      saveScheduleBtn.textContent = "Save weekly bedtime";
+      saveScheduleBtn.addEventListener("click", function () {
+        var days = dayChecks.reduce(function (acc, cb, i) {
+          if (cb.checked) acc.push(i);
+          return acc;
+        }, []);
+        if (days.length === 0) {
+          scheduleMsg.textContent = "Pick at least one day.";
+          scheduleMsg.className = "msg error";
+          return;
+        }
+        if (!startInput.value || !endInput.value || startInput.value === endInput.value) {
+          scheduleMsg.textContent = "Pick a start and end time that are different.";
+          scheduleMsg.className = "msg error";
+          return;
+        }
+        scheduleMsg.textContent = "";
+        sendCommand(device.id, "set_schedule", saveScheduleBtn, {
+          enabled: scheduleEnabled.checked,
+          days: days,
+          startTime: startInput.value,
+          endTime: endInput.value,
+        });
+      });
+
+      scheduleSection.appendChild(scheduleHeading);
+      scheduleSection.appendChild(scheduleEnabledRow);
+      scheduleSection.appendChild(dayRow);
+      scheduleSection.appendChild(timeRow);
+      scheduleSection.appendChild(saveScheduleBtn);
+      scheduleSection.appendChild(scheduleMsg);
+      panel.appendChild(scheduleSection);
+
       // Sleep timer: same command as the quick "Enforce sleep now" button
       // above, just with a duration the parent picks instead of the fixed
       // default the server falls back to when no payload is sent.
@@ -668,21 +791,34 @@
       sleepSection.appendChild(sleepRow);
       panel.appendChild(sleepSection);
 
-      // Lock: takes effect the next time this PC checks in (usually within
-      // ~20 seconds), same as every other remote command.
+      // Lock/unlock: takes effect the next time this PC checks in (usually
+      // within ~20 seconds). Locking shows a full-screen "ask your parent"
+      // screen the child can't get past on their own, even after signing
+      // back into their own Windows account — Unlock here is the only way
+      // to clear it (see cloudSync.js's remoteLockActive).
       var lockSection = document.createElement("div");
       lockSection.className = "managesection";
       var lockHeading = document.createElement("h4");
       lockHeading.textContent = "Screen";
+      var lockRow = document.createElement("div");
+      lockRow.className = "row";
       var lockBtn = document.createElement("button");
       lockBtn.className = "btn ghost small";
       lockBtn.textContent = "Lock computer now";
       lockBtn.addEventListener("click", function () {
-        if (!confirm("Lock " + device.name + " now?")) return;
+        if (!confirm("Lock " + device.name + " now? It stays locked until you unlock it from here.")) return;
         sendCommand(device.id, "lock_computer", lockBtn);
       });
+      var unlockBtn = document.createElement("button");
+      unlockBtn.className = "btn primary small";
+      unlockBtn.textContent = "Unlock computer";
+      unlockBtn.addEventListener("click", function () {
+        sendCommand(device.id, "unlock_computer", unlockBtn);
+      });
+      lockRow.appendChild(lockBtn);
+      lockRow.appendChild(unlockBtn);
       lockSection.appendChild(lockHeading);
-      lockSection.appendChild(lockBtn);
+      lockSection.appendChild(lockRow);
       panel.appendChild(lockSection);
 
       // Blocked sites for this PC specifically — separate from, and in
@@ -711,9 +847,9 @@
       domainList.className = "domainlist";
       var domainCount = countLine.querySelector(".domaincount");
 
-      addBtn.addEventListener("click", function () { addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount); });
+      addBtn.addEventListener("click", function () { addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount, addBtn); });
       siteInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount);
+        if (event.key === "Enter") addDeviceDomain(device, siteInput, siteMsg, domainList, domainCount, addBtn);
       });
 
       addRow.appendChild(siteInput);
@@ -728,12 +864,26 @@
 
       el.appendChild(panel);
 
+      function openManagePanel() {
+        panel.hidden = false;
+        manageBtn.textContent = "Hide";
+        manageBtn.classList.add("active");
+        openManagePanels.add(device.id);
+        loadDeviceDomains(device, domainList, domainCount);
+      }
+      function closeManagePanel() {
+        panel.hidden = true;
+        manageBtn.textContent = "Manage";
+        manageBtn.classList.remove("active");
+        openManagePanels.delete(device.id);
+      }
       manageBtn.addEventListener("click", function () {
-        var opening = panel.hidden;
-        panel.hidden = !opening;
-        manageBtn.textContent = opening ? "Hide" : "Manage";
-        if (opening) loadDeviceDomains(device, domainList, domainCount);
+        if (panel.hidden) openManagePanel(); else closeManagePanel();
       });
+      // loadDevices() rebuilds this whole card from scratch every 10
+      // seconds — restore the panel to how the parent left it instead of
+      // it silently snapping shut mid-use.
+      if (openManagePanels.has(device.id)) openManagePanel();
 
       return el;
     }
