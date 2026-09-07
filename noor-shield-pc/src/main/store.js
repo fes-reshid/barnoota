@@ -59,6 +59,11 @@ const DEFAULTS = {
   // bedtime window for as long as this is in the future, independent of
   // the PC's own configured weekly schedule. Null means no remote override.
   forceSleepUntil: null,
+  // Sites the parent added for this specific PC from the web dashboard
+  // (device_domains in Supabase — see service/cloudSync.js), synced down
+  // and merged into the live blocklist alongside customDomains. Always
+  // wholesale-replaced from the cloud's current list, never edited locally.
+  cloudBlockedDomains: [],
 };
 
 class Store {

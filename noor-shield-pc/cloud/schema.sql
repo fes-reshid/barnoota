@@ -6,10 +6,10 @@
 --
 -- Design in one paragraph: a parent's PC never logs into Supabase as a real
 -- user — it only ever proves it holds a long random `device_secret` it
--- generated for itself at pairing time. The three device-facing functions
--- below (start_pairing, poll_pairing, get_pending_commands, complete_command,
--- heartbeat) check that secret themselves and are safe to call with only the
--- public "anon"/"publishable" key. The parent's web dashboard, in contrast,
+-- generated for itself at pairing time. The device-facing functions below
+-- (start_pairing, poll_pairing, get_pending_commands, complete_command,
+-- get_device_domains) check that secret themselves and are safe to call
+-- with only the public "anon"/"publishable" key. The parent's web dashboard, in contrast,
 -- logs in for real via Supabase Auth, and Row Level Security (the "policy"
 -- blocks below) makes sure a logged-in parent can only ever see or command
 -- their own paired devices — never anyone else's.
@@ -44,16 +44,39 @@ create table if not exists public.pairing_codes (
 create table if not exists public.commands (
   id uuid primary key default gen_random_uuid(),
   device_id uuid not null references public.devices(id) on delete cascade,
-  kind text not null check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown')),
+  kind text not null check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer')),
   status text not null default 'pending' check (status in ('pending', 'done', 'failed')),
   requested_by uuid not null references auth.users(id),
+  -- Small per-command extras that don't need their own column — currently
+  -- just enforce_sleep_now's { "hours": N } duration, defaulting to 8 when
+  -- absent so older rows (and a plain insert with no payload) still work.
+  payload jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   completed_at timestamptz
 );
 
+-- Re-run-safe: adds `payload` and the `lock_computer` kind to a commands
+-- table created before this existed, without touching existing rows.
+alter table public.commands add column if not exists payload jsonb not null default '{}'::jsonb;
+alter table public.commands drop constraint if exists commands_kind_check;
+alter table public.commands add constraint commands_kind_check
+  check (kind in ('enforce_sleep_now', 'cancel_sleep_now', 'shutdown', 'lock_computer'));
+
 create index if not exists commands_device_pending_idx
   on public.commands (device_id, status)
   where status = 'pending';
+
+-- Sites the parent has added for one specific paired PC, from the web
+-- dashboard. Separate from the PC's own locally-added list (customDomains
+-- in its local store) — this one is authoritative from the cloud side and
+-- synced down into the PC's blocklist on every command poll (see
+-- get_device_domains below and service/cloudSync.js).
+create table if not exists public.device_domains (
+  device_id uuid not null references public.devices(id) on delete cascade,
+  domain text not null,
+  added_at timestamptz not null default now(),
+  primary key (device_id, domain)
+);
 
 -- Product keys. Replaces the old fully-offline scheme (a fixed list of 1000
 -- precomputed key hashes shipped inside the app, in licenseKeyHashes.json)
@@ -71,6 +94,7 @@ create table if not exists public.license_keys (
 alter table public.devices enable row level security;
 alter table public.pairing_codes enable row level security;
 alter table public.commands enable row level security;
+alter table public.device_domains enable row level security;
 alter table public.license_keys enable row level security;
 
 -- No policies for license_keys either (same reasoning as pairing_codes
@@ -116,6 +140,16 @@ create policy "parents queue commands for their own devices"
 -- denies every direct table access (even to logged-in users), which is
 -- exactly right here — every interaction with this table goes through the
 -- functions below instead, so the raw codes/secrets are never queryable.
+
+-- device_domains, unlike pairing_codes, IS meant to be queried and written
+-- directly by the logged-in parent's dashboard (list/add/remove a site) —
+-- one policy covering all four operations is enough since the ownership
+-- check is identical for each.
+drop policy if exists "parents manage sites for their own devices" on public.device_domains;
+create policy "parents manage sites for their own devices"
+  on public.device_domains for all
+  using (device_id in (select id from public.devices where owner_id = auth.uid()))
+  with check (device_id in (select id from public.devices where owner_id = auth.uid()));
 
 -- ---------------------------------------------------------------------
 -- Device-facing functions (called with only the public anon/publishable
@@ -235,6 +269,32 @@ begin
   where id = p_command_id
     and device_id = p_device_id
     and device_id in (select id from public.devices where id = p_device_id and device_secret = p_device_secret);
+end;
+$$;
+
+-- Polled by the PC alongside get_pending_commands, on the same interval —
+-- returns the full current list of parent-added sites for this device so
+-- the PC can fold them into its blocklist. Deliberately returns the whole
+-- list every time rather than just new additions: it's the simplest way to
+-- also pick up a removal (a domain the parent deleted from the dashboard
+-- just stops appearing here, no separate "removed" signal needed).
+create or replace function public.get_device_domains(p_device_id uuid, p_device_secret text)
+returns setof text
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.devices where id = p_device_id and device_secret = p_device_secret
+  ) then
+    raise exception 'Unrecognized device';
+  end if;
+
+  return query
+    select domain from public.device_domains
+    where device_id = p_device_id
+    order by added_at asc;
 end;
 $$;
 

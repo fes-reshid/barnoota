@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const { exec } = require('child_process');
 
 /**
  * Remote control: lets a parent enforce bedtime or (later) other commands
@@ -18,11 +19,17 @@ const crypto = require('crypto');
  * deviceSecret) and in Row Level Security for the parent's logged-in side,
  * not in keeping this key secret.
  *
- * Deliberately minimal for now: only two commands are implemented
- * end-to-end (enforce_sleep_now, cancel_sleep_now). `shutdown` exists in
- * the database schema for later but is intentionally left unimplemented
- * here — proving the lower-stakes command pipe works first, before wiring
- * up anything that can't be undone by just reopening the app.
+ * Three commands are implemented end-to-end (enforce_sleep_now,
+ * cancel_sleep_now, lock_computer). `shutdown` exists in the database
+ * schema for later but is intentionally left unimplemented here — proving
+ * the lower-stakes command pipe works first, before wiring up anything
+ * that can't be undone by just reopening the app.
+ *
+ * Also syncs one more thing besides commands: `device_domains`, sites the
+ * parent added for this specific PC from the web dashboard. Polled on the
+ * same interval and folded into the local blocklist (see buildBlocklist()
+ * in handlers.js) — separate from, and in addition to, whatever the parent
+ * has added from the app itself.
  */
 
 const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('./supabaseConfig');
@@ -30,7 +37,7 @@ const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('./supabaseConfig');
 const PAIRING_POLL_MS = 4_000;
 const PAIRING_TIMEOUT_MS = 10 * 60 * 1000; // matches schema.sql's pairing_codes.expires_at
 const COMMAND_POLL_MS = 20_000;
-const FORCE_SLEEP_DURATION_MS = 8 * 60 * 60 * 1000; // "enforce sleep now" lasts 8 hours
+const DEFAULT_SLEEP_HOURS = 8; // used when enforce_sleep_now's payload doesn't specify a duration
 
 async function callRpc(fnName, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fnName}`, {
@@ -121,14 +128,29 @@ function isForceSleepActive(store) {
   return typeof until === 'number' && until > Date.now();
 }
 
+/** Locks the Windows session immediately — the same effect as Win+L. */
+function lockComputer() {
+  return new Promise((resolve) => {
+    if (process.platform !== 'win32') {
+      resolve('failed');
+      return;
+    }
+    exec('rundll32.exe user32.dll,LockWorkStation', (err) => resolve(err ? 'failed' : 'done'));
+  });
+}
+
 async function applyCommand(store, command) {
   if (command.kind === 'enforce_sleep_now') {
-    store.set('forceSleepUntil', Date.now() + FORCE_SLEEP_DURATION_MS);
+    const hours = Number(command.payload && command.payload.hours) || DEFAULT_SLEEP_HOURS;
+    store.set('forceSleepUntil', Date.now() + hours * 60 * 60 * 1000);
     return 'done';
   }
   if (command.kind === 'cancel_sleep_now') {
     store.set('forceSleepUntil', null);
     return 'done';
+  }
+  if (command.kind === 'lock_computer') {
+    return lockComputer();
   }
   // 'shutdown' and anything else: not implemented yet, on purpose (see
   // module comment). Marking it failed rather than leaving it pending
@@ -172,13 +194,45 @@ async function pollCommandsOnce(store) {
 }
 
 /**
+ * One poll cycle: fetch the parent's current site list for this device (if
+ * paired) and store it wholesale, replacing whatever was there before.
+ * Always the full list rather than a diff — see the function's own comment
+ * in schema.sql for why that's what makes removal work with no extra
+ * plumbing. `onChange`, when given, runs after the store update so the
+ * caller can push the new list into the live blocklist immediately instead
+ * of waiting for something else to trigger a rebuild.
+ */
+async function pollDeviceDomainsOnce(store, onChange) {
+  const cloud = store.get('cloud') || {};
+  if (!cloud.deviceId || !cloud.deviceSecret) return;
+
+  let domains;
+  try {
+    domains = await callRpc('get_device_domains', {
+      p_device_id: cloud.deviceId,
+      p_device_secret: cloud.deviceSecret,
+    });
+  } catch (err) {
+    console.error(`[cloudSync] could not fetch parent-added sites: ${err.message}`);
+    return;
+  }
+
+  store.set('cloudBlockedDomains', domains || []);
+  if (onChange) onChange();
+}
+
+/**
  * Starts the background loops: while a pairing code is pending, polls
  * quickly for it being claimed; once paired, polls (more slowly) for
- * commands. Both are fire-and-forget interval timers, `.unref()`'d so they
- * never keep the process alive on their own — matching the feed-refresh
- * timer pattern already used in filterService.js.
+ * commands and the parent's site list. All fire-and-forget interval timers,
+ * `.unref()`'d so they never keep the process alive on their own — matching
+ * the feed-refresh timer pattern already used in filterService.js.
+ *
+ * `onBlocklistChange`, if given, is called whenever the synced site list
+ * changes so the live DNS proxy's blocklist gets rebuilt right away instead
+ * of waiting up to COMMAND_POLL_MS for something else to trigger it.
  */
-function start(store) {
+function start(store, { onBlocklistChange } = {}) {
   const pairingTimer = setInterval(() => {
     const cloud = store.get('cloud') || {};
     if (!cloud.pendingPairing) return;
@@ -190,6 +244,18 @@ function start(store) {
     pollCommandsOnce(store).catch((err) => console.error(`[cloudSync] command poll failed: ${err.message}`));
   }, COMMAND_POLL_MS);
   commandTimer.unref();
+
+  const domainsTimer = setInterval(() => {
+    pollDeviceDomainsOnce(store, onBlocklistChange).catch((err) =>
+      console.error(`[cloudSync] site sync failed: ${err.message}`)
+    );
+  }, COMMAND_POLL_MS);
+  domainsTimer.unref();
+  // Also run once immediately, so a PC that was already paired before this
+  // restart doesn't wait a full interval to pick up sites added meanwhile.
+  pollDeviceDomainsOnce(store, onBlocklistChange).catch((err) =>
+    console.error(`[cloudSync] initial site sync failed: ${err.message}`)
+  );
 }
 
 module.exports = {
@@ -200,4 +266,5 @@ module.exports = {
   unpair,
   isForceSleepActive,
   pollCommandsOnce, // exported for tests
+  pollDeviceDomainsOnce, // exported for tests
 };

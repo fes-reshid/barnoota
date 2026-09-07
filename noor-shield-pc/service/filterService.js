@@ -126,7 +126,7 @@ async function main() {
     onStateChange: () => {}, // hook point if a future UI wants push updates
   };
 
-  const { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote } = createHandlers(ctx);
+  const { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote, refreshBlocklist } = createHandlers(ctx);
 
   // At boot, the Windows service can be started (by the SCM) before network
   // adapters have finished initializing — a well-known race for anything
@@ -204,7 +204,10 @@ async function main() {
 
   // Remote control: no-op unless a pairing is in progress or already
   // paired (see cloudSync.js) — never reaches out on its own otherwise.
-  cloudSync.start(store);
+  // refreshBlocklist rebuilds the live DNS proxy's blocklist the moment a
+  // remotely-added site changes, rather than waiting for something else to
+  // trigger it.
+  cloudSync.start(store, { onBlocklistChange: refreshBlocklist });
 
   let shuttingDown = false;
   async function shutdown(reason) {

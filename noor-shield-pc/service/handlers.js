@@ -145,7 +145,11 @@ function createHandlers(ctx) {
 
   function buildBlocklist() {
     const custom = (store.get('customDomains') || []).map((entry) => entry.domain);
-    return new Blocklist(seedDomains, custom, mergedFeedDomains);
+    // Sites the parent added from this PC directly, plus sites the parent
+    // added remotely for this PC from the web dashboard (see cloudSync.js) —
+    // both apply regardless of which side added them.
+    const cloudBlocked = store.get('cloudBlockedDomains') || [];
+    return new Blocklist(seedDomains, [...custom, ...cloudBlocked], mergedFeedDomains);
   }
 
   function refreshBlocklist() {
@@ -483,7 +487,7 @@ function createHandlers(ctx) {
   // Exposed unwrapped for the service's own startup reconciliation and its
   // periodic feed-refresh timer, neither of which is a request going through
   // the RPC/parentOnly() path.
-  return { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote };
+  return { rpc, startFilter, stopFilter, refreshAllFeedsFromRemote, refreshBlocklist };
 }
 
 module.exports = { createHandlers, appendActivity, MAX_ACTIVITY_ENTRIES };
