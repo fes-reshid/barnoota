@@ -194,16 +194,38 @@
       </div>
       <div class="field">
         <label for="auth-password">Password</label>
-        <input type="password" id="auth-password" autocomplete="current-password" placeholder="At least 6 characters">
+        <input type="password" id="auth-password" autocomplete="current-password" placeholder="At least 8 characters, upper &amp; lower case">
       </div>
       <button class="btn primary block" id="auth-submit">Sign in</button>
       <button class="linkbtn" id="auth-toggle">Need an account? Create one</button>
+      <button class="linkbtn" id="auth-forgot-link">Forgot password?</button>
       <p class="msg" id="auth-msg"></p>
     </div>
 
     <div id="auth-success" hidden>
       <p class="msg success">Account created successfully. Check your email to activate your account, then sign in.</p>
       <button class="btn primary block" id="auth-success-back">Back to sign in</button>
+    </div>
+
+    <div id="auth-forgot" hidden>
+      <p class="msg">Enter your email and we'll send you a link to reset your password.</p>
+      <div class="field">
+        <label for="forgot-email">Email</label>
+        <input type="email" id="forgot-email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <button class="btn primary block" id="forgot-submit">Send reset link</button>
+      <button class="linkbtn" id="forgot-back">Back to sign in</button>
+      <p class="msg" id="forgot-msg"></p>
+    </div>
+
+    <div id="auth-recovery" hidden>
+      <p class="msg">Choose a new password for your account.</p>
+      <div class="field">
+        <label for="recovery-password">New password</label>
+        <input type="password" id="recovery-password" autocomplete="new-password" placeholder="At least 8 characters, upper &amp; lower case">
+      </div>
+      <button class="btn primary block" id="recovery-submit">Set new password</button>
+      <p class="msg" id="recovery-msg"></p>
     </div>
   </div>
 </div>
@@ -272,6 +294,14 @@
     var isSignUp = false;
     var deviceRefreshTimer = null;
 
+    // Only enforced when creating an account — signing in accepts whatever
+    // password the account already has, since tightening this rule later
+    // shouldn't lock anyone out of an account made under the old one.
+    function isStrongPassword(pw) {
+      return pw.length >= 8 && /[a-z]/.test(pw) && /[A-Z]/.test(pw);
+    }
+    var PASSWORD_HINT = "Password must be at least 8 characters and include both uppercase and lowercase letters.";
+
     function showAuthError(msg) {
       var el = $("auth-msg");
       el.textContent = msg;
@@ -282,14 +312,19 @@
       $("auth-heading").textContent = isSignUp ? "Create your family account" : "Sign in to your family account";
       $("auth-submit").textContent = isSignUp ? "Create account" : "Sign in";
       $("auth-toggle").textContent = isSignUp ? "Already have an account? Sign in" : "Need an account? Create one";
+      $("auth-forgot-link").hidden = isSignUp;
       $("auth-msg").textContent = "";
     });
 
     $("auth-submit").addEventListener("click", async function () {
       var email = $("auth-email").value.trim();
       var password = $("auth-password").value;
-      if (!email || password.length < 6) {
-        showAuthError("Enter an email and a password of at least 6 characters.");
+      if (!email || !password) {
+        showAuthError("Enter your email and password.");
+        return;
+      }
+      if (isSignUp && !isStrongPassword(password)) {
+        showAuthError(PASSWORD_HINT);
         return;
       }
       $("auth-submit").disabled = true;
@@ -315,14 +350,74 @@
       }
     });
 
-    $("auth-success-back").addEventListener("click", function () {
+    function backToSignIn() {
       isSignUp = false;
       $("auth-heading").textContent = "Sign in to your family account";
       $("auth-submit").textContent = "Sign in";
       $("auth-toggle").textContent = "Need an account? Create one";
+      $("auth-forgot-link").hidden = false;
       $("auth-msg").textContent = "";
       $("auth-success").hidden = true;
+      $("auth-forgot").hidden = true;
       $("auth-fields").hidden = false;
+    }
+
+    $("auth-success-back").addEventListener("click", backToSignIn);
+
+    $("auth-forgot-link").addEventListener("click", function () {
+      $("forgot-email").value = $("auth-email").value.trim();
+      $("forgot-msg").textContent = "";
+      $("forgot-msg").className = "msg";
+      $("auth-fields").hidden = true;
+      $("auth-forgot").hidden = false;
+    });
+
+    $("forgot-back").addEventListener("click", backToSignIn);
+
+    $("forgot-submit").addEventListener("click", async function () {
+      var email = $("forgot-email").value.trim();
+      if (!email) {
+        $("forgot-msg").textContent = "Enter your email address.";
+        $("forgot-msg").className = "msg error";
+        return;
+      }
+      $("forgot-submit").disabled = true;
+      try {
+        var res = await sb.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + window.location.pathname,
+        });
+        if (res.error) throw res.error;
+        $("forgot-msg").textContent = "Reset link sent. Check your email.";
+        $("forgot-msg").className = "msg success";
+      } catch (err) {
+        $("forgot-msg").textContent = err.message || "Something went wrong.";
+        $("forgot-msg").className = "msg error";
+      } finally {
+        $("forgot-submit").disabled = false;
+      }
+    });
+
+    $("recovery-submit").addEventListener("click", async function () {
+      var password = $("recovery-password").value;
+      if (!isStrongPassword(password)) {
+        $("recovery-msg").textContent = PASSWORD_HINT;
+        $("recovery-msg").className = "msg error";
+        return;
+      }
+      $("recovery-submit").disabled = true;
+      try {
+        var res = await sb.auth.updateUser({ password: password });
+        if (res.error) throw res.error;
+        $("recovery-password").value = "";
+        // No need to show anything further here — the auth-state listener
+        // below reacts to the session this just updated and switches to
+        // the app screen on its own.
+      } catch (err) {
+        $("recovery-msg").textContent = err.message || "Something went wrong.";
+        $("recovery-msg").className = "msg error";
+      } finally {
+        $("recovery-submit").disabled = false;
+      }
     });
 
     $("signout").addEventListener("click", function () { sb.auth.signOut(); });
@@ -453,6 +548,22 @@
     }
 
     sb.auth.onAuthStateChange(function (event, session) {
+      // Supabase signs the visitor into a temporary session the instant a
+      // password-reset link is opened, before they've actually set a new
+      // password — showApp(session) here would drop them straight into the
+      // dashboard using a session they never meant to establish. Catch that
+      // case first and show the "choose a new password" panel instead;
+      // everything else (including the normal session change once
+      // updateUser() below succeeds) falls through to the usual handling.
+      if (event === "PASSWORD_RECOVERY") {
+        $("app-screen").hidden = true;
+        $("auth-screen").hidden = false;
+        $("auth-fields").hidden = true;
+        $("auth-success").hidden = true;
+        $("auth-forgot").hidden = true;
+        $("auth-recovery").hidden = false;
+        return;
+      }
       if (session) showApp(session); else showAuth();
     });
     sb.auth.getSession().then(function (res) {
