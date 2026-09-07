@@ -13,7 +13,8 @@ steps.
    publishable** key (never the `service_role` key — that one must stay
    secret) and put them into:
    - `service/cloudSync.js` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`)
-   - `cloud/dashboard.html` (`SUPABASE_URL`, `SUPABASE_KEY`, same values)
+   - `dashboard.html` (`SUPABASE_URL`, `SUPABASE_KEY`, same values) — and
+     wherever the deployed copy of it lives (see below)
 
 Both of those keys are meant to be public — the database's Row Level
 Security policies and the `SECURITY DEFINER` functions in `schema.sql` are
@@ -28,9 +29,18 @@ of these values.
   (proving itself with a `device_secret` it generated at pairing time,
   never with a real login).
 - **`dashboard.html`** — the parent-facing web page (sign in, link a
-  device with its pairing code, send commands). Published as a Claude
-  Artifact; this file is the source of truth if it ever needs updating —
-  republish the artifact from an edited copy of this file.
+  device with its pairing code, send commands): the source of truth for
+  its markup/logic. **Not deployed as a Claude Artifact** — Artifacts run
+  under a CSP that only permits *loading a script* from a short CDN
+  allowlist, not making fetch/XHR calls to arbitrary hosts (even from a
+  library loaded off an allowed CDN), so Supabase's own auth/database
+  calls were silently blocked there ("NetworkError when attempting to
+  fetch resource" the moment anyone tried to sign in). The real deployed
+  copy lives on the `main` branch of this repo as `noor-shield-remote.html`
+  (a plain page on diinislaam.com, wrapped in a normal
+  doctype/html/head/body) — a static site has no such restriction. When
+  this file changes, copy it over to `noor-shield-remote.html` on `main`
+  and re-wrap it.
 - **`../service/cloudSync.js`** — the PC-side half: generates the pairing
   code, polls for it being claimed, then polls for commands and applies
   them (`enforce_sleep_now`, `cancel_sleep_now`). `shutdown` exists in the
