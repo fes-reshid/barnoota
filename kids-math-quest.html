@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Math Number Quest — Kids Corner</title>
+<meta name="description" content="A map-and-lessons number game for maths: 40 lessons across 4 maps teaching counting to 20, adding, taking away, shapes, patterns, time and money, with mini-games, stars and coins.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c; --gold-bright:#e8b53c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#8fd3ef; --sky-deep:#3f9fc9;
+    --coral:#e0703a; --violet:#7a5aa8; --pink:#e86fa0;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+  .glyph{ font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; }
+  .hidden{ display:none !important; }
+
+  header.site{
+    position:sticky; top:0; z-index:60;
+    background:rgba(250,243,224,.94); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 18px; max-width:var(--maxw); margin:0 auto; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:12px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 14px; white-space:nowrap;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .wrap{ max-width:1000px; margin:0 auto; padding:18px 16px 60px; }
+
+  /* ============ Shared buttons ============ */
+  .big-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--gold); color:#fff8ea; border:none; border-radius:26px;
+    padding:14px 34px; font-family:'Marcellus'; font-size:19px; cursor:pointer;
+    box-shadow:0 5px 0 #8a6417; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .big-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #8a6417; }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #8a6417; }
+  .big-btn.green{ background:var(--green); box-shadow:0 5px 0 var(--green-dark); }
+  .big-btn.green:hover{ box-shadow:0 7px 0 var(--green-dark); }
+  .big-btn.green:active{ box-shadow:0 2px 0 var(--green-dark); }
+  .ghost-btn{
+    background:#fff; border:2px solid var(--gold-soft); color:var(--ink-brown);
+    border-radius:22px; padding:9px 20px; font-family:'Marcellus'; font-size:15px; cursor:pointer;
+  }
+  .ghost-btn:hover{ background:var(--parchment-deep); }
+
+  /* ============ Name screen ============ */
+  .name-box{
+    max-width:440px; margin:40px auto; background:#fff; border:3px solid var(--gold-soft);
+    border-radius:26px; padding:34px 28px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14);
+  }
+  .name-icons{ font-size:42px; letter-spacing:8px; margin-bottom:10px; }
+  .name-box h1{ font-family:'Marcellus'; font-size:28px; color:var(--ink-navy); margin:0 0 6px; }
+  .name-box .sub{ font-family:'Amiri', serif; font-size:22px; color:var(--gold); margin:0 0 14px; }
+  .name-box p{ font-size:17px; color:#6b5a3f; line-height:1.5; margin:0 0 18px; }
+  .big-input{
+    width:100%; padding:14px 18px; border:2px solid var(--gold-soft); border-radius:16px;
+    font-family:'Cormorant Garamond', serif; font-size:20px; text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+  }
+  .big-input:focus{ outline:none; border-color:var(--gold); }
+
+  /* ============ Map screen ============ */
+  .map-topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px;
+    padding:10px 14px; margin-bottom:12px; box-shadow:0 4px 14px rgba(60,45,20,.08);
+  }
+  .player-chip{ display:flex; align-items:center; gap:8px; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); }
+  .player-chip .avatar{
+    width:36px; height:36px; border-radius:50%; background:var(--green-bg);
+    display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--green);
+  }
+  .stat-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .stat{
+    display:flex; align-items:center; gap:5px; background:var(--parchment-deep);
+    border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 12px;
+    font-family:'Marcellus'; font-size:15px; color:var(--ink-navy);
+  }
+
+  .map-frame{
+    position:relative; background:linear-gradient(#bfe9fb 0%, #d8f2c4 42%, #b6e39a 100%);
+    border:3px solid var(--gold-soft); border-radius:22px; overflow:hidden;
+    box-shadow:0 10px 26px rgba(60,45,20,.14);
+  }
+  .map-title{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5;
+    background:var(--violet); color:#fff; font-family:'Marcellus'; font-size:17px;
+    padding:6px 22px; border-radius:14px; border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.2);
+    white-space:nowrap;
+  }
+  .map-nav{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:6;
+    width:48px; height:48px; border-radius:50%; border:3px solid #fff; cursor:pointer;
+    background:var(--coral); color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
+  }
+  .map-nav:disabled{ opacity:.35; cursor:default; }
+  .map-nav.prev{ left:8px; }
+  .map-nav.next{ right:8px; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
+
+  .node-num{ font-family:'Marcellus'; font-size:26px; fill:#fff8ea; }
+  .node-num.locked{ fill:#f2f1ee; }
+  .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g:not(.locked):hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-disc{ transition:transform .15s ease; }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  .avatar-marker{ animation:bobber 1.6s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:34; opacity:.75; } 100%{ r:50; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.6s ease-out infinite; }
+
+  .map-help{ text-align:center; font-size:16px; color:#5f6f52; margin:12px 0 0; }
+
+  /* ============ Lesson shell ============ */
+  /* min-width:0 lets the columns shrink instead of stretching the page on small screens. */
+  .lesson-layout{ display:grid; grid-template-columns:212px 1fr; gap:14px; align-items:start; }
+  .lesson-side, .lesson-stage-wrap{ min-width:0; }
+
+  .lesson-side{
+    background:linear-gradient(#4fb3e0, #2f97cb);
+    border:3px solid #fff; border-radius:22px; padding:12px;
+    box-shadow:0 8px 22px rgba(20,60,90,.22); color:#fff;
+  }
+  .side-name{
+    background:#2f7fb0; border:2px solid #fff; border-radius:14px; text-align:center;
+    font-family:'Marcellus'; font-size:16px; padding:7px 8px; margin-bottom:10px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .side-lesson{
+    display:flex; align-items:center; gap:8px; background:#fff; border-radius:16px;
+    padding:8px 10px; margin-bottom:10px; color:var(--ink-navy);
+  }
+  .side-avatar{
+    width:44px; height:44px; border-radius:50%; background:var(--green-bg); border:2px solid var(--green);
+    display:flex; align-items:center; justify-content:center; font-size:24px; flex:none;
+  }
+  .sl-block{ flex:1; line-height:1.05; }
+  .sl-label{ display:block; font-family:'Marcellus'; font-size:13px; color:var(--sky-deep); }
+  .sl-num{ display:block; font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); }
+  .sl-coins{ text-align:center; font-family:'Marcellus'; font-size:14px; color:var(--gold); line-height:1.1; }
+  .sl-coins span{ display:block; font-size:20px; }
+
+  .side-tools{ display:flex; gap:8px; margin-bottom:10px; }
+  .tool-btn{
+    flex:1; background:#ffcf4d; border:3px solid #fff; border-radius:14px; cursor:pointer;
+    font-size:20px; padding:7px 0; box-shadow:0 3px 0 #d9a520;
+  }
+  .tool-btn:active{ transform:translateY(2px); box-shadow:0 1px 0 #d9a520; }
+  .tool-btn.off{ background:#cfd6da; box-shadow:0 3px 0 #a9b1b6; }
+
+  .side-steps{ display:flex; flex-direction:column; gap:8px; max-height:360px; overflow-y:auto; padding-right:2px; }
+  .side-step{
+    display:flex; align-items:center; gap:9px; background:#fff; border:3px solid #fff;
+    border-radius:14px; padding:7px 9px; color:var(--ink-navy); cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
+  }
+  .side-step .ss-num{ font-family:'Marcellus'; font-size:19px; color:var(--sky-deep); width:16px; text-align:center; flex:none; }
+  .side-step .ss-icon{ font-size:22px; }
+  .side-step .ss-label{ font-family:'Marcellus'; font-size:13.5px; flex:1; line-height:1.15; }
+  .side-step .ss-state{ font-size:17px; }
+  .side-step.current{ background:#fff6cf; border-color:#ffcf4d; transform:scale(1.02); }
+  .side-step.done{ background:#dcf3dc; }
+  .side-step.locked{ background:#e6e9ea; color:#8c9296; cursor:not-allowed; }
+
+  .stage-top{
+    display:flex; align-items:center; gap:10px;
+    background:linear-gradient(#4fb3e0, #2f97cb); border:3px solid #fff; border-radius:18px;
+    padding:8px 12px; margin-bottom:10px; box-shadow:0 6px 16px rgba(20,60,90,.18);
+  }
+  .step-pill{
+    background:#fff; border-radius:14px; padding:4px 14px; font-family:'Marcellus';
+    font-size:17px; color:var(--ink-navy); flex:none;
+  }
+  .heart-track{ flex:1; height:18px; background:#fff; border-radius:12px; overflow:hidden; border:2px solid #fff; }
+  .heart-fill{ height:100%; width:0%; background:linear-gradient(90deg,#7ddc6b,#3fb14a); transition:width .35s ease; }
+  .heart-icon{ font-size:22px; flex:none; }
+
+  .stage-card{
+    background:#fff; border:3px solid var(--gold-soft); border-radius:24px;
+    padding:24px 20px 28px; text-align:center; box-shadow:0 10px 26px rgba(60,45,20,.12);
+    min-height:400px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .task-line{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0 0 4px; }
+  .task-sub{ font-size:17px; color:#6b5a3f; margin:0 0 20px; }
+
+  /* ---- activity intro card ---- */
+  .intro-title{
+    font-family:'Marcellus'; font-size:32px; color:var(--sky-deep); margin:0 0 18px;
+    text-shadow:0 2px 0 #e8f5fb;
+  }
+  .intro-text{ font-size:21px; color:#5c6b74; line-height:1.5; max-width:420px; margin:0 auto 24px; }
+  .intro-speak{
+    width:52px; height:52px; border-radius:50%; border:3px solid #fff; background:var(--sky-deep);
+    color:#fff; font-size:22px; cursor:pointer; box-shadow:0 4px 0 #2c7ba0; margin-bottom:14px;
+  }
+  .intro-speak:active{ transform:translateY(2px); box-shadow:0 2px 0 #2c7ba0; }
+
+  .hero-letter{
+    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:100px; line-height:1.1; color:var(--green-dark);
+    background:var(--green-bg); border:4px solid var(--green); border-radius:28px;
+    width:180px; height:180px; display:flex; align-items:center; justify-content:center;
+    margin:0 auto 12px; box-shadow:inset 0 -6px 0 rgba(0,0,0,.06);
+  }
+  .hero-name{ font-family:'Marcellus'; font-size:29px; color:var(--ink-navy); margin:0 0 2px; }
+  .hero-word{ font-family:'Amiri', serif; font-size:34px; color:var(--gold); margin:6px 0 0; }
+  .hero-emoji{ font-size:46px; margin-top:2px; }
+  .count-row{ font-size:34px; line-height:1.35; max-width:340px; margin:8px auto 0; word-break:break-word; }
+  .speak-btn{
+    display:inline-flex; align-items:center; gap:8px; margin:14px 0 6px;
+    background:var(--sky-deep); color:#fff; border:none; border-radius:24px;
+    padding:11px 24px; font-family:'Marcellus'; font-size:17px; cursor:pointer;
+    box-shadow:0 4px 0 #2c7ba0;
+  }
+  .speak-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 #2c7ba0; }
+
+  .choice-grid{ display:grid; gap:14px; width:100%; max-width:460px; margin:0 auto; }
+  .choice-grid.cols-2{ grid-template-columns:1fr 1fr; }
+  .choice-grid.cols-3{ grid-template-columns:repeat(3, 1fr); }
+  .choice-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .choice{
+    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:20px;
+    padding:16px 8px; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:96px;
+  }
+  .choice:hover{ transform:translateY(-3px); border-color:var(--gold); }
+  .choice .c-letter{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:52px; line-height:1; color:var(--ink-navy); }
+  .choice .c-word{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:24px; line-height:1.3; word-break:break-word; color:var(--ink-navy); }
+  .choice .c-name{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .choice .c-emoji{ font-size:38px; }
+  .choice.correct{ background:#d8f0d8; border-color:#3d9b4f; animation:pop .35s ease; }
+  .choice.wrong{ background:#f7dede; border-color:#c1503f; animation:shakeX .4s ease; }
+  .choice.locked{ pointer-events:none; }
+  @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.14); } 100%{ transform:scale(1); } }
+  @keyframes shakeX{ 0%,100%{ transform:translateX(0);} 25%{ transform:translateX(-7px);} 75%{ transform:translateX(7px);} }
+
+  .hunt-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; width:100%; max-width:400px; margin:0 auto; }
+  .hunt-cell{
+    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:16px;
+    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:36px; color:var(--ink-navy);
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    transition:transform .12s ease;
+  }
+  .hunt-cell:hover{ transform:scale(1.06); }
+  .hunt-cell.found{ background:#d8f0d8; border-color:#3d9b4f; color:var(--green-dark); pointer-events:none; }
+  .hunt-cell.miss{ background:#f7dede; border-color:#c1503f; }
+
+  /* ---- blend a word ---- */
+  .bubble-row{ display:flex; direction:ltr; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 18px; }
+  .sound-bubble{
+    width:96px; height:96px; border-radius:50%; cursor:pointer;
+    background:radial-gradient(circle at 32% 28%, #ffffff, #cfeeff 60%, #a8ddf5);
+    border:3px solid #8fd3ef; display:flex; align-items:center; justify-content:center;
+    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:38px; color:#20618a;
+    box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 4px 10px rgba(30,90,120,.18);
+    transition:transform .15s ease;
+  }
+  .sound-bubble:hover{ transform:translateY(-4px) scale(1.04); }
+  .sound-bubble.said{ background:radial-gradient(circle at 32% 28%, #ffffff, #d5f3d2 60%, #a7e0a2); border-color:#5cb85c; color:var(--green-dark); }
+  /* The "tap me next" hint glows in place — a moving target is hard for small fingers. */
+  .sound-bubble.next{ border-color:var(--gold); animation:bubbleHint 1.3s ease-in-out infinite; }
+  @keyframes bubbleHint{
+    0%,100%{ box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 0 0 0 rgba(232,181,60,.75); }
+    50%{ box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 0 0 12px rgba(232,181,60,0); }
+  }
+  .blend-slot{
+    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:48px; color:var(--ink-navy); direction:ltr;
+    background:var(--parchment); border:3px dashed var(--gold-soft); border-radius:18px;
+    min-height:88px; min-width:220px; display:inline-flex; align-items:center; justify-content:center;
+    padding:6px 22px; margin-bottom:10px;
+  }
+  .blend-slot.full{ border-style:solid; border-color:var(--green); background:var(--green-bg); color:var(--green-dark); }
+
+  .feedback{ min-height:34px; font-family:'Marcellus'; font-size:20px; margin-top:16px; }
+  .feedback.good{ color:var(--green); }
+  .feedback.bad{ color:#b8462f; }
+
+  .lesson-actions{ text-align:center; margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+  /* ============ Reward screen ============ */
+  .reward-box{
+    max-width:520px; margin:26px auto; background:#fff; border:3px solid var(--gold-soft);
+    border-radius:26px; padding:34px 26px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14);
+  }
+  .coin-pop{ font-size:88px; line-height:1; margin-bottom:4px; animation:coinPop .7s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes coinPop{ 0%{ transform:scale(.2) rotate(-25deg); opacity:0; } 60%{ transform:scale(1.18) rotate(6deg); } 100%{ transform:scale(1) rotate(0); opacity:1; } }
+  .coin-earned{ font-family:'Marcellus'; font-size:26px; color:var(--gold); margin:0 0 8px; }
+  .reward-box h2{ font-family:'Marcellus'; font-size:27px; color:var(--ink-navy); margin:0 0 6px; }
+  .reward-box p{ font-size:18px; color:#6b5a3f; margin:0 0 14px; line-height:1.5; }
+  .star-row{ font-size:38px; letter-spacing:6px; margin:6px 0 12px; }
+  .learned-chip{
+    display:inline-flex; align-items:center; gap:10px; background:var(--green-bg); border:2px solid var(--green);
+    border-radius:18px; padding:8px 18px; margin-bottom:14px;
+  }
+  .learned-chip .lc-letter{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:38px; color:var(--green-dark); line-height:1; }
+  .learned-chip .lc-name{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .purse{
+    display:inline-flex; align-items:center; gap:8px; background:var(--parchment-deep);
+    border:2px solid var(--gold-soft); border-radius:18px; padding:8px 20px; margin:4px 0 8px;
+    font-family:'Marcellus'; font-size:20px; color:var(--ink-navy);
+  }
+
+  .confetti-piece{
+    position:fixed; top:-14px; width:11px; height:15px; z-index:200; pointer-events:none;
+    animation:confettiFall linear forwards;
+  }
+  @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:32px 20px 22px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin:0 0 14px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+
+  @media (max-width:720px){
+    .lesson-layout{ grid-template-columns:1fr; }
+    .side-steps{ flex-direction:row; overflow-x:auto; max-height:none; padding-bottom:4px; }
+    .side-step{ flex:0 0 auto; flex-direction:column; gap:2px; min-width:78px; text-align:center; padding:8px 6px; }
+    .side-step .ss-label{ font-size:11.5px; }
+    .side-step .ss-num{ width:auto; }
+  }
+  @media (max-width:560px){
+    .hero-letter{ width:148px; height:148px; font-size:86px; }
+    .choice .c-letter{ font-size:44px; }
+    .hunt-cell{ font-size:32px; }
+    .sound-bubble{ width:76px; height:76px; font-size:34px; }
+    .blend-slot{ font-size:40px; min-width:180px; }
+    .intro-title{ font-size:26px; }
+    .intro-text{ font-size:18px; }
+    .map-nav{ width:40px; height:40px; font-size:17px; }
+    .map-title{ font-size:15px; padding:5px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids-games.html">← Games</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ NAME SCREEN ============ -->
+  <section id="name-screen">
+    <div class="name-box">
+      <div class="name-icons">🗺️ 🔢 🪙</div>
+      <h1>Math Number Quest</h1>
+      <p class="sub">Count · Add · Solve</p>
+      <p>Travel across four maps: count to twenty, add and take away, then shapes, patterns, time and money. Every game you finish earns you coins!</p>
+      <input type="text" class="big-input" id="name-input" placeholder="Type your name" maxlength="24" autocomplete="given-name">
+      <button class="big-btn" id="name-start-btn">Start My Quest 🚀</button>
+    </div>
+  </section>
+
+  <!-- ============ MAP SCREEN ============ -->
+  <section id="map-screen" class="hidden">
+    <div class="map-topbar">
+      <div class="player-chip">
+        <span class="avatar">🧒</span>
+        <span id="player-name">Explorer</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat">🪙 <span id="stat-coins">0</span></span>
+        <span class="stat">⭐ <span id="stat-stars">0</span></span>
+        <span class="stat">📍 <span id="stat-lessons">0</span>/40</span>
+      </div>
+    </div>
+
+    <div class="map-frame">
+      <div class="map-title" id="map-title">Map 1 · The First Letters</div>
+      <button class="map-nav prev" id="map-prev" aria-label="Previous map">◀</button>
+      <button class="map-nav next" id="map-next" aria-label="Next map">▶</button>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" role="img" aria-label="Lesson map"></svg>
+    </div>
+    <p class="map-help" id="map-help">Tap the glowing stone to play your next lesson!</p>
+    <div class="lesson-actions">
+      <button class="ghost-btn" id="reset-btn">Start over</button>
+    </div>
+  </section>
+
+  <!-- ============ LESSON SCREEN ============ -->
+  <section id="lesson-screen" class="hidden">
+    <div class="lesson-layout">
+
+      <aside class="lesson-side">
+        <div class="side-name" id="side-name">Explorer</div>
+        <div class="side-lesson">
+          <span class="side-avatar">🧒</span>
+          <span class="sl-block">
+            <span class="sl-label">Lesson</span>
+            <span class="sl-num" id="side-lesson-num">1</span>
+          </span>
+          <span class="sl-coins"><span>🪙</span><b id="side-coins">0</b></span>
+        </div>
+        <div class="side-tools">
+          <button class="tool-btn" id="side-home-btn" title="Back to map" aria-label="Back to map">🏠</button>
+          <button class="tool-btn" id="side-sound-btn" title="Sound on or off" aria-label="Sound on or off">🔊</button>
+        </div>
+        <div class="side-steps" id="side-steps"></div>
+      </aside>
+
+      <div class="lesson-stage-wrap">
+        <div class="stage-top">
+          <span class="step-pill" id="step-pill">1/5</span>
+          <div class="heart-track"><div class="heart-fill" id="heart-fill"></div></div>
+          <span class="heart-icon">💚</span>
+        </div>
+        <div class="stage-card" id="stage-card"></div>
+        <div class="lesson-actions" id="stage-actions"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ REWARD SCREEN ============ -->
+  <section id="reward-screen" class="hidden">
+    <div class="reward-box">
+      <div class="coin-pop" id="reward-coin">🪙</div>
+      <p class="coin-earned" id="reward-coins-earned">+10 coins</p>
+      <h2 id="reward-title">Great job!</h2>
+      <div class="star-row" id="reward-stars">⭐⭐⭐</div>
+      <div id="reward-learned"></div>
+      <p id="reward-msg">You finished the lesson.</p>
+      <div class="purse">🪙 <span id="reward-purse">0</span> coins in your purse</div>
+      <div class="lesson-actions">
+        <button class="big-btn green" id="reward-next-btn">Next Lesson →</button>
+        <button class="ghost-btn" id="reward-map-btn">Back to Map</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids-games.html">Games</a>
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===================== DATA ===================== */
+const LETTERS = [
+  {letter:'1',  word:'one',      count:1,  emoji:'🍎', hint:'one apple'},
+  {letter:'2',  word:'two',      count:2,  emoji:'🐟', hint:'two fish'},
+  {letter:'3',  word:'three',    count:3,  emoji:'⭐', hint:'three stars'},
+  {letter:'4',  word:'four',     count:4,  emoji:'🚗', hint:'four cars'},
+  {letter:'5',  word:'five',     count:5,  emoji:'🌸', hint:'five flowers'},
+  {letter:'6',  word:'six',      count:6,  emoji:'🐝', hint:'six bees'},
+  {letter:'7',  word:'seven',    count:7,  emoji:'🎈', hint:'seven balloons'},
+  {letter:'8',  word:'eight',    count:8,  emoji:'🍇', hint:'eight grapes'},
+  {letter:'9',  word:'nine',     count:9,  emoji:'🐞', hint:'nine ladybirds'},
+  {letter:'10', word:'ten',      count:10, emoji:'🥚', hint:'ten eggs'},
+  {letter:'11', word:'eleven',   count:11, emoji:'🍬', hint:'eleven sweets'},
+  {letter:'12', word:'twelve',   count:12, emoji:'🌙', hint:'twelve moons'},
+  {letter:'13', word:'thirteen', count:13, emoji:'🍀', hint:'thirteen clovers'},
+  {letter:'14', word:'fourteen', count:14, emoji:'🐚', hint:'fourteen shells'},
+  {letter:'15', word:'fifteen',  count:15, emoji:'🍋', hint:'fifteen lemons'},
+  {letter:'16', word:'sixteen',  count:16, emoji:'🐜', hint:'sixteen ants'},
+  {letter:'17', word:'seventeen',count:17, emoji:'💧', hint:'seventeen drops'},
+  {letter:'18', word:'eighteen', count:18, emoji:'🌰', hint:'eighteen nuts'},
+  {letter:'19', word:'nineteen', count:19, emoji:'🪙', hint:'nineteen coins'},
+  {letter:'20', word:'twenty',   count:20, emoji:'🌟', hint:'twenty stars'}
+];
+
+/* Numerals young children mix up, so "Find the Number" is real practice. */
+const LOOKALIKES = {
+  '1':['7','4'],   '2':['5','3'],   '3':['8','2'],   '4':['9','1'],  '5':['2','6'],
+  '6':['9','5'],   '7':['1','4'],   '8':['3','6'],   '9':['6','4'],  '10':['1','100'],
+  '11':['1','7'],  '12':['21','2'], '13':['31','3'], '14':['41','4'],'15':['51','5'],
+  '16':['61','6'], '17':['71','7'], '18':['81','8'], '19':['91','9'],'20':['2','12']
+};
+
+/* Lessons 21-40: adding, taking away, then shapes, patterns, time and money. */
+const SPECIAL_LESSONS = [
+  { title:'Add 1', teachName:'+ 1', letter:'+1', note:'Adding one means the very next number.', word:'3 + 1 = 4', split:'count on one more', emoji:'➕', parts:['🍎','🍎','🍎','🍎'], total:'4',
+    picks:[ {q:'What is 5 + 1?', options:['6','5','7'], correct:0},
+            {q:'What is 8 + 1?', options:['7','9','10'], correct:1},
+            {q:'What is 2 + 1?', options:['4','2','3'], correct:2} ] },
+  { title:'Add 2', teachName:'+ 2', letter:'+2', note:'Adding two means counting on two more.', word:'4 + 2 = 6', split:'count on two more', emoji:'➕', parts:['⭐','⭐','⭐','⭐','⭐','⭐'], total:'6',
+    picks:[ {q:'What is 3 + 2?', options:['5','4','6'], correct:0},
+            {q:'What is 6 + 2?', options:['7','8','9'], correct:1},
+            {q:'What is 9 + 2?', options:['10','12','11'], correct:2} ] },
+  { title:'Doubles', teachName:'double it', letter:'2+2', note:'A double is the same number twice.', word:'3 + 3 = 6', split:'double three', emoji:'👯', parts:['🐝','🐝','🐝','🐝','🐝','🐝'], total:'6',
+    picks:[ {q:'What is double 2?', options:['4','2','6'], correct:0},
+            {q:'What is double 5?', options:['5','10','15'], correct:1},
+            {q:'What is double 4?', options:['6','12','8'], correct:2} ] },
+  { title:'Adding to 10', teachName:'sums to 10', letter:'+', note:'Put the two groups together and count them all.', word:'6 + 3 = 9', split:'count them all', emoji:'🧮', parts:['🍇','🍇','🍇','🍇','🍇','🍇','🍇','🍇','🍇'], total:'9',
+    picks:[ {q:'What is 4 + 3?', options:['7','6','8'], correct:0},
+            {q:'What is 5 + 4?', options:['8','9','10'], correct:1},
+            {q:'What is 7 + 2?', options:['10','8','9'], correct:2} ] },
+  { title:'Make 10', teachName:'pairs to 10', letter:'?+?=10', note:'Two numbers that make ten are called a number bond.', word:'7 + 3 = 10', split:'a pair that makes ten', emoji:'🤝',
+    picks:[ {q:'6 + ? = 10', options:['4','5','3'], correct:0},
+            {q:'8 + ? = 10', options:['1','2','3'], correct:1},
+            {q:'5 + ? = 10', options:['4','6','5'], correct:2} ] },
+  { title:'Take away 1', teachName:'− 1', letter:'−1', note:'Taking one away means the number just before.', word:'5 − 1 = 4', split:'count back one', emoji:'➖',
+    picks:[ {q:'What is 7 − 1?', options:['6','8','5'], correct:0},
+            {q:'What is 4 − 1?', options:['4','3','2'], correct:1},
+            {q:'What is 10 − 1?', options:['8','11','9'], correct:2} ] },
+  { title:'Take away 2', teachName:'− 2', letter:'−2', note:'Count back two to take two away.', word:'8 − 2 = 6', split:'count back two', emoji:'➖',
+    picks:[ {q:'What is 9 − 2?', options:['7','8','6'], correct:0},
+            {q:'What is 5 − 2?', options:['2','3','4'], correct:1},
+            {q:'What is 6 − 2?', options:['5','3','4'], correct:2} ] },
+  { title:'Taking away to 10', teachName:'subtracting', letter:'−', note:'Start with the big number and count back.', word:'9 − 4 = 5', split:'count back four', emoji:'🧮',
+    picks:[ {q:'What is 8 − 3?', options:['5','4','6'], correct:0},
+            {q:'What is 10 − 6?', options:['3','4','5'], correct:1},
+            {q:'What is 7 − 5?', options:['3','4','2'], correct:2} ] },
+  { title:'Missing number', teachName:'find the gap', letter:'3+?=5', note:'Work out what is hiding in the gap.', word:'3 + ? = 5', split:'the missing number is 2', emoji:'🕵️',
+    picks:[ {q:'4 + ? = 7', options:['3','2','4'], correct:0},
+            {q:'? + 5 = 9', options:['3','4','5'], correct:1},
+            {q:'10 − ? = 8', options:['3','4','2'], correct:2} ] },
+  { title:'Adding to 20', teachName:'teen sums', letter:'+', note:'Ten and some more makes a teen number.', word:'10 + 4 = 14', split:'ten and four more', emoji:'🔢',
+    picks:[ {q:'What is 10 + 6?', options:['16','15','17'], correct:0},
+            {q:'What is 12 + 3?', options:['14','15','16'], correct:1},
+            {q:'What is 11 + 8?', options:['18','20','19'], correct:2} ] },
+  { title:'Circle & square', teachName:'shapes', letter:'⬛', note:'A circle is round. A square has 4 sides, all the same.', word:'square', split:'4 equal sides', emoji:'🟦',
+    picks:[ {q:'Which one is a circle?', options:['🔵','🔺','🟥'], correct:0, plain:true},
+            {q:'How many sides does a square have?', options:['3','4','5'], correct:1, plain:true},
+            {q:'Which one is a square?', options:['🔵','🔺','🟦'], correct:2, plain:true} ] },
+  { title:'Triangle & rectangle', teachName:'more shapes', letter:'🔺', note:'A triangle has 3 sides. A rectangle has 4, two long and two short.', word:'triangle', split:'3 sides', emoji:'🔺',
+    picks:[ {q:'How many sides does a triangle have?', options:['3','4','5'], correct:0, plain:true},
+            {q:'Which one is a triangle?', options:['🟦','🔺','🔵'], correct:1, plain:true},
+            {q:'How many corners does a rectangle have?', options:['3','5','4'], correct:2, plain:true} ] },
+  { title:'Patterns', teachName:'what comes next', letter:'🔁', note:'Look for the part that repeats, then say what comes next.', word:'🔴 🔵 🔴 🔵 …', split:'the pattern repeats', emoji:'🔁',
+    picks:[ {q:'🔴 🔵 🔴 🔵 — what comes next?', options:['🔴','🔵','🟢'], correct:0, plain:true},
+            {q:'⭐ ⭐ 🌙 ⭐ ⭐ — what comes next?', options:['⭐','🌙','☀️'], correct:1, plain:true},
+            {q:'2, 4, 6, 8 — what comes next?', options:['9','11','10'], correct:2, plain:true} ] },
+  { title:'Bigger & smaller', teachName:'compare', letter:'>', note:'The bigger number is further along when you count.', word:'8 > 5', split:'eight is bigger', emoji:'⚖️',
+    picks:[ {q:'Which number is bigger?', options:['9','6','3'], correct:0, plain:true},
+            {q:'Which number is smaller?', options:['12','4','7'], correct:1, plain:true},
+            {q:'Which number is bigger?', options:['11','14','13'], correct:1, plain:true} ] },
+  { title:'Before & after', teachName:'number order', letter:'…7 8 9…', note:'Every number has one before it and one after it.', word:'7, 8, 9', split:'8 comes after 7', emoji:'🔢',
+    picks:[ {q:'What comes after 6?', options:['7','5','8'], correct:0, plain:true},
+            {q:'What comes before 10?', options:['11','9','8'], correct:1, plain:true},
+            {q:'What is between 13 and 15?', options:['12','16','14'], correct:2, plain:true} ] },
+  { title:'Halves & sharing', teachName:'half', letter:'½', note:'Half means sharing into two equal parts.', word:'half of 6 is 3', split:'share it fairly', emoji:'🍕',
+    picks:[ {q:'What is half of 4?', options:['2','3','1'], correct:0, plain:true},
+            {q:'What is half of 10?', options:['4','5','6'], correct:1, plain:true},
+            {q:'Share 8 sweets between 2 friends. How many each?', options:['3','2','4'], correct:2, plain:true} ] },
+  { title:'Longer & shorter', teachName:'measuring', letter:'📏', note:'We can compare things by how long or how heavy they are.', word:'longer · shorter', split:'measure and compare', emoji:'📏',
+    picks:[ {q:'Which is longer?', options:['🚂 train','🐜 ant','🖊️ pen'], correct:0, plain:true},
+            {q:'Which is heavier?', options:['🪶 feather','🐘 elephant','🍎 apple'], correct:1, plain:true},
+            {q:'Which is shorter?', options:['🌳 tree','🏢 building','🌱 seedling'], correct:2, plain:true} ] },
+  { title:"Time — o'clock", teachName:'telling time', letter:'🕒', note:'The short hand tells the hour. When the long hand points up, it is o\'clock.', word:"3 o'clock", split:'short hand on 3', emoji:'🕒',
+    picks:[ {q:'How many hours are on a clock face?', options:['12','10','24'], correct:0, plain:true},
+            {q:'Which hand tells the hour?', options:['the long hand','the short hand','both'], correct:1, plain:true},
+            {q:'🕕 shows what time?', options:["3 o'clock","5 o'clock","6 o'clock"], correct:2, plain:true} ] },
+  { title:'Money', teachName:'coins', letter:'🪙', note:'Coins have different values. Count them up to find the total.', word:'5c + 5c = 10c', split:'count the coins', emoji:'🪙',
+    picks:[ {q:'How much is 10c + 10c?', options:['20c','15c','30c'], correct:0, plain:true},
+            {q:'How much is 5c + 2c?', options:['6c','7c','8c'], correct:1, plain:true},
+            {q:'Which is worth more?', options:['5c','1c','20c'], correct:2, plain:true} ] },
+  { title:'Big finish', teachName:'Champion', letter:'🎉', note:'You can count to twenty, add, take away, and know your shapes.', word:'well done!', split:'you did it', emoji:'🏆',
+    picks:[ {q:'What is 7 + 3?', options:['10','9','11'], correct:0, plain:true},
+            {q:'What is 12 − 2?', options:['9','10','11'], correct:1, plain:true},
+            {q:'How many sides does a triangle have?', options:['4','5','3'], correct:2, plain:true} ] }
+];
+
+const MAPS = [
+  { title:'Map 1 · Counting to 10',   from:0,  to:10, scene:'meadow' },
+  { title:'Map 2 · Teen Numbers',     from:10, to:20, scene:'desert' },
+  { title:'Map 3 · Add & Take Away',  from:20, to:30, scene:'ocean'  },
+  { title:'Map 4 · Shapes & More',    from:30, to:40, scene:'sky'    }
+];
+const TOTAL_LESSONS = 40;
+const COINS_PER_GAME = 2;      // each mini-game inside a lesson
+const COINS_LESSON_BONUS = 5;  // finishing the lesson
+const COINS_PERFECT_BONUS = 5; // finishing with no mistakes
+
+/* ===================== STATE ===================== */
+const STORAGE_KEY = 'kids-math-quest-progress';
+const SOUND_KEY = 'kids-math-quest-sound';
+let profile = null;
+let viewMap = 0;
+let lesson = null;   // { index, steps, stepIndex, mistakes, cleared[], showIntro, coins }
+let soundOn = true;
+
+function defaultProfile(name){
+  return { name: name || 'Explorer', unlocked: 1, stars: new Array(TOTAL_LESSONS).fill(0), coins: 0 };
+}
+function loadProfile(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const d = JSON.parse(raw);
+    if(!d || typeof d.name !== 'string') return null;
+    if(!Array.isArray(d.stars) || d.stars.length !== TOTAL_LESSONS) d.stars = new Array(TOTAL_LESSONS).fill(0);
+    if(typeof d.unlocked !== 'number') d.unlocked = 1;
+    if(typeof d.coins !== 'number') d.coins = 0;
+    return d;
+  }catch(e){ return null; }
+}
+function saveProfile(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
+}
+
+/* ===================== SOUND ===================== */
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  if(!soundOn) return;
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playTap(){ beep(430, 0.07, 'triangle'); }
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playCoin(){ beep(1046, 0.08, 'square'); setTimeout(()=>beep(1568,0.12,'square'), 70); }
+function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+/* Say a letter sound or word aloud, slowly enough for a young reader. */
+function speakOut(text){
+  if(!soundOn || !text) return;
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.72;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function setSound(on){
+  soundOn = on;
+  try{ localStorage.setItem(SOUND_KEY, on ? '1' : '0'); }catch(e){}
+  const btn = document.getElementById('side-sound-btn');
+  btn.textContent = on ? '🔊' : '🔇';
+  btn.classList.toggle('off', !on);
+  if(!on && 'speechSynthesis' in window){ try{ window.speechSynthesis.cancel(); }catch(e){} }
+}
+
+function burstConfetti(){
+  const colors = ['#a97c25','#2e6b58','#d3ac5c','#e0703a','#7a5aa8','#e86fa0'];
+  for(let i = 0; i < 46; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 3600);
+  }
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ===================== LESSON BUILDING ===================== */
+function lessonTitle(idx){
+  if(idx < LETTERS.length) return 'Lesson ' + (idx + 1) + ' \u00b7 ' + LETTERS[idx].word;
+  return 'Lesson ' + (idx + 1) + ' \u00b7 ' + SPECIAL_LESSONS[idx - LETTERS.length].title;
+}
+
+function objectRow(emoji, n){
+  let out = '';
+  for(let i = 0; i < n; i++) out += emoji;
+  return out;
+}
+
+function buildLetterSteps(idx){
+  const N = LETTERS[idx];
+  const others = LETTERS.filter(x => x.letter !== N.letter);
+  const steps = [];
+
+  steps.push({
+    type:'meet', icon:'\ud83d\udc40', label:'Meet it',
+    gameTitle:'Meet the Number', gameIntro:'Look at the number, hear its name, and count the things beside it.',
+    letter:N
+  });
+
+  const lookAlike = (LOOKALIKES[N.letter] || []).slice(0, 2);
+  const distractors = shuffle(others.filter(x => !lookAlike.includes(x.letter)))
+                        .slice(0, 3 - lookAlike.length).map(x => x.letter);
+  steps.push({
+    type:'pick', icon:'\ud83d\udd0e', label:'Find it',
+    gameTitle:'Find the Number', gameIntro:'Some numbers look alike. Look closely and tap the right one.',
+    prompt:'Which one is the number ' + N.word + '?',
+    sub:'Look carefully — 6 and 9 love to trick us!',
+    options: shuffle(lookAlike.concat(distractors).concat([N.letter]))
+               .map(ch => ({ show:ch, kind:'letter', correct: ch === N.letter })),
+    cols:4, speak:N.word
+  });
+
+  const wordChoices = shuffle(others).slice(0, 3).map(x => ({ show:x.word, kind:'name', correct:false }));
+  wordChoices.push({ show:N.word, kind:'name', correct:true });
+  steps.push({
+    type:'pick', icon:'\ud83d\udd24', label:'Name it',
+    gameTitle:'Name the Number', gameIntro:'Every number has a name. Tap the name of the number you can see.',
+    prompt:'What is this number called?',
+    heroLetter:N.letter,
+    options: shuffle(wordChoices),
+    cols:2, speak:N.word
+  });
+
+  // How many? — three groups of objects, one of them has the right amount.
+  const wrongCounts = shuffle([N.count - 1, N.count + 1, N.count + 2, Math.max(1, N.count - 2)])
+                        .filter(c => c > 0 && c !== N.count).slice(0, 2);
+  const groupChoices = wrongCounts.map(c => ({ show:objectRow(N.emoji, c), kind:'word', correct:false }));
+  groupChoices.push({ show:objectRow(N.emoji, N.count), kind:'word', correct:true });
+  steps.push({
+    type:'pick', icon:'\ud83d\udd22', label:'How many',
+    gameTitle:'How Many?', gameIntro:'Count each group carefully, then tap the group with the right amount.',
+    prompt:'Which group has ' + N.count + '?',
+    sub:'Count them one by one.',
+    options: shuffle(groupChoices),
+    cols: N.count > 8 ? 1 : 3, speak:N.word
+  });
+
+  const gridSize = 12, targetCount = 3;
+  const cells = [];
+  for(let i = 0; i < targetCount; i++) cells.push({ ch:N.letter, target:true });
+  const pool = shuffle(others).map(x => x.letter);
+  for(let i = 0; cells.length < gridSize; i++) cells.push({ ch: pool[i % pool.length], target:false });
+  steps.push({
+    type:'hunt', icon:'\ud83e\udde9', label:'Hunt',
+    gameTitle:'Number Hunt', gameIntro:'Our number is hiding in the box. Tap every one you can find!',
+    prompt:'Find all ' + targetCount + ' of the number ' + N.letter,
+    sub:'Tap every one you can see.',
+    cells: shuffle(cells), need: targetCount
+  });
+
+  const objects = [];
+  for(let i = 0; i < N.count; i++) objects.push(N.emoji);
+  steps.push({
+    type:'blend', icon:'\ud83d\udc46', label:'Count',
+    gameTitle:'Count Along', gameIntro:'Tap each one and count out loud. How many are there altogether?',
+    mode:'count', parts:objects, word:N.letter, wordEn:N.hint, emoji:N.emoji
+  });
+
+  return steps;
+}
+
+function buildSpecialSteps(idx){
+  const sp = SPECIAL_LESSONS[idx - LETTERS.length];
+  const steps = [{
+    type:'meet', icon:'\ud83d\udc40', label:'Learn it',
+    gameTitle:'Learn It', gameIntro:'Look and listen carefully — this is your new maths skill.',
+    letter:{ letter:sp.letter, word:sp.word, hint:sp.split, emoji:sp.emoji, note:sp.note, name:sp.teachName }
+  }];
+  const icons = ['\ud83d\udd0e','\ud83d\udd22','\ud83e\udde0'];
+  const titles = ['Look and Choose', 'Work It Out', 'Think and Choose'];
+  sp.picks.forEach((p, i) => {
+    steps.push({
+      type:'pick', icon:icons[i % icons.length], label:'Try ' + (i + 1),
+      gameTitle:titles[i % titles.length], gameIntro:'Work out the answer, then tap it.',
+      prompt:p.q,
+      sub: p.plain ? '' : 'Take your time and count if you need to.',
+      options: shuffle(p.options.map((o, oi) => ({ show:o, kind: p.plain ? 'name' : 'letter', correct: oi === p.correct }))),
+      cols: p.options.length >= 3 ? 3 : 2,
+      speak: null
+    });
+  });
+  if(sp.parts){
+    steps.push({
+      type:'blend', icon:'\ud83d\udc46', label:'Count',
+      gameTitle:'Count Along', gameIntro:'Tap each one and count out loud. How many are there altogether?',
+      mode:'count', parts:sp.parts, word:sp.total, wordEn:sp.split, emoji:sp.emoji
+    });
+  }
+  return steps;
+}
+
+function buildLesson(idx){
+  return {
+    index: idx,
+    steps: idx < LETTERS.length ? buildLetterSteps(idx) : buildSpecialSteps(idx),
+    stepIndex: 0,
+    mistakes: 0,
+    cleared: [],
+    coins: 0,
+    showIntro: true
+  };
+}
+
+/* ===================== SCREENS ===================== */
+function showScreen(id){
+  ['name-screen','map-screen','lesson-screen','reward-screen'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ===================== MAP ===================== */
+const SCENES = {
+  meadow: { sky:'#bfe9fb', ground:'#c9edb0', deco:[
+    {e:'🌳', x:80,  y:170, s:60}, {e:'🌳', x:930, y:520, s:56}, {e:'🌼', x:180, y:560, s:34},
+    {e:'🦋', x:620, y:120, s:34}, {e:'🌿', x:430, y:585, s:32}, {e:'🐇', x:760, y:250, s:36}
+  ]},
+  desert: { sky:'#ffe6b5', ground:'#f2d79b', deco:[
+    {e:'🌵', x:90,  y:200, s:56}, {e:'🐫', x:880, y:480, s:56}, {e:'🏜️', x:520, y:120, s:40},
+    {e:'🦂', x:300, y:575, s:30}, {e:'🌴', x:700, y:180, s:50}, {e:'⛺', x:160, y:520, s:44}
+  ]},
+  ocean: { sky:'#cdefff', ground:'#a9e0f0', deco:[
+    {e:'🐠', x:120, y:230, s:44}, {e:'🐬', x:880, y:200, s:50}, {e:'🐚', x:260, y:570, s:34},
+    {e:'⛵', x:560, y:110, s:46}, {e:'🐙', x:760, y:520, s:44}, {e:'🌊', x:400, y:590, s:38}
+  ]},
+  sky: { sky:'#dfd4ff', ground:'#cdeaff', deco:[
+    {e:'☁️', x:130, y:150, s:52}, {e:'🌈', x:840, y:170, s:52}, {e:'⭐', x:330, y:110, s:34},
+    {e:'🎈', x:690, y:520, s:44}, {e:'🌙', x:200, y:540, s:40}, {e:'✨', x:560, y:580, s:32}
+  ]}
+};
+
+const MAP_PATH_D = 'M 70 545 C 210 545 250 470 330 448 C 420 424 500 470 560 430 ' +
+                   'C 640 378 590 300 500 285 C 400 268 330 230 360 170 ' +
+                   'C 392 108 520 96 640 132 C 780 174 850 150 940 108';
+
+function renderMap(){
+  const svg = document.getElementById('map-svg');
+  const map = MAPS[viewMap];
+  const scene = SCENES[map.scene];
+  const count = map.to - map.from;
+
+  document.getElementById('map-title').textContent = map.title;
+  document.getElementById('map-prev').disabled = viewMap === 0;
+  document.getElementById('map-next').disabled = viewMap === MAPS.length - 1;
+  document.getElementById('player-name').textContent = profile.name;
+  document.getElementById('stat-coins').textContent = profile.coins;
+  document.getElementById('stat-stars').textContent = profile.stars.reduce((a, b) => a + b, 0);
+  document.getElementById('stat-lessons').textContent = profile.stars.filter(s => s > 0).length;
+
+  // Measure the winding path so the lesson stones sit evenly along it.
+  const measure = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i = 0; i < count; i++){
+    const p = measure.getPointAtLength(total * ((i + 0.5) / count));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
+
+  let html = '<defs>' +
+    '<linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="' + scene.sky + '"/><stop offset="100%" stop-color="' + scene.ground + '"/>' +
+    '</linearGradient>' +
+    '<radialGradient id="stoneDone" cx="35%" cy="30%">' +
+      '<stop offset="0%" stop-color="#f4cf78"/><stop offset="100%" stop-color="#b98a26"/></radialGradient>' +
+    '<radialGradient id="stoneNow" cx="35%" cy="30%">' +
+      '<stop offset="0%" stop-color="#63c39a"/><stop offset="100%" stop-color="#2e6b58"/></radialGradient>' +
+    '<radialGradient id="stoneLock" cx="35%" cy="30%">' +
+      '<stop offset="0%" stop-color="#d8d6cf"/><stop offset="100%" stop-color="#a5a29a"/></radialGradient>' +
+  '</defs>';
+
+  html += '<rect x="0" y="0" width="1000" height="620" fill="url(#skyGrad)"/>';
+  html += '<ellipse cx="500" cy="640" rx="620" ry="150" fill="rgba(255,255,255,.25)"/>';
+  scene.deco.forEach(d => {
+    html += '<text x="' + d.x + '" y="' + d.y + '" font-size="' + d.s + '" text-anchor="middle">' + d.e + '</text>';
+  });
+
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="46" stroke-linecap="round" opacity=".92"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#e5c98a" stroke-width="34" stroke-linecap="round"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
+
+  const currentLesson = profile.unlocked;
+  points.forEach((pt, i) => {
+    const lessonNo = map.from + i + 1;
+    const starCount = profile.stars[lessonNo - 1];
+    const isDone = starCount > 0;
+    const isCurrent = lessonNo === currentLesson;
+    const isLocked = lessonNo > currentLesson;
+    const fill = isDone ? 'url(#stoneDone)' : (isCurrent ? 'url(#stoneNow)' : 'url(#stoneLock)');
+
+    // The moving ring and avatar sit outside the tappable group so the hit area stays put.
+    if(isCurrent){
+      html += '<circle class="pulse-ring" cx="' + pt.x + '" cy="' + pt.y + '" r="34" fill="none" stroke="#2e6b58" stroke-width="4"/>';
+    }
+    html += '<g class="node-g' + (isLocked ? ' locked' : '') + '" data-lesson="' + lessonNo + '">';
+    html += '<circle class="node-disc" cx="' + pt.x + '" cy="' + pt.y + '" r="33" fill="' + fill + '" stroke="#fff" stroke-width="5"/>';
+    html += '<text class="node-num' + (isLocked ? ' locked' : '') + '" x="' + pt.x + '" y="' + (pt.y + 9) + '" text-anchor="middle">' +
+              (isLocked ? '🔒' : lessonNo) + '</text>';
+    html += '</g>';
+    if(isDone){
+      html += '<text x="' + pt.x + '" y="' + (pt.y + 52) + '" font-size="17" text-anchor="middle">' + '⭐'.repeat(starCount) + '</text>';
+    }
+    if(isCurrent){
+      html += '<text class="avatar-marker" x="' + pt.x + '" y="' + (pt.y - 46) + '" font-size="40" text-anchor="middle">🧒</text>';
+    }
+
+    if(i === Math.floor(count / 2) - 1){
+      html += '<text x="' + (pt.x + 6) + '" y="' + (pt.y - 52) + '" font-size="34" text-anchor="middle">🧰</text>';
+    }
+    if(i === count - 1){
+      html += '<text x="' + (pt.x + 62) + '" y="' + (pt.y + 12) + '" font-size="40" text-anchor="middle">🏁</text>';
+    }
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g => {
+    g.addEventListener('click', () => {
+      const no = parseInt(g.dataset.lesson, 10);
+      if(no > profile.unlocked){ playWrong(); return; }
+      playTap();
+      startLesson(no - 1);
+    });
+  });
+
+  const doneOnMap = [];
+  for(let n = map.from + 1; n <= map.to; n++) if(profile.stars[n - 1] > 0) doneOnMap.push(n);
+  document.getElementById('map-help').textContent = doneOnMap.length === count
+    ? 'This whole map is finished — tap ▶ for the next one!'
+    : (currentLesson > map.to
+        ? 'You have already passed this map. Tap ▶ to keep going.'
+        : (currentLesson < map.from + 1
+            ? 'Finish the earlier maps first, then this one unlocks.'
+            : 'Tap the glowing stone to play lesson ' + currentLesson + '!'));
+
+  showScreen('map-screen');
+}
+
+/* ===================== LESSON PLAYER ===================== */
+function startLesson(idx){
+  lesson = buildLesson(idx);
+  document.getElementById('side-name').textContent = profile.name;
+  document.getElementById('side-lesson-num').textContent = idx + 1;
+  document.getElementById('side-coins').textContent = profile.coins;
+  renderStep();
+  showScreen('lesson-screen');
+}
+
+/* The sidebar list of this lesson's mini-games, with done / playing / locked states. */
+function renderSideSteps(){
+  const box = document.getElementById('side-steps');
+  box.innerHTML = '';
+  lesson.steps.forEach((s, i) => {
+    const done = lesson.cleared.indexOf(i) !== -1;
+    const current = i === lesson.stepIndex;
+    const locked = !done && !current;
+    const el = document.createElement('div');
+    el.className = 'side-step' + (current ? ' current' : done ? ' done' : ' locked');
+    el.innerHTML =
+      '<span class="ss-num">' + (i + 1) + '</span>' +
+      '<span class="ss-icon">' + s.icon + '</span>' +
+      '<span class="ss-label">' + escapeHtml(s.label) + '</span>' +
+      '<span class="ss-state">' + (done ? '✅' : current ? '▶️' : '🔒') + '</span>';
+    if(!locked){
+      el.addEventListener('click', () => {
+        if(i === lesson.stepIndex) return;
+        playTap();
+        lesson.stepIndex = i;
+        lesson.showIntro = true;
+        renderStep();
+      });
+    }
+    box.appendChild(el);
+  });
+}
+
+function renderStep(){
+  const card = document.getElementById('stage-card');
+  const actions = document.getElementById('stage-actions');
+  const step = lesson.steps[lesson.stepIndex];
+
+  document.getElementById('step-pill').textContent = (lesson.stepIndex + 1) + '/' + lesson.steps.length;
+  document.getElementById('heart-fill').style.width =
+    Math.round((lesson.cleared.length / lesson.steps.length) * 100) + '%';
+  document.getElementById('side-coins').textContent = profile.coins + lesson.coins;
+  renderSideSteps();
+  actions.innerHTML = '';
+
+  // Every mini-game opens with its own title card and a Play button.
+  if(lesson.showIntro){
+    card.innerHTML =
+      '<button class="intro-speak" id="intro-speak-btn" aria-label="Read the instructions again">🔊</button>' +
+      '<h2 class="intro-title">' + escapeHtml(step.gameTitle) + '</h2>' +
+      '<p class="intro-text">' + escapeHtml(step.gameIntro) + '</p>';
+    const playBtn = document.createElement('button');
+    playBtn.className = 'big-btn';
+    playBtn.id = 'intro-play-btn';
+    playBtn.textContent = 'Play ▶';
+    playBtn.addEventListener('click', () => {
+      playTap();
+      lesson.showIntro = false;
+      renderStep();
+    });
+    actions.appendChild(playBtn);
+    const isb = document.getElementById('intro-speak-btn');
+    if(isb) isb.addEventListener('click', () => { playTap(); speakEnglish(step.gameIntro); });
+    speakEnglish(step.gameIntro);
+    return;
+  }
+
+  if(step.type === 'meet'){
+    const L = step.letter;
+    card.innerHTML =
+      '<p class="task-line">Meet this one!</p>' +
+      '<div class="hero-letter glyph">' + escapeHtml(L.letter) + '</div>' +
+      '<p class="hero-name">' + escapeHtml(L.word || L.name) + '</p>' +
+      (L.note ? '<p class="task-sub" style="margin:6px 0 0;">' + escapeHtml(L.note) + '</p>' : '') +
+      (L.count ? '<p class="count-row">' + objectRow(L.emoji, L.count) + '</p>'
+               : '<div class="hero-emoji">' + L.emoji + '</div>') +
+      '<p class="task-sub" style="margin:4px 0 0;">' + escapeHtml(L.hint || '') + '</p>' +
+      '<button class="speak-btn" id="speak-btn">🔊 Listen</button>';
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'big-btn green';
+    nextBtn.textContent = 'Got it →';
+    nextBtn.addEventListener('click', () => { playTap(); clearStep(); });
+    actions.appendChild(nextBtn);
+    const sb = document.getElementById('speak-btn');
+    if(sb) sb.addEventListener('click', () => { playTap(); speakOut(L.word || L.letter); });
+    speakOut(L.word || L.letter);
+    return;
+  }
+
+  if(step.type === 'pick'){
+    let inner = '<p class="task-line">' + escapeHtml(step.prompt) + '</p>';
+    if(step.heroLetter){
+      inner += '<div class="hero-letter glyph" style="width:126px;height:126px;font-size:74px;">' + escapeHtml(step.heroLetter) + '</div>';
+    } else if(step.sub){
+      inner += '<p class="task-sub">' + escapeHtml(step.sub) + '</p>';
+    }
+    inner += '<div class="choice-grid cols-' + step.cols + '" id="choice-grid"></div>';
+    inner += '<div class="feedback" id="feedback"></div>';
+    card.innerHTML = inner;
+
+    const grid = document.getElementById('choice-grid');
+    step.options.forEach(opt => {
+      const el = document.createElement('div');
+      el.className = 'choice';
+      const cls = opt.kind === 'letter' ? 'c-letter glyph'
+                : opt.kind === 'word'   ? 'c-word glyph'
+                : 'c-name';
+      el.innerHTML = '<span class="' + cls + '">' + escapeHtml(opt.show) + '</span>' +
+                     (opt.sub ? '<span class="c-emoji">' + opt.sub + '</span>' : '');
+      el.addEventListener('click', () => handlePick(el, opt));
+      grid.appendChild(el);
+    });
+    if(step.speak) speakOut(step.speak);
+    return;
+  }
+
+  if(step.type === 'hunt'){
+    lesson.huntFound = 0;
+    card.innerHTML =
+      '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
+      '<p class="task-sub">' + escapeHtml(step.sub) + '</p>' +
+      '<div class="hunt-grid" id="hunt-grid"></div>' +
+      '<div class="feedback" id="feedback"><span id="hunt-count">0</span> / ' + step.need + ' found</div>';
+    const grid = document.getElementById('hunt-grid');
+    step.cells.forEach(cell => {
+      const el = document.createElement('div');
+      el.className = 'hunt-cell glyph';
+      el.textContent = cell.ch;
+      el.addEventListener('click', () => {
+        if(cell.target){
+          if(el.classList.contains('found')) return;
+          el.classList.add('found');
+          lesson.huntFound++;
+          playRight();
+          document.getElementById('hunt-count').textContent = lesson.huntFound;
+          if(lesson.huntFound >= step.need){
+            const fb = document.getElementById('feedback');
+            fb.className = 'feedback good';
+            fb.textContent = 'You found them all! 🎉';
+            setTimeout(clearStep, 900);
+          }
+        } else {
+          lesson.mistakes++;
+          playWrong();
+          el.classList.add('miss');
+          setTimeout(() => el.classList.remove('miss'), 450);
+        }
+      });
+      grid.appendChild(el);
+    });
+    return;
+  }
+
+  if(step.type === 'blend'){
+    // Tap each sound bubble in order (right to left), then read the whole word.
+    lesson.blendAt = 0;
+    const isCount = step.mode === 'count';
+    card.innerHTML =
+      '<p class="task-line">' + (isCount ? 'Tap each one and count' : 'Tap each sound, then read the word') + '</p>' +
+      '<p class="task-sub">' + (isCount ? 'Count them one by one 👆' : 'Start from the left ➡️') + '</p>' +
+      '<div class="bubble-row" id="bubble-row"></div>' +
+      '<div><span class="blend-slot glyph" id="blend-slot">…</span></div>' +
+      '<div class="feedback" id="feedback"></div>';
+    const row = document.getElementById('bubble-row');
+    step.parts.forEach((part, i) => {
+      const b = document.createElement('div');
+      b.className = 'sound-bubble glyph' + (i === 0 ? ' next' : '');
+      b.textContent = part;
+      b.addEventListener('click', () => {
+        if(i < lesson.blendAt){ speakOut(part); return; }
+        if(i > lesson.blendAt){ playWrong(); return; }   // must go in order
+        b.classList.add('said');
+        b.classList.remove('next');
+        playRight();
+        lesson.blendAt++;
+        speakOut(isCount ? String(lesson.blendAt) : part);
+        const nextB = row.children[lesson.blendAt];
+        if(nextB) nextB.classList.add('next');
+        const slot = document.getElementById('blend-slot');
+        slot.textContent = isCount ? String(lesson.blendAt) : step.parts.slice(0, lesson.blendAt).join('');
+        if(lesson.blendAt >= step.parts.length){
+          slot.textContent = step.word;
+          slot.classList.add('full');
+          const fb = document.getElementById('feedback');
+          fb.className = 'feedback good';
+          fb.textContent = (isCount ? 'That makes ' + step.word + '! ' : step.word + ' — ') + (step.wordEn || '') + ' ' + (step.emoji || '');
+          speakOut(isCount ? 'That makes ' + step.word : step.word);
+          const doneBtn = document.createElement('button');
+          doneBtn.className = 'big-btn green';
+          doneBtn.textContent = isCount ? 'I counted them! →' : 'I read it! →';
+          doneBtn.addEventListener('click', () => { playTap(); clearStep(); });
+          document.getElementById('stage-actions').appendChild(doneBtn);
+        }
+      });
+      row.appendChild(b);
+    });
+    return;
+  }
+}
+
+function handlePick(el, opt){
+  const grid = document.getElementById('choice-grid');
+  const fb = document.getElementById('feedback');
+  if(opt.correct){
+    playRight();
+    el.classList.add('correct');
+    grid.querySelectorAll('.choice').forEach(c => c.classList.add('locked'));
+    fb.className = 'feedback good';
+    fb.textContent = ['Yes! 🌟', 'Perfect! 🎉', 'Well done! 👏', 'Māshāʼ Allāh! ✨'][Math.floor(Math.random() * 4)];
+    setTimeout(clearStep, 850);
+  } else {
+    lesson.mistakes++;
+    playWrong();
+    el.classList.add('wrong');
+    fb.className = 'feedback bad';
+    fb.textContent = 'Not that one — try again!';
+    setTimeout(() => el.classList.remove('wrong'), 450);
+  }
+}
+
+/* Finish the current mini-game, pay out its coins, then move to the next one. */
+function clearStep(){
+  if(lesson.cleared.indexOf(lesson.stepIndex) === -1){
+    lesson.cleared.push(lesson.stepIndex);
+    lesson.coins += COINS_PER_GAME;
+    playCoin();
+  }
+  if(lesson.cleared.length >= lesson.steps.length){ finishLesson(); return; }
+  let next = lesson.stepIndex + 1;
+  while(next < lesson.steps.length && lesson.cleared.indexOf(next) !== -1) next++;
+  if(next >= lesson.steps.length){
+    next = lesson.steps.findIndex((s, i) => lesson.cleared.indexOf(i) === -1);
+  }
+  lesson.stepIndex = next;
+  lesson.showIntro = true;
+  renderStep();
+}
+
+function finishLesson(){
+  const idx = lesson.index;
+  const stars = lesson.mistakes === 0 ? 3 : (lesson.mistakes <= 2 ? 2 : 1);
+  if(stars > profile.stars[idx]) profile.stars[idx] = stars;
+
+  let earned = lesson.coins + COINS_LESSON_BONUS;
+  if(lesson.mistakes === 0) earned += COINS_PERFECT_BONUS;
+  profile.coins += earned;
+  if(profile.unlocked === idx + 1 && profile.unlocked < TOTAL_LESSONS) profile.unlocked = idx + 2;
+  saveProfile();
+
+  playWin();
+  burstConfetti();
+
+  const lessonNo = idx + 1;
+  const isMapEnd = MAPS.some(m => m.to === lessonNo);
+  const allDone = profile.stars.every(s => s > 0);
+
+  document.getElementById('reward-coins-earned').textContent = '+' + earned + ' coins';
+  document.getElementById('reward-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  document.getElementById('reward-title').textContent = allDone
+    ? 'You finished every lesson! 🏆'
+    : (isMapEnd ? 'Map complete! 🏁' : 'Lesson ' + lessonNo + ' complete!');
+
+  const learned = document.getElementById('reward-learned');
+  if(idx < LETTERS.length){
+    const L = LETTERS[idx];
+    learned.innerHTML = '<div class="learned-chip"><span class="lc-letter glyph">' + escapeHtml(L.letter) + '</span>' +
+                        '<span class="lc-name">' + escapeHtml(L.word) + ' · ' + escapeHtml(L.hint) + '</span></div>';
+  } else {
+    const sp = SPECIAL_LESSONS[idx - LETTERS.length];
+    learned.innerHTML = '<div class="learned-chip"><span class="lc-letter glyph">' + escapeHtml(sp.letter) + '</span>' +
+                        '<span class="lc-name">' + escapeHtml(sp.teachName) + '</span></div>';
+  }
+
+  document.getElementById('reward-msg').textContent = allDone
+    ? 'You are a number champion now, ' + profile.name + '. Come back any time to practise!'
+    : (stars === 3 ? 'Perfect — no mistakes at all!' : 'Nice work. Play it again for three stars and more coins!');
+
+  document.getElementById('reward-purse').textContent = profile.coins;
+  document.getElementById('reward-next-btn').classList.toggle('hidden', lessonNo >= TOTAL_LESSONS);
+  showScreen('reward-screen');
+}
+
+/* Read the instruction line aloud in English, the way the intro card does. */
+function speakEnglish(text){
+  if(!soundOn || !text) return;
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.92;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ===================== EVENTS ===================== */
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const val = document.getElementById('name-input').value.trim();
+  profile = defaultProfile(val);
+  saveProfile();
+  playTap();
+  viewMap = 0;
+  renderMap();
+});
+document.getElementById('name-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('name-start-btn').click();
+});
+document.getElementById('map-prev').addEventListener('click', () => {
+  if(viewMap > 0){ viewMap--; playTap(); renderMap(); }
+});
+document.getElementById('map-next').addEventListener('click', () => {
+  if(viewMap < MAPS.length - 1){ viewMap++; playTap(); renderMap(); }
+});
+document.getElementById('side-home-btn').addEventListener('click', () => { playTap(); renderMap(); });
+document.getElementById('side-sound-btn').addEventListener('click', () => {
+  setSound(!soundOn);
+  if(soundOn) playTap();
+});
+document.getElementById('reward-map-btn').addEventListener('click', () => { playTap(); renderMap(); });
+document.getElementById('reward-next-btn').addEventListener('click', () => {
+  playTap();
+  const next = Math.min(profile.unlocked, TOTAL_LESSONS);
+  viewMap = Math.max(0, MAPS.findIndex(m => next > m.from && next <= m.to));
+  startLesson(next - 1);
+});
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if(!confirm('Start the whole quest again from lesson 1?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  profile = null;
+  document.getElementById('name-input').value = '';
+  showScreen('name-screen');
+});
+
+/* ===================== INIT ===================== */
+function init(){
+  let savedSound = null;
+  try{ savedSound = localStorage.getItem(SOUND_KEY); }catch(e){}
+  setSound(savedSound !== '0');
+
+  profile = loadProfile();
+  if(!profile){
+    let saved = null;
+    try{ saved = localStorage.getItem('kids-school-name'); }catch(e){}
+    if(saved) document.getElementById('name-input').value = saved;
+    showScreen('name-screen');
+    return;
+  }
+  const current = Math.min(profile.unlocked, TOTAL_LESSONS);
+  viewMap = Math.max(0, MAPS.findIndex(m => current > m.from && current <= m.to));
+  renderMap();
+}
+init();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
