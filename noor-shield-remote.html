@@ -820,35 +820,6 @@
       scheduleSection.appendChild(scheduleMsg);
       panel.appendChild(scheduleSection);
 
-      // Sleep timer: same command as the quick "Enforce sleep now" button
-      // above, just with a duration the parent picks instead of the fixed
-      // default the server falls back to when no payload is sent.
-      var sleepSection = document.createElement("div");
-      sleepSection.className = "managesection";
-      var sleepHeading = document.createElement("h4");
-      sleepHeading.textContent = "Sleep timer";
-      var sleepRow = document.createElement("div");
-      sleepRow.className = "row";
-      var sleepSelect = document.createElement("select");
-      [1, 2, 4, 8, 12].forEach(function (h) {
-        var opt = document.createElement("option");
-        opt.value = String(h);
-        opt.textContent = h + (h === 1 ? " hour" : " hours");
-        if (h === 8) opt.selected = true;
-        sleepSelect.appendChild(opt);
-      });
-      var sleepForBtn = document.createElement("button");
-      sleepForBtn.className = "btn primary small";
-      sleepForBtn.textContent = "Enforce for this long";
-      sleepForBtn.addEventListener("click", function () {
-        sendCommand(device.id, "enforce_sleep_now", sleepForBtn, { hours: parseInt(sleepSelect.value, 10) });
-      });
-      sleepRow.appendChild(sleepSelect);
-      sleepRow.appendChild(sleepForBtn);
-      sleepSection.appendChild(sleepHeading);
-      sleepSection.appendChild(sleepRow);
-      panel.appendChild(sleepSection);
-
       // Lock/unlock: takes effect the next time this PC checks in (usually
       // within ~20 seconds). Locking shows a full-screen "ask your parent"
       // screen the child can't get past on their own, even after signing
