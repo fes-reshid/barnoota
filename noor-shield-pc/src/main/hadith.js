@@ -9,6 +9,10 @@
  * hadith's authenticity (e.g. hasan rather than sahih). Verify against
  * sunnah.com or a qualified scholar before relying on this list beyond
  * in-app reminders.
+ *
+ * `arabic` (the matn) is only filled in for a subset of entries so far —
+ * currently the Lower-the-gaze ones shown on the blocked-site reminder page
+ * (reminderServer.js). Absent on the rest; check for it before rendering.
  */
 
 const CATEGORY = {
@@ -28,6 +32,10 @@ const HADITHS = [
       'inevitably have. The zina of the eyes is the (lustful) glance, the zina of the tongue is ' +
       '(improper) speech, the zina of the ears is listening (to what is unlawful)... and the ' +
       'private parts confirm all this or deny it."',
+    arabic:
+      'إِنَّ اللَّهَ كَتَبَ عَلَى ابْنِ آدَمَ حَظَّهُ مِنَ الزِّنَا أَدْرَكَ ذَلِكَ لاَ مَحَالَةَ، فَزِنَا الْعَيْنِ ' +
+      'النَّظَرُ، وَزِنَا اللِّسَانِ الْمَنْطِقُ، وَالنَّفْسُ تَمَنَّى وَتَشْتَهِي، وَالْفَرْجُ يُصَدِّقُ ذَلِكَ كُلَّهُ ' +
+      'أَوْ يُكَذِّبُهُ',
     source: 'Sahih Muslim 2657a',
     grading: 'Sahih',
   },
@@ -37,6 +45,7 @@ const HADITHS = [
     text:
       'The Prophet (peace be upon him) said to ʿAli: "O ʿAli, do not follow a (lustful) ' +
       'glance with another glance. The first is forgiven for you, but not the second."',
+    arabic: 'يَا عَلِيُّ، لاَ تُتْبِعِ النَّظْرَةَ النَّظْرَةَ، فَإِنَّ لَكَ الأُولَى وَلَيْسَتْ لَكَ الآخِرَةُ',
     source: 'Sunan Abi Dawud 2149, Jamiʿ at-Tirmidhi 2777',
     grading: 'Hasan',
   },
@@ -47,6 +56,7 @@ const HADITHS = [
       '"Seven will be shaded by Allah under His shade on the Day when there will be no shade ' +
       'except His... and a man who is called by a woman of beauty and position [for an illicit ' +
       'relationship] but says, \'I fear Allah.\'"',
+    arabic: 'وَرَجُلٌ دَعَتْهُ امْرَأَةٌ ذَاتُ مَنْصِبٍ وَجَمَالٍ، فَقَالَ: إِنِّي أَخَافُ اللَّهَ',
     source: 'Sahih al-Bukhari 660, Sahih Muslim 1031',
     grading: 'Sahih',
   },

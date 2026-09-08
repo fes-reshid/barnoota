@@ -80,6 +80,18 @@ const PAGE_STYLE_BASE = `
   .host { font-size: 14px; margin: 0 0 22px; word-break: break-all; }
 `;
 
+// Always shown first on the blocked-site page, before the rotating pick
+// below — the single most fitting reminder for the moment this page exists
+// to interrupt, so it isn't left to chance the way the rotating one is.
+const ITTAQILLAH = {
+  arabic: 'اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا، وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ',
+  text:
+    '"Fear Allah wherever you are, follow a bad deed with a good one which will wipe it out, ' +
+    'and behave well towards people."',
+  source: 'Jamiʿ at-Tirmidhi 1987',
+  grading: 'Hasan (some scholars grade it Sahih)',
+};
+
 function renderReminderPage(hostname) {
   const pick = hadith.randomLowerGazeReminder() || hadith.random();
   const safeHost = escapeHtml(hostname || 'this site');
@@ -99,7 +111,13 @@ function renderReminderPage(hostname) {
     text-align: left; background: rgba(0,0,0,.2); border-left: 3px solid #c9a24b;
     border-radius: 6px; padding: 18px 20px; margin: 0 0 14px; line-height: 1.7; font-size: 15px;
   }
+  .quote.first { margin-bottom: 8px; }
+  .arabic {
+    display: block; direction: rtl; text-align: right; font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 19px; line-height: 2; margin: 0 0 10px;
+  }
   .source { text-align: left; font-size: 13px; color: #8a968e; font-style: italic; margin: 0 0 26px; }
+  .source.tight { margin-bottom: 18px; }
   .note { font-size: 14px; color: #d8d3c4; line-height: 1.6; margin: 0 0 24px; }
   .learn {
     text-align: left; background: rgba(201,162,75,.1); border: 1px solid rgba(201,162,75,.35);
@@ -118,7 +136,17 @@ function renderReminderPage(hostname) {
     <div class="icon">🛡️</div>
     <h1>This site is blocked</h1>
     <p class="host">${safeHost}</p>
-    <p class="quote">${escapeHtml(pick.text)}</p>
+    <p class="quote first">
+      <span class="arabic">${escapeHtml(ITTAQILLAH.arabic)}</span>
+      ${escapeHtml(ITTAQILLAH.text)}
+    </p>
+    <p class="source tight">
+      — ${escapeHtml(ITTAQILLAH.source)}${ITTAQILLAH.grading ? ` · ${escapeHtml(ITTAQILLAH.grading)}` : ''}
+    </p>
+    <p class="quote">
+      ${pick.arabic ? `<span class="arabic">${escapeHtml(pick.arabic)}</span>` : ''}
+      ${escapeHtml(pick.text)}
+    </p>
     <p class="source">— ${escapeHtml(pick.source)}${pick.grading ? ` · ${escapeHtml(pick.grading)}` : ''}</p>
     <p class="note">
       Turning away from this now is between you and Allah — an act of tawbah He loves. Log it in
