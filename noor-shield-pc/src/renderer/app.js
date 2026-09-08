@@ -579,6 +579,13 @@ async function renderBlocklist() {
     const name = document.createElement('span');
     name.textContent = entry.domain;
 
+    if (entry.addedRemotely) {
+      const badge = document.createElement('span');
+      badge.className = 'remotebadge';
+      badge.textContent = 'Added remotely';
+      name.appendChild(badge);
+    }
+
     const remove = document.createElement('button');
     remove.className = 'linkbtn';
     remove.textContent = 'Remove';

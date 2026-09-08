@@ -268,6 +268,42 @@ async function pollCommandsOnce(store) {
 }
 
 /**
+ * Pushes a site the parent just added from this PC's own Add-a-site screen
+ * up to Supabase (if paired), so it shows up on the web dashboard too —
+ * the other direction from pollDeviceDomainsOnce below. A no-op (resolves
+ * immediately) when this PC isn't paired; best-effort otherwise, since the
+ * site is already blocked locally regardless of whether this sync succeeds.
+ */
+async function addDeviceDomain(store, domain) {
+  const cloud = store.get('cloud') || {};
+  if (!cloud.deviceId || !cloud.deviceSecret) return;
+  try {
+    await callRpc('add_device_domain', {
+      p_device_id: cloud.deviceId,
+      p_device_secret: cloud.deviceSecret,
+      p_domain: domain,
+    });
+  } catch (err) {
+    console.error(`[cloudSync] could not sync added site to remote dashboard: ${err.message}`);
+  }
+}
+
+/** The removal counterpart to addDeviceDomain — see its comment for the pairing/best-effort notes. */
+async function removeDeviceDomain(store, domain) {
+  const cloud = store.get('cloud') || {};
+  if (!cloud.deviceId || !cloud.deviceSecret) return;
+  try {
+    await callRpc('remove_device_domain', {
+      p_device_id: cloud.deviceId,
+      p_device_secret: cloud.deviceSecret,
+      p_domain: domain,
+    });
+  } catch (err) {
+    console.error(`[cloudSync] could not sync removed site to remote dashboard: ${err.message}`);
+  }
+}
+
+/**
  * One poll cycle: fetch the parent's current site list for this device (if
  * paired) and store it wholesale, replacing whatever was there before.
  * Always the full list rather than a diff — see the function's own comment
@@ -340,6 +376,8 @@ module.exports = {
   unpair,
   isForceSleepActive,
   setRemoteLockActive,
+  addDeviceDomain,
+  removeDeviceDomain,
   pollCommandsOnce, // exported for tests
   pollDeviceDomainsOnce, // exported for tests
 };

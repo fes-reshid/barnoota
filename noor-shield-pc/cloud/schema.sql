@@ -8,7 +8,8 @@
 -- user — it only ever proves it holds a long random `device_secret` it
 -- generated for itself at pairing time. The device-facing functions below
 -- (start_pairing, poll_pairing, get_pending_commands, complete_command,
--- get_device_domains, unpair_device) check that secret themselves and are safe to call
+-- get_device_domains, add_device_domain, remove_device_domain,
+-- unpair_device) check that secret themselves and are safe to call
 -- with only the public "anon"/"publishable" key. The parent's web dashboard, in contrast,
 -- logs in for real via Supabase Auth, and Row Level Security (the "policy"
 -- blocks below) makes sure a logged-in parent can only ever see or command
@@ -295,6 +296,49 @@ begin
     select domain from public.device_domains
     where device_id = p_device_id
     order by added_at asc;
+end;
+$$;
+
+-- Lets the PC itself push a site it was just told to block (from its own
+-- Add-a-site screen, not the dashboard) up into device_domains, so a site
+-- added locally shows up on the parent's web dashboard too — sync in the
+-- other direction from get_device_domains above. Device-facing like the
+-- functions above: checked against device_secret, no login required.
+-- `on conflict do nothing` makes it safe to call even if the dashboard
+-- already has this exact domain for this device.
+create or replace function public.add_device_domain(p_device_id uuid, p_device_secret text, p_domain text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.devices where id = p_device_id and device_secret = p_device_secret
+  ) then
+    raise exception 'Unrecognized device';
+  end if;
+
+  insert into public.device_domains (device_id, domain)
+  values (p_device_id, p_domain)
+  on conflict (device_id, domain) do nothing;
+end;
+$$;
+
+-- The other half of add_device_domain: removing a site from the PC's own
+-- Add-a-site screen also removes it from device_domains, so it disappears
+-- from the dashboard's list too instead of only being un-blocked locally.
+create or replace function public.remove_device_domain(p_device_id uuid, p_device_secret text, p_domain text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  delete from public.device_domains
+  where device_id = p_device_id
+    and domain = p_domain
+    and device_id in (select id from public.devices where id = p_device_id and device_secret = p_device_secret);
 end;
 $$;
 

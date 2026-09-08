@@ -294,6 +294,17 @@ code {
 }
 .domainrow:last-child, .journalrow:last-child { border-bottom: none; }
 .domainrow span { font-family: Consolas, "Courier New", monospace; font-size: 0.88rem; }
+.remotebadge {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  background: rgba(201, 162, 75, 0.15);
+  padding: 2px 7px;
+  border-radius: 999px;
+  margin-left: 8px;
+}
 .journalrow .when { font-size: 0.86rem; font-weight: 500; }
 .journalrow .note { font-size: 0.8rem; color: var(--ink-faint); margin-top: 1px; }
 .journalrow .count {

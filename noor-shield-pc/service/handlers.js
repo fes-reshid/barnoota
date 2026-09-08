@@ -286,14 +286,28 @@ function createHandlers(ctx) {
     // — seeing exactly what's specifically blocked could itself help a
     // child probe for gaps. seedCount/feedCount/feedCategories stay visible
     // either way: they're just totals, not a list to check against.
-    'blocklist.list': async () => ({
-      ok: true,
-      custom: parentAuth.isUnlocked() ? store.get('customDomains') || [] : [],
-      customHidden: !parentAuth.isUnlocked(),
-      seedCount: seedDomains.length,
-      feedCount: mergedFeedDomains.length,
-      feedCategories: feedCategoriesSummary(),
-    }),
+    //
+    // `custom` also folds in cloudBlockedDomains (sites the parent added
+    // from the web dashboard, synced down by cloudSync.js's
+    // pollDeviceDomainsOnce) so they show up here too, not just silently
+    // enforced — marked addedRemotely so the UI can badge them, and never
+    // duplicated with a domain already present via customDomains (e.g.
+    // after it was pushed up by blocklist.add's addDeviceDomain call).
+    'blocklist.list': async () => {
+      const custom = store.get('customDomains') || [];
+      const customDomainSet = new Set(custom.map((e) => e.domain));
+      const remoteOnly = (store.get('cloudBlockedDomains') || [])
+        .filter((domain) => !customDomainSet.has(domain))
+        .map((domain) => ({ domain, addedAt: null, addedRemotely: true }));
+      return {
+        ok: true,
+        custom: parentAuth.isUnlocked() ? [...custom, ...remoteOnly] : [],
+        customHidden: !parentAuth.isUnlocked(),
+        seedCount: seedDomains.length,
+        feedCount: mergedFeedDomains.length,
+        feedCategories: feedCategoriesSummary(),
+      };
+    },
 
     // Not parent-gated: this only pulls in public lists, the same ones
     // anyone could download themselves — nothing it does requires the
@@ -472,13 +486,22 @@ function createHandlers(ctx) {
       custom.unshift({ domain, addedAt: Date.now() });
       store.set('customDomains', custom);
       refreshBlocklist();
+      // Best-effort, fire-and-forget: the site is already blocked locally
+      // regardless of whether this sync to the dashboard succeeds.
+      cloudSync.addDeviceDomain(store, domain).catch(() => {});
       return { ok: true, domain };
     }),
 
     'blocklist.remove': parentOnly(({ domain }) => {
       const custom = (store.get('customDomains') || []).filter((e) => e.domain !== domain);
       store.set('customDomains', custom);
+      // A site could also be here only because the parent added it from
+      // the dashboard (cloudBlockedDomains, not customDomains) — remove it
+      // from both, either way, so "remove" from this PC always sticks.
+      const cloudBlocked = (store.get('cloudBlockedDomains') || []).filter((d) => d !== domain);
+      store.set('cloudBlockedDomains', cloudBlocked);
       refreshBlocklist();
+      cloudSync.removeDeviceDomain(store, domain).catch(() => {});
       return { ok: true };
     }),
 

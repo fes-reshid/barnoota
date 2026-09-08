@@ -128,6 +128,21 @@ function always returns the *current full list*, not just new additions,
 so a site the parent removes from the dashboard simply stops appearing on
 the PC's next poll — no separate "removed" signal needed.
 
+Sync goes the other way too: a site added from the PC's own Add-a-site
+screen (`blocklist.add` in `handlers.js`) calls `cloudSync.addDeviceDomain`,
+which calls `add_device_domain` — a device-facing counterpart to the
+dashboard's direct insert, checked against `device_secret` instead of a
+login — so it shows up in the dashboard's list too, not just enforced
+silently. `blocklist.remove` mirrors this with `removeDeviceDomain` /
+`remove_device_domain`. Both are best-effort and fire-and-forget: the site
+is already added/removed locally regardless of whether the sync succeeds,
+and the next `get_device_domains` poll (or a page refresh on the dashboard)
+reconciles either side if it was briefly out of sync. The local Blocklist
+tab's `blocklist.list` folds `cloudBlockedDomains` into what it shows,
+badging any site that's only there because the parent added it from the
+dashboard (`addedRemotely`) — so the two lists always show the same sites,
+regardless of which side a site was added from.
+
 ## Extending it
 
 Adding a new remote command means: add its name to the `kind` check
