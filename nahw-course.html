@@ -194,6 +194,8 @@
     display:flex; align-items:center; justify-content:center; gap:10px;
   }
   .week-select-btn:hover{ transform:scale(1.03); background:#b8862c; }
+  .week-select-btn.milestone{ background:var(--green); }
+  .week-select-btn.milestone:hover{ background:var(--green-dark); }
   .week-select-btn .wsb-ar{ font-family:'Amiri', serif; }
   body.rtl-active .week-select-btn .wsb-en{ display:none; }
   body:not(.rtl-active) .week-select-btn .wsb-ar{ display:none; }
@@ -529,7 +531,72 @@
   .review-detail .rd-expl{ background:#fff; border-radius:8px; padding:10px 12px; }
   .retake-btn{ background:var(--gold); color:#fff8ea; border:none; border-radius:22px; padding:11px 26px; font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); cursor:pointer; margin-top:10px; }
 
+  /* ===== Week 5 Certificate — progress checklist ===== */
+  .progress-list{ max-width:460px; margin:14px auto 0; display:flex; flex-direction:column; gap:10px; }
+  .progress-row{
+    display:flex; align-items:center; gap:12px; background:#fff; border:1.5px solid var(--gold-soft);
+    border-radius:12px; padding:12px 16px; text-align:start;
+  }
+  .progress-row.pr-done{ border-color:var(--green); background:var(--green-bg); }
+  .progress-row.pr-pending{ border-color:var(--red); background:var(--red-bg); }
+  .pr-icon{ flex-shrink:0; font-size:calc(18px * var(--scale)); }
+  .pr-body{ flex:1; min-width:0; }
+  .pr-label{ font-weight:700; color:var(--ink-navy); display:block; font-size:calc(14.5px * var(--scale)); }
+  .pr-status{ font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); margin-top:2px; }
+  .pr-jump-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:16px; padding:7px 16px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(12.5px * var(--scale));
+    cursor:pointer; transition:transform .15s ease; flex-shrink:0;
+  }
+  .pr-jump-btn:hover{ transform:scale(1.05); }
+
+  /* ===== Week 5 Certificate — the certificate itself ===== */
+  #w5-cert-wrap{ display:flex; justify-content:center; padding:8px 0 20px; }
+  .cert-card{
+    width:100%; max-width:640px; background:var(--parchment); position:relative;
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-20px;
+    border-radius:6px; padding:48px 30px 36px; text-align:center;
+    box-shadow:0 10px 30px rgba(60,47,38,.15);
+  }
+  .cert-corner{ position:absolute; width:26px; height:26px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--gold); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:16px; left:16px; }
+  .cert-corner.tr{ top:16px; right:16px; }
+  .cert-corner.bl{ bottom:16px; left:16px; }
+  .cert-corner.br{ bottom:16px; right:16px; }
+  .cert-bismillah{ font-family:'Amiri', serif; color:var(--gold); font-size:calc(15px * var(--scale)); margin:0 0 12px; }
+  .cert-seal{
+    width:62px; height:62px; border-radius:50%; background:var(--green); color:#faf3e0;
+    display:flex; align-items:center; justify-content:center; font-family:'Marcellus', serif; font-size:26px; font-weight:700;
+    margin:0 auto 14px; border:3px solid var(--gold-soft);
+  }
+  .cert-eyebrow{ font-family:'Amiri', serif; color:var(--gold); font-size:calc(15.5px * var(--scale)); margin:0 0 4px; }
+  .cert-title{ font-family:'Marcellus'; font-size:calc(25px * var(--scale)); color:var(--ink-navy); margin:0 0 18px; letter-spacing:.02em; }
+  .cert-line{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0 0 6px; }
+  .cert-name{ font-family:'Amiri', serif; font-weight:700; font-size:calc(30px * var(--scale)); color:var(--green-dark); margin:6px 0 16px; border-bottom:2px solid var(--gold-soft); display:inline-block; padding:0 10px 6px; }
+  .cert-course{ font-family:'Marcellus'; font-size:calc(16.5px * var(--scale)); color:var(--ink-navy); margin:0 0 2px; }
+  .cert-course-ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); margin:0 0 4px; }
+  .cert-course-sub{ font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); opacity:.75; margin:0; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto 14px; max-width:200px; }
+  .cert-divider span{ flex:1; height:1px; background:var(--gold-soft); }
+  .cert-divider b{ color:var(--gold); font-size:13px; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin:6px 0 6px; font-size:calc(13px * var(--scale)); color:var(--ink-brown); }
+  .cert-meta-row b{ color:var(--ink-navy); display:block; font-size:calc(13.5px * var(--scale)); }
+  .cert-footer{ margin-top:26px; padding-top:14px; border-top:1px solid var(--gold-soft); font-size:calc(12.5px * var(--scale)); color:var(--gold); }
+  .cert-actions{ text-align:center; margin-top:20px; }
+  .cert-actions .qbtn{ margin:0 6px; }
+  body.rtl-active .progress-row, body.rtl-active .cert-line, body.rtl-active .cert-course{ font-family:'Amiri', serif; }
+
   footer.foot{ text-align:center; color:var(--gold); font-size:calc(12px * var(--scale)); margin-top:40px; }
+
+  @media print{
+    header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, #logout-btn,
+    #course-hero-section, #week-select, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ max-width:none; padding:0; }
+    .cert-card{ box-shadow:none; }
+  }
 </style>
 </head>
 <body>
@@ -686,6 +753,9 @@
       </button>
       <button class="week-select-btn" id="week-select-w5" data-step="19">
         <span class="wsb-en">Week 5 · The I'rab Rulings</span><span class="wsb-ar">الأسبوع الخامس · الأحكام الإعرابية</span>
+      </button>
+      <button class="week-select-btn milestone" id="week-select-w5-cert" data-step="25">
+        <span class="wsb-en">🎓 Week 5 · Certificate</span><span class="wsb-ar">🎓 الأسبوع الخامس · الشهادة</span>
       </button>
     </div>
   </div>
@@ -2897,6 +2967,7 @@ var STEP_DEFS = [
     titleEn: 'Practice Your Knowledge — Week 5 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل',
     leadEn: '25 questions covering everything from Week 5 — the four i\'rab rulings, Khaṭṭ al-I\'rāb, and how to parse a word from either side of it. The answer and explanation appear right after each question.',
     leadAr: '٢٥ سؤالاً تغطي كل ما في الأسبوع الخامس — الأحكام الإعرابية الأربعة، وخط الإعراب، وكيفية إعراب الكلمة من كل جانبيه. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'w5certificate', weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
 
   { type: 'quiz', enQ: 'finalQuizEN', arQ: 'finalQuizAR', immediate: false,
     titleEn: 'Test Your Knowledge', titleAr: 'اختبر معلوماتك',
@@ -2934,6 +3005,121 @@ function weekBadgeHTML(def){
   if(!def.weekEn) return '';
   var label = (currentLang === 'ar') ? def.weekAr : def.weekEn;
   return '<div class="week-badge">' + label + '</div>';
+}
+
+function escapeHTML(str){
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+var W5_CERT_PASS = 75;
+var W5_CERT_QUIZZES = [
+  { id: 'week5aQuizEN', jumpStep: 20,
+    labelEn: 'Week 5 Quiz — The Four I\'rab Rulings', labelAr: 'اختبار الأسبوع الخامس — الأحكام الإعرابية الأربعة' },
+  { id: 'week5bQuizEN', jumpStep: 22,
+    labelEn: 'Week 5 Quiz — Khaṭṭ al-I\'rāb', labelAr: 'اختبار الأسبوع الخامس — خط الإعراب' },
+  { id: 'week5QuizEN', jumpStep: 24,
+    labelEn: 'Practice Your Knowledge — Week 5 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل' }
+];
+
+function bestQuizPct(quizId){
+  var attempts = quizAttempts[quizId];
+  if(!attempts || !attempts.length) return null;
+  var best = -1;
+  attempts.forEach(function(a){ if(a.pct > best){ best = a.pct; } });
+  return best;
+}
+
+function renderWeek5CertificateStep(){
+  var viewport = document.getElementById('step-viewport');
+  var nextBtn = document.getElementById('step-next-btn');
+  var isAr = (currentLang === 'ar');
+  var def = STEP_DEFS[currentStepIndex];
+
+  var results = W5_CERT_QUIZZES.map(function(m){
+    var best = bestQuizPct(m.id);
+    return { meta: m, best: best, passed: (best !== null && best > W5_CERT_PASS) };
+  });
+  var allPassed = results.every(function(r){ return r.passed; });
+
+  nextBtn.style.display = '';
+  nextBtn.disabled = false;
+  nextBtn.textContent = isAr ? 'التالي' : 'Next';
+
+  if(!allPassed){
+    var introText = isAr
+      ? ('يلزم تحقيق أكثر من ' + W5_CERT_PASS + '٪ في الاختبارات التالية للحصول على شهادة الأسبوع الخامس:')
+      : ('You need to score more than ' + W5_CERT_PASS + '% on the following quizzes to earn your Week 5 certificate:');
+
+    var listHtml = results.map(function(r){
+      var label = isAr ? r.meta.labelAr : r.meta.labelEn;
+      var statusText;
+      if(r.best === null){
+        statusText = isAr ? 'لم تُحاول بعد' : 'Not attempted yet';
+      } else if(!r.passed){
+        statusText = isAr
+          ? ('أفضل نتيجة: ' + r.best + '٪ — يلزم أكثر من ' + W5_CERT_PASS + '٪')
+          : ('Best score: ' + r.best + '% — need more than ' + W5_CERT_PASS + '%');
+      } else {
+        statusText = isAr ? ('أفضل نتيجة: ' + r.best + '٪ ✓') : ('Best score: ' + r.best + '% ✓');
+      }
+      return '<div class="progress-row ' + (r.passed ? 'pr-done' : 'pr-pending') + '">' +
+        '<span class="pr-icon">' + (r.passed ? '✅' : '⛔') + '</span>' +
+        '<span class="pr-body"><span class="pr-label">' + label + '</span><span class="pr-status">' + statusText + '</span></span>' +
+        (r.passed ? '' : ('<button class="pr-jump-btn" data-jump="' + r.meta.jumpStep + '">' + (isAr ? 'اذهب' : 'Go') + '</button>')) +
+      '</div>';
+    }).join('');
+
+    viewport.innerHTML = weekBadgeHTML(def) +
+      '<h2 class="section-title"><span class="num">🎓</span>' + (isAr ? 'شهادة الأسبوع الخامس' : 'Week 5 Certificate') + '</h2>' +
+      '<p class="lead">' + introText + '</p>' +
+      '<div class="progress-list">' + listHtml + '</div>';
+
+    viewport.querySelectorAll('.pr-jump-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        playClickSound();
+        renderStep(parseInt(btn.getAttribute('data-jump'), 10));
+      });
+    });
+    return;
+  }
+
+  var avgPct = Math.round(results.reduce(function(s, r){ return s + r.best; }, 0) / results.length);
+  var today = new Date();
+  var dateStr = today.toLocaleDateString(isAr ? 'ar-SA-u-nu-latn' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  var certId = 'NAHW-W5-' + today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+
+  viewport.innerHTML = weekBadgeHTML(def) +
+    '<div id="w5-cert-wrap">' +
+      '<div class="cert-card">' +
+        '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
+        '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
+        '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
+        '<div class="cert-seal">5</div>' +
+        '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
+        '<h1 class="cert-title"' + (isAr ? ' style="font-family:\'Amiri\',serif;"' : '') + '>' + (isAr ? 'شهادة إتمام' : 'Certificate of Completion') + '</h1>' +
+        '<p class="cert-line">' + (isAr ? 'تشهد هذه الوثيقة بأن' : 'This certifies that') + '</p>' +
+        '<div class="cert-name">' + escapeHTML(studentName) + '</div>' +
+        '<p class="cert-line">' + (isAr ? 'قد أتم بنجاح' : 'has successfully completed') + '</p>' +
+        '<p class="cert-course">Week 5 — The I\'rab Rulings &amp; Khaṭṭ al-I\'rāb</p>' +
+        '<p class="cert-course-ar">الأسبوع الخامس — الأحكام الإعرابية وخط الإعراب</p>' +
+        '<p class="cert-course-sub">مَبَادِئُ النَّحْوِ · Foundations of Naḥw</p>' +
+        '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+        '<div class="cert-meta-row">' +
+          '<div>' + (isAr ? 'متوسط الدرجات' : 'Average Score') + '<b>' + avgPct + '%</b></div>' +
+          '<div>' + (isAr ? 'التاريخ' : 'Date') + '<b>' + dateStr + '</b></div>' +
+          '<div>' + (isAr ? 'رقم الشهادة' : 'Certificate ID') + '<b>' + certId + '</b></div>' +
+        '</div>' +
+        '<div class="cert-footer">Diin Islaam · diinislaam.com</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cert-actions no-print">' +
+      '<button class="qbtn solid" id="w5-print-cert-btn">🖨️ ' + (isAr ? 'طباعة / حفظ كملف PDF' : 'Print / Save as PDF') + '</button>' +
+    '</div>';
+
+  var printBtn = document.getElementById('w5-print-cert-btn');
+  if(printBtn){ printBtn.addEventListener('click', function(){ playClickSound(); window.print(); }); }
 }
 
 function renderStep(i){
@@ -2980,6 +3166,11 @@ function renderStep(i){
       nextBtn.style.display = 'none';
     }, !!def.immediate, def.enQ);
     activeQuizInstance.setLanguage(currentLang);
+  } else if(def.type === 'w5certificate'){
+    activeQuizInstance = null;
+    stepDone[i] = true;
+    saveProgress();
+    renderWeek5CertificateStep();
   }
 
   updateStepProgress();
@@ -3004,6 +3195,8 @@ function refreshCurrentStepLanguage(){
     if(leadEl){ leadEl.textContent = (currentLang === 'ar') ? def.leadAr : def.leadEn; }
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
+  } else if(def.type === 'w5certificate'){
+    renderWeek5CertificateStep();
   }
   updateStepProgress();
 }
