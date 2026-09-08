@@ -14,6 +14,19 @@
 -- logs in for real via Supabase Auth, and Row Level Security (the "policy"
 -- blocks below) makes sure a logged-in parent can only ever see or command
 -- their own paired devices — never anyone else's.
+--
+-- Supabase's Security Advisor flags two things here as warnings — both
+-- expected, not bugs, given the design above:
+--   1. "Public Can Execute SECURITY DEFINER Function" on every device-facing
+--      function listed above (plus activate_license_key, claim_pairing_code,
+--      poll_pairing, start_pairing). The advisor can't see that each one
+--      checks device_secret (or auth.uid()) internally before doing
+--      anything — see each function's own body below.
+--   2. "RLS Enabled No Policy" on pairing_codes and license_keys. That's
+--      deliberate too: zero policies + RLS enabled blocks all direct table
+--      access, even to a logged-in parent — see the comments at each
+--      table's RLS section below for why.
+-- Both are safe to dismiss in the advisor.
 
 create extension if not exists pgcrypto; -- for gen_random_uuid() / gen_random_bytes()
 
@@ -101,6 +114,8 @@ alter table public.license_keys enable row level security;
 -- No policies for license_keys either (same reasoning as pairing_codes
 -- below): every interaction goes through activate_license_key, so the raw
 -- table is never directly queryable, even by a logged-in user.
+-- Expected — see the "Security Advisor" note at the top of this file
+-- ("RLS Enabled No Policy" on this table is deliberate, not an oversight).
 
 -- ---------------------------------------------------------------------
 -- Row Level Security — the parent-facing (logged-in) side only.
@@ -141,6 +156,8 @@ create policy "parents queue commands for their own devices"
 -- denies every direct table access (even to logged-in users), which is
 -- exactly right here — every interaction with this table goes through the
 -- functions below instead, so the raw codes/secrets are never queryable.
+-- Expected — see the "Security Advisor" note at the top of this file
+-- ("RLS Enabled No Policy" on this table is deliberate, not an oversight).
 
 -- device_domains, unlike pairing_codes, IS meant to be queried and written
 -- directly by the logged-in parent's dashboard (list/add/remove a site) —
@@ -155,6 +172,9 @@ create policy "parents manage sites for their own devices"
 -- ---------------------------------------------------------------------
 -- Device-facing functions (called with only the public anon/publishable
 -- key — no Supabase login). Each one re-checks device_secret itself.
+-- Expected — see the "Security Advisor" note at the top of this file
+-- ("Public Can Execute SECURITY DEFINER Function" on every function below
+-- is deliberate: the internal device_secret check is the real gate).
 -- ---------------------------------------------------------------------
 
 -- Called once by a PC that has just generated its own device_secret and a
