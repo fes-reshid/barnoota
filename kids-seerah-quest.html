@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
-<title>English Reading Quest — Kids Corner</title>
-<meta name="description" content="A map-and-lessons phonics game for English: 40 lessons across 4 maps teaching every letter sound, digraphs, sight words and blending, with mini-games, stars and coins.">
+<title>Seerah Quest — Kids Corner</title>
+<meta name="description" content="A map-and-lessons game through the life of Prophet Muhammad صلى الله عليه وسلم: 30 story lessons across 5 maps, with questions, ordering games, true-or-false rounds, stars, coins, and a printable certificate for every map.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -28,7 +28,6 @@
   }
   a{color:inherit;}
   .arabic{ font-family:'Amiri', serif; }
-  .glyph{ font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; }
   .hidden{ display:none !important; }
 
   header.site{
@@ -221,15 +220,14 @@
   }
   .intro-speak:active{ transform:translateY(2px); box-shadow:0 2px 0 #2c7ba0; }
 
-  .hero-letter{
-    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:100px; line-height:1.1; color:var(--green-dark);
-    background:var(--green-bg); border:4px solid var(--green); border-radius:28px;
-    width:180px; height:180px; display:flex; align-items:center; justify-content:center;
-    margin:0 auto 12px; box-shadow:inset 0 -6px 0 rgba(0,0,0,.06);
+  .story-emoji{ font-size:74px; line-height:1; margin-bottom:4px; }
+  .story-title{ font-family:'Marcellus'; font-size:27px; color:var(--ink-navy); margin:0 0 2px; }
+  .story-arabic{ font-family:'Amiri', serif; font-size:26px; color:var(--gold); margin:0 0 12px; }
+  .story-text{
+    font-size:19.5px; line-height:1.65; color:#4a4034; max-width:560px; margin:0 auto;
+    text-align:left; background:var(--parchment); border:2px solid var(--gold-soft);
+    border-radius:18px; padding:18px 20px;
   }
-  .hero-name{ font-family:'Marcellus'; font-size:29px; color:var(--ink-navy); margin:0 0 2px; }
-  .hero-word{ font-family:'Amiri', serif; font-size:34px; color:var(--gold); margin:6px 0 0; }
-  .hero-emoji{ font-size:46px; margin-top:2px; }
   .speak-btn{
     display:inline-flex; align-items:center; gap:8px; margin:14px 0 6px;
     background:var(--sky-deep); color:#fff; border:none; border-radius:24px;
@@ -239,61 +237,54 @@
   .speak-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 #2c7ba0; }
 
   .choice-grid{ display:grid; gap:14px; width:100%; max-width:460px; margin:0 auto; }
-  .choice-grid.cols-2{ grid-template-columns:1fr 1fr; }
-  .choice-grid.cols-3{ grid-template-columns:repeat(3, 1fr); }
-  .choice-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .choice-grid.cols-1{ grid-template-columns:1fr; }
   .choice{
     background:var(--parchment); border:3px solid var(--gold-soft); border-radius:20px;
-    padding:16px 8px; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:96px;
+    padding:15px 18px; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease;
+    display:flex; align-items:center; justify-content:center; min-height:62px;
   }
   .choice:hover{ transform:translateY(-3px); border-color:var(--gold); }
-  .choice .c-letter{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:52px; line-height:1; color:var(--ink-navy); }
-  .choice .c-word{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:26px; color:var(--ink-navy); }
-  .choice .c-name{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
-  .choice .c-emoji{ font-size:38px; }
+  .choice .c-name{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); line-height:1.3; }
   .choice.correct{ background:#d8f0d8; border-color:#3d9b4f; animation:pop .35s ease; }
   .choice.wrong{ background:#f7dede; border-color:#c1503f; animation:shakeX .4s ease; }
   .choice.locked{ pointer-events:none; }
   @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.14); } 100%{ transform:scale(1); } }
   @keyframes shakeX{ 0%,100%{ transform:translateX(0);} 25%{ transform:translateX(-7px);} 75%{ transform:translateX(7px);} }
 
-  .hunt-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; width:100%; max-width:400px; margin:0 auto; }
-  .hunt-cell{
-    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:16px;
-    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:36px; color:var(--ink-navy);
-    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; cursor:pointer;
-    transition:transform .12s ease;
+  /* ---- put it in order ---- */
+  .order-list{ display:flex; flex-direction:column; gap:11px; width:100%; max-width:480px; margin:0 auto; }
+  .order-item{
+    display:flex; align-items:center; gap:12px; text-align:left; cursor:pointer;
+    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:18px;
+    padding:13px 16px; transition:transform .12s ease, background .15s ease, border-color .15s ease;
   }
-  .hunt-cell:hover{ transform:scale(1.06); }
-  .hunt-cell.found{ background:#d8f0d8; border-color:#3d9b4f; color:var(--green-dark); pointer-events:none; }
-  .hunt-cell.miss{ background:#f7dede; border-color:#c1503f; }
+  .order-item:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .order-item .oi-num{
+    width:32px; height:32px; border-radius:50%; flex:none; background:#fff;
+    border:2px solid var(--gold-soft); display:flex; align-items:center; justify-content:center;
+    font-family:'Marcellus'; font-size:17px; color:var(--gold);
+  }
+  .order-item .oi-text{ flex:1; font-size:18px; color:var(--ink-navy); line-height:1.35; }
+  .order-item.done{ background:var(--green-bg); border-color:var(--green); pointer-events:none; }
+  .order-item.done .oi-num{ background:var(--green); border-color:var(--green); color:#fff; }
+  .order-item.miss{ background:#f7dede; border-color:#c1503f; animation:shakeX .4s ease; }
 
-  /* ---- blend a word ---- */
-  .bubble-row{ display:flex; direction:ltr; gap:14px; justify-content:center; flex-wrap:wrap; margin:6px 0 18px; }
-  .sound-bubble{
-    width:96px; height:96px; border-radius:50%; cursor:pointer;
-    background:radial-gradient(circle at 32% 28%, #ffffff, #cfeeff 60%, #a8ddf5);
-    border:3px solid #8fd3ef; display:flex; align-items:center; justify-content:center;
-    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:38px; color:#20618a;
-    box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 4px 10px rgba(30,90,120,.18);
-    transition:transform .15s ease;
+  /* ---- true or false ---- */
+  .tf-progress{ font-family:'Marcellus'; font-size:15px; color:var(--sky-deep); margin:0 0 14px; }
+  .tf-statement{
+    font-size:23px; line-height:1.5; color:var(--ink-navy); max-width:480px; margin:0 auto 24px;
+    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:20px; padding:20px 22px;
   }
-  .sound-bubble:hover{ transform:translateY(-4px) scale(1.04); }
-  .sound-bubble.said{ background:radial-gradient(circle at 32% 28%, #ffffff, #d5f3d2 60%, #a7e0a2); border-color:#5cb85c; color:var(--green-dark); }
-  /* The "tap me next" hint glows in place — a moving target is hard for small fingers. */
-  .sound-bubble.next{ border-color:var(--gold); animation:bubbleHint 1.3s ease-in-out infinite; }
-  @keyframes bubbleHint{
-    0%,100%{ box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 0 0 0 rgba(232,181,60,.75); }
-    50%{ box-shadow:inset -6px -8px 14px rgba(255,255,255,.85), 0 0 0 12px rgba(232,181,60,0); }
+  .tf-btns{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .tf-btn{
+    border:3px solid #fff; border-radius:22px; cursor:pointer; color:#fff8ea;
+    padding:14px 34px; font-family:'Marcellus'; font-size:20px;
   }
-  .blend-slot{
-    font-family:'Trebuchet MS', 'Verdana', sans-serif; font-weight:700; font-size:48px; color:var(--ink-navy); direction:ltr;
-    background:var(--parchment); border:3px dashed var(--gold-soft); border-radius:18px;
-    min-height:88px; min-width:220px; display:inline-flex; align-items:center; justify-content:center;
-    padding:6px 22px; margin-bottom:10px;
-  }
-  .blend-slot.full{ border-style:solid; border-color:var(--green); background:var(--green-bg); color:var(--green-dark); }
+  .tf-btn.yes{ background:var(--green); box-shadow:0 5px 0 var(--green-dark); }
+  .tf-btn.no{ background:var(--coral); box-shadow:0 5px 0 #b8552a; }
+  .tf-btn:active{ transform:translateY(3px); }
+  .tf-btn.right{ animation:pop .35s ease; }
+  .tf-btn.wrongish{ animation:shakeX .4s ease; }
 
   .feedback{ min-height:34px; font-family:'Marcellus'; font-size:20px; margin-top:16px; }
   .feedback.good{ color:var(--green); }
@@ -316,7 +307,7 @@
     display:inline-flex; align-items:center; gap:10px; background:var(--green-bg); border:2px solid var(--green);
     border-radius:18px; padding:8px 18px; margin-bottom:14px;
   }
-  .learned-chip .lc-letter{ font-family:'Trebuchet MS','Verdana',sans-serif; font-weight:700; font-size:38px; color:var(--green-dark); line-height:1; }
+  .learned-chip .lc-letter{ font-size:36px; line-height:1; }
   .learned-chip .lc-name{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
   .purse{
     display:inline-flex; align-items:center; gap:8px; background:var(--parchment-deep);
@@ -434,11 +425,12 @@
     .side-step .ss-num{ width:auto; }
   }
   @media (max-width:560px){
-    .hero-letter{ width:148px; height:148px; font-size:86px; }
-    .choice .c-letter{ font-size:44px; }
-    .hunt-cell{ font-size:32px; }
-    .sound-bubble{ width:76px; height:76px; font-size:34px; }
-    .blend-slot{ font-size:40px; min-width:180px; }
+    .story-emoji{ font-size:58px; }
+    .story-text{ font-size:17.5px; padding:15px 16px; }
+    .choice .c-name{ font-size:17px; }
+    .order-item .oi-text{ font-size:16.5px; }
+    .tf-statement{ font-size:19.5px; padding:16px 16px; }
+    .tf-btn{ padding:12px 26px; font-size:18px; }
     .intro-title{ font-size:26px; }
     .intro-text{ font-size:18px; }
     .map-nav{ width:40px; height:40px; font-size:17px; }
@@ -471,10 +463,10 @@
   <!-- ============ NAME SCREEN ============ -->
   <section id="name-screen">
     <div class="name-box">
-      <div class="name-icons">🗺️ 📖 🪙</div>
-      <h1>English Reading Quest</h1>
-      <p class="sub">Sounds · Words · Reading</p>
-      <p>Travel across four maps and learn every letter sound, then blend them into real words. Every game you finish earns you coins!</p>
+      <div class="name-icons">🗺️ 🕋 🪙</div>
+      <h1>Seerah Quest</h1>
+      <p class="sub arabic">رِحْلَةُ السِّيرَة</p>
+      <p>Travel five maps through the life of Prophet Muhammad ﷺ — thirty stories, one lesson at a time. Finish a whole map and print your certificate!</p>
       <p class="pick-label">Pick your character</p>
       <div class="avatar-grid" id="name-avatars"></div>
       <input type="text" class="big-input" id="name-input" placeholder="Type your name" maxlength="24" autocomplete="given-name">
@@ -492,12 +484,12 @@
       <div class="stat-row">
         <span class="stat">🪙 <span id="stat-coins">0</span></span>
         <span class="stat">⭐ <span id="stat-stars">0</span></span>
-        <span class="stat">📍 <span id="stat-lessons">0</span>/40</span>
+        <span class="stat">📍 <span id="stat-lessons">0</span>/30</span>
       </div>
     </div>
 
     <div class="map-frame">
-      <div class="map-title" id="map-title">Map 1 · The First Letters</div>
+      <div class="map-title" id="map-title">Map 1 · Makkah Long Ago</div>
       <button class="map-nav prev" id="map-prev" aria-label="Previous map">◀</button>
       <button class="map-nav next" id="map-next" aria-label="Next map">▶</button>
       <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" role="img" aria-label="Lesson map"></svg>
@@ -596,126 +588,367 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ===================== DATA ===================== */
-const LETTERS = [
-  {letter:'s', sound:'sss', word:'sun',   split:'s · u · n',    emoji:'☀️', parts:['s','u','n']},
-  {letter:'a', sound:'aaa', word:'ant',   split:'a · n · t',    emoji:'🐜', parts:['a','n','t']},
-  {letter:'t', sound:'t',   word:'ten',   split:'t · e · n',    emoji:'🔟', parts:['t','e','n']},
-  {letter:'p', sound:'p',   word:'pig',   split:'p · i · g',    emoji:'🐷', parts:['p','i','g']},
-  {letter:'i', sound:'iii', word:'ink',   split:'i · n · k',    emoji:'🖊️', parts:['i','n','k']},
-  {letter:'n', sound:'nnn', word:'net',   split:'n · e · t',    emoji:'🥅', parts:['n','e','t']},
-  {letter:'m', sound:'mmm', word:'map',   split:'m · a · p',    emoji:'🗺️', parts:['m','a','p']},
-  {letter:'d', sound:'d',   word:'dog',   split:'d · o · g',    emoji:'🐶', parts:['d','o','g']},
-  {letter:'g', sound:'g',   word:'gum',   split:'g · u · m',    emoji:'🍬', parts:['g','u','m']},
-  {letter:'o', sound:'ooo', word:'ox',    split:'o · x',        emoji:'🐂', parts:['o','x']},
-  {letter:'c', sound:'k',   word:'cat',   split:'c · a · t',    emoji:'🐱', parts:['c','a','t']},
-  {letter:'k', sound:'k',   word:'kit',   split:'k · i · t',    emoji:'🧰', parts:['k','i','t']},
-  {letter:'e', sound:'eee', word:'egg',   split:'e · gg',       emoji:'🥚', parts:['e','gg']},
-  {letter:'u', sound:'uuu', word:'up',    split:'u · p',        emoji:'⬆️', parts:['u','p']},
-  {letter:'r', sound:'rrr', word:'rat',   split:'r · a · t',    emoji:'🐀', parts:['r','a','t']},
-  {letter:'h', sound:'h',   word:'hat',   split:'h · a · t',    emoji:'🎩', parts:['h','a','t']},
-  {letter:'b', sound:'b',   word:'bus',   split:'b · u · s',    emoji:'🚌', parts:['b','u','s']},
-  {letter:'f', sound:'fff', word:'fish',  split:'f · i · sh',   emoji:'🐟', parts:['f','i','sh']},
-  {letter:'l', sound:'lll', word:'log',   split:'l · o · g',    emoji:'🪵', parts:['l','o','g']},
-  {letter:'j', sound:'j',   word:'jam',   split:'j · a · m',    emoji:'🍓', parts:['j','a','m']},
-  {letter:'v', sound:'vvv', word:'van',   split:'v · a · n',    emoji:'🚐', parts:['v','a','n']},
-  {letter:'w', sound:'w',   word:'web',   split:'w · e · b',    emoji:'🕸️', parts:['w','e','b']},
-  {letter:'x', sound:'ks',  word:'box',   split:'b · o · x',    emoji:'📦', parts:['b','o','x']},
-  {letter:'y', sound:'y',   word:'yak',   split:'y · a · k',    emoji:'🐃', parts:['y','a','k']},
-  {letter:'z', sound:'zzz', word:'zip',   split:'z · i · p',    emoji:'🤐', parts:['z','i','p']},
-  {letter:'q', sound:'kw',  word:'queen', split:'qu · ee · n',  emoji:'👑', parts:['qu','ee','n']}
-];
+/* Thirty short stories from the Seerah, six on each of the five maps. */
+const SEERAH = [
 
-/* Letters young readers most often mix up — this makes "Find the Letter" real practice. */
-const LOOKALIKES = {
-  'b':['d','p','q'], 'd':['b','p','q'], 'p':['q','b','d'], 'q':['p','g','b'],
-  'm':['n','w'],     'n':['m','u','r'], 'w':['m','v'],     'v':['w','y'],
-  'i':['j','l','t'], 'j':['i','g'],     'l':['i','t','j'], 't':['f','l'],
-  'c':['e','o','s'], 'e':['c','o','a'], 'o':['c','e','a'], 'a':['o','e','c'],
-  'g':['q','y','j'], 'h':['n','b','k'], 'k':['h','x'],     'x':['k','y'],
-  'r':['n','v'],     's':['z','c'],     'z':['s','x'],     'u':['n','v','y'],
-  'f':['t','r'],     'y':['v','g','x']
-};
+  /* ---------- Map 1 · Makkah Long Ago ---------- */
+  { title:'The House of Allah', teach:'The Kaʿbah', emoji:'🕋', arabic:'ٱلْكَعْبَة',
+    story:'Long, long ago Allah told Prophet Ibrāhīm and his son Ismāʿīl to build a simple house of stone in the dry valley of Makkah. It was called the Kaʿbah, and it was built for one reason only: so that people would worship Allah alone. Many years later the people of Makkah forgot that reason, and they filled the Kaʿbah with idols.',
+    picks:[
+      {q:'Who built the Kaʿbah?', options:['Ibrāhīm and his son Ismāʿīl','The kings of Yemen','The people of Madīnah']},
+      {q:'Why was the Kaʿbah built?', options:['To keep gold safe','So people would worship Allah alone','To be a market']}],
+    order:{ prompt:'Put the story of the Kaʿbah in order',
+            items:['Allah tells Ibrāhīm to build a house','Ibrāhīm and Ismāʿīl raise the walls','People come to worship Allah there','Long after, people fill it with idols'] },
+    tf:[ {s:'The Kaʿbah is in the city of Makkah.', a:true},
+         {s:'Ismāʿīl helped his father build the Kaʿbah.', a:true},
+         {s:'The Kaʿbah was built so people could worship idols.', a:false} ] },
 
-/* Lessons 27-40: two letters that make one sound, sight words and reading. */
-const SPECIAL_LESSONS = [
-  { title:'sh', teachName:'sh', letter:'sh', note:'Two letters, one sound: "shhh".', word:'ship', split:'sh · i · p', emoji:'🚢', parts:['sh','i','p'],
-    picks:[ {q:'Which word starts with sh?', options:['ship','tip','lip'], correct:0},
-            {q:'Which two letters make the "shhh" sound?', options:['ch','sh','th'], correct:1},
-            {q:'Which word ends with sh?', options:['fish','fin','fit'], correct:0} ] },
-  { title:'ch', teachName:'ch', letter:'ch', note:'Two letters, one sound: "ch" like a little train.', word:'chip', split:'ch · i · p', emoji:'🍟', parts:['ch','i','p'],
-    picks:[ {q:'Which word starts with ch?', options:['chin','shin','tin'], correct:0},
-            {q:'Which two letters make the "ch" sound?', options:['sh','th','ch'], correct:2},
-            {q:'Which word has ch in it?', options:['much','mush','must'], correct:0} ] },
-  { title:'th', teachName:'th', letter:'th', note:'Put your tongue between your teeth: "th".', word:'thumb', split:'th · u · mb', emoji:'👍', parts:['th','u','mb'],
-    picks:[ {q:'Which word starts with th?', options:['thin','shin','chin'], correct:0},
-            {q:'Which two letters make the "th" sound?', options:['th','sh','ph'], correct:0},
-            {q:'Which word has th in it?', options:['bath','back','bag'], correct:0} ] },
-  { title:'ng', teachName:'ng', letter:'ng', note:'The sound at the end of "ring".', word:'ring', split:'r · i · ng', emoji:'💍', parts:['r','i','ng'],
-    picks:[ {q:'Which word ends with ng?', options:['song','sock','sob'], correct:0},
-            {q:'Which two letters make the "ng" sound?', options:['nk','ng','gn'], correct:1},
-            {q:'Which word ends with ng?', options:['king','kid','kit'], correct:0} ] },
-  { title:'ee', teachName:'ee', letter:'ee', note:'Two e\'s make a long "eee".', word:'bee', split:'b · ee', emoji:'🐝', parts:['b','ee'],
-    picks:[ {q:'Which word has the "ee" sound?', options:['tree','trap','trot'], correct:0},
-            {q:'Which letters make the long "eee"?', options:['oo','ee','ai'], correct:1},
-            {q:'Which word rhymes with bee?', options:['see','sat','sun'], correct:0} ] },
-  { title:'oo', teachName:'oo', letter:'oo', note:'Two o\'s make a long "oooo".', word:'moon', split:'m · oo · n', emoji:'🌙', parts:['m','oo','n'],
-    picks:[ {q:'Which word has the "oo" sound?', options:['moon','man','mat'], correct:0},
-            {q:'Which letters make the long "oooo"?', options:['ee','ai','oo'], correct:2},
-            {q:'Which word rhymes with moon?', options:['spoon','spin','span'], correct:0} ] },
-  { title:'ai', teachName:'ai', letter:'ai', note:'a and i together say "ay".', word:'rain', split:'r · ai · n', emoji:'🌧️', parts:['r','ai','n'],
-    picks:[ {q:'Which word has the "ai" sound?', options:['rain','ran','run'], correct:0},
-            {q:'Which letters say "ay"?', options:['ai','oo','ch'], correct:0},
-            {q:'Which word rhymes with rain?', options:['train','trip','trot'], correct:0} ] },
-  { title:'ck', teachName:'ck', letter:'ck', note:'c and k together make one "k" sound at the end.', word:'duck', split:'d \u00b7 u \u00b7 ck', emoji:'\ud83e\udd86', parts:['d','u','ck'],
-    picks:[ {q:'Which word ends with ck?', options:['sock','sob','sod'], correct:0},
-            {q:'Which two letters make one "k" sound?', options:['ch','ck','sh'], correct:1},
-            {q:'Which word rhymes with duck?', options:['truck','trap','trip'], correct:0} ] },
-  { title:'Sight words 1', teachName:'the · and · is · it', letter:'the', note:'Some words we just learn by sight. Read them fast!', word:'the', split:'just know it', emoji:'👀',
-    picks:[ {q:'Which one is the word "the"?', options:['the','teh','hte'], correct:0, plain:true},
-            {q:'Which one is the word "and"?', options:['nad','and','dan'], correct:1, plain:true},
-            {q:'Which one is the word "is"?', options:['si','it','is'], correct:2, plain:true} ] },
-  { title:'Sight words 2', teachName:'was · you · they · said', letter:'you', note:'These words do not sound out neatly — learn them by sight.', word:'you', split:'just know it', emoji:'🙋',
-    picks:[ {q:'Which one is the word "you"?', options:['yuo','you','yoo'], correct:1, plain:true},
-            {q:'Which one is the word "was"?', options:['was','saw','wus'], correct:0, plain:true},
-            {q:'Which one is the word "said"?', options:['sed','siad','said'], correct:2, plain:true} ] },
-  { title:'Word family -at', teachName:'-at family', letter:'-at', note:'Change the first sound and you get a whole family of words.', word:'cat', split:'c · a · t', emoji:'🐱', parts:['c','a','t'],
-    picks:[ {q:'Which word is in the -at family?', options:['bat','bag','bud'], correct:0},
-            {q:'Which word is in the -at family?', options:['hop','hat','hut'], correct:1},
-            {q:'Which word is NOT in the -at family?', options:['mat','rat','rug'], correct:2} ] },
-  { title:'Rhyming words', teachName:'Rhymes', letter:'🎵', note:'Rhyming words end with the same sound.', word:'dog', split:'d · o · g', emoji:'🐶', parts:['d','o','g'],
-    picks:[ {q:'Which word rhymes with dog?', options:['log','leg','lip'], correct:0},
-            {q:'Which word rhymes with hen?', options:['hat','ten','tin'], correct:1},
-            {q:'Which word rhymes with sun?', options:['sit','sat','fun'], correct:2} ] },
-  { title:'Capital letters', teachName:'A a \u00b7 B b', letter:'A a', note:'Every letter has a big capital and a small letter. They say the same sound.', word:'Ant', split:'A \u00b7 n \u00b7 t', emoji:'\ud83d\udc1c', parts:['a','n','t'],
-    picks:[ {q:'Which is the capital letter for b?', options:['B','D','P'], correct:0, plain:true},
-            {q:'Which is the small letter for M?', options:['n','m','w'], correct:1, plain:true},
-            {q:'Sentences always start with a…', options:['small letter','capital letter','number'], correct:1, plain:true} ] },
-  { title:'Big finish', teachName:'Reader', letter:'🎉', note:'You can sound out words and read a whole sentence now.', word:'the big red bus', split:'read it slowly', emoji:'🚌',
-    picks:[ {q:'Read it: "The cat sat on the ___"', options:['mat','mud','moon'], correct:0, plain:true},
-            {q:'How many sounds are in the word "ship"?', options:['2','3','4'], correct:1, plain:true},
-            {q:'Which word says what a bee does?', options:['buzz','bell','ball'], correct:0, plain:true} ] }
+  { title:'The Year of the Elephant', teach:'Abrahah and the birds', emoji:'🐘', arabic:'عَامُ ٱلْفِيل',
+    story:'A proud king called Abrahah marched towards Makkah with a huge army and even an elephant, meaning to knock down the Kaʿbah. The people of Makkah could not stop him — but Allah could. He sent flocks of small birds carrying little stones, and the army was destroyed. That year became known as the Year of the Elephant.',
+    picks:[
+      {q:'What did Abrahah want to do?', options:['Destroy the Kaʿbah','Build a new Kaʿbah','Trade in Makkah']},
+      {q:'How did Allah stop the army?', options:['With a great flood','With flocks of small birds','With a strong wind']}],
+    order:{ prompt:'Put the Year of the Elephant in order',
+            items:['Abrahah gathers a huge army','The army marches towards Makkah','Allah sends flocks of birds','The army is destroyed'] },
+    tf:[ {s:'Abrahah brought an elephant with his army.', a:true},
+         {s:'The people of Makkah defeated the army themselves.', a:false},
+         {s:'Allah protected His House.', a:true} ] },
+
+  { title:'A Blessed Birth', teach:'Born in Makkah', emoji:'👶', arabic:'مُحَمَّد ﷺ',
+    story:'In that same year, in the city of Makkah, a baby boy was born to Āminah. His grandfather named him Muhammad ﷺ, which means "the praised one". His father ʿAbdullāh had died before he was even born, so from his very first day he was an orphan.',
+    picks:[
+      {q:'In which city was the Prophet ﷺ born?', options:['Madīnah','Makkah','Ṭāʾif']},
+      {q:'What does the name Muhammad mean?', options:['The praised one','The strong one','The traveller']}],
+    order:{ prompt:'Put the beginning of his life in order',
+            items:['His father ʿAbdullāh passes away','The baby is born in Makkah','His grandfather names him Muhammad','He grows up as an orphan'] },
+    tf:[ {s:'The Prophet ﷺ was born an orphan.', a:true},
+         {s:'His mother was called Āminah.', a:true},
+         {s:'He was born in Madīnah.', a:false} ] },
+
+  { title:'Out in the Desert', teach:'Ḥalīmah as-Saʿdiyyah', emoji:'🐑', arabic:'حَلِيمَة',
+    story:'It was the custom of Makkah to send babies to the open desert, where the air was clean and the Arabic was pure. A kind woman named Ḥalīmah as-Saʿdiyyah took baby Muhammad ﷺ home with her. She said that from the day he came, blessing came with him — her animals gave more milk and her family had enough.',
+    picks:[
+      {q:'Who cared for him in the desert?', options:['Ḥalīmah as-Saʿdiyyah','Khadījah','Umm Salamah']},
+      {q:'Why were babies sent to the desert?', options:['To learn to ride camels','For clean air and pure Arabic','Because Makkah was empty']}],
+    order:{ prompt:'Put the desert years in order',
+            items:['Ḥalīmah comes to Makkah looking for a baby','She takes Muhammad ﷺ home','Blessing comes to her family','He returns to his mother Āminah'] },
+    tf:[ {s:'Ḥalīmah found blessing in her home after he came.', a:true},
+         {s:'He learned pure Arabic in the desert.', a:true},
+         {s:'Ḥalīmah was his mother.', a:false} ] },
+
+  { title:'Cared For and Loved', teach:'His grandfather and uncle', emoji:'🤲', arabic:'أَبُو طَالِب',
+    story:'When Muhammad ﷺ was six, his mother Āminah passed away, and he was cared for by his grandfather ʿAbd al-Muṭṭalib, who loved him dearly. Two years later his grandfather died too, and his uncle Abū Ṭālib took him in. Abū Ṭālib protected him and kept him close for many, many years.',
+    picks:[
+      {q:'Who cared for him after his grandfather?', options:['His uncle Abū Ṭālib','A neighbour','He lived alone']},
+      {q:'How old was he when his mother died?', options:['Six years old','Twelve years old','Twenty years old']}],
+    order:{ prompt:'Put his childhood in order',
+            items:['He lives with his mother Āminah','Āminah passes away','His grandfather ʿAbd al-Muṭṭalib cares for him','His uncle Abū Ṭālib takes him in'] },
+    tf:[ {s:'Abū Ṭālib was his uncle.', a:true},
+         {s:'His grandfather was ʿAbd al-Muṭṭalib.', a:true},
+         {s:'He was raised by his father.', a:false} ] },
+
+  { title:'The Young Shepherd', teach:'Honest work', emoji:'🐏', arabic:'رَاعِي ٱلْغَنَم',
+    story:'As a boy, Muhammad ﷺ looked after sheep on the hills outside Makkah and earned his own keep. Later he said that every prophet had been a shepherd. Watching over animals taught him patience, care, and how to look after those who cannot look after themselves.',
+    picks:[
+      {q:'What work did he do as a boy?', options:['He looked after sheep','He sailed ships','He built houses']},
+      {q:'What did shepherding teach him?', options:['Patience and care','How to fight','How to write']}],
+    order:{ prompt:'Put a shepherd\u2019s day in order',
+            items:['He leads the sheep out to the hills','He watches over them all day','He keeps them safe from harm','He brings them home again'] },
+    tf:[ {s:'He earned his own keep as a shepherd.', a:true},
+         {s:'He said every prophet had been a shepherd.', a:true},
+         {s:'He never worked as a boy.', a:false} ] },
+
+  /* ---------- Map 2 · Al-Amīn ---------- */
+  { title:'The Trustworthy One', teach:'Al-Amīn', emoji:'✨', arabic:'ٱلْأَمِين',
+    story:'As he grew up, everyone in Makkah noticed something about Muhammad ﷺ: he never lied, he never cheated, and he always kept his promise. People trusted him so much that they left their valuables with him for safe keeping. They gave him a name that stuck — Al-Amīn, the Trustworthy.',
+    picks:[
+      {q:'What does Al-Amīn mean?', options:['The Trustworthy','The Brave','The Wealthy']},
+      {q:'Why did people trust him?', options:['He was very rich','He never lied and kept his promises','He was the strongest']}],
+    order:{ prompt:'Put it in order',
+            items:['He grows up in Makkah','People see he never lies','They leave their valuables with him','They call him Al-Amīn'] },
+    tf:[ {s:'Al-Amīn means the Trustworthy.', a:true},
+         {s:'People left their valuables with him.', a:true},
+         {s:'He was known for telling jokes that were untrue.', a:false} ] },
+
+  { title:'The Honest Trader', teach:'Journeys to Shām', emoji:'🐫', arabic:'ٱلتِّجَارَة',
+    story:'Muhammad ﷺ travelled north with the trading caravans to Shām. He weighed goods fairly, told buyers the truth about what he was selling, and never took more than his share. Traders came back saying they had never met anyone so honest in business.',
+    picks:[
+      {q:'Where did the caravans travel?', options:['North to Shām','South to Yemen only','Across the sea']},
+      {q:'How did he trade?', options:['Fairly and honestly','He charged too much','He hid faults in the goods']}],
+    order:{ prompt:'Put a trading journey in order',
+            items:['The caravan is loaded in Makkah','They travel north to Shām','The goods are sold honestly','The caravan returns home'] },
+    tf:[ {s:'He told buyers the truth about his goods.', a:true},
+         {s:'He weighed goods fairly.', a:true},
+         {s:'He took more than his share.', a:false} ] },
+
+  { title:'Khadījah', teach:'His first wife', emoji:'💍', arabic:'خَدِيجَة',
+    story:'Khadījah was a respected businesswoman of Makkah. When she heard how honest Muhammad ﷺ was, she asked him to trade for her, and her servant came back full of praise. She admired his character so much that she proposed marriage. Khadījah became his first wife and, for twenty-five years, his closest support.',
+    picks:[
+      {q:'What was Khadījah known for?', options:['Her business','Her poetry','Her horses']},
+      {q:'What did she admire about him?', options:['His character','His wealth','His height']}],
+    order:{ prompt:'Put their story in order',
+            items:['Khadījah hears of his honesty','She asks him to trade for her','Her servant praises him','They marry'] },
+    tf:[ {s:'Khadījah was a businesswoman.', a:true},
+         {s:'She was his first wife.', a:true},
+         {s:'She never believed in his honesty.', a:false} ] },
+
+  { title:'The Black Stone', teach:'A wise solution', emoji:'🪨', arabic:'ٱلْحَجَرُ ٱلْأَسْوَد',
+    story:'When the Kaʿbah was being rebuilt, the tribes argued fiercely about who would have the honour of lifting the Black Stone into place. They agreed to let the next person to walk in decide — and in walked Muhammad ﷺ. He laid the stone on a cloak, asked a man from each tribe to hold an edge, and they carried it together. Nobody was left out.',
+    picks:[
+      {q:'What were the tribes arguing about?', options:['Who would lift the Black Stone','Who would pay for the roof','Who would guard the door']},
+      {q:'How did he solve it?', options:['He decided alone','Each tribe held an edge of a cloak','He drew lots']}],
+    order:{ prompt:'Put the Black Stone story in order',
+            items:['The Kaʿbah is being rebuilt','The tribes argue over the stone','Muhammad ﷺ walks in','Every tribe carries it on one cloak'] },
+    tf:[ {s:'He used a cloak so every tribe could share the honour.', a:true},
+         {s:'The tribes were about to fight.', a:true},
+         {s:'One tribe alone carried the stone.', a:false} ] },
+
+  { title:'The Cave of Ḥirāʾ', teach:'Quiet and thinking', emoji:'🕯️', arabic:'غَارُ حِرَاء',
+    story:'Muhammad ﷺ could not accept the idols and the unfairness he saw around him. He began climbing a mountain outside Makkah to a small cave called Ḥirāʾ, where he would stay alone for days, thinking about Allah and about the truth. Khadījah would send food up to him.',
+    picks:[
+      {q:'What was the cave called?', options:['Ḥirāʾ','Thawr','Ṣafā']},
+      {q:'Why did he go there?', options:['To hide from the heat','To be alone and think about Allah','To keep his sheep']}],
+    order:{ prompt:'Put his visits to the cave in order',
+            items:['He is troubled by the idols','He climbs the mountain','He stays alone in the cave of Ḥirāʾ','Khadījah sends food up to him'] },
+    tf:[ {s:'He went to the cave to worship and think.', a:true},
+         {s:'Khadījah supported him with food.', a:true},
+         {s:'The cave was called Thawr.', a:false} ] },
+
+  { title:'Read!', teach:'The first revelation', emoji:'📖', arabic:'ٱقْرَأْ',
+    story:'One night in Ramaḍān, when he was forty years old, the Angel Jibrīl came to him in the cave and said, "Iqraʾ" — "Read!" He answered that he could not read. The angel held him and said it again, then taught him the first words of the Qurʾān: "Read in the name of your Lord who created." He hurried home shaking, and Khadījah wrapped him in a cloak and comforted him.',
+    picks:[
+      {q:'Which angel came to him?', options:['Jibrīl','Isrāfīl','Mīkāʾīl']},
+      {q:'What was the first word revealed?', options:['Iqraʾ — Read!','Ṣalli — Pray!','Qum — Stand!']}],
+    order:{ prompt:'Put the first revelation in order',
+            items:['He is alone in the cave of Ḥirāʾ','Jibrīl comes and says "Read!"','The first verses of the Qurʾān are taught','He hurries home to Khadījah'] },
+    tf:[ {s:'The first revelation came in the cave of Ḥirāʾ.', a:true},
+         {s:'He was forty years old.', a:true},
+         {s:'He could read and write before this.', a:false} ] },
+
+  /* ---------- Map 3 · The First Muslims ---------- */
+  { title:'The First to Believe', teach:'Khadījah believes', emoji:'💚', arabic:'أَوَّلُ مُؤْمِنَة',
+    story:'When Muhammad ﷺ told Khadījah what had happened, she did not doubt him for a moment. "Allah would never disgrace you," she said, "for you keep good ties, carry the weak, and help those in need." She was the very first person to believe in him. She took him to her cousin Waraqah, an old scholar, who said the same angel had come to Mūsā.',
+    picks:[
+      {q:'Who was the first to believe?', options:['Khadījah','Abū Bakr','ʿAlī']},
+      {q:'Who was Waraqah?', options:['Khadījah\u2019s cousin, an old scholar','A merchant from Yemen','A poet of Makkah']}],
+    order:{ prompt:'Put the story in order',
+            items:['He tells Khadījah what happened','She comforts him and believes','They visit her cousin Waraqah','Waraqah says this is the same angel sent to Mūsā'] },
+    tf:[ {s:'Khadījah believed him straight away.', a:true},
+         {s:'Waraqah recognised the sign of prophethood.', a:true},
+         {s:'Khadījah laughed at him.', a:false} ] },
+
+  { title:'Friends Who Believed', teach:'Abū Bakr and ʿAlī', emoji:'🤝', arabic:'أَبُو بَكْر',
+    story:'Abū Bakr was his closest friend, and when he heard the message he believed at once, without asking for a single proof. Young ʿAlī, who lived in the Prophet\u2019s home, was the first child to believe. Zayd ibn Ḥārithah believed too. Abū Bakr then quietly brought many others to Islam.',
+    picks:[
+      {q:'How did Abū Bakr respond?', options:['He believed at once','He asked for many proofs','He refused']},
+      {q:'Who was the first child to believe?', options:['ʿAlī','Bilāl','ʿUmar']}],
+    order:{ prompt:'Put the first believers in order',
+            items:['Khadījah believes first','Abū Bakr believes at once','Young ʿAlī believes','Abū Bakr brings others to Islam'] },
+    tf:[ {s:'Abū Bakr was his closest friend.', a:true},
+         {s:'ʿAlī lived in the Prophet\u2019s home.', a:true},
+         {s:'Abū Bakr needed a long time to believe.', a:false} ] },
+
+  { title:'The Quiet Years', teach:'The house of al-Arqam', emoji:'🤫', arabic:'دَارُ ٱلْأَرْقَم',
+    story:'For about three years the message was shared quietly. The small group of Muslims would meet in the house of a young man called al-Arqam, near the hill of Ṣafā, to learn the Qurʾān and pray together away from watching eyes.',
+    picks:[
+      {q:'Where did the first Muslims meet?', options:['In the house of al-Arqam','Inside the Kaʿbah','In a cave']},
+      {q:'How long was the message kept quiet?', options:['About three years','About ten years','Only one week']}],
+    order:{ prompt:'Put the quiet years in order',
+            items:['The message is shared with close friends','The Muslims meet in al-Arqam\u2019s house','They learn the Qurʾān together','More people join in secret'] },
+    tf:[ {s:'They met away from watching eyes.', a:true},
+         {s:'Al-Arqam was a young man.', a:true},
+         {s:'The message was announced publicly from day one.', a:false} ] },
+
+  { title:'Calling from Ṣafā', teach:'The open call', emoji:'📣', arabic:'ٱلصَّفَا',
+    story:'Then Allah commanded him to call people openly. He climbed the hill of Ṣafā and called out to the tribes. "If I told you an army was behind this hill, would you believe me?" They said, "Yes — we have never known you to lie." Then he told them to worship Allah alone. Some listened; many turned away angrily.',
+    picks:[
+      {q:'Which hill did he climb?', options:['Ṣafā','Uḥud','Thawr']},
+      {q:'What did the people admit about him?', options:['They had never known him to lie','That he was the richest','That he was the oldest']}],
+    order:{ prompt:'Put the open call in order',
+            items:['Allah commands him to call openly','He climbs the hill of Ṣafā','He asks if they would believe him','He calls them to worship Allah alone'] },
+    tf:[ {s:'The people admitted he had never lied.', a:true},
+         {s:'Some people accepted and some refused.', a:true},
+         {s:'Everyone in Makkah accepted straight away.', a:false} ] },
+
+  { title:'Bilāl Stays Firm', teach:'Patience under hardship', emoji:'🔥', arabic:'بِلَال',
+    story:'Bilāl ibn Rabāḥ was a slave in Makkah. When he accepted Islam, his master laid him on the burning sand under a heavy stone to make him give it up. Bilāl only said one word again and again: "Aḥad, Aḥad" — One, One. Abū Bakr bought his freedom, and later Bilāl became the first to call the adhān.',
+    picks:[
+      {q:'What word did Bilāl repeat?', options:['Aḥad — One','Ṣabr — Patience','Nūr — Light']},
+      {q:'Who set Bilāl free?', options:['Abū Bakr','ʿUmar','Khadījah']}],
+    order:{ prompt:'Put Bilāl\u2019s story in order',
+            items:['Bilāl accepts Islam','He is harmed for his faith','He says only "Aḥad, Aḥad"','Abū Bakr buys his freedom'] },
+    tf:[ {s:'Bilāl later called the adhān.', a:true},
+         {s:'Bilāl stayed firm in his faith.', a:true},
+         {s:'Bilāl gave up Islam under pressure.', a:false} ] },
+
+  { title:'Across the Sea', teach:'Abyssinia', emoji:'⛵', arabic:'ٱلْحَبَشَة',
+    story:'Life became so hard for the Muslims that the Prophet ﷺ told a group to sail to Abyssinia, where a just Christian king called the Negus ruled. Makkah sent men to demand they be handed back. Jaʿfar stood before the king and recited verses about ʿĪsā and Maryam. The Negus wept and said, "You are safe in my land."',
+    picks:[
+      {q:'Where did the Muslims go?', options:['Abyssinia','Yemen','Egypt']},
+      {q:'What did the Negus decide?', options:['They could stay safely','To send them back','To imprison them']}],
+    order:{ prompt:'Put the journey in order',
+            items:['Life in Makkah becomes very hard','A group sails to Abyssinia','Makkah sends men to bring them back','The Negus lets them stay in safety'] },
+    tf:[ {s:'The Negus was a just king.', a:true},
+         {s:'Jaʿfar recited verses about ʿĪsā and Maryam.', a:true},
+         {s:'The Muslims were sent back to Makkah.', a:false} ] },
+
+  /* ---------- Map 4 · Patience and Hope ---------- */
+  { title:'Three Hard Years', teach:'The boycott', emoji:'📜', arabic:'ٱلْمُقَاطَعَة',
+    story:'The leaders of Makkah wrote an agreement and hung it in the Kaʿbah: nobody was to buy from, sell to, or marry into the Prophet\u2019s family. For about three years they lived in a narrow valley, so hungry that children cried through the night. In the end some fair-minded men of Makkah tore the agreement up.',
+    picks:[
+      {q:'What was the boycott?', options:['No buying, selling, or marrying with them','A tax on traders','A ban on travel']},
+      {q:'How did it end?', options:['Men of Makkah tore the agreement up','The Muslims paid money','It never ended']}],
+    order:{ prompt:'Put the boycott in order',
+            items:['The leaders write the agreement','It is hung inside the Kaʿbah','The family lives hungry in the valley','Fair-minded men tear it up'] },
+    tf:[ {s:'The boycott lasted about three years.', a:true},
+         {s:'The Muslims stayed patient through it.', a:true},
+         {s:'The boycott was easy and comfortable.', a:false} ] },
+
+  { title:'The Year of Sorrow', teach:'ʿĀm al-Ḥuzn', emoji:'🌧️', arabic:'عَامُ ٱلْحُزْن',
+    story:'Soon after the boycott ended, Khadījah passed away — the wife who had believed in him first and stood by him for twenty-five years. In the same year his uncle Abū Ṭālib, who had always protected him, died too. That year is remembered as ʿĀm al-Ḥuzn, the Year of Sorrow.',
+    picks:[
+      {q:'Who did he lose that year?', options:['Khadījah and Abū Ṭālib','Abū Bakr and ʿUmar','Bilāl and Zayd']},
+      {q:'What is that year called?', options:['The Year of Sorrow','The Year of the Elephant','The Year of Victory']}],
+    order:{ prompt:'Put the Year of Sorrow in order',
+            items:['The boycott finally ends','Khadījah passes away','Abū Ṭālib passes away','The year is named ʿĀm al-Ḥuzn'] },
+    tf:[ {s:'Khadījah supported him for twenty-five years.', a:true},
+         {s:'Abū Ṭālib had protected him for many years.', a:true},
+         {s:'That year was his happiest.', a:false} ] },
+
+  { title:'The Day of Ṭāʾif', teach:'Mercy, not revenge', emoji:'🍇', arabic:'ٱلطَّائِف',
+    story:'He walked to the town of Ṭāʾif to invite its people to Islam, and they drove him out with stones until his feet bled. Sitting under a vine, he asked Allah only for help, blaming no one but himself. An angel offered to crush the town between two mountains. He said no — and prayed that their children might one day worship Allah.',
+    picks:[
+      {q:'What did the angel offer?', options:['To crush the town between two mountains','To carry him home','To make it rain']},
+      {q:'What did the Prophet ﷺ choose?', options:['Mercy, and duʿāʾ for their children','Revenge','To never speak again']}],
+    order:{ prompt:'Put the day of Ṭāʾif in order',
+            items:['He walks to Ṭāʾif to invite them','The people drive him out with stones','He rests and makes duʿāʾ','He refuses the angel and asks for mercy'] },
+    tf:[ {s:'He refused to have Ṭāʾif destroyed.', a:true},
+         {s:'He hoped their children would worship Allah.', a:true},
+         {s:'He asked Allah to punish them at once.', a:false} ] },
+
+  { title:'The Night Journey', teach:'Isrāʾ and Miʿrāj', emoji:'🌙', arabic:'ٱلْإِسْرَاء وَٱلْمِعْرَاج',
+    story:'One night Allah took His Prophet ﷺ from Makkah to Masjid al-Aqṣā in Jerusalem, where he led all the earlier prophets in prayer. Then he was raised through the heavens. On that night Allah gave the Muslims their greatest gift: the five daily prayers.',
+    picks:[
+      {q:'Where was he taken first?', options:['Masjid al-Aqṣā in Jerusalem','Madīnah','Ṭāʾif']},
+      {q:'What was given that night?', options:['The five daily prayers','Fasting in Ramaḍān','Zakāh']}],
+    order:{ prompt:'Put the Night Journey in order',
+            items:['He is taken from Makkah by night','He reaches Masjid al-Aqṣā','He leads the prophets in prayer','He is raised through the heavens'] },
+    tf:[ {s:'The five daily prayers were given on this night.', a:true},
+         {s:'He led the earlier prophets in prayer.', a:true},
+         {s:'The journey took many months.', a:false} ] },
+
+  { title:'Promises at ʿAqabah', teach:'The people of Yathrib', emoji:'🤲', arabic:'بَيْعَةُ ٱلْعَقَبَة',
+    story:'At the yearly pilgrimage he met a small group from a city to the north called Yathrib. They listened, believed, and carried Islam home. The next year more came, and at a place called ʿAqabah they promised to protect the Prophet ﷺ as they would protect their own families, and invited him to their city.',
+    picks:[
+      {q:'Where were these people from?', options:['Yathrib','Ṭāʾif','Abyssinia']},
+      {q:'What did they promise at ʿAqabah?', options:['To protect him like their own families','To pay him money','To keep Islam secret forever']}],
+    order:{ prompt:'Put the pledges in order',
+            items:['He meets men from Yathrib at the pilgrimage','They believe and carry Islam home','More come the following year','They pledge at ʿAqabah to protect him'] },
+    tf:[ {s:'Yathrib later became Madīnah.', a:true},
+         {s:'They invited him to their city.', a:true},
+         {s:'They refused to help him.', a:false} ] },
+
+  { title:'The Cave of Thawr', teach:'The Hijrah begins', emoji:'🕸️', arabic:'ٱلْهِجْرَة',
+    story:'Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. Abū Bakr was afraid, and the Prophet ﷺ told him, "Do not grieve — Allah is with us." The Hijrah is where the Islamic calendar begins.',
+    picks:[
+      {q:'Who travelled with him?', options:['Abū Bakr','ʿUmar','Bilāl']},
+      {q:'What did he say inside the cave?', options:['"Do not grieve — Allah is with us"','"Let us go back"','"Call the others"']}],
+    order:{ prompt:'Put the Hijrah in order',
+            items:['Allah gives permission to migrate','They leave Makkah at night','They hide in the cave of Thawr','They travel on towards Yathrib'] },
+    tf:[ {s:'The Islamic calendar begins with the Hijrah.', a:true},
+         {s:'They hid in the cave for three days.', a:true},
+         {s:'They travelled to Ṭāʾif.', a:false} ] },
+
+  /* ---------- Map 5 · The City of the Prophet ﷺ ---------- */
+  { title:'Welcome to Madīnah', teach:'The city rejoices', emoji:'🌴', arabic:'ٱلْمَدِينَة',
+    story:'The people of Yathrib went out day after day to watch the road. When he finally arrived they sang with joy, and every family begged him to stay with them. He let his camel walk freely and said she was under Allah\u2019s command — where she knelt, he would stay. The city was renamed al-Madīnah, the City of the Prophet ﷺ.',
+    picks:[
+      {q:'How did he choose where to stay?', options:['He let his camel choose','He picked the largest house','He drew lots']},
+      {q:'What was Yathrib renamed?', options:['Al-Madīnah','Makkah','Ṭāʾif']}],
+    order:{ prompt:'Put the arrival in order',
+            items:['The people watch the road each day','He arrives and they sing with joy','Every family invites him to stay','His camel kneels and he stays there'] },
+    tf:[ {s:'Yathrib became known as Madīnah.', a:true},
+         {s:'The people were overjoyed to see him.', a:true},
+         {s:'Nobody wanted him in their home.', a:false} ] },
+
+  { title:'The Masjid and the Bond', teach:'Muhājirūn and Anṣār', emoji:'🕌', arabic:'ٱلْمَسْجِدُ ٱلنَّبَوِيّ',
+    story:'The first thing he built in Madīnah was a masjid, and he carried the bricks himself alongside everyone else. Then he joined each Muhājir who had left everything in Makkah with an Anṣārī of Madīnah, as brothers. The Anṣār shared their homes, their food, and their land, and history has never seen generosity like it.',
+    picks:[
+      {q:'What did he build first?', options:['A masjid','A market','A wall']},
+      {q:'Who were the Anṣār?', options:['The helpers of Madīnah','The traders of Makkah','The kings of Yemen']}],
+    order:{ prompt:'Put the first days in Madīnah in order',
+            items:['He arrives in Madīnah','A masjid is built, and he carries bricks too','Muhājirūn and Anṣār are paired as brothers','The Anṣār share their homes and food'] },
+    tf:[ {s:'He worked on the masjid with his own hands.', a:true},
+         {s:'The Muhājirūn had left their homes in Makkah.', a:true},
+         {s:'The Anṣār refused to share anything.', a:false} ] },
+
+  { title:'The Day of Badr', teach:'Allah helps the few', emoji:'🌟', arabic:'بَدْر',
+    story:'Two years after the Hijrah the Muslims faced a far larger army at a place called Badr. They were only about three hundred, poorly equipped, against nearly a thousand. The Prophet ﷺ raised his hands and asked Allah for help all night long. Allah gave them victory, and Badr became a sign that help comes from Allah, not from numbers.',
+    picks:[
+      {q:'How many Muslims were at Badr?', options:['About three hundred','About three thousand','About thirty']},
+      {q:'What did Badr teach?', options:['Help comes from Allah, not numbers','Big armies always win','Fighting solves everything']}],
+    order:{ prompt:'Put the day of Badr in order',
+            items:['A far larger army marches out','The small Muslim group meets them at Badr','The Prophet ﷺ prays all night for help','Allah grants them victory'] },
+    tf:[ {s:'The Muslims were far fewer in number.', a:true},
+         {s:'The Prophet ﷺ made long duʿāʾ before the battle.', a:true},
+         {s:'The Muslims had the bigger army.', a:false} ] },
+
+  { title:'The Trench', teach:'Salmān\u2019s idea', emoji:'🛡️', arabic:'ٱلْخَنْدَق',
+    story:'A huge army came to surround Madīnah. Salmān al-Fārisī suggested something the Arabs had never done: dig a deep trench across the open side of the city. Everyone dug together, hungry and cold, singing as they worked — the Prophet ﷺ carrying earth with them. The army could not cross, and after weeks a fierce wind sent them home.',
+    picks:[
+      {q:'Whose idea was the trench?', options:['Salmān al-Fārisī','Abū Bakr','Bilāl']},
+      {q:'Why did the army leave?', options:['They could not cross, and a fierce wind came','They ran out of horses','They were invited in']}],
+    order:{ prompt:'Put the Trench in order',
+            items:['A huge army marches on Madīnah','Salmān suggests digging a trench','Everyone digs together, the Prophet ﷺ too','The army cannot cross and goes home'] },
+    tf:[ {s:'The Prophet ﷺ dug alongside the companions.', a:true},
+         {s:'The trench protected the open side of Madīnah.', a:true},
+         {s:'Only the leaders did the digging.', a:false} ] },
+
+  { title:'Return to Makkah', teach:'The day of forgiveness', emoji:'🕊️', arabic:'فَتْحُ مَكَّة',
+    story:'Eight years after leaving as a hunted man, he returned to Makkah with ten thousand Muslims — and the city surrendered without a battle. He rode in with his head bowed low in thankfulness. To the people who had hurt him for years he said: "Go — you are free." The idols were cleared from the Kaʿbah, and Bilāl climbed up to call the adhān.',
+    picks:[
+      {q:'What did he say to the people of Makkah?', options:['"Go — you are free"','"Leave the city"','"Pay for what you did"']},
+      {q:'Who called the adhān that day?', options:['Bilāl','Abū Bakr','Zayd']}],
+    order:{ prompt:'Put the return to Makkah in order',
+            items:['He returns after eight years','The city surrenders without a battle','He forgives the people of Makkah','The idols are cleared and the adhān is called'] },
+    tf:[ {s:'Makkah was taken without a battle.', a:true},
+         {s:'He forgave those who had harmed him.', a:true},
+         {s:'He took revenge on the people of Makkah.', a:false} ] },
+
+  { title:'The Farewell', teach:'His last advice', emoji:'🤍', arabic:'حَجَّةُ ٱلْوَدَاع',
+    story:'In his last year he made Ḥajj with over a hundred thousand Muslims and gave his farewell sermon on the plain of ʿArafah. He told them that no Arab is better than a non-Arab except by taqwā, that women have rights, that a Muslim\u2019s life and property are sacred, and that he was leaving them the Qurʾān. Soon after, he passed away in Madīnah — and his message has been carried ever since.',
+    picks:[
+      {q:'Where did he give the farewell sermon?', options:['The plain of ʿArafah','Inside the Kaʿbah','On Mount Uḥud']},
+      {q:'What makes one person better than another?', options:['Taqwā — awareness of Allah','Their tribe','Their wealth']}],
+    order:{ prompt:'Put his final year in order',
+            items:['He makes Ḥajj with over a hundred thousand','He gives the farewell sermon at ʿArafah','He reminds them to hold to the Qurʾān','He passes away in Madīnah'] },
+    tf:[ {s:'He taught that no Arab is better than a non-Arab except by taqwā.', a:true},
+         {s:'He left the Qurʾān with his ummah.', a:true},
+         {s:'He said tribe and wealth decide who is best.', a:false} ] }
 ];
 
 const MAPS = [
-  { title:'Map 1 · First Sounds',        from:0,  to:10, scene:'meadow',
-    cert:{ en:'First Sounds', ar:'', sub:'The letter sounds s, a, t, p, i, n, m, d, g and o — heard, found and blended.' } },
-  { title:'Map 2 · More Sounds',         from:10, to:20, scene:'desert',
-    cert:{ en:'More Sounds', ar:'', sub:'The letter sounds c, k, e, u, r, h, b, f, l and j — and the words they build.' } },
-  { title:'Map 3 · Two Letters, One Sound', from:20, to:30, scene:'ocean',
-    cert:{ en:'Two Letters, One Sound', ar:'', sub:'v, w, x, y, z and q, plus the digraphs sh, ch, th and ng.' } },
-  { title:'Map 4 · Reading Time',        from:30, to:40, scene:'sky',
-    cert:{ en:'Reading Time', ar:'', sub:'Vowel teams, sight words, word families and reading whole words aloud.' } }
+  { title:'Map 1 · Makkah Long Ago',        from:0,  to:6,  scene:'valley',
+    cert:{ en:'Makkah Long Ago', ar:'مَكَّةُ ٱلْقَدِيمَة', sub:'The building of the Kaʿbah, the Year of the Elephant, and the childhood of the Prophet ﷺ.' } },
+  { title:'Map 2 · Al-Amīn',                from:6,  to:12, scene:'hills',
+    cert:{ en:'Al-Amīn, the Trustworthy', ar:'ٱلْأَمِين', sub:'His honesty, his marriage to Khadījah, the Black Stone, and the first revelation in Ḥirāʾ.' } },
+  { title:'Map 3 · The First Muslims',      from:12, to:18, scene:'city',
+    cert:{ en:'The First Muslims', ar:'أَوَّلُ ٱلْمُسْلِمِين', sub:'Khadījah, Abū Bakr and ʿAlī, the house of al-Arqam, the call from Ṣafā, Bilāl, and Abyssinia.' } },
+  { title:'Map 4 · Patience and Hope',      from:18, to:24, scene:'night',
+    cert:{ en:'Patience and Hope', ar:'ٱلصَّبْرُ وَٱلرَّجَاء', sub:'The boycott, the Year of Sorrow, Ṭāʾif, the Night Journey, ʿAqabah, and the Hijrah.' } },
+  { title:'Map 5 · The City of the Prophet ﷺ', from:24, to:30, scene:'oasis',
+    cert:{ en:'The City of the Prophet ﷺ', ar:'ٱلْمَدِينَة', sub:'Madīnah welcomes him — the masjid, brotherhood, Badr, the Trench, the return to Makkah, and the farewell.' } }
 ];
-const TOTAL_LESSONS = 40;
-const CERT_PREFIX = 'ENQ';
-const COURSE_LINE = 'English Reading Quest';
+const TOTAL_LESSONS = 30;
+const CERT_PREFIX = 'SRQ';
+const COURSE_LINE = 'Seerah Quest';
 const COINS_PER_GAME = 2;      // each mini-game inside a lesson
 const COINS_LESSON_BONUS = 5;  // finishing the lesson
 const COINS_PERFECT_BONUS = 5; // finishing with no mistakes
 
 /* ===================== STATE ===================== */
-const STORAGE_KEY = 'kids-english-quest-progress';
-const SOUND_KEY = 'kids-english-quest-sound';
+const STORAGE_KEY = 'kids-seerah-quest-progress';
+const SOUND_KEY = 'kids-seerah-quest-sound';
 let profile = null;
 let viewMap = 0;
 let lesson = null;   // { index, steps, stepIndex, mistakes, cleared[], showIntro, coins }
@@ -917,18 +1150,6 @@ function playWrong(){ beep(180, 0.2, 'sawtooth'); }
 function playCoin(){ beep(1046, 0.08, 'square'); setTimeout(()=>beep(1568,0.12,'square'), 70); }
 function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
 
-/* Say a letter sound or word aloud, slowly enough for a young reader. */
-function speakOut(text){
-  if(!soundOn || !text) return;
-  try{
-    if(!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = 0.72;
-    window.speechSynthesis.speak(u);
-  }catch(e){}
-}
 function setSound(on){
   soundOn = on;
   try{ localStorage.setItem(SOUND_KEY, on ? '1' : '0'); }catch(e){}
@@ -968,119 +1189,42 @@ function escapeHtml(s){
 
 /* ===================== LESSON BUILDING ===================== */
 function lessonTitle(idx){
-  if(idx < LETTERS.length) return 'Lesson ' + (idx + 1) + ' \u00b7 ' + LETTERS[idx].letter;
-  return 'Lesson ' + (idx + 1) + ' \u00b7 ' + SPECIAL_LESSONS[idx - LETTERS.length].title;
+  return 'Lesson ' + (idx + 1) + ' · ' + SEERAH[idx].title;
 }
 
-function buildLetterSteps(idx){
-  const L = LETTERS[idx];
-  const others = LETTERS.filter(x => x.letter !== L.letter);
-  const steps = [];
-
-  steps.push({
-    type:'meet', icon:'\ud83d\udc40', label:'Meet it',
-    gameTitle:'Meet the Sound', gameIntro:'Look at the letter, hear the sound it makes, and see a word that uses it.',
-    letter:L
-  });
-
-  const lookAlike = (LOOKALIKES[L.letter] || []).slice(0, 2);
-  const distractors = shuffle(others.filter(x => !lookAlike.includes(x.letter)))
-                        .slice(0, 3 - lookAlike.length).map(x => x.letter);
-  steps.push({
-    type:'pick', icon:'\ud83d\udd0e', label:'Find it',
-    gameTitle:'Find the Letter', gameIntro:'Some letters look almost the same. Look closely and tap the right one.',
-    prompt:'Which letter makes the "' + L.sound + '" sound?',
-    sub:'Look carefully — b, d, p and q love to trick us!',
-    options: shuffle(lookAlike.concat(distractors).concat([L.letter]))
-               .map(ch => ({ show:ch, kind:'letter', correct: ch === L.letter })),
-    cols:4, speak:L.sound
-  });
-
-  const soundChoices = shuffle(others.filter(x => x.sound !== L.sound)).slice(0, 3)
-                         .map(x => ({ show:x.sound, kind:'name', correct:false }));
-  soundChoices.push({ show:L.sound, kind:'name', correct:true });
-  steps.push({
-    type:'pick', icon:'\ud83d\udd0a', label:'Sound',
-    gameTitle:'What Sound?', gameIntro:'Every letter makes a sound. Tap the sound this letter makes.',
-    prompt:'What sound does this letter make?',
-    heroLetter:L.letter,
-    options: shuffle(soundChoices),
-    cols:2, speak:L.sound
-  });
-
-  const wordChoices = shuffle(others).slice(0, 2).map(x => ({ show:x.word, sub:x.emoji, kind:'word', correct:false }));
-  wordChoices.push({ show:L.word, sub:L.emoji, kind:'word', correct:true });
-  steps.push({
-    type:'pick', icon:'\ud83d\uddbc\ufe0f', label:'Word',
-    gameTitle:'Find the Word', gameIntro:'Say each word out loud. Tap the one that uses our letter.',
-    prompt:'Which word uses the letter ' + L.letter + ' ?',
-    sub:'Tap the picture word that uses this letter.',
-    options: shuffle(wordChoices),
-    cols:3, speak:L.word
-  });
-
-  const gridSize = 12, targetCount = 3;
-  const cells = [];
-  for(let i = 0; i < targetCount; i++) cells.push({ ch:L.letter, target:true });
-  const pool = shuffle(others).map(x => x.letter);
-  for(let i = 0; cells.length < gridSize; i++) cells.push({ ch: pool[i % pool.length], target:false });
-  steps.push({
-    type:'hunt', icon:'\ud83e\udde9', label:'Hunt',
-    gameTitle:'Letter Hunt', gameIntro:'Our letter is hiding in the box. Tap every one you can find!',
-    prompt:'Find all ' + targetCount + ' of the letter ' + L.letter,
-    sub:'Tap every one you can see.',
-    cells: shuffle(cells), need: targetCount
-  });
-
-  steps.push({
-    type:'blend', icon:'\ud83e\udee7', label:'Blend',
-    gameTitle:'Blend a Word', gameIntro:'We are going to use sound talk to read a word. Say each sound, then say the word.',
-    parts:L.parts, word:L.word, wordEn:L.split, emoji:L.emoji
-  });
-
-  return steps;
-}
-
-function buildSpecialSteps(idx){
-  const sp = SPECIAL_LESSONS[idx - LETTERS.length];
-  const steps = [{
-    type:'meet', icon:'\ud83d\udc40', label:'Learn it',
-    gameTitle:'Learn It', gameIntro:'Look and listen carefully — this is your new reading skill.',
-    letter:{ letter:sp.letter, name:sp.teachName, word:sp.word, wordEn:sp.split, emoji:sp.emoji, note:sp.note }
-  }];
-  const icons = ['\ud83d\udd0e','\ud83d\udd24','\ud83d\uddbc\ufe0f'];
-  const titles = ['Look and Choose', 'Read and Choose', 'Think and Choose'];
-  sp.picks.forEach((p, i) => {
-    steps.push({
-      type:'pick', icon:icons[i % icons.length], label:'Try ' + (i + 1),
-      gameTitle:titles[i % titles.length], gameIntro:'Read each choice, then tap your answer.',
-      prompt:p.q,
-      sub: p.plain ? '' : 'Read each one, then tap your answer.',
-      options: shuffle(p.options.map((o, oi) => ({ show:o, kind: p.plain ? 'name' : 'word', correct: oi === p.correct }))),
-      cols: p.options.length >= 3 ? 3 : 2,
-      speak: p.plain ? null : sp.word
-    });
-  });
-  if(sp.parts){
-    steps.push({
-      type:'blend', icon:'\ud83e\udee7', label:'Blend',
-      gameTitle:'Blend a Word', gameIntro:'We are going to use sound talk to read a word. Say each sound, then say the word.',
-      parts:sp.parts, word:sp.word, wordEn:sp.split, emoji:sp.emoji
-    });
-  }
-  return steps;
-}
-
+/* Each lesson is the same shape: hear the story, answer it, order it, then true or false.
+   In the data the correct answer is always written first, and the choices are shuffled here. */
 function buildLesson(idx){
-  return {
-    index: idx,
-    steps: idx < LETTERS.length ? buildLetterSteps(idx) : buildSpecialSteps(idx),
-    stepIndex: 0,
-    mistakes: 0,
-    cleared: [],
-    coins: 0,
-    showIntro: true
-  };
+  const S = SEERAH[idx];
+  const steps = [{
+    type:'story', icon:'📖', label:'The story',
+    gameTitle:'The Story', gameIntro:'Listen carefully to what happened — the games come after.',
+    data:S
+  }];
+
+  S.picks.forEach((p, i) => {
+    steps.push({
+      type:'pick', icon: i === 0 ? '❓' : '💡', label:'Question ' + (i + 1),
+      gameTitle:'Story Question', gameIntro:'Read every answer, then tap the one that is right.',
+      prompt:p.q,
+      options: shuffle(p.options.map((o, oi) => ({ show:o, correct: oi === 0 }))),
+      cols:1
+    });
+  });
+
+  steps.push({
+    type:'order', icon:'🔢', label:'In order',
+    gameTitle:'Put It In Order', gameIntro:'Think about what happened first, and tap them one by one in order.',
+    prompt:S.order.prompt, items:S.order.items
+  });
+
+  steps.push({
+    type:'tf', icon:'👍', label:'True or false',
+    gameTitle:'True or False', gameIntro:'Listen to each sentence and say whether it is true or false.',
+    items:S.tf
+  });
+
+  return { index:idx, steps, stepIndex:0, mistakes:0, cleared:[], coins:0, showIntro:true };
 }
 
 /* ===================== SCREENS ===================== */
@@ -1093,21 +1237,25 @@ function showScreen(id){
 
 /* ===================== MAP ===================== */
 const SCENES = {
-  meadow: { sky:'#bfe9fb', ground:'#c9edb0', deco:[
-    {e:'🌳', x:80,  y:170, s:60}, {e:'🌳', x:930, y:520, s:56}, {e:'🌼', x:180, y:560, s:34},
-    {e:'🦋', x:620, y:120, s:34}, {e:'🌿', x:430, y:585, s:32}, {e:'🐇', x:760, y:250, s:36}
+  valley: { sky:'#ffe0a8', ground:'#f0d59a', deco:[
+    {e:'🕋', x:105, y:200, s:52}, {e:'⛰️', x:900, y:170, s:58}, {e:'🌴', x:255, y:565, s:42},
+    {e:'🐫', x:700, y:545, s:48}, {e:'☀️', x:520, y:105, s:44}, {e:'🏜️', x:430, y:590, s:36}
   ]},
-  desert: { sky:'#ffe6b5', ground:'#f2d79b', deco:[
-    {e:'🌵', x:90,  y:200, s:56}, {e:'🐫', x:880, y:480, s:56}, {e:'🏜️', x:520, y:120, s:40},
-    {e:'🦂', x:300, y:575, s:30}, {e:'🌴', x:700, y:180, s:50}, {e:'⛺', x:160, y:520, s:44}
+  hills: { sky:'#ffd6a5', ground:'#e6c89c', deco:[
+    {e:'⛰️', x:110, y:185, s:60}, {e:'🌄', x:880, y:520, s:52}, {e:'🕯️', x:620, y:120, s:38},
+    {e:'🐐', x:300, y:575, s:38}, {e:'🪨', x:770, y:250, s:34}, {e:'🌤️', x:180, y:545, s:38}
   ]},
-  ocean: { sky:'#cdefff', ground:'#a9e0f0', deco:[
-    {e:'🐠', x:120, y:230, s:44}, {e:'🐬', x:880, y:200, s:50}, {e:'🐚', x:260, y:570, s:34},
-    {e:'⛵', x:560, y:110, s:46}, {e:'🐙', x:760, y:520, s:44}, {e:'🌊', x:400, y:590, s:38}
+  city: { sky:'#cfe3ff', ground:'#e8dcbf', deco:[
+    {e:'🏘️', x:120, y:215, s:50}, {e:'🕋', x:880, y:190, s:48}, {e:'⛲', x:270, y:570, s:38},
+    {e:'📣', x:560, y:110, s:40}, {e:'🐫', x:760, y:540, s:46}, {e:'🌿', x:430, y:592, s:32}
   ]},
-  sky: { sky:'#dfd4ff', ground:'#cdeaff', deco:[
-    {e:'☁️', x:130, y:150, s:52}, {e:'🌈', x:840, y:170, s:52}, {e:'⭐', x:330, y:110, s:34},
-    {e:'🎈', x:690, y:520, s:44}, {e:'🌙', x:200, y:540, s:40}, {e:'✨', x:560, y:580, s:32}
+  night: { sky:'#39407a', ground:'#6f6fae', deco:[
+    {e:'🌙', x:140, y:150, s:52}, {e:'⭐', x:850, y:150, s:34}, {e:'✨', x:330, y:110, s:32},
+    {e:'🕸️', x:700, y:520, s:42}, {e:'🏔️', x:200, y:545, s:46}, {e:'🐫', x:560, y:585, s:36}
+  ]},
+  oasis: { sky:'#bfe9fb', ground:'#c6ecb0', deco:[
+    {e:'🕌', x:880, y:180, s:56}, {e:'🌴', x:100, y:195, s:56}, {e:'💧', x:265, y:565, s:32},
+    {e:'🕊️', x:600, y:115, s:38}, {e:'🌾', x:740, y:545, s:38}, {e:'🐑', x:415, y:590, s:34}
   ]}
 };
 
@@ -1294,134 +1442,121 @@ function renderStep(){
     return;
   }
 
-  if(step.type === 'meet'){
-    const L = step.letter;
+  if(step.type === 'story'){
+    const S = step.data;
     card.innerHTML =
-      '<p class="task-line">Meet this one!</p>' +
-      '<div class="hero-letter glyph">' + escapeHtml(L.letter) + '</div>' +
-      '<p class="hero-name">' + escapeHtml(L.sound ? 'says "' + L.sound + '"' : L.name) + '</p>' +
-      (L.note ? '<p class="task-sub" style="margin:6px 0 0;">' + escapeHtml(L.note) + '</p>' : '') +
-      '<p class="hero-word glyph">' + escapeHtml(L.word) + '</p>' +
-      '<div class="hero-emoji">' + L.emoji + '</div>' +
-      '<p class="task-sub" style="margin:4px 0 0;">' + escapeHtml(L.wordEn || '') + '</p>' +
-      '<button class="speak-btn" id="speak-btn">🔊 Listen</button>';
+      '<div class="story-emoji">' + S.emoji + '</div>' +
+      '<p class="story-title">' + escapeHtml(S.teach) + '</p>' +
+      (S.arabic ? '<p class="story-arabic arabic">' + S.arabic + '</p>' : '') +
+      '<p class="story-text">' + escapeHtml(S.story) + '</p>' +
+      '<button class="speak-btn" id="speak-btn">🔊 Read it to me</button>';
     const nextBtn = document.createElement('button');
     nextBtn.className = 'big-btn green';
-    nextBtn.textContent = 'Got it →';
+    nextBtn.textContent = 'I am ready →';
     nextBtn.addEventListener('click', () => { playTap(); clearStep(); });
     actions.appendChild(nextBtn);
     const sb = document.getElementById('speak-btn');
-    if(sb) sb.addEventListener('click', () => { playTap(); speakOut(L.word || L.letter); });
-    speakOut(L.letter);
+    if(sb) sb.addEventListener('click', () => { playTap(); speakEnglish(S.story); });
+    speakEnglish(S.story);
     return;
   }
 
   if(step.type === 'pick'){
-    let inner = '<p class="task-line">' + escapeHtml(step.prompt) + '</p>';
-    if(step.heroLetter){
-      inner += '<div class="hero-letter glyph" style="width:126px;height:126px;font-size:74px;">' + escapeHtml(step.heroLetter) + '</div>';
-    } else if(step.sub){
-      inner += '<p class="task-sub">' + escapeHtml(step.sub) + '</p>';
-    }
-    inner += '<div class="choice-grid cols-' + step.cols + '" id="choice-grid"></div>';
-    inner += '<div class="feedback" id="feedback"></div>';
-    card.innerHTML = inner;
-
+    card.innerHTML =
+      '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
+      '<div class="choice-grid cols-' + step.cols + '" id="choice-grid"></div>' +
+      '<div class="feedback" id="feedback"></div>';
     const grid = document.getElementById('choice-grid');
     step.options.forEach(opt => {
       const el = document.createElement('div');
       el.className = 'choice';
-      const cls = opt.kind === 'letter' ? 'c-letter glyph'
-                : opt.kind === 'word'   ? 'c-word glyph'
-                : 'c-name';
-      el.innerHTML = '<span class="' + cls + '">' + escapeHtml(opt.show) + '</span>' +
-                     (opt.sub ? '<span class="c-emoji">' + opt.sub + '</span>' : '');
+      el.innerHTML = '<span class="c-name">' + escapeHtml(opt.show) + '</span>';
       el.addEventListener('click', () => handlePick(el, opt));
       grid.appendChild(el);
     });
-    if(step.speak) speakOut(step.speak);
+    speakEnglish(step.prompt);
     return;
   }
 
-  if(step.type === 'hunt'){
-    lesson.huntFound = 0;
+  if(step.type === 'order'){
+    // Tap the four parts of the story from first to last; a wrong tap is a gentle nudge.
+    lesson.orderAt = 0;
     card.innerHTML =
       '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
-      '<p class="task-sub">' + escapeHtml(step.sub) + '</p>' +
-      '<div class="hunt-grid" id="hunt-grid"></div>' +
-      '<div class="feedback" id="feedback"><span id="hunt-count">0</span> / ' + step.need + ' found</div>';
-    const grid = document.getElementById('hunt-grid');
-    step.cells.forEach(cell => {
+      '<p class="task-sub">Tap them from first to last.</p>' +
+      '<div class="order-list" id="order-list"></div>' +
+      '<div class="feedback" id="feedback"></div>';
+    const list = document.getElementById('order-list');
+    shuffle(step.items.map((t, i) => ({ text:t, at:i }))).forEach(it => {
       const el = document.createElement('div');
-      el.className = 'hunt-cell glyph';
-      el.textContent = cell.ch;
+      el.className = 'order-item';
+      el.innerHTML = '<span class="oi-num"></span><span class="oi-text">' + escapeHtml(it.text) + '</span>';
       el.addEventListener('click', () => {
-        if(cell.target){
-          if(el.classList.contains('found')) return;
-          el.classList.add('found');
-          lesson.huntFound++;
-          playRight();
-          document.getElementById('hunt-count').textContent = lesson.huntFound;
-          if(lesson.huntFound >= step.need){
-            const fb = document.getElementById('feedback');
-            fb.className = 'feedback good';
-            fb.textContent = 'You found them all! 🎉';
-            setTimeout(clearStep, 900);
-          }
-        } else {
+        const fb = document.getElementById('feedback');
+        if(it.at !== lesson.orderAt){
           lesson.mistakes++;
           playWrong();
           el.classList.add('miss');
           setTimeout(() => el.classList.remove('miss'), 450);
+          fb.className = 'feedback bad';
+          fb.textContent = 'Not yet — which one happened first?';
+          return;
+        }
+        lesson.orderAt++;
+        el.classList.add('done');
+        el.querySelector('.oi-num').textContent = lesson.orderAt;
+        playRight();
+        fb.className = 'feedback good';
+        fb.textContent = 'Yes — then what?';
+        if(lesson.orderAt >= step.items.length){
+          fb.textContent = 'That is the whole story! 🎉';
+          setTimeout(clearStep, 950);
         }
       });
-      grid.appendChild(el);
+      list.appendChild(el);
     });
     return;
   }
 
-  if(step.type === 'blend'){
-    // Tap each sound bubble in order (right to left), then read the whole word.
-    lesson.blendAt = 0;
-    card.innerHTML =
-      '<p class="task-line">Tap each sound, then read the word</p>' +
-      '<p class="task-sub">Start from the left ➡️</p>' +
-      '<div class="bubble-row" id="bubble-row"></div>' +
-      '<div><span class="blend-slot glyph" id="blend-slot">…</span></div>' +
-      '<div class="feedback" id="feedback"></div>';
-    const row = document.getElementById('bubble-row');
-    step.parts.forEach((part, i) => {
-      const b = document.createElement('div');
-      b.className = 'sound-bubble glyph' + (i === 0 ? ' next' : '');
-      b.textContent = part;
-      b.addEventListener('click', () => {
-        if(i < lesson.blendAt){ speakOut(part); return; }
-        if(i > lesson.blendAt){ playWrong(); return; }   // must go in order
-        b.classList.add('said');
-        b.classList.remove('next');
-        speakOut(part);
-        playRight();
-        lesson.blendAt++;
-        const nextB = row.children[lesson.blendAt];
-        if(nextB) nextB.classList.add('next');
-        const slot = document.getElementById('blend-slot');
-        slot.textContent = step.parts.slice(0, lesson.blendAt).join('');
-        if(lesson.blendAt >= step.parts.length){
-          slot.textContent = step.word;
-          slot.classList.add('full');
+  if(step.type === 'tf'){
+    lesson.tfAt = 0;
+    const paintTF = () => {
+      const it = step.items[lesson.tfAt];
+      card.innerHTML =
+        '<p class="tf-progress">Sentence ' + (lesson.tfAt + 1) + ' of ' + step.items.length + '</p>' +
+        '<p class="tf-statement">' + escapeHtml(it.s) + '</p>' +
+        '<div class="tf-btns">' +
+          '<button class="tf-btn yes" type="button" data-a="1">👍 True</button>' +
+          '<button class="tf-btn no" type="button" data-a="0">👎 False</button>' +
+        '</div>' +
+        '<div class="feedback" id="feedback"></div>';
+      speakEnglish(it.s);
+      card.querySelectorAll('.tf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const said = btn.dataset.a === '1';
           const fb = document.getElementById('feedback');
-          fb.className = 'feedback good';
-          fb.textContent = step.word + ' — ' + (step.wordEn || '') + ' ' + (step.emoji || '');
-          speakOut(step.word);
-          const doneBtn = document.createElement('button');
-          doneBtn.className = 'big-btn green';
-          doneBtn.textContent = 'I read it! →';
-          doneBtn.addEventListener('click', () => { playTap(); clearStep(); });
-          document.getElementById('stage-actions').appendChild(doneBtn);
-        }
+          if(said === it.a){
+            playRight();
+            btn.classList.add('right');
+            fb.className = 'feedback good';
+            fb.textContent = ['Yes! 🌟', 'That is right! 🎉', 'Well done! 👏'][Math.floor(Math.random() * 3)];
+            lesson.tfAt++;
+            setTimeout(() => {
+              if(lesson.tfAt >= step.items.length) clearStep();
+              else paintTF();
+            }, 900);
+          } else {
+            lesson.mistakes++;
+            playWrong();
+            btn.classList.add('wrongish');
+            setTimeout(() => btn.classList.remove('wrongish'), 450);
+            fb.className = 'feedback bad';
+            fb.textContent = 'Not quite — listen to the sentence again.';
+          }
+        });
       });
-      row.appendChild(b);
-    });
+    };
+    paintTF();
     return;
   }
 }
@@ -1489,18 +1624,12 @@ function finishLesson(){
     : (isMapEnd ? 'Map complete! 🏁' : 'Lesson ' + lessonNo + ' complete!');
 
   const learned = document.getElementById('reward-learned');
-  if(idx < LETTERS.length){
-    const L = LETTERS[idx];
-    learned.innerHTML = '<div class="learned-chip"><span class="lc-letter glyph">' + escapeHtml(L.letter) + '</span>' +
-                        '<span class="lc-name">says "' + escapeHtml(L.sound) + '" · ' + escapeHtml(L.word) + '</span></div>';
-  } else {
-    const sp = SPECIAL_LESSONS[idx - LETTERS.length];
-    learned.innerHTML = '<div class="learned-chip"><span class="lc-letter glyph">' + escapeHtml(sp.letter) + '</span>' +
-                        '<span class="lc-name">' + escapeHtml(sp.teachName) + '</span></div>';
-  }
+  const S = SEERAH[idx];
+  learned.innerHTML = '<div class="learned-chip"><span class="lc-letter">' + S.emoji + '</span>' +
+                      '<span class="lc-name">' + escapeHtml(S.teach) + '</span></div>';
 
   document.getElementById('reward-msg').textContent = allDone
-    ? 'You can sound out words and read now, ' + profile.name + '. Come back any time to practise!'
+    ? 'You have travelled the whole Seerah, ' + profile.name + '. May Allah let you follow him ﷺ in everything you do!'
     : (stars === 3 ? 'Perfect — no mistakes at all!' : 'Nice work. Play it again for three stars and more coins!');
 
   document.getElementById('reward-purse').textContent = profile.coins;
