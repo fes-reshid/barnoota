@@ -194,8 +194,6 @@
     display:flex; align-items:center; justify-content:center; gap:10px;
   }
   .week-select-btn:hover{ transform:scale(1.03); background:#b8862c; }
-  .week-select-btn.milestone{ background:var(--green); }
-  .week-select-btn.milestone:hover{ background:var(--green-dark); }
   .week-select-btn .wsb-ar{ font-family:'Amiri', serif; }
   body.rtl-active .week-select-btn .wsb-en{ display:none; }
   body:not(.rtl-active) .week-select-btn .wsb-ar{ display:none; }
@@ -743,32 +741,17 @@
       <button class="week-select-btn" id="week-select-w1" data-jump-week="Week 1" data-week="Week 1">
         <span class="wsb-en">Week 1 · The Subject of Naḥw</span><span class="wsb-ar">الأسبوع الأول · موضوع النحو</span>
       </button>
-      <button class="week-select-btn milestone" id="week-select-w1-cert" data-jump-cert="w1" data-week="Week 1">
-        <span class="wsb-en">🎓 Certificate · Subject of Naḥw</span><span class="wsb-ar">🎓 شهادة · موضوع النحو</span>
-      </button>
       <button class="week-select-btn" id="week-select-w2" data-jump-week="Week 2" data-week="Week 2">
         <span class="wsb-en">Week 2 · Types of the Word</span><span class="wsb-ar">الأسبوع الثاني · أنواع الكلمة</span>
-      </button>
-      <button class="week-select-btn milestone" id="week-select-w2-cert" data-jump-cert="w2" data-week="Week 2">
-        <span class="wsb-en">🎓 Certificate · Types of the Word</span><span class="wsb-ar">🎓 شهادة · أنواع الكلمة</span>
       </button>
       <button class="week-select-btn" id="week-select-w3" data-jump-week="Week 3" data-week="Week 3">
         <span class="wsb-en">Week 3 · Indefinite &amp; Definite</span><span class="wsb-ar">الأسبوع الثالث · النكرة والمعرفة</span>
       </button>
-      <button class="week-select-btn milestone" id="week-select-w3-cert" data-jump-cert="w3" data-week="Week 3">
-        <span class="wsb-en">🎓 Certificate · Indefinite &amp; Definite</span><span class="wsb-ar">🎓 شهادة · النكرة والمعرفة</span>
-      </button>
       <button class="week-select-btn" id="week-select-w4" data-jump-week="Week 4" data-week="Week 4">
         <span class="wsb-en">Week 4 · Declinable &amp; Indeclinable</span><span class="wsb-ar">الأسبوع الرابع · المعرب والمبني</span>
       </button>
-      <button class="week-select-btn milestone" id="week-select-w4-cert" data-jump-cert="w4" data-week="Week 4">
-        <span class="wsb-en">🎓 Certificate · Declinable &amp; Indeclinable</span><span class="wsb-ar">🎓 شهادة · المعرب والمبني</span>
-      </button>
       <button class="week-select-btn" id="week-select-w5" data-jump-week="Week 5" data-week="Week 5">
         <span class="wsb-en">Week 5 · The I'rab Rulings</span><span class="wsb-ar">الأسبوع الخامس · الأحكام الإعرابية</span>
-      </button>
-      <button class="week-select-btn milestone" id="week-select-w5-cert" data-jump-cert="w5" data-week="Week 5">
-        <span class="wsb-en">🎓 Certificate · I'rab Rulings</span><span class="wsb-ar">🎓 شهادة · الأحكام الإعرابية</span>
       </button>
     </div>
   </div>
@@ -1058,19 +1041,10 @@ function findStepIndexByWeek(weekEn){
   return -1;
 }
 
-function findStepIndexByCert(certKey){
-  for(var i = 0; i < STEP_DEFS.length; i++){
-    if(STEP_DEFS[i].type === 'certificate' && STEP_DEFS[i].certKey === certKey) return i;
-  }
-  return -1;
-}
-
 document.querySelectorAll('.week-select-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     playClickSound();
-    var targetStep = btn.dataset.jumpCert
-      ? findStepIndexByCert(btn.dataset.jumpCert)
-      : findStepIndexByWeek(btn.dataset.jumpWeek);
+    var targetStep = findStepIndexByWeek(btn.dataset.jumpWeek);
     document.getElementById('week-select').style.display = 'none';
     document.getElementById('main-content').style.display = '';
     document.getElementById('back-to-weeks-btn').style.display = 'flex';
