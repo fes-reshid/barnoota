@@ -239,6 +239,32 @@
     else { checkCatchUp(); scheduleNext(); }
   }
 
+  // Generic native scheduler shared by every reminder feature in the app -
+  // this module's own Fajr/Maghrib/bedtime reminders above, and the
+  // Azan/post-azan/post-salah prayer alerts in app.js (see scheduleNextAzan
+  // there). @capacitor/local-notifications has no "replace" verb, so this
+  // always cancels whatever IDs it previously scheduled under `storageKey`
+  // (kept separate per caller, so one feature's reschedule never cancels
+  // another's) before scheduling the fresh list.
+  function nativeSchedule(storageKey, notifications) {
+    var ln = nativeLN();
+    if (!ln) return Promise.resolve();
+    var idsKey = "hisn:reminders:nativeids:" + storageKey;
+    var prevIds = [];
+    try { prevIds = JSON.parse(localStorage.getItem(idsKey) || "[]"); } catch (e) {}
+    return (prevIds.length ? ln.cancel({ notifications: prevIds.map(function (id) { return { id: id }; }) }) : Promise.resolve())
+      .catch(function () {})
+      .then(function () {
+        if (!notifications.length) {
+          try { localStorage.setItem(idsKey, "[]"); } catch (e) {}
+          return;
+        }
+        return ln.schedule({ notifications: notifications }).then(function () {
+          try { localStorage.setItem(idsKey, JSON.stringify(notifications.map(function (n) { return n.id; }))); } catch (e) {}
+        });
+      });
+  }
+
   // Android 12+ (API 31+) has no runtime permission dialog for exact
   // alarms - the reader has to flip it on themselves via a dedicated system
   // settings screen (Settings > Apps > ... > Alarms & reminders). Without
@@ -355,7 +381,14 @@
     enableBedtime: enableBedtime,
     disableBedtime: disableBedtime,
     setBedtimeTime: setBedtimeTime,
-    init: init
+    init: init,
+    // Exposed for the Azan reminders in app.js, so that feature follows the
+    // same native-vs-web behavior as the reminders above instead of
+    // duplicating the native-notification plumbing.
+    isNative: isNative,
+    requestNotifPermission: requestNotifPermission,
+    maybeRequestExactAlarm: maybeRequestExactAlarm,
+    nativeSchedule: nativeSchedule
   };
 
   init();
