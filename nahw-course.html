@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
-<title>مبادئ النحو — Foundations of Naḥw (4-Week Course)</title>
+<title>مبادئ النحو — Foundations of Naḥw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Reem+Kufi:wght@400;500;700&family=Marcellus&display=swap" rel="stylesheet">
 <style>
@@ -117,6 +117,24 @@
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
   #account-name{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
+  .account-name-wrap{ display:none; align-items:center; gap:3px; }
+  .edit-name-btn{
+    background:none; border:none; cursor:pointer; padding:2px 4px; line-height:1;
+    font-size:calc(12px * var(--scale)); opacity:.5; color:var(--ink-brown); transition:opacity .15s ease, transform .15s ease;
+  }
+  .edit-name-btn:hover{ opacity:1; transform:scale(1.12); }
+
+  .name-modal-overlay{
+    display:none; position:fixed; inset:0; z-index:200; background:rgba(28,43,70,.55);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .name-modal-overlay.show{ display:flex; }
+  .name-modal-box{
+    max-width:360px; width:100%; background:#fff; border:2px solid var(--gold-soft); border-radius:16px;
+    padding:26px 24px; text-align:center; box-shadow:0 10px 30px rgba(28,43,70,.28);
+  }
+  .name-modal-box h3{ font-family:'Marcellus'; font-size:calc(17px * var(--scale)); color:var(--ink-navy); margin:0 0 8px; }
+  .name-modal-note{ font-size:calc(13px * var(--scale)); color:var(--ink-brown); margin:0 0 16px; }
 
   /* ===== Auth gate (enroll / login) ===== */
   #auth-gate{ display:flex; justify-content:center; padding:40px 10px; }
@@ -511,7 +529,73 @@
   .review-detail .rd-expl{ background:#fff; border-radius:8px; padding:10px 12px; }
   .retake-btn{ background:var(--gold); color:#fff8ea; border:none; border-radius:22px; padding:11px 26px; font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(14.5px * var(--scale)); cursor:pointer; margin-top:10px; }
 
+  /* ===== Week 5 Certificate — progress checklist ===== */
+  .progress-list{ max-width:460px; margin:14px auto 0; display:flex; flex-direction:column; gap:10px; }
+  .progress-row{
+    display:flex; align-items:center; gap:12px; background:#fff; border:1.5px solid var(--gold-soft);
+    border-radius:12px; padding:12px 16px; text-align:start;
+  }
+  .progress-row.pr-done{ border-color:var(--green); background:var(--green-bg); }
+  .progress-row.pr-pending{ border-color:var(--red); background:var(--red-bg); }
+  .pr-icon{ flex-shrink:0; font-size:calc(18px * var(--scale)); }
+  .pr-body{ flex:1; min-width:0; }
+  .pr-label{ font-weight:700; color:var(--ink-navy); display:block; font-size:calc(14.5px * var(--scale)); }
+  .pr-status{ font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); margin-top:2px; }
+  .pr-jump-btn{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:16px; padding:7px 16px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:calc(12.5px * var(--scale));
+    cursor:pointer; transition:transform .15s ease; flex-shrink:0;
+  }
+  .pr-jump-btn:hover{ transform:scale(1.05); }
+
+  /* ===== Week 5 Certificate — the certificate itself ===== */
+  #w5-cert-wrap{ display:flex; justify-content:center; padding:8px 0 20px; }
+  .cert-card{
+    width:100%; max-width:640px; background:var(--parchment); position:relative;
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-20px;
+    border-radius:6px; padding:48px 30px 36px; text-align:center;
+    box-shadow:0 10px 30px rgba(60,47,38,.15);
+  }
+  .cert-corner{ position:absolute; width:26px; height:26px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--gold); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:16px; left:16px; }
+  .cert-corner.tr{ top:16px; right:16px; }
+  .cert-corner.bl{ bottom:16px; left:16px; }
+  .cert-corner.br{ bottom:16px; right:16px; }
+  .cert-bismillah{ font-family:'Amiri', serif; color:var(--gold); font-size:calc(15px * var(--scale)); margin:0 0 12px; }
+  .cert-seal{
+    width:62px; height:62px; border-radius:50%; background:var(--green); color:#faf3e0;
+    display:flex; align-items:center; justify-content:center; font-family:'Marcellus', serif; font-size:26px; font-weight:700;
+    margin:0 auto 14px; border:3px solid var(--gold-soft);
+  }
+  .cert-eyebrow{ font-family:'Amiri', serif; color:var(--gold); font-size:calc(15.5px * var(--scale)); margin:0 0 4px; }
+  .cert-title{ font-family:'Marcellus'; font-size:calc(25px * var(--scale)); color:var(--ink-navy); margin:0 0 18px; letter-spacing:.02em; }
+  .cert-line{ font-size:calc(14.5px * var(--scale)); color:var(--ink-brown); margin:0 0 6px; }
+  .cert-name{ font-family:'Amiri', serif; font-weight:700; font-size:calc(30px * var(--scale)); color:var(--green-dark); margin:6px 0 16px; border-bottom:2px solid var(--gold-soft); display:inline-block; padding:0 10px 6px; }
+  .cert-course{ font-family:'Marcellus'; font-size:calc(16.5px * var(--scale)); color:var(--ink-navy); margin:0 0 2px; }
+  .cert-course-ar{ font-family:'Amiri', serif; font-size:calc(16px * var(--scale)); color:var(--gold); margin:0 0 4px; }
+  .cert-course-sub{ font-size:calc(12.5px * var(--scale)); color:var(--ink-brown); opacity:.75; margin:0; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto 14px; max-width:200px; }
+  .cert-divider span{ flex:1; height:1px; background:var(--gold-soft); }
+  .cert-divider b{ color:var(--gold); font-size:13px; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin:6px 0 6px; font-size:calc(13px * var(--scale)); color:var(--ink-brown); }
+  .cert-meta-row b{ color:var(--ink-navy); display:block; font-size:calc(13.5px * var(--scale)); }
+  .cert-footer{ margin-top:26px; padding-top:14px; border-top:1px solid var(--gold-soft); font-size:calc(12.5px * var(--scale)); color:var(--gold); }
+  .cert-continue-note{ text-align:center; margin:16px 0 0; font-size:calc(13.5px * var(--scale)); color:var(--ink-brown); }
+  .cert-actions{ text-align:center; margin-top:20px; }
+  .cert-actions .qbtn{ margin:0 6px; }
+  body.rtl-active .progress-row, body.rtl-active .cert-line, body.rtl-active .cert-course{ font-family:'Amiri', serif; }
+
   footer.foot{ text-align:center; color:var(--gold); font-size:calc(12px * var(--scale)); margin-top:40px; }
+
+  @media print{
+    header.site, .topbar, .step-progress-row, .step-nav-row, footer.foot, #logout-btn,
+    #course-hero-section, #week-select, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ max-width:none; padding:0; }
+    .cert-card{ box-shadow:none; }
+  }
 </style>
 </head>
 <body>
@@ -546,9 +630,23 @@
     <span class="en">Foundations of Naḥw</span>
   </div>
   <div class="lang-toggle">
-    <span id="account-name" style="display:none;"></span>
+    <span class="account-name-wrap" id="account-name-wrap">
+      <span id="account-name"></span>
+      <button class="edit-name-btn" id="edit-name-btn" type="button" aria-label="Edit name" title="Edit name">✎</button>
+    </span>
     <button class="lang-pill" id="lang-en-btn">English</button>
     <button class="lang-pill" id="lang-ar-btn">العربية</button>
+  </div>
+</div>
+
+<div class="name-modal-overlay" id="edit-name-modal">
+  <div class="name-modal-box">
+    <h3 id="edit-name-modal-title">Update Your Name</h3>
+    <p class="name-modal-note" id="edit-name-modal-note">This is the name shown on your account and progress.</p>
+    <input type="text" class="auth-input" id="edit-name-input" placeholder="Full name" autocomplete="name">
+    <p class="auth-error" id="edit-name-error" style="display:none;"></p>
+    <button class="auth-primary-btn" id="edit-name-save-btn">Save</button>
+    <button class="auth-secondary-btn" id="edit-name-cancel-btn" style="margin-top:10px;">Cancel</button>
   </div>
 </div>
 
@@ -557,15 +655,15 @@
   <div id="course-hero-section">
     <div class="course-hero">
       <div class="course-hero-text">
-        <span class="course-hero-tag">Free · 4-Week Course</span>
+        <span class="course-hero-tag">Free · Ongoing Course</span>
         <h1 class="course-hero-title">Foundations of Naḥw</h1>
         <p class="course-hero-sub">مَبَادِئُ النَّحْوِ</p>
-        <p class="course-hero-desc">A 4-week introduction to Arabic grammar — how words behave, how sentences are built, and why it all matters for reading the Qur'ān and Sunnah correctly.</p>
+        <p class="course-hero-desc">An ongoing introduction to Arabic grammar, with new weeks added regularly — how words behave, how sentences are built, and why it all matters for reading the Qur'ān and Sunnah correctly.</p>
       </div>
       <div class="course-badge">
         <span class="badge-circle">ن</span>
         <p class="badge-name">Foundations of Naḥw</p>
-        <p class="badge-sub">4-Week Course</p>
+        <p class="badge-sub">Ongoing Course</p>
       </div>
     </div>
     <hr class="hero-divider">
@@ -637,22 +735,22 @@
   <div id="week-select" style="display:none;">
     <p class="week-select-lead" id="week-select-lead">Choose where you'd like to start · اختر من أين تريد أن تبدأ</p>
     <div class="week-select-grid">
-      <button class="week-select-btn" id="week-select-foundations" data-step="0">
+      <button class="week-select-btn" id="week-select-foundations" data-jump-week="Foundations" data-week="Foundations">
         <span class="wsb-en">Foundations</span><span class="wsb-ar">الأساسيات</span>
       </button>
-      <button class="week-select-btn" id="week-select-w1" data-step="2">
+      <button class="week-select-btn" id="week-select-w1" data-jump-week="Week 1" data-week="Week 1">
         <span class="wsb-en">Week 1 · The Subject of Naḥw</span><span class="wsb-ar">الأسبوع الأول · موضوع النحو</span>
       </button>
-      <button class="week-select-btn" id="week-select-w2" data-step="4">
+      <button class="week-select-btn" id="week-select-w2" data-jump-week="Week 2" data-week="Week 2">
         <span class="wsb-en">Week 2 · Types of the Word</span><span class="wsb-ar">الأسبوع الثاني · أنواع الكلمة</span>
       </button>
-      <button class="week-select-btn" id="week-select-w3" data-step="6">
+      <button class="week-select-btn" id="week-select-w3" data-jump-week="Week 3" data-week="Week 3">
         <span class="wsb-en">Week 3 · Indefinite &amp; Definite</span><span class="wsb-ar">الأسبوع الثالث · النكرة والمعرفة</span>
       </button>
-      <button class="week-select-btn" id="week-select-w4" data-step="9">
+      <button class="week-select-btn" id="week-select-w4" data-jump-week="Week 4" data-week="Week 4">
         <span class="wsb-en">Week 4 · Declinable &amp; Indeclinable</span><span class="wsb-ar">الأسبوع الرابع · المعرب والمبني</span>
       </button>
-      <button class="week-select-btn" id="week-select-w5" data-step="19">
+      <button class="week-select-btn" id="week-select-w5" data-jump-week="Week 5" data-week="Week 5">
         <span class="wsb-en">Week 5 · The I'rab Rulings</span><span class="wsb-ar">الأسبوع الخامس · الأحكام الإعرابية</span>
       </button>
     </div>
@@ -877,11 +975,14 @@ function enterCourse(uid, email, data, isReturning){
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
   document.getElementById('week-select').style.display = 'block';
-  document.getElementById('account-name').style.display = '';
+  document.getElementById('account-name-wrap').style.display = 'flex';
   document.getElementById('account-name').textContent = studentName;
   document.getElementById('logout-btn').style.display = '';
   updateWeekCompletionBadges();
   showWelcomeBanner(isReturning && stepDone.some(function(d){ return d; }));
+  if(studentEmail && studentName.trim().toLowerCase() === studentEmail.trim().toLowerCase() && window.__promptNameFix){
+    window.__promptNameFix();
+  }
 }
 
 document.getElementById('logout-btn').addEventListener('click', function(){
@@ -913,9 +1014,7 @@ function computeWeekCompletion(){
 function updateWeekCompletionBadges(){
   var completion = computeWeekCompletion();
   document.querySelectorAll('.week-select-btn').forEach(function(btn){
-    var idx = parseInt(btn.dataset.step, 10);
-    var def = STEP_DEFS[idx];
-    var wk = def && def.weekEn;
+    var wk = btn.dataset.week;
     var done = !!(wk && completion[wk]);
     var badge = btn.querySelector('.wsb-check');
     if(done && !badge){
@@ -935,10 +1034,17 @@ function saveProgress(){
   if(window.__fbSaveProgress){ window.__fbSaveProgress(currentUID, stepDone, quizAttempts); }
 }
 
+function findStepIndexByWeek(weekEn){
+  for(var i = 0; i < STEP_DEFS.length; i++){
+    if(STEP_DEFS[i].weekEn === weekEn) return i;
+  }
+  return -1;
+}
+
 document.querySelectorAll('.week-select-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     playClickSound();
-    var targetStep = parseInt(btn.getAttribute('data-step'), 10);
+    var targetStep = findStepIndexByWeek(btn.dataset.jumpWeek);
     document.getElementById('week-select').style.display = 'none';
     document.getElementById('main-content').style.display = '';
     document.getElementById('back-to-weeks-btn').style.display = 'flex';
@@ -1014,7 +1120,7 @@ var LESSONS_FOUNDATIONS_EN = [
 <div class="section">
   <div class="note-box">
     <p class="note-title">Where this course is headed</p>
-    <p>The four weeks that follow build this science from the ground up: first the big map of what Naḥw covers, then how to classify any word you see, then how definiteness works, and finally the single most important distinction in the whole subject — مُعرَب versus مبني. Each idea is a tool you'll keep using in every chapter after it.</p>
+    <p>The weeks that follow build this science from the ground up: first the big map of what Naḥw covers, then how to classify any word you see, then how definiteness works, then the single most important distinction in the whole subject — مُعرَب versus مبني — and then how that distinction is put to work through the four i'rab rulings and Khaṭṭ al-I'rāb. This course keeps growing, with new weeks added as you go. Each idea is a tool you'll keep using in every chapter after it.</p>
   </div>
 </div>
 `,
@@ -1080,7 +1186,7 @@ var LESSONS_FOUNDATIONS_EN = [
     </div>
   </div>
   <div class="rule-box">
-    <p style="margin:0;">This is exactly the roadmap of the four weeks ahead: Week 1 is the big map, Week 2 is the types of the word, Week 3 is definite versus indefinite, and Week 4 is مُعرَب versus مبني.</p>
+    <p style="margin:0;">This is exactly the roadmap ahead: Week 1 is the big map, Week 2 is the types of the word, Week 3 is definite versus indefinite, Week 4 is مُعرَب versus مبني, and Week 5 is the four i'rab rulings and Khaṭṭ al-I'rāb — with more weeks still to come.</p>
   </div>
 </div>
 
@@ -1171,7 +1277,7 @@ var LESSONS_FOUNDATIONS_AR = [
 <div class="section">
   <div class="note-box">
     <p class="note-title">إلى أين يتّجه هذا المقرر</p>
-    <p>تبني الأسابيع الأربعة القادمة هذا العلم من الأساس: أولاً الخريطة الكبرى لما يغطيه النحو، ثم كيفية تصنيف أي كلمة تراها، ثم كيف يعمل التعريف والتنكير، وأخيرًا أهم تفريق في هذا العلم كله — بين المُعرَب والمبني. كل فكرة هنا أداة ستستخدمها في كل باب بعدها.</p>
+    <p>تبني الأسابيع القادمة هذا العلم من الأساس: أولاً الخريطة الكبرى لما يغطيه النحو، ثم كيفية تصنيف أي كلمة تراها، ثم كيف يعمل التعريف والتنكير، ثم أهم تفريق في هذا العلم كله — بين المُعرَب والمبني، ثم كيف يُطبَّق هذا التفريق من خلال الأحكام الإعرابية الأربعة وخط الإعراب. وهذا المقرر يستمر في النمو، وتُضاف إليه أسابيع جديدة أولاً بأول. كل فكرة هنا أداة ستستخدمها في كل باب بعدها.</p>
   </div>
 </div>
 `,
@@ -1236,7 +1342,7 @@ var LESSONS_FOUNDATIONS_AR = [
     </div>
   </div>
   <div class="rule-box">
-    <p style="margin:0;">هذه بالضبط خريطة الأسابيع الأربعة القادمة: الأسبوع الأول الخريطة الكبرى، والثاني أنواع الكلمة، والثالث النكرة والمعرفة، والرابع المعرب والمبني.</p>
+    <p style="margin:0;">هذه بالضبط خريطة الأسابيع القادمة: الأسبوع الأول الخريطة الكبرى، والثاني أنواع الكلمة، والثالث النكرة والمعرفة، والرابع المعرب والمبني، والخامس الأحكام الإعرابية الأربعة وخط الإعراب — وستُضاف أسابيع أخرى بعدها.</p>
   </div>
 </div>
 
@@ -1369,6 +1475,23 @@ var LESSONS_W1_EN = [
     <p>Every chapter you study from here on fits into one of these seven boxes. When you feel lost in a new topic, come back to this outline and ask: "which of the seven am I in right now?"</p>
   </div>
 </div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>Week 1 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>أَحْكَامُ الْكَلِمَة (Rulings of the Word)</b></summary><p style="margin:10px 0 0;">One of the two major parts of Naḥw — how a single word behaves on its own, regardless of its place in a sentence.</p></details></div>
+    <div class="rule-box"><details><summary><b>أَحْكَامُ الْكَلَام (Rulings of Speech)</b></summary><p style="margin:10px 0 0;">The other major part of Naḥw — how words combine correctly into sentences.</p></details></div>
+    <div class="rule-box"><details><summary><b>أَنْوَاعُ الْكَلِمَة (Types of the Word)</b></summary><p style="margin:10px 0 0;">The first topic under Rulings of the Word: every word is اسم, فعل, or حرف — and the verb further divides into ماضٍ, مضارع, and أمر.</p></details></div>
+    <div class="rule-box"><details><summary><b>نَكِرَة وَمَعْرِفَة</b></summary><p style="margin:10px 0 0;">The second topic under Rulings of the Word: نكرة accepts (أل); معرفة does not.</p></details></div>
+    <div class="rule-box"><details><summary><b>مُعْرَب وَمَبْنِيّ</b></summary><p style="margin:10px 0 0;">The third topic under Rulings of the Word: a مُعرَب word's ending changes with its grammatical role; a مبني word's ending stays fixed.</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجُمْلَةُ الْفِعْلِيَّة (The Verbal Sentence)</b></summary><p style="margin:10px 0 0;">Takes two forms: an active verb + فاعل (صَلَّى أَنَسٌ, باب الفاعل), or a passive verb + نائب فاعل (قُرِئَ الكتابُ, باب نائب الفاعل).</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجُمْلَةُ الاِسْمِيَّة (The Nominal Sentence)</b></summary><p style="margin:10px 0 0;">Takes four forms depending on whether each pillar is مرفوع or منصوب — studied in باب المبتدأ والخبر, باب كان وأخواتها, باب إنّ وأخواتها, and باب ظننتُ وأخواتها.</p></details></div>
+    <div class="rule-box"><details><summary><b>مُكَمِّلَاتُ الْجُمْلَتَيْن</b></summary><p style="margin:10px 0 0;">What completes both sentence types, in three groups: منصوبات (like the five objects), مجرورات (like المضاف إليه), and توابع (like النعت and التوكيد).</p></details></div>
+    <div class="rule-box"><details><summary><b>إِعْرَابُ الْفِعْلِ الْمُضَارِع</b></summary><p style="margin:10px 0 0;">جزم after one of five Jazm particles, نصب after one of four accusative particles, and رفع otherwise.</p></details></div>
+    <div class="rule-box"><details><summary><b>Why the Map Matters</b></summary><p style="margin:10px 0 0;">The two major parts split into seven topics in all — three under the word (types, نكرة/معرفة, معرب/مبني) and four under speech (the verbal sentence, the nominal sentence, the completers, and the present-tense verb's declension).</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -1451,6 +1574,23 @@ var LESSONS_W1_AR = [
     <p>كل باب ستدرسه بعد ذلك يقع تحت أحد هذه المباحث السبعة. حين تشعر بالتيه في موضوع جديد، ارجع إلى هذا المخطط واسأل: "في أيّ من السبعة أنا الآن؟"</p>
   </div>
 </div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الأول</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>أَحْكَامُ الْكَلِمَة</b></summary><p style="margin:10px 0 0;">أحد جزأي النحو الكبيرين — كيف تتصرّف الكلمة الواحدة بمفردها، بصرف النظر عن موقعها في الجملة.</p></details></div>
+    <div class="rule-box"><details><summary><b>أَحْكَامُ الْكَلَام</b></summary><p style="margin:10px 0 0;">الجزء الآخر من جزأي النحو الكبيرين — كيف تتركّب الكلمات في جملة صحيحة.</p></details></div>
+    <div class="rule-box"><details><summary><b>أَنْوَاعُ الْكَلِمَة</b></summary><p style="margin:10px 0 0;">أول مباحث أحكام الكلمة: كل كلمة اسمٌ أو فعلٌ أو حرفٌ، والفعل ينقسم إلى ماضٍ ومضارع وأمر.</p></details></div>
+    <div class="rule-box"><details><summary><b>نَكِرَة وَمَعْرِفَة</b></summary><p style="margin:10px 0 0;">ثاني مباحث أحكام الكلمة: النكرة تقبل (أل)، والمعرفة لا تقبلها.</p></details></div>
+    <div class="rule-box"><details><summary><b>مُعْرَب وَمَبْنِيّ</b></summary><p style="margin:10px 0 0;">ثالث مباحث أحكام الكلمة: المُعرَب تتغيّر حركة آخره بتغيّر موقعه، والمبني تثبت حركة آخره دائماً.</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجُمْلَةُ الْفِعْلِيَّة</b></summary><p style="margin:10px 0 0;">لها صورتان: فعل مبني للمعلوم وفاعل (صَلَّى أَنَسٌ، باب الفاعل)، أو فعل مبني للمجهول ونائب فاعل (قُرِئَ الكتابُ، باب نائب الفاعل).</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجُمْلَةُ الاِسْمِيَّة</b></summary><p style="margin:10px 0 0;">لها أربع صور بحسب حالة ركنيها رفعاً ونصباً — تُدرَس في باب المبتدأ والخبر، وباب كان وأخواتها، وباب إنّ وأخواتها، وباب ظننتُ وأخواتها.</p></details></div>
+    <div class="rule-box"><details><summary><b>مُكَمِّلَاتُ الْجُمْلَتَيْن</b></summary><p style="margin:10px 0 0;">ما يكمّل الجملتين، في ثلاث مجموعات: منصوبات (كالمفاعيل الخمسة)، ومجرورات (كالمضاف إليه)، وتوابع (كالنعت والتوكيد).</p></details></div>
+    <div class="rule-box"><details><summary><b>إِعْرَابُ الْفِعْلِ الْمُضَارِع</b></summary><p style="margin:10px 0 0;">جزمٌ بعد أحد الجوازم الخمسة، ونصبٌ بعد أحد النواصب الأربعة، ورفعٌ فيما عدا ذلك.</p></details></div>
+    <div class="rule-box"><details><summary><b>لماذا هذا المخطط مهم</b></summary><p style="margin:10px 0 0;">ينقسم الجزآن الكبيران إلى سبعة مباحث في المجموع — ثلاثة تحت الكلمة (الأنواع، والنكرة والمعرفة، والمعرب والمبني)، وأربعة تحت الكلام (الجملة الفعلية، والجملة الاسمية، والمكمّلات، وإعراب المضارع).</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -1518,6 +1658,21 @@ var LESSONS_W2_EN = [
     <p>You never need to guess a word's type from meaning alone — run the tests. If tanwīn/أل/نداء/جر fits, it's a noun. If تاء التأنيث fits, it's ماضٍ. If لَمْ fits, it's مضارع. If ياء المخاطبة + a request-meaning fits, it's أمر. If nothing fits, it's a حرف.</p>
   </div>
 </div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>Week 2 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>Test for a Noun (الاسم)</b></summary><p style="margin:10px 0 0;">Accepts tanwīn, (أل), being called out to (نداء), or a preposition before it. Passing even one or two of these is enough.</p></details></div>
+    <div class="rule-box"><details><summary><b>سَاجِدٍ</b></summary><p style="margin:10px 0 0;">A noun that accepts ALL four noun markers at once — tanwīn, أل, نداء, and a preposition.</p></details></div>
+    <div class="rule-box"><details><summary><b>كاف الخطاب وهذا</b></summary><p style="margin:10px 0 0;">Nouns that only pass one or two of the noun tests — still enough to confirm they are nouns.</p></details></div>
+    <div class="rule-box"><details><summary><b>Test for الفعل الماضي</b></summary><p style="margin:10px 0 0;">Accepts the still تاء التأنيث (تْ). سَجَدَ becomes سَجَدَتْ.</p></details></div>
+    <div class="rule-box"><details><summary><b>Test for الفعل المضارع</b></summary><p style="margin:10px 0 0;">Accepts لَمْ. يَسْجُدُ becomes لَمْ يَسْجُدْ.</p></details></div>
+    <div class="rule-box"><details><summary><b>Test for فعل الأمر</b></summary><p style="margin:10px 0 0;">Accepts ياء المخاطبة AND carries the meaning of a request, together. اسْجُدْ becomes اسْجُدِي.</p></details></div>
+    <div class="rule-box"><details><summary><b>Test for الحرف</b></summary><p style="margin:10px 0 0;">Accepts none of the noun or verb markers above — no tanwīn, أل, نداء, حرف جر, تاء التأنيث, لَمْ, or ياء المخاطبة.</p></details></div>
+    <div class="rule-box"><details><summary><b>هَلْ and لَمْ</b></summary><p style="margin:10px 0 0;">Both are particles (حروف) themselves — they pass none of the noun or verb tests, even though لَمْ is used as the test for المضارع.</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -1582,6 +1737,21 @@ var LESSONS_W2_AR = [
   <div class="note-box">
     <p class="note-title">الفكرة الجوهرية</p>
     <p>لا تحتاج أبدًا إلى تخمين نوع الكلمة من المعنى وحده — طبِّق الاختبارات. إن صلح التنوين/أل/النداء/الجر فهي اسم. إن صلحت تاء التأنيث فهي ماضٍ. إن صلحت (لم) فهي مضارع. إن صلحت ياء المخاطبة مع معنى الطلب فهي أمر. وإن لم يصلح شيء فهي حرف.</p>
+  </div>
+</div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الثاني</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>ضابط الاسم</b></summary><p style="margin:10px 0 0;">يقبل التنوين، أو (أل)، أو النداء، أو حرف جر. اجتياز علامة واحدة أو اثنتين كافٍ.</p></details></div>
+    <div class="rule-box"><details><summary><b>سَاجِدٍ</b></summary><p style="margin:10px 0 0;">اسم يقبل علامات الاسم الأربع كلها معاً: التنوين، والأل، والنداء، وحرف الجر.</p></details></div>
+    <div class="rule-box"><details><summary><b>كاف الخطاب وهذا</b></summary><p style="margin:10px 0 0;">أسماء تقبل اختباراً أو اختبارين فقط من اختبارات الاسم — وهذا كافٍ لإثبات أنها أسماء.</p></details></div>
+    <div class="rule-box"><details><summary><b>ضابط الفعل الماضي</b></summary><p style="margin:10px 0 0;">يقبل تاء التأنيث الساكنة. سَجَدَ تصبح سَجَدَتْ.</p></details></div>
+    <div class="rule-box"><details><summary><b>ضابط الفعل المضارع</b></summary><p style="margin:10px 0 0;">يقبل (لَمْ). يَسْجُدُ تصبح لَمْ يَسْجُدْ.</p></details></div>
+    <div class="rule-box"><details><summary><b>ضابط فعل الأمر</b></summary><p style="margin:10px 0 0;">يقبل ياء المخاطبة مع الدلالة على الطلب معاً. اسْجُدْ تصبح اسْجُدِي.</p></details></div>
+    <div class="rule-box"><details><summary><b>ضابط الحرف</b></summary><p style="margin:10px 0 0;">لا يقبل شيئاً من علامات الاسم والفعل السابقة — لا تنويناً، ولا أل، ولا نداءً، ولا حرف جر، ولا تاء التأنيث، ولا (لم)، ولا ياء المخاطبة.</p></details></div>
+    <div class="rule-box"><details><summary><b>هَلْ ولَمْ</b></summary><p style="margin:10px 0 0;">كلتاهما حرفان بذاتهما — لا تقبلان شيئاً من علامات الاسم أو الفعل، رغم أن (لَمْ) هي نفسها اختبار المضارع.</p></details></div>
   </div>
 </div>
 `
@@ -1680,6 +1850,23 @@ var LESSONS_W3_EN = [
     <p>معرفة has six doors: pronoun, proper noun, demonstrative, relative noun, defined by (أل), and attached to something already definite. If a noun doesn't fit any of these six and takes (أل) instead, it's simply نكرة.</p>
   </div>
 </div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>Week 3 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>نَكِرَة (Indefinite)</b></summary><p style="margin:10px 0 0;">Any noun that accepts (أل), like رَجُلٍ → الرَّجُلِ.</p></details></div>
+    <div class="rule-box"><details><summary><b>مَعْرِفَة (Definite)</b></summary><p style="margin:10px 0 0;">Any noun that does not accept (أل). It comes in six types.</p></details></div>
+    <div class="rule-box"><details><summary><b>الضمير المنفصل (Detached Pronoun)</b></summary><p style="margin:10px 0 0;">6 pronouns: three for رفع (أنا، أنتَ، هو) and three for نصب (إيّايَ، إيّاكَ، إيّاهُ), plus their dual/plural/feminine branches.</p></details></div>
+    <div class="rule-box"><details><summary><b>الضمير المتصل (Attached Pronoun)</b></summary><p style="margin:10px 0 0;">9 pronouns: تايوان (5 for رفع), هيك (3 for نصب &amp; جر), and نا (1 for all three cases).</p></details></div>
+    <div class="rule-box"><details><summary><b>العَلَم (Proper Noun)</b></summary><p style="margin:10px 0 0;">A noun that belongs specifically to what it names — names of Allah, angels, people, places, and more.</p></details></div>
+    <div class="rule-box"><details><summary><b>اسم الإشارة (Demonstrative Noun)</b></summary><p style="margin:10px 0 0;">هَذَا، هَذِهِ، هَذَانِ، هَاتَانِ، هَؤُلَاءِ، هُنَا، ثَمَّ.</p></details></div>
+    <div class="rule-box"><details><summary><b>الاسم الموصول (Relative Noun)</b></summary><p style="margin:10px 0 0;">الَّذِي، الَّتِي، اللَّذَانِ، اللَّتَانِ، الَّذِينَ، اللَّائِي، اللَّاتِي، اللَّوَاتِي.</p></details></div>
+    <div class="rule-box"><details><summary><b>المعرَّف بـ(أل)</b></summary><p style="margin:10px 0 0;">A noun which, if you strip (أل) away, goes back to being indefinite. الْقَلَمِ ← قَلَمٍ.</p></details></div>
+    <div class="rule-box"><details><summary><b>المضاف إلى معرفة</b></summary><p style="margin:10px 0 0;">A noun made definite by being attached to an already-definite noun. قَلَمِي، قَلَمُ مُحَمَّدٍ، قَلَمُ الطَّالِبِ.</p></details></div>
+    <div class="rule-box"><details><summary><b>The Six Doors of معرفة</b></summary><p style="margin:10px 0 0;">Pronoun, proper noun, demonstrative, relative noun, defined by (أل), and attached to something already definite. Fifteen total pronouns alone.</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -1771,6 +1958,23 @@ var LESSONS_W3_AR = [
   <div class="note-box">
     <p class="note-title">خلاصة سريعة</p>
     <p>للمعرفة ستة أبواب: الضمير، والعلم، واسم الإشارة، والاسم الموصول، والمعرَّف بـ(أل)، والمضاف إلى معرفة. فإن لم ينطبق على الاسم واحد من هذه الستة وقَبِل (أل)، فهو ببساطة نكرة.</p>
+  </div>
+</div>
+`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الثالث</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>نَكِرَة</b></summary><p style="margin:10px 0 0;">كل اسم يقبل (أل)، نحو: رَجُلٍ ← الرَّجُلِ.</p></details></div>
+    <div class="rule-box"><details><summary><b>مَعْرِفَة</b></summary><p style="margin:10px 0 0;">كل اسم لا يقبل (أل). وهي ستة أنواع.</p></details></div>
+    <div class="rule-box"><details><summary><b>الضمير المنفصل</b></summary><p style="margin:10px 0 0;">٦ ضمائر: ثلاثة للرفع (أنا، أنتَ، هو) وثلاثة للنصب (إيّايَ، إيّاكَ، إيّاهُ)، وفروعها في التثنية والجمع والتأنيث.</p></details></div>
+    <div class="rule-box"><details><summary><b>الضمير المتصل</b></summary><p style="margin:10px 0 0;">٩ ضمائر: تايوان (٥ للرفع)، وهيك (٣ للنصب والجر)، ونا (واحد للحالات الثلاث).</p></details></div>
+    <div class="rule-box"><details><summary><b>العَلَم</b></summary><p style="margin:10px 0 0;">الاسم الخاصّ بمُسَمَّاهُ — أسماء الله والملائكة والناس والبلدان وغيرها.</p></details></div>
+    <div class="rule-box"><details><summary><b>اسم الإشارة</b></summary><p style="margin:10px 0 0;">هَذَا، هَذِهِ، هَذَانِ، هَاتَانِ، هَؤُلَاءِ، هُنَا، ثَمَّ.</p></details></div>
+    <div class="rule-box"><details><summary><b>الاسم الموصول</b></summary><p style="margin:10px 0 0;">الَّذِي، الَّتِي، اللَّذَانِ، اللَّتَانِ، الَّذِينَ، اللَّائِي، اللَّاتِي، اللَّوَاتِي.</p></details></div>
+    <div class="rule-box"><details><summary><b>المعرَّف بـ(أل)</b></summary><p style="margin:10px 0 0;">الاسم الذي إذا نُزِعَتْ منه (أل) عاد نكرة. الْقَلَمِ ← قَلَمٍ.</p></details></div>
+    <div class="rule-box"><details><summary><b>المضاف إلى معرفة</b></summary><p style="margin:10px 0 0;">اسم صار معرفة بإضافته إلى اسم معرفة. قَلَمِي، قَلَمُ مُحَمَّدٍ، قَلَمُ الطَّالِبِ.</p></details></div>
+    <div class="rule-box"><details><summary><b>أبواب المعرفة الستة</b></summary><p style="margin:10px 0 0;">الضمير، والعلم، واسم الإشارة، والاسم الموصول، والمعرَّف بـ(أل)، والمضاف إلى معرفة. والضمائر وحدها خمسة عشر ضميراً.</p></details></div>
   </div>
 </div>
 `
@@ -1936,6 +2140,24 @@ var LESSONS_EN = [
     </div>
   </div>
 </div>`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>Week 4 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>مُعْرَب (Declinable)</b></summary><p style="margin:10px 0 0;">A word whose ending changes depending on its grammatical position. مُحَمَّدٌ يَذْهَبُ (rafʿ) · لَنْ يَذْهَبَ (naṣb) · لَمْ يَذْهَبْ (jazm).</p></details></div>
+    <div class="rule-box"><details><summary><b>مَبْنِيّ (Indeclinable)</b></summary><p style="margin:10px 0 0;">A word whose ending never changes, no matter its position. هٰذَا ذَهَبَ · إِنَّ هٰذَا قَدْ ذَهَبَ · سَلَّمْتُ عَلَى هٰذَا.</p></details></div>
+    <div class="rule-box"><details><summary><b>The General Rule</b></summary><p style="margin:10px 0 0;">Always mabni: every particle, every past-tense verb, every imperative verb. Usually muʿrab, with exceptions: nouns and present-tense verbs.</p></details></div>
+    <div class="rule-box"><details><summary><b>How Particles Are Built</b></summary><p style="margin:10px 0 0;">Every particle is mabni — on one of four possible vowels: sukūn (مِنْ، قَدْ), fatḥ (سَوْفَ), kasr (لام الجر), or ḍamm (مُنْذُ).</p></details></div>
+    <div class="rule-box"><details><summary><b>The Past-Tense Verb's Building</b></summary><p style="margin:10px 0 0;">Default: visible fatḥ (سَجَدَ). Estimated (hidden) fatḥ in three situations: ending in alif (دَعَا), واو الجماعة attached (سَجَدُوا), or a moving nominative pronoun attached (سَجَدْتُ).</p></details></div>
+    <div class="rule-box"><details><summary><b>The Imperative Verb's Building</b></summary><p style="margin:10px 0 0;">Drop the nūn (if from the "five verbs"), drop the weak letter (if weak-ended), fatḥ (if نون التوكيد is attached, اسْجُدَنَّ), or sukūn otherwise (اسْجُدْ).</p></details></div>
+    <div class="rule-box"><details><summary><b>The Present-Tense Verb's Two Mabni Cases</b></summary><p style="margin:10px 0 0;">Muʿrab by default. Becomes mabni on sukūn with نون النسوة attached (يَسْجُدْنَ), or on fatḥ with نون التوكيد attached (تَسْجُدَنَّ).</p></details></div>
+    <div class="rule-box"><details><summary><b>The Ten Mabni Noun Types</b></summary><p style="margin:10px 0 0;">Nouns are muʿrab by default, except ten always-mabni categories: pronouns, demonstrative nouns, relative nouns, interrogative nouns, conditional nouns, verb-nouns, ـويه-ending proper nouns, compound numbers, compound adverbs, and some individual adverbs.</p></details></div>
+    <div class="rule-box"><details><summary><b>Except the Dual</b></summary><p style="margin:10px 0 0;">Demonstrative nouns and relative nouns are mabni EXCEPT their dual forms (هذانِ/هاتانِ, اللذانِ/اللتانِ), which are muʿrab like any dual.</p></details></div>
+    <div class="rule-box"><details><summary><b>Except أَيّ</b></summary><p style="margin:10px 0 0;">Interrogative nouns and conditional nouns are all mabni EXCEPT أَيّ, which is muʿrab.</p></details></div>
+    <div class="rule-box"><details><summary><b>Naming the Ruling: مرفوع vs. في محل رفع</b></summary><p style="margin:10px 0 0;">A muʿrab word is described as marfūʿ/manṣūb/majrūr/majzūm. A mabni word carrying the same role is instead "في محل رفع/نصب/جر/جزم" — since its ending can't visibly shift to show it.</p></details></div>
+    <div class="rule-box"><details><summary><b>Naming the Vowel: ضمة vs. ضم</b></summary><p style="margin:10px 0 0;">A muʿrab word's endings are ḍammah/fatḥah/kasrah/sukūn (with ة). A mabni word's building-vowels are ḍamm/fatḥ/kasr/sukūn instead (without ة).</p></details></div>
+  </div>
+</div>`,
 ];
 
 var LESSONS_AR = [
@@ -2097,6 +2319,24 @@ var LESSONS_AR = [
     </div>
   </div>
 </div>`,
+`<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الرابع</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>مُعْرَب</b></summary><p style="margin:10px 0 0;">كلمة يتغيّر آخرها بحسب موقعها الإعرابي. مُحَمَّدٌ يَذْهَبُ (رفع) · لَنْ يَذْهَبَ (نصب) · لَمْ يَذْهَبْ (جزم).</p></details></div>
+    <div class="rule-box"><details><summary><b>مَبْنِيّ</b></summary><p style="margin:10px 0 0;">كلمة لا يتغيّر آخرها مهما تغيّر موقعها. هٰذَا ذَهَبَ · إِنَّ هٰذَا قَدْ ذَهَبَ · سَلَّمْتُ عَلَى هٰذَا.</p></details></div>
+    <div class="rule-box"><details><summary><b>القاعدة العامة</b></summary><p style="margin:10px 0 0;">مبني دائماً: كل حرف، وكل فعل ماضٍ، وكل فعل أمر. معرب في الأصل مع استثناءات: الأسماء والفعل المضارع.</p></details></div>
+    <div class="rule-box"><details><summary><b>بناء الحروف</b></summary><p style="margin:10px 0 0;">كل حرف مبني — على إحدى حركات أربع: سكون (مِنْ، قَدْ)، أو فتح (سَوْفَ)، أو كسر (لام الجر)، أو ضم (مُنْذُ).</p></details></div>
+    <div class="rule-box"><details><summary><b>بناء الفعل الماضي</b></summary><p style="margin:10px 0 0;">الأصل: الفتح الظاهر (سَجَدَ). ويُقدَّر الفتح في ثلاث حالات: إذا انتهى بألف (دَعَا)، أو اتصلت به واو الجماعة (سَجَدُوا)، أو اتصل به ضمير رفع متحرك (سَجَدْتُ).</p></details></div>
+    <div class="rule-box"><details><summary><b>بناء فعل الأمر</b></summary><p style="margin:10px 0 0;">حذف النون (إن كان من الأفعال الخمسة)، أو حذف حرف العلة (إن كان معتل الآخر)، أو الفتح (إن اتصلت به نون التوكيد، اسْجُدَنَّ)، أو السكون فيما عدا ذلك (اسْجُدْ).</p></details></div>
+    <div class="rule-box"><details><summary><b>حالتا بناء الفعل المضارع</b></summary><p style="margin:10px 0 0;">معرب في الأصل. يُبنى على السكون إذا اتصلت به نون النسوة (يَسْجُدْنَ)، وعلى الفتح إذا اتصلت به نون التوكيد (تَسْجُدَنَّ).</p></details></div>
+    <div class="rule-box"><details><summary><b>الأسماء العشرة المبنية</b></summary><p style="margin:10px 0 0;">الاسم معرب في الأصل، إلا عشرة أنواع دائمة البناء: الضمائر، وأسماء الإشارة، والأسماء الموصولة، وأسماء الاستفهام، وأسماء الشرط، وأسماء الأفعال، والعلم المختوم بـ(ويه)، والأعداد المركبة، والظروف المركبة، وبعض الظروف المفردة.</p></details></div>
+    <div class="rule-box"><details><summary><b>إلا المثنى</b></summary><p style="margin:10px 0 0;">أسماء الإشارة والأسماء الموصولة كلها مبنية إلا المثنى منها (هذانِ/هاتانِ، اللذانِ/اللتانِ)، فهو معرب إعراب المثنى.</p></details></div>
+    <div class="rule-box"><details><summary><b>إلا أَيّ</b></summary><p style="margin:10px 0 0;">أسماء الاستفهام وأسماء الشرط كلها مبنية إلا (أَيّ)، فهي معربة.</p></details></div>
+    <div class="rule-box"><details><summary><b>تسمية الحكم: مرفوع أم في محل رفع؟</b></summary><p style="margin:10px 0 0;">المعرب يقال فيه: مرفوع/منصوب/مجرور/مجزوم. والمبني في نفس الموقع يقال فيه: في محل رفع/نصب/جر/جزم — لأن آخره لا يتغيّر ليظهر عليه الإعراب.</p></details></div>
+    <div class="rule-box"><details><summary><b>تسمية الحركة: ضمة أم ضم؟</b></summary><p style="margin:10px 0 0;">حركات المعرب: ضمة، فتحة، كسرة، سكون (بالتاء). وحركات بناء المبني: ضم، فتح، كسر، سكون (بلا تاء).</p></details></div>
+  </div>
+</div>`,
 ];
 
 var tenNounsEN = [
@@ -2195,6 +2435,48 @@ var module2QuizAR = [
   { q: "من بين الظروف المفردة، تُبنى (إذا) و(إذْ) على:", options: ["السكون", "الضم", "الكسر", "الفتح"], correct: 0, explanation: "إذا وإذْ من الظروف المفردة المبنية على السكون." },
   { q: "ما الفرق في المصطلح بين الكلمة المعربة والمبنية في تسمية الحكم الإعرابي نفسه؟", options: ["يقال في المعرب: مرفوع/منصوب/مجرور/مجزوم، وفي المبني: في محل رفع/نصب/جر/جزم", "المبني لا وظيفة إعرابية له أصلاً", "لا فرق بينهما", "المعرب فقط يصلح أن يكون فاعلاً"], correct: 0, explanation: "المعرب يوصف بـ(مرفوع، منصوب، مجرور، مجزوم)، أما المبني فيوصف بـ(في محل رفع، في محل نصب...) لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
   { q: "ما الفرق بين مصطلحات أسماء الحركات في المعرب والمبني؟", options: ["المبني يستخدم حركات مختلفة تماماً", "لا فرق في الأسماء", "المعرب فقط يقبل السكون", "المعرب: ضمة/فتحة/كسرة/سكون (بالتاء)، والمبني: ضم/فتح/كسر/سكون (بلا تاء)"], correct: 3, explanation: "المعرب حركاته: ضمة، فتحة، كسرة، سكون. والمبني حركاته: ضم، فتح، كسر، سكون — بلا تاء مربوطة." }
+];
+
+var week4PracticeQuizEN = [
+  { q: "In مُحَمَّدٌ يَذْهَبُ (rafʿ) → لَنْ يَذْهَبَ (naṣb) → لَمْ يَذْهَبْ (jazm), what does يَذْهَبُ's changing ending demonstrate?", options: ["That it is mabni", "That it is a particle", "That it is muʿrab — its ending changes with its grammatical position", "That it is always in rafʿ"], correct: 2, explanation: "تغيّر آخر الفعل يذهب بين الرفع والنصب والجزم دليل على أنه معرب." },
+  { q: "In هٰذَا ذَهَبَ / إِنَّ هٰذَا قَدْ ذَهَبَ / سَلَّمْتُ عَلَى هٰذَا, what does هٰذَا's unchanging form demonstrate?", options: ["That it is muʿrab", "That it is mabni — its ending never changes, no matter its position", "That it is a present-tense verb", "That it is always majrūr"], correct: 1, explanation: "بقاء هذا على حالة واحدة رغم اختلاف موقعها الإعرابي دليل على أنها مبنية." },
+  { q: "Besides particles, past-tense verbs, and imperative verbs (always mabni), which two categories are 'usually muʿrab, with exceptions'?", options: ["Nouns and present-tense verbs", "Particles and nouns", "Only proper nouns", "Only pronouns"], correct: 0, explanation: "الأسماء والفعل المضارع معربان في الأصل، مع استثناءات تُبنى فيها بعض صورهما." },
+  { q: "When نون التوكيد (the confirming nūn) attaches to the imperative verb, like اسْجُدَنَّ, it is built on:", options: ["Sukūn", "Kasr", "Fatḥ", "Ḍamm"], correct: 2, explanation: "اتصال نون التوكيد بفعل الأمر يجعله مبنياً على الفتح، نحو: اسْجُدَنَّ." },
+  { q: "Conditional nouns (أسماء الشرط) are all mabni EXCEPT:", options: ["مَن", "ما", "أيّ", "متى"], correct: 2, explanation: "أسماء الشرط مبنية كلها عدا (أيّ)، فهي معربة." },
+  { q: "مَن، ما، مهما، متى، أين، كيفما are listed as examples of which of the ten mabni noun categories?", options: ["Interrogative nouns only", "Conditional nouns (أسماء الشرط)", "Verb-nouns", "Compound numbers"], correct: 1, explanation: "هذه الألفاظ من أمثلة أسماء الشرط، وإن كان بعضها يشترك أيضاً مع أسماء الاستفهام." },
+  { q: "صَهْ، آمين، هيهاتَ، شتّانَ، أُفٍّ are examples of which mabni noun category?", options: ["Verb-nouns (أسماء الأفعال)", "Compound adverbs", "Proper nouns ending in ـويه", "Compound numbers"], correct: 0, explanation: "هذه الألفاظ من أسماء الأفعال — ألفاظ أسماء لكنّ معناها معنى الفعل." },
+  { q: "سيبويه، خالَوَيْه، and عَمْرَوَيْه, besides being built on kasr, share what structural feature?", options: ["They are compound numbers", "They are proper nouns ending in ـويه", "They are demonstrative nouns", "They are conditional nouns"], correct: 1, explanation: "هذه أعلام مختومة بـ(ويه)، ولذلك تُبنى على الكسر." },
+  { q: "Among the individual (non-compound) adverbs, الآنَ is built on:", options: ["Sukūn", "Ḍamm", "Kasr", "Fatḥ"], correct: 3, explanation: "الآنَ من الظروف المفردة المبنية على الفتح." },
+  { q: "A mabni word acting as a subject (فاعل) is described using which phrase, instead of simply مرفوع?", options: ["منصوب", "في محل رفع", "مجرور", "مجزوم"], correct: 1, explanation: "المبني في موضع الفاعل يقال فيه: في محل رفع، لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
+  { q: "A mabni word acting as a direct object (مفعول به) would be described as:", options: ["في محل رفع", "في محل نصب", "منصوب", "مجزوم"], correct: 1, explanation: "المبني في موضع المفعول به يقال فيه: في محل نصب." },
+  { q: "A mabni word's building-vowel equivalent to a muʿrab word's ḍammah is simply called:", options: ["ضمة", "ضم", "فتحة", "كسرة"], correct: 1, explanation: "المبني يُقال في حركته: ضم، بلا تاء مربوطة، بخلاف المعرب الذي يُقال في حركته: ضمة." },
+  { q: "How many total categories of mabni nouns are there?", options: ["Eight", "Ten", "Twelve", "Six"], correct: 1, explanation: "الأسماء المبنية دائماً عشرة أنواع." },
+  { q: "How many possible building vowels can a particle (حرف) take?", options: ["Two", "Three", "Four", "One — always sukūn"], correct: 2, explanation: "يُبنى الحرف على إحدى أربع حركات: السكون، أو الفتح، أو الكسر، أو الضم." },
+  { q: "Among the example particles given, which vowel is used by only ONE particle (مُنْذُ)?", options: ["Sukūn", "Fatḥ", "Kasr", "Ḍamm"], correct: 3, explanation: "مُنْذُ هو المثال الوحيد المذكور للحرف المبني على الضم." },
+  { q: "How many distinct situations cause the past-tense verb to take an ESTIMATED (hidden), rather than visible, fatḥ?", options: ["One", "Two", "Three", "Four"], correct: 2, explanation: "ثلاث حالات: انتهاؤه بألف، واتصال واو الجماعة، واتصال ضمير رفع متحرك." },
+  { q: "What does 'estimated' (مُقدَّر) fatḥ mean, as opposed to visible (ظاهر) fatḥ?", options: ["The verb has no fatḥ at all", "The fatḥa is assumed/intended but cannot physically appear on that letter", "The fatḥa only appears in writing, not in speech", "It means the verb is actually mabni on sukūn"], correct: 1, explanation: "الفتح المقدّر هو فتح مقصود لكن يتعذّر ظهوره على الحرف، كالألف في (دَعَا)." },
+  { q: "Of the three verb types — past, imperative, and present — which is the ONLY one that can ever be muʿrab?", options: ["الفعل الماضي", "فعل الأمر", "الفعل المضارع", "None of them — all verbs are always mabni"], correct: 2, explanation: "الماضي والأمر مبنيان دائماً؛ أما المضارع فمعرب في الأصل، ولا يُبنى إلا في حالتين." }
+];
+
+var week4PracticeQuizAR = [
+  { q: "في (مُحَمَّدٌ يَذْهَبُ ← رفع) و(لَنْ يَذْهَبَ ← نصب) و(لَمْ يَذْهَبْ ← جزم)، ماذا يثبت تغيّر آخر (يَذْهَبُ)؟", options: ["أنها مبنية", "أنها حرف", "أنها معربة — يتغيّر آخرها بتغيّر موقعها الإعرابي", "أنها دائماً في حالة رفع"], correct: 2, explanation: "تغيّر آخر الفعل يذهب بين الرفع والنصب والجزم دليل على أنه معرب." },
+  { q: "في (هٰذَا ذَهَبَ) و(إِنَّ هٰذَا قَدْ ذَهَبَ) و(سَلَّمْتُ عَلَى هٰذَا)، ماذا يثبت ثبات صورة (هٰذَا)؟", options: ["أنها معربة", "أنها مبنية — لا يتغيّر آخرها مهما تغيّر موقعها", "أنها فعل مضارع", "أنها دائماً مجرورة"], correct: 1, explanation: "بقاء هذا على حالة واحدة رغم اختلاف موقعها الإعرابي دليل على أنها مبنية." },
+  { q: "غير الحروف والفعل الماضي وفعل الأمر (المبنية دائماً)، ما الفئتان 'المعربتان في الأصل مع استثناءات'؟", options: ["الأسماء والفعل المضارع", "الحروف والأسماء", "الأعلام فقط", "الضمائر فقط"], correct: 0, explanation: "الأسماء والفعل المضارع معربان في الأصل، مع استثناءات تُبنى فيها بعض صورهما." },
+  { q: "إذا اتصلت نون التوكيد بفعل الأمر، كما في (اسْجُدَنَّ)، يُبنى على:", options: ["السكون", "الكسر", "الفتح", "الضم"], correct: 2, explanation: "اتصال نون التوكيد بفعل الأمر يجعله مبنياً على الفتح، نحو: اسْجُدَنَّ." },
+  { q: "أسماء الشرط كلها مبنية إلا:", options: ["مَن", "ما", "أيّ", "متى"], correct: 2, explanation: "أسماء الشرط مبنية كلها عدا (أيّ)، فهي معربة." },
+  { q: "(مَن، ما، مهما، متى، أين، كيفما) وردت أمثلةً على أي نوع من الأسماء العشرة المبنية؟", options: ["أسماء الاستفهام فقط", "أسماء الشرط", "أسماء الأفعال", "الأعداد المركبة"], correct: 1, explanation: "هذه الألفاظ من أمثلة أسماء الشرط، وإن كان بعضها يشترك أيضاً مع أسماء الاستفهام." },
+  { q: "(صَهْ، آمين، هيهاتَ، شتّانَ، أُفٍّ) أمثلة على أي نوع من الأسماء المبنية؟", options: ["أسماء الأفعال", "الظروف المركبة", "العلم المختوم بـ(ويه)", "الأعداد المركبة"], correct: 0, explanation: "هذه الألفاظ من أسماء الأفعال — ألفاظ أسماء لكنّ معناها معنى الفعل." },
+  { q: "(سيبويه، خالَوَيْه، عَمْرَوَيْه) — إلى جانب بنائها على الكسر، ما القاسم المشترك بينها؟", options: ["أعداد مركبة", "أعلام مختومة بـ(ويه)", "أسماء إشارة", "أسماء شرط"], correct: 1, explanation: "هذه أعلام مختومة بـ(ويه)، ولذلك تُبنى على الكسر." },
+  { q: "من بين الظروف المفردة، تُبنى (الآنَ) على:", options: ["السكون", "الضم", "الكسر", "الفتح"], correct: 3, explanation: "الآنَ من الظروف المفردة المبنية على الفتح." },
+  { q: "المبني الواقع فاعلاً يُقال فيه، بدلاً من (مرفوع):", options: ["منصوب", "في محل رفع", "مجرور", "مجزوم"], correct: 1, explanation: "المبني في موضع الفاعل يقال فيه: في محل رفع، لأن آخره لا يتغيّر ليظهر عليه الإعراب." },
+  { q: "المبني الواقع مفعولاً به يُقال فيه:", options: ["في محل رفع", "في محل نصب", "منصوب", "مجزوم"], correct: 1, explanation: "المبني في موضع المفعول به يقال فيه: في محل نصب." },
+  { q: "حركة بناء المبني المقابلة لضمة المعرب تُسمّى ببساطة:", options: ["ضمة", "ضم", "فتحة", "كسرة"], correct: 1, explanation: "المبني يُقال في حركته: ضم، بلا تاء مربوطة، بخلاف المعرب الذي يُقال في حركته: ضمة." },
+  { q: "كم عدد أنواع الأسماء المبنية دائماً إجمالاً؟", options: ["ثمانية", "عشرة", "اثنا عشر", "ستة"], correct: 1, explanation: "الأسماء المبنية دائماً عشرة أنواع." },
+  { q: "على كم حركة ممكنة يُبنى الحرف؟", options: ["اثنتين", "ثلاث", "أربع", "واحدة فقط، وهي السكون"], correct: 2, explanation: "يُبنى الحرف على إحدى أربع حركات: السكون، أو الفتح، أو الكسر، أو الضم." },
+  { q: "من بين الأمثلة المذكورة، أي حركة يستخدمها حرف واحد فقط (مُنْذُ)؟", options: ["السكون", "الفتح", "الكسر", "الضم"], correct: 3, explanation: "مُنْذُ هو المثال الوحيد المذكور للحرف المبني على الضم." },
+  { q: "كم حالة مختلفة تجعل الفعل الماضي يُبنى على فتح مقدّر بدلاً من الفتح الظاهر؟", options: ["حالة واحدة", "حالتان", "ثلاث حالات", "أربع حالات"], correct: 2, explanation: "ثلاث حالات: انتهاؤه بألف، واتصال واو الجماعة، واتصال ضمير رفع متحرك." },
+  { q: "ماذا يعني (الفتح المقدّر) بخلاف (الفتح الظاهر)؟", options: ["لا فتح للفعل إطلاقاً", "فتحة مقصودة لكن يتعذّر ظهورها على الحرف", "الفتحة تظهر في الكتابة فقط دون النطق", "أن الفعل مبني على السكون في الحقيقة"], correct: 1, explanation: "الفتح المقدّر هو فتح مقصود لكن يتعذّر ظهوره على الحرف، كالألف في (دَعَا)." },
+  { q: "من بين الأفعال الثلاثة — الماضي والأمر والمضارع — أيّها الوحيد الذي يمكن أن يكون معرباً؟", options: ["الفعل الماضي", "فعل الأمر", "الفعل المضارع", "لا واحد منها — كلها مبنية دائماً"], correct: 2, explanation: "الماضي والأمر مبنيان دائماً؛ أما المضارع فمعرب في الأصل، ولا يُبنى إلا في حالتين." }
 ];
 
 var finalQuizEN = [
@@ -2388,6 +2670,35 @@ var LESSONS_W5_EN = [
     <p style="margin:0;"><b>هَذَا:</b> object (mafʿūl bih), in the position of naṣb, mabni on sukūn.</p>
   </div>
 </div>
+`,
+`<div class="hero">
+  <p class="hero-eyebrow">فَصْلٌ فِي مُرَاجَعَةِ الْأُسْبُوعِ الْخَامِس</p>
+  <h1 class="en-title">Practice Your Knowledge</h1>
+  <p>Sixteen flashcards covering everything from this week — tap each term to reveal its meaning, then test yourself with the quiz that follows.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>Week 5 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>رَفْع (Rafʿ)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — the default ruling for a noun or present-tense verb when no accusative or jazm particle affects it.</p></details></div>
+    <div class="rule-box"><details><summary><b>نَصْب (Naṣb)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — applies to nouns (e.g. after certain particles) and to a present-tense verb preceded by a naṣb particle.</p></details></div>
+    <div class="rule-box"><details><summary><b>جَرّ (Jarr)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — touches nouns only. It never touches a verb.</p></details></div>
+    <div class="rule-box"><details><summary><b>جَزْم (Jazm)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — touches present-tense verbs only. It never touches a noun.</p></details></div>
+    <div class="rule-box"><details><summary><b>Nouns and Jazm</b></summary><p style="margin:10px 0 0;">A noun can carry rafʿ, naṣb, or jarr — but never jazm.</p></details></div>
+    <div class="rule-box"><details><summary><b>Verbs and Jarr</b></summary><p style="margin:10px 0 0;">A present-tense verb can carry rafʿ, naṣb, or jazm — but never jarr.</p></details></div>
+    <div class="rule-box"><details><summary><b>خَطُّ الْإِعْرَاب (Khaṭṭ al-I'rāb)</b></summary><p style="margin:10px 0 0;">"The I'rab Line" — the boundary dividing every Arabic word into those that never take an i'rab ruling, and those that always must.</p></details></div>
+    <div class="rule-box"><details><summary><b>قَبْلَ الْخَطّ (Before the Line)</b></summary><p style="margin:10px 0 0;">Particles, the past-tense verb, and the imperative verb. None of these ever takes an i'rab ruling.</p></details></div>
+    <div class="rule-box"><details><summary><b>بَعْدَ الْخَطّ (After the Line)</b></summary><p style="margin:10px 0 0;">Nouns and present-tense verbs. Both always carry one of the four i'rab rulings.</p></details></div>
+    <div class="rule-box"><details><summary><b>لَا مَحَلَّ لَهُ مِنَ الْإِعْرَاب</b></summary><p style="margin:10px 0 0;">"It has no locus in i'rab" — what you say when parsing any word from before the line.</p></details></div>
+    <div class="rule-box"><details><summary><b>Parsing "Before the Line" (3 steps)</b></summary><p style="margin:10px 0 0;">① its type ② the vowel it's built on ③ لَا مَحَلَّ لَهُ مِنَ الْإِعْرَاب.</p></details></div>
+    <div class="rule-box"><details><summary><b>Parsing "After the Line" (3 steps)</b></summary><p style="margin:10px 0 0;">① its type/role ② its i'rab ruling ③ its marker (a vowel, or what it's mabni on).</p></details></div>
+    <div class="rule-box"><details><summary><b>Muʿrab Markers</b></summary><p style="margin:10px 0 0;">rafʿ → ḍamma, naṣb → fatḥa, jarr → kasra, jazm → sukūn.</p></details></div>
+    <div class="rule-box"><details><summary><b>Mabni Phrasing</b></summary><p style="margin:10px 0 0;">Instead of plain marfūʿ/manṣūb/etc., a mabni word is described as "in the position of rafʿ/naṣb/jarr/jazm, mabni on such-and-such."</p></details></div>
+    <div class="rule-box"><details><summary><b>نُون النِّسْوَة (The Feminine-Plural Nūn)</b></summary><p style="margin:10px 0 0;">When attached to a present-tense verb, it makes that verb mabni on sukūn — even while the verb sits in a rafʿ position.</p></details></div>
+    <div class="rule-box"><details><summary><b>Why This Matters</b></summary><p style="margin:10px 0 0;">Getting a single i'rab ruling wrong can quietly flip who is doing what to whom in a sentence — including in the Qur'an and Sunnah.</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -2540,6 +2851,34 @@ var LESSONS_W5_AR = [
     <p style="margin:0;"><b>هَذَا:</b> مفعول به، في محل نصب، مبني على السكون.</p>
   </div>
 </div>
+`,
+`<div class="hero">
+  <h1>مُرَاجَعَةُ الْأُسْبُوعِ الْخَامِس</h1>
+  <p>ستّ عشرة بطاقة تراجع كل ما درسته هذا الأسبوع — انقر كل مصطلح لتظهر معناه، ثم اختبر نفسك في الاختبار الذي يليها.</p>
+</div>
+
+<div class="section">
+  <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الخامس</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
+  <div class="def-grid">
+    <div class="rule-box"><details><summary><b>الرَّفْع</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ وهو الحكم الأصلي للاسم أو الفعل المضارع إذا لم يدخله ناصب ولا جازم.</p></details></div>
+    <div class="rule-box"><details><summary><b>النَّصْب</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ يدخل الأسماء (بعد بعض الحروف) والفعل المضارع إذا سبقه ناصب.</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجَرّ</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ يدخل الأسماء فقط، ولا يدخل الأفعال أبداً.</p></details></div>
+    <div class="rule-box"><details><summary><b>الْجَزْم</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ يدخل الأفعال المضارعة فقط، ولا يدخل الأسماء أبداً.</p></details></div>
+    <div class="rule-box"><details><summary><b>الأسماء والجزم</b></summary><p style="margin:10px 0 0;">لا يدخل الاسمَ إلا الرفعُ أو النصبُ أو الجرّ، ولا يدخله الجزم أبداً.</p></details></div>
+    <div class="rule-box"><details><summary><b>الأفعال والجر</b></summary><p style="margin:10px 0 0;">لا يدخل الفعلَ المضارعَ إلا الرفعُ أو النصبُ أو الجزم، ولا يدخله الجرّ أبداً.</p></details></div>
+    <div class="rule-box"><details><summary><b>خَطُّ الْإِعْرَاب</b></summary><p style="margin:10px 0 0;">الحدّ الذي يفصل كل كلمة عربية إلى قسمين: كلمات لا يدخلها حكم إعرابي أبداً، وكلمات لا بد أن يدخلها حكم إعرابي.</p></details></div>
+    <div class="rule-box"><details><summary><b>قَبْلَ الْخَطّ</b></summary><p style="margin:10px 0 0;">الحروف، والفعل الماضي، وفعل الأمر. هذه لا يدخلها حكم إعرابي أبداً.</p></details></div>
+    <div class="rule-box"><details><summary><b>بَعْدَ الْخَطّ</b></summary><p style="margin:10px 0 0;">الأسماء والأفعال المضارعة. هذه يدخلها دائماً أحد الأحكام الأربعة.</p></details></div>
+    <div class="rule-box"><details><summary><b>لَا مَحَلَّ لَهُ مِنَ الْإِعْرَاب</b></summary><p style="margin:10px 0 0;">العبارة التي تقال عند إعراب أي كلمة من قبل الخط.</p></details></div>
+    <div class="rule-box"><details><summary><b>إعراب ما قبل الخط (ثلاث خطوات)</b></summary><p style="margin:10px 0 0;">١) بيان نوعها ٢) بيان حركة بنائها ٣) لا محل لها من الإعراب.</p></details></div>
+    <div class="rule-box"><details><summary><b>إعراب ما بعد الخط (ثلاث خطوات)</b></summary><p style="margin:10px 0 0;">١) بيان نوعها أو موقعها ٢) بيان حكمها الإعرابي ٣) بيان علامتها (الحركة، أو ما بُنيت عليه إن كانت مبنية).</p></details></div>
+    <div class="rule-box"><details><summary><b>علامات المعرَب</b></summary><p style="margin:10px 0 0;">الرفع بالضمة، والنصب بالفتحة، والجر بالكسرة، والجزم بالسكون.</p></details></div>
+    <div class="rule-box"><details><summary><b>صيغة المبني</b></summary><p style="margin:10px 0 0;">بدلاً من (مرفوع/منصوب) يُقال في المبني: (في محل رفع/نصب/جر/جزم، مبني على كذا).</p></details></div>
+    <div class="rule-box"><details><summary><b>نُون النِّسْوَة</b></summary><p style="margin:10px 0 0;">إذا اتصلت بالفعل المضارع بنته على السكون، حتى وإن كان في محل رفع.</p></details></div>
+    <div class="rule-box"><details><summary><b>لماذا يهمّ هذا؟</b></summary><p style="margin:10px 0 0;">الخطأ في حكم إعرابي واحد قد يُغيِّر بصمت من فعل الفعل ومن وقع عليه — حتى في القرآن والسنة.</p></details></div>
+  </div>
+</div>
 `
 ];
 
@@ -2567,6 +2906,36 @@ var week1QuizAR = [
   { q: "تنقسم مكمّلات الجملتين إلى ثلاث مجموعات، ما هي؟", options: ["مرفوعات ومجزومات فقط", "منصوبات، ومجرورات، وتوابع", "اسم وفعل وحرف", "نكرة ومعرفة وضمير"], correct: 1, explanation: "مكمّلات الجملتين ثلاث: منصوبات (كالمفاعيل الخمسة)، ومجرورات (كالمضاف إليه)، وتوابع (كالنعت والتوكيد)." },
   { q: "كم عدد الجوازم التي تسبق الفعل المضارع فتجزمه؟", options: ["عشرة", "خمسة", "أربعة", "اثنان"], correct: 1, explanation: "يُجزَم الفعل المضارع إذا سُبِق بجازم، وجوازمه خمسة." },
   { q: "متى يكون الفعل المضارع مرفوعًا؟", options: ["فقط إذا سُبِق بأحد الجوازم الخمسة", "إذا لم يُسبَق بناصب ولا جازم", "أبدًا — المضارع مبني دائمًا", "فقط إذا سُبِق بأحد النواصب الأربعة"], correct: 1, explanation: "يُرفَع الفعل المضارع إذا لم يُسبَق بناصب ولا جازم — هذه هي حالته الافتراضية." }
+];
+
+var week1PracticeQuizEN = [
+  { q: "Which chapter studies مُحَمَّدٌ كَرِيمٌ, where both pillars are nominative?", options: ["باب كان وأخواتها", "باب إنّ وأخواتها", "باب المبتدأ والخبر", "باب ظننتُ وأخواتها"], correct: 2, explanation: "مُحَمَّدٌ كَرِيمٌ: كلا الركنين مرفوع — تُدرَس في باب المبتدأ والخبر." },
+  { q: "Which chapter studies كَانَ مُحَمَّدٌ كَرِيمًا, where the first pillar is nominative and the second accusative?", options: ["باب المبتدأ والخبر", "باب كان وأخواتها", "باب إنّ وأخواتها", "باب ظننتُ وأخواتها"], correct: 1, explanation: "كَانَ مُحَمَّدٌ كَرِيمًا: الأول مرفوع (اسم كان) والثاني منصوب (خبر كان) — تُدرَس في باب كان وأخواتها." },
+  { q: "Which chapter studies ظَنَنْتُ مُحَمَّدًا كَرِيمًا, where both pillars are accusative?", options: ["باب ظننتُ وأخواتها", "باب الفاعل", "باب نائب الفاعل", "باب المبتدأ والخبر"], correct: 0, explanation: "ظَنَنْتُ مُحَمَّدًا كَرِيمًا: كلا المفعولين منصوب — تُدرَس في باب ظننتُ وأخواتها." },
+  { q: "The five objects (المفاعيل الخمسة) belong to which category of مكمّلات الجملتين?", options: ["مجرورات", "توابع", "منصوبات", "لا شيء مما سبق"], correct: 2, explanation: "المفاعيل الخمسة من المنصوبات، إلى جانب الحال والتمييز والمستثنى والمنادى." },
+  { q: "المضاف إليه belongs to which category of مكمّلات الجملتين?", options: ["منصوبات", "مجرورات", "توابع", "معرفة فقط، لا مكمّلات"], correct: 1, explanation: "المضاف إليه من المجرورات، إلى جانب الاسم المسبوق بحرف جر." },
+  { q: "النعت والمعطوف والتوكيد والبدل all belong to which category of مكمّلات الجملتين?", options: ["منصوبات", "مجرورات", "توابع", "لا شيء مما سبق"], correct: 2, explanation: "هذه الأربعة كلها من التوابع." },
+  { q: "What are the two forms of الجملة الفعلية?", options: ["نكرة followed by معرفة", "An active verb + فاعل, or a passive verb + نائب فاعل", "A noun followed by another noun", "ماضٍ followed by مضارع"], correct: 1, explanation: "للجملة الفعلية صورتان: فعل مبني للمعلوم وفاعل، أو فعل مبني للمجهول ونائب فاعل." },
+  { q: "How many accusative particles (نواصب) put the present-tense verb in نصب?", options: ["Five", "Four", "Two", "Ten"], correct: 1, explanation: "يُنصَب الفعل المضارع إذا سُبِق بناصب، ونواصبه أربعة." },
+  { q: "How many Jazm particles (جوازم) put the present-tense verb in جزم?", options: ["Four", "Five", "Two", "Ten"], correct: 1, explanation: "يُجزَم الفعل المضارع إذا سُبِق بجازم، وجوازمه خمسة." },
+  { q: "In صَلَّى أَنَسٌ, what grammatical role does أَنَسٌ play?", options: ["نائب فاعل", "فاعل", "مبتدأ", "خبر"], correct: 1, explanation: "أَنَسٌ فاعل لفعل صَلَّى المبني للمعلوم." },
+  { q: "In قُرِئَ الكتابُ, what grammatical role does الكتابُ play?", options: ["فاعل", "نائب فاعل", "مبتدأ", "اسم إنّ"], correct: 1, explanation: "الكتابُ نائب فاعل لفعل قُرِئَ المبني للمجهول." },
+  { q: "When you feel lost in a new Naḥw topic, what does this week's lesson recommend?", options: ["Skip ahead to Week 5", "Memorize the topic without understanding it", "Return to this map and identify which of the seven topics you're in", "Ask only about verbs, since nouns come later"], correct: 2, explanation: "توصية الدرس: العودة إلى هذا المخطط وسؤال: في أي المباحث السبعة أنا الآن؟" }
+];
+
+var week1PracticeQuizAR = [
+  { q: "أي باب يدرس (مُحَمَّدٌ كَرِيمٌ)، حيث كلا الركنين مرفوع؟", options: ["باب كان وأخواتها", "باب إنّ وأخواتها", "باب المبتدأ والخبر", "باب ظننتُ وأخواتها"], correct: 2, explanation: "مُحَمَّدٌ كَرِيمٌ: كلا الركنين مرفوع — تُدرَس في باب المبتدأ والخبر." },
+  { q: "أي باب يدرس (كَانَ مُحَمَّدٌ كَرِيمًا)، حيث الأول مرفوع والثاني منصوب؟", options: ["باب المبتدأ والخبر", "باب كان وأخواتها", "باب إنّ وأخواتها", "باب ظننتُ وأخواتها"], correct: 1, explanation: "كَانَ مُحَمَّدٌ كَرِيمًا: الأول مرفوع (اسم كان) والثاني منصوب (خبر كان) — تُدرَس في باب كان وأخواتها." },
+  { q: "أي باب يدرس (ظَنَنْتُ مُحَمَّدًا كَرِيمًا)، حيث كلاهما منصوب؟", options: ["باب ظننتُ وأخواتها", "باب الفاعل", "باب نائب الفاعل", "باب المبتدأ والخبر"], correct: 0, explanation: "ظَنَنْتُ مُحَمَّدًا كَرِيمًا: كلا المفعولين منصوب — تُدرَس في باب ظننتُ وأخواتها." },
+  { q: "المفاعيل الخمسة تنتمي إلى أي مجموعة من مكمّلات الجملتين؟", options: ["مجرورات", "توابع", "منصوبات", "لا شيء مما سبق"], correct: 2, explanation: "المفاعيل الخمسة من المنصوبات، إلى جانب الحال والتمييز والمستثنى والمنادى." },
+  { q: "المضاف إليه ينتمي إلى أي مجموعة من مكمّلات الجملتين؟", options: ["منصوبات", "مجرورات", "توابع", "معرفة فقط، لا مكمّلات"], correct: 1, explanation: "المضاف إليه من المجرورات، إلى جانب الاسم المسبوق بحرف جر." },
+  { q: "النعت والمعطوف والتوكيد والبدل، كلها تنتمي إلى أي مجموعة؟", options: ["منصوبات", "مجرورات", "توابع", "لا شيء مما سبق"], correct: 2, explanation: "هذه الأربعة كلها من التوابع." },
+  { q: "ما صورتا الجملة الفعلية؟", options: ["نكرة تليها معرفة", "فعل مبني للمعلوم وفاعل، أو فعل مبني للمجهول ونائب فاعل", "اسم يتبعه اسم آخر", "ماضٍ يتبعه مضارع"], correct: 1, explanation: "للجملة الفعلية صورتان: فعل مبني للمعلوم وفاعل، أو فعل مبني للمجهول ونائب فاعل." },
+  { q: "كم عدد النواصب التي تنصب الفعل المضارع؟", options: ["خمسة", "أربعة", "اثنان", "عشرة"], correct: 1, explanation: "يُنصَب الفعل المضارع إذا سُبِق بناصب، ونواصبه أربعة." },
+  { q: "كم عدد الجوازم التي تجزم الفعل المضارع؟", options: ["أربعة", "خمسة", "اثنان", "عشرة"], correct: 1, explanation: "يُجزَم الفعل المضارع إذا سُبِق بجازم، وجوازمه خمسة." },
+  { q: "في (صَلَّى أَنَسٌ)، ما الدور النحوي لـ(أَنَسٌ)؟", options: ["نائب فاعل", "فاعل", "مبتدأ", "خبر"], correct: 1, explanation: "أَنَسٌ فاعل لفعل صَلَّى المبني للمعلوم." },
+  { q: "في (قُرِئَ الكتابُ)، ما الدور النحوي لـ(الكتابُ)؟", options: ["فاعل", "نائب فاعل", "مبتدأ", "اسم إنّ"], correct: 1, explanation: "الكتابُ نائب فاعل لفعل قُرِئَ المبني للمجهول." },
+  { q: "حين تشعر بالتيه في موضوع جديد من النحو، بماذا ينصحك هذا الأسبوع؟", options: ["تجاوز الأمر إلى الأسبوع الخامس", "حفظ الموضوع دون فهمه", "العودة إلى هذا المخطط ومعرفة في أي المباحث السبعة أنت الآن", "السؤال عن الأفعال فقط، لأن الأسماء تأتي لاحقاً"], correct: 2, explanation: "توصية الدرس: العودة إلى هذا المخطط وسؤال: في أي المباحث السبعة أنا الآن؟" }
 ];
 
 var week2QuizEN = [
@@ -2597,6 +2966,32 @@ var week2QuizAR = [
   { q: "أي مما يلي يُصنَّف حرفًا؟", options: ["هَلْ", "سَجَدَ", "اسْجُدْ", "سَاجِدٍ"], correct: 0, explanation: "هَلْ حرف استفهام لا يقبل أياً من علامات الاسم أو الفعل؛ أما الباقي فاسم وفعل ماضٍ وفعل أمر على الترتيب." },
   { q: "كلمة اختُبِرَت فوُجِد أنها تقبل (لَمْ). ما نوعها؟", options: ["فعل ماضٍ", "فعل مضارع", "اسم", "حرف"], correct: 1, explanation: "قبول (لَمْ) هو الاختبار الحاصر لتحديد الفعل المضارع." },
   { q: "لماذا يكون تطبيق هذه الاختبارات النحوية أوثق من تخمين نوع الكلمة من معناها؟", options: ["الاختبارات ليست أوثق من المعنى في الحقيقة", "لأن المعنى لا علاقة له بالنحو إطلاقاً", "لأن الاختبارات تعطي جوابًا موضوعيًّا يمكن التحقق منه، بصرف النظر عن 'إحساس' الكلمة", "لأن استخدام المعنى خاص بالمتقدمين فقط"], correct: 2, explanation: "الاعتماد على العلامات النحوية (كقبول التنوين أو تاء التأنيث) يعطي نتيجة قاطعة، بخلاف الاعتماد على الحدس من المعنى وحده." }
+];
+
+var week2PracticeQuizEN = [
+  { q: "What do we call a word like كاف الخطاب, which only passes one or two of the four noun tests?", options: ["It isn't really a noun", "It is still a noun — passing even one test is enough", "It is a حرف instead", "It is مبني only, never a noun"], correct: 1, explanation: "اجتياز علامة واحدة من علامات الاسم يكفي لإثبات أن الكلمة اسم، حتى لو لم تقبل بقية العلامات." },
+  { q: "Which of the three verb types is tested by accepting تاء التأنيث الساكنة?", options: ["الفعل الماضي", "الفعل المضارع", "فعل الأمر", "لا أحد منها"], correct: 0, explanation: "قبول تاء التأنيث الساكنة هو ضابط الفعل الماضي تحديداً." },
+  { q: "Which of the three verb types is tested by accepting لَمْ?", options: ["فعل الأمر", "الفعل الماضي", "الفعل المضارع", "لا أحد منها"], correct: 2, explanation: "قبول (لَمْ) هو ضابط الفعل المضارع تحديداً." },
+  { q: "Which verb type requires BOTH ياء المخاطبة AND a request-meaning together?", options: ["الفعل الماضي", "الفعل المضارع", "فعل الأمر", "لا أحد منها"], correct: 2, explanation: "ضابط فعل الأمر أمران معاً: قبول ياء المخاطبة، والدلالة على الطلب." },
+  { q: "How is الحرف (the particle) defined?", options: ["A word with three letters or fewer", "A word that accepts every noun marker", "A word that accepts none of the noun or verb markers", "A word that always starts a sentence"], correct: 2, explanation: "الحرف: كل كلمة لا تقبل شيئاً من علامات الاسم أو الفعل." },
+  { q: "هَلْ is classified as what type of word?", options: ["اسم", "فعل ماضٍ", "حرف", "فعل أمر"], correct: 2, explanation: "هَلْ حرف استفهام لا يقبل أياً من علامات الاسم أو الفعل." },
+  { q: "لَمْ is itself used as the test for المضارع — but what type of word is لَمْ itself?", options: ["فعل مضارع", "اسم", "حرف", "فعل ماضٍ"], correct: 2, explanation: "لَمْ حرف جزم بذاته، رغم استخدامه اختباراً لتمييز الفعل المضارع." },
+  { q: "مِنْ is an example of which type of word?", options: ["اسم", "فعل", "حرف", "فعل أمر"], correct: 2, explanation: "مِنْ من حروف الجر." },
+  { q: "Why should you run these grammatical tests instead of guessing a word's type from its meaning?", options: ["Meaning is unrelated to grammar entirely", "Because tests give an objective, verifiable answer regardless of how the word 'feels'", "Because only advanced students may use meaning", "Tests are not actually more reliable"], correct: 1, explanation: "الاعتماد على العلامات النحوية يعطي نتيجة قاطعة، بخلاف الاعتماد على الحدس من المعنى وحده." },
+  { q: "اسْجُدْ becomes اسْجُدِي when addressing a woman. Beyond just proving it's a verb, what does this specifically prove?", options: ["That it is فعل ماضٍ", "That it is فعل مضارع", "That it is specifically فعل الأمر, since it accepts ياء المخاطبة with a request meaning", "That it is a حرف"], correct: 2, explanation: "قبول ياء المخاطبة مع معنى الطلب هو الاختبار المميِّز لفعل الأمر تحديداً، لا لأي فعل آخر." }
+];
+
+var week2PracticeQuizAR = [
+  { q: "كلمة مثل (كاف الخطاب) لا تقبل إلا اختباراً أو اختبارين من اختبارات الاسم الأربعة، فماذا نسمّيها؟", options: ["ليست اسماً في الحقيقة", "تبقى اسماً — واجتياز اختبار واحد كافٍ", "تُصنَّف حرفاً بدلاً من ذلك", "مبنية فقط، وليست اسماً أبداً"], correct: 1, explanation: "اجتياز علامة واحدة من علامات الاسم يكفي لإثبات أن الكلمة اسم، حتى لو لم تقبل بقية العلامات." },
+  { q: "أي أقسام الفعل الثلاثة يُختبَر بقبول تاء التأنيث الساكنة؟", options: ["الفعل الماضي", "الفعل المضارع", "فعل الأمر", "لا واحد منها"], correct: 0, explanation: "قبول تاء التأنيث الساكنة هو ضابط الفعل الماضي تحديداً." },
+  { q: "أي أقسام الفعل الثلاثة يُختبَر بقبول (لَمْ)؟", options: ["فعل الأمر", "الفعل الماضي", "الفعل المضارع", "لا واحد منها"], correct: 2, explanation: "قبول (لَمْ) هو ضابط الفعل المضارع تحديداً." },
+  { q: "أي أقسام الفعل يحتاج إلى قبول ياء المخاطبة والدلالة على الطلب معاً؟", options: ["الفعل الماضي", "الفعل المضارع", "فعل الأمر", "لا واحد منها"], correct: 2, explanation: "ضابط فعل الأمر أمران معاً: قبول ياء المخاطبة، والدلالة على الطلب." },
+  { q: "كيف يُعرَّف الحرف؟", options: ["كلمة من ثلاثة أحرف أو أقل", "كلمة تقبل كل علامات الاسم", "كلمة لا تقبل شيئاً من علامات الاسم أو الفعل", "كلمة تقع دائماً في أول الجملة"], correct: 2, explanation: "الحرف: كل كلمة لا تقبل شيئاً من علامات الاسم أو الفعل." },
+  { q: "(هَلْ) تُصنَّف من أي نوع؟", options: ["اسم", "فعل ماضٍ", "حرف", "فعل أمر"], correct: 2, explanation: "هَلْ حرف استفهام لا يقبل أياً من علامات الاسم أو الفعل." },
+  { q: "(لَمْ) تُستخدَم اختباراً للمضارع — لكن ما نوع (لَمْ) نفسها؟", options: ["فعل مضارع", "اسم", "حرف", "فعل ماضٍ"], correct: 2, explanation: "لَمْ حرف جزم بذاته، رغم استخدامه اختباراً لتمييز الفعل المضارع." },
+  { q: "(مِنْ) مثال على أي نوع من الكلمة؟", options: ["اسم", "فعل", "حرف", "فعل أمر"], correct: 2, explanation: "مِنْ من حروف الجر." },
+  { q: "لماذا تُطبَّق هذه الاختبارات النحوية بدلاً من تخمين نوع الكلمة من معناها؟", options: ["المعنى لا علاقة له بالنحو إطلاقاً", "لأن الاختبارات تعطي جوابًا موضوعيًّا يمكن التحقق منه، بصرف النظر عن 'إحساس' الكلمة", "لأن استخدام المعنى خاص بالمتقدمين فقط", "الاختبارات ليست أوثق من المعنى في الحقيقة"], correct: 1, explanation: "الاعتماد على العلامات النحوية يعطي نتيجة قاطعة، بخلاف الاعتماد على الحدس من المعنى وحده." },
+  { q: "(اسْجُدْ) تصبح (اسْجُدِي) عند مخاطبة الأنثى. ماذا يثبت هذا تحديداً، غير أنها فعل؟", options: ["أنها فعل ماضٍ", "أنها فعل مضارع", "أنها فعل أمر تحديداً، لقبولها ياء المخاطبة مع معنى الطلب", "أنها حرف"], correct: 2, explanation: "قبول ياء المخاطبة مع معنى الطلب هو الاختبار المميِّز لفعل الأمر تحديداً، لا لأي فعل آخر." }
 ];
 
 var week3QuizEN = [
@@ -2635,6 +3030,150 @@ var week3QuizAR = [
   { q: "لماذا لا يوصف الفعل أو الحرف بالنكرة أو المعرفة؟", options: ["لأن التنكير والتعريف خاصّان بالأسماء فقط", "لا يوجد قيد حقيقي — هذا فهم خاطئ شائع", "لأن الفعل الماضي فقط يمكن أن يكون معرفة", "لأن الفعل والحرف معرفة دائماً بشكل افتراضي"], correct: 0, explanation: "التنكير والتعريف خاصّان بالأسماء، فلا يوصف بهما الأفعال ولا الحروف." }
 ];
 
+var week3PracticeQuizEN = [
+  { q: "الله، الرحمن، الرحيم، العزيز — the Names of Allah — fall under which type of معرفة?", options: ["اسم الإشارة", "العلم", "الاسم الموصول", "الضمير"], correct: 1, explanation: "أسماء الله من قبيل العلم — الاسم الخاصّ بمسمّاه." },
+  { q: "جِبْرِيلَ، إسْرَافِيلَ، مَالِكَ (names of angels) are examples of which معرفة type?", options: ["المعرَّف بأل", "المضاف إلى معرفة", "العلم", "اسم الإشارة"], correct: 2, explanation: "أسماء الملائكة من قبيل العلم." },
+  { q: "زُحَل and عُطَارِد (star and planet names) exemplify which معرفة type?", options: ["العلم", "الضمير", "الاسم الموصول", "المعرَّف بأل"], correct: 0, explanation: "أسماء الكواكب والنجوم من قبيل العلم." },
+  { q: "المحرَّم، صَفَر، شَوَّال (month names) exemplify which معرفة type?", options: ["اسم الإشارة", "العلم", "المضاف إلى معرفة", "الاسم الموصول"], correct: 1, explanation: "أسماء الشهور من قبيل العلم." },
+  { q: "مَكَّة، الرياض، مِصر, and فرنسا (place names) all exemplify which معرفة type?", options: ["الضمير", "المعرَّف بأل", "العلم", "اسم الإشارة"], correct: 2, explanation: "أسماء البلدان من قبيل العلم." },
+  { q: "الدَّوْلَةِ is an example of which معرفة type?", options: ["المعرَّف بـ(أل)", "العلم", "الضمير", "الاسم الموصول"], correct: 0, explanation: "الدَّوْلَةِ اسم معرَّف بأل — يعود نكرة (دولة) إذا نُزِعَت منه أل." },
+  { q: "قَلَمِي (my pen) is معرفة because قَلَمُ is:", options: ["اسم إشارة", "علم", "المضاف إلى معرفة — attached to the attached pronoun ي", "معرَّف بأل"], correct: 2, explanation: "قَلَمِي: قَلَمُ أُضيف إلى ياء المتكلم (ضمير متصل، وهو معرفة)، فصار مضافاً إلى معرفة." },
+  { q: "قَلَمُ هَذَا is معرفة because قَلَمُ is attached to which type of معرفة?", options: ["اسم إشارة", "علم", "اسم موصول", "ضمير منفصل"], correct: 0, explanation: "هَذَا اسم إشارة، فَقَلَمُ صار مضافاً إلى معرفة بإضافته إليه." },
+  { q: "قَلَمُ الَّذِي عِنْدِي is معرفة because قَلَمُ is attached to which type of معرفة?", options: ["علم", "اسم موصول", "ضمير", "معرَّف بأل"], correct: 1, explanation: "الَّذِي اسم موصول، فَقَلَمُ صار مضافاً إلى معرفة بإضافته إليه." },
+  { q: "How many detached (منفصلة) pronouns are there in total?", options: ["Nine", "Six", "Fifteen", "Three"], correct: 1, explanation: "الضمائر المنفصلة ستة: ثلاثة للرفع وثلاثة للنصب." },
+  { q: "How many attached (متصلة) pronouns are there in total?", options: ["Six", "Fifteen", "Nine", "Three"], correct: 2, explanation: "الضمائر المتصلة تسعة: خمسة تايوان للرفع، وثلاثة هيك للنصب والجر، وواحد (نا) للحالات الثلاث." },
+  { q: "The mnemonic تايوان stands for which five attached pronouns?", options: ["ياء المتكلم، كاف المخاطب، هاء الغائب، نا، تاء المتكلم", "تاء المتكلم، ألف الاثنين، واو الجماعة، ياء المخاطبة، نون النسوة", "أنا، أنتَ، هو، إيّايَ، إيّاكَ", "الَّذِي، الَّتِي، هَذَا، هَذِهِ، نا"], correct: 1, explanation: "تايوان: تاء المتكلم، ألف الاثنين، واو الجماعة، ياء المخاطبة، نون النسوة — خمسة للرفع." },
+  { q: "The mnemonic هيك stands for which three attached pronouns?", options: ["تاء المتكلم، ألف الاثنين، واو الجماعة", "ياء المتكلم، كاف المخاطب، هاء الغائب", "أنتَ، هو، نا", "نون النسوة، ياء المخاطبة، هاء الغائب"], correct: 1, explanation: "هيك: ياء المتكلم، وكاف المخاطب، وهاء الغائب — ثلاثة للنصب والجر." },
+  { q: "Which of the six معرفة types is studied FIRST in this chapter, before the other five?", options: ["العلم", "اسم الإشارة", "الضمير", "المضاف إلى معرفة"], correct: 2, explanation: "يبدأ الباب بدراسة الضمير قبل بقية أنواع المعرفة الخمسة." },
+  { q: "أُحُد، القَصْوَاء، ذو الفِقَار are examples of which معرفة type, beyond just people, places, and months?", options: ["اسم الإشارة", "العلم — any other proper name", "الضمير", "المعرَّف بأل"], correct: 1, explanation: "هذه أعلام أيضاً — العلم يشمل أي اسم خاص بمسمّاه، لا الناس والبلدان والشهور فقط." }
+];
+
+var week3PracticeQuizAR = [
+  { q: "الله، الرحمن، الرحيم، العزيز — أسماء الله — تندرج تحت أي نوع من المعرفة؟", options: ["اسم الإشارة", "العلم", "الاسم الموصول", "الضمير"], correct: 1, explanation: "أسماء الله من قبيل العلم — الاسم الخاصّ بمسمّاه." },
+  { q: "جِبْرِيلَ، إسْرَافِيلَ، مَالِكَ (أسماء الملائكة) أمثلة على أي نوع من المعرفة؟", options: ["المعرَّف بأل", "المضاف إلى معرفة", "العلم", "اسم الإشارة"], correct: 2, explanation: "أسماء الملائكة من قبيل العلم." },
+  { q: "زُحَل وعُطَارِد (أسماء الكواكب) مثالان على أي نوع من المعرفة؟", options: ["العلم", "الضمير", "الاسم الموصول", "المعرَّف بأل"], correct: 0, explanation: "أسماء الكواكب والنجوم من قبيل العلم." },
+  { q: "المحرَّم، صَفَر، شَوَّال (أسماء الشهور) أمثلة على أي نوع من المعرفة؟", options: ["اسم الإشارة", "العلم", "المضاف إلى معرفة", "الاسم الموصول"], correct: 1, explanation: "أسماء الشهور من قبيل العلم." },
+  { q: "مَكَّة، الرياض، مِصر، وفرنسا (أسماء البلدان) كلها أمثلة على أي نوع من المعرفة؟", options: ["الضمير", "المعرَّف بأل", "العلم", "اسم الإشارة"], correct: 2, explanation: "أسماء البلدان من قبيل العلم." },
+  { q: "(الدَّوْلَةِ) مثال على أي نوع من المعرفة؟", options: ["المعرَّف بـ(أل)", "العلم", "الضمير", "الاسم الموصول"], correct: 0, explanation: "الدَّوْلَةِ اسم معرَّف بأل — يعود نكرة (دولة) إذا نُزِعَت منه أل." },
+  { q: "(قَلَمِي) معرفة لأن (قَلَمُ):", options: ["اسم إشارة", "علم", "مضاف إلى معرفة — أُضيف إلى ياء المتكلم", "معرَّف بأل"], correct: 2, explanation: "قَلَمِي: قَلَمُ أُضيف إلى ياء المتكلم (ضمير متصل، وهو معرفة)، فصار مضافاً إلى معرفة." },
+  { q: "(قَلَمُ هَذَا) معرفة لأن (قَلَمُ) أُضيف إلى أي نوع من المعرفة؟", options: ["اسم إشارة", "علم", "اسم موصول", "ضمير منفصل"], correct: 0, explanation: "هَذَا اسم إشارة، فَقَلَمُ صار مضافاً إلى معرفة بإضافته إليه." },
+  { q: "(قَلَمُ الَّذِي عِنْدِي) معرفة لأن (قَلَمُ) أُضيف إلى أي نوع من المعرفة؟", options: ["علم", "اسم موصول", "ضمير", "معرَّف بأل"], correct: 1, explanation: "الَّذِي اسم موصول، فَقَلَمُ صار مضافاً إلى معرفة بإضافته إليه." },
+  { q: "كم عدد الضمائر المنفصلة إجمالاً؟", options: ["تسعة", "ستة", "خمسة عشر", "ثلاثة"], correct: 1, explanation: "الضمائر المنفصلة ستة: ثلاثة للرفع وثلاثة للنصب." },
+  { q: "كم عدد الضمائر المتصلة إجمالاً؟", options: ["ستة", "خمسة عشر", "تسعة", "ثلاثة"], correct: 2, explanation: "الضمائر المتصلة تسعة: خمسة (تايوان) للرفع، وثلاثة (هيك) للنصب والجر، وواحد (نا) للحالات الثلاث." },
+  { q: "كلمة (تايوان) الاختصارية تجمع أي خمسة ضمائر متصلة؟", options: ["ياء المتكلم، كاف المخاطب، هاء الغائب، نا، تاء المتكلم", "تاء المتكلم، ألف الاثنين، واو الجماعة، ياء المخاطبة، نون النسوة", "أنا، أنتَ، هو، إيّايَ، إيّاكَ", "الَّذِي، الَّتِي، هَذَا، هَذِهِ، نا"], correct: 1, explanation: "تايوان: تاء المتكلم، ألف الاثنين، واو الجماعة، ياء المخاطبة، نون النسوة — خمسة للرفع." },
+  { q: "كلمة (هيك) الاختصارية تجمع أي ثلاثة ضمائر متصلة؟", options: ["تاء المتكلم، ألف الاثنين، واو الجماعة", "ياء المتكلم، كاف المخاطب، هاء الغائب", "أنتَ، هو، نا", "نون النسوة، ياء المخاطبة، هاء الغائب"], correct: 1, explanation: "هيك: ياء المتكلم، وكاف المخاطب، وهاء الغائب — ثلاثة للنصب والجر." },
+  { q: "أي أنواع المعرفة الستة يُدرَس أولاً في هذا الباب قبل البقية؟", options: ["العلم", "اسم الإشارة", "الضمير", "المضاف إلى معرفة"], correct: 2, explanation: "يبدأ الباب بدراسة الضمير قبل بقية أنواع المعرفة الخمسة." },
+  { q: "أُحُد، القَصْوَاء، ذو الفِقَار أمثلة على أي نوع من المعرفة، غير أسماء الناس والبلدان والشهور؟", options: ["اسم الإشارة", "العلم — أي اسم خاص آخر", "الضمير", "المعرَّف بأل"], correct: 1, explanation: "هذه أعلام أيضاً — العلم يشمل أي اسم خاص بمسمّاه، لا الناس والبلدان والشهور فقط." }
+];
+
+var week5aQuizEN = [
+  { q: "How many i'rab rulings are there in total?", options: ["Three", "Four", "Five", "Two"], correct: 1, explanation: "الأحكام الإعرابية أربعة: الرفع والنصب والجر والجزم." },
+  { q: "Which two word types can ever carry an i'rab ruling?", options: ["Only nouns", "Only present-tense verbs", "Nouns and present-tense verbs", "Every word without exception"], correct: 2, explanation: "الأحكام الإعرابية الأربعة لا تدخل إلا على الأسماء والأفعال المضارعة." },
+  { q: "Which single ruling can NEVER touch a noun?", options: ["رفع", "نصب", "جر", "جزم"], correct: 3, explanation: "كل اسم لا يدخله إلا الرفع أو النصب أو الجر، ولا يدخله الجزم أبداً." },
+  { q: "Which single ruling can NEVER touch a present-tense verb?", options: ["رفع", "نصب", "جر", "جزم"], correct: 2, explanation: "كل فعل مضارع لا يدخله إلا الرفع أو النصب أو الجزم، ولا يدخله الجر أبداً." },
+  { q: "In مُحَمَّدٌ يُكْرِمُ الضَّيْفَ بِحَفَاوَةٍ, what ruling does مُحَمَّدٌ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "محمدٌ مرفوع." },
+  { q: "In the same sentence, what ruling does الضَّيْفَ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "الضيفَ منصوب؛ لأنه مفعول به." },
+  { q: "In the same sentence, what ruling does بِحَفَاوَةٍ carry, and why?", options: ["جر، لأنه مجرور بحرف الجر", "نصب، لأنه حال", "رفع، لأنه فاعل", "جزم، لأنه مسبوق بجازم"], correct: 0, explanation: "بحفاوةٍ اسم مجرور بحرف الجر الباء." },
+  { q: "In أَجْتَهِدُ وَلَمْ أُهْمِلْ وَلَنْ أُهْمِلَ, what ruling does أُهْمِلْ (after لَمْ) carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 3, explanation: "لَمْ من أدوات الجزم، فتجزم الفعل المضارع بعدها." },
+  { q: "In the same sentence, what ruling does أُهْمِلَ (after لَنْ) carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "لَنْ من أدوات النصب، فتنصب الفعل المضارع بعدها." },
+  { q: "What do we say when parsing a particle, the past-tense verb, or the imperative verb, since none of them ever takes an i'rab ruling?", options: ["مرفوع دائماً", "لا محل له من الإعراب", "مجزوم دائماً", "في محل نصب دائماً"], correct: 1, explanation: "الحروف والماضي والأمر لا حكم إعرابي لها؛ يقال فيها: لا محل له من الإعراب." }
+];
+
+var week5aQuizAR = [
+  { q: "كم عدد الأحكام الإعرابية؟", options: ["ثلاثة", "أربعة", "خمسة", "اثنان"], correct: 1, explanation: "الأحكام الإعرابية أربعة: الرفع والنصب والجر والجزم." },
+  { q: "ما النوعان اللذان يدخلهما حكم إعرابي؟", options: ["الأسماء فقط", "الأفعال المضارعة فقط", "الأسماء والأفعال المضارعة", "كل الكلمات بلا استثناء"], correct: 2, explanation: "الأحكام الإعرابية الأربعة لا تدخل إلا على الأسماء والأفعال المضارعة." },
+  { q: "أي حكم لا يدخل الاسم أبداً؟", options: ["الرفع", "النصب", "الجر", "الجزم"], correct: 3, explanation: "كل اسم لا يدخله إلا الرفع أو النصب أو الجر، ولا يدخله الجزم أبداً." },
+  { q: "أي حكم لا يدخل الفعل المضارع أبداً؟", options: ["الرفع", "النصب", "الجر", "الجزم"], correct: 2, explanation: "كل فعل مضارع لا يدخله إلا الرفع أو النصب أو الجزم، ولا يدخله الجر أبداً." },
+  { q: "في (مُحَمَّدٌ يُكْرِمُ الضَّيْفَ بِحَفَاوَةٍ)، ما حكم (مُحَمَّدٌ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "محمدٌ مرفوع." },
+  { q: "في الجملة نفسها، ما حكم (الضَّيْفَ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "الضيفَ منصوب؛ لأنه مفعول به." },
+  { q: "في الجملة نفسها، ما حكم (بِحَفَاوَةٍ)، ولماذا؟", options: ["جر؛ لأنه مجرور بحرف الجر", "نصب؛ لأنه حال", "رفع؛ لأنه فاعل", "جزم؛ لأنه مسبوق بجازم"], correct: 0, explanation: "بحفاوةٍ اسم مجرور بحرف الجر الباء." },
+  { q: "في (أَجْتَهِدُ وَلَمْ أُهْمِلْ وَلَنْ أُهْمِلَ)، ما حكم (أُهْمِلْ) بعد (لَمْ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 3, explanation: "لَمْ من أدوات الجزم، فتجزم الفعل المضارع بعدها." },
+  { q: "في الجملة نفسها، ما حكم (أُهْمِلَ) بعد (لَنْ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "لَنْ من أدوات النصب، فتنصب الفعل المضارع بعدها." },
+  { q: "ماذا نقول عند إعراب الحرف أو الفعل الماضي أو فعل الأمر، بما أنها لا يدخلها حكم إعرابي؟", options: ["مرفوع دائماً", "لا محل له من الإعراب", "مجزوم دائماً", "في محل نصب دائماً"], correct: 1, explanation: "الحروف والماضي والأمر لا حكم إعرابي لها؛ يقال فيها: لا محل له من الإعراب." }
+];
+
+var week5bQuizEN = [
+  { q: "What does Khaṭṭ al-I'rāb divide every Arabic word into?", options: ["Definite and indefinite", "Words that never take an i'rab ruling, and words that always must", "Singular and plural", "Noun and verb only"], correct: 1, explanation: "خط الإعراب يفصل بين كلمات لا يدخلها حكم إعرابي أبداً وكلمات لا بد أن يدخلها حكم إعرابي." },
+  { q: "Which three word types fall \"before Khaṭṭ al-I'rāb\"?", options: ["Nouns, verbs, particles", "Particles, the past-tense verb, the imperative verb", "Only particles", "Present-tense verbs and nouns"], correct: 1, explanation: "قبل الخط: الحروف، والفعل الماضي، وفعل الأمر." },
+  { q: "Which two word types fall \"after Khaṭṭ al-I'rāb\"?", options: ["Nouns and present-tense verbs", "Particles and nouns", "Past and imperative verbs", "Only nouns"], correct: 0, explanation: "بعد الخط: الأسماء والأفعال المضارعة." },
+  { q: "When parsing a word from \"before the line,\" what is the third thing you state?", options: ["Its role in the sentence", "Its i'rab marker (vowel)", "لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ", "Whether it is muʿrab or mabni"], correct: 2, explanation: "الخطوة الثالثة في إعراب ما قبل الخط: بيان حكمها الإعرابي، وهو دائماً: لا محل له من الإعراب." },
+  { q: "In هَلْ ذَهَبَ؟, how is هَلْ parsed?", options: ["اسم استفهام، في محل رفع", "حرف استفهام، مبني على السكون، لا محل له من الإعراب", "فعل أمر، مبني على السكون", "حرف جر، مبني على الفتح"], correct: 1, explanation: "هَلْ حرف استفهام، مبني على السكون، لا محل له من الإعراب." },
+  { q: "When parsing a muʿrab word from \"after the line,\" which three things are stated, in order?", options: ["Type/role → ruling → marker", "Marker → type → ruling", "Ruling → marker → type/role", "Type → marker → ruling"], correct: 0, explanation: "بعد الخط: أولاً نوع المضارع أو موقع الاسم، ثم الحكم الإعرابي، ثم الحركة (العلامة)." },
+  { q: "If a muʿrab word is manṣūb, what is its naṣb marker?", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 1, explanation: "علامة النصب في المعرب هي الفتحة." },
+  { q: "In يَنْصُرُ الْمُسْلِمُ الْحَقَّ, what is الْمُسْلِمُ's role and ruling?", options: ["مفعول به، منصوب", "فاعل، مرفوع", "مضاف إليه، مجرور", "خبر، مرفوع"], correct: 1, explanation: "المسلمُ فاعل، مرفوع، وعلامة رفعه الضمة." },
+  { q: "In هَؤُلَاءِ يُكْرِمْنَ هَذَا, how do we describe هَؤُلَاءِ's i'rab ruling, since it is mabni?", options: ["مرفوع، وعلامة رفعه الضمة", "في محل رفع، مبني على الكسر", "منصوب، وعلامة نصبه الفتحة", "في محل جر، مبني على الفتح"], correct: 1, explanation: "هؤلاء مبتدأ مبني، فيقال: في محل رفع، مبني على الكسر." },
+  { q: "Why is يُكْرِمْنَ mabni on sukūn in هَؤُلَاءِ يُكْرِمْنَ هَذَا?", options: ["Because it follows a jazm particle", "Because a nūn of the feminine plural (نون النسوة) is attached to it", "Because it is a past-tense verb", "Because it has no subject"], correct: 1, explanation: "يُكرِمْنَ مبني على السكون؛ لاتصاله بنون النسوة." }
+];
+
+var week5bQuizAR = [
+  { q: "ما الذي يفصله خط الإعراب في كل كلمة عربية؟", options: ["النكرة والمعرفة", "كلمات لا يدخلها حكم إعرابي أبداً، وكلمات لا بد أن يدخلها حكم إعرابي", "المفرد والجمع", "الاسم والفعل فقط"], correct: 1, explanation: "خط الإعراب يفصل بين كلمات لا يدخلها حكم إعرابي أبداً وكلمات لا بد أن يدخلها حكم إعرابي." },
+  { q: "ما الأنواع الثلاثة التي تقع (قبل الخط)؟", options: ["الاسم والفعل والحرف", "الحروف، والفعل الماضي، وفعل الأمر", "الحروف فقط", "الأفعال المضارعة والأسماء"], correct: 1, explanation: "قبل الخط: الحروف، والفعل الماضي، وفعل الأمر." },
+  { q: "ما النوعان اللذان يقعان (بعد الخط)؟", options: ["الأسماء والأفعال المضارعة", "الحروف والأسماء", "الفعل الماضي وفعل الأمر", "الأسماء فقط"], correct: 0, explanation: "بعد الخط: الأسماء والأفعال المضارعة." },
+  { q: "عند إعراب كلمة (قبل الخط)، ما الركن الثالث الذي يُذكر؟", options: ["موقعها في الجملة", "علامتها الإعرابية", "لَا مَحَلَّ لَهُ مِنَ الْإِعْرَابِ", "هل هي معربة أم مبنية"], correct: 2, explanation: "الخطوة الثالثة في إعراب ما قبل الخط: بيان حكمها الإعرابي، وهو دائماً: لا محل له من الإعراب." },
+  { q: "في (هَلْ ذَهَبَ؟)، كيف تُعرَب (هَلْ)؟", options: ["اسم استفهام، في محل رفع", "حرف استفهام، مبني على السكون، لا محل له من الإعراب", "فعل أمر، مبني على السكون", "حرف جر، مبني على الفتح"], correct: 1, explanation: "هَلْ حرف استفهام، مبني على السكون، لا محل له من الإعراب." },
+  { q: "عند إعراب كلمة معربة (بعد الخط)، ما ترتيب الأركان الثلاثة؟", options: ["النوع/الموقع ثم الحكم ثم العلامة", "العلامة ثم النوع ثم الحكم", "الحكم ثم العلامة ثم النوع/الموقع", "النوع ثم العلامة ثم الحكم"], correct: 0, explanation: "بعد الخط: أولاً نوع المضارع أو موقع الاسم، ثم الحكم الإعرابي، ثم الحركة (العلامة)." },
+  { q: "إذا كانت الكلمة المعربة منصوبة، فما علامة نصبها؟", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 1, explanation: "علامة النصب في المعرب هي الفتحة." },
+  { q: "في (يَنْصُرُ الْمُسْلِمُ الْحَقَّ)، ما موقع (الْمُسْلِمُ) وحكمه؟", options: ["مفعول به، منصوب", "فاعل، مرفوع", "مضاف إليه، مجرور", "خبر، مرفوع"], correct: 1, explanation: "المسلمُ فاعل، مرفوع، وعلامة رفعه الضمة." },
+  { q: "في (هَؤُلَاءِ يُكْرِمْنَ هَذَا)، كيف يُوصَف حكم (هَؤُلَاءِ) بما أنها مبنية؟", options: ["مرفوعة، وعلامة رفعها الضمة", "في محل رفع، مبنية على الكسر", "منصوبة، وعلامة نصبها الفتحة", "في محل جر، مبنية على الفتح"], correct: 1, explanation: "هؤلاء مبتدأ مبني، فيقال: في محل رفع، مبني على الكسر." },
+  { q: "لماذا (يُكْرِمْنَ) مبنية على السكون في (هَؤُلَاءِ يُكْرِمْنَ هَذَا)؟", options: ["لأنها مسبوقة بجازم", "لاتصالها بنون النسوة", "لأنها فعل ماضٍ", "لأنها بلا فاعل"], correct: 1, explanation: "يُكرِمْنَ مبني على السكون؛ لاتصاله بنون النسوة." }
+];
+
+var week5QuizEN = [
+  { q: "How many i'rab rulings exist in Arabic in total?", options: ["Two", "Three", "Four", "Five"], correct: 2, explanation: "الأحكام الإعرابية أربعة: الرفع والنصب والجر والجزم." },
+  { q: "Which two word categories can ever carry an i'rab ruling?", options: ["Only nouns", "Only present-tense verbs", "Nouns and present-tense verbs", "Every word without exception"], correct: 2, explanation: "الأحكام الإعرابية الأربعة لا تدخل إلا على الأسماء والأفعال المضارعة." },
+  { q: "Which single ruling never touches a noun?", options: ["رفع", "نصب", "جر", "جزم"], correct: 3, explanation: "كل اسم لا يدخله إلا الرفع أو النصب أو الجر، ولا يدخله الجزم أبداً." },
+  { q: "Which single ruling never touches a present-tense verb?", options: ["رفع", "نصب", "جر", "جزم"], correct: 2, explanation: "كل فعل مضارع لا يدخله إلا الرفع أو النصب أو الجزم، ولا يدخله الجر أبداً." },
+  { q: "In مُحَمَّدٌ يُكْرِمُ الضَّيْفَ بِحَفَاوَةٍ, what ruling does مُحَمَّدٌ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "محمدٌ مرفوع." },
+  { q: "In the same sentence, what ruling does الضَّيْفَ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "الضيفَ منصوب؛ لأنه مفعول به." },
+  { q: "In the same sentence, what ruling does بِحَفَاوَةٍ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 2, explanation: "بحفاوةٍ اسم مجرور بحرف الجر الباء." },
+  { q: "In وَهَذَا يُكْرِمُ سِيبَوَيْهِ بِالَّذِي يُحِبُّ, هَذَا and الَّذِي are both mabni nouns — yet what still applies to them?", options: ["No ruling at all", "The same rafʿ/naṣb/jarr rulings as any noun", "Only jazm", "Only jarr"], correct: 1, explanation: "هذا والذي اسمان مبنيان، ومع ذلك دخلتهما أحكام الرفع والنصب والجر كغيرهما من الأسماء." },
+  { q: "In أَجْتَهِدُ وَلَمْ أُهْمِلْ وَلَنْ أُهْمِلَ, what ruling does أَجْتَهِدُ carry?", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "أجتهدُ مرفوع؛ لأنه لم يُسبَق بناصب ولا جازم." },
+  { q: "In the same sentence, what ruling does أُهْمِلْ (after لَمْ) carry, and why?", options: ["جزم، لأن لَمْ جازمة", "نصب، لأن لَمْ ناصبة", "رفع؛ لأنها لم تُسبَق بشيء", "جر؛ لأنها مضاف إليه"], correct: 0, explanation: "لَمْ من أدوات الجزم، فتجزم الفعل المضارع بعدها." },
+  { q: "In the same sentence, what ruling does أُهْمِلَ (after لَنْ) carry, and why?", options: ["نصب، لأن لَنْ ناصبة", "جزم، لأن لَنْ جازمة", "رفع؛ لأنها لم تُسبَق بشيء", "جر؛ لأنها مسبوقة بحرف جر"], correct: 0, explanation: "لَنْ من أدوات النصب، فتنصب الفعل المضارع بعدها." },
+  { q: "What do we say when parsing a particle, the past-tense verb, or the imperative verb?", options: ["مرفوع دائماً", "لا محل له من الإعراب", "في محل نصب دائماً", "مجزوم دائماً"], correct: 1, explanation: "الحروف والماضي والأمر لا حكم إعرابي لها؛ يقال فيها: لا محل له من الإعراب." },
+  { q: "What does Khaṭṭ al-I'rāb divide every Arabic word into?", options: ["Definite and indefinite", "Singular and plural", "Words that never take an i'rab ruling, and words that always must", "Noun and particle only"], correct: 2, explanation: "خط الإعراب يفصل بين كلمات لا يدخلها حكم إعرابي أبداً وكلمات لا بد أن يدخلها حكم إعرابي." },
+  { q: "Which three word types are \"before Khaṭṭ al-I'rāb\"?", options: ["Particles, the past-tense verb, the imperative verb", "Nouns, verbs, particles", "Only the imperative verb", "Present-tense verbs and nouns"], correct: 0, explanation: "قبل الخط: الحروف، والفعل الماضي، وفعل الأمر." },
+  { q: "Which two word types are \"after Khaṭṭ al-I'rāb\"?", options: ["Particles and nouns", "Nouns and present-tense verbs", "Only present-tense verbs", "Past and imperative verbs"], correct: 1, explanation: "بعد الخط: الأسماء والأفعال المضارعة." },
+  { q: "In هَلْ ذَهَبَ؟, how is هَلْ parsed?", options: ["حرف استفهام، مبني على السكون، لا محل له من الإعراب", "اسم استفهام، في محل رفع", "فعل أمر، مبني على السكون", "حرف جر، مبني على الفتح"], correct: 0, explanation: "هَلْ حرف استفهام، مبني على السكون، لا محل له من الإعراب." },
+  { q: "In the same phrase, how is ذَهَبَ parsed?", options: ["فعل ماضٍ، مبني على الفتح، لا محل له من الإعراب", "فعل مضارع، مرفوع، وعلامة رفعه الضمة", "اسم، مجرور", "فعل أمر، مبني على السكون"], correct: 0, explanation: "ذَهَبَ فعل ماضٍ، مبني على الفتح، لا محل له من الإعراب." },
+  { q: "In اذْهَبْ, how is it parsed?", options: ["فعل أمر، مبني على السكون، لا محل له من الإعراب", "فعل مضارع، مجزوم", "اسم فعل، مرفوع", "فعل ماضٍ، مبني على الضم"], correct: 0, explanation: "اذْهَبْ فعل أمر، مبني على السكون، لا محل له من الإعراب." },
+  { q: "When parsing a word \"after the line,\" which three things are stated, in order?", options: ["Type/role → ruling → marker", "Marker → ruling → type/role", "Ruling → type/role → marker", "Type/role → marker → ruling"], correct: 0, explanation: "بعد الخط: أولاً نوع المضارع أو موقع الاسم، ثم الحكم الإعرابي، ثم الحركة (العلامة)." },
+  { q: "If a muʿrab word is marfūʿ, what is its rafʿ marker?", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 0, explanation: "علامة الرفع في المعرب هي الضمة." },
+  { q: "If a muʿrab word is majzūm, what is its jazm marker?", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 3, explanation: "علامة الجزم في المعرب هي السكون." },
+  { q: "In يَنْصُرُ الْمُسْلِمُ الْحَقَّ, what is الْمُسْلِمُ's role, and what is its ruling?", options: ["فاعل، مرفوع", "مفعول به، منصوب", "مبتدأ، في محل رفع", "مضاف إليه، مجرور"], correct: 0, explanation: "المسلمُ فاعل، مرفوع، وعلامة رفعه الضمة." },
+  { q: "In the same sentence, what is الْحَقَّ's role, and what is its ruling?", options: ["مفعول به، منصوب", "فاعل، مرفوع", "خبر، مرفوع", "مضاف إليه، مجرور"], correct: 0, explanation: "الحقَّ مفعول به، منصوب، وعلامة نصبه الفتحة." },
+  { q: "In هَؤُلَاءِ يُكْرِمْنَ هَذَا, how is هَؤُلَاءِ described, since it is mabni?", options: ["مبتدأ، في محل رفع، مبني على الكسر", "فاعل، مرفوع، وعلامة رفعه الضمة", "مفعول به، منصوب", "خبر، مرفوع"], correct: 0, explanation: "هؤلاء مبتدأ مبني، فيقال: في محل رفع، مبني على الكسر." },
+  { q: "In the same sentence, why is يُكْرِمْنَ mabni on sukūn even though it sits in a rafʿ position?", options: ["Because a nūn of the feminine plural (نون النسوة) is attached to it", "Because it follows a jazm particle", "Because it is a past-tense verb", "Because it has no subject"], correct: 0, explanation: "يُكرِمْنَ مبني على السكون؛ لاتصاله بنون النسوة." }
+];
+
+var week5QuizAR = [
+  { q: "كم عدد الأحكام الإعرابية في العربية؟", options: ["اثنان", "ثلاثة", "أربعة", "خمسة"], correct: 2, explanation: "الأحكام الإعرابية أربعة: الرفع والنصب والجر والجزم." },
+  { q: "ما النوعان اللذان يدخلهما حكم إعرابي؟", options: ["الأسماء فقط", "الأفعال المضارعة فقط", "الأسماء والأفعال المضارعة", "كل الكلمات بلا استثناء"], correct: 2, explanation: "الأحكام الإعرابية الأربعة لا تدخل إلا على الأسماء والأفعال المضارعة." },
+  { q: "أي حكم لا يدخل الاسم أبداً؟", options: ["الرفع", "النصب", "الجر", "الجزم"], correct: 3, explanation: "كل اسم لا يدخله إلا الرفع أو النصب أو الجر، ولا يدخله الجزم أبداً." },
+  { q: "أي حكم لا يدخل الفعل المضارع أبداً؟", options: ["الرفع", "النصب", "الجر", "الجزم"], correct: 2, explanation: "كل فعل مضارع لا يدخله إلا الرفع أو النصب أو الجزم، ولا يدخله الجر أبداً." },
+  { q: "في (مُحَمَّدٌ يُكْرِمُ الضَّيْفَ بِحَفَاوَةٍ)، ما حكم (مُحَمَّدٌ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "محمدٌ مرفوع." },
+  { q: "في الجملة نفسها، ما حكم (الضَّيْفَ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 1, explanation: "الضيفَ منصوب؛ لأنه مفعول به." },
+  { q: "في الجملة نفسها، ما حكم (بِحَفَاوَةٍ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 2, explanation: "بحفاوةٍ اسم مجرور بحرف الجر الباء." },
+  { q: "في (وَهَذَا يُكْرِمُ سِيبَوَيْهِ بِالَّذِي يُحِبُّ)، (هَذَا) و(الَّذِي) اسمان مبنيان — فماذا يدخلهما مع ذلك؟", options: ["لا يدخلهما أي حكم", "أحكام الرفع والنصب والجر نفسها التي تدخل أي اسم", "الجزم فقط", "الجر فقط"], correct: 1, explanation: "هذا والذي اسمان مبنيان، ومع ذلك دخلتهما أحكام الرفع والنصب والجر كغيرهما من الأسماء." },
+  { q: "في (أَجْتَهِدُ وَلَمْ أُهْمِلْ وَلَنْ أُهْمِلَ)، ما حكم (أَجْتَهِدُ)؟", options: ["رفع", "نصب", "جر", "جزم"], correct: 0, explanation: "أجتهدُ مرفوع؛ لأنه لم يُسبَق بناصب ولا جازم." },
+  { q: "في الجملة نفسها، ما حكم (أُهْمِلْ) بعد (لَمْ)، ولماذا؟", options: ["جزم؛ لأن لَمْ جازمة", "نصب؛ لأن لَمْ ناصبة", "رفع؛ لأنها لم تُسبَق بشيء", "جر؛ لأنها مضاف إليه"], correct: 0, explanation: "لَمْ من أدوات الجزم، فتجزم الفعل المضارع بعدها." },
+  { q: "في الجملة نفسها، ما حكم (أُهْمِلَ) بعد (لَنْ)، ولماذا؟", options: ["نصب؛ لأن لَنْ ناصبة", "جزم؛ لأن لَنْ جازمة", "رفع؛ لأنها لم تُسبَق بشيء", "جر؛ لأنها مسبوقة بحرف جر"], correct: 0, explanation: "لَنْ من أدوات النصب، فتنصب الفعل المضارع بعدها." },
+  { q: "ماذا نقول عند إعراب الحرف أو الفعل الماضي أو فعل الأمر؟", options: ["مرفوع دائماً", "لا محل له من الإعراب", "في محل نصب دائماً", "مجزوم دائماً"], correct: 1, explanation: "الحروف والماضي والأمر لا حكم إعرابي لها؛ يقال فيها: لا محل له من الإعراب." },
+  { q: "ما الذي يفصله خط الإعراب في كل كلمة عربية؟", options: ["النكرة والمعرفة", "المفرد والجمع", "كلمات لا يدخلها حكم إعرابي أبداً، وكلمات لا بد أن يدخلها حكم إعرابي", "الاسم والحرف فقط"], correct: 2, explanation: "خط الإعراب يفصل بين كلمات لا يدخلها حكم إعرابي أبداً وكلمات لا بد أن يدخلها حكم إعرابي." },
+  { q: "ما الأنواع الثلاثة التي تقع (قبل الخط)؟", options: ["الحروف، والفعل الماضي، وفعل الأمر", "الاسم والفعل والحرف", "فعل الأمر فقط", "الأفعال المضارعة والأسماء"], correct: 0, explanation: "قبل الخط: الحروف، والفعل الماضي، وفعل الأمر." },
+  { q: "ما النوعان اللذان يقعان (بعد الخط)؟", options: ["الحروف والأسماء", "الأسماء والأفعال المضارعة", "الفعل الماضي وفعل الأمر", "الأسماء فقط"], correct: 1, explanation: "بعد الخط: الأسماء والأفعال المضارعة." },
+  { q: "في (هَلْ ذَهَبَ؟)، كيف تُعرَب (هَلْ)؟", options: ["حرف استفهام، مبني على السكون، لا محل له من الإعراب", "اسم استفهام، في محل رفع", "فعل أمر، مبني على السكون", "حرف جر، مبني على الفتح"], correct: 0, explanation: "هَلْ حرف استفهام، مبني على السكون، لا محل له من الإعراب." },
+  { q: "في العبارة نفسها، كيف تُعرَب (ذَهَبَ)؟", options: ["فعل ماضٍ، مبني على الفتح، لا محل له من الإعراب", "فعل مضارع، مرفوع، وعلامة رفعه الضمة", "اسم، مجرور", "فعل أمر، مبني على السكون"], correct: 0, explanation: "ذَهَبَ فعل ماضٍ، مبني على الفتح، لا محل له من الإعراب." },
+  { q: "كيف تُعرَب (اذْهَبْ)؟", options: ["فعل أمر، مبني على السكون، لا محل له من الإعراب", "فعل مضارع، مجزوم", "اسم فعل، مرفوع", "فعل ماضٍ، مبني على الضم"], correct: 0, explanation: "اذْهَبْ فعل أمر، مبني على السكون، لا محل له من الإعراب." },
+  { q: "عند إعراب كلمة (بعد الخط)، ما ترتيب الأركان الثلاثة؟", options: ["النوع/الموقع ثم الحكم ثم العلامة", "العلامة ثم الحكم ثم النوع/الموقع", "الحكم ثم النوع/الموقع ثم العلامة", "النوع/الموقع ثم العلامة ثم الحكم"], correct: 0, explanation: "بعد الخط: أولاً نوع المضارع أو موقع الاسم، ثم الحكم الإعرابي، ثم الحركة (العلامة)." },
+  { q: "إذا كانت الكلمة المعربة مرفوعة، فما علامة رفعها؟", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 0, explanation: "علامة الرفع في المعرب هي الضمة." },
+  { q: "إذا كانت الكلمة المعربة مجزومة، فما علامة جزمها؟", options: ["الضمة", "الفتحة", "الكسرة", "السكون"], correct: 3, explanation: "علامة الجزم في المعرب هي السكون." },
+  { q: "في (يَنْصُرُ الْمُسْلِمُ الْحَقَّ)، ما موقع (الْمُسْلِمُ) وحكمه؟", options: ["فاعل، مرفوع", "مفعول به، منصوب", "مبتدأ، في محل رفع", "مضاف إليه، مجرور"], correct: 0, explanation: "المسلمُ فاعل، مرفوع، وعلامة رفعه الضمة." },
+  { q: "في الجملة نفسها، ما موقع (الْحَقَّ) وحكمه؟", options: ["مفعول به، منصوب", "فاعل، مرفوع", "خبر، مرفوع", "مضاف إليه، مجرور"], correct: 0, explanation: "الحقَّ مفعول به، منصوب، وعلامة نصبه الفتحة." },
+  { q: "في (هَؤُلَاءِ يُكْرِمْنَ هَذَا)، كيف تُوصَف (هَؤُلَاءِ) بما أنها مبنية؟", options: ["مبتدأ، في محل رفع، مبنية على الكسر", "فاعل، مرفوعة، وعلامة رفعها الضمة", "مفعول به، منصوبة", "خبر، مرفوعة"], correct: 0, explanation: "هؤلاء مبتدأ مبني، فيقال: في محل رفع، مبني على الكسر." },
+  { q: "في الجملة نفسها، لماذا (يُكْرِمْنَ) مبنية على السكون مع أنها في محل رفع؟", options: ["لاتصالها بنون النسوة", "لأنها مسبوقة بجازم", "لأنها فعل ماضٍ", "لأنها بلا فاعل"], correct: 0, explanation: "يُكرِمْنَ مبني على السكون؛ لاتصاله بنون النسوة." }
+];
+
 var currentLang = 'en';
 var currentStepIndex = 0;
 
@@ -2649,6 +3188,12 @@ var STEP_DEFS = [
     titleEn: 'Week 1 Quiz — The Subject of Naḥw', titleAr: 'اختبار الأسبوع الأول — موضوع النحو',
     leadEn: '10 questions covering the two major parts of Naḥw and everything studied under each. The answer and explanation appear right after each question.',
     leadAr: '١٠ أسئلة تغطي جزأي النحو الكبيرين وكل ما يُدرَس تحت كل منهما. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'lesson', arrEN: 'LESSONS_W1_EN', arrAR: 'LESSONS_W1_AR', idx: 1 },
+  { type: 'quiz', enQ: 'week1PracticeQuizEN', arQ: 'week1PracticeQuizAR', immediate: true,
+    titleEn: 'Practice Your Knowledge — Week 1 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الأول الشامل',
+    leadEn: '12 questions revisiting the chapters, roles, and examples from Week 1. The answer and explanation appear right after each question.',
+    leadAr: '١٢ سؤالاً تراجع الأبواب والأدوار والأمثلة من الأسبوع الأول. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w1', weekEn: 'Week 1', weekAr: 'الأسبوع الأول' },
 
   // ===== Week 2: Types of the Word =====
   { type: 'lesson', arrEN: 'LESSONS_W2_EN', arrAR: 'LESSONS_W2_AR', idx: 0, weekEn: 'Week 2', weekAr: 'الأسبوع الثاني' },
@@ -2656,6 +3201,12 @@ var STEP_DEFS = [
     titleEn: 'Week 2 Quiz — Types of the Word', titleAr: 'اختبار الأسبوع الثاني — أنواع الكلمة',
     leadEn: '12 questions covering the tests for identifying a noun, the three verb types, and the particle. The answer and explanation appear right after each question.',
     leadAr: '١٢ سؤالاً تغطي اختبارات الاسم، وأقسام الفعل الثلاثة، والحرف. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'lesson', arrEN: 'LESSONS_W2_EN', arrAR: 'LESSONS_W2_AR', idx: 1 },
+  { type: 'quiz', enQ: 'week2PracticeQuizEN', arQ: 'week2PracticeQuizAR', immediate: true,
+    titleEn: 'Practice Your Knowledge — Week 2 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الثاني الشامل',
+    leadEn: '10 questions revisiting the noun, verb, and particle tests from Week 2. The answer and explanation appear right after each question.',
+    leadAr: '١٠ أسئلة تراجع اختبارات الاسم والفعل والحرف من الأسبوع الثاني. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w2', weekEn: 'Week 2', weekAr: 'الأسبوع الثاني' },
 
   // ===== Week 3: Indefinite & Definite =====
   { type: 'lesson', arrEN: 'LESSONS_W3_EN', arrAR: 'LESSONS_W3_AR', idx: 0, weekEn: 'Week 3', weekAr: 'الأسبوع الثالث' },
@@ -2664,6 +3215,12 @@ var STEP_DEFS = [
     titleEn: 'Week 3 Quiz — Indefinite & Definite', titleAr: 'اختبار الأسبوع الثالث — النكرة والمعرفة',
     leadEn: '15 questions covering the six types of معرفة, especially the pronoun. The answer and explanation appear right after each question.',
     leadAr: '١٥ سؤالاً تغطي أنواع المعرفة الستة، وخاصة الضمير. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'lesson', arrEN: 'LESSONS_W3_EN', arrAR: 'LESSONS_W3_AR', idx: 2 },
+  { type: 'quiz', enQ: 'week3PracticeQuizEN', arQ: 'week3PracticeQuizAR', immediate: true,
+    titleEn: 'Practice Your Knowledge — Week 3 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الثالث الشامل',
+    leadEn: '15 questions revisiting the pronoun mnemonics and the six types of معرفة from Week 3. The answer and explanation appear right after each question.',
+    leadAr: '١٥ سؤالاً تراجع اختصارات الضمائر وأنواع المعرفة الستة من الأسبوع الثالث. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w3', weekEn: 'Week 3', weekAr: 'الأسبوع الثالث' },
 
   // ===== Week 4: Declinable & Indeclinable =====
   { type: 'lesson', arrEN: 'LESSONS_EN', arrAR: 'LESSONS_AR', idx: 0, weekEn: 'Week 4', weekAr: 'الأسبوع الرابع' },
@@ -2682,10 +3239,30 @@ var STEP_DEFS = [
     titleEn: 'Module 2 Quiz — Lessons 6–8', titleAr: 'اختبار الوحدة الثانية — الدروس ٦–٨',
     leadEn: '15 questions covering the present-tense verb, the ten mabni noun types, and the terminology note. The answer and explanation appear right after each question.',
     leadAr: '١٥ سؤالاً تغطي الفعل المضارع، والأسماء العشرة المبنية، وفائدة المصطلح. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'lesson', arrEN: 'LESSONS_EN', arrAR: 'LESSONS_AR', idx: 8 },
+  { type: 'quiz', enQ: 'week4PracticeQuizEN', arQ: 'week4PracticeQuizAR', immediate: true,
+    titleEn: 'Practice Your Knowledge — Week 4 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الرابع الشامل',
+    leadEn: '18 questions revisiting muʿrab, mabni, and everything built on them from Week 4. The answer and explanation appear right after each question.',
+    leadAr: '١٨ سؤالاً تراجع المعرب والمبني وكل ما يُبنى عليهما من الأسبوع الرابع. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w4', weekEn: 'Week 4', weekAr: 'الأسبوع الرابع' },
 
-  // ===== Week 5 (placeholder — content to be added) =====
+  // ===== Week 5: The I'rab Rulings & Khaṭṭ al-I'rāb =====
   { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 0, weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
+  { type: 'quiz', enQ: 'week5aQuizEN', arQ: 'week5aQuizAR', immediate: true,
+    titleEn: 'Week 5 Quiz — The Four I\'rab Rulings', titleAr: 'اختبار الأسبوع الخامس — الأحكام الإعرابية الأربعة',
+    leadEn: '10 questions covering the four i\'rab rulings and which word types each one can and cannot touch. The answer and explanation appear right after each question.',
+    leadAr: '١٠ أسئلة تغطي الأحكام الإعرابية الأربعة وأيّ الكلمات يدخلها كل حكم منها. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
   { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 1 },
+  { type: 'quiz', enQ: 'week5bQuizEN', arQ: 'week5bQuizAR', immediate: true,
+    titleEn: 'Week 5 Quiz — Khaṭṭ al-I\'rāb', titleAr: 'اختبار الأسبوع الخامس — خط الإعراب',
+    leadEn: '10 questions covering what Khaṭṭ al-I\'rāb separates and how to parse a word from each side of it. The answer and explanation appear right after each question.',
+    leadAr: '١٠ أسئلة تغطي ما يفصله خط الإعراب وكيفية إعراب الكلمة من كل جانب منه. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 2 },
+  { type: 'quiz', enQ: 'week5QuizEN', arQ: 'week5QuizAR', immediate: true,
+    titleEn: 'Practice Your Knowledge — Week 5 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل',
+    leadEn: '25 questions covering everything from Week 5 — the four i\'rab rulings, Khaṭṭ al-I\'rāb, and how to parse a word from either side of it. The answer and explanation appear right after each question.',
+    leadAr: '٢٥ سؤالاً تغطي كل ما في الأسبوع الخامس — الأحكام الإعرابية الأربعة، وخط الإعراب، وكيفية إعراب الكلمة من كل جانبيه. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w5', weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
 
   { type: 'quiz', enQ: 'finalQuizEN', arQ: 'finalQuizAR', immediate: false,
     titleEn: 'Test Your Knowledge', titleAr: 'اختبر معلوماتك',
@@ -2725,6 +3302,153 @@ function weekBadgeHTML(def){
   return '<div class="week-badge">' + label + '</div>';
 }
 
+function escapeHTML(str){
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+var CERT_DEFS = {
+  w1: { pass: 75, topicEn: 'The Subject of Naḥw', topicAr: 'موضوع النحو',
+    quizzes: [
+      { id: 'week1QuizEN', labelEn: 'Week 1 Quiz — The Subject of Naḥw', labelAr: 'اختبار الأسبوع الأول — موضوع النحو' },
+      { id: 'week1PracticeQuizEN', labelEn: 'Practice Your Knowledge — Week 1 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الأول الشامل' }
+    ] },
+  w2: { pass: 75, topicEn: 'Types of the Word', topicAr: 'أنواع الكلمة',
+    quizzes: [
+      { id: 'week2QuizEN', labelEn: 'Week 2 Quiz — Types of the Word', labelAr: 'اختبار الأسبوع الثاني — أنواع الكلمة' },
+      { id: 'week2PracticeQuizEN', labelEn: 'Practice Your Knowledge — Week 2 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الثاني الشامل' }
+    ] },
+  w3: { pass: 75, topicEn: 'Indefinite & Definite', topicAr: 'النكرة والمعرفة',
+    quizzes: [
+      { id: 'week3QuizEN', labelEn: 'Week 3 Quiz — Indefinite & Definite', labelAr: 'اختبار الأسبوع الثالث — النكرة والمعرفة' },
+      { id: 'week3PracticeQuizEN', labelEn: 'Practice Your Knowledge — Week 3 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الثالث الشامل' }
+    ] },
+  w4: { pass: 75, topicEn: 'Declinable & Indeclinable', topicAr: 'المعرب والمبني',
+    quizzes: [
+      { id: 'module1QuizEN', labelEn: 'Module 1 Quiz — Lessons 1–5', labelAr: 'اختبار الوحدة الأولى — الدروس ١–٥' },
+      { id: 'module2QuizEN', labelEn: 'Module 2 Quiz — Lessons 6–8', labelAr: 'اختبار الوحدة الثانية — الدروس ٦–٨' },
+      { id: 'week4PracticeQuizEN', labelEn: 'Practice Your Knowledge — Week 4 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الرابع الشامل' }
+    ] },
+  w5: { pass: 75, topicEn: 'The I\'rab Rulings & Khaṭṭ al-I\'rāb', topicAr: 'الأحكام الإعرابية وخط الإعراب',
+    quizzes: [
+      { id: 'week5aQuizEN', labelEn: 'Week 5 Quiz — The Four I\'rab Rulings', labelAr: 'اختبار الأسبوع الخامس — الأحكام الإعرابية الأربعة' },
+      { id: 'week5bQuizEN', labelEn: 'Week 5 Quiz — Khaṭṭ al-I\'rāb', labelAr: 'اختبار الأسبوع الخامس — خط الإعراب' },
+      { id: 'week5QuizEN', labelEn: 'Practice Your Knowledge — Week 5 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل' }
+    ] }
+};
+
+function bestQuizPct(quizId){
+  var attempts = quizAttempts[quizId];
+  if(!attempts || !attempts.length) return null;
+  var best = -1;
+  attempts.forEach(function(a){ if(a.pct > best){ best = a.pct; } });
+  return best;
+}
+
+function findStepIndexByQuiz(quizId){
+  for(var i = 0; i < STEP_DEFS.length; i++){
+    if(STEP_DEFS[i].type === 'quiz' && STEP_DEFS[i].enQ === quizId) return i;
+  }
+  return -1;
+}
+
+function renderCourseCertificateStep(certKey){
+  var cert = CERT_DEFS[certKey];
+  var viewport = document.getElementById('step-viewport');
+  var nextBtn = document.getElementById('step-next-btn');
+  var isAr = (currentLang === 'ar');
+  var def = STEP_DEFS[currentStepIndex];
+  var topic = isAr ? cert.topicAr : cert.topicEn;
+
+  var results = cert.quizzes.map(function(m){
+    var best = bestQuizPct(m.id);
+    return { meta: m, best: best, passed: (best !== null && best > cert.pass) };
+  });
+  var allPassed = results.every(function(r){ return r.passed; });
+
+  nextBtn.style.display = '';
+  nextBtn.disabled = false;
+  nextBtn.textContent = isAr ? 'التالي' : 'Next';
+
+  if(!allPassed){
+    var introText = isAr
+      ? ('يلزم تحقيق أكثر من ' + cert.pass + '٪ في الاختبارات التالية للحصول على هذه الشهادة:')
+      : ('You need to score more than ' + cert.pass + '% on the following quizzes to earn this certificate:');
+
+    var listHtml = results.map(function(r){
+      var label = isAr ? r.meta.labelAr : r.meta.labelEn;
+      var statusText;
+      if(r.best === null){
+        statusText = isAr ? 'لم تُحاول بعد' : 'Not attempted yet';
+      } else if(!r.passed){
+        statusText = isAr
+          ? ('أفضل نتيجة: ' + r.best + '٪ — يلزم أكثر من ' + cert.pass + '٪')
+          : ('Best score: ' + r.best + '% — need more than ' + cert.pass + '%');
+      } else {
+        statusText = isAr ? ('أفضل نتيجة: ' + r.best + '٪ ✓') : ('Best score: ' + r.best + '% ✓');
+      }
+      var jumpStep = findStepIndexByQuiz(r.meta.id);
+      return '<div class="progress-row ' + (r.passed ? 'pr-done' : 'pr-pending') + '">' +
+        '<span class="pr-icon">' + (r.passed ? '✅' : '⛔') + '</span>' +
+        '<span class="pr-body"><span class="pr-label">' + label + '</span><span class="pr-status">' + statusText + '</span></span>' +
+        (r.passed ? '' : ('<button class="pr-jump-btn" data-jump="' + jumpStep + '">' + (isAr ? 'اذهب' : 'Go') + '</button>')) +
+      '</div>';
+    }).join('');
+
+    viewport.innerHTML = weekBadgeHTML(def) +
+      '<h2 class="section-title"><span class="num">🎓</span>' + (isAr ? ('شهادة — ' + topic) : ('Certificate — ' + topic)) + '</h2>' +
+      '<p class="lead">' + introText + '</p>' +
+      '<div class="progress-list">' + listHtml + '</div>';
+
+    viewport.querySelectorAll('.pr-jump-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        playClickSound();
+        renderStep(parseInt(btn.getAttribute('data-jump'), 10));
+      });
+    });
+    return;
+  }
+
+  var avgPct = Math.round(results.reduce(function(s, r){ return s + r.best; }, 0) / results.length);
+  var today = new Date();
+  var dateStr = today.toLocaleDateString(isAr ? 'ar-SA-u-nu-latn' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  var certId = 'NAHW-' + certKey.toUpperCase() + '-' + today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+  var sealNum = certKey.replace(/[^0-9]/g, '') || '★';
+
+  viewport.innerHTML = weekBadgeHTML(def) +
+    '<div id="w5-cert-wrap">' +
+      '<div class="cert-card">' +
+        '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
+        '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
+        '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
+        '<div class="cert-seal">' + sealNum + '</div>' +
+        '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
+        '<h1 class="cert-title"' + (isAr ? ' style="font-family:\'Amiri\',serif;"' : '') + '>' + (isAr ? 'شهادة إتمام' : 'Certificate of Completion') + '</h1>' +
+        '<p class="cert-line">' + (isAr ? 'تشهد هذه الوثيقة بأن' : 'This certifies that') + '</p>' +
+        '<div class="cert-name">' + escapeHTML(studentName) + '</div>' +
+        '<p class="cert-line">' + (isAr ? 'قد أتم بنجاح' : 'has successfully completed') + '</p>' +
+        '<p class="cert-course">' + escapeHTML(cert.topicEn) + '</p>' +
+        '<p class="cert-course-ar">' + escapeHTML(cert.topicAr) + '</p>' +
+        '<p class="cert-course-sub">مَبَادِئُ النَّحْوِ · Foundations of Naḥw</p>' +
+        '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+        '<div class="cert-meta-row">' +
+          '<div>' + (isAr ? 'متوسط الدرجات' : 'Average Score') + '<b>' + avgPct + '%</b></div>' +
+          '<div>' + (isAr ? 'التاريخ' : 'Date') + '<b>' + dateStr + '</b></div>' +
+          '<div>' + (isAr ? 'رقم الشهادة' : 'Certificate ID') + '<b>' + certId + '</b></div>' +
+        '</div>' +
+        '<div class="cert-footer">Diin Islaam · diinislaam.com</div>' +
+      '</div>' +
+    '</div>' +
+    '<p class="cert-continue-note no-print">📚 ' + (isAr ? 'المقرر مستمر — أسابيع جديدة قادمة قريبًا!' : 'This course continues — new weeks are on the way!') + '</p>' +
+    '<div class="cert-actions no-print">' +
+      '<button class="qbtn solid" id="cert-print-btn">🖨️ ' + (isAr ? 'طباعة / حفظ كملف PDF' : 'Print / Save as PDF') + '</button>' +
+    '</div>';
+
+  var printBtn = document.getElementById('cert-print-btn');
+  if(printBtn){ printBtn.addEventListener('click', function(){ playClickSound(); window.print(); }); }
+}
+
 function renderStep(i){
   currentStepIndex = i;
   var def = STEP_DEFS[i];
@@ -2762,13 +3486,24 @@ function renderStep(i){
     nextBtn.style.display = 'none';
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     activeQuizInstance = createQuizInstance('sq', enQArr, arQArr, function(){
-      if(!isLastStep){ nextBtn.style.display = ''; }
+      if(!isLastStep){
+        nextBtn.style.display = '';
+        var nextDef = STEP_DEFS[i + 1];
+        if(nextDef && nextDef.type === 'certificate'){
+          nextBtn.textContent = (currentLang === 'ar') ? '🎓 عرض شهادتي' : '🎓 View My Certificate';
+        }
+      }
       stepDone[i] = true;
       saveProgress();
     }, function(){
       nextBtn.style.display = 'none';
     }, !!def.immediate, def.enQ);
     activeQuizInstance.setLanguage(currentLang);
+  } else if(def.type === 'certificate'){
+    activeQuizInstance = null;
+    stepDone[i] = true;
+    saveProgress();
+    renderCourseCertificateStep(def.certKey);
   }
 
   updateStepProgress();
@@ -2791,8 +3526,14 @@ function refreshCurrentStepLanguage(){
     var leadEl = document.getElementById('active-quiz-lead');
     if(titleEl){ titleEl.textContent = (currentLang === 'ar') ? def.titleAr : def.titleEn; }
     if(leadEl){ leadEl.textContent = (currentLang === 'ar') ? def.leadAr : def.leadEn; }
-    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+    var nextDef = STEP_DEFS[currentStepIndex + 1];
+    var showingCertCta = (nextBtn.style.display !== 'none') && nextDef && nextDef.type === 'certificate';
+    nextBtn.textContent = showingCertCta
+      ? ((currentLang === 'ar') ? '🎓 عرض شهادتي' : '🎓 View My Certificate')
+      : ((currentLang === 'ar') ? 'التالي' : 'Next');
     if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
+  } else if(def.type === 'certificate'){
+    renderCourseCertificateStep(def.certKey);
   }
   updateStepProgress();
 }
@@ -2814,6 +3555,12 @@ var AUTH_STRINGS = {
     errRequireEmail: 'Please enter your email.',
     errPasswordLen: 'Password must be at least 6 characters.',
     errRequireBoth: 'Please enter your email and password.',
+    editNameTitle: 'Update Your Name',
+    editNameNote: 'This is the name shown on your account and progress.',
+    editNameAutoNote: "We noticed your account has no name saved yet — please enter your name below.",
+    editNamePlaceholder: 'Full name',
+    saveBtn: 'Save', cancel: 'Cancel',
+    errEditName: 'Please enter your name.',
     err: {
       'auth/email-already-in-use': 'This email is already registered.',
       'auth/invalid-email': 'Please enter a valid email address.',
@@ -2841,6 +3588,12 @@ var AUTH_STRINGS = {
     errRequireEmail: 'الرجاء إدخال بريدك الإلكتروني.',
     errPasswordLen: 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
     errRequireBoth: 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.',
+    editNameTitle: 'تحديث اسمك',
+    editNameNote: 'هذا هو الاسم الذي يظهر في حسابك وتقدّمك.',
+    editNameAutoNote: 'لاحظنا أن حسابك ليس له اسم محفوظ بعد — الرجاء إدخال اسمك أدناه.',
+    editNamePlaceholder: 'الاسم الكامل',
+    saveBtn: 'حفظ', cancel: 'إلغاء',
+    errEditName: 'الرجاء إدخال اسمك.',
     err: {
       'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجَّل بالفعل.',
       'auth/invalid-email': 'الرجاء إدخال بريد إلكتروني صحيح.',
@@ -2884,6 +3637,7 @@ function setLanguage(lang){
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
   document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
   refreshAuthLanguage();
+  if(window.__refreshEditNameLanguage){ window.__refreshEditNameLanguage(); }
   if(studentName){ showWelcomeBanner(false); }
   refreshCurrentStepLanguage();
 }
@@ -3345,6 +4099,66 @@ document.getElementById('forgot-password-btn').addEventListener('click', functio
       showErr(loginErrorEl, authErrorMessage(e.code));
     });
 });
+
+var editNameModalEl = document.getElementById('edit-name-modal');
+var editNameInputEl = document.getElementById('edit-name-input');
+var editNameErrorEl = document.getElementById('edit-name-error');
+var editNameSaveBtn = document.getElementById('edit-name-save-btn');
+
+function refreshEditNameLanguage(){
+  document.getElementById('edit-name-modal-title').textContent = t('editNameTitle');
+  document.getElementById('edit-name-modal-note').textContent = (editNameModalEl.dataset.auto === '1') ? t('editNameAutoNote') : t('editNameNote');
+  editNameInputEl.placeholder = t('editNamePlaceholder');
+  editNameSaveBtn.textContent = t('saveBtn');
+  document.getElementById('edit-name-cancel-btn').textContent = t('cancel');
+}
+
+function openEditNameModal(auto){
+  editNameModalEl.dataset.auto = auto ? '1' : '0';
+  refreshEditNameLanguage();
+  var current = window.studentName || '';
+  editNameInputEl.value = (current && current.toLowerCase() !== (window.studentEmail || '').toLowerCase()) ? current : '';
+  editNameErrorEl.style.display = 'none';
+  editNameModalEl.classList.add('show');
+  editNameInputEl.focus();
+}
+function closeEditNameModal(){
+  editNameModalEl.classList.remove('show');
+}
+
+document.getElementById('edit-name-btn').addEventListener('click', function(){
+  window.playClickSound && window.playClickSound();
+  openEditNameModal(false);
+});
+document.getElementById('edit-name-cancel-btn').addEventListener('click', function(){
+  window.playClickSound && window.playClickSound();
+  closeEditNameModal();
+});
+editNameSaveBtn.addEventListener('click', function(){
+  var name = editNameInputEl.value.trim();
+  if(!name){ showErr(editNameErrorEl, t('errEditName')); return; }
+  editNameSaveBtn.disabled = true;
+  var tasks = [ setDoc(doc(db, COLLECTION, window.currentUID), { fullName: name }, { merge: true }) ];
+  if(auth.currentUser){ tasks.push(updateProfile(auth.currentUser, { displayName: name })); }
+  Promise.all(tasks)
+    .then(function(){
+      window.playClickSound && window.playClickSound();
+      window.studentName = name;
+      document.getElementById('account-name').textContent = name;
+      closeEditNameModal();
+    })
+    .catch(function(e){
+      showErr(editNameErrorEl, authErrorMessage(e.code));
+    })
+    .finally(function(){
+      editNameSaveBtn.disabled = false;
+    });
+});
+editNameInputEl.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ editNameSaveBtn.click(); }
+});
+window.__promptNameFix = function(){ openEditNameModal(true); };
+window.__refreshEditNameLanguage = refreshEditNameLanguage;
 
 ['enroll-name','enroll-email','enroll-password'].forEach(function(id){
   document.getElementById(id).addEventListener('keydown', function(e){
