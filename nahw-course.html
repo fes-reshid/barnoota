@@ -3486,7 +3486,13 @@ function renderStep(i){
     nextBtn.style.display = 'none';
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     activeQuizInstance = createQuizInstance('sq', enQArr, arQArr, function(){
-      if(!isLastStep){ nextBtn.style.display = ''; }
+      if(!isLastStep){
+        nextBtn.style.display = '';
+        var nextDef = STEP_DEFS[i + 1];
+        if(nextDef && nextDef.type === 'certificate'){
+          nextBtn.textContent = (currentLang === 'ar') ? '🎓 عرض شهادتي' : '🎓 View My Certificate';
+        }
+      }
       stepDone[i] = true;
       saveProgress();
     }, function(){
@@ -3520,7 +3526,11 @@ function refreshCurrentStepLanguage(){
     var leadEl = document.getElementById('active-quiz-lead');
     if(titleEl){ titleEl.textContent = (currentLang === 'ar') ? def.titleAr : def.titleEn; }
     if(leadEl){ leadEl.textContent = (currentLang === 'ar') ? def.leadAr : def.leadEn; }
-    nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
+    var nextDef = STEP_DEFS[currentStepIndex + 1];
+    var showingCertCta = (nextBtn.style.display !== 'none') && nextDef && nextDef.type === 'certificate';
+    nextBtn.textContent = showingCertCta
+      ? ((currentLang === 'ar') ? '🎓 عرض شهادتي' : '🎓 View My Certificate')
+      : ((currentLang === 'ar') ? 'التالي' : 'Next');
     if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
   } else if(def.type === 'certificate'){
     renderCourseCertificateStep(def.certKey);
