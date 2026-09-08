@@ -16,10 +16,50 @@
     -webkit-user-select: none;
     text-align: center;
   }
-  .wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 420px; padding: 0 24px; }
-  svg { width: 64px; height: 64px; fill: #D9C27E; }
-  h1 { margin: 0; font-size: 1.4rem; font-weight: 600; }
+  .wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 480px; padding: 24px; }
+  svg { width: 56px; height: 56px; fill: #D9C27E; flex-shrink: 0; }
+  h1 { margin: 0; font-size: 1.3rem; font-weight: 600; }
   p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: rgba(246, 245, 240, 0.75); }
+
+  .reminder {
+    margin-top: 6px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: rgba(246, 245, 240, 0.05);
+    border: 1px solid rgba(246, 245, 240, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+  }
+  .reminder-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #D9C27E;
+    text-align: center;
+    margin-bottom: -4px;
+  }
+  .reminder-item { display: flex; flex-direction: column; gap: 6px; }
+  .reminder-ar {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: #F6F5F0;
+    direction: rtl;
+    text-align: right;
+  }
+  .reminder-en {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: rgba(246, 245, 240, 0.8);
+  }
+  .reminder-source {
+    font-size: 0.72rem;
+    color: rgba(246, 245, 240, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
 
   .fallback-link {
     all: unset;
@@ -27,7 +67,7 @@
     font-size: 0.85rem;
     color: rgba(246, 245, 240, 0.55);
     text-decoration: underline;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   .fallback-form {
@@ -70,8 +110,24 @@
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12,1L3,5v6c0,5.55 3.84,10.74 9,12c5.16,-1.26 9,-6.45 9,-12V5L12,1zM12,11.99h7c-0.53,4.12 -3.28,7.79 -7,8.94V12H5V6.3l7,-3.11v8.8z"/>
     </svg>
-    <h1>This computer was locked by a parent.</h1>
-    <p>Ask them to open it from the Noor Shield remote dashboard — this screen will disappear on its own the moment they do.</p>
+    <h1>Your parent has locked this computer.</h1>
+    <p>Please listen to your parent — this screen will disappear on its own once they unlock it.</p>
+
+    <div class="reminder">
+      <div class="reminder-eyebrow">A reminder</div>
+      <div class="reminder-item">
+        <div class="reminder-ar">وَقَضَىٰ رَبُّكَ أَلَّا تَعْبُدُوٓا۟ إِلَّآ إِيَّاهُ وَبِٱلْوَٰلِدَيْنِ إِحْسَٰنًا</div>
+        <p class="reminder-en">"And your Lord has decreed that you worship none but Him, and that you be
+          dutiful to your parents."</p>
+        <div class="reminder-source">Qur'an, Al-Isra 17:23</div>
+      </div>
+      <div class="reminder-item">
+        <p class="reminder-en">A man asked the Prophet ﷺ, "Which deed is most beloved to Allah?" He said,
+          "Prayer at its proper time." The man asked, "Then what?" He said, "Being good and dutiful to
+          your parents."</p>
+        <div class="reminder-source">Sahih al-Bukhari 527 &amp; Sahih Muslim 85</div>
+      </div>
+    </div>
 
     <button class="fallback-link" id="fallback-toggle">Parent: enter the local password instead</button>
 
