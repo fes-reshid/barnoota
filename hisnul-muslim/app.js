@@ -808,7 +808,7 @@
       "</header>" +
       '<section class="glass prayer-panel">' +
         '<div class="prayer-list">' + rowsHTML + "</div>" +
-        '<p class="qibla-note">' + icon("bell", 13) + ' gara salaataa kee jala tuqi akka salaanni sun yeroo ga’utti bilbila salphaan si beeksisu (dhugaa azaanaa miti), yeroo appiin banamee jiru. Dabalataanis, daqiiqaa 10 booda, zikrii salaamtaa booda dubbisuuf si yaadachiisa.</p>' +
+        '<p class="qibla-note">' + icon("bell", 13) + ' gara salaataa kee jala tuqi akka salaanni sun yeroo ga’utti beeksisa siif ergu (dhugaa azaanaa miti — yeroo salaataa qofa si beeksisa). Ergasii, daqiiqaa 3 booda du’aa’ii azaanaa, daqiiqaa 10 boodas zikrii salaamtaa booda dubbisuuf si yaadachiisa.' + (isNativeApp() ? "" : " (App banamee jiraachuu qaba.)") + "</p>" +
         (manual ?
           '<button class="font-reset" id="prayer-manual-edit" style="margin-top:0.75rem;">Yeroo ofii gulaali</button>' +
           '<button class="font-reset" id="prayer-manual-clear" style="margin-top:0.5rem;">Deebi\'ii gara herrega GPS-tti</button>'
@@ -893,14 +893,22 @@
     });
 
     document.querySelectorAll('[data-action="prayer-azan-toggle"]').forEach(function (btn) {
-      btn.addEventListener("click", function () {
+      btn.addEventListener("click", async function () {
         var k = btn.getAttribute("data-prayer");
         var enabling = !isAzanEnabledFor(k);
-        setAzanEnabledFor(k, enabling);
-        if (enabling && "Notification" in window && Notification.permission === "default") {
-          Notification.requestPermission().catch(function () {});
+        if (enabling) {
+          // On native this goes through LocalNotifications (the only
+          // reliable permission surface inside a WebView); on the web PWA
+          // it's the plain Notification API, same as the rest of the
+          // reminders system.
+          if (window.RemindersAPI) await RemindersAPI.requestNotifPermission();
+          else if ("Notification" in window && Notification.permission === "default") {
+            await Notification.requestPermission().catch(function () {});
+          }
         }
+        setAzanEnabledFor(k, enabling);
         scheduleNextAzan();
+        if (enabling && window.RemindersAPI) RemindersAPI.maybeRequestExactAlarm();
         navigate(location.hash, true);
       });
     });
@@ -911,66 +919,135 @@
     });
   }
 
-  // Fires a plain alert chime (see playChime, used the same way for the
-  // Tasbiih 100-count completion) at each of the day's five prayer times -
-  // a "prayer time reached" notice, not an attempt at reciting the actual
-  // Adhan, which this app has no licensed recording of. Only runs while the
-  // app is open, same as the rest of the reminders system before its native
-  // LocalNotifications upgrade.
-  //
-  // A short while after each of those, it also nudges the reader toward
-  // ch.25 ("Zikrii yeroo salaata irraa salaamtaa bahanii" - the dhikr said
-  // on finishing a prayer) - as a real system notification when permission
-  // for one has already been granted, falling back to the same chime
-  // otherwise so it's never a silent no-op while the app is open.
+  // Three alerts per enabled prayer, all pointing at real chapters rather
+  // than an attempt at reciting the actual Adhan (this app has no licensed
+  // recording of it):
+  //  - at prayer time: a "salaatni ga'e" notice, pointing at ch.15 (the
+  //    dhikr said along with/after the mu'azzin's azan)
+  //  - a few minutes later, once the azan itself would be over: a nudge
+  //    specifically toward ch.15's post-azan du'a (the du'a between azan
+  //    and iqama the reader might otherwise skip past)
+  //  - POST_SALAH_DELAY_MS later: a nudge toward ch.25 (the dhikr said on
+  //    finishing the prayer with salam)
+  // On the native app this schedules real OS notifications via
+  // RemindersAPI.nativeSchedule so they fire on time whether or not the app
+  // is open, mirroring the Fajr/Maghrib/bedtime reminders in reminders.js.
+  // On the plain web PWA there's no way to wake a fully-closed page (same
+  // limitation documented at the top of reminders.js), so it falls back to
+  // a setTimeout schedule that fires while the app/tab is open, showing a
+  // real Notification when permission has been granted and always playing
+  // the chime as well so it's never a silent no-op.
+  var POST_AZAN_DELAY_MS = 3 * 60 * 1000;
   var POST_SALAH_DELAY_MS = 10 * 60 * 1000;
+  var AZAN_CHAPTER = 15;
   var POST_SALAH_CHAPTER = 25;
-  function firePostSalahReminder(prayerKey) {
-    if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) {
-      playChime();
-      return;
-    }
+
+  function azanMessage(k) {
+    return { title: "Yeroon Salaata " + PRAYER_LABELS[k] + " Ga'e", body: "Azaanni ga'eera — fakkii mu'azzinii dubbadhuufi azaana booda du'aa'ii azaanaa dubbisi." };
+  }
+  function postAzanMessage(k) {
+    return { title: "Du'aa'ii Azaanaa Hin Irraanfatin", body: "Azaanni salaata " + PRAYER_LABELS[k] + " xumurameera — du'aa'ii azaanaa dubbisi." };
+  }
+  function postSalahMessage(k) {
+    return { title: "Zikrii Salaata " + PRAYER_LABELS[k] + " Booda", body: "Erga salaata xumurtee, zikrii salaamtaa booda dubbisi." };
+  }
+
+  function showAzanWebNotification(msg, chapter, tag) {
+    if (!("Notification" in window) || Notification.permission !== "granted" || !("serviceWorker" in navigator)) return;
     navigator.serviceWorker.ready.then(function (reg) {
-      return reg.showNotification("Zikrii Salaata " + PRAYER_LABELS[prayerKey] + " Booda", {
-        body: "Erga salaata xumurtee, zikrii salaamtaa booda dubbisi.",
+      reg.showNotification(msg.title, {
+        body: msg.body,
         icon: "icons/icon-192.png",
         badge: "icons/icon-192.png",
-        tag: "hisn-postsalah-" + prayerKey,
-        data: { url: "#/category/" + POST_SALAH_CHAPTER }
-      });
-    }).catch(function () { playChime(); });
+        tag: tag,
+        data: { url: "#/category/" + chapter }
+      }).catch(function () {});
+    }).catch(function () {});
+  }
+  function fireAzanAlert(prayerKey) {
+    playChime();
+    showAzanWebNotification(azanMessage(prayerKey), AZAN_CHAPTER, "hisn-azan-" + prayerKey);
+  }
+  function firePostAzanReminder(prayerKey) {
+    showAzanWebNotification(postAzanMessage(prayerKey), AZAN_CHAPTER, "hisn-postazan-" + prayerKey);
+  }
+  function firePostSalahReminder(prayerKey) {
+    showAzanWebNotification(postSalahMessage(prayerKey), POST_SALAH_CHAPTER, "hisn-postsalah-" + prayerKey);
   }
 
   var prayerAzanTimer = null;
   function stopPrayerAzanSchedule() {
     if (prayerAzanTimer) { clearTimeout(prayerAzanTimer); prayerAzanTimer = null; }
   }
-  function scheduleNextAzan() {
-    stopPrayerAzanSchedule();
-    if (!anyAzanEnabled()) return;
+
+  function azanDateKey(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  // A stable id from (prayer, kind, date) so rescheduling replaces exactly
+  // what it previously scheduled. Multiplied by 100 (vs. reminders.js's own
+  // *10 scheme) so the two native id ranges can never collide.
+  var AZAN_KIND_SUFFIX = { azan: 0, postazan: 1, postsalah: 2 };
+  function azanNotifId(prayerKey, kind, key) {
+    var suffix = 10 + AZAN_PRAYERS.indexOf(prayerKey) * 3 + AZAN_KIND_SUFFIX[kind];
+    return parseInt(key.replace(/-/g, ""), 10) * 100 + suffix;
+  }
+
+  function azanCandidatesForOffsets(offsets) {
     var manual = loadManualPrayerTimes();
     var coords = manual ? null : loadPrayerCoords();
-    if (!manual && !coords) return;
-    var now = new Date();
+    if (!manual && !coords) return [];
+    var now = Date.now();
     var candidates = [];
-    [0, 1].forEach(function (offset) {
-      var day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    offsets.forEach(function (offset) {
+      var day = new Date(); day.setDate(day.getDate() + offset);
       var times = manual ? manualTimesToDate(manual, day) : PrayerTimes.computeTimes(localMidnightUTCFor(day), coords.lat, coords.lon);
       if (!times) return;
+      var key = azanDateKey(day);
       AZAN_PRAYERS.forEach(function (k) {
         if (!isAzanEnabledFor(k) || !times[k]) return;
-        if (times[k].getTime() > now.getTime()) candidates.push({ at: times[k], fn: playChime });
-        var postAt = new Date(times[k].getTime() + POST_SALAH_DELAY_MS);
-        if (postAt.getTime() > now.getTime()) candidates.push({ at: postAt, fn: function () { firePostSalahReminder(k); } });
+        var azanAt = times[k];
+        var postAzanAt = new Date(azanAt.getTime() + POST_AZAN_DELAY_MS);
+        var postSalahAt = new Date(azanAt.getTime() + POST_SALAH_DELAY_MS);
+        if (azanAt.getTime() > now) candidates.push({ prayer: k, kind: "azan", key: key, at: azanAt });
+        if (postAzanAt.getTime() > now) candidates.push({ prayer: k, kind: "postazan", key: key, at: postAzanAt });
+        if (postSalahAt.getTime() > now) candidates.push({ prayer: k, kind: "postsalah", key: key, at: postSalahAt });
       });
     });
+    return candidates;
+  }
+
+  function scheduleNextAzanNative() {
+    var candidates = anyAzanEnabled() ? azanCandidatesForOffsets([0, 1]) : [];
+    var notifications = candidates.map(function (c) {
+      var msg = c.kind === "azan" ? azanMessage(c.prayer) : c.kind === "postazan" ? postAzanMessage(c.prayer) : postSalahMessage(c.prayer);
+      var chapter = c.kind === "postsalah" ? POST_SALAH_CHAPTER : AZAN_CHAPTER;
+      return {
+        id: azanNotifId(c.prayer, c.kind, c.key),
+        title: msg.title,
+        body: msg.body,
+        schedule: { at: c.at, allowWhileIdle: true },
+        extra: { url: "#/category/" + chapter }
+      };
+    });
+    RemindersAPI.nativeSchedule("azan", notifications);
+  }
+
+  function scheduleNextAzanWeb() {
+    stopPrayerAzanSchedule();
+    var candidates = anyAzanEnabled() ? azanCandidatesForOffsets([0, 1]) : [];
     if (!candidates.length) return;
     candidates.sort(function (a, b) { return a.at - b.at; });
     var next = candidates[0];
+    var fn = next.kind === "azan" ? function () { fireAzanAlert(next.prayer); }
+      : next.kind === "postazan" ? function () { firePostAzanReminder(next.prayer); }
+      : function () { firePostSalahReminder(next.prayer); };
     prayerAzanTimer = setTimeout(function () {
-      next.fn();
-      scheduleNextAzan();
-    }, Math.max(0, next.at.getTime() - now.getTime()));
+      fn();
+      scheduleNextAzanWeb();
+    }, Math.max(0, next.at.getTime() - Date.now()));
+  }
+
+  function scheduleNextAzan() {
+    if (isNativeApp() && window.RemindersAPI) scheduleNextAzanNative();
+    else scheduleNextAzanWeb();
   }
 
   function homeFavCardHTML(c) {
