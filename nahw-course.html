@@ -743,19 +743,31 @@
       <button class="week-select-btn" id="week-select-w1" data-step="2">
         <span class="wsb-en">Week 1 · The Subject of Naḥw</span><span class="wsb-ar">الأسبوع الأول · موضوع النحو</span>
       </button>
-      <button class="week-select-btn" id="week-select-w2" data-step="4">
+      <button class="week-select-btn milestone" id="week-select-w1-cert" data-step="4">
+        <span class="wsb-en">🎓 Certificate · Subject of Naḥw</span><span class="wsb-ar">🎓 شهادة · موضوع النحو</span>
+      </button>
+      <button class="week-select-btn" id="week-select-w2" data-step="5">
         <span class="wsb-en">Week 2 · Types of the Word</span><span class="wsb-ar">الأسبوع الثاني · أنواع الكلمة</span>
       </button>
-      <button class="week-select-btn" id="week-select-w3" data-step="6">
+      <button class="week-select-btn milestone" id="week-select-w2-cert" data-step="7">
+        <span class="wsb-en">🎓 Certificate · Types of the Word</span><span class="wsb-ar">🎓 شهادة · أنواع الكلمة</span>
+      </button>
+      <button class="week-select-btn" id="week-select-w3" data-step="8">
         <span class="wsb-en">Week 3 · Indefinite &amp; Definite</span><span class="wsb-ar">الأسبوع الثالث · النكرة والمعرفة</span>
       </button>
-      <button class="week-select-btn" id="week-select-w4" data-step="9">
+      <button class="week-select-btn milestone" id="week-select-w3-cert" data-step="11">
+        <span class="wsb-en">🎓 Certificate · Indefinite &amp; Definite</span><span class="wsb-ar">🎓 شهادة · النكرة والمعرفة</span>
+      </button>
+      <button class="week-select-btn" id="week-select-w4" data-step="12">
         <span class="wsb-en">Week 4 · Declinable &amp; Indeclinable</span><span class="wsb-ar">الأسبوع الرابع · المعرب والمبني</span>
       </button>
-      <button class="week-select-btn" id="week-select-w5" data-step="19">
+      <button class="week-select-btn milestone" id="week-select-w4-cert" data-step="22">
+        <span class="wsb-en">🎓 Certificate · Declinable &amp; Indeclinable</span><span class="wsb-ar">🎓 شهادة · المعرب والمبني</span>
+      </button>
+      <button class="week-select-btn" id="week-select-w5" data-step="23">
         <span class="wsb-en">Week 5 · The I'rab Rulings</span><span class="wsb-ar">الأسبوع الخامس · الأحكام الإعرابية</span>
       </button>
-      <button class="week-select-btn milestone" id="week-select-w5-cert" data-step="25">
+      <button class="week-select-btn milestone" id="week-select-w5-cert" data-step="29">
         <span class="wsb-en">🎓 Certificate · I'rab Rulings</span><span class="wsb-ar">🎓 شهادة · الأحكام الإعرابية</span>
       </button>
     </div>
@@ -2503,6 +2515,7 @@ var LESSONS_W5_EN = [
 
 <div class="section">
   <h2 class="section-title"><span class="num">📇</span>Week 5 Flashcards</h2>
+  <p class="lead">💡 Tap or click on any card below to reveal its meaning.</p>
   <div class="def-grid">
     <div class="rule-box"><details><summary><b>رَفْع (Rafʿ)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — the default ruling for a noun or present-tense verb when no accusative or jazm particle affects it.</p></details></div>
     <div class="rule-box"><details><summary><b>نَصْب (Naṣb)</b></summary><p style="margin:10px 0 0;">One of the four i'rab rulings — applies to nouns (e.g. after certain particles) and to a present-tense verb preceded by a naṣb particle.</p></details></div>
@@ -2682,6 +2695,7 @@ var LESSONS_W5_AR = [
 
 <div class="section">
   <h2 class="section-title"><span class="num">📇</span>بطاقات مراجعة الأسبوع الخامس</h2>
+  <p class="lead">💡 اضغط على أي بطاقة أدناه لإظهار معناها.</p>
   <div class="def-grid">
     <div class="rule-box"><details><summary><b>الرَّفْع</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ وهو الحكم الأصلي للاسم أو الفعل المضارع إذا لم يدخله ناصب ولا جازم.</p></details></div>
     <div class="rule-box"><details><summary><b>النَّصْب</b></summary><p style="margin:10px 0 0;">أحد الأحكام الإعرابية الأربعة؛ يدخل الأسماء (بعد بعض الحروف) والفعل المضارع إذا سبقه ناصب.</p></details></div>
@@ -2918,6 +2932,7 @@ var STEP_DEFS = [
     titleEn: 'Week 1 Quiz — The Subject of Naḥw', titleAr: 'اختبار الأسبوع الأول — موضوع النحو',
     leadEn: '10 questions covering the two major parts of Naḥw and everything studied under each. The answer and explanation appear right after each question.',
     leadAr: '١٠ أسئلة تغطي جزأي النحو الكبيرين وكل ما يُدرَس تحت كل منهما. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w1', weekEn: 'Week 1', weekAr: 'الأسبوع الأول' },
 
   // ===== Week 2: Types of the Word =====
   { type: 'lesson', arrEN: 'LESSONS_W2_EN', arrAR: 'LESSONS_W2_AR', idx: 0, weekEn: 'Week 2', weekAr: 'الأسبوع الثاني' },
@@ -2925,6 +2940,7 @@ var STEP_DEFS = [
     titleEn: 'Week 2 Quiz — Types of the Word', titleAr: 'اختبار الأسبوع الثاني — أنواع الكلمة',
     leadEn: '12 questions covering the tests for identifying a noun, the three verb types, and the particle. The answer and explanation appear right after each question.',
     leadAr: '١٢ سؤالاً تغطي اختبارات الاسم، وأقسام الفعل الثلاثة، والحرف. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w2', weekEn: 'Week 2', weekAr: 'الأسبوع الثاني' },
 
   // ===== Week 3: Indefinite & Definite =====
   { type: 'lesson', arrEN: 'LESSONS_W3_EN', arrAR: 'LESSONS_W3_AR', idx: 0, weekEn: 'Week 3', weekAr: 'الأسبوع الثالث' },
@@ -2933,6 +2949,7 @@ var STEP_DEFS = [
     titleEn: 'Week 3 Quiz — Indefinite & Definite', titleAr: 'اختبار الأسبوع الثالث — النكرة والمعرفة',
     leadEn: '15 questions covering the six types of معرفة, especially the pronoun. The answer and explanation appear right after each question.',
     leadAr: '١٥ سؤالاً تغطي أنواع المعرفة الستة، وخاصة الضمير. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w3', weekEn: 'Week 3', weekAr: 'الأسبوع الثالث' },
 
   // ===== Week 4: Declinable & Indeclinable =====
   { type: 'lesson', arrEN: 'LESSONS_EN', arrAR: 'LESSONS_AR', idx: 0, weekEn: 'Week 4', weekAr: 'الأسبوع الرابع' },
@@ -2951,6 +2968,7 @@ var STEP_DEFS = [
     titleEn: 'Module 2 Quiz — Lessons 6–8', titleAr: 'اختبار الوحدة الثانية — الدروس ٦–٨',
     leadEn: '15 questions covering the present-tense verb, the ten mabni noun types, and the terminology note. The answer and explanation appear right after each question.',
     leadAr: '١٥ سؤالاً تغطي الفعل المضارع، والأسماء العشرة المبنية، وفائدة المصطلح. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
+  { type: 'certificate', certKey: 'w4', weekEn: 'Week 4', weekAr: 'الأسبوع الرابع' },
 
   // ===== Week 5: The I'rab Rulings & Khaṭṭ al-I'rāb =====
   { type: 'lesson', arrEN: 'LESSONS_W5_EN', arrAR: 'LESSONS_W5_AR', idx: 0, weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
@@ -2968,7 +2986,7 @@ var STEP_DEFS = [
     titleEn: 'Practice Your Knowledge — Week 5 Final Quiz', titleAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل',
     leadEn: '25 questions covering everything from Week 5 — the four i\'rab rulings, Khaṭṭ al-I\'rāb, and how to parse a word from either side of it. The answer and explanation appear right after each question.',
     leadAr: '٢٥ سؤالاً تغطي كل ما في الأسبوع الخامس — الأحكام الإعرابية الأربعة، وخط الإعراب، وكيفية إعراب الكلمة من كل جانبيه. تظهر الإجابة والتفسير بعد كل سؤال مباشرة.' },
-  { type: 'w5certificate', weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
+  { type: 'certificate', certKey: 'w5', weekEn: 'Week 5', weekAr: 'الأسبوع الخامس' },
 
   { type: 'quiz', enQ: 'finalQuizEN', arQ: 'finalQuizAR', immediate: false,
     titleEn: 'Test Your Knowledge', titleAr: 'اختبر معلوماتك',
@@ -3014,15 +3032,31 @@ function escapeHTML(str){
   return div.innerHTML;
 }
 
-var W5_CERT_PASS = 75;
-var W5_CERT_QUIZZES = [
-  { id: 'week5aQuizEN', jumpStep: 20,
-    labelEn: 'Week 5 Quiz — The Four I\'rab Rulings', labelAr: 'اختبار الأسبوع الخامس — الأحكام الإعرابية الأربعة' },
-  { id: 'week5bQuizEN', jumpStep: 22,
-    labelEn: 'Week 5 Quiz — Khaṭṭ al-I\'rāb', labelAr: 'اختبار الأسبوع الخامس — خط الإعراب' },
-  { id: 'week5QuizEN', jumpStep: 24,
-    labelEn: 'Practice Your Knowledge — Week 5 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل' }
-];
+var CERT_DEFS = {
+  w1: { pass: 75, topicEn: 'The Subject of Naḥw', topicAr: 'موضوع النحو',
+    quizzes: [
+      { id: 'week1QuizEN', labelEn: 'Week 1 Quiz — The Subject of Naḥw', labelAr: 'اختبار الأسبوع الأول — موضوع النحو' }
+    ] },
+  w2: { pass: 75, topicEn: 'Types of the Word', topicAr: 'أنواع الكلمة',
+    quizzes: [
+      { id: 'week2QuizEN', labelEn: 'Week 2 Quiz — Types of the Word', labelAr: 'اختبار الأسبوع الثاني — أنواع الكلمة' }
+    ] },
+  w3: { pass: 75, topicEn: 'Indefinite & Definite', topicAr: 'النكرة والمعرفة',
+    quizzes: [
+      { id: 'week3QuizEN', labelEn: 'Week 3 Quiz — Indefinite & Definite', labelAr: 'اختبار الأسبوع الثالث — النكرة والمعرفة' }
+    ] },
+  w4: { pass: 75, topicEn: 'Declinable & Indeclinable', topicAr: 'المعرب والمبني',
+    quizzes: [
+      { id: 'module1QuizEN', labelEn: 'Module 1 Quiz — Lessons 1–5', labelAr: 'اختبار الوحدة الأولى — الدروس ١–٥' },
+      { id: 'module2QuizEN', labelEn: 'Module 2 Quiz — Lessons 6–8', labelAr: 'اختبار الوحدة الثانية — الدروس ٦–٨' }
+    ] },
+  w5: { pass: 75, topicEn: 'The I\'rab Rulings & Khaṭṭ al-I\'rāb', topicAr: 'الأحكام الإعرابية وخط الإعراب',
+    quizzes: [
+      { id: 'week5aQuizEN', labelEn: 'Week 5 Quiz — The Four I\'rab Rulings', labelAr: 'اختبار الأسبوع الخامس — الأحكام الإعرابية الأربعة' },
+      { id: 'week5bQuizEN', labelEn: 'Week 5 Quiz — Khaṭṭ al-I\'rāb', labelAr: 'اختبار الأسبوع الخامس — خط الإعراب' },
+      { id: 'week5QuizEN', labelEn: 'Practice Your Knowledge — Week 5 Final Quiz', labelAr: 'اختبر معلوماتك — اختبار الأسبوع الخامس الشامل' }
+    ] }
+};
 
 function bestQuizPct(quizId){
   var attempts = quizAttempts[quizId];
@@ -3032,15 +3066,24 @@ function bestQuizPct(quizId){
   return best;
 }
 
-function renderWeek5CertificateStep(){
+function findStepIndexByQuiz(quizId){
+  for(var i = 0; i < STEP_DEFS.length; i++){
+    if(STEP_DEFS[i].type === 'quiz' && STEP_DEFS[i].enQ === quizId) return i;
+  }
+  return -1;
+}
+
+function renderCourseCertificateStep(certKey){
+  var cert = CERT_DEFS[certKey];
   var viewport = document.getElementById('step-viewport');
   var nextBtn = document.getElementById('step-next-btn');
   var isAr = (currentLang === 'ar');
   var def = STEP_DEFS[currentStepIndex];
+  var topic = isAr ? cert.topicAr : cert.topicEn;
 
-  var results = W5_CERT_QUIZZES.map(function(m){
+  var results = cert.quizzes.map(function(m){
     var best = bestQuizPct(m.id);
-    return { meta: m, best: best, passed: (best !== null && best > W5_CERT_PASS) };
+    return { meta: m, best: best, passed: (best !== null && best > cert.pass) };
   });
   var allPassed = results.every(function(r){ return r.passed; });
 
@@ -3050,8 +3093,8 @@ function renderWeek5CertificateStep(){
 
   if(!allPassed){
     var introText = isAr
-      ? ('يلزم تحقيق أكثر من ' + W5_CERT_PASS + '٪ في الاختبارات التالية للحصول على هذه الشهادة:')
-      : ('You need to score more than ' + W5_CERT_PASS + '% on the following quizzes to earn this certificate:');
+      ? ('يلزم تحقيق أكثر من ' + cert.pass + '٪ في الاختبارات التالية للحصول على هذه الشهادة:')
+      : ('You need to score more than ' + cert.pass + '% on the following quizzes to earn this certificate:');
 
     var listHtml = results.map(function(r){
       var label = isAr ? r.meta.labelAr : r.meta.labelEn;
@@ -3060,20 +3103,21 @@ function renderWeek5CertificateStep(){
         statusText = isAr ? 'لم تُحاول بعد' : 'Not attempted yet';
       } else if(!r.passed){
         statusText = isAr
-          ? ('أفضل نتيجة: ' + r.best + '٪ — يلزم أكثر من ' + W5_CERT_PASS + '٪')
-          : ('Best score: ' + r.best + '% — need more than ' + W5_CERT_PASS + '%');
+          ? ('أفضل نتيجة: ' + r.best + '٪ — يلزم أكثر من ' + cert.pass + '٪')
+          : ('Best score: ' + r.best + '% — need more than ' + cert.pass + '%');
       } else {
         statusText = isAr ? ('أفضل نتيجة: ' + r.best + '٪ ✓') : ('Best score: ' + r.best + '% ✓');
       }
+      var jumpStep = findStepIndexByQuiz(r.meta.id);
       return '<div class="progress-row ' + (r.passed ? 'pr-done' : 'pr-pending') + '">' +
         '<span class="pr-icon">' + (r.passed ? '✅' : '⛔') + '</span>' +
         '<span class="pr-body"><span class="pr-label">' + label + '</span><span class="pr-status">' + statusText + '</span></span>' +
-        (r.passed ? '' : ('<button class="pr-jump-btn" data-jump="' + r.meta.jumpStep + '">' + (isAr ? 'اذهب' : 'Go') + '</button>')) +
+        (r.passed ? '' : ('<button class="pr-jump-btn" data-jump="' + jumpStep + '">' + (isAr ? 'اذهب' : 'Go') + '</button>')) +
       '</div>';
     }).join('');
 
     viewport.innerHTML = weekBadgeHTML(def) +
-      '<h2 class="section-title"><span class="num">🎓</span>' + (isAr ? 'شهادة — الأحكام الإعرابية وخط الإعراب' : 'Certificate — The I\'rab Rulings &amp; Khaṭṭ al-I\'rāb') + '</h2>' +
+      '<h2 class="section-title"><span class="num">🎓</span>' + (isAr ? ('شهادة — ' + topic) : ('Certificate — ' + topic)) + '</h2>' +
       '<p class="lead">' + introText + '</p>' +
       '<div class="progress-list">' + listHtml + '</div>';
 
@@ -3089,7 +3133,8 @@ function renderWeek5CertificateStep(){
   var avgPct = Math.round(results.reduce(function(s, r){ return s + r.best; }, 0) / results.length);
   var today = new Date();
   var dateStr = today.toLocaleDateString(isAr ? 'ar-SA-u-nu-latn' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  var certId = 'NAHW-CERT-' + today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+  var certId = 'NAHW-' + certKey.toUpperCase() + '-' + today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+  var sealNum = certKey.replace(/[^0-9]/g, '') || '★';
 
   viewport.innerHTML = weekBadgeHTML(def) +
     '<div id="w5-cert-wrap">' +
@@ -3097,14 +3142,14 @@ function renderWeek5CertificateStep(){
         '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
         '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
         '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
-        '<div class="cert-seal">5</div>' +
+        '<div class="cert-seal">' + sealNum + '</div>' +
         '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
         '<h1 class="cert-title"' + (isAr ? ' style="font-family:\'Amiri\',serif;"' : '') + '>' + (isAr ? 'شهادة إتمام' : 'Certificate of Completion') + '</h1>' +
         '<p class="cert-line">' + (isAr ? 'تشهد هذه الوثيقة بأن' : 'This certifies that') + '</p>' +
         '<div class="cert-name">' + escapeHTML(studentName) + '</div>' +
         '<p class="cert-line">' + (isAr ? 'قد أتم بنجاح' : 'has successfully completed') + '</p>' +
-        '<p class="cert-course">The I\'rab Rulings &amp; Khaṭṭ al-I\'rāb</p>' +
-        '<p class="cert-course-ar">الأحكام الإعرابية وخط الإعراب</p>' +
+        '<p class="cert-course">' + escapeHTML(cert.topicEn) + '</p>' +
+        '<p class="cert-course-ar">' + escapeHTML(cert.topicAr) + '</p>' +
         '<p class="cert-course-sub">مَبَادِئُ النَّحْوِ · Foundations of Naḥw</p>' +
         '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
         '<div class="cert-meta-row">' +
@@ -3117,10 +3162,10 @@ function renderWeek5CertificateStep(){
     '</div>' +
     '<p class="cert-continue-note no-print">📚 ' + (isAr ? 'المقرر مستمر — أسابيع جديدة قادمة قريبًا!' : 'This course continues — new weeks are on the way!') + '</p>' +
     '<div class="cert-actions no-print">' +
-      '<button class="qbtn solid" id="w5-print-cert-btn">🖨️ ' + (isAr ? 'طباعة / حفظ كملف PDF' : 'Print / Save as PDF') + '</button>' +
+      '<button class="qbtn solid" id="cert-print-btn">🖨️ ' + (isAr ? 'طباعة / حفظ كملف PDF' : 'Print / Save as PDF') + '</button>' +
     '</div>';
 
-  var printBtn = document.getElementById('w5-print-cert-btn');
+  var printBtn = document.getElementById('cert-print-btn');
   if(printBtn){ printBtn.addEventListener('click', function(){ playClickSound(); window.print(); }); }
 }
 
@@ -3168,11 +3213,11 @@ function renderStep(i){
       nextBtn.style.display = 'none';
     }, !!def.immediate, def.enQ);
     activeQuizInstance.setLanguage(currentLang);
-  } else if(def.type === 'w5certificate'){
+  } else if(def.type === 'certificate'){
     activeQuizInstance = null;
     stepDone[i] = true;
     saveProgress();
-    renderWeek5CertificateStep();
+    renderCourseCertificateStep(def.certKey);
   }
 
   updateStepProgress();
@@ -3197,8 +3242,8 @@ function refreshCurrentStepLanguage(){
     if(leadEl){ leadEl.textContent = (currentLang === 'ar') ? def.leadAr : def.leadEn; }
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
     if(activeQuizInstance){ activeQuizInstance.refreshLanguage(currentLang); }
-  } else if(def.type === 'w5certificate'){
-    renderWeek5CertificateStep();
+  } else if(def.type === 'certificate'){
+    renderCourseCertificateStep(def.certKey);
   }
   updateStepProgress();
 }
