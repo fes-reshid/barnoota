@@ -27,6 +27,27 @@
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .dhikr {
+    text-align: center;
+    min-height: 46px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .dhikr.visible { opacity: 1; }
+  .dhikr-ar {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 1.35rem;
+    color: #D9C27E;
+    line-height: 1.4;
+  }
+  .dhikr-en {
+    font-size: 0.68rem;
+    color: rgba(246, 245, 240, 0.5);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -36,6 +57,38 @@
     </svg>
     <h1>Noor Shield</h1>
     <div class="spinner" aria-hidden="true"></div>
+    <div class="dhikr" id="dhikr" dir="rtl" lang="ar">
+      <div class="dhikr-ar" id="dhikr-ar"></div>
+      <div class="dhikr-en" id="dhikr-en"></div>
+    </div>
   </div>
+
+  <script>
+    var PHRASES = [
+      { ar: "سُبْحَانَ اللَّهِ", en: "SubhanAllah" },
+      { ar: "الْحَمْدُ لِلَّهِ", en: "Alhamdulillah" },
+      { ar: "اللَّهُ أَكْبَرُ", en: "Allahu Akbar" }
+    ];
+
+    var index = 0;
+    var dhikr = document.getElementById("dhikr");
+    var arEl = document.getElementById("dhikr-ar");
+    var enEl = document.getElementById("dhikr-en");
+
+    function showPhrase(i) {
+      arEl.textContent = PHRASES[i].ar;
+      enEl.textContent = PHRASES[i].en;
+      dhikr.classList.add("visible");
+    }
+
+    showPhrase(index);
+    setInterval(function () {
+      dhikr.classList.remove("visible");
+      setTimeout(function () {
+        index = (index + 1) % PHRASES.length;
+        showPhrase(index);
+      }, 400);
+    }, 2200);
+  </script>
 </body>
 </html>
