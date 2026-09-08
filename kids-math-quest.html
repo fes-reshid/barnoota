@@ -331,6 +331,96 @@
   }
   @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
 
+
+  /* ============ Character picker ============ */
+  .pick-label{ font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); margin:0 0 8px; }
+  .avatar-grid{ display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; margin:0 0 18px; }
+  .avatar-pick{
+    aspect-ratio:1/1; border-radius:14px; border:3px solid var(--parchment-deep);
+    background:var(--parchment); font-size:25px; cursor:pointer; padding:0; line-height:1;
+    display:flex; align-items:center; justify-content:center; transition:transform .12s ease;
+  }
+  .avatar-pick:hover{ transform:scale(1.1); }
+  .avatar-pick.on{ border-color:var(--green); background:var(--green-bg); transform:scale(1.08); }
+  .player-chip .avatar{ cursor:pointer; padding:0; font-family:inherit; line-height:1; }
+  .player-chip .avatar:hover{ background:#cbe6d5; }
+
+  .modal-back{
+    position:fixed; inset:0; z-index:120; background:rgba(28,43,70,.55);
+    display:flex; align-items:center; justify-content:center; padding:18px;
+  }
+  .modal-box{
+    background:#fff; border:3px solid var(--gold-soft); border-radius:24px;
+    padding:24px 20px; max-width:400px; width:100%; text-align:center;
+    box-shadow:0 16px 40px rgba(30,20,10,.32);
+  }
+  .modal-box h2{ font-family:'Marcellus'; font-size:23px; color:var(--ink-navy); margin:0 0 6px; }
+  .modal-box p{ font-size:16px; color:#6b5a3f; margin:0 0 14px; line-height:1.45; }
+
+  /* ============ Map certificate ============ */
+  .map-cert-row{ display:flex; justify-content:center; margin:14px 0 0; }
+  .cert-cta{
+    display:inline-flex; align-items:center; gap:9px; cursor:pointer; text-align:center;
+    background:var(--green); color:#fff8ea; border:3px solid #fff; border-radius:22px;
+    padding:11px 24px; font-family:'Marcellus'; font-size:17px; box-shadow:0 5px 0 var(--green-dark);
+  }
+  .cert-cta:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--green-dark); }
+  .cert-cta.locked{ background:var(--parchment-deep); color:#7d6c4d; border-color:var(--gold-soft); box-shadow:0 5px 0 #cbbb92; }
+
+  .cert-head{ font-family:'Marcellus'; font-size:25px; color:var(--ink-navy); text-align:center; margin:4px 0 14px; }
+  .cert-todo-lead{ text-align:center; font-size:17.5px; color:#6b5a3f; margin:0 auto 16px; max-width:460px; line-height:1.5; }
+  .cert-todo{ max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:9px; }
+  .todo-row{
+    display:flex; align-items:center; gap:11px; background:#fff; border:2px solid var(--gold-soft);
+    border-radius:16px; padding:10px 14px; box-shadow:0 3px 10px rgba(60,45,20,.07);
+  }
+  .todo-row.ok{ background:var(--green-bg); border-color:var(--green); }
+  .todo-row .tr-icon{ font-size:19px; flex:none; }
+  .todo-row .tr-label{ flex:1; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); }
+  .todo-row .tr-go{
+    background:var(--gold); color:#fff8ea; border:none; border-radius:14px; padding:6px 16px;
+    font-family:'Marcellus'; font-size:14px; cursor:pointer; flex:none;
+  }
+  .todo-row .tr-go:hover{ transform:scale(1.05); }
+
+  .cert-wrap{ display:flex; justify-content:center; padding:4px 0 0; }
+  .cert-card{
+    width:100%; max-width:640px; background:var(--parchment); position:relative;
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-20px;
+    border-radius:6px; padding:48px 30px 36px; text-align:center;
+    box-shadow:0 10px 30px rgba(60,47,38,.15);
+  }
+  .cert-corner{ position:absolute; width:26px; height:26px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--gold); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:16px; left:16px; }
+  .cert-corner.tr{ top:16px; right:16px; }
+  .cert-corner.bl{ bottom:16px; left:16px; }
+  .cert-corner.br{ bottom:16px; right:16px; }
+  .cert-bismillah{ font-family:'Amiri', serif; color:var(--gold); font-size:16px; margin:0 0 12px; }
+  .cert-seal{
+    width:62px; height:62px; border-radius:50%; background:var(--green); color:#faf3e0;
+    display:flex; align-items:center; justify-content:center; font-family:'Marcellus', serif; font-size:26px;
+    margin:0 auto 14px; border:3px solid var(--gold-soft);
+  }
+  .cert-eyebrow{ font-family:'Amiri', serif; color:var(--gold); font-size:16px; margin:0 0 4px; }
+  .cert-title{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 18px; letter-spacing:.02em; }
+  .cert-line{ font-size:16px; color:var(--ink-brown); margin:0 0 6px; }
+  .cert-name{
+    font-family:'Marcellus'; font-size:31px; color:var(--green-dark); margin:6px 0 16px;
+    border-bottom:2px solid var(--gold-soft); display:inline-block; padding:0 12px 6px;
+  }
+  .cert-course{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); margin:0 0 2px; }
+  .cert-course-ar{ font-family:'Amiri', serif; font-size:18px; color:var(--gold); margin:0 0 4px; }
+  .cert-course-sub{ font-size:14px; color:var(--ink-brown); opacity:.8; margin:0; max-width:430px; margin-inline:auto; line-height:1.45; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto 14px; max-width:200px; }
+  .cert-divider span{ flex:1; height:1px; background:var(--gold-soft); }
+  .cert-divider b{ color:var(--gold); font-size:13px; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin:6px 0; font-size:14px; color:var(--ink-brown); }
+  .cert-meta-row b{ color:var(--ink-navy); display:block; font-family:'Marcellus'; font-size:15px; }
+  .cert-footer{ margin-top:26px; padding-top:14px; border-top:1px solid var(--gold-soft); font-size:13.5px; color:var(--gold); }
+  .cert-note{ text-align:center; font-size:16.5px; color:#6b5a3f; margin:16px 0 0; }
+
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:32px 20px 22px; text-align:center; }
   footer .flinks{ display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin:0 0 14px; font-size:15px; }
   footer .flinks a{ text-decoration:none; color:#c9d2e0; }
@@ -355,6 +445,14 @@
     .map-nav{ width:40px; height:40px; font-size:17px; }
     .map-title{ font-size:15px; padding:5px 16px; }
   }
+
+  @media print{
+    header.site, footer, .no-print, .cert-head, .map-cert-row,
+    #name-screen, #map-screen, #lesson-screen, #reward-screen, #avatar-modal{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ padding:0; max-width:none; }
+    .cert-card{ box-shadow:none; outline-color:#efe6cc; }
+  }
 </style>
 </head>
 <body>
@@ -378,6 +476,8 @@
       <h1>Math Number Quest</h1>
       <p class="sub">Count · Add · Solve</p>
       <p>Travel across four maps: count to twenty, add and take away, then shapes, patterns, time and money. Every game you finish earns you coins!</p>
+      <p class="pick-label">Pick your character</p>
+      <div class="avatar-grid" id="name-avatars"></div>
       <input type="text" class="big-input" id="name-input" placeholder="Type your name" maxlength="24" autocomplete="given-name">
       <button class="big-btn" id="name-start-btn">Start My Quest 🚀</button>
     </div>
@@ -387,7 +487,7 @@
   <section id="map-screen" class="hidden">
     <div class="map-topbar">
       <div class="player-chip">
-        <span class="avatar">🧒</span>
+        <button class="avatar" id="avatar-btn" type="button" title="Change my character" aria-label="Change my character">🧒</button>
         <span id="player-name">Explorer</span>
       </div>
       <div class="stat-row">
@@ -404,6 +504,7 @@
       <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" role="img" aria-label="Lesson map"></svg>
     </div>
     <p class="map-help" id="map-help">Tap the glowing stone to play your next lesson!</p>
+    <div class="map-cert-row" id="map-cert-row"></div>
     <div class="lesson-actions">
       <button class="ghost-btn" id="reset-btn">Start over</button>
     </div>
@@ -416,7 +517,7 @@
       <aside class="lesson-side">
         <div class="side-name" id="side-name">Explorer</div>
         <div class="side-lesson">
-          <span class="side-avatar">🧒</span>
+          <span class="side-avatar" id="side-avatar">🧒</span>
           <span class="sl-block">
             <span class="sl-label">Lesson</span>
             <span class="sl-num" id="side-lesson-num">1</span>
@@ -455,11 +556,31 @@
       <div class="purse">🪙 <span id="reward-purse">0</span> coins in your purse</div>
       <div class="lesson-actions">
         <button class="big-btn green" id="reward-next-btn">Next Lesson →</button>
+        <button class="big-btn hidden" id="reward-cert-btn">🎓 My Certificate</button>
         <button class="ghost-btn" id="reward-map-btn">Back to Map</button>
       </div>
     </div>
   </section>
 
+  <!-- ============ CERTIFICATE SCREEN ============ -->
+  <section id="cert-screen" class="hidden">
+    <h2 class="cert-head" id="cert-head">Map 1 Certificate</h2>
+    <div id="cert-body"></div>
+    <div class="lesson-actions no-print">
+      <button class="big-btn" id="cert-print-btn">&#128424;&#65039; Print / Save as PDF</button>
+      <button class="ghost-btn" id="cert-back-btn">Back to Map</button>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal-back hidden" id="avatar-modal">
+  <div class="modal-box">
+    <h2>Choose your character</h2>
+    <p>Tap the one you like — it walks the map with you.</p>
+    <div class="avatar-grid" id="modal-avatars"></div>
+    <button class="big-btn green" id="avatar-done-btn">Done &#10003;</button>
+  </div>
 </div>
 
 <footer>
@@ -592,12 +713,18 @@ const SPECIAL_LESSONS = [
 ];
 
 const MAPS = [
-  { title:'Map 1 · Counting to 10',   from:0,  to:10, scene:'meadow' },
-  { title:'Map 2 · Teen Numbers',     from:10, to:20, scene:'desert' },
-  { title:'Map 3 · Add & Take Away',  from:20, to:30, scene:'ocean'  },
-  { title:'Map 4 · Shapes & More',    from:30, to:40, scene:'sky'    }
+  { title:'Map 1 · Counting to 10',   from:0,  to:10, scene:'meadow',
+    cert:{ en:'Counting to 10', ar:'', sub:'The numbers 1 to 10 — naming them, counting them and finding them.' } },
+  { title:'Map 2 · Teen Numbers',     from:10, to:20, scene:'desert',
+    cert:{ en:'Teen Numbers', ar:'', sub:'The numbers 11 to 20 — naming, counting and putting them in order.' } },
+  { title:'Map 3 · Add & Take Away',  from:20, to:30, scene:'ocean',
+    cert:{ en:'Add & Take Away', ar:'', sub:'Adding, doubles, number bonds, taking away and missing numbers to 20.' } },
+  { title:'Map 4 · Shapes & More',    from:30, to:40, scene:'sky',
+    cert:{ en:'Shapes & More', ar:'', sub:'Shapes, patterns, comparing, halves, telling the time and counting money.' } }
 ];
 const TOTAL_LESSONS = 40;
+const CERT_PREFIX = 'MTQ';
+const COURSE_LINE = 'Math Number Quest';
 const COINS_PER_GAME = 2;      // each mini-game inside a lesson
 const COINS_LESSON_BONUS = 5;  // finishing the lesson
 const COINS_PERFECT_BONUS = 5; // finishing with no mistakes
@@ -608,10 +735,13 @@ const SOUND_KEY = 'kids-math-quest-sound';
 let profile = null;
 let viewMap = 0;
 let lesson = null;   // { index, steps, stepIndex, mistakes, cleared[], showIntro, coins }
+let certMap = 0;     // which map's certificate the certificate screen is showing
+let rewardCertMap = 0;
 let soundOn = true;
 
 function defaultProfile(name){
-  return { name: name || 'Explorer', unlocked: 1, stars: new Array(TOTAL_LESSONS).fill(0), coins: 0 };
+  return { name: name || 'Explorer', avatar: pickedAvatar, unlocked: 1,
+           stars: new Array(TOTAL_LESSONS).fill(0), coins: 0, certs: {} };
 }
 function loadProfile(){
   try{
@@ -622,12 +752,161 @@ function loadProfile(){
     if(!Array.isArray(d.stars) || d.stars.length !== TOTAL_LESSONS) d.stars = new Array(TOTAL_LESSONS).fill(0);
     if(typeof d.unlocked !== 'number') d.unlocked = 1;
     if(typeof d.coins !== 'number') d.coins = 0;
+    if(typeof d.avatar !== 'string' || !d.avatar) d.avatar = AVATARS[0];
+    if(!d.certs || typeof d.certs !== 'object') d.certs = {};
     return d;
   }catch(e){ return null; }
 }
 function saveProfile(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
 }
+
+/* ===================== CHARACTER ===================== */
+const AVATARS = ['🧒','👦','👧','🧕','🧑','🧓',
+                 '🦁','🐯','🐨','🐼','🦊','🐧',
+                 '🦉','🐝','🐢','🦋','🚀','⭐'];
+let pickedAvatar = AVATARS[0];
+
+function avatarOf(){ return (profile && profile.avatar) || AVATARS[0]; }
+
+/* Paint the chosen character everywhere it shows: map chip, map marker, lesson sidebar. */
+function applyAvatar(){
+  const a = avatarOf();
+  const btn = document.getElementById('avatar-btn');
+  if(btn) btn.textContent = a;
+  const side = document.getElementById('side-avatar');
+  if(side) side.textContent = a;
+}
+
+function renderAvatarGrid(box, chosen, onPick){
+  box.innerHTML = '';
+  AVATARS.forEach(a => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'avatar-pick' + (a === chosen ? ' on' : '');
+    b.textContent = a;
+    b.setAttribute('aria-label', 'Character ' + a);
+    b.addEventListener('click', () => { playTap(); onPick(a); });
+    box.appendChild(b);
+  });
+}
+function paintNameAvatars(){
+  renderAvatarGrid(document.getElementById('name-avatars'), pickedAvatar, a => {
+    pickedAvatar = a;
+    paintNameAvatars();
+  });
+}
+function paintModalAvatars(){
+  renderAvatarGrid(document.getElementById('modal-avatars'), avatarOf(), a => {
+    profile.avatar = a;
+    saveProfile();
+    applyAvatar();
+    paintModalAvatars();
+    renderMap();
+  });
+}
+
+/* ===================== MAP CERTIFICATES ===================== */
+function mapLessonNos(mi){
+  const out = [];
+  for(let n = MAPS[mi].from + 1; n <= MAPS[mi].to; n++) out.push(n);
+  return out;
+}
+function mapDoneCount(mi){ return mapLessonNos(mi).filter(n => profile.stars[n - 1] > 0).length; }
+function mapComplete(mi){ return mapDoneCount(mi) === mapLessonNos(mi).length; }
+function mapStars(mi){ return mapLessonNos(mi).reduce((s, n) => s + profile.stars[n - 1], 0); }
+
+/* The award date and ID are stored the first time, so a reprint always matches the first print. */
+function certRecord(mi){
+  if(!profile.certs || typeof profile.certs !== 'object') profile.certs = {};
+  if(!profile.certs[mi]){
+    const d = new Date();
+    profile.certs[mi] = {
+      date: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'),
+      id: CERT_PREFIX + '-M' + (mi + 1) + '-' + d.getFullYear() +
+          String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') +
+          '-' + Math.floor(1000 + Math.random() * 9000)
+    };
+    saveProfile();
+  }
+  return profile.certs[mi];
+}
+function prettyDate(iso){
+  const p = String(iso || '').split('-');
+  const d = (p.length === 3) ? new Date(+p[0], +p[1] - 1, +p[2]) : new Date();
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+}
+
+/* Under the map: an invitation once the map is finished, a progress note while it isn't. */
+function renderMapCertRow(){
+  const row = document.getElementById('map-cert-row');
+  const done = mapDoneCount(viewMap);
+  const total = mapLessonNos(viewMap).length;
+  const ready = done === total;
+  row.innerHTML = '<button class="cert-cta' + (ready ? '' : ' locked') + '" id="map-cert-btn" type="button">' +
+    (ready
+      ? '🎓 Get my Map ' + (viewMap + 1) + ' certificate'
+      : '🎓 Map ' + (viewMap + 1) + ' certificate · ' + done + ' of ' + total + ' lessons done') +
+    '</button>';
+  document.getElementById('map-cert-btn').addEventListener('click', () => { playTap(); showCertificate(viewMap); });
+}
+
+function showCertificate(mi){
+  certMap = mi;
+  const box = document.getElementById('cert-body');
+  const nos = mapLessonNos(mi);
+  const cert = MAPS[mi].cert;
+  const ready = mapComplete(mi);
+  document.getElementById('cert-head').textContent = 'Map ' + (mi + 1) + ' Certificate';
+  document.getElementById('cert-print-btn').classList.toggle('hidden', !ready);
+
+  if(!ready){
+    box.innerHTML =
+      '<p class="cert-todo-lead">Almost there! Finish these lessons and the Map ' + (mi + 1) + ' certificate is yours.</p>' +
+      '<div class="cert-todo">' + nos.map(n => {
+        const done = profile.stars[n - 1] > 0;
+        const playable = n <= profile.unlocked;
+        return '<div class="todo-row' + (done ? ' ok' : '') + '">' +
+          '<span class="tr-icon">' + (done ? '✅' : (playable ? '⭕' : '🔒')) + '</span>' +
+          '<span class="tr-label">' + escapeHtml(lessonTitle(n - 1)) + '</span>' +
+          ((done || !playable) ? '' : '<button class="tr-go" type="button" data-play="' + n + '">Play</button>') +
+        '</div>';
+      }).join('') + '</div>';
+    box.querySelectorAll('.tr-go').forEach(b => b.addEventListener('click', () => {
+      playTap();
+      startLesson(parseInt(b.dataset.play, 10) - 1);
+    }));
+    showScreen('cert-screen');
+    return;
+  }
+
+  const rec = certRecord(mi);
+  box.innerHTML =
+    '<div class="cert-wrap"><div class="cert-card">' +
+      '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
+      '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
+      '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
+      '<div class="cert-seal">' + (mi + 1) + '</div>' +
+      '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
+      '<h1 class="cert-title">Certificate of Completion</h1>' +
+      '<p class="cert-line">This certifies that</p>' +
+      '<div class="cert-name">' + escapeHtml(profile.name) + '</div>' +
+      '<p class="cert-line">has finished every lesson on</p>' +
+      '<p class="cert-course">Map ' + (mi + 1) + ' · ' + escapeHtml(cert.en) + '</p>' +
+      (cert.ar ? ('<p class="cert-course-ar">' + cert.ar + '</p>') : '') +
+      '<p class="cert-course-sub">' + escapeHtml(cert.sub) + '</p>' +
+      '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+      '<div class="cert-meta-row">' +
+        '<div>Stars<b>' + mapStars(mi) + ' / ' + (nos.length * 3) + '</b></div>' +
+        '<div>Date<b>' + prettyDate(rec.date) + '</b></div>' +
+        '<div>Certificate ID<b>' + rec.id + '</b></div>' +
+      '</div>' +
+      '<div class="cert-footer">' + COURSE_LINE + ' · diinislaam.com</div>' +
+    '</div></div>' +
+    '<p class="cert-note no-print">🖨️ Print it, or save it as a PDF and show it to your family!</p>';
+  showScreen('cert-screen');
+}
+
 
 /* ===================== SOUND ===================== */
 function getCtx(){
@@ -832,7 +1111,7 @@ function buildLesson(idx){
 
 /* ===================== SCREENS ===================== */
 function showScreen(id){
-  ['name-screen','map-screen','lesson-screen','reward-screen'].forEach(s => {
+  ['name-screen','map-screen','lesson-screen','reward-screen','cert-screen'].forEach(s => {
     document.getElementById(s).classList.toggle('hidden', s !== id);
   });
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -932,7 +1211,7 @@ function renderMap(){
       html += '<text x="' + pt.x + '" y="' + (pt.y + 52) + '" font-size="17" text-anchor="middle">' + '⭐'.repeat(starCount) + '</text>';
     }
     if(isCurrent){
-      html += '<text class="avatar-marker" x="' + pt.x + '" y="' + (pt.y - 46) + '" font-size="40" text-anchor="middle">🧒</text>';
+      html += '<text class="avatar-marker" x="' + pt.x + '" y="' + (pt.y - 46) + '" font-size="40" text-anchor="middle">' + avatarOf() + '</text>';
     }
 
     if(i === Math.floor(count / 2) - 1){
@@ -963,6 +1242,8 @@ function renderMap(){
             ? 'Finish the earlier maps first, then this one unlocks.'
             : 'Tap the glowing stone to play lesson ' + currentLesson + '!'));
 
+  applyAvatar();
+  renderMapCertRow();
   showScreen('map-screen');
 }
 
@@ -972,6 +1253,7 @@ function startLesson(idx){
   document.getElementById('side-name').textContent = profile.name;
   document.getElementById('side-lesson-num').textContent = idx + 1;
   document.getElementById('side-coins').textContent = profile.coins;
+  applyAvatar();
   renderStep();
   showScreen('lesson-screen');
 }
@@ -1249,6 +1531,14 @@ function finishLesson(){
     : (stars === 3 ? 'Perfect — no mistakes at all!' : 'Nice work. Play it again for three stars and more coins!');
 
   document.getElementById('reward-purse').textContent = profile.coins;
+  const certIdx = MAPS.findIndex(m => lessonNo > m.from && lessonNo <= m.to);
+  const certBtn = document.getElementById('reward-cert-btn');
+  const certEarned = certIdx >= 0 && mapComplete(certIdx);
+  if(certEarned){
+    rewardCertMap = certIdx;
+    certBtn.textContent = '\uD83C\uDF93 My Map ' + (certIdx + 1) + ' Certificate';
+  }
+  certBtn.classList.toggle('hidden', !certEarned);
   document.getElementById('reward-next-btn').classList.toggle('hidden', lessonNo >= TOTAL_LESSONS);
   showScreen('reward-screen');
 }
@@ -1296,11 +1586,31 @@ document.getElementById('reward-next-btn').addEventListener('click', () => {
   viewMap = Math.max(0, MAPS.findIndex(m => next > m.from && next <= m.to));
   startLesson(next - 1);
 });
+document.getElementById('avatar-btn').addEventListener('click', () => {
+  playTap();
+  paintModalAvatars();
+  document.getElementById('avatar-modal').classList.remove('hidden');
+});
+document.getElementById('avatar-done-btn').addEventListener('click', () => {
+  playTap();
+  document.getElementById('avatar-modal').classList.add('hidden');
+});
+document.getElementById('avatar-modal').addEventListener('click', e => {
+  if(e.target.id === 'avatar-modal') document.getElementById('avatar-modal').classList.add('hidden');
+});
+document.getElementById('cert-back-btn').addEventListener('click', () => { playTap(); renderMap(); });
+document.getElementById('cert-print-btn').addEventListener('click', () => { window.print(); });
+document.getElementById('reward-cert-btn').addEventListener('click', () => {
+  playTap();
+  showCertificate(rewardCertMap);
+});
 document.getElementById('reset-btn').addEventListener('click', () => {
   if(!confirm('Start the whole quest again from lesson 1?')) return;
   localStorage.removeItem(STORAGE_KEY);
   profile = null;
   document.getElementById('name-input').value = '';
+  pickedAvatar = AVATARS[0];
+  paintNameAvatars();
   showScreen('name-screen');
 });
 
@@ -1310,6 +1620,7 @@ function init(){
   try{ savedSound = localStorage.getItem(SOUND_KEY); }catch(e){}
   setSound(savedSound !== '0');
 
+  paintNameAvatars();
   profile = loadProfile();
   if(!profile){
     let saved = null;
