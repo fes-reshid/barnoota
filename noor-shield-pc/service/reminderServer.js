@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const certAuthority = require('./certAuthority');
 const hadith = require(path.join(__dirname, '..', 'src', 'main', 'hadith'));
-const { isWithinSchedule, minutesUntilScheduleEnds, parseHHMM } = require(
+const { isWithinSchedule, minutesUntilScheduleEnds, currentWindowEndTime, parseHHMM } = require(
   path.join(__dirname, '..', 'src', 'main', 'schedule')
 );
 
@@ -173,7 +173,7 @@ function renderSleepPage(hostname, schedule, remoteResumeAt) {
     resumeTime = formatTime12hFromDate(remoteResumeAt);
     minutesLeft = Math.max(0, Math.round((remoteResumeAt.getTime() - Date.now()) / 60000));
   } else if (schedule) {
-    resumeTime = formatTime12h(schedule.endTime);
+    resumeTime = formatTime12h(currentWindowEndTime(schedule));
     minutesLeft = minutesUntilScheduleEnds(schedule);
   }
   const resumeLine = resumeTime

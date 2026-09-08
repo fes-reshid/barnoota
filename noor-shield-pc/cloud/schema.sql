@@ -8,7 +8,7 @@
 -- user — it only ever proves it holds a long random `device_secret` it
 -- generated for itself at pairing time. The device-facing functions below
 -- (start_pairing, poll_pairing, get_pending_commands, complete_command,
--- get_device_domains) check that secret themselves and are safe to call
+-- get_device_domains, unpair_device) check that secret themselves and are safe to call
 -- with only the public "anon"/"publishable" key. The parent's web dashboard, in contrast,
 -- logs in for real via Supabase Auth, and Row Level Security (the "policy"
 -- blocks below) makes sure a logged-in parent can only ever see or command
@@ -333,5 +333,29 @@ begin
   end if;
 
   return 'already_used';
+end;
+$$;
+
+-- Called by the PC itself when the parent unpairs it from inside the app
+-- (Parent Settings → remote control). Without this, "unpair" only ever
+-- cleared the PC's own local pairing state, so the device row — and every
+-- command/site queued against it — stayed behind and kept showing up on the
+-- web dashboard forever, with no way for the parent to make it go away
+-- short of deleting it there too. Deleting here instead means a local
+-- unpair is authoritative: the row (and, via the existing "on delete
+-- cascade" foreign keys, its commands and device_domains rows) is gone from
+-- both sides in one step. Device-facing like the functions above — checked
+-- against device_secret, no login required — since the PC unpairing itself
+-- is exactly the kind of thing that shouldn't need the parent to also be
+-- signed into the dashboard at that moment.
+create or replace function public.unpair_device(p_device_id uuid, p_device_secret text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  delete from public.devices
+  where id = p_device_id and device_secret = p_device_secret;
 end;
 $$;

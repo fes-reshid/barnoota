@@ -830,15 +830,62 @@ async function renderSettings() {
   const schedule = full.schedule;
   if (!schedule) return;
   $('schedule-enabled').checked = Boolean(schedule.enabled);
-  $('schedule-start').value = schedule.startTime || '21:00';
-  $('schedule-end').value = schedule.endTime || '07:00';
-  const days = new Set(schedule.days || []);
-  document.querySelectorAll('#schedule-days input[data-day]').forEach((box) => {
-    box.checked = days.has(Number(box.dataset.day));
-  });
+  scheduleDayWindows = {};
+  for (let day = 0; day <= 6; day++) {
+    const window = (schedule.perDay || {})[day];
+    scheduleDayWindows[day] = window
+      ? { enabled: Boolean(window.enabled), startTime: window.startTime || '21:00', endTime: window.endTime || '07:00' }
+      : { enabled: false, startTime: '21:00', endTime: '07:00' };
+  }
+  scheduleFocusedDay = Object.keys(scheduleDayWindows).map(Number).find((d) => scheduleDayWindows[d].enabled) ?? 0;
+  renderScheduleDayChips();
 
   await renderCloudStatus();
 }
+
+// Per-day bedtime editor: each day chip toggles that day on/off and, when
+// clicked, becomes the "focused" day whose start/end time shows in the two
+// time inputs below — so every day can carry its own bedtime window.
+let scheduleDayWindows = null; // { 0: {enabled, startTime, endTime}, ..., 6: {...} }
+let scheduleFocusedDay = 0;
+const SCHEDULE_DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function renderScheduleDayChips() {
+  document.querySelectorAll('#schedule-days .daychip').forEach((chip) => {
+    const day = Number(chip.dataset.day);
+    const window = scheduleDayWindows[day];
+    chip.classList.toggle('enabled', window.enabled);
+    chip.classList.toggle('editing', day === scheduleFocusedDay);
+  });
+  const focused = scheduleDayWindows[scheduleFocusedDay];
+  $('schedule-start').value = focused.startTime;
+  $('schedule-end').value = focused.endTime;
+  $('schedule-editing-day').textContent = `Editing ${SCHEDULE_DAY_NAMES[scheduleFocusedDay]}'s time.`;
+}
+
+document.querySelectorAll('#schedule-days .daychip').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    if (!scheduleDayWindows) return;
+    const day = Number(chip.dataset.day);
+    const window = scheduleDayWindows[day];
+    if (day === scheduleFocusedDay) {
+      window.enabled = !window.enabled;
+    } else {
+      window.enabled = true;
+      scheduleFocusedDay = day;
+    }
+    renderScheduleDayChips();
+  });
+});
+
+$('schedule-start').addEventListener('input', () => {
+  if (!scheduleDayWindows) return;
+  scheduleDayWindows[scheduleFocusedDay].startTime = $('schedule-start').value;
+});
+$('schedule-end').addEventListener('input', () => {
+  if (!scheduleDayWindows) return;
+  scheduleDayWindows[scheduleFocusedDay].endTime = $('schedule-end').value;
+});
 
 let cloudPairingPollTimer = null;
 
@@ -926,15 +973,16 @@ $('reminder-save').addEventListener('click', async () => {
 
 $('schedule-save').addEventListener('click', async () => {
   const message = $('schedule-message');
-  const days = Array.from(document.querySelectorAll('#schedule-days input[data-day]:checked')).map((box) =>
-    Number(box.dataset.day)
-  );
-  const payload = {
-    enabled: $('schedule-enabled').checked,
-    days,
-    startTime: $('schedule-start').value,
-    endTime: $('schedule-end').value,
-  };
+  if (!scheduleDayWindows) return;
+  // Commit whatever's currently in the time inputs to the focused day
+  // before building the payload, in case 'input' events were missed.
+  scheduleDayWindows[scheduleFocusedDay].startTime = $('schedule-start').value;
+  scheduleDayWindows[scheduleFocusedDay].endTime = $('schedule-end').value;
+  const perDay = {};
+  for (const day of Object.keys(scheduleDayWindows)) {
+    perDay[day] = { ...scheduleDayWindows[day] };
+  }
+  const payload = { enabled: $('schedule-enabled').checked, perDay };
   const result = await callGated(
     () => api.setSchedule(payload),
     'Enter the parent password to change the internet schedule.'

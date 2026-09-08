@@ -84,6 +84,21 @@ p { margin: 0; }
 }
 .dayrow input { width: auto; margin: 0; }
 
+.daychips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0; }
+.daychip {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+}
+.daychip.enabled { background: var(--green); color: #fff; font-weight: 600; }
+.daychip.editing { border-color: var(--gold); }
+.daychip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
 .feedrow {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 10px 0; border-top: 1px solid var(--line);

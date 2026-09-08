@@ -120,7 +120,27 @@ async function checkPairingClaimed(store) {
   return true;
 }
 
-function unpair(store) {
+/**
+ * Clears local pairing state and, best-effort, deletes this PC's device row
+ * from Supabase too — so unpairing from inside the app also makes it
+ * disappear from the parent's web dashboard, instead of leaving a stale
+ * "phantom" device behind that the parent has to also remove separately
+ * from the dashboard. Local state is cleared either way: a parent choosing
+ * to unpair on this PC should never stay stuck with a live remote channel
+ * just because the network call to Supabase failed.
+ */
+async function unpair(store) {
+  const cloud = store.get('cloud') || {};
+  if (cloud.deviceId && cloud.deviceSecret) {
+    try {
+      await callRpc('unpair_device', {
+        p_device_id: cloud.deviceId,
+        p_device_secret: cloud.deviceSecret,
+      });
+    } catch (err) {
+      console.error(`[cloudSync] could not remove device from remote dashboard: ${err.message}`);
+    }
+  }
   store.set('cloud', { deviceId: null, deviceSecret: null, pendingPairing: null });
   store.set('forceSleepUntil', null);
 }
@@ -202,8 +222,8 @@ async function applyCommand(store, command) {
   }
   if (command.kind === 'set_schedule') {
     if (!isValidSchedule(command.payload)) return 'failed';
-    const { enabled, days, startTime, endTime } = command.payload;
-    store.set('schedule', { enabled: Boolean(enabled), days, startTime, endTime });
+    const { enabled, perDay } = command.payload;
+    store.set('schedule', { enabled: Boolean(enabled), perDay });
     return 'done';
   }
   // 'shutdown' and anything else: not implemented yet, on purpose (see

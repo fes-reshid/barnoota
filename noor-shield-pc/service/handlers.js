@@ -328,12 +328,12 @@ function createHandlers(ctx) {
     // filterService.js) — nothing here needs to start/stop the DNS proxy or
     // touch Windows' DNS settings, since the schedule only changes what a
     // query already flowing through the proxy gets answered with.
-    'schedule.set': parentOnly(({ enabled, days, startTime, endTime }) => {
-      const candidate = { enabled: Boolean(enabled), days, startTime, endTime };
+    'schedule.set': parentOnly(({ enabled, perDay }) => {
+      const candidate = { enabled: Boolean(enabled), perDay };
       if (candidate.enabled && !isValidSchedule(candidate)) {
         return {
           ok: false,
-          error: 'Pick at least one day and two different times before turning the schedule on.',
+          error: 'Turn on at least one day, with two different times, before turning the schedule on.',
         };
       }
       store.set('schedule', candidate);
@@ -380,7 +380,7 @@ function createHandlers(ctx) {
       return { ok: true };
     }),
     'cloud.unpair': parentOnly(async () => {
-      cloudSync.unpair(store);
+      await cloudSync.unpair(store);
       return { ok: true };
     }),
 

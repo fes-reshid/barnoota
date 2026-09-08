@@ -61,7 +61,13 @@ of these values.
   `shutdown` exists in the schema for later but is deliberately not
   implemented yet — see the comment at the top of that file for why. Also
   polls `get_device_domains` on the same interval and folds the result into
-  the PC's live blocklist (see `refreshBlocklist` in `handlers.js`).
+  the PC's live blocklist (see `refreshBlocklist` in `handlers.js`). Its
+  `unpair(store)` also calls `unpair_device` (best-effort, before clearing
+  local state either way) so unpairing from inside the app deletes the
+  device row on the Supabase side too — otherwise a parent removing the PC
+  locally would still see it sitting in the web dashboard forever, with the
+  cloud-side row (and its commands/sites, via `on delete cascade`) never
+  actually going anywhere.
 - **`seed_license_keys.sql`** — one `insert` per already-issued key hash
   (regenerated from `../src/main/licenseKeyHashes.json` by
   `../scripts/gen-seed-sql.js`, only needed again if a new batch of keys is
@@ -84,7 +90,7 @@ of these values.
 | `cancel_sleep_now` | Clears `forceSleepUntil`. |
 | `lock_computer` | Runs `rundll32.exe user32.dll,LockWorkStation` (Windows-only; fails on any other platform) **and** calls `setRemoteLockActive(store, true)`, which sets `remoteLockActive` and hides Windows' "Switch User" option (see below). The Windows lock alone does nothing for a child with their own account — they just log back in — so `remoteLockActive` is what actually keeps them out: the GUI polls it independently of window visibility and shows a full-screen, unclosable "ask your parent" window (`src/renderer/lock-overlay.html`) for as long as it's set. |
 | `unlock_computer` | Calls `setRemoteLockActive(store, false)`, which the GUI notices on its next poll (≤5s) and closes the overlay, and restores "Switch User". |
-| `set_schedule` | Validates `payload` with `isValidSchedule` (`src/main/schedule.js`) and, if valid, replaces the PC's local `schedule` outright — its own weekly bedtime setting from Parent settings, now settable remotely too. Invalid payloads (e.g. no days picked) are marked `failed` rather than silently ignored. |
+| `set_schedule` | Validates `payload` with `isValidSchedule` (`src/main/schedule.js`) and, if valid, replaces the PC's local `schedule` outright — its own weekly bedtime setting from Parent settings, now settable remotely too. `payload.perDay` is keyed by day-of-week (`"0"`=Sun..`"6"`=Sat), each with its own `{enabled, startTime, endTime}` — every day can carry a different bedtime window, not just one shared time across all selected days. Invalid payloads (e.g. no day enabled) are marked `failed` rather than silently ignored. |
 | `shutdown` | Schema-only. `cloudSync.js` marks it `failed` immediately rather than leaving it pending forever. |
 
 ## The remote lock, in full

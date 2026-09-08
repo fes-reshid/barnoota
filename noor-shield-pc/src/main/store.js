@@ -26,10 +26,19 @@ const DEFAULTS = {
   // are on by default but parent-toggleable, since ad blocking in
   // particular can occasionally break a site's layout or functionality.
   filterCategories: { security: true, ads: true },
-  // A single recurring full-internet-off window (e.g. a school-night
-  // bedtime) — see schedule.js for exactly how days/startTime/endTime
-  // combine, especially for a window that crosses midnight.
-  schedule: { enabled: false, days: [0, 1, 2, 3, 4], startTime: '21:00', endTime: '07:00' },
+  // Recurring full-internet-off windows (e.g. a school-night bedtime), one
+  // per day of the week — see schedule.js for exactly how perDay/startTime/
+  // endTime combine, especially for a window that crosses midnight.
+  schedule: {
+    enabled: false,
+    perDay: {
+      0: { enabled: true, startTime: '21:00', endTime: '07:00' },
+      1: { enabled: true, startTime: '21:00', endTime: '07:00' },
+      2: { enabled: true, startTime: '21:00', endTime: '07:00' },
+      3: { enabled: true, startTime: '21:00', endTime: '07:00' },
+      4: { enabled: true, startTime: '21:00', endTime: '07:00' },
+    },
+  },
   // Product-key activation (see src/main/license.js). Separate on purpose
   // from `parent` (the password/recovery-key system) — activation and
   // account recovery are different concerns and shouldn't share a secret.
