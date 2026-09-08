@@ -117,6 +117,24 @@
   .lang-pill:hover{ transform:scale(1.04); }
   .lang-pill.active{ background:var(--green); color:#fff8ea; border-color:var(--green); }
   #account-name{ font-size:calc(12.5px * var(--scale)); font-weight:700; color:var(--ink-brown); }
+  .account-name-wrap{ display:none; align-items:center; gap:3px; }
+  .edit-name-btn{
+    background:none; border:none; cursor:pointer; padding:2px 4px; line-height:1;
+    font-size:calc(12px * var(--scale)); opacity:.5; color:var(--ink-brown); transition:opacity .15s ease, transform .15s ease;
+  }
+  .edit-name-btn:hover{ opacity:1; transform:scale(1.12); }
+
+  .name-modal-overlay{
+    display:none; position:fixed; inset:0; z-index:200; background:rgba(28,43,70,.55);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .name-modal-overlay.show{ display:flex; }
+  .name-modal-box{
+    max-width:360px; width:100%; background:#fff; border:2px solid var(--gold-soft); border-radius:16px;
+    padding:26px 24px; text-align:center; box-shadow:0 10px 30px rgba(28,43,70,.28);
+  }
+  .name-modal-box h3{ font-family:'Marcellus'; font-size:calc(17px * var(--scale)); color:var(--ink-navy); margin:0 0 8px; }
+  .name-modal-note{ font-size:calc(13px * var(--scale)); color:var(--ink-brown); margin:0 0 16px; }
 
   /* ===== Auth gate (enroll / login) ===== */
   #auth-gate{ display:flex; justify-content:center; padding:40px 10px; }
@@ -546,9 +564,23 @@
     <span class="en">Foundations of Naḥw</span>
   </div>
   <div class="lang-toggle">
-    <span id="account-name" style="display:none;"></span>
+    <span class="account-name-wrap" id="account-name-wrap">
+      <span id="account-name"></span>
+      <button class="edit-name-btn" id="edit-name-btn" type="button" aria-label="Edit name" title="Edit name">✎</button>
+    </span>
     <button class="lang-pill" id="lang-en-btn">English</button>
     <button class="lang-pill" id="lang-ar-btn">العربية</button>
+  </div>
+</div>
+
+<div class="name-modal-overlay" id="edit-name-modal">
+  <div class="name-modal-box">
+    <h3 id="edit-name-modal-title">Update Your Name</h3>
+    <p class="name-modal-note" id="edit-name-modal-note">This is the name shown on your account and progress.</p>
+    <input type="text" class="auth-input" id="edit-name-input" placeholder="Full name" autocomplete="name">
+    <p class="auth-error" id="edit-name-error" style="display:none;"></p>
+    <button class="auth-primary-btn" id="edit-name-save-btn">Save</button>
+    <button class="auth-secondary-btn" id="edit-name-cancel-btn" style="margin-top:10px;">Cancel</button>
   </div>
 </div>
 
@@ -877,11 +909,14 @@ function enterCourse(uid, email, data, isReturning){
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('course-hero-section').style.display = 'none';
   document.getElementById('week-select').style.display = 'block';
-  document.getElementById('account-name').style.display = '';
+  document.getElementById('account-name-wrap').style.display = 'flex';
   document.getElementById('account-name').textContent = studentName;
   document.getElementById('logout-btn').style.display = '';
   updateWeekCompletionBadges();
   showWelcomeBanner(isReturning && stepDone.some(function(d){ return d; }));
+  if(studentEmail && studentName.trim().toLowerCase() === studentEmail.trim().toLowerCase() && window.__promptNameFix){
+    window.__promptNameFix();
+  }
 }
 
 document.getElementById('logout-btn').addEventListener('click', function(){
@@ -2990,6 +3025,12 @@ var AUTH_STRINGS = {
     errRequireEmail: 'Please enter your email.',
     errPasswordLen: 'Password must be at least 6 characters.',
     errRequireBoth: 'Please enter your email and password.',
+    editNameTitle: 'Update Your Name',
+    editNameNote: 'This is the name shown on your account and progress.',
+    editNameAutoNote: "We noticed your account has no name saved yet — please enter your name below.",
+    editNamePlaceholder: 'Full name',
+    saveBtn: 'Save', cancel: 'Cancel',
+    errEditName: 'Please enter your name.',
     err: {
       'auth/email-already-in-use': 'This email is already registered.',
       'auth/invalid-email': 'Please enter a valid email address.',
@@ -3017,6 +3058,12 @@ var AUTH_STRINGS = {
     errRequireEmail: 'الرجاء إدخال بريدك الإلكتروني.',
     errPasswordLen: 'يجب ألا تقل كلمة المرور عن 6 أحرف.',
     errRequireBoth: 'الرجاء إدخال البريد الإلكتروني وكلمة المرور.',
+    editNameTitle: 'تحديث اسمك',
+    editNameNote: 'هذا هو الاسم الذي يظهر في حسابك وتقدّمك.',
+    editNameAutoNote: 'لاحظنا أن حسابك ليس له اسم محفوظ بعد — الرجاء إدخال اسمك أدناه.',
+    editNamePlaceholder: 'الاسم الكامل',
+    saveBtn: 'حفظ', cancel: 'إلغاء',
+    errEditName: 'الرجاء إدخال اسمك.',
     err: {
       'auth/email-already-in-use': 'هذا البريد الإلكتروني مسجَّل بالفعل.',
       'auth/invalid-email': 'الرجاء إدخال بريد إلكتروني صحيح.',
@@ -3060,6 +3107,7 @@ function setLanguage(lang){
   document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
   document.getElementById('lang-ar-btn').classList.toggle('active', lang === 'ar');
   refreshAuthLanguage();
+  if(window.__refreshEditNameLanguage){ window.__refreshEditNameLanguage(); }
   if(studentName){ showWelcomeBanner(false); }
   refreshCurrentStepLanguage();
 }
@@ -3521,6 +3569,66 @@ document.getElementById('forgot-password-btn').addEventListener('click', functio
       showErr(loginErrorEl, authErrorMessage(e.code));
     });
 });
+
+var editNameModalEl = document.getElementById('edit-name-modal');
+var editNameInputEl = document.getElementById('edit-name-input');
+var editNameErrorEl = document.getElementById('edit-name-error');
+var editNameSaveBtn = document.getElementById('edit-name-save-btn');
+
+function refreshEditNameLanguage(){
+  document.getElementById('edit-name-modal-title').textContent = t('editNameTitle');
+  document.getElementById('edit-name-modal-note').textContent = (editNameModalEl.dataset.auto === '1') ? t('editNameAutoNote') : t('editNameNote');
+  editNameInputEl.placeholder = t('editNamePlaceholder');
+  editNameSaveBtn.textContent = t('saveBtn');
+  document.getElementById('edit-name-cancel-btn').textContent = t('cancel');
+}
+
+function openEditNameModal(auto){
+  editNameModalEl.dataset.auto = auto ? '1' : '0';
+  refreshEditNameLanguage();
+  var current = window.studentName || '';
+  editNameInputEl.value = (current && current.toLowerCase() !== (window.studentEmail || '').toLowerCase()) ? current : '';
+  editNameErrorEl.style.display = 'none';
+  editNameModalEl.classList.add('show');
+  editNameInputEl.focus();
+}
+function closeEditNameModal(){
+  editNameModalEl.classList.remove('show');
+}
+
+document.getElementById('edit-name-btn').addEventListener('click', function(){
+  window.playClickSound && window.playClickSound();
+  openEditNameModal(false);
+});
+document.getElementById('edit-name-cancel-btn').addEventListener('click', function(){
+  window.playClickSound && window.playClickSound();
+  closeEditNameModal();
+});
+editNameSaveBtn.addEventListener('click', function(){
+  var name = editNameInputEl.value.trim();
+  if(!name){ showErr(editNameErrorEl, t('errEditName')); return; }
+  editNameSaveBtn.disabled = true;
+  var tasks = [ setDoc(doc(db, COLLECTION, window.currentUID), { fullName: name }, { merge: true }) ];
+  if(auth.currentUser){ tasks.push(updateProfile(auth.currentUser, { displayName: name })); }
+  Promise.all(tasks)
+    .then(function(){
+      window.playClickSound && window.playClickSound();
+      window.studentName = name;
+      document.getElementById('account-name').textContent = name;
+      closeEditNameModal();
+    })
+    .catch(function(e){
+      showErr(editNameErrorEl, authErrorMessage(e.code));
+    })
+    .finally(function(){
+      editNameSaveBtn.disabled = false;
+    });
+});
+editNameInputEl.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ editNameSaveBtn.click(); }
+});
+window.__promptNameFix = function(){ openEditNameModal(true); };
+window.__refreshEditNameLanguage = refreshEditNameLanguage;
 
 ['enroll-name','enroll-email','enroll-password'].forEach(function(id){
   document.getElementById(id).addEventListener('keydown', function(e){
