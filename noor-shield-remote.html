@@ -206,11 +206,13 @@
   .checkrow input { margin: 0; }
   .dayrow { display: flex; gap: 6px; flex-wrap: wrap; }
   .daychip {
-    display: flex; align-items: center; gap: 5px; padding: 7px 10px;
-    border: 1px solid var(--line); border-radius: 8px; font-size: 0.8rem; cursor: pointer;
-    background: var(--surface);
+    all: unset;
+    padding: 7px 12px;
+    border: 2px solid var(--line); border-radius: 999px; font-size: 0.8rem; cursor: pointer;
+    background: var(--surface); color: var(--ink-soft);
   }
-  .daychip input { margin: 0; }
+  .daychip.enabled { background: var(--green); border-color: var(--green); color: #fff; font-weight: 600; }
+  .daychip.editing { border-color: var(--gold); }
   .managesection input[type="time"] {
     padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line);
     background: var(--surface); color: var(--ink); font-size: 0.9rem;
@@ -709,36 +711,74 @@
       scheduleEnabledRow.appendChild(scheduleEnabled);
       scheduleEnabledRow.appendChild(document.createTextNode(" Enabled"));
 
+      var scheduleHint = document.createElement("p");
+      scheduleHint.className = "hint";
+      scheduleHint.textContent = "Click a day to block internet on it, and give it its own start/end time — every day can have a different bedtime.";
+
       var dayLabels = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-      var weeknights = [0, 1, 2, 3, 4]; // Sun-Thu nights, the nights before a school day
+      var weeknights = [0, 1, 2, 3, 4]; // Sun-Thu nights, the nights before a school day, on by default
+      // One start/end time per day (0=Sun..6=Sat) — the two time inputs
+      // below always edit whichever day is currently "focused" (clicked).
+      var dayWindows = dayLabels.map(function (_, i) {
+        return { enabled: weeknights.indexOf(i) >= 0, startTime: "21:00", endTime: "07:00" };
+      });
+      var focusedDay = weeknights[0];
+
       var dayRow = document.createElement("div");
       dayRow.className = "dayrow";
-      var dayChecks = dayLabels.map(function (label, i) {
-        var chip = document.createElement("label");
-        chip.className = "daychip";
-        var cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.checked = weeknights.indexOf(i) >= 0;
-        chip.appendChild(cb);
-        chip.appendChild(document.createTextNode(label));
-        dayRow.appendChild(chip);
-        return cb;
-      });
+      var editingHint = document.createElement("p");
+      editingHint.className = "hint";
 
       var timeRow = document.createElement("div");
       timeRow.className = "row";
       var startInput = document.createElement("input");
       startInput.type = "time";
-      startInput.value = "21:00";
       var toLabel = document.createElement("span");
       toLabel.className = "hint";
       toLabel.textContent = "to";
       var endInput = document.createElement("input");
       endInput.type = "time";
-      endInput.value = "07:00";
       timeRow.appendChild(startInput);
       timeRow.appendChild(toLabel);
       timeRow.appendChild(endInput);
+
+      function renderDayChips() {
+        chips.forEach(function (chip, i) {
+          chip.classList.toggle("enabled", dayWindows[i].enabled);
+          chip.classList.toggle("editing", i === focusedDay);
+        });
+        startInput.value = dayWindows[focusedDay].startTime;
+        endInput.value = dayWindows[focusedDay].endTime;
+        var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        editingHint.textContent = "Editing " + dayNames[focusedDay] + "'s time.";
+      }
+
+      var chips = dayLabels.map(function (label, i) {
+        var chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "daychip";
+        chip.textContent = label;
+        chip.addEventListener("click", function () {
+          if (i === focusedDay) {
+            dayWindows[i].enabled = !dayWindows[i].enabled;
+          } else {
+            dayWindows[i].enabled = true;
+            focusedDay = i;
+          }
+          renderDayChips();
+        });
+        dayRow.appendChild(chip);
+        return chip;
+      });
+
+      startInput.addEventListener("input", function () {
+        dayWindows[focusedDay].startTime = startInput.value;
+      });
+      endInput.addEventListener("input", function () {
+        dayWindows[focusedDay].endTime = endInput.value;
+      });
+
+      renderDayChips();
 
       var scheduleMsg = document.createElement("p");
       scheduleMsg.className = "msg";
@@ -746,32 +786,35 @@
       saveScheduleBtn.className = "btn primary small";
       saveScheduleBtn.textContent = "Save weekly bedtime";
       saveScheduleBtn.addEventListener("click", function () {
-        var days = dayChecks.reduce(function (acc, cb, i) {
-          if (cb.checked) acc.push(i);
-          return acc;
-        }, []);
-        if (days.length === 0) {
-          scheduleMsg.textContent = "Pick at least one day.";
+        dayWindows[focusedDay].startTime = startInput.value;
+        dayWindows[focusedDay].endTime = endInput.value;
+        if (!dayWindows.some(function (w) { return w.enabled; })) {
+          scheduleMsg.textContent = "Click at least one day to block.";
           scheduleMsg.className = "msg error";
           return;
         }
-        if (!startInput.value || !endInput.value || startInput.value === endInput.value) {
-          scheduleMsg.textContent = "Pick a start and end time that are different.";
+        var badDay = dayWindows.find(function (w) {
+          return w.enabled && (!w.startTime || !w.endTime || w.startTime === w.endTime);
+        });
+        if (badDay) {
+          scheduleMsg.textContent = "Pick a start and end time that are different for every blocked day.";
           scheduleMsg.className = "msg error";
           return;
         }
         scheduleMsg.textContent = "";
+        var perDay = {};
+        dayWindows.forEach(function (w, i) { perDay[i] = w; });
         sendCommand(device.id, "set_schedule", saveScheduleBtn, {
           enabled: scheduleEnabled.checked,
-          days: days,
-          startTime: startInput.value,
-          endTime: endInput.value,
+          perDay: perDay,
         });
       });
 
       scheduleSection.appendChild(scheduleHeading);
       scheduleSection.appendChild(scheduleEnabledRow);
+      scheduleSection.appendChild(scheduleHint);
       scheduleSection.appendChild(dayRow);
+      scheduleSection.appendChild(editingHint);
       scheduleSection.appendChild(timeRow);
       scheduleSection.appendChild(saveScheduleBtn);
       scheduleSection.appendChild(scheduleMsg);
