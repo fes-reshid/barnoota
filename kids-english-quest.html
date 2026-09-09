@@ -449,7 +449,7 @@
 
   @media print{
     header.site, footer, .no-print, .cert-head, .map-cert-row,
-    #name-screen, #map-screen, #lesson-screen, #reward-screen, #avatar-modal{ display:none !important; }
+    #name-screen, #map-screen, #lesson-screen, #reward-screen, #avatar-modal, #certname-modal{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:none; }
     .cert-card{ box-shadow:none; outline-color:#efe6cc; }
@@ -571,6 +571,7 @@
     <div id="cert-body"></div>
     <div class="lesson-actions no-print">
       <button class="big-btn" id="cert-print-btn">&#128424;&#65039; Print / Save as PDF</button>
+      <button class="ghost-btn hidden" id="certname-edit-btn">&#9999;&#65039; Edit name</button>
       <button class="ghost-btn" id="cert-back-btn">Back to Map</button>
     </div>
   </section>
@@ -583,6 +584,16 @@
     <p>Tap the one you like — it walks the map with you.</p>
     <div class="avatar-grid" id="modal-avatars"></div>
     <button class="big-btn green" id="avatar-done-btn">Done &#10003;</button>
+  </div>
+</div>
+
+<div class="modal-back hidden" id="certname-modal">
+  <div class="modal-box">
+    <h2>Name for your certificate</h2>
+    <p>Type your name exactly how it should appear on every certificate you earn.</p>
+    <input type="text" class="big-input" id="certname-input" placeholder="Full name" maxlength="40">
+    <p class="login-msg" id="certname-msg"></p>
+    <button class="big-btn green" id="certname-save-btn">Save &#10003;</button>
   </div>
 </div>
 
@@ -726,6 +737,7 @@ let viewMap = 0;
 let lesson = null;   // { index, steps, stepIndex, mistakes, cleared[], showIntro, coins }
 let certMap = 0;     // which map's certificate the certificate screen is showing
 let rewardCertMap = 0;
+let studentFullName = ''; // the name printed on certificates, shared across all four games
 let soundOn = true;
 
 /* Progress now lives in the child's account (Firestore), not this device —
@@ -843,6 +855,7 @@ function showCertificate(mi){
   const ready = mapComplete(mi);
   document.getElementById('cert-head').textContent = 'Map ' + (mi + 1) + ' Certificate';
   document.getElementById('cert-print-btn').classList.toggle('hidden', !ready);
+  document.getElementById('certname-edit-btn').classList.toggle('hidden', !ready);
 
   if(!ready){
     box.innerHTML =
@@ -864,6 +877,10 @@ function showCertificate(mi){
     return;
   }
 
+  if(!studentFullName){
+    openCertNameModal(function(){ showCertificate(mi); });
+    return;
+  }
   const rec = certRecord(mi);
   box.innerHTML =
     '<div class="cert-wrap"><div class="cert-card">' +
@@ -874,7 +891,7 @@ function showCertificate(mi){
       '<p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>' +
       '<h1 class="cert-title">Certificate of Completion</h1>' +
       '<p class="cert-line">This certifies that</p>' +
-      '<div class="cert-name">' + escapeHtml(profile.name) + '</div>' +
+      '<div class="cert-name">' + escapeHtml(studentFullName) + '</div>' +
       '<p class="cert-line">has finished every lesson on</p>' +
       '<p class="cert-course">Map ' + (mi + 1) + ' · ' + escapeHtml(cert.en) + '</p>' +
       (cert.ar ? ('<p class="cert-course-ar">' + cert.ar + '</p>') : '') +
@@ -1577,6 +1594,7 @@ function applyCloudProfile(cloudData){
   const shownName = cloudData.displayName || cloudData.username;
   profile = normalizeProfile(raw ? JSON.parse(JSON.stringify(raw)) : defaultProfile(shownName), shownName);
   profile.name = shownName;
+  studentFullName = cloudData.fullName || '';
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
   applyAvatar();
   const current = Math.min(profile.unlocked, TOTAL_LESSONS);
@@ -1644,6 +1662,42 @@ document.getElementById('avatar-done-btn').addEventListener('click', () => {
 });
 document.getElementById('avatar-modal').addEventListener('click', e => {
   if(e.target.id === 'avatar-modal') document.getElementById('avatar-modal').classList.add('hidden');
+});
+
+/* Asks once for the name to print on certificates (separate from the login
+   username), saves it to the account so every game and every future
+   certificate uses it, then runs onSaved(). */
+let certNameOnSaved = null;
+function openCertNameModal(onSaved){
+  certNameOnSaved = onSaved || null;
+  document.getElementById('certname-input').value = studentFullName || (profile ? profile.name : '');
+  document.getElementById('certname-msg').textContent = '';
+  document.getElementById('certname-modal').classList.remove('hidden');
+  document.getElementById('certname-input').focus();
+}
+document.getElementById('certname-save-btn').addEventListener('click', () => {
+  const val = document.getElementById('certname-input').value.trim();
+  const msg = document.getElementById('certname-msg');
+  if(!val){ msg.textContent = 'Type a name first.'; return; }
+  if(!window.KidsCloud){ msg.textContent = 'Still loading — try again in a moment.'; return; }
+  const btn = document.getElementById('certname-save-btn');
+  btn.disabled = true;
+  window.KidsCloud.setFullName(val).then(() => {
+    studentFullName = val;
+    document.getElementById('certname-modal').classList.add('hidden');
+    const cb = certNameOnSaved;
+    certNameOnSaved = null;
+    if(cb) cb();
+  }).catch(err => {
+    msg.textContent = (err && err.message) || 'Could not save — try again.';
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('certname-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('certname-save-btn').click();
+});
+document.getElementById('certname-edit-btn').addEventListener('click', () => {
+  playTap();
+  openCertNameModal(function(){ showCertificate(certMap); });
 });
 document.getElementById('cert-back-btn').addEventListener('click', () => { playTap(); renderMap(); });
 document.getElementById('cert-print-btn').addEventListener('click', () => { window.print(); });
