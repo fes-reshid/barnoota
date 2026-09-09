@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Kids Quest — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --danger:#a3352b; --danger-bg:#f7dede;
+    --maxw:880px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:26px 18px 80px; }
+
+  header.site{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 18px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:34px; height:34px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Marcellus'; font-size:16px; }
+  .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  #signout-top{ display:none; }
+  #signout-top.show{ display:inline-block; }
+
+  h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
+  h2{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 10px; }
+  p{ line-height:1.55; }
+
+  .card{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:22px 22px;
+    box-shadow:0 6px 18px rgba(60,45,20,.08); margin-bottom:20px; }
+
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-family:'Marcellus'; font-size:13.5px; color:var(--ink-navy); margin-bottom:4px; }
+  .field input, .field select{
+    width:100%; padding:10px 12px; border:1.5px solid var(--gold-soft); border-radius:10px;
+    background:var(--parchment); color:var(--ink-navy); font-family:'Cormorant Garamond',serif; font-size:17px;
+  }
+  .field input:focus{ outline:none; border-color:var(--gold); }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .row > .field{ flex:1; min-width:160px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:6px; border:none; border-radius:22px; cursor:pointer;
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:16px; padding:10px 22px;
+    transition:transform .12s ease; }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:disabled{ opacity:.55; cursor:default; transform:none; }
+  .btn.primary{ background:var(--green); color:#faf3e0; }
+  .btn.ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
+  .btn.danger{ background:var(--danger); color:#fff; }
+  .btn.small{ padding:6px 14px; font-size:14px; border-radius:16px; }
+
+  .msg{ min-height:22px; font-family:'Marcellus'; font-size:14.5px; margin-top:8px; }
+  .msg.error{ color:var(--danger); }
+  .msg.success{ color:var(--green-dark); }
+
+  details.setup{ background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:22px; }
+  details.setup summary{ font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); cursor:pointer; }
+  details.setup ol{ padding-left:22px; }
+  details.setup li{ margin-bottom:10px; line-height:1.55; }
+  pre{ font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.6; background:#1c2b1f; color:#e4efe6;
+    padding:14px 16px; border-radius:10px; overflow-x:auto; }
+  code{ font-family:'JetBrains Mono',monospace; background:var(--parchment-deep); padding:1px 6px; border-radius:5px; font-size:.88em; }
+
+  .student{ border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--parchment); }
+  .student .top{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+  .student .uname{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
+  .student .meta{ font-size:13.5px; color:#8a7654; }
+  .student .progress-line{ font-size:14px; color:var(--ink-brown); margin:8px 0; }
+  .student .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .rename-panel{ margin-top:12px; padding-top:12px; border-top:1px dashed var(--gold-soft); display:none; }
+  .rename-panel.show{ display:block; }
+  .empty{ color:#8a7654; font-size:16px; padding:10px 2px; }
+
+  #login-card{ max-width:420px; margin:60px auto; text-align:center; }
+  #login-card .name-icons{ font-size:36px; margin-bottom:8px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <a class="brand" href="kids.html">
+    <span class="brand-mark">🛡️</span>
+    <span class="brand-text">Kids Quest Admin</span>
+  </a>
+  <button class="btn ghost small" id="signout-top">Sign out</button>
+</header>
+
+<div class="wrap">
+
+  <section id="login-screen">
+    <div class="card" id="login-card">
+      <div class="name-icons">🔑</div>
+      <h1>Admin Sign In</h1>
+      <p>Sign in with the admin account to add students and manage passwords.</p>
+      <div class="field"><label for="admin-email">Email</label>
+        <input type="email" id="admin-email" autocomplete="username" placeholder="you@example.com"></div>
+      <div class="field"><label for="admin-password">Password</label>
+        <input type="password" id="admin-password" autocomplete="current-password"></div>
+      <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
+      <p class="msg" id="login-msg"></p>
+    </div>
+
+    <details class="setup">
+      <summary>First-time setup (do this once)</summary>
+      <ol>
+        <li><b>Create the admin login.</b> In the
+          <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/authentication/users" target="_blank" rel="noopener">Firebase Console → Authentication → Users</a>,
+          click <b>Add user</b> and enter the admin email (must match <code>ADMIN_EMAIL</code> in
+          <code>kids-quest-cloud.js</code> — currently <code id="setup-admin-email">fesbackups@gmail.com</code>) and a password of your choice. That's the login you'll use above.</li>
+        <li><b>Add the Firestore security rules.</b> In
+          <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/firestore/rules" target="_blank" rel="noopener">Firebase Console → Firestore Database → Rules</a>,
+          add this block inside your existing <code>match /databases/{database}/documents { ... }</code>
+          (alongside whatever rules already exist for other collections — don't remove those):
+          <pre>match /kids_quest_students/{uid} {
+  // a student can only ever read/write their own saved progress
+  allow get, create, update: if request.auth != null && request.auth.uid == uid;
+  // the admin account can manage every student's record
+  allow get, list, create, update, delete: if request.auth != null
+    && request.auth.token.email.lower() == 'fesbackups@gmail.com';
+}</pre>
+          Replace the email on the last line if you used a different admin address.</li>
+        <li>Reload this page and sign in above. New student accounts you create will start working immediately.</li>
+      </ol>
+    </details>
+  </section>
+
+  <section id="dashboard-screen" class="hidden">
+    <h1>Kids Quest — Students</h1>
+    <p>Every account works for all four quest games (Arabic, English, Math, Seerah) — one username and
+      password logs a child into whichever one they open.</p>
+
+    <div class="card">
+      <h2>Add a student</h2>
+      <div class="row">
+        <div class="field"><label for="new-username">Username</label>
+          <input type="text" id="new-username" placeholder="amina123"></div>
+        <div class="field"><label for="new-displayname">Display name (optional)</label>
+          <input type="text" id="new-displayname" placeholder="Amina"></div>
+      </div>
+      <div class="row">
+        <div class="field" style="flex:2;"><label for="new-password">Password</label>
+          <input type="text" id="new-password" placeholder="At least 6 characters"></div>
+        <div class="field" style="flex:1; align-self:flex-end;">
+          <button class="btn ghost" type="button" id="gen-password-btn" style="width:100%; justify-content:center;">🎲 Generate</button>
+        </div>
+      </div>
+      <button class="btn primary" id="add-student-btn">Add Student</button>
+      <p class="msg" id="add-msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Students <span id="student-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
+      <button class="btn ghost small" id="refresh-btn" style="margin-bottom:14px;">Refresh</button>
+      <div id="student-list"></div>
+      <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
+    </div>
+  </section>
+
+</div>
+
+<script type="module" src="kids-quest-cloud.js"></script>
+<script type="module">
+const $ = id => document.getElementById(id);
+
+function randomPassword(){
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let out = '';
+  for(let i = 0; i < 8; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+function friendlyError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('wrong-password') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('user-not-found') >= 0){
+    return 'Wrong email or password.';
+  }
+  if(code.indexOf('email-already-in-use') >= 0) return 'That username is already taken.';
+  if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  return (err && err.message) || 'Something went wrong.';
+}
+function progressSummary(progress){
+  const labels = { arabic:'Arabic', english:'English', math:'Math', seerah:'Seerah' };
+  const parts = [];
+  Object.keys(labels).forEach(key => {
+    const p = progress && progress[key];
+    if(p && Array.isArray(p.stars)){
+      const done = p.stars.filter(s => s > 0).length;
+      parts.push(labels[key] + ': ' + done + '/' + p.stars.length);
+    }
+  });
+  return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
+}
+
+function renderStudents(list){
+  const box = $('student-list');
+  box.innerHTML = '';
+  $('student-count').textContent = list.length ? '(' + list.length + ')' : '';
+  $('student-empty').classList.toggle('hidden', list.length > 0);
+  list.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'student';
+    el.innerHTML =
+      '<div class="top">' +
+        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span></span>' +
+        '<span class="meta">' + (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '') + '</span>' +
+      '</div>' +
+      '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
+      '<div class="actions">' +
+        '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
+        '<button class="btn ghost small" data-act="rename">Rename username</button>' +
+        '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>' +
+      '</div>' +
+      '<div class="rename-panel" data-rename>' +
+        '<div class="row">' +
+          '<div class="field"><label>Current password</label><input type="text" data-cur-pass></div>' +
+          '<div class="field"><label>New username</label><input type="text" data-new-uname></div>' +
+        '</div>' +
+        '<button class="btn primary small" data-act="do-rename">Confirm rename</button>' +
+        '<p class="msg" data-rename-msg></p>' +
+      '</div>' +
+      '<p class="msg" data-msg></p>';
+
+    el.querySelector('[data-act="reset"]').addEventListener('click', () => {
+      const msg = el.querySelector('[data-msg]');
+      window.KidsCloud.adminSendPasswordReset(s.username).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = 'Reset link sent to your inbox — open it, set a new password, then tell the student.';
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
+    });
+
+    el.querySelector('[data-act="rename"]').addEventListener('click', () => {
+      el.querySelector('[data-rename]').classList.toggle('show');
+    });
+
+    el.querySelector('[data-act="do-rename"]').addEventListener('click', () => {
+      const curPass = el.querySelector('[data-cur-pass]').value;
+      const newUname = el.querySelector('[data-new-uname]').value.trim();
+      const msg = el.querySelector('[data-rename-msg]');
+      if(!curPass || !newUname){ msg.className = 'msg error'; msg.textContent = 'Fill in both fields.'; return; }
+      msg.className = 'msg'; msg.textContent = 'Working…';
+      window.KidsCloud.adminRenameStudent(s.username, curPass, newUname, s.uid).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = 'Renamed! Refreshing…';
+        loadStudents();
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
+    });
+
+    el.querySelector('[data-act="delete"]').addEventListener('click', () => {
+      if(!confirm('Remove ' + s.username + '’s saved progress? This cannot be undone from here.')) return;
+      window.KidsCloud.adminDeleteStudent(s.uid).then(loadStudents).catch(err => alert(friendlyError(err)));
+    });
+
+    box.appendChild(el);
+  });
+}
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+
+function loadStudents(){
+  window.KidsCloud.adminListStudents().then(renderStudents).catch(err => {
+    $('student-list').innerHTML = '';
+    $('student-empty').classList.remove('hidden');
+    $('student-empty').textContent = friendlyError(err);
+  });
+}
+
+function showDashboard(){
+  $('login-screen').classList.add('hidden');
+  $('dashboard-screen').classList.remove('hidden');
+  $('signout-top').classList.add('show');
+  loadStudents();
+}
+function showLogin(){
+  $('login-screen').classList.remove('hidden');
+  $('dashboard-screen').classList.add('hidden');
+  $('signout-top').classList.remove('show');
+}
+
+function wire(){
+  $('setup-admin-email').textContent = window.KidsCloud.ADMIN_EMAIL;
+
+  $('admin-signin-btn').addEventListener('click', () => {
+    const email = $('admin-email').value.trim();
+    const password = $('admin-password').value;
+    const msg = $('login-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email || !password){ msg.className = 'msg error'; msg.textContent = 'Enter email and password.'; return; }
+    $('admin-signin-btn').disabled = true;
+    window.KidsCloud.adminSignIn(email, password).catch(err => {
+      msg.className = 'msg error';
+      msg.textContent = friendlyError(err);
+    }).finally(() => { $('admin-signin-btn').disabled = false; });
+  });
+  $('admin-password').addEventListener('keydown', e => { if(e.key === 'Enter') $('admin-signin-btn').click(); });
+
+  $('signout-top').addEventListener('click', () => window.KidsCloud.adminSignOut());
+
+  $('gen-password-btn').addEventListener('click', () => { $('new-password').value = randomPassword(); });
+
+  $('add-student-btn').addEventListener('click', () => {
+    const username = $('new-username').value.trim();
+    const displayName = $('new-displayname').value.trim();
+    const password = $('new-password').value;
+    const msg = $('add-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!username || !password){ msg.className = 'msg error'; msg.textContent = 'Username and password are required.'; return; }
+    if(password.length < 6){ msg.className = 'msg error'; msg.textContent = 'Password needs to be at least 6 characters.'; return; }
+    $('add-student-btn').disabled = true;
+    window.KidsCloud.adminCreateStudent(username, displayName, password).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Added! Username: ' + username + ' — write down the password to give the student, it is not shown again here.';
+      $('new-username').value = ''; $('new-displayname').value = ''; $('new-password').value = '';
+      loadStudents();
+    }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
+      .finally(() => { $('add-student-btn').disabled = false; });
+  });
+
+  $('refresh-btn').addEventListener('click', loadStudents);
+
+  window.KidsCloud.onAdminAuth(user => { if(user) showDashboard(); else showLogin(); });
+}
+if(window.KidsCloud) wire(); else window.addEventListener('kidscloud-ready', wire);
+</script>
+</body>
+</html>
