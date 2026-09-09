@@ -66,7 +66,7 @@ function studentLogin(username, password){
   return signInWithEmailAndPassword(auth, email, password)
     .then(function(cred){
       return ensureStudentDoc(cred.user, username).then(function(data){
-        return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, progress: data.progress || {} };
+        return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} };
       });
     });
 }
@@ -98,7 +98,7 @@ function onStudentAuth(cb){
   return onAuthStateChanged(auth, function(user){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
-      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, progress: data.progress || {} });
+      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} });
     }).catch(function(){ cb(null); });
   });
 }
@@ -114,6 +114,16 @@ function saveProgress(gameKey, profileObj){
   const patch = { progress: {} };
   patch.progress[gameKey] = profileObj;
   return setDoc(doc(db, STUDENTS_COLLECTION, user.uid), patch, { merge:true });
+}
+
+/* The name printed on certificates — separate from username/displayName
+   (which may be a login-style handle like "wbzz0015") and shared across
+   all four games, so a child fixes the spelling once and every future
+   certificate, in every game, uses it. */
+function setFullName(name){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  return setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { fullName: String(name || '').trim() }, { merge:true });
 }
 
 /* ===================== Admin-facing API ===================== */
@@ -236,6 +246,7 @@ window.KidsCloud = {
   onStudentAuth: onStudentAuth,
   studentLogout: studentLogout,
   saveProgress: saveProgress,
+  setFullName: setFullName,
   adminSignIn: adminSignIn,
   adminSignOut: adminSignOut,
   onAdminAuth: onAdminAuth,
