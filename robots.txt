@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /kids-admin.html
 
 Sitemap: https://diinislaam.com/sitemap.xml

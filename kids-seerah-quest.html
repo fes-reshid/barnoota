@@ -324,6 +324,8 @@
 
   /* ============ Character picker ============ */
   .pick-label{ font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); margin:0 0 8px; }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:15px; color:#b8462f; margin:6px 0 0; }
+  .login-hint{ font-size:14px; color:#8a7654; margin-top:14px; }
   .avatar-grid{ display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; margin:0 0 18px; }
   .avatar-pick{
     aspect-ratio:1/1; border-radius:14px; border:3px solid var(--parchment-deep);
@@ -505,10 +507,12 @@
       <h1>Seerah Quest</h1>
       <p class="sub arabic">رِحْلَةُ السِّيرَة</p>
       <p>Travel five maps through the life of Prophet Muhammad ﷺ — thirty stories, one lesson at a time. Finish a whole map and print your certificate!</p>
-      <p class="pick-label">Pick your character</p>
-      <div class="avatar-grid" id="name-avatars"></div>
-      <input type="text" class="big-input" id="name-input" placeholder="Type your name" maxlength="24" autocomplete="given-name">
-      <button class="big-btn" id="name-start-btn">Start My Quest 🚀</button>
+      <p class="pick-label">Log in with the username and password your parent gave you</p>
+      <input type="text" class="big-input" id="login-username" placeholder="Username" maxlength="24" autocomplete="username">
+      <input type="password" class="big-input" id="login-password" placeholder="Password" maxlength="60" autocomplete="current-password">
+      <button class="big-btn" id="name-start-btn">Log In 🚀</button>
+      <p class="login-msg" id="login-msg"></p>
+      <p class="login-hint">Don't have an account? Ask your parent to set one up.</p>
     </div>
   </section>
 
@@ -536,7 +540,7 @@
     <div class="map-flash-row" id="map-flash-row"></div>
     <div class="map-cert-row" id="map-cert-row"></div>
     <div class="lesson-actions">
-      <button class="ghost-btn" id="reset-btn">Start over</button>
+      <button class="ghost-btn" id="reset-btn">Log out</button>
     </div>
   </section>
 
@@ -991,6 +995,7 @@ const MAPS = [
 const TOTAL_LESSONS = 30;
 const CERT_PREFIX = 'SRQ';
 const COURSE_LINE = 'Seerah Quest';
+const GAME_KEY = 'seerah';
 const COINS_PER_GAME = 2;      // each mini-game inside a lesson
 const COINS_LESSON_BONUS = 5;  // finishing the lesson
 const COINS_PERFECT_BONUS = 5; // finishing with no mistakes
@@ -1005,33 +1010,34 @@ let certMap = 0;     // which map's certificate the certificate screen is showin
 let rewardCertMap = 0;
 let soundOn = true;
 
-function defaultProfile(name){
-  return { name: name || 'Explorer', avatar: pickedAvatar, unlocked: 1,
+/* Progress now lives in the child's account (Firestore), not this device —
+   defaultProfile seeds a brand-new save, normalizeProfile repairs whatever
+   comes back from the cloud into a shape the rest of the game can trust. */
+function defaultProfile(username){
+  return { name: username || 'Explorer', avatar: AVATARS[0], unlocked: 1,
            stars: new Array(TOTAL_LESSONS).fill(0), coins: 0, certs: {} };
 }
-function loadProfile(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return null;
-    const d = JSON.parse(raw);
-    if(!d || typeof d.name !== 'string') return null;
-    if(!Array.isArray(d.stars) || d.stars.length !== TOTAL_LESSONS) d.stars = new Array(TOTAL_LESSONS).fill(0);
-    if(typeof d.unlocked !== 'number') d.unlocked = 1;
-    if(typeof d.coins !== 'number') d.coins = 0;
-    if(typeof d.avatar !== 'string' || !d.avatar) d.avatar = AVATARS[0];
-    if(!d.certs || typeof d.certs !== 'object') d.certs = {};
-    return d;
-  }catch(e){ return null; }
+function normalizeProfile(d, usernameFallback){
+  if(!d || typeof d !== 'object') d = {};
+  if(typeof d.name !== 'string' || !d.name) d.name = usernameFallback || 'Explorer';
+  if(!Array.isArray(d.stars) || d.stars.length !== TOTAL_LESSONS) d.stars = new Array(TOTAL_LESSONS).fill(0);
+  if(typeof d.unlocked !== 'number') d.unlocked = 1;
+  if(typeof d.coins !== 'number') d.coins = 0;
+  if(typeof d.avatar !== 'string' || !d.avatar) d.avatar = AVATARS[0];
+  if(!d.certs || typeof d.certs !== 'object') d.certs = {};
+  return d;
 }
+/* Written on every change; localStorage is just an offline snapshot now —
+   the account's copy in the cloud is what actually persists and syncs. */
 function saveProfile(){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
+  if(window.KidsCloud){ window.KidsCloud.saveProgress(GAME_KEY, profile).catch(function(){}); }
 }
 
 /* ===================== CHARACTER ===================== */
 const AVATARS = ['🧒','👦','👧','🧕','🧑','🧓',
                  '🦁','🐯','🐨','🐼','🦊','🐧',
                  '🦉','🐝','🐢','🦋','🚀','⭐'];
-let pickedAvatar = AVATARS[0];
 
 function avatarOf(){ return (profile && profile.avatar) || AVATARS[0]; }
 
@@ -1054,12 +1060,6 @@ function renderAvatarGrid(box, chosen, onPick){
     b.setAttribute('aria-label', 'Character ' + a);
     b.addEventListener('click', () => { playTap(); onPick(a); });
     box.appendChild(b);
-  });
-}
-function paintNameAvatars(){
-  renderAvatarGrid(document.getElementById('name-avatars'), pickedAvatar, a => {
-    pickedAvatar = a;
-    paintNameAvatars();
   });
 }
 function paintModalAvatars(){
@@ -1795,15 +1795,48 @@ function speakEnglish(text){
 }
 
 /* ===================== EVENTS ===================== */
-document.getElementById('name-start-btn').addEventListener('click', () => {
-  const val = document.getElementById('name-input').value.trim();
-  profile = defaultProfile(val);
-  saveProfile();
-  playTap();
-  viewMap = 0;
+/* Once signed in (fresh login or a session the cloud module restored on
+   its own), fold the account's saved progress for THIS game into profile
+   and jump straight to the map. */
+function applyCloudProfile(cloudData){
+  const raw = cloudData.progress && cloudData.progress[GAME_KEY];
+  profile = normalizeProfile(raw ? JSON.parse(JSON.stringify(raw)) : defaultProfile(cloudData.username), cloudData.username);
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
+  applyAvatar();
+  const current = Math.min(profile.unlocked, TOTAL_LESSONS);
+  viewMap = Math.max(0, MAPS.findIndex(m => current > m.from && current <= m.to));
+  document.getElementById('login-msg').textContent = '';
   renderMap();
+}
+function friendlyLoginError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('user-not-found') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('wrong-password') >= 0){
+    return 'That username or password is not right. Ask your parent to check it.';
+  }
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('network') >= 0) return 'No internet connection — check you are online.';
+  return 'Could not log in — try again.';
+}
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  msg.textContent = '';
+  if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
+  if(!window.KidsCloud){ msg.textContent = 'Still loading — try again in a moment.'; return; }
+  const btn = document.getElementById('name-start-btn');
+  btn.disabled = true;
+  window.KidsCloud.studentLogin(u, p).then(data => {
+    playTap();
+    applyCloudProfile(data);
+  }).catch(err => {
+    msg.textContent = friendlyLoginError(err);
+  }).finally(() => { btn.disabled = false; });
 });
-document.getElementById('name-input').addEventListener('keydown', e => {
+document.getElementById('login-username').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-password').focus();
+});
+document.getElementById('login-password').addEventListener('keydown', e => {
   if(e.key === 'Enter') document.getElementById('name-start-btn').click();
 });
 document.getElementById('map-prev').addEventListener('click', () => {
@@ -1844,36 +1877,44 @@ document.getElementById('reward-cert-btn').addEventListener('click', () => {
   showCertificate(rewardCertMap);
 });
 document.getElementById('reset-btn').addEventListener('click', () => {
-  if(!confirm('Start the whole quest again from lesson 1?')) return;
-  localStorage.removeItem(STORAGE_KEY);
+  playTap();
+  if(window.KidsCloud) window.KidsCloud.studentLogout();
   profile = null;
-  document.getElementById('name-input').value = '';
-  pickedAvatar = AVATARS[0];
-  paintNameAvatars();
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
   showScreen('name-screen');
 });
 
 /* ===================== INIT ===================== */
+/* The Firebase module script loads after this one (same pattern as
+   nahw-course.html): show the login screen as the safe default now, then
+   let onStudentAuth decide — moments later — whether to jump straight to
+   the map because a session was already active. */
+function wireCloudAuth(){
+  if(window.__kidsCloudWired) return;
+  window.__kidsCloudWired = true;
+  window.KidsCloud.onStudentAuth(function(data){
+    if(data){
+      applyCloudProfile(data);
+    } else if(!document.getElementById('map-screen').classList.contains('hidden') ||
+              !document.getElementById('lesson-screen').classList.contains('hidden') ||
+              !document.getElementById('reward-screen').classList.contains('hidden') ||
+              !document.getElementById('cert-screen').classList.contains('hidden')){
+      showScreen('name-screen');
+    }
+  });
+}
 function init(){
   let savedSound = null;
   try{ savedSound = localStorage.getItem(SOUND_KEY); }catch(e){}
   setSound(savedSound !== '0');
-
-  paintNameAvatars();
-  profile = loadProfile();
-  if(!profile){
-    let saved = null;
-    try{ saved = localStorage.getItem('kids-school-name'); }catch(e){}
-    if(saved) document.getElementById('name-input').value = saved;
-    showScreen('name-screen');
-    return;
-  }
-  const current = Math.min(profile.unlocked, TOTAL_LESSONS);
-  viewMap = Math.max(0, MAPS.findIndex(m => current > m.from && current <= m.to));
-  renderMap();
+  showScreen('name-screen');
+  window.addEventListener('kidscloud-ready', wireCloudAuth);
+  if(window.KidsCloud) wireCloudAuth();
 }
 init();
 </script>
+<script type="module" src="kids-quest-cloud.js"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
