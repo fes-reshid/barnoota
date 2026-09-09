@@ -1617,7 +1617,7 @@ document.getElementById('name-start-btn').addEventListener('click', () => {
   const msg = document.getElementById('login-msg');
   msg.textContent = '';
   if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
-  if(!window.KidsCloud){ msg.textContent = 'Still loading — try again in a moment.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
   const btn = document.getElementById('name-start-btn');
   btn.disabled = true;
   window.KidsCloud.studentLogin(u, p).then(data => {
@@ -1679,7 +1679,7 @@ document.getElementById('certname-save-btn').addEventListener('click', () => {
   const val = document.getElementById('certname-input').value.trim();
   const msg = document.getElementById('certname-msg');
   if(!val){ msg.textContent = 'Type a name first.'; return; }
-  if(!window.KidsCloud){ msg.textContent = 'Still loading — try again in a moment.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.setFullName){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
   const btn = document.getElementById('certname-save-btn');
   btn.disabled = true;
   window.KidsCloud.setFullName(val).then(() => {
@@ -1743,7 +1743,7 @@ function init(){
 }
 init();
 </script>
-<script type="module" src="kids-quest-cloud.js"></script>
+<script type="module" src="kids-quest-cloud.js?v=3"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
