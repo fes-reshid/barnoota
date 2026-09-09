@@ -33,13 +33,17 @@ const firebaseConfig = {
   projectId: "diinislaam-8fdeb"
 };
 
-/* The one real inbox every kid account's login email resolves to.
-   Change this one line if the admin's email is different. */
+/* The one real inbox every kid account's synthetic login email resolves
+   to (so Firebase's password-reset emails land somewhere real). This is
+   NOT the same thing as "who is an admin" — that's decided by the
+   kids_quest_admins collection below, so any number of people can be
+   admins even though kid accounts all route through this one inbox. */
 const ADMIN_EMAIL = "fesbackups@gmail.com";
 const ADMIN_LOCAL = ADMIN_EMAIL.split('@')[0];
 const ADMIN_DOMAIN = ADMIN_EMAIL.split('@')[1];
 
 const STUDENTS_COLLECTION = 'kids_quest_students';
+const ADMINS_COLLECTION = 'kids_quest_admins';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -54,6 +58,9 @@ function usernameToEmail(username){
 }
 function normalizeUsername(username){
   return String(username || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+}
+function normalizeEmail(email){
+  return String(email || '').trim().toLowerCase();
 }
 
 /* ===================== Student-facing API ===================== */
@@ -127,18 +134,67 @@ function setFullName(name){
 }
 
 /* ===================== Admin-facing API ===================== */
-/* All admin calls require being signed in to the SAME Firebase project
-   as ADMIN_EMAIL — enforced again server-side by the Firestore rules
-   the project owner must add (see kids-admin.html for the exact text). */
+/* Who is allowed in kids-admin.html is decided entirely by whether a doc
+   exists at kids_quest_admins/{their email} — not by any email hardcoded
+   in this file. Two roles: 'admin' can manage students; 'super' can also
+   manage other admins. The very first admin doc has to be created by
+   hand in the Firebase console (nothing can grant that role from inside
+   the app before it exists) — see kids-admin.html's setup instructions.
+   Every check here is re-enforced server-side by the Firestore rules the
+   project owner adds; a client-side bypass still hits a denied write. */
 
 function adminSignIn(email, password){
   return signInWithEmailAndPassword(auth, email, password);
 }
+/* Self-service account creation for a NEW admin whose email a super
+   admin already added to kids_quest_admins. Creating your own Firebase
+   Auth login is harmless even for a stranger who isn't pre-authorized —
+   onAdminAuth below still reports them as signed out of the admin panel
+   until their email actually has an admins doc. */
+function adminSignUp(email, password){
+  return createUserWithEmailAndPassword(auth, email, password);
+}
 function adminSignOut(){ return signOut(auth); }
+
+/* Fires cb(null) if fully signed out; cb({ email, role: null }) if signed
+   in but that email has no admin doc (so the page can say "not an admin"
+   instead of just bouncing back to a blank sign-in form); otherwise
+   cb({ email, role: 'admin' | 'super' }). */
 function onAdminAuth(cb){
   return onAuthStateChanged(auth, function(user){
-    cb(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? user : null);
+    if(!user || !user.email){ cb(null); return; }
+    const email = normalizeEmail(user.email);
+    getDoc(doc(db, ADMINS_COLLECTION, email)).then(function(snap){
+      cb(snap.exists() ? { email: email, role: snap.data().role || 'admin' } : { email: email, role: null });
+    }).catch(function(){ cb({ email: email, role: null }); });
   });
+}
+
+/* ---- super-admin only: managing the admin roster itself ---- */
+function superListAdmins(){
+  return getDocs(collection(db, ADMINS_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(d.data()); });
+    out.sort(function(a, b){ return (a.email || '').localeCompare(b.email || ''); });
+    return out;
+  });
+}
+function superAddAdmin(email, role){
+  const clean = normalizeEmail(email);
+  if(!clean) return Promise.reject(new Error('Enter an email address.'));
+  const user = auth.currentUser;
+  return setDoc(doc(db, ADMINS_COLLECTION, clean), {
+    email: clean,
+    role: role === 'super' ? 'super' : 'admin',
+    addedAt: new Date().toISOString(),
+    addedBy: user && user.email
+  });
+}
+function superSetAdminRole(email, role){
+  return setDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)), { role: role === 'super' ? 'super' : 'admin' }, { merge:true });
+}
+function superRemoveAdmin(email){
+  return deleteDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)));
 }
 
 /* Creates a brand-new student account without disturbing the admin's own
@@ -164,7 +220,7 @@ function adminCreateStudent(username, displayName, password){
             username: clean,
             displayName: displayName || clean,
             createdAt: new Date().toISOString(),
-            createdBy: ADMIN_EMAIL,
+            createdBy: (auth.currentUser && auth.currentUser.email) || null,
             progress: {}
           });
         })
@@ -214,7 +270,7 @@ function adminRenameStudent(oldUsername, oldPassword, newUsername, oldUid){
               username: cleanNew,
               displayName: oldData.displayName || cleanNew,
               createdAt: oldData.createdAt || new Date().toISOString(),
-              createdBy: ADMIN_EMAIL,
+              createdBy: (auth.currentUser && auth.currentUser.email) || null,
               progress: oldData.progress || {}
             }).then(function(){
               return deleteUser(cred.user).catch(function(){});
@@ -248,6 +304,7 @@ window.KidsCloud = {
   saveProgress: saveProgress,
   setFullName: setFullName,
   adminSignIn: adminSignIn,
+  adminSignUp: adminSignUp,
   adminSignOut: adminSignOut,
   onAdminAuth: onAdminAuth,
   adminCreateStudent: adminCreateStudent,
@@ -255,6 +312,10 @@ window.KidsCloud = {
   adminListStudents: adminListStudents,
   adminRenameStudent: adminRenameStudent,
   adminDeleteStudent: adminDeleteStudent,
+  superListAdmins: superListAdmins,
+  superAddAdmin: superAddAdmin,
+  superSetAdminRole: superSetAdminRole,
+  superRemoveAdmin: superRemoveAdmin,
   ADMIN_EMAIL: ADMIN_EMAIL
 };
 window.dispatchEvent(new Event('kidscloud-ready'));

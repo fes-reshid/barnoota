@@ -33,6 +33,12 @@
   .brand-mark{ width:34px; height:34px; border-radius:50%; background:var(--green);
     display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Marcellus'; font-size:16px; }
   .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .who{ font-size:14px; color:#8a7654; display:none; }
+  .who.show{ display:inline; }
+  .role-badge{ font-family:'Marcellus'; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    background:var(--gold-soft); color:#4a3712; padding:2px 9px; border-radius:999px; margin-left:4px; }
+  .role-badge.super{ background:var(--green); color:#fff; }
   #signout-top{ display:none; }
   #signout-top.show{ display:inline-block; }
 
@@ -62,6 +68,8 @@
   .btn.ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
   .btn.danger{ background:var(--danger); color:#fff; }
   .btn.small{ padding:6px 14px; font-size:14px; border-radius:16px; }
+  .linkbtn{ background:none; border:none; color:var(--green-dark); font-family:'Marcellus'; font-size:14px;
+    cursor:pointer; padding:4px 0; text-decoration:underline; }
 
   .msg{ min-height:22px; font-family:'Marcellus'; font-size:14.5px; margin-top:8px; }
   .msg.error{ color:var(--danger); }
@@ -85,8 +93,14 @@
   .rename-panel.show{ display:block; }
   .empty{ color:#8a7654; font-size:16px; padding:10px 2px; }
 
+  .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--parchment); }
+  .admin-row .email{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); }
+  .admin-row .actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
   #login-card{ max-width:420px; margin:60px auto; text-align:center; }
   #login-card .name-icons{ font-size:36px; margin-bottom:8px; }
+  #not-authorized{ max-width:420px; margin:60px auto; text-align:center; }
 </style>
 </head>
 <body>
@@ -96,7 +110,10 @@
     <span class="brand-mark">🛡️</span>
     <span class="brand-text">Kids Quest Admin</span>
   </a>
-  <button class="btn ghost small" id="signout-top">Sign out</button>
+  <div class="header-right">
+    <span class="who" id="who-am-i"></span>
+    <button class="btn ghost small" id="signout-top">Sign out</button>
+  </div>
 </header>
 
 <div class="wrap">
@@ -104,38 +121,64 @@
   <section id="login-screen">
     <div class="card" id="login-card">
       <div class="name-icons">🔑</div>
-      <h1>Admin Sign In</h1>
-      <p>Sign in with the admin account to add students and manage passwords.</p>
+      <h1 id="login-title">Admin Sign In</h1>
+      <p id="login-lead">Sign in with an admin account to add students and manage passwords.</p>
       <div class="field"><label for="admin-email">Email</label>
         <input type="email" id="admin-email" autocomplete="username" placeholder="you@example.com"></div>
       <div class="field"><label for="admin-password">Password</label>
         <input type="password" id="admin-password" autocomplete="current-password"></div>
       <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
       <p class="msg" id="login-msg"></p>
+      <button class="linkbtn" id="login-toggle" style="margin-top:6px;">First time here? Create your admin login</button>
     </div>
 
     <details class="setup">
-      <summary>First-time setup (do this once)</summary>
+      <summary>First-time setup (do this once, as the very first admin)</summary>
       <ol>
-        <li><b>Create the admin login.</b> In the
-          <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/authentication/users" target="_blank" rel="noopener">Firebase Console → Authentication → Users</a>,
-          click <b>Add user</b> and enter the admin email (must match <code>ADMIN_EMAIL</code> in
-          <code>kids-quest-cloud.js</code> — currently <code id="setup-admin-email">fesbackups@gmail.com</code>) and a password of your choice. That's the login you'll use above.</li>
         <li><b>Add the Firestore security rules.</b> In
           <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/firestore/rules" target="_blank" rel="noopener">Firebase Console → Firestore Database → Rules</a>,
-          add this block inside your existing <code>match /databases/{database}/documents { ... }</code>
+          add these two blocks inside your existing <code>match /databases/{database}/documents { ... }</code>
           (alongside whatever rules already exist for other collections — don't remove those):
-          <pre>match /kids_quest_students/{uid} {
+          <pre>match /kids_quest_admins/{adminEmail} {
+  // anyone signed in can check their OWN admin status
+  allow get: if request.auth != null
+    && request.auth.token.email.lower() == adminEmail;
+  // a super admin can see and manage the whole admin list
+  allow get, list, create, update, delete: if request.auth != null
+    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'super';
+}
+match /kids_quest_students/{uid} {
   // a student can only ever read/write their own saved progress
   allow get, create, update: if request.auth != null && request.auth.uid == uid;
-  // the admin account can manage every student's record
+  // any listed admin (super or regular) can manage every student's record
   allow get, list, create, update, delete: if request.auth != null
-    && request.auth.token.email.lower() == 'fesbackups@gmail.com';
+    && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
 }</pre>
-          Replace the email on the last line if you used a different admin address.</li>
-        <li>Reload this page and sign in above. New student accounts you create will start working immediately.</li>
+        </li>
+        <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
+          since nothing can grant the very first admin role from a page that requires already being an admin.
+          In <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/firestore/data" target="_blank" rel="noopener">Firebase Console → Firestore Database → Data</a>,
+          start a collection named <code>kids_quest_admins</code>, and add one document:
+          <ul>
+            <li>Document ID: <code>savefes@gmail.com</code> (all lowercase, exactly as shown)</li>
+            <li>Field <code>email</code> (string) = <code>savefes@gmail.com</code></li>
+            <li>Field <code>role</code> (string) = <code>super</code></li>
+          </ul>
+        </li>
+        <li>Come back here and click <b>"First time here? Create your admin login"</b> below, using
+          <code>savefes@gmail.com</code> and a password of your choice (this is a brand new login — it
+          doesn't matter whether that email has signed into anything on this site before). You're now
+          signed in as the super admin — from here on, adding more admins (regular or super) is done
+          entirely from the Admins section below, no more console work needed.</li>
       </ol>
     </details>
+
+    <div class="card hidden" id="not-authorized">
+      <h2>Not an admin yet</h2>
+      <p id="not-authorized-msg">This account isn't on the admin list. Ask an existing admin to add your
+        email address in the Admins section, then sign in again.</p>
+      <button class="btn ghost" id="not-authorized-signout">Sign out</button>
+    </div>
   </section>
 
   <section id="dashboard-screen" class="hidden">
@@ -168,13 +211,36 @@
       <div id="student-list"></div>
       <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
     </div>
+
+    <div class="card hidden" id="admins-card">
+      <h2>Admins <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
+      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Only super admins can see and change this
+        list. A new admin still has to create their own login (they'll see a "Create your admin login" link
+        on the sign-in screen) — adding them here just authorizes that email.</p>
+      <div class="row">
+        <div class="field" style="flex:2;"><label for="new-admin-email">Email</label>
+          <input type="email" id="new-admin-email" placeholder="someone@example.com"></div>
+        <div class="field"><label for="new-admin-role">Role</label>
+          <select id="new-admin-role">
+            <option value="admin">Admin</option>
+            <option value="super">Super admin</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn primary" id="add-admin-btn">Add Admin</button>
+      <p class="msg" id="add-admin-msg"></p>
+      <div id="admin-list" style="margin-top:16px;"></div>
+    </div>
   </section>
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=3"></script>
+<script type="module" src="kids-quest-cloud.js?v=4"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
+let isSignUp = false;
+let myEmail = '';
+let myRole = '';
 
 function randomPassword(){
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
@@ -187,9 +253,10 @@ function friendlyError(err){
   if(code.indexOf('wrong-password') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('user-not-found') >= 0){
     return 'Wrong email or password.';
   }
-  if(code.indexOf('email-already-in-use') >= 0) return 'That username is already taken.';
+  if(code.indexOf('email-already-in-use') >= 0) return 'That email or username already has an account — try signing in instead.';
   if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
   if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('permission-denied') >= 0) return 'Not allowed — only a super admin can do that.';
   return (err && err.message) || 'Something went wrong.';
 }
 function progressSummary(progress){
@@ -203,6 +270,11 @@ function progressSummary(progress){
     }
   });
   return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
+}
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
 }
 
 function renderStudents(list){
@@ -267,10 +339,36 @@ function renderStudents(list){
     box.appendChild(el);
   });
 }
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s == null ? '' : String(s);
-  return d.innerHTML;
+
+function renderAdmins(list){
+  const box = $('admin-list');
+  box.innerHTML = '';
+  $('admin-count').textContent = list.length ? '(' + list.length + ')' : '';
+  list.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'admin-row';
+    const isMe = a.email === myEmail;
+    el.innerHTML =
+      '<span class="email">' + escapeHtml(a.email) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
+        '<span class="role-badge' + (a.role === 'super' ? ' super' : '') + '">' + (a.role === 'super' ? 'Super' : 'Admin') + '</span>' +
+      '</span>' +
+      '<span class="actions">' +
+        (isMe ? '' :
+          '<button class="btn ghost small" data-act="toggle-role">' + (a.role === 'super' ? 'Make regular admin' : 'Make super admin') + '</button>' +
+          '<button class="btn danger small" data-act="remove">Remove</button>'
+        ) +
+      '</span>';
+    if(!isMe){
+      el.querySelector('[data-act="toggle-role"]').addEventListener('click', () => {
+        window.KidsCloud.superSetAdminRole(a.email, a.role === 'super' ? 'admin' : 'super').then(loadAdmins).catch(err => alert(friendlyError(err)));
+      });
+      el.querySelector('[data-act="remove"]').addEventListener('click', () => {
+        if(!confirm('Remove admin access for ' + a.email + '? Their Firebase login itself stays — this only revokes admin rights.')) return;
+        window.KidsCloud.superRemoveAdmin(a.email).then(loadAdmins).catch(err => alert(friendlyError(err)));
+      });
+    }
+    box.appendChild(el);
+  });
 }
 
 function loadStudents(){
@@ -280,21 +378,60 @@ function loadStudents(){
     $('student-empty').textContent = friendlyError(err);
   });
 }
+function loadAdmins(){
+  if(myRole !== 'super') return;
+  window.KidsCloud.superListAdmins().then(renderAdmins).catch(err => {
+    $('admin-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>';
+  });
+}
 
-function showDashboard(){
+function showDashboard(info){
+  myEmail = info.email; myRole = info.role;
   $('login-screen').classList.add('hidden');
   $('dashboard-screen').classList.remove('hidden');
   $('signout-top').classList.add('show');
+  $('who-am-i').classList.add('show');
+  $('who-am-i').innerHTML = escapeHtml(info.email) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + (info.role === 'super' ? 'Super admin' : 'Admin') + '</span>';
+  $('admins-card').classList.toggle('hidden', info.role !== 'super');
+  $('not-authorized').classList.add('hidden');
   loadStudents();
+  loadAdmins();
 }
 function showLogin(){
   $('login-screen').classList.remove('hidden');
+  $('login-card').classList.remove('hidden');
   $('dashboard-screen').classList.add('hidden');
   $('signout-top').classList.remove('show');
+  $('who-am-i').classList.remove('show');
+  $('not-authorized').classList.add('hidden');
+  setSignUpMode(false);
+}
+function showNotAuthorized(email){
+  $('login-screen').classList.remove('hidden');
+  $('dashboard-screen').classList.add('hidden');
+  $('signout-top').classList.remove('show');
+  $('who-am-i').classList.remove('show');
+  $('login-card').classList.add('hidden');
+  $('not-authorized').classList.remove('hidden');
+  $('not-authorized-msg').textContent = '"' + email + '" isn’t on the admin list yet. Ask an existing admin to add ' +
+    'that email in the Admins section, then sign in again.';
+}
+
+function setSignUpMode(on){
+  isSignUp = on;
+  $('login-title').textContent = on ? 'Create Admin Login' : 'Admin Sign In';
+  $('login-lead').textContent = on
+    ? 'Only use the email an existing super admin already authorized (or the one you just added to Firestore for the very first account).'
+    : 'Sign in with an admin account to add students and manage passwords.';
+  $('admin-signin-btn').textContent = on ? 'Create Account' : 'Sign In';
+  $('login-toggle').textContent = on ? 'Already have a login? Sign in instead' : 'First time here? Create your admin login';
+  $('login-msg').textContent = '';
 }
 
 function wire(){
-  $('setup-admin-email').textContent = window.KidsCloud.ADMIN_EMAIL;
+  $('login-card').classList.remove('hidden');
+
+  $('login-toggle').addEventListener('click', () => setSignUpMode(!isSignUp));
 
   $('admin-signin-btn').addEventListener('click', () => {
     const email = $('admin-email').value.trim();
@@ -303,7 +440,8 @@ function wire(){
     msg.className = 'msg'; msg.textContent = '';
     if(!email || !password){ msg.className = 'msg error'; msg.textContent = 'Enter email and password.'; return; }
     $('admin-signin-btn').disabled = true;
-    window.KidsCloud.adminSignIn(email, password).catch(err => {
+    const action = isSignUp ? window.KidsCloud.adminSignUp(email, password) : window.KidsCloud.adminSignIn(email, password);
+    action.catch(err => {
       msg.className = 'msg error';
       msg.textContent = friendlyError(err);
     }).finally(() => { $('admin-signin-btn').disabled = false; });
@@ -311,6 +449,7 @@ function wire(){
   $('admin-password').addEventListener('keydown', e => { if(e.key === 'Enter') $('admin-signin-btn').click(); });
 
   $('signout-top').addEventListener('click', () => window.KidsCloud.adminSignOut());
+  $('not-authorized-signout').addEventListener('click', () => window.KidsCloud.adminSignOut());
 
   $('gen-password-btn').addEventListener('click', () => { $('new-password').value = randomPassword(); });
 
@@ -334,7 +473,27 @@ function wire(){
 
   $('refresh-btn').addEventListener('click', loadStudents);
 
-  window.KidsCloud.onAdminAuth(user => { if(user) showDashboard(); else showLogin(); });
+  $('add-admin-btn').addEventListener('click', () => {
+    const email = $('new-admin-email').value.trim();
+    const role = $('new-admin-role').value;
+    const msg = $('add-admin-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter an email address.'; return; }
+    $('add-admin-btn').disabled = true;
+    window.KidsCloud.superAddAdmin(email, role).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Added — tell them to visit this page and click "Create your admin login" with that email.';
+      $('new-admin-email').value = '';
+      loadAdmins();
+    }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
+      .finally(() => { $('add-admin-btn').disabled = false; });
+  });
+
+  window.KidsCloud.onAdminAuth(info => {
+    if(!info) showLogin();
+    else if(!info.role) showNotAuthorized(info.email);
+    else showDashboard(info);
+  });
 }
 if(window.KidsCloud) wire(); else window.addEventListener('kidscloud-ready', wire);
 </script>
