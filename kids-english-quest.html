@@ -1574,7 +1574,9 @@ function speakEnglish(text){
    and jump straight to the map. */
 function applyCloudProfile(cloudData){
   const raw = cloudData.progress && cloudData.progress[GAME_KEY];
-  profile = normalizeProfile(raw ? JSON.parse(JSON.stringify(raw)) : defaultProfile(cloudData.username), cloudData.username);
+  const shownName = cloudData.displayName || cloudData.username;
+  profile = normalizeProfile(raw ? JSON.parse(JSON.stringify(raw)) : defaultProfile(shownName), shownName);
+  profile.name = shownName;
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
   applyAvatar();
   const current = Math.min(profile.unlocked, TOTAL_LESSONS);
