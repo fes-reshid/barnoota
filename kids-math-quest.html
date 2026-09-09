@@ -1727,7 +1727,14 @@ document.getElementById('certname-edit-btn').addEventListener('click', () => {
   openCertNameModal(function(){ showCertificate(certMap); });
 });
 document.getElementById('cert-back-btn').addEventListener('click', () => { playTap(); renderMap(); });
-document.getElementById('cert-print-btn').addEventListener('click', () => { window.print(); });
+document.getElementById('cert-print-btn').addEventListener('click', () => {
+  const prevTitle = document.title;
+  const name = (studentFullName || (profile ? profile.name : '') || 'My').trim();
+  document.title = name + '’s map ' + (certMap + 1) + ' certificate';
+  const restoreTitle = () => { document.title = prevTitle; window.removeEventListener('afterprint', restoreTitle); };
+  window.addEventListener('afterprint', restoreTitle);
+  window.print();
+});
 document.getElementById('reward-cert-btn').addEventListener('click', () => {
   playTap();
   showCertificate(rewardCertMap);
