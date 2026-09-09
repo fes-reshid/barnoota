@@ -66,7 +66,7 @@ function studentLogin(username, password){
   return signInWithEmailAndPassword(auth, email, password)
     .then(function(cred){
       return ensureStudentDoc(cred.user, username).then(function(data){
-        return { uid: cred.user.uid, username: data.username, progress: data.progress || {} };
+        return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, progress: data.progress || {} };
       });
     });
 }
@@ -74,9 +74,15 @@ function studentLogin(username, password){
 function ensureStudentDoc(user, usernameHint){
   const ref = doc(db, STUDENTS_COLLECTION, user.uid);
   return getDoc(ref).then(function(snap){
-    if(snap.exists()) return snap.data();
+    if(snap.exists()){
+      const data = snap.data();
+      if(!data.displayName) data.displayName = data.username;
+      return data;
+    }
+    const clean = normalizeUsername(usernameHint || user.email);
     const data = {
-      username: normalizeUsername(usernameHint || user.email),
+      username: clean,
+      displayName: clean,
       createdAt: new Date().toISOString(),
       progress: {}
     };
@@ -92,7 +98,7 @@ function onStudentAuth(cb){
   return onAuthStateChanged(auth, function(user){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
-      cb({ uid: user.uid, username: data.username, progress: data.progress || {} });
+      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, progress: data.progress || {} });
     }).catch(function(){ cb(null); });
   });
 }
