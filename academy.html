@@ -8,68 +8,109 @@
 <meta name="description" content="A playful learning journey for kids: Afaan Oromoo, Arabic, Qur'ān, Tajweed, Seerah, Fiqh and Tafsir, one lesson at a time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:oklch(0.24 0.045 260); --bg:oklch(0.985 0.004 250); --bg-deep:oklch(0.96 0.006 250);
-    --coral:oklch(0.68 0.19 30); --teal:oklch(0.68 0.15 190); --sun:oklch(0.8 0.16 95);
-    --violet:oklch(0.6 0.17 300); --green:oklch(0.64 0.15 145); --pink:oklch(0.64 0.18 350); --sky:oklch(0.66 0.14 230);
-    --muted:oklch(0.45 0.03 260); --sand:oklch(0.86 0.05 75);
-    --maxw:1120px;
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c; --gold-bright:#e8b53c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#3f9fc9; --sky-bg:#dcecf5;
+    --coral:#e0703a; --coral-bg:#fbe6dc;
+    --violet:#7a5aa8; --violet-bg:#ece3f5;
+    --pink:#c1558a; --pink-bg:#f7e2ec;
+    --maxw:1000px;
   }
   *{box-sizing:border-box;}
   html,body{ overflow-x:hidden; }
-  body{ margin:0; padding:0; background:var(--bg); font-family:'Work Sans',sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
   a{ color:inherit; }
   .hidden{ display:none !important; }
 
-  header.site{ position:sticky; top:0; z-index:50; background:oklch(0.985 0.004 250 / .94); backdrop-filter:blur(6px); border-bottom:2.5px solid var(--ink); }
-  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; gap:12px; }
+  header.site{
+    position:sticky; top:0; z-index:60;
+    background:rgba(250,243,224,.94); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 18px; max-width:var(--maxw); margin:0 auto; gap:10px; }
   .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
-  .brand-mark{ width:40px; height:40px; border-radius:12px; background:var(--coral); border:2.5px solid var(--ink); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:19px; }
-  .brand-text{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:18px; color:var(--ink); line-height:1.15; }
-  .brand-text small{ display:block; font-family:'Work Sans',sans-serif; font-size:12px; color:var(--muted); font-weight:600; }
-  .back-pill{ display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Work Sans',sans-serif; font-weight:700; font-size:14px; color:var(--ink); background:#fff; border:2px solid var(--ink); border-radius:20px; padding:8px 16px; white-space:nowrap; cursor:pointer; }
-  .back-pill:hover{ background:var(--bg-deep); }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:12px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 14px; white-space:nowrap; cursor:pointer;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
 
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding:26px 18px 70px; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 16px 60px; }
 
-  .big-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px; color:var(--ink); padding:14px 32px; border-radius:16px; border:2.5px solid var(--ink); cursor:pointer; background:var(--sun); box-shadow:5px 5px 0 var(--ink); transition:transform .1s ease; }
-  .big-btn:hover{ transform:translate(-2px,-2px); }
-  .big-btn:active{ transform:translate(1px,1px); box-shadow:2px 2px 0 var(--ink); }
-  .big-btn:disabled{ opacity:.6; cursor:default; }
+  .big-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--gold); color:#fff8ea; border:none; border-radius:26px;
+    padding:14px 34px; font-family:'Marcellus'; font-size:19px; cursor:pointer;
+    box-shadow:0 5px 0 #8a6417; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .big-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #8a6417; }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #8a6417; }
+  .big-btn:disabled{ opacity:.6; cursor:default; transform:none; }
 
   /* ============ Login screen ============ */
-  .login-card{ max-width:440px; margin:48px auto; background:#fff; border:2.5px solid var(--ink); border-radius:22px; padding:34px 28px; text-align:center; box-shadow:6px 6px 0 var(--ink); }
-  .login-card h1{ font-family:'Fredoka',sans-serif; font-weight:700; font-size:26px; margin:0 0 8px; }
-  .login-card p{ font-size:16px; line-height:1.5; color:var(--muted); margin:0 0 20px; }
-  .big-input{ width:100%; padding:13px 16px; border:2px solid var(--ink); border-radius:14px; font-family:'Work Sans',sans-serif; font-size:17px; text-align:center; background:var(--bg-deep); color:var(--ink); margin-bottom:12px; }
-  .big-input:focus{ outline:none; border-color:var(--coral); }
-  .login-msg{ min-height:22px; font-family:'Work Sans',sans-serif; font-weight:700; font-size:14.5px; color:var(--coral); margin:6px 0 0; }
-  .login-hint{ font-size:14.5px; color:var(--muted); margin:12px 0 0; }
+  .name-box{
+    max-width:440px; margin:40px auto; background:#fff; border:3px solid var(--gold-soft);
+    border-radius:26px; padding:34px 28px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14);
+  }
+  .name-icons{ font-size:42px; letter-spacing:8px; margin-bottom:10px; }
+  .name-box h1{ font-family:'Marcellus'; font-size:28px; color:var(--ink-navy); margin:0 0 6px; }
+  .name-box p{ font-size:17px; color:#6b5a3f; line-height:1.5; margin:0 0 18px; }
+  .big-input{
+    width:100%; padding:14px 18px; border:2px solid var(--gold-soft); border-radius:16px;
+    font-family:'Cormorant Garamond', serif; font-size:20px; text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+  }
+  .big-input:focus{ outline:none; border-color:var(--gold); }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:15px; color:#b8462f; margin:6px 0 0; }
+  .login-hint{ font-size:15px; color:#8a7654; margin:10px 0 0; }
 
-  /* ============ Journey hub ============ */
-  .hub-topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; background:#fff; border:2.5px solid var(--ink); border-radius:18px; padding:14px 18px; margin-bottom:24px; box-shadow:5px 5px 0 var(--ink); }
-  .player-chip{ display:flex; align-items:center; gap:10px; font-family:'Fredoka',sans-serif; font-size:17px; }
-  .player-chip .avatar{ width:40px; height:40px; border-radius:50%; background:var(--sun); border:2px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:20px; }
-  .hub-hello{ font-size:13.5px; color:var(--muted); display:block; font-family:'Work Sans',sans-serif; font-weight:600; }
+  /* ============ Hub screen ============ */
+  .hub-topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px;
+    padding:14px 18px; margin-bottom:20px; box-shadow:0 4px 14px rgba(60,45,20,.08);
+  }
+  .player-chip{ display:flex; align-items:center; gap:10px; font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .player-chip .avatar{
+    width:42px; height:42px; border-radius:50%; background:var(--green-bg);
+    display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid var(--green);
+  }
+  .hub-hello{ font-size:14px; color:#8a7654; display:block; font-family:'Cormorant Garamond', serif; }
 
-  .journey-heading{ text-align:center; margin:6px 0 30px; }
-  .journey-heading h1{ font-family:'Fredoka',sans-serif; font-weight:700; font-size:27px; margin:0 0 8px; }
-  .journey-heading p{ font-size:15.5px; color:var(--muted); margin:0; }
+  .subject-heading{ text-align:center; margin:6px 0 22px; }
+  .subject-heading h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-heading p{ font-size:16px; color:#6b5a3f; margin:0; }
 
-  .path-strip{ position:relative; background:var(--sand); border:2.5px solid var(--ink); border-radius:28px; padding:36px 28px; }
-  .path-row{ display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:0; }
-  .stop{ display:flex; flex-direction:column; align-items:center; width:150px; text-decoration:none; color:inherit; }
-  .stop-node{ width:78px; height:78px; border-radius:50%; border:2.5px solid var(--ink); display:flex; align-items:center; justify-content:center; background:#fff; box-shadow:4px 4px 0 var(--ink); margin-bottom:10px; transition:transform .1s ease; }
-  .stop:hover .stop-node{ transform:translate(-2px,-2px); }
-  .stop.locked .stop-node{ background:var(--bg-deep); opacity:.7; }
-  .stop-name{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; text-align:center; margin-bottom:4px; }
-  .stop-status{ font-family:'Work Sans',sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:3px 10px; border-radius:10px; }
-  .stop-status.ready{ background:var(--green); color:#08351f; }
-  .stop-status.soon{ background:var(--bg-deep); color:var(--muted); border:1.5px solid var(--muted); }
-  .connector{ width:44px; height:2.5px; background:repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 14px); margin:37px 4px 0; flex:none; }
-  @media (max-width:900px){ .connector{ display:none; } .path-row{ gap:18px; } }
+  .subject-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:18px; }
+  .subject-card{
+    background:#fff; border:3px solid var(--accent, var(--gold-soft)); border-radius:24px;
+    padding:28px 20px; text-align:center; cursor:pointer; text-decoration:none; color:inherit;
+    display:block; box-shadow:0 8px 20px rgba(60,45,20,.1); transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .subject-card:hover{ transform:translateY(-3px); box-shadow:0 11px 24px rgba(60,45,20,.16); }
+  .subject-card .icon{ font-size:46px; margin-bottom:10px; }
+  .subject-card h3{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-card p{ font-size:14.5px; color:#6b5a3f; margin:0 0 10px; line-height:1.4; }
+  .subject-card .progress-badge{
+    display:inline-block; font-family:'Marcellus'; font-size:12.5px; color:var(--accent, var(--gold));
+    background:var(--accent-bg, var(--parchment-deep)); padding:4px 12px; border-radius:12px;
+  }
+  .subject-card.soon{ opacity:.65; cursor:default; }
+  .subject-card.soon:hover{ transform:none; box-shadow:0 8px 20px rgba(60,45,20,.1); }
+  .subject-card.soon .progress-badge{ background:var(--coral-bg); color:var(--coral); }
 </style>
 </head>
 <body>
@@ -88,12 +129,13 @@
 
   <!-- ============ LOGIN SCREEN ============ -->
   <section id="login-screen">
-    <div class="login-card">
+    <div class="name-box">
+      <div class="name-icons">🌍 🌟 📚</div>
       <h1>Start Your Journey</h1>
       <p>Log in with the username and password your parent gave you to explore Afaan Oromoo, Arabic, Qur'ān and more.</p>
       <input type="text" class="big-input" id="login-username" placeholder="Username" maxlength="24" autocomplete="username">
       <input type="password" class="big-input" id="login-password" placeholder="Password" maxlength="60" autocomplete="current-password">
-      <button class="big-btn" id="login-btn" style="width:100%;">Let's Go! 🚀</button>
+      <button class="big-btn" id="login-btn" style="width:100%; justify-content:center;">Let's Go! 🚀</button>
       <p class="login-msg" id="login-msg"></p>
       <p class="login-hint">Don't have an account? Ask your parent to set one up on the <a href="kids-admin.html">admin page</a>.</p>
     </div>
@@ -108,27 +150,25 @@
       </div>
     </div>
 
-    <div class="journey-heading">
+    <div class="subject-heading">
       <h1>Your Learning Map</h1>
       <p>Seven stops, one journey. Walk the path in any order you like.</p>
     </div>
 
-    <div class="path-strip">
-      <div class="path-row" id="path-row"><!-- stops injected by script --></div>
-    </div>
+    <div class="subject-grid" id="area-grid"><!-- areas injected by script --></div>
   </section>
 
 </div>
 
 <script>
 const AREAS = [
-  { key:'oromo',  name:'Afaan Oromoo', icon:'🗣️', accent:'var(--coral)',  href:'academy-oromo-quest.html', ready:true,  total:11 },
-  { key:'arabic', name:'Arabic',       icon:'🔤', accent:'var(--violet)', href:'kids-arabic-quest.html',   ready:true,  total:40 },
-  { key:'quran',  name:"Qur'ān",       icon:'📖', accent:'var(--teal)',   href:null,                        ready:false },
-  { key:'tajweed',name:'Tajweed',      icon:'🎵', accent:'var(--sky)',    href:null,                        ready:false },
-  { key:'seerah', name:'Seerah',       icon:'🕋', accent:'var(--green)',  href:'kids-seerah-quest.html',    ready:true,  total:30 },
-  { key:'fiqh',   name:'Fiqh',         icon:'⚖️', accent:'var(--sun)',    href:null,                        ready:false },
-  { key:'tafseer',name:'Tafsir',       icon:'📜', accent:'var(--pink)',   href:null,                        ready:false }
+  { key:'oromo',  name:'Afaan Oromoo', icon:'🗣️', accent:'var(--coral)',  bg:'var(--coral-bg)',  href:'academy-oromo-quest.html', ready:true,  total:11, desc:'Letters, sounds and first words in Afaan Oromoo.' },
+  { key:'arabic', name:'Arabic',       icon:'🔤', accent:'var(--violet)', bg:'var(--violet-bg)', href:'kids-arabic-quest.html',   ready:true,  total:40, desc:'Every Arabic letter — four maps, 40 lessons.' },
+  { key:'quran',  name:"Qur'ān",       icon:'📖', accent:'var(--sky)',    bg:'var(--sky-bg)',    href:null,                        ready:false, desc:'Reading and understanding the Qur’ān.' },
+  { key:'tajweed',name:'Tajweed',      icon:'🎵', accent:'var(--gold)',   bg:'var(--parchment-deep)', href:null,                   ready:false, desc:'Learning the rules of beautiful recitation.' },
+  { key:'seerah', name:'Seerah',       icon:'🕋', accent:'var(--green)',  bg:'var(--green-bg)',  href:'kids-seerah-quest.html',    ready:true,  total:30, desc:'The life of Prophet Muhammad ے — five maps, 30 lessons.' },
+  { key:'fiqh',   name:'Fiqh',         icon:'⚖️', accent:'var(--coral)',  bg:'var(--coral-bg)',  href:null,                        ready:false, desc:'Simple, practical rulings for everyday life.' },
+  { key:'tafseer',name:'Tafsir',       icon:'📜', accent:'var(--pink)',   bg:'var(--pink-bg)',   href:null,                        ready:false, desc:'Learning the meaning of the Qur’ān.' }
 ];
 
 function progressLabel(progress, area){
@@ -141,25 +181,21 @@ function progressLabel(progress, area){
   return done + '/' + area.total;
 }
 
-function renderPath(progress){
-  const row = document.getElementById('path-row');
-  row.innerHTML = '';
-  AREAS.forEach((area, i) => {
-    if(i > 0){
-      const c = document.createElement('div');
-      c.className = 'connector';
-      row.appendChild(c);
-    }
+function renderAreas(progress){
+  const box = document.getElementById('area-grid');
+  box.innerHTML = '';
+  AREAS.forEach(area => {
     const el = document.createElement(area.ready ? 'a' : 'div');
-    el.className = 'stop' + (area.ready ? '' : ' locked');
+    el.className = 'subject-card' + (area.ready ? '' : ' soon');
+    el.style.setProperty('--accent', area.accent);
+    el.style.setProperty('--accent-bg', area.bg);
     if(area.ready) el.href = area.href;
     el.innerHTML =
-      '<div class="stop-node" style="color:' + area.accent + '">' +
-        '<span style="font-size:32px;">' + area.icon + '</span>' +
-      '</div>' +
-      '<div class="stop-name">' + area.name + '</div>' +
-      '<span class="stop-status ' + (area.ready ? 'ready' : 'soon') + '">' + progressLabel(progress, area) + '</span>';
-    row.appendChild(el);
+      '<div class="icon">' + area.icon + '</div>' +
+      '<h3>' + area.name + '</h3>' +
+      '<p>' + area.desc + '</p>' +
+      '<span class="progress-badge">' + progressLabel(progress, area) + '</span>';
+    box.appendChild(el);
   });
 }
 
@@ -194,7 +230,7 @@ function showHub(data){
   document.getElementById('hub-screen').classList.remove('hidden');
   document.getElementById('signout-btn').classList.remove('hidden');
   document.getElementById('player-name').textContent = data.displayName || data.username;
-  renderPath(data.progress || {});
+  renderAreas(data.progress || {});
 }
 function showLogin(){
   document.getElementById('hub-screen').classList.add('hidden');
