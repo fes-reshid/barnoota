@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>My Learning World — Kids Corner</title>
+<meta name="description" content="Sign in and pick a subject — English, Maths or Islamic Studies (Tajweed, Tawheed, Arabic, Seerah, Tafsir) — and pick up right where you left off.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c; --gold-bright:#e8b53c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#3f9fc9; --sky-bg:#dcecf5;
+    --coral:#e0703a; --coral-bg:#fbe6dc;
+    --violet:#7a5aa8; --violet-bg:#ece3f5;
+    --maxw:1000px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+
+  header.site{
+    position:sticky; top:0; z-index:60;
+    background:rgba(250,243,224,.94); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 18px; max-width:var(--maxw); margin:0 auto; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:12px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 14px; white-space:nowrap; cursor:pointer;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 16px 60px; }
+
+  .big-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--gold); color:#fff8ea; border:none; border-radius:26px;
+    padding:14px 34px; font-family:'Marcellus'; font-size:19px; cursor:pointer;
+    box-shadow:0 5px 0 #8a6417; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .big-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #8a6417; }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #8a6417; }
+  .big-btn:disabled{ opacity:.6; cursor:default; transform:none; }
+
+  /* ============ Login screen ============ */
+  .name-box{
+    max-width:440px; margin:40px auto; background:#fff; border:3px solid var(--gold-soft);
+    border-radius:26px; padding:34px 28px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14);
+  }
+  .name-icons{ font-size:42px; letter-spacing:8px; margin-bottom:10px; }
+  .name-box h1{ font-family:'Marcellus'; font-size:28px; color:var(--ink-navy); margin:0 0 6px; }
+  .name-box p{ font-size:17px; color:#6b5a3f; line-height:1.5; margin:0 0 18px; }
+  .big-input{
+    width:100%; padding:14px 18px; border:2px solid var(--gold-soft); border-radius:16px;
+    font-family:'Cormorant Garamond', serif; font-size:20px; text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
+  }
+  .big-input:focus{ outline:none; border-color:var(--gold); }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:15px; color:#b8462f; margin:6px 0 0; }
+  .login-hint{ font-size:15px; color:#8a7654; margin:10px 0 0; }
+
+  /* ============ Hub screen ============ */
+  .hub-topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px;
+    padding:14px 18px; margin-bottom:20px; box-shadow:0 4px 14px rgba(60,45,20,.08);
+  }
+  .player-chip{ display:flex; align-items:center; gap:10px; font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .player-chip .avatar{
+    width:42px; height:42px; border-radius:50%; background:var(--green-bg);
+    display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid var(--green);
+  }
+  .hub-hello{ font-size:14px; color:#8a7654; display:block; font-family:'Cormorant Garamond', serif; }
+
+  .subject-heading{ text-align:center; margin:6px 0 22px; }
+  .subject-heading h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-heading p{ font-size:16px; color:#6b5a3f; margin:0; }
+
+  .subject-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:18px; }
+  .subject-card{
+    background:#fff; border:3px solid var(--accent, var(--gold-soft)); border-radius:24px;
+    padding:28px 20px; text-align:center; cursor:pointer; text-decoration:none; color:inherit;
+    display:block; box-shadow:0 8px 20px rgba(60,45,20,.1); transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .subject-card:hover{ transform:translateY(-3px); box-shadow:0 11px 24px rgba(60,45,20,.16); }
+  .subject-card .icon{ font-size:46px; margin-bottom:10px; }
+  .subject-card h3{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 6px; }
+  .subject-card p{ font-size:14.5px; color:#6b5a3f; margin:0 0 10px; line-height:1.4; }
+  .subject-card .progress-badge{
+    display:inline-block; font-family:'Marcellus'; font-size:12.5px; color:var(--accent, var(--gold));
+    background:var(--accent-bg, var(--parchment-deep)); padding:4px 12px; border-radius:12px;
+  }
+  .subject-card.soon{ opacity:.65; cursor:default; }
+  .subject-card.soon:hover{ transform:none; box-shadow:0 8px 20px rgba(60,45,20,.1); }
+  .subject-card.soon .progress-badge{ background:var(--coral-bg); color:var(--coral); }
+
+  .islamic-back{ margin-bottom:18px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="kids.html">
+      <span class="brand-mark">🕌</span>
+      <span class="brand-text">Kids Corner<small>My Learning World</small></span>
+    </a>
+    <button class="back-pill hidden" id="signout-btn" type="button">Log out</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <section id="login-screen">
+    <div class="name-box">
+      <div class="name-icons">🥚 🌟 📚</div>
+      <h1>My Learning World</h1>
+      <p>Log in with the username and password your parent gave you to start learning English, Maths and Islamic Studies.</p>
+      <input type="text" class="big-input" id="login-username" placeholder="Username" maxlength="24" autocomplete="username">
+      <input type="password" class="big-input" id="login-password" placeholder="Password" maxlength="60" autocomplete="current-password">
+      <button class="big-btn" id="login-btn">Log In 🚀</button>
+      <p class="login-msg" id="login-msg"></p>
+      <p class="login-hint">Don't have an account? Ask your parent to set one up on the <a href="kids-admin.html">admin page</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ SUBJECT HUB ============ -->
+  <section id="hub-screen" class="hidden">
+    <div class="hub-topbar">
+      <div class="player-chip">
+        <span class="avatar">🧒</span>
+        <span>
+          <span id="player-name">Explorer</span>
+          <span class="hub-hello">Welcome back! Pick a subject to keep learning.</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- top-level subjects: English / Maths / Islamic -->
+    <div id="top-subjects">
+      <div class="subject-heading">
+        <h1>What do you want to learn today?</h1>
+        <p>Pick a subject to start or continue your quest.</p>
+      </div>
+      <div class="subject-grid">
+        <a class="subject-card" id="card-english" href="kids-english-quest.html" style="--accent:var(--sky); --accent-bg:var(--sky-bg);">
+          <div class="icon">📖</div>
+          <h3>English</h3>
+          <p>Phonics, sight words and reading — four maps, 40 lessons.</p>
+          <span class="progress-badge" id="progress-english">Start now!</span>
+        </a>
+        <a class="subject-card" id="card-math" href="kids-math-quest.html" style="--accent:var(--gold); --accent-bg:var(--parchment-deep);">
+          <div class="icon">🔢</div>
+          <h3>Maths</h3>
+          <p>Counting, adding, shapes and more — four maps, 40 lessons.</p>
+          <span class="progress-badge" id="progress-math">Start now!</span>
+        </a>
+        <div class="subject-card" id="card-islamic" style="--accent:var(--green); --accent-bg:var(--green-bg);">
+          <div class="icon">🕌</div>
+          <h3>Islamic Studies</h3>
+          <p>Tajweed, Tawheed, Arabic, Seerah and Tafsir.</p>
+          <span class="progress-badge">5 topics →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Islamic sub-subjects: Tajweed / Tawheed / Arabic / Seerah / Tafsir -->
+    <div id="islamic-subjects" class="hidden">
+      <button class="back-pill islamic-back" id="islamic-back-btn" type="button">← All subjects</button>
+      <div class="subject-heading">
+        <h1>Islamic Studies</h1>
+        <p>Pick a topic to start or continue.</p>
+      </div>
+      <div class="subject-grid">
+        <div class="subject-card soon" style="--accent:var(--sky); --accent-bg:var(--sky-bg);">
+          <div class="icon">🎵</div>
+          <h3>Tajweed</h3>
+          <p>Learning the rules of beautiful Qur'ān recitation.</p>
+          <span class="progress-badge">Coming soon!</span>
+        </div>
+        <div class="subject-card soon" style="--accent:var(--coral); --accent-bg:var(--coral-bg);">
+          <div class="icon">☝️</div>
+          <h3>Tawheed</h3>
+          <p>Learning about the Oneness of Allah.</p>
+          <span class="progress-badge">Coming soon!</span>
+        </div>
+        <a class="subject-card" id="card-arabic" href="kids-arabic-quest.html" style="--accent:var(--violet); --accent-bg:var(--violet-bg);">
+          <div class="icon">🔤</div>
+          <h3>Arabic</h3>
+          <p>Every Arabic letter — four maps, 40 lessons.</p>
+          <span class="progress-badge" id="progress-arabic">Start now!</span>
+        </a>
+        <a class="subject-card" id="card-seerah" href="kids-seerah-quest.html" style="--accent:var(--green); --accent-bg:var(--green-bg);">
+          <div class="icon">🕋</div>
+          <h3>Seerah</h3>
+          <p>The life of Prophet Muhammad ﷺ — five maps, 30 lessons.</p>
+          <span class="progress-badge" id="progress-seerah">Start now!</span>
+        </a>
+        <div class="subject-card soon" style="--accent:var(--gold); --accent-bg:var(--parchment-deep);">
+          <div class="icon">📜</div>
+          <h3>Tafsir</h3>
+          <p>Learning the meaning of the Qur'ān.</p>
+          <span class="progress-badge">Coming soon!</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* Show the login screen as the safe default; the module script below
+   upgrades to the hub the moment it knows whether a session is already
+   active (same pattern as the quest games). */
+function friendlyLoginError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('user-not-found') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('wrong-password') >= 0){
+    return 'That username or password is not right. Ask your parent to check it.';
+  }
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('network') >= 0) return 'No internet connection — check you are online.';
+  return 'Could not log in — try again.';
+}
+document.getElementById('login-btn').addEventListener('click', () => {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  msg.textContent = '';
+  if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  window.KidsCloud.studentLogin(u, p).catch(err => {
+    msg.textContent = friendlyLoginError(err);
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('login-username').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-password').focus();
+});
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-btn').click();
+});
+document.getElementById('card-islamic').addEventListener('click', () => {
+  document.getElementById('top-subjects').classList.add('hidden');
+  document.getElementById('islamic-subjects').classList.remove('hidden');
+});
+document.getElementById('islamic-back-btn').addEventListener('click', () => {
+  document.getElementById('islamic-subjects').classList.add('hidden');
+  document.getElementById('top-subjects').classList.remove('hidden');
+});
+document.getElementById('signout-btn').addEventListener('click', () => {
+  if(window.KidsCloud) window.KidsCloud.studentLogout();
+});
+
+function progressLabel(progress, gameKey, total){
+  const p = progress && progress[gameKey];
+  if(!p || !Array.isArray(p.stars)){ return 'Start now!'; }
+  const done = p.stars.filter(s => s > 0).length;
+  if(done <= 0) return 'Start now!';
+  if(done >= total) return 'All done! 🎉';
+  return done + '/' + total + ' lessons';
+}
+function showHub(data){
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('hub-screen').classList.remove('hidden');
+  document.getElementById('signout-btn').classList.remove('hidden');
+  document.getElementById('player-name').textContent = data.displayName || data.username;
+  const progress = data.progress || {};
+  document.getElementById('progress-english').textContent = progressLabel(progress, 'english', 40);
+  document.getElementById('progress-math').textContent = progressLabel(progress, 'math', 40);
+  document.getElementById('progress-arabic').textContent = progressLabel(progress, 'arabic', 40);
+  document.getElementById('progress-seerah').textContent = progressLabel(progress, 'seerah', 30);
+}
+function showLogin(){
+  document.getElementById('hub-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('signout-btn').classList.add('hidden');
+  document.getElementById('top-subjects').classList.remove('hidden');
+  document.getElementById('islamic-subjects').classList.add('hidden');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+}
+function wireCloudAuth(){
+  if(window.__kidsCloudWired) return;
+  window.__kidsCloudWired = true;
+  window.KidsCloud.onStudentAuth(function(data){
+    if(data) showHub(data); else showLogin();
+  });
+}
+if(window.KidsCloud) wireCloudAuth(); else window.addEventListener('kidscloud-ready', wireCloudAuth);
+</script>
+<script type="module" src="kids-quest-cloud.js?v=3"></script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
