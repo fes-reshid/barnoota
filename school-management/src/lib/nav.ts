@@ -51,6 +51,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Homework', to: '/teacher/homework', icon: ClipboardList },
     { label: 'Exams & Marks', to: '/teacher/exams', icon: FileSpreadsheet },
     { label: 'Announcements', to: '/teacher/announcements', icon: Megaphone },
+    { label: 'Messages', to: '/teacher/messages', icon: MessageSquare },
   ],
   parent: [
     { label: 'Dashboard', to: '/parent', icon: LayoutDashboard },

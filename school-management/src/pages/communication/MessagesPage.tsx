@@ -1,45 +1,92 @@
 import { useState } from 'react';
-import { Plus, Send, MessageSquare } from 'lucide-react';
+import { Plus, Send, MessageSquare, Mail } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { messageThreadsRepo, messagesRepo, teachersRepo } from '@/lib/services';
+import { messageThreadsRepo, messagesRepo, teachersRepo, studentsRepo, classesRepo, usersRepo } from '@/lib/services';
 import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { FormField } from '@/components/ui/FormField';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Spinner } from '@/components/ui/Spinner';
+import { useToast } from '@/components/ui/Toast';
 
 export default function MessagesPage() {
   usePageTitle('Messages');
   const { currentUser, schoolId } = useAuth();
+  const { showToast } = useToast();
+  const isTeacher = currentUser?.role === 'teacher';
+
   const { data: threads, loading: l1, reload: reloadThreads } = useRepoList(messageThreadsRepo);
   const { data: allMessages, loading: l2, reload: reloadMessages } = useRepoList(messagesRepo);
-  const { data: teachers } = useRepoList(teachersRepo);
+  const { data: teachers, loading: l3 } = useRepoList(teachersRepo);
+  const { data: students, loading: l4 } = useRepoList(studentsRepo);
+  const { data: classes, loading: l5 } = useRepoList(classesRepo);
+  const { data: users, loading: l6 } = useRepoList(usersRepo);
 
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [newOpen, setNewOpen] = useState(false);
   const [subject, setSubject] = useState('');
-  const [teacherId, setTeacherId] = useState(teachers[0]?.id ?? '');
+  const [teacherId, setTeacherId] = useState('');
+  const [studentId, setStudentId] = useState('');
   const [draft, setDraft] = useState('');
 
-  if (l1 || l2) return <Spinner />;
+  if (l1 || l2 || l3 || l4 || l5 || l6) return <Spinner />;
 
   const myThreads = threads.filter((t) => t.participantIds.includes(currentUser?.id ?? ''));
   const activeThread = myThreads.find((t) => t.id === activeThreadId) ?? myThreads[0] ?? null;
   const threadMessages = activeThread ? allMessages.filter((m) => m.threadId === activeThread.id).sort((a, b) => a.sentAt.localeCompare(b.sentAt)) : [];
 
+  // A teacher's own students, scoped to the classes they teach (falls back
+  // to every student if they're not assigned as a class teacher anywhere).
+  const myClassIds = classes.filter((c) => c.classTeacherId === currentUser?.teacherId).map((c) => c.id);
+  const teachableStudents = students.filter((s) => s.status === 'active' && (myClassIds.length === 0 || myClassIds.includes(s.classId)));
+
+  function parentForStudent(sId: string) {
+    const student = students.find((s) => s.id === sId);
+    if (!student) return null;
+    const parentUser = users.find((u) => u.role === 'parent' && (u.id === student.parentUserId || u.childrenIds?.includes(sId)));
+    return { student, parentUser };
+  }
+
+  function resetNewConversationForm() {
+    setSubject('');
+    setTeacherId(teachers[0]?.id ?? '');
+    setStudentId(teachableStudents[0]?.id ?? '');
+  }
+
   async function createThread() {
-    if (!subject.trim() || !teacherId || !currentUser) return;
+    if (!subject.trim() || !currentUser) return;
+
+    if (isTeacher) {
+      const result = parentForStudent(studentId);
+      if (!result?.parentUser) return; // guarded in the UI — button is disabled without a linked parent account
+      const thread = await messageThreadsRepo.create({
+        schoolId, subject,
+        participantIds: [currentUser.id, result.parentUser.id],
+        participantNames: [currentUser.name, result.parentUser.name],
+        lastMessagePreview: '', lastMessageAt: new Date().toISOString(),
+      });
+      setActiveThreadId(thread.id);
+      setNewOpen(false);
+      reloadThreads();
+      return;
+    }
+
     const teacher = teachers.find((t) => t.id === teacherId);
+    const teacherUser = users.find((u) => u.role === 'teacher' && u.teacherId === teacherId);
+    if (!teacherUser) {
+      showToast('This teacher does not have a login account yet — ask your school admin to add one.', 'error');
+      return;
+    }
     const thread = await messageThreadsRepo.create({
-      schoolId, subject, participantIds: [currentUser.id, teacherId],
+      schoolId, subject,
+      participantIds: [currentUser.id, teacherUser.id],
       participantNames: [currentUser.name, teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Teacher'],
       lastMessagePreview: '', lastMessageAt: new Date().toISOString(),
     });
     setActiveThreadId(thread.id);
     setNewOpen(false);
-    setSubject('');
     reloadThreads();
   }
 
@@ -55,15 +102,17 @@ export default function MessagesPage() {
     reloadThreads();
   }
 
+  const selectedResult = isTeacher ? parentForStudent(studentId) : null;
+
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <Card className="lg:col-span-1">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <h3 className="text-sm font-semibold text-slate-800">Conversations</h3>
-          <button className="btn-ghost !px-2 !py-1" onClick={() => setNewOpen(true)}><Plus className="h-4 w-4" /></button>
+          <button className="btn-ghost !px-2 !py-1" onClick={() => { resetNewConversationForm(); setNewOpen(true); }}><Plus className="h-4 w-4" /></button>
         </div>
         {myThreads.length === 0 ? (
-          <EmptyState icon={MessageSquare} title="No conversations yet" action={<button className="btn-primary" onClick={() => setNewOpen(true)}>Start a conversation</button>} />
+          <EmptyState icon={MessageSquare} title="No conversations yet" action={<button className="btn-primary" onClick={() => { resetNewConversationForm(); setNewOpen(true); }}>Start a conversation</button>} />
         ) : (
           <div className="divide-y divide-slate-100">
             {myThreads.map((t) => (
@@ -112,15 +161,45 @@ export default function MessagesPage() {
       <Modal open={newOpen} onClose={() => setNewOpen(false)} title="New conversation"
         footer={<>
           <button className="btn-secondary" onClick={() => setNewOpen(false)}>Cancel</button>
-          <button className="btn-primary" onClick={createThread} disabled={!subject.trim()}>Start</button>
+          <button
+            className="btn-primary"
+            onClick={createThread}
+            disabled={!subject.trim() || (isTeacher && !selectedResult?.parentUser)}
+          >
+            Start
+          </button>
         </>}>
         <div className="space-y-4">
           <FormField label="Subject"><input className="input" value={subject} onChange={(e) => setSubject(e.target.value)} /></FormField>
-          <FormField label="Teacher">
-            <select className="input" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
-              {teachers.map((t) => <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>)}
-            </select>
-          </FormField>
+          {isTeacher ? (
+            <>
+              <FormField label="Student">
+                <select className="input" value={studentId} onChange={(e) => setStudentId(e.target.value)}>
+                  {teachableStudents.length === 0 && <option value="">No students available</option>}
+                  {teachableStudents.map((s) => <option key={s.id} value={s.id}>{s.firstName} {s.lastName}</option>)}
+                </select>
+              </FormField>
+              {studentId && !selectedResult?.parentUser && (
+                <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                  This student's guardian doesn't have a parent login account yet, so they can't be messaged in-app.
+                  {selectedResult?.student?.guardianEmail && (
+                    <>
+                      {' '}Email them directly instead:{' '}
+                      <a href={`mailto:${selectedResult.student.guardianEmail}`} className="inline-flex items-center gap-1 font-medium underline">
+                        <Mail className="h-3 w-3" /> {selectedResult.student.guardianEmail}
+                      </a>
+                    </>
+                  )}
+                </div>
+              )}
+            </>
+          ) : (
+            <FormField label="Teacher">
+              <select className="input" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
+                {teachers.map((t) => <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>)}
+              </select>
+            </FormField>
+          )}
         </div>
       </Modal>
     </div>

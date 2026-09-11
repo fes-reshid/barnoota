@@ -126,6 +126,7 @@ export default function App() {
           <Route path="homework" element={<HomeworkListPage />} />
           <Route path="exams" element={<ExamsListPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
+          <Route path="messages" element={<MessagesPage />} />
         </Route>
       </Route>
 

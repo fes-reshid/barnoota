@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onDocumentCreated, onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { GMAIL_USER, GMAIL_APP_PASSWORD, sendMail, emailLayout } from './mailer.js';
@@ -133,6 +134,44 @@ export const onPaymentCreated = onDocumentCreated('payments/{id}', async (event)
     html: emailLayout('Payment received', `
       <p>We've received a payment of <strong>$${amount.toLocaleString()}</strong> for <strong>${escapeHtml(guardian.studentName)}</strong> via ${escapeHtml(method.replace('_', ' '))}.</p>
       <p style="color:#64748b; font-size: 13px;">Receipt: ${escapeHtml(receiptNumber)}</p>
+    `),
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Direct messages — emailed to every other participant in the thread, using
+// the email already on their user profile (participantIds are Firebase Auth
+// uids, i.e. users/{uid} documents).
+// ---------------------------------------------------------------------------
+export const onMessageCreated = onDocumentCreated('messages/{id}', async (event) => {
+  const data = event.data?.data();
+  if (!data) return;
+
+  const { threadId, senderId, senderName, body } = data as {
+    threadId: string; senderId: string; senderName: string; body: string;
+  };
+
+  const db = getFirestore();
+  const threadDoc = await db.collection('messageThreads').doc(threadId).get();
+  if (!threadDoc.exists) return;
+  const thread = threadDoc.data() as { subject: string; participantIds: string[] };
+
+  const recipientIds = thread.participantIds.filter((id) => id !== senderId);
+  if (recipientIds.length === 0) return;
+
+  const recipientDocs = await Promise.all(recipientIds.map((id) => db.collection('users').doc(id).get()));
+  const recipients = recipientDocs
+    .map((d) => (d.exists ? (d.data() as { email?: string }).email : undefined))
+    .filter((e): e is string => Boolean(e));
+
+  if (recipients.length === 0) return;
+
+  await sendMail({
+    to: recipients,
+    subject: `New message: ${thread.subject}`,
+    html: emailLayout(thread.subject, `
+      <p>${escapeHtml(body)}</p>
+      <p style="color:#64748b; font-size: 13px;">— ${escapeHtml(senderName)}</p>
     `),
   });
 });
