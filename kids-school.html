@@ -353,6 +353,12 @@ function showSubjectScreen(name){
 document.querySelectorAll('.subject-card').forEach(card => {
   card.addEventListener('click', () => {
     const subject = card.dataset.subject;
+    // Year 2 Math has its own full quest (units, games, boss) instead of the
+    // generic random-question practice every other class/subject still uses.
+    if(subject === 'math' && selectedYear === 'g2'){
+      window.location.href = 'kids-math-year2-quest.html';
+      return;
+    }
     const page = SUBJECT_PAGES[subject];
     window.location.href = YEAR_GATED_SUBJECTS.includes(subject)
       ? page + '?year=' + encodeURIComponent(selectedYear)
