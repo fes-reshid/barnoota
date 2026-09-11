@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Math Quest — Year 2</title>
+<meta name="description" content="Year 2 Australian Curriculum maths adventure: Term 1, Number Forest — counting, place value, addition, subtraction and patterns, with games, practice and a boss challenge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#8fd3ef; --sky-deep:#3f9fc9;
+    --coral:#e0703a; --violet:#7a5aa8;
+    --maxw:1000px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{ margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+
+  header.site{ position:sticky; top:0; z-index:60; background:rgba(250,243,224,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft); }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 18px; max-width:var(--maxw); margin:0 auto; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); line-height:1.1; }
+  .back-pill{ display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus'; font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft); border-radius:20px; padding:8px 14px; white-space:nowrap; }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 16px 60px; }
+
+  .big-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--gold); color:#fff8ea; border:none; border-radius:26px; padding:14px 32px; font-family:'Marcellus'; font-size:18px; cursor:pointer; box-shadow:0 5px 0 #8a6417; transition:transform .12s ease, box-shadow .12s ease; }
+  .big-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #8a6417; }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #8a6417; }
+  .big-btn.green{ background:var(--green); box-shadow:0 5px 0 var(--green-dark); }
+  .big-btn.green:hover{ box-shadow:0 7px 0 var(--green-dark); }
+  .big-btn.green:active{ box-shadow:0 2px 0 var(--green-dark); }
+  .big-btn:disabled{ opacity:.55; cursor:default; transform:none; }
+  .ghost-btn{ background:#fff; border:2px solid var(--gold-soft); color:var(--ink-brown); border-radius:22px; padding:9px 20px; font-family:'Marcellus'; font-size:15px; cursor:pointer; }
+  .ghost-btn:hover{ background:var(--parchment-deep); }
+
+  /* ---- name gate (reuses the name kids-school.html already collected) ---- */
+  .name-box{ max-width:420px; margin:40px auto; background:#fff; border:3px solid var(--gold-soft); border-radius:26px; padding:32px 26px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14); }
+  .name-box h1{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 6px; }
+  .name-box p{ font-size:16px; color:#6b5a3f; line-height:1.5; margin:0 0 18px; }
+  .big-input{ width:100%; padding:13px 16px; border:2px solid var(--gold-soft); border-radius:14px; font-family:'Cormorant Garamond', serif; font-size:17px; text-align:center; background:var(--parchment); color:var(--ink-navy); margin-bottom:12px; }
+
+  /* ---- map ---- */
+  .map-topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:10px 14px; margin-bottom:12px; box-shadow:0 4px 14px rgba(60,45,20,.08); }
+  .player-chip{ display:flex; align-items:center; gap:8px; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); }
+  .player-chip .avatar{ width:36px; height:36px; border-radius:50%; background:var(--green-bg); display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--green); }
+  .stat-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .stat{ display:flex; align-items:center; gap:5px; background:var(--parchment-deep); border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 12px; font-family:'Marcellus'; font-size:14.5px; color:var(--ink-navy); }
+  .badge-row{ display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+  .badge-chip{ font-size:20px; background:var(--parchment-deep); border:1.5px solid var(--gold-soft); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
+
+  .map-frame{ position:relative; background:linear-gradient(#bfe9fb 0%, #d8f2c4 42%, #b6e39a 100%); border:3px solid var(--gold-soft); border-radius:22px; overflow:hidden; box-shadow:0 10px 26px rgba(60,45,20,.14); }
+  .map-title{ position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5; background:var(--violet); color:#fff; font-family:'Marcellus'; font-size:16px; padding:6px 20px; border-radius:14px; border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.2); white-space:nowrap; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
+  .node-num{ font-family:'Marcellus'; font-size:15px; fill:#fff8ea; }
+  .node-num.locked{ fill:#f2f1ee; }
+  .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g:not(.locked):hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-disc{ transition:transform .15s ease; }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  .avatar-marker{ animation:bobber 1.6s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:30; opacity:.75; } 100%{ r:46; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.6s ease-out infinite; }
+  .map-help{ text-align:center; font-size:15.5px; color:#5f6f52; margin:12px 0 0; }
+
+  /* ---- unit intro / stage ---- */
+  .stage-card{ background:#fff; border:3px solid var(--gold-soft); border-radius:24px; padding:26px 22px 30px; box-shadow:0 10px 26px rgba(60,45,20,.12); }
+  .stage-card h2{ font-family:'Marcellus'; font-size:23px; color:var(--ink-navy); margin:0 0 10px; text-align:center; }
+  .stage-card p{ font-size:17px; line-height:1.55; color:#4a3c2c; }
+  .phase-label{ text-align:center; font-family:'Marcellus'; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7654; margin-bottom:12px; }
+  .example-list{ background:var(--parchment); border:2px dashed var(--gold-soft); border-radius:16px; padding:14px 18px; margin:14px 0; }
+  .example-list div{ font-family:'JetBrains Mono', monospace; font-size:16px; color:var(--ink-navy); padding:4px 0; }
+  .center{ text-align:center; }
+
+  .quiz-q{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 16px; text-align:center; }
+  .choice-grid{ display:grid; gap:12px; width:100%; max-width:460px; margin:0 auto; grid-template-columns:repeat(2, 1fr); }
+  .choice-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .choice{ background:var(--parchment); border:3px solid var(--gold-soft); border-radius:18px; padding:16px 8px; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease; text-align:center; font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .choice:hover{ transform:translateY(-3px); border-color:var(--gold); }
+  .choice.correct{ background:#d8f0d8; border-color:#3d9b4f; }
+  .choice.wrong{ background:#f7dede; border-color:#c1503f; }
+  .feedback-box{ max-width:460px; margin:14px auto 0; background:var(--parchment-deep); border:2px solid var(--gold-soft); border-radius:14px; padding:12px 16px; font-size:15.5px; color:#4a3c2c; line-height:1.5; text-align:left; }
+  .feedback-box.good{ background:var(--green-bg); border-color:var(--green); }
+  .progress-pill{ text-align:center; font-family:'Marcellus'; font-size:13px; color:#8a7654; margin-bottom:10px; }
+  .hint-btn{ display:block; margin:12px auto 0; background:none; border:none; color:var(--sky-deep); text-decoration:underline; cursor:pointer; font-family:'Marcellus'; font-size:14px; }
+
+  /* ---- build-the-number game (unit 2) ---- */
+  .block-row{ display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin:18px 0; }
+  .block-col{ text-align:center; }
+  .block-col .col-label{ font-family:'Marcellus'; font-size:14px; color:var(--ink-navy); margin-bottom:6px; }
+  .block-count{ font-family:'Marcellus'; font-size:30px; color:var(--green-dark); background:var(--green-bg); border:2px solid var(--green); border-radius:14px; width:64px; padding:8px 0; margin:0 auto 8px; }
+  .block-tap{ width:64px; height:44px; border-radius:12px; border:2.5px solid var(--gold-soft); background:var(--parchment); font-family:'Marcellus'; font-size:20px; cursor:pointer; }
+  .block-tap:hover{ background:var(--parchment-deep); }
+  .target-number{ text-align:center; font-family:'Marcellus'; font-size:42px; color:var(--coral); margin:6px 0 4px; }
+
+  /* ---- reward ---- */
+  .reward-box{ max-width:460px; margin:26px auto; background:#fff; border:3px solid var(--gold-soft); border-radius:26px; padding:34px 26px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14); }
+  .coin-pop{ font-size:76px; line-height:1; margin-bottom:4px; animation:coinPop .7s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes coinPop{ 0%{ transform:scale(.2) rotate(-25deg); opacity:0; } 60%{ transform:scale(1.18) rotate(6deg); } 100%{ transform:scale(1) rotate(0); opacity:1; } }
+  .reward-box h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 8px; }
+  .star-row{ font-size:34px; letter-spacing:6px; margin:6px 0 12px; }
+  .badge-earned{ display:inline-flex; align-items:center; gap:10px; background:var(--green-bg); border:2px solid var(--green); border-radius:18px; padding:8px 18px; margin-bottom:14px; font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); }
+  .purse{ display:inline-flex; align-items:center; gap:14px; background:var(--parchment-deep); border:2px solid var(--gold-soft); border-radius:18px; padding:8px 20px; margin:4px 0 8px; font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); }
+  .confetti-piece{ position:fixed; top:-14px; width:11px; height:15px; z-index:200; pointer-events:none; animation:confettiFall linear forwards; }
+  @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
+
+  .scope-note{ text-align:center; font-size:13px; color:#8a7654; max-width:560px; margin:16px auto 0; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="kids-school.html">
+      <span class="brand-mark">🏆</span>
+      <span class="brand-text">Math Quest — Year 2</span>
+    </a>
+    <a class="back-pill" href="kids-school.html">← Classes</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ NAME GATE (only if kids-school.html hasn't collected one) ============ -->
+  <section id="name-screen" class="hidden">
+    <div class="name-box">
+      <h1>What's your name?</h1>
+      <p>We'll remember it so you don't have to type it again.</p>
+      <input type="text" id="name-input" class="big-input" placeholder="Your name" autocomplete="off">
+      <button class="big-btn" id="name-start-btn" style="width:100%; justify-content:center;">Start My Quest 🌳</button>
+    </div>
+  </section>
+
+  <!-- ============ MAP ============ -->
+  <section id="map-screen" class="hidden">
+    <div class="map-topbar">
+      <div>
+        <div class="player-chip"><span class="avatar">🧒</span><span id="player-name">Explorer</span></div>
+        <div class="badge-row" id="badge-row"></div>
+      </div>
+      <div class="stat-row">
+        <span class="stat">🪙 <span id="stat-coins">0</span></span>
+        <span class="stat">⚡ <span id="stat-xp">0</span> XP</span>
+        <span class="stat">⭐ <span id="stat-stars">0</span></span>
+      </div>
+    </div>
+    <div class="map-frame">
+      <div class="map-title">🌳 Term 1 · Number Forest</div>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <p class="map-help" id="map-help"></p>
+    <p class="scope-note">Term 1 is ready to play now — Terms 2–4 (Measurement Island, Problem-Solving Space and Maths Champion Kingdom) are on the way next.</p>
+  </section>
+
+  <!-- ============ UNIT STAGE ============ -->
+  <section id="stage-screen" class="hidden">
+    <div class="stage-card" id="stage-body"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="ghost-btn" id="stage-quit-btn">← Back to Map</button>
+    </div>
+  </section>
+
+  <!-- ============ REWARD ============ -->
+  <section id="reward-screen" class="hidden">
+    <div class="reward-box">
+      <div class="coin-pop" id="reward-emoji">🪙</div>
+      <h2 id="reward-title">Unit Complete!</h2>
+      <div class="star-row" id="reward-stars">⭐⭐⭐</div>
+      <div class="badge-earned hidden" id="reward-badge"></div><br>
+      <div class="purse"><span>⚡ +<span id="reward-xp">0</span> XP</span><span>🪙 +<span id="reward-coins">0</span></span></div><br>
+      <button class="big-btn green" id="reward-continue-btn" style="margin-top:14px;">Continue →</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ==========================================================================
+   MATH QUEST — YEAR 2, TERM 1: NUMBER FOREST
+   Five real units (Counting & Number Sense, Place Value, Addition,
+   Subtraction, Patterns) plus the Term 1 Boss, each with a teaching intro,
+   worked examples, a distinct game, a 15-question Easy/Medium/Challenge
+   practice set with hints and wrong-answer feedback, and a reward.
+   Terms 2-4 are a planned follow-up, not built here — see the note on the
+   map screen and the assistant's handover message for the full scope.
+   ========================================================================== */
+
+const NAME_KEY = 'kids-school-name';
+const PROGRESS_KEY = 'kids-math-year2-quest-progress';
+
+function q(question, options, answer, explain, hint){
+  return { q: question, options, answer, explain, hint };
+}
+
+const UNITS = [
+  { id:'u1', title:'Unit 1 · Counting & Number Sense', short:'Counting', icon:'🔢', badge:'🔢 Number Explorer',
+    intro: "Numbers help us count, compare and put things in order. In this unit you'll count forwards and backwards, skip count by 2s, 5s and 10s, and compare and order numbers up to 1,000.",
+    examples: ['29 → 30 (the number after 29)', 'Count by 5s: 5, 10, 15, 20', '72 is greater than 27 — look at the tens digit first'],
+    gameTitle: '🗺️ Number Path — walk the forest trail',
+    gameIntro: 'Answer each question to move your explorer forward along the path to the treasure!',
+    game: [
+      q('What number comes after 49?', ['48','50','51','59'], '50', 'Counting on by 1 from 49 gives 50.', 'Count one more than 49.'),
+      q('Count by 10s: 10, 20, 30, ?', ['35','40','50','31'], '40', 'Each jump adds 10: 30 + 10 = 40.', 'Add 10 to the last number.'),
+      q('Which is greater: 27 or 72?', ['27','72','They are equal','Cannot tell'], '72', '72 has 7 tens and 27 only has 2 tens, so 72 is bigger.', 'Compare the tens digit first.'),
+      q('What comes before 50?', ['48','49','51','40'], '49', 'The number just before 50 is one less: 49.', 'Count back one from 50.'),
+      q('Count by 5s: 5, 10, 15, ?', ['18','20','25','16'], '20', '15 + 5 = 20.', 'Add 5 to the last number.')
+    ],
+    practice: {
+      easy: [
+        q('What number comes after 29?', ['28','30','31','39'], '30', '29 + 1 = 30.', 'Count one more.'),
+        q('What number comes before 50?', ['48','49','51','52'], '49', '50 − 1 = 49.', 'Count one less.'),
+        q('Count by 10s: 10, 20, 30, ?', ['35','40','31','50'], '40', '30 + 10 = 40.', 'Add 10 each time.'),
+        q('Count by 5s: 5, 10, 15, ?', ['18','20','16','25'], '20', '15 + 5 = 20.', 'Add 5 each time.'),
+        q('Which is greater: 27 or 72?', ['27','72','Equal','Cannot tell'], '72', 'Compare the tens digit: 7 tens beats 2 tens.', 'Look at the tens digit first.')
+      ],
+      medium: [
+        q('Put in order, smallest to largest: 45, 12, 67, 31', ['12, 31, 45, 67','45, 12, 67, 31','67, 45, 31, 12','12, 45, 31, 67'], '12, 31, 45, 67', 'Compare the numbers two at a time, smallest first: 12, 31, 45, 67.', 'Find the smallest number first, then the next smallest.'),
+        q('What number is halfway between 40 and 50?', ['44','45','46','48'], '45', '40 and 50 are 10 apart, so halfway is 5 more than 40: 45.', 'Halfway means exactly in the middle.'),
+        q('Count backwards: 100, 90, 80, ?', ['85','75','70','60'], '70', '80 − 10 = 70.', 'Subtract 10 each time.'),
+        q('Which number is closest to 100: 89 or 98?', ['89','98','Equal','Neither'], '98', '100 − 98 = 2, but 100 − 89 = 11, so 98 is closer.', 'Work out how far each number is from 100.'),
+        q('What comes next? 125, 135, 145, ?', ['150','155','160','145'], '155', 'Each jump adds 10: 145 + 10 = 155.', 'Look at how much each number grows by.')
+      ],
+      challenge: [
+        q('Mia says "235 is greater than 253." Is she correct?', ['Yes','No, 253 is greater','They are equal','Cannot tell'], 'No, 253 is greater', 'Compare the tens digit: 253 has 5 tens, 235 has 3 tens, so 253 is bigger.', 'Compare digit by digit, starting from the hundreds.'),
+        q('Put in order, smallest to largest: 309, 390, 903, 330', ['309, 330, 390, 903','903, 390, 330, 309','309, 390, 330, 903','330, 309, 390, 903'], '309, 330, 390, 903', 'Compare hundreds first (all start with 3, except 903), then tens.', 'All but one number starts with 3 — sort those by their tens digit.'),
+        q('What number comes just before 60, 70, 80?', ['50','59','61','69'], '59', 'The pattern goes up by 10 each time, so the number just before is one less than the next: 59.', 'What is one less than 60?'),
+        q('Which is in order from largest to smallest: 82, 28, 18, 81?', ['82, 81, 28, 18','18, 28, 81, 82','82, 28, 81, 18','28, 82, 18, 81'], '82, 81, 28, 18', 'Compare tens digits first: 82 and 81 both have 8 tens, then 28 and 18 have 2 and 1 tens.', 'Sort by the tens digit, then the ones digit.'),
+        q('True or false: the number just after 999 is 1,000.', ['True','False'], 'True', 'Counting on by 1 from 999 rolls over to 1,000.', 'Think about what happens when all the digits are 9.')
+      ]
+    }
+  },
+  { id:'u2', title:'Unit 2 · Place Value', short:'Place Value', icon:'🏗️', badge:'🏗️ Place Value Builder',
+    intro: "Every digit in a number has a place value: hundreds, tens or ones. Knowing this helps you build and break apart big numbers, like 463 = 400 + 60 + 3.",
+    examples: ['527 = 5 hundreds, 2 tens, 7 ones', '346 in expanded form: 300 + 40 + 6', '4 hundreds + 6 tens + 3 ones = 463'],
+    gameTitle: '🧱 Build the Number',
+    gameIntro: 'Tap the blocks to build the target number — hundreds, then tens, then ones.',
+    buildGame: [
+      { target: 463, h:4, t:6, o:3 },
+      { target: 258, h:2, t:5, o:8 },
+      { target: 704, h:7, t:0, o:4 },
+      { target: 819, h:8, t:1, o:9 }
+    ],
+    practice: {
+      easy: [
+        q('How many hundreds are in 527?', ['5','2','7','52'], '5', '527 has a 5 in the hundreds place.', 'Look at the first digit.'),
+        q('How many tens are in 527?', ['5','2','7','20'], '2', '527 has a 2 in the tens place.', 'Look at the middle digit.'),
+        q('How many ones are in 527?', ['5','2','7','70'], '7', '527 has a 7 in the ones place.', 'Look at the last digit.'),
+        q('How many tens are in 84?', ['4','8','40','84'], '8', '84 has 8 tens and 4 ones.', 'The tens digit is the first digit in a 2-digit number.'),
+        q('How many ones are in 90?', ['9','90','0','19'], '0', '90 has 9 tens and 0 ones.', 'What is the last digit of 90?')
+      ],
+      medium: [
+        q('Write 346 in expanded form.', ['300 + 40 + 6','300 + 4 + 6','30 + 40 + 6','300 + 46'], '300 + 40 + 6', 'Split each digit by its place value: 3 hundreds, 4 tens, 6 ones.', 'Multiply each digit by its place value (100s, 10s, 1s).'),
+        q('Make the number: 600 + 20 + 5', ['625','652','256','526'], '625', '6 hundreds + 2 tens + 5 ones = 625.', 'Line up hundreds, tens, then ones in order.'),
+        q('Write 708 in expanded form.', ['700 + 0 + 8','700 + 8','70 + 8','700 + 80'], '700 + 8', 'There are 0 tens, so it is just 700 + 8.', 'What happens to the tens place when there are none?'),
+        q('What number is 500 + 70 + 9?', ['579','597','759','957'], '579', '5 hundreds + 7 tens + 9 ones = 579.', 'Write hundreds, then tens, then ones.'),
+        q('Which is bigger: 4 hundreds 2 tens 3 ones, or 3 hundreds 9 tens 9 ones?', ['4 hundreds 2 tens 3 ones','3 hundreds 9 tens 9 ones','They are equal','Cannot tell'], '4 hundreds 2 tens 3 ones', '423 has more hundreds than 399, so it is bigger even though its other digits are smaller.', 'Build both numbers, then compare the hundreds digit first.')
+      ],
+      challenge: [
+        q('A number has 3 hundreds, 0 tens and 6 ones. What is the number?', ['306','360','36','630'], '306', '3 hundreds + 0 tens + 6 ones = 306.', "Don't forget the 0 in the tens place still needs a spot."),
+        q('If you take one ten away from 350, what number do you get?', ['340','360','349','250'], '340', '350 − 10 = 340.', 'Only the tens digit changes.'),
+        q('Which number has more hundreds: 645 or 999?', ['645','999','Equal','Cannot tell'], '999', '999 has 9 hundreds; 645 has 6 hundreds.', 'Compare the first digit of each number.'),
+        q('Write the number that has 6 in the tens place, 3 in the hundreds place, and 8 in the ones place.', ['368','386','638','863'], '368', 'Hundreds first (3), then tens (6), then ones (8): 368.', 'Place each digit in hundreds, tens, ones order.'),
+        q('Order these using place value: 219, 291, 129, 912', ['129, 219, 291, 912','912, 291, 219, 129','129, 291, 219, 912','219, 129, 291, 912'], '129, 219, 291, 912', 'Compare hundreds digits first (1, 2, 2, 9), then tens digits for the two starting with 2.', 'Sort by hundreds digit first, then tens digit.')
+      ]
+    }
+  },
+  { id:'u3', title:'Unit 3 · Addition', short:'Addition', icon:'➕', badge:'➕ Addition Hero',
+    intro: "Addition means joining two numbers to make a bigger number. A great strategy for bigger numbers is to split one number into tens and ones, then add each part.",
+    examples: ['27 + 15 → 27 + 10 = 37, then 37 + 5 = 42', '24 + 13 → 24 + 10 = 34, then 34 + 3 = 37'],
+    gameTitle: '💰 Treasure Cave',
+    gameIntro: 'Solve each addition problem to unlock the treasure door!',
+    game: [
+      q('27 + 15 = ?', ['40','42','45','52'], '42', '27 + 10 = 37, then 37 + 5 = 42.', 'Split 15 into 10 and 5.'),
+      q('24 + 13 = ?', ['35','36','37','47'], '37', '24 + 10 = 34, then 34 + 3 = 37.', 'Split 13 into 10 and 3.'),
+      q('35 + 21 = ?', ['54','55','56','65'], '56', '35 + 20 = 55, then 55 + 1 = 56.', 'Split 21 into 20 and 1.'),
+      q('42 + 16 = ?', ['56','58','60','48'], '58', '42 + 10 = 52, then 52 + 6 = 58.', 'Split 16 into 10 and 6.'),
+      q('46 + 18 = ?', ['54','62','64','66'], '64', '46 + 10 = 56, then 56 + 8 = 64.', 'Split 18 into 10 and 8.')
+    ],
+    practice: {
+      easy: [
+        q('5 + 3 = ?', ['7','8','9','6'], '8', '5 + 3 = 8.', 'Count on 3 from 5.'),
+        q('7 + 2 = ?', ['8','9','10','7'], '9', '7 + 2 = 9.', 'Count on 2 from 7.'),
+        q('10 + 6 = ?', ['14','15','16','17'], '16', '10 + 6 = 16.', 'Count on 6 from 10.'),
+        q('20 + 10 = ?', ['20','30','40','25'], '30', '20 + 10 = 30.', 'Add the tens together.'),
+        q('15 + 5 = ?', ['18','19','20','25'], '20', '15 + 5 = 20.', 'Count on 5 from 15.')
+      ],
+      medium: [
+        q('24 + 13 = ?', ['35','36','37','47'], '37', '24 + 10 = 34, then + 3 = 37.', 'Split 13 into 10 and 3.'),
+        q('35 + 21 = ?', ['54','55','56','65'], '56', '35 + 20 = 55, then + 1 = 56.', 'Split 21 into 20 and 1.'),
+        q('42 + 16 = ?', ['56','58','60','48'], '58', '42 + 10 = 52, then + 6 = 58.', 'Split 16 into 10 and 6.'),
+        q('27 + 25 = ?', ['42','50','52','62'], '52', '27 + 20 = 47, then + 5 = 52.', 'Split 25 into 20 and 5.'),
+        q('46 + 18 = ?', ['54','62','64','66'], '64', '46 + 10 = 56, then + 8 = 64.', 'Split 18 into 10 and 8.')
+      ],
+      challenge: [
+        q('Sam has 28 cards. He receives 17 more. How many cards does he have?', ['35','45','55','38'], '45', '28 + 17 = 28 + 10 + 7 = 45.', 'Split 17 into 10 and 7.'),
+        q('There are 36 birds in a tree. 15 more arrive. How many birds now?', ['41','51','61','46'], '51', '36 + 15 = 36 + 10 + 5 = 51.', 'Split 15 into 10 and 5.'),
+        q('A farmer has 45 sheep. He buys 38 more. How many sheep now?', ['73','83','93','75'], '83', '45 + 38 = 45 + 30 + 8 = 83.', 'Split 38 into 30 and 8.'),
+        q('What number added to 27 makes 50?', ['13','23','33','43'], '23', '50 − 27 = 23, and 27 + 23 = 50.', 'Think: 27 + ? = 50.'),
+        q('Fill the missing number: 34 + ? = 60', ['16','24','26','36'], '26', '60 − 34 = 26.', 'Work backwards from 60.')
+      ]
+    }
+  },
+  { id:'u4', title:'Unit 4 · Subtraction', short:'Subtraction', icon:'➖', badge:'➖ Subtraction Hero',
+    intro: "Subtraction means taking away or finding the difference between two numbers. For bigger numbers, split the number you're subtracting into tens and ones, just like with addition.",
+    examples: ['53 − 21 → 53 − 20 = 33, then 33 − 1 = 32', '47 − 23 → 47 − 20 = 27, then 27 − 3 = 24'],
+    gameTitle: '🤖 Rescue the Robot',
+    gameIntro: 'Solve each subtraction problem to open the gate and free the robot!',
+    game: [
+      q('53 − 21 = ?', ['30','31','32','33'], '32', '53 − 20 = 33, then 33 − 1 = 32.', 'Split 21 into 20 and 1.'),
+      q('47 − 23 = ?', ['22','23','24','25'], '24', '47 − 20 = 27, then 27 − 3 = 24.', 'Split 23 into 20 and 3.'),
+      q('58 − 16 = ?', ['40','41','42','43'], '42', '58 − 10 = 48, then 48 − 6 = 42.', 'Split 16 into 10 and 6.'),
+      q('63 − 31 = ?', ['30','31','32','33'], '32', '63 − 30 = 33, then 33 − 1 = 32.', 'Split 31 into 30 and 1.'),
+      q('72 − 25 = ?', ['45','46','47','48'], '47', '72 − 20 = 52, then 52 − 5 = 47.', 'Split 25 into 20 and 5.')
+    ],
+    practice: {
+      easy: [
+        q('8 − 3 = ?', ['4','5','6','3'], '5', '8 − 3 = 5.', 'Count back 3 from 8.'),
+        q('9 − 4 = ?', ['4','5','6','3'], '5', '9 − 4 = 5.', 'Count back 4 from 9.'),
+        q('15 − 5 = ?', ['9','10','11','5'], '10', '15 − 5 = 10.', 'Count back 5 from 15.'),
+        q('20 − 10 = ?', ['5','10','15','0'], '10', '20 − 10 = 10.', 'Subtract the tens.'),
+        q('12 − 2 = ?', ['9','10','11','8'], '10', '12 − 2 = 10.', 'Count back 2 from 12.')
+      ],
+      medium: [
+        q('47 − 23 = ?', ['22','23','24','25'], '24', '47 − 20 = 27, then − 3 = 24.', 'Split 23 into 20 and 3.'),
+        q('58 − 16 = ?', ['40','41','42','43'], '42', '58 − 10 = 48, then − 6 = 42.', 'Split 16 into 10 and 6.'),
+        q('63 − 31 = ?', ['30','31','32','33'], '32', '63 − 30 = 33, then − 1 = 32.', 'Split 31 into 30 and 1.'),
+        q('72 − 25 = ?', ['45','46','47','48'], '47', '72 − 20 = 52, then − 5 = 47.', 'Split 25 into 20 and 5.'),
+        q('84 − 19 = ?', ['63','64','65','66'], '65', '84 − 20 = 64, then + 1 = 65 (we took away one too many).', 'Try subtracting 20, then adding 1 back.')
+      ],
+      challenge: [
+        q('There are 40 birds in a tree. 17 fly away. How many are left?', ['21','22','23','24'], '23', '40 − 17 = 40 − 10 − 7 = 23.', 'Split 17 into 10 and 7.'),
+        q('Layla had 52 stickers. She gave 28 to her friend. How many does she have left?', ['22','23','24','25'], '24', '52 − 28 = 52 − 20 − 8 = 24.', 'Split 28 into 20 and 8.'),
+        q('A shop had 90 apples. They sold 46. How many are left?', ['42','43','44','45'], '44', '90 − 46 = 90 − 40 − 6 = 44.', 'Split 46 into 40 and 6.'),
+        q('What number subtracted from 70 leaves 25?', ['35','40','45','50'], '45', '70 − 25 = 45.', 'Think: 70 − ? = 25.'),
+        q('Fill the missing number: 60 − ? = 35', ['15','20','25','30'], '25', '60 − 35 = 25.', 'Work out the gap between 35 and 60.')
+      ]
+    }
+  },
+  { id:'u5', title:'Unit 5 · Patterns', short:'Patterns', icon:'🔍', badge:'🔍 Pattern Detective',
+    intro: "A pattern is something that repeats or changes in a predictable way. Spotting the rule — like 'add 2 each time' — lets you predict what comes next.",
+    examples: ['2, 4, 6, 8, ? → 10 (add 2 each time)', '5, 10, 15, ? → 20 (add 5 each time)'],
+    gameTitle: '🧩 Pattern Trail',
+    gameIntro: "Spot the rule and tap what comes next to keep the trail growing!",
+    game: [
+      q('2, 4, 6, 8, ?', ['9','10','12','16'], '10', 'The pattern adds 2 each time: 8 + 2 = 10.', 'What is added each time?'),
+      q('5, 10, 15, ?', ['18','20','25','16'], '20', 'The pattern adds 5 each time: 15 + 5 = 20.', 'Count by 5s.'),
+      q('10, 20, 30, ?', ['35','40','50','31'], '40', 'The pattern adds 10 each time: 30 + 10 = 40.', 'Count by 10s.'),
+      q('3, 6, 9, 12, ?', ['13','14','15','16'], '15', 'The pattern adds 3 each time: 12 + 3 = 15.', 'What is added each time?'),
+      q('50, 45, 40, ?', ['30','35','38','42'], '35', 'The pattern subtracts 5 each time: 40 − 5 = 35.', 'This pattern is counting backwards.')
+    ],
+    practice: {
+      easy: [
+        q('2, 4, 6, 8, ?', ['9','10','12','7'], '10', 'Add 2 each time: 8 + 2 = 10.', 'What is added each time?'),
+        q('5, 10, 15, ?', ['18','20','25','16'], '20', 'Add 5 each time: 15 + 5 = 20.', 'Count by 5s.'),
+        q('1, 3, 5, 7, ?', ['8','9','10','11'], '9', 'These are odd numbers — add 2 each time: 7 + 2 = 9.', 'Add 2 each time.'),
+        q('10, 20, 30, ?', ['35','40','50','31'], '40', 'Add 10 each time: 30 + 10 = 40.', 'Count by 10s.'),
+        q('What comes next? 🔴🔵🔴🔵🔴 ?', ['🔴','🔵','🟡','🟢'], '🔵', 'The pattern alternates red, blue, red, blue... so blue comes next.', 'Look at what repeats.')
+      ],
+      medium: [
+        q('3, 6, 9, 12, ?', ['13','14','15','16'], '15', 'Add 3 each time: 12 + 3 = 15.', 'What is added each time?'),
+        q('50, 45, 40, ?', ['30','35','38','42'], '35', 'Subtract 5 each time: 40 − 5 = 35.', 'This one counts backwards.'),
+        q('Shape pattern: ⭐⭐🔺⭐⭐🔺⭐⭐ ?', ['⭐','🔺','🟦','🔵'], '🔺', 'The pattern repeats ⭐⭐🔺, so a 🔺 comes after two stars.', 'Find the repeating group.'),
+        q('Fill the missing number: 12, ?, 16, 18', ['13','14','15','17'], '14', 'Each number goes up by 2: 12, 14, 16, 18.', 'What number is between 12 and 16 in this pattern?'),
+        q("What is the rule for this pattern: 5, 10, 15, 20?", ['Add 2 each time','Add 5 each time','Add 10 each time','Multiply by 2'], 'Add 5 each time', 'Each number is 5 more than the one before it.', 'Find the difference between two numbers next to each other.')
+      ],
+      challenge: [
+        q('Find the mistake: 4, 8, 12, 17, 20 — which number breaks the pattern?', ['4','12','17','20'], '17', 'The pattern adds 4 each time, so after 12 it should be 16, not 17.', 'Check each gap: is it always +4?'),
+        q('Continue the pattern: 100, 90, 80, ?, ?', ['70, 50','70, 60','60, 50','75, 65'], '70, 60', 'Subtract 10 each time: 80 − 10 = 70, then 70 − 10 = 60.', 'Keep subtracting 10.'),
+        q('A pattern grows by 3 each time and starts at 2. What are the first 5 numbers?', ['2, 5, 8, 11, 14','2, 4, 6, 8, 10','2, 6, 9, 12, 15','2, 5, 7, 10, 13'], '2, 5, 8, 11, 14', 'Start at 2 and keep adding 3: 2, 5, 8, 11, 14.', 'Add 3 to each number to get the next one.'),
+        q('Which numbers correctly continue 7, 14, 21, ?', ['24','26','28','30'], '28', 'This is counting by 7s: 21 + 7 = 28.', 'Each number is 7 more than the last.'),
+        q('True or false: in the pattern 2, 4, 8, 16, each number is double the one before.', ['True','False'], 'True', '2×2=4, 4×2=8, 8×2=16 — yes, each number doubles.', 'Check: is each number twice the one before it?')
+      ]
+    }
+  }
+];
+
+const TERM1_BOSS = {
+  title: 'Term 1 Boss · The Number Dragon 🐉',
+  intro: "The Number Dragon guards the end of Number Forest! Answer 20 questions from everything you've learned this term to earn your title.",
+  questions: [
+    // 4 number / counting questions
+    UNITS[0].practice.easy[0], UNITS[0].practice.medium[1], UNITS[0].practice.challenge[0], UNITS[0].practice.challenge[3],
+    // 4 place value
+    UNITS[1].practice.easy[0], UNITS[1].practice.medium[1], UNITS[1].practice.challenge[0], UNITS[1].practice.challenge[3],
+    // 4 addition
+    UNITS[2].practice.easy[2], UNITS[2].practice.medium[2], UNITS[2].practice.challenge[0], UNITS[2].practice.challenge[3],
+    // 4 subtraction
+    UNITS[3].practice.easy[2], UNITS[3].practice.medium[2], UNITS[3].practice.challenge[0], UNITS[3].practice.challenge[3],
+    // 4 patterns
+    UNITS[4].practice.easy[1], UNITS[4].practice.medium[0], UNITS[4].practice.challenge[1], UNITS[4].practice.challenge[3]
+  ]
+};
+
+/* ===================== STATE ===================== */
+let progress = null; // { unitsDone:{u1:stars,...}, bossDone:bool, bossScore, coins, xp, badges:[] }
+let stage = null;    // { kind:'unit'|'boss', unitIndex, phase, idx, mistakes, ... }
+
+function defaultProgress(){
+  return { unitsDone: {}, bossDone: false, bossScore: 0, coins: 0, xp: 0, badges: [] };
+}
+function loadProgress(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+    if(raw && typeof raw === 'object') return Object.assign(defaultProgress(), raw, { unitsDone: raw.unitsDone || {}, badges: raw.badges || [] });
+  }catch(e){}
+  return defaultProgress();
+}
+function saveProgress(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }catch(e){} }
+
+function $(id){ return document.getElementById(id); }
+function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function showScreen(id){ ['name-screen','map-screen','stage-screen','reward-screen'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ===================== SOUND (self-contained) ===================== */
+function getCtx(){ if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)(); return window.__actx; }
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playTap(){ beep(430, 0.07, 'triangle'); }
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+function spawnConfetti(){
+  const colors = ['#a97c25','#2e6b58','#e0703a','#7a5aa8','#3f9fc9'];
+  for(let i = 0; i < 24; i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[i % colors.length];
+    el.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+/* ===================== MAP (same winding-path scene as the other quest games) ===================== */
+const SCENE = { sky:'#bfe9fb', ground:'#c9edb0', deco:[
+  {e:'🌳', x:80,  y:170, s:60}, {e:'🌳', x:930, y:520, s:56}, {e:'🌼', x:180, y:560, s:34},
+  {e:'🦋', x:620, y:120, s:34}, {e:'🌿', x:430, y:585, s:32}, {e:'🐇', x:760, y:250, s:36}
+]};
+const MAP_PATH_D = 'M 60 555 C 170 555 210 480 300 460 C 400 438 470 480 530 445 ' +
+                   'C 600 405 550 340 470 320 C 390 298 350 250 400 205 ' +
+                   'C 450 160 550 165 640 195 C 740 230 850 200 940 150';
+const STOPS = UNITS.length + 1; // 5 units + boss
+
+function isUnitUnlocked(i){ if(i === 0) return true; return !!progress.unitsDone[UNITS[i-1].id]; }
+function isBossUnlocked(){ return UNITS.every(u => !!progress.unitsDone[u.id]); }
+
+function renderStats(){
+  $('player-name').textContent = localStorage.getItem(NAME_KEY) || 'Explorer';
+  $('stat-coins').textContent = progress.coins;
+  $('stat-xp').textContent = progress.xp;
+  $('stat-stars').textContent = Object.values(progress.unitsDone).reduce((a,b)=>a+b,0);
+  $('badge-row').innerHTML = progress.badges.map(b => '<span class="badge-chip" title="' + b + '">' + b.split(' ')[0] + '</span>').join('');
+}
+
+function renderMap(){
+  renderStats();
+  showScreen('map-screen');
+  const svg = $('map-svg');
+  const measure = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i = 0; i < STOPS; i++){
+    const p = measure.getPointAtLength(total * ((i + 0.5) / STOPS));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
+
+  let html = '<defs>' +
+    '<linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + SCENE.sky + '"/><stop offset="100%" stop-color="' + SCENE.ground + '"/></linearGradient>' +
+    '<radialGradient id="stoneDone" cx="35%" cy="30%"><stop offset="0%" stop-color="#f4cf78"/><stop offset="100%" stop-color="#b98a26"/></radialGradient>' +
+    '<radialGradient id="stoneNow" cx="35%" cy="30%"><stop offset="0%" stop-color="#63c39a"/><stop offset="100%" stop-color="#2e6b58"/></radialGradient>' +
+    '<radialGradient id="stoneLock" cx="35%" cy="30%"><stop offset="0%" stop-color="#d8d6cf"/><stop offset="100%" stop-color="#a5a29a"/></radialGradient>' +
+    '<radialGradient id="stoneBoss" cx="35%" cy="30%"><stop offset="0%" stop-color="#ef9d8f"/><stop offset="100%" stop-color="#a3352b"/></radialGradient>' +
+  '</defs>';
+  html += '<rect x="0" y="0" width="1000" height="620" fill="url(#skyGrad)"/>';
+  html += '<ellipse cx="500" cy="640" rx="620" ry="150" fill="rgba(255,255,255,.25)"/>';
+  SCENE.deco.forEach(d => { html += '<text x="' + d.x + '" y="' + d.y + '" font-size="' + d.s + '" text-anchor="middle">' + d.e + '</text>'; });
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="42" stroke-linecap="round" opacity=".92"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#e5c98a" stroke-width="30" stroke-linecap="round"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
+
+  let currentIdx = UNITS.findIndex((u,i) => isUnitUnlocked(i) && !progress.unitsDone[u.id]);
+  if(currentIdx === -1) currentIdx = isBossUnlocked() && !progress.bossDone ? UNITS.length : -1;
+
+  points.forEach((pt, i) => {
+    const isBoss = i === UNITS.length;
+    const unlocked = isBoss ? isBossUnlocked() : isUnitUnlocked(i);
+    const done = isBoss ? progress.bossDone : !!progress.unitsDone[UNITS[i].id];
+    const isCurrent = i === currentIdx;
+    const fill = isBoss ? 'url(#stoneBoss)' : (done ? 'url(#stoneDone)' : (isCurrent ? 'url(#stoneNow)' : 'url(#stoneLock)'));
+    const icon = !unlocked ? '🔒' : (isBoss ? '🐉' : UNITS[i].icon);
+
+    if(isCurrent) html += '<circle class="pulse-ring" cx="' + pt.x + '" cy="' + pt.y + '" r="30" fill="none" stroke="#2e6b58" stroke-width="4"/>';
+    html += '<g class="node-g' + (unlocked ? '' : ' locked') + '" data-stop="' + i + '">';
+    html += '<circle class="node-disc" cx="' + pt.x + '" cy="' + pt.y + '" r="30" fill="' + fill + '" stroke="#fff" stroke-width="5"/>';
+    html += '<text class="node-num' + (unlocked ? '' : ' locked') + '" x="' + pt.x + '" y="' + (pt.y + 7) + '" text-anchor="middle" style="font-size:22px;">' + icon + '</text>';
+    html += '</g>';
+    if(done) html += '<text x="' + pt.x + '" y="' + (pt.y + 48) + '" font-size="15" text-anchor="middle">' + '⭐'.repeat(isBoss ? 0 : progress.unitsDone[UNITS[i].id]) + '</text>';
+    if(isCurrent) html += '<text class="avatar-marker" x="' + pt.x + '" y="' + (pt.y - 42) + '" font-size="34" text-anchor="middle">🧒</text>';
+    if(i === STOPS - 1) html += '<text x="' + (pt.x + 55) + '" y="' + (pt.y + 10) + '" font-size="34" text-anchor="middle">🏁</text>';
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g => {
+    g.addEventListener('click', () => {
+      const i = parseInt(g.dataset.stop, 10);
+      const isBoss = i === UNITS.length;
+      const unlocked = isBoss ? isBossUnlocked() : isUnitUnlocked(i);
+      if(!unlocked){ playWrong(); return; }
+      playTap();
+      if(isBoss) startBoss(); else startUnit(i);
+    });
+  });
+  $('map-help').textContent = isBossUnlocked() && !progress.bossDone
+    ? 'All five units are done — the Number Dragon awaits! 🐉'
+    : (currentIdx >= 0 ? 'Tap the glowing stone to play ' + UNITS[currentIdx].title.split(' · ')[1] + '!' : 'Every stop is complete — great work, Maths Explorer!');
+}
+
+/* ===================== UNIT FLOW ===================== */
+function startUnit(unitIndex){
+  stage = { kind:'unit', unitIndex, phase:'intro', idx:0, mistakes:0, allQ: [] };
+  showScreen('stage-screen');
+  renderStage();
+}
+function renderStage(){
+  const body = $('stage-body');
+  if(stage.kind === 'unit'){
+    const u = UNITS[stage.unitIndex];
+    if(stage.phase === 'intro') return renderUnitIntro(body, u);
+    if(stage.phase === 'game') return renderUnitGame(body, u);
+    if(stage.phase === 'practice') return renderPracticeQuestion(body, u);
+    if(stage.phase === 'reward') return finishUnit(u);
+  } else {
+    if(stage.phase === 'intro') return renderBossIntro(body);
+    if(stage.phase === 'quiz') return renderBossQuestion(body);
+    if(stage.phase === 'reward') return finishBoss();
+  }
+}
+
+function renderUnitIntro(body, u){
+  body.innerHTML =
+    '<div class="phase-label">' + u.title + '</div>' +
+    '<h2>' + u.icon + ' Let\'s Learn!</h2>' +
+    '<p>' + u.intro + '</p>' +
+    '<div class="example-list">' + u.examples.map(e => '<div>' + e + '</div>').join('') + '</div>' +
+    '<div class="center"><button class="big-btn" id="to-game">Play ' + u.gameTitle + ' →</button></div>';
+  $('to-game').addEventListener('click', () => { playTap(); stage.phase = 'game'; stage.idx = 0; renderStage(); });
+}
+
+function renderUnitGame(body, u){
+  if(u.buildGame) return renderBuildGame(body, u);
+  const item = u.game[stage.idx];
+  body.innerHTML =
+    '<div class="phase-label">' + u.gameTitle + '</div>' +
+    '<p class="center" style="margin-top:0;">' + u.gameIntro + '</p>' +
+    '<div class="progress-pill">Step ' + (stage.idx+1) + ' of ' + u.game.length + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid" id="game-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<div id="game-feedback"></div>';
+  let answered = false;
+  document.querySelectorAll('#game-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('game-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight();
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">🤔 ' + item.explain + '</div>';
+      }
+      setTimeout(() => {
+        stage.idx++;
+        if(stage.idx >= u.game.length){ stage.phase = 'practice'; stage.idx = 0; stage.allQ = shuffle(u.practice.easy.concat(u.practice.medium, u.practice.challenge)); }
+        renderStage();
+      }, 1400);
+    });
+  });
+}
+
+function renderBuildGame(body, u){
+  const item = u.buildGame[stage.idx];
+  stage.built = stage.built || { h:0, t:0, o:0 };
+  body.innerHTML =
+    '<div class="phase-label">' + u.gameTitle + '</div>' +
+    '<p class="center" style="margin-top:0;">' + u.gameIntro + '</p>' +
+    '<div class="progress-pill">Number ' + (stage.idx+1) + ' of ' + u.buildGame.length + '</div>' +
+    '<div class="target-number">' + item.target + '</div>' +
+    '<div class="block-row">' +
+      '<div class="block-col"><div class="col-label">Hundreds</div><div class="block-count" id="cnt-h">0</div><button class="block-tap" id="tap-h">+100</button></div>' +
+      '<div class="block-col"><div class="col-label">Tens</div><div class="block-count" id="cnt-t">0</div><button class="block-tap" id="tap-t">+10</button></div>' +
+      '<div class="block-col"><div class="col-label">Ones</div><div class="block-count" id="cnt-o">0</div><button class="block-tap" id="tap-o">+1</button></div>' +
+    '</div>' +
+    '<div class="center"><button class="big-btn" id="check-build">Build It! 🧱</button></div>' +
+    '<div id="build-feedback"></div>';
+  stage.built = { h:0, t:0, o:0 };
+  const paint = () => { $('cnt-h').textContent = stage.built.h; $('cnt-t').textContent = stage.built.t; $('cnt-o').textContent = stage.built.o; };
+  $('tap-h').addEventListener('click', () => { if(stage.built.h < 9){ stage.built.h++; playTap(); paint(); } });
+  $('tap-t').addEventListener('click', () => { if(stage.built.t < 9){ stage.built.t++; playTap(); paint(); } });
+  $('tap-o').addEventListener('click', () => { if(stage.built.o < 9){ stage.built.o++; playTap(); paint(); } });
+  $('check-build').addEventListener('click', () => {
+    const built = stage.built.h*100 + stage.built.t*10 + stage.built.o;
+    const box = $('build-feedback');
+    if(built === item.target){
+      playRight();
+      box.innerHTML = '<div class="feedback-box good">✅ ' + item.h + '00 + ' + item.t + '0 + ' + item.o + ' = ' + item.target + '. Well built!</div>';
+      setTimeout(() => {
+        stage.idx++;
+        if(stage.idx >= u.buildGame.length){ stage.phase = 'practice'; stage.idx = 0; stage.allQ = shuffle(u.practice.easy.concat(u.practice.medium, u.practice.challenge)); }
+        renderStage();
+      }, 1300);
+    } else {
+      playWrong();
+      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built + '. The target is ' + item.target + ' = ' + item.h + '00 + ' + item.t + '0 + ' + item.o + '. Try adjusting the blocks!</div>';
+    }
+  });
+}
+
+function renderPracticeQuestion(body, u){
+  const total = stage.allQ.length;
+  const item = stage.allQ[stage.idx];
+  body.innerHTML =
+    '<div class="phase-label">' + u.title + ' · Practice</div>' +
+    '<div class="progress-pill">Question ' + (stage.idx+1) + ' of ' + total + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid' + (item.options.length > 3 ? ' cols-4' : '') + '" id="p-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<button class="hint-btn" id="hint-btn">💡 Need a hint?</button>' +
+    '<div id="p-feedback"></div>';
+  $('hint-btn').addEventListener('click', () => { $('hint-btn').outerHTML = '<div class="feedback-box">💡 ' + item.hint + '</div>'; });
+  let answered = false;
+  document.querySelectorAll('#p-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('p-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight();
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        stage.mistakes++;
+        el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">Not quite — here\'s how to solve it: ' + item.explain + ' The correct answer is <b>' + item.answer + '</b>.</div>';
+      }
+      setTimeout(() => {
+        stage.idx++;
+        if(stage.idx >= total){ stage.phase = 'reward'; }
+        renderStage();
+      }, item.explain.length > 60 ? 2600 : 1600);
+    });
+  });
+}
+
+function starsFor(mistakes){ return mistakes === 0 ? 3 : mistakes <= 3 ? 2 : 1; }
+
+function finishUnit(u){
+  const stars = starsFor(stage.mistakes);
+  const xp = 30 + stars * 10;
+  const coins = 10 + stars * 5;
+  const isNew = !progress.unitsDone[u.id];
+  progress.unitsDone[u.id] = Math.max(progress.unitsDone[u.id] || 0, stars);
+  progress.xp += xp;
+  progress.coins += coins;
+  if(isNew && !progress.badges.includes(u.badge)) progress.badges.push(u.badge);
+  saveProgress();
+  playWin();
+  $('reward-emoji').textContent = '🎉';
+  $('reward-title').textContent = u.short + ' Complete!';
+  $('reward-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  $('reward-xp').textContent = xp;
+  $('reward-coins').textContent = coins;
+  if(isNew){ $('reward-badge').classList.remove('hidden'); $('reward-badge').textContent = 'New badge: ' + u.badge; }
+  else { $('reward-badge').classList.add('hidden'); }
+  showScreen('reward-screen');
+  spawnConfetti();
+}
+
+/* ===================== TERM 1 BOSS ===================== */
+function startBoss(){
+  stage = { kind:'boss', phase:'intro', idx:0, mistakes:0, correct:0, allQ: shuffle(TERM1_BOSS.questions) };
+  showScreen('stage-screen');
+  renderStage();
+}
+function renderBossIntro(body){
+  body.innerHTML =
+    '<div class="phase-label">' + TERM1_BOSS.title + '</div>' +
+    '<h2>🐉 The Number Dragon</h2>' +
+    '<p>' + TERM1_BOSS.intro + '</p>' +
+    '<div class="center"><button class="big-btn" id="to-boss-quiz">Begin the Battle! ⚔️</button></div>';
+  $('to-boss-quiz').addEventListener('click', () => { playTap(); stage.phase = 'quiz'; renderStage(); });
+}
+function renderBossQuestion(body){
+  const total = stage.allQ.length;
+  const item = stage.allQ[stage.idx];
+  body.innerHTML =
+    '<div class="phase-label">🐉 Boss Battle</div>' +
+    '<div class="progress-pill">Question ' + (stage.idx+1) + ' of ' + total + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid' + (item.options.length > 3 ? ' cols-4' : '') + '" id="b-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<div id="b-feedback"></div>';
+  let answered = false;
+  document.querySelectorAll('#b-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('b-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight(); stage.correct++;
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        stage.mistakes++; el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">The answer was <b>' + item.answer + '</b>. ' + item.explain + '</div>';
+      }
+      setTimeout(() => {
+        stage.idx++;
+        if(stage.idx >= total){ stage.phase = 'reward'; }
+        renderStage();
+      }, 1500);
+    });
+  });
+}
+function bossTitleFor(score){
+  if(score >= 20) return { label:'🏆 Number Dragon Master', emoji:'🏆' };
+  if(score >= 17) return { label:'⭐⭐⭐ Excellent', emoji:'⭐' };
+  if(score >= 13) return { label:'⭐⭐ Strong', emoji:'⭐' };
+  if(score >= 8) return { label:'⭐ Developing', emoji:'🌱' };
+  return { label:'🌱 Keep Training', emoji:'🌱' };
+}
+function finishBoss(){
+  const title = bossTitleFor(stage.correct);
+  const xp = 50 + stage.correct * 5;
+  const coins = 30 + stage.correct * 3;
+  progress.bossDone = true;
+  progress.bossScore = Math.max(progress.bossScore, stage.correct);
+  progress.xp += xp;
+  progress.coins += coins;
+  if(!progress.badges.includes('🐉 Number Dragon Tamer')) progress.badges.push('🐉 Number Dragon Tamer');
+  saveProgress();
+  playWin();
+  $('reward-emoji').textContent = title.emoji;
+  $('reward-title').textContent = 'Term 1 Complete! ' + stage.correct + '/20';
+  $('reward-stars').textContent = title.label;
+  $('reward-xp').textContent = xp;
+  $('reward-coins').textContent = coins;
+  $('reward-badge').classList.remove('hidden');
+  $('reward-badge').textContent = 'New badge: 🐉 Number Dragon Tamer';
+  showScreen('reward-screen');
+  spawnConfetti();
+}
+
+$('reward-continue-btn').addEventListener('click', () => { playTap(); renderMap(); });
+$('stage-quit-btn').addEventListener('click', () => { if(confirm('Leave this quest? Your progress so far in this stop will not be saved.')){ playTap(); renderMap(); } });
+
+/* ===================== NAME / BOOT ===================== */
+$('name-start-btn').addEventListener('click', () => {
+  const val = $('name-input').value.trim();
+  localStorage.setItem(NAME_KEY, val || 'Explorer');
+  progress = loadProgress();
+  renderMap();
+});
+$('name-input') && $('name-input').addEventListener('keydown', e => { if(e.key === 'Enter') $('name-start-btn').click(); });
+
+const existingName = localStorage.getItem(NAME_KEY);
+progress = loadProgress();
+if(existingName){
+  renderMap();
+} else {
+  showScreen('name-screen');
+  setTimeout(() => $('name-input').focus(), 150);
+}
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
