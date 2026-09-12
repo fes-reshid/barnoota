@@ -775,6 +775,8 @@ function renderBuildGame(body, u){
     $('tap-' + c).addEventListener('click', () => { if(lesson.built[c] < 9){ lesson.built[c]++; playTap(); paint(); } });
   });
   $('check-build').addEventListener('click', () => {
+    const btn = $('check-build');
+    btn.classList.add('green');
     const built = cols.reduce((sum, c) => sum + lesson.built[c] * PLACE[c], 0);
     const box = $('build-feedback');
     if(built === item.target){
@@ -787,7 +789,12 @@ function renderBuildGame(body, u){
       }, 1300);
     } else {
       playWrong();
-      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built.toLocaleString() + '. The target is ' + item.target.toLocaleString() + '. Try adjusting the blocks!</div>';
+      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built.toLocaleString() + '. The target is ' + item.target.toLocaleString() + '. Let\'s start fresh!</div>';
+      setTimeout(() => {
+        btn.classList.remove('green');
+        cols.forEach(c => { lesson.built[c] = 0; });
+        paint();
+      }, 900);
     }
   });
 }
