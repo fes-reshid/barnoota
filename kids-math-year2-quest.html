@@ -724,6 +724,8 @@ function renderBuildGame(body, u){
   $('tap-t').addEventListener('click', () => { if(lesson.built.t < 9){ lesson.built.t++; playTap(); paint(); } });
   $('tap-o').addEventListener('click', () => { if(lesson.built.o < 9){ lesson.built.o++; playTap(); paint(); } });
   $('check-build').addEventListener('click', () => {
+    const btn = $('check-build');
+    btn.classList.add('green');
     const built = lesson.built.h*100 + lesson.built.t*10 + lesson.built.o;
     const box = $('build-feedback');
     if(built === item.target){
@@ -735,7 +737,12 @@ function renderBuildGame(body, u){
       }, 1300);
     } else {
       playWrong();
-      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built + '. The target is ' + item.target + ' = ' + item.h + '00 + ' + item.t + '0 + ' + item.o + '. Try adjusting the blocks!</div>';
+      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built + '. The target is ' + item.target + ' = ' + item.h + '00 + ' + item.t + '0 + ' + item.o + '. Let\'s start fresh!</div>';
+      setTimeout(() => {
+        btn.classList.remove('green');
+        lesson.built = { h:0, t:0, o:0 };
+        paint();
+      }, 900);
     }
   });
 }
