@@ -102,6 +102,9 @@
     display:block; margin-top:14px; background:none; border:none; color:var(--gold); text-decoration:underline;
     cursor:pointer; font-family:'Cormorant Garamond', serif; font-size:14px;
   }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:15px; color:#b8462f; margin:6px 0 0; }
+  .login-hint{ font-size:14px; color:#8a7654; margin:10px 0 0; }
+  .login-hint a{ color:var(--gold); }
 
   /* ---- subject picker ---- */
   .subject-head{ text-align:center; margin-bottom:24px; }
@@ -159,15 +162,20 @@
     <p class="lock-notice hidden" id="lock-notice"></p>
     <div class="year-grid" id="year-grid"></div>
     <button class="back-link" id="change-grade-btn">Not in this class anymore? Update it</button>
+    <button class="back-link" id="logout-btn">Log out</button>
   </div>
 
   <div id="name-screen" class="hidden">
     <div class="center-card">
-      <div class="icon">✏️</div>
-      <h2>What's your name?</h2>
-      <p>We'll remember it so you don't have to type it again.</p>
-      <input type="text" id="name-input" class="name-field" placeholder="Your name" autocomplete="off">
-      <div><button class="btn" id="name-start-btn">Continue</button></div>
+      <div class="icon">🔑</div>
+      <h2>Log In</h2>
+      <p>Use the same username and password your parent set up for Seerah Quest or Math Quest.</p>
+      <input type="text" id="login-username" class="name-field" placeholder="Username" maxlength="24" autocomplete="username">
+      <input type="password" id="login-password" class="name-field" placeholder="Password" maxlength="60" autocomplete="current-password">
+      <div><button class="btn" id="name-start-btn">Log In 🚀</button></div>
+      <p class="login-msg" id="login-msg"></p>
+      <p class="login-hint">Don't have an account? Ask your parent to set one up on the <a href="kids-admin.html">admin page</a>.</p>
+      <p class="login-hint">Forgot your password? Ask your parent to reset it there too.</p>
     </div>
   </div>
 
@@ -327,10 +335,18 @@ function showScreen(id){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-document.getElementById('name-start-btn').addEventListener('click', () => {
-  const val = document.getElementById('name-input').value.trim();
-  const name = val || 'Explorer';
-  localStorage.setItem(NAME_KEY, name);
+function friendlyLoginError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('user-not-found') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('wrong-password') >= 0){
+    return 'That username or password is not right. Ask your parent to check it.';
+  }
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('network') >= 0) return 'No internet connection — check you are online.';
+  return 'Could not log in — try again.';
+}
+function applyCloudProfile(cloudData){
+  localStorage.setItem(NAME_KEY, cloudData.displayName || cloudData.username);
+  document.getElementById('login-msg').textContent = '';
   if(localStorage.getItem(HOME_GRADE_KEY)){
     renderYearGrid();
     showScreen('year-screen');
@@ -338,9 +354,34 @@ document.getElementById('name-start-btn').addEventListener('click', () => {
     renderGradeGrid();
     showScreen('grade-screen');
   }
+}
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  msg.textContent = '';
+  if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('name-start-btn');
+  btn.disabled = true;
+  window.KidsCloud.studentLogin(u, p).then(data => {
+    applyCloudProfile(data);
+  }).catch(err => {
+    msg.textContent = friendlyLoginError(err);
+  }).finally(() => { btn.disabled = false; });
 });
-document.getElementById('name-input').addEventListener('keydown', (e) => {
+document.getElementById('login-username').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') document.getElementById('login-password').focus();
+});
+document.getElementById('login-password').addEventListener('keydown', (e) => {
   if(e.key === 'Enter') document.getElementById('name-start-btn').click();
+});
+document.getElementById('logout-btn').addEventListener('click', () => {
+  if(window.KidsCloud) window.KidsCloud.studentLogout();
+  localStorage.removeItem(NAME_KEY);
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  showScreen('name-screen');
 });
 
 function showSubjectScreen(name){
@@ -353,10 +394,15 @@ function showSubjectScreen(name){
 document.querySelectorAll('.subject-card').forEach(card => {
   card.addEventListener('click', () => {
     const subject = card.dataset.subject;
-    // Year 2 Math has its own full quest (units, games, boss) instead of the
-    // generic random-question practice every other class/subject still uses.
+    // Year 2 and Year 3 Math have their own full quest (units, games, boss)
+    // instead of the generic random-question practice every other class/
+    // subject still uses.
     if(subject === 'math' && selectedYear === 'g2'){
       window.location.href = 'kids-math-year2-quest.html';
+      return;
+    }
+    if(subject === 'math' && selectedYear === 'g3'){
+      window.location.href = 'kids-math-year3-quest.html';
       return;
     }
     const page = SUBJECT_PAGES[subject];
@@ -375,19 +421,30 @@ document.getElementById('change-grade-btn').addEventListener('click', () => {
   showScreen('grade-screen');
 });
 
-const existingName = localStorage.getItem(NAME_KEY);
-const existingHomeGrade = localStorage.getItem(HOME_GRADE_KEY);
-if(existingName && existingHomeGrade){
-  renderYearGrid();
-  showScreen('year-screen');
-} else if(existingName){
-  renderGradeGrid();
-  showScreen('grade-screen');
-} else {
-  showScreen('name-screen');
-  setTimeout(() => document.getElementById('name-input').focus(), 150);
+/* Firebase module script loads after this one (same pattern as the quest
+   games): show the login screen as the safe default now, then let
+   onStudentAuth decide — moments later — whether a session is already
+   active (including one started on Seerah Quest or Math Quest, since it's
+   the very same account). */
+function wireCloudAuth(){
+  if(window.__kidsCloudWired) return;
+  window.__kidsCloudWired = true;
+  window.KidsCloud.onStudentAuth(function(data){
+    if(data){
+      applyCloudProfile(data);
+    } else if(!document.getElementById('year-screen').classList.contains('hidden') ||
+              !document.getElementById('grade-screen').classList.contains('hidden') ||
+              !document.getElementById('subject-screen').classList.contains('hidden')){
+      showScreen('name-screen');
+    }
+  });
 }
+showScreen('name-screen');
+setTimeout(() => document.getElementById('login-username').focus(), 150);
+window.addEventListener('kidscloud-ready', wireCloudAuth);
+if(window.KidsCloud) wireCloudAuth();
 </script>
+<script type="module" src="kids-quest-cloud.js?v=3"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
