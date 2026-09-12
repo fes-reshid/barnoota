@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Math Quest — Year 3</title>
+<meta name="description" content="Year 3 Victorian Curriculum maths adventure: Term 1, Number Kingdom — place value to 10,000, number lines, odd and even numbers, addition and subtraction, with games, practice and a boss challenge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#8fd3ef; --sky-deep:#3f9fc9;
+    --coral:#e0703a; --violet:#7a5aa8;
+    --maxw:1000px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{ margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+
+  header.site{ position:sticky; top:0; z-index:60; background:rgba(250,243,224,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft); }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:12px 18px; max-width:var(--maxw); margin:0 auto; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); line-height:1.1; }
+  .back-pill{ display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus'; font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft); border-radius:20px; padding:8px 14px; white-space:nowrap; }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 16px 60px; }
+
+  .big-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--gold); color:#fff8ea; border:none; border-radius:26px; padding:14px 32px; font-family:'Marcellus'; font-size:18px; cursor:pointer; box-shadow:0 5px 0 #8a6417; transition:transform .12s ease, box-shadow .12s ease; }
+  .big-btn:hover{ transform:translateY(-2px); box-shadow:0 7px 0 #8a6417; }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #8a6417; }
+  .big-btn.green{ background:var(--green); box-shadow:0 5px 0 var(--green-dark); }
+  .big-btn.green:hover{ box-shadow:0 7px 0 var(--green-dark); }
+  .big-btn.green:active{ box-shadow:0 2px 0 var(--green-dark); }
+  .big-btn:disabled{ opacity:.55; cursor:default; transform:none; }
+  .ghost-btn{ background:#fff; border:2px solid var(--gold-soft); color:var(--ink-brown); border-radius:22px; padding:9px 20px; font-family:'Marcellus'; font-size:15px; cursor:pointer; }
+  .ghost-btn:hover{ background:var(--parchment-deep); }
+
+  /* ---- name gate (reuses the name kids-school.html already collected) ---- */
+  .name-box{ max-width:420px; margin:40px auto; background:#fff; border:3px solid var(--gold-soft); border-radius:26px; padding:32px 26px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14); }
+  .name-box h1{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 6px; }
+  .name-box p{ font-size:16px; color:#6b5a3f; line-height:1.5; margin:0 0 18px; }
+  .big-input{ width:100%; padding:13px 16px; border:2px solid var(--gold-soft); border-radius:14px; font-family:'Cormorant Garamond', serif; font-size:17px; text-align:center; background:var(--parchment); color:var(--ink-navy); margin-bottom:12px; }
+
+  /* ---- map ---- */
+  .map-topbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:10px 14px; margin-bottom:12px; box-shadow:0 4px 14px rgba(60,45,20,.08); }
+  .player-chip{ display:flex; align-items:center; gap:8px; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); }
+  .player-chip .avatar{ width:36px; height:36px; border-radius:50%; background:var(--green-bg); display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--green); }
+  .stat-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .stat{ display:flex; align-items:center; gap:5px; background:var(--parchment-deep); border:1.5px solid var(--gold-soft); border-radius:16px; padding:5px 12px; font-family:'Marcellus'; font-size:14.5px; color:var(--ink-navy); }
+  .badge-row{ display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+  .badge-chip{ font-size:20px; background:var(--parchment-deep); border:1.5px solid var(--gold-soft); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; }
+
+  .map-frame{ position:relative; background:linear-gradient(#ffe6b5 0%, #f2d79b 100%); border:3px solid var(--gold-soft); border-radius:22px; overflow:hidden; box-shadow:0 10px 26px rgba(60,45,20,.14); }
+  .map-title{ position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5; background:var(--violet); color:#fff; font-family:'Marcellus'; font-size:16px; padding:6px 20px; border-radius:14px; border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.2); white-space:nowrap; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
+  .node-num{ font-family:'Marcellus'; font-size:15px; fill:#fff8ea; }
+  .node-num.locked{ fill:#f2f1ee; }
+  .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g:not(.locked):hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-disc{ transition:transform .15s ease; }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  .avatar-marker{ animation:bobber 1.6s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:30; opacity:.75; } 100%{ r:46; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.6s ease-out infinite; }
+  .map-help{ text-align:center; font-size:15.5px; color:#6b5a3f; margin:12px 0 0; }
+
+  /* ---- unit lesson: sidebar of steps + a stage card, same shell as the other quest games ---- */
+  .lesson-layout{ display:grid; grid-template-columns:212px 1fr; gap:14px; align-items:start; }
+  .lesson-side, .lesson-stage-wrap{ min-width:0; }
+  .lesson-side{ background:linear-gradient(#4fb3e0, #2f97cb); border:3px solid #fff; border-radius:22px; padding:12px; box-shadow:0 8px 22px rgba(20,60,90,.22); color:#fff; }
+  .side-unit-name{ background:#2f7fb0; border:2px solid #fff; border-radius:14px; text-align:center; font-family:'Marcellus'; font-size:15px; padding:7px 8px; margin-bottom:10px; }
+  .side-steps{ display:flex; flex-direction:column; gap:8px; }
+  .side-step{ display:flex; align-items:center; gap:9px; background:#fff; border:3px solid #fff; border-radius:14px; padding:7px 9px; color:var(--ink-navy); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+  .side-step .ss-num{ font-family:'Marcellus'; font-size:17px; color:var(--sky-deep); width:16px; text-align:center; flex:none; }
+  .side-step .ss-icon{ font-size:19px; }
+  .side-step .ss-label{ font-family:'Marcellus'; font-size:12.5px; flex:1; line-height:1.15; }
+  .side-step .ss-state{ font-size:15px; }
+  .side-step.current{ background:#fff6cf; border-color:#ffcf4d; transform:scale(1.02); }
+  .side-step.done{ background:#dcf3dc; }
+  .side-step.locked{ background:#e6e9ea; color:#8c9296; cursor:not-allowed; }
+  @media (max-width:640px){ .lesson-layout{ grid-template-columns:1fr; } .side-steps{ flex-direction:row; overflow-x:auto; padding-bottom:4px; } .side-step{ flex:0 0 auto; flex-direction:column; gap:2px; min-width:74px; text-align:center; padding:8px 6px; } .side-step .ss-label{ font-size:10.5px; } }
+
+  .stage-top{ display:flex; align-items:center; gap:10px; background:linear-gradient(#4fb3e0, #2f97cb); border:3px solid #fff; border-radius:18px; padding:8px 12px; margin-bottom:10px; box-shadow:0 6px 16px rgba(20,60,90,.18); }
+  .step-pill{ background:#fff; border-radius:14px; padding:4px 14px; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); flex:none; }
+  .heart-track{ flex:1; height:16px; background:#fff; border-radius:12px; overflow:hidden; border:2px solid #fff; }
+  .heart-fill{ height:100%; width:0%; background:linear-gradient(90deg,#7ddc6b,#3fb14a); transition:width .35s ease; }
+
+  .stage-card{ background:#fff; border:3px solid var(--gold-soft); border-radius:24px; padding:26px 22px 30px; box-shadow:0 10px 26px rgba(60,45,20,.12); text-align:center; min-height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .stage-card h2{ font-family:'Marcellus'; font-size:23px; color:var(--ink-navy); margin:0 0 10px; text-align:center; }
+  .stage-card p{ font-size:17px; line-height:1.55; color:#4a3c2c; }
+  .phase-label{ text-align:center; font-family:'Marcellus'; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7654; margin-bottom:12px; }
+  .example-list{ background:var(--parchment); border:2px dashed var(--gold-soft); border-radius:16px; padding:14px 18px; margin:14px 0; text-align:left; }
+  .example-list div{ font-family:'JetBrains Mono', monospace; font-size:16px; color:var(--ink-navy); padding:4px 0; }
+  .center{ text-align:center; }
+
+  .quiz-q{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 16px; text-align:center; }
+  .choice-grid{ display:grid; gap:12px; width:100%; max-width:460px; margin:0 auto; grid-template-columns:repeat(2, 1fr); }
+  .choice-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .choice{ background:var(--parchment); border:3px solid var(--gold-soft); border-radius:18px; padding:16px 8px; cursor:pointer; transition:transform .12s ease, background .15s ease, border-color .15s ease; text-align:center; font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
+  .choice:hover{ transform:translateY(-3px); border-color:var(--gold); }
+  .choice.correct{ background:#d8f0d8; border-color:#3d9b4f; }
+  .choice.wrong{ background:#f7dede; border-color:#c1503f; }
+  .feedback-box{ max-width:460px; margin:14px auto 0; background:var(--parchment-deep); border:2px solid var(--gold-soft); border-radius:14px; padding:12px 16px; font-size:15.5px; color:#4a3c2c; line-height:1.5; text-align:left; }
+  .feedback-box.good{ background:var(--green-bg); border-color:var(--green); }
+  .progress-pill{ text-align:center; font-family:'Marcellus'; font-size:13px; color:#8a7654; margin-bottom:10px; }
+  .hint-btn{ display:block; margin:12px auto 0; background:none; border:none; color:var(--sky-deep); text-decoration:underline; cursor:pointer; font-family:'Marcellus'; font-size:14px; }
+
+  /* ---- build-the-number game (unit 1, up to thousands) ---- */
+  .block-row{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:18px 0; }
+  .block-col{ text-align:center; }
+  .block-col .col-label{ font-family:'Marcellus'; font-size:13px; color:var(--ink-navy); margin-bottom:6px; }
+  .block-count{ font-family:'Marcellus'; font-size:28px; color:var(--green-dark); background:var(--green-bg); border:2px solid var(--green); border-radius:14px; width:60px; padding:8px 0; margin:0 auto 8px; }
+  .block-tap{ width:60px; height:42px; border-radius:12px; border:2.5px solid var(--gold-soft); background:var(--parchment); font-family:'Marcellus'; font-size:15px; cursor:pointer; }
+  .block-tap:hover{ background:var(--parchment-deep); }
+  .target-number{ text-align:center; font-family:'Marcellus'; font-size:40px; color:var(--coral); margin:6px 0 4px; }
+
+  /* ---- reward ---- */
+  .reward-box{ max-width:460px; margin:26px auto; background:#fff; border:3px solid var(--gold-soft); border-radius:26px; padding:34px 26px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.14); }
+  .coin-pop{ font-size:76px; line-height:1; margin-bottom:4px; animation:coinPop .7s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes coinPop{ 0%{ transform:scale(.2) rotate(-25deg); opacity:0; } 60%{ transform:scale(1.18) rotate(6deg); } 100%{ transform:scale(1) rotate(0); opacity:1; } }
+  .reward-box h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 8px; }
+  .star-row{ font-size:34px; letter-spacing:6px; margin:6px 0 12px; }
+  .badge-earned{ display:inline-flex; align-items:center; gap:10px; background:var(--green-bg); border:2px solid var(--green); border-radius:18px; padding:8px 18px; margin-bottom:14px; font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); }
+  .purse{ display:inline-flex; align-items:center; gap:14px; background:var(--parchment-deep); border:2px solid var(--gold-soft); border-radius:18px; padding:8px 20px; margin:4px 0 8px; font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); }
+  .confetti-piece{ position:fixed; top:-14px; width:11px; height:15px; z-index:200; pointer-events:none; animation:confettiFall linear forwards; }
+  @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
+
+  .scope-note{ text-align:center; font-size:13px; color:#8a7654; max-width:560px; margin:16px auto 0; line-height:1.5; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="kids-school.html">
+      <span class="brand-mark">👑</span>
+      <span class="brand-text">Math Quest — Year 3</span>
+    </a>
+    <a class="back-pill" href="kids-school.html">← Classes</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ NAME GATE (only if kids-school.html hasn't collected one) ============ -->
+  <section id="name-screen" class="hidden">
+    <div class="name-box">
+      <h1>What's your name?</h1>
+      <p>We'll remember it so you don't have to type it again.</p>
+      <input type="text" id="name-input" class="big-input" placeholder="Your name" autocomplete="off">
+      <button class="big-btn" id="name-start-btn" style="width:100%; justify-content:center;">Start My Quest 👑</button>
+    </div>
+  </section>
+
+  <!-- ============ MAP ============ -->
+  <section id="map-screen" class="hidden">
+    <div class="map-topbar">
+      <div>
+        <div class="player-chip"><span class="avatar">🧒</span><span id="player-name">Explorer</span></div>
+        <div class="badge-row" id="badge-row"></div>
+      </div>
+      <div class="stat-row">
+        <span class="stat">🪙 <span id="stat-coins">0</span></span>
+        <span class="stat">⚡ <span id="stat-xp">0</span> XP</span>
+        <span class="stat">⭐ <span id="stat-stars">0</span></span>
+      </div>
+    </div>
+    <div class="map-frame">
+      <div class="map-title">👑 Term 1 · Number Kingdom</div>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <p class="map-help" id="map-help"></p>
+    <p class="scope-note">Term 1 is ready to play now — Terms 2–4 (multiplication, division, fractions, money, measurement, shape, data and NAPLAN-style practice) are on the way next.</p>
+  </section>
+
+  <!-- ============ UNIT STAGE (sidebar of steps, like the other quest games) ============ -->
+  <section id="unit-screen" class="hidden">
+    <div class="lesson-layout">
+      <aside class="lesson-side">
+        <div class="side-unit-name" id="side-unit-name">Unit</div>
+        <div class="side-steps" id="side-steps"></div>
+      </aside>
+      <div class="lesson-stage-wrap">
+        <div class="stage-top">
+          <span class="step-pill" id="step-pill">1/6</span>
+          <div class="heart-track"><div class="heart-fill" id="heart-fill"></div></div>
+        </div>
+        <div class="stage-card" id="unit-body"></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="ghost-btn" id="unit-quit-btn">← Back to Map</button>
+    </div>
+  </section>
+
+  <!-- ============ BOSS STAGE (one continuous battle, no step sidebar) ============ -->
+  <section id="boss-screen" class="hidden">
+    <div class="stage-card" id="boss-body"></div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="ghost-btn" id="boss-quit-btn">← Back to Map</button>
+    </div>
+  </section>
+
+  <!-- ============ REWARD ============ -->
+  <section id="reward-screen" class="hidden">
+    <div class="reward-box">
+      <div class="coin-pop" id="reward-emoji">🪙</div>
+      <h2 id="reward-title">Unit Complete!</h2>
+      <div class="star-row" id="reward-stars">⭐⭐⭐</div>
+      <div class="badge-earned hidden" id="reward-badge"></div><br>
+      <div class="purse"><span>⚡ +<span id="reward-xp">0</span> XP</span><span>🪙 +<span id="reward-coins">0</span></span></div><br>
+      <button class="big-btn green" id="reward-continue-btn" style="margin-top:14px;">Continue →</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ==========================================================================
+   MATH QUEST — YEAR 3, TERM 1: NUMBER KINGDOM
+   Five real units (Place Value, Number Lines & Counting, Odd/Even & Number
+   Properties, Addition, Subtraction) plus the Term 1 Boss, each with a
+   teaching intro, worked examples, a distinct game, a 15-question
+   Easy/Medium/Challenge practice set with hints and wrong-answer feedback,
+   and a reward — same lesson engine as Math Quest — Year 2 (six named
+   steps per unit: Learn it / Play it / Try it / Level Up / Challenge / Show
+   What You Know), adapted to Year 3 (Victorian Curriculum) content.
+   Terms 2-4, the 40-unit full-year scope, adaptive difficulty, the mistake
+   book, and the parent/teacher dashboards from the original brief are a
+   planned follow-up, not built here — see the note on the map screen and
+   the assistant's handover message for the full scope.
+   ========================================================================== */
+
+const NAME_KEY = 'kids-school-name';
+const PROGRESS_KEY = 'kids-math-year3-quest-progress';
+
+function q(question, options, answer, explain, hint){
+  return { q: question, options, answer, explain, hint };
+}
+
+const UNITS = [
+  { id:'u1', title:'Unit 1 · Place Value', short:'Place Value', icon:'🏗️', badge:'🏗️ Number Explorer',
+    intro: "Numbers to 10,000 have thousands, hundreds, tens and ones. Each digit's place tells you its value — for example, in 3,742 the 7 is worth 700, because it's in the hundreds place.",
+    examples: ['3,742 = 3,000 + 700 + 40 + 2', 'The value of 7 in 3,742 is 700', 'Expanded form of 5,306: 5,000 + 300 + 6'],
+    gameTitle: '🏰 Build the Number',
+    gameIntro: 'Tap the blocks to build the target number — thousands, hundreds, tens, then ones.',
+    buildGame: [
+      { target: 3742, th:3, h:7, t:4, o:2 },
+      { target: 5306, th:5, h:3, t:0, o:6 },
+      { target: 2641, th:2, h:6, t:4, o:1 },
+      { target: 8215, th:8, h:2, t:1, o:5 }
+    ],
+    practice: {
+      easy: [
+        q('What is the value of 6 in 2,641?', ['6','60','600','6,000'], '600', '6 is in the hundreds place, so it is worth 600.', 'Look at which place the 6 sits in.'),
+        q('What is the value of 8 in 8,215?', ['8','80','800','8,000'], '8,000', '8 is in the thousands place, so it is worth 8,000.', 'The first digit of a 4-digit number is in the thousands place.'),
+        q('What is the expanded form of 4,503?', ['4,000 + 500 + 3','4,000 + 50 + 3','4,000 + 500 + 30','400 + 50 + 3'], '4,000 + 500 + 3', 'There are 0 tens, so it skips straight from hundreds to ones: 4,000 + 500 + 3.', 'Split each digit by its place value.'),
+        q('Which is greater: 4,621 or 4,612?', ['4,621','4,612','They are equal','Cannot tell'], '4,621', 'Both start 4,6__, so compare the tens digit: 2 tens beats 1 ten.', 'The thousands and hundreds match — compare the tens digit next.'),
+        q('Order from smallest: 2,310, 2,103, 2,301', ['2,103, 2,301, 2,310','2,310, 2,301, 2,103','2,103, 2,310, 2,301','2,301, 2,103, 2,310'], '2,103, 2,301, 2,310', 'All start with 2 thousands, so compare the hundreds digit: 1, 3, 3 — then the tens digit for the two starting 2,3__.', 'Compare hundreds digits first.'),
+        q('What is the value of 3 in 3,742?', ['3','30','300','3,000'], '3,000', '3 is the first digit of a 4-digit number, so it is in the thousands place, worth 3,000.', 'The leftmost digit in a 4-digit number is thousands.'),
+        q('What is the expanded form of 7,050?', ['7,000 + 500','7,000 + 50','7,000 + 5','700 + 50'], '7,000 + 50', 'There are 0 hundreds, so it skips straight from thousands to tens: 7,000 + 50.', 'Check which place is zero.'),
+        q('Which is greater: 6,204 or 6,240?', ['6,204','6,240','They are equal','Cannot tell'], '6,240', 'Both start 6,2__, so compare the tens digit: 4 tens beats 0 tens.', 'Compare digit by digit from the left.')
+      ],
+      medium: [
+        q('Write 6,208 in expanded form.', ['6,000 + 200 + 8','6,000 + 20 + 8','6,000 + 200 + 80','600 + 200 + 8'], '6,000 + 200 + 8', 'There are 0 tens, so it goes straight from hundreds to ones: 6,000 + 200 + 8.', 'Check which place value is missing.'),
+        q('What is the value of 9 in 9,517?', ['9','90','900','9,000'], '9,000', '9 is the first digit of a 4-digit number, so it is in the thousands place.', 'The leftmost digit in a 4-digit number is thousands.'),
+        q('Which is smaller: 7,341 or 7,314?', ['7,341','7,314','They are equal','Cannot tell'], '7,314', 'Both start 7,3__, so compare the tens digit: 1 ten is less than 4 tens.', 'Compare digit by digit from the left.'),
+        q('Make the number: 4,000 + 300 + 60 + 7', ['4,367','4,637','4,763','4,376'], '4,367', 'Line up thousands, hundreds, tens, then ones in order: 4,367.', 'Write each part in place-value order.'),
+        q('Order from largest to smallest: 5,102, 5,201, 5,012', ['5,201, 5,102, 5,012','5,012, 5,102, 5,201','5,102, 5,201, 5,012','5,201, 5,012, 5,102'], '5,201, 5,102, 5,012', 'All start with 5 thousands, so compare the hundreds digit: 1, 2, 0.', 'Compare the hundreds digit once the thousands match.'),
+        q('Write 8,090 in expanded form.', ['8,000 + 900','8,000 + 90','8,000 + 9','800 + 90'], '8,000 + 90', 'There are 0 hundreds, so it skips straight from thousands to tens: 8,000 + 90.', 'Check which place is zero.'),
+        q('What is the value of 4 in 1,463?', ['4','40','400','4,000'], '400', '4 is in the hundreds place, so it is worth 400.', 'Count places from the right: ones, tens, hundreds, thousands.'),
+        q('Which is smaller: 3,802 or 3,820?', ['3,802','3,820','They are equal','Cannot tell'], '3,802', 'Both start 3,8__, so compare the tens digit: 0 tens is less than 2 tens.', 'Compare digit by digit from the left.')
+      ],
+      challenge: [
+        q('A number has 4 thousands, 0 hundreds, 6 tens and 3 ones. What is it?', ['4,063','4,630','4,603','4,036'], '4,063', "Don't forget the 0 in the hundreds place still needs a spot: 4,063.", 'Write every place value, even the zero.'),
+        q('True or false: 6,999 is greater than 7,000.', ['True','False'], 'False', '7,000 has 7 thousands, but 6,999 only has 6 thousands, so 7,000 is greater.', 'Compare the thousands digit first.'),
+        q('Which number has more thousands: 2,999 or 3,001?', ['2,999','3,001','They are equal','Cannot tell'], '3,001', '3,001 has 3 thousands; 2,999 has only 2 thousands.', 'Look at the very first digit of each number.'),
+        q('Order from smallest to largest: 8,090, 8,009, 8,900, 8,099', ['8,009, 8,090, 8,099, 8,900','8,900, 8,099, 8,090, 8,009','8,009, 8,099, 8,090, 8,900','8,090, 8,009, 8,099, 8,900'], '8,009, 8,090, 8,099, 8,900', 'All start with 8 thousands. Compare hundreds first (0,0,0,9), then tens for the three starting 8,0__.', 'Sort by hundreds digit first, then tens, then ones.'),
+        q('If you add 1 thousand to 4,502, what number do you get?', ['5,502','4,602','5,602','4,512'], '5,502', 'Adding 1 thousand only changes the thousands digit: 4,502 + 1,000 = 5,502.', 'Only the thousands digit should change.'),
+        q('A number has 7 thousands, 2 hundreds, 0 tens and 9 ones. What is it?', ['7,209','7,290','7,029','7,092'], '7,209', "Don't forget the 0 in the tens place still needs a spot: 7,209.", 'Write every place value, even the zero.'),
+        q('True or false: 5,499 is greater than 5,500.', ['True','False'], 'False', '5,500 has a higher hundreds digit than 5,499, so 5,500 is greater.', 'Compare digit by digit from the left.'),
+        q('If you subtract 1 hundred from 6,050, what number do you get?', ['5,950','5,150','6,150','5,940'], '5,950', 'Subtracting 1 hundred only changes the hundreds digit: 6,050 − 100 = 5,950.', 'Only the hundreds digit should change.')
+      ]
+    }
+  },
+  { id:'u2', title:'Unit 2 · Number Lines and Counting', short:'Number Lines', icon:'🔢', badge:'🔢 Pattern Finder',
+    intro: "Number lines help us see the order of numbers and spot patterns when counting forwards or backwards in equal jumps — by 2s, 3s, 5s, 10s, or even bigger steps like 50s and 100s.",
+    examples: ['250, 300, 350, ?, 450 → 400 (jumps of 50)', '1,200, 1,100, 1,000, ? → 900 (counting back by 100)'],
+    gameTitle: '🚂 Number Line Express',
+    gameIntro: 'Spot the jump size and tap the missing number to keep the train moving!',
+    game: [
+      q('35, 40, 45, ?, 55', ['48','50','52','60'], '50', 'The train jumps by 5 each time: 45 + 5 = 50.', 'What is added each time?'),
+      q('600, 650, 700, ?', ['720','750','800','710'], '750', 'The jump is 50: 700 + 50 = 750.', 'Find the size of each jump.'),
+      q('1,000, 900, 800, ?', ['750','700','600','850'], '700', 'Counting back by 100: 800 − 100 = 700.', 'This line counts backwards.'),
+      q('27, 30, 33, ?', ['34','35','36','39'], '36', 'The jump is 3: 33 + 3 = 36.', 'What is added each time?'),
+      q('4,000, 4,100, 4,200, ?', ['4,250','4,300','4,400','4,210'], '4,300', 'The jump is 100: 4,200 + 100 = 4,300.', 'Find the size of the jump.')
+    ],
+    practice: {
+      easy: [
+        q('10, 20, 30, ?', ['35','40','45','50'], '40', '30 + 10 = 40.', 'Count on by 10.'),
+        q('100, 200, 300, ?', ['350','400','450','500'], '400', '300 + 100 = 400.', 'Count on by 100.'),
+        q('5, 10, 15, ?', ['18','20','25','16'], '20', '15 + 5 = 20.', 'Count on by 5.'),
+        q('Count back: 50, 40, 30, ?', ['25','20','15','10'], '20', '30 − 10 = 20.', 'Subtract 10 each time.'),
+        q('60, 65, 70, ?', ['72','74','75','80'], '75', '70 + 5 = 75.', 'Count on by 5.'),
+        q('45, 50, 55, ?', ['58','60','62','65'], '60', '55 + 5 = 60.', 'Count on by 5.'),
+        q('200, 300, 400, ?', ['450','500','550','600'], '500', '400 + 100 = 500.', 'Count on by 100.'),
+        q('Count back: 90, 80, 70, ?', ['50','55','60','65'], '60', '70 − 10 = 60.', 'Subtract 10 each time.')
+      ],
+      medium: [
+        q('125, 150, 175, ?', ['185','190','195','200'], '200', 'The jump is 25: 175 + 25 = 200.', 'Find the size of the jump.'),
+        q('900, 800, 700, ?', ['500','600','650','750'], '600', 'Counting back by 100: 700 − 100 = 600.', 'This one counts backwards by 100.'),
+        q('48, 52, 56, ?', ['58','59','60','62'], '60', 'The jump is 4: 56 + 4 = 60.', 'Find the size of the jump.'),
+        q('2,000, 2,200, 2,400, ?', ['2,500','2,600','2,700','2,450'], '2,600', 'The jump is 200: 2,400 + 200 = 2,600.', 'Find the size of the jump.'),
+        q('Count back by 25: 300, 275, 250, ?', ['235','225','215','200'], '225', '250 − 25 = 225.', 'Subtract 25 each time.'),
+        q('175, 200, 225, ?', ['235','240','245','250'], '250', 'The jump is 25: 225 + 25 = 250.', 'Find the size of the jump.'),
+        q('1,500, 1,300, 1,100, ?', ['800','900','1,000','950'], '900', 'Counting back by 200: 1,100 − 200 = 900.', 'This line counts backwards by 200.'),
+        q('36, 42, 48, ?', ['50','52','54','56'], '54', 'The jump is 6: 48 + 6 = 54.', 'Find the size of the jump.')
+      ],
+      challenge: [
+        q('Find the missing number: 3,700, ?, 3,900, 4,000', ['3,750','3,800','3,850','3,950'], '3,800', 'The jump is 100 each time: 3,700 + 100 = 3,800.', 'Work out the jump size from the numbers you can see.'),
+        q('A pattern counts back by 150, starting at 1,000. What is the number after 850?', ['650','700','750','800'], '700', '850 − 150 = 700.', 'Keep subtracting 150.'),
+        q('Which number is NOT part of counting by 5s from 0: 235, 240, 243, 250?', ['235','240','243','250'], '243', 'Multiples of 5 always end in 0 or 5 — 243 ends in 3.', 'Check the last digit of each number.'),
+        q('Counting back by 1 from 9,999, what is the next number?', ['9,990','9,998','10,000','9,900'], '9,998', '9,999 − 1 = 9,998.', 'Subtract just 1.'),
+        q('Continue counting back by 300: 6,300, 6,000, 5,700, ?', ['5,600','5,500','5,400','5,300'], '5,400', '5,700 − 300 = 5,400.', 'Keep subtracting 300.'),
+        q('Find the missing number: 4,250, ?, 4,450, 4,550', ['4,300','4,350','4,400','4,500'], '4,350', 'The jump is 100 each time: 4,250 + 100 = 4,350.', 'Work out the jump size from the numbers you can see.'),
+        q('A pattern counts back by 75, starting at 1,000. What is the number after 850?', ['700','725','775','800'], '775', '850 − 75 = 775.', 'Keep subtracting 75.'),
+        q('Continue counting back by 400: 7,600, 7,200, 6,800, ?', ['6,200','6,300','6,400','6,500'], '6,400', '6,800 − 400 = 6,400.', 'Keep subtracting 400.')
+      ]
+    }
+  },
+  { id:'u3', title:'Unit 3 · Odd, Even and Number Properties', short:'Odd & Even', icon:'🔎', badge:'🔎 Number Detective',
+    intro: 'Even numbers end in 0, 2, 4, 6 or 8 — they can be split into two equal groups. Odd numbers end in 1, 3, 5, 7 or 9, and always have one left over when split into pairs.',
+    examples: ['248 is even (ends in 8)', '731 is odd (ends in 1)'],
+    gameTitle: '🔎 Odd or Even Detective',
+    gameIntro: "Look at each number's last digit to decide — odd or even?",
+    game: [
+      q('Is 248 odd or even?', ['Odd','Even'], 'Even', '248 ends in 8, an even digit.', 'Check the last digit.'),
+      q('Is 731 odd or even?', ['Odd','Even'], 'Odd', '731 ends in 1, an odd digit.', 'Check the last digit.'),
+      q('Which is even: 315, 428, 507?', ['315','428','507'], '428', '428 ends in 8, an even digit; the others end in odd digits.', 'Check each last digit.'),
+      q('What is the next even number after 398?', ['399','400','402','396'], '400', 'Even numbers are 2 apart: 398 + 2 = 400.', 'Add 2 to the last even number.'),
+      q('What is the next odd number after 721?', ['722','723','725','719'], '723', 'Odd numbers are 2 apart: 721 + 2 = 723.', 'Add 2 to the last odd number.')
+    ],
+    practice: {
+      easy: [
+        q('Is 156 odd or even?', ['Odd','Even'], 'Even', '156 ends in 6, an even digit.', 'Check the last digit.'),
+        q('Is 493 odd or even?', ['Odd','Even'], 'Odd', '493 ends in 3, an odd digit.', 'Check the last digit.'),
+        q('Which is odd: 244, 367, 810?', ['244','367','810'], '367', '367 ends in 7, an odd digit; the others end in even digits.', 'Check each last digit.'),
+        q('What is the next even number after 522?', ['523','524','526','520'], '524', '522 + 2 = 524.', 'Even numbers are 2 apart.'),
+        q('What is the next odd number after 199?', ['198','200','201','203'], '201', '199 + 2 = 201.', 'Odd numbers are 2 apart.'),
+        q('Is 372 odd or even?', ['Odd','Even'], 'Even', '372 ends in 2, an even digit.', 'Check the last digit.'),
+        q('Is 815 odd or even?', ['Odd','Even'], 'Odd', '815 ends in 5, an odd digit.', 'Check the last digit.'),
+        q('Which is even: 133, 246, 359?', ['133','246','359'], '246', '246 ends in 6, an even digit; the others end in odd digits.', 'Check each last digit.')
+      ],
+      medium: [
+        q('Which of these is even: 1,001, 1,002, 1,003?', ['1,001','1,002','1,003'], '1,002', '1,002 ends in 2, an even digit.', 'Check the last digit of each.'),
+        q('Is the sum of two odd numbers odd or even? (e.g. 3 + 5)', ['Odd','Even'], 'Even', '3 + 5 = 8, which is even. Two odds always add to an even number.', 'Try an example and check the last digit of the answer.'),
+        q('Is the sum of an odd and an even number odd or even? (e.g. 4 + 7)', ['Odd','Even'], 'Odd', '4 + 7 = 11, which is odd. Odd + even always makes odd.', 'Try an example and check the last digit of the answer.'),
+        q('What is the largest even number less than 500?', ['498','499','500','496'], '498', '500 is even but not less than 500, so the next even number down is 498.', 'Count back by 2 from 500.'),
+        q('What is the smallest odd number greater than 700?', ['700','701','702','703'], '701', '700 is even, so the very next number, 701, is the smallest odd one greater than it.', 'Check the number right after 700.'),
+        q('Which of these is odd: 2,004, 2,005, 2,006?', ['2,004','2,005','2,006'], '2,005', '2,005 ends in 5, an odd digit.', 'Check the last digit of each.'),
+        q('Is the sum of two even numbers odd or even? (e.g. 4 + 6)', ['Odd','Even'], 'Even', '4 + 6 = 10, which is even. Two evens always add to an even number.', 'Try an example and check the last digit of the answer.'),
+        q('What is the smallest even number greater than 601?', ['601','602','603','604'], '602', '601 is odd, so the very next number, 602, is the smallest even one greater than it.', 'Check the number right after 601.')
+      ],
+      challenge: [
+        q('Sara says all numbers ending in 5 are odd. Is she correct?', ['Yes, she is correct','No, she is wrong'], 'Yes, she is correct', 'Every number ending in 5 (5, 15, 25, 35...) is odd.', 'Try a few examples ending in 5.'),
+        q('Is 1,000 odd or even?', ['Odd','Even'], 'Even', '1,000 ends in 0, an even digit.', 'Check the last digit.'),
+        q('If you add 1 to an even number, is the result odd or even?', ['Odd','Even'], 'Odd', 'Adding 1 always flips even to odd, like 4 + 1 = 5.', 'Try an example, like 4 + 1.'),
+        q('Which of these numbers is even: 903, 904, 905?', ['903','904','905'], '904', '904 ends in 4, an even digit.', 'Check the last digit of each.'),
+        q('True or false: the sum of three odd numbers is always odd (e.g. 1 + 3 + 5 = 9).', ['True','False'], 'True', '1 + 3 + 5 = 9, which is odd — three odd numbers always add to an odd total.', 'Try the example given and check the last digit.'),
+        q('Tom says all numbers ending in 0 are even. Is he correct?', ['Yes, he is correct','No, he is wrong'], 'Yes, he is correct', 'Every number ending in 0 (10, 20, 30...) is even.', 'Try a few examples ending in 0.'),
+        q('Is 2,001 odd or even?', ['Odd','Even'], 'Odd', '2,001 ends in 1, an odd digit.', 'Check the last digit.'),
+        q('If you add 1 to an odd number, is the result odd or even?', ['Odd','Even'], 'Even', 'Adding 1 always flips odd to even, like 5 + 1 = 6.', 'Try an example, like 5 + 1.')
+      ]
+    }
+  },
+  { id:'u4', title:'Unit 4 · Addition', short:'Addition', icon:'➕', badge:'➕ Addition Hero',
+    intro: "For bigger numbers, add the hundreds, tens and ones separately, or split one number into friendly parts (like tens and ones) and add them one step at a time. Estimating first helps you check your answer makes sense.",
+    examples: ['247 + 135 = 382', '1,245 + 326 = 1,571'],
+    gameTitle: '🏆 Addition Arena',
+    gameIntro: 'Solve each addition to score a point in the arena!',
+    game: [
+      q('245 + 123 = ?', ['358','368','378','458'], '368', '245 + 100 = 345, then 345 + 23 = 368.', 'Split 123 into 100 and 23.'),
+      q('378 + 245 = ?', ['613','623','633','723'], '623', '378 + 200 = 578, then 578 + 45 = 623.', 'Split 245 into 200 and 45.'),
+      q('1,245 + 678 = ?', ['1,823','1,913','1,923','2,023'], '1,923', '1,245 + 600 = 1,845, then 1,845 + 78 = 1,923.', 'Split 678 into 600 and 78.'),
+      q('2,506 + 1,234 = ?', ['3,640','3,740','3,840','3,730'], '3,740', '2,506 + 1,000 = 3,506, then 3,506 + 234 = 3,740.', 'Split 1,234 into 1,000 and 234.'),
+      q('3,875 + 2,149 = ?', ['5,924','6,024','6,124','5,824'], '6,024', '3,875 + 2,000 = 5,875, then 5,875 + 149 = 6,024.', 'Split 2,149 into 2,000 and 149.')
+    ],
+    practice: {
+      easy: [
+        q('34 + 25 = ?', ['49','54','59','69'], '59', '34 + 25 = 59.', 'Add the tens, then the ones.'),
+        q('48 + 31 = ?', ['69','79','89','78'], '79', '48 + 31 = 79.', 'Add the tens, then the ones.'),
+        q('120 + 150 = ?', ['260','270','280','370'], '270', '120 + 150 = 270.', 'Add the hundreds, then the tens.'),
+        q('200 + 300 = ?', ['400','500','600','300'], '500', '200 + 300 = 500.', 'Add the hundreds.'),
+        q('65 + 18 = ?', ['73','83','93','75'], '83', '65 + 18 = 83.', 'Split 18 into 10 and 8.'),
+        q('27 + 16 = ?', ['39','43','53','33'], '43', '27 + 16 = 43.', 'Add the tens, then the ones.'),
+        q('140 + 230 = ?', ['350','360','370','380'], '370', '140 + 230 = 370.', 'Add the hundreds, then the tens.'),
+        q('400 + 300 = ?', ['600','700','800','500'], '700', '400 + 300 = 700.', 'Add the hundreds.')
+      ],
+      medium: [
+        q('246 + 157 = ?', ['393','403','413','303'], '403', '246 + 100 = 346, then 346 + 57 = 403.', 'Split 157 into 100 and 57.'),
+        q('389 + 214 = ?', ['503','593','603','613'], '603', '389 + 200 = 589, then 589 + 14 = 603.', 'Split 214 into 200 and 14.'),
+        q('512 + 278 = ?', ['690','780','790','800'], '790', '512 + 200 = 712, then 712 + 78 = 790.', 'Split 278 into 200 and 78.'),
+        q('1,340 + 256 = ?', ['1,496','1,596','1,696','1,586'], '1,596', '1,340 + 200 = 1,540, then 1,540 + 56 = 1,596.', 'Split 256 into 200 and 56.'),
+        q('2,145 + 867 = ?', ['2,912','3,012','3,112','2,902'], '3,012', '2,145 + 800 = 2,945, then 2,945 + 67 = 3,012.', 'Split 867 into 800 and 67.'),
+        q('278 + 345 = ?', ['613','623','633','603'], '623', '278 + 300 = 578, then 578 + 45 = 623.', 'Split 345 into 300 and 45.'),
+        q('456 + 327 = ?', ['773','783','793','683'], '783', '456 + 300 = 756, then 756 + 27 = 783.', 'Split 327 into 300 and 27.'),
+        q('1,472 + 318 = ?', ['1,690','1,780','1,790','1,890'], '1,790', '1,472 + 300 = 1,772, then 1,772 + 18 = 1,790.', 'Split 318 into 300 and 18.')
+      ],
+      challenge: [
+        q('A library has 245 books and buys 178 more. How many books now?', ['413','423','433','443'], '423', '245 + 178 = 245 + 100 + 78 = 423.', 'Split 178 into 100 and 78.'),
+        q('A farm has 1,256 chickens. It buys 389 more. How many chickens now?', ['1,545','1,645','1,745','1,635'], '1,645', '1,256 + 300 = 1,556, then 1,556 + 89 = 1,645.', 'Split 389 into 300 and 89.'),
+        q('Estimate then solve: 2,875 + 3,146', ['5,921','6,021','6,121','5,021'], '6,021', 'Estimate 2,900 + 3,100 = 6,000, and the exact answer is 6,021.', 'Round each number to the nearest hundred first, then calculate exactly.'),
+        q('What number added to 458 makes 900?', ['432','442','452','462'], '442', '900 − 458 = 442.', 'Think: 458 + ? = 900.'),
+        q('Fill the missing number: 1,250 + ? = 2,000', ['650','700','750','800'], '750', '2,000 − 1,250 = 750.', 'Work backwards from 2,000.'),
+        q('A shop sold 356 shirts in the morning and 289 in the afternoon. How many shirts sold in total?', ['635','645','655','665'], '645', '356 + 200 = 556, then 556 + 89 = 645.', 'Split 289 into 200 and 89.'),
+        q('Estimate then solve: 1,675 + 2,238', ['3,813','3,913','4,013','3,713'], '3,913', 'Estimate 1,700 + 2,200 = 3,900, and the exact answer is 3,913.', 'Round each number to the nearest hundred first, then calculate exactly.'),
+        q('What number added to 675 makes 1,000?', ['315','325','335','345'], '325', '1,000 − 675 = 325.', 'Think: 675 + ? = 1,000.')
+      ]
+    }
+  },
+  { id:'u5', title:'Unit 5 · Subtraction', short:'Subtraction', icon:'➖', badge:'➖ Subtraction Hero',
+    intro: "Subtracting bigger numbers works the same way as addition — split the number you're taking away into friendly parts, and subtract each part one step at a time. You can always check a subtraction by adding back up.",
+    examples: ['503 − 278 = 225', '1,000 − 365 = 635'],
+    gameTitle: '🛡️ Subtraction Fortress',
+    gameIntro: 'Solve each subtraction to break through the fortress gate!',
+    game: [
+      q('456 − 123 = ?', ['323','333','343','433'], '333', '456 − 100 = 356, then 356 − 23 = 333.', 'Split 123 into 100 and 23.'),
+      q('700 − 245 = ?', ['445','455','465','545'], '455', '700 − 200 = 500, then 500 − 45 = 455.', 'Split 245 into 200 and 45.'),
+      q('1,245 − 678 = ?', ['467','567','667','577'], '567', '1,245 − 600 = 645, then 645 − 78 = 567.', 'Split 678 into 600 and 78.'),
+      q('2,000 − 875 = ?', ['1,025','1,125','1,225','1,325'], '1,125', '2,000 − 800 = 1,200, then 1,200 − 75 = 1,125.', 'Split 875 into 800 and 75.'),
+      q('4,302 − 1,456 = ?', ['2,746','2,846','2,946','2,646'], '2,846', '4,302 − 1,000 = 3,302, then 3,302 − 456 = 2,846.', 'Split 1,456 into 1,000 and 456.')
+    ],
+    practice: {
+      easy: [
+        q('58 − 23 = ?', ['25','35','45','30'], '35', '58 − 23 = 35.', 'Subtract the tens, then the ones.'),
+        q('96 − 42 = ?', ['44','54','64','58'], '54', '96 − 42 = 54.', 'Subtract the tens, then the ones.'),
+        q('150 − 80 = ?', ['60','70','80','90'], '70', '150 − 80 = 70.', 'Subtract the tens.'),
+        q('500 − 200 = ?', ['200','300','400','100'], '300', '500 − 200 = 300.', 'Subtract the hundreds.'),
+        q('74 − 19 = ?', ['45','55','65','50'], '55', '74 − 20 = 54, then + 1 = 55.', 'Try subtracting 20, then adding 1 back.'),
+        q('67 − 24 = ?', ['33','43','53','47'], '43', '67 − 24 = 43.', 'Subtract the tens, then the ones.'),
+        q('180 − 60 = ?', ['110','120','130','140'], '120', '180 − 60 = 120.', 'Subtract the tens.'),
+        q('600 − 500 = ?', ['50','100','150','200'], '100', '600 − 500 = 100.', 'Subtract the hundreds.')
+      ],
+      medium: [
+        q('342 − 158 = ?', ['174','184','194','204'], '184', '342 − 100 = 242, then 242 − 58 = 184.', 'Split 158 into 100 and 58.'),
+        q('623 − 247 = ?', ['366','376','386','326'], '376', '623 − 200 = 423, then 423 − 47 = 376.', 'Split 247 into 200 and 47.'),
+        q('810 − 365 = ?', ['435','445','455','465'], '445', '810 − 300 = 510, then 510 − 65 = 445.', 'Split 365 into 300 and 65.'),
+        q('1,500 − 680 = ?', ['720','820','920','780'], '820', '1,500 − 600 = 900, then 900 − 80 = 820.', 'Split 680 into 600 and 80.'),
+        q('2,406 − 918 = ?', ['1,388','1,488','1,588','1,428'], '1,488', '2,406 − 900 = 1,506, then 1,506 − 18 = 1,488.', 'Split 918 into 900 and 18.'),
+        q('563 − 278 = ?', ['275','285','295','305'], '285', '563 − 200 = 363, then 363 − 78 = 285.', 'Split 278 into 200 and 78.'),
+        q('740 − 365 = ?', ['365','375','385','395'], '375', '740 − 300 = 440, then 440 − 65 = 375.', 'Split 365 into 300 and 65.'),
+        q('1,620 − 740 = ?', ['780','880','980','870'], '880', '1,620 − 700 = 920, then 920 − 40 = 880.', 'Split 740 into 700 and 40.')
+      ],
+      challenge: [
+        q('A shop had 620 apples. It sold 385. How many apples are left?', ['225','235','245','255'], '235', '620 − 385 = 620 − 300 − 85 = 235.', 'Split 385 into 300 and 85.'),
+        q('A school has 1,450 students. 275 are on excursion. How many remain?', ['1,075','1,175','1,275','1,225'], '1,175', '1,450 − 275 = 1,450 − 200 − 75 = 1,175.', 'Split 275 into 200 and 75.'),
+        q('What number subtracted from 900 leaves 365?', ['435','535','635','365'], '535', '900 − 365 = 535.', 'Think: 900 − ? = 365.'),
+        q('Fill the missing number: 2,300 − ? = 1,150', ['1,050','1,150','1,250','950'], '1,150', '2,300 − 1,150 = 1,150.', 'Work out the gap between the two numbers.'),
+        q('Estimate then solve: 5,204 − 2,876', ['2,228','2,328','2,428','2,528'], '2,328', 'Estimate 5,200 − 2,900 = 2,300, and the exact answer is 2,328.', 'Round each number to the nearest hundred first, then calculate exactly.'),
+        q('A farmer had 845 eggs. He sold 468. How many eggs are left?', ['367','377','387','397'], '377', '845 − 400 = 445, then 445 − 68 = 377.', 'Split 468 into 400 and 68.'),
+        q('A stadium holds 2,500 seats. 1,675 are filled. How many seats are empty?', ['725','825','925','815'], '825', '2,500 − 1,675 = 2,500 − 1,600 − 75 = 825.', 'Split 1,675 into 1,600 and 75.'),
+        q('What number subtracted from 1,200 leaves 485?', ['615','715','815','705'], '715', '1,200 − 485 = 715.', 'Think: 1,200 − ? = 485.')
+      ]
+    }
+  }
+];
+
+const TERM1_BOSS = {
+  title: 'Term 1 Boss · The Number Kingdom Guardian 👑',
+  intro: "The Guardian of Number Kingdom tests everything you've learned this term! Answer 20 questions to earn your title.",
+  questions: [
+    // 4 place value
+    UNITS[0].practice.easy[0], UNITS[0].practice.medium[1], UNITS[0].practice.challenge[0], UNITS[0].practice.challenge[3],
+    // 4 number lines & counting
+    UNITS[1].practice.easy[0], UNITS[1].practice.medium[1], UNITS[1].practice.challenge[0], UNITS[1].practice.challenge[3],
+    // 4 odd/even & number properties
+    UNITS[2].practice.easy[0], UNITS[2].practice.medium[1], UNITS[2].practice.challenge[0], UNITS[2].practice.challenge[3],
+    // 4 addition
+    UNITS[3].practice.easy[2], UNITS[3].practice.medium[2], UNITS[3].practice.challenge[0], UNITS[3].practice.challenge[3],
+    // 4 subtraction
+    UNITS[4].practice.easy[2], UNITS[4].practice.medium[2], UNITS[4].practice.challenge[0], UNITS[4].practice.challenge[3]
+  ]
+};
+
+/* ===================== STATE ===================== */
+let progress = null; // { unitsDone:{u1:stars,...}, bossDone:bool, bossScore, coins, xp, badges:[] }
+let lesson = null;   // current unit's step-based lesson state (see buildUnitSteps)
+
+function defaultProgress(){
+  return { unitsDone: {}, bossDone: false, bossScore: 0, coins: 0, xp: 0, badges: [] };
+}
+function loadProgress(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+    if(raw && typeof raw === 'object') return Object.assign(defaultProgress(), raw, { unitsDone: raw.unitsDone || {}, badges: raw.badges || [] });
+  }catch(e){}
+  return defaultProgress();
+}
+function saveProgress(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }catch(e){} }
+
+function $(id){ return document.getElementById(id); }
+function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function showScreen(id){ ['name-screen','map-screen','unit-screen','boss-screen','reward-screen'].forEach(s => $(s).classList.toggle('hidden', s !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* ===================== SOUND (self-contained) ===================== */
+function getCtx(){ if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)(); return window.__actx; }
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playTap(){ beep(430, 0.07, 'triangle'); }
+function playRight(){ beep(660, 0.12, 'sine'); setTimeout(()=>beep(880,0.16,'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
+function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+function spawnConfetti(){
+  const colors = ['#a97c25','#2e6b58','#e0703a','#7a5aa8','#3f9fc9'];
+  for(let i = 0; i < 24; i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[i % colors.length];
+    el.style.animationDuration = (1.6 + Math.random() * 1.2) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+  }
+}
+
+/* ===================== MAP (same winding-path scene as the other quest games, desert theme for Number Kingdom) ===================== */
+const SCENE = { sky:'#ffe6b5', ground:'#f2d79b', deco:[
+  {e:'🏰', x:80,  y:170, s:60}, {e:'🐫', x:930, y:520, s:56}, {e:'🌵', x:180, y:560, s:34},
+  {e:'👑', x:620, y:120, s:34}, {e:'🌴', x:430, y:585, s:32}, {e:'⛺', x:760, y:250, s:36}
+]};
+const MAP_PATH_D = 'M 60 555 C 170 555 210 480 300 460 C 400 438 470 480 530 445 ' +
+                   'C 600 405 550 340 470 320 C 390 298 350 250 400 205 ' +
+                   'C 450 160 550 165 640 195 C 740 230 850 200 940 150';
+const STOPS = UNITS.length + 1; // 5 units + boss
+
+function isUnitUnlocked(i){ if(i === 0) return true; return !!progress.unitsDone[UNITS[i-1].id]; }
+function isBossUnlocked(){ return UNITS.every(u => !!progress.unitsDone[u.id]); }
+
+function renderStats(){
+  $('player-name').textContent = localStorage.getItem(NAME_KEY) || 'Explorer';
+  $('stat-coins').textContent = progress.coins;
+  $('stat-xp').textContent = progress.xp;
+  $('stat-stars').textContent = Object.values(progress.unitsDone).reduce((a,b)=>a+b,0);
+  $('badge-row').innerHTML = progress.badges.map(b => '<span class="badge-chip" title="' + b + '">' + b.split(' ')[0] + '</span>').join('');
+}
+
+function renderMap(){
+  renderStats();
+  showScreen('map-screen');
+  const svg = $('map-svg');
+  const measure = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i = 0; i < STOPS; i++){
+    const p = measure.getPointAtLength(total * ((i + 0.5) / STOPS));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
+
+  let html = '<defs>' +
+    '<linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + SCENE.sky + '"/><stop offset="100%" stop-color="' + SCENE.ground + '"/></linearGradient>' +
+    '<radialGradient id="stoneDone" cx="35%" cy="30%"><stop offset="0%" stop-color="#f4cf78"/><stop offset="100%" stop-color="#b98a26"/></radialGradient>' +
+    '<radialGradient id="stoneNow" cx="35%" cy="30%"><stop offset="0%" stop-color="#63c39a"/><stop offset="100%" stop-color="#2e6b58"/></radialGradient>' +
+    '<radialGradient id="stoneLock" cx="35%" cy="30%"><stop offset="0%" stop-color="#d8d6cf"/><stop offset="100%" stop-color="#a5a29a"/></radialGradient>' +
+    '<radialGradient id="stoneBoss" cx="35%" cy="30%"><stop offset="0%" stop-color="#ef9d8f"/><stop offset="100%" stop-color="#a3352b"/></radialGradient>' +
+  '</defs>';
+  html += '<rect x="0" y="0" width="1000" height="620" fill="url(#skyGrad)"/>';
+  html += '<ellipse cx="500" cy="640" rx="620" ry="150" fill="rgba(255,255,255,.2)"/>';
+  SCENE.deco.forEach(d => { html += '<text x="' + d.x + '" y="' + d.y + '" font-size="' + d.s + '" text-anchor="middle">' + d.e + '</text>'; });
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="42" stroke-linecap="round" opacity=".92"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#e5c98a" stroke-width="30" stroke-linecap="round"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
+
+  let currentIdx = UNITS.findIndex((u,i) => isUnitUnlocked(i) && !progress.unitsDone[u.id]);
+  if(currentIdx === -1) currentIdx = isBossUnlocked() && !progress.bossDone ? UNITS.length : -1;
+
+  points.forEach((pt, i) => {
+    const isBoss = i === UNITS.length;
+    const unlocked = isBoss ? isBossUnlocked() : isUnitUnlocked(i);
+    const done = isBoss ? progress.bossDone : !!progress.unitsDone[UNITS[i].id];
+    const isCurrent = i === currentIdx;
+    const fill = isBoss ? 'url(#stoneBoss)' : (done ? 'url(#stoneDone)' : (isCurrent ? 'url(#stoneNow)' : 'url(#stoneLock)'));
+    const icon = !unlocked ? '🔒' : (isBoss ? '👑' : UNITS[i].icon);
+
+    if(isCurrent) html += '<circle class="pulse-ring" cx="' + pt.x + '" cy="' + pt.y + '" r="30" fill="none" stroke="#2e6b58" stroke-width="4"/>';
+    html += '<g class="node-g' + (unlocked ? '' : ' locked') + '" data-stop="' + i + '">';
+    html += '<circle class="node-disc" cx="' + pt.x + '" cy="' + pt.y + '" r="30" fill="' + fill + '" stroke="#fff" stroke-width="5"/>';
+    html += '<text class="node-num' + (unlocked ? '' : ' locked') + '" x="' + pt.x + '" y="' + (pt.y + 7) + '" text-anchor="middle" style="font-size:22px;">' + icon + '</text>';
+    html += '</g>';
+    if(done) html += '<text x="' + pt.x + '" y="' + (pt.y + 48) + '" font-size="15" text-anchor="middle">' + '⭐'.repeat(isBoss ? 0 : progress.unitsDone[UNITS[i].id]) + '</text>';
+    if(isCurrent) html += '<text class="avatar-marker" x="' + pt.x + '" y="' + (pt.y - 42) + '" font-size="34" text-anchor="middle">🧒</text>';
+    if(i === STOPS - 1) html += '<text x="' + (pt.x + 55) + '" y="' + (pt.y + 10) + '" font-size="34" text-anchor="middle">🏁</text>';
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g => {
+    g.addEventListener('click', () => {
+      const i = parseInt(g.dataset.stop, 10);
+      const isBoss = i === UNITS.length;
+      const unlocked = isBoss ? isBossUnlocked() : isUnitUnlocked(i);
+      if(!unlocked){ playWrong(); return; }
+      playTap();
+      if(isBoss) startBoss(); else startUnit(i);
+    });
+  });
+  $('map-help').textContent = isBossUnlocked() && !progress.bossDone
+    ? 'All five units are done — the Kingdom Guardian awaits! 👑'
+    : (currentIdx >= 0 ? 'Tap the glowing stone to play ' + UNITS[currentIdx].title.split(' · ')[1] + '!' : 'Every stop is complete — great work, Maths Explorer!');
+}
+
+/* ===================== UNIT FLOW ===================== */
+/* Each unit is six named, differently-shaped steps — not one long block of
+   repeated multiple-choice questions — same lesson engine as Math Quest —
+   Year 2, adapted to Year 3 content. */
+function buildUnitSteps(u){
+  const mixed = shuffle(u.practice.easy.concat(u.practice.medium, u.practice.challenge)).slice(0, 5);
+  return [
+    { type:'learn', icon:'👀', label:'Learn it' },
+    { type: u.buildGame ? 'buildgame' : 'game', icon:'🎮', label:'Play it', title:u.gameTitle, intro:u.gameIntro },
+    { type:'quiz', icon:'🟢', label:'Try it', bank:u.practice.easy, title:'Try It!', intro:"Let's practise with some easy questions." },
+    { type:'quiz', icon:'🟡', label:'Level Up', bank:u.practice.medium, title:'Level Up!', intro:"A little trickier now — you've got this!" },
+    { type:'quiz', icon:'🔴', label:'Challenge', bank:u.practice.challenge, title:'Challenge!', intro:'Our hardest questions for this unit.' },
+    { type:'quiz', icon:'🏆', label:'Show What You Know', bank:mixed, title:'Show What You Know!', intro:'A quick mixed recap of everything in this unit.' }
+  ];
+}
+
+function startUnit(unitIndex){
+  const u = UNITS[unitIndex];
+  lesson = { unitIndex, steps: buildUnitSteps(u), stepIndex:0, showIntro:true, mistakes:0, cleared:[], qIdx:0, built:null };
+  $('side-unit-name').textContent = u.short;
+  showScreen('unit-screen');
+  renderUnitStep();
+}
+
+function renderSideSteps(){
+  const box = $('side-steps');
+  box.innerHTML = '';
+  lesson.steps.forEach((s, i) => {
+    const done = lesson.cleared.indexOf(i) !== -1;
+    const current = i === lesson.stepIndex;
+    const locked = !done && !current;
+    const el = document.createElement('div');
+    el.className = 'side-step' + (current ? ' current' : done ? ' done' : ' locked');
+    el.innerHTML =
+      '<span class="ss-num">' + (i + 1) + '</span>' +
+      '<span class="ss-icon">' + s.icon + '</span>' +
+      '<span class="ss-label">' + s.label + '</span>' +
+      '<span class="ss-state">' + (done ? '✅' : current ? '▶️' : '🔒') + '</span>';
+    if(!locked){
+      el.addEventListener('click', () => {
+        if(i === lesson.stepIndex) return;
+        playTap();
+        lesson.stepIndex = i; lesson.showIntro = true; lesson.qIdx = 0;
+        renderUnitStep();
+      });
+    }
+    box.appendChild(el);
+  });
+}
+
+function clearCurrentStep(){
+  if(lesson.cleared.indexOf(lesson.stepIndex) === -1) lesson.cleared.push(lesson.stepIndex);
+  if(lesson.stepIndex < lesson.steps.length - 1){
+    lesson.stepIndex++; lesson.showIntro = true; lesson.qIdx = 0;
+    renderUnitStep();
+  } else {
+    finishUnit(UNITS[lesson.unitIndex]);
+  }
+}
+
+function renderUnitStep(){
+  const u = UNITS[lesson.unitIndex];
+  const step = lesson.steps[lesson.stepIndex];
+  $('step-pill').textContent = (lesson.stepIndex + 1) + '/' + lesson.steps.length;
+  $('heart-fill').style.width = Math.round((lesson.cleared.length / lesson.steps.length) * 100) + '%';
+  renderSideSteps();
+  const body = $('unit-body');
+
+  if(step.type === 'learn'){
+    body.innerHTML =
+      '<div class="phase-label">' + u.title + '</div>' +
+      '<h2>' + u.icon + " Let's Learn!</h2>" +
+      '<p>' + u.intro + '</p>' +
+      '<div class="example-list">' + u.examples.map(e => '<div>' + e + '</div>').join('') + '</div>' +
+      '<button class="big-btn" id="learn-next">Got it →</button>';
+    $('learn-next').addEventListener('click', () => { playTap(); clearCurrentStep(); });
+    return;
+  }
+
+  if(lesson.showIntro){
+    body.innerHTML =
+      '<h2>' + step.title + '</h2>' +
+      '<p>' + step.intro + '</p>' +
+      '<button class="big-btn" id="step-play">Play ▶</button>';
+    $('step-play').addEventListener('click', () => { playTap(); lesson.showIntro = false; renderUnitStep(); });
+    return;
+  }
+
+  if(step.type === 'game') return renderUnitGame(body, u);
+  if(step.type === 'buildgame') return renderBuildGame(body, u);
+  if(step.type === 'quiz') return renderQuizStep(body, step);
+}
+
+function renderUnitGame(body, u){
+  const item = u.game[lesson.qIdx];
+  body.innerHTML =
+    '<div class="progress-pill">Step ' + (lesson.qIdx+1) + ' of ' + u.game.length + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid' + (item.options.length > 3 ? ' cols-4' : '') + '" id="game-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<div id="game-feedback"></div>';
+  let answered = false;
+  document.querySelectorAll('#game-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('game-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight();
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">🤔 ' + item.explain + '</div>';
+      }
+      setTimeout(() => {
+        lesson.qIdx++;
+        if(lesson.qIdx >= u.game.length) clearCurrentStep(); else renderUnitStep();
+      }, 1400);
+    });
+  });
+}
+
+/* Build-the-number: supports an optional thousands column (item.th) so it
+   works for both 3-digit and 4-digit targets. */
+function renderBuildGame(body, u){
+  const item = u.buildGame[lesson.qIdx];
+  const cols = item.th !== undefined ? ['th','h','t','o'] : ['h','t','o'];
+  const LABELS = { th:'Thousands', h:'Hundreds', t:'Tens', o:'Ones' };
+  const TAPS = { th:'+1000', h:'+100', t:'+10', o:'+1' };
+  const PLACE = { th:1000, h:100, t:10, o:1 };
+  body.innerHTML =
+    '<div class="progress-pill">Number ' + (lesson.qIdx+1) + ' of ' + u.buildGame.length + '</div>' +
+    '<div class="target-number">' + item.target.toLocaleString() + '</div>' +
+    '<div class="block-row">' +
+      cols.map(c => '<div class="block-col"><div class="col-label">' + LABELS[c] + '</div><div class="block-count" id="cnt-' + c + '">0</div><button class="block-tap" id="tap-' + c + '">' + TAPS[c] + '</button></div>').join('') +
+    '</div>' +
+    '<div class="center"><button class="big-btn" id="check-build">Build It! 🏰</button></div>' +
+    '<div id="build-feedback"></div>';
+  lesson.built = {};
+  cols.forEach(c => { lesson.built[c] = 0; });
+  const paint = () => { cols.forEach(c => { $('cnt-' + c).textContent = lesson.built[c]; }); };
+  cols.forEach(c => {
+    $('tap-' + c).addEventListener('click', () => { if(lesson.built[c] < 9){ lesson.built[c]++; playTap(); paint(); } });
+  });
+  $('check-build').addEventListener('click', () => {
+    const built = cols.reduce((sum, c) => sum + lesson.built[c] * PLACE[c], 0);
+    const box = $('build-feedback');
+    if(built === item.target){
+      playRight();
+      const breakdown = cols.map(c => lesson.built[c] * PLACE[c]).join(' + ');
+      box.innerHTML = '<div class="feedback-box good">✅ ' + breakdown + ' = ' + item.target.toLocaleString() + '. Well built!</div>';
+      setTimeout(() => {
+        lesson.qIdx++;
+        if(lesson.qIdx >= u.buildGame.length) clearCurrentStep(); else renderUnitStep();
+      }, 1300);
+    } else {
+      playWrong();
+      box.innerHTML = '<div class="feedback-box">🤔 You built ' + built.toLocaleString() + '. The target is ' + item.target.toLocaleString() + '. Try adjusting the blocks!</div>';
+    }
+  });
+}
+
+function renderQuizStep(body, step){
+  const total = step.bank.length;
+  const item = step.bank[lesson.qIdx];
+  body.innerHTML =
+    '<div class="progress-pill">Question ' + (lesson.qIdx+1) + ' of ' + total + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid' + (item.options.length > 3 ? ' cols-4' : '') + '" id="qz-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<button class="hint-btn" id="hint-btn">💡 Need a hint?</button>' +
+    '<div id="qz-feedback"></div>';
+  $('hint-btn').addEventListener('click', () => { $('hint-btn').outerHTML = '<div class="feedback-box">💡 ' + item.hint + '</div>'; });
+  let answered = false;
+  document.querySelectorAll('#qz-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('qz-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight();
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        lesson.mistakes++;
+        el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">Not quite — here\'s how to solve it: ' + item.explain + ' The correct answer is <b>' + item.answer + '</b>.</div>';
+      }
+      setTimeout(() => {
+        lesson.qIdx++;
+        if(lesson.qIdx >= total) clearCurrentStep(); else renderUnitStep();
+      }, item.explain.length > 60 ? 2600 : 1600);
+    });
+  });
+}
+
+function starsFor(mistakes){ return mistakes === 0 ? 3 : mistakes <= 3 ? 2 : 1; }
+
+function finishUnit(u){
+  const stars = starsFor(lesson.mistakes);
+  const xp = 30 + stars * 10;
+  const coins = 10 + stars * 5;
+  const isNew = !progress.unitsDone[u.id];
+  progress.unitsDone[u.id] = Math.max(progress.unitsDone[u.id] || 0, stars);
+  progress.xp += xp;
+  progress.coins += coins;
+  if(isNew && !progress.badges.includes(u.badge)) progress.badges.push(u.badge);
+  saveProgress();
+  playWin();
+  $('reward-emoji').textContent = '🎉';
+  $('reward-title').textContent = u.short + ' Complete!';
+  $('reward-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  $('reward-xp').textContent = xp;
+  $('reward-coins').textContent = coins;
+  if(isNew){ $('reward-badge').classList.remove('hidden'); $('reward-badge').textContent = 'New badge: ' + u.badge; }
+  else { $('reward-badge').classList.add('hidden'); }
+  showScreen('reward-screen');
+  spawnConfetti();
+}
+
+/* ===================== TERM 1 BOSS (one continuous battle, no step sidebar) ===================== */
+let stage = null; // boss-only state: { phase, idx, mistakes, correct, allQ }
+function startBoss(){
+  stage = { phase:'intro', idx:0, mistakes:0, correct:0, allQ: shuffle(TERM1_BOSS.questions) };
+  showScreen('boss-screen');
+  renderBossStage();
+}
+function renderBossStage(){
+  const body = $('boss-body');
+  if(stage.phase === 'intro') return renderBossIntro(body);
+  if(stage.phase === 'quiz') return renderBossQuestion(body);
+  if(stage.phase === 'reward') return finishBoss();
+}
+function renderBossIntro(body){
+  body.innerHTML =
+    '<div class="phase-label">' + TERM1_BOSS.title + '</div>' +
+    '<h2>👑 The Kingdom Guardian</h2>' +
+    '<p>' + TERM1_BOSS.intro + '</p>' +
+    '<div class="center"><button class="big-btn" id="to-boss-quiz">Begin the Battle! ⚔️</button></div>';
+  $('to-boss-quiz').addEventListener('click', () => { playTap(); stage.phase = 'quiz'; renderBossStage(); });
+}
+function renderBossQuestion(body){
+  const total = stage.allQ.length;
+  const item = stage.allQ[stage.idx];
+  body.innerHTML =
+    '<div class="phase-label">👑 Boss Battle</div>' +
+    '<div class="progress-pill">Question ' + (stage.idx+1) + ' of ' + total + '</div>' +
+    '<div class="quiz-q">' + item.q + '</div>' +
+    '<div class="choice-grid' + (item.options.length > 3 ? ' cols-4' : '') + '" id="b-choices">' + item.options.map(o => '<div class="choice" data-v="' + o + '">' + o + '</div>').join('') + '</div>' +
+    '<div id="b-feedback"></div>';
+  let answered = false;
+  document.querySelectorAll('#b-choices .choice').forEach(el => {
+    el.addEventListener('click', () => {
+      if(answered) return;
+      answered = true;
+      const box = $('b-feedback');
+      if(el.dataset.v === item.answer){
+        el.classList.add('correct'); playRight(); stage.correct++;
+        box.innerHTML = '<div class="feedback-box good">✅ ' + item.explain + '</div>';
+      } else {
+        stage.mistakes++; el.classList.add('wrong'); playWrong();
+        box.innerHTML = '<div class="feedback-box">The answer was <b>' + item.answer + '</b>. ' + item.explain + '</div>';
+      }
+      setTimeout(() => {
+        stage.idx++;
+        if(stage.idx >= total){ stage.phase = 'reward'; }
+        renderBossStage();
+      }, 1500);
+    });
+  });
+}
+function bossTitleFor(score){
+  if(score >= 20) return { label:'👑 Number Kingdom Master', emoji:'👑' };
+  if(score >= 17) return { label:'⭐⭐⭐ Excellent', emoji:'⭐' };
+  if(score >= 13) return { label:'⭐⭐ Strong', emoji:'⭐' };
+  if(score >= 8) return { label:'⭐ Developing', emoji:'🌱' };
+  return { label:'🌱 Keep Training', emoji:'🌱' };
+}
+function finishBoss(){
+  const title = bossTitleFor(stage.correct);
+  const xp = 50 + stage.correct * 5;
+  const coins = 30 + stage.correct * 3;
+  progress.bossDone = true;
+  progress.bossScore = Math.max(progress.bossScore, stage.correct);
+  progress.xp += xp;
+  progress.coins += coins;
+  if(!progress.badges.includes('👑 Number Kingdom Champion')) progress.badges.push('👑 Number Kingdom Champion');
+  saveProgress();
+  playWin();
+  $('reward-emoji').textContent = title.emoji;
+  $('reward-title').textContent = 'Term 1 Complete! ' + stage.correct + '/20';
+  $('reward-stars').textContent = title.label;
+  $('reward-xp').textContent = xp;
+  $('reward-coins').textContent = coins;
+  $('reward-badge').classList.remove('hidden');
+  $('reward-badge').textContent = 'New badge: 👑 Number Kingdom Champion';
+  showScreen('reward-screen');
+  spawnConfetti();
+}
+
+$('reward-continue-btn').addEventListener('click', () => { playTap(); renderMap(); });
+$('unit-quit-btn').addEventListener('click', () => { if(confirm('Leave this unit? Your progress so far in this stop will not be saved.')){ playTap(); renderMap(); } });
+$('boss-quit-btn').addEventListener('click', () => { if(confirm('Leave the boss battle? Your progress so far will not be saved.')){ playTap(); renderMap(); } });
+
+/* ===================== NAME / BOOT ===================== */
+$('name-start-btn').addEventListener('click', () => {
+  const val = $('name-input').value.trim();
+  localStorage.setItem(NAME_KEY, val || 'Explorer');
+  progress = loadProgress();
+  renderMap();
+});
+$('name-input') && $('name-input').addEventListener('keydown', e => { if(e.key === 'Enter') $('name-start-btn').click(); });
+
+const existingName = localStorage.getItem(NAME_KEY);
+progress = loadProgress();
+if(existingName){
+  renderMap();
+} else {
+  showScreen('name-screen');
+  setTimeout(() => $('name-input').focus(), 150);
+}
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
