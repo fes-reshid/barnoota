@@ -405,6 +405,18 @@ document.querySelectorAll('.subject-card').forEach(card => {
       window.location.href = 'kids-math-year3-quest.html';
       return;
     }
+    // Foundation has no grade-specific curriculum of its own yet, so route
+    // straight to the real English/Math Quest games (the same account logs
+    // a child straight in) instead of the generic practice every other
+    // class/subject still uses.
+    if(subject === 'english' && selectedYear === 'foundation'){
+      window.location.href = 'kids-english-quest.html';
+      return;
+    }
+    if(subject === 'math' && selectedYear === 'foundation'){
+      window.location.href = 'kids-math-quest.html';
+      return;
+    }
     const page = SUBJECT_PAGES[subject];
     window.location.href = YEAR_GATED_SUBJECTS.includes(subject)
       ? page + '?year=' + encodeURIComponent(selectedYear)
