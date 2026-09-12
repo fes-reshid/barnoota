@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Hijrah Race — Kids Corner</title>
+<meta name="description" content="A two-player desert obstacle race inspired by the Hijrah — jump the rocks and be first to reach Madinah! Play together on one keyboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --coral-dark:#b8552a;
+    --p1:#2e86ab; --p2:#b8552a;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:36px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--coral); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:16px; color:#6b5a3f; line-height:1.5; max-width:560px; margin:0 auto; }
+
+  .game-wrap{ max-width:640px; margin:0 auto; padding:20px 20px 90px; position:relative; }
+
+  .lanes{ display:flex; flex-direction:column; gap:16px; }
+  .lane{ background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:12px 14px; }
+  .lane-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap; }
+  .lane-head .who{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); display:flex; align-items:center; gap:6px; }
+  .lane-head .who .dot{ width:10px; height:10px; border-radius:50%; }
+  .lane[data-player="1"] .who .dot{ background:var(--p1); }
+  .lane[data-player="2"] .who .dot{ background:var(--p2); }
+  .key-hint{ font-size:12.5px; color:#8a7654; background:var(--parchment-deep); padding:3px 10px; border-radius:10px; font-family:'Marcellus'; }
+
+  .lane-track{
+    position:relative; height:120px; border-radius:14px; overflow:hidden;
+    background:linear-gradient(to bottom, #fbe7ba 0%, #f0cd8c 62%, #e3b46b 62%, #d9a75c 100%);
+    border:2px solid var(--gold-soft);
+  }
+  .sun{ position:absolute; top:8px; right:16px; width:20px; height:20px; border-radius:50%; background:#fff3cf; opacity:.8; }
+  .finish-icon{ position:absolute; right:8px; bottom:14px; font-size:34px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.2)); }
+  .runner{ position:absolute; left:30px; bottom:16px; font-size:38px; line-height:1; transform:translateY(0); filter:drop-shadow(0 2px 3px rgba(0,0,0,.2)); }
+  .runner.jump{ animation:jumpArc .55s ease-out; }
+  .runner.stumble{ animation:stumbleShake .4s ease; }
+  @keyframes jumpArc{ 0%{ transform:translateY(0); } 45%{ transform:translateY(-46px); } 100%{ transform:translateY(0); } }
+  @keyframes stumbleShake{ 0%,100%{ transform:translateX(0) rotate(0); } 25%{ transform:translateX(-6px) rotate(-8deg); } 75%{ transform:translateX(6px) rotate(8deg); } }
+  .obstacle{ position:absolute; bottom:14px; font-size:28px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.18)); }
+  .sparkle{ position:absolute; font-size:18px; animation:sparklePop .5s ease-out forwards; pointer-events:none; }
+  @keyframes sparklePop{ 0%{ opacity:1; transform:translateY(0) scale(.8); } 100%{ opacity:0; transform:translateY(-30px) scale(1.3); } }
+
+  .progress-track{ background:var(--parchment-deep); border-radius:10px; height:11px; overflow:hidden; margin-top:9px; }
+  .progress-fill{ height:100%; width:0%; transition:width .12s linear; }
+  .lane[data-player="1"] .progress-fill{ background:linear-gradient(90deg,#79b9d9,var(--p1)); }
+  .lane[data-player="2"] .progress-fill{ background:linear-gradient(90deg,#e0a27f,var(--p2)); }
+
+  .overlay{
+    position:absolute; inset:20px 20px 30px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(250,243,224,.96); border:2px solid var(--gold-soft); border-radius:22px; text-align:center; padding:24px 20px;
+  }
+  .overlay h2{ font-family:'Marcellus'; color:var(--ink-navy); font-size:24px; margin:0 0 10px; }
+  .overlay p{ font-size:15.5px; color:#6b5a3f; margin:0 0 18px; max-width:420px; }
+  .legend{ display:flex; gap:18px; justify-content:center; margin:0 0 18px; flex-wrap:wrap; }
+  .legend-item{ font-size:13px; color:var(--ink-brown); display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .legend-item .em{ font-size:26px; }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:11px 28px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--coral); color:#fff; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--coral-dark); }
+  .hidden{ display:none !important; }
+  .hint{ text-align:center; font-size:13.5px; color:#8a7654; margin-top:14px; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+
+  .confetti-piece{
+    position:fixed; top:-20px; width:9px; height:9px; z-index:500; pointer-events:none;
+    animation:confettiFall linear forwards;
+  }
+  @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids-games.html">← Games</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">🐪 Racing Game · Two Players</p>
+  <h1>Hijrah Race</h1>
+  <p>Two travellers race across the desert to reach Madinah — inspired by the historic Hijrah journey. Jump over the rocks and cacti, and be first to the mosque!</p>
+</div>
+
+<div class="game-wrap">
+  <div class="lanes">
+    <div class="lane" id="lane-1" data-player="1">
+      <div class="lane-head">
+        <span class="who"><span class="dot"></span>Player 1</span>
+        <span class="key-hint">Press W to jump</span>
+      </div>
+      <div class="lane-track" id="track-1">
+        <div class="sun"></div>
+        <div class="finish-icon">🕌</div>
+        <div class="runner" id="runner-1">🐪</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-1"></div></div>
+    </div>
+    <div class="lane" id="lane-2" data-player="2">
+      <div class="lane-head">
+        <span class="who"><span class="dot"></span>Player 2</span>
+        <span class="key-hint">Press ↑ to jump</span>
+      </div>
+      <div class="lane-track" id="track-2">
+        <div class="sun"></div>
+        <div class="finish-icon">🕌</div>
+        <div class="runner" id="runner-2">🐫</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-2"></div></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="start-overlay">
+    <h2>Ready to race?</h2>
+    <p>In 622 CE, believers migrated from Makkah to Madinah for the sake of Allah. Race there first — jump at the right moment or you'll stumble and lose ground!</p>
+    <div class="legend">
+      <div class="legend-item"><span class="em">🪨🌵</span>Jump these!</div>
+      <div class="legend-item"><span class="em">🕌</span>First one there wins</div>
+    </div>
+    <button class="btn" id="start-btn">Start Race</button>
+  </div>
+  <div class="overlay hidden" id="end-overlay">
+    <h2 id="end-title">We have a winner!</h2>
+    <p id="end-msg"></p>
+    <button class="btn" id="restart-btn">Race Again</button>
+  </div>
+
+  <p class="hint">Two players, one keyboard — sit side by side and race together!</p>
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids-games.html">Games</a>
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const OBSTACLES = ['🪨', '🌵'];
+const RUNNER_X = 30;      // px from left edge, where the runner stands
+const HIT_ZONE = 26;      // px either side of RUNNER_X that counts as a collision
+const BASE_SPEED = 90;    // px/sec obstacles travel
+const PROGRESS_PER_MS = 100 / 22000; // clean run takes ~22s to reach 100%
+const STUMBLE_MS = 700;   // how long progress is paused after a hit
+
+function makePlayer(num){
+  return {
+    num,
+    track: document.getElementById('track-' + num),
+    runner: document.getElementById('runner-' + num),
+    fill: document.getElementById('progress-' + num),
+    progress: 0,
+    jumping: false,
+    stumbleUntil: 0,
+    obstacles: [],
+    spawnTimer: null,
+    finished: false
+  };
+}
+
+let players = [makePlayer(1), makePlayer(2)];
+let running = false;
+let rafId = null;
+let lastTs = null;
+
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)();
+  return window.__actx;
+}
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playJump(){ beep(520, 0.09, 'sine'); }
+function playStumble(){ beep(150, 0.2, 'sawtooth'); }
+function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine'), i*140)); }
+
+function burstConfetti(){
+  const colors = ['#a97c25','#2e6b58','#d3ac5c','#1f4f40','#2e86ab'];
+  for(let i = 0; i < 60; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 3600);
+  }
+}
+
+function spawnObstacle(p){
+  if(!running || p.finished) return;
+  const rect = p.track.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = 'obstacle';
+  el.textContent = OBSTACLES[Math.floor(Math.random() * OBSTACLES.length)];
+  el.style.left = rect.width + 'px';
+  p.track.appendChild(el);
+  p.obstacles.push({ el, x: rect.width, passed: false });
+  const delay = 900 + Math.random() * 700;
+  p.spawnTimer = setTimeout(() => spawnObstacle(p), delay);
+}
+
+function triggerJump(num){
+  const p = players[num - 1];
+  if(!running || p.finished || p.jumping) return;
+  p.jumping = true;
+  p.runner.classList.remove('jump');
+  void p.runner.offsetWidth; // restart animation
+  p.runner.classList.add('jump');
+  playJump();
+  setTimeout(() => { p.jumping = false; p.runner.classList.remove('jump'); }, 550);
+}
+
+function stumble(p){
+  if(Date.now() < p.stumbleUntil) return;
+  p.stumbleUntil = Date.now() + STUMBLE_MS;
+  playStumble();
+  p.runner.classList.remove('stumble');
+  void p.runner.offsetWidth;
+  p.runner.classList.add('stumble');
+  setTimeout(() => p.runner.classList.remove('stumble'), 400);
+}
+
+function spawnSparkle(p){
+  const rect = p.track.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = 'sparkle';
+  el.textContent = '✨';
+  el.style.left = (RUNNER_X + 10) + 'px';
+  el.style.bottom = '46px';
+  p.track.appendChild(el);
+  setTimeout(() => el.remove(), 520);
+}
+
+function updatePlayer(p, dt){
+  if(p.finished) return;
+
+  const rect = p.track.getBoundingClientRect();
+  for(let i = p.obstacles.length - 1; i >= 0; i--){
+    const ob = p.obstacles[i];
+    ob.x -= BASE_SPEED * (dt / 1000);
+    ob.el.style.left = ob.x + 'px';
+
+    if(!ob.passed && ob.x <= RUNNER_X + HIT_ZONE && ob.x >= RUNNER_X - HIT_ZONE){
+      ob.passed = true;
+      if(p.jumping){ spawnSparkle(p); }
+      else { stumble(p); }
+    }
+    if(ob.x < -40){
+      ob.el.remove();
+      p.obstacles.splice(i, 1);
+    }
+  }
+
+  if(Date.now() >= p.stumbleUntil){
+    p.progress = Math.min(100, p.progress + PROGRESS_PER_MS * dt);
+    p.fill.style.width = p.progress + '%';
+  }
+
+  if(p.progress >= 100 && !p.finished){
+    p.finished = true;
+    if(p.spawnTimer) clearTimeout(p.spawnTimer);
+    endRace(p.num);
+  }
+}
+
+function gameLoop(ts){
+  if(!running) return;
+  if(lastTs === null) lastTs = ts;
+  const dt = Math.min(ts - lastTs, 50);
+  lastTs = ts;
+  players.forEach(p => updatePlayer(p, dt));
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function startRace(){
+  players.forEach(p => {
+    p.obstacles.forEach(ob => ob.el.remove());
+    p.obstacles = [];
+    p.progress = 0;
+    p.fill.style.width = '0%';
+    p.jumping = false;
+    p.finished = false;
+    p.stumbleUntil = 0;
+    p.runner.classList.remove('jump', 'stumble');
+    if(p.spawnTimer) clearTimeout(p.spawnTimer);
+  });
+  lastTs = null;
+  running = true;
+  document.getElementById('start-overlay').classList.add('hidden');
+  document.getElementById('end-overlay').classList.add('hidden');
+  players.forEach(p => spawnObstacle(p));
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function endRace(winnerNum){
+  running = false;
+  if(rafId) cancelAnimationFrame(rafId);
+  players.forEach(p => { if(p.spawnTimer) clearTimeout(p.spawnTimer); });
+  playWin();
+  burstConfetti();
+  document.getElementById('end-title').textContent = 'Player ' + winnerNum + ' reaches Madinah first! 🕌';
+  document.getElementById('end-msg').textContent = 'Great race! Play again and see who wins this time.';
+  document.getElementById('end-overlay').classList.remove('hidden');
+}
+
+document.addEventListener('keydown', (e) => {
+  if(!running) return;
+  if(e.key === 'w' || e.key === 'W'){ e.preventDefault(); triggerJump(1); }
+  if(e.key === 'ArrowUp'){ e.preventDefault(); triggerJump(2); }
+});
+
+document.getElementById('start-btn').addEventListener('click', startRace);
+document.getElementById('restart-btn').addEventListener('click', startRace);
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
