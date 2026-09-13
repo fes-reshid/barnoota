@@ -1,4 +1,4 @@
-/* Deen Sprouts — shared small behaviors used across pages. */
+/* Tayyibly — shared small behaviors used across pages. */
 
 document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
@@ -23,5 +23,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function comingSoon(){
-  alert("Deen Sprouts hasn't launched yet — there's nothing to sign up for just yet! Check back soon. 🌱");
+  alert("Tayyibly hasn't launched yet — there's nothing to sign up for just yet! Check back soon. 🌱");
 }
