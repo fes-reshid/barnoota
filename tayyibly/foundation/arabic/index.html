@@ -37,6 +37,8 @@
   .map-deco{ position:absolute; font-size:26px; opacity:.7; }
   svg.map-svg{ display:block; width:100%; height:auto; position:relative; z-index:2; }
   .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g.locked .node-disc{ opacity:.85; }
   .node-disc{ transition:transform .15s ease; }
   .node-g:hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
   .node-letter{ font-family:'Amiri', serif; font-size:20px; fill:var(--ink); pointer-events:none; }
@@ -69,6 +71,8 @@
   .heart-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--sun),var(--coral)); transition:width .35s ease; }
 
   .stage-card{ background:#fff; border:3px solid #f0e4c8; border-radius:24px; padding:26px 22px 30px; box-shadow:0 10px 26px rgba(28,58,52,.12); text-align:center; min-height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .intro-speak{ width:52px; height:52px; border-radius:50%; border:3px solid #fff; background:var(--sky); color:#fff; font-size:22px; cursor:pointer; box-shadow:0 4px 0 #3c82ad; margin-bottom:14px; }
+  .intro-speak:active{ transform:translateY(2px); box-shadow:0 2px 0 #3c82ad; }
   .stage-card h2{ font-size:22px; color:var(--ink); margin:0 0 10px; }
   .stage-card p{ font-size:16px; line-height:1.55; color:var(--ink-soft); }
   .task-line{ font-weight:800; font-size:19px; color:var(--ink); margin:0 0 4px; }
@@ -309,22 +313,23 @@ const MAX_STARS = LETTERS.length * 3;
 let letterIdx = 0;
 let stars = [];        // one 0-3 entry per letter
 let certRecord = null; // { date, id } once earned
+let unlocked = 1;      // letters [0, unlocked) are playable; the rest are locked
 let lesson = null;     // { steps, stepIndex, showIntro, mistakes, cleared[], huntFound, blendAt }
 
 function shuffle(arr){ return arr.map(v => [Math.random(), v]).sort((a,b) => a[0]-b[0]).map(v => v[1]); }
 
 /* ===================== PROGRESS ===================== */
-function defaultProgress(){ return { stars: new Array(LETTERS.length).fill(0), cert: null }; }
+function defaultProgress(){ return { stars: new Array(LETTERS.length).fill(0), cert: null, unlocked: 1 }; }
 function loadProgress(){
   try{
     const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY));
     if(raw && Array.isArray(raw.stars) && raw.stars.length === LETTERS.length){
-      return { stars: raw.stars, cert: raw.cert || null };
+      return { stars: raw.stars, cert: raw.cert || null, unlocked: typeof raw.unlocked === 'number' ? raw.unlocked : 1 };
     }
   }catch(e){}
   return defaultProgress();
 }
-function saveProgress(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify({ stars, cert: certRecord })); }catch(e){} }
+function saveProgress(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify({ stars, cert: certRecord, unlocked })); }catch(e){} }
 
 /* ===================== SOUND ===================== */
 function getCtx(){ if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)(); return window.__actx; }
@@ -350,6 +355,15 @@ function speakArabic(text){
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'ar-SA'; u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speakEnglish(text){
+  try{
+    if(!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.96;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -406,12 +420,13 @@ function renderMap(){
   certBtn.className = 'cert-cta' + (ready ? '' : ' locked');
   certBtn.textContent = ready ? '🎓 Get my Alphabet Certificate' : '🎓 Certificate · ' + doneCount + ' of ' + LETTERS.length + ' letters done';
 
-  const nextIdx = stars.findIndex(s => s === 0);
+  const nextIdx = Math.min(unlocked - 1, LETTERS.length - 1);
   const svg = document.getElementById('map-svg');
   svg.innerHTML =
     '<defs>' +
       '<radialGradient id="stoneDone" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
       '<radialGradient id="stoneOpen" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0e4c8"/></radialGradient>' +
+      '<radialGradient id="stoneLock" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#d7dcda"/><stop offset="100%" stop-color="#aab3b0"/></radialGradient>' +
     '</defs>';
 
   let pathD = '';
@@ -431,9 +446,10 @@ function renderMap(){
   LETTERS.forEach((l, i) => {
     const p = nodePos(i);
     const s = stars[i];
-    const isNext = i === nextIdx;
+    const isLocked = i >= unlocked;
+    const isNext = i === nextIdx && !isLocked;
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('class', 'node-g');
+    g.setAttribute('class', 'node-g' + (isLocked ? ' locked' : ''));
     g.setAttribute('transform', 'translate(' + p.x + ',' + p.y + ')');
 
     if(isNext){
@@ -446,7 +462,7 @@ function renderMap(){
     const disc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     disc.setAttribute('class', 'node-disc');
     disc.setAttribute('r', '26');
-    disc.setAttribute('fill', s > 0 ? 'url(#stoneDone)' : 'url(#stoneOpen)');
+    disc.setAttribute('fill', isLocked ? 'url(#stoneLock)' : s > 0 ? 'url(#stoneDone)' : 'url(#stoneOpen)');
     disc.setAttribute('stroke', isNext ? 'var(--coral)' : '#fff');
     disc.setAttribute('stroke-width', isNext ? '3.5' : '3');
     g.appendChild(disc);
@@ -454,7 +470,8 @@ function renderMap(){
     const letterText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     letterText.setAttribute('class', 'node-letter' + (s > 0 ? ' done' : ''));
     letterText.setAttribute('text-anchor', 'middle'); letterText.setAttribute('dy', '7');
-    letterText.textContent = l.letter;
+    if(isLocked){ letterText.setAttribute('font-size', '18'); letterText.textContent = '🔒'; }
+    else letterText.textContent = l.letter;
     g.appendChild(letterText);
 
     if(s > 0){
@@ -471,7 +488,7 @@ function renderMap(){
       marker.textContent = '👆';
       g.appendChild(marker);
     }
-    g.addEventListener('click', () => { playTap(); startLesson(i); });
+    if(!isLocked) g.addEventListener('click', () => { playTap(); startLesson(i); });
     svg.appendChild(g);
   });
 }
@@ -566,12 +583,16 @@ function renderStep(){
   actions.innerHTML = '';
 
   if(lesson.showIntro){
-    card.innerHTML = '<h2>' + step.gameTitle + '</h2><p>' + step.gameIntro + '</p>';
+    card.innerHTML =
+      '<button class="intro-speak" id="intro-speak-btn" type="button" aria-label="Read the instructions again">🔊</button>' +
+      '<h2>' + step.gameTitle + '</h2><p>' + step.gameIntro + '</p>';
     const playBtn = document.createElement('button');
     playBtn.className = 'btn btn-primary';
     playBtn.textContent = 'Play ▶';
     playBtn.addEventListener('click', () => { playTap(); lesson.showIntro = false; renderStep(); });
     actions.appendChild(playBtn);
+    document.getElementById('intro-speak-btn').addEventListener('click', () => { playTap(); speakEnglish(step.gameIntro); });
+    speakEnglish(step.gameIntro);
     return;
   }
 
@@ -711,6 +732,8 @@ function clearStep(){
 function finishLesson(){
   const earned = starsFor(lesson.mistakes);
   stars[letterIdx] = Math.max(stars[letterIdx], earned);
+  if(unlocked <= letterIdx + 1 && letterIdx + 1 < LETTERS.length) unlocked = letterIdx + 2;
+  else if(letterIdx + 1 >= LETTERS.length) unlocked = LETTERS.length;
   saveProgress();
   playWin();
   document.getElementById('reward-title').textContent = LETTERS[letterIdx].name + ' Complete!';
@@ -752,10 +775,11 @@ function showCertificate(){
     box.innerHTML = '<p class="cert-todo-lead">Almost there! Meet every letter and your certificate is ready.</p>' +
       '<div class="cert-todo">' + LETTERS.map((l, i) => {
         const done = stars[i] > 0;
+        const playable = i < unlocked;
         return '<div class="todo-row' + (done ? ' ok' : '') + '">' +
-          '<span class="tr-icon">' + (done ? '✅' : '⭕') + '</span>' +
+          '<span class="tr-icon">' + (done ? '✅' : playable ? '⭕' : '🔒') + '</span>' +
           '<span class="tr-label arabic">' + l.letter + ' — ' + l.name + '</span>' +
-          (done ? '' : '<button class="tr-go" type="button" data-idx="' + i + '">Play</button>') +
+          ((done || !playable) ? '' : '<button class="tr-go" type="button" data-idx="' + i + '">Play</button>') +
         '</div>';
       }).join('') + '</div>';
     box.querySelectorAll('.tr-go').forEach(b => b.addEventListener('click', () => { playTap(); startLesson(parseInt(b.dataset.idx, 10)); }));
@@ -795,7 +819,7 @@ document.getElementById('cert-print-btn').addEventListener('click', () => { wind
 document.getElementById('name-start-btn').addEventListener('click', () => {
   const val = document.getElementById('name-input').value.trim();
   localStorage.setItem(NAME_KEY, val || 'Explorer');
-  const p = loadProgress(); stars = p.stars; certRecord = p.cert;
+  const p = loadProgress(); stars = p.stars; certRecord = p.cert; unlocked = p.unlocked;
   renderMap();
   showScreen('map-screen');
 });
@@ -805,7 +829,7 @@ document.getElementById('name-input').addEventListener('keydown', (e) => {
 
 const existingName = localStorage.getItem(NAME_KEY);
 const loaded = loadProgress();
-stars = loaded.stars; certRecord = loaded.cert;
+stars = loaded.stars; certRecord = loaded.cert; unlocked = loaded.unlocked;
 if(existingName){
   renderMap();
   showScreen('map-screen');
