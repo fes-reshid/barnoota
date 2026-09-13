@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arabic Letters — Foundation — Deen Sprouts</title>
+<meta name="description" content="Meet the Arabic alphabet one letter at a time, a fun flashcard activity for Foundation on Deen Sprouts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<style>
+  .arabic-glyph{ font-family:'Amiri', serif; }
+  .flash-wrap{ max-width:460px; margin:24px auto 60px; }
+  .flash-card{
+    background:#fff; border:3px solid #f0e4c8; border-radius:28px; padding:36px 26px; text-align:center;
+    box-shadow:0 12px 28px rgba(28,58,52,.1);
+  }
+  .flash-letter{ font-size:110px; line-height:1; color:var(--ink); margin-bottom:10px; }
+  .flash-name{ font-size:22px; font-weight:800; color:var(--mint-dark); margin-bottom:4px; }
+  .flash-word{ font-size:16px; color:var(--ink-soft); margin-bottom:20px; }
+  .flash-progress{ text-align:center; font-weight:800; color:var(--ink-soft); font-size:14px; margin-bottom:14px; }
+  .flash-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:22px; gap:10px; }
+  .know-btn{ width:100%; margin-top:6px; }
+  .know-btn.known{ background:var(--mint); box-shadow:0 5px 0 var(--mint-dark); }
+  .dots{ display:flex; justify-content:center; gap:6px; margin-top:18px; flex-wrap:wrap; }
+  .dot{ width:10px; height:10px; border-radius:50%; background:#e7dcc0; }
+  .dot.known{ background:var(--mint); }
+  .dot.current{ outline:2px solid var(--coral); outline-offset:2px; }
+  .complete-banner{ text-align:center; }
+  .complete-banner .icon{ font-size:52px; margin-bottom:10px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="../../index.html">
+      <span class="brand-mark">🌱</span>
+      <span class="brand-text">Deen Sprouts</span>
+    </a>
+    <nav class="nav-links">
+      <a href="../index.html">Foundation</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" data-coming-soon>Login</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-head">
+  <span class="eyebrow">🔤 Arabic Letters</span>
+  <h1>Meet the Alphabet</h1>
+  <p>Flip through each letter, say it out loud, and mark it once you know it!</p>
+</div>
+
+<div class="wrap">
+  <div id="name-screen" class="hidden">
+    <div class="center-card">
+      <div class="icon">🌱</div>
+      <h2>What's your name?</h2>
+      <p>We'll remember it so you don't have to type it again on this device.</p>
+      <input type="text" id="name-input" class="name-field" placeholder="Your name" autocomplete="off">
+      <div><button class="btn btn-primary" id="name-start-btn">Start Learning</button></div>
+    </div>
+  </div>
+
+  <div id="practice-screen" class="hidden">
+    <div class="flash-wrap">
+      <div class="flash-progress" id="flash-progress"></div>
+      <div class="flash-card">
+        <div class="arabic-glyph flash-letter" id="flash-letter"></div>
+        <div class="flash-name" id="flash-name"></div>
+        <div class="flash-word" id="flash-word"></div>
+        <button class="btn know-btn" id="know-btn"></button>
+      </div>
+      <div class="flash-nav">
+        <button class="btn btn-ghost" id="prev-btn">← Prev</button>
+        <button class="btn btn-mint" id="next-btn">Next →</button>
+      </div>
+      <div class="dots" id="dots"></div>
+      <p style="text-align:center;"><a class="back-link" href="../index.html">← Back to Foundation</a></p>
+    </div>
+  </div>
+
+  <div id="complete-screen" class="hidden">
+    <div class="center-card complete-banner">
+      <div class="icon">🎉</div>
+      <h2>You've met every letter!</h2>
+      <p id="complete-msg"></p>
+      <button class="btn btn-mint" id="review-btn">Review the Letters</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="flinks">
+    <a href="../../index.html">Home</a>
+    <a href="../index.html">Foundation</a>
+    <a href="../../classes/index.html">Classes</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Deen Sprouts. A project still being planted — details may change before launch.</p>
+</footer>
+
+<script src="../../shared/site.js"></script>
+<script>
+const LETTERS = [
+  { ar:'ا', name:'Alif', word:'أَسَد — lion' },
+  { ar:'ب', name:'Baa', word:'بَيْت — house' },
+  { ar:'ت', name:'Taa', word:'تُفَّاح — apple' },
+  { ar:'ث', name:'Thaa', word:'ثَعْلَب — fox' },
+  { ar:'ج', name:'Jeem', word:'جَمَل — camel' },
+  { ar:'ح', name:'Haa', word:'حِصَان — horse' },
+  { ar:'خ', name:'Khaa', word:'خُبْز — bread' },
+  { ar:'د', name:'Daal', word:'دُبّ — bear' },
+  { ar:'ذ', name:'Dhaal', word:'ذِئْب — wolf' },
+  { ar:'ر', name:'Raa', word:'رُمَّان — pomegranate' }
+];
+
+const NAME_KEY = 'deen-sprouts-name';
+const PROGRESS_KEY = 'deen-sprouts-foundation-arabic-known';
+
+let idx = 0;
+let known = [];
+
+function loadKnown(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+    if(Array.isArray(raw) && raw.length === LETTERS.length) return raw;
+  }catch(e){}
+  return new Array(LETTERS.length).fill(false);
+}
+function saveKnown(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(known)); }catch(e){} }
+
+function showScreen(id){
+  ['name-screen','practice-screen','complete-screen'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderCard(){
+  const item = LETTERS[idx];
+  document.getElementById('flash-letter').textContent = item.ar;
+  document.getElementById('flash-name').textContent = item.name;
+  document.getElementById('flash-word').textContent = item.word;
+  document.getElementById('flash-progress').textContent = 'Letter ' + (idx + 1) + ' of ' + LETTERS.length + ' · ' + known.filter(Boolean).length + ' known';
+
+  const knowBtn = document.getElementById('know-btn');
+  const isKnown = known[idx];
+  knowBtn.textContent = isKnown ? '✓ You know this one!' : "I know this one!";
+  knowBtn.classList.toggle('known', isKnown);
+
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').textContent = idx === LETTERS.length - 1 ? 'Finish →' : 'Next →';
+
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  LETTERS.forEach((l, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (known[i] ? ' known' : '') + (i === idx ? ' current' : '');
+    dots.appendChild(d);
+  });
+}
+
+document.getElementById('know-btn').addEventListener('click', () => {
+  known[idx] = !known[idx];
+  saveKnown();
+  renderCard();
+});
+document.getElementById('prev-btn').addEventListener('click', () => {
+  if(idx > 0){ idx--; renderCard(); }
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  if(idx < LETTERS.length - 1){ idx++; renderCard(); }
+  else {
+    const knownCount = known.filter(Boolean).length;
+    document.getElementById('complete-msg').textContent = knownCount === LETTERS.length
+      ? "You marked all " + LETTERS.length + " letters as known — amazing work!"
+      : "You've reached the end! You've marked " + knownCount + " of " + LETTERS.length + " letters as known so far — review any you'd like to practice more.";
+    showScreen('complete-screen');
+  }
+});
+document.getElementById('review-btn').addEventListener('click', () => {
+  idx = 0;
+  renderCard();
+  showScreen('practice-screen');
+});
+
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const val = document.getElementById('name-input').value.trim();
+  localStorage.setItem(NAME_KEY, val || 'Explorer');
+  known = loadKnown();
+  renderCard();
+  showScreen('practice-screen');
+});
+document.getElementById('name-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') document.getElementById('name-start-btn').click();
+});
+
+const existingName = localStorage.getItem(NAME_KEY);
+known = loadKnown();
+if(existingName){
+  renderCard();
+  showScreen('practice-screen');
+} else {
+  showScreen('name-screen');
+}
+</script>
+</body>
+</html>
