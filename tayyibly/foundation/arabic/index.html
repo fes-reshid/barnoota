@@ -34,7 +34,6 @@
     background:linear-gradient(#d9f0e6 0%, #eaf7f2 55%, #cdeeda 55%, #b7e4cd 100%);
     box-shadow:0 10px 24px rgba(28,58,52,.1); margin-bottom:8px;
   }
-  .map-deco{ position:absolute; font-size:26px; opacity:.7; }
   svg.map-svg{ display:block; width:100%; height:auto; position:relative; z-index:2; }
   .node-g{ cursor:pointer; }
   .node-g.locked{ cursor:not-allowed; }
@@ -50,8 +49,9 @@
 
   /* ---- lesson shell (sidebar of steps + stage) ---- */
   .lesson-layout{ display:grid; grid-template-columns:200px 1fr; gap:14px; align-items:start; }
-  @media (max-width:700px){ .lesson-layout{ grid-template-columns:1fr; } }
-  .lesson-side{ background:linear-gradient(var(--mint), var(--mint-dark)); border:3px solid #fff; border-radius:22px; padding:12px; box-shadow:0 8px 22px rgba(28,58,52,.2); color:#fff; }
+  @media (max-width:700px){ .lesson-layout{ grid-template-columns:minmax(0,1fr); } }
+  .lesson-side{ min-width:0; background:linear-gradient(var(--mint), var(--mint-dark)); border:3px solid #fff; border-radius:22px; padding:12px; box-shadow:0 8px 22px rgba(28,58,52,.2); color:#fff; }
+  .lesson-stage-wrap{ min-width:0; }
   .side-letter-name{ background:rgba(255,255,255,.18); border:2px solid #fff; border-radius:14px; text-align:center; font-weight:800; padding:7px 8px; margin-bottom:10px; }
   .side-steps{ display:flex; flex-direction:column; gap:8px; }
   @media (max-width:700px){ .side-steps{ flex-direction:row; overflow-x:auto; padding-bottom:4px; } }
@@ -159,6 +159,30 @@
     header, footer, .no-print{ display:none !important; }
     body{ background:#fff; }
   }
+
+  /* ---- mobile ---- */
+  @media (max-width:480px){
+    .page-head{ padding:28px 16px 6px; }
+    .map-topbar{ padding:8px 12px; }
+    .stat-pill{ font-size:12.5px; padding:5px 11px; }
+    .hero-letter{ width:96px; height:96px; font-size:56px; }
+    .hero-word{ font-size:24px; }
+    .choice-grid{ gap:8px; }
+    .choice{ padding:10px 4px; }
+    .c-letter{ font-size:28px; }
+    .c-word{ font-size:17px; }
+    .c-name{ font-size:14px; }
+    .hunt-grid{ grid-template-columns:repeat(3, 1fr); max-width:280px; gap:7px; }
+    .hunt-cell{ font-size:22px; padding:8px 0; }
+    .sound-bubble{ width:52px; height:52px; font-size:20px; }
+    .blend-slot{ font-size:26px; min-width:110px; padding:8px 12px; }
+    .stage-card{ padding:20px 14px 24px; min-height:280px; }
+    .task-line{ font-size:16.5px; }
+    .cert-card{ padding:26px 16px; }
+    .cert-title{ font-size:22px; }
+    .cert-name{ font-size:24px; }
+    .cert-meta-row{ gap:8px; }
+  }
 </style>
 </head>
 <body>
@@ -202,12 +226,7 @@
     </div>
     <p class="map-hint" id="map-hint">Tap the glowing letter to start!</p>
     <div class="map-frame">
-      <span class="map-deco" style="top:6%; left:6%;">🌳</span>
-      <span class="map-deco" style="top:14%; right:8%;">🦋</span>
-      <span class="map-deco" style="top:46%; left:4%;">🌸</span>
-      <span class="map-deco" style="top:60%; right:6%;">⭐</span>
-      <span class="map-deco" style="bottom:6%; left:10%;">🍃</span>
-      <svg class="map-svg" id="map-svg" viewBox="0 0 640 590" role="img" aria-label="Arabic letters map"></svg>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 700 820" role="img" aria-label="Arabic letters map"></svg>
     </div>
     <button class="cert-cta" id="map-cert-btn" type="button"></button>
     <p style="text-align:center;"><a class="back-link" href="../index.html">← Back to Foundation</a></p>
@@ -307,7 +326,6 @@ const LOOKALIKES = {
 const NAME_KEY = 'tayyibly-name';
 const PROGRESS_KEY = 'tayyibly-foundation-arabic-progress';
 const CERT_PREFIX = 'TYB-AR';
-const COLS = 7, ROW_H = 150, MARGIN_X = 70, MARGIN_Y = 70, VB_W = 640;
 const MAX_STARS = LETTERS.length * 3;
 
 let letterIdx = 0;
@@ -358,12 +376,49 @@ function speakArabic(text){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
+/* Pick the clearest, most natural-sounding MALE English voice this browser/OS
+   offers, preferring high-quality "Natural"/neural voices, then well-known
+   good male voices, then any voice whose name suggests a male speaker. */
+let ttsVoice = null;
+function pickVoice(){
+  if(!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices() || [];
+  if(!voices.length) return null;
+  const isEn = v => /^en/i.test(v.lang || '');
+  const byName = name => voices.find(v => v.name === name && isEn(v));
+  const preferred = [
+    'Microsoft Guy Online (Natural) - English (United States)',
+    'Microsoft Ryan Online (Natural) - English (United Kingdom)',
+    'Microsoft Andrew Online (Natural) - English (United States)',
+    'Microsoft William Online (Natural) - English (Australia)',
+    'Google UK English Male',
+    'Microsoft David - English (United States)',
+    'Microsoft David Desktop - English (United States)',
+    'Daniel', 'Alex', 'Fred'
+  ];
+  for(let i = 0; i < preferred.length; i++){
+    const v = byName(preferred[i]);
+    if(v) return v;
+  }
+  const maleGuess = voices.find(v => isEn(v) && /\b(male|guy|david|daniel|alex|fred|ryan|andrew|william|mark|george|james|thomas)\b/i.test(v.name));
+  if(maleGuess) return maleGuess;
+  return voices.find(isEn) || null;
+}
+function loadVoice(){
+  if(!('speechSynthesis' in window)) return;
+  ttsVoice = pickVoice();
+  if(!ttsVoice) window.speechSynthesis.onvoiceschanged = () => { ttsVoice = pickVoice(); };
+}
+loadVoice();
+
 function speakEnglish(text){
   try{
     if(!('speechSynthesis' in window) || !text) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = 0.96;
+    u.lang = ttsVoice ? ttsVoice.lang : 'en-US';
+    u.rate = 0.96;
+    if(ttsVoice) u.voice = ttsVoice;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -390,15 +445,38 @@ function showScreen(id){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-/* ===================== MAP ===================== */
-function nodePos(i){
-  const row = Math.floor(i / COLS);
-  const colInRow = i % COLS;
-  const col = row % 2 === 0 ? colInRow : (COLS - 1 - colInRow);
-  const colSpacing = (VB_W - MARGIN_X * 2) / (COLS - 1);
-  return { x: MARGIN_X + col * colSpacing, y: MARGIN_Y + row * ROW_H };
-}
+/* ===================== MAP =====================
+   Same winding-path technique as diinislaam's quest games: a single hand-drawn
+   SVG path is measured with getTotalLength()/getPointAtLength() so any number
+   of stones can be spaced evenly along it, however winding the path is. */
+const MAP_PATH_D =
+  'M 80 90 C 170 60 260 120 350 90 C 440 60 530 120 620 90 ' +
+  'C 660 130 660 270 620 310 ' +
+  'C 530 280 440 340 350 310 C 260 280 170 340 80 310 ' +
+  'C 40 350 40 490 80 530 ' +
+  'C 170 500 260 560 350 530 C 440 500 530 560 620 530 ' +
+  'C 660 570 660 710 620 750 ' +
+  'C 530 720 440 780 350 750 C 260 720 170 780 80 750';
+const MAP_DECO = [
+  {e:'🌳', x:40, y:50, s:34}, {e:'🦋', x:650, y:190, s:26}, {e:'🌸', x:30, y:250, s:28},
+  {e:'⭐', x:660, y:420, s:24}, {e:'🍃', x:40, y:470, s:26}, {e:'🌼', x:660, y:640, s:26},
+  {e:'🌷', x:35, y:700, s:26}
+];
 function totalStars(){ return stars.reduce((a,b) => a+b, 0); }
+function mapPoints(count){
+  const svg = document.getElementById('map-svg');
+  const measure = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i = 0; i < count; i++){
+    const p = measure.getPointAtLength(total * ((i + 0.5) / count));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
+  return points;
+}
 
 function renderMap(){
   document.getElementById('player-name').textContent = localStorage.getItem(NAME_KEY) || 'Explorer';
@@ -422,74 +500,44 @@ function renderMap(){
 
   const nextIdx = Math.min(unlocked - 1, LETTERS.length - 1);
   const svg = document.getElementById('map-svg');
-  svg.innerHTML =
-    '<defs>' +
-      '<radialGradient id="stoneDone" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
-      '<radialGradient id="stoneOpen" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0e4c8"/></radialGradient>' +
-      '<radialGradient id="stoneLock" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#d7dcda"/><stop offset="100%" stop-color="#aab3b0"/></radialGradient>' +
-    '</defs>';
+  svg.innerHTML = '';
+  const points = mapPoints(LETTERS.length);
 
-  let pathD = '';
-  LETTERS.forEach((l, i) => { const p = nodePos(i); pathD += (i === 0 ? 'M' : 'L') + p.x + ',' + p.y + ' '; });
-  [{stroke:'#ffffffb0', width:'10', dash:null}, {stroke:'#cdeeda', width:'5', dash:'3 10'}].forEach(cfg => {
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', pathD);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', cfg.stroke);
-    path.setAttribute('stroke-width', cfg.width);
-    path.setAttribute('stroke-linecap', 'round');
-    path.setAttribute('stroke-linejoin', 'round');
-    if(cfg.dash) path.setAttribute('stroke-dasharray', cfg.dash);
-    svg.appendChild(path);
-  });
+  let html = '<defs>' +
+    '<radialGradient id="stoneDone" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
+    '<radialGradient id="stoneNow" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#ffe9b0"/><stop offset="100%" stop-color="var(--sun-dark)"/></radialGradient>' +
+    '<radialGradient id="stoneLock" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#d7dcda"/><stop offset="100%" stop-color="#aab3b0"/></radialGradient>' +
+  '</defs>';
+
+  MAP_DECO.forEach(d => { html += '<text x="' + d.x + '" y="' + d.y + '" font-size="' + d.s + '" text-anchor="middle">' + d.e + '</text>'; });
+
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#ffffffb0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#cdeeda" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>';
+  html += '<path d="' + MAP_PATH_D + '" fill="none" stroke="#ffffffb0" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 16"/>';
 
   LETTERS.forEach((l, i) => {
-    const p = nodePos(i);
+    const p = points[i];
     const s = stars[i];
     const isLocked = i >= unlocked;
     const isNext = i === nextIdx && !isLocked;
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('class', 'node-g' + (isLocked ? ' locked' : ''));
-    g.setAttribute('transform', 'translate(' + p.x + ',' + p.y + ')');
+    const fill = isLocked ? 'url(#stoneLock)' : s > 0 ? 'url(#stoneDone)' : 'url(#stoneNow)';
 
-    if(isNext){
-      const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      ring.setAttribute('class', 'pulse-ring');
-      ring.setAttribute('r', '26'); ring.setAttribute('fill', 'none');
-      ring.setAttribute('stroke', 'var(--coral)'); ring.setAttribute('stroke-width', '3');
-      g.appendChild(ring);
-    }
-    const disc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    disc.setAttribute('class', 'node-disc');
-    disc.setAttribute('r', '26');
-    disc.setAttribute('fill', isLocked ? 'url(#stoneLock)' : s > 0 ? 'url(#stoneDone)' : 'url(#stoneOpen)');
-    disc.setAttribute('stroke', isNext ? 'var(--coral)' : '#fff');
-    disc.setAttribute('stroke-width', isNext ? '3.5' : '3');
-    g.appendChild(disc);
+    if(isNext) html += '<circle class="pulse-ring" cx="' + p.x + '" cy="' + p.y + '" r="26" fill="none" stroke="var(--coral)" stroke-width="3"/>';
+    html += '<g class="node-g' + (isLocked ? ' locked' : '') + '" data-idx="' + i + '">' +
+      '<circle class="node-disc" cx="' + p.x + '" cy="' + p.y + '" r="26" fill="' + fill + '" stroke="' + (isNext ? 'var(--coral)' : '#fff') + '" stroke-width="' + (isNext ? '3.5' : '3') + '"/>' +
+      '<text class="node-letter' + (s > 0 ? ' done' : '') + '" x="' + p.x + '" y="' + (p.y + 7) + '" text-anchor="middle"' + (isLocked ? ' font-size="18"' : '') + '>' +
+        (isLocked ? '🔒' : l.letter) +
+      '</text>' +
+    '</g>';
+    if(s > 0) html += '<text x="' + (p.x + 20) + '" y="' + (p.y - 14) + '" font-size="13" text-anchor="middle">' + '⭐'.repeat(s) + '</text>';
+    if(isNext) html += '<text class="next-marker" x="' + p.x + '" y="' + (p.y - 34) + '" font-size="26" text-anchor="middle">🧒</text>';
+    if(i === LETTERS.length - 1) html += '<text x="' + (p.x + 34) + '" y="' + (p.y + 6) + '" font-size="30" text-anchor="middle">🏁</text>';
+  });
 
-    const letterText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    letterText.setAttribute('class', 'node-letter' + (s > 0 ? ' done' : ''));
-    letterText.setAttribute('text-anchor', 'middle'); letterText.setAttribute('dy', '7');
-    if(isLocked){ letterText.setAttribute('font-size', '18'); letterText.textContent = '🔒'; }
-    else letterText.textContent = l.letter;
-    g.appendChild(letterText);
-
-    if(s > 0){
-      const starText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      starText.setAttribute('x', '20'); starText.setAttribute('y', '-14');
-      starText.setAttribute('font-size', '13'); starText.setAttribute('text-anchor', 'middle');
-      starText.textContent = '⭐'.repeat(s);
-      g.appendChild(starText);
-    }
-    if(isNext){
-      const marker = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      marker.setAttribute('class', 'next-marker'); marker.setAttribute('text-anchor', 'middle');
-      marker.setAttribute('y', '-32'); marker.setAttribute('font-size', '20');
-      marker.textContent = '👆';
-      g.appendChild(marker);
-    }
-    if(!isLocked) g.addEventListener('click', () => { playTap(); startLesson(i); });
-    svg.appendChild(g);
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g => {
+    if(g.classList.contains('locked')) return;
+    g.addEventListener('click', () => { playTap(); startLesson(parseInt(g.dataset.idx, 10)); });
   });
 }
 
