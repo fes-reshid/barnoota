@@ -4,32 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arabic Letters — Foundation — Tayyibly</title>
-<meta name="description" content="Meet the Arabic alphabet one letter at a time, a fun flashcard activity for Foundation on Tayyibly.">
+<meta name="description" content="Meet the Arabic alphabet one letter at a time on a fun garden map, a flashcard activity for Foundation on Tayyibly.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../shared/styles.css">
 <style>
   .arabic-glyph{ font-family:'Amiri', serif; }
-  .flash-wrap{ max-width:460px; margin:24px auto 60px; }
+
+  /* ---- map topbar ---- */
+  .map-topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:#fff; border:2.5px solid #f0e4c8; border-radius:18px; padding:10px 16px; margin-bottom:14px;
+  }
+  .player-chip{ display:flex; align-items:center; gap:8px; font-weight:800; color:var(--ink); }
+  .player-chip .avatar{ width:36px; height:36px; border-radius:50%; background:var(--mint-bg); display:flex; align-items:center; justify-content:center; font-size:19px; }
+  .stat-pill{ background:var(--mint-bg); color:var(--mint-dark); font-weight:800; font-size:14px; padding:6px 14px; border-radius:999px; }
+  .map-hint{ text-align:center; color:var(--ink-soft); font-size:14.5px; margin:0 0 14px; }
+  .map-hint.done{ color:var(--mint-dark); font-weight:800; }
+
+  /* ---- map frame ---- */
+  .map-frame{
+    position:relative; border-radius:24px; overflow:hidden; border:3px solid #f0e4c8;
+    background:linear-gradient(#d9f0e6 0%, #eaf7f2 55%, #cdeeda 55%, #b7e4cd 100%);
+    box-shadow:0 10px 24px rgba(28,58,52,.1); margin-bottom:16px;
+  }
+  .map-deco{ position:absolute; font-size:26px; opacity:.7; }
+  svg.map-svg{ display:block; width:100%; height:auto; position:relative; z-index:2; }
+  .node-g{ cursor:pointer; }
+  .node-disc{ transition:transform .15s ease; }
+  .node-g:hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-letter{ font-family:'Amiri', serif; font-size:22px; fill:var(--ink); pointer-events:none; }
+  .node-letter.known{ fill:#fff; }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+  .next-marker{ animation:bobber 1.5s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:26; opacity:.7; } 100%{ r:40; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.5s ease-out infinite; }
+
+  /* ---- letter detail screen ---- */
+  .flash-wrap{ max-width:440px; margin:10px auto 60px; }
   .flash-card{
-    background:#fff; border:3px solid #f0e4c8; border-radius:28px; padding:36px 26px; text-align:center;
+    background:#fff; border:3px solid #f0e4c8; border-radius:28px; padding:34px 26px; text-align:center;
     box-shadow:0 12px 28px rgba(28,58,52,.1);
   }
   .flash-emoji{ font-size:38px; margin-bottom:4px; }
-  .flash-letter{ font-size:110px; line-height:1; color:var(--ink); margin-bottom:10px; }
+  .flash-letter{ font-size:104px; line-height:1; color:var(--ink); margin-bottom:8px; }
   .flash-name{ font-size:22px; font-weight:800; color:var(--mint-dark); margin-bottom:4px; }
-  .flash-word{ font-size:16px; color:var(--ink-soft); margin-bottom:20px; }
-  .flash-progress{ text-align:center; font-weight:800; color:var(--ink-soft); font-size:14px; margin-bottom:14px; }
-  .flash-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:22px; gap:10px; }
+  .flash-word{ font-size:16px; color:var(--ink-soft); margin-bottom:18px; }
+  .flash-progress{ text-align:center; font-weight:800; color:var(--ink-soft); font-size:14px; margin-bottom:12px; }
+  .flash-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:18px; gap:10px; }
   .know-btn{ width:100%; margin-top:6px; }
   .know-btn.known{ background:var(--mint); box-shadow:0 5px 0 var(--mint-dark); }
-  .dots{ display:flex; justify-content:center; gap:6px; margin-top:18px; flex-wrap:wrap; }
-  .dot{ width:10px; height:10px; border-radius:50%; background:#e7dcc0; }
-  .dot.known{ background:var(--mint); }
-  .dot.current{ outline:2px solid var(--coral); outline-offset:2px; }
-  .complete-banner{ text-align:center; }
-  .complete-banner .icon{ font-size:52px; margin-bottom:10px; }
 </style>
 </head>
 <body>
@@ -51,8 +76,8 @@
 
 <div class="page-head">
   <span class="eyebrow">🔤 Arabic Letters</span>
-  <h1>Meet the Alphabet</h1>
-  <p>Flip through each letter, say it out loud, and mark it once you know it!</p>
+  <h1>The Letter Garden</h1>
+  <p>Walk the path and tap a letter to meet it. Mark it once you know it — no need to go in order!</p>
 </div>
 
 <div class="wrap">
@@ -66,7 +91,24 @@
     </div>
   </div>
 
-  <div id="practice-screen" class="hidden">
+  <div id="map-screen" class="hidden">
+    <div class="map-topbar">
+      <div class="player-chip"><span class="avatar">🧒</span><span id="player-name">Explorer</span></div>
+      <div class="stat-pill">🔤 <span id="stat-known">0</span>/28 known</div>
+    </div>
+    <p class="map-hint" id="map-hint">Tap the glowing letter to start!</p>
+    <div class="map-frame">
+      <span class="map-deco" style="top:6%; left:6%;">🌳</span>
+      <span class="map-deco" style="top:14%; right:8%;">🦋</span>
+      <span class="map-deco" style="top:46%; left:4%;">🌸</span>
+      <span class="map-deco" style="top:60%; right:6%;">⭐</span>
+      <span class="map-deco" style="bottom:6%; left:10%;">🍃</span>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 640 590" role="img" aria-label="Arabic letters map"></svg>
+    </div>
+    <p style="text-align:center;"><a class="back-link" href="../index.html">← Back to Foundation</a></p>
+  </div>
+
+  <div id="letter-screen" class="hidden">
     <div class="flash-wrap">
       <div class="flash-progress" id="flash-progress"></div>
       <div class="flash-card">
@@ -78,19 +120,9 @@
       </div>
       <div class="flash-nav">
         <button class="btn btn-ghost" id="prev-btn">← Prev</button>
+        <button class="btn btn-ghost" id="map-btn">🗺️ Map</button>
         <button class="btn btn-mint" id="next-btn">Next →</button>
       </div>
-      <div class="dots" id="dots"></div>
-      <p style="text-align:center;"><a class="back-link" href="../index.html">← Back to Foundation</a></p>
-    </div>
-  </div>
-
-  <div id="complete-screen" class="hidden">
-    <div class="center-card complete-banner">
-      <div class="icon">🎉</div>
-      <h2>You've met every letter!</h2>
-      <p id="complete-msg"></p>
-      <button class="btn btn-mint" id="review-btn">Review the Letters</button>
     </div>
   </div>
 </div>
@@ -139,6 +171,7 @@ const LETTERS = [
 
 const NAME_KEY = 'tayyibly-name';
 const PROGRESS_KEY = 'tayyibly-foundation-arabic-known';
+const COLS = 7, ROW_H = 150, MARGIN_X = 70, MARGIN_Y = 70, VB_W = 640;
 
 let idx = 0;
 let known = [];
@@ -153,67 +186,159 @@ function loadKnown(){
 function saveKnown(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(known)); }catch(e){} }
 
 function showScreen(id){
-  ['name-screen','practice-screen','complete-screen'].forEach(s => {
+  ['name-screen','map-screen','letter-screen'].forEach(s => {
     document.getElementById(s).classList.toggle('hidden', s !== id);
   });
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function renderCard(){
+function nodePos(i){
+  const row = Math.floor(i / COLS);
+  const colInRow = i % COLS;
+  const col = row % 2 === 0 ? colInRow : (COLS - 1 - colInRow);
+  const colSpacing = (VB_W - MARGIN_X * 2) / (COLS - 1);
+  return { x: MARGIN_X + col * colSpacing, y: MARGIN_Y + row * ROW_H };
+}
+
+function renderMap(){
+  document.getElementById('player-name').textContent = localStorage.getItem(NAME_KEY) || 'Explorer';
+  const knownCount = known.filter(Boolean).length;
+  document.getElementById('stat-known').textContent = knownCount;
+
+  const hint = document.getElementById('map-hint');
+  if(knownCount === LETTERS.length){
+    hint.textContent = '🎉 You know the whole alphabet! Tap any letter to review it.';
+    hint.classList.add('done');
+  } else {
+    hint.textContent = 'Tap the glowing letter to start!';
+    hint.classList.remove('done');
+  }
+
+  const nextIdx = known.findIndex(k => !k);
+  const svg = document.getElementById('map-svg');
+  svg.innerHTML =
+    '<defs>' +
+      '<radialGradient id="stoneKnown" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
+      '<radialGradient id="stoneOpen" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0e4c8"/></radialGradient>' +
+    '</defs>';
+
+  // connecting path
+  let pathD = '';
+  LETTERS.forEach((l, i) => {
+    const p = nodePos(i);
+    pathD += (i === 0 ? 'M' : 'L') + p.x + ',' + p.y + ' ';
+  });
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', pathD);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#ffffffb0');
+  path.setAttribute('stroke-width', '10');
+  path.setAttribute('stroke-linecap', 'round');
+  path.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(path);
+  const pathDash = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  pathDash.setAttribute('d', pathD);
+  pathDash.setAttribute('fill', 'none');
+  pathDash.setAttribute('stroke', '#cdeeda');
+  pathDash.setAttribute('stroke-width', '5');
+  pathDash.setAttribute('stroke-dasharray', '3 10');
+  pathDash.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(pathDash);
+
+  LETTERS.forEach((l, i) => {
+    const p = nodePos(i);
+    const isKnown = known[i];
+    const isNext = i === nextIdx;
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node-g');
+    g.setAttribute('transform', 'translate(' + p.x + ',' + p.y + ')');
+
+    if(isNext){
+      const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      ring.setAttribute('class', 'pulse-ring');
+      ring.setAttribute('r', '26');
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', 'var(--coral)');
+      ring.setAttribute('stroke-width', '3');
+      g.appendChild(ring);
+    }
+
+    const disc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    disc.setAttribute('class', 'node-disc');
+    disc.setAttribute('r', '26');
+    disc.setAttribute('fill', isKnown ? 'url(#stoneKnown)' : 'url(#stoneOpen)');
+    disc.setAttribute('stroke', isNext ? 'var(--coral)' : '#fff');
+    disc.setAttribute('stroke-width', isNext ? '3.5' : '3');
+    g.appendChild(disc);
+
+    const letterText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    letterText.setAttribute('class', 'node-letter' + (isKnown ? ' known' : ''));
+    letterText.setAttribute('text-anchor', 'middle');
+    letterText.setAttribute('dy', '8');
+    letterText.textContent = l.ar;
+    g.appendChild(letterText);
+
+    if(isKnown){
+      const check = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      check.setAttribute('x', '18'); check.setAttribute('y', '-14');
+      check.setAttribute('font-size', '16');
+      check.textContent = '⭐';
+      g.appendChild(check);
+    }
+    if(isNext){
+      const marker = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      marker.setAttribute('class', 'next-marker');
+      marker.setAttribute('text-anchor', 'middle');
+      marker.setAttribute('y', '-32');
+      marker.setAttribute('font-size', '20');
+      marker.textContent = '👆';
+      g.appendChild(marker);
+    }
+
+    g.addEventListener('click', () => { idx = i; renderLetter(); showScreen('letter-screen'); });
+    svg.appendChild(g);
+  });
+}
+
+function renderLetter(){
   const item = LETTERS[idx];
   document.getElementById('flash-emoji').textContent = item.emoji;
   document.getElementById('flash-letter').textContent = item.ar;
   document.getElementById('flash-name').textContent = item.name;
   document.getElementById('flash-word').textContent = item.word + ' — ' + item.wordEn;
-  document.getElementById('flash-progress').textContent = 'Letter ' + (idx + 1) + ' of ' + LETTERS.length + ' · ' + known.filter(Boolean).length + ' known';
+  document.getElementById('flash-progress').textContent = 'Letter ' + (idx + 1) + ' of ' + LETTERS.length;
 
   const knowBtn = document.getElementById('know-btn');
   const isKnown = known[idx];
-  knowBtn.textContent = isKnown ? '✓ You know this one!' : "I know this one!";
+  knowBtn.textContent = isKnown ? '✓ You know this one!' : 'I know this one!';
   knowBtn.classList.toggle('known', isKnown);
 
   document.getElementById('prev-btn').disabled = idx === 0;
-  document.getElementById('next-btn').textContent = idx === LETTERS.length - 1 ? 'Finish →' : 'Next →';
-
-  const dots = document.getElementById('dots');
-  dots.innerHTML = '';
-  LETTERS.forEach((l, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (known[i] ? ' known' : '') + (i === idx ? ' current' : '');
-    dots.appendChild(d);
-  });
+  document.getElementById('next-btn').disabled = idx === LETTERS.length - 1;
 }
 
 document.getElementById('know-btn').addEventListener('click', () => {
   known[idx] = !known[idx];
   saveKnown();
-  renderCard();
+  renderLetter();
 });
 document.getElementById('prev-btn').addEventListener('click', () => {
-  if(idx > 0){ idx--; renderCard(); }
+  if(idx > 0){ idx--; renderLetter(); }
 });
 document.getElementById('next-btn').addEventListener('click', () => {
-  if(idx < LETTERS.length - 1){ idx++; renderCard(); }
-  else {
-    const knownCount = known.filter(Boolean).length;
-    document.getElementById('complete-msg').textContent = knownCount === LETTERS.length
-      ? "You marked all " + LETTERS.length + " letters as known — amazing work!"
-      : "You've reached the end! You've marked " + knownCount + " of " + LETTERS.length + " letters as known so far — review any you'd like to practice more.";
-    showScreen('complete-screen');
-  }
+  if(idx < LETTERS.length - 1){ idx++; renderLetter(); }
 });
-document.getElementById('review-btn').addEventListener('click', () => {
-  idx = 0;
-  renderCard();
-  showScreen('practice-screen');
+document.getElementById('map-btn').addEventListener('click', () => {
+  renderMap();
+  showScreen('map-screen');
 });
 
 document.getElementById('name-start-btn').addEventListener('click', () => {
   const val = document.getElementById('name-input').value.trim();
   localStorage.setItem(NAME_KEY, val || 'Explorer');
   known = loadKnown();
-  renderCard();
-  showScreen('practice-screen');
+  renderMap();
+  showScreen('map-screen');
 });
 document.getElementById('name-input').addEventListener('keydown', (e) => {
   if(e.key === 'Enter') document.getElementById('name-start-btn').click();
@@ -222,8 +347,8 @@ document.getElementById('name-input').addEventListener('keydown', (e) => {
 const existingName = localStorage.getItem(NAME_KEY);
 known = loadKnown();
 if(existingName){
-  renderCard();
-  showScreen('practice-screen');
+  renderMap();
+  showScreen('map-screen');
 } else {
   showScreen('name-screen');
 }
