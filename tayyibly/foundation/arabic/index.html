@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arabic Letters — Foundation — Tayyibly</title>
-<meta name="description" content="Meet the Arabic alphabet one letter at a time on a fun garden map, a flashcard activity for Foundation on Tayyibly.">
+<meta name="description" content="A full 6-step lesson for every Arabic letter — meet it, find it, name it, spot its word, hunt it and blend it — with a certificate when you know them all.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../shared/styles.css">
 <style>
-  .arabic-glyph{ font-family:'Amiri', serif; }
+  .arabic{ font-family:'Amiri', serif; }
 
   /* ---- map topbar ---- */
   .map-topbar{
@@ -22,44 +22,144 @@
   .stat-pill{ background:var(--mint-bg); color:var(--mint-dark); font-weight:800; font-size:14px; padding:6px 14px; border-radius:999px; }
   .map-hint{ text-align:center; color:var(--ink-soft); font-size:14.5px; margin:0 0 14px; }
   .map-hint.done{ color:var(--mint-dark); font-weight:800; }
+  .cert-cta{
+    display:block; margin:14px auto 0; font-family:'Nunito'; font-weight:800; font-size:14.5px; text-align:center;
+    background:var(--sun); color:#5a3d00; border:none; border-radius:999px; padding:11px 22px; cursor:pointer;
+  }
+  .cert-cta.locked{ background:#f0e4c8; color:var(--ink-soft); cursor:default; }
 
   /* ---- map frame ---- */
   .map-frame{
     position:relative; border-radius:24px; overflow:hidden; border:3px solid #f0e4c8;
     background:linear-gradient(#d9f0e6 0%, #eaf7f2 55%, #cdeeda 55%, #b7e4cd 100%);
-    box-shadow:0 10px 24px rgba(28,58,52,.1); margin-bottom:16px;
+    box-shadow:0 10px 24px rgba(28,58,52,.1); margin-bottom:8px;
   }
   .map-deco{ position:absolute; font-size:26px; opacity:.7; }
   svg.map-svg{ display:block; width:100%; height:auto; position:relative; z-index:2; }
   .node-g{ cursor:pointer; }
   .node-disc{ transition:transform .15s ease; }
   .node-g:hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
-  .node-letter{ font-family:'Amiri', serif; font-size:22px; fill:var(--ink); pointer-events:none; }
-  .node-letter.known{ fill:#fff; }
+  .node-letter{ font-family:'Amiri', serif; font-size:20px; fill:var(--ink); pointer-events:none; }
+  .node-letter.done{ fill:#fff; }
   @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
   .next-marker{ animation:bobber 1.5s ease-in-out infinite; }
   @keyframes pulseRing{ 0%{ r:26; opacity:.7; } 100%{ r:40; opacity:0; } }
   .pulse-ring{ animation:pulseRing 1.5s ease-out infinite; }
 
-  /* ---- letter detail screen ---- */
-  .flash-wrap{ max-width:440px; margin:10px auto 60px; }
-  .flash-card{
-    background:#fff; border:3px solid #f0e4c8; border-radius:28px; padding:34px 26px; text-align:center;
-    box-shadow:0 12px 28px rgba(28,58,52,.1);
+  /* ---- lesson shell (sidebar of steps + stage) ---- */
+  .lesson-layout{ display:grid; grid-template-columns:200px 1fr; gap:14px; align-items:start; }
+  @media (max-width:700px){ .lesson-layout{ grid-template-columns:1fr; } }
+  .lesson-side{ background:linear-gradient(var(--mint), var(--mint-dark)); border:3px solid #fff; border-radius:22px; padding:12px; box-shadow:0 8px 22px rgba(28,58,52,.2); color:#fff; }
+  .side-letter-name{ background:rgba(255,255,255,.18); border:2px solid #fff; border-radius:14px; text-align:center; font-weight:800; padding:7px 8px; margin-bottom:10px; }
+  .side-steps{ display:flex; flex-direction:column; gap:8px; }
+  @media (max-width:700px){ .side-steps{ flex-direction:row; overflow-x:auto; padding-bottom:4px; } }
+  .side-step{ display:flex; align-items:center; gap:8px; background:#fff; border:3px solid #fff; border-radius:14px; padding:7px 9px; color:var(--ink); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+  @media (max-width:700px){ .side-step{ flex:0 0 auto; flex-direction:column; gap:2px; min-width:72px; text-align:center; padding:8px 6px; } }
+  .side-step .ss-num{ font-weight:800; font-size:15px; color:var(--mint-dark); width:16px; text-align:center; flex:none; }
+  .side-step .ss-icon{ font-size:17px; }
+  .side-step .ss-label{ font-weight:700; font-size:12px; flex:1; line-height:1.15; }
+  .side-step .ss-state{ font-size:14px; }
+  .side-step.current{ background:#fff6cf; border-color:var(--sun); transform:scale(1.02); }
+  .side-step.done{ background:#dcf3dc; }
+  .side-step.locked{ background:#e6e9ea; color:#8c9296; cursor:not-allowed; }
+
+  .stage-top{ display:flex; align-items:center; gap:10px; background:linear-gradient(var(--mint), var(--mint-dark)); border:3px solid #fff; border-radius:18px; padding:8px 12px; margin-bottom:10px; box-shadow:0 6px 16px rgba(28,58,52,.18); }
+  .step-pill{ background:#fff; border-radius:14px; padding:4px 14px; font-weight:800; font-size:15px; color:var(--ink); flex:none; }
+  .heart-track{ flex:1; height:15px; background:#fff; border-radius:12px; overflow:hidden; border:2px solid #fff; }
+  .heart-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--sun),var(--coral)); transition:width .35s ease; }
+
+  .stage-card{ background:#fff; border:3px solid #f0e4c8; border-radius:24px; padding:26px 22px 30px; box-shadow:0 10px 26px rgba(28,58,52,.12); text-align:center; min-height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .stage-card h2{ font-size:22px; color:var(--ink); margin:0 0 10px; }
+  .stage-card p{ font-size:16px; line-height:1.55; color:var(--ink-soft); }
+  .task-line{ font-weight:800; font-size:19px; color:var(--ink); margin:0 0 4px; }
+  .task-sub{ font-size:15px; color:var(--ink-soft); margin:0 0 18px; }
+
+  .hero-letter{ width:130px; height:130px; border-radius:50%; background:var(--mint-bg); border:3px solid var(--mint); display:flex; align-items:center; justify-content:center; font-size:76px; color:var(--ink); margin:0 auto 12px; }
+  .hero-name{ font-size:24px; font-weight:800; color:var(--ink); margin:0 0 2px; }
+  .hero-word{ font-family:'Amiri', serif; font-size:32px; color:var(--coral); margin:6px 0 0; }
+  .hero-emoji{ font-size:42px; margin-top:2px; }
+  .speak-btn{ margin-top:14px; background:var(--sky); color:#fff; border:none; border-radius:999px; padding:9px 20px; font-weight:800; cursor:pointer; box-shadow:0 4px 0 #3c82ad; }
+  .speak-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 #3c82ad; }
+
+  .choice-grid{ display:grid; gap:12px; width:100%; max-width:440px; margin:0 auto; }
+  .choice-grid.cols-2{ grid-template-columns:1fr 1fr; }
+  .choice-grid.cols-3{ grid-template-columns:repeat(3, 1fr); }
+  .choice-grid.cols-4{ grid-template-columns:repeat(4, 1fr); }
+  .choice{ background:var(--mint-bg); border:3px solid #cdeeda; border-radius:16px; padding:14px 8px; cursor:pointer; transition:transform .12s ease; text-align:center; }
+  .choice:hover{ transform:translateY(-3px); border-color:var(--mint); }
+  .choice.correct{ background:#d8f0d8; border-color:#3d9b4f; }
+  .choice.wrong{ background:#fbdedb; border-color:var(--coral); }
+  .choice.locked{ pointer-events:none; }
+  .c-letter{ font-family:'Amiri', serif; font-size:38px; color:var(--ink); }
+  .c-name{ font-weight:800; font-size:16px; color:var(--ink); }
+  .c-word{ font-family:'Amiri', serif; font-size:22px; color:var(--ink); display:block; }
+  .c-emoji{ font-size:22px; display:block; margin-top:4px; }
+
+  .hunt-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:9px; width:100%; max-width:380px; margin:0 auto; }
+  .hunt-cell{ font-family:'Amiri', serif; font-size:28px; background:var(--mint-bg); border:2.5px solid #cdeeda; border-radius:12px; padding:10px 0; cursor:pointer; transition:transform .12s ease; }
+  .hunt-cell:hover{ transform:scale(1.06); }
+  .hunt-cell.found{ background:#d8f0d8; border-color:#3d9b4f; pointer-events:none; }
+  .hunt-cell.miss{ background:#fbdedb; border-color:var(--coral); }
+
+  .bubble-row{ display:flex; direction:rtl; gap:12px; justify-content:center; flex-wrap:wrap; margin:6px 0 16px; }
+  .sound-bubble{ font-family:'Amiri', serif; width:66px; height:66px; border-radius:50%; background:#fff; border:3px solid #cdeeda; display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; transition:transform .12s ease; }
+  .sound-bubble:hover{ transform:translateY(-4px) scale(1.04); }
+  .sound-bubble.said{ background:#d8f0d8; border-color:#3d9b4f; color:#1f4f40; }
+  @keyframes bubbleHint{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,183,3,.5); } 50%{ box-shadow:0 0 0 8px rgba(255,183,3,0); } }
+  .sound-bubble.next{ border-color:var(--sun); animation:bubbleHint 1.3s ease-in-out infinite; }
+  .blend-slot{ font-family:'Amiri', serif; font-size:34px; min-width:150px; display:inline-block; border:2.5px dashed #cdeeda; border-radius:14px; padding:10px 18px; color:var(--ink); }
+  .blend-slot.full{ border-style:solid; border-color:var(--mint); background:var(--mint-bg); }
+
+  .feedback{ min-height:30px; font-weight:800; font-size:17px; margin-top:14px; }
+  .feedback.good{ color:var(--mint-dark); }
+  .feedback.bad{ color:var(--coral-dark); }
+
+  .lesson-actions{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:16px; }
+
+  /* ---- reward screen ---- */
+  .reward-box{ text-align:center; }
+  .reward-box .coin-pop{ font-size:60px; margin-bottom:6px; }
+  .star-row{ font-size:34px; margin:8px 0; }
+
+  /* ---- certificate ---- */
+  .cert-wrap{ display:flex; justify-content:center; }
+  .cert-card{
+    position:relative; max-width:640px; width:100%; background:#fffdf6; border:3px solid var(--sun);
+    border-radius:20px; padding:40px 30px; text-align:center;
   }
-  .flash-emoji{ font-size:38px; margin-bottom:4px; }
-  .flash-letter{ font-size:104px; line-height:1; color:var(--ink); margin-bottom:8px; }
-  .flash-name{ font-size:22px; font-weight:800; color:var(--mint-dark); margin-bottom:4px; }
-  .flash-word{ font-size:16px; color:var(--ink-soft); margin-bottom:18px; }
-  .flash-progress{ text-align:center; font-weight:800; color:var(--ink-soft); font-size:14px; margin-bottom:12px; }
-  .flash-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:18px; gap:10px; }
-  .know-btn{ width:100%; margin-top:6px; }
-  .know-btn.known{ background:var(--mint); box-shadow:0 5px 0 var(--mint-dark); }
+  .cert-corner{ position:absolute; width:26px; height:26px; border:3px solid var(--coral); }
+  .cert-corner.tl{ top:10px; left:10px; border-right:none; border-bottom:none; }
+  .cert-corner.tr{ top:10px; right:10px; border-left:none; border-bottom:none; }
+  .cert-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; }
+  .cert-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; }
+  .cert-seal{ width:56px; height:56px; border-radius:50%; background:var(--sun); color:#5a3d00; font-weight:800; font-size:22px; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; }
+  .cert-eyebrow{ font-weight:800; color:var(--ink-soft); font-size:13px; letter-spacing:.05em; text-transform:uppercase; margin:0 0 6px; }
+  .cert-title{ font-size:28px; color:var(--ink); margin:0 0 14px; }
+  .cert-line{ font-size:15px; color:var(--ink-soft); margin:4px 0; }
+  .cert-name{ font-size:30px; font-weight:800; color:var(--coral); margin:8px 0; }
+  .cert-course{ font-size:18px; font-weight:800; color:var(--mint-dark); margin:10px 0 0; }
+  .cert-course-sub{ font-size:14px; color:var(--ink-soft); max-width:440px; margin:6px auto 0; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:18px auto; max-width:200px; }
+  .cert-divider span{ flex:1; height:1px; background:#e7dcc0; }
+  .cert-meta-row{ display:flex; justify-content:space-around; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--ink-soft); margin-top:14px; }
+  .cert-meta-row b{ display:block; color:var(--ink); font-size:14px; margin-top:2px; }
+  .cert-footer{ margin-top:20px; font-size:11.5px; color:var(--ink-soft); }
+  .cert-head{ text-align:center; font-size:24px; color:var(--ink); }
+  .cert-todo-lead{ text-align:center; color:var(--ink-soft); max-width:420px; margin:0 auto 16px; }
+  .cert-todo{ max-width:420px; margin:0 auto; display:flex; flex-direction:column; gap:8px; }
+  .todo-row{ display:flex; align-items:center; gap:10px; background:#fff; border:2px solid #f0e4c8; border-radius:12px; padding:9px 12px; }
+  .todo-row.ok{ background:var(--mint-bg); border-color:var(--mint); }
+  .tr-label{ flex:1; font-weight:700; font-size:14px; }
+  .tr-go{ background:var(--mint); color:#fff; border:none; border-radius:999px; padding:5px 14px; font-weight:800; font-size:12.5px; cursor:pointer; }
+  @media print{
+    header, footer, .no-print{ display:none !important; }
+    body{ background:#fff; }
+  }
 </style>
 </head>
 <body>
 
-<header class="site">
+<header class="site no-print">
   <div class="nav-row">
     <a class="brand" href="../../index.html">
       <span class="brand-mark">🌱</span>
@@ -74,10 +174,10 @@
   </div>
 </header>
 
-<div class="page-head">
+<div class="page-head no-print">
   <span class="eyebrow">🔤 Arabic Letters</span>
   <h1>The Letter Garden</h1>
-  <p>Walk the path and tap a letter to meet it. Mark it once you know it — no need to go in order!</p>
+  <p>Tap a letter for a full six-step lesson — meet it, find it, name it, spot its word, hunt it, then blend it into a word.</p>
 </div>
 
 <div class="wrap">
@@ -85,7 +185,7 @@
     <div class="center-card">
       <div class="icon">🌱</div>
       <h2>What's your name?</h2>
-      <p>We'll remember it so you don't have to type it again on this device.</p>
+      <p>We'll remember it so you don't have to type it again on this device — it's also the name on your certificate.</p>
       <input type="text" id="name-input" class="name-field" placeholder="Your name" autocomplete="off">
       <div><button class="btn btn-primary" id="name-start-btn">Start Learning</button></div>
     </div>
@@ -94,7 +194,7 @@
   <div id="map-screen" class="hidden">
     <div class="map-topbar">
       <div class="player-chip"><span class="avatar">🧒</span><span id="player-name">Explorer</span></div>
-      <div class="stat-pill">🔤 <span id="stat-known">0</span>/28 known</div>
+      <div class="stat-pill">⭐ <span id="stat-stars">0</span>/<span id="stat-max-stars">84</span></div>
     </div>
     <p class="map-hint" id="map-hint">Tap the glowing letter to start!</p>
     <div class="map-frame">
@@ -105,29 +205,50 @@
       <span class="map-deco" style="bottom:6%; left:10%;">🍃</span>
       <svg class="map-svg" id="map-svg" viewBox="0 0 640 590" role="img" aria-label="Arabic letters map"></svg>
     </div>
+    <button class="cert-cta" id="map-cert-btn" type="button"></button>
     <p style="text-align:center;"><a class="back-link" href="../index.html">← Back to Foundation</a></p>
   </div>
 
-  <div id="letter-screen" class="hidden">
-    <div class="flash-wrap">
-      <div class="flash-progress" id="flash-progress"></div>
-      <div class="flash-card">
-        <div class="flash-emoji" id="flash-emoji"></div>
-        <div class="arabic-glyph flash-letter" id="flash-letter"></div>
-        <div class="flash-name" id="flash-name"></div>
-        <div class="flash-word" id="flash-word"></div>
-        <button class="btn know-btn" id="know-btn"></button>
+  <div id="lesson-screen" class="hidden">
+    <div class="lesson-layout">
+      <aside class="lesson-side">
+        <div class="side-letter-name" id="side-letter-name">Alif</div>
+        <div class="side-steps" id="side-steps"></div>
+      </aside>
+      <div class="lesson-stage-wrap">
+        <div class="stage-top">
+          <span class="step-pill" id="step-pill">1/6</span>
+          <div class="heart-track"><div class="heart-fill" id="heart-fill"></div></div>
+        </div>
+        <div class="stage-card" id="stage-card"></div>
+        <div class="lesson-actions" id="stage-actions"></div>
       </div>
-      <div class="flash-nav">
-        <button class="btn btn-ghost" id="prev-btn">← Prev</button>
-        <button class="btn btn-ghost" id="map-btn">🗺️ Map</button>
-        <button class="btn btn-mint" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <div id="reward-screen" class="hidden">
+    <div class="center-card reward-box">
+      <div class="coin-pop" id="reward-emoji">🎉</div>
+      <h2 id="reward-title">Letter Complete!</h2>
+      <div class="star-row" id="reward-stars">⭐⭐⭐</div>
+      <div class="lesson-actions">
+        <button class="btn btn-mint" id="reward-next-btn">Next Letter →</button>
+        <button class="btn btn-ghost" id="reward-map-btn">Back to Map</button>
       </div>
+    </div>
+  </div>
+
+  <div id="cert-screen" class="hidden">
+    <h2 class="cert-head" id="cert-head">Alphabet Certificate</h2>
+    <div id="cert-body"></div>
+    <div class="lesson-actions no-print">
+      <button class="btn btn-mint hidden" id="cert-print-btn">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-ghost" id="cert-back-btn">Back to Map</button>
     </div>
   </div>
 </div>
 
-<footer>
+<footer class="no-print">
   <div class="flinks">
     <a href="../../index.html">Home</a>
     <a href="../index.html">Foundation</a>
@@ -138,60 +259,124 @@
 
 <script src="../../shared/site.js"></script>
 <script>
+/* ===================== DATA ===================== */
 const LETTERS = [
-  { ar:'ا', name:'Alif',  word:'أَرْنَب',  wordEn:'rabbit',   emoji:'🐰' },
-  { ar:'ب', name:'Bāʼ',   word:'بَيْت',    wordEn:'house',    emoji:'🏠' },
-  { ar:'ت', name:'Tāʼ',   word:'تُفَّاح',   wordEn:'apple',    emoji:'🍎' },
-  { ar:'ث', name:'Thāʼ',  word:'ثَعْلَب',   wordEn:'fox',      emoji:'🦊' },
-  { ar:'ج', name:'Jīm',   word:'جَمَل',    wordEn:'camel',    emoji:'🐫' },
-  { ar:'ح', name:'Ḥāʼ',   word:'حِصَان',   wordEn:'horse',    emoji:'🐴' },
-  { ar:'خ', name:'Khāʼ',  word:'خُبْز',    wordEn:'bread',    emoji:'🍞' },
-  { ar:'د', name:'Dāl',   word:'دُبّ',     wordEn:'bear',     emoji:'🐻' },
-  { ar:'ذ', name:'Dhāl',  word:'ذِئْب',    wordEn:'wolf',     emoji:'🐺' },
-  { ar:'ر', name:'Rāʼ',   word:'رَجُل',    wordEn:'man',      emoji:'👨' },
-  { ar:'ز', name:'Zāy',   word:'زَهْرَة',   wordEn:'flower',   emoji:'🌸' },
-  { ar:'س', name:'Sīn',   word:'سَمَك',    wordEn:'fish',     emoji:'🐟' },
-  { ar:'ش', name:'Shīn',  word:'شَمْس',    wordEn:'sun',      emoji:'☀️' },
-  { ar:'ص', name:'Ṣād',   word:'صَقْر',    wordEn:'falcon',   emoji:'🦅' },
-  { ar:'ض', name:'Ḍād',   word:'ضِفْدَع',   wordEn:'frog',     emoji:'🐸' },
-  { ar:'ط', name:'Ṭāʼ',   word:'طَبْل',    wordEn:'drum',     emoji:'🥁' },
-  { ar:'ظ', name:'Ẓāʼ',   word:'ظِلّ',     wordEn:'shade',    emoji:'🌑' },
-  { ar:'ع', name:'ʿAyn',  word:'عَيْن',    wordEn:'eye',      emoji:'👁️' },
-  { ar:'غ', name:'Ghayn', word:'غَزَال',   wordEn:'gazelle',  emoji:'🦌' },
-  { ar:'ف', name:'Fāʼ',   word:'فِيل',     wordEn:'elephant', emoji:'🐘' },
-  { ar:'ق', name:'Qāf',   word:'قِطَّة',    wordEn:'cat',      emoji:'🐱' },
-  { ar:'ك', name:'Kāf',   word:'كِتَاب',   wordEn:'book',     emoji:'📖' },
-  { ar:'ل', name:'Lām',   word:'لَيْمُون',  wordEn:'lemon',    emoji:'🍋' },
-  { ar:'م', name:'Mīm',   word:'مَاء',     wordEn:'water',    emoji:'💧' },
-  { ar:'ن', name:'Nūn',   word:'نَحْلَة',   wordEn:'bee',      emoji:'🐝' },
-  { ar:'هـ', name:'Hāʼ',  word:'هِلَال',   wordEn:'crescent', emoji:'🌙' },
-  { ar:'و', name:'Wāw',   word:'وَرْدَة',   wordEn:'rose',     emoji:'🌹' },
-  { ar:'ي', name:'Yāʼ',   word:'يَد',      wordEn:'hand',     emoji:'✋' }
+  { letter:'ا', name:'Alif',  word:'أَرْنَب',  wordEn:'rabbit',   emoji:'🐰', parts:['أَ','رْ','نَب'] },
+  { letter:'ب', name:'Bāʼ',   word:'بَيْت',    wordEn:'house',    emoji:'🏠', parts:['بَ','يْ','ت'] },
+  { letter:'ت', name:'Tāʼ',   word:'تُفَّاح',   wordEn:'apple',    emoji:'🍎', parts:['تُ','فَّا','ح'] },
+  { letter:'ث', name:'Thāʼ',  word:'ثَعْلَب',   wordEn:'fox',      emoji:'🦊', parts:['ثَعْ','لَب'] },
+  { letter:'ج', name:'Jīm',   word:'جَمَل',    wordEn:'camel',    emoji:'🐫', parts:['جَ','مَل'] },
+  { letter:'ح', name:'Ḥāʼ',   word:'حِصَان',   wordEn:'horse',    emoji:'🐴', parts:['حِ','صَان'] },
+  { letter:'خ', name:'Khāʼ',  word:'خُبْز',    wordEn:'bread',    emoji:'🍞', parts:['خُبْ','ز'] },
+  { letter:'د', name:'Dāl',   word:'دُبّ',     wordEn:'bear',     emoji:'🐻', parts:['دُ','بّ'] },
+  { letter:'ذ', name:'Dhāl',  word:'ذِئْب',    wordEn:'wolf',     emoji:'🐺', parts:['ذِئْ','ب'] },
+  { letter:'ر', name:'Rāʼ',   word:'رَجُل',    wordEn:'man',      emoji:'👨', parts:['رَ','جُل'] },
+  { letter:'ز', name:'Zāy',   word:'زَهْرَة',   wordEn:'flower',   emoji:'🌸', parts:['زَهْ','رَة'] },
+  { letter:'س', name:'Sīn',   word:'سَمَك',    wordEn:'fish',     emoji:'🐟', parts:['سَ','مَك'] },
+  { letter:'ش', name:'Shīn',  word:'شَمْس',    wordEn:'sun',      emoji:'☀️', parts:['شَمْ','س'] },
+  { letter:'ص', name:'Ṣād',   word:'صَقْر',    wordEn:'falcon',   emoji:'🦅', parts:['صَقْ','ر'] },
+  { letter:'ض', name:'Ḍād',   word:'ضِفْدَع',   wordEn:'frog',     emoji:'🐸', parts:['ضِفْ','دَع'] },
+  { letter:'ط', name:'Ṭāʼ',   word:'طَبْل',    wordEn:'drum',     emoji:'🥁', parts:['طَبْ','ل'] },
+  { letter:'ظ', name:'Ẓāʼ',   word:'ظِلّ',     wordEn:'shade',    emoji:'🌑', parts:['ظِ','لّ'] },
+  { letter:'ع', name:'ʿAyn',  word:'عَيْن',    wordEn:'eye',      emoji:'👁️', parts:['عَيْ','ن'] },
+  { letter:'غ', name:'Ghayn', word:'غَزَال',   wordEn:'gazelle',  emoji:'🦌', parts:['غَ','زَال'] },
+  { letter:'ف', name:'Fāʼ',   word:'فِيل',     wordEn:'elephant', emoji:'🐘', parts:['فِي','ل'] },
+  { letter:'ق', name:'Qāf',   word:'قِطَّة',    wordEn:'cat',      emoji:'🐱', parts:['قِطْ','طَة'] },
+  { letter:'ك', name:'Kāf',   word:'كِتَاب',   wordEn:'book',     emoji:'📖', parts:['كِ','تَاب'] },
+  { letter:'ل', name:'Lām',   word:'لَيْمُون',  wordEn:'lemon',    emoji:'🍋', parts:['لَيْ','مُون'] },
+  { letter:'م', name:'Mīm',   word:'مَاء',     wordEn:'water',    emoji:'💧', parts:['مَا','ء'] },
+  { letter:'ن', name:'Nūn',   word:'نَحْلَة',   wordEn:'bee',      emoji:'🐝', parts:['نَحْ','لَة'] },
+  { letter:'هـ', name:'Hāʼ',  word:'هِلَال',   wordEn:'crescent', emoji:'🌙', parts:['هِ','لَال'] },
+  { letter:'و', name:'Wāw',   word:'وَرْدَة',   wordEn:'rose',     emoji:'🌹', parts:['وَرْ','دَة'] },
+  { letter:'ي', name:'Yāʼ',   word:'يَد',      wordEn:'hand',     emoji:'✋', parts:['يَ','د'] }
 ];
+const LOOKALIKES = {
+  'ا':['ل','ر'], 'ب':['ت','ث','ن'], 'ت':['ب','ث','ن'], 'ث':['ب','ت','ن'],
+  'ج':['ح','خ'], 'ح':['ج','خ'], 'خ':['ج','ح'],
+  'د':['ذ','ر'], 'ذ':['د','ر'], 'ر':['ز','د'], 'ز':['ر','ذ'],
+  'س':['ش','ص'], 'ش':['س','ض'], 'ص':['ض','س'], 'ض':['ص','ش'],
+  'ط':['ظ','ص'], 'ظ':['ط','ض'], 'ع':['غ','ح'], 'غ':['ع','خ'],
+  'ف':['ق','و'], 'ق':['ف','ن'], 'ك':['ل','م'], 'ل':['ا','ك'],
+  'م':['هـ','و'], 'ن':['ب','ت'], 'هـ':['م','ع'], 'و':['ر','ز'], 'ي':['ب','ن']
+};
 
 const NAME_KEY = 'tayyibly-name';
-const PROGRESS_KEY = 'tayyibly-foundation-arabic-known';
+const PROGRESS_KEY = 'tayyibly-foundation-arabic-progress';
+const CERT_PREFIX = 'TYB-AR';
 const COLS = 7, ROW_H = 150, MARGIN_X = 70, MARGIN_Y = 70, VB_W = 640;
+const MAX_STARS = LETTERS.length * 3;
 
-let idx = 0;
-let known = [];
+let letterIdx = 0;
+let stars = [];        // one 0-3 entry per letter
+let certRecord = null; // { date, id } once earned
+let lesson = null;     // { steps, stepIndex, showIntro, mistakes, cleared[], huntFound, blendAt }
 
-function loadKnown(){
+function shuffle(arr){ return arr.map(v => [Math.random(), v]).sort((a,b) => a[0]-b[0]).map(v => v[1]); }
+
+/* ===================== PROGRESS ===================== */
+function defaultProgress(){ return { stars: new Array(LETTERS.length).fill(0), cert: null }; }
+function loadProgress(){
   try{
     const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY));
-    if(Array.isArray(raw) && raw.length === LETTERS.length) return raw;
+    if(raw && Array.isArray(raw.stars) && raw.stars.length === LETTERS.length){
+      return { stars: raw.stars, cert: raw.cert || null };
+    }
   }catch(e){}
-  return new Array(LETTERS.length).fill(false);
+  return defaultProgress();
 }
-function saveKnown(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(known)); }catch(e){} }
+function saveProgress(){ try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify({ stars, cert: certRecord })); }catch(e){} }
 
+/* ===================== SOUND ===================== */
+function getCtx(){ if(!window.__actx) window.__actx = new (window.AudioContext || window.webkitAudioContext)(); return window.__actx; }
+function beep(freq, dur, type){
+  try{
+    const ctx = getCtx();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playTap(){ beep(420, 0.07, 'sine'); }
+function playRight(){ beep(660, 0.1, 'sine'); setTimeout(() => beep(880, 0.14, 'sine'), 90); }
+function playWrong(){ beep(170, 0.18, 'sawtooth'); }
+function playWin(){ [523,659,784,1047].forEach((f,i) => setTimeout(() => beep(f,0.2,'sine'), i*140)); }
+function speakArabic(text){
+  try{
+    if(!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ar-SA'; u.rate = 0.85;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function burstConfetti(){
+  const colors = ['#2fb88f','#ff6f59','#ffb703','#5aa9e6'];
+  for(let i = 0; i < 50; i++){
+    const p = document.createElement('div');
+    p.style.cssText = 'position:fixed;top:-20px;width:9px;height:9px;z-index:500;pointer-events:none;' +
+      'left:' + (Math.random()*100) + 'vw;background:' + colors[Math.floor(Math.random()*colors.length)] +
+      ';border-radius:' + (Math.random()>0.5?'50%':'2px') + ';animation:confettiFall ' + (2+Math.random()*1.5) + 's linear forwards;';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 3600);
+  }
+}
+const styleTag = document.createElement('style');
+styleTag.textContent = '@keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }';
+document.head.appendChild(styleTag);
+
+/* ===================== SCREENS ===================== */
 function showScreen(id){
-  ['name-screen','map-screen','letter-screen'].forEach(s => {
+  ['name-screen','map-screen','lesson-screen','reward-screen','cert-screen'].forEach(s => {
     document.getElementById(s).classList.toggle('hidden', s !== id);
   });
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
+/* ===================== MAP ===================== */
 function nodePos(i){
   const row = Math.floor(i / COLS);
   const colInRow = i % COLS;
@@ -199,14 +384,16 @@ function nodePos(i){
   const colSpacing = (VB_W - MARGIN_X * 2) / (COLS - 1);
   return { x: MARGIN_X + col * colSpacing, y: MARGIN_Y + row * ROW_H };
 }
+function totalStars(){ return stars.reduce((a,b) => a+b, 0); }
 
 function renderMap(){
   document.getElementById('player-name').textContent = localStorage.getItem(NAME_KEY) || 'Explorer';
-  const knownCount = known.filter(Boolean).length;
-  document.getElementById('stat-known').textContent = knownCount;
+  document.getElementById('stat-stars').textContent = totalStars();
+  document.getElementById('stat-max-stars').textContent = MAX_STARS;
 
   const hint = document.getElementById('map-hint');
-  if(knownCount === LETTERS.length){
+  const doneCount = stars.filter(s => s > 0).length;
+  if(doneCount === LETTERS.length){
     hint.textContent = '🎉 You know the whole alphabet! Tap any letter to review it.';
     hint.classList.add('done');
   } else {
@@ -214,40 +401,36 @@ function renderMap(){
     hint.classList.remove('done');
   }
 
-  const nextIdx = known.findIndex(k => !k);
+  const certBtn = document.getElementById('map-cert-btn');
+  const ready = doneCount === LETTERS.length;
+  certBtn.className = 'cert-cta' + (ready ? '' : ' locked');
+  certBtn.textContent = ready ? '🎓 Get my Alphabet Certificate' : '🎓 Certificate · ' + doneCount + ' of ' + LETTERS.length + ' letters done';
+
+  const nextIdx = stars.findIndex(s => s === 0);
   const svg = document.getElementById('map-svg');
   svg.innerHTML =
     '<defs>' +
-      '<radialGradient id="stoneKnown" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
+      '<radialGradient id="stoneDone" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#6fd4ac"/><stop offset="100%" stop-color="var(--mint-dark)"/></radialGradient>' +
       '<radialGradient id="stoneOpen" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0e4c8"/></radialGradient>' +
     '</defs>';
 
-  // connecting path
   let pathD = '';
-  LETTERS.forEach((l, i) => {
-    const p = nodePos(i);
-    pathD += (i === 0 ? 'M' : 'L') + p.x + ',' + p.y + ' ';
+  LETTERS.forEach((l, i) => { const p = nodePos(i); pathD += (i === 0 ? 'M' : 'L') + p.x + ',' + p.y + ' '; });
+  [{stroke:'#ffffffb0', width:'10', dash:null}, {stroke:'#cdeeda', width:'5', dash:'3 10'}].forEach(cfg => {
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathD);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', cfg.stroke);
+    path.setAttribute('stroke-width', cfg.width);
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+    if(cfg.dash) path.setAttribute('stroke-dasharray', cfg.dash);
+    svg.appendChild(path);
   });
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', pathD);
-  path.setAttribute('fill', 'none');
-  path.setAttribute('stroke', '#ffffffb0');
-  path.setAttribute('stroke-width', '10');
-  path.setAttribute('stroke-linecap', 'round');
-  path.setAttribute('stroke-linejoin', 'round');
-  svg.appendChild(path);
-  const pathDash = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  pathDash.setAttribute('d', pathD);
-  pathDash.setAttribute('fill', 'none');
-  pathDash.setAttribute('stroke', '#cdeeda');
-  pathDash.setAttribute('stroke-width', '5');
-  pathDash.setAttribute('stroke-dasharray', '3 10');
-  pathDash.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(pathDash);
 
   LETTERS.forEach((l, i) => {
     const p = nodePos(i);
-    const isKnown = known[i];
+    const s = stars[i];
     const isNext = i === nextIdx;
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', 'node-g');
@@ -256,87 +439,363 @@ function renderMap(){
     if(isNext){
       const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       ring.setAttribute('class', 'pulse-ring');
-      ring.setAttribute('r', '26');
-      ring.setAttribute('fill', 'none');
-      ring.setAttribute('stroke', 'var(--coral)');
-      ring.setAttribute('stroke-width', '3');
+      ring.setAttribute('r', '26'); ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', 'var(--coral)'); ring.setAttribute('stroke-width', '3');
       g.appendChild(ring);
     }
-
     const disc = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     disc.setAttribute('class', 'node-disc');
     disc.setAttribute('r', '26');
-    disc.setAttribute('fill', isKnown ? 'url(#stoneKnown)' : 'url(#stoneOpen)');
+    disc.setAttribute('fill', s > 0 ? 'url(#stoneDone)' : 'url(#stoneOpen)');
     disc.setAttribute('stroke', isNext ? 'var(--coral)' : '#fff');
     disc.setAttribute('stroke-width', isNext ? '3.5' : '3');
     g.appendChild(disc);
 
     const letterText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    letterText.setAttribute('class', 'node-letter' + (isKnown ? ' known' : ''));
-    letterText.setAttribute('text-anchor', 'middle');
-    letterText.setAttribute('dy', '8');
-    letterText.textContent = l.ar;
+    letterText.setAttribute('class', 'node-letter' + (s > 0 ? ' done' : ''));
+    letterText.setAttribute('text-anchor', 'middle'); letterText.setAttribute('dy', '7');
+    letterText.textContent = l.letter;
     g.appendChild(letterText);
 
-    if(isKnown){
-      const check = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      check.setAttribute('x', '18'); check.setAttribute('y', '-14');
-      check.setAttribute('font-size', '16');
-      check.textContent = '⭐';
-      g.appendChild(check);
+    if(s > 0){
+      const starText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      starText.setAttribute('x', '20'); starText.setAttribute('y', '-14');
+      starText.setAttribute('font-size', '13'); starText.setAttribute('text-anchor', 'middle');
+      starText.textContent = '⭐'.repeat(s);
+      g.appendChild(starText);
     }
     if(isNext){
       const marker = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      marker.setAttribute('class', 'next-marker');
-      marker.setAttribute('text-anchor', 'middle');
-      marker.setAttribute('y', '-32');
-      marker.setAttribute('font-size', '20');
+      marker.setAttribute('class', 'next-marker'); marker.setAttribute('text-anchor', 'middle');
+      marker.setAttribute('y', '-32'); marker.setAttribute('font-size', '20');
       marker.textContent = '👆';
       g.appendChild(marker);
     }
-
-    g.addEventListener('click', () => { idx = i; renderLetter(); showScreen('letter-screen'); });
+    g.addEventListener('click', () => { playTap(); startLesson(i); });
     svg.appendChild(g);
   });
 }
 
-function renderLetter(){
-  const item = LETTERS[idx];
-  document.getElementById('flash-emoji').textContent = item.emoji;
-  document.getElementById('flash-letter').textContent = item.ar;
-  document.getElementById('flash-name').textContent = item.name;
-  document.getElementById('flash-word').textContent = item.word + ' — ' + item.wordEn;
-  document.getElementById('flash-progress').textContent = 'Letter ' + (idx + 1) + ' of ' + LETTERS.length;
+/* ===================== LESSON BUILD ===================== */
+function buildLetterSteps(idx){
+  const L = LETTERS[idx];
+  const others = LETTERS.filter(x => x.letter !== L.letter);
+  const steps = [];
 
-  const knowBtn = document.getElementById('know-btn');
-  const isKnown = known[idx];
-  knowBtn.textContent = isKnown ? '✓ You know this one!' : 'I know this one!';
-  knowBtn.classList.toggle('known', isKnown);
+  steps.push({ type:'meet', icon:'👀', label:'Meet it',
+    gameTitle:'Meet the Letter', gameIntro:'Look at the letter, hear its name, and see a word that starts with it.',
+    letter:L });
 
-  document.getElementById('prev-btn').disabled = idx === 0;
-  document.getElementById('next-btn').disabled = idx === LETTERS.length - 1;
+  const lookAlike = (LOOKALIKES[L.letter] || []).slice(0, 2);
+  const distractors = shuffle(others.filter(x => !lookAlike.includes(x.letter))).slice(0, 3 - lookAlike.length).map(x => x.letter);
+  steps.push({ type:'pick', icon:'🔎', label:'Find it',
+    gameTitle:'Find the Letter', gameIntro:'Some letters look almost the same. Look closely and tap the right one.',
+    prompt:'Which letter is ' + L.name + '?', sub:'Look carefully — some letters look alike!',
+    options: shuffle(lookAlike.concat(distractors).concat([L.letter])).map(ch => ({ show:ch, kind:'letter', correct: ch === L.letter })),
+    cols:4, speak:L.letter });
+
+  const nameChoices = shuffle(others).slice(0, 3).map(x => ({ show:x.name, kind:'name', correct:false }));
+  nameChoices.push({ show:L.name, kind:'name', correct:true });
+  steps.push({ type:'pick', icon:'🔤', label:'Name it',
+    gameTitle:'Name the Letter', gameIntro:'Every letter has a name. Tap the name of the letter you can see.',
+    prompt:'What is the name of this letter?', heroLetter:L.letter,
+    options: shuffle(nameChoices), cols:2, speak:L.letter });
+
+  const wordChoices = shuffle(others).slice(0, 2).map(x => ({ show:x.word, sub:x.emoji, kind:'word', correct:false }));
+  wordChoices.push({ show:L.word, sub:L.emoji, kind:'word', correct:true });
+  steps.push({ type:'pick', icon:'🖼️', label:'Word',
+    gameTitle:'Starting Sound', gameIntro:'Say each word out loud. Tap the one that begins with our letter.',
+    prompt:'Which word starts with ' + L.letter + ' ?', sub:'Tap the picture word that begins with this letter.',
+    options: shuffle(wordChoices), cols:3, speak:L.word });
+
+  const gridSize = 12, targetCount = 3;
+  const cells = [];
+  for(let i = 0; i < targetCount; i++) cells.push({ ch:L.letter, target:true });
+  const pool = shuffle(others).map(x => x.letter);
+  for(let i = 0; cells.length < gridSize; i++) cells.push({ ch: pool[i % pool.length], target:false });
+  steps.push({ type:'hunt', icon:'🧩', label:'Hunt',
+    gameTitle:'Letter Hunt', gameIntro:'Our letter is hiding in the box. Tap every one you can find!',
+    prompt:'Find all ' + targetCount + ' of the letter ' + L.letter, sub:'Tap every one you can see.',
+    cells: shuffle(cells), need: targetCount });
+
+  steps.push({ type:'blend', icon:'🫧', label:'Blend',
+    gameTitle:'Blend a Word', gameIntro:'We are going to use sound talk to read a word. Say each sound, then say the word.',
+    parts:L.parts, word:L.word, wordEn:L.wordEn, emoji:L.emoji });
+
+  return steps;
 }
 
-document.getElementById('know-btn').addEventListener('click', () => {
-  known[idx] = !known[idx];
-  saveKnown();
-  renderLetter();
-});
-document.getElementById('prev-btn').addEventListener('click', () => {
-  if(idx > 0){ idx--; renderLetter(); }
-});
-document.getElementById('next-btn').addEventListener('click', () => {
-  if(idx < LETTERS.length - 1){ idx++; renderLetter(); }
-});
-document.getElementById('map-btn').addEventListener('click', () => {
-  renderMap();
-  showScreen('map-screen');
-});
+/* ===================== LESSON ENGINE ===================== */
+function startLesson(idx){
+  letterIdx = idx;
+  lesson = { steps: buildLetterSteps(idx), stepIndex:0, showIntro:true, mistakes:0, cleared:[], huntFound:0, blendAt:0 };
+  document.getElementById('side-letter-name').textContent = LETTERS[idx].name;
+  showScreen('lesson-screen');
+  renderStep();
+}
 
+function renderSideSteps(){
+  const box = document.getElementById('side-steps');
+  box.innerHTML = '';
+  lesson.steps.forEach((s, i) => {
+    const done = lesson.cleared.indexOf(i) !== -1;
+    const current = i === lesson.stepIndex;
+    const locked = !done && !current;
+    const el = document.createElement('div');
+    el.className = 'side-step' + (current ? ' current' : done ? ' done' : ' locked');
+    el.innerHTML = '<span class="ss-num">' + (i+1) + '</span><span class="ss-icon">' + s.icon + '</span>' +
+      '<span class="ss-label">' + s.label + '</span><span class="ss-state">' + (done ? '✅' : current ? '▶️' : '🔒') + '</span>';
+    if(!locked){
+      el.addEventListener('click', () => {
+        if(i === lesson.stepIndex) return;
+        playTap(); lesson.stepIndex = i; lesson.showIntro = true; renderStep();
+      });
+    }
+    box.appendChild(el);
+  });
+}
+
+function renderStep(){
+  const card = document.getElementById('stage-card');
+  const actions = document.getElementById('stage-actions');
+  const step = lesson.steps[lesson.stepIndex];
+
+  document.getElementById('step-pill').textContent = (lesson.stepIndex+1) + '/' + lesson.steps.length;
+  document.getElementById('heart-fill').style.width = Math.round((lesson.cleared.length / lesson.steps.length) * 100) + '%';
+  renderSideSteps();
+  actions.innerHTML = '';
+
+  if(lesson.showIntro){
+    card.innerHTML = '<h2>' + step.gameTitle + '</h2><p>' + step.gameIntro + '</p>';
+    const playBtn = document.createElement('button');
+    playBtn.className = 'btn btn-primary';
+    playBtn.textContent = 'Play ▶';
+    playBtn.addEventListener('click', () => { playTap(); lesson.showIntro = false; renderStep(); });
+    actions.appendChild(playBtn);
+    return;
+  }
+
+  if(step.type === 'meet'){
+    const L = step.letter;
+    card.innerHTML =
+      '<p class="task-line">Meet this one!</p>' +
+      '<div class="hero-letter arabic">' + L.letter + '</div>' +
+      '<p class="hero-name">' + L.name + '</p>' +
+      '<p class="hero-word arabic">' + L.word + '</p>' +
+      '<div class="hero-emoji">' + L.emoji + '</div>' +
+      '<p class="task-sub" style="margin:4px 0 0;">' + (L.wordEn || '') + '</p>' +
+      '<button class="speak-btn" id="speak-btn" type="button">🔊 Listen</button>';
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-mint';
+    nextBtn.textContent = 'Got it →';
+    nextBtn.addEventListener('click', () => { playTap(); clearStep(); });
+    actions.appendChild(nextBtn);
+    document.getElementById('speak-btn').addEventListener('click', () => { playTap(); speakArabic(L.word || L.letter); });
+    speakArabic(L.letter);
+    return;
+  }
+
+  if(step.type === 'pick'){
+    let inner = '<p class="task-line">' + step.prompt + '</p>';
+    if(step.heroLetter) inner += '<div class="hero-letter arabic" style="width:110px;height:110px;font-size:64px;">' + step.heroLetter + '</div>';
+    else if(step.sub) inner += '<p class="task-sub">' + step.sub + '</p>';
+    inner += '<div class="choice-grid cols-' + step.cols + '" id="choice-grid"></div><div class="feedback" id="feedback"></div>';
+    card.innerHTML = inner;
+    const grid = document.getElementById('choice-grid');
+    step.options.forEach(opt => {
+      const el = document.createElement('div');
+      el.className = 'choice';
+      const cls = opt.kind === 'letter' ? 'c-letter arabic' : opt.kind === 'word' ? 'c-word arabic' : 'c-name';
+      el.innerHTML = '<span class="' + cls + '">' + opt.show + '</span>' + (opt.sub ? '<span class="c-emoji">' + opt.sub + '</span>' : '');
+      el.addEventListener('click', () => handlePick(el, opt));
+      grid.appendChild(el);
+    });
+    if(step.speak) speakArabic(step.speak);
+    return;
+  }
+
+  if(step.type === 'hunt'){
+    lesson.huntFound = 0;
+    card.innerHTML = '<p class="task-line">' + step.prompt + '</p><p class="task-sub">' + step.sub + '</p>' +
+      '<div class="hunt-grid" id="hunt-grid"></div><div class="feedback" id="feedback"><span id="hunt-count">0</span> / ' + step.need + ' found</div>';
+    const grid = document.getElementById('hunt-grid');
+    step.cells.forEach(cell => {
+      const el = document.createElement('div');
+      el.className = 'hunt-cell arabic';
+      el.textContent = cell.ch;
+      el.addEventListener('click', () => {
+        if(cell.target){
+          if(el.classList.contains('found')) return;
+          el.classList.add('found'); lesson.huntFound++; playRight();
+          document.getElementById('hunt-count').textContent = lesson.huntFound;
+          if(lesson.huntFound >= step.need){
+            const fb = document.getElementById('feedback');
+            fb.className = 'feedback good'; fb.textContent = 'You found them all! 🎉';
+            setTimeout(clearStep, 900);
+          }
+        } else {
+          lesson.mistakes++; playWrong();
+          el.classList.add('miss');
+          setTimeout(() => el.classList.remove('miss'), 450);
+        }
+      });
+      grid.appendChild(el);
+    });
+    return;
+  }
+
+  if(step.type === 'blend'){
+    lesson.blendAt = 0;
+    card.innerHTML = '<p class="task-line">Tap each sound, then read the word</p><p class="task-sub">Start from the right ➡️</p>' +
+      '<div class="bubble-row" id="bubble-row"></div><div><span class="blend-slot arabic" id="blend-slot">…</span></div><div class="feedback" id="feedback"></div>';
+    const row = document.getElementById('bubble-row');
+    step.parts.forEach((part, i) => {
+      const b = document.createElement('div');
+      b.className = 'sound-bubble arabic' + (i === 0 ? ' next' : '');
+      b.textContent = part;
+      b.addEventListener('click', () => {
+        if(i < lesson.blendAt){ speakArabic(part); return; }
+        if(i > lesson.blendAt){ playWrong(); return; }
+        b.classList.add('said'); b.classList.remove('next');
+        speakArabic(part); playRight();
+        lesson.blendAt++;
+        const nextB = row.children[lesson.blendAt];
+        if(nextB) nextB.classList.add('next');
+        const slot = document.getElementById('blend-slot');
+        slot.textContent = step.parts.slice(0, lesson.blendAt).join('');
+        if(lesson.blendAt >= step.parts.length){
+          slot.textContent = step.word; slot.classList.add('full');
+          const fb = document.getElementById('feedback');
+          fb.className = 'feedback good';
+          fb.textContent = step.word + ' — ' + (step.wordEn || '') + ' ' + (step.emoji || '');
+          speakArabic(step.word);
+          const doneBtn = document.createElement('button');
+          doneBtn.className = 'btn btn-mint';
+          doneBtn.textContent = 'I read it! →';
+          doneBtn.addEventListener('click', () => { playTap(); clearStep(); });
+          document.getElementById('stage-actions').appendChild(doneBtn);
+        }
+      });
+      row.appendChild(b);
+    });
+    return;
+  }
+}
+
+function handlePick(el, opt){
+  const grid = document.getElementById('choice-grid');
+  const fb = document.getElementById('feedback');
+  if(opt.correct){
+    playRight();
+    el.classList.add('correct');
+    grid.querySelectorAll('.choice').forEach(c => c.classList.add('locked'));
+    fb.className = 'feedback good';
+    fb.textContent = ['Yes! 🌟','Perfect! 🎉','Well done! 👏','Amazing! ✨'][Math.floor(Math.random()*4)];
+    setTimeout(clearStep, 850);
+  } else {
+    lesson.mistakes++; playWrong();
+    el.classList.add('wrong');
+    fb.className = 'feedback bad'; fb.textContent = 'Not that one — try again!';
+    setTimeout(() => el.classList.remove('wrong'), 450);
+  }
+}
+
+function starsFor(mistakes){ return mistakes === 0 ? 3 : mistakes <= 3 ? 2 : 1; }
+
+function clearStep(){
+  if(lesson.cleared.indexOf(lesson.stepIndex) === -1) lesson.cleared.push(lesson.stepIndex);
+  if(lesson.stepIndex >= lesson.steps.length - 1) finishLesson();
+  else { lesson.stepIndex++; lesson.showIntro = true; renderStep(); }
+}
+
+function finishLesson(){
+  const earned = starsFor(lesson.mistakes);
+  stars[letterIdx] = Math.max(stars[letterIdx], earned);
+  saveProgress();
+  playWin();
+  document.getElementById('reward-title').textContent = LETTERS[letterIdx].name + ' Complete!';
+  document.getElementById('reward-stars').textContent = '⭐'.repeat(earned) + '☆'.repeat(3 - earned);
+  document.getElementById('reward-next-btn').classList.toggle('hidden', letterIdx >= LETTERS.length - 1);
+  showScreen('reward-screen');
+  burstConfetti();
+}
+
+document.getElementById('reward-next-btn').addEventListener('click', () => {
+  playTap();
+  if(letterIdx < LETTERS.length - 1) startLesson(letterIdx + 1);
+});
+document.getElementById('reward-map-btn').addEventListener('click', () => { playTap(); renderMap(); showScreen('map-screen'); });
+
+/* ===================== CERTIFICATE ===================== */
+function prettyDate(iso){
+  const p = String(iso || '').split('-');
+  const d = (p.length === 3) ? new Date(+p[0], +p[1]-1, +p[2]) : new Date();
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+}
+function ensureCertRecord(){
+  if(certRecord) return certRecord;
+  const d = new Date();
+  certRecord = {
+    date: d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'),
+    id: CERT_PREFIX + '-' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '-' + Math.floor(1000 + Math.random()*9000)
+  };
+  saveProgress();
+  return certRecord;
+}
+function showCertificate(){
+  const box = document.getElementById('cert-body');
+  const doneCount = stars.filter(s => s > 0).length;
+  const ready = doneCount === LETTERS.length;
+  document.getElementById('cert-print-btn').classList.toggle('hidden', !ready);
+
+  if(!ready){
+    box.innerHTML = '<p class="cert-todo-lead">Almost there! Meet every letter and your certificate is ready.</p>' +
+      '<div class="cert-todo">' + LETTERS.map((l, i) => {
+        const done = stars[i] > 0;
+        return '<div class="todo-row' + (done ? ' ok' : '') + '">' +
+          '<span class="tr-icon">' + (done ? '✅' : '⭕') + '</span>' +
+          '<span class="tr-label arabic">' + l.letter + ' — ' + l.name + '</span>' +
+          (done ? '' : '<button class="tr-go" type="button" data-idx="' + i + '">Play</button>') +
+        '</div>';
+      }).join('') + '</div>';
+    box.querySelectorAll('.tr-go').forEach(b => b.addEventListener('click', () => { playTap(); startLesson(parseInt(b.dataset.idx, 10)); }));
+    showScreen('cert-screen');
+    return;
+  }
+
+  const name = localStorage.getItem(NAME_KEY) || 'Explorer';
+  const rec = ensureCertRecord();
+  box.innerHTML =
+    '<div class="cert-wrap"><div class="cert-card">' +
+      '<span class="cert-corner tl"></span><span class="cert-corner tr"></span><span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
+      '<div class="cert-seal">🌱</div>' +
+      '<p class="cert-eyebrow">Tayyibly</p>' +
+      '<h1 class="cert-title">Certificate of Completion</h1>' +
+      '<p class="cert-line">This certifies that</p>' +
+      '<div class="cert-name">' + name + '</div>' +
+      '<p class="cert-line">has met and learned every letter of</p>' +
+      '<p class="cert-course">The Arabic Alphabet</p>' +
+      '<p class="cert-course-sub">All 28 letters, their names, sounds, and words — met, found, named, spotted, hunted and blended.</p>' +
+      '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+      '<div class="cert-meta-row">' +
+        '<div>Stars<b>' + totalStars() + ' / ' + MAX_STARS + '</b></div>' +
+        '<div>Date<b>' + prettyDate(rec.date) + '</b></div>' +
+        '<div>Certificate ID<b>' + rec.id + '</b></div>' +
+      '</div>' +
+      '<div class="cert-footer">Tayyibly · Arabic Letters</div>' +
+    '</div></div>' +
+    '<p class="cert-note no-print" style="text-align:center; margin-top:10px; color:var(--ink-soft);">🖨️ Print it, or save it as a PDF and show it to your family!</p>';
+  showScreen('cert-screen');
+}
+document.getElementById('map-cert-btn').addEventListener('click', () => { playTap(); showCertificate(); });
+document.getElementById('cert-back-btn').addEventListener('click', () => { renderMap(); showScreen('map-screen'); });
+document.getElementById('cert-print-btn').addEventListener('click', () => { window.print(); });
+
+/* ===================== BOOT ===================== */
 document.getElementById('name-start-btn').addEventListener('click', () => {
   const val = document.getElementById('name-input').value.trim();
   localStorage.setItem(NAME_KEY, val || 'Explorer');
-  known = loadKnown();
+  const p = loadProgress(); stars = p.stars; certRecord = p.cert;
   renderMap();
   showScreen('map-screen');
 });
@@ -345,7 +804,8 @@ document.getElementById('name-input').addEventListener('keydown', (e) => {
 });
 
 const existingName = localStorage.getItem(NAME_KEY);
-known = loadKnown();
+const loaded = loadProgress();
+stars = loaded.stars; certRecord = loaded.cert;
 if(existingName){
   renderMap();
   showScreen('map-screen');
