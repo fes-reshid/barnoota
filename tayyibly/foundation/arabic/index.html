@@ -16,6 +16,7 @@
     background:#fff; border:3px solid #f0e4c8; border-radius:28px; padding:36px 26px; text-align:center;
     box-shadow:0 12px 28px rgba(28,58,52,.1);
   }
+  .flash-emoji{ font-size:38px; margin-bottom:4px; }
   .flash-letter{ font-size:110px; line-height:1; color:var(--ink); margin-bottom:10px; }
   .flash-name{ font-size:22px; font-weight:800; color:var(--mint-dark); margin-bottom:4px; }
   .flash-word{ font-size:16px; color:var(--ink-soft); margin-bottom:20px; }
@@ -69,6 +70,7 @@
     <div class="flash-wrap">
       <div class="flash-progress" id="flash-progress"></div>
       <div class="flash-card">
+        <div class="flash-emoji" id="flash-emoji"></div>
         <div class="arabic-glyph flash-letter" id="flash-letter"></div>
         <div class="flash-name" id="flash-name"></div>
         <div class="flash-word" id="flash-word"></div>
@@ -105,16 +107,34 @@
 <script src="../../shared/site.js"></script>
 <script>
 const LETTERS = [
-  { ar:'ا', name:'Alif', word:'أَسَد — lion' },
-  { ar:'ب', name:'Baa', word:'بَيْت — house' },
-  { ar:'ت', name:'Taa', word:'تُفَّاح — apple' },
-  { ar:'ث', name:'Thaa', word:'ثَعْلَب — fox' },
-  { ar:'ج', name:'Jeem', word:'جَمَل — camel' },
-  { ar:'ح', name:'Haa', word:'حِصَان — horse' },
-  { ar:'خ', name:'Khaa', word:'خُبْز — bread' },
-  { ar:'د', name:'Daal', word:'دُبّ — bear' },
-  { ar:'ذ', name:'Dhaal', word:'ذِئْب — wolf' },
-  { ar:'ر', name:'Raa', word:'رُمَّان — pomegranate' }
+  { ar:'ا', name:'Alif',  word:'أَرْنَب',  wordEn:'rabbit',   emoji:'🐰' },
+  { ar:'ب', name:'Bāʼ',   word:'بَيْت',    wordEn:'house',    emoji:'🏠' },
+  { ar:'ت', name:'Tāʼ',   word:'تُفَّاح',   wordEn:'apple',    emoji:'🍎' },
+  { ar:'ث', name:'Thāʼ',  word:'ثَعْلَب',   wordEn:'fox',      emoji:'🦊' },
+  { ar:'ج', name:'Jīm',   word:'جَمَل',    wordEn:'camel',    emoji:'🐫' },
+  { ar:'ح', name:'Ḥāʼ',   word:'حِصَان',   wordEn:'horse',    emoji:'🐴' },
+  { ar:'خ', name:'Khāʼ',  word:'خُبْز',    wordEn:'bread',    emoji:'🍞' },
+  { ar:'د', name:'Dāl',   word:'دُبّ',     wordEn:'bear',     emoji:'🐻' },
+  { ar:'ذ', name:'Dhāl',  word:'ذِئْب',    wordEn:'wolf',     emoji:'🐺' },
+  { ar:'ر', name:'Rāʼ',   word:'رَجُل',    wordEn:'man',      emoji:'👨' },
+  { ar:'ز', name:'Zāy',   word:'زَهْرَة',   wordEn:'flower',   emoji:'🌸' },
+  { ar:'س', name:'Sīn',   word:'سَمَك',    wordEn:'fish',     emoji:'🐟' },
+  { ar:'ش', name:'Shīn',  word:'شَمْس',    wordEn:'sun',      emoji:'☀️' },
+  { ar:'ص', name:'Ṣād',   word:'صَقْر',    wordEn:'falcon',   emoji:'🦅' },
+  { ar:'ض', name:'Ḍād',   word:'ضِفْدَع',   wordEn:'frog',     emoji:'🐸' },
+  { ar:'ط', name:'Ṭāʼ',   word:'طَبْل',    wordEn:'drum',     emoji:'🥁' },
+  { ar:'ظ', name:'Ẓāʼ',   word:'ظِلّ',     wordEn:'shade',    emoji:'🌑' },
+  { ar:'ع', name:'ʿAyn',  word:'عَيْن',    wordEn:'eye',      emoji:'👁️' },
+  { ar:'غ', name:'Ghayn', word:'غَزَال',   wordEn:'gazelle',  emoji:'🦌' },
+  { ar:'ف', name:'Fāʼ',   word:'فِيل',     wordEn:'elephant', emoji:'🐘' },
+  { ar:'ق', name:'Qāf',   word:'قِطَّة',    wordEn:'cat',      emoji:'🐱' },
+  { ar:'ك', name:'Kāf',   word:'كِتَاب',   wordEn:'book',     emoji:'📖' },
+  { ar:'ل', name:'Lām',   word:'لَيْمُون',  wordEn:'lemon',    emoji:'🍋' },
+  { ar:'م', name:'Mīm',   word:'مَاء',     wordEn:'water',    emoji:'💧' },
+  { ar:'ن', name:'Nūn',   word:'نَحْلَة',   wordEn:'bee',      emoji:'🐝' },
+  { ar:'هـ', name:'Hāʼ',  word:'هِلَال',   wordEn:'crescent', emoji:'🌙' },
+  { ar:'و', name:'Wāw',   word:'وَرْدَة',   wordEn:'rose',     emoji:'🌹' },
+  { ar:'ي', name:'Yāʼ',   word:'يَد',      wordEn:'hand',     emoji:'✋' }
 ];
 
 const NAME_KEY = 'tayyibly-name';
@@ -141,9 +161,10 @@ function showScreen(id){
 
 function renderCard(){
   const item = LETTERS[idx];
+  document.getElementById('flash-emoji').textContent = item.emoji;
   document.getElementById('flash-letter').textContent = item.ar;
   document.getElementById('flash-name').textContent = item.name;
-  document.getElementById('flash-word').textContent = item.word;
+  document.getElementById('flash-word').textContent = item.word + ' — ' + item.wordEn;
   document.getElementById('flash-progress').textContent = 'Letter ' + (idx + 1) + ' of ' + LETTERS.length + ' · ' + known.filter(Boolean).length + ' known';
 
   const knowBtn = document.getElementById('know-btn');
