@@ -14,10 +14,11 @@ import { checkForTag, performTag, grantProtectionAndResume } from './tagSystem.j
 import { PROTECTION_DURATION_MS, updateProtectionDisplay } from './protectionTimer.js';
 import { DuaSystem } from './duaSystem.js';
 import * as ui from './ui.js';
-import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd } from './audioManager.js';
+import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd, playCountdownTick, unlockAudio } from './audioManager.js';
 
 const CLASSIC_PROTECTION_MS = 3000;
-const ROUND_DURATION_MS = { classic: 120000, dua: 150000, practice: null };
+const ROUND_DURATION_MS = { classic: 180000, dua: 180000, practice: null };
+const FINAL_COUNTDOWN_SEC = 5;
 const MODE_LABELS = { classic: 'Classic Tag', dua: 'Du’a Tag', practice: 'Practice Mode' };
 
 export class GameManager {
@@ -36,11 +37,17 @@ export class GameManager {
     this.libraryFilter = 'all';
     this.textScale = 1;
     this.arabicScale = 1;
+    this._lastRoundSecondAnnounced = null;
 
     this._tick = this._tick.bind(this);
   }
 
   init(){
+    // The browser suspends audio until a real user gesture unlocks it --
+    // catch the very first click/keypress on the page, whatever it is.
+    window.addEventListener('pointerdown', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+
     window.addEventListener('keydown', e => {
       if(this.running && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
       if(e.code === 'Escape' && this.running) this.pause();
@@ -95,6 +102,7 @@ export class GameManager {
 
     const duration = ROUND_DURATION_MS[this.mode];
     this.roundEndAt = duration ? performance.now() + duration : null;
+    this._lastRoundSecondAnnounced = null;
 
     ui.hideDuaModal();
     ui.hidePause();
@@ -173,9 +181,16 @@ export class GameManager {
       }
     }
 
-    if(this.roundEndAt !== null && now >= this.roundEndAt){
-      this._endRound();
-      return;
+    if(this.roundEndAt !== null){
+      const secLeft = Math.ceil((this.roundEndAt - now) / 1000);
+      if(secLeft <= FINAL_COUNTDOWN_SEC && secLeft > 0 && secLeft !== this._lastRoundSecondAnnounced){
+        this._lastRoundSecondAnnounced = secLeft;
+        playCountdownTick(secLeft);
+      }
+      if(now >= this.roundEndAt){
+        this._endRound();
+        return;
+      }
     }
 
     this.ctx.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
@@ -208,7 +223,7 @@ export class GameManager {
     this.running = false;
     playRoundEnd();
     ui.hideDuaModal();
-    const stats = this.players.map(p => ({ name: p.name, color: p.color, timesIt: p.timesIt, duasRecited: p.duasRecited }));
+    const stats = this.players.map(p => ({ name: p.name, color: p.color, timesIt: p.timesIt, duasRecited: p.duasRecited, isIt: p.isIt }));
     ui.showRoundEnd(this.mode, stats);
     ui.showScreen('screen-roundend');
   }

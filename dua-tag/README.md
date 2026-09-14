@@ -6,6 +6,12 @@ short, authentic du'a (supplication) to read; pressing **"I Recited It"**
 makes that player the new "It" and gives them 30 seconds of protection
 before the chase resumes.
 
+Classic Tag and Du'a Tag both run for a 3-minute round (shown live in the
+HUD, with a countdown beep in the final 5 seconds): whoever is stuck being
+"It" when time runs out is the one who got caught, and everyone else
+escaped. Practice Mode stays untimed, just for getting comfortable with the
+du'as.
+
 This is a static, no-build, no-server web page — open `index.html` (or
 serve the folder) and it runs entirely in the browser.
 
