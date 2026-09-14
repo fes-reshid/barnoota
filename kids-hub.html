@@ -88,6 +88,19 @@
     display:flex; align-items:center; justify-content:center; font-size:22px; border:2px solid var(--green);
   }
   .hub-hello{ font-size:14px; color:#8a7654; display:block; font-family:'Cormorant Garamond', serif; }
+  #edit-name-btn{
+    border:none; background:none; cursor:pointer; font-size:15px; padding:2px 4px;
+    border-radius:8px; opacity:.7; vertical-align:middle;
+  }
+  #edit-name-btn:hover{ opacity:1; background:var(--parchment-deep); }
+
+  .modal-overlay{ position:fixed; inset:0; background:rgba(28,20,10,.5); display:flex; align-items:center; justify-content:center; z-index:80; padding:16px; }
+  .modal-box{
+    max-width:380px; width:100%; background:#fff; border:3px solid var(--gold-soft); border-radius:22px;
+    padding:26px 24px; text-align:center; box-shadow:0 12px 30px rgba(60,45,20,.18);
+  }
+  .modal-box h2{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0 0 6px; }
+  .modal-box p{ font-size:15px; color:#6b5a3f; margin:0 0 16px; }
 
   .subject-heading{ text-align:center; margin:6px 0 22px; }
   .subject-heading h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
@@ -150,6 +163,7 @@
         <span class="avatar">🧒</span>
         <span>
           <span id="player-name">Explorer</span>
+          <button type="button" id="edit-name-btn" title="Set your name">✏️</button>
           <span class="hub-hello">Welcome back! Pick a subject to keep learning.</span>
         </span>
       </div>
@@ -227,6 +241,16 @@
 
 </div>
 
+<div class="modal-overlay hidden" id="name-modal">
+  <div class="modal-box">
+    <h2>What's your name?</h2>
+    <p>This is the name shown here and printed on your certificates.</p>
+    <input type="text" class="big-input" id="name-input" placeholder="Your name" maxlength="40">
+    <p class="login-msg" id="name-msg"></p>
+    <button class="big-btn" id="name-save-btn">Save 💾</button>
+  </div>
+</div>
+
 <script>
 /* Show the login screen as the safe default; the module script below
    upgrades to the hub the moment it knows whether a session is already
@@ -271,6 +295,37 @@ document.getElementById('signout-btn').addEventListener('click', () => {
   if(window.KidsCloud) window.KidsCloud.studentLogout();
 });
 
+/* Lets a child set (or fix) the name shown here and printed on
+   certificates — separate from their login username, which is often
+   just a handle their parent picked. */
+document.getElementById('edit-name-btn').addEventListener('click', () => {
+  document.getElementById('name-input').value = studentFullName || '';
+  document.getElementById('name-msg').textContent = '';
+  document.getElementById('name-modal').classList.remove('hidden');
+  document.getElementById('name-input').focus();
+});
+document.getElementById('name-modal').addEventListener('click', e => {
+  if(e.target.id === 'name-modal') document.getElementById('name-modal').classList.add('hidden');
+});
+document.getElementById('name-save-btn').addEventListener('click', () => {
+  const val = document.getElementById('name-input').value.trim();
+  const msg = document.getElementById('name-msg');
+  if(!val){ msg.textContent = 'Type a name first.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.setFullName){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('name-save-btn');
+  btn.disabled = true;
+  window.KidsCloud.setFullName(val).then(() => {
+    studentFullName = val;
+    document.getElementById('player-name').textContent = val;
+    document.getElementById('name-modal').classList.add('hidden');
+  }).catch(err => {
+    msg.textContent = (err && err.message) || 'Could not save — try again.';
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('name-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('name-save-btn').click();
+});
+
 function progressLabel(progress, gameKey, total){
   const p = progress && progress[gameKey];
   if(!p || !Array.isArray(p.stars)){ return 'Start now!'; }
@@ -279,11 +334,13 @@ function progressLabel(progress, gameKey, total){
   if(done >= total) return 'All done! 🎉';
   return done + '/' + total + ' lessons';
 }
+let studentFullName = '';
 function showHub(data){
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('hub-screen').classList.remove('hidden');
   document.getElementById('signout-btn').classList.remove('hidden');
-  document.getElementById('player-name').textContent = data.displayName || data.username;
+  studentFullName = data.fullName || '';
+  document.getElementById('player-name').textContent = studentFullName || data.displayName || data.username;
   const progress = data.progress || {};
   document.getElementById('progress-english').textContent = progressLabel(progress, 'english', 40);
   document.getElementById('progress-math').textContent = progressLabel(progress, 'math', 40);
