@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Journey of Hijrah</title>
+<meta name="description" content="A beautiful, educational 4-player adventure for kids about the Hijrah from Makkah to Madinah, with real Qur'an references and no depiction of the Prophet ﷺ or Abu Bakr (RA).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-dark:#8a5a00; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --coral-dark:#b8552a;
+    --night:#101a33;
+    --text-scale:1; --arabic-scale:1;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    font-size:calc(17px * var(--text-scale));
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; direction:rtl; font-size:calc(1em * var(--arabic-scale)); }
+  h1,h2,h3{ font-family:'Marcellus', serif; }
+  [hidden]{ display:none !important; }
+  button{ font-family:inherit; font-size:inherit; cursor:pointer; }
+
+  .screen{ max-width:var(--maxw); margin:0 auto; padding:26px 20px 70px; text-align:center; }
+
+  /* ---- menu / generic buttons ---- */
+  .eyebrow{ font-family:'Marcellus'; color:var(--coral); font-size:13px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .title-lg{ font-size:clamp(28px,5vw,42px); color:var(--ink-navy); margin:6px 0 4px; }
+  .subtitle{ color:#6b5a3f; font-size:18px; margin:0 0 26px; }
+  .big-btn{
+    display:block; width:100%; max-width:360px; margin:10px auto; padding:15px 20px;
+    border:none; border-radius:16px; background:var(--green); color:#fff; font-weight:700;
+    font-family:'Cormorant Garamond', serif; font-size:calc(1.05rem * var(--text-scale));
+    box-shadow:0 4px 0 var(--green-dark); transition:transform .15s ease;
+  }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--green-dark); }
+  .big-btn.secondary{ background:#fff; color:var(--ink-navy); border:2px solid var(--gold-soft); box-shadow:0 4px 0 var(--parchment-deep); }
+  .big-btn.gold{ background:var(--gold); box-shadow:0 4px 0 var(--gold-dark); }
+  .back-row{ margin-top:24px; }
+
+  .card{ background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:26px 24px; box-shadow:0 8px 20px rgba(60,45,20,.09); }
+
+  /* ---- intro / cutscenes ---- */
+  .cutscene{ background:linear-gradient(180deg, var(--night) 0%, #24345a 55%, #3a4d6b 100%); border-radius:22px; padding:34px 24px; color:#f3ead0; position:relative; overflow:hidden; }
+  .cutscene.day{ background:linear-gradient(180deg, #f6d98a 0%, #e8b45c 55%, #d99a3f 100%); color:#3c2f26; }
+  .cutscene.green{ background:linear-gradient(180deg, #9fd6c9 0%, #6fb894 55%, #3f8f68 100%); color:#153327; }
+  .cutscene .stars{ position:absolute; inset:0; background-image:radial-gradient(2px 2px at 20% 30%, #fff, transparent), radial-gradient(2px 2px at 70% 20%, #fff, transparent), radial-gradient(1.5px 1.5px at 40% 65%, #fff, transparent), radial-gradient(1.5px 1.5px at 85% 55%, #fff, transparent), radial-gradient(2px 2px at 55% 80%, #fff, transparent); opacity:.7; }
+  .cutscene .content{ position:relative; z-index:1; }
+  .cutscene h1{ font-size:clamp(24px,5vw,34px); margin:8px 0; }
+  .cutscene .year{ font-family:'JetBrains Mono', monospace; letter-spacing:.08em; font-size:14px; opacity:.85; margin-bottom:16px; }
+  .cutscene p{ font-size:17px; line-height:1.6; max-width:560px; margin:0 auto 14px; }
+  .cutscene .note{ font-size:13px; opacity:.75; font-style:italic; margin-top:14px; }
+
+  /* ---- setup ---- */
+  .setup-row{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:16px; margin-bottom:14px; text-align:left; }
+  .setup-name-input{ width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid var(--gold-soft); font-family:'Cormorant Garamond', serif; font-size:17px; background:var(--parchment); margin-bottom:10px; }
+  .swatch-row{ display:flex; gap:10px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
+  .swatch-label{ font-size:13px; color:#6b5a3f; width:100%; }
+  .swatch{ width:30px; height:30px; border-radius:8px; border:3px solid transparent; cursor:pointer; flex:none; }
+  .swatch.selected{ border-color:var(--ink-navy); transform:scale(1.1); }
+
+  /* ---- gameplay screen ---- */
+  #screen-chapter{ max-width:960px; padding:12px 12px 60px; }
+  .hud-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:8px 14px; margin-bottom:8px; flex-wrap:wrap; font-weight:700; font-size:14px; }
+  .hud-bar .loc{ color:var(--ink-navy); }
+  .hud-bar .btns{ display:flex; gap:6px; }
+  .hud-bar button{ border:none; background:var(--parchment-deep); border-radius:10px; padding:6px 12px; font-weight:700; }
+  .canvas-wrap{ position:relative; max-width:900px; margin:0 auto; }
+  #game-canvas{ width:100%; height:auto; display:block; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,.18); }
+  .hud-riders{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+  .hud-rider{ background:#fff; border:2px solid var(--gold-soft); border-radius:12px; padding:6px 10px; font-size:12.5px; min-width:110px; }
+  .hud-rider-name{ font-weight:800; color:var(--ink-navy); }
+  .stamina-track{ background:var(--parchment-deep); border-radius:8px; height:7px; margin-top:4px; overflow:hidden; }
+  .stamina-fill{ height:100%; background:linear-gradient(90deg, var(--coral), var(--gold)); }
+
+  /* ---- modals / learning cards ---- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(20,20,10,.55); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; }
+  .modal-card{ background:var(--parchment); border:2px solid var(--gold-soft); border-radius:20px; padding:26px 24px; max-width:480px; width:100%; text-align:center; max-height:88vh; overflow-y:auto; }
+  .modal-card h2{ color:var(--ink-navy); font-size:22px; margin:4px 0 4px; }
+  .modal-card .kicker{ font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.1em; color:var(--coral); text-transform:uppercase; }
+  .learning-section{ text-align:left; margin:14px 0; }
+  .learning-section .label{ font-weight:800; color:var(--gold-dark); font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
+  .learning-section p{ margin:0; line-height:1.55; }
+  .ayah-box{ background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px; margin:12px 0; }
+  .ayah-box .arabic{ font-size:calc(1.5em * var(--arabic-scale)); line-height:1.9; margin-bottom:8px; }
+  .ayah-box .arabic mark{ background:#f6e2a8; padding:1px 4px; border-radius:6px; }
+  .ayah-box .translit{ font-style:italic; color:#446; margin-bottom:6px; }
+  .ayah-box .translation{ margin-bottom:6px; }
+  .ayah-box .ref{ font-size:13px; color:#8a7654; }
+  .answer-list{ display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .answer-btn{ text-align:left; padding:12px 16px; border-radius:12px; border:2px solid var(--gold-soft); background:#fff; font-family:'Cormorant Garamond', serif; font-size:16px; color:var(--ink-brown); }
+  .answer-btn.correct{ background:var(--green-bg); border-color:var(--green); }
+  .answer-btn.wrong{ background:#fbe0da; border-color:var(--coral); }
+  .feedback{ min-height:22px; font-weight:700; margin-top:8px; }
+  .feedback.good{ color:var(--green-dark); }
+  .feedback.bad{ color:var(--coral-dark); }
+
+  /* ---- ending ---- */
+  .lesson-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:20px 0; }
+  .lesson-card{ background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:16px 10px; }
+  .lesson-card .icon{ font-size:28px; }
+  .checkbox-row{ display:flex; align-items:center; gap:10px; background:#fff; border:2px solid var(--gold-soft); border-radius:12px; padding:12px 16px; margin-bottom:10px; text-align:left; }
+  .checkbox-row input{ width:20px; height:20px; }
+
+  /* ---- map screen ---- */
+  .map-svg-wrap{ background:#fff; border:2px solid var(--gold-soft); border-radius:20px; padding:20px; }
+
+  /* ---- history / library ---- */
+  .fact-list{ text-align:left; background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:18px 22px; line-height:1.6; margin-bottom:16px; }
+  .note-box{ background:var(--parchment-deep); border-radius:14px; padding:14px 18px; font-size:15px; text-align:left; margin-bottom:16px; }
+  .source-list{ text-align:left; font-size:14.5px; color:#6b5a3f; }
+
+  /* ---- settings ---- */
+  .settings-row{ display:flex; align-items:center; justify-content:space-between; background:#fff; border:2px solid var(--gold-soft); border-radius:14px; padding:13px 18px; margin-bottom:12px; text-align:left; }
+  .switch{ position:relative; width:48px; height:26px; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .slider{ position:absolute; inset:0; background:#ccc; border-radius:999px; transition:.2s; }
+  .switch .slider::before{ content:''; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+  .switch input:checked + .slider{ background:var(--green); }
+  .switch input:checked + .slider::before{ transform:translateX(22px); }
+
+  header.site{ position:sticky; top:0; z-index:50; background:rgba(250,243,224,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft); }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:1120px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:18px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); }
+  .back-pill{ display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus'; font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft); border-radius:20px; padding:8px 16px; }
+
+  @media (max-width:480px){
+    .lesson-grid{ grid-template-columns:1fr 1fr; }
+    .hud-bar{ font-size:12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam</span>
+    </a>
+    <a class="back-pill" href="../kids-games.html">&larr; Kids Corner</a>
+  </div>
+</header>
+
+<div id="app">
+
+<section class="screen" id="screen-menu">
+  <p class="eyebrow">A Learning Adventure</p>
+  <h1 class="title-lg">The Journey of Hijrah</h1>
+  <p class="subtitle">From Makkah to Madinah<br><em>A Journey of Faith, Courage and Trust in Allah</em></p>
+  <button class="big-btn gold" id="menu-play-btn">Play Hijrah Journey</button>
+  <button class="big-btn secondary" data-nav="screen-history">History</button>
+  <button class="big-btn secondary" data-nav="screen-ayah-library">Du'a &amp; Ayah Library</button>
+  <button class="big-btn secondary" data-nav="screen-map">Map</button>
+  <button class="big-btn secondary" data-nav="screen-howto">How to Play</button>
+  <button class="big-btn secondary" data-nav="screen-settings">Settings</button>
+</section>
+
+<section class="screen" id="screen-setup" hidden>
+  <h2>Meet Your Explorers</h2>
+  <p class="subtitle">Four fictional children ready for the adventure — not the Prophet ﷺ or Abu Bakr (RA), whose story inspires this journey.</p>
+  <div id="setup-players"></div>
+  <button class="big-btn gold" id="setup-start-btn">Begin the Adventure</button>
+  <button class="big-btn secondary" id="setup-continue-btn" hidden>Continue Saved Journey</button>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-intro" hidden>
+  <div class="cutscene">
+    <div class="stars"></div>
+    <div class="content">
+      <p class="eyebrow" style="color:#f6d98a;">MAKKAH</p>
+      <h1>The Hijrah</h1>
+      <p class="year">622 CE &middot; 1 AH &middot; Traditional historical dating</p>
+      <p>More than fourteen centuries ago, Prophet Muhammad ﷺ and his companion Abu Bakr (RA) made a courageous journey from Makkah toward Madinah. This journey is known as the Hijrah.</p>
+      <p><strong>Today, our four explorers will travel through a learning adventure inspired by the places and lessons of the Hijrah.</strong></p>
+      <p class="note">This game presents a learning adventure, not a re-enactment — the Prophet ﷺ and Abu Bakr (RA) are never shown.</p>
+    </div>
+  </div>
+  <button class="big-btn secondary" data-nav="screen-history" style="margin-top:16px;">History Notes</button>
+  <button class="big-btn gold" id="intro-continue-btn">Your Adventure Begins &rarr;</button>
+</section>
+
+<section class="screen" id="screen-chapter" hidden>
+  <div class="hud-bar">
+    <span class="loc" id="hud-location">Makkah</span>
+    <span id="hud-distance">1 of 5 stops</span>
+    <span id="hud-stars">⭐ 0</span>
+    <div class="btns">
+      <button data-nav="screen-map">Map</button>
+      <button data-nav="screen-history">History</button>
+      <button id="chapter-pause-btn">⏸</button>
+    </div>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="game-canvas" width="900" height="520"></canvas>
+  </div>
+  <div class="hud-riders" id="hud-riders"></div>
+</section>
+
+<section class="screen" id="screen-madinah-arrival" hidden>
+  <div class="cutscene green">
+    <div class="content">
+      <p class="eyebrow" style="color:#0f3324;">MADINAH</p>
+      <h1 id="madinah-title">Journey Complete!</h1>
+      <p>The landscape has turned green — palm trees, farms, date palms, houses and welcoming paths stretch ahead under a wide blue sky, birds circling overhead.</p>
+      <p><strong>"You made it to Madinah!"</strong></p>
+      <p>The Hijrah was much more than a journey from one place to another. It became an important turning point in Islamic history.</p>
+    </div>
+  </div>
+  <button class="big-btn gold" id="madinah-continue-btn">Take the Final Quiz</button>
+</section>
+
+<section class="screen" id="screen-final-quiz" hidden>
+  <h2>What Did We Learn?</h2>
+  <div class="card">
+    <p class="kicker" id="quiz-progress">Question 1 of 5</p>
+    <p id="quiz-question" style="font-weight:700; font-size:19px; color:var(--ink-navy);"></p>
+    <div class="answer-list" id="quiz-answers"></div>
+    <p class="feedback" id="quiz-feedback"></p>
+  </div>
+</section>
+
+<section class="screen" id="screen-ending" hidden>
+  <h1 class="title-lg">You Completed the Journey!</h1>
+  <p class="subtitle">Every explorer earns the very same reward — this journey was never a race.</p>
+  <div class="lesson-grid">
+    <div class="lesson-card"><div class="icon">🧡</div>Courage</div>
+    <div class="lesson-card"><div class="icon">⏳</div>Patience</div>
+    <div class="lesson-card"><div class="icon">🙏</div>Trust in Allah</div>
+    <div class="lesson-card"><div class="icon">🤝</div>Helping Others</div>
+  </div>
+  <button class="big-btn gold" id="ending-continue-btn">Continue</button>
+</section>
+
+<section class="screen" id="screen-alhamdulillah" hidden>
+  <h1 class="title-lg">Alhamdulillah!</h1>
+  <p class="subtitle">You reached Madinah.</p>
+  <p style="font-weight:700; color:var(--ink-navy);">What did you learn from the Hijrah?</p>
+  <div id="lessons-checklist">
+    <label class="checkbox-row"><input type="checkbox" value="Patience"><span>Patience</span></label>
+    <label class="checkbox-row"><input type="checkbox" value="Courage"><span>Courage</span></label>
+    <label class="checkbox-row"><input type="checkbox" value="Trust in Allah"><span>Trust in Allah</span></label>
+    <label class="checkbox-row"><input type="checkbox" value="Helping others"><span>Helping others</span></label>
+    <label class="checkbox-row"><input type="checkbox" value="Never giving up"><span>Never giving up</span></label>
+  </div>
+  <button class="big-btn secondary" id="restart-btn">Start Again</button>
+  <button class="big-btn secondary" data-nav="screen-history">Explore History</button>
+  <button class="big-btn secondary" data-nav="screen-setup">Play With Friends</button>
+</section>
+
+<section class="screen" id="screen-map" hidden>
+  <h2>The Route</h2>
+  <div class="map-svg-wrap" id="map-svg-wrap"></div>
+  <div class="back-row"><button class="big-btn secondary" id="map-back-btn">Back</button></div>
+</section>
+
+<section class="screen" id="screen-history" hidden>
+  <h2>History Notes</h2>
+  <div class="fact-list" id="history-facts"></div>
+  <div class="note-box" id="history-dating-note"></div>
+  <p style="font-weight:800; color:var(--ink-navy); text-align:left;">Sources</p>
+  <ul class="source-list" id="history-sources"></ul>
+  <div class="back-row"><button class="big-btn secondary" id="history-back-btn">Back</button></div>
+</section>
+
+<section class="screen" id="screen-ayah-library" hidden>
+  <h2>Du'a &amp; Ayah Library</h2>
+  <div id="ayah-list"></div>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-howto" hidden>
+  <h2>How to Play</h2>
+  <ul class="fact-list" style="text-align:left;">
+    <li>Up to four players ride together, each with their own camel and controls: <strong>Player 1</strong> = WASD, <strong>Player 2</strong> = Arrow Keys, <strong>Player 3</strong> = IJKL, <strong>Player 4</strong> = TFGH.</li>
+    <li>Explore each area and ride close to a glowing landmark to discover it — the whole group pauses together to learn something new.</li>
+    <li>Answer questions correctly to earn shared Journey Stars for the whole party.</li>
+    <li>Reciting or learning an ayah is never scored competitively — it's simply part of the journey.</li>
+    <li>Watch your camels' stamina — moving drains it, resting refills it.</li>
+    <li>There is no race and no single winner. Everyone who reaches Madinah completes the journey together.</li>
+  </ul>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-settings" hidden>
+  <h2>Settings</h2>
+  <div class="settings-row"><span>Sound Effects</span><label class="switch"><input type="checkbox" id="toggle-sound"><span class="slider"></span></label></div>
+  <div class="settings-row"><span>Desert Wind Ambience</span><label class="switch"><input type="checkbox" id="toggle-wind"><span class="slider"></span></label></div>
+  <div class="settings-row"><span>Text Size</span><input type="range" id="range-text-size" min="0.85" max="1.4" step="0.05" value="1"></div>
+  <div class="settings-row"><span>Arabic Text Size</span><input type="range" id="range-arabic-size" min="0.85" max="1.6" step="0.05" value="1"></div>
+  <p style="font-size:14px; color:#6b5a3f; text-align:left;">"Hear the Ayah" in the Du'a &amp; Ayah Library uses your browser's built-in computer voice — it is not a Qur'an reciter.</p>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+</div>
+
+<div class="modal-overlay" id="modal-landmark" hidden>
+  <div class="modal-card">
+    <p class="kicker" id="landmark-kicker">Discover</p>
+    <h2 id="landmark-title"></h2>
+    <div class="learning-section"><div class="label">Discover</div><p id="landmark-discover"></p></div>
+    <div class="learning-section"><div class="label">Learn</div><p id="landmark-learn"></p></div>
+    <div class="learning-section"><div class="label">Why is this place important?</div><p id="landmark-why"></p></div>
+    <div class="learning-section"><div class="label">Reference</div><p id="landmark-reference"></p></div>
+    <p id="landmark-question" style="font-weight:700; color:var(--ink-navy);"></p>
+    <div class="answer-list" id="landmark-answers"></div>
+    <p class="feedback" id="landmark-feedback"></p>
+    <button class="big-btn gold" id="landmark-continue-btn" hidden>Continue</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cave" hidden>
+  <div class="modal-card">
+    <p class="kicker">JABAL THAWR</p>
+    <h2>Cave of Thawr</h2>
+    <p>This cave is connected with an important part of the Hijrah. Prophet Muhammad ﷺ and Abu Bakr (RA) stayed here while people searching for them were nearby.</p>
+    <div class="learning-section"><div class="label">Qur'an Lesson</div></div>
+    <div class="ayah-box" id="cave-ayah-box"></div>
+    <p style="font-weight:700; color:var(--ink-navy);">Lesson: Trust Allah during difficult moments.</p>
+    <p id="cave-question" style="font-weight:700; color:var(--ink-navy); margin-top:14px;"></p>
+    <div class="answer-list" id="cave-answers"></div>
+    <p class="feedback" id="cave-feedback"></p>
+    <button class="big-btn gold" id="cave-continue-btn" hidden>Continue</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-teamwork" hidden>
+  <div class="modal-card">
+    <p class="kicker">Teamwork</p>
+    <h2>A Tired Camel</h2>
+    <p id="teamwork-narration"></p>
+    <div class="answer-list">
+      <button class="answer-btn" id="teamwork-help-btn">🤝 Help your friend</button>
+      <button class="answer-btn" id="teamwork-race-btn">🐪 Race ahead</button>
+    </div>
+    <p class="feedback" id="teamwork-feedback"></p>
+    <button class="big-btn gold" id="teamwork-continue-btn" hidden>Continue</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-quba" hidden>
+  <div class="modal-card">
+    <p class="kicker">QUBA</p>
+    <h2>Masjid Quba</h2>
+    <p>This is Quba, near Madinah. The Prophet ﷺ stayed at Quba during the Hijrah, and the mosque there is closely connected with the early Muslim community.</p>
+    <p id="quba-question" style="font-weight:700; color:var(--ink-navy); margin-top:14px;"></p>
+    <div class="answer-list" id="quba-answers"></div>
+    <p class="feedback" id="quba-feedback"></p>
+    <button class="big-btn gold" id="quba-continue-btn" hidden>Continue</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="overlay-pause" hidden>
+  <div class="modal-card">
+    <h2>Paused</h2>
+    <button class="big-btn gold" id="pause-resume-btn">Resume</button>
+    <button class="big-btn secondary" data-nav="screen-map">Map</button>
+    <button class="big-btn secondary" data-nav="screen-history">History</button>
+    <button class="big-btn secondary" id="pause-quit-btn">Quit to Menu</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
