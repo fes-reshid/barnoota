@@ -9,7 +9,17 @@ let ctx = null;
 
 function getCtx(){
   if(!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  // Browsers create (or suspend) the context until a user gesture resumes it --
+  // without this, oscillators run silently and no error is ever thrown.
+  if(ctx.state === 'suspended') ctx.resume();
   return ctx;
+}
+
+/* Called once, as early as possible after any user click/key/tap, so the
+   very first sound of the game isn't silently swallowed by the browser's
+   autoplay-suspension policy. Safe to call repeatedly. */
+export function unlockAudio(){
+  getCtx();
 }
 
 function beep(freq, dur, type, gain){

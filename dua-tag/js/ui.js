@@ -115,6 +115,20 @@ export function markLibraryFilter(filter){
 export function showRoundEnd(mode, stats){
   els['roundend-title'].textContent = mode === 'practice' ? 'Practice Complete' : 'Round Complete!';
   els['roundend-stats'].innerHTML = '';
+
+  if(mode !== 'practice'){
+    const loser = stats.find(s => s.isIt);
+    const winners = stats.filter(s => !s.isIt);
+    const banner = document.createElement('div');
+    banner.className = 'roundend-banner';
+    if(loser && winners.length){
+      banner.innerHTML =
+        '🏆 ' + winners.map(w => escapeHtml(w.name)).join(', ') + ' escaped the tag!<br>' +
+        '<span class="roundend-banner-sub">' + escapeHtml(loser.name) + ' was left holding it when time ran out.</span>';
+    }
+    els['roundend-stats'].appendChild(banner);
+  }
+
   stats.forEach(s => {
     const row = document.createElement('div');
     row.className = 'roundend-row';
