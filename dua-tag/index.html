@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Du'a Tag &mdash; A 4-Player Islamic Tag Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --text-scale: 1;
+    --arabic-scale: 1;
+    --bg: #eaf7f2;
+    --ink: #1c3a34;
+    --accent: #2fb88f;
+    --accent-dark: #1c8f6c;
+    --card: #ffffff;
+    --p1: #0072B2; --p2: #E69F00; --p3: #009E73; --p4: #CC79A7;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
+    font-size: calc(16px * var(--text-scale));
+    min-height: 100vh;
+  }
+  h1, h2, h3, .heading{ font-family: 'Baloo 2', sans-serif; }
+  button{ font-family: inherit; font-size: inherit; cursor: pointer; }
+  [hidden]{ display: none !important; }
+
+  .screen{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    text-align: center;
+  }
+  .app-title{
+    font-size: calc(2.4rem * var(--text-scale));
+    color: var(--accent-dark);
+    margin: 10px 0 2px;
+  }
+  .app-subtitle{ color: #4a685f; margin-bottom: 28px; }
+
+  .big-btn{
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    margin: 10px auto;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 16px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: calc(1.05rem * var(--text-scale));
+    box-shadow: 0 4px 0 var(--accent-dark);
+  }
+  .big-btn:active{ transform: translateY(3px); box-shadow: 0 1px 0 var(--accent-dark); }
+  .big-btn.secondary{ background: #fff; color: var(--accent-dark); border: 2px solid var(--accent); box-shadow: 0 4px 0 #cfe9de; }
+  .big-btn.quiet{ background: #f2f2f2; color: #555; box-shadow: 0 4px 0 #d8d8d8; }
+
+  .back-row{ margin-top: 26px; }
+
+  .howto-list{ text-align: left; background: var(--card); border-radius: 16px; padding: 18px 22px; line-height: 1.6; }
+  .howto-list li{ margin-bottom: 10px; }
+
+  /* Library */
+  .filter-row{ display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-row button{ padding: 8px 16px; border-radius: 999px; border: 2px solid var(--accent); background: #fff; color: var(--accent-dark); font-weight: 700; }
+  .filter-row button.selected{ background: var(--accent); color: #fff; }
+  .library-card{ background: var(--card); border-radius: 16px; padding: 16px 18px; margin-bottom: 14px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .library-badge{ display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .library-badge.quran{ background: var(--accent-dark); }
+  .library-badge.hadith{ background: #b98a2f; }
+  .library-arabic{ font-family: 'Noto Naskh Arabic', serif; font-size: calc(1.5rem * var(--arabic-scale)); direction: rtl; margin-bottom: 6px; }
+  .library-translit{ font-style: italic; color: #446; margin-bottom: 4px; }
+  .library-english{ margin-bottom: 6px; }
+  .library-source{ font-size: 0.85rem; color: #667; }
+
+  /* Settings */
+  .settings-row{ display: flex; align-items: center; justify-content: space-between; background: var(--card); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; text-align: left; }
+  .settings-row input[type="range"]{ width: 140px; }
+  .switch{ position: relative; width: 50px; height: 28px; }
+  .switch input{ opacity: 0; width: 0; height: 0; }
+  .switch .slider{ position: absolute; inset: 0; background: #ccc; border-radius: 999px; transition: 0.2s; }
+  .switch .slider::before{ content:''; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+  .switch input:checked + .slider{ background: var(--accent); }
+  .switch input:checked + .slider::before{ transform: translateX(22px); }
+  .colorblind-note{ font-size: 0.85rem; color: #667; text-align: left; margin-top: 6px; }
+
+  /* Setup */
+  .mode-btns{ display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+  .mode-btn{ padding: 12px 18px; border-radius: 14px; border: 2px solid var(--accent); background: #fff; color: var(--accent-dark); font-weight: 800; }
+  .mode-btn.selected{ background: var(--accent); color: #fff; }
+  .setup-row{ display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+  .setup-swatch{ width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; }
+  .setup-name-input{ flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid #cdd; font-size: 1rem; }
+  .setup-scheme{ font-size: 0.8rem; color: #667; white-space: nowrap; }
+
+  /* Game screen */
+  #screen-game{ max-width: 960px; padding: 12px 12px 40px; }
+  .game-wrap{ position: relative; max-width: 900px; margin: 0 auto; }
+  #game-canvas{ width: 100%; height: auto; display: block; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); background: #eaf7f2; }
+  .hud-bar{ display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border-radius: 12px; padding: 8px 14px; margin-bottom: 8px; flex-wrap: wrap; font-weight: 700; }
+  #game-pause-btn{ border: none; background: #f2f2f2; border-radius: 10px; padding: 6px 12px; font-weight: 800; }
+  .hud-players{ display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .hud-chip{ border: 2px solid #ccc; border-radius: 999px; padding: 4px 12px; font-size: 0.85rem; display: flex; gap: 6px; align-items: center; background: #fff; }
+  .hud-chip-name{ font-weight: 800; }
+
+  /* Modal */
+  .modal-overlay{ position: fixed; inset: 0; background: rgba(20,40,35,0.55); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+  .modal-card{ background: #fff; border-radius: 20px; padding: 26px 24px; max-width: 420px; width: 100%; text-align: center; }
+  #dua-who{ font-weight: 800; color: var(--accent-dark); margin-bottom: 10px; }
+  #dua-arabic{ font-family: 'Noto Naskh Arabic', serif; font-size: calc(2rem * var(--arabic-scale)); direction: rtl; margin: 12px 0; }
+  #dua-translit{ font-style: italic; color: #446; margin-bottom: 8px; }
+  #dua-english{ margin-bottom: 10px; }
+  #dua-source{ font-size: 0.85rem; color: #667; margin-bottom: 18px; }
+
+  #overlay-pause .modal-card{ max-width: 300px; }
+
+  .roundend-row{ display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; text-align: left; }
+  .roundend-name{ font-weight: 800; flex: 1; }
+  .roundend-stat{ font-size: 0.82rem; color: #446; white-space: nowrap; }
+
+  @media (max-width: 480px){
+    .setup-row{ flex-wrap: wrap; }
+    .setup-scheme{ width: 100%; }
+    .roundend-row{ flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <section class="screen" id="screen-menu">
+    <div style="font-size:3rem;">🏮</div>
+    <h1 class="app-title">Du'a Tag</h1>
+    <p class="app-subtitle">A friendly 4-player tag game &mdash; get tagged, recite a du'a, stay safe!</p>
+    <button class="big-btn" id="menu-play-btn">Play</button>
+    <button class="big-btn secondary" data-nav="screen-howto">How to Play</button>
+    <button class="big-btn secondary" data-nav="screen-library">Du'a Library</button>
+    <button class="big-btn quiet" data-nav="screen-settings">Settings</button>
+  </section>
+
+  <section class="screen" id="screen-howto" hidden>
+    <h2 class="heading">How to Play</h2>
+    <ul class="howto-list">
+      <li><strong>One player is "It"</strong> and chases the others around the courtyard.</li>
+      <li>If It touches you, you're <strong>tagged</strong> and freeze in place. In <strong>Du'a Tag</strong> mode, a du'a (supplication) pops up on screen.</li>
+      <li>Read the Arabic, transliteration and English translation, then press <strong>"I Recited It"</strong>.</li>
+      <li>You become the new "It", but you get <strong>30 seconds of protection</strong> right after &mdash; nobody can tag you (and you can't tag anyone) while you catch your breath.</li>
+      <li><strong>Classic Tag</strong> mode skips the du'a popup for a faster, simpler game. <strong>Practice Mode</strong> is untimed, just for getting comfortable with the du'as.</li>
+      <li>Controls: <strong>Player 1</strong> = WASD, <strong>Player 2</strong> = Arrow Keys, <strong>Player 3</strong> = IJKL, <strong>Player 4</strong> = TFGH. Game controllers also work if connected.</li>
+      <li>This is just a fun game &mdash; reciting a du'a here isn't a form of worship or a reward from Allah, it's simply how this game's "safe zone" works.</li>
+    </ul>
+    <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+  </section>
+
+  <section class="screen" id="screen-library" hidden>
+    <h2 class="heading">Du'a Library</h2>
+    <div class="filter-row" id="library-filter">
+      <button data-filter="all">All</button>
+      <button data-filter="quran">Qur'an</button>
+      <button data-filter="hadith">Hadith</button>
+    </div>
+    <div id="library-list"></div>
+    <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+  </section>
+
+  <section class="screen" id="screen-settings" hidden>
+    <h2 class="heading">Settings</h2>
+    <div class="settings-row">
+      <span>Sound Effects</span>
+      <label class="switch"><input type="checkbox" id="toggle-sound"><span class="slider"></span></label>
+    </div>
+    <div class="settings-row">
+      <span>Background Music</span>
+      <label class="switch"><input type="checkbox" id="toggle-music"><span class="slider"></span></label>
+    </div>
+    <div class="settings-row">
+      <span>Text Size</span>
+      <input type="range" id="range-text-size" min="0.85" max="1.4" step="0.05" value="1">
+    </div>
+    <div class="settings-row">
+      <span>Arabic Text Size</span>
+      <input type="range" id="range-arabic-size" min="0.85" max="1.6" step="0.05" value="1">
+    </div>
+    <p class="colorblind-note">Every player is shown with a colorblind-friendly color <em>and</em> a distinct icon/number, so status is never shown by color alone.</p>
+    <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+  </section>
+
+  <section class="screen" id="screen-setup" hidden>
+    <h2 class="heading">Set Up Your Game</h2>
+    <div class="mode-btns" id="setup-mode-buttons">
+      <button class="mode-btn" data-mode="classic">Classic Tag</button>
+      <button class="mode-btn" data-mode="dua">Du'a Tag</button>
+      <button class="mode-btn" data-mode="practice">Practice Mode</button>
+    </div>
+    <div id="setup-players"></div>
+    <button class="big-btn" id="setup-start-btn">Start Game</button>
+    <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+  </section>
+
+  <section class="screen" id="screen-game" hidden>
+    <div class="hud-bar">
+      <span id="hud-it">It: —</span>
+      <span id="hud-mode">Du'a Tag</span>
+      <span id="hud-timer">2:00</span>
+      <button id="game-pause-btn">⏸ Pause</button>
+    </div>
+    <div class="game-wrap">
+      <canvas id="game-canvas" width="900" height="600"></canvas>
+    </div>
+    <div class="hud-players" id="hud-players"></div>
+  </section>
+
+  <section class="screen" id="screen-roundend" hidden>
+    <h2 class="heading" id="roundend-title">Round Complete!</h2>
+    <div id="roundend-stats"></div>
+    <button class="big-btn" id="roundend-again-btn">Play Again</button>
+    <button class="big-btn secondary" id="roundend-menu-btn">Main Menu</button>
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="modal-dua" hidden>
+  <div class="modal-card">
+    <div id="dua-who">Tagged!</div>
+    <div id="dua-arabic"></div>
+    <div id="dua-translit"></div>
+    <div id="dua-english"></div>
+    <div id="dua-source"></div>
+    <button class="big-btn" id="dua-recited-btn">I Recited It</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="overlay-pause" hidden>
+  <div class="modal-card">
+    <h3 class="heading">Paused</h3>
+    <button class="big-btn" id="pause-resume-btn">Resume</button>
+    <button class="big-btn secondary" id="pause-quit-btn">Quit to Menu</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
