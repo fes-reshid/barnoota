@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Race to the Good Deed</title>
+<meta name="description" content="A colorful 4-player platform-racing adventure for kids: run fast, help others, and do good. No combat, no weapons -- just racing, teamwork and good-deed challenges.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eaf6ff; --ink:#1c2b46; --ink-soft:#4a5a78;
+    --sun:#ffb703; --sun-dark:#d99400;
+    --sky:#3aa6ff; --sky-dark:#1c7fd6;
+    --green:#2ec27e; --green-dark:#1f9c63;
+    --card:#ffffff; --gold-soft:#ffd98a;
+    --text-scale:1;
+    --zayd:#1E6FE0; --layla:#F08A1E; --malik:#E0301E; --amira:#E0479C;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:'Nunito',sans-serif; font-size:calc(16px * var(--text-scale)); }
+  h1,h2,h3,.heading{ font-family:'Baloo 2',sans-serif; }
+  .arabic{ font-family:'Amiri',serif; direction:rtl; }
+  button{ font-family:inherit; font-size:inherit; cursor:pointer; }
+  [hidden]{ display:none !important; }
+
+  .screen{ max-width:960px; margin:0 auto; padding:26px 20px 70px; text-align:center; }
+  .eyebrow{ font-family:'Baloo 2'; color:var(--sky-dark); font-size:14px; letter-spacing:.1em; text-transform:uppercase; }
+  .title-lg{ font-size:clamp(30px,6vw,50px); color:var(--ink); margin:6px 0 2px; text-shadow:2px 2px 0 var(--gold-soft); }
+  .subtitle{ color:var(--ink-soft); font-size:18px; margin:0 0 24px; }
+
+  .big-btn{ display:block; width:100%; max-width:360px; margin:10px auto; padding:15px 20px; border:none; border-radius:16px;
+    background:var(--sky); color:#fff; font-weight:800; font-family:'Baloo 2'; font-size:1.05rem; box-shadow:0 4px 0 var(--sky-dark); }
+  .big-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--sky-dark); }
+  .big-btn.gold{ background:var(--sun); box-shadow:0 4px 0 var(--sun-dark); color:#3c2f10; }
+  .big-btn.green{ background:var(--green); box-shadow:0 4px 0 var(--green-dark); }
+  .big-btn.secondary{ background:#fff; color:var(--ink); border:2px solid #cfe4ff; box-shadow:0 4px 0 #dceeff; }
+  .back-row{ margin-top:22px; }
+  .card{ background:var(--card); border-radius:20px; padding:24px; box-shadow:0 8px 20px rgba(20,40,80,.1); }
+
+  /* Character panels */
+  .char-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin:20px 0; }
+  .char-panel{ background:#fff; border-radius:18px; padding:18px; border:4px solid transparent; position:relative; }
+  .char-panel .icon{ font-size:40px; }
+  .char-panel h3{ margin:6px 0 2px; }
+  .char-panel .ability{ font-weight:800; font-size:13px; letter-spacing:.04em; }
+  .char-panel .desc{ font-size:13px; color:var(--ink-soft); margin-top:4px; }
+  .char-panel .ready-btn{ margin-top:10px; padding:8px 16px; border-radius:12px; border:none; font-weight:800; }
+  .char-panel.ready{ box-shadow:0 0 0 4px rgba(0,0,0,.05) inset; }
+  .char-panel .checkmark{ position:absolute; top:8px; right:10px; font-size:20px; display:none; }
+  .char-panel.ready .checkmark{ display:block; }
+
+  /* Good deed reveal / level intro */
+  .banner{ background:linear-gradient(135deg, var(--sun), #ffd166); border-radius:22px; padding:30px 20px; color:#3c2f10; }
+  .banner h1{ margin:6px 0; }
+
+  /* Starting line */
+  .countdown-box{ font-family:'Baloo 2'; font-size:64px; color:var(--sky-dark); margin:30px 0; }
+  .starters{ display:flex; justify-content:center; gap:18px; flex-wrap:wrap; }
+  .starter{ text-align:center; font-weight:800; }
+  .starter .dot{ width:36px; height:36px; border-radius:50%; margin:0 auto 4px; }
+
+  /* Race screen */
+  #screen-race{ max-width:1000px; padding:10px 10px 60px; }
+  .hud-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .hud-players{ display:flex; gap:6px; flex-wrap:wrap; }
+  .hud-player{ background:#fff; border-radius:12px; padding:5px 9px; font-size:11.5px; min-width:96px; border-left:6px solid #ccc; }
+  .hud-player .name{ font-weight:800; }
+  .hud-cooldown{ background:#eee; border-radius:6px; height:5px; margin-top:3px; overflow:hidden; }
+  .hud-cooldown-fill{ height:100%; background:#999; }
+  .hud-ranks{ display:flex; gap:6px; }
+  .rank-chip{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:12px; }
+  .hud-center{ text-align:center; font-family:'Baloo 2'; font-size:15px; color:var(--ink); margin-bottom:6px; }
+  .canvas-wrap{ position:relative; max-width:960px; margin:0 auto; }
+  #game-canvas{ width:100%; height:auto; display:block; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,.18); }
+  #minimap-canvas{ position:absolute; right:8px; bottom:8px; width:150px; height:34px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  #race-pause-btn{ position:absolute; left:8px; top:8px; border:none; background:rgba(255,255,255,.85); border-radius:10px; padding:6px 10px; font-weight:800; }
+  .toast{ position:absolute; top:44%; left:50%; transform:translate(-50%,-50%); font-family:'Baloo 2'; font-size:22px; font-weight:800; color:#fff; text-shadow:0 2px 4px rgba(0,0,0,.35); pointer-events:none; opacity:0; transition:opacity .2s; }
+  .toast.show{ opacity:1; }
+
+  /* Modals */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(10,20,40,.55); display:flex; align-items:center; justify-content:center; z-index:60; padding:16px; }
+  .modal-card{ background:#fff; border-radius:22px; padding:26px 24px; max-width:460px; width:100%; text-align:center; max-height:88vh; overflow-y:auto; }
+  .answer-list{ display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .answer-btn{ text-align:left; padding:12px 16px; border-radius:12px; border:2px solid #cfe4ff; background:#fff; font-family:'Nunito'; font-size:16px; }
+  .answer-btn.correct{ background:#e3f9ee; border-color:var(--green); }
+  .answer-btn.wrong{ background:#ffe3df; border-color:#e0703a; }
+  .feedback{ min-height:22px; font-weight:800; margin-top:8px; }
+  .feedback.good{ color:var(--green-dark); }
+  .feedback.bad{ color:#b8552a; }
+
+  /* Results */
+  .result-card{ background:#fff; border-radius:16px; padding:14px 16px; margin-bottom:10px; text-align:left; border-left:8px solid #ccc; }
+  .result-card h3{ margin:0 0 6px; }
+  .result-row{ display:flex; justify-content:space-between; font-size:14px; margin-bottom:2px; }
+
+  /* Library */
+  .lib-tabs{ display:flex; gap:8px; justify-content:center; margin-bottom:16px; flex-wrap:wrap; }
+  .lib-tabs button{ padding:8px 16px; border-radius:999px; border:2px solid var(--sky); background:#fff; color:var(--sky-dark); font-weight:800; }
+  .lib-tabs button.selected{ background:var(--sky); color:#fff; }
+  .deed-card{ background:#fff; border-radius:16px; padding:16px 18px; margin-bottom:12px; text-align:left; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .deed-card h3{ margin:0 0 6px; }
+  .deed-card .label{ font-weight:800; color:var(--sky-dark); font-size:12px; text-transform:uppercase; }
+  .ayah-box{ background:#fff; border-radius:16px; padding:16px; margin-bottom:12px; text-align:left; }
+  .ayah-box .arabic{ font-size:1.5rem; line-height:1.8; margin-bottom:6px; }
+
+  /* Level select */
+  .level-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:20px 0; }
+  .level-card{ background:#fff; border-radius:16px; padding:16px; text-align:left; border:2px solid #cfe4ff; }
+  .level-card.locked{ opacity:.5; }
+  .level-card h3{ margin:0 0 4px; }
+
+  /* Settings */
+  .settings-row{ display:flex; align-items:center; justify-content:space-between; background:#fff; border-radius:14px; padding:13px 18px; margin-bottom:12px; text-align:left; gap:14px; }
+  .switch{ position:relative; width:48px; height:26px; flex:none; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .slider{ position:absolute; inset:0; background:#ccc; border-radius:999px; transition:.2s; }
+  .switch .slider::before{ content:''; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+  .switch input:checked + .slider{ background:var(--green); }
+  .switch input:checked + .slider::before{ transform:translateX(22px); }
+
+  header.site{ position:sticky; top:0; z-index:50; background:rgba(234,246,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid #cfe4ff; }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:1120px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:36px; height:36px; border-radius:50%; background:var(--sky); display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Amiri'; font-size:18px; }
+  .brand-text{ font-family:'Baloo 2'; font-size:20px; color:var(--ink); }
+  .back-pill{ display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Baloo 2'; font-size:14px; color:var(--ink); background:#fff; border:1px solid #cfe4ff; border-radius:20px; padding:8px 16px; }
+
+  @media (max-width:480px){ .char-grid{ grid-template-columns:1fr; } .starters{ gap:10px; } }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam</span>
+    </a>
+    <a class="back-pill" href="../kids-games.html">&larr; Kids Corner</a>
+  </div>
+</header>
+
+<div id="app">
+
+<section class="screen" id="screen-menu">
+  <p class="eyebrow">A 4-Player Racing Adventure</p>
+  <h1 class="title-lg">RACE TO THE GOOD DEED</h1>
+  <p class="subtitle">Run Fast. Help Others. Do Good.</p>
+  <button class="big-btn gold" id="menu-play-btn">Play</button>
+  <button class="big-btn" id="menu-4p-btn">4 Player Race</button>
+  <button class="big-btn secondary" data-nav="screen-level-select">Level Select</button>
+  <button class="big-btn secondary" data-nav="screen-library">Good Deed Library</button>
+  <button class="big-btn secondary" data-nav="screen-howto">How to Play</button>
+  <button class="big-btn secondary" data-nav="screen-settings">Settings</button>
+</section>
+
+<section class="screen" id="screen-level-select" hidden>
+  <h2>Level Select</h2>
+  <div class="level-grid" id="level-grid"></div>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-character-confirm" hidden>
+  <h2>Meet Your Racers</h2>
+  <p class="subtitle">Each player presses their Ability key to get ready.</p>
+  <div class="char-grid" id="char-grid"></div>
+  <p id="confirm-hint" style="font-weight:800; color:var(--sky-dark);"></p>
+</section>
+
+<section class="screen" id="screen-good-deed-reveal" hidden>
+  <div class="banner">
+    <p class="eyebrow" style="color:#7a5200;">TODAY'S GOOD DEED</p>
+    <h1 id="reveal-deed-label">Help Someone</h1>
+    <p>Your mission is to race toward the Good Deed!</p>
+  </div>
+  <button class="big-btn gold" id="reveal-continue-btn" style="margin-top:20px;">Continue</button>
+</section>
+
+<section class="screen" id="screen-level-intro" hidden>
+  <h2 id="intro-level-name">Kindness Park</h2>
+  <p class="subtitle" id="intro-level-desc"></p>
+  <button class="big-btn green" id="intro-continue-btn">Go to the Starting Line</button>
+</section>
+
+<section class="screen" id="screen-starting-line" hidden>
+  <h2>On Your Marks!</h2>
+  <div class="starters" id="starters"></div>
+  <div class="countdown-box" id="countdown-text">READY...</div>
+</section>
+
+<section class="screen" id="screen-race" hidden>
+  <button id="race-pause-btn" style="display:none;">⏸</button>
+  <div class="hud-top">
+    <div class="hud-players" id="hud-players"></div>
+    <div class="hud-ranks" id="hud-ranks"></div>
+  </div>
+  <div class="hud-center" id="hud-distance">GOOD DEED DISTANCE: 0m</div>
+  <div class="canvas-wrap">
+    <canvas id="game-canvas" width="960" height="520"></canvas>
+    <canvas id="minimap-canvas" width="150" height="34"></canvas>
+    <div class="toast" id="race-toast"></div>
+  </div>
+</section>
+
+<section class="screen" id="screen-results" hidden>
+  <h1 class="title-lg" style="font-size:34px;">ALHAMDULILLAH!</h1>
+  <p class="subtitle" id="results-deed-line">Today's Good Deed: HELPING OTHERS</p>
+  <div id="results-list"></div>
+  <button class="big-btn gold" id="results-continue-btn">Continue</button>
+</section>
+
+<section class="screen" id="screen-final-message" hidden>
+  <h1 class="title-lg" style="font-size:30px;">RACE TO THE GOOD DEED</h1>
+  <p class="subtitle">It's not only about being first.<br>It's about doing good along the way.</p>
+  <div class="card" id="post-level-card" style="margin-bottom:16px;"></div>
+  <p style="font-weight:800; font-size:18px;">Be Kind &middot; Help Others &middot; Share &middot; Be Honest &middot; Work Together</p>
+  <button class="big-btn green" id="next-level-btn">Next Level</button>
+  <button class="big-btn secondary" data-nav="screen-menu">Main Menu</button>
+</section>
+
+<section class="screen" id="screen-library" hidden>
+  <h2>Good Deed Library</h2>
+  <div class="lib-tabs" id="lib-tabs">
+    <button data-tab="deeds" class="selected">Good Deeds</button>
+    <button data-tab="quran">Qur'an &amp; Hadith</button>
+  </div>
+  <div id="lib-deeds"></div>
+  <div id="lib-quran" hidden></div>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-howto" hidden>
+  <h2>How to Play</h2>
+  <ul class="card" style="text-align:left; line-height:1.7; list-style:none; padding:20px 24px;">
+    <li>✅ Exactly four players race together, each with a fixed character: <strong>Player 1 = Zayd (Blue)</strong>, <strong>Player 2 = Layla (Orange)</strong>, <strong>Player 3 = Malik (Red)</strong>, <strong>Player 4 = Amira (Pink)</strong>.</li>
+    <li>✅ Controls (hold Right to run): <strong>Zayd</strong> D/W/S/A &middot; <strong>Layla</strong> Arrow Keys &middot; <strong>Malik</strong> L/I/K/J &middot; <strong>Amira</strong> H/T/G/F -- each player's four keys are Right(move) / Up(jump) / Down(slide) / Left(ability).</li>
+    <li>✅ Jump again in the air for a double jump. Hold Down while running to slide.</li>
+    <li>✅ Each character's ability is unique: Zayd bursts faster, Layla flies over gaps, Malik smashes rocks, Amira activates switches -- and once a switch is opened, it stays open for everyone.</li>
+    <li>✅ Reaching the Good Deed first starts a quick good-choice question for everyone to think about.</li>
+    <li>✅ There's no fighting and no "worst player" -- results are shown as Speed, Kindness and Teamwork stars, and everyone gets positive feedback.</li>
+  </ul>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+<section class="screen" id="screen-settings" hidden>
+  <h2>Settings</h2>
+  <div class="settings-row"><span>Music Volume</span><input type="range" id="range-music" min="0" max="1" step="0.05"></div>
+  <div class="settings-row"><span>Sound Effects Volume</span><input type="range" id="range-sfx" min="0" max="1" step="0.05"></div>
+  <div class="settings-row"><span>Voice Volume</span><input type="range" id="range-voice" min="0" max="1" step="0.05"></div>
+  <div class="settings-row"><span>Mute All</span><label class="switch"><input type="checkbox" id="toggle-mute"><span class="slider"></span></label></div>
+  <div class="settings-row"><span>Background Music</span><label class="switch"><input type="checkbox" id="toggle-music"><span class="slider"></span></label></div>
+  <div class="settings-row"><span>Text Size</span><input type="range" id="range-text" min="0.85" max="1.4" step="0.05"></div>
+  <div class="settings-row"><span>Subtitles</span><label class="switch"><input type="checkbox" id="toggle-subtitles"><span class="slider"></span></label></div>
+  <div class="settings-row"><span>Controller / Keyboard</span><span style="font-size:13px; text-align:right;">Fixed 4-player zones -- see How to Play</span></div>
+  <div class="settings-row"><span>Language</span><span style="font-size:13px;">English</span></div>
+  <button class="big-btn secondary" data-nav="screen-howto">Tutorial (How to Play)</button>
+  <button class="big-btn secondary" id="reset-progress-btn">Reset Progress</button>
+  <div class="back-row"><button class="big-btn secondary" data-nav="screen-menu">Back to Menu</button></div>
+</section>
+
+</div>
+
+<div class="modal-overlay" id="modal-finish-question" hidden>
+  <div class="modal-card">
+    <p class="eyebrow" id="finish-deed-label">GOOD DEED: HELP SOMEONE</p>
+    <p id="finish-question-text" style="font-weight:800; font-size:18px; color:var(--ink);"></p>
+    <div class="answer-list" id="finish-answers"></div>
+    <p class="feedback" id="finish-feedback"></p>
+    <button class="big-btn gold" id="finish-continue-btn" hidden>See Results</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="overlay-pause" hidden>
+  <div class="modal-card">
+    <h2>Paused</h2>
+    <button class="big-btn gold" id="pause-resume-btn">Resume</button>
+    <button class="big-btn secondary" id="pause-quit-btn">Quit to Menu</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
