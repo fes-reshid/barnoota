@@ -53,6 +53,16 @@ Jump again while airborne for a double jump. On the character-select
 screen, each player presses their own **Ability** key to "ready up" —
 that's a real, working confirmation step, not a fake button.
 
+### On a phone or tablet
+
+Touch devices get RUN / JUMP / ABILITY buttons for each player
+automatically (`js/touchControls.js`), one cluster per corner in that
+character's color — no setting to turn on. Slide is keyboard-only, left
+off touch controls to keep each corner to three buttons; it's a
+nice-to-have, not required to finish a level. The buttons hide during
+the pause menu and the finish-line question, and reappear once you're
+back racing. A tablet in landscape gives four thumbs the room they need.
+
 Suggested test pass:
 1. From the menu, **Play** (or **Level Select** to choose deliberately) →
    ready up all four players → good deed reveal → level intro → the

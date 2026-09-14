@@ -74,7 +74,7 @@
   .canvas-wrap{ position:relative; max-width:960px; margin:0 auto; }
   #game-canvas{ width:100%; height:auto; display:block; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,.18); }
   #minimap-canvas{ position:absolute; right:8px; bottom:8px; width:150px; height:34px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  #race-pause-btn{ position:absolute; left:8px; top:8px; border:none; background:rgba(255,255,255,.85); border-radius:10px; padding:6px 10px; font-weight:800; }
+  #race-pause-btn{ border:none; background:#fff; border-radius:10px; padding:6px 12px; font-weight:800; flex:none; }
   .toast{ position:absolute; top:44%; left:50%; transform:translate(-50%,-50%); font-family:'Baloo 2'; font-size:22px; font-weight:800; color:#fff; text-shadow:0 2px 4px rgba(0,0,0,.35); pointer-events:none; opacity:0; transition:opacity .2s; }
   .toast.show{ opacity:1; }
 
@@ -190,9 +190,9 @@
 </section>
 
 <section class="screen" id="screen-race" hidden>
-  <button id="race-pause-btn" style="display:none;">⏸</button>
   <div class="hud-top">
     <div class="hud-players" id="hud-players"></div>
+    <button id="race-pause-btn" style="display:none;">⏸</button>
     <div class="hud-ranks" id="hud-ranks"></div>
   </div>
   <div class="hud-center" id="hud-distance">GOOD DEED DISTANCE: 0m</div>
@@ -235,6 +235,7 @@
   <ul class="card" style="text-align:left; line-height:1.7; list-style:none; padding:20px 24px;">
     <li>✅ Exactly four players race together, each with a fixed character: <strong>Player 1 = Zayd (Blue)</strong>, <strong>Player 2 = Layla (Orange)</strong>, <strong>Player 3 = Malik (Red)</strong>, <strong>Player 4 = Amira (Pink)</strong>.</li>
     <li>✅ Controls (hold Right to run): <strong>Zayd</strong> D/W/S/A &middot; <strong>Layla</strong> Arrow Keys &middot; <strong>Malik</strong> L/I/K/J &middot; <strong>Amira</strong> H/T/G/F -- each player's four keys are Right(move) / Up(jump) / Down(slide) / Left(ability).</li>
+    <li>✅ On a phone or tablet, each player gets RUN/JUMP/ABILITY buttons in their own corner of the screen (Slide is keyboard-only). Landscape orientation on a tablet works best for four players at once.</li>
     <li>✅ Jump again in the air for a double jump. Hold Down while running to slide.</li>
     <li>✅ Each character's ability is unique: Zayd bursts faster, Layla flies over gaps, Malik smashes rocks, Amira activates switches -- and once a switch is opened, it stays open for everyone.</li>
     <li>✅ Reaching the Good Deed first starts a quick good-choice question for everyone to think about.</li>
