@@ -17,6 +17,8 @@ import {
   setMuted, isMuted, setWindOn, isWindOn, unlockAudio,
   playUiClick, playDiscovery, playCorrect, playWrong, playJourneyComplete
 } from './audioManager.js';
+import { CLOTHING_COLORS, CONTROL_SCHEMES } from './playerController.js';
+import { initTouchControls, autoShowTouchControls } from './touchControls.js';
 
 const CANVAS_W = 900, CANVAS_H = 520;
 
@@ -98,6 +100,15 @@ export class GameManager {
     ui.setToggleState(isMuted(), isWindOn());
     ui.applyTextScale(this.textScale, this.arabicScale);
     ui.showScreen('screen-menu');
+
+    initTouchControls(this.keysDown, CONTROL_SCHEMES, CLOTHING_COLORS, document.querySelector('#screen-chapter .hud-bar'));
+    autoShowTouchControls(document.getElementById('screen-chapter'), [
+      document.getElementById('overlay-pause'),
+      document.getElementById('modal-landmark'),
+      document.getElementById('modal-cave'),
+      document.getElementById('modal-teamwork'),
+      document.getElementById('modal-quba')
+    ]);
   }
 
   goToSetup(){

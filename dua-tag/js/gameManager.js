@@ -15,6 +15,7 @@ import { PROTECTION_DURATION_MS, updateProtectionDisplay } from './protectionTim
 import { DuaSystem } from './duaSystem.js';
 import * as ui from './ui.js';
 import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd, playCountdownTick, unlockAudio } from './audioManager.js';
+import { initTouchControls, autoShowTouchControls } from './touchControls.js';
 
 const CLASSIC_PROTECTION_MS = 3000;
 const ROUND_DURATION_MS = { classic: 180000, dua: 180000, practice: null };
@@ -78,6 +79,12 @@ export class GameManager {
     ui.applyTextScale(this.textScale, this.arabicScale);
     ui.markModeButton(this.mode);
     ui.showScreen('screen-menu');
+
+    initTouchControls(this.keysDown, CONTROL_SCHEMES, PLAYER_COLORS, document.querySelector('#screen-game .hud-bar'));
+    autoShowTouchControls(document.getElementById('screen-game'), [
+      document.getElementById('overlay-pause'),
+      document.getElementById('modal-dua')
+    ]);
   }
 
   goToSetup(){

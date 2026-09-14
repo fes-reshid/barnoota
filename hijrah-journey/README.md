@@ -37,6 +37,14 @@ Up to four children play on one screen/keyboard, split by control scheme:
 | 3      | I J K L     |
 | 4      | T F G H     |
 
+On a phone or tablet, touch devices get an on-screen D-pad for each
+player automatically (`js/touchControls.js`), one per corner in that
+rider's clothing color — no setting to turn on, it just appears once a
+touch-capable device is detected, and hides during the cave/Quba/
+teamwork story panels and the pause menu. Same key codes as the keyboard
+under the hood, so it's a drop-in rather than a separate input path. A
+tablet in landscape gives four thumbs the most room.
+
 This is a cooperative journey, not a race: Journey Stars are a single
 shared party total, and the ending gives every player the exact same
 completion reward regardless of who answered what. A landmark only needs

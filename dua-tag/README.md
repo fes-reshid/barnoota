@@ -47,6 +47,18 @@ around one keyboard (the layout above is deliberately spread across the
 keyboard so hands don't collide), or plug in up to four USB/Bluetooth
 controllers.
 
+### On a phone or tablet
+
+Touch devices get an on-screen D-pad for each player automatically
+(`js/touchControls.js`), one in each corner of the screen, in that
+player's color — no settings toggle needed, it just appears once a
+touch-capable device is detected. Each button adds/removes the same key
+code the keyboard would, so it's a drop-in alongside keyboard/gamepad
+input rather than a separate control path. The D-pads hide automatically
+during the du'a popup, pause menu, and any other modal, and reappear once
+you're back in the courtyard. A tablet in landscape works best — four
+thumbs need real room.
+
 Suggested test pass:
 1. From the main menu, choose **Play**, pick a mode, optionally rename the
    four players, and press **Start Game**.

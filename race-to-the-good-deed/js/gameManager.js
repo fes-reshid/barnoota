@@ -22,6 +22,7 @@ import { loadSettings, getSettings, updateSetting } from './settingsManager.js';
 import * as ui from './uiManager.js';
 import { unlockAudio, playUiClick, playCheckpoint, playObstacleBump, playTeamworkComplete, playRaceFinish } from './audioManager.js';
 import { drawMiniMap } from './miniMapManager.js';
+import { initTouchControls, autoShowTouchControls } from './touchControls.js';
 
 const CANVAS_W = 960, CANVAS_H = 520;
 
@@ -84,6 +85,12 @@ export class GameManager {
     ui.applySettingsToUI(getSettings());
     ui.renderLevelSelect();
     ui.showScreen('screen-menu');
+
+    initTouchControls(this.keysDown, CONTROL_SCHEMES, CHARACTERS.map(c => c.color), document.getElementById('hud-distance'));
+    autoShowTouchControls(document.getElementById('screen-race'), [
+      document.getElementById('overlay-pause'),
+      document.getElementById('modal-finish-question')
+    ]);
   }
 
   _pickRandomUnlockedLevel(){
