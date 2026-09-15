@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
  * once activated, the filter keeps enforcing with no further internet need.
  */
 object License {
-    const val TRIAL_DAYS = 7
+    const val TRIAL_DAYS = 29
     private const val TRIAL_MS = TRIAL_DAYS * 24L * 60 * 60 * 1000
 
     private val http = OkHttpClient.Builder()

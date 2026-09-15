@@ -1073,7 +1073,7 @@ async function boot() {
     // for a password (or a product key) the service isn't there to receive.
     $('shell').hidden = false;
   } else if (needsActivation(status)) {
-    // The 7-day free trial (started the first time the service ever ran)
+    // The 29-day free trial (started the first time the service ever ran)
     // has run out without a product key being entered.
     $('activation-gate').hidden = false;
     $('activation-key').focus();

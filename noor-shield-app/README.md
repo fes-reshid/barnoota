@@ -112,7 +112,7 @@ companion exactly as they would a PC.
   seconds while the filter is running — the same role the PC's always-on
   Windows service plays.
 - **`license/License.kt`** — a Kotlin port of `src/main/license.js`: the
-  same 7-day trial and `activate_license_key`-backed product-key
+  same 29-day trial and `activate_license_key`-backed product-key
   activation, "check once, then work offline forever."
 - **Blocked-site sync is two-way**, same as the PC app: adding a site here
   pushes it to `device_domains` (shows up on the dashboard too), and a

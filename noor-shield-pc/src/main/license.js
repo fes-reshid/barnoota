@@ -16,7 +16,7 @@ const { SUPABASE_URL, SUPABASE_ANON_KEY } = require('../../service/supabaseConfi
  * sent, never the plaintext key.
  */
 
-const TRIAL_DAYS = 7;
+const TRIAL_DAYS = 29;
 const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
 
 /**
