@@ -51,15 +51,21 @@ controllers.
 
 ### On a phone or tablet
 
-Touch devices get an on-screen D-pad for each player automatically
+Touch devices get an on-screen joystick for each player automatically
 (`js/touchControls.js`), one in each corner of the screen, in that
 player's color — no settings toggle needed, it just appears once a
-touch-capable device is detected. Each button adds/removes the same key
-code the keyboard would, so it's a drop-in alongside keyboard/gamepad
-input rather than a separate control path. The D-pads hide automatically
-during the du'a popup, pause menu, and any other modal, and reappear once
-you're back in the courtyard. A tablet in landscape works best — four
-thumbs need real room.
+touch-capable device is detected. Hold the joystick and drag it any
+direction (8-way, including diagonals) and it adds/removes the same key
+codes the keyboard would, so it's a drop-in alongside keyboard/gamepad
+input rather than a separate control path. The joysticks hide
+automatically during the du'a popup, pause menu, and any other modal,
+and reappear once you're back in the courtyard.
+
+Starting a round also tries to lock the screen to landscape (works on
+Chrome/Android; iOS Safari has no such API at all) and, either way, shows
+a "turn your device sideways" overlay blocking gameplay whenever the game
+screen is active and the device is still in portrait — four thumbs need
+the real room landscape gives them.
 
 Suggested test pass:
 1. From the main menu, choose **Play**, pick a mode, optionally rename the

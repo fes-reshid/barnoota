@@ -15,7 +15,7 @@ import { PROTECTION_DURATION_MS, updateProtectionDisplay } from './protectionTim
 import { DuaSystem } from './duaSystem.js';
 import * as ui from './ui.js';
 import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd, playCountdownTick, unlockAudio, speakDua, stopSpeech } from './audioManager.js';
-import { initTouchControls, autoShowTouchControls } from './touchControls.js';
+import { initTouchControls, autoShowTouchControls, requestLandscape, releaseLandscapeLock } from './touchControls.js';
 
 const CLASSIC_PROTECTION_MS = 3000;
 const DUA_READING_MS = 5000;
@@ -117,6 +117,7 @@ export class GameManager {
     ui.hideDuaModal();
     ui.hidePause();
     ui.showScreen('screen-game');
+    requestLandscape();
 
     this.lastTime = performance.now();
     this.running = true;
@@ -141,6 +142,7 @@ export class GameManager {
   quitToMenu(){
     this.running = false;
     stopSpeech();
+    releaseLandscapeLock();
     ui.hidePause();
     ui.hideDuaModal();
     ui.showScreen('screen-menu');
@@ -246,6 +248,7 @@ export class GameManager {
 
   _endRound(){
     this.running = false;
+    releaseLandscapeLock();
     playRoundEnd();
     ui.hideDuaModal();
     const stats = this.players.map(p => ({ name: p.name, color: p.color, timesIt: p.timesIt, duasRecited: p.duasRecited, isIt: p.isIt }));
