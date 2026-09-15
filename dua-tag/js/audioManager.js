@@ -37,8 +37,34 @@ function beep(freq, dur, type, gain){
   }catch(e){}
 }
 
-export function setMuted(value){ muted = value; }
+export function setMuted(value){
+  muted = value;
+  if(value) stopSpeech();
+}
 export function isMuted(){ return muted; }
+
+/* Reads a du'a aloud using the browser's built-in text-to-speech (Web
+   Speech API) -- never the Arabic itself, since a synthesized voice
+   mispronouncing a Qur'anic ayah or hadith wording would be disrespectful.
+   It speaks the transliteration and English meaning instead, the same
+   words already shown on screen, so a tagged player gets pronunciation
+   help and the meaning read to them while they're frozen. */
+export function speakDua(dua){
+  stopSpeech();
+  if(muted || !('speechSynthesis' in window)) return;
+  try{
+    [dua.transliteration, dua.english].forEach(text => {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.85;
+      utter.pitch = 1.05;
+      window.speechSynthesis.speak(utter);
+    });
+  }catch(e){}
+}
+
+export function stopSpeech(){
+  try{ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){}
+}
 
 export function playFootstep(){ beep(180, 0.03, 'square', 0.02); }
 export function playTag(){ beep(220, 0.12, 'sawtooth', 0.14); setTimeout(() => beep(140, 0.16, 'sawtooth', 0.12), 100); }

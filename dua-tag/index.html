@@ -113,6 +113,14 @@
   .modal-overlay{ position: fixed; inset: 0; background: rgba(20,40,35,0.55); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
   .modal-card{ background: #fff; border-radius: 20px; padding: 26px 24px; max-width: 420px; width: 100%; text-align: center; }
   #dua-who{ font-weight: 800; color: var(--accent-dark); margin-bottom: 10px; }
+  #dua-countdown-wrap{ display: flex; flex-direction: column; align-items: center; gap: 4px; margin-bottom: 6px; }
+  #dua-countdown-tag{ font-size: 1.5rem; }
+  #dua-countdown{
+    width: 60px; height: 60px; border-radius: 50%;
+    border: 4px dashed #f0c34d; background: #fff6dd; color: #7a5b0a;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 1.5rem;
+  }
   #dua-arabic{ font-family: 'Noto Naskh Arabic', serif; font-size: calc(2rem * var(--arabic-scale)); direction: rtl; margin: 12px 0; }
   #dua-translit{ font-style: italic; color: #446; margin-bottom: 8px; }
   #dua-english{ margin-bottom: 10px; }
@@ -152,8 +160,8 @@
     <h2 class="heading">How to Play</h2>
     <ul class="howto-list">
       <li><strong>One player is "It"</strong> and chases the others around the courtyard.</li>
-      <li>If It touches you, you're <strong>tagged</strong> and freeze in place. In <strong>Du'a Tag</strong> mode, a du'a (supplication) pops up on screen.</li>
-      <li>Read the Arabic, transliteration and English translation, then press <strong>"I Recited It"</strong>.</li>
+      <li>If It touches you, you're <strong>tagged</strong> and freeze in place. In <strong>Du'a Tag</strong> mode, a du'a (supplication) pops up on screen and is <strong>read aloud to you</strong>, with a 5-second countdown.</li>
+      <li>Read along with the Arabic, transliteration and English translation. The tag passes automatically when the countdown reaches 0 &mdash; or press <strong>"I Recited It"</strong> to move on right away.</li>
       <li>You become the new "It", but you get <strong>30 seconds of protection</strong> right after &mdash; nobody can tag you (and you can't tag anyone) while you catch your breath.</li>
       <li><strong>Classic Tag</strong> mode skips the du'a popup for a faster, simpler game. <strong>Practice Mode</strong> is untimed, just for getting comfortable with the du'as.</li>
       <li>Classic Tag and Du'a Tag both run for <strong>3 minutes</strong>. Whoever is stuck being "It" when time runs out is the one who got caught &mdash; everyone else escaped!</li>
@@ -234,6 +242,10 @@
 <div class="modal-overlay" id="modal-dua" hidden>
   <div class="modal-card">
     <div id="dua-who">Tagged!</div>
+    <div id="dua-countdown-wrap">
+      <span id="dua-countdown-tag" aria-hidden="true">🏷️</span>
+      <span id="dua-countdown">5</span>
+    </div>
     <div id="dua-arabic"></div>
     <div id="dua-translit"></div>
     <div id="dua-english"></div>

@@ -240,6 +240,15 @@ function adminSendPasswordReset(username){
   return sendPasswordResetEmail(auth, usernameToEmail(username));
 }
 
+/* Self-service "forgot password" for an admin's OWN login, straight to
+   their real email (admins never use synthetic addressing the way
+   student accounts do) — the same official Firebase reset-email flow,
+   just triggered from the sign-in screen instead of needing the
+   Firebase console. */
+function adminForgotPassword(email){
+  return sendPasswordResetEmail(auth, normalizeEmail(email));
+}
+
 function adminListStudents(){
   return getDocs(query(collection(db, STUDENTS_COLLECTION), orderBy('createdAt', 'desc')))
     .then(function(snap){
@@ -309,6 +318,7 @@ window.KidsCloud = {
   onAdminAuth: onAdminAuth,
   adminCreateStudent: adminCreateStudent,
   adminSendPasswordReset: adminSendPasswordReset,
+  adminForgotPassword: adminForgotPassword,
   adminListStudents: adminListStudents,
   adminRenameStudent: adminRenameStudent,
   adminDeleteStudent: adminDeleteStudent,

@@ -93,6 +93,11 @@
   .rename-panel.show{ display:block; }
   .empty{ color:#8a7654; font-size:16px; padding:10px 2px; }
 
+  .bulk-row{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border-radius:10px; padding:8px 12px; margin-bottom:6px; font-size:14.5px; }
+  .bulk-row.success{ background:var(--green-bg); color:var(--green-dark); }
+  .bulk-row.error{ background:var(--danger-bg); color:var(--danger); }
+
   .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
     border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--parchment); }
   .admin-row .email{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); }
@@ -129,8 +134,12 @@
         <input type="password" id="admin-password" autocomplete="current-password"></div>
       <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
       <p class="msg" id="login-msg"></p>
-      <button class="linkbtn" id="login-toggle" style="margin-top:6px;">First time here? Create your admin login</button>
+      <button class="linkbtn" id="forgot-password-btn" style="margin-top:6px;">Forgot password?</button>
     </div>
+
+    <p style="text-align:center; margin:12px 0 0;">
+      <button class="linkbtn" id="login-toggle">New admin? Create your login</button>
+    </p>
 
     <details class="setup">
       <summary>First-time setup (do this once, as the very first admin)</summary>
@@ -165,7 +174,7 @@ match /kids_quest_students/{uid} {
             <li>Field <code>role</code> (string) = <code>super</code></li>
           </ul>
         </li>
-        <li>Come back here and click <b>"First time here? Create your admin login"</b> below, using
+        <li>Come back here and click <b>"New admin? Create your login"</b> below the sign-in form, using
           <code>savefes@gmail.com</code> and a password of your choice (this is a brand new login — it
           doesn't matter whether that email has signed into anything on this site before). You're now
           signed in as the super admin — from here on, adding more admins (regular or super) is done
@@ -206,6 +215,21 @@ match /kids_quest_students/{uid} {
     </div>
 
     <div class="card">
+      <h2>Bulk add students (CSV)</h2>
+      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Upload a CSV file to add many students at
+        once. Columns: <code>username</code> (required), <code>displayname</code> (optional),
+        <code>password</code> (optional — a random one is generated for any row that leaves it blank).</p>
+      <button class="btn ghost small" type="button" id="download-template-btn">⬇️ Download CSV template</button>
+      <div class="field" style="margin-top:12px;">
+        <label for="csv-file">CSV file</label>
+        <input type="file" id="csv-file" accept=".csv,text/csv">
+      </div>
+      <button class="btn primary" id="bulk-add-btn">Add All Students</button>
+      <p class="msg" id="bulk-msg"></p>
+      <div id="bulk-results" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
       <h2>Students <span id="student-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
       <button class="btn ghost small" id="refresh-btn" style="margin-bottom:14px;">Refresh</button>
       <div id="student-list"></div>
@@ -215,8 +239,8 @@ match /kids_quest_students/{uid} {
     <div class="card hidden" id="admins-card">
       <h2>Admins <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
       <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Only super admins can see and change this
-        list. A new admin still has to create their own login (they'll see a "Create your admin login" link
-        on the sign-in screen) — adding them here just authorizes that email.</p>
+        list. A new admin still has to create their own login (they'll see a "New admin? Create your login"
+        link below the sign-in form) — adding them here just authorizes that email.</p>
       <div class="row">
         <div class="field" style="flex:2;"><label for="new-admin-email">Email</label>
           <input type="email" id="new-admin-email" placeholder="someone@example.com"></div>
@@ -235,7 +259,7 @@ match /kids_quest_students/{uid} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=4"></script>
+<script type="module" src="kids-quest-cloud.js?v=5"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -275,6 +299,38 @@ function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : String(s);
   return d.innerHTML;
+}
+
+function parseCSV(text){
+  // Simple CSV parser: handles quoted fields, escaped quotes (""), and commas inside quotes.
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){
+        if(text[i + 1] === '"'){ field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else if(c === '"'){
+      inQuotes = true;
+    } else if(c === ','){
+      row.push(field); field = '';
+    } else if(c === '\n' || c === '\r'){
+      if(c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = '';
+      if(row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  if(field !== '' || row.length){ row.push(field); if(row.some(v => v.trim() !== '')) rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows[0].map(h => h.trim().toLowerCase());
+  return rows.slice(1).map(r => {
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+    return obj;
+  });
 }
 
 function renderStudents(list){
@@ -424,7 +480,8 @@ function setSignUpMode(on){
     ? 'Only use the email an existing super admin already authorized (or the one you just added to Firestore for the very first account).'
     : 'Sign in with an admin account to add students and manage passwords.';
   $('admin-signin-btn').textContent = on ? 'Create Account' : 'Sign In';
-  $('login-toggle').textContent = on ? 'Already have a login? Sign in instead' : 'First time here? Create your admin login';
+  $('login-toggle').textContent = on ? 'Already have a login? Sign in instead' : 'New admin? Create your login';
+  $('forgot-password-btn').classList.toggle('hidden', on);
   $('login-msg').textContent = '';
 }
 
@@ -447,6 +504,23 @@ function wire(){
     }).finally(() => { $('admin-signin-btn').disabled = false; });
   });
   $('admin-password').addEventListener('keydown', e => { if(e.key === 'Enter') $('admin-signin-btn').click(); });
+
+  $('forgot-password-btn').addEventListener('click', () => {
+    const email = $('admin-email').value.trim();
+    const msg = $('login-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter your email above, then tap "Forgot password?" again.'; return; }
+    $('forgot-password-btn').disabled = true;
+    window.KidsCloud.adminForgotPassword(email).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Reset link sent to ' + email + ' — open it, set a new password, then sign in.';
+    }).catch(err => {
+      msg.className = 'msg error';
+      msg.textContent = (err && err.code && err.code.indexOf('user-not-found') >= 0)
+        ? 'No admin login exists for that email yet.'
+        : friendlyError(err);
+    }).finally(() => { $('forgot-password-btn').disabled = false; });
+  });
 
   $('signout-top').addEventListener('click', () => window.KidsCloud.adminSignOut());
   $('not-authorized-signout').addEventListener('click', () => window.KidsCloud.adminSignOut());
@@ -471,6 +545,73 @@ function wire(){
       .finally(() => { $('add-student-btn').disabled = false; });
   });
 
+  $('download-template-btn').addEventListener('click', () => {
+    const csv = 'username,displayname,password\namina123,Amina,\nyusuf456,Yusuf,\n';
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'students-template.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  $('bulk-add-btn').addEventListener('click', () => {
+    const fileInput = $('csv-file');
+    const msg = $('bulk-msg');
+    const results = $('bulk-results');
+    msg.className = 'msg'; msg.textContent = '';
+    results.innerHTML = '';
+    const file = fileInput.files && fileInput.files[0];
+    if(!file){ msg.className = 'msg error'; msg.textContent = 'Choose a CSV file first.'; return; }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const rows = parseCSV(String(reader.result || ''));
+      if(!rows.length || !('username' in rows[0])){
+        msg.className = 'msg error';
+        msg.textContent = 'That CSV needs a header row with a "username" column.';
+        return;
+      }
+      $('bulk-add-btn').disabled = true;
+      msg.className = 'msg'; msg.textContent = 'Adding ' + rows.length + ' student(s)…';
+
+      let done = 0, ok = 0, fail = 0;
+      const addRow = (row) => {
+        const username = (row.username || '').trim();
+        const displayName = (row.displayname || '').trim();
+        const password = (row.password || '').trim() || randomPassword();
+        const line = document.createElement('div');
+        if(!username){
+          fail++; line.className = 'bulk-row error';
+          line.textContent = '(blank row) — missing username';
+          results.appendChild(line);
+          return Promise.resolve();
+        }
+        return window.KidsCloud.adminCreateStudent(username, displayName, password).then(() => {
+          ok++; line.className = 'bulk-row success';
+          line.textContent = username + ' — added (password: ' + password + ')';
+          results.appendChild(line);
+        }).catch(err => {
+          fail++; line.className = 'bulk-row error';
+          line.textContent = username + ' — failed: ' + friendlyError(err);
+          results.appendChild(line);
+        });
+      };
+
+      // Sequential, not parallel, so Firebase Auth doesn't rate-limit and rows report in order.
+      rows.reduce((chain, row) => chain.then(() => addRow(row)).then(() => { done++; }), Promise.resolve())
+        .then(() => {
+          msg.className = fail ? 'msg error' : 'msg success';
+          msg.textContent = 'Done: ' + ok + ' added, ' + fail + ' failed.';
+          fileInput.value = '';
+          loadStudents();
+        })
+        .finally(() => { $('bulk-add-btn').disabled = false; });
+    };
+    reader.onerror = () => { msg.className = 'msg error'; msg.textContent = 'Could not read that file.'; };
+    reader.readAsText(file);
+  });
+
   $('refresh-btn').addEventListener('click', loadStudents);
 
   $('add-admin-btn').addEventListener('click', () => {
@@ -482,7 +623,7 @@ function wire(){
     $('add-admin-btn').disabled = true;
     window.KidsCloud.superAddAdmin(email, role).then(() => {
       msg.className = 'msg success';
-      msg.textContent = 'Added — tell them to visit this page and click "Create your admin login" with that email.';
+      msg.textContent = 'Added — tell them to visit this page and click "New admin? Create your login" with that email.';
       $('new-admin-email').value = '';
       loadAdmins();
     }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
