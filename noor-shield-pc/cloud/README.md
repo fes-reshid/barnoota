@@ -81,6 +81,20 @@ of these values.
   cleanly, while a *different* PC trying the same key is rejected as
   `already_used`. Deliberately "check once": this only ever runs at the
   moment "Activate" is clicked, never again afterwards.
+- **Time-limited keys** (e.g. a 29-day key): `license_keys.duration_days`
+  is null for a lifetime key (the original batch) or a number of days for
+  a time-limited one. `activate_license_key` computes `expires_at` once,
+  the moment the key is *first* claimed (`now() + duration_days days`),
+  and returns it in its `{status, expires_at}` response — the client
+  stores it locally (`store.license.expiresAt` / Android's
+  `CloudStore`) and checks it with `isLicenseActive()` /
+  `License.isLicenseActive()`, no further network round trip needed.
+  Mint a batch with `../scripts/generate-timed-keys.js <days> [count]`
+  (e.g. `node generate-timed-keys.js 29 10`), which writes the plaintext
+  keys to a local, gitignored file and a ready-to-run
+  `seed_license_keys_<days>day.sql` — run `schema.sql` (for the
+  `duration_days`/`expires_at` columns) then that seed file in Supabase's
+  SQL Editor.
 
 ## Commands implemented so far
 

@@ -36,6 +36,21 @@ function isTrialActive(firstRunAt, now = Date.now()) {
   return Boolean(firstRunAt) && now - firstRunAt < TRIAL_MS;
 }
 
+/**
+ * True if an activated key is still within its access window. `expiresAt`
+ * is null for a lifetime key (the common case) — always active once
+ * activated. A time-limited key (e.g. a 29-day key) carries a real
+ * timestamp, set once at activation time (see activate_license_key in
+ * schema.sql) and stored locally in store.license.expiresAt, checked here
+ * with no further network round trip — same offline-first design as the
+ * rest of activation, just no longer "forever" for these keys.
+ */
+function isLicenseActive(activated, expiresAt, now = Date.now()) {
+  if (!activated) return false;
+  if (!expiresAt) return true;
+  return now < new Date(expiresAt).getTime();
+}
+
 /** "NOOR-XXXXX-XXXXX-XXXXX" -> "NOORXXXXXXXXXXXXXXX", tolerant of case/whitespace/missing dashes. */
 function normalizeKey(rawInput) {
   return String(rawInput || '')
@@ -58,8 +73,10 @@ function hashKey(rawInput) {
  * reused on every later activation attempt — including reinstalls — so the
  * same PC re-activating its own key never looks like reuse on another PC).
  *
- * Returns { ok: true } on success, or { ok: false, reason } where reason is
- * 'invalid' (not a real key), 'already_used' (claimed by a different PC),
+ * Returns { ok: true, expiresAt } on success — expiresAt is null for a
+ * lifetime key or an ISO timestamp for a time-limited one (see
+ * isLicenseActive) — or { ok: false, reason } where reason is 'invalid'
+ * (not a real key), 'already_used' (claimed by a different PC),
  * 'bad_format' (didn't even look like a key), or 'network_error' (couldn't
  * reach Supabase at all).
  */
@@ -85,8 +102,8 @@ async function activateKeyOnline(rawInput, deviceId) {
   if (!res.ok) return { ok: false, reason: 'network_error' };
 
   const result = JSON.parse(await res.text());
-  if (result === 'ok') return { ok: true };
-  if (result === 'already_used') return { ok: false, reason: 'already_used' };
+  if (result.status === 'ok') return { ok: true, expiresAt: result.expires_at };
+  if (result.status === 'already_used') return { ok: false, reason: 'already_used' };
   return { ok: false, reason: 'invalid' };
 }
 
@@ -96,5 +113,6 @@ module.exports = {
   activateKeyOnline,
   trialDaysRemaining,
   isTrialActive,
+  isLicenseActive,
   TRIAL_DAYS,
 };

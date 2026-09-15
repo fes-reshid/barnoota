@@ -296,24 +296,32 @@ private fun LicenseCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var activated by remember { mutableStateOf(false) }
+    var everActivated by remember { mutableStateOf(false) }
+    var expiresAtMs by remember { mutableStateOf<Long?>(null) }
     var trialDaysLeft by remember { mutableStateOf(0) }
     var keyInput by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    suspend fun refresh() {
         activated = CloudStore.isActivated(context)
+        everActivated = CloudStore.everActivated(context)
+        expiresAtMs = CloudStore.licenseExpiresAt(context)
         val firstRunAt = CloudStore.ensureFirstRunAt(context)
         trialDaysLeft = License.trialDaysRemaining(firstRunAt)
     }
+    LaunchedEffect(Unit) { refresh() }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Text("Product key", style = MaterialTheme.typography.titleMedium)
             Text(
                 when {
+                    activated && expiresAtMs != null ->
+                        "Activated — valid until ${java.text.DateFormat.getDateInstance().format(java.util.Date(expiresAtMs!!))}."
                     activated -> "Activated."
                     trialDaysLeft > 0 -> "Free trial: $trialDaysLeft day${if (trialDaysLeft == 1) "" else "s"} left."
+                    everActivated -> "Your product key has expired. Enter a new one to keep using remote control."
                     else -> "Your free trial has ended. Enter a product key to keep using remote control."
                 },
                 style = MaterialTheme.typography.bodySmall,
@@ -334,10 +342,10 @@ private fun LicenseCard() {
                         message = null
                         scope.launch {
                             val deviceId = CloudStore.licenseDeviceId(context)
-                            when (License.activateKeyOnline(keyInput, deviceId)) {
-                                License.ActivationResult.Ok -> {
-                                    CloudStore.setActivated(context, true)
-                                    activated = true
+                            when (val result = License.activateKeyOnline(keyInput, deviceId)) {
+                                is License.ActivationResult.Ok -> {
+                                    CloudStore.setActivated(context, true, result.expiresAtMs)
+                                    refresh()
                                 }
                                 License.ActivationResult.BadFormat -> message = "That doesn't look like a valid product key."
                                 License.ActivationResult.Invalid -> message = "That key isn't recognized."

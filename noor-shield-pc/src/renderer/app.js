@@ -385,13 +385,23 @@ async function refreshStatus() {
 
   $('admin-warning').hidden = status.elevated || status.platform !== 'win32';
 
+  // status.activated already means "activated AND not expired" (see
+  // licenseStatus() in handlers.js) — a time-limited key past its
+  // expires_at reports as not activated here, same as never having
+  // activated one, so this same trial/license UI naturally re-prompts for
+  // a new key instead of needing a separate "expired" branch.
+  const everActivated = Boolean(status.license && status.license.everActivated);
+  const expiredMessage = everActivated
+    ? 'Your product key has expired. Enter a new one below to keep protection on.'
+    : 'Free trial has ended. Enter your product key below to keep protection on.';
+
   const trialBanner = $('trial-banner');
   if (!status.activated) {
     trialBanner.hidden = false;
     $('trial-banner-detail').textContent =
       status.trialDaysRemaining > 0
         ? `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left.`
-        : 'Free trial has ended. Enter your product key below to keep protection on.';
+        : expiredMessage;
   } else {
     trialBanner.hidden = true;
   }
@@ -400,13 +410,18 @@ async function refreshStatus() {
   const licenseForm = $('license-form');
   if (licenseStatus) {
     if (status.activated) {
-      licenseStatus.textContent = 'Activated.';
+      const expiresAt = status.license && status.license.expiresAt;
+      licenseStatus.textContent = expiresAt
+        ? `Activated — valid until ${new Date(expiresAt).toLocaleDateString()}.`
+        : 'Activated.';
       licenseForm.hidden = true;
     } else {
       licenseStatus.textContent =
         status.trialDaysRemaining > 0
           ? `Free trial: ${status.trialDaysRemaining} day${status.trialDaysRemaining === 1 ? '' : 's'} left.`
-          : 'Free trial has ended.';
+          : everActivated
+            ? 'Your product key has expired.'
+            : 'Free trial has ended.';
       licenseForm.hidden = false;
     }
   }

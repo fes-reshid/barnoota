@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.barnoota.noorshield.license.License
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -37,6 +38,7 @@ object CloudStore {
         val SCHEDULE_JSON = stringPreferencesKey("schedule_json")
         val LICENSE_DEVICE_ID = stringPreferencesKey("license_device_id")
         val ACTIVATED = booleanPreferencesKey("activated")
+        val LICENSE_EXPIRES_AT = longPreferencesKey("license_expires_at")
         val FIRST_RUN_AT = longPreferencesKey("first_run_at")
     }
 
@@ -148,13 +150,24 @@ object CloudStore {
         return fresh
     }
 
+    /** True only while activated AND (for a time-limited key) not yet expired — see License.isLicenseActive. */
     fun observeActivated(context: Context): Flow<Boolean> =
-        context.cloudDataStore.data.map { it[Keys.ACTIVATED] ?: false }
+        context.cloudDataStore.data.map { prefs ->
+            License.isLicenseActive(prefs[Keys.ACTIVATED] ?: false, prefs[Keys.LICENSE_EXPIRES_AT])
+        }
 
-    suspend fun isActivated(context: Context): Boolean = context.cloudDataStore.data.first()[Keys.ACTIVATED] ?: false
+    suspend fun isActivated(context: Context): Boolean = observeActivated(context).first()
 
-    suspend fun setActivated(context: Context, activated: Boolean) {
-        context.cloudDataStore.edit { it[Keys.ACTIVATED] = activated }
+    /** True if a key was ever activated, even if it has since expired — for "your key expired" vs. "start a trial" messaging. */
+    suspend fun everActivated(context: Context): Boolean = context.cloudDataStore.data.first()[Keys.ACTIVATED] ?: false
+
+    suspend fun licenseExpiresAt(context: Context): Long? = context.cloudDataStore.data.first()[Keys.LICENSE_EXPIRES_AT]
+
+    suspend fun setActivated(context: Context, activated: Boolean, expiresAtMs: Long? = null) {
+        context.cloudDataStore.edit { prefs ->
+            prefs[Keys.ACTIVATED] = activated
+            if (expiresAtMs == null) prefs.remove(Keys.LICENSE_EXPIRES_AT) else prefs[Keys.LICENSE_EXPIRES_AT] = expiresAtMs
+        }
     }
 
     suspend fun ensureFirstRunAt(context: Context): Long {

@@ -99,11 +99,24 @@ create table if not exists public.device_domains (
 -- key can be told apart from a made-up string. Only key_hash is stored,
 -- never the plaintext key, matching how the app already hashed keys before
 -- checking them locally.
+-- duration_days: null means a lifetime key (the original 2000-key batch);
+-- a number means a time-limited key (e.g. a 29-day key) whose access
+-- expires that many days after the moment it's first activated — not from
+-- when it was generated, so a key sitting unsold for months still gives
+-- its buyer the full duration.
 create table if not exists public.license_keys (
   key_hash text primary key,
   activated_device_id text,
-  activated_at timestamptz
+  activated_at timestamptz,
+  duration_days integer,
+  expires_at timestamptz
 );
+
+-- Re-run-safe: adds duration_days/expires_at to a license_keys table
+-- created before they existed, without touching existing rows (which stay
+-- lifetime keys — duration_days null).
+alter table public.license_keys add column if not exists duration_days integer;
+alter table public.license_keys add column if not exists expires_at timestamptz;
 
 alter table public.devices enable row level security;
 alter table public.pairing_codes enable row level security;
@@ -362,16 +375,24 @@ begin
 end;
 $$;
 
--- Called once by a PC when the parent clicks "Activate". p_device_id here is
--- just a random id the PC generated for itself the first time it tried to
--- activate (see license.js) — nothing to do with the `devices`/pairing
--- system above, which only exists once a PC is paired for remote control.
--- Returns 'ok' the first time a key is claimed, 'ok' again on every later
--- call from the *same* device id (so reinstalling the app on the same PC
--- keeps working), 'already_used' if a *different* device id already claimed
--- it, and 'invalid' if the hash isn't a known key at all.
+-- Called once by a PC/phone when the parent clicks "Activate". p_device_id
+-- here is just a random id the app generated for itself the first time it
+-- tried to activate (see license.js / License.kt) — nothing to do with the
+-- `devices`/pairing system above, which only exists once a device is
+-- paired for remote control.
+--
+-- Returns a jsonb object {status, expires_at}. status is 'ok' the first
+-- time a key is claimed, 'ok' again on every later call from the *same*
+-- device id (so reinstalling the app on the same device keeps working),
+-- 'already_used' if a *different* device id already claimed it, and
+-- 'invalid' if the hash isn't a known key at all. expires_at is null for a
+-- lifetime key (duration_days is null) or a timestamp the caller should
+-- treat as an expiry for a time-limited key (e.g. a 29-day key) — computed
+-- once, the moment the key is first claimed, from that key's own
+-- duration_days, so it doesn't drift on later re-activation calls from the
+-- same device.
 create or replace function public.activate_license_key(p_key_hash text, p_device_id text)
-returns text
+returns jsonb
 language plpgsql
 security definer
 set search_path = public
@@ -382,21 +403,25 @@ begin
   select * into v_row from public.license_keys where key_hash = p_key_hash for update;
 
   if not found then
-    return 'invalid';
+    return jsonb_build_object('status', 'invalid', 'expires_at', null);
   end if;
 
   if v_row.activated_device_id is null then
     update public.license_keys
-    set activated_device_id = p_device_id, activated_at = now()
-    where key_hash = p_key_hash;
-    return 'ok';
+    set
+      activated_device_id = p_device_id,
+      activated_at = now(),
+      expires_at = case when v_row.duration_days is not null then now() + (v_row.duration_days || ' days')::interval else null end
+    where key_hash = p_key_hash
+    returning * into v_row;
+    return jsonb_build_object('status', 'ok', 'expires_at', v_row.expires_at);
   end if;
 
   if v_row.activated_device_id = p_device_id then
-    return 'ok';
+    return jsonb_build_object('status', 'ok', 'expires_at', v_row.expires_at);
   end if;
 
-  return 'already_used';
+  return jsonb_build_object('status', 'already_used', 'expires_at', null);
 end;
 $$;
 

@@ -38,6 +38,19 @@ object License {
     fun isTrialActive(firstRunAt: Long?, nowMs: Long = System.currentTimeMillis()): Boolean =
         firstRunAt != null && nowMs - firstRunAt < TRIAL_MS
 
+    /**
+     * True if an activated key is still within its access window. `expiresAtMs`
+     * is null for a lifetime key — always active once activated. A
+     * time-limited key (e.g. a 29-day key) carries a real timestamp, set
+     * once at activation time (see activate_license_key in schema.sql) and
+     * checked here with no further network round trip.
+     */
+    fun isLicenseActive(activated: Boolean, expiresAtMs: Long?, nowMs: Long = System.currentTimeMillis()): Boolean {
+        if (!activated) return false
+        if (expiresAtMs == null) return true
+        return nowMs < expiresAtMs
+    }
+
     /** "NOOR-XXXXX-XXXXX-XXXXX" -> "NOORXXXXXXXXXXXXXXX", tolerant of case/whitespace/missing dashes. */
     fun normalizeKey(rawInput: String): String = rawInput.uppercase().filter { it.isLetterOrDigit() }
 
@@ -52,7 +65,8 @@ object License {
     }
 
     sealed class ActivationResult {
-        data object Ok : ActivationResult()
+        /** expiresAtMs is null for a lifetime key, or the key's expiry for a time-limited one (e.g. a 29-day key). */
+        data class Ok(val expiresAtMs: Long?) : ActivationResult()
         data object BadFormat : ActivationResult()
         data object Invalid : ActivationResult()
         data object AlreadyUsed : ActivationResult()
@@ -81,8 +95,13 @@ object License {
             http.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) return@withContext ActivationResult.NetworkError
                 val text = response.body?.string().orEmpty()
-                when (text.trim('"')) {
-                    "ok" -> ActivationResult.Ok
+                val json = JSONObject(text)
+                when (json.optString("status")) {
+                    "ok" -> {
+                        val expiresAt = json.optString("expires_at", null)
+                        val expiresAtMs = expiresAt?.let { runCatching { java.time.Instant.parse(it).toEpochMilli() }.getOrNull() }
+                        ActivationResult.Ok(expiresAtMs)
+                    }
                     "already_used" -> ActivationResult.AlreadyUsed
                     else -> ActivationResult.Invalid
                 }

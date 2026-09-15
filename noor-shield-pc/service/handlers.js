@@ -7,7 +7,7 @@ const feedBlocklist = require('./feedBlocklist');
 const certAuthority = require('./certAuthority');
 const cloudSync = require('./cloudSync');
 const crypto = require('crypto');
-const { activateKeyOnline, trialDaysRemaining, isTrialActive } = require(path.join(
+const { activateKeyOnline, trialDaysRemaining, isTrialActive, isLicenseActive } = require(path.join(
   __dirname,
   '..',
   'src',
@@ -123,6 +123,20 @@ function createHandlers(ctx) {
     };
   }
 
+  /**
+   * `activated` here means "activated AND still within its access window" —
+   * a time-limited key that's expired reports as not activated, even though
+   * store.activated itself stays true forever (see startFilter's own,
+   * separately-computed check for why that's fine to leave as-is: it
+   * re-derives the same thing rather than depending on this being called
+   * first).
+   */
+  function licenseStatus() {
+    const activated = Boolean(store.get('activated'));
+    const expiresAt = (store.get('license') || {}).expiresAt || null;
+    return { activated: isLicenseActive(activated, expiresAt), expiresAt, everActivated: activated };
+  }
+
   function scheduleStatus() {
     const schedule = store.get('schedule');
     const scheduleActive = isWithinSchedule(schedule);
@@ -186,11 +200,14 @@ function createHandlers(ctx) {
   }
 
   async function startFilter() {
-    if (!store.get('activated') && !isTrialActive(store.get('firstRunAt'))) {
-      return {
-        ok: false,
-        error: 'Your free trial has ended. Enter your product key (see the About tab) to keep protection on.',
-      };
+    const activated = Boolean(store.get('activated'));
+    const licenseExpiresAt = (store.get('license') || {}).expiresAt;
+    const trialActive = isTrialActive(store.get('firstRunAt'));
+    if (!trialActive && (!activated || !isLicenseActive(activated, licenseExpiresAt))) {
+      const error = activated
+        ? 'Your product key has expired. Enter a new one (see the About tab) to keep protection on.'
+        : 'Your free trial has ended. Enter your product key (see the About tab) to keep protection on.';
+      return { ok: false, error };
     }
     if (process.platform !== 'win32') {
       return { ok: false, error: 'The filter currently supports Windows only.' };
@@ -275,7 +292,8 @@ function createHandlers(ctx) {
         feedCategories: feedCategoriesSummary(),
         reminderPageAvailable: Boolean(ctx.reminderPageAvailable),
         schedule: scheduleStatus(),
-        activated: Boolean(store.get('activated')),
+        license: licenseStatus(),
+        activated: licenseStatus().activated,
         trialDaysRemaining: trialDaysRemaining(store.get('firstRunAt')),
         parent: parentAuth.status(),
         serviceVersion: ctx.version || null,
@@ -432,7 +450,7 @@ function createHandlers(ctx) {
     // substitutes for the parent password, which has its own one-time
     // recovery key for that (see parentAuth.js).
     'license.activate': async ({ key }) => {
-      if (store.get('activated')) return { ok: true, alreadyActivated: true };
+      if (licenseStatus().activated) return { ok: true, alreadyActivated: true };
 
       const license = store.get('license') || {};
       const deviceId = license.deviceId || crypto.randomUUID();
@@ -450,12 +468,13 @@ function createHandlers(ctx) {
       }
 
       store.set('activated', true);
-      return { ok: true };
+      store.set('license', { ...store.get('license'), expiresAt: result.expiresAt || null });
+      return { ok: true, expiresAt: result.expiresAt || null };
     },
 
     'parent.status': async () => ({
       ok: true,
-      activated: Boolean(store.get('activated')),
+      activated: licenseStatus().activated,
       trialDaysRemaining: trialDaysRemaining(store.get('firstRunAt')),
       ...parentAuth.status(),
     }),
