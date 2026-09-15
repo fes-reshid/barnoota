@@ -12,8 +12,8 @@ android {
         applicationId = "com.barnoota.noorshield"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.3.0"
     }
 
     buildFeatures {
@@ -79,6 +79,11 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
+    // Plain HTTP client for talking to Supabase's REST/RPC endpoints directly (see
+    // cloud/CloudSync.kt and license/License.kt) — same approach as
+    // noor-shield-pc/service/cloudSync.js and the noor-shield-parent-app.
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // Encrypted-at-rest storage for the SMTP password (Activity Log email report).
     implementation("androidx.security:security-crypto:1.0.0")

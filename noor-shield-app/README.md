@@ -85,6 +85,65 @@ Noor Shield can tell a parent what it's been blocking, on request:
   runtime — but the report format (plain-text + HTML multipart, same
   subject line shape) deliberately matches.
 
+## Remote control, weekly bedtime, and product keys
+
+This phone is a full peer to a paired PC, not a lesser client — pairing,
+commands, blocked-site sync, and licensing all call the exact same
+Supabase project and SQL functions as `noor-shield-pc` (see
+`noor-shield-pc/cloud/schema.sql`), so a parent can pair, manage, and lock
+this device from the web dashboard or the `noor-shield-parent-app` phone
+companion exactly as they would a PC.
+
+- **`cloud/CloudConfig.kt`** — same Supabase URL/anon key as the PC app.
+- **`cloud/CloudStore.kt`** — DataStore-backed state: pairing (device
+  secret/id), the weekly bedtime schedule, the parent-added-remotely site
+  list, a remote "enforce sleep now" override, remote-lock state, and
+  license/trial state. Kotlin equivalents of `store.js`'s `cloud`/
+  `schedule`/`cloudBlockedDomains`/`forceSleepUntil`/`license`/`activated`/
+  `firstRunAt` fields.
+- **`cloud/Schedule.kt`** — a line-by-line Kotlin port of
+  `src/main/schedule.js`, including the crossing-midnight math, so a
+  schedule set from any client (PC, web, either phone app) is interpreted
+  identically everywhere.
+- **`cloud/CloudSync.kt`** — a Kotlin port of `service/cloudSync.js`:
+  pairing, polling `get_pending_commands`/`get_device_domains`, and
+  applying `enforce_sleep_now`/`cancel_sleep_now`/`lock_computer`/
+  `unlock_computer`/`set_schedule`. Polled from `BlockVpnService` every 20
+  seconds while the filter is running — the same role the PC's always-on
+  Windows service plays.
+- **`license/License.kt`** — a Kotlin port of `src/main/license.js`: the
+  same 7-day trial and `activate_license_key`-backed product-key
+  activation, "check once, then work offline forever."
+- **Blocked-site sync is two-way**, same as the PC app: adding a site here
+  pushes it to `device_domains` (shows up on the dashboard too), and a
+  site the parent adds remotely shows up in the Blocklist tab here, badged
+  "Added remotely."
+- **Weekly bedtime blocks *all* internet**, not just the adult-content
+  list, while active — `BlockVpnService` checks a `blockEverything` flag
+  (schedule or remote sleep override) on every DNS query, same behavior as
+  the PC app's `isScheduleActive`.
+- **`ui/LockActivity.kt`** is the phone equivalent of
+  `lock-overlay.html`, shown while a remote lock is active, with the same
+  Qur'an/Hadith reminder and a parent-password fallback. **Read its doc
+  comment before assuming it's as strong as the PC lock**: a regular
+  (non-device-owner) Android app cannot block the Home button or the
+  recent-apps switcher the way the PC app blocks Windows' Fast User
+  Switching — a child can always leave via Home. This screen re-fronts
+  itself for as long as the lock stays active, but real enforcement would
+  need Android's Device Owner / Lock Task mode, which requires the phone
+  to be provisioned as a managed device (out of scope for a normal Play
+  Store install).
+- **No HTTPS interstitial reminder page** (unlike the PC app's
+  `reminderServer.js` + local certificate authority): a blocked domain
+  here gets an NXDOMAIN DNS response, so the browser just shows its own
+  "can't reach this site" error, not a Hadith reminder page. Building the
+  PC's approach on Android would mean installing a device-wide trusted
+  root certificate — a much bigger, riskier undertaking (most parents
+  would find the OS's "install a certificate?" warnings alarming, and
+  newer Android versions increasingly restrict user-added CAs) — so it's
+  deliberately not attempted here. `ScreenGuardAccessibilityService`'s
+  on-screen blur is this app's equivalent reminder surface instead.
+
 ## Honest limitations — read this before telling anyone it "blocks all nudity"
 
 1. **No app can guarantee that.** This is a barrier and a reminder, not a

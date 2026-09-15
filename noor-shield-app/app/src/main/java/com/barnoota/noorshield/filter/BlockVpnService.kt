@@ -11,10 +11,15 @@ import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.barnoota.noorshield.R
+import com.barnoota.noorshield.cloud.CloudStore
+import com.barnoota.noorshield.cloud.CloudSync
+import com.barnoota.noorshield.cloud.isWithinSchedule
+import com.barnoota.noorshield.ui.LockActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -51,6 +56,12 @@ class BlockVpnService : VpnService() {
 
     @Volatile private var blocklist: DomainBlocklist = DomainBlocklist.EMPTY
 
+    // True while a bedtime schedule or a remote-issued "enforce sleep now" is active — during
+    // this window ALL domains are blocked, not just the adult-content list, mirroring
+    // isScheduleActive in noor-shield-pc/service/filterService.js. Read on the packet-forwarding
+    // hot path, written only by the cloud poll loop below, hence @Volatile rather than a lock.
+    @Volatile private var blockEverything: Boolean = false
+
     // For writing to the activity log off the packet-forwarding thread. A blocked lookup is
     // relatively rare (compared to the packet loop's hot path), so a plain IO-dispatched
     // coroutine per event is cheap enough — no need for a batching/queueing layer.
@@ -78,6 +89,7 @@ class BlockVpnService : VpnService() {
         blocklist = DomainBlocklist.load(applicationContext)
         startForeground(NOTIFICATION_ID, buildNotification())
         startVpn()
+        startCloudSyncLoop()
         return START_STICKY
     }
 
@@ -85,6 +97,42 @@ class BlockVpnService : VpnService() {
         stopVpn()
         serviceScope.cancel()
         super.onDestroy()
+    }
+
+    /**
+     * Polls Supabase for commands and the parent's site list, same cadence
+     * and role as noor-shield-pc/service/cloudSync.js's start() — this is
+     * what makes remote lock/unlock, bedtime, and blocked-site edits from
+     * the web dashboard or the phone companion app actually reach this
+     * device, for as long as the filter service itself is alive.
+     */
+    private fun startCloudSyncLoop() {
+        serviceScope.launch {
+            CloudStore.ensureFirstRunAt(applicationContext)
+            while (running.get()) {
+                try {
+                    val beforeDomains = CloudStore.cloudBlockedDomains(applicationContext)
+                    CloudSync.pollCommandsOnce(applicationContext)
+                    CloudSync.pollDeviceDomainsOnce(applicationContext)
+                    val afterDomains = CloudStore.cloudBlockedDomains(applicationContext)
+                    if (afterDomains != beforeDomains) {
+                        blocklist = DomainBlocklist.load(applicationContext)
+                    }
+
+                    val schedule = CloudStore.schedule(applicationContext)
+                    val scheduleActive = isWithinSchedule(schedule)
+                    val forceSleepActive = CloudSync.isForceSleepActive(applicationContext)
+                    blockEverything = scheduleActive || forceSleepActive
+
+                    if (CloudStore.isRemoteLockActive(applicationContext)) {
+                        LockActivity.show(applicationContext)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "cloud sync cycle failed: ${e.message}")
+                }
+                delay(CLOUD_POLL_INTERVAL_MS)
+            }
+        }
     }
 
     override fun onRevoke() {
@@ -165,7 +213,7 @@ class BlockVpnService : VpnService() {
             val dnsPayload = buffer.copyOfRange(packet.payloadOffset, packet.payloadOffset + packet.payloadLength)
             val query = DnsMessage.parseQuestion(dnsPayload, dnsPayload.size)
 
-            val responsePayload: ByteArray = if (query != null && blocklist.isBlocked(query.question)) {
+            val responsePayload: ByteArray = if (query != null && (blockEverything || blocklist.isBlocked(query.question))) {
                 Log.i(TAG, "Blocked DNS lookup: ${query.question}")
                 val domain = query.question
                 serviceScope.launch { ActivityLogRepository.record(applicationContext, domain) }
@@ -243,6 +291,8 @@ class BlockVpnService : VpnService() {
         // through. Kept short: this list is walked serially per query.
         private val UPSTREAM_DNS_SERVERS = listOf("1.1.1.1", "8.8.8.8", "9.9.9.9")
         private const val UPSTREAM_TIMEOUT_MS = 1_500
+        // Same cadence as noor-shield-pc/service/cloudSync.js's COMMAND_POLL_MS.
+        private const val CLOUD_POLL_INTERVAL_MS = 20_000L
 
         const val ACTION_RELOAD = "com.barnoota.noorshield.action.RELOAD_BLOCKLIST"
 

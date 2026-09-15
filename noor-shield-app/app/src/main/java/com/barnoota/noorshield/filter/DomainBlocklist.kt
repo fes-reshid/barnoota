@@ -2,6 +2,7 @@ package com.barnoota.noorshield.filter
 
 import android.content.Context
 import com.barnoota.noorshield.R
+import com.barnoota.noorshield.cloud.CloudStore
 import com.barnoota.noorshield.journal.AppDatabase
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -38,8 +39,9 @@ class DomainBlocklist private constructor(private val blocked: Set<String>) {
 
         /**
          * Loads the built-in seed list plus every domain the user has added themselves
-         * (see [CustomBlockedDomainDao]). Reading the user's additions is a small,
-         * one-off synchronous DB query done once when the VPN service (re)starts —
+         * (see [CustomBlockedDomainDao]) plus every site a parent added remotely from the
+         * dashboard/phone app (see CloudSync.pollDeviceDomainsOnce). Reading these is a
+         * small, one-off synchronous read done once when the VPN service (re)starts —
          * not on the packet-forwarding hot path.
          */
         fun load(context: Context): DomainBlocklist {
@@ -54,6 +56,8 @@ class DomainBlocklist private constructor(private val blocked: Set<String>) {
                 AppDatabase.get(context).customBlockedDomainDao().allDomainsOnce()
             }
             domains.addAll(customDomains.map { it.trim().lowercase() })
+            val cloudDomains = runBlocking { CloudStore.cloudBlockedDomains(context) }
+            domains.addAll(cloudDomains.map { it.trim().lowercase() })
             return DomainBlocklist(domains)
         }
     }

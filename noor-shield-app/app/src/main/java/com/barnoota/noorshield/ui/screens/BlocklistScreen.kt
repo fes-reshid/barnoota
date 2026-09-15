@@ -51,10 +51,17 @@ fun BlocklistScreen() {
     var input by remember { mutableStateOf("") }
     var message by remember { mutableStateOf<String?>(null) }
     var customDomains by remember { mutableStateOf<List<CustomBlockedDomain>>(emptyList()) }
+    var cloudDomains by remember { mutableStateOf<Set<String>>(emptySet()) }
 
     LaunchedEffect(Unit) {
         BlocklistRepository.observeCustomDomains(context).collect { customDomains = it }
     }
+    LaunchedEffect(Unit) {
+        BlocklistRepository.observeCloudDomains(context).collect { cloudDomains = it }
+    }
+    // Sites added remotely (from the dashboard/phone app) that this device didn't already have
+    // locally — shown separately so the two lists never show the same site twice.
+    val remoteOnlyDomains = cloudDomains - customDomains.map { it.domain }.toSet()
 
     fun submit() {
         val toAdd = input
@@ -130,6 +137,29 @@ fun BlocklistScreen() {
                     Text(entry.domain, modifier = Modifier.weight(1f).padding(vertical = 12.dp))
                     IconButton(onClick = { scope.launch { BlocklistRepository.removeDomain(context, entry) } }) {
                         Icon(Icons.Filled.Delete, contentDescription = "Remove ${entry.domain}")
+                    }
+                }
+            }
+        }
+
+        if (remoteOnlyDomains.isNotEmpty()) {
+            item {
+                Text(
+                    "Added remotely (${remoteOnlyDomains.size})",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(top = 12.dp),
+                )
+            }
+            items(remoteOnlyDomains.toList(), key = { "remote-$it" }) { domain ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(domain, modifier = Modifier.weight(1f).padding(vertical = 12.dp))
+                        IconButton(onClick = { scope.launch { BlocklistRepository.removeCloudDomain(context, domain) } }) {
+                            Icon(Icons.Filled.Delete, contentDescription = "Remove $domain")
+                        }
                     }
                 }
             }
