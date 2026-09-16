@@ -139,6 +139,8 @@
   }
   .quiz-opt:hover{ border-color:var(--card-accent, var(--gold)); }
   .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); font-weight:700; }
+  .quiz-opt.pop{ animation:opt-pop .3s ease; }
+  @keyframes opt-pop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.08); } 100%{ transform:scale(1); } }
   .quiz-opt.wrong{ background:#f7dede; border-color:#a3352b; color:#a3352b; }
   .quiz-opt[disabled]{ cursor:default; }
   .quiz-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:6px; }
@@ -162,6 +164,56 @@
   }
   .scramble-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:8px; }
 
+  /* ---- interactive polish ---- */
+  .day-card{ transition:transform .15s ease, box-shadow .15s ease; }
+  .day-card:hover{ transform:translateY(-3px); box-shadow:0 10px 22px rgba(60,45,20,.12); }
+  .btn, .quiz-opt, .letter-tile, .quiz-cta-btn{ transition:transform .1s ease; }
+  .btn:active, .quiz-opt:active, .letter-tile:active, .quiz-cta-btn:active{ transform:scale(.94); }
+
+  .points-banner{
+    max-width:320px; margin:0 auto 18px; text-align:center; font-family:'Marcellus'; font-size:18px;
+    color:#7a5b0a; background:#fff6dd; border:2px solid var(--gold); border-radius:999px; padding:8px 20px;
+    transition:transform .25s ease;
+  }
+  .points-banner.bump{ transform:scale(1.12); }
+  .points-banner b{ font-size:21px; }
+
+  .day-section.quizcta{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .quiz-cta-btn{
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:14.5px; padding:8px 16px; border-radius:16px;
+    border:none; cursor:pointer; background:var(--card-accent, var(--gold)); color:#fff;
+  }
+  .quiz-cta-btn:hover{ filter:brightness(1.08); }
+  .quiz-badge{ font-family:'Marcellus'; font-size:12.5px; color:#8a7654; }
+  .quiz-badge.done{ color:var(--green-dark); font-weight:700; }
+
+  /* ---- quiz modal ---- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(28,43,70,.55); display:flex; align-items:center; justify-content:center;
+    z-index:80; padding:16px;
+  }
+  .modal-card{
+    background:#fff; border-radius:22px; padding:26px 24px; max-width:440px; width:100%; text-align:center;
+    box-shadow:0 16px 40px rgba(0,0,0,.25); animation:pop-in .18s ease;
+  }
+  @keyframes pop-in{ from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .quiz-progress{ font-family:'Marcellus'; font-size:13px; color:#8a7654; margin-bottom:10px; }
+  .quiz-progress-bar{ height:8px; border-radius:999px; background:var(--parchment-deep); overflow:hidden; margin-bottom:16px; }
+  .quiz-progress-fill{ height:100%; background:var(--green); transition:width .25s ease; }
+  #quiz-modal-question{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 16px; line-height:1.4; }
+  #quiz-modal-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+  #quiz-modal-options .quiz-opt{ font-size:16px; padding:12px 16px; border-radius:14px; }
+  #quiz-modal-feedback{ min-height:24px; font-weight:700; margin-bottom:10px; }
+  #quiz-modal-next{ display:none; }
+  .quiz-results-emoji{ font-size:52px; margin-bottom:8px; animation:bounce-in .4s ease; }
+  @keyframes bounce-in{ 0%{ transform:scale(.4) rotate(-10deg); opacity:0; } 60%{ transform:scale(1.15) rotate(4deg); } 100%{ transform:scale(1) rotate(0); opacity:1; } }
+  .confetti-burst{ position:relative; height:0; }
+  .confetti-piece{ position:absolute; font-size:20px; left:50%; top:0; animation:confetti-fly .8s ease-out forwards; }
+  @keyframes confetti-fly{
+    0%{ transform:translate(-50%,0) scale(.6); opacity:1; }
+    100%{ transform:translate(var(--dx,0), -70px) scale(1.1); opacity:0; }
+  }
+
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
   footer .flinks a{ text-decoration:none; color:#c9d2e0; }
@@ -169,7 +221,7 @@
   footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
 
   @media print{
-    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer{ display:none !important; }
+    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:100%; }
     .day-card{ break-inside:avoid; box-shadow:none !important; }
@@ -221,8 +273,9 @@
   <div id="plan-screen" class="hidden">
     <div class="plan-head">
       <h2 id="plan-greeting"></h2>
-      <p>One activity, a Qur'an focus, a du'a, a quick quiz and a mini-game a day — do a little bit each day! (If your school also assigned Mathletics or Reading Eggs tasks, keep those going too.)</p>
+      <p>One activity, a Qur'an focus, a du'a, a Quiz of the Day and a mini-game a day — do a little bit each day! (If your school also assigned Mathletics or Reading Eggs tasks, keep those going too.)</p>
     </div>
+    <div class="points-banner">⭐ My Points: <b id="my-points">0</b></div>
     <div class="plan-actions">
       <button class="btn" id="print-btn">🖨️ Print This Plan</button>
       <button class="btn ghost" id="change-grade-btn">Choose a different class</button>
@@ -240,6 +293,28 @@
     <div id="plan-weeks"></div>
   </div>
 
+</div>
+
+<div class="modal-overlay hidden" id="quiz-modal">
+  <div class="modal-card">
+    <div id="quiz-modal-progress-wrap">
+      <p class="quiz-progress" id="quiz-modal-progress"></p>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-modal-progress-fill" style="width:0%"></div></div>
+    </div>
+    <div id="quiz-modal-question-view">
+      <p id="quiz-modal-question"></p>
+      <div id="quiz-modal-options"></div>
+      <p id="quiz-modal-feedback"></p>
+      <button class="btn" id="quiz-modal-next">Next Question →</button>
+    </div>
+    <div id="quiz-modal-results-view" class="hidden">
+      <div class="quiz-results-emoji" id="quiz-results-emoji">🎉</div>
+      <h2 id="quiz-results-title">Quiz Complete!</h2>
+      <p id="quiz-results-msg"></p>
+      <div class="confetti-burst" id="confetti-burst"></div>
+      <button class="btn" id="quiz-modal-close">Done</button>
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -449,58 +524,255 @@ function renderGradeGrid(){
   });
 }
 
-/* Alternates two quiz styles day to day, both generated straight from
-   HOLIDAY_PLAN's own data (ayah counts, meanings) so there's nothing new
-   to fact-check: even days ask "how many ayat", odd days ask "what's it
-   about" with two other days' real meanings as honest wrong answers. */
-function buildQuizQuestion(dayIndex){
-  const plan = HOLIDAY_PLAN[dayIndex];
-  if(dayIndex % 2 === 0){
-    const correct = plan.quran.ayat;
-    const wrongPool = [correct - 1, correct + 1, correct + 2, correct - 2].filter(n => n > 0 && n !== correct);
-    const options = [correct, wrongPool[0], wrongPool[1]].sort(() => Math.random() - 0.5);
-    return { q: 'How many ayat (verses) does Surah ' + plan.quran.name + ' have?', options: options.map(String), correct: String(correct) };
-  }
-  const distractor1 = HOLIDAY_PLAN[(dayIndex + 3) % HOLIDAY_PLAN.length].quran.meaning;
-  const distractor2 = HOLIDAY_PLAN[(dayIndex + 7) % HOLIDAY_PLAN.length].quran.meaning;
-  const options = [plan.quran.meaning, distractor1, distractor2].sort(() => Math.random() - 0.5);
-  return { q: 'What is Surah ' + plan.quran.name + ' mainly about?', options: options, correct: plan.quran.meaning };
+/* One comprehension question per day, tied to that day's own theme, and
+   one simple English (grammar/vocabulary) question per day -- both plain
+   fixed facts (parts of speech, shape/word basics) rather than anything
+   that needs a citation, so there's nothing to get wrong here. Index
+   matches HOLIDAY_PLAN 1:1. */
+const ACTIVITY_QUESTIONS = [
+  { q:'A holiday recount tells people about...', options:['things that really happened','a made-up story','times tables'], correct:'things that really happened' },
+  { q:'Skip counting means counting in...', options:['jumps or groups','backwards only','letters'], correct:'jumps or groups' },
+  { q:'Being kind to your family is an example of...', options:['Sadaqah (charity)','being lazy','an accident'], correct:'Sadaqah (charity)' },
+  { q:'A "word hunt" means looking for...', options:['objects and their names','lost pets','your shoes'], correct:'objects and their names' },
+  { q:'A triangle has how many sides?', options:['3','4','5'], correct:'3' },
+  { q:'Every story has a beginning, a middle, and an...', options:['end','test','lunch'], correct:'end' },
+  { q:'Helping at home with a chore is an act of...', options:['kindness','cheating','laziness'], correct:'kindness' },
+  { q:'Trees, birds and clouds are all part of...', options:['nature','a classroom','a book'], correct:'nature' },
+  { q:'A ruler is used to measure...', options:['length','feelings','time'], correct:'length' },
+  { q:'Making a card for someone shows...', options:['kindness','boredom','anger'], correct:'kindness' },
+  { q:'3 × 4 means 3 groups of...', options:['4','3','12'], correct:'4' },
+  { q:'A book review mostly shares your...', options:['opinion about a book','phone number','shopping list'], correct:'opinion about a book' },
+  { q:'Playing fairly, even if you lose, shows good...', options:['sportsmanship','cheating','sadness'], correct:'sportsmanship' },
+  { q:'Thinking back on what you did and learned is called...', options:['reflection','forgetting','homework'], correct:'reflection' }
+];
+const ENGLISH_QUESTIONS = [
+  { q:'Which word means the same as "happy"?', options:['glad','sad','tired'], correct:'glad' },
+  { q:'Which of these is a naming word (noun)?', options:['dog','jump','quickly'], correct:'dog' },
+  { q:'Which word means being nice to others?', options:['kind','rude','loud'], correct:'kind' },
+  { q:'Which letter comes right after "M"?', options:['N','L','O'], correct:'N' },
+  { q:'Which of these is spelled correctly?', options:['triangle','triangel','triangl'], correct:'triangle' },
+  { q:'Which word describes an action (a verb)?', options:['running','happy','blue'], correct:'running' },
+  { q:'Which sentence uses capital letters correctly?', options:['I like cats','i like cats','I Like cats'], correct:'I like cats' },
+  { q:'Which word means the opposite of "big"?', options:['small','tall','loud'], correct:'small' },
+  { q:'Which word is a describing word (adjective)?', options:['green','jump','house'], correct:'green' },
+  { q:'Which word rhymes with "day"?', options:['play','cat','dog'], correct:'play' },
+  { q:'Which punctuation mark ends a question?', options:['?','.',','], correct:'?' },
+  { q:'Which word means a made-up story?', options:['fiction','fact','recipe'], correct:'fiction' },
+  { q:'Which word means working together?', options:['teamwork','fighting','ignoring'], correct:'teamwork' },
+  { q:'Which word means looking back and thinking about something?', options:['reflection','forgetting','running'], correct:'reflection' }
+];
+
+function shuffleOptions(options, correct){
+  return { options: options.slice().sort(() => Math.random() - 0.5), correct };
 }
 
-function renderQuiz(container, dayIndex){
-  const quiz = buildQuizQuestion(dayIndex);
-  const wrap = document.createElement('div');
-  wrap.className = 'day-section quiz';
-  wrap.innerHTML = '<div class="lbl">✅ Quick Quiz</div><p class="quiz-q">' + escapeHtml(quiz.q) + '</p>';
-  const opts = document.createElement('div');
-  opts.className = 'quiz-opts';
-  const feedback = document.createElement('p');
-  feedback.className = 'quiz-feedback';
-  quiz.options.forEach(opt => {
+function buildAyatQuestion(dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  const correct = plan.quran.ayat;
+  const wrongPool = [correct - 1, correct + 1, correct + 2, correct - 2].filter(n => n > 0 && n !== correct);
+  const shuffled = shuffleOptions([correct, wrongPool[0], wrongPool[1]], correct);
+  return { q: 'How many ayat (verses) does Surah ' + plan.quran.name + ' have?', options: shuffled.options.map(String), correct: String(correct) };
+}
+function buildMeaningQuestion(dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  const distractor1 = HOLIDAY_PLAN[(dayIndex + 3) % HOLIDAY_PLAN.length].quran.meaning;
+  const distractor2 = HOLIDAY_PLAN[(dayIndex + 7) % HOLIDAY_PLAN.length].quran.meaning;
+  const shuffled = shuffleOptions([plan.quran.meaning, distractor1, distractor2], plan.quran.meaning);
+  return { q: 'What is Surah ' + plan.quran.name + ' mainly about?', options: shuffled.options, correct: shuffled.correct };
+}
+/* A small arithmetic fact for the day, computed fresh each time (never
+   hand-typed) so it's always correct -- leveled by grade so a Foundation
+   5-year-old gets a friendly counting picture instead of the same times
+   tables question a Year 3 gets: Foundation counts emoji, Year 1 only
+   ever adds small numbers, and Year 2-3 cycle +, -, x like before. */
+function buildMathQuestion(dayIndex, gradeId){
+  const n = dayIndex + 1;
+  let answer, text;
+
+  if(gradeId === 'foundation'){
+    const count = (n % 5) + 3; // 3-7 dots, friendly for counting practice
+    answer = count;
+    text = 'How many stars are there? ' + '⭐'.repeat(count);
+  } else if(gradeId === 'g1'){
+    const a = (n % 8) + 1, b = ((n + 3) % 6) + 1;
+    answer = a + b;
+    text = 'What is ' + a + ' + ' + b + '?';
+  } else {
+    const type = n % 3;
+    let a, b;
+    if(type === 1){ a = n; b = n + 1; answer = a + b; text = 'What is ' + a + ' + ' + b + '?'; }
+    else if(type === 2){ a = n + 5; b = n; answer = a - b; text = 'What is ' + a + ' − ' + b + '?'; }
+    else { a = (n % 5) + 2; b = 2; answer = a * b; text = 'What is ' + a + ' × ' + b + '?'; }
+  }
+
+  const wrongPool = [answer + 1, answer - 1, answer + 2].filter(w => w !== answer && w >= 0);
+  const shuffled = shuffleOptions([answer, wrongPool[0], wrongPool[1]], answer);
+  return { q: text, options: shuffled.options.map(String), correct: String(shuffled.correct) };
+}
+
+/* Five questions a day: two about the Qur'an focus, one about what the
+   activity taught, one math fact, one English fact -- exactly the four
+   subjects asked for, with the surah getting two questions of its own. */
+function buildDayQuizQuestions(dayIndex, gradeId){
+  const activity = shuffleOptions(ACTIVITY_QUESTIONS[dayIndex].options, ACTIVITY_QUESTIONS[dayIndex].correct);
+  const english = shuffleOptions(ENGLISH_QUESTIONS[dayIndex].options, ENGLISH_QUESTIONS[dayIndex].correct);
+  return [
+    buildAyatQuestion(dayIndex),
+    buildMeaningQuestion(dayIndex),
+    { q: ACTIVITY_QUESTIONS[dayIndex].q, options: activity.options, correct: activity.correct },
+    buildMathQuestion(dayIndex, gradeId),
+    { q: ENGLISH_QUESTIONS[dayIndex].q, options: english.options, correct: english.correct }
+  ];
+}
+
+/* ===================== Points + cloud-saved progress ===================== */
+let studentProgress = { points: 0, completed: {} };
+
+function loadProgressFromCloud(cloudData){
+  const saved = cloudData && cloudData.progress && cloudData.progress.holidayHomework;
+  studentProgress = saved && typeof saved === 'object' ? Object.assign({ points:0, completed:{} }, saved) : { points:0, completed:{} };
+  updatePointsBanner();
+}
+function saveHolidayProgress(){
+  if(window.KidsCloud && window.KidsCloud.saveProgress) window.KidsCloud.saveProgress('holidayHomework', studentProgress);
+}
+function updatePointsBanner(){
+  const el = document.getElementById('my-points');
+  if(!el) return;
+  el.textContent = studentProgress.points;
+  const banner = document.querySelector('.points-banner');
+  if(banner){ banner.classList.add('bump'); setTimeout(() => banner.classList.remove('bump'), 250); }
+}
+function dayScoreFor(gradeId, dayIndex){
+  return studentProgress.completed[gradeId] && studentProgress.completed[gradeId][dayIndex];
+}
+function applyBadge(badge, gradeId, dayIndex){
+  if(!badge) return;
+  const score = dayScoreFor(gradeId, dayIndex);
+  if(score !== undefined){
+    badge.textContent = '✅ ' + score.correct + '/' + score.total;
+    badge.classList.add('done');
+  } else {
+    badge.textContent = 'Not done yet';
+    badge.classList.remove('done');
+  }
+}
+function updateDayBadge(gradeId, dayIndex){
+  applyBadge(document.getElementById('quiz-badge-' + dayIndex), gradeId, dayIndex);
+}
+
+/* ===================== Quiz of the Day modal ===================== */
+let quizState = null;
+
+function fireConfetti(){
+  const burst = document.getElementById('confetti-burst');
+  if(!burst) return;
+  burst.innerHTML = '';
+  const emojis = ['🎉','⭐','🎊','✨','🌟'];
+  for(let i = 0; i < 8; i++){
+    const piece = document.createElement('span');
+    piece.className = 'confetti-piece';
+    piece.textContent = emojis[i % emojis.length];
+    piece.style.setProperty('--dx', (Math.random() * 140 - 70) + 'px');
+    piece.style.left = (40 + Math.random() * 20) + '%';
+    burst.appendChild(piece);
+  }
+}
+
+function openQuizModal(dayIndex){
+  quizState = { dayIndex: dayIndex, questions: buildDayQuizQuestions(dayIndex, selectedGrade), index: 0, correctCount: 0 };
+  document.getElementById('quiz-modal-results-view').classList.add('hidden');
+  document.getElementById('quiz-modal-question-view').classList.remove('hidden');
+  document.getElementById('quiz-modal').classList.remove('hidden');
+  renderQuizStep();
+}
+
+function renderQuizStep(){
+  const { questions, index } = quizState;
+  const total = questions.length;
+  document.getElementById('quiz-modal-progress').textContent = 'Question ' + (index + 1) + ' of ' + total;
+  document.getElementById('quiz-modal-progress-fill').style.width = Math.round((index / total) * 100) + '%';
+  document.getElementById('quiz-modal-question').textContent = questions[index].q;
+  document.getElementById('quiz-modal-feedback').textContent = '';
+  document.getElementById('quiz-modal-next').style.display = 'none';
+
+  const optsEl = document.getElementById('quiz-modal-options');
+  optsEl.innerHTML = '';
+  questions[index].options.forEach(opt => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'quiz-opt';
     btn.textContent = opt;
-    btn.addEventListener('click', () => {
-      const isRight = opt === quiz.correct;
-      btn.classList.add(isRight ? 'correct' : 'wrong');
-      if(isRight){
-        playCorrect();
-        feedback.textContent = '🎉 Correct!';
-        feedback.style.color = 'var(--green-dark)';
-        opts.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
-      } else {
-        playWrong();
-        feedback.textContent = 'Not quite — try another answer!';
-        feedback.style.color = '#a3352b';
-        btn.disabled = true;
-      }
-    });
-    opts.appendChild(btn);
+    btn.addEventListener('click', () => answerQuizQuestion(opt, btn));
+    optsEl.appendChild(btn);
   });
-  wrap.appendChild(opts);
-  wrap.appendChild(feedback);
-  container.appendChild(wrap);
+}
+
+const CHEERS = ['🎉 Correct!', '🌟 Awesome!', '✅ You got it!', '👏 Nice job!', '🥳 Brilliant!'];
+const TRY_AGAIN = ['Not quite', 'So close', 'Almost', 'Good try'];
+
+function answerQuizQuestion(opt, btnEl){
+  const q = quizState.questions[quizState.index];
+  const isRight = opt === q.correct;
+  const feedback = document.getElementById('quiz-modal-feedback');
+  document.querySelectorAll('#quiz-modal-options .quiz-opt').forEach(b => { b.disabled = true; });
+  if(isRight){
+    playCorrect();
+    quizState.correctCount++;
+    btnEl.classList.add('correct', 'pop');
+    feedback.textContent = CHEERS[Math.floor(Math.random() * CHEERS.length)];
+    feedback.style.color = 'var(--green-dark)';
+  } else {
+    playWrong();
+    btnEl.classList.add('wrong');
+    feedback.textContent = TRY_AGAIN[Math.floor(Math.random() * TRY_AGAIN.length)] + ' — it was "' + q.correct + '"';
+    feedback.style.color = '#a3352b';
+    document.querySelectorAll('#quiz-modal-options .quiz-opt').forEach(b => { if(b.textContent === q.correct) b.classList.add('correct'); });
+  }
+  document.getElementById('quiz-modal-next').style.display = 'inline-block';
+}
+
+function nextQuizStep(){
+  quizState.index++;
+  if(quizState.index >= quizState.questions.length){ finishQuiz(); return; }
+  renderQuizStep();
+}
+
+function finishQuiz(){
+  const { dayIndex, questions, correctCount } = quizState;
+  document.getElementById('quiz-modal-progress-fill').style.width = '100%';
+  document.getElementById('quiz-modal-question-view').classList.add('hidden');
+  document.getElementById('quiz-modal-results-view').classList.remove('hidden');
+
+  const alreadyDone = dayScoreFor(selectedGrade, dayIndex) !== undefined;
+  const total = questions.length;
+  document.getElementById('quiz-results-emoji').textContent = correctCount === total ? '🏆' : correctCount >= total / 2 ? '🎉' : '💪';
+  document.getElementById('quiz-results-title').textContent = correctCount === total ? 'Perfect Score!' : 'Quiz Complete!';
+
+  if(!alreadyDone){
+    studentProgress.completed[selectedGrade] = studentProgress.completed[selectedGrade] || {};
+    studentProgress.completed[selectedGrade][dayIndex] = { correct: correctCount, total: total };
+    studentProgress.points += correctCount;
+    saveHolidayProgress();
+    updatePointsBanner();
+    document.getElementById('quiz-results-msg').textContent = 'You got ' + correctCount + ' out of ' + total + ' — +' + correctCount + ' ⭐ points earned!';
+    fireConfetti();
+  } else {
+    document.getElementById('quiz-results-msg').textContent = 'You got ' + correctCount + ' out of ' + total + ' this time. Great practice — your points were already counted the first time you finished this day!';
+  }
+  updateDayBadge(selectedGrade, dayIndex);
+}
+
+function closeQuizModal(){
+  document.getElementById('quiz-modal').classList.add('hidden');
+}
+
+function wireQuizModal(){
+  document.getElementById('quiz-modal-next').addEventListener('click', nextQuizStep);
+  document.getElementById('quiz-modal-close').addEventListener('click', closeQuizModal);
+  document.getElementById('quiz-modal').addEventListener('click', e => {
+    if(e.target.id === 'quiz-modal') closeQuizModal();
+  });
 }
 
 function shuffleLetters(word){
@@ -637,7 +909,20 @@ function renderPlan(name, gradeId){
           '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
           '<p>' + escapeHtml(dua.english) + '</p>' +
           '<p class="dua-source">' + escapeHtml(dua.source) + '</p></div>';
-      renderQuiz(card, dayNum - 1);
+      const quizSection = document.createElement('div');
+      quizSection.className = 'day-section quizcta';
+      const quizBtn = document.createElement('button');
+      quizBtn.type = 'button';
+      quizBtn.className = 'quiz-cta-btn';
+      quizBtn.textContent = '🎯 Quiz of the Day';
+      quizBtn.addEventListener('click', () => openQuizModal(dayNum - 1));
+      const quizBadge = document.createElement('span');
+      quizBadge.className = 'quiz-badge';
+      quizBadge.id = 'quiz-badge-' + (dayNum - 1);
+      applyBadge(quizBadge, gradeId, dayNum - 1);
+      quizSection.appendChild(quizBtn);
+      quizSection.appendChild(quizBadge);
+      card.appendChild(quizSection);
       renderScrambleGame(card, dayNum - 1);
       dayGrid.appendChild(card);
     }
@@ -655,6 +940,7 @@ function chooseGrade(gradeId){
 function applyCloudProfile(cloudData){
   localStorage.setItem(NAME_KEY, cloudData.displayName || cloudData.username);
   document.getElementById('login-msg').textContent = '';
+  loadProgressFromCloud(cloudData);
   const homeGrade = localStorage.getItem(HOME_GRADE_KEY);
   if(homeGrade && GRADES.some(g => g.id === homeGrade)){
     chooseGrade(homeGrade);
@@ -711,6 +997,7 @@ function wireCloudAuth(){
     }
   });
 }
+wireQuizModal();
 showScreen('name-screen');
 setTimeout(() => document.getElementById('login-username').focus(), 150);
 window.addEventListener('kidscloud-ready', wireCloudAuth);
