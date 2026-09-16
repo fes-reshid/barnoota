@@ -102,6 +102,10 @@
     display:flex; align-items:center; gap:7px; background:#fff; border:1.5px solid var(--line);
     border-radius:18px; padding:8px 16px; font-weight:800; font-size:15.5px;
   }
+  .stat-chip .stat-ico{
+    display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+    border-radius:50%; background:#f3d9a2; font-size:12.5px; flex:none;
+  }
   .home-actions{ display:flex; flex-direction:column; gap:12px; max-width:340px; margin:18px auto 0; }
   .home-secondary{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
   .badge-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
@@ -146,11 +150,14 @@
   .landmark-banner .lm-sub{ font-size:13px; color:#9a7a4a; margin:2px 0 0; }
   .group-band{
     position:relative; z-index:1; text-align:center; margin:22px 0 12px;
-    font-weight:800; font-size:15px; color:#7a4a1a;
-    background:#fff3dc; border:1.5px solid var(--sun-dark); border-radius:16px; padding:6px 14px; display:inline-block;
-    left:50%; transform:translateX(-50%);
+    font-weight:800; font-size:14.5px; color:#fff;
+    background:#6a4fb0; border:none; border-radius:16px; padding:7px 16px; display:inline-block;
+    left:50%; transform:translateX(-50%); box-shadow:0 4px 0 #4d3785;
   }
   .group-band-row{ text-align:center; }
+  .decor-row{ position:relative; z-index:0; height:44px; margin:2px 0; pointer-events:none; }
+  .decor-icon{ width:42px; height:42px; opacity:.82; }
+  .decor-icon svg{ width:100%; height:100%; display:block; }
   .mountain-divider{ line-height:0; margin:16px -14px 0; position:relative; z-index:0; }
   .mountain-divider svg{ width:100%; height:36px; display:block; }
   .mountain-divider path{ fill:rgba(122,74,26,.18); }
@@ -166,7 +173,8 @@
   .node.available{ background:var(--leaf); }
   .node.complete{ background:var(--sun); color:#5a4300; }
   .node.in_progress{ background:var(--sky); }
-  .node.locked{ background:#c7d2c8; cursor:not-allowed; box-shadow:none; }
+  .node.locked{ background:#b7bdbc; cursor:not-allowed; box-shadow:none; }
+  .node.locked .lock-ico{ width:30px; height:30px; }
   .node.locked:hover{ transform:none; }
   .node.checkpoint{ background:var(--berry); font-size:26px; }
   .node.vocabnode{ background:var(--coral); font-size:24px; }
@@ -463,8 +471,9 @@
     <div class="map-topbar">
       <div class="player-chip"><span class="avatar" id="map-avatar-btn"></span><span id="map-name"></span></div>
       <div class="stat-row" style="margin:0;">
-        <div class="stat-chip">⭐ <span id="map-stars">0</span></div>
-        <div class="stat-chip">🪙 <span id="map-coins">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">🪙</span> <span id="map-coins">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">⭐</span> <span id="map-stars">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">📍</span> <span id="map-progress">0/0</span></div>
       </div>
       <button class="ghost-btn" id="map-home-btn">🏠 Home</button>
     </div>
@@ -871,6 +880,22 @@ const MASJID_NABAWI_SVG =
     '<rect x="80" y="42" width="8" height="32" fill="#f2ede0" stroke="#c9a86a" stroke-width="1.2"/>' +
     '<polygon points="84,33 79,42 89,42" fill="#c9a86a"/>' +
   '</svg>';
+const LOCK_ICON_SVG =
+  '<svg class="lock-ico" viewBox="0 0 100 100" aria-hidden="true">' +
+    '<rect x="28" y="46" width="44" height="36" rx="6" fill="#e8973a"/>' +
+    '<path d="M36 46 V34 a14 14 0 0 1 28 0 V46" fill="none" stroke="#7a5220" stroke-width="7"/>' +
+    '<circle cx="50" cy="62" r="6" fill="#7a5220"/>' +
+  '</svg>';
+/* Small decorative desert flavour icons scattered beside the road —
+   purely original, non-interactive scenery, no real photos. */
+const DECOR_ICONS = [
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="30" width="60" height="50" rx="3" fill="#20242a"/><rect x="20" y="50" width="60" height="9" fill="#d8b23c"/><rect x="20" y="30" width="60" height="50" rx="3" fill="none" stroke="#3a3f3a" stroke-width="2"/></svg>',
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="46" y="45" width="8" height="45" fill="#8a5a2b"/><g fill="#3fae6a"><path d="M50 45 Q20 30 10 42 Q30 46 50 50 Z"/><path d="M50 45 Q80 30 90 42 Q70 46 50 50 Z"/><path d="M50 45 Q30 15 20 12 Q30 34 50 50 Z"/><path d="M50 45 Q70 15 80 12 Q70 34 50 50 Z"/><path d="M50 45 Q50 10 50 5 Q54 30 50 50 Z"/></g></svg>',
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M15 78 Q15 60 28 58 Q26 48 34 42 Q30 30 40 26 Q44 34 46 40 Q54 32 60 34 Q56 42 58 48 Q68 46 74 54 Q80 58 78 66 L78 78 L70 78 L70 70 L34 70 L34 78 Z" fill="#c9976a"/><circle cx="42" cy="30" r="3" fill="#5a3d22"/><line x1="20" y1="78" x2="20" y2="88" stroke="#c9976a" stroke-width="5"/><line x1="66" y1="78" x2="66" y2="88" stroke="#c9976a" stroke-width="5"/><line x1="74" y1="78" x2="74" y2="88" stroke="#c9976a" stroke-width="5"/></svg>',
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="38" width="64" height="42" rx="6" fill="#e0556a"/><rect x="40" y="26" width="20" height="14" rx="3" fill="none" stroke="#e0556a" stroke-width="6"/><rect x="18" y="54" width="64" height="10" fill="#b5334a"/></svg>',
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="15" y="15" width="35" height="35" fill="#4fb0e0"/><rect x="50" y="15" width="35" height="35" fill="#f2c94c"/><rect x="15" y="50" width="35" height="35" fill="#eb5757"/><rect x="50" y="50" width="35" height="35" fill="#3fae6a"/></svg>',
+  '<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="28" r="14" fill="#f0c090"/><path d="M30 85 Q30 55 50 55 Q70 55 70 85 Z" fill="#6a4fb0"/></svg>'
+];
 function landmarkBanner(svg, title, sub){
   return '<div class="landmark-banner"><div class="lm-svg">'+svg+'</div>' +
     '<div><p class="lm-title">'+escapeHtml(title)+'</p><p class="lm-sub">'+escapeHtml(sub)+'</p></div></div>';
@@ -899,8 +924,8 @@ function drawZigzagRoad(){
   svg.setAttribute('id','zigzag-road-svg');
   svg.setAttribute('viewBox', '0 0 '+wrapRect.width+' '+wrapRect.height);
   svg.innerHTML =
-    '<path d="'+d+'" fill="none" stroke="#e0c384" stroke-width="14" stroke-linecap="round"/>' +
-    '<path d="'+d+'" fill="none" stroke="#fff6e2" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 18"/>';
+    '<path d="'+d+'" fill="none" stroke="#e3c07f" stroke-width="16" stroke-linecap="round"/>' +
+    '<path d="'+d+'" fill="none" stroke="#fff8ea" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 15"/>';
   wrap.insertBefore(svg, wrap.firstChild);
 }
 window.addEventListener('resize', ()=>{ if(!$('screen-map').classList.contains('hidden')) drawZigzagRoad(); });
@@ -926,17 +951,21 @@ function renderMap(jumpToIdx){
   $('map-name').textContent = profile.name;
   $('map-stars').textContent = totalStars();
   $('map-coins').textContent = profile.coins;
+  $('map-progress').textContent = Math.min(profile.unlockedIndex, NODES.length) + '/' + NODES.length;
 
   const wrap = $('map-path');
   let html =
     '<div class="dune-row"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>' +
     landmarkBanner(MASJID_HARAM_SVG, 'Masjid al-Haram', 'Your journey begins here in Makkah.');
-  let lastGroup = null, zigIndex = 0;
+  let lastGroup = null, zigIndex = 0, decorIndex = 0;
   const ZIG = [0.5, 0.86, 0.5, 0.14];
   NODES.forEach((n,i)=>{
     if(n.group !== lastGroup){
       lastGroup = n.group;
+      const decorFrac = 1 - ZIG[zigIndex % ZIG.length];
+      const decorSvg = DECOR_ICONS[decorIndex % DECOR_ICONS.length]; decorIndex++;
       html += '<div class="mountain-divider"><svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 46 L0 34 L45 8 L75 28 L110 4 L150 30 L190 10 L230 32 L270 6 L310 28 L350 12 L400 34 L400 46 Z"/></svg></div>' +
+        '<div class="decor-row"><div class="decor-icon" style="margin-left:calc('+decorFrac+' * (100% - 42px));">'+decorSvg+'</div></div>' +
         '<div class="group-band-row"><div class="group-band">'+n.group.icon+' '+escapeHtml(n.group.title)+'</div></div>';
     }
     const status = nodeStatus(i);
@@ -945,7 +974,7 @@ function renderMap(jumpToIdx){
     const frac = ZIG[zigIndex % ZIG.length]; zigIndex++;
     html += '<div class="node-row"><div class="node-col" style="margin-left:calc('+frac+' * (100% - 74px));">' +
       '<div class="'+v.cls+'" data-idx="'+i+'">' +
-        (status==='locked' ? '🔒' : v.letterCh) +
+        (status==='locked' ? LOCK_ICON_SVG : v.letterCh) +
         (st ? '<span class="node-stars">'+'★'.repeat(st)+'</span>' : '') +
       '</div>' +
       '<div class="node-label">'+escapeHtml(v.label)+'</div>' +
