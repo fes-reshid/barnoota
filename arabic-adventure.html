@@ -381,30 +381,54 @@
   .avatar-pick{ aspect-ratio:1/1; border-radius:14px; border:3px solid var(--line); background:var(--cream); font-size:24px; cursor:pointer; }
   .avatar-pick.on{ border-color:var(--leaf); background:var(--leaf-bg); }
 
-  /* ============ Certificate ============ */
-  .cert-wrap{ display:flex; justify-content:center; padding:10px 0; }
-  .cert-card{
-    width:100%; max-width:640px; background:var(--cream); position:relative;
-    border:3px double var(--sun-dark); outline:8px solid var(--sun-bg); outline-offset:-20px;
-    border-radius:6px; padding:44px 28px 32px; text-align:center; box-shadow:0 10px 30px rgba(60,47,20,.15);
+  /* ============ Certificate (full-screen, landscape, light green) ============ */
+  #screen-certificate.fullscreen-cert{
+    position:fixed; inset:0; z-index:200; background:var(--leaf-bg);
+    display:flex; align-items:center; justify-content:center; padding:16px; margin:0; border-radius:0;
   }
-  .cert-corner{ position:absolute; width:24px; height:24px; opacity:.5; pointer-events:none; }
-  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--sun-dark); }
+  #screen-certificate.fullscreen-cert .map-topbar{ position:absolute; top:12px; left:16px; right:16px; z-index:2; }
+  .cert-wrap{
+    display:flex; justify-content:center; align-items:center; padding:10px 0;
+    min-height:calc(100vh - 120px);
+  }
+  .cert-card{
+    width:100%; max-width:960px; aspect-ratio:1.5/1; background:linear-gradient(135deg, #f2faf4, #e6f6ec);
+    position:relative; border:3px double var(--leaf-dark); outline:8px solid #d7f0dd; outline-offset:-20px;
+    border-radius:10px; padding:34px 44px; text-align:center; box-shadow:0 14px 34px rgba(30,80,50,.18);
+    display:flex; flex-direction:row; align-items:center; gap:28px;
+  }
+  .cert-corner{ position:absolute; width:24px; height:24px; opacity:.55; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--leaf-dark); }
   .cert-corner::after{ transform:rotate(45deg); }
   .cert-corner.tl{ top:14px; left:14px; } .cert-corner.tr{ top:14px; right:14px; }
   .cert-corner.bl{ bottom:14px; left:14px; } .cert-corner.br{ bottom:14px; right:14px; }
-  .cert-bismillah{ font-family:'Amiri', serif; direction:rtl; font-size:20px; color:var(--sun-dark); margin:0 0 6px; }
-  .cert-mascot{ width:56px; margin:0 auto 4px; }
+  .cert-side{
+    flex:0 0 26%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    border-right:3px double var(--leaf-dark); padding-right:24px; height:80%;
+  }
+  .cert-mascot{ width:56px; }
+  .cert-calligraphy{ font-family:'Amiri', serif; direction:rtl; font-size:34px; line-height:1.3; color:var(--leaf-dark); margin:0; }
+  .cert-bismillah{ font-family:'Amiri', serif; direction:rtl; font-size:15px; color:var(--leaf-dark); opacity:.8; margin:0; }
+  .cert-main{ flex:1; min-width:0; }
   .cert-eyebrow{ font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--leaf-dark); margin:0; }
-  .cert-title{ font-size:24px; font-weight:800; color:var(--ink); margin:4px 0 14px; }
+  .cert-title{ font-size:26px; font-weight:800; color:var(--ink); margin:4px 0 14px; }
   .cert-line{ font-size:15px; color:var(--ink-soft); margin:2px 0; }
-  .cert-name{ font-size:28px; font-weight:800; color:var(--sun-dark); margin:8px 0; font-family:'Amiri', serif; }
+  .cert-name{ font-size:28px; font-weight:800; color:var(--leaf-dark); margin:8px 0; font-family:'Amiri', serif; }
   .cert-course{ font-size:17px; font-weight:800; color:var(--leaf-dark); margin:6px 0 2px; }
-  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto; max-width:280px; color:var(--sun-dark); }
-  .cert-divider span{ flex:1; height:1px; background:var(--sun-dark); opacity:.4; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto; max-width:320px; color:var(--leaf-dark); }
+  .cert-divider span{ flex:1; height:1px; background:var(--leaf-dark); opacity:.4; }
   .cert-meta-row{ display:flex; justify-content:center; gap:28px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); margin-top:6px; }
   .cert-meta-row b{ display:block; color:var(--ink); font-size:15px; }
   .cert-footer{ margin-top:18px; font-size:12px; color:var(--ink-soft); }
+  @media (max-width:640px){
+    .cert-card{ flex-direction:column; aspect-ratio:auto; padding:28px 20px; gap:14px; }
+    .cert-side{ flex:none; width:100%; border-right:none; border-bottom:3px double var(--leaf-dark); padding-right:0; padding-bottom:14px; height:auto; flex-direction:row; justify-content:center; }
+    .cert-calligraphy{ font-size:26px; }
+  }
+  @media print{
+    @page{ size:landscape; margin:0.4in; }
+    .cert-card{ aspect-ratio:auto; box-shadow:none; }
+  }
   .cert-todo-lead{ text-align:center; font-size:15.5px; color:var(--ink-soft); margin:0 auto 16px; max-width:460px; }
   @media print{
     header.site, .no-print, .map-topbar{ display:none !important; }
@@ -544,6 +568,7 @@
     <div class="map-topbar">
       <div class="player-chip">🎓 <span id="cert-head-label">Certificate</span></div>
       <div>
+        <button class="ghost-btn no-print" id="cert-fullscreen-btn" style="margin-right:8px;">⛶ Fullscreen</button>
         <button class="ghost-btn no-print" id="cert-print-btn" style="margin-right:8px;">🖨️ Print</button>
         <button class="ghost-btn no-print" id="cert-back-btn">← Back</button>
       </div>
@@ -1890,21 +1915,27 @@ function showCertificate(mi){
     '<div class="cert-wrap"><div class="cert-card">' +
       '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
       '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
-      '<div class="cert-mascot">'+mascotSVG(56)+'</div>' +
-      '<p class="cert-eyebrow">Arabic Adventure · Kids Corner</p>' +
-      '<h1 class="cert-title">Certificate of Completion</h1>' +
-      '<p class="cert-line">This certifies that</p>' +
-      '<div class="cert-name">'+escapeHtml(studentFullName)+'</div>' +
-      '<p class="cert-line">has finished every lesson on</p>' +
-      '<p class="cert-course">'+g.icon+' Map '+(mi+1)+' · '+escapeHtml(g.title)+'</p>' +
-      '<p class="cert-line" style="font-size:14px; margin-top:2px;">'+escapeHtml(certSubForGroup(g))+'</p>' +
-      '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
-      '<div class="cert-meta-row">' +
-        '<div>Stars<b>'+mapStars(mi)+' / '+mapMaxStars(mi)+'</b></div>' +
-        '<div>Date<b>'+prettyDate(rec.date)+'</b></div>' +
-        '<div>Certificate ID<b>'+rec.id+'</b></div>' +
+      '<div class="cert-side">' +
+        '<div class="cert-mascot">'+mascotSVG(56)+'</div>' +
+        '<p class="cert-calligraphy">شَهَادَةُ<br>إِتْمَام</p>' +
+        '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
       '</div>' +
-      '<div class="cert-footer">Arabic Adventure · diinislaam.com</div>' +
+      '<div class="cert-main">' +
+        '<p class="cert-eyebrow">Arabic Adventure · Kids Corner</p>' +
+        '<h1 class="cert-title">Certificate of Completion</h1>' +
+        '<p class="cert-line">This certifies that</p>' +
+        '<div class="cert-name">'+escapeHtml(studentFullName)+'</div>' +
+        '<p class="cert-line">has finished every lesson on</p>' +
+        '<p class="cert-course">'+g.icon+' Map '+(mi+1)+' · '+escapeHtml(g.title)+'</p>' +
+        '<p class="cert-line" style="font-size:14px; margin-top:2px;">'+escapeHtml(certSubForGroup(g))+'</p>' +
+        '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+        '<div class="cert-meta-row">' +
+          '<div>Stars<b>'+mapStars(mi)+' / '+mapMaxStars(mi)+'</b></div>' +
+          '<div>Date<b>'+prettyDate(rec.date)+'</b></div>' +
+          '<div>Certificate ID<b>'+rec.id+'</b></div>' +
+        '</div>' +
+        '<div class="cert-footer">Arabic Adventure · diinislaam.com</div>' +
+      '</div>' +
     '</div></div>' +
     '<p class="cert-line no-print" style="text-align:center;">🖨️ Print it, or save it as a PDF, and show your family!</p>';
   showScreen('screen-certificate');
@@ -1924,13 +1955,33 @@ $('certname-save-btn').addEventListener('click', ()=>{
     .finally(()=>{ btn.disabled = false; });
 });
 $('certname-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('certname-save-btn').click(); });
-$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderMap(MAPS[certMap].from); });
+$('cert-back-btn').addEventListener('click', ()=>{
+  playTap();
+  if(document.fullscreenElement) document.exitFullscreen();
+  renderMap(MAPS[certMap].from);
+});
 $('cert-print-btn').addEventListener('click', ()=>{
   const prevTitle = document.title;
   document.title = (studentFullName||'My')+'’s Map '+(certMap+1)+' certificate';
   const restore = ()=>{ document.title = prevTitle; window.removeEventListener('afterprint', restore); };
   window.addEventListener('afterprint', restore);
   window.print();
+});
+$('cert-fullscreen-btn').addEventListener('click', ()=>{
+  playTap();
+  const el = $('screen-certificate');
+  if(!document.fullscreenElement){
+    el.classList.add('fullscreen-cert');
+    const req = el.requestFullscreen ? el.requestFullscreen() : Promise.reject();
+    req.then(()=>{
+      if(screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+    }).catch(()=>{ /* Fullscreen API unsupported/blocked — the CSS class alone still gives an edge-to-edge view */ });
+  } else {
+    document.exitFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  if(!document.fullscreenElement) $('screen-certificate').classList.remove('fullscreen-cert');
 });
 $('home-cert-btn') && $('home-cert-btn').addEventListener('click', ()=>{ playTap(); showCertificate(); });
 
