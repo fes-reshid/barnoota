@@ -369,10 +369,12 @@
       <p class="sub">رَحْلَةُ الْحُرُوف</p>
       <p>Learn every Arabic letter through a garden full of games — recognise it, hear it, trace it, and read it in a real word.</p>
       <input class="big-input" id="login-username" type="text" placeholder="Username" autocomplete="username">
+      <input class="big-input hidden" id="login-email" type="email" placeholder="Email (for account recovery)" autocomplete="email">
       <input class="big-input" id="login-password" type="password" placeholder="Password" autocomplete="current-password">
       <button class="big-btn" id="login-start-btn" style="width:100%;">▶ Start Adventure</button>
       <p class="login-msg" id="login-msg"></p>
-      <p class="login-hint">Same account as your other Kids Corner games — ask your parent if you don't have a username yet.</p>
+      <button class="ghost-btn" id="login-toggle-mode" type="button" style="margin-top:8px;">First time here? Create an account</button>
+      <p class="login-hint" id="login-hint">Same account as your other Kids Corner games — ask your parent if you don't have a username yet.</p>
     </div>
   </div>
 
@@ -1655,6 +1657,10 @@ $('avatar-modal').addEventListener('click', e=>{ if(e.target.id==='avatar-modal'
 
 function friendlyLoginError(err){
   const code = (err && err.code) || '';
+  if(code === 'app/account-disabled') return err.message;
+  if(code.indexOf('email-already-in-use')>=0) return 'That username is already taken — try signing in instead, or pick another username.';
+  if(code.indexOf('weak-password')>=0) return 'Password needs to be at least 6 characters.';
+  if(code.indexOf('invalid-email')>=0) return 'That doesn’t look like a valid email address.';
   if(code.indexOf('user-not-found')>=0 || code.indexOf('invalid-credential')>=0 || code.indexOf('wrong-password')>=0) return 'That username or password is not right. Ask your parent to check it.';
   if(code.indexOf('too-many-requests')>=0) return 'Too many tries — wait a bit and try again.';
   if(code.indexOf('network')>=0) return 'No internet connection — check you are online.';
@@ -1668,19 +1674,44 @@ function applyCloudProfile(cloudData){
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
   renderHome();
 }
+
+let isSignUpMode = false;
+function setLoginMode(signUp){
+  isSignUpMode = signUp;
+  $('login-email').classList.toggle('hidden', !signUp);
+  $('login-password').setAttribute('autocomplete', signUp ? 'new-password' : 'current-password');
+  $('login-start-btn').textContent = signUp ? '🌱 Create Account' : '▶ Start Adventure';
+  $('login-toggle-mode').textContent = signUp ? 'Already have an account? Sign in' : 'First time here? Create an account';
+  $('login-hint').textContent = signUp
+    ? 'Pick any username, a real email in case a password ever needs resetting, and a password (6+ characters). An admin can see and manage every account from the Kids Corner admin page.'
+    : 'Same account as your other Kids Corner games — ask your parent if you don’t have a username yet.';
+  $('login-msg').textContent = '';
+}
+$('login-toggle-mode').addEventListener('click', ()=>{ playTap(); setLoginMode(!isSignUpMode); });
+
 $('login-start-btn').addEventListener('click', ()=>{
   const u = $('login-username').value.trim();
   const p = $('login-password').value;
   const msg = $('login-msg');
   msg.textContent='';
-  if(!u||!p){ msg.textContent='Enter your username and password.'; return; }
+  if(!u||!p){ msg.textContent='Enter a username and password.'; return; }
   if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent='Still loading — refresh the page and try again.'; return; }
   const btn = $('login-start-btn'); btn.disabled=true;
-  window.KidsCloud.studentLogin(u,p).then(data=>{ playTap(); applyCloudProfile(data); })
-    .catch(err=>{ msg.textContent = friendlyLoginError(err); })
-    .finally(()=>{ btn.disabled=false; });
+  if(isSignUpMode){
+    const email = $('login-email').value.trim();
+    if(!/^\S+@\S+\.\S+$/.test(email)){ msg.textContent='Enter a valid email address.'; btn.disabled=false; return; }
+    if(p.length<6){ msg.textContent='Password needs to be at least 6 characters.'; btn.disabled=false; return; }
+    window.KidsCloud.studentSignUp(u, email, p).then(data=>{ playTap(); applyCloudProfile(data); })
+      .catch(err=>{ msg.textContent = friendlyLoginError(err); })
+      .finally(()=>{ btn.disabled=false; });
+  } else {
+    window.KidsCloud.studentLogin(u,p).then(data=>{ playTap(); applyCloudProfile(data); })
+      .catch(err=>{ msg.textContent = friendlyLoginError(err); })
+      .finally(()=>{ btn.disabled=false; });
+  }
 });
-$('login-username').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-password').focus(); });
+$('login-username').addEventListener('keydown', e=>{ if(e.key==='Enter') (isSignUpMode ? $('login-email') : $('login-password')).focus(); });
+$('login-email').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-password').focus(); });
 $('login-password').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-start-btn').click(); });
 
 /* ===================== INIT ===================== */
