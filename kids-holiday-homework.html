@@ -198,8 +198,13 @@
   }
   @keyframes pop-in{ from{ transform:scale(.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
   .quiz-progress{ font-family:'Marcellus'; font-size:13px; color:#8a7654; margin-bottom:10px; }
-  .quiz-progress-bar{ height:8px; border-radius:999px; background:var(--parchment-deep); overflow:hidden; margin-bottom:16px; }
+  .quiz-progress-bar{ height:8px; border-radius:999px; background:var(--parchment-deep); overflow:hidden; margin-bottom:6px; }
   .quiz-progress-fill{ height:100%; background:var(--green); transition:width .25s ease; }
+  .quiz-running-score{ font-family:'Marcellus'; font-size:12.5px; color:#8a7654; margin:0 0 10px; }
+  .quiz-tag{
+    display:inline-block; font-family:'Marcellus'; font-size:12px; text-transform:uppercase; letter-spacing:.05em;
+    background:var(--parchment-deep); color:var(--gold); padding:3px 12px; border-radius:999px; margin-bottom:10px;
+  }
   #quiz-modal-question{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 16px; line-height:1.4; }
   #quiz-modal-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
   #quiz-modal-options .quiz-opt{ font-size:16px; padding:12px 16px; border-radius:14px; }
@@ -300,8 +305,10 @@
     <div id="quiz-modal-progress-wrap">
       <p class="quiz-progress" id="quiz-modal-progress"></p>
       <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-modal-progress-fill" style="width:0%"></div></div>
+      <p class="quiz-running-score" id="quiz-modal-running-score"></p>
     </div>
     <div id="quiz-modal-question-view">
+      <span class="quiz-tag" id="quiz-modal-tag"></span>
       <p id="quiz-modal-question"></p>
       <div id="quiz-modal-options"></div>
       <p id="quiz-modal-feedback"></p>
@@ -524,46 +531,105 @@ function renderGradeGrid(){
   });
 }
 
-/* One comprehension question per day, tied to that day's own theme, and
-   one simple English (grammar/vocabulary) question per day -- both plain
-   fixed facts (parts of speech, shape/word basics) rather than anything
-   that needs a citation, so there's nothing to get wrong here. Index
-   matches HOLIDAY_PLAN 1:1. */
+/* Three comprehension questions per day tied to that day's own theme, and
+   three simple English (grammar/vocabulary/phonics) questions per day --
+   all plain fixed facts (parts of speech, shape/word basics) rather than
+   anything that needs a citation, so there's nothing to get wrong here.
+   Index matches HOLIDAY_PLAN 1:1, inner array is 3 questions. */
 const ACTIVITY_QUESTIONS = [
-  { q:'A holiday recount tells people about...', options:['things that really happened','a made-up story','times tables'], correct:'things that really happened' },
-  { q:'Skip counting means counting in...', options:['jumps or groups','backwards only','letters'], correct:'jumps or groups' },
-  { q:'Being kind to your family is an example of...', options:['Sadaqah (charity)','being lazy','an accident'], correct:'Sadaqah (charity)' },
-  { q:'A "word hunt" means looking for...', options:['objects and their names','lost pets','your shoes'], correct:'objects and their names' },
-  { q:'A triangle has how many sides?', options:['3','4','5'], correct:'3' },
-  { q:'Every story has a beginning, a middle, and an...', options:['end','test','lunch'], correct:'end' },
-  { q:'Helping at home with a chore is an act of...', options:['kindness','cheating','laziness'], correct:'kindness' },
-  { q:'Trees, birds and clouds are all part of...', options:['nature','a classroom','a book'], correct:'nature' },
-  { q:'A ruler is used to measure...', options:['length','feelings','time'], correct:'length' },
-  { q:'Making a card for someone shows...', options:['kindness','boredom','anger'], correct:'kindness' },
-  { q:'3 × 4 means 3 groups of...', options:['4','3','12'], correct:'4' },
-  { q:'A book review mostly shares your...', options:['opinion about a book','phone number','shopping list'], correct:'opinion about a book' },
-  { q:'Playing fairly, even if you lose, shows good...', options:['sportsmanship','cheating','sadness'], correct:'sportsmanship' },
-  { q:'Thinking back on what you did and learned is called...', options:['reflection','forgetting','homework'], correct:'reflection' }
+  [ { q:'A holiday recount tells people about...', options:['things that really happened','a made-up story','times tables'], correct:'things that really happened' },
+    { q:'A recount is usually written in which order?', options:['the order things happened','backwards','random order'], correct:'the order things happened' },
+    { q:'A recount should use correct...', options:['punctuation','stickers','drawings only'], correct:'punctuation' } ],
+  [ { q:'Skip counting means counting in...', options:['jumps or groups','backwards only','letters'], correct:'jumps or groups' },
+    { q:'2, 4, 6, 8... is an example of...', options:['skip counting by 2s','subtraction','spelling'], correct:'skip counting by 2s' },
+    { q:'Which of these is a counting tool?', options:['an abacus','a paintbrush','a pillow'], correct:'an abacus' } ],
+  [ { q:'Being kind to your family is an example of...', options:['Sadaqah (charity)','being lazy','an accident'], correct:'Sadaqah (charity)' },
+    { q:'Which of these is a kind action?', options:['sharing your toys','grabbing toys','ignoring someone sad'], correct:'sharing your toys' },
+    { q:'Sadaqah is an Islamic word meaning...', options:['voluntary charity','a type of food','a game'], correct:'voluntary charity' } ],
+  [ { q:'A "word hunt" means looking for...', options:['objects and their names','lost pets','your shoes'], correct:'objects and their names' },
+    { q:'Words are made up of...', options:['letters','numbers','colours'], correct:'letters' },
+    { q:'Putting words in ABC order is called...', options:['alphabetical order','counting order','colour order'], correct:'alphabetical order' } ],
+  [ { q:'A triangle has how many sides?', options:['3','4','5'], correct:'3' },
+    { q:'A square has how many equal sides?', options:['4','3','5'], correct:'4' },
+    { q:'A shape with 4 sides is called a...', options:['quadrilateral','triangle','circle'], correct:'quadrilateral' } ],
+  [ { q:'Every story has a beginning, a middle, and an...', options:['end','test','lunch'], correct:'end' },
+    { q:'The people in a story are called...', options:['characters','chapters','covers'], correct:'characters' },
+    { q:'Where a story takes place is called the...', options:['setting','ending','title'], correct:'setting' } ],
+  [ { q:'Helping at home with a chore is an act of...', options:['kindness','cheating','laziness'], correct:'kindness' },
+    { q:'Which of these is a chore?', options:['tidying your room','watching TV all day','eating lunch'], correct:'tidying your room' },
+    { q:'Helping others without being asked shows...', options:['initiative and kindness','laziness','boredom'], correct:'initiative and kindness' } ],
+  [ { q:'Trees, birds and clouds are all part of...', options:['nature','a classroom','a book'], correct:'nature' },
+    { q:'Which of these lives in nature?', options:['a bird','a television','a calculator'], correct:'a bird' },
+    { q:'Looking closely at plants and animals is called...', options:['observing','ignoring','forgetting'], correct:'observing' } ],
+  [ { q:'A ruler is used to measure...', options:['length','feelings','time'], correct:'length' },
+    { q:'Which of these is a unit of length?', options:['centimetre','kilogram','litre'], correct:'centimetre' },
+    { q:'Coins and notes are both examples of...', options:['money','shapes','animals'], correct:'money' } ],
+  [ { q:'Making a card for someone shows...', options:['kindness','boredom','anger'], correct:'kindness' },
+    { q:'Which of these is a craft material?', options:['glue','soup','homework'], correct:'glue' },
+    { q:'Making something with your hands is called...', options:['a craft','a race','a nap'], correct:'a craft' } ],
+  [ { q:'3 × 4 means 3 groups of...', options:['4','3','12'], correct:'4' },
+    { q:'Times tables help you practise...', options:['multiplication','spelling','drawing'], correct:'multiplication' },
+    { q:'5 × 2 is the same as adding 5 to itself...', options:['two times','five times','zero times'], correct:'two times' } ],
+  [ { q:'A book review mostly shares your...', options:['opinion about a book','phone number','shopping list'], correct:'opinion about a book' },
+    { q:'Before reviewing a book, you should first...', options:['read it','hide it','sell it'], correct:'read it' },
+    { q:'Your opinion about a book is also called your...', options:['point of view','phone number','address'], correct:'point of view' } ],
+  [ { q:'Playing fairly, even if you lose, shows good...', options:['sportsmanship','cheating','sadness'], correct:'sportsmanship' },
+    { q:'Taking turns in a game shows...', options:['fairness','cheating','rudeness'], correct:'fairness' },
+    { q:'Games with more than one player are called...', options:['multiplayer games','lonely games','silent games'], correct:'multiplayer games' } ],
+  [ { q:'Thinking back on what you did and learned is called...', options:['reflection','forgetting','homework'], correct:'reflection' },
+    { q:'Thinking about what went well and what to improve is called...', options:['reflecting','forgetting','sleeping'], correct:'reflecting' },
+    { q:'Setting a goal for Term 4 means...', options:['planning something to work on','ignoring school','staying home'], correct:'planning something to work on' } ]
 ];
 const ENGLISH_QUESTIONS = [
-  { q:'Which word means the same as "happy"?', options:['glad','sad','tired'], correct:'glad' },
-  { q:'Which of these is a naming word (noun)?', options:['dog','jump','quickly'], correct:'dog' },
-  { q:'Which word means being nice to others?', options:['kind','rude','loud'], correct:'kind' },
-  { q:'Which letter comes right after "M"?', options:['N','L','O'], correct:'N' },
-  { q:'Which of these is spelled correctly?', options:['triangle','triangel','triangl'], correct:'triangle' },
-  { q:'Which word describes an action (a verb)?', options:['running','happy','blue'], correct:'running' },
-  { q:'Which sentence uses capital letters correctly?', options:['I like cats','i like cats','I Like cats'], correct:'I like cats' },
-  { q:'Which word means the opposite of "big"?', options:['small','tall','loud'], correct:'small' },
-  { q:'Which word is a describing word (adjective)?', options:['green','jump','house'], correct:'green' },
-  { q:'Which word rhymes with "day"?', options:['play','cat','dog'], correct:'play' },
-  { q:'Which punctuation mark ends a question?', options:['?','.',','], correct:'?' },
-  { q:'Which word means a made-up story?', options:['fiction','fact','recipe'], correct:'fiction' },
-  { q:'Which word means working together?', options:['teamwork','fighting','ignoring'], correct:'teamwork' },
-  { q:'Which word means looking back and thinking about something?', options:['reflection','forgetting','running'], correct:'reflection' }
+  [ { q:'Which word means the same as "happy"?', options:['glad','sad','tired'], correct:'glad' },
+    { q:'Which word means the same as "fun"?', options:['enjoyable','boring','tired'], correct:'enjoyable' },
+    { q:'Which is a complete sentence?', options:['I went to the park.','went park the','Park.'], correct:'I went to the park.' } ],
+  [ { q:'Which of these is a naming word (noun)?', options:['dog','jump','quickly'], correct:'dog' },
+    { q:'Which word is a number word?', options:['seven','jump','happy'], correct:'seven' },
+    { q:'Which word means the opposite of "more"?', options:['less','many','some'], correct:'less' } ],
+  [ { q:'Which word means being nice to others?', options:['kind','rude','loud'], correct:'kind' },
+    { q:'Which word means "gentle and caring"?', options:['kind','harsh','mean'], correct:'kind' },
+    { q:'Which word rhymes with "share"?', options:['care','cat','run'], correct:'care' } ],
+  [ { q:'Which letter comes right after "M"?', options:['N','L','O'], correct:'N' },
+    { q:'Which word starts with the same sound as "sun"?', options:['sock','moon','tree'], correct:'sock' },
+    { q:'Which is a describing word for size?', options:['big','jump','and'], correct:'big' } ],
+  [ { q:'Which of these is spelled correctly?', options:['triangle','triangel','triangl'], correct:'triangle' },
+    { q:'Which word means "the same shape on both sides"?', options:['symmetrical','broken','loud'], correct:'symmetrical' },
+    { q:'Which word is a shape name?', options:['circle','running','happy'], correct:'circle' } ],
+  [ { q:'Which word describes an action (a verb)?', options:['running','happy','blue'], correct:'running' },
+    { q:'Which word means "exciting part of a story"?', options:['adventure','homework','silence'], correct:'adventure' },
+    { q:'Which word means to read something again?', options:['reread','forget','erase'], correct:'reread' } ],
+  [ { q:'Which sentence uses capital letters correctly?', options:['I like cats','i like cats','I Like cats'], correct:'I like cats' },
+    { q:'Which word means "to assist"?', options:['help','hide','hurt'], correct:'help' },
+    { q:'Which sentence uses "helps" correctly?', options:['She helps her mum.','She help her mum.','She helping mum.'], correct:'She helps her mum.' } ],
+  [ { q:'Which word means the opposite of "big"?', options:['small','tall','loud'], correct:'small' },
+    { q:'Which word means "the outdoors"?', options:['nature','homework','kitchen'], correct:'nature' },
+    { q:'Which word describes a sound birds make?', options:['chirp','bark','moo'], correct:'chirp' } ],
+  [ { q:'Which word is a describing word (adjective)?', options:['green','jump','house'], correct:'green' },
+    { q:'Which word means having a lot of money?', options:['rich','poor','hungry'], correct:'rich' },
+    { q:'Which coin word means 100 cents?', options:['dollar','metre','hour'], correct:'dollar' } ],
+  [ { q:'Which word rhymes with "day"?', options:['play','cat','dog'], correct:'play' },
+    { q:'Which word means "to create something"?', options:['make','break','lose'], correct:'make' },
+    { q:'Which word describes bright colours?', options:['colourful','silent','heavy'], correct:'colourful' } ],
+  [ { q:'Which punctuation mark ends a question?', options:['?','.',','], correct:'?' },
+    { q:'Which word means "many groups of the same size"?', options:['equal groups','random piles','one big pile'], correct:'equal groups' },
+    { q:'Which symbol means "multiply"?', options:['×','+','?'], correct:'×' } ],
+  [ { q:'Which word means a made-up story?', options:['fiction','fact','recipe'], correct:'fiction' },
+    { q:'Which word means "your thoughts about something"?', options:['opinion','address','weather'], correct:'opinion' },
+    { q:'Which word means the same as "story"?', options:['tale','test','trip'], correct:'tale' } ],
+  [ { q:'Which word means working together?', options:['teamwork','fighting','ignoring'], correct:'teamwork' },
+    { q:'Which word means "playing together nicely"?', options:['cooperating','arguing','ignoring'], correct:'cooperating' },
+    { q:'Which word means "the person who wins"?', options:['winner','loser','referee'], correct:'winner' } ],
+  [ { q:'Which word means looking back and thinking about something?', options:['reflection','forgetting','running'], correct:'reflection' },
+    { q:'Which word means "looking back on something"?', options:['reviewing','forgetting','sleeping'], correct:'reviewing' },
+    { q:'Which word means "a plan for the future"?', options:['goal','memory','photo'], correct:'goal' } ]
 ];
 
 function shuffleOptions(options, correct){
   return { options: options.slice().sort(() => Math.random() - 0.5), correct };
+}
+function fromBank(bank, dayIndex){
+  return bank[dayIndex].map(q => { const s = shuffleOptions(q.options, q.correct); return { q: q.q, options: s.options, correct: s.correct }; });
 }
 
 function buildAyatQuestion(dayIndex){
@@ -580,49 +646,99 @@ function buildMeaningQuestion(dayIndex){
   const shuffled = shuffleOptions([plan.quran.meaning, distractor1, distractor2], plan.quran.meaning);
   return { q: 'What is Surah ' + plan.quran.name + ' mainly about?', options: shuffled.options, correct: shuffled.correct };
 }
-/* A small arithmetic fact for the day, computed fresh each time (never
-   hand-typed) so it's always correct -- leveled by grade so a Foundation
-   5-year-old gets a friendly counting picture instead of the same times
-   tables question a Year 3 gets: Foundation counts emoji, Year 1 only
-   ever adds small numbers, and Year 2-3 cycle +, -, x like before. */
-function buildMathQuestion(dayIndex, gradeId){
-  const n = dayIndex + 1;
-  let answer, text;
-
-  if(gradeId === 'foundation'){
-    const count = (n % 5) + 3; // 3-7 dots, friendly for counting practice
-    answer = count;
-    text = 'How many stars are there? ' + '⭐'.repeat(count);
-  } else if(gradeId === 'g1'){
-    const a = (n % 8) + 1, b = ((n + 3) % 6) + 1;
-    answer = a + b;
-    text = 'What is ' + a + ' + ' + b + '?';
-  } else {
-    const type = n % 3;
-    let a, b;
-    if(type === 1){ a = n; b = n + 1; answer = a + b; text = 'What is ' + a + ' + ' + b + '?'; }
-    else if(type === 2){ a = n + 5; b = n; answer = a - b; text = 'What is ' + a + ' − ' + b + '?'; }
-    else { a = (n % 5) + 2; b = 2; answer = a * b; text = 'What is ' + a + ' × ' + b + '?'; }
-  }
-
-  const wrongPool = [answer + 1, answer - 1, answer + 2].filter(w => w !== answer && w >= 0);
-  const shuffled = shuffleOptions([answer, wrongPool[0], wrongPool[1]], answer);
-  return { q: text, options: shuffled.options.map(String), correct: String(shuffled.correct) };
+function buildSurahNumberQuestion(dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  const correct = plan.quran.num;
+  const wrongPool = [correct - 1, correct + 1, correct + 3, correct - 3].filter(n => n > 0 && n <= 114 && n !== correct);
+  const shuffled = shuffleOptions([correct, wrongPool[0], wrongPool[1]], correct);
+  return { q: 'What is Surah ' + plan.quran.name + '’s number in the Qur’an (out of 114)?', options: shuffled.options.map(String), correct: String(correct) };
 }
 
-/* Five questions a day: two about the Qur'an focus, one about what the
-   activity taught, one math fact, one English fact -- exactly the four
-   subjects asked for, with the surah getting two questions of its own. */
-function buildDayQuizQuestions(dayIndex, gradeId){
-  const activity = shuffleOptions(ACTIVITY_QUESTIONS[dayIndex].options, ACTIVITY_QUESTIONS[dayIndex].correct);
-  const english = shuffleOptions(ENGLISH_QUESTIONS[dayIndex].options, ENGLISH_QUESTIONS[dayIndex].correct);
+/* Three questions from the day's Du'a of the Day -- reuses dua-tag's own
+   vetted library (meaning, category, source) instead of writing anything
+   new, so there's nothing to fact-check here either. */
+function buildDuaQuestions(dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  const dua = getDuaById(plan.duaId) || DUA_LIBRARY[0];
+  const idx = Math.max(0, DUA_LIBRARY.findIndex(d => d.id === dua.id));
+  const other1 = DUA_LIBRARY[(idx + 3) % DUA_LIBRARY.length];
+  const other2 = DUA_LIBRARY[(idx + 6) % DUA_LIBRARY.length];
+
+  const meaning = shuffleOptions([dua.english, other1.english, other2.english], dua.english);
+  const categoryLabel = dua.category === 'quran' ? 'The Qur’an' : 'A hadith';
+  const wrongCategory = dua.category === 'quran' ? 'A hadith' : 'The Qur’an';
+  const category = shuffleOptions([categoryLabel, wrongCategory, 'A nursery rhyme'], categoryLabel);
+  const source = shuffleOptions([dua.source, other1.source, other2.source], dua.source);
+
   return [
-    buildAyatQuestion(dayIndex),
-    buildMeaningQuestion(dayIndex),
-    { q: ACTIVITY_QUESTIONS[dayIndex].q, options: activity.options, correct: activity.correct },
-    buildMathQuestion(dayIndex, gradeId),
-    { q: ENGLISH_QUESTIONS[dayIndex].q, options: english.options, correct: english.correct }
+    { q: 'What does today’s du’a mean?', options: meaning.options, correct: meaning.correct },
+    { q: 'Where does today’s du’a come from?', options: category.options, correct: category.correct },
+    { q: 'Which source records today’s du’a?', options: source.options, correct: source.correct }
   ];
+}
+
+/* Three arithmetic facts a day, computed fresh each time (never
+   hand-typed) so they're always correct -- leveled by grade so a
+   Foundation 5-year-old gets friendly counting questions instead of the
+   same times tables a Year 3 gets: Foundation counts and compares small
+   numbers, Year 1 only ever adds/doubles small numbers, and Year 2-3 get
+   one addition, one subtraction and one multiplication fact. */
+function buildMathQuestions(dayIndex, gradeId){
+  const n = dayIndex + 1;
+  const mk = (text, answer) => {
+    const wrongPool = [answer + 1, answer - 1, answer + 2].filter(w => w !== answer && w >= 0);
+    const shuffled = shuffleOptions([answer, wrongPool[0], wrongPool[1]], answer);
+    return { q: text, options: shuffled.options.map(String), correct: String(shuffled.correct) };
+  };
+
+  if(gradeId === 'foundation'){
+    const count = (n % 5) + 3; // 3-7
+    const a = (n % 5) + 1, b = a + 1, c = a + 2; // three consecutive numbers, always distinct
+    const biggest = Math.max(a, b, c);
+    return [
+      mk('How many stars are there? ' + '⭐'.repeat(count), count),
+      { q: 'Which number is the biggest: ' + a + ', ' + b + ' or ' + c + '?', options: shuffleOptions([a, b, c], biggest).options.map(String), correct: String(biggest) },
+      mk('What number comes right after ' + ((n % 9) + 1) + '?', (n % 9) + 2)
+    ];
+  }
+  if(gradeId === 'g1'){
+    const addA = (n % 8) + 1, addB = ((n + 3) % 6) + 1;
+    const subA = (n % 8) + 5, subB = (n % 4) + 1;
+    const dbl = (n % 6) + 1;
+    return [
+      mk('What is ' + addA + ' + ' + addB + '?', addA + addB),
+      mk('What is ' + subA + ' − ' + subB + '?', subA - subB),
+      mk('What is double ' + dbl + '?', dbl * 2)
+    ];
+  }
+  const addA = n, addB = n + 1;
+  const subA = n + 5, subB = n;
+  const mulA = (n % 5) + 2, mulB = 2;
+  return [
+    mk('What is ' + addA + ' + ' + addB + '?', addA + addB),
+    mk('What is ' + subA + ' − ' + subB + '?', subA - subB),
+    mk('What is ' + mulA + ' × ' + mulB + '?', mulA * mulB)
+  ];
+}
+
+/* 15 questions a day: 3 about the Qur'an focus, 3 about what the activity
+   taught, 3 math facts, 3 English facts, and 3 about the du'a of the day
+   -- tagged with a category icon/label for the modal, then shuffled into
+   one mixed order so the subjects interleave instead of running in blocks. */
+function buildDayQuizQuestions(dayIndex, gradeId){
+  const tag = (list, icon, label) => list.map(q => Object.assign({ icon: icon, label: label }, q));
+  const all = [
+    ...tag([buildAyatQuestion(dayIndex), buildMeaningQuestion(dayIndex), buildSurahNumberQuestion(dayIndex)], '📖', 'Qur’an'),
+    ...tag(fromBank(ACTIVITY_QUESTIONS, dayIndex), '🎯', 'Today'),
+    ...tag(buildMathQuestions(dayIndex, gradeId), '🔢', 'Math'),
+    ...tag(fromBank(ENGLISH_QUESTIONS, dayIndex), '✏️', 'English'),
+    ...tag(buildDuaQuestions(dayIndex), '🤲', 'Du’a')
+  ];
+  for(let i = all.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [all[i], all[j]] = [all[j], all[i]];
+  }
+  return all;
 }
 
 /* ===================== Points + cloud-saved progress ===================== */
@@ -680,7 +796,7 @@ function fireConfetti(){
 }
 
 function openQuizModal(dayIndex){
-  quizState = { dayIndex: dayIndex, questions: buildDayQuizQuestions(dayIndex, selectedGrade), index: 0, correctCount: 0 };
+  quizState = { dayIndex: dayIndex, questions: buildDayQuizQuestions(dayIndex, selectedGrade), index: 0, correctCount: 0, streak: 0 };
   document.getElementById('quiz-modal-results-view').classList.add('hidden');
   document.getElementById('quiz-modal-question-view').classList.remove('hidden');
   document.getElementById('quiz-modal').classList.remove('hidden');
@@ -688,10 +804,12 @@ function openQuizModal(dayIndex){
 }
 
 function renderQuizStep(){
-  const { questions, index } = quizState;
+  const { questions, index, correctCount } = quizState;
   const total = questions.length;
   document.getElementById('quiz-modal-progress').textContent = 'Question ' + (index + 1) + ' of ' + total;
   document.getElementById('quiz-modal-progress-fill').style.width = Math.round((index / total) * 100) + '%';
+  document.getElementById('quiz-modal-running-score').textContent = index > 0 ? 'Score so far: ' + correctCount + '/' + index : '';
+  document.getElementById('quiz-modal-tag').textContent = questions[index].icon + ' ' + questions[index].label;
   document.getElementById('quiz-modal-question').textContent = questions[index].q;
   document.getElementById('quiz-modal-feedback').textContent = '';
   document.getElementById('quiz-modal-next').style.display = 'none';
@@ -719,11 +837,15 @@ function answerQuizQuestion(opt, btnEl){
   if(isRight){
     playCorrect();
     quizState.correctCount++;
+    quizState.streak++;
     btnEl.classList.add('correct', 'pop');
-    feedback.textContent = CHEERS[Math.floor(Math.random() * CHEERS.length)];
+    let msg = CHEERS[Math.floor(Math.random() * CHEERS.length)];
+    if(quizState.streak >= 3) msg += ' 🔥 ' + quizState.streak + ' in a row!';
+    feedback.textContent = msg;
     feedback.style.color = 'var(--green-dark)';
   } else {
     playWrong();
+    quizState.streak = 0;
     btnEl.classList.add('wrong');
     feedback.textContent = TRY_AGAIN[Math.floor(Math.random() * TRY_AGAIN.length)] + ' — it was "' + q.correct + '"';
     feedback.style.color = '#a3352b';
