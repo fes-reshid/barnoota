@@ -250,6 +250,11 @@
     padding:10px 22px; font-weight:800; font-size:15.5px; cursor:pointer; box-shadow:0 4px 0 var(--sky-dark);
   }
   .speak-btn:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--sky-dark); }
+  .speak-btn-en{
+    display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+    background:var(--coral); color:#fff; border:none; border-radius:50%; font-size:11px;
+    cursor:pointer; vertical-align:middle; margin-left:4px; padding:0;
+  }
 
   .choice-grid{ display:grid; gap:12px; width:100%; max-width:440px; margin:0 auto; }
   .choice-grid.cols-2{ grid-template-columns:1fr 1fr; }
@@ -599,6 +604,7 @@
 </div>
 
 <script src="data/arabic-adventure-world1.js"></script>
+<script src="data/arabic-adventure-audio-manifest.js"></script>
 <script>
 /* =====================================================================
  * Arabic Adventure — game engine
@@ -656,17 +662,56 @@ function loadVoices(){
   ttsArabicVoice = voices.find(v => (v.lang||'').toLowerCase().startsWith('ar')) || null;
 }
 if('speechSynthesis' in window){ loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+
+/* Every letter, word, vocab item and story line has a real recorded AI
+   voice clip (see tools/generate-arabic-adventure-audio.js) — this is
+   what actually plays. The browser's own speechSynthesis is kept only
+   as a fallback for text with no clip, or if playback ever fails
+   (offline with an uncached file, browser blocks audio, etc.), since
+   voice availability there varies wildly across devices. */
+const AUDIO_MANIFEST = window.ARABIC_ADVENTURE_AUDIO_MANIFEST || { ar:{}, en:{} };
+const audioClipCache = {};
+function playClip(text, manifestSet, fallback, onend){
+  const src = manifestSet[text];
+  if(!src){ fallback(); return; }
+  try{
+    let audio = audioClipCache[src];
+    if(!audio){ audio = new Audio(src); audioClipCache[src] = audio; }
+    audio.currentTime = 0;
+    audio.onended = onend || null;
+    audio.onerror = fallback;
+    const p = audio.play();
+    if(p && p.catch) p.catch(fallback);
+  }catch(e){ fallback(); }
+}
 function speakArabic(text, onend){
   if(!text) return;
-  if(!soundOn || !('speechSynthesis' in window)){ if(onend) setTimeout(onend, 300); return; }
-  try{
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ar-SA'; u.rate = 0.8;
-    if(ttsArabicVoice) u.voice = ttsArabicVoice;
-    if(onend) u.onend = onend;
-    window.speechSynthesis.speak(u);
-  }catch(e){ if(onend) onend(); }
+  if(!soundOn){ if(onend) setTimeout(onend, 300); return; }
+  playClip(text, AUDIO_MANIFEST.ar, function(){
+    if(!('speechSynthesis' in window)){ if(onend) setTimeout(onend, 300); return; }
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ar-SA'; u.rate = 0.8;
+      if(ttsArabicVoice) u.voice = ttsArabicVoice;
+      if(onend) u.onend = onend;
+      window.speechSynthesis.speak(u);
+    }catch(e){ if(onend) onend(); }
+  }, onend);
+}
+function speakEnglish(text, onend){
+  if(!text) return;
+  if(!soundOn){ if(onend) setTimeout(onend, 300); return; }
+  playClip(text, AUDIO_MANIFEST.en, function(){
+    if(!('speechSynthesis' in window)){ if(onend) setTimeout(onend, 300); return; }
+    try{
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.9;
+      if(onend) u.onend = onend;
+      window.speechSynthesis.speak(u);
+    }catch(e){ if(onend) onend(); }
+  }, onend);
 }
 /* Chrome/Safari create a new AudioContext in a "suspended" state and
    never make a sound until something explicitly resumes it from within a
@@ -1723,11 +1768,12 @@ function startVocabModule(nodeIdx){
       '<p class="task-line">'+n.module.title+'</p>' +
       '<div class="hero-emoji" style="font-size:70px;">'+w.emoji+'</div>' +
       '<p class="hero-word">'+w.word+'</p>' +
-      '<p class="task-sub">'+w.english+'</p>' +
+      '<p class="task-sub">'+w.english+' <button class="speak-btn-en" id="vocab-speak-en" aria-label="Hear in English">🔊</button></p>' +
       '<button class="speak-btn" id="vocab-speak">🔊 Listen</button>' +
       '<div class="lesson-actions"><button class="big-btn" id="vocab-next">'+(i<words.length-1?'Next word →':'Finish')+'</button></div>';
     speakArabic(w.word);
     $('vocab-speak').addEventListener('click', ()=>{ playTap(); speakArabic(w.word); });
+    $('vocab-speak-en').addEventListener('click', ()=>{ playTap(); speakEnglish(w.english); });
     $('vocab-next').addEventListener('click', ()=>{
       playTap(); i++;
       if(i>=words.length){
