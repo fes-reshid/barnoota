@@ -102,6 +102,10 @@
     display:flex; align-items:center; gap:7px; background:#fff; border:1.5px solid var(--line);
     border-radius:18px; padding:8px 16px; font-weight:800; font-size:15.5px;
   }
+  .stat-chip .stat-ico{
+    display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+    border-radius:50%; background:#f3d9a2; font-size:12.5px; flex:none;
+  }
   .home-actions{ display:flex; flex-direction:column; gap:12px; max-width:340px; margin:18px auto 0; }
   .home-secondary{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
   .badge-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
@@ -124,67 +128,79 @@
     display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--leaf);
     cursor:pointer;
   }
-  #screen-map{
-    background:linear-gradient(180deg, #fdf1d6 0%, #f6dfae 30%, #e8c583 70%, #dcb46e 100%);
-    border-radius:24px; padding:14px 14px 4px; margin:0 -2px;
+  /* Paginated illustrated map, one page per group, in the same style as
+     the kids-arabic-quest / kids-seerah-quest map screens — fully
+     self-contained inline SVG (no map tiles, no hotlinked photos, no
+     CDN), so it always looks right and never depends on a network
+     connection. */
+  .map-frame{
+    position:relative; background:linear-gradient(#ffe9c2 0%, #dcb46e 100%);
+    border:3px solid var(--sun-dark); border-radius:22px; overflow:hidden;
+    box-shadow:0 10px 26px rgba(60,45,20,.14);
   }
-  .path-wrap{ position:relative; padding:6px 0 4px; }
-  .dune-row{ line-height:0; margin:0 -14px; }
-  .dune-row.flip{ transform:scaleY(-1); }
-  .dune-svg{ width:100%; height:26px; display:block; }
-  .dune-svg path{ fill:#f3d9a2; }
-  .map-chapter-bar{
-    display:flex; align-items:center; justify-content:center; gap:14px; margin:6px 0 16px;
+  .map-title{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5;
+    background:#6a4fb0; color:#fff; font-weight:800; font-size:15px;
+    padding:7px 20px; border-radius:14px; border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.2);
+    white-space:nowrap;
   }
-  .map-nav-btn{
-    width:40px; height:40px; border-radius:50%; border:3px solid #fff; background:var(--coral);
-    color:#fff; font-size:16px; cursor:pointer; box-shadow:0 3px 0 var(--coral-dark); flex:none;
+  .map-nav{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:6;
+    width:46px; height:46px; border-radius:50%; border:3px solid #fff; cursor:pointer;
+    background:var(--coral); color:#fff; font-size:19px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
   }
-  .map-nav-btn:disabled{ background:#d9c49a; box-shadow:none; opacity:.5; cursor:not-allowed; }
-  .map-chapter-title{
-    text-align:center; background:#fff; border:2px solid var(--sun-dark); border-radius:16px;
-    padding:6px 18px; min-width:180px;
+  .map-nav:disabled{ opacity:.35; cursor:default; }
+  .map-nav.prev{ left:8px; }
+  .map-nav.next{ right:8px; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
+  .node-num{ font-family:'Amiri', serif; font-size:28px; fill:#fff8ea; }
+  .node-num.locked{ fill:#f2f1ee; font-family:'Baloo 2', sans-serif; font-size:24px; }
+  .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g:not(.locked):hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-disc{ transition:transform .15s ease; }
+  .node-disc.available{ fill:var(--leaf); }
+  .node-disc.complete{ fill:var(--sun); }
+  .node-disc.in_progress{ fill:var(--sky); }
+  .node-disc.locked{ fill:#b7bdbc; }
+  .node-disc.checkpoint{ fill:var(--berry); }
+  .node-disc.vocabnode{ fill:var(--coral); }
+  .node-disc.storynode{ fill:var(--sky-dark); }
+  .node-disc.finalnode{ fill:var(--sun); }
+  .node-disc.node-done{ fill:var(--sun) !important; }
+  .node-disc.just-arrived{ animation:nodeArrivePop .8s ease; }
+  @keyframes nodeArrivePop{
+    0%{ transform:scale(1); } 30%{ transform:scale(1.32); } 60%{ transform:scale(.94); } 100%{ transform:scale(1); }
   }
-  .map-chapter-title b{ display:block; font-size:15.5px; color:#7a4a1a; }
-  .map-chapter-title .arabic{ display:block; font-size:15px; color:var(--sun-dark); direction:rtl; }
-  .map-chapter-title small{ display:block; font-size:10.5px; color:#9a7a4a; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
-  .path-line{
-    position:absolute; left:50%; top:10px; bottom:10px; width:6px; margin-left:-3px;
-    background:repeating-linear-gradient(180deg, #f3d9a2 0 10px, transparent 10px 20px);
-    border-radius:4px; z-index:0;
+  .node-label{ font-size:14px; font-weight:700; fill:#6b5a2f; }
+  .node-stars{ font-size:15px; fill:var(--sun-dark); }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  .avatar-marker{ animation:bobber 1.6s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:34; opacity:.75; } 100%{ r:50; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.6s ease-out infinite; }
+  .map-help{ text-align:center; font-size:14.5px; color:var(--ink-soft); margin:12px 0 0; }
+  .map-cert-row{ display:flex; justify-content:center; margin:12px 0 0; }
+  .cert-cta{
+    display:inline-flex; align-items:center; gap:9px; cursor:pointer; text-align:center;
+    background:var(--leaf); color:#fff; border:3px solid #fff; border-radius:22px;
+    padding:11px 22px; font-weight:800; font-size:15px; box-shadow:0 5px 0 var(--leaf-dark);
   }
-  .group-band{
-    position:relative; z-index:1; text-align:center; margin:22px 0 12px;
-    font-weight:800; font-size:15px; color:#7a4a1a;
-    background:#fff3dc; border:1.5px solid var(--sun-dark); border-radius:16px; padding:6px 14px; display:inline-block;
-    left:50%; transform:translateX(-50%);
+  .cert-cta:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--leaf-dark); }
+  .cert-cta.locked{ background:#fff3dc; color:#8a7248; border-color:var(--sun-dark); box-shadow:0 5px 0 #cbbb92; }
+  .cert-todo{ max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:9px; }
+  .todo-row{
+    display:flex; align-items:center; gap:11px; background:#fff; border:2px solid var(--sun-dark);
+    border-radius:16px; padding:10px 14px; box-shadow:0 3px 10px rgba(60,45,20,.07);
   }
-  .group-band-row{ text-align:center; }
-  .mountain-divider{ line-height:0; margin:16px -14px 0; position:relative; z-index:0; }
-  .mountain-divider svg{ width:100%; height:36px; display:block; }
-  .mountain-divider path{ fill:rgba(122,74,26,.18); }
-  .node-row{ position:relative; z-index:1; display:flex; justify-content:center; margin:10px 0; }
-  .node{
-    width:74px; height:74px; border-radius:50%; border:4px solid #fff; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-family:'Amiri', serif; font-size:30px; color:#fff; position:relative;
-    box-shadow:0 6px 0 rgba(0,0,0,.14), 0 8px 16px rgba(30,60,40,.16);
-    transition:transform .12s ease;
+  .todo-row.ok{ background:var(--leaf-bg); border-color:var(--leaf); }
+  .todo-row .tr-icon{ font-size:18px; flex:none; }
+  .todo-row .tr-label{ flex:1; font-weight:700; font-size:15px; color:var(--ink); }
+  .todo-row .tr-go{
+    background:var(--sun-dark); color:#fff; border:none; border-radius:14px; padding:6px 16px;
+    font-weight:800; font-size:13.5px; cursor:pointer; flex:none;
   }
-  .node:hover{ transform:translateY(-3px) scale(1.04); }
-  .node.available{ background:var(--leaf); }
-  .node.complete{ background:var(--sun); color:#5a4300; }
-  .node.in_progress{ background:var(--sky); }
-  .node.locked{ background:#c7d2c8; cursor:not-allowed; box-shadow:none; }
-  .node.locked:hover{ transform:none; }
-  .node.checkpoint{ background:var(--berry); font-size:26px; }
-  .node.vocabnode{ background:var(--coral); font-size:24px; }
-  .node.storynode{ background:var(--sky-dark); font-size:24px; }
-  .node.finalnode{ width:92px; height:92px; background:var(--sun); font-size:38px; color:#5a4300; }
-  .node.node-done{ background:var(--sun) !important; color:#5a4300; }
-  .node .node-stars{ position:absolute; bottom:-14px; font-size:12px; letter-spacing:1px; color:var(--sun-dark); }
-  .node-label{ text-align:center; font-size:12.5px; font-weight:700; color:var(--ink-soft); margin-top:2px; max-width:90px; }
-  .node-col{ display:flex; flex-direction:column; align-items:center; z-index:1; position:relative; }
+  .todo-row .tr-go:hover{ transform:scale(1.05); }
 
   /* ============ Lesson shell ============ */
   .lesson-layout{ display:grid; grid-template-columns:190px 1fr; gap:14px; align-items:start; }
@@ -464,12 +480,20 @@
     <div class="map-topbar">
       <div class="player-chip"><span class="avatar" id="map-avatar-btn"></span><span id="map-name"></span></div>
       <div class="stat-row" style="margin:0;">
-        <div class="stat-chip">⭐ <span id="map-stars">0</span></div>
-        <div class="stat-chip">🪙 <span id="map-coins">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">🪙</span> <span id="map-coins">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">⭐</span> <span id="map-stars">0</span></div>
+        <div class="stat-chip"><span class="stat-ico">📍</span> <span id="map-progress">0/0</span></div>
       </div>
       <button class="ghost-btn" id="map-home-btn">🏠 Home</button>
     </div>
-    <div class="path-wrap" id="map-path"></div>
+    <div class="map-frame">
+      <div class="map-title" id="map-title">Map 1</div>
+      <button class="map-nav prev" id="map-prev" aria-label="Previous map">◀</button>
+      <button class="map-nav next" id="map-next" aria-label="Next map">▶</button>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <p class="map-help" id="map-help"></p>
+    <div class="map-cert-row" id="map-cert-row"></div>
   </div>
 
   <!-- ============ LESSON ============ -->
@@ -518,7 +542,7 @@
   <!-- ============ CERTIFICATE ============ -->
   <div class="screen hidden" id="screen-certificate">
     <div class="map-topbar">
-      <div class="player-chip">🎓 Certificate</div>
+      <div class="player-chip">🎓 <span id="cert-head-label">Certificate</span></div>
       <div>
         <button class="ghost-btn no-print" id="cert-print-btn" style="margin-right:8px;">🖨️ Print</button>
         <button class="ghost-btn no-print" id="cert-back-btn">← Back</button>
@@ -725,7 +749,7 @@ function defaultProfile(name){
     skillScores:{}, groupBadges:{},
     statsLessonsCompleted:0, statsTracingSessions:0,
     activityHistory:[], nodeStepProgress:{},
-    certEarned:false, certRecord:null
+    certRecords:{}
   };
 }
 function normalizeProfile(d, fallbackName){
@@ -743,8 +767,7 @@ function normalizeProfile(d, fallbackName){
   if(typeof d.statsTracingSessions!=='number') d.statsTracingSessions = 0;
   if(!Array.isArray(d.activityHistory)) d.activityHistory = [];
   if(!d.nodeStepProgress || typeof d.nodeStepProgress!=='object') d.nodeStepProgress = {};
-  if(typeof d.certEarned!=='boolean') d.certEarned = false;
-  if(typeof d.certRecord!=='object') d.certRecord = null;
+  if(!d.certRecords || typeof d.certRecords!=='object') d.certRecords = {};
   return d;
 }
 function saveProfile(){
@@ -789,9 +812,13 @@ function nodeStatus(i){
   if(i === profile.unlockedIndex) return profile.nodeStepProgress[NODES[i].id] ? 'in_progress' : 'available';
   return 'locked';
 }
+let lastCompletedMapIdx = null;
 function unlockNext(){
+  const justFinishedIdx = profile.unlockedIndex;
   if(profile.unlockedIndex < NODES.length) profile.unlockedIndex++;
   saveProfile();
+  const mi = mapIndexForNodeIdx(justFinishedIdx);
+  lastCompletedMapIdx = (profile.unlockedIndex >= MAPS[mi].to) ? mi : null;
 }
 function currentContinueTarget(){
   return Math.min(profile.unlockedIndex, NODES.length-1);
@@ -837,7 +864,7 @@ function renderHome(){
   $('home-stars').textContent = totalStars();
   $('home-streak').textContent = profile.streak;
   $('home-letters').textContent = lettersMasteredCount();
-  $('home-cert-btn').classList.toggle('hidden', !profile.certEarned);
+  $('home-cert-btn').classList.toggle('hidden', latestCompleteMap() < 0);
   const badgeRow = $('home-badges');
   badgeRow.innerHTML = DATA.groups.filter(g=>g.letters.length).map(g=>{
     const won = !!profile.groupBadges[g.id];
@@ -847,76 +874,177 @@ function renderHome(){
 }
 
 /* ===================== MAP ===================== */
-const MAP_CHAPTERS = DATA.mapChapters;
-function chapterIndexForGroupId(gid){
-  const i = MAP_CHAPTERS.findIndex(c => c.groupIds.indexOf(gid) >= 0);
-  return i < 0 ? 0 : i;
+/* Paginated SVG journey map — one page per group, same mechanic as the
+   kids-arabic-quest / kids-seerah-quest map screens: a fixed winding
+   road, lesson stones evenly spaced along it by arc length, and
+   prev/next arrows to flip between pages. Fully original inline SVG
+   and emoji decoration — no map tiles, no hotlinked photos. */
+const MAP_PATH_D = 'M 70 545 C 210 545 250 470 330 448 C 420 424 500 470 560 430 ' +
+                   'C 640 378 590 300 500 285 C 400 268 330 230 360 170 ' +
+                   'C 392 108 520 96 640 132 C 780 174 850 150 940 108';
+const SCENES = {
+  g1: { sky:'#ffe9c2', ground:'#f3d79a', deco:[
+    {e:'🕋', x:90,  y:170, s:56}, {e:'🌴', x:900, y:520, s:50}, {e:'🐫', x:800, y:150, s:40},
+    {e:'☀️', x:500, y:90,  s:44}, {e:'🏜️', x:250, y:560, s:36}
+  ]},
+  g2: { sky:'#ffe3b0', ground:'#f0cf8e', deco:[
+    {e:'🐪', x:110, y:520, s:56}, {e:'🌵', x:900, y:170, s:48}, {e:'🏜️', x:500, y:100, s:40},
+    {e:'☀️', x:760, y:540, s:36}, {e:'🪨', x:260, y:150, s:34}
+  ]},
+  g3: { sky:'#d7f0c4', ground:'#bfe6a0', deco:[
+    {e:'🌴', x:100, y:160, s:56}, {e:'💧', x:900, y:520, s:44}, {e:'🐦', x:520, y:100, s:34},
+    {e:'🌿', x:760, y:170, s:36}, {e:'🦋', x:280, y:560, s:32}
+  ]},
+  g4: { sky:'#cfe3ee', ground:'#b9cdd6', deco:[
+    {e:'⛰️', x:100, y:160, s:58}, {e:'🦅', x:880, y:150, s:40}, {e:'☁️', x:500, y:90,  s:44},
+    {e:'🪨', x:760, y:540, s:36}, {e:'🏔️', x:260, y:540, s:50}
+  ]},
+  g5: { sky:'#ffe6b5', ground:'#f2d79b', deco:[
+    {e:'🏜️', x:100, y:170, s:56}, {e:'🐫', x:880, y:520, s:52}, {e:'☀️', x:500, y:90,  s:44},
+    {e:'🌵', x:760, y:150, s:38}, {e:'🌙', x:250, y:560, s:32}
+  ]},
+  g6: { sky:'#cdeaff', ground:'#a9d8ee', deco:[
+    {e:'💧', x:100, y:160, s:52}, {e:'🐐', x:880, y:520, s:44}, {e:'🪣', x:520, y:560, s:36},
+    {e:'🌾', x:760, y:150, s:38}, {e:'☁️', x:280, y:560, s:36}
+  ]},
+  g7: { sky:'#d7f0c4', ground:'#bfe6a0', deco:[
+    {e:'🕌', x:100, y:160, s:56}, {e:'🌴', x:880, y:520, s:52}, {e:'🐦', x:520, y:90,  s:34},
+    {e:'🌿', x:760, y:560, s:36}, {e:'🦋', x:260, y:170, s:32}
+  ]},
+  g8: { sky:'#dfd4ff', ground:'#cdeaff', deco:[
+    {e:'🕌', x:100, y:160, s:60}, {e:'🏆', x:880, y:520, s:52}, {e:'⭐', x:500, y:90,  s:38},
+    {e:'🌙', x:760, y:150, s:40}, {e:'✨', x:260, y:560, s:32}
+  ]}
+};
+/* Groups NODES into one "map" per group, in order — computed once from
+   the real node list rather than duplicated, so it can never drift out
+   of sync with the curriculum data. */
+function buildMaps(){
+  const maps = [];
+  let cur = null;
+  NODES.forEach((n,i)=>{
+    if(!cur || cur.group !== n.group){ cur = { group:n.group, from:i, to:i+1 }; maps.push(cur); }
+    else cur.to = i+1;
+  });
+  return maps;
 }
-let viewMapChapter = 0;
+const MAPS = buildMaps();
+let viewMap = 0;
+function mapIndexForNodeIdx(idx){
+  const mi = MAPS.findIndex(m => idx >= m.from && idx < m.to);
+  return mi < 0 ? 0 : mi;
+}
 
 function nodeVisual(n, status){
-  let cls='node', label='', letterCh='', done=(status==='complete');
-  if(n.type==='letter'){ cls+=' '+status; letterCh=n.letter.letter; label=n.letter.translit; }
-  else if(n.type==='checkpoint'){ cls+=' checkpoint '+(status==='locked'?'locked':''); letterCh=done?'✅':'🌟'; label='Review'; }
-  else if(n.type==='vocab'){ cls+=' vocabnode '+(status==='locked'?'locked':''); letterCh=done?'✅':'🗂️'; label=n.module.title; }
-  else if(n.type==='story'){ cls+=' storynode '+(status==='locked'?'locked':''); letterCh=done?'✅':'📖'; label='Story'; }
-  else if(n.type==='final'){ cls+=' finalnode '+(status==='locked'?'locked':''); letterCh=done?'🏆':'🔓'; label=n.group.title; }
-  if(done && n.type!=='letter') cls += ' node-done';
-  return { cls, letterCh, label };
+  let discCls='node-disc', label='', letterCh='', done=(status==='complete');
+  if(n.type==='letter'){ discCls+=' '+status; letterCh=n.letter.letter; label=n.letter.translit; }
+  else if(n.type==='checkpoint'){ discCls+=' checkpoint'+(status==='locked'?' locked':''); letterCh=done?'✅':'🌟'; label='Review'; }
+  else if(n.type==='vocab'){ discCls+=' vocabnode'+(status==='locked'?' locked':''); letterCh=done?'✅':'🗂️'; label=n.module.title; }
+  else if(n.type==='story'){ discCls+=' storynode'+(status==='locked'?' locked':''); letterCh=done?'✅':'📖'; label='Story'; }
+  else if(n.type==='final'){ discCls+=' finalnode'+(status==='locked'?' locked':''); letterCh=done?'🏆':'🔓'; label=n.group.title; }
+  if(done && n.type!=='letter') discCls += ' node-done';
+  return { discCls, letterCh, label };
 }
-function renderMap(){
+
+/* Draws the current map page: MAPS[viewMap]'s lesson stones spaced
+   evenly along the fixed winding road by arc length. jumpNodeIdx
+   (optional) plays a little "just arrived here" pop on that node —
+   used when coming back from a finished lesson so progress visibly
+   advances instead of just silently updating. */
+function paintMap(jumpNodeIdx){
+  const svg = $('map-svg');
+  const map = MAPS[viewMap];
+  const scene = SCENES[map.group.id] || SCENES.g1;
+  const count = map.to - map.from;
+
+  $('map-title').textContent = 'Map ' + (viewMap+1) + ' · ' + map.group.icon + ' ' + map.group.title;
+  $('map-prev').disabled = viewMap === 0;
+  $('map-next').disabled = viewMap === MAPS.length - 1;
   paintAvatarChips();
   $('map-name').textContent = profile.name;
   $('map-stars').textContent = totalStars();
   $('map-coins').textContent = profile.coins;
+  $('map-progress').textContent = Math.min(profile.unlockedIndex, NODES.length) + '/' + NODES.length;
 
-  const curNodeGroup = NODES[Math.min(profile.unlockedIndex, NODES.length-1)].group;
-  viewMapChapter = clamp(viewMapChapter, 0, MAP_CHAPTERS.length-1);
-  if(!window.__mapChapterTouched) viewMapChapter = chapterIndexForGroupId(curNodeGroup.id);
+  const measure = document.createElementNS('http://www.w3.org/2000/svg','path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i=0;i<count;i++){
+    const p = measure.getPointAtLength(total * ((i+0.5)/count));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
 
-  const chapter = MAP_CHAPTERS[viewMapChapter];
-  const wrap = $('map-path');
-  let html =
-    '<div class="dune-row"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>' +
-    '<div class="map-chapter-bar">' +
-      '<button class="map-nav-btn" id="map-chapter-prev" '+(viewMapChapter<=0?'disabled':'')+'>◀</button>' +
-      '<div class="map-chapter-title"><b>'+escapeHtml(chapter.title)+'</b><span class="arabic">'+chapter.subtitle+'</span><small>Map '+(viewMapChapter+1)+' of '+MAP_CHAPTERS.length+'</small></div>' +
-      '<button class="map-nav-btn" id="map-chapter-next" '+(viewMapChapter>=MAP_CHAPTERS.length-1?'disabled':'')+'>▶</button>' +
-    '</div>' +
-    '<div class="path-line"></div>';
-  let lastGroup = null;
-  NODES.forEach((n,i)=>{
-    if(chapter.groupIds.indexOf(n.group.id) < 0) return;
-    if(n.group !== lastGroup){
-      lastGroup = n.group;
-      html += '<div class="mountain-divider"><svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 46 L0 34 L45 8 L75 28 L110 4 L150 30 L190 10 L230 32 L270 6 L310 28 L350 12 L400 34 L400 46 Z"/></svg></div>' +
-        '<div class="group-band-row"><div class="group-band">'+n.group.icon+' '+escapeHtml(n.group.title)+'</div></div>';
-    }
-    const status = nodeStatus(i);
-    const v = nodeVisual(n, status);
-    const st = n.type==='letter' ? starsFor(n.id) : 0;
-    html += '<div class="node-row"><div class="node-col">' +
-      '<div class="'+v.cls+'" data-idx="'+i+'">' +
-        (status==='locked' ? '🔒' : v.letterCh) +
-        (st ? '<span class="node-stars">'+'★'.repeat(st)+'</span>' : '') +
-      '</div>' +
-      '<div class="node-label">'+escapeHtml(v.label)+'</div>' +
-    '</div></div>';
+  let html = '<defs><linearGradient id="mapSkyGrad" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="'+scene.sky+'"/><stop offset="100%" stop-color="'+scene.ground+'"/>' +
+  '</linearGradient></defs>';
+  html += '<rect x="0" y="0" width="1000" height="620" fill="url(#mapSkyGrad)"/>';
+  html += '<ellipse cx="500" cy="640" rx="620" ry="150" fill="rgba(255,255,255,.22)"/>';
+  scene.deco.forEach(d=>{
+    html += '<text x="'+d.x+'" y="'+d.y+'" font-size="'+d.s+'" text-anchor="middle">'+d.e+'</text>';
   });
-  html += '<div class="dune-row flip"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>';
-  wrap.innerHTML = html;
-  wrap.querySelectorAll('.node').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const i = parseInt(el.dataset.idx,10);
-      if(nodeStatus(i)==='locked'){ playTap(); return; }
-      playTap(); openNode(i);
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#fff7e2" stroke-width="46" stroke-linecap="round" opacity=".92"/>';
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#e5c98a" stroke-width="34" stroke-linecap="round"/>';
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
+
+  const currentIdx = currentContinueTarget();
+  points.forEach((pt,i)=>{
+    const idx = map.from + i;
+    const n = NODES[idx];
+    const status = nodeStatus(idx);
+    const v = nodeVisual(n, status);
+    const isCurrent = idx === currentIdx;
+    const st = n.type==='letter' ? starsFor(n.id) : 0;
+    const rad = n.type==='final' ? 40 : 33;
+
+    if(isCurrent){
+      html += '<circle class="pulse-ring" cx="'+pt.x+'" cy="'+pt.y+'" r="34" fill="none" stroke="'+(status==='locked'?'#8c9296':'#2c8350')+'" stroke-width="4"/>';
+    }
+    html += '<g class="node-g'+(status==='locked'?' locked':'')+'" data-idx="'+idx+'">';
+    html += '<circle class="'+v.discCls+(idx===jumpNodeIdx?' just-arrived':'')+'" cx="'+pt.x+'" cy="'+pt.y+'" r="'+rad+'" stroke="#fff" stroke-width="5"/>';
+    html += '<text class="node-num'+(status==='locked'?' locked':'')+'" x="'+pt.x+'" y="'+(pt.y+9)+'" text-anchor="middle">' +
+              (status==='locked' ? '🔒' : escapeHtml(v.letterCh)) + '</text>';
+    html += '</g>';
+    html += '<text class="node-label" x="'+pt.x+'" y="'+(pt.y+rad+22)+'" text-anchor="middle">'+escapeHtml(v.label)+'</text>';
+    if(st) html += '<text class="node-stars" x="'+pt.x+'" y="'+(pt.y+rad+40)+'" text-anchor="middle">'+'★'.repeat(st)+'</text>';
+    if(isCurrent){
+      html += '<text class="avatar-marker" x="'+pt.x+'" y="'+(pt.y-rad-14)+'" font-size="38" text-anchor="middle">'+profile.avatar+'</text>';
+    }
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g=>{
+    g.addEventListener('click', ()=>{
+      const idx = parseInt(g.dataset.idx,10);
+      if(nodeStatus(idx)==='locked'){ playTap(); return; }
+      playTap(); openNode(idx);
     });
   });
-  const prevBtn = $('map-chapter-prev'), nextBtn = $('map-chapter-next');
-  if(prevBtn) prevBtn.addEventListener('click', ()=>{ if(viewMapChapter>0){ playTap(); window.__mapChapterTouched=true; viewMapChapter--; renderMap(); } });
-  if(nextBtn) nextBtn.addEventListener('click', ()=>{ if(viewMapChapter<MAP_CHAPTERS.length-1){ playTap(); window.__mapChapterTouched=true; viewMapChapter++; renderMap(); } });
-  showScreen('screen-map');
+
+  const doneOnMap = mapDoneCount(viewMap);
+  $('map-help').textContent = doneOnMap === count
+    ? 'This whole map is finished — tap ▶ for the next one!'
+    : (currentIdx >= map.to
+        ? 'You have already passed this map. Tap ▶ to keep going.'
+        : (currentIdx < map.from
+            ? 'Finish the earlier maps first, then this one unlocks.'
+            : 'Tap the glowing stone to keep going!'));
+  renderMapCertRow();
 }
+/* Full entry point: pick the page containing jumpToIdx (defaulting to
+   the player's current lesson) and paint it, with the "just arrived"
+   pop on that node. Used whenever the game returns to the map from
+   somewhere else (finishing a lesson, Home, the certificate screen). */
+function renderMap(jumpToIdx){
+  if(typeof jumpToIdx !== 'number') jumpToIdx = currentContinueTarget();
+  viewMap = mapIndexForNodeIdx(jumpToIdx);
+  showScreen('screen-map');
+  paintMap(jumpToIdx);
+}
+$('map-prev').addEventListener('click', ()=>{ if(viewMap>0){ viewMap--; playTap(); paintMap(); } });
+$('map-next').addEventListener('click', ()=>{ if(viewMap<MAPS.length-1){ viewMap++; playTap(); paintMap(); } });
 function openNode(i){
   const n = NODES[i];
   if(n.type==='letter') startLetterLesson(i);
@@ -1646,13 +1774,47 @@ function startFinalChallenge(nodeIdx){
     const stars = scorePct>=90?3:(scorePct>=70?2:1);
     profile.stars[n.id] = Math.max(starsFor(n.id), stars);
     profile.coins += 20;
-    profile.certEarned = true;
     unlockNext();
-    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true, offerCert:true });
+    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true });
   }, 'Garden Challenge', '🏆');
 }
 
-/* ===================== CERTIFICATE ===================== */
+/* ===================== CERTIFICATE (one per map) ===================== */
+function mapNodeIdxs(mi){
+  const out = [];
+  for(let i=MAPS[mi].from;i<MAPS[mi].to;i++) out.push(i);
+  return out;
+}
+function mapDoneCount(mi){ return mapNodeIdxs(mi).filter(i=>i<profile.unlockedIndex).length; }
+function mapComplete(mi){ return profile.unlockedIndex >= MAPS[mi].to; }
+function mapStars(mi){ return mapNodeIdxs(mi).reduce((s,i)=>{ const n=NODES[i]; return s + (n.type==='letter' ? starsFor(n.id) : 0); }, 0); }
+function mapMaxStars(mi){ return mapNodeIdxs(mi).filter(i=>NODES[i].type==='letter').length * 3; }
+function latestCompleteMap(){
+  let last = -1;
+  MAPS.forEach((m,mi)=>{ if(mapComplete(mi)) last = mi; });
+  return last;
+}
+function nodeTitle(i){
+  const n = NODES[i];
+  if(n.type==='letter') return n.letter.letter+' · '+n.letter.translit;
+  if(n.type==='checkpoint') return '🌟 Review';
+  if(n.type==='vocab') return '🗂️ '+n.module.title;
+  if(n.type==='story') return '📖 '+(n.story ? n.story.title : 'Story');
+  if(n.type==='final') return '🏆 '+n.group.title+' Challenge';
+  return '';
+}
+/* Built from our own verified curriculum data (letter translits, vocab
+   module titles) rather than hand-typed, so it can't drift from what's
+   actually taught in that map. */
+function certSubForGroup(g){
+  const names = g.letters.map(ch => LETTER_BY_CH[ch].translit);
+  let sub = names.join(', ');
+  if(g.vocabModule && DATA.vocabModules[g.vocabModule]){
+    sub += (sub ? ' — plus ' : '') + DATA.vocabModules[g.vocabModule].title.toLowerCase() + ' words';
+  }
+  if(!sub) sub = 'Every letter of the Arabic alphabet, mastered!';
+  return sub;
+}
 function openCertNameModal(onSaved){
   window.__certNameOnSaved = onSaved || null;
   $('certname-input').value = studentFullName || (profile ? profile.name : '');
@@ -1660,38 +1822,70 @@ function openCertNameModal(onSaved){
   $('certname-modal').classList.remove('hidden');
   $('certname-input').focus();
 }
-function certRecord(){
-  if(!profile.certRecord){
+/* The award date and ID are stored the first time, so a reprint always matches the first print. */
+function certRecord(mi){
+  if(!profile.certRecords || typeof profile.certRecords!=='object') profile.certRecords = {};
+  if(!profile.certRecords[mi]){
     const d = new Date();
-    profile.certRecord = {
+    profile.certRecords[mi] = {
       date: d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
-      id: 'AA-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)
+      id: 'AA-M'+(mi+1)+'-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)
     };
     saveProfile();
   }
-  return profile.certRecord;
+  return profile.certRecords[mi];
 }
 function prettyDate(iso){
   const p = String(iso||'').split('-');
   const d = (p.length===3) ? new Date(+p[0], +p[1]-1, +p[2]) : new Date();
   return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
 }
-function showCertificate(){
+let certMap = 0;
+/* Under the map: an invitation once that map is finished, a progress note while it isn't. */
+function renderMapCertRow(){
+  const row = $('map-cert-row');
+  const done = mapDoneCount(viewMap);
+  const total = mapNodeIdxs(viewMap).length;
+  const ready = done === total;
+  row.innerHTML = '<button class="cert-cta'+(ready?'':' locked')+'" id="map-cert-btn" type="button">' +
+    (ready ? '🎓 Get my Map '+(viewMap+1)+' certificate' : '🎓 Map '+(viewMap+1)+' certificate · '+done+' of '+total+' done') +
+    '</button>';
+  $('map-cert-btn').addEventListener('click', ()=>{ playTap(); showCertificate(viewMap); });
+}
+function showCertificate(mi){
+  if(typeof mi !== 'number') mi = Math.max(0, latestCompleteMap());
+  certMap = mi;
+  const g = MAPS[mi].group;
   const box = $('cert-body');
-  if(!profile.certEarned){
-    box.innerHTML = '<p class="cert-todo-lead">Finish the 🏆 Garden Challenge at the end of the map to earn your Arabic Adventure certificate!</p>' +
-      '<div class="lesson-actions"><button class="big-btn" id="cert-goto-map">🗺️ Go to map</button></div>';
+  $('cert-head-label').textContent = 'Map '+(mi+1)+' Certificate';
+  const ready = mapComplete(mi);
+  if(!ready){
+    const idxs = mapNodeIdxs(mi);
+    box.innerHTML =
+      '<p class="cert-todo-lead">Almost there! Finish these to earn the Map '+(mi+1)+' · '+escapeHtml(g.title)+' certificate.</p>' +
+      '<div class="cert-todo">'+idxs.map(i=>{
+        const done = i < profile.unlockedIndex;
+        const playable = i <= profile.unlockedIndex;
+        return '<div class="todo-row'+(done?' ok':'')+'">' +
+          '<span class="tr-icon">'+(done?'✅':(playable?'⭕':'🔒'))+'</span>' +
+          '<span class="tr-label">'+escapeHtml(nodeTitle(i))+'</span>' +
+          ((done || !playable) ? '' : '<button class="tr-go" type="button" data-play="'+i+'">Play</button>') +
+        '</div>';
+      }).join('')+'</div>';
+    box.querySelectorAll('.tr-go').forEach(b=>b.addEventListener('click', ()=>{
+      playTap(); openNode(parseInt(b.dataset.play,10));
+    }));
     showScreen('screen-certificate');
     $('cert-print-btn').classList.add('hidden');
-    $('cert-goto-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
+    $('certname-edit-btn') && $('certname-edit-btn').classList.add('hidden');
     return;
   }
   if(!studentFullName){
-    openCertNameModal(showCertificate);
+    openCertNameModal(function(){ showCertificate(mi); });
     return;
   }
   $('cert-print-btn').classList.remove('hidden');
-  const rec = certRecord();
+  const rec = certRecord(mi);
   box.innerHTML =
     '<div class="cert-wrap"><div class="cert-card">' +
       '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
@@ -1701,12 +1895,12 @@ function showCertificate(){
       '<h1 class="cert-title">Certificate of Completion</h1>' +
       '<p class="cert-line">This certifies that</p>' +
       '<div class="cert-name">'+escapeHtml(studentFullName)+'</div>' +
-      '<p class="cert-line">has completed World 1</p>' +
-      '<p class="cert-course">🏜️ The Desert Road · All 28 Arabic Letters</p>' +
-      '<p class="cert-line arabic" style="font-size:22px; margin-top:4px;">جَمِيعُ الْحُرُوفِ الْعَرَبِيَّة</p>' +
+      '<p class="cert-line">has finished every lesson on</p>' +
+      '<p class="cert-course">'+g.icon+' Map '+(mi+1)+' · '+escapeHtml(g.title)+'</p>' +
+      '<p class="cert-line" style="font-size:14px; margin-top:2px;">'+escapeHtml(certSubForGroup(g))+'</p>' +
       '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
       '<div class="cert-meta-row">' +
-        '<div>Stars<b>'+totalStars()+'</b></div>' +
+        '<div>Stars<b>'+mapStars(mi)+' / '+mapMaxStars(mi)+'</b></div>' +
         '<div>Date<b>'+prettyDate(rec.date)+'</b></div>' +
         '<div>Certificate ID<b>'+rec.id+'</b></div>' +
       '</div>' +
@@ -1730,10 +1924,10 @@ $('certname-save-btn').addEventListener('click', ()=>{
     .finally(()=>{ btn.disabled = false; });
 });
 $('certname-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('certname-save-btn').click(); });
-$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderHome(); });
+$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderMap(MAPS[certMap].from); });
 $('cert-print-btn').addEventListener('click', ()=>{
   const prevTitle = document.title;
-  document.title = (studentFullName||'My')+'’s Arabic Adventure certificate';
+  document.title = (studentFullName||'My')+'’s Map '+(certMap+1)+' certificate';
   const restore = ()=>{ document.title = prevTitle; window.removeEventListener('afterprint', restore); };
   window.addEventListener('afterprint', restore);
   window.print();
@@ -1812,6 +2006,7 @@ function wireChoiceGrid(gridId, opts, renderFn, done, letter, isEmoji){
 
 /* ===================== REWARD ===================== */
 function showReward(opts){
+  if(lastCompletedMapIdx !== null){ opts.offerCert = true; opts.certMapIdx = lastCompletedMapIdx; lastCompletedMapIdx = null; }
   const box = $('reward-box');
   box.innerHTML =
     '<div class="mascot-wrap"></div>' +
@@ -1822,7 +2017,7 @@ function showReward(opts){
     '<div class="coin-earned">🪙 +'+(opts.coins||0)+' coins</div>' +
     (opts.badge ? '<div class="sticker-row">'+opts.badge+'</div>' : '') +
     '<div class="lesson-actions">' +
-      (opts.offerCert ? '<button class="big-btn sun" id="reward-cert">🎓 Get my certificate</button>' : '') +
+      (opts.offerCert ? '<button class="big-btn sun" id="reward-cert">🎓 Get my Map '+(opts.certMapIdx+1)+' certificate</button>' : '') +
       '<button class="big-btn" id="reward-continue">▶ Continue</button>' +
       '<button class="ghost-btn" id="reward-map">🗺️ Map</button>' +
     '</div>';
@@ -1833,12 +2028,10 @@ function showReward(opts){
   showScreen('screen-reward');
   $('reward-continue').addEventListener('click', ()=>{
     playTap();
-    const nextIdx = currentContinueTarget();
-    if(nodeStatus(nextIdx)==='locked' || (nextIdx===NODES.length-1 && nodeStatus(nextIdx)==='complete')){ renderMap(); return; }
-    openNode(nextIdx);
+    renderMap(currentContinueTarget());
   });
   $('reward-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
-  if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(); });
+  if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(opts.certMapIdx); });
 }
 
 /* ===================== PARENT AREA ===================== */
