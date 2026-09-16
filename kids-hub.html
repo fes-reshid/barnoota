@@ -223,6 +223,12 @@
           <p>Every Arabic letter — four maps, 40 lessons.</p>
           <span class="progress-badge" id="progress-arabic">Start now!</span>
         </a>
+        <a class="subject-card" id="card-arabic-adventure" href="arabic-adventure.html" style="--accent:#3fae6a; --accent-bg:#e6f6ec;">
+          <div class="icon">🌿</div>
+          <h3>Arabic Adventure</h3>
+          <p>A garden of letter games for little ones — meet, hear, trace, match and read every letter.</p>
+          <span class="progress-badge" id="progress-arabic-adventure">Start now!</span>
+        </a>
         <a class="subject-card" id="card-seerah" href="kids-seerah-quest.html" style="--accent:var(--green); --accent-bg:var(--green-bg);">
           <div class="icon">🕋</div>
           <h3>Seerah</h3>
@@ -334,6 +340,17 @@ function progressLabel(progress, gameKey, total){
   if(done >= total) return 'All done! 🎉';
   return done + '/' + total + ' lessons';
 }
+/* Arabic Adventure stores stars keyed by node id (e.g. "L_ب") rather than
+   as a plain array, since its map mixes letters, reviews and bonus nodes. */
+function progressLabelArabicAdventure(progress){
+  const p = progress && progress['arabicAdventure'];
+  const TOTAL_LETTERS = 28;
+  if(!p || typeof p.stars !== 'object') return 'Start now!';
+  const lettersDone = Object.keys(p.stars).filter(k => k.indexOf('L_') === 0).length;
+  if(lettersDone <= 0) return 'Start now!';
+  if(lettersDone >= TOTAL_LETTERS) return 'All done! 🎉';
+  return lettersDone + '/' + TOTAL_LETTERS + ' letters';
+}
 let studentFullName = '';
 function showHub(data){
   document.getElementById('login-screen').classList.add('hidden');
@@ -345,6 +362,7 @@ function showHub(data){
   document.getElementById('progress-english').textContent = progressLabel(progress, 'english', 40);
   document.getElementById('progress-math').textContent = progressLabel(progress, 'math', 40);
   document.getElementById('progress-arabic').textContent = progressLabel(progress, 'arabic', 40);
+  document.getElementById('progress-arabic-adventure').textContent = progressLabelArabicAdventure(progress);
   document.getElementById('progress-seerah').textContent = progressLabel(progress, 'seerah', 30);
 }
 function showLogin(){
