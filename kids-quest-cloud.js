@@ -67,15 +67,48 @@ function normalizeEmail(email){
 
 /* Logs a child in with their plain username + password. Resolves with
    the Firestore profile doc (creating a blank one on first-ever login,
-   in case an admin-created account hasn't been touched yet). */
+   in case an admin-created account hasn't been touched yet). Rejects
+   (and signs back out) if an admin has disabled the account. */
 function studentLogin(username, password){
   const email = usernameToEmail(username);
   return signInWithEmailAndPassword(auth, email, password)
     .then(function(cred){
       return ensureStudentDoc(cred.user, username).then(function(data){
+        if(data.disabled){
+          return signOut(auth).then(function(){
+            const err = new Error('This account has been disabled by an admin.');
+            err.code = 'app/account-disabled';
+            throw err;
+          });
+        }
         return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} };
       });
     });
+}
+
+/* Self-service sign-up: anyone can pick their own username, a real
+   contact email (for the admin to reach them — separate from the
+   internal synthetic Auth email every account still uses, so existing
+   login/reset logic keeps working unchanged) and a password. Firebase
+   naturally rejects a taken username, since it maps to the same
+   synthetic email as any existing account with that username. */
+function studentSignUp(username, contactEmail, password){
+  const clean = normalizeUsername(username);
+  if(!clean) return Promise.reject(new Error('Choose a username.'));
+  const email = usernameToEmail(clean);
+  return createUserWithEmailAndPassword(auth, email, password).then(function(cred){
+    const data = {
+      username: clean,
+      displayName: clean,
+      contactEmail: normalizeEmail(contactEmail || ''),
+      selfSignup: true,
+      createdAt: new Date().toISOString(),
+      progress: {}
+    };
+    return setDoc(doc(db, STUDENTS_COLLECTION, cred.user.uid), data).then(function(){
+      return { uid: cred.user.uid, username: clean, displayName: clean, fullName: '', progress: {} };
+    });
+  });
 }
 
 function ensureStudentDoc(user, usernameHint){
@@ -105,6 +138,7 @@ function onStudentAuth(cb){
   return onAuthStateChanged(auth, function(user){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
+      if(data.disabled){ signOut(auth); cb(null); return; }
       cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} });
     }).catch(function(){ cb(null); });
   });
@@ -295,10 +329,18 @@ function adminDeleteStudent(uid){
   return deleteDoc(doc(db, STUDENTS_COLLECTION, uid));
 }
 
+/* "Restrict" a student without deleting their progress: a disabled
+   account is signed out immediately (if active) and blocked from
+   logging back in until an admin re-enables it. */
+function adminSetStudentDisabled(uid, disabled){
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), { disabled: !!disabled }, { merge:true });
+}
+
 window.KidsCloud = {
   usernameToEmail: usernameToEmail,
   normalizeUsername: normalizeUsername,
   studentLogin: studentLogin,
+  studentSignUp: studentSignUp,
   onStudentAuth: onStudentAuth,
   studentLogout: studentLogout,
   saveProgress: saveProgress,
@@ -312,6 +354,7 @@ window.KidsCloud = {
   adminListStudents: adminListStudents,
   adminRenameStudent: adminRenameStudent,
   adminDeleteStudent: adminDeleteStudent,
+  adminSetStudentDisabled: adminSetStudentDisabled,
   superListAdmins: superListAdmins,
   superAddAdmin: superAddAdmin,
   superSetAdminRole: superSetAdminRole,

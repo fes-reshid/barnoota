@@ -124,19 +124,45 @@
     display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--leaf);
     cursor:pointer;
   }
-  .path-wrap{ position:relative; padding:6px 0 20px; }
+  #screen-map{
+    background:linear-gradient(180deg, #fdf1d6 0%, #f6dfae 30%, #e8c583 70%, #dcb46e 100%);
+    border-radius:24px; padding:14px 14px 4px; margin:0 -2px;
+  }
+  .path-wrap{ position:relative; padding:6px 0 4px; }
+  .dune-row{ line-height:0; margin:0 -14px; }
+  .dune-row.flip{ transform:scaleY(-1); }
+  .dune-svg{ width:100%; height:26px; display:block; }
+  .dune-svg path{ fill:#f3d9a2; }
+  .map-chapter-bar{
+    display:flex; align-items:center; justify-content:center; gap:14px; margin:6px 0 16px;
+  }
+  .map-nav-btn{
+    width:40px; height:40px; border-radius:50%; border:3px solid #fff; background:var(--coral);
+    color:#fff; font-size:16px; cursor:pointer; box-shadow:0 3px 0 var(--coral-dark); flex:none;
+  }
+  .map-nav-btn:disabled{ background:#d9c49a; box-shadow:none; opacity:.5; cursor:not-allowed; }
+  .map-chapter-title{
+    text-align:center; background:#fff; border:2px solid var(--sun-dark); border-radius:16px;
+    padding:6px 18px; min-width:180px;
+  }
+  .map-chapter-title b{ display:block; font-size:15.5px; color:#7a4a1a; }
+  .map-chapter-title .arabic{ display:block; font-size:15px; color:var(--sun-dark); direction:rtl; }
+  .map-chapter-title small{ display:block; font-size:10.5px; color:#9a7a4a; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
   .path-line{
     position:absolute; left:50%; top:10px; bottom:10px; width:6px; margin-left:-3px;
-    background:repeating-linear-gradient(180deg, var(--leaf-bg) 0 10px, transparent 10px 20px);
+    background:repeating-linear-gradient(180deg, #f3d9a2 0 10px, transparent 10px 20px);
     border-radius:4px; z-index:0;
   }
   .group-band{
     position:relative; z-index:1; text-align:center; margin:22px 0 12px;
-    font-weight:800; font-size:15px; color:var(--leaf-dark);
-    background:var(--leaf-bg); border-radius:16px; padding:6px 14px; display:inline-block;
+    font-weight:800; font-size:15px; color:#7a4a1a;
+    background:#fff3dc; border:1.5px solid var(--sun-dark); border-radius:16px; padding:6px 14px; display:inline-block;
     left:50%; transform:translateX(-50%);
   }
   .group-band-row{ text-align:center; }
+  .mountain-divider{ line-height:0; margin:16px -14px 0; position:relative; z-index:0; }
+  .mountain-divider svg{ width:100%; height:36px; display:block; }
+  .mountain-divider path{ fill:rgba(122,74,26,.18); }
   .node-row{ position:relative; z-index:1; display:flex; justify-content:center; margin:10px 0; }
   .node{
     width:74px; height:74px; border-radius:50%; border:4px solid #fff; cursor:pointer;
@@ -339,6 +365,36 @@
   .avatar-pick{ aspect-ratio:1/1; border-radius:14px; border:3px solid var(--line); background:var(--cream); font-size:24px; cursor:pointer; }
   .avatar-pick.on{ border-color:var(--leaf); background:var(--leaf-bg); }
 
+  /* ============ Certificate ============ */
+  .cert-wrap{ display:flex; justify-content:center; padding:10px 0; }
+  .cert-card{
+    width:100%; max-width:640px; background:var(--cream); position:relative;
+    border:3px double var(--sun-dark); outline:8px solid var(--sun-bg); outline-offset:-20px;
+    border-radius:6px; padding:44px 28px 32px; text-align:center; box-shadow:0 10px 30px rgba(60,47,20,.15);
+  }
+  .cert-corner{ position:absolute; width:24px; height:24px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--sun-dark); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:14px; left:14px; } .cert-corner.tr{ top:14px; right:14px; }
+  .cert-corner.bl{ bottom:14px; left:14px; } .cert-corner.br{ bottom:14px; right:14px; }
+  .cert-bismillah{ font-family:'Amiri', serif; direction:rtl; font-size:20px; color:var(--sun-dark); margin:0 0 6px; }
+  .cert-mascot{ width:56px; margin:0 auto 4px; }
+  .cert-eyebrow{ font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--leaf-dark); margin:0; }
+  .cert-title{ font-size:24px; font-weight:800; color:var(--ink); margin:4px 0 14px; }
+  .cert-line{ font-size:15px; color:var(--ink-soft); margin:2px 0; }
+  .cert-name{ font-size:28px; font-weight:800; color:var(--sun-dark); margin:8px 0; font-family:'Amiri', serif; }
+  .cert-course{ font-size:17px; font-weight:800; color:var(--leaf-dark); margin:6px 0 2px; }
+  .cert-divider{ display:flex; align-items:center; gap:10px; margin:16px auto; max-width:280px; color:var(--sun-dark); }
+  .cert-divider span{ flex:1; height:1px; background:var(--sun-dark); opacity:.4; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:28px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .cert-meta-row b{ display:block; color:var(--ink); font-size:15px; }
+  .cert-footer{ margin-top:18px; font-size:12px; color:var(--ink-soft); }
+  .cert-todo-lead{ text-align:center; font-size:15.5px; color:var(--ink-soft); margin:0 auto 16px; max-width:460px; }
+  @media print{
+    header.site, .no-print, .map-topbar{ display:none !important; }
+    body{ background:#fff; }
+  }
+
   @media (max-width:640px){
     .lesson-layout{ grid-template-columns:1fr; }
     .lesson-side{ order:2; }
@@ -369,10 +425,12 @@
       <p class="sub">رَحْلَةُ الْحُرُوف</p>
       <p>Learn every Arabic letter through a garden full of games — recognise it, hear it, trace it, and read it in a real word.</p>
       <input class="big-input" id="login-username" type="text" placeholder="Username" autocomplete="username">
+      <input class="big-input hidden" id="login-email" type="email" placeholder="Email (for account recovery)" autocomplete="email">
       <input class="big-input" id="login-password" type="password" placeholder="Password" autocomplete="current-password">
       <button class="big-btn" id="login-start-btn" style="width:100%;">▶ Start Adventure</button>
       <p class="login-msg" id="login-msg"></p>
-      <p class="login-hint">Same account as your other Kids Corner games — ask your parent if you don't have a username yet.</p>
+      <button class="ghost-btn" id="login-toggle-mode" type="button" style="margin-top:8px;">First time here? Create an account</button>
+      <p class="login-hint" id="login-hint">Same account as your other Kids Corner games — ask your parent if you don't have a username yet.</p>
     </div>
   </div>
 
@@ -394,6 +452,7 @@
       <button class="big-btn sun" id="home-parent-btn">👪 PARENT AREA</button>
     </div>
     <div class="home-secondary">
+      <button class="ghost-btn hidden" id="home-cert-btn">🎓 My certificate</button>
       <button class="ghost-btn" id="home-avatar-btn">🙂 Change character</button>
       <button class="ghost-btn" id="home-logout-btn">Log out</button>
     </div>
@@ -456,6 +515,18 @@
     <div id="dash-body"></div>
   </div>
 
+  <!-- ============ CERTIFICATE ============ -->
+  <div class="screen hidden" id="screen-certificate">
+    <div class="map-topbar">
+      <div class="player-chip">🎓 Certificate</div>
+      <div>
+        <button class="ghost-btn no-print" id="cert-print-btn" style="margin-right:8px;">🖨️ Print</button>
+        <button class="ghost-btn no-print" id="cert-back-btn">← Back</button>
+      </div>
+    </div>
+    <div id="cert-body"></div>
+  </div>
+
 </div>
 
 <!-- ============ Avatar modal ============ -->
@@ -464,6 +535,17 @@
     <h2>Choose your character</h2>
     <div class="avatar-grid" id="modal-avatars"></div>
     <button class="big-btn" id="avatar-done-btn" style="width:100%;">Done</button>
+  </div>
+</div>
+
+<!-- ============ Certificate name modal ============ -->
+<div class="modal-back hidden" id="certname-modal">
+  <div class="modal-box">
+    <h2>What's your full name?</h2>
+    <p style="font-size:14.5px; color:var(--ink-soft);">This is the name printed on your certificate — shared with your other Kids Corner games.</p>
+    <input class="big-input" id="certname-input" type="text" placeholder="Full name">
+    <p class="login-msg" id="certname-msg"></p>
+    <button class="big-btn" id="certname-save-btn" style="width:100%;">Save</button>
   </div>
 </div>
 
@@ -537,7 +619,16 @@ function speakArabic(text, onend){
     window.speechSynthesis.speak(u);
   }catch(e){ if(onend) onend(); }
 }
-function getCtx(){ if(!window.__actx) window.__actx = new (window.AudioContext||window.webkitAudioContext)(); return window.__actx; }
+/* Chrome/Safari create a new AudioContext in a "suspended" state and
+   never make a sound until something explicitly resumes it from within a
+   real user gesture — creating it and calling .start() is not enough on
+   its own. Every beep re-checks this, so the very first tap in a session
+   is what actually wakes audio up. */
+function getCtx(){
+  if(!window.__actx) window.__actx = new (window.AudioContext||window.webkitAudioContext)();
+  if(window.__actx.state === 'suspended') window.__actx.resume().catch(function(){});
+  return window.__actx;
+}
 function beep(freq,dur,type){
   if(!soundOn) return;
   try{
@@ -547,13 +638,35 @@ function beep(freq,dur,type){
     o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur+.02);
   }catch(e){}
 }
-function playTap(){ beep(430,.07,'triangle'); }
+/* Some browsers silently drop the first speechSynthesis.speak() call of a
+   page unless one has already happened inside a real user gesture. Every
+   playTap() (fired from nearly every button in the app) tries to "prime"
+   it once with a silent utterance, so by the time a lesson actually wants
+   to speak a letter, the engine is already awake. */
+let speechPrimed = false;
+function primeSpeech(){
+  if(speechPrimed || !('speechSynthesis' in window)) return;
+  speechPrimed = true;
+  try{
+    const u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function playTap(){ primeSpeech(); beep(430,.07,'triangle'); }
 function playRight(){ beep(660,.12,'sine'); setTimeout(()=>beep(880,.16,'sine'),90); }
 function playWrong(){ beep(180,.2,'sawtooth'); }
 function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.2,'sine'), i*140)); }
 function setSound(on){
   soundOn = on;
   try{ localStorage.setItem(SOUND_KEY, on?'1':'0'); }catch(e){}
+}
+/* True once we know for certain there is no voice at all to speak Arabic
+   with — used to show a one-time, honest note rather than staying silently
+   broken (common on locked-down/managed or remote-desktop Windows setups
+   with no language pack or no audio device installed). */
+function noSpeechVoicesAvailable(){
+  return 'speechSynthesis' in window && (window.speechSynthesis.getVoices() || []).length === 0;
 }
 
 function burstConfetti(){
@@ -611,7 +724,8 @@ function defaultProfile(name){
     streak:0, lastPlayedDate:'',
     skillScores:{}, groupBadges:{},
     statsLessonsCompleted:0, statsTracingSessions:0,
-    activityHistory:[], nodeStepProgress:{}
+    activityHistory:[], nodeStepProgress:{},
+    certEarned:false, certRecord:null
   };
 }
 function normalizeProfile(d, fallbackName){
@@ -629,6 +743,8 @@ function normalizeProfile(d, fallbackName){
   if(typeof d.statsTracingSessions!=='number') d.statsTracingSessions = 0;
   if(!Array.isArray(d.activityHistory)) d.activityHistory = [];
   if(!d.nodeStepProgress || typeof d.nodeStepProgress!=='object') d.nodeStepProgress = {};
+  if(typeof d.certEarned!=='boolean') d.certEarned = false;
+  if(typeof d.certRecord!=='object') d.certRecord = null;
   return d;
 }
 function saveProfile(){
@@ -721,6 +837,7 @@ function renderHome(){
   $('home-stars').textContent = totalStars();
   $('home-streak').textContent = profile.streak;
   $('home-letters').textContent = lettersMasteredCount();
+  $('home-cert-btn').classList.toggle('hidden', !profile.certEarned);
   const badgeRow = $('home-badges');
   badgeRow.innerHTML = DATA.groups.filter(g=>g.letters.length).map(g=>{
     const won = !!profile.groupBadges[g.id];
@@ -730,13 +847,20 @@ function renderHome(){
 }
 
 /* ===================== MAP ===================== */
+const MAP_CHAPTERS = DATA.mapChapters;
+function chapterIndexForGroupId(gid){
+  const i = MAP_CHAPTERS.findIndex(c => c.groupIds.indexOf(gid) >= 0);
+  return i < 0 ? 0 : i;
+}
+let viewMapChapter = 0;
+
 function nodeVisual(n, status){
   let cls='node', label='', letterCh='', done=(status==='complete');
   if(n.type==='letter'){ cls+=' '+status; letterCh=n.letter.letter; label=n.letter.translit; }
   else if(n.type==='checkpoint'){ cls+=' checkpoint '+(status==='locked'?'locked':''); letterCh=done?'✅':'🌟'; label='Review'; }
   else if(n.type==='vocab'){ cls+=' vocabnode '+(status==='locked'?'locked':''); letterCh=done?'✅':'🗂️'; label=n.module.title; }
   else if(n.type==='story'){ cls+=' storynode '+(status==='locked'?'locked':''); letterCh=done?'✅':'📖'; label='Story'; }
-  else if(n.type==='final'){ cls+=' finalnode '+(status==='locked'?'locked':''); letterCh=done?'🏆':'🔓'; label='Garden Challenge'; }
+  else if(n.type==='final'){ cls+=' finalnode '+(status==='locked'?'locked':''); letterCh=done?'🏆':'🔓'; label=n.group.title; }
   if(done && n.type!=='letter') cls += ' node-done';
   return { cls, letterCh, label };
 }
@@ -745,13 +869,28 @@ function renderMap(){
   $('map-name').textContent = profile.name;
   $('map-stars').textContent = totalStars();
   $('map-coins').textContent = profile.coins;
+
+  const curNodeGroup = NODES[Math.min(profile.unlockedIndex, NODES.length-1)].group;
+  viewMapChapter = clamp(viewMapChapter, 0, MAP_CHAPTERS.length-1);
+  if(!window.__mapChapterTouched) viewMapChapter = chapterIndexForGroupId(curNodeGroup.id);
+
+  const chapter = MAP_CHAPTERS[viewMapChapter];
   const wrap = $('map-path');
-  let html = '<div class="path-line"></div>';
+  let html =
+    '<div class="dune-row"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>' +
+    '<div class="map-chapter-bar">' +
+      '<button class="map-nav-btn" id="map-chapter-prev" '+(viewMapChapter<=0?'disabled':'')+'>◀</button>' +
+      '<div class="map-chapter-title"><b>'+escapeHtml(chapter.title)+'</b><span class="arabic">'+chapter.subtitle+'</span><small>Map '+(viewMapChapter+1)+' of '+MAP_CHAPTERS.length+'</small></div>' +
+      '<button class="map-nav-btn" id="map-chapter-next" '+(viewMapChapter>=MAP_CHAPTERS.length-1?'disabled':'')+'>▶</button>' +
+    '</div>' +
+    '<div class="path-line"></div>';
   let lastGroup = null;
   NODES.forEach((n,i)=>{
+    if(chapter.groupIds.indexOf(n.group.id) < 0) return;
     if(n.group !== lastGroup){
       lastGroup = n.group;
-      html += '<div class="group-band-row"><div class="group-band">'+n.group.icon+' '+escapeHtml(n.group.title)+'</div></div>';
+      html += '<div class="mountain-divider"><svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 46 L0 34 L45 8 L75 28 L110 4 L150 30 L190 10 L230 32 L270 6 L310 28 L350 12 L400 34 L400 46 Z"/></svg></div>' +
+        '<div class="group-band-row"><div class="group-band">'+n.group.icon+' '+escapeHtml(n.group.title)+'</div></div>';
     }
     const status = nodeStatus(i);
     const v = nodeVisual(n, status);
@@ -764,6 +903,7 @@ function renderMap(){
       '<div class="node-label">'+escapeHtml(v.label)+'</div>' +
     '</div></div>';
   });
+  html += '<div class="dune-row flip"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>';
   wrap.innerHTML = html;
   wrap.querySelectorAll('.node').forEach(el=>{
     el.addEventListener('click', ()=>{
@@ -772,6 +912,9 @@ function renderMap(){
       playTap(); openNode(i);
     });
   });
+  const prevBtn = $('map-chapter-prev'), nextBtn = $('map-chapter-next');
+  if(prevBtn) prevBtn.addEventListener('click', ()=>{ if(viewMapChapter>0){ playTap(); window.__mapChapterTouched=true; viewMapChapter--; renderMap(); } });
+  if(nextBtn) nextBtn.addEventListener('click', ()=>{ if(viewMapChapter<MAP_CHAPTERS.length-1){ playTap(); window.__mapChapterTouched=true; viewMapChapter++; renderMap(); } });
   showScreen('screen-map');
 }
 function openNode(i){
@@ -886,6 +1029,7 @@ STEP_RENDER.meet = function(card, letter, done){
     '<p class="hero-name">'+letter.translit+' · <span class="arabic">'+letter.name+'</span></p>' +
     '<div class="forms-row">' + formsHtml + '</div>' +
     '<button class="speak-btn" id="meet-speak">🔊 Listen again</button>' +
+    (noSpeechVoicesAvailable() ? '<p class="task-sub" style="color:var(--coral-dark); margin-top:8px;">🔈 No voice found on this device for Arabic speech — try a different browser or device, or ask a grown-up to check the sound/language settings.</p>' : '') +
     '<div class="lesson-actions"><button class="big-btn" id="meet-next">Continue</button></div>';
   speakArabic(letter.letter);
   $('meet-speak').addEventListener('click', ()=>{ playTap(); speakArabic(letter.letter); });
@@ -958,6 +1102,41 @@ STEP_RENDER.find = function(card, letter, done){
   });
 };
 
+/* ---------- shared: robust Arabic glyph rasterizing for canvas ---------- */
+/* canvas fillText/strokeText do not reliably shape Arabic glyphs at large
+   sizes — a letter's dot can render as a stray blob or diamond, especially
+   when stroked. Rendering through an SVG <foreignObject> instead uses the
+   browser's own HTML text engine (the same one that shapes Arabic
+   correctly everywhere else on this page), then rasterizes that to an
+   <img> we can drawImage() onto a canvas like any other image. Cached per
+   letter+size+colour since building the data URI/image is comparatively
+   slow and every redraw during a trace/colour stroke reuses the same one. */
+const glyphImageCache = {};
+function glyphImage(letter, sizePx, colorHex){
+  const key = letter+'|'+sizePx+'|'+colorHex;
+  if(glyphImageCache[key]) return glyphImageCache[key];
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="'+sizePx+'" height="'+sizePx+'">' +
+      '<foreignObject width="100%" height="100%">' +
+        '<div xmlns="http://www.w3.org/1999/xhtml" style="' +
+          'width:'+sizePx+'px;height:'+sizePx+'px;margin:0;display:flex;align-items:center;justify-content:center;' +
+          'font-family:Amiri,serif;font-size:'+Math.round(sizePx*0.72)+'px;color:'+colorHex+';direction:rtl;line-height:1;">' +
+          letter +
+        '</div>' +
+      '</foreignObject>' +
+    '</svg>';
+  const promise = (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function(){
+    return new Promise(function(resolve){
+      const img = new Image();
+      img.onload = function(){ resolve(img); };
+      img.onerror = function(){ resolve(null); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    });
+  });
+  glyphImageCache[key] = promise;
+  return promise;
+}
+
 /* ---------- step: trace (canvas) ---------- */
 STEP_RENDER.trace = function(card, letter, done){
   card.innerHTML =
@@ -974,24 +1153,18 @@ STEP_RENDER.trace = function(card, letter, done){
   const canvas = $('trace-canvas');
   const ctx = canvas.getContext('2d');
   const W=canvas.width, H=canvas.height;
+  let guideImg = null, guidePixelCount = 0;
 
   function drawGuide(){
     ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = '#e7ede6';
-    ctx.font = '220px Amiri, serif';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(letter.letter, W/2, H/2+18);
+    if(guideImg) ctx.drawImage(guideImg,0,0,W,H);
   }
-  drawGuide();
-  const guideData = ctx.getImageData(0,0,W,H).data;
-  let guidePixelCount = 0;
-  for(let i=3;i<guideData.length;i+=4){ if(guideData[i]>10) guidePixelCount++; }
 
   const inkCanvas = document.createElement('canvas'); inkCanvas.width=W; inkCanvas.height=H;
   const inkCtx = inkCanvas.getContext('2d');
   inkCtx.lineWidth = 16; inkCtx.lineCap='round'; inkCtx.lineJoin='round'; inkCtx.strokeStyle='#3fae6a';
 
-  let drawing=false, lastX=0, lastY=0, inkedAny=false;
+  let drawing=false, lastX=0, lastY=0;
   function pos(e){
     const r=canvas.getBoundingClientRect();
     const cx = (e.touches? e.touches[0].clientX : e.clientX) - r.left;
@@ -1003,19 +1176,18 @@ STEP_RENDER.trace = function(card, letter, done){
     ctx.drawImage(inkCanvas,0,0);
   }
   function scoreNow(){
+    if(!guideImg || !guidePixelCount) return 0;
     const merged = document.createElement('canvas'); merged.width=W; merged.height=H;
     const mctx = merged.getContext('2d');
-    mctx.font='220px Amiri, serif'; mctx.textAlign='center'; mctx.textBaseline='middle';
-    mctx.fillStyle='#000'; mctx.fillText(letter.letter, W/2, H/2+18);
+    mctx.drawImage(guideImg,0,0,W,H);
     mctx.globalCompositeOperation='source-in';
     mctx.drawImage(inkCanvas,0,0);
     const d = mctx.getImageData(0,0,W,H).data;
     let hit=0;
     for(let i=3;i<d.length;i+=4){ if(d[i]>10) hit++; }
-    const pct = guidePixelCount ? clamp(Math.round(hit/guidePixelCount*100),0,100) : 0;
-    return pct;
+    return clamp(Math.round(hit/guidePixelCount*100),0,100);
   }
-  function onDown(e){ e.preventDefault(); drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; inkedAny=true; }
+  function onDown(e){ if(!guideImg) return; e.preventDefault(); drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; }
   function onMove(e){
     if(!drawing) return; e.preventDefault();
     const p=pos(e);
@@ -1026,7 +1198,7 @@ STEP_RENDER.trace = function(card, letter, done){
     $('trace-score').textContent = 'Coverage: '+pct+'%';
     $('trace-done').disabled = pct < 15;
   }
-  function onUp(e){ drawing=false; }
+  function onUp(){ drawing=false; }
   canvas.addEventListener('pointerdown', onDown);
   canvas.addEventListener('pointermove', onMove);
   window.addEventListener('pointerup', onUp);
@@ -1045,6 +1217,15 @@ STEP_RENDER.trace = function(card, letter, done){
     canvas.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onUp);
     done(true);
+  });
+
+  glyphImage(letter.letter, W, '#d7e3d5').then(function(img){
+    guideImg = img;
+    drawGuide();
+    if(img){
+      const data = ctx.getImageData(0,0,W,H).data;
+      for(let i=3;i<data.length;i+=4){ if(data[i]>10) guidePixelCount++; }
+    }
   });
 };
 
@@ -1139,29 +1320,30 @@ STEP_RENDER.colour = function(card, letter, done){
   const W=canvas.width, H=canvas.height;
   const colours = ['#ff8a65','#57c2e8','#ffc94d','#b877d8','#3fae6a','#ff6f91'];
   let current = colours[0];
+  let guideImg = null;
 
-  function drawOutline(){
+  /* Pale backdrop always shows the letter shape; wherever the child has
+     coloured, their ink is composited on top clipped to that same shape
+     (via the mask canvas below) so it never spills outside the letter. */
+  function drawBackdrop(){
     ctx.clearRect(0,0,W,H);
-    ctx.font='220px Amiri, serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.lineWidth=4; ctx.strokeStyle='#26352a';
-    ctx.strokeText(letter.letter, W/2, H/2+18);
+    if(guideImg) ctx.drawImage(guideImg,0,0,W,H);
   }
-  drawOutline();
+  drawBackdrop();
 
   const inkCanvas = document.createElement('canvas'); inkCanvas.width=W; inkCanvas.height=H;
   const inkCtx = inkCanvas.getContext('2d');
   inkCtx.lineWidth=22; inkCtx.lineCap='round'; inkCtx.lineJoin='round';
 
   function composite(){
-    const mask = document.createElement('canvas'); mask.width=W; mask.height=H;
-    const mctx = mask.getContext('2d');
-    mctx.font='220px Amiri, serif'; mctx.textAlign='center'; mctx.textBaseline='middle';
-    mctx.fillStyle='#000'; mctx.fillText(letter.letter, W/2, H/2+18);
+    if(!guideImg) return;
+    drawBackdrop();
+    const masked = document.createElement('canvas'); masked.width=W; masked.height=H;
+    const mctx = masked.getContext('2d');
+    mctx.drawImage(guideImg,0,0,W,H);
     mctx.globalCompositeOperation='source-in';
     mctx.drawImage(inkCanvas,0,0);
-    ctx.clearRect(0,0,W,H);
-    ctx.drawImage(mask,0,0);
-    drawOutline();
+    ctx.drawImage(masked,0,0);
   }
 
   let drawing=false, lastX=0,lastY=0;
@@ -1171,7 +1353,7 @@ STEP_RENDER.colour = function(card, letter, done){
     const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
     return { x:cx*(W/r.width), y:cy*(H/r.height) };
   }
-  function onDown(e){ e.preventDefault(); drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; }
+  function onDown(e){ if(!guideImg) return; e.preventDefault(); drawing=true; const p=pos(e); lastX=p.x; lastY=p.y; }
   function onMove(e){
     if(!drawing) return; e.preventDefault();
     const p=pos(e);
@@ -1197,6 +1379,11 @@ STEP_RENDER.colour = function(card, letter, done){
     canvas.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onUp);
     done(true);
+  });
+
+  glyphImage(letter.letter, W, '#d7e3d5').then(function(img){
+    guideImg = img;
+    drawBackdrop();
   });
 };
 
@@ -1459,10 +1646,99 @@ function startFinalChallenge(nodeIdx){
     const stars = scorePct>=90?3:(scorePct>=70?2:1);
     profile.stars[n.id] = Math.max(starsFor(n.id), stars);
     profile.coins += 20;
+    profile.certEarned = true;
     unlockNext();
-    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true });
+    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true, offerCert:true });
   }, 'Garden Challenge', '🏆');
 }
+
+/* ===================== CERTIFICATE ===================== */
+function openCertNameModal(onSaved){
+  window.__certNameOnSaved = onSaved || null;
+  $('certname-input').value = studentFullName || (profile ? profile.name : '');
+  $('certname-msg').textContent = '';
+  $('certname-modal').classList.remove('hidden');
+  $('certname-input').focus();
+}
+function certRecord(){
+  if(!profile.certRecord){
+    const d = new Date();
+    profile.certRecord = {
+      date: d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
+      id: 'AA-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)
+    };
+    saveProfile();
+  }
+  return profile.certRecord;
+}
+function prettyDate(iso){
+  const p = String(iso||'').split('-');
+  const d = (p.length===3) ? new Date(+p[0], +p[1]-1, +p[2]) : new Date();
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+}
+function showCertificate(){
+  const box = $('cert-body');
+  if(!profile.certEarned){
+    box.innerHTML = '<p class="cert-todo-lead">Finish the 🏆 Garden Challenge at the end of the map to earn your Arabic Adventure certificate!</p>' +
+      '<div class="lesson-actions"><button class="big-btn" id="cert-goto-map">🗺️ Go to map</button></div>';
+    showScreen('screen-certificate');
+    $('cert-print-btn').classList.add('hidden');
+    $('cert-goto-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
+    return;
+  }
+  if(!studentFullName){
+    openCertNameModal(showCertificate);
+    return;
+  }
+  $('cert-print-btn').classList.remove('hidden');
+  const rec = certRecord();
+  box.innerHTML =
+    '<div class="cert-wrap"><div class="cert-card">' +
+      '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
+      '<span class="cert-corner bl"></span><span class="cert-corner br"></span>' +
+      '<div class="cert-mascot">'+mascotSVG(56)+'</div>' +
+      '<p class="cert-eyebrow">Arabic Adventure · Kids Corner</p>' +
+      '<h1 class="cert-title">Certificate of Completion</h1>' +
+      '<p class="cert-line">This certifies that</p>' +
+      '<div class="cert-name">'+escapeHtml(studentFullName)+'</div>' +
+      '<p class="cert-line">has completed World 1</p>' +
+      '<p class="cert-course">🏜️ The Desert Road · All 28 Arabic Letters</p>' +
+      '<p class="cert-line arabic" style="font-size:22px; margin-top:4px;">جَمِيعُ الْحُرُوفِ الْعَرَبِيَّة</p>' +
+      '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+      '<div class="cert-meta-row">' +
+        '<div>Stars<b>'+totalStars()+'</b></div>' +
+        '<div>Date<b>'+prettyDate(rec.date)+'</b></div>' +
+        '<div>Certificate ID<b>'+rec.id+'</b></div>' +
+      '</div>' +
+      '<div class="cert-footer">Arabic Adventure · diinislaam.com</div>' +
+    '</div></div>' +
+    '<p class="cert-line no-print" style="text-align:center;">🖨️ Print it, or save it as a PDF, and show your family!</p>';
+  showScreen('screen-certificate');
+}
+$('certname-save-btn').addEventListener('click', ()=>{
+  const val = $('certname-input').value.trim();
+  const msg = $('certname-msg');
+  if(!val){ msg.textContent = 'Type a name first.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.setFullName){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = $('certname-save-btn'); btn.disabled = true;
+  window.KidsCloud.setFullName(val).then(()=>{
+    studentFullName = val;
+    $('certname-modal').classList.add('hidden');
+    const cb = window.__certNameOnSaved; window.__certNameOnSaved = null;
+    if(cb) cb();
+  }).catch(err=>{ msg.textContent = (err && err.message) || 'Could not save — try again.'; })
+    .finally(()=>{ btn.disabled = false; });
+});
+$('certname-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('certname-save-btn').click(); });
+$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderHome(); });
+$('cert-print-btn').addEventListener('click', ()=>{
+  const prevTitle = document.title;
+  document.title = (studentFullName||'My')+'’s Arabic Adventure certificate';
+  const restore = ()=>{ document.title = prevTitle; window.removeEventListener('afterprint', restore); };
+  window.addEventListener('afterprint', restore);
+  window.print();
+});
+$('home-cert-btn') && $('home-cert-btn').addEventListener('click', ()=>{ playTap(); showCertificate(); });
 
 /* ===================== generic mastery question engine ===================== */
 function buildMasteryQuestions(letterPool, count){
@@ -1546,6 +1822,7 @@ function showReward(opts){
     '<div class="coin-earned">🪙 +'+(opts.coins||0)+' coins</div>' +
     (opts.badge ? '<div class="sticker-row">'+opts.badge+'</div>' : '') +
     '<div class="lesson-actions">' +
+      (opts.offerCert ? '<button class="big-btn sun" id="reward-cert">🎓 Get my certificate</button>' : '') +
       '<button class="big-btn" id="reward-continue">▶ Continue</button>' +
       '<button class="ghost-btn" id="reward-map">🗺️ Map</button>' +
     '</div>';
@@ -1557,10 +1834,11 @@ function showReward(opts){
   $('reward-continue').addEventListener('click', ()=>{
     playTap();
     const nextIdx = currentContinueTarget();
-    if(nodeStatus(nextIdx)==='locked'){ renderMap(); return; }
+    if(nodeStatus(nextIdx)==='locked' || (nextIdx===NODES.length-1 && nodeStatus(nextIdx)==='complete')){ renderMap(); return; }
     openNode(nextIdx);
   });
   $('reward-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
+  if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(); });
 }
 
 /* ===================== PARENT AREA ===================== */
@@ -1655,32 +1933,63 @@ $('avatar-modal').addEventListener('click', e=>{ if(e.target.id==='avatar-modal'
 
 function friendlyLoginError(err){
   const code = (err && err.code) || '';
+  if(code === 'app/account-disabled') return err.message;
+  if(code.indexOf('email-already-in-use')>=0) return 'That username is already taken — try signing in instead, or pick another username.';
+  if(code.indexOf('weak-password')>=0) return 'Password needs to be at least 6 characters.';
+  if(code.indexOf('invalid-email')>=0) return 'That doesn’t look like a valid email address.';
   if(code.indexOf('user-not-found')>=0 || code.indexOf('invalid-credential')>=0 || code.indexOf('wrong-password')>=0) return 'That username or password is not right. Ask your parent to check it.';
   if(code.indexOf('too-many-requests')>=0) return 'Too many tries — wait a bit and try again.';
   if(code.indexOf('network')>=0) return 'No internet connection — check you are online.';
   return 'Could not log in — try again.';
 }
+let studentFullName = '';
 function applyCloudProfile(cloudData){
   const raw = cloudData.progress && cloudData.progress[GAME_KEY];
   const shownName = cloudData.displayName || cloudData.username;
   profile = normalizeProfile(raw ? JSON.parse(JSON.stringify(raw)) : defaultProfile(shownName), shownName);
   profile.name = shownName;
+  studentFullName = cloudData.fullName || '';
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); }catch(e){}
   renderHome();
 }
+
+let isSignUpMode = false;
+function setLoginMode(signUp){
+  isSignUpMode = signUp;
+  $('login-email').classList.toggle('hidden', !signUp);
+  $('login-password').setAttribute('autocomplete', signUp ? 'new-password' : 'current-password');
+  $('login-start-btn').textContent = signUp ? '🌱 Create Account' : '▶ Start Adventure';
+  $('login-toggle-mode').textContent = signUp ? 'Already have an account? Sign in' : 'First time here? Create an account';
+  $('login-hint').textContent = signUp
+    ? 'Pick any username, a real email in case a password ever needs resetting, and a password (6+ characters). An admin can see and manage every account from the Kids Corner admin page.'
+    : 'Same account as your other Kids Corner games — ask your parent if you don’t have a username yet.';
+  $('login-msg').textContent = '';
+}
+$('login-toggle-mode').addEventListener('click', ()=>{ playTap(); setLoginMode(!isSignUpMode); });
+
 $('login-start-btn').addEventListener('click', ()=>{
   const u = $('login-username').value.trim();
   const p = $('login-password').value;
   const msg = $('login-msg');
   msg.textContent='';
-  if(!u||!p){ msg.textContent='Enter your username and password.'; return; }
+  if(!u||!p){ msg.textContent='Enter a username and password.'; return; }
   if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent='Still loading — refresh the page and try again.'; return; }
   const btn = $('login-start-btn'); btn.disabled=true;
-  window.KidsCloud.studentLogin(u,p).then(data=>{ playTap(); applyCloudProfile(data); })
-    .catch(err=>{ msg.textContent = friendlyLoginError(err); })
-    .finally(()=>{ btn.disabled=false; });
+  if(isSignUpMode){
+    const email = $('login-email').value.trim();
+    if(!/^\S+@\S+\.\S+$/.test(email)){ msg.textContent='Enter a valid email address.'; btn.disabled=false; return; }
+    if(p.length<6){ msg.textContent='Password needs to be at least 6 characters.'; btn.disabled=false; return; }
+    window.KidsCloud.studentSignUp(u, email, p).then(data=>{ playTap(); applyCloudProfile(data); })
+      .catch(err=>{ msg.textContent = friendlyLoginError(err); })
+      .finally(()=>{ btn.disabled=false; });
+  } else {
+    window.KidsCloud.studentLogin(u,p).then(data=>{ playTap(); applyCloudProfile(data); })
+      .catch(err=>{ msg.textContent = friendlyLoginError(err); })
+      .finally(()=>{ btn.disabled=false; });
+  }
 });
-$('login-username').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-password').focus(); });
+$('login-username').addEventListener('keydown', e=>{ if(e.key==='Enter') (isSignUpMode ? $('login-email') : $('login-password')).focus(); });
+$('login-email').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-password').focus(); });
 $('login-password').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-start-btn').click(); });
 
 /* ===================== INIT ===================== */

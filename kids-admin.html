@@ -183,8 +183,11 @@ match /kids_quest_students/{uid} {
 
   <section id="dashboard-screen" class="hidden">
     <h1>Kids Quest — Students</h1>
-    <p>Every account works for all four quest games (Arabic, English, Math, Seerah) and for Classes
-      (Foundation–Year 6) — one username and password logs a child into whichever one they open.</p>
+    <p>Every account works for all Kids Corner games (Arabic, Arabic Adventure, English, Math, Seerah) and
+      for Classes (Foundation–Year 6) — one username and password logs a child into whichever one they open.
+      Arabic Adventure also lets visitors create their own account directly on its login screen — those show
+      up here tagged <b>Self sign-up</b>, with whatever contact email they gave, and you can disable or
+      delete them just like any account you create yourself.</p>
 
     <div class="card">
       <h2>Add a student</h2>
@@ -269,6 +272,13 @@ function progressSummary(progress){
       parts.push(labels[key] + ': ' + done + '/' + p.stars.length);
     }
   });
+  /* Arabic Adventure keeps stars keyed by node id (e.g. "L_ب") rather than
+     as a plain array, since its map mixes letters, reviews and bonus nodes. */
+  const aa = progress && progress.arabicAdventure;
+  if(aa && aa.stars && typeof aa.stars === 'object'){
+    const lettersDone = Object.keys(aa.stars).filter(k => k.indexOf('L_') === 0).length;
+    parts.push('Arabic Adventure: ' + lettersDone + '/28 letters');
+  }
   return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
 }
 function escapeHtml(s){
@@ -287,13 +297,18 @@ function renderStudents(list){
     el.className = 'student';
     el.innerHTML =
       '<div class="top">' +
-        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span></span>' +
+        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span>' +
+          (s.selfSignup ? ' <span class="role-badge" style="background:#c9dfe6; color:#1c4a55;">Self sign-up</span>' : '') +
+          (s.disabled ? ' <span class="role-badge" style="background:var(--danger-bg); color:var(--danger);">Disabled</span>' : '') +
+        '</span>' +
         '<span class="meta">' + (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '') + '</span>' +
       '</div>' +
+      (s.contactEmail ? '<p class="meta" style="margin:2px 0 0;">✉️ ' + escapeHtml(s.contactEmail) + '</p>' : '') +
       '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
       '<div class="actions">' +
         '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
         '<button class="btn ghost small" data-act="rename">Rename username</button>' +
+        '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
         '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>' +
       '</div>' +
       '<div class="rename-panel" data-rename>' +
@@ -334,6 +349,17 @@ function renderStudents(list){
     el.querySelector('[data-act="delete"]').addEventListener('click', () => {
       if(!confirm('Remove ' + s.username + '’s saved progress? This cannot be undone from here.')) return;
       window.KidsCloud.adminDeleteStudent(s.uid).then(loadStudents).catch(err => alert(friendlyError(err)));
+    });
+
+    el.querySelector('[data-act="toggle-disable"]').addEventListener('click', () => {
+      const msg = el.querySelector('[data-msg]');
+      const next = !s.disabled;
+      if(next && !confirm('Disable ' + s.username + '’s account? They’ll be signed out and blocked from logging back in until you enable it again.')) return;
+      window.KidsCloud.adminSetStudentDisabled(s.uid, next).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = next ? 'Disabled.' : 'Enabled — they can log back in now.';
+        loadStudents();
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
     });
 
     box.appendChild(el);
