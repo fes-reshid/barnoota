@@ -99,6 +99,14 @@
   .plan-head p{ font-size:15.5px; color:#6b5a3f; margin:0; }
   .plan-actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:16px 0 30px; }
 
+  .best-tips{
+    max-width:520px; margin:0 auto 34px; background:#fdeecb; border:1.5px dashed var(--gold);
+    border-radius:16px; padding:18px 22px; text-align:center;
+  }
+  .best-tips h3{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); margin:0 0 10px; }
+  .best-tips ul{ list-style:none; margin:0; padding:0; text-align:left; display:inline-block; }
+  .best-tips li{ font-size:15px; line-height:1.7; }
+
   .week-block{ margin-bottom:34px; }
   .week-title{
     font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); text-align:center;
@@ -213,12 +221,21 @@
   <div id="plan-screen" class="hidden">
     <div class="plan-head">
       <h2 id="plan-greeting"></h2>
-      <p>One activity, one Qur'an focus, and one du'a a day — do a little bit each day!</p>
+      <p>One activity, a Qur'an focus, a du'a, a quick quiz and a mini-game a day — do a little bit each day! (If your school also assigned Mathletics or Reading Eggs tasks, keep those going too.)</p>
     </div>
     <div class="plan-actions">
       <button class="btn" id="print-btn">🖨️ Print This Plan</button>
       <button class="btn ghost" id="change-grade-btn">Choose a different class</button>
       <button class="btn ghost" id="logout-btn">Log out</button>
+    </div>
+    <div class="best-tips">
+      <h3>🌟 Be Your Best!</h3>
+      <ul>
+        <li>⭐ Try to complete a little bit each day.</li>
+        <li>⭐ Do your best and take pride in your work.</li>
+        <li>⭐ If you need help, ask a family member.</li>
+        <li>⭐ Have fun and enjoy your break!</li>
+      </ul>
     </div>
     <div id="plan-weeks"></div>
   </div>
@@ -261,7 +278,7 @@ const HOLIDAY_PLAN = [
     tasks:{ foundation:'Draw a picture of something fun you did today, then tell a grown-up about it out loud.',
       g1:'Write 1-2 sentences about your day. What was your favourite part?',
       g2:'Write a short paragraph (3-4 sentences) about your day so far.',
-      g3:'Write a paragraph about your day — include where you went, what you did, and how you felt.' },
+      g3:'Write a recount (3-4 paragraphs) about your holiday so far. Think about: where you went, what you did, who you were with, and what you enjoyed most. Use correct punctuation and interesting vocabulary!' },
     quran:{ name:'An-Nas', arabic:'النَّاس', num:114, ayat:6, meaning:'Asking Allah to protect us from bad whispers.' },
     duaId:'upon-waking' },
 
@@ -341,7 +358,7 @@ const HOLIDAY_PLAN = [
     tasks:{ foundation:'Practice counting from 1 to 20 with a grown-up.',
       g1:'Practice skip counting by 2s, 5s and 10s — how fast can you go?',
       g2:'Practice your 2, 3, 4, 5 and 10 times tables out loud.',
-      g3:'Practice your 2, 3, 4, 5, 10 and 11 times tables — say them, write them, or try a fun online game!' },
+      g3:'Keep practising your timetables (× tables) and skip counting by 2, 3, 4, 5, 10 and 11 — try saying them out loud, writing them down, or using fun online games to help you practise!' },
     quran:{ name:'Al-Humazah', arabic:'الهمزة', num:104, ayat:9, meaning:'A warning against gossip and mocking others.' },
     duaId:'zidni-ilma' },
 
