@@ -128,70 +128,79 @@
     display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--leaf);
     cursor:pointer;
   }
-  /* One continuous illustrated journey from Makkah to Madinah — fully
-     self-contained (no map tiles, no hotlinked photos, no CDN), so it
-     always looks right and never depends on a network connection. */
-  #screen-map{
-    background:linear-gradient(180deg, #fdf1d6 0%, #f6dfae 30%, #e8c583 70%, #dcb46e 100%);
-    border-radius:24px; padding:14px 14px 4px; margin:0 -2px;
+  /* Paginated illustrated map, one page per group, in the same style as
+     the kids-arabic-quest / kids-seerah-quest map screens — fully
+     self-contained inline SVG (no map tiles, no hotlinked photos, no
+     CDN), so it always looks right and never depends on a network
+     connection. */
+  .map-frame{
+    position:relative; background:linear-gradient(#ffe9c2 0%, #dcb46e 100%);
+    border:3px solid var(--sun-dark); border-radius:22px; overflow:hidden;
+    box-shadow:0 10px 26px rgba(60,45,20,.14);
   }
-  .path-wrap{ position:relative; padding:6px 0 4px; }
-  .dune-row{ line-height:0; margin:0 -14px; }
-  .dune-row.flip{ transform:scaleY(-1); }
-  .dune-svg{ width:100%; height:26px; display:block; }
-  .dune-svg path{ fill:#f3d9a2; }
-  #zigzag-road-svg{ position:absolute; left:0; top:0; width:100%; height:100%; z-index:0; pointer-events:none; }
-  .landmark-banner{
-    display:flex; align-items:center; gap:14px; background:rgba(255,255,255,.75); border:2px dashed var(--sun-dark);
-    border-radius:20px; padding:12px 16px; margin:4px 0 22px; position:relative; z-index:1;
+  .map-title{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:5;
+    background:#6a4fb0; color:#fff; font-weight:800; font-size:15px;
+    padding:7px 20px; border-radius:14px; border:3px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.2);
+    white-space:nowrap;
   }
-  .landmark-banner .lm-svg{ width:72px; height:72px; flex:none; }
-  .landmark-banner .lm-title{ font-weight:800; font-size:15.5px; color:#7a4a1a; margin:0; }
-  .landmark-banner .lm-sub{ font-size:13px; color:#9a7a4a; margin:2px 0 0; }
-  .group-band{
-    position:relative; z-index:1; text-align:center; margin:22px 0 12px;
-    font-weight:800; font-size:14.5px; color:#fff;
-    background:#6a4fb0; border:none; border-radius:16px; padding:7px 16px; display:inline-block;
-    left:50%; transform:translateX(-50%); box-shadow:0 4px 0 #4d3785;
+  .map-nav{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:6;
+    width:46px; height:46px; border-radius:50%; border:3px solid #fff; cursor:pointer;
+    background:var(--coral); color:#fff; font-size:19px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
   }
-  .group-band-row{ text-align:center; }
-  .decor-row{ position:relative; z-index:0; height:44px; margin:2px 0; pointer-events:none; }
-  .decor-icon{ width:42px; height:42px; opacity:.82; }
-  .decor-icon svg{ width:100%; height:100%; display:block; }
-  .mountain-divider{ line-height:0; margin:16px -14px 0; position:relative; z-index:0; }
-  .mountain-divider svg{ width:100%; height:36px; display:block; }
-  .mountain-divider path{ fill:rgba(122,74,26,.18); }
-  .node-row{ position:relative; z-index:1; display:flex; justify-content:flex-start; margin:18px 0; }
-  .node{
-    width:74px; height:74px; border-radius:50%; border:4px solid #fff; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-family:'Amiri', serif; font-size:30px; color:#fff; position:relative;
-    box-shadow:0 6px 0 rgba(0,0,0,.14), 0 8px 16px rgba(30,60,40,.16);
-    transition:transform .12s ease;
+  .map-nav:disabled{ opacity:.35; cursor:default; }
+  .map-nav.prev{ left:8px; }
+  .map-nav.next{ right:8px; }
+  svg.map-svg{ display:block; width:100%; height:auto; }
+  .node-num{ font-family:'Amiri', serif; font-size:28px; fill:#fff8ea; }
+  .node-num.locked{ fill:#f2f1ee; font-family:'Baloo 2', sans-serif; font-size:24px; }
+  .node-g{ cursor:pointer; }
+  .node-g.locked{ cursor:not-allowed; }
+  .node-g:not(.locked):hover .node-disc{ transform-box:fill-box; transform-origin:center; transform:scale(1.08); }
+  .node-disc{ transition:transform .15s ease; }
+  .node-disc.available{ fill:var(--leaf); }
+  .node-disc.complete{ fill:var(--sun); }
+  .node-disc.in_progress{ fill:var(--sky); }
+  .node-disc.locked{ fill:#b7bdbc; }
+  .node-disc.checkpoint{ fill:var(--berry); }
+  .node-disc.vocabnode{ fill:var(--coral); }
+  .node-disc.storynode{ fill:var(--sky-dark); }
+  .node-disc.finalnode{ fill:var(--sun); }
+  .node-disc.node-done{ fill:var(--sun) !important; }
+  .node-disc.just-arrived{ animation:nodeArrivePop .8s ease; }
+  @keyframes nodeArrivePop{
+    0%{ transform:scale(1); } 30%{ transform:scale(1.32); } 60%{ transform:scale(.94); } 100%{ transform:scale(1); }
   }
-  .node:hover{ transform:translateY(-3px) scale(1.04); }
-  .node.available{ background:var(--leaf); }
-  .node.complete{ background:var(--sun); color:#5a4300; }
-  .node.in_progress{ background:var(--sky); }
-  .node.locked{ background:#b7bdbc; cursor:not-allowed; box-shadow:none; }
-  .node.locked .lock-ico{ width:30px; height:30px; }
-  .node.locked:hover{ transform:none; }
-  .node.checkpoint{ background:var(--berry); font-size:26px; }
-  .node.vocabnode{ background:var(--coral); font-size:24px; }
-  .node.storynode{ background:var(--sky-dark); font-size:24px; }
-  .node.finalnode{ width:92px; height:92px; background:var(--sun); font-size:38px; color:#5a4300; }
-  .node.node-done{ background:var(--sun) !important; color:#5a4300; }
-  .node .node-stars{ position:absolute; bottom:-14px; font-size:12px; letter-spacing:1px; color:var(--sun-dark); }
-  .node.node-jump{ animation:nodeJumpPop .9s ease; }
-  @keyframes nodeJumpPop{
-    0%{ transform:scale(1); }
-    25%{ transform:scale(1.35) translateY(-14px); box-shadow:0 16px 0 rgba(0,0,0,.1), 0 22px 24px rgba(30,60,40,.24); }
-    50%{ transform:scale(.96) translateY(2px); }
-    70%{ transform:scale(1.1) translateY(-4px); }
-    100%{ transform:scale(1) translateY(0); }
+  .node-label{ font-size:14px; font-weight:700; fill:#6b5a2f; }
+  .node-stars{ font-size:15px; fill:var(--sun-dark); }
+  @keyframes bobber{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+  .avatar-marker{ animation:bobber 1.6s ease-in-out infinite; }
+  @keyframes pulseRing{ 0%{ r:34; opacity:.75; } 100%{ r:50; opacity:0; } }
+  .pulse-ring{ animation:pulseRing 1.6s ease-out infinite; }
+  .map-help{ text-align:center; font-size:14.5px; color:var(--ink-soft); margin:12px 0 0; }
+  .map-cert-row{ display:flex; justify-content:center; margin:12px 0 0; }
+  .cert-cta{
+    display:inline-flex; align-items:center; gap:9px; cursor:pointer; text-align:center;
+    background:var(--leaf); color:#fff; border:3px solid #fff; border-radius:22px;
+    padding:11px 22px; font-weight:800; font-size:15px; box-shadow:0 5px 0 var(--leaf-dark);
   }
-  .node-label{ text-align:center; font-size:12.5px; font-weight:700; color:var(--ink-soft); margin-top:2px; max-width:90px; }
-  .node-col{ display:flex; flex-direction:column; align-items:center; z-index:1; position:relative; }
+  .cert-cta:active{ transform:translateY(3px); box-shadow:0 2px 0 var(--leaf-dark); }
+  .cert-cta.locked{ background:#fff3dc; color:#8a7248; border-color:var(--sun-dark); box-shadow:0 5px 0 #cbbb92; }
+  .cert-todo{ max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:9px; }
+  .todo-row{
+    display:flex; align-items:center; gap:11px; background:#fff; border:2px solid var(--sun-dark);
+    border-radius:16px; padding:10px 14px; box-shadow:0 3px 10px rgba(60,45,20,.07);
+  }
+  .todo-row.ok{ background:var(--leaf-bg); border-color:var(--leaf); }
+  .todo-row .tr-icon{ font-size:18px; flex:none; }
+  .todo-row .tr-label{ flex:1; font-weight:700; font-size:15px; color:var(--ink); }
+  .todo-row .tr-go{
+    background:var(--sun-dark); color:#fff; border:none; border-radius:14px; padding:6px 16px;
+    font-weight:800; font-size:13.5px; cursor:pointer; flex:none;
+  }
+  .todo-row .tr-go:hover{ transform:scale(1.05); }
 
   /* ============ Lesson shell ============ */
   .lesson-layout{ display:grid; grid-template-columns:190px 1fr; gap:14px; align-items:start; }
@@ -477,7 +486,14 @@
       </div>
       <button class="ghost-btn" id="map-home-btn">🏠 Home</button>
     </div>
-    <div class="path-wrap" id="map-path"></div>
+    <div class="map-frame">
+      <div class="map-title" id="map-title">Map 1</div>
+      <button class="map-nav prev" id="map-prev" aria-label="Previous map">◀</button>
+      <button class="map-nav next" id="map-next" aria-label="Next map">▶</button>
+      <svg class="map-svg" id="map-svg" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <p class="map-help" id="map-help"></p>
+    <div class="map-cert-row" id="map-cert-row"></div>
   </div>
 
   <!-- ============ LESSON ============ -->
@@ -526,7 +542,7 @@
   <!-- ============ CERTIFICATE ============ -->
   <div class="screen hidden" id="screen-certificate">
     <div class="map-topbar">
-      <div class="player-chip">🎓 Certificate</div>
+      <div class="player-chip">🎓 <span id="cert-head-label">Certificate</span></div>
       <div>
         <button class="ghost-btn no-print" id="cert-print-btn" style="margin-right:8px;">🖨️ Print</button>
         <button class="ghost-btn no-print" id="cert-back-btn">← Back</button>
@@ -733,7 +749,7 @@ function defaultProfile(name){
     skillScores:{}, groupBadges:{},
     statsLessonsCompleted:0, statsTracingSessions:0,
     activityHistory:[], nodeStepProgress:{},
-    certEarned:false, certRecord:null
+    certRecords:{}
   };
 }
 function normalizeProfile(d, fallbackName){
@@ -751,8 +767,7 @@ function normalizeProfile(d, fallbackName){
   if(typeof d.statsTracingSessions!=='number') d.statsTracingSessions = 0;
   if(!Array.isArray(d.activityHistory)) d.activityHistory = [];
   if(!d.nodeStepProgress || typeof d.nodeStepProgress!=='object') d.nodeStepProgress = {};
-  if(typeof d.certEarned!=='boolean') d.certEarned = false;
-  if(typeof d.certRecord!=='object') d.certRecord = null;
+  if(!d.certRecords || typeof d.certRecords!=='object') d.certRecords = {};
   return d;
 }
 function saveProfile(){
@@ -797,9 +812,13 @@ function nodeStatus(i){
   if(i === profile.unlockedIndex) return profile.nodeStepProgress[NODES[i].id] ? 'in_progress' : 'available';
   return 'locked';
 }
+let lastCompletedMapIdx = null;
 function unlockNext(){
+  const justFinishedIdx = profile.unlockedIndex;
   if(profile.unlockedIndex < NODES.length) profile.unlockedIndex++;
   saveProfile();
+  const mi = mapIndexForNodeIdx(justFinishedIdx);
+  lastCompletedMapIdx = (profile.unlockedIndex >= MAPS[mi].to) ? mi : null;
 }
 function currentContinueTarget(){
   return Math.min(profile.unlockedIndex, NODES.length-1);
@@ -845,7 +864,7 @@ function renderHome(){
   $('home-stars').textContent = totalStars();
   $('home-streak').textContent = profile.streak;
   $('home-letters').textContent = lettersMasteredCount();
-  $('home-cert-btn').classList.toggle('hidden', !profile.certEarned);
+  $('home-cert-btn').classList.toggle('hidden', latestCompleteMap() < 0);
   const badgeRow = $('home-badges');
   badgeRow.innerHTML = DATA.groups.filter(g=>g.letters.length).map(g=>{
     const won = !!profile.groupBadges[g.id];
@@ -855,155 +874,177 @@ function renderHome(){
 }
 
 /* ===================== MAP ===================== */
-/* Small, iconic original illustrations — used only as a graceful
-   fallback if a real photo below ever fails to load. Not attempts at
-   real architectural accuracy, just a recognisable "grand mosque with
-   the Kaaba" / "green-domed mosque" shorthand. */
-const MASJID_HARAM_SVG =
-  '<svg viewBox="0 0 100 100" aria-hidden="true">' +
-    '<ellipse cx="50" cy="72" rx="42" ry="15" fill="#efe4c8" stroke="#c9a86a" stroke-width="2"/>' +
-    '<rect x="8" y="30" width="9" height="40" fill="#efe4c8" stroke="#c9a86a" stroke-width="1.5"/>' +
-    '<polygon points="12.5,20 6,32 19,32" fill="#c9a86a"/>' +
-    '<rect x="83" y="30" width="9" height="40" fill="#efe4c8" stroke="#c9a86a" stroke-width="1.5"/>' +
-    '<polygon points="87.5,20 81,32 94,32" fill="#c9a86a"/>' +
-    '<rect x="37" y="46" width="26" height="26" fill="#262f2a" stroke="#101410" stroke-width="1"/>' +
-    '<rect x="37" y="57" width="26" height="6" fill="#d4af37"/>' +
-  '</svg>';
-const MASJID_NABAWI_SVG =
-  '<svg viewBox="0 0 100 100" aria-hidden="true">' +
-    '<rect x="28" y="52" width="44" height="22" fill="#f2ede0" stroke="#c9a86a" stroke-width="1.5"/>' +
-    '<circle cx="50" cy="44" r="17" fill="#2e6b4f"/>' +
-    '<rect x="46" y="24" width="8" height="14" fill="#2e6b4f"/>' +
-    '<polygon points="50,15 45,24 55,24" fill="#d4af37"/>' +
-    '<rect x="12" y="42" width="8" height="32" fill="#f2ede0" stroke="#c9a86a" stroke-width="1.2"/>' +
-    '<polygon points="16,33 11,42 21,42" fill="#c9a86a"/>' +
-    '<rect x="80" y="42" width="8" height="32" fill="#f2ede0" stroke="#c9a86a" stroke-width="1.2"/>' +
-    '<polygon points="84,33 79,42 89,42" fill="#c9a86a"/>' +
-  '</svg>';
-const LOCK_ICON_SVG =
-  '<svg class="lock-ico" viewBox="0 0 100 100" aria-hidden="true">' +
-    '<rect x="28" y="46" width="44" height="36" rx="6" fill="#e8973a"/>' +
-    '<path d="M36 46 V34 a14 14 0 0 1 28 0 V46" fill="none" stroke="#7a5220" stroke-width="7"/>' +
-    '<circle cx="50" cy="62" r="6" fill="#7a5220"/>' +
-  '</svg>';
-/* Small decorative desert flavour icons scattered beside the road —
-   purely original, non-interactive scenery, no real photos. */
-const DECOR_ICONS = [
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="20" y="30" width="60" height="50" rx="3" fill="#20242a"/><rect x="20" y="50" width="60" height="9" fill="#d8b23c"/><rect x="20" y="30" width="60" height="50" rx="3" fill="none" stroke="#3a3f3a" stroke-width="2"/></svg>',
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="46" y="45" width="8" height="45" fill="#8a5a2b"/><g fill="#3fae6a"><path d="M50 45 Q20 30 10 42 Q30 46 50 50 Z"/><path d="M50 45 Q80 30 90 42 Q70 46 50 50 Z"/><path d="M50 45 Q30 15 20 12 Q30 34 50 50 Z"/><path d="M50 45 Q70 15 80 12 Q70 34 50 50 Z"/><path d="M50 45 Q50 10 50 5 Q54 30 50 50 Z"/></g></svg>',
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M15 78 Q15 60 28 58 Q26 48 34 42 Q30 30 40 26 Q44 34 46 40 Q54 32 60 34 Q56 42 58 48 Q68 46 74 54 Q80 58 78 66 L78 78 L70 78 L70 70 L34 70 L34 78 Z" fill="#c9976a"/><circle cx="42" cy="30" r="3" fill="#5a3d22"/><line x1="20" y1="78" x2="20" y2="88" stroke="#c9976a" stroke-width="5"/><line x1="66" y1="78" x2="66" y2="88" stroke="#c9976a" stroke-width="5"/><line x1="74" y1="78" x2="74" y2="88" stroke="#c9976a" stroke-width="5"/></svg>',
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="18" y="38" width="64" height="42" rx="6" fill="#e0556a"/><rect x="40" y="26" width="20" height="14" rx="3" fill="none" stroke="#e0556a" stroke-width="6"/><rect x="18" y="54" width="64" height="10" fill="#b5334a"/></svg>',
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="15" y="15" width="35" height="35" fill="#4fb0e0"/><rect x="50" y="15" width="35" height="35" fill="#f2c94c"/><rect x="15" y="50" width="35" height="35" fill="#eb5757"/><rect x="50" y="50" width="35" height="35" fill="#3fae6a"/></svg>',
-  '<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="28" r="14" fill="#f0c090"/><path d="M30 85 Q30 55 50 55 Q70 55 70 85 Z" fill="#6a4fb0"/></svg>'
-];
-function landmarkBanner(svg, title, sub){
-  return '<div class="landmark-banner"><div class="lm-svg">'+svg+'</div>' +
-    '<div><p class="lm-title">'+escapeHtml(title)+'</p><p class="lm-sub">'+escapeHtml(sub)+'</p></div></div>';
-}
-/* Draws a winding road connecting the actual on-screen centre of every
-   node, in order — measured after layout rather than assumed, so it
-   stays correct at any viewport width. */
-function drawZigzagRoad(){
-  const wrap = $('map-path');
-  if(!wrap) return;
-  const old = document.getElementById('zigzag-road-svg');
-  if(old) old.remove();
-  const nodeEls = Array.from(wrap.querySelectorAll('.node'));
-  if(nodeEls.length < 2) return;
-  const wrapRect = wrap.getBoundingClientRect();
-  const pts = nodeEls.map(el=>{
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width/2 - wrapRect.left, y: r.top + r.height/2 - wrapRect.top };
+/* Paginated SVG journey map — one page per group, same mechanic as the
+   kids-arabic-quest / kids-seerah-quest map screens: a fixed winding
+   road, lesson stones evenly spaced along it by arc length, and
+   prev/next arrows to flip between pages. Fully original inline SVG
+   and emoji decoration — no map tiles, no hotlinked photos. */
+const MAP_PATH_D = 'M 70 545 C 210 545 250 470 330 448 C 420 424 500 470 560 430 ' +
+                   'C 640 378 590 300 500 285 C 400 268 330 230 360 170 ' +
+                   'C 392 108 520 96 640 132 C 780 174 850 150 940 108';
+const SCENES = {
+  g1: { sky:'#ffe9c2', ground:'#f3d79a', deco:[
+    {e:'🕋', x:90,  y:170, s:56}, {e:'🌴', x:900, y:520, s:50}, {e:'🐫', x:800, y:150, s:40},
+    {e:'☀️', x:500, y:90,  s:44}, {e:'🏜️', x:250, y:560, s:36}
+  ]},
+  g2: { sky:'#ffe3b0', ground:'#f0cf8e', deco:[
+    {e:'🐪', x:110, y:520, s:56}, {e:'🌵', x:900, y:170, s:48}, {e:'🏜️', x:500, y:100, s:40},
+    {e:'☀️', x:760, y:540, s:36}, {e:'🪨', x:260, y:150, s:34}
+  ]},
+  g3: { sky:'#d7f0c4', ground:'#bfe6a0', deco:[
+    {e:'🌴', x:100, y:160, s:56}, {e:'💧', x:900, y:520, s:44}, {e:'🐦', x:520, y:100, s:34},
+    {e:'🌿', x:760, y:170, s:36}, {e:'🦋', x:280, y:560, s:32}
+  ]},
+  g4: { sky:'#cfe3ee', ground:'#b9cdd6', deco:[
+    {e:'⛰️', x:100, y:160, s:58}, {e:'🦅', x:880, y:150, s:40}, {e:'☁️', x:500, y:90,  s:44},
+    {e:'🪨', x:760, y:540, s:36}, {e:'🏔️', x:260, y:540, s:50}
+  ]},
+  g5: { sky:'#ffe6b5', ground:'#f2d79b', deco:[
+    {e:'🏜️', x:100, y:170, s:56}, {e:'🐫', x:880, y:520, s:52}, {e:'☀️', x:500, y:90,  s:44},
+    {e:'🌵', x:760, y:150, s:38}, {e:'🌙', x:250, y:560, s:32}
+  ]},
+  g6: { sky:'#cdeaff', ground:'#a9d8ee', deco:[
+    {e:'💧', x:100, y:160, s:52}, {e:'🐐', x:880, y:520, s:44}, {e:'🪣', x:520, y:560, s:36},
+    {e:'🌾', x:760, y:150, s:38}, {e:'☁️', x:280, y:560, s:36}
+  ]},
+  g7: { sky:'#d7f0c4', ground:'#bfe6a0', deco:[
+    {e:'🕌', x:100, y:160, s:56}, {e:'🌴', x:880, y:520, s:52}, {e:'🐦', x:520, y:90,  s:34},
+    {e:'🌿', x:760, y:560, s:36}, {e:'🦋', x:260, y:170, s:32}
+  ]},
+  g8: { sky:'#dfd4ff', ground:'#cdeaff', deco:[
+    {e:'🕌', x:100, y:160, s:60}, {e:'🏆', x:880, y:520, s:52}, {e:'⭐', x:500, y:90,  s:38},
+    {e:'🌙', x:760, y:150, s:40}, {e:'✨', x:260, y:560, s:32}
+  ]}
+};
+/* Groups NODES into one "map" per group, in order — computed once from
+   the real node list rather than duplicated, so it can never drift out
+   of sync with the curriculum data. */
+function buildMaps(){
+  const maps = [];
+  let cur = null;
+  NODES.forEach((n,i)=>{
+    if(!cur || cur.group !== n.group){ cur = { group:n.group, from:i, to:i+1 }; maps.push(cur); }
+    else cur.to = i+1;
   });
-  let d = 'M '+pts[0].x.toFixed(1)+' '+pts[0].y.toFixed(1);
-  for(let i=1;i<pts.length;i++){
-    const midY = (pts[i-1].y + pts[i].y)/2;
-    d += ' C '+pts[i-1].x.toFixed(1)+' '+midY.toFixed(1)+', '+pts[i].x.toFixed(1)+' '+midY.toFixed(1)+', '+pts[i].x.toFixed(1)+' '+pts[i].y.toFixed(1);
-  }
-  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('id','zigzag-road-svg');
-  svg.setAttribute('viewBox', '0 0 '+wrapRect.width+' '+wrapRect.height);
-  svg.innerHTML =
-    '<path d="'+d+'" fill="none" stroke="#e3c07f" stroke-width="16" stroke-linecap="round"/>' +
-    '<path d="'+d+'" fill="none" stroke="#fff8ea" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 15"/>';
-  wrap.insertBefore(svg, wrap.firstChild);
+  return maps;
 }
-window.addEventListener('resize', ()=>{ if(!$('screen-map').classList.contains('hidden')) drawZigzagRoad(); });
+const MAPS = buildMaps();
+let viewMap = 0;
+function mapIndexForNodeIdx(idx){
+  const mi = MAPS.findIndex(m => idx >= m.from && idx < m.to);
+  return mi < 0 ? 0 : mi;
+}
 
 function nodeVisual(n, status){
-  let cls='node', label='', letterCh='', done=(status==='complete');
-  if(n.type==='letter'){ cls+=' '+status; letterCh=n.letter.letter; label=n.letter.translit; }
-  else if(n.type==='checkpoint'){ cls+=' checkpoint '+(status==='locked'?'locked':''); letterCh=done?'✅':'🌟'; label='Review'; }
-  else if(n.type==='vocab'){ cls+=' vocabnode '+(status==='locked'?'locked':''); letterCh=done?'✅':'🗂️'; label=n.module.title; }
-  else if(n.type==='story'){ cls+=' storynode '+(status==='locked'?'locked':''); letterCh=done?'✅':'📖'; label='Story'; }
-  else if(n.type==='final'){ cls+=' finalnode '+(status==='locked'?'locked':''); letterCh=done?'🏆':'🔓'; label=n.group.title; }
-  if(done && n.type!=='letter') cls += ' node-done';
-  return { cls, letterCh, label };
+  let discCls='node-disc', label='', letterCh='', done=(status==='complete');
+  if(n.type==='letter'){ discCls+=' '+status; letterCh=n.letter.letter; label=n.letter.translit; }
+  else if(n.type==='checkpoint'){ discCls+=' checkpoint'+(status==='locked'?' locked':''); letterCh=done?'✅':'🌟'; label='Review'; }
+  else if(n.type==='vocab'){ discCls+=' vocabnode'+(status==='locked'?' locked':''); letterCh=done?'✅':'🗂️'; label=n.module.title; }
+  else if(n.type==='story'){ discCls+=' storynode'+(status==='locked'?' locked':''); letterCh=done?'✅':'📖'; label='Story'; }
+  else if(n.type==='final'){ discCls+=' finalnode'+(status==='locked'?' locked':''); letterCh=done?'🏆':'🔓'; label=n.group.title; }
+  if(done && n.type!=='letter') discCls += ' node-done';
+  return { discCls, letterCh, label };
 }
-/* One continuous illustrated road, start to finish — every group, in
-   order, no pagination. jumpToIdx (optional) scrolls to and plays a
-   little "just arrived here" hop animation on that node, used when
-   coming back from a finished lesson so progress visibly advances
-   along the path instead of just silently updating. */
-function renderMap(jumpToIdx){
-  if(typeof jumpToIdx !== 'number') jumpToIdx = currentContinueTarget();
+
+/* Draws the current map page: MAPS[viewMap]'s lesson stones spaced
+   evenly along the fixed winding road by arc length. jumpNodeIdx
+   (optional) plays a little "just arrived here" pop on that node —
+   used when coming back from a finished lesson so progress visibly
+   advances instead of just silently updating. */
+function paintMap(jumpNodeIdx){
+  const svg = $('map-svg');
+  const map = MAPS[viewMap];
+  const scene = SCENES[map.group.id] || SCENES.g1;
+  const count = map.to - map.from;
+
+  $('map-title').textContent = 'Map ' + (viewMap+1) + ' · ' + map.group.icon + ' ' + map.group.title;
+  $('map-prev').disabled = viewMap === 0;
+  $('map-next').disabled = viewMap === MAPS.length - 1;
   paintAvatarChips();
   $('map-name').textContent = profile.name;
   $('map-stars').textContent = totalStars();
   $('map-coins').textContent = profile.coins;
   $('map-progress').textContent = Math.min(profile.unlockedIndex, NODES.length) + '/' + NODES.length;
 
-  const wrap = $('map-path');
-  let html =
-    '<div class="dune-row"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>' +
-    landmarkBanner(MASJID_HARAM_SVG, 'Masjid al-Haram', 'Your journey begins here in Makkah.');
-  let lastGroup = null, zigIndex = 0, decorIndex = 0;
-  const ZIG = [0.5, 0.86, 0.5, 0.14];
-  NODES.forEach((n,i)=>{
-    if(n.group !== lastGroup){
-      lastGroup = n.group;
-      const decorFrac = 1 - ZIG[zigIndex % ZIG.length];
-      const decorSvg = DECOR_ICONS[decorIndex % DECOR_ICONS.length]; decorIndex++;
-      html += '<div class="mountain-divider"><svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 46 L0 34 L45 8 L75 28 L110 4 L150 30 L190 10 L230 32 L270 6 L310 28 L350 12 L400 34 L400 46 Z"/></svg></div>' +
-        '<div class="decor-row"><div class="decor-icon" style="margin-left:calc('+decorFrac+' * (100% - 42px));">'+decorSvg+'</div></div>' +
-        '<div class="group-band-row"><div class="group-band">'+n.group.icon+' '+escapeHtml(n.group.title)+'</div></div>';
-    }
-    const status = nodeStatus(i);
-    const v = nodeVisual(n, status);
-    const st = n.type==='letter' ? starsFor(n.id) : 0;
-    const frac = ZIG[zigIndex % ZIG.length]; zigIndex++;
-    html += '<div class="node-row"><div class="node-col" style="margin-left:calc('+frac+' * (100% - 74px));">' +
-      '<div class="'+v.cls+'" data-idx="'+i+'">' +
-        (status==='locked' ? LOCK_ICON_SVG : v.letterCh) +
-        (st ? '<span class="node-stars">'+'★'.repeat(st)+'</span>' : '') +
-      '</div>' +
-      '<div class="node-label">'+escapeHtml(v.label)+'</div>' +
-    '</div></div>';
+  const measure = document.createElementNS('http://www.w3.org/2000/svg','path');
+  measure.setAttribute('d', MAP_PATH_D);
+  svg.appendChild(measure);
+  const total = measure.getTotalLength();
+  const points = [];
+  for(let i=0;i<count;i++){
+    const p = measure.getPointAtLength(total * ((i+0.5)/count));
+    points.push({ x:p.x, y:p.y });
+  }
+  svg.removeChild(measure);
+
+  let html = '<defs><linearGradient id="mapSkyGrad" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="'+scene.sky+'"/><stop offset="100%" stop-color="'+scene.ground+'"/>' +
+  '</linearGradient></defs>';
+  html += '<rect x="0" y="0" width="1000" height="620" fill="url(#mapSkyGrad)"/>';
+  html += '<ellipse cx="500" cy="640" rx="620" ry="150" fill="rgba(255,255,255,.22)"/>';
+  scene.deco.forEach(d=>{
+    html += '<text x="'+d.x+'" y="'+d.y+'" font-size="'+d.s+'" text-anchor="middle">'+d.e+'</text>';
   });
-  html += landmarkBanner(MASJID_NABAWI_SVG, 'Masjid an-Nabawi', 'Your finish line — welcome to Madinah!');
-  html += '<div class="dune-row flip"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>';
-  wrap.style.position = 'relative';
-  wrap.innerHTML = html;
-  wrap.querySelectorAll('.node').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      const i = parseInt(el.dataset.idx,10);
-      if(nodeStatus(i)==='locked'){ playTap(); return; }
-      playTap(); openNode(i);
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#fff7e2" stroke-width="46" stroke-linecap="round" opacity=".92"/>';
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#e5c98a" stroke-width="34" stroke-linecap="round"/>';
+  html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
+
+  const currentIdx = currentContinueTarget();
+  points.forEach((pt,i)=>{
+    const idx = map.from + i;
+    const n = NODES[idx];
+    const status = nodeStatus(idx);
+    const v = nodeVisual(n, status);
+    const isCurrent = idx === currentIdx;
+    const st = n.type==='letter' ? starsFor(n.id) : 0;
+    const rad = n.type==='final' ? 40 : 33;
+
+    if(isCurrent){
+      html += '<circle class="pulse-ring" cx="'+pt.x+'" cy="'+pt.y+'" r="34" fill="none" stroke="'+(status==='locked'?'#8c9296':'#2c8350')+'" stroke-width="4"/>';
+    }
+    html += '<g class="node-g'+(status==='locked'?' locked':'')+'" data-idx="'+idx+'">';
+    html += '<circle class="'+v.discCls+(idx===jumpNodeIdx?' just-arrived':'')+'" cx="'+pt.x+'" cy="'+pt.y+'" r="'+rad+'" stroke="#fff" stroke-width="5"/>';
+    html += '<text class="node-num'+(status==='locked'?' locked':'')+'" x="'+pt.x+'" y="'+(pt.y+9)+'" text-anchor="middle">' +
+              (status==='locked' ? '🔒' : escapeHtml(v.letterCh)) + '</text>';
+    html += '</g>';
+    html += '<text class="node-label" x="'+pt.x+'" y="'+(pt.y+rad+22)+'" text-anchor="middle">'+escapeHtml(v.label)+'</text>';
+    if(st) html += '<text class="node-stars" x="'+pt.x+'" y="'+(pt.y+rad+40)+'" text-anchor="middle">'+'★'.repeat(st)+'</text>';
+    if(isCurrent){
+      html += '<text class="avatar-marker" x="'+pt.x+'" y="'+(pt.y-rad-14)+'" font-size="38" text-anchor="middle">'+profile.avatar+'</text>';
+    }
+  });
+
+  svg.innerHTML = html;
+  svg.querySelectorAll('.node-g').forEach(g=>{
+    g.addEventListener('click', ()=>{
+      const idx = parseInt(g.dataset.idx,10);
+      if(nodeStatus(idx)==='locked'){ playTap(); return; }
+      playTap(); openNode(idx);
     });
   });
-  showScreen('screen-map');
-  requestAnimationFrame(()=>{
-    drawZigzagRoad();
-    if(typeof jumpToIdx === 'number'){
-      const target = wrap.querySelector('.node[data-idx="'+jumpToIdx+'"]');
-      if(target){
-        target.scrollIntoView({ behavior:'smooth', block:'center' });
-        target.classList.add('node-jump');
-        setTimeout(()=>target.classList.remove('node-jump'), 900);
-      }
-    }
-  });
+
+  const doneOnMap = mapDoneCount(viewMap);
+  $('map-help').textContent = doneOnMap === count
+    ? 'This whole map is finished — tap ▶ for the next one!'
+    : (currentIdx >= map.to
+        ? 'You have already passed this map. Tap ▶ to keep going.'
+        : (currentIdx < map.from
+            ? 'Finish the earlier maps first, then this one unlocks.'
+            : 'Tap the glowing stone to keep going!'));
+  renderMapCertRow();
 }
+/* Full entry point: pick the page containing jumpToIdx (defaulting to
+   the player's current lesson) and paint it, with the "just arrived"
+   pop on that node. Used whenever the game returns to the map from
+   somewhere else (finishing a lesson, Home, the certificate screen). */
+function renderMap(jumpToIdx){
+  if(typeof jumpToIdx !== 'number') jumpToIdx = currentContinueTarget();
+  viewMap = mapIndexForNodeIdx(jumpToIdx);
+  showScreen('screen-map');
+  paintMap(jumpToIdx);
+}
+$('map-prev').addEventListener('click', ()=>{ if(viewMap>0){ viewMap--; playTap(); paintMap(); } });
+$('map-next').addEventListener('click', ()=>{ if(viewMap<MAPS.length-1){ viewMap++; playTap(); paintMap(); } });
 function openNode(i){
   const n = NODES[i];
   if(n.type==='letter') startLetterLesson(i);
@@ -1733,13 +1774,47 @@ function startFinalChallenge(nodeIdx){
     const stars = scorePct>=90?3:(scorePct>=70?2:1);
     profile.stars[n.id] = Math.max(starsFor(n.id), stars);
     profile.coins += 20;
-    profile.certEarned = true;
     unlockNext();
-    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true, offerCert:true });
+    showReward({ title:'🏆 Garden Challenge complete!', subtitle:'You finished World 1 — every letter of the Arabic alphabet!', stars:stars, coins:20, big:true });
   }, 'Garden Challenge', '🏆');
 }
 
-/* ===================== CERTIFICATE ===================== */
+/* ===================== CERTIFICATE (one per map) ===================== */
+function mapNodeIdxs(mi){
+  const out = [];
+  for(let i=MAPS[mi].from;i<MAPS[mi].to;i++) out.push(i);
+  return out;
+}
+function mapDoneCount(mi){ return mapNodeIdxs(mi).filter(i=>i<profile.unlockedIndex).length; }
+function mapComplete(mi){ return profile.unlockedIndex >= MAPS[mi].to; }
+function mapStars(mi){ return mapNodeIdxs(mi).reduce((s,i)=>{ const n=NODES[i]; return s + (n.type==='letter' ? starsFor(n.id) : 0); }, 0); }
+function mapMaxStars(mi){ return mapNodeIdxs(mi).filter(i=>NODES[i].type==='letter').length * 3; }
+function latestCompleteMap(){
+  let last = -1;
+  MAPS.forEach((m,mi)=>{ if(mapComplete(mi)) last = mi; });
+  return last;
+}
+function nodeTitle(i){
+  const n = NODES[i];
+  if(n.type==='letter') return n.letter.letter+' · '+n.letter.translit;
+  if(n.type==='checkpoint') return '🌟 Review';
+  if(n.type==='vocab') return '🗂️ '+n.module.title;
+  if(n.type==='story') return '📖 '+(n.story ? n.story.title : 'Story');
+  if(n.type==='final') return '🏆 '+n.group.title+' Challenge';
+  return '';
+}
+/* Built from our own verified curriculum data (letter translits, vocab
+   module titles) rather than hand-typed, so it can't drift from what's
+   actually taught in that map. */
+function certSubForGroup(g){
+  const names = g.letters.map(ch => LETTER_BY_CH[ch].translit);
+  let sub = names.join(', ');
+  if(g.vocabModule && DATA.vocabModules[g.vocabModule]){
+    sub += (sub ? ' — plus ' : '') + DATA.vocabModules[g.vocabModule].title.toLowerCase() + ' words';
+  }
+  if(!sub) sub = 'Every letter of the Arabic alphabet, mastered!';
+  return sub;
+}
 function openCertNameModal(onSaved){
   window.__certNameOnSaved = onSaved || null;
   $('certname-input').value = studentFullName || (profile ? profile.name : '');
@@ -1747,38 +1822,70 @@ function openCertNameModal(onSaved){
   $('certname-modal').classList.remove('hidden');
   $('certname-input').focus();
 }
-function certRecord(){
-  if(!profile.certRecord){
+/* The award date and ID are stored the first time, so a reprint always matches the first print. */
+function certRecord(mi){
+  if(!profile.certRecords || typeof profile.certRecords!=='object') profile.certRecords = {};
+  if(!profile.certRecords[mi]){
     const d = new Date();
-    profile.certRecord = {
+    profile.certRecords[mi] = {
       date: d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
-      id: 'AA-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)
+      id: 'AA-M'+(mi+1)+'-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)
     };
     saveProfile();
   }
-  return profile.certRecord;
+  return profile.certRecords[mi];
 }
 function prettyDate(iso){
   const p = String(iso||'').split('-');
   const d = (p.length===3) ? new Date(+p[0], +p[1]-1, +p[2]) : new Date();
   return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
 }
-function showCertificate(){
+let certMap = 0;
+/* Under the map: an invitation once that map is finished, a progress note while it isn't. */
+function renderMapCertRow(){
+  const row = $('map-cert-row');
+  const done = mapDoneCount(viewMap);
+  const total = mapNodeIdxs(viewMap).length;
+  const ready = done === total;
+  row.innerHTML = '<button class="cert-cta'+(ready?'':' locked')+'" id="map-cert-btn" type="button">' +
+    (ready ? '🎓 Get my Map '+(viewMap+1)+' certificate' : '🎓 Map '+(viewMap+1)+' certificate · '+done+' of '+total+' done') +
+    '</button>';
+  $('map-cert-btn').addEventListener('click', ()=>{ playTap(); showCertificate(viewMap); });
+}
+function showCertificate(mi){
+  if(typeof mi !== 'number') mi = Math.max(0, latestCompleteMap());
+  certMap = mi;
+  const g = MAPS[mi].group;
   const box = $('cert-body');
-  if(!profile.certEarned){
-    box.innerHTML = '<p class="cert-todo-lead">Finish the 🏆 Garden Challenge at the end of the map to earn your Arabic Adventure certificate!</p>' +
-      '<div class="lesson-actions"><button class="big-btn" id="cert-goto-map">🗺️ Go to map</button></div>';
+  $('cert-head-label').textContent = 'Map '+(mi+1)+' Certificate';
+  const ready = mapComplete(mi);
+  if(!ready){
+    const idxs = mapNodeIdxs(mi);
+    box.innerHTML =
+      '<p class="cert-todo-lead">Almost there! Finish these to earn the Map '+(mi+1)+' · '+escapeHtml(g.title)+' certificate.</p>' +
+      '<div class="cert-todo">'+idxs.map(i=>{
+        const done = i < profile.unlockedIndex;
+        const playable = i <= profile.unlockedIndex;
+        return '<div class="todo-row'+(done?' ok':'')+'">' +
+          '<span class="tr-icon">'+(done?'✅':(playable?'⭕':'🔒'))+'</span>' +
+          '<span class="tr-label">'+escapeHtml(nodeTitle(i))+'</span>' +
+          ((done || !playable) ? '' : '<button class="tr-go" type="button" data-play="'+i+'">Play</button>') +
+        '</div>';
+      }).join('')+'</div>';
+    box.querySelectorAll('.tr-go').forEach(b=>b.addEventListener('click', ()=>{
+      playTap(); openNode(parseInt(b.dataset.play,10));
+    }));
     showScreen('screen-certificate');
     $('cert-print-btn').classList.add('hidden');
-    $('cert-goto-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
+    $('certname-edit-btn') && $('certname-edit-btn').classList.add('hidden');
     return;
   }
   if(!studentFullName){
-    openCertNameModal(showCertificate);
+    openCertNameModal(function(){ showCertificate(mi); });
     return;
   }
   $('cert-print-btn').classList.remove('hidden');
-  const rec = certRecord();
+  const rec = certRecord(mi);
   box.innerHTML =
     '<div class="cert-wrap"><div class="cert-card">' +
       '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
@@ -1788,12 +1895,12 @@ function showCertificate(){
       '<h1 class="cert-title">Certificate of Completion</h1>' +
       '<p class="cert-line">This certifies that</p>' +
       '<div class="cert-name">'+escapeHtml(studentFullName)+'</div>' +
-      '<p class="cert-line">has completed World 1</p>' +
-      '<p class="cert-course">🏜️ The Desert Road · All 28 Arabic Letters</p>' +
-      '<p class="cert-line arabic" style="font-size:22px; margin-top:4px;">جَمِيعُ الْحُرُوفِ الْعَرَبِيَّة</p>' +
+      '<p class="cert-line">has finished every lesson on</p>' +
+      '<p class="cert-course">'+g.icon+' Map '+(mi+1)+' · '+escapeHtml(g.title)+'</p>' +
+      '<p class="cert-line" style="font-size:14px; margin-top:2px;">'+escapeHtml(certSubForGroup(g))+'</p>' +
       '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
       '<div class="cert-meta-row">' +
-        '<div>Stars<b>'+totalStars()+'</b></div>' +
+        '<div>Stars<b>'+mapStars(mi)+' / '+mapMaxStars(mi)+'</b></div>' +
         '<div>Date<b>'+prettyDate(rec.date)+'</b></div>' +
         '<div>Certificate ID<b>'+rec.id+'</b></div>' +
       '</div>' +
@@ -1817,10 +1924,10 @@ $('certname-save-btn').addEventListener('click', ()=>{
     .finally(()=>{ btn.disabled = false; });
 });
 $('certname-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('certname-save-btn').click(); });
-$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderHome(); });
+$('cert-back-btn').addEventListener('click', ()=>{ playTap(); renderMap(MAPS[certMap].from); });
 $('cert-print-btn').addEventListener('click', ()=>{
   const prevTitle = document.title;
-  document.title = (studentFullName||'My')+'’s Arabic Adventure certificate';
+  document.title = (studentFullName||'My')+'’s Map '+(certMap+1)+' certificate';
   const restore = ()=>{ document.title = prevTitle; window.removeEventListener('afterprint', restore); };
   window.addEventListener('afterprint', restore);
   window.print();
@@ -1899,6 +2006,7 @@ function wireChoiceGrid(gridId, opts, renderFn, done, letter, isEmoji){
 
 /* ===================== REWARD ===================== */
 function showReward(opts){
+  if(lastCompletedMapIdx !== null){ opts.offerCert = true; opts.certMapIdx = lastCompletedMapIdx; lastCompletedMapIdx = null; }
   const box = $('reward-box');
   box.innerHTML =
     '<div class="mascot-wrap"></div>' +
@@ -1909,7 +2017,7 @@ function showReward(opts){
     '<div class="coin-earned">🪙 +'+(opts.coins||0)+' coins</div>' +
     (opts.badge ? '<div class="sticker-row">'+opts.badge+'</div>' : '') +
     '<div class="lesson-actions">' +
-      (opts.offerCert ? '<button class="big-btn sun" id="reward-cert">🎓 Get my certificate</button>' : '') +
+      (opts.offerCert ? '<button class="big-btn sun" id="reward-cert">🎓 Get my Map '+(opts.certMapIdx+1)+' certificate</button>' : '') +
       '<button class="big-btn" id="reward-continue">▶ Continue</button>' +
       '<button class="ghost-btn" id="reward-map">🗺️ Map</button>' +
     '</div>';
@@ -1923,7 +2031,7 @@ function showReward(opts){
     renderMap(currentContinueTarget());
   });
   $('reward-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
-  if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(); });
+  if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(opts.certMapIdx); });
 }
 
 /* ===================== PARENT AREA ===================== */
