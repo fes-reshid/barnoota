@@ -58,17 +58,30 @@
     { letter:'ي', name:'يَاء',  translit:'Ya',    word:'يَدٌ',     wordTranslit:'yadun',     english:'hand',     emoji:'✋', sourcePages:[74,75] }
   ];
 
-  /* Groups mirror the book's own rhythm: a run of letters, then the
-     review / matching pages that immediately follow them in the PDF. */
+  /* World 1 is framed as a desert road-trip from Makkah to Madinah — a
+     fun, familiar journey shape for an Islamic kids' site, not a claim of
+     historical waypoint accuracy beyond the two well-established endpoints
+     (and Quba, the first mosque on the real route into Madinah). Groups
+     mirror the book's own rhythm: a run of letters, then the review /
+     matching pages that immediately follow them in the PDF. */
+  var WORLD_TITLE = 'The Desert Road';
   var GROUPS = [
-    { id:'g1', title:'First Seeds',     icon:'🌱', letters:['ا','ب','ت','ث'],         reviewPages:[14,15], storyAfter:'rabbit_house' },
-    { id:'g2', title:'Camel Trail',     icon:'🐪', letters:['ج','ح','خ','د'],         reviewPages:[24,25] },
-    { id:'g3', title:'Flower Field',    icon:'🌸', letters:['ذ','ر','ز','س'],         reviewPages:[35],   vocabModule:'classroom' },
-    { id:'g4', title:'Tree House',      icon:'🌳', letters:['ش','ص','ض','ط'],         reviewPages:[44,45] },
-    { id:'g5', title:'Butterfly Meadow', icon:'🦋', letters:['ظ','ع','غ','ف'],        reviewPages:[54],   vocabModule:'fruits' },
-    { id:'g6', title:'Pond Path',       icon:'🐸', letters:['ق','ك','ل','م','ن'],     reviewPages:[67],   vocabModule:'toys' },
-    { id:'g7', title:'Sunny Yard',      icon:'🌞', letters:['و','ه','ي'],             reviewPages:[76,77], vocabModule:'body' },
-    { id:'g8', title:'Garden Challenge', icon:'🏆', letters:[],                        reviewPages:[90,95], vocabModule:'colours', finalChallenge:true }
+    { id:'g1', title:'Makkah Gate',       icon:'🕋', letters:['ا','ب','ت','ث'],         reviewPages:[14,15], storyAfter:'rabbit_house' },
+    { id:'g2', title:'Camel Trail',       icon:'🐪', letters:['ج','ح','خ','د'],         reviewPages:[24,25] },
+    { id:'g3', title:'Palm Oasis',        icon:'🌴', letters:['ذ','ر','ز','س'],         reviewPages:[35],   vocabModule:'classroom' },
+    { id:'g4', title:'Mountain Pass',     icon:'⛰️', letters:['ش','ص','ض','ط'],         reviewPages:[44,45] },
+    { id:'g5', title:'Desert Dunes',      icon:'🏜️', letters:['ظ','ع','غ','ف'],        reviewPages:[54],   vocabModule:'fruits' },
+    { id:'g6', title:'Caravan Well',      icon:'💧', letters:['ق','ك','ل','م','ن'],     reviewPages:[67],   vocabModule:'toys' },
+    { id:'g7', title:'Quba Grove',        icon:'🕌', letters:['و','ه','ي'],             reviewPages:[76,77], vocabModule:'body' },
+    { id:'g8', title:'Madinah Gate',      icon:'🏆', letters:[],                        reviewPages:[90,95], vocabModule:'colours', finalChallenge:true }
+  ];
+
+  /* Splits the road into a few shorter "maps" you page between, so the
+     whole journey doesn't have to sit on one long scroll. */
+  var MAP_CHAPTERS = [
+    { title:'Leaving Makkah',      subtitle:'مِنْ مَكَّةَ',       groupIds:['g1','g2'] },
+    { title:'Across the Desert',   subtitle:'فِي الصَّحْرَاء',    groupIds:['g3','g4','g5'] },
+    { title:'Arriving in Madinah', subtitle:'إِلَى الْمَدِينَة',  groupIds:['g6','g7','g8'] }
   ];
 
   /* Themed vocabulary modules — bonus mini-lessons that appear between
@@ -156,8 +169,10 @@
 
   global.ARABIC_ADVENTURE_WORLD1 = {
     sourceBook: SOURCE_BOOK,
+    worldTitle: WORLD_TITLE,
     letters: LETTERS,
     groups: GROUPS,
+    mapChapters: MAP_CHAPTERS,
     vocabModules: VOCAB_MODULES,
     lookalikes: LOOKALIKES,
     stories: STORIES
