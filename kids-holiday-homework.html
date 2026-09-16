@@ -166,6 +166,11 @@
     margin-top:10px; height:100px; border:2px dashed var(--card-accent, var(--gold-soft)); border-radius:10px;
     background:#fff;
   }
+  .ayah-play-btn{
+    border:none; background:var(--card-accent, var(--gold)); color:#fff; width:28px; height:28px;
+    border-radius:50%; font-size:13px; cursor:pointer; vertical-align:middle;
+  }
+  .ayah-play-btn:hover{ filter:brightness(1.1); }
 
   /* ---- quiz ---- */
   .quiz-q{ font-size:14.5px; margin:0 0 8px; }
@@ -263,7 +268,7 @@
   footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
 
   @media print{
-    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta{ display:none !important; }
+    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta, .ayah-play-btn{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:100%; }
     .day-grid{ display:block; }
@@ -363,6 +368,8 @@
   </div>
 
 </div>
+
+<audio id="ayah-audio" preload="none"></audio>
 
 <div class="modal-overlay hidden" id="quiz-modal">
   <div class="modal-card">
@@ -596,14 +603,28 @@ const FOUNDATION_QURAN_PLAN = [
   { a:{ surah:'falaq', review:true }, b:{ surah:'nas', review:true }, bigReview:true }
 ];
 
+/* Per-ayah recitation audio (Sheikh Mishari Al-Afasy) from EveryAyah.com's
+   long-standing per-ayah archive -- the same file-naming convention most
+   open-source Qur'an apps use (three-digit surah + three-digit ayah). This
+   session has no web access to confirm the files are still served at this
+   path, so this is best-effort: if a link is stale the player just shows
+   nothing to play, nothing else breaks. Spot-check a few before relying on
+   this for real classroom/home use. */
+function pad3(n){ return String(n).padStart(3, '0'); }
+function ayahAudioUrl(surahNum, ayahNum){
+  return 'https://everyayah.com/data/Alafasy_128kbps/' + pad3(surahNum) + pad3(ayahNum) + '.mp3';
+}
+
 function foundationAyahHtml(entry){
   const surah = SURAH_DATA[entry.surah];
   if(entry.review){
     return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + ') — review time! Try to recite the whole surah from memory with a grown-up.</p>';
   }
   const ayah = surah.ayahs[entry.ayah];
+  const audioUrl = ayahAudioUrl(surah.num, entry.ayah + 1);
   return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + '), ayah ' + (entry.ayah + 1) + ' of ' + surah.totalAyat + ':<br>' +
-    '<span class="arabic-name">' + escapeHtml(ayah.arabic) + '</span><br>' +
+    '<span class="arabic-name">' + escapeHtml(ayah.arabic) + '</span> ' +
+    '<button type="button" class="ayah-play-btn" data-audio="' + escapeHtml(audioUrl) + '" title="Listen (Sheikh Al-Afasy)">🔊</button><br>' +
     '<em>' + escapeHtml(ayah.translit) + '</em><br>' +
     '"' + escapeHtml(ayah.translation) + '"' +
     (entry.complete ? '<br>🎉 That’s the whole surah — well done!' : '') + '</p>';
@@ -1138,6 +1159,35 @@ function wireQuizModal(){
   });
 }
 
+/* One shared <audio> element for every ayah "Listen" button (click
+   delegation, since the buttons themselves are built from innerHTML
+   strings) -- clicking a playing button pauses it, clicking a different
+   one switches to that ayah, and the button's own icon always reflects
+   the shared player's actual state. */
+function wireAyahAudio(){
+  const audio = document.getElementById('ayah-audio');
+  let activeBtn = null;
+  function resetBtn(btn){ if(btn) btn.textContent = '🔊'; }
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.ayah-play-btn');
+    if(!btn) return;
+    const url = btn.dataset.audio;
+    if(activeBtn === btn && !audio.paused){
+      audio.pause();
+      resetBtn(btn);
+      activeBtn = null;
+      return;
+    }
+    resetBtn(activeBtn);
+    audio.src = url;
+    audio.play().catch(() => {});
+    btn.textContent = '⏸️';
+    activeBtn = btn;
+  });
+  audio.addEventListener('ended', () => { resetBtn(activeBtn); activeBtn = null; });
+  audio.addEventListener('error', () => { resetBtn(activeBtn); activeBtn = null; });
+}
+
 function shuffleLetters(word){
   const letters = word.split('');
   for(let i = letters.length - 1; i > 0; i--){
@@ -1366,6 +1416,7 @@ function wireCloudAuth(){
   });
 }
 wireQuizModal();
+wireAyahAudio();
 showScreen('name-screen');
 setTimeout(() => document.getElementById('login-username').focus(), 150);
 window.addEventListener('kidscloud-ready', wireCloudAuth);
