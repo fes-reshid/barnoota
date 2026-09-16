@@ -158,10 +158,14 @@
   .day-section{ margin-bottom:10px; padding:10px 12px; border-radius:12px; background:var(--parchment); }
   .day-section .lbl{ font-family:'Marcellus'; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--card-accent, var(--gold)); margin-bottom:4px; }
   .day-section p{ margin:0; font-size:15px; line-height:1.45; }
-  .day-section.quran .arabic-name{ font-family:'Amiri', serif; font-size:19px; }
+  .day-section.quran .arabic-name, .day-section.draw .arabic-name{ font-family:'Amiri', serif; font-size:19px; }
   .day-section.dua .dua-arabic{ font-family:'Amiri', serif; font-size:18px; direction:rtl; margin:4px 0; }
   .day-section.dua .dua-translit{ font-style:italic; color:#6b5a3f; font-size:13.5px; margin:2px 0; }
   .day-section.dua .dua-source{ font-size:12px; color:#8a7654; margin-top:4px; }
+  .draw-box{
+    margin-top:10px; height:100px; border:2px dashed var(--card-accent, var(--gold-soft)); border-radius:10px;
+    background:#fff;
+  }
 
   /* ---- quiz ---- */
   .quiz-q{ font-size:14.5px; margin:0 0 8px; }
@@ -262,8 +266,11 @@
     header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:100%; }
-    .day-card{ break-inside:avoid; box-shadow:none !important; }
+    .day-grid{ display:block; }
+    .day-card{ break-inside:avoid; break-after:page; box-shadow:none !important; margin-bottom:0; }
+    .day-card:last-child{ break-after:auto; }
     .week-block:nth-of-type(2){ break-before:page; }
+    .draw-box{ height:220px; }
   }
 </style>
 </head>
@@ -526,6 +533,128 @@ const HOLIDAY_PLAN = [
     duaId:'ighfir-warham' }
 ];
 
+/* ===================== Foundation: a focused hifz track ===================== */
+/* Foundation gets its own two-week Qur'an focus instead of the rotating
+   14-surah list above: Week 1 builds up Al-Fatiha and Al-Ikhlas ayah by
+   ayah alongside each other, Week 2 does the same for Al-Falaq and
+   An-Nas (the two always taught together as "Al-Mu'awwidhatayn"). Every
+   ayah below is a short, extremely well-known, frequently-recited text
+   (all four surahs are recited in daily prayers) -- still, Qur'anic
+   Arabic deserves a second pair of eyes: have a knowledgeable local
+   reciter check the diacritics against a mus'haf before relying on this
+   for actual recitation practice. */
+const SURAH_DATA = {
+  fatiha: { name:'Al-Fatiha', arabic:'الفاتحة', num:1, totalAyat:7, ayahs:[
+    { arabic:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', translit:'Bismillahi-r-Rahmani-r-Rahim', translation:'In the name of Allah, the Most Gracious, the Most Merciful' },
+    { arabic:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ', translit:'Alhamdu lillahi Rabbil-‘alamin', translation:'All praise is for Allah, Lord of all the worlds' },
+    { arabic:'الرَّحْمَٰنِ الرَّحِيمِ', translit:'Ar-Rahmani-r-Rahim', translation:'The Most Gracious, the Most Merciful' },
+    { arabic:'مَالِكِ يَوْمِ الدِّينِ', translit:'Maliki yawmid-din', translation:'Master of the Day of Judgment' },
+    { arabic:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ', translit:'Iyyaka na‘budu wa iyyaka nasta‘in', translation:'You alone we worship, and You alone we ask for help' },
+    { arabic:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ', translit:'Ihdinas-siratal-mustaqim', translation:'Guide us to the straight path' },
+    { arabic:'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ', translit:'Siratal-ladhina an‘amta ‘alayhim ghayril-maghdubi ‘alayhim wa lad-dallin', translation:'The path of those You have blessed, not of those who earned Your anger, nor of those who went astray' }
+  ]},
+  ikhlas: { name:'Al-Ikhlas', arabic:'الإخلاص', num:112, totalAyat:4, ayahs:[
+    { arabic:'قُلْ هُوَ اللَّهُ أَحَدٌ', translit:'Qul huwa Allahu ahad', translation:'Say, He is Allah, the One' },
+    { arabic:'اللَّهُ الصَّمَدُ', translit:'Allahu-s-Samad', translation:'Allah, the Eternal, the Self-Sufficient' },
+    { arabic:'لَمْ يَلِدْ وَلَمْ يُولَدْ', translit:'Lam yalid wa lam yulad', translation:'He does not give birth, nor was He born' },
+    { arabic:'وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ', translit:'Wa lam yakun lahu kufuwan ahad', translation:'And there is none equal to Him' }
+  ]},
+  falaq: { name:'Al-Falaq', arabic:'الفلق', num:113, totalAyat:5, ayahs:[
+    { arabic:'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ', translit:'Qul a‘udhu bi-Rabbil-falaq', translation:'Say, I seek refuge in the Lord of the daybreak' },
+    { arabic:'مِنْ شَرِّ مَا خَلَقَ', translit:'Min sharri ma khalaq', translation:'From the evil of what He created' },
+    { arabic:'وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ', translit:'Wa min sharri ghasiqin idha waqab', translation:'And from the evil of darkness when it settles' },
+    { arabic:'وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ', translit:'Wa min sharrin-naffathati fil-‘uqad', translation:'And from the evil of those who blow on knots' },
+    { arabic:'وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ', translit:'Wa min sharri hasidin idha hasad', translation:'And from the evil of an envier when he envies' }
+  ]},
+  nas: { name:'An-Nas', arabic:'الناس', num:114, totalAyat:6, ayahs:[
+    { arabic:'قُلْ أَعُوذُ بِرَبِّ النَّاسِ', translit:'Qul a‘udhu bi-Rabbin-nas', translation:'Say, I seek refuge in the Lord of mankind' },
+    { arabic:'مَلِكِ النَّاسِ', translit:'Malikin-nas', translation:'The King of mankind' },
+    { arabic:'إِلَٰهِ النَّاسِ', translit:'Ilahin-nas', translation:'The God of mankind' },
+    { arabic:'مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ', translit:'Min sharril-waswasil-khannas', translation:'From the evil of the sneaking whisperer' },
+    { arabic:'الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ', translit:'Alladhi yuwaswisu fi sudurin-nas', translation:'Who whispers into the hearts of people' },
+    { arabic:'مِنَ الْجِنَّةِ وَالنَّاسِ', translit:'Minal-jinnati wan-nas', translation:'From among the jinn and mankind' }
+  ]}
+};
+
+/* Two surahs a day: `a` progresses through Al-Ikhlas then reviews it
+   once finished, `b` progresses through the week's longer surah. */
+const FOUNDATION_QURAN_PLAN = [
+  { a:{ surah:'ikhlas', ayah:0 }, b:{ surah:'fatiha', ayah:0 } },
+  { a:{ surah:'ikhlas', ayah:1 }, b:{ surah:'fatiha', ayah:1 } },
+  { a:{ surah:'ikhlas', ayah:2 }, b:{ surah:'fatiha', ayah:2 } },
+  { a:{ surah:'ikhlas', ayah:3, complete:true }, b:{ surah:'fatiha', ayah:3 } },
+  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:4 } },
+  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:5 } },
+  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:6, complete:true }, bigReview:true },
+
+  { a:{ surah:'falaq', ayah:0 }, b:{ surah:'nas', ayah:0 } },
+  { a:{ surah:'falaq', ayah:1 }, b:{ surah:'nas', ayah:1 } },
+  { a:{ surah:'falaq', ayah:2 }, b:{ surah:'nas', ayah:2 } },
+  { a:{ surah:'falaq', ayah:3 }, b:{ surah:'nas', ayah:3 } },
+  { a:{ surah:'falaq', ayah:4, complete:true }, b:{ surah:'nas', ayah:4 } },
+  { a:{ surah:'falaq', review:true }, b:{ surah:'nas', ayah:5, complete:true } },
+  { a:{ surah:'falaq', review:true }, b:{ surah:'nas', review:true }, bigReview:true }
+];
+
+function foundationAyahHtml(entry){
+  const surah = SURAH_DATA[entry.surah];
+  if(entry.review){
+    return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + ') — review time! Try to recite the whole surah from memory with a grown-up.</p>';
+  }
+  const ayah = surah.ayahs[entry.ayah];
+  return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + '), ayah ' + (entry.ayah + 1) + ' of ' + surah.totalAyat + ':<br>' +
+    '<span class="arabic-name">' + escapeHtml(ayah.arabic) + '</span><br>' +
+    '<em>' + escapeHtml(ayah.translit) + '</em><br>' +
+    '"' + escapeHtml(ayah.translation) + '"' +
+    (entry.complete ? '<br>🎉 That’s the whole surah — well done!' : '') + '</p>';
+}
+
+function renderFoundationQuranSection(dayIndex){
+  const plan = FOUNDATION_QURAN_PLAN[dayIndex];
+  const surahA = SURAH_DATA[plan.a.surah], surahB = SURAH_DATA[plan.b.surah];
+  const heading = plan.bigReview ? '🎉 Recitation Day!' : '📖 Qur’an Focus (Hifz)';
+  const task = plan.bigReview
+    ? 'Try to recite both ' + surahA.name + ' and ' + surahB.name + ' fully, from memory, to a family member!'
+    : 'Say today’s ayah(s) three times with a grown-up, then try once by yourself.';
+  return '<div class="day-section quran"><div class="lbl">' + heading + '</div>' +
+    foundationAyahHtml(plan.a) + foundationAyahHtml(plan.b) +
+    '<p><em>' + escapeHtml(task) + '</em></p></div>' +
+    '<div class="day-section draw"><div class="lbl">✏️ Draw &amp; Learn</div>' +
+    '<p>Draw and colour a picture for today’s surahs! Then trace or write their names and numbers:<br>' +
+    '<span class="arabic-name">' + escapeHtml(surahA.arabic) + '</span> — Surah ' + surahA.num + ' (' + surahA.name + ')<br>' +
+    '<span class="arabic-name">' + escapeHtml(surahB.arabic) + '</span> — Surah ' + surahB.num + ' (' + surahB.name + ')</p>' +
+    '<div class="draw-box" aria-hidden="true"></div></div>';
+}
+
+/* Foundation's 3 "Qur'an" quiz questions, built from its own two-surah
+   focus for the day instead of the generic rotating-surah data. */
+function buildFoundationQuranQuestions(dayIndex){
+  const plan = FOUNDATION_QURAN_PLAN[dayIndex];
+  const surahA = SURAH_DATA[plan.a.surah], surahB = SURAH_DATA[plan.b.surah];
+
+  const ayatCorrect = surahA.totalAyat;
+  const ayatWrong = [ayatCorrect - 1, ayatCorrect + 1, ayatCorrect + 2].filter(n => n > 0 && n !== ayatCorrect);
+  const ayatQ = shuffleOptions([ayatCorrect, ayatWrong[0], ayatWrong[1]], ayatCorrect);
+
+  const numCorrect = surahB.num;
+  const numWrong = [numCorrect - 1, numCorrect + 1, numCorrect - 3, numCorrect + 3].filter(n => n > 0 && n <= 114 && n !== numCorrect);
+  const numQ = shuffleOptions([numCorrect, numWrong[0], numWrong[1]], numCorrect);
+
+  const otherWeekSurah = SURAH_DATA[plan.a.surah === 'ikhlas' ? 'falaq' : 'ikhlas'];
+  const pickB = !plan.a.review;
+  const quoteEntry = pickB ? plan.b : plan.a;
+  const quoteSurah = pickB ? surahB : surahA;
+  const otherSurahThisWeek = pickB ? surahA : surahB;
+  const quoteAyah = quoteEntry.review ? quoteSurah.ayahs[0] : quoteSurah.ayahs[quoteEntry.ayah];
+  const quoteQ = shuffleOptions([quoteSurah.name, otherSurahThisWeek.name, otherWeekSurah.name], quoteSurah.name);
+
+  return [
+    { q: 'How many ayat (verses) does Surah ' + surahA.name + ' have?', options: ayatQ.options.map(String), correct: String(ayatQ.correct) },
+    { q: 'What is Surah ' + surahB.name + '’s number in the Qur’an (out of 114)?', options: numQ.options.map(String), correct: String(numQ.correct) },
+    { q: 'Which surah says: "' + quoteAyah.translation + '"?', options: quoteQ.options, correct: quoteQ.correct }
+  ];
+}
+
 const QURAN_TASKS = {
   foundation:'Listen to a grown-up recite it, then try to repeat the last word or two with them.',
   g1:'Listen to it 2-3 times, then try saying the shortest line by yourself.',
@@ -784,8 +913,11 @@ function buildMathQuestions(dayIndex, gradeId){
    one mixed order so the subjects interleave instead of running in blocks. */
 function buildDayQuizQuestions(dayIndex, gradeId){
   const tag = (list, icon, label) => list.map(q => Object.assign({ icon: icon, label: label }, q));
+  const quranQs = gradeId === 'foundation'
+    ? buildFoundationQuranQuestions(dayIndex)
+    : [buildAyatQuestion(dayIndex), buildMeaningQuestion(dayIndex), buildSurahNumberQuestion(dayIndex)];
   const all = [
-    ...tag([buildAyatQuestion(dayIndex), buildMeaningQuestion(dayIndex), buildSurahNumberQuestion(dayIndex)], '📖', 'Qur’an'),
+    ...tag(quranQs, '📖', 'Qur’an'),
     ...tag(fromBank(ACTIVITY_QUESTIONS, dayIndex), '🎯', 'Today'),
     ...tag(buildMathQuestions(dayIndex, gradeId), '🔢', 'Math'),
     ...tag(fromBank(ENGLISH_QUESTIONS, dayIndex), '✏️', 'English'),
@@ -1135,10 +1267,11 @@ function renderPlan(name, gradeId){
         '<span class="day-badge">Day ' + dayNum + '</span>' +
         '<h3>' + plan.icon + ' ' + escapeHtml(plan.theme) + '</h3>' +
         '<div class="day-section activity"><div class="lbl">🎯 Today\'s Activity</div><p>' + escapeHtml(plan.tasks[gradeId]) + '</p></div>' +
+        (gradeId === 'foundation' ? renderFoundationQuranSection(dayNum - 1) :
         '<div class="day-section quran"><div class="lbl">📖 Qur\'an Focus</div>' +
           '<p><span class="arabic-name">' + escapeHtml(plan.quran.arabic) + '</span> — Surah ' + escapeHtml(plan.quran.name) +
           ' (' + plan.quran.num + ') · ' + plan.quran.ayat + ' ayat<br>' + escapeHtml(plan.quran.meaning) + '<br>' +
-          '<em>' + escapeHtml(QURAN_TASKS[gradeId]) + '</em></p></div>' +
+          '<em>' + escapeHtml(QURAN_TASKS[gradeId]) + '</em></p></div>') +
         '<div class="day-section dua"><div class="lbl">🤲 Du\'a of the Day</div>' +
           '<p class="dua-arabic">' + escapeHtml(dua.arabic) + '</p>' +
           '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
