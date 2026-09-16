@@ -171,6 +171,12 @@
     border-radius:50%; font-size:13px; cursor:pointer; vertical-align:middle;
   }
   .ayah-play-btn:hover{ filter:brightness(1.1); }
+  .ayah-block{ margin-top:8px; padding-top:8px; }
+  .ayah-block + .ayah-block{ border-top:1.5px dashed var(--card-accent, var(--gold-soft)); }
+  .ayah-tag{ font-size:11.5px !important; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--card-accent, var(--gold)) !important; }
+  .repeat-row{ margin-top:4px !important; font-size:13.5px !important; }
+  .repeat-star{ background:none; border:none; font-size:19px; cursor:pointer; opacity:.3; padding:2px; transition:transform .15s, opacity .15s; }
+  .repeat-star.lit{ opacity:1; transform:scale(1.2); }
 
   /* ---- quiz ---- */
   .quiz-q{ font-size:14.5px; margin:0 0 8px; }
@@ -270,7 +276,7 @@
   footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
 
   @media print{
-    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta, .ayah-play-btn{ display:none !important; }
+    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta, .ayah-play-btn, .repeat-row{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:100%; }
     .day-grid{ display:block; }
@@ -580,24 +586,28 @@ const SURAH_DATA = {
   ]}
 };
 
-/* Two surahs a day: `a` progresses through Al-Ikhlas then reviews it
-   once finished, `b` progresses through the week's longer surah. */
+/* One surah at a time -- never two new surahs on the same day, so a
+   young Foundation child only ever meets one at once: all of Al-Fatiha
+   first, then all of Al-Ikhlas; then (week 2) all of Al-Falaq, then all
+   of An-Nas. `ayahs` are the 0-indexed ayahs taught that day, `reviewSurah`
+   marks the day the surah's just been finished (recite it whole), and
+   `bigReview` days have no new ayah -- just recite the week's two surahs. */
 const FOUNDATION_QURAN_PLAN = [
-  { a:{ surah:'ikhlas', ayah:0 }, b:{ surah:'fatiha', ayah:0 } },
-  { a:{ surah:'ikhlas', ayah:1 }, b:{ surah:'fatiha', ayah:1 } },
-  { a:{ surah:'ikhlas', ayah:2 }, b:{ surah:'fatiha', ayah:2 } },
-  { a:{ surah:'ikhlas', ayah:3, complete:true }, b:{ surah:'fatiha', ayah:3 } },
-  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:4 } },
-  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:5 } },
-  { a:{ surah:'ikhlas', review:true }, b:{ surah:'fatiha', ayah:6, complete:true }, bigReview:true },
+  { surah:'fatiha', ayahs:[0] },
+  { surah:'fatiha', ayahs:[1,2] },
+  { surah:'fatiha', ayahs:[3,4] },
+  { surah:'fatiha', ayahs:[5,6], reviewSurah:true },
+  { surah:'ikhlas', ayahs:[0,1] },
+  { surah:'ikhlas', ayahs:[2,3], reviewSurah:true },
+  { surah:'ikhlas', ayahs:[], bigReview:true, weekSurahs:['fatiha','ikhlas'] },
 
-  { a:{ surah:'falaq', ayah:0 }, b:{ surah:'nas', ayah:0 } },
-  { a:{ surah:'falaq', ayah:1 }, b:{ surah:'nas', ayah:1 } },
-  { a:{ surah:'falaq', ayah:2 }, b:{ surah:'nas', ayah:2 } },
-  { a:{ surah:'falaq', ayah:3 }, b:{ surah:'nas', ayah:3 } },
-  { a:{ surah:'falaq', ayah:4, complete:true }, b:{ surah:'nas', ayah:4 } },
-  { a:{ surah:'falaq', review:true }, b:{ surah:'nas', ayah:5, complete:true } },
-  { a:{ surah:'falaq', review:true }, b:{ surah:'nas', review:true }, bigReview:true }
+  { surah:'falaq', ayahs:[0] },
+  { surah:'falaq', ayahs:[1,2] },
+  { surah:'falaq', ayahs:[3,4], reviewSurah:true },
+  { surah:'nas', ayahs:[0,1] },
+  { surah:'nas', ayahs:[2,3] },
+  { surah:'nas', ayahs:[4,5], reviewSurah:true },
+  { surah:'nas', ayahs:[], bigReview:true, weekSurahs:['falaq','nas'] }
 ];
 
 /* Per-ayah recitation audio (Sheikh Mishari Al-Afasy) from EveryAyah.com's
@@ -612,63 +622,100 @@ function ayahAudioUrl(surahNum, ayahNum){
   return 'https://everyayah.com/data/Alafasy_128kbps/' + pad3(surahNum) + pad3(ayahNum) + '.mp3';
 }
 
-function foundationAyahHtml(entry){
-  const surah = SURAH_DATA[entry.surah];
-  if(entry.review){
-    return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + ') — review time! Try to recite the whole surah from memory with a grown-up.</p>';
+function repeatStarsHtml(dayIndex, ayahIdx){
+  return '<span class="repeat-stars" data-day="' + dayIndex + '" data-ayah="' + ayahIdx + '">' +
+    [0, 1, 2].map(n => '<button type="button" class="repeat-star" data-n="' + n + '" title="I said it again!">⭐</button>').join('') +
+    '</span>';
+}
+
+/* Renders the day's single surah: every taught ayah gets its own block
+   (Arabic, play button, transliteration, translation) plus a row of tap
+   stars a young child can hit each time they repeat it out loud. */
+function foundationQuranBlockHtml(dayIndex){
+  const plan = FOUNDATION_QURAN_PLAN[dayIndex];
+  if(plan.bigReview){
+    const names = plan.weekSurahs.map(id => SURAH_DATA[id].name).join(' and ');
+    return '<p>🎉 <b>Recitation Day!</b> Try to recite both ' + escapeHtml(names) + ' fully, from memory, to a family member!</p>';
   }
-  const ayah = surah.ayahs[entry.ayah];
-  const audioUrl = ayahAudioUrl(surah.num, entry.ayah + 1);
-  return '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + '), ayah ' + (entry.ayah + 1) + ' of ' + surah.totalAyat + ':<br>' +
-    '<span class="arabic-name">' + escapeHtml(ayah.arabic) + '</span> ' +
-    '<button type="button" class="ayah-play-btn" data-audio="' + escapeHtml(audioUrl) + '" title="Listen (Sheikh Al-Afasy)">🔊</button><br>' +
-    '<em>' + escapeHtml(ayah.translit) + '</em><br>' +
-    '"' + escapeHtml(ayah.translation) + '"' +
-    (entry.complete ? '<br>🎉 That’s the whole surah — well done!' : '') + '</p>';
+  const surah = SURAH_DATA[plan.surah];
+  let html = '<p><b>' + escapeHtml(surah.name) + '</b> (Surah ' + surah.num + ', ' + surah.totalAyat + ' ayat total)</p>';
+  plan.ayahs.forEach(ayahIdx => {
+    const ayah = surah.ayahs[ayahIdx];
+    const audioUrl = ayahAudioUrl(surah.num, ayahIdx + 1);
+    html += '<div class="ayah-block">' +
+      '<p class="ayah-tag">Ayah ' + (ayahIdx + 1) + ' of ' + surah.totalAyat + '</p>' +
+      '<p><span class="arabic-name">' + escapeHtml(ayah.arabic) + '</span> ' +
+      '<button type="button" class="ayah-play-btn" data-audio="' + escapeHtml(audioUrl) + '" title="Listen (Sheikh Al-Afasy)">🔊</button></p>' +
+      '<p><em>' + escapeHtml(ayah.translit) + '</em></p>' +
+      '<p>"' + escapeHtml(ayah.translation) + '"</p>' +
+      '<p class="repeat-row">Say it, then tap a star: ' + repeatStarsHtml(dayIndex, ayahIdx) + '</p>' +
+      '</div>';
+  });
+  if(plan.reviewSurah){
+    html += '<p>🎉 You’ve finished <b>' + escapeHtml(surah.name) + '</b>! Try to recite the whole surah from memory with a grown-up.</p>';
+  }
+  return html;
 }
 
 function renderFoundationQuranSection(dayIndex){
   const plan = FOUNDATION_QURAN_PLAN[dayIndex];
-  const surahA = SURAH_DATA[plan.a.surah], surahB = SURAH_DATA[plan.b.surah];
   const heading = plan.bigReview ? '🎉 Recitation Day!' : '📖 Qur’an Focus (Hifz)';
-  const task = plan.bigReview
-    ? 'Try to recite both ' + surahA.name + ' and ' + surahB.name + ' fully, from memory, to a family member!'
-    : 'Say today’s ayah(s) three times with a grown-up, then try once by yourself.';
-  return '<div class="day-section quran"><div class="lbl">' + heading + '</div>' +
-    foundationAyahHtml(plan.a) + foundationAyahHtml(plan.b) +
-    '<p><em>' + escapeHtml(task) + '</em></p></div>' +
-    '<div class="day-section draw"><div class="lbl">✏️ Draw &amp; Learn</div>' +
-    '<p>Draw and colour a picture for today’s surahs! Then trace or write their names and numbers:<br>' +
-    '<span class="arabic-name">' + escapeHtml(surahA.arabic) + '</span> — Surah ' + surahA.num + ' (' + surahA.name + ')<br>' +
-    '<span class="arabic-name">' + escapeHtml(surahB.arabic) + '</span> — Surah ' + surahB.num + ' (' + surahB.name + ')</p>' +
+  const task = plan.bigReview ? '' : '<p><em>Say today’s ayah(s) three times with a grown-up, then try once by yourself.</em></p>';
+  const quranSection = '<div class="day-section quran"><div class="lbl">' + heading + '</div>' +
+    foundationQuranBlockHtml(dayIndex) + task + '</div>';
+  if(plan.bigReview) return quranSection;
+  const surah = SURAH_DATA[plan.surah];
+  const drawSection = '<div class="day-section draw"><div class="lbl">✏️ Draw &amp; Learn</div>' +
+    '<p>Draw and colour a picture for ' + escapeHtml(surah.name) + '! Then trace or write its name and number:<br>' +
+    '<span class="arabic-name">' + escapeHtml(surah.arabic) + '</span> — Surah ' + surah.num + ' (' + escapeHtml(surah.name) + ')</p>' +
     '<div class="draw-box" aria-hidden="true"></div></div>';
+  return quranSection + drawSection;
 }
 
-/* Foundation's 3 "Qur'an" quiz questions, built from its own two-surah
-   focus for the day instead of the generic rotating-surah data. */
+/* A tap-the-letters unscramble game for the day's surah name(s) --
+   the same interactive mechanic used for the Soundwaves words, so the
+   surah name gets its own bit of play instead of just being traced. */
+function renderFoundationQuranGame(container, dayIndex){
+  const plan = FOUNDATION_QURAN_PLAN[dayIndex];
+  const surahIds = plan.bigReview ? plan.weekSurahs : [plan.surah];
+  const section = document.createElement('div');
+  section.className = 'day-section game';
+  const label = document.createElement('div');
+  label.className = 'lbl';
+  label.textContent = '🧩 Unscramble the Surah Name';
+  section.appendChild(label);
+  surahIds.forEach(id => renderWordScramble(section, SURAH_DATA[id].name.replace(/^(Al|An)-/, '')));
+  container.appendChild(section);
+}
+
+/* Foundation's 3 "Qur'an" quiz questions, built from the day's single
+   surah focus (falling back to the week's most-recent surah on a pure
+   review day, which has no new ayah of its own). */
 function buildFoundationQuranQuestions(dayIndex){
   const plan = FOUNDATION_QURAN_PLAN[dayIndex];
-  const surahA = SURAH_DATA[plan.a.surah], surahB = SURAH_DATA[plan.b.surah];
+  const weekSurahIds = dayIndex < 7 ? ['fatiha', 'ikhlas'] : ['falaq', 'nas'];
+  const otherWeekSurahIds = dayIndex < 7 ? ['falaq', 'nas'] : ['fatiha', 'ikhlas'];
 
-  const ayatCorrect = surahA.totalAyat;
+  const focusId = plan.bigReview ? weekSurahIds[1] : plan.surah;
+  const focusSurah = SURAH_DATA[focusId];
+  const partnerSurah = SURAH_DATA[weekSurahIds.find(id => id !== focusId) || weekSurahIds[0]];
+  const otherWeekSurah = SURAH_DATA[otherWeekSurahIds[dayIndex % 2]];
+
+  const ayatCorrect = focusSurah.totalAyat;
   const ayatWrong = [ayatCorrect - 1, ayatCorrect + 1, ayatCorrect + 2].filter(n => n > 0 && n !== ayatCorrect);
   const ayatQ = shuffleOptions([ayatCorrect, ayatWrong[0], ayatWrong[1]], ayatCorrect);
 
-  const numCorrect = surahB.num;
+  const numCorrect = focusSurah.num;
   const numWrong = [numCorrect - 1, numCorrect + 1, numCorrect - 3, numCorrect + 3].filter(n => n > 0 && n <= 114 && n !== numCorrect);
   const numQ = shuffleOptions([numCorrect, numWrong[0], numWrong[1]], numCorrect);
 
-  const otherWeekSurah = SURAH_DATA[plan.a.surah === 'ikhlas' ? 'falaq' : 'ikhlas'];
-  const pickB = !plan.a.review;
-  const quoteEntry = pickB ? plan.b : plan.a;
-  const quoteSurah = pickB ? surahB : surahA;
-  const otherSurahThisWeek = pickB ? surahA : surahB;
-  const quoteAyah = quoteEntry.review ? quoteSurah.ayahs[0] : quoteSurah.ayahs[quoteEntry.ayah];
-  const quoteQ = shuffleOptions([quoteSurah.name, otherSurahThisWeek.name, otherWeekSurah.name], quoteSurah.name);
+  const quoteAyahIdx = (plan.ayahs && plan.ayahs.length) ? plan.ayahs[0] : 0;
+  const quoteAyah = focusSurah.ayahs[quoteAyahIdx];
+  const quoteQ = shuffleOptions([focusSurah.name, partnerSurah.name, otherWeekSurah.name], focusSurah.name);
 
   return [
-    { q: 'How many ayat (verses) does Surah ' + surahA.name + ' have?', options: ayatQ.options.map(String), correct: String(ayatQ.correct) },
-    { q: 'What is Surah ' + surahB.name + '’s number in the Qur’an (out of 114)?', options: numQ.options.map(String), correct: String(numQ.correct) },
+    { q: 'How many ayat (verses) does Surah ' + focusSurah.name + ' have?', options: ayatQ.options.map(String), correct: String(ayatQ.correct) },
+    { q: 'What is Surah ' + focusSurah.name + '’s number in the Qur’an (out of 114)?', options: numQ.options.map(String), correct: String(numQ.correct) },
     { q: 'Which surah says: "' + quoteAyah.translation + '"?', options: quoteQ.options, correct: quoteQ.correct }
   ];
 }
@@ -1301,6 +1348,21 @@ function wireAyahAudio(){
   audio.addEventListener('error', () => { resetBtn(activeBtn); activeBtn = null; });
 }
 
+/* Tap-the-star feedback under each ayah -- purely a fun in-the-moment
+   "I said it again!" counter for a young child, not a saved record. */
+function wireRepeatStars(){
+  document.addEventListener('click', e => {
+    const star = e.target.closest('.repeat-star');
+    if(!star) return;
+    const group = star.closest('.repeat-stars');
+    const stars = Array.from(group.querySelectorAll('.repeat-star'));
+    const n = Number(star.dataset.n);
+    const alreadyLit = star.classList.contains('lit') && Number(stars[stars.length - 1].dataset.n) !== n;
+    stars.forEach((s, i) => s.classList.toggle('lit', i <= n));
+    if(n === stars.length - 1 && !alreadyLit) playCorrect();
+  });
+}
+
 function shuffleLetters(word){
   const letters = word.split('');
   for(let i = letters.length - 1; i > 0; i--){
@@ -1440,6 +1502,9 @@ function renderPlan(name, gradeId){
           '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
           '<p>' + escapeHtml(dua.english) + '</p>' +
           '<p class="dua-source">' + escapeHtml(dua.source) + '</p></div>';
+      if(gradeId === 'foundation'){
+        renderFoundationQuranGame(card, dayNum - 1);
+      }
       const quizSection = document.createElement('div');
       quizSection.className = 'day-section quizcta';
       const quizBtn = document.createElement('button');
@@ -1535,6 +1600,7 @@ function wireCloudAuth(){
 }
 wireQuizModal();
 wireAyahAudio();
+wireRepeatStars();
 showScreen('name-screen');
 setTimeout(() => document.getElementById('login-username').focus(), 150);
 window.addEventListener('kidscloud-ready', wireCloudAuth);
