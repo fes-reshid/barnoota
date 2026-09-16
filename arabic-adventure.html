@@ -452,7 +452,10 @@
   .cert-todo-lead{ text-align:center; font-size:15.5px; color:var(--ink-soft); margin:0 auto 16px; max-width:460px; }
   @media print{
     header.site, .no-print, .map-topbar{ display:none !important; }
-    body{ background:#fff; }
+    body{ background:#fff; margin:0; }
+    .wrap{ max-width:100%; padding:0; margin:0; }
+    .cert-wrap{ padding:0; min-height:100vh; align-items:center; }
+    .cert-card{ max-width:none; width:94vw; margin:0 auto; }
   }
 
   @media (max-width:640px){
