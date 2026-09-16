@@ -126,13 +126,13 @@
   <div id="start-block" class="overlay">
     <div style="font-size:44px; margin-bottom:8px;">💧</div>
     <h2>Ready to play?</h2>
-    <p>Nine steps are shown below in a mixed-up order. Tap them one by one, starting with the very first step of wudu. Get 3 wrong and it's game over!</p>
+    <p>Ten steps are shown below in a mixed-up order. Tap them one by one, starting with the very first step of wudu. Get 3 wrong and it's game over!</p>
     <button class="btn" id="start-btn">Start Game</button>
   </div>
 
   <div id="play-block" class="hidden">
     <div class="stat-row">
-      <div class="stat-chip">Step: <b id="step-count">1</b> / 9</div>
+      <div class="stat-chip">Step: <b id="step-count">1</b> / 10</div>
       <div class="lives" id="lives-display">❤️❤️❤️</div>
     </div>
     <div class="sequence-track" id="sequence-track"></div>
@@ -163,14 +163,15 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 const STEPS = [
   { emoji:'🤲', text:'Say "Bismillah" and make your intention' },
-  { emoji:'✋', text:'Wash your hands up to the wrist (3 times)' },
+  { emoji:'✋', text:'Wash your hands' },
   { emoji:'👄', text:'Rinse your mouth (3 times)' },
-  { emoji:'👃', text:'Sniff water and clean your nose (3 times)' },
-  { emoji:'😊', text:'Wash your face, hairline to chin (3 times)' },
-  { emoji:'💪', text:'Wash your arms to the elbows — right, then left' },
-  { emoji:'🧢', text:'Wipe your head with wet hands' },
-  { emoji:'👂', text:'Wipe your ears, inside and out' },
-  { emoji:'🦶', text:'Wash your feet to the ankles — right, then left' }
+  { emoji:'👃', text:'Rinse your nose (3 times)' },
+  { emoji:'😊', text:'Wash your face (3 times)' },
+  { emoji:'🫱', text:'Wash your right hand, fingertips to elbow (3 times)' },
+  { emoji:'🫲', text:'Wash your left hand, fingertips to elbow (3 times)' },
+  { emoji:'🧢', text:'Wipe your head and ears (once)' },
+  { emoji:'🦶', text:'Wash your right foot to the ankle (3 times)' },
+  { emoji:'🦶', text:'Wash your left foot to the ankle (3 times)' }
 ];
 
 function getCtx(){
@@ -278,7 +279,7 @@ function loseGame(){
   document.getElementById('play-block').classList.add('hidden');
   document.getElementById('end-emoji').textContent = '💧';
   document.getElementById('end-title').textContent = 'Out of Tries!';
-  document.getElementById('end-msg').textContent = 'You got to step ' + nextIndex + ' of 9. Take a look at the order again — practice makes perfect!';
+  document.getElementById('end-msg').textContent = 'You got to step ' + nextIndex + ' of ' + STEPS.length + '. Take a look at the order again — practice makes perfect!';
   document.getElementById('end-block').classList.remove('hidden');
 }
 

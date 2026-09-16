@@ -2,9 +2,11 @@
 
 A colorful, local 4-player Islamic-themed tag game. One player is "It" and
 chases the others around a courtyard-garden map. Getting tagged pops up a
-short, authentic du'a (supplication) to read; pressing **"I Recited It"**
-makes that player the new "It" and gives them 30 seconds of protection
-before the chase resumes.
+short, authentic du'a (supplication), which is read aloud (transliteration
+and English meaning, via the browser's built-in text-to-speech) alongside
+a 5-second countdown. When the countdown ends — or as soon as you press
+**"I Recited It"** — that player becomes the new "It" and gets 30 seconds
+of protection before the chase resumes.
 
 Classic Tag and Du'a Tag both run for a 3-minute round (shown live in the
 HUD, with a countdown beep in the final 5 seconds): whoever is stuck being
@@ -49,15 +51,21 @@ controllers.
 
 ### On a phone or tablet
 
-Touch devices get an on-screen D-pad for each player automatically
+Touch devices get an on-screen joystick for each player automatically
 (`js/touchControls.js`), one in each corner of the screen, in that
 player's color — no settings toggle needed, it just appears once a
-touch-capable device is detected. Each button adds/removes the same key
-code the keyboard would, so it's a drop-in alongside keyboard/gamepad
-input rather than a separate control path. The D-pads hide automatically
-during the du'a popup, pause menu, and any other modal, and reappear once
-you're back in the courtyard. A tablet in landscape works best — four
-thumbs need real room.
+touch-capable device is detected. Hold the joystick and drag it any
+direction (8-way, including diagonals) and it adds/removes the same key
+codes the keyboard would, so it's a drop-in alongside keyboard/gamepad
+input rather than a separate control path. The joysticks hide
+automatically during the du'a popup, pause menu, and any other modal,
+and reappear once you're back in the courtyard.
+
+Starting a round also tries to lock the screen to landscape (works on
+Chrome/Android; iOS Safari has no such API at all) and, either way, shows
+a "turn your device sideways" overlay blocking gameplay whenever the game
+screen is active and the device is still in portrait — four thumbs need
+the real room landscape gives them.
 
 Suggested test pass:
 1. From the main menu, choose **Play**, pick a mode, optionally rename the
@@ -65,8 +73,10 @@ Suggested test pass:
 2. Have each player move with their control scheme and confirm no one
    else's movement is affected.
 3. Let "It" catch someone — confirm the tagged player freezes, the du'a
-   popup appears (in **Du'a Tag** and **Practice Mode**), and pressing
-   "I Recited It" transfers "It" and starts the 30-second protection glow.
+   popup appears (in **Du'a Tag** and **Practice Mode**) with a 5-second
+   countdown and is read aloud, and that either the countdown reaching 0
+   or pressing "I Recited It" transfers "It" and starts the 30-second
+   protection glow.
 4. Confirm the newly-tagged "It" cannot immediately re-tag anyone (they're
    tag-locked for the same 30 seconds).
 5. Try **Classic Tag** mode to confirm tags work the same way but skip the
@@ -120,7 +130,10 @@ without touching the others:
   sacred site).
 - `audioManager.js` — every sound effect and the background music pad, all
   synthesized with the Web Audio API (no audio files, and never Qur'an
-  recitation as a sound effect).
+  recitation as a sound effect); also reads a tagged du'a aloud with the
+  browser's built-in text-to-speech (transliteration + English meaning
+  only — never the Arabic itself, to avoid a synthesized voice mangling
+  the actual wording).
 - `ui.js` — all DOM rendering: menu, setup, HUD, du'a modal, library,
   settings, pause, round summary.
 - `gameManager.js` — the orchestrator: game state, the animation loop,

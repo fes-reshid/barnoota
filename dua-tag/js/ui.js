@@ -19,7 +19,7 @@ export function cacheEls(){
     'game-canvas', 'hud-it', 'hud-timer', 'hud-mode', 'hud-players',
     'setup-mode-buttons', 'setup-players', 'setup-start-btn',
     'library-list', 'library-filter',
-    'dua-arabic', 'dua-translit', 'dua-english', 'dua-source', 'dua-who', 'dua-recited-btn',
+    'dua-arabic', 'dua-translit', 'dua-english', 'dua-source', 'dua-who', 'dua-recited-btn', 'dua-countdown',
     'roundend-title', 'roundend-stats', 'roundend-again-btn', 'roundend-menu-btn',
     'toggle-sound', 'toggle-music',
     'range-text-size', 'range-arabic-size',
@@ -33,13 +33,18 @@ export function showScreen(id){
   SCREENS.forEach(s => { if(els[s]) els[s].hidden = (s !== id); });
 }
 
-export function showDuaModal(dua, whoName){
+export function showDuaModal(dua, whoName, countdownSec){
   els['dua-who'].textContent = whoName + ' was tagged!';
   els['dua-arabic'].textContent = dua.arabic;
   els['dua-translit'].textContent = dua.transliteration;
   els['dua-english'].textContent = dua.english;
   els['dua-source'].textContent = dua.source + (dua.category === 'quran' ? ' — Qur’an' : ' — Hadith');
+  els['dua-countdown'].textContent = countdownSec;
   els['modal-dua'].hidden = false;
+}
+
+export function updateDuaCountdown(secLeft){
+  els['dua-countdown'].textContent = secLeft;
 }
 
 export function hideDuaModal(){

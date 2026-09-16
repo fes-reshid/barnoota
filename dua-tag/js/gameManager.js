@@ -14,10 +14,11 @@ import { checkForTag, performTag, grantProtectionAndResume } from './tagSystem.j
 import { PROTECTION_DURATION_MS, updateProtectionDisplay } from './protectionTimer.js';
 import { DuaSystem } from './duaSystem.js';
 import * as ui from './ui.js';
-import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd, playCountdownTick, unlockAudio } from './audioManager.js';
-import { initTouchControls, autoShowTouchControls } from './touchControls.js';
+import { setMuted, isMuted, setMusicOn, isMusicOn, playUiClick, playTag, playRecited, playRoundEnd, playCountdownTick, unlockAudio, speakDua, stopSpeech } from './audioManager.js';
+import { initTouchControls, autoShowTouchControls, requestLandscape, releaseLandscapeLock } from './touchControls.js';
 
 const CLASSIC_PROTECTION_MS = 3000;
+const DUA_READING_MS = 5000;
 const ROUND_DURATION_MS = { classic: 180000, dua: 180000, practice: null };
 const FINAL_COUNTDOWN_SEC = 5;
 const MODE_LABELS = { classic: 'Classic Tag', dua: 'Du’a Tag', practice: 'Practice Mode' };
@@ -29,6 +30,7 @@ export class GameManager {
     this.players = [];
     this.duaSystem = new DuaSystem();
     this.frozenIndex = null;
+    this.frozenUntil = 0;
     this.roundEndAt = 0;
     this.running = false;
     this.keysDown = new Set();
@@ -105,6 +107,7 @@ export class GameManager {
     this.players = CONTROL_SCHEMES.map((scheme, i) => new Player(i, this.setupNames[i], PLAYER_COLORS[i]));
     this.players[0].isIt = true;
     this.frozenIndex = null;
+    this.frozenUntil = 0;
     this.duaSystem.close();
 
     const duration = ROUND_DURATION_MS[this.mode];
@@ -114,6 +117,7 @@ export class GameManager {
     ui.hideDuaModal();
     ui.hidePause();
     ui.showScreen('screen-game');
+    requestLandscape();
 
     this.lastTime = performance.now();
     this.running = true;
@@ -123,6 +127,7 @@ export class GameManager {
   pause(){
     if(!this.running) return;
     this.running = false;
+    stopSpeech();
     ui.showPause();
   }
 
@@ -136,6 +141,8 @@ export class GameManager {
 
   quitToMenu(){
     this.running = false;
+    stopSpeech();
+    releaseLandscapeLock();
     ui.hidePause();
     ui.hideDuaModal();
     ui.showScreen('screen-menu');
@@ -146,7 +153,9 @@ export class GameManager {
     const player = this.players[this.frozenIndex];
     grantProtectionAndResume(player, performance.now(), PROTECTION_DURATION_MS);
     playRecited();
+    stopSpeech();
     this.frozenIndex = null;
+    this.frozenUntil = 0;
     this.duaSystem.close();
     ui.hideDuaModal();
   }
@@ -182,10 +191,21 @@ export class GameManager {
           grantProtectionAndResume(tagged, now, CLASSIC_PROTECTION_MS);
         } else {
           this.frozenIndex = tagged.index;
+          this.frozenUntil = now + DUA_READING_MS;
           const dua = this.duaSystem.openForTag();
-          ui.showDuaModal(dua, tagged.name);
+          ui.showDuaModal(dua, tagged.name, DUA_READING_MS / 1000);
+          speakDua(dua);
         }
       }
+    }
+
+    if(this.frozenIndex !== null){
+      const secLeft = Math.max(0, Math.ceil((this.frozenUntil - now) / 1000));
+      ui.updateDuaCountdown(secLeft);
+      // The du'a is read aloud and shown for a fixed 5 seconds, then the tag
+      // passes on its own -- "I Recited It" is still there for anyone who
+      // wants to move on the moment they've actually said it.
+      if(now >= this.frozenUntil) this.playerRecited();
     }
 
     if(this.roundEndAt !== null){
@@ -228,6 +248,7 @@ export class GameManager {
 
   _endRound(){
     this.running = false;
+    releaseLandscapeLock();
     playRoundEnd();
     ui.hideDuaModal();
     const stats = this.players.map(p => ({ name: p.name, color: p.color, timesIt: p.timesIt, duasRecited: p.duasRecited, isIt: p.isIt }));

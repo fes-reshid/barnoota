@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Holiday Homework — Kids Corner</title>
+<meta name="description" content="A fun two-week holiday homework plan for Foundation to Year 3 — one activity, one Qur'an focus and one du'a a day, printable for the fridge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#2e86ab; --violet:#7a5aa8; --coral:#e0703a; --pink:#c4568a; --pink-bg:#f8e3ee;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0;
+    background:#e9e2cd; font-family:'Cormorant Garamond', serif; color:var(--ink-brown);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+  .hidden{ display:none !important; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:38px; height:38px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none; }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  .back-pill{
+    display:flex; align-items:center; gap:6px; text-decoration:none; font-family:'Marcellus';
+    font-size:14px; color:var(--ink-brown); background:#fff; border:1px solid var(--gold-soft);
+    border-radius:20px; padding:8px 16px;
+  }
+  .back-pill:hover{ background:var(--parchment-deep); }
+
+  .page-head{ text-align:center; padding:36px 20px 8px; }
+  .eyebrow{ font-family:'Marcellus'; color:var(--gold); font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 8px; }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(26px,4vw,38px); color:var(--ink-navy); margin:0 0 10px; }
+  .page-head p{ font-size:16px; color:#6b5a3f; line-height:1.5; max-width:560px; margin:0 auto; }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:24px 20px 90px; }
+
+  /* ---- shared: grid of picker cards (grade) ---- */
+  .year-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px; max-width:640px; margin:0 auto; }
+  .year-card{
+    background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:22px 16px;
+    text-align:center; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .year-card:hover{ transform:translateY(-4px); border-color:var(--gold); }
+  .year-card .icon{ font-size:32px; margin-bottom:8px; }
+  .year-card .label{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
+
+  /* ---- login gate ---- */
+  .center-card{
+    max-width:420px; margin:0 auto; background:#fff; border:2px solid var(--gold-soft); border-radius:22px;
+    padding:40px 30px; text-align:center; box-shadow:0 8px 20px rgba(60,45,20,.09);
+  }
+  .center-card .icon{ font-size:48px; margin-bottom:14px; }
+  .center-card h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 10px; }
+  .center-card p{ font-size:16px; color:#6b5a3f; line-height:1.5; margin:0 0 22px; }
+  .name-field{
+    width:100%; max-width:300px; padding:13px 16px; border-radius:14px; border:1.5px solid var(--gold-soft);
+    font-family:'Cormorant Garamond', serif; font-size:18px; text-align:center; margin-bottom:16px;
+    background:var(--parchment);
+  }
+  .name-field:focus{ outline:none; border-color:var(--green); }
+  .btn{
+    display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700;
+    font-size:16px; padding:12px 30px; border-radius:26px; border:none; cursor:pointer;
+    background:var(--green); color:#fff; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); background:var(--green-dark); }
+  .btn.ghost{ background:#fff; color:var(--ink-brown); border:1.5px solid var(--gold-soft); }
+  .btn.ghost:hover{ background:var(--parchment-deep); }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:15px; color:#b8462f; margin:6px 0 0; }
+  .login-hint{ font-size:14px; color:#8a7654; margin:10px 0 0; }
+  .login-hint a{ color:var(--gold); }
+  .back-link{
+    display:block; text-align:center; margin-top:22px; font-size:14px; color:var(--gold); text-decoration:underline;
+    background:none; border:none; cursor:pointer; font-family:'Cormorant Garamond', serif;
+  }
+
+  /* ---- plan screen ---- */
+  .plan-head{ text-align:center; margin-bottom:26px; }
+  .plan-head h2{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
+  .plan-head p{ font-size:15.5px; color:#6b5a3f; margin:0; }
+  .plan-actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:16px 0 30px; }
+
+  .week-block{ margin-bottom:34px; }
+  .week-title{
+    font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); text-align:center;
+    margin:0 0 16px; padding-bottom:8px; border-bottom:2px dashed var(--gold-soft);
+  }
+  .day-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px; }
+  .day-card{
+    background:#fff; border:2px solid var(--card-accent, var(--gold-soft)); border-radius:18px;
+    padding:18px 18px 16px; box-shadow:0 4px 14px rgba(60,45,20,.07);
+  }
+  .day-card .day-badge{
+    display:inline-block; font-family:'Marcellus'; font-size:13px; font-weight:700; color:#fff;
+    background:var(--card-accent, var(--gold)); padding:4px 14px; border-radius:999px; margin-bottom:10px;
+  }
+  .day-card h3{ font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); margin:0 0 10px; }
+  .day-section{ margin-bottom:10px; padding:10px 12px; border-radius:12px; background:var(--parchment); }
+  .day-section .lbl{ font-family:'Marcellus'; font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--card-accent, var(--gold)); margin-bottom:4px; }
+  .day-section p{ margin:0; font-size:15px; line-height:1.45; }
+  .day-section.quran .arabic-name{ font-family:'Amiri', serif; font-size:19px; }
+  .day-section.dua .dua-arabic{ font-family:'Amiri', serif; font-size:18px; direction:rtl; margin:4px 0; }
+  .day-section.dua .dua-translit{ font-style:italic; color:#6b5a3f; font-size:13.5px; margin:2px 0; }
+  .day-section.dua .dua-source{ font-size:12px; color:#8a7654; margin-top:4px; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+
+  @media print{
+    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ padding:0; max-width:100%; }
+    .day-card{ break-inside:avoid; box-shadow:none !important; }
+    .week-block:nth-of-type(2){ break-before:page; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+    </a>
+    <a class="back-pill" href="kids.html">← Kids Corner</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">☀️ Foundation – Year 3</p>
+  <h1>Term 3 Holiday Homework</h1>
+  <p>Two fun weeks, one thing a day: an activity, a Qur'an focus, and a du'a to learn. Small steps make big progress!</p>
+</div>
+
+<div class="wrap">
+
+  <div id="name-screen" class="hidden">
+    <div class="center-card">
+      <div class="icon">🔑</div>
+      <h2>Log In</h2>
+      <p>Use the same username and password your parent set up for the quest games or Classes.</p>
+      <input type="text" id="login-username" class="name-field" placeholder="Username" maxlength="24" autocomplete="username">
+      <input type="password" id="login-password" class="name-field" placeholder="Password" maxlength="60" autocomplete="current-password">
+      <div><button class="btn" id="name-start-btn">Log In 🚀</button></div>
+      <p class="login-msg" id="login-msg"></p>
+      <p class="login-hint">Don't have an account? Ask your parent to set one up on the <a href="kids-admin.html">admin page</a>.</p>
+    </div>
+  </div>
+
+  <div id="grade-screen" class="hidden">
+    <div class="plan-head">
+      <h2>Which class are you in?</h2>
+      <p>Pick your class to see your two-week plan.</p>
+    </div>
+    <div class="year-grid" id="grade-grid"></div>
+  </div>
+
+  <div id="plan-screen" class="hidden">
+    <div class="plan-head">
+      <h2 id="plan-greeting"></h2>
+      <p>One activity, one Qur'an focus, and one du'a a day — do a little bit each day!</p>
+    </div>
+    <div class="plan-actions">
+      <button class="btn" id="print-btn">🖨️ Print This Plan</button>
+      <button class="btn ghost" id="change-grade-btn">Choose a different class</button>
+      <button class="btn ghost" id="logout-btn">Log out</button>
+    </div>
+    <div id="plan-weeks"></div>
+  </div>
+
+</div>
+
+<footer>
+  <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
+  <div class="flinks">
+    <a href="kids-school.html">Classes</a>
+    <a href="kids.html">Kids Corner</a>
+    <a href="/">Diin Islaam Home</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script type="module">
+import { DUA_LIBRARY, getDuaById } from './dua-tag/js/duaLibraryData.js';
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const GRADES = [
+  { id:'foundation', label:'Foundation', icon:'🌱' },
+  { id:'g1', label:'Year 1', icon:'1️⃣' },
+  { id:'g2', label:'Year 2', icon:'2️⃣' },
+  { id:'g3', label:'Year 3', icon:'3️⃣' }
+];
+const CARD_COLORS = ['--green', '--sky', '--coral', '--violet', '--gold', '--pink'];
+const NAME_KEY = 'kids-school-name';
+const HOME_GRADE_KEY = 'kids-school-home-grade';
+
+/* One theme a day for two weeks, with a task line scaled to each of the
+   4 grades. The Qur'an focus only names the surah (number + ayah count,
+   easy facts to double-check) rather than reproducing its Arabic text,
+   so a family reads the real thing from their own mus'haf or app. The
+   du'a of the day is pulled straight from dua-tag's own vetted library
+   (real Qur'an ayahs or named hadith only) instead of duplicating it. */
+const HOLIDAY_PLAN = [
+  { theme:'My Holiday So Far!', icon:'✍️',
+    tasks:{ foundation:'Draw a picture of something fun you did today, then tell a grown-up about it out loud.',
+      g1:'Write 1-2 sentences about your day. What was your favourite part?',
+      g2:'Write a short paragraph (3-4 sentences) about your day so far.',
+      g3:'Write a paragraph about your day — include where you went, what you did, and how you felt.' },
+    quran:{ name:'An-Nas', arabic:'النَّاس', num:114, ayat:6, meaning:'Asking Allah to protect us from bad whispers.' },
+    duaId:'upon-waking' },
+
+  { theme:'Number Ninja!', icon:'🔢',
+    tasks:{ foundation:'Count 10 things around your house (spoons, toys, shoes) out loud with a grown-up.',
+      g1:'Skip count by 2s from 0 to 20. Can you do it without looking?',
+      g2:'Skip count by 5s and 10s, all the way up to 100.',
+      g3:'Practice your 2, 3, 4 and 5 times tables. Time yourself — beat it tomorrow!' },
+    quran:{ name:'Al-Falaq', arabic:'الفَلَق', num:113, ayat:5, meaning:'Asking Allah to protect us from harm.' },
+    duaId:'zidni-ilma' },
+
+  { theme:'Kindness Challenge', icon:'💛',
+    tasks:{ foundation:'Do something kind for your family today — like a hug or helping tidy up.',
+      g1:'Do one kind thing for a family member today.',
+      g2:'Do one kind thing for a family member, then tell them why kindness matters in Islam.',
+      g3:'Do a kind deed for someone today and write one sentence about how it made you feel.' },
+    quran:{ name:'Al-Ikhlas', arabic:'الإخلاص', num:112, ayat:4, meaning:'Describing that Allah is One, with no partner.' },
+    duaId:'before-eating' },
+
+  { theme:'Letter & Word Hunt', icon:'🔤',
+    tasks:{ foundation:'Hunt around your house for 5 things that start with a letter you pick!',
+      g1:'Find 5 objects around your house and write their names.',
+      g2:'Find 5 objects, write their names, then put them in ABC order.',
+      g3:'Find 5 objects around your house and write a sentence using each one.' },
+    quran:{ name:'Al-Masad', arabic:'المسد', num:111, ayat:5, meaning:'A warning about pride and turning away from truth.' },
+    duaId:'after-eating' },
+
+  { theme:'Shape Detective', icon:'🔺',
+    tasks:{ foundation:'Find 5 different shapes around your house (circle, square, triangle) and draw them!',
+      g1:'Find and draw 5 shapes. Can you name their sides and corners?',
+      g2:'Find 2D and 3D shapes around your home and sort them into a list.',
+      g3:'Draw and label 5 shapes, including how many sides and angles each one has.' },
+    quran:{ name:'An-Nasr', arabic:'النصر', num:110, ayat:3, meaning:'Allah\'s help and victory, and turning to Him in gratitude.' },
+    duaId:'leaving-home' },
+
+  { theme:'Story Time!', icon:'📖',
+    tasks:{ foundation:'Ask a grown-up to read you a story. Point to the pictures and guess what happens next.',
+      g1:'Read a short book by yourself or with help, then tell someone your favourite part.',
+      g2:'Read a book for 15 minutes. Write the title and one sentence about it.',
+      g3:'Read a book for 20 minutes. Write 3 sentences: what happened, your favourite part, and why.' },
+    quran:{ name:'Al-Kafirun', arabic:'الكافرون', num:109, ayat:6, meaning:'Being clear and firm about our own beliefs.' },
+    duaId:'entering-home' },
+
+  { theme:'Helping Hands', icon:'🤲',
+    tasks:{ foundation:'Help tidy up your toys today, all by yourself!',
+      g1:'Help set the table for a meal today.',
+      g2:'Help with one chore at home today and ask what else you can help with tomorrow.',
+      g3:'Pick a chore you don\'t usually do and help with it today.' },
+    quran:{ name:'Al-Kawthar', arabic:'الكوثر', num:108, ayat:3, meaning:'Being thankful for Allah\'s many blessings.' },
+    duaId:'rabbana-atina' },
+
+  { theme:'Nature Explorer', icon:'🌳',
+    tasks:{ foundation:'Go outside and find something green, something soft, and something round.',
+      g1:'Go for a walk and count how many trees, birds or clouds you see.',
+      g2:'Go outside and draw or describe 3 things you notice in nature today.',
+      g3:'Go for a nature walk. Write down 5 things you notice and one question you have.' },
+    quran:{ name:'Al-Ma\'un', arabic:'الماعون', num:107, ayat:7, meaning:'Caring for orphans and those in need, and sincerity in prayer.' },
+    duaId:'ighfir-warham' },
+
+  { theme:'Money & Measuring', icon:'💰',
+    tasks:{ foundation:'Sort some coins by size or colour. Which one is biggest?',
+      g1:'Count a small pile of coins with a grown-up. How much money is it?',
+      g2:'Measure 5 objects around your house using a ruler or tape measure.',
+      g3:'Pretend you\'re shopping with $20 — practice adding up prices for what you\'d buy.' },
+    quran:{ name:'Quraysh', arabic:'قريش', num:106, ayat:4, meaning:'Being thankful for safety and provision.' },
+    duaId:'ishrah-sadri' },
+
+  { theme:'Craft Day!', icon:'🎨',
+    tasks:{ foundation:'Make a card or drawing for someone in your family.',
+      g1:'Make a card for someone and write their name or "I love you" on it.',
+      g2:'Make a card and write a short kind message inside.',
+      g3:'Make a card and write a short poem or paragraph inside.' },
+    quran:{ name:'Al-Fil', arabic:'الفيل', num:105, ayat:5, meaning:'The story of the Elephant — Allah protects His House.' },
+    duaId:'before-sleep' },
+
+  { theme:'Times Tables Challenge', icon:'🧮',
+    tasks:{ foundation:'Practice counting from 1 to 20 with a grown-up.',
+      g1:'Practice skip counting by 2s, 5s and 10s — how fast can you go?',
+      g2:'Practice your 2, 3, 4, 5 and 10 times tables out loud.',
+      g3:'Practice your 2, 3, 4, 5, 10 and 11 times tables — say them, write them, or try a fun online game!' },
+    quran:{ name:'Al-Humazah', arabic:'الهمزة', num:104, ayat:9, meaning:'A warning against gossip and mocking others.' },
+    duaId:'zidni-ilma' },
+
+  { theme:'Book Review', icon:'📚',
+    tasks:{ foundation:'Tell a grown-up about a book or story you like and why.',
+      g1:'Draw your favourite character from a book you\'ve read.',
+      g2:'Write 2-3 sentences about a book you\'ve read — what happened, and did you like it?',
+      g3:'Write a short book review: title, author, what happened, and your opinion.' },
+    quran:{ name:'Al-Asr', arabic:'العصر', num:103, ayat:3, meaning:'The importance of time, faith, good deeds, truth and patience.' },
+    duaId:'rabbana-atina' },
+
+  { theme:'Family Fun Day', icon:'🎲',
+    tasks:{ foundation:'Play a simple game with your family, like hide and seek or a puzzle.',
+      g1:'Play a board game or card game with your family.',
+      g2:'Play a game with your family and be a good sport, win or lose!',
+      g3:'Organise a family game night — pick the game and explain the rules to everyone.' },
+    quran:{ name:'At-Takathur', arabic:'التكاثر', num:102, ayat:8, meaning:'A warning against being distracted by chasing worldly things.' },
+    duaId:'leaving-home' },
+
+  { theme:'My Holiday Reflection', icon:'🌈',
+    tasks:{ foundation:'Draw your favourite thing you did these holidays.',
+      g1:'Write 1-2 sentences about your favourite holiday memory.',
+      g2:'Write a paragraph about your favourite part of the holidays and what you\'re looking forward to in Term 4.',
+      g3:'Write a reflection: your favourite memory, something new you learned, and one goal for Term 4.' },
+    quran:{ name:'Al-Fatiha', arabic:'الفاتحة', num:1, ayat:7, meaning:'The Opening — recited in every unit of every prayer. Review it well!' },
+    duaId:'ighfir-warham' }
+];
+
+const QURAN_TASKS = {
+  foundation:'Listen to a grown-up recite it, then try to repeat the last word or two with them.',
+  g1:'Listen to it 2-3 times, then try saying the shortest line by yourself.',
+  g2:'Practice reciting it with a grown-up until you can say the first half from memory.',
+  g3:'Memorize the whole surah and recite it to a family member without looking.'
+};
+
+let selectedGrade = null;
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+
+function showScreen(id){
+  ['name-screen','grade-screen','plan-screen'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function renderGradeGrid(){
+  const grid = document.getElementById('grade-grid');
+  grid.innerHTML = '';
+  GRADES.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'year-card';
+    card.innerHTML = '<div class="icon">' + g.icon + '</div><div class="label">' + g.label + '</div>';
+    card.addEventListener('click', () => {
+      localStorage.setItem(HOME_GRADE_KEY, g.id);
+      chooseGrade(g.id);
+    });
+    grid.appendChild(card);
+  });
+}
+
+function renderPlan(name, gradeId){
+  const grade = GRADES.find(g => g.id === gradeId);
+  document.getElementById('plan-greeting').textContent = 'Hi ' + name + '! Here\'s your ' + grade.label + ' plan.';
+
+  const weeksEl = document.getElementById('plan-weeks');
+  weeksEl.innerHTML = '';
+  for(let week = 0; week < 2; week++){
+    const weekBlock = document.createElement('div');
+    weekBlock.className = 'week-block';
+    weekBlock.innerHTML = '<h3 class="week-title">Week ' + (week + 1) + '</h3>';
+    const dayGrid = document.createElement('div');
+    dayGrid.className = 'day-grid';
+
+    for(let i = 0; i < 7; i++){
+      const dayNum = week * 7 + i + 1;
+      const plan = HOLIDAY_PLAN[dayNum - 1];
+      const dua = getDuaById(plan.duaId) || DUA_LIBRARY[0];
+      const accent = CARD_COLORS[(dayNum - 1) % CARD_COLORS.length];
+
+      const card = document.createElement('div');
+      card.className = 'day-card';
+      card.style.setProperty('--card-accent', 'var(' + accent + ')');
+      card.innerHTML =
+        '<span class="day-badge">Day ' + dayNum + '</span>' +
+        '<h3>' + plan.icon + ' ' + escapeHtml(plan.theme) + '</h3>' +
+        '<div class="day-section activity"><div class="lbl">🎯 Today\'s Activity</div><p>' + escapeHtml(plan.tasks[gradeId]) + '</p></div>' +
+        '<div class="day-section quran"><div class="lbl">📖 Qur\'an Focus</div>' +
+          '<p><span class="arabic-name">' + escapeHtml(plan.quran.arabic) + '</span> — Surah ' + escapeHtml(plan.quran.name) +
+          ' (' + plan.quran.num + ') · ' + plan.quran.ayat + ' ayat<br>' + escapeHtml(plan.quran.meaning) + '<br>' +
+          '<em>' + escapeHtml(QURAN_TASKS[gradeId]) + '</em></p></div>' +
+        '<div class="day-section dua"><div class="lbl">🤲 Du\'a of the Day</div>' +
+          '<p class="dua-arabic">' + escapeHtml(dua.arabic) + '</p>' +
+          '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
+          '<p>' + escapeHtml(dua.english) + '</p>' +
+          '<p class="dua-source">' + escapeHtml(dua.source) + '</p></div>';
+      dayGrid.appendChild(card);
+    }
+    weekBlock.appendChild(dayGrid);
+    weeksEl.appendChild(weekBlock);
+  }
+}
+
+function chooseGrade(gradeId){
+  selectedGrade = gradeId;
+  renderPlan(localStorage.getItem(NAME_KEY) || 'friend', gradeId);
+  showScreen('plan-screen');
+}
+
+function applyCloudProfile(cloudData){
+  localStorage.setItem(NAME_KEY, cloudData.displayName || cloudData.username);
+  document.getElementById('login-msg').textContent = '';
+  const homeGrade = localStorage.getItem(HOME_GRADE_KEY);
+  if(homeGrade && GRADES.some(g => g.id === homeGrade)){
+    chooseGrade(homeGrade);
+  } else {
+    renderGradeGrid();
+    showScreen('grade-screen');
+  }
+}
+
+function friendlyLoginError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('user-not-found') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('wrong-password') >= 0){
+    return 'That username or password is not right. Ask your parent to check it.';
+  }
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  return 'Could not log in — try again.';
+}
+
+document.getElementById('name-start-btn').addEventListener('click', () => {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  msg.textContent = '';
+  if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('name-start-btn');
+  btn.disabled = true;
+  window.KidsCloud.studentLogin(u, p).then(applyCloudProfile).catch(err => {
+    msg.textContent = friendlyLoginError(err);
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('login-username').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('login-password').focus(); });
+document.getElementById('login-password').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('name-start-btn').click(); });
+
+document.getElementById('print-btn').addEventListener('click', () => window.print());
+document.getElementById('change-grade-btn').addEventListener('click', () => { renderGradeGrid(); showScreen('grade-screen'); });
+document.getElementById('logout-btn').addEventListener('click', () => {
+  if(window.KidsCloud) window.KidsCloud.studentLogout();
+  localStorage.removeItem(NAME_KEY);
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  showScreen('name-screen');
+});
+
+function wireCloudAuth(){
+  if(window.__kidsCloudWired) return;
+  window.__kidsCloudWired = true;
+  window.KidsCloud.onStudentAuth(data => {
+    if(data){
+      applyCloudProfile(data);
+    } else if(!document.getElementById('grade-screen').classList.contains('hidden') ||
+              !document.getElementById('plan-screen').classList.contains('hidden')){
+      showScreen('name-screen');
+    }
+  });
+}
+showScreen('name-screen');
+setTimeout(() => document.getElementById('login-username').focus(), 150);
+window.addEventListener('kidscloud-ready', wireCloudAuth);
+if(window.KidsCloud) wireCloudAuth();
+</script>
+<script type="module" src="kids-quest-cloud.js?v=5"></script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
