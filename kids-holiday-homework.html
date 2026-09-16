@@ -139,6 +139,44 @@
   .habit-check input:checked + span{ background:var(--green); }
   .habit-check input:checked + span::after{ content:'✓'; color:#fff; font-weight:800; font-size:18px; }
   .checklist-cheer{ font-family:'Marcellus'; font-size:14px; color:var(--gold); margin:14px 0 0; }
+  .cert-btn-row{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:12px 0 8px; }
+  .cert-progress-note{ text-align:center; font-size:13.5px; color:var(--gold); margin:0; }
+  .poster-btn{
+    margin-top:8px; font-family:'Cormorant Garamond',serif; font-size:12.5px; padding:5px 12px; border-radius:12px;
+    border:1.5px solid var(--gold-soft); background:#fff; cursor:pointer; color:var(--ink-brown);
+  }
+  .poster-btn:hover{ background:var(--parchment-deep); }
+  .cert-modal-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
+
+  /* ---- printable du'a poster + certificates (rendered into #print-overlay) ---- */
+  #print-overlay{ display:none; }
+  .poster-page{ padding:50px 30px; text-align:center; }
+  .poster-eyebrow{ font-family:'Marcellus'; font-size:18px; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin:0 0 6px; }
+  .poster-name{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 26px; }
+  .poster-arabic{ font-family:'Amiri', serif; font-size:52px; line-height:1.7; direction:rtl; color:var(--ink-navy); margin:0 0 26px; }
+  .poster-translit{ font-size:24px; font-style:italic; color:var(--ink-brown); margin:0 0 18px; }
+  .poster-english{ font-size:22px; color:var(--ink-brown); margin:0 auto 26px; max-width:640px; }
+  .poster-source{ font-size:14px; color:var(--gold); margin:0; }
+  .cert-page{ padding:30px; }
+  .cert-card{
+    max-width:900px; margin:0 auto; background:linear-gradient(135deg, #fffaf0, var(--parchment));
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-18px;
+    border-radius:14px; padding:50px 60px; text-align:center; position:relative;
+  }
+  .cert-corner{ position:absolute; width:26px; height:26px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--gold); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:14px; left:14px; } .cert-corner.tr{ top:14px; right:14px; }
+  .cert-corner.bl{ bottom:14px; left:14px; } .cert-corner.br{ bottom:14px; right:14px; }
+  .cert-bismillah{ font-family:'Amiri', serif; font-size:20px; color:var(--gold); margin:0 0 8px; direction:rtl; }
+  .cert-eyebrow{ font-family:'Marcellus'; font-size:14px; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin:0; }
+  .cert-title{ font-family:'Marcellus'; font-size:32px; color:var(--ink-navy); margin:10px 0 20px; }
+  .cert-line{ font-size:17px; color:var(--ink-brown); margin:4px 0; }
+  .cert-name{ font-family:'Amiri', serif; font-size:36px; font-weight:700; color:var(--gold); margin:12px 0; }
+  .cert-course{ font-size:19px; font-weight:700; color:var(--ink-navy); margin:8px 0; }
+  .cert-divider{ margin:24px auto; max-width:280px; display:flex; align-items:center; gap:10px; color:var(--gold); }
+  .cert-divider span{ flex:1; height:1px; background:var(--gold); opacity:.5; }
+  .cert-footer{ font-size:13.5px; color:var(--gold); margin-top:20px; }
 
   .week-block{ margin-bottom:34px; }
   .week-title{
@@ -276,7 +314,7 @@
   footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
 
   @media print{
-    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta, .ayah-play-btn, .repeat-row{ display:none !important; }
+    header.site, .page-head, #name-screen, #grade-screen, .back-link, .plan-actions, footer, .modal-overlay, .day-section.quizcta, .ayah-play-btn, .repeat-row, .poster-btn, #foundation-certs{ display:none !important; }
     body{ background:#fff; }
     .wrap{ padding:0; max-width:100%; }
     .day-grid{ display:block; }
@@ -284,6 +322,12 @@
     .day-card:last-child{ break-after:auto; }
     .week-block:nth-of-type(2){ break-before:page; }
     .draw-box{ height:220px; }
+
+    /* A du'a poster or certificate takes over the whole print job --
+       everything else on the page is hidden and only #print-overlay
+       shows (see printSpecial() in the module script). */
+    body.printing-special > *:not(#print-overlay){ display:none !important; }
+    body.printing-special #print-overlay{ display:block !important; }
   }
 </style>
 </head>
@@ -367,12 +411,33 @@
       </div>
       <p class="checklist-cheer">You're doing a great job! 🌈</p>
     </div>
+    <div class="checklist-card hidden" id="foundation-certs">
+      <h3>🏆 Certificates</h3>
+      <p class="checklist-sub">Finish every day's Quiz of the Day to unlock two keepsake certificates!</p>
+      <div class="cert-btn-row">
+        <button class="btn" id="hifz-cert-btn">📖 Hifz Certificate</button>
+        <button class="btn" id="dua-cert-btn">🤲 Du’a Certificate</button>
+      </div>
+      <p class="cert-progress-note" id="cert-progress-note"></p>
+    </div>
     <div id="plan-weeks"></div>
   </div>
 
 </div>
 
 <audio id="ayah-audio" preload="none"></audio>
+
+<div id="print-overlay"></div>
+
+<div class="modal-overlay hidden" id="cert-modal">
+  <div class="modal-card">
+    <div id="cert-preview-body"></div>
+    <div class="cert-modal-actions">
+      <button class="btn" id="cert-modal-print">🖨️ Print Certificate</button>
+      <button class="btn ghost" id="cert-modal-close">Close</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay hidden" id="quiz-modal">
   <div class="modal-card">
@@ -727,6 +792,66 @@ const QURAN_TASKS = {
   g3:'Memorize the whole surah and recite it to a family member without looking.'
 };
 
+/* ===================== Foundation Du'a hifz track ===================== */
+/* Same "one thing at a time" idea as the Qur'an track: 3 days on the
+   du'a for leaving the house, 3 days on entering the house, then a
+   review day -- then week 2 repeats the pattern for before-sleep and
+   upon-waking. All 4 du'as already live in dua-tag's own vetted
+   library, so nothing here is newly written or needs fact-checking. */
+const DUA_TITLES = {
+  'leaving-home':'Leaving the House', 'entering-home':'Entering the House',
+  'before-sleep':'Before Sleeping', 'upon-waking':'Upon Waking'
+};
+function duaTitle(id){
+  if(DUA_TITLES[id]) return DUA_TITLES[id];
+  const dua = getDuaById(id);
+  return dua ? (dua.category === 'quran' ? 'A Du’a from the Qur’an' : 'A Du’a from a Hadith') : 'Du’a';
+}
+const FOUNDATION_DUA_PLAN = [
+  { duaId:'leaving-home' }, { duaId:'leaving-home' }, { duaId:'leaving-home' },
+  { duaId:'entering-home' }, { duaId:'entering-home' }, { duaId:'entering-home' },
+  { bigReview:true, weekDuaIds:['leaving-home', 'entering-home'] },
+  { duaId:'before-sleep' }, { duaId:'before-sleep' }, { duaId:'before-sleep' },
+  { duaId:'upon-waking' }, { duaId:'upon-waking' }, { duaId:'upon-waking' },
+  { bigReview:true, weekDuaIds:['before-sleep', 'upon-waking'] }
+];
+
+/* The poster button lives inside an innerHTML string, so it's wired by
+   click delegation (like the ayah play button) rather than a direct
+   listener -- printSpecial() takes over the page for one landscape
+   sheet a family can print and pin up to help a child memorise it. */
+function buildPosterHtml(dua){
+  return '<div class="poster-page"><div class="poster-card">' +
+    '<p class="poster-eyebrow">🤲 Du’a to Remember</p>' +
+    '<p class="poster-name">' + escapeHtml(duaTitle(dua.id)) + '</p>' +
+    '<p class="poster-arabic">' + escapeHtml(dua.arabic) + '</p>' +
+    '<p class="poster-translit">' + escapeHtml(dua.transliteration) + '</p>' +
+    '<p class="poster-english">“' + escapeHtml(dua.english) + '”</p>' +
+    '<p class="poster-source">' + escapeHtml(dua.source) + '</p>' +
+    '</div></div>';
+}
+function duaSectionHtml(dua, posterId){
+  return '<p class="dua-arabic">' + escapeHtml(dua.arabic) + '</p>' +
+    '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
+    '<p>' + escapeHtml(dua.english) + '</p>' +
+    '<p class="dua-source">' + escapeHtml(dua.source) + '</p>' +
+    '<button type="button" class="poster-btn" data-dua-id="' + posterId + '">🖨️ Print Poster</button>';
+}
+function renderFoundationDuaSection(dayIndex){
+  const entry = FOUNDATION_DUA_PLAN[dayIndex];
+  if(entry.bigReview){
+    const duas = entry.weekDuaIds.map(id => getDuaById(id));
+    return '<div class="day-section dua"><div class="lbl">🎉 Du’a Review Day</div>' +
+      '<p>Try to say both du’as you learned this week, from memory:</p>' +
+      duas.map(d => '<p><b>' + escapeHtml(duaTitle(d.id)) + ':</b> ' + escapeHtml(d.arabic) + ' — “' + escapeHtml(d.english) + '”' +
+        ' <button type="button" class="poster-btn" data-dua-id="' + d.id + '">🖨️ Print Poster</button></p>').join('') +
+      '</div>';
+  }
+  const dua = getDuaById(entry.duaId);
+  return '<div class="day-section dua"><div class="lbl">🤲 Du’a: ' + escapeHtml(duaTitle(dua.id)) + '</div>' +
+    duaSectionHtml(dua, dua.id) + '</div>';
+}
+
 /* One word per day to unscramble in the mini-game below — the same
    surah name shown in that day's Qur'an Focus, just with the letters
    mixed up (apostrophes/hyphens stripped so every tile is a plain
@@ -908,9 +1033,10 @@ function buildSurahNumberQuestion(dayIndex){
 /* Three questions from the day's Du'a of the Day -- reuses dua-tag's own
    vetted library (meaning, category, source) instead of writing anything
    new, so there's nothing to fact-check here either. */
-function buildDuaQuestions(dayIndex){
-  const plan = HOLIDAY_PLAN[dayIndex];
-  const dua = getDuaById(plan.duaId) || DUA_LIBRARY[0];
+function buildDuaQuestions(dayIndex, gradeId){
+  const entry = gradeId === 'foundation' ? FOUNDATION_DUA_PLAN[dayIndex] : null;
+  const duaId = entry ? (entry.bigReview ? entry.weekDuaIds[1] : entry.duaId) : HOLIDAY_PLAN[dayIndex].duaId;
+  const dua = getDuaById(duaId) || DUA_LIBRARY[0];
   const idx = Math.max(0, DUA_LIBRARY.findIndex(d => d.id === dua.id));
   const other1 = DUA_LIBRARY[(idx + 3) % DUA_LIBRARY.length];
   const other2 = DUA_LIBRARY[(idx + 6) % DUA_LIBRARY.length];
@@ -986,7 +1112,7 @@ function buildDayQuizQuestions(dayIndex, gradeId){
     ...tag(fromBank(ACTIVITY_QUESTIONS, dayIndex), '🎯', 'Today'),
     ...tag(buildMathQuestions(dayIndex, gradeId), '🔢', 'Math'),
     ...tag(fromBank(ENGLISH_QUESTIONS, dayIndex), '✏️', 'English'),
-    ...tag(buildDuaQuestions(dayIndex), '🤲', 'Du’a')
+    ...tag(buildDuaQuestions(dayIndex, gradeId), '🤲', 'Du’a')
   ];
   for(let i = all.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
@@ -1180,6 +1306,7 @@ function updatePointsBanner(){
   el.textContent = studentProgress.points;
   const banner = document.querySelector('.points-banner');
   if(banner){ banner.classList.add('bump'); setTimeout(() => banner.classList.remove('bump'), 250); }
+  updateCertUI();
 }
 function dayScoreFor(gradeId, dayIndex){
   return studentProgress.completed[gradeId] && studentProgress.completed[gradeId][dayIndex];
@@ -1363,6 +1490,87 @@ function wireRepeatStars(){
   });
 }
 
+/* Takes over the whole page for one printed sheet -- everything else is
+   hidden via the "printing-special" body class (see CSS) and only
+   #print-overlay's content shows, so a du'a poster or certificate
+   prints as a clean full page instead of sitting inside the plan. */
+function printSpecial(html){
+  document.getElementById('print-overlay').innerHTML = html;
+  document.body.classList.add('printing-special');
+  const pageStyle = document.createElement('style');
+  pageStyle.id = 'print-page-style';
+  pageStyle.textContent = '@page{ size:landscape; margin:0.5in; }';
+  document.head.appendChild(pageStyle);
+  window.print();
+}
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-special');
+  const pageStyle = document.getElementById('print-page-style');
+  if(pageStyle) pageStyle.remove();
+});
+
+function wirePosterButtons(){
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.poster-btn');
+    if(!btn) return;
+    const dua = getDuaById(btn.dataset.duaId);
+    if(dua) printSpecial(buildPosterHtml(dua));
+  });
+}
+
+/* ===================== Foundation certificates ===================== */
+/* Both certificates unlock together once every one of the 14 days has
+   a saved Quiz-of-the-Day score -- "finishing the two weeks" is one
+   event, just recorded as two keepsake certificates (hifz + du'a). */
+function foundationDaysDone(){
+  return Object.keys(studentProgress.completed.foundation || {}).length;
+}
+function buildCertHtml(kind, name){
+  const dateStr = new Date().toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+  const corners = '<span class="cert-corner tl"></span><span class="cert-corner tr"></span>' +
+    '<span class="cert-corner bl"></span><span class="cert-corner br"></span>';
+  const course = kind === 'hifz'
+    ? { title:'🏆 Hifz Certificate', line:'has learned and can recite', course:'Surah Al-Fatiha, Al-Ikhlas, Al-Falaq &amp; An-Nas' }
+    : { title:'🏆 Du’a Certificate', line:'has learned four important du’as, for', course:'leaving the house, entering the house,<br>before sleeping &amp; upon waking' };
+  return '<div class="cert-page"><div class="cert-card">' + corners +
+    '<p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' +
+    '<p class="cert-eyebrow">Term 3 Holiday Homework · Foundation</p>' +
+    '<h1 class="cert-title">' + course.title + '</h1>' +
+    '<p class="cert-line">This certifies that</p>' +
+    '<div class="cert-name">' + escapeHtml(name) + '</div>' +
+    '<p class="cert-line">' + course.line + '</p>' +
+    '<p class="cert-course">' + course.course + '</p>' +
+    '<div class="cert-divider"><span></span><b>✦</b><span></span></div>' +
+    '<p class="cert-footer">' + escapeHtml(dateStr) + ' · diinislaam.com</p>' +
+    '</div></div>';
+}
+function updateCertUI(){
+  const note = document.getElementById('cert-progress-note');
+  if(!note) return;
+  const done = foundationDaysDone();
+  note.textContent = done >= 14
+    ? '🎉 All 14 days complete — your certificates are ready!'
+    : done + '/14 days complete — finish the Quiz of the Day every day to unlock your certificates!';
+}
+function openCertificate(kind){
+  const done = foundationDaysDone();
+  if(done < 14){ updateCertUI(); return; }
+  const name = localStorage.getItem(NAME_KEY) || 'Student';
+  document.getElementById('cert-preview-body').innerHTML = buildCertHtml(kind, name);
+  document.getElementById('cert-modal').classList.remove('hidden');
+}
+function wireCertificates(){
+  document.getElementById('hifz-cert-btn').addEventListener('click', () => openCertificate('hifz'));
+  document.getElementById('dua-cert-btn').addEventListener('click', () => openCertificate('dua'));
+  document.getElementById('cert-modal-close').addEventListener('click', () => document.getElementById('cert-modal').classList.add('hidden'));
+  document.getElementById('cert-modal-print').addEventListener('click', () => {
+    printSpecial(document.getElementById('cert-preview-body').innerHTML);
+  });
+  document.getElementById('cert-modal').addEventListener('click', e => {
+    if(e.target.id === 'cert-modal') document.getElementById('cert-modal').classList.add('hidden');
+  });
+}
+
 function shuffleLetters(word){
   const letters = word.split('');
   for(let i = letters.length - 1; i > 0; i--){
@@ -1468,7 +1676,8 @@ function renderPlan(name, gradeId){
 
   const isFoundation = gradeId === 'foundation';
   document.getElementById('foundation-checklist').classList.toggle('hidden', !isFoundation);
-  if(isFoundation) renderFoundationChecklist();
+  document.getElementById('foundation-certs').classList.toggle('hidden', !isFoundation);
+  if(isFoundation){ renderFoundationChecklist(); updateCertUI(); }
 
   const weeksEl = document.getElementById('plan-weeks');
   weeksEl.innerHTML = '';
@@ -1482,12 +1691,17 @@ function renderPlan(name, gradeId){
     for(let i = 0; i < 7; i++){
       const dayNum = week * 7 + i + 1;
       const plan = HOLIDAY_PLAN[dayNum - 1];
-      const dua = getDuaById(plan.duaId) || DUA_LIBRARY[0];
       const accent = CARD_COLORS[(dayNum - 1) % CARD_COLORS.length];
 
       const card = document.createElement('div');
       card.className = 'day-card';
       card.style.setProperty('--card-accent', 'var(' + accent + ')');
+      const duaSection = gradeId === 'foundation' ? renderFoundationDuaSection(dayNum - 1) :
+        (() => {
+          const dua = getDuaById(plan.duaId) || DUA_LIBRARY[0];
+          return '<div class="day-section dua"><div class="lbl">🤲 Du\'a of the Day: ' + escapeHtml(duaTitle(dua.id)) + '</div>' +
+            duaSectionHtml(dua, dua.id) + '</div>';
+        })();
       card.innerHTML =
         '<span class="day-badge">Day ' + dayNum + '</span>' +
         '<h3>' + plan.icon + ' ' + escapeHtml(plan.theme) + '</h3>' +
@@ -1497,11 +1711,7 @@ function renderPlan(name, gradeId){
           '<p><span class="arabic-name">' + escapeHtml(plan.quran.arabic) + '</span> — Surah ' + escapeHtml(plan.quran.name) +
           ' (' + plan.quran.num + ') · ' + plan.quran.ayat + ' ayat<br>' + escapeHtml(plan.quran.meaning) + '<br>' +
           '<em>' + escapeHtml(QURAN_TASKS[gradeId]) + '</em></p></div>') +
-        '<div class="day-section dua"><div class="lbl">🤲 Du\'a of the Day</div>' +
-          '<p class="dua-arabic">' + escapeHtml(dua.arabic) + '</p>' +
-          '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
-          '<p>' + escapeHtml(dua.english) + '</p>' +
-          '<p class="dua-source">' + escapeHtml(dua.source) + '</p></div>';
+        duaSection;
       if(gradeId === 'foundation'){
         renderFoundationQuranGame(card, dayNum - 1);
       }
@@ -1601,6 +1811,8 @@ function wireCloudAuth(){
 wireQuizModal();
 wireAyahAudio();
 wireRepeatStars();
+wirePosterButtons();
+wireCertificates();
 showScreen('name-screen');
 setTimeout(() => document.getElementById('login-username').focus(), 150);
 window.addEventListener('kidscloud-ready', wireCloudAuth);
