@@ -10,7 +10,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
   :root{
     --leaf:#3fae6a; --leaf-dark:#2c8350; --leaf-bg:#e6f6ec;
@@ -125,33 +124,10 @@
     display:flex; align-items:center; justify-content:center; font-size:20px; border:2px solid var(--leaf);
     cursor:pointer;
   }
-  .leaflet-wrap{ position:relative; height:min(74vh, 640px); min-height:420px; border-radius:22px; overflow:hidden; border:3px solid #fff; box-shadow:0 10px 26px rgba(60,45,20,.18); }
-  #leaflet-map{ position:absolute; inset:0; background:#cfe8d8; }
-  #leaflet-map .leaflet-marker-icon{ background:none; border:none; }
-  .map-chapter-bar.floating{
-    position:absolute; top:12px; left:50%; transform:translateX(-50%); z-index:650;
-    margin:0; gap:10px;
-  }
-  .landmark-popup{ width:220px; text-align:center; }
-  .landmark-popup img{ width:100%; height:120px; object-fit:cover; border-radius:10px 10px 0 0; display:block; background:#eee; }
-  .landmark-popup .lp-body{ padding:8px 4px 2px; }
-  .landmark-popup .lp-title{ font-weight:800; font-size:14.5px; margin:0 0 2px; }
-  .landmark-popup .lp-sub{ font-size:12px; color:var(--ink-soft); margin:0 0 4px; }
-  .landmark-popup .lp-credit{ font-size:10px; color:#9a9a9a; }
-  .landmark-popup .lp-credit a{ color:#9a9a9a; }
-  .landmark-marker{
-    width:64px; height:64px; border-radius:50%; border:3px solid #fff; overflow:hidden;
-    box-shadow:0 4px 10px rgba(0,0,0,.3); background:#eee;
-  }
-  .landmark-marker img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .group-label-marker{
-    background:#fff3dc; border:1.5px solid var(--sun-dark); border-radius:14px; padding:4px 10px;
-    font-weight:800; font-size:12.5px; color:#7a4a1a; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.15);
-  }
-  /* Offline/no-CDN fallback map — a fully self-contained illustrated
-     version used only when Leaflet/OpenStreetMap/Wikimedia can't load
-     (blocked CDN, no connection), so the map screen never just breaks. */
-  #screen-map.classic-mode{
+  /* One continuous illustrated journey from Makkah to Madinah — fully
+     self-contained (no map tiles, no hotlinked photos, no CDN), so it
+     always looks right and never depends on a network connection. */
+  #screen-map{
     background:linear-gradient(180deg, #fdf1d6 0%, #f6dfae 30%, #e8c583 70%, #dcb46e 100%);
     border-radius:24px; padding:14px 14px 4px; margin:0 -2px;
   }
@@ -179,21 +155,6 @@
   .mountain-divider svg{ width:100%; height:36px; display:block; }
   .mountain-divider path{ fill:rgba(122,74,26,.18); }
   .node-row{ position:relative; z-index:1; display:flex; justify-content:flex-start; margin:18px 0; }
-  .map-chapter-bar{
-    display:flex; align-items:center; justify-content:center; gap:14px; margin:6px 0 16px;
-  }
-  .map-nav-btn{
-    width:40px; height:40px; border-radius:50%; border:3px solid #fff; background:var(--coral);
-    color:#fff; font-size:16px; cursor:pointer; box-shadow:0 3px 0 var(--coral-dark); flex:none;
-  }
-  .map-nav-btn:disabled{ background:#d9c49a; box-shadow:none; opacity:.5; cursor:not-allowed; }
-  .map-chapter-title{
-    text-align:center; background:#fff; border:2px solid var(--sun-dark); border-radius:16px;
-    padding:6px 18px; min-width:180px;
-  }
-  .map-chapter-title b{ display:block; font-size:15.5px; color:#7a4a1a; }
-  .map-chapter-title .arabic{ display:block; font-size:15px; color:var(--sun-dark); direction:rtl; }
-  .map-chapter-title small{ display:block; font-size:10.5px; color:#9a7a4a; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
   .node{
     width:74px; height:74px; border-radius:50%; border:4px solid #fff; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -213,6 +174,14 @@
   .node.finalnode{ width:92px; height:92px; background:var(--sun); font-size:38px; color:#5a4300; }
   .node.node-done{ background:var(--sun) !important; color:#5a4300; }
   .node .node-stars{ position:absolute; bottom:-14px; font-size:12px; letter-spacing:1px; color:var(--sun-dark); }
+  .node.node-jump{ animation:nodeJumpPop .9s ease; }
+  @keyframes nodeJumpPop{
+    0%{ transform:scale(1); }
+    25%{ transform:scale(1.35) translateY(-14px); box-shadow:0 16px 0 rgba(0,0,0,.1), 0 22px 24px rgba(30,60,40,.24); }
+    50%{ transform:scale(.96) translateY(2px); }
+    70%{ transform:scale(1.1) translateY(-4px); }
+    100%{ transform:scale(1) translateY(0); }
+  }
   .node-label{ text-align:center; font-size:12.5px; font-weight:700; color:var(--ink-soft); margin-top:2px; max-width:90px; }
   .node-col{ display:flex; flex-direction:column; align-items:center; z-index:1; position:relative; }
 
@@ -499,15 +468,7 @@
       </div>
       <button class="ghost-btn" id="map-home-btn">🏠 Home</button>
     </div>
-    <div class="leaflet-wrap hidden" id="leaflet-wrap">
-      <div id="leaflet-map"></div>
-      <div class="map-chapter-bar floating">
-        <button class="map-nav-btn" id="map-chapter-prev">◀</button>
-        <div class="map-chapter-title"><b id="map-chapter-title-text"></b><span class="arabic" id="map-chapter-sub"></span><small id="map-chapter-count"></small></div>
-        <button class="map-nav-btn" id="map-chapter-next">▶</button>
-      </div>
-    </div>
-    <div class="path-wrap hidden" id="map-path"></div>
+    <div class="path-wrap" id="map-path"></div>
   </div>
 
   <!-- ============ LESSON ============ -->
@@ -587,7 +548,6 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="data/arabic-adventure-world1.js"></script>
 <script>
 /* =====================================================================
@@ -911,31 +871,16 @@ const MASJID_NABAWI_SVG =
     '<rect x="80" y="42" width="8" height="32" fill="#f2ede0" stroke="#c9a86a" stroke-width="1.2"/>' +
     '<polygon points="84,33 79,42 89,42" fill="#c9a86a"/>' +
   '</svg>';
-/* Real photos, hotlinked from Wikimedia Commons's own stable FilePath
-   endpoint (their documented way to reference current media — nothing
-   is re-hosted or cached here). Filenames were confirmed to exist via
-   search before use; sourcePage links to the exact file for full
-   licence/author details, and each falls back to the SVG above if the
-   photo ever fails to load. */
-const MASJID_HARAM_PHOTO = {
-  url: 'https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%20Masjid%20Haraam%20Makkah.jpg?width=300',
-  sourcePage: 'https://commons.wikimedia.org/wiki/File:Kaaba_Masjid_Haraam_Makkah.jpg',
-  fallbackSvg: MASJID_HARAM_SVG
-};
-const MASJID_NABAWI_PHOTO = {
-  url: 'https://commons.wikimedia.org/wiki/Special:FilePath/Al-Masjid%20Al-Nabawi%2010.jpg?width=300',
-  sourcePage: 'https://commons.wikimedia.org/wiki/File:Al-Masjid_Al-Nabawi_10.jpg',
-  fallbackSvg: MASJID_NABAWI_SVG
-};
 function landmarkBanner(svg, title, sub){
   return '<div class="landmark-banner"><div class="lm-svg">'+svg+'</div>' +
     '<div><p class="lm-title">'+escapeHtml(title)+'</p><p class="lm-sub">'+escapeHtml(sub)+'</p></div></div>';
 }
-/* Classic-mode-only: draws a winding road connecting the actual on-screen
-   centre of every node, measured after layout rather than assumed. */
+/* Draws a winding road connecting the actual on-screen centre of every
+   node, in order — measured after layout rather than assumed, so it
+   stays correct at any viewport width. */
 function drawZigzagRoad(){
   const wrap = $('map-path');
-  if(!wrap || wrap.classList.contains('hidden')) return;
+  if(!wrap) return;
   const old = document.getElementById('zigzag-road-svg');
   if(old) old.remove();
   const nodeEls = Array.from(wrap.querySelectorAll('.node'));
@@ -958,53 +903,7 @@ function drawZigzagRoad(){
     '<path d="'+d+'" fill="none" stroke="#fff6e2" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 18"/>';
   wrap.insertBefore(svg, wrap.firstChild);
 }
-
-/* Real-world waypoints (approximate) shaping each chapter's stretch of
-   road — Makkah, past Jabal Thawr, on to Taif, across the desert, past
-   Quba, into Madinah. Nodes are interpolated along these, so the road
-   follows real geography even though a "lesson" isn't tied to an exact
-   historical spot the way the two mosque landmarks are. */
-const ROUTE_WAYPOINTS = [
-  [ [21.4225,39.8262], [21.3770,39.8560], [21.320,39.960] ],
-  [ [21.320,39.960], [21.2703,40.4158], [22.05,40.05], [22.85,39.95] ],
-  [ [22.85,39.95], [23.65,39.75], [24.4395,39.6173], [24.4672,39.6024] ]
-];
-function interpolateAlong(waypoints, t){
-  const segLens = [];
-  let total = 0;
-  for(let i=1;i<waypoints.length;i++){
-    const dx = waypoints[i][0]-waypoints[i-1][0], dy = waypoints[i][1]-waypoints[i-1][1];
-    const len = Math.sqrt(dx*dx+dy*dy);
-    segLens.push(len); total += len;
-  }
-  let target = t*total, acc = 0;
-  for(let i=0;i<segLens.length;i++){
-    if(acc+segLens[i] >= target || i===segLens.length-1){
-      const localT = segLens[i] ? (target-acc)/segLens[i] : 0;
-      const a = waypoints[i], b = waypoints[i+1];
-      return [ a[0]+(b[0]-a[0])*localT, a[1]+(b[1]-a[1])*localT ];
-    }
-    acc += segLens[i];
-  }
-  return waypoints[waypoints.length-1];
-}
-function jitterPerp(waypoints, pt, t, amount){
-  const t2 = Math.min(1, t+0.01);
-  const p2 = interpolateAlong(waypoints, t2);
-  const dx = p2[1]-pt[1], dy = p2[0]-pt[0];
-  const len = Math.sqrt(dx*dx+dy*dy) || 1;
-  const px = -dy/len, py = dx/len;
-  return [pt[0]+px*amount, pt[1]+py*amount];
-}
-
-const MAP_CHAPTERS = DATA.mapChapters;
-function chapterIndexForGroupId(gid){
-  const i = MAP_CHAPTERS.findIndex(c => c.groupIds.indexOf(gid) >= 0);
-  return i < 0 ? 0 : i;
-}
-let viewMapChapter = 0;
-let leafletMap = null;
-let leafletLayers = [];
+window.addEventListener('resize', ()=>{ if(!$('screen-map').classList.contains('hidden')) drawZigzagRoad(); });
 
 function nodeVisual(n, status){
   let cls='node', label='', letterCh='', done=(status==='complete');
@@ -1016,122 +915,25 @@ function nodeVisual(n, status){
   if(done && n.type!=='letter') cls += ' node-done';
   return { cls, letterCh, label };
 }
-function ensureLeafletMap(){
-  if(leafletMap) return leafletMap;
-  leafletMap = L.map('leaflet-map', { zoomControl:false, minZoom:5, maxZoom:16, attributionControl:true })
-    .setView([22.9,40.0], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:18, attribution:'&copy; OpenStreetMap contributors'
-  }).addTo(leafletMap);
-  return leafletMap;
-}
-function addLandmark(map, latlng, photo, title, sub){
-  const icon = L.divIcon({ html:'<div class="landmark-marker"><img alt=""></div>', className:'', iconSize:[64,64], iconAnchor:[32,32] });
-  const marker = L.marker(latlng, { icon, zIndexOffset:500 }).addTo(map);
-  const el = marker.getElement();
-  const img = el ? el.querySelector('img') : null;
-  if(img){
-    img.src = photo.url;
-    img.addEventListener('error', function(){
-      const box = el.querySelector('.landmark-marker');
-      if(box) box.innerHTML = photo.fallbackSvg;
-    }, { once:true });
-  }
-  marker.bindPopup(
-    '<div class="landmark-popup">' +
-      '<img src="'+photo.url+'" alt="'+escapeHtml(title)+'" onerror="this.style.display=\'none\'">' +
-      '<div class="lp-body">' +
-        '<p class="lp-title">'+escapeHtml(title)+'</p>' +
-        '<p class="lp-sub">'+escapeHtml(sub)+'</p>' +
-        '<p class="lp-credit">Photo via <a href="'+photo.sourcePage+'" target="_blank" rel="noopener">Wikimedia Commons</a></p>' +
-      '</div>' +
-    '</div>'
-  );
-  leafletLayers.push(marker);
-}
-function drawChapterOnMap(map, chapter, chapterIdx){
-  leafletLayers.forEach(l => map.removeLayer(l));
-  leafletLayers = [];
+/* One continuous illustrated road, start to finish — every group, in
+   order, no pagination. jumpToIdx (optional) scrolls to and plays a
+   little "just arrived here" hop animation on that node, used when
+   coming back from a finished lesson so progress visibly advances
+   along the path instead of just silently updating. */
+function renderMap(jumpToIdx){
+  if(typeof jumpToIdx !== 'number') jumpToIdx = currentContinueTarget();
+  paintAvatarChips();
+  $('map-name').textContent = profile.name;
+  $('map-stars').textContent = totalStars();
+  $('map-coins').textContent = profile.coins;
 
-  const visible = [];
-  NODES.forEach((n,i)=>{ if(chapter.groupIds.indexOf(n.group.id) >= 0) visible.push({ n, i }); });
-  const wp = ROUTE_WAYPOINTS[chapterIdx];
-  const N = visible.length;
-  const ZIG = [0, 0.06, -0.025, 0.035, -0.055];
-  const points = [];
-  let lastGroupId = null;
-
-  visible.forEach((item, idx)=>{
-    const t = (idx+0.5)/N;
-    const base = interpolateAlong(wp, t);
-    const pt = jitterPerp(wp, base, t, ZIG[idx % ZIG.length]);
-    points.push(pt);
-
-    if(item.n.group.id !== lastGroupId){
-      lastGroupId = item.n.group.id;
-      const lbl = L.marker(pt, {
-        icon: L.divIcon({ html:'<div class="group-label-marker">'+item.n.group.icon+' '+escapeHtml(item.n.group.title)+'</div>', className:'', iconSize:[170,26], iconAnchor:[20,52] }),
-        interactive:false, zIndexOffset:-200
-      }).addTo(map);
-      leafletLayers.push(lbl);
-    }
-
-    const status = nodeStatus(item.i);
-    const v = nodeVisual(item.n, status);
-    const st = item.n.type==='letter' ? starsFor(item.n.id) : 0;
-    const marker = L.marker(pt, {
-      icon: L.divIcon({
-        html: '<div class="node-col"><div class="'+v.cls+'">' +
-          (status==='locked' ? '🔒' : v.letterCh) +
-          (st ? '<span class="node-stars">'+'★'.repeat(st)+'</span>' : '') +
-          '</div><div class="node-label">'+escapeHtml(v.label)+'</div></div>',
-        className:'', iconSize:[100,100], iconAnchor:[50,37]
-      })
-    }).addTo(map);
-    marker.on('click', ()=>{
-      if(nodeStatus(item.i)==='locked'){ playTap(); return; }
-      playTap(); openNode(item.i);
-    });
-    leafletLayers.push(marker);
-  });
-
-  if(points.length>1){
-    leafletLayers.push(L.polyline(points, { color:'#e0c384', weight:6, opacity:.9, dashArray:'2 14', lineCap:'round' }).addTo(map));
-  }
-  if(chapterIdx===0) addLandmark(map, ROUTE_WAYPOINTS[0][0], MASJID_HARAM_PHOTO, 'Masjid al-Haram', 'Your journey begins here in Makkah.');
-  if(chapterIdx===MAP_CHAPTERS.length-1) addLandmark(map, ROUTE_WAYPOINTS[ROUTE_WAYPOINTS.length-1].slice(-1)[0], MASJID_NABAWI_PHOTO, 'Masjid an-Nabawi', 'Welcome to Madinah — you made it!');
-
-  const boundsPts = points.slice();
-  if(chapterIdx===0) boundsPts.push(ROUTE_WAYPOINTS[0][0]);
-  if(chapterIdx===MAP_CHAPTERS.length-1) boundsPts.push(ROUTE_WAYPOINTS[ROUTE_WAYPOINTS.length-1].slice(-1)[0]);
-  if(boundsPts.length) map.fitBounds(L.latLngBounds(boundsPts), { padding:[36,56] });
-}
-/* True only if the Leaflet script actually loaded before this point (it's
-   a synchronous <script src> placed earlier in the document — by the time
-   this runs it has either succeeded or permanently failed, no retry). If
-   a CDN is blocked or there's no connection, we fall back to a fully
-   self-contained illustrated map instead of a broken screen — this app
-   is built to be offline-capable, and the map screen shouldn't be the
-   one part that hard-depends on three different external services. */
-const LEAFLET_AVAILABLE = (typeof L !== 'undefined');
-
-function renderMapClassic(chapter){
-  $('screen-map').classList.add('classic-mode');
-  $('leaflet-wrap').classList.add('hidden');
   const wrap = $('map-path');
-  wrap.classList.remove('hidden');
   let html =
     '<div class="dune-row"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>' +
-    '<div class="map-chapter-bar">' +
-      '<button class="map-nav-btn" id="classic-chapter-prev" '+(viewMapChapter<=0?'disabled':'')+'>◀</button>' +
-      '<div class="map-chapter-title"><b>'+escapeHtml(chapter.title)+'</b><span class="arabic">'+chapter.subtitle+'</span><small>Map '+(viewMapChapter+1)+' of '+MAP_CHAPTERS.length+'</small></div>' +
-      '<button class="map-nav-btn" id="classic-chapter-next" '+(viewMapChapter>=MAP_CHAPTERS.length-1?'disabled':'')+'>▶</button>' +
-    '</div>';
-  if(viewMapChapter===0) html += landmarkBanner(MASJID_HARAM_SVG, 'Masjid al-Haram', 'Your journey begins here in Makkah.');
+    landmarkBanner(MASJID_HARAM_SVG, 'Masjid al-Haram', 'Your journey begins here in Makkah.');
   let lastGroup = null, zigIndex = 0;
   const ZIG = [0.5, 0.86, 0.5, 0.14];
   NODES.forEach((n,i)=>{
-    if(chapter.groupIds.indexOf(n.group.id) < 0) return;
     if(n.group !== lastGroup){
       lastGroup = n.group;
       html += '<div class="mountain-divider"><svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 46 L0 34 L45 8 L75 28 L110 4 L150 30 L190 10 L230 32 L270 6 L310 28 L350 12 L400 34 L400 46 Z"/></svg></div>' +
@@ -1149,7 +951,7 @@ function renderMapClassic(chapter){
       '<div class="node-label">'+escapeHtml(v.label)+'</div>' +
     '</div></div>';
   });
-  if(viewMapChapter===MAP_CHAPTERS.length-1) html += landmarkBanner(MASJID_NABAWI_SVG, 'Masjid an-Nabawi', 'Welcome to Madinah — you made it!');
+  html += landmarkBanner(MASJID_NABAWI_SVG, 'Masjid an-Nabawi', 'Your finish line — welcome to Madinah!');
   html += '<div class="dune-row flip"><svg viewBox="0 0 400 40" preserveAspectRatio="none" class="dune-svg"><path d="M0 40 L0 22 Q50 4 100 20 T200 18 T300 24 T400 14 L400 40 Z"/></svg></div>';
   wrap.style.position = 'relative';
   wrap.innerHTML = html;
@@ -1160,47 +962,19 @@ function renderMapClassic(chapter){
       playTap(); openNode(i);
     });
   });
-  $('classic-chapter-prev').addEventListener('click', ()=>{ if(viewMapChapter>0){ playTap(); window.__mapChapterTouched=true; viewMapChapter--; renderMap(); } });
-  $('classic-chapter-next').addEventListener('click', ()=>{ if(viewMapChapter<MAP_CHAPTERS.length-1){ playTap(); window.__mapChapterTouched=true; viewMapChapter++; renderMap(); } });
-  requestAnimationFrame(drawZigzagRoad);
-}
-function renderMap(){
-  paintAvatarChips();
-  $('map-name').textContent = profile.name;
-  $('map-stars').textContent = totalStars();
-  $('map-coins').textContent = profile.coins;
-
-  const curNodeGroup = NODES[Math.min(profile.unlockedIndex, NODES.length-1)].group;
-  viewMapChapter = clamp(viewMapChapter, 0, MAP_CHAPTERS.length-1);
-  if(!window.__mapChapterTouched) viewMapChapter = chapterIndexForGroupId(curNodeGroup.id);
-
-  const chapter = MAP_CHAPTERS[viewMapChapter];
   showScreen('screen-map');
-
-  if(!LEAFLET_AVAILABLE){
-    renderMapClassic(chapter);
-    return;
-  }
-  $('screen-map').classList.remove('classic-mode');
-  $('map-path').classList.add('hidden');
-  $('leaflet-wrap').classList.remove('hidden');
-  $('map-chapter-title-text').textContent = chapter.title;
-  $('map-chapter-sub').textContent = chapter.subtitle;
-  $('map-chapter-count').textContent = 'Map '+(viewMapChapter+1)+' of '+MAP_CHAPTERS.length;
-  $('map-chapter-prev').disabled = viewMapChapter<=0;
-  $('map-chapter-next').disabled = viewMapChapter>=MAP_CHAPTERS.length-1;
-  const map = ensureLeafletMap();
-  requestAnimationFrame(()=>{ map.invalidateSize(); drawChapterOnMap(map, chapter, viewMapChapter); });
+  requestAnimationFrame(()=>{
+    drawZigzagRoad();
+    if(typeof jumpToIdx === 'number'){
+      const target = wrap.querySelector('.node[data-idx="'+jumpToIdx+'"]');
+      if(target){
+        target.scrollIntoView({ behavior:'smooth', block:'center' });
+        target.classList.add('node-jump');
+        setTimeout(()=>target.classList.remove('node-jump'), 900);
+      }
+    }
+  });
 }
-if(LEAFLET_AVAILABLE){
-  $('map-chapter-prev').addEventListener('click', ()=>{ if(viewMapChapter>0){ playTap(); window.__mapChapterTouched=true; viewMapChapter--; renderMap(); } });
-  $('map-chapter-next').addEventListener('click', ()=>{ if(viewMapChapter<MAP_CHAPTERS.length-1){ playTap(); window.__mapChapterTouched=true; viewMapChapter++; renderMap(); } });
-}
-window.addEventListener('resize', ()=>{
-  if($('screen-map').classList.contains('hidden')) return;
-  if(leafletMap) leafletMap.invalidateSize();
-  else drawZigzagRoad();
-});
 function openNode(i){
   const n = NODES[i];
   if(n.type==='letter') startLetterLesson(i);
@@ -2117,9 +1891,7 @@ function showReward(opts){
   showScreen('screen-reward');
   $('reward-continue').addEventListener('click', ()=>{
     playTap();
-    const nextIdx = currentContinueTarget();
-    if(nodeStatus(nextIdx)==='locked' || (nextIdx===NODES.length-1 && nodeStatus(nextIdx)==='complete')){ renderMap(); return; }
-    openNode(nextIdx);
+    renderMap(currentContinueTarget());
   });
   $('reward-map').addEventListener('click', ()=>{ playTap(); renderMap(); });
   if(opts.offerCert) $('reward-cert').addEventListener('click', ()=>{ playTap(); showCertificate(); });
