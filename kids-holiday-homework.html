@@ -205,6 +205,8 @@
     border:1.5px solid var(--gold-soft); background:#fff; cursor:pointer; color:var(--ink-brown);
   }
   .scramble-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:8px; }
+  .word-game{ padding-top:10px; margin-top:10px; }
+  .word-game + .word-game{ border-top:1.5px dashed var(--gold-soft); }
 
   /* ---- interactive polish ---- */
   .day-card{ transition:transform .15s ease, box-shadow .15s ease; }
@@ -342,12 +344,7 @@
     </div>
     <div class="checklist-card hidden" id="foundation-checklist">
       <h3>📋 Holiday Homework Checklist</h3>
-      <p class="checklist-sub">Tick the boxes when you have completed each task! A grown-up listens to you read each word, then marks how you read it.</p>
-      <div class="checklist-section">
-        <h4>⭐ Read the Soundwaves words list</h4>
-        <p class="checklist-note">Practise reading the words below, then tap how it went: ⚡ Automatic &nbsp; 🔤 Decoded (sounded out) &nbsp; ❌ Incorrect.</p>
-        <div id="soundwaves-grid" class="soundwaves-grid"></div>
-      </div>
+      <p class="checklist-sub">Your Soundwaves words are spread across the days below — one or two new words a day, with a little game to help you remember them! Tick these two boxes when you've done them too:</p>
       <div class="checklist-section habit">
         <div>
           <h4>⭐ Read a book each day</h4>
@@ -972,41 +969,157 @@ function saveHolidayProgress(){
    (automatically/decoded/incorrect), plus two daily reading habits. This
    is a parent-assessed checklist, not a right/wrong quiz, so it never
    touches the points system -- just its own saved tick state. */
-const SOUNDWAVES_WORDS = ['zap','web','has','off','yell','mess','buzz','luck','sick','king','long','shop','rush','much','chin','that','moth','pay','nail','bake'];
+/* The same 20 Soundwaves words as the school's checklist, now spread
+   across the 14 days (1-2 new words a day) instead of one long list up
+   front -- flattening this array back in order reproduces the original
+   20-word list exactly, so nothing is dropped or reordered. */
+const SOUNDWAVES_DAYS = [
+  ['zap','web'], ['has'], ['off','yell'], ['mess'], ['buzz','luck'], ['sick'], ['king','long'],
+  ['shop'], ['rush','much'], ['chin'], ['that','moth'], ['pay'], ['nail'], ['bake']
+];
 const STATUS_ICONS = { automatic:'⚡', decoded:'🔤', incorrect:'❌' };
 
-function renderFoundationChecklist(){
-  const grid = document.getElementById('soundwaves-grid');
-  grid.innerHTML = '';
+function buildWordStatusRow(word){
   const checklist = studentProgress.foundationChecklist;
-  SOUNDWAVES_WORDS.forEach(word => {
-    const row = document.createElement('div');
-    row.className = 'soundwaves-row';
-    const label = document.createElement('span');
-    label.className = 'soundwaves-word';
-    label.textContent = word;
-    const statusWrap = document.createElement('span');
-    statusWrap.className = 'soundwaves-status';
-    ['automatic', 'decoded', 'incorrect'].forEach(status => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'status-btn';
-      btn.dataset.status = status;
-      btn.title = status.charAt(0).toUpperCase() + status.slice(1);
-      btn.textContent = STATUS_ICONS[status];
-      if(checklist.words[word] === status) btn.classList.add('active');
-      btn.addEventListener('click', () => {
-        checklist.words[word] = checklist.words[word] === status ? undefined : status;
-        saveHolidayProgress();
-        statusWrap.querySelectorAll('.status-btn').forEach(b => b.classList.toggle('active', checklist.words[word] === b.dataset.status));
-      });
-      statusWrap.appendChild(btn);
+  const row = document.createElement('div');
+  row.className = 'soundwaves-row';
+  const label = document.createElement('span');
+  label.className = 'soundwaves-word';
+  label.textContent = word;
+  const statusWrap = document.createElement('span');
+  statusWrap.className = 'soundwaves-status';
+  ['automatic', 'decoded', 'incorrect'].forEach(status => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'status-btn';
+    btn.dataset.status = status;
+    btn.title = status.charAt(0).toUpperCase() + status.slice(1);
+    btn.textContent = STATUS_ICONS[status];
+    if(checklist.words[word] === status) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      checklist.words[word] = checklist.words[word] === status ? undefined : status;
+      saveHolidayProgress();
+      statusWrap.querySelectorAll('.status-btn').forEach(b => b.classList.toggle('active', checklist.words[word] === b.dataset.status));
     });
-    row.appendChild(label);
-    row.appendChild(statusWrap);
-    grid.appendChild(row);
+    statusWrap.appendChild(btn);
+  });
+  row.appendChild(label);
+  row.appendChild(statusWrap);
+  return row;
+}
+
+function renderFoundationWordSection(container, dayIndex){
+  const words = SOUNDWAVES_DAYS[dayIndex];
+  const wrap = document.createElement('div');
+  wrap.className = 'day-section words';
+  wrap.innerHTML = '<div class="lbl">📖 Soundwaves Words</div>' +
+    '<p class="checklist-note">Practise reading today’s word(s) with a grown-up, then tap how it went: ⚡ Automatic &nbsp; 🔤 Decoded &nbsp; ❌ Incorrect.</p>';
+  words.forEach(word => wrap.appendChild(buildWordStatusRow(word)));
+  container.appendChild(wrap);
+}
+
+/* Reuses the exact same tap-the-letters mechanic as the surah-name
+   scramble game (same CSS classes, same audio cues) so it's a familiar,
+   already-tested pattern -- just retargeted at today's Soundwaves word(s)
+   instead of a surah name. */
+function renderWordScramble(container, word){
+  const target = word.toUpperCase();
+  let scrambled = shuffleLetters(target);
+  if(scrambled.join('') === target && target.length > 1){ scrambled.reverse(); }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'word-game';
+  wrap.innerHTML = '<p class="scramble-hint">Unscramble: <b>' + escapeHtml(word) + '</b></p>';
+
+  const slotsRow = document.createElement('div');
+  slotsRow.className = 'scramble-row';
+  const pool = document.createElement('div');
+  pool.className = 'scramble-pool';
+  const actions = document.createElement('div');
+  actions.className = 'scramble-actions';
+  const feedback = document.createElement('p');
+  feedback.className = 'scramble-feedback';
+
+  let picked = [];
+
+  function renderSlots(){
+    slotsRow.innerHTML = '';
+    for(let i = 0; i < target.length; i++){
+      const slot = document.createElement('span');
+      slot.className = 'scramble-slot';
+      slot.textContent = picked[i] || '';
+      slotsRow.appendChild(slot);
+    }
+  }
+  function checkComplete(){
+    if(picked.length !== target.length) return;
+    if(picked.join('') === target){
+      playCorrect();
+      feedback.textContent = '🎉 You read it: ' + word + '!';
+      feedback.style.color = 'var(--green-dark)';
+      pool.querySelectorAll('.letter-tile').forEach(t => t.disabled = true);
+    } else {
+      playWrong();
+      feedback.textContent = 'Not quite — tap Clear and try again!';
+      feedback.style.color = '#a3352b';
+    }
+  }
+  scrambled.forEach(letter => {
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = 'letter-tile';
+    tile.textContent = letter;
+    tile.addEventListener('click', () => {
+      if(tile.disabled || picked.length >= target.length) return;
+      picked.push(letter);
+      tile.disabled = true;
+      renderSlots();
+      checkComplete();
+    });
+    pool.appendChild(tile);
   });
 
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.textContent = '↺ Clear';
+  clearBtn.addEventListener('click', () => {
+    picked = [];
+    feedback.textContent = '';
+    pool.querySelectorAll('.letter-tile').forEach(t => { t.disabled = false; });
+    renderSlots();
+  });
+  const hintBtn = document.createElement('button');
+  hintBtn.type = 'button';
+  hintBtn.textContent = '💡 Hint';
+  hintBtn.addEventListener('click', () => {
+    feedback.textContent = 'It starts with "' + word[0].toUpperCase() + '"';
+    feedback.style.color = '#8a7654';
+  });
+
+  actions.appendChild(clearBtn);
+  actions.appendChild(hintBtn);
+  renderSlots();
+  wrap.appendChild(slotsRow);
+  wrap.appendChild(pool);
+  wrap.appendChild(actions);
+  wrap.appendChild(feedback);
+  container.appendChild(wrap);
+}
+
+function renderFoundationWordGame(container, dayIndex){
+  const words = SOUNDWAVES_DAYS[dayIndex];
+  const section = document.createElement('div');
+  section.className = 'day-section game';
+  const label = document.createElement('div');
+  label.className = 'lbl';
+  label.textContent = '🎮 Word Game';
+  section.appendChild(label);
+  words.forEach(word => renderWordScramble(section, word));
+  container.appendChild(section);
+}
+
+function renderFoundationChecklist(){
+  const checklist = studentProgress.foundationChecklist;
   const bookBox = document.getElementById('check-read-book');
   const eggsBox = document.getElementById('check-reading-eggs');
   bookBox.checked = !!checklist.readBook;
@@ -1341,7 +1454,12 @@ function renderPlan(name, gradeId){
       quizSection.appendChild(quizBtn);
       quizSection.appendChild(quizBadge);
       card.appendChild(quizSection);
-      renderScrambleGame(card, dayNum - 1);
+      if(gradeId === 'foundation'){
+        renderFoundationWordSection(card, dayNum - 1);
+        renderFoundationWordGame(card, dayNum - 1);
+      } else {
+        renderScrambleGame(card, dayNum - 1);
+      }
       dayGrid.appendChild(card);
     }
     weekBlock.appendChild(dayGrid);
