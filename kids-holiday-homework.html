@@ -107,6 +107,39 @@
   .best-tips ul{ list-style:none; margin:0; padding:0; text-align:left; display:inline-block; }
   .best-tips li{ font-size:15px; line-height:1.7; }
 
+  /* ---- Foundation checklist ---- */
+  .checklist-card{
+    max-width:720px; margin:0 auto 34px; background:#fff; border:2px solid var(--sky);
+    border-radius:20px; padding:22px 24px; text-align:center;
+  }
+  .checklist-card h3{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 6px; }
+  .checklist-sub{ font-size:14px; color:#6b5a3f; margin:0 0 18px; }
+  .checklist-section{
+    background:#eaf6fb; border:1.5px solid #bfe0ee; border-radius:14px; padding:16px 18px; margin-bottom:14px; text-align:left;
+  }
+  .checklist-section.habit{ display:flex; align-items:center; justify-content:space-between; gap:14px; background:#eef6ea; border-color:#c9e3bd; }
+  .checklist-section h4{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); margin:0 0 4px; }
+  .checklist-note{ font-size:13.5px; color:#6b5a3f; margin:0; }
+  .soundwaves-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:8px 16px; margin-top:12px; }
+  .soundwaves-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border-radius:10px; padding:6px 10px; }
+  .soundwaves-word{ font-family:'Marcellus'; font-size:15px; color:var(--ink-navy); min-width:56px; }
+  .soundwaves-status{ display:flex; gap:4px; }
+  .status-btn{
+    width:30px; height:30px; border-radius:8px; border:1.5px solid #cdd; background:#fff; cursor:pointer; font-size:14px;
+  }
+  .status-btn[data-status="automatic"].active{ background:var(--green); border-color:var(--green); }
+  .status-btn[data-status="decoded"].active{ background:var(--sky); border-color:var(--sky); }
+  .status-btn[data-status="incorrect"].active{ background:var(--danger, #a3352b); border-color:var(--danger, #a3352b); }
+  .habit-check{ position:relative; width:34px; height:34px; flex:none; cursor:pointer; }
+  .habit-check input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+  .habit-check span{
+    position:absolute; inset:0; border-radius:9px; border:2px solid var(--green); background:#fff;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .habit-check input:checked + span{ background:var(--green); }
+  .habit-check input:checked + span::after{ content:'✓'; color:#fff; font-weight:800; font-size:18px; }
+  .checklist-cheer{ font-family:'Marcellus'; font-size:14px; color:var(--gold); margin:14px 0 0; }
+
   .week-block{ margin-bottom:34px; }
   .week-title{
     font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); text-align:center;
@@ -294,6 +327,30 @@
         <li>⭐ If you need help, ask a family member.</li>
         <li>⭐ Have fun and enjoy your break!</li>
       </ul>
+    </div>
+    <div class="checklist-card hidden" id="foundation-checklist">
+      <h3>📋 Holiday Homework Checklist</h3>
+      <p class="checklist-sub">Tick the boxes when you have completed each task! A grown-up listens to you read each word, then marks how you read it.</p>
+      <div class="checklist-section">
+        <h4>⭐ Read the Soundwaves words list</h4>
+        <p class="checklist-note">Practise reading the words below, then tap how it went: ⚡ Automatic &nbsp; 🔤 Decoded (sounded out) &nbsp; ❌ Incorrect.</p>
+        <div id="soundwaves-grid" class="soundwaves-grid"></div>
+      </div>
+      <div class="checklist-section habit">
+        <div>
+          <h4>⭐ Read a book each day</h4>
+          <p class="checklist-note">Choose a book you enjoy and read it for at least 10 minutes each day.</p>
+        </div>
+        <label class="habit-check"><input type="checkbox" id="check-read-book"><span></span></label>
+      </div>
+      <div class="checklist-section habit">
+        <div>
+          <h4>⭐ Work on Reading Eggs Map</h4>
+          <p class="checklist-note">Practise your reading skills using Reading Eggs Map.</p>
+        </div>
+        <label class="habit-check"><input type="checkbox" id="check-reading-eggs"><span></span></label>
+      </div>
+      <p class="checklist-cheer">You're doing a great job! 🌈</p>
     </div>
     <div id="plan-weeks"></div>
   </div>
@@ -742,15 +799,67 @@ function buildDayQuizQuestions(dayIndex, gradeId){
 }
 
 /* ===================== Points + cloud-saved progress ===================== */
-let studentProgress = { points: 0, completed: {} };
+let studentProgress = { points: 0, completed: {}, foundationChecklist: { words: {}, readBook: false, readingEggs: false } };
 
 function loadProgressFromCloud(cloudData){
   const saved = cloudData && cloudData.progress && cloudData.progress.holidayHomework;
-  studentProgress = saved && typeof saved === 'object' ? Object.assign({ points:0, completed:{} }, saved) : { points:0, completed:{} };
+  const base = { points:0, completed:{}, foundationChecklist: { words:{}, readBook:false, readingEggs:false } };
+  studentProgress = saved && typeof saved === 'object' ? Object.assign({}, base, saved, {
+    foundationChecklist: Object.assign({}, base.foundationChecklist, saved.foundationChecklist)
+  }) : base;
   updatePointsBanner();
 }
 function saveHolidayProgress(){
   if(window.KidsCloud && window.KidsCloud.saveProgress) window.KidsCloud.saveProgress('holidayHomework', studentProgress);
+}
+
+/* ===================== Foundation Soundwaves reading checklist ===================== */
+/* Straight from the school's own "Holiday Homework Checklist -- Foundation"
+   sheet: a Soundwaves phonics word list a grown-up listens to and marks
+   (automatically/decoded/incorrect), plus two daily reading habits. This
+   is a parent-assessed checklist, not a right/wrong quiz, so it never
+   touches the points system -- just its own saved tick state. */
+const SOUNDWAVES_WORDS = ['zap','web','has','off','yell','mess','buzz','luck','sick','king','long','shop','rush','much','chin','that','moth','pay','nail','bake'];
+const STATUS_ICONS = { automatic:'⚡', decoded:'🔤', incorrect:'❌' };
+
+function renderFoundationChecklist(){
+  const grid = document.getElementById('soundwaves-grid');
+  grid.innerHTML = '';
+  const checklist = studentProgress.foundationChecklist;
+  SOUNDWAVES_WORDS.forEach(word => {
+    const row = document.createElement('div');
+    row.className = 'soundwaves-row';
+    const label = document.createElement('span');
+    label.className = 'soundwaves-word';
+    label.textContent = word;
+    const statusWrap = document.createElement('span');
+    statusWrap.className = 'soundwaves-status';
+    ['automatic', 'decoded', 'incorrect'].forEach(status => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'status-btn';
+      btn.dataset.status = status;
+      btn.title = status.charAt(0).toUpperCase() + status.slice(1);
+      btn.textContent = STATUS_ICONS[status];
+      if(checklist.words[word] === status) btn.classList.add('active');
+      btn.addEventListener('click', () => {
+        checklist.words[word] = checklist.words[word] === status ? undefined : status;
+        saveHolidayProgress();
+        statusWrap.querySelectorAll('.status-btn').forEach(b => b.classList.toggle('active', checklist.words[word] === b.dataset.status));
+      });
+      statusWrap.appendChild(btn);
+    });
+    row.appendChild(label);
+    row.appendChild(statusWrap);
+    grid.appendChild(row);
+  });
+
+  const bookBox = document.getElementById('check-read-book');
+  const eggsBox = document.getElementById('check-reading-eggs');
+  bookBox.checked = !!checklist.readBook;
+  eggsBox.checked = !!checklist.readingEggs;
+  bookBox.onchange = () => { checklist.readBook = bookBox.checked; saveHolidayProgress(); };
+  eggsBox.onchange = () => { checklist.readingEggs = eggsBox.checked; saveHolidayProgress(); };
 }
 function updatePointsBanner(){
   const el = document.getElementById('my-points');
@@ -999,6 +1108,10 @@ function renderScrambleGame(container, dayIndex){
 function renderPlan(name, gradeId){
   const grade = GRADES.find(g => g.id === gradeId);
   document.getElementById('plan-greeting').textContent = 'Hi ' + name + '! Here\'s your ' + grade.label + ' plan.';
+
+  const isFoundation = gradeId === 'foundation';
+  document.getElementById('foundation-checklist').classList.toggle('hidden', !isFoundation);
+  if(isFoundation) renderFoundationChecklist();
 
   const weeksEl = document.getElementById('plan-weeks');
   weeksEl.innerHTML = '';
