@@ -139,6 +139,8 @@
   }
   .quiz-opt:hover{ border-color:var(--card-accent, var(--gold)); }
   .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); font-weight:700; }
+  .quiz-opt.pop{ animation:opt-pop .3s ease; }
+  @keyframes opt-pop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.08); } 100%{ transform:scale(1); } }
   .quiz-opt.wrong{ background:#f7dede; border-color:#a3352b; color:#a3352b; }
   .quiz-opt[disabled]{ cursor:default; }
   .quiz-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:6px; }
@@ -579,14 +581,30 @@ function buildMeaningQuestion(dayIndex){
   return { q: 'What is Surah ' + plan.quran.name + ' mainly about?', options: shuffled.options, correct: shuffled.correct };
 }
 /* A small arithmetic fact for the day, computed fresh each time (never
-   hand-typed) so it's always correct, cycling +, -, x across the two weeks. */
-function buildMathQuestion(dayIndex){
+   hand-typed) so it's always correct -- leveled by grade so a Foundation
+   5-year-old gets a friendly counting picture instead of the same times
+   tables question a Year 3 gets: Foundation counts emoji, Year 1 only
+   ever adds small numbers, and Year 2-3 cycle +, -, x like before. */
+function buildMathQuestion(dayIndex, gradeId){
   const n = dayIndex + 1;
-  const type = n % 3;
-  let a, b, answer, text;
-  if(type === 1){ a = n; b = n + 1; answer = a + b; text = 'What is ' + a + ' + ' + b + '?'; }
-  else if(type === 2){ a = n + 5; b = n; answer = a - b; text = 'What is ' + a + ' − ' + b + '?'; }
-  else { a = (n % 5) + 2; b = 2; answer = a * b; text = 'What is ' + a + ' × ' + b + '?'; }
+  let answer, text;
+
+  if(gradeId === 'foundation'){
+    const count = (n % 5) + 3; // 3-7 dots, friendly for counting practice
+    answer = count;
+    text = 'How many stars are there? ' + '⭐'.repeat(count);
+  } else if(gradeId === 'g1'){
+    const a = (n % 8) + 1, b = ((n + 3) % 6) + 1;
+    answer = a + b;
+    text = 'What is ' + a + ' + ' + b + '?';
+  } else {
+    const type = n % 3;
+    let a, b;
+    if(type === 1){ a = n; b = n + 1; answer = a + b; text = 'What is ' + a + ' + ' + b + '?'; }
+    else if(type === 2){ a = n + 5; b = n; answer = a - b; text = 'What is ' + a + ' − ' + b + '?'; }
+    else { a = (n % 5) + 2; b = 2; answer = a * b; text = 'What is ' + a + ' × ' + b + '?'; }
+  }
+
   const wrongPool = [answer + 1, answer - 1, answer + 2].filter(w => w !== answer && w >= 0);
   const shuffled = shuffleOptions([answer, wrongPool[0], wrongPool[1]], answer);
   return { q: text, options: shuffled.options.map(String), correct: String(shuffled.correct) };
@@ -595,14 +613,14 @@ function buildMathQuestion(dayIndex){
 /* Five questions a day: two about the Qur'an focus, one about what the
    activity taught, one math fact, one English fact -- exactly the four
    subjects asked for, with the surah getting two questions of its own. */
-function buildDayQuizQuestions(dayIndex){
+function buildDayQuizQuestions(dayIndex, gradeId){
   const activity = shuffleOptions(ACTIVITY_QUESTIONS[dayIndex].options, ACTIVITY_QUESTIONS[dayIndex].correct);
   const english = shuffleOptions(ENGLISH_QUESTIONS[dayIndex].options, ENGLISH_QUESTIONS[dayIndex].correct);
   return [
     buildAyatQuestion(dayIndex),
     buildMeaningQuestion(dayIndex),
     { q: ACTIVITY_QUESTIONS[dayIndex].q, options: activity.options, correct: activity.correct },
-    buildMathQuestion(dayIndex),
+    buildMathQuestion(dayIndex, gradeId),
     { q: ENGLISH_QUESTIONS[dayIndex].q, options: english.options, correct: english.correct }
   ];
 }
@@ -662,7 +680,7 @@ function fireConfetti(){
 }
 
 function openQuizModal(dayIndex){
-  quizState = { dayIndex: dayIndex, questions: buildDayQuizQuestions(dayIndex), index: 0, correctCount: 0 };
+  quizState = { dayIndex: dayIndex, questions: buildDayQuizQuestions(dayIndex, selectedGrade), index: 0, correctCount: 0 };
   document.getElementById('quiz-modal-results-view').classList.add('hidden');
   document.getElementById('quiz-modal-question-view').classList.remove('hidden');
   document.getElementById('quiz-modal').classList.remove('hidden');
@@ -690,6 +708,9 @@ function renderQuizStep(){
   });
 }
 
+const CHEERS = ['🎉 Correct!', '🌟 Awesome!', '✅ You got it!', '👏 Nice job!', '🥳 Brilliant!'];
+const TRY_AGAIN = ['Not quite', 'So close', 'Almost', 'Good try'];
+
 function answerQuizQuestion(opt, btnEl){
   const q = quizState.questions[quizState.index];
   const isRight = opt === q.correct;
@@ -698,13 +719,13 @@ function answerQuizQuestion(opt, btnEl){
   if(isRight){
     playCorrect();
     quizState.correctCount++;
-    btnEl.classList.add('correct');
-    feedback.textContent = '🎉 Correct!';
+    btnEl.classList.add('correct', 'pop');
+    feedback.textContent = CHEERS[Math.floor(Math.random() * CHEERS.length)];
     feedback.style.color = 'var(--green-dark)';
   } else {
     playWrong();
     btnEl.classList.add('wrong');
-    feedback.textContent = 'Not quite — it was "' + q.correct + '"';
+    feedback.textContent = TRY_AGAIN[Math.floor(Math.random() * TRY_AGAIN.length)] + ' — it was "' + q.correct + '"';
     feedback.style.color = '#a3352b';
     document.querySelectorAll('#quiz-modal-options .quiz-opt').forEach(b => { if(b.textContent === q.correct) b.classList.add('correct'); });
   }
