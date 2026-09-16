@@ -334,6 +334,21 @@
   .drag-tile.dragging{ position:fixed; z-index:400; cursor:grabbing; box-shadow:0 10px 20px rgba(0,0,0,.2); }
   .drag-tile .dt-word{ font-family:'Amiri', serif; direction:rtl; font-size:15px; color:var(--ink-soft); }
 
+  .scramble-answer{ display:flex; direction:rtl; gap:8px; justify-content:center; flex-wrap:wrap; margin:16px 0 10px; }
+  .scramble-slot{
+    width:52px; height:56px; border-radius:12px; border:2px dashed var(--line); background:var(--cream);
+    display:flex; align-items:center; justify-content:center; font-family:'Amiri', serif; font-size:26px;
+    color:var(--ink); cursor:pointer;
+  }
+  .scramble-slot.filled{ border-style:solid; border-color:var(--leaf); background:#fff; }
+  .scramble-bank{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:6px 0 10px; }
+  .scramble-tile{
+    width:52px; height:56px; border-radius:12px; background:#fff; border:3px solid var(--line);
+    font-family:'Amiri', serif; font-size:26px; color:var(--ink); cursor:pointer; box-shadow:0 3px 0 var(--line);
+  }
+  .scramble-tile:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--line); }
+  .scramble-tile.used{ visibility:hidden; }
+
   .word-display{ font-family:'Amiri', serif; direction:rtl; font-size:44px; margin:8px 0 16px; }
   .word-display .wch{ transition:color .2s ease, transform .2s ease; }
   .word-display .wch.hi{ color:var(--coral-dark); transform:translateY(-4px) scale(1.15); display:inline-block; }
@@ -644,6 +659,22 @@ function $(id){ return document.getElementById(id); }
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function sample(arr,n){ return shuffle(arr).slice(0,n); }
 function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+/* Splits an Arabic word into the pieces a child should see as one
+   "letter" tile — a base letter plus any tashkeel/shadda riding on it
+   — rather than raw code points, which would tear a diacritic off into
+   its own unreadable tile. */
+function arabicGraphemes(str){
+  if(typeof Intl !== 'undefined' && Intl.Segmenter){
+    return Array.from(new Intl.Segmenter('ar', { granularity:'grapheme' }).segment(str), s=>s.segment);
+  }
+  const marks = /[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭ]/;
+  const out = [];
+  for(const ch of str){
+    if(marks.test(ch) && out.length) out[out.length-1] += ch;
+    else out.push(ch);
+  }
+  return out;
+}
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
@@ -1761,7 +1792,7 @@ function startVocabModule(nodeIdx){
   $('side-title').textContent = n.module.title;
   $('side-steps').innerHTML = '';
   function showWord(){
-    $('lesson-progress-fill').style.width = Math.round(i/words.length*100)+'%';
+    $('lesson-progress-fill').style.width = Math.round(i/(words.length*2)*100)+'%';
     const w = words[i];
     const card = $('stage-card');
     card.innerHTML =
@@ -1770,18 +1801,84 @@ function startVocabModule(nodeIdx){
       '<p class="hero-word">'+w.word+'</p>' +
       '<p class="task-sub">'+w.english+' <button class="speak-btn-en" id="vocab-speak-en" aria-label="Hear in English">🔊</button></p>' +
       '<button class="speak-btn" id="vocab-speak">🔊 Listen</button>' +
-      '<div class="lesson-actions"><button class="big-btn" id="vocab-next">'+(i<words.length-1?'Next word →':'Finish')+'</button></div>';
+      '<div class="lesson-actions"><button class="big-btn" id="vocab-next">'+(i<words.length-1?'Next word →':'Unscramble round →')+'</button></div>';
     speakArabic(w.word);
     $('vocab-speak').addEventListener('click', ()=>{ playTap(); speakArabic(w.word); });
     $('vocab-speak-en').addEventListener('click', ()=>{ playTap(); speakEnglish(w.english); });
     $('vocab-next').addEventListener('click', ()=>{
       playTap(); i++;
-      if(i>=words.length){
-        profile.coins += 6; profile.stars[n.id] = Math.max(starsFor(n.id),3);
-        unlockNext();
-        showReward({ title:n.module.title+' complete!', subtitle:'You met '+words.length+' new words', stars:3, coins:6 });
-      } else showWord();
+      if(i>=words.length){ i=0; showScramble(); } else showWord();
     });
+  }
+  /* Second round: unscramble each word's letters, with the real audio
+     clip available on tap so the child can listen while working it out. */
+  function showScramble(){
+    $('lesson-progress-fill').style.width = Math.round((words.length+i)/(words.length*2)*100)+'%';
+    const w = words[i];
+    const target = arabicGraphemes(w.word);
+    let bank;
+    do{ bank = shuffle(target.map((g,idx)=>({ g, idx }))); }
+    while(target.length > 1 && bank.every((item,idx)=>item.idx===idx));
+    let placed = [];
+    const card = $('stage-card');
+    function render(){
+      card.innerHTML =
+        '<p class="task-line">Unscramble the word</p>' +
+        '<div class="hero-emoji" style="font-size:60px;">'+w.emoji+'</div>' +
+        '<p class="task-sub">'+w.english+'</p>' +
+        '<button class="speak-btn" id="scramble-speak">🔊 Listen</button>' +
+        '<div class="scramble-answer" id="scramble-answer">' +
+          target.map((_,slotIdx)=>{
+            const item = placed[slotIdx];
+            return '<div class="scramble-slot'+(item?' filled':'')+'" data-slot="'+slotIdx+'">'+(item?item.g:'')+'</div>';
+          }).join('') +
+        '</div>' +
+        '<div class="scramble-bank" id="scramble-bank">' +
+          bank.map((item,bi)=>{
+            const used = placed.some(p=>p.bankIdx===bi);
+            return '<button type="button" class="scramble-tile'+(used?' used':'')+'" data-bank="'+bi+'">'+item.g+'</button>';
+          }).join('') +
+        '</div>' +
+        '<p class="feedback" id="scramble-fb"></p>';
+      $('scramble-speak').addEventListener('click', ()=>{ playTap(); speakArabic(w.word); });
+      card.querySelectorAll('.scramble-tile:not(.used)').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const bankIdx = parseInt(btn.dataset.bank,10);
+          placed.push({ g: bank[bankIdx].g, srcIdx: bank[bankIdx].idx, bankIdx: bankIdx });
+          playTap();
+          if(placed.length === target.length) checkAnswer(); else render();
+        });
+      });
+      card.querySelectorAll('.scramble-slot.filled').forEach(slotEl=>{
+        slotEl.addEventListener('click', ()=>{
+          playTap();
+          placed.splice(parseInt(slotEl.dataset.slot,10), 1);
+          render();
+        });
+      });
+    }
+    function checkAnswer(){
+      render();
+      const correct = placed.every((p,idx)=>p.srcIdx===idx);
+      if(correct){
+        playRight();
+        $('scramble-fb').textContent = '✅ '+w.word;
+        setTimeout(()=>{
+          i++;
+          if(i>=words.length){
+            profile.coins += 6; profile.stars[n.id] = Math.max(starsFor(n.id),3);
+            unlockNext();
+            showReward({ title:n.module.title+' complete!', subtitle:'You met '+words.length+' new words', stars:3, coins:6 });
+          } else showScramble();
+        }, 1100);
+      } else {
+        playWrong();
+        $('scramble-fb').textContent = 'Not quite — try again!';
+        setTimeout(()=>{ placed = []; render(); }, 700);
+      }
+    }
+    speakArabic(w.word);
+    render();
   }
   showWord();
 }
