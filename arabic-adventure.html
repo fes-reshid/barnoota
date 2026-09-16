@@ -408,7 +408,27 @@
   .cert-todo-lead{ text-align:center; font-size:15.5px; color:var(--ink-soft); margin:0 auto 16px; max-width:460px; }
   @media print{
     header.site, .no-print, .map-topbar{ display:none !important; }
-    body{ background:#fff; }
+    body{ background:#fff; margin:0; }
+    @page{ size:landscape; margin:0; }
+    .wrap{ max-width:100%; padding:0; margin:0; }
+    .cert-wrap{ padding:0; min-height:100vh; align-items:center; }
+    .cert-card{
+      max-width:none; width:94vw; height:90vh; margin:0 auto;
+      display:flex; flex-direction:column; justify-content:center;
+      box-shadow:none; outline-offset:-34px; padding:50px 60px;
+    }
+    .cert-mascot{ width:100px; }
+    .cert-bismillah{ font-size:30px; }
+    .cert-eyebrow{ font-size:18px; }
+    .cert-title{ font-size:44px; margin:8px 0 22px; }
+    .cert-line{ font-size:22px; }
+    .cert-name{ font-size:56px; margin:14px 0; }
+    .cert-course{ font-size:28px; margin:10px 0 4px; }
+    .cert-divider{ max-width:420px; margin:26px auto; }
+    .cert-meta-row{ font-size:19px; gap:50px; margin-top:16px; }
+    .cert-meta-row b{ font-size:23px; }
+    .cert-footer{ font-size:16px; margin-top:28px; }
+    .cert-corner{ width:36px; height:36px; }
   }
 
   @media (max-width:640px){
