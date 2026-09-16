@@ -99,6 +99,14 @@
   .plan-head p{ font-size:15.5px; color:#6b5a3f; margin:0; }
   .plan-actions{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:16px 0 30px; }
 
+  .best-tips{
+    max-width:520px; margin:0 auto 34px; background:#fdeecb; border:1.5px dashed var(--gold);
+    border-radius:16px; padding:18px 22px; text-align:center;
+  }
+  .best-tips h3{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); margin:0 0 10px; }
+  .best-tips ul{ list-style:none; margin:0; padding:0; text-align:left; display:inline-block; }
+  .best-tips li{ font-size:15px; line-height:1.7; }
+
   .week-block{ margin-bottom:34px; }
   .week-title{
     font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); text-align:center;
@@ -121,6 +129,38 @@
   .day-section.dua .dua-arabic{ font-family:'Amiri', serif; font-size:18px; direction:rtl; margin:4px 0; }
   .day-section.dua .dua-translit{ font-style:italic; color:#6b5a3f; font-size:13.5px; margin:2px 0; }
   .day-section.dua .dua-source{ font-size:12px; color:#8a7654; margin-top:4px; }
+
+  /* ---- quiz ---- */
+  .quiz-q{ font-size:14.5px; margin:0 0 8px; }
+  .quiz-opts{ display:flex; flex-wrap:wrap; gap:6px; }
+  .quiz-opt{
+    font-family:'Cormorant Garamond',serif; font-size:14px; padding:6px 12px; border-radius:12px;
+    border:1.5px solid var(--gold-soft); background:#fff; cursor:pointer; color:var(--ink-brown);
+  }
+  .quiz-opt:hover{ border-color:var(--card-accent, var(--gold)); }
+  .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); font-weight:700; }
+  .quiz-opt.wrong{ background:#f7dede; border-color:#a3352b; color:#a3352b; }
+  .quiz-opt[disabled]{ cursor:default; }
+  .quiz-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:6px; }
+
+  /* ---- scramble game ---- */
+  .scramble-hint{ font-size:13.5px; color:#6b5a3f; margin:0 0 8px; }
+  .scramble-row, .scramble-pool{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; min-height:38px; }
+  .scramble-slot{
+    width:30px; height:34px; border-bottom:2.5px solid var(--card-accent, var(--gold)); text-align:center;
+    font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); line-height:34px;
+  }
+  .letter-tile{
+    width:32px; height:34px; border-radius:8px; border:1.5px solid var(--card-accent, var(--gold-soft));
+    background:#fff; font-family:'Marcellus'; font-size:16px; cursor:pointer; color:var(--ink-navy);
+  }
+  .letter-tile[disabled]{ opacity:.3; cursor:default; }
+  .scramble-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .scramble-actions button{
+    font-family:'Cormorant Garamond',serif; font-size:13px; padding:5px 12px; border-radius:12px;
+    border:1.5px solid var(--gold-soft); background:#fff; cursor:pointer; color:var(--ink-brown);
+  }
+  .scramble-feedback{ min-height:20px; font-size:13.5px; font-weight:700; margin-top:8px; }
 
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; margin-top:20px; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
@@ -181,12 +221,21 @@
   <div id="plan-screen" class="hidden">
     <div class="plan-head">
       <h2 id="plan-greeting"></h2>
-      <p>One activity, one Qur'an focus, and one du'a a day — do a little bit each day!</p>
+      <p>One activity, a Qur'an focus, a du'a, a quick quiz and a mini-game a day — do a little bit each day! (If your school also assigned Mathletics or Reading Eggs tasks, keep those going too.)</p>
     </div>
     <div class="plan-actions">
       <button class="btn" id="print-btn">🖨️ Print This Plan</button>
       <button class="btn ghost" id="change-grade-btn">Choose a different class</button>
       <button class="btn ghost" id="logout-btn">Log out</button>
+    </div>
+    <div class="best-tips">
+      <h3>🌟 Be Your Best!</h3>
+      <ul>
+        <li>⭐ Try to complete a little bit each day.</li>
+        <li>⭐ Do your best and take pride in your work.</li>
+        <li>⭐ If you need help, ask a family member.</li>
+        <li>⭐ Have fun and enjoy your break!</li>
+      </ul>
     </div>
     <div id="plan-weeks"></div>
   </div>
@@ -229,7 +278,7 @@ const HOLIDAY_PLAN = [
     tasks:{ foundation:'Draw a picture of something fun you did today, then tell a grown-up about it out loud.',
       g1:'Write 1-2 sentences about your day. What was your favourite part?',
       g2:'Write a short paragraph (3-4 sentences) about your day so far.',
-      g3:'Write a paragraph about your day — include where you went, what you did, and how you felt.' },
+      g3:'Write a recount (3-4 paragraphs) about your holiday so far. Think about: where you went, what you did, who you were with, and what you enjoyed most. Use correct punctuation and interesting vocabulary!' },
     quran:{ name:'An-Nas', arabic:'النَّاس', num:114, ayat:6, meaning:'Asking Allah to protect us from bad whispers.' },
     duaId:'upon-waking' },
 
@@ -309,7 +358,7 @@ const HOLIDAY_PLAN = [
     tasks:{ foundation:'Practice counting from 1 to 20 with a grown-up.',
       g1:'Practice skip counting by 2s, 5s and 10s — how fast can you go?',
       g2:'Practice your 2, 3, 4, 5 and 10 times tables out loud.',
-      g3:'Practice your 2, 3, 4, 5, 10 and 11 times tables — say them, write them, or try a fun online game!' },
+      g3:'Keep practising your timetables (× tables) and skip counting by 2, 3, 4, 5, 10 and 11 — try saying them out loud, writing them down, or using fun online games to help you practise!' },
     quran:{ name:'Al-Humazah', arabic:'الهمزة', num:104, ayat:9, meaning:'A warning against gossip and mocking others.' },
     duaId:'zidni-ilma' },
 
@@ -345,7 +394,32 @@ const QURAN_TASKS = {
   g3:'Memorize the whole surah and recite it to a family member without looking.'
 };
 
+/* One word per day to unscramble in the mini-game below — the same
+   surah name shown in that day's Qur'an Focus, just with the letters
+   mixed up (apostrophes/hyphens stripped so every tile is a plain
+   letter). Kept as a flat array (not part of HOLIDAY_PLAN) so the
+   scramble target is obviously derived from, and never drifts from,
+   the surah name each day already teaches. */
+const SCRAMBLE_WORDS = ['NAS','FALAQ','IKHLAS','MASAD','NASR','KAFIRUN','KAWTHAR','MAUN','QURAYSH','FIL','HUMAZAH','ASR','TAKATHUR','FATIHA'];
+
 let selectedGrade = null;
+let audioCtx = null;
+
+function beep(freq, dur, type){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + dur + 0.02);
+  }catch(e){}
+}
+function playCorrect(){ beep(660, 0.1, 'sine'); setTimeout(() => beep(880, 0.14, 'sine'), 90); }
+function playWrong(){ beep(180, 0.2, 'sawtooth'); }
 
 function escapeHtml(s){
   const d = document.createElement('div');
@@ -373,6 +447,159 @@ function renderGradeGrid(){
     });
     grid.appendChild(card);
   });
+}
+
+/* Alternates two quiz styles day to day, both generated straight from
+   HOLIDAY_PLAN's own data (ayah counts, meanings) so there's nothing new
+   to fact-check: even days ask "how many ayat", odd days ask "what's it
+   about" with two other days' real meanings as honest wrong answers. */
+function buildQuizQuestion(dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  if(dayIndex % 2 === 0){
+    const correct = plan.quran.ayat;
+    const wrongPool = [correct - 1, correct + 1, correct + 2, correct - 2].filter(n => n > 0 && n !== correct);
+    const options = [correct, wrongPool[0], wrongPool[1]].sort(() => Math.random() - 0.5);
+    return { q: 'How many ayat (verses) does Surah ' + plan.quran.name + ' have?', options: options.map(String), correct: String(correct) };
+  }
+  const distractor1 = HOLIDAY_PLAN[(dayIndex + 3) % HOLIDAY_PLAN.length].quran.meaning;
+  const distractor2 = HOLIDAY_PLAN[(dayIndex + 7) % HOLIDAY_PLAN.length].quran.meaning;
+  const options = [plan.quran.meaning, distractor1, distractor2].sort(() => Math.random() - 0.5);
+  return { q: 'What is Surah ' + plan.quran.name + ' mainly about?', options: options, correct: plan.quran.meaning };
+}
+
+function renderQuiz(container, dayIndex){
+  const quiz = buildQuizQuestion(dayIndex);
+  const wrap = document.createElement('div');
+  wrap.className = 'day-section quiz';
+  wrap.innerHTML = '<div class="lbl">✅ Quick Quiz</div><p class="quiz-q">' + escapeHtml(quiz.q) + '</p>';
+  const opts = document.createElement('div');
+  opts.className = 'quiz-opts';
+  const feedback = document.createElement('p');
+  feedback.className = 'quiz-feedback';
+  quiz.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => {
+      const isRight = opt === quiz.correct;
+      btn.classList.add(isRight ? 'correct' : 'wrong');
+      if(isRight){
+        playCorrect();
+        feedback.textContent = '🎉 Correct!';
+        feedback.style.color = 'var(--green-dark)';
+        opts.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+      } else {
+        playWrong();
+        feedback.textContent = 'Not quite — try another answer!';
+        feedback.style.color = '#a3352b';
+        btn.disabled = true;
+      }
+    });
+    opts.appendChild(btn);
+  });
+  wrap.appendChild(opts);
+  wrap.appendChild(feedback);
+  container.appendChild(wrap);
+}
+
+function shuffleLetters(word){
+  const letters = word.split('');
+  for(let i = letters.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [letters[i], letters[j]] = [letters[j], letters[i]];
+  }
+  return letters;
+}
+
+function renderScrambleGame(container, dayIndex){
+  const plan = HOLIDAY_PLAN[dayIndex];
+  const word = SCRAMBLE_WORDS[dayIndex];
+  let scrambled = shuffleLetters(word);
+  if(scrambled.join('') === word && word.length > 1){ scrambled.reverse(); }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'day-section game';
+  wrap.innerHTML = '<div class="lbl">🧩 Unscramble the Surah Name</div><p class="scramble-hint">Tap the letters in order to spell today\'s surah!</p>';
+
+  const slotsRow = document.createElement('div');
+  slotsRow.className = 'scramble-row';
+  const pool = document.createElement('div');
+  pool.className = 'scramble-pool';
+  const actions = document.createElement('div');
+  actions.className = 'scramble-actions';
+  const feedback = document.createElement('p');
+  feedback.className = 'scramble-feedback';
+
+  let picked = [];
+
+  function renderSlots(){
+    slotsRow.innerHTML = '';
+    for(let i = 0; i < word.length; i++){
+      const slot = document.createElement('span');
+      slot.className = 'scramble-slot';
+      slot.textContent = picked[i] || '';
+      slotsRow.appendChild(slot);
+    }
+  }
+
+  function checkComplete(){
+    if(picked.length !== word.length) return;
+    const guess = picked.join('');
+    if(guess === word){
+      playCorrect();
+      feedback.textContent = '🎉 You got it! It\'s Surah ' + plan.quran.name + '!';
+      feedback.style.color = 'var(--green-dark)';
+      pool.querySelectorAll('.letter-tile').forEach(t => t.disabled = true);
+    } else {
+      playWrong();
+      feedback.textContent = 'Not quite — tap Clear and try again!';
+      feedback.style.color = '#a3352b';
+    }
+  }
+
+  scrambled.forEach((letter, idx) => {
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = 'letter-tile';
+    tile.textContent = letter;
+    tile.addEventListener('click', () => {
+      if(tile.disabled || picked.length >= word.length) return;
+      picked.push(letter);
+      tile.disabled = true;
+      tile.dataset.used = idx;
+      renderSlots();
+      checkComplete();
+    });
+    pool.appendChild(tile);
+  });
+
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.textContent = '↺ Clear';
+  clearBtn.addEventListener('click', () => {
+    picked = [];
+    feedback.textContent = '';
+    pool.querySelectorAll('.letter-tile').forEach(t => { t.disabled = false; });
+    renderSlots();
+  });
+
+  const hintBtn = document.createElement('button');
+  hintBtn.type = 'button';
+  hintBtn.textContent = '💡 Hint (first letter)';
+  hintBtn.addEventListener('click', () => {
+    feedback.textContent = 'It starts with "' + word[0] + '"';
+    feedback.style.color = '#8a7654';
+  });
+
+  actions.appendChild(clearBtn);
+  actions.appendChild(hintBtn);
+  renderSlots();
+  wrap.appendChild(slotsRow);
+  wrap.appendChild(pool);
+  wrap.appendChild(actions);
+  wrap.appendChild(feedback);
+  container.appendChild(wrap);
 }
 
 function renderPlan(name, gradeId){
@@ -410,6 +637,8 @@ function renderPlan(name, gradeId){
           '<p class="dua-translit">' + escapeHtml(dua.transliteration) + '</p>' +
           '<p>' + escapeHtml(dua.english) + '</p>' +
           '<p class="dua-source">' + escapeHtml(dua.source) + '</p></div>';
+      renderQuiz(card, dayNum - 1);
+      renderScrambleGame(card, dayNum - 1);
       dayGrid.appendChild(card);
     }
     weekBlock.appendChild(dayGrid);
