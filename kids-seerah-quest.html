@@ -1380,7 +1380,7 @@ function renderStep(){
     const ab = document.getElementById('arabic-speak-btn');
     if(ab) ab.addEventListener('click', e => { e.stopPropagation(); playTap(); speakArabic(S.arabic); });
     const qb = document.getElementById('quran-speak-btn');
-    if(qb) qb.addEventListener('click', e => { e.stopPropagation(); playTap(); speakArabic(S.quran.arabic); });
+    if(qb) qb.addEventListener('click', e => { e.stopPropagation(); playTap(); speakQuranAyah(S.quran); });
     speakEnglish(S.story);
     return;
   }
@@ -1781,6 +1781,24 @@ function speakArabic(text){
       window.speechSynthesis.speak(u);
     }catch(e){}
   });
+}
+function pad3(n){ return String(n).padStart(3, '0'); }
+/* An actual Qur'an ayah (unlike a story's own Arabic phrase) has a real
+   public recitation to link to -- Sheikh Al-Afasy's per-ayah archive on
+   EveryAyah.com, the same source kids-holiday-homework.html uses -- so
+   try that first, before the generic speakArabic() fallback chain. */
+function speakQuranAyah(q){
+  if(!soundOn || !q) return;
+  if(q.surahNum && q.ayahNum){
+    try{
+      const audio = new Audio('https://everyayah.com/data/Alafasy_128kbps/' + pad3(q.surahNum) + pad3(q.ayahNum) + '.mp3');
+      audio.onerror = () => speakArabic(q.arabic);
+      const p = audio.play();
+      if(p && p.catch) p.catch(() => speakArabic(q.arabic));
+      return;
+    }catch(e){}
+  }
+  speakArabic(q.arabic);
 }
 
 /* ===================== EVENTS ===================== */

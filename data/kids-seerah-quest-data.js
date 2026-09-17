@@ -162,7 +162,8 @@ window.SEERAH = [
          {s:'He could read and write before this.', a:false} ],
     benefit:'We learn that the Qurʾān is Allah’s own words, sent down to guide us, and it is worth reading and reflecting on every single day.',
     quran:{ arabic:'ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِي خَلَقَ', translit:'Iqraʾ bismi Rabbika-lladhī khalaq',
-            translation:'Read in the name of your Lord who created.', ref:'Surah Al-ʿAlaq, 96:1' } },
+            translation:'Read in the name of your Lord who created.', ref:'Surah Al-ʿAlaq, 96:1',
+            surahNum:96, ayahNum:1 } },
 
   /* ---------- Map 3 · The First Muslims ---------- */
   { title:'The First to Believe', teach:'Khadījah believes', emoji:'💚', arabic:'أَوَّلُ مُؤْمِنَة',
