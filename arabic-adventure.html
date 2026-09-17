@@ -154,6 +154,24 @@
   .map-nav.prev{ left:8px; }
   .map-nav.next{ right:8px; }
   svg.map-svg{ display:block; width:100%; height:auto; }
+  /* On a phone held upright, the 1000-unit-wide map SVG has to shrink so
+     much to fit the narrow width that its lesson stones become too
+     small to reliably tap. Rather than just enlarging them (which would
+     make the whole map absurdly tall), force a landscape-shaped view —
+     there's no cross-browser API to lock device orientation outside an
+     installed PWA (iOS Safari in particular has none), so this rotates
+     the map screen itself to fill the viewport as landscape, giving
+     roughly double the width to draw the road and nodes at. */
+  @media (max-width:700px) and (orientation:portrait){
+    body:has(#screen-map:not(.hidden)) header.site{ display:none; }
+    #screen-map:not(.hidden){
+      position:fixed; top:0; left:100%; z-index:60;
+      width:100vh; width:100dvh; height:100vw; height:100dvw;
+      transform-origin:0 0; transform:rotate(90deg);
+      overflow-y:auto; overflow-x:hidden;
+      background:var(--cream); margin:0; box-sizing:border-box; padding:12px;
+    }
+  }
   .node-num{ font-family:'Amiri', serif; font-size:28px; fill:#fff8ea; }
   .node-num.locked{ fill:#f2f1ee; font-family:'Baloo 2', sans-serif; font-size:24px; }
   .node-g{ cursor:pointer; }
