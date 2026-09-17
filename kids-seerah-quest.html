@@ -289,6 +289,9 @@
   .drag-chip:disabled{ cursor:default; }
 
   /* ---- match it up ---- */
+  .match-wrap{ position:relative; width:100%; max-width:560px; margin:0 auto; }
+  .match-lines{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
+  .match-line-drawn{ stroke:#3d9b4f; stroke-width:3; stroke-linecap:round; }
   .match-grid{ display:flex; gap:24px; justify-content:center; width:100%; max-width:560px; margin:0 auto; }
   .match-col{ flex:1; display:flex; flex-direction:column; gap:10px; }
   .match-item{
@@ -737,7 +740,7 @@ let soundOn = true;
    comes back from the cloud into a shape the rest of the game can trust. */
 function defaultProfile(username){
   return { name: username || 'Explorer', avatar: AVATARS[0], unlocked: 1,
-           stars: new Array(TOTAL_LESSONS).fill(0), coins: 0, certs: {} };
+           stars: new Array(TOTAL_LESSONS).fill(0), coins: 0, certs: {}, certQuiz: {} };
 }
 function normalizeProfile(d, usernameFallback){
   if(!d || typeof d !== 'object') d = {};
@@ -747,6 +750,7 @@ function normalizeProfile(d, usernameFallback){
   if(typeof d.coins !== 'number') d.coins = 0;
   if(typeof d.avatar !== 'string' || !d.avatar) d.avatar = AVATARS[0];
   if(!d.certs || typeof d.certs !== 'object') d.certs = {};
+  if(!d.certQuiz || typeof d.certQuiz !== 'object') d.certQuiz = {};
   return d;
 }
 /* Written on every change; localStorage is just an offline snapshot now —
@@ -803,6 +807,7 @@ function mapLessonNos(mi){
 function mapDoneCount(mi){ return mapLessonNos(mi).filter(n => profile.stars[n - 1] > 0).length; }
 function mapComplete(mi){ return mapDoneCount(mi) === mapLessonNos(mi).length; }
 function mapStars(mi){ return mapLessonNos(mi).reduce((s, n) => s + profile.stars[n - 1], 0); }
+function mapQuizPassed(mi){ return !!(profile.certQuiz && profile.certQuiz[mi]); }
 
 /* The award date and ID are stored the first time, so a reprint always matches the first print. */
 function certRecord(mi){
@@ -831,11 +836,12 @@ function renderMapCertRow(){
   const done = mapDoneCount(viewMap);
   const total = mapLessonNos(viewMap).length;
   const ready = done === total;
-  row.innerHTML = '<button class="cert-cta' + (ready ? '' : ' locked') + '" id="map-cert-btn" type="button">' +
-    (ready
-      ? '🎓 Get my Map ' + (viewMap + 1) + ' certificate'
-      : '🎓 Map ' + (viewMap + 1) + ' certificate · ' + done + ' of ' + total + ' lessons done') +
-    '</button>';
+  const label = !ready
+    ? '🎓 Map ' + (viewMap + 1) + ' certificate · ' + done + ' of ' + total + ' lessons done'
+    : (mapQuizPassed(viewMap)
+        ? '🎓 Get my Map ' + (viewMap + 1) + ' certificate'
+        : '📝 Take the Map ' + (viewMap + 1) + ' Certificate Quiz');
+  row.innerHTML = '<button class="cert-cta' + (ready ? '' : ' locked') + '" id="map-cert-btn" type="button">' + label + '</button>';
   document.getElementById('map-cert-btn').addEventListener('click', () => { playTap(); showCertificate(viewMap); });
 }
 
@@ -892,9 +898,10 @@ function showCertificate(mi){
   const nos = mapLessonNos(mi);
   const cert = MAPS[mi].cert;
   const ready = mapComplete(mi);
+  const finalReady = ready && mapQuizPassed(mi);
   document.getElementById('cert-head').textContent = 'Map ' + (mi + 1) + ' Certificate';
-  document.getElementById('cert-print-btn').classList.toggle('hidden', !ready);
-  document.getElementById('certname-edit-btn').classList.toggle('hidden', !ready);
+  document.getElementById('cert-print-btn').classList.toggle('hidden', !finalReady);
+  document.getElementById('certname-edit-btn').classList.toggle('hidden', !finalReady);
 
   if(!ready){
     box.innerHTML =
@@ -912,6 +919,16 @@ function showCertificate(mi){
       playTap();
       startLesson(parseInt(b.dataset.play, 10) - 1);
     }));
+    showScreen('cert-screen');
+    return;
+  }
+
+  if(!mapQuizPassed(mi)){
+    box.innerHTML =
+      '<p class="cert-todo-lead">Great work finishing every lesson on Map ' + (mi + 1) + '! ' +
+      'Answer 11 quick questions and match 4 pairs to earn your certificate.</p>' +
+      '<div class="map-cert-row"><button class="cert-cta" id="start-map-quiz-btn" type="button">📝 Start the Certificate Quiz</button></div>';
+    document.getElementById('start-map-quiz-btn').addEventListener('click', () => { playTap(); startMapQuiz(mi); });
     showScreen('cert-screen');
     return;
   }
@@ -947,6 +964,109 @@ function showCertificate(mi){
   showScreen('cert-screen');
 }
 
+/* ===================== MAP CERTIFICATE QUIZ ===================== */
+/* A short gate between "every lesson done" and the printable certificate --
+   11 multiple-choice questions plus a 4-pair matching board, built entirely
+   from that map's own six stories (their existing picks + English topic/
+   Arabic term pairs), so no new content has to be authored just for this. */
+let mapQuiz = null; // { mi, mcqs:[{prompt, options}], matchPairs:[{left,right}], stepIndex, mistakes }
+
+function buildMapQuizMcqs(mi){
+  const pool = [];
+  mapLessonNos(mi).forEach(n => { SEERAH[n - 1].picks.forEach(p => pool.push(p)); });
+  const picked = shuffleAvoidRepeat('certmcq:' + mi, pool).slice(0, Math.min(11, pool.length));
+  return picked.map((p, i) => ({
+    prompt: p.q,
+    options: shuffleAvoidRepeat('certmcq:' + mi + ':' + i, p.options.map((o, oi) => ({ show:o, correct: oi === 0 })))
+  }));
+}
+function buildMapQuizMatchPairs(mi){
+  const pairs = mapLessonNos(mi).map(n => {
+    const S = SEERAH[n - 1];
+    return { left:S.teach, right:S.arabic };
+  });
+  return shuffleAvoidRepeat('certmatch:' + mi, pairs).slice(0, Math.min(4, pairs.length));
+}
+function startMapQuiz(mi){
+  mapQuiz = { mi, mcqs: buildMapQuizMcqs(mi), matchPairs: buildMapQuizMatchPairs(mi), stepIndex:0, mistakes:0 };
+  renderMapQuiz();
+}
+function renderMapQuiz(){
+  const box = document.getElementById('cert-body');
+  const total = mapQuiz.mcqs.length + 1; // +1 for the single matching board at the end
+  document.getElementById('cert-head').textContent = 'Map ' + (mapQuiz.mi + 1) + ' Certificate Quiz';
+  document.getElementById('cert-print-btn').classList.add('hidden');
+  document.getElementById('certname-edit-btn').classList.add('hidden');
+
+  if(mapQuiz.stepIndex < mapQuiz.mcqs.length){
+    const q = mapQuiz.mcqs[mapQuiz.stepIndex];
+    box.innerHTML =
+      '<p class="tf-progress">Question ' + (mapQuiz.stepIndex + 1) + ' of ' + total + '</p>' +
+      '<p class="task-line">' + escapeHtml(q.prompt) + '</p>' +
+      '<div class="choice-grid cols-1" id="quiz-choice-grid"></div>' +
+      '<div class="feedback" id="feedback"></div>';
+    const grid = document.getElementById('quiz-choice-grid');
+    q.options.forEach(opt => {
+      const el = document.createElement('div');
+      el.className = 'choice';
+      el.innerHTML = '<span class="c-name">' + escapeHtml(opt.show) + '</span>';
+      el.addEventListener('click', () => handleMapQuizPick(el, opt));
+      grid.appendChild(el);
+    });
+    speakEnglish(q.prompt);
+  } else {
+    box.innerHTML =
+      '<p class="tf-progress">Matching · ' + total + ' of ' + total + '</p>' +
+      '<p class="task-line">Match each lesson to its Arabic term</p>' +
+      '<p class="task-sub">Tap a card on the left, then tap the one on the right that matches it.</p>' +
+      '<div class="match-wrap" id="match-wrap">' +
+        '<div class="match-grid"><div class="match-col" id="match-left"></div><div class="match-col" id="match-right"></div></div>' +
+        '<svg class="match-lines" id="match-lines"></svg>' +
+      '</div>' +
+      '<div class="feedback" id="feedback"></div>';
+    wireMatchBoard(mapQuiz.matchPairs, 'certmatchboard:' + mapQuiz.mi, {
+      wrap: document.getElementById('match-wrap'),
+      leftCol: document.getElementById('match-left'),
+      rightCol: document.getElementById('match-right'),
+      svg: document.getElementById('match-lines'),
+      feedback: document.getElementById('feedback')
+    }, {
+      onWrong: () => { mapQuiz.mistakes++; },
+      onComplete: finishMapQuiz
+    });
+    speakEnglish('Match each lesson to its Arabic term');
+  }
+  showScreen('cert-screen');
+}
+function handleMapQuizPick(el, opt){
+  const grid = document.getElementById('quiz-choice-grid');
+  const fb = document.getElementById('feedback');
+  if(opt.correct){
+    playRight();
+    el.classList.add('correct');
+    grid.querySelectorAll('.choice').forEach(c => c.classList.add('locked'));
+    fb.className = 'feedback good';
+    fb.textContent = ['Yes! 🌟', 'Perfect! 🎉', 'Well done! 👏', 'Māshāʼ Allāh! ✨'][Math.floor(Math.random() * 4)];
+    setTimeout(() => { mapQuiz.stepIndex++; renderMapQuiz(); }, 850);
+  } else {
+    mapQuiz.mistakes++;
+    playWrong();
+    el.classList.add('wrong');
+    fb.className = 'feedback bad';
+    fb.textContent = 'Not that one — try again!';
+    setTimeout(() => el.classList.remove('wrong'), 450);
+  }
+}
+function finishMapQuiz(){
+  const mi = mapQuiz.mi;
+  if(!profile.certQuiz || typeof profile.certQuiz !== 'object') profile.certQuiz = {};
+  profile.certQuiz[mi] = true;
+  saveProfile();
+  mapQuiz = null;
+  playWin();
+  burstConfetti();
+  showCertificate(mi);
+}
 
 /* ===================== SOUND ===================== */
 /* Pick the clearest, most natural-sounding male English voice this browser/OS offers,
@@ -1444,10 +1564,18 @@ function renderStep(){
 
   if(step.type === 'tf'){
     lesson.tfAt = 0;
+    // Every story used to show its statements True, True, False in that
+    // exact order, so a child could score well by pattern-matching
+    // instead of reading. Reshuffling the order each playthrough removes
+    // that shortcut. speakReadyAt is stamped when a statement appears and
+    // checked on tap, so an answer given before there was time to even
+    // hear/read the sentence is treated as a guess, not an answer.
+    const tfOrder = shuffleAvoidRepeat(lesson.index + ':tf', step.items.slice());
+    let tfShownAt = 0;
     const paintTF = () => {
-      const it = step.items[lesson.tfAt];
+      const it = tfOrder[lesson.tfAt];
       card.innerHTML =
-        '<p class="tf-progress">Sentence ' + (lesson.tfAt + 1) + ' of ' + step.items.length + '</p>' +
+        '<p class="tf-progress">Sentence ' + (lesson.tfAt + 1) + ' of ' + tfOrder.length + '</p>' +
         '<p class="tf-statement">' + escapeHtml(it.s) + '</p>' +
         '<div class="tf-btns">' +
           '<button class="tf-btn yes" type="button" data-a="1">👍 True</button>' +
@@ -1455,10 +1583,17 @@ function renderStep(){
         '</div>' +
         '<div class="feedback" id="feedback"></div>';
       speakEnglish(it.s);
+      tfShownAt = Date.now();
+      const minReadMs = Math.max(900, Math.min(2200, it.s.length * 35));
       card.querySelectorAll('.tf-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const said = btn.dataset.a === '1';
           const fb = document.getElementById('feedback');
+          if(Date.now() - tfShownAt < minReadMs){
+            fb.className = 'feedback bad';
+            fb.textContent = '👀 You are clicking without reading — please read the sentence first!';
+            return;
+          }
+          const said = btn.dataset.a === '1';
           if(said === it.a){
             playRight();
             btn.classList.add('right');
@@ -1466,7 +1601,7 @@ function renderStep(){
             fb.textContent = ['Yes! 🌟', 'That is right! 🎉', 'Well done! 👏'][Math.floor(Math.random() * 3)];
             lesson.tfAt++;
             setTimeout(() => {
-              if(lesson.tfAt >= step.items.length) clearStep();
+              if(lesson.tfAt >= tfOrder.length) clearStep();
               else paintTF();
             }, 900);
           } else {
@@ -1508,56 +1643,20 @@ function renderStep(){
     card.innerHTML =
       '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
       '<p class="task-sub">Tap a card on the left, then tap the one on the right that matches it.</p>' +
-      '<div class="match-grid"><div class="match-col" id="match-left"></div><div class="match-col" id="match-right"></div></div>' +
+      '<div class="match-wrap" id="match-wrap">' +
+        '<div class="match-grid"><div class="match-col" id="match-left"></div><div class="match-col" id="match-right"></div></div>' +
+        '<svg class="match-lines" id="match-lines"></svg>' +
+      '</div>' +
       '<div class="feedback" id="feedback"></div>';
-    const leftCol = document.getElementById('match-left');
-    const rightCol = document.getElementById('match-right');
-    const rightShuffled = shuffleAvoidRepeat(lesson.index + ':match', step.pairs.map((p, i) => ({ text:p.right, pairId:i })));
-    let selectedLeft = null;
-    let selectedLeftEl = null;
-    const matchedIds = new Set();
-    step.pairs.forEach((p, i) => {
-      const el = document.createElement('div');
-      el.className = 'match-item';
-      el.textContent = p.left;
-      el.addEventListener('click', () => {
-        if(el.classList.contains('matched')) return;
-        leftCol.querySelectorAll('.match-item').forEach(x => x.classList.remove('selected'));
-        el.classList.add('selected');
-        selectedLeft = i;
-        selectedLeftEl = el;
-        playTap();
-      });
-      leftCol.appendChild(el);
-    });
-    rightShuffled.forEach(r => {
-      const el = document.createElement('div');
-      el.className = 'match-item';
-      el.textContent = r.text;
-      el.addEventListener('click', () => {
-        if(el.classList.contains('matched') || selectedLeft === null) return;
-        const fb = document.getElementById('feedback');
-        if(r.pairId === selectedLeft){
-          playRight();
-          selectedLeftEl.classList.remove('selected');
-          selectedLeftEl.classList.add('matched');
-          el.classList.add('matched');
-          matchedIds.add(selectedLeft);
-          selectedLeft = null;
-          selectedLeftEl = null;
-          fb.className = 'feedback good';
-          fb.textContent = matchedIds.size === step.pairs.length ? 'All matched! 🎉' : 'Yes — keep going!';
-          if(matchedIds.size === step.pairs.length) setTimeout(clearStep, 850);
-        } else {
-          lesson.mistakes++;
-          playWrong();
-          el.classList.add('shake');
-          setTimeout(() => el.classList.remove('shake'), 450);
-          fb.className = 'feedback bad';
-          fb.textContent = 'Not a match — try again!';
-        }
-      });
-      rightCol.appendChild(el);
+    wireMatchBoard(step.pairs, lesson.index + ':match', {
+      wrap: document.getElementById('match-wrap'),
+      leftCol: document.getElementById('match-left'),
+      rightCol: document.getElementById('match-right'),
+      svg: document.getElementById('match-lines'),
+      feedback: document.getElementById('feedback')
+    }, {
+      onWrong: () => { lesson.mistakes++; },
+      onComplete: clearStep
     });
     speakEnglish(step.prompt);
     return;
@@ -1600,6 +1699,78 @@ function handlePick(el, opt){
     fb.textContent = 'Not that one — try again!';
     setTimeout(() => el.classList.remove('wrong'), 450);
   }
+}
+
+/* Shared by the per-lesson "Match it up" step and the map certificate
+   quiz's matching board -- builds the two tap-to-select columns and, on
+   every correct pair, draws an SVG line connecting the two cards so a
+   match reads as a real connection instead of just a colour change.
+   `pairs` is [{left, right}, ...]; `els` names the DOM pieces the caller
+   already put in place; `callbacks.onWrong`/`onComplete` let each caller
+   track mistakes and finish in its own way (lesson vs quiz). */
+function wireMatchBoard(pairs, shuffleKey, els, callbacks){
+  const rightShuffled = shuffleAvoidRepeat(shuffleKey, pairs.map((p, i) => ({ text:p.right, pairId:i })));
+  let selectedLeft = null;
+  let selectedLeftEl = null;
+  const matchedIds = new Set();
+
+  function drawLine(leftEl, rightEl){
+    const wrapRect = els.wrap.getBoundingClientRect();
+    const lr = leftEl.getBoundingClientRect();
+    const rr = rightEl.getBoundingClientRect();
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', lr.right - wrapRect.left);
+    line.setAttribute('y1', lr.top + lr.height / 2 - wrapRect.top);
+    line.setAttribute('x2', rr.left - wrapRect.left);
+    line.setAttribute('y2', rr.top + rr.height / 2 - wrapRect.top);
+    line.setAttribute('class', 'match-line-drawn');
+    els.svg.appendChild(line);
+  }
+
+  pairs.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.textContent = p.left;
+    el.addEventListener('click', () => {
+      if(el.classList.contains('matched')) return;
+      els.leftCol.querySelectorAll('.match-item').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedLeft = i;
+      selectedLeftEl = el;
+      playTap();
+    });
+    els.leftCol.appendChild(el);
+  });
+  rightShuffled.forEach(r => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.textContent = r.text;
+    el.addEventListener('click', () => {
+      if(el.classList.contains('matched') || selectedLeft === null) return;
+      if(r.pairId === selectedLeft){
+        playRight();
+        selectedLeftEl.classList.remove('selected');
+        selectedLeftEl.classList.add('matched');
+        el.classList.add('matched');
+        drawLine(selectedLeftEl, el);
+        matchedIds.add(selectedLeft);
+        selectedLeft = null;
+        selectedLeftEl = null;
+        els.feedback.className = 'feedback good';
+        const allDone = matchedIds.size === pairs.length;
+        els.feedback.textContent = allDone ? 'All matched! 🎉' : 'Yes — keep going!';
+        if(allDone) setTimeout(callbacks.onComplete, 850);
+      } else {
+        callbacks.onWrong();
+        playWrong();
+        el.classList.add('shake');
+        setTimeout(() => el.classList.remove('shake'), 450);
+        els.feedback.className = 'feedback bad';
+        els.feedback.textContent = 'Not a match — try again!';
+      }
+    });
+    els.rightCol.appendChild(el);
+  });
 }
 
 /* Pointer Events (not the native HTML5 drag-and-drop API) so this works

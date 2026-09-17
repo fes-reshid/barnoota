@@ -28,7 +28,7 @@ window.SEERAH = [
             items:['Abrahah gathers a huge army','The army marches towards Makkah','Allah sends flocks of birds','The army is destroyed'] },
     tf:[ {s:'Abrahah brought an elephant with his army.', a:true},
          {s:'The people of Makkah defeated the army themselves.', a:false},
-         {s:'Allah protected His House.', a:true} ],
+         {s:'The Kaʿbah was destroyed by Abrahah’s army.', a:false} ],
     benefit:'We learn that Allah is always able to protect what belongs to Him, no matter how strong the enemy seems.' },
 
   { title:'A Blessed Birth', teach:'Born in Makkah', emoji:'🌅', arabic:'مُحَمَّد ﷺ',
@@ -53,7 +53,7 @@ window.SEERAH = [
     order:{ prompt:'Put the desert years in order',
             items:['Ḥalīmah comes to Makkah looking for a baby','She takes Muhammad ﷺ home','Blessing comes to her family','He returns to his mother Āminah'] },
     tf:[ {s:'Ḥalīmah found blessing in her home after he came.', a:true},
-         {s:'He learned pure Arabic in the desert.', a:true},
+         {s:'He stayed in the city his whole childhood.', a:false},
          {s:'Ḥalīmah was his mother.', a:false} ],
     benefit:'We learn that kindness to a child, even one who is not your own, can bring great blessing into a whole family.' },
 
@@ -79,7 +79,7 @@ window.SEERAH = [
     order:{ prompt:'Put a shepherd’s day in order',
             items:['He leads the sheep out to the hills','He watches over them all day','He keeps them safe from harm','He brings them home again'] },
     tf:[ {s:'He earned his own keep as a shepherd.', a:true},
-         {s:'He said every prophet had been a shepherd.', a:true},
+         {s:'He said prophets never worked as shepherds.', a:false},
          {s:'He never worked as a boy.', a:false} ],
     benefit:'We learn that even small, humble jobs can teach us skills we will need for much bigger responsibilities later in life.' },
 
@@ -106,7 +106,7 @@ window.SEERAH = [
     order:{ prompt:'Put a trading journey in order',
             items:['The caravan is loaded in Makkah','They travel north to Shām','The goods are sold honestly','The caravan returns home'] },
     tf:[ {s:'He told buyers the truth about his goods.', a:true},
-         {s:'He weighed goods fairly.', a:true},
+         {s:'He weighed goods unfairly to earn more.', a:false},
          {s:'He took more than his share.', a:false} ],
     benefit:'We learn that being fair and truthful in our dealings with others, even in small things like buying and selling, matters greatly to Allah.' },
 
@@ -132,7 +132,7 @@ window.SEERAH = [
     order:{ prompt:'Put the Black Stone story in order',
             items:['The Kaʿbah is being rebuilt','The tribes argue over the stone','Muhammad ﷺ walks in','Every tribe carries it on one cloak'] },
     tf:[ {s:'He used a cloak so every tribe could share the honour.', a:true},
-         {s:'The tribes were about to fight.', a:true},
+         {s:'The tribes agreed peacefully from the very start.', a:false},
          {s:'One tribe alone carried the stone.', a:false} ],
     benefit:'We learn that a wise and fair solution can bring people together instead of letting pride and rivalry divide them.' },
 
@@ -158,7 +158,7 @@ window.SEERAH = [
     order:{ prompt:'Put the first revelation in order',
             items:['He is alone in the cave of Ḥirāʾ','Jibrīl comes and says "Read!"','The first verses of the Qurʾān are taught','He hurries home to Khadījah'] },
     tf:[ {s:'The first revelation came in the cave of Ḥirāʾ.', a:true},
-         {s:'He was forty years old.', a:true},
+         {s:'He was a young boy when revelation came.', a:false},
          {s:'He could read and write before this.', a:false} ],
     benefit:'We learn that the Qurʾān is Allah’s own words, sent down to guide us, and it is worth reading and reflecting on every single day.',
     quran:{ arabic:'ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِي خَلَقَ', translit:'Iqraʾ bismi Rabbika-lladhī khalaq',
@@ -188,7 +188,7 @@ window.SEERAH = [
     order:{ prompt:'Put the first believers in order',
             items:['Khadījah believes first','Abū Bakr believes at once','Young ʿAlī believes','Abū Bakr brings others to Islam'] },
     tf:[ {s:'Abū Bakr was his closest friend.', a:true},
-         {s:'ʿAlī lived in the Prophet’s home.', a:true},
+         {s:'ʿAlī was the last person to accept Islam.', a:false},
          {s:'Abū Bakr needed a long time to believe.', a:false} ],
     benefit:'We learn that true friendship means standing firmly beside someone, even when believing them costs us something.' },
 
@@ -213,7 +213,7 @@ window.SEERAH = [
       {q:'What did he call the people to do?', options:['Worship Allah alone','Move to a new city','Stop trading']}],
     order:{ prompt:'Put the open call in order',
             items:['Allah commands him to call openly','He climbs the hill of Ṣafā','He asks if they would believe him','He calls them to worship Allah alone'] },
-    tf:[ {s:'The people admitted he had never lied.', a:true},
+    tf:[ {s:'The people accused him of lying many times before.', a:false},
          {s:'Some people accepted and some refused.', a:true},
          {s:'Everyone in Makkah accepted straight away.', a:false} ],
     benefit:'We learn that speaking the truth openly takes courage, especially when we know not everyone will want to hear it.' },
@@ -240,7 +240,7 @@ window.SEERAH = [
     order:{ prompt:'Put the journey in order',
             items:['Life in Makkah becomes very hard','A group sails to Abyssinia','Makkah sends men to bring them back','The Negus lets them stay in safety'] },
     tf:[ {s:'The Negus was a just king.', a:true},
-         {s:'Jaʿfar recited verses about ʿĪsā and Maryam.', a:true},
+         {s:'Jaʿfar refused to speak in front of the king.', a:false},
          {s:'The Muslims were sent back to Makkah.', a:false} ],
     benefit:'We learn that when things become too hard in one place, it can be wise and courageous to seek safety elsewhere, trusting Allah.' },
 
@@ -267,7 +267,7 @@ window.SEERAH = [
     order:{ prompt:'Put the Year of Sorrow in order',
             items:['The boycott finally ends','Khadījah passes away','Abū Ṭālib passes away','The year is named ʿĀm al-Ḥuzn'] },
     tf:[ {s:'Khadījah supported him for twenty-five years.', a:true},
-         {s:'Abū Ṭālib had protected him for many years.', a:true},
+         {s:'Abū Ṭālib passed away many years before this.', a:false},
          {s:'That year was his happiest.', a:false} ],
     benefit:'We learn that even in our saddest times, we can still hold on to patience and keep doing what is right.' },
 
@@ -293,7 +293,7 @@ window.SEERAH = [
     order:{ prompt:'Put the Night Journey in order',
             items:['He is taken from Makkah by night','He reaches Masjid al-Aqṣā','He leads the prophets in prayer','He is raised through the heavens'] },
     tf:[ {s:'The five daily prayers were given on this night.', a:true},
-         {s:'He led the earlier prophets in prayer.', a:true},
+         {s:'He journeyed there completely alone, meeting no one.', a:false},
          {s:'The journey took many months.', a:false} ],
     benefit:'We learn the importance of the five daily prayers, a precious gift given directly on this remarkable night.' },
 
@@ -319,7 +319,7 @@ window.SEERAH = [
     order:{ prompt:'Put the Hijrah in order',
             items:['Allah gives permission to migrate','They leave Makkah at night','They hide in the cave of Thawr','They travel on towards Yathrib'] },
     tf:[ {s:'The Islamic calendar begins with the Hijrah.', a:true},
-         {s:'They hid in the cave for three days.', a:true},
+         {s:'They hid in the cave for only one night.', a:false},
          {s:'They travelled to Ṭāʾif.', a:false} ],
     benefit:'We learn that true trust in Allah means staying calm and hopeful even when danger feels very close.' },
 
@@ -346,7 +346,7 @@ window.SEERAH = [
     order:{ prompt:'Put the first days in Madīnah in order',
             items:['He arrives in Madīnah','A masjid is built, and he carries bricks too','Muhājirūn and Anṣār are paired as brothers','The Anṣār share their homes and food'] },
     tf:[ {s:'He worked on the masjid with his own hands.', a:true},
-         {s:'The Muhājirūn had left their homes in Makkah.', a:true},
+         {s:'The Muhājirūn kept all their wealth from Makkah.', a:false},
          {s:'The Anṣār refused to share anything.', a:false} ],
     benefit:'We learn that sharing what we have with others in need can turn strangers into the closest of brothers and sisters.' },
 
@@ -372,7 +372,7 @@ window.SEERAH = [
     order:{ prompt:'Put the Trench in order',
             items:['A huge army marches on Madīnah','Salmān suggests digging a trench','Everyone digs together, the Prophet ﷺ too','The army cannot cross and goes home'] },
     tf:[ {s:'The Prophet ﷺ dug alongside the companions.', a:true},
-         {s:'The trench protected the open side of Madīnah.', a:true},
+         {s:'The trench was dug all the way around the whole city.', a:false},
          {s:'Only the leaders did the digging.', a:false} ],
     benefit:'We learn that creative thinking and teamwork can overcome even the biggest and most frightening challenges.' },
 
@@ -398,7 +398,7 @@ window.SEERAH = [
     order:{ prompt:'Put his final year in order',
             items:['He makes Ḥajj with over a hundred thousand','He gives the farewell sermon at ʿArafah','He reminds them to hold to the Qurʾān','He passes away in Madīnah'] },
     tf:[ {s:'He taught that no Arab is better than a non-Arab except by taqwā.', a:true},
-         {s:'He left the Qurʾān with his ummah.', a:true},
+         {s:'He asked his ummah to write a new scripture after him.', a:false},
          {s:'He said tribe and wealth decide who is best.', a:false} ],
     benefit:'We learn that his final advice — piety, fairness, and holding on to the Qurʾān — is timeless guidance for every generation.' }
 ];
