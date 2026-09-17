@@ -161,31 +161,14 @@
   <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
 </footer>
 
+<script src="data/kids-game-names-data.js"></script>
+<script src="data/kids-game-names-audio-manifest.js"></script>
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-const NAMES = [
-  { ar:'الرَّحْمَٰن', translit:'Ar-Rahman', meaning:'The Most Merciful' },
-  { ar:'الرَّحِيم', translit:'Ar-Raheem', meaning:'The Most Compassionate' },
-  { ar:'الْمَلِك', translit:'Al-Malik', meaning:'The King' },
-  { ar:'الْقُدُّوس', translit:'Al-Quddus', meaning:'The Most Holy' },
-  { ar:'السَّلَام', translit:'As-Salaam', meaning:'The Source of Peace' },
-  { ar:'الْخَالِق', translit:'Al-Khaliq', meaning:'The Creator' },
-  { ar:'الْغَفَّار', translit:'Al-Ghaffar', meaning:'The Great Forgiver' },
-  { ar:'الرَّزَّاق', translit:'Ar-Razzaq', meaning:'The Provider' },
-  { ar:'الْعَلِيم', translit:"Al-Aleem", meaning:'The All-Knowing' },
-  { ar:'السَّمِيع', translit:"As-Samee'", meaning:'The All-Hearing' },
-  { ar:'الْبَصِير', translit:'Al-Baseer', meaning:'The All-Seeing' },
-  { ar:'الْعَزِيز', translit:"Al-Azeez", meaning:'The Mighty' },
-  { ar:'اللَّطِيف', translit:'Al-Lateef', meaning:'The Gentle' },
-  { ar:'الْحَكِيم', translit:'Al-Hakeem', meaning:'The Wise' },
-  { ar:'الْكَرِيم', translit:'Al-Kareem', meaning:'The Generous' },
-  { ar:'الشَّكُور', translit:'Ash-Shakoor', meaning:'The Appreciative' },
-  { ar:'الْحَلِيم', translit:'Al-Haleem', meaning:'The Forbearing One' },
-  { ar:'الْوَدُود', translit:'Al-Wadood', meaning:'The Loving One' },
-  { ar:'الصَّبُور', translit:'As-Saboor', meaning:'The Patient One' },
-  { ar:'النُّور', translit:'An-Noor', meaning:'The Light' }
-];
+/* All 99 Names now live in data/kids-game-names-data.js (see that file),
+   so the audio generator script can load the exact same data in Node. */
+const NAMES = window.NAMES_99;
 
 function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
 function shuffle(arr){
@@ -219,6 +202,50 @@ function playStreak(){ beep(660, 0.1, 'sine'); setTimeout(()=>beep(880,0.14,'sin
 function playWrong(){ beep(180, 0.2, 'sawtooth'); }
 function playTimeUp(){ [392,330,262].forEach((f,i)=>setTimeout(()=>beep(f,0.25,'sine'), i*160)); }
 
+/* Recorded AI narration first, browser text-to-speech only as a fallback
+   for a line with no recorded clip, or if playback ever fails -- same
+   pattern as arabic-adventure.html and kids-seerah-quest.html. */
+const AUDIO_MANIFEST = window.NAMES_AUDIO_MANIFEST || { ar:{}, en:{} };
+const audioClipCache = {};
+function playClip(text, manifestSet, fallback){
+  const src = manifestSet[text];
+  if(!src){ fallback(); return; }
+  try{
+    let audio = audioClipCache[src];
+    if(!audio){ audio = new Audio(src); audioClipCache[src] = audio; }
+    audio.currentTime = 0;
+    audio.onerror = fallback;
+    const p = audio.play();
+    if(p && p.catch) p.catch(fallback);
+  }catch(e){ fallback(); }
+}
+function speakEnglish(text){
+  if(!text) return;
+  playClip(text, AUDIO_MANIFEST.en, function(){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.98;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  });
+}
+function speakArabic(text){
+  if(!text) return;
+  playClip(text, AUDIO_MANIFEST.ar, function(){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ar-SA';
+      u.rate = 0.82;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  });
+}
+
 let score = 0, streak = 0, timeLeft = 60, timerId = null, current = null, locked = false, running = false;
 
 function makeQuestion(){
@@ -243,6 +270,7 @@ function renderQuestion(){
     btn.addEventListener('click', () => handleAnswer(opt, btn));
     grid.appendChild(btn);
   });
+  speakEnglish(current.item.meaning);
 }
 
 function handleAnswer(opt, btn){
@@ -269,6 +297,7 @@ function handleAnswer(opt, btn){
     fb.textContent = 'That was ' + current.item.ar + ' (' + current.item.translit + ').';
     fb.classList.add('wrong');
   }
+  speakArabic(current.item.ar);
   document.getElementById('score-count').textContent = score;
   document.getElementById('streak-count').textContent = streak;
   setTimeout(() => { if(running) renderQuestion(); }, 900);
