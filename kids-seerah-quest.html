@@ -228,6 +228,21 @@
     text-align:left; background:var(--parchment); border:2px solid var(--gold-soft);
     border-radius:18px; padding:18px 20px;
   }
+  .mini-speak-btn{
+    display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px;
+    border:none; border-radius:50%; background:var(--sky-deep); color:#fff; font-size:14px;
+    cursor:pointer; vertical-align:middle; box-shadow:0 2px 0 #2c7ba0;
+  }
+  .mini-speak-btn:active{ transform:translateY(2px); box-shadow:0 0 0 #2c7ba0; }
+  .quran-block{
+    max-width:560px; margin:16px auto 0; text-align:center; background:var(--green-bg);
+    border:2px solid var(--green); border-radius:18px; padding:16px 20px;
+  }
+  .quran-eyebrow{ font-family:'Marcellus'; font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--green-dark); margin:0 0 8px; }
+  .quran-arabic{ font-family:'Amiri', serif; font-size:26px; color:var(--green-dark); margin:0 0 8px; line-height:1.6; }
+  .quran-translit{ font-style:italic; font-size:15.5px; color:#3c4f45; margin:0 0 4px; }
+  .quran-translation{ font-size:16.5px; color:#3c4f45; margin:0 0 4px; }
+  .quran-ref{ font-size:13px; color:var(--green-dark); margin:0; }
   .speak-btn{
     display:inline-flex; align-items:center; gap:8px; margin:14px 0 6px;
     background:var(--sky-deep); color:#fff; border:none; border-radius:24px;
@@ -250,6 +265,43 @@
   .choice.locked{ pointer-events:none; }
   @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.14); } 100%{ transform:scale(1); } }
   @keyframes shakeX{ 0%,100%{ transform:translateX(0);} 25%{ transform:translateX(-7px);} 75%{ transform:translateX(7px);} }
+  .shake{ animation:shakeX .4s ease; }
+
+  /* ---- drag the answer in ---- */
+  .drag-dropzone{
+    width:100%; max-width:420px; min-height:70px; margin:0 auto 22px;
+    border:3px dashed var(--gold-soft); border-radius:20px; background:var(--parchment);
+    display:flex; align-items:center; justify-content:center; padding:12px 16px;
+    font-family:'Marcellus'; font-size:16px; color:#9a8a6a; transition:background .15s ease, border-color .15s ease;
+  }
+  .drag-dropzone.drag-over{ background:#fff6cf; border-color:var(--gold-bright); }
+  .drag-dropzone.correct{ background:#d8f0d8; border-style:solid; border-color:#3d9b4f; }
+  .drag-dropzone .dz-answer{ font-family:'Marcellus'; font-size:19px; color:var(--green-dark); }
+  .drag-chips{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-width:520px; margin:0 auto; touch-action:none; }
+  .drag-chip{
+    background:#fff; border:3px solid var(--gold-soft); border-radius:18px; padding:13px 20px;
+    font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); cursor:grab; user-select:none;
+    touch-action:none; box-shadow:0 3px 8px rgba(60,45,20,.1);
+  }
+  .drag-chip.dragging{ cursor:grabbing; box-shadow:0 8px 18px rgba(60,45,20,.25); z-index:5; position:relative; }
+  .drag-chip.shake{ border-color:#c1503f; background:#f7dede; }
+  .drag-chip.placed{ display:none; }
+  .drag-chip:disabled{ cursor:default; }
+
+  /* ---- match it up ---- */
+  .match-grid{ display:flex; gap:24px; justify-content:center; width:100%; max-width:560px; margin:0 auto; }
+  .match-col{ flex:1; display:flex; flex-direction:column; gap:10px; }
+  .match-item{
+    background:var(--parchment); border:3px solid var(--gold-soft); border-radius:16px;
+    padding:12px 14px; cursor:pointer; font-family:'Marcellus'; font-size:15px; color:var(--ink-navy);
+    line-height:1.3; text-align:center; transition:transform .12s ease, background .15s ease, border-color .15s ease;
+  }
+  .match-item:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .match-item.selected{ background:#fff6cf; border-color:var(--gold-bright); }
+  .match-item.matched{ background:#d8f0d8; border-color:#3d9b4f; pointer-events:none; opacity:.75; }
+  @media (max-width:560px){
+    .match-item{ font-size:13.5px; padding:10px 8px; }
+  }
 
   /* ---- put it in order ---- */
   .order-list{ display:flex; flex-direction:column; gap:11px; width:100%; max-width:480px; margin:0 auto; }
@@ -649,361 +701,18 @@
   <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
 </footer>
 
+<script src="data/kids-seerah-quest-data.js"></script>
+<script src="data/kids-seerah-quest-audio-manifest.js"></script>
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ===================== DATA ===================== */
-/* Thirty short stories from the Seerah, six on each of the five maps. */
-const SEERAH = [
+/* Thirty short stories from the Seerah, six on each of the five maps --
+   now loaded from data/kids-seerah-quest-data.js (see that file), so the
+   audio generator script can load the exact same data in Node. */
+const SEERAH = window.SEERAH;
+const MAPS = window.MAPS;
 
-  /* ---------- Map 1 · Makkah Long Ago ---------- */
-  { title:'The House of Allah', teach:'The Kaʿbah', emoji:'🕋', arabic:'ٱلْكَعْبَة',
-    story:'Long, long ago Allah told Prophet Ibrāhīm and his son Ismāʿīl to build a simple house of stone in the dry valley of Makkah. It was called the Kaʿbah, and it was built for one reason only: so that people would worship Allah alone. Many years later the people of Makkah forgot that reason, and they filled the Kaʿbah with idols.',
-    picks:[
-      {q:'Who built the Kaʿbah?', options:['Ibrāhīm and his son Ismāʿīl','The kings of Yemen','The people of Madīnah']},
-      {q:'Why was the Kaʿbah built?', options:['So people would worship Allah alone','To keep gold safe','To be a market']}],
-    order:{ prompt:'Put the story of the Kaʿbah in order',
-            items:['Allah tells Ibrāhīm to build a house','Ibrāhīm and Ismāʿīl raise the walls','People come to worship Allah there','Long after, people fill it with idols'] },
-    tf:[ {s:'The Kaʿbah is in the city of Makkah.', a:true},
-         {s:'Ismāʿīl helped his father build the Kaʿbah.', a:true},
-         {s:'The Kaʿbah was built so people could worship idols.', a:false} ] },
-
-  { title:'The Year of the Elephant', teach:'Abrahah and the birds', emoji:'🐘', arabic:'عَامُ ٱلْفِيل',
-    story:'A proud king called Abrahah marched towards Makkah with a huge army and even an elephant, meaning to knock down the Kaʿbah. The people of Makkah could not stop him — but Allah could. He sent flocks of small birds carrying little stones, and the army was destroyed. That year became known as the Year of the Elephant.',
-    picks:[
-      {q:'What did Abrahah want to do?', options:['Destroy the Kaʿbah','Build a new Kaʿbah','Trade in Makkah']},
-      {q:'How did Allah stop the army?', options:['With flocks of small birds','With a great flood','With a strong wind']}],
-    order:{ prompt:'Put the Year of the Elephant in order',
-            items:['Abrahah gathers a huge army','The army marches towards Makkah','Allah sends flocks of birds','The army is destroyed'] },
-    tf:[ {s:'Abrahah brought an elephant with his army.', a:true},
-         {s:'The people of Makkah defeated the army themselves.', a:false},
-         {s:'Allah protected His House.', a:true} ] },
-
-  { title:'A Blessed Birth', teach:'Born in Makkah', emoji:'🌅', arabic:'مُحَمَّد ﷺ',
-    story:'In that same year, in the city of Makkah, a baby boy was born to Āminah. His grandfather named him Muhammad ﷺ, which means "the praised one". His father ʿAbdullāh had died before he was even born, so from his very first day he was an orphan.',
-    picks:[
-      {q:'In which city was the Prophet ﷺ born?', options:['Makkah','Madīnah','Ṭāʾif']},
-      {q:'What does the name Muhammad mean?', options:['The praised one','The strong one','The traveller']}],
-    order:{ prompt:'Put the beginning of his life in order',
-            items:['His father ʿAbdullāh passes away','The baby is born in Makkah','His grandfather names him Muhammad','He grows up as an orphan'] },
-    tf:[ {s:'The Prophet ﷺ was born an orphan.', a:true},
-         {s:'His mother was called Āminah.', a:true},
-         {s:'He was born in Madīnah.', a:false} ] },
-
-  { title:'Out in the Desert', teach:'Ḥalīmah as-Saʿdiyyah', emoji:'🐑', arabic:'حَلِيمَة',
-    story:'It was the custom of Makkah to send babies to the open desert, where the air was clean and the Arabic was pure. A kind woman named Ḥalīmah as-Saʿdiyyah took baby Muhammad ﷺ home with her. She said that from the day he came, blessing came with him — her animals gave more milk and her family had enough.',
-    picks:[
-      {q:'Who cared for him in the desert?', options:['Ḥalīmah as-Saʿdiyyah','Khadījah','Umm Salamah']},
-      {q:'Why were babies sent to the desert?', options:['For clean air and pure Arabic','To learn to ride camels','Because Makkah was empty']}],
-    order:{ prompt:'Put the desert years in order',
-            items:['Ḥalīmah comes to Makkah looking for a baby','She takes Muhammad ﷺ home','Blessing comes to her family','He returns to his mother Āminah'] },
-    tf:[ {s:'Ḥalīmah found blessing in her home after he came.', a:true},
-         {s:'He learned pure Arabic in the desert.', a:true},
-         {s:'Ḥalīmah was his mother.', a:false} ] },
-
-  { title:'Cared For and Loved', teach:'His grandfather and uncle', emoji:'🤲', arabic:'أَبُو طَالِب',
-    story:'When Muhammad ﷺ was six, his mother Āminah passed away, and he was cared for by his grandfather ʿAbd al-Muṭṭalib, who loved him dearly. Two years later his grandfather died too, and his uncle Abū Ṭālib took him in. Abū Ṭālib protected him and kept him close for many, many years.',
-    picks:[
-      {q:'Who cared for him after his grandfather?', options:['His uncle Abū Ṭālib','A neighbour','He lived alone']},
-      {q:'How old was he when his mother died?', options:['Six years old','Twelve years old','Twenty years old']}],
-    order:{ prompt:'Put his childhood in order',
-            items:['He lives with his mother Āminah','Āminah passes away','His grandfather ʿAbd al-Muṭṭalib cares for him','His uncle Abū Ṭālib takes him in'] },
-    tf:[ {s:'Abū Ṭālib was his uncle.', a:true},
-         {s:'His grandfather was ʿAbd al-Muṭṭalib.', a:true},
-         {s:'He was raised by his father.', a:false} ] },
-
-  { title:'The Young Shepherd', teach:'Honest work', emoji:'🐏', arabic:'رَاعِي ٱلْغَنَم',
-    story:'As a boy, Muhammad ﷺ looked after sheep on the hills outside Makkah and earned his own keep. Later he said that every prophet had been a shepherd. Watching over animals taught him patience, care, and how to look after those who cannot look after themselves.',
-    picks:[
-      {q:'What work did he do as a boy?', options:['He looked after sheep','He sailed ships','He built houses']},
-      {q:'What did shepherding teach him?', options:['Patience and care','How to fight','How to write']}],
-    order:{ prompt:'Put a shepherd\u2019s day in order',
-            items:['He leads the sheep out to the hills','He watches over them all day','He keeps them safe from harm','He brings them home again'] },
-    tf:[ {s:'He earned his own keep as a shepherd.', a:true},
-         {s:'He said every prophet had been a shepherd.', a:true},
-         {s:'He never worked as a boy.', a:false} ] },
-
-  /* ---------- Map 2 · Al-Amīn ---------- */
-  { title:'The Trustworthy One', teach:'Al-Amīn', emoji:'✨', arabic:'ٱلْأَمِين',
-    story:'As he grew up, everyone in Makkah noticed something about Muhammad ﷺ: he never lied, he never cheated, and he always kept his promise. People trusted him so much that they left their valuables with him for safe keeping. They gave him a name that stuck — Al-Amīn, the Trustworthy.',
-    picks:[
-      {q:'What does Al-Amīn mean?', options:['The Trustworthy','The Brave','The Wealthy']},
-      {q:'Why did people trust him?', options:['He never lied and kept his promises','He was very rich','He was the strongest']}],
-    order:{ prompt:'Put it in order',
-            items:['He grows up in Makkah','People see he never lies','They leave their valuables with him','They call him Al-Amīn'] },
-    tf:[ {s:'Al-Amīn means the Trustworthy.', a:true},
-         {s:'People left their valuables with him.', a:true},
-         {s:'He was known for telling jokes that were untrue.', a:false} ] },
-
-  { title:'The Honest Trader', teach:'Journeys to Shām', emoji:'🐫', arabic:'ٱلتِّجَارَة',
-    story:'Muhammad ﷺ travelled north with the trading caravans to Shām. He weighed goods fairly, told buyers the truth about what he was selling, and never took more than his share. Traders came back saying they had never met anyone so honest in business.',
-    picks:[
-      {q:'Where did the caravans travel?', options:['North to Shām','South to Yemen only','Across the sea']},
-      {q:'How did he trade?', options:['Fairly and honestly','He charged too much','He hid faults in the goods']}],
-    order:{ prompt:'Put a trading journey in order',
-            items:['The caravan is loaded in Makkah','They travel north to Shām','The goods are sold honestly','The caravan returns home'] },
-    tf:[ {s:'He told buyers the truth about his goods.', a:true},
-         {s:'He weighed goods fairly.', a:true},
-         {s:'He took more than his share.', a:false} ] },
-
-  { title:'Khadījah', teach:'His first wife', emoji:'💍', arabic:'خَدِيجَة',
-    story:'Khadījah was a respected businesswoman of Makkah. When she heard how honest Muhammad ﷺ was, she asked him to trade for her, and her servant came back full of praise. She admired his character so much that she proposed marriage. Khadījah became his first wife and, for twenty-five years, his closest support.',
-    picks:[
-      {q:'What was Khadījah known for?', options:['Her business','Her poetry','Her horses']},
-      {q:'What did she admire about him?', options:['His character','His wealth','His height']}],
-    order:{ prompt:'Put their story in order',
-            items:['Khadījah hears of his honesty','She asks him to trade for her','Her servant praises him','They marry'] },
-    tf:[ {s:'Khadījah was a businesswoman.', a:true},
-         {s:'She was his first wife.', a:true},
-         {s:'She never believed in his honesty.', a:false} ] },
-
-  { title:'The Black Stone', teach:'A wise solution', emoji:'🪨', arabic:'ٱلْحَجَرُ ٱلْأَسْوَد',
-    story:'When the Kaʿbah was being rebuilt, the tribes argued fiercely about who would have the honour of lifting the Black Stone into place. They agreed to let the next person to walk in decide — and in walked Muhammad ﷺ. He laid the stone on a cloak, asked a man from each tribe to hold an edge, and they carried it together. Nobody was left out.',
-    picks:[
-      {q:'What were the tribes arguing about?', options:['Who would lift the Black Stone','Who would pay for the roof','Who would guard the door']},
-      {q:'How did he solve it?', options:['Each tribe held an edge of a cloak','He decided alone','He drew lots']}],
-    order:{ prompt:'Put the Black Stone story in order',
-            items:['The Kaʿbah is being rebuilt','The tribes argue over the stone','Muhammad ﷺ walks in','Every tribe carries it on one cloak'] },
-    tf:[ {s:'He used a cloak so every tribe could share the honour.', a:true},
-         {s:'The tribes were about to fight.', a:true},
-         {s:'One tribe alone carried the stone.', a:false} ] },
-
-  { title:'The Cave of Ḥirāʾ', teach:'Quiet and thinking', emoji:'🕯️', arabic:'غَارُ حِرَاء',
-    story:'Muhammad ﷺ could not accept the idols and the unfairness he saw around him. He began climbing a mountain outside Makkah to a small cave called Ḥirāʾ, where he would stay alone for days, thinking about Allah and about the truth. Khadījah would send food up to him.',
-    picks:[
-      {q:'What was the cave called?', options:['Ḥirāʾ','Thawr','Ṣafā']},
-      {q:'Why did he go there?', options:['To be alone and think about Allah','To hide from the heat','To keep his sheep']}],
-    order:{ prompt:'Put his visits to the cave in order',
-            items:['He is troubled by the idols','He climbs the mountain','He stays alone in the cave of Ḥirāʾ','Khadījah sends food up to him'] },
-    tf:[ {s:'He went to the cave to worship and think.', a:true},
-         {s:'Khadījah supported him with food.', a:true},
-         {s:'The cave was called Thawr.', a:false} ] },
-
-  { title:'Read!', teach:'The first revelation', emoji:'📖', arabic:'ٱقْرَأْ',
-    story:'One night in Ramaḍān, when he was forty years old, the Angel Jibrīl came to him in the cave and said, "Iqraʾ" — "Read!" He answered that he could not read. The angel held him and said it again, then taught him the first words of the Qurʾān: "Read in the name of your Lord who created." He hurried home shaking, and Khadījah wrapped him in a cloak and comforted him.',
-    picks:[
-      {q:'Which angel came to him?', options:['Jibrīl','Isrāfīl','Mīkāʾīl']},
-      {q:'What was the first word revealed?', options:['Iqraʾ — Read!','Ṣalli — Pray!','Qum — Stand!']}],
-    order:{ prompt:'Put the first revelation in order',
-            items:['He is alone in the cave of Ḥirāʾ','Jibrīl comes and says "Read!"','The first verses of the Qurʾān are taught','He hurries home to Khadījah'] },
-    tf:[ {s:'The first revelation came in the cave of Ḥirāʾ.', a:true},
-         {s:'He was forty years old.', a:true},
-         {s:'He could read and write before this.', a:false} ] },
-
-  /* ---------- Map 3 · The First Muslims ---------- */
-  { title:'The First to Believe', teach:'Khadījah believes', emoji:'💚', arabic:'أَوَّلُ مُؤْمِنَة',
-    story:'When Muhammad ﷺ told Khadījah what had happened, she did not doubt him for a moment. "Allah would never disgrace you," she said, "for you keep good ties, carry the weak, and help those in need." She was the very first person to believe in him. She took him to her cousin Waraqah, an old scholar, who said the same angel had come to Mūsā.',
-    picks:[
-      {q:'Who was the first to believe?', options:['Khadījah','Abū Bakr','ʿAlī']},
-      {q:'Who was Waraqah?', options:['Khadījah\u2019s cousin, an old scholar','A merchant from Yemen','A poet of Makkah']}],
-    order:{ prompt:'Put the story in order',
-            items:['He tells Khadījah what happened','She comforts him and believes','They visit her cousin Waraqah','Waraqah says this is the same angel sent to Mūsā'] },
-    tf:[ {s:'Khadījah believed him straight away.', a:true},
-         {s:'Waraqah recognised the sign of prophethood.', a:true},
-         {s:'Khadījah laughed at him.', a:false} ] },
-
-  { title:'Friends Who Believed', teach:'Abū Bakr and ʿAlī', emoji:'🤝', arabic:'أَبُو بَكْر',
-    story:'Abū Bakr was his closest friend, and when he heard the message he believed at once, without asking for a single proof. Young ʿAlī, who lived in the Prophet\u2019s home, was the first child to believe. Zayd ibn Ḥārithah believed too. Abū Bakr then quietly brought many others to Islam.',
-    picks:[
-      {q:'How did Abū Bakr respond?', options:['He believed at once','He asked for many proofs','He refused']},
-      {q:'Who was the first child to believe?', options:['ʿAlī','Bilāl','ʿUmar']}],
-    order:{ prompt:'Put the first believers in order',
-            items:['Khadījah believes first','Abū Bakr believes at once','Young ʿAlī believes','Abū Bakr brings others to Islam'] },
-    tf:[ {s:'Abū Bakr was his closest friend.', a:true},
-         {s:'ʿAlī lived in the Prophet\u2019s home.', a:true},
-         {s:'Abū Bakr needed a long time to believe.', a:false} ] },
-
-  { title:'The Quiet Years', teach:'The house of al-Arqam', emoji:'🤫', arabic:'دَارُ ٱلْأَرْقَم',
-    story:'For about three years the message was shared quietly. The small group of Muslims would meet in the house of a young man called al-Arqam, near the hill of Ṣafā, to learn the Qurʾān and pray together away from watching eyes.',
-    picks:[
-      {q:'Where did the first Muslims meet?', options:['In the house of al-Arqam','Inside the Kaʿbah','In a cave']},
-      {q:'How long was the message kept quiet?', options:['About three years','About ten years','Only one week']}],
-    order:{ prompt:'Put the quiet years in order',
-            items:['The message is shared with close friends','The Muslims meet in al-Arqam\u2019s house','They learn the Qurʾān together','More people join in secret'] },
-    tf:[ {s:'They met away from watching eyes.', a:true},
-         {s:'Al-Arqam was a young man.', a:true},
-         {s:'The message was announced publicly from day one.', a:false} ] },
-
-  { title:'Calling from Ṣafā', teach:'The open call', emoji:'📣', arabic:'ٱلصَّفَا',
-    story:'Then Allah commanded him to call people openly. He climbed the hill of Ṣafā and called out to the tribes. "If I told you an army was behind this hill, would you believe me?" They said, "Yes — we have never known you to lie." Then he told them to worship Allah alone. Some listened; many turned away angrily.',
-    picks:[
-      {q:'Which hill did he climb?', options:['Ṣafā','Uḥud','Thawr']},
-      {q:'What did the people admit about him?', options:['They had never known him to lie','That he was the richest','That he was the oldest']}],
-    order:{ prompt:'Put the open call in order',
-            items:['Allah commands him to call openly','He climbs the hill of Ṣafā','He asks if they would believe him','He calls them to worship Allah alone'] },
-    tf:[ {s:'The people admitted he had never lied.', a:true},
-         {s:'Some people accepted and some refused.', a:true},
-         {s:'Everyone in Makkah accepted straight away.', a:false} ] },
-
-  { title:'Bilāl Stays Firm', teach:'Patience under hardship', emoji:'🔥', arabic:'بِلَال',
-    story:'Bilāl ibn Rabāḥ was a slave in Makkah. When he accepted Islam, his master laid him on the burning sand under a heavy stone to make him give it up. Bilāl only said one word again and again: "Aḥad, Aḥad" — One, One. Abū Bakr bought his freedom, and later Bilāl became the first to call the adhān.',
-    picks:[
-      {q:'What word did Bilāl repeat?', options:['Aḥad — One','Ṣabr — Patience','Nūr — Light']},
-      {q:'Who set Bilāl free?', options:['Abū Bakr','ʿUmar','Khadījah']}],
-    order:{ prompt:'Put Bilāl\u2019s story in order',
-            items:['Bilāl accepts Islam','He is harmed for his faith','He says only "Aḥad, Aḥad"','Abū Bakr buys his freedom'] },
-    tf:[ {s:'Bilāl later called the adhān.', a:true},
-         {s:'Bilāl stayed firm in his faith.', a:true},
-         {s:'Bilāl gave up Islam under pressure.', a:false} ] },
-
-  { title:'Across the Sea', teach:'Abyssinia', emoji:'⛵', arabic:'ٱلْحَبَشَة',
-    story:'Life became so hard for the Muslims that the Prophet ﷺ told a group to sail to Abyssinia, where a just Christian king called the Negus ruled. Makkah sent men to demand they be handed back. Jaʿfar stood before the king and recited verses about ʿĪsā and Maryam. The Negus wept and said, "You are safe in my land."',
-    picks:[
-      {q:'Where did the Muslims go?', options:['Abyssinia','Yemen','Egypt']},
-      {q:'What did the Negus decide?', options:['They could stay safely','To send them back','To imprison them']}],
-    order:{ prompt:'Put the journey in order',
-            items:['Life in Makkah becomes very hard','A group sails to Abyssinia','Makkah sends men to bring them back','The Negus lets them stay in safety'] },
-    tf:[ {s:'The Negus was a just king.', a:true},
-         {s:'Jaʿfar recited verses about ʿĪsā and Maryam.', a:true},
-         {s:'The Muslims were sent back to Makkah.', a:false} ] },
-
-  /* ---------- Map 4 · Patience and Hope ---------- */
-  { title:'Three Hard Years', teach:'The boycott', emoji:'📜', arabic:'ٱلْمُقَاطَعَة',
-    story:'The leaders of Makkah wrote an agreement and hung it in the Kaʿbah: nobody was to buy from, sell to, or marry into the Prophet\u2019s family. For about three years they lived in a narrow valley, so hungry that children cried through the night. In the end some fair-minded men of Makkah tore the agreement up.',
-    picks:[
-      {q:'What was the boycott?', options:['No buying, selling, or marrying with them','A tax on traders','A ban on travel']},
-      {q:'How did it end?', options:['Men of Makkah tore the agreement up','The Muslims paid money','It never ended']}],
-    order:{ prompt:'Put the boycott in order',
-            items:['The leaders write the agreement','It is hung inside the Kaʿbah','The family lives hungry in the valley','Fair-minded men tear it up'] },
-    tf:[ {s:'The boycott lasted about three years.', a:true},
-         {s:'The Muslims stayed patient through it.', a:true},
-         {s:'The boycott was easy and comfortable.', a:false} ] },
-
-  { title:'The Year of Sorrow', teach:'ʿĀm al-Ḥuzn', emoji:'🌧️', arabic:'عَامُ ٱلْحُزْن',
-    story:'Soon after the boycott ended, Khadījah passed away — the wife who had believed in him first and stood by him for twenty-five years. In the same year his uncle Abū Ṭālib, who had always protected him, died too. That year is remembered as ʿĀm al-Ḥuzn, the Year of Sorrow.',
-    picks:[
-      {q:'Who did he lose that year?', options:['Khadījah and Abū Ṭālib','Abū Bakr and ʿUmar','Bilāl and Zayd']},
-      {q:'What is that year called?', options:['The Year of Sorrow','The Year of the Elephant','The Year of Victory']}],
-    order:{ prompt:'Put the Year of Sorrow in order',
-            items:['The boycott finally ends','Khadījah passes away','Abū Ṭālib passes away','The year is named ʿĀm al-Ḥuzn'] },
-    tf:[ {s:'Khadījah supported him for twenty-five years.', a:true},
-         {s:'Abū Ṭālib had protected him for many years.', a:true},
-         {s:'That year was his happiest.', a:false} ] },
-
-  { title:'The Day of Ṭāʾif', teach:'Mercy, not revenge', emoji:'🍇', arabic:'ٱلطَّائِف',
-    story:'He walked to the town of Ṭāʾif to invite its people to Islam, and they drove him out with stones until his feet bled. Sitting under a vine, he asked Allah only for help, blaming no one but himself. An angel offered to crush the town between two mountains. He said no — and prayed that their children might one day worship Allah.',
-    picks:[
-      {q:'What did the angel offer?', options:['To crush the town between two mountains','To carry him home','To make it rain']},
-      {q:'What did the Prophet ﷺ choose?', options:['Mercy, and duʿāʾ for their children','Revenge','To never speak again']}],
-    order:{ prompt:'Put the day of Ṭāʾif in order',
-            items:['He walks to Ṭāʾif to invite them','The people drive him out with stones','He rests and makes duʿāʾ','He refuses the angel and asks for mercy'] },
-    tf:[ {s:'He refused to have Ṭāʾif destroyed.', a:true},
-         {s:'He hoped their children would worship Allah.', a:true},
-         {s:'He asked Allah to punish them at once.', a:false} ] },
-
-  { title:'The Night Journey', teach:'Isrāʾ and Miʿrāj', emoji:'🌙', arabic:'ٱلْإِسْرَاء وَٱلْمِعْرَاج',
-    story:'One night Allah took His Prophet ﷺ from Makkah to Masjid al-Aqṣā in Jerusalem, where he led all the earlier prophets in prayer. Then he was raised through the heavens. On that night Allah gave the Muslims their greatest gift: the five daily prayers.',
-    picks:[
-      {q:'Where was he taken first?', options:['Masjid al-Aqṣā in Jerusalem','Madīnah','Ṭāʾif']},
-      {q:'What was given that night?', options:['The five daily prayers','Fasting in Ramaḍān','Zakāh']}],
-    order:{ prompt:'Put the Night Journey in order',
-            items:['He is taken from Makkah by night','He reaches Masjid al-Aqṣā','He leads the prophets in prayer','He is raised through the heavens'] },
-    tf:[ {s:'The five daily prayers were given on this night.', a:true},
-         {s:'He led the earlier prophets in prayer.', a:true},
-         {s:'The journey took many months.', a:false} ] },
-
-  { title:'Promises at ʿAqabah', teach:'The people of Yathrib', emoji:'🤲', arabic:'بَيْعَةُ ٱلْعَقَبَة',
-    story:'At the yearly pilgrimage he met a small group from a city to the north called Yathrib. They listened, believed, and carried Islam home. The next year more came, and at a place called ʿAqabah they promised to protect the Prophet ﷺ as they would protect their own families, and invited him to their city.',
-    picks:[
-      {q:'Where were these people from?', options:['Yathrib','Ṭāʾif','Abyssinia']},
-      {q:'What did they promise at ʿAqabah?', options:['To protect him like their own families','To pay him money','To keep Islam secret forever']}],
-    order:{ prompt:'Put the pledges in order',
-            items:['He meets men from Yathrib at the pilgrimage','They believe and carry Islam home','More come the following year','They pledge at ʿAqabah to protect him'] },
-    tf:[ {s:'Yathrib later became Madīnah.', a:true},
-         {s:'They invited him to their city.', a:true},
-         {s:'They refused to help him.', a:false} ] },
-
-  { title:'The Cave of Thawr', teach:'The Hijrah begins', emoji:'🕸️', arabic:'ٱلْهِجْرَة',
-    story:'Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. Abū Bakr was afraid, and the Prophet ﷺ told him, "Do not grieve — Allah is with us." The Hijrah is where the Islamic calendar begins.',
-    picks:[
-      {q:'Who travelled with him?', options:['Abū Bakr','ʿUmar','Bilāl']},
-      {q:'What did he say inside the cave?', options:['"Do not grieve — Allah is with us"','"Let us go back"','"Call the others"']}],
-    order:{ prompt:'Put the Hijrah in order',
-            items:['Allah gives permission to migrate','They leave Makkah at night','They hide in the cave of Thawr','They travel on towards Yathrib'] },
-    tf:[ {s:'The Islamic calendar begins with the Hijrah.', a:true},
-         {s:'They hid in the cave for three days.', a:true},
-         {s:'They travelled to Ṭāʾif.', a:false} ] },
-
-  /* ---------- Map 5 · The City of the Prophet ﷺ ---------- */
-  { title:'Welcome to Madīnah', teach:'The city rejoices', emoji:'🌴', arabic:'ٱلْمَدِينَة',
-    story:'The people of Yathrib went out day after day to watch the road. When he finally arrived they sang with joy, and every family begged him to stay with them. He let his camel walk freely and said she was under Allah\u2019s command — where she knelt, he would stay. The city was renamed al-Madīnah, the City of the Prophet ﷺ.',
-    picks:[
-      {q:'How did he choose where to stay?', options:['He let his camel choose','He picked the largest house','He drew lots']},
-      {q:'What was Yathrib renamed?', options:['Al-Madīnah','Makkah','Ṭāʾif']}],
-    order:{ prompt:'Put the arrival in order',
-            items:['The people watch the road each day','He arrives and they sing with joy','Every family invites him to stay','His camel kneels and he stays there'] },
-    tf:[ {s:'Yathrib became known as Madīnah.', a:true},
-         {s:'The people were overjoyed to see him.', a:true},
-         {s:'Nobody wanted him in their home.', a:false} ] },
-
-  { title:'The Masjid and the Bond', teach:'Muhājirūn and Anṣār', emoji:'🕌', arabic:'ٱلْمَسْجِدُ ٱلنَّبَوِيّ',
-    story:'The first thing he built in Madīnah was a masjid, and he carried the bricks himself alongside everyone else. Then he joined each Muhājir who had left everything in Makkah with an Anṣārī of Madīnah, as brothers. The Anṣār shared their homes, their food, and their land, and history has never seen generosity like it.',
-    picks:[
-      {q:'What did he build first?', options:['A masjid','A market','A wall']},
-      {q:'Who were the Anṣār?', options:['The helpers of Madīnah','The traders of Makkah','The kings of Yemen']}],
-    order:{ prompt:'Put the first days in Madīnah in order',
-            items:['He arrives in Madīnah','A masjid is built, and he carries bricks too','Muhājirūn and Anṣār are paired as brothers','The Anṣār share their homes and food'] },
-    tf:[ {s:'He worked on the masjid with his own hands.', a:true},
-         {s:'The Muhājirūn had left their homes in Makkah.', a:true},
-         {s:'The Anṣār refused to share anything.', a:false} ] },
-
-  { title:'The Day of Badr', teach:'Allah helps the few', emoji:'🌟', arabic:'بَدْر',
-    story:'Two years after the Hijrah the Muslims faced a far larger army at a place called Badr. They were only about three hundred, poorly equipped, against nearly a thousand. The Prophet ﷺ raised his hands and asked Allah for help all night long. Allah gave them victory, and Badr became a sign that help comes from Allah, not from numbers.',
-    picks:[
-      {q:'How many Muslims were at Badr?', options:['About three hundred','About three thousand','About thirty']},
-      {q:'What did Badr teach?', options:['Help comes from Allah, not numbers','Big armies always win','Fighting solves everything']}],
-    order:{ prompt:'Put the day of Badr in order',
-            items:['A far larger army marches out','The small Muslim group meets them at Badr','The Prophet ﷺ prays all night for help','Allah grants them victory'] },
-    tf:[ {s:'The Muslims were far fewer in number.', a:true},
-         {s:'The Prophet ﷺ made long duʿāʾ before the battle.', a:true},
-         {s:'The Muslims had the bigger army.', a:false} ] },
-
-  { title:'The Trench', teach:'Salmān\u2019s idea', emoji:'🛡️', arabic:'ٱلْخَنْدَق',
-    story:'A huge army came to surround Madīnah. Salmān al-Fārisī suggested something the Arabs had never done: dig a deep trench across the open side of the city. Everyone dug together, hungry and cold, singing as they worked — the Prophet ﷺ carrying earth with them. The army could not cross, and after weeks a fierce wind sent them home.',
-    picks:[
-      {q:'Whose idea was the trench?', options:['Salmān al-Fārisī','Abū Bakr','Bilāl']},
-      {q:'Why did the army leave?', options:['They could not cross, and a fierce wind came','They ran out of horses','They were invited in']}],
-    order:{ prompt:'Put the Trench in order',
-            items:['A huge army marches on Madīnah','Salmān suggests digging a trench','Everyone digs together, the Prophet ﷺ too','The army cannot cross and goes home'] },
-    tf:[ {s:'The Prophet ﷺ dug alongside the companions.', a:true},
-         {s:'The trench protected the open side of Madīnah.', a:true},
-         {s:'Only the leaders did the digging.', a:false} ] },
-
-  { title:'Return to Makkah', teach:'The day of forgiveness', emoji:'🕊️', arabic:'فَتْحُ مَكَّة',
-    story:'Eight years after leaving as a hunted man, he returned to Makkah with ten thousand Muslims — and the city surrendered without a battle. He rode in with his head bowed low in thankfulness. To the people who had hurt him for years he said: "Go — you are free." The idols were cleared from the Kaʿbah, and Bilāl climbed up to call the adhān.',
-    picks:[
-      {q:'What did he say to the people of Makkah?', options:['"Go — you are free"','"Leave the city"','"Pay for what you did"']},
-      {q:'Who called the adhān that day?', options:['Bilāl','Abū Bakr','Zayd']}],
-    order:{ prompt:'Put the return to Makkah in order',
-            items:['He returns after eight years','The city surrenders without a battle','He forgives the people of Makkah','The idols are cleared and the adhān is called'] },
-    tf:[ {s:'Makkah was taken without a battle.', a:true},
-         {s:'He forgave those who had harmed him.', a:true},
-         {s:'He took revenge on the people of Makkah.', a:false} ] },
-
-  { title:'The Farewell', teach:'His last advice', emoji:'🤍', arabic:'حَجَّةُ ٱلْوَدَاع',
-    story:'In his last year he made Ḥajj with over a hundred thousand Muslims and gave his farewell sermon on the plain of ʿArafah. He told them that no Arab is better than a non-Arab except by taqwā, that women have rights, that a Muslim\u2019s life and property are sacred, and that he was leaving them the Qurʾān. Soon after, he passed away in Madīnah — and his message has been carried ever since.',
-    picks:[
-      {q:'Where did he give the farewell sermon?', options:['The plain of ʿArafah','Inside the Kaʿbah','On Mount Uḥud']},
-      {q:'What makes one person better than another?', options:['Taqwā — awareness of Allah','Their tribe','Their wealth']}],
-    order:{ prompt:'Put his final year in order',
-            items:['He makes Ḥajj with over a hundred thousand','He gives the farewell sermon at ʿArafah','He reminds them to hold to the Qurʾān','He passes away in Madīnah'] },
-    tf:[ {s:'He taught that no Arab is better than a non-Arab except by taqwā.', a:true},
-         {s:'He left the Qurʾān with his ummah.', a:true},
-         {s:'He said tribe and wealth decide who is best.', a:false} ] }
-];
-
-const MAPS = [
-  { title:'Map 1 · Makkah Long Ago',        from:0,  to:6,  scene:'valley',
-    cert:{ en:'Makkah Long Ago', ar:'مَكَّةُ ٱلْقَدِيمَة', sub:'The building of the Kaʿbah, the Year of the Elephant, and the childhood of the Prophet ﷺ.' } },
-  { title:'Map 2 · Al-Amīn',                from:6,  to:12, scene:'hills',
-    cert:{ en:'Al-Amīn, the Trustworthy', ar:'ٱلْأَمِين', sub:'His honesty, his marriage to Khadījah, the Black Stone, and the first revelation in Ḥirāʾ.' } },
-  { title:'Map 3 · The First Muslims',      from:12, to:18, scene:'city',
-    cert:{ en:'The First Muslims', ar:'أَوَّلُ ٱلْمُسْلِمِين', sub:'Khadījah, Abū Bakr and ʿAlī, the house of al-Arqam, the call from Ṣafā, Bilāl, and Abyssinia.' } },
-  { title:'Map 4 · Patience and Hope',      from:18, to:24, scene:'night',
-    cert:{ en:'Patience and Hope', ar:'ٱلصَّبْرُ وَٱلرَّجَاء', sub:'The boycott, the Year of Sorrow, Ṭāʾif, the Night Journey, ʿAqabah, and the Hijrah.' } },
-  { title:'Map 5 · The City of the Prophet ﷺ', from:24, to:30, scene:'oasis',
-    cert:{ en:'The City of the Prophet ﷺ', ar:'ٱلْمَدِينَة', sub:'Madīnah welcomes him — the masjid, brotherhood, Badr, the Trench, the return to Makkah, and the farewell.' } }
-];
 const TOTAL_LESSONS = 30;
 const CERT_PREFIX = 'SRQ';
 const COURSE_LINE = 'Seerah Quest';
@@ -1332,6 +1041,22 @@ function shuffle(arr){
   }
   return a;
 }
+/* Re-shuffles the same list every time a step is replayed, but never
+   shows the exact same order twice in a row for the same question --
+   a few retries is enough since Fisher-Yates on 2-4 items only very
+   occasionally repeats itself. */
+const lastShuffleOrder = {};
+function shuffleAvoidRepeat(key, arr){
+  const serialize = a => JSON.stringify(a.map(x => (x && (x.show || x.text)) || x));
+  let result = shuffle(arr);
+  let tries = 0;
+  while(arr.length > 1 && tries < 6 && lastShuffleOrder[key] === serialize(result)){
+    result = shuffle(arr);
+    tries++;
+  }
+  lastShuffleOrder[key] = serialize(result);
+  return result;
+}
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s;
@@ -1353,14 +1078,40 @@ function buildLesson(idx){
     data:S
   }];
 
-  S.picks.forEach((p, i) => {
+  // The first two picks stay tap-to-choose; the third is answered by
+  // dragging the right chip into the box instead of tapping it.
+  S.picks.slice(0, 2).forEach((p, i) => {
     steps.push({
       type:'pick', icon: i === 0 ? '❓' : '💡', label:'Question ' + (i + 1),
       gameTitle:'Story Question', gameIntro:'Read every answer, then tap the one that is right.',
       prompt:p.q,
-      options: shuffle(p.options.map((o, oi) => ({ show:o, correct: oi === 0 }))),
+      options: shuffleAvoidRepeat(idx + ':pick' + i, p.options.map((o, oi) => ({ show:o, correct: oi === 0 }))),
       cols:1
     });
+  });
+
+  const dragQ = S.picks[2];
+  if(dragQ){
+    steps.push({
+      type:'drag', icon:'🖐️', label:'Drag it in',
+      gameTitle:'Drag the Answer', gameIntro:'Pick up the correct answer with your finger or mouse and drag it into the box.',
+      prompt:dragQ.q,
+      options: shuffleAvoidRepeat(idx + ':drag', dragQ.options.map((o, oi) => ({ show:o, correct: oi === 0 })))
+    });
+  }
+
+  // The matching game is built entirely from data the story already has --
+  // its own two questions/answers, plus its English topic paired with its
+  // Arabic name, so the Arabic term gets its own bit of interactive review.
+  steps.push({
+    type:'match', icon:'🔗', label:'Match it up',
+    gameTitle:'Match It Up', gameIntro:'Tap a card on the left, then tap the card on the right that goes with it.',
+    prompt:'Match each one to its pair',
+    pairs:[
+      { left:S.picks[0].q, right:S.picks[0].options[0] },
+      { left:S.picks[1].q, right:S.picks[1].options[0] },
+      { left:S.teach, right:S.arabic }
+    ]
   });
 
   steps.push({
@@ -1374,6 +1125,14 @@ function buildLesson(idx){
     gameTitle:'True or False', gameIntro:'Listen to each sentence and say whether it is true or false.',
     items:S.tf
   });
+
+  if(S.benefit){
+    steps.push({
+      type:'benefit', icon:'💡', label:'What we learn',
+      gameTitle:'What We Learn', gameIntro:'Every story from the Seerah has something we can take into our own lives.',
+      data:S
+    });
+  }
 
   return { index:idx, steps, stepIndex:0, mistakes:0, cleared:[], coins:0, showIntro:true };
 }
@@ -1599,8 +1358,17 @@ function renderStep(){
     card.innerHTML =
       '<div class="story-emoji">' + S.emoji + '</div>' +
       '<p class="story-title">' + escapeHtml(S.teach) + '</p>' +
-      (S.arabic ? '<p class="story-arabic arabic">' + S.arabic + '</p>' : '') +
+      (S.arabic ? '<p class="story-arabic arabic">' + S.arabic +
+        ' <button type="button" class="mini-speak-btn" id="arabic-speak-btn" aria-label="Listen in Arabic">🔊</button></p>' : '') +
       '<p class="story-text">' + escapeHtml(S.story) + '</p>' +
+      (S.quran ? '<div class="quran-block">' +
+        '<p class="quran-eyebrow">📖 From the Qurʾān</p>' +
+        '<p class="quran-arabic arabic">' + S.quran.arabic +
+        ' <button type="button" class="mini-speak-btn" id="quran-speak-btn" aria-label="Listen to the ayah">🔊</button></p>' +
+        '<p class="quran-translit">' + escapeHtml(S.quran.translit) + '</p>' +
+        '<p class="quran-translation">“' + escapeHtml(S.quran.translation) + '”</p>' +
+        '<p class="quran-ref">' + escapeHtml(S.quran.ref) + '</p>' +
+      '</div>' : '') +
       '<button class="speak-btn" id="speak-btn">🔊 Read it to me</button>';
     const nextBtn = document.createElement('button');
     nextBtn.className = 'big-btn green';
@@ -1609,6 +1377,10 @@ function renderStep(){
     actions.appendChild(nextBtn);
     const sb = document.getElementById('speak-btn');
     if(sb) sb.addEventListener('click', () => { playTap(); speakEnglish(S.story); });
+    const ab = document.getElementById('arabic-speak-btn');
+    if(ab) ab.addEventListener('click', e => { e.stopPropagation(); playTap(); speakArabic(S.arabic); });
+    const qb = document.getElementById('quran-speak-btn');
+    if(qb) qb.addEventListener('click', e => { e.stopPropagation(); playTap(); speakArabic(S.quran.arabic); });
     speakEnglish(S.story);
     return;
   }
@@ -1639,7 +1411,7 @@ function renderStep(){
       '<div class="order-list" id="order-list"></div>' +
       '<div class="feedback" id="feedback"></div>';
     const list = document.getElementById('order-list');
-    shuffle(step.items.map((t, i) => ({ text:t, at:i }))).forEach(it => {
+    shuffleAvoidRepeat(lesson.index + ':order', step.items.map((t, i) => ({ text:t, at:i }))).forEach(it => {
       const el = document.createElement('div');
       el.className = 'order-item';
       el.innerHTML = '<span class="oi-num"></span><span class="oi-text">' + escapeHtml(it.text) + '</span>';
@@ -1711,6 +1483,103 @@ function renderStep(){
     paintTF();
     return;
   }
+
+  if(step.type === 'drag'){
+    card.innerHTML =
+      '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
+      '<p class="task-sub">🖐️ Drag the correct answer into the box below.</p>' +
+      '<div class="drag-dropzone" id="drag-dropzone"><span id="dz-label">Drop it here</span></div>' +
+      '<div class="drag-chips" id="drag-chips"></div>' +
+      '<div class="feedback" id="feedback"></div>';
+    const chipsWrap = document.getElementById('drag-chips');
+    step.options.forEach(opt => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'drag-chip';
+      chip.textContent = opt.show;
+      wireDragChip(chip, opt);
+      chipsWrap.appendChild(chip);
+    });
+    speakEnglish(step.prompt);
+    return;
+  }
+
+  if(step.type === 'match'){
+    card.innerHTML =
+      '<p class="task-line">' + escapeHtml(step.prompt) + '</p>' +
+      '<p class="task-sub">Tap a card on the left, then tap the one on the right that matches it.</p>' +
+      '<div class="match-grid"><div class="match-col" id="match-left"></div><div class="match-col" id="match-right"></div></div>' +
+      '<div class="feedback" id="feedback"></div>';
+    const leftCol = document.getElementById('match-left');
+    const rightCol = document.getElementById('match-right');
+    const rightShuffled = shuffleAvoidRepeat(lesson.index + ':match', step.pairs.map((p, i) => ({ text:p.right, pairId:i })));
+    let selectedLeft = null;
+    let selectedLeftEl = null;
+    const matchedIds = new Set();
+    step.pairs.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.textContent = p.left;
+      el.addEventListener('click', () => {
+        if(el.classList.contains('matched')) return;
+        leftCol.querySelectorAll('.match-item').forEach(x => x.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedLeft = i;
+        selectedLeftEl = el;
+        playTap();
+      });
+      leftCol.appendChild(el);
+    });
+    rightShuffled.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.textContent = r.text;
+      el.addEventListener('click', () => {
+        if(el.classList.contains('matched') || selectedLeft === null) return;
+        const fb = document.getElementById('feedback');
+        if(r.pairId === selectedLeft){
+          playRight();
+          selectedLeftEl.classList.remove('selected');
+          selectedLeftEl.classList.add('matched');
+          el.classList.add('matched');
+          matchedIds.add(selectedLeft);
+          selectedLeft = null;
+          selectedLeftEl = null;
+          fb.className = 'feedback good';
+          fb.textContent = matchedIds.size === step.pairs.length ? 'All matched! 🎉' : 'Yes — keep going!';
+          if(matchedIds.size === step.pairs.length) setTimeout(clearStep, 850);
+        } else {
+          lesson.mistakes++;
+          playWrong();
+          el.classList.add('shake');
+          setTimeout(() => el.classList.remove('shake'), 450);
+          fb.className = 'feedback bad';
+          fb.textContent = 'Not a match — try again!';
+        }
+      });
+      rightCol.appendChild(el);
+    });
+    speakEnglish(step.prompt);
+    return;
+  }
+
+  if(step.type === 'benefit'){
+    const S = step.data;
+    card.innerHTML =
+      '<div class="story-emoji">💡</div>' +
+      '<p class="story-title">What can we learn?</p>' +
+      '<p class="story-text">' + escapeHtml(S.benefit) + '</p>' +
+      '<button class="speak-btn" id="speak-btn">🔊 Read it to me</button>';
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'big-btn green';
+    nextBtn.textContent = 'Māshāʼ Allāh →';
+    nextBtn.addEventListener('click', () => { playTap(); clearStep(); });
+    actions.appendChild(nextBtn);
+    const sb = document.getElementById('speak-btn');
+    if(sb) sb.addEventListener('click', () => { playTap(); speakEnglish(S.benefit); });
+    speakEnglish(S.benefit);
+    return;
+  }
 }
 
 function handlePick(el, opt){
@@ -1730,6 +1599,74 @@ function handlePick(el, opt){
     fb.className = 'feedback bad';
     fb.textContent = 'Not that one — try again!';
     setTimeout(() => el.classList.remove('wrong'), 450);
+  }
+}
+
+/* Pointer Events (not the native HTML5 drag-and-drop API) so this works
+   the same way with a mouse, a trackpad, or a finger on a tablet -- the
+   chip itself never leaves the layout, it is just visually translated
+   with CSS while a finger or the mouse button is down. */
+function wireDragChip(chip, opt){
+  let startX = 0, startY = 0, dragging = false;
+  function overDropzone(x, y){
+    const dz = document.getElementById('drag-dropzone');
+    if(!dz) return false;
+    const r = dz.getBoundingClientRect();
+    return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+  }
+  chip.addEventListener('pointerdown', e => {
+    if(chip.disabled) return;
+    dragging = true;
+    startX = e.clientX; startY = e.clientY;
+    try{ chip.setPointerCapture(e.pointerId); }catch(err){}
+    chip.classList.add('dragging');
+  });
+  chip.addEventListener('pointermove', e => {
+    if(!dragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    chip.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    const dz = document.getElementById('drag-dropzone');
+    if(dz) dz.classList.toggle('drag-over', overDropzone(e.clientX, e.clientY));
+  });
+  const finish = e => {
+    if(!dragging) return;
+    dragging = false;
+    chip.classList.remove('dragging');
+    const dz = document.getElementById('drag-dropzone');
+    if(dz) dz.classList.remove('drag-over');
+    if(overDropzone(e.clientX, e.clientY)) handleDragAnswer(chip, opt);
+    else chip.style.transform = '';
+  };
+  chip.addEventListener('pointerup', finish);
+  chip.addEventListener('pointercancel', () => {
+    dragging = false;
+    chip.classList.remove('dragging');
+    chip.style.transform = '';
+  });
+}
+
+function handleDragAnswer(chip, opt){
+  const fb = document.getElementById('feedback');
+  const dz = document.getElementById('drag-dropzone');
+  if(opt.correct){
+    playRight();
+    chip.style.transform = '';
+    chip.disabled = true;
+    chip.classList.add('placed');
+    dz.innerHTML = '<span class="dz-answer">' + escapeHtml(chip.textContent) + '</span>';
+    dz.classList.add('correct');
+    document.querySelectorAll('.drag-chip').forEach(c => { if(c !== chip) c.style.visibility = 'hidden'; });
+    fb.className = 'feedback good';
+    fb.textContent = ['Yes! 🌟', 'Perfect! 🎉', 'Well done! 👏'][Math.floor(Math.random() * 3)];
+    setTimeout(clearStep, 850);
+  } else {
+    lesson.mistakes++;
+    playWrong();
+    chip.style.transform = '';
+    chip.classList.add('shake');
+    setTimeout(() => chip.classList.remove('shake'), 450);
+    fb.className = 'feedback bad';
+    fb.textContent = 'Not that one — try dragging another!';
   }
 }
 
@@ -1797,19 +1734,53 @@ function finishLesson(){
   showScreen('reward-screen');
 }
 
+/* Recorded AI narration first, browser text-to-speech only as a fallback
+   for a line with no recorded clip, or if playback ever fails -- same
+   pattern as arabic-adventure.html's speakArabic()/speakEnglish(). */
+const AUDIO_MANIFEST = window.SEERAH_AUDIO_MANIFEST || { ar:{}, en:{} };
+const audioClipCache = {};
+function playClip(text, manifestSet, fallback){
+  const src = manifestSet[text];
+  if(!src){ fallback(); return; }
+  try{
+    let audio = audioClipCache[src];
+    if(!audio){ audio = new Audio(src); audioClipCache[src] = audio; }
+    audio.currentTime = 0;
+    audio.onerror = fallback;
+    const p = audio.play();
+    if(p && p.catch) p.catch(fallback);
+  }catch(e){ fallback(); }
+}
 /* Read the instruction line aloud in English, the way the intro card does. */
 function speakEnglish(text){
   if(!soundOn || !text) return;
-  try{
-    if(!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = ttsVoice ? ttsVoice.lang : 'en-US';
-    u.rate = 0.94;
-    u.pitch = 0.9;
-    if(ttsVoice) u.voice = ttsVoice;
-    window.speechSynthesis.speak(u);
-  }catch(e){}
+  playClip(text, AUDIO_MANIFEST.en, function(){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = ttsVoice ? ttsVoice.lang : 'en-US';
+      u.rate = 0.94;
+      u.pitch = 0.9;
+      if(ttsVoice) u.voice = ttsVoice;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  });
+}
+/* Read an Arabic term or ayah aloud -- new for this page (nothing in
+   Arabic was ever spoken before). */
+function speakArabic(text){
+  if(!soundOn || !text) return;
+  playClip(text, AUDIO_MANIFEST.ar, function(){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ar-SA';
+      u.rate = 0.82;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  });
 }
 
 /* ===================== EVENTS ===================== */
