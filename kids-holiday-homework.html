@@ -468,6 +468,24 @@
   </div>
 </div>
 
+<div class="modal-overlay hidden" id="foundation-quiz-modal">
+  <div class="modal-card">
+    <div id="foundation-quiz-game-view">
+      <p class="quiz-progress" id="foundation-quiz-progress"></p>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="foundation-quiz-progress-fill" style="width:0%"></div></div>
+      <span class="quiz-tag" id="foundation-quiz-tag"></span>
+      <div id="foundation-quiz-game-container"></div>
+    </div>
+    <div id="foundation-quiz-results-view" class="hidden">
+      <div class="quiz-results-emoji" id="foundation-quiz-results-emoji">🎉</div>
+      <h2>Great Job!</h2>
+      <p id="foundation-quiz-results-msg"></p>
+      <div class="confetti-burst" id="foundation-quiz-confetti-burst"></div>
+      <button class="btn" id="foundation-quiz-modal-close">Done</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p>
   <div class="flinks">
@@ -758,38 +776,6 @@ function renderFoundationQuranGame(container, dayIndex){
   container.appendChild(section);
 }
 
-/* Foundation's 3 "Qur'an" quiz questions, built from the day's single
-   surah focus (falling back to the week's most-recent surah on a pure
-   review day, which has no new ayah of its own). */
-function buildFoundationQuranQuestions(dayIndex){
-  const plan = FOUNDATION_QURAN_PLAN[dayIndex];
-  const weekSurahIds = dayIndex < 7 ? ['fatiha', 'ikhlas'] : ['falaq', 'nas'];
-  const otherWeekSurahIds = dayIndex < 7 ? ['falaq', 'nas'] : ['fatiha', 'ikhlas'];
-
-  const focusId = plan.bigReview ? weekSurahIds[1] : plan.surah;
-  const focusSurah = SURAH_DATA[focusId];
-  const partnerSurah = SURAH_DATA[weekSurahIds.find(id => id !== focusId) || weekSurahIds[0]];
-  const otherWeekSurah = SURAH_DATA[otherWeekSurahIds[dayIndex % 2]];
-
-  const ayatCorrect = focusSurah.totalAyat;
-  const ayatWrong = [ayatCorrect - 1, ayatCorrect + 1, ayatCorrect + 2].filter(n => n > 0 && n !== ayatCorrect);
-  const ayatQ = shuffleOptions([ayatCorrect, ayatWrong[0], ayatWrong[1]], ayatCorrect);
-
-  const numCorrect = focusSurah.num;
-  const numWrong = [numCorrect - 1, numCorrect + 1, numCorrect - 3, numCorrect + 3].filter(n => n > 0 && n <= 114 && n !== numCorrect);
-  const numQ = shuffleOptions([numCorrect, numWrong[0], numWrong[1]], numCorrect);
-
-  const quoteAyahIdx = (plan.ayahs && plan.ayahs.length) ? plan.ayahs[0] : 0;
-  const quoteAyah = focusSurah.ayahs[quoteAyahIdx];
-  const quoteQ = shuffleOptions([focusSurah.name, partnerSurah.name, otherWeekSurah.name], focusSurah.name);
-
-  return [
-    { q: 'How many ayat (verses) does Surah ' + focusSurah.name + ' have?', options: ayatQ.options.map(String), correct: String(ayatQ.correct) },
-    { q: 'What is Surah ' + focusSurah.name + '’s number in the Qur’an (out of 114)?', options: numQ.options.map(String), correct: String(numQ.correct) },
-    { q: 'Which surah says: "' + quoteAyah.translation + '"?', options: quoteQ.options, correct: quoteQ.correct }
-  ];
-}
-
 const QURAN_TASKS = {
   foundation:'Listen to a grown-up recite it, then try to repeat the last word or two with them.',
   g1:'Listen to it 2-3 times, then try saying the shortest line by yourself.',
@@ -1041,10 +1027,8 @@ function buildSurahNumberQuestion(dayIndex){
 /* Three questions from the day's Du'a of the Day -- reuses dua-tag's own
    vetted library (meaning, category, source) instead of writing anything
    new, so there's nothing to fact-check here either. */
-function buildDuaQuestions(dayIndex, gradeId){
-  const entry = gradeId === 'foundation' ? FOUNDATION_DUA_PLAN[dayIndex] : null;
-  const duaId = entry ? (entry.bigReview ? entry.weekDuaIds[1] : entry.duaId) : HOLIDAY_PLAN[dayIndex].duaId;
-  const dua = getDuaById(duaId) || DUA_LIBRARY[0];
+function buildDuaQuestions(dayIndex){
+  const dua = getDuaById(HOLIDAY_PLAN[dayIndex].duaId) || DUA_LIBRARY[0];
   const idx = Math.max(0, DUA_LIBRARY.findIndex(d => d.id === dua.id));
   const other1 = DUA_LIBRARY[(idx + 3) % DUA_LIBRARY.length];
   const other2 = DUA_LIBRARY[(idx + 6) % DUA_LIBRARY.length];
@@ -1112,15 +1096,13 @@ function buildMathQuestions(dayIndex, gradeId){
    one mixed order so the subjects interleave instead of running in blocks. */
 function buildDayQuizQuestions(dayIndex, gradeId){
   const tag = (list, icon, label) => list.map(q => Object.assign({ icon: icon, label: label }, q));
-  const quranQs = gradeId === 'foundation'
-    ? buildFoundationQuranQuestions(dayIndex)
-    : [buildAyatQuestion(dayIndex), buildMeaningQuestion(dayIndex), buildSurahNumberQuestion(dayIndex)];
+  const quranQs = [buildAyatQuestion(dayIndex), buildMeaningQuestion(dayIndex), buildSurahNumberQuestion(dayIndex)];
   const all = [
     ...tag(quranQs, '📖', 'Qur’an'),
     ...tag(fromBank(ACTIVITY_QUESTIONS, dayIndex), '🎯', 'Today'),
     ...tag(buildMathQuestions(dayIndex, gradeId), '🔢', 'Math'),
     ...tag(fromBank(ENGLISH_QUESTIONS, dayIndex), '✏️', 'English'),
-    ...tag(buildDuaQuestions(dayIndex, gradeId), '🤲', 'Du’a')
+    ...tag(buildDuaQuestions(dayIndex), '🤲', 'Du’a')
   ];
   for(let i = all.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
@@ -1203,7 +1185,7 @@ function renderFoundationWordSection(container, dayIndex){
    scramble game (same CSS classes, same audio cues) so it's a familiar,
    already-tested pattern -- just retargeted at today's Soundwaves word(s)
    instead of a surah name. */
-function renderWordScramble(container, word){
+function renderWordScramble(container, word, onSolve){
   const target = word.toUpperCase();
   let scrambled = shuffleLetters(target);
   if(scrambled.join('') === target && target.length > 1){ scrambled.reverse(); }
@@ -1239,6 +1221,7 @@ function renderWordScramble(container, word){
       feedback.textContent = '🎉 You read it: ' + word + '!';
       feedback.style.color = 'var(--green-dark)';
       pool.querySelectorAll('.letter-tile').forEach(t => t.disabled = true);
+      if(onSolve) setTimeout(() => onSolve(true), 700);
     } else {
       playWrong();
       feedback.textContent = 'Not quite — tap Clear and try again!';
@@ -1279,6 +1262,13 @@ function renderWordScramble(container, word){
 
   actions.appendChild(clearBtn);
   actions.appendChild(hintBtn);
+  if(onSolve){
+    const skipBtn = document.createElement('button');
+    skipBtn.type = 'button';
+    skipBtn.textContent = 'Skip ⏭';
+    skipBtn.addEventListener('click', () => onSolve(false));
+    actions.appendChild(skipBtn);
+  }
   renderSlots();
   wrap.appendChild(slotsRow);
   wrap.appendChild(pool);
@@ -1337,8 +1327,8 @@ function updateDayBadge(gradeId, dayIndex){
 /* ===================== Quiz of the Day modal ===================== */
 let quizState = null;
 
-function fireConfetti(){
-  const burst = document.getElementById('confetti-burst');
+function fireConfetti(burstId){
+  const burst = document.getElementById(burstId || 'confetti-burst');
   if(!burst) return;
   burst.innerHTML = '';
   const emojis = ['🎉','⭐','🎊','✨','🌟'];
@@ -1451,6 +1441,86 @@ function wireQuizModal(){
   document.getElementById('quiz-modal-close').addEventListener('click', closeQuizModal);
   document.getElementById('quiz-modal').addEventListener('click', e => {
     if(e.target.id === 'quiz-modal') closeQuizModal();
+  });
+}
+
+/* ===================== Foundation's Quiz of the Day ===================== */
+/* Foundation gets a completely different "quiz": no multiple-choice at
+   all, just the same tap-the-letters unscramble game used elsewhere on
+   the page, stepped through one at a time for exactly the things
+   they're memorising this fortnight -- today's surah name(s), a
+   keyword from today's du'a, and today's Soundwaves word(s). Nothing
+   about the generic Activity/Math/English categories. */
+const DUA_SCRAMBLE_WORDS = {
+  'leaving-home':'LEAVING', 'entering-home':'ENTERING',
+  'before-sleep':'SLEEP', 'upon-waking':'WAKING'
+};
+function buildFoundationQuizSteps(dayIndex){
+  const quranPlan = FOUNDATION_QURAN_PLAN[dayIndex];
+  const surahIds = quranPlan.bigReview ? quranPlan.weekSurahs : [quranPlan.surah];
+  const duaPlan = FOUNDATION_DUA_PLAN[dayIndex];
+  const duaIds = duaPlan.bigReview ? duaPlan.weekDuaIds : [duaPlan.duaId];
+  const steps = [];
+  surahIds.forEach(id => steps.push({ icon:'📖', label:'Qur’an', word: SURAH_DATA[id].name.replace(/^(Al|An)-/, '') }));
+  duaIds.forEach(id => steps.push({ icon:'🤲', label:'Du’a', word: DUA_SCRAMBLE_WORDS[id] }));
+  SOUNDWAVES_DAYS[dayIndex].forEach(word => steps.push({ icon:'🔤', label:'Words', word: word.toUpperCase() }));
+  for(let i = steps.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [steps[i], steps[j]] = [steps[j], steps[i]];
+  }
+  return steps;
+}
+let foundationQuizState = null;
+function openFoundationQuiz(dayIndex){
+  foundationQuizState = { dayIndex: dayIndex, steps: buildFoundationQuizSteps(dayIndex), index: 0, solvedCount: 0 };
+  document.getElementById('foundation-quiz-results-view').classList.add('hidden');
+  document.getElementById('foundation-quiz-game-view').classList.remove('hidden');
+  document.getElementById('foundation-quiz-modal').classList.remove('hidden');
+  renderFoundationQuizStep();
+}
+function renderFoundationQuizStep(){
+  const { steps, index } = foundationQuizState;
+  const total = steps.length;
+  document.getElementById('foundation-quiz-progress').textContent = 'Game ' + (index + 1) + ' of ' + total;
+  document.getElementById('foundation-quiz-progress-fill').style.width = Math.round((index / total) * 100) + '%';
+  const step = steps[index];
+  document.getElementById('foundation-quiz-tag').textContent = step.icon + ' ' + step.label;
+  const container = document.getElementById('foundation-quiz-game-container');
+  container.innerHTML = '';
+  renderWordScramble(container, step.word, solved => {
+    if(solved) foundationQuizState.solvedCount++;
+    foundationQuizState.index++;
+    if(foundationQuizState.index >= steps.length) finishFoundationQuiz();
+    else renderFoundationQuizStep();
+  });
+}
+function finishFoundationQuiz(){
+  const { dayIndex, steps, solvedCount } = foundationQuizState;
+  const total = steps.length;
+  document.getElementById('foundation-quiz-progress-fill').style.width = '100%';
+  document.getElementById('foundation-quiz-game-view').classList.add('hidden');
+  document.getElementById('foundation-quiz-results-view').classList.remove('hidden');
+  const alreadyDone = dayScoreFor('foundation', dayIndex) !== undefined;
+  document.getElementById('foundation-quiz-results-emoji').textContent = solvedCount === total ? '🏆' : '🎉';
+  if(!alreadyDone){
+    studentProgress.completed.foundation = studentProgress.completed.foundation || {};
+    studentProgress.completed.foundation[dayIndex] = { correct: solvedCount, total: total };
+    studentProgress.points += solvedCount;
+    saveHolidayProgress();
+    updatePointsBanner();
+    document.getElementById('foundation-quiz-results-msg').textContent = 'You solved ' + solvedCount + ' of ' + total + ' games — +' + solvedCount + ' ⭐ points earned!';
+    fireConfetti('foundation-quiz-confetti-burst');
+  } else {
+    document.getElementById('foundation-quiz-results-msg').textContent = 'You solved ' + solvedCount + ' of ' + total + ' games this time. Great practice!';
+  }
+  updateDayBadge('foundation', dayIndex);
+}
+function wireFoundationQuiz(){
+  document.getElementById('foundation-quiz-modal-close').addEventListener('click', () => {
+    document.getElementById('foundation-quiz-modal').classList.add('hidden');
+  });
+  document.getElementById('foundation-quiz-modal').addEventListener('click', e => {
+    if(e.target.id === 'foundation-quiz-modal') document.getElementById('foundation-quiz-modal').classList.add('hidden');
   });
 }
 
@@ -1740,7 +1810,10 @@ function renderPlan(name, gradeId){
       quizBtn.type = 'button';
       quizBtn.className = 'quiz-cta-btn';
       quizBtn.textContent = '🎯 Quiz of the Day';
-      quizBtn.addEventListener('click', () => openQuizModal(dayNum - 1));
+      quizBtn.addEventListener('click', () => {
+        if(gradeId === 'foundation') openFoundationQuiz(dayNum - 1);
+        else openQuizModal(dayNum - 1);
+      });
       const quizBadge = document.createElement('span');
       quizBadge.className = 'quiz-badge';
       quizBadge.id = 'quiz-badge-' + (dayNum - 1);
@@ -1828,6 +1901,7 @@ function wireCloudAuth(){
   });
 }
 wireQuizModal();
+wireFoundationQuiz();
 wireAyahAudio();
 wireRepeatStars();
 wirePosterButtons();
