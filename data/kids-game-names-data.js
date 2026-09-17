@@ -1,7 +1,6 @@
 /* The 99 Names of Allah (Al-Asma-ul-Husna), in the customary order used
    in the well-known hadith list (Jami' at-Tirmidhi) that virtually every
-   Islamic curriculum teaches from. Loaded before the main game script
-   (and directly by tools/generate-kids-game-names-audio.js in Node) so
+   Islamic curriculum teaches from. Loaded before the main script so
    both share one source of truth -- do not duplicate this content inline
    in the HTML. */
 window.NAMES_99 = [
