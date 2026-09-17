@@ -803,7 +803,29 @@ function primeSpeech(){
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
-function playTap(){ primeSpeech(); beep(430,.07,'triangle'); }
+/* Browsers only allow requestFullscreen() from inside a real user
+   gesture, so it can't be triggered on page load — instead, every tap
+   (playTap fires from nearly every button) tries it once fullscreen
+   isn't already active. Best-effort: iOS Safari before 16.4 has no
+   Fullscreen API at all, and some contexts (an embedded iframe without
+   the allowfullscreen permission) will always reject it — either way
+   it silently no-ops and the app still works, just without hiding the
+   browser chrome. */
+let triedFullscreen = false;
+function enterImmersiveMode(){
+  if(document.fullscreenElement || triedFullscreen) return;
+  triedFullscreen = true;
+  const el = document.documentElement;
+  const req = el.requestFullscreen ? el.requestFullscreen()
+    : (el.webkitRequestFullscreen ? el.webkitRequestFullscreen() : null);
+  if(req && req.then){
+    req.then(()=>{
+      if(screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+    }).catch(()=>{ triedFullscreen = false; });
+  }
+}
+document.addEventListener('fullscreenchange', ()=>{ if(!document.fullscreenElement) triedFullscreen = false; });
+function playTap(){ primeSpeech(); enterImmersiveMode(); beep(430,.07,'triangle'); }
 function playRight(){ beep(660,.12,'sine'); setTimeout(()=>beep(880,.16,'sine'),90); }
 function playWrong(){ beep(180,.2,'sawtooth'); }
 function playWin(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.2,'sine'), i*140)); }
@@ -939,12 +961,14 @@ function nodeStatus(i){
   return 'locked';
 }
 let lastCompletedMapIdx = null;
+let lastAdvancedFromIdx = null;
 function unlockNext(){
   const justFinishedIdx = profile.unlockedIndex;
   if(profile.unlockedIndex < NODES.length) profile.unlockedIndex++;
   saveProfile();
   const mi = mapIndexForNodeIdx(justFinishedIdx);
   lastCompletedMapIdx = (profile.unlockedIndex >= MAPS[mi].to) ? mi : null;
+  lastAdvancedFromIdx = justFinishedIdx;
 }
 function currentContinueTarget(){
   return Math.min(profile.unlockedIndex, NODES.length-1);
@@ -1008,6 +1032,15 @@ function renderHome(){
 const MAP_PATH_D = 'M 70 545 C 210 545 250 470 330 448 C 420 424 500 470 560 430 ' +
                    'C 640 378 590 300 500 285 C 400 268 330 230 360 170 ' +
                    'C 392 108 520 96 640 132 C 780 174 850 150 940 108';
+/* Shared, detached measuring path — getPointAtLength/getTotalLength work
+   on it without ever attaching it to the document, so every map page
+   (and the walking-avatar animation) can reuse one instance instead of
+   creating/appending/removing a temporary element on every render. */
+const MAP_PATH_MEASURE = document.createElementNS('http://www.w3.org/2000/svg','path');
+MAP_PATH_MEASURE.setAttribute('d', MAP_PATH_D);
+const MAP_PATH_LEN = MAP_PATH_MEASURE.getTotalLength();
+function nodeArcFrac(localIdx, count){ return (localIdx+0.5)/count; }
+function pointAtFrac(frac){ return MAP_PATH_MEASURE.getPointAtLength(MAP_PATH_LEN*frac); }
 const SCENES = {
   g1: { sky:'#ffe9c2', ground:'#f3d79a', deco:[
     {e:'🕋', x:90,  y:170, s:56}, {e:'🌴', x:900, y:520, s:50}, {e:'🐫', x:800, y:150, s:40},
@@ -1072,12 +1105,40 @@ function nodeVisual(n, status){
   return { discCls, letterCh, label };
 }
 
+/* Animates the avatar walking along the road from one node to another
+   on the SAME map page (each page is its own self-contained road, so
+   there's no continuous path to walk along once a page boundary is
+   crossed — that case just gets the ordinary arrival pop instead). */
+function walkAvatarAlong(svg, count, fromLocal, toLocal, onArrive){
+  const NS = 'http://www.w3.org/2000/svg';
+  const avatarEl = document.createElementNS(NS,'text');
+  avatarEl.setAttribute('class','avatar-marker');
+  avatarEl.setAttribute('font-size','38');
+  avatarEl.setAttribute('text-anchor','middle');
+  avatarEl.textContent = profile.avatar;
+  svg.appendChild(avatarEl);
+  const fromFrac = nodeArcFrac(fromLocal, count), toFrac = nodeArcFrac(toLocal, count);
+  const DURATION = 850;
+  const start = performance.now();
+  function step(now){
+    const t = Math.min(1, (now-start)/DURATION);
+    const eased = t*t*(3-2*t);
+    const p = pointAtFrac(fromFrac + (toFrac-fromFrac)*eased);
+    avatarEl.setAttribute('x', p.x);
+    avatarEl.setAttribute('y', p.y-47);
+    if(t<1) requestAnimationFrame(step);
+    else onArrive();
+  }
+  requestAnimationFrame(step);
+}
 /* Draws the current map page: MAPS[viewMap]'s lesson stones spaced
    evenly along the fixed winding road by arc length. jumpNodeIdx
-   (optional) plays a little "just arrived here" pop on that node —
-   used when coming back from a finished lesson so progress visibly
-   advances instead of just silently updating. */
-function paintMap(jumpNodeIdx){
+   (optional) plays a little "just arrived here" pop on that node; if
+   walkFromLocal is also given (the previous node's position on this
+   same page), the avatar visibly walks there first instead of just
+   appearing — used when coming back from a finished lesson so progress
+   advances like a step on the road, not a silent update. */
+function paintMap(jumpNodeIdx, walkFromLocal){
   const svg = $('map-svg');
   const map = MAPS[viewMap];
   const scene = SCENES[map.group.id] || SCENES.g1;
@@ -1092,16 +1153,8 @@ function paintMap(jumpNodeIdx){
   $('map-coins').textContent = profile.coins;
   $('map-progress').textContent = Math.min(profile.unlockedIndex, NODES.length) + '/' + NODES.length;
 
-  const measure = document.createElementNS('http://www.w3.org/2000/svg','path');
-  measure.setAttribute('d', MAP_PATH_D);
-  svg.appendChild(measure);
-  const total = measure.getTotalLength();
   const points = [];
-  for(let i=0;i<count;i++){
-    const p = measure.getPointAtLength(total * ((i+0.5)/count));
-    points.push({ x:p.x, y:p.y });
-  }
-  svg.removeChild(measure);
+  for(let i=0;i<count;i++) points.push(pointAtFrac(nodeArcFrac(i,count)));
 
   let html = '<defs><linearGradient id="mapSkyGrad" x1="0" y1="0" x2="0" y2="1">' +
     '<stop offset="0%" stop-color="'+scene.sky+'"/><stop offset="100%" stop-color="'+scene.ground+'"/>' +
@@ -1116,6 +1169,7 @@ function paintMap(jumpNodeIdx){
   html += '<path d="'+MAP_PATH_D+'" fill="none" stroke="#fff7e2" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 26"/>';
 
   const currentIdx = currentContinueTarget();
+  const willWalk = typeof walkFromLocal === 'number' && walkFromLocal >= 0 && walkFromLocal < count;
   points.forEach((pt,i)=>{
     const idx = map.from + i;
     const n = NODES[idx];
@@ -1129,13 +1183,13 @@ function paintMap(jumpNodeIdx){
       html += '<circle class="pulse-ring" cx="'+pt.x+'" cy="'+pt.y+'" r="34" fill="none" stroke="'+(status==='locked'?'#8c9296':'#2c8350')+'" stroke-width="4"/>';
     }
     html += '<g class="node-g'+(status==='locked'?' locked':'')+'" data-idx="'+idx+'">';
-    html += '<circle class="'+v.discCls+(idx===jumpNodeIdx?' just-arrived':'')+'" cx="'+pt.x+'" cy="'+pt.y+'" r="'+rad+'" stroke="#fff" stroke-width="5"/>';
+    html += '<circle class="'+v.discCls+((idx===jumpNodeIdx && !willWalk)?' just-arrived':'')+'" cx="'+pt.x+'" cy="'+pt.y+'" r="'+rad+'" stroke="#fff" stroke-width="5"/>';
     html += '<text class="node-num'+(status==='locked'?' locked':'')+'" x="'+pt.x+'" y="'+(pt.y+9)+'" text-anchor="middle">' +
               (status==='locked' ? '🔒' : escapeHtml(v.letterCh)) + '</text>';
     html += '</g>';
     html += '<text class="node-label" x="'+pt.x+'" y="'+(pt.y+rad+22)+'" text-anchor="middle">'+escapeHtml(v.label)+'</text>';
     if(st) html += '<text class="node-stars" x="'+pt.x+'" y="'+(pt.y+rad+40)+'" text-anchor="middle">'+'★'.repeat(st)+'</text>';
-    if(isCurrent){
+    if(isCurrent && !willWalk){
       html += '<text class="avatar-marker" x="'+pt.x+'" y="'+(pt.y-rad-14)+'" font-size="38" text-anchor="middle">'+profile.avatar+'</text>';
     }
   });
@@ -1149,6 +1203,17 @@ function paintMap(jumpNodeIdx){
     });
   });
 
+  if(willWalk){
+    const toLocal = currentIdx - map.from;
+    walkAvatarAlong(svg, count, walkFromLocal, toLocal, function(){
+      const targetDisc = svg.querySelector('.node-g[data-idx="'+currentIdx+'"] .node-disc');
+      if(targetDisc){
+        targetDisc.classList.add('just-arrived');
+        setTimeout(()=>targetDisc.classList.remove('just-arrived'), 800);
+      }
+    });
+  }
+
   const doneOnMap = mapDoneCount(viewMap);
   $('map-help').textContent = doneOnMap === count
     ? 'This whole map is finished — tap ▶ for the next one!'
@@ -1161,13 +1226,19 @@ function paintMap(jumpNodeIdx){
 }
 /* Full entry point: pick the page containing jumpToIdx (defaulting to
    the player's current lesson) and paint it, with the "just arrived"
-   pop on that node. Used whenever the game returns to the map from
-   somewhere else (finishing a lesson, Home, the certificate screen). */
+   pop on that node (or a full walking animation there, if the last
+   thing that happened was finishing a lesson on this same page). Used
+   whenever the game returns to the map from somewhere else (finishing
+   a lesson, Home, the certificate screen). */
 function renderMap(jumpToIdx){
   if(typeof jumpToIdx !== 'number') jumpToIdx = currentContinueTarget();
   viewMap = mapIndexForNodeIdx(jumpToIdx);
+  const walkFrom = lastAdvancedFromIdx;
+  lastAdvancedFromIdx = null;
+  const walkFromLocal = (typeof walkFrom === 'number' && mapIndexForNodeIdx(walkFrom) === viewMap && walkFrom !== jumpToIdx)
+    ? walkFrom - MAPS[viewMap].from : null;
   showScreen('screen-map');
-  paintMap(jumpToIdx);
+  paintMap(jumpToIdx, walkFromLocal);
 }
 $('map-prev').addEventListener('click', ()=>{ if(viewMap>0){ viewMap--; playTap(); paintMap(); } });
 $('map-next').addEventListener('click', ()=>{ if(viewMap<MAPS.length-1){ viewMap++; playTap(); paintMap(); } });
