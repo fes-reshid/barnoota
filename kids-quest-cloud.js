@@ -146,6 +146,16 @@ function onStudentAuth(cb){
 
 function studentLogout(){ return signOut(auth); }
 
+/* The signed-in user's Firebase ID token, for calling a backend that has to
+   know who is asking without ever being told a username or password. Firebase
+   refreshes it automatically; null when signed out. Used by the Qur'an daily
+   tracker's reminder API. */
+function getIdToken(forceRefresh){
+  return auth.currentUser
+    ? auth.currentUser.getIdToken(!!forceRefresh)
+    : Promise.resolve(null);
+}
+
 /* Saves one game's profile object (stars, coins, unlocked, certs, avatar —
    whatever shape that game already uses) under progress.<gameKey>, merged
    so other games' saved progress on the same account is untouched. */
@@ -352,6 +362,7 @@ window.KidsCloud = {
   studentSignUp: studentSignUp,
   onStudentAuth: onStudentAuth,
   studentLogout: studentLogout,
+  getIdToken: getIdToken,
   saveProgress: saveProgress,
   setFullName: setFullName,
   adminSignIn: adminSignIn,
