@@ -239,6 +239,11 @@ match /kids_quest_students/{uid} {
       <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
     </div>
 
+    <!-- Qur'an daily reading report. The panel fills this in and shows itself
+         only to a signed-in admin; its data comes from the tracker's reminder
+         API, joined to these students' names here in the browser. -->
+    <div id="quran-tracker-report" data-api="/quran-tracker/api/"></div>
+
     <div class="card hidden" id="admins-card">
       <h2>Admins <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
       <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Only super admins can see and change this
@@ -263,6 +268,7 @@ match /kids_quest_students/{uid} {
 </div>
 
 <script type="module" src="kids-quest-cloud.js?v=5"></script>
+<script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
