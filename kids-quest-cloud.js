@@ -91,22 +91,31 @@ function studentLogin(username, password){
    internal synthetic Auth email every account still uses, so existing
    login/reset logic keeps working unchanged) and a password. Firebase
    naturally rejects a taken username, since it maps to the same
-   synthetic email as any existing account with that username. */
-function studentSignUp(username, contactEmail, password){
+   synthetic email as any existing account with that username.
+
+   `fullName` is optional and new: when a caller provides it (the Qur'an
+   tracker's create-account form does), it becomes the account's
+   displayName in place of the username, everywhere that field is read —
+   the admin roster, this game, and any other game on the shared login.
+   Callers that do not pass it (the existing games) are unaffected:
+   displayName still defaults to the username exactly as before. */
+function studentSignUp(username, contactEmail, password, fullName){
   const clean = normalizeUsername(username);
   if(!clean) return Promise.reject(new Error('Choose a username.'));
   const email = usernameToEmail(clean);
+  const cleanFullName = String(fullName || '').trim();
   return createUserWithEmailAndPassword(auth, email, password).then(function(cred){
     const data = {
       username: clean,
-      displayName: clean,
+      displayName: cleanFullName || clean,
+      fullName: cleanFullName,
       contactEmail: normalizeEmail(contactEmail || ''),
       selfSignup: true,
       createdAt: new Date().toISOString(),
       progress: {}
     };
     return setDoc(doc(db, STUDENTS_COLLECTION, cred.user.uid), data).then(function(){
-      return { uid: cred.user.uid, username: clean, displayName: clean, fullName: '', progress: {} };
+      return { uid: cred.user.uid, username: clean, displayName: data.displayName, fullName: cleanFullName, progress: {} };
     });
   });
 }
