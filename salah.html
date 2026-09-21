@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
 <title>Shurūṭ aṣ-Ṣalāh — Conditions of Prayer — Diin Islaam</title>
-<meta name="description" content="Shurūṭ aṣ-Ṣalāh, the nine conditions that must be fulfilled before Salah can be performed — Islam, sanity, discernment, purification, covering the awrah, prayer time, facing the Qiblah and intention — with a 5-question self-check quiz.">
+<meta name="description" content="An interactive journey through Shurūṭ aṣ-Ṣalāh, the nine conditions that must be fulfilled before Salah can be performed — starting with what Salah is, a quick check after each condition, a final challenge, and a printable certificate.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
@@ -26,6 +26,7 @@
   }
   a{color:inherit;}
   .arabic{ font-family:'Amiri', serif; }
+  .hidden{ display:none !important; }
 
   header.site{
     position:sticky; top:0; z-index:50;
@@ -78,73 +79,120 @@
   .page-head p{ font-size:18px; color:#6b5a3f; line-height:1.65; max-width:680px; margin:0 auto; }
   .byline{ font-family:'Marcellus'; font-size:14px; color:var(--gold); margin:16px 0 0; }
 
-  .mode-tabs{ display:flex; justify-content:center; gap:10px; margin:32px auto 0; }
-  .mode-tab{
-    font-family:'Marcellus'; font-size:15px; background:#fff; border:1.5px solid var(--gold-soft);
-    color:var(--ink-brown); padding:10px 24px; border-radius:24px; cursor:pointer;
-    transition:background .15s, color .15s;
+  /* ===== name gate ===== */
+  .name-gate-wrap{ display:flex; justify-content:center; padding:30px 20px 90px; }
+  .name-gate-card{
+    max-width:440px; width:100%; text-align:center; background:#fff;
+    border:2px solid var(--gold-soft); border-radius:20px; padding:36px 30px;
+    box-shadow:0 10px 26px rgba(60,45,20,.12);
   }
-  .mode-tab.active{ background:var(--green); color:#faf3e0; border-color:var(--green); }
-  .mode-panel{ display:none; max-width:var(--maxw); margin:0 auto; padding:36px 20px 90px; }
-  .mode-panel.active{ display:block; }
-
-  /* lesson cards */
-  .cond-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(270px,1fr)); gap:22px; max-width:960px; margin:0 auto; }
-  .cond-card{
-    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px;
-    padding:24px 26px; box-shadow:0 5px 14px rgba(60,45,20,.07); position:relative;
+  .name-gate-icon{ font-size:44px; margin-bottom:10px; }
+  .name-gate-card h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 8px; }
+  .name-gate-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; line-height:1.55; }
+  .name-input{
+    width:100%; padding:13px 16px; border:1.5px solid var(--gold-soft); border-radius:12px;
+    font-family:'Cormorant Garamond', serif; font-size:18px; text-align:center;
+    background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
   }
-  .cond-num{
-    position:absolute; top:-12px; left:20px; width:28px; height:28px; border-radius:50%;
-    background:var(--green); color:#faf3e0; font-family:'Marcellus'; font-size:14px; font-weight:700;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .cond-card h3{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); margin:8px 0 2px; }
-  .cond-card .ar-name{ font-family:'Amiri', serif; font-size:21px; color:var(--gold); margin:0 0 10px; display:block; }
-  .cond-card p{ font-size:15px; color:#6b5a3f; line-height:1.6; margin:0; }
-
-  /* quiz */
-  .quiz-shell{ max-width:640px; margin:0 auto; }
-  .quiz-intro{ text-align:center; font-size:16px; color:#6b5a3f; max-width:560px; margin:0 auto 26px; line-height:1.6; }
-  .quiz-progress{ text-align:center; font-size:14px; color:#8a7a5c; margin-bottom:8px; font-family:'Marcellus'; }
-  .quiz-card{
-    background:var(--parchment); border:2px solid var(--gold); border-radius:16px;
-    padding:30px 26px; box-shadow:0 10px 26px rgba(60,45,20,.14); text-align:center;
-  }
-  .quiz-q{ font-size:21px; color:var(--ink-navy); line-height:1.5; margin:0 0 22px; }
-  .quiz-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
-  .quiz-opt{
-    text-align:left; font-family:'Cormorant Garamond', serif; font-size:17px; font-weight:600;
-    background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px; padding:12px 18px;
-    cursor:pointer; transition:border-color .15s, background .15s;
-  }
-  .quiz-opt:hover{ border-color:var(--gold); }
-  .quiz-opt.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
-  .quiz-opt.wrong{ background:var(--red-bg); border-color:var(--red); color:var(--red); }
-  .quiz-opt[disabled]{ cursor:default; }
-  .quiz-explain{
-    text-align:left; font-size:15px; color:#6b5a3f; background:var(--parchment-deep);
-    border-radius:10px; padding:12px 16px; margin-top:14px; line-height:1.5; display:none;
-  }
-  .quiz-explain.show{ display:block; }
-  .quiz-nextrow{ margin-top:18px; }
+  .name-input:focus{ outline:none; border-color:var(--gold); }
   .btn{
     display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
     font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
     transition:transform .15s ease, background .15s ease;
   }
   .btn:hover{ transform:translateY(-2px); }
-  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary{ background:var(--green); color:#faf3e0; width:100%; }
   .btn-primary:hover{ background:var(--green-dark); }
-  .quiz-result{ text-align:center; }
-  .quiz-result .score{ font-family:'Marcellus'; font-size:44px; color:var(--ink-navy); margin:6px 0; }
-  .quiz-result p{ font-size:17px; color:#6b5a3f; }
+  .btn-ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
+  .btn-ghost:hover{ background:var(--parchment-deep); }
+
+  /* ===== quest ===== */
+  .quest-wrap{ max-width:640px; margin:0 auto; padding:30px 20px 90px; }
+  .progress-row{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .progress-track{ flex:1; height:10px; border-radius:6px; background:var(--parchment-deep); overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--green); border-radius:6px; transition:width .3s ease; width:0%; }
+  .progress-label{ font-family:'Marcellus'; font-size:13px; color:#8a7a5c; white-space:nowrap; }
+  .coin-chip{
+    font-family:'Marcellus'; font-size:13px; color:var(--gold); background:var(--parchment-deep);
+    border-radius:14px; padding:5px 12px; white-space:nowrap;
+  }
+  .stage-card{
+    background:var(--parchment); border:2px solid var(--gold); border-radius:18px;
+    padding:34px 30px; text-align:center; box-shadow:0 10px 26px rgba(60,45,20,.14);
+  }
+  .stage-icon{ font-size:44px; margin-bottom:8px; }
+  .stage-badge{
+    display:inline-block; font-family:'Marcellus'; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--green); color:#faf3e0; padding:4px 14px; border-radius:14px; margin-bottom:14px;
+  }
+  .stage-title{ font-family:'Marcellus'; font-size:23px; color:var(--ink-navy); margin:0 0 6px; }
+  .stage-ar{ font-family:'Amiri', serif; font-size:26px; color:var(--gold); display:block; margin:0 0 14px; }
+  .stage-text{ font-size:16.5px; color:var(--ink-brown); line-height:1.65; margin:0 auto 14px; max-width:480px; }
+  .speak-btn{
+    background:#fff; border:1.5px solid var(--gold-soft); border-radius:20px; padding:8px 18px;
+    font-family:'Cormorant Garamond', serif; font-weight:700; font-size:14.5px; color:var(--ink-brown);
+    cursor:pointer; transition:background .15s ease;
+  }
+  .speak-btn:hover{ background:var(--parchment-deep); }
+  .check-block{ margin-top:26px; border-top:2px dashed var(--gold-soft); padding-top:22px; }
+  .check-q{ font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); margin:0 0 16px; }
+  .choice-grid{ display:flex; flex-direction:column; gap:10px; }
+  .choice{
+    text-align:left; background:#fff; border:1.5px solid var(--gold-soft); border-radius:10px;
+    padding:12px 18px; font-size:16.5px; font-weight:600; cursor:pointer;
+    transition:border-color .15s, background .15s, transform .12s;
+  }
+  .choice:hover{ border-color:var(--gold); }
+  .choice.correct{ background:var(--green-bg); border-color:var(--green); color:var(--green-dark); }
+  .choice.wrong{ background:var(--red-bg); border-color:var(--red); color:var(--red); animation:shakeX .4s ease; }
+  .choice.locked{ pointer-events:none; }
+  .choice.correct.locked{ opacity:1; }
+  @keyframes shakeX{ 20%,60%{ transform:translateX(-6px); } 40%,80%{ transform:translateX(6px); } }
+  .feedback{ min-height:24px; font-family:'Marcellus'; font-size:15px; margin-top:14px; }
+  .feedback.good{ color:var(--green-dark); }
+  .feedback.bad{ color:var(--red); }
+
+  /* ===== certificate ===== */
+  .cert-wrap{ display:flex; justify-content:center; padding:10px 20px 90px; }
+  .cert-card{
+    max-width:640px; width:100%; background:linear-gradient(135deg,#fffaf0,var(--parchment));
+    border:3px double var(--gold); outline:8px solid var(--parchment-deep); outline-offset:-16px;
+    border-radius:14px; padding:44px 36px; text-align:center; position:relative;
+  }
+  .cert-corner{ position:absolute; width:24px; height:24px; opacity:.5; pointer-events:none; }
+  .cert-corner::before, .cert-corner::after{ content:''; position:absolute; inset:0; border:2px solid var(--gold); }
+  .cert-corner::after{ transform:rotate(45deg); }
+  .cert-corner.tl{ top:14px; left:14px; } .cert-corner.tr{ top:14px; right:14px; }
+  .cert-corner.bl{ bottom:14px; left:14px; } .cert-corner.br{ bottom:14px; right:14px; }
+  .cert-bismillah{ font-family:'Amiri', serif; font-size:17px; color:var(--gold); margin:0 0 14px; }
+  .cert-eyebrow{ font-family:'Marcellus'; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin:0; }
+  .cert-title{ font-family:'Marcellus'; font-size:27px; color:var(--ink-navy); margin:10px 0 18px; }
+  .cert-line{ font-size:16px; color:var(--ink-brown); margin:4px 0; }
+  .cert-name{ font-family:'Marcellus'; font-size:30px; color:var(--gold); margin:10px 0; }
+  .cert-course{ font-size:18px; font-weight:700; color:var(--ink-navy); margin:6px 0; }
+  .cert-course-ar{ font-family:'Amiri', serif; font-size:19px; color:var(--gold); margin:2px 0 0; display:block; }
+  .cert-divider{ margin:22px auto; max-width:240px; display:flex; align-items:center; gap:10px; color:var(--gold); }
+  .cert-divider span{ flex:1; height:1px; background:var(--gold); opacity:.5; }
+  .cert-meta-row{ display:flex; justify-content:center; gap:26px; flex-wrap:wrap; margin:10px 0; font-size:14px; color:var(--ink-brown); }
+  .cert-meta-row b{ display:block; color:var(--ink-navy); font-family:'Marcellus'; font-size:15px; }
+  .cert-footer{ margin-top:20px; font-size:13px; color:var(--gold); }
+  .cert-actions{ display:flex; justify-content:center; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .cert-actions .btn{ width:auto; }
+
+  .confetti-piece{ position:fixed; top:-14px; width:9px; height:9px; border-radius:2px; z-index:300; animation:confettiFall linear forwards; pointer-events:none; }
+  @keyframes confettiFall{ to{ transform:translateY(105vh) rotate(360deg); opacity:.3; } }
 
   footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
   footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
   footer .flinks a{ text-decoration:none; color:#c9d2e0; }
   footer .flinks a:hover{ color:#faf3e0; }
   footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+
+  @media print{
+    header.site, footer, .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .cert-wrap{ padding:0; }
+  }
 </style>
 </head>
 <body>
@@ -167,30 +215,67 @@
   </div>
 </header>
 
-<div class="page-head">
+<div class="page-head no-print">
   <p class="eyebrow">Fiqh · Ṣalāh</p>
   <h1>Conditions of Prayer<span class="h1-ar arabic">شُرُوطُ الصَّلَاةِ</span></h1>
-  <p>Salah is one of the Five Pillars of Islam, and Shurūṭ aṣ-Ṣalāh are the conditions that must be fulfilled before it can be performed. They help a Muslim prepare themselves physically and spiritually before standing before Allah. Below are the nine main conditions, followed by a short quiz to check your understanding.</p>
+  <p>Salah is one of the Five Pillars of Islam, and Shurūṭ aṣ-Ṣalāh are the conditions that must be fulfilled before it can be performed. Start the journey below — learn what Salah is, meet all nine conditions one at a time, take on a final challenge, and earn your certificate.</p>
   <p class="byline">By Dania Nuradin &amp; Hania Feysel</p>
 </div>
 
-<div class="mode-tabs">
-  <button class="mode-tab active" data-mode="lesson">📖 Lesson</button>
-  <button class="mode-tab" data-mode="quiz">📝 Quiz</button>
-</div>
-
-<div class="mode-panel active" id="panel-lesson">
-  <div class="cond-grid" id="condGrid"></div>
-</div>
-
-<div class="mode-panel" id="panel-quiz">
-  <div class="quiz-shell">
-    <p class="quiz-intro">A short self-check — 5 questions on the conditions of Salah. No sign-in needed.</p>
-    <div id="quizShell"></div>
+<section id="screen-name" class="no-print">
+  <div class="name-gate-wrap">
+    <div class="name-gate-card">
+      <div class="name-gate-icon">🕌</div>
+      <h2>Start Your Ṣalāh Journey</h2>
+      <p>Type your name to begin — you'll learn what Salah is, meet all nine conditions one at a time, and earn a certificate at the end.</p>
+      <form id="nameForm">
+        <input type="text" class="name-input" id="nameInput" placeholder="Your name" maxlength="40" autocomplete="name" required>
+        <button type="submit" class="btn btn-primary">Begin →</button>
+      </form>
+    </div>
   </div>
-</div>
+</section>
 
-<footer>
+<section id="screen-quest" class="hidden no-print">
+  <div class="quest-wrap">
+    <div class="progress-row">
+      <span class="progress-label" id="progressLabel">Step 1</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="coin-chip">🪙 <b id="coinCount">0</b></span>
+    </div>
+    <div class="stage-card" id="stageCard"></div>
+  </div>
+</section>
+
+<section id="screen-cert" class="hidden">
+  <div class="cert-wrap">
+    <div class="cert-card">
+      <span class="cert-corner tl"></span><span class="cert-corner tr"></span>
+      <span class="cert-corner bl"></span><span class="cert-corner br"></span>
+      <p class="cert-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+      <p class="cert-eyebrow">Diin Islaam · دين الإسلام</p>
+      <h1 class="cert-title">Certificate of Completion</h1>
+      <p class="cert-line">This certifies that</p>
+      <div class="cert-name" id="certStudentName"></div>
+      <p class="cert-line">has completed the journey through</p>
+      <p class="cert-course">Shurūṭ aṣ-Ṣalāh · Conditions of Prayer</p>
+      <span class="cert-course-ar arabic">شُرُوطُ الصَّلَاةِ</span>
+      <div class="cert-divider"><span></span><b>✦</b><span></span></div>
+      <div class="cert-meta-row">
+        <div>Stars<b id="certStars"></b></div>
+        <div>Coins Earned<b id="certCoins"></b></div>
+        <div>Date<b id="certDate"></b></div>
+      </div>
+      <div class="cert-footer">Fiqh · Ṣalāh · diinislaam.com</div>
+      <div class="cert-actions no-print">
+        <button class="btn btn-primary" id="certPrintBtn">🖨️ Print Certificate</button>
+        <button class="btn btn-ghost" id="retakeBtn">↺ Take It Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="no-print">
   <div class="flinks">
     <a href="quran.html">Qur'ān</a>
     <a href="hadeeth.html">Ḥadīth</a>
@@ -218,23 +303,21 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
 
-/* ---------- mode tabs (Lesson / Quiz) ---------- */
-document.querySelectorAll('.mode-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-' + tab.dataset.mode).classList.add('active');
-  });
-});
-
 function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-/* ---------- the nine conditions ---------- */
+/* ---------- content: the nine conditions ---------- */
 const CONDITIONS = [
   { en:'Islam', ar:'الإِسْلَام',
     desc:'A person must be a Muslim before their prayer can be accepted as an act of worship. Someone becomes a Muslim by sincerely believing in Allah and accepting that Muhammad ﷺ is His final Messenger.' },
@@ -256,137 +339,221 @@ const CONDITIONS = [
     desc:'Making the sincere decision in your heart to perform a specific prayer for the sake of Allah. Having the correct intention helps a person pray with focus, honesty and purpose, and gives meaning to the prayer.' }
 ];
 
-document.getElementById('condGrid').innerHTML = CONDITIONS.map((c, i) => `
-  <div class="cond-card">
-    <span class="cond-num">${i + 1}</span>
-    <h3>${escapeHtml(c.en)}</h3>
-    <span class="ar-name arabic">${c.ar}</span>
-    <p>${escapeHtml(c.desc)}</p>
-  </div>
-`).join('');
-
-/* ---------- quiz ---------- */
-const QUIZ = [
-  {
-    q: 'What is the Arabic term for "Discernment," the condition of Salah reached around the age of seven?',
-    opts: ['العَقْل (Sanity)', 'التَّمْيِيز (Tamyīz)', 'النِّيَّة (Niyyah)', 'الإِسْلَام (Islam)'],
-    a: 1,
-    ex: 'Tamyīz (discernment) is having the ability to distinguish between right and wrong, usually reached around age seven, though it may vary from child to child.'
-  },
-  {
-    q: 'What does Satr al-ʿAwrah (covering the awrah) require a Muslim to do before Salah?',
-    opts: [
-      'Wear only white clothing',
-      'Cover the parts of the body that should not be shown during prayer',
-      'Wear their most expensive clothes',
-      'Remove their shoes before entering the prayer area'
-    ],
-    a: 1,
-    ex: 'Satr al-ʿAwrah means wearing clothing that is clean, modest and covers the parts of the body that should not be shown during prayer.'
-  },
-  {
-    q: 'Which condition of Salah means turning towards the Kaʿbah?',
-    opts: ['Dukhūl al-Waqt', 'Rafʿ al-Ḥadath', 'Istiqbāl al-Qiblah', 'Izālat an-Najāsah'],
-    a: 2,
-    ex: "Istiqbāl al-Qiblah (Facing the Qiblah) means turning towards the Ka'bah during Salah, which every Muslim around the world does, no matter where they live."
-  },
-  {
-    q: 'What is Niyyah?',
-    opts: [
-      'Saying the takbīr out loud before starting to pray',
-      'The sincere decision in the heart to perform a specific prayer for the sake of Allah',
-      'Reciting Sūrah al-Fātiḥah in every rakʿah',
-      'Raising both hands at the start of prayer'
-    ],
-    a: 1,
-    ex: 'Niyyah (intention) is made in the heart, not spoken aloud — it is the sincere decision to perform a specific prayer for the sake of Allah alone.'
-  },
-  {
-    q: 'Why must each Salah be performed within its appointed time (Dukhūl al-Waqt)?',
-    opts: [
-      'Because Allah has given every daily prayer a specific time, and praying within it shows obedience and follows the Sunnah',
-      'Because it is only a suggestion, not a requirement',
-      'Because the time of prayer can be chosen freely by each person',
-      'Because it only matters during Ramaḍān'
-    ],
-    a: 0,
-    ex: 'Each of the five daily prayers has a specific time to begin and end. Praying within the correct time shows obedience to Allah and follows the Sunnah of the Prophet ﷺ.'
-  }
+/* One quick-check question per condition, same order as CONDITIONS. */
+const CHECKS = [
+  { q:'What must someone sincerely do to fulfil the first condition of Salah, Islam?',
+    opts:['Believe in Allah and accept that Muhammad ﷺ is His final Messenger', 'Learn to read Arabic fluently', 'Visit Makkah at least once', "Memorize the whole Qur'an"], a:0 },
+  { q:"Why is Al-'Aql (sanity) an important condition for Salah?",
+    opts:['It helps a person pray with focus, understanding and awareness of their actions', 'It means a person must be exceptionally intelligent', 'It means only elderly people can pray', 'It has nothing to do with how a person prays'], a:0 },
+  { q:'Around what age does a child usually reach Tamyīz (discernment)?',
+    opts:['Around three years old', 'Around seven years old', 'Around fifteen years old', 'Around eighteen years old'], a:1 },
+  { q:'How do Muslims fulfil the condition of Rafʿ al-Ḥadath (purification from impurity)?',
+    opts:['By fasting the day before praying', 'By making wuḍūʾ and keeping the body, clothes and prayer area free from impurities', 'By reciting Sūrah al-Fātiḥah three times', 'By wearing brand-new clothes'], a:1 },
+  { q:'What must a Muslim check before praying, to fulfil Izālat an-Najāsah?',
+    opts:['That the sun has fully set', 'That their clothes and prayer area are free of anything impure', 'That they have eaten a meal', 'That they are standing up'], a:1 },
+  { q:"What does Satr al-'Awrah (covering the awrah) require?",
+    opts:['Wearing a hat at all times', 'Praying barefoot only', 'Wearing clean, modest clothing that covers the parts of the body that should not be shown', 'Wearing only white clothing'], a:2 },
+  { q:'Why must Salah be performed within its appointed time, Dukhūl al-Waqt?',
+    opts:['Because Allah gave each prayer a specific time, and praying within it shows obedience and follows the Sunnah', 'Because the mosque closes otherwise', 'Because it is only a local custom in some countries', 'Because it makes the prayer shorter'], a:0 },
+  { q:'What does Istiqbāl al-Qiblah (facing the Qiblah) mean?',
+    opts:['Facing the sunrise every morning', "Turning towards the Ka'bah during Salah", 'Standing facing north at all times', 'Facing away from other worshippers'], a:1 },
+  { q:'Where is Niyyah (intention) made, according to the ninth condition of Salah?',
+    opts:['Sincerely in the heart, before starting the prayer', 'Out loud before the adhan is called', 'Written down on paper beforehand', 'After the prayer has finished'], a:0 }
 ];
 
-let quizOrder = [];
-let quizIndex = 0;
-let quizScore = 0;
+/* Final challenge -- a mixed review, gating the certificate. */
+const FINAL_QUIZ = [
+  { q: 'What is the Arabic term for "Discernment," the condition of Salah reached around the age of seven?',
+    opts: ['العَقْل (Sanity)', 'التَّمْيِيز (Tamyīz)', 'النِّيَّة (Niyyah)', 'الإِسْلَام (Islam)'], a: 1 },
+  { q: 'What does Satr al-ʿAwrah (covering the awrah) require a Muslim to do before Salah?',
+    opts: ['Wear only white clothing', 'Cover the parts of the body that should not be shown during prayer', 'Wear their most expensive clothes', 'Remove their shoes before entering the prayer area'], a: 1 },
+  { q: 'Which condition of Salah means turning towards the Kaʿbah?',
+    opts: ['Dukhūl al-Waqt', 'Rafʿ al-Ḥadath', 'Istiqbāl al-Qiblah', 'Izālat an-Najāsah'], a: 2 },
+  { q: 'What is Niyyah?',
+    opts: ['Saying the takbīr out loud before starting to pray', 'The sincere decision in the heart to perform a specific prayer for the sake of Allah', 'Reciting Sūrah al-Fātiḥah in every rakʿah', 'Raising both hands at the start of prayer'], a: 1 },
+  { q: 'Why must each Salah be performed within its appointed time (Dukhūl al-Waqt)?',
+    opts: ['Because Allah has given every daily prayer a specific time, and praying within it shows obedience and follows the Sunnah', 'Because it is only a suggestion, not a requirement', 'Because the time of prayer can be chosen freely by each person', 'Because it only matters during Ramaḍān'], a: 0 }
+];
 
-function shuffle(arr){
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+const INTRO_TEXT = "Salah is the ritual prayer that Muslims perform five times every day — Fajr, Dhuhr, ʿAṣr, Maghrib and ʿIshāʾ. It is the second Pillar of Islam, and it is how a Muslim speaks directly to Allah, without anyone standing in between. Before Salah can be accepted as an act of worship, though, a person must first meet a set of conditions — Shurūṭ aṣ-Ṣalāh. Let's meet them, one at a time.";
+
+/* ---------- build the sequential journey ---------- */
+function buildSteps(){
+  const steps = [{ type:'story', icon:'🕌', title:'What is Salah?', text:INTRO_TEXT }];
+  CONDITIONS.forEach((c, i) => steps.push({ type:'condition', num:i + 1, data:c, check:CHECKS[i] }));
+  FINAL_QUIZ.forEach((q, i) => steps.push({ type:'finalq', num:i + 1, total:FINAL_QUIZ.length, data:q }));
+  return steps;
+}
+const STEPS = buildSteps();
+
+/* ---------- state ---------- */
+const NAME_KEY = 'salah-quest-name';
+let studentName = localStorage.getItem(NAME_KEY) || '';
+let stepIndex = 0;
+let mistakes = 0;
+let coins = 0;
+
+function showScreen(id){
+  ['screen-name', 'screen-quest', 'screen-cert'].forEach(s => {
+    document.getElementById(s).classList.toggle('hidden', s !== id);
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* Browser text-to-speech only -- an honest fallback, not a recorded AI
+   voice, since this page has no audio manifest to play from. */
+function speak(text){
+  if(!text || !('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.96;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function burstConfetti(){
+  const colors = ['#a97c25', '#2e6b58', '#d3ac5c', '#9c3d3d', '#1c2b46'];
+  for(let i = 0; i < 40; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 3600);
   }
-  return a;
 }
 
-function startQuiz(){
-  quizOrder = shuffle(QUIZ.map((_, i) => i));
-  quizIndex = 0;
-  quizScore = 0;
-  renderQuizQuestion();
+function renderProgress(){
+  const pct = Math.round((stepIndex / STEPS.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Step ' + Math.min(stepIndex + 1, STEPS.length) + ' of ' + STEPS.length;
+  document.getElementById('coinCount').textContent = coins;
 }
 
-function renderQuizQuestion(){
-  const shell = document.getElementById('quizShell');
-  if (quizIndex >= quizOrder.length){
-    shell.innerHTML = `
-      <div class="quiz-card quiz-result">
-        <p class="eyebrow" style="margin:0;">Quiz Complete</p>
-        <div class="score">${quizScore} / ${quizOrder.length}</div>
-        <p>${quizScore === quizOrder.length ? 'Perfect score — excellent work!' : 'Review the conditions above and try again.'}</p>
-        <button class="btn btn-primary" id="restartBtn">Restart Quiz</button>
-      </div>
+/* Tap-to-choose with retry-until-correct -- a wrong tap just shakes and
+   invites another try, so the check is about learning, not scoring. */
+function renderChoices(opts, correctIndex, onCorrect){
+  const grid = document.getElementById('choiceGrid');
+  const fb = document.getElementById('feedback');
+  const order = shuffle(opts.map((text, i) => ({ text, correct: i === correctIndex })));
+  grid.innerHTML = '';
+  order.forEach(opt => {
+    const el = document.createElement('div');
+    el.className = 'choice';
+    el.textContent = opt.text;
+    el.addEventListener('click', () => {
+      if(opt.correct){
+        el.classList.add('correct', 'locked');
+        grid.querySelectorAll('.choice').forEach(c => c.classList.add('locked'));
+        coins += 2;
+        document.getElementById('coinCount').textContent = coins;
+        fb.className = 'feedback good';
+        fb.textContent = ['Yes! 🌟', 'Well done! 👏', 'Perfect! 🎉', 'Māshāʼ Allāh! ✨'][Math.floor(Math.random() * 4)];
+        setTimeout(onCorrect, 900);
+      } else {
+        mistakes++;
+        el.classList.add('wrong');
+        fb.className = 'feedback bad';
+        fb.textContent = 'Not quite — try again!';
+        setTimeout(() => el.classList.remove('wrong'), 450);
+      }
+    });
+    grid.appendChild(el);
+  });
+}
+
+function renderStep(){
+  if(stepIndex >= STEPS.length){ finishQuest(); return; }
+  renderProgress();
+  const step = STEPS[stepIndex];
+  const card = document.getElementById('stageCard');
+
+  if(step.type === 'story'){
+    card.innerHTML = `
+      <div class="stage-icon">${step.icon}</div>
+      <h2 class="stage-title">${escapeHtml(step.title)}</h2>
+      <p class="stage-text">${escapeHtml(step.text)}</p>
+      <button class="speak-btn" id="speakBtn">🔊 Read it to me</button>
+      <div style="margin-top:20px;"><button class="btn btn-primary" id="continueBtn" style="width:auto;">I'm ready →</button></div>
     `;
-    document.getElementById('restartBtn').addEventListener('click', startQuiz);
+    document.getElementById('speakBtn').addEventListener('click', () => speak(step.text));
+    document.getElementById('continueBtn').addEventListener('click', () => { stepIndex++; renderStep(); });
+    speak(step.text);
     return;
   }
-  const item = QUIZ[quizOrder[quizIndex]];
-  shell.innerHTML = `
-    <p class="quiz-progress">Question ${quizIndex + 1} of ${quizOrder.length} · Score: ${quizScore}</p>
-    <div class="quiz-card">
-      <p class="quiz-q">${escapeHtml(item.q)}</p>
-      <div class="quiz-options">
-        ${item.opts.map((opt, i) => `<button class="quiz-opt" data-i="${i}">${escapeHtml(opt)}</button>`).join('')}
+
+  if(step.type === 'condition'){
+    const c = step.data;
+    card.innerHTML = `
+      <span class="stage-badge">Condition ${step.num} of ${CONDITIONS.length}</span>
+      <h2 class="stage-title">${escapeHtml(c.en)}</h2>
+      <span class="stage-ar arabic">${c.ar}</span>
+      <p class="stage-text">${escapeHtml(c.desc)}</p>
+      <button class="speak-btn" id="speakBtn">🔊 Read it to me</button>
+      <div class="check-block">
+        <p class="check-q">${escapeHtml(step.check.q)}</p>
+        <div class="choice-grid" id="choiceGrid"></div>
+        <div class="feedback" id="feedback"></div>
       </div>
-      <div class="quiz-explain" id="quizExplain">${escapeHtml(item.ex)}</div>
-      <div class="quiz-nextrow" id="quizNextRow" style="display:none;">
-        <button class="btn btn-primary" id="nextBtn">Next Question</button>
-      </div>
-    </div>
-  `;
-  const buttons = shell.querySelectorAll('.quiz-opt');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const chosen = Number(btn.dataset.i);
-      buttons.forEach(b => b.disabled = true);
-      if (chosen === item.a){
-        btn.classList.add('correct');
-        quizScore++;
-      } else {
-        btn.classList.add('wrong');
-        buttons[item.a].classList.add('correct');
-      }
-      document.getElementById('quizExplain').classList.add('show');
-      document.getElementById('quizNextRow').style.display = 'block';
-    });
-  });
-  shell.querySelector('#quizNextRow')?.addEventListener('click', (e) => {
-    if (e.target.id === 'nextBtn'){
-      quizIndex++;
-      renderQuizQuestion();
-    }
-  });
+    `;
+    document.getElementById('speakBtn').addEventListener('click', () => speak(c.desc));
+    speak(c.desc);
+    renderChoices(step.check.opts, step.check.a, () => { stepIndex++; renderStep(); });
+    return;
+  }
+
+  if(step.type === 'finalq'){
+    const q = step.data;
+    card.innerHTML = `
+      <span class="stage-badge">Final Challenge · ${step.num} of ${step.total}</span>
+      <h2 class="stage-title">Let's see what you remember</h2>
+      <p class="check-q">${escapeHtml(q.q)}</p>
+      <div class="choice-grid" id="choiceGrid"></div>
+      <div class="feedback" id="feedback"></div>
+    `;
+    renderChoices(q.opts, q.a, () => { stepIndex++; renderStep(); });
+    return;
+  }
 }
 
-startQuiz();
+function finishQuest(){
+  const stars = mistakes === 0 ? 3 : (mistakes <= 3 ? 2 : 1);
+  coins += 10;
+  document.getElementById('certStudentName').textContent = studentName;
+  document.getElementById('certStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  document.getElementById('certCoins').textContent = coins;
+  document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  showScreen('screen-cert');
+  burstConfetti();
+}
+
+/* ---------- name gate ---------- */
+if(studentName){ document.getElementById('nameInput').value = studentName; }
+document.getElementById('nameForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const val = document.getElementById('nameInput').value.trim();
+  if(!val) return;
+  studentName = val;
+  try{ localStorage.setItem(NAME_KEY, val); }catch(err){}
+  stepIndex = 0;
+  mistakes = 0;
+  coins = 0;
+  showScreen('screen-quest');
+  renderStep();
+});
+
+document.getElementById('retakeBtn').addEventListener('click', () => {
+  stepIndex = 0;
+  mistakes = 0;
+  coins = 0;
+  showScreen('screen-quest');
+  renderStep();
+});
+document.getElementById('certPrintBtn').addEventListener('click', () => window.print());
 </script>
 <script src="/cursor.js" defer></script>
 </body>
