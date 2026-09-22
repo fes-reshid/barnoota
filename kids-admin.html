@@ -318,7 +318,7 @@ function progressSummary(progress){
   if(tq && Array.isArray(tq.stars)){
     const lessonsDone = tq.stars.filter(s => s > 0).length;
     const approved = Array.isArray(tq.teacherAssessments) ? tq.teacherAssessments.filter(a => a && a.approved).length : 0;
-    parts.push('Tuhfatul Atfaal: ' + lessonsDone + '/33 lessons · ' + approved + '/15 maps teacher-approved');
+    parts.push('Tuhfatul Atfaal: ' + lessonsDone + '/62 activities (61 lines) · ' + approved + '/15 maps teacher-approved');
   }
   return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
 }
