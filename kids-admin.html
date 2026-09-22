@@ -88,6 +88,11 @@
   .student .uname{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
   .student .meta{ font-size:13.5px; color:#8a7654; }
   .student .progress-line{ font-size:14px; color:var(--ink-brown); margin:8px 0; }
+  .course-detail{ margin:10px 0; border:1px solid var(--gold-soft); border-radius:11px; background:#fff; padding:9px 11px; }
+  .course-detail summary{ cursor:pointer; font-family:'Marcellus'; color:var(--green-dark); font-size:14px; }
+  .map-record{ margin-top:8px; padding:8px 10px; border-left:4px solid var(--green); background:var(--green-bg); border-radius:8px; font-size:14px; }
+  .map-record.pending{ border-left-color:var(--gold); background:#fff7dc; }
+  .map-record p{ margin:3px 0; }
   .student .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
   .rename-panel{ margin-top:12px; padding-top:12px; border-top:1px dashed var(--gold-soft); display:none; }
   .rename-panel.show{ display:block; }
@@ -192,7 +197,7 @@ match /kids_quest_students/{uid} {
 
   <section id="dashboard-screen" class="hidden">
     <h1>Kids Quest — Students</h1>
-    <p>Every account works for all Kids Corner games (Arabic, Arabic Adventure, English, Math, Seerah) and
+    <p>Every account works for all Kids Corner games (Arabic, Arabic Adventure, English, Math, Seerah, Tuhfatul Atfaal) and
       for Classes (Foundation–Year 6) — one username and password logs a child into whichever one they open.
       Arabic Adventure also lets visitors create their own account directly on its login screen — those show
       up here tagged <b>Self sign-up</b>, with whatever contact email they gave, and you can disable or
@@ -309,12 +314,35 @@ function progressSummary(progress){
     const lettersDone = Object.keys(aa.stars).filter(k => k.indexOf('L_') === 0).length;
     parts.push('Arabic Adventure: ' + lettersDone + '/28 letters');
   }
+  const tq = progress && progress['tuhfatul-atfaal'];
+  if(tq && Array.isArray(tq.stars)){
+    const lessonsDone = tq.stars.filter(s => s > 0).length;
+    const approved = Array.isArray(tq.teacherAssessments) ? tq.teacherAssessments.filter(a => a && a.approved).length : 0;
+    parts.push('Tuhfatul Atfaal: ' + lessonsDone + '/33 lessons · ' + approved + '/15 maps teacher-approved');
+  }
   return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
 }
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : String(s);
   return d.innerHTML;
+}
+
+function tuhfatDetails(progress){
+  const p = progress && progress['tuhfatul-atfaal'];
+  if(!p) return '';
+  const assessments = Array.isArray(p.teacherAssessments) ? p.teacherAssessments : [];
+  const approved = assessments.filter(a => a && a.approved).length;
+  const rows = Array.from({length:15}, (_, i) => {
+    const a = assessments[i];
+    if(!a || !a.approved) return '<div class="map-record pending"><strong>Map ' + (i + 1) + '</strong> — awaiting teacher approval</div>';
+    const date = a.approvedAt ? new Date(a.approvedAt).toLocaleDateString() : 'Recorded';
+    return '<div class="map-record"><strong>Map ' + (i + 1) + ' ✓</strong>' +
+      '<p>Teacher: ' + escapeHtml(a.teacherName || 'Not recorded') + ' · ' + escapeHtml(date) + '</p>' +
+      '<p>Hifz: ' + (a.hifz ? '✓' : '—') + ' · Good recitation: ' + (a.recitation ? '✓' : '—') + '</p>' +
+      '<p>Feedback: ' + escapeHtml(a.feedback || 'No feedback recorded') + '</p></div>';
+  }).join('');
+  return '<details class="course-detail"><summary>' + escapeHtml(p.avatar || '🧒') + ' Tuhfatul Atfaal details (' + approved + '/15 approved)</summary>' + rows + '</details>';
 }
 
 function parseCSV(text){
@@ -367,6 +395,7 @@ function renderStudents(list){
       '</div>' +
       (s.contactEmail ? '<p class="meta" style="margin:2px 0 0;">✉️ ' + escapeHtml(s.contactEmail) + '</p>' : '') +
       '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
+      tuhfatDetails(s.progress) +
       '<div class="actions">' +
         '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
         '<button class="btn ghost small" data-act="rename">Rename username</button>' +
