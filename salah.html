@@ -79,7 +79,7 @@
   .page-head p{ font-size:18px; color:#6b5a3f; line-height:1.65; max-width:680px; margin:0 auto; }
   .byline{ font-family:'Marcellus'; font-size:14px; color:var(--gold); margin:16px 0 0; }
 
-  /* ===== name gate ===== */
+  /* ===== login gate (shared account -- same username/password as Seerah Quest) ===== */
   .name-gate-wrap{ display:flex; justify-content:center; padding:30px 20px 90px; }
   .name-gate-card{
     max-width:440px; width:100%; text-align:center; background:#fff;
@@ -88,13 +88,34 @@
   }
   .name-gate-icon{ font-size:44px; margin-bottom:10px; }
   .name-gate-card h2{ font-family:'Marcellus'; font-size:24px; color:var(--ink-navy); margin:0 0 8px; }
-  .name-gate-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 20px; line-height:1.55; }
+  .name-gate-card p{ font-size:15.5px; color:#6b5a3f; margin:0 0 16px; line-height:1.55; }
   .name-input{
     width:100%; padding:13px 16px; border:1.5px solid var(--gold-soft); border-radius:12px;
     font-family:'Cormorant Garamond', serif; font-size:18px; text-align:center;
     background:var(--parchment); color:var(--ink-navy); margin-bottom:14px;
   }
   .name-input:focus{ outline:none; border-color:var(--gold); }
+  .login-msg{ min-height:22px; font-family:'Marcellus'; font-size:14.5px; color:var(--red); margin:6px 0 0; }
+  .login-hint{ font-size:14.5px; color:#8a7a5c; margin:10px 0 0; }
+  .login-hint a{ color:var(--green); font-weight:700; }
+  .account-bar{
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    font-size:14px; color:#6b5a3f; margin-bottom:14px;
+  }
+  .account-bar button{
+    background:none; border:none; color:var(--green); font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:14px; text-decoration:underline; cursor:pointer; padding:0;
+  }
+  .modal-back{
+    display:flex; position:fixed; inset:0; z-index:400; background:rgba(28,43,70,.55);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-box{
+    max-width:400px; width:100%; background:#fff; border:2px solid var(--gold-soft); border-radius:18px;
+    padding:30px 26px; text-align:center; box-shadow:0 14px 30px rgba(60,45,20,.2);
+  }
+  .modal-box h2{ font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); margin:0 0 8px; }
+  .modal-box p{ font-size:15px; color:#6b5a3f; margin:0 0 16px; line-height:1.5; }
   .btn{
     display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
     font-weight:700; font-size:16px; padding:11px 26px; border-radius:26px; border:none; cursor:pointer;
@@ -216,22 +237,27 @@
   <p class="byline">By Dania Nuradin &amp; Hania Feysel</p>
 </div>
 
-<section id="screen-name" class="no-print">
+<section id="screen-login" class="no-print">
   <div class="name-gate-wrap">
     <div class="name-gate-card">
       <div class="name-gate-icon">🕌</div>
       <h2>Start Your Ṣalāh Journey</h2>
-      <p>Type your name to begin — you'll learn what Salah is, meet all nine conditions one at a time, and earn a certificate at the end.</p>
-      <form id="nameForm">
-        <input type="text" class="name-input" id="nameInput" placeholder="Your name" maxlength="40" autocomplete="name" required>
-        <button type="submit" class="btn btn-primary">Begin →</button>
-      </form>
+      <p>Log in with the same username and password you use for Seerah Quest — you'll learn what Salah is, meet all nine conditions one at a time, and earn a certificate at the end.</p>
+      <input type="text" class="name-input" id="login-username" placeholder="Username" maxlength="24" autocomplete="username">
+      <input type="password" class="name-input" id="login-password" placeholder="Password" maxlength="60" autocomplete="current-password">
+      <button type="button" class="btn btn-primary" id="login-btn">Log In 🚀</button>
+      <p class="login-msg" id="login-msg"></p>
+      <p class="login-hint">Don't have an account? Ask your parent to set one up.</p>
+      <p class="login-hint">Forgot your password? Ask your parent to reset it on the <a href="kids-admin.html">admin page</a>.</p>
     </div>
   </div>
 </section>
 
 <section id="screen-quest" class="hidden no-print">
   <div class="quest-wrap">
+    <div class="account-bar">
+      Logged in as <b id="accountName"></b> · <button type="button" id="logoutBtn">Log out</button>
+    </div>
     <div class="progress-row">
       <span class="progress-label" id="progressLabel">Step 1</span>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -268,6 +294,16 @@
     </div>
   </div>
 </section>
+
+<div class="modal-back hidden no-print" id="certname-modal">
+  <div class="modal-box">
+    <h2>Name for your certificate</h2>
+    <p>Type your name exactly how it should appear on every certificate you earn — shared with Seerah Quest and every other game on this account.</p>
+    <input type="text" class="name-input" id="certname-input" placeholder="Full name" maxlength="40">
+    <p class="login-msg" id="certname-msg"></p>
+    <button type="button" class="btn btn-primary" id="certname-save-btn">Save ✓</button>
+  </div>
+</div>
 
 <footer class="no-print">
   <div class="flinks">
@@ -381,14 +417,15 @@ function buildSteps(){
 const STEPS = buildSteps();
 
 /* ---------- state ---------- */
-const NAME_KEY = 'salah-quest-name';
-let studentName = localStorage.getItem(NAME_KEY) || '';
+const GAME_KEY = 'salah';
+let studentName = '';
+let studentFullName = '';
 let stepIndex = 0;
 let mistakes = 0;
 let coins = 0;
 
 function showScreen(id){
-  ['screen-name', 'screen-quest', 'screen-cert'].forEach(s => {
+  ['screen-login', 'screen-quest', 'screen-cert'].forEach(s => {
     document.getElementById(s).classList.toggle('hidden', s !== id);
   });
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -406,6 +443,15 @@ function burstConfetti(){
     document.body.appendChild(piece);
     setTimeout(() => piece.remove(), 3600);
   }
+}
+
+function saveCloudProgress(){
+  if(window.KidsCloud) window.KidsCloud.saveProgress(GAME_KEY, { stepIndex, mistakes, coins }).catch(() => {});
+}
+function advanceStep(){
+  stepIndex++;
+  saveCloudProgress();
+  renderStep();
 }
 
 function renderProgress(){
@@ -460,7 +506,7 @@ function renderStep(){
       <p class="stage-text">${escapeHtml(step.text)}</p>
       <div style="margin-top:20px;"><button class="btn btn-primary" id="continueBtn" style="width:auto;">I'm ready →</button></div>
     `;
-    document.getElementById('continueBtn').addEventListener('click', () => { stepIndex++; renderStep(); });
+    document.getElementById('continueBtn').addEventListener('click', advanceStep);
     return;
   }
 
@@ -477,7 +523,7 @@ function renderStep(){
         <div class="feedback" id="feedback"></div>
       </div>
     `;
-    renderChoices(step.check.opts, step.check.a, () => { stepIndex++; renderStep(); });
+    renderChoices(step.check.opts, step.check.a, advanceStep);
     return;
   }
 
@@ -490,15 +536,22 @@ function renderStep(){
       <div class="choice-grid" id="choiceGrid"></div>
       <div class="feedback" id="feedback"></div>
     `;
-    renderChoices(q.opts, q.a, () => { stepIndex++; renderStep(); });
+    renderChoices(q.opts, q.a, advanceStep);
     return;
   }
 }
 
 function finishQuest(){
+  if(!studentFullName){
+    openCertNameModal(showCertificateScreen);
+    return;
+  }
+  showCertificateScreen();
+}
+function showCertificateScreen(){
   const stars = mistakes === 0 ? 3 : (mistakes <= 3 ? 2 : 1);
   coins += 10;
-  document.getElementById('certStudentName').textContent = studentName;
+  document.getElementById('certStudentName').textContent = studentFullName;
   document.getElementById('certStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
   document.getElementById('certCoins').textContent = coins;
   document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
@@ -506,30 +559,137 @@ function finishQuest(){
   burstConfetti();
 }
 
-/* ---------- name gate ---------- */
-if(studentName){ document.getElementById('nameInput').value = studentName; }
-document.getElementById('nameForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const val = document.getElementById('nameInput').value.trim();
-  if(!val) return;
-  studentName = val;
-  try{ localStorage.setItem(NAME_KEY, val); }catch(err){}
+/* ---------- cloud account (same shared login as Seerah Quest, Arabic
+   Adventure, etc. -- see kids-quest-cloud.js) ---------- */
+function friendlyLoginError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('user-not-found') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('wrong-password') >= 0){
+    return 'That username or password is not right. Ask your parent to check it.';
+  }
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('network') >= 0) return 'No internet connection — check you are online.';
+  return 'Could not log in — try again.';
+}
+
+function applyCloudProfile(data){
+  studentName = data.displayName || data.username;
+  studentFullName = data.fullName || '';
+  document.getElementById('accountName').textContent = studentName;
+  const saved = data.progress && data.progress[GAME_KEY];
+  if(saved && typeof saved.stepIndex === 'number' && saved.stepIndex > 0 && saved.stepIndex < STEPS.length){
+    stepIndex = saved.stepIndex;
+    mistakes = saved.mistakes || 0;
+    coins = saved.coins || 0;
+  } else {
+    stepIndex = 0;
+    mistakes = 0;
+    coins = 0;
+  }
+  document.getElementById('login-msg').textContent = '';
+  showScreen('screen-quest');
+  renderStep();
+}
+
+document.getElementById('login-btn').addEventListener('click', () => {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  const msg = document.getElementById('login-msg');
+  msg.textContent = '';
+  if(!u || !p){ msg.textContent = 'Enter your username and password.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentLogin){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  window.KidsCloud.studentLogin(u, p).then(data => {
+    applyCloudProfile(data);
+  }).catch(err => {
+    msg.textContent = friendlyLoginError(err);
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('login-username').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-password').focus();
+});
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('login-btn').click();
+});
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  if(window.KidsCloud) window.KidsCloud.studentLogout();
+  studentName = '';
+  studentFullName = '';
   stepIndex = 0;
   mistakes = 0;
   coins = 0;
-  showScreen('screen-quest');
-  renderStep();
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  showScreen('screen-login');
+});
+
+/* Asks once for the name to print on the certificate -- shared across
+   every game on this account, exactly like Seerah Quest. */
+let certNameOnSaved = null;
+function openCertNameModal(onSaved){
+  certNameOnSaved = onSaved || null;
+  document.getElementById('certname-input').value = studentFullName || studentName || '';
+  document.getElementById('certname-msg').textContent = '';
+  document.getElementById('certname-modal').classList.remove('hidden');
+  document.getElementById('certname-input').focus();
+}
+document.getElementById('certname-save-btn').addEventListener('click', () => {
+  const val = document.getElementById('certname-input').value.trim();
+  const msg = document.getElementById('certname-msg');
+  if(!val){ msg.textContent = 'Type a name first.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.setFullName){ msg.textContent = 'Still loading — refresh the page and try again.'; return; }
+  const btn = document.getElementById('certname-save-btn');
+  btn.disabled = true;
+  window.KidsCloud.setFullName(val).then(() => {
+    studentFullName = val;
+    document.getElementById('certname-modal').classList.add('hidden');
+    const cb = certNameOnSaved;
+    certNameOnSaved = null;
+    if(cb) cb();
+  }).catch(err => {
+    msg.textContent = (err && err.message) || 'Could not save — try again.';
+  }).finally(() => { btn.disabled = false; });
+});
+document.getElementById('certname-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') document.getElementById('certname-save-btn').click();
+});
+document.getElementById('certname-modal').addEventListener('click', e => {
+  if(e.target.id === 'certname-modal') document.getElementById('certname-modal').classList.add('hidden');
 });
 
 document.getElementById('retakeBtn').addEventListener('click', () => {
   stepIndex = 0;
   mistakes = 0;
   coins = 0;
+  saveCloudProgress();
   showScreen('screen-quest');
   renderStep();
 });
 document.getElementById('certPrintBtn').addEventListener('click', () => window.print());
+
+/* ===================== INIT ===================== */
+/* The Firebase module script loads after this one (same pattern as
+   kids-seerah-quest.html): show the login screen as the safe default
+   now, then let onStudentAuth decide -- moments later -- whether to
+   jump straight to the quest because a session was already active
+   (including one started on Seerah Quest, since it's the same account). */
+function wireCloudAuth(){
+  if(window.__kidsCloudWired) return;
+  window.__kidsCloudWired = true;
+  window.KidsCloud.onStudentAuth(function(data){
+    if(data){
+      applyCloudProfile(data);
+    } else if(!document.getElementById('screen-quest').classList.contains('hidden') ||
+              !document.getElementById('screen-cert').classList.contains('hidden')){
+      showScreen('screen-login');
+    }
+  });
+}
+showScreen('screen-login');
+window.addEventListener('kidscloud-ready', wireCloudAuth);
+if(window.KidsCloud) wireCloudAuth();
 </script>
+<script type="module" src="kids-quest-cloud.js?v=3"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
