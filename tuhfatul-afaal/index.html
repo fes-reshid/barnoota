@@ -320,14 +320,9 @@ function cleanQuizText(text){
  return String(text||'').replace(/\bIn\s+Lines?\s+\d+(?:\s*[–-]\s*\d+)?\s*,?\s*/gi,'').replace(/\bLines?\s+\d+(?:\s*[–-]\s*\d+)?\s+(?:teaches|explains|states|says|shows)\s*:?\s*/gi,'').replace(/\bLines?\s+\d+(?:\s*[–-]\s*\d+)?\b/gi,'this lesson').replace(/\s{2,}/g,' ').trim()
 }
 function lessonQuizBank(index){
- const l=lessons[index],others=lessons.filter((_,i)=>i!==index),pairs=vocabPairsForLesson(l),pair=pairs[(+l.lines-1)%pairs.length],pair2=pairs[(+l.lines)%pairs.length],allVocab=[...Object.values(WORD_MATCH).flat(),...Object.values(LINE_VOCAB).flat()],englishPool=allVocab.map(p=>p[1]),arabicPool=allVocab.map(p=>p[0]);let set,bank=[];
+ const l=lessons[index],others=lessons.filter((_,i)=>i!==index),pairs=vocabPairsForLesson(l),pair=pairs[(+l.lines-1)%pairs.length],pair2=pairs[(+l.lines)%pairs.length],pair3=pairs[(+l.lines+1)%pairs.length],allVocab=[...Object.values(WORD_MATCH).flat(),...Object.values(LINE_VOCAB).flat()],englishPool=allVocab.map(p=>p[1]),arabicPool=allVocab.map(p=>p[0]);let set,bank=[];
  set=choiceSet(cleanQuizText(l.translation),others.map(x=>cleanQuizText(x.translation)),index);bank.push({q:`Which English meaning matches this Arabic Matn: ${l.matn}`,...set,hint:'Return to the Matn page and read the English text under the Arabic.',source:cleanQuizText(l.translation),example:l.matn});
- const hasUsefulConcept=Array.isArray(l.choices)&&l.choices.length>1&&!/\bwhich\s+line\b|\bline\s+\d+/i.test(l.q||'');
- if(hasUsefulConcept){
-   bank.push({q:cleanQuizText(l.q),choices:l.choices.map(cleanQuizText),answer:l.answer,hint:'Review the interactive explanation for this lesson.',source:cleanQuizText(l.text),example:l.example});
- }else{
-   set=choiceSet(cleanQuizText(l.text),others.map(x=>cleanQuizText(x.text)),index+1);bank.push({q:'Which statement correctly explains this lesson?',...set,hint:'Review the interactive explanation for this lesson.',source:cleanQuizText(l.text),example:l.example});
- }
+ set=choiceSet(pair3[1],englishPool,index+1);bank.push({q:`Complete the vocabulary match: ${pair3[0]} = ?`,...set,hint:'Review this lesson’s vocabulary cards.',source:`${pair3[0]} means “${pair3[1]}”.`,example:pair3[0]});
  set=choiceSet(pair[1],englishPool,index+2);bank.push({q:`What does ${pair[0]} mean here?`,...set,hint:'Find this exact word in the Words matching page.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]});
  set=choiceSet(pair[0],arabicPool,index+3);bank.push({q:`Which Arabic word means “${pair[1]}”?`,...set,hint:'Return to this lesson’s vocabulary page.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]});
  set=choiceSet(pair2[1],englishPool,index+4);bank.push({q:`Choose the correct meaning of ${pair2[0]}.`,...set,hint:'Review the vocabulary cards and try again.',source:`${pair2[0]} means “${pair2[1]}”.`,example:pair2[0]});
