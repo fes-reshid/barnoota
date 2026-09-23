@@ -1,0 +1,7 @@
+node_modules/
+dist/
+
+# Regenerated from ../../hisnul-muslim by `npm run sync` - don't duplicate
+# 56MB of audio into git history (same reasoning as ../android's .gitignore
+# for android/app/src/main/assets/public/).
+www/
