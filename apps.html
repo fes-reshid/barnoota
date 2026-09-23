@@ -114,6 +114,21 @@
   .btn-play .play-icon{ flex:none; }
   .btn-ghost:hover{ background:var(--green-bg); }
   .btn-row{ display:flex; flex-wrap:wrap; gap:10px; align-self:flex-start; }
+
+  .store-badges{ display:flex; flex-wrap:wrap; gap:10px; align-self:flex-start; margin-top:2px; }
+  .store-badge{
+    display:inline-flex; align-items:center; gap:10px; background:#000; color:#fff;
+    text-decoration:none; border-radius:8px; padding:8px 14px; min-width:172px;
+    font-family:Arial, Helvetica, sans-serif; border:1px solid #000;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .store-badge:hover{ transform:translateY(-2px); }
+  .store-badge-icon{ flex:none; width:26px; height:26px; }
+  .store-badge-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .store-badge-text small{ font-size:9px; letter-spacing:.06em; text-transform:uppercase; opacity:.85; }
+  .store-badge-text strong{ font-size:17px; font-weight:600; margin-top:1px; }
+  .store-badge.is-soon{ opacity:.5; cursor:not-allowed; }
+  .store-badge.is-soon:hover{ transform:none; }
   .beta-badge{
     display:inline-block; font-family:'Marcellus'; font-size:11px; letter-spacing:.08em;
     text-transform:uppercase; color:#8a5a00; background:#fdeecb; border:1px solid var(--gold-soft);
@@ -169,8 +184,10 @@
       <p>The Fortress of the Muslim — daily adhkar and duʿāʾ with Arabic text and Oromo translation. Installable as an app on your phone, works offline.</p>
       <div class="btn-row">
         <a class="btn btn-primary" href="hisnul-muslim/index.html">Open App</a>
-        <a class="btn btn-ghost btn-play" href="https://play.google.com/store/apps/details?id=com.diinislaam.hisnulmuslim" target="_blank" rel="noopener">
-          <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+      </div>
+      <div class="store-badges">
+        <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.diinislaam.hisnulmuslim" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+          <svg class="store-badge-icon" viewBox="0 0 24 24" aria-hidden="true">
             <defs>
               <linearGradient id="playGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#00d2ff"/>
@@ -178,11 +195,19 @@
                 <stop offset="100%" stop-color="#ffcd00"/>
               </linearGradient>
             </defs>
-            <rect width="24" height="24" rx="6" fill="url(#playGrad)"/>
-            <path d="M9 6l9 6-9 6V6z" fill="#fff"/>
+            <path d="M4 3.5v17c0 .4.2.8.6 1l8-9-8-9c-.4.2-.6.6-.6 1z" fill="#00d2ff"/>
+            <path d="M12.6 12l2.9-2.9-9.5-5.4c-.4-.2-.8-.2-1.2 0z" fill="#3ad29f"/>
+            <path d="M12.6 12l2.9 2.9-9.5 5.4c-.4.2-.8.2-1.2 0z" fill="#ffcd00"/>
+            <path d="M15.5 9.1l3.4 1.9c.7.4.7 1.6 0 2l-3.4 1.9-3.1-2.9z" fill="#ff3d57"/>
           </svg>
-          Get it on Google Play
+          <span class="store-badge-text"><small>GET IT ON</small><strong>Google Play</strong></span>
         </a>
+        <span class="store-badge is-soon" aria-disabled="true" aria-label="Download on the App Store — coming soon">
+          <svg class="store-badge-icon" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.09 3.74-4.25.29 2.58-2.34 4.51-3.74 4.25z"/>
+          </svg>
+          <span class="store-badge-text"><small>Coming Soon</small><strong>App Store</strong></span>
+        </span>
       </div>
     </div>
   </div>
