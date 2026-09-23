@@ -37,7 +37,28 @@
     .line-translation,.explain-translation,.memory-translation{display:block}
     .map-quiz-road{cursor:pointer;outline:none}.map-quiz-road .quiz-disc{transition:transform .18s,filter .18s}.map-quiz-road:not(.locked):hover .quiz-disc,.map-quiz-road:not(.locked):focus .quiz-disc{transform:scale(1.1);filter:brightness(1.08)}.map-quiz-road.locked{cursor:not-allowed;opacity:.78}.map-quiz-road .quiz-label{font:700 14px 'Marcellus';fill:#1c2b46;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}.map-quiz-road .quiz-sub{font:12px 'Marcellus';fill:#1c2b46;paint-order:stroke;stroke:#fff;stroke-width:3px}
     .flash-practice-status{margin:0 auto 16px;width:min(560px,100%);padding:10px 14px;border:2px solid var(--gold2);border-radius:16px;background:#fff8df;color:var(--navy);font:17px 'Marcellus';text-align:center}.map-flash-road{cursor:pointer;outline:none}.map-flash-road .flash-disc{transition:transform .18s,filter .18s}.map-flash-road:not(.locked):hover .flash-disc,.map-flash-road:not(.locked):focus .flash-disc{transform:scale(1.1);filter:brightness(1.08)}.map-flash-road.locked{cursor:not-allowed;opacity:.78}
-  </style>
+  
+    /* Clean two-sided Arabic/English practice cards */
+    #flashScreen{overflow:hidden}
+    #flashScreen .flash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:stretch}
+    #flashScreen .flash{appearance:none;-webkit-appearance:none;display:block;width:100%;height:240px;margin:0;padding:0;border:0;border-radius:22px;background:transparent;color:inherit;font:inherit;line-height:normal;text-align:initial;perspective:1100px;cursor:pointer;overflow:visible}
+    #flashScreen .flash-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.25,1)}
+    #flashScreen .flash.flipped .flash-inner{transform:rotateY(180deg)}
+    #flashScreen .flash-face{box-sizing:border-box;position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:3px solid var(--gold2);border-radius:22px;background:linear-gradient(145deg,#fffdf7,#fff7db);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;padding:24px;text-align:center;box-shadow:0 9px 0 #d3aa52,0 15px 28px rgba(55,43,25,.16)}
+    #flashScreen .flash-face.back{transform:rotateY(180deg);background:linear-gradient(145deg,#eff9f0,#dcefe1);border-color:var(--green);box-shadow:0 9px 0 #245747,0 15px 28px rgba(55,43,25,.16)}
+    #flashScreen .flash-face .ar{display:block;max-width:100%;font:700 clamp(25px,2.25vw,34px)/1.8 'Amiri';color:var(--green);direction:rtl;unicode-bidi:plaintext;overflow-wrap:anywhere}
+    #flashScreen .flash-line-label{position:absolute;top:14px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:5px 12px;border-radius:999px;background:#fff;color:var(--navy);font:700 14px 'Marcellus';box-shadow:0 2px 8px rgba(31,42,67,.1)}
+    #flashScreen .flash-translation{display:block;max-width:100%;color:var(--navy);font:700 clamp(19px,2vw,25px)/1.45 'Marcellus';overflow-wrap:anywhere}
+    #flashScreen .flash-hint{position:absolute;bottom:14px;color:#6b5b42;font:700 14px 'Nunito',sans-serif}
+    #flashScreen .flash:focus-visible{outline:4px solid var(--sky);outline-offset:5px}
+    @media(max-width:760px){
+      #flashScreen .flash-grid{grid-template-columns:minmax(0,1fr);gap:18px}
+      #flashScreen .flash{height:220px}
+      #flashScreen .flash-face{padding:48px 17px 42px}
+      #flashScreen .flash-face .ar{font-size:clamp(23px,7vw,31px);line-height:1.75}
+      #flashScreen .flash-translation{font-size:clamp(18px,5.2vw,23px)}
+    }
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="https://diinislaam.com/kids-games.html">← Games</a></div></header>
@@ -362,7 +383,20 @@ function answerMapQuiz(a){const q=mapQuizQuestions[mapQuizIndex],buttons=[...doc
 function finishMapQuiz(){const passed=mapQuizCorrect>=MAP_QUIZ_PASS,old=mapQuizResult(viewWorld),alreadyPassed=!!(old&&old.passed),firstPass=passed&&!alreadyPassed,best=Math.max(mapQuizCorrect,old&&Number(old.score)||0),overallPassed=passed||alreadyPassed;profile.mapQuizScores[viewWorld]={score:best,total:MAP_QUIZ_TOTAL,passed:overallPassed,completedAt:new Date().toISOString()};if(firstPass)profile.coins+=15;save();syncStats();$('#mapQuizBody').innerHTML=`<p class="kicker">Map ${viewWorld+1} Challenge Complete</p><h1>${passed?'Mā shā’ Allāh! You passed!':alreadyPassed?'Practice complete — your pass is still saved!':'Keep practising — you are learning!'}</h1><div class="map-quiz-score">⭐ ${mapQuizCorrect}/${MAP_QUIZ_TOTAL} correct</div><p class="map-quiz-result">${passed?'The Talqeen teacher check is now unlocked. Practise the lines with your teacher, then ask the teacher to listen, add feedback and sign your certificate.':alreadyPassed?'Your best passing score is still saved. You can return to the map or practise the challenge again.':`You need ${MAP_QUIZ_PASS} correct answers to unlock the teacher check. Review the lessons and try the challenge again.`}</p>`;$('#mapQuizActions').innerHTML=`${passed?'':'<button class="btn green" id="retryMapQuiz">Try Again ↻</button>'}<button class="ghost" id="finishMapQuizBack">Back to Map</button>`;if(!passed)$('#retryMapQuiz').onclick=showMapQuiz;$('#finishMapQuizBack').onclick=()=>{renderMap();show('mapScreen')}}
 function previousLesson(){if(step>0){step--;hintReturn=false;renderLesson();return}if(current>0){const previous=current-1;viewWorld=lessons[previous].world;openLesson(previous);return}viewWorld=0;renderMap();show('mapScreen')}
 function continueQuest(){if(current<TOTAL_LESSONS-1){const n=current+1,nextMap=lessons[n].world;if(nextMap!==lessons[current].world&&!worldUnlocked(nextMap)){viewWorld=lessons[current].world;renderMap();show('mapScreen');return}viewWorld=nextMap;if(n<profile.unlocked)openLesson(n);else{renderMap();show('mapScreen')}}else{viewWorld=worlds.length-1;renderMap();show('mapScreen')}}
-function showFlash(){const w=worlds[viewWorld];$('#flashTitle').textContent=w.title+' Flashcards';$('#flashGrid').innerHTML=w.lessons.map((l,i)=>{const phrase=l[7].split(/\s+/).slice(0,4).join(' ')+'…';return`<button class="flash" data-word="${i}" aria-label="Flip and hear line ${l[8]}"><span class="flash-inner"><span class="flash-face"><span class="ar">${phrase}</span><b>Line ${l[8]}</b><span>Tap to hear 🔊</span></span><span class="flash-face back"><b>${l[0]}</b><span>${l[2]}</span></span></span></button>`}).join('');document.querySelectorAll('.flash').forEach(c=>c.onclick=()=>{if(!c.classList.contains('flipped'))sayArabic(w.lessons[+c.dataset.word][7]);c.classList.toggle('flipped')});show('flashScreen')}
+function showFlash(){
+  const w=worlds[viewWorld];
+  $('#flashTitle').textContent=w.title+' Flashcards';
+  $('#flashGrid').innerHTML=w.lessons.map((l,i)=>{
+    const line=l[8],translation=LINE_TRANSLATIONS[line]||'Review this line with your teacher.';
+    return `<button class="flash" type="button" data-word="${i}" aria-label="Line ${line}: show English translation" aria-pressed="false"><span class="flash-inner"><span class="flash-face flash-front"><span class="flash-line-label">Line ${line}</span><span class="ar" lang="ar" dir="rtl">${l[7]}</span><span class="flash-hint">Tap to flip</span></span><span class="flash-face back"><span class="flash-line-label">Line ${line} · English</span><span class="flash-translation">${translation}</span><span class="flash-hint">Tap to see Arabic</span></span></span></button>`;
+  }).join('');
+  document.querySelectorAll('.flash').forEach(card=>card.onclick=()=>{
+    const flipped=card.classList.toggle('flipped');
+    card.setAttribute('aria-pressed',String(flipped));
+    card.setAttribute('aria-label',`Line ${w.lessons[+card.dataset.word][8]}: ${flipped?'show Arabic':'show English translation'}`);
+  });
+  show('flashScreen')
+}
 function shuffled(arr){return [...arr].sort(()=>Math.random()-.5)}
 function showVocab(){selectedVocab=null;const w=worlds[viewWorld];$('#vocabTitle').textContent=w.title+' · Line Match';const items=w.lessons.map((l,i)=>({i,ar:l[7].split(/\s+/).slice(0,3).join(' ')+'…',full:l[7],en:`Line ${l[8]} · ${l[0].replace(/ · Line \d+$/,'')}`}));$('#vocabBank').innerHTML=shuffled(items).map(x=>`<button class="vocab-card" draggable="true" data-term="${x.i}" data-full="${x.full}" aria-label="${x.en}. Drag or tap to match">${x.ar} 🔊</button>`).join('');$('#vocabTargets').innerHTML=shuffled(items).map(x=>`<div class="vocab-target" data-target="${x.i}" tabindex="0"><span>${x.en}</span><span>Drop here</span></div>`).join('');$('#vocabResult').textContent='';wireVocab();show('vocabScreen')}
 function wireVocab(){document.querySelectorAll('.vocab-card').forEach(card=>{card.addEventListener('dragstart',e=>{selectedVocab=+card.dataset.term;e.dataTransfer.setData('text/plain',card.dataset.term);card.classList.add('selected');sayArabic(card.dataset.full)});card.addEventListener('dragend',()=>card.classList.remove('selected'));card.onclick=()=>{if(card.classList.contains('matched'))return;document.querySelectorAll('.vocab-card').forEach(c=>c.classList.remove('selected'));selectedVocab=+card.dataset.term;card.classList.add('selected');sayArabic(card.dataset.full)}});document.querySelectorAll('.vocab-target').forEach(t=>{t.addEventListener('dragover',e=>{e.preventDefault();t.classList.add('drag-over')});t.addEventListener('dragleave',()=>t.classList.remove('drag-over'));t.addEventListener('drop',e=>{e.preventDefault();t.classList.remove('drag-over');checkVocab(+(e.dataTransfer.getData('text/plain')),t)});t.onclick=()=>{if(selectedVocab!==null)checkVocab(selectedVocab,t)};t.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&selectedVocab!==null){e.preventDefault();checkVocab(selectedVocab,t)}}})}
