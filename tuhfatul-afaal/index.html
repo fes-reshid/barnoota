@@ -316,15 +316,31 @@ const LINE_VOCAB={
 function plainArabic(value){return String(value).normalize('NFKD').replace(/[\u064B-\u065F\u0670\u06D6-\u06EDـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/\s+/g,' ').trim()}
 function vocabPairsForLesson(l){if(LINE_VOCAB[l.lines])return LINE_VOCAB[l.lines];const line=plainArabic(l.matn),sourceLines=String(allLessonRows[l.sourceIndex][8]),source=WORD_MATCH[sourceLines]||[],all=[...source,...Object.values(WORD_MATCH).flat()],seen=new Set(),matches=all.filter(pair=>{const word=plainArabic(pair[0]);if(!word||!line.includes(word)||seen.has(word))return false;seen.add(word);return true});if(matches.length)return matches.slice(0,7);return [[l.matn.split(/\s+/)[0],'a key word from this line']]}
 function choiceSet(correct,pool,seed=0){const values=[correct,...pool.filter(x=>x&&x!==correct)].filter((x,i,a)=>a.indexOf(x)===i).slice(0,3);while(values.length<3)values.push('Review the lesson');const answer=seed%values.length;values.splice(answer,0,values.shift());return{choices:values,answer}}
-function lessonQuizBank(index){const l=lessons[index],others=lessons.filter((_,i)=>i!==index),pairs=vocabPairsForLesson(l),pair=pairs[(+l.lines-1)%pairs.length],pair2=pairs[(+l.lines)%pairs.length],allVocab=[...Object.values(WORD_MATCH).flat(),...Object.values(LINE_VOCAB).flat()],englishPool=allVocab.map(p=>p[1]),arabicPool=allVocab.map(p=>p[0]);let set,bank=[];
- set=choiceSet(l.translation,others.map(x=>x.translation),index);bank.push({q:`Which English meaning matches this Arabic Matn: ${l.matn}`,...set,hint:'Return to the Matn page and read the English text under the Arabic.',source:l.translation,example:l.matn});
- set=choiceSet(l.text,others.map(x=>x.text),index+1);bank.push({q:'Which explanation matches the lesson you just studied?',...set,hint:'Review the interactive explanation for this lesson.',source:l.text,example:l.example});
+function cleanQuizText(text){
+ return String(text||'').replace(/\bIn\s+Lines?\s+\d+(?:\s*[–-]\s*\d+)?\s*,?\s*/gi,'').replace(/\bLines?\s+\d+(?:\s*[–-]\s*\d+)?\s+(?:teaches|explains|states|says|shows)\s*:?\s*/gi,'').replace(/\bLines?\s+\d+(?:\s*[–-]\s*\d+)?\b/gi,'this lesson').replace(/\s{2,}/g,' ').trim()
+}
+function lessonQuizBank(index){
+ const l=lessons[index],others=lessons.filter((_,i)=>i!==index),pairs=vocabPairsForLesson(l),pair=pairs[(+l.lines-1)%pairs.length],pair2=pairs[(+l.lines)%pairs.length],allVocab=[...Object.values(WORD_MATCH).flat(),...Object.values(LINE_VOCAB).flat()],englishPool=allVocab.map(p=>p[1]),arabicPool=allVocab.map(p=>p[0]);let set,bank=[];
+ set=choiceSet(cleanQuizText(l.translation),others.map(x=>cleanQuizText(x.translation)),index);bank.push({q:`Which English meaning matches this Arabic Matn: ${l.matn}`,...set,hint:'Return to the Matn page and read the English text under the Arabic.',source:cleanQuizText(l.translation),example:l.matn});
+ const hasUsefulConcept=Array.isArray(l.choices)&&l.choices.length>1&&!/\bwhich\s+line\b|\bline\s+\d+/i.test(l.q||'');
+ if(hasUsefulConcept){
+   bank.push({q:cleanQuizText(l.q),choices:l.choices.map(cleanQuizText),answer:l.answer,hint:'Review the interactive explanation for this lesson.',source:cleanQuizText(l.text),example:l.example});
+ }else{
+   set=choiceSet(cleanQuizText(l.text),others.map(x=>cleanQuizText(x.text)),index+1);bank.push({q:'Which statement correctly explains this lesson?',...set,hint:'Review the interactive explanation for this lesson.',source:cleanQuizText(l.text),example:l.example});
+ }
  set=choiceSet(pair[1],englishPool,index+2);bank.push({q:`What does ${pair[0]} mean here?`,...set,hint:'Find this exact word in the Words matching page.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]});
  set=choiceSet(pair[0],arabicPool,index+3);bank.push({q:`Which Arabic word means “${pair[1]}”?`,...set,hint:'Return to this lesson’s vocabulary page.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]});
  set=choiceSet(pair2[1],englishPool,index+4);bank.push({q:`Choose the correct meaning of ${pair2[0]}.`,...set,hint:'Review the vocabulary cards and try again.',source:`${pair2[0]} means “${pair2[1]}”.`,example:pair2[0]});
  return bank
 }
-function buildMapQuiz(worldIndex){const w=worlds[worldIndex],start=worldStarts[worldIndex],banks=w.lessons.map((_,i)=>lessonQuizBank(start+i)),pool=[];for(let type=0;type<5;type++)banks.forEach(bank=>pool.push({...bank[type]}));w.lessons.forEach((line,lineIndex)=>vocabPairsForLesson(lessons[start+lineIndex]).forEach((pair,pairIndex)=>{let set=choiceSet(pair[1],Object.values(WORD_MATCH).flat().map(p=>p[1]),lineIndex+pairIndex);pool.push({q:`What does ${pair[0]} mean?`,...set,hint:'Review the vocabulary practice.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]})}));const unique=pool.filter((q,i,a)=>a.findIndex(x=>x.q===q.q&&x.choices.join('|')===q.choices.join('|'))===i);while(unique.length<MAP_QUIZ_TOTAL)unique.push({...pool[unique.length%pool.length]});return unique.slice(0,MAP_QUIZ_TOTAL)}
+function buildMapQuiz(worldIndex){
+ const w=worlds[worldIndex],start=worldStarts[worldIndex],banks=w.lessons.map((_,i)=>lessonQuizBank(start+i)),pool=[];
+ for(let type=0;type<5;type++)banks.forEach(bank=>pool.push({...bank[type]}));
+ w.lessons.forEach((line,lineIndex)=>vocabPairsForLesson(lessons[start+lineIndex]).forEach((pair,pairIndex)=>{let set=choiceSet(pair[1],Object.values(WORD_MATCH).flat().map(p=>p[1]),lineIndex+pairIndex);pool.push({q:`What does ${pair[0]} mean?`,...set,hint:'Review the vocabulary practice.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]})}));
+ const unique=pool.filter((q,i,a)=>a.findIndex(x=>x.q===q.q&&x.choices.join('|')===q.choices.join('|'))===i);
+ while(unique.length<MAP_QUIZ_TOTAL)unique.push({...pool[unique.length%pool.length]});
+ return unique.slice(0,MAP_QUIZ_TOTAL).map(item=>({...item,q:cleanQuizText(item.q),choices:item.choices.map(cleanQuizText)}))
+}
 const worldStarts=[];let tally=0;worlds.forEach(w=>{worldStarts.push(tally);tally+=w.lessons.length});
 const key='tajweed-quest-progress-v3',GAME_KEY='tuhfatul-atfaal',COURSE_VERSION=5,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
 window.TAJWEED_AUDIO=window.TAJWEED_AUDIO||{}; // Add recordings later: {'line-01':'audio/line-01.mp3'}
