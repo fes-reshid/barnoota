@@ -408,7 +408,17 @@ function buildMapQuiz(worldIndex){
  w.lessons.forEach((line,lineIndex)=>vocabPairsForLesson(lessons[start+lineIndex]).forEach((pair,pairIndex)=>{let set=choiceSet(pair[1],Object.values(WORD_MATCH).flat().map(p=>p[1]),lineIndex+pairIndex);pool.push({q:`What does ${pair[0]} mean?`,...set,hint:'Review the vocabulary practice.',source:`${pair[0]} means “${pair[1]}”.`,example:pair[0]})}));
  const unique=pool.filter((q,i,a)=>a.findIndex(x=>x.q===q.q&&x.choices.join('|')===q.choices.join('|'))===i);
  while(unique.length<MAP_QUIZ_TOTAL)unique.push({...pool[unique.length%pool.length]});
- return unique.slice(0,MAP_QUIZ_TOTAL).map(item=>({...item,q:cleanQuizText(item.q),choices:item.choices.map(cleanQuizText)}))
+ const questions=unique.slice(0,MAP_QUIZ_TOTAL).map(item=>({...item,q:cleanQuizText(item.q),choices:item.choices.map(cleanQuizText)}));
+ if(worldIndex===1){
+  questions.splice(10,5,
+   {q:'What is Izhaar?',choices:['Pronouncing Noon Saakinah or Tanween clearly','Merging two letters completely','Changing the sound into Meem','Hiding every letter'],answer:0},
+   {q:'What is Noon Saakinah?',choices:['A Noon with a Sukoon and no vowel','A Noon with a Shaddah','A Meem with a Sukoon','A Noon followed only by Alif'],answer:0},
+   {q:'What is Tanween?',choices:['A doubled vowel ending that makes an “n” sound','A long Madd sound','A letter with Shaddah','A silent Meem'],answer:0},
+   {q:'How many Izhaar letters are there?',choices:['Four','Five','Six','Fifteen'],answer:2},
+   {q:'Which one is NOT an Izhaar letter?',choices:['ء','ه','ب','غ'],answer:2}
+  )
+ }
+ return questions
 }
 const worldStarts=[];let tally=0;worlds.forEach(w=>{worldStarts.push(tally);tally+=w.lessons.length});
 const key='tajweed-quest-progress-v3',GAME_KEY='tuhfatul-atfaal',COURSE_VERSION=5,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
