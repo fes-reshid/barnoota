@@ -67,6 +67,8 @@
     @media(max-width:760px){.poem-verse{gap:3px}.poem-divider{height:15px;font-size:13px}.poem-half{font-size:clamp(25px,7vw,33px);line-height:1.75;padding-top:4px;padding-bottom:4px}.poem-first{padding-right:2%;padding-left:12%}.poem-second{padding-left:2%;padding-right:12%}.poem-matn-line{grid-template-columns:34px minmax(0,1fr);gap:9px}.poem-matn-line .line-play{grid-column:1/-1;justify-self:center}.explain-line{align-items:center}.explain-line .line-play{flex:0 0 auto}.missing-poem{padding:18px 10px}.missing-poem .poem-half{font-size:clamp(27px,8vw,35px);line-height:1.85}.blank-word{min-width:125px;border-bottom-width:4px}.poem-build-target{min-height:210px;padding:13px}.built-half{min-height:72px;padding-left:3%;padding-right:3%}.built-half:first-child{padding-left:10%}.built-half:last-child{padding-right:10%}.flash-poem .poem-half{font-size:clamp(19px,5.4vw,25px)}}
     .explain-reveal-grid.two-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.explain-reveal-grid.two-cards .explain-reveal-card.open{grid-column:span 2}.simple-explanation{margin:16px 0 0;border-left:5px solid var(--violet);border-radius:12px;background:#f4effb;padding:13px 16px;color:#4f4163;font-size:18px;line-height:1.55;text-align:left}.simple-explanation strong{color:var(--violet)}
     @media(max-width:760px){.explain-reveal-grid.two-cards{grid-template-columns:minmax(0,1fr)}.explain-reveal-grid.two-cards .explain-reveal-card.open{grid-column:auto}.simple-explanation{font-size:17px}}
+    .map-person{pointer-events:none;filter:drop-shadow(0 4px 3px rgba(31,48,60,.28))}.map-person .person-body{fill:#7a5aa8;stroke:#fff;stroke-width:2}.map-person .person-limb{stroke:#203858;stroke-width:5;stroke-linecap:round}.map-person .person-hand,.map-person .person-foot{fill:#f3b87b;stroke:#fff;stroke-width:1.5}.walking-avatar .left-arm,.walking-avatar .right-leg{transform-box:fill-box;transform-origin:top center;animation:walkLimb .34s ease-in-out infinite alternate}.walking-avatar .right-arm,.walking-avatar .left-leg{transform-box:fill-box;transform-origin:top center;animation:walkLimbBack .34s ease-in-out infinite alternate}.walking-avatar .avatar-head{animation:walkHead .34s ease-in-out infinite alternate}.map-frame.avatar-walking .node,.map-frame.avatar-walking .map-quiz-road{pointer-events:none}.map-frame.avatar-walking .map-title::after{content:' • walking to the next lesson';font-size:12px}.standing-avatar{animation:avatarReady 1.5s ease-in-out infinite}.destination-glow{animation:destinationGlow .75s ease-in-out 3}.marker{display:none}@keyframes walkLimb{to{transform:rotate(30deg)}}@keyframes walkLimbBack{to{transform:rotate(-30deg)}}@keyframes walkHead{to{transform:translateY(-2px)}}@keyframes avatarReady{50%{transform:translateY(-4px)}}@keyframes destinationGlow{50%{filter:drop-shadow(0 0 13px #ffcf4d)}}
+    @media(prefers-reduced-motion:reduce){.walking-avatar .left-arm,.walking-avatar .right-leg,.walking-avatar .right-arm,.walking-avatar .left-leg,.walking-avatar .avatar-head,.standing-avatar,.destination-glow{animation:none}}
 </style>
 </head>
 <body>
@@ -663,6 +665,63 @@ function renderExplanation(l){
  let hidden=false;$('#practiceHide').onclick=()=>{hidden=!hidden;$('#practiceExplainLine').classList.toggle('hidden-words',hidden);$('#practiceHide').textContent=hidden?'👀 Show and check':'🙈 Hide and recall'};
  nextButton('Build the Line →')
 }
+
+/* Full-body map avatar and lesson-to-lesson walking celebration. */
+let pendingMapWalk=null,mapAvatarPosition=null;
+function mapPersonMarkup(extraClass=''){
+ const face=escapeHtml(profile.avatar||'🧕');
+ return `<g class="map-person ${extraClass}" aria-hidden="true"><text class="avatar-head" x="0" y="-22" text-anchor="middle" font-size="31">${face}</text><rect class="person-body" x="-9" y="-17" width="18" height="24" rx="8"/><g class="left-arm"><line class="person-limb" x1="-7" y1="-12" x2="-17" y2="0"/><circle class="person-hand" cx="-18" cy="1" r="3"/></g><g class="right-arm"><line class="person-limb" x1="7" y1="-12" x2="17" y2="0"/><circle class="person-hand" cx="18" cy="1" r="3"/></g><g class="left-leg"><line class="person-limb" x1="-4" y1="5" x2="-10" y2="20"/><ellipse class="person-foot" cx="-12" cy="21" rx="5" ry="3"/></g><g class="right-leg"><line class="person-limb" x1="4" y1="5" x2="10" y2="20"/><ellipse class="person-foot" cx="12" cy="21" rx="5" ry="3"/></g></g>`
+}
+function translatedPoint(el){
+ if(!el)return null;
+ const consolidated=el.transform&&el.transform.baseVal.consolidate();
+ return consolidated?{x:consolidated.matrix.e,y:consolidated.matrix.f}:null
+}
+function standingAvatarAt(target){
+ const svg=$('#mapSvg');if(!svg||!target)return;
+ svg.querySelectorAll('.standing-avatar-wrap').forEach(x=>x.remove());
+ const p=translatedPoint(target);if(!p)return;
+ svg.insertAdjacentHTML('beforeend',`<g class="standing-avatar-wrap" transform="translate(${p.x} ${p.y-59})">${mapPersonMarkup('standing-avatar')}</g>`)
+}
+function placeStandingMapAvatar(){
+ const svg=$('#mapSvg');if(!svg)return;
+ let target=null;
+ if(mapAvatarPosition!==null)target=svg.querySelector(`.node[data-i="${mapAvatarPosition}"]`);
+ if(!target){const latest=Math.max(0,profile.unlocked-1);target=svg.querySelector(`.node[data-i="${latest}"]`)||svg.querySelector('.node:not(.locked)')}
+ standingAvatarAt(target)
+}
+function animateMapAvatar(walk){
+ const svg=$('#mapSvg'),frame=svg?.closest('.map-frame');if(!svg||!frame)return;
+ const from=svg.querySelector(`.node[data-i="${walk.from}"]`);
+ const to=walk.to===null?$('#roadFlashBtn'):svg.querySelector(`.node[data-i="${walk.to}"]`);
+ const a=translatedPoint(from),b=translatedPoint(to);if(!a||!b){placeStandingMapAvatar();return}
+ svg.querySelectorAll('.standing-avatar-wrap').forEach(x=>x.remove());
+ svg.insertAdjacentHTML('beforeend',`<g id="walkingMapAvatar" class="walking-avatar-wrap" transform="translate(${a.x} ${a.y-59})">${mapPersonMarkup('walking-avatar')}</g>`);
+ const walker=$('#walkingMapAvatar'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?350:2300,start=performance.now();
+ frame.classList.add('avatar-walking');$('#mapHelp').textContent=walk.to===null?'Great work! Walking to the practice cards…':'Great work! Walking to the next lesson…';
+ function step(now){
+  const raw=Math.min(1,(now-start)/duration),t=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=a.x+(b.x-a.x)*t,y=a.y+(b.y-a.y)*t-59-Math.sin(Math.PI*t)*10;
+  walker.setAttribute('transform',`translate(${x} ${y})`);
+  if(raw<1){requestAnimationFrame(step);return}
+  walker.remove();frame.classList.remove('avatar-walking');to.classList.add('destination-glow');setTimeout(()=>to.classList.remove('destination-glow'),2300);standingAvatarAt(to);mapAvatarPosition=walk.to;$('#mapHelp').textContent=walk.to===null?'Lesson road complete! Open Practice Cards when you are ready.':'You reached the next lesson — tap the glowing point to begin!';happySound()
+ }
+ requestAnimationFrame(step)
+}
+const renderMapBeforeWalkingAvatar=renderMap;
+renderMap=function(){renderMapBeforeWalkingAvatar();requestAnimationFrame(()=>{if(!pendingMapWalk)placeStandingMapAvatar()})};
+const finishLessonBeforeWalkingAvatar=finishLesson;
+finishLesson=function(){
+ const from=current,world=lessons[from].world,next=from+1<TOTAL_LESSONS&&lessons[from+1].world===world?from+1:null;
+ finishLessonBeforeWalkingAvatar();pendingMapWalk={world,from,to:next};
+ $('#continueBtn').textContent=next===null?'Walk to Practice Cards →':'Walk to Next Lesson →'
+};
+function returnToMapWithWalk(){
+ const walk=pendingMapWalk||{world:lessons[current].world,from:current,to:current+1<TOTAL_LESSONS&&lessons[current+1].world===lessons[current].world?current+1:null};
+ viewWorld=walk.world;mapAvatarPosition=walk.from;renderMap();show('mapScreen');requestAnimationFrame(()=>animateMapAvatar(walk));pendingMapWalk=null
+}
+continueQuest=returnToMapWithWalk;
+$('#continueBtn').onclick=returnToMapWithWalk;
+$('#rewardMapBtn').onclick=returnToMapWithWalk;
 </script>
 </body>
 </html>
