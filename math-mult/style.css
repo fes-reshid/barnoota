@@ -158,18 +158,26 @@ img,svg{max-width:100%}
 }
 
 
-/* Learn: a tap reveals the result on the back of each card. */
-.sound-fact{display:block;position:relative;height:148px;min-height:148px;padding:0;border-radius:17px;background:transparent;perspective:800px;overflow:visible;box-shadow:0 6px 0 #bfd8c7}
-.fact-flip-inner{position:relative;display:block;width:100%;height:100%;border-radius:15px;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.2,.7,.2,1)}
-.sound-fact.is-flipped .fact-flip-inner{transform:rotateY(180deg)}
-.fact-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:9px;border-radius:15px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.fact-front{background:linear-gradient(145deg,#e3f5e9,#f3faf4)}
-.fact-back{background:linear-gradient(145deg,#fff1bf,#fbe2a1);transform:rotateY(180deg);border:2px solid #cfad5d}
-.sound-fact .fact-face strong{font:700 clamp(1.3rem,3vw,1.75rem) 'Marcellus',serif;color:var(--deep)}
-.sound-fact .fact-back strong{font-size:2.2rem}
-.sound-fact .fact-face small{font:13px 'Marcellus',serif;color:#4a6458}
-.sound-fact:hover{background:transparent;box-shadow:0 9px 0 #bfd8c7}
-.sound-fact.is-flipped{border-color:#cfad5d;box-shadow:0 6px 0 #d7b965}
-.sound-fact:focus-visible{outline:3px solid var(--deep);outline-offset:4px}
-@media(max-width:720px){.sound-fact{height:140px;min-height:140px}.sound-fact .fact-face strong{font-size:1.45rem}.sound-fact .fact-back strong{font-size:2rem}}
-@media(prefers-reduced-motion:reduce){.fact-flip-inner{transition:none}}
+
+/* A single visible card face makes the answer reveal reliable on narrow touch screens. */
+.sound-facts{width:100%;max-width:650px}
+.sound-fact{display:block;width:100%;height:142px;min-height:142px;padding:0;border:2px solid #9fc9b5;border-radius:17px;background:#e7f5ec;overflow:hidden;box-shadow:0 5px 0 #bfd8c7;touch-action:manipulation}
+.card-side{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;padding:12px;text-align:center}
+.sound-fact .card-side strong{font:700 clamp(1.25rem,3vw,1.7rem) 'Marcellus',serif;color:var(--deep)}
+.sound-fact .card-side small{font:13px 'Marcellus',serif;color:#4a6458}
+.sound-fact.is-flipped{background:#fff1bf;border-color:#cfad5d;box-shadow:0 5px 0 #d7b965}
+.sound-fact.is-flipped .card-side strong{font-size:2rem}
+.sound-fact:hover{background:#e7f5ec;box-shadow:0 5px 0 #bfd8c7;transform:none}
+.sound-fact.is-flipped:hover{background:#fff1bf;box-shadow:0 5px 0 #d7b965}
+.sound-fact:active,.recall-flip:active{transform:none}
+.sound-fact:focus-visible,.recall-flip:focus-visible{outline:3px solid var(--deep);outline-offset:3px}
+.sound-fact.turning,.recall-flip.turning{animation:cardTurn .39s ease-in-out both;pointer-events:none}
+@keyframes cardTurn{0%{transform:scaleX(1)}48%,52%{transform:scaleX(.04)}100%{transform:scaleX(1)}}
+.recall-flip{width:min(100%,540px);min-height:195px;margin-inline:auto;overflow:hidden;touch-action:manipulation}
+.recall-flip .card-side{min-height:190px}
+.recall-flip .card-side strong{font:700 clamp(1.5rem,6vw,2.7rem) 'Marcellus',serif;overflow-wrap:anywhere}
+.recall-flip .card-side small{font:16px 'Marcellus',serif}
+.recall-flip.is-flipped{background:#fff1bf}
+@media(max-width:720px){.sound-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sound-fact{height:128px;min-height:128px}.sound-fact .card-side strong{font-size:clamp(1.2rem,5vw,1.55rem)}.sound-fact.is-flipped .card-side strong{font-size:1.8rem}.recall-flip{min-height:170px}.recall-flip .card-side{min-height:166px}}
+@media(max-width:350px){.sound-facts{gap:7px}.sound-fact{height:115px;min-height:115px}.sound-fact .card-side{padding:6px}.sound-fact .card-side small{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.sound-fact.turning,.recall-flip.turning{animation:none}}
