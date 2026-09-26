@@ -57,3 +57,14 @@ body.map-page .layout{display:none}body.map-page.exam-active .layout{display:gri
 @keyframes rewardSpark{0%{opacity:0;transform:translate(0,35px) scale(.3)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),-180px) scale(1.45) rotate(220deg)}}
 @media(max-width:680px){.sound-facts{grid-template-columns:repeat(3,minmax(0,1fr))}.game-start-card{padding:18px 16px 24px}.start-avatar{width:135px;height:145px}}
 @media(prefers-reduced-motion:reduce){.game-start,.game-start-card,.start-stars,.start-game-btn,.game-enter,.sound-fact.fact-playing,.reward-burst span{animation:none!important}.choice,.fact,.flip,.btn{transition:none}}
+
+/* Final award shown as soon as the 25-question exam is passed. */
+.certificate{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 12%,#fffdfa 0%,#fff7db 65%,#e9f3e6 100%);box-shadow:inset 0 0 0 2px #fff,0 12px 32px #3c2d2029}
+.certificate:before,.certificate:after{content:'✦';position:absolute;top:20px;color:#b38932;font-size:2.2rem}
+.certificate:before{left:24px}.certificate:after{right:24px}
+.certificate .seal{animation:starPulse 1.7s ease-in-out 2}
+.certificate .recipient{color:var(--deep);font-weight:700}
+.certificate-name-controls{margin:18px auto 10px;text-align:center}
+.certificate-name-controls label{font-weight:750;color:var(--deep)}
+.certificate-name-controls .btn{margin-left:9px}
+@media(max-width:560px){.certificate-name-controls .btn{display:block;margin:4px auto 0}}
