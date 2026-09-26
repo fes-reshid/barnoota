@@ -732,6 +732,22 @@ function returnToMapWithWalk(){
 continueQuest=returnToMapWithWalk;
 $('#continueBtn').onclick=returnToMapWithWalk;
 $('#rewardMapBtn').onclick=returnToMapWithWalk;
+
+/* Lesson order: Matn, Learn, Words, then the practice activities. */
+stepLabels=function(){return [['🎧','Matn'],['📖','Learn'],['🔤','Words'],['🧩','Build'],['🎯','Missing'],['🗣️','Memorise'],['🏆','5 Questions']]};
+renderLesson=function(){
+ syncStats();const l=lessons[current],clearBtn=$('#clearBuildBtn'),backBtn=$('#previousLessonBtn'),total=7;
+ $('#lessonNum').textContent=current+1;$('#stepPill').textContent=(step+1)+'/'+total;$('#fill').style.width=((step+1)/total*100)+'%';renderSide();$('#lessonActions').innerHTML='';
+ backBtn.disabled=false;backBtn.textContent=step>0?'← Previous page':current>0?'← Previous lesson':'← Back to map';clearBtn.classList.add('hidden');clearBtn.disabled=false;clearBtn.onclick=null;answered=false;
+ if(step===0)renderMatn(l);else if(step===1)renderExplanation(l);else if(step===2)renderWordMatch(l);else if(step===3)renderBuilder(l);else if(step===4)renderMissingWord(l);else if(step===5)renderMemory(l);else renderLessonQuiz()
+};
+const nextButtonBeforeLessonReorder=nextButton;
+nextButton=function(label,targetStep=null){
+ if(targetStep===null&&step===0)label='Learn This Line →';
+ else if(targetStep===null&&step===1)label='Match This Line’s Words →';
+ else if(targetStep===null&&step===2)label='Build the Line →';
+ nextButtonBeforeLessonReorder(label,targetStep)
+};
 </script>
 </body>
 </html>
