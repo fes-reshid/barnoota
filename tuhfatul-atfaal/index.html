@@ -69,6 +69,17 @@
     @media(max-width:760px){.explain-reveal-grid.two-cards{grid-template-columns:minmax(0,1fr)}.explain-reveal-grid.two-cards .explain-reveal-card.open{grid-column:auto}.simple-explanation{font-size:17px}}
     .map-person{pointer-events:none;filter:drop-shadow(0 4px 3px rgba(31,48,60,.28))}.map-person .person-outline{stroke:#fff;stroke-width:1.8}.map-person .face-detail{stroke:#34271f;stroke-width:1.3;stroke-linecap:round;fill:none}.walking-avatar .left-arm,.walking-avatar .right-leg{transform-box:fill-box;transform-origin:top center;animation:walkLimb .34s ease-in-out infinite alternate}.walking-avatar .right-arm,.walking-avatar .left-leg{transform-box:fill-box;transform-origin:top center;animation:walkLimbBack .34s ease-in-out infinite alternate}.walking-avatar .avatar-head{animation:walkHead .34s ease-in-out infinite alternate}.map-frame.avatar-walking .node,.map-frame.avatar-walking .map-quiz-road{pointer-events:none}.map-frame.avatar-walking .map-title::after{content:' • walking to the next lesson';font-size:12px}.standing-avatar{animation:avatarReady 1.5s ease-in-out infinite}.destination-glow{animation:destinationGlow .75s ease-in-out 3}.marker{display:none}.avatar-preview-card{width:min(300px,100%);margin:18px auto;padding:12px;background:linear-gradient(#cceffc,#dff4ca);border:3px solid var(--sky);border-radius:22px}.avatar-preview-card svg{display:block;width:180px;height:190px;margin:auto;overflow:visible}.avatar-customiser{display:grid;gap:16px;margin:18px 0;text-align:left}.colour-group{padding:14px;background:var(--paper);border:2px solid #ead8a9;border-radius:18px}.colour-group h3{margin:0 0 10px;color:var(--navy);font:19px 'Marcellus'}.colour-swatches{display:flex;gap:10px;flex-wrap:wrap}.colour-swatch{width:46px;height:46px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px #cbb77f;cursor:pointer}.colour-swatch.selected{box-shadow:0 0 0 4px var(--green);transform:scale(1.08)}.avatar-style-title{margin:18px 0 4px;font:21px 'Marcellus';color:var(--navy)}@keyframes walkLimb{to{transform:rotate(30deg)}}@keyframes walkLimbBack{to{transform:rotate(-30deg)}}@keyframes walkHead{to{transform:translateY(-2px)}}@keyframes avatarReady{50%{transform:translateY(-4px)}}@keyframes destinationGlow{50%{filter:drop-shadow(0 0 13px #ffcf4d)}}
     @media(prefers-reduced-motion:reduce){.walking-avatar .left-arm,.walking-avatar .right-leg,.walking-avatar .right-arm,.walking-avatar .left-leg,.walking-avatar .avatar-head,.standing-avatar,.destination-glow{animation:none}}
+    .lesson-flash-grid{width:min(720px,100%);margin:18px auto;display:grid;grid-template-columns:minmax(0,1fr)}
+    .lesson-flash{appearance:none;-webkit-appearance:none;width:100%;height:300px;margin:0;padding:0;border:0;background:transparent;color:inherit;font:inherit;line-height:normal;text-align:initial;overflow:visible}
+    .lesson-flash .flash-face{box-sizing:border-box;gap:16px;padding:50px 28px 44px;background:linear-gradient(145deg,#fffdf7,#fff5cd);overflow:hidden}
+    .lesson-flash .flash-face.back{background:linear-gradient(145deg,#eff9f0,#dcefe1)}
+    .lesson-flash .flash-line-label{position:absolute;top:17px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:5px 13px;border-radius:999px;background:#fff;color:var(--navy);font:700 14px 'Marcellus'}
+    .lesson-flash .flash-translation{display:block;max-width:100%;color:var(--navy);font:700 clamp(20px,2.2vw,27px)/1.5 'Marcellus';text-align:center;overflow-wrap:anywhere}
+    .lesson-flash .flash-hint{position:absolute;bottom:16px;color:#6b5b42;font:700 14px 'Nunito',sans-serif}
+    .lesson-flash:focus-visible{outline:4px solid var(--sky);outline-offset:5px}
+    .quiz-missing-poem{display:block;width:min(760px,100%);margin:20px auto 0;padding:18px 16px;border:3px solid var(--gold2);border-radius:20px;background:#fff9e8}
+    .quiz-missing-poem .poem-half{font-size:clamp(25px,2.8vw,38px)}
+    @media(max-width:600px){.lesson-flash{height:270px}.lesson-flash .flash-face{padding:46px 15px 40px}.quiz-missing-poem{padding:13px 8px}.quiz-missing-poem .blank-word{min-width:105px}}
 </style>
 </head>
 <body>
@@ -635,7 +646,7 @@ function renderMemory(l){
  $('#stage').innerHTML=`<div class="kicker">Talqeen practice · Line ${l.lines}</div><h1 class="lesson-title">Listen, Repeat, Remember!</h1>${video}<div class="memory-card"><p class="builder-tip"><strong>Practise with a teacher:</strong> listen carefully, repeat each half after the teacher, then recite the complete verse. Repeat at least three times.</p><div class="memory-steps"><div class="memory-step" id="listenStep">1. 👂 Listen</div><div class="memory-step" id="repeatStep">2. 🗣️ Repeat ×3</div><div class="memory-step" id="recallStep">3. 🧠 Hide & recall</div></div><div class="memory-lines poem-memory" id="memoryLines">${poemHTML(l.matn,l.lines)}</div><div class="memory-translation">${l.translation}</div><div class="repeat-row"><button class="repeat-btn" id="listenAll">🔊 Listen to verse</button><button class="repeat-btn" id="repeatDone">I repeated it</button><button class="repeat-btn" id="hideWords">🙈 Hide the verse</button></div><div class="memory-meter"><span id="memoryFill"></span></div><div class="feedback" id="memoryFeedback" aria-live="polite">Begin by watching or listening carefully.</div></div>`;
  $('#listenAll').onclick=()=>{listened=true;sayArabic(l.matn);$('#listenStep').classList.add('done');$('#memoryFeedback').textContent='Now repeat both halves after your teacher three times.';$('#memoryFill').style.width='25%'};
  $('#repeatDone').onclick=()=>{if(!listened){say('Listen first, then repeat.');return}if(repeats<3)repeats++;$('#repeatDone').textContent=`Repeated ${repeats}/3 ✓`;$('#memoryFill').style.width=(25+repeats*15)+'%';if(repeats===3){$('#repeatStep').classList.add('done');happySound();$('#memoryFeedback').textContent='Great repetition! Now hide the verse and recite both halves from memory.'}};
- $('#hideWords').onclick=()=>{if(repeats<3){say('Repeat three times first.');return}hidden=!hidden;$('#memoryLines').classList.toggle('hidden-words',hidden);$('#hideWords').textContent=hidden?'👀 Show the verse':'🙈 Hide the verse';if(hidden){$('#recallStep').classList.add('done');$('#memoryFill').style.width='100%';$('#memoryFeedback').textContent='Recite both halves from memory. Then show the verse and check carefully.';if(!profile.memoryDone[current]){profile.memoryDone[current]=true;profile.coins+=3;save();syncStats()}happySound();nextButton('Answer 5 Lesson Questions →',6)}}
+ $('#hideWords').onclick=()=>{if(repeats<3){say('Listen first, then repeat.');return}hidden=!hidden;$('#memoryLines').classList.toggle('hidden-words',hidden);$('#hideWords').textContent=hidden?'👀 Show the verse':'🙈 Hide the verse';if(hidden){$('#recallStep').classList.add('done');$('#memoryFill').style.width='100%';$('#memoryFeedback').textContent='Recite both halves from memory. Then show the verse and check carefully.';if(!profile.memoryDone[current]){profile.memoryDone[current]=true;profile.coins+=3;save();syncStats()}happySound();nextButton('Open Flash Card →',4)}}
 }
 function showFlash(){
  const w=worlds[viewWorld];
@@ -733,19 +744,33 @@ continueQuest=returnToMapWithWalk;
 $('#continueBtn').onclick=returnToMapWithWalk;
 $('#rewardMapBtn').onclick=returnToMapWithWalk;
 
-/* Lesson order: Matn, Learn, Words, then the practice activities. */
-stepLabels=function(){return [['🎧','Matn'],['📖','Learn'],['🔤','Words'],['🧩','Build'],['🎯','Missing'],['🗣️','Memorise'],['🏆','5 Questions']]};
+/* Seven-stage lesson order with Missing Word included inside the final five questions. */
+function renderLessonFlashCard(l){
+ $('#stage').innerHTML=`<div class="kicker">Line ${l.lines} · Recall practice</div><h1 class="lesson-title">Flip the Flash Card</h1><p class="builder-tip">Read the Arabic from memory, then flip the card to check the English translation.</p><div class="lesson-flash-grid"><button class="flash lesson-flash" id="lessonFlashCard" type="button" aria-label="Show English translation" aria-pressed="false"><span class="flash-inner"><span class="flash-face flash-front"><span class="flash-line-label">Arabic poem</span><span class="flash-poem">${poemHTML(l.matn,l.lines)}</span><span class="flash-hint">Tap to flip</span></span><span class="flash-face back"><span class="flash-line-label">English translation</span><span class="flash-translation">${l.translation}</span><span class="flash-hint">Tap to see Arabic</span></span></span></button></div><div class="feedback" id="lessonFlashFeedback" aria-live="polite">Flip the card once to unlock Build.</div>`;
+ const card=$('#lessonFlashCard');
+ card.onclick=()=>{const flipped=card.classList.toggle('flipped');card.setAttribute('aria-pressed',String(flipped));card.setAttribute('aria-label',flipped?'Show Arabic poem':'Show English translation');if(flipped){$('#lessonFlashFeedback').textContent='Great recall — now rebuild the poem!';$('#lessonFlashFeedback').className='feedback good';happySound();nextButton('Build the Poem →')}}
+}
+const lessonQuizBankBeforeMissingWord=lessonQuizBank;
+lessonQuizBank=function(index){
+ const bank=lessonQuizBankBeforeMissingWord(index),l=lessons[index],words=l.matn.trim().split(/\s+/),blankIndex=(index*3+1)%words.length,answerWord=words[blankIndex],pool=vocabPairsForLesson(l).map(pair=>pair[0]).concat(words).filter((word,i,all)=>word!==answerWord&&all.indexOf(word)===i),set=choiceSet(answerWord,pool,index+11);
+ bank[4]={q:`Which word completes this poem?<span class="quiz-missing-poem">${poemHTML(l.matn,l.lines,blankIndex)}</span>`,...set,hint:'Return to Matn or Flash Card, read both halves slowly, and find the word in the large gap.',source:`The missing word is ${answerWord}.`,example:answerWord};
+ return bank
+};
+stepLabels=function(){return [['🎧','Matn'],['📖','Learn'],['🔤','Words'],['🗣️','Memorise'],['🃏','Flash Card'],['🧩','Build'],['🏆','Five Questions']]};
 renderLesson=function(){
  syncStats();const l=lessons[current],clearBtn=$('#clearBuildBtn'),backBtn=$('#previousLessonBtn'),total=7;
  $('#lessonNum').textContent=current+1;$('#stepPill').textContent=(step+1)+'/'+total;$('#fill').style.width=((step+1)/total*100)+'%';renderSide();$('#lessonActions').innerHTML='';
  backBtn.disabled=false;backBtn.textContent=step>0?'← Previous page':current>0?'← Previous lesson':'← Back to map';clearBtn.classList.add('hidden');clearBtn.disabled=false;clearBtn.onclick=null;answered=false;
- if(step===0)renderMatn(l);else if(step===1)renderExplanation(l);else if(step===2)renderWordMatch(l);else if(step===3)renderBuilder(l);else if(step===4)renderMissingWord(l);else if(step===5)renderMemory(l);else renderLessonQuiz()
+ if(step===0)renderMatn(l);else if(step===1)renderExplanation(l);else if(step===2)renderWordMatch(l);else if(step===3)renderMemory(l);else if(step===4)renderLessonFlashCard(l);else if(step===5)renderBuilder(l);else renderLessonQuiz()
 };
 const nextButtonBeforeLessonReorder=nextButton;
 nextButton=function(label,targetStep=null){
  if(targetStep===null&&step===0)label='Learn This Line →';
  else if(targetStep===null&&step===1)label='Match This Line’s Words →';
- else if(targetStep===null&&step===2)label='Build the Line →';
+ else if(targetStep===null&&step===2)label='Memorise This Line →';
+ else if(targetStep===null&&step===4)label='Build the Poem →';
+ else if(targetStep===null&&step===5)label='Answer Five Questions →';
+ else if(step===3&&targetStep===4)label='Open Flash Card →';
  nextButtonBeforeLessonReorder(label,targetStep)
 };
 
