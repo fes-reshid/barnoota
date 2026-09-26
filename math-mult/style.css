@@ -68,3 +68,91 @@ body.map-page .layout{display:none}body.map-page.exam-active .layout{display:gri
 .certificate-name-controls label{font-weight:750;color:var(--deep)}
 .certificate-name-controls .btn{margin-left:9px}
 @media(max-width:560px){.certificate-name-controls .btn{display:block;margin:4px auto 0}}
+
+/* Tajweed Quest layout adapted for the green Math Quest. */
+*,*::before,*::after{min-width:0}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+button,input{touch-action:manipulation}
+img,svg{max-width:100%}
+.week-page main{max-width:1040px;padding:18px 16px 64px}
+.week-page .layout{grid-template-columns:222px minmax(0,1fr);gap:14px;margin-top:0}
+.week-page .lesson-sidebar{background:linear-gradient(160deg,#397f67,#24624f);border:3px solid #fff;color:#fff;border-radius:22px;padding:12px;box-shadow:0 8px 22px #173b2e38;max-height:calc(100vh - 86px);top:72px;scrollbar-width:thin}
+.week-page .lesson-sidebar>h2{background:#1f5847;color:#fff;border:2px solid #fff;border-radius:14px;text-align:center;padding:7px;font:16px 'Marcellus',serif;margin:0 0 10px}
+.lesson-side-summary{display:flex;align-items:center;gap:9px;background:#fff;color:var(--deep);padding:7px 9px;border-radius:15px;margin-bottom:9px}
+.lesson-side-summary svg{width:48px;height:53px;flex:0 0 48px;border-radius:50%;background:#e2f3e5}
+.lesson-side-summary small{display:block;color:#577468;font:12px 'Marcellus',serif}
+.lesson-side-summary strong{display:block;font:18px 'Marcellus',serif}
+.lesson-side-tools{display:flex;gap:8px;margin-bottom:10px}
+.lesson-side-tools a,.lesson-side-tools button{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;min-height:42px;border:2px solid #fff;border-radius:13px;background:#f4d57a;color:#24523f;box-shadow:0 3px 0 #bb9638;text-decoration:none;font:15px 'Marcellus',serif;cursor:pointer}
+.week-page .lesson-sidebar .progress{height:10px;background:#c9e3cf;border:2px solid #fff;margin:0 2px 10px}
+.week-page .lesson-sidebar .progress>span{background:linear-gradient(90deg,#f6d976,#fff2b4)}
+.week-page .lesson-menu{display:flex;flex-direction:column;gap:7px;margin:0}
+.week-page .lesson-nav{min-height:53px;padding:6px 8px;background:#fff;border:3px solid #fff;border-radius:14px;box-shadow:none;color:var(--deep);gap:7px;font:14px 'Marcellus',serif}
+.week-page .lesson-nav strong{min-width:35px;width:35px;height:35px;border-radius:10px;background:#e3f1e7;font-size:1.05rem}
+.week-page .lesson-nav span{font-size:.9rem;line-height:1.18}
+.week-page .lesson-nav small{font-size:.67rem;color:#5c7369}
+.week-page .lesson-nav.active{background:#fff5cb;border-color:#f5d777;box-shadow:0 3px 0 #bca05b}
+.week-page .lesson-nav.done:not(.active){background:#e0f3df}
+.week-page .lesson-nav:disabled{opacity:.64;background:#ecf3e9}
+.lesson-stage-top{display:flex;align-items:center;gap:10px;background:linear-gradient(130deg,#39866c,#246951);border:3px solid #fff;border-radius:18px;color:#fff;padding:9px 12px;margin-bottom:10px;box-shadow:0 4px 10px #21483124}
+.lesson-stage-top>span:first-child{flex:0 0 auto;background:#fff;color:var(--deep);padding:5px 12px;border-radius:13px;font:16px 'Marcellus',serif}
+.lesson-stage-track{flex:1;height:17px;background:#e6f3e8;border:2px solid white;border-radius:12px;overflow:hidden}
+.lesson-stage-track span{display:block;width:0;height:100%;background:linear-gradient(90deg,#8bd769,#47ad5a);border-radius:12px;transition:width .35s}
+.week-page .course-card{background:#fff;border:3px solid var(--line);border-radius:24px;padding:24px 20px;box-shadow:0 10px 26px #3c2d201f}
+.week-page .week-head{align-items:center;margin:0 0 18px}
+.week-page .week-head h2{font:29px/1.18 'Marcellus',serif;color:var(--deep)}
+.week-page .week-head p{font-size:1rem}
+.week-page .disc{width:62px;height:62px;font-size:1.45rem}
+.week-page .activity{min-height:430px;border:2px solid #eadab5;border-radius:20px;background:#fffdf7;box-shadow:none;padding:22px 18px}
+.week-page .activity h3{font:27px 'Marcellus',serif;color:var(--deep)}
+.week-page .footer-actions{margin:14px 2px 2px;align-items:center}
+.week-page .footer-actions .btn{border-radius:18px;padding:10px 15px;font-size:15px}
+.week-page .teacher{margin-top:16px}
+.map-page .lesson-stage-top{display:none}
+@media(max-width:720px){
+  .week-page main{padding:10px 10px 50px}
+  .week-page .layout{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:0}
+  .week-page .lesson-sidebar{position:static;max-height:none;width:100%;padding:10px;overflow:visible}
+  .week-page .lesson-sidebar>h2{margin-bottom:7px}
+  .lesson-side-summary{margin-bottom:7px;padding:5px 8px}
+  .lesson-side-summary svg{width:39px;height:43px;flex-basis:39px}
+  .lesson-side-summary strong{font-size:16px}
+  .lesson-side-tools{margin-bottom:8px}
+  .lesson-side-tools a,.lesson-side-tools button{min-height:38px}
+  .week-page .lesson-sidebar .progress{margin-bottom:7px}
+  .week-page .lesson-menu{display:flex;flex-direction:row;gap:7px;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:2px 2px 7px;scrollbar-width:thin}
+  .week-page .lesson-nav{flex:0 0 103px;min-width:103px;min-height:77px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;padding:4px;text-align:center;scroll-snap-align:center}
+  .week-page .lesson-nav strong{min-width:29px;width:29px;height:29px;font-size:.91rem}
+  .week-page .lesson-nav span{display:block;font-size:.78rem;line-height:1.15}
+  .week-page .lesson-nav small{display:none}
+  .lesson-stage-top{margin-bottom:8px;padding:7px 8px}
+  .lesson-stage-top>span:first-child{font-size:14px;padding:5px 8px;max-width:49%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .week-page .course-card{padding:18px 12px}
+  .week-page .activity{min-height:360px;padding:19px 12px}
+  .week-page .activity h3{font-size:23px}
+  .week-page .week-head h2{font-size:clamp(20px,5vw,25px)}
+  .week-page .disc{width:52px;height:52px;font-size:1.2rem}
+  .week-page .footer-actions{gap:8px;flex-wrap:nowrap}
+  .week-page .footer-actions .btn{font-size:13px;padding:10px 9px;white-space:normal}
+  .week-page .footer-actions #next{margin-left:auto}
+  .sound-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .map-page .map-heading{padding:12px}
+  .map-page .map-scroll{scrollbar-width:thin;overscroll-behavior-x:contain}
+  .map-page .map-scroll svg{min-width:700px}
+}
+@media(max-width:520px){
+  .nav{padding:8px 10px;gap:6px;flex-wrap:wrap}
+  .brand{font-size:15px;white-space:nowrap}
+  .brand span{padding:4px 8px;margin-right:4px}
+  .nav-actions{gap:5px;margin-left:auto}
+  .nav-actions a,.nav-actions button{font-size:12px!important;padding:6px 8px!important}
+  .week-page .nav-actions>a:last-child{display:none}
+  .week-page .week-head{gap:7px}
+  .week-page .week-head h2{overflow-wrap:anywhere}
+  .week-page .footer-actions .btn{line-height:1.15}
+  .map-week-grid{padding:12px}
+  .map-week-grid .week-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .map-week-grid .week{min-height:63px;padding:7px}
+  .map-week-grid .week span{display:block;font-size:.83rem}
+  .map-week-grid .week small{font-size:.68rem}
+}
