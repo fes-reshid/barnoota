@@ -7,3 +7,20 @@ body{background:#e9e2cd;color:var(--ink)}header{background:rgba(250,243,224,.96)
 
 /* Separate map and week pages */
 body.map-page .layout{display:none}body.map-page.exam-active .layout{display:grid}body.week-page .journey,body.week-page .map-week-grid,body.week-page .title-art,body.week-page .top{display:none}body.week-page .layout{margin-top:22px}body.map-page .map-link{display:none}.title-art{position:relative;margin-top:18px;border:3px solid #d3ac5c;border-radius:23px;overflow:hidden;box-shadow:0 12px 28px #4938192b;aspect-ratio:3.05/1;background:#a4ceb1}.title-art img{width:100%;height:100%;object-fit:cover;display:block}.title-art .title-overlay{position:absolute;inset:auto 0 0;padding:40px 22px 20px;background:linear-gradient(transparent,#173d32cc);color:white;text-align:center}.title-overlay strong{display:block;font:700 clamp(1.8rem,5vw,3.1rem) 'Cormorant Garamond',serif;text-shadow:0 2px 8px #133728}.title-overlay span{font:16px 'Marcellus',serif}.auth-art{padding:0;overflow:hidden}.auth-art img{display:block;width:100%;aspect-ratio:3/1;object-fit:cover}.map-week-grid{margin:20px 0 40px;background:#faf3e0;border:3px solid #d3ac5c;border-radius:22px;padding:20px;box-shadow:0 10px 25px #3c2d2022}.map-week-grid h2{font:23px 'Marcellus',serif;color:#1f4f40;margin:0 0 13px}.map-week-grid .week-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.map-week-grid .week{min-height:72px}.map-tools{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:15px}.map-tools button{font:16px 'Marcellus',serif}.map-tools button:disabled{opacity:.55;cursor:not-allowed}.map-page.exam-active .work{min-width:0}.map-page.exam-active .course-card{display:none}.map-page.exam-active .layout>aside{display:none}.map-page.exam-active .layout{display:block}.map-page.exam-active .exam-panel{max-width:800px;margin:24px auto}@media(max-width:760px){.map-week-grid .week-list{grid-template-columns:repeat(3,minmax(0,1fr))}.title-art{aspect-ratio:2/1}.title-art .title-overlay{padding:30px 12px 12px}}@media(max-width:450px){.map-week-grid .week-list{grid-template-columns:repeat(3,minmax(0,1fr))}.title-art{aspect-ratio:1.8/1}.title-overlay span{font-size:14px}}
+
+/* Week activity menu: mirrors the course navigation pattern used in Tajweed Quest. */
+.week-page .layout{grid-template-columns:300px minmax(0,1fr);align-items:start}
+.week-page .lesson-sidebar{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto}
+.week-page .lesson-sidebar>h2{margin-bottom:10px}
+.week-page .lesson-menu{gap:9px;margin-top:14px}
+.week-page .lesson-nav{min-height:68px;padding:9px 11px}
+.week-page .lesson-nav strong{display:grid;place-items:center;min-width:46px;height:46px;padding:0;font-size:1.25rem}
+.week-page .lesson-nav span{font-size:1rem;line-height:1.25}
+.week-page .lesson-nav small{font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:.76rem;margin-top:3px}
+.week-page .lesson-nav.active{background:#e4f4e9;border-color:var(--green);box-shadow:0 4px 0 #8aad9e}
+.week-page .lesson-nav.done:not(.active) strong{background:var(--gold);color:#fff}
+.week-page .lesson-nav:disabled{opacity:.48;cursor:not-allowed}
+.week-page #midExam,.week-page #finalExam,.week-page #viewCertificate{display:none!important}
+.week-page .course-card>.steps{display:none}
+@media(max-width:760px){.week-page .layout{grid-template-columns:1fr}.week-page .lesson-sidebar{position:static;max-height:none}.week-page .lesson-menu{grid-template-columns:repeat(2,minmax(0,1fr))}.week-page .lesson-nav{justify-content:flex-start}.week-page .lesson-nav span{display:block}}
+@media(max-width:480px){.week-page .lesson-menu{grid-template-columns:1fr}}
