@@ -24,3 +24,36 @@ body.map-page .layout{display:none}body.map-page.exam-active .layout{display:gri
 .week-page .course-card>.steps{display:none}
 @media(max-width:760px){.week-page .layout{grid-template-columns:1fr}.week-page .lesson-sidebar{position:static;max-height:none}.week-page .lesson-menu{grid-template-columns:repeat(2,minmax(0,1fr))}.week-page .lesson-nav{justify-content:flex-start}.week-page .lesson-nav span{display:block}}
 @media(max-width:480px){.week-page .lesson-menu{grid-template-columns:1fr}}
+
+/* Game start, sound cards and answer celebrations. */
+.game-start{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 20%,#e8f8df 0,#b6dfc8 38%,#1f4f40e8 100%);animation:gameFadeIn .35s ease both}
+.game-start.leaving{animation:gameFadeOut .45s ease both;pointer-events:none}
+.game-start-card{position:relative;width:min(520px,100%);overflow:hidden;text-align:center;background:#fffaf0;border:4px solid var(--line);border-radius:30px;padding:22px 26px 28px;box-shadow:0 22px 70px #173e3270;animation:startCardBounce .65s cubic-bezier(.2,.9,.25,1.2) both}
+.game-start-card:before,.game-start-card:after{content:'×';position:absolute;color:#2e6b5820;font:700 8rem 'Marcellus',serif;transform:rotate(-16deg)}
+.game-start-card:before{left:-20px;top:40px}.game-start-card:after{content:'÷';right:-18px;bottom:20px;transform:rotate(14deg)}
+.start-stars{color:#d3a33f;font-size:2rem;letter-spacing:.35em;animation:starPulse 1.25s ease-in-out infinite}
+.start-avatar{display:block;width:155px;height:165px;margin:-6px auto -8px;background:radial-gradient(circle,#e8f6dd 20%,#b8dec6 70%,transparent 71%);border-radius:50%}
+.game-start-card h2{font:700 clamp(2rem,7vw,3.2rem) 'Cormorant Garamond',serif;color:var(--deep);margin:4px 0 6px}
+.game-start-card p{max-width:390px;margin:0 auto 18px;color:#4d625a}
+.start-game-btn{display:block;margin:0 auto;font-size:1.15rem;padding:14px 28px;animation:startButtonPulse 1.5s ease-in-out infinite}
+.start-sound-btn{margin-top:17px;border:0;background:transparent;color:var(--deep);font-weight:750}
+.game-enter{animation:gameEnter .55s cubic-bezier(.2,.9,.25,1.15) both}
+.sound-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sound-fact{min-height:108px;border:2px solid #9fc9b5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform .18s ease,background .18s ease,box-shadow .18s ease}
+.sound-fact span{font-size:1rem}.sound-fact strong{font:700 1.55rem 'Marcellus',serif}.sound-fact small{font-size:.7rem;color:#567067}
+.sound-fact:hover{transform:translateY(-4px) rotate(-1deg);box-shadow:0 8px 0 #c5d9c9;background:#dff3e6}
+.sound-fact.fact-playing{animation:factPop .8s ease;background:#fff2bd;border-color:#d3a33f;box-shadow:0 0 0 6px #f0d47a55}
+.activity{position:relative;overflow:hidden}
+.reward-burst{position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;place-items:center}
+.reward-burst span{position:absolute;color:#d39a28;font-size:1.35rem;animation:rewardSpark 1s cubic-bezier(.1,.8,.2,1) both;animation-delay:calc(var(--i)*.025s)}
+.choice,.fact,.flip,.btn{transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.choice:active,.fact:active,.flip:active{transform:scale(.96)}
+@keyframes gameFadeIn{from{opacity:0}to{opacity:1}}@keyframes gameFadeOut{to{opacity:0;transform:scale(1.04)}}
+@keyframes startCardBounce{from{opacity:0;transform:translateY(45px) scale(.88)}to{opacity:1;transform:none}}
+@keyframes starPulse{50%{transform:scale(1.12);filter:drop-shadow(0 0 8px #f6ca4f)}}
+@keyframes startButtonPulse{50%{transform:translateY(-3px);box-shadow:0 8px 0 var(--deep)}}
+@keyframes gameEnter{from{opacity:.2;transform:scale(.94) translateY(18px)}to{opacity:1;transform:none}}
+@keyframes factPop{0%,100%{transform:none}35%{transform:scale(1.1) rotate(2deg)}65%{transform:scale(1.04) rotate(-2deg)}}
+@keyframes rewardSpark{0%{opacity:0;transform:translate(0,35px) scale(.3)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),-180px) scale(1.45) rotate(220deg)}}
+@media(max-width:680px){.sound-facts{grid-template-columns:repeat(3,minmax(0,1fr))}.game-start-card{padding:18px 16px 24px}.start-avatar{width:135px;height:145px}}
+@media(prefers-reduced-motion:reduce){.game-start,.game-start-card,.start-stars,.start-game-btn,.game-enter,.sound-fact.fact-playing,.reward-burst span{animation:none!important}.choice,.fact,.flip,.btn{transition:none}}
