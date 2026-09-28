@@ -993,7 +993,7 @@ function encodeWav(ch, sr) {
   let o = 44;
   for (let i = 0; i < n; i++) for (let k = 0; k < nc; k++) {
     const s = clamp(ch[k][i], -1, 1);
-    v.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true); o += 2;
+    v.setInt16(o, Math.round(s < 0 ? s * 0x8000 : s * 0x7fff), true); o += 2;
   }
   return new Uint8Array(buf);
 }
@@ -1089,12 +1089,21 @@ async function encodeMp3(ch, sr, onProgress) {
 }
 
 /* ---------- Saving ---------- */
-const saveFormat = () => $('fmtSel').value;
-const ext = () => saveFormat() === 'mp3' ? '.mp3' : '.wav';
-const mime = () => saveFormat() === 'mp3' ? 'audio/mpeg' : 'audio/wav';
+// Save formats. Feature files (save-extras.js) add more and can replace an encoder.
+// lossy: uses the Quality (kbps) setting in the Save panel.
+const FORMATS = {
+  mp3: { label: 'MP3', ext: '.mp3', mime: 'audio/mpeg', lossy: true, encode: (ch, sr, onProgress) => encodeMp3(ch, sr, onProgress) },
+  wav: { label: 'WAV (lossless)', ext: '.wav', mime: 'audio/wav', encode: async (ch, sr) => encodeWav(ch, sr) },
+};
+const saveFormat = () => FORMATS[$('fmtSel').value] ? $('fmtSel').value : 'mp3';
+const fmtInfo = () => FORMATS[saveFormat()];
+const fmtShort = k => FORMATS[k].label.replace(/\s*\(.*\)$/, '');
+const formatOptions = () => Object.entries(FORMATS).map(([k, f]) => [k, f.label]);
+const ext = () => fmtInfo().ext;
+const mime = () => fmtInfo().mime;
 function encode(ch, sr, onProgress) {
   // (format and bitrate come from the Save panel)
-  return saveFormat() === 'mp3' ? encodeMp3(ch, sr, onProgress) : Promise.resolve(encodeWav(ch, sr));
+  return fmtInfo().encode(ch, sr, onProgress);
 }
 function busyText(t) { $('busy').textContent = t; }
 // Run an export with the busy overlay; returns nothing, reports errors as a toast.
@@ -1139,9 +1148,8 @@ function exportSel() {
   exportPart(selA, selB, baseName() + '-selection');
 }
 function syncFormat() {
-  const mp3 = saveFormat() === 'mp3';
-  $('kbpsWrap').style.display = mp3 ? '' : 'none';
-  $('exportBtn').textContent = 'Download ' + (mp3 ? 'MP3' : 'WAV');
+  $('kbpsWrap').style.display = fmtInfo().lossy ? '' : 'none';
+  $('exportBtn').textContent = 'Download ' + fmtShort(saveFormat());
 }
 $('fmtSel').addEventListener('change', syncFormat);
 syncFormat();
@@ -1940,7 +1948,7 @@ $('batchFileIn').addEventListener('change', async e => {
   const files = [...e.target.files]; e.target.value = '';
   if (!files.length) return;
   const v = await askParams(`Batch convert ${files.length} file${files.length > 1 ? 's' : ''}`, 'Each file is processed the same way and all are saved together in one zip. Your open tabs are not changed.', [
-    { id: 'fmt', label: 'Save as', type: 'select', value: saveFormat(), options: [['mp3', 'MP3 (' + $('kbpsSel').value + ' kbps — change in the Save panel)'], ['wav', 'WAV (lossless)']] },
+    { id: 'fmt', label: 'Save as (lossy formats use the ' + $('kbpsSel').value + ' kbps quality set in the Save panel)', type: 'select', value: saveFormat(), options: formatOptions() },
     { id: 'trim', type: 'check', label: 'Trim silent start and end (uses the silence threshold)', value: false },
     { id: 'norm', type: 'check', label: 'Normalise loudness (peak −1 dB)', value: true },
     { id: 'mono', type: 'check', label: 'Convert to mono', value: false },
@@ -3146,8 +3154,8 @@ async function saveAs() {
   if (!doc || !len()) return;
   const v = await askParams('Save file as', 'Choose a name and format. The file downloads to your computer.', [
     { id: 'name', label: 'File name', type: 'text', value: baseName() },
-    { id: 'fmt', label: 'Format', type: 'select', value: saveFormat(), options: [['mp3', 'MP3'], ['wav', 'WAV (lossless)']] },
-    { id: 'kbps', label: 'MP3 quality', type: 'select', value: $('kbpsSel').value, options: [['96', '96 kbps'], ['128', '128 kbps'], ['192', '192 kbps'], ['320', '320 kbps']] },
+    { id: 'fmt', label: 'Format', type: 'select', value: saveFormat(), options: formatOptions() },
+    { id: 'kbps', label: 'Quality (MP3, OGG, M4A)', type: 'select', value: $('kbpsSel').value, options: [['96', '96 kbps'], ['128', '128 kbps'], ['192', '192 kbps'], ['320', '320 kbps']] },
   ], { ok: 'Save' });
   if (!v) return;
   $('fileName').value = v.name.trim() || baseName(); $('fmtSel').value = v.fmt; $('kbpsSel').value = v.kbps; syncFormat(); renderTabs();
@@ -3219,6 +3227,21 @@ function unzipStored(buf) {
   }
   return files;
 }
+// Tags go into project.json; a cover picture is stored as base64 text.
+function tagsToJSON(t) {
+  if (!t) return undefined;
+  const { cover, ...rest } = t;
+  if (!cover) return rest;
+  let bin = ''; for (let i = 0; i < cover.data.length; i += 0x8000) bin += String.fromCharCode.apply(null, cover.data.subarray(i, i + 0x8000));
+  return { ...rest, cover: { mime: cover.mime, b64: btoa(bin) } };
+}
+function tagsFromJSON(t) {
+  if (!t) return undefined;
+  const { cover, ...rest } = t;
+  if (!cover) return rest;
+  const bin = atob(cover.b64), data = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) data[i] = bin.charCodeAt(i);
+  return { ...rest, cover: { mime: cover.mime, data } };
+}
 async function saveProject() {
   stashTab();
   const list = tabs.filter(t => t.doc);
@@ -3231,14 +3254,13 @@ async function saveProject() {
       if (written.has(ch[0])) return written.get(ch[0]);
       written.set(ch[0], name); files.push({ name, data: encodeWavFloat(ch, sr) }); return name;
     };
-    list.forEach((t, i) => meta.tabs.push({ name: t.name, sr: t.doc.sr, markers: t.doc.markers, file: store(t.doc.ch, t.doc.sr, `tab${i + 1}.wav`) }));
+    list.forEach((t, i) => meta.tabs.push({ name: t.name, sr: t.doc.sr, markers: t.doc.markers, labels: t.doc.labels, tags: tagsToJSON(t.tags), file: store(t.doc.ch, t.doc.sr, `tab${i + 1}.wav`) }));
     if (mt.tracks.length) {
       let n = 0;
       meta.multitrack = {
         pps: mt.pps, scroll: mt.scroll, playhead: mt.playhead,
         tracks: mt.tracks.map(({ id, name, vol, pan, mute, solo, color }) => ({ id, name, vol, pan, mute, solo, color })),
-        clips: mt.clips.map(c => ({ id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name,
-          srcName: c.src.name, file: store(c.src.ch, c.src.sr, `clip${++n}.wav`) })),
+        clips: mt.clips.map(({ src, ...c }) => ({ ...c, srcName: src.name, file: store(src.ch, src.sr, `clip${++n}.wav`) })),
       };
     }
     files.unshift({ name: 'project.json', data: new TextEncoder().encode(JSON.stringify(meta, null, 1)) });
@@ -3261,7 +3283,10 @@ async function openProject(file) {
     const made = [];
     for (const t of meta.tabs) {
       const w = load(t.file);
-      newDocument(makeDoc(w.sr, w.ch, (t.markers || []).filter(m => m > 0 && m < w.ch[0].length)), t.name, false);
+      const d = makeDoc(w.sr, w.ch, (t.markers || []).filter(m => m > 0 && m < w.ch[0].length));
+      if (t.labels) d.labels = t.labels;
+      newDocument(d, t.name, false);
+      active.tags = tagsFromJSON(t.tags);
       made.push(active);
     }
     if (made[meta.active]) showTab(made[meta.active]);
@@ -3271,7 +3296,7 @@ async function openProject(file) {
         mtStopNodes();
         const m = meta.multitrack;
         mt.tracks = m.tracks.map(t => ({ ...t }));
-        mt.clips = m.clips.map(c => { const w = load(c.file); return { id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name, src: { name: c.srcName || c.name, sr: w.sr, ch: w.ch } }; });
+        mt.clips = m.clips.map(({ file: f, srcName, ...c }) => { const w = load(f); return { ...c, src: { name: srcName || c.name, sr: w.sr, ch: w.ch } }; });
         mt.pps = m.pps || 60; mt.scroll = m.scroll || 0; mt.playhead = m.playhead || 0;
         mt.nextId = Math.max(0, ...mt.tracks.map(t => t.id), ...mt.clips.map(c => c.id)) + 1;
         mt.undo = []; mt.redo = []; mt.sel = null; mt.selTrack = mt.tracks[0] ? mt.tracks[0].id : null;
@@ -3303,7 +3328,7 @@ const HELP_TUTORIALS = [
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
   ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
-  ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
+  ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-safe', 'Autosave, offline use and installing'], ['t-project', 'Save your work and continue later'],
 ];
 // Opens in a new tab so the editor (and unsaved audio) stays open.
 function openHelp(id) { window.open('help.html' + (id ? '#' + id : ''), '_blank', 'noopener'); }
@@ -3325,7 +3350,7 @@ const MENUS = [
     { label: 'Save File As…', key: 'Ctrl+Shift+S', run: saveAs, en: has.audio },
     { label: 'Save Selected Region As…', run: exportSel, en: has.sel },
     { label: 'Save All Files (.zip)', run: saveAll, en: has.tabs },
-    { label: 'Save Format', sub: () => [['mp3', 'MP3'], ['wav', 'WAV (lossless)']].map(([v, l]) => ({ label: l, check: () => saveFormat() === v, run: () => { $('fmtSel').value = v; syncFormat(); } })) },
+    { label: 'Save Format', sub: () => formatOptions().map(([v, l]) => ({ label: l, check: () => saveFormat() === v, run: () => { $('fmtSel').value = v; syncFormat(); } })) },
     '-',
     { label: 'Open Project…', run: () => $('projIn').click() },
     { label: 'Save Project', run: saveProject, en: () => tabs.length > 0 || mt.clips.length > 0 },
