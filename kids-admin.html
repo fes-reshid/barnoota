@@ -227,6 +227,47 @@ match /kids_quest_quizzes/{quizId} {
   // only a listed admin, super admin or teacher can write them
   allow create, update, delete: if request.auth != null
     && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
+}
+function isStaff() {
+  return request.auth != null
+    && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
+}
+// teacher announcements, each with a class comment section
+match /kids_quest_announcements/{annId} {
+  allow get, list: if request.auth != null;
+  allow create, update, delete: if isStaff();
+  match /comments/{commentId} {
+    allow get, list: if request.auth != null;
+    // your own uid only; only staff may post as 'teacher'; students only
+    // while the teacher has comments open
+    allow create: if request.auth != null
+      && request.resource.data.uid == request.auth.uid
+      && request.resource.data.text is string
+      && request.resource.data.text.size() > 0
+      && request.resource.data.text.size() <= 1000
+      && (request.resource.data.role == 'student'
+          || (request.resource.data.role == 'teacher' && isStaff()))
+      && (isStaff() || get(/databases/$(database)/documents/kids_quest_announcements/$(annId)).data.commentsOpen == true);
+    allow delete: if request.auth != null
+      && (resource.data.uid == request.auth.uid || isStaff());
+  }
+}
+// private teacher <-> student messages: only that student and staff
+match /kids_quest_messages/{studentUid} {
+  allow get, create, update: if request.auth != null
+    && (request.auth.uid == studentUid || isStaff());
+  allow list, delete: if isStaff();
+  match /thread/{messageId} {
+    allow get, list: if request.auth != null
+      && (request.auth.uid == studentUid || isStaff());
+    allow create: if request.auth != null
+      && request.resource.data.text is string
+      && request.resource.data.text.size() > 0
+      && request.resource.data.text.size() <= 2000
+      && ((request.auth.uid == studentUid && request.resource.data.from == 'student')
+          || (isStaff() && request.resource.data.from == 'teacher'));
+    allow delete: if isStaff();
+  }
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -338,7 +379,7 @@ match /kids_quest_quizzes/{quizId} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=10"></script>
+<script type="module" src="kids-quest-cloud.js?v=11"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

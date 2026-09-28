@@ -46,6 +46,8 @@ const STUDENTS_COLLECTION = 'kids_quest_students';
 const ADMINS_COLLECTION = 'kids_quest_admins';
 const USERNAMES_COLLECTION = 'kids_quest_usernames';
 const QUIZZES_COLLECTION = 'kids_quest_quizzes';
+const ANNOUNCEMENTS_COLLECTION = 'kids_quest_announcements';
+const MESSAGES_COLLECTION = 'kids_quest_messages';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -639,6 +641,118 @@ function adminSetStudentMapNote(uid, game, mapIndex, note){
   patch.teacherNotes[game][String(mapIndex)] = value;
   return setDoc(doc(db, STUDENTS_COLLECTION, uid), patch, { merge:true });
 }
+
+/* ---- announcements + class comments ---- */
+/* kids_quest_announcements/{id}: posted by staff for one map (or every
+   map, map -1). Its comments subcollection is a class discussion every
+   signed-in student can read and add to; staff answer in the same list
+   (role 'teacher', replyTo = the question's id). The Firestore rules pin
+   each comment's uid to the signed-in account and only let staff post
+   with role 'teacher', so a student can't pose as the teacher. */
+function sortByAt(list, field){
+  const f = field || 'createdAt';
+  return list.sort(function(a, b){ return String(a[f] || '').localeCompare(String(b[f] || '')); });
+}
+function listAnnouncements(game){
+  return getDocs(collection(db, ANNOUNCEMENTS_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const data = d.data(); if(!game || data.game === game) out.push(Object.assign({ id: d.id }, data)); });
+    out.sort(function(a, b){ return (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+function adminSaveAnnouncement(a){
+  const x = a || {};
+  const ref = x.id ? doc(db, ANNOUNCEMENTS_COLLECTION, x.id) : doc(collection(db, ANNOUNCEMENTS_COLLECTION));
+  const user = auth.currentUser, now = new Date().toISOString();
+  const data = {
+    game: String(x.game || ''),
+    map: Number.isInteger(x.map) ? x.map : -1,
+    title: String(x.title || '').trim(),
+    body: String(x.body || '').trim(),
+    commentsOpen: x.commentsOpen !== false,
+    pinned: !!x.pinned,
+    authorName: String(x.authorName || '').trim(),
+    updatedAt: now
+  };
+  if(!x.id){ data.createdAt = now; data.by = (user && user.email) || null; }
+  return setDoc(ref, data, { merge:true }).then(function(){ return ref.id; });
+}
+function listComments(announcementId){
+  return getDocs(collection(db, ANNOUNCEMENTS_COLLECTION, announcementId, 'comments')).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ id: d.id }, d.data())); });
+    return sortByAt(out);
+  });
+}
+function addComment(announcementId, c){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const ref = doc(collection(db, ANNOUNCEMENTS_COLLECTION, announcementId, 'comments'));
+  return setDoc(ref, {
+    uid: user.uid,
+    role: c && c.role === 'teacher' ? 'teacher' : 'student',
+    authorName: String((c && c.authorName) || '').trim().slice(0, 80),
+    text: String((c && c.text) || '').trim().slice(0, 1000),
+    replyTo: String((c && c.replyTo) || ''),
+    createdAt: new Date().toISOString()
+  }).then(function(){ return ref.id; });
+}
+function deleteComment(announcementId, commentId){
+  return deleteDoc(doc(db, ANNOUNCEMENTS_COLLECTION, announcementId, 'comments', commentId));
+}
+function adminDeleteAnnouncement(id){
+  return listComments(id).catch(function(){ return []; }).then(function(cs){
+    return Promise.all(cs.map(function(c){ return deleteComment(id, c.id).catch(function(){}); }));
+  }).then(function(){ return deleteDoc(doc(db, ANNOUNCEMENTS_COLLECTION, id)); });
+}
+
+/* ---- private teacher <-> student messages ---- */
+/* kids_quest_messages/{studentUid} is a small summary (last message, who
+   sent it, unread flags) so the portal can list every conversation in one
+   read; the messages themselves live in its thread subcollection. Only
+   that student and staff can read either. */
+function listMessageThreads(){
+  return getDocs(collection(db, MESSAGES_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ studentUid: d.id }, d.data())); });
+    out.sort(function(a, b){ return String(b.lastAt || '').localeCompare(String(a.lastAt || '')); });
+    return out;
+  });
+}
+function getMessageThread(studentUid){
+  return getDoc(doc(db, MESSAGES_COLLECTION, studentUid)).then(function(s){ return s.exists() ? s.data() : null; });
+}
+function getMessages(studentUid){
+  return getDocs(collection(db, MESSAGES_COLLECTION, studentUid, 'thread')).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ id: d.id }, d.data())); });
+    return sortByAt(out);
+  });
+}
+function sendMessage(studentUid, m){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const from = m && m.from === 'teacher' ? 'teacher' : 'student';
+  const text = String((m && m.text) || '').trim().slice(0, 2000);
+  if(!text) return Promise.reject(new Error('Write a message first.'));
+  const now = new Date().toISOString();
+  const ref = doc(collection(db, MESSAGES_COLLECTION, studentUid, 'thread'));
+  return setDoc(ref, { from: from, uid: user.uid, authorName: String((m && m.authorName) || '').trim().slice(0, 80), text: text, createdAt: now })
+    .then(function(){
+      const summary = { lastAt: now, lastFrom: from, lastText: text.slice(0, 140) };
+      if(from === 'teacher'){ summary.unreadForStudent = true; summary.unreadForStaff = false; }
+      else { summary.unreadForStaff = true; summary.unreadForStudent = false; }
+      if(m && m.studentName) summary.studentName = String(m.studentName).slice(0, 80);
+      return setDoc(doc(db, MESSAGES_COLLECTION, studentUid), summary, { merge:true });
+    }).then(function(){ return ref.id; });
+}
+function markThreadRead(studentUid, who){
+  const patch = {}; patch[who === 'staff' ? 'unreadForStaff' : 'unreadForStudent'] = false;
+  return setDoc(doc(db, MESSAGES_COLLECTION, studentUid), patch, { merge:true });
+}
+function currentUid(){ return auth.currentUser ? auth.currentUser.uid : null; }
+
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
 }
@@ -683,6 +797,18 @@ window.KidsCloud = {
   adminSaveQuiz: adminSaveQuiz,
   adminDeleteQuiz: adminDeleteQuiz,
   updateMyProfile: updateMyProfile,
+  listAnnouncements: listAnnouncements,
+  adminSaveAnnouncement: adminSaveAnnouncement,
+  adminDeleteAnnouncement: adminDeleteAnnouncement,
+  listComments: listComments,
+  addComment: addComment,
+  deleteComment: deleteComment,
+  listMessageThreads: listMessageThreads,
+  getMessageThread: getMessageThread,
+  getMessages: getMessages,
+  sendMessage: sendMessage,
+  markThreadRead: markThreadRead,
+  currentUid: currentUid,
   adminSetStudentMapNote: adminSetStudentMapNote,
   ADMIN_EMAIL: ADMIN_EMAIL
 };

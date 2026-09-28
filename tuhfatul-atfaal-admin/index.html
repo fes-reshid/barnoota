@@ -216,6 +216,37 @@
   .preview-q .choices button.wrong{background:#ffe0d8;border-color:#d85c38}
   .acc{display:inline-block;min-width:44px;text-align:right;font-family:'Marcellus'}
 
+  .ann-card{background:#fff;border:2px solid var(--gold-soft);border-radius:16px;padding:16px;margin-bottom:14px}
+  .ann-card.pinned{border-color:var(--gold);box-shadow:0 0 0 3px rgba(169,124,37,.15)}
+  .ann-card h3{font-size:19px;margin:4px 0 6px}
+  .ann-body{white-space:pre-wrap;font-size:17px;line-height:1.55;margin:6px 0 10px}
+  .ann-tools{display:flex;gap:6px;flex-wrap:wrap}
+  .comments{border-top:1px dashed var(--gold-soft);margin-top:12px;padding-top:10px}
+  .cmt{background:var(--parchment);border-radius:12px;padding:8px 11px;margin-bottom:7px;font-size:15.5px}
+  .cmt .who{font-family:'Marcellus';font-size:13.5px;color:var(--ink-navy);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .cmt .who .x{margin-left:auto;background:none;border:none;cursor:pointer;color:#a3352b;font-size:14px}
+  .cmt p{margin:3px 0 0;white-space:pre-wrap}
+  .cmt.teacher{background:#e3f2fa;border-left:4px solid var(--sky);margin-left:26px}
+  .cmt.unanswered{box-shadow:inset 3px 0 0 #d99a16}
+  .reply-box{display:flex;gap:6px;margin-top:6px}
+  .reply-box input{flex:1;padding:8px 10px;border:1.5px solid var(--gold-soft);border-radius:10px;font-family:'Cormorant Garamond',serif;font-size:16px}
+  .msg-layout{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+  .thread-list{max-height:64vh;overflow:auto}
+  .thread{display:flex;gap:10px;align-items:center;padding:9px;border-radius:12px;cursor:pointer;border:1.5px solid transparent}
+  .thread:hover{background:var(--parchment)} .thread.active{background:#e3f2fa;border-color:var(--sky)}
+  .thread .t{font-family:'Marcellus';color:var(--ink-navy);font-size:15px}.thread .s{font-size:13.5px;color:#8a7654;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--coral);flex:none}
+  .chat-card{min-height:420px}
+  .chat-head{display:flex;gap:10px;align-items:center;border-bottom:1px dashed var(--gold-soft);padding-bottom:10px}
+  .chat-head .title{font-family:'Marcellus';font-size:18px;color:var(--ink-navy)}
+  .chat-log{max-height:52vh;overflow:auto;padding:12px 2px;display:flex;flex-direction:column;gap:8px}
+  .bubble{max-width:78%;padding:9px 13px;border-radius:16px;font-size:16.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+  .bubble small{display:block;font-size:12px;opacity:.75;margin-top:3px}
+  .bubble.teacher{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:5px}
+  .bubble.student{align-self:flex-start;background:var(--parchment);border:1.5px solid var(--gold-soft);border-bottom-left-radius:5px}
+  .chat-compose{display:flex;gap:8px;align-items:flex-end;border-top:1px dashed var(--gold-soft);padding-top:10px}
+  .chat-compose textarea{flex:1;min-height:56px;padding:10px 12px;border:1.5px solid var(--gold-soft);border-radius:12px;font-family:'Cormorant Garamond',serif;font-size:17px;resize:vertical}
+  @media(max-width:900px){.msg-layout{grid-template-columns:1fr}}
   .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--ink-navy);color:#fff;
     padding:12px 20px;border-radius:14px;font-family:'Marcellus';font-size:15px;z-index:80;transition:transform .25s ease,opacity .25s ease;box-shadow:0 8px 24px #0004;max-width:92vw;opacity:0;pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
@@ -296,6 +327,8 @@
       <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
       <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
       <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
+      <button class="tab" data-tab="announce" role="tab">📣 Announcements <span class="count" id="tab-count-ann">0</span></button>
+      <button class="tab" data-tab="messages" role="tab">✉️ Messages <span class="count" id="tab-count-msg">0</span></button>
       <button class="tab" data-tab="add" role="tab">➕ Add students</button>
       <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers">🧑‍🏫 Teachers</button>
       <button class="tab" data-tab="profile" role="tab" id="tab-profile">👤 My profile</button>
@@ -324,6 +357,11 @@
         <div class="card">
           <h2>🌟 Leading learners</h2>
           <div id="leader-list"></div>
+        </div>
+        <div class="card" style="grid-column:1/-1">
+          <h2>💬 Waiting for your reply</h2>
+          <p class="muted" style="margin-top:-4px">Student questions on your announcements and private messages you haven’t answered yet.</p>
+          <div id="reply-list"></div>
         </div>
         <div class="card">
           <h2>🗺️ Class across the 15 maps</h2>
@@ -427,6 +465,58 @@
       </div>
     </div>
 
+    <!-- ANNOUNCEMENTS -->
+    <div class="tab-panel hidden" data-panel="announce">
+      <div class="quiz-layout">
+        <div class="card" id="ann-composer">
+          <h2 id="ann-form-title">📣 New announcement</h2>
+          <p class="muted" style="margin-top:-4px">Every student sees it under the map you choose, with a comment section for their questions.</p>
+          <div class="field"><label for="ann-title">Title</label><input id="ann-title" maxlength="100" placeholder="e.g. Class test on Friday"></div>
+          <div class="field"><label for="ann-body">Message</label><textarea id="ann-body" maxlength="2000" style="min-height:120px" placeholder="Write your announcement…"></textarea></div>
+          <div class="field"><label for="ann-map">Show under</label><select id="ann-map"></select></div>
+          <label class="toggle"><input type="checkbox" id="ann-comments" checked> Allow student comments &amp; questions</label><br>
+          <label class="toggle" style="margin-top:6px"><input type="checkbox" id="ann-pinned"> 📌 Pin to the top</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+            <button class="btn primary" id="ann-post">📣 Post announcement</button>
+            <button class="btn ghost hidden" id="ann-cancel">Cancel editing</button>
+          </div>
+          <p class="msg" id="ann-msg"></p>
+        </div>
+        <div>
+          <div id="ann-list"></div>
+          <p class="empty hidden" id="ann-empty">No announcements yet — post your first one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="tab-panel hidden" data-panel="messages">
+      <div class="msg-layout">
+        <div class="card" style="padding:14px">
+          <button class="btn sky" id="msg-broadcast-btn" style="width:100%;justify-content:center;margin-bottom:10px">📨 Message every student</button>
+          <div class="toolbar" style="margin-bottom:8px"><div class="search"><input type="search" id="msg-search" placeholder="Find a student"></div></div>
+          <div id="msg-thread-list" class="thread-list"></div>
+        </div>
+        <div class="card chat-card">
+          <div id="chat-empty"><h2>✉️ Private messages</h2><p>Choose a student on the left to read and answer their messages, or send the same message to every student at once. Only you, other staff and that student can see a conversation.</p></div>
+          <div id="chat-broadcast" class="hidden">
+            <h2>📨 Message every student</h2>
+            <p class="muted" style="margin-top:-4px">Each student gets it privately in their own conversation, and can reply to you.</p>
+            <div class="field"><textarea id="broadcast-text" maxlength="2000" style="min-height:140px" placeholder="Assalāmu ʿalaykum everyone…"></textarea></div>
+            <label class="toggle"><input type="checkbox" id="broadcast-skip-disabled" checked> Skip disabled accounts</label>
+            <div style="margin-top:10px"><button class="btn primary" id="broadcast-send">Send to all students</button></div>
+            <p class="msg" id="broadcast-msg"></p>
+          </div>
+          <div id="chat-view" class="hidden">
+            <div class="chat-head"><div class="avatar" id="chat-avatar">🧒</div><div style="flex:1;min-width:0"><div class="title" id="chat-name">Student</div><div class="muted" id="chat-sub"></div></div><button class="btn ghost small" id="chat-profile">Open profile</button></div>
+            <div class="chat-log" id="chat-log"></div>
+            <div class="chat-compose"><textarea id="chat-text" maxlength="2000" placeholder="Write a message… (Enter to send, Shift+Enter for a new line)"></textarea><button class="btn primary" id="chat-send">Send</button></div>
+            <p class="msg" id="chat-msg"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ADD STUDENTS -->
     <div class="tab-panel hidden" data-panel="add">
       <div class="two-col">
@@ -515,7 +605,7 @@
         <div class="avatar big" id="manage-avatar">🧒</div>
         <div><h1 id="manage-title" style="margin:0">Student</h1><p id="manage-sub" class="muted" style="margin:2px 0"></p><div id="manage-badges"></div></div>
       </div>
-      <button class="btn ghost small" id="close-modal">✕ Close</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn sky small" id="modal-message">✉️ Message</button><button class="btn ghost small" id="close-modal">✕ Close</button></div>
     </div>
     <div class="subtabs" role="tablist">
       <button class="subtab active" data-sub="profile">👤 Profile</button>
@@ -617,7 +707,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=10"></script>
+<script type="module" src="../kids-quest-cloud.js?v=11"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1210,8 +1300,173 @@ function showResults(){
   showQuizPane('quiz-results');
 }
 
+/* ===================== announcements ===================== */
+let annCache = [], commentsCache = {}, editingAnn = null, threadsCache = [], activeThread = null;
+function fmtTime(iso){ if(!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString(undefined, { day:'numeric', month:'short', hour:'numeric', minute:'2-digit' }); }
+function unansweredIn(cs){
+  return cs.filter(c => c.role === 'student' && !c.replyTo && !cs.some(r => r.role === 'teacher' && r.replyTo === c.id));
+}
+function loadAnnouncements(){
+  return window.KidsCloud.listAnnouncements(GAME_KEY).then(list => {
+    annCache = list;
+    return Promise.all(list.map(a => window.KidsCloud.listComments(a.id).then(cs => { commentsCache[a.id] = cs; }).catch(() => { commentsCache[a.id] = []; })));
+  }).then(() => { renderAnnouncements(); renderReplyList(); })
+    .catch(err => { $('ann-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function studentName(uid){ const s = studentsCache.find(x => x.uid === uid); return s ? (s.displayName || s.username) : ''; }
+function renderAnnouncements(){
+  const box = $('ann-list'); box.innerHTML = '';
+  $('ann-empty').classList.toggle('hidden', annCache.length > 0);
+  $('tab-count-ann').textContent = annCache.reduce((n, a) => n + unansweredIn(commentsCache[a.id] || []).length, 0) || annCache.length;
+  annCache.forEach(a => {
+    const cs = commentsCache[a.id] || [], waiting = unansweredIn(cs);
+    const card = document.createElement('div'); card.className = 'ann-card' + (a.pinned ? ' pinned' : ''); card.id = 'ann-' + a.id;
+    const top = cs.filter(c => !c.replyTo || !cs.some(p => p.id === c.replyTo));
+    const cmtHtml = c => '<div class="cmt ' + (c.role === 'teacher' ? 'teacher' : '') + (waiting.includes(c) ? ' unanswered' : '') + '" data-cid="' + escapeHtml(c.id) + '"><div class="who">' +
+      (c.role === 'teacher' ? '🧑‍🏫 ' : '🧒 ') + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + ' <span class="muted">· ' + fmtTime(c.createdAt) + '</span>' +
+      (waiting.includes(c) ? '<span class="role-badge warn">Needs reply</span>' : '') + '<button class="x" data-del="' + escapeHtml(c.id) + '" title="Remove comment">✕</button></div><p>' + escapeHtml(c.text) + '</p>' +
+      (c.role === 'student' ? '<button class="linkbtn" data-reply="' + escapeHtml(c.id) + '">↩ Reply</button><div class="reply-box hidden" data-replybox="' + escapeHtml(c.id) + '"><input placeholder="Your answer…" maxlength="1000"><button class="btn primary small">Send</button></div>' : '') + '</div>';
+    card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + (a.pinned ? '<span class="role-badge warn">📌 Pinned</span>' : '') +
+      '<span class="role-badge info">' + escapeHtml(mapLabel(a.map)) + '</span>' + (a.commentsOpen ? '' : '<span class="role-badge">Comments closed</span>') +
+      (waiting.length ? '<span class="role-badge warn">' + waiting.length + ' question' + (waiting.length > 1 ? 's' : '') + ' waiting</span>' : '') + '</div>' +
+      '<h3>' + escapeHtml(a.title || 'Announcement') + '</h3><div class="muted">' + escapeHtml(a.authorName || 'Teacher') + ' · ' + fmtTime(a.createdAt) + '</div>' +
+      '<div class="ann-body">' + escapeHtml(a.body) + '</div>' +
+      '<div class="ann-tools"><button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn ghost small" data-act="toggle">' + (a.commentsOpen ? '🔒 Close comments' : '🔓 Open comments') + '</button>' +
+      '<button class="btn ghost small" data-act="pin">' + (a.pinned ? 'Unpin' : '📌 Pin') + '</button><button class="btn danger small" data-act="del">Delete</button></div>' +
+      '<div class="comments"><h3 style="font-size:15px">💬 Comments (' + cs.length + ')</h3>' +
+      (cs.length ? top.map(c => cmtHtml(c) + cs.filter(r => r.replyTo === c.id).map(cmtHtml).join('')).join('') : '<p class="muted">No comments yet.</p>') +
+      '<div class="reply-box"><input data-general placeholder="Add a comment for everyone…" maxlength="1000"><button class="btn ghost small" data-act="comment">Post</button></div></div>';
+    card.querySelector('[data-act="edit"]').onclick = () => startEditAnn(a);
+    card.querySelector('[data-act="toggle"]').onclick = () => saveAnnPatch(a, { commentsOpen: !a.commentsOpen }, a.commentsOpen ? 'Comments closed' : 'Comments opened');
+    card.querySelector('[data-act="pin"]').onclick = () => saveAnnPatch(a, { pinned: !a.pinned }, a.pinned ? 'Unpinned' : 'Pinned to the top');
+    card.querySelector('[data-act="del"]').onclick = () => {
+      if(!confirm('Delete “' + (a.title || 'this announcement') + '” and all its comments?')) return;
+      window.KidsCloud.adminDeleteAnnouncement(a.id).then(() => { toast('Announcement deleted'); loadAnnouncements(); }).catch(err => alert(friendlyError(err)));
+    };
+    card.querySelectorAll('[data-reply]').forEach(b => b.onclick = () => { const box = card.querySelector('[data-replybox="' + b.dataset.reply + '"]'); box.classList.toggle('hidden'); box.querySelector('input').focus(); });
+    card.querySelectorAll('[data-replybox]').forEach(rb => {
+      const send = () => postComment(a, rb.querySelector('input').value, rb.dataset.replybox);
+      rb.querySelector('button').onclick = send; rb.querySelector('input').onkeydown = e => { if(e.key === 'Enter') send(); };
+    });
+    const gen = card.querySelector('[data-general]');
+    card.querySelector('[data-act="comment"]').onclick = () => postComment(a, gen.value, '');
+    gen.onkeydown = e => { if(e.key === 'Enter') postComment(a, gen.value, ''); };
+    card.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+      if(!confirm('Remove this comment for everyone?')) return;
+      window.KidsCloud.deleteComment(a.id, b.dataset.del).then(() => refreshComments(a.id)).catch(err => alert(friendlyError(err)));
+    });
+    box.appendChild(card);
+  });
+}
+function refreshComments(id){
+  return window.KidsCloud.listComments(id).then(cs => { commentsCache[id] = cs; renderAnnouncements(); renderReplyList(); });
+}
+function postComment(a, text, replyTo){
+  text = String(text || '').trim(); if(!text) return;
+  window.KidsCloud.addComment(a.id, { text, replyTo, role: 'teacher', authorName: $('certificate-teacher').dataset.me || '' })
+    .then(() => { toast(replyTo ? 'Reply posted' : 'Comment posted'); return refreshComments(a.id); })
+    .catch(err => alert(friendlyError(err)));
+}
+function saveAnnPatch(a, patch, msg){
+  window.KidsCloud.adminSaveAnnouncement(Object.assign({}, a, patch)).then(() => { Object.assign(a, patch); toast(msg); renderAnnouncements(); }).catch(err => alert(friendlyError(err)));
+}
+function fillAnnMap(){ $('ann-map').innerHTML = $('quiz-map').innerHTML; }
+function startEditAnn(a){
+  editingAnn = a;
+  $('ann-form-title').textContent = '✏️ Edit announcement'; $('ann-post').textContent = '💾 Save changes'; $('ann-cancel').classList.remove('hidden');
+  $('ann-title').value = a.title || ''; $('ann-body').value = a.body || ''; $('ann-map').value = String(a.map); $('ann-comments').checked = a.commentsOpen !== false; $('ann-pinned').checked = !!a.pinned;
+  $('ann-composer').scrollIntoView({ behavior:'smooth' }); $('ann-title').focus();
+}
+function resetAnnForm(){
+  editingAnn = null; $('ann-form-title').textContent = '📣 New announcement'; $('ann-post').textContent = '📣 Post announcement'; $('ann-cancel').classList.add('hidden');
+  $('ann-title').value = ''; $('ann-body').value = ''; $('ann-map').value = '-1'; $('ann-comments').checked = true; $('ann-pinned').checked = false;
+}
+function submitAnn(){
+  const title = $('ann-title').value.trim(), body = $('ann-body').value.trim();
+  if(!title || !body){ setMsg('ann-msg', 'Add a title and a message.', true); return; }
+  const data = Object.assign({}, editingAnn || {}, { game: GAME_KEY, title, body, map: Number($('ann-map').value), commentsOpen: $('ann-comments').checked, pinned: $('ann-pinned').checked,
+    authorName: (editingAnn && editingAnn.authorName) || $('certificate-teacher').dataset.me || '' });
+  $('ann-post').disabled = true; setMsg('ann-msg', 'Posting…');
+  window.KidsCloud.adminSaveAnnouncement(data).then(() => {
+    setMsg('ann-msg', editingAnn ? 'Saved ✓' : 'Posted ✓ Students will see it under ' + mapLabel(data.map) + '.');
+    toast(editingAnn ? 'Announcement updated' : 'Announcement posted'); resetAnnForm(); return loadAnnouncements();
+  }).catch(err => setMsg('ann-msg', friendlyError(err), true)).finally(() => { $('ann-post').disabled = false; });
+}
+
+/* ===================== messages ===================== */
+function loadThreads(){
+  return window.KidsCloud.listMessageThreads().then(list => { threadsCache = list; renderThreads(); renderReplyList(); })
+    .catch(err => { $('msg-thread-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function renderThreads(){
+  const q = $('msg-search').value.trim().toLowerCase();
+  const byUid = {}; threadsCache.forEach(t => { byUid[t.studentUid] = t; });
+  let rows = studentsCache.map(s => ({ s, t: byUid[s.uid] || null }));
+  if(q) rows = rows.filter(r => [r.s.displayName, r.s.username, r.s.fullName].some(v => String(v || '').toLowerCase().includes(q)));
+  rows.sort((a, b) => ((b.t && b.t.unreadForStaff) ? 1 : 0) - ((a.t && a.t.unreadForStaff) ? 1 : 0) || String((b.t || {}).lastAt || '').localeCompare(String((a.t || {}).lastAt || ''))
+    || String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username)));
+  const unread = threadsCache.filter(t => t.unreadForStaff).length;
+  $('tab-count-msg').textContent = unread || threadsCache.length;
+  const box = $('msg-thread-list'); box.innerHTML = '';
+  rows.forEach(({ s, t }) => {
+    const el = document.createElement('div'); el.className = 'thread' + (activeThread && activeThread.uid === s.uid ? ' active' : '');
+    el.innerHTML = '<div class="avatar" style="width:38px;height:38px;font-size:20px">' + avatarHtml(s, courseProfile(s)) + '</div><div style="flex:1;min-width:0"><div class="t">' + escapeHtml(s.displayName || s.username) +
+      '</div><div class="s">' + (t ? (t.lastFrom === 'teacher' ? 'You: ' : '') + escapeHtml(t.lastText || '') : '<i>No messages yet</i>') + '</div></div>' + (t && t.unreadForStaff ? '<span class="dot" title="Unread"></span>' : '');
+    el.onclick = () => openThread(s);
+    box.appendChild(el);
+  });
+}
+function openThread(s){
+  activeThread = s; showTab('messages');
+  ['chat-empty','chat-broadcast'].forEach(id => $(id).classList.add('hidden')); $('chat-view').classList.remove('hidden');
+  $('chat-avatar').innerHTML = avatarHtml(s, courseProfile(s)); $('chat-name').textContent = s.displayName || s.username; $('chat-sub').textContent = '@' + s.username;
+  $('chat-log').innerHTML = '<p class="muted">Loading…</p>'; setMsg('chat-msg', ''); renderThreads();
+  window.KidsCloud.getMessages(s.uid).then(ms => {
+    if(!activeThread || activeThread.uid !== s.uid) return;
+    const log = $('chat-log');
+    log.innerHTML = ms.length ? ms.map(m => '<div class="bubble ' + (m.from === 'teacher' ? 'teacher' : 'student') + '">' + escapeHtml(m.text) + '<small>' +
+      escapeHtml(m.from === 'teacher' ? (m.authorName || 'Teacher') : (s.displayName || s.username)) + ' · ' + fmtTime(m.createdAt) + '</small></div>').join('')
+      : '<p class="muted">No messages yet — say salām!</p>';
+    log.scrollTop = log.scrollHeight;
+    const t = threadsCache.find(x => x.studentUid === s.uid);
+    if(t && t.unreadForStaff){ window.KidsCloud.markThreadRead(s.uid, 'staff').then(() => { t.unreadForStaff = false; renderThreads(); renderReplyList(); }).catch(() => {}); }
+  }).catch(err => { $('chat-log').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+  $('chat-text').focus();
+}
+function sendChat(){
+  const s = activeThread, text = $('chat-text').value.trim();
+  if(!s || !text) return;
+  $('chat-send').disabled = true;
+  window.KidsCloud.sendMessage(s.uid, { from:'teacher', text, authorName: $('certificate-teacher').dataset.me || '', studentName: s.displayName || s.username })
+    .then(() => { $('chat-text').value = ''; return loadThreads(); }).then(() => openThread(s))
+    .catch(err => setMsg('chat-msg', friendlyError(err), true)).finally(() => { $('chat-send').disabled = false; });
+}
+function sendBroadcast(){
+  const text = $('broadcast-text').value.trim();
+  if(!text){ setMsg('broadcast-msg', 'Write a message first.', true); return; }
+  const targets = studentsCache.filter(s => !($('broadcast-skip-disabled').checked && s.disabled));
+  if(!targets.length || !confirm('Send this message privately to ' + targets.length + ' student' + (targets.length > 1 ? 's' : '') + '?')) return;
+  $('broadcast-send').disabled = true;
+  let ok = 0, fail = 0;
+  targets.reduce((chain, s) => chain.then(() => window.KidsCloud.sendMessage(s.uid, { from:'teacher', text, authorName: $('certificate-teacher').dataset.me || '', studentName: s.displayName || s.username })
+    .then(() => { ok++; }).catch(() => { fail++; }).then(() => setMsg('broadcast-msg', 'Sending… ' + (ok + fail) + ' / ' + targets.length))), Promise.resolve())
+    .then(() => { setMsg('broadcast-msg', 'Sent to ' + ok + ' student' + (ok === 1 ? '' : 's') + (fail ? ' · ' + fail + ' failed' : '') + ' ✓', fail > 0); if(ok) { $('broadcast-text').value = ''; toast('Message sent to ' + ok + ' students'); } return loadThreads(); })
+    .finally(() => { $('broadcast-send').disabled = false; });
+}
+function renderReplyList(){
+  const box = $('reply-list'); if(!box) return;
+  const items = [];
+  annCache.forEach(a => unansweredIn(commentsCache[a.id] || []).forEach(c => items.push({ at: c.createdAt, html: '🧒 <b>' + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + '</b> asked on “' + escapeHtml(a.title) + '”: ' + escapeHtml(c.text.slice(0, 120)),
+    go: () => { showTab('announce'); const el = document.getElementById('ann-' + a.id); if(el) el.scrollIntoView({ behavior:'smooth' }); } })));
+  threadsCache.filter(t => t.unreadForStaff).forEach(t => { const s = studentsCache.find(x => x.uid === t.studentUid);
+    items.push({ at: t.lastAt, html: '✉️ <b>' + escapeHtml(s ? (s.displayName || s.username) : (t.studentName || 'Student')) + '</b> messaged you: ' + escapeHtml(t.lastText || ''), go: () => s && openThread(s) }); });
+  items.sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
+  box.innerHTML = items.length ? '' : '<p class="empty">You’re all caught up. 🌟</p>';
+  items.slice(0, 10).forEach(i => { const el = document.createElement('div'); el.className = 'list-row'; el.innerHTML = '<div class="grow"><div class="sub" style="font-size:15px;color:var(--ink-brown)">' + i.html + '</div><div class="sub">' + fmtTime(i.at) + '</div></div><button class="btn primary small">Reply →</button>'; el.onclick = i.go; box.appendChild(el); });
+}
+
 /* ===================== data loading ===================== */
-function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); }
+function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); }
 function loadStudents(){
   return window.KidsCloud.adminListStudents().then(list => {
     studentsCache = list;
@@ -1227,7 +1482,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadQuizzes(), loadAdmins()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -1294,6 +1549,8 @@ function showDashboard(info){
   showTab('overview');
   loadStudents();
   loadQuizzes();
+  loadAnnouncements();
+  loadThreads();
   loadAdmins();
 }
 function showLogin(){
@@ -1343,6 +1600,16 @@ function wire(){
   document.querySelectorAll('.subtab').forEach(t => t.onclick = () => showSub(t.dataset.sub));
 
   $('hero-add-name').onclick = () => { showTab('profile'); $('me-fullname').focus(); };
+  fillAnnMap();
+  $('ann-post').onclick = submitAnn;
+  $('ann-cancel').onclick = resetAnnForm;
+  $('msg-search').oninput = renderThreads;
+  $('msg-broadcast-btn').onclick = () => { activeThread = null; renderThreads(); ['chat-empty','chat-view'].forEach(id => $(id).classList.add('hidden')); $('chat-broadcast').classList.remove('hidden'); $('broadcast-text').focus(); };
+  $('broadcast-send').onclick = sendBroadcast;
+  $('chat-send').onclick = sendChat;
+  $('chat-text').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } };
+  $('chat-profile').onclick = () => { if(activeThread) openManager(activeThread, 'profile'); };
+  $('modal-message').onclick = () => { const s = activeStudent; if(!s) return; closeManager(); openThread(s); };
   $('me-fullname').oninput = () => { $('me-preview-name').textContent = $('me-fullname').value.trim() || myProfile.username; };
   $('me-save').onclick = () => {
     const full = $('me-fullname').value.trim(), email = $('me-email').value.trim();
