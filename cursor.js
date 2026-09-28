@@ -33,6 +33,18 @@
     daal.textContent = 'د';
     document.body.appendChild(daal);
 
+    // Modal dialogs (and other top-layer elements) are drawn above every z-index, which would hide
+    // this cursor while the real one is turned off. Keep the cursor inside the top-most open dialog.
+    function host(){
+      var open = document.querySelectorAll('dialog[open]');
+      return open.length ? open[open.length - 1] : document.body;
+    }
+    function place(){
+      var h = host();
+      if(cursor.parentNode !== h || !cursor.isConnected){ h.appendChild(cursor); h.appendChild(daal); }
+    }
+    new MutationObserver(place).observe(document.documentElement, { attributes:true, attributeFilter:['open'], subtree:true, childList:true });
+
     var mouseX = -100, mouseY = -100;
     var daalX = -100, daalY = -100;
     var shown = false;
@@ -90,7 +102,7 @@
       dot.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;' +
         'border-radius:50%;background:#3a8a6e;pointer-events:none;z-index:2147483646;' +
         'transition:transform .5s ease-out, opacity .5s ease-out;transform:scale(1);opacity:.55;';
-      document.body.appendChild(dot);
+      host().appendChild(dot);
       requestAnimationFrame(function(){
         dot.style.transform = 'scale(4.5)';
         dot.style.opacity = '0';
