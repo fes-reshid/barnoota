@@ -1,0 +1,13 @@
+{
+  "name": "audio-editor-tests",
+  "private": true,
+  "description": "Browser tests for the Diin Islaam audio editor (Chromium, Firefox, WebKit/Safari)",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "http-server": "14.1.1"
+  }
+}
