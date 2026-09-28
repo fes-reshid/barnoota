@@ -48,6 +48,16 @@
   .drop h2{ font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); margin:0 0 6px; font-size:22px; }
   .drop p{ margin:0 0 16px; color:#6b5a3f; }
   .drop .fine{ margin:14px 0 0; font-size:13px; color:#8a7654; }
+  .tabs{ display:inline-flex; gap:4px; background:var(--parchment-deep); border-radius:12px; padding:4px; margin:0 0 20px; }
+  .tabs button{
+    border:0; background:transparent; border-radius:9px; padding:7px 16px; font-weight:600; font-size:14px; color:#6b5a3f;
+  }
+  .tabs button[aria-selected=true]{ background:#fff; color:var(--green-dark); box-shadow:0 1px 4px rgba(60,45,20,.15); }
+  .url-form{ display:flex; gap:8px; max-width:560px; margin:0 auto; flex-wrap:wrap; }
+  .url-form input{
+    flex:1 1 260px; min-width:0; padding:10px 14px; border:1.5px solid var(--gold-soft); border-radius:26px; background:#fff;
+  }
+  .url-err{ color:var(--danger); font-size:13.5px; margin:10px auto 0; max-width:560px; min-height:1em; }
 
   .btn{
     border:1.5px solid var(--gold-soft); background:#fff; color:var(--ink-brown); border-radius:10px;
@@ -194,9 +204,25 @@
   <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
 
   <section class="drop" id="drop">
-    <h2>Drop PDF files here</h2>
-    <p>or choose one or more files to start. Several files are joined in the order you add them.</p>
-    <button class="btn primary big" id="pickBtn" type="button">Choose PDF files</button>
+    <div class="tabs" role="tablist" aria-label="How to open a PDF">
+      <button type="button" role="tab" id="tabFile" aria-selected="true" aria-controls="panelFile">Upload file</button>
+      <button type="button" role="tab" id="tabUrl" aria-selected="false" aria-controls="panelUrl" tabindex="-1">From URL</button>
+    </div>
+    <div id="panelFile" role="tabpanel" aria-labelledby="tabFile">
+      <h2>Drop PDF files here</h2>
+      <p>or choose one or more files to start. Several files are joined in the order you add them.</p>
+      <button class="btn primary big" id="pickBtn" type="button">Choose PDF files</button>
+    </div>
+    <div id="panelUrl" role="tabpanel" aria-labelledby="tabUrl" hidden>
+      <h2>Open a PDF from a link</h2>
+      <p>Paste the web address of a PDF file and it will open here for editing.</p>
+      <form class="url-form" id="urlForm" novalidate>
+        <input type="url" id="urlInput" placeholder="https://example.com/document.pdf" aria-label="PDF link" autocomplete="url" inputmode="url" required>
+        <button class="btn primary big" type="submit">Open PDF</button>
+      </form>
+      <p class="url-err" id="urlErr" role="alert"></p>
+      <p class="fine" style="margin-top:4px">Some websites don't let other sites download their files. If a link won't open, download the PDF and use <strong>Upload file</strong> instead.</p>
+    </div>
     <p class="fine">Everything is processed locally — nothing is uploaded to any server.</p>
   </section>
 
@@ -204,6 +230,7 @@
     <div>
       <div class="toolbar" role="toolbar" aria-label="Page tools">
         <button class="btn" id="addBtn" type="button" title="Add more PDF files">＋ Add PDF</button>
+        <button class="btn" id="addUrlBtn" type="button" title="Add a PDF from a web link">＋ From URL</button>
         <button class="btn" id="blankBtn" type="button" title="Insert a blank page after the selection">＋ Blank page</button>
         <span class="sep"></span>
         <button class="btn" id="selAllBtn" type="button" title="Select all (Ctrl+A)">Select all</button>
@@ -315,6 +342,19 @@
   </form>
 </div>
 
+<div class="dialog-back hidden" id="urlDialog" role="dialog" aria-modal="true" aria-labelledby="urlDlgTitle">
+  <form class="dialog" id="urlDlgForm" novalidate>
+    <h3 id="urlDlgTitle">Add PDF from URL</h3>
+    <p>Paste the link to a PDF. Its pages are added after the selected page, or at the end.</p>
+    <input type="url" id="urlDlgInput" placeholder="https://example.com/document.pdf" aria-label="PDF link" autocomplete="url" inputmode="url" required>
+    <p class="err" id="urlDlgErr" role="alert" style="margin:8px 0 0"></p>
+    <div class="row">
+      <button class="btn" type="button" id="urlDlgCancel">Cancel</button>
+      <button class="btn primary" type="submit">Add PDF</button>
+    </div>
+  </form>
+</div>
+
 <div class="busy hidden" id="busy"><div id="busyText">Working…</div></div>
 <div class="toast hidden" id="toast" role="status"></div>
 
@@ -397,7 +437,7 @@ async function addFiles(files) {
       }
     }
   } finally { busy(false); }
-  if (!added.length) return;
+  if (!added.length) return false;
   if (before) pushUndo();
   // Insert after the last selected page if any, otherwise append.
   const at = selected.size ? Math.max(...pages.map((p, i) => selected.has(p.uid) ? i : -1)) + 1 : pages.length;
@@ -405,6 +445,77 @@ async function addFiles(files) {
   if (!before) $('outName').value = list[0].name.replace(/\.pdf$/i, '') + '-edited.pdf';
   showWorkspace();
   renderGrid();
+  return true;
+}
+
+/* ---------- Opening from a URL ---------- */
+// Turn common "view" links into direct-download links.
+function directUrl(raw) {
+  let text = raw.trim();
+  if (!text) throw 'Paste a link to a PDF.';
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(text) && !text.startsWith('/')) text = 'https://' + text;
+  let u;
+  try { u = new URL(text, location.href); } catch { throw 'That doesn\'t look like a web address.'; }
+  if (!/^https?:$/.test(u.protocol)) throw 'Only http:// and https:// links can be opened.';
+  // github.com/<user>/<repo>/blob/<ref>/<path>  ->  raw file
+  const gh = u.hostname === 'github.com' && u.pathname.match(/^\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+  if (gh) return `https://raw.githubusercontent.com/${gh[1]}/${gh[2]}/${gh[3]}`;
+  // Dropbox share links: ask for the file itself rather than the preview page
+  if (/(^|\.)dropbox\.com$/.test(u.hostname)) { u.searchParams.delete('dl'); u.searchParams.set('raw', '1'); }
+  return u.href;
+}
+
+function nameFromResponse(res, url) {
+  const cd = res.headers.get('content-disposition') || '';
+  let m = cd.match(/filename\*\s*=\s*[^']*'[^']*'([^;]+)/i);
+  let name = m ? safeDecode(m[1]) : (cd.match(/filename\s*=\s*"?([^";]+)"?/i) || [])[1];
+  if (!name) name = safeDecode(new URL(url).pathname.split('/').filter(Boolean).pop() || '') || 'download';
+  name = name.replace(/[\\/:*?"<>|]+/g, '_').trim() || 'download';
+  return /\.pdf$/i.test(name) ? name : name + '.pdf';
+}
+function safeDecode(s) { try { return decodeURIComponent(s); } catch { return s; } }
+
+async function fetchPdf(raw) {
+  const url = directUrl(raw);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 90000);
+  busy(true, 'Downloading PDF…');
+  try {
+    let res;
+    try { res = await fetch(url, { signal: ctrl.signal, credentials: 'omit', redirect: 'follow' }); }
+    catch (e) {
+      if (e.name === 'AbortError') throw 'The download took too long and was stopped.';
+      throw 'Couldn\'t download that file. The website may not allow other sites to fetch it, or the link may be wrong. Download the PDF yourself and use “Upload file” instead.';
+    }
+    if (!res.ok) throw `The website answered “${res.status}${res.statusText ? ' ' + res.statusText : ''}”. Check that the link is correct and public.`;
+    const total = +res.headers.get('content-length') || 0;
+    const chunks = []; let got = 0;
+    if (res.body && res.body.getReader) {
+      const reader = res.body.getReader();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value); got += value.length;
+        $('busyText').textContent = `Downloading PDF… ${(got / 1048576).toFixed(1)} MB` + (total ? ` of ${(total / 1048576).toFixed(1)} MB` : '');
+      }
+    } else {
+      const b = new Uint8Array(await res.arrayBuffer()); chunks.push(b); got = b.length;
+    }
+    const bytes = new Uint8Array(got); let off = 0;
+    for (const c of chunks) { bytes.set(c, off); off += c.length; }
+    // A real PDF starts with "%PDF-" within its first kilobyte.
+    const head = new TextDecoder('latin1').decode(bytes.subarray(0, 1024));
+    if (!head.includes('%PDF-')) throw 'That link didn\'t return a PDF — it may lead to a web page instead of the file itself. Try the direct download link.';
+    return new File([bytes], nameFromResponse(res, url), { type: 'application/pdf' });
+  } finally { clearTimeout(timer); busy(false); }
+}
+
+// Fetch a URL and add it. Returns '' on success, or an error message to show.
+async function addFromUrl(raw) {
+  let file;
+  try { file = await fetchPdf(raw); }
+  catch (msg) { if (typeof msg !== 'string') { console.error(msg); msg = 'Something went wrong while downloading.'; } return msg; }
+  return (await addFiles([file])) ? '' : 'The file was downloaded but could not be opened as a PDF.';
 }
 
 const CANCELLED = new Error('cancelled');
@@ -1142,6 +1253,53 @@ function applyStyleToSel() {
 
 /* ---------- Wiring ---------- */
 $('pickBtn').onclick = $('addBtn').onclick = () => $('fileInput').click();
+
+// Upload-file / From-URL tabs
+function selectTab(which) {
+  const url = which === 'url';
+  $('tabFile').setAttribute('aria-selected', !url); $('tabUrl').setAttribute('aria-selected', url);
+  $('tabFile').tabIndex = url ? -1 : 0; $('tabUrl').tabIndex = url ? 0 : -1;
+  $('panelFile').hidden = url; $('panelUrl').hidden = !url;
+}
+$('tabFile').onclick = () => selectTab('file');
+$('tabUrl').onclick = () => { selectTab('url'); $('urlInput').focus(); };
+[$('tabFile'), $('tabUrl')].forEach(t => t.addEventListener('keydown', e => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const next = t === $('tabFile') ? $('tabUrl') : $('tabFile');
+  next.click(); next.focus();
+}));
+$('urlForm').onsubmit = async e => {
+  e.preventDefault();
+  $('urlErr').textContent = '';
+  const err = await addFromUrl($('urlInput').value);
+  $('urlErr').textContent = err;
+  if (!err) $('urlInput').value = '';
+};
+
+// "+ From URL" in the toolbar
+function closeUrlDialog() { $('urlDialog').classList.add('hidden'); }
+$('addUrlBtn').onclick = () => {
+  $('urlDlgErr').textContent = ''; $('urlDlgInput').value = '';
+  $('urlDialog').classList.remove('hidden');
+  setTimeout(() => $('urlDlgInput').focus(), 0);
+};
+$('urlDlgCancel').onclick = closeUrlDialog;
+$('urlDialog').addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); closeUrlDialog(); } });
+$('urlDlgForm').onsubmit = async e => {
+  e.preventDefault();
+  $('urlDlgErr').textContent = '';
+  closeUrlDialog();
+  const err = await addFromUrl($('urlDlgInput').value);
+  if (err) { $('urlDlgErr').textContent = err; $('urlDialog').classList.remove('hidden'); $('urlDlgInput').focus(); }
+};
+
+// Links like /pdf-tools/?url=https://example.com/file.pdf open that PDF straight away.
+(() => {
+  const q = new URLSearchParams(location.search).get('url');
+  if (!q) return;
+  selectTab('url'); $('urlInput').value = q;
+  $('urlForm').requestSubmit();
+})();
 $('fileInput').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
 
 ['dragenter', 'dragover'].forEach(t => document.addEventListener(t, e => {
