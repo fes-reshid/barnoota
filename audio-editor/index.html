@@ -122,6 +122,14 @@
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
   #busy{position:fixed; inset:0; background:rgba(28,43,70,.35); display:none; align-items:center; justify-content:center; z-index:90; font-family:var(--ui); color:#fff; font-size:16px;}
   #busy.show{display:flex;}
+  dialog#mixDlg{border:1.5px solid var(--gold-soft); border-radius:14px; background:var(--parchment); color:var(--ink-brown); padding:18px 18px 14px; width:min(440px, calc(100vw - 32px)); box-shadow:0 20px 50px rgba(28,43,70,.3);}
+  dialog#mixDlg::backdrop{background:rgba(28,43,70,.35);}
+  #mixDlg .field{display:flex; flex-direction:column; gap:5px; margin:0 0 14px; font-family:var(--ui); font-size:13px; color:var(--muted);}
+  #mixDlg .field-row{display:flex; gap:8px; align-items:center;}
+  #mixDlg select{flex:1; min-width:0; border:1px solid var(--gold-soft); border-radius:8px; padding:7px 6px; background:#fff; color:var(--ink-brown);}
+  #mixDlg input[type=range]{flex:1; accent-color:var(--green);}
+  #mixDlg output{min-width:48px; text-align:right; font-family:ui-monospace, Menlo, Consolas, monospace; color:var(--ink-navy);}
+  #mixDlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
   .privacy{font-family:var(--ui); font-size:12px; color:var(--muted); text-align:center; margin-top:8px;}
 </style>
@@ -178,6 +186,7 @@
           <button class="btn" id="copyBtn" type="button" title="Copy (Ctrl+C)">Copy</button>
           <button class="btn" id="pasteBtn" type="button" title="Paste at cursor, or over the selection (Ctrl+V)">Paste</button>
           <button class="btn" id="pasteMixBtn" type="button" title="Mix the copied audio on top of this file, starting at the cursor (Ctrl+Shift+V)">Paste mix</button>
+          <button class="btn" id="mixFileBtn" type="button" title="Layer another file or open tab on top of this one">Mix with file…</button>
           <button class="btn" id="delBtn" type="button" title="Delete selection (Delete)">Delete</button>
           <button class="btn" id="trimBtn" type="button" title="Keep only the selection">Trim to selection</button>
         </div>
@@ -278,6 +287,31 @@
 
   <input type="file" id="fileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 </main>
+
+<dialog id="mixDlg" aria-labelledby="mixTitle">
+  <h2 id="mixTitle">Mix with file</h2>
+  <p class="info" style="margin:0 0 14px">Plays another recording on top of this one — for example a voice over background audio. The file gets longer if the mixed audio runs past the end.</p>
+  <div class="field">
+    <label for="mixSrc">Audio to mix in</label>
+    <div class="field-row">
+      <select id="mixSrc"></select>
+      <button class="btn" id="mixBrowse" type="button">Browse…</button>
+    </div>
+  </div>
+  <div class="field">
+    <label for="mixVol">Its volume</label>
+    <div class="field-row"><input id="mixVol" type="range" min="0" max="200" step="5" value="100"><output id="mixVolOut" for="mixVol">100%</output></div>
+  </div>
+  <div class="field">
+    <label for="mixAt">Start at</label>
+    <select id="mixAt"></select>
+  </div>
+  <div class="actions">
+    <button class="btn" id="mixCancel" type="button">Cancel</button>
+    <button class="btn primary" id="mixGo" type="button">Mix</button>
+  </div>
+</dialog>
+<input type="file" id="mixFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy">Working…</div>
@@ -382,13 +416,13 @@ function opMap(a, b, fn) {
 }
 
 // Add a clip on top of the audio from p, extending the file if the clip runs past the end.
-function opMix(p, ins) {
+function opMix(p, ins, gain = 1) {
   ins = fitChannels(ins, doc.ch.length);
   const n = ins[0].length, L = Math.max(len(), p + n);
   const ch = doc.ch.map((c, k) => {
     const out = new Float32Array(L), src = ins[k];
     out.set(c);
-    for (let i = 0; i < n; i++) out[p + i] = clamp(out[p + i] + src[i], -1, 1);
+    for (let i = 0; i < n; i++) out[p + i] = clamp(out[p + i] + src[i] * gain, -1, 1);
     return out;
   });
   return makeDoc(doc.sr, ch, doc.markers.slice());
@@ -500,6 +534,53 @@ function renderTabs() {
   bar.appendChild(add);
   const cur = bar.querySelector('.tab.active');
   if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+/* ---------- Mix with file ---------- */
+let mixFile = null; // { name, sr, ch } picked with Browse…
+function decodeFile(file) {
+  return file.arrayBuffer().then(buf => audio().decodeAudioData(buf)).then(ab => {
+    const ch = [];
+    for (let i = 0; i < ab.numberOfChannels; i++) ch.push(ab.getChannelData(i).slice());
+    return { name: file.name.replace(/\.[^.]+$/, ''), sr: ab.sampleRate, ch };
+  });
+}
+function fillMixSources(pick) {
+  stashTab();
+  const sel = $('mixSrc');
+  sel.innerHTML = '';
+  tabs.forEach((t, i) => { if (t !== active) sel.add(new Option('Tab: ' + (t.name || 'untitled'), 'tab:' + i)); });
+  if (mixFile) sel.add(new Option('File: ' + mixFile.name, 'file'));
+  if (!sel.options.length) sel.add(new Option('Click Browse… to choose a file', ''));
+  if (pick) sel.value = pick;
+  $('mixGo').disabled = !sel.value;
+}
+function openMixDialog() {
+  if (!doc) return;
+  stopPlay();
+  fillMixSources();
+  const at = hasSel() ? selA : cursor;
+  const opts = $('mixAt');
+  opts.innerHTML = '';
+  opts.add(new Option(`Cursor (${fmt(at / doc.sr)})`, String(at)));
+  if (at !== 0) opts.add(new Option('Beginning of file', '0'));
+  $('mixDlg').showModal();
+  // With nothing else open, go straight to the file picker.
+  if (!$('mixSrc').value) $('mixFileIn').click();
+}
+async function runMix() {
+  const v = $('mixSrc').value;
+  if (!v) return;
+  const src = v === 'file' ? mixFile : (t => ({ name: t.name, sr: t.doc.sr, ch: t.doc.ch }))(tabs[+v.slice(4)]);
+  const gain = $('mixVol').value / 100, at = clamp(+$('mixAt').value, 0, len());
+  $('mixDlg').close();
+  busy(true);
+  try {
+    const ins = src.sr === doc.sr ? src.ch : await resample(src.ch, src.sr, doc.sr);
+    commit(opMix(at, ins, gain), `Mixed in “${src.name}”`);
+    selA = at; selB = Math.min(len(), at + ins[0].length); cursor = at; refresh();
+  } catch (e) { console.error(e); toast('Mixing failed.'); }
+  finally { busy(false); }
 }
 
 /* ---------- Loading ---------- */
@@ -1220,6 +1301,20 @@ on('homeBtn', () => { stopPlay(); cursor = 0; selA = selB = null; viewStart = 0;
 on('endBtn', () => { stopPlay(); cursor = len(); selA = selB = null; viewStart = len(); clampView(); refresh(); });
 on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
+on('mixFileBtn', openMixDialog);
+on('mixCancel', () => $('mixDlg').close());
+on('mixGo', runMix);
+on('mixBrowse', () => $('mixFileIn').click());
+$('mixVol').addEventListener('input', e => { $('mixVolOut').value = e.target.value + '%'; });
+$('mixSrc').addEventListener('change', e => { $('mixGo').disabled = !e.target.value; });
+$('mixFileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  busy(true);
+  try { mixFile = await decodeFile(f); fillMixSources('file'); }
+  catch (err) { console.error(err); toast(`Could not read “${f.name}”.`); }
+  finally { busy(false); }
+});
 on('cutBtn', cmdCut); on('copyBtn', cmdCopy); on('pasteBtn', cmdPaste); on('pasteMixBtn', cmdPasteMix);
 on('delBtn', () => cmdDelete()); on('trimBtn', cmdTrim);
 on('zoomInBtn', () => zoomAt(0.5)); on('zoomOutBtn', () => zoomAt(2));
@@ -1237,6 +1332,7 @@ on('zipBtn', exportZip);
 document.addEventListener('keydown', e => {
   if (!doc) return;
   const t = e.target;
+  if ($('mixDlg').open) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   let handled = true;
