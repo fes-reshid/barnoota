@@ -109,6 +109,7 @@
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
   #busy{position:fixed; inset:0; background:rgba(28,43,70,.35); display:none; align-items:center; justify-content:center; z-index:90; font-family:var(--ui); color:#fff; font-size:16px;}
   #busy.show{display:flex;}
+  select.num{padding:6px 4px;}
   .privacy{font-family:var(--ui); font-size:12px; color:var(--muted); text-align:center; margin-top:8px;}
 </style>
 </head>
@@ -134,7 +135,7 @@
       <button class="btn primary big" id="openBtn2" type="button">Open audio file</button>
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
     </div>
-    <p class="hint" style="margin-top:18px">…or drop an audio file here (MP3, WAV, M4A, OGG, WebM).</p>
+    <p class="hint" style="margin-top:18px">…or drop an audio file here (MP3, WAV, M4A, OGG, WebM). Save as MP3 or WAV.</p>
   </section>
 
   <!-- Editor -->
@@ -219,7 +220,23 @@
 
         <h2 style="margin-top:18px">Save</h2>
         <div class="row">
-          <button class="btn primary" id="exportBtn" type="button">Download WAV</button>
+          <label>Format
+            <select id="fmtSel" class="num" style="width:auto">
+              <option value="mp3">MP3</option>
+              <option value="wav">WAV (lossless)</option>
+            </select>
+          </label>
+          <label id="kbpsWrap">Quality
+            <select id="kbpsSel" class="num" style="width:auto">
+              <option value="96">96 kbps (small)</option>
+              <option value="128">128 kbps</option>
+              <option value="192" selected>192 kbps</option>
+              <option value="320">320 kbps (best)</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="exportBtn" type="button">Download MP3</button>
           <button class="btn" id="exportSelBtn" type="button">Download selection</button>
         </div>
         <p class="privacy">Everything happens on this device. Your audio is never uploaded.</p>
@@ -699,7 +716,7 @@ function renderSegments() {
     const mk = (label, title, fn) => { const bt = document.createElement('button'); bt.className = 'btn'; bt.type = 'button'; bt.textContent = label; bt.title = title; bt.onclick = fn; li.appendChild(bt); };
     mk('▶', 'Select and play this part', () => { selA = a; selB = b; cursor = a; refresh(); play(); });
     mk('Select', 'Select this part', () => { selA = a; selB = b; cursor = a; stopPlay(); refresh(); });
-    mk('↓', 'Download this part', () => downloadBlob(encodeWav(sliceCh(doc.ch, a, b), sr), partName(i + 1, segs.length) + '.wav'));
+    mk('↓', 'Download this part', () => exportPart(a, b, partName(i + 1, segs.length)));
     if (i > 0) mk('✕', `Remove marker ${i}`, () => { const m = doc.markers.slice(); m.splice(i - 1, 1); commit(makeDoc(doc.sr, doc.ch, m)); });
     ul.appendChild(li);
   });
@@ -892,30 +909,115 @@ function makeZip(files) {
   e.setUint32(12, cdSize, true); e.setUint32(16, offset, true);
   return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: 'application/zip' });
 }
+/* ---------- MP3 ---------- */
+// lamejs (LGPL-3.0, unmodified) is loaded on first use from lame.min.js next to this page.
+let lamePromise = null;
+function loadLame() {
+  if (window.lamejs) return Promise.resolve();
+  return lamePromise || (lamePromise = new Promise((resolve, reject) => {
+    const sc = document.createElement('script');
+    sc.src = 'lame.min.js';
+    sc.onload = () => resolve();
+    sc.onerror = () => { lamePromise = null; reject(new Error('Could not load the MP3 encoder.')); };
+    document.head.appendChild(sc);
+  }));
+}
+const MP3_RATES = [8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000];
+async function resample(ch, from, to) {
+  const n = Math.max(1, Math.round(ch[0].length * to / from));
+  const off = new OfflineAudioContext(ch.length, n, to);
+  const buf = off.createBuffer(ch.length, ch[0].length, from);
+  ch.forEach((c, i) => buf.copyToChannel(c, i));
+  const src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start();
+  const out = await off.startRendering();
+  return Array.from({ length: ch.length }, (_, i) => out.getChannelData(i));
+}
+async function encodeMp3(ch, sr, onProgress) {
+  await loadLame();
+  if (ch.length > 2) ch = fitChannels(ch, 1);
+  if (!MP3_RATES.includes(sr)) { ch = await resample(ch, sr, sr > 48000 ? 48000 : 44100); sr = sr > 48000 ? 48000 : 44100; }
+  const kbps = parseInt($('kbpsSel').value, 10) || 192;
+  const enc = new lamejs.Mp3Encoder(ch.length, sr, kbps);
+  const n = ch[0].length, BLOCK = 1152 * 32, out = [];
+  const toInt16 = (c, a, b) => {
+    const r = new Int16Array(b - a);
+    for (let i = a; i < b; i++) { const v = clamp(c[i], -1, 1); r[i - a] = v < 0 ? v * 0x8000 : v * 0x7fff; }
+    return r;
+  };
+  let lastYield = performance.now();
+  for (let a = 0; a < n; a += BLOCK) {
+    const b = Math.min(n, a + BLOCK);
+    const l = toInt16(ch[0], a, b), r = ch.length > 1 ? toInt16(ch[1], a, b) : undefined;
+    const data = r ? enc.encodeBuffer(l, r) : enc.encodeBuffer(l);
+    if (data.length) out.push(new Uint8Array(data));
+    if (performance.now() - lastYield > 60) {
+      if (onProgress) onProgress(b / n);
+      await new Promise(res => setTimeout(res, 0));
+      lastYield = performance.now();
+    }
+  }
+  const tail = enc.flush();
+  if (tail.length) out.push(new Uint8Array(tail));
+  const total = out.reduce((s, x) => s + x.length, 0), bytes = new Uint8Array(total);
+  let o = 0; for (const x of out) { bytes.set(x, o); o += x.length; }
+  return bytes;
+}
+
+/* ---------- Saving ---------- */
+const saveFormat = () => $('fmtSel').value;
+const ext = () => saveFormat() === 'mp3' ? '.mp3' : '.wav';
+const mime = () => saveFormat() === 'mp3' ? 'audio/mpeg' : 'audio/wav';
+function encode(ch, sr, onProgress) {
+  return saveFormat() === 'mp3' ? encodeMp3(ch, sr, onProgress) : Promise.resolve(encodeWav(ch, sr));
+}
+function busyText(t) { $('busy').textContent = t; }
+// Run an export with the busy overlay; returns nothing, reports errors as a toast.
+async function withBusy(label, fn) {
+  busyText(label); busy(true);
+  await new Promise(res => setTimeout(res, 30));
+  try { await fn(); }
+  catch (e) { console.error(e); toast(e.message || 'Saving failed.'); }
+  finally { busy(false); busyText('Working…'); }
+}
+function exportPart(a, b, name) {
+  return withBusy('Encoding…', async () => {
+    downloadBlob(await encode(sliceCh(doc.ch, a, b), doc.sr, p => busyText(`Encoding… ${Math.round(p * 100)}%`)), name + ext(), mime());
+  });
+}
 function exportZip() {
   const segs = segments();
   if (segs.length < 2) return;
-  busy(true);
-  setTimeout(() => {
-    try {
-      const files = segs.map(([a, b], i) => ({ name: partName(i + 1, segs.length) + '.wav', data: encodeWav(sliceCh(doc.ch, a, b), doc.sr) }));
-      const blob = makeZip(files);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = baseName() + '-parts.zip';
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-      toast(`Saved ${segs.length} parts`);
-    } finally { busy(false); }
-  }, 30);
+  return withBusy('Encoding…', async () => {
+    const files = [];
+    for (let i = 0; i < segs.length; i++) {
+      const [a, b] = segs[i];
+      busyText(`Encoding part ${i + 1} of ${segs.length}…`);
+      files.push({ name: partName(i + 1, segs.length) + ext(), data: await encode(sliceCh(doc.ch, a, b), doc.sr) });
+    }
+    const url = URL.createObjectURL(makeZip(files));
+    const link = document.createElement('a'); link.href = url; link.download = baseName() + '-parts.zip';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast(`Saved ${segs.length} parts`);
+  });
 }
 function exportAll() {
-  busy(true);
-  setTimeout(() => { try { downloadBlob(encodeWav(doc.ch, doc.sr), baseName() + '.wav'); dirty = false; } finally { busy(false); } }, 30);
+  return withBusy('Encoding…', async () => {
+    downloadBlob(await encode(doc.ch, doc.sr, p => busyText(`Encoding… ${Math.round(p * 100)}%`)), baseName() + ext(), mime());
+    dirty = false;
+  });
 }
 function exportSel() {
   if (!hasSel()) return;
-  downloadBlob(encodeWav(sliceCh(doc.ch, selA, selB), doc.sr), baseName() + '-selection.wav');
+  exportPart(selA, selB, baseName() + '-selection');
 }
+function syncFormat() {
+  const mp3 = saveFormat() === 'mp3';
+  $('kbpsWrap').style.display = mp3 ? '' : 'none';
+  $('exportBtn').textContent = 'Download ' + (mp3 ? 'MP3' : 'WAV');
+}
+$('fmtSel').addEventListener('change', syncFormat);
+syncFormat();
 
 /* ---------- Pointer interaction ---------- */
 let drag = null; // { kind:'sel', anchor } | { kind:'marker', index }
