@@ -195,6 +195,14 @@
         <li>Press <b>■ Stop</b> (or <kbd>R</kbd> again). If no file was open, the recording opens as a new file; otherwise it is <b>inserted at the cursor</b> (or replaces the selection).</li>
         <li>To record into a fresh file while others are open, press <b>＋</b> next to the tabs first, then Record.</li>
       </ol>
+      <h3>Re-record one mistake (punch-in)</h3>
+      <ol class="steps">
+        <li>Select the words you want to record again.</li>
+        <li>Press <b>⟲● Re-record</b> (next to Record), or right-click the selection ▸ <em>Re-record Selection</em>. The editor plays the 2 seconds before the selection so you can come in on time, then records.</li>
+        <li>Press <b>■ Stop punch-in</b>. Only the selection is replaced — with short fades so the joins don't click. <kbd>Ctrl</kbd>+<kbd>Z</kbd> brings the old take back.</li>
+      </ol>
+      <h3>Metronome and count-in</h3>
+      <p><span class="m">Control ▸ Recording Options…</span> sets a count-in (1 or 2 bars of clicks before recording starts), a metronome while recording, the tempo, and how much plays before a punch-in. Use headphones so the clicks aren't recorded.</p>
       <div class="tip"><b>For a clean recording:</b> hold the phone or microphone a hand's width away, record in a quiet room, and record a second of silence at the start — it is useful later for noise reduction.</div>
     </section>
 
@@ -308,7 +316,16 @@
         <li>Pick a <b>preset</b> — <em>Voice clarity</em>, <em>Remove rumble / hum</em>, <em>Reduce hiss</em>… — or drag the sliders / the dots on the graph. The shaded area shows your audio's own frequencies. Double-click a band to reset it.</li>
         <li>Press <b>▶ Preview</b>: the audio loops and every change is heard immediately. Then <b>Apply</b>.</li>
         <li>Other effects work the same way — a small window with settings, <b>▶ Preview</b> and <b>Apply</b>: Echo, Reverb, Compressor, Pitch, Tempo, Speed, Stereo Pan…</li>
+        <li><b>Presets:</b> in those windows, <b>Save preset…</b> keeps your settings under a name (e.g. “My recitation room”); pick it from the list next time.</li>
       </ol>
+      <h3>Effect chains — your usual clean-up in one click</h3>
+      <ol class="steps">
+        <li>Press <b>Effect chain…</b> (or <span class="m">Effects ▸ Effect Chains…</span>).</li>
+        <li>Start from a ready-made chain — <em>Recitation polish</em>, <em>Clean voice</em>, <em>Phone recording fix</em>, <em>WhatsApp voice note</em>, <em>Slow down for memorising</em> — or pick <em>New empty chain</em>.</li>
+        <li>Change any step's numbers, reorder steps with ↑ ↓, remove with ✕, or add more with <b>＋ Add step</b>. <b>▶ Preview</b> plays the first 10 seconds with the whole chain.</li>
+        <li><b>Save as…</b> keeps it under your own name; then <b>Apply</b>. Saved chains also appear in <span class="m">Effects ▸ Apply Chain</span> and the right-click menu.</li>
+      </ol>
+      <div class="tip"><b>Right-click</b> (or press and hold on a phone) anywhere on the waveform for a menu of the common commands: play, cut, copy, paste, fades, effect chains, add a marker, re-record…</div>
     </section>
 
     <section class="card tut" id="t-tempo" data-title="Slow down a recitation (tempo, pitch, speed)">
@@ -362,7 +379,10 @@
         <li><b>Arrange:</b> drag a clip left or right — or up/down onto another track. It snaps to the start, the playhead and other clips' edges. Drag a clip's <b>left or right edge</b> to trim it.</li>
         <li><b>Edit clips:</b> click a clip to select it, then <b>Split</b> at the playhead (<kbd>S</kbd>), <b>Duplicate</b> (<kbd>Ctrl</kbd>+<kbd>D</kbd>) or <b>Delete</b> (<kbd>Del</kbd>). <b>Edit clip</b> opens it in the normal editor as a new tab.</li>
         <li><b>Mix:</b> each track has <b>Vol</b> (0–200%), <b>Pan</b> (left–right), <b>M</b> (mute) and <b>S</b> (solo — hear only this track). Changes are heard live while playing (<kbd>Space</kbd>).</li>
-        <li><b>● Record track</b> (<kbd>R</kbd>) records a new track from the microphone while the other tracks play — use headphones so they aren't recorded too.</li>
+        <li><b>Volume and fades per clip:</b> double-click a clip (or <b>Volume &amp; fades…</b>) to make just that clip quieter or louder and give it a fade in / out. You can also drag the small squares at a selected clip's top corners.</li>
+        <li><b>Several clips at once:</b> <kbd>Shift</kbd>+click clips to select several (<kbd>Ctrl</kbd>+<kbd>A</kbd> selects all), then drag one to move them together, or Delete / Duplicate them.</li>
+        <li><b>Markers and looping:</b> <kbd>M</kbd> (or <b>◆ Marker</b>) marks the playhead; <kbd>;</kbd> and <kbd>'</kbd> jump between marks; drag a mark on the ruler to move it. Drag along the ruler to choose a part to <b>loop</b>, and <kbd>L</kbd> (or <b>⟲ Loop</b>) turns looping on and off.</li>
+        <li><b>● Record track</b> (<kbd>R</kbd>) records a new track from the microphone while the other tracks play — use headphones so they aren't recorded too. The editor moves the new take earlier to make up for the delay in your device; if takes still land late or early, change <em>recording delay</em> in <span class="m">Control ▸ Recording Options…</span>.</li>
         <li><b>Mix down → new tab</b> turns everything into one stereo file in the editor (save it as MP3 from there), or <b>Save mix</b> downloads it straight away.</li>
       </ol>
       <div class="tip">Closing the multitrack (✕ or <kbd>Esc</kbd>) keeps your session — open it again to carry on. <b>Save project</b> keeps it for another day. Undo / redo (<kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd>) work inside it too.</div>
@@ -459,6 +479,7 @@
         <tr><td>Fade Type ▸</td><td>Linear, Smooth, Fast start or S-curve.</td></tr>
         <tr><td>Envelope… <kbd>E</kbd></td><td>Draw how the volume changes over time.</td></tr>
         <tr><td>Stereo Pan…</td><td>Move the sound left or right.</td></tr>
+        <tr><td>Effect Chains… · Apply Chain ▸</td><td>Several effects in one step — ready-made clean-ups or your own saved chains.</td></tr>
         <tr><td>Equalizer…</td><td>10-band graphic equaliser with presets and live preview.</td></tr>
         <tr><td>Echo · Reverb · Compressor</td><td>Repeats, room sound, and evening out the volume.</td></tr>
         <tr><td>Pitch · Tempo · Speed</td><td>Higher/lower voice; slower/faster with the same voice; or both together.</td></tr>
@@ -470,6 +491,8 @@
         <tr><th>Item</th><th>What it does</th></tr>
         <tr><td>Play / Pause · Stop</td><td><kbd>Space</kbd> plays the selection, or from the cursor.</td></tr>
         <tr><td>Record <kbd>R</kbd></td><td>Record from the microphone into the current file.</td></tr>
+        <tr><td>Re-record Selection (punch-in)</td><td>Play a little before the selection, then record over just the selection.</td></tr>
+        <tr><td>Recording Options…</td><td>Count-in, metronome, tempo, punch-in pre-roll and multitrack recording delay.</td></tr>
         <tr><td>Loop Selection <kbd>L</kbd></td><td>Repeat the selection while playing.</td></tr>
         <tr><td>Go to Start / End · Back / Forward 5 s</td><td>Move around quickly (<kbd>Home</kbd> <kbd>End</kbd> <kbd>,</kbd> <kbd>.</kbd>).</td></tr>
         <tr><td>Playback Speed ▸</td><td>Listen at 0.5×–2× without changing the file.</td></tr>
@@ -530,6 +553,17 @@
         <tr><td><kbd>+</kbd> · <kbd>−</kbd> · <kbd>Z</kbd> · <kbd>F</kbd></td><td>Zoom in · out · to selection · fit</td></tr>
         <tr><td><kbd>[</kbd> · <kbd>]</kbd></td><td>Previous · next tab</td></tr>
         <tr><td><kbd>?</kbd></td><td>Quick guide</td></tr>
+        <tr><td>Right-click · long-press</td><td>Menu of common commands on the waveform</td></tr>
+      </table></div>
+      <h3>In the multitrack editor</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Keys</th><th>Action</th></tr>
+        <tr><td><kbd>Space</kbd> · <kbd>R</kbd> · <kbd>Home</kbd></td><td>Play / pause · record a track · go to start</td></tr>
+        <tr><td><kbd>S</kbd> · <kbd>Ctrl</kbd>+<kbd>D</kbd> · <kbd>Del</kbd></td><td>Split at the playhead · duplicate · delete the selected clip(s)</td></tr>
+        <tr><td><kbd>Shift</kbd>+click · <kbd>Ctrl</kbd>+<kbd>A</kbd></td><td>Select several clips · select all</td></tr>
+        <tr><td><kbd>M</kbd> · <kbd>;</kbd> · <kbd>'</kbd></td><td>Add / remove a marker · previous · next marker</td></tr>
+        <tr><td><kbd>L</kbd></td><td>Loop on / off (drag on the ruler to choose the part)</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> · <kbd>Ctrl</kbd>+<kbd>Y</kbd> · <kbd>Esc</kbd></td><td>Undo · redo · close</td></tr>
       </table></div>
     </section>
 
