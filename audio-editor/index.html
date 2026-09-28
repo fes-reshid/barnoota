@@ -176,6 +176,27 @@
   .eq-band output{font-size:11px; color:var(--ink-navy); font-family:ui-monospace, Menlo, Consolas, monospace; white-space:nowrap;}
   .eq-band span{font-size:11px; color:var(--muted); white-space:nowrap;}
   .eq-band input[type=range]{writing-mode:vertical-lr; direction:rtl; width:26px; height:120px; margin:0; accent-color:var(--green);}
+  .menubar{display:flex; flex-wrap:wrap; gap:1px; max-width:1240px; margin:0 auto; padding:0 12px 6px; font-family:var(--ui); font-size:14px;}
+  .menubar > button{background:none; border:1px solid transparent; padding:5px 11px; border-radius:6px; cursor:pointer; color:var(--ink-brown); font:inherit;}
+  .menubar > button:hover, .menubar > button.open{background:var(--green-bg); border-color:var(--gold-soft);}
+  .menu{position:fixed; z-index:95; min-width:250px; max-width:calc(100vw - 16px); max-height:calc(100vh - 16px); overflow:auto; background:#fff; border:1px solid var(--gold-soft); border-radius:8px; box-shadow:0 14px 34px rgba(28,43,70,.22); padding:4px 0; font-family:var(--ui); font-size:13.5px; color:var(--ink-brown);}
+  .menu .mi{display:flex; align-items:center; gap:22px; padding:6px 14px 6px 30px; cursor:pointer; position:relative; white-space:nowrap; user-select:none;}
+  .menu .mi:hover, .menu .mi.active{background:var(--green-bg);}
+  .menu .mi.dis{opacity:.38; cursor:default; background:none;}
+  .menu .mi .k{margin-left:auto; color:var(--muted); font-size:12px;}
+  .menu .mi.chk::before{content:'✓'; position:absolute; left:11px; color:var(--green-dark); font-weight:700;}
+  .menu .mi.sub::after{content:'›'; margin-left:auto; font-size:16px; line-height:1; color:var(--muted);}
+  .menu .mi.sub .k{display:none;}
+  .menu .msub{background:#faf6ea; border-top:1px solid rgba(169,124,37,.2); border-bottom:1px solid rgba(169,124,37,.2);}
+  .menu .msub .mi{padding-left:46px;}
+  .menu .msub .mi.chk::before{left:27px;}
+  .menu .sep{height:1px; background:rgba(169,124,37,.25); margin:4px 0;}
+  .menu .mhead{padding:6px 14px 2px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
+  body.compact .cols{display:none;}
+  body.tall canvas#wave{height:400px;}
+  .flash{animation:flash 1.2s ease;}
+  @keyframes flash{0%,60%{box-shadow:0 0 0 4px var(--gold-soft);}100%{box-shadow:0 6px 18px rgba(60,45,20,.08);}}
+  #fftGraph{display:block; width:100%; height:260px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0;}
   .head-actions{display:flex; gap:8px; align-items:center;}
   .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
@@ -195,6 +216,7 @@
       <a class="back" href="../apps.html">← All apps</a>
     </div>
   </div>
+  <nav class="menubar" id="menuBar" aria-label="Menu"></nav>
 </header>
 
 <main>
@@ -458,6 +480,7 @@
   <div class="guide-body">
     <h3>Getting started</h3>
     <ul>
+      <li>The <strong>menu bar</strong> at the top (File, Edit, Effects, Control, Tools, Bookmark, View, Voice, Help) has every command, like WavePad; shortcuts are shown next to each item. The panels below the waveform have the most-used ones as buttons — hide them with <em>View ▸ Show Effects &amp; Tools Panels</em> for a cleaner screen.</li>
       <li><strong>Open…</strong> loads one or more audio files; each gets its own tab. You can also drag files onto the page.</li>
       <li>The <strong>+</strong> next to the tabs starts an <strong>empty file</strong>: record into it, paste audio copied from another tab, or drop a file on it.</li>
       <li>Click the waveform to place the cursor, drag to select. Effects apply to the selection — or to the whole file when nothing is selected.</li>
@@ -528,6 +551,10 @@
           <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></td><td>Paste mix: layer the clipboard over the audio</td></tr>
           <tr><td><kbd>Del</kbd></td><td>Delete the selection</td></tr>
           <tr><td><kbd>T</kbd></td><td>Trim: keep only the selection</td></tr>
+          <tr><td><kbd>G</kbd></td><td>Jump to a time</td></tr>
+          <tr><td><kbd>;</kbd> <kbd>'</kbd></td><td>Previous / next marker</td></tr>
+          <tr><td><kbd>Shift</kbd>+<kbd>A</kbd> · <kbd>Shift</kbd>+<kbd>N</kbd></td><td>Amplify… · Normalise</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>Save file as…</td></tr>
           <tr><td><kbd>E</kbd></td><td>Volume envelope on / off (<kbd>Enter</kbd> applies, <kbd>Esc</kbd> cancels, <kbd>Del</kbd> removes the chosen point)</td></tr>
           <tr><td><kbd>I</kbd> <kbd>O</kbd></td><td>Fade in / fade out (selection or whole file)</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
@@ -560,6 +587,13 @@
   </div>
 </dialog>
 <input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<dialog id="fftDlg" class="dlg eq" aria-labelledby="fftTitle">
+  <div class="eq-top"><h2 id="fftTitle">Frequency analysis <span class="info" id="fftScope"></span></h2></div>
+  <canvas id="fftGraph" aria-label="Spectrum of the audio"></canvas>
+  <p class="info" id="fftInfo" style="margin:10px 0"></p>
+  <div class="actions"><button class="btn primary" id="fftClose" type="button">Close</button></div>
+</dialog>
+<input type="file" id="projIn" accept=".zip,application/zip" hidden>
 <dialog id="eqDlg" class="dlg eq" aria-labelledby="eqTitle">
   <div class="eq-top">
     <h2 id="eqTitle">Graphic equaliser <span class="info" id="eqScope"></span></h2>
@@ -777,10 +811,10 @@ function showTab(t) {
   lastW = canvas.clientWidth;
   clampView(); refresh();
 }
-function closeTab(t) {
+function closeTab(t, force = false) {
   const isDirty = t === active ? dirty : t.dirty;
   const name = t === active ? $('fileName').value : t.name;
-  if (isDirty && !confirm(`Close “${name}” without saving your edits?`)) return;
+  if (!force && isDirty && !confirm(`Close “${name}” without saving your edits?`)) return;
   const i = tabs.indexOf(t);
   tabs.splice(i, 1);
   if (t !== active) { renderTabs(); return; }
@@ -878,6 +912,7 @@ async function loadFiles(files) {
 }
 async function loadFile(file, { remember = true } = {}) {
   if (!file) return;
+  if (/\.zip$/i.test(file.name)) return openProject(file);
   stopPlay(); busy(true);
   try {
     const buf = await file.arrayBuffer();
@@ -1334,8 +1369,8 @@ function peakOf(a, b) {
   for (const c of doc.ch) for (let i = a; i < b; i++) { const v = Math.abs(c[i]); if (v > p) p = v; }
   return p;
 }
-const fadeIn = () => effect('Faded in', (c, a, b) => { const n = b - a; for (let i = 0; i < n; i++) { const t = i / n; c[a + i] *= t * t; } });
-const fadeOut = () => effect('Faded out', (c, a, b) => { const n = b - a; for (let i = 0; i < n; i++) { const t = 1 - i / n; c[a + i] *= t * t; } });
+const fadeIn = () => effect('Faded in', (c, a, b) => { const n = b - a; for (let i = 0; i < n; i++) c[a + i] *= fadeGain(i / n); });
+const fadeOut = () => effect('Faded out', (c, a, b) => { const n = b - a; for (let i = 0; i < n; i++) c[a + i] *= fadeGain(1 - i / n); });
 const reverse = () => effect('Reversed', (c, a, b) => c.subarray(a, b).reverse());
 const silence = () => effect('Silenced', (c, a, b) => c.fill(0, a, b));
 function normalise() {
@@ -1700,6 +1735,9 @@ function askParams(title, desc, fields, { ok = 'Apply', preview = null } = {}) {
           input = document.createElement('select');
           f.options.forEach(([v, l]) => input.add(new Option(l, v)));
           input.value = String(f.value);
+        } else if (f.type === 'text') {
+          input = document.createElement('input'); input.type = 'text'; input.className = 'num';
+          input.style.width = '100%'; input.value = f.value; input.spellcheck = false;
         } else {
           input = document.createElement('input'); input.type = 'number'; input.className = 'num';
           input.value = f.value;
@@ -1722,7 +1760,7 @@ function paramValues() {
   return Object.fromEntries(paramState.fields.map(f => {
     const el = $('pf_' + f.id);
     if (f.type === 'check') return [f.id, el.checked];
-    if (f.type === 'select') return [f.id, el.value];
+    if (f.type === 'select' || f.type === 'text') return [f.id, el.value];
     let v = parseFloat(el.value);
     if (!isFinite(v)) v = f.value;
     if (f.min !== undefined) v = Math.max(f.min, v);
@@ -2541,6 +2579,614 @@ async function renderRecent() {
 }
 renderRecent();
 
+/* ---------- More edit & effect commands (used by the menus) ---------- */
+function amplifyDlg() {
+  if (!doc || !len()) return;
+  askParams('Amplify', 'Makes the selection (or the whole file) louder or quieter.', [
+    { id: 'db', label: 'Change volume by', value: parseFloat($('gainIn').value) || 3, min: -60, max: 40, step: 0.5, unit: 'dB (− quieter, + louder)' },
+  ]).then(v => { if (v) { $('gainIn').value = v.db; amplify(); } });
+}
+function invert() { effect('Inverted', (c, a, b) => { for (let i = a; i < b; i++) c[i] = -c[i]; }); }
+function fadeInOut() {
+  if (!hasSel()) { toast('Select the part to fade in and out.'); return; }
+  effect('Faded in & out', (c, a, b) => {
+    const n = b - a, h = Math.floor(n / 2);
+    for (let i = 0; i < n; i++) c[a + i] *= i < h ? fadeGain(i / h) : fadeGain((n - i) / (n - h));
+  });
+}
+function muteChannel(k) {
+  if (!doc || doc.ch.length < 2) return;
+  stopPlay();
+  const [a, b] = range();
+  const ch = doc.ch.map((c, i) => { if (i !== k) return c; const o = c.slice(); o.fill(0, a, b); return o; });
+  commit(makeDoc(doc.sr, ch, doc.markers.slice()), `Muted ${k ? 'right' : 'left'} channel`);
+}
+async function stereoPan() {
+  if (!doc || !len()) return;
+  stopPlay();
+  const v = await askParams('Stereo pan', 'Moves the sound towards the left or right speaker. A mono file is made stereo first.', [
+    { id: 'pan', label: 'Position', value: 0, min: -100, max: 100, step: 5, unit: '−100 = left, 0 = centre, +100 = right' },
+  ]);
+  if (!v || !v.pan) return;
+  const [a, b] = range(), p = v.pan / 100, gl = p > 0 ? 1 - p : 1, gr = p < 0 ? 1 + p : 1;
+  const base = doc.ch.length === 1 ? [doc.ch[0], doc.ch[0]] : doc.ch;
+  const ch = base.map((c, i) => { if (i > 1) return c; const o = c.slice(), g = i ? gr : gl; for (let j = a; j < b; j++) o[j] *= g; return o; });
+  commit(makeDoc(doc.sr, ch, doc.markers.slice()), `Panned ${v.pan > 0 ? 'right' : 'left'} ${Math.abs(v.pan)}%`);
+}
+function selectPart(which) {
+  if (!doc || !len()) return;
+  const L = len();
+  if (which === 'all') { selA = 0; selB = L; }
+  else if (which === 'none') { selA = selB = null; }
+  else if (which === 'start') { if (cursor > 0) { selA = 0; selB = cursor; } }
+  else if (which === 'end') { if (cursor < L) { selA = cursor; selB = L; } }
+  else if (which === 'part') { const seg = segments().find(([a, b]) => cursor >= a && cursor < b) || [0, L]; [selA, selB] = seg; }
+  refresh();
+}
+async function jumpTo() {
+  if (!doc || !len()) return;
+  const v = await askParams('Jump to location', 'Moves the cursor to a time.', [
+    { id: 't', label: 'Time', value: +(cursor / doc.sr).toFixed(3), min: 0, max: len() / doc.sr, step: 0.001, unit: 'seconds' },
+  ], { ok: 'Go' });
+  if (!v) return;
+  stopPlay();
+  cursor = clamp(Math.round(v.t * doc.sr), 0, len()); selA = selB = null;
+  const w = canvas.clientWidth * spp;
+  if (cursor < viewStart || cursor > viewStart + w) { viewStart = cursor - w / 2; clampView(); }
+  refresh();
+}
+function gotoMarker(dir) {
+  if (!doc || !doc.markers.length) return;
+  const pos = player ? playPos() : cursor;
+  const m = dir > 0 ? doc.markers.find(x => x > pos + 1) : [...doc.markers].reverse().find(x => x < pos - 1);
+  if (m === undefined) return;
+  if (player) stopPlay();
+  cursor = m; selA = selB = null;
+  const w = canvas.clientWidth * spp;
+  if (cursor < viewStart || cursor > viewStart + w) { viewStart = cursor - w / 2; clampView(); }
+  refresh();
+}
+function findPeak() {
+  if (!doc || !len()) return;
+  const [a, b] = range();
+  let best = 0, at = a;
+  for (const c of doc.ch) for (let i = a; i < b; i++) { const v = Math.abs(c[i]); if (v > best) { best = v; at = i; } }
+  stopPlay(); cursor = at; selA = selB = null;
+  const w = canvas.clientWidth * spp; viewStart = at - w / 2; clampView(); refresh();
+  toast(`Loudest sample at ${fmt(at / doc.sr)}: ${best ? (20 * Math.log10(best)).toFixed(1) + ' dB' : 'silent'}`);
+}
+// Clicks and pops: samples that jump far away from their neighbours compared with the local
+// average are replaced by a straight line between the good samples either side.
+function declickCh(ch, sr, sens) {
+  const factor = 4 + (10 - sens) * 3, maxLen = Math.max(3, Math.round(sr * 0.002)), W = 512;
+  let fixed = 0;
+  const out = ch.map(c => {
+    const o = c.slice(), n = o.length;
+    if (n < 8) return o;
+    const e = new Float32Array(n);
+    for (let i = 1; i < n - 1; i++) e[i] = Math.abs(o[i] - (o[i - 1] + o[i + 1]) / 2);
+    const pre = new Float64Array(n + 1);
+    for (let i = 0; i < n; i++) pre[i + 1] = pre[i] + e[i];
+    for (let i = 2; i < n - 2; i++) {
+      const a0 = Math.max(0, i - W), b0 = Math.min(n, i + W), mean = (pre[b0] - pre[a0]) / (b0 - a0);
+      if (e[i] < 0.02 || e[i] < factor * mean) continue;
+      let s0 = i - 1, s1 = i + 1;
+      while (s1 < n - 2 && s1 - s0 < maxLen && e[s1] > factor * mean * 0.3) s1++;
+      const va = o[s0 - 1] ?? 0, vb = o[s1 + 1] ?? 0;
+      for (let j = s0; j <= s1; j++) o[j] = va + (vb - va) * (j - s0 + 1) / (s1 - s0 + 2);
+      for (let j = s0; j <= s1 + 1 && j < n - 1; j++) e[j] = 0;
+      fixed++; i = s1 + 1;
+    }
+    return o;
+  });
+  return { out, fixed };
+}
+async function removeClicks() {
+  if (!doc || !len()) return;
+  stopPlay();
+  const v = await askParams('Click / pop removal', 'Finds short clicks and pops (vinyl crackle, mouth clicks, digital glitches) and smooths them over.', [
+    { id: 'sens', label: 'Sensitivity', value: 5, min: 1, max: 10, step: 1, unit: '1 = only big clicks · 10 = also small ones' },
+  ], { ok: 'Remove clicks', preview: async (ch, sr, v) => declickCh(ch, sr, v.sens).out });
+  if (!v) return;
+  const [a, b] = range(), { out, fixed } = declickCh(sliceCh(doc.ch, a, b), doc.sr, v.sens);
+  if (!fixed) { toast('No clicks found — try a higher sensitivity.'); return; }
+  const ch = doc.ch.map((c, k) => { const o = c.slice(); o.set(out[k], a); return o; });
+  commit(makeDoc(doc.sr, ch, doc.markers.slice()), `Removed ${fixed} click${fixed === 1 ? '' : 's'}`);
+}
+async function createRingtone() {
+  if (!doc || !len()) return;
+  stopPlay();
+  const v = await askParams('Create ringtone', 'Saves a short clip — from the selection, or from the cursor — with gentle fades, at full loudness.', [
+    { id: 'secs', label: 'Length', value: 30, min: 3, max: 60, step: 1, unit: 'seconds' },
+    { id: 'fin', label: 'Fade in', value: 300, min: 0, max: 5000, step: 50, unit: 'ms' },
+    { id: 'fout', label: 'Fade out', value: 1500, min: 0, max: 10000, step: 50, unit: 'ms' },
+  ], { ok: 'Save ringtone' });
+  if (!v) return;
+  const a = hasSel() ? selA : (cursor < len() - doc.sr ? cursor : 0);
+  const b = Math.min(hasSel() ? selB : len(), a + Math.round(v.secs * doc.sr));
+  let ch = normaliseCh(sliceCh(doc.ch, a, b));
+  ch = fadeCh(ch, doc.sr, v.fin, v.fout);
+  withBusy('Encoding…', async () => downloadBlob(await encode(ch, doc.sr), baseName() + '-ringtone' + ext(), mime()));
+}
+
+/* ---------- Voice tools ---------- */
+// Run fn(channels, sr) -> channels (same length) over the selection or whole file, as one undo step.
+async function runOnRange(label, fn) {
+  if (!doc || !len()) return;
+  stopPlay();
+  const [a, b] = range();
+  busy(true);
+  try {
+    const out = fitChannels(await fn(sliceCh(doc.ch, a, b), doc.sr), doc.ch.length);
+    const ch = doc.ch.map((c, k) => { const o = c.slice(); o.set(out[k].subarray(0, b - a), a); return o; });
+    commit(makeDoc(doc.sr, ch, doc.markers.slice()), label);
+  } catch (e) { console.error(e); toast(label + ' failed.'); }
+  finally { busy(false); }
+}
+const midOf = ch => ch.length === 1 ? ch[0] : ch[0].map((v, i) => (v + ch[1][i]) / 2);
+function reduceVoice() {
+  if (!doc || doc.ch.length < 2) { toast('Reduce voice needs a stereo recording (music with the voice in the centre).'); return; }
+  runOnRange('Reduced voice', async (ch, sr) => {
+    // Voice is usually mixed dead-centre: left − right cancels it. Keep the bass (also centred) from the mid.
+    const side = ch[0].map((v, i) => (v - ch[1][i]) / 2);
+    const [bass] = await renderOffline([midOf(ch)], sr, (ctx, src) => chain(src, biquad(ctx, 'lowpass', 150), biquad(ctx, 'lowpass', 150)));
+    const out = side.map((v, i) => v + bass[i]);
+    return [out, out.slice()];
+  });
+}
+function isolateVoice() {
+  runOnRange('Isolated voice', async (ch, sr) => {
+    const [v] = await renderOffline([midOf(ch)], sr, (ctx, src) => chain(src,
+      biquad(ctx, 'highpass', 120), biquad(ctx, 'highpass', 120), biquad(ctx, 'lowpass', 7000), biquad(ctx, 'lowpass', 7000),
+      biquad(ctx, 'peaking', 3000, 3, 0.8)));
+    return [v];
+  });
+}
+function amplifyVocals() {
+  runOnRange('Amplified vocals', async (ch, sr) => {
+    let src = ch;
+    if (ch.length >= 2) { // turn the centre up relative to the sides
+      const m = midOf(ch), sL = ch[0].map((v, i) => (v - ch[1][i]) / 2);
+      src = [m.map((v, i) => v * 1.2 + sL[i] * 0.7), m.map((v, i) => v * 1.2 - sL[i] * 0.7)];
+    }
+    return renderOffline(src, sr, (ctx, s) => chain(s, biquad(ctx, 'peaking', 250, -2, 0.8), biquad(ctx, 'peaking', 1500, 4, 0.7), biquad(ctx, 'peaking', 3000, 5, 0.8)));
+  });
+}
+function voiceCleanup() {
+  runOnRange('Voice cleanup', async (ch, sr) => {
+    let x = await renderOffline(ch, sr, (ctx, s) => chain(s, biquad(ctx, 'highpass', 90), biquad(ctx, 'highpass', 90)));
+    x = await reduceNoise(x, sr, { src: 'auto', amount: 15, sens: 1.5 });
+    x = await renderOffline(x, sr, (ctx, s) => {
+      const c = ctx.createDynamicsCompressor(); c.threshold.value = -26; c.ratio.value = 3; c.knee.value = 8; c.attack.value = 0.005; c.release.value = 0.2;
+      return chain(s, c);
+    });
+    return normaliseCh(x);
+  });
+}
+function audioEnhancer() {
+  runOnRange('Audio enhancer', async (ch, sr) => {
+    const x = await renderOffline(ch, sr, (ctx, s) => {
+      const c = ctx.createDynamicsCompressor(); c.threshold.value = -22; c.ratio.value = 2.5; c.knee.value = 10;
+      return chain(s, ...eqFilters(ctx, EQ_PRESETS['Voice clarity']), c);
+    });
+    return normaliseCh(x);
+  });
+}
+
+/* ---------- Frequency analysis ---------- */
+const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+const noteOf = f => { const n = Math.round(12 * Math.log2(f / 440) + 69); return NOTE_NAMES[((n % 12) + 12) % 12] + (Math.floor(n / 12) - 1); };
+let fftData = null;
+function openFFT() {
+  if (!doc || !len()) return;
+  const [a, b] = range();
+  if (b - a < NR_N) { toast('Select at least 0.05 s to analyse.'); return; }
+  const sp = eqMeasureSpectrum(a, b), binHz = doc.sr / NR_N;
+  let pk = 2; for (let k = 2; k < sp.length - 1; k++) if (k * binHz >= 20 && sp[k] > sp[pk]) pk = k;
+  const y0 = sp[pk - 1], y1 = sp[pk], y2 = sp[pk + 1], d = (y0 - y2) / (2 * (y0 - 2 * y1 + y2) || 1);
+  const peakF = (pk + (isFinite(d) ? clamp(d, -0.5, 0.5) : 0)) * binHz;
+  fftData = { sp, binHz, max: Math.max(...sp.slice(1)), peakF };
+  $('fftScope').textContent = hasSel() ? `(selection, ${fmt((b - a) / doc.sr)})` : '(whole file)';
+  $('fftInfo').textContent = `Loudest frequency: ${Math.round(peakF)} Hz (${noteOf(peakF)}). Hover the graph to read any frequency.`;
+  $('fftDlg').showModal();
+  drawFFT();
+}
+function drawFFT(hx) {
+  const cv = $('fftGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  const fMax = Math.min(20000, doc.sr / 2), xOf = f => Math.log(f / 20) / Math.log(fMax / 20) * W, yOf = db => 8 + (-(db - fftData.max)) / 90 * (H - 26);
+  g2.font = '10px ' + css('--ui'); g2.textBaseline = 'top';
+  for (const f of [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]) if (f <= fMax) {
+    const x = xOf(f); g2.fillStyle = 'rgba(169,124,37,.2)'; g2.fillRect(Math.round(x), 0, 1, H); g2.fillStyle = css('--muted'); g2.fillText(eqFmtF(f), x + 2, H - 12);
+  }
+  for (let db = 0; db >= -90; db -= 15) { const y = yOf(fftData.max + db); g2.fillStyle = 'rgba(169,124,37,.2)'; g2.fillRect(0, Math.round(y), W, 1); g2.fillStyle = css('--muted'); g2.fillText(db + ' dB', 3, y + 1); }
+  const at = x => { const f = 20 * Math.pow(fMax / 20, x / W), k = Math.min(fftData.sp.length - 1, Math.max(1, Math.round(f / fftData.binHz))); return [f, fftData.sp[k]]; };
+  g2.beginPath(); g2.moveTo(0, H);
+  for (let x = 0; x <= W; x++) g2.lineTo(x, Math.min(H, yOf(at(x)[1])));
+  g2.lineTo(W, H); g2.closePath(); g2.fillStyle = 'rgba(46,107,88,.25)'; g2.fill();
+  g2.beginPath(); for (let x = 0; x <= W; x++) { const y = Math.min(H, yOf(at(x)[1])); x ? g2.lineTo(x, y) : g2.moveTo(x, y); }
+  g2.strokeStyle = css('--green'); g2.lineWidth = 1.5; g2.stroke();
+  const px = xOf(fftData.peakF); g2.fillStyle = ENV_COL; g2.fillRect(px - 1, 0, 2, H);
+  if (hx !== undefined) {
+    const [f, db] = at(hx); g2.fillStyle = css('--ink-navy'); g2.fillRect(hx, 0, 1, H);
+    const label = `${f < 1000 ? Math.round(f) + ' Hz' : (f / 1000).toFixed(2) + ' kHz'} · ${(db - fftData.max).toFixed(1)} dB · ${noteOf(f)}`;
+    g2.font = '600 12px ' + css('--ui'); const tw = g2.measureText(label).width + 12, lx = clamp(hx + 8, 2, W - tw - 2);
+    g2.fillRect(lx, 8, tw, 20); g2.fillStyle = '#fff'; g2.textBaseline = 'middle'; g2.fillText(label, lx + 6, 18);
+  }
+}
+$('fftGraph').addEventListener('pointermove', e => { if (fftData) drawFFT(e.clientX - $('fftGraph').getBoundingClientRect().left); });
+$('fftGraph').addEventListener('pointerleave', () => { if (fftData) drawFFT(); });
+on('fftClose', () => $('fftDlg').close());
+
+/* ---------- Save As, Save All, Close All, projects ---------- */
+async function saveAs() {
+  if (!doc || !len()) return;
+  const v = await askParams('Save file as', 'Choose a name and format. The file downloads to your computer.', [
+    { id: 'name', label: 'File name', type: 'text', value: baseName() },
+    { id: 'fmt', label: 'Format', type: 'select', value: saveFormat(), options: [['mp3', 'MP3'], ['wav', 'WAV (lossless)']] },
+    { id: 'kbps', label: 'MP3 quality', type: 'select', value: $('kbpsSel').value, options: [['96', '96 kbps'], ['128', '128 kbps'], ['192', '192 kbps'], ['320', '320 kbps']] },
+  ], { ok: 'Save' });
+  if (!v) return;
+  $('fileName').value = v.name.trim() || baseName(); $('fmtSel').value = v.fmt; $('kbpsSel').value = v.kbps; syncFormat(); renderTabs();
+  exportAll();
+}
+async function saveAll() {
+  stashTab();
+  const list = tabs.filter(t => t.doc && t.doc.ch[0].length);
+  if (!list.length) return;
+  await withBusy('Encoding…', async () => {
+    const files = [], used = new Set();
+    for (let i = 0; i < list.length; i++) {
+      busyText(`Encoding ${i + 1} of ${list.length}…`);
+      let name = (list[i].name || 'audio').replace(/[\\/:*?"<>|]+/g, '_');
+      while (used.has(name)) name += '-' + (i + 1);
+      used.add(name);
+      files.push({ name: name + ext(), data: await encode(list[i].doc.ch, list[i].doc.sr) });
+      list[i].dirty = false;
+    }
+    if (active) dirty = active.dirty;
+    const url = URL.createObjectURL(makeZip(files));
+    const link = document.createElement('a'); link.href = url; link.download = 'all-files.zip';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    renderTabs(); toast(`Saved ${files.length} files`);
+  });
+}
+function closeAll() {
+  stashTab();
+  if (!tabs.length) return;
+  if (tabs.some(t => t.dirty) && !confirm('Close all files? Unsaved edits will be lost.')) return;
+  while (tabs.length) closeTab(active || tabs[0], true);
+}
+// 32-bit float WAV: lossless, used for projects.
+function encodeWavFloat(ch, sr) {
+  const n = ch[0].length, nc = ch.length, bytes = n * nc * 4, buf = new ArrayBuffer(44 + bytes), v = new DataView(buf);
+  const str = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  str(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); str(8, 'WAVE'); str(12, 'fmt '); v.setUint32(16, 16, true);
+  v.setUint16(20, 3, true); v.setUint16(22, nc, true); v.setUint32(24, sr, true); v.setUint32(28, sr * nc * 4, true); v.setUint16(32, nc * 4, true); v.setUint16(34, 32, true);
+  str(36, 'data'); v.setUint32(40, bytes, true);
+  let o = 44;
+  for (let i = 0; i < n; i++) for (let k = 0; k < nc; k++) { v.setFloat32(o, ch[k][i], true); o += 4; }
+  return new Uint8Array(buf);
+}
+function parseWav(bytes) {
+  const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let o = 12, fmtTag = 1, nc = 1, sr = 44100, bits = 16, data = null;
+  while (o + 8 <= v.byteLength) {
+    const id = String.fromCharCode(v.getUint8(o), v.getUint8(o + 1), v.getUint8(o + 2), v.getUint8(o + 3)), size = v.getUint32(o + 4, true);
+    if (id === 'fmt ') { fmtTag = v.getUint16(o + 8, true); nc = v.getUint16(o + 10, true); sr = v.getUint32(o + 12, true); bits = v.getUint16(o + 22, true); }
+    if (id === 'data') data = [o + 8, size];
+    o += 8 + size + (size & 1);
+  }
+  if (!data) throw new Error('No audio data');
+  const bps = bits / 8, n = Math.floor(data[1] / (bps * nc)), ch = Array.from({ length: nc }, () => new Float32Array(n));
+  for (let i = 0, p = data[0]; i < n; i++) for (let k = 0; k < nc; k++, p += bps)
+    ch[k][i] = fmtTag === 3 ? v.getFloat32(p, true) : v.getInt16(p, true) / 32768;
+  return { sr, ch };
+}
+function unzipStored(buf) {
+  const v = new DataView(buf), files = {}, dec = new TextDecoder();
+  let o = 0;
+  while (o + 30 <= v.byteLength && v.getUint32(o, true) === 0x04034b50) {
+    const method = v.getUint16(o + 8, true), size = v.getUint32(o + 18, true), nl = v.getUint16(o + 26, true), xl = v.getUint16(o + 28, true);
+    const name = dec.decode(new Uint8Array(buf, o + 30, nl)), start = o + 30 + nl + xl;
+    if (method !== 0) throw new Error('Compressed zip');
+    files[name] = new Uint8Array(buf, start, size);
+    o = start + size;
+  }
+  return files;
+}
+async function saveProject() {
+  stashTab();
+  const list = tabs.filter(t => t.doc);
+  if (!list.length) return;
+  await withBusy('Saving project…', async () => {
+    const meta = { app: 'diinislaam-audio-editor', version: 1, active: list.indexOf(active), tabs: [] }, files = [];
+    list.forEach((t, i) => {
+      const file = `tab${i + 1}.wav`;
+      meta.tabs.push({ name: t.name, sr: t.doc.sr, markers: t.doc.markers, file });
+      files.push({ name: file, data: encodeWavFloat(t.doc.ch, t.doc.sr) });
+    });
+    files.unshift({ name: 'project.json', data: new TextEncoder().encode(JSON.stringify(meta, null, 1)) });
+    const url = URL.createObjectURL(makeZip(files));
+    const link = document.createElement('a'); link.href = url; link.download = baseName() + '-project.zip';
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast(`Project saved with ${list.length} tab${list.length === 1 ? '' : 's'} — open it again with File ▸ Open Project`);
+  });
+}
+async function openProject(file) {
+  busy(true);
+  try {
+    const files = unzipStored(await file.arrayBuffer());
+    const meta = JSON.parse(new TextDecoder().decode(files['project.json'] || new Uint8Array()));
+    if (meta.app !== 'diinislaam-audio-editor') throw new Error('not a project');
+    const made = [];
+    for (const t of meta.tabs) {
+      const w = parseWav(files[t.file]);
+      newDocument(makeDoc(w.sr, w.ch, (t.markers || []).filter(m => m > 0 && m < w.ch[0].length)), t.name, false);
+      made.push(active);
+    }
+    if (made[meta.active]) showTab(made[meta.active]);
+    toast(`Opened project: ${made.length} tab${made.length === 1 ? '' : 's'}`);
+  } catch (e) { console.error(e); toast(`“${file.name}” is not a project saved by this editor.`); }
+  finally { busy(false); }
+}
+$('projIn').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) openProject(f); });
+function showHistory() {
+  const panel = $('histList').closest('.panel');
+  document.body.classList.remove('compact');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  panel.classList.remove('flash'); void panel.offsetWidth; panel.classList.add('flash');
+}
+function toggleView(cls) {
+  document.body.classList.toggle(cls);
+  try { localStorage.setItem('ae-view-' + cls, document.body.classList.contains(cls) ? '1' : ''); } catch (e) {}
+  if (doc) { clampView(); draw(); }
+}
+try { for (const c of ['compact', 'tall']) if (localStorage.getItem('ae-view-' + c)) document.body.classList.add(c); } catch (e) {}
+
+/* ---------- Menu bar ---------- */
+const has = {
+  doc: () => !!doc, audio: () => !!doc && len() > 0, sel: () => hasSel(), clip: () => !!clip && !!doc,
+  stereo: () => !!doc && doc.ch.length === 2, mono: () => !!doc && doc.ch.length === 1 && len() > 0,
+  markers: () => !!doc && doc.markers.length > 0, tabs: () => tabs.length > 0, many: () => tabs.length > 1,
+};
+const fadeTypes = [['linear', 'Linear'], ['smooth', 'Smooth (default)'], ['fast', 'Fast start'], ['scurve', 'S-curve']];
+const MENUS = [
+  { label: 'File', items: [
+    { label: 'New File', key: 'N', run: newEmpty },
+    { label: 'Open File…', key: 'Ctrl+O', run: () => $('fileIn').click() },
+    { label: 'Recent Files', sub: async () => { const r = await recentAll(); return r.length ? r.map(x => ({ label: x.name, run: () => loadFile(new File([x.blob], x.name, { type: x.type }), { remember: false }) })) : [{ label: 'No recent files', en: () => false }]; } },
+    '-',
+    { label: 'Save File', key: 'Ctrl+S', run: exportAll, en: has.audio },
+    { label: 'Save File As…', key: 'Ctrl+Shift+S', run: saveAs, en: has.audio },
+    { label: 'Save Selected Region As…', run: exportSel, en: has.sel },
+    { label: 'Save All Files (.zip)', run: saveAll, en: has.tabs },
+    { label: 'Save Format', sub: () => [['mp3', 'MP3'], ['wav', 'WAV (lossless)']].map(([v, l]) => ({ label: l, check: () => saveFormat() === v, run: () => { $('fmtSel').value = v; syncFormat(); } })) },
+    '-',
+    { label: 'Open Project…', run: () => $('projIn').click() },
+    { label: 'Save Project', run: saveProject, en: has.tabs },
+    '-',
+    { label: 'Join Audio Files…', run: () => openJoin(true) },
+    { label: 'Batch Converter…', run: () => $('batchFileIn').click() },
+    '-',
+    { label: 'Close File', run: () => active && closeTab(active), en: has.tabs },
+    { label: 'Close All', run: closeAll, en: has.tabs },
+  ] },
+  { label: 'Edit', items: [
+    { label: 'Undo', key: 'Ctrl+Z', run: undo, en: () => undoStack.length > 0 },
+    { label: 'Redo', key: 'Ctrl+Y', run: redo, en: () => redoStack.length > 0 },
+    { label: 'History Manager', run: showHistory, en: has.doc },
+    '-',
+    { label: 'Cut', key: 'Ctrl+X', run: cmdCut, en: has.sel },
+    { label: 'Copy', key: 'Ctrl+C', run: cmdCopy, en: has.sel },
+    { label: 'Duplicate', key: 'Ctrl+D', run: duplicate, en: has.audio },
+    { label: 'Paste', key: 'Ctrl+V', run: cmdPaste, en: has.clip },
+    { label: 'Paste Mix', key: 'Ctrl+Shift+V', run: cmdPasteMix, en: has.clip },
+    { label: 'Delete', key: 'Del', run: () => cmdDelete(), en: has.sel },
+    '-',
+    { label: 'Select', sub: () => [
+      { label: 'All', key: 'Ctrl+A', run: () => selectPart('all'), en: has.audio },
+      { label: 'None', key: 'Esc', run: () => selectPart('none'), en: has.sel },
+      { label: 'Start to Cursor', run: () => selectPart('start'), en: has.audio },
+      { label: 'Cursor to End', run: () => selectPart('end'), en: has.audio },
+      { label: 'Part Between Markers', run: () => selectPart('part'), en: has.markers },
+    ] },
+    { label: 'Jump to Location…', key: 'G', run: jumpTo, en: has.audio },
+    '-',
+    { label: 'Repeat Loop…', run: repeatLoop, en: has.sel },
+    { label: 'Mix with File…', run: openMixDialog, en: has.doc },
+    { label: 'Insert File…', run: () => $('insFileIn').click(), en: has.doc },
+    { label: 'Silence', sub: () => [
+      { label: 'Silence Selection', run: silence, en: has.sel },
+      { label: 'Insert Silence…', run: async () => { const v = await askParams('Insert silence', 'Inserted at the cursor.', [{ id: 's', label: 'Length', value: parseFloat($('insSilIn').value) || 1, min: 0.01, max: 600, step: 0.25, unit: 'seconds' }], { ok: 'Insert' }); if (v) { $('insSilIn').value = v.s; insertSilence(); } }, en: has.doc },
+    ] },
+    { label: 'Trim', sub: () => [
+      { label: 'Trim to Selection', key: 'T', run: cmdTrim, en: has.sel },
+      { label: 'Auto Trim…', run: autoTrim, en: has.audio },
+    ] },
+    { label: 'Cleanup', sub: () => [
+      { label: 'Grab Noise Sample', run: grabNoise, en: has.sel },
+      { label: 'Noise Reduction…', run: fxNoise, en: has.audio },
+      { label: 'Noise Gate…', run: fxGate, en: has.audio },
+      { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
+      { label: 'Remove Rumble…', run: fxHighpass, en: has.audio },
+      { label: 'Remove Hiss…', run: fxLowpass, en: has.audio },
+    ] },
+    { label: 'Redact / Beep…', run: redact, en: has.sel },
+    '-',
+    { label: 'Split File', sub: () => [
+      { label: 'Split into Tabs (at markers or cursor)', run: splitIntoTabs, en: has.audio },
+      { label: 'Split at Pauses into Tabs', run: () => { autoSplit(); if (doc && doc.markers.length) splitIntoTabs(); }, en: has.audio },
+    ] },
+    { label: 'Join Audio…', run: () => openJoin(false) },
+    { label: 'Convert', sub: () => [
+      { label: 'Make Mono', run: makeMono, en: has.stereo },
+      { label: 'Make Stereo', run: makeStereo, en: has.mono },
+      { label: 'Swap Left / Right', run: swapChannels, en: has.stereo },
+      { label: 'Sample Rate…', run: fxSampleRate, en: has.audio },
+    ] },
+  ] },
+  { label: 'Effects', items: [
+    { label: 'Amplify…', key: 'Shift+A', run: amplifyDlg, en: has.audio },
+    { label: 'Normalize', key: 'Shift+N', run: normalise, en: has.audio },
+    { label: 'Mute Channel', sub: () => [
+      { label: 'Left', run: () => muteChannel(0), en: has.stereo },
+      { label: 'Right', run: () => muteChannel(1), en: has.stereo },
+    ] },
+    '-',
+    { label: 'Fade In', key: 'I', run: fadeIn, en: has.audio },
+    { label: 'Fade Out', key: 'O', run: fadeOut, en: has.audio },
+    { label: 'Fade In & Out Selection', run: fadeInOut, en: has.sel },
+    { label: 'Fade Type', sub: () => fadeTypes.map(([v, l]) => ({ label: l, check: () => fadeCurve === v, run: () => { fadeCurve = v; toast('Fade type: ' + l); } })) },
+    { label: 'Envelope…', key: 'E', run: envStart, en: has.audio },
+    { label: 'Stereo Pan…', run: stereoPan, en: has.audio },
+    '-',
+    { label: 'Equalizer…', run: fxEqualiser, en: has.audio },
+    { label: 'Echo…', run: fxEcho, en: has.audio },
+    { label: 'Reverb…', run: fxReverb, en: has.audio },
+    { label: 'Compressor…', run: fxCompressor, en: has.audio },
+    { label: 'Pitch…', run: fxPitch, en: has.audio },
+    { label: 'Tempo…', run: fxTempo, en: has.audio },
+    { label: 'Speed…', run: fxSpeed, en: has.audio },
+    '-',
+    { label: 'Reverse', run: reverse, en: has.audio },
+    { label: 'Invert', run: invert, en: has.audio },
+    { label: 'Silence', run: silence, en: has.audio },
+  ] },
+  { label: 'Control', items: [
+    { label: 'Play / Pause', key: 'Space', run: togglePlay, en: has.audio },
+    { label: 'Stop', run: () => { stopPlay(); refresh(); }, en: has.audio },
+    { label: 'Record / Stop Recording', key: 'R', run: toggleRecord },
+    { label: 'Loop Selection', key: 'L', check: () => loop, run: () => { loop = !loop; if (player) play(); refresh(); }, en: has.doc },
+    '-',
+    { label: 'Go to Start', key: 'Home', run: () => { stopPlay(); cursor = 0; viewStart = 0; clampView(); refresh(); }, en: has.audio },
+    { label: 'Go to End', key: 'End', run: () => { stopPlay(); cursor = len(); viewStart = len(); clampView(); refresh(); }, en: has.audio },
+    { label: 'Back 5 Seconds', key: ',', run: () => seekBy(-5), en: has.audio },
+    { label: 'Forward 5 Seconds', key: '.', run: () => seekBy(5), en: has.audio },
+    { label: 'Playback Speed', sub: () => ['0.5', '0.75', '1', '1.25', '1.5', '2'].map(r => ({ label: r + '×', check: () => $('rateSel').value === r, run: () => { $('rateSel').value = r; $('rateSel').dispatchEvent(new Event('change')); } })) },
+  ] },
+  { label: 'Tools', items: [
+    { label: 'Frequency Analysis (FFT)…', run: openFFT, en: has.audio },
+    { label: 'Find Peak Sample', run: findPeak, en: has.audio },
+    '-',
+    { label: 'Noise Removal…', run: fxNoise, en: has.audio },
+    { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
+    '-',
+    { label: 'Generate Tone…', run: generate, en: has.doc },
+    { label: 'Create Ringtone…', run: createRingtone, en: has.audio },
+    { label: 'Batch Converter…', run: () => $('batchFileIn').click() },
+  ] },
+  { label: 'Bookmark', items: [
+    { label: 'Add Marker at Cursor', key: 'M', run: addMarker, en: has.audio },
+    { label: 'Next Marker', key: "'", run: () => gotoMarker(1), en: has.markers },
+    { label: 'Previous Marker', key: ';', run: () => gotoMarker(-1), en: has.markers },
+    { label: 'Auto-split at Pauses', run: autoSplit, en: has.audio },
+    { label: 'Clear All Markers', run: () => commit(makeDoc(doc.sr, doc.ch, []), 'Markers cleared'), en: has.markers },
+    '-',
+    { label: 'Save All Parts (.zip)', run: exportZip, en: has.markers },
+    { label: 'Split Parts into Tabs', run: splitIntoTabs, en: has.markers },
+  ] },
+  { label: 'View', items: [
+    { label: 'Zoom In', key: '+', run: () => zoomAt(0.5), en: has.audio },
+    { label: 'Zoom Out', key: '−', run: () => zoomAt(2), en: has.audio },
+    { label: 'Zoom to Selection', key: 'Z', run: zoomSel, en: has.sel },
+    { label: 'Zoom to Fit', key: 'F', run: zoomFit, en: has.audio },
+    '-',
+    { label: 'Taller Waveform', check: () => document.body.classList.contains('tall'), run: () => toggleView('tall') },
+    { label: 'Show Effects & Tools Panels', check: () => !document.body.classList.contains('compact'), run: () => toggleView('compact') },
+    '-',
+    { label: 'Next Tab', key: ']', run: () => switchTab(1), en: has.many },
+    { label: 'Previous Tab', key: '[', run: () => switchTab(-1), en: has.many },
+  ] },
+  { label: 'Voice', items: [
+    { mhead: 'One-click voice tools' },
+    { label: 'Voice Cleanup', run: voiceCleanup, en: has.audio, title: 'Remove rumble → reduce noise → even out volume → normalise' },
+    { label: 'Audio Enhancer', run: audioEnhancer, en: has.audio, title: 'Clearer, fuller, evenly loud voice' },
+    { label: 'Amplify Vocals', run: amplifyVocals, en: has.audio, title: 'Brings the voice forward' },
+    { label: 'Isolate Voice', run: isolateVoice, en: has.audio, title: 'Keeps the centre and the speech frequencies' },
+    { label: 'Reduce Voice (karaoke)', run: reduceVoice, en: has.stereo, title: 'Removes centre-panned vocals from stereo music' },
+    '-',
+    { label: 'Pitch (higher / lower voice)…', run: fxPitch, en: has.audio },
+    { label: 'Tempo (slower / faster, same voice)…', run: fxTempo, en: has.audio },
+  ] },
+  { label: 'Help', items: [
+    { label: 'Guide & Keyboard Shortcuts', key: '?', run: openGuide },
+    { label: 'About', run: () => toast('Audio Editor — Diin Islaam. Everything runs in your browser; your audio is never uploaded.') },
+  ] },
+];
+
+let openMenus = []; // [{ el, level }]
+const menuOpen = () => openMenus.length > 0;
+function closeMenus(fromLevel = 0) {
+  openMenus.filter(m => m.level >= fromLevel).forEach(m => m.el.remove());
+  openMenus = openMenus.filter(m => m.level < fromLevel);
+  if (!fromLevel) document.querySelectorAll('#menuBar > button.open').forEach(b => b.classList.remove('open'));
+}
+// On narrow (phone) screens submenus open inline under their item instead of flying out.
+const narrowMenus = () => innerWidth < 600;
+function fillMenu(el, items, level) {
+  items.forEach(it => {
+    if (it === '-') { const d = document.createElement('div'); d.className = 'sep'; el.appendChild(d); return; }
+    if (it.mhead) { const d = document.createElement('div'); d.className = 'mhead'; d.textContent = it.mhead; el.appendChild(d); return; }
+    const d = document.createElement('div'); d.className = 'mi'; d.setAttribute('role', 'menuitem');
+    const enabled = !it.en || it.en();
+    if (!enabled) d.classList.add('dis');
+    if (it.check && it.check()) d.classList.add('chk');
+    if (it.sub) d.classList.add('sub');
+    if (it.title) d.title = it.title;
+    const l = document.createElement('span'); l.textContent = it.label; d.appendChild(l);
+    if (it.key) { const k = document.createElement('span'); k.className = 'k'; k.textContent = it.key; d.appendChild(k); }
+    const clearActive = () => el.querySelectorAll(':scope > .mi.active').forEach(x => x.classList.remove('active'));
+    if (it.sub && narrowMenus()) {
+      d.addEventListener('click', async () => {
+        const next = d.nextElementSibling;
+        if (next && next.classList.contains('msub')) { next.remove(); d.classList.remove('active'); return; }
+        const box = document.createElement('div'); box.className = 'msub';
+        d.after(box); d.classList.add('active');
+        fillMenu(box, typeof it.sub === 'function' ? await it.sub() : it.sub, level + 1);
+      });
+    } else if (it.sub) {
+      const open = () => { clearActive(); d.classList.add('active'); showMenu(it.sub, d.getBoundingClientRect(), level + 1, true); };
+      d.addEventListener('mouseenter', open); d.addEventListener('click', open);
+    } else {
+      d.addEventListener('mouseenter', () => { if (!narrowMenus()) { clearActive(); closeMenus(level + 1); } });
+      if (enabled) d.addEventListener('click', () => { closeMenus(); it.run(); });
+    }
+    el.appendChild(d);
+  });
+}
+async function showMenu(items, rect, level, asSub) {
+  if (typeof items === 'function') items = await items();
+  closeMenus(level);
+  const el = document.createElement('div'); el.className = 'menu'; el.setAttribute('role', 'menu');
+  fillMenu(el, items, level);
+  document.body.appendChild(el);
+  // Place it (to the right of a submenu's item, or under the menu bar button), keeping it on screen.
+  const w = el.offsetWidth, h = el.offsetHeight, vw = innerWidth, vh = innerHeight;
+  let x = asSub ? rect.right - 4 : rect.left, y = asSub ? rect.top - 5 : rect.bottom + 2;
+  if (x + w > vw - 8) x = asSub ? Math.max(8, rect.left - w + 4) : Math.max(8, vw - w - 8);
+  if (y + h > vh - 8) y = Math.max(8, vh - h - 8);
+  el.style.left = x + 'px'; el.style.top = y + 'px';
+  openMenus.push({ el, level });
+}
+function buildMenuBar() {
+  const bar = $('menuBar');
+  MENUS.forEach(m => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = m.label; b.setAttribute('aria-haspopup', 'true');
+    const open = () => { closeMenus(); b.classList.add('open'); showMenu(m.items, b.getBoundingClientRect(), 0, false); };
+    b.addEventListener('click', () => (b.classList.contains('open') ? closeMenus() : open()));
+    b.addEventListener('mouseenter', () => { if (menuOpen() && !b.classList.contains('open')) open(); });
+    bar.appendChild(b);
+  });
+}
+buildMenuBar();
+document.addEventListener('pointerdown', e => { if (menuOpen() && !e.target.closest('.menu') && !e.target.closest('#menuBar')) closeMenus(); }, true);
+window.addEventListener('resize', () => closeMenus());
+
 /* ---------- Pointer interaction ---------- */
 let drag = null; // { kind:'sel', anchor } | { kind:'marker', index } | { kind:'fade', side, a, b, n }
 
@@ -2656,7 +3302,9 @@ canvas.addEventListener('contextmenu', e => {
 // Fade handles (like WavePad): drag the square at the selection's top-left corner inwards to
 // fade in, the top-right one to fade out. With no selection they sit at the file's start and end.
 const RULER_H = 22, FADE_H = 16;
-const fadeGain = t => t * t; // same curve as the Fade in / Fade out buttons
+// Fade curve shared by the Fade buttons, the fade handles and Effects ▸ Fade type.
+let fadeCurve = 'smooth';
+const fadeGain = t => fadeCurve === 'linear' ? t : fadeCurve === 'fast' ? 1 - (1 - t) * (1 - t) : fadeCurve === 'scurve' ? t * t * (3 - 2 * t) : t * t;
 function fadeSpan() { return hasSel() ? [selA, selB] : [0, len()]; }
 function fadeHandles() {
   if (!doc || !len() || env) return [];
@@ -2840,6 +3488,7 @@ function switchTab(dir) {
 }
 document.addEventListener('keydown', e => {
   const t = e.target;
+  if (menuOpen()) { if (e.key === 'Escape') { e.preventDefault(); closeMenus(); } return; }
   if (document.querySelector('dialog[open]')) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
@@ -2851,12 +3500,18 @@ document.addEventListener('keydown', e => {
   // These work even with no file open.
   if (k === '?') openGuide();
   else if (mod && k === 'o') $('fileIn').click();
-  else if (!mod && !e.altKey && k === 'n') newEmpty();
+  else if (!mod && !e.altKey && !e.shiftKey && k === 'n') newEmpty();
   else if ((!mod && !e.altKey && k === 'r') || k === 'f5') toggleRecord();
   else handled = false;
   if (handled || !doc) { if (handled) e.preventDefault(); return; }
   handled = true;
   if (k === ' ') togglePlay();
+  else if (mod && e.shiftKey && k === 's') saveAs();
+  else if (!mod && e.shiftKey && k === 'a') amplifyDlg();
+  else if (!mod && e.shiftKey && k === 'n') normalise();
+  else if (!mod && k === 'g') jumpTo();
+  else if (!mod && k === ';') gotoMarker(-1);
+  else if (!mod && k === "'") gotoMarker(1);
   else if (mod && k === 'z' && !e.shiftKey) undo();
   else if (mod && (k === 'y' || (k === 'z' && e.shiftKey))) redo();
   else if (mod && k === 'x') cmdCut();
