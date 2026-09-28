@@ -26,6 +26,8 @@ const on = (id, fn) => $(id).addEventListener('click', fn);
 const canvas = $('wave'), g = canvas.getContext('2d');
 let waveOverlay = null; // optional (g, W, H, rulerHeight) => true when it drew the audio instead of the waveform
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+// Touch screens get bigger grab areas for handles, edges and markers.
+const TOUCH = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches), HIT = TOUCH ? 14 : 6;
 
 /* ---------- Helpers ---------- */
 const len = () => doc ? doc.ch[0].length : 0;
@@ -225,7 +227,7 @@ function renderTabs() {
   });
   const add = document.createElement('button');
   add.className = 'tab-add'; add.type = 'button'; add.textContent = '+';
-  add.title = 'New empty tab (N) — record, paste or drop audio into it';
+  add.title = 'New empty tab (N) — record, paste or drop audio into it'; add.setAttribute('aria-label', 'New empty tab');
   add.onclick = newEmpty;
   bar.appendChild(add);
   const cur = bar.querySelector('.tab.active');
@@ -581,7 +583,7 @@ function draw(playhead) {
       if (room < 30 || x0 > W || x0 + room < 0) continue;
       let t = name; while (t.length > 1 && g.measureText(t).width > room) t = t.slice(0, -2) + '…';
       const tw = g.measureText(t).width;
-      g.fillStyle = 'rgba(255,250,240,.88)'; g.fillRect(x0 - 3, RULER + 4, tw + 6, 16);
+      g.fillStyle = css('--chip'); g.fillRect(x0 - 3, RULER + 4, tw + 6, 16);
       g.fillStyle = css('--marker'); g.fillText(t, x0, RULER + 12);
     }
   }
@@ -697,7 +699,7 @@ function drawOverview(playhead) {
   if (!W) return;
   if (ovCanvas.width !== Math.round(W * dpr) || ovCanvas.height !== Math.round(H * dpr)) { ovCanvas.width = Math.round(W * dpr); ovCanvas.height = Math.round(H * dpr); }
   ovG.setTransform(1, 0, 0, 1, 0, 0);
-  ovG.fillStyle = '#fffaf0'; ovG.fillRect(0, 0, ovCanvas.width, ovCanvas.height);
+  ovG.fillStyle = css('--wave-bg'); ovG.fillRect(0, 0, ovCanvas.width, ovCanvas.height);
   ovG.drawImage(ovWave(W, H, dpr), 0, 0);
   ovG.setTransform(dpr, 0, 0, dpr, 0, 0);
   const L = len(), X = v => v / L * W, b = ovBox();
@@ -714,8 +716,8 @@ function drawOverview(playhead) {
 let ovDrag = null; // { kind: 'pan' | 'left' | 'right', off }
 function ovPart(e) {
   const r = ovCanvas.getBoundingClientRect(), x = e.clientX - r.left, b = ovBox();
-  if (Math.abs(x - b.x) <= 6) return 'left';
-  if (Math.abs(x - (b.x + b.w)) <= 6) return 'right';
+  if (Math.abs(x - b.x) <= HIT) return 'left';
+  if (Math.abs(x - (b.x + b.w)) <= HIT) return 'right';
   return x > b.x && x < b.x + b.w ? 'pan' : 'jump';
 }
 ovCanvas.addEventListener('pointerdown', e => {
@@ -1403,7 +1405,7 @@ function eqDraw() {
   if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const g2 = cv.getContext('2d');
   g2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.fillStyle = css('--wave-bg'); g2.fillRect(0, 0, W, H);
   g2.font = '10px ' + css('--ui'); g2.textBaseline = 'top';
   // Grid
   for (const f of [50, 100, 200, 500, 1000, 2000, 5000, 10000]) {
@@ -2315,7 +2317,7 @@ function drawFFT(hx) {
   const cv = $('fftGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
   if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.fillStyle = css('--wave-bg'); g2.fillRect(0, 0, W, H);
   const fMax = Math.min(20000, doc.sr / 2), xOf = f => Math.log(f / 20) / Math.log(fMax / 20) * W, yOf = db => 8 + (-(db - fftData.max)) / 90 * (H - 26);
   g2.font = '10px ' + css('--ui'); g2.textBaseline = 'top';
   for (const f of [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]) if (f <= fMax) {
@@ -2413,7 +2415,7 @@ function drawKey() {
   const cv = $('keyGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
   if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.fillStyle = css('--wave-bg'); g2.fillRect(0, 0, W, H);
   const c = keyState.c12, mx = Math.max(...c) || 1, bw = W / 12, best = keyState.best;
   const scale = (best.minor ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11]).map(i => (i + best.tonic) % 12);
   g2.font = '600 12px ' + css('--ui'); g2.textAlign = 'center';
@@ -2425,7 +2427,7 @@ function drawKey() {
   }
   g2.textAlign = 'left'; g2.font = '11px ' + css('--ui');
   const cap = 'orange = key note · green = notes of the scale';
-  g2.fillStyle = 'rgba(255,250,240,.92)'; g2.fillRect(2, 1, g2.measureText(cap).width + 8, 15);
+  g2.fillStyle = css('--chip'); g2.fillRect(2, 1, g2.measureText(cap).width + 8, 15);
   g2.fillStyle = css('--muted'); g2.fillText(cap, 6, 12);
 }
 $('keyTarget').addEventListener('change', syncKeyShift);
@@ -2560,7 +2562,7 @@ function mtDraw() {
     mtCanvas.width = Math.round(W * dpr); mtCanvas.height = Math.round(H * dpr); mtCanvas.style.width = W + 'px'; mtCanvas.style.height = H + 'px';
   }
   const g2 = mtG; g2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.fillStyle = css('--wave-bg'); g2.fillRect(0, 0, W, H);
   // Ruler
   g2.fillStyle = css('--parchment-deep'); g2.fillRect(0, 0, W, MT_RULER);
   const steps = [0.1, 0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300, 600];
@@ -2605,7 +2607,7 @@ function mtDraw() {
       }
       // Fades: shaded corners with a line, and handles on the selected clip
       const [fi, fo] = clipFades(c), fx0 = x0 + fi * mt.pps, fx1 = x1 - fo * mt.pps;
-      g2.fillStyle = 'rgba(255,250,240,.55)'; g2.strokeStyle = css('--ink-navy'); g2.lineWidth = 1.2;
+      g2.fillStyle = css('--chip'); g2.strokeStyle = css('--ink-navy'); g2.lineWidth = 1.2;
       if (fi) { g2.beginPath(); g2.moveTo(x0, cy + ch); g2.lineTo(fx0, cy); g2.lineTo(x0, cy); g2.closePath(); g2.fill(); g2.beginPath(); g2.moveTo(x0, cy + ch); g2.lineTo(fx0, cy); g2.stroke(); }
       if (fo) { g2.beginPath(); g2.moveTo(x1, cy + ch); g2.lineTo(fx1, cy); g2.lineTo(x1, cy); g2.closePath(); g2.fill(); g2.beginPath(); g2.moveTo(x1, cy + ch); g2.lineTo(fx1, cy); g2.stroke(); }
       if (c.id === mt.sel) { g2.fillStyle = css('--ink-navy'); g2.fillRect(fx0 - (fi ? 5 : 0), cy, 10, 10); g2.fillRect(fx1 - (fo ? 5 : 10), cy, 10, 10); }
@@ -2757,7 +2759,7 @@ function mtMixSave() {
 // ---------- Pointer editing on the timeline ----------
 function mtHit(e) {
   const r = mtCanvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-  if (y < MT_RULER) { const mi = mt.markers.findIndex(m => Math.abs(mtX(m) - x) <= 6); return { x, y, ruler: true, marker: mi < 0 ? null : mi }; }
+  if (y < MT_RULER) { const mi = mt.markers.findIndex(m => Math.abs(mtX(m) - x) <= HIT); return { x, y, ruler: true, marker: mi < 0 ? null : mi }; }
   const row = Math.floor((y - MT_RULER) / MT_ROW), track = mt.tracks[row];
   if (!track) return { x, y, row };
   const c = mt.clips.filter(k => k.track === track.id).reverse().find(k => x >= mtX(k.start) - 5 && x <= mtX(k.start + k.dur) + 5);
@@ -2765,9 +2767,9 @@ function mtHit(e) {
   const sc = mt.sel && mtClip(mt.sel);
   if (sc && sc.track === track.id) { // fade handles (top corners) of the selected clip come first
     const cy = MT_RULER + row * MT_ROW + 5, [fi, fo] = clipFades(sc), hx0 = mtX(sc.start) + fi * mt.pps + (fi ? 0 : 5), hx1 = mtX(sc.start + sc.dur) - fo * mt.pps - (fo ? 0 : 5);
-    if (y >= cy - 2 && y <= cy + 13) { if (Math.abs(x - hx0) <= 7) return { x, y, row, track, clip: sc, part: 'fi' }; if (Math.abs(x - hx1) <= 7) return { x, y, row, track, clip: sc, part: 'fo' }; }
+    if (y >= cy - 2 && y <= cy + 13) { if (Math.abs(x - hx0) <= HIT + 1) return { x, y, row, track, clip: sc, part: 'fi' }; if (Math.abs(x - hx1) <= HIT + 1) return { x, y, row, track, clip: sc, part: 'fo' }; }
   }
-  if (c) part = Math.abs(x - mtX(c.start)) <= 7 ? 'l' : Math.abs(x - mtX(c.start + c.dur)) <= 7 ? 'r' : x > mtX(c.start) && x < mtX(c.start + c.dur) ? 'move' : null;
+  if (c) part = Math.abs(x - mtX(c.start)) <= HIT + 1 ? 'l' : Math.abs(x - mtX(c.start + c.dur)) <= HIT + 1 ? 'r' : x > mtX(c.start) && x < mtX(c.start + c.dur) ? 'move' : null;
   return { x, y, row, track, clip: part ? c : null, part };
 }
 function mtSnap(t, ignore) { // snap to 0, the playhead and other clips' edges within 8 px
@@ -3305,7 +3307,7 @@ function drawBeats() {
   const cv = $('beatGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
   if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.fillStyle = css('--wave-bg'); g2.fillRect(0, 0, W, H);
   const st = beatState, show = Math.min(st.env.length, Math.round(st.fr * 12)), mx = Math.max(...st.env.subarray(0, show)) || 1;
   g2.fillStyle = 'rgba(46,107,88,.55)';
   for (let x = 0; x < W; x++) { const f = Math.floor(x / W * show), h = (H - 22) * st.env[f] / mx; g2.fillRect(x, H - 16 - h, 1, h); }
@@ -3314,7 +3316,7 @@ function drawBeats() {
   g2.font = '10px ' + css('--ui'); g2.fillStyle = css('--muted');
   for (let t = 0; t <= show / st.fr; t += 2) g2.fillText(t + ' s', t * st.fr / show * W + 2, H - 4);
   const cap = 'first 12 s · green = note onsets · orange = beats (thick = start of a bar)';
-  g2.fillStyle = 'rgba(255,250,240,.92)'; g2.fillRect(2, 1, g2.measureText(cap).width + 8, 14);
+  g2.fillStyle = css('--chip'); g2.fillRect(2, 1, g2.measureText(cap).width + 8, 14);
   g2.fillStyle = css('--muted'); g2.fillText(cap, 6, 11);
 }
 function playWithClick() {
@@ -3525,7 +3527,7 @@ const HELP_TUTORIALS = [
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
   ['t-transcript', 'Transcribe and edit by text'], ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
-  ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-safe', 'Autosave, offline use and installing'], ['t-project', 'Save your work and continue later'],
+  ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-safe', 'Autosave, offline use and installing'], ['t-look', 'Language, dark mode, touch, shortcuts'], ['t-project', 'Save your work and continue later'],
 ];
 // Opens in a new tab so the editor (and unsaved audio) stays open.
 function openHelp(id) { window.open('help.html' + (id ? '#' + id : ''), '_blank', 'noopener'); }
@@ -3724,18 +3726,22 @@ function closeMenus(fromLevel = 0) {
 }
 // On narrow (phone) screens submenus open inline under their item instead of flying out.
 const narrowMenus = () => innerWidth < 600;
+// Hooks for other files: tr translates a label, menuKey gives the shortcut shown for an item.
+let tr = s => s, menuKey = it => it.key;
 function fillMenu(el, items, level) {
   items.forEach(it => {
     if (it === '-') { const d = document.createElement('div'); d.className = 'sep'; el.appendChild(d); return; }
-    if (it.mhead) { const d = document.createElement('div'); d.className = 'mhead'; d.textContent = it.mhead; el.appendChild(d); return; }
-    const d = document.createElement('div'); d.className = 'mi'; d.setAttribute('role', 'menuitem');
+    if (it.mhead) { const d = document.createElement('div'); d.className = 'mhead'; d.setAttribute('role', 'presentation'); d.textContent = tr(it.mhead); el.appendChild(d); return; }
+    const d = document.createElement('div'); d.className = 'mi'; d.tabIndex = -1;
     const enabled = !it.en || it.en();
-    if (!enabled) d.classList.add('dis');
-    if (it.check && it.check()) d.classList.add('chk');
-    if (it.sub) d.classList.add('sub');
+    d.setAttribute('role', it.check ? 'menuitemcheckbox' : 'menuitem');
+    if (!enabled) { d.classList.add('dis'); d.setAttribute('aria-disabled', 'true'); }
+    if (it.check) { const on = !!it.check(); d.classList.toggle('chk', on); d.setAttribute('aria-checked', on); }
+    if (it.sub) { d.classList.add('sub'); d.setAttribute('aria-haspopup', 'menu'); }
     if (it.title) d.title = it.title;
-    const l = document.createElement('span'); l.textContent = it.label; d.appendChild(l);
-    if (it.key) { const k = document.createElement('span'); k.className = 'k'; k.textContent = it.key; d.appendChild(k); }
+    const l = document.createElement('span'); l.textContent = tr(it.label); d.appendChild(l);
+    const key = menuKey(it);
+    if (key) { const k = document.createElement('span'); k.className = 'k'; k.textContent = key; d.appendChild(k); }
     const clearActive = () => el.querySelectorAll(':scope > .mi.active').forEach(x => x.classList.remove('active'));
     if (it.sub && narrowMenus()) {
       d.addEventListener('click', async () => {
@@ -3897,7 +3903,7 @@ canvas.addEventListener('contextmenu', e => {
 
 // Fade handles (like WavePad): drag the square at the selection's top-left corner inwards to
 // fade in, the top-right one to fade out. With no selection they sit at the file's start and end.
-const RULER_H = 22, FADE_H = 16;
+const RULER_H = 22, FADE_H = TOUCH ? 22 : 16;
 // Fade curve shared by the Fade buttons, the fade handles and Effects ▸ Fade type.
 let fadeCurve = 'smooth';
 const fadeGain = t => fadeCurve === 'linear' ? t : fadeCurve === 'fast' ? 1 - (1 - t) * (1 - t) : fadeCurve === 'scurve' ? t * t * (3 - 2 * t) : t * t;
@@ -3910,7 +3916,7 @@ function fadeHandles() {
 }
 function fadeHandleAt(clientX, clientY) {
   const r = canvas.getBoundingClientRect(), x = clientX - r.left, y = clientY - r.top;
-  for (const h of fadeHandles()) if (x >= h.x - 4 && x <= h.x + FADE_H + 4 && y >= h.y - 4 && y <= h.y + FADE_H + 4) return h.side;
+  for (const h of fadeHandles()) { const p = TOUCH ? 10 : 4; if (x >= h.x - p && x <= h.x + FADE_H + p && y >= h.y - p && y <= h.y + FADE_H + p) return h.side; }
   return null;
 }
 function applyFade(side, a, b, n) {
@@ -3927,13 +3933,13 @@ function sampleAt(clientX) {
 }
 function markerNear(clientX) {
   const r = canvas.getBoundingClientRect(), x = clientX - r.left;
-  let best = -1, bestD = 7;
+  let best = -1, bestD = HIT + 1;
   doc.markers.forEach((m, i) => { const d = Math.abs((m - viewStart) / spp - x); if (d < bestD) { bestD = d; best = i; } });
   return best;
 }
 // Selection holder (bottom bar) and edge grips, like WavePad: move or resize a selection
 // by dragging, without starting a new one.
-const SEL_BAR = 16;
+const SEL_BAR = TOUCH ? 24 : 16;
 function selHandles() {
   if (!doc || !hasSel() || env) return null;
   return { x0: (selA - viewStart) / spp, x1: (selB - viewStart) / spp, barY: canvas.clientHeight - SEL_BAR };
@@ -3942,8 +3948,8 @@ function selHandleAt(clientX, clientY) {
   const h = selHandles(); if (!h) return null;
   const r = canvas.getBoundingClientRect(), x = clientX - r.left, y = clientY - r.top;
   if (y < RULER_H + FADE_H + 6) return null; // leave the ruler and fade handles alone
-  if (Math.abs(x - h.x0) <= 6) return 'edgeA';
-  if (Math.abs(x - h.x1) <= 6) return 'edgeB';
+  if (Math.abs(x - h.x0) <= HIT) return 'edgeA';
+  if (Math.abs(x - h.x1) <= HIT) return 'edgeB';
   if (y >= h.barY - 2 && x > h.x0 && x < h.x1) return 'move';
   return null;
 }

@@ -15,31 +15,36 @@
     --gold:#a97c25; --gold-soft:#d3ac5c;
     --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
     --orange:#c8641e;
+    --surface:#fff; --page:#e9e2cd; --warn-bg:#fff4e6; --wave-bg:#fffaf0; --chip:#fffaf0cc;
     --ui:'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
   }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme=light]){ --ink-navy:#e3e9f2; --ink-brown:#e6dac4; --muted:#b0a286; --parchment:#1e2226; --parchment-deep:#2a2f35; --gold:#d6b061; --gold-soft:#6b5830;
+    --green:#3f9a7c; --green-dark:#8fd3b9; --green-bg:#1d3a30; --surface:#262b31; --page:#111315; --warn-bg:#3a2a18; --wave-bg:#15181b; --chip:rgba(21,24,27,.9); color-scheme:dark; } }
+  :root[data-theme=dark]{ --ink-navy:#e3e9f2; --ink-brown:#e6dac4; --muted:#b0a286; --parchment:#1e2226; --parchment-deep:#2a2f35; --gold:#d6b061; --gold-soft:#6b5830;
+    --green:#3f9a7c; --green-dark:#8fd3b9; --green-bg:#1d3a30; --surface:#262b31; --page:#111315; --warn-bg:#3a2a18; --wave-bg:#15181b; --chip:rgba(21,24,27,.9); color-scheme:dark; }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth; scroll-padding-top:80px;}
   html,body{overflow-x:hidden;}
-  body{margin:0; background:#e9e2cd; color:var(--ink-brown); font-family:var(--ui); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  body{margin:0; background:var(--page); color:var(--ink-brown); font-family:var(--ui); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
   a{color:var(--green-dark);}
-  kbd{font-family:ui-monospace, Menlo, Consolas, monospace; font-size:.8em; background:#fff; border:1px solid var(--gold-soft); border-bottom-width:2px; border-radius:4px; padding:0 5px; white-space:nowrap;}
+  kbd{font-family:ui-monospace, Menlo, Consolas, monospace; font-size:.8em; background:var(--surface); border:1px solid var(--gold-soft); border-bottom-width:2px; border-radius:4px; padding:0 5px; white-space:nowrap;}
   .m{font-weight:600; color:var(--ink-navy); white-space:nowrap;} /* menu path */
 
-  header.site{position:sticky; top:0; z-index:50; background:rgba(250,243,224,.95); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft);}
+  header.site{position:sticky; top:0; z-index:50; background:var(--parchment); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft);}
   .nav-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; max-width:1200px; margin:0 auto;}
   .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
   .brand-mark{width:36px; height:36px; border-radius:50%; background:var(--green); color:var(--parchment); display:flex; align-items:center; justify-content:center; font-size:18px; flex:none;}
   .brand-text{font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); line-height:1.1;}
   .brand-text small{display:block; font-family:'Cormorant Garamond'; font-size:14px; color:var(--gold);}
   .head-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
-  .pill{font-size:14px; text-decoration:none; color:var(--green-dark); border:1px solid var(--gold-soft); border-radius:20px; padding:6px 14px; background:#fff; white-space:nowrap;}
+  .pill{font-size:14px; text-decoration:none; color:var(--green-dark); border:1px solid var(--gold-soft); border-radius:20px; padding:6px 14px; background:var(--surface); white-space:nowrap;}
   .pill.primary{background:var(--green); color:var(--parchment); border-color:var(--green);}
 
   .hero{max-width:1200px; margin:0 auto; padding:34px 16px 10px;}
   .hero h1{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:clamp(28px,4vw,40px); margin:0 0 6px;}
   .hero p{font-family:'Cormorant Garamond'; font-size:20px; color:var(--muted); margin:0; max-width:760px;}
   .search{margin-top:18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
-  .search input{flex:1 1 280px; max-width:520px; font:inherit; padding:10px 14px; border:1.5px solid var(--gold-soft); border-radius:24px; background:#fff;}
+  .search input{flex:1 1 280px; max-width:520px; font:inherit; padding:10px 14px; border:1.5px solid var(--gold-soft); border-radius:24px; background:var(--surface);}
   .search span{font-size:14px; color:var(--muted);}
 
   .layout{max-width:1200px; margin:0 auto; padding:16px 16px 80px; display:grid; grid-template-columns:250px minmax(0,1fr); gap:28px; align-items:start;}
@@ -64,13 +69,13 @@
   section.card h3{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:19px; margin:22px 0 6px;}
   .lead{color:var(--muted); margin:0 0 12px;}
   .tut-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
-  .tag{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-soft); border-radius:999px; padding:1px 9px; background:#fff;}
+  .tag{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-soft); border-radius:999px; padding:1px 9px; background:var(--surface);}
   ol.steps{counter-reset:step; list-style:none; padding:0; margin:12px 0 0;}
   ol.steps > li{counter-increment:step; position:relative; padding:4px 0 10px 44px;}
   ol.steps > li::before{content:counter(step); position:absolute; left:0; top:2px; width:30px; height:30px; border-radius:50%; background:var(--green); color:var(--parchment); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px;}
   .tip, .warn{border-radius:10px; padding:10px 14px; margin:12px 0 0; font-size:15px;}
   .tip{background:var(--green-bg); border:1px solid #b9d3c3;}
-  .warn{background:#fff4e6; border:1px solid #e2a15a;}
+  .warn{background:var(--warn-bg); border:1px solid #e2a15a;}
   .tip b, .warn b{color:var(--ink-navy);}
   table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:8px;}
   th, td{text-align:left; padding:7px 8px; border-bottom:1px solid rgba(169,124,37,.22); vertical-align:top;}
@@ -78,19 +83,19 @@
   td:first-child{white-space:nowrap; font-weight:600; color:var(--ink-navy);}
   .table-wrap{overflow-x:auto;}
   .grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; margin-top:12px;}
-  .mini{background:#fff; border:1px solid var(--gold-soft); border-radius:12px; padding:12px 14px;}
+  .mini{background:var(--surface); border:1px solid var(--gold-soft); border-radius:12px; padding:12px 14px;}
   .mini h4{margin:0 0 4px; font-size:15px; color:var(--ink-navy);}
   .mini p{margin:0; font-size:14px; color:var(--muted);}
   .mini a{font-size:14px;}
 
   /* Screen map */
-  .screen{border:1.5px solid var(--gold-soft); border-radius:12px; overflow:hidden; background:#fff; font-size:13px; margin-top:10px;}
+  .screen{border:1.5px solid var(--gold-soft); border-radius:12px; overflow:hidden; background:var(--surface); font-size:13px; margin-top:10px;}
   .screen > div{position:relative; padding:9px 12px 9px 44px; border-bottom:1px solid rgba(169,124,37,.25);}
   .screen > div:last-child{border-bottom:none;}
   .screen .n{position:absolute; left:10px; top:8px; width:24px; height:24px; border-radius:50%; background:var(--orange); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;}
   .screen .bar{background:var(--parchment-deep);}
-  .screen .wave{height:84px; background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(46,107,88,.55) 6px 8px) center/100% 46px no-repeat, #fffaf0;}
-  .screen .wave span{background:#fffaf0cc; padding:1px 6px; border-radius:4px;}
+  .screen .wave{height:84px; background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(46,107,88,.55) 6px 8px) center/100% 46px no-repeat, var(--wave-bg);}
+  .screen .wave span{background:var(--chip); padding:1px 6px; border-radius:4px;}
   .screen .panels{display:grid; grid-template-columns:1fr 1fr; gap:0; padding:0 !important;}
   .screen .panels > div{position:relative; padding:9px 12px 9px 44px;}
   .screen .panels > div + div{border-left:1px solid rgba(169,124,37,.25);}
@@ -100,6 +105,7 @@
   footer a{color:#fff;}
   .noresults{display:none; text-align:center; color:var(--muted); padding:30px;}
 </style>
+<script>try{var t=localStorage.getItem('ae-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
 </head>
 <body>
 
@@ -431,6 +437,17 @@
         <li><b>Offline:</b> after your first visit the editor works without internet. Text to speech and M4A saving work offline after you've used them once.</li>
       </ol>
       <div class="tip">Autosave lives only in this browser on this device. To move work to another device, or keep it for a long time, use <b>Save Project</b>.</div>
+    </section>
+
+    <section class="card tut" id="t-look" data-title="Language, dark mode, touch and shortcuts">
+      <div class="tut-head"><h2>Language, dark mode, phones and your own shortcuts</h2><span class="tag">Settings</span></div>
+      <ul class="steps">
+        <li><b>Language:</b> pick <em>English</em>, <em>Afaan Oromoo</em> or <em>العربية</em> at the top right (or <span class="m">View ▸ Language</span>). Arabic turns the page right-to-left; the timeline still runs left to right. Menus, buttons and dialogs are translated; this help page and some messages are still in English. The Afaan Oromoo wording is new — tell us if a word should be better.</li>
+        <li><b>Dark mode:</b> the <b>◐</b> button at the top switches light and dark. <span class="m">View ▸ Theme</span> also has <em>Automatic</em>, which follows your phone or computer.</li>
+        <li><b>Phones and tablets:</b> pinch with two fingers on the waveform (or the multitrack timeline) to zoom in and out, and move your fingers sideways to scroll. Press and hold for the quick menu. Buttons, handles and marker grips are bigger on touch screens.</li>
+        <li><b>Your own shortcuts:</b> <span class="m">Help ▸ Keyboard Shortcuts…</span> lists every menu command. Press <b>Change</b> and then the key you want (with <kbd>Ctrl</kbd>, <kbd>Alt</kbd> or <kbd>Shift</kbd> if you like); ↺ puts the built-in key back. Your keys are shown in the menus.</li>
+        <li><b>Keyboard only:</b> <kbd>Tab</kbd> to the menu bar, <kbd>↓</kbd> or <kbd>Enter</kbd> opens a menu, <kbd>↑</kbd> <kbd>↓</kbd> move, <kbd>→</kbd> opens a submenu, <kbd>←</kbd> / <kbd>Esc</kbd> go back, <kbd>←</kbd> <kbd>→</kbd> on the menu bar switch menus. Screen readers hear the menu items, whether they are ticked or unavailable, and messages at the bottom of the screen.</li>
+      </ul>
     </section>
 
     <section class="card tut" id="t-project" data-title="Save your work and continue later">
