@@ -160,6 +160,13 @@
   .list .btn{padding:3px 8px; font-size:12px;}
   #emptyRecent{max-width:520px; margin:26px auto 0; text-align:left;}
   #emptyRecent h2{font-size:16px; text-align:center;}
+  .env-bar{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 10px; margin-bottom:8px; background:#fff4e6; border:1px solid #e2a15a; border-radius:10px; font-family:var(--ui); font-size:13px;}
+  .env-bar[hidden]{display:none;}
+  .env-bar strong{color:#9a4a12;}
+  /* Fixed-size readout: the bar must not change height while a point is dragged,
+     or the waveform would move under the pointer. */
+  .env-read{display:inline-block; min-width:210px; white-space:nowrap; font-family:ui-monospace, Menlo, Consolas, monospace; font-size:12px; color:var(--ink-navy);}
+  .env-help{flex-basis:100%; color:var(--muted); font-size:12px;}
   .head-actions{display:flex; gap:8px; align-items:center;}
   .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
@@ -258,6 +265,16 @@
     </section>
 
     <section class="panel">
+      <div class="env-bar" id="envBar" hidden>
+        <strong>Volume envelope</strong>
+        <span class="env-read" id="envInfo">—</span>
+        <span style="flex:1"></span>
+        <button class="btn" id="envPreview" type="button" title="Hear the range with this envelope">▶ Preview</button>
+        <button class="btn" id="envReset" type="button" title="Back to a flat 100% line">Reset</button>
+        <button class="btn" id="envCancel" type="button" title="Leave without changing the audio (Esc)">Cancel</button>
+        <button class="btn primary" id="envApply" type="button" title="Apply the envelope to the audio (Enter)">Apply</button>
+        <span class="env-help">Click the orange line to add a point · drag points up / down · double-click (or right-click) a point to remove it · <kbd>Enter</kbd> applies, <kbd>Esc</kbd> cancels</span>
+      </div>
       <div class="wave-wrap">
         <canvas id="wave" aria-label="Waveform. Click to place the cursor, drag to select."></canvas>
         <div class="wave-empty" id="emptyHint" hidden>
@@ -287,6 +304,7 @@
           <button class="btn" id="fadeInBtn" type="button">Fade in</button>
           <button class="btn" id="fadeOutBtn" type="button">Fade out</button>
           <button class="btn" id="normBtn" type="button" title="Raise the loudest peak to −1 dB">Normalise</button>
+          <button class="btn fx-need" id="envBtn" type="button" title="Draw how the volume changes over time (E)">Volume envelope</button>
           <button class="btn" id="revBtn" type="button">Reverse</button>
           <button class="btn" id="silBtn" type="button" title="Replace with silence">Silence</button>
         </div>
@@ -434,6 +452,7 @@
       <li><strong>Open…</strong> loads one or more audio files; each gets its own tab. You can also drag files onto the page.</li>
       <li>The <strong>+</strong> next to the tabs starts an <strong>empty file</strong>: record into it, paste audio copied from another tab, or drop a file on it.</li>
       <li>Click the waveform to place the cursor, drag to select. Effects apply to the selection — or to the whole file when nothing is selected.</li>
+      <li><strong>Volume envelope</strong> (<kbd>E</kbd>): an orange line appears over the selection (or whole file). Click the line to add points and drag them up (louder, up to 200%) or down (quieter, down to silence); the waveform shows the result as you go. Double-click or right-click a point to remove it, <strong>▶ Preview</strong> to listen, then <strong>Apply</strong>.</li>
       <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
 
@@ -499,6 +518,7 @@
           <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></td><td>Paste mix: layer the clipboard over the audio</td></tr>
           <tr><td><kbd>Del</kbd></td><td>Delete the selection</td></tr>
           <tr><td><kbd>T</kbd></td><td>Trim: keep only the selection</td></tr>
+          <tr><td><kbd>E</kbd></td><td>Volume envelope on / off (<kbd>Enter</kbd> applies, <kbd>Esc</kbd> cancels, <kbd>Del</kbd> removes the chosen point)</td></tr>
           <tr><td><kbd>I</kbd> <kbd>O</kbd></td><td>Fade in / fade out (selection or whole file)</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
           <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td>Redo</td></tr>
@@ -686,6 +706,7 @@ function redo() {
 }
 
 function setDoc(d) {
+  if (env) { env = null; syncEnvBar(); } // any edit, undo or new file leaves envelope mode
   const audioChanged = !doc || d.ch.length !== doc.ch.length || d.ch.some((c, i) => c !== doc.ch[i]);
   doc = d;
   if (audioChanged) { buildPeaks(); playBuf = null; }
@@ -720,6 +741,7 @@ function stashTab() {
 }
 function showTab(t) {
   if (t === active) return;
+  if (env) { env = null; syncEnvBar(); }
   stopPlay(); stashTab();
   active = t;
   ({ doc, undoStack, redoStack, selA, selB, cursor, viewStart, spp, dirty, peaks, playBuf } = t);
@@ -1057,9 +1079,10 @@ function draw(playhead) {
       // Sample-level: draw a line through the samples.
       const s0 = Math.max(0, Math.floor(viewStart)), s1 = Math.min(c.length - 1, Math.ceil(viewStart + W * spp));
       g.beginPath(); g.lineWidth = 1.2;
-      for (let i = s0; i <= s1; i++) { const x = toX(i), y = mid - c[i] * amp; i === s0 ? g.moveTo(x, y) : g.lineTo(x, y); }
+      const v = i => clamp(c[i] * envAt(i), -1, 1);
+      for (let i = s0; i <= s1; i++) { const x = toX(i), y = mid - v(i) * amp; i === s0 ? g.moveTo(x, y) : g.lineTo(x, y); }
       g.stroke();
-      if (spp < 0.12) for (let i = s0; i <= s1; i++) g.fillRect(toX(i) - 1.5, mid - c[i] * amp - 1.5, 3, 3);
+      if (spp < 0.12) for (let i = s0; i <= s1; i++) g.fillRect(toX(i) - 1.5, mid - v(i) * amp - 1.5, 3, 3);
     } else {
       const pk = peaks[k];
       for (let x = 0; x < W; x++) {
@@ -1073,6 +1096,7 @@ function draw(playhead) {
           for (let i = a; i < Math.max(b, a + 1); i++) { const v = c[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
         }
         if (hi < lo) continue;
+        if (env) { const f = envAt(viewStart + (x + 0.5) * spp); lo = Math.max(-1, lo * f); hi = Math.min(1, hi * f); } // live preview
         const y0 = mid - hi * amp, y1 = mid - lo * amp;
         g.fillRect(x, y0, 1, Math.max(1, y1 - y0));
       }
@@ -1110,6 +1134,22 @@ function draw(playhead) {
   // Cursor
   const cx = toX(cursor);
   g.fillStyle = css('--ink-navy'); g.globalAlpha = 0.55; g.fillRect(Math.round(cx), RULER, 1, H - RULER); g.globalAlpha = 1;
+
+  // Volume envelope: dim outside its range, draw the 100% guide, the line and its points.
+  if (env) {
+    const xa = toX(env.a), xb = toX(env.b), h = H - RULER, yOf = gv => RULER + h * (1 - gv / 2);
+    g.fillStyle = 'rgba(60,45,20,.12)';
+    g.fillRect(0, RULER, Math.max(0, xa), h); g.fillRect(xb, RULER, Math.max(0, W - xb), h);
+    g.setLineDash([4, 4]); g.strokeStyle = 'rgba(200,100,30,.45)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(xa, yOf(1)); g.lineTo(xb, yOf(1)); g.stroke(); g.setLineDash([]);
+    g.beginPath(); env.pts.forEach((pt, i) => { const x = toX(pt.s), y = yOf(pt.g); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.strokeStyle = ENV_COL; g.lineWidth = 2.5; g.stroke();
+    env.pts.forEach((pt, i) => {
+      const x = toX(pt.s), y = yOf(pt.g), big = i === env.sel || i === env.hover;
+      g.beginPath(); g.arc(x, y, big ? 7 : 5, 0, Math.PI * 2);
+      g.fillStyle = i === env.sel ? ENV_COL : '#fff'; g.fill(); g.strokeStyle = ENV_COL; g.lineWidth = 2; g.stroke();
+    });
+  }
 
   // Fade being dragged: shade the volume that will be removed and draw the fade curve.
   if (drag && drag.kind === 'fade' && drag.n > 0) {
@@ -2320,13 +2360,122 @@ renderRecent();
 /* ---------- Pointer interaction ---------- */
 let drag = null; // { kind:'sel', anchor } | { kind:'marker', index } | { kind:'fade', side, a, b, n }
 
+// Volume envelope (like WavePad): a line over the selection (or file) with draggable points;
+// 100% is the middle of the waveform, the top is 200%, the bottom silence.
+let env = null; // { a, b, pts: [{ s, g }], sel, hover }
+const ENV_COL = '#c8641e';
+function envAt(i) {
+  if (!env || i < env.a || i > env.b) return 1;
+  const p = env.pts;
+  for (let k = 1; k < p.length; k++) if (i <= p[k].s) {
+    const s0 = p[k - 1].s, s1 = p[k].s;
+    return s1 > s0 ? p[k - 1].g + (p[k].g - p[k - 1].g) * (i - s0) / (s1 - s0) : p[k].g;
+  }
+  return p[p.length - 1].g;
+}
+function applyEnvTo(c, from, pts, offset) {
+  for (let k = 1; k < pts.length; k++) {
+    const s0 = pts[k - 1].s, s1 = pts[k].s, g0 = pts[k - 1].g, g1 = pts[k].g, n = s1 - s0;
+    for (let i = s0; i < s1 + (k === pts.length - 1 ? 1 : 0); i++) {
+      const j = i - offset; if (j < 0 || j >= c.length) continue;
+      c[j] = clamp(c[j] * (n > 0 ? g0 + (g1 - g0) * (i - s0) / n : g1), -1, 1);
+    }
+  }
+}
+function envInfoText(pt) {
+  if (!pt) return '—';
+  const db = pt.g > 0 ? 20 * Math.log10(pt.g) : -Infinity;
+  return `${fmt(pt.s / doc.sr)} · ${Math.round(pt.g * 100)}% (${isFinite(db) ? (db > 0 ? '+' : '') + db.toFixed(1) + ' dB' : 'silent'})`;
+}
+function syncEnvBar(pt) {
+  $('envBar').hidden = !env;
+  $('envBtn').classList.toggle('on', !!env);
+  if (env) $('envInfo').textContent = envInfoText(pt);
+}
+function envStart() {
+  if (!doc || !len()) return;
+  if (env) { envCancel(); return; }
+  stopPlay(); stopPreview();
+  const [a, b] = range();
+  env = { a, b, pts: [{ s: a, g: 1 }, { s: b, g: 1 }], sel: -1, hover: -1 };
+  syncEnvBar(); draw();
+}
+function envCancel() { if (!env) return; stopPreview(); env = null; syncEnvBar(); draw(); }
+function envApply() {
+  if (!env) return;
+  stopPreview(); stopPlay();
+  const e = env; env = null; syncEnvBar();
+  if (e.pts.every(pt => pt.g === 1)) { draw(); toast('The envelope is flat — nothing changed.'); return; }
+  commit(opMap(e.a, e.b, c => applyEnvTo(c, e.a, e.pts, 0)), 'Volume envelope');
+}
+function envPreview() {
+  if (!env) return;
+  stopPlay(); stopPreview();
+  const a = env.a, b = Math.min(env.b, a + doc.sr * 20);
+  const out = sliceCh(doc.ch, a, b);
+  out.forEach(c => applyEnvTo(c, a, env.pts, a));
+  const ctx = audio(); ctx.resume();
+  const buf = ctx.createBuffer(out.length, Math.max(1, out[0].length), doc.sr);
+  out.forEach((c, i) => buf.copyToChannel(c, i));
+  const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start();
+  previewSrc = src;
+}
+function envGainFromY(clientY) {
+  const r = canvas.getBoundingClientRect(), h = canvas.clientHeight - RULER_H;
+  const gv = clamp(2 * (1 - (clientY - r.top - RULER_H) / h), 0, 2);
+  return Math.abs(gv - 1) < 0.04 ? 1 : Math.round(gv * 100) / 100; // snap to 100%
+}
+function envPointNear(clientX, clientY) {
+  const r = canvas.getBoundingClientRect(), x = clientX - r.left, y = clientY - r.top, h = canvas.clientHeight - RULER_H;
+  let best = -1, bestD = 10;
+  env.pts.forEach((pt, i) => {
+    const d = Math.hypot((pt.s - viewStart) / spp - x, RULER_H + h * (1 - pt.g / 2) - y);
+    if (d < bestD) { bestD = d; best = i; }
+  });
+  return best;
+}
+function envRemove(i) {
+  if (!env || i <= 0 || i >= env.pts.length - 1) return; // the two end points stay
+  env.pts.splice(i, 1); env.sel = -1; env.hover = -1;
+  syncEnvBar(); draw();
+}
+function envPointerDown(e) {
+  let i = envPointNear(e.clientX, e.clientY);
+  if (i < 0) {
+    const s = sampleAt(e.clientX);
+    if (s <= env.a || s >= env.b) return;
+    i = env.pts.findIndex(pt => pt.s > s);
+    env.pts.splice(i, 0, { s, g: envGainFromY(e.clientY) });
+  }
+  env.sel = i;
+  drag = { kind: 'env', idx: i };
+  syncEnvBar(env.pts[i]); draw();
+}
+function envPointerMove(e) {
+  if (drag && drag.kind === 'env') {
+    const p = env.pts, i = drag.idx, pt = p[i];
+    if (i > 0 && i < p.length - 1) pt.s = clamp(sampleAt(e.clientX), p[i - 1].s + 1, p[i + 1].s - 1);
+    pt.g = envGainFromY(e.clientY);
+    syncEnvBar(pt); draw(); return;
+  }
+  const i = envPointNear(e.clientX, e.clientY), s = sampleAt(e.clientX);
+  canvas.style.cursor = i >= 0 ? 'grab' : (s > env.a && s < env.b ? 'crosshair' : 'default');
+  if (i !== env.hover) { env.hover = i; syncEnvBar(i >= 0 ? env.pts[i] : null); draw(); }
+}
+canvas.addEventListener('dblclick', e => { if (env) envRemove(envPointNear(e.clientX, e.clientY)); });
+canvas.addEventListener('contextmenu', e => {
+  if (!env) return;
+  e.preventDefault();
+  envRemove(envPointNear(e.clientX, e.clientY));
+});
+
 // Fade handles (like WavePad): drag the square at the selection's top-left corner inwards to
 // fade in, the top-right one to fade out. With no selection they sit at the file's start and end.
 const RULER_H = 22, FADE_H = 16;
 const fadeGain = t => t * t; // same curve as the Fade in / Fade out buttons
 function fadeSpan() { return hasSel() ? [selA, selB] : [0, len()]; }
 function fadeHandles() {
-  if (!doc || !len()) return [];
+  if (!doc || !len() || env) return [];
   const [a, b] = fadeSpan(), toX = v => (v - viewStart) / spp;
   const n = side => (drag && drag.kind === 'fade' && drag.side === side ? drag.n : 0);
   return [{ side: 'in', x: toX(a + n('in')), y: RULER_H + 3 }, { side: 'out', x: toX(b - n('out')) - FADE_H, y: RULER_H + 3 }];
@@ -2357,6 +2506,7 @@ function markerNear(clientX) {
 canvas.addEventListener('pointerdown', e => {
   if (!doc || e.button > 0) return;
   canvas.setPointerCapture(e.pointerId);
+  if (env) { envPointerDown(e); return; }
   const fh = fadeHandleAt(e.clientX, e.clientY);
   if (fh) {
     const [a, b] = fadeSpan();
@@ -2381,6 +2531,7 @@ canvas.addEventListener('pointerdown', e => {
 });
 canvas.addEventListener('pointermove', e => {
   if (!doc) return;
+  if (env) { envPointerMove(e); return; }
   if (!drag) { canvas.style.cursor = fadeHandleAt(e.clientX, e.clientY) || markerNear(e.clientX) >= 0 ? 'ew-resize' : 'text'; return; }
   const s = sampleAt(e.clientX);
   if (drag.kind === 'fade') {
@@ -2402,6 +2553,7 @@ canvas.addEventListener('pointermove', e => {
 function endDrag() {
   if (!drag) return;
   const d = drag; drag = null;
+  if (d.kind === 'env') { draw(); return; }
   if (d.kind === 'fade') {
     if (d.n >= Math.max(2, spp * 3)) applyFade(d.side, d.a, d.b, d.n); else draw();
     return;
@@ -2454,6 +2606,8 @@ on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
 on('mixFileBtn', openMixDialog);
 on('dupBtn', duplicate);
+on('envBtn', envStart); on('envApply', envApply); on('envCancel', envCancel); on('envPreview', envPreview);
+on('envReset', () => { if (env) { env.pts = [{ s: env.a, g: 1 }, { s: env.b, g: 1 }]; env.sel = env.hover = -1; syncEnvBar(); draw(); } });
 on('backBtn', () => seekBy(-5)); on('fwdBtn', () => seekBy(5));
 $('rateSel').addEventListener('change', () => { if (player) { const pos = playPos(); stopPlay(); cursor = Math.round(pos); play(); } });
 on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('speedBtn', fxSpeed); on('pitchBtn', fxPitch); on('tempoBtn', fxTempo); on('compBtn', fxCompressor);
@@ -2505,6 +2659,10 @@ document.addEventListener('keydown', e => {
   if (document.querySelector('dialog[open]')) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  if (env) {
+    const envKeys = { enter: envApply, escape: envCancel, e: envCancel, delete: () => envRemove(env.sel), backspace: () => envRemove(env.sel) };
+    if (!mod && envKeys[k]) { e.preventDefault(); envKeys[k](); return; }
+  }
   let handled = true;
   // These work even with no file open.
   if (k === '?') openGuide();
@@ -2529,6 +2687,7 @@ document.addEventListener('keydown', e => {
   else if (!mod && k === '[') switchTab(-1);
   else if (!mod && k === ']') switchTab(1);
   else if (!mod && k === 't') cmdTrim();
+  else if (!mod && k === 'e') envStart();
   else if (!mod && k === 'i') fadeIn();
   else if (!mod && k === 'o') fadeOut();
   else if (!mod && k === 'z') zoomSel();
