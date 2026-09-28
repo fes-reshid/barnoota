@@ -229,9 +229,20 @@
         <li><b>Too many parts?</b> Lower the silence level (e.g. −45 dB) or raise <b>for at least</b> (e.g. 600 ms). <b>Too few?</b> Do the opposite. Press Auto-split again after changing.</li>
         <li>Fix markers by hand: <b>drag</b> a marker to move it, press <kbd>M</kbd> to add one at the cursor, or ✕ in the list to remove one. <kbd>'</kbd> and <kbd>;</kbd> jump between markers.</li>
         <li>Press <b>▶</b> next to a part to check it.</li>
+        <li><b>Name the parts</b> (optional): type a name in each part's box, or press <b>Name parts…</b> and paste all the names at once, one per line (e.g. the ayah or line names). Names show on the waveform, stay with their parts when you edit, and are used for the saved files: <em>al-fatiha-01-Bismillah.mp3</em>…</li>
         <li>Press <b>Download all parts (.zip)</b> to save every part as a numbered file (name-01, name-02…), or ↓ to save one part. <span class="m">Edit ▸ Split File</span> opens the parts as separate tabs instead.</li>
       </ol>
       <div class="tip"><b>Naming:</b> the parts use the name in the file-name box above the waveform — change it before saving (e.g. <em>al-fatiha</em> → al-fatiha-01.mp3…).</div>
+    </section>
+
+    <section class="card tut" id="t-times" data-title="Timestamps and links">
+      <div class="tut-head"><h2>Timestamps and "Edit in audio editor" links</h2><span class="tag">Teaching</span></div>
+      <ol class="steps">
+        <li><b>Export timestamps:</b> after splitting (and naming) the parts, press <b>Timestamps…</b> or <span class="m">Bookmark ▸ Export Timestamps</span>: a text list, spreadsheet (CSV), <b>JSON</b> for a website or app, <b>subtitles</b> (SRT), lyrics (LRC) or Audacity labels.</li>
+        <li><b>Import timestamps:</b> <span class="m">Bookmark ▸ Import Timestamps…</span> reads any of those files and puts the markers and names back — handy to reuse the same line timings.</li>
+        <li><b>Open from a link:</b> <code>/audio-editor/?open=/path/to/file.mp3&amp;name=Title</code> opens that recording straight in the editor.</li>
+        <li><b>Links on your pages:</b> add <code>&lt;script src="/audio-editor/edit-link.js" defer&gt;&lt;/script&gt;</code> to a page and every audio player on it gets a small <b>✂ Edit in audio editor</b> link (the Tafsīr page already has it).</li>
+      </ol>
     </section>
 
     <section class="card tut" id="t-join" data-title="Join audio files">
@@ -306,6 +317,7 @@
         <li><b>Just listening slower?</b> Use the <b>1×</b> menu in the toolbar (0.5×–2×). The file is not changed.</li>
         <li><b>Save a slower version:</b> <span class="m">Effects ▸ Tempo…</span> and choose e.g. 80%. The voice keeps the same pitch.</li>
         <li><b>Repeat a line:</b> select it and use <span class="m">Edit ▸ Repeat Loop…</span> — e.g. 3 times with a 1-second pause, to recite along.</li>
+        <li><b>A whole practice track:</b> split the recitation into lines or ayat (Auto-split), then press <b>Memorise…</b> (<span class="m">Bookmark ▸ Memorisation Track…</span>). Choose a pattern — each part repeated, <em>linked</em> (1, 2, 1+2, 3, 2+3…) or <em>growing</em> (1, 1–2, 1–3…) — how many times, and the pauses for reciting back. It opens as a new tab, with a marker and name for every block.</li>
         <li><b>Pitch…</b> makes the voice higher or lower without changing the speed. <b>Speed…</b> changes both together, like a tape.</li>
       </ol>
     </section>

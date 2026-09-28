@@ -117,7 +117,16 @@ function docBytes(stack) {
   for (const d of stack) for (const c of d.ch) if (!seen.has(c)) { seen.add(c); bytes += c.byteLength; }
   return bytes;
 }
+// Part names (doc.labels[i] names the part starting at 0 or at markers[i-1]) follow the
+// parts through edits: same number of markers → same names; otherwise matched by start position.
+function carryLabels(old, nw) {
+  if (!old || !old.labels || !old.labels.some(Boolean)) return undefined;
+  if (nw.markers.length === old.markers.length) return old.labels.slice();
+  const starts = [0, ...old.markers], byStart = new Map(starts.map((s0, i) => [s0, old.labels[i]]));
+  return [0, ...nw.markers].map(s0 => byStart.get(s0) || '');
+}
 function commit(next, label) {
+  if (!next.labels && doc) next.labels = carryLabels(doc, next);
   next.label = label || 'Edit';
   undoStack.push(doc);
   while (undoStack.length > 1 && (undoStack.length > 60 || docBytes(undoStack) > UNDO_BYTES)) undoStack.shift();
@@ -561,6 +570,20 @@ function draw(playhead) {
     g.beginPath(); g.moveTo(x - 6, 0); g.lineTo(x + 6, 0); g.lineTo(x + 6, RULER - 6); g.lineTo(x, RULER); g.lineTo(x - 6, RULER - 6); g.closePath(); g.fill();
     g.fillStyle = '#fff'; g.textAlign = 'center'; g.fillText(String(i + 1), x, 8); g.textAlign = 'left';
   });
+  // Part names, written just after the start of each part when there is room.
+  if (doc.labels && doc.labels.some(Boolean)) {
+    g.font = '600 11px ' + css('--ui'); g.textBaseline = 'middle';
+    const starts = [0, ...doc.markers, len()];
+    for (let i = 0; i < starts.length - 1; i++) {
+      const name = doc.labels[i]; if (!name) continue;
+      const x0 = toX(starts[i]) + 5, room = toX(starts[i + 1]) - x0 - 8;
+      if (room < 30 || x0 > W || x0 + room < 0) continue;
+      let t = name; while (t.length > 1 && g.measureText(t).width > room) t = t.slice(0, -2) + '…';
+      const tw = g.measureText(t).width;
+      g.fillStyle = 'rgba(255,250,240,.88)'; g.fillRect(x0 - 3, RULER + 4, tw + 6, 16);
+      g.fillStyle = css('--marker'); g.fillText(t, x0, RULER + 12);
+    }
+  }
 
   // Cursor
   const cx = toX(cursor);
@@ -771,7 +794,11 @@ function renderSegments() {
   }
   segs.forEach(([a, b], i) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span class="idx">${i + 1}</span><span class="t">${fmt(a / sr)} – ${fmt(b / sr)} (${((b - a) / sr).toFixed(2)} s)</span>`;
+    li.innerHTML = `<span class="idx">${i + 1}</span><span class="pcol"><input class="pname" type="text" dir="auto" spellcheck="false" placeholder="Name (optional)" aria-label="Name of part ${i + 1}"><span class="t">${fmt(a / sr)} – ${fmt(b / sr)} (${((b - a) / sr).toFixed(2)} s)</span></span>`;
+    const nameIn = li.querySelector('.pname');
+    nameIn.value = (doc.labels && doc.labels[i]) || '';
+    nameIn.onchange = () => setPartName(i, nameIn.value);
+    nameIn.onkeydown = e => { if (e.key === 'Enter') { nameIn.blur(); const nx = ul.querySelectorAll('.pname')[i + 1]; if (nx) nx.focus(); } };
     const mk = (label, title, fn) => { const bt = document.createElement('button'); bt.className = 'btn'; bt.type = 'button'; bt.textContent = label; bt.title = title; bt.onclick = fn; li.appendChild(bt); };
     mk('▶', 'Select and play this part', () => { selA = a; selB = b; cursor = a; refresh(); play(); });
     mk('Select', 'Select this part', () => { selA = a; selB = b; cursor = a; stopPlay(); refresh(); });
@@ -781,7 +808,18 @@ function renderSegments() {
   });
 }
 function baseName() { return ($('fileName').value.trim() || 'audio').replace(/[\\/:*?"<>|]+/g, '_'); }
-function partName(n, total) { return baseName() + '-' + String(n).padStart(String(total).length < 2 ? 2 : String(total).length, '0'); }
+function partName(n, total) {
+  const num = String(n).padStart(String(total).length < 2 ? 2 : String(total).length, '0');
+  const label = doc && doc.labels && doc.labels[n - 1] ? '-' + doc.labels[n - 1].trim().replace(/[\\/:*?"<>|]+/g, '_').slice(0, 60) : '';
+  return baseName() + '-' + num + label;
+}
+function setPartName(i, name) {
+  const labels = (doc.labels || []).slice(); while (labels.length < doc.markers.length + 1) labels.push('');
+  if ((labels[i] || '') === name.trim()) return;
+  labels[i] = name.trim();
+  const d = makeDoc(doc.sr, doc.ch, doc.markers.slice()); d.labels = labels;
+  commit(d, name.trim() ? `Named part ${i + 1}` : `Unnamed part ${i + 1}`);
+}
 
 /* ---------- Edit commands ---------- */
 function range() { return hasSel() ? [selA, selB] : [0, len()]; }
@@ -1837,7 +1875,8 @@ function splitIntoTabs() {
   const parts = doc.markers.length ? segments() : [[0, cursor], [cursor, len()]];
   if (parts.length < 2 || parts.some(([a, b]) => b <= a)) { toast('Place the cursor inside the audio, or add markers, to split.'); return; }
   const base = $('fileName').value.trim() || 'audio', src = doc;
-  parts.forEach(([a, b], i) => newDocument(makeDoc(src.sr, sliceCh(src.ch, a, b)), `${base}-${String(i + 1).padStart(2, '0')}`, false));
+  const names = parts.map((_, i) => doc.markers.length ? partName(i + 1, parts.length) : `${base}-${String(i + 1).padStart(2, '0')}`);
+  parts.forEach(([a, b], i) => newDocument(makeDoc(src.sr, sliceCh(src.ch, a, b)), names[i], false));
   toast(`Split into ${parts.length} new tabs`);
 }
 /* ---------- Join audio ---------- */
@@ -3324,7 +3363,7 @@ try { for (const c of ['compact', 'tall', 'no-overview']) if (localStorage.getIt
 /* ---------- Help page ---------- */
 const HELP_TUTORIALS = [
   ['t-open', 'Open, play and save a file'], ['t-record', 'Record from the microphone'], ['t-edit', 'Cut, copy, paste and delete'],
-  ['t-trim', 'Trim silence (Auto trim)'], ['t-split', 'Split a recitation into lines'], ['t-join', 'Join audio files'],
+  ['t-trim', 'Trim silence (Auto trim)'], ['t-split', 'Split a recitation into lines'], ['t-times', 'Timestamps and links'], ['t-join', 'Join audio files'],
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
   ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
