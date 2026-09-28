@@ -185,6 +185,8 @@
   .teacher-work{background:#fff;border:2px solid var(--gold-soft);border-radius:15px;padding:18px}
   .check-row{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}.check-row label{font-size:17px}
   #signature{width:100%;height:150px;border:2px dashed var(--gold-soft);border-radius:12px;background:#fff;touch-action:none}
+  .note-block{margin-top:16px;border-color:#9fd8f2;background:linear-gradient(135deg,#fff,#eef8fc)}
+  .note-sent{background:var(--sky-bg);border-left:4px solid var(--sky);border-radius:10px;padding:9px 12px;font-size:15px;margin:8px 0}
   .danger-zone{border-top:1px dashed #c88;margin-top:17px;padding-top:15px}
   .map-record{ margin-top:8px; padding:8px 10px; border-left:4px solid var(--green); background:var(--green-bg); border-radius:8px; font-size:14px; }
   .map-record.pending{ border-left-color:var(--gold); background:#fff7dc; }
@@ -386,7 +388,8 @@
               <div class="field" style="max-width:130px"><label for="quiz-pass">Pass mark (%)</label><input id="quiz-pass" type="number" min="0" max="100" value="70"></div>
             </div>
             <div class="field"><label for="quiz-instructions">Instructions for students (optional)</label><input id="quiz-instructions" maxlength="200" placeholder="Read each question carefully…"></div>
-            <label class="toggle"><input type="checkbox" id="quiz-published"> Published — students can see and take this quiz</label>
+            <label class="toggle"><input type="checkbox" id="quiz-published"> Published — students can see and take this quiz</label><br>
+            <label class="toggle" style="margin-top:6px"><input type="checkbox" id="quiz-personal"> Personal — only students I send it to (from a student’s Maps tab), not the whole map</label>
 
             <h3 style="margin-top:16px">Questions <span class="muted" id="question-count"></span></h3>
             <div id="question-list"></div>
@@ -539,6 +542,22 @@
         <p class="msg" id="manage-msg"></p>
         <div class="danger-zone"><button class="btn danger small" id="reset-map">Reset selected map</button> <button class="btn danger small" id="reset-course">Reset entire course</button></div>
       </div>
+      <div class="teacher-work note-block">
+        <h2 id="note-title">💬 Personal note &amp; quiz</h2>
+        <p class="muted" style="margin-top:-4px">Only this student sees these, in a “From your teacher” box directly under this map.</p>
+        <div class="field"><label for="map-note">Note to the student</label>
+          <textarea id="map-note" maxlength="600" placeholder="e.g. MashaAllah, beautiful recitation of line 3! Practise the ghunnah in line 4 three times before next class."></textarea></div>
+        <div class="row">
+          <div class="field" style="flex:2"><label for="map-note-quiz">Quiz for this student (optional)</label><select id="map-note-quiz"></select></div>
+          <div class="field" style="align-self:end;flex:0 0 auto"><button class="btn ghost" id="note-new-quiz" type="button">＋ Write a new quiz</button></div>
+        </div>
+        <div id="note-quiz-result"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <button class="btn sky" id="send-note">📨 Send note &amp; quiz to student</button>
+          <button class="btn ghost" id="clear-note">Remove</button>
+        </div>
+        <p class="msg" id="note-msg"></p>
+      </div>
     </div>
 
     <div class="sub-panel hidden" data-subpanel="quizzes">
@@ -571,7 +590,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=8"></script>
+<script type="module" src="../kids-quest-cloud.js?v=9"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -586,7 +605,7 @@ const MAPS = [
 ];
 const TOTAL_LESSONS = 62;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
-let studentFilter = 'all', editingQuiz = null;
+let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
 
 /* ===================== helpers ===================== */
 function randomPassword(){
@@ -884,7 +903,7 @@ function renderModal(){
   ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');
   $('progress-rows').innerHTML = MAPS.map((m, i) => {
     const done = mapLessonsDone(x.p, i), q = x.p.mapQuizScores[i], a = x.p.teacherAssessments[i];
-    return '<tr><td><b>' + (i + 1) + '.</b> ' + escapeHtml(m[0]) + ' <span class="muted">(lines ' + m[1] + ')</span></td>' +
+    return '<tr><td><b>' + (i + 1) + '.</b> ' + escapeHtml(m[0]) + ' <span class="muted">(lines ' + m[1] + ')</span>' + (mapNote(s, i) ? ' <span title="Personal note sent">💬</span>' : '') + '</td>' +
       '<td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1;min-width:60px"><span style="width:' + Math.round(done / m[3] * 100) + '%"></span></div><span class="acc">' + done + '/' + m[3] + '</span></div></td>' +
       '<td>' + (q ? (quizPassed(x.p, i) ? '<span class="role-badge ok">' : '<span class="role-badge warn">') + escapeHtml(String(q.score)) + '/15</span>' : '<span class="muted">—</span>') + '</td>' +
       '<td>' + (a && a.approved ? '<span class="role-badge ok">✓ ' + escapeHtml(a.teacherName || 'Signed') + '</span>' : readyForReview(x.p, i) ? '<button class="btn primary small" data-review="' + i + '">Review</button>' : '<span class="muted">—</span>') + '</td></tr>';
@@ -946,7 +965,28 @@ function renderMapManager(){
   const m=MAPS[selectedMap],a=p.teacherAssessments[selectedMap]||{},complete=mapComplete(p,selectedMap),passed=quizPassed(p,selectedMap),manual=!!p.teacherMapUnlocks[selectedMap];
   $('selected-map-title').textContent='Map '+(selectedMap+1)+' · '+m[0]+' · Lines '+m[1];
   $('map-status').innerHTML='Lessons: <b>'+mapLessonsDone(p,selectedMap)+'/'+m[3]+(complete?' ✓':'')+'</b> · 15-question challenge: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
+  renderNoteBlock();
   $('certificate-teacher').value=a.teacherName||$('certificate-teacher').dataset.me||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
+}
+function mapNote(s, i){ const n = s.teacherNotes && s.teacherNotes[GAME_KEY] && s.teacherNotes[GAME_KEY][String(i)]; return n && (n.note || n.quizId) ? n : null; }
+function renderNoteBlock(){
+  if(!activeStudent) return;
+  const n = mapNote(activeStudent, selectedMap), p = currentProfile();
+  $('note-title').textContent = '💬 Personal note & quiz · Map ' + (selectedMap + 1);
+  $('map-note').value = n ? n.note : '';
+  const opts = quizzesCache.filter(q => (q.questions || []).length).sort((a, b) => (b.map === selectedMap) - (a.map === selectedMap));
+  $('map-note-quiz').innerHTML = '<option value="">— No quiz —</option>' + opts.map(q => '<option value="' + escapeHtml(q.id) + '">' +
+    escapeHtml(q.title) + ' · ' + escapeHtml(mapLabel(q.map)) + (q.audience === 'assigned' ? ' · personal' : '') + (q.published ? '' : ' · draft') + '</option>').join('');
+  $('map-note-quiz').value = n && n.quizId && opts.some(q => q.id === n.quizId) ? n.quizId : '';
+  if(noteDraft && noteDraft.uid === activeStudent.uid && noteDraft.map === selectedMap){
+    $('map-note').value = noteDraft.note; if(opts.some(q => q.id === noteDraft.quizId)) $('map-note-quiz').value = noteDraft.quizId;
+    noteDraft = null;
+  }
+  const qid = $('map-note-quiz').value, r = qid && p.teacherQuizResults[qid];
+  $('note-quiz-result').innerHTML = (n ? '<div class="note-sent">Last sent ' + fmtDate(n.at) + (n.teacherName ? ' by ' + escapeHtml(n.teacherName) : '') + '.</div>' : '') +
+    (qid ? '<div class="note-sent">' + (r ? 'Student’s result: <b>' + (r.best != null ? r.best : r.score) + '/' + r.total + '</b> best · ' + (r.attempts || 1) + ' attempt(s) · ' + fmtDate(r.at) : 'Student hasn’t taken this quiz yet.') + '</div>' : '');
+  $('clear-note').classList.toggle('hidden', !n);
+  setMsg('note-msg', '');
 }
 function resizeSignature(){const c=$('signature'),r=c.getBoundingClientRect();c.width=Math.max(300,Math.round(r.width));c.height=150;const ctx=c.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#1f4f40';signatureDirty=false;}
 function wireSignature(){
@@ -978,7 +1018,7 @@ function renderQuizList(){
     const st = quizStats(q), el = document.createElement('div');
     el.className = 'quiz-item' + (editingQuiz && editingQuiz.id === q.id ? ' active' : '');
     el.innerHTML = '<div class="t">' + escapeHtml(q.title) + '</div><div class="m">' + escapeHtml(mapLabel(q.map)) + ' · ' + (q.questions || []).length + ' questions</div>' +
-      '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + (q.published ? '<span class="role-badge ok">Published</span>' : '<span class="role-badge">Draft</span>') +
+      '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + (q.published ? '<span class="role-badge ok">Published</span>' : '<span class="role-badge">Draft</span>') + (q.audience === 'assigned' ? '<span class="role-badge warn">Personal</span>' : '') +
       '<span class="role-badge info">' + st.rows.length + ' taken</span>' + (st.avg != null ? '<span class="role-badge warn">avg ' + st.avg + '%</span>' : '') + '</div>';
     el.onclick = () => editQuiz(q);
     box.appendChild(el);
@@ -997,9 +1037,11 @@ function editQuiz(q){
   $('builder-title').textContent = q ? 'Edit quiz' : 'New quiz';
   $('quiz-title').value = editingQuiz.title || '';
   $('quiz-map').value = String(Number.isInteger(editingQuiz.map) ? editingQuiz.map : -1);
+  if(!q && pendingAssign){ $('quiz-map').value = String(pendingAssign.map); editingQuiz.map = pendingAssign.map; editingQuiz.audience = 'assigned'; }
   $('quiz-pass').value = editingQuiz.passPercent || 70;
   $('quiz-instructions').value = editingQuiz.instructions || '';
   $('quiz-published').checked = !!editingQuiz.published;
+  $('quiz-personal').checked = editingQuiz.audience === 'assigned';
   $('delete-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
   $('duplicate-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
   $('builder-results-btn').classList.toggle('hidden', !editingQuiz.id);
@@ -1015,6 +1057,7 @@ function readBuilderMeta(){
   editingQuiz.passPercent = Number($('quiz-pass').value) || 70;
   editingQuiz.instructions = $('quiz-instructions').value;
   editingQuiz.published = $('quiz-published').checked;
+  editingQuiz.audience = $('quiz-personal').checked ? 'assigned' : 'map';
 }
 function renderQuestions(){
   const box = $('question-list'); box.innerHTML = '';
@@ -1078,7 +1121,15 @@ function saveQuiz(asCopy){
   setMsg('quiz-msg', 'Saving…');
   window.KidsCloud.adminSaveQuiz(payload).then(id => {
     toast(asCopy ? 'Copy created as a draft.' : payload.published ? 'Quiz saved and published to students ✓' : 'Draft saved ✓');
-    return loadQuizzes().then(() => { const saved = quizzesCache.find(q => q.id === id); if(saved) editQuiz(saved); });
+    return loadQuizzes().then(() => {
+      const saved = quizzesCache.find(q => q.id === id);
+      if(pendingAssign && !asCopy){
+        const back = studentsCache.find(s => s.uid === pendingAssign.uid), m = pendingAssign.map, pendingNote = pendingAssign.note || '';
+        pendingAssign = null;
+        if(back){ noteDraft = { uid: back.uid, map: m, note: pendingNote, quizId: id }; openManager(back, 'maps', m); toast('Quiz created — press “Send note & quiz” to send it'); return; }
+      }
+      if(saved) editQuiz(saved);
+    });
   }).catch(err => setMsg('quiz-msg', friendlyError(err), true))
     .finally(() => { $('save-quiz-btn').disabled = false; });
 }
@@ -1258,7 +1309,7 @@ function wire(){
   $('add-tf-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(true)); renderQuestions(); };
   $('save-quiz-btn').onclick = () => saveQuiz(false);
   $('duplicate-quiz-btn').onclick = () => saveQuiz(true);
-  $('cancel-quiz-btn').onclick = () => { editingQuiz = null; renderQuizList(); showQuizPane('quiz-welcome'); };
+  $('cancel-quiz-btn').onclick = () => { pendingAssign = null; editingQuiz = null; renderQuizList(); showQuizPane('quiz-welcome'); };
   $('builder-preview-btn').onclick = previewQuiz;
   $('builder-results-btn').onclick = showResults;
   $('close-preview').onclick = () => showQuizPane('quiz-builder');
@@ -1309,6 +1360,41 @@ function wire(){
     saveActiveProfile(p,'The complete Tuhfatul Atfaal course has been reset.').then(renderMapManager);
   });
 
+  $('map-note-quiz').onchange = () => {
+    const keep = $('map-note').value, sel = $('map-note-quiz').value;
+    renderNoteBlock(); $('map-note').value = keep; $('map-note-quiz').value = sel;
+    const p = currentProfile(), r = sel && p.teacherQuizResults[sel];
+    $('note-quiz-result').innerHTML = sel ? '<div class="note-sent">' + (r ? 'Student’s result: <b>' + (r.best != null ? r.best : r.score) + '/' + r.total + '</b> best' : 'Student hasn’t taken this quiz yet.') + '</div>' : '';
+  };
+  $('note-new-quiz').onclick = () => {
+    if(!activeStudent) return;
+    pendingAssign = { uid: activeStudent.uid, map: selectedMap, note: $('map-note').value };
+    closeManager(); editQuiz(null);
+    toast('Write the quiz, then Save — you’ll come straight back to send it');
+  };
+  $('send-note').onclick = () => {
+    if(!activeStudent) return;
+    const note = $('map-note').value.trim(), quizId = $('map-note-quiz').value;
+    if(!note && !quizId){ setMsg('note-msg', 'Write a note or choose a quiz first.', true); return; }
+    const s = activeStudent, m = selectedMap, teacherName = $('certificate-teacher').dataset.me || '';
+    const payload = { note, quizId, teacherName };
+    $('send-note').disabled = true; setMsg('note-msg', 'Sending…');
+    window.KidsCloud.adminSetStudentMapNote(s.uid, GAME_KEY, m, payload).then(() => {
+      s.teacherNotes = s.teacherNotes || {}; s.teacherNotes[GAME_KEY] = s.teacherNotes[GAME_KEY] || {};
+      s.teacherNotes[GAME_KEY][String(m)] = Object.assign({ at: new Date().toISOString() }, payload);
+      renderNoteBlock(); setMsg('note-msg', 'Sent ✓ ' + (s.displayName || s.username) + ' will see it under Map ' + (m + 1) + '.');
+      toast('Note sent to ' + (s.displayName || s.username));
+      renderAll();
+    }).catch(err => setMsg('note-msg', friendlyError(err), true)).finally(() => { $('send-note').disabled = false; });
+  };
+  $('clear-note').onclick = () => {
+    if(!activeStudent || !confirm('Remove this note and quiz from the student’s map?')) return;
+    const s = activeStudent, m = selectedMap;
+    window.KidsCloud.adminSetStudentMapNote(s.uid, GAME_KEY, m, null).then(() => {
+      if(s.teacherNotes && s.teacherNotes[GAME_KEY]) s.teacherNotes[GAME_KEY][String(m)] = null;
+      renderNoteBlock(); toast('Removed');
+    }).catch(err => setMsg('note-msg', friendlyError(err), true));
+  };
   $('acct-reset').onclick = () => {
     if(!activeStudent) return;
     window.KidsCloud.adminSendPasswordReset(activeStudent.username).then(() => setMsg('acct-msg', 'Reset link sent — open it, set a new password, then tell the student.'))

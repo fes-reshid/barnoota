@@ -109,7 +109,7 @@ function studentLogin(username, password){
           throw err;
         });
       }
-      return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} };
+      return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {} };
     });
   });
 }
@@ -222,7 +222,7 @@ function onStudentAuth(cb){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
       if(data.disabled){ signOut(auth); cb(null); return; }
-      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} });
+      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {} });
     }).catch(function(){ cb(null); });
   });
 }
@@ -260,7 +260,7 @@ function getStudentProfile(){
     if(!snap.exists()) return null;
     const data = snap.data();
     return { uid:user.uid, username:data.username, displayName:data.displayName || data.username,
-      fullName:data.fullName || '', progress:data.progress || {} };
+      fullName:data.fullName || '', progress:data.progress || {}, teacherNotes:data.teacherNotes || {} };
   });
 }
 
@@ -584,6 +584,7 @@ function adminSaveQuiz(quiz){
     map: Number.isInteger(q.map) ? q.map : -1,
     instructions: String(q.instructions || '').trim(),
     passPercent: Math.min(100, Math.max(0, Number(q.passPercent) || 70)),
+    audience: q.audience === 'assigned' ? 'assigned' : 'map',
     published: !!q.published,
     questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
       return {
@@ -602,6 +603,26 @@ function adminSaveQuiz(quiz){
     data.createdByName = String(q.createdByName || '').trim();
   }
   return setDoc(ref, data, { merge:true }).then(function(){ return ref.id; });
+}
+/* A teacher's personal note (and optionally a quiz) for one student on
+   one map. Kept at teacherNotes.<game>.<map> on the student doc — NOT
+   inside progress.<game> — because the student app saves progress.<game>
+   wholesale; a student with the game open could otherwise overwrite a
+   note the teacher had just sent. Pass null to remove it. */
+function adminSetStudentMapNote(uid, game, mapIndex, note){
+  if(!uid || !game) return Promise.reject(new Error('Missing student or course.'));
+  const user = auth.currentUser;
+  const value = note ? {
+    note: String(note.note || '').trim(),
+    quizId: String(note.quizId || ''),
+    teacherName: String(note.teacherName || '').trim(),
+    by: (user && user.email) || null,
+    at: new Date().toISOString()
+  } : null;
+  const patch = { teacherNotes: {} };
+  patch.teacherNotes[game] = {};
+  patch.teacherNotes[game][String(mapIndex)] = value;
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), patch, { merge:true });
 }
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
@@ -646,6 +667,7 @@ window.KidsCloud = {
   listQuizzes: listQuizzes,
   adminSaveQuiz: adminSaveQuiz,
   adminDeleteQuiz: adminDeleteQuiz,
+  adminSetStudentMapNote: adminSetStudentMapNote,
   ADMIN_EMAIL: ADMIN_EMAIL
 };
 window.dispatchEvent(new Event('kidscloud-ready'));
