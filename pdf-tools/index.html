@@ -259,9 +259,10 @@
           <input type="text" id="outName" value="edited.pdf">
         </div>
         <div class="row">
-          <button class="btn primary" id="saveBtn" type="button">⬇ Download PDF</button>
-          <button class="btn" id="saveSelBtn" data-need-sel type="button">Selected only</button>
+          <button class="btn primary" id="saveBtn" type="button">⬇ Save PDF…</button>
+          <button class="btn" id="saveSelBtn" data-need-sel type="button">Save selected…</button>
         </div>
+        <p class="sub hidden" id="saveNote" style="margin:10px 0 0">Your browser can't show a “Save as” window here, so files go to its Downloads folder. To choose a location every time, turn on <em>“Ask where to save each file”</em> in your browser's download settings.</p>
         <p class="sub" style="margin:10px 0 0">Tip: click a page's ✎ button to crop it, add text, white-out or highlight.</p>
         <div class="warnbox hidden" id="whiteoutWarn" role="note">
           <strong>⚠ White-out only hides text from view.</strong> The covered text is still inside the file
@@ -297,9 +298,9 @@
         <label class="opt"><input type="radio" name="splitMode" value="marks">
           <span>Cut before selected pages<br><span class="sub">Select the first page of each new part (marked ✂).</span></span></label>
         <div class="preview" id="splitPreview"></div>
-        <label class="opt"><input type="checkbox" id="zipChk" checked><span>Download all parts as one .zip</span></label>
+        <label class="opt"><input type="checkbox" id="zipChk" checked><span>Save all parts as one .zip</span></label>
         <div class="row">
-          <button class="btn primary" id="splitBtn" type="button">✂ Cut PDF</button>
+          <button class="btn primary" id="splitBtn" type="button">✂ Cut &amp; save…</button>
         </div>
         <div class="results" id="splitResults"></div>
       </div>
@@ -406,6 +407,53 @@ function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
   return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
+/* ---------- Saving to the user's chosen location ----------
+ * Where the File System Access API exists (Chrome, Edge, Opera on desktop) the user picks the
+ * file or folder in a "Save as" window. Elsewhere we fall back to an ordinary download. */
+const CAN_PICK_FILE = typeof window.showSaveFilePicker === 'function';
+const CAN_PICK_DIR = typeof window.showDirectoryPicker === 'function';
+const FILE_TYPES = {
+  pdf: [{ description: 'PDF document', accept: { 'application/pdf': ['.pdf'] } }],
+  zip: [{ description: 'ZIP archive', accept: { 'application/zip': ['.zip'] } }],
+};
+// Must run straight from a click, before any slow work, or the browser refuses to show the window.
+// Resolves with a file handle, or null to fall back to a download; throws CANCELLED if the user cancels.
+async function askSaveFile(name, kind) {
+  if (!CAN_PICK_FILE) return null;
+  try { return await window.showSaveFilePicker({ suggestedName: name, types: FILE_TYPES[kind], id: 'pdf-tools-save' }); }
+  catch (e) {
+    if (e && e.name === 'AbortError') throw CANCELLED;
+    console.warn('Save dialog unavailable, downloading instead', e);
+    return null;
+  }
+}
+async function askSaveFolder() {
+  if (!CAN_PICK_DIR) return null;
+  try { return await window.showDirectoryPicker({ mode: 'readwrite', id: 'pdf-tools-save' }); }
+  catch (e) {
+    if (e && e.name === 'AbortError') throw CANCELLED;
+    console.warn('Folder dialog unavailable, falling back', e);
+    return null;
+  }
+}
+// Write to the chosen file, or download when there is none. Returns the saved file's name.
+async function writeFile(handle, blob, name) {
+  if (!handle) { downloadBlob(blob, name); return name; }
+  const w = await handle.createWritable();
+  await w.write(blob); await w.close();
+  return handle.name;
+}
+// Save into a folder without overwriting anything already there: "a.pdf" -> "a (2).pdf".
+async function writeIntoFolder(dir, blob, name) {
+  const dot = name.lastIndexOf('.'), stem = name.slice(0, dot), ext = name.slice(dot);
+  let final = name;
+  for (let n = 2; ; n++) {
+    try { await dir.getFileHandle(final); final = `${stem} (${n})${ext}`; }
+    catch (e) { if (e.name === 'NotFoundError') break; throw e; }
+  }
+  return writeFile(await dir.getFileHandle(final, { create: true }), blob, final);
+}
+
 function downloadBlob(blob, name) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = name;
@@ -937,12 +985,16 @@ async function saveAll(onlySel) {
   const list = onlySel ? selPages() : pages;
   if (!list.length) { toast('No pages to save.'); return; }
   if (!checkPasswordReady()) return;
+  let handle;
+  try { handle = await askSaveFile(baseName() + (onlySel ? '-selected' : '') + '.pdf', 'pdf'); }
+  catch (e) { if (e === CANCELLED) return; throw e; }
   busy(true, 'Building PDF…');
   try {
     const { bytes, lostChars } = await buildPdf(list);
-    downloadBlob(new Blob([bytes], { type: 'application/pdf' }), baseName() + (onlySel ? '-selected' : '') + '.pdf');
+    const saved = await writeFile(handle, new Blob([bytes], { type: 'application/pdf' }), baseName() + (onlySel ? '-selected' : '') + '.pdf');
     const prot = $('pwChk').checked ? ' It is password protected.' : '';
-    toast(lostChars ? 'Saved.' + prot + ' Some characters are not supported by the built-in font and were replaced with “?”.' : 'PDF saved.' + prot, lostChars ? 5000 : 2600);
+    const done = handle ? `Saved “${saved}”.` : 'PDF saved.';
+    toast(lostChars ? done + prot + ' Some characters are not supported by the built-in font and were replaced with “?”.' : done + prot, lostChars ? 5000 : 3000);
   } catch (e) {
     console.error(e); toast('Sorry — the PDF could not be built. ' + (e.message || ''), 5000);
   } finally { busy(false); }
@@ -1005,39 +1057,71 @@ function updateSplitPreview() {
   }
 }
 
+// A link for one cut part. Clicking it opens "Save as" where supported, else downloads.
+function partLink(blob, name, size) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  a.textContent = `⬇ ${name}  (${(size / 1024).toFixed(0)} KB)`;
+  a.addEventListener('click', async e => {
+    if (!CAN_PICK_FILE) return;
+    e.preventDefault();
+    try {
+      const h = await askSaveFile(name, 'pdf');
+      const saved = await writeFile(h, blob, name);
+      if (h) toast(`Saved “${saved}”.`);
+    } catch (err) {
+      if (err !== CANCELLED) { console.error(err); toast('Sorry — the file could not be saved.', 4000); }
+    }
+  });
+  return a;
+}
+
 async function doSplit() {
   let parts;
   try { parts = computeParts(); } catch (msg) { toast(String(msg), 4000); return; }
   if (!parts.length) return;
   if (!checkPasswordReady()) return;
-  const results = $('splitResults'); results.textContent = '';
   const useZip = $('zipChk').checked && parts.length > 1;
   const zip = useZip ? new JSZip() : null;
   const base = baseName();
   const pad = String(parts.length).length;
-  let lost = false;
+  const partName = i => `${base}-part${String(i + 1).padStart(pad, '0')}-p${describePart(parts[i]).replace(/–/g, '-').replace(/[, ]+/g, '_')}.pdf`;
+  // Ask where to save first: one zip or one PDF -> "Save as"; several PDFs -> choose a folder.
+  let fileHandle = null, folder = null;
+  try {
+    if (zip) fileHandle = await askSaveFile(`${base}-split.zip`, 'zip');
+    else if (parts.length === 1) fileHandle = await askSaveFile(partName(0), 'pdf');
+    else folder = await askSaveFolder();
+  } catch (e) { if (e === CANCELLED) return; throw e; }
+  const results = $('splitResults'); results.textContent = '';
+  let lost = false, savedCount = 0, lastBlob = null;
   busy(true, 'Cutting PDF…');
   try {
     for (let i = 0; i < parts.length; i++) {
       $('busyText').textContent = `Cutting PDF… part ${i + 1} of ${parts.length}`;
       const { bytes, lostChars } = await buildPdf(parts[i].map(k => pages[k]));
       lost = lost || lostChars;
-      const name = `${base}-part${String(i + 1).padStart(pad, '0')}-p${describePart(parts[i]).replace(/–/g, '-').replace(/[, ]+/g, '_')}.pdf`;
+      const name = partName(i);
       if (zip) zip.file(name, bytes);
-      const blob = new Blob([bytes], { type: 'application/pdf' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = name;
-      a.textContent = `⬇ ${name}  (${(bytes.length / 1024).toFixed(0)} KB)`;
-      results.appendChild(a);
+      const blob = lastBlob = new Blob([bytes], { type: 'application/pdf' });
+      if (folder) { await writeIntoFolder(folder, blob, name); savedCount++; }
+      results.appendChild(partLink(blob, name, bytes.length));
     }
+    let where = '';
     if (zip) {
       $('busyText').textContent = 'Packing zip…';
       const blob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(blob, `${base}-split.zip`);
+      const saved = await writeFile(fileHandle, blob, `${base}-split.zip`);
+      where = fileHandle ? ` Saved “${saved}”.` : '';
     } else if (parts.length === 1) {
-      results.firstChild.click();
+      const saved = await writeFile(fileHandle, lastBlob, partName(0));
+      where = fileHandle ? ` Saved “${saved}”.` : '';
+    } else if (folder) {
+      where = ` Saved ${savedCount} files in “${folder.name}”.`;
+    } else {
+      where = ' Use the links below to save each part.';
     }
-    toast(`Cut into ${parts.length} file${parts.length === 1 ? '' : 's'}.` + (lost ? ' Some unsupported characters became “?”.' : ''));
+    toast(`Cut into ${parts.length} file${parts.length === 1 ? '' : 's'}.` + where + (lost ? ' Some unsupported characters became “?”.' : ''), 4000);
   } catch (e) {
     console.error(e); toast('Sorry — cutting failed. ' + (e.message || ''), 5000);
   } finally { busy(false); }
@@ -1334,6 +1418,7 @@ $('clearBtn').onclick = () => {
   renderGrid();
 };
 $('saveBtn').onclick = () => saveAll(false);
+$('saveNote').classList.toggle('hidden', CAN_PICK_FILE);
 $('pwChk').onchange = () => {
   $('pwFields').classList.toggle('hidden', !$('pwChk').checked);
   if ($('pwChk').checked) $('pwInput').focus();
