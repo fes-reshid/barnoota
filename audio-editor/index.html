@@ -197,6 +197,8 @@
   .flash{animation:flash 1.2s ease;}
   @keyframes flash{0%,60%{box-shadow:0 0 0 4px var(--gold-soft);}100%{box-shadow:0 6px 18px rgba(60,45,20,.08);}}
   #fftGraph{display:block; width:100%; height:260px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0;}
+  .big-result{font-family:'Marcellus'; font-size:30px; color:var(--ink-navy); margin:0 0 2px;}
+  #keyGraph, #beatGraph{display:block; width:100%; height:170px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0; margin:10px 0;}
   .head-actions{display:flex; gap:8px; align-items:center;}
   .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
@@ -514,6 +516,7 @@
       <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab. <strong>Join audio…</strong> does the opposite: tick open tabs and/or add files from your computer, put them in order with ↑ ↓, choose a pause or a crossfade between them, and they're joined into a new tab (also on the start screen as <em>Join audio files</em>).</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
       <li><strong>Equaliser…</strong> is a 10-band graphic EQ like WavePad's: drag the sliders or the dots on the graph (double-click resets a band), or pick a preset such as <em>Voice clarity</em> or <em>Remove rumble / hum</em>. The shaded area shows your audio's own frequencies. <strong>▶ Preview</strong> loops the audio so you hear every change live.</li>
+      <li><strong>Tools ▸ Key Detector</strong> tells you the musical key (e.g. <em>A minor</em>) and shows which notes are used; <strong>Key Changer</strong> moves the audio to another key without changing its speed. <strong>Tools ▸ Automatic Beat Detection</strong> finds the tempo in BPM — check it with <em>▶ Play with click</em>, fix a double/half tempo with ½× / 2×, and add a marker on every beat or bar. Both work on the selection, or on the whole file.</li>
       <li><strong>Pitch…</strong> makes a voice higher or lower while keeping the same speed (+12 semitones = one octave up). <strong>Tempo…</strong> makes it faster or slower while keeping the same voice — e.g. 80% to slow a recitation down for learning. <strong>Speed…</strong> changes both together, like a tape.</li>
       <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Tempo…</strong> or <strong>Speed…</strong> to change the file itself.</li>
       <li><strong>History</strong> lists every change; click any line to go back to that point.</li>
@@ -587,6 +590,37 @@
   </div>
 </dialog>
 <input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<dialog id="keyDlg" class="dlg eq" aria-labelledby="keyTitle">
+  <div class="eq-top"><h2 id="keyTitle">Key detector <span class="info" id="keyScope"></span></h2></div>
+  <p class="big-result" id="keyResult">—</p>
+  <p class="info" id="keyInfo" style="margin:0"></p>
+  <canvas id="keyGraph" aria-label="How strongly each of the 12 notes is present"></canvas>
+  <div class="row" style="margin:0 0 12px">
+    <label>Key changer — move it to
+      <select id="keyTarget" class="num" style="width:auto"></select>
+    </label>
+    <span class="info" id="keyShift"></span>
+    <button class="btn" id="keyChange" type="button">Change key</button>
+  </div>
+  <div class="actions"><button class="btn primary" id="keyClose" type="button">Close</button></div>
+</dialog>
+<dialog id="beatDlg" class="dlg eq" aria-labelledby="beatTitle">
+  <div class="eq-top"><h2 id="beatTitle">Beat detection <span class="info" id="beatScope"></span></h2></div>
+  <p class="big-result" id="beatResult">—</p>
+  <p class="info" id="beatInfo" style="margin:0"></p>
+  <canvas id="beatGraph" aria-label="Note onsets with the detected beats"></canvas>
+  <div class="row" style="margin:0 0 12px">
+    <label>Tempo <input class="num" id="beatBpm" type="number" min="40" max="240" step="0.1" style="width:84px"> BPM</label>
+    <button class="btn" id="beatHalf" type="button" title="If the detected tempo is twice too fast">½×</button>
+    <button class="btn" id="beatDouble" type="button" title="If the detected tempo is half too slow">2×</button>
+    <button class="btn" id="beatClick" type="button">▶ Play with click</button>
+  </div>
+  <div class="row" style="margin:0 0 12px">
+    <button class="btn" id="beatMarkBeats" type="button">Add a marker on every beat</button>
+    <button class="btn" id="beatMarkBars" type="button">Add a marker on every bar (4 beats)</button>
+  </div>
+  <div class="actions"><button class="btn primary" id="beatClose" type="button">Close</button></div>
+</dialog>
 <dialog id="fftDlg" class="dlg eq" aria-labelledby="fftTitle">
   <div class="eq-top"><h2 id="fftTitle">Frequency analysis <span class="info" id="fftScope"></span></h2></div>
   <canvas id="fftGraph" aria-label="Spectrum of the audio"></canvas>
@@ -2820,6 +2854,221 @@ $('fftGraph').addEventListener('pointermove', e => { if (fftData) drawFFT(e.clie
 $('fftGraph').addEventListener('pointerleave', () => { if (fftData) drawFFT(); });
 on('fftClose', () => $('fftDlg').close());
 
+/* ---------- Key detection (and key changer) ---------- */
+// Chromagram: how much of each of the 12 notes is in the audio (all octaves folded together),
+// matched against the Krumhansl–Schmuckler major / minor key profiles in all 12 transpositions.
+const KEY_MAJOR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88];
+const KEY_MINOR = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17];
+const PC_NAMES = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+const keyName = k => PC_NAMES[k.tonic] + (k.minor ? ' minor' : ' major');
+function chroma(ch, sr, a, b) {
+  const N = 8192, n = b - a, frames = Math.min(300, Math.max(1, Math.floor(n / (N / 2)) - 1));
+  const win = new Float64Array(N); for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
+  const bins = []; // precomputed bin → pitch class for 60 Hz – 5 kHz
+  for (let k = 1; k < N / 2; k++) { const f = k * sr / N; if (f < 60 || f > 5000) continue; bins.push([k, ((Math.round(12 * Math.log2(f / 440) + 69) % 12) + 12) % 12]); }
+  const total = new Float64Array(12), re = new Float64Array(N), im = new Float64Array(N);
+  for (let f = 0; f < frames; f++) {
+    const st = a + Math.floor(Math.max(0, n - N) * (frames > 1 ? f / (frames - 1) : 0));
+    let energy = 0;
+    for (let i = 0; i < N; i++) { let v = 0; for (const c of ch) v += c[st + i] || 0; re[i] = v * win[i]; im[i] = 0; energy += v * v; }
+    if (energy < 1e-6) continue; // skip silence
+    fft(re, im, false);
+    const c12 = new Float64Array(12);
+    for (const [k, pc] of bins) c12[pc] += Math.sqrt(Math.hypot(re[k], im[k]));
+    const mx = Math.max(...c12) || 1;
+    for (let i = 0; i < 12; i++) total[i] += c12[i] / mx; // every frame counts equally
+  }
+  return total;
+}
+function corr(x, y) {
+  const mx = x.reduce((s, v) => s + v, 0) / 12, my = y.reduce((s, v) => s + v, 0) / 12;
+  let num = 0, dx = 0, dy = 0;
+  for (let i = 0; i < 12; i++) { num += (x[i] - mx) * (y[i] - my); dx += (x[i] - mx) ** 2; dy += (y[i] - my) ** 2; }
+  return num / (Math.sqrt(dx * dy) || 1);
+}
+function detectKey(c12) {
+  const all = [];
+  for (let t = 0; t < 12; t++) for (const minor of [false, true]) {
+    const prof = (minor ? KEY_MINOR : KEY_MAJOR).map((_, i, p) => p[(i - t + 12) % 12]);
+    all.push({ tonic: t, minor, r: corr(c12, prof) });
+  }
+  return all.sort((x, y) => y.r - x.r);
+}
+let keyState = null;
+function openKey(focusChanger) {
+  if (!doc || !len()) return;
+  const [a, b] = range();
+  if (b - a < doc.sr * 2) { toast('Select at least 2 seconds of music to detect the key.'); return; }
+  busy(true);
+  setTimeout(() => {
+    try {
+      const c12 = chroma(doc.ch, doc.sr, a, b), ranked = detectKey(c12), best = ranked[0];
+      keyState = { c12, best, ranked };
+      $('keyScope').textContent = hasSel() ? `(selection, ${fmt((b - a) / doc.sr)})` : '(whole file)';
+      $('keyResult').textContent = keyName(best);
+      const rel = best.minor ? { tonic: (best.tonic + 3) % 12, minor: false } : { tonic: (best.tonic + 9) % 12, minor: true };
+      $('keyInfo').textContent = `Confidence ${Math.round(clamp(best.r, 0, 1) * 100)}% · relative ${best.minor ? 'major' : 'minor'}: ${keyName(rel)} · next closest: ${keyName(ranked[1])}, ${keyName(ranked[2])}`;
+      const sel = $('keyTarget'); sel.innerHTML = '';
+      for (let t = 0; t < 12; t++) sel.add(new Option(keyName({ tonic: t, minor: best.minor }), t));
+      sel.value = String(best.tonic); syncKeyShift();
+      $('keyDlg').showModal(); drawKey();
+      if (focusChanger) sel.focus();
+    } finally { busy(false); }
+  }, 30);
+}
+// Shortest way to the target key: −6…+5 semitones.
+const keySemis = () => { const d = ((+$('keyTarget').value - keyState.best.tonic) % 12 + 12) % 12; return d > 6 ? d - 12 : d; };
+function syncKeyShift() {
+  const d = keySemis();
+  $('keyShift').textContent = d ? `(${d > 0 ? '+' : ''}${d} semitone${Math.abs(d) === 1 ? '' : 's'}, same speed)` : '(no change)';
+  $('keyChange').disabled = !d;
+}
+function drawKey() {
+  const cv = $('keyGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  const c = keyState.c12, mx = Math.max(...c) || 1, bw = W / 12, best = keyState.best;
+  const scale = (best.minor ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11]).map(i => (i + best.tonic) % 12);
+  g2.font = '600 12px ' + css('--ui'); g2.textAlign = 'center';
+  for (let i = 0; i < 12; i++) {
+    const h = (H - 34) * c[i] / mx, x = i * bw;
+    g2.fillStyle = i === best.tonic ? ENV_COL : scale.includes(i) ? css('--green') : 'rgba(46,107,88,.3)';
+    g2.fillRect(x + 6, H - 20 - h, bw - 12, h);
+    g2.fillStyle = css('--ink-navy'); g2.fillText(PC_NAMES[i], x + bw / 2, H - 6);
+  }
+  g2.textAlign = 'left'; g2.font = '11px ' + css('--ui');
+  const cap = 'orange = key note · green = notes of the scale';
+  g2.fillStyle = 'rgba(255,250,240,.92)'; g2.fillRect(2, 1, g2.measureText(cap).width + 8, 15);
+  g2.fillStyle = css('--muted'); g2.fillText(cap, 6, 12);
+}
+$('keyTarget').addEventListener('change', syncKeyShift);
+on('keyChange', () => {
+  const d = keySemis(); if (!d) return;
+  const target = keyName({ tonic: +$('keyTarget').value, minor: keyState.best.minor });
+  $('keyDlg').close();
+  runOnRange(`Key change to ${target}`, (ch, sr) => pitchShift(ch, sr, d));
+});
+on('keyClose', () => $('keyDlg').close());
+
+/* ---------- Beat detection ---------- */
+// Onset strength (spectral flux) → tempo from its autocorrelation (weighted towards
+// 120 BPM) → beat positions from the best-fitting phase of that pulse.
+const BEAT_N = 1024, BEAT_H = 512;
+function onsetEnvelope(ch, sr, a, b) {
+  const n = b - a, frames = Math.max(0, Math.floor((n - BEAT_N) / BEAT_H));
+  const win = new Float64Array(BEAT_N); for (let i = 0; i < BEAT_N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / BEAT_N);
+  const re = new Float64Array(BEAT_N), im = new Float64Array(BEAT_N), prev = new Float64Array(BEAT_N / 2), env = new Float64Array(frames);
+  for (let f = 0; f < frames; f++) {
+    const st = a + f * BEAT_H;
+    for (let i = 0; i < BEAT_N; i++) { let v = 0; for (const c of ch) v += c[st + i]; re[i] = v * win[i]; im[i] = 0; }
+    fft(re, im, false);
+    let flux = 0;
+    for (let k = 1; k < BEAT_N / 2; k++) { const m = Math.log1p(100 * Math.hypot(re[k], im[k])); if (f) flux += Math.max(0, m - prev[k]); prev[k] = m; }
+    env[f] = flux;
+  }
+  // Remove the slowly varying loudness so only the "hits" remain.
+  const w = Math.round(sr / BEAT_H * 0.4), pre = new Float64Array(frames + 1);
+  for (let i = 0; i < frames; i++) pre[i + 1] = pre[i] + env[i];
+  const out = new Float64Array(frames);
+  for (let i = 0; i < frames; i++) { const x0 = Math.max(0, i - w), x1 = Math.min(frames, i + w + 1); out[i] = Math.max(0, env[i] - (pre[x1] - pre[x0]) / (x1 - x0)); }
+  // Compress: a soft kick and a loud snare should count almost equally, otherwise the loud
+  // hit on every other beat makes the tempo come out at half speed.
+  const mx = Math.max(...out) || 1;
+  for (let i = 0; i < frames; i++) out[i] = Math.sqrt(out[i] / mx);
+  return out;
+}
+function tempoFromEnvelope(env, fr) {
+  const ac = L => { let s = 0; for (let i = 0; i + L < env.length; i++) s += env[i] * env[i + L]; return s / (env.length - L); };
+  const lo = Math.floor(fr * 60 / 220), hi = Math.ceil(fr * 60 / 50);
+  const vals = []; for (let L = lo; L <= hi + 1; L++) vals[L] = ac(L);
+  let best = lo, bestScore = -Infinity;
+  for (let L = lo; L <= hi; L++) {
+    const bpm = 60 * fr / L, wgt = Math.exp(-0.5 * (Math.log2(bpm / 120) / 0.7) ** 2); // prefer 80–180 BPM
+    const sc = vals[L] * wgt; if (sc > bestScore) { bestScore = sc; best = L; }
+  }
+  const y0 = vals[best - 1] ?? vals[best], y1 = vals[best], y2 = vals[best + 1] ?? vals[best];
+  const d = (y0 - 2 * y1 + y2) ? clamp((y0 - y2) / (2 * (y0 - 2 * y1 + y2)), -0.5, 0.5) : 0;
+  const mean = vals.slice(lo, hi + 1).reduce((t, v) => t + v, 0) / (hi - lo + 1);
+  return { bpm: 60 * fr / (best + d), strength: y1 / (mean || 1) };
+}
+function beatTimes(env, fr, bpm) {
+  const P = fr * 60 / bpm;
+  let bestO = 0, bestS = -1;
+  for (let o = 0; o < P; o += 0.25) { let sc = 0; for (let t = o; t < env.length; t += P) sc += env[Math.round(t)] || 0; if (sc > bestS) { bestS = sc; bestO = o; } }
+  const out = []; for (let t = bestO; t < env.length; t += P) out.push(t);
+  return out; // in frames
+}
+let beatState = null;
+function openBeats() {
+  if (!doc || !len()) return;
+  const [a, b] = range();
+  if (b - a < doc.sr * 4) { toast('Select at least 4 seconds of music to detect the beat.'); return; }
+  busy(true);
+  setTimeout(() => {
+    try {
+      const env = onsetEnvelope(doc.ch, doc.sr, a, b), fr = doc.sr / BEAT_H, t = tempoFromEnvelope(env, fr);
+      beatState = { a, env, fr, bpm: Math.round(t.bpm * 10) / 10, strength: t.strength };
+      $('beatScope').textContent = hasSel() ? `(selection, ${fmt((b - a) / doc.sr)})` : '(whole file)';
+      $('beatBpm').value = beatState.bpm;
+      updateBeats();
+      $('beatDlg').showModal(); drawBeats();
+    } finally { busy(false); }
+  }, 30);
+}
+function updateBeats() {
+  const st = beatState;
+  st.bpm = clamp(parseFloat($('beatBpm').value) || st.bpm, 40, 240);
+  // Frame f covers samples [f·H, f·H + N): place each beat at the frame centre.
+  st.beats = beatTimes(st.env, st.fr, st.bpm).map(f => Math.round(st.a + f * BEAT_H + BEAT_N / 2)).filter(x => x < len());
+  $('beatResult').textContent = `${st.bpm.toFixed(1)} BPM`;
+  const clear = st.strength > 2.2 ? 'a clear, steady beat' : st.strength > 1.4 ? 'a fairly steady beat' : 'no clear beat (speech or free rhythm?)';
+  $('beatInfo').textContent = `${st.beats.length} beats found · ${clear}. If it sounds twice too fast or slow, use ½× or 2×.`;
+}
+function drawBeats() {
+  const cv = $('beatGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g2 = cv.getContext('2d'); g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  const st = beatState, show = Math.min(st.env.length, Math.round(st.fr * 12)), mx = Math.max(...st.env.subarray(0, show)) || 1;
+  g2.fillStyle = 'rgba(46,107,88,.55)';
+  for (let x = 0; x < W; x++) { const f = Math.floor(x / W * show), h = (H - 22) * st.env[f] / mx; g2.fillRect(x, H - 16 - h, 1, h); }
+  g2.fillStyle = ENV_COL;
+  st.beats.forEach((s, i) => { const f = (s - st.a - BEAT_N / 2) / BEAT_H; if (f > show) return; const x = f / show * W; g2.fillRect(x - 1, 0, i % 4 ? 1.5 : 3, H - 16); });
+  g2.font = '10px ' + css('--ui'); g2.fillStyle = css('--muted');
+  for (let t = 0; t <= show / st.fr; t += 2) g2.fillText(t + ' s', t * st.fr / show * W + 2, H - 4);
+  const cap = 'first 12 s · green = note onsets · orange = beats (thick = start of a bar)';
+  g2.fillStyle = 'rgba(255,250,240,.92)'; g2.fillRect(2, 1, g2.measureText(cap).width + 8, 14);
+  g2.fillStyle = css('--muted'); g2.fillText(cap, 6, 11);
+}
+function playWithClick() {
+  const st = beatState; stopPreview(); stopPlay();
+  const a = st.a, b = Math.min(len(), a + doc.sr * 20), out = sliceCh(doc.ch, a, b);
+  const clickLen = Math.round(doc.sr * 0.02);
+  st.beats.forEach((s, i) => {
+    const o = s - a; if (o < 0 || o >= out[0].length) return;
+    const f = i % 4 ? 1500 : 2500;
+    for (const c of out) for (let j = 0; j < clickLen && o + j < c.length; j++) c[o + j] = clamp(c[o + j] * 0.6 + 0.5 * Math.sin(2 * Math.PI * f * j / doc.sr) * (1 - j / clickLen), -1, 1);
+  });
+  const ctx = audio(); ctx.resume();
+  const buf = ctx.createBuffer(out.length, out[0].length, doc.sr); out.forEach((c, i) => buf.copyToChannel(c, i));
+  const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start(); previewSrc = src;
+}
+function beatMarkers(every) {
+  const st = beatState, pts = st.beats.filter((_, i) => i % every === 0).filter(x => x > 0 && x < len());
+  $('beatDlg').close();
+  const merged = [...new Set([...doc.markers, ...pts])].sort((x, y) => x - y);
+  commit(makeDoc(doc.sr, doc.ch, merged), `Added ${pts.length} beat markers`);
+}
+$('beatBpm').addEventListener('change', () => { updateBeats(); drawBeats(); });
+on('beatHalf', () => { $('beatBpm').value = (beatState.bpm / 2).toFixed(1); updateBeats(); drawBeats(); });
+on('beatDouble', () => { $('beatBpm').value = (beatState.bpm * 2).toFixed(1); updateBeats(); drawBeats(); });
+on('beatClick', playWithClick);
+on('beatMarkBeats', () => beatMarkers(1));
+on('beatMarkBars', () => beatMarkers(4));
+on('beatClose', () => $('beatDlg').close());
+$('beatDlg').addEventListener('close', stopPreview);
+
 /* ---------- Save As, Save All, Close All, projects ---------- */
 async function saveAs() {
   if (!doc || !len()) return;
@@ -3072,6 +3321,9 @@ const MENUS = [
   { label: 'Tools', items: [
     { label: 'Frequency Analysis (FFT)…', run: openFFT, en: has.audio },
     { label: 'Find Peak Sample', run: findPeak, en: has.audio },
+    { label: 'Key Detector…', run: () => openKey(false), en: has.audio },
+    { label: 'Key Changer…', run: () => openKey(true), en: has.audio },
+    { label: 'Automatic Beat Detection…', run: openBeats, en: has.audio },
     '-',
     { label: 'Noise Removal…', run: fxNoise, en: has.audio },
     { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
@@ -3085,6 +3337,7 @@ const MENUS = [
     { label: 'Next Marker', key: "'", run: () => gotoMarker(1), en: has.markers },
     { label: 'Previous Marker', key: ';', run: () => gotoMarker(-1), en: has.markers },
     { label: 'Auto-split at Pauses', run: autoSplit, en: has.audio },
+    { label: 'Markers on Beats…', run: openBeats, en: has.audio },
     { label: 'Clear All Markers', run: () => commit(makeDoc(doc.sr, doc.ch, []), 'Markers cleared'), en: has.markers },
     '-',
     { label: 'Save All Parts (.zip)', run: exportZip, en: has.markers },
