@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Tuhfatul Atfaal — Teacher Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --coral:#e0703a; --danger:#a3352b; --danger-bg:#f7dede;
+    --maxw:880px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:26px 18px 80px; }
+
+  header.site{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 18px; max-width:var(--maxw); margin:0 auto; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{ width:34px; height:34px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Marcellus'; font-size:16px; }
+  .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .who{ font-size:14px; color:#8a7654; display:none; }
+  .who.show{ display:inline; }
+  .role-badge{ font-family:'Marcellus'; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    background:var(--gold-soft); color:#4a3712; padding:2px 9px; border-radius:999px; margin-left:4px; }
+  .role-badge.super{ background:var(--green); color:#fff; }
+  #signout-top{ display:none; }
+  #signout-top.show{ display:inline-block; }
+
+  h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
+  h2{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 10px; }
+  p{ line-height:1.55; }
+
+  .card{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:22px 22px;
+    box-shadow:0 6px 18px rgba(60,45,20,.08); margin-bottom:20px; }
+
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-family:'Marcellus'; font-size:13.5px; color:var(--ink-navy); margin-bottom:4px; }
+  .field input, .field select{
+    width:100%; padding:10px 12px; border:1.5px solid var(--gold-soft); border-radius:10px;
+    background:var(--parchment); color:var(--ink-navy); font-family:'Cormorant Garamond',serif; font-size:17px;
+  }
+  .field input:focus{ outline:none; border-color:var(--gold); }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .row > .field{ flex:1; min-width:160px; }
+
+  .btn{ display:inline-flex; align-items:center; gap:6px; border:none; border-radius:22px; cursor:pointer;
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:16px; padding:10px 22px;
+    transition:transform .12s ease; }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:disabled{ opacity:.55; cursor:default; transform:none; }
+  .btn.primary{ background:var(--green); color:#faf3e0; }
+  .btn.ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
+  .btn.danger{ background:var(--danger); color:#fff; }
+  .btn.small{ padding:6px 14px; font-size:14px; border-radius:16px; }
+  .linkbtn{ background:none; border:none; color:var(--green-dark); font-family:'Marcellus'; font-size:14px;
+    cursor:pointer; padding:4px 0; text-decoration:underline; }
+
+  .msg{ min-height:22px; font-family:'Marcellus'; font-size:14.5px; margin-top:8px; }
+  .msg.error{ color:var(--danger); }
+  .msg.success{ color:var(--green-dark); }
+
+  details.setup{ background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:22px; }
+  details.setup summary{ font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); cursor:pointer; }
+  details.setup ol{ padding-left:22px; }
+  details.setup li{ margin-bottom:10px; line-height:1.55; }
+  pre{ font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.6; background:#1c2b1f; color:#e4efe6;
+    padding:14px 16px; border-radius:10px; overflow-x:auto; }
+  code{ font-family:'JetBrains Mono',monospace; background:var(--parchment-deep); padding:1px 6px; border-radius:5px; font-size:.88em; }
+
+  .student{ border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--parchment); }
+  .student .top{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+  .student .uname{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
+  .student .meta{ font-size:13.5px; color:#8a7654; }
+  .student .progress-line{ font-size:14px; color:var(--ink-brown); margin:8px 0; }
+  .course-detail{ margin:10px 0; border:1px solid var(--gold-soft); border-radius:11px; background:#fff; padding:9px 11px; }
+  .course-detail summary{ cursor:pointer; font-family:'Marcellus'; color:var(--green-dark); font-size:14px; }
+  .map-record{ margin-top:8px; padding:8px 10px; border-left:4px solid var(--green); background:var(--green-bg); border-radius:8px; font-size:14px; }
+  .map-record.pending{ border-left-color:var(--gold); background:#fff7dc; }
+  .map-record p{ margin:3px 0; }
+  .student .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .rename-panel{ margin-top:12px; padding-top:12px; border-top:1px dashed var(--gold-soft); display:none; }
+  .rename-panel.show{ display:block; }
+  .empty{ color:#8a7654; font-size:16px; padding:10px 2px; }
+
+  .bulk-row{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border-radius:10px; padding:8px 12px; margin-bottom:6px; font-size:14.5px; }
+  .bulk-row.success{ background:var(--green-bg); color:var(--green-dark); }
+  .bulk-row.error{ background:var(--danger-bg); color:var(--danger); }
+
+  .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--parchment); }
+  .admin-row .email{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); }
+  .admin-row .actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+  #login-card{ max-width:420px; margin:60px auto; text-align:center; }
+  #login-card .name-icons{ font-size:36px; margin-bottom:8px; }
+  #not-authorized{ max-width:420px; margin:60px auto; text-align:center; }
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 22px}
+  .stat{background:#fff;border:2px solid var(--gold-soft);border-radius:15px;padding:15px;text-align:center}
+  .stat strong{display:block;font:700 26px 'Marcellus';color:var(--green)}
+  .stat span{font-size:14px;color:#725f42}
+  .manage-btn{background:var(--green);color:#fff}
+  .modal{position:fixed;inset:0;background:rgba(20,28,35,.68);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
+  .modal-panel{width:min(930px,100%);max-height:92vh;overflow:auto;background:#f9f2df;border:3px solid var(--gold-soft);border-radius:22px;padding:22px;box-shadow:0 18px 60px #0005}
+  .modal-head{display:flex;justify-content:space-between;gap:14px;align-items:start}
+  .map-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
+  .map-pick{border:2px solid var(--gold-soft);background:#fff;border-radius:12px;padding:9px 5px;cursor:pointer;font-family:'Marcellus';color:var(--ink-navy)}
+  .map-pick.active{background:var(--green);color:#fff}.map-pick.approved{border-color:#39965b;background:#e4efe6}.map-pick.active.approved{background:var(--green)}
+  .teacher-work{background:#fff;border:2px solid var(--gold-soft);border-radius:15px;padding:18px}
+  .check-row{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}.check-row label{font-size:17px}
+  #signature{width:100%;height:150px;border:2px dashed var(--gold-soft);border-radius:12px;background:#fff;touch-action:none}
+  .danger-zone{border-top:1px dashed #c88;margin-top:17px;padding-top:15px}
+  @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.map-grid{grid-template-columns:repeat(3,1fr)}.modal{padding:6px}.modal-panel{padding:14px}.student .actions .btn{width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <a class="brand" href="../tuhfatul-atfaal/">
+    <span class="brand-mark">📚</span>
+    <span class="brand-text">Tuhfatul Atfaal Teachers</span>
+  </a>
+  <div class="header-right">
+    <span class="who" id="who-am-i"></span>
+    <button class="btn ghost small" id="signout-top">Sign out</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section id="login-screen">
+    <div class="card" id="login-card">
+      <div class="name-icons">🔑</div>
+      <h1 id="login-title">Teacher Sign In</h1>
+      <p id="login-lead">Use your teacher username and password. Teacher usernames must contain “teacher”.</p>
+      <div class="field"><label for="admin-email">Teacher username</label>
+        <input type="text" id="admin-email" autocomplete="username" placeholder="salah-teacher"></div>
+      <div class="field"><label for="admin-password">Password</label>
+        <input type="password" id="admin-password" autocomplete="current-password"></div>
+      <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
+      <p class="msg" id="login-msg"></p>
+      <button class="linkbtn" id="forgot-password-btn" style="margin-top:6px;">Forgot password?</button>
+    </div>
+
+    <p style="text-align:center; margin:12px 0 0;">
+      <button class="linkbtn" id="login-toggle">New teacher? Create an account</button>
+    </p>
+
+    <div class="card" style="max-width:620px;margin:20px auto;text-align:center">
+      <h2>Protected teacher access</h2>
+      <p>A new teacher may create a login, but a super administrator must approve the account before any student information is visible.</p>
+    </div>
+
+    <div class="card hidden" id="not-authorized">
+      <h2>Awaiting teacher approval</h2>
+      <p id="not-authorized-msg">A super administrator must approve this teacher account before it can access student records.</p>
+      <button class="btn ghost" id="not-authorized-signout">Sign out</button>
+    </div>
+  </section>
+
+  <section id="dashboard-screen" class="hidden">
+    <h1>Tuhfatul Atfaal — Teacher Portal</h1>
+    <p>Manage learners, review all 15 maps, sign certificates, leave feedback, and unlock the next map after successful Talqeen, Hifz and recitation.</p>
+
+    <div class="stats">
+      <div class="stat"><strong id="stat-total">0</strong><span>Total students</span></div>
+      <div class="stat"><strong id="stat-active">0</strong><span>Started course</span></div>
+      <div class="stat"><strong id="stat-certs">0</strong><span>Certificates</span></div>
+      <div class="stat"><strong id="stat-review">0</strong><span>Ready for review</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Add a student</h2>
+      <div class="row">
+        <div class="field"><label for="new-username">Username</label>
+          <input type="text" id="new-username" placeholder="amina123"></div>
+        <div class="field"><label for="new-displayname">Display name (optional)</label>
+          <input type="text" id="new-displayname" placeholder="Amina"></div>
+      </div>
+      <div class="row">
+        <div class="field" style="flex:2;"><label for="new-password">Password</label>
+          <input type="text" id="new-password" placeholder="At least 6 characters"></div>
+        <div class="field" style="flex:1; align-self:flex-end;">
+          <button class="btn ghost" type="button" id="gen-password-btn" style="width:100%; justify-content:center;">🎲 Generate</button>
+        </div>
+      </div>
+      <button class="btn primary" id="add-student-btn">Add Student</button>
+      <p class="msg" id="add-msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Bulk add students (CSV)</h2>
+      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Upload a CSV file to add many students at
+        once. Columns: <code>username</code> (required), <code>displayname</code> (optional),
+        <code>password</code> (optional — a random one is generated for any row that leaves it blank).</p>
+      <button class="btn ghost small" type="button" id="download-template-btn">⬇️ Download CSV template</button>
+      <div class="field" style="margin-top:12px;">
+        <label for="csv-file">CSV file</label>
+        <input type="file" id="csv-file" accept=".csv,text/csv">
+      </div>
+      <button class="btn primary" id="bulk-add-btn">Add All Students</button>
+      <p class="msg" id="bulk-msg"></p>
+      <div id="bulk-results" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Students <span id="student-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
+      <button class="btn ghost small" id="refresh-btn" style="margin-bottom:14px;">Refresh</button>
+      <div id="student-list"></div>
+      <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
+    </div>
+
+    <div class="card hidden" id="admins-card">
+      <h2>Teacher accounts <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
+      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Only a super administrator can approve teachers. Enter the exact username they used; it must contain “teacher”.</p>
+      <div class="row">
+        <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
+          <input type="text" id="new-admin-email" placeholder="salah-teacher"></div>
+        <div class="field"><label for="new-admin-role">Role</label>
+          <select id="new-admin-role">
+            <option value="admin">Teacher</option>
+            <option value="super">Super administrator</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
+      <p class="msg" id="add-admin-msg"></p>
+      <div id="admin-list" style="margin-top:16px;"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="modal hidden" id="student-modal" role="dialog" aria-modal="true" aria-labelledby="manage-title">
+  <div class="modal-panel">
+    <div class="modal-head"><div><h1 id="manage-title">Manage student</h1><p id="manage-sub" style="margin:2px 0"></p></div><button class="btn ghost small" id="close-modal">✕ Close</button></div>
+    <div class="row">
+      <div class="field"><label>Display name</label><input id="edit-display-name"></div>
+      <div class="field"><label>Certificate full name</label><input id="edit-full-name"></div>
+      <div class="field" style="align-self:end"><button class="btn ghost" id="save-names">Save names</button></div>
+    </div>
+    <h2 style="margin-top:14px">Choose a map</h2><div class="map-grid" id="map-grid"></div>
+    <div class="teacher-work">
+      <h2 id="selected-map-title">Map review</h2><p id="map-status"></p>
+      <div class="row"><div class="field"><label>Teacher name</label><input id="certificate-teacher"></div><div class="field"><label>Teacher feedback</label><input id="certificate-feedback" placeholder="Strengths and next practice step"></div></div>
+      <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Hifz completed</label><label><input type="checkbox" id="certificate-recitation"> Good recitation</label></div>
+      <label style="font-family:'Marcellus';color:var(--ink-navy)">Teacher signature</label><canvas id="signature"></canvas>
+      <div class="actions" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" id="clear-signature">Clear signature</button><button class="btn primary" id="approve-map">Sign certificate & unlock next map</button><button class="btn ghost" id="manual-unlock">Open next map</button></div>
+      <p class="msg" id="manage-msg"></p>
+      <div class="danger-zone"><button class="btn danger small" id="reset-map">Reset selected map</button> <button class="btn danger small" id="reset-course">Reset entire course</button></div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="../kids-quest-cloud.js?v=4"></script>
+<script type="module">
+const $ = id => document.getElementById(id);
+let isSignUp = false;
+let myEmail = '';
+let myRole = '';
+const GAME_KEY = 'tuhfatul-atfaal';
+const MAPS = [
+  ['Beginnings','1–5',0,5],['Four Rules','6–8',5,3],['Izhar Letters','9–11',8,3],['Idgham','12–13',11,2],
+  ['Idgham Types','14–16',13,3],['Iqlab','17',16,1],['Ikhfa','18–20',17,3],['Noon & Meem','21–23',20,3],
+  ['Meem Rules','24–29',23,6],['Laam Rules','30–34',29,5],['Madd','35–41',34,7],['Madd Types','42–47',41,6],
+  ['More Madd','48–52',47,5],['Waqf','53–57',52,5],['Completion','57–61',57,5]
+];
+let studentsCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
+
+function randomPassword(){
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let out = '';
+  for(let i = 0; i < 8; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+function friendlyError(err){
+  const code = (err && err.code) || '';
+  if(code.indexOf('wrong-password') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('user-not-found') >= 0){
+    return 'Wrong email or password.';
+  }
+  if(code.indexOf('email-already-in-use') >= 0) return 'That email or username already has an account — try signing in instead.';
+  if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('permission-denied') >= 0) return 'Not allowed — only a super admin can do that.';
+  return (err && err.message) || 'Something went wrong.';
+}
+function progressSummary(progress){
+  const labels = { arabic:'Arabic', english:'English', math:'Math', seerah:'Seerah' };
+  const parts = [];
+  Object.keys(labels).forEach(key => {
+    const p = progress && progress[key];
+    if(p && Array.isArray(p.stars)){
+      const done = p.stars.filter(s => s > 0).length;
+      parts.push(labels[key] + ': ' + done + '/' + p.stars.length);
+    }
+  });
+  /* Arabic Adventure keeps stars keyed by node id (e.g. "L_ب") rather than
+     as a plain array, since its map mixes letters, reviews and bonus nodes. */
+  const aa = progress && progress.arabicAdventure;
+  if(aa && aa.stars && typeof aa.stars === 'object'){
+    const lettersDone = Object.keys(aa.stars).filter(k => k.indexOf('L_') === 0).length;
+    parts.push('Arabic Adventure: ' + lettersDone + '/28 letters');
+  }
+  const tq = progress && progress['tuhfatul-atfaal'];
+  if(tq && Array.isArray(tq.stars)){
+    const lessonsDone = tq.stars.filter(s => s > 0).length;
+    const approved = Array.isArray(tq.teacherAssessments) ? tq.teacherAssessments.filter(a => a && a.approved).length : 0;
+    parts.push('Tuhfatul Atfaal: ' + lessonsDone + '/62 activities (61 lines) · ' + approved + '/15 maps teacher-approved');
+  }
+  return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
+}
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+
+function tuhfatDetails(progress){
+  const p = progress && progress['tuhfatul-atfaal'];
+  if(!p) return '';
+  const assessments = Array.isArray(p.teacherAssessments) ? p.teacherAssessments : [];
+  const approved = assessments.filter(a => a && a.approved).length;
+  const rows = Array.from({length:15}, (_, i) => {
+    const a = assessments[i];
+    if(!a || !a.approved) return '<div class="map-record pending"><strong>Map ' + (i + 1) + '</strong> — awaiting teacher approval</div>';
+    const date = a.approvedAt ? new Date(a.approvedAt).toLocaleDateString() : 'Recorded';
+    return '<div class="map-record"><strong>Map ' + (i + 1) + ' ✓</strong>' +
+      '<p>Teacher: ' + escapeHtml(a.teacherName || 'Not recorded') + ' · ' + escapeHtml(date) + '</p>' +
+      '<p>Hifz: ' + (a.hifz ? '✓' : '—') + ' · Good recitation: ' + (a.recitation ? '✓' : '—') + '</p>' +
+      '<p>Feedback: ' + escapeHtml(a.feedback || 'No feedback recorded') + '</p></div>';
+  }).join('');
+  return '<details class="course-detail"><summary>' + escapeHtml(p.avatar || '🧒') + ' Tuhfatul Atfaal details (' + approved + '/15 approved)</summary>' + rows + '</details>';
+}
+
+function parseCSV(text){
+  // Simple CSV parser: handles quoted fields, escaped quotes (""), and commas inside quotes.
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){
+        if(text[i + 1] === '"'){ field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else if(c === '"'){
+      inQuotes = true;
+    } else if(c === ','){
+      row.push(field); field = '';
+    } else if(c === '\n' || c === '\r'){
+      if(c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); field = '';
+      if(row.some(v => v.trim() !== '')) rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  if(field !== '' || row.length){ row.push(field); if(row.some(v => v.trim() !== '')) rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows[0].map(h => h.trim().toLowerCase());
+  return rows.slice(1).map(r => {
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+    return obj;
+  });
+}
+
+function courseProfile(student){
+  const original = student.progress && student.progress[GAME_KEY];
+  const p = original && typeof original === 'object' ? JSON.parse(JSON.stringify(original)) : {};
+  p.stars = [...(Array.isArray(p.stars) ? p.stars : []), ...Array(62).fill(0)].slice(0,62);
+  p.memoryDone = [...(Array.isArray(p.memoryDone) ? p.memoryDone : []), ...Array(62).fill(false)].slice(0,62);
+  p.vocabDone = [...(Array.isArray(p.vocabDone) ? p.vocabDone : []), ...Array(15).fill(false)].slice(0,15);
+  p.teacherAssessments = [...(Array.isArray(p.teacherAssessments) ? p.teacherAssessments : []), ...Array(15).fill(null)].slice(0,15);
+  p.mapQuizScores = [...(Array.isArray(p.mapQuizScores) ? p.mapQuizScores : []), ...Array(15).fill(null)].slice(0,15);
+  p.flashPracticeDone = [...(Array.isArray(p.flashPracticeDone) ? p.flashPracticeDone : []), ...Array(15).fill(false)].slice(0,15);
+  p.teacherMapUnlocks = [...(Array.isArray(p.teacherMapUnlocks) ? p.teacherMapUnlocks : []), ...Array(15).fill(false)].slice(0,15);
+  p.unlocked = Math.max(1, Number(p.unlocked)||1); p.coins = Number(p.coins)||0;
+  return p;
+}
+function mapComplete(p, i){ const m=MAPS[i]; return p.stars.slice(m[2],m[2]+m[3]).every(v=>Number(v)>0); }
+function quizPassed(p,i){ const q=p.mapQuizScores[i]; return !!(q && (q.passed || Number(q.score)>=12)); }
+function updateStats(list){
+  $('stat-total').textContent=list.length;
+  let active=0,certs=0,ready=0;
+  list.forEach(s=>{ const p=s.progress&&s.progress[GAME_KEY]; if(!p)return; active++; const a=Array.isArray(p.teacherAssessments)?p.teacherAssessments:[]; certs+=a.filter(x=>x&&x.approved&&!x.manual).length; MAPS.forEach((_,i)=>{if(mapComplete(courseProfile(s),i)&&quizPassed(courseProfile(s),i)&&!(a[i]&&a[i].approved))ready++;}); });
+  $('stat-active').textContent=active;$('stat-certs').textContent=certs;$('stat-review').textContent=ready;
+}
+function setManageMessage(text,error){ const m=$('manage-msg');m.textContent=text||'';m.className='msg '+(error?'error':'success'); }
+function currentProfile(){ return courseProfile(activeStudent); }
+function saveActiveProfile(p, message){
+  setManageMessage('Saving…');
+  return window.KidsCloud.adminUpdateStudentGameProgress(activeStudent.uid,GAME_KEY,p).then(()=>{
+    activeStudent.progress=activeStudent.progress||{};activeStudent.progress[GAME_KEY]=p;setManageMessage(message||'Saved. The student will receive the update automatically.');
+    return loadStudents(false);
+  }).catch(err=>setManageMessage(friendlyError(err),true));
+}
+function drawSavedSignature(dataUrl){
+  clearSignature(false); if(!dataUrl)return;
+  const img=new Image();img.onload=()=>{const c=$('signature'),ctx=c.getContext('2d');ctx.drawImage(img,0,0,c.width,c.height);signatureDirty=true;};img.src=dataUrl;
+}
+function clearSignature(mark=true){ const c=$('signature'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);if(mark)signatureDirty=false; }
+function renderMapManager(){
+  const p=currentProfile(), grid=$('map-grid');grid.innerHTML='';
+  MAPS.forEach((m,i)=>{const a=p.teacherAssessments[i],b=document.createElement('button');b.className='map-pick'+(i===selectedMap?' active':'')+(a&&a.approved?' approved':'');b.innerHTML='Map '+(i+1)+'<br><small>Lines '+m[1]+(a&&a.approved?' · ✓':'')+'</small>';b.onclick=()=>{selectedMap=i;renderMapManager();};grid.appendChild(b);});
+  const m=MAPS[selectedMap],a=p.teacherAssessments[selectedMap]||{},complete=mapComplete(p,selectedMap),passed=quizPassed(p,selectedMap),manual=!!p.teacherMapUnlocks[selectedMap];
+  $('selected-map-title').textContent='Map '+(selectedMap+1)+' · '+m[0]+' · Lines '+m[1];
+  $('map-status').innerHTML='Lessons: <b>'+(complete?'complete':'not complete')+'</b> · 15-question quiz: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
+  $('certificate-teacher').value=a.teacherName||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
+}
+function openManager(student){
+  activeStudent=student;selectedMap=0;$('manage-title').textContent=student.displayName||student.username;$('manage-sub').textContent='@'+student.username+' · Tuhfatul Atfaal progress';$('edit-display-name').value=student.displayName||'';$('edit-full-name').value=student.fullName||student.displayName||'';$('student-modal').classList.remove('hidden');document.body.style.overflow='hidden';requestAnimationFrame(()=>{resizeSignature();renderMapManager();});
+}
+function closeManager(){$('student-modal').classList.add('hidden');document.body.style.overflow='';activeStudent=null;}
+function resizeSignature(){const c=$('signature'),r=c.getBoundingClientRect();c.width=Math.max(300,Math.round(r.width));c.height=150;const ctx=c.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#1f4f40';signatureDirty=false;}
+function wireSignature(){
+  const c=$('signature'),ctx=c.getContext('2d');let drawing=false;
+  const point=e=>{const r=c.getBoundingClientRect();return{x:(e.clientX-r.left)*c.width/r.width,y:(e.clientY-r.top)*c.height/r.height}};
+  c.addEventListener('pointerdown',e=>{drawing=true;signatureDirty=true;c.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
+  c.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
+  ['pointerup','pointercancel','pointerleave'].forEach(t=>c.addEventListener(t,()=>drawing=false));
+}
+
+function renderStudents(list){
+  studentsCache = list;
+  updateStats(list);
+  const box = $('student-list');
+  box.innerHTML = '';
+  $('student-count').textContent = list.length ? '(' + list.length + ')' : '';
+  $('student-empty').classList.toggle('hidden', list.length > 0);
+  list.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'student';
+    el.innerHTML =
+      '<div class="top">' +
+        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span>' +
+          (s.selfSignup ? ' <span class="role-badge" style="background:#c9dfe6; color:#1c4a55;">Self sign-up</span>' : '') +
+          (s.disabled ? ' <span class="role-badge" style="background:var(--danger-bg); color:var(--danger);">Disabled</span>' : '') +
+        '</span>' +
+        '<span class="meta">' + (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '') + '</span>' +
+      '</div>' +
+      (s.contactEmail ? '<p class="meta" style="margin:2px 0 0;">✉️ ' + escapeHtml(s.contactEmail) + '</p>' : '') +
+      '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
+      tuhfatDetails(s.progress) +
+      '<div class="actions">' +
+        '<button class="btn small manage-btn" data-act="manage">📘 Manage Tuhfatul</button>' +
+        '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
+        '<button class="btn ghost small" data-act="rename">Rename username</button>' +
+        '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
+        '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>' +
+      '</div>' +
+      '<div class="rename-panel" data-rename>' +
+        '<div class="row">' +
+          '<div class="field"><label>Current password</label><input type="text" data-cur-pass></div>' +
+          '<div class="field"><label>New username</label><input type="text" data-new-uname></div>' +
+        '</div>' +
+        '<button class="btn primary small" data-act="do-rename">Confirm rename</button>' +
+        '<p class="msg" data-rename-msg></p>' +
+      '</div>' +
+      '<p class="msg" data-msg></p>';
+
+    el.querySelector('[data-act="manage"]').addEventListener('click', () => openManager(s));
+
+    el.querySelector('[data-act="reset"]').addEventListener('click', () => {
+      const msg = el.querySelector('[data-msg]');
+      window.KidsCloud.adminSendPasswordReset(s.username).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = 'Reset link sent to your inbox — open it, set a new password, then tell the student.';
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
+    });
+
+    el.querySelector('[data-act="rename"]').addEventListener('click', () => {
+      el.querySelector('[data-rename]').classList.toggle('show');
+    });
+
+    el.querySelector('[data-act="do-rename"]').addEventListener('click', () => {
+      const curPass = el.querySelector('[data-cur-pass]').value;
+      const newUname = el.querySelector('[data-new-uname]').value.trim();
+      const msg = el.querySelector('[data-rename-msg]');
+      if(!curPass || !newUname){ msg.className = 'msg error'; msg.textContent = 'Fill in both fields.'; return; }
+      msg.className = 'msg'; msg.textContent = 'Working…';
+      window.KidsCloud.adminRenameStudent(s.username, curPass, newUname, s.uid).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = 'Renamed! Refreshing…';
+        loadStudents();
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
+    });
+
+    el.querySelector('[data-act="delete"]').addEventListener('click', () => {
+      if(!confirm('Remove ' + s.username + '’s saved progress? This cannot be undone from here.')) return;
+      window.KidsCloud.adminDeleteStudent(s.uid).then(loadStudents).catch(err => alert(friendlyError(err)));
+    });
+
+    el.querySelector('[data-act="toggle-disable"]').addEventListener('click', () => {
+      const msg = el.querySelector('[data-msg]');
+      const next = !s.disabled;
+      if(next && !confirm('Disable ' + s.username + '’s account? They’ll be signed out and blocked from logging back in until you enable it again.')) return;
+      window.KidsCloud.adminSetStudentDisabled(s.uid, next).then(() => {
+        msg.className = 'msg success';
+        msg.textContent = next ? 'Disabled.' : 'Enabled — they can log back in now.';
+        loadStudents();
+      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
+    });
+
+    box.appendChild(el);
+  });
+}
+
+function renderAdmins(list){
+  const box = $('admin-list');
+  box.innerHTML = '';
+  $('admin-count').textContent = list.length ? '(' + list.length + ')' : '';
+  list.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'admin-row';
+    const isMe = a.email === myEmail;
+    el.innerHTML =
+      '<span class="email">' + escapeHtml(a.email) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
+        '<span class="role-badge' + (a.role === 'super' ? ' super' : '') + '">' + (a.role === 'super' ? 'Super' : 'Admin') + '</span>' +
+      '</span>' +
+      '<span class="actions">' +
+        (isMe ? '' :
+          '<button class="btn ghost small" data-act="toggle-role">' + (a.role === 'super' ? 'Make regular admin' : 'Make super admin') + '</button>' +
+          '<button class="btn danger small" data-act="remove">Remove</button>'
+        ) +
+      '</span>';
+    if(!isMe){
+      el.querySelector('[data-act="toggle-role"]').addEventListener('click', () => {
+        window.KidsCloud.superSetAdminRole(a.email, a.role === 'super' ? 'admin' : 'super').then(loadAdmins).catch(err => alert(friendlyError(err)));
+      });
+      el.querySelector('[data-act="remove"]').addEventListener('click', () => {
+        if(!confirm('Remove admin access for ' + a.email + '? Their Firebase login itself stays — this only revokes admin rights.')) return;
+        window.KidsCloud.superRemoveAdmin(a.email).then(loadAdmins).catch(err => alert(friendlyError(err)));
+      });
+    }
+    box.appendChild(el);
+  });
+}
+
+function loadStudents(){
+  return window.KidsCloud.adminListStudents().then(renderStudents).catch(err => {
+    $('student-list').innerHTML = '';
+    $('student-empty').classList.remove('hidden');
+    $('student-empty').textContent = friendlyError(err);
+  });
+}
+function loadAdmins(){
+  if(myRole !== 'super') return;
+  window.KidsCloud.superListAdmins().then(renderAdmins).catch(err => {
+    $('admin-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>';
+  });
+}
+
+function showDashboard(info){
+  myEmail = info.email; myRole = info.role;
+  $('login-screen').classList.add('hidden');
+  $('dashboard-screen').classList.remove('hidden');
+  $('signout-top').classList.add('show');
+  $('who-am-i').classList.add('show');
+  $('who-am-i').innerHTML = escapeHtml(info.email) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + (info.role === 'super' ? 'Super admin' : 'Admin') + '</span>';
+  $('admins-card').classList.toggle('hidden', info.role !== 'super');
+  $('not-authorized').classList.add('hidden');
+  loadStudents();
+  loadAdmins();
+}
+function showLogin(){
+  $('login-screen').classList.remove('hidden');
+  $('login-card').classList.remove('hidden');
+  $('dashboard-screen').classList.add('hidden');
+  $('signout-top').classList.remove('show');
+  $('who-am-i').classList.remove('show');
+  $('not-authorized').classList.add('hidden');
+  setSignUpMode(false);
+}
+function showNotAuthorized(email){
+  $('login-screen').classList.remove('hidden');
+  $('dashboard-screen').classList.add('hidden');
+  $('signout-top').classList.remove('show');
+  $('who-am-i').classList.remove('show');
+  $('login-card').classList.add('hidden');
+  $('not-authorized').classList.remove('hidden');
+  $('not-authorized-msg').textContent = 'This teacher account is waiting for approval. Ask the super administrator to approve your teacher username, then sign in again.';
+}
+
+function setSignUpMode(on){
+  isSignUp = on;
+  $('login-title').textContent = on ? 'Create Teacher Account' : 'Teacher Sign In';
+  $('login-lead').textContent = on
+    ? 'Choose a username containing “teacher”, for example salah-teacher. A super administrator must approve it before you can see students.'
+    : 'Use your teacher username and password to manage Tuhfatul Atfaal students.';
+  $('admin-signin-btn').textContent = on ? 'Create Account' : 'Sign In';
+  $('login-toggle').textContent = on ? 'Already have a teacher account? Sign in' : 'New teacher? Create an account';
+  $('forgot-password-btn').classList.toggle('hidden', on);
+  $('login-msg').textContent = '';
+}
+
+function wire(){
+  $('login-card').classList.remove('hidden');
+
+  wireSignature();
+  $('close-modal').addEventListener('click', closeManager);
+  $('student-modal').addEventListener('click', e=>{if(e.target===$('student-modal'))closeManager()});
+  $('clear-signature').addEventListener('click', ()=>clearSignature(true));
+  $('save-names').addEventListener('click', ()=>{
+    if(!activeStudent)return;
+    const display=$('edit-display-name').value.trim(),full=$('edit-full-name').value.trim();
+    window.KidsCloud.adminUpdateStudentNames(activeStudent.uid,display,full).then(()=>{activeStudent.displayName=display;activeStudent.fullName=full;setManageMessage('Student names saved.');loadStudents();}).catch(err=>setManageMessage(friendlyError(err),true));
+  });
+  $('approve-map').addEventListener('click', ()=>{
+    if(!activeStudent)return;const p=currentProfile();
+    if(!mapComplete(p,selectedMap)||!quizPassed(p,selectedMap)){setManageMessage('The student must finish every lesson and pass the 15-question map quiz first.',true);return;}
+    const teacher=$('certificate-teacher').value.trim(),feedback=$('certificate-feedback').value.trim(),hifz=$('certificate-hifz').checked,recitation=$('certificate-recitation').checked;
+    if(!teacher||!feedback||!hifz||!recitation||!signatureDirty){setManageMessage('Add the teacher name, feedback, both checks and a signature.',true);return;}
+    p.teacherAssessments[selectedMap]={teacherName:teacher,feedback,hifz,recitation,signature:$('signature').toDataURL('image/png'),approved:true,approvedAt:new Date().toISOString(),approvedFromTeacherPortal:true};p.teacherMapUnlocks[selectedMap]=true;
+    saveActiveProfile(p,'Certificate signed. The next map is now open in the student portal.').then(renderMapManager);
+  });
+  $('manual-unlock').addEventListener('click', ()=>{
+    if(!activeStudent||!confirm('Open the next map without issuing a certificate? The Talqeen teacher check will remain incomplete.'))return;
+    const p=currentProfile();p.teacherMapUnlocks[selectedMap]=true;saveActiveProfile(p,'Next map opened. The certificate still requires the Talqeen teacher check.').then(renderMapManager);
+  });
+  $('reset-map').addEventListener('click', ()=>{
+    if(!activeStudent||!confirm('Reset this map’s lessons, quiz, teacher check and certificate?'))return;const p=currentProfile(),m=MAPS[selectedMap];
+    for(let i=m[2];i<m[2]+m[3];i++){p.stars[i]=0;p.memoryDone[i]=false}p.vocabDone[selectedMap]=false;p.flashPracticeDone[selectedMap]=false;p.mapQuizScores[selectedMap]=null;p.teacherAssessments[selectedMap]=null;p.teacherMapUnlocks[selectedMap]=false;
+    saveActiveProfile(p,'Selected map reset.').then(renderMapManager);
+  });
+  $('reset-course').addEventListener('click', ()=>{
+    if(!activeStudent||!confirm('Reset all Tuhfatul Atfaal progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(62).fill(0);p.memoryDone=Array(62).fill(false);p.vocabDone=Array(15).fill(false);p.flashPracticeDone=Array(15).fill(false);p.mapQuizScores=Array(15).fill(null);p.teacherAssessments=Array(15).fill(null);p.teacherMapUnlocks=Array(15).fill(false);p.unlocked=1;p.coins=0;
+    saveActiveProfile(p,'The complete Tuhfatul Atfaal course has been reset.').then(renderMapManager);
+  });
+
+  $('login-toggle').addEventListener('click', () => setSignUpMode(!isSignUp));
+
+  $('admin-signin-btn').addEventListener('click', () => {
+    const email = $('admin-email').value.trim();
+    const password = $('admin-password').value;
+    const msg = $('login-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email || !password){ msg.className = 'msg error'; msg.textContent = 'Enter teacher username and password.'; return; }
+    $('admin-signin-btn').disabled = true;
+    const action = isSignUp ? window.KidsCloud.teacherSignUp(email, password) : window.KidsCloud.teacherSignIn(email, password);
+    action.catch(err => {
+      msg.className = 'msg error';
+      msg.textContent = friendlyError(err);
+    }).finally(() => { $('admin-signin-btn').disabled = false; });
+  });
+  $('admin-password').addEventListener('keydown', e => { if(e.key === 'Enter') $('admin-signin-btn').click(); });
+
+  $('forgot-password-btn').addEventListener('click', () => {
+    const email = $('admin-email').value.trim();
+    const msg = $('login-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter your teacher username above, then tap “Forgot password?” again.'; return; }
+    $('forgot-password-btn').disabled = true;
+    let resetEmail;
+    try{ resetEmail = email.indexOf('@')>=0 ? email : window.KidsCloud.teacherUsernameToEmail(email); }
+    catch(err){ msg.className='msg error';msg.textContent=friendlyError(err);$('forgot-password-btn').disabled=false;return; }
+    window.KidsCloud.adminForgotPassword(resetEmail).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Password reset link sent. Open it, set a new password, then sign in.';
+    }).catch(err => {
+      msg.className = 'msg error';
+      msg.textContent = (err && err.code && err.code.indexOf('user-not-found') >= 0)
+        ? 'No teacher login exists for that username yet.'
+        : friendlyError(err);
+    }).finally(() => { $('forgot-password-btn').disabled = false; });
+  });
+
+  $('signout-top').addEventListener('click', () => window.KidsCloud.adminSignOut());
+  $('not-authorized-signout').addEventListener('click', () => window.KidsCloud.adminSignOut());
+
+  $('gen-password-btn').addEventListener('click', () => { $('new-password').value = randomPassword(); });
+
+  $('add-student-btn').addEventListener('click', () => {
+    const username = $('new-username').value.trim();
+    const displayName = $('new-displayname').value.trim();
+    const password = $('new-password').value;
+    const msg = $('add-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!username || !password){ msg.className = 'msg error'; msg.textContent = 'Username and password are required.'; return; }
+    if(password.length < 6){ msg.className = 'msg error'; msg.textContent = 'Password needs to be at least 6 characters.'; return; }
+    $('add-student-btn').disabled = true;
+    window.KidsCloud.adminCreateStudent(username, displayName, password).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Added! Username: ' + username + ' — write down the password to give the student, it is not shown again here.';
+      $('new-username').value = ''; $('new-displayname').value = ''; $('new-password').value = '';
+      loadStudents();
+    }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
+      .finally(() => { $('add-student-btn').disabled = false; });
+  });
+
+  $('download-template-btn').addEventListener('click', () => {
+    const csv = 'username,displayname,password\namina123,Amina,\nyusuf456,Yusuf,\n';
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'students-template.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  $('bulk-add-btn').addEventListener('click', () => {
+    const fileInput = $('csv-file');
+    const msg = $('bulk-msg');
+    const results = $('bulk-results');
+    msg.className = 'msg'; msg.textContent = '';
+    results.innerHTML = '';
+    const file = fileInput.files && fileInput.files[0];
+    if(!file){ msg.className = 'msg error'; msg.textContent = 'Choose a CSV file first.'; return; }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const rows = parseCSV(String(reader.result || ''));
+      if(!rows.length || !('username' in rows[0])){
+        msg.className = 'msg error';
+        msg.textContent = 'That CSV needs a header row with a "username" column.';
+        return;
+      }
+      $('bulk-add-btn').disabled = true;
+      msg.className = 'msg'; msg.textContent = 'Adding ' + rows.length + ' student(s)…';
+
+      let done = 0, ok = 0, fail = 0;
+      const addRow = (row) => {
+        const username = (row.username || '').trim();
+        const displayName = (row.displayname || '').trim();
+        const password = (row.password || '').trim() || randomPassword();
+        const line = document.createElement('div');
+        if(!username){
+          fail++; line.className = 'bulk-row error';
+          line.textContent = '(blank row) — missing username';
+          results.appendChild(line);
+          return Promise.resolve();
+        }
+        return window.KidsCloud.adminCreateStudent(username, displayName, password).then(() => {
+          ok++; line.className = 'bulk-row success';
+          line.textContent = username + ' — added (password: ' + password + ')';
+          results.appendChild(line);
+        }).catch(err => {
+          fail++; line.className = 'bulk-row error';
+          line.textContent = username + ' — failed: ' + friendlyError(err);
+          results.appendChild(line);
+        });
+      };
+
+      // Sequential, not parallel, so Firebase Auth doesn't rate-limit and rows report in order.
+      rows.reduce((chain, row) => chain.then(() => addRow(row)).then(() => { done++; }), Promise.resolve())
+        .then(() => {
+          msg.className = fail ? 'msg error' : 'msg success';
+          msg.textContent = 'Done: ' + ok + ' added, ' + fail + ' failed.';
+          fileInput.value = '';
+          loadStudents();
+        })
+        .finally(() => { $('bulk-add-btn').disabled = false; });
+    };
+    reader.onerror = () => { msg.className = 'msg error'; msg.textContent = 'Could not read that file.'; };
+    reader.readAsText(file);
+  });
+
+  $('refresh-btn').addEventListener('click', loadStudents);
+
+  $('add-admin-btn').addEventListener('click', () => {
+    const email = $('new-admin-email').value.trim();
+    const role = $('new-admin-role').value;
+    const msg = $('add-admin-msg');
+    msg.className = 'msg'; msg.textContent = '';
+    if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter the teacher username.'; return; }
+    $('add-admin-btn').disabled = true;
+    window.KidsCloud.superAddTeacher(email, role).then(() => {
+      msg.className = 'msg success';
+      msg.textContent = 'Teacher approved. They can now sign in with that username and password.';
+      $('new-admin-email').value = '';
+      loadAdmins();
+    }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
+      .finally(() => { $('add-admin-btn').disabled = false; });
+  });
+
+  window.KidsCloud.onAdminAuth(info => {
+    if(!info) showLogin();
+    else if(!info.role) showNotAuthorized(info.email);
+    else showDashboard(info);
+  });
+}
+if(window.KidsCloud) wire(); else window.addEventListener('kidscloud-ready', wire);
+</script>
+</body>
+</html>
