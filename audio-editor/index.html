@@ -143,6 +143,23 @@
   .wave-empty{position:absolute; inset:22px 0 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; font-family:var(--ui); font-size:14px; color:var(--muted); padding:12px;}
   .wave-empty[hidden]{display:none;}
   .wave-empty .row{justify-content:center; margin:0;}
+  #meter{width:150px; height:18px; border:1px solid var(--gold-soft); border-radius:4px; background:#fff; display:block;}
+  .dlg .check{flex-direction:row; align-items:center; gap:8px; color:var(--ink-brown); font-size:14px;}
+  .dlg .field-row .num{width:110px; flex:none;}
+  .dlg .field-row span{font-size:13px; color:var(--muted);}
+  .fx-group{font-family:var(--ui); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin:12px 0 6px;}
+  .fx-group:first-of-type{margin-top:0;}
+  .list{list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; border-top:1px solid rgba(169,124,37,.25); font-family:var(--ui); font-size:13px;}
+  .list li{display:flex; align-items:center; gap:8px; padding:6px 4px; border-bottom:1px solid rgba(169,124,37,.18);}
+  .list li.empty{color:var(--muted); justify-content:center; padding:14px;}
+  .list .grow{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .list .sub{color:var(--muted); font-size:12px; white-space:nowrap;}
+  .list button.link{background:none; border:none; padding:0; font:inherit; color:var(--green-dark); cursor:pointer; text-align:left; text-decoration:underline; text-decoration-color:var(--gold-soft); text-underline-offset:3px;}
+  .list li.cur{background:var(--green-bg); font-weight:600;}
+  .list li.future{opacity:.5;}
+  .list .btn{padding:3px 8px; font-size:12px;}
+  #emptyRecent{max-width:520px; margin:26px auto 0; text-align:left;}
+  #emptyRecent h2{font-size:16px; text-align:center;}
   .head-actions{display:flex; gap:8px; align-items:center;}
   .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
@@ -175,6 +192,10 @@
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
       <button class="btn big" id="newBtn2" type="button" title="Start an empty file to paste or record into (N)">＋ New empty</button>
     </div>
+    <div id="emptyRecent" hidden>
+      <h2>Recent files</h2>
+      <ul class="list" id="recentList0"></ul>
+    </div>
     <p class="hint" style="margin-top:18px">…or drop audio files here (MP3, WAV, M4A, OGG, WebM) — each opens in its own tab. Save as MP3 or WAV.</p>
   </section>
 
@@ -195,8 +216,14 @@
           <button class="btn primary" id="playBtn" type="button" title="Play / pause (Space)">▶ Play</button>
           <button class="btn" id="stopBtn" type="button" title="Stop">■</button>
           <button class="btn" id="homeBtn" type="button" title="Go to start (Home)">⏮</button>
+          <button class="btn" id="backBtn" type="button" title="Back 5 seconds (,)">« 5s</button>
+          <button class="btn" id="fwdBtn" type="button" title="Forward 5 seconds (.)">5s »</button>
           <button class="btn" id="endBtn" type="button" title="Go to end (End)">⏭</button>
           <button class="btn" id="loopBtn" type="button" title="Loop the selection (L)">⟲ Loop</button>
+          <select class="num" id="rateSel" style="width:auto" title="Playback speed (listening only — does not change the file)">
+            <option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option>
+          </select>
         </div>
         <span class="sep"></span>
         <div class="group" aria-label="Edit">
@@ -225,6 +252,7 @@
         <label>End <input id="selEndIn" type="text" spellcheck="false"></label>
         <span>Length <strong id="selLen">—</strong></span>
         <span>Total <strong id="totalLen">—</strong></span>
+        <canvas id="meter" width="150" height="18" title="Playback level"></canvas>
       </div>
     </section>
 
@@ -253,6 +281,7 @@
     <div class="cols">
       <section class="panel">
         <h2>Effects <span class="info" id="fxScope">(whole file)</span></h2>
+        <div class="fx-group">Basic</div>
         <div class="row">
           <button class="btn" id="fadeInBtn" type="button">Fade in</button>
           <button class="btn" id="fadeOutBtn" type="button">Fade out</button>
@@ -269,7 +298,27 @@
         </div>
         <div class="row">
           <button class="btn" id="trimSilBtn" type="button" title="Remove quiet audio at the very start and end (uses the threshold on the right)">Trim silent ends</button>
+        </div>
+        <div class="fx-group">Sound</div>
+        <div class="row">
+          <button class="btn fx-need" id="eqBtn" type="button" title="Bass, middle and treble">Equaliser…</button>
+          <button class="btn fx-need" id="echoBtn" type="button">Echo…</button>
+          <button class="btn fx-need" id="reverbBtn" type="button" title="Room / hall ambience">Reverb…</button>
+          <button class="btn fx-need" id="speedBtn" type="button" title="Make it faster or slower (pitch changes too)">Speed…</button>
+          <button class="btn fx-need" id="compBtn" type="button" title="Even out loud and quiet parts">Compressor…</button>
+        </div>
+        <div class="fx-group">Clean up</div>
+        <div class="row">
+          <button class="btn fx-need" id="gateBtn" type="button" title="Silence background noise between words">Noise gate…</button>
+          <button class="btn fx-need" id="hpBtn" type="button" title="High-pass filter: removes low hum, rumble and wind">Remove rumble…</button>
+          <button class="btn fx-need" id="lpBtn" type="button" title="Low-pass filter: softens hiss and harsh highs">Remove hiss…</button>
+        </div>
+        <div class="fx-group">Channels</div>
+        <div class="row">
           <button class="btn" id="monoBtn" type="button" title="Mix all channels down to one">Make mono</button>
+          <button class="btn" id="stereoBtn" type="button" title="Copy the single channel to left and right">Make stereo</button>
+          <button class="btn" id="swapBtn" type="button" title="Swap left and right">Swap L/R</button>
+          <button class="btn fx-need" id="rateConvBtn" type="button" title="Change the sample rate of the whole file">Sample rate…</button>
         </div>
 
         <h2 style="margin-top:18px">Save</h2>
@@ -311,6 +360,34 @@
         <div class="row" style="margin-top:10px">
           <button class="btn primary" id="zipBtn" type="button">Download all parts (.zip)</button>
         </div>
+      </section>
+    </div>
+
+    <div class="cols">
+      <section class="panel">
+        <h2>Tools</h2>
+        <div class="fx-group">Add audio</div>
+        <div class="row">
+          <button class="btn" id="insFileBtn" type="button" title="Insert another audio file at the cursor">Insert file…</button>
+          <button class="btn" id="genBtn" type="button" title="Insert a tone, noise or silence at the cursor">Generate…</button>
+          <button class="btn" id="repeatBtn" type="button" title="Repeat the selection several times">Repeat loop…</button>
+          <button class="btn" id="redactBtn" type="button" title="Cover the selection with a beep or silence">Redact…</button>
+        </div>
+        <div class="fx-group">Files</div>
+        <div class="row">
+          <button class="btn" id="splitBtn" type="button" title="Open each part (between markers, or either side of the cursor) in its own tab">Split into tabs</button>
+          <button class="btn" id="joinBtn" type="button" title="Join open tabs end to end into a new tab">Join tabs…</button>
+          <button class="btn" id="batchBtn" type="button" title="Convert or clean up many files at once">Batch convert…</button>
+        </div>
+        <p class="hint">Split, Join and Duplicate open their result in a new tab and never change the original.</p>
+      </section>
+
+      <section class="panel">
+        <h2>History</h2>
+        <ul class="list" id="histList"></ul>
+        <h2 style="margin-top:18px">Recent files</h2>
+        <ul class="list" id="recentList"></ul>
+        <p class="hint">Recent files are kept in this browser only (up to 8 files under 25&nbsp;MB).</p>
       </section>
     </div>
   </div>
@@ -370,6 +447,17 @@
       <li>Press ▶ next to a part to check it, then <strong>Download all parts</strong> for a zip of numbered files.</li>
     </ol>
 
+    <h3>Effects &amp; tools</h3>
+    <ul>
+      <li>Effects with <strong>…</strong> open a small window: set the values, press <strong>▶ Preview</strong> to hear up to 8 seconds, then <strong>Apply</strong>.</li>
+      <li><strong>Clean up a recording:</strong> <em>Remove rumble</em> (hum and wind) → <em>Noise gate</em> (background noise between words) → <em>Normalise</em>.</li>
+      <li><strong>Repeat loop</strong> repeats the selected line several times, with an optional pause — useful for memorising.</li>
+      <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab; <strong>Join tabs</strong> does the opposite.</li>
+      <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
+      <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Speed…</strong> to change the file itself.</li>
+      <li><strong>History</strong> lists every change; click any line to go back to that point.</li>
+    </ul>
+
     <h3>Saving</h3>
     <ul>
       <li>Choose <strong>MP3</strong> (small, good for sharing) or <strong>WAV</strong> (lossless, bigger). 192 kbps MP3 is a good default.</li>
@@ -390,6 +478,7 @@
           <tr><td><kbd>Space</kbd></td><td>Play / pause</td></tr>
           <tr><td><kbd>L</kbd></td><td>Loop the selection on or off</td></tr>
           <tr><td><kbd>Home</kbd> <kbd>End</kbd></td><td>Go to start / end</td></tr>
+          <tr><td><kbd>,</kbd> <kbd>.</kbd></td><td>Jump back / forward 5 seconds</td></tr>
           <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Move the cursor 0.1 s (hold <kbd>Shift</kbd> for 1 s)</td></tr>
           <tr class="grp"><td colspan="2">Selecting</td></tr>
           <tr><td>Drag</td><td>Select a region</td></tr>
@@ -413,6 +502,19 @@
     </table>
   </div>
 </dialog>
+<dialog id="paramDlg" class="dlg" aria-labelledby="paramTitle">
+  <h2 id="paramTitle"></h2>
+  <p class="info" id="paramDesc" style="margin:0 0 14px"></p>
+  <div id="paramFields"></div>
+  <div class="actions">
+    <button class="btn" id="paramPreview" type="button" title="Hear the result without changing the file">▶ Preview</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="paramCancel" type="button">Cancel</button>
+    <button class="btn primary" id="paramOk" type="button">Apply</button>
+  </div>
+</dialog>
+<input type="file" id="insFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<input type="file" id="batchFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 <input type="file" id="mixFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -442,6 +544,7 @@ let actx = null;
 const audio = () => actx || (actx = new (window.AudioContext || window.webkitAudioContext)());
 
 const $ = id => document.getElementById(id);
+const on = (id, fn) => $(id).addEventListener('click', fn);
 const canvas = $('wave'), g = canvas.getContext('2d');
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -537,6 +640,7 @@ function docBytes(stack) {
   return bytes;
 }
 function commit(next, label) {
+  next.label = label || 'Edit';
   undoStack.push(doc);
   while (undoStack.length > 1 && (undoStack.length > 60 || docBytes(undoStack) > UNDO_BYTES)) undoStack.shift();
   redoStack = [];
@@ -690,7 +794,7 @@ async function runMix() {
 async function loadFiles(files) {
   for (const f of files) await loadFile(f);
 }
-async function loadFile(file) {
+async function loadFile(file, { remember = true } = {}) {
   if (!file) return;
   stopPlay(); busy(true);
   try {
@@ -699,6 +803,7 @@ async function loadFile(file) {
     const ch = [];
     for (let i = 0; i < ab.numberOfChannels; i++) ch.push(ab.getChannelData(i).slice());
     newDocument(makeDoc(ab.sampleRate, ch), file.name.replace(/\.[^.]+$/, ''));
+    if (remember) recentAdd(file);
   } catch (e) {
     console.error(e);
     toast(`Could not read “${file.name}”. Try MP3, WAV, M4A or OGG.`);
@@ -723,7 +828,9 @@ function newEmpty() {
 // An empty tab takes on the sample rate and channels of the first audio put into it.
 function adoptFormat(sr, nch) {
   if (len() || (doc.sr === sr && doc.ch.length === nch)) return;
+  const label = doc.label;
   doc = makeDoc(sr, Array.from({ length: nch }, () => new Float32Array(0)), []);
+  doc.label = label;
 }
 // Opening a file while an untouched empty tab is showing fills that tab instead of adding one.
 function newDocument(d, name, reuseEmpty = true) {
@@ -735,6 +842,7 @@ function newDocument(d, name, reuseEmpty = true) {
   tabs.splice(at, 0, t); active = t;
   doc = null; undoStack = []; redoStack = []; selA = selB = null; cursor = 0; viewStart = 0; spp = 1; dirty = false; peaks = null; playBuf = null;
   $('fileName').value = t.name;
+  d.label = d.label || (d.ch[0].length ? 'Opened' : 'New empty file');
   $('empty').style.display = 'none';
   $('editor').style.display = 'block';
   setDoc(d);
@@ -806,20 +914,23 @@ function play() {
   if (hasSel()) { from = selA; to = selB; if (cursor > selA && cursor < selB && !loop) from = cursor; }
   else { from = cursor >= len() ? 0 : cursor; to = len(); }
   const src = ctx.createBufferSource();
-  src.buffer = getPlayBuf(); src.connect(ctx.destination);
+  const rate = parseFloat($('rateSel').value) || 1;
+  src.buffer = getPlayBuf(); src.playbackRate.value = rate; src.connect(ctx.destination);
+  const meters = connectMeters(ctx, src, doc.ch.length);
   const looping = loop && hasSel();
   if (looping) {
     src.loop = true; src.loopStart = selA / doc.sr; src.loopEnd = selB / doc.sr;
     src.start(0, from / doc.sr);
-  } else src.start(0, from / doc.sr, (to - from) / doc.sr);
-  const p = { src, t0: ctx.currentTime, from, to, loop: looping };
-  src.onended = () => { if (player === p) { player = null; cursor = hasSel() ? cursor : to; updatePlayBtn(); refresh(); } };
+  } else { src.start(0, from / doc.sr); src.stop(ctx.currentTime + (to - from) / doc.sr / rate); }
+  const p = { src, t0: ctx.currentTime, from, to, loop: looping, rate, meters };
+  src.onended = () => { if (player === p) { player = null; drawMeter(null); cursor = hasSel() ? cursor : to; updatePlayBtn(); refresh(); } };
   player = p; updatePlayBtn(); animate();
 }
 function stopPlay() {
   if (!player) return;
   const p = player; player = null;
   try { p.src.stop(); } catch (e) {}
+  drawMeter(null);
   updatePlayBtn(); draw();
 }
 function togglePlay() {
@@ -828,7 +939,7 @@ function togglePlay() {
 }
 function playPos() {
   if (!player) return cursor;
-  const el = (audio().currentTime - player.t0) * doc.sr;
+  const el = (audio().currentTime - player.t0) * doc.sr * player.rate;
   if (player.loop) {
     const span = player.to - player.from;
     const first = selB - player.from;
@@ -843,6 +954,7 @@ function animate() {
   const w = canvas.clientWidth, vis = w * spp;
   if (pos < viewStart || pos > viewStart + vis) { viewStart = pos - vis * 0.05; clampView(); }
   $('clock').textContent = fmt(pos / doc.sr);
+  drawMeter(player.meters);
   draw(pos);
   requestAnimationFrame(animate);
 }
@@ -994,6 +1106,13 @@ function refresh() {
   $('undoBtn').disabled = !undoStack.length;
   $('redoBtn').disabled = !redoStack.length;
   $('monoBtn').disabled = doc.ch.length === 1;
+  $('stereoBtn').disabled = doc.ch.length !== 1 || !L;
+  $('swapBtn').disabled = doc.ch.length !== 2;
+  document.querySelectorAll('.fx-need').forEach(b => { b.disabled = !L; });
+  $('repeatBtn').disabled = $('redactBtn').disabled = !s;
+  $('splitBtn').disabled = !L || (!doc.markers.length && (cursor <= 0 || cursor >= L));
+  $('joinBtn').disabled = tabs.length < 2;
+  renderHistory();
   $('loopBtn').classList.toggle('on', loop);
   $('clearMarksBtn').disabled = !doc.markers.length;
   renderSegments();
@@ -1121,14 +1240,15 @@ function makeMono() {
 }
 
 /* ---------- Silence detection ---------- */
-function loudness() {
+function loudness(chs = doc.ch, sr = doc.sr) {
   // dB level of each 10 ms window (loudest channel).
-  const win = Math.max(1, Math.round(doc.sr * 0.01)), n = Math.ceil(len() / win);
+  const L = chs[0].length;
+  const win = Math.max(1, Math.round(sr * 0.01)), n = Math.ceil(L / win);
   const db = new Float32Array(n);
   for (let w = 0; w < n; w++) {
-    const a = w * win, b = Math.min(len(), a + win);
+    const a = w * win, b = Math.min(L, a + win);
     let best = 0;
-    for (const c of doc.ch) { let s = 0; for (let i = a; i < b; i++) s += c[i] * c[i]; best = Math.max(best, s / (b - a)); }
+    for (const c of chs) { let s = 0; for (let i = a; i < b; i++) s += c[i] * c[i]; best = Math.max(best, s / (b - a)); }
     db[w] = best > 0 ? 10 * Math.log10(best) : -120;
   }
   return { win, db };
@@ -1289,6 +1409,7 @@ const saveFormat = () => $('fmtSel').value;
 const ext = () => saveFormat() === 'mp3' ? '.mp3' : '.wav';
 const mime = () => saveFormat() === 'mp3' ? 'audio/mpeg' : 'audio/wav';
 function encode(ch, sr, onProgress) {
+  // (format and bitrate come from the Save panel)
   return saveFormat() === 'mp3' ? encodeMp3(ch, sr, onProgress) : Promise.resolve(encodeWav(ch, sr));
 }
 function busyText(t) { $('busy').textContent = t; }
@@ -1340,6 +1461,527 @@ function syncFormat() {
 }
 $('fmtSel').addEventListener('change', syncFormat);
 syncFormat();
+
+/* ---------- Level meter ---------- */
+function connectMeters(ctx, src, n) {
+  const split = ctx.createChannelSplitter(n);
+  src.connect(split);
+  return Array.from({ length: n }, (_, i) => {
+    const an = ctx.createAnalyser(); an.fftSize = 1024;
+    split.connect(an, i);
+    return { an, buf: new Float32Array(an.fftSize), hold: 0 };
+  });
+}
+function drawMeter(meters) {
+  const c = $('meter'), m = c.getContext('2d'), W = c.width, H = c.height;
+  m.fillStyle = '#fff'; m.fillRect(0, 0, W, H);
+  // Scale: -60 dB .. 0 dB
+  const x = db => clamp((db + 60) / 60, 0, 1) * W;
+  m.fillStyle = 'rgba(169,124,37,.35)';
+  for (let d = -48; d < 0; d += 12) m.fillRect(Math.round(x(d)), 0, 1, H);
+  if (!meters) return;
+  const lane = H / meters.length;
+  meters.forEach((mt, i) => {
+    mt.an.getFloatTimeDomainData(mt.buf);
+    let pk = 0; for (const v of mt.buf) pk = Math.max(pk, Math.abs(v));
+    const db = pk > 0 ? 20 * Math.log10(pk) : -120;
+    mt.hold = Math.max(db, mt.hold - 0.6);
+    const w = x(db);
+    m.fillStyle = db > -1 ? '#a3402e' : db > -9 ? '#a97c25' : '#2e6b58';
+    m.fillRect(0, i * lane + 1, w, lane - 2);
+    m.fillStyle = '#1c2b46'; m.fillRect(Math.max(0, x(mt.hold) - 1), i * lane + 1, 2, lane - 2);
+  });
+}
+function seekBy(sec) {
+  if (!doc || !len()) return;
+  const wasPlaying = !!player, pos = player ? playPos() : cursor;
+  cursor = clamp(Math.round(pos + sec * doc.sr), 0, len());
+  if (wasPlaying) { stopPlay(); if (hasSel() && (cursor < selA || cursor >= selB)) selA = selB = null; play(); }
+  else refresh();
+}
+
+/* ---------- Parameter dialog ---------- */
+// fields: { id, label, type: 'number' | 'select' | 'check', value, min, max, step, unit, options: [[value, label]] }
+let paramState = null;
+function askParams(title, desc, fields, { ok = 'Apply', preview = null } = {}) {
+  return new Promise(resolve => {
+    $('paramTitle').textContent = title;
+    $('paramDesc').textContent = desc || '';
+    const box = $('paramFields'); box.innerHTML = '';
+    for (const f of fields) {
+      const wrap = document.createElement('div'); wrap.className = 'field';
+      const id = 'pf_' + f.id;
+      if (f.type === 'check') {
+        const lab = document.createElement('label'); lab.className = 'check';
+        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = id; cb.checked = !!f.value;
+        lab.append(cb, ' ' + f.label); wrap.appendChild(lab);
+      } else {
+        const lab = document.createElement('label'); lab.htmlFor = id; lab.textContent = f.label; wrap.appendChild(lab);
+        const row = document.createElement('div'); row.className = 'field-row';
+        let input;
+        if (f.type === 'select') {
+          input = document.createElement('select');
+          f.options.forEach(([v, l]) => input.add(new Option(l, v)));
+          input.value = String(f.value);
+        } else {
+          input = document.createElement('input'); input.type = 'number'; input.className = 'num';
+          input.value = f.value;
+          for (const a of ['min', 'max', 'step']) if (f[a] !== undefined) input[a] = f[a];
+        }
+        input.id = id; row.appendChild(input);
+        if (f.unit) { const u = document.createElement('span'); u.textContent = f.unit; row.appendChild(u); }
+        wrap.appendChild(row);
+      }
+      box.appendChild(wrap);
+    }
+    $('paramOk').textContent = ok;
+    $('paramPreview').hidden = !preview;
+    paramState = { fields, resolve, preview };
+    $('paramDlg').showModal();
+    const first = box.querySelector('input,select'); if (first) first.focus();
+  });
+}
+function paramValues() {
+  return Object.fromEntries(paramState.fields.map(f => {
+    const el = $('pf_' + f.id);
+    if (f.type === 'check') return [f.id, el.checked];
+    if (f.type === 'select') return [f.id, el.value];
+    let v = parseFloat(el.value);
+    if (!isFinite(v)) v = f.value;
+    if (f.min !== undefined) v = Math.max(f.min, v);
+    if (f.max !== undefined) v = Math.min(f.max, v);
+    return [f.id, v];
+  }));
+}
+function finishParams(ok) {
+  if (!paramState) return;
+  const st = paramState, vals = ok ? paramValues() : null;
+  paramState = null;
+  stopPreview();
+  $('paramDlg').close();
+  st.resolve(vals);
+}
+on('paramOk', () => finishParams(true));
+on('paramCancel', () => finishParams(false));
+$('paramDlg').addEventListener('close', () => finishParams(false));
+$('paramDlg').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') { e.preventDefault(); finishParams(true); } });
+
+// Preview: render up to 8 s of the target range with the current settings and play it.
+let previewSrc = null;
+function stopPreview() { if (previewSrc) { try { previewSrc.stop(); } catch (e) {} previewSrc = null; } }
+on('paramPreview', async () => {
+  if (!paramState || !paramState.preview) return;
+  stopPreview(); stopPlay();
+  const [a, b0] = range(), b = Math.min(b0, a + doc.sr * 8);
+  try {
+    const out = await paramState.preview(sliceCh(doc.ch, a, b), doc.sr, paramValues());
+    const ctx = audio(); ctx.resume();
+    const buf = ctx.createBuffer(out.length, Math.max(1, out[0].length), doc.sr);
+    out.forEach((c, i) => buf.copyToChannel(c, i));
+    const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start();
+    previewSrc = src;
+  } catch (e) { console.error(e); toast('Preview failed.'); }
+});
+
+/* ---------- Offline rendering (Web Audio effects) ---------- */
+async function renderOffline(ch, sr, build) {
+  const n = Math.max(1, ch[0].length);
+  const off = new OfflineAudioContext(ch.length, n, sr);
+  const buf = off.createBuffer(ch.length, n, sr);
+  ch.forEach((c, i) => buf.copyToChannel(c, i));
+  const src = off.createBufferSource(); src.buffer = buf;
+  build(off, src).connect(off.destination);
+  src.start();
+  const r = await off.startRendering();
+  return Array.from({ length: ch.length }, (_, i) => r.getChannelData(i).slice(0, ch[0].length));
+}
+// Replace [a, b) with audio of any length (markers inside the range are dropped).
+function opReplace(a, b, ins) {
+  const base = doc;
+  doc = opDelete(a, b);
+  const next = opInsert(a, ins);
+  doc = base;
+  return next;
+}
+// Ask for settings, then run process(ch, sr, values) -> channels over the selection (or whole file).
+async function processFx(name, desc, fields, process, { sameLength = true } = {}) {
+  if (!doc || !len()) return;
+  stopPlay();
+  const vals = await askParams(name, desc, fields, { preview: process });
+  if (!vals) return;
+  const [a, b] = range();
+  busy(true);
+  try {
+    const out = await process(sliceCh(doc.ch, a, b), doc.sr, vals);
+    if (sameLength) {
+      const ch = doc.ch.map((c, k) => { const o = c.slice(); o.set(out[k].subarray(0, b - a), a); return o; });
+      commit(makeDoc(doc.sr, ch, doc.markers.slice()), name);
+    } else {
+      commit(opReplace(a, b, out), name);
+      if (hasSel()) { selB = selA + out[0].length; }
+      clampView(); refresh();
+    }
+  } catch (e) { console.error(e); toast(name + ' failed.'); }
+  finally { busy(false); }
+}
+const biquad = (ctx, type, freq, gain = 0, Q = 0.707) => {
+  const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.gain.value = gain; f.Q.value = Q; return f;
+};
+const chain = (src, ...nodes) => { nodes.reduce((a, n) => (a.connect(n), n), src); return nodes[nodes.length - 1]; };
+
+function fxEqualiser() {
+  processFx('Equaliser', 'Boost (+) or cut (−) the low, middle and high frequencies.', [
+    { id: 'bass', label: 'Bass (below 200 Hz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
+    { id: 'mid', label: 'Middle (around 1 kHz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
+    { id: 'treble', label: 'Treble (above 4 kHz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => chain(src,
+    biquad(ctx, 'lowshelf', 200, v.bass), biquad(ctx, 'peaking', 1000, v.mid, 0.8), biquad(ctx, 'highshelf', 4000, v.treble))));
+}
+function fxEcho() {
+  processFx('Echo', 'Repeats the sound after a short delay, each repeat quieter than the last.', [
+    { id: 'delay', label: 'Delay between echoes', value: 300, min: 20, max: 2000, step: 10, unit: 'ms' },
+    { id: 'decay', label: 'Each echo’s loudness', value: 40, min: 5, max: 90, step: 5, unit: '% of the previous' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => {
+    const out = ctx.createGain(), d = ctx.createDelay(5), fb = ctx.createGain();
+    d.delayTime.value = v.delay / 1000; fb.gain.value = v.decay / 100;
+    src.connect(out); src.connect(d); d.connect(fb); fb.connect(d); fb.connect(out);
+    return out;
+  }));
+}
+function fxReverb() {
+  processFx('Reverb', 'Adds the sound of a room or hall.', [
+    { id: 'size', label: 'Room size (reverb length)', value: 1.8, min: 0.2, max: 8, step: 0.1, unit: 's' },
+    { id: 'mix', label: 'Amount', value: 25, min: 0, max: 100, step: 5, unit: '%' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => {
+    const n = Math.round(v.size * sr), nc = Math.min(2, ch.length);
+    const ir = ctx.createBuffer(nc, n, sr);
+    for (let k = 0; k < nc; k++) { const d = ir.getChannelData(k); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3); }
+    const conv = ctx.createConvolver(); conv.buffer = ir;
+    const dry = ctx.createGain(), wet = ctx.createGain(), out = ctx.createGain();
+    dry.gain.value = 1 - v.mix / 200; wet.gain.value = v.mix / 100;
+    src.connect(dry); dry.connect(out); src.connect(conv); conv.connect(wet); wet.connect(out);
+    return out;
+  }));
+}
+function fxCompressor() {
+  processFx('Compressor', 'Makes loud parts quieter so the whole recording sounds more even, then raises it back up.', [
+    { id: 'thr', label: 'Start compressing above', value: -24, min: -60, max: 0, step: 1, unit: 'dB' },
+    { id: 'ratio', label: 'Strength (ratio)', value: 4, min: 1, max: 20, step: 0.5, unit: ': 1' },
+    { id: 'makeup', label: 'Make-up gain', value: 6, min: 0, max: 24, step: 1, unit: 'dB' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => {
+    const c = ctx.createDynamicsCompressor();
+    c.threshold.value = v.thr; c.ratio.value = v.ratio; c.knee.value = 8; c.attack.value = 0.005; c.release.value = 0.2;
+    const g = ctx.createGain(); g.gain.value = Math.pow(10, v.makeup / 20);
+    return chain(src, c, g);
+  }));
+}
+function fxHighpass() {
+  processFx('Remove rumble', 'Cuts everything below the chosen pitch — removes hum, traffic rumble and wind. 80–120 Hz suits speech.', [
+    { id: 'f', label: 'Cut below', value: 90, min: 20, max: 1000, step: 10, unit: 'Hz' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => chain(src, biquad(ctx, 'highpass', v.f), biquad(ctx, 'highpass', v.f))));
+}
+function fxLowpass() {
+  processFx('Remove hiss', 'Cuts everything above the chosen pitch — softens hiss and harsh highs. 6000–8000 Hz keeps speech clear.', [
+    { id: 'f', label: 'Cut above', value: 7000, min: 500, max: 20000, step: 100, unit: 'Hz' },
+  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => chain(src, biquad(ctx, 'lowpass', v.f), biquad(ctx, 'lowpass', v.f))));
+}
+function gateCh(ch, sr, thr, holdMs = 60) {
+  const { win, db } = loudness(ch, sr);
+  const hold = Math.ceil(holdMs / 10), open = new Uint8Array(db.length);
+  for (let w = 0; w < db.length; w++) if (db[w] >= thr) for (let j = Math.max(0, w - hold); j <= Math.min(db.length - 1, w + hold); j++) open[j] = 1;
+  const atk = 1 - Math.exp(-1 / (0.004 * sr)), rel = 1 - Math.exp(-1 / (0.06 * sr));
+  const out = ch.map(c => new Float32Array(c.length));
+  let g = open[0] ? 1 : 0;
+  for (let i = 0; i < ch[0].length; i++) {
+    const t = open[Math.floor(i / win)] ? 1 : 0;
+    g += (t - g) * (t > g ? atk : rel);
+    for (let k = 0; k < ch.length; k++) out[k][i] = ch[k][i] * g;
+  }
+  return out;
+}
+function fxGate() {
+  processFx('Noise gate', 'Silences the quiet background noise between words and phrases. Anything quieter than the threshold is muted.', [
+    { id: 'thr', label: 'Mute anything quieter than', value: -45, min: -90, max: -5, step: 1, unit: 'dB' },
+    { id: 'hold', label: 'Keep open after speech for', value: 80, min: 10, max: 1000, step: 10, unit: 'ms' },
+  ], async (ch, sr, v) => gateCh(ch, sr, v.thr, v.hold));
+}
+function fxSpeed() {
+  processFx('Speed', 'Plays faster or slower. Like a tape, the pitch changes too (faster = higher).', [
+    { id: 'pct', label: 'New speed', value: 110, min: 25, max: 400, step: 5, unit: '% of original' },
+  ], (ch, sr, v) => resample(ch, sr * v.pct / 100, sr), { sameLength: false });
+}
+async function fxSampleRate() {
+  if (!doc || !len()) return;
+  stopPlay();
+  const v = await askParams('Sample rate', `Currently ${doc.sr} Hz. Lower rates make smaller files; 44 100 Hz is CD quality, 16 000–22 050 Hz is fine for speech.`, [
+    { id: 'sr', label: 'New sample rate', type: 'select', value: doc.sr, options: [8000, 11025, 16000, 22050, 24000, 32000, 44100, 48000, 96000].map(r => [r, r + ' Hz']) },
+  ]);
+  if (!v || +v.sr === doc.sr) return;
+  const to = +v.sr, k = to / doc.sr;
+  busy(true);
+  try {
+    const ch = await resample(doc.ch, doc.sr, to);
+    const markers = doc.markers.map(m => Math.round(m * k)).filter(m => m > 0 && m < ch[0].length);
+    cursor = Math.round(cursor * k); selA = selB = null;
+    commit(makeDoc(to, ch, markers), `Sample rate ${to} Hz`);
+    zoomFit();
+  } finally { busy(false); }
+}
+function makeStereo() {
+  if (!doc || doc.ch.length !== 1) return;
+  stopPlay();
+  commit(makeDoc(doc.sr, [doc.ch[0], doc.ch[0]], doc.markers.slice()), 'Made stereo');
+}
+function swapChannels() {
+  if (!doc || doc.ch.length !== 2) return;
+  stopPlay();
+  commit(makeDoc(doc.sr, [doc.ch[1], doc.ch[0]], doc.markers.slice()), 'Swapped channels');
+}
+
+/* ---------- Tools ---------- */
+function insertAt(ins, label) {
+  const at = hasSel() ? selA : cursor;
+  const next = hasSel() ? opReplace(selA, selB, ins) : opInsert(at, ins);
+  commit(next, label);
+  selA = at; selB = at + ins[0].length; cursor = at; refresh();
+}
+$('insFileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f || !doc) return;
+  stopPlay(); busy(true);
+  try {
+    const src = await decodeFile(f);
+    adoptFormat(src.sr, src.ch.length);
+    const ins = src.sr === doc.sr ? src.ch : await resample(src.ch, src.sr, doc.sr);
+    insertAt(ins, `Inserted “${src.name}”`);
+  } catch (err) { console.error(err); toast(`Could not read “${f.name}”.`); }
+  finally { busy(false); }
+});
+async function generate() {
+  if (!doc) return;
+  stopPlay();
+  const v = await askParams('Generate', 'Inserts a tone, noise or silence at the cursor (replacing the selection, if any).', [
+    { id: 'kind', label: 'Sound', type: 'select', value: 'sine', options: [['sine', 'Tone (sine — smooth)'], ['square', 'Tone (square — buzzy)'], ['noise', 'White noise'], ['silence', 'Silence']] },
+    { id: 'freq', label: 'Pitch (tones only)', value: 440, min: 20, max: 20000, step: 1, unit: 'Hz' },
+    { id: 'dur', label: 'Length', value: 1, min: 0.01, max: 600, step: 0.1, unit: 's' },
+    { id: 'vol', label: 'Volume', value: 30, min: 0, max: 100, step: 5, unit: '%' },
+  ], { ok: 'Insert' });
+  if (!v) return;
+  const n = Math.round(v.dur * doc.sr), a = v.vol / 100, c = new Float32Array(n), w = 2 * Math.PI * v.freq / doc.sr;
+  const fade = Math.min(n / 2, Math.round(doc.sr * 0.005));
+  for (let i = 0; i < n; i++) {
+    let x = v.kind === 'sine' ? Math.sin(w * i) : v.kind === 'square' ? (Math.sin(w * i) >= 0 ? 1 : -1) : v.kind === 'noise' ? Math.random() * 2 - 1 : 0;
+    const env = Math.min(1, i / fade, (n - 1 - i) / fade); // tiny fades avoid clicks
+    c[i] = x * a * (fade ? env : 1);
+  }
+  insertAt(doc.ch.map(() => c), { sine: 'Generated tone', square: 'Generated tone', noise: 'Generated noise', silence: 'Generated silence' }[v.kind]);
+}
+async function repeatLoop() {
+  if (!hasSel()) return;
+  stopPlay();
+  const v = await askParams('Repeat loop', 'Repeats the selection straight after itself — handy for memorising a line.', [
+    { id: 'times', label: 'Play it this many times in total', value: 3, min: 2, max: 100, step: 1 },
+    { id: 'gap', label: 'Pause between repeats', value: 0, min: 0, max: 30, step: 0.25, unit: 's' },
+  ], { ok: 'Repeat' });
+  if (!v) return;
+  const seg = sliceCh(doc.ch, selA, selB), gap = Math.round(v.gap * doc.sr), n = seg[0].length;
+  const total = (n + gap) * (v.times - 1);
+  const ins = seg.map(c => { const o = new Float32Array(total); for (let r = 0; r < v.times - 1; r++) o.set(c, gap + r * (n + gap)); return o; });
+  const a = selA, at = selB;
+  commit(opInsert(at, ins), `Repeated ×${v.times}`);
+  selA = a; selB = at + total; cursor = a; refresh();
+}
+async function redact() {
+  if (!hasSel()) return;
+  stopPlay();
+  const v = await askParams('Redact', 'Covers the selected words so they can’t be heard.', [
+    { id: 'kind', label: 'Replace with', type: 'select', value: 'beep', options: [['beep', 'Beep'], ['silence', 'Silence']] },
+    { id: 'vol', label: 'Beep volume', value: 25, min: 1, max: 100, step: 1, unit: '%' },
+  ], { ok: 'Redact' });
+  if (!v) return;
+  const w = 2 * Math.PI * 1000 / doc.sr, amp = v.vol / 100, a0 = selA;
+  effect('Redacted', (c, a, b) => { for (let i = a; i < b; i++) c[i] = v.kind === 'beep' ? amp * Math.sin(w * (i - a0)) : 0; });
+}
+function splitIntoTabs() {
+  if (!doc || !len()) return;
+  const parts = doc.markers.length ? segments() : [[0, cursor], [cursor, len()]];
+  if (parts.length < 2 || parts.some(([a, b]) => b <= a)) { toast('Place the cursor inside the audio, or add markers, to split.'); return; }
+  const base = $('fileName').value.trim() || 'audio', src = doc;
+  parts.forEach(([a, b], i) => newDocument(makeDoc(src.sr, sliceCh(src.ch, a, b)), `${base}-${String(i + 1).padStart(2, '0')}`, false));
+  toast(`Split into ${parts.length} new tabs`);
+}
+async function joinTabs() {
+  stashTab();
+  if (tabs.length < 2) return;
+  const withAudio = tabs.filter(t => t.doc && t.doc.ch[0].length);
+  const v = await askParams('Join tabs', 'Puts the ticked tabs end to end, in tab order, in a new tab. A marker is placed at each join.', [
+    ...withAudio.map((t, i) => ({ id: 'j' + i, type: 'check', label: t.name || 'untitled', value: true })),
+    { id: 'gap', label: 'Pause between files', value: 0, min: 0, max: 60, step: 0.25, unit: 's' },
+  ], { ok: 'Join' });
+  if (!v) return;
+  const pick = withAudio.filter((_, i) => v['j' + i]);
+  if (pick.length < 2) { toast('Tick at least two tabs to join.'); return; }
+  busy(true);
+  try {
+    const sr = pick[0].doc.sr, nch = Math.max(...pick.map(t => t.doc.ch.length)), gap = Math.round(v.gap * sr);
+    const pieces = [];
+    for (const t of pick) {
+      const c = t.doc.sr === sr ? t.doc.ch : await resample(t.doc.ch, t.doc.sr, sr);
+      pieces.push(fitChannels(c, nch));
+    }
+    const total = pieces.reduce((s, p) => s + p[0].length, 0) + gap * (pieces.length - 1);
+    const ch = Array.from({ length: nch }, () => new Float32Array(total)), markers = [];
+    let o = 0;
+    pieces.forEach((p, i) => {
+      if (i) { o += gap; markers.push(o); }
+      p.forEach((c, k) => ch[k].set(c, o));
+      o += p[0].length;
+    });
+    newDocument(makeDoc(sr, ch, markers), 'Joined', false);
+    dirty = true; refresh();
+    toast(`Joined ${pick.length} files`);
+  } catch (e) { console.error(e); toast('Joining failed.'); }
+  finally { busy(false); }
+}
+
+/* ---------- Batch convert ---------- */
+function normaliseCh(ch) {
+  let p = 0; for (const c of ch) for (const v of c) p = Math.max(p, Math.abs(v));
+  if (!p) return ch;
+  const k = Math.pow(10, -1 / 20) / p;
+  return ch.map(c => c.map(v => v * k));
+}
+function trimSilenceCh(ch, sr, thr) {
+  const { win, db } = loudness(ch, sr);
+  let f = 0, l = db.length - 1;
+  while (f < db.length && db[f] < thr) f++;
+  while (l >= 0 && db[l] < thr) l--;
+  if (f > l) return ch;
+  const pad = Math.round(sr * 0.05);
+  return sliceCh(ch, Math.max(0, f * win - pad), Math.min(ch[0].length, (l + 1) * win + pad));
+}
+function fadeCh(ch, sr, inMs, outMs) {
+  const ni = Math.min(ch[0].length, Math.round(sr * inMs / 1000)), no = Math.min(ch[0].length, Math.round(sr * outMs / 1000));
+  return ch.map(c => {
+    const o = c.slice(), L = o.length;
+    for (let i = 0; i < ni; i++) o[i] *= (i / ni) ** 2;
+    for (let i = 0; i < no; i++) o[L - 1 - i] *= (i / no) ** 2;
+    return o;
+  });
+}
+on('batchBtn', () => $('batchFileIn').click());
+$('batchFileIn').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length) return;
+  const v = await askParams(`Batch convert ${files.length} file${files.length > 1 ? 's' : ''}`, 'Each file is processed the same way and all are saved together in one zip. Your open tabs are not changed.', [
+    { id: 'fmt', label: 'Save as', type: 'select', value: saveFormat(), options: [['mp3', 'MP3 (' + $('kbpsSel').value + ' kbps — change in the Save panel)'], ['wav', 'WAV (lossless)']] },
+    { id: 'trim', type: 'check', label: 'Trim silent start and end (uses the silence threshold)', value: false },
+    { id: 'norm', type: 'check', label: 'Normalise loudness (peak −1 dB)', value: true },
+    { id: 'mono', type: 'check', label: 'Convert to mono', value: false },
+    { id: 'fin', label: 'Fade in', value: 0, min: 0, max: 10000, step: 50, unit: 'ms' },
+    { id: 'fout', label: 'Fade out', value: 0, min: 0, max: 10000, step: 50, unit: 'ms' },
+  ], { ok: 'Convert' });
+  if (!v) return;
+  $('fmtSel').value = v.fmt; syncFormat();
+  const thr = parseFloat($('thrIn').value);
+  await withBusy('Converting…', async () => {
+    const out = [], failed = [];
+    for (let i = 0; i < files.length; i++) {
+      busyText(`Converting ${i + 1} of ${files.length}…`);
+      try {
+        const src = await decodeFile(files[i]);
+        let ch = src.ch;
+        if (v.mono) ch = fitChannels(ch, 1);
+        if (v.trim) ch = trimSilenceCh(ch, src.sr, thr);
+        if (v.norm) ch = normaliseCh(ch);
+        if (v.fin || v.fout) ch = fadeCh(ch, src.sr, v.fin, v.fout);
+        out.push({ name: src.name + ext(), data: await encode(ch, src.sr) });
+      } catch (err) { console.error(err); failed.push(files[i].name); }
+    }
+    if (out.length) {
+      const url = URL.createObjectURL(makeZip(out));
+      const link = document.createElement('a'); link.href = url; link.download = 'converted.zip';
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+    toast(`Converted ${out.length} file${out.length === 1 ? '' : 's'}` + (failed.length ? ` — couldn’t read: ${failed.join(', ')}` : ''));
+  });
+});
+
+/* ---------- History ---------- */
+function renderHistory() {
+  const ul = $('histList'); ul.innerHTML = '';
+  const items = [...undoStack.map((d, i) => ({ d, i, cls: '' })), { d: doc, i: undoStack.length, cls: 'cur' },
+    ...redoStack.slice().reverse().map((d, j) => ({ d, i: undoStack.length + 1 + j, cls: 'future' }))];
+  items.forEach(({ d, i, cls }) => {
+    const li = document.createElement('li'); li.className = cls;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'link grow';
+    b.textContent = (i + 1) + '. ' + (d.label || 'Edit');
+    b.title = cls === 'cur' ? 'Current state' : 'Go back to this point';
+    b.onclick = () => jumpHistory(i);
+    li.appendChild(b); ul.appendChild(li);
+  });
+  const cur = ul.querySelector('.cur'); if (cur) cur.scrollIntoView({ block: 'nearest' });
+}
+function jumpHistory(idx) {
+  if (idx === undoStack.length) return;
+  stopPlay();
+  const from = doc;
+  let d = doc;
+  while (undoStack.length > idx) { redoStack.push(d); d = undoStack.pop(); }
+  while (undoStack.length < idx && redoStack.length) { undoStack.push(d); d = redoStack.pop(); }
+  doc = from; setDoc(d); dirty = true;
+}
+
+/* ---------- Recent files (IndexedDB, this browser only) ---------- */
+const RECENT_MAX = 8, RECENT_MAX_BYTES = 25e6;
+let dbPromise = null;
+function idb() {
+  return dbPromise || (dbPromise = new Promise((res, rej) => {
+    const r = indexedDB.open('diin-audio-editor', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('recent', { keyPath: 'id' });
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  }));
+}
+const idbReq = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
+async function recentAll() {
+  try { const db = await idb(); return (await idbReq(db.transaction('recent').objectStore('recent').getAll())).sort((a, b) => b.date - a.date); }
+  catch (e) { return []; }
+}
+async function recentAdd(file) {
+  if (!file || file.size > RECENT_MAX_BYTES) return;
+  try {
+    const db = await idb(), id = file.name + '|' + file.size;
+    await idbReq(db.transaction('recent', 'readwrite').objectStore('recent').put({ id, name: file.name, size: file.size, type: file.type, date: Date.now(), blob: file }));
+    const all = await recentAll();
+    for (const old of all.slice(RECENT_MAX)) await idbReq(db.transaction('recent', 'readwrite').objectStore('recent').delete(old.id));
+  } catch (e) { /* storage unavailable (private mode) — recent list is optional */ }
+  renderRecent();
+}
+async function recentDelete(id) {
+  try { const db = await idb(); await idbReq(db.transaction('recent', 'readwrite').objectStore('recent').delete(id)); } catch (e) {}
+  renderRecent();
+}
+async function renderRecent() {
+  const all = await recentAll();
+  $('emptyRecent').hidden = !all.length;
+  for (const id of ['recentList', 'recentList0']) {
+    const ul = $(id); ul.innerHTML = '';
+    if (!all.length) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'Files you open will appear here.'; ul.appendChild(li); continue; }
+    all.forEach(r => {
+      const li = document.createElement('li');
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'link grow'; b.textContent = r.name; b.title = 'Open ' + r.name;
+      b.onclick = () => loadFile(new File([r.blob], r.name, { type: r.type }), { remember: false });
+      const sub = document.createElement('span'); sub.className = 'sub';
+      sub.textContent = (r.size / 1048576).toFixed(1) + ' MB · ' + new Date(r.date).toLocaleDateString();
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'btn'; x.textContent = '✕'; x.title = 'Remove from recent files';
+      x.onclick = () => recentDelete(r.id);
+      li.append(b, sub, x); ul.appendChild(li);
+    });
+  }
+}
+renderRecent();
 
 /* ---------- Pointer interaction ---------- */
 let drag = null; // { kind:'sel', anchor } | { kind:'marker', index }
@@ -1422,7 +2064,6 @@ for (const id of ['selStartIn', 'selEndIn']) {
 }
 
 /* ---------- Wire up buttons ---------- */
-const on = (id, fn) => $(id).addEventListener('click', fn);
 on('openBtn', () => $('fileIn').click());
 on('openBtn2', () => $('fileIn').click());
 $('fileIn').addEventListener('change', e => { loadFiles([...e.target.files]); e.target.value = ''; });
@@ -1436,6 +2077,13 @@ on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
 on('mixFileBtn', openMixDialog);
 on('dupBtn', duplicate);
+on('backBtn', () => seekBy(-5)); on('fwdBtn', () => seekBy(5));
+$('rateSel').addEventListener('change', () => { if (player) { const pos = playPos(); stopPlay(); cursor = Math.round(pos); play(); } });
+on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('speedBtn', fxSpeed); on('compBtn', fxCompressor);
+on('gateBtn', fxGate); on('hpBtn', fxHighpass); on('lpBtn', fxLowpass);
+on('stereoBtn', makeStereo); on('swapBtn', swapChannels); on('rateConvBtn', fxSampleRate);
+on('insFileBtn', () => $('insFileIn').click()); on('genBtn', generate); on('repeatBtn', repeatLoop); on('redactBtn', redact);
+on('splitBtn', splitIntoTabs); on('joinBtn', joinTabs);
 function openGuide() { $('guideDlg').showModal(); $('guideDlg').querySelector('.guide-body').scrollTop = 0; }
 on('guideBtn', openGuide);
 on('guideClose', () => $('guideDlg').close());
@@ -1477,7 +2125,7 @@ function switchTab(dir) {
 }
 document.addEventListener('keydown', e => {
   const t = e.target;
-  if ($('mixDlg').open || $('guideDlg').open) return;
+  if (document.querySelector('dialog[open]')) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   let handled = true;
@@ -1499,6 +2147,8 @@ document.addEventListener('keydown', e => {
   else if (mod && k === 'a') { selA = 0; selB = len(); cursor = 0; refresh(); }
   else if (mod && k === 's') exportAll();
   else if (mod && k === 'd') duplicate();
+  else if (!mod && k === ',') seekBy(-5);
+  else if (!mod && k === '.') seekBy(5);
   else if (!mod && k === '[') switchTab(-1);
   else if (!mod && k === ']') switchTab(1);
   else if (!mod && k === 't') cmdTrim();
