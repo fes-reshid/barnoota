@@ -83,6 +83,7 @@
     .quiz-missing-poem{display:block;width:min(760px,100%);margin:20px auto 0;padding:18px 16px;border:3px solid var(--gold2);border-radius:20px;background:#fff9e8}
     .quiz-missing-poem .poem-half{font-size:clamp(25px,2.8vw,38px)}
     .lesson-word-arabic{display:block;max-width:100%;font:700 clamp(30px,4vw,44px)/1.6 'Amiri';color:var(--green);direction:rtl;text-align:center;overflow-wrap:anywhere}.lesson-flash-status{width:min(620px,100%);margin:4px auto 0;padding:10px 14px;border:2px solid var(--gold2);border-radius:15px;background:#fff8df;color:var(--navy);font:17px 'Marcellus';text-align:center}
+    .learn-stay-note{margin:0 0 12px;padding:11px 14px;border:2px solid #d8b45a;border-radius:15px;background:#fff6cf;color:var(--navy);font:700 16px/1.45 'Nunito',sans-serif;text-align:center}.reading-guard{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(18,38,63,.68);backdrop-filter:blur(4px)}.reading-guard.hidden{display:none}.reading-guard-card{width:min(440px,100%);border:4px solid #fff;border-radius:28px;background:linear-gradient(145deg,#fffdf7,#fff3c7);padding:26px 22px;text-align:center;box-shadow:0 22px 60px rgba(0,0,0,.28)}.reading-guard-icon{font-size:46px}.reading-guard-card h2{margin:6px 0 8px;color:var(--navy);font:28px 'Marcellus'}.reading-guard-card p{margin:0 auto 14px;color:#5f513d;font-size:18px;line-height:1.5}.reading-count{width:96px;height:96px;margin:12px auto;display:grid;place-items:center;border:8px solid #cfeaf4;border-top-color:var(--green);border-radius:50%;background:#fff;color:var(--green);font:700 34px 'Nunito',sans-serif}.reading-guard-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.reading-guard-actions button{border:2px solid var(--gold2);border-radius:16px;padding:11px 17px;font:17px 'Marcellus';cursor:pointer}.reading-return{background:#fff;color:var(--navy)}.reading-continue{background:var(--green);color:#fff}.reading-continue:disabled{opacity:.45;cursor:not-allowed}
     @media(max-width:600px){.lesson-flash-grid{grid-template-columns:minmax(0,1fr);gap:16px}.lesson-flash{height:210px}.lesson-flash .flash-face{padding:46px 15px 40px}.quiz-missing-poem{padding:13px 8px}.quiz-missing-poem .blank-word{min-width:105px}}
 </style>
 </head>
@@ -448,10 +449,12 @@ function getAudio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webki
 function tone(freq,start,duration,type='sine',gain=.08){if(!soundOn)return;const ctx=getAudio(),osc=ctx.createOscillator(),vol=ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,ctx.currentTime+start);vol.gain.setValueAtTime(.001,ctx.currentTime+start);vol.gain.exponentialRampToValueAtTime(gain,ctx.currentTime+start+.02);vol.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+start+duration);osc.connect(vol).connect(ctx.destination);osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+duration+.03)}
 function happySound(){tone(523,0,.16,'sine',.09);tone(659,.13,.17,'sine',.09);tone(784,.27,.28,'triangle',.1)}
 function wrongSound(){tone(240,0,.18,'square',.045);tone(170,.16,.28,'square',.04)}
-function say(text,lang='en-AU'){if(!soundOn||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=lang.startsWith('ar')?.72:.86;speechSynthesis.speak(u)}
+let activeMediaAudio=null,audioPlaybackToken=0;
+function stopVoicePlayback(){audioPlaybackToken++;if(activeMediaAudio){activeMediaAudio.onended=null;activeMediaAudio.onerror=null;activeMediaAudio.pause();try{activeMediaAudio.currentTime=0}catch(e){}activeMediaAudio=null}if('speechSynthesis'in window)speechSynthesis.cancel()}
+function say(text,lang='en-AU'){if(!soundOn||!('speechSynthesis'in window))return;stopVoicePlayback();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=lang.startsWith('ar')?.72:.86;speechSynthesis.speak(u)}
 function sayArabic(text){say(text,'ar-SA')}function tryAgainSound(){wrongSound();setTimeout(()=>say('Try again','en-AU'),360)}
 function lineNumbers(l){const parts=String(l.lines).split('-').map(Number);return parts.length===1?[parts[0]]:Array.from({length:parts[1]-parts[0]+1},(_,i)=>parts[0]+i)}
-function playAudioFiles(sources,fallback){if(!soundOn)return;let index=0;const next=()=>{if(index>=sources.length)return;const audio=new Audio(sources[index++]);audio.onended=next;audio.onerror=()=>{if(index<sources.length)next();else sayArabic(fallback)};audio.play().catch(()=>sayArabic(fallback))};next()}
+function playAudioFiles(sources,fallback){if(!soundOn)return;stopVoicePlayback();const token=audioPlaybackToken;let index=0;const next=()=>{if(token!==audioPlaybackToken)return;if(index>=sources.length){activeMediaAudio=null;return}const audio=new Audio(sources[index++]);activeMediaAudio=audio;audio.onended=()=>{if(activeMediaAudio===audio)activeMediaAudio=null;next()};audio.onerror=()=>{if(activeMediaAudio===audio)activeMediaAudio=null;if(index<sources.length)next();else sayArabic(fallback)};audio.play().catch(()=>{if(activeMediaAudio===audio)activeMediaAudio=null;sayArabic(fallback)})};next()}
 function playMatnLine(l,index){const number=lineNumbers(l)[index],key='line-'+String(number).padStart(2,'0'),full=window.TAJWEED_AUDIO[key],halves=['a','b'].map(part=>window.TAJWEED_AUDIO[key+part]).filter(Boolean),fallback=l.matn.split('|')[index];if(full)playAudioFiles([full],fallback);else if(halves.length)playAudioFiles(halves,fallback);else sayArabic(fallback)}
 function playMatnHalf(l,partIndex){const number=lineNumbers(l)[0],key='line-'+String(number).padStart(2,'0')+(partIndex===0?'a':'b'),parts=poemParts(l.matn,l.lines),src=window.TAJWEED_AUDIO[key],fallback=parts[partIndex].join(' ');if(src)playAudioFiles([src],fallback);else sayArabic(fallback)}
 function totalStars(){return profile.stars.reduce((a,b)=>a+b,0)}function doneCount(){return profile.stars.filter(Boolean).length}function worldComplete(w){return worlds[w].lessons.every((_,i)=>profile.stars[worldStarts[w]+i]>0)}function assessment(w){return profile.teacherAssessments[w]||null}function mapQuizResult(w){return profile.mapQuizScores[w]||null}function mapQuizPassed(w){const r=mapQuizResult(w);return!!(r&&r.passed)}function worldUnlocked(w){return w===0||!!(assessment(w-1)&&assessment(w-1).approved)}
@@ -769,11 +772,14 @@ lessonQuizBank=function(index){
  return bank
 };
 stepLabels=function(){return [['🎧','Matn'],['📖','Learn'],['🔤','Words'],['🗣️','Memorise'],['🃏','Flash Card'],['🧩','Build'],['🏆','Five Questions']]};
+let activityStartedAt=0,readingGuardTimer=null;
 renderLesson=function(){
+ stopVoicePlayback();closeReadingGuard();activityStartedAt=Date.now();
  syncStats();const l=lessons[current],clearBtn=$('#clearBuildBtn'),backBtn=$('#previousLessonBtn'),total=7;
  $('#lessonNum').textContent=current+1;$('#stepPill').textContent=(step+1)+'/'+total;$('#fill').style.width=((step+1)/total*100)+'%';renderSide();$('#lessonActions').innerHTML='';
  backBtn.disabled=false;backBtn.textContent=step>0?'← Previous page':current>0?'← Previous lesson':'← Back to map';clearBtn.classList.add('hidden');clearBtn.disabled=false;clearBtn.onclick=null;answered=false;
- if(step===0)renderMatn(l);else if(step===1)renderExplanation(l);else if(step===2)renderWordMatch(l);else if(step===3)renderMemory(l);else if(step===4)renderLessonFlashCard(l);else if(step===5)renderBuilder(l);else renderLessonQuiz()
+ if(step===0)renderMatn(l);else if(step===1)renderExplanation(l);else if(step===2)renderWordMatch(l);else if(step===3)renderMemory(l);else if(step===4)renderLessonFlashCard(l);else if(step===5)renderBuilder(l);else renderLessonQuiz();
+ if(step===1){const tabs=$('.explain-tabs');if(tabs)tabs.insertAdjacentHTML('afterend','<p class="learn-stay-note">📖 Open <strong>Explanation</strong>, <strong>Explore Words</strong> and <strong>Practise</strong>. Stay on each section and read it carefully before moving on.</p>')}
 };
 const nextButtonBeforeLessonReorder=nextButton;
 nextButton=function(label,targetStep=null){
@@ -783,8 +789,28 @@ nextButton=function(label,targetStep=null){
  else if(targetStep===null&&step===4)label='Build the Poem →';
  else if(targetStep===null&&step===5)label='Answer Five Questions →';
  else if(step===3&&targetStep===4)label='Open Flash Card →';
- nextButtonBeforeLessonReorder(label,targetStep)
+ nextButtonBeforeLessonReorder(label,targetStep);
+ const button=$('#nextStep');if(button)button.onclick=()=>requestNextActivity(targetStep)
 };
+function closeReadingGuard(){if(readingGuardTimer){clearInterval(readingGuardTimer);readingGuardTimer=null}const guard=$('#readingGuard');if(guard)guard.remove()}
+function advanceToNextActivity(targetStep){step=targetStep===null?step+1:targetStep;if(targetStep===6)hintReturn=false;renderLesson()}
+function requestNextActivity(targetStep){
+ const elapsed=Math.floor((Date.now()-activityStartedAt)/1000);
+ if(elapsed>=30){advanceToNextActivity(targetStep);return}
+ openReadingGuard(Math.max(1,30-elapsed),targetStep)
+}
+function openReadingGuard(seconds,targetStep){
+ closeReadingGuard();
+ const advice=step===1?'Before moving on, open Explanation, Explore Words and Practise. Stay on each section and read it carefully.':'Read the Arabic and English carefully. Take your time so you can remember what you learned.';
+ document.body.insertAdjacentHTML('beforeend',`<div class="reading-guard" id="readingGuard" role="dialog" aria-modal="true" aria-labelledby="readingGuardTitle"><div class="reading-guard-card"><div class="reading-guard-icon">📖</div><h2 id="readingGuardTitle">Please read before going to the next activity</h2><p>${advice}</p><div class="reading-count" id="readingCount" aria-live="polite">${seconds}</div><p id="readingGuardStatus">Keep reading — ${seconds} seconds remaining.</p><div class="reading-guard-actions"><button class="reading-return" id="readingReturn">← Return to reading</button><button class="reading-continue" id="readingContinue" disabled>Continue →</button></div></div></div>`);
+ const count=$('#readingCount'),status=$('#readingGuardStatus'),continueButton=$('#readingContinue');
+ $('#readingReturn').onclick=closeReadingGuard;
+ continueButton.onclick=()=>{if(continueButton.disabled)return;closeReadingGuard();advanceToNextActivity(targetStep)};
+ readingGuardTimer=setInterval(()=>{seconds--;count.textContent=Math.max(0,seconds);if(seconds<=0){clearInterval(readingGuardTimer);readingGuardTimer=null;count.textContent='✓';status.textContent='Well done — you are ready for the next activity.';continueButton.disabled=false;continueButton.focus()}else status.textContent=`Keep reading — ${seconds} second${seconds===1?'':'s'} remaining.`},1000)
+}
+const soundToggleBeforeSingleAudio=$('#soundToggle').onclick;
+$('#soundToggle').onclick=()=>{soundToggleBeforeSingleAudio();if(!soundOn)stopVoicePlayback()};
+$('#homeBtn').addEventListener('click',stopVoicePlayback);
 
 /* Child avatar colours, Islamic clothing and full-body character. */
 const HUMAN_AVATARS=['🧒','👧','👦','🧕','👳'];
