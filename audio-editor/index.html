@@ -786,6 +786,7 @@
     <div class="grp">
       <button class="btn primary" id="mtMix" type="button" title="Mix all tracks into one file and open it in the editor">Mix down → new tab</button>
       <button class="btn" id="mtMixSave" type="button" title="Mix all tracks and download (format from the Save panel)">Save mix</button>
+      <button class="btn" id="mtSaveProj" type="button" title="Save everything — tabs and this multitrack session — to carry on later">Save project</button>
       <button class="btn" id="mtClose" type="button" title="Back to the editor (the multitrack session is kept)">✕ Close</button>
     </div>
   </div>
@@ -3593,7 +3594,7 @@ $('mtFileIn').addEventListener('change', async e => {
 on('mtSplit', mtSplit); on('mtDup', mtDup); on('mtDel', mtDel); on('mtEdit', mtEditClip);
 on('mtUndo', () => mtUndo(false)); on('mtRedo', () => mtUndo(true));
 on('mtZoomIn', () => mtZoom(1.5)); on('mtZoomOut', () => mtZoom(1 / 1.5)); on('mtFit', mtFit);
-on('mtMix', mtMixToTab); on('mtMixSave', mtMixSave); on('mtClose', mtClose);
+on('mtMix', mtMixToTab); on('mtSaveProj', saveProject); on('mtMixSave', mtMixSave); on('mtClose', mtClose);
 window.addEventListener('resize', () => { if ($('mt').classList.contains('open')) mtRender(); });
 
 /* ---------- Text to speech (eSpeak-NG compiled to WebAssembly, runs in the browser) ---------- */
@@ -4028,20 +4029,32 @@ function unzipStored(buf) {
 async function saveProject() {
   stashTab();
   const list = tabs.filter(t => t.doc);
-  if (!list.length) return;
+  if (!list.length && !mt.clips.length) return;
   await withBusy('Saving project…', async () => {
-    const meta = { app: 'diinislaam-audio-editor', version: 1, active: list.indexOf(active), tabs: [] }, files = [];
-    list.forEach((t, i) => {
-      const file = `tab${i + 1}.wav`;
-      meta.tabs.push({ name: t.name, sr: t.doc.sr, markers: t.doc.markers, file });
-      files.push({ name: file, data: encodeWavFloat(t.doc.ch, t.doc.sr) });
-    });
+    const meta = { app: 'diinislaam-audio-editor', version: 2, active: list.indexOf(active), tabs: [] }, files = [];
+    // Each piece of audio is stored once: a multitrack clip made from a tab reuses that tab's file.
+    const written = new Map(); // first channel array → file name
+    const store = (ch, sr, name) => {
+      if (written.has(ch[0])) return written.get(ch[0]);
+      written.set(ch[0], name); files.push({ name, data: encodeWavFloat(ch, sr) }); return name;
+    };
+    list.forEach((t, i) => meta.tabs.push({ name: t.name, sr: t.doc.sr, markers: t.doc.markers, file: store(t.doc.ch, t.doc.sr, `tab${i + 1}.wav`) }));
+    if (mt.tracks.length) {
+      let n = 0;
+      meta.multitrack = {
+        pps: mt.pps, scroll: mt.scroll, playhead: mt.playhead,
+        tracks: mt.tracks.map(({ id, name, vol, pan, mute, solo, color }) => ({ id, name, vol, pan, mute, solo, color })),
+        clips: mt.clips.map(c => ({ id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name,
+          srcName: c.src.name, file: store(c.src.ch, c.src.sr, `clip${++n}.wav`) })),
+      };
+    }
     files.unshift({ name: 'project.json', data: new TextEncoder().encode(JSON.stringify(meta, null, 1)) });
     const url = URL.createObjectURL(makeZip(files));
-    const link = document.createElement('a'); link.href = url; link.download = baseName() + '-project.zip';
+    const link = document.createElement('a'); link.href = url; link.download = (list.length ? baseName() : 'multitrack') + '-project.zip';
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
-    toast(`Project saved with ${list.length} tab${list.length === 1 ? '' : 's'} — open it again with File ▸ Open Project`);
+    const mtNote = mt.clips.length ? ` and the multitrack session (${mt.tracks.length} tracks, ${mt.clips.length} clips)` : '';
+    toast(`Project saved: ${list.length} tab${list.length === 1 ? '' : 's'}${mtNote}`);
   });
 }
 async function openProject(file) {
@@ -4050,14 +4063,29 @@ async function openProject(file) {
     const files = unzipStored(await file.arrayBuffer());
     const meta = JSON.parse(new TextDecoder().decode(files['project.json'] || new Uint8Array()));
     if (meta.app !== 'diinislaam-audio-editor') throw new Error('not a project');
+    const parsed = new Map(); // file name → { sr, ch } (read once, shared by tabs and clips)
+    const load = f => { if (!parsed.has(f)) parsed.set(f, parseWav(files[f])); return parsed.get(f); };
     const made = [];
     for (const t of meta.tabs) {
-      const w = parseWav(files[t.file]);
+      const w = load(t.file);
       newDocument(makeDoc(w.sr, w.ch, (t.markers || []).filter(m => m > 0 && m < w.ch[0].length)), t.name, false);
       made.push(active);
     }
     if (made[meta.active]) showTab(made[meta.active]);
-    toast(`Opened project: ${made.length} tab${made.length === 1 ? '' : 's'}`);
+    let mtNote = '';
+    if (meta.multitrack) {
+      if (!mt.clips.length || confirm('This project has a multitrack session. Replace the multitrack session you have open now?')) {
+        mtStopNodes();
+        const m = meta.multitrack;
+        mt.tracks = m.tracks.map(t => ({ ...t }));
+        mt.clips = m.clips.map(c => { const w = load(c.file); return { id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name, src: { name: c.srcName || c.name, sr: w.sr, ch: w.ch } }; });
+        mt.pps = m.pps || 60; mt.scroll = m.scroll || 0; mt.playhead = m.playhead || 0;
+        mt.nextId = Math.max(0, ...mt.tracks.map(t => t.id), ...mt.clips.map(c => c.id)) + 1;
+        mt.undo = []; mt.redo = []; mt.sel = null; mt.selTrack = mt.tracks[0] ? mt.tracks[0].id : null;
+        mtNote = ` and a multitrack session (${mt.tracks.length} tracks, ${mt.clips.length} clips) — open it with Tools ▸ Multitrack Editor`;
+      }
+    }
+    toast(`Opened project: ${made.length} tab${made.length === 1 ? '' : 's'}${mtNote}`);
   } catch (e) { console.error(e); toast(`“${file.name}” is not a project saved by this editor.`); }
   finally { busy(false); }
 }
@@ -4107,7 +4135,7 @@ const MENUS = [
     { label: 'Save Format', sub: () => [['mp3', 'MP3'], ['wav', 'WAV (lossless)']].map(([v, l]) => ({ label: l, check: () => saveFormat() === v, run: () => { $('fmtSel').value = v; syncFormat(); } })) },
     '-',
     { label: 'Open Project…', run: () => $('projIn').click() },
-    { label: 'Save Project', run: saveProject, en: has.tabs },
+    { label: 'Save Project', run: saveProject, en: () => tabs.length > 0 || mt.clips.length > 0 },
     '-',
     { label: 'Join Audio Files…', run: () => openJoin(true) },
     { label: 'Batch Converter…', run: () => $('batchFileIn').click() },
