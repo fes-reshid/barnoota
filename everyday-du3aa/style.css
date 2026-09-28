@@ -93,6 +93,30 @@ nav.main-links a:hover{ color:var(--green); }
 }
 .hero-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
 
+/* ---------- Kids' Daily Essentials strip (home page) ---------- */
+.kids-strip{ margin:36px 0 8px; }
+.kids-strip-head{ display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+.kids-strip-head h2{ font-family:'Marcellus'; font-size:21px; color:var(--ink-navy); margin:0; }
+.kids-strip-head a{ font-size:15px; font-weight:700; color:var(--green-dark); text-decoration:none; }
+.kids-strip-head a:hover{ text-decoration:underline; }
+.kids-tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; }
+.kids-tile{
+  display:flex; flex-direction:column; align-items:center; gap:6px; text-decoration:none; color:var(--ink-brown);
+  background:#fff; border:1.5px solid var(--gold-soft); border-radius:16px; padding:16px 10px;
+  text-align:center; transition:transform .15s ease, box-shadow .15s ease;
+}
+.kids-tile:hover{ transform:translateY(-3px); box-shadow:0 10px 20px rgba(60,45,20,.12); }
+.kids-tile-icon{ font-size:32px; }
+.kids-tile-label{ font-family:'Marcellus'; font-size:14px; line-height:1.25; color:var(--ink-navy); }
+
+/* ---------- Kids essentials sequence view ---------- */
+.kids-step{ position:relative; }
+.kids-step-num{
+  position:absolute; top:-10px; left:-10px; z-index:1; width:30px; height:30px; border-radius:50%;
+  background:var(--green); color:#faf3e0; font-family:'Marcellus'; font-size:15px;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(60,45,20,.2);
+}
+
 /* ---------- Category grid ---------- */
 .cat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:20px; }
 .cat-card{
@@ -144,6 +168,10 @@ h1{ font-family:'Marcellus'; color:var(--ink-navy); font-size:clamp(22px,3.4vw,3
 .dua-translit{ text-align:center; font-style:italic; color:var(--gold); font-size:calc(16px * var(--font-scale)); margin:0 0 10px; line-height:1.5; }
 .dua-translation{ text-align:center; font-size:calc(17px * var(--font-scale)); line-height:1.6; margin:0; }
 .dua-lang-note{ text-align:center; font-size:12px; color:#a08a64; margin:4px 0 0; }
+.dua-benefit{
+  background:var(--green-bg); border:1px solid #a9c9b9; border-radius:10px; color:var(--green-dark);
+  font-size:calc(14px * var(--font-scale)); line-height:1.5; padding:10px 14px; margin:14px 0 0;
+}
 .dua-card-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:16px; gap:10px; flex-wrap:wrap; }
 .dua-source{ font-size:13px; color:#8a7654; }
 .dua-actions{ display:flex; gap:8px; }
@@ -228,6 +256,10 @@ footer .fine{ font-size:13px; color:#8b96ab; max-width:640px; margin:0 auto 8px;
   .print-card .dua-note{ text-align:center; font-style:italic; font-size:14px; color:#555; }
   .print-card .dua-translit{ text-align:center; font-style:italic; color:#8a5a00; font-size:calc(15px * var(--font-scale)); margin:0 0 8px; }
   .print-card .dua-translation{ text-align:center; font-size:calc(16px * var(--font-scale)); line-height:1.55; color:#222; }
+  .print-card .dua-benefit{
+    background:#eef6f1; border:1px solid #a9c9b9; border-radius:8px; color:#1f4f40;
+    font-size:calc(12px * var(--font-scale)); line-height:1.45; padding:8px 10px; margin-top:10px;
+  }
   .print-card .dua-card-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
   .print-card .dua-card-chapter{ font-family:'Marcellus'; font-size:12px; color:#a97c25; text-transform:uppercase; letter-spacing:.04em; }
   .print-card .badge-repeat{ font-size:11px; border:1px solid #a97c25; border-radius:20px; padding:2px 8px; color:#2e6b58; }

@@ -7,6 +7,7 @@
   var DEFAULT_SETTINGS = {
     showTranslit: true,
     showTranslation: true,
+    showBenefit: true,
     lang: "en",
     arabicFont: "amiri",
     borderTheme: "gold",
@@ -85,6 +86,7 @@
     if (parts[0] === "dua" && parts[1]) return { view: "dua", dua: Number(parts[1]) };
     if (parts[0] === "memorize") return { view: "memorize", cat: parts[1] || "all" };
     if (parts[0] === "search" && parts[1]) return { view: "search", q: decodeURIComponent(parts[1]) };
+    if (parts[0] === "kids") return { view: "kids" };
     return { view: "home" };
   }
   function go(hash) { location.hash = hash; }
@@ -102,6 +104,7 @@
     else if (r.view === "dua") renderSingleDua(r.dua);
     else if (r.view === "memorize") renderMemorize(r.cat);
     else if (r.view === "search") renderSearch(r.q);
+    else if (r.view === "kids") renderKids();
     else renderHome();
     window.scrollTo(0, 0);
   }
@@ -117,6 +120,7 @@
     var elLang = document.getElementById("optLang");
     var elTranslit = document.getElementById("optTranslit");
     var elTranslation = document.getElementById("optTranslation");
+    var elBenefit = document.getElementById("optBenefit");
     var elFont = document.getElementById("optArabicFont");
     var elTheme = document.getElementById("optBorderTheme");
     var elSize = document.getElementById("optPrintSize");
@@ -125,6 +129,7 @@
     if (elLang) elLang.value = s.lang;
     if (elTranslit) elTranslit.checked = s.showTranslit;
     if (elTranslation) elTranslation.checked = s.showTranslation;
+    if (elBenefit) elBenefit.checked = s.showBenefit;
     if (elFont) elFont.value = s.arabicFont;
     if (elTheme) elTheme.value = s.borderTheme;
     if (elSize) elSize.value = s.printSize;
@@ -155,10 +160,22 @@
       + '<button class="btn btn-primary" type="submit">Search</button>'
       + "</form>";
     html += '<div class="hero-actions">'
+      + '<a class="btn btn-primary" href="#/kids">👶 Kids’ Daily Essentials</a>'
       + '<a class="btn btn-ghost" href="#/memorize/all">🧠 Memorize mode</a>'
       + '<button class="btn btn-ghost" type="button" id="openSettingsHero">🎨 Print &amp; language settings</button>'
       + "</div>";
     html += "</div>";
+
+    html += '<div class="kids-strip">';
+    html += '<div class="kids-strip-head"><h2>👶 Kids’ Daily Essentials</h2><a href="#/kids">See all &amp; print →</a></div>';
+    html += '<div class="kids-tiles">';
+    state.data.kidsEssentials.forEach(function (k) {
+      html += '<a class="kids-tile" href="#/dua/' + k.id + '">'
+        + '<span class="kids-tile-icon" aria-hidden="true">' + k.icon + "</span>"
+        + '<span class="kids-tile-label">' + esc(k.label) + "</span>"
+        + "</a>";
+    });
+    html += "</div></div>";
 
     html += '<div class="cat-grid">';
     cats.forEach(function (c) {
@@ -267,7 +284,29 @@
     bindCardEvents();
   }
 
-  function duaCardHTML(chapter, dua) {
+  function renderKids() {
+    var items = state.data.kidsEssentials.map(function (k) {
+      var found = findDua(k.id);
+      return { k: k, chapter: found.chapter, dua: found.dua };
+    });
+    var html = crumbs([{ href: "#/", label: "Home" }, { label: "Kids’ Daily Essentials" }]);
+    html += "<h1>👶 Kids’ Daily Essentials</h1>";
+    html += '<p class="lead" style="margin:0 0 18px;text-align:left;max-width:none;">Nine short du’as for a child’s day, in order — '
+      + 'waking up, morning &amp; evening, before and after eating, the toilet, leaving and entering the house, and before sleeping. '
+      + 'Print the whole set as a flashcard deck or as one poster per du’a.</p>';
+    html += '<div class="cat-actions">'
+      + '<a class="btn btn-ghost" href="#/memorize/kids">🧠 Memorize this set</a>'
+      + '<button class="btn btn-ghost" type="button" id="printKidsBtn">🖨️ Print this set</button>'
+      + "</div>";
+    html += '<div class="dua-list">' + items.map(function (it, i) {
+      return '<div class="kids-step"><span class="kids-step-num">' + (i + 1) + "</span>" + duaCardHTML(it.chapter, it.dua, it.k.label) + "</div>";
+    }).join("") + "</div>";
+    mount.innerHTML = html;
+    bindCardEvents();
+    document.getElementById("printKidsBtn").addEventListener("click", printKidsSet);
+  }
+
+  function duaCardHTML(chapter, dua, overrideLabel) {
     var s = state.settings;
     var transText = dua.translation ? dua.translation[s.lang] : null;
     var fallback = !transText && s.lang !== "en" ? dua.translation.en : null;
@@ -275,7 +314,7 @@
     var repeatBadge = dua.repeat > 1 ? '<span class="badge-repeat">🔁 ×' + dua.repeat + "</span>" : "";
     var html = '<article class="dua-card" data-dua-id="' + dua.id + '" data-chapter-id="' + chapter.id + '">';
     html += '<header class="dua-card-head">'
-      + '<span class="dua-card-chapter">' + esc(chapter.title) + "</span>"
+      + '<span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>"
       + repeatBadge
       + "</header>";
     if (dua.arabic) {
@@ -291,6 +330,9 @@
       + '<p class="dua-translation">' + esc(transText || fallback || "") + "</p>"
       + (fallback ? '<p class="dua-lang-note">Not yet translated to ' + esc(langLabel(s.lang)) + " — showing English.</p>" : "")
       + "</div>";
+    if (dua.benefit && s.showBenefit) {
+      html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> ' + esc(dua.benefit) + "</p>";
+    }
     html += '<div class="drawing-box" aria-hidden="true"><span class="drawing-label">✏️ Draw a picture</span></div>';
     html += '<footer class="dua-card-foot">'
       + '<span class="dua-source">Hisnul Muslim · Ch. ' + chapter.id + "</span>"
@@ -334,7 +376,12 @@
     var pool = [];
     if (scope === "all") {
       state.data.chapters.forEach(function (ch) { ch.duas.forEach(function (d) { pool.push({ chapter: ch, dua: d }); }); });
-    } else if (scope && scope.indexOf("ch") === 0) {
+    } else if (scope === "kids") {
+      state.data.kidsEssentials.forEach(function (k) {
+        var found = findDua(k.id);
+        if (found) pool.push({ chapter: found.chapter, dua: found.dua, label: k.label });
+      });
+    } else if (scope && /^ch\d+$/.test(scope)) {
       var ch = findChapter(Number(scope.slice(2)));
       if (ch) ch.duas.forEach(function (d) { pool.push({ chapter: ch, dua: d }); });
     } else {
@@ -371,12 +418,13 @@
       + ' · <span class="muted">' + (meta ? meta.icon + " " + esc(meta.label) : "") + "</span>"
       + '<label class="shuffle-toggle"><input type="checkbox" id="shuffleToggle" ' + (m.shuffle ? "checked" : "") + '> Shuffle</label>'
       + "</div>";
-    html += '<div class="memorize-prompt">' + esc(item.chapter.title) + "</div>";
+    html += '<div class="memorize-prompt">' + esc(item.label || item.chapter.title) + "</div>";
     html += '<div class="memorize-card' + (m.revealed ? " is-revealed" : "") + '" id="memCard" data-dua-id="' + item.dua.id + '">';
     html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(item.dua.arabic || "") + "</p>";
     html += '<div class="memorize-back">';
     if (s.showTranslit && item.dua.transliteration) html += '<p class="dua-translit">' + esc(item.dua.transliteration) + "</p>";
     if (s.showTranslation && transText) html += '<p class="dua-translation">' + esc(transText) + "</p>";
+    if (s.showBenefit && item.dua.benefit) html += '<p class="dua-benefit">💡 ' + esc(item.dua.benefit) + "</p>";
     html += "</div>";
     html += '<p class="memorize-hint">' + (m.revealed ? "Tap card to hide again" : "Tap card to reveal") + "</p>";
     html += "</div>";
@@ -449,20 +497,21 @@
   // ---------------- Print ----------------
   function buildPrintCards(pairs) {
     var area = document.getElementById("printArea");
-    area.innerHTML = pairs.map(function (p) { return printCardHTML(p.chapter, p.dua); }).join("");
+    area.innerHTML = pairs.map(function (p) { return printCardHTML(p.chapter, p.dua, p.label); }).join("");
   }
-  function printCardHTML(chapter, dua) {
+  function printCardHTML(chapter, dua, overrideLabel) {
     var s = state.settings;
     var transText = dua.translation[s.lang] || dua.translation.en || "";
     var repeatBadge = dua.repeat > 1 ? '<span class="badge-repeat">🔁 ×' + dua.repeat + "</span>" : "";
     var html = '<div class="print-card">';
     html += '<div class="print-card-inner">';
     html += '<div class="print-corners"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>';
-    html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(chapter.title) + "</span>" + repeatBadge + "</header>";
+    html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>" + repeatBadge + "</header>";
     if (dua.arabic) html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(dua.arabic) + "</p>";
     if (dua.note) html += '<p class="dua-note">📖 ' + esc(dua.note) + "</p>";
     if (s.showTranslit && dua.transliteration) html += '<p class="dua-translit">' + esc(dua.transliteration) + "</p>";
     if (s.showTranslation && transText) html += '<p class="dua-translation">' + esc(transText) + "</p>";
+    if (s.showBenefit && dua.benefit) html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> ' + esc(dua.benefit) + "</p>";
     html += '<div class="drawing-box" aria-hidden="true"><span class="drawing-label">✏️ Draw a picture</span></div>';
     html += '<footer class="dua-card-foot"><span class="dua-source">Hisnul Muslim · Ch. ' + chapter.id + " · diinislaam.com/everyday-du3aa</span></footer>";
     html += "</div></div>";
@@ -488,6 +537,14 @@
     buildPrintCards(pairs);
     window.print();
   }
+  function printKidsSet() {
+    var pairs = state.data.kidsEssentials.map(function (k) {
+      var found = findDua(k.id);
+      return { chapter: found.chapter, dua: found.dua, label: k.label };
+    });
+    buildPrintCards(pairs);
+    window.print();
+  }
 
   // ---------------- Settings panel ----------------
   function openSettings() { document.getElementById("settingsOverlay").classList.remove("is-hidden"); }
@@ -507,6 +564,9 @@
     });
     document.getElementById("optTranslation").addEventListener("change", function (e) {
       state.settings.showTranslation = e.target.checked; saveSettings(); render();
+    });
+    document.getElementById("optBenefit").addEventListener("change", function (e) {
+      state.settings.showBenefit = e.target.checked; saveSettings(); render();
     });
     document.getElementById("optArabicFont").addEventListener("change", function (e) {
       state.settings.arabicFont = e.target.value; saveSettings(); applySettingsToDom();
