@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF Editor &amp; Cutter — Diin Islaam</title>
-<meta name="description" content="Free PDF editor and cutter that runs entirely in your browser: merge, reorder, rotate, delete, crop, add text, white-out, and split PDFs into separate files. Nothing is uploaded.">
+<meta name="description" content="Free PDF editor and cutter that runs entirely in your browser: merge, reorder, rotate, delete, crop, add text, white-out, split PDFs into separate files, and add or remove password protection. Nothing is uploaded.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
@@ -115,7 +115,7 @@
   .card label.opt{ display:flex; gap:8px; align-items:flex-start; padding:6px 0; cursor:pointer; }
   .card label.opt input{ margin-top:3px; }
   .card .sub{ font-size:12.5px; color:#8a7654; }
-  .card input[type=text], .card input[type=number]{
+  .card input[type=text], .card input[type=number], .card input[type=password]{
     width:100%; padding:7px 10px; border:1.5px solid var(--gold-soft); border-radius:8px; background:#fff; margin-top:4px;
   }
   .card .row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
@@ -152,6 +152,25 @@
     resize:both; outline:none; line-height:1.2; font-family:Helvetica,Arial,sans-serif; min-width:60px; overflow:hidden;
   }
   .hint{ color:#dfe5ee; font-size:13px; text-align:center; padding:0 14px 12px; }
+  .hint.warn{ color:#ffe3a3; font-weight:600; }
+  .warnbox{
+    margin-top:12px; font-size:13px; line-height:1.45; color:#7a4a00; background:#fdeecb;
+    border:1px solid var(--gold-soft); border-left:4px solid var(--gold); border-radius:8px; padding:8px 10px;
+  }
+  .warnbox strong{ color:#5c3600; }
+  .pw-fields{ margin-top:6px; }
+  .pw-fields .field{ margin-top:8px; display:block; }
+  .pw-fields .field > span{ display:block; }
+  .pw-status{ font-size:12.5px; margin-top:6px; min-height:1em; }
+  .pw-status.err{ color:var(--danger); }
+  .pw-status.ok{ color:var(--green-dark); }
+  .dialog-back{ position:fixed; inset:0; background:rgba(28,43,70,.5); z-index:95; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .dialog{ background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:20px; width:100%; max-width:380px; box-shadow:0 12px 40px rgba(0,0,0,.3); }
+  .dialog h3{ font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); margin:0 0 6px; font-size:20px; }
+  .dialog p{ margin:0 0 10px; color:#6b5a3f; font-size:14px; word-break:break-word; }
+  .dialog p.err{ color:var(--danger); font-weight:600; }
+  .dialog input{ width:100%; padding:8px 10px; border:1.5px solid var(--gold-soft); border-radius:8px; background:#fff; }
+  .dialog .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:14px; }
 </style>
 </head>
 <body>
@@ -217,6 +236,26 @@
           <button class="btn" id="saveSelBtn" data-need-sel type="button">Selected only</button>
         </div>
         <p class="sub" style="margin:10px 0 0">Tip: click a page's ✎ button to crop it, add text, white-out or highlight.</p>
+        <div class="warnbox hidden" id="whiteoutWarn" role="note">
+          <strong>⚠ White-out only hides text from view.</strong> The covered text is still inside the file
+          and can be copied, searched or recovered. Do not use it to remove private information.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Password</h3>
+        <label class="opt"><input type="checkbox" id="pwChk">
+          <span>Protect with a password<br><span class="sub">Applies to every file you download or cut. The PDF will ask for this password when opened.</span></span></label>
+        <div class="pw-fields hidden" id="pwFields">
+          <label class="field"><span>Password</span>
+            <input type="password" id="pwInput" autocomplete="new-password"></label>
+          <label class="field"><span>Confirm password</span>
+            <input type="password" id="pwConfirm" autocomplete="new-password"></label>
+          <label class="opt"><input type="checkbox" id="pwShow"><span>Show password</span></label>
+          <div class="pw-status" id="pwStatus" aria-live="polite"></div>
+          <p class="sub" style="margin:4px 0 0">Encrypted with AES-256. Keep the password safe — it cannot be recovered if forgotten.</p>
+        </div>
+        <p class="sub" style="margin:8px 0 0">Opened a protected PDF? Leave this unticked to save it without a password.</p>
       </div>
 
       <div class="card">
@@ -262,6 +301,18 @@
     <div class="stage" id="stage"><canvas id="edCanvas"></canvas></div>
   </div>
   <div class="hint" id="edHint"></div>
+</div>
+
+<div class="dialog-back hidden" id="pwDialog" role="dialog" aria-modal="true" aria-labelledby="pwDlgTitle">
+  <form class="dialog" id="pwDlgForm">
+    <h3 id="pwDlgTitle">Password required</h3>
+    <p id="pwDlgMsg"></p>
+    <input type="password" id="pwDlgInput" autocomplete="current-password" aria-label="Password">
+    <div class="row">
+      <button class="btn" type="button" id="pwDlgCancel">Skip file</button>
+      <button class="btn primary" type="submit">Open</button>
+    </div>
+  </form>
 </div>
 
 <div class="busy hidden" id="busy"><div id="busyText">Working…</div></div>
@@ -342,7 +393,7 @@ async function addFiles(files) {
         added = added.concat(ids);
       } catch (e) {
         console.error(e);
-        toast(`Could not open “${f.name}”` + (e && e.name === 'PasswordException' ? ' — it is password protected.' : '.'), 4000);
+        if (e !== CANCELLED) toast(`Could not open “${f.name}”.`, 4000);
       }
     }
   } finally { busy(false); }
@@ -356,16 +407,57 @@ async function addFiles(files) {
   renderGrid();
 }
 
+const CANCELLED = new Error('cancelled');
+
+// Ask for a password in a small dialog. Resolves with the text, or null if skipped.
+function askPassword(fileName, wrong) {
+  return new Promise(resolve => {
+    const dlg = $('pwDialog'), input = $('pwDlgInput'), msg = $('pwDlgMsg');
+    const wasBusy = !$('busy').classList.contains('hidden');
+    busy(false);
+    msg.textContent = wrong ? `Incorrect password for “${fileName}”. Please try again.` : `“${fileName}” is password protected. Enter its password to open it.`;
+    msg.classList.toggle('err', !!wrong);
+    input.value = '';
+    dlg.classList.remove('hidden');
+    setTimeout(() => input.focus(), 0);
+    const done = val => {
+      dlg.classList.add('hidden');
+      $('pwDlgForm').onsubmit = $('pwDlgCancel').onclick = dlg.onkeydown = null;
+      if (wasBusy) busy(true, 'Opening PDF…');
+      resolve(val);
+    };
+    $('pwDlgForm').onsubmit = e => { e.preventDefault(); done(input.value); };
+    $('pwDlgCancel').onclick = () => done(null);
+    dlg.onkeydown = e => { if (e.key === 'Escape') { e.stopPropagation(); done(null); } };
+  });
+}
+
+// Open with pdf.js, asking for a password as many times as needed.
+async function openPdfjs(name, bytes) {
+  let password;
+  for (;;) {
+    try {
+      // pdf.js may transfer/detach the buffer it is given, so hand it a copy.
+      const doc = await pdfjsLib.getDocument({ data: bytes.slice(), password }).promise;
+      return { doc, password };
+    } catch (e) {
+      if (!e || e.name !== 'PasswordException') throw e;
+      const pw = await askPassword(name, password !== undefined);
+      if (pw === null) throw CANCELLED;
+      password = pw;
+    }
+  }
+}
+
 async function addSource(name, bytes) {
-  // pdf.js may transfer/detach the buffer it is given, so hand it a copy.
-  const pdfjs = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
+  const { doc: pdfjs, password } = await openPdfjs(name, bytes);
   const id = 's' + (srcSeq++);
   const pageInfo = [];
   for (let i = 1; i <= pdfjs.numPages; i++) {
     const pg = await pdfjs.getPage(i);
     pageInfo.push({ rotate: pg.rotate || 0 });
   }
-  sources.set(id, { name, bytes, pdfjs, libDoc: null, pageInfo });
+  sources.set(id, { name, bytes, pdfjs, password, libDoc: null, pageInfo });
   return pageInfo.map((_, i) => ({ uid: uidSeq++, src: id, idx: i, rot: 0, crop: null, items: [] }));
 }
 
@@ -573,6 +665,7 @@ function renderGrid() {
   });
   $('count').textContent = `${pages.length} page${pages.length === 1 ? '' : 's'}` + (selected.size ? ` · ${selected.size} selected` : '');
   document.querySelectorAll('[data-need-sel]').forEach(b => b.disabled = !selected.size);
+  $('whiteoutWarn').classList.toggle('hidden', !pages.some(p => p.items.some(it => it.type === 'whiteout')));
   showWorkspace();
   updateSplitPreview();
 }
@@ -654,7 +747,8 @@ async function insertBlank() {
 /* ---------- Building output PDFs ---------- */
 async function libDocFor(srcId) {
   const s = sources.get(srcId);
-  if (!s.libDoc) s.libDoc = await PDFDocument.load(s.bytes, { ignoreEncryption: true });
+  // Decrypt protected sources (an empty password unlocks files that only restrict editing or printing).
+  if (!s.libDoc) s.libDoc = await PDFDocument.load(s.bytes, { ignoreEncryption: true, password: s.password || '' });
   return s.libDoc;
 }
 
@@ -701,18 +795,43 @@ async function buildPdf(list) {
       }
     }
   }
+  const pw = outputPassword();
+  if (pw) out.encrypt({ userPassword: pw, ownerPassword: pw });
   const bytes = await out.save();
   return { bytes, lostChars };
+}
+
+// The password to protect downloads with, '' for none. Throws a user-facing message if the form is incomplete.
+function outputPassword() {
+  if (!$('pwChk').checked) return '';
+  const a = $('pwInput').value, b = $('pwConfirm').value;
+  if (!a) throw 'Enter a password, or untick “Protect with a password”.';
+  if (a !== b) throw 'The two passwords do not match.';
+  return a;
+}
+function updatePwStatus() {
+  const st = $('pwStatus'), a = $('pwInput').value, b = $('pwConfirm').value;
+  st.className = 'pw-status';
+  if (!a && !b) st.textContent = '';
+  else if (!b) st.textContent = '';
+  else if (a === b) { st.textContent = '✓ Passwords match'; st.classList.add('ok'); }
+  else { st.textContent = 'Passwords do not match'; st.classList.add('err'); }
+}
+function checkPasswordReady() {
+  try { outputPassword(); return true; }
+  catch (msg) { toast(String(msg), 4000); if ($('pwChk').checked) $('pwInput').focus(); return false; }
 }
 
 async function saveAll(onlySel) {
   const list = onlySel ? selPages() : pages;
   if (!list.length) { toast('No pages to save.'); return; }
+  if (!checkPasswordReady()) return;
   busy(true, 'Building PDF…');
   try {
     const { bytes, lostChars } = await buildPdf(list);
     downloadBlob(new Blob([bytes], { type: 'application/pdf' }), baseName() + (onlySel ? '-selected' : '') + '.pdf');
-    toast(lostChars ? 'Saved. Some characters are not supported by the built-in font and were replaced with “?”.' : 'PDF saved.', lostChars ? 5000 : 2600);
+    const prot = $('pwChk').checked ? ' It is password protected.' : '';
+    toast(lostChars ? 'Saved.' + prot + ' Some characters are not supported by the built-in font and were replaced with “?”.' : 'PDF saved.' + prot, lostChars ? 5000 : 2600);
   } catch (e) {
     console.error(e); toast('Sorry — the PDF could not be built. ' + (e.message || ''), 5000);
   } finally { busy(false); }
@@ -779,6 +898,7 @@ async function doSplit() {
   let parts;
   try { parts = computeParts(); } catch (msg) { toast(String(msg), 4000); return; }
   if (!parts.length) return;
+  if (!checkPasswordReady()) return;
   const results = $('splitResults'); results.textContent = '';
   const useZip = $('zipChk').checked && parts.length > 1;
   const zip = useZip ? new JSZip() : null;
@@ -817,7 +937,7 @@ const ed = { uid: null, tool: 'select', vp: null, dpr: 1, rot: 0, selItem: null,
 const HINTS = {
   select: 'Click an item to select it, drag to move it, double-click text to edit. Delete removes it.',
   text: 'Click where the text should start, type, then click outside or press Ctrl+Enter.',
-  whiteout: 'Drag over the area to cover. The box uses the chosen colour (white by default).',
+  whiteout: '⚠ White-out only hides content from view — the text underneath stays in the file and can still be copied. Drag over the area to cover.',
   highlight: 'Drag over the area to highlight.',
   crop: 'Drag a box around the part of the page to keep. Everything outside it will be hidden.',
 };
@@ -854,6 +974,7 @@ function setTool(t) {
   ed.tool = t;
   document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
   $('edHint').textContent = HINTS[t];
+  $('edHint').classList.toggle('warn', t === 'whiteout');
   $('stage').style.cursor = t === 'select' ? 'default' : t === 'text' ? 'text' : 'crosshair';
   if (t === 'whiteout' && ed.lastTool !== 'whiteout') $('edColor').value = '#ffffff';
   if (t === 'highlight') $('edColor').value = '#ffe14d';
@@ -951,6 +1072,10 @@ function onStageUp(e) {
   } else {
     const it = { type: d.kind, x1: A[0], y1: A[1], x2: B[0], y2: B[1], color: $('edColor').value };
     p.items.push(it); ed.selItem = it;
+    if (d.kind === 'whiteout' && !ed.warnedWhiteout) {
+      ed.warnedWhiteout = true;
+      toast('Reminder: white-out hides text visually only — it is still in the file and can be copied.', 6000);
+    }
   }
   redrawEditor();
 }
@@ -1051,6 +1176,12 @@ $('clearBtn').onclick = () => {
   renderGrid();
 };
 $('saveBtn').onclick = () => saveAll(false);
+$('pwChk').onchange = () => {
+  $('pwFields').classList.toggle('hidden', !$('pwChk').checked);
+  if ($('pwChk').checked) $('pwInput').focus();
+};
+['pwInput', 'pwConfirm'].forEach(id => $(id).addEventListener('input', updatePwStatus));
+$('pwShow').onchange = () => { const t = $('pwShow').checked ? 'text' : 'password'; $('pwInput').type = $('pwConfirm').type = t; };
 $('saveSelBtn').onclick = () => saveAll(true);
 $('splitBtn').onclick = doSplit;
 document.querySelectorAll('input[name=splitMode]').forEach(r => r.onchange = renderGrid);
