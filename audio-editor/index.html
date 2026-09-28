@@ -304,7 +304,9 @@
           <button class="btn fx-need" id="eqBtn" type="button" title="Bass, middle and treble">Equaliser…</button>
           <button class="btn fx-need" id="echoBtn" type="button">Echo…</button>
           <button class="btn fx-need" id="reverbBtn" type="button" title="Room / hall ambience">Reverb…</button>
-          <button class="btn fx-need" id="speedBtn" type="button" title="Make it faster or slower (pitch changes too)">Speed…</button>
+          <button class="btn fx-need" id="pitchBtn" type="button" title="Make the voice higher or lower without changing the speed">Pitch…</button>
+          <button class="btn fx-need" id="tempoBtn" type="button" title="Make it faster or slower without changing the pitch">Tempo…</button>
+          <button class="btn fx-need" id="speedBtn" type="button" title="Make it faster or slower (pitch changes too, like a tape)">Speed…</button>
           <button class="btn fx-need" id="compBtn" type="button" title="Even out loud and quiet parts">Compressor…</button>
         </div>
         <div class="fx-group">Clean up</div>
@@ -454,7 +456,8 @@
       <li><strong>Repeat loop</strong> repeats the selected line several times, with an optional pause — useful for memorising.</li>
       <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab; <strong>Join tabs</strong> does the opposite.</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
-      <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Speed…</strong> to change the file itself.</li>
+      <li><strong>Pitch…</strong> makes a voice higher or lower while keeping the same speed (+12 semitones = one octave up). <strong>Tempo…</strong> makes it faster or slower while keeping the same voice — e.g. 80% to slow a recitation down for learning. <strong>Speed…</strong> changes both together, like a tape.</li>
+      <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Tempo…</strong> or <strong>Speed…</strong> to change the file itself.</li>
       <li><strong>History</strong> lists every change; click any line to go back to that point.</li>
     </ul>
 
@@ -1705,6 +1708,66 @@ function fxGate() {
     { id: 'hold', label: 'Keep open after speech for', value: 80, min: 10, max: 1000, step: 10, unit: 'ms' },
   ], async (ch, sr, v) => gateCh(ch, sr, v.thr, v.hold));
 }
+/* ---------- Time-stretch (WSOLA) and pitch shift ---------- */
+// Waveform-similarity overlap-add: rebuilds the sound from 40 ms grains taken at a new
+// rate, nudging each grain (±10 ms) to where it lines up best with the previous one, so
+// the duration changes but the pitch doesn't.
+async function timeStretch(ch, sr, tempo) {
+  const L = ch[0].length;
+  const N = Math.max(64, Math.round(sr * 0.04) & ~1), Hs = N / 2, Ha = Hs * tempo, D = Math.round(sr * 0.01);
+  const outLen = Math.max(1, Math.round(L / tempo));
+  const padLen = L + N + 2 * D + Hs + 8;
+  const pad = c => { const o = new Float32Array(padLen); o.set(c); return o; };
+  const xs = ch.map(pad);
+  const mono = ch.length === 1 ? xs[0] : (() => { const m = new Float32Array(padLen); for (const c of xs) for (let i = 0; i < L; i++) m[i] += c[i] / xs.length; return m; })();
+  const win = new Float32Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N);
+  const out = ch.map(() => new Float32Array(outLen + N)), wsum = new Float32Array(outLen + N);
+  const corr = (c, t, step) => { let s = 0; for (let i = 0; i < N; i += step) s += mono[c + i] * mono[t + i]; return s; };
+  const frames = Math.ceil(outLen / Hs) + 1;
+  let prev = 0, lastYield = performance.now();
+  for (let k = 0; k < frames; k++) {
+    let pos = 0;
+    if (k > 0) {
+      const ideal = Math.round(k * Ha), tpl = prev + Hs;
+      const lo = Math.max(0, ideal - D), hi = Math.min(L + D, ideal + D);
+      let best = -Infinity;
+      pos = Math.min(hi, Math.max(lo, ideal));
+      for (let c = lo; c <= hi; c += 4) { const v = corr(c, tpl, 4); if (v > best) { best = v; pos = c; } }
+      best = -Infinity;
+      const c0 = pos;
+      for (let c = Math.max(lo, c0 - 3); c <= Math.min(hi, c0 + 3); c++) { const v = corr(c, tpl, 2); if (v > best) { best = v; pos = c; } }
+    }
+    const o = k * Hs;
+    if (o >= outLen) break;
+    for (let j = 0; j < xs.length; j++) { const x = xs[j], y = out[j]; for (let i = 0; i < N; i++) y[o + i] += x[pos + i] * win[i]; }
+    for (let i = 0; i < N; i++) wsum[o + i] += win[i];
+    prev = pos;
+    if (performance.now() - lastYield > 80) { await new Promise(r => setTimeout(r, 0)); lastYield = performance.now(); }
+  }
+  return out.map(y => { const r = new Float32Array(outLen); for (let i = 0; i < outLen; i++) r[i] = wsum[i] > 1e-4 ? y[i] / wsum[i] : y[i]; return r; });
+}
+function fitLength(ch, L) {
+  return ch.map(c => { if (c.length === L) return c; const o = new Float32Array(L); o.set(c.subarray(0, L)); return o; });
+}
+// Stretch the audio longer by the pitch ratio, then play it back faster by the same ratio:
+// the length returns to the original while the pitch moves.
+async function pitchShift(ch, sr, semitones) {
+  if (!semitones) return ch;
+  const r = Math.pow(2, semitones / 12);
+  const stretched = await timeStretch(ch, sr, 1 / r);
+  return fitLength(await resample(stretched, sr * r, sr), ch[0].length);
+}
+function fxPitch() {
+  processFx('Pitch', 'Makes the voice higher or lower without changing the speed. 12 semitones = one octave; small changes (±1–3) sound most natural.', [
+    { id: 'semi', label: 'Change pitch by', value: 2, min: -12, max: 12, step: 0.5, unit: 'semitones (− lower, + higher)' },
+  ], (ch, sr, v) => pitchShift(ch, sr, v.semi));
+}
+function fxTempo() {
+  processFx('Tempo', 'Makes it faster or slower without changing the pitch of the voice — e.g. 80% to slow a recitation down for learning.', [
+    { id: 'pct', label: 'New tempo', value: 80, min: 25, max: 400, step: 5, unit: '% of original' },
+  ], (ch, sr, v) => v.pct === 100 ? ch : timeStretch(ch, sr, v.pct / 100), { sameLength: false });
+}
 function fxSpeed() {
   processFx('Speed', 'Plays faster or slower. Like a tape, the pitch changes too (faster = higher).', [
     { id: 'pct', label: 'New speed', value: 110, min: 25, max: 400, step: 5, unit: '% of original' },
@@ -2079,7 +2142,7 @@ on('mixFileBtn', openMixDialog);
 on('dupBtn', duplicate);
 on('backBtn', () => seekBy(-5)); on('fwdBtn', () => seekBy(5));
 $('rateSel').addEventListener('change', () => { if (player) { const pos = playPos(); stopPlay(); cursor = Math.round(pos); play(); } });
-on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('speedBtn', fxSpeed); on('compBtn', fxCompressor);
+on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('speedBtn', fxSpeed); on('pitchBtn', fxPitch); on('tempoBtn', fxTempo); on('compBtn', fxCompressor);
 on('gateBtn', fxGate); on('hpBtn', fxHighpass); on('lpBtn', fxLowpass);
 on('stereoBtn', makeStereo); on('swapBtn', swapChannels); on('rateConvBtn', fxSampleRate);
 on('insFileBtn', () => $('insFileIn').click()); on('genBtn', generate); on('repeatBtn', repeatLoop); on('redactBtn', redact);
