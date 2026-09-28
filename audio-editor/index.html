@@ -215,6 +215,7 @@
     </a>
     <div class="head-actions">
       <button class="back" id="guideBtn" type="button" title="How to use the editor and all shortcuts (?)">? Guide</button>
+      <a class="back" href="help.html" target="_blank" rel="noopener" title="Step-by-step tutorials and full reference (F1)">Tutorials</a>
       <a class="back" href="../apps.html">← All apps</a>
     </div>
   </div>
@@ -237,7 +238,8 @@
       <h2>Recent files</h2>
       <ul class="list" id="recentList0"></ul>
     </div>
-    <p class="hint" style="margin-top:18px">…or drop audio files here (MP3, WAV, M4A, OGG, WebM) — each opens in its own tab. Save as MP3 or WAV.</p>
+    <p class="hint" style="margin-top:14px">New here? <a href="help.html" target="_blank" rel="noopener">Read the step-by-step tutorials</a>.</p>
+    <p class="hint" style="margin-top:6px">…or drop audio files here (MP3, WAV, M4A, OGG, WebM) — each opens in its own tab. Save as MP3 or WAV.</p>
   </section>
 
   <!-- Editor -->
@@ -476,7 +478,7 @@
 </dialog>
 <dialog id="guideDlg" class="dlg guide" aria-labelledby="guideTitle">
   <div class="guide-head">
-    <h2 id="guideTitle">Guide &amp; shortcuts</h2>
+    <h2 id="guideTitle">Guide &amp; shortcuts <a href="help.html" target="_blank" rel="noopener" style="font-family:var(--ui); font-size:14px; margin-left:10px">Full help &amp; tutorials ↗</a></h2>
     <button class="btn" id="guideClose" type="button">Close</button>
   </div>
   <div class="guide-body">
@@ -3363,6 +3365,18 @@ function toggleView(cls) {
 }
 try { for (const c of ['compact', 'tall']) if (localStorage.getItem('ae-view-' + c)) document.body.classList.add(c); } catch (e) {}
 
+/* ---------- Help page ---------- */
+const HELP_TUTORIALS = [
+  ['t-open', 'Open, play and save a file'], ['t-record', 'Record from the microphone'], ['t-edit', 'Cut, copy, paste and delete'],
+  ['t-trim', 'Trim silence (Auto trim)'], ['t-split', 'Split a recitation into lines'], ['t-join', 'Join audio files'],
+  ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
+  ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
+  ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
+  ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
+];
+// Opens in a new tab so the editor (and unsaved audio) stays open.
+function openHelp(id) { window.open('help.html' + (id ? '#' + id : ''), '_blank', 'noopener'); }
+
 /* ---------- Menu bar ---------- */
 const has = {
   doc: () => !!doc, audio: () => !!doc && len() > 0, sel: () => hasSel(), clip: () => !!clip && !!doc,
@@ -3535,7 +3549,11 @@ const MENUS = [
     { label: 'Tempo (slower / faster, same voice)…', run: fxTempo, en: has.audio },
   ] },
   { label: 'Help', items: [
+    { label: 'Help & Tutorials (full page)', key: 'F1', run: () => openHelp('') },
+    { label: 'Tutorials', sub: () => HELP_TUTORIALS.map(([id, label]) => ({ label, run: () => openHelp(id) })) },
+    { label: 'Menu Reference', run: () => openHelp('menus') },
     { label: 'Guide & Keyboard Shortcuts', key: '?', run: openGuide },
+    '-',
     { label: 'About', run: () => toast('Audio Editor — Diin Islaam. Everything runs in your browser; your audio is never uploaded.') },
   ] },
 ];
@@ -3920,6 +3938,7 @@ document.addEventListener('keydown', e => {
   let handled = true;
   // These work even with no file open.
   if (k === '?') openGuide();
+  else if (k === 'f1') openHelp('');
   else if (mod && k === 'o') $('fileIn').click();
   else if (!mod && !e.altKey && !e.shiftKey && k === 'n') newEmpty();
   else if ((!mod && !e.altKey && k === 'r') || k === 'f5') toggleRecord();
