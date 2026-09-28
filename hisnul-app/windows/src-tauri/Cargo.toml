@@ -1,0 +1,18 @@
+[package]
+name = "hisnul-muslim-desktop"
+version = "1.0.0"
+description = "Hisnul Muslim - Zikrii Musliimaa, as a Windows desktop app."
+authors = ["Feysel Mustefa"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[[bin]]
+name = "hisnul-muslim-desktop"
+path = "src/main.rs"
