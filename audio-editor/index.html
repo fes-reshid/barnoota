@@ -166,6 +166,7 @@
       <div class="topline">
         <button class="btn" id="openBtn" type="button" title="Open one or more files, each in its own tab">Open…</button>
         <button class="btn rec" id="recBtn" type="button" title="Record from microphone and insert at the cursor">● Record</button>
+        <button class="btn" id="dupBtn" type="button" title="Open a copy of the selection — or the whole file — in a new tab (Ctrl+D)">⧉ Duplicate</button>
         <input class="name" id="fileName" type="text" aria-label="File name" spellcheck="false">
         <span class="info" id="fileInfo"></span>
       </div>
@@ -600,6 +601,18 @@ async function loadFile(file) {
     console.error(e);
     toast(`Could not read “${file.name}”. Try MP3, WAV, M4A or OGG.`);
   } finally { busy(false); }
+}
+// Copy the selection (or the whole file, with its markers) into a new tab.
+function duplicate() {
+  if (!doc) return;
+  const base = $('fileName').value.trim() || 'audio';
+  const d = hasSel()
+    ? makeDoc(doc.sr, sliceCh(doc.ch, selA, selB), doc.markers.filter(m => m > selA && m < selB).map(m => m - selA))
+    : makeDoc(doc.sr, doc.ch, doc.markers.slice()); // documents are immutable, so the audio can be shared
+  const what = hasSel() ? 'Selection' : 'File';
+  newDocument(d, base + (hasSel() ? ' (part)' : ' (copy)'));
+  dirty = true; refresh();
+  toast(what + ' duplicated into a new tab');
 }
 function newDocument(d, name) {
   stopPlay(); stashTab();
@@ -1302,6 +1315,7 @@ on('endBtn', () => { stopPlay(); cursor = len(); selA = selB = null; viewStart =
 on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
 on('mixFileBtn', openMixDialog);
+on('dupBtn', duplicate);
 on('mixCancel', () => $('mixDlg').close());
 on('mixGo', runMix);
 on('mixBrowse', () => $('mixFileIn').click());
@@ -1345,6 +1359,7 @@ document.addEventListener('keydown', e => {
   else if (mod && k === 'v') cmdPaste();
   else if (mod && k === 'a') { selA = 0; selB = len(); cursor = 0; refresh(); }
   else if (mod && k === 's') exportAll();
+  else if (mod && k === 'd') duplicate();
   else if (!mod && (k === 'delete' || k === 'backspace')) cmdDelete();
   else if (!mod && k === 'm') addMarker();
   else if (!mod && k === 'l') { loop = !loop; if (player) play(); refresh(); }
