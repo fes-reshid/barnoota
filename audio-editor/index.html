@@ -67,6 +67,19 @@
   .btn svg{width:16px; height:16px; flex:none;}
 
   #editor{display:none;}
+  .tabbar{display:flex; align-items:flex-end; gap:4px; overflow-x:auto; padding:0 6px; border-bottom:2px solid var(--green); margin-bottom:14px; scrollbar-width:thin;}
+  .tab{
+    display:flex; align-items:center; gap:4px; flex:none; min-width:110px; max-width:230px; cursor:pointer;
+    padding:6px 6px 6px 12px; font-family:var(--ui); font-size:13px; white-space:nowrap;
+    background:var(--parchment-deep); color:var(--ink-brown); border:1px solid var(--gold-soft); border-bottom:none; border-radius:9px 9px 0 0;
+  }
+  .tab:hover{background:var(--parchment);}
+  .tab.active{background:var(--green); border-color:var(--green); color:var(--parchment);}
+  .tab .nm{flex:1; overflow:hidden; text-overflow:ellipsis;}
+  .tab .x{border:none; background:none; color:inherit; cursor:pointer; width:22px; height:22px; border-radius:5px; font-size:15px; line-height:1; opacity:.7; padding:0;}
+  .tab .x:hover{opacity:1; background:rgba(0,0,0,.14);}
+  .tab-add{flex:none; align-self:center; width:30px; height:30px; margin-left:4px; border-radius:8px; border:1px solid var(--gold-soft); background:#fff; color:var(--green-dark); font-size:20px; line-height:1; cursor:pointer;}
+  .tab-add:hover{background:var(--green-bg); border-color:var(--green);}
   .topline{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:12px;}
   .topline input.name{flex:1 1 200px; min-width:0; border:1px solid var(--gold-soft); border-radius:8px; padding:7px 10px; background:#fff;}
   .info{font-family:var(--ui); font-size:13px; color:var(--muted);}
@@ -135,14 +148,15 @@
       <button class="btn primary big" id="openBtn2" type="button">Open audio file</button>
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
     </div>
-    <p class="hint" style="margin-top:18px">…or drop an audio file here (MP3, WAV, M4A, OGG, WebM). Save as MP3 or WAV.</p>
+    <p class="hint" style="margin-top:18px">…or drop audio files here (MP3, WAV, M4A, OGG, WebM) — each opens in its own tab. Save as MP3 or WAV.</p>
   </section>
 
   <!-- Editor -->
   <div id="editor">
+    <div class="tabbar" id="tabBar" role="tablist" aria-label="Open files"></div>
     <section class="panel">
       <div class="topline">
-        <button class="btn" id="openBtn" type="button">Open…</button>
+        <button class="btn" id="openBtn" type="button" title="Open one or more files, each in its own tab">Open…</button>
         <button class="btn rec" id="recBtn" type="button" title="Record from microphone and insert at the cursor">● Record</button>
         <input class="name" id="fileName" type="text" aria-label="File name" spellcheck="false">
         <span class="info" id="fileInfo"></span>
@@ -163,6 +177,7 @@
           <button class="btn" id="cutBtn" type="button" title="Cut (Ctrl+X)">Cut</button>
           <button class="btn" id="copyBtn" type="button" title="Copy (Ctrl+C)">Copy</button>
           <button class="btn" id="pasteBtn" type="button" title="Paste at cursor, or over the selection (Ctrl+V)">Paste</button>
+          <button class="btn" id="pasteMixBtn" type="button" title="Mix the copied audio on top of this file, starting at the cursor (Ctrl+Shift+V)">Paste mix</button>
           <button class="btn" id="delBtn" type="button" title="Delete selection (Delete)">Delete</button>
           <button class="btn" id="trimBtn" type="button" title="Keep only the selection">Trim to selection</button>
         </div>
@@ -261,7 +276,7 @@
     </div>
   </div>
 
-  <input type="file" id="fileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+  <input type="file" id="fileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 </main>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -366,6 +381,19 @@ function opMap(a, b, fn) {
   return makeDoc(doc.sr, ch, doc.markers.slice());
 }
 
+// Add a clip on top of the audio from p, extending the file if the clip runs past the end.
+function opMix(p, ins) {
+  ins = fitChannels(ins, doc.ch.length);
+  const n = ins[0].length, L = Math.max(len(), p + n);
+  const ch = doc.ch.map((c, k) => {
+    const out = new Float32Array(L), src = ins[k];
+    out.set(c);
+    for (let i = 0; i < n; i++) out[p + i] = clamp(out[p + i] + src[i], -1, 1);
+    return out;
+  });
+  return makeDoc(doc.sr, ch, doc.markers.slice());
+}
+
 /* ---------- Undo ---------- */
 function docBytes(stack) {
   const seen = new Set(); let bytes = 0;
@@ -414,10 +442,72 @@ function buildPeaks() {
   });
 }
 
+/* ---------- Tabs ---------- */
+// Each tab holds one document with its own history, selection and view. The globals
+// above always describe the active tab; stashTab() copies them back into it.
+let tabs = [], active = null;
+function stashTab() {
+  if (!active) return;
+  Object.assign(active, { doc, undoStack, redoStack, selA, selB, cursor, viewStart, spp, dirty, peaks, playBuf, name: $('fileName').value });
+}
+function showTab(t) {
+  if (t === active) return;
+  stopPlay(); stashTab();
+  active = t;
+  ({ doc, undoStack, redoStack, selA, selB, cursor, viewStart, spp, dirty, peaks, playBuf } = t);
+  $('fileName').value = t.name;
+  lastW = canvas.clientWidth;
+  clampView(); refresh();
+}
+function closeTab(t) {
+  const isDirty = t === active ? dirty : t.dirty;
+  const name = t === active ? $('fileName').value : t.name;
+  if (isDirty && !confirm(`Close “${name}” without saving your edits?`)) return;
+  const i = tabs.indexOf(t);
+  tabs.splice(i, 1);
+  if (t !== active) { renderTabs(); return; }
+  stopPlay(); active = null;
+  if (tabs.length) { showTab(tabs[Math.min(i, tabs.length - 1)]); return; }
+  doc = null; dirty = false;
+  $('editor').style.display = 'none';
+  $('empty').style.display = '';
+}
+function renderTabs() {
+  const bar = $('tabBar');
+  bar.innerHTML = '';
+  tabs.forEach(t => {
+    const isActive = t === active;
+    const name = (isActive ? $('fileName').value : t.name) || 'untitled';
+    const el = document.createElement('div');
+    el.className = 'tab' + (isActive ? ' active' : '');
+    el.setAttribute('role', 'tab'); el.setAttribute('aria-selected', isActive); el.tabIndex = 0;
+    el.title = name;
+    const nm = document.createElement('span'); nm.className = 'nm';
+    nm.textContent = ((isActive ? dirty : t.dirty) ? '*' : '') + name;
+    const x = document.createElement('button'); x.className = 'x'; x.type = 'button'; x.textContent = '×';
+    x.title = 'Close'; x.setAttribute('aria-label', 'Close ' + name);
+    x.onclick = e => { e.stopPropagation(); closeTab(t); };
+    el.append(nm, x);
+    el.onclick = () => showTab(t);
+    el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showTab(t); } };
+    el.onauxclick = e => { if (e.button === 1) closeTab(t); };
+    bar.appendChild(el);
+  });
+  const add = document.createElement('button');
+  add.className = 'tab-add'; add.type = 'button'; add.textContent = '+';
+  add.title = 'Open another file in a new tab';
+  add.onclick = () => $('fileIn').click();
+  bar.appendChild(add);
+  const cur = bar.querySelector('.tab.active');
+  if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
 /* ---------- Loading ---------- */
+async function loadFiles(files) {
+  for (const f of files) await loadFile(f);
+}
 async function loadFile(file) {
   if (!file) return;
-  if (dirty && !confirm('Discard the current edits and open a new file?')) return;
   stopPlay(); busy(true);
   try {
     const buf = await file.arrayBuffer();
@@ -427,12 +517,15 @@ async function loadFile(file) {
     newDocument(makeDoc(ab.sampleRate, ch), file.name.replace(/\.[^.]+$/, ''));
   } catch (e) {
     console.error(e);
-    toast('Could not read that file. Try MP3, WAV, M4A or OGG.');
+    toast(`Could not read “${file.name}”. Try MP3, WAV, M4A or OGG.`);
   } finally { busy(false); }
 }
 function newDocument(d, name) {
-  doc = null; undoStack = []; redoStack = []; selA = selB = null; cursor = 0; dirty = false;
-  $('fileName').value = name || 'recording';
+  stopPlay(); stashTab();
+  const t = { name: name || 'recording' };
+  tabs.push(t); active = t;
+  doc = null; undoStack = []; redoStack = []; selA = selB = null; cursor = 0; viewStart = 0; spp = 1; dirty = false; peaks = null; playBuf = null;
+  $('fileName').value = t.name;
   $('empty').style.display = 'none';
   $('editor').style.display = 'block';
   setDoc(d);
@@ -462,15 +555,15 @@ async function toggleRecord() {
       const ch = [];
       for (let i = 0; i < ab.numberOfChannels; i++) ch.push(ab.getChannelData(i).slice());
       if (!doc) newDocument(makeDoc(ab.sampleRate, ch), 'recording');
-      else if (ab.sampleRate !== doc.sr) toast('Recording sample rate differs from the file; open it separately.');
       else {
+        const ins = ab.sampleRate === doc.sr ? ch : await resample(ch, ab.sampleRate, doc.sr);
         const at = hasSel() ? selA : cursor;
         let base = doc;
         if (hasSel()) { doc = opDelete(selA, selB); }
-        const next = opInsert(at, ch);
+        const next = opInsert(at, ins);
         doc = base;
         commit(next, 'Recording inserted');
-        selA = at; selB = at + ch[0].length; cursor = at; refresh();
+        selA = at; selB = at + ins[0].length; cursor = at; refresh();
       }
     } catch (e) { console.error(e); toast('Could not decode the recording.'); }
     finally { busy(false); }
@@ -685,7 +778,8 @@ function refresh() {
   $('selLen').textContent = s ? fmt((selB - selA) / sr) : '—';
   $('fxScope').textContent = s ? '(selection)' : '(whole file)';
   for (const id of ['cutBtn', 'copyBtn', 'delBtn', 'trimBtn', 'zoomSelBtn', 'exportSelBtn']) $(id).disabled = !s;
-  $('pasteBtn').disabled = !clip;
+  $('pasteBtn').disabled = $('pasteMixBtn').disabled = !clip;
+  renderTabs();
   $('undoBtn').disabled = !undoStack.length;
   $('redoBtn').disabled = !redoStack.length;
   $('monoBtn').disabled = doc.ch.length === 1;
@@ -735,15 +829,29 @@ function cmdDelete(label) {
   commit(opDelete(a, b), label || 'Deleted');
 }
 function cmdCut() { if (!hasSel()) return; cmdCopy(); cmdDelete('Cut'); }
-function cmdPaste() {
+// The clipboard may come from another tab: convert it to this document's sample rate.
+async function clipFor(sr) {
+  if (clip.sr === sr) return clip.ch;
+  busy(true);
+  try { return await resample(clip.ch, clip.sr, sr); } finally { busy(false); }
+}
+async function cmdPaste() {
   if (!clip || !doc) return;
   stopPlay();
+  const ins = await clipFor(doc.sr);
   let base = doc, at = cursor;
   if (hasSel()) { at = selA; doc = opDelete(selA, selB); }
-  const next = opInsert(at, clip.ch);
+  const next = opInsert(at, ins);
   doc = base;
   commit(next, 'Pasted');
-  selA = at; selB = at + clip.ch[0].length; cursor = at; refresh();
+  selA = at; selB = at + ins[0].length; cursor = at; refresh();
+}
+async function cmdPasteMix() {
+  if (!clip || !doc) return;
+  stopPlay();
+  const ins = await clipFor(doc.sr), at = hasSel() ? selA : cursor;
+  commit(opMix(at, ins), 'Mixed in');
+  selA = at; selB = at + ins[0].length; cursor = at; refresh();
 }
 function cmdTrim() {
   if (!hasSel()) return;
@@ -1103,7 +1211,8 @@ for (const id of ['selStartIn', 'selEndIn']) {
 const on = (id, fn) => $(id).addEventListener('click', fn);
 on('openBtn', () => $('fileIn').click());
 on('openBtn2', () => $('fileIn').click());
-$('fileIn').addEventListener('change', e => { loadFile(e.target.files[0]); e.target.value = ''; });
+$('fileIn').addEventListener('change', e => { loadFiles([...e.target.files]); e.target.value = ''; });
+$('fileName').addEventListener('input', renderTabs);
 on('recBtn', toggleRecord); on('recBtn2', toggleRecord);
 on('playBtn', togglePlay);
 on('stopBtn', () => { stopPlay(); refresh(); });
@@ -1111,7 +1220,7 @@ on('homeBtn', () => { stopPlay(); cursor = 0; selA = selB = null; viewStart = 0;
 on('endBtn', () => { stopPlay(); cursor = len(); selA = selB = null; viewStart = len(); clampView(); refresh(); });
 on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
-on('cutBtn', cmdCut); on('copyBtn', cmdCopy); on('pasteBtn', cmdPaste);
+on('cutBtn', cmdCut); on('copyBtn', cmdCopy); on('pasteBtn', cmdPaste); on('pasteMixBtn', cmdPasteMix);
 on('delBtn', () => cmdDelete()); on('trimBtn', cmdTrim);
 on('zoomInBtn', () => zoomAt(0.5)); on('zoomOutBtn', () => zoomAt(2));
 on('zoomSelBtn', zoomSel); on('zoomFitBtn', zoomFit);
@@ -1136,6 +1245,7 @@ document.addEventListener('keydown', e => {
   else if (mod && (k === 'y' || (k === 'z' && e.shiftKey))) redo();
   else if (mod && k === 'x') cmdCut();
   else if (mod && k === 'c') cmdCopy();
+  else if (mod && k === 'v' && e.shiftKey) cmdPasteMix();
   else if (mod && k === 'v') cmdPaste();
   else if (mod && k === 'a') { selA = 0; selB = len(); cursor = 0; refresh(); }
   else if (mod && k === 's') exportAll();
@@ -1163,8 +1273,7 @@ dropTarget.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDep
 dropTarget.addEventListener('dragover', e => e.preventDefault());
 dropTarget.addEventListener('drop', e => {
   e.preventDefault(); dragDepth = 0; $('empty').classList.remove('drag');
-  const f = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (f) loadFile(f);
+  if (e.dataTransfer.files && e.dataTransfer.files.length) loadFiles([...e.dataTransfer.files]);
 });
 
 // Keep the same stretch of time on screen when the window is resized.
@@ -1174,7 +1283,7 @@ window.addEventListener('resize', () => {
   if (doc && lastW && w) { spp *= lastW / w; clampView(); draw(player ? playPos() : undefined); }
   lastW = w;
 });
-window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { stashTab(); if (tabs.some(t => t.dirty)) { e.preventDefault(); e.returnValue = ''; } });
 })();
 </script>
 <script src="/cursor.js" defer></script>
