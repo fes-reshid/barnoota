@@ -167,6 +167,15 @@
      or the waveform would move under the pointer. */
   .env-read{display:inline-block; min-width:210px; white-space:nowrap; font-family:ui-monospace, Menlo, Consolas, monospace; font-size:12px; color:var(--ink-navy);}
   .env-help{flex-basis:100%; color:var(--muted); font-size:12px;}
+  dialog.eq{width:min(760px, calc(100vw - 24px)); padding:16px;}
+  .eq-top{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:10px;}
+  .eq-top h2{margin:0; flex:1;}
+  #eqGraph{display:block; width:100%; height:190px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0; touch-action:none; cursor:ns-resize;}
+  .eq-bands{display:grid; grid-template-columns:repeat(10, minmax(0, 1fr)); gap:2px; margin:10px 0 4px; font-family:var(--ui);}
+  .eq-band{display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0;}
+  .eq-band output{font-size:11px; color:var(--ink-navy); font-family:ui-monospace, Menlo, Consolas, monospace; white-space:nowrap;}
+  .eq-band span{font-size:11px; color:var(--muted); white-space:nowrap;}
+  .eq-band input[type=range]{writing-mode:vertical-lr; direction:rtl; width:26px; height:120px; margin:0; accent-color:var(--green);}
   .head-actions{display:flex; gap:8px; align-items:center;}
   .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
@@ -320,7 +329,7 @@
         </div>
         <div class="fx-group">Sound</div>
         <div class="row">
-          <button class="btn fx-need" id="eqBtn" type="button" title="Bass, middle and treble">Equaliser…</button>
+          <button class="btn fx-need" id="eqBtn" type="button" title="10-band graphic equaliser with a live graph and preview">Equaliser…</button>
           <button class="btn fx-need" id="echoBtn" type="button">Echo…</button>
           <button class="btn fx-need" id="reverbBtn" type="button" title="Room / hall ambience">Reverb…</button>
           <button class="btn fx-need" id="pitchBtn" type="button" title="Make the voice higher or lower without changing the speed">Pitch…</button>
@@ -481,6 +490,7 @@
       <li><strong>Auto trim…</strong> cuts the silence at the start and end, or shortens every long pause inside the recording to a length you choose — great for tightening a recitation or a lecture.</li>
       <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab. <strong>Join audio…</strong> does the opposite: tick open tabs and/or add files from your computer, put them in order with ↑ ↓, choose a pause or a crossfade between them, and they're joined into a new tab (also on the start screen as <em>Join audio files</em>).</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
+      <li><strong>Equaliser…</strong> is a 10-band graphic EQ like WavePad's: drag the sliders or the dots on the graph (double-click resets a band), or pick a preset such as <em>Voice clarity</em> or <em>Remove rumble / hum</em>. The shaded area shows your audio's own frequencies. <strong>▶ Preview</strong> loops the audio so you hear every change live.</li>
       <li><strong>Pitch…</strong> makes a voice higher or lower while keeping the same speed (+12 semitones = one octave up). <strong>Tempo…</strong> makes it faster or slower while keeping the same voice — e.g. 80% to slow a recitation down for learning. <strong>Speed…</strong> changes both together, like a tape.</li>
       <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Tempo…</strong> or <strong>Speed…</strong> to change the file itself.</li>
       <li><strong>History</strong> lists every change; click any line to go back to that point.</li>
@@ -550,6 +560,24 @@
   </div>
 </dialog>
 <input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<dialog id="eqDlg" class="dlg eq" aria-labelledby="eqTitle">
+  <div class="eq-top">
+    <h2 id="eqTitle">Graphic equaliser <span class="info" id="eqScope"></span></h2>
+    <label class="info">Preset
+      <select id="eqPreset" class="num" style="width:auto"></select>
+    </label>
+  </div>
+  <canvas id="eqGraph" aria-label="Frequency response. Drag a dot up or down to boost or cut that band."></canvas>
+  <div class="eq-bands" id="eqBands"></div>
+  <p class="hint" style="margin:4px 0 10px">Drag the sliders or the dots on the graph. The shaded area is your audio's own spectrum. Press ▶ Preview to hear changes live while you adjust.</p>
+  <div class="actions">
+    <button class="btn" id="eqPlay" type="button">▶ Preview</button>
+    <button class="btn" id="eqFlat" type="button" title="All bands to 0 dB">Flat</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="eqCancel" type="button">Cancel</button>
+    <button class="btn primary" id="eqApply" type="button">Apply</button>
+  </div>
+</dialog>
 <dialog id="paramDlg" class="dlg" aria-labelledby="paramTitle">
   <h2 id="paramTitle"></h2>
   <p class="info" id="paramDesc" style="margin:0 0 14px"></p>
@@ -1778,14 +1806,170 @@ const biquad = (ctx, type, freq, gain = 0, Q = 0.707) => {
 };
 const chain = (src, ...nodes) => { nodes.reduce((a, n) => (a.connect(n), n), src); return nodes[nodes.length - 1]; };
 
-function fxEqualiser() {
-  processFx('Equaliser', 'Boost (+) or cut (−) the low, middle and high frequencies.', [
-    { id: 'bass', label: 'Bass (below 200 Hz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
-    { id: 'mid', label: 'Middle (around 1 kHz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
-    { id: 'treble', label: 'Treble (above 4 kHz)', value: 0, min: -18, max: 18, step: 1, unit: 'dB' },
-  ], (ch, sr, v) => renderOffline(ch, sr, (ctx, src) => chain(src,
-    biquad(ctx, 'lowshelf', 200, v.bass), biquad(ctx, 'peaking', 1000, v.mid, 0.8), biquad(ctx, 'highshelf', 4000, v.treble))));
+/* ---------- Graphic equaliser (10 bands, like WavePad) ---------- */
+const EQ_FREQS = [31, 62, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
+const EQ_Q = 1.41, EQ_MAX = 24; // one-octave bands, ±24 dB
+const EQ_PRESETS = {
+  'Flat': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  'Voice clarity': [-6, -4, -2, 0, 0, 2, 4, 4, 2, 0],
+  'Warm voice': [0, 2, 3, 2, 0, -1, 0, 1, 0, -2],
+  'Remove rumble / hum': [-18, -12, -6, -2, 0, 0, 0, 0, 0, 0],
+  'Reduce hiss': [0, 0, 0, 0, 0, 0, 0, -3, -8, -12],
+  'Soften harsh “s”': [0, 0, 0, 0, 0, 0, 0, -2, -6, -3],
+  'Bass boost': [6, 5, 4, 2, 0, 0, 0, 0, 0, 0],
+  'Treble boost': [0, 0, 0, 0, 0, 0, 2, 4, 5, 6],
+  'Loudness (smile)': [5, 4, 2, 0, -1, -1, 0, 2, 4, 5],
+  'Telephone': [-24, -24, -18, -6, 0, 3, 3, -6, -24, -24],
+};
+let eqGains = EQ_FREQS.map(() => 0), eqRange = null, eqSpectrum = null, eqLive = null, eqDragBand = -1;
+const eqFmtF = f => f >= 1000 ? (f / 1000) + 'k' : String(f);
+function eqFilters(ctx, gains) {
+  return EQ_FREQS.map((f, i) => biquad(ctx, 'peaking', f, gains[i], EQ_Q));
 }
+// Average spectrum of (up to 150 frames of) the range, in dB, on the FFT bins.
+function eqMeasureSpectrum(a, b) {
+  const n = b - a, frames = Math.min(150, Math.max(1, Math.floor(n / NR_N)));
+  const pow = new Float64Array(NR_N / 2 + 1), re = new Float64Array(NR_N), im = new Float64Array(NR_N);
+  for (let f = 0; f < frames; f++) {
+    const st = a + Math.floor((n - NR_N) * (frames > 1 ? f / (frames - 1) : 0));
+    for (let i = 0; i < NR_N; i++) { let v = 0; for (const c of doc.ch) v += c[st + i] || 0; re[i] = v / doc.ch.length * nrWindow[i]; im[i] = 0; }
+    fft(re, im, false);
+    for (let k = 0; k < pow.length; k++) pow[k] += re[k] * re[k] + im[k] * im[k];
+  }
+  return Array.from(pow, v => 10 * Math.log10(v / frames + 1e-12));
+}
+// Graph geometry: log frequency 20 Hz – 20 kHz across, dB from -EQ_MAX to +EQ_MAX up.
+const eqX = (f, W) => Math.log(f / 20) / Math.log(1000) * W;
+const eqY = (db, H) => H / 2 - db / EQ_MAX * (H / 2 - 12);
+function eqDraw() {
+  const cv = $('eqGraph'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const g2 = cv.getContext('2d');
+  g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  g2.font = '10px ' + css('--ui'); g2.textBaseline = 'top';
+  // Grid
+  for (const f of [50, 100, 200, 500, 1000, 2000, 5000, 10000]) {
+    const x = eqX(f, W); g2.fillStyle = 'rgba(169,124,37,.18)'; g2.fillRect(Math.round(x), 0, 1, H);
+    g2.fillStyle = css('--muted'); g2.fillText(eqFmtF(f), x + 2, H - 12);
+  }
+  for (const db of [-18, -12, -6, 0, 6, 12, 18]) {
+    const y = eqY(db, H); g2.fillStyle = db ? 'rgba(169,124,37,.18)' : 'rgba(169,124,37,.55)'; g2.fillRect(0, Math.round(y), W, 1);
+    g2.fillStyle = css('--muted'); g2.fillText((db > 0 ? '+' : '') + db, 3, y + 1);
+  }
+  // The audio's spectrum (relative), as a soft fill
+  if (eqSpectrum && doc) {
+    const sp = eqSpectrum, max = Math.max(...sp.slice(2)), binHz = doc.sr / NR_N;
+    g2.beginPath(); g2.moveTo(0, H);
+    for (let x = 0; x <= W; x += 2) {
+      const f = 20 * Math.pow(1000, x / W), k = Math.min(sp.length - 1, Math.max(1, Math.round(f / binHz)));
+      const rel = clamp((sp[k] - max + 70) / 70, 0, 1); // 70 dB range
+      g2.lineTo(x, H - rel * (H - 16));
+    }
+    g2.lineTo(W, H); g2.closePath(); g2.fillStyle = 'rgba(46,107,88,.16)'; g2.fill();
+  }
+  // Response curve from the real filters
+  const ctx = audio(), fl = eqFilters(ctx, eqGains), N = 240;
+  const freqs = new Float32Array(N), mag = new Float32Array(N), ph = new Float32Array(N), tot = new Float32Array(N).fill(1);
+  for (let i = 0; i < N; i++) freqs[i] = 20 * Math.pow(1000, i / (N - 1));
+  for (const f of fl) { f.getFrequencyResponse(freqs, mag, ph); for (let i = 0; i < N; i++) tot[i] *= mag[i]; }
+  g2.beginPath();
+  for (let i = 0; i < N; i++) { const x = i / (N - 1) * W, y = eqY(clamp(20 * Math.log10(tot[i]), -EQ_MAX * 1.2, EQ_MAX * 1.2), H); i ? g2.lineTo(x, y) : g2.moveTo(x, y); }
+  g2.strokeStyle = ENV_COL; g2.lineWidth = 2.5; g2.stroke();
+  // Band dots
+  EQ_FREQS.forEach((f, i) => {
+    const x = eqX(f, W), y = eqY(eqGains[i], H);
+    g2.beginPath(); g2.arc(x, y, i === eqDragBand ? 7 : 5.5, 0, Math.PI * 2);
+    g2.fillStyle = i === eqDragBand ? ENV_COL : '#fff'; g2.fill(); g2.strokeStyle = ENV_COL; g2.lineWidth = 2; g2.stroke();
+  });
+}
+function eqSetGain(i, db, fromSlider) {
+  eqGains[i] = clamp(Math.round(db * 2) / 2, -EQ_MAX, EQ_MAX);
+  const band = $('eqBands').children[i];
+  if (!fromSlider) band.querySelector('input').value = eqGains[i];
+  band.querySelector('output').value = (eqGains[i] > 0 ? '+' : '') + eqGains[i];
+  if (eqLive) eqLive.filters[i].gain.setTargetAtTime(eqGains[i], audio().currentTime, 0.02);
+  const match = Object.keys(EQ_PRESETS).find(k => EQ_PRESETS[k].every((v, j) => v === eqGains[j]));
+  $('eqPreset').value = match || '';
+  eqDraw();
+}
+function eqBuild() {
+  const box = $('eqBands'); box.innerHTML = '';
+  EQ_FREQS.forEach((f, i) => {
+    const d = document.createElement('div'); d.className = 'eq-band';
+    const out = document.createElement('output');
+    const r = document.createElement('input'); r.type = 'range'; r.min = -EQ_MAX; r.max = EQ_MAX; r.step = 0.5; r.value = eqGains[i];
+    r.setAttribute('aria-label', eqFmtF(f) + ' Hz');
+    r.addEventListener('input', () => eqSetGain(i, parseFloat(r.value), true));
+    r.addEventListener('dblclick', () => eqSetGain(i, 0));
+    const lab = document.createElement('span'); lab.textContent = eqFmtF(f);
+    d.append(out, r, lab); box.appendChild(d);
+  });
+  const sel = $('eqPreset'); sel.innerHTML = '';
+  sel.add(new Option('Custom', ''));
+  Object.keys(EQ_PRESETS).forEach(k => sel.add(new Option(k, k)));
+  EQ_FREQS.forEach((_, i) => eqSetGain(i, eqGains[i]));
+}
+function fxEqualiser() {
+  if (!doc || !len()) return;
+  stopPlay();
+  const [a, b] = range();
+  eqRange = [a, b];
+  $('eqScope').textContent = hasSel() ? '(selection)' : '(whole file)';
+  eqSpectrum = b - a >= NR_N ? eqMeasureSpectrum(a, b) : null;
+  eqBuild();
+  $('eqDlg').showModal();
+  eqDraw();
+}
+function eqStopLive() {
+  if (!eqLive) return;
+  try { eqLive.src.stop(); } catch (e) {}
+  eqLive = null; $('eqPlay').textContent = '▶ Preview';
+}
+// Live preview: loop the range through real filters; slider moves change them instantly.
+function eqToggleLive() {
+  if (eqLive) { eqStopLive(); return; }
+  const ctx = audio(); ctx.resume();
+  const [a, b] = eqRange, src = ctx.createBufferSource();
+  src.buffer = getPlayBuf(); src.loop = true; src.loopStart = a / doc.sr; src.loopEnd = b / doc.sr;
+  const filters = eqFilters(ctx, eqGains);
+  chain(src, ...filters).connect(ctx.destination);
+  src.start(0, a / doc.sr);
+  eqLive = { src, filters };
+  $('eqPlay').textContent = '■ Stop preview';
+}
+async function eqApply() {
+  eqStopLive();
+  $('eqDlg').close();
+  if (eqGains.every(v => v === 0)) { toast('The equaliser is flat — nothing changed.'); return; }
+  const [a, b] = eqRange, gains = eqGains.slice();
+  busy(true);
+  try {
+    const out = await renderOffline(sliceCh(doc.ch, a, b), doc.sr, (ctx, src) => chain(src, ...eqFilters(ctx, gains)));
+    const ch = doc.ch.map((c, k) => { const o = c.slice(); o.set(out[k].subarray(0, b - a), a); return o; });
+    const name = $('eqPreset').value;
+    commit(makeDoc(doc.sr, ch, doc.markers.slice()), 'Equaliser' + (name ? ` (${name})` : ''));
+  } catch (e) { console.error(e); toast('Equaliser failed.'); }
+  finally { busy(false); }
+}
+// Dragging a dot on the graph moves the nearest band.
+(() => {
+  const cv = $('eqGraph');
+  const band = e => { const r = cv.getBoundingClientRect(), x = e.clientX - r.left; let best = 0, bd = Infinity; EQ_FREQS.forEach((f, i) => { const d = Math.abs(eqX(f, r.width) - x); if (d < bd) { bd = d; best = i; } }); return best; };
+  const dbAt = e => { const r = cv.getBoundingClientRect(), H = r.height; return (H / 2 - (e.clientY - r.top)) / (H / 2 - 12) * EQ_MAX; };
+  cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); eqDragBand = band(e); eqSetGain(eqDragBand, dbAt(e)); });
+  cv.addEventListener('pointermove', e => { if (eqDragBand >= 0) eqSetGain(eqDragBand, dbAt(e)); });
+  const end = () => { eqDragBand = -1; eqDraw(); };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  cv.addEventListener('dblclick', e => eqSetGain(band(e), 0));
+})();
+$('eqPreset').addEventListener('change', e => { const p = EQ_PRESETS[e.target.value]; if (p) p.forEach((v, i) => eqSetGain(i, v)); });
+on('eqPlay', eqToggleLive);
+on('eqFlat', () => EQ_FREQS.forEach((_, i) => eqSetGain(i, 0)));
+on('eqCancel', () => $('eqDlg').close());
+on('eqApply', eqApply);
+$('eqDlg').addEventListener('close', eqStopLive);
+
 function fxEcho() {
   processFx('Echo', 'Repeats the sound after a short delay, each repeat quieter than the last.', [
     { id: 'delay', label: 'Delay between echoes', value: 300, min: 20, max: 2000, step: 10, unit: 'ms' },
