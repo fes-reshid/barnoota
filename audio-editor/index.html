@@ -99,6 +99,9 @@
   .wave-wrap{position:relative; border:1px solid var(--gold-soft); border-radius:10px; overflow:hidden; background:var(--wave-bg); touch-action:none;}
   canvas#wave{display:block; width:100%; height:260px; cursor:text;}
   #scroll{width:100%; margin:8px 0 0; accent-color:var(--green);}
+  #overview{display:block; width:100%; height:46px; margin-bottom:6px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0; touch-action:none; cursor:pointer;}
+  body.no-overview #overview{display:none;}
+  body:not(.no-overview) #scroll{display:none;} /* the overview bar does the scrolling */
   .hint{font-family:var(--ui); font-size:12px; color:var(--muted); margin:6px 0 0; line-height:1.5;}
   kbd{font-family:ui-monospace, Menlo, Consolas, monospace; font-size:11px; background:#fff; border:1px solid var(--gold-soft); border-bottom-width:2px; border-radius:4px; padding:0 4px;}
 
@@ -312,6 +315,7 @@
         <button class="btn primary" id="envApply" type="button" title="Apply the envelope to the audio (Enter)">Apply</button>
         <span class="env-help">Click the orange line to add a point · drag points up / down · double-click (or right-click) a point to remove it · <kbd>Enter</kbd> applies, <kbd>Esc</kbd> cancels</span>
       </div>
+      <canvas id="overview" aria-label="Overview of the whole file. Drag the box to scroll, drag its edges to zoom, click to jump, double-click to show everything."></canvas>
       <div class="wave-wrap">
         <canvas id="wave" aria-label="Waveform. Click to place the cursor, drag to select."></canvas>
         <div class="wave-empty" id="emptyHint" hidden>
@@ -493,6 +497,7 @@
       <li><strong>Volume envelope</strong> (<kbd>E</kbd>): an orange line appears over the selection (or whole file). Click the line to add points and drag them up (louder, up to 200%) or down (quieter, down to silence); the waveform shows the result as you go. Double-click or right-click a point to remove it, <strong>▶ Preview</strong> to listen, then <strong>Apply</strong>.</li>
       <li><strong>Move or resize a selection:</strong> drag the gold bar along the bottom of the selection to slide it left or right (same length). Drag either edge to make it longer or shorter — the other edge stays where it is.</li>
       <li><strong>Text to speech</strong> (Voice or Tools menu, or the start screen): type text, pick a language such as Afaan Oromoo, Arabic or English, press ▶ Preview, then insert it at the cursor or open it as a new tab.</li>
+      <li><strong>Overview bar</strong> (above the waveform): the whole file in miniature. The gold box is the part shown below — drag it to scroll, drag its edges to zoom in or out, click anywhere to jump there, double-click to see everything. Turn it off in <em>View ▸ Overview Bar</em>.</li>
       <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
 
@@ -1361,7 +1366,89 @@ function draw(playhead) {
     const px = toX(playhead);
     g.fillStyle = css('--playhead'); g.fillRect(Math.round(px) - 1, 0, 2, H);
   }
+  drawOverview(playhead);
 }
+
+/* ---------- Overview bar (whole file, like WavePad) ---------- */
+// The whole-file waveform is drawn once into an offscreen canvas (it only changes when the
+// audio or the width changes); each redraw just copies it and adds the view box on top.
+const ovCanvas = $('overview'), ovG = ovCanvas.getContext('2d');
+let ovCache = null; // { peaks, w, img }
+function ovWave(W, H, dpr) {
+  if (ovCache && ovCache.peaks === peaks && ovCache.w === W && ovCache.dpr === dpr) return ovCache.img;
+  const img = document.createElement('canvas'); img.width = Math.round(W * dpr); img.height = Math.round(H * dpr);
+  const c2 = img.getContext('2d'); c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const nb = peaks[0].mn.length, mid = H / 2, amp = H / 2 - 3;
+  c2.fillStyle = css('--wave');
+  for (let x = 0; x < W; x++) {
+    const b0 = Math.floor(x * nb / W), b1 = Math.max(b0 + 1, Math.floor((x + 1) * nb / W));
+    let lo = 1, hi = -1;
+    for (const pk of peaks) for (let i = b0; i < b1 && i < nb; i++) { if (pk.mn[i] < lo) lo = pk.mn[i]; if (pk.mx[i] > hi) hi = pk.mx[i]; }
+    if (hi >= lo) c2.fillRect(x, mid - hi * amp, 1, Math.max(1, (hi - lo) * amp));
+  }
+  ovCache = { peaks, w: W, dpr, img };
+  return img;
+}
+function ovBox() {
+  const W = ovCanvas.clientWidth, L = Math.max(1, len()), vis = canvas.clientWidth * spp;
+  const x = viewStart / L * W, w = Math.max(6, Math.min(W, vis / L * W));
+  return { x: Math.min(x, W - w), w, W, L, vis };
+}
+function drawOverview(playhead) {
+  if (!doc || !len() || document.body.classList.contains('no-overview')) { ovCanvas.style.visibility = doc && len() ? '' : 'hidden'; return; }
+  ovCanvas.style.visibility = '';
+  const dpr = window.devicePixelRatio || 1, W = ovCanvas.clientWidth, H = ovCanvas.clientHeight;
+  if (!W) return;
+  if (ovCanvas.width !== Math.round(W * dpr) || ovCanvas.height !== Math.round(H * dpr)) { ovCanvas.width = Math.round(W * dpr); ovCanvas.height = Math.round(H * dpr); }
+  ovG.setTransform(1, 0, 0, 1, 0, 0);
+  ovG.fillStyle = '#fffaf0'; ovG.fillRect(0, 0, ovCanvas.width, ovCanvas.height);
+  ovG.drawImage(ovWave(W, H, dpr), 0, 0);
+  ovG.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const L = len(), X = v => v / L * W, b = ovBox();
+  ovCanvas.title = `Showing ${fmt(viewStart / doc.sr)} – ${fmt(Math.min(L, viewStart + b.vis) / doc.sr)} of ${fmt(L / doc.sr)} · drag the box to scroll, its edges to zoom, double-click for everything`;
+  if (hasSel()) { ovG.fillStyle = css('--sel'); ovG.fillRect(X(selA), 0, Math.max(1, X(selB) - X(selA)), H); }
+  ovG.fillStyle = css('--marker'); for (const m of doc.markers) ovG.fillRect(Math.round(X(m)), 0, 1, H);
+  // Dim what's outside the view and frame the part shown below.
+  ovG.fillStyle = 'rgba(60,45,20,.16)'; ovG.fillRect(0, 0, b.x, H); ovG.fillRect(b.x + b.w, 0, W - b.x - b.w, H);
+  ovG.strokeStyle = css('--gold'); ovG.lineWidth = 2; ovG.strokeRect(b.x + 1, 1, b.w - 2, H - 2);
+  ovG.fillStyle = css('--gold'); ovG.fillRect(b.x, H / 2 - 8, 3, 16); ovG.fillRect(b.x + b.w - 3, H / 2 - 8, 3, 16);
+  ovG.fillStyle = css('--ink-navy'); ovG.globalAlpha = 0.6; ovG.fillRect(Math.round(X(cursor)), 0, 1, H); ovG.globalAlpha = 1;
+  if (playhead !== undefined) { ovG.fillStyle = css('--playhead'); ovG.fillRect(Math.round(X(playhead)) - 1, 0, 2, H); }
+}
+let ovDrag = null; // { kind: 'pan' | 'left' | 'right', off }
+function ovPart(e) {
+  const r = ovCanvas.getBoundingClientRect(), x = e.clientX - r.left, b = ovBox();
+  if (Math.abs(x - b.x) <= 6) return 'left';
+  if (Math.abs(x - (b.x + b.w)) <= 6) return 'right';
+  return x > b.x && x < b.x + b.w ? 'pan' : 'jump';
+}
+ovCanvas.addEventListener('pointerdown', e => {
+  if (!doc || !len()) return;
+  ovCanvas.setPointerCapture(e.pointerId);
+  const r = ovCanvas.getBoundingClientRect(), x = e.clientX - r.left, b = ovBox(), part = ovPart(e);
+  if (part === 'jump') { // centre the view where you clicked, then keep dragging it
+    viewStart = x / b.W * b.L - b.vis / 2; clampView(); draw(player ? playPos() : undefined);
+    ovDrag = { kind: 'pan', off: ovBox().w / 2 };
+  } else ovDrag = { kind: part, off: x - b.x };
+});
+ovCanvas.addEventListener('pointermove', e => {
+  if (!doc || !len()) return;
+  if (!ovDrag) { const part = ovPart(e); ovCanvas.style.cursor = part === 'pan' ? 'grab' : part === 'jump' ? 'pointer' : 'ew-resize'; return; }
+  const r = ovCanvas.getBoundingClientRect(), x = clamp(e.clientX - r.left, 0, r.width), b = ovBox(), Wm = canvas.clientWidth;
+  if (ovDrag.kind === 'pan') { viewStart = (x - ovDrag.off) / b.W * b.L; ovCanvas.style.cursor = 'grabbing'; }
+  else if (ovDrag.kind === 'left') { const right = viewStart + b.vis, st = Math.min(x / b.W * b.L, right - Wm * 0.05); spp = (right - st) / Wm; viewStart = st; }
+  else { const end = Math.max(x / b.W * b.L, viewStart + Wm * 0.05); spp = (end - viewStart) / Wm; }
+  clampView(); draw(player ? playPos() : undefined);
+});
+const ovEnd = () => { ovDrag = null; };
+ovCanvas.addEventListener('pointerup', ovEnd); ovCanvas.addEventListener('pointercancel', ovEnd);
+ovCanvas.addEventListener('dblclick', () => { if (doc && len()) zoomFit(); });
+ovCanvas.addEventListener('wheel', e => { // wheel over the overview scrolls, Ctrl+wheel zooms
+  if (!doc || !len()) return;
+  e.preventDefault();
+  if (e.ctrlKey || e.metaKey) zoomAt(e.deltaY > 0 ? 1.25 : 0.8);
+  else { viewStart += (e.deltaY || e.deltaX) * spp * 2; clampView(); draw(player ? playPos() : undefined); }
+}, { passive: false });
 
 /* ---------- UI refresh ---------- */
 function refresh() {
@@ -3507,7 +3594,7 @@ function toggleView(cls) {
   try { localStorage.setItem('ae-view-' + cls, document.body.classList.contains(cls) ? '1' : ''); } catch (e) {}
   if (doc) { clampView(); draw(); }
 }
-try { for (const c of ['compact', 'tall']) if (localStorage.getItem('ae-view-' + c)) document.body.classList.add(c); } catch (e) {}
+try { for (const c of ['compact', 'tall', 'no-overview']) if (localStorage.getItem('ae-view-' + c)) document.body.classList.add(c); } catch (e) {}
 
 /* ---------- Help page ---------- */
 const HELP_TUTORIALS = [
@@ -3675,6 +3762,7 @@ const MENUS = [
     { label: 'Zoom to Selection', key: 'Z', run: zoomSel, en: has.sel },
     { label: 'Zoom to Fit', key: 'F', run: zoomFit, en: has.audio },
     '-',
+    { label: 'Overview Bar', check: () => !document.body.classList.contains('no-overview'), run: () => toggleView('no-overview') },
     { label: 'Taller Waveform', check: () => document.body.classList.contains('tall'), run: () => toggleView('tall') },
     { label: 'Show Effects & Tools Panels', check: () => !document.body.classList.contains('compact'), run: () => toggleView('compact') },
     '-',
