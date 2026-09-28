@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="editor.css?v=202609280600">
+<link rel="stylesheet" href="editor.css?v=202609280613">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2e6b58">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
@@ -306,7 +306,8 @@
       <li><strong>Volume envelope</strong> (<kbd>E</kbd>): an orange line appears over the selection (or whole file). Click the line to add points and drag them up (louder, up to 200%) or down (quieter, down to silence); the waveform shows the result as you go. Double-click or right-click a point to remove it, <strong>▶ Preview</strong> to listen, then <strong>Apply</strong>.</li>
       <li><strong>Move or resize a selection:</strong> drag the gold bar along the bottom of the selection to slide it left or right (same length). Drag either edge to make it longer or shorter — the other edge stays where it is.</li>
       <li><strong>Text to speech</strong> (Voice or Tools menu, or the start screen): type text, pick a language such as Afaan Oromoo, Arabic or English, press ▶ Preview, then insert it at the cursor or open it as a new tab.</li>
-      <li><strong>Multitrack editor</strong> (<em>Tools ▸ Multitrack Editor</em>, <kbd>Ctrl</kbd>+<kbd>M</kbd>): put audio on several tracks and play them together — e.g. a voice over quiet background audio. Drag clips along the timeline or to another track, drag clip edges to trim, split at the playhead (<kbd>S</kbd>), set each track's volume, pan, mute and solo, or <em>● Record track</em> while the others play. <em>Mix down</em> turns it into one file.</li>
+      <li><strong>Multitrack editor</strong> (<em>Tools ▸ Multitrack Editor</em>, <kbd>Ctrl</kbd>+<kbd>M</kbd>): put audio on several tracks and play them together — e.g. a voice over quiet background audio. Drag clips along the timeline or to another track, drag clip edges to trim, split at the playhead (<kbd>S</kbd>), set each track's volume, pan, mute and solo, clip volume and fades (double-click a clip), <kbd>Shift</kbd>+click to move several clips, markers (<kbd>M</kbd>), a loop (drag on the ruler, <kbd>L</kbd>), or <em>● Record track</em> while the others play. <em>Mix down</em> turns it into one file.</li>
+      <li><strong>Effect chains, presets and punch-in:</strong> <em>Effect chain…</em> applies several effects in one step (ready-made clean-ups or your own); effect windows can save presets; <em>⟲● Re-record</em> records over just the selection after a short pre-roll; <em>Control ▸ Recording Options</em> adds a count-in and metronome. Right-click (or long-press) the waveform for a quick menu.</li>
       <li><strong>Overview bar</strong> (above the waveform): the whole file in miniature. The gold box is the part shown below — drag it to scroll, drag its edges to zoom in or out, click anywhere to jump there, double-click to see everything. Turn it off in <em>View ▸ Overview Bar</em>.</li>
       <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
@@ -552,9 +553,14 @@
       <button class="btn" id="mtSplit" type="button" title="Split the selected clip at the playhead (S)">Split</button>
       <button class="btn" id="mtDup" type="button" title="Duplicate the selected clip after itself (Ctrl+D)">Duplicate</button>
       <button class="btn" id="mtDel" type="button" title="Delete the selected clip (Del)">Delete</button>
+      <button class="btn" id="mtClipBtn" type="button" title="Volume and fades of the selected clip (or double-click a clip)">Volume &amp; fades…</button>
       <button class="btn" id="mtEdit" type="button" title="Open the selected clip in the editor as a new tab">Edit clip</button>
       <button class="btn" id="mtUndo" type="button" title="Undo (Ctrl+Z)">↶</button>
       <button class="btn" id="mtRedo" type="button" title="Redo (Ctrl+Y)">↷</button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="mtMarkBtn" type="button" title="Add a marker at the playhead, or remove the one there (M) · ; and ' jump between markers">◆ Marker</button>
+      <button class="btn" id="mtLoopBtn" type="button" title="Loop playback (L) — drag along the ruler to choose the part">⟲ Loop</button>
     </div>
     <div class="grp">
       <button class="btn" id="mtZoomOut" type="button">－</button>
@@ -575,7 +581,7 @@
     <p class="mt-empty" id="mtEmpty">Add audio: pick an open tab in the list above, <b>Add files…</b>, or <b>● Record track</b>.</p>
   </div>
   <div class="mt-foot">
-    <span id="mtInfo">Drag clips to move them (also onto other tracks) · drag a clip's edge to trim it · click the ruler or empty space to move the playhead · Ctrl+wheel zooms</span>
+    <span id="mtInfo"></span>
     <input id="mtScroll" type="range" min="0" max="1000" value="0" aria-label="Scroll the timeline">
   </div>
 </section>
@@ -584,11 +590,12 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy">Working…</div>
 
-<script src="editor.js?v=202609280600"></script>
-<script src="save-extras.js?v=202609280600"></script>
-<script src="autosave.js?v=202609280600"></script>
-<script src="recitation.js?v=202609280600"></script>
-<script src="app-install.js?v=202609280600"></script>
+<script src="editor.js?v=202609280613"></script>
+<script src="save-extras.js?v=202609280613"></script>
+<script src="autosave.js?v=202609280613"></script>
+<script src="recitation.js?v=202609280613"></script>
+<script src="editing-extras.js?v=202609280613"></script>
+<script src="app-install.js?v=202609280613"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>

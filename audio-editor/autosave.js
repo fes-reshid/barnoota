@@ -32,7 +32,7 @@ function asSnapshot() {
     savedAt: Date.now(), activeIndex: tabs.indexOf(active),
     tabs: tabs.filter(t => t.doc).map(t => ({ name: t.name, dirty: !!t.dirty, markers: t.doc.markers, labels: t.doc.labels || null, tags: t.tags || null, audio: ref(t.doc.ch, t.doc.sr), sr: t.doc.sr })),
     multitrack: mt.tracks.length ? {
-      pps: mt.pps, scroll: mt.scroll, playhead: mt.playhead,
+      pps: mt.pps, scroll: mt.scroll, playhead: mt.playhead, markers: mt.markers, loop: mt.loop, looping: mt.looping,
       tracks: mt.tracks.map(({ id, name, vol, pan, mute, solo, color }) => ({ id, name, vol, pan, mute, solo, color })),
       clips: mt.clips.map(c => ({ id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name, srcName: c.src.name, audio: ref(c.src.ch, c.src.sr), sr: c.src.sr, fadeIn: c.fadeIn || 0, fadeOut: c.fadeOut || 0, gain: c.gain == null ? 1 : c.gain })),
     } : null,
@@ -93,6 +93,7 @@ async function asRestore(saved) {
         return { id: c.id, track: c.track, start: c.start, offset: c.offset, dur: c.dur, name: c.name, fadeIn: c.fadeIn || 0, fadeOut: c.fadeOut || 0, gain: c.gain == null ? 1 : c.gain, src: { name: c.srcName || c.name, sr: a.sr, ch: a.ch } };
       });
       mt.pps = m.pps || 60; mt.scroll = m.scroll || 0; mt.playhead = m.playhead || 0;
+      mt.markers = m.markers || []; mt.loop = m.loop || null; mt.looping = !!m.looping && !!m.loop; mt.picked = new Set();
       mt.nextId = Math.max(0, ...mt.tracks.map(t => t.id), ...mt.clips.map(c => c.id)) + 1;
       mt.undo = []; mt.redo = []; mt.sel = null; mt.selTrack = mt.tracks[0] ? mt.tracks[0].id : null;
     }
