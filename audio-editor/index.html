@@ -101,6 +101,35 @@
   #scroll{width:100%; margin:8px 0 0; accent-color:var(--green);}
   #overview{display:block; width:100%; height:46px; margin-bottom:6px; border:1px solid var(--gold-soft); border-radius:8px; background:#fffaf0; touch-action:none; cursor:pointer;}
   body.no-overview #overview{display:none;}
+  /* ----- Multitrack editor ----- */
+  #mt{position:fixed; inset:0; z-index:85; background:#efe7d2; display:none; flex-direction:column; font-family:var(--ui);}
+  #mt.open{display:flex;}
+  body.mt-open{overflow:hidden;}
+  .mt-bar{display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; padding:10px 14px; background:var(--parchment); border-bottom:1.5px solid var(--gold-soft);}
+  .mt-bar h2{font-family:'Marcellus'; font-weight:400; font-size:20px; color:var(--ink-navy); margin:0 8px 0 0;}
+  .mt-bar .grp{display:flex; flex-wrap:wrap; gap:5px; align-items:center;}
+  .mt-bar .clock{font-size:18px; min-width:96px;}
+  .mt-main{flex:1; min-height:0; overflow:auto; display:flex; position:relative;}
+  .mt-heads{flex:none; width:210px; position:sticky; left:0; z-index:2; background:var(--parchment); border-right:1.5px solid var(--gold-soft);}
+  .mt-heads .spacer{height:26px; border-bottom:1px solid var(--gold-soft); font-size:11px; color:var(--muted); padding:5px 8px;}
+  .mt-head{height:92px; border-bottom:1px solid rgba(169,124,37,.3); padding:6px 8px; display:flex; flex-direction:column; gap:4px; font-size:12px;}
+  .mt-head.sel{background:var(--green-bg);}
+  .mt-head .r1{display:flex; gap:4px; align-items:center;}
+  .mt-head input[type=text]{flex:1; min-width:0; font:600 13px var(--ui); border:1px solid transparent; background:transparent; border-radius:5px; padding:2px 4px; color:var(--ink-navy);}
+  .mt-head input[type=text]:focus{border-color:var(--gold-soft); background:#fff;}
+  .mt-head .sw{width:12px; height:28px; border-radius:3px; flex:none;}
+  .mt-head .tb{border:1px solid var(--gold-soft); background:#fff; border-radius:5px; font:700 11px var(--ui); width:24px; height:22px; cursor:pointer; padding:0; color:var(--ink-brown);}
+  .mt-head .tb.on-m{background:#a3402e; color:#fff; border-color:#a3402e;}
+  .mt-head .tb.on-s{background:#d3a21c; color:#fff; border-color:#d3a21c;}
+  .mt-head label{display:flex; align-items:center; gap:5px; color:var(--muted);}
+  .mt-head input[type=range]{flex:1; min-width:0; accent-color:var(--green); height:14px;}
+  .mt-head output{width:34px; text-align:right; font-family:ui-monospace, Menlo, Consolas, monospace; font-size:11px;}
+  .mt-lane{flex:1; min-width:0; position:relative;}
+  #mtCanvas{display:block; touch-action:none;}
+  .mt-foot{display:flex; align-items:center; gap:10px; padding:6px 14px; background:var(--parchment); border-top:1.5px solid var(--gold-soft); font-size:12px; color:var(--muted);}
+  .mt-foot input[type=range]{flex:1; accent-color:var(--green);}
+  .mt-empty{position:absolute; left:230px; right:20px; top:80px; text-align:center; color:var(--muted); font-size:15px; pointer-events:none;}
+  @media (max-width:700px){ .mt-heads{width:140px;} .mt-head label span{display:none;} }
   body:not(.no-overview) #scroll{display:none;} /* the overview bar does the scrolling */
   .hint{font-family:var(--ui); font-size:12px; color:var(--muted); margin:6px 0 0; line-height:1.5;}
   kbd{font-family:ui-monospace, Menlo, Consolas, monospace; font-size:11px; background:#fff; border:1px solid var(--gold-soft); border-bottom-width:2px; border-radius:4px; padding:0 4px;}
@@ -238,6 +267,7 @@
       <button class="btn big" id="newBtn2" type="button" title="Start an empty file to paste or record into (N)">＋ New empty</button>
       <button class="btn big" id="joinBtn2" type="button" title="Pick several audio files and join them into one">Join audio files</button>
       <button class="btn big" id="ttsBtn2" type="button" title="Type text and turn it into speech">Text to speech</button>
+      <button class="btn big" id="mtBtn2" type="button" title="Mix several tracks — e.g. a voice over background audio">Multitrack</button>
     </div>
     <div id="emptyRecent" hidden>
       <h2>Recent files</h2>
@@ -497,6 +527,7 @@
       <li><strong>Volume envelope</strong> (<kbd>E</kbd>): an orange line appears over the selection (or whole file). Click the line to add points and drag them up (louder, up to 200%) or down (quieter, down to silence); the waveform shows the result as you go. Double-click or right-click a point to remove it, <strong>▶ Preview</strong> to listen, then <strong>Apply</strong>.</li>
       <li><strong>Move or resize a selection:</strong> drag the gold bar along the bottom of the selection to slide it left or right (same length). Drag either edge to make it longer or shorter — the other edge stays where it is.</li>
       <li><strong>Text to speech</strong> (Voice or Tools menu, or the start screen): type text, pick a language such as Afaan Oromoo, Arabic or English, press ▶ Preview, then insert it at the cursor or open it as a new tab.</li>
+      <li><strong>Multitrack editor</strong> (<em>Tools ▸ Multitrack Editor</em>, <kbd>Ctrl</kbd>+<kbd>M</kbd>): put audio on several tracks and play them together — e.g. a voice over quiet background audio. Drag clips along the timeline or to another track, drag clip edges to trim, split at the playhead (<kbd>S</kbd>), set each track's volume, pan, mute and solo, or <em>● Record track</em> while the others play. <em>Mix down</em> turns it into one file.</li>
       <li><strong>Overview bar</strong> (above the waveform): the whole file in miniature. The gold box is the part shown below — drag it to scroll, drag its edges to zoom in or out, click anywhere to jump there, double-click to see everything. Turn it off in <em>View ▸ Overview Bar</em>.</li>
       <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
@@ -722,6 +753,53 @@
 <input type="file" id="insFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 <input type="file" id="batchFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 <input type="file" id="mixFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+
+<section id="mt" aria-label="Multitrack editor">
+  <div class="mt-bar">
+    <h2>Multitrack</h2>
+    <div class="grp">
+      <button class="btn primary" id="mtPlay" type="button" title="Play / pause (Space)">▶ Play</button>
+      <button class="btn" id="mtStop" type="button" title="Stop and go back">■</button>
+      <button class="btn" id="mtHome" type="button" title="Go to start (Home)">⏮</button>
+      <button class="btn rec" id="mtRec" type="button" title="Record a new track while the others play (R)">● Record track</button>
+      <span class="clock" id="mtClock">0:00.000</span>
+    </div>
+    <div class="grp">
+      <button class="btn" id="mtAddTrack" type="button">＋ Track</button>
+      <select class="num" id="mtAddTab" style="width:auto" title="Put an open tab on the selected track at the playhead"></select>
+      <button class="btn" id="mtAddFile" type="button" title="Each file becomes a new track">Add files…</button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="mtSplit" type="button" title="Split the selected clip at the playhead (S)">Split</button>
+      <button class="btn" id="mtDup" type="button" title="Duplicate the selected clip after itself (Ctrl+D)">Duplicate</button>
+      <button class="btn" id="mtDel" type="button" title="Delete the selected clip (Del)">Delete</button>
+      <button class="btn" id="mtEdit" type="button" title="Open the selected clip in the editor as a new tab">Edit clip</button>
+      <button class="btn" id="mtUndo" type="button" title="Undo (Ctrl+Z)">↶</button>
+      <button class="btn" id="mtRedo" type="button" title="Redo (Ctrl+Y)">↷</button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="mtZoomOut" type="button">－</button>
+      <button class="btn" id="mtZoomIn" type="button">＋</button>
+      <button class="btn" id="mtFit" type="button">Fit</button>
+    </div>
+    <span style="flex:1"></span>
+    <div class="grp">
+      <button class="btn primary" id="mtMix" type="button" title="Mix all tracks into one file and open it in the editor">Mix down → new tab</button>
+      <button class="btn" id="mtMixSave" type="button" title="Mix all tracks and download (format from the Save panel)">Save mix</button>
+      <button class="btn" id="mtClose" type="button" title="Back to the editor (the multitrack session is kept)">✕ Close</button>
+    </div>
+  </div>
+  <div class="mt-main" id="mtMain">
+    <div class="mt-heads" id="mtHeads"></div>
+    <div class="mt-lane" id="mtLane"><canvas id="mtCanvas"></canvas></div>
+    <p class="mt-empty" id="mtEmpty">Add audio: pick an open tab in the list above, <b>Add files…</b>, or <b>● Record track</b>.</p>
+  </div>
+  <div class="mt-foot">
+    <span id="mtInfo">Drag clips to move them (also onto other tracks) · drag a clip's edge to trim it · click the ruler or empty space to move the playhead · Ctrl+wheel zooms</span>
+    <input id="mtScroll" type="range" min="0" max="1000" value="0" aria-label="Scroll the timeline">
+  </div>
+</section>
+<input type="file" id="mtFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy">Working…</div>
@@ -3117,6 +3195,407 @@ on('keyChange', () => {
 });
 on('keyClose', () => $('keyDlg').close());
 
+/* ---------- Multitrack editor (like WavePad's) ---------- */
+// Tracks hold clips; a clip plays part of a source (offset/dur, in seconds) at a start time.
+// Sources are immutable channel arrays (e.g. a tab's audio), so clips just reference them.
+const MT_ROW = 92, MT_RULER = 26, MT_COLORS = ['#2e6b58', '#a97c25', '#3a6ea5', '#8a4f9e', '#b5543a', '#4f8a3a', '#2a7f8a', '#9a6a2a'];
+const mt = { tracks: [], clips: [], pps: 60, scroll: 0, playhead: 0, sel: null, selTrack: null, undo: [], redo: [], nextId: 1 };
+let mtPlayer = null, mtRecorder = null, mtDrag = null;
+const mtCanvas = $('mtCanvas'), mtG = mtCanvas.getContext('2d');
+const mtBuffers = new WeakMap(), mtPeakCache = new WeakMap();
+const mtEnd = () => mt.clips.reduce((e, c) => Math.max(e, c.start + c.dur), 0);
+const mtClip = id => mt.clips.find(c => c.id === id);
+const mtTrack = id => mt.tracks.find(t => t.id === id);
+function mtSnapshot() { return { tracks: mt.tracks.map(t => ({ ...t })), clips: mt.clips.map(c => ({ ...c })) }; }
+function mtChange(fn) { // record an undo step, then change
+  mt.undo.push(mtSnapshot()); if (mt.undo.length > 80) mt.undo.shift(); mt.redo = [];
+  fn(); mtRender();
+  if (mtPlayer) mtRestart();
+}
+function mtUndo(redo) {
+  const from = redo ? mt.redo : mt.undo, to = redo ? mt.undo : mt.redo;
+  if (!from.length) return;
+  to.push(mtSnapshot()); const s0 = from.pop(); mt.tracks = s0.tracks; mt.clips = s0.clips;
+  if (mt.sel && !mtClip(mt.sel)) mt.sel = null;
+  mtRender(); if (mtPlayer) mtRestart();
+}
+function mtAddTrackObj(name) {
+  const t = { id: mt.nextId++, name: name || 'Track ' + (mt.tracks.length + 1), vol: 1, pan: 0, mute: false, solo: false, color: MT_COLORS[mt.tracks.length % MT_COLORS.length] };
+  mt.tracks.push(t); mt.selTrack = t.id; return t;
+}
+function mtAddClip(src, trackId, start) {
+  const c = { id: mt.nextId++, track: trackId, src, start: Math.max(0, start), offset: 0, dur: src.ch[0].length / src.sr, name: src.name };
+  mt.clips.push(c); mt.sel = c.id; return c;
+}
+function mtBuffer(src) {
+  if (!mtBuffers.has(src)) {
+    const b = audio().createBuffer(src.ch.length, Math.max(1, src.ch[0].length), src.sr);
+    src.ch.forEach((c, i) => b.copyToChannel(c, i)); mtBuffers.set(src, b);
+  }
+  return mtBuffers.get(src);
+}
+function mtPeaks(src) { // min/max per 256 samples, all channels together
+  if (!mtPeakCache.has(src)) {
+    const n = Math.ceil(src.ch[0].length / 256), mn = new Float32Array(n), mx = new Float32Array(n);
+    for (let b = 0; b < n; b++) {
+      let lo = 1, hi = -1;
+      for (const c of src.ch) for (let i = b * 256, e = Math.min(c.length, i + 256); i < e; i++) { const v = c[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+      mn[b] = lo; mx[b] = hi;
+    }
+    mtPeakCache.set(src, { mn, mx });
+  }
+  return mtPeakCache.get(src);
+}
+// ---------- Drawing ----------
+const mtX = t => (t - mt.scroll) * mt.pps;
+const mtT = x => x / mt.pps + mt.scroll;
+function mtRender() { mtHeads(); mtDraw(); mtSync(); }
+function mtSync() {
+  stashTab();
+  const hasTabs = tabs.some(t => t.doc && t.doc.ch[0].length);
+  const sel = $('mtAddTab'); sel.innerHTML = '';
+  sel.add(new Option(hasTabs ? '＋ Add an open tab…' : 'No open tabs', ''));
+  tabs.forEach((t, i) => { if (t.doc && t.doc.ch[0].length) sel.add(new Option(t.name || 'untitled', i)); });
+  const c = mt.sel && mtClip(mt.sel);
+  $('mtInfo').textContent = c ? `${c.name}: starts ${fmt(c.start)} · length ${fmt(c.dur)} · on ${(mtTrack(c.track) || {}).name}`
+    : 'Drag clips to move them (also onto other tracks) · drag a clip\'s edge to trim it · click the ruler or empty space to move the playhead · Ctrl+wheel zooms';
+  for (const id of ['mtSplit', 'mtDup', 'mtDel', 'mtEdit']) $(id).disabled = !c;
+  $('mtSplit').disabled = !c || mt.playhead <= c.start || mt.playhead >= c.start + c.dur;
+  $('mtUndo').disabled = !mt.undo.length; $('mtRedo').disabled = !mt.redo.length;
+  $('mtMix').disabled = $('mtMixSave').disabled = !mt.clips.length;
+  $('mtEmpty').hidden = mt.clips.length > 0;
+  const W = $('mtLane').clientWidth, total = Math.max(mtEnd() + 5, W / mt.pps), max = Math.max(0, total - W / mt.pps);
+  $('mtScroll').max = 1000; $('mtScroll').value = max ? Math.round(mt.scroll / max * 1000) : 0; $('mtScroll').disabled = !max;
+  if (!mtPlayer) $('mtClock').textContent = fmt(mt.playhead);
+}
+function mtHeads() {
+  const box = $('mtHeads'); box.innerHTML = '<div class="spacer">Tracks</div>';
+  mt.tracks.forEach(t => {
+    const d = document.createElement('div'); d.className = 'mt-head' + (t.id === mt.selTrack ? ' sel' : '');
+    d.innerHTML = `<div class="r1"><span class="sw" style="background:${t.color}"></span><input type="text" aria-label="Track name"><button class="tb" data-a="m" title="Mute">M</button><button class="tb" data-a="s" title="Solo (hear only this track)">S</button><button class="tb" data-a="x" title="Remove track">✕</button></div>
+      <label><span>Vol</span><input type="range" min="0" max="200" step="1" data-a="vol"><output></output></label>
+      <label><span>Pan</span><input type="range" min="-100" max="100" step="5" data-a="pan"><output></output></label>`;
+    const nm = d.querySelector('input[type=text]'); nm.value = t.name;
+    nm.onchange = () => mtChange(() => { t.name = nm.value.trim() || t.name; });
+    const [vol, pan] = d.querySelectorAll('input[type=range]'), [ov, op] = d.querySelectorAll('output');
+    vol.value = Math.round(t.vol * 100); ov.value = vol.value + '%';
+    pan.value = Math.round(t.pan * 100); op.value = t.pan ? (t.pan < 0 ? 'L' : 'R') + Math.abs(Math.round(t.pan * 100)) : 'C';
+    vol.oninput = () => { t.vol = vol.value / 100; ov.value = vol.value + '%'; mtLive(); };
+    pan.oninput = () => { t.pan = pan.value / 100; op.value = t.pan ? (t.pan < 0 ? 'L' : 'R') + Math.abs(pan.value) : 'C'; mtLive(); };
+    d.querySelector('[data-a=m]').classList.toggle('on-m', t.mute);
+    d.querySelector('[data-a=s]').classList.toggle('on-s', t.solo);
+    d.querySelector('[data-a=m]').onclick = () => { t.mute = !t.mute; mtHeads(); mtLive(); mtDraw(); };
+    d.querySelector('[data-a=s]').onclick = () => { t.solo = !t.solo; mtHeads(); mtLive(); mtDraw(); };
+    d.querySelector('[data-a=x]').onclick = () => {
+      if (mt.clips.some(c => c.track === t.id) && !confirm(`Remove “${t.name}” and its clips?`)) return;
+      mtChange(() => { mt.tracks = mt.tracks.filter(x => x !== t); mt.clips = mt.clips.filter(c => c.track !== t.id); });
+    };
+    d.onpointerdown = e => { if (e.target === d) { mt.selTrack = t.id; mtHeads(); } };
+    box.appendChild(d);
+  });
+}
+function mtAudible(t) { const anySolo = mt.tracks.some(x => x.solo); return !t.mute && (!anySolo || t.solo); }
+function mtDraw() {
+  if (!$('mt').classList.contains('open')) return;
+  const lane = $('mtLane'), dpr = window.devicePixelRatio || 1;
+  const W = lane.clientWidth, H = MT_RULER + Math.max(1, mt.tracks.length) * MT_ROW;
+  if (mtCanvas.width !== Math.round(W * dpr) || mtCanvas.height !== Math.round(H * dpr)) {
+    mtCanvas.width = Math.round(W * dpr); mtCanvas.height = Math.round(H * dpr); mtCanvas.style.width = W + 'px'; mtCanvas.style.height = H + 'px';
+  }
+  const g2 = mtG; g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.fillStyle = '#fffaf0'; g2.fillRect(0, 0, W, H);
+  // Ruler
+  g2.fillStyle = css('--parchment-deep'); g2.fillRect(0, 0, W, MT_RULER);
+  const steps = [0.1, 0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300, 600];
+  const step = steps.find(st => st * mt.pps >= 70) || 600;
+  g2.font = '11px ' + css('--ui'); g2.textBaseline = 'middle';
+  for (let t = Math.floor(mt.scroll / step) * step; mtX(t) < W; t += step) {
+    const x = mtX(t); if (x < 0) continue;
+    g2.fillStyle = 'rgba(169,124,37,.25)'; g2.fillRect(Math.round(x), MT_RULER, 1, H - MT_RULER);
+    g2.fillStyle = css('--gold'); g2.fillRect(Math.round(x), MT_RULER - 7, 1, 7);
+    g2.fillStyle = css('--muted'); g2.fillText(step >= 1 ? fmt(t).slice(0, -4) : fmt(t).replace(/0+$/, ''), x + 3, MT_RULER / 2);
+  }
+  // Rows and clips
+  mt.tracks.forEach((t, row) => {
+    const y = MT_RULER + row * MT_ROW;
+    if (t.id === mt.selTrack) { g2.fillStyle = 'rgba(46,107,88,.05)'; g2.fillRect(0, y, W, MT_ROW); }
+    g2.fillStyle = 'rgba(169,124,37,.3)'; g2.fillRect(0, y + MT_ROW - 1, W, 1);
+    const dim = !mtAudible(t);
+    for (const c of mt.clips) {
+      if (c.track !== t.id) continue;
+      const x0 = mtX(c.start), x1 = mtX(c.start + c.dur);
+      if (x1 < 0 || x0 > W) continue;
+      const cy = y + 5, ch = MT_ROW - 10, sel = c.id === mt.sel;
+      g2.globalAlpha = dim ? 0.35 : 1;
+      g2.fillStyle = t.color + '26'; g2.strokeStyle = sel ? css('--ink-navy') : t.color; g2.lineWidth = sel ? 2.5 : 1.5;
+      g2.beginPath(); g2.roundRect ? g2.roundRect(x0, cy, x1 - x0, ch, 6) : g2.rect(x0, cy, x1 - x0, ch); g2.fill(); g2.stroke();
+      // waveform
+      const pk = mtPeaks(c.src), mid = cy + ch / 2 + 6, amp = ch / 2 - 10, spb = c.src.sr / 256;
+      g2.fillStyle = t.color;
+      for (let x = Math.max(0, Math.floor(x0)); x < Math.min(W, x1); x++) {
+        const ta = c.offset + (mtT(x) - c.start), tb2 = ta + 1 / mt.pps;
+        const b0 = Math.max(0, Math.floor(ta * spb)), b1 = Math.min(pk.mn.length, Math.max(b0 + 1, Math.ceil(tb2 * spb)));
+        let lo = 1, hi = -1; for (let i = b0; i < b1; i++) { if (pk.mn[i] < lo) lo = pk.mn[i]; if (pk.mx[i] > hi) hi = pk.mx[i]; }
+        if (hi >= lo) g2.fillRect(x, mid - hi * amp, 1, Math.max(1, (hi - lo) * amp));
+      }
+      g2.fillStyle = css('--ink-navy'); g2.font = '600 11px ' + css('--ui'); g2.textBaseline = 'top';
+      g2.save(); g2.beginPath(); g2.rect(x0, cy, x1 - x0, ch); g2.clip();
+      g2.fillText(c.name + '  ' + fmt(c.dur).replace(/\d$/, ''), Math.max(x0, 0) + 6, cy + 4); g2.restore();
+      if (sel) { g2.fillStyle = css('--ink-navy'); g2.fillRect(x0, cy + ch / 2 - 10, 3, 20); g2.fillRect(x1 - 3, cy + ch / 2 - 10, 3, 20); }
+      g2.globalAlpha = 1;
+    }
+  });
+  // Playhead
+  const px = mtX(mt.playhead);
+  if (px >= 0 && px <= W) { g2.fillStyle = css('--playhead'); g2.fillRect(Math.round(px) - 1, 0, 2, H); }
+  if (mtRecorder) { const rx0 = mtX(mtRecorder.start), rx1 = mtX(mt.playhead); g2.fillStyle = 'rgba(163,64,46,.25)'; g2.fillRect(rx0, MT_RULER + mtRecorder.row * MT_ROW + 5, Math.max(2, rx1 - rx0), MT_ROW - 10); }
+}
+// ---------- Playback (live mix through Web Audio) ----------
+function mtGraph(ctx, dest) {
+  const master = ctx.createGain(); master.connect(dest);
+  const nodes = new Map();
+  for (const t of mt.tracks) {
+    const gn = ctx.createGain(), pn = ctx.createStereoPanner();
+    gn.gain.value = mtAudible(t) ? t.vol : 0; pn.pan.value = t.pan;
+    gn.connect(pn); pn.connect(master); nodes.set(t.id, { gn, pn });
+  }
+  return nodes;
+}
+function mtSchedule(ctx, nodes, from, when) {
+  const srcs = [];
+  for (const c of mt.clips) {
+    const end = c.start + c.dur; if (end <= from) continue;
+    const n = nodes.get(c.track); if (!n) continue;
+    const sn = ctx.createBufferSource(); sn.buffer = mtBuffer(c.src); sn.connect(n.gn);
+    const skip = Math.max(0, from - c.start);
+    sn.start(when + Math.max(0, c.start - from), c.offset + skip, c.dur - skip);
+    srcs.push(sn);
+  }
+  return srcs;
+}
+function mtPlay() {
+  if (mtPlayer) { mtPause(); return; }
+  stopPlay(); stopPreview();
+  const ctx = audio(); ctx.resume();
+  const nodes = mtGraph(ctx, ctx.destination), t0 = ctx.currentTime + 0.05;
+  if (mt.playhead >= mtEnd() && !mtRecorder) mt.playhead = 0;
+  const srcs = mtSchedule(ctx, nodes, mt.playhead, t0);
+  mtPlayer = { nodes, srcs, t0, from: mt.playhead };
+  $('mtPlay').textContent = '❚❚ Pause';
+  mtAnimate();
+}
+function mtStopNodes() { if (!mtPlayer) return; mtPlayer.srcs.forEach(sn => { try { sn.stop(); } catch (e) {} }); mtPlayer = null; $('mtPlay').textContent = '▶ Play'; }
+function mtPause() { if (mtPlayer) mt.playhead = mtPos(); mtStopNodes(); if (mtRecorder) mtRecStop(); mtRender(); }
+function mtRestart() { const pos = mtPos(); mtStopNodes(); mt.playhead = pos; mtPlay(); }
+const mtPos = () => mtPlayer ? mtPlayer.from + Math.max(0, audio().currentTime - mtPlayer.t0) : mt.playhead;
+function mtLive() { if (mtPlayer) for (const t of mt.tracks) { const n = mtPlayer.nodes.get(t.id); if (n) { n.gn.gain.setTargetAtTime(mtAudible(t) ? t.vol : 0, audio().currentTime, 0.02); n.pn.pan.setTargetAtTime(t.pan, audio().currentTime, 0.02); } } }
+function mtAnimate() {
+  if (!mtPlayer) return;
+  mt.playhead = mtPos();
+  if (mt.playhead >= mtEnd() + 0.05 && !mtRecorder) { mtStopNodes(); mt.playhead = mtEnd(); mtRender(); return; }
+  const W = $('mtLane').clientWidth;
+  if (mtX(mt.playhead) > W - 30) { mt.scroll = mt.playhead - 30 / mt.pps; }
+  $('mtClock').textContent = fmt(mt.playhead);
+  mtDraw(); requestAnimationFrame(mtAnimate);
+}
+// ---------- Recording a new track while the others play ----------
+async function mtRec() {
+  if (mtRecorder) { mtRecStop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) { toast('Recording is not supported in this browser.'); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } }); }
+  catch (e) { toast('Microphone permission was refused.'); return; }
+  // One undo step covers the new track and its recording.
+  mt.undo.push(mtSnapshot()); mt.redo = [];
+  const t = mtAddTrackObj('Recording ' + (mt.tracks.filter(x => /^Recording/.test(x.name)).length + 1));
+  const chunks = [], mr = new MediaRecorder(stream);
+  mtRecorder = { mr, stream, start: mt.playhead, track: t.id, row: mt.tracks.indexOf(t) };
+  mr.ondataavailable = e => e.data.size && chunks.push(e.data);
+  mr.onstop = async () => {
+    stream.getTracks().forEach(x => x.stop());
+    try {
+      const ab = await audio().decodeAudioData(await new Blob(chunks, { type: mr.mimeType }).arrayBuffer());
+      const ch = []; for (let i = 0; i < ab.numberOfChannels; i++) ch.push(ab.getChannelData(i).slice());
+      const start = mtRecorder.start, trackId = mtRecorder.track;
+      mtRecorder = null;
+      mtAddClip({ name: mtTrack(trackId).name, sr: ab.sampleRate, ch }, trackId, start); mtRender();
+    } catch (e) { console.error(e); mtRecorder = null; mtUndo(false); mt.redo.pop(); toast('Could not decode the recording.'); }
+  };
+  mr.start();
+  $('mtRec').textContent = '■ Stop recording'; $('mtRec').classList.add('live');
+  mtRender();
+  if (!mtPlayer) mtPlay(); // hear the other tracks while recording
+}
+function mtRecStop() {
+  if (!mtRecorder || mtRecorder.mr.state === 'inactive') return;
+  mtRecorder.mr.stop();
+  $('mtRec').textContent = '● Record track'; $('mtRec').classList.remove('live');
+  if (mtPlayer) { mt.playhead = mtPos(); mtStopNodes(); }
+}
+// ---------- Mixdown ----------
+async function mtMixdown() {
+  const end = mtEnd(); if (!end) return null;
+  const sr = Math.max(44100, ...mt.clips.map(c => c.src.sr));
+  const off = new OfflineAudioContext(2, Math.ceil(end * sr), sr);
+  mtSchedule(off, mtGraph(off, off.destination), 0, 0);
+  const r = await off.startRendering();
+  return { sr, ch: [r.getChannelData(0).slice(), r.getChannelData(1).slice()] };
+}
+async function mtMixToTab() {
+  busy(true);
+  try { const m = await mtMixdown(); if (!m) return; mtClose(); newDocument(makeDoc(m.sr, m.ch), 'Multitrack mix', false); dirty = true; refresh(); toast('Mix opened in a new tab'); }
+  catch (e) { console.error(e); toast('Mixing failed.'); } finally { busy(false); }
+}
+function mtMixSave() {
+  withBusy('Mixing…', async () => { const m = await mtMixdown(); if (m) downloadBlob(await encode(m.ch, m.sr), 'multitrack-mix' + ext(), mime()); });
+}
+// ---------- Pointer editing on the timeline ----------
+function mtHit(e) {
+  const r = mtCanvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  if (y < MT_RULER) return { x, y, ruler: true };
+  const row = Math.floor((y - MT_RULER) / MT_ROW), track = mt.tracks[row];
+  if (!track) return { x, y, row };
+  const c = mt.clips.filter(k => k.track === track.id).reverse().find(k => x >= mtX(k.start) - 5 && x <= mtX(k.start + k.dur) + 5);
+  let part = null;
+  if (c) part = Math.abs(x - mtX(c.start)) <= 7 ? 'l' : Math.abs(x - mtX(c.start + c.dur)) <= 7 ? 'r' : x > mtX(c.start) && x < mtX(c.start + c.dur) ? 'move' : null;
+  return { x, y, row, track, clip: part ? c : null, part };
+}
+function mtSnap(t, ignore) { // snap to 0, the playhead and other clips' edges within 8 px
+  let best = t, bd = 8 / mt.pps;
+  for (const p of [0, mt.playhead, ...mt.clips.filter(c => c !== ignore).flatMap(c => [c.start, c.start + c.dur])]) if (Math.abs(p - t) < bd) { bd = Math.abs(p - t); best = p; }
+  return best;
+}
+mtCanvas.addEventListener('pointerdown', e => {
+  if (e.button > 0) return;
+  mtCanvas.setPointerCapture(e.pointerId);
+  const h = mtHit(e);
+  if (h.track) mt.selTrack = h.track.id;
+  if (h.clip) {
+    mt.sel = h.clip.id;
+    mt.undo.push(mtSnapshot()); mt.redo = [];
+    mtDrag = { part: h.part, c: h.clip, x0: h.x, row0: h.row, orig: { ...h.clip }, moved: false };
+  } else {
+    mt.sel = null;
+    if (mtPlayer) { mtStopNodes(); mt.playhead = Math.max(0, mtT(h.x)); mtPlay(); } else mt.playhead = Math.max(0, mtT(h.x));
+    mtDrag = { part: 'playhead' };
+  }
+  mtRender();
+});
+mtCanvas.addEventListener('pointermove', e => {
+  const h = mtHit(e);
+  if (!mtDrag) { mtCanvas.style.cursor = h.part === 'move' ? 'grab' : h.part ? 'ew-resize' : 'default'; return; }
+  if (mtDrag.part === 'playhead') { mt.playhead = Math.max(0, mtT(h.x)); if (!mtPlayer) $('mtClock').textContent = fmt(mt.playhead); mtDraw(); return; }
+  const c = mtDrag.c, o = mtDrag.orig, dt = (h.x - mtDrag.x0) / mt.pps, srcLen = c.src.ch[0].length / c.src.sr;
+  if (Math.abs(h.x - mtDrag.x0) > 2) mtDrag.moved = true;
+  if (mtDrag.part === 'move') {
+    let st = Math.max(0, o.start + dt);
+    const snapA = mtSnap(st, c), snapB = mtSnap(st + o.dur, c) - o.dur;
+    st = Math.abs(snapA - st) <= Math.abs(snapB - st) ? snapA : Math.max(0, snapB);
+    c.start = st;
+    const row = clamp(Math.floor((h.y - MT_RULER) / MT_ROW), 0, mt.tracks.length - 1);
+    c.track = mt.tracks[row].id;
+    mtCanvas.style.cursor = 'grabbing';
+  } else if (mtDrag.part === 'l') { // trim the start: the audio stays in place
+    const ns = clamp(mtSnap(o.start + dt, c), Math.max(0, o.start - o.offset), o.start + o.dur - 0.02);
+    c.offset = o.offset + (ns - o.start); c.dur = o.dur - (ns - o.start); c.start = ns;
+  } else { // trim the end
+    const ne = clamp(mtSnap(o.start + o.dur + dt, c), o.start + 0.02, o.start + (srcLen - o.offset));
+    c.dur = ne - o.start;
+  }
+  $('mtInfo').textContent = `${c.name}: starts ${fmt(c.start)} · length ${fmt(c.dur)}`;
+  mtDraw();
+});
+function mtEndDrag() {
+  if (!mtDrag) return;
+  const d = mtDrag; mtDrag = null;
+  if (d.c && !d.moved) mt.undo.pop(); // a plain click selects, it isn't an edit
+  mtRender();
+  if (d.c && d.moved && mtPlayer) mtRestart();
+}
+mtCanvas.addEventListener('pointerup', mtEndDrag); mtCanvas.addEventListener('pointercancel', mtEndDrag);
+mtCanvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = mtCanvas.getBoundingClientRect();
+  if (e.ctrlKey || e.metaKey) { const t = mtT(e.clientX - r.left); mt.pps = clamp(mt.pps * (e.deltaY > 0 ? 0.8 : 1.25), 2, 2000); mt.scroll = Math.max(0, t - (e.clientX - r.left) / mt.pps); }
+  else if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) mt.scroll = Math.max(0, mt.scroll + (e.deltaX || e.deltaY) / mt.pps);
+  else { $('mtMain').scrollTop += e.deltaY; return; }
+  mtDraw(); mtSync();
+}, { passive: false });
+$('mtScroll').addEventListener('input', e => {
+  const W = $('mtLane').clientWidth, max = Math.max(0, Math.max(mtEnd() + 5, W / mt.pps) - W / mt.pps);
+  mt.scroll = e.target.value / 1000 * max; mtDraw();
+});
+// ---------- Clip commands ----------
+function mtSplit() {
+  const c = mt.sel && mtClip(mt.sel), p = mt.playhead;
+  if (!c || p <= c.start || p >= c.start + c.dur) return;
+  mtChange(() => { const cut = p - c.start, b = { ...c, id: mt.nextId++, start: p, offset: c.offset + cut, dur: c.dur - cut }; c.dur = cut; mt.clips.push(b); mt.sel = b.id; });
+}
+function mtDup() { const c = mt.sel && mtClip(mt.sel); if (c) mtChange(() => { const b = { ...c, id: mt.nextId++, start: c.start + c.dur }; mt.clips.push(b); mt.sel = b.id; }); }
+function mtDel() { const c = mt.sel && mtClip(mt.sel); if (c) mtChange(() => { mt.clips = mt.clips.filter(k => k !== c); mt.sel = null; }); }
+function mtEditClip() {
+  const c = mt.sel && mtClip(mt.sel); if (!c) return;
+  const a = Math.round(c.offset * c.src.sr), b = a + Math.round(c.dur * c.src.sr);
+  mtClose(); newDocument(makeDoc(c.src.sr, sliceCh(c.src.ch, a, b)), c.name + ' (clip)', false); dirty = true; refresh();
+  toast('Clip opened in a new tab — edit it, then add it back from the Multitrack tab list');
+}
+function mtZoom(f) { const W = $('mtLane').clientWidth, mid = mt.scroll + W / 2 / mt.pps; mt.pps = clamp(mt.pps * f, 2, 2000); mt.scroll = Math.max(0, mid - W / 2 / mt.pps); mtDraw(); mtSync(); }
+function mtFit() { const W = $('mtLane').clientWidth; mt.pps = clamp((W - 20) / Math.max(1, mtEnd()), 2, 2000); mt.scroll = 0; mtDraw(); mtSync(); }
+// ---------- Open / close ----------
+function openMultitrack() {
+  stopPlay(); closeMenus();
+  $('mt').classList.add('open'); document.body.classList.add('mt-open');
+  if (!mt.tracks.length) {
+    mt.undo = []; mt.redo = [];
+    if (doc && len()) { const t = mtAddTrackObj($('fileName').value || 'Track 1'); mtAddClip({ name: $('fileName').value || 'audio', sr: doc.sr, ch: doc.ch }, t.id, 0); }
+    else mtAddTrackObj();
+    requestAnimationFrame(mtFit);
+  }
+  mtRender();
+}
+function mtClose() { mtStopNodes(); if (mtRecorder) mtRecStop(); $('mt').classList.remove('open'); document.body.classList.remove('mt-open'); }
+function mtKey(e) {
+  const t = e.target;
+  if (t.tagName === 'INPUT' && t.type === 'text' || t.tagName === 'SELECT') return false;
+  const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  const act = k === ' ' ? mtPlay : k === 'escape' ? mtClose : (k === 'delete' || k === 'backspace') ? mtDel : k === 's' && !mod ? mtSplit
+    : mod && k === 'd' ? mtDup : mod && k === 'z' && !e.shiftKey ? () => mtUndo(false) : mod && (k === 'y' || (k === 'z' && e.shiftKey)) ? () => mtUndo(true)
+    : k === 'r' && !mod ? mtRec : k === 'home' ? () => { mt.playhead = 0; mt.scroll = 0; if (mtPlayer) mtRestart(); mtRender(); } : k === '+' || k === '=' ? () => mtZoom(1.5) : k === '-' ? () => mtZoom(1 / 1.5) : null;
+  if (!act) return false;
+  e.preventDefault(); act(); return true;
+}
+on('mtPlay', mtPlay);
+on('mtBtn2', openMultitrack);
+on('mtStop', () => { mtStopNodes(); if (mtRecorder) mtRecStop(); mt.playhead = mtPlayer ? mtPlayer.from : mt.playhead; mtRender(); });
+on('mtHome', () => { const was = !!mtPlayer; mtStopNodes(); mt.playhead = 0; mt.scroll = 0; mtRender(); if (was) mtPlay(); });
+on('mtRec', mtRec);
+on('mtAddTrack', () => mtChange(() => mtAddTrackObj()));
+$('mtAddTab').addEventListener('change', e => {
+  const t = tabs[+e.target.value]; e.target.value = '';
+  if (!t || !t.doc) return;
+  mtChange(() => {
+    const track = mtTrack(mt.selTrack) || mtAddTrackObj(t.name);
+    mtAddClip({ name: t.name || 'audio', sr: t.doc.sr, ch: t.doc.ch }, track.id, mt.playhead);
+  });
+});
+on('mtAddFile', () => $('mtFileIn').click());
+$('mtFileIn').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  busy(true);
+  try {
+    for (const f of files) {
+      try { const d = await decodeFile(f); mtChange(() => { const t = mtAddTrackObj(d.name); mtAddClip(d, t.id, 0); }); }
+      catch (err) { console.error(err); toast(`Could not read “${f.name}”.`); }
+    }
+  } finally { busy(false); }
+  if (mt.clips.length) mtFit();
+});
+on('mtSplit', mtSplit); on('mtDup', mtDup); on('mtDel', mtDel); on('mtEdit', mtEditClip);
+on('mtUndo', () => mtUndo(false)); on('mtRedo', () => mtUndo(true));
+on('mtZoomIn', () => mtZoom(1.5)); on('mtZoomOut', () => mtZoom(1 / 1.5)); on('mtFit', mtFit);
+on('mtMix', mtMixToTab); on('mtMixSave', mtMixSave); on('mtClose', mtClose);
+window.addEventListener('resize', () => { if ($('mt').classList.contains('open')) mtRender(); });
+
 /* ---------- Text to speech (eSpeak-NG compiled to WebAssembly, runs in the browser) ---------- */
 const TTS_SOURCES = ['https://cdn.jsdelivr.net/npm/espeak-ng@1.0.2/dist/', 'https://unpkg.com/espeak-ng@1.0.2/dist/'];
 let ttsEngine = null; // Promise<{ factory, wasmBinary }>
@@ -3603,7 +4082,7 @@ const HELP_TUTORIALS = [
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
   ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
-  ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
+  ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
 ];
 // Opens in a new tab so the editor (and unsaved audio) stays open.
 function openHelp(id) { window.open('help.html' + (id ? '#' + id : ''), '_blank', 'noopener'); }
@@ -3737,6 +4216,7 @@ const MENUS = [
     { label: 'Automatic Beat Detection…', run: openBeats, en: has.audio },
     { label: 'Remove Filler Words (um, uh)…', run: openFillers, en: has.audio },
     { label: 'Text to Speech…', run: openTTS },
+    { label: 'Multitrack Editor…', key: 'Ctrl+M', run: openMultitrack },
     '-',
     { label: 'Noise Removal…', run: fxNoise, en: has.audio },
     { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
@@ -4202,6 +4682,7 @@ function switchTab(dir) {
 document.addEventListener('keydown', e => {
   const t = e.target;
   if (menuOpen()) { if (e.key === 'Escape') { e.preventDefault(); closeMenus(); } return; }
+  if ($('mt').classList.contains('open')) { if (!document.querySelector('dialog[open]')) mtKey(e); return; }
   if (document.querySelector('dialog[open]')) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
@@ -4214,6 +4695,7 @@ document.addEventListener('keydown', e => {
   if (k === '?') openGuide();
   else if (k === 'f1') openHelp('');
   else if (mod && k === 'o') $('fileIn').click();
+  else if (mod && k === 'm') openMultitrack();
   else if (!mod && !e.altKey && !e.shiftKey && k === 'n') newEmpty();
   else if ((!mod && !e.altKey && k === 'r') || k === 'f5') toggleRecord();
   else handled = false;
