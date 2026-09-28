@@ -516,6 +516,7 @@
       <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab. <strong>Join audio…</strong> does the opposite: tick open tabs and/or add files from your computer, put them in order with ↑ ↓, choose a pause or a crossfade between them, and they're joined into a new tab (also on the start screen as <em>Join audio files</em>).</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
       <li><strong>Equaliser…</strong> is a 10-band graphic EQ like WavePad's: drag the sliders or the dots on the graph (double-click resets a band), or pick a preset such as <em>Voice clarity</em> or <em>Remove rumble / hum</em>. The shaded area shows your audio's own frequencies. <strong>▶ Preview</strong> loops the audio so you hear every change live.</li>
+      <li><strong>Voice ▸ Remove Filler Words</strong> finds hesitation sounds (um, uh, er, ah) in speech, lets you listen to each one and untick real words, then cuts them out (closing the gap) or silences them. It listens to the sound, not the words, so it works in any language — but not on recitation, where held vowels sound like fillers.</li>
       <li><strong>Tools ▸ Key Detector</strong> tells you the musical key (e.g. <em>A minor</em>) and shows which notes are used; <strong>Key Changer</strong> moves the audio to another key without changing its speed. <strong>Tools ▸ Automatic Beat Detection</strong> finds the tempo in BPM — check it with <em>▶ Play with click</em>, fix a double/half tempo with ½× / 2×, and add a marker on every beat or bar. Both work on the selection, or on the whole file.</li>
       <li><strong>Pitch…</strong> makes a voice higher or lower while keeping the same speed (+12 semitones = one octave up). <strong>Tempo…</strong> makes it faster or slower while keeping the same voice — e.g. 80% to slow a recitation down for learning. <strong>Speed…</strong> changes both together, like a tape.</li>
       <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Tempo…</strong> or <strong>Speed…</strong> to change the file itself.</li>
@@ -590,6 +591,34 @@
   </div>
 </dialog>
 <input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<dialog id="fillDlg" class="dlg eq" aria-labelledby="fillTitle">
+  <div class="eq-top"><h2 id="fillTitle">Remove filler words <span class="info" id="fillScope"></span></h2></div>
+  <p class="info" style="margin:0 0 10px">Finds hesitation sounds — <em>um, uh, er, ah, mm</em> — by how they sound: a steady hum with a flat pitch and no consonants, usually between pauses. Works in any language. Listen to each one (▶) and untick anything that is a real word. <strong>Not for Qur'an recitation</strong>: long held vowels (madd) sound just like fillers.</p>
+  <div class="row">
+    <label>Sensitivity
+      <select id="fillSens" class="num" style="width:auto">
+        <option value="0.5">Low — only obvious ones</option>
+        <option value="0.33" selected>Normal</option>
+        <option value="0.2">High — find more (check carefully)</option>
+      </select>
+    </label>
+    <button class="btn" id="fillScan" type="button">Scan again</button>
+    <span class="info" id="fillCount"></span>
+  </div>
+  <ul class="list" id="fillList" style="max-height:300px"></ul>
+  <div class="row" style="margin-top:12px">
+    <label>Then
+      <select id="fillMode" class="num" style="width:auto">
+        <option value="cut">Cut them out and close the gap</option>
+        <option value="silence">Replace them with silence</option>
+      </select>
+    </label>
+  </div>
+  <div class="actions">
+    <button class="btn" id="fillCancel" type="button">Cancel</button>
+    <button class="btn primary" id="fillApply" type="button">Remove ticked</button>
+  </div>
+</dialog>
 <dialog id="keyDlg" class="dlg eq" aria-labelledby="keyTitle">
   <div class="eq-top"><h2 id="keyTitle">Key detector <span class="info" id="keyScope"></span></h2></div>
   <p class="big-result" id="keyResult">—</p>
@@ -2951,6 +2980,143 @@ on('keyChange', () => {
 });
 on('keyClose', () => $('keyDlg').close());
 
+/* ---------- Filler words (um, uh, er…) ---------- */
+// No speech recognition (that would mean uploading the audio): fillers are found acoustically.
+// A filled pause is a stretch of sound that is almost all voiced, holds a very steady pitch,
+// has no consonants (steady zero-crossing rate) and usually sits between two pauses.
+function analyseSpeech(ch, sr) {
+  const n = ch[0].length, d = Math.max(1, Math.floor(sr / 11025)), sr2 = sr / d, n2 = Math.floor(n / d);
+  const x = new Float32Array(n2); // mono, decimated for the pitch tracker
+  for (let i = 0; i < n2; i++) { let v = 0; for (let j = 0; j < d; j++) for (const c of ch) v += c[i * d + j]; x[i] = v / (d * ch.length); }
+  const W = Math.round(sr2 * 0.04), H = Math.round(sr2 * 0.01), minL = Math.floor(sr2 / 400), maxL = Math.ceil(sr2 / 70);
+  const frames = Math.max(0, Math.floor((n2 - W - maxL) / H));
+  const db = new Float32Array(frames), f0 = new Float32Array(frames), zcr = new Float32Array(frames);
+  const rw = Math.round(sr * 0.04), rh = Math.round(sr * 0.01);
+  for (let f = 0; f < frames; f++) {
+    const o = f * H;
+    let e = 0; for (let i = 0; i < W; i++) e += x[o + i] * x[o + i];
+    db[f] = 10 * Math.log10(e / W + 1e-12);
+    // Zero crossings of the full-rate signal's slope: high when consonants (s, t, f…) are present.
+    let z = 0, prev = 0; const ro = f * rh;
+    for (let i = 1; i < rw && ro + i < n; i++) { let v = 0; for (const c of ch) v += c[ro + i] - c[ro + i - 1]; if ((v > 0) !== (prev > 0)) z++; prev = v; }
+    zcr[f] = z / rw;
+    if (db[f] < -55) continue;
+    let best = 0, bestL = 0;
+    for (let L = minL; L <= maxL; L++) {
+      let num = 0, e1 = 0, e2 = 0;
+      for (let i = 0; i < W; i++) { const a = x[o + i], b = x[o + i + L]; num += a * b; e1 += a * a; e2 += b * b; }
+      const r = num / (Math.sqrt(e1 * e2) + 1e-12);
+      if (r > best) { best = r; bestL = L; }
+    }
+    if (best > 0.6) f0[f] = sr2 / bestL;
+  }
+  return { db, f0, zcr, hop: rh, frames };
+}
+function findFillers(ch, sr, thresh) {
+  const A = analyseSpeech(ch, sr), { db, f0, zcr, hop, frames } = A;
+  if (!frames) return [];
+  const loud = [...db].sort((p, q) => q - p)[Math.floor(frames * 0.05)] || -20;
+  const gate = loud - 30; // "sound" = within 30 dB of the loud parts
+  // Chunks of sound between pauses (gaps under 60 ms are bridged).
+  const chunks = []; let st = -1, lastOn = -1;
+  for (let f = 0; f <= frames; f++) {
+    const on = f < frames && db[f] > gate;
+    if (on) { if (st < 0) st = f; lastOn = f; }
+    else if (st >= 0 && (f === frames || f - lastOn > 6)) { chunks.push([st, lastOn + 1]); st = -1; }
+  }
+  const out = [];
+  chunks.forEach(([a, b], i) => {
+    const dur = (b - a) * hop / sr;
+    if (dur < 0.18 || dur > 1.6) return;
+    const vs = [], zs = [];
+    for (let f = a; f < b; f++) { zs.push(zcr[f]); if (f0[f]) vs.push(12 * Math.log2(f0[f] / 100)); }
+    const voiced = vs.length / (b - a);
+    if (voiced < 0.6) return;
+    const med = vs.slice().sort((p, q) => p - q)[vs.length >> 1], v2 = vs.filter(v => Math.abs(v - med) < 6);
+    const mean = v2.reduce((t, v) => t + v, 0) / v2.length, pitchSd = Math.sqrt(v2.reduce((t, v) => t + (v - mean) ** 2, 0) / v2.length);
+    const zm = zs.reduce((t, v) => t + v, 0) / zs.length, zcv = Math.sqrt(zs.reduce((t, v) => t + (v - zm) ** 2, 0) / zs.length) / (zm || 1);
+    const zmax = Math.max(...zs);
+    const pb = i ? (a - chunks[i - 1][1]) * hop / sr : a * hop / sr, pa = i < chunks.length - 1 ? (chunks[i + 1][0] - b) * hop / sr : (frames - b) * hop / sr;
+    const s1 = clamp((voiced - 0.6) / 0.3, 0, 1);            // almost all voiced
+    const s2 = clamp((2.2 - pitchSd) / 1.6, 0, 1);            // flat pitch (semitones)
+    const s3 = clamp((0.6 - zcv) / 0.45, 0, 1) * (zmax < zm * 2.5 ? 1 : 0.4); // no consonant bursts
+    const s4 = (pb > 0.12 ? 0.5 : 0) + (pa > 0.12 ? 0.5 : 0); // pauses around it
+    const score = s1 * s2 * Math.sqrt(s3) * (0.55 + 0.45 * s4);
+    if (score >= thresh) out.push({ a: a * hop, b: Math.min(ch[0].length, b * hop + Math.round(sr * 0.03)), score, pb, pa, on: score >= thresh + 0.1 || thresh >= 0.5 });
+  });
+  return out;
+}
+let fillState = null;
+function openFillers() {
+  if (!doc || !len()) return;
+  const [a, b] = range();
+  if (b - a < doc.sr) { toast('Select at least 1 second of speech.'); return; }
+  fillState = { a, b };
+  $('fillScope').textContent = hasSel() ? `(selection, ${fmt((b - a) / doc.sr)})` : '(whole file)';
+  $('fillDlg').showModal();
+  scanFillers();
+}
+function scanFillers() {
+  const { a, b } = fillState;
+  $('fillList').innerHTML = '<li class="empty">Listening for ums and uhs…</li>';
+  setTimeout(() => {
+    const found = findFillers(sliceCh(doc.ch, a, b), doc.sr, parseFloat($('fillSens').value));
+    fillState.items = found.map(f => ({ ...f, a: f.a + a, b: f.b + a }));
+    renderFillers();
+  }, 30);
+}
+function renderFillers() {
+  const ul = $('fillList'), items = fillState.items; ul.innerHTML = '';
+  if (!items.length) { ul.innerHTML = '<li class="empty">No filler sounds found. Try High sensitivity.</li>'; }
+  items.forEach(it => {
+    const li = document.createElement('li');
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.on; cb.onchange = () => { it.on = cb.checked; count(); };
+    const t = document.createElement('span'); t.className = 'grow'; t.textContent = `${fmt(it.a / doc.sr)} · ${((it.b - it.a) / doc.sr).toFixed(2)} s`;
+    const sc = document.createElement('span'); sc.className = 'sub'; sc.textContent = `${Math.round(it.score * 100)}% sure`;
+    const play = document.createElement('button'); play.type = 'button'; play.className = 'btn'; play.textContent = '▶'; play.title = 'Listen (with a little around it)';
+    play.onclick = () => playSnippet(Math.max(0, it.a - Math.round(doc.sr * 0.4)), Math.min(len(), it.b + Math.round(doc.sr * 0.4)));
+    li.append(cb, t, sc, play); ul.appendChild(li);
+  });
+  const count = () => { const n = items.filter(i => i.on).length; $('fillCount').textContent = `${items.length} found · ${n} ticked`; $('fillApply').disabled = !n; };
+  count();
+}
+function playSnippet(a, b) {
+  stopPreview(); stopPlay();
+  const ctx = audio(); ctx.resume();
+  const out = sliceCh(doc.ch, a, b), buf = ctx.createBuffer(out.length, Math.max(1, out[0].length), doc.sr);
+  out.forEach((c, i) => buf.copyToChannel(c, i));
+  const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start(); previewSrc = src;
+}
+function applyFillers() {
+  const pick = fillState.items.filter(i => i.on);
+  $('fillDlg').close();
+  if (!pick.length) return;
+  stopPlay();
+  if ($('fillMode').value === 'silence') {
+    const ch = doc.ch.map(c => { const o = c.slice(); for (const f of pick) o.fill(0, f.a, f.b); return o; });
+    commit(makeDoc(doc.sr, ch, doc.markers.slice()), `Silenced ${pick.length} filler${pick.length === 1 ? '' : 's'}`);
+    return;
+  }
+  // Cut each filler and shorten the pauses around it so the gap left is about 0.25 s.
+  const keepGap = 0.25, cuts = pick.map(f => {
+    const extra = Math.max(0, f.pb + f.pa - keepGap) / 2;
+    return [Math.max(0, f.a - Math.round(Math.min(f.pb, extra) * doc.sr)), Math.min(len(), f.b + Math.round(Math.min(f.pa, extra) * doc.sr))];
+  }).sort((x, y) => x[0] - y[0]);
+  const keep = []; let from = 0;
+  for (const [a, b] of cuts) { if (a > from) keep.push([from, a]); from = Math.max(from, b); }
+  if (from < len()) keep.push([from, len()]);
+  const removed = len() - keep.reduce((t, [a, b]) => t + b - a, 0);
+  selA = selB = null; cursor = 0;
+  commit(makeDoc(doc.sr, keepRangesCh(doc.ch, doc.sr, keep), mapMarkers(doc.markers, keep)),
+    `Removed ${pick.length} filler${pick.length === 1 ? '' : 's'} (${(removed / doc.sr).toFixed(1)} s shorter)`);
+  zoomFit();
+}
+$('fillSens').addEventListener('change', scanFillers);
+on('fillScan', scanFillers);
+on('fillCancel', () => $('fillDlg').close());
+on('fillApply', applyFillers);
+$('fillDlg').addEventListener('close', stopPreview);
+
 /* ---------- Beat detection ---------- */
 // Onset strength (spectral flux) → tempo from its autocorrelation (weighted towards
 // 120 BPM) → beat positions from the best-fitting phase of that pulse.
@@ -3324,6 +3490,7 @@ const MENUS = [
     { label: 'Key Detector…', run: () => openKey(false), en: has.audio },
     { label: 'Key Changer…', run: () => openKey(true), en: has.audio },
     { label: 'Automatic Beat Detection…', run: openBeats, en: has.audio },
+    { label: 'Remove Filler Words (um, uh)…', run: openFillers, en: has.audio },
     '-',
     { label: 'Noise Removal…', run: fxNoise, en: has.audio },
     { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
@@ -3357,6 +3524,7 @@ const MENUS = [
   ] },
   { label: 'Voice', items: [
     { mhead: 'One-click voice tools' },
+    { label: 'Remove Filler Words (um, uh)…', run: openFillers, en: has.audio, title: 'Find and remove hesitation sounds' },
     { label: 'Voice Cleanup', run: voiceCleanup, en: has.audio, title: 'Remove rumble → reduce noise → even out volume → normalise' },
     { label: 'Audio Enhancer', run: audioEnhancer, en: has.audio, title: 'Clearer, fuller, evenly loud voice' },
     { label: 'Amplify Vocals', run: amplifyVocals, en: has.audio, title: 'Brings the voice forward' },
