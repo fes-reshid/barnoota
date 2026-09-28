@@ -325,7 +325,9 @@ function onAdminAuth(cb){
     if(!user || !user.email){ cb(null); return; }
     const email = normalizeEmail(user.email);
     getDoc(doc(db, ADMINS_COLLECTION, email)).then(function(snap){
-      cb(snap.exists() ? { email: email, role: snap.data().role || 'admin' } : { email: email, role: null });
+      if(!snap.exists()){ cb({ email: email, role: null }); return; }
+      const data = snap.data();
+      cb({ email: email, role: data.role || 'admin', fullName: data.fullName || '', contactEmail: data.contactEmail || '' });
     }).catch(function(){ cb({ email: email, role: null }); });
   });
 }
@@ -381,6 +383,19 @@ function adminAddTeacher(usernameOrEmail){
     addedAt: new Date().toISOString(),
     addedBy: user && user.email
   });
+}
+/* Anyone on the list (teacher, admin or super) can edit their OWN full
+   name and contact email — the Firestore rules allow exactly these
+   fields on your own doc and nothing else, so this can never change a
+   role. The full name is what appears on certificates a teacher signs. */
+function updateMyProfile(fullName, contactEmail){
+  const user = auth.currentUser;
+  if(!user || !user.email) return Promise.reject(new Error('Not signed in'));
+  return setDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(user.email)), {
+    fullName: String(fullName || '').trim(),
+    contactEmail: normalizeEmail(contactEmail || ''),
+    profileUpdatedAt: new Date().toISOString()
+  }, { merge:true });
 }
 function adminRemoveTeacher(email){
   return deleteDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)));
@@ -667,6 +682,7 @@ window.KidsCloud = {
   listQuizzes: listQuizzes,
   adminSaveQuiz: adminSaveQuiz,
   adminDeleteQuiz: adminDeleteQuiz,
+  updateMyProfile: updateMyProfile,
   adminSetStudentMapNote: adminSetStudentMapNote,
   ADMIN_EMAIL: ADMIN_EMAIL
 };

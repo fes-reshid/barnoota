@@ -183,6 +183,12 @@
   allow delete: if request.auth != null
     && resource.data.role == 'teacher'
     && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'admin';
+  // anyone on the list can edit ONLY their own full name and contact
+  // email (shown on certificates they sign) — never their role
+  allow update: if request.auth != null
+    && request.auth.token.email.lower() == adminEmail
+    && request.resource.data.role == resource.data.role
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName', 'contactEmail', 'profileUpdatedAt']);
 }
 match /kids_quest_students/{uid} {
   // a student can only ever read/write their own saved progress
@@ -332,7 +338,7 @@ match /kids_quest_quizzes/{quizId} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=9"></script>
+<script type="module" src="kids-quest-cloud.js?v=10"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

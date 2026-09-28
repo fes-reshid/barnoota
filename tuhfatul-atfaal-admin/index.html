@@ -283,6 +283,7 @@
         <div class="arabic">تُحْفَةُ الأَطْفَال</div>
         <h1 id="hero-greeting">Teacher Portal</h1>
         <p id="hero-sub">Follow every learner, review maps, sign certificates and set your own quizzes.</p>
+        <p id="hero-name-prompt" class="hidden" style="margin-top:8px"><button class="btn small" id="hero-add-name" style="background:#f3d98f;color:#3c2f26">✍️ Add your full name</button> <span style="color:#f3d98f">— it’s printed on the certificates you sign.</span></p>
       </div>
       <div class="hero-actions">
         <button class="btn" id="hero-new-quiz">📝 New quiz</button>
@@ -297,6 +298,7 @@
       <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
       <button class="tab" data-tab="add" role="tab">➕ Add students</button>
       <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers">🧑‍🏫 Teachers</button>
+      <button class="tab" data-tab="profile" role="tab" id="tab-profile">👤 My profile</button>
     </nav>
 
     <!-- OVERVIEW -->
@@ -460,6 +462,31 @@
       </div>
     </div>
 
+    <!-- MY PROFILE -->
+    <div class="tab-panel hidden" data-panel="profile">
+      <div class="two-col">
+        <div class="card">
+          <h2>👤 My profile</h2>
+          <div class="info-grid" style="grid-template-columns:1fr 1fr">
+            <div class="info"><small>Username</small><span id="me-username">—</span></div>
+            <div class="info"><small>Role</small><span id="me-role">—</span></div>
+          </div>
+          <div class="field"><label for="me-fullname">Full name</label>
+            <input id="me-fullname" maxlength="80" placeholder="e.g. Ustadh Mussa Ahmed" autocomplete="name"></div>
+          <div class="field"><label for="me-email">Email</label>
+            <input id="me-email" type="email" maxlength="120" placeholder="you@example.com" autocomplete="email"></div>
+          <button class="btn primary" id="me-save">💾 Save profile</button>
+          <p class="msg" id="me-msg"></p>
+        </div>
+        <div class="card">
+          <h2>🎓 How your name is used</h2>
+          <p>Your <b>full name</b> is filled in automatically as the teacher’s name when you sign a map certificate, and it’s shown to students on the notes and quizzes you send them.</p>
+          <p>Your <b>email</b> lets admins contact you. Your sign-in stays your username.</p>
+          <div class="note-sent" id="me-preview">Certificates will say: <b id="me-preview-name">—</b></div>
+        </div>
+      </div>
+    </div>
+
     <!-- TEACHERS (admin / super only) -->
     <div class="tab-panel hidden" data-panel="teachers">
       <div class="card" id="admins-card">
@@ -590,7 +617,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=9"></script>
+<script type="module" src="../kids-quest-cloud.js?v=10"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1211,8 +1238,9 @@ function renderAdmins(list){
     el.className = 'admin-row';
     const isMe = a.email === myEmail;
     el.innerHTML =
-      '<span class="email">' + escapeHtml(a.email) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
+      '<span class="email">' + (a.fullName ? '<b>' + escapeHtml(a.fullName) + '</b> · ' : '') + escapeHtml(teacherDisplayName(a.email)) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
         '<span class="role-badge">Teacher</span>' +
+        (a.contactEmail ? '<br><span class="muted">✉️ ' + escapeHtml(a.contactEmail) + '</span>' : (a.fullName ? '' : '<br><span class="muted">No full name added yet</span>')) +
       '</span>' +
       '<span>' + (isMe ? '' : '<button class="btn danger small" data-act="remove">Remove</button>') + '</span>';
     if(!isMe){
@@ -1240,16 +1268,27 @@ function teacherDisplayName(email){
   const m = local.match(/\+quest-teacher-(.+)$/);
   return m ? m[1] : local;
 }
+let myProfile = { username:'', fullName:'', contactEmail:'', role:'' };
+function applyMyProfile(){
+  const shown = myProfile.fullName || myProfile.username;
+  $('who-am-i').innerHTML = escapeHtml(shown) + '<span class="role-badge' + (myProfile.role === 'super' ? ' super' : '') + '">' + roleLabel(myProfile.role) + '</span>';
+  $('hero-greeting').textContent = 'Assalāmu ʿalaykum, ' + shown;
+  $('certificate-teacher').dataset.me = shown;
+  $('hero-name-prompt').classList.toggle('hidden', !!myProfile.fullName);
+  $('me-username').textContent = myProfile.username;
+  $('me-role').textContent = roleLabel(myProfile.role);
+  $('me-fullname').value = myProfile.fullName;
+  $('me-email').value = myProfile.contactEmail;
+  $('me-preview-name').textContent = shown;
+}
 function showDashboard(info){
   myEmail = info.email; myRole = info.role;
   $('login-screen').classList.add('hidden');
   $('dashboard-screen').classList.remove('hidden');
   $('signout-top').classList.add('show');
   $('who-am-i').classList.add('show');
-  const name = teacherDisplayName(info.email);
-  $('who-am-i').innerHTML = escapeHtml(name) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + roleLabel(info.role) + '</span>';
-  $('hero-greeting').textContent = 'Assalāmu ʿalaykum, ' + name;
-  $('certificate-teacher').dataset.me = name;
+  myProfile = { username: teacherDisplayName(info.email), fullName: info.fullName || '', contactEmail: info.contactEmail || '', role: info.role };
+  applyMyProfile();
   $('tab-teachers').classList.toggle('hidden', info.role === 'teacher');
   $('not-authorized').classList.add('hidden');
   showTab('overview');
@@ -1303,6 +1342,17 @@ function wire(){
   $('hero-refresh').onclick = refreshAll;
   document.querySelectorAll('.subtab').forEach(t => t.onclick = () => showSub(t.dataset.sub));
 
+  $('hero-add-name').onclick = () => { showTab('profile'); $('me-fullname').focus(); };
+  $('me-fullname').oninput = () => { $('me-preview-name').textContent = $('me-fullname').value.trim() || myProfile.username; };
+  $('me-save').onclick = () => {
+    const full = $('me-fullname').value.trim(), email = $('me-email').value.trim();
+    if(email && !/^\S+@\S+\.\S+$/.test(email)){ setMsg('me-msg', 'That email doesn’t look right.', true); return; }
+    $('me-save').disabled = true; setMsg('me-msg', 'Saving…');
+    window.KidsCloud.updateMyProfile(full, email).then(() => {
+      myProfile.fullName = full; myProfile.contactEmail = email.toLowerCase(); applyMyProfile();
+      setMsg('me-msg', 'Saved ✓ Your name will appear on certificates you sign from now on.'); toast('Profile saved');
+    }).catch(err => setMsg('me-msg', friendlyError(err), true)).finally(() => { $('me-save').disabled = false; });
+  };
   $('new-quiz-btn').onclick = () => editQuiz(null);
   $('welcome-new-quiz').onclick = () => editQuiz(null);
   $('add-question-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(false)); renderQuestions(); };
