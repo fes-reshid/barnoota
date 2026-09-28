@@ -555,6 +555,7 @@
     var html = '<div class="print-card">';
     html += '<div class="print-card-inner">';
     html += '<div class="print-corners"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>';
+    html += '<div class="print-seal" aria-hidden="true"><span>۞</span></div>';
     html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>" + repeatBadge + "</header>";
     if (dua.arabic || editable) {
       html += '<p class="dua-arabic arabic' + editClass + '" dir="rtl" lang="ar"' + editAttrs("arabic") + ">" + esc(dua.arabic || "") + "</p>";
@@ -696,7 +697,14 @@
       var el = document.getElementById(idPrefix + c.suffix);
       if (!el) return;
       el.addEventListener(c.numeric ? "input" : "change", function (e) {
-        state.settings[c.key] = c.checkbox ? e.target.checked : (c.numeric ? Number(e.target.value) : e.target.value);
+        var value = c.checkbox ? e.target.checked : (c.numeric ? Number(e.target.value) : e.target.value);
+        state.settings[c.key] = value;
+        // The certificate border is designed as a one-per-page landscape
+        // piece, like an actual certificate, so picking it pulls those in too.
+        if (c.key === "borderTheme" && value === "certificate") {
+          state.settings.printSize = "poster";
+          state.settings.orientation = "landscape";
+        }
         saveSettings();
         afterChange(c.textish);
       });
