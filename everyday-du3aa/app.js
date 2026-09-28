@@ -3,6 +3,7 @@
 
   var LS_SETTINGS = "edu3aa:settings";
   var LS_KNOWN = "edu3aa:known";
+  var LS_OVERRIDES = "edu3aa:overrides";
 
   var DEFAULT_SETTINGS = {
     showTranslit: true,
@@ -12,6 +13,7 @@
     arabicFont: "amiri",
     borderTheme: "gold",
     printSize: "flashcard",
+    orientation: "portrait",
     drawing: false,
     fontScale: 1
   };
@@ -20,8 +22,10 @@
     data: null,
     settings: loadSettings(),
     known: loadKnown(),
+    overrides: loadOverrides(),
     route: { view: "home", cat: null, chapter: null, dua: null },
-    memorize: { queue: [], pos: 0, revealed: false, shuffle: true, scope: "" }
+    memorize: { queue: [], pos: 0, revealed: false, shuffle: true, scope: "" },
+    printPreview: { pairs: [] }
   };
 
   function loadSettings() {
@@ -45,6 +49,36 @@
   }
   function saveKnown() {
     try { localStorage.setItem(LS_KNOWN, JSON.stringify(Array.from(state.known))); } catch (e) {}
+  }
+  function loadOverrides() {
+    try {
+      var raw = localStorage.getItem(LS_OVERRIDES);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveOverrides() {
+    try { localStorage.setItem(LS_OVERRIDES, JSON.stringify(state.overrides)); } catch (e) {}
+  }
+  function effectiveDua(dua) {
+    var o = state.overrides[dua.id];
+    if (!o || !Object.keys(o).length) return dua;
+    var merged = Object.assign({}, dua, o);
+    if (o.translation) merged.translation = Object.assign({}, dua.translation, o.translation);
+    return merged;
+  }
+  function setOverrideField(duaId, field, lang, value) {
+    var o = state.overrides[duaId] || (state.overrides[duaId] = {});
+    if (field === "translation") {
+      o.translation = o.translation || {};
+      o.translation[lang] = value;
+    } else {
+      o[field] = value;
+    }
+    saveOverrides();
+  }
+  function clearOverride(duaId) {
+    delete state.overrides[duaId];
+    saveOverrides();
   }
 
   function esc(s) {
@@ -115,27 +149,28 @@
     root.setAttribute("data-arabic-font", s.arabicFont);
     root.setAttribute("data-border-theme", s.borderTheme);
     root.setAttribute("data-print-size", s.printSize);
+    root.setAttribute("data-orientation", s.orientation);
     root.setAttribute("data-drawing", s.drawing ? "on" : "off");
     root.style.setProperty("--font-scale", s.fontScale);
-    var elLang = document.getElementById("optLang");
-    var elTranslit = document.getElementById("optTranslit");
-    var elTranslation = document.getElementById("optTranslation");
-    var elBenefit = document.getElementById("optBenefit");
-    var elFont = document.getElementById("optArabicFont");
-    var elTheme = document.getElementById("optBorderTheme");
-    var elSize = document.getElementById("optPrintSize");
-    var elDrawing = document.getElementById("optDrawing");
-    var elScale = document.getElementById("optFontScale");
-    if (elLang) elLang.value = s.lang;
-    if (elTranslit) elTranslit.checked = s.showTranslit;
-    if (elTranslation) elTranslation.checked = s.showTranslation;
-    if (elBenefit) elBenefit.checked = s.showBenefit;
-    if (elFont) elFont.value = s.arabicFont;
-    if (elTheme) elTheme.value = s.borderTheme;
-    if (elSize) elSize.value = s.printSize;
-    if (elDrawing) elDrawing.checked = s.drawing;
-    if (elScale) elScale.value = s.fontScale;
+    var pageStyle = document.getElementById("pageSizeStyle");
+    if (pageStyle) pageStyle.textContent = "@page{ size: A4 " + (s.orientation === "landscape" ? "landscape" : "portrait") + "; }";
+    // The main settings panel ("optX" ids) and the print preview's toolbar
+    // ("ppOptX" ids) are two separate control sets mirroring the same state.
+    ["opt", "ppOpt"].forEach(function (p) {
+      setVal(p + "Lang", s.lang);
+      setChecked(p + "Translit", s.showTranslit);
+      setChecked(p + "Translation", s.showTranslation);
+      setChecked(p + "Benefit", s.showBenefit);
+      setVal(p + "ArabicFont", s.arabicFont);
+      setVal(p + "BorderTheme", s.borderTheme);
+      setVal(p + "PrintSize", s.printSize);
+      setVal(p + "Orientation", s.orientation);
+      setChecked(p + "Drawing", s.drawing);
+      setVal(p + "FontScale", s.fontScale);
+    });
   }
+  function setVal(id, v) { var el = document.getElementById(id); if (el) el.value = v; }
+  function setChecked(id, v) { var el = document.getElementById(id); if (el) el.checked = v; }
 
   function crumbs(list) {
     return '<nav class="crumbs">' + list.map(function (c, i) {
@@ -306,8 +341,10 @@
     document.getElementById("printKidsBtn").addEventListener("click", printKidsSet);
   }
 
-  function duaCardHTML(chapter, dua, overrideLabel) {
+  function duaCardHTML(chapter, rawDua, overrideLabel) {
     var s = state.settings;
+    var dua = effectiveDua(rawDua);
+    var edited = state.overrides[rawDua.id] && Object.keys(state.overrides[rawDua.id]).length;
     var transText = dua.translation ? dua.translation[s.lang] : null;
     var fallback = !transText && s.lang !== "en" ? dua.translation.en : null;
     var known = state.known.has(dua.id);
@@ -315,6 +352,7 @@
     var html = '<article class="dua-card" data-dua-id="' + dua.id + '" data-chapter-id="' + chapter.id + '">';
     html += '<header class="dua-card-head">'
       + '<span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>"
+      + (edited ? '<span class="edited-badge" title="You’ve edited this du’a’s text">✏️ edited</span>' : "")
       + repeatBadge
       + "</header>";
     if (dua.arabic) {
@@ -408,9 +446,10 @@
   function renderMemorizeCard() {
     var m = state.memorize;
     var item = m.queue[m.pos];
+    var dua = effectiveDua(item.dua);
     var meta = categoryMeta(item.chapter.category);
     var s = state.settings;
-    var transText = item.dua.translation[s.lang] || item.dua.translation.en || "";
+    var transText = dua.translation[s.lang] || dua.translation.en || "";
     var known = state.known.has(item.dua.id);
     var html = crumbs([{ href: "#/", label: "Home" }, { label: "Memorize" }]);
     html += '<div class="memorize-wrap">';
@@ -420,11 +459,11 @@
       + "</div>";
     html += '<div class="memorize-prompt">' + esc(item.label || item.chapter.title) + "</div>";
     html += '<div class="memorize-card' + (m.revealed ? " is-revealed" : "") + '" id="memCard" data-dua-id="' + item.dua.id + '">';
-    html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(item.dua.arabic || "") + "</p>";
+    html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(dua.arabic || "") + "</p>";
     html += '<div class="memorize-back">';
-    if (s.showTranslit && item.dua.transliteration) html += '<p class="dua-translit">' + esc(item.dua.transliteration) + "</p>";
+    if (s.showTranslit && dua.transliteration) html += '<p class="dua-translit">' + esc(dua.transliteration) + "</p>";
     if (s.showTranslation && transText) html += '<p class="dua-translation">' + esc(transText) + "</p>";
-    if (s.showBenefit && item.dua.benefit) html += '<p class="dua-benefit">💡 ' + esc(item.dua.benefit) + "</p>";
+    if (s.showBenefit && dua.benefit) html += '<p class="dua-benefit">💡 ' + esc(dua.benefit) + "</p>";
     html += "</div>";
     html += '<p class="memorize-hint">' + (m.revealed ? "Tap card to hide again" : "Tap card to reveal") + "</p>";
     html += "</div>";
@@ -499,19 +538,37 @@
     var area = document.getElementById("printArea");
     area.innerHTML = pairs.map(function (p) { return printCardHTML(p.chapter, p.dua, p.label); }).join("");
   }
-  function printCardHTML(chapter, dua, overrideLabel) {
+  // editIndex is null for a real print card, or the pair's index in
+  // state.printPreview.pairs when rendering it inside the editable preview.
+  function printCardHTML(chapter, rawDua, overrideLabel, editIndex) {
     var s = state.settings;
+    var dua = effectiveDua(rawDua);
+    var editable = editIndex != null;
     var transText = dua.translation[s.lang] || dua.translation.en || "";
     var repeatBadge = dua.repeat > 1 ? '<span class="badge-repeat">🔁 ×' + dua.repeat + "</span>" : "";
+    function editAttrs(field, extra) {
+      if (!editable) return "";
+      return ' contenteditable="true" data-pp-field="' + field + '" data-pp-index="' + editIndex + '"'
+        + (extra || "") + ' title="Click to edit — saved on this device only"';
+    }
+    var editClass = editable ? " pp-editable" : "";
     var html = '<div class="print-card">';
     html += '<div class="print-card-inner">';
     html += '<div class="print-corners"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>';
     html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>" + repeatBadge + "</header>";
-    if (dua.arabic) html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(dua.arabic) + "</p>";
+    if (dua.arabic || editable) {
+      html += '<p class="dua-arabic arabic' + editClass + '" dir="rtl" lang="ar"' + editAttrs("arabic") + ">" + esc(dua.arabic || "") + "</p>";
+    }
     if (dua.note) html += '<p class="dua-note">📖 ' + esc(dua.note) + "</p>";
-    if (s.showTranslit && dua.transliteration) html += '<p class="dua-translit">' + esc(dua.transliteration) + "</p>";
-    if (s.showTranslation && transText) html += '<p class="dua-translation">' + esc(transText) + "</p>";
-    if (s.showBenefit && dua.benefit) html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> ' + esc(dua.benefit) + "</p>";
+    if (s.showTranslit && (dua.transliteration || editable)) {
+      html += '<p class="dua-translit' + editClass + '"' + editAttrs("transliteration") + ">" + esc(dua.transliteration || "") + "</p>";
+    }
+    if (s.showTranslation && (transText || editable)) {
+      html += '<p class="dua-translation' + editClass + '"' + editAttrs("translation", ' data-pp-lang="' + s.lang + '"') + ">" + esc(transText) + "</p>";
+    }
+    if (s.showBenefit && (dua.benefit || editable)) {
+      html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> <span' + (editable ? ' class="pp-editable"' : "") + editAttrs("benefit") + ">" + esc(dua.benefit || "") + "</span></p>";
+    }
     html += '<div class="drawing-box" aria-hidden="true"><span class="drawing-label">✏️ Draw a picture</span></div>';
     html += '<footer class="dua-card-foot"><span class="dua-source">Hisnul Muslim · Ch. ' + chapter.id + " · diinislaam.com/everyday-du3aa</span></footer>";
     html += "</div></div>";
@@ -520,29 +577,97 @@
   function printDua(id) {
     var found = findDua(id);
     if (!found) return;
-    buildPrintCards([{ chapter: found.chapter, dua: found.dua }]);
-    window.print();
+    openPrintPreview([{ chapter: found.chapter, dua: found.dua }]);
   }
   function printChapter(id) {
     var ch = findChapter(id);
     if (!ch) return;
-    buildPrintCards(ch.duas.map(function (d) { return { chapter: ch, dua: d }; }));
-    window.print();
+    openPrintPreview(ch.duas.map(function (d) { return { chapter: ch, dua: d }; }));
   }
   function printCategory(key) {
     var pairs = [];
     chaptersInCategory(key).forEach(function (ch) {
       ch.duas.forEach(function (d) { pairs.push({ chapter: ch, dua: d }); });
     });
-    buildPrintCards(pairs);
-    window.print();
+    openPrintPreview(pairs);
   }
   function printKidsSet() {
     var pairs = state.data.kidsEssentials.map(function (k) {
       var found = findDua(k.id);
       return { chapter: found.chapter, dua: found.dua, label: k.label };
     });
-    buildPrintCards(pairs);
+    openPrintPreview(pairs);
+  }
+
+  // ---------------- Print preview (select, edit, then print) ----------------
+  function openPrintPreview(pairs) {
+    state.printPreview.pairs = pairs.map(function (p) { return { chapter: p.chapter, dua: p.dua, label: p.label, checked: true }; });
+    document.getElementById("printPreviewOverlay").classList.remove("is-hidden");
+    applySettingsToDom();
+    renderPrintPreviewList();
+  }
+  function closePrintPreview() {
+    document.getElementById("printPreviewOverlay").classList.add("is-hidden");
+    render();
+  }
+
+  function renderPrintPreviewList() {
+    var list = document.getElementById("ppCardList");
+    list.innerHTML = state.printPreview.pairs.map(function (pair, i) {
+      var edited = state.overrides[pair.dua.id] && Object.keys(state.overrides[pair.dua.id]).length;
+      var html = '<div class="pp-card-wrap">';
+      html += '<div class="pp-card-tools">'
+        + '<label class="pp-check"><input type="checkbox" data-pp-check="' + i + '" ' + (pair.checked ? "checked" : "") + '> Include in print</label>'
+        + (edited ? '<button type="button" class="pp-reset" data-pp-reset="' + i + '">↺ Reset edits</button>' : "")
+        + "</div>";
+      html += printCardHTML(pair.chapter, pair.dua, pair.label, i);
+      html += "</div>";
+      return html;
+    }).join("");
+    updatePrintButtonCount();
+    bindPrintPreviewCardEvents();
+  }
+  function updatePrintButtonCount() {
+    var count = state.printPreview.pairs.filter(function (p) { return p.checked; }).length;
+    document.getElementById("ppPrintBtn").textContent = "🖨️ Print " + count + (count === 1 ? " card" : " cards");
+    document.getElementById("ppPrintBtn").disabled = count === 0;
+  }
+
+  function bindPrintPreviewCardEvents() {
+    var list = document.getElementById("ppCardList");
+    list.querySelectorAll("[data-pp-check]").forEach(function (el) {
+      el.addEventListener("change", function () {
+        var i = Number(el.getAttribute("data-pp-check"));
+        state.printPreview.pairs[i].checked = el.checked;
+        updatePrintButtonCount();
+      });
+    });
+    list.querySelectorAll("[data-pp-reset]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        var i = Number(el.getAttribute("data-pp-reset"));
+        clearOverride(state.printPreview.pairs[i].dua.id);
+        renderPrintPreviewList();
+      });
+    });
+    list.querySelectorAll("[data-pp-field]").forEach(function (el) {
+      el.addEventListener("blur", function () {
+        var i = Number(el.getAttribute("data-pp-index"));
+        var field = el.getAttribute("data-pp-field");
+        var lang = el.getAttribute("data-pp-lang");
+        var duaId = state.printPreview.pairs[i].dua.id;
+        var text = el.textContent.trim();
+        setOverrideField(duaId, field, lang, text);
+        // Deferred so the browser finishes any in-progress focus change
+        // (e.g. tabbing to the next editable field) before we rebuild the DOM.
+        setTimeout(renderPrintPreviewList, 0);
+      });
+    });
+  }
+
+  function doPrintFromPreview() {
+    var chosen = state.printPreview.pairs.filter(function (p) { return p.checked; });
+    if (!chosen.length) return;
+    buildPrintCards(chosen);
     window.print();
   }
 
@@ -550,43 +675,60 @@
   function openSettings() { document.getElementById("settingsOverlay").classList.remove("is-hidden"); }
   function closeSettings() { document.getElementById("settingsOverlay").classList.add("is-hidden"); }
 
+  // Each entry: settings key, control id suffix ("optLang" -> "optLang"/"ppOptLang"),
+  // whether it's a checkbox, and whether changing it needs a full re-render
+  // (affects visible text/layout) or just applySettingsToDom (visual-only).
+  var SETTINGS_CONTROLS = [
+    { key: "lang", suffix: "Lang", checkbox: false, textish: true },
+    { key: "showTranslit", suffix: "Translit", checkbox: true, textish: true },
+    { key: "showTranslation", suffix: "Translation", checkbox: true, textish: true },
+    { key: "showBenefit", suffix: "Benefit", checkbox: true, textish: true },
+    { key: "arabicFont", suffix: "ArabicFont", checkbox: false, textish: false },
+    { key: "borderTheme", suffix: "BorderTheme", checkbox: false, textish: false },
+    { key: "printSize", suffix: "PrintSize", checkbox: false, textish: false },
+    { key: "orientation", suffix: "Orientation", checkbox: false, textish: false },
+    { key: "drawing", suffix: "Drawing", checkbox: true, textish: false },
+    { key: "fontScale", suffix: "FontScale", checkbox: false, textish: false, numeric: true }
+  ];
+
+  function bindSettingsControls(idPrefix, afterChange) {
+    SETTINGS_CONTROLS.forEach(function (c) {
+      var el = document.getElementById(idPrefix + c.suffix);
+      if (!el) return;
+      el.addEventListener(c.numeric ? "input" : "change", function (e) {
+        state.settings[c.key] = c.checkbox ? e.target.checked : (c.numeric ? Number(e.target.value) : e.target.value);
+        saveSettings();
+        afterChange(c.textish);
+      });
+    });
+  }
+
   function bindChrome() {
     document.getElementById("settingsBtn").addEventListener("click", openSettings);
     document.getElementById("settingsClose").addEventListener("click", closeSettings);
     document.getElementById("settingsOverlay").addEventListener("click", function (e) {
       if (e.target.id === "settingsOverlay") closeSettings();
     });
-    document.getElementById("optLang").addEventListener("change", function (e) {
-      state.settings.lang = e.target.value; saveSettings(); render();
+    bindSettingsControls("opt", function (textish) {
+      if (textish) render(); else applySettingsToDom();
     });
-    document.getElementById("optTranslit").addEventListener("change", function (e) {
-      state.settings.showTranslit = e.target.checked; saveSettings(); render();
-    });
-    document.getElementById("optTranslation").addEventListener("change", function (e) {
-      state.settings.showTranslation = e.target.checked; saveSettings(); render();
-    });
-    document.getElementById("optBenefit").addEventListener("change", function (e) {
-      state.settings.showBenefit = e.target.checked; saveSettings(); render();
-    });
-    document.getElementById("optArabicFont").addEventListener("change", function (e) {
-      state.settings.arabicFont = e.target.value; saveSettings(); applySettingsToDom();
-    });
-    document.getElementById("optBorderTheme").addEventListener("change", function (e) {
-      state.settings.borderTheme = e.target.value; saveSettings(); applySettingsToDom();
-    });
-    document.getElementById("optPrintSize").addEventListener("change", function (e) {
-      state.settings.printSize = e.target.value; saveSettings(); applySettingsToDom();
-    });
-    document.getElementById("optDrawing").addEventListener("change", function (e) {
-      state.settings.drawing = e.target.checked; saveSettings(); applySettingsToDom();
-    });
-    document.getElementById("optFontScale").addEventListener("input", function (e) {
-      state.settings.fontScale = Number(e.target.value); saveSettings(); applySettingsToDom();
+    bindSettingsControls("ppOpt", function () {
+      applySettingsToDom();
+      renderPrintPreviewList();
     });
     document.getElementById("resetMemorize").addEventListener("click", function () {
       if (confirm("Clear all ‘memorized’ marks on this device?")) {
         state.known = new Set(); saveKnown(); render();
       }
+    });
+
+    document.getElementById("ppClose").addEventListener("click", closePrintPreview);
+    document.getElementById("ppCancel").addEventListener("click", closePrintPreview);
+    document.getElementById("ppPrintBtn").addEventListener("click", doPrintFromPreview);
+    document.getElementById("ppResetAll").addEventListener("click", function () {
+      if (!confirm("Clear your edits on every du’a in this set?")) return;
+      state.printPreview.pairs.forEach(function (p) { clearOverride(p.dua.id); });
+      renderPrintPreviewList();
     });
 
     var menuBtn = document.getElementById("menuBtn");
