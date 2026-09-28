@@ -154,6 +154,28 @@
   .modal-bar input[type=number]{ width:64px; padding:5px 6px; border:1.5px solid var(--gold-soft); border-radius:8px; }
   .modal-bar input[type=color]{ width:36px; height:30px; border:1.5px solid var(--gold-soft); border-radius:8px; padding:1px; background:#fff; }
   .modal-bar .spacer{ flex:1; }
+  .modal-bar select{ padding:5px 6px; border:1.5px solid var(--gold-soft); border-radius:8px; background:#fff; }
+  /* pdf.js text layer (for selecting and copying the PDF's own text) */
+  .textLayer{ position:absolute; text-align:initial; inset:0; overflow:hidden; line-height:1; text-size-adjust:none; forced-color-adjust:none; transform-origin:0 0; z-index:2; display:none; }
+  .stage.selecting .textLayer{ display:block; }
+  .textLayer :is(span, br){ color:transparent; position:absolute; white-space:pre; cursor:text; transform-origin:0% 0%; }
+  .textLayer span.markedContent{ top:0; height:0; }
+  .textLayer ::selection{ background:rgba(46,107,88,.35); }
+  .textLayer br::selection{ background:transparent; }
+  .textLayer .endOfContent{ display:block; position:absolute; inset:100% 0 0; z-index:-1; cursor:default; user-select:none; }
+  .textLayer .endOfContent.active{ top:0; }
+  .ctx-menu{
+    position:fixed; z-index:80; min-width:230px; background:#fff; border:1px solid var(--gold-soft); border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.28); padding:6px; display:flex; flex-direction:column;
+  }
+  .ctx-menu button{
+    border:0; background:transparent; text-align:left; padding:8px 12px; border-radius:7px; font-size:14px; color:var(--ink-brown);
+    display:flex; gap:10px; align-items:center;
+  }
+  .ctx-menu button:hover, .ctx-menu button:focus-visible{ background:var(--green-bg); outline:none; }
+  .ctx-menu button .ic{ width:18px; text-align:center; }
+  .ctx-menu [hidden]{ display:none; }
+  .ctx-menu hr{ border:0; border-top:1px solid var(--parchment-deep); margin:4px 6px; width:auto; }
   .modal-body{ flex:1; overflow:auto; display:flex; align-items:flex-start; justify-content:center; padding:24px; }
   .stage{ position:relative; box-shadow:0 6px 30px rgba(0,0,0,.5); background:#fff; touch-action:none; }
   .stage canvas{ display:block; }
@@ -312,21 +334,27 @@
   <div class="modal-bar">
     <span class="title" id="edTitle">Page</span>
     <button class="btn active" data-tool="select" type="button" title="Select and move items">⬚ Select</button>
+    <button class="btn" data-tool="textsel" type="button" title="Select the PDF's text to copy it">⌶ Select text</button>
     <button class="btn" data-tool="text" type="button" title="Click on the page to add text">T Text</button>
     <button class="btn" data-tool="whiteout" type="button" title="Drag to cover content with a solid box">▭ White-out</button>
     <button class="btn" data-tool="highlight" type="button" title="Drag to highlight">▨ Highlight</button>
     <button class="btn" data-tool="crop" type="button" title="Drag to set the visible area of the page">⌗ Crop</button>
+    <label>Font <select id="edFont" title="Amiri is used automatically for Arabic">
+      <option value="sans">Sans (Latin)</option>
+      <option value="amiri">Amiri (Arabic &amp; Latin)</option>
+    </select></label>
     <label>Size <input type="number" id="edSize" value="14" min="4" max="200"></label>
     <label>Colour <input type="color" id="edColor" value="#000000"></label>
     <button class="btn danger" id="edDelete" type="button" disabled>Delete item</button>
     <button class="btn" id="edResetCrop" type="button">Reset crop</button>
+    <button class="btn" id="edCopyText" type="button" title="Copy all the text on this page">⎘ Copy page text</button>
     <span class="spacer"></span>
     <button class="btn" id="edPrev" type="button" title="Previous page">◀</button>
     <button class="btn" id="edNext" type="button" title="Next page">▶</button>
     <button class="btn primary" id="edDone" type="button">Done</button>
   </div>
   <div class="modal-body" id="edBody">
-    <div class="stage" id="stage"><canvas id="edCanvas"></canvas></div>
+    <div class="stage" id="stage"><canvas id="edCanvas"></canvas><div class="textLayer" id="textLayer"></div></div>
   </div>
   <div class="hint" id="edHint"></div>
 </div>
@@ -356,6 +384,18 @@
   </form>
 </div>
 
+<div class="ctx-menu hidden" id="ctxMenu" role="menu" aria-label="Area options">
+  <button type="button" role="menuitem" data-act="crop"><span class="ic">⌗</span>Crop page to this area</button>
+  <hr data-for="crop">
+  <button type="button" role="menuitem" data-act="copyimg"><span class="ic">⧉</span>Copy image</button>
+  <button type="button" role="menuitem" data-act="saveimg"><span class="ic">⬇</span>Save image as…</button>
+  <button type="button" role="menuitem" data-act="openimg"><span class="ic">↗</span>Open image in new tab</button>
+  <hr>
+  <button type="button" role="menuitem" data-act="copytext"><span class="ic">⎘</span>Copy text in this area</button>
+  <hr>
+  <button type="button" role="menuitem" data-act="cancel"><span class="ic">✕</span>Cancel</button>
+</div>
+
 <div class="busy hidden" id="busy"><div id="busyText">Working…</div></div>
 <div class="toast hidden" id="toast" role="status"></div>
 
@@ -366,7 +406,8 @@
 (() => {
 'use strict';
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'vendor/pdf.worker.min.js';
-const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+const { PDFDocument, StandardFonts, rgb, degrees, PDFHexString,
+  pushGraphicsState, popGraphicsState, beginText, endText, setFontAndSize, setTextMatrix, showText, setFillingColor } = PDFLib;
 
 const $ = id => document.getElementById(id);
 const THUMB_SCALE_MAX = 180; // longest thumbnail side, CSS px
@@ -415,6 +456,7 @@ const CAN_PICK_DIR = typeof window.showDirectoryPicker === 'function';
 const FILE_TYPES = {
   pdf: [{ description: 'PDF document', accept: { 'application/pdf': ['.pdf'] } }],
   zip: [{ description: 'ZIP archive', accept: { 'application/zip': ['.zip'] } }],
+  png: [{ description: 'PNG image', accept: { 'image/png': ['.png'] } }],
 };
 // Must run straight from a click, before any slow work, or the browser refuses to show the window.
 // Resolves with a file handle, or null to fall back to a download; throws CANCELLED if the user cancels.
@@ -709,24 +751,90 @@ function textFrame(it, vp, rot) {
   const o = vp.convertToViewportPoint(it.x, it.y);
   return { ox: o[0], oy: o[1], ang: (rot - it.rot) * Math.PI / 180 };
 }
-const FONT_STACK = 'Helvetica, Arial, sans-serif';
+/* ---------- Fonts & text layout ----------
+ * Latin-only text uses the built-in Helvetica. Arabic (or any character Helvetica lacks) uses Amiri,
+ * embedded from vendor/fonts. fontkit shapes Arabic (joining forms, ligatures) and puts each Arabic
+ * run in visual order; we split mixed lines into direction runs ourselves and lay them out. */
+const ARABIC_RE = /[\u0590-\u05FF\u0600-\u065F\u066A-\u06EF\u06FA-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/;
+const WINANSI_EXTRA = '–—‘’‚“”„•…€†‡ˆ‰‹›ŒœŠšŽžŸ˜™ƒ';
+function needsAmiri(text) {
+  for (const ch of text) { const c = ch.codePointAt(0); if (c > 0xFF && !WINANSI_EXTRA.includes(ch)) return true; }
+  return false;
+}
+function itemFont(it) { return it.font === 'amiri' || needsAmiri(it.text || '') ? 'amiri' : 'sans'; }
+const LINE_H = { sans: 1.2, amiri: 1.75 };
+const CANVAS_FONT = { sans: 'Helvetica, Arial, sans-serif', amiri: 'AmiriPDF, Amiri, serif' };
+const AMIRI_URL = 'vendor/fonts/Amiri-Regular.ttf';
+let amiriFace = null;
+function ensureAmiriFace() {
+  if (amiriFace) return amiriFace.loaded;
+  amiriFace = new FontFace('AmiriPDF', `url(${AMIRI_URL})`);
+  document.fonts.add(amiriFace);
+  return amiriFace.load().then(() => { if (ed.uid) redrawEditor(); refreshThumbs(); }).catch(e => console.warn('Amiri font failed to load', e));
+}
+function refreshThumbs() { if (!$('workspace').classList.contains('hidden') && pages.some(p => p.items.some(it => it.type === 'text' && itemFont(it) === 'amiri'))) renderGrid(); }
+
+// Split one line into runs of the same direction, returned in visual (left-to-right) order.
+function bidiRuns(line) {
+  const chars = [...line];
+  const types = chars.map(ch => /[\u0660-\u0669\u06F0-\u06F9]/.test(ch) ? 'L' : ARABIC_RE.test(ch) ? 'R' : /[\p{L}\p{N}]/u.test(ch) ? 'L' : 'N');
+  const base = types.find(t => t !== 'N') || 'L';
+  const res = types.map((t, i) => {
+    if (t !== 'N') return t;
+    let a = null, b = null;
+    for (let j = i - 1; j >= 0; j--) if (types[j] !== 'N') { a = types[j]; break; }
+    for (let j = i + 1; j < types.length; j++) if (types[j] !== 'N') { b = types[j]; break; }
+    return a && a === b ? a : base;
+  });
+  const runs = [];
+  chars.forEach((ch, i) => {
+    const last = runs[runs.length - 1];
+    if (last && last.dir === res[i]) last.text += ch; else runs.push({ dir: res[i], text: ch });
+  });
+  return { base, runs: base === 'R' ? runs.reverse() : runs };
+}
+// Lay out every line: runs, their widths, and each line's width. RTL lines are right-aligned in the box.
+function layoutText(it, measure) {
+  const lines = textLines(it).map(l => {
+    const { base, runs } = bidiRuns(l);
+    const ws = runs.map(r => measure(r.text, r.dir));
+    return { base, runs, ws, w: ws.reduce((a, b) => a + b, 0) };
+  });
+  return { lines, boxW: Math.max(0, ...lines.map(l => l.w)) };
+}
 function textLines(it) { return String(it.text).split('\n'); }
+function canvasMeasure(ctx) {
+  return (t, dir) => { ctx.direction = dir === 'R' ? 'rtl' : 'ltr'; return ctx.measureText(t).width; };
+}
 function textBox(ctx, it, vp) {
-  const s = it.size * vp.scale;
-  ctx.font = `${s}px ${FONT_STACK}`;
-  const w = Math.max(...textLines(it).map(l => ctx.measureText(l).width), s * 0.5);
-  const n = textLines(it).length;
+  const s = it.size * vp.scale, f = itemFont(it);
+  ctx.save();
+  ctx.font = `${s}px ${CANVAS_FONT[f]}`;
+  const L = layoutText(it, canvasMeasure(ctx));
+  ctx.restore();
+  const n = L.lines.length, lh = s * LINE_H[f];
   // Relative to the first baseline: top above by ascent, bottom below last line.
-  return { x: 0, y: -s * 0.8, w, h: s * 1.2 * (n - 1) + s * 1.05 };
+  const asc = f === 'amiri' ? 1.05 : 0.8, desc = f === 'amiri' ? 0.55 : 0.25;
+  return { x: 0, y: -s * asc, w: Math.max(L.boxW, s * 0.5), h: lh * (n - 1) + s * (asc + desc) };
+}
+function drawTextItem(ctx, it, vp) {
+  const s = it.size * vp.scale, f = itemFont(it), lh = s * LINE_H[f];
+  if (f === 'amiri') ensureAmiriFace();
+  ctx.fillStyle = it.color; ctx.font = `${s}px ${CANVAS_FONT[f]}`; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+  const L = layoutText(it, canvasMeasure(ctx));
+  L.lines.forEach((ln, i) => {
+    let x = ln.base === 'R' ? L.boxW - ln.w : 0;
+    ln.runs.forEach((r, k) => { ctx.direction = r.dir === 'R' ? 'rtl' : 'ltr'; ctx.fillText(r.text, x, i * lh); x += ln.ws[k]; });
+  });
+  ctx.direction = 'ltr';
 }
 
 function drawItems(ctx, p, vp, rot, selItem) {
   for (const it of p.items) {
     if (it.type === 'text') {
-      const f = textFrame(it, vp, rot), s = it.size * vp.scale;
+      const f = textFrame(it, vp, rot);
       ctx.save(); ctx.translate(f.ox, f.oy); ctx.rotate(f.ang);
-      ctx.fillStyle = it.color; ctx.font = `${s}px ${FONT_STACK}`; ctx.textBaseline = 'alphabetic';
-      textLines(it).forEach((l, i) => ctx.fillText(l, 0, i * s * 1.2));
+      drawTextItem(ctx, it, vp);
       if (it === selItem) {
         const b = textBox(ctx, it, vp);
         ctx.strokeStyle = '#2e6b58'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
@@ -921,9 +1029,101 @@ function encodable(font, text) {
   return { text: out, lost };
 }
 
+let fontkitReady = null, amiriBytes = null;
+function loadScript(src) {
+  return new Promise((ok, fail) => { const sc = document.createElement('script'); sc.src = src; sc.onload = ok; sc.onerror = () => fail(new Error('Could not load ' + src)); document.head.appendChild(sc); });
+}
+async function loadAmiriForPdf() {
+  if (!fontkitReady) fontkitReady = window.fontkit ? Promise.resolve() : loadScript('vendor/fontkit.umd.min.js');
+  if (!amiriBytes) amiriBytes = fetch(AMIRI_URL).then(r => { if (!r.ok) throw new Error('Font download failed'); return r.arrayBuffer(); });
+  try { await fontkitReady; return await amiriBytes; }
+  catch (e) { fontkitReady = amiriBytes = null; throw e; }
+}
+// Prepare one direction run for drawing: mirror brackets in RTL runs, and make sure the final glyph
+// order is visual (fontkit reverses runs it detects as Arabic script; others we reverse ourselves).
+const MIRROR = { '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{', '<': '>', '>': '<', '«': '»', '»': '«' };
+function prepRun(font, text, dir) {
+  if (dir !== 'R') return text;
+  let t = [...text].map(ch => MIRROR[ch] || ch).join('');
+  const fk = font.embedder && font.embedder.font;
+  const fkRtl = fk && fk.layout ? fk.layout(t).direction === 'rtl' : ARABIC_RE.test(t);
+  if (!fkRtl) t = [...t].reverse().join('');
+  return t;
+}
+// Shape a run with fontkit: glyphs plus their exact positions (joining, ligatures, mark placement).
+function shapeRun(font, text, dir, size) {
+  const fk = font.embedder.font, run = fk.layout(prepRun(font, text, dir)), k = size / fk.unitsPerEm;
+  return { run, k, width: run.advanceWidth * k };
+}
+function drawPdfText(pg, it, font) {
+  const f = itemFont(it), size = it.size, lh = size * LINE_H[f];
+  // Amiri needs its glyph positioning rules, which drawText ignores, so its glyphs are placed one by one.
+  const shaped = f === 'amiri' && font.embedder && font.embedder.font;
+  const measure = shaped
+    ? (t, dir) => shapeRun(font, t, dir, size).width
+    : (t, dir) => font.widthOfTextAtSize(prepRun(font, t, dir), size);
+  const L = layoutText(it, measure);
+  const th = it.rot * Math.PI / 180, c = Math.cos(th), sn = Math.sin(th);
+  const at = (dx, dy) => [it.x + dx * c - dy * sn, it.y + dx * sn + dy * c];
+  let fontKey = null;
+  if (shaped) { pg.setFont(font); fontKey = pg.fontKey; }
+  L.lines.forEach((ln, i) => {
+    let dx = ln.base === 'R' ? L.boxW - ln.w : 0;
+    const dy = -i * lh;
+    ln.runs.forEach((r, k) => {
+      if (r.text.trim()) {
+        if (!shaped) {
+          const [x, y] = at(dx, dy);
+          pg.drawText(prepRun(font, r.text, r.dir), { x, y, size, font, color: hexToRgb(it.color), rotate: degrees(it.rot) });
+        } else {
+          const { run, k: u } = shapeRun(font, r.text, r.dir, size);
+          const ops = [pushGraphicsState(), setFillingColor(hexToRgb(it.color)), beginText(), setFontAndSize(fontKey, size)];
+          let pen = 0;
+          run.glyphs.forEach((g, gi) => {
+            const ps = run.positions[gi];
+            if (font.__unicode && g.codePoints.length) font.__unicode.set(g.id, g.codePoints);
+            const [x, y] = at(dx + pen + ps.xOffset * u, dy + ps.yOffset * u);
+            ops.push(setTextMatrix(c, sn, -sn, c, x, y), showText(PDFHexString.of(g.id.toString(16).padStart(4, '0'))));
+            pen += ps.xAdvance * u;
+          });
+          ops.push(endText(), popGraphicsState());
+          pg.pushOperators(...ops);
+        }
+      }
+      dx += ln.ws[k];
+    });
+  });
+}
+
+// pdf-lib maps each glyph to the characters it stands for (so text can be copied from the PDF), but
+// Arabic joining forms and ligatures have no entry of their own and come out broken. Record what each
+// drawn glyph stands for while shaping, and use that when the map is written.
+function fixUnicodeMap(font) {
+  const cache = font.embedder && font.embedder.glyphCache;
+  if (!cache || typeof cache.access !== 'function') return;
+  const map = font.__unicode = new Map(), access = cache.access.bind(cache), fk = font.embedder.font;
+  // pdf-lib only lists glyphs that have their own character code; add the shaped forms we drew.
+  cache.access = () => {
+    const base = access(), have = new Set(base.map(g => g.id));
+    const extra = [...map.keys()].filter(id => !have.has(id))
+      .map(id => ({ id, advanceWidth: fk.getGlyph(id).advanceWidth, codePoints: map.get(id) }));
+    return base.map(g => map.has(g.id) ? { id: g.id, advanceWidth: g.advanceWidth, codePoints: map.get(g.id) } : g)
+      .concat(extra).sort((a, b) => a.id - b.id);
+  };
+}
+
 async function buildPdf(list) {
   const out = await PDFDocument.create();
   const font = await out.embedFont(StandardFonts.Helvetica);
+  let amiri = null;
+  const needArabicFont = list.some(p => p.items.some(it => it.type === 'text' && itemFont(it) === 'amiri'));
+  if (needArabicFont) {
+    const bytes = await loadAmiriForPdf();
+    out.registerFontkit(window.fontkit);
+    // Embedded whole: fontkit's subsetting fails on Amiri. Only PDFs with added Arabic text pay for it.
+    amiri = await out.embedFont(bytes, { subset: false });
+    fixUnicodeMap(amiri);
+  }
   let lostChars = false;
   for (const p of list) {
     const src = await libDocFor(p.src);
@@ -939,12 +1139,12 @@ async function buildPdf(list) {
     }
     for (const it of p.items) {
       if (it.type === 'text') {
-        const enc = encodable(font, it.text);
-        lostChars = lostChars || enc.lost;
-        pg.drawText(enc.text, {
-          x: it.x, y: it.y, size: it.size, font, color: hexToRgb(it.color),
-          lineHeight: it.size * 1.2, rotate: degrees(it.rot),
-        });
+        if (itemFont(it) === 'amiri') drawPdfText(pg, it, amiri);
+        else {
+          const enc = encodable(font, it.text);
+          lostChars = lostChars || enc.lost;
+          drawPdfText(pg, { ...it, text: enc.text }, font);
+        }
       } else {
         pg.drawRectangle({
           x: Math.min(it.x1, it.x2), y: Math.min(it.y1, it.y2),
@@ -1134,7 +1334,8 @@ const HINTS = {
   text: 'Click where the text should start, type, then click outside or press Ctrl+Enter.',
   whiteout: '⚠ White-out only hides content from view — the text underneath stays in the file and can still be copied. Drag over the area to cover.',
   highlight: 'Drag over the area to highlight.',
-  crop: 'Drag a box around the part of the page to keep. Everything outside it will be hidden.',
+  crop: 'Drag a box over part of the page, then choose to crop the page to it, copy or save it as an image, or copy its text. Right-click the page for the same options.',
+  textsel: 'Drag over the text to select it, then press Ctrl+C (or right-click → Copy). “Copy page text” copies everything on this page.',
 };
 const edPage = () => pages.find(p => p.uid === ed.uid);
 
@@ -1147,6 +1348,8 @@ async function openEditor(uid) {
 }
 function closeEditor() {
   commitTextarea();
+  closeMenu(); ed.region = null;
+  $('textLayer').textContent = ''; ed.textKey = null;
   $('editor').classList.add('hidden');
   document.body.style.overflow = '';
   ed.uid = null;
@@ -1163,14 +1366,156 @@ async function redrawEditor() {
   const px = Math.max(300, Math.min(body.clientWidth - 48, (body.clientHeight - 48) * 1.414, 1400));
   const r = await drawPage(p, $('edCanvas'), px, { showFullWithCrop: true, selItem: ed.selItem });
   ed.vp = r.viewport; ed.dpr = r.dpr; ed.rot = r.rot;
+  if (ed.region) drawRegion();
+  const key = `${p.uid}:${r.rot}:${r.viewport.scale}`;
+  if (ed.tool === 'textsel' && ed.textKey !== key) { ed.textKey = key; renderTextLayer(p); }
+}
+function drawRegion() {
+  const ctx = $('edCanvas').getContext('2d'), r = cropRectView(ed.region, ed.vp);
+  ctx.save();
+  ctx.fillStyle = 'rgba(211,172,92,.18)'; ctx.fillRect(r.x, r.y, r.w, r.h);
+  ctx.strokeStyle = '#a97c25'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.strokeRect(r.x, r.y, r.w, r.h);
+  ctx.restore();
+}
+
+// The PDF's own text, laid over the page so it can be selected and copied.
+let textLayerSeq = 0;
+async function renderTextLayer(p) {
+  const tl = $('textLayer'), seq = ++textLayerSeq;
+  tl.textContent = '';
+  try {
+    const page = await sources.get(p.src).pdfjs.getPage(p.idx + 1);
+    const vp = page.getViewport({ scale: ed.vp.scale / ed.dpr, rotation: ed.rot });
+    const tc = await page.getTextContent();
+    if (seq !== textLayerSeq) return;
+    tl.style.setProperty('--scale-factor', vp.scale);
+    if (!tc.items.length) { toast('This page has no selectable text — it may be a scanned image.', 4000); return; }
+    await pdfjsLib.renderTextLayer({ textContentSource: tc, container: tl, viewport: vp, textDivs: [] }).promise;
+  } catch (e) { console.error(e); }
+}
+
+// Text inside a region (PDF points), or the whole page when region is null.
+async function pageText(p, region) {
+  const page = await sources.get(p.src).pdfjs.getPage(p.idx + 1);
+  const tc = await page.getTextContent();
+  const vp = page.getViewport({ scale: 1, rotation: 0 });
+  const box = region && cropRectView(region, vp);
+  let out = '', pendingBreak = false;
+  for (const t of tc.items) {
+    if (!('str' in t)) continue;
+    let inside = true;
+    if (box) {
+      const [a, b, , , e, f] = t.transform, len = Math.hypot(a, b) || 1;
+      const mx = e + (a / len) * t.width / 2, my = f + (b / len) * t.width / 2 + (t.height || 0) / 3;
+      const [vx, vy] = vp.convertToViewportPoint(mx, my);
+      inside = vx >= box.x && vx <= box.x + box.w && vy >= box.y && vy <= box.y + box.h;
+    }
+    if (inside) {
+      if (pendingBreak && out && !out.endsWith('\n')) out += '\n';
+      pendingBreak = false;
+      out += t.str;
+      if (t.hasEOL) out += '\n';
+    } else if (t.hasEOL) pendingBreak = true;
+  }
+  return out.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+async function copyText(text) {
+  if (!text) { toast('No text found here. Scanned pages contain only pictures of text.', 4000); return; }
+  try { await navigator.clipboard.writeText(text); toast(`Copied ${text.length} characters of text.`); }
+  catch {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand('copy'); ta.remove();
+    toast(ok ? `Copied ${text.length} characters of text.` : 'Your browser blocked copying.', 3500);
+  }
+}
+
+// Render a region of a page (with its added text and boxes) to a PNG at about 200 dpi.
+async function regionPng(p, region) {
+  const rot = totalRot(p);
+  const page = await sources.get(p.src).pdfjs.getPage(p.idx + 1);
+  const one = page.getViewport({ scale: 1, rotation: rot });
+  const scale = Math.min(200 / 72, 7000 / Math.max(one.width, one.height));
+  const viewport = page.getViewport({ scale, rotation: rot });
+  const full = document.createElement('canvas');
+  full.width = Math.ceil(viewport.width); full.height = Math.ceil(viewport.height);
+  const fctx = full.getContext('2d');
+  fctx.fillStyle = '#fff'; fctx.fillRect(0, 0, full.width, full.height);
+  await page.render({ canvasContext: fctx, viewport }).promise;
+  drawItems(fctx, p, viewport, rot, null);
+  const r = region ? cropRectView(region, viewport) : { x: 0, y: 0, w: full.width, h: full.height };
+  const out = document.createElement('canvas');
+  out.width = Math.max(1, Math.round(r.w)); out.height = Math.max(1, Math.round(r.h));
+  out.getContext('2d').drawImage(full, r.x, r.y, r.w, r.h, 0, 0, out.width, out.height);
+  return new Promise((ok, fail) => out.toBlob(b => b ? ok(b) : fail(new Error('Image too large')), 'image/png'));
+}
+
+/* ----- Area options menu (after a crop drag, or on right-click) ----- */
+function openMenu(x, y, region, allowCrop) {
+  ed.menuRegion = region;
+  const m = $('ctxMenu');
+  m.querySelector('[data-act=crop]').hidden = !allowCrop;
+  m.querySelector('hr[data-for=crop]').hidden = !allowCrop;
+  m.classList.remove('hidden');
+  const w = m.offsetWidth, h = m.offsetHeight;
+  m.style.left = Math.max(8, Math.min(x, innerWidth - w - 8)) + 'px';
+  m.style.top = Math.max(8, Math.min(y, innerHeight - h - 8)) + 'px';
+  m.querySelector('button:not([hidden])').focus();
+}
+function closeMenu(keepRegion) {
+  if ($('ctxMenu').classList.contains('hidden')) return;
+  $('ctxMenu').classList.add('hidden');
+  if (!keepRegion && ed.region) { ed.region = null; redrawEditor(); }
+}
+async function menuAction(act) {
+  const p = edPage(), region = ed.menuRegion;
+  const n = pages.indexOf(p) + 1;
+  closeMenu(act === 'cancel' ? false : act !== 'crop');
+  if (!p || act === 'cancel') return;
+  const imgName = `${baseName()}-page${n}${region ? '-area' : ''}.png`;
+  try {
+    if (act === 'crop') {
+      pushUndo(); p.crop = region; ed.region = null; redrawEditor();
+      toast('Page cropped. “Reset crop” undoes it.');
+    } else if (act === 'copyimg') {
+      if (!window.ClipboardItem || !navigator.clipboard || !navigator.clipboard.write) throw 'Your browser can\'t copy images — use “Save image as…” instead.';
+      // Pass the promise straight in so the copy still counts as part of the click.
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': regionPng(p, region) })]);
+      toast('Image copied — paste it anywhere.');
+    } else if (act === 'saveimg') {
+      const handle = await askSaveFile(imgName, 'png');
+      busy(true, 'Making image…');
+      try { const saved = await writeFile(handle, await regionPng(p, region), imgName); toast(handle ? `Saved “${saved}”.` : 'Image saved.'); }
+      finally { busy(false); }
+    } else if (act === 'openimg') {
+      const w = window.open('', '_blank');
+      if (!w) throw 'The new tab was blocked — allow pop-ups for this site, or use “Save image as…”.';
+      w.document.title = imgName;
+      w.document.body.style.cssText = 'margin:0;background:#333;display:flex;align-items:center;justify-content:center;min-height:100vh;font:16px system-ui;color:#eee';
+      w.document.body.textContent = 'Making image…';
+      const url = URL.createObjectURL(await regionPng(p, region));
+      w.location.href = url;
+      setTimeout(() => URL.revokeObjectURL(url), 120000);
+    } else if (act === 'copytext') {
+      await copyText(await pageText(p, region));
+    }
+  } catch (e) {
+    if (e === CANCELLED) return;
+    if (typeof e === 'string') toast(e, 4500); else { console.error(e); toast('Sorry — that did not work. ' + (e.message || ''), 4500); }
+  }
+  if (act !== 'crop' && ed.region) { ed.region = null; redrawEditor(); }
 }
 function setTool(t) {
   commitTextarea();
+  closeMenu();
   ed.tool = t;
+  $('stage').classList.toggle('selecting', t === 'textsel');
+  if (t === 'textsel') { ed.textKey = null; if (ed.vp) redrawEditor(); }
+  else { $('textLayer').textContent = ''; ed.textKey = null; window.getSelection().removeAllRanges(); }
   document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
   $('edHint').textContent = HINTS[t];
   $('edHint').classList.toggle('warn', t === 'whiteout');
-  $('stage').style.cursor = t === 'select' ? 'default' : t === 'text' ? 'text' : 'crosshair';
+  $('stage').style.cursor = t === 'select' || t === 'textsel' ? 'default' : t === 'text' ? 'text' : 'crosshair';
   if (t === 'whiteout' && ed.lastTool !== 'whiteout') $('edColor').value = '#ffffff';
   if (t === 'highlight') $('edColor').value = '#ffe14d';
   if (t === 'text' && ['#ffffff', '#ffe14d'].includes($('edColor').value)) $('edColor').value = '#000000';
@@ -1204,6 +1549,8 @@ function hitTest(pt) {
 function onStageDown(e) {
   if (e.button !== undefined && e.button !== 0) return;
   if (e.target.tagName === 'TEXTAREA') return;
+  if (ed.tool === 'textsel') return; // let the browser select text normally
+  if (ed.region) { ed.region = null; }
   const p = edPage(); if (!p) return;
   const pt = evPt(e);
   if (ed.textarea) { commitTextarea(); if (ed.tool === 'text') return; }
@@ -1261,16 +1608,19 @@ function onStageUp(e) {
   const a = cl(d.a), b = cl(d.b);
   if (Math.abs(a[0] - b[0]) < 6 * ed.dpr || Math.abs(a[1] - b[1]) < 6 * ed.dpr) { redrawEditor(); return; }
   const A = toPdf(a), B = toPdf(b);
-  pushUndo();
   if (d.kind === 'crop') {
-    p.crop = [Math.min(A[0], B[0]), Math.min(A[1], B[1]), Math.max(A[0], B[0]), Math.max(A[1], B[1])];
-  } else {
-    const it = { type: d.kind, x1: A[0], y1: A[1], x2: B[0], y2: B[1], color: $('edColor').value };
-    p.items.push(it); ed.selItem = it;
-    if (d.kind === 'whiteout' && !ed.warnedWhiteout) {
-      ed.warnedWhiteout = true;
-      toast('Reminder: white-out hides text visually only — it is still in the file and can be copied.', 6000);
-    }
+    // Show the options instead of cropping straight away.
+    ed.region = [Math.min(A[0], B[0]), Math.min(A[1], B[1]), Math.max(A[0], B[0]), Math.max(A[1], B[1])];
+    redrawEditor();
+    openMenu(e.clientX, e.clientY, ed.region, true);
+    return;
+  }
+  pushUndo();
+  const it = { type: d.kind, x1: A[0], y1: A[1], x2: B[0], y2: B[1], color: $('edColor').value };
+  p.items.push(it); ed.selItem = it;
+  if (d.kind === 'whiteout' && !ed.warnedWhiteout) {
+    ed.warnedWhiteout = true;
+    toast('Reminder: white-out hides text visually only — it is still in the file and can be copied.', 6000);
   }
   redrawEditor();
 }
@@ -1279,29 +1629,51 @@ function openTextarea(pt, item) {
   const ta = document.createElement('textarea');
   const size = item ? item.size : (parseFloat($('edSize').value) || 14);
   const cssSize = size * ed.vp.scale / ed.dpr;
+  const fontOf = () => (item ? item.font : $('edFont').value) === 'amiri' || needsAmiri(ta.value) ? 'amiri' : 'sans';
+  const applyFont = () => {
+    const f = fontOf();
+    if (f === 'amiri') { ensureAmiriFace(); if (!item) $('edFont').value = 'amiri'; }
+    ta.style.fontFamily = CANVAS_FONT[f]; ta.style.lineHeight = LINE_H[f];
+    // Grow with the text instead of wrapping, so every line stays visible while typing.
+    const m = document.createElement('canvas').getContext('2d');
+    m.font = `${cssSize}px ${CANVAS_FONT[f]}`;
+    const longest = Math.max(0, ...ta.value.split('\n').map(l => m.measureText(l).width));
+    ta.style.width = Math.max(120, longest + cssSize) + 'px';
+    ta.rows = Math.max(1, ta.value.split('\n').length);
+  };
+  ta.dir = 'auto';
+  ta.wrap = 'off';
   ta.style.fontSize = cssSize + 'px';
   ta.style.color = item ? item.color : $('edColor').value;
   let left = pt[0] / ed.dpr, top = pt[1] / ed.dpr;
   if (item) {
     // Position over the existing text (only exact when it is displayed upright).
     const f = textFrame(item, ed.vp, ed.rot);
-    left = f.ox / ed.dpr; top = f.oy / ed.dpr - cssSize * 0.9;
     ta.value = item.text;
+    applyFont();
+    left = f.ox / ed.dpr; top = f.oy / ed.dpr - baselineOffset(itemFont(item), cssSize);
   }
+  applyFont();
   ta.style.left = left + 'px'; ta.style.top = top + 'px';
-  ta.rows = Math.max(1, ta.value.split('\n').length);
-  ta.style.width = Math.max(120, cssSize * Math.max(8, ...ta.value.split('\n').map(l => l.length)) * 0.6) + 'px';
   ta.addEventListener('keydown', e => {
     e.stopPropagation();
     if (e.key === 'Escape') { ta.value = item ? item.text : ''; commitTextarea(); }
     else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) commitTextarea();
   });
-  ta.addEventListener('input', () => { ta.rows = Math.max(1, ta.value.split('\n').length); });
+  ta.addEventListener('input', applyFont);
   $('stage').appendChild(ta);
   ed.textarea = { el: ta, pt: [left * ed.dpr, top * ed.dpr], item, cssSize };
   if (item) { item._hidden = item.text; item.text = ''; redrawEditor(); }
   ta.focus();
   setTimeout(() => ta.focus(), 0);
+}
+// Distance from the top of a line box (CSS px, line-height LINE_H) to the text baseline.
+function baselineOffset(font, cssSize) {
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.font = `${cssSize}px ${CANVAS_FONT[font]}`;
+  const m = ctx.measureText('Hg');
+  const A = m.fontBoundingBoxAscent || cssSize * 0.8, D = m.fontBoundingBoxDescent || cssSize * 0.2;
+  return (LINE_H[font] * cssSize - (A + D)) / 2 + A;
 }
 function commitTextarea() {
   const t = ed.textarea; if (!t) return;
@@ -1315,9 +1687,10 @@ function commitTextarea() {
     else { if (val !== old) pushUndo(); it.text = val; }
   } else if (val && p) {
     const size = parseFloat($('edSize').value) || 14;
-    // Baseline sits ~0.9em below the top of the textarea.
-    const base = toPdf([t.pt[0] + 2 * ed.dpr, t.pt[1] + t.cssSize * 0.95 * ed.dpr]);
-    const it = { type: 'text', x: base[0], y: base[1], text: val, size, color: $('edColor').value, rot: ed.rot };
+    const font = $('edFont').value === 'amiri' || needsAmiri(val) ? 'amiri' : 'sans';
+    // Put the baseline where the textarea showed the first line.
+    const base = toPdf([t.pt[0] + 1.5 * ed.dpr, t.pt[1] + (1.5 + baselineOffset(font, t.cssSize)) * ed.dpr]);
+    const it = { type: 'text', x: base[0], y: base[1], text: val, size, color: $('edColor').value, rot: ed.rot, font: $('edFont').value };
     pushUndo(); p.items.push(it); ed.selItem = it;
   }
   if (p) redrawEditor();
@@ -1330,7 +1703,7 @@ function deleteSelItem() {
 function applyStyleToSel() {
   if (!ed.selItem) return;
   pushUndo();
-  if (ed.selItem.type === 'text') ed.selItem.size = parseFloat($('edSize').value) || ed.selItem.size;
+  if (ed.selItem.type === 'text') { ed.selItem.size = parseFloat($('edSize').value) || ed.selItem.size; ed.selItem.font = $('edFont').value; }
   ed.selItem.color = $('edColor').value;
   redrawEditor();
 }
@@ -1464,18 +1837,37 @@ stage.addEventListener('dblclick', e => {
   if (it && it.type === 'text') openTextarea(null, it);
 });
 $('edDelete').onclick = deleteSelItem;
+$('edFont').addEventListener('change', () => {
+  if ($('edFont').value === 'amiri') ensureAmiriFace();
+  if (ed.selItem && ed.selItem.type === 'text') applyStyleToSel();
+});
+$('edCopyText').onclick = async () => { const p = edPage(); if (p) await copyText(await pageText(p, null)); };
+stage.addEventListener('contextmenu', e => {
+  if (ed.tool === 'textsel' || e.target.tagName === 'TEXTAREA') return; // keep the browser's own Copy menu
+  const p = edPage(); if (!p) return;
+  e.preventDefault();
+  openMenu(e.clientX, e.clientY, ed.region || p.crop || null, !!ed.region);
+});
+$('ctxMenu').addEventListener('click', e => { const b = e.target.closest('button[data-act]'); if (b) menuAction(b.dataset.act); });
+$('ctxMenu').addEventListener('keydown', e => {
+  const items = [...$('ctxMenu').querySelectorAll('button:not([hidden])')], i = items.indexOf(document.activeElement);
+  if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+  else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeMenu(); }
+});
+document.addEventListener('pointerdown', e => { if (!e.target.closest('#ctxMenu')) closeMenu(); }, true);
 $('edResetCrop').onclick = () => { const p = edPage(); if (p && p.crop) { pushUndo(); p.crop = null; redrawEditor(); } };
 $('edSize').addEventListener('change', () => { if (ed.selItem && ed.selItem.type === 'text') applyStyleToSel(); });
 $('edColor').addEventListener('change', applyStyleToSel);
 $('edDone').onclick = closeEditor;
-$('edPrev').onclick = () => { commitTextarea(); const i = pages.indexOf(edPage()); if (i > 0) { ed.uid = pages[i - 1].uid; ed.selItem = null; redrawEditor(); } };
-$('edNext').onclick = () => { commitTextarea(); const i = pages.indexOf(edPage()); if (i < pages.length - 1) { ed.uid = pages[i + 1].uid; ed.selItem = null; redrawEditor(); } };
+$('edPrev').onclick = () => { commitTextarea(); closeMenu(); ed.region = null; const i = pages.indexOf(edPage()); if (i > 0) { ed.uid = pages[i - 1].uid; ed.selItem = null; redrawEditor(); } };
+$('edNext').onclick = () => { commitTextarea(); closeMenu(); ed.region = null; const i = pages.indexOf(edPage()); if (i < pages.length - 1) { ed.uid = pages[i + 1].uid; ed.selItem = null; redrawEditor(); } };
 let resizeT; window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (ed.uid) redrawEditor(); }, 150); });
 
 window.addEventListener('beforeunload', e => { if (pages.length) { e.preventDefault(); e.returnValue = ''; } });
 
 // Test hook: lets automated checks inspect state without affecting normal use.
-window.__pdfTools = { get pages() { return pages; }, buildPdf, computeParts, addFiles };
+window.__pdfTools = { get pages() { return pages; }, buildPdf, computeParts, addFiles, bidiRuns, pageText };
 })();
 </script>
 </body>
