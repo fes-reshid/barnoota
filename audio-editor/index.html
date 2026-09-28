@@ -67,7 +67,7 @@
   .btn svg{width:16px; height:16px; flex:none;}
 
   #editor{display:none;}
-  .tabbar{display:flex; align-items:flex-end; gap:4px; overflow-x:auto; padding:0 6px; border-bottom:2px solid var(--green); margin-bottom:14px; scrollbar-width:thin;}
+  .tabbar{position:relative; display:flex; align-items:flex-end; gap:4px; overflow-x:auto; padding:0 6px; border-bottom:2px solid var(--green); margin-bottom:14px; scrollbar-width:thin;}
   .tab{
     display:flex; align-items:center; gap:4px; flex:none; min-width:110px; max-width:230px; cursor:pointer;
     padding:6px 6px 6px 12px; font-family:var(--ui); font-size:13px; white-space:nowrap;
@@ -149,7 +149,7 @@
   .dlg .field-row span{font-size:13px; color:var(--muted);}
   .fx-group{font-family:var(--ui); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); margin:12px 0 6px;}
   .fx-group:first-of-type{margin-top:0;}
-  .list{list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; border-top:1px solid rgba(169,124,37,.25); font-family:var(--ui); font-size:13px;}
+  .list{position:relative; list-style:none; margin:0; padding:0; max-height:260px; overflow:auto; border-top:1px solid rgba(169,124,37,.25); font-family:var(--ui); font-size:13px;}
   .list li{display:flex; align-items:center; gap:8px; padding:6px 4px; border-bottom:1px solid rgba(169,124,37,.18);}
   .list li.empty{color:var(--muted); justify-content:center; padding:14px;}
   .list .grow{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
@@ -311,6 +311,8 @@
         </div>
         <div class="fx-group">Clean up</div>
         <div class="row">
+          <button class="btn" id="noiseGrabBtn" type="button" title="Select a part with only background noise (no voice), then press this">Grab noise sample</button>
+          <button class="btn fx-need" id="noiseBtn" type="button" title="Remove steady background noise (hiss, hum, fan, air-conditioning) using the noise sample">Noise reduction…</button>
           <button class="btn fx-need" id="gateBtn" type="button" title="Silence background noise between words">Noise gate…</button>
           <button class="btn fx-need" id="hpBtn" type="button" title="High-pass filter: removes low hum, rumble and wind">Remove rumble…</button>
           <button class="btn fx-need" id="lpBtn" type="button" title="Low-pass filter: softens hiss and harsh highs">Remove hiss…</button>
@@ -452,7 +454,8 @@
     <h3>Effects &amp; tools</h3>
     <ul>
       <li>Effects with <strong>…</strong> open a small window: set the values, press <strong>▶ Preview</strong> to hear up to 8 seconds, then <strong>Apply</strong>.</li>
-      <li><strong>Clean up a recording:</strong> <em>Remove rumble</em> (hum and wind) → <em>Noise gate</em> (background noise between words) → <em>Normalise</em>.</li>
+      <li><strong>Noise reduction</strong> (like WavePad): select a second or two where there is <em>only</em> background noise — no voice — and press <strong>Grab noise sample</strong>. Then clear the selection (<kbd>Esc</kbd>) and press <strong>Noise reduction…</strong>; preview, and raise or lower the amount. Without a sample it guesses the noise from the quietest parts.</li>
+      <li><strong>Clean up a recording:</strong> <em>Remove rumble</em> (hum and wind) → <em>Noise reduction</em> (steady hiss) → <em>Noise gate</em> (anything left between words) → <em>Normalise</em>.</li>
       <li><strong>Repeat loop</strong> repeats the selected line several times, with an optional pause — useful for memorising.</li>
       <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab; <strong>Join tabs</strong> does the opposite.</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
@@ -742,7 +745,11 @@ function renderTabs() {
   add.onclick = newEmpty;
   bar.appendChild(add);
   const cur = bar.querySelector('.tab.active');
-  if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  // Scroll only the tab strip — scrollIntoView would also scroll the page.
+  if (cur) {
+    if (cur.offsetLeft < bar.scrollLeft) bar.scrollLeft = cur.offsetLeft;
+    else if (cur.offsetLeft + cur.offsetWidth > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = cur.offsetLeft + cur.offsetWidth - bar.clientWidth;
+  }
 }
 
 /* ---------- Mix with file ---------- */
@@ -1112,7 +1119,7 @@ function refresh() {
   $('stereoBtn').disabled = doc.ch.length !== 1 || !L;
   $('swapBtn').disabled = doc.ch.length !== 2;
   document.querySelectorAll('.fx-need').forEach(b => { b.disabled = !L; });
-  $('repeatBtn').disabled = $('redactBtn').disabled = !s;
+  $('repeatBtn').disabled = $('redactBtn').disabled = $('noiseGrabBtn').disabled = !s;
   $('splitBtn').disabled = !L || (!doc.markers.length && (cursor <= 0 || cursor >= L));
   $('joinBtn').disabled = tabs.length < 2;
   renderHistory();
@@ -1702,6 +1709,125 @@ function gateCh(ch, sr, thr, holdMs = 60) {
   }
   return out;
 }
+/* ---------- Noise reduction (spectral subtraction) ---------- */
+// Radix-2 FFT, in place. inv = true for the inverse (unscaled).
+const fftCache = {};
+function fftTables(n) {
+  if (fftCache[n]) return fftCache[n];
+  const rev = new Uint32Array(n), bits = Math.log2(n);
+  for (let i = 0; i < n; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= ((i >> b) & 1) << (bits - 1 - b); rev[i] = r; }
+  const cos = new Float64Array(n / 2), sin = new Float64Array(n / 2);
+  for (let i = 0; i < n / 2; i++) { cos[i] = Math.cos(2 * Math.PI * i / n); sin[i] = Math.sin(2 * Math.PI * i / n); }
+  return (fftCache[n] = { rev, cos, sin });
+}
+function fft(re, im, inv) {
+  const n = re.length, { rev, cos, sin } = fftTables(n);
+  for (let i = 0; i < n; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let size = 2; size <= n; size <<= 1) {
+    const half = size >> 1, step = n / size;
+    for (let i = 0; i < n; i += size) {
+      for (let j = 0, k = 0; j < half; j++, k += step) {
+        const wr = cos[k], wi = inv ? sin[k] : -sin[k];
+        const a = i + j, b = a + half;
+        const tr = re[b] * wr - im[b] * wi, ti = re[b] * wi + im[b] * wr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+      }
+    }
+  }
+}
+const NR_N = 2048, NR_HOP = 512;
+const nrWindow = (() => { const w = new Float64Array(NR_N); for (let i = 0; i < NR_N; i++) w[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / NR_N); return w; })();
+// Magnitude spectrum of each frame of one channel: calls fn(frameIndex, re, im).
+function eachFrame(c, fn) {
+  const re = new Float64Array(NR_N), im = new Float64Array(NR_N);
+  const frames = Math.max(1, Math.ceil((c.length + NR_N) / NR_HOP));
+  for (let f = 0; f < frames; f++) {
+    const start = f * NR_HOP - NR_N; // first frame starts before the audio so every sample is covered
+    for (let i = 0; i < NR_N; i++) { const j = start + i; re[i] = j >= 0 && j < c.length ? c[j] * nrWindow[i] : 0; im[i] = 0; }
+    fft(re, im, false);
+    fn(f, re, im, start);
+  }
+}
+// Average noise spectrum per channel. frames: 'all' or pick the quietest 15% (automatic).
+function noiseProfile(ch, quietestOnly) {
+  return ch.map(c => {
+    const mags = [], energies = [];
+    eachFrame(c, (f, re, im, start) => {
+      if (start < 0 || start + NR_N > c.length) return; // only whole frames
+      const m = new Float32Array(NR_N / 2 + 1); let e = 0;
+      for (let k = 0; k <= NR_N / 2; k++) { m[k] = Math.hypot(re[k], im[k]); e += m[k] * m[k]; }
+      mags.push(m); energies.push(e);
+    });
+    let use = mags;
+    if (quietestOnly && mags.length > 4) {
+      const order = energies.map((e, i) => [e, i]).sort((a, b) => a[0] - b[0]);
+      use = order.slice(0, Math.max(2, Math.round(order.length * 0.15))).map(([, i]) => mags[i]);
+    }
+    const avg = new Float32Array(NR_N / 2 + 1);
+    if (!use.length) return avg;
+    for (const m of use) for (let k = 0; k < avg.length; k++) avg[k] += m[k] / use.length;
+    return avg;
+  });
+}
+let grabbedNoise = null; // { sr, prof: [Float32Array per channel], secs }
+async function reduceNoise(ch, sr, v) {
+  let prof;
+  if (v.src === 'sample' && grabbedNoise && grabbedNoise.sr === sr) prof = grabbedNoise.prof;
+  else prof = noiseProfile(ch, true);
+  const floor = Math.pow(10, -v.amount / 20), over = v.sens;
+  const nb = NR_N / 2 + 1, out = [];
+  let lastYield = performance.now();
+  for (let c = 0; c < ch.length; c++) {
+    const x = ch[c], noise = prof[Math.min(c, prof.length - 1)];
+    const y = new Float64Array(x.length + 2 * NR_N);
+    const prevG = new Float64Array(nb).fill(1), g = new Float64Array(nb), gs = new Float64Array(nb);
+    const re = new Float64Array(NR_N), im = new Float64Array(NR_N);
+    const frames = Math.max(1, Math.ceil((x.length + NR_N) / NR_HOP));
+    for (let f = 0; f < frames; f++) {
+      const start = f * NR_HOP - NR_N;
+      for (let i = 0; i < NR_N; i++) { const j = start + i; re[i] = j >= 0 && j < x.length ? x[j] * nrWindow[i] : 0; im[i] = 0; }
+      fft(re, im, false);
+      for (let k = 0; k < nb; k++) {
+        const mag = Math.hypot(re[k], im[k]) + 1e-12;
+        g[k] = Math.max(floor, 1 - over * noise[k] / mag);
+      }
+      // Smooth across neighbouring frequencies and over time to avoid "musical noise" chirps.
+      for (let k = 0; k < nb; k++) {
+        const a = g[Math.max(0, k - 1)], b = g[k], d = g[Math.min(nb - 1, k + 1)];
+        let v2 = (a + 2 * b + d) / 4;
+        v2 = v2 < prevG[k] ? prevG[k] * 0.5 + v2 * 0.5 : v2; // fall gently, rise at once (keeps word onsets)
+        gs[k] = v2; prevG[k] = v2;
+      }
+      for (let k = 0; k < nb; k++) {
+        re[k] *= gs[k]; im[k] *= gs[k];
+        if (k > 0 && k < NR_N / 2) { re[NR_N - k] *= gs[k]; im[NR_N - k] *= gs[k]; }
+      }
+      fft(re, im, true);
+      // Hann analysis + Hann synthesis at 75% overlap sums to 1.5.
+      for (let i = 0; i < NR_N; i++) y[start + NR_N + i] += re[i] / NR_N * nrWindow[i] / 1.5;
+      if (performance.now() - lastYield > 80) { await new Promise(r => setTimeout(r, 0)); lastYield = performance.now(); }
+    }
+    out.push(Float32Array.from(y.subarray(NR_N, NR_N + x.length)));
+  }
+  return out;
+}
+function grabNoise() {
+  if (!doc || !hasSel()) { toast('First select a part that has only background noise (no voice).'); return; }
+  const secs = (selB - selA) / doc.sr;
+  if (secs < 0.1) { toast('Select at least 0.1 s of noise — half a second or more works best.'); return; }
+  grabbedNoise = { sr: doc.sr, prof: noiseProfile(sliceCh(doc.ch, selA, selB), false), secs };
+  toast(`Noise sample taken (${secs.toFixed(2)} s). Now clear the selection and press Noise reduction…`);
+}
+function fxNoise() {
+  const have = grabbedNoise && doc && grabbedNoise.sr === doc.sr;
+  processFx('Noise reduction', 'Removes steady background noise — hiss, hum, fans, air-conditioning — while keeping the voice. Preview first: too much reduction can make the voice sound watery.', [
+    { id: 'src', label: 'Noise sample', type: 'select', value: have ? 'sample' : 'auto', options: [
+      ...(have ? [['sample', `Grabbed sample (${grabbedNoise.secs.toFixed(2)} s)`]] : []),
+      ['auto', 'Automatic — learn from the quietest parts'] ] },
+    { id: 'amount', label: 'Reduce noise by', value: 18, min: 3, max: 40, step: 1, unit: 'dB (higher = stronger)' },
+    { id: 'sens', label: 'Sensitivity', value: 1.5, min: 0.5, max: 4, step: 0.1, unit: '(higher removes more, may touch the voice)' },
+  ], reduceNoise);
+}
 function fxGate() {
   processFx('Noise gate', 'Silences the quiet background noise between words and phrases. Anything quieter than the threshold is muted.', [
     { id: 'thr', label: 'Mute anything quieter than', value: -45, min: -90, max: -5, step: 1, unit: 'dB' },
@@ -1984,7 +2110,9 @@ function renderHistory() {
     b.onclick = () => jumpHistory(i);
     li.appendChild(b); ul.appendChild(li);
   });
-  const cur = ul.querySelector('.cur'); if (cur) cur.scrollIntoView({ block: 'nearest' });
+  // Keep the current step visible by scrolling the list itself, never the page.
+  const cur = ul.querySelector('.cur');
+  if (cur) ul.scrollTop = Math.max(0, cur.offsetTop - ul.clientHeight + cur.offsetHeight);
 }
 function jumpHistory(idx) {
   if (idx === undoStack.length) return;
@@ -2143,7 +2271,7 @@ on('dupBtn', duplicate);
 on('backBtn', () => seekBy(-5)); on('fwdBtn', () => seekBy(5));
 $('rateSel').addEventListener('change', () => { if (player) { const pos = playPos(); stopPlay(); cursor = Math.round(pos); play(); } });
 on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('speedBtn', fxSpeed); on('pitchBtn', fxPitch); on('tempoBtn', fxTempo); on('compBtn', fxCompressor);
-on('gateBtn', fxGate); on('hpBtn', fxHighpass); on('lpBtn', fxLowpass);
+on('gateBtn', fxGate); on('noiseGrabBtn', grabNoise); on('noiseBtn', fxNoise); on('hpBtn', fxHighpass); on('lpBtn', fxLowpass);
 on('stereoBtn', makeStereo); on('swapBtn', swapChannels); on('rateConvBtn', fxSampleRate);
 on('insFileBtn', () => $('insFileIn').click()); on('genBtn', generate); on('repeatBtn', repeatLoop); on('redactBtn', redact);
 on('splitBtn', splitIntoTabs); on('joinBtn', joinTabs);
