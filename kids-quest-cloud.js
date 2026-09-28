@@ -206,14 +206,19 @@ function setFullName(name){
 }
 
 /* ===================== Admin-facing API ===================== */
-/* Who is allowed in kids-admin.html is decided entirely by whether a doc
-   exists at kids_quest_admins/{their email} — not by any email hardcoded
-   in this file. Two roles: 'admin' can manage students; 'super' can also
-   manage other admins. The very first admin doc has to be created by
-   hand in the Firebase console (nothing can grant that role from inside
-   the app before it exists) — see kids-admin.html's setup instructions.
-   Every check here is re-enforced server-side by the Firestore rules the
-   project owner adds; a client-side bypass still hits a denied write. */
+/* Who is allowed in kids-admin.html (or the Tuhfatul Atfaal teacher
+   portal) is decided entirely by whether a doc exists at
+   kids_quest_admins/{their email} and what its role field says — not by
+   any email hardcoded in this file. Three roles: 'teacher' can manage
+   students and grade Tuhfatul Atfaal progress, but never delete a
+   student; 'admin' can do everything 'teacher' can, plus delete
+   students and approve/add/remove teacher accounts; 'super' can also
+   manage other admins (and teachers). The very first admin doc has to
+   be created by hand in the Firebase console (nothing can grant that
+   role from inside the app before it exists) — see kids-admin.html's
+   setup instructions. Every check here is re-enforced server-side by
+   the Firestore rules the project owner adds; a client-side bypass
+   still hits a denied write. */
 
 function adminSignIn(email, password){
   return signInWithEmailAndPassword(auth, email, password);
@@ -256,11 +261,16 @@ function onAdminAuth(cb){
   });
 }
 
-/* ---- super-admin only: managing the admin roster itself ---- */
+/* ---- super-admin only: managing the admin/super roster itself ---- */
+/* Teacher docs are deliberately left out of this list (and of anything
+   superAddAdmin/superSetAdminRole/superRemoveAdmin touch) — they're
+   managed separately below by adminAddTeacher/adminRemoveTeacher, which
+   a regular admin can also call. Mixing them in here would let "make
+   super admin" accidentally apply to a teacher row. */
 function superListAdmins(){
   return getDocs(collection(db, ADMINS_COLLECTION)).then(function(snap){
     const out = [];
-    snap.forEach(function(d){ out.push(d.data()); });
+    snap.forEach(function(d){ const data = d.data(); if(data.role !== 'teacher') out.push(data); });
     out.sort(function(a, b){ return (a.email || '').localeCompare(b.email || ''); });
     return out;
   });
@@ -282,8 +292,37 @@ function superSetAdminRole(email, role){
 function superRemoveAdmin(email){
   return deleteDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)));
 }
-function superAddTeacher(username, role){
-  return superAddAdmin(teacherUsernameToEmail(username), role || 'admin');
+
+/* ---- teacher accounts: any admin or super admin can manage these ---- */
+/* A teacher's Firestore doc only ever gets role:'teacher' — never
+   'admin'/'super' — so a teacher account can NEVER sign into the general
+   kids-admin.html panel or delete a student; it only unlocks the
+   Tuhfatul Atfaal teacher portal's grading tools. Approving someone
+   (after they've created their own login with teacherSignUp) and
+   pre-registering them ahead of time are the same call: it just writes
+   the doc, approved or not doesn't exist as a separate idea here —
+   same as how a regular admin doc works today. */
+function adminAddTeacher(usernameOrEmail){
+  const value = String(usernameOrEmail || '').trim();
+  const email = value.indexOf('@') >= 0 ? normalizeEmail(value) : teacherUsernameToEmail(value);
+  const user = auth.currentUser;
+  return setDoc(doc(db, ADMINS_COLLECTION, email), {
+    email: email,
+    role: 'teacher',
+    addedAt: new Date().toISOString(),
+    addedBy: user && user.email
+  });
+}
+function adminRemoveTeacher(email){
+  return deleteDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)));
+}
+function adminListTeachers(){
+  return getDocs(collection(db, ADMINS_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const data = d.data(); if(data.role === 'teacher') out.push(data); });
+    out.sort(function(a, b){ return (a.email || '').localeCompare(b.email || ''); });
+    return out;
+  });
 }
 
 /* Creates a brand-new student account without disturbing the admin's own
@@ -412,6 +451,26 @@ function adminUpdateStudentNames(uid, displayName, fullName){
   }, { merge:true });
 }
 
+/* Everything else worth keeping on file for a student besides their
+   name — a small photo (already resized to a thumbnail data URL by the
+   caller before this is called, so it stays well under Firestore's
+   per-document size limit), date of birth, a contact email, and a
+   parent/guardian name + phone for the admin or teacher to reach out
+   to. Any field left out of `details` is left untouched, so a partial
+   edit (just the photo, say) never blanks out the others. */
+function adminUpdateStudentDetails(uid, details){
+  if(!uid) return Promise.reject(new Error('Missing student.'));
+  const d = details || {};
+  const patch = {};
+  if('photoUrl' in d) patch.photoUrl = String(d.photoUrl || '');
+  if('dob' in d) patch.dob = String(d.dob || '');
+  if('contactEmail' in d) patch.contactEmail = normalizeEmail(d.contactEmail || '');
+  if('guardianName' in d) patch.guardianName = String(d.guardianName || '').trim();
+  if('guardianPhone' in d) patch.guardianPhone = String(d.guardianPhone || '').trim();
+  if('notes' in d) patch.notes = String(d.notes || '').trim();
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), patch, { merge:true });
+}
+
 window.KidsCloud = {
   usernameToEmail: usernameToEmail,
   normalizeUsername: normalizeUsername,
@@ -439,11 +498,14 @@ window.KidsCloud = {
   adminSetStudentDisabled: adminSetStudentDisabled,
   adminUpdateStudentGameProgress: adminUpdateStudentGameProgress,
   adminUpdateStudentNames: adminUpdateStudentNames,
+  adminUpdateStudentDetails: adminUpdateStudentDetails,
   superListAdmins: superListAdmins,
   superAddAdmin: superAddAdmin,
   superSetAdminRole: superSetAdminRole,
   superRemoveAdmin: superRemoveAdmin,
-  superAddTeacher: superAddTeacher,
+  adminAddTeacher: adminAddTeacher,
+  adminRemoveTeacher: adminRemoveTeacher,
+  adminListTeachers: adminListTeachers,
   ADMIN_EMAIL: ADMIN_EMAIL
 };
 window.dispatchEvent(new Event('kidscloud-ready'));

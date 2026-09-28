@@ -164,12 +164,12 @@
 
     <div class="card" style="max-width:620px;margin:20px auto;text-align:center">
       <h2>Protected teacher access</h2>
-      <p>A new teacher may create a login, but a super administrator must approve the account before any student information is visible.</p>
+      <p>A new teacher may create a login, but an admin or super administrator must approve the account before any student information is visible.</p>
     </div>
 
     <div class="card hidden" id="not-authorized">
       <h2>Awaiting teacher approval</h2>
-      <p id="not-authorized-msg">A super administrator must approve this teacher account before it can access student records.</p>
+      <p id="not-authorized-msg">An admin or super administrator must approve this teacher account before it can access student records.</p>
       <button class="btn ghost" id="not-authorized-signout">Sign out</button>
     </div>
   </section>
@@ -228,16 +228,12 @@
 
     <div class="card hidden" id="admins-card">
       <h2>Teacher accounts <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
-      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Only a super administrator can approve teachers. Enter the exact username they used; it must contain “teacher”.</p>
+      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Any admin or super admin can approve a teacher here. Enter the
+        exact username they used to sign up; it must contain “teacher”. A teacher account can manage and grade
+        students but can never delete one, and can never sign into the main site admin panel.</p>
       <div class="row">
         <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
           <input type="text" id="new-admin-email" placeholder="salah-teacher"></div>
-        <div class="field"><label for="new-admin-role">Role</label>
-          <select id="new-admin-role">
-            <option value="admin">Teacher</option>
-            <option value="super">Super administrator</option>
-          </select>
-        </div>
       </div>
       <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
       <p class="msg" id="add-admin-msg"></p>
@@ -268,7 +264,7 @@
   </div>
 </div>
 
-<script type="module" src="../kids-quest-cloud.js?v=4"></script>
+<script type="module" src="../kids-quest-cloud.js?v=5"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -297,7 +293,7 @@ function friendlyError(err){
   if(code.indexOf('email-already-in-use') >= 0) return 'That email or username already has an account — try signing in instead.';
   if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
   if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
-  if(code.indexOf('permission-denied') >= 0) return 'Not allowed — only a super admin can do that.';
+  if(code.indexOf('permission-denied') >= 0) return 'Not allowed for your account role.';
   return (err && err.message) || 'Something went wrong.';
 }
 function progressSummary(progress){
@@ -462,7 +458,9 @@ function renderStudents(list){
         '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
         '<button class="btn ghost small" data-act="rename">Rename username</button>' +
         '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
-        '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>' +
+        (myRole === 'teacher' ? '' :
+          '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>'
+        ) +
       '</div>' +
       '<div class="rename-panel" data-rename>' +
         '<div class="row">' +
@@ -501,7 +499,8 @@ function renderStudents(list){
       }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
     });
 
-    el.querySelector('[data-act="delete"]').addEventListener('click', () => {
+    const deleteBtn = el.querySelector('[data-act="delete"]');
+    if(deleteBtn) deleteBtn.addEventListener('click', () => {
       if(!confirm('Remove ' + s.username + '’s saved progress? This cannot be undone from here.')) return;
       window.KidsCloud.adminDeleteStudent(s.uid).then(loadStudents).catch(err => alert(friendlyError(err)));
     });
@@ -531,21 +530,15 @@ function renderAdmins(list){
     const isMe = a.email === myEmail;
     el.innerHTML =
       '<span class="email">' + escapeHtml(a.email) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
-        '<span class="role-badge' + (a.role === 'super' ? ' super' : '') + '">' + (a.role === 'super' ? 'Super' : 'Admin') + '</span>' +
+        '<span class="role-badge">Teacher</span>' +
       '</span>' +
       '<span class="actions">' +
-        (isMe ? '' :
-          '<button class="btn ghost small" data-act="toggle-role">' + (a.role === 'super' ? 'Make regular admin' : 'Make super admin') + '</button>' +
-          '<button class="btn danger small" data-act="remove">Remove</button>'
-        ) +
+        (isMe ? '' : '<button class="btn danger small" data-act="remove">Remove</button>') +
       '</span>';
     if(!isMe){
-      el.querySelector('[data-act="toggle-role"]').addEventListener('click', () => {
-        window.KidsCloud.superSetAdminRole(a.email, a.role === 'super' ? 'admin' : 'super').then(loadAdmins).catch(err => alert(friendlyError(err)));
-      });
       el.querySelector('[data-act="remove"]').addEventListener('click', () => {
-        if(!confirm('Remove admin access for ' + a.email + '? Their Firebase login itself stays — this only revokes admin rights.')) return;
-        window.KidsCloud.superRemoveAdmin(a.email).then(loadAdmins).catch(err => alert(friendlyError(err)));
+        if(!confirm('Remove teacher access for ' + a.email + '? Their Firebase login itself stays — this only revokes teacher-portal rights.')) return;
+        window.KidsCloud.adminRemoveTeacher(a.email).then(loadAdmins).catch(err => alert(friendlyError(err)));
       });
     }
     box.appendChild(el);
@@ -560,20 +553,23 @@ function loadStudents(){
   });
 }
 function loadAdmins(){
-  if(myRole !== 'super') return;
-  window.KidsCloud.superListAdmins().then(renderAdmins).catch(err => {
+  if(myRole !== 'admin' && myRole !== 'super') return;
+  window.KidsCloud.adminListTeachers().then(renderAdmins).catch(err => {
     $('admin-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>';
   });
 }
 
+function roleLabel(role){
+  return role === 'super' ? 'Super admin' : role === 'teacher' ? 'Teacher' : 'Admin';
+}
 function showDashboard(info){
   myEmail = info.email; myRole = info.role;
   $('login-screen').classList.add('hidden');
   $('dashboard-screen').classList.remove('hidden');
   $('signout-top').classList.add('show');
   $('who-am-i').classList.add('show');
-  $('who-am-i').innerHTML = escapeHtml(info.email) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + (info.role === 'super' ? 'Super admin' : 'Admin') + '</span>';
-  $('admins-card').classList.toggle('hidden', info.role !== 'super');
+  $('who-am-i').innerHTML = escapeHtml(info.email) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + roleLabel(info.role) + '</span>';
+  $('admins-card').classList.toggle('hidden', info.role === 'teacher');
   $('not-authorized').classList.add('hidden');
   loadStudents();
   loadAdmins();
@@ -594,14 +590,14 @@ function showNotAuthorized(email){
   $('who-am-i').classList.remove('show');
   $('login-card').classList.add('hidden');
   $('not-authorized').classList.remove('hidden');
-  $('not-authorized-msg').textContent = 'This teacher account is waiting for approval. Ask the super administrator to approve your teacher username, then sign in again.';
+  $('not-authorized-msg').textContent = 'This teacher account is waiting for approval. Ask an admin or super administrator to approve your teacher username, then sign in again.';
 }
 
 function setSignUpMode(on){
   isSignUp = on;
   $('login-title').textContent = on ? 'Create Teacher Account' : 'Teacher Sign In';
   $('login-lead').textContent = on
-    ? 'Choose a username containing “teacher”, for example salah-teacher. A super administrator must approve it before you can see students.'
+    ? 'Choose a username containing “teacher”, for example salah-teacher. An admin or super administrator must approve it before you can see students.'
     : 'Use your teacher username and password to manage Tuhfatul Atfaal students.';
   $('admin-signin-btn').textContent = on ? 'Create Account' : 'Sign In';
   $('login-toggle').textContent = on ? 'Already have a teacher account? Sign in' : 'New teacher? Create an account';
@@ -774,12 +770,11 @@ function wire(){
 
   $('add-admin-btn').addEventListener('click', () => {
     const email = $('new-admin-email').value.trim();
-    const role = $('new-admin-role').value;
     const msg = $('add-admin-msg');
     msg.className = 'msg'; msg.textContent = '';
     if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter the teacher username.'; return; }
     $('add-admin-btn').disabled = true;
-    window.KidsCloud.superAddTeacher(email, role).then(() => {
+    window.KidsCloud.adminAddTeacher(email).then(() => {
       msg.className = 'msg success';
       msg.textContent = 'Teacher approved. They can now sign in with that username and password.';
       $('new-admin-email').value = '';

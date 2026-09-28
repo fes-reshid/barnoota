@@ -85,6 +85,8 @@
 
   .student{ border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--parchment); }
   .student .top{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
+  .student .top-left{ display:flex; align-items:center; gap:10px; }
+  .student-photo{ width:40px; height:40px; border-radius:50%; object-fit:cover; border:1.5px solid var(--gold-soft); flex:none; background:#fff; }
   .student .uname{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
   .student .meta{ font-size:13.5px; color:#8a7654; }
   .student .progress-line{ font-size:14px; color:var(--ink-brown); margin:8px 0; }
@@ -147,26 +149,50 @@
     </p>
 
     <details class="setup">
-      <summary>First-time setup (do this once, as the very first admin)</summary>
+      <summary>First-time setup (do this once, as the very first admin) — and one rules update for teacher accounts</summary>
+      <p style="background:#fff7dc; border:1.5px solid var(--gold); border-radius:10px; padding:10px 14px; margin:0 0 14px;">
+        <b>Already set up?</b> The rules below now add a third role, <code>teacher</code>, used by the
+        <a href="tuhfatul-atfaal-admin/" target="_blank" rel="noopener">Tuhfatul Atfaal Teacher Portal</a> —
+        regular admins can approve teachers, and teacher accounts can never delete a student. Paste the updated
+        rules block in step 1 into the Firebase console even if you already did the original setup; steps 2–3
+        only apply the very first time.
+      </p>
       <ol>
         <li><b>Add the Firestore security rules.</b> In
           <a href="https://console.firebase.google.com/project/diinislaam-8fdeb/firestore/rules" target="_blank" rel="noopener">Firebase Console → Firestore Database → Rules</a>,
           add these two blocks inside your existing <code>match /databases/{database}/documents { ... }</code>
           (alongside whatever rules already exist for other collections — don't remove those):
           <pre>match /kids_quest_admins/{adminEmail} {
-  // anyone signed in can check their OWN admin status
+  // anyone signed in can check their OWN status (admin, super or teacher)
   allow get: if request.auth != null
     && request.auth.token.email.lower() == adminEmail;
-  // a super admin can see and manage the whole admin list
+  // a super admin can see and manage the whole list — admins, super
+  // admins and teachers alike
   allow get, list, create, update, delete: if request.auth != null
     && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'super';
+  // a regular admin can read the whole list too (so it can tell teacher
+  // rows apart from admin/super rows), and can approve, add or remove
+  // TEACHER accounts specifically — but can never touch an admin/super doc
+  allow get, list: if request.auth != null
+    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'admin';
+  allow create, update: if request.auth != null
+    && request.resource.data.role == 'teacher'
+    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'admin';
+  allow delete: if request.auth != null
+    && resource.data.role == 'teacher'
+    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role == 'admin';
 }
 match /kids_quest_students/{uid} {
   // a student can only ever read/write their own saved progress
   allow get, create, update: if request.auth != null && request.auth.uid == uid;
-  // any listed admin (super or regular) can manage every student's record
-  allow get, list, create, update, delete: if request.auth != null
+  // any listed admin, super admin OR teacher can view and edit every
+  // student's record (needed for teachers to grade Tuhfatul Atfaal)
+  allow get, list, create, update: if request.auth != null
     && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
+  // but only an admin or super admin can delete a student outright —
+  // a teacher account can never do this, even by editing the page
+  allow delete: if request.auth != null
+    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role in ['admin', 'super'];
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -239,9 +265,15 @@ match /kids_quest_students/{uid} {
 
     <div class="card">
       <h2>Students <span id="student-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
-      <button class="btn ghost small" id="refresh-btn" style="margin-bottom:14px;">Refresh</button>
+      <div class="row" style="align-items:flex-end;">
+        <div class="field" style="flex:2;"><label for="student-search">Search</label>
+          <input type="text" id="student-search" placeholder="Name, username or email"></div>
+        <div class="field" style="flex:0 0 auto;"><button class="btn primary" type="button" id="student-search-btn">🔍 Search</button></div>
+        <div class="field" style="flex:0 0 auto;"><button class="btn ghost" id="refresh-btn">Refresh</button></div>
+      </div>
       <div id="student-list"></div>
       <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
+      <p class="empty hidden" id="student-no-match">No student matches that search.</p>
     </div>
 
     <!-- Qur'an daily reading report. The panel fills this in and shows itself
@@ -272,7 +304,7 @@ match /kids_quest_students/{uid} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=5"></script>
+<script type="module" src="kids-quest-cloud.js?v=6"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);
@@ -377,30 +409,84 @@ function parseCSV(text){
   });
 }
 
+/* Shrinks whatever image the admin picks down to a small square thumbnail
+   before it's ever stored, so a student's photo stays a few KB as a data
+   URL inside their Firestore doc instead of risking the 1MiB document
+   limit (there's no separate file storage set up for this project). */
+function resizePhotoFile(file){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read that image.'));
+    reader.onload = () => {
+      img.onerror = () => reject(new Error('That file isn’t a readable image.'));
+      img.onload = () => {
+        const size = 160;
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const scale = Math.max(size / img.width, size / img.height);
+        const w = img.width * scale, h = img.height * scale;
+        ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.72));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 function renderStudents(list){
   const box = $('student-list');
   box.innerHTML = '';
   $('student-count').textContent = list.length ? '(' + list.length + ')' : '';
-  $('student-empty').classList.toggle('hidden', list.length > 0);
+  $('student-no-match').classList.add('hidden');
   list.forEach(s => {
     const el = document.createElement('div');
     el.className = 'student';
     el.innerHTML =
       '<div class="top">' +
-        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span>' +
-          (s.selfSignup ? ' <span class="role-badge" style="background:#c9dfe6; color:#1c4a55;">Self sign-up</span>' : '') +
-          (s.disabled ? ' <span class="role-badge" style="background:var(--danger-bg); color:var(--danger);">Disabled</span>' : '') +
+        '<span class="top-left">' +
+          (s.photoUrl ? '<img class="student-photo" src="' + s.photoUrl + '" alt="">' : '') +
+          '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span>' +
+            (s.selfSignup ? ' <span class="role-badge" style="background:#c9dfe6; color:#1c4a55;">Self sign-up</span>' : '') +
+            (s.disabled ? ' <span class="role-badge" style="background:var(--danger-bg); color:var(--danger);">Disabled</span>' : '') +
+          '</span>' +
         '</span>' +
         '<span class="meta">' + (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '') + '</span>' +
       '</div>' +
-      (s.contactEmail ? '<p class="meta" style="margin:2px 0 0;">✉️ ' + escapeHtml(s.contactEmail) + '</p>' : '') +
+      (s.contactEmail || s.dob || s.guardianName || s.guardianPhone ? '<p class="meta" style="margin:2px 0 0;">' +
+        [
+          s.contactEmail ? '✉️ ' + escapeHtml(s.contactEmail) : '',
+          s.dob ? '🎂 ' + escapeHtml(s.dob) : '',
+          s.guardianName ? '👤 ' + escapeHtml(s.guardianName) : '',
+          s.guardianPhone ? '📞 ' + escapeHtml(s.guardianPhone) : ''
+        ].filter(Boolean).join(' · ') +
+      '</p>' : '') +
       '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
       tuhfatDetails(s.progress) +
       '<div class="actions">' +
+        '<button class="btn ghost small" data-act="details">Student details</button>' +
         '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
         '<button class="btn ghost small" data-act="rename">Rename username</button>' +
         '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
         '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>' +
+      '</div>' +
+      '<div class="rename-panel" data-details>' +
+        '<div class="row">' +
+          '<div class="field"><label>Photo</label><input type="file" accept="image/*" data-photo-file></div>' +
+          '<div class="field"><label>Date of birth</label><input type="date" data-dob value="' + escapeHtml(s.dob || '') + '"></div>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div class="field"><label>Email</label><input type="email" data-contact-email value="' + escapeHtml(s.contactEmail || '') + '"></div>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div class="field"><label>Parent/guardian name</label><input type="text" data-guardian-name value="' + escapeHtml(s.guardianName || '') + '"></div>' +
+          '<div class="field"><label>Parent/guardian phone</label><input type="text" data-guardian-phone value="' + escapeHtml(s.guardianPhone || '') + '"></div>' +
+        '</div>' +
+        '<div class="field"><label>Notes</label><input type="text" data-notes value="' + escapeHtml(s.notes || '') + '"></div>' +
+        '<button class="btn primary small" data-act="save-details">Save details</button>' +
+        '<p class="msg" data-details-msg></p>' +
       '</div>' +
       '<div class="rename-panel" data-rename>' +
         '<div class="row">' +
@@ -422,6 +508,30 @@ function renderStudents(list){
 
     el.querySelector('[data-act="rename"]').addEventListener('click', () => {
       el.querySelector('[data-rename]').classList.toggle('show');
+    });
+
+    el.querySelector('[data-act="details"]').addEventListener('click', () => {
+      el.querySelector('[data-details]').classList.toggle('show');
+    });
+
+    el.querySelector('[data-act="save-details"]').addEventListener('click', () => {
+      const msg = el.querySelector('[data-details-msg]');
+      const photoFile = el.querySelector('[data-photo-file]').files[0];
+      const patch = {
+        dob: el.querySelector('[data-dob]').value,
+        contactEmail: el.querySelector('[data-contact-email]').value.trim(),
+        guardianName: el.querySelector('[data-guardian-name]').value.trim(),
+        guardianPhone: el.querySelector('[data-guardian-phone]').value.trim(),
+        notes: el.querySelector('[data-notes]').value.trim()
+      };
+      msg.className = 'msg'; msg.textContent = 'Saving…';
+      (photoFile ? resizePhotoFile(photoFile).then(dataUrl => { patch.photoUrl = dataUrl; }) : Promise.resolve())
+        .then(() => window.KidsCloud.adminUpdateStudentDetails(s.uid, patch))
+        .then(() => {
+          msg.className = 'msg success';
+          msg.textContent = 'Saved. Refreshing…';
+          loadStudents();
+        }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
     });
 
     el.querySelector('[data-act="do-rename"]').addEventListener('click', () => {
@@ -488,12 +598,29 @@ function renderAdmins(list){
   });
 }
 
+let studentsCache = [];
 function loadStudents(){
-  window.KidsCloud.adminListStudents().then(renderStudents).catch(err => {
+  return window.KidsCloud.adminListStudents().then(list => {
+    studentsCache = list;
+    applyStudentSearch();
+  }).catch(err => {
     $('student-list').innerHTML = '';
     $('student-empty').classList.remove('hidden');
     $('student-empty').textContent = friendlyError(err);
   });
+}
+function applyStudentSearch(){
+  const q = $('student-search').value.trim().toLowerCase();
+  $('student-empty').classList.toggle('hidden', studentsCache.length > 0);
+  if(!q){ renderStudents(studentsCache); $('student-no-match').classList.add('hidden'); return; }
+  const matches = studentsCache.filter(s =>
+    (s.username || '').toLowerCase().includes(q) ||
+    (s.displayName || '').toLowerCase().includes(q) ||
+    (s.fullName || '').toLowerCase().includes(q) ||
+    (s.contactEmail || '').toLowerCase().includes(q)
+  );
+  renderStudents(matches);
+  $('student-no-match').classList.toggle('hidden', matches.length > 0 || studentsCache.length === 0);
 }
 function loadAdmins(){
   if(myRole !== 'super') return;
@@ -532,6 +659,16 @@ function showNotAuthorized(email){
   $('not-authorized').classList.remove('hidden');
   $('not-authorized-msg').textContent = '"' + email + '" isn’t on the admin list yet. Ask an existing admin to add ' +
     'that email in the Admins section, then sign in again.';
+}
+function showTeacherWrongPortal(email){
+  $('login-screen').classList.remove('hidden');
+  $('dashboard-screen').classList.add('hidden');
+  $('signout-top').classList.remove('show');
+  $('who-am-i').classList.remove('show');
+  $('login-card').classList.add('hidden');
+  $('not-authorized').classList.remove('hidden');
+  $('not-authorized-msg').innerHTML = '"' + escapeHtml(email) + '" is a teacher account, not a site admin — it doesn\'t open ' +
+    'this panel. Use the <a href="tuhfatul-atfaal-admin/">Tuhfatul Atfaal Teacher Portal</a> instead.';
 }
 
 function setSignUpMode(on){
@@ -674,6 +811,9 @@ function wire(){
   });
 
   $('refresh-btn').addEventListener('click', loadStudents);
+  $('student-search-btn').addEventListener('click', applyStudentSearch);
+  $('student-search').addEventListener('keydown', e => { if(e.key === 'Enter') applyStudentSearch(); });
+  $('student-search').addEventListener('input', () => { if(!$('student-search').value.trim()) applyStudentSearch(); });
 
   $('add-admin-btn').addEventListener('click', () => {
     const email = $('new-admin-email').value.trim();
@@ -694,6 +834,7 @@ function wire(){
   window.KidsCloud.onAdminAuth(info => {
     if(!info) showLogin();
     else if(!info.role) showNotAuthorized(info.email);
+    else if(info.role === 'teacher') showTeacherWrongPortal(info.email);
     else showDashboard(info);
   });
 }
