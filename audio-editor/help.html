@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Editor Help &amp; Tutorials — Diin Islaam</title>
+<meta name="description" content="Step-by-step tutorials and a full reference for the free Diin Islaam audio editor: recording, trimming, splitting recitations, joining files, noise reduction, effects, menus and keyboard shortcuts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26; --muted:#6b5a3f;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --orange:#c8641e;
+    --ui:'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:80px;}
+  html,body{overflow-x:hidden;}
+  body{margin:0; background:#e9e2cd; color:var(--ink-brown); font-family:var(--ui); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  a{color:var(--green-dark);}
+  kbd{font-family:ui-monospace, Menlo, Consolas, monospace; font-size:.8em; background:#fff; border:1px solid var(--gold-soft); border-bottom-width:2px; border-radius:4px; padding:0 5px; white-space:nowrap;}
+  .m{font-weight:600; color:var(--ink-navy); white-space:nowrap;} /* menu path */
+
+  header.site{position:sticky; top:0; z-index:50; background:rgba(250,243,224,.95); backdrop-filter:blur(6px); border-bottom:1px solid var(--gold-soft);}
+  .nav-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; max-width:1200px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .brand-mark{width:36px; height:36px; border-radius:50%; background:var(--green); color:var(--parchment); display:flex; align-items:center; justify-content:center; font-size:18px; flex:none;}
+  .brand-text{font-family:'Marcellus'; font-size:20px; color:var(--ink-navy); line-height:1.1;}
+  .brand-text small{display:block; font-family:'Cormorant Garamond'; font-size:14px; color:var(--gold);}
+  .head-actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+  .pill{font-size:14px; text-decoration:none; color:var(--green-dark); border:1px solid var(--gold-soft); border-radius:20px; padding:6px 14px; background:#fff; white-space:nowrap;}
+  .pill.primary{background:var(--green); color:var(--parchment); border-color:var(--green);}
+
+  .hero{max-width:1200px; margin:0 auto; padding:34px 16px 10px;}
+  .hero h1{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:clamp(28px,4vw,40px); margin:0 0 6px;}
+  .hero p{font-family:'Cormorant Garamond'; font-size:20px; color:var(--muted); margin:0; max-width:760px;}
+  .search{margin-top:18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .search input{flex:1 1 280px; max-width:520px; font:inherit; padding:10px 14px; border:1.5px solid var(--gold-soft); border-radius:24px; background:#fff;}
+  .search span{font-size:14px; color:var(--muted);}
+
+  .layout{max-width:1200px; margin:0 auto; padding:16px 16px 80px; display:grid; grid-template-columns:250px minmax(0,1fr); gap:28px; align-items:start;}
+  nav.toc{position:sticky; top:84px; max-height:calc(100vh - 100px); overflow:auto; background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:12px 8px; font-size:14px;}
+  nav.toc h2{font-family:'Marcellus'; font-weight:400; font-size:16px; color:var(--ink-navy); margin:4px 10px 6px;}
+  nav.toc a{display:block; text-decoration:none; color:var(--ink-brown); padding:4px 10px; border-radius:6px;}
+  nav.toc a:hover{background:var(--green-bg);}
+  nav.toc a.sub{padding-left:22px; font-size:13.5px; color:var(--muted);}
+  nav.toc a.on{background:var(--green-bg); color:var(--green-dark); font-weight:600;}
+  details.toc-mobile{display:none;}
+  @media (max-width:900px){
+    .layout{grid-template-columns:minmax(0,1fr);}
+    nav.toc{display:none;}
+    details.toc-mobile{display:block; background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:6px;}
+    details.toc-mobile summary{font-weight:600; cursor:pointer; color:var(--ink-navy);}
+    details.toc-mobile a{display:block; padding:3px 0; text-decoration:none;}
+  }
+
+  section.card{background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; box-shadow:0 6px 18px rgba(60,45,20,.07); padding:22px 24px; margin-bottom:22px;}
+  section.card.hidden{display:none;}
+  section.card h2{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:26px; margin:0 0 8px;}
+  section.card h3{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:19px; margin:22px 0 6px;}
+  .lead{color:var(--muted); margin:0 0 12px;}
+  .tut-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .tag{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-soft); border-radius:999px; padding:1px 9px; background:#fff;}
+  ol.steps{counter-reset:step; list-style:none; padding:0; margin:12px 0 0;}
+  ol.steps > li{counter-increment:step; position:relative; padding:4px 0 10px 44px;}
+  ol.steps > li::before{content:counter(step); position:absolute; left:0; top:2px; width:30px; height:30px; border-radius:50%; background:var(--green); color:var(--parchment); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px;}
+  .tip, .warn{border-radius:10px; padding:10px 14px; margin:12px 0 0; font-size:15px;}
+  .tip{background:var(--green-bg); border:1px solid #b9d3c3;}
+  .warn{background:#fff4e6; border:1px solid #e2a15a;}
+  .tip b, .warn b{color:var(--ink-navy);}
+  table{width:100%; border-collapse:collapse; font-size:14.5px; margin-top:8px;}
+  th, td{text-align:left; padding:7px 8px; border-bottom:1px solid rgba(169,124,37,.22); vertical-align:top;}
+  th{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); font-weight:600;}
+  td:first-child{white-space:nowrap; font-weight:600; color:var(--ink-navy);}
+  .table-wrap{overflow-x:auto;}
+  .grid2{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; margin-top:12px;}
+  .mini{background:#fff; border:1px solid var(--gold-soft); border-radius:12px; padding:12px 14px;}
+  .mini h4{margin:0 0 4px; font-size:15px; color:var(--ink-navy);}
+  .mini p{margin:0; font-size:14px; color:var(--muted);}
+  .mini a{font-size:14px;}
+
+  /* Screen map */
+  .screen{border:1.5px solid var(--gold-soft); border-radius:12px; overflow:hidden; background:#fff; font-size:13px; margin-top:10px;}
+  .screen > div{position:relative; padding:9px 12px 9px 44px; border-bottom:1px solid rgba(169,124,37,.25);}
+  .screen > div:last-child{border-bottom:none;}
+  .screen .n{position:absolute; left:10px; top:8px; width:24px; height:24px; border-radius:50%; background:var(--orange); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;}
+  .screen .bar{background:var(--parchment-deep);}
+  .screen .wave{height:84px; background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(46,107,88,.55) 6px 8px) center/100% 46px no-repeat, #fffaf0;}
+  .screen .wave span{background:#fffaf0cc; padding:1px 6px; border-radius:4px;}
+  .screen .panels{display:grid; grid-template-columns:1fr 1fr; gap:0; padding:0 !important;}
+  .screen .panels > div{position:relative; padding:9px 12px 9px 44px;}
+  .screen .panels > div + div{border-left:1px solid rgba(169,124,37,.25);}
+  ol.legend{margin:10px 0 0; padding-left:22px; font-size:15px;}
+
+  footer{background:var(--ink-navy); color:#c9d2e0; padding:26px 16px; text-align:center; font-size:14px;}
+  footer a{color:#fff;}
+  .noresults{display:none; text-align:center; color:var(--muted); padding:30px;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="./">
+      <span class="brand-mark">د</span>
+      <span class="brand-text">Audio Editor Help<small>Diin Islaam</small></span>
+    </a>
+    <div class="head-actions">
+      <a class="pill primary" href="./">Open the editor</a>
+      <a class="pill" href="../apps.html">All apps</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Help &amp; Tutorials</h1>
+  <p>Everything the audio editor can do, explained step by step — from opening your first file to splitting a recitation into lines, cleaning up a recording and saving MP3s.</p>
+  <div class="search">
+    <input id="q" type="search" placeholder="Search the help — e.g. noise, split, ringtone, shortcut…" aria-label="Search the help">
+    <span id="qInfo"></span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Contents"></nav>
+  <main id="content">
+    <details class="toc-mobile" id="tocMobile"><summary>Contents</summary><div></div></details>
+
+    <section class="card" id="start">
+      <h2>Getting started</h2>
+      <p class="lead">A full audio editor that runs in your web browser — on a computer, tablet or phone. There is nothing to install and no account.</p>
+      <div class="tip"><b>Private by design.</b> Your recordings never leave your device: opening, editing, effects and saving all happen inside the browser. Nothing is uploaded.</div>
+      <h3>What you can open and save</h3>
+      <ul>
+        <li><b>Open:</b> MP3, WAV, M4A/AAC, OGG, WebM, FLAC — and the sound track of most video files. You can open many files at once; each gets its own tab.</li>
+        <li><b>Save:</b> MP3 (small, good for sharing; 96–320 kbps) or WAV (lossless). Parts and batches are saved together in a .zip.</li>
+        <li><b>Projects:</b> <span class="m">File ▸ Save Project</span> keeps every open tab with its name and markers, so you can carry on later.</li>
+      </ul>
+      <h3>A tour of the screen</h3>
+      <div class="screen" aria-hidden="true">
+        <div class="bar"><span class="n">1</span>File · Edit · Effects · Control · Tools · Bookmark · View · Voice · Help</div>
+        <div><span class="n">2</span>▭ recitation.mp3 &nbsp; ▭ *Untitled 1 &nbsp; ＋</div>
+        <div><span class="n">3</span>▶ Play ■ ⏮ «5s 5s» ⏭ ⟲ Loop 1× │ ↶ Undo ↷ Redo Cut Copy Paste … │ ＋ − Fit</div>
+        <div><span class="n">4</span>0:01.250 &nbsp; Start … End … Length … Total … ▮▮▮ level</div>
+        <div class="wave"><span class="n">5</span><span>waveform · markers · fade handles · selection</span></div>
+        <div class="panels"><div><span class="n">6</span>Effects · Save</div><div><span class="n">7</span>Markers &amp; parts</div></div>
+        <div class="panels"><div><span class="n">8</span>Tools</div><div><span class="n">9</span>History · Recent files</div></div>
+      </div>
+      <ol class="legend">
+        <li><b>Menu bar</b> — every command, with its keyboard shortcut shown on the right.</li>
+        <li><b>Tabs</b> — one per open file. <b>＋</b> starts an empty file. A <b>*</b> means unsaved changes.</li>
+        <li><b>Toolbar</b> — playback, editing and zoom buttons.</li>
+        <li><b>Time bar</b> — cursor time, the selection (you can type exact times), total length and a level meter.</li>
+        <li><b>Waveform</b> — click to place the cursor, drag to select. Red flags are markers; the small squares at the top corners are fade handles.</li>
+        <li><b>Effects &amp; Save</b> — the most-used effects as buttons, and the MP3/WAV download buttons.</li>
+        <li><b>Markers &amp; parts</b> — split a recording into numbered parts.</li>
+        <li><b>Tools</b> — insert, generate, repeat, redact, split, join, batch convert.</li>
+        <li><b>History</b> — every change; click one to go back to it. <b>Recent files</b> reopen with one click.</li>
+      </ol>
+      <div class="tip"><b>Tip:</b> once you know the menus, hide panels 6–9 with <span class="m">View ▸ Show Effects &amp; Tools Panels</span> for a cleaner screen.</div>
+    </section>
+
+    <section class="card" id="tutorials">
+      <h2>Tutorials</h2>
+      <p class="lead">Short, step-by-step lessons. Each one works on the whole file, or only on the part you select — select first when you want to change just one part.</p>
+      <div class="grid2" id="tutIndex"></div>
+    </section>
+
+    <section class="card tut" id="t-open" data-title="Open, play and save a file">
+      <div class="tut-head"><h2>Open, play and save a file</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li>Press <b>Open audio file</b> (or <span class="m">File ▸ Open File…</span>, <kbd>Ctrl</kbd>+<kbd>O</kbd>) and choose a file. You can also drag files from your computer onto the page.</li>
+        <li>Press <b>▶ Play</b> or <kbd>Space</kbd>. Press it again to pause. Click anywhere on the waveform to play from there.</li>
+        <li>Zoom with <kbd>+</kbd> / <kbd>−</kbd> or <kbd>Ctrl</kbd>+mouse wheel; <b>Fit</b> (<kbd>F</kbd>) shows the whole file again. Scroll with the slider under the waveform or the mouse wheel.</li>
+        <li>To listen slower or faster without changing the file, pick a speed in the <b>1×</b> menu next to Loop.</li>
+        <li>In the <b>Save</b> panel choose <b>MP3</b> or <b>WAV</b>, then press <b>Download</b> (or <kbd>Ctrl</kbd>+<kbd>S</kbd>). To choose a new name first, use <span class="m">File ▸ Save File As…</span>.</li>
+      </ol>
+      <div class="tip"><b>Where does it go?</b> Saved files go to your browser's <em>Downloads</em> folder.</div>
+    </section>
+
+    <section class="card tut" id="t-record" data-title="Record from the microphone">
+      <div class="tut-head"><h2>Record from the microphone</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li>Press <b>● Record</b> (or <kbd>R</kbd>). The first time, your browser asks for permission to use the microphone — choose <em>Allow</em>.</li>
+        <li>Speak or recite. The button shows the recording time.</li>
+        <li>Press <b>■ Stop</b> (or <kbd>R</kbd> again). If no file was open, the recording opens as a new file; otherwise it is <b>inserted at the cursor</b> (or replaces the selection).</li>
+        <li>To record into a fresh file while others are open, press <b>＋</b> next to the tabs first, then Record.</li>
+      </ol>
+      <div class="tip"><b>For a clean recording:</b> hold the phone or microphone a hand's width away, record in a quiet room, and record a second of silence at the start — it is useful later for noise reduction.</div>
+    </section>
+
+    <section class="card tut" id="t-edit" data-title="Cut, copy, paste and delete">
+      <div class="tut-head"><h2>Cut, copy, paste and delete (remove a section)</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li><b>Select</b> the part by dragging across the waveform. <kbd>Shift</kbd>+click extends a selection. For exact times, type them in the <b>Start</b> and <b>End</b> boxes.</li>
+        <li>Press <kbd>Space</kbd> to check what's selected. Turn on <b>⟲ Loop</b> (<kbd>L</kbd>) to hear it repeat.</li>
+        <li>Press <b>Delete</b> (<kbd>Del</kbd>) to remove it, or <b>Cut</b> (<kbd>Ctrl</kbd>+<kbd>X</kbd>) to remove it and keep a copy.</li>
+        <li>To move it, click where it should go and <b>Paste</b> (<kbd>Ctrl</kbd>+<kbd>V</kbd>). Pasting over a selection replaces it.</li>
+        <li>Made a mistake? <b>Undo</b> (<kbd>Ctrl</kbd>+<kbd>Z</kbd>) — as many times as you need. The <b>History</b> panel lets you jump back to any earlier step.</li>
+      </ol>
+      <div class="tip"><b>Keep only one part:</b> select it and press <b>Trim to selection</b> (<kbd>T</kbd>).</div>
+    </section>
+
+    <section class="card tut" id="t-trim" data-title="Trim silence (Auto trim)">
+      <div class="tut-head"><h2>Trim silence at the ends — or shorten long pauses</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li>Open <span class="m">Edit ▸ Trim ▸ Auto Trim…</span> (or the <b>Auto trim…</b> button).</li>
+        <li>Choose what to trim: silence at the <b>start and end</b>, only the start, only the end — or <b>start and end, and shorten long pauses inside</b>.</li>
+        <li><b>Count as silence below</b>: −40 dB suits most recordings. If too much is cut, use a lower number (e.g. −50); if too little, a higher one (e.g. −35).</li>
+        <li><b>Leave this much silence</b> keeps a natural gap (250 ms by default).</li>
+        <li>Press <b>▶ Preview</b> to hear the first seconds, then <b>Trim</b>.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-split" data-title="Split a recitation into lines">
+      <div class="tut-head"><h2>Split a recitation or lesson into lines</h2><span class="tag">Popular</span></div>
+      <ol class="steps">
+        <li>Open the recording. In <b>Markers &amp; parts</b>, press <b>Auto-split at pauses</b>. A red marker is placed in the middle of every pause, and the parts are listed underneath.</li>
+        <li><b>Too many parts?</b> Lower the silence level (e.g. −45 dB) or raise <b>for at least</b> (e.g. 600 ms). <b>Too few?</b> Do the opposite. Press Auto-split again after changing.</li>
+        <li>Fix markers by hand: <b>drag</b> a marker to move it, press <kbd>M</kbd> to add one at the cursor, or ✕ in the list to remove one. <kbd>'</kbd> and <kbd>;</kbd> jump between markers.</li>
+        <li>Press <b>▶</b> next to a part to check it.</li>
+        <li>Press <b>Download all parts (.zip)</b> to save every part as a numbered file (name-01, name-02…), or ↓ to save one part. <span class="m">Edit ▸ Split File</span> opens the parts as separate tabs instead.</li>
+      </ol>
+      <div class="tip"><b>Naming:</b> the parts use the name in the file-name box above the waveform — change it before saving (e.g. <em>al-fatiha</em> → al-fatiha-01.mp3…).</div>
+    </section>
+
+    <section class="card tut" id="t-join" data-title="Join audio files">
+      <div class="tut-head"><h2>Join several files into one</h2><span class="tag">Popular</span></div>
+      <ol class="steps">
+        <li>Open <span class="m">File ▸ Join Audio Files…</span> (or <b>Join audio files</b> on the start screen, or <b>Join audio…</b> in Tools).</li>
+        <li>Open tabs are listed; press <b>＋ Add files…</b> to add more from your computer.</li>
+        <li>Tick what to include and put it in order with <b>↑ ↓</b>.</li>
+        <li>Optional: a <b>pause between files</b> (e.g. 1 s), or a <b>crossfade</b> to blend each file into the next (when the pause is 0). Leave <b>Put a marker at each join</b> on to find the joins later.</li>
+        <li>Press <b>Join</b>. The result opens in a new tab — the originals are not changed.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-fade" data-title="Fade in and fade out">
+      <div class="tut-head"><h2>Fade in and fade out</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li><b>Quickest:</b> drag the small square at the <b>top-left</b> of the waveform to the right — the shaded curve and label show the fade length. Let go to apply. The <b>top-right</b> square does the fade out.</li>
+        <li>With a selection, the squares sit on the selection's corners, so you can fade any part.</li>
+        <li>Or select the part and press <b>Fade in</b> / <b>Fade out</b> (<kbd>I</kbd> / <kbd>O</kbd>). <span class="m">Effects ▸ Fade In &amp; Out Selection</span> does both at once.</li>
+        <li>Change the shape in <span class="m">Effects ▸ Fade Type</span>: Linear, Smooth (default), Fast start or S-curve.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-volume" data-title="Volume: amplify, normalise and envelope">
+      <div class="tut-head"><h2>Make it louder, quieter or more even</h2><span class="tag">Beginner</span></div>
+      <ol class="steps">
+        <li><b>Normalise</b> (<kbd>Shift</kbd>+<kbd>N</kbd>) makes the loudest point just below the maximum — the safest way to make a quiet recording louder.</li>
+        <li><b>Amplify…</b> (<kbd>Shift</kbd>+<kbd>A</kbd>) changes the volume by a number of dB: +6 dB ≈ twice as loud, −6 dB ≈ half.</li>
+        <li><b>Compressor…</b> evens out loud and quiet parts, so a voice that fades in and out stays clear.</li>
+        <li><b>Volume envelope</b> (<kbd>E</kbd>): an orange line appears. Click it to add points, drag them up (louder, to 200%) or down (quieter, to silence). The waveform shows the result while you drag. Press <b>Apply</b> (<kbd>Enter</kbd>) — or <b>Cancel</b> (<kbd>Esc</kbd>).</li>
+      </ol>
+      <div class="tip"><b>Example:</b> to lower background music under a voice, select the part with the voice, press <kbd>E</kbd>, drag the line down to 30%, Apply.</div>
+    </section>
+
+    <section class="card tut" id="t-clean" data-title="Clean up a voice recording">
+      <div class="tut-head"><h2>Clean up a voice recording (noise, hum, hiss)</h2><span class="tag">Popular</span></div>
+      <p>The one-click way is <span class="m">Voice ▸ Voice Cleanup</span>. For more control, do it in this order:</p>
+      <ol class="steps">
+        <li><b>Remove rumble…</b> (Effects ▸ Clean up) cuts low hum, traffic and wind. 80–120 Hz suits speech.</li>
+        <li><b>Noise reduction</b> for steady hiss, fans or air-conditioning: select a second or so with <em>only</em> background noise (no voice), press <b>Grab noise sample</b>, press <kbd>Esc</kbd> to clear the selection, then <b>Noise reduction…</b>. Preview, adjust <b>Reduce noise by</b>, and apply.</li>
+        <li><b>Noise gate…</b> mutes whatever quiet noise is left between words.</li>
+        <li><b>Click / Pop Removal…</b> (Tools) smooths short clicks and mouth noises.</li>
+        <li>Finish with <b>Normalise</b>.</li>
+      </ol>
+      <div class="warn"><b>Don't overdo it:</b> too much noise reduction makes a voice sound watery or robotic. Preview, and use the smallest amount that sounds clean.</div>
+    </section>
+
+    <section class="card tut" id="t-filler" data-title="Remove filler words (um, uh)">
+      <div class="tut-head"><h2>Remove filler words (um, uh, er, ah)</h2><span class="tag">Speech</span></div>
+      <ol class="steps">
+        <li>Open <span class="m">Voice ▸ Remove Filler Words (um, uh)…</span>. The editor listens for hesitation sounds — a steady hum with a flat pitch and no consonants, usually between pauses.</li>
+        <li>Each one found is listed with how sure the editor is. Press <b>▶</b> to hear it in context, and <b>untick anything that is a real word</b>.</li>
+        <li>Not finding enough? Choose <b>High</b> sensitivity (and check more carefully). Too many? Choose <b>Low</b>.</li>
+        <li>Choose <b>Cut them out and close the gap</b> (the pause left is shortened to about ¼ second) or <b>Replace them with silence</b>, then <b>Remove ticked</b>.</li>
+      </ol>
+      <div class="warn"><b>Not for Qur'an recitation:</b> held vowels (madd) sound exactly like "um" and "ah" to the detector. It also can't recognise real words used as fillers ("like", "you know") — it listens to the sound, not the words.</div>
+    </section>
+
+    <section class="card tut" id="t-effects" data-title="Equaliser and sound effects">
+      <div class="tut-head"><h2>Equaliser and sound effects</h2><span class="tag">Intermediate</span></div>
+      <ol class="steps">
+        <li>Select a part (or nothing for the whole file) and open <span class="m">Effects ▸ Equalizer…</span>.</li>
+        <li>Pick a <b>preset</b> — <em>Voice clarity</em>, <em>Remove rumble / hum</em>, <em>Reduce hiss</em>… — or drag the sliders / the dots on the graph. The shaded area shows your audio's own frequencies. Double-click a band to reset it.</li>
+        <li>Press <b>▶ Preview</b>: the audio loops and every change is heard immediately. Then <b>Apply</b>.</li>
+        <li>Other effects work the same way — a small window with settings, <b>▶ Preview</b> and <b>Apply</b>: Echo, Reverb, Compressor, Pitch, Tempo, Speed, Stereo Pan…</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-tempo" data-title="Slow down a recitation (tempo, pitch, speed)">
+      <div class="tut-head"><h2>Slow down a recitation for memorising — tempo, pitch and speed</h2><span class="tag">Popular</span></div>
+      <ol class="steps">
+        <li><b>Just listening slower?</b> Use the <b>1×</b> menu in the toolbar (0.5×–2×). The file is not changed.</li>
+        <li><b>Save a slower version:</b> <span class="m">Effects ▸ Tempo…</span> and choose e.g. 80%. The voice keeps the same pitch.</li>
+        <li><b>Repeat a line:</b> select it and use <span class="m">Edit ▸ Repeat Loop…</span> — e.g. 3 times with a 1-second pause, to recite along.</li>
+        <li><b>Pitch…</b> makes the voice higher or lower without changing the speed. <b>Speed…</b> changes both together, like a tape.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-tabs" data-title="Work with several files">
+      <div class="tut-head"><h2>Work with several files — copy between them and mix</h2><span class="tag">Intermediate</span></div>
+      <ol class="steps">
+        <li>Open several files (they become tabs), or press <b>＋</b> for an empty one. <kbd>[</kbd> and <kbd>]</kbd> switch tabs.</li>
+        <li>Copy in one tab (<kbd>Ctrl</kbd>+<kbd>C</kbd>), switch tabs, click where it should go and paste (<kbd>Ctrl</kbd>+<kbd>V</kbd>). Different sample rates are converted automatically.</li>
+        <li><b>Paste mix</b> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>) plays the copied audio <em>on top of</em> what's there instead of inserting it.</li>
+        <li><b>Mix with file…</b> layers another tab or file at a chosen volume, from the cursor or the start — e.g. a voice over quiet background audio.</li>
+        <li><b>Duplicate</b> (<kbd>Ctrl</kbd>+<kbd>D</kbd>) opens a copy in a new tab, so you can try changes without touching the original.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-ringtone" data-title="Make a ringtone">
+      <div class="tut-head"><h2>Make a ringtone</h2><span class="tag">Fun</span></div>
+      <ol class="steps">
+        <li>Select the part you want (or click where it should start).</li>
+        <li>Open <span class="m">Tools ▸ Create Ringtone…</span>, choose the length (30 s is usual) and the fades.</li>
+        <li>Press <b>Save ringtone</b>. It is made loud and saved in the format chosen in the Save panel (MP3 works on most phones).</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-music" data-title="Key and beat detection">
+      <div class="tut-head"><h2>Key and beat detection</h2><span class="tag">Music</span></div>
+      <ol class="steps">
+        <li><span class="m">Tools ▸ Key Detector…</span> shows the musical key (e.g. <em>A minor</em>), how sure it is, and a chart of which notes are used.</li>
+        <li>To move the music to another key, choose it under <b>Key changer</b> and press <b>Change key</b> — the speed stays the same.</li>
+        <li><span class="m">Tools ▸ Automatic Beat Detection…</span> finds the tempo in BPM. Check it with <b>▶ Play with click</b>; if it's twice too fast or slow, press <b>½×</b> or <b>2×</b>.</li>
+        <li>Press <b>Add a marker on every beat</b> (or every bar) to cut or loop exactly on the beat.</li>
+      </ol>
+      <div class="tip">These are made for music with harmony and a steady rhythm. On speech or recitation there is no key or beat to find.</div>
+    </section>
+
+    <section class="card tut" id="t-batch" data-title="Batch convert many files">
+      <div class="tut-head"><h2>Convert or clean up many files at once</h2><span class="tag">Intermediate</span></div>
+      <ol class="steps">
+        <li>Open <span class="m">File ▸ Batch Converter…</span> and choose all the files.</li>
+        <li>Choose MP3 or WAV, and what to do to each: trim silent ends, normalise, convert to mono, fade in / out.</li>
+        <li>Press <b>Convert</b>. All the results are saved together in one .zip. Your open tabs are not changed.</li>
+      </ol>
+    </section>
+
+    <section class="card tut" id="t-project" data-title="Save your work and continue later">
+      <div class="tut-head"><h2>Save your work and continue later (projects)</h2><span class="tag">Intermediate</span></div>
+      <ol class="steps">
+        <li><span class="m">File ▸ Save Project</span> saves every open tab — audio, names and markers — in one <em>…-project.zip</em> file.</li>
+        <li>Later, <span class="m">File ▸ Open Project…</span> (or just open that .zip) brings all the tabs back exactly as they were.</li>
+        <li>Projects are lossless, so saving and reopening never lowers the quality.</li>
+      </ol>
+      <div class="warn"><b>Remember:</b> nothing is kept on a server. If you close the page without saving, your changes are gone. The browser warns you if a tab has unsaved changes.</div>
+    </section>
+
+    <section class="card" id="menus">
+      <h2>Menu reference</h2>
+      <p class="lead">What every menu item does. Items are greyed out when they can't be used — for example Cut needs a selection.</p>
+
+      <h3>File</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>New File <kbd>N</kbd></td><td>An empty tab to record, paste or drop audio into.</td></tr>
+        <tr><td>Open File… <kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Open one or more audio files (or a saved project).</td></tr>
+        <tr><td>Recent Files</td><td>Reopen files you used before (kept in this browser only).</td></tr>
+        <tr><td>Save File <kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Download the file as MP3 or WAV.</td></tr>
+        <tr><td>Save File As… <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>Choose the name, format and MP3 quality, then download.</td></tr>
+        <tr><td>Save Selected Region As…</td><td>Download only the selection.</td></tr>
+        <tr><td>Save All Files (.zip)</td><td>Every open tab in one zip.</td></tr>
+        <tr><td>Save Format</td><td>Switch between MP3 and WAV.</td></tr>
+        <tr><td>Open / Save Project</td><td>Keep all tabs with their markers and carry on later.</td></tr>
+        <tr><td>Join Audio Files…</td><td>Join tabs and files end to end.</td></tr>
+        <tr><td>Batch Converter…</td><td>Convert or process many files at once.</td></tr>
+        <tr><td>Close File · Close All</td><td>Close the current tab or all tabs (asks first if something isn't saved).</td></tr>
+      </table></div>
+
+      <h3>Edit</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>Undo · Redo</td><td>Step back or forward through your changes.</td></tr>
+        <tr><td>History Manager</td><td>Shows the History panel — click any step to go back to it.</td></tr>
+        <tr><td>Cut · Copy · Paste · Delete</td><td>The usual editing, also between tabs.</td></tr>
+        <tr><td>Duplicate <kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Copy of the selection or whole file in a new tab.</td></tr>
+        <tr><td>Paste Mix</td><td>Layer the copied audio over the existing audio.</td></tr>
+        <tr><td>Select ▸</td><td>All, none, start to cursor, cursor to end, or the part between markers.</td></tr>
+        <tr><td>Jump to Location… <kbd>G</kbd></td><td>Move the cursor to an exact time.</td></tr>
+        <tr><td>Repeat Loop…</td><td>Repeat the selection several times, with an optional pause.</td></tr>
+        <tr><td>Mix with File… · Insert File…</td><td>Layer or insert another file / tab at the cursor.</td></tr>
+        <tr><td>Silence ▸</td><td>Silence the selection, or insert silence.</td></tr>
+        <tr><td>Trim ▸</td><td>Trim to selection, or Auto Trim silence and pauses.</td></tr>
+        <tr><td>Cleanup ▸</td><td>Noise sample, noise reduction, noise gate, click removal, remove rumble / hiss.</td></tr>
+        <tr><td>Redact / Beep…</td><td>Cover the selection with a beep or silence.</td></tr>
+        <tr><td>Split File ▸</td><td>Open each part as its own tab — at markers, the cursor, or the pauses.</td></tr>
+        <tr><td>Convert ▸</td><td>Mono / stereo, swap left and right, change sample rate.</td></tr>
+      </table></div>
+
+      <h3>Effects</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>Amplify… · Normalize</td><td>Change the volume by dB, or bring the peak to just below maximum.</td></tr>
+        <tr><td>Mute Channel ▸</td><td>Silence the left or right channel.</td></tr>
+        <tr><td>Fade In · Fade Out · Fade In &amp; Out</td><td>Fades, using the shape chosen in Fade Type.</td></tr>
+        <tr><td>Fade Type ▸</td><td>Linear, Smooth, Fast start or S-curve.</td></tr>
+        <tr><td>Envelope… <kbd>E</kbd></td><td>Draw how the volume changes over time.</td></tr>
+        <tr><td>Stereo Pan…</td><td>Move the sound left or right.</td></tr>
+        <tr><td>Equalizer…</td><td>10-band graphic equaliser with presets and live preview.</td></tr>
+        <tr><td>Echo · Reverb · Compressor</td><td>Repeats, room sound, and evening out the volume.</td></tr>
+        <tr><td>Pitch · Tempo · Speed</td><td>Higher/lower voice; slower/faster with the same voice; or both together.</td></tr>
+        <tr><td>Reverse · Invert · Silence</td><td>Play backwards, flip the waveform, or silence.</td></tr>
+      </table></div>
+
+      <h3>Control</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>Play / Pause · Stop</td><td><kbd>Space</kbd> plays the selection, or from the cursor.</td></tr>
+        <tr><td>Record <kbd>R</kbd></td><td>Record from the microphone into the current file.</td></tr>
+        <tr><td>Loop Selection <kbd>L</kbd></td><td>Repeat the selection while playing.</td></tr>
+        <tr><td>Go to Start / End · Back / Forward 5 s</td><td>Move around quickly (<kbd>Home</kbd> <kbd>End</kbd> <kbd>,</kbd> <kbd>.</kbd>).</td></tr>
+        <tr><td>Playback Speed ▸</td><td>Listen at 0.5×–2× without changing the file.</td></tr>
+      </table></div>
+
+      <h3>Tools</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>Frequency Analysis (FFT)…</td><td>A graph of the frequencies in the audio, with the loudest one and its musical note.</td></tr>
+        <tr><td>Find Peak Sample</td><td>Jumps to the loudest point.</td></tr>
+        <tr><td>Key Detector… · Key Changer…</td><td>Find the musical key; move to another key.</td></tr>
+        <tr><td>Automatic Beat Detection…</td><td>Tempo in BPM, click track, markers on beats.</td></tr>
+        <tr><td>Remove Filler Words…</td><td>Find and remove um / uh sounds in speech.</td></tr>
+        <tr><td>Noise Removal · Click / Pop Removal</td><td>Clean up hiss and clicks.</td></tr>
+        <tr><td>Generate Tone… · Create Ringtone… · Batch Converter…</td><td>Insert tones or silence; make a ringtone; convert many files.</td></tr>
+      </table></div>
+
+      <h3>Bookmark · View · Voice</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Item</th><th>What it does</th></tr>
+        <tr><td>Add Marker <kbd>M</kbd></td><td>Marker at the cursor; <kbd>'</kbd> / <kbd>;</kbd> jump to the next / previous one.</td></tr>
+        <tr><td>Auto-split at Pauses · Markers on Beats</td><td>Place markers automatically.</td></tr>
+        <tr><td>Save All Parts · Split Parts into Tabs</td><td>Use the markers to cut the file.</td></tr>
+        <tr><td>Zoom ▸ · Taller Waveform · Show Panels</td><td>Change what you see.</td></tr>
+        <tr><td>Voice Cleanup · Audio Enhancer</td><td>One-click cleaner, clearer voice.</td></tr>
+        <tr><td>Amplify Vocals · Isolate Voice</td><td>Bring the voice forward, or keep only the speech frequencies from the centre.</td></tr>
+        <tr><td>Reduce Voice (karaoke)</td><td>Removes a centred voice from stereo music.</td></tr>
+      </table></div>
+    </section>
+
+    <section class="card" id="keys">
+      <h2>Keyboard shortcuts</h2>
+      <p class="lead">Shortcuts work when you're not typing in a box. Press <kbd>?</kbd> in the editor to see them at any time.</p>
+      <div class="table-wrap"><table>
+        <tr><th>Keys</th><th>Action</th></tr>
+        <tr><td><kbd>Space</kbd></td><td>Play / pause</td></tr>
+        <tr><td><kbd>N</kbd> · <kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>New empty tab · open files</td></tr>
+        <tr><td><kbd>R</kbd> or <kbd>F5</kbd></td><td>Start / stop recording</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd> · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></td><td>Save · save as</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> · <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Undo · redo</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>C</kbd> <kbd>V</kbd></td><td>Cut · copy · paste</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></td><td>Paste mix</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Duplicate into a new tab</td></tr>
+        <tr><td><kbd>Del</kbd></td><td>Delete the selection</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>A</kbd> · <kbd>Esc</kbd></td><td>Select all · clear the selection</td></tr>
+        <tr><td><kbd>T</kbd></td><td>Trim to selection</td></tr>
+        <tr><td><kbd>I</kbd> · <kbd>O</kbd></td><td>Fade in · fade out</td></tr>
+        <tr><td><kbd>Shift</kbd>+<kbd>A</kbd> · <kbd>Shift</kbd>+<kbd>N</kbd></td><td>Amplify… · normalise</td></tr>
+        <tr><td><kbd>E</kbd></td><td>Volume envelope (<kbd>Enter</kbd> apply, <kbd>Esc</kbd> cancel)</td></tr>
+        <tr><td><kbd>M</kbd> · <kbd>'</kbd> · <kbd>;</kbd></td><td>Add marker · next marker · previous marker</td></tr>
+        <tr><td><kbd>L</kbd></td><td>Loop the selection on / off</td></tr>
+        <tr><td><kbd>Home</kbd> · <kbd>End</kbd></td><td>Go to start · end</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd> (<kbd>Shift</kbd>)</td><td>Move the cursor 0.1 s (1 s)</td></tr>
+        <tr><td><kbd>,</kbd> · <kbd>.</kbd></td><td>Back · forward 5 seconds</td></tr>
+        <tr><td><kbd>G</kbd></td><td>Jump to a time</td></tr>
+        <tr><td><kbd>+</kbd> · <kbd>−</kbd> · <kbd>Z</kbd> · <kbd>F</kbd></td><td>Zoom in · out · to selection · fit</td></tr>
+        <tr><td><kbd>[</kbd> · <kbd>]</kbd></td><td>Previous · next tab</td></tr>
+        <tr><td><kbd>?</kbd></td><td>Quick guide</td></tr>
+      </table></div>
+    </section>
+
+    <section class="card" id="faq">
+      <h2>Questions &amp; troubleshooting</h2>
+      <h3>The page looks old or a new feature is missing</h3>
+      <p>Your browser may be showing a saved copy. Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> (Mac: <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>). On a phone, close the tab and open the page again.</p>
+      <h3>Recording doesn't start</h3>
+      <p>Allow microphone access when the browser asks. If you said no before, click the lock icon next to the address and allow the microphone, then reload.</p>
+      <h3>Nothing plays</h3>
+      <p>Check the volume and that the tab isn't muted. On iPhone, turn off the silent switch.</p>
+      <h3>My file won't open</h3>
+      <p>Most MP3, WAV, M4A and OGG files work. Some protected or unusual files (e.g. WMA in some browsers) don't — convert them first, or try another browser such as Chrome or Edge.</p>
+      <h3>Large files are slow</h3>
+      <p>Everything runs on your device, so an hour-long file needs a lot of memory. Split long recordings first, or work on a selection.</p>
+      <h3>Where are my files saved?</h3>
+      <p>In your browser's <em>Downloads</em> folder. Recent files are remembered in this browser only; clearing your browsing data removes them.</p>
+      <h3>Is it really private?</h3>
+      <p>Yes. The editor is a web page that works entirely inside your browser. Your audio is never sent anywhere.</p>
+    </section>
+
+    <p class="noresults" id="noResults">Nothing matches your search. Try another word, e.g. <em>trim</em>, <em>noise</em> or <em>MP3</em>.</p>
+  </main>
+</div>
+
+<footer>
+  <a href="./">Open the audio editor</a> · <a href="../apps.html">All apps</a> · © <span id="year"></span> Diin Islaam
+</footer>
+
+<script>
+(() => {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const cards = [...document.querySelectorAll('section.card')];
+  const tuts = cards.filter(c => c.classList.contains('tut'));
+
+  // Tutorial index cards
+  const idx = document.getElementById('tutIndex');
+  tuts.forEach(t => {
+    const first = t.querySelector('ol.steps li');
+    const d = document.createElement('div'); d.className = 'mini';
+    d.innerHTML = `<h4></h4><p></p><a href="#${t.id}">Open tutorial →</a>`;
+    d.querySelector('h4').textContent = t.dataset.title;
+    d.querySelector('p').textContent = (first ? first.textContent : '').slice(0, 110).trim() + '…';
+    idx.appendChild(d);
+  });
+
+  // Contents (sidebar + mobile)
+  const toc = document.getElementById('toc'), mob = document.querySelector('#tocMobile div');
+  const add = (href, text, sub) => {
+    for (const box of [toc, mob]) { const a = document.createElement('a'); a.href = href; a.textContent = text; if (sub) a.className = 'sub'; box.appendChild(a); }
+  };
+  toc.innerHTML = '<h2>Contents</h2>';
+  cards.forEach(c => {
+    if (c.classList.contains('tut')) add('#' + c.id, c.dataset.title, true);
+    else add('#' + c.id, c.querySelector('h2').textContent, false);
+  });
+  mob.addEventListener('click', e => { if (e.target.tagName === 'A') document.getElementById('tocMobile').open = false; });
+  // The index above was built after load and moved everything down: go to the requested section again.
+  if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) requestAnimationFrame(() => t.scrollIntoView({ behavior: 'instant', block: 'start' })); }
+
+  // Highlight the section on screen
+  const links = [...toc.querySelectorAll('a')];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-20% 0px -70% 0px' });
+  cards.forEach(c => io.observe(c));
+
+  // Search
+  const q = document.getElementById('q'), info = document.getElementById('qInfo'), none = document.getElementById('noResults');
+  q.addEventListener('input', () => {
+    const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    cards.forEach(c => {
+      const hit = !words.length || words.every(w => c.textContent.toLowerCase().includes(w));
+      c.classList.toggle('hidden', !hit); if (hit) shown++;
+    });
+    info.textContent = words.length ? `${shown} section${shown === 1 ? '' : 's'} found` : '';
+    none.style.display = shown ? 'none' : 'block';
+  });
+})();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
