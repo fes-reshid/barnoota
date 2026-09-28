@@ -3,53 +3,11 @@
   "productName": "Hisnul Muslim",
   "version": "1.0.0",
   "private": true,
-  "description": "Hisnul Muslim - Zikrii Musliimaa, as a Windows desktop app.",
-  "main": "main.js",
+  "description": "Hisnul Muslim - Zikrii Musliimaa, as a Windows desktop app (Tauri).",
   "scripts": {
-    "sync": "node sync.js",
-    "start": "npm run sync && electron .",
-    "dist:win": "npm run sync && electron-builder --win nsis portable"
+    "dist:win": "tauri build --target x86_64-pc-windows-gnu --bundles nsis"
   },
   "devDependencies": {
-    "electron": "^33.2.0",
-    "electron-builder": "^25.1.8"
-  },
-  "build": {
-    "appId": "com.diinislaam.hisnulmuslim",
-    "productName": "Hisnul Muslim",
-    "copyright": "Copyright (c) Feysel Mustefa",
-    "publish": null,
-    "files": [
-      "main.js",
-      "www/**/*"
-    ],
-    "directories": {
-      "output": "dist",
-      "buildResources": "build"
-    },
-    "win": {
-      "icon": "build/icon.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    }
+    "@tauri-apps/cli": "^2"
   }
 }
