@@ -58,6 +58,7 @@
   }
   .btn:hover:not(:disabled){background:var(--green-bg); border-color:var(--green);}
   .btn:disabled{opacity:.4; cursor:default;}
+  .btn[hidden]{display:none;}
   .btn.primary{background:var(--green); border-color:var(--green); color:var(--parchment);}
   .btn.primary:hover:not(:disabled){background:var(--green-dark);}
   .btn.big{font-size:16px; padding:11px 22px; border-radius:26px;}
@@ -233,6 +234,7 @@
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
       <button class="btn big" id="newBtn2" type="button" title="Start an empty file to paste or record into (N)">＋ New empty</button>
       <button class="btn big" id="joinBtn2" type="button" title="Pick several audio files and join them into one">Join audio files</button>
+      <button class="btn big" id="ttsBtn2" type="button" title="Type text and turn it into speech">Text to speech</button>
     </div>
     <div id="emptyRecent" hidden>
       <h2>Recent files</h2>
@@ -325,7 +327,7 @@
       <input id="scroll" type="range" min="0" max="1000" value="0" aria-label="Scroll waveform">
       <p class="hint">
         Click to place the cursor · drag to select · <kbd>Shift</kbd>+click to extend ·
-        drag a red marker to move it · drag the small squares at the top corners inwards to fade in / out · <kbd>Ctrl</kbd>+scroll to zoom ·
+        drag a red marker to move it · drag the bar under a selection to move it, or its edges to resize it · drag the small squares at the top corners inwards to fade in / out · <kbd>Ctrl</kbd>+scroll to zoom ·
         <kbd>Space</kbd> play · <kbd>Del</kbd> delete · <kbd>M</kbd> marker ·
         press <kbd>?</kbd> for the guide and all shortcuts
       </p>
@@ -489,6 +491,8 @@
       <li>The <strong>+</strong> next to the tabs starts an <strong>empty file</strong>: record into it, paste audio copied from another tab, or drop a file on it.</li>
       <li>Click the waveform to place the cursor, drag to select. Effects apply to the selection — or to the whole file when nothing is selected.</li>
       <li><strong>Volume envelope</strong> (<kbd>E</kbd>): an orange line appears over the selection (or whole file). Click the line to add points and drag them up (louder, up to 200%) or down (quieter, down to silence); the waveform shows the result as you go. Double-click or right-click a point to remove it, <strong>▶ Preview</strong> to listen, then <strong>Apply</strong>.</li>
+      <li><strong>Move or resize a selection:</strong> drag the gold bar along the bottom of the selection to slide it left or right (same length). Drag either edge to make it longer or shorter — the other edge stays where it is.</li>
+      <li><strong>Text to speech</strong> (Voice or Tools menu, or the start screen): type text, pick a language such as Afaan Oromoo, Arabic or English, press ▶ Preview, then insert it at the cursor or open it as a new tab.</li>
       <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
 
@@ -593,6 +597,28 @@
   </div>
 </dialog>
 <input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
+<dialog id="ttsDlg" class="dlg eq" aria-labelledby="ttsTitle">
+  <div class="eq-top"><h2 id="ttsTitle">Text to speech</h2></div>
+  <p class="info" style="margin:0 0 10px">Type or paste text and it is turned into speech — right here in your browser, in more than 100 languages including <strong>Afaan Oromoo</strong>, <strong>Arabic</strong> and <strong>English</strong>. The voice is synthetic (robot-like), good for announcements, prompts and pronunciation practice.</p>
+  <textarea id="ttsText" dir="auto" rows="5" style="width:100%; font:16px/1.5 var(--ui); padding:10px; border:1px solid var(--gold-soft); border-radius:8px; background:#fff; resize:vertical" placeholder="Type what should be spoken…"></textarea>
+  <div class="row" style="margin-top:10px">
+    <label>Voice <select id="ttsVoice" class="num" style="width:auto; max-width:230px"></select></label>
+    <label><select id="ttsGender" class="num" style="width:auto"><option value="">Male</option><option value="+f3">Female</option></select></label>
+  </div>
+  <div class="row">
+    <label>Speed <input class="num" id="ttsSpeed" type="number" value="150" min="80" max="450" step="10"> words/min</label>
+    <label>Pitch <input class="num" id="ttsPitch" type="number" value="50" min="0" max="99" step="5"></label>
+    <label>Pause between words <input class="num" id="ttsGap" type="number" value="0" min="0" max="50" step="1"> ×10 ms</label>
+  </div>
+  <p class="info" id="ttsStatus" style="margin:6px 0 10px">The speech engine (18 MB) downloads the first time you use it, then stays cached.</p>
+  <div class="actions">
+    <button class="btn" id="ttsPlay" type="button">▶ Preview</button>
+    <span style="flex:1"></span>
+    <button class="btn" id="ttsCancel" type="button">Close</button>
+    <button class="btn" id="ttsNew" type="button" title="Open the speech as a new file">New tab</button>
+    <button class="btn primary" id="ttsInsert" type="button" title="Insert at the cursor (or replace the selection)">Insert at cursor</button>
+  </div>
+</dialog>
 <dialog id="fillDlg" class="dlg eq" aria-labelledby="fillTitle">
   <div class="eq-top"><h2 id="fillTitle">Remove filler words <span class="info" id="fillScope"></span></h2></div>
   <p class="info" style="margin:0 0 10px">Finds hesitation sounds — <em>um, uh, er, ah, mm</em> — by how they sound: a steady hum with a flat pitch and no consonants, usually between pauses. Works in any language. Listen to each one (▶) and untick anything that is a real word. <strong>Not for Qur'an recitation</strong>: long held vowels (madd) sound just like fillers.</p>
@@ -1297,6 +1323,28 @@ function draw(playhead) {
     g.fillStyle = css('--ink-navy'); g.fillRect(lx, ly, tw, 20);
     g.fillStyle = '#fff'; g.textBaseline = 'middle'; g.fillText(label, lx + 6, ly + 10);
   }
+  // Selection holder (drag to move the selection) and edge grips (drag to resize it).
+  const sh = selHandles();
+  if (sh) {
+    const { x0, x1, barY } = sh, bx0 = Math.max(0, x0), bx1 = Math.min(W, x1);
+    if (bx1 > bx0) {
+      g.fillStyle = drag && drag.kind === 'move' ? css('--gold') : 'rgba(169,124,37,.55)';
+      g.fillRect(bx0, barY, bx1 - bx0, SEL_BAR);
+      g.fillStyle = '#fff';
+      const cx = (bx0 + bx1) / 2;
+      if (bx1 - bx0 > 150) {
+        g.font = '600 11px ' + css('--ui'); g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillText('⟷  drag to move the selection', cx, barY + SEL_BAR / 2 + 0.5); g.textAlign = 'left';
+      } else if (bx1 - bx0 > 16) for (const dx of [-4, 0, 4]) g.fillRect(Math.round(cx + dx), barY + 3, 1.5, SEL_BAR - 6);
+    }
+    for (const x of [x0, x1]) {
+      if (x < -6 || x > W + 6) continue;
+      const gy = RULER + (H - RULER - SEL_BAR) / 2 - 18;
+      g.fillStyle = css('--gold'); g.fillRect(Math.round(x) - 4, gy, 8, 36);
+      g.fillStyle = '#fff'; g.fillRect(Math.round(x) - 1.5, gy + 8, 1, 20); g.fillRect(Math.round(x) + 0.5, gy + 8, 1, 20);
+    }
+  }
+
   // Fade handles: small squares at the top corners of the selection (or of the file).
   for (const hd of fadeHandles()) {
     if (hd.x < -FADE_H || hd.x > W) continue;
@@ -2982,6 +3030,102 @@ on('keyChange', () => {
 });
 on('keyClose', () => $('keyDlg').close());
 
+/* ---------- Text to speech (eSpeak-NG compiled to WebAssembly, runs in the browser) ---------- */
+const TTS_SOURCES = ['https://cdn.jsdelivr.net/npm/espeak-ng@1.0.2/dist/', 'https://unpkg.com/espeak-ng@1.0.2/dist/'];
+let ttsEngine = null; // Promise<{ factory, wasmBinary }>
+function loadTTS() {
+  if (ttsEngine) return ttsEngine;
+  ttsEngine = (async () => {
+    let lastErr;
+    for (const base of TTS_SOURCES) {
+      try {
+        $('ttsStatus').textContent = 'Downloading the speech engine (18 MB, first time only)…';
+        const [mod, wasm] = await Promise.all([import(base + 'espeak-ng.js'), fetch(base + 'espeak-ng.wasm').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })]);
+        return { factory: mod.default, wasmBinary: new Uint8Array(wasm) };
+      } catch (e) { lastErr = e; }
+    }
+    ttsEngine = null;
+    throw lastErr || new Error('Could not load the speech engine');
+  })();
+  return ttsEngine;
+}
+// eSpeak runs like its command-line tool: one run per sentence batch, writing a WAV file.
+async function runEspeak(args, print) {
+  const { factory, wasmBinary } = await loadTTS();
+  return factory({ arguments: args, wasmBinary: wasmBinary.slice(0), print: print || (() => {}), printErr: () => {} });
+}
+const TTS_TOP = [['om', 'Afaan Oromoo'], ['ar', 'Arabic'], ['en-us', 'English (US)'], ['en', 'English (UK)'], ['am', 'Amharic'], ['so', 'Somali'], ['sw', 'Swahili'], ['fr', 'French'], ['tr', 'Turkish'], ['ur', 'Urdu'], ['id', 'Indonesian'], ['ms', 'Malay']];
+let ttsVoicesLoaded = false;
+async function fillTTSVoices() {
+  const sel = $('ttsVoice');
+  if (!sel.options.length) {
+    const g1 = document.createElement('optgroup'); g1.label = 'Common';
+    TTS_TOP.forEach(([v, l]) => g1.appendChild(new Option(l, v)));
+    sel.appendChild(g1);
+    try { const last = localStorage.getItem('ae-tts-voice'); if (last) sel.value = last; else sel.value = 'en-us'; } catch (e) { sel.value = 'en-us'; }
+  }
+  if (ttsVoicesLoaded) return;
+  // Add every other language the engine has.
+  const lines = [];
+  await runEspeak(['--voices'], l => lines.push(l));
+  const have = new Set(TTS_TOP.map(t => t[0])), g2 = document.createElement('optgroup'); g2.label = 'All languages';
+  lines.slice(1).map(l => l.trim().split(/\s+/)).filter(p => p.length >= 4 && !have.has(p[1]))
+    .map(p => [p[1], p[3].replace(/_/g, ' ')]).sort((a, b) => a[1].localeCompare(b[1]))
+    .forEach(([v, l]) => g2.appendChild(new Option(l, v)));
+  sel.appendChild(g2);
+  ttsVoicesLoaded = true;
+}
+async function synthesize() {
+  const text = $('ttsText').value.trim();
+  if (!text) { toast('Type some text first.'); return null; }
+  const voice = $('ttsVoice').value + $('ttsGender').value;
+  try { localStorage.setItem('ae-tts-voice', $('ttsVoice').value); } catch (e) {}
+  $('ttsStatus').textContent = 'Speaking…';
+  const es = await runEspeak(['-v', voice, '-s', String(clamp(+$('ttsSpeed').value || 150, 80, 450)), '-p', String(clamp(+$('ttsPitch').value || 0, 0, 99)),
+    '-g', String(clamp(+$('ttsGap').value || 0, 0, 50)), '-w', 'speech.wav', ' ' + text.replace(/\s+/g, ' ')]);
+  const w = parseWav(es.FS.readFile('speech.wav'));
+  $('ttsStatus').textContent = `Ready: ${fmt(w.ch[0].length / w.sr)} of speech.`;
+  return w;
+}
+async function ttsDo(action) {
+  const btns = ['ttsPlay', 'ttsNew', 'ttsInsert'].map($);
+  btns.forEach(b => (b.disabled = true));
+  try {
+    const w = await synthesize();
+    if (!w) return;
+    if (action === 'play') {
+      stopPreview(); stopPlay();
+      const ctx = audio(); ctx.resume();
+      const buf = ctx.createBuffer(1, w.ch[0].length, w.sr); buf.copyToChannel(w.ch[0], 0);
+      const src = ctx.createBufferSource(); src.buffer = buf; src.connect(ctx.destination); src.start(); previewSrc = src;
+      return;
+    }
+    const name = 'Speech - ' + $('ttsText').value.trim().split(/\s+/).slice(0, 4).join(' ').replace(/[\\/:*?"<>|]+/g, '');
+    $('ttsDlg').close();
+    if (action === 'new' || !doc) { newDocument(makeDoc(w.sr, w.ch), name, false); dirty = true; refresh(); toast('Speech opened in a new tab'); return; }
+    stopPlay();
+    adoptFormat(w.sr, 1);
+    const ins = w.sr === doc.sr ? w.ch : await resample(w.ch, w.sr, doc.sr);
+    insertAt(ins, 'Text to speech');
+  } catch (e) {
+    console.error(e);
+    $('ttsStatus').textContent = 'The speech engine could not be loaded — check your internet connection and try again.';
+  } finally { btns.forEach(b => (b.disabled = false)); }
+}
+async function openTTS() {
+  $('ttsDlg').showModal();
+  $('ttsText').focus();
+  $('ttsInsert').hidden = !doc;
+  try { await fillTTSVoices(); $('ttsStatus').textContent = 'Speech engine ready.'; }
+  catch (e) { console.error(e); $('ttsStatus').textContent = 'The speech engine could not be loaded — check your internet connection and try again.'; }
+}
+on('ttsPlay', () => ttsDo('play'));
+on('ttsBtn2', openTTS);
+on('ttsNew', () => ttsDo('new'));
+on('ttsInsert', () => ttsDo('insert'));
+on('ttsCancel', () => $('ttsDlg').close());
+$('ttsDlg').addEventListener('close', stopPreview);
+
 /* ---------- Filler words (um, uh, er…) ---------- */
 // No speech recognition (that would mean uploading the audio): fillers are found acoustically.
 // A filled pause is a stretch of sound that is almost all voiced, holds a very steady pitch,
@@ -3372,7 +3516,7 @@ const HELP_TUTORIALS = [
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
   ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
-  ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
+  ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-project', 'Save your work and continue later'],
 ];
 // Opens in a new tab so the editor (and unsaved audio) stays open.
 function openHelp(id) { window.open('help.html' + (id ? '#' + id : ''), '_blank', 'noopener'); }
@@ -3505,6 +3649,7 @@ const MENUS = [
     { label: 'Key Changer…', run: () => openKey(true), en: has.audio },
     { label: 'Automatic Beat Detection…', run: openBeats, en: has.audio },
     { label: 'Remove Filler Words (um, uh)…', run: openFillers, en: has.audio },
+    { label: 'Text to Speech…', run: openTTS },
     '-',
     { label: 'Noise Removal…', run: fxNoise, en: has.audio },
     { label: 'Click / Pop Removal…', run: removeClicks, en: has.audio },
@@ -3538,6 +3683,7 @@ const MENUS = [
   ] },
   { label: 'Voice', items: [
     { mhead: 'One-click voice tools' },
+    { label: 'Text to Speech…', run: openTTS, title: 'Type text and turn it into speech' },
     { label: 'Remove Filler Words (um, uh)…', run: openFillers, en: has.audio, title: 'Find and remove hesitation sounds' },
     { label: 'Voice Cleanup', run: voiceCleanup, en: has.audio, title: 'Remove rumble → reduce noise → even out volume → normalise' },
     { label: 'Audio Enhancer', run: audioEnhancer, en: has.audio, title: 'Clearer, fuller, evenly loud voice' },
@@ -3774,10 +3920,41 @@ function markerNear(clientX) {
   doc.markers.forEach((m, i) => { const d = Math.abs((m - viewStart) / spp - x); if (d < bestD) { bestD = d; best = i; } });
   return best;
 }
+// Selection holder (bottom bar) and edge grips, like WavePad: move or resize a selection
+// by dragging, without starting a new one.
+const SEL_BAR = 16;
+function selHandles() {
+  if (!doc || !hasSel() || env) return null;
+  return { x0: (selA - viewStart) / spp, x1: (selB - viewStart) / spp, barY: canvas.clientHeight - SEL_BAR };
+}
+function selHandleAt(clientX, clientY) {
+  const h = selHandles(); if (!h) return null;
+  const r = canvas.getBoundingClientRect(), x = clientX - r.left, y = clientY - r.top;
+  if (y < RULER_H + FADE_H + 6) return null; // leave the ruler and fade handles alone
+  if (Math.abs(x - h.x0) <= 6) return 'edgeA';
+  if (Math.abs(x - h.x1) <= 6) return 'edgeB';
+  if (y >= h.barY - 2 && x > h.x0 && x < h.x1) return 'move';
+  return null;
+}
+// While dragging past the edge of the waveform, scroll the view along.
+function edgeScroll(clientX) {
+  const r = canvas.getBoundingClientRect(), x = clientX - r.left, W = canvas.clientWidth;
+  if (x < 24) viewStart -= spp * (24 - x); else if (x > W - 24) viewStart += spp * (x - W + 24); else return;
+  clampView();
+}
+
 canvas.addEventListener('pointerdown', e => {
   if (!doc || e.button > 0) return;
   canvas.setPointerCapture(e.pointerId);
   if (env) { envPointerDown(e); return; }
+  const sh = selHandleAt(e.clientX, e.clientY);
+  if (sh) {
+    if (player) stopPlay();
+    if (sh === 'move') drag = { kind: 'move', off: sampleAt(e.clientX) - selA, w: selB - selA };
+    else drag = { kind: 'sel', anchor: sh === 'edgeA' ? selB : selA, x0: -1e9, edge: true }; // the other edge stays put
+    canvas.style.cursor = sh === 'move' ? 'grabbing' : 'ew-resize';
+    draw(); return;
+  }
   const fh = fadeHandleAt(e.clientX, e.clientY);
   if (fh) {
     const [a, b] = fadeSpan();
@@ -3803,8 +3980,17 @@ canvas.addEventListener('pointerdown', e => {
 canvas.addEventListener('pointermove', e => {
   if (!doc) return;
   if (env) { envPointerMove(e); return; }
-  if (!drag) { canvas.style.cursor = fadeHandleAt(e.clientX, e.clientY) || markerNear(e.clientX) >= 0 ? 'ew-resize' : 'text'; return; }
+  if (!drag) {
+    const sh = selHandleAt(e.clientX, e.clientY);
+    canvas.style.cursor = sh === 'move' ? 'grab' : sh || fadeHandleAt(e.clientX, e.clientY) || markerNear(e.clientX) >= 0 ? 'ew-resize' : 'text';
+    return;
+  }
+  if (drag.kind === 'move' || drag.edge) edgeScroll(e.clientX);
   const s = sampleAt(e.clientX);
+  if (drag.kind === 'move') {
+    selA = clamp(s - drag.off, 0, len() - drag.w); selB = selA + drag.w; cursor = selA;
+    refresh(); return;
+  }
   if (drag.kind === 'fade') {
     const span = drag.b - drag.a;
     const at = s - drag.off;
