@@ -24,6 +24,7 @@ const audio = () => actx || (actx = new (window.AudioContext || window.webkitAud
 const $ = id => document.getElementById(id);
 const on = (id, fn) => $(id).addEventListener('click', fn);
 const canvas = $('wave'), g = canvas.getContext('2d');
+let waveOverlay = null; // optional (g, W, H, rulerHeight) => true when it drew the audio instead of the waveform
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 /* ---------- Helpers ---------- */
@@ -506,10 +507,10 @@ function draw(playhead) {
     g.fillStyle = css('--sel'); g.fillRect(x0, RULER, x1 - x0, H - RULER);
   }
 
-  // Waveform lanes
+  // Waveform lanes (or another view, e.g. the spectrogram, drawn by waveOverlay)
   const nch = doc.ch.length, laneH = (H - RULER) / nch;
-  const waveCol = css('--wave');
-  for (let k = 0; k < nch; k++) {
+  const waveCol = css('--wave'), replaced = !!(waveOverlay && waveOverlay(g, W, H, RULER));
+  for (let k = 0; k < (replaced ? 0 : nch); k++) {
     const top = RULER + k * laneH, mid = top + laneH / 2, amp = laneH / 2 - 4;
     g.fillStyle = css('--wave-mid'); g.fillRect(0, Math.round(mid), W, 1);
     if (k > 0) { g.fillStyle = css('--gold-soft'); g.fillRect(0, Math.round(top), W, 1); }
@@ -3522,7 +3523,7 @@ const HELP_TUTORIALS = [
   ['t-open', 'Open, play and save a file'], ['t-record', 'Record from the microphone'], ['t-edit', 'Cut, copy, paste and delete'],
   ['t-trim', 'Trim silence (Auto trim)'], ['t-split', 'Split a recitation into lines'], ['t-times', 'Timestamps and links'], ['t-join', 'Join audio files'],
   ['t-fade', 'Fade in and fade out'], ['t-volume', 'Volume: amplify, normalise, envelope'], ['t-clean', 'Clean up a voice recording'],
-  ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
+  ['t-transcript', 'Transcribe and edit by text'], ['t-filler', 'Remove filler words'], ['t-effects', 'Equaliser and sound effects'], ['t-tempo', 'Slow down a recitation'],
   ['t-tabs', 'Work with several files'], ['t-ringtone', 'Make a ringtone'], ['t-music', 'Key and beat detection'],
   ['t-multi', 'Multitrack editor'], ['t-tts', 'Text to speech'], ['t-batch', 'Batch convert many files'], ['t-safe', 'Autosave, offline use and installing'], ['t-project', 'Save your work and continue later'],
 ];

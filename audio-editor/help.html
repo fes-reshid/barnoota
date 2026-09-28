@@ -295,7 +295,21 @@
         <li><b>Click / Pop Removal…</b> (Tools) smooths short clicks and mouth noises.</li>
         <li>Finish with <b>Normalise</b>.</li>
       </ol>
+      <div class="tip"><b>AI noise removal</b> (<span class="m">Effects ▸ AI Noise Removal…</span>, or the button next to Noise reduction) needs no noise sample: a small neural network trained on speech (RNNoise) removes fans, traffic, keyboard and room noise and keeps the voice. It downloads once (5 MB) and then works offline. It is made for speech — for recitation with long held notes, preview it and lower the <b>Amount</b> if the voice sounds thin.</div>
+      <div class="tip"><b>See the noise:</b> <span class="m">View ▸ Spectrogram</span> (or the <b>Spectrogram</b> button) shows the frequencies over time — low at the bottom, high at the top, brighter = louder. A steady hum is a bright horizontal line; hiss is a haze across the top; clicks are thin vertical lines. Select them there like on the waveform.</div>
       <div class="warn"><b>Don't overdo it:</b> too much noise reduction makes a voice sound watery or robotic. Preview, and use the smallest amount that sounds clean.</div>
+    </section>
+
+    <section class="card tut" id="t-transcript" data-title="Transcribe and edit by text">
+      <div class="tut-head"><h2>Transcribe speech and edit the audio by editing the text</h2><span class="tag">Speech</span></div>
+      <ol class="steps">
+        <li>Open <span class="m">Voice ▸ Transcribe &amp; Edit by Text…</span>.</li>
+        <li>Choose a <b>model</b> (<em>Balanced</em> is a good start; <em>Fast</em> for slow computers and phones) and the <b>language</b>, then <b>Transcribe</b>. The first time, the model downloads (40–250 MB); after that it works offline. Everything runs on your device.</li>
+        <li>The text appears word by word. <b>Click a word</b> to hear it (and select it on the waveform); <kbd>Shift</kbd>+click another word to select everything in between.</li>
+        <li><b>Delete selected words</b> (or <kbd>Del</kbd>) cuts them out of the audio — and shortens the pause after them. <b>Remove fillers</b> removes every <em>um / uh / er</em> that is highlighted in yellow. <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes.</li>
+        <li><b>Markers at sentences</b> puts a named marker at each sentence, ready for <em>Save parts</em>. <b>Export text…</b> saves the transcript as plain text or subtitles (.srt, .vtt).</li>
+      </ol>
+      <div class="warn">Speech recognition uses Whisper, which knows about 100 languages — including Arabic, English, Somali and Swahili — but <b>not Afaan Oromoo</b> yet. For Qur'an recitation the text is only a rough guide; never rely on it for the words of the Qur'an. If you edit the audio some other way, transcribe again so the words match.</div>
     </section>
 
     <section class="card tut" id="t-filler" data-title="Remove filler words (um, uh)">
@@ -480,6 +494,7 @@
         <tr><td>Envelope… <kbd>E</kbd></td><td>Draw how the volume changes over time.</td></tr>
         <tr><td>Stereo Pan…</td><td>Move the sound left or right.</td></tr>
         <tr><td>Effect Chains… · Apply Chain ▸</td><td>Several effects in one step — ready-made clean-ups or your own saved chains.</td></tr>
+        <tr><td>AI Noise Removal…</td><td>Removes background noise from speech with a small neural network — no noise sample needed.</td></tr>
         <tr><td>Equalizer…</td><td>10-band graphic equaliser with presets and live preview.</td></tr>
         <tr><td>Echo · Reverb · Compressor</td><td>Repeats, room sound, and evening out the volume.</td></tr>
         <tr><td>Pitch · Tempo · Speed</td><td>Higher/lower voice; slower/faster with the same voice; or both together.</td></tr>
@@ -519,6 +534,9 @@
         <tr><td>Auto-split at Pauses · Markers on Beats</td><td>Place markers automatically.</td></tr>
         <tr><td>Save All Parts · Split Parts into Tabs</td><td>Use the markers to cut the file.</td></tr>
         <tr><td>Zoom ▸ · Taller Waveform · Show Panels</td><td>Change what you see.</td></tr>
+        <tr><td>Spectrogram</td><td>Show frequencies over time instead of the waveform.</td></tr>
+        <tr><td>Transcribe &amp; Edit by Text…</td><td>Speech to text on this device; delete words to cut the audio, remove fillers, export subtitles.</td></tr>
+        <tr><td>AI Noise Removal…</td><td>Neural-network noise removal for speech (also in Effects).</td></tr>
         <tr><td>Voice Cleanup · Audio Enhancer</td><td>One-click cleaner, clearer voice.</td></tr>
         <tr><td>Amplify Vocals · Isolate Voice</td><td>Bring the voice forward, or keep only the speech frequencies from the centre.</td></tr>
         <tr><td>Reduce Voice (karaoke)</td><td>Removes a centred voice from stereo music.</td></tr>
