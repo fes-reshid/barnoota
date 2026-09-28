@@ -122,14 +122,29 @@
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
   #busy{position:fixed; inset:0; background:rgba(28,43,70,.35); display:none; align-items:center; justify-content:center; z-index:90; font-family:var(--ui); color:#fff; font-size:16px;}
   #busy.show{display:flex;}
-  dialog#mixDlg{border:1.5px solid var(--gold-soft); border-radius:14px; background:var(--parchment); color:var(--ink-brown); padding:18px 18px 14px; width:min(440px, calc(100vw - 32px)); box-shadow:0 20px 50px rgba(28,43,70,.3);}
-  dialog#mixDlg::backdrop{background:rgba(28,43,70,.35);}
-  #mixDlg .field{display:flex; flex-direction:column; gap:5px; margin:0 0 14px; font-family:var(--ui); font-size:13px; color:var(--muted);}
-  #mixDlg .field-row{display:flex; gap:8px; align-items:center;}
-  #mixDlg select{flex:1; min-width:0; border:1px solid var(--gold-soft); border-radius:8px; padding:7px 6px; background:#fff; color:var(--ink-brown);}
-  #mixDlg input[type=range]{flex:1; accent-color:var(--green);}
-  #mixDlg output{min-width:48px; text-align:right; font-family:ui-monospace, Menlo, Consolas, monospace; color:var(--ink-navy);}
-  #mixDlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
+  dialog.dlg{border:1.5px solid var(--gold-soft); border-radius:14px; background:var(--parchment); color:var(--ink-brown); padding:18px 18px 14px; width:min(440px, calc(100vw - 32px)); box-shadow:0 20px 50px rgba(28,43,70,.3);}
+  dialog.dlg::backdrop{background:rgba(28,43,70,.35);}
+  .dlg .field{display:flex; flex-direction:column; gap:5px; margin:0 0 14px; font-family:var(--ui); font-size:13px; color:var(--muted);}
+  .dlg .field-row{display:flex; gap:8px; align-items:center;}
+  .dlg select{flex:1; min-width:0; border:1px solid var(--gold-soft); border-radius:8px; padding:7px 6px; background:#fff; color:var(--ink-brown);}
+  .dlg input[type=range]{flex:1; accent-color:var(--green);}
+  .dlg output{min-width:48px; text-align:right; font-family:ui-monospace, Menlo, Consolas, monospace; color:var(--ink-navy);}
+  dialog.guide{width:min(720px, calc(100vw - 32px)); max-height:calc(100vh - 48px); padding:0;}
+  .guide-head{position:sticky; top:0; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; background:var(--parchment); border-bottom:1px solid var(--gold-soft);}
+  .guide-head h2{margin:0;}
+  .guide-body{padding:4px 18px 18px; font-family:var(--ui); font-size:14px; line-height:1.55; color:var(--ink-brown);}
+  .guide-body h3{font-family:'Marcellus'; font-weight:400; color:var(--ink-navy); font-size:17px; margin:18px 0 6px;}
+  .guide-body ol, .guide-body ul{margin:0; padding-left:20px;}
+  .guide-body li{margin:3px 0;}
+  .keys{width:100%; border-collapse:collapse; font-size:13px;}
+  .keys td{padding:5px 6px; border-bottom:1px solid rgba(169,124,37,.18); vertical-align:top;}
+  .keys td:first-child{white-space:nowrap; width:1%; padding-right:14px;}
+  .keys tr.grp td{font-family:var(--ui); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); padding-top:14px; border-bottom:none;}
+  .wave-empty{position:absolute; inset:22px 0 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; font-family:var(--ui); font-size:14px; color:var(--muted); padding:12px;}
+  .wave-empty[hidden]{display:none;}
+  .wave-empty .row{justify-content:center; margin:0;}
+  .head-actions{display:flex; gap:8px; align-items:center;}
+  .dlg .actions{display:flex; justify-content:flex-end; gap:8px; margin-top:4px;}
   select.num{padding:6px 4px;}
   .privacy{font-family:var(--ui); font-size:12px; color:var(--muted); text-align:center; margin-top:8px;}
 </style>
@@ -142,7 +157,10 @@
       <span class="brand-mark">د</span>
       <span class="brand-text">Audio Editor<small>Diin Islaam</small></span>
     </a>
-    <a class="back" href="../apps.html">← All apps</a>
+    <div class="head-actions">
+      <button class="back" id="guideBtn" type="button" title="How to use the editor and all shortcuts (?)">? Guide</button>
+      <a class="back" href="../apps.html">← All apps</a>
+    </div>
   </div>
 </header>
 
@@ -155,6 +173,7 @@
     <div class="empty-actions">
       <button class="btn primary big" id="openBtn2" type="button">Open audio file</button>
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
+      <button class="btn big" id="newBtn2" type="button" title="Start an empty file to paste or record into (N)">＋ New empty</button>
     </div>
     <p class="hint" style="margin-top:18px">…or drop audio files here (MP3, WAV, M4A, OGG, WebM) — each opens in its own tab. Save as MP3 or WAV.</p>
   </section>
@@ -212,12 +231,22 @@
     <section class="panel">
       <div class="wave-wrap">
         <canvas id="wave" aria-label="Waveform. Click to place the cursor, drag to select."></canvas>
+        <div class="wave-empty" id="emptyHint" hidden>
+          <div>This file is empty. Record, paste or drop audio into it.</div>
+          <div class="row">
+            <button class="btn rec" id="emptyRec" type="button">● Record <kbd>R</kbd></button>
+            <button class="btn" id="emptyPaste" type="button">Paste <kbd>Ctrl</kbd>+<kbd>V</kbd></button>
+            <button class="btn" id="emptyOpen" type="button">Open file <kbd>Ctrl</kbd>+<kbd>O</kbd></button>
+          </div>
+          <div>…or drag and drop an audio file here</div>
+        </div>
       </div>
       <input id="scroll" type="range" min="0" max="1000" value="0" aria-label="Scroll waveform">
       <p class="hint">
         Click to place the cursor · drag to select · <kbd>Shift</kbd>+click to extend ·
         drag a red marker to move it · <kbd>Ctrl</kbd>+scroll to zoom ·
-        <kbd>Space</kbd> play · <kbd>M</kbd> marker · <kbd>Del</kbd> delete · <kbd>Ctrl</kbd>+<kbd>A</kbd> select all · <kbd>Esc</kbd> clear selection
+        <kbd>Space</kbd> play · <kbd>Del</kbd> delete · <kbd>M</kbd> marker ·
+        press <kbd>?</kbd> for the guide and all shortcuts
       </p>
     </section>
 
@@ -289,7 +318,7 @@
   <input type="file" id="fileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 </main>
 
-<dialog id="mixDlg" aria-labelledby="mixTitle">
+<dialog id="mixDlg" class="dlg" aria-labelledby="mixTitle">
   <h2 id="mixTitle">Mix with file</h2>
   <p class="info" style="margin:0 0 14px">Plays another recording on top of this one — for example a voice over background audio. The file gets longer if the mixed audio runs past the end.</p>
   <div class="field">
@@ -310,6 +339,78 @@
   <div class="actions">
     <button class="btn" id="mixCancel" type="button">Cancel</button>
     <button class="btn primary" id="mixGo" type="button">Mix</button>
+  </div>
+</dialog>
+<dialog id="guideDlg" class="dlg guide" aria-labelledby="guideTitle">
+  <div class="guide-head">
+    <h2 id="guideTitle">Guide &amp; shortcuts</h2>
+    <button class="btn" id="guideClose" type="button">Close</button>
+  </div>
+  <div class="guide-body">
+    <h3>Getting started</h3>
+    <ul>
+      <li><strong>Open…</strong> loads one or more audio files; each gets its own tab. You can also drag files onto the page.</li>
+      <li>The <strong>+</strong> next to the tabs starts an <strong>empty file</strong>: record into it, paste audio copied from another tab, or drop a file on it.</li>
+      <li>Click the waveform to place the cursor, drag to select. Effects apply to the selection — or to the whole file when nothing is selected.</li>
+    </ul>
+
+    <h3>Combining two recordings</h3>
+    <ol>
+      <li>Open both files — they appear as tabs.</li>
+      <li>In the first tab, select the part you want and press <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+      <li>Switch tabs, click where it should go and press <kbd>Ctrl</kbd>+<kbd>V</kbd> to insert it, or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> to play it <em>on top</em> of what's there.</li>
+      <li><strong>Mix with file…</strong> layers a whole tab or file at a chosen volume — e.g. a voice over quiet background audio.</li>
+    </ol>
+
+    <h3>Splitting a recitation into lines</h3>
+    <ol>
+      <li>Press <strong>Auto-split at pauses</strong>. A red marker is placed in the middle of every pause.</li>
+      <li>Too many parts? Lower the threshold (e.g. −45 dB) or raise the minimum pause length. Too few? Do the opposite.</li>
+      <li>Drag markers to adjust them, press <kbd>M</kbd> to add one, or ✕ in the list to remove one.</li>
+      <li>Press ▶ next to a part to check it, then <strong>Download all parts</strong> for a zip of numbered files.</li>
+    </ol>
+
+    <h3>Saving</h3>
+    <ul>
+      <li>Choose <strong>MP3</strong> (small, good for sharing) or <strong>WAV</strong> (lossless, bigger). 192 kbps MP3 is a good default.</li>
+      <li>A <strong>*</strong> on a tab means it has changes you haven't downloaded yet.</li>
+      <li>Everything stays on your device — nothing is uploaded — so download your work before closing the page.</li>
+    </ul>
+
+    <h3>Keyboard shortcuts</h3>
+    <table class="keys">
+          <tr class="grp"><td colspan="2">Files</td></tr>
+          <tr><td><kbd>N</kbd></td><td>New empty tab — then record, paste or drop audio into it</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>O</kbd></td><td>Open files (each in its own tab)</td></tr>
+          <tr><td><kbd>R</kbd> or <kbd>F5</kbd></td><td>Start / stop recording (inserts at the cursor)</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Duplicate the selection or whole file into a new tab</td></tr>
+          <tr><td><kbd>[</kbd> <kbd>]</kbd></td><td>Previous / next tab</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Save (download) the file</td></tr>
+          <tr class="grp"><td colspan="2">Playback</td></tr>
+          <tr><td><kbd>Space</kbd></td><td>Play / pause</td></tr>
+          <tr><td><kbd>L</kbd></td><td>Loop the selection on or off</td></tr>
+          <tr><td><kbd>Home</kbd> <kbd>End</kbd></td><td>Go to start / end</td></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Move the cursor 0.1 s (hold <kbd>Shift</kbd> for 1 s)</td></tr>
+          <tr class="grp"><td colspan="2">Selecting</td></tr>
+          <tr><td>Drag</td><td>Select a region</td></tr>
+          <tr><td><kbd>Shift</kbd>+click</td><td>Extend the selection</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>A</kbd></td><td>Select everything</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Clear the selection</td></tr>
+          <tr class="grp"><td colspan="2">Editing</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>X</kbd> <kbd>Ctrl</kbd>+<kbd>C</kbd> <kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Cut / copy / paste — works between tabs</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></td><td>Paste mix: layer the clipboard over the audio</td></tr>
+          <tr><td><kbd>Del</kbd></td><td>Delete the selection</td></tr>
+          <tr><td><kbd>T</kbd></td><td>Trim: keep only the selection</td></tr>
+          <tr><td><kbd>I</kbd> <kbd>O</kbd></td><td>Fade in / fade out (selection or whole file)</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td>Redo</td></tr>
+          <tr class="grp"><td colspan="2">Markers & view</td></tr>
+          <tr><td><kbd>M</kbd></td><td>Add a marker at the cursor</td></tr>
+          <tr><td><kbd>+</kbd> <kbd>−</kbd></td><td>Zoom in / out (<kbd>Ctrl</kbd>+scroll also zooms)</td></tr>
+          <tr><td><kbd>Z</kbd></td><td>Zoom to the selection</td></tr>
+          <tr><td><kbd>F</kbd></td><td>Fit the whole file on screen</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Open this guide</td></tr>
+    </table>
   </div>
 </dialog>
 <input type="file" id="mixFileIn" accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
@@ -530,8 +631,8 @@ function renderTabs() {
   });
   const add = document.createElement('button');
   add.className = 'tab-add'; add.type = 'button'; add.textContent = '+';
-  add.title = 'Open another file in a new tab';
-  add.onclick = () => $('fileIn').click();
+  add.title = 'New empty tab (N) — record, paste or drop audio into it';
+  add.onclick = newEmpty;
   bar.appendChild(add);
   const cur = bar.querySelector('.tab.active');
   if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
@@ -577,6 +678,7 @@ async function runMix() {
   $('mixDlg').close();
   busy(true);
   try {
+    adoptFormat(src.sr, src.ch.length);
     const ins = src.sr === doc.sr ? src.ch : await resample(src.ch, src.sr, doc.sr);
     commit(opMix(at, ins, gain), `Mixed in “${src.name}”`);
     selA = at; selB = Math.min(len(), at + ins[0].length); cursor = at; refresh();
@@ -604,7 +706,7 @@ async function loadFile(file) {
 }
 // Copy the selection (or the whole file, with its markers) into a new tab.
 function duplicate() {
-  if (!doc) return;
+  if (!doc || !len()) return;
   const base = $('fileName').value.trim() || 'audio';
   const d = hasSel()
     ? makeDoc(doc.sr, sliceCh(doc.ch, selA, selB), doc.markers.filter(m => m > selA && m < selB).map(m => m - selA))
@@ -614,10 +716,23 @@ function duplicate() {
   dirty = true; refresh();
   toast(what + ' duplicated into a new tab');
 }
-function newDocument(d, name) {
-  stopPlay(); stashTab();
+let untitledCount = 0;
+function newEmpty() {
+  newDocument(makeDoc(clip ? clip.sr : (actx ? actx.sampleRate : 44100), [new Float32Array(0)]), 'Untitled ' + (++untitledCount), false);
+}
+// An empty tab takes on the sample rate and channels of the first audio put into it.
+function adoptFormat(sr, nch) {
+  if (len() || (doc.sr === sr && doc.ch.length === nch)) return;
+  doc = makeDoc(sr, Array.from({ length: nch }, () => new Float32Array(0)), []);
+}
+// Opening a file while an untouched empty tab is showing fills that tab instead of adding one.
+function newDocument(d, name, reuseEmpty = true) {
+  stopPlay();
+  let at = tabs.length;
+  if (reuseEmpty && active && doc && !len() && !undoStack.length) { at = tabs.indexOf(active); tabs.splice(at, 1); active = null; }
+  else stashTab();
   const t = { name: name || 'recording' };
-  tabs.push(t); active = t;
+  tabs.splice(at, 0, t); active = t;
   doc = null; undoStack = []; redoStack = []; selA = selB = null; cursor = 0; viewStart = 0; spp = 1; dirty = false; peaks = null; playBuf = null;
   $('fileName').value = t.name;
   $('empty').style.display = 'none';
@@ -650,6 +765,7 @@ async function toggleRecord() {
       for (let i = 0; i < ab.numberOfChannels; i++) ch.push(ab.getChannelData(i).slice());
       if (!doc) newDocument(makeDoc(ab.sampleRate, ch), 'recording');
       else {
+        adoptFormat(ab.sampleRate, ch.length);
         const ins = ab.sampleRate === doc.sr ? ch : await resample(ch, ab.sampleRate, doc.sr);
         const at = hasSel() ? selA : cursor;
         let base = doc;
@@ -862,7 +978,8 @@ function draw(playhead) {
 function refresh() {
   if (!doc) return;
   const sr = doc.sr, L = len();
-  $('fileInfo').textContent = `${doc.ch.length === 1 ? 'Mono' : doc.ch.length === 2 ? 'Stereo' : doc.ch.length + ' ch'} · ${(sr / 1000).toFixed(1)} kHz`;
+  $('emptyHint').hidden = L > 0;
+  $('fileInfo').textContent = !L ? 'Empty' : `${doc.ch.length === 1 ? 'Mono' : doc.ch.length === 2 ? 'Stereo' : doc.ch.length + ' ch'} · ${(sr / 1000).toFixed(1)} kHz`;
   $('totalLen').textContent = fmt(L / sr);
   if (!player) $('clock').textContent = fmt(cursor / sr);
   const s = hasSel();
@@ -932,6 +1049,7 @@ async function clipFor(sr) {
 async function cmdPaste() {
   if (!clip || !doc) return;
   stopPlay();
+  adoptFormat(clip.sr, clip.ch.length);
   const ins = await clipFor(doc.sr);
   let base = doc, at = cursor;
   if (hasSel()) { at = selA; doc = opDelete(selA, selB); }
@@ -943,6 +1061,7 @@ async function cmdPaste() {
 async function cmdPasteMix() {
   if (!clip || !doc) return;
   stopPlay();
+  adoptFormat(clip.sr, clip.ch.length);
   const ins = await clipFor(doc.sr), at = hasSel() ? selA : cursor;
   commit(opMix(at, ins), 'Mixed in');
   selA = at; selB = at + ins[0].length; cursor = at; refresh();
@@ -1204,6 +1323,7 @@ function exportZip() {
   });
 }
 function exportAll() {
+  if (!len()) { toast('Nothing to save yet — this file is empty.'); return; }
   return withBusy('Encoding…', async () => {
     downloadBlob(await encode(doc.ch, doc.sr, p => busyText(`Encoding… ${Math.round(p * 100)}%`)), baseName() + ext(), mime());
     dirty = false;
@@ -1316,6 +1436,14 @@ on('loopBtn', () => { loop = !loop; if (player) play(); refresh(); });
 on('undoBtn', undo); on('redoBtn', redo);
 on('mixFileBtn', openMixDialog);
 on('dupBtn', duplicate);
+function openGuide() { $('guideDlg').showModal(); $('guideDlg').querySelector('.guide-body').scrollTop = 0; }
+on('guideBtn', openGuide);
+on('guideClose', () => $('guideDlg').close());
+$('guideDlg').addEventListener('click', e => { if (e.target === $('guideDlg')) $('guideDlg').close(); });
+on('newBtn2', newEmpty);
+on('emptyRec', toggleRecord);
+on('emptyPaste', () => clip ? cmdPaste() : toast('Nothing copied yet — select audio in another tab and press Ctrl+C.'));
+on('emptyOpen', () => $('fileIn').click());
 on('mixCancel', () => $('mixDlg').close());
 on('mixGo', runMix);
 on('mixBrowse', () => $('mixFileIn').click());
@@ -1343,13 +1471,24 @@ on('autoSplitBtn', autoSplit);
 on('zipBtn', exportZip);
 
 /* ---------- Keyboard ---------- */
+function switchTab(dir) {
+  if (tabs.length < 2) return;
+  showTab(tabs[(tabs.indexOf(active) + dir + tabs.length) % tabs.length]);
+}
 document.addEventListener('keydown', e => {
-  if (!doc) return;
   const t = e.target;
-  if ($('mixDlg').open) return;
+  if ($('mixDlg').open || $('guideDlg').open) return;
   if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   let handled = true;
+  // These work even with no file open.
+  if (k === '?') openGuide();
+  else if (mod && k === 'o') $('fileIn').click();
+  else if (!mod && !e.altKey && k === 'n') newEmpty();
+  else if ((!mod && !e.altKey && k === 'r') || k === 'f5') toggleRecord();
+  else handled = false;
+  if (handled || !doc) { if (handled) e.preventDefault(); return; }
+  handled = true;
   if (k === ' ') togglePlay();
   else if (mod && k === 'z' && !e.shiftKey) undo();
   else if (mod && (k === 'y' || (k === 'z' && e.shiftKey))) redo();
@@ -1360,6 +1499,13 @@ document.addEventListener('keydown', e => {
   else if (mod && k === 'a') { selA = 0; selB = len(); cursor = 0; refresh(); }
   else if (mod && k === 's') exportAll();
   else if (mod && k === 'd') duplicate();
+  else if (!mod && k === '[') switchTab(-1);
+  else if (!mod && k === ']') switchTab(1);
+  else if (!mod && k === 't') cmdTrim();
+  else if (!mod && k === 'i') fadeIn();
+  else if (!mod && k === 'o') fadeOut();
+  else if (!mod && k === 'z') zoomSel();
+  else if (!mod && k === 'f') zoomFit();
   else if (!mod && (k === 'delete' || k === 'backspace')) cmdDelete();
   else if (!mod && k === 'm') addMarker();
   else if (!mod && k === 'l') { loop = !loop; if (player) play(); refresh(); }
