@@ -5,7 +5,7 @@ const V = new URL(self.location).searchParams.get('v') || 'dev';
 const CACHE = 'audio-editor-' + V, RUNTIME = 'audio-editor-runtime';
 const q = f => f + '?v=' + V;
 const PRECACHE = ['./', 'index.html', 'help.html', 'manifest.webmanifest', 'lame.min.js',
-  q('editor.css'), q('editor.js'), q('save-extras.js'), q('autosave.js'), q('app-install.js'), q('encoder-worker.js'),
+  q('editor.css'), q('editor.js'), q('save-extras.js'), q('autosave.js'), q('app-install.js'), q('recitation.js'), q('encoder-worker.js'),
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'];
 
 self.addEventListener('install', e => {

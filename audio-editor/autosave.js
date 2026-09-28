@@ -30,7 +30,7 @@ function asSnapshot() {
   const ref = (ch, sr) => { const id = asIdFor(ch); audioRefs.set(id, { ch, sr }); return id; };
   const meta = {
     savedAt: Date.now(), activeIndex: tabs.indexOf(active),
-    tabs: tabs.filter(t => t.doc).map(t => ({ name: t.name, dirty: !!t.dirty, markers: t.doc.markers, tags: t.tags || null, audio: ref(t.doc.ch, t.doc.sr), sr: t.doc.sr })),
+    tabs: tabs.filter(t => t.doc).map(t => ({ name: t.name, dirty: !!t.dirty, markers: t.doc.markers, labels: t.doc.labels || null, tags: t.tags || null, audio: ref(t.doc.ch, t.doc.sr), sr: t.doc.sr })),
     multitrack: mt.tracks.length ? {
       pps: mt.pps, scroll: mt.scroll, playhead: mt.playhead,
       tracks: mt.tracks.map(({ id, name, vol, pan, mute, solo, color }) => ({ id, name, vol, pan, mute, solo, color })),
@@ -79,7 +79,9 @@ async function asRestore(saved) {
     for (const t of meta.tabs) {
       const a = audio.get(t.audio); if (!a) continue;
       asIds.set(a.ch[0], t.audio); asWritten.add(t.audio);
-      newDocument(makeDoc(a.sr, a.ch, (t.markers || []).filter(m => m > 0 && m < a.ch[0].length)), t.name, false);
+      const d = makeDoc(a.sr, a.ch, (t.markers || []).filter(m => m > 0 && m < a.ch[0].length));
+      if (t.labels) d.labels = t.labels;
+      newDocument(d, t.name, false);
       active.tags = t.tags || undefined; dirty = t.dirty; made.push(active);
     }
     if (made[meta.activeIndex]) showTab(made[meta.activeIndex]);
