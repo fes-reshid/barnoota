@@ -62,6 +62,11 @@ function normalizeUsername(username){
 function normalizeEmail(email){
   return String(email || '').trim().toLowerCase();
 }
+function teacherUsernameToEmail(username){
+  const clean = normalizeUsername(username);
+  if(clean.indexOf('teacher') < 0) throw new Error('Teacher username must contain “teacher”, for example salah-teacher.');
+  return ADMIN_LOCAL + '+quest-teacher-' + clean + '@' + ADMIN_DOMAIN;
+}
 
 /* ===================== Student-facing API ===================== */
 
@@ -176,6 +181,20 @@ function saveProgress(gameKey, profileObj){
   return setDoc(doc(db, STUDENTS_COLLECTION, user.uid), patch, { merge:true });
 }
 
+/* Re-read the current student's record after a teacher has approved a map.
+   This lets an already-open student tab receive the new certificate/unlock
+   when it becomes visible again without asking the child to sign in again. */
+function getStudentProfile(){
+  const user = auth.currentUser;
+  if(!user) return Promise.resolve(null);
+  return getDoc(doc(db, STUDENTS_COLLECTION, user.uid)).then(function(snap){
+    if(!snap.exists()) return null;
+    const data = snap.data();
+    return { uid:user.uid, username:data.username, displayName:data.displayName || data.username,
+      fullName:data.fullName || '', progress:data.progress || {} };
+  });
+}
+
 /* The name printed on certificates — separate from username/displayName
    (which may be a login-style handle like "wbzz0015") and shared across
    all four games, so a child fixes the spelling once and every future
@@ -198,6 +217,20 @@ function setFullName(name){
 
 function adminSignIn(email, password){
   return signInWithEmailAndPassword(auth, email, password);
+}
+function teacherSignIn(usernameOrEmail, password){
+  const value = String(usernameOrEmail || '').trim();
+  const email = value.indexOf('@') >= 0 ? normalizeEmail(value) : teacherUsernameToEmail(value);
+  return adminSignIn(email, password);
+}
+function teacherSignUp(username, password){
+  const clean = normalizeUsername(username);
+  const email = teacherUsernameToEmail(clean);
+  return createUserWithEmailAndPassword(auth, email, password).then(function(cred){
+    return updateProfile(cred.user, { displayName: clean }).catch(function(){}).then(function(){
+      return { uid: cred.user.uid, username: clean, email: email, awaitingApproval: true };
+    });
+  });
 }
 /* Self-service account creation for a NEW admin whose email a super
    admin already added to kids_quest_admins. Creating your own Firebase
@@ -248,6 +281,9 @@ function superSetAdminRole(email, role){
 }
 function superRemoveAdmin(email){
   return deleteDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(email)));
+}
+function superAddTeacher(username, role){
+  return superAddAdmin(teacherUsernameToEmail(username), role || 'admin');
 }
 
 /* Creates a brand-new student account without disturbing the admin's own
@@ -363,6 +399,18 @@ function adminDeleteStudent(uid){
 function adminSetStudentDisabled(uid, disabled){
   return setDoc(doc(db, STUDENTS_COLLECTION, uid), { disabled: !!disabled }, { merge:true });
 }
+function adminUpdateStudentGameProgress(uid, gameKey, profileObj){
+  if(!uid || !gameKey) return Promise.reject(new Error('Student and course are required.'));
+  const patch = { progress: {}, lastTeacherUpdateAt: new Date().toISOString() };
+  patch.progress[gameKey] = profileObj;
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), patch, { merge:true });
+}
+function adminUpdateStudentNames(uid, displayName, fullName){
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), {
+    displayName: String(displayName || '').trim(),
+    fullName: String(fullName || displayName || '').trim()
+  }, { merge:true });
+}
 
 window.KidsCloud = {
   usernameToEmail: usernameToEmail,
@@ -373,9 +421,13 @@ window.KidsCloud = {
   studentLogout: studentLogout,
   getIdToken: getIdToken,
   saveProgress: saveProgress,
+  getStudentProfile: getStudentProfile,
   setFullName: setFullName,
   adminSignIn: adminSignIn,
   adminSignUp: adminSignUp,
+  teacherUsernameToEmail: teacherUsernameToEmail,
+  teacherSignIn: teacherSignIn,
+  teacherSignUp: teacherSignUp,
   adminSignOut: adminSignOut,
   onAdminAuth: onAdminAuth,
   adminCreateStudent: adminCreateStudent,
@@ -385,10 +437,13 @@ window.KidsCloud = {
   adminRenameStudent: adminRenameStudent,
   adminDeleteStudent: adminDeleteStudent,
   adminSetStudentDisabled: adminSetStudentDisabled,
+  adminUpdateStudentGameProgress: adminUpdateStudentGameProgress,
+  adminUpdateStudentNames: adminUpdateStudentNames,
   superListAdmins: superListAdmins,
   superAddAdmin: superAddAdmin,
   superSetAdminRole: superSetAdminRole,
   superRemoveAdmin: superRemoveAdmin,
+  superAddTeacher: superAddTeacher,
   ADMIN_EMAIL: ADMIN_EMAIL
 };
 window.dispatchEvent(new Event('kidscloud-ready'));
