@@ -7,15 +7,16 @@
 <title>Tuhfatul Atfaal — Teacher Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink-navy:#1c2b46; --ink-brown:#3c2f26;
     --parchment:#faf3e0; --parchment-deep:#f2e6c9;
     --gold:#a97c25; --gold-soft:#d3ac5c;
     --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --sky:#2f97cb; --sky-bg:#e3f2fa;
     --coral:#e0703a; --danger:#a3352b; --danger-bg:#f7dede;
-    --maxw:880px;
+    --maxw:1120px;
   }
   *{box-sizing:border-box;}
   html,body{ overflow-x:hidden; }
@@ -25,108 +26,208 @@
   }
   a{ color:inherit; }
   .hidden{ display:none !important; }
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding:26px 18px 80px; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:18px 18px 80px; }
 
   header.site{ display:flex; align-items:center; justify-content:space-between; gap:12px;
-    padding:14px 18px; max-width:var(--maxw); margin:0 auto; }
+    padding:14px 18px; max-width:var(--maxw); margin:0 auto; flex-wrap:wrap; }
   .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
   .brand-mark{ width:34px; height:34px; border-radius:50%; background:var(--green);
     display:flex; align-items:center; justify-content:center; color:#faf3e0; font-family:'Marcellus'; font-size:16px; }
   .brand-text{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); }
-  .header-right{ display:flex; align-items:center; gap:10px; }
+  .header-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
   .who{ font-size:14px; color:#8a7654; display:none; }
   .who.show{ display:inline; }
   .role-badge{ font-family:'Marcellus'; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
-    background:var(--gold-soft); color:#4a3712; padding:2px 9px; border-radius:999px; margin-left:4px; }
+    background:var(--gold-soft); color:#4a3712; padding:2px 9px; border-radius:999px; margin-left:4px; white-space:nowrap; }
   .role-badge.super{ background:var(--green); color:#fff; }
+  .role-badge.ok{ background:var(--green-bg); color:var(--green-dark); }
+  .role-badge.warn{ background:#fff0c9; color:#7a5300; }
+  .role-badge.bad{ background:var(--danger-bg); color:var(--danger); }
+  .role-badge.info{ background:var(--sky-bg); color:#1c4a66; }
   #signout-top{ display:none; }
   #signout-top.show{ display:inline-block; }
 
   h1{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 6px; }
   h2{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:0 0 10px; }
+  h3{ font-family:'Marcellus'; font-size:16.5px; color:var(--ink-navy); margin:0 0 8px; }
   p{ line-height:1.55; }
 
-  .card{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:22px 22px;
-    box-shadow:0 6px 18px rgba(60,45,20,.08); margin-bottom:20px; }
+  .card{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:20px 20px;
+    box-shadow:0 6px 18px rgba(60,45,20,.08); margin-bottom:18px; }
 
   .field{ margin-bottom:12px; }
   .field label{ display:block; font-family:'Marcellus'; font-size:13.5px; color:var(--ink-navy); margin-bottom:4px; }
-  .field input, .field select{
+  .field input, .field select, .field textarea{
     width:100%; padding:10px 12px; border:1.5px solid var(--gold-soft); border-radius:10px;
     background:var(--parchment); color:var(--ink-navy); font-family:'Cormorant Garamond',serif; font-size:17px;
   }
-  .field input:focus{ outline:none; border-color:var(--gold); }
+  .field textarea{ min-height:64px; resize:vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:3px solid rgba(47,151,203,.2); border-color:var(--sky); }
   .row{ display:flex; gap:10px; flex-wrap:wrap; }
   .row > .field{ flex:1; min-width:160px; }
 
   .btn{ display:inline-flex; align-items:center; gap:6px; border:none; border-radius:22px; cursor:pointer;
-    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:16px; padding:10px 22px;
-    transition:transform .12s ease; }
+    font-family:'Cormorant Garamond',serif; font-weight:700; font-size:16px; padding:10px 20px;
+    transition:transform .12s ease, box-shadow .12s ease; }
   .btn:hover{ transform:translateY(-1px); }
   .btn:disabled{ opacity:.55; cursor:default; transform:none; }
   .btn.primary{ background:var(--green); color:#faf3e0; }
+  .btn.sky{ background:var(--sky); color:#fff; }
   .btn.ghost{ background:#fff; border:1.5px solid var(--gold-soft); color:var(--ink-brown); }
   .btn.danger{ background:var(--danger); color:#fff; }
-  .btn.small{ padding:6px 14px; font-size:14px; border-radius:16px; }
+  .btn.small{ padding:6px 13px; font-size:14px; border-radius:16px; }
   .linkbtn{ background:none; border:none; color:var(--green-dark); font-family:'Marcellus'; font-size:14px;
     cursor:pointer; padding:4px 0; text-decoration:underline; }
 
   .msg{ min-height:22px; font-family:'Marcellus'; font-size:14.5px; margin-top:8px; }
   .msg.error{ color:var(--danger); }
   .msg.success{ color:var(--green-dark); }
-
-  details.setup{ background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:22px; }
-  details.setup summary{ font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); cursor:pointer; }
-  details.setup ol{ padding-left:22px; }
-  details.setup li{ margin-bottom:10px; line-height:1.55; }
-  pre{ font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.6; background:#1c2b1f; color:#e4efe6;
-    padding:14px 16px; border-radius:10px; overflow-x:auto; }
   code{ font-family:'JetBrains Mono',monospace; background:var(--parchment-deep); padding:1px 6px; border-radius:5px; font-size:.88em; }
-
-  .student{ border:1.5px solid var(--gold-soft); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:var(--parchment); }
-  .student .top{ display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
-  .student .uname{ font-family:'Marcellus'; font-size:18px; color:var(--ink-navy); }
-  .student .meta{ font-size:13.5px; color:#8a7654; }
-  .student .progress-line{ font-size:14px; color:var(--ink-brown); margin:8px 0; }
-  .course-detail{ margin:10px 0; border:1px solid var(--gold-soft); border-radius:11px; background:#fff; padding:9px 11px; }
-  .course-detail summary{ cursor:pointer; font-family:'Marcellus'; color:var(--green-dark); font-size:14px; }
-  .map-record{ margin-top:8px; padding:8px 10px; border-left:4px solid var(--green); background:var(--green-bg); border-radius:8px; font-size:14px; }
-  .map-record.pending{ border-left-color:var(--gold); background:#fff7dc; }
-  .map-record p{ margin:3px 0; }
-  .student .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  .rename-panel{ margin-top:12px; padding-top:12px; border-top:1px dashed var(--gold-soft); display:none; }
-  .rename-panel.show{ display:block; }
   .empty{ color:#8a7654; font-size:16px; padding:10px 2px; }
+  .muted{ color:#8a7654; font-size:14.5px; }
 
-  .bulk-row{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    border-radius:10px; padding:8px 12px; margin-bottom:6px; font-size:14.5px; }
-  .bulk-row.success{ background:var(--green-bg); color:var(--green-dark); }
-  .bulk-row.error{ background:var(--danger-bg); color:var(--danger); }
-
-  .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--parchment); }
-  .admin-row .email{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); }
-  .admin-row .actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-
-  #login-card{ max-width:420px; margin:60px auto; text-align:center; }
+  #login-card{ max-width:420px; margin:50px auto 0; text-align:center; }
   #login-card .name-icons{ font-size:36px; margin-bottom:8px; }
   #not-authorized{ max-width:420px; margin:60px auto; text-align:center; }
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 22px}
-  .stat{background:#fff;border:2px solid var(--gold-soft);border-radius:15px;padding:15px;text-align:center}
-  .stat strong{display:block;font:700 26px 'Marcellus';color:var(--green)}
-  .stat span{font-size:14px;color:#725f42}
-  .manage-btn{background:var(--green);color:#fff}
+
+  /* ---- dashboard shell ---- */
+  .hero{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+    background:linear-gradient(135deg,#2e6b58,#1f4f40); color:#faf3e0; border-radius:20px; padding:20px 22px; margin-bottom:16px;
+    box-shadow:0 10px 26px rgba(31,79,64,.25); }
+  .hero h1{ color:#fff; margin:0; }
+  .hero p{ margin:4px 0 0; color:#d8eadf; }
+  .hero .arabic{ font-family:'Amiri'; font-size:22px; color:#f3d98f; }
+  .hero-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .hero-actions .btn{ background:#faf3e0; color:var(--green-dark); }
+  .hero-actions .btn.alt{ background:rgba(255,255,255,.14); color:#fff; border:1.5px solid rgba(255,255,255,.35); }
+
+  .tabs{ display:flex; gap:6px; flex-wrap:wrap; margin:0 0 16px; position:sticky; top:0; z-index:5;
+    background:#e9e2cd; padding:8px 0; }
+  .tab{ border:2px solid var(--gold-soft); background:#fff; color:var(--ink-navy); border-radius:14px; padding:9px 15px;
+    font-family:'Marcellus'; font-size:15px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; }
+  .tab .count{ background:var(--parchment-deep); border-radius:999px; padding:1px 8px; font-size:12.5px; }
+  .tab.active{ background:var(--green); border-color:var(--green); color:#fff; }
+  .tab.active .count{ background:rgba(255,255,255,.2); }
+
+  .stats{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:0 0 18px; }
+  .stat{ background:#fff; border:2px solid var(--gold-soft); border-radius:15px; padding:14px; text-align:center; cursor:pointer;
+    transition:transform .12s ease, border-color .12s ease; }
+  .stat:hover{ transform:translateY(-2px); border-color:var(--green); }
+  .stat .ico{ font-size:22px; }
+  .stat strong{ display:block; font:700 28px 'Marcellus'; color:var(--green); }
+  .stat span{ font-size:14px; color:#725f42; }
+  .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+
+  .list-row{ display:flex; align-items:center; gap:12px; padding:10px 12px; border:1.5px solid var(--gold-soft); border-radius:12px;
+    background:var(--parchment); margin-bottom:8px; cursor:pointer; transition:background .12s ease; }
+  .list-row:hover{ background:#fff; }
+  .list-row .grow{ flex:1; min-width:0; }
+  .list-row .title{ font-family:'Marcellus'; color:var(--ink-navy); font-size:15.5px; }
+  .list-row .sub{ font-size:13.5px; color:#8a7654; }
+
+  .avatar{ width:46px; height:46px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center;
+    font-size:24px; background:var(--sky-bg); border:2px solid #fff; box-shadow:0 2px 8px rgba(0,0,0,.12); object-fit:cover; overflow:hidden; }
+  .avatar.big{ width:84px; height:84px; font-size:44px; }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+
+  /* ---- students tab ---- */
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .toolbar .search{ flex:1; min-width:220px; position:relative; }
+  .toolbar .search input{ width:100%; padding:11px 14px 11px 38px; border:1.5px solid var(--gold-soft); border-radius:14px; font-size:17px;
+    font-family:'Cormorant Garamond',serif; background:#fff; color:var(--ink-navy); }
+  .toolbar .search::before{ content:'🔍'; position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px; }
+  .toolbar select{ padding:10px 12px; border:1.5px solid var(--gold-soft); border-radius:12px; background:#fff; font-family:'Cormorant Garamond',serif; font-size:16px; }
+  .chips{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .chip{ border:1.5px solid var(--gold-soft); background:#fff; border-radius:999px; padding:6px 13px; cursor:pointer; font-family:'Marcellus'; font-size:13.5px; color:var(--ink-navy); }
+  .chip.active{ background:var(--ink-navy); border-color:var(--ink-navy); color:#fff; }
+  .student-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+  .s-card{ background:#fff; border:2px solid var(--gold-soft); border-radius:16px; padding:15px; cursor:pointer; display:flex; flex-direction:column; gap:10px;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease; }
+  .s-card:hover{ transform:translateY(-3px); box-shadow:0 10px 22px rgba(60,45,20,.14); border-color:var(--green); }
+  .s-card.disabled{ opacity:.65; }
+  .s-head{ display:flex; gap:11px; align-items:center; }
+  .s-name{ font-family:'Marcellus'; font-size:17px; color:var(--ink-navy); line-height:1.2; }
+  .s-user{ font-size:13.5px; color:#8a7654; }
+  .bar{ height:10px; background:var(--parchment-deep); border-radius:99px; overflow:hidden; }
+  .bar > span{ display:block; height:100%; background:linear-gradient(90deg,#7ddc6b,#2e6b58); border-radius:99px; transition:width .4s ease; }
+  .bar.gold > span{ background:linear-gradient(90deg,#f3d98f,#a97c25); }
+  .bar.sky > span{ background:linear-gradient(90deg,#9fd8f2,#2f97cb); }
+  .s-metrics{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; text-align:center; }
+  .s-metrics div{ background:var(--parchment); border-radius:10px; padding:6px 4px; }
+  .s-metrics b{ display:block; font:700 17px 'Marcellus'; color:var(--green-dark); }
+  .s-metrics small{ font-size:12px; color:#8a7654; }
+  .s-foot{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+
+  /* ---- modal ---- */
   .modal{position:fixed;inset:0;background:rgba(20,28,35,.68);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
-  .modal-panel{width:min(930px,100%);max-height:92vh;overflow:auto;background:#f9f2df;border:3px solid var(--gold-soft);border-radius:22px;padding:22px;box-shadow:0 18px 60px #0005}
-  .modal-head{display:flex;justify-content:space-between;gap:14px;align-items:start}
-  .map-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}
-  .map-pick{border:2px solid var(--gold-soft);background:#fff;border-radius:12px;padding:9px 5px;cursor:pointer;font-family:'Marcellus';color:var(--ink-navy)}
-  .map-pick.active{background:var(--green);color:#fff}.map-pick.approved{border-color:#39965b;background:#e4efe6}.map-pick.active.approved{background:var(--green)}
+  .modal-panel{width:min(980px,100%);max-height:94vh;overflow:auto;background:#f9f2df;border:3px solid var(--gold-soft);border-radius:22px;padding:22px;box-shadow:0 18px 60px #0005}
+  .modal-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:12px}
+  .modal-id{display:flex;gap:14px;align-items:center}
+  .subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 16px;border-bottom:2px solid var(--gold-soft);padding-bottom:8px}
+  .subtab{border:none;background:none;font-family:'Marcellus';font-size:15px;color:#725f42;padding:7px 12px;border-radius:10px;cursor:pointer}
+  .subtab.active{background:var(--green);color:#fff}
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .info{background:#fff;border:1.5px solid var(--gold-soft);border-radius:12px;padding:10px 12px}
+  .info small{display:block;font-family:'Marcellus';font-size:12px;color:#8a7654;text-transform:uppercase;letter-spacing:.04em}
+  .info span{font-size:17px;color:var(--ink-navy);word-break:break-word}
+
+  .map-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+  .map-pick{border:2px solid var(--gold-soft);background:#fff;border-radius:12px;padding:9px 5px;cursor:pointer;font-family:'Marcellus';color:var(--ink-navy);position:relative}
+  .map-pick small{font-family:'Cormorant Garamond';font-size:13px}
+  .map-pick.active{outline:3px solid var(--sky);outline-offset:1px}
+  .map-pick.approved{border-color:#39965b;background:#e4efe6}
+  .map-pick.ready{border-color:#d99a16;background:#fff5d6}
+  .map-pick .mini{height:5px;background:var(--parchment-deep);border-radius:99px;overflow:hidden;margin-top:5px}
+  .map-pick .mini span{display:block;height:100%;background:var(--green)}
+  .progress-table{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border-radius:12px;overflow:hidden}
+  .progress-table th,.progress-table td{padding:8px 10px;border-bottom:1px solid var(--parchment-deep);text-align:left}
+  .progress-table th{font-family:'Marcellus';font-size:13px;color:#725f42;background:var(--parchment);font-weight:400}
   .teacher-work{background:#fff;border:2px solid var(--gold-soft);border-radius:15px;padding:18px}
   .check-row{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}.check-row label{font-size:17px}
   #signature{width:100%;height:150px;border:2px dashed var(--gold-soft);border-radius:12px;background:#fff;touch-action:none}
   .danger-zone{border-top:1px dashed #c88;margin-top:17px;padding-top:15px}
-  @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.map-grid{grid-template-columns:repeat(3,1fr)}.modal{padding:6px}.modal-panel{padding:14px}.student .actions .btn{width:100%;justify-content:center}}
+  .map-record{ margin-top:8px; padding:8px 10px; border-left:4px solid var(--green); background:var(--green-bg); border-radius:8px; font-size:14px; }
+  .map-record.pending{ border-left-color:var(--gold); background:#fff7dc; }
+
+  /* ---- quizzes ---- */
+  .quiz-layout{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+  .quiz-item{border:1.5px solid var(--gold-soft);border-radius:13px;padding:12px;background:var(--parchment);margin-bottom:9px;cursor:pointer}
+  .quiz-item.active{border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(46,107,88,.15)}
+  .quiz-item .t{font-family:'Marcellus';font-size:15.5px;color:var(--ink-navy)}
+  .quiz-item .m{font-size:13.5px;color:#8a7654;margin-top:3px}
+  .q-card{border:2px solid var(--gold-soft);border-radius:14px;padding:14px;margin-bottom:12px;background:var(--parchment);position:relative}
+  .q-card .q-num{font-family:'Marcellus';color:var(--green-dark);font-size:14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+  .q-card .q-tools{display:flex;gap:4px}
+  .q-card .q-tools button{border:1.5px solid var(--gold-soft);background:#fff;border-radius:9px;padding:3px 9px;cursor:pointer;font-size:14px}
+  .choice-row{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+  .choice-row input[type=text]{flex:1;padding:8px 11px;border:1.5px solid var(--gold-soft);border-radius:10px;font-family:'Cormorant Garamond',serif;font-size:16.5px;background:#fff}
+  .choice-row input[type=radio]{width:20px;height:20px;accent-color:var(--green);cursor:pointer}
+  .choice-row.correct input[type=text]{border-color:#39965b;background:#effaf1}
+  .choice-row .letter{font-family:'Marcellus';width:22px;text-align:center;color:#8a7654}
+  .builder-actions{display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;background:#fff;padding:12px 0 2px;border-top:1px dashed var(--gold-soft);margin-top:6px}
+  .toggle{display:inline-flex;align-items:center;gap:8px;font-family:'Marcellus';font-size:14.5px;cursor:pointer}
+  .toggle input{width:20px;height:20px;accent-color:var(--green)}
+  .preview-q{background:#fff;border:2px solid var(--gold-soft);border-radius:14px;padding:16px;margin-bottom:10px}
+  .preview-q .choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .preview-q .choices button{border:2px solid var(--gold-soft);background:#fff;border-radius:12px;padding:10px;cursor:pointer;font-size:16px;font-family:'Cormorant Garamond',serif;text-align:left}
+  .preview-q .choices button.right{background:#dff4dd;border-color:#3e9c4a}
+  .preview-q .choices button.wrong{background:#ffe0d8;border-color:#d85c38}
+  .acc{display:inline-block;min-width:44px;text-align:right;font-family:'Marcellus'}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--ink-navy);color:#fff;
+    padding:12px 20px;border-radius:14px;font-family:'Marcellus';font-size:15px;z-index:80;transition:transform .25s ease,opacity .25s ease;box-shadow:0 8px 24px #0004;max-width:92vw;opacity:0;pointer-events:none}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+  .bulk-row{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; border-radius:10px; padding:8px 12px; margin-bottom:6px; font-size:14.5px; }
+  .bulk-row.success{ background:var(--green-bg); color:var(--green-dark); }
+  .bulk-row.error{ background:var(--danger-bg); color:var(--danger); }
+  .admin-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border:1.5px solid var(--gold-soft); border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--parchment); }
+  .admin-row .email{ font-family:'Marcellus'; font-size:15.5px; color:var(--ink-navy); }
+
+  @media(max-width:900px){.quiz-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.map-grid{grid-template-columns:repeat(3,1fr)}
+    .info-grid{grid-template-columns:1fr 1fr}.modal{padding:6px}.modal-panel{padding:14px}.preview-q .choices{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -175,96 +276,302 @@
   </section>
 
   <section id="dashboard-screen" class="hidden">
-    <h1>Tuhfatul Atfaal — Teacher Portal</h1>
-    <p>Manage learners, review all 15 maps, sign certificates, leave feedback, and unlock the next map after successful Talqeen, Hifz and recitation.</p>
-
-    <div class="stats">
-      <div class="stat"><strong id="stat-total">0</strong><span>Total students</span></div>
-      <div class="stat"><strong id="stat-active">0</strong><span>Started course</span></div>
-      <div class="stat"><strong id="stat-certs">0</strong><span>Certificates</span></div>
-      <div class="stat"><strong id="stat-review">0</strong><span>Ready for review</span></div>
+    <div class="hero">
+      <div>
+        <div class="arabic">تُحْفَةُ الأَطْفَال</div>
+        <h1 id="hero-greeting">Teacher Portal</h1>
+        <p id="hero-sub">Follow every learner, review maps, sign certificates and set your own quizzes.</p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn" id="hero-new-quiz">📝 New quiz</button>
+        <button class="btn" id="hero-review">✅ Review queue</button>
+        <button class="btn alt" id="hero-refresh">↻ Refresh</button>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>Add a student</h2>
-      <div class="row">
-        <div class="field"><label for="new-username">Username</label>
-          <input type="text" id="new-username" placeholder="amina123"></div>
-        <div class="field"><label for="new-displayname">Display name (optional)</label>
-          <input type="text" id="new-displayname" placeholder="Amina"></div>
+    <nav class="tabs" role="tablist" aria-label="Teacher portal sections">
+      <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
+      <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
+      <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
+      <button class="tab" data-tab="add" role="tab">➕ Add students</button>
+      <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers">🧑‍🏫 Teachers</button>
+    </nav>
+
+    <!-- OVERVIEW -->
+    <div class="tab-panel" data-panel="overview">
+      <div class="stats">
+        <div class="stat" data-goto="students" data-filter="all"><div class="ico">👩‍🎓</div><strong id="stat-total">0</strong><span>Total students</span></div>
+        <div class="stat" data-goto="students" data-filter="active"><div class="ico">🚀</div><strong id="stat-active">0</strong><span>Started the course</span></div>
+        <div class="stat" data-goto="students" data-filter="ready"><div class="ico">⏳</div><strong id="stat-review">0</strong><span>Maps ready for review</span></div>
+        <div class="stat" data-goto="students" data-filter="all"><div class="ico">🎓</div><strong id="stat-certs">0</strong><span>Certificates signed</span></div>
+        <div class="stat" data-goto="quizzes"><div class="ico">📝</div><strong id="stat-quizzes">0</strong><span>Published quizzes</span></div>
       </div>
-      <div class="row">
-        <div class="field" style="flex:2;"><label for="new-password">Password</label>
-          <input type="text" id="new-password" placeholder="At least 6 characters"></div>
-        <div class="field" style="flex:1; align-self:flex-end;">
-          <button class="btn ghost" type="button" id="gen-password-btn" style="width:100%; justify-content:center;">🎲 Generate</button>
+      <div class="two-col">
+        <div class="card">
+          <h2>⏳ Needs your review</h2>
+          <p class="muted" style="margin-top:-4px">Students who finished a map’s lessons and passed its 15-question challenge. Tap to sign the certificate.</p>
+          <div id="review-list"></div>
+        </div>
+        <div class="card">
+          <h2>📝 Recent quiz results</h2>
+          <p class="muted" style="margin-top:-4px">The latest attempts on quizzes you and other teachers set.</p>
+          <div id="recent-quiz-list"></div>
+        </div>
+        <div class="card">
+          <h2>🌟 Leading learners</h2>
+          <div id="leader-list"></div>
+        </div>
+        <div class="card">
+          <h2>🗺️ Class across the 15 maps</h2>
+          <p class="muted" style="margin-top:-4px">How many students have finished each map’s lessons.</p>
+          <div id="map-distribution"></div>
         </div>
       </div>
-      <button class="btn primary" id="add-student-btn">Add Student</button>
-      <p class="msg" id="add-msg"></p>
     </div>
 
-    <div class="card">
-      <h2>Bulk add students (CSV)</h2>
-      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Upload a CSV file to add many students at
-        once. Columns: <code>username</code> (required), <code>displayname</code> (optional),
-        <code>password</code> (optional — a random one is generated for any row that leaves it blank).</p>
-      <button class="btn ghost small" type="button" id="download-template-btn">⬇️ Download CSV template</button>
-      <div class="field" style="margin-top:12px;">
-        <label for="csv-file">CSV file</label>
-        <input type="file" id="csv-file" accept=".csv,text/csv">
+    <!-- STUDENTS -->
+    <div class="tab-panel hidden" data-panel="students">
+      <div class="toolbar">
+        <div class="search"><input type="search" id="student-search" placeholder="Search by name, username, email or guardian" aria-label="Search students"></div>
+        <select id="student-sort" aria-label="Sort students">
+          <option value="name">Sort: Name A–Z</option>
+          <option value="progress">Sort: Most progress</option>
+          <option value="least">Sort: Least progress</option>
+          <option value="newest">Sort: Newest first</option>
+        </select>
       </div>
-      <button class="btn primary" id="bulk-add-btn">Add All Students</button>
-      <p class="msg" id="bulk-msg"></p>
-      <div id="bulk-results" style="margin-top:12px;"></div>
-    </div>
-
-    <div class="card">
-      <h2>Students <span id="student-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
-      <button class="btn ghost small" id="refresh-btn" style="margin-bottom:14px;">Refresh</button>
-      <div id="student-list"></div>
-      <p class="empty hidden" id="student-empty">No students yet — add one above.</p>
-    </div>
-
-    <div class="card hidden" id="admins-card">
-      <h2>Teacher accounts <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
-      <p style="font-size:14px; color:#8a7654; margin-top:-6px;">Any admin or super admin can approve a teacher here. Enter the
-        exact username they used to sign up; it must contain “teacher”. A teacher account can manage and grade
-        students but can never delete one, and can never sign into the main site admin panel.</p>
-      <div class="row">
-        <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
-          <input type="text" id="new-admin-email" placeholder="salah-teacher"></div>
+      <div class="chips" id="student-filters">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="ready">⏳ Ready for review</button>
+        <button class="chip" data-filter="active">🚀 In progress</button>
+        <button class="chip" data-filter="new">🌱 Not started</button>
+        <button class="chip" data-filter="done">🎓 Completed</button>
+        <button class="chip" data-filter="disabled">⛔ Disabled</button>
       </div>
-      <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
-      <p class="msg" id="add-admin-msg"></p>
-      <div id="admin-list" style="margin-top:16px;"></div>
+      <div class="student-grid" id="student-list"></div>
+      <p class="empty hidden" id="student-empty">No students yet — add one in the “Add students” tab.</p>
+    </div>
+
+    <!-- QUIZZES -->
+    <div class="tab-panel hidden" data-panel="quizzes">
+      <div class="quiz-layout">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
+            <h2 style="margin:0">Your quizzes</h2>
+            <button class="btn primary small" id="new-quiz-btn">＋ New quiz</button>
+          </div>
+          <p class="muted" style="margin-top:0">Published quizzes appear to students under the map you choose.</p>
+          <div id="quiz-list"></div>
+          <p class="empty hidden" id="quiz-empty">No quizzes yet. Create your first one!</p>
+        </div>
+
+        <div>
+          <div class="card" id="quiz-welcome">
+            <h2>📝 Create a quiz for your students</h2>
+            <p>Pick a map, write your questions, mark the right answer, and publish. Students see it straight away under that map in Tajweed Quest, and their scores come back here.</p>
+            <button class="btn primary" id="welcome-new-quiz">＋ Start a new quiz</button>
+          </div>
+
+          <div class="card hidden" id="quiz-builder">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+              <h2 id="builder-title" style="margin:0">New quiz</h2>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn ghost small" id="builder-results-btn">📈 Results</button>
+                <button class="btn ghost small" id="builder-preview-btn">👁️ Preview</button>
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <div class="field" style="flex:2"><label for="quiz-title">Quiz title</label><input id="quiz-title" maxlength="80" placeholder="e.g. Idgham revision"></div>
+              <div class="field"><label for="quiz-map">Show under</label><select id="quiz-map"></select></div>
+              <div class="field" style="max-width:130px"><label for="quiz-pass">Pass mark (%)</label><input id="quiz-pass" type="number" min="0" max="100" value="70"></div>
+            </div>
+            <div class="field"><label for="quiz-instructions">Instructions for students (optional)</label><input id="quiz-instructions" maxlength="200" placeholder="Read each question carefully…"></div>
+            <label class="toggle"><input type="checkbox" id="quiz-published"> Published — students can see and take this quiz</label>
+
+            <h3 style="margin-top:16px">Questions <span class="muted" id="question-count"></span></h3>
+            <div id="question-list"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn ghost" id="add-question-btn">＋ Add multiple-choice question</button>
+              <button class="btn ghost" id="add-tf-btn">＋ Add true / false</button>
+            </div>
+
+            <div class="builder-actions">
+              <button class="btn primary" id="save-quiz-btn">💾 Save quiz</button>
+              <button class="btn ghost" id="cancel-quiz-btn">Close</button>
+              <button class="btn ghost" id="duplicate-quiz-btn">⧉ Duplicate</button>
+              <button class="btn danger" id="delete-quiz-btn" style="margin-left:auto">Delete</button>
+            </div>
+            <p class="msg" id="quiz-msg"></p>
+          </div>
+
+          <div class="card hidden" id="quiz-preview">
+            <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0" id="preview-title">Preview</h2><button class="btn ghost small" id="close-preview">← Back to editing</button></div>
+            <p class="muted" id="preview-sub"></p>
+            <div id="preview-body"></div>
+          </div>
+
+          <div class="card hidden" id="quiz-results">
+            <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0" id="results-title">Results</h2><button class="btn ghost small" id="close-results">← Back to editing</button></div>
+            <div class="info-grid" id="results-summary" style="margin-top:12px"></div>
+            <h3>Students</h3>
+            <div id="results-students"></div>
+            <h3 style="margin-top:14px">Question by question</h3>
+            <div id="results-questions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD STUDENTS -->
+    <div class="tab-panel hidden" data-panel="add">
+      <div class="two-col">
+        <div class="card">
+          <h2>Add a student</h2>
+          <div class="field"><label for="new-username">Username</label>
+            <input type="text" id="new-username" placeholder="amina123"></div>
+          <div class="field"><label for="new-displayname">Display name (optional)</label>
+            <input type="text" id="new-displayname" placeholder="Amina"></div>
+          <div class="row">
+            <div class="field" style="flex:2;"><label for="new-password">Password</label>
+              <input type="text" id="new-password" placeholder="At least 6 characters"></div>
+            <div class="field" style="flex:1; align-self:flex-end;">
+              <button class="btn ghost" type="button" id="gen-password-btn" style="width:100%; justify-content:center;">🎲 Generate</button>
+            </div>
+          </div>
+          <button class="btn primary" id="add-student-btn">Add Student</button>
+          <p class="msg" id="add-msg"></p>
+        </div>
+        <div class="card">
+          <h2>Bulk add students (CSV)</h2>
+          <p class="muted" style="margin-top:-6px;">Columns: <code>username</code> (required), <code>displayname</code> (optional),
+            <code>password</code> (optional — a random one is generated for any row that leaves it blank).</p>
+          <button class="btn ghost small" type="button" id="download-template-btn">⬇️ Download CSV template</button>
+          <div class="field" style="margin-top:12px;">
+            <label for="csv-file">CSV file</label>
+            <input type="file" id="csv-file" accept=".csv,text/csv">
+          </div>
+          <button class="btn primary" id="bulk-add-btn">Add All Students</button>
+          <p class="msg" id="bulk-msg"></p>
+          <div id="bulk-results" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEACHERS (admin / super only) -->
+    <div class="tab-panel hidden" data-panel="teachers">
+      <div class="card" id="admins-card">
+        <h2>Teacher accounts <span id="admin-count" style="font-family:'Cormorant Garamond'; font-weight:400; color:#8a7654;"></span></h2>
+        <p class="muted" style="margin-top:-6px;">Any admin or super admin can approve a teacher here. Enter the
+          exact username they used to sign up; it must contain “teacher”. A teacher account can manage and grade
+          students but can never delete one, and can never sign into the main site admin panel.</p>
+        <div class="row">
+          <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
+            <input type="text" id="new-admin-email" placeholder="salah-teacher"></div>
+        </div>
+        <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
+        <p class="msg" id="add-admin-msg"></p>
+        <div id="admin-list" style="margin-top:16px;"></div>
+      </div>
     </div>
   </section>
 
 </div>
 
+<!-- STUDENT PROFILE MODAL -->
 <div class="modal hidden" id="student-modal" role="dialog" aria-modal="true" aria-labelledby="manage-title">
   <div class="modal-panel">
-    <div class="modal-head"><div><h1 id="manage-title">Manage student</h1><p id="manage-sub" style="margin:2px 0"></p></div><button class="btn ghost small" id="close-modal">✕ Close</button></div>
-    <div class="row">
-      <div class="field"><label>Display name</label><input id="edit-display-name"></div>
-      <div class="field"><label>Certificate full name</label><input id="edit-full-name"></div>
-      <div class="field" style="align-self:end"><button class="btn ghost" id="save-names">Save names</button></div>
+    <div class="modal-head">
+      <div class="modal-id">
+        <div class="avatar big" id="manage-avatar">🧒</div>
+        <div><h1 id="manage-title" style="margin:0">Student</h1><p id="manage-sub" class="muted" style="margin:2px 0"></p><div id="manage-badges"></div></div>
+      </div>
+      <button class="btn ghost small" id="close-modal">✕ Close</button>
     </div>
-    <h2 style="margin-top:14px">Choose a map</h2><div class="map-grid" id="map-grid"></div>
-    <div class="teacher-work">
-      <h2 id="selected-map-title">Map review</h2><p id="map-status"></p>
-      <div class="row"><div class="field"><label>Teacher name</label><input id="certificate-teacher"></div><div class="field"><label>Teacher feedback</label><input id="certificate-feedback" placeholder="Strengths and next practice step"></div></div>
-      <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Hifz completed</label><label><input type="checkbox" id="certificate-recitation"> Good recitation</label></div>
-      <label style="font-family:'Marcellus';color:var(--ink-navy)">Teacher signature</label><canvas id="signature"></canvas>
-      <div class="actions" style="display:flex;gap:9px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" id="clear-signature">Clear signature</button><button class="btn primary" id="approve-map">Sign certificate & unlock next map</button><button class="btn ghost" id="manual-unlock">Open next map</button></div>
-      <p class="msg" id="manage-msg"></p>
-      <div class="danger-zone"><button class="btn danger small" id="reset-map">Reset selected map</button> <button class="btn danger small" id="reset-course">Reset entire course</button></div>
+    <div class="subtabs" role="tablist">
+      <button class="subtab active" data-sub="profile">👤 Profile</button>
+      <button class="subtab" data-sub="progress">📈 Progress</button>
+      <button class="subtab" data-sub="maps">🗺️ Maps &amp; certificates</button>
+      <button class="subtab" data-sub="quizzes">📝 Quiz results</button>
+      <button class="subtab" data-sub="account">⚙️ Account</button>
+    </div>
+
+    <div class="sub-panel" data-subpanel="profile">
+      <div class="info-grid" id="profile-info"></div>
+      <div class="teacher-work">
+        <h3>Edit student details</h3>
+        <div class="row">
+          <div class="field"><label for="edit-display-name">Display name</label><input id="edit-display-name"></div>
+          <div class="field"><label for="edit-full-name">Certificate full name</label><input id="edit-full-name"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="edit-dob">Date of birth</label><input type="date" id="edit-dob"></div>
+          <div class="field"><label for="edit-email">Email</label><input type="email" id="edit-email"></div>
+          <div class="field"><label for="edit-photo">Photo</label><input type="file" id="edit-photo" accept="image/*"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="edit-guardian">Parent / guardian</label><input id="edit-guardian"></div>
+          <div class="field"><label for="edit-phone">Guardian phone</label><input id="edit-phone"></div>
+        </div>
+        <div class="field"><label for="edit-notes">Teacher notes</label><textarea id="edit-notes" placeholder="Strengths, what to practise next, reminders…"></textarea></div>
+        <button class="btn primary" id="save-names">💾 Save details</button>
+        <p class="msg" id="profile-msg"></p>
+      </div>
+    </div>
+
+    <div class="sub-panel hidden" data-subpanel="progress">
+      <div class="info-grid" id="progress-summary"></div>
+      <table class="progress-table">
+        <thead><tr><th>Map</th><th>Lessons</th><th>Map challenge</th><th>Teacher check</th></tr></thead>
+        <tbody id="progress-rows"></tbody>
+      </table>
+      <p class="muted" id="other-games" style="margin-top:12px"></p>
+    </div>
+
+    <div class="sub-panel hidden" data-subpanel="maps">
+      <p class="muted" style="margin:0">Choose a map. <span class="role-badge warn">Gold</span> = ready for your review, <span class="role-badge ok">Green</span> = certificate signed.</p>
+      <div class="map-grid" id="map-grid"></div>
+      <div class="teacher-work">
+        <h2 id="selected-map-title">Map review</h2><p id="map-status"></p>
+        <div class="row"><div class="field"><label>Teacher name</label><input id="certificate-teacher"></div><div class="field"><label>Teacher feedback</label><input id="certificate-feedback" placeholder="Strengths and next practice step"></div></div>
+        <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Hifz completed</label><label><input type="checkbox" id="certificate-recitation"> Good recitation</label></div>
+        <label style="font-family:'Marcellus';color:var(--ink-navy)">Teacher signature</label><canvas id="signature"></canvas>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" id="clear-signature">Clear signature</button><button class="btn primary" id="approve-map">✍️ Sign certificate &amp; unlock next map</button><button class="btn ghost" id="manual-unlock">Open next map</button></div>
+        <p class="msg" id="manage-msg"></p>
+        <div class="danger-zone"><button class="btn danger small" id="reset-map">Reset selected map</button> <button class="btn danger small" id="reset-course">Reset entire course</button></div>
+      </div>
+    </div>
+
+    <div class="sub-panel hidden" data-subpanel="quizzes">
+      <div id="student-quiz-results"></div>
+    </div>
+
+    <div class="sub-panel hidden" data-subpanel="account">
+      <div class="teacher-work">
+        <h3>Password</h3>
+        <p class="muted">Sends Firebase’s reset link to the student’s own email if they gave one at sign-up, otherwise to the site’s admin inbox.</p>
+        <button class="btn ghost" id="acct-reset">✉️ Send password reset</button>
+        <div id="acct-rename-box">
+          <h3 style="margin-top:18px">Rename username</h3>
+          <div class="row">
+            <div class="field"><label for="acct-cur-pass">Current password</label><input type="text" id="acct-cur-pass"></div>
+            <div class="field"><label for="acct-new-uname">New username</label><input type="text" id="acct-new-uname"></div>
+          </div>
+          <button class="btn ghost" id="acct-rename">Confirm rename</button>
+        </div>
+        <h3 style="margin-top:18px">Access</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost" id="acct-disable">Disable account</button>
+          <button class="btn danger" id="acct-delete">Delete student</button>
+        </div>
+        <p class="msg" id="acct-msg"></p>
+      </div>
     </div>
   </div>
 </div>
 
-<script type="module" src="../kids-quest-cloud.js?v=7"></script>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="../kids-quest-cloud.js?v=8"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -277,8 +584,11 @@ const MAPS = [
   ['Meem Rules','24–29',23,6],['Laam Rules','30–34',29,5],['Madd','35–41',34,7],['Madd Types','42–47',41,6],
   ['More Madd','48–52',47,5],['Waqf','53–57',52,5],['Completion','57–61',57,5]
 ];
-let studentsCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
+const TOTAL_LESSONS = 62;
+let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
+let studentFilter = 'all', editingQuiz = null;
 
+/* ===================== helpers ===================== */
 function randomPassword(){
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   let out = '';
@@ -288,78 +598,69 @@ function randomPassword(){
 function friendlyError(err){
   const code = (err && err.code) || '';
   if(code.indexOf('wrong-password') >= 0 || code.indexOf('invalid-credential') >= 0 || code.indexOf('user-not-found') >= 0){
-    return 'Wrong email or password.';
+    return 'Wrong username or password.';
   }
   if(code.indexOf('email-already-in-use') >= 0) return 'That email or username already has an account — try signing in instead.';
   if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
   if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
-  if(code.indexOf('permission-denied') >= 0) return 'Not allowed for your account role.';
+  if(code.indexOf('permission-denied') >= 0) return 'Not allowed for your account role (or the Firestore rules still need updating).';
   return (err && err.message) || 'Something went wrong.';
-}
-function progressSummary(progress){
-  const labels = { arabic:'Arabic', english:'English', math:'Math', seerah:'Seerah' };
-  const parts = [];
-  Object.keys(labels).forEach(key => {
-    const p = progress && progress[key];
-    if(p && Array.isArray(p.stars)){
-      const done = p.stars.filter(s => s > 0).length;
-      parts.push(labels[key] + ': ' + done + '/' + p.stars.length);
-    }
-  });
-  /* Arabic Adventure keeps stars keyed by node id (e.g. "L_ب") rather than
-     as a plain array, since its map mixes letters, reviews and bonus nodes. */
-  const aa = progress && progress.arabicAdventure;
-  if(aa && aa.stars && typeof aa.stars === 'object'){
-    const lettersDone = Object.keys(aa.stars).filter(k => k.indexOf('L_') === 0).length;
-    parts.push('Arabic Adventure: ' + lettersDone + '/28 letters');
-  }
-  const tq = progress && progress['tuhfatul-atfaal'];
-  if(tq && Array.isArray(tq.stars)){
-    const lessonsDone = tq.stars.filter(s => s > 0).length;
-    const approved = Array.isArray(tq.teacherAssessments) ? tq.teacherAssessments.filter(a => a && a.approved).length : 0;
-    parts.push('Tuhfatul Atfaal: ' + lessonsDone + '/62 activities (61 lines) · ' + approved + '/15 maps teacher-approved');
-  }
-  return parts.length ? parts.join(' · ') : 'No progress yet in any game.';
 }
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : String(s);
   return d.innerHTML;
 }
-
-function tuhfatDetails(progress){
-  const p = progress && progress['tuhfatul-atfaal'];
-  if(!p) return '';
-  const assessments = Array.isArray(p.teacherAssessments) ? p.teacherAssessments : [];
-  const approved = assessments.filter(a => a && a.approved).length;
-  const rows = Array.from({length:15}, (_, i) => {
-    const a = assessments[i];
-    if(!a || !a.approved) return '<div class="map-record pending"><strong>Map ' + (i + 1) + '</strong> — awaiting teacher approval</div>';
-    const date = a.approvedAt ? new Date(a.approvedAt).toLocaleDateString() : 'Recorded';
-    return '<div class="map-record"><strong>Map ' + (i + 1) + ' ✓</strong>' +
-      '<p>Teacher: ' + escapeHtml(a.teacherName || 'Not recorded') + ' · ' + escapeHtml(date) + '</p>' +
-      '<p>Hifz: ' + (a.hifz ? '✓' : '—') + ' · Good recitation: ' + (a.recitation ? '✓' : '—') + '</p>' +
-      '<p>Feedback: ' + escapeHtml(a.feedback || 'No feedback recorded') + '</p></div>';
-  }).join('');
-  return '<details class="course-detail"><summary>' + escapeHtml(p.avatar || '🧒') + ' Tuhfatul Atfaal details (' + approved + '/15 approved)</summary>' + rows + '</details>';
+let toastTimer = null;
+function toast(text){
+  const t = $('toast'); t.textContent = text; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function setMsg(id, text, error){ const m = $(id); m.textContent = text || ''; m.className = 'msg ' + (error ? 'error' : 'success'); }
+function fmtDate(iso){ if(!iso) return '—'; const d = new Date(iso); return isNaN(d) ? '—' : d.toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }); }
+function ageFrom(dob){
+  if(!dob) return '';
+  const d = new Date(dob); if(isNaN(d)) return '';
+  const now = new Date(); let a = now.getFullYear() - d.getFullYear();
+  if(now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) a--;
+  return a >= 0 ? a + ' yrs' : '';
+}
+function mapLabel(i){ return i === -1 || i == null ? 'All maps' : 'Map ' + (i + 1) + ' · ' + MAPS[i][0]; }
+function resizePhotoFile(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read that image.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('That file isn’t a readable image.'));
+      img.onload = () => {
+        const size = 160, canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const scale = Math.max(size / img.width, size / img.height), w = img.width * scale, h = img.height * scale;
+        canvas.getContext('2d').drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.72));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function avatarHtml(s, p){
+  if(s.photoUrl && /^data:image\//.test(s.photoUrl)) return '<img src="' + s.photoUrl + '" alt="">';
+  return escapeHtml((p && p.avatar) || '🧒');
 }
 
 function parseCSV(text){
-  // Simple CSV parser: handles quoted fields, escaped quotes (""), and commas inside quotes.
   const rows = [];
   let row = [], field = '', inQuotes = false;
   for(let i = 0; i < text.length; i++){
     const c = text[i];
     if(inQuotes){
-      if(c === '"'){
-        if(text[i + 1] === '"'){ field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else if(c === '"'){
-      inQuotes = true;
-    } else if(c === ','){
-      row.push(field); field = '';
-    } else if(c === '\n' || c === '\r'){
+      if(c === '"'){ if(text[i + 1] === '"'){ field += '"'; i++; } else inQuotes = false; }
+      else field += c;
+    } else if(c === '"'){ inQuotes = true; }
+    else if(c === ','){ row.push(field); field = ''; }
+    else if(c === '\n' || c === '\r'){
       if(c === '\r' && text[i + 1] === '\n') i++;
       row.push(field); field = '';
       if(row.some(v => v.trim() !== '')) rows.push(row);
@@ -369,41 +670,263 @@ function parseCSV(text){
   if(field !== '' || row.length){ row.push(field); if(row.some(v => v.trim() !== '')) rows.push(row); }
   if(!rows.length) return [];
   const headers = rows[0].map(h => h.trim().toLowerCase());
-  return rows.slice(1).map(r => {
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
-    return obj;
-  });
+  return rows.slice(1).map(r => { const obj = {}; headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); }); return obj; });
 }
 
+/* ===================== course model ===================== */
 function courseProfile(student){
   const original = student.progress && student.progress[GAME_KEY];
   const p = original && typeof original === 'object' ? JSON.parse(JSON.stringify(original)) : {};
-  p.stars = [...(Array.isArray(p.stars) ? p.stars : []), ...Array(62).fill(0)].slice(0,62);
-  p.memoryDone = [...(Array.isArray(p.memoryDone) ? p.memoryDone : []), ...Array(62).fill(false)].slice(0,62);
+  p.stars = [...(Array.isArray(p.stars) ? p.stars : []), ...Array(TOTAL_LESSONS).fill(0)].slice(0,TOTAL_LESSONS);
+  p.memoryDone = [...(Array.isArray(p.memoryDone) ? p.memoryDone : []), ...Array(TOTAL_LESSONS).fill(false)].slice(0,TOTAL_LESSONS);
   p.vocabDone = [...(Array.isArray(p.vocabDone) ? p.vocabDone : []), ...Array(15).fill(false)].slice(0,15);
   p.teacherAssessments = [...(Array.isArray(p.teacherAssessments) ? p.teacherAssessments : []), ...Array(15).fill(null)].slice(0,15);
   p.mapQuizScores = [...(Array.isArray(p.mapQuizScores) ? p.mapQuizScores : []), ...Array(15).fill(null)].slice(0,15);
   p.flashPracticeDone = [...(Array.isArray(p.flashPracticeDone) ? p.flashPracticeDone : []), ...Array(15).fill(false)].slice(0,15);
   p.teacherMapUnlocks = [...(Array.isArray(p.teacherMapUnlocks) ? p.teacherMapUnlocks : []), ...Array(15).fill(false)].slice(0,15);
+  p.teacherQuizResults = p.teacherQuizResults && typeof p.teacherQuizResults === 'object' ? p.teacherQuizResults : {};
   p.unlocked = Math.max(1, Number(p.unlocked)||1); p.coins = Number(p.coins)||0;
   return p;
 }
-function mapComplete(p, i){ const m=MAPS[i]; return p.stars.slice(m[2],m[2]+m[3]).every(v=>Number(v)>0); }
+function mapLessonsDone(p, i){ const m = MAPS[i]; return p.stars.slice(m[2], m[2] + m[3]).filter(v => Number(v) > 0).length; }
+function mapComplete(p, i){ return mapLessonsDone(p, i) === MAPS[i][3]; }
 function quizPassed(p,i){ const q=p.mapQuizScores[i]; return !!(q && (q.passed || Number(q.score)>=12)); }
-function updateStats(list){
-  $('stat-total').textContent=list.length;
-  let active=0,certs=0,ready=0;
-  list.forEach(s=>{ const p=s.progress&&s.progress[GAME_KEY]; if(!p)return; active++; const a=Array.isArray(p.teacherAssessments)?p.teacherAssessments:[]; certs+=a.filter(x=>x&&x.approved&&!x.manual).length; MAPS.forEach((_,i)=>{if(mapComplete(courseProfile(s),i)&&quizPassed(courseProfile(s),i)&&!(a[i]&&a[i].approved))ready++;}); });
-  $('stat-active').textContent=active;$('stat-certs').textContent=certs;$('stat-review').textContent=ready;
+function approved(p, i){ const a = p.teacherAssessments[i]; return !!(a && a.approved); }
+function readyForReview(p, i){ return mapComplete(p, i) && quizPassed(p, i) && !approved(p, i); }
+
+/* One summary object per student, reused by every view so the numbers
+   on the cards, the overview and the profile can never disagree. */
+function summarize(s){
+  const hasCourse = !!(s.progress && s.progress[GAME_KEY]);
+  const p = courseProfile(s);
+  const lessons = p.stars.filter(v => Number(v) > 0).length;
+  const stars = p.stars.reduce((a, b) => a + (Number(b) || 0), 0);
+  const certs = p.teacherAssessments.filter(a => a && a.approved).length;
+  const readyMaps = MAPS.map((_, i) => i).filter(i => readyForReview(p, i));
+  let currentMap = MAPS.findIndex((_, i) => !mapComplete(p, i));
+  if(currentMap < 0) currentMap = 14;
+  const quizzes = Object.values(p.teacherQuizResults || {});
+  const lastQuiz = quizzes.slice().sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))[0] || null;
+  let status = 'active';
+  if(s.disabled) status = 'disabled';
+  else if(certs === 15) status = 'done';
+  else if(readyMaps.length) status = 'ready';
+  else if(!hasCourse || lessons === 0) status = 'new';
+  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
 }
-function setManageMessage(text,error){ const m=$('manage-msg');m.textContent=text||'';m.className='msg '+(error?'error':'success'); }
+function statusBadge(sum){
+  return {
+    ready: '<span class="role-badge warn">⏳ Ready for review</span>',
+    done: '<span class="role-badge ok">🎓 Completed</span>',
+    new: '<span class="role-badge info">🌱 Not started</span>',
+    disabled: '<span class="role-badge bad">⛔ Disabled</span>',
+    active: '<span class="role-badge ok">🚀 In progress</span>'
+  }[sum.status];
+}
+
+/* ===================== tabs ===================== */
+function showTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('hidden', p.dataset.panel !== name));
+}
+function setFilter(f){
+  studentFilter = f;
+  document.querySelectorAll('#student-filters .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === f));
+  renderStudentGrid();
+}
+
+/* ===================== overview ===================== */
+function renderOverview(){
+  const sums = studentsCache.map(summarize);
+  $('stat-total').textContent = sums.length;
+  $('stat-active').textContent = sums.filter(x => x.hasCourse && x.lessons > 0).length;
+  $('stat-certs').textContent = sums.reduce((a, x) => a + x.p.teacherAssessments.filter(t => t && t.approved && !t.manual).length, 0);
+  $('stat-review').textContent = sums.reduce((a, x) => a + x.readyMaps.length, 0);
+  $('stat-quizzes').textContent = quizzesCache.filter(q => q.published).length;
+  $('tab-count-students').textContent = sums.length;
+  $('tab-count-quizzes').textContent = quizzesCache.length;
+
+  const review = $('review-list'); review.innerHTML = '';
+  const items = [];
+  sums.forEach(x => x.readyMaps.forEach(i => items.push({ x, i })));
+  if(!items.length) review.innerHTML = '<p class="empty">Nothing waiting — every finished map has been reviewed. 🌟</p>';
+  items.slice(0, 12).forEach(({ x, i }) => {
+    const el = document.createElement('div'); el.className = 'list-row';
+    el.innerHTML = '<div class="avatar">' + avatarHtml(x.s, x.p) + '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) +
+      '</div><div class="sub">' + escapeHtml(mapLabel(i)) + ' · challenge ' + escapeHtml(String((x.p.mapQuizScores[i] || {}).score || 0)) + '/15</div></div><button class="btn primary small">Review →</button>';
+    el.onclick = () => openManager(x.s, 'maps', i);
+    review.appendChild(el);
+  });
+
+  const recent = $('recent-quiz-list'); recent.innerHTML = '';
+  const attempts = [];
+  sums.forEach(x => Object.entries(x.p.teacherQuizResults || {}).forEach(([qid, r]) => {
+    const quiz = quizzesCache.find(q => q.id === qid);
+    if(quiz && r) attempts.push({ x, quiz, r });
+  }));
+  attempts.sort((a, b) => String(b.r.at || '').localeCompare(String(a.r.at || '')));
+  if(!attempts.length) recent.innerHTML = '<p class="empty">No quiz attempts yet. Publish a quiz in the Quizzes tab.</p>';
+  attempts.slice(0, 8).forEach(({ x, quiz, r }) => {
+    const pct = r.total ? Math.round(r.score / r.total * 100) : 0, pass = pct >= (quiz.passPercent || 70);
+    const el = document.createElement('div'); el.className = 'list-row';
+    el.innerHTML = '<div class="avatar">' + avatarHtml(x.s, x.p) + '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) +
+      '</div><div class="sub">' + escapeHtml(quiz.title) + ' · ' + fmtDate(r.at) + '</div></div><span class="role-badge ' + (pass ? 'ok' : 'warn') + '">' + r.score + '/' + r.total + '</span>';
+    el.onclick = () => openManager(x.s, 'quizzes');
+    recent.appendChild(el);
+  });
+
+  const leaders = $('leader-list'); leaders.innerHTML = '';
+  const top = sums.filter(x => x.lessons > 0).sort((a, b) => b.lessons - a.lessons || b.stars - a.stars).slice(0, 6);
+  if(!top.length) leaders.innerHTML = '<p class="empty">No one has started yet.</p>';
+  top.forEach((x, n) => {
+    const el = document.createElement('div'); el.className = 'list-row';
+    el.innerHTML = '<div style="font:700 20px Marcellus;width:26px;text-align:center;color:var(--gold)">' + ['🥇','🥈','🥉'][n] + (n > 2 ? (n + 1) : '') + '</div><div class="avatar">' + avatarHtml(x.s, x.p) +
+      '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) + '</div><div class="bar" style="margin-top:5px"><span style="width:' + x.pct + '%"></span></div></div><span class="muted">' + x.lessons + '/62 · ⭐' + x.stars + '</span>';
+    el.onclick = () => openManager(x.s, 'progress');
+    leaders.appendChild(el);
+  });
+
+  const dist = $('map-distribution'); dist.innerHTML = '';
+  const total = Math.max(1, sums.length);
+  MAPS.forEach((m, i) => {
+    const done = sums.filter(x => mapComplete(x.p, i)).length;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:130px 1fr 38px;gap:8px;align-items:center;margin-bottom:6px;font-size:14px';
+    row.innerHTML = '<span>' + (i + 1) + '. ' + escapeHtml(m[0]) + '</span><div class="bar sky"><span style="width:' + Math.round(done / total * 100) + '%"></span></div><span class="acc">' + done + '</span>';
+    dist.appendChild(row);
+  });
+}
+
+/* ===================== students grid ===================== */
+function renderStudentGrid(){
+  const q = $('student-search').value.trim().toLowerCase();
+  let sums = studentsCache.map(summarize);
+  if(studentFilter !== 'all') sums = sums.filter(x => studentFilter === 'active' ? x.status === 'active' || x.status === 'ready' : x.status === studentFilter);
+  if(q) sums = sums.filter(x => [x.s.username, x.s.displayName, x.s.fullName, x.s.contactEmail, x.s.guardianName]
+    .some(v => String(v || '').toLowerCase().includes(q)));
+  const sort = $('student-sort').value;
+  sums.sort((a, b) => sort === 'progress' ? b.lessons - a.lessons
+    : sort === 'least' ? a.lessons - b.lessons
+    : sort === 'newest' ? String(b.s.createdAt || '').localeCompare(String(a.s.createdAt || ''))
+    : String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username)));
+
+  const box = $('student-list'); box.innerHTML = '';
+  $('student-empty').classList.toggle('hidden', sums.length > 0);
+  $('student-empty').textContent = studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
+  sums.forEach(x => {
+    const s = x.s, el = document.createElement('div');
+    el.className = 's-card' + (s.disabled ? ' disabled' : '');
+    el.tabIndex = 0;
+    const last = x.lastQuiz ? x.lastQuiz.score + '/' + x.lastQuiz.total : '—';
+    el.innerHTML =
+      '<div class="s-head"><div class="avatar">' + avatarHtml(s, x.p) + '</div><div style="min-width:0"><div class="s-name">' + escapeHtml(s.displayName || s.username) +
+      '</div><div class="s-user">@' + escapeHtml(s.username) + (s.dob ? ' · ' + escapeHtml(ageFrom(s.dob)) : '') + '</div></div></div>' +
+      '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
+      '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
+      '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.certs + '/15</b><small>certificates</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
+      '<div class="s-foot">' + statusBadge(x) + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
+    el.onclick = () => openManager(s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
+    el.onkeydown = e => { if(e.key === 'Enter') el.click(); };
+    box.appendChild(el);
+  });
+}
+
+/* ===================== student modal ===================== */
+function showSub(name){
+  document.querySelectorAll('.subtab').forEach(t => t.classList.toggle('active', t.dataset.sub === name));
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.toggle('hidden', p.dataset.subpanel !== name));
+  if(name === 'maps') requestAnimationFrame(() => { resizeSignature(); renderMapManager(); });
+}
+function openManager(student, sub, mapIndex){
+  activeStudent = student; selectedMap = Number.isInteger(mapIndex) ? mapIndex : 0;
+  $('student-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden';
+  renderModal();
+  showSub(sub || 'profile');
+}
+function closeManager(){ $('student-modal').classList.add('hidden'); document.body.style.overflow = ''; activeStudent = null; }
+function renderModal(){
+  if(!activeStudent) return;
+  const x = summarize(activeStudent), s = activeStudent;
+  $('manage-avatar').innerHTML = avatarHtml(s, x.p);
+  $('manage-title').textContent = s.displayName || s.username;
+  $('manage-sub').textContent = '@' + s.username + (s.fullName && s.fullName !== s.displayName ? ' · certificate name: ' + s.fullName : '');
+  $('manage-badges').innerHTML = statusBadge(x) + (s.selfSignup ? ' <span class="role-badge info">Self sign-up</span>' : '');
+
+  const info = [
+    ['Date of birth', s.dob ? fmtDate(s.dob) + ' (' + ageFrom(s.dob) + ')' : '—'],
+    ['Email', s.contactEmail || '—'],
+    ['Parent / guardian', s.guardianName || '—'],
+    ['Guardian phone', s.guardianPhone || '—'],
+    ['Joined', fmtDate(s.createdAt)],
+    ['Last teacher update', fmtDate(s.lastTeacherUpdateAt)],
+    ['Lessons done', x.lessons + ' / 62'],
+    ['Stars · coins', '⭐ ' + x.stars + ' · 🪙 ' + x.p.coins],
+    ['Certificates', x.certs + ' / 15']
+  ];
+  $('profile-info').innerHTML = info.map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('') +
+    (s.notes ? '<div class="info" style="grid-column:1/-1"><small>Teacher notes</small><span>' + escapeHtml(s.notes) + '</span></div>' : '');
+  $('edit-display-name').value = s.displayName || '';
+  $('edit-full-name').value = s.fullName || s.displayName || '';
+  $('edit-dob').value = s.dob || '';
+  $('edit-email').value = s.contactEmail || '';
+  $('edit-guardian').value = s.guardianName || '';
+  $('edit-phone').value = s.guardianPhone || '';
+  $('edit-notes').value = s.notes || '';
+  $('edit-photo').value = '';
+  setMsg('profile-msg', '');
+
+  const quizResults = Object.values(x.p.teacherQuizResults || {});
+  const avg = quizResults.length ? Math.round(quizResults.reduce((a, r) => a + (r.total ? r.score / r.total : 0), 0) / quizResults.length * 100) + '%' : '—';
+  $('progress-summary').innerHTML = [
+    ['Overall', x.pct + '%'], ['Currently on', mapLabel(x.currentMap)], ['Memorisation practice', x.p.memoryDone.filter(Boolean).length + ' / 62'],
+    ['Map challenges passed', x.p.mapQuizScores.filter(q => q && (q.passed || Number(q.score) >= 12)).length + ' / 15'],
+    ['Teacher quizzes taken', String(quizResults.length)], ['Teacher quiz average', avg]
+  ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');
+  $('progress-rows').innerHTML = MAPS.map((m, i) => {
+    const done = mapLessonsDone(x.p, i), q = x.p.mapQuizScores[i], a = x.p.teacherAssessments[i];
+    return '<tr><td><b>' + (i + 1) + '.</b> ' + escapeHtml(m[0]) + ' <span class="muted">(lines ' + m[1] + ')</span></td>' +
+      '<td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1;min-width:60px"><span style="width:' + Math.round(done / m[3] * 100) + '%"></span></div><span class="acc">' + done + '/' + m[3] + '</span></div></td>' +
+      '<td>' + (q ? (quizPassed(x.p, i) ? '<span class="role-badge ok">' : '<span class="role-badge warn">') + escapeHtml(String(q.score)) + '/15</span>' : '<span class="muted">—</span>') + '</td>' +
+      '<td>' + (a && a.approved ? '<span class="role-badge ok">✓ ' + escapeHtml(a.teacherName || 'Signed') + '</span>' : readyForReview(x.p, i) ? '<button class="btn primary small" data-review="' + i + '">Review</button>' : '<span class="muted">—</span>') + '</td></tr>';
+  }).join('');
+  document.querySelectorAll('[data-review]').forEach(b => b.onclick = () => { selectedMap = +b.dataset.review; showSub('maps'); });
+  const other = [];
+  const pr = s.progress || {};
+  [['arabic','Arabic Quest'],['english','English Quest'],['math','Math Quest'],['seerah','Seerah Quest']].forEach(([k, label]) => {
+    const g = pr[k]; if(g && Array.isArray(g.stars)) other.push(label + ': ' + g.stars.filter(v => v > 0).length + '/' + g.stars.length);
+  });
+  $('other-games').textContent = other.length ? 'Other Kids Corner games — ' + other.join(' · ') : '';
+
+  renderStudentQuizResults(x);
+
+  const isTeacher = myRole === 'teacher';
+  $('acct-rename-box').classList.toggle('hidden', isTeacher);
+  $('acct-delete').classList.toggle('hidden', isTeacher);
+  $('acct-disable').textContent = s.disabled ? 'Enable account' : 'Disable account';
+  setMsg('acct-msg', '');
+}
+function renderStudentQuizResults(x){
+  const box = $('student-quiz-results');
+  const relevant = quizzesCache.filter(q => q.published || x.p.teacherQuizResults[q.id]);
+  if(!relevant.length){ box.innerHTML = '<p class="empty">No teacher quizzes have been published yet.</p>'; return; }
+  box.innerHTML = '<table class="progress-table"><thead><tr><th>Quiz</th><th>Shown under</th><th>Best</th><th>Last score</th><th>Attempts</th><th>Last taken</th></tr></thead><tbody>' +
+    relevant.map(q => {
+      const r = x.p.teacherQuizResults[q.id];
+      if(!r) return '<tr><td>' + escapeHtml(q.title) + '</td><td>' + escapeHtml(mapLabel(q.map)) + '</td><td colspan="4" class="muted">Not taken yet</td></tr>';
+      const pass = r.total && (r.best || r.score) / r.total * 100 >= (q.passPercent || 70);
+      return '<tr><td>' + escapeHtml(q.title) + '</td><td>' + escapeHtml(mapLabel(q.map)) + '</td><td><span class="role-badge ' + (pass ? 'ok' : 'warn') + '">' + (r.best != null ? r.best : r.score) + '/' + r.total + '</span></td><td>' +
+        r.score + '/' + r.total + '</td><td>' + (r.attempts || 1) + '</td><td>' + fmtDate(r.at) + '</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function setManageMessage(text,error){ setMsg('manage-msg', text, error); }
 function currentProfile(){ return courseProfile(activeStudent); }
 function saveActiveProfile(p, message){
   setManageMessage('Saving…');
   return window.KidsCloud.adminUpdateStudentGameProgress(activeStudent.uid,GAME_KEY,p).then(()=>{
     activeStudent.progress=activeStudent.progress||{};activeStudent.progress[GAME_KEY]=p;setManageMessage(message||'Saved. The student will receive the update automatically.');
-    return loadStudents(false);
+    toast(message || 'Saved');
+    renderModal(); renderAll();
   }).catch(err=>setManageMessage(friendlyError(err),true));
 }
 function drawSavedSignature(dataUrl){
@@ -412,17 +935,19 @@ function drawSavedSignature(dataUrl){
 }
 function clearSignature(mark=true){ const c=$('signature'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);if(mark)signatureDirty=false; }
 function renderMapManager(){
+  if(!activeStudent) return;
   const p=currentProfile(), grid=$('map-grid');grid.innerHTML='';
-  MAPS.forEach((m,i)=>{const a=p.teacherAssessments[i],b=document.createElement('button');b.className='map-pick'+(i===selectedMap?' active':'')+(a&&a.approved?' approved':'');b.innerHTML='Map '+(i+1)+'<br><small>Lines '+m[1]+(a&&a.approved?' · ✓':'')+'</small>';b.onclick=()=>{selectedMap=i;renderMapManager();};grid.appendChild(b);});
+  MAPS.forEach((m,i)=>{
+    const b=document.createElement('button'), done=mapLessonsDone(p,i);
+    b.className='map-pick'+(i===selectedMap?' active':'')+(approved(p,i)?' approved':readyForReview(p,i)?' ready':'');
+    b.innerHTML='Map '+(i+1)+(approved(p,i)?' ✓':readyForReview(p,i)?' ⏳':'')+'<br><small>'+escapeHtml(m[0])+'</small><div class="mini"><span style="width:'+Math.round(done/m[3]*100)+'%"></span></div>';
+    b.onclick=()=>{selectedMap=i;renderMapManager();};grid.appendChild(b);
+  });
   const m=MAPS[selectedMap],a=p.teacherAssessments[selectedMap]||{},complete=mapComplete(p,selectedMap),passed=quizPassed(p,selectedMap),manual=!!p.teacherMapUnlocks[selectedMap];
   $('selected-map-title').textContent='Map '+(selectedMap+1)+' · '+m[0]+' · Lines '+m[1];
-  $('map-status').innerHTML='Lessons: <b>'+(complete?'complete':'not complete')+'</b> · 15-question quiz: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
-  $('certificate-teacher').value=a.teacherName||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
+  $('map-status').innerHTML='Lessons: <b>'+mapLessonsDone(p,selectedMap)+'/'+m[3]+(complete?' ✓':'')+'</b> · 15-question challenge: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
+  $('certificate-teacher').value=a.teacherName||$('certificate-teacher').dataset.me||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
 }
-function openManager(student){
-  activeStudent=student;selectedMap=0;$('manage-title').textContent=student.displayName||student.username;$('manage-sub').textContent='@'+student.username+' · Tuhfatul Atfaal progress';$('edit-display-name').value=student.displayName||'';$('edit-full-name').value=student.fullName||student.displayName||'';$('student-modal').classList.remove('hidden');document.body.style.overflow='hidden';requestAnimationFrame(()=>{resizeSignature();renderMapManager();});
-}
-function closeManager(){$('student-modal').classList.add('hidden');document.body.style.overflow='';activeStudent=null;}
 function resizeSignature(){const c=$('signature'),r=c.getBoundingClientRect();c.width=Math.max(300,Math.round(r.width));c.height=150;const ctx=c.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#1f4f40';signatureDirty=false;}
 function wireSignature(){
   const c=$('signature'),ctx=c.getContext('2d');let drawing=false;
@@ -432,94 +957,199 @@ function wireSignature(){
   ['pointerup','pointercancel','pointerleave'].forEach(t=>c.addEventListener(t,()=>drawing=false));
 }
 
-function renderStudents(list){
-  studentsCache = list;
-  updateStats(list);
-  const box = $('student-list');
-  box.innerHTML = '';
-  $('student-count').textContent = list.length ? '(' + list.length + ')' : '';
-  $('student-empty').classList.toggle('hidden', list.length > 0);
-  list.forEach(s => {
-    const el = document.createElement('div');
-    el.className = 'student';
-    el.innerHTML =
-      '<div class="top">' +
-        '<span class="uname">' + escapeHtml(s.displayName || s.username) + ' <span style="color:#8a7654; font-size:14px;">(@' + escapeHtml(s.username) + ')</span>' +
-          (s.selfSignup ? ' <span class="role-badge" style="background:#c9dfe6; color:#1c4a55;">Self sign-up</span>' : '') +
-          (s.disabled ? ' <span class="role-badge" style="background:var(--danger-bg); color:var(--danger);">Disabled</span>' : '') +
-        '</span>' +
-        '<span class="meta">' + (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '') + '</span>' +
-      '</div>' +
-      (s.contactEmail ? '<p class="meta" style="margin:2px 0 0;">✉️ ' + escapeHtml(s.contactEmail) + '</p>' : '') +
-      '<p class="progress-line">' + escapeHtml(progressSummary(s.progress)) + '</p>' +
-      tuhfatDetails(s.progress) +
-      '<div class="actions">' +
-        '<button class="btn small manage-btn" data-act="manage">📘 Manage Tuhfatul</button>' +
-        '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
-        (myRole === 'teacher' ? '' : '<button class="btn ghost small" data-act="rename">Rename username</button>') +
-        '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
-        (myRole === 'teacher' ? '' :
-          '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>'
-        ) +
-      '</div>' +
-      '<div class="rename-panel" data-rename>' +
-        '<div class="row">' +
-          '<div class="field"><label>Current password</label><input type="text" data-cur-pass></div>' +
-          '<div class="field"><label>New username</label><input type="text" data-new-uname></div>' +
-        '</div>' +
-        '<button class="btn primary small" data-act="do-rename">Confirm rename</button>' +
-        '<p class="msg" data-rename-msg></p>' +
-      '</div>' +
-      '<p class="msg" data-msg></p>';
-
-    el.querySelector('[data-act="manage"]').addEventListener('click', () => openManager(s));
-
-    el.querySelector('[data-act="reset"]').addEventListener('click', () => {
-      const msg = el.querySelector('[data-msg]');
-      window.KidsCloud.adminSendPasswordReset(s.username).then(() => {
-        msg.className = 'msg success';
-        msg.textContent = 'Reset link sent to your inbox — open it, set a new password, then tell the student.';
-      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
-    });
-
-    const renameBtn = el.querySelector('[data-act="rename"]');
-    if(renameBtn) renameBtn.addEventListener('click', () => {
-      el.querySelector('[data-rename]').classList.toggle('show');
-    });
-
-    el.querySelector('[data-act="do-rename"]').addEventListener('click', () => {
-      const curPass = el.querySelector('[data-cur-pass]').value;
-      const newUname = el.querySelector('[data-new-uname]').value.trim();
-      const msg = el.querySelector('[data-rename-msg]');
-      if(!curPass || !newUname){ msg.className = 'msg error'; msg.textContent = 'Fill in both fields.'; return; }
-      msg.className = 'msg'; msg.textContent = 'Working…';
-      window.KidsCloud.adminRenameStudent(s.username, curPass, newUname, s.uid).then(() => {
-        msg.className = 'msg success';
-        msg.textContent = 'Renamed! Refreshing…';
-        loadStudents();
-      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
-    });
-
-    const deleteBtn = el.querySelector('[data-act="delete"]');
-    if(deleteBtn) deleteBtn.addEventListener('click', () => {
-      if(!confirm('Remove ' + s.username + '’s saved progress? This cannot be undone from here.')) return;
-      window.KidsCloud.adminDeleteStudent(s.uid).then(loadStudents).catch(err => alert(friendlyError(err)));
-    });
-
-    el.querySelector('[data-act="toggle-disable"]').addEventListener('click', () => {
-      const msg = el.querySelector('[data-msg]');
-      const next = !s.disabled;
-      if(next && !confirm('Disable ' + s.username + '’s account? They’ll be signed out and blocked from logging back in until you enable it again.')) return;
-      window.KidsCloud.adminSetStudentDisabled(s.uid, next).then(() => {
-        msg.className = 'msg success';
-        msg.textContent = next ? 'Disabled.' : 'Enabled — they can log back in now.';
-        loadStudents();
-      }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
-    });
-
+/* ===================== quizzes ===================== */
+function blankQuestion(tf){
+  return tf ? { q:'', choices:['True','False'], answer:0, explain:'' } : { q:'', choices:['','','',''], answer:0, explain:'' };
+}
+function quizStats(quiz){
+  const rows = [];
+  studentsCache.forEach(s => {
+    const r = courseProfile(s).teacherQuizResults[quiz.id];
+    if(r) rows.push({ s, r });
+  });
+  const avg = rows.length ? Math.round(rows.reduce((a, x) => a + (x.r.total ? x.r.score / x.r.total : 0), 0) / rows.length * 100) : null;
+  const passed = rows.filter(x => x.r.total && (x.r.best != null ? x.r.best : x.r.score) / x.r.total * 100 >= (quiz.passPercent || 70)).length;
+  return { rows, avg, passed };
+}
+function renderQuizList(){
+  const box = $('quiz-list'); box.innerHTML = '';
+  $('quiz-empty').classList.toggle('hidden', quizzesCache.length > 0);
+  quizzesCache.forEach(q => {
+    const st = quizStats(q), el = document.createElement('div');
+    el.className = 'quiz-item' + (editingQuiz && editingQuiz.id === q.id ? ' active' : '');
+    el.innerHTML = '<div class="t">' + escapeHtml(q.title) + '</div><div class="m">' + escapeHtml(mapLabel(q.map)) + ' · ' + (q.questions || []).length + ' questions</div>' +
+      '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + (q.published ? '<span class="role-badge ok">Published</span>' : '<span class="role-badge">Draft</span>') +
+      '<span class="role-badge info">' + st.rows.length + ' taken</span>' + (st.avg != null ? '<span class="role-badge warn">avg ' + st.avg + '%</span>' : '') + '</div>';
+    el.onclick = () => editQuiz(q);
     box.appendChild(el);
   });
 }
+function fillMapSelect(){
+  const sel = $('quiz-map');
+  sel.innerHTML = '<option value="-1">All maps (always shown)</option>' + MAPS.map((m, i) => '<option value="' + i + '">Map ' + (i + 1) + ' · ' + escapeHtml(m[0]) + '</option>').join('');
+}
+function showQuizPane(which){
+  ['quiz-welcome','quiz-builder','quiz-preview','quiz-results'].forEach(id => $(id).classList.toggle('hidden', id !== which));
+}
+function editQuiz(q){
+  editingQuiz = q ? JSON.parse(JSON.stringify(q)) : { title:'', map:-1, passPercent:70, instructions:'', published:false, questions:[blankQuestion(false)] };
+  if(!editingQuiz.questions || !editingQuiz.questions.length) editingQuiz.questions = [blankQuestion(false)];
+  $('builder-title').textContent = q ? 'Edit quiz' : 'New quiz';
+  $('quiz-title').value = editingQuiz.title || '';
+  $('quiz-map').value = String(Number.isInteger(editingQuiz.map) ? editingQuiz.map : -1);
+  $('quiz-pass').value = editingQuiz.passPercent || 70;
+  $('quiz-instructions').value = editingQuiz.instructions || '';
+  $('quiz-published').checked = !!editingQuiz.published;
+  $('delete-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
+  $('duplicate-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
+  $('builder-results-btn').classList.toggle('hidden', !editingQuiz.id);
+  setMsg('quiz-msg', '');
+  renderQuestions();
+  renderQuizList();
+  showQuizPane('quiz-builder');
+  showTab('quizzes');
+}
+function readBuilderMeta(){
+  editingQuiz.title = $('quiz-title').value;
+  editingQuiz.map = Number($('quiz-map').value);
+  editingQuiz.passPercent = Number($('quiz-pass').value) || 70;
+  editingQuiz.instructions = $('quiz-instructions').value;
+  editingQuiz.published = $('quiz-published').checked;
+}
+function renderQuestions(){
+  const box = $('question-list'); box.innerHTML = '';
+  const qs = editingQuiz.questions;
+  $('question-count').textContent = '(' + qs.length + ')';
+  qs.forEach((item, qi) => {
+    const card = document.createElement('div'); card.className = 'q-card';
+    card.innerHTML =
+      '<div class="q-num"><span>Question ' + (qi + 1) + '</span><span class="q-tools">' +
+        '<button data-t="up" title="Move up">↑</button><button data-t="down" title="Move down">↓</button><button data-t="copy" title="Duplicate">⧉</button><button data-t="del" title="Delete">🗑</button></span></div>' +
+      '<div class="field" style="margin-bottom:8px"><textarea data-f="q" placeholder="Type the question… (Arabic is fine too)">' + escapeHtml(item.q) + '</textarea></div>' +
+      item.choices.map((c, ci) => '<div class="choice-row' + (item.answer === ci ? ' correct' : '') + '"><input type="radio" name="ans-' + qi + '" data-ans="' + ci + '"' + (item.answer === ci ? ' checked' : '') + ' title="Mark as the correct answer"><span class="letter">' + 'ABCDEF'[ci] + '</span><input type="text" data-c="' + ci + '" value="' + escapeHtml(c) + '" placeholder="Answer ' + 'ABCDEF'[ci] + (ci > 1 ? ' (optional)' : '') + '">' +
+        (item.choices.length > 2 ? '<button class="btn ghost small" data-rm="' + ci + '" title="Remove option" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
+      (item.choices.length < 6 ? '<button class="linkbtn" data-t="addopt">＋ add another answer</button>' : '') +
+      '<div class="field" style="margin:8px 0 0"><input data-f="explain" placeholder="Explanation shown after answering (optional)" value="' + escapeHtml(item.explain || '') + '"></div>' +
+      '<p class="muted" style="margin:6px 0 0">Tick the circle beside the correct answer.</p>';
+    card.querySelector('[data-f="q"]').oninput = e => { item.q = e.target.value; };
+    card.querySelector('[data-f="explain"]').oninput = e => { item.explain = e.target.value; };
+    card.querySelectorAll('[data-c]').forEach(inp => inp.oninput = e => { item.choices[+inp.dataset.c] = e.target.value; });
+    card.querySelectorAll('[data-ans]').forEach(r => r.onchange = () => { item.answer = +r.dataset.ans; renderQuestions(); });
+    card.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+      const ci = +b.dataset.rm; item.choices.splice(ci, 1);
+      if(item.answer === ci) item.answer = 0; else if(item.answer > ci) item.answer--;
+      renderQuestions();
+    });
+    card.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
+      const t = b.dataset.t;
+      if(t === 'up' && qi > 0){ [qs[qi - 1], qs[qi]] = [qs[qi], qs[qi - 1]]; }
+      else if(t === 'down' && qi < qs.length - 1){ [qs[qi + 1], qs[qi]] = [qs[qi], qs[qi + 1]]; }
+      else if(t === 'copy'){ qs.splice(qi + 1, 0, JSON.parse(JSON.stringify(item))); }
+      else if(t === 'del'){ if(qs.length === 1){ toast('A quiz needs at least one question.'); return; } qs.splice(qi, 1); }
+      else if(t === 'addopt'){ item.choices.push(''); }
+      renderQuestions();
+    });
+    box.appendChild(card);
+  });
+}
+/* Drops empty answer boxes and re-points the correct answer at the same
+   option it was on before, so a teacher leaving C and D blank never
+   silently shifts which answer is marked right. */
+function cleanQuestions(){
+  const out = [], problems = [];
+  editingQuiz.questions.forEach((item, qi) => {
+    const kept = [], map = {};
+    item.choices.forEach((c, ci) => { if(String(c).trim()){ map[ci] = kept.length; kept.push(String(c).trim()); } });
+    if(!String(item.q).trim()) problems.push('Question ' + (qi + 1) + ' has no text.');
+    else if(kept.length < 2) problems.push('Question ' + (qi + 1) + ' needs at least two answers.');
+    else if(!(item.answer in map)) problems.push('Question ' + (qi + 1) + ': the ticked correct answer is empty.');
+    out.push({ q: String(item.q).trim(), choices: kept, answer: map[item.answer] || 0, explain: String(item.explain || '').trim() });
+  });
+  return { questions: out, problems };
+}
+function saveQuiz(asCopy){
+  readBuilderMeta();
+  if(!String(editingQuiz.title).trim()){ setMsg('quiz-msg', 'Give the quiz a title.', true); $('quiz-title').focus(); return; }
+  const { questions, problems } = cleanQuestions();
+  if(problems.length){ setMsg('quiz-msg', problems[0], true); return; }
+  const payload = Object.assign({}, editingQuiz, { questions, game: GAME_KEY, createdByName: $('certificate-teacher').dataset.me || myEmail });
+  if(asCopy){ delete payload.id; payload.title = payload.title + ' (copy)'; payload.published = false; }
+  $('save-quiz-btn').disabled = true;
+  setMsg('quiz-msg', 'Saving…');
+  window.KidsCloud.adminSaveQuiz(payload).then(id => {
+    toast(asCopy ? 'Copy created as a draft.' : payload.published ? 'Quiz saved and published to students ✓' : 'Draft saved ✓');
+    return loadQuizzes().then(() => { const saved = quizzesCache.find(q => q.id === id); if(saved) editQuiz(saved); });
+  }).catch(err => setMsg('quiz-msg', friendlyError(err), true))
+    .finally(() => { $('save-quiz-btn').disabled = false; });
+}
+function previewQuiz(){
+  readBuilderMeta();
+  const { questions } = cleanQuestions();
+  $('preview-title').textContent = 'Preview · ' + (editingQuiz.title || 'Untitled quiz');
+  $('preview-sub').textContent = mapLabel(editingQuiz.map) + ' · pass mark ' + (editingQuiz.passPercent || 70) + '% · this is exactly what students will see. Try answering!';
+  const body = $('preview-body'); body.innerHTML = editingQuiz.instructions ? '<p><i>' + escapeHtml(editingQuiz.instructions) + '</i></p>' : '';
+  questions.forEach((item, qi) => {
+    const box = document.createElement('div'); box.className = 'preview-q';
+    box.innerHTML = '<b>' + (qi + 1) + '.</b> ' + escapeHtml(item.q) + '<div class="choices">' + item.choices.map((c, ci) => '<button data-ci="' + ci + '">' + 'ABCDEF'[ci] + '. ' + escapeHtml(c) + '</button>').join('') + '</div><p class="muted" data-exp></p>';
+    box.querySelectorAll('[data-ci]').forEach(b => b.onclick = () => {
+      box.querySelectorAll('[data-ci]').forEach(x => { x.disabled = true; if(+x.dataset.ci === item.answer) x.classList.add('right'); });
+      if(+b.dataset.ci !== item.answer) b.classList.add('wrong');
+      box.querySelector('[data-exp]').textContent = item.explain || '';
+    });
+    body.appendChild(box);
+  });
+  showQuizPane('quiz-preview');
+}
+function showResults(){
+  const q = quizzesCache.find(x => editingQuiz && x.id === editingQuiz.id);
+  if(!q) return;
+  const st = quizStats(q);
+  $('results-title').textContent = 'Results · ' + q.title;
+  $('results-summary').innerHTML = [
+    ['Students who took it', String(st.rows.length)], ['Average score', st.avg != null ? st.avg + '%' : '—'], ['Passed (' + (q.passPercent || 70) + '%+)', st.passed + ' / ' + st.rows.length]
+  ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');
+  const sb = $('results-students');
+  if(!st.rows.length) sb.innerHTML = '<p class="empty">Nobody has taken this quiz yet.</p>';
+  else {
+    sb.innerHTML = '';
+    st.rows.sort((a, b) => (b.r.best != null ? b.r.best : b.r.score) - (a.r.best != null ? a.r.best : a.r.score)).forEach(({ s, r }) => {
+      const el = document.createElement('div'); el.className = 'list-row';
+      const best = r.best != null ? r.best : r.score, pct = r.total ? Math.round(best / r.total * 100) : 0;
+      el.innerHTML = '<div class="avatar">' + avatarHtml(s, courseProfile(s)) + '</div><div class="grow"><div class="title">' + escapeHtml(s.displayName || s.username) +
+        '</div><div class="sub">' + (r.attempts || 1) + ' attempt(s) · last ' + fmtDate(r.at) + ' · last score ' + r.score + '/' + r.total + '</div></div><span class="role-badge ' + (pct >= (q.passPercent || 70) ? 'ok' : 'warn') + '">best ' + best + '/' + r.total + '</span>';
+      el.onclick = () => openManager(s, 'quizzes');
+      sb.appendChild(el);
+    });
+  }
+  const qb = $('results-questions');
+  qb.innerHTML = (q.questions || []).map((item, qi) => {
+    const answered = st.rows.filter(x => Array.isArray(x.r.answers) && x.r.answers[qi] != null);
+    const right = answered.filter(x => x.r.answers[qi] === item.answer).length;
+    const pct = answered.length ? Math.round(right / answered.length * 100) : null;
+    return '<div style="display:grid;grid-template-columns:1fr 160px 48px;gap:10px;align-items:center;margin-bottom:8px;font-size:15px"><span><b>' + (qi + 1) + '.</b> ' + escapeHtml(item.q) +
+      '</span><div class="bar ' + (pct != null && pct < 50 ? 'gold' : '') + '"><span style="width:' + (pct || 0) + '%"></span></div><span class="acc">' + (pct != null ? pct + '%' : '—') + '</span></div>';
+  }).join('') + '<p class="muted">Share of students whose latest attempt got each question right. Low bars show what to re-teach.</p>';
+  showQuizPane('quiz-results');
+}
+
+/* ===================== data loading ===================== */
+function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); }
+function loadStudents(){
+  return window.KidsCloud.adminListStudents().then(list => {
+    studentsCache = list;
+    if(activeStudent){ const fresh = list.find(s => s.uid === activeStudent.uid); if(fresh){ activeStudent = fresh; renderModal(); } }
+    renderAll();
+  }).catch(err => {
+    $('student-list').innerHTML = '';
+    $('student-empty').classList.remove('hidden');
+    $('student-empty').textContent = friendlyError(err);
+  });
+}
+function loadQuizzes(){
+  return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
+    .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function refreshAll(){ return Promise.all([loadStudents(), loadQuizzes(), loadAdmins()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -533,9 +1163,7 @@ function renderAdmins(list){
       '<span class="email">' + escapeHtml(a.email) + (isMe ? ' <span style="color:#8a7654; font-size:13px;">(you)</span>' : '') +
         '<span class="role-badge">Teacher</span>' +
       '</span>' +
-      '<span class="actions">' +
-        (isMe ? '' : '<button class="btn danger small" data-act="remove">Remove</button>') +
-      '</span>';
+      '<span>' + (isMe ? '' : '<button class="btn danger small" data-act="remove">Remove</button>') + '</span>';
     if(!isMe){
       el.querySelector('[data-act="remove"]').addEventListener('click', () => {
         if(!confirm('Remove teacher access for ' + a.email + '? Their Firebase login itself stays — this only revokes teacher-portal rights.')) return;
@@ -545,23 +1173,21 @@ function renderAdmins(list){
     box.appendChild(el);
   });
 }
-
-function loadStudents(){
-  return window.KidsCloud.adminListStudents().then(renderStudents).catch(err => {
-    $('student-list').innerHTML = '';
-    $('student-empty').classList.remove('hidden');
-    $('student-empty').textContent = friendlyError(err);
-  });
-}
 function loadAdmins(){
-  if(myRole !== 'admin' && myRole !== 'super') return;
-  window.KidsCloud.adminListTeachers().then(renderAdmins).catch(err => {
+  if(myRole !== 'admin' && myRole !== 'super') return Promise.resolve();
+  return window.KidsCloud.adminListTeachers().then(renderAdmins).catch(err => {
     $('admin-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>';
   });
 }
 
+/* ===================== screens ===================== */
 function roleLabel(role){
   return role === 'super' ? 'Super admin' : role === 'teacher' ? 'Teacher' : 'Admin';
+}
+function teacherDisplayName(email){
+  const local = String(email || '').split('@')[0];
+  const m = local.match(/\+quest-teacher-(.+)$/);
+  return m ? m[1] : local;
 }
 function showDashboard(info){
   myEmail = info.email; myRole = info.role;
@@ -569,10 +1195,15 @@ function showDashboard(info){
   $('dashboard-screen').classList.remove('hidden');
   $('signout-top').classList.add('show');
   $('who-am-i').classList.add('show');
-  $('who-am-i').innerHTML = escapeHtml(info.email) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + roleLabel(info.role) + '</span>';
-  $('admins-card').classList.toggle('hidden', info.role === 'teacher');
+  const name = teacherDisplayName(info.email);
+  $('who-am-i').innerHTML = escapeHtml(name) + '<span class="role-badge' + (info.role === 'super' ? ' super' : '') + '">' + roleLabel(info.role) + '</span>';
+  $('hero-greeting').textContent = 'Assalāmu ʿalaykum, ' + name;
+  $('certificate-teacher').dataset.me = name;
+  $('tab-teachers').classList.toggle('hidden', info.role === 'teacher');
   $('not-authorized').classList.add('hidden');
+  showTab('overview');
   loadStudents();
+  loadQuizzes();
   loadAdmins();
 }
 function showLogin(){
@@ -584,7 +1215,7 @@ function showLogin(){
   $('not-authorized').classList.add('hidden');
   setSignUpMode(false);
 }
-function showNotAuthorized(email){
+function showNotAuthorized(){
   $('login-screen').classList.remove('hidden');
   $('dashboard-screen').classList.add('hidden');
   $('signout-top').classList.remove('show');
@@ -593,7 +1224,6 @@ function showNotAuthorized(email){
   $('not-authorized').classList.remove('hidden');
   $('not-authorized-msg').textContent = 'This teacher account is waiting for approval. Ask an admin or super administrator to approve your teacher username, then sign in again.';
 }
-
 function setSignUpMode(on){
   isSignUp = on;
   $('login-title').textContent = on ? 'Create Teacher Account' : 'Teacher Sign In';
@@ -606,25 +1236,64 @@ function setSignUpMode(on){
   $('login-msg').textContent = '';
 }
 
+/* ===================== wiring ===================== */
 function wire(){
   $('login-card').classList.remove('hidden');
-
+  fillMapSelect();
   wireSignature();
+
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => showTab(t.dataset.tab));
+  document.querySelectorAll('.stat[data-goto]').forEach(st => st.onclick = () => { showTab(st.dataset.goto); if(st.dataset.filter) setFilter(st.dataset.filter); });
+  document.querySelectorAll('#student-filters .chip').forEach(c => c.onclick = () => setFilter(c.dataset.filter));
+  $('student-search').oninput = renderStudentGrid;
+  $('student-sort').onchange = renderStudentGrid;
+  $('hero-new-quiz').onclick = () => editQuiz(null);
+  $('hero-review').onclick = () => { showTab('students'); setFilter('ready'); };
+  $('hero-refresh').onclick = refreshAll;
+  document.querySelectorAll('.subtab').forEach(t => t.onclick = () => showSub(t.dataset.sub));
+
+  $('new-quiz-btn').onclick = () => editQuiz(null);
+  $('welcome-new-quiz').onclick = () => editQuiz(null);
+  $('add-question-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(false)); renderQuestions(); };
+  $('add-tf-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(true)); renderQuestions(); };
+  $('save-quiz-btn').onclick = () => saveQuiz(false);
+  $('duplicate-quiz-btn').onclick = () => saveQuiz(true);
+  $('cancel-quiz-btn').onclick = () => { editingQuiz = null; renderQuizList(); showQuizPane('quiz-welcome'); };
+  $('builder-preview-btn').onclick = previewQuiz;
+  $('builder-results-btn').onclick = showResults;
+  $('close-preview').onclick = () => showQuizPane('quiz-builder');
+  $('close-results').onclick = () => showQuizPane('quiz-builder');
+  $('delete-quiz-btn').onclick = () => {
+    if(!editingQuiz || !editingQuiz.id || !confirm('Delete “' + editingQuiz.title + '”? Students will no longer see it. Their past scores stay in their records.')) return;
+    window.KidsCloud.adminDeleteQuiz(editingQuiz.id).then(() => { toast('Quiz deleted'); editingQuiz = null; showQuizPane('quiz-welcome'); return loadQuizzes(); })
+      .catch(err => setMsg('quiz-msg', friendlyError(err), true));
+  };
+
   $('close-modal').addEventListener('click', closeManager);
   $('student-modal').addEventListener('click', e=>{if(e.target===$('student-modal'))closeManager()});
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && activeStudent) closeManager(); });
   $('clear-signature').addEventListener('click', ()=>clearSignature(true));
   $('save-names').addEventListener('click', ()=>{
     if(!activeStudent)return;
-    const display=$('edit-display-name').value.trim(),full=$('edit-full-name').value.trim();
-    window.KidsCloud.adminUpdateStudentNames(activeStudent.uid,display,full).then(()=>{activeStudent.displayName=display;activeStudent.fullName=full;setManageMessage('Student names saved.');loadStudents();}).catch(err=>setManageMessage(friendlyError(err),true));
+    const s = activeStudent, display=$('edit-display-name').value.trim(),full=$('edit-full-name').value.trim();
+    const details = { dob: $('edit-dob').value, contactEmail: $('edit-email').value.trim(), guardianName: $('edit-guardian').value.trim(),
+      guardianPhone: $('edit-phone').value.trim(), notes: $('edit-notes').value.trim() };
+    const file = $('edit-photo').files[0];
+    $('save-names').disabled = true; setMsg('profile-msg', 'Saving…');
+    (file ? resizePhotoFile(file).then(url => { details.photoUrl = url; }) : Promise.resolve())
+      .then(() => window.KidsCloud.adminUpdateStudentNames(s.uid, display, full))
+      .then(() => window.KidsCloud.adminUpdateStudentDetails(s.uid, details))
+      .then(() => { Object.assign(s, details, { displayName: display, fullName: full }); setMsg('profile-msg', 'Details saved ✓'); toast('Student details saved'); renderModal(); renderAll(); })
+      .catch(err => setMsg('profile-msg', friendlyError(err), true))
+      .finally(() => { $('save-names').disabled = false; });
   });
   $('approve-map').addEventListener('click', ()=>{
     if(!activeStudent)return;const p=currentProfile();
-    if(!mapComplete(p,selectedMap)||!quizPassed(p,selectedMap)){setManageMessage('The student must finish every lesson and pass the 15-question map quiz first.',true);return;}
+    if(!mapComplete(p,selectedMap)||!quizPassed(p,selectedMap)){setManageMessage('The student must finish every lesson and pass the 15-question map challenge first.',true);return;}
     const teacher=$('certificate-teacher').value.trim(),feedback=$('certificate-feedback').value.trim(),hifz=$('certificate-hifz').checked,recitation=$('certificate-recitation').checked;
     if(!teacher||!feedback||!hifz||!recitation||!signatureDirty){setManageMessage('Add the teacher name, feedback, both checks and a signature.',true);return;}
     p.teacherAssessments[selectedMap]={teacherName:teacher,feedback,hifz,recitation,signature:$('signature').toDataURL('image/png'),approved:true,approvedAt:new Date().toISOString(),approvedFromTeacherPortal:true};p.teacherMapUnlocks[selectedMap]=true;
-    saveActiveProfile(p,'Certificate signed. The next map is now open in the student portal.').then(renderMapManager);
+    saveActiveProfile(p,'Certificate signed 🎓 The next map is now open for the student.').then(renderMapManager);
   });
   $('manual-unlock').addEventListener('click', ()=>{
     if(!activeStudent||!confirm('Open the next map without issuing a certificate? The Talqeen teacher check will remain incomplete.'))return;
@@ -640,8 +1309,33 @@ function wire(){
     saveActiveProfile(p,'The complete Tuhfatul Atfaal course has been reset.').then(renderMapManager);
   });
 
-  $('login-toggle').addEventListener('click', () => setSignUpMode(!isSignUp));
+  $('acct-reset').onclick = () => {
+    if(!activeStudent) return;
+    window.KidsCloud.adminSendPasswordReset(activeStudent.username).then(() => setMsg('acct-msg', 'Reset link sent — open it, set a new password, then tell the student.'))
+      .catch(err => setMsg('acct-msg', friendlyError(err), true));
+  };
+  $('acct-rename').onclick = () => {
+    if(!activeStudent) return;
+    const cur = $('acct-cur-pass').value, next = $('acct-new-uname').value.trim();
+    if(!cur || !next){ setMsg('acct-msg', 'Fill in both fields.', true); return; }
+    setMsg('acct-msg', 'Working…');
+    window.KidsCloud.adminRenameStudent(activeStudent.username, cur, next, activeStudent.uid).then(() => { setMsg('acct-msg', 'Renamed ✓'); closeManager(); loadStudents(); })
+      .catch(err => setMsg('acct-msg', friendlyError(err), true));
+  };
+  $('acct-disable').onclick = () => {
+    if(!activeStudent) return;
+    const s = activeStudent, next = !s.disabled;
+    if(next && !confirm('Disable ' + s.username + '’s account? They’ll be signed out and blocked until you enable it again.')) return;
+    window.KidsCloud.adminSetStudentDisabled(s.uid, next).then(() => { s.disabled = next; setMsg('acct-msg', next ? 'Disabled.' : 'Enabled — they can log back in now.'); renderModal(); renderAll(); })
+      .catch(err => setMsg('acct-msg', friendlyError(err), true));
+  };
+  $('acct-delete').onclick = () => {
+    if(!activeStudent || !confirm('Remove ' + activeStudent.username + '’s saved progress? This cannot be undone from here.')) return;
+    window.KidsCloud.adminDeleteStudent(activeStudent.uid).then(() => { closeManager(); toast('Student removed'); loadStudents(); })
+      .catch(err => setMsg('acct-msg', friendlyError(err), true));
+  };
 
+  $('login-toggle').addEventListener('click', () => setSignUpMode(!isSignUp));
   $('admin-signin-btn').addEventListener('click', () => {
     const email = $('admin-email').value.trim();
     const password = $('admin-password').value;
@@ -649,14 +1343,13 @@ function wire(){
     msg.className = 'msg'; msg.textContent = '';
     if(!email || !password){ msg.className = 'msg error'; msg.textContent = 'Enter teacher username and password.'; return; }
     $('admin-signin-btn').disabled = true;
-    const action = isSignUp ? window.KidsCloud.teacherSignUp(email, password) : window.KidsCloud.teacherSignIn(email, password);
-    action.catch(err => {
-      msg.className = 'msg error';
-      msg.textContent = friendlyError(err);
-    }).finally(() => { $('admin-signin-btn').disabled = false; });
+    let action;
+    try{ action = isSignUp ? window.KidsCloud.teacherSignUp(email, password) : window.KidsCloud.teacherSignIn(email, password); }
+    catch(err){ action = Promise.reject(err); }
+    action.catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
+      .finally(() => { $('admin-signin-btn').disabled = false; });
   });
   $('admin-password').addEventListener('keydown', e => { if(e.key === 'Enter') $('admin-signin-btn').click(); });
-
   $('forgot-password-btn').addEventListener('click', () => {
     const email = $('admin-email').value.trim();
     const msg = $('login-msg');
@@ -671,17 +1364,13 @@ function wire(){
       msg.textContent = 'Password reset link sent. Open it, set a new password, then sign in.';
     }).catch(err => {
       msg.className = 'msg error';
-      msg.textContent = (err && err.code && err.code.indexOf('user-not-found') >= 0)
-        ? 'No teacher login exists for that username yet.'
-        : friendlyError(err);
+      msg.textContent = (err && err.code && err.code.indexOf('user-not-found') >= 0) ? 'No teacher login exists for that username yet.' : friendlyError(err);
     }).finally(() => { $('forgot-password-btn').disabled = false; });
   });
-
   $('signout-top').addEventListener('click', () => window.KidsCloud.adminSignOut());
   $('not-authorized-signout').addEventListener('click', () => window.KidsCloud.adminSignOut());
 
   $('gen-password-btn').addEventListener('click', () => { $('new-password').value = randomPassword(); });
-
   $('add-student-btn').addEventListener('click', () => {
     const username = $('new-username').value.trim();
     const displayName = $('new-displayname').value.trim();
@@ -695,11 +1384,10 @@ function wire(){
       msg.className = 'msg success';
       msg.textContent = 'Added! Username: ' + username + ' — write down the password to give the student, it is not shown again here.';
       $('new-username').value = ''; $('new-displayname').value = ''; $('new-password').value = '';
-      loadStudents();
+      toast('Student added'); loadStudents();
     }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
       .finally(() => { $('add-student-btn').disabled = false; });
   });
-
   $('download-template-btn').addEventListener('click', () => {
     const csv = 'username,displayname,password\namina123,Amina,\nyusuf456,Yusuf,\n';
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -709,77 +1397,45 @@ function wire(){
     document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
   });
-
   $('bulk-add-btn').addEventListener('click', () => {
-    const fileInput = $('csv-file');
-    const msg = $('bulk-msg');
-    const results = $('bulk-results');
-    msg.className = 'msg'; msg.textContent = '';
-    results.innerHTML = '';
+    const fileInput = $('csv-file'), msg = $('bulk-msg'), results = $('bulk-results');
+    msg.className = 'msg'; msg.textContent = ''; results.innerHTML = '';
     const file = fileInput.files && fileInput.files[0];
     if(!file){ msg.className = 'msg error'; msg.textContent = 'Choose a CSV file first.'; return; }
-
     const reader = new FileReader();
     reader.onload = () => {
       const rows = parseCSV(String(reader.result || ''));
-      if(!rows.length || !('username' in rows[0])){
-        msg.className = 'msg error';
-        msg.textContent = 'That CSV needs a header row with a "username" column.';
-        return;
-      }
+      if(!rows.length || !('username' in rows[0])){ msg.className = 'msg error'; msg.textContent = 'That CSV needs a header row with a "username" column.'; return; }
       $('bulk-add-btn').disabled = true;
       msg.className = 'msg'; msg.textContent = 'Adding ' + rows.length + ' student(s)…';
-
-      let done = 0, ok = 0, fail = 0;
+      let ok = 0, fail = 0;
       const addRow = (row) => {
-        const username = (row.username || '').trim();
-        const displayName = (row.displayname || '').trim();
-        const password = (row.password || '').trim() || randomPassword();
+        const username = (row.username || '').trim(), displayName = (row.displayname || '').trim(), password = (row.password || '').trim() || randomPassword();
         const line = document.createElement('div');
-        if(!username){
-          fail++; line.className = 'bulk-row error';
-          line.textContent = '(blank row) — missing username';
-          results.appendChild(line);
-          return Promise.resolve();
-        }
+        if(!username){ fail++; line.className = 'bulk-row error'; line.textContent = '(blank row) — missing username'; results.appendChild(line); return Promise.resolve(); }
         return window.KidsCloud.adminCreateStudent(username, displayName, password).then(() => {
-          ok++; line.className = 'bulk-row success';
-          line.textContent = username + ' — added (password: ' + password + ')';
-          results.appendChild(line);
-        }).catch(err => {
-          fail++; line.className = 'bulk-row error';
-          line.textContent = username + ' — failed: ' + friendlyError(err);
-          results.appendChild(line);
-        });
+          ok++; line.className = 'bulk-row success'; line.textContent = username + ' — added (password: ' + password + ')'; results.appendChild(line);
+        }).catch(err => { fail++; line.className = 'bulk-row error'; line.textContent = username + ' — failed: ' + friendlyError(err); results.appendChild(line); });
       };
-
       // Sequential, not parallel, so Firebase Auth doesn't rate-limit and rows report in order.
-      rows.reduce((chain, row) => chain.then(() => addRow(row)).then(() => { done++; }), Promise.resolve())
-        .then(() => {
-          msg.className = fail ? 'msg error' : 'msg success';
-          msg.textContent = 'Done: ' + ok + ' added, ' + fail + ' failed.';
-          fileInput.value = '';
-          loadStudents();
-        })
+      rows.reduce((chain, row) => chain.then(() => addRow(row)), Promise.resolve())
+        .then(() => { msg.className = fail ? 'msg error' : 'msg success'; msg.textContent = 'Done: ' + ok + ' added, ' + fail + ' failed.'; fileInput.value = ''; loadStudents(); })
         .finally(() => { $('bulk-add-btn').disabled = false; });
     };
     reader.onerror = () => { msg.className = 'msg error'; msg.textContent = 'Could not read that file.'; };
     reader.readAsText(file);
   });
 
-  $('refresh-btn').addEventListener('click', loadStudents);
-
   $('add-admin-btn').addEventListener('click', () => {
-    const email = $('new-admin-email').value.trim();
-    const msg = $('add-admin-msg');
+    const email = $('new-admin-email').value.trim(), msg = $('add-admin-msg');
     msg.className = 'msg'; msg.textContent = '';
     if(!email){ msg.className = 'msg error'; msg.textContent = 'Enter the teacher username.'; return; }
     $('add-admin-btn').disabled = true;
-    window.KidsCloud.adminAddTeacher(email).then(() => {
-      msg.className = 'msg success';
-      msg.textContent = 'Teacher approved. They can now sign in with that username and password.';
-      $('new-admin-email').value = '';
-      loadAdmins();
+    let action;
+    try{ action = window.KidsCloud.adminAddTeacher(email); } catch(err){ action = Promise.reject(err); }
+    action.then(() => {
+      msg.className = 'msg success'; msg.textContent = 'Teacher approved. They can now sign in with that username and password.';
+      $('new-admin-email').value = ''; loadAdmins();
     }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); })
       .finally(() => { $('add-admin-btn').disabled = false; });
   });

@@ -149,14 +149,14 @@
     </p>
 
     <details class="setup">
-      <summary>First-time setup (do this once, as the very first admin) — and two rules updates since</summary>
+      <summary>First-time setup (do this once, as the very first admin) — and three rules updates since</summary>
       <p style="background:#fff7dc; border:1.5px solid var(--gold); border-radius:10px; padding:10px 14px; margin:0 0 14px;">
         <b>Already set up?</b> The rules below now add: (1) a third role, <code>teacher</code>, used by the
         <a href="tuhfatul-atfaal-admin/" target="_blank" rel="noopener">Tuhfatul Atfaal Teacher Portal</a> —
         regular admins can approve teachers, and teacher accounts can never delete a student; and (2) a
         <code>kids_quest_usernames</code> collection that lets a student's own email (if they gave one at
         sign-up) become their real login, so "Forgot your password?" can email them directly instead of only
-        the admin. Paste the whole updated rules block below into the Firebase console even if you already
+        the admin; and (3) a <code>kids_quest_quizzes</code> collection for quizzes teachers write in the Teacher Portal. Paste the whole updated rules block below into the Firebase console even if you already
         did the original setup; steps 2–3 only apply the very first time.
       </p>
       <ol>
@@ -213,6 +213,13 @@ match /kids_quest_usernames/{username} {
   // any listed admin, super admin or teacher can update/remove a
   // mapping (needed when renaming a student's username)
   allow update, delete: if request.auth != null
+    && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
+}
+match /kids_quest_quizzes/{quizId} {
+  // any signed-in student can read quizzes, to take them
+  allow get, list: if request.auth != null;
+  // only a listed admin, super admin or teacher can write them
+  allow create, update, delete: if request.auth != null
     && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
 }</pre>
         </li>
@@ -325,7 +332,7 @@ match /kids_quest_usernames/{username} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=7"></script>
+<script type="module" src="kids-quest-cloud.js?v=8"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

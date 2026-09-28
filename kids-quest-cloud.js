@@ -45,6 +45,7 @@ const ADMIN_DOMAIN = ADMIN_EMAIL.split('@')[1];
 const STUDENTS_COLLECTION = 'kids_quest_students';
 const ADMINS_COLLECTION = 'kids_quest_admins';
 const USERNAMES_COLLECTION = 'kids_quest_usernames';
+const QUIZZES_COLLECTION = 'kids_quest_quizzes';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -554,6 +555,58 @@ function adminUpdateStudentDetails(uid, details){
   return setDoc(doc(db, STUDENTS_COLLECTION, uid), patch, { merge:true });
 }
 
+/* ---- teacher-written quizzes ---- */
+/* One doc per quiz in kids_quest_quizzes. Any signed-in account can read
+   them (students need to, to take them); only a listed admin, super admin
+   or teacher can write. A student's answers never go here — they're saved
+   into that student's own progress record (under the game's key) through
+   the normal saveProgress, so no new write permission is needed for them
+   and the teacher portal already reads them with the rest of the student. */
+function listQuizzes(game){
+  return getDocs(collection(db, QUIZZES_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){
+      const data = d.data();
+      if(!game || data.game === game) out.push(Object.assign({ id: d.id }, data));
+    });
+    out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+function adminSaveQuiz(quiz){
+  const q = quiz || {};
+  const ref = q.id ? doc(db, QUIZZES_COLLECTION, q.id) : doc(collection(db, QUIZZES_COLLECTION));
+  const user = auth.currentUser;
+  const now = new Date().toISOString();
+  const data = {
+    title: String(q.title || '').trim() || 'Untitled quiz',
+    game: String(q.game || ''),
+    map: Number.isInteger(q.map) ? q.map : -1,
+    instructions: String(q.instructions || '').trim(),
+    passPercent: Math.min(100, Math.max(0, Number(q.passPercent) || 70)),
+    published: !!q.published,
+    questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
+      return {
+        q: String(item.q || '').trim(),
+        choices: (Array.isArray(item.choices) ? item.choices : []).map(function(c){ return String(c || '').trim(); }),
+        answer: Number(item.answer) || 0,
+        explain: String(item.explain || '').trim()
+      };
+    }),
+    updatedAt: now,
+    updatedBy: (user && user.email) || null
+  };
+  if(!q.id){
+    data.createdAt = now;
+    data.createdBy = (user && user.email) || null;
+    data.createdByName = String(q.createdByName || '').trim();
+  }
+  return setDoc(ref, data, { merge:true }).then(function(){ return ref.id; });
+}
+function adminDeleteQuiz(id){
+  return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
+}
+
 window.KidsCloud = {
   usernameToEmail: usernameToEmail,
   normalizeUsername: normalizeUsername,
@@ -590,6 +643,9 @@ window.KidsCloud = {
   adminAddTeacher: adminAddTeacher,
   adminRemoveTeacher: adminRemoveTeacher,
   adminListTeachers: adminListTeachers,
+  listQuizzes: listQuizzes,
+  adminSaveQuiz: adminSaveQuiz,
+  adminDeleteQuiz: adminDeleteQuiz,
   ADMIN_EMAIL: ADMIN_EMAIL
 };
 window.dispatchEvent(new Event('kidscloud-ready'));
