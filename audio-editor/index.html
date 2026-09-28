@@ -273,7 +273,7 @@
       <input id="scroll" type="range" min="0" max="1000" value="0" aria-label="Scroll waveform">
       <p class="hint">
         Click to place the cursor · drag to select · <kbd>Shift</kbd>+click to extend ·
-        drag a red marker to move it · <kbd>Ctrl</kbd>+scroll to zoom ·
+        drag a red marker to move it · drag the small squares at the top corners inwards to fade in / out · <kbd>Ctrl</kbd>+scroll to zoom ·
         <kbd>Space</kbd> play · <kbd>Del</kbd> delete · <kbd>M</kbd> marker ·
         press <kbd>?</kbd> for the guide and all shortcuts
       </p>
@@ -434,6 +434,7 @@
       <li><strong>Open…</strong> loads one or more audio files; each gets its own tab. You can also drag files onto the page.</li>
       <li>The <strong>+</strong> next to the tabs starts an <strong>empty file</strong>: record into it, paste audio copied from another tab, or drop a file on it.</li>
       <li>Click the waveform to place the cursor, drag to select. Effects apply to the selection — or to the whole file when nothing is selected.</li>
+      <li><strong>Fade handles:</strong> the two small squares at the top corners of the selection (or of the whole file) — drag the left one to the right to fade in, the right one to the left to fade out. The shaded curve shows the fade and its length while you drag.</li>
     </ul>
 
     <h3>Combining two recordings</h3>
@@ -1034,7 +1035,7 @@ function draw(playhead) {
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.fillStyle = css('--wave-bg'); g.fillRect(0, 0, W, H);
 
-  const RULER = 22;
+  const RULER = RULER_H;
   const toX = s => (s - viewStart) / spp;
 
   // Selection
@@ -1109,6 +1110,35 @@ function draw(playhead) {
   // Cursor
   const cx = toX(cursor);
   g.fillStyle = css('--ink-navy'); g.globalAlpha = 0.55; g.fillRect(Math.round(cx), RULER, 1, H - RULER); g.globalAlpha = 1;
+
+  // Fade being dragged: shade the volume that will be removed and draw the fade curve.
+  if (drag && drag.kind === 'fade' && drag.n > 0) {
+    const inFade = drag.side === 'in';
+    const x0 = toX(inFade ? drag.a : drag.b - drag.n), x1 = toX(inFade ? drag.a + drag.n : drag.b), h = H - RULER;
+    const yAt = t => RULER + h * (1 - fadeGain(inFade ? t : 1 - t));
+    g.beginPath(); g.moveTo(x0, RULER);
+    for (let i = 0; i <= 48; i++) g.lineTo(x0 + (x1 - x0) * i / 48, yAt(i / 48));
+    g.lineTo(x1, RULER); g.closePath();
+    g.fillStyle = 'rgba(28,43,70,.22)'; g.fill();
+    g.beginPath();
+    for (let i = 0; i <= 48; i++) { const x = x0 + (x1 - x0) * i / 48, y = yAt(i / 48); i ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.strokeStyle = css('--ink-navy'); g.lineWidth = 2; g.stroke();
+    const label = `Fade ${inFade ? 'in' : 'out'} ${(drag.n / doc.sr).toFixed(2)} s`;
+    g.font = '600 12px ' + css('--ui');
+    const tw = g.measureText(label).width + 12, lx = clamp(inFade ? x1 + 6 : x0 - tw - 6, 2, W - tw - 2), ly = RULER + FADE_H + 22;
+    g.fillStyle = css('--ink-navy'); g.fillRect(lx, ly, tw, 20);
+    g.fillStyle = '#fff'; g.textBaseline = 'middle'; g.fillText(label, lx + 6, ly + 10);
+  }
+  // Fade handles: small squares at the top corners of the selection (or of the file).
+  for (const hd of fadeHandles()) {
+    if (hd.x < -FADE_H || hd.x > W) continue;
+    g.fillStyle = '#fff'; g.fillRect(hd.x, hd.y, FADE_H, FADE_H);
+    g.strokeStyle = css('--gold'); g.lineWidth = 1.5; g.strokeRect(hd.x + 0.5, hd.y + 0.5, FADE_H - 1, FADE_H - 1);
+    g.beginPath(); // ramp icon: rising for fade in, falling for fade out
+    if (hd.side === 'in') { g.moveTo(hd.x + 3, hd.y + FADE_H - 3); g.lineTo(hd.x + FADE_H - 3, hd.y + FADE_H - 3); g.lineTo(hd.x + FADE_H - 3, hd.y + 3); }
+    else { g.moveTo(hd.x + 3, hd.y + 3); g.lineTo(hd.x + 3, hd.y + FADE_H - 3); g.lineTo(hd.x + FADE_H - 3, hd.y + FADE_H - 3); }
+    g.closePath(); g.fillStyle = css('--green'); g.fill();
+  }
 
   // Playhead
   if (playhead !== undefined) {
@@ -2288,7 +2318,32 @@ async function renderRecent() {
 renderRecent();
 
 /* ---------- Pointer interaction ---------- */
-let drag = null; // { kind:'sel', anchor } | { kind:'marker', index }
+let drag = null; // { kind:'sel', anchor } | { kind:'marker', index } | { kind:'fade', side, a, b, n }
+
+// Fade handles (like WavePad): drag the square at the selection's top-left corner inwards to
+// fade in, the top-right one to fade out. With no selection they sit at the file's start and end.
+const RULER_H = 22, FADE_H = 16;
+const fadeGain = t => t * t; // same curve as the Fade in / Fade out buttons
+function fadeSpan() { return hasSel() ? [selA, selB] : [0, len()]; }
+function fadeHandles() {
+  if (!doc || !len()) return [];
+  const [a, b] = fadeSpan(), toX = v => (v - viewStart) / spp;
+  const n = side => (drag && drag.kind === 'fade' && drag.side === side ? drag.n : 0);
+  return [{ side: 'in', x: toX(a + n('in')), y: RULER_H + 3 }, { side: 'out', x: toX(b - n('out')) - FADE_H, y: RULER_H + 3 }];
+}
+function fadeHandleAt(clientX, clientY) {
+  const r = canvas.getBoundingClientRect(), x = clientX - r.left, y = clientY - r.top;
+  for (const h of fadeHandles()) if (x >= h.x - 4 && x <= h.x + FADE_H + 4 && y >= h.y - 4 && y <= h.y + FADE_H + 4) return h.side;
+  return null;
+}
+function applyFade(side, a, b, n) {
+  stopPlay();
+  const [fa, fb] = side === 'in' ? [a, a + n] : [b - n, b];
+  commit(opMap(fa, fb, (c, s0, s1) => {
+    const len0 = s1 - s0;
+    for (let i = 0; i < len0; i++) { const t = i / len0; c[s0 + i] *= fadeGain(side === 'in' ? t : 1 - t); }
+  }), `Fade ${side} ${(n / doc.sr).toFixed(2)} s`);
+}
 function sampleAt(clientX) {
   const r = canvas.getBoundingClientRect();
   return clamp(Math.round(viewStart + (clientX - r.left) * spp), 0, len());
@@ -2302,6 +2357,14 @@ function markerNear(clientX) {
 canvas.addEventListener('pointerdown', e => {
   if (!doc || e.button > 0) return;
   canvas.setPointerCapture(e.pointerId);
+  const fh = fadeHandleAt(e.clientX, e.clientY);
+  if (fh) {
+    const [a, b] = fadeSpan();
+    if (player) stopPlay();
+    // Remember where on the handle it was grabbed so the fade follows the pointer exactly.
+    drag = { kind: 'fade', side: fh, a, b, n: 0, off: sampleAt(e.clientX) - (fh === 'in' ? a : b) };
+    draw(); return;
+  }
   const mi = markerNear(e.clientX);
   if (mi >= 0) { drag = { kind: 'marker', index: mi, orig: doc, markers: doc.markers.slice(), moved: false }; return; }
   const s = sampleAt(e.clientX);
@@ -2318,8 +2381,14 @@ canvas.addEventListener('pointerdown', e => {
 });
 canvas.addEventListener('pointermove', e => {
   if (!doc) return;
-  if (!drag) { canvas.style.cursor = markerNear(e.clientX) >= 0 ? 'ew-resize' : 'text'; return; }
+  if (!drag) { canvas.style.cursor = fadeHandleAt(e.clientX, e.clientY) || markerNear(e.clientX) >= 0 ? 'ew-resize' : 'text'; return; }
   const s = sampleAt(e.clientX);
+  if (drag.kind === 'fade') {
+    const span = drag.b - drag.a;
+    const at = s - drag.off;
+    drag.n = drag.side === 'in' ? clamp(at - drag.a, 0, span) : clamp(drag.b - at, 0, span);
+    draw(); return;
+  }
   if (drag.kind === 'marker') {
     drag.markers[drag.index] = clamp(s, 1, len() - 1); drag.moved = true;
     doc = makeDoc(doc.sr, doc.ch, drag.markers); // live preview; committed on release
@@ -2333,6 +2402,10 @@ canvas.addEventListener('pointermove', e => {
 function endDrag() {
   if (!drag) return;
   const d = drag; drag = null;
+  if (d.kind === 'fade') {
+    if (d.n >= Math.max(2, spp * 3)) applyFade(d.side, d.a, d.b, d.n); else draw();
+    return;
+  }
   if (d.kind === 'marker' && d.moved) {
     doc = d.orig; // commit from the pre-drag document so undo restores the old position
     commit(makeDoc(doc.sr, doc.ch, d.markers.slice().sort((x, y) => x - y)));
