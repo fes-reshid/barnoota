@@ -191,6 +191,7 @@
       <button class="btn primary big" id="openBtn2" type="button">Open audio file</button>
       <button class="btn big rec" id="recBtn2" type="button">● Record</button>
       <button class="btn big" id="newBtn2" type="button" title="Start an empty file to paste or record into (N)">＋ New empty</button>
+      <button class="btn big" id="joinBtn2" type="button" title="Pick several audio files and join them into one">Join audio files</button>
     </div>
     <div id="emptyRecent" hidden>
       <h2>Recent files</h2>
@@ -297,7 +298,7 @@
           <button class="btn" id="insSilBtn" type="button" title="Insert silence at the cursor">Insert silence</button>
         </div>
         <div class="row">
-          <button class="btn" id="trimSilBtn" type="button" title="Remove quiet audio at the very start and end (uses the threshold on the right)">Trim silent ends</button>
+          <button class="btn fx-need" id="trimSilBtn" type="button" title="Cut silence at the start and end, or shorten long pauses inside the recording">Auto trim…</button>
         </div>
         <div class="fx-group">Sound</div>
         <div class="row">
@@ -380,7 +381,7 @@
         <div class="fx-group">Files</div>
         <div class="row">
           <button class="btn" id="splitBtn" type="button" title="Open each part (between markers, or either side of the cursor) in its own tab">Split into tabs</button>
-          <button class="btn" id="joinBtn" type="button" title="Join open tabs end to end into a new tab">Join tabs…</button>
+          <button class="btn" id="joinBtn" type="button" title="Join open tabs and/or files from your computer end to end into a new tab">Join audio…</button>
           <button class="btn" id="batchBtn" type="button" title="Convert or clean up many files at once">Batch convert…</button>
         </div>
         <p class="hint">Split, Join and Duplicate open their result in a new tab and never change the original.</p>
@@ -457,7 +458,8 @@
       <li><strong>Noise reduction</strong> (like WavePad): select a second or two where there is <em>only</em> background noise — no voice — and press <strong>Grab noise sample</strong>. Then clear the selection (<kbd>Esc</kbd>) and press <strong>Noise reduction…</strong>; preview, and raise or lower the amount. Without a sample it guesses the noise from the quietest parts.</li>
       <li><strong>Clean up a recording:</strong> <em>Remove rumble</em> (hum and wind) → <em>Noise reduction</em> (steady hiss) → <em>Noise gate</em> (anything left between words) → <em>Normalise</em>.</li>
       <li><strong>Repeat loop</strong> repeats the selected line several times, with an optional pause — useful for memorising.</li>
-      <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab; <strong>Join tabs</strong> does the opposite.</li>
+      <li><strong>Auto trim…</strong> cuts the silence at the start and end, or shortens every long pause inside the recording to a length you choose — great for tightening a recitation or a lecture.</li>
+      <li><strong>Split into tabs</strong> opens each marked part (or each side of the cursor) as a separate tab. <strong>Join audio…</strong> does the opposite: tick open tabs and/or add files from your computer, put them in order with ↑ ↓, choose a pause or a crossfade between them, and they're joined into a new tab (also on the start screen as <em>Join audio files</em>).</li>
       <li><strong>Batch convert</strong> processes many files at once — e.g. convert a folder of WAV recordings to normalised MP3s.</li>
       <li><strong>Pitch…</strong> makes a voice higher or lower while keeping the same speed (+12 semitones = one octave up). <strong>Tempo…</strong> makes it faster or slower while keeping the same voice — e.g. 80% to slow a recitation down for learning. <strong>Speed…</strong> changes both together, like a tape.</li>
       <li>The playback speed menu (<strong>1×</strong>) only changes how you listen; use <strong>Tempo…</strong> or <strong>Speed…</strong> to change the file itself.</li>
@@ -508,6 +510,25 @@
     </table>
   </div>
 </dialog>
+<dialog id="joinDlg" class="dlg" aria-labelledby="joinTitle" style="width:min(560px, calc(100vw - 32px))">
+  <h2 id="joinTitle">Join audio</h2>
+  <p class="info" style="margin:0 0 12px">Tick what to join and put it in order. The result opens in a new tab; the originals aren't changed.</p>
+  <ul class="list" id="joinList" style="max-height:300px"></ul>
+  <div class="row" style="margin:10px 0 14px">
+    <button class="btn" id="joinAdd" type="button">＋ Add files…</button>
+    <span class="info" id="joinTotal"></span>
+  </div>
+  <div class="field"><label for="joinGap">Pause between files</label>
+    <div class="field-row"><input class="num" id="joinGap" type="number" value="0" min="0" max="60" step="0.25"><span>seconds</span></div></div>
+  <div class="field"><label for="joinXf">Crossfade (blend one into the next — used when the pause is 0)</label>
+    <div class="field-row"><input class="num" id="joinXf" type="number" value="0" min="0" max="10000" step="50"><span>ms</span></div></div>
+  <div class="field"><label class="check"><input type="checkbox" id="joinMarks" checked> Put a marker at each join</label></div>
+  <div class="actions">
+    <button class="btn" id="joinCancel" type="button">Cancel</button>
+    <button class="btn primary" id="joinGo" type="button">Join</button>
+  </div>
+</dialog>
+<input type="file" id="joinFileIn" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.oga,.webm,.flac,.aac" hidden>
 <dialog id="paramDlg" class="dlg" aria-labelledby="paramTitle">
   <h2 id="paramTitle"></h2>
   <p class="info" id="paramDesc" style="margin:0 0 14px"></p>
@@ -1121,7 +1142,6 @@ function refresh() {
   document.querySelectorAll('.fx-need').forEach(b => { b.disabled = !L; });
   $('repeatBtn').disabled = $('redactBtn').disabled = $('noiseGrabBtn').disabled = !s;
   $('splitBtn').disabled = !L || (!doc.markers.length && (cursor <= 0 || cursor >= L));
-  $('joinBtn').disabled = tabs.length < 2;
   renderHistory();
   $('loopBtn').classList.toggle('on', loop);
   $('clearMarksBtn').disabled = !doc.markers.length;
@@ -1281,21 +1301,70 @@ function autoSplit() {
   if (!marks.length) { toast('No pauses found — try a higher threshold or shorter minimum.'); return; }
   commit(makeDoc(doc.sr, doc.ch, marks), `Found ${marks.length + 1} parts`);
 }
-function trimSilentEnds() {
-  if (!doc) return;
-  const thr = parseFloat($('thrIn').value);
-  const { win, db } = loudness();
+// Ranges of audio to keep for Auto trim (everything else is silence to drop).
+function autoTrimRanges(ch, sr, v) {
+  const { win, db } = loudness(ch, sr), L = ch[0].length, keep = Math.round(sr * v.keep / 1000);
   let first = 0, last = db.length - 1;
-  while (first < db.length && db[first] < thr) first++;
-  while (last >= 0 && db[last] < thr) last--;
-  if (first > last) { toast('Everything is below the threshold.'); return; }
-  const pad = Math.round(doc.sr * 0.05);
-  const a = Math.max(0, first * win - pad), b = Math.min(len(), (last + 1) * win + pad);
-  if (a === 0 && b === len()) { toast('No silent ends to trim.'); return; }
+  while (first < db.length && db[first] < v.thr) first++;
+  while (last >= 0 && db[last] < v.thr) last--;
+  if (first > last) return null;
+  const a = v.mode === 'end' ? 0 : Math.max(0, first * win - keep);
+  const b = v.mode === 'start' ? L : Math.min(L, (last + 1) * win + keep);
+  if (v.mode !== 'pauses') return [[a, b]];
+  const out = [], minW = Math.ceil(v.minPause / 10), half = keep >> 1;
+  let from = a, run = -1;
+  for (let w = first; w <= last + 1; w++) {
+    const quiet = w <= last && db[w] < v.thr;
+    if (quiet && run < 0) run = w;
+    if (!quiet && run >= 0) {
+      const s0 = run * win, e0 = w * win;
+      if (w - run >= minW && e0 - s0 > keep) { out.push([from, s0 + half]); from = e0 - (keep - half); }
+      run = -1;
+    }
+  }
+  out.push([from, b]);
+  return out.filter(([x, y]) => y > x);
+}
+// Join kept ranges with 3 ms fades at each cut so the joins never click.
+function keepRangesCh(ch, sr, ranges) {
+  const total = ranges.reduce((t, [a, b]) => t + b - a, 0), f = Math.round(sr * 0.003);
+  return ch.map(c => {
+    const o = new Float32Array(total); let p = 0;
+    ranges.forEach(([a, b], i) => {
+      o.set(c.subarray(a, b), p);
+      const n = Math.min(f, (b - a) >> 1);
+      if (i > 0) for (let j = 0; j < n; j++) o[p + j] *= j / n;
+      if (i < ranges.length - 1) for (let j = 0; j < n; j++) o[p + (b - a) - 1 - j] *= j / n;
+      p += b - a;
+    });
+    return o;
+  });
+}
+// Move markers to their new positions; one inside a removed stretch moves to the cut point.
+function mapMarkers(markers, ranges) {
+  const total = ranges.reduce((t, [a, b]) => t + b - a, 0);
+  const at = m => { let p = 0; for (const [a, b] of ranges) { if (m < a) return p; if (m < b) return p + m - a; p += b - a; } return p; };
+  return [...new Set(markers.map(at))].filter(m => m > 0 && m < total).sort((x, y) => x - y);
+}
+async function autoTrim() {
+  if (!doc || !len()) return;
   stopPlay();
-  const markers = doc.markers.filter(m => m > a && m < b).map(m => m - a);
+  const v = await askParams('Auto trim', 'Removes silence from the whole file. “Shorten long pauses” also tightens every gap inside the recording.', [
+    { id: 'mode', label: 'What to trim', type: 'select', value: 'ends', options: [
+      ['ends', 'Silence at the start and end'], ['start', 'Silence at the start only'], ['end', 'Silence at the end only'],
+      ['pauses', 'Start and end, and shorten long pauses inside'] ] },
+    { id: 'thr', label: 'Count as silence below', value: parseFloat($('thrIn').value) || -40, min: -90, max: -5, step: 1, unit: 'dB' },
+    { id: 'keep', label: 'Leave this much silence', value: 250, min: 0, max: 5000, step: 50, unit: 'ms (at each end / per pause)' },
+    { id: 'minPause', label: 'Only shorten pauses longer than', value: 700, min: 100, max: 10000, step: 50, unit: 'ms (pauses mode)' },
+  ], { ok: 'Trim', preview: async (ch, sr, v) => { const r = autoTrimRanges(ch, sr, v); return r ? keepRangesCh(ch, sr, r) : ch; } });
+  if (!v) return;
+  const ranges = autoTrimRanges(doc.ch, doc.sr, v);
+  if (!ranges) { toast('Everything is below the threshold — try a lower (more negative) dB value.'); return; }
+  const kept = ranges.reduce((t, [a, b]) => t + b - a, 0), removed = len() - kept;
+  if (removed <= 0) { toast('Nothing to trim with these settings.'); return; }
   selA = selB = null; cursor = 0;
-  commit(makeDoc(doc.sr, sliceCh(doc.ch, a, b), markers), `Trimmed ${((a + len() - b) / doc.sr).toFixed(2)} s of silence`);
+  commit(makeDoc(doc.sr, keepRangesCh(doc.ch, doc.sr, ranges), mapMarkers(doc.markers, ranges)),
+    `Auto trim: removed ${(removed / doc.sr).toFixed(2)} s${ranges.length > 1 ? ` (${ranges.length - 1} pauses shortened)` : ''}`);
   zoomFit();
 }
 
@@ -1999,39 +2068,83 @@ function splitIntoTabs() {
   parts.forEach(([a, b], i) => newDocument(makeDoc(src.sr, sliceCh(src.ch, a, b)), `${base}-${String(i + 1).padStart(2, '0')}`, false));
   toast(`Split into ${parts.length} new tabs`);
 }
-async function joinTabs() {
+/* ---------- Join audio ---------- */
+let joinItems = []; // { name, sr, ch, on }
+function openJoin(pickFiles) {
   stashTab();
-  if (tabs.length < 2) return;
-  const withAudio = tabs.filter(t => t.doc && t.doc.ch[0].length);
-  const v = await askParams('Join tabs', 'Puts the ticked tabs end to end, in tab order, in a new tab. A marker is placed at each join.', [
-    ...withAudio.map((t, i) => ({ id: 'j' + i, type: 'check', label: t.name || 'untitled', value: true })),
-    { id: 'gap', label: 'Pause between files', value: 0, min: 0, max: 60, step: 0.25, unit: 's' },
-  ], { ok: 'Join' });
-  if (!v) return;
-  const pick = withAudio.filter((_, i) => v['j' + i]);
-  if (pick.length < 2) { toast('Tick at least two tabs to join.'); return; }
+  joinItems = tabs.filter(t => t.doc && t.doc.ch[0].length).map(t => ({ name: t.name || 'untitled', sr: t.doc.sr, ch: t.doc.ch, on: true }));
+  renderJoin();
+  $('joinDlg').showModal();
+  if (pickFiles || !joinItems.length) $('joinFileIn').click();
+}
+function renderJoin() {
+  const ul = $('joinList'); ul.innerHTML = '';
+  if (!joinItems.length) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'Press “Add files…” to choose the audio to join.'; ul.appendChild(li); }
+  joinItems.forEach((it, i) => {
+    const li = document.createElement('li');
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.on; cb.setAttribute('aria-label', 'Include ' + it.name);
+    cb.onchange = () => { it.on = cb.checked; renderJoin(); };
+    const nm = document.createElement('span'); nm.className = 'grow'; nm.textContent = (i + 1) + '. ' + it.name; nm.title = it.name;
+    const sub = document.createElement('span'); sub.className = 'sub'; sub.textContent = fmt(it.ch[0].length / it.sr).replace(/\.\d+$/, '');
+    const mk = (t, title, fn, dis) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn'; b.textContent = t; b.title = title; b.disabled = !!dis; b.onclick = fn; return b; };
+    const move = d => { const j = i + d; [joinItems[i], joinItems[j]] = [joinItems[j], joinItems[i]]; renderJoin(); };
+    li.append(cb, nm, sub,
+      mk('↑', 'Move up', () => move(-1), i === 0),
+      mk('↓', 'Move down', () => move(1), i === joinItems.length - 1),
+      mk('✕', 'Remove from the list', () => { joinItems.splice(i, 1); renderJoin(); }));
+    ul.appendChild(li);
+  });
+  const on = joinItems.filter(it => it.on);
+  $('joinGo').disabled = on.length < 2;
+  $('joinTotal').textContent = on.length ? `${on.length} selected · about ${fmt(on.reduce((t, it) => t + it.ch[0].length / it.sr, 0)).replace(/\.\d+$/, '')}` : '';
+}
+$('joinFileIn').addEventListener('change', async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length) return;
+  $('joinAdd').disabled = true; $('joinAdd').textContent = 'Reading…';
+  for (const f of files) {
+    try { const d = await decodeFile(f); joinItems.push({ ...d, on: true }); }
+    catch (err) { console.error(err); toast(`Could not read “${f.name}”.`); }
+  }
+  $('joinAdd').disabled = false; $('joinAdd').textContent = '＋ Add files…';
+  renderJoin();
+});
+async function runJoin() {
+  const pick = joinItems.filter(it => it.on);
+  if (pick.length < 2) return;
+  const gapS = Math.max(0, parseFloat($('joinGap').value) || 0), xfMs = Math.max(0, parseFloat($('joinXf').value) || 0);
+  const wantMarks = $('joinMarks').checked;
+  $('joinDlg').close();
   busy(true);
   try {
-    const sr = pick[0].doc.sr, nch = Math.max(...pick.map(t => t.doc.ch.length)), gap = Math.round(v.gap * sr);
+    const sr = pick[0].sr, nch = Math.max(...pick.map(it => it.ch.length));
     const pieces = [];
-    for (const t of pick) {
-      const c = t.doc.sr === sr ? t.doc.ch : await resample(t.doc.ch, t.doc.sr, sr);
-      pieces.push(fitChannels(c, nch));
-    }
-    const total = pieces.reduce((s, p) => s + p[0].length, 0) + gap * (pieces.length - 1);
+    for (const it of pick) pieces.push(fitChannels(it.sr === sr ? it.ch : await resample(it.ch, it.sr, sr), nch));
+    const gap = Math.round(gapS * sr);
+    // Crossfade only when there's no pause, and never longer than half the shortest piece.
+    const xf = gap ? 0 : Math.min(Math.round(xfMs / 1000 * sr), ...pieces.map(p => p[0].length >> 1));
+    const total = pieces.reduce((t, p) => t + p[0].length, 0) + (gap - xf) * (pieces.length - 1);
     const ch = Array.from({ length: nch }, () => new Float32Array(total)), markers = [];
     let o = 0;
     pieces.forEach((p, i) => {
-      if (i) { o += gap; markers.push(o); }
-      p.forEach((c, k) => ch[k].set(c, o));
-      o += p[0].length;
+      const start = i ? o + gap - xf : 0;
+      if (i && wantMarks) markers.push(start + (xf >> 1));
+      p.forEach((c, k) => {
+        const y = ch[k];
+        for (let j = 0; j < xf && i; j++) { const t = j / xf; y[start + j] = y[start + j] * (1 - t) + c[j] * t; }
+        y.set(i ? c.subarray(xf) : c, i ? start + xf : 0);
+      });
+      o = start + p[0].length;
     });
     newDocument(makeDoc(sr, ch, markers), 'Joined', false);
     dirty = true; refresh();
-    toast(`Joined ${pick.length} files`);
+    toast(`Joined ${pick.length} files — ${fmt(total / sr)}`);
   } catch (e) { console.error(e); toast('Joining failed.'); }
   finally { busy(false); }
 }
+on('joinAdd', () => $('joinFileIn').click());
+on('joinCancel', () => $('joinDlg').close());
+on('joinGo', runJoin);
 
 /* ---------- Batch convert ---------- */
 function normaliseCh(ch) {
@@ -2274,7 +2387,7 @@ on('eqBtn', fxEqualiser); on('echoBtn', fxEcho); on('reverbBtn', fxReverb); on('
 on('gateBtn', fxGate); on('noiseGrabBtn', grabNoise); on('noiseBtn', fxNoise); on('hpBtn', fxHighpass); on('lpBtn', fxLowpass);
 on('stereoBtn', makeStereo); on('swapBtn', swapChannels); on('rateConvBtn', fxSampleRate);
 on('insFileBtn', () => $('insFileIn').click()); on('genBtn', generate); on('repeatBtn', repeatLoop); on('redactBtn', redact);
-on('splitBtn', splitIntoTabs); on('joinBtn', joinTabs);
+on('splitBtn', splitIntoTabs); on('joinBtn', () => openJoin(false)); on('joinBtn2', () => openJoin(true));
 function openGuide() { $('guideDlg').showModal(); $('guideDlg').querySelector('.guide-body').scrollTop = 0; }
 on('guideBtn', openGuide);
 on('guideClose', () => $('guideDlg').close());
@@ -2302,7 +2415,7 @@ on('zoomInBtn', () => zoomAt(0.5)); on('zoomOutBtn', () => zoomAt(2));
 on('zoomSelBtn', zoomSel); on('zoomFitBtn', zoomFit);
 on('fadeInBtn', fadeIn); on('fadeOutBtn', fadeOut); on('normBtn', normalise);
 on('revBtn', reverse); on('silBtn', silence); on('gainBtn', amplify);
-on('insSilBtn', insertSilence); on('trimSilBtn', trimSilentEnds); on('monoBtn', makeMono);
+on('insSilBtn', insertSilence); on('trimSilBtn', autoTrim); on('monoBtn', makeMono);
 on('exportBtn', exportAll); on('exportSelBtn', exportSel);
 on('markBtn', addMarker);
 on('clearMarksBtn', () => { if (doc && doc.markers.length) commit(makeDoc(doc.sr, doc.ch, []), 'Markers cleared'); });
