@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="editor.css?v=202609280622">
+<link rel="stylesheet" href="editor.css?v=202609280636">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2e6b58">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
@@ -16,6 +16,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Audio Editor">
+<script>/* theme and language before first paint */try{var t=localStorage.getItem('ae-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;var l=localStorage.getItem('ae-lang');if(l==='ar'){document.documentElement.lang='ar';document.documentElement.dir='rtl';}else if(l==='om')document.documentElement.lang='om';}catch(e){}</script>
 </head>
 <body>
 
@@ -417,7 +418,7 @@
 <dialog id="ttsDlg" class="dlg eq" aria-labelledby="ttsTitle">
   <div class="eq-top"><h2 id="ttsTitle">Text to speech</h2></div>
   <p class="info" style="margin:0 0 10px">Type or paste text and it is turned into speech — right here in your browser, in more than 100 languages including <strong>Afaan Oromoo</strong>, <strong>Arabic</strong> and <strong>English</strong>. The voice is synthetic (robot-like), good for announcements, prompts and pronunciation practice.</p>
-  <textarea id="ttsText" dir="auto" rows="5" style="width:100%; font:16px/1.5 var(--ui); padding:10px; border:1px solid var(--gold-soft); border-radius:8px; background:#fff; resize:vertical" placeholder="Type what should be spoken…"></textarea>
+  <textarea id="ttsText" dir="auto" rows="5" style="width:100%; font:16px/1.5 var(--ui); padding:10px; border:1px solid var(--gold-soft); border-radius:8px; background:var(--surface); resize:vertical" placeholder="Type what should be spoken…"></textarea>
   <div class="row" style="margin-top:10px">
     <label>Voice <select id="ttsVoice" class="num" style="width:auto; max-width:230px"></select></label>
     <label><select id="ttsGender" class="num" style="width:auto"><option value="">Male</option><option value="+f3">Female</option></select></label>
@@ -591,13 +592,15 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy">Working…</div>
 
-<script src="editor.js?v=202609280622"></script>
-<script src="save-extras.js?v=202609280622"></script>
-<script src="autosave.js?v=202609280622"></script>
-<script src="recitation.js?v=202609280622"></script>
-<script src="editing-extras.js?v=202609280622"></script>
-<script src="sound-tools.js?v=202609280622"></script>
-<script src="app-install.js?v=202609280622"></script>
+<script src="editor.js?v=202609280636"></script>
+<script src="save-extras.js?v=202609280636"></script>
+<script src="autosave.js?v=202609280636"></script>
+<script src="recitation.js?v=202609280636"></script>
+<script src="editing-extras.js?v=202609280636"></script>
+<script src="sound-tools.js?v=202609280636"></script>
+<script src="i18n.js?v=202609280636"></script>
+<script src="ui-prefs.js?v=202609280636"></script>
+<script src="app-install.js?v=202609280636"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>

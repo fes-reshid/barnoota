@@ -162,7 +162,7 @@ askParams = function (title, desc, fields, opts) {
     const inp = $('pf_' + f.id); if (!inp) return;
     const ta = document.createElement('textarea');
     ta.id = inp.id; ta.value = f.value; ta.rows = 10; ta.dir = 'auto';
-    ta.style.cssText = 'width:100%; font:14px/1.5 var(--ui); padding:8px; border:1px solid var(--gold-soft); border-radius:8px; background:#fff; resize:vertical';
+    ta.style.cssText = 'width:100%; font:14px/1.5 var(--ui); padding:8px; border:1px solid var(--gold-soft); border-radius:8px; background:var(--surface); resize:vertical';
     inp.replaceWith(ta); ta.focus();
     ta.addEventListener('keydown', e => e.stopPropagation()); // Enter makes a new line, not "OK"
   });

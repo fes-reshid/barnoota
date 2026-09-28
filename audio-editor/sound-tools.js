@@ -160,7 +160,7 @@ trDlg.innerHTML = `<div class="eq-top"><h2>Transcript <span class="info" id="trS
   <div class="row"><label>Model <select id="trModel" class="num" style="width:auto"></select></label>
     <label>Language <select id="trLang" class="num" style="width:auto"></select></label>
     <button class="btn primary" id="trGo" type="button">Transcribe</button><span class="info" id="trStatus"></span></div>
-  <div id="trText" tabindex="0" style="max-height:340px; min-height:120px; overflow:auto; line-height:2; font-size:16px; padding:10px 12px; margin-top:10px; background:#fff; border:1px solid var(--gold-soft); border-radius:8px"></div>
+  <div id="trText" tabindex="0" style="max-height:340px; min-height:120px; overflow:auto; line-height:2; font-size:16px; padding:10px 12px; margin-top:10px; background:var(--surface); border:1px solid var(--gold-soft); border-radius:8px"></div>
   <div class="row" style="margin-top:10px">
     <button class="btn" id="trPlay" type="button">▶ Play selected</button>
     <button class="btn" id="trDel" type="button">Delete selected words</button>
