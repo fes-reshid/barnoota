@@ -149,13 +149,15 @@
     </p>
 
     <details class="setup">
-      <summary>First-time setup (do this once, as the very first admin) — and one rules update for teacher accounts</summary>
+      <summary>First-time setup (do this once, as the very first admin) — and two rules updates since</summary>
       <p style="background:#fff7dc; border:1.5px solid var(--gold); border-radius:10px; padding:10px 14px; margin:0 0 14px;">
-        <b>Already set up?</b> The rules below now add a third role, <code>teacher</code>, used by the
+        <b>Already set up?</b> The rules below now add: (1) a third role, <code>teacher</code>, used by the
         <a href="tuhfatul-atfaal-admin/" target="_blank" rel="noopener">Tuhfatul Atfaal Teacher Portal</a> —
-        regular admins can approve teachers, and teacher accounts can never delete a student. Paste the updated
-        rules block in step 1 into the Firebase console even if you already did the original setup; steps 2–3
-        only apply the very first time.
+        regular admins can approve teachers, and teacher accounts can never delete a student; and (2) a
+        <code>kids_quest_usernames</code> collection that lets a student's own email (if they gave one at
+        sign-up) become their real login, so "Forgot your password?" can email them directly instead of only
+        the admin. Paste the whole updated rules block below into the Firebase console even if you already
+        did the original setup; steps 2–3 only apply the very first time.
       </p>
       <ol>
         <li><b>Add the Firestore security rules.</b> In
@@ -193,6 +195,25 @@ match /kids_quest_students/{uid} {
   // a teacher account can never do this, even by editing the page
   allow delete: if request.auth != null
     && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role in ['admin', 'super'];
+}
+match /kids_quest_usernames/{username} {
+  // public read — needed to resolve a username to its login email
+  // BEFORE signing in, since a student who gave a real email at sign-up
+  // no longer uses the deterministic synthetic address. The value here
+  // is just an email address, no more sensitive than the synthetic
+  // addresses it replaces.
+  allow get: if true;
+  // the account itself, right after creating its own login, can claim
+  // its own username (pointing only at its OWN email) — or an admin,
+  // super admin or teacher can create one on its behalf (needed when
+  // renaming a student who already graduated to a real email)
+  allow create: if request.auth != null
+    && (request.resource.data.email == request.auth.token.email.lower()
+        || exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())));
+  // any listed admin, super admin or teacher can update/remove a
+  // mapping (needed when renaming a student's username)
+  allow update, delete: if request.auth != null
+    && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -304,7 +325,7 @@ match /kids_quest_students/{uid} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=6"></script>
+<script type="module" src="kids-quest-cloud.js?v=7"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

@@ -264,7 +264,7 @@
   </div>
 </div>
 
-<script type="module" src="../kids-quest-cloud.js?v=5"></script>
+<script type="module" src="../kids-quest-cloud.js?v=7"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -456,7 +456,7 @@ function renderStudents(list){
       '<div class="actions">' +
         '<button class="btn small manage-btn" data-act="manage">📘 Manage Tuhfatul</button>' +
         '<button class="btn ghost small" data-act="reset">Send password reset to my inbox</button>' +
-        '<button class="btn ghost small" data-act="rename">Rename username</button>' +
+        (myRole === 'teacher' ? '' : '<button class="btn ghost small" data-act="rename">Rename username</button>') +
         '<button class="btn ghost small" data-act="toggle-disable">' + (s.disabled ? 'Enable account' : 'Disable account') + '</button>' +
         (myRole === 'teacher' ? '' :
           '<button class="btn danger small" data-act="delete" title="Removes their saved progress. The login itself is removed from Firebase Authentication → Users in the console.">Delete</button>'
@@ -482,7 +482,8 @@ function renderStudents(list){
       }).catch(err => { msg.className = 'msg error'; msg.textContent = friendlyError(err); });
     });
 
-    el.querySelector('[data-act="rename"]').addEventListener('click', () => {
+    const renameBtn = el.querySelector('[data-act="rename"]');
+    if(renameBtn) renameBtn.addEventListener('click', () => {
       el.querySelector('[data-rename]').classList.toggle('show');
     });
 

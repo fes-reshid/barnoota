@@ -21,7 +21,7 @@ import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   onAuthStateChanged, signOut, sendPasswordResetEmail, deleteUser,
-  updateProfile
+  updateProfile, updateEmail
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy
@@ -44,6 +44,7 @@ const ADMIN_DOMAIN = ADMIN_EMAIL.split('@')[1];
 
 const STUDENTS_COLLECTION = 'kids_quest_students';
 const ADMINS_COLLECTION = 'kids_quest_admins';
+const USERNAMES_COLLECTION = 'kids_quest_usernames';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -70,35 +71,65 @@ function teacherUsernameToEmail(username){
 
 /* ===================== Student-facing API ===================== */
 
+/* Every account's REAL Firebase Auth login is created under the
+   deterministic synthetic address (see usernameToEmail above) — always,
+   with no exception — so "same username = same one shared account
+   across every Quest game" can never fragment into two separate
+   accounts no matter which game someone signs up from. If the student
+   gives a real email at sign-up, that account's email is then changed
+   ("graduated") to the real one via updateEmail, and the mapping is
+   recorded in kids_quest_usernames so future sign-ins (from ANY game)
+   can find the account again — usernameToEmail alone would no longer
+   point at it once it's graduated. An account that never graduates has
+   no doc in kids_quest_usernames at all, and resolveLoginEmail falls
+   straight back to the deterministic address, so every account created
+   before this feature existed keeps working with zero migration. */
+function resolveLoginEmail(username){
+  const clean = normalizeUsername(username);
+  return getDoc(doc(db, USERNAMES_COLLECTION, clean)).then(function(snap){
+    return (snap.exists() && snap.data().email) ? snap.data().email : usernameToEmail(clean);
+  }).catch(function(){ return usernameToEmail(clean); });
+}
+
 /* Logs a child in with their plain username + password. Resolves with
    the Firestore profile doc (creating a blank one on first-ever login,
    in case an admin-created account hasn't been touched yet). Rejects
    (and signs back out) if an admin has disabled the account. */
 function studentLogin(username, password){
-  const email = usernameToEmail(username);
-  return signInWithEmailAndPassword(auth, email, password)
-    .then(function(cred){
-      return ensureStudentDoc(cred.user, username).then(function(data){
-        if(data.disabled){
-          return signOut(auth).then(function(){
-            const err = new Error('This account has been disabled by an admin.');
-            err.code = 'app/account-disabled';
-            throw err;
-          });
-        }
-        return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} };
-      });
+  const clean = normalizeUsername(username);
+  return resolveLoginEmail(clean).then(function(email){
+    return signInWithEmailAndPassword(auth, email, password);
+  }).then(function(cred){
+    return ensureStudentDoc(cred.user, clean).then(function(data){
+      if(data.disabled){
+        return signOut(auth).then(function(){
+          const err = new Error('This account has been disabled by an admin.');
+          err.code = 'app/account-disabled';
+          throw err;
+        });
+      }
+      return { uid: cred.user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {} };
     });
+  });
 }
 
-/* Self-service sign-up: anyone can pick their own username, a real
-   contact email (for the admin to reach them — separate from the
-   internal synthetic Auth email every account still uses, so existing
-   login/reset logic keeps working unchanged) and a password. Firebase
-   naturally rejects a taken username, since it maps to the same
-   synthetic email as any existing account with that username.
+/* Self-service sign-up: anyone can pick their own username, an optional
+   real email (used for self-service password recovery — see
+   studentForgotPassword — and for the admin to reach them) and a
+   password.
 
-   `fullName` is optional and new: when a caller provides it (the Qur'an
+   The account is always CREATED under the synthetic address first (see
+   the comment above resolveLoginEmail for why), so a taken username
+   reliably fails here with Firebase's own "email already in use" no
+   matter whether the existing account has since graduated to a real
+   email or not — the pre-check against kids_quest_usernames below
+   catches the graduated case that usernameToEmail's uniqueness check
+   alone could no longer see. If a real email is given, the account's
+   email is then changed to it (best-effort: if that email is already
+   in use by something else, the account still works fine under the
+   synthetic address, just without self-service recovery).
+
+   `fullName` is optional: when a caller provides it (the Qur'an
    tracker's create-account form does), it becomes the account's
    displayName in place of the username, everywhere that field is read —
    the admin roster, this game, and any other game on the shared login.
@@ -107,21 +138,58 @@ function studentLogin(username, password){
 function studentSignUp(username, contactEmail, password, fullName){
   const clean = normalizeUsername(username);
   if(!clean) return Promise.reject(new Error('Choose a username.'));
-  const email = usernameToEmail(clean);
+  const cleanEmail = normalizeEmail(contactEmail || '');
   const cleanFullName = String(fullName || '').trim();
-  return createUserWithEmailAndPassword(auth, email, password).then(function(cred){
-    const data = {
-      username: clean,
-      displayName: cleanFullName || clean,
-      fullName: cleanFullName,
-      contactEmail: normalizeEmail(contactEmail || ''),
-      selfSignup: true,
-      createdAt: new Date().toISOString(),
-      progress: {}
-    };
-    return setDoc(doc(db, STUDENTS_COLLECTION, cred.user.uid), data).then(function(){
-      return { uid: cred.user.uid, username: clean, displayName: data.displayName, fullName: cleanFullName, progress: {} };
+  return getDoc(doc(db, USERNAMES_COLLECTION, clean)).catch(function(){ return { exists:function(){ return false; } }; }).then(function(lookupSnap){
+    if(lookupSnap.exists()){
+      const err = new Error('That username is already taken. Try signing in instead.');
+      err.code = 'auth/email-already-in-use';
+      throw err;
+    }
+    const email = usernameToEmail(clean);
+    return createUserWithEmailAndPassword(auth, email, password).then(function(cred){
+      const data = {
+        username: clean,
+        displayName: cleanFullName || clean,
+        fullName: cleanFullName,
+        contactEmail: cleanEmail,
+        selfSignup: true,
+        createdAt: new Date().toISOString(),
+        progress: {}
+      };
+      return setDoc(doc(db, STUDENTS_COLLECTION, cred.user.uid), data).then(function(){
+        if(!cleanEmail) return null;
+        return updateEmail(cred.user, cleanEmail)
+          // Firestore rules see request.auth.token.email from the ID
+          // token's cached claims, which updateEmail() does not refresh
+          // by itself — force a refresh so the very next write (below,
+          // claiming this username under the new email) is evaluated
+          // against the email that write is actually for.
+          .then(function(){ return cred.user.getIdToken(true); })
+          .then(function(){ return setDoc(doc(db, USERNAMES_COLLECTION, clean), { email: cleanEmail, uid: cred.user.uid }); })
+          .catch(function(){ return null; });
+      }).then(function(){
+        return { uid: cred.user.uid, username: clean, displayName: data.displayName, fullName: cleanFullName, progress: {} };
+      });
     });
+  });
+}
+
+/* Self-service "forgot password" for a STUDENT'S own login — only works
+   for an account that graduated to a real email at sign-up (see above);
+   otherwise there's nowhere of the student's own to send a reset link
+   to, so this says so plainly rather than silently emailing the admin's
+   inbox the way adminSendPasswordReset deliberately still does. */
+function studentForgotPassword(username){
+  const clean = normalizeUsername(username);
+  if(!clean) return Promise.reject(new Error('Enter your username.'));
+  return getDoc(doc(db, USERNAMES_COLLECTION, clean)).then(function(snap){
+    if(!snap.exists() || !snap.data().email){
+      const err = new Error('No email is on file for this account. Ask an admin or teacher to reset your password for you.');
+      err.code = 'app/no-email-on-file';
+      throw err;
+    }
+    return sendPasswordResetEmail(auth, snap.data().email);
   });
 }
 
@@ -359,13 +427,16 @@ function adminCreateStudent(username, displayName, password){
     });
 }
 
-/* Sends Firebase's own password-reset email to the admin's real inbox
-   (via the +tag). The admin opens it, sets a new password, then tells
-   the child what it is — same trusted flow Firebase already runs for
-   every "forgot password" link on the web, just redirected to whoever
-   controls the base address. */
+/* Sends Firebase's own password-reset email wherever this account's
+   real login currently resolves to: the admin's own inbox (via the
+   +tag) for an ordinary account, or straight to the student's own
+   email if they graduated to one at sign-up — either way it's the same
+   trusted Firebase reset-email flow, just reaching whoever actually
+   controls that account's current address. */
 function adminSendPasswordReset(username){
-  return sendPasswordResetEmail(auth, usernameToEmail(username));
+  return resolveLoginEmail(username).then(function(email){
+    return sendPasswordResetEmail(auth, email);
+  });
 }
 
 /* Self-service "forgot password" for an admin's OWN login, straight to
@@ -396,16 +467,19 @@ function adminRenameStudent(oldUsername, oldPassword, newUsername, oldUid){
   if(!cleanNew) return Promise.reject(new Error('Enter a new username.'));
   const secondary = initializeApp(firebaseConfig, 'admin-rename-' + Date.now());
   const secondaryAuth = getAuth(secondary);
-  return signInWithEmailAndPassword(secondaryAuth, usernameToEmail(oldUsername), oldPassword)
+  return resolveLoginEmail(oldUsername).then(function(oldEmail){
+    return signInWithEmailAndPassword(secondaryAuth, oldEmail, oldPassword)
     .then(function(cred){
       return getDoc(doc(db, STUDENTS_COLLECTION, oldUid)).then(function(oldSnap){
         const oldData = oldSnap.exists() ? oldSnap.data() : { progress:{} };
+        const graduatedEmail = oldEmail !== usernameToEmail(oldUsername) ? oldEmail : '';
         return createUserWithEmailAndPassword(secondaryAuth, usernameToEmail(cleanNew), oldPassword)
           .then(function(newCred){
             const newUid = newCred.user.uid;
             return setDoc(doc(db, STUDENTS_COLLECTION, newUid), {
               username: cleanNew,
               displayName: oldData.displayName || cleanNew,
+              contactEmail: oldData.contactEmail || '',
               createdAt: oldData.createdAt || new Date().toISOString(),
               createdBy: (auth.currentUser && auth.currentUser.email) || null,
               progress: oldData.progress || {}
@@ -413,6 +487,14 @@ function adminRenameStudent(oldUsername, oldPassword, newUsername, oldUid){
               return deleteUser(cred.user).catch(function(){});
             }).then(function(){
               return deleteDoc(doc(db, STUDENTS_COLLECTION, oldUid)).catch(function(){});
+            }).then(function(){
+              return graduatedEmail
+                ? updateEmail(newCred.user, graduatedEmail)
+                    .then(function(){ return setDoc(doc(db, USERNAMES_COLLECTION, cleanNew), { email: graduatedEmail, uid: newUid }); })
+                    .catch(function(){ return null; })
+                : null;
+            }).then(function(){
+              return deleteDoc(doc(db, USERNAMES_COLLECTION, normalizeUsername(oldUsername))).catch(function(){});
             }).then(function(){
               return signOut(secondaryAuth);
             }).then(function(){
@@ -422,7 +504,8 @@ function adminRenameStudent(oldUsername, oldPassword, newUsername, oldUid){
             });
           });
       });
-    })
+    });
+  })
     .catch(function(err){
       return deleteApp(secondary).catch(function(){}).then(function(){ throw err; });
     });
@@ -476,6 +559,7 @@ window.KidsCloud = {
   normalizeUsername: normalizeUsername,
   studentLogin: studentLogin,
   studentSignUp: studentSignUp,
+  studentForgotPassword: studentForgotPassword,
   onStudentAuth: onStudentAuth,
   studentLogout: studentLogout,
   getIdToken: getIdToken,

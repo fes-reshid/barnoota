@@ -495,6 +495,7 @@
       <button class="big-btn" id="login-start-btn" style="width:100%;">▶ Start Adventure</button>
       <p class="login-msg" id="login-msg"></p>
       <button class="ghost-btn" id="login-toggle-mode" type="button" style="margin-top:8px;">First time here? Create an account</button>
+      <button class="ghost-btn" id="login-forgot-btn" type="button" style="margin-top:4px;">Forgot your password?</button>
       <p class="login-hint" id="login-hint">Same account as your other Kids Corner games — ask your parent if you don't have a username yet.</p>
     </div>
   </div>
@@ -2451,6 +2452,19 @@ $('login-start-btn').addEventListener('click', ()=>{
       .finally(()=>{ btn.disabled=false; });
   }
 });
+$('login-forgot-btn').addEventListener('click', ()=>{
+  const u = $('login-username').value.trim();
+  const msg = $('login-msg');
+  msg.textContent = '';
+  if(!u){ msg.textContent='Enter your username above first, then tap "Forgot your password?" again.'; return; }
+  if(!window.KidsCloud || !window.KidsCloud.studentForgotPassword){ msg.textContent='Still loading — refresh the page and try again.'; return; }
+  const btn = $('login-forgot-btn'); btn.disabled=true;
+  window.KidsCloud.studentForgotPassword(u).then(()=>{
+    msg.textContent = 'Reset link sent to the email on file — open it, set a new password, then sign in.';
+  }).catch(err=>{
+    msg.textContent = (err && err.code === 'app/no-email-on-file') ? err.message : friendlyLoginError(err);
+  }).finally(()=>{ btn.disabled=false; });
+});
 $('login-username').addEventListener('keydown', e=>{ if(e.key==='Enter') (isSignUpMode ? $('login-email') : $('login-password')).focus(); });
 $('login-email').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-password').focus(); });
 $('login-password').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-start-btn').click(); });
@@ -2478,7 +2492,7 @@ function init(){
 }
 init();
 </script>
-<script type="module" src="kids-quest-cloud.js?v=3"></script>
+<script type="module" src="kids-quest-cloud.js?v=7"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
