@@ -516,7 +516,7 @@
             <option value="memorise">🧠 Memorise lines (Memorise mode, level 4)</option>
             <option value="lessons">▶ Finish lessons</option>
             <option value="quiz">📝 Pass a quiz</option>
-            <option value="record">🎙️ Record lines &amp; send to teacher</option>
+            <option value="record">🎙️ Record lines &amp; send (students with Talqeen on)</option>
             <option value="task">✏️ Other task (student ticks it)</option>
           </select></div>
           <div class="row" id="hw-lines-row">
@@ -848,7 +848,9 @@
     </div>
 
     <div class="sub-panel hidden" data-subpanel="talqeen">
-      <div class="card" style="margin-bottom:12px;box-shadow:none">
+      <div class="lb-box" style="margin-top:0"><label class="toggle"><input type="checkbox" id="rec-enabled"> 🎙️ Talqeen on for this student</label>
+        <div class="muted" id="rec-enabled-note" style="font-size:13.5px;margin-top:4px"></div></div>
+      <div class="card" id="rec-card" style="margin-bottom:12px;box-shadow:none">
         <h3 style="margin-top:0">🎙️ Record Talqeen for this student</h3>
         <p class="muted" style="margin-top:-4px">Recite a line; it plays for this student under the map. Up to 60 seconds.</p>
         <div class="row"><div class="field" style="max-width:120px"><label for="rec-line">Line</label><input id="rec-line" type="number" min="1" max="61" value="1"></div>
@@ -887,7 +889,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=15"></script>
+<script type="module" src="../kids-quest-cloud.js?v=16"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1147,7 +1149,7 @@ function renderStudentGrid(){
       '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
       '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
       '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.certs + '/15</b><small>certificates</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
-      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + (x.badges ? '<span class="role-badge warn">🏅 ' + x.badges + '</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
+      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + (x.badges ? '<span class="role-badge warn">🏅 ' + x.badges + '</span>' : '') + (s.talqeenEnabled ? '<span class="role-badge info">🎙️ Talqeen</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
     el.onclick = () => openManager(s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
     el.onkeydown = e => { if(e.key === 'Enter') el.click(); };
     box.appendChild(el);
@@ -2055,11 +2057,16 @@ function makeRecorder(opts){
 function fmtSec(sec){ sec = Math.round(sec); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
 /* ===================== Talqeen recordings ===================== */
-/* Switched off for now — set to true to bring Talqeen back in the portal. */
-var TALQEEN_ENABLED = false;
+/* Talqeen is off for each student until a teacher turns it on for them. */
 let teacherRec = null, pendingRec = null, recCache = {};
+function syncTalqeenSwitch(){
+  const s = activeStudent; if(!s) return; const on = !!s.talqeenEnabled;
+  $('rec-enabled').checked = on; $('rec-card').classList.toggle('hidden', !on);
+  $('rec-enabled-note').textContent = on ? (s.displayName || s.username) + ' sees a Talqeen block under the map: your recordings, and a button to record themselves and send it to you.' : 'Hidden for this student (the default). Turn it on to record lines for them and let them send their recitation to you.';
+}
 function renderTalqeen(){
   const s = activeStudent; if(!s) return;
+  syncTalqeenSwitch();
   $('rec-list').innerHTML = '<p class="muted">Loading…</p>';
   window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list; if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
     .catch(err => { $('rec-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
@@ -2115,7 +2122,7 @@ function sendTeacherRecording(){
     .catch(err => { setMsg('rec-msg', friendlyError(err), true); $('rec-send').disabled = false; });
 }
 function loadRecInbox(){
-  if(!TALQEEN_ENABLED || !window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
+  if(!window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
   return window.KidsCloud.listUnheardStudentRecordings().then(list => {
     const box = $('rec-inbox'), mine = list.filter(r => studentsCache.some(s => s.uid === r.studentUid));
     box.innerHTML = mine.length ? '' : '<p class="empty">No new recitations. 🌟</p>';
@@ -2237,11 +2244,11 @@ function openParentLink(s, reset){
 
 function wireExtras(){
   wireTeacherRecorder();
-  if(!TALQEEN_ENABLED){
-    document.querySelector('.subtab[data-sub="talqeen"]').classList.add('hidden');
-    $('rec-inbox').closest('.card').classList.add('hidden');
-    const opt = $('hw-kind').querySelector('option[value="record"]'); if(opt) opt.remove();
-  }
+  $('rec-enabled').onchange = () => {
+    const s = activeStudent; if(!s) return; const on = $('rec-enabled').checked;
+    window.KidsCloud.adminSetTalqeen(s.uid, on).then(() => { s.talqeenEnabled = on; syncTalqeenSwitch(); renderStudentGrid(); toast(on ? 'Talqeen on for ' + (s.displayName || s.username) : 'Talqeen hidden for ' + (s.displayName || s.username)); })
+      .catch(err => { $('rec-enabled').checked = !on; alert(friendlyError(err)); });
+  };
   $('modal-parent').onclick = () => { if(activeStudent) openParentLink(activeStudent, false); };
   $('parent-close').onclick = () => $('parent-modal').classList.add('hidden');
   $('att-date').value = isoDate(new Date());

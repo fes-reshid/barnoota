@@ -231,7 +231,7 @@ function onStudentAuth(cb){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
       if(data.disabled){ signOut(auth); cb(null); return; }
-      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {}, parentToken: data.parentToken || '' });
+      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {}, parentToken: data.parentToken || '', talqeenEnabled: !!data.talqeenEnabled });
     }).catch(function(){ cb(null); });
   });
 }
@@ -269,7 +269,7 @@ function getStudentProfile(){
     if(!snap.exists()) return null;
     const data = snap.data();
     return { uid:user.uid, username:data.username, displayName:data.displayName || data.username,
-      fullName:data.fullName || '', progress:data.progress || {}, teacherNotes:data.teacherNotes || {}, parentToken:data.parentToken || '' };
+      fullName:data.fullName || '', progress:data.progress || {}, teacherNotes:data.teacherNotes || {}, parentToken:data.parentToken || '', talqeenEnabled: !!data.talqeenEnabled };
   });
 }
 
@@ -591,6 +591,12 @@ function adminUpdateStudentNames(uid, displayName, fullName){
    parent/guardian name + phone for the admin or teacher to reach out
    to. Any field left out of `details` is left untouched, so a partial
    edit (just the photo, say) never blanks out the others. */
+/* Talqeen (voice recordings) is off for every student until their
+   teacher switches it on for that student. */
+function adminSetTalqeen(uid, on){
+  if(!uid) return Promise.reject(new Error('Missing student.'));
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), { talqeenEnabled: !!on }, { merge:true });
+}
 function adminUpdateStudentDetails(uid, details){
   if(!uid) return Promise.reject(new Error('Missing student.'));
   const d = details || {};
@@ -1111,6 +1117,7 @@ window.KidsCloud = {
   markThreadRead: markThreadRead,
   currentUid: currentUid,
   listClasses: listClasses,
+  adminSetTalqeen: adminSetTalqeen,
   adminEnsureParentToken: adminEnsureParentToken,
   adminResetParentToken: adminResetParentToken,
   writeParentSummary: writeParentSummary,
