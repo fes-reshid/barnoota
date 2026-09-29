@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap');:root{font-family:Nunito,system-ui,sans-serif;color:#effcff;background:#062c36}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -20%,#166b76 0,transparent 45%),#062c36}.shell{max-width:1500px;margin:auto;padding:16px 22px 24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:12px}.brand-icon{display:grid;place-items:center;width:47px;height:47px;border-radius:16px;background:#f7c957;color:#123c43;font-size:31px;box-shadow:0 5px 0 #b98329}.brand strong{font-family:Outfit,sans-serif;font-size:22px;letter-spacing:.12em}.brand small{display:block;color:#b4d4d2;font-size:12px;font-weight:700}.stats{display:flex;gap:8px;align-items:center}.stats span,.stats button{background:#f8fcf2;color:#16444a;border:0;border-radius:50px;padding:9px 15px;font-weight:900;box-shadow:0 4px 0 #8eb9b5}.stats button{cursor:pointer;font-size:19px;padding:6px 14px}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}.stage{height:min(72vh,760px);min-height:510px;position:relative;overflow:hidden;border:3px solid #c5e6dc;border-radius:30px;background:#257b96;box-shadow:0 18px 50px #001c2590;touch-action:none}canvas{width:100%;height:100%;display:block}.hud{position:absolute;inset:16px 16px auto;display:flex;align-items:center;gap:14px;z-index:2}.chapter-label{background:#073c49df;border:1px solid #b6e7d6;border-radius:18px;padding:8px 13px;min-width:140px;box-shadow:0 5px 15px #002b3777}.chapter-label span{font-size:10px;letter-spacing:.12em;color:#f9ce6b;font-weight:900;display:block}.chapter-label strong{font-family:Outfit;font-size:17px}.progress{flex:1;max-width:270px;height:12px;border:2px solid #fff8;border-radius:20px;background:#18454b99;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#f7ae34,#ffe27d);width:0%;border-radius:20px;transition:width .2s}.hud button{margin-left:auto;border:2px solid #fff8;background:#073c49d9;color:white;width:43px;height:43px;border-radius:50%;font-size:20px;cursor:pointer}.overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(#06262b49,#06282bbd);padding:18px}.overlay.hidden{display:none}.panel{width:min(100%,490px);max-height:90%;overflow:auto;text-align:center;padding:27px 28px;background:linear-gradient(150deg,#f9fff2,#e2f3dc);color:#14434b;border:5px solid #fff;border-radius:29px;box-shadow:0 18px 0 #074753,0 28px 60px #00171b99}.eyebrow{font-size:12px;font-weight:900;letter-spacing:.16em;color:#f7be48}.panel .eyebrow{color:#9b6b17}.panel h1,.panel h2{font-family:Outfit;margin:5px 0 10px;font-weight:900;line-height:1.05}.panel h1{font-size:clamp(37px,6vw,64px)}.panel h1 em{font-style:normal;color:#e09d27}.panel h2{font-size:35px}.panel p{font-size:16px;line-height:1.45;margin:10px 0 16px}.place-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;margin:20px 0;color:#16717a;font-size:13px;font-weight:900}.place-flow span{background:#d2eadb;border-radius:30px;padding:7px}.primary{border:0;border-radius:17px;background:linear-gradient(135deg,#f9d669,#f1a63c);box-shadow:0 6px 0 #b87424;color:#163f48;font-family:Outfit;font-size:19px;font-weight:900;padding:15px 24px;min-width:210px;cursor:pointer}.primary:active{transform:translateY(5px);box-shadow:0 1px 0 #b87424}.panel small{display:block;margin-top:18px;color:#4c6d6e;font-weight:800;line-height:1.5}.choices{display:grid;gap:9px;margin:18px 0}.choice{border:2px solid #b6d9cc;border-radius:13px;background:white;padding:12px 14px;text-align:left;font:800 16px Nunito;cursor:pointer;color:#19434a}.choice.correct{border-color:#32a768;background:#c6f1d0}.choice.wrong{border-color:#d68261;background:#ffe0d7}.story-icon{font-size:52px}.answer-feedback{min-height:24px;color:#126447;font-weight:900}.touch-controls{display:flex;position:absolute;z-index:3;bottom:15px;left:50%;transform:translateX(-50%);gap:12px}.touch-controls button{width:66px;height:59px;border:2px solid #fff8;border-radius:16px;background:#073c49cb;color:white;font-size:28px;font-weight:900;box-shadow:0 5px 0 #072d31;cursor:pointer}.touch-controls small{display:block;font-size:9px;margin-top:-6px}.journey{border:2px solid #62a7a4;border-radius:27px;background:linear-gradient(160deg,#115b64,#0a454e);padding:23px;box-shadow:0 12px 30px #001d2599;overflow:auto;max-height:min(72vh,760px)}.journey h2{font:900 30px Outfit;margin:5px 0}.journey p{font-size:14px;color:#c4e4d9;line-height:1.5;margin:7px 0 18px}.map{position:relative;display:grid;gap:13px;padding:8px 0}.map:before{content:'';position:absolute;top:20px;bottom:24px;left:23px;border-left:4px dashed #ffd461;opacity:.8}.map-stop{position:relative;display:flex;align-items:center;gap:13px;border:2px solid #5aa6a6;background:#104e59;color:white;border-radius:16px;padding:10px 12px;width:100%;text-align:left;cursor:pointer;transition:.2s}.map-stop:nth-child(even){margin-left:13px;width:calc(100% - 13px)}.map-stop.active{border-color:#ffe07e;background:#1c7075;box-shadow:0 0 0 3px #ffe07e33}.map-stop.done{background:#1d715a}.map-stop.locked{opacity:.62}.map-stop .icon{z-index:1;display:grid;place-items:center;flex:none;width:43px;height:43px;border-radius:50%;background:#fcf4d7;font-size:24px;border:2px solid #ffce69}.map-stop strong{display:block;font:800 15px Outfit}.map-stop small{color:#bae1dd;font-weight:800}.history-note{display:flex;gap:12px;margin-top:18px;border-radius:17px;background:#f6e6b5;color:#5d4b28;padding:13px}.history-note span{font-size:24px}.history-note p{color:#5d4b28;margin:0;font-size:12px}.chapter-strip{display:flex;gap:9px;overflow-x:auto;padding:17px 2px 9px;scrollbar-color:#b7d4c3 transparent}.chapter-strip button{min-width:155px;border:2px solid #559ca3;border-radius:17px;background:#145963;color:#fff;padding:11px;text-align:left;font-family:Outfit;cursor:pointer}.chapter-strip button.active{background:#f6c85b;color:#19454a;border-color:white}.chapter-strip button.locked{opacity:.6}.chapter-strip button span{display:block;font-size:26px}.chapter-strip button strong{display:block;margin-top:3px}footer{text-align:center;color:#9ac0c2;font-size:12px;padding:8px}footer a{color:#e7ca7b}@media(max-width:900px){.game-layout{grid-template-columns:1fr}.journey{max-height:none}.map{grid-template-columns:repeat(2,1fr)}.map:before{display:none}.map-stop:nth-child(even){margin:0;width:100%}}@media(max-width:600px){.shell{padding:9px}.brand strong{font-size:16px}.brand small{font-size:10px;max-width:180px}.brand-icon{width:39px;height:39px}.stats span{padding:7px 9px;font-size:12px}.stats button{padding:4px 10px}.stage{height:68svh;min-height:470px;border-radius:22px}.hud{inset:10px 10px auto}.chapter-label{min-width:110px;padding:6px 9px}.chapter-label strong{font-size:14px}.progress{height:10px}.touch-controls{gap:7px;bottom:10px}.touch-controls button{width:57px;height:55px}.panel{padding:19px 17px}.map{grid-template-columns:1fr}.journey{padding:17px}.chapter-strip button{min-width:130px}}
+
+/* Journey setup and vehicle controls */
+[hidden]{display:none!important}
+button,input{font:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #29aaca;outline-offset:4px}
+canvas:focus{outline:none}
+.mode-picker,.car-picker{border:0;margin:0 0 15px;padding:0;min-width:0}
+.mode-picker legend,.car-picker legend{font-size:14px;font-weight:900;margin:0 auto 8px;color:#315c61}
+.mode-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-option,.car-option{position:relative;cursor:pointer;min-width:0}
+.mode-option input,.car-option input{position:absolute;opacity:0;width:1px;height:1px}
+.mode-option>span,.car-option>span{display:block;border:2px solid #b7d5ca;background:#fffdf7;border-radius:15px;padding:9px;transition:border-color .15s,background .15s,box-shadow .15s}
+.mode-option input:checked+span,.car-option input:checked+span{border-color:#13797d;background:#dbf2e6;box-shadow:0 0 0 2px #13797d22}
+.mode-option input:focus-visible+span,.car-option input:focus-visible+span{outline:3px solid #1b91b3;outline-offset:3px}
+.mode-option strong{font:900 22px Outfit,system-ui,sans-serif}
+.panel .mode-option small,.panel .car-option small{margin:0;font-size:12px;line-height:1.4}
+.car-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.car-option>span{padding:4px 4px 8px}
+.car-preview{width:100%;height:76px;object-fit:contain}
+.car-option strong{display:block;font-size:14px;font-weight:900;line-height:1.3}
+.panel:has(.mode-picker){width:min(100%,530px);max-height:100%;padding:20px 24px}
+.panel:has(.mode-picker) h1{font-size:clamp(32px,5vw,44px);margin:5px 0 7px}
+.panel .setup-intro{margin:5px 0 14px;font-size:15px}
+.panel .control-help{font-size:13px;line-height:1.45;margin-top:14px}
+.panel:has(.mode-picker) .primary{width:100%;padding:12px 18px;font-size:20px}
+.secondary{display:block;margin:20px auto 0;padding:10px;border:1px solid #a2c6b9;border-radius:12px;background:transparent;color:#23595e;cursor:pointer;font-size:14px;font-weight:800}
+.chapter-label .travel-badge{font-size:11px;letter-spacing:.04em;color:#d1f4ec;margin-top:3px;font-weight:800}
+.chapter-label .travel-badge.driving{color:#ffe19b}
+.touch-controls .brake-control{width:112px;background:#76543be6}
+.touch-controls .brake-control.braking{background:#b9683f;border-color:#ffe4a4;transform:translateY(3px);box-shadow:0 2px 0 #072d31}
+.touch-controls small{font-size:12px;line-height:1.2;margin-top:-2px}
+.touch-controls button{height:62px;touch-action:none}
+.overlay{touch-action:pan-y}
+@media(max-width:600px){
+ .top{gap:8px;flex-wrap:wrap}.brand{gap:8px}.stats{margin-left:auto;gap:6px}
+ .panel:has(.mode-picker){padding:15px 14px;border-width:3px;border-radius:23px}
+ .overlay{padding:12px}
+ .mode-picker,.car-picker{margin-bottom:12px}
+ .mode-option>span{padding:6px}
+ .mode-option strong{font-size:20px}
+ .panel .setup-intro{font-size:14px;margin-bottom:10px}
+ .car-preview{height:63px}
+ .car-option strong{font-size:12px}
+ .panel .car-option small{display:none}
+ .panel .control-help{font-size:12px;margin-top:12px}
+ .touch-controls button{height:56px}
+ .hud{gap:8px}.chapter-label{min-width:110px;max-width:200px}.chapter-label .travel-badge{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.progress div,.mode-option>span,.car-option>span{transition:none}}
+/* Immersive trail and discovery cards */
+.shell{max-width:1320px;padding:16px 24px 20px}
+.game-layout{grid-template-columns:minmax(0,1fr)}
+.stage{height:min(79svh,830px);min-height:570px;border:1px solid #c1dbce7a;border-radius:28px;box-shadow:0 20px 70px #00192088}
+.top{margin-bottom:12px}.brand strong{letter-spacing:.10em;font-size:24px}
+.brand small{font-size:12px}.brand-icon{box-shadow:none;border:1px solid #ffe4a0;background:linear-gradient(135deg,#f9d87d,#d99b31)}
+.hud{inset:20px 22px auto;gap:18px;pointer-events:none}
+.chapter-label{min-width:155px;max-width:260px;border-radius:17px;padding:11px 16px;background:#073642e6;backdrop-filter:blur(12px);border:1px solid #f2d69a75;box-shadow:0 5px 22px #00202e33}
+.chapter-label span{font-size:12px;letter-spacing:.14em}.chapter-label strong{font-size:19px;line-height:1.4}
+.chapter-label .travel-badge{font-size:12px;margin-top:4px}
+.progress{height:10px;max-width:290px;border:1px solid #ffedb9b3;background:#263d4999;box-shadow:0 2px 10px #05253533}
+.progress div{background:linear-gradient(90deg,#d99b43,#fff0ab)}
+.hud button{width:46px;height:46px;pointer-events:auto;background:#073642e6;backdrop-filter:blur(8px);border:1px solid #f2d69a75}
+.overlay{background:linear-gradient(135deg,#05202b66,#05202b99);padding:24px;backdrop-filter:blur(3px)}
+.panel{max-height:100%;width:min(100%,580px);padding:25px 30px;background:linear-gradient(145deg,#fffdf2,#f2f1dd);border:1px solid #fff4d5;border-radius:25px;box-shadow:0 24px 65px #00152070;color:#21474b;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b9c7b5 transparent}
+.panel.setup-panel{width:min(100%,520px);padding:27px 28px}
+.panel h1,.panel.setup-panel h1{font-size:clamp(39px,5.3vw,58px);margin:4px 0 10px;letter-spacing:-.045em}
+.panel h1 em{color:#ba822b}.panel h2{font-size:clamp(29px,3vw,38px);line-height:1.1;letter-spacing:-.025em;margin:9px 0 16px}
+.panel .eyebrow{color:#977034;font-size:12px;letter-spacing:.13em;line-height:1.5}
+.panel .setup-intro{font-size:16px;margin-bottom:23px}
+.panel .primary{width:100%;min-width:0;font-size:18px;padding:14px 17px;box-shadow:0 4px 0 #a56d29;background:linear-gradient(135deg,#f7d676,#e4ac42);border-radius:13px;line-height:1.3}
+.panel .secondary{box-shadow:none;margin-top:0}
+.panel small.control-help{font-size:13px;line-height:1.55;margin-top:19px}
+.current-ride{display:inline-flex;border:1px solid #b1c8b8;border-radius:30px;padding:10px 18px;margin:0 0 23px;font-size:15px;font-weight:900;background:#e1eee1}
+.text-button{display:block;border:0;background:none;color:#286168;text-decoration:underline;font-size:14px;font-weight:800;margin:16px auto 0;cursor:pointer;padding:4px}
+.mode-picker legend,.car-picker legend{font-size:14px}.mode-option strong{font-size:22px}
+.story-emblem{font-size:31px;line-height:1.3;color:#c3923b;margin:5px auto 0}
+.story-copy{text-align:left}.story-copy p{font-size:17px;line-height:1.65;margin:12px 0}
+.takeaway{font-size:15px;line-height:1.5;text-align:left;color:#215956;background:#deebe0;border-left:3px solid #92b2a0;border-radius:0 10px 10px 0;padding:12px 15px;margin:18px 0}
+.story-sources{display:flex;flex-wrap:wrap;justify-content:center;gap:7px 14px;margin:14px 0 20px;line-height:1.5}
+.story-sources a,.verse-source{font-size:12px;font-weight:800;color:#547169;text-underline-offset:3px}
+.choices{gap:10px;margin:21px 0}.choice{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid #adc9bb;background:#fffffa;font:800 16px Nunito,system-ui,sans-serif;line-height:1.5;border-radius:13px}
+.choice span{display:grid;place-items:center;width:29px;height:29px;flex:none;border:1px solid #c1d5c9;border-radius:8px;color:#647d71;font-size:13px}
+.choice.correct{background:#c8eace;border-color:#5d9e74}.choice.wrong{background:#f9e3d6;border-color:#ce9a7a}
+.choice:disabled{opacity:1}.answer-feedback{font-size:16px;line-height:1.5;margin-bottom:10px}
+.verse-progress{display:flex;gap:6px;max-width:175px;margin:18px auto}.verse-progress span{flex:1;height:5px;background:#d3dfd3;border-radius:5px}.verse-progress span.read{background:#b7893b}
+.panel p.quran-verse{font-family:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif;font-size:clamp(29px,5vw,40px);font-weight:600;line-height:2.15;text-align:center;color:#1a4e4e;padding:16px 12px;margin:18px 0;background:#ffffff77;border:1px solid #d7dfc6;border-radius:17px;overflow-wrap:normal}
+.ayah-number{color:#a57c32;font-size:.7em;white-space:nowrap}
+.verse-meaning{margin:20px 0 12px}.verse-meaning>span{font-size:11px;font-weight:900;letter-spacing:.14em;color:#8a753f}.verse-meaning p{font-size:17px;line-height:1.6;margin:8px 0}
+.verse-actions{display:flex;gap:12px;margin-top:25px}.verse-actions .secondary{flex:0 0 auto;padding:12px;font-size:14px}.verse-actions .primary{flex:1}.review-verses p{font-size:28px;line-height:2}.review-verses small{font-size:14px}
+.trail-message{position:absolute;bottom:95px;left:50%;transform:translateX(-50%);color:#fff9e7;font-size:14px;font-weight:900;letter-spacing:.02em;text-shadow:0 2px 8px #072631;pointer-events:none;text-align:center;max-width:85%;white-space:nowrap}
+.touch-controls{bottom:19px;gap:13px}.touch-controls button{background:#073b48bf;backdrop-filter:blur(8px);border:1px solid #f9e7b8a3;width:67px;height:64px;border-radius:18px;box-shadow:0 4px 0 #052c3870}
+.touch-controls small{font-size:12px;line-height:1.3}.touch-controls .brake-control{width:127px;background:#76563cc9}
+.discovery-journal{margin-top:17px;border:1px solid #58959966;background:#0d4651;border-radius:15px;padding:13px 17px;color:#d6e9df}
+.discovery-journal summary{cursor:pointer;font-weight:800;font-size:14px;list-style-position:inside}
+#discoveries{display:flex;flex-wrap:wrap;gap:9px;padding-top:15px}#discoveries p{font-size:14px}
+#discoveries button{display:flex;gap:8px;border:1px solid #86b5aa66;background:#ffffff0d;color:#e7f3e6;padding:10px 13px;border-radius:10px;font-size:14px;cursor:pointer;text-align:left}
+#discoveries button span{color:#f2d286}footer{font-size:12px;line-height:1.7;margin-top:9px;color:#a4c3c3}
+@media(max-width:600px){
+ .shell{padding:10px 9px 14px}.top{margin-bottom:10px}.brand strong{font-size:18px}.brand small{display:none}.brand-icon{width:33px;height:33px;font-size:25px;border-radius:11px}
+ .brand{gap:8px}.stats span{padding:6px 9px;font-size:12px;box-shadow:none}.stats button{padding:5px 10px;box-shadow:none}
+ .stage{height:calc(100svh - 104px);min-height:540px;max-height:900px;border-radius:21px}
+ .hud{inset:12px 11px auto;gap:10px}.chapter-label{padding:9px 11px;min-width:123px;max-width:178px;border-radius:14px}.chapter-label span{font-size:10px}.chapter-label strong{font-size:16px}.chapter-label .travel-badge{font-size:10px}.hud button{width:40px;height:40px;flex:none}.progress{height:8px}
+ .overlay{padding:14px 12px}.panel,.panel.setup-panel,.panel:has(.mode-picker){padding:20px 19px;border-width:1px;border-radius:21px}.panel.setup-panel h1,.panel:has(.mode-picker) h1{font-size:42px}
+ .panel .eyebrow{font-size:10px}.panel h2{font-size:30px}.panel .setup-intro{font-size:16px;margin-bottom:18px}.story-copy p{font-size:16px;line-height:1.6}
+ .panel .primary{font-size:17px;padding:13px 14px}.panel small.control-help{font-size:12px}.current-ride{font-size:14px}
+ .car-preview{height:68px}.car-options{gap:6px}.car-option strong{font-size:12px}
+ .choice{font-size:15px;padding:11px;gap:10px}.takeaway{font-size:14px;padding:11px 13px}.story-sources{margin:13px 0 18px}.story-sources a{font-size:11px}
+ .panel p.quran-verse{font-size:30px;line-height:2.1;padding:13px 8px}.verse-meaning p{font-size:16px}.verse-actions{gap:8px}.verse-actions .secondary{padding:10px 8px;font-size:13px}
+ .touch-controls{bottom:13px;gap:9px}.touch-controls button{width:57px;height:56px;border-radius:15px}.touch-controls .brake-control{width:119px}.trail-message{bottom:83px;font-size:12px;white-space:normal;width:85%}
+}
+@media(max-width:360px){.brand strong{font-size:15px}.stats{gap:4px}.stats span{padding:6px}.brand-icon{width:28px;height:28px}.panel,.panel.setup-panel{padding:18px 14px}.chapter-label{min-width:115px;max-width:154px}.verse-actions{flex-wrap:wrap}.verse-actions .primary{flex-basis:100%}}
+.stage{touch-action:auto}
+#game{touch-action:none}
+.panel{touch-action:pan-y}
+
+.runner-picker{border:0;padding:0;margin:0 0 15px;min-width:0}.runner-picker legend{font-size:14px;font-weight:900;margin:0 auto 8px;color:#315c61}.runner-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.runner-option{cursor:pointer;position:relative}.runner-option input{position:absolute;opacity:0;width:1px;height:1px}.runner-option>span{display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #b7d5ca;border-radius:15px;background:#fffdf7;padding:5px 9px}.runner-option input:checked+span{border-color:#13797d;background:#dbf2e6;box-shadow:0 0 0 2px #13797d22}.runner-option input:focus-visible+span{outline:3px solid #1b91b3;outline-offset:3px}.runner-portrait{display:block;width:60px;height:80px;flex:none;background-size:400% 200%;background-position:0 0;background-repeat:no-repeat}.runner-portrait.boy{background-image:url('assets/runner.png')}.runner-portrait.girl{background-image:url('assets/girl.png')}.runner-option strong{font-size:16px}
+.touch-controls .boost-control{position:relative;overflow:hidden;width:84px;background:#086a9bdf;border-color:#91e9ff;color:#defaff;font-size:25px}.boost-control small{position:relative;z-index:1;white-space:nowrap}.boost-control:disabled{cursor:default;opacity:.6}.boost-control.boosting:disabled{opacity:1;background:#168ac2}.boost-control.ready{box-shadow:0 0 17px #49ccffa0,0 4px 0 #052c3870}.boost-control #boostMeter{position:absolute;bottom:0;left:0;height:5px;background:#b9f4ff;width:0;transition:width .1s linear}
+@media(max-width:600px){.touch-controls{gap:7px}.touch-controls button{width:51px}.touch-controls .boost-control{width:75px}.touch-controls .brake-control{width:109px}.runner-portrait{width:48px;height:64px}.runner-option>span{gap:7px}.runner-option strong{font-size:15px}}
+@media(max-width:360px){.touch-controls{gap:5px}.touch-controls button{width:46px}.touch-controls .boost-control{width:71px}.touch-controls .brake-control{width:98px}.touch-controls small{font-size:11px}}
+
+/* Story activities */
+.reading-time{font-size:14px!important;color:#356168}.reading-advice{font-size:16px!important;color:#815014;background:#fff1cb;border-radius:12px}.reading-advice:not(:empty){padding:12px}.activity-help{font-size:15px!important;color:#406369}.match-board{display:grid;grid-template-columns:1fr 1fr;gap:12px}.match-board>div{display:grid;gap:9px}.match-card,.answer-token,.answer-slot{font:inherit;font-size:16px;color:#174e54;border:2px solid #b4d5cf;border-radius:12px;background:#fffdf7;padding:12px;min-height:52px;overflow-wrap:anywhere;cursor:pointer}.match-card.selected,.answer-token.selected{background:#d5f2fb;border-color:#087eae;outline:2px solid #087eae}.match-card.correct,.answer-slot.correct{background:#d8f0de;border-color:#34865d;color:#205332;opacity:1}.answer-slot{width:100%;min-height:74px;border-style:dashed;background:#eef9f8}.answer-slot.wrong{border-color:#bb724d}.answer-bank{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:15px 0}.answer-token{touch-action:none}.story-recap{background:#eef7ed;border-radius:14px;padding:14px;text-align:left}.story-recap p{font-size:16px!important}.journey-verse{margin:0 0 14px;color:#32626a}.journey-verse summary{font-size:14px;cursor:pointer}.journey-verse p{font-size:16px!important;line-height:1.65}.journey-verse small{font-size:12px}.runner-option strong{font-size:14px}.runner-option>span{gap:6px}.match-card:focus-visible,.answer-token:focus-visible,.answer-slot:focus-visible{outline:3px solid #168fc0;outline-offset:2px}@media(max-width:600px){.match-board{gap:8px}.match-card{padding:10px 7px;font-size:15px}.runner-option>span{flex-direction:column}.runner-portrait{height:64px;width:48px}}
