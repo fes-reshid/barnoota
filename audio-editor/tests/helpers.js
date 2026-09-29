@@ -26,9 +26,13 @@ async function openEditor(page) {
   page.on('pageerror', e => errors.push(e.message));
   page.on('dialog', d => d.accept());
   await page.goto('./');
-  // Clear all storage, but keep the "I agree" purpose reminder answered — its own flow has a
-  // dedicated test (consent.spec.js); every other test should land straight on the editor.
-  await page.evaluate(async () => { localStorage.clear(); localStorage.setItem('ae-consent-v1', 'yes'); try { indexedDB.deleteDatabase('diin-audio-editor-autosave'); } catch (e) {} });
+  // Clear all storage, but keep the "I agree" purpose reminder and the phone notice both answered
+  // — each has its own dedicated test (consent.spec.js, app-info.spec.js); every other test should
+  // land straight on the editor, on any device profile.
+  await page.evaluate(async () => {
+    localStorage.clear(); localStorage.setItem('ae-consent-v1', 'yes'); localStorage.setItem('ae-mobile-notice-v1', 'yes');
+    try { indexedDB.deleteDatabase('diin-audio-editor-autosave'); } catch (e) {}
+  });
   await page.reload();
   await expect(page.locator('#menuBar > button').first()).toBeVisible();
   return errors;
