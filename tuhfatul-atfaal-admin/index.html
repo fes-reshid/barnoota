@@ -1586,8 +1586,16 @@ function submitAnn(){
 }
 
 /* ===================== messages ===================== */
+/* Admins list every conversation in one read. A teacher may only open
+   conversations of students linked to them (the Firestore rules check
+   this), so a teacher fetches each of their own students' threads. */
+let studentsReadyResolve; const studentsReady = new Promise(r => { studentsReadyResolve = r; });
 function loadThreads(){
-  return window.KidsCloud.listMessageThreads().then(list => { threadsCache = list; renderThreads(); renderReplyList(); })
+  const threadsP = myRole === 'teacher'
+    ? studentsReady.then(() => Promise.all(studentsCache.map(s => window.KidsCloud.getMessageThread(s.uid).then(t => t ? Object.assign({ studentUid: s.uid }, t) : null).catch(() => null))))
+        .then(list => list.filter(Boolean).sort((a, b) => String(b.lastAt || '').localeCompare(String(a.lastAt || ''))))
+    : window.KidsCloud.listMessageThreads();
+  return threadsP.then(list => { threadsCache = list; renderThreads(); renderReplyList(); })
     .catch(err => { $('msg-thread-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderThreads(){
@@ -2269,9 +2277,11 @@ function loadStudents(){
     // pupils, so keep them out of every student list, class and count.
     studentsCache = list.filter(s => !isStaffAccount(s));
     if(classesCache.length) syncTeacherLinks();
+    studentsReadyResolve();
     if(activeStudent){ const fresh = list.find(s => s.uid === activeStudent.uid); if(fresh){ activeStudent = fresh; renderModal(); } }
     renderAll();
   }).catch(err => {
+    studentsReadyResolve();
     $('student-list').innerHTML = '';
     $('student-empty').classList.remove('hidden');
     $('student-empty').textContent = friendlyError(err);

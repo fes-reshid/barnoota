@@ -264,23 +264,32 @@ match /kids_quest_announcements/{annId} {
   }
 }
 // private teacher <-> student messages: only that student and staff
+// staff who may see one student's private things: admins and super
+// admins, or a teacher linked to that student (joined their class /
+// created by them)
+function canStaffStudent(studentUid) {
+  return isAdminOrSuper() || (isTeacher()
+    && request.auth.token.email.lower() in get(/databases/$(database)/documents/kids_quest_students/$(studentUid)).data.get('teacherEmails', []));
+}
+// private teacher <-> student messages: only that student, admins, and
+// the student's own teachers
 match /kids_quest_messages/{studentUid} {
   allow get, create, update: if request.auth != null
-    && (request.auth.uid == studentUid || isStaff());
-  allow list, delete: if isStaff();
+    && (request.auth.uid == studentUid || canStaffStudent(studentUid));
+  allow list: if isAdminOrSuper();
+  allow delete: if canStaffStudent(studentUid);
   match /thread/{messageId} {
     allow get, list: if request.auth != null
-      && (request.auth.uid == studentUid || isStaff());
+      && (request.auth.uid == studentUid || canStaffStudent(studentUid));
     allow create: if request.auth != null
       && request.resource.data.text is string
       && request.resource.data.text.size() > 0
       && request.resource.data.text.size() <= 2000
       && ((request.auth.uid == studentUid && request.resource.data.from == 'student')
-          || (isStaff() && request.resource.data.from == 'teacher'));
-    allow delete: if isStaff();
+          || (canStaffStudent(studentUid) && request.resource.data.from == 'teacher'));
+    allow delete: if canStaffStudent(studentUid);
   }
 }
-// teacher classes: the document id is the 6-letter join code
 match /kids_quest_classes/{classId} {
   // anyone signed in can open a class by its code (to join it)
   allow get: if request.auth != null;
