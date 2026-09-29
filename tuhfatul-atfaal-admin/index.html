@@ -261,6 +261,14 @@
   @media(max-width:900px){.quiz-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.two-col{grid-template-columns:1fr}.map-grid{grid-template-columns:repeat(3,1fr)}
     .info-grid{grid-template-columns:1fr 1fr}.modal{padding:6px}.modal-panel{padding:14px}.preview-q .choices{grid-template-columns:1fr}}
+.class-item{border:2px solid #eadcb8;border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:#fffdf7}
+  .class-item.active{border-color:var(--green,#2f6f55);box-shadow:0 0 0 2px rgba(47,111,85,.2)}
+  .class-item .t{font-weight:700}
+  .class-code{display:inline-block;font:700 30px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:6px;background:#fff7dc;border:2px dashed #d9b85c;border-radius:14px;padding:10px 16px;margin:6px 0}
+  .member-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0e6cc}
+  .member-row .grow{flex:1;min-width:0}
+  .pick-list{max-height:320px;overflow:auto;border:1px solid #eadcb8;border-radius:12px;padding:4px 10px;margin:8px 0}
+  .pick-list label{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f4ecd7;cursor:pointer}
 </style>
 </head>
 <body>
@@ -326,6 +334,7 @@
     <nav class="tabs" role="tablist" aria-label="Teacher portal sections">
       <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
       <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
+      <button class="tab" data-tab="classes" role="tab">🏫 Classes <span class="count" id="tab-count-classes">0</span></button>
       <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
       <button class="tab" data-tab="announce" role="tab">📣 Announcements <span class="count" id="tab-count-ann">0</span></button>
       <button class="tab" data-tab="messages" role="tab">✉️ Messages <span class="count" id="tab-count-msg">0</span></button>
@@ -375,6 +384,7 @@
     <div class="tab-panel hidden" data-panel="students">
       <div class="toolbar">
         <div class="search"><input type="search" id="student-search" placeholder="Search by name, username, email or guardian" aria-label="Search students"></div>
+        <select id="student-class" aria-label="Filter by class"><option value="">All students</option></select>
         <select id="student-sort" aria-label="Sort students">
           <option value="name">Sort: Name A–Z</option>
           <option value="progress">Sort: Most progress</option>
@@ -392,6 +402,57 @@
       </div>
       <div class="student-grid" id="student-list"></div>
       <p class="empty hidden" id="student-empty">No students yet — add one in the “Add students” tab.</p>
+    </div>
+
+    <!-- CLASSES -->
+    <div class="tab-panel hidden" data-panel="classes">
+      <div class="quiz-layout">
+        <div class="card">
+          <h2 style="margin-top:0">🏫 Classes</h2>
+          <p class="muted" style="margin-top:-4px">Group your students. Announcements, quizzes and messages can then go to one class only.</p>
+          <div class="field"><label for="class-new-name">New class name</label><input id="class-new-name" maxlength="60" placeholder="e.g. Saturday Girls 8–10"></div>
+          <button class="btn primary" id="class-create">＋ Create class</button>
+          <p class="msg" id="class-msg"></p>
+          <label class="toggle hidden" id="class-all-wrap" style="margin:6px 0 8px"><input type="checkbox" id="class-show-all" checked> Show every teacher’s classes</label>
+          <div id="class-list"></div>
+          <p class="empty hidden" id="class-empty">No classes yet — create your first one above.</p>
+        </div>
+        <div>
+          <div class="card" id="class-welcome">
+            <h2>How classes work</h2>
+            <ol style="line-height:1.7;margin:0;padding-left:20px">
+              <li>Create a class and you get a 6-letter <b>class code</b>.</li>
+              <li>Give the code to your students — they type it in Tajweed Quest under <b>“From your teacher → My class”</b>. Or add them yourself here.</li>
+              <li>When you post an announcement, quiz or message, choose the class it’s for. Other classes won’t see it.</li>
+              <li>On the Students tab, pick a class to see only those students.</li>
+            </ol>
+          </div>
+          <div class="card hidden" id="class-detail">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <input id="class-name" maxlength="60" aria-label="Class name" style="flex:1;min-width:180px;font-family:inherit;font-weight:700;font-size:20px;padding:8px 12px;border:1.5px solid #d9c9a3;border-radius:12px;background:#fffdf7">
+              <button class="btn ghost small" id="class-rename">💾 Save name</button>
+            </div>
+            <p class="muted" id="class-sub" style="margin:6px 0 0"></p>
+            <div style="margin:12px 0">
+              <div class="muted">Class code — students type this to join:</div>
+              <div class="class-code" id="class-code">——————</div>
+              <button class="btn ghost small" id="class-copy">📋 Copy invite</button>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+              <button class="btn sky small" id="class-view-students">👩‍🎓 View on Students tab</button>
+              <button class="btn ghost small" id="class-message">📨 Message this class</button>
+              <button class="btn ghost small" id="class-announce">📣 Announce to this class</button>
+            </div>
+            <h3>Students <span class="muted" id="class-member-count"></span></h3>
+            <div id="class-members"></div>
+            <h3 style="margin-top:16px">Add students</h3>
+            <div class="toolbar" style="margin-bottom:0"><div class="search"><input type="search" id="class-add-search" placeholder="Search students to add"></div></div>
+            <div class="pick-list" id="class-add-list"></div>
+            <button class="btn primary" id="class-add-btn">＋ Add selected</button>
+            <div style="border-top:1px solid #eadcb8;margin-top:18px;padding-top:12px"><button class="btn danger small" id="class-delete">Delete class</button> <span class="muted">Students keep their progress; only the group is removed.</span></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- QUIZZES -->
@@ -425,6 +486,7 @@
             <div class="row" style="margin-top:12px">
               <div class="field" style="flex:2"><label for="quiz-title">Quiz title</label><input id="quiz-title" maxlength="80" placeholder="e.g. Idgham revision"></div>
               <div class="field"><label for="quiz-map">Show under</label><select id="quiz-map"></select></div>
+              <div class="field"><label for="quiz-class">For</label><select id="quiz-class" class="class-target"></select></div>
               <div class="field" style="max-width:130px"><label for="quiz-pass">Pass mark (%)</label><input id="quiz-pass" type="number" min="0" max="100" value="70"></div>
             </div>
             <div class="field"><label for="quiz-instructions">Instructions for students (optional)</label><input id="quiz-instructions" maxlength="200" placeholder="Read each question carefully…"></div>
@@ -473,7 +535,7 @@
           <p class="muted" style="margin-top:-4px">Every student sees it under the map you choose, with a comment section for their questions.</p>
           <div class="field"><label for="ann-title">Title</label><input id="ann-title" maxlength="100" placeholder="e.g. Class test on Friday"></div>
           <div class="field"><label for="ann-body">Message</label><textarea id="ann-body" maxlength="2000" style="min-height:120px" placeholder="Write your announcement…"></textarea></div>
-          <div class="field"><label for="ann-map">Show under</label><select id="ann-map"></select></div>
+          <div class="row"><div class="field"><label for="ann-map">Show under</label><select id="ann-map"></select></div><div class="field"><label for="ann-class">Who sees it</label><select id="ann-class" class="class-target"></select></div></div>
           <label class="toggle"><input type="checkbox" id="ann-comments" checked> Allow student comments &amp; questions</label><br>
           <label class="toggle" style="margin-top:6px"><input type="checkbox" id="ann-pinned"> 📌 Pin to the top</label>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
@@ -493,18 +555,19 @@
     <div class="tab-panel hidden" data-panel="messages">
       <div class="msg-layout">
         <div class="card" style="padding:14px">
-          <button class="btn sky" id="msg-broadcast-btn" style="width:100%;justify-content:center;margin-bottom:10px">📨 Message every student</button>
+          <button class="btn sky" id="msg-broadcast-btn" style="width:100%;justify-content:center;margin-bottom:10px">📨 Message a class or everyone</button>
           <div class="toolbar" style="margin-bottom:8px"><div class="search"><input type="search" id="msg-search" placeholder="Find a student"></div></div>
           <div id="msg-thread-list" class="thread-list"></div>
         </div>
         <div class="card chat-card">
           <div id="chat-empty"><h2>✉️ Private messages</h2><p>Choose a student on the left to read and answer their messages, or send the same message to every student at once. Only you, other staff and that student can see a conversation.</p></div>
           <div id="chat-broadcast" class="hidden">
-            <h2>📨 Message every student</h2>
+            <h2>📨 Message many students</h2>
             <p class="muted" style="margin-top:-4px">Each student gets it privately in their own conversation, and can reply to you.</p>
             <div class="field"><textarea id="broadcast-text" maxlength="2000" style="min-height:140px" placeholder="Assalāmu ʿalaykum everyone…"></textarea></div>
+            <div class="field"><label for="broadcast-class">Send to</label><select id="broadcast-class" class="class-target"></select></div>
             <label class="toggle"><input type="checkbox" id="broadcast-skip-disabled" checked> Skip disabled accounts</label>
-            <div style="margin-top:10px"><button class="btn primary" id="broadcast-send">Send to all students</button></div>
+            <div style="margin-top:10px"><button class="btn primary" id="broadcast-send">Send</button></div>
             <p class="msg" id="broadcast-msg"></p>
           </div>
           <div id="chat-view" class="hidden">
@@ -707,7 +770,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=11"></script>
+<script type="module" src="../kids-quest-cloud.js?v=12"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -723,6 +786,7 @@ const MAPS = [
 const TOTAL_LESSONS = 62;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
+let classesCache = [], activeClassId = null, classFilterTouched = false;
 
 /* ===================== helpers ===================== */
 function randomPassword(){
@@ -848,7 +912,8 @@ function summarize(s){
   else if(certs === 15) status = 'done';
   else if(readyMaps.length) status = 'ready';
   else if(!hasCourse || lessons === 0) status = 'new';
-  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
+  const hifz = Object.values(p.hifz && typeof p.hifz === 'object' ? p.hifz : {}).filter(h => h && Number(h.level) >= 4).length;
+  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
 }
 function statusBadge(sum){
   return {
@@ -937,6 +1002,8 @@ function renderOverview(){
 function renderStudentGrid(){
   const q = $('student-search').value.trim().toLowerCase();
   let sums = studentsCache.map(summarize);
+  const classSel = $('student-class').value;
+  if(classSel){ const ids = classSel === '*mine' ? new Set(myClasses().flatMap(c => c.studentUids)) : new Set((classById(classSel) || { studentUids: [] }).studentUids); sums = sums.filter(x => ids.has(x.s.uid)); }
   if(studentFilter !== 'all') sums = sums.filter(x => studentFilter === 'active' ? x.status === 'active' || x.status === 'ready' : x.status === studentFilter);
   if(q) sums = sums.filter(x => [x.s.username, x.s.displayName, x.s.fullName, x.s.contactEmail, x.s.guardianName]
     .some(v => String(v || '').toLowerCase().includes(q)));
@@ -948,7 +1015,7 @@ function renderStudentGrid(){
 
   const box = $('student-list'); box.innerHTML = '';
   $('student-empty').classList.toggle('hidden', sums.length > 0);
-  $('student-empty').textContent = studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
+  $('student-empty').textContent = studentsCache.length && classSel && !sums.length && !q && studentFilter === 'all' ? 'No students in this class yet — add them on the Classes tab or share the class code.' : studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
   sums.forEach(x => {
     const s = x.s, el = document.createElement('div');
     el.className = 's-card' + (s.disabled ? ' disabled' : '');
@@ -960,7 +1027,7 @@ function renderStudentGrid(){
       '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
       '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
       '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.certs + '/15</b><small>certificates</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
-      '<div class="s-foot">' + statusBadge(x) + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
+      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
     el.onclick = () => openManager(s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
     el.onkeydown = e => { if(e.key === 'Enter') el.click(); };
     box.appendChild(el);
@@ -1135,7 +1202,7 @@ function renderQuizList(){
     const st = quizStats(q), el = document.createElement('div');
     el.className = 'quiz-item' + (editingQuiz && editingQuiz.id === q.id ? ' active' : '');
     el.innerHTML = '<div class="t">' + escapeHtml(q.title) + '</div><div class="m">' + escapeHtml(mapLabel(q.map)) + ' · ' + (q.questions || []).length + ' questions</div>' +
-      '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + (q.published ? '<span class="role-badge ok">Published</span>' : '<span class="role-badge">Draft</span>') + (q.audience === 'assigned' ? '<span class="role-badge warn">Personal</span>' : '') +
+      '<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">' + (q.published ? '<span class="role-badge ok">Published</span>' : '<span class="role-badge">Draft</span>') + (q.audience === 'assigned' ? '<span class="role-badge warn">Personal</span>' : '') + (q.classId ? '<span class="role-badge">🏫 ' + escapeHtml(className(q.classId)) + '</span>' : '') +
       '<span class="role-badge info">' + st.rows.length + ' taken</span>' + (st.avg != null ? '<span class="role-badge warn">avg ' + st.avg + '%</span>' : '') + '</div>';
     el.onclick = () => editQuiz(q);
     box.appendChild(el);
@@ -1159,6 +1226,7 @@ function editQuiz(q){
   $('quiz-instructions').value = editingQuiz.instructions || '';
   $('quiz-published').checked = !!editingQuiz.published;
   $('quiz-personal').checked = editingQuiz.audience === 'assigned';
+  fillClassSelects(); $('quiz-class').value = editingQuiz.classId || '';
   $('delete-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
   $('duplicate-quiz-btn').classList.toggle('hidden', !editingQuiz.id);
   $('builder-results-btn').classList.toggle('hidden', !editingQuiz.id);
@@ -1175,6 +1243,7 @@ function readBuilderMeta(){
   editingQuiz.instructions = $('quiz-instructions').value;
   editingQuiz.published = $('quiz-published').checked;
   editingQuiz.audience = $('quiz-personal').checked ? 'assigned' : 'map';
+  editingQuiz.classId = $('quiz-class').value;
 }
 function renderQuestions(){
   const box = $('question-list'); box.innerHTML = '';
@@ -1327,7 +1396,7 @@ function renderAnnouncements(){
       (waiting.includes(c) ? '<span class="role-badge warn">Needs reply</span>' : '') + '<button class="x" data-del="' + escapeHtml(c.id) + '" title="Remove comment">✕</button></div><p>' + escapeHtml(c.text) + '</p>' +
       (c.role === 'student' ? '<button class="linkbtn" data-reply="' + escapeHtml(c.id) + '">↩ Reply</button><div class="reply-box hidden" data-replybox="' + escapeHtml(c.id) + '"><input placeholder="Your answer…" maxlength="1000"><button class="btn primary small">Send</button></div>' : '') + '</div>';
     card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + (a.pinned ? '<span class="role-badge warn">📌 Pinned</span>' : '') +
-      '<span class="role-badge info">' + escapeHtml(mapLabel(a.map)) + '</span>' + (a.commentsOpen ? '' : '<span class="role-badge">Comments closed</span>') +
+      '<span class="role-badge info">' + escapeHtml(mapLabel(a.map)) + '</span>' + '<span class="role-badge">' + (a.classId ? '🏫 ' + escapeHtml(className(a.classId)) : '👥 Everyone') + '</span>' + (a.commentsOpen ? '' : '<span class="role-badge">Comments closed</span>') +
       (waiting.length ? '<span class="role-badge warn">' + waiting.length + ' question' + (waiting.length > 1 ? 's' : '') + ' waiting</span>' : '') + '</div>' +
       '<h3>' + escapeHtml(a.title || 'Announcement') + '</h3><div class="muted">' + escapeHtml(a.authorName || 'Teacher') + ' · ' + fmtTime(a.createdAt) + '</div>' +
       '<div class="ann-body">' + escapeHtml(a.body) + '</div>' +
@@ -1374,21 +1443,21 @@ function fillAnnMap(){ $('ann-map').innerHTML = $('quiz-map').innerHTML; }
 function startEditAnn(a){
   editingAnn = a;
   $('ann-form-title').textContent = '✏️ Edit announcement'; $('ann-post').textContent = '💾 Save changes'; $('ann-cancel').classList.remove('hidden');
-  $('ann-title').value = a.title || ''; $('ann-body').value = a.body || ''; $('ann-map').value = String(a.map); $('ann-comments').checked = a.commentsOpen !== false; $('ann-pinned').checked = !!a.pinned;
+  $('ann-title').value = a.title || ''; $('ann-body').value = a.body || ''; $('ann-map').value = String(a.map); $('ann-comments').checked = a.commentsOpen !== false; $('ann-pinned').checked = !!a.pinned; fillClassSelects(); $('ann-class').value = a.classId || '';
   $('ann-composer').scrollIntoView({ behavior:'smooth' }); $('ann-title').focus();
 }
 function resetAnnForm(){
   editingAnn = null; $('ann-form-title').textContent = '📣 New announcement'; $('ann-post').textContent = '📣 Post announcement'; $('ann-cancel').classList.add('hidden');
-  $('ann-title').value = ''; $('ann-body').value = ''; $('ann-map').value = '-1'; $('ann-comments').checked = true; $('ann-pinned').checked = false;
+  $('ann-title').value = ''; $('ann-body').value = ''; $('ann-map').value = '-1'; $('ann-comments').checked = true; $('ann-pinned').checked = false; $('ann-class').value = '';
 }
 function submitAnn(){
   const title = $('ann-title').value.trim(), body = $('ann-body').value.trim();
   if(!title || !body){ setMsg('ann-msg', 'Add a title and a message.', true); return; }
-  const data = Object.assign({}, editingAnn || {}, { game: GAME_KEY, title, body, map: Number($('ann-map').value), commentsOpen: $('ann-comments').checked, pinned: $('ann-pinned').checked,
+  const data = Object.assign({}, editingAnn || {}, { game: GAME_KEY, title, body, map: Number($('ann-map').value), classId: $('ann-class').value, commentsOpen: $('ann-comments').checked, pinned: $('ann-pinned').checked,
     authorName: (editingAnn && editingAnn.authorName) || $('certificate-teacher').dataset.me || '' });
   $('ann-post').disabled = true; setMsg('ann-msg', 'Posting…');
   window.KidsCloud.adminSaveAnnouncement(data).then(() => {
-    setMsg('ann-msg', editingAnn ? 'Saved ✓' : 'Posted ✓ Students will see it under ' + mapLabel(data.map) + '.');
+    setMsg('ann-msg', editingAnn ? 'Saved ✓' : 'Posted ✓ ' + (data.classId ? className(data.classId) + ' will' : 'Students will') + ' see it under ' + mapLabel(data.map) + '.');
     toast(editingAnn ? 'Announcement updated' : 'Announcement posted'); resetAnnForm(); return loadAnnouncements();
   }).catch(err => setMsg('ann-msg', friendlyError(err), true)).finally(() => { $('ann-post').disabled = false; });
 }
@@ -1444,7 +1513,9 @@ function sendChat(){
 function sendBroadcast(){
   const text = $('broadcast-text').value.trim();
   if(!text){ setMsg('broadcast-msg', 'Write a message first.', true); return; }
-  const targets = studentsCache.filter(s => !($('broadcast-skip-disabled').checked && s.disabled));
+  const cls = $('broadcast-class').value, inClass = cls ? new Set((classById(cls) || { studentUids: [] }).studentUids) : null;
+  const targets = studentsCache.filter(s => !($('broadcast-skip-disabled').checked && s.disabled) && (!inClass || inClass.has(s.uid)));
+  if(!targets.length){ setMsg('broadcast-msg', 'There are no students in that class yet.', true); return; }
   if(!targets.length || !confirm('Send this message privately to ' + targets.length + ' student' + (targets.length > 1 ? 's' : '') + '?')) return;
   $('broadcast-send').disabled = true;
   let ok = 0, fail = 0;
@@ -1465,8 +1536,124 @@ function renderReplyList(){
   items.slice(0, 10).forEach(i => { const el = document.createElement('div'); el.className = 'list-row'; el.innerHTML = '<div class="grow"><div class="sub" style="font-size:15px;color:var(--ink-brown)">' + i.html + '</div><div class="sub">' + fmtTime(i.at) + '</div></div><button class="btn primary small">Reply →</button>'; el.onclick = i.go; box.appendChild(el); });
 }
 
+/* ===================== classes ===================== */
+function classById(id){ return classesCache.find(c => c.id === id) || null; }
+function className(id){ const c = classById(id); return c ? c.name : 'A class'; }
+function isMyClass(c){ return String(c.teacherEmail || '').toLowerCase() === String(myEmail || '').toLowerCase(); }
+function myClasses(){ return classesCache.filter(isMyClass); }
+function classesOf(uid){ return classesCache.filter(c => c.studentUids.includes(uid)); }
+function visibleClasses(){ return myRole === 'teacher' || !$('class-show-all').checked ? myClasses() : classesCache; }
+/* Which classes a staff member may post to: a teacher, their own;
+   admins, every class (labelled with its teacher). */
+function targetClasses(){ return myRole === 'teacher' ? myClasses() : classesCache; }
+function classOptionLabel(c){ return c.name + (isMyClass(c) ? '' : ' — ' + (c.teacherName || teacherDisplayName(c.teacherEmail))); }
+function fillClassSelects(){
+  const opts = targetClasses().map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(classOptionLabel(c)) + ' (' + c.studentUids.length + ')</option>').join('');
+  [['quiz-class', 'Every student'], ['ann-class', '👥 Every student'], ['broadcast-class', '👥 Every student']].forEach(([id, all]) => {
+    const sel = $(id), keep = sel.value; sel.innerHTML = '<option value="">' + all + '</option>' + opts;
+    if([...sel.options].some(o => o.value === keep)) sel.value = keep;
+  });
+  const sc = $('student-class'), keep = sc.value;
+  sc.innerHTML = '<option value="">All students</option>' + (myClasses().length > 1 ? '<option value="*mine">🏫 All my classes</option>' : '') +
+    classesCache.map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(classOptionLabel(c)) + '</option>').join('');
+  if(!classFilterTouched && myRole === 'teacher' && myClasses().length) sc.value = myClasses().length > 1 ? '*mine' : myClasses()[0].id;
+  else if([...sc.options].some(o => o.value === keep)) sc.value = keep;
+}
+function loadClasses(){
+  if(!window.KidsCloud.listClasses) return Promise.resolve();
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); })
+    .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function renderClasses(){
+  $('class-all-wrap').classList.toggle('hidden', myRole === 'teacher');
+  const list = visibleClasses(), box = $('class-list'); box.innerHTML = '';
+  $('tab-count-classes').textContent = myClasses().length || list.length;
+  $('class-empty').classList.toggle('hidden', list.length > 0);
+  list.forEach(c => {
+    const el = document.createElement('div'); el.className = 'class-item' + (c.id === activeClassId ? ' active' : '');
+    el.innerHTML = '<div class="t">🏫 ' + escapeHtml(c.name) + '</div><div class="muted" style="font-size:13.5px">' + c.studentUids.length + ' student' + (c.studentUids.length === 1 ? '' : 's') + ' · code <b>' + escapeHtml(c.id) + '</b>' +
+      (isMyClass(c) ? '' : ' · ' + escapeHtml(c.teacherName || teacherDisplayName(c.teacherEmail))) + '</div>';
+    el.onclick = () => openClass(c.id);
+    box.appendChild(el);
+  });
+  if(activeClassId && !classById(activeClassId)) activeClassId = null;
+  renderClassDetail();
+}
+function openClass(id){ activeClassId = id; showTab('classes'); renderClasses(); $('class-detail').scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+function renderClassDetail(){
+  const c = activeClassId && classById(activeClassId);
+  $('class-welcome').classList.toggle('hidden', !!c); $('class-detail').classList.toggle('hidden', !c);
+  if(!c) return;
+  $('class-name').value = c.name; $('class-code').textContent = c.id;
+  $('class-sub').textContent = 'Teacher: ' + (c.teacherName || teacherDisplayName(c.teacherEmail)) + ' · created ' + fmtDate(c.createdAt);
+  const members = c.studentUids.map(uid => studentsCache.find(s => s.uid === uid) || { uid, username: '(removed account)', missing: true });
+  $('class-member-count').textContent = '(' + members.length + ')';
+  const mb = $('class-members'); mb.innerHTML = members.length ? '' : '<p class="muted">No students yet. Share the code above or add them below.</p>';
+  members.forEach(s => {
+    const el = document.createElement('div'); el.className = 'member-row';
+    const x = s.missing ? null : summarize(s);
+    el.innerHTML = '<div class="avatar" style="width:34px;height:34px;font-size:18px">' + (s.missing ? '❔' : avatarHtml(s, x.p)) + '</div><div class="grow"><b>' + escapeHtml(s.displayName || s.username) + '</b><div class="muted" style="font-size:13px">@' + escapeHtml(s.username) +
+      (x ? ' · ' + x.pct + '% · ' + escapeHtml(mapLabel(x.currentMap)) : '') + '</div></div>' + (s.missing ? '' : '<button class="btn ghost small" data-open>Open</button>') + '<button class="btn ghost small" data-rm>Remove</button>';
+    if(!s.missing) el.querySelector('[data-open]').onclick = () => openManager(s, 'profile');
+    el.querySelector('[data-rm]').onclick = () => {
+      if(!confirm('Remove ' + (s.displayName || s.username) + ' from ' + c.name + '? Their progress is not affected.')) return;
+      updateClassMembers(c, c.studentUids.filter(u => u !== s.uid), 'Removed from class');
+    };
+    mb.appendChild(el);
+  });
+  renderClassAddList();
+}
+function renderClassAddList(){
+  const c = activeClassId && classById(activeClassId); if(!c) return;
+  const q = $('class-add-search').value.trim().toLowerCase();
+  let rows = studentsCache.filter(s => !c.studentUids.includes(s.uid) && !s.disabled);
+  if(q) rows = rows.filter(s => [s.username, s.displayName, s.fullName].some(v => String(v || '').toLowerCase().includes(q)));
+  rows.sort((a, b) => String(a.displayName || a.username).localeCompare(String(b.displayName || b.username)));
+  $('class-add-list').innerHTML = rows.length ? rows.map(s => '<label><input type="checkbox" value="' + escapeHtml(s.uid) + '"> <b>' + escapeHtml(s.displayName || s.username) + '</b> <span class="muted">@' + escapeHtml(s.username) +
+    (classesOf(s.uid).length ? ' · in ' + escapeHtml(classesOf(s.uid).map(x => x.name).join(', ')) : '') + '</span></label>').join('') : '<p class="muted">' + (q ? 'No match.' : 'Every student is already in this class.') + '</p>';
+}
+function updateClassMembers(c, uids, msg){
+  return window.KidsCloud.adminUpdateClass(c.id, { studentUids: uids }).then(() => { c.studentUids = Array.from(new Set(uids)); toast(msg); renderClasses(); fillClassSelects(); renderStudentGrid(); })
+    .catch(err => alert(friendlyError(err)));
+}
+function wireClasses(){
+  $('class-create').onclick = () => {
+    const name = $('class-new-name').value.trim(); if(!name){ setMsg('class-msg', 'Type a class name first.', true); return; }
+    $('class-create').disabled = true; setMsg('class-msg', 'Creating…');
+    window.KidsCloud.adminCreateClass({ name, game: GAME_KEY, teacherName: $('certificate-teacher').dataset.me || '' })
+      .then(code => { $('class-new-name').value = ''; setMsg('class-msg', 'Created ✓ Class code: ' + code); toast('Class created'); activeClassId = code; return loadClasses(); })
+      .catch(err => setMsg('class-msg', friendlyError(err), true)).finally(() => { $('class-create').disabled = false; });
+  };
+  $('class-new-name').onkeydown = e => { if(e.key === 'Enter') $('class-create').click(); };
+  $('class-show-all').onchange = renderClasses;
+  $('class-add-search').oninput = renderClassAddList;
+  $('class-add-btn').onclick = () => {
+    const c = classById(activeClassId); if(!c) return;
+    const picked = [...$('class-add-list').querySelectorAll('input:checked')].map(i => i.value);
+    if(!picked.length){ toast('Tick the students to add first'); return; }
+    updateClassMembers(c, c.studentUids.concat(picked), picked.length + ' student' + (picked.length > 1 ? 's' : '') + ' added');
+  };
+  $('class-rename').onclick = () => {
+    const c = classById(activeClassId), name = $('class-name').value.trim(); if(!c || !name) return;
+    window.KidsCloud.adminUpdateClass(c.id, { name }).then(() => { c.name = name; toast('Class renamed'); renderClasses(); fillClassSelects(); renderStudentGrid(); }).catch(err => alert(friendlyError(err)));
+  };
+  $('class-delete').onclick = () => {
+    const c = classById(activeClassId); if(!c || !confirm('Delete the class “' + c.name + '”? Students keep their progress and accounts; announcements or quizzes for this class will no longer show to anyone.')) return;
+    window.KidsCloud.adminDeleteClass(c.id).then(() => { toast('Class deleted'); activeClassId = null; return loadClasses(); }).catch(err => alert(friendlyError(err)));
+  };
+  $('class-copy').onclick = () => {
+    const c = classById(activeClassId); if(!c) return;
+    const text = 'Join my class “' + c.name + '” in Tajweed Quest: open https://diinislaam.com/tuhfatul-atfaal/ , sign in, then under “From your teacher → My class” type the code ' + c.id;
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => toast('Invite copied — paste it to parents or students')).catch(() => prompt('Copy this invite:', text));
+  };
+  $('class-view-students').onclick = () => { classFilterTouched = true; $('student-class').value = activeClassId; showTab('students'); renderStudentGrid(); };
+  $('class-message').onclick = () => { $('msg-broadcast-btn').click(); showTab('messages'); $('broadcast-class').value = activeClassId; $('broadcast-text').focus(); };
+  $('class-announce').onclick = () => { resetAnnForm(); showTab('announce'); $('ann-class').value = activeClassId; $('ann-title').focus(); };
+  $('student-class').onchange = () => { classFilterTouched = true; renderStudentGrid(); };
+}
+
 /* ===================== data loading ===================== */
-function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); }
+function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); }
 function loadStudents(){
   return window.KidsCloud.adminListStudents().then(list => {
     studentsCache = list;
@@ -1482,7 +1669,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -1548,6 +1735,7 @@ function showDashboard(info){
   $('not-authorized').classList.add('hidden');
   showTab('overview');
   loadStudents();
+  loadClasses();
   loadQuizzes();
   loadAnnouncements();
   loadThreads();
@@ -1606,6 +1794,7 @@ function wire(){
   $('msg-search').oninput = renderThreads;
   $('msg-broadcast-btn').onclick = () => { activeThread = null; renderThreads(); ['chat-empty','chat-view'].forEach(id => $(id).classList.add('hidden')); $('chat-broadcast').classList.remove('hidden'); $('broadcast-text').focus(); };
   $('broadcast-send').onclick = sendBroadcast;
+  wireClasses();
   $('chat-send').onclick = sendChat;
   $('chat-text').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } };
   $('chat-profile').onclick = () => { if(activeThread) openManager(activeThread, 'profile'); };

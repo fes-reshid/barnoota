@@ -24,7 +24,8 @@ import {
   updateProfile, updateEmail
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy
+  getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy,
+  where, updateDoc, arrayUnion, arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -48,6 +49,7 @@ const USERNAMES_COLLECTION = 'kids_quest_usernames';
 const QUIZZES_COLLECTION = 'kids_quest_quizzes';
 const ANNOUNCEMENTS_COLLECTION = 'kids_quest_announcements';
 const MESSAGES_COLLECTION = 'kids_quest_messages';
+const CLASSES_COLLECTION = 'kids_quest_classes';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -602,6 +604,7 @@ function adminSaveQuiz(quiz){
     instructions: String(q.instructions || '').trim(),
     passPercent: Math.min(100, Math.max(0, Number(q.passPercent) || 70)),
     audience: q.audience === 'assigned' ? 'assigned' : 'map',
+    classId: String(q.classId || ''),
     published: !!q.published,
     questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
       return {
@@ -672,6 +675,7 @@ function adminSaveAnnouncement(a){
     body: String(x.body || '').trim(),
     commentsOpen: x.commentsOpen !== false,
     pinned: !!x.pinned,
+    classId: String(x.classId || ''),
     authorName: String(x.authorName || '').trim(),
     updatedAt: now
   };
@@ -753,6 +757,94 @@ function markThreadRead(studentUid, who){
 }
 function currentUid(){ return auth.currentUser ? auth.currentUser.uid : null; }
 
+/* ---- classes ---- */
+/* kids_quest_classes/{code}: the document id IS the join code a teacher
+   gives students (6 letters/digits, no look-alikes such as O/0 or I/1), so
+   a student can join by reading one doc — no search over every class.
+   studentUids lists the members. Staff create and manage classes; a
+   signed-in student may only add or remove THEIR OWN uid (enforced by the
+   Firestore rules), and can only list classes they belong to. */
+const CLASS_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function newClassCode(){
+  let out = '';
+  for(let i = 0; i < 6; i++) out += CLASS_CODE_CHARS[Math.floor(Math.random() * CLASS_CODE_CHARS.length)];
+  return out;
+}
+function classFromDoc(d){
+  const data = d.data();
+  return Object.assign({ id: d.id }, data, { studentUids: Array.isArray(data.studentUids) ? data.studentUids : [] });
+}
+function listClasses(game){
+  return getDocs(collection(db, CLASSES_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const c = classFromDoc(d); if(!game || c.game === game) out.push(c); });
+    out.sort(function(a, b){ return String(a.name || '').localeCompare(String(b.name || '')); });
+    return out;
+  });
+}
+function adminCreateClass(c){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const name = String((c && c.name) || '').trim().slice(0, 60);
+  if(!name) return Promise.reject(new Error('Give the class a name.'));
+  const attempt = function(tries){
+    const code = newClassCode();
+    return getDoc(doc(db, CLASSES_COLLECTION, code)).then(function(snap){
+      if(snap.exists()){
+        if(tries > 5) throw new Error('Could not make a unique class code — try again.');
+        return attempt(tries + 1);
+      }
+      return setDoc(doc(db, CLASSES_COLLECTION, code), {
+        name: name,
+        game: String((c && c.game) || ''),
+        teacherEmail: String(user.email || '').toLowerCase(),
+        teacherName: String((c && c.teacherName) || '').trim().slice(0, 80),
+        studentUids: Array.isArray(c && c.studentUids) ? c.studentUids.map(String) : [],
+        createdAt: new Date().toISOString()
+      }).then(function(){ return code; });
+    });
+  };
+  return attempt(0);
+}
+function adminUpdateClass(id, patch){
+  const p = patch || {}, data = { updatedAt: new Date().toISOString() };
+  if(p.name != null) data.name = String(p.name).trim().slice(0, 60);
+  if(p.teacherName != null) data.teacherName = String(p.teacherName).trim().slice(0, 80);
+  if(Array.isArray(p.studentUids)) data.studentUids = Array.from(new Set(p.studentUids.map(String)));
+  return setDoc(doc(db, CLASSES_COLLECTION, id), data, { merge:true });
+}
+function adminDeleteClass(id){
+  return deleteDoc(doc(db, CLASSES_COLLECTION, id));
+}
+function listMyClasses(){
+  const user = auth.currentUser;
+  if(!user) return Promise.resolve([]);
+  return getDocs(query(collection(db, CLASSES_COLLECTION), where('studentUids', 'array-contains', user.uid))).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const c = classFromDoc(d); out.push({ id: c.id, name: c.name, game: c.game, teacherName: c.teacherName || '' }); });
+    return out;
+  });
+}
+function studentJoinClass(code){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const id = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if(id.length !== 6) return Promise.reject(Object.assign(new Error('A class code has 6 letters and numbers.'), { code: 'app/bad-class-code' }));
+  const ref = doc(db, CLASSES_COLLECTION, id);
+  return getDoc(ref).then(function(snap){
+    if(!snap.exists()) throw Object.assign(new Error('No class has that code. Check it with your teacher.'), { code: 'app/no-class' });
+    return updateDoc(ref, { studentUids: arrayUnion(user.uid) }).then(function(){
+      const c = snap.data();
+      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '' };
+    });
+  });
+}
+function studentLeaveClass(id){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  return updateDoc(doc(db, CLASSES_COLLECTION, id), { studentUids: arrayRemove(user.uid) });
+}
+
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
 }
@@ -809,6 +901,13 @@ window.KidsCloud = {
   sendMessage: sendMessage,
   markThreadRead: markThreadRead,
   currentUid: currentUid,
+  listClasses: listClasses,
+  adminCreateClass: adminCreateClass,
+  adminUpdateClass: adminUpdateClass,
+  adminDeleteClass: adminDeleteClass,
+  listMyClasses: listMyClasses,
+  studentJoinClass: studentJoinClass,
+  studentLeaveClass: studentLeaveClass,
   adminSetStudentMapNote: adminSetStudentMapNote,
   ADMIN_EMAIL: ADMIN_EMAIL
 };

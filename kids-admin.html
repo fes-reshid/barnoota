@@ -268,6 +268,26 @@ match /kids_quest_messages/{studentUid} {
           || (isStaff() && request.resource.data.from == 'teacher'));
     allow delete: if isStaff();
   }
+}
+// teacher classes: the document id is the 6-letter join code
+match /kids_quest_classes/{classId} {
+  // anyone signed in can open a class by its code (to join it)
+  allow get: if request.auth != null;
+  // staff see every class; a student can list only classes they're in
+  allow list: if isStaff()
+    || (request.auth != null && request.auth.uid in resource.data.studentUids);
+  // staff create classes in their own name
+  allow create: if isStaff()
+    && request.resource.data.teacherEmail == request.auth.token.email.lower();
+  // the class's own teacher, or an admin / super admin, manages it
+  allow update, delete: if isStaff()
+    && (resource.data.teacherEmail == request.auth.token.email.lower()
+        || get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role in ['admin', 'super']);
+  // a student may only add or remove THEMSELVES (join / leave)
+  allow update: if request.auth != null
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['studentUids'])
+    && request.resource.data.studentUids.toSet().difference(resource.data.studentUids.toSet()).hasOnly([request.auth.uid])
+    && resource.data.studentUids.toSet().difference(request.resource.data.studentUids.toSet()).hasOnly([request.auth.uid]);
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -379,7 +399,7 @@ match /kids_quest_messages/{studentUid} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=11"></script>
+<script type="module" src="kids-quest-cloud.js?v=12"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);
