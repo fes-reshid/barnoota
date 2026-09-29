@@ -13,6 +13,7 @@ const I18N_ROWS = [
   ['New File', 'Faayilii haaraa', 'ملف جديد'], ['Open File…', 'Faayilii bani…', 'فتح ملف…'], ['Recent Files', 'Faayilota dhiyoo', 'الملفات الأخيرة'],
   ['Save File', 'Olkaa’i', 'حفظ'], ['Save File As…', 'Akka haaraatti olkaa’i…', 'حفظ باسم…'], ['Save Selected Region As…', 'Kutaa filatame olkaa’i…', 'حفظ الجزء المحدد باسم…'],
   ['Save All Files (.zip)', 'Faayilota hunda olkaa’i (.zip)', 'حفظ كل الملفات (.zip)'], ['Share…', 'Qoodi…', 'مشاركة…'], ['Share Selection…', 'Filannoo qoodi…', 'مشاركة التحديد…'],
+  ['Send to Video Editor', 'Gara gulaalaa viidiyoo ergi', 'إرسال إلى محرر الفيديو'], ['Send Selection to Video Editor', 'Filannoo gara gulaalaa viidiyoo ergi', 'إرسال التحديد إلى محرر الفيديو'],
   ['Audio Tags…', 'Odeeffannoo sagalee…', 'وسوم الصوت…'], ['Save Format', 'Akkaataa olkaa’uu', 'صيغة الحفظ'], ['WAV (lossless)', 'WAV (qulqullina guutuu)', 'WAV (بلا فقدان)'],
   ['Open Project…', 'Pirojektii bani…', 'فتح مشروع…'], ['Save Project', 'Pirojektii olkaa’i', 'حفظ المشروع'], ['Autosave in This Browser', 'Ofumaan olkaa’i (biraawzara kana keessatti)', 'حفظ تلقائي في هذا المتصفح'],
   ['Join Audio Files…', 'Faayilota sagalee walitti qabsiisi…', 'دمج ملفات صوتية…'], ['Batch Converter…', 'Hedduu al tokkotti jijjiiri…', 'تحويل دفعة ملفات…'],
