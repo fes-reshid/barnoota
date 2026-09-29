@@ -1127,7 +1127,7 @@ function loadHomework(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.listHomework)return;
  window.KidsCloud.listHomework(GAME_KEY).then(list=>{studentHomework=list;if(hwCheck())save();if(!$('#mapScreen').classList.contains('hidden')){renderHomework();renderTeacherAlert()}}).catch(()=>{});
 }
-function myHomework(){return studentHomework.filter(forMyClass)}
+function myHomework(){return studentHomework.filter(h=>forMyClass(h)&&(TALQEEN_ENABLED||h.kind!=='record'))}
 function hwLessonIdx(h){const a=Math.min(h.lineFrom||0,h.lineTo||h.lineFrom||0),b=Math.max(h.lineFrom||0,h.lineTo||h.lineFrom||0);if(!a)return[];return lessons.map((l,i)=>lineNumbers(l).some(n=>n>=a&&n<=b)?i:-1).filter(i=>i>=0)}
 function hwQuizPassed(id){const q=teacherQuizzes.find(x=>x.id===id),r=tqResults()[id];if(!r||!r.total)return false;const best=r.best!=null?r.best:r.score;return best/r.total*100>=((q&&q.passPercent)||70)}
 function hwProgress(h){
@@ -1336,15 +1336,17 @@ function makeRecorder(opts){
 function fmtSec(sec){sec=Math.round(sec);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}
 
 /* ---------- Talqeen: teacher recordings + record yourself ---------- */
+/* Switched off for now — set to true to bring Talqeen back for students. */
+var TALQEEN_ENABLED=false;
 screens.push('recScreen');
 var myRecs=[],recLine=0,pendingRec=null,studentRec=null;
 function loadMyRecordings(){
- const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!uid||!window.KidsCloud.listRecordings)return;
+ const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!TALQEEN_ENABLED||!uid||!window.KidsCloud.listRecordings)return;
  window.KidsCloud.listRecordings(uid).then(list=>{myRecs=list;if(hwCheck())save();if(!$('#mapScreen').classList.contains('hidden')){renderTalqeenBox();renderHomework()}if(!$('#recScreen').classList.contains('hidden'))renderRecMine();checkBadgesSoon()}).catch(()=>{});
 }
 function recLineLabel(n){return 'Line '+n}
 function renderTalqeenBox(){
- const box=$('#talqeenBox');if(!box)return;if(!cloudUser){box.innerHTML='';return}
+ const box=$('#talqeenBox');if(!box)return;if(!cloudUser||!TALQEEN_ENABLED){box.innerHTML='';return}
  const fromT=myRecs.filter(r=>r.from==='teacher'),mine=myRecs.filter(r=>r.from==='student'),fresh=fromT.filter(r=>!r.heard).length,fb=mine.filter(r=>r.feedback).length;
  const when=r=>new Date(r.createdAt||Date.now()).toLocaleDateString([], {day:'numeric',month:'short'});
  const body=(fromT.length?fromT.slice(0,4).map(r=>`<div class="tal-row ${r.heard?'':'new'}"><div class="tal-meta">🧑‍🏫 <b>${escapeHtml(r.authorName||'Your teacher')}</b> · Line ${escapeHtml(r.line)} · ${when(r)} ${r.heard?'':'<span class="tq-unread">New</span>'}</div>${r.note?`<div class="tal-note">${escapeHtml(r.note)}</div>`:''}<audio controls preload="none" src="${escapeHtml(r.data)}" data-recid="${escapeHtml(r.id)}"></audio></div>`).join(''):'<p style="margin:0 0 6px;color:#75684f">When your teacher records a line for you, it plays here.</p>')+
@@ -1439,8 +1441,9 @@ const BADGES=[
  ['quiz1','📝','Quiz passed','Pass a quiz from your teacher',()=>passedTeacherQuizCount()>=1],
  ['hw5','📚','Homework hero','Hand in 5 homework on time',()=>onTimeHomework()>=5],
  ['rec1','🎙️','First recitation','Record yourself and send it',()=>myRecs.some(r=>r.from==='student')],
+].filter(b=>TALQEEN_ENABLED||b[0]!=='rec1').concat([
  ['class1','🏫','Class member','Join your teacher’s class',()=>myClassList.length>=1]
-];
+]);
 function badgeMap(){if(!profile.badges||typeof profile.badges!=='object')profile.badges={};return profile.badges}
 let badgeTimer=null;
 function checkBadgesSoon(){clearTimeout(badgeTimer);badgeTimer=setTimeout(checkBadges,600)}

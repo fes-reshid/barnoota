@@ -2055,6 +2055,8 @@ function makeRecorder(opts){
 function fmtSec(sec){ sec = Math.round(sec); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
 /* ===================== Talqeen recordings ===================== */
+/* Switched off for now — set to true to bring Talqeen back in the portal. */
+var TALQEEN_ENABLED = false;
 let teacherRec = null, pendingRec = null, recCache = {};
 function renderTalqeen(){
   const s = activeStudent; if(!s) return;
@@ -2113,7 +2115,7 @@ function sendTeacherRecording(){
     .catch(err => { setMsg('rec-msg', friendlyError(err), true); $('rec-send').disabled = false; });
 }
 function loadRecInbox(){
-  if(!window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
+  if(!TALQEEN_ENABLED || !window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
   return window.KidsCloud.listUnheardStudentRecordings().then(list => {
     const box = $('rec-inbox'), mine = list.filter(r => studentsCache.some(s => s.uid === r.studentUid));
     box.innerHTML = mine.length ? '' : '<p class="empty">No new recitations. 🌟</p>';
@@ -2235,6 +2237,11 @@ function openParentLink(s, reset){
 
 function wireExtras(){
   wireTeacherRecorder();
+  if(!TALQEEN_ENABLED){
+    document.querySelector('.subtab[data-sub="talqeen"]').classList.add('hidden');
+    $('rec-inbox').closest('.card').classList.add('hidden');
+    const opt = $('hw-kind').querySelector('option[value="record"]'); if(opt) opt.remove();
+  }
   $('modal-parent').onclick = () => { if(activeStudent) openParentLink(activeStudent, false); };
   $('parent-close').onclick = () => $('parent-modal').classList.add('hidden');
   $('att-date').value = isoDate(new Date());
