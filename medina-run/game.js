@@ -282,6 +282,37 @@ function roadStrip(z1,z2,left,right,color){
  const a=project(1,z1),b=project(1,z2);
  poly([[a.x+a.half*left,a.y],[a.x+a.half*right,a.y],[b.x+b.half*right,b.y],[b.x+b.half*left,b.y]],color);
 }
+function roadside(){
+ const road=roadProfile(),night=!!chapters[state.chapter].night,flow=state.motion*.00018;
+ // Recycle scenery from the horizon toward the camera using the road's own motion.
+ const pieces=[];
+ for(let i=0;i<16;i++){
+  const z=(i/16+flow)%1;
+  for(const side of [-1,1])pieces.push({i,side,z});
+ }
+ pieces.sort((a,b)=>a.z-b.z);
+ for(const {i,side,z} of pieces){
+  if(z<.025)continue;
+  const p=project(1,z),variation=Math.sin(i*17.27+side*4.7),s=(.22+Math.pow(z,1.65)*2.5)*Math.min(W/760,1.25);
+  const x=p.x+side*p.half*(1.14+(i%3)*.12),y=p.y;
+  if(road.kind==='town'){
+   const w=(32+(i%4)*9)*s,h=(44+(i%5)*11)*s;
+   ellipse(x,y,w*.62,Math.max(1,4*s),'#3a2d2740');
+   ctx.fillStyle=night?'#64717b':i%3?'#d9b98d':'#eee0bd';ctx.fillRect(x-w/2,y-h,w,h);
+   poly([[x-w/2,y-h],[x-w*.56,y-h-6*s],[x+w*.45,y-h-6*s],[x+w/2,y-h]],night?'#a1a6aa':'#f6e8c8');
+   ctx.fillStyle=night?'#27384b':'#745f4b';
+   for(let row=0;row<2;row++)for(let col=0;col<2;col++)ctx.fillRect(x-w*.28+col*w*.36,y-h*.72+row*h*.27,Math.max(1,5*s),Math.max(1,8*s));
+   ctx.fillRect(x-5*s,y-16*s,10*s,16*s);
+   if(i%4===0){const tx=x+side*w*.29,tw=7*s,th=h*.48;ctx.fillStyle=night?'#778794':'#e9d1a6';ctx.fillRect(tx-tw/2,y-h-th,tw,th);poly([[tx-tw,y-h-th],[tx,y-h-th-8*s],[tx+tw,y-h-th]],night?'#a1a6aa':'#f4dfb7')}
+  }else{
+   const w=(36+(i%4)*14)*s,h=(24+(i%5)*8)*s;
+   ellipse(x,y,w*.6,Math.max(1,3*s),'#3e31293b');
+   poly([[x-w*.65,y],[x-w*.49,y-h*.64],[x-w*.23,y-h*.58],[x+variation*w*.13,y-h],[x+w*.43,y-h*.53],[x+w*.65,y]],night?'#4f5966':road.kind==='mountain'?'#8c735e':'#ad835b');
+   poly([[x-w*.65,y],[x-w*.49,y-h*.64],[x-w*.23,y-h*.58],[x+variation*w*.13,y-h],[x-w*.08,y-h*.27]],night?'#76818a':'#d2ae82');
+   if(road.kind==='mountain'&&i%3===0)poly([[x+w*.16,y-h*.62],[x+w*.43,y-h*.53],[x+w*.65,y],[x+w*.48,y-h*.14]],night?'#394755':'#725f51');
+  }
+ }
+}
 function scenery(t){
  const c=chapters[state.chapter],night=!!c.night,road=roadProfile(),mountain=road.kind==='mountain';
  // Each projected strip follows the same bend as stars, obstacles and the player.
@@ -343,6 +374,7 @@ function scenery(t){
   ellipse(0,0,55,9,'#40322150');poly([[-41,-68],[12,-79],[42,-61],[-12,-51]],'#252b30');poly([[-41,-68],[-12,-51],[-12,0],[-41,-15]],'#101a20');poly([[-12,-51],[42,-61],[42,-10],[-12,0]],'#212a2d');
   poly([[-41,-53],[-12,-37],[-12,-30],[-41,-46]],'#bc8f46');poly([[-12,-37],[42,-46],[42,-39],[-12,-30]],'#efc166');poly([[20,-30],[29,-32],[29,-10],[20,-9]],'#ca9f4c');ctx.restore();
  }
+ roadside();
  const fog=ctx.createLinearGradient(0,horizon()-H*.04,0,horizon()+H*.1);fog.addColorStop(0,'#ffffff00');fog.addColorStop(.3,night?'#b8c3d31a':'#ffe0b337');fog.addColorStop(1,'#ffffff00');ctx.fillStyle=fog;ctx.fillRect(0,horizon()-H*.04,W,H*.14);
 }
 function objectDraw(o){if(o.collected)return;let p=project(o.lane,o.z),s=p.scale,x=p.x,y=p.y;if(o.type==='star'||o.type==='blueStar'){const blue=o.type==='blueStar';let bob=Math.sin(state.dist*.03+o.z*8)*5*s;ctx.save();ctx.translate(x,y-38*s+bob);ctx.rotate(state.dist*.015);ctx.fillStyle=blue?'#36baff':'#ffda55';ctx.strokeStyle=blue?'#d4f6ff':'#fff4c1';if(blue){ctx.shadowColor='#29baff';ctx.shadowBlur=14*s;}ctx.lineWidth=2*s;ctx.beginPath();for(let j=0;j<10;j++){let a=j*Math.PI/5-Math.PI/2,r=j%2?9*s:19*s;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r)}ctx.closePath();ctx.fill();ctx.stroke();ctx.restore()}else if(o.type==='barrier'){ellipse(x,y,27*s,7*s,'#4c392650');ctx.fillStyle='#435962';ctx.fillRect(x-26*s,y-35*s,5*s,35*s);ctx.fillRect(x+21*s,y-35*s,5*s,35*s);ctx.fillStyle='#f8e6bd';ctx.fillRect(x-28*s,y-36*s,56*s,21*s);for(let i=0;i<3;i++)poly([[x+(-27+i*19)*s,y-36*s],[x+(-14+i*19)*s,y-36*s],[x+(-23+i*19)*s,y-15*s],[x+(-36+i*19)*s,y-15*s]],'#d78240')}else if(o.type==='crate'){ellipse(x,y,23*s,7*s,'#4c392650');ctx.fillStyle='#a06235';ctx.fillRect(x-19*s,y-32*s,38*s,30*s);ctx.strokeStyle='#6b3d25';ctx.lineWidth=3*s;ctx.strokeRect(x-19*s,y-32*s,38*s,30*s);line(x-18*s,y-31*s,x+18*s,y-3*s,'#d9a767',3*s)}else{ctx.fillStyle='#ceb27d';ctx.fillRect(x-26*s,y-55*s,52*s,7*s);ctx.fillRect(x-25*s,y-55*s,5*s,55*s);ctx.fillRect(x+20*s,y-55*s,5*s,55*s);ctx.fillStyle='#416c58';ctx.fillRect(x-21*s,y-53*s,42*s,7*s)}}
