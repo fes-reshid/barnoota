@@ -32,7 +32,12 @@ test('blocks the editor until agreed, cannot be closed with Escape, and is remem
 
 test('"I Do Not Agree" cancels — it blocks the tool rather than sending them elsewhere, and can be undone', async ({ page }) => {
   const errors = []; page.on('pageerror', e => errors.push(e.message));
+  // A second history entry means the best-effort window.close() in consent.js is a no-op in every
+  // browser (per spec it only succeeds for a script-opened window, or one with a single history
+  // entry) — same as for anyone who arrived via a link rather than typing the address fresh. This
+  // makes the fallback "cancelled" screen below the deterministic path to test everywhere.
   await page.goto('./');
+  await page.goto('./?revisit=1');
 
   await page.locator('#consentDecline').click();
   await expect(page.locator('#consentView')).toBeHidden();

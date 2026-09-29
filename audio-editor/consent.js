@@ -25,7 +25,7 @@
   declineBtn.addEventListener('click', () => {
     view.hidden = true; cancelled.hidden = false;
     cancelled.querySelector('h1').focus();
-    try { window.close(); } catch (e) {} // works only if this tab was opened by a script; otherwise nothing happens
+    try { window.close(); } catch (e) {} // best effort: per spec this succeeds for a script-opened tab, or one with a single history entry (a fresh visit) — otherwise it quietly does nothing, which is why the message above is the real fallback
   });
   reconsiderBtn.addEventListener('click', () => { cancelled.hidden = true; view.hidden = false; document.getElementById('consentTitle').focus(); });
   gate.addEventListener('cancel', e => e.preventDefault()); // no closing this one with Escape
