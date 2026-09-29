@@ -1821,9 +1821,11 @@ function wireHomework(){
   document.querySelectorAll('#hw-filters .chip').forEach(c => c.onclick = () => { hwFilter = c.dataset.hwf; document.querySelectorAll('#hw-filters .chip').forEach(x => x.classList.toggle('active', x === c)); renderHomeworkList(); });
 }
 
+// Test / non-pupil logins to keep out of the student lists (by username).
+const HIDDEN_ACCOUNTS = ['fesfes.com'];
 function isStaffAccount(s){
   const text = [s.username, s.email, s.loginEmail, s.displayName].map(v => String(v || '').toLowerCase()).join(' ');
-  return /quest-?teacher-/.test(text) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
+  return /quest-?teacher-/.test(text) || HIDDEN_ACCOUNTS.includes(String(s.username || '').toLowerCase()) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
 }
 
 /* ===================== data loading ===================== */
