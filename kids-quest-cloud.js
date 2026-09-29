@@ -50,6 +50,7 @@ const QUIZZES_COLLECTION = 'kids_quest_quizzes';
 const ANNOUNCEMENTS_COLLECTION = 'kids_quest_announcements';
 const MESSAGES_COLLECTION = 'kids_quest_messages';
 const CLASSES_COLLECTION = 'kids_quest_classes';
+const HOMEWORK_COLLECTION = 'kids_quest_homework';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -845,6 +846,45 @@ function studentLeaveClass(id){
   return updateDoc(doc(db, CLASSES_COLLECTION, id), { studentUids: arrayRemove(user.uid) });
 }
 
+/* ---- homework ---- */
+/* kids_quest_homework/{id}: set by staff for everyone or one class, with
+   a due date (YYYY-MM-DD). What counts as done depends on the kind —
+   memorise lines, finish lessons, pass a quiz, or a plain task the
+   student ticks. The student app decides when it's done and records it
+   in the student's own progress (homeworkDone.<id>), so no extra write
+   permission is needed and the portal reads it with the rest. */
+function listHomework(game){
+  return getDocs(collection(db, HOMEWORK_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const data = d.data(); if(!game || data.game === game) out.push(Object.assign({ id: d.id }, data)); });
+    out.sort(function(a, b){ return String(a.dueDate || '').localeCompare(String(b.dueDate || '')); });
+    return out;
+  });
+}
+function adminSaveHomework(h){
+  const x = h || {}, user = auth.currentUser, now = new Date().toISOString();
+  const ref = x.id ? doc(db, HOMEWORK_COLLECTION, x.id) : doc(collection(db, HOMEWORK_COLLECTION));
+  const kinds = ['memorise', 'lessons', 'quiz', 'task'];
+  const data = {
+    game: String(x.game || ''),
+    kind: kinds.indexOf(x.kind) >= 0 ? x.kind : 'task',
+    title: String(x.title || '').trim().slice(0, 100) || 'Homework',
+    details: String(x.details || '').trim().slice(0, 1000),
+    lineFrom: Math.max(0, Number(x.lineFrom) || 0),
+    lineTo: Math.max(0, Number(x.lineTo) || 0),
+    quizId: String(x.quizId || ''),
+    dueDate: /^\d{4}-\d{2}-\d{2}$/.test(String(x.dueDate || '')) ? x.dueDate : '',
+    classId: String(x.classId || ''),
+    authorName: String(x.authorName || '').trim().slice(0, 80),
+    updatedAt: now
+  };
+  if(!x.id){ data.createdAt = now; data.by = (user && user.email) || null; }
+  return setDoc(ref, data, { merge:true }).then(function(){ return ref.id; });
+}
+function adminDeleteHomework(id){
+  return deleteDoc(doc(db, HOMEWORK_COLLECTION, id));
+}
+
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
 }
@@ -902,6 +942,9 @@ window.KidsCloud = {
   markThreadRead: markThreadRead,
   currentUid: currentUid,
   listClasses: listClasses,
+  listHomework: listHomework,
+  adminSaveHomework: adminSaveHomework,
+  adminDeleteHomework: adminDeleteHomework,
   adminCreateClass: adminCreateClass,
   adminUpdateClass: adminUpdateClass,
   adminDeleteClass: adminDeleteClass,

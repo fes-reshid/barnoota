@@ -269,6 +269,13 @@
   .member-row .grow{flex:1;min-width:0}
   .pick-list{max-height:320px;overflow:auto;border:1px solid #eadcb8;border-radius:12px;padding:4px 10px;margin:8px 0}
   .pick-list label{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f4ecd7;cursor:pointer}
+.hw-card{background:#fff;border:2px solid #eadcb8;border-radius:16px;padding:12px 14px;margin-bottom:10px}
+  .hw-card.overdue{border-color:#e7a37f}
+  .hw-card h3{margin:4px 0 2px}
+  .hw-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14.5px}
+  .hw-table td{padding:6px 4px;border-bottom:1px solid #f0e6cc}
+  .hw-st{font-weight:700;white-space:nowrap}
+  .hw-st.done{color:#2f6f55}.hw-st.late{color:#b5452b}.hw-st.lateDone{color:#8a5a00}.hw-st.pending{color:#6b5d44}
 </style>
 </head>
 <body>
@@ -335,6 +342,7 @@
       <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
       <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
       <button class="tab" data-tab="classes" role="tab">🏫 Classes <span class="count" id="tab-count-classes">0</span></button>
+      <button class="tab" data-tab="homework" role="tab">📚 Homework <span class="count" id="tab-count-hw">0</span></button>
       <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
       <button class="tab" data-tab="announce" role="tab">📣 Announcements <span class="count" id="tab-count-ann">0</span></button>
       <button class="tab" data-tab="messages" role="tab">✉️ Messages <span class="count" id="tab-count-msg">0</span></button>
@@ -442,6 +450,7 @@
               <button class="btn sky small" id="class-view-students">👩‍🎓 View on Students tab</button>
               <button class="btn ghost small" id="class-message">📨 Message this class</button>
               <button class="btn ghost small" id="class-announce">📣 Announce to this class</button>
+              <button class="btn ghost small" id="class-homework">📚 Homework for this class</button>
             </div>
             <h3>Students <span class="muted" id="class-member-count"></span></h3>
             <div id="class-members"></div>
@@ -451,6 +460,47 @@
             <button class="btn primary" id="class-add-btn">＋ Add selected</button>
             <div style="border-top:1px solid #eadcb8;margin-top:18px;padding-top:12px"><button class="btn danger small" id="class-delete">Delete class</button> <span class="muted">Students keep their progress; only the group is removed.</span></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOMEWORK -->
+    <div class="tab-panel hidden" data-panel="homework">
+      <div class="quiz-layout">
+        <div class="card" id="hw-composer">
+          <h2 id="hw-form-title" style="margin-top:0">📚 Set homework</h2>
+          <p class="muted" style="margin-top:-4px">Students see it under “From your teacher → Homework” with the due date. Memorise, lesson and quiz homework ticks itself off when the student finishes it.</p>
+          <div class="field"><label for="hw-kind">Type</label><select id="hw-kind">
+            <option value="memorise">🧠 Memorise lines (Memorise mode, level 4)</option>
+            <option value="lessons">▶ Finish lessons</option>
+            <option value="quiz">📝 Pass a quiz</option>
+            <option value="task">✏️ Other task (student ticks it)</option>
+          </select></div>
+          <div class="row" id="hw-lines-row">
+            <div class="field"><label for="hw-from">From line</label><input id="hw-from" type="number" min="1" max="61" value="1"></div>
+            <div class="field"><label for="hw-to">To line</label><input id="hw-to" type="number" min="1" max="61" value="1"></div>
+          </div>
+          <div class="field hidden" id="hw-quiz-row"><label for="hw-quiz">Quiz</label><select id="hw-quiz"></select></div>
+          <div class="field"><label for="hw-title">Title</label><input id="hw-title" maxlength="100" placeholder="Filled in for you — change it if you like"></div>
+          <div class="field"><label for="hw-details">Instructions (optional)</label><textarea id="hw-details" maxlength="1000" style="min-height:70px" placeholder="e.g. Recite to a parent 3 times before class."></textarea></div>
+          <div class="row">
+            <div class="field"><label for="hw-due">Due date</label><input id="hw-due" type="date"></div>
+            <div class="field"><label for="hw-class">For</label><select id="hw-class" class="class-target"></select></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+            <button class="btn primary" id="hw-save">📚 Set homework</button>
+            <button class="btn ghost hidden" id="hw-cancel">Cancel editing</button>
+          </div>
+          <p class="msg" id="hw-msg"></p>
+        </div>
+        <div>
+          <div class="chips" id="hw-filters" style="margin-bottom:10px">
+            <button class="chip active" data-hwf="active">Current</button>
+            <button class="chip" data-hwf="overdue">⚠️ Past due</button>
+            <button class="chip" data-hwf="all">All</button>
+          </div>
+          <div id="hw-list"></div>
+          <p class="empty hidden" id="hw-empty">No homework here yet.</p>
         </div>
       </div>
     </div>
@@ -770,7 +820,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=12"></script>
+<script type="module" src="../kids-quest-cloud.js?v=13"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -787,6 +837,7 @@ const TOTAL_LESSONS = 62;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
 let classesCache = [], activeClassId = null, classFilterTouched = false;
+let homeworkCache = [], editingHw = null, hwFilter = 'active', hwOpen = {};
 
 /* ===================== helpers ===================== */
 function randomPassword(){
@@ -1549,7 +1600,7 @@ function targetClasses(){ return myRole === 'teacher' ? myClasses() : classesCac
 function classOptionLabel(c){ return c.name + (isMyClass(c) ? '' : ' — ' + (c.teacherName || teacherDisplayName(c.teacherEmail))); }
 function fillClassSelects(){
   const opts = targetClasses().map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(classOptionLabel(c)) + ' (' + c.studentUids.length + ')</option>').join('');
-  [['quiz-class', 'Every student'], ['ann-class', '👥 Every student'], ['broadcast-class', '👥 Every student']].forEach(([id, all]) => {
+  [['quiz-class', 'Every student'], ['ann-class', '👥 Every student'], ['broadcast-class', '👥 Every student'], ['hw-class', '👥 Every student']].forEach(([id, all]) => {
     const sel = $(id), keep = sel.value; sel.innerHTML = '<option value="">' + all + '</option>' + opts;
     if([...sel.options].some(o => o.value === keep)) sel.value = keep;
   });
@@ -1650,10 +1701,128 @@ function wireClasses(){
   $('class-message').onclick = () => { $('msg-broadcast-btn').click(); showTab('messages'); $('broadcast-class').value = activeClassId; $('broadcast-text').focus(); };
   $('class-announce').onclick = () => { resetAnnForm(); showTab('announce'); $('ann-class').value = activeClassId; $('ann-title').focus(); };
   $('student-class').onchange = () => { classFilterTouched = true; renderStudentGrid(); };
+  $('class-homework').onclick = () => { resetHwForm(); showTab('homework'); $('hw-class').value = activeClassId; $('hw-kind').focus(); };
+}
+
+/* ===================== homework ===================== */
+function hwDueEnd(h){ return h.dueDate ? new Date(h.dueDate + 'T23:59:59') : null; }
+function hwPastDue(h){ const e = hwDueEnd(h); return !!e && new Date() > e; }
+function fmtDue(h){ const e = hwDueEnd(h); return e ? e.toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short' }) : 'no due date'; }
+function hwAudience(h){
+  const inClass = h.classId ? new Set((classById(h.classId) || { studentUids: [] }).studentUids) : null;
+  return studentsCache.filter(s => !s.disabled && (!inClass || inClass.has(s.uid)));
+}
+function hwStatus(h, s){
+  const done = (courseProfile(s).homeworkDone || {})[h.id], e = hwDueEnd(h);
+  if(done) return { key: e && new Date(done.at) > e ? 'lateDone' : 'done', at: done.at };
+  return { key: hwPastDue(h) ? 'late' : 'pending' };
+}
+function hwKindLabel(h){ return { memorise:'🧠 Memorise', lessons:'▶ Lessons', quiz:'📝 Quiz', task:'✏️ Task' }[h.kind] || '✏️ Task'; }
+function hwAutoTitle(){
+  const k = $('hw-kind').value, a = Number($('hw-from').value) || 1, b = Number($('hw-to').value) || a, r = a === b ? 'line ' + a : 'lines ' + Math.min(a, b) + '–' + Math.max(a, b);
+  if(k === 'memorise') return 'Memorise ' + r;
+  if(k === 'lessons') return 'Finish ' + r.replace('line', 'lesson for line').replace('lines', 'lessons for lines');
+  if(k === 'quiz'){ const q = quizzesCache.find(x => x.id === $('hw-quiz').value); return q ? 'Pass the quiz “' + q.title + '”' : 'Pass the quiz'; }
+  return '';
+}
+function syncHwForm(){
+  const k = $('hw-kind').value;
+  $('hw-lines-row').classList.toggle('hidden', k !== 'memorise' && k !== 'lessons');
+  $('hw-quiz-row').classList.toggle('hidden', k !== 'quiz');
+  $('hw-title').placeholder = hwAutoTitle() || 'e.g. Write the 4 rules of noon sakinah in your notebook';
+}
+function fillHwQuiz(){
+  const sel = $('hw-quiz'), keep = sel.value;
+  sel.innerHTML = quizzesCache.length ? quizzesCache.map(q => '<option value="' + escapeHtml(q.id) + '">' + escapeHtml(q.title) + (q.published ? '' : ' (draft — publish it first)') + '</option>').join('') : '<option value="">No quizzes yet — make one on the Quizzes tab</option>';
+  if([...sel.options].some(o => o.value === keep)) sel.value = keep;
+}
+function isoDate(d){ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function resetHwForm(){
+  editingHw = null; $('hw-form-title').textContent = '📚 Set homework'; $('hw-save').textContent = '📚 Set homework'; $('hw-cancel').classList.add('hidden');
+  $('hw-title').value = ''; $('hw-details').value = ''; const d = new Date(); d.setDate(d.getDate() + 7); $('hw-due').value = isoDate(d);
+  syncHwForm();
+}
+function startEditHw(h){
+  editingHw = h; $('hw-form-title').textContent = '✏️ Edit homework'; $('hw-save').textContent = '💾 Save changes'; $('hw-cancel').classList.remove('hidden');
+  $('hw-kind').value = h.kind; $('hw-from').value = h.lineFrom || 1; $('hw-to').value = h.lineTo || h.lineFrom || 1; fillHwQuiz(); $('hw-quiz').value = h.quizId || '';
+  $('hw-title').value = h.title || ''; $('hw-details').value = h.details || ''; $('hw-due').value = h.dueDate || ''; fillClassSelects(); $('hw-class').value = h.classId || '';
+  syncHwForm(); $('hw-composer').scrollIntoView({ behavior:'smooth' });
+}
+function submitHw(){
+  const kind = $('hw-kind').value, from = Number($('hw-from').value), to = Number($('hw-to').value) || from;
+  if((kind === 'memorise' || kind === 'lessons') && !(from >= 1 && from <= 61 && to >= 1 && to <= 61)){ setMsg('hw-msg', 'Lines go from 1 to 61.', true); return; }
+  if(kind === 'quiz' && !$('hw-quiz').value){ setMsg('hw-msg', 'Make a quiz on the Quizzes tab first.', true); return; }
+  const title = $('hw-title').value.trim() || hwAutoTitle();
+  if(!title){ setMsg('hw-msg', 'Give the task a title.', true); return; }
+  if(!$('hw-due').value){ setMsg('hw-msg', 'Choose a due date.', true); return; }
+  const data = Object.assign({}, editingHw || {}, { game: GAME_KEY, kind, title, details: $('hw-details').value.trim(), lineFrom: Math.min(from, to) || 0, lineTo: Math.max(from, to) || 0,
+    quizId: kind === 'quiz' ? $('hw-quiz').value : '', dueDate: $('hw-due').value, classId: $('hw-class').value, authorName: (editingHw && editingHw.authorName) || $('certificate-teacher').dataset.me || '' });
+  $('hw-save').disabled = true; setMsg('hw-msg', 'Saving…');
+  window.KidsCloud.adminSaveHomework(data).then(() => {
+    setMsg('hw-msg', (editingHw ? 'Saved ✓' : 'Homework set ✓ ') + (editingHw ? '' : (data.classId ? className(data.classId) : 'Every student') + ' will see it, due ' + fmtDue(data) + '.'));
+    toast(editingHw ? 'Homework updated' : 'Homework set'); resetHwForm(); return loadHomework();
+  }).catch(err => setMsg('hw-msg', friendlyError(err), true)).finally(() => { $('hw-save').disabled = false; });
+}
+function loadHomework(){
+  if(!window.KidsCloud.listHomework) return Promise.resolve();
+  return window.KidsCloud.listHomework(GAME_KEY).then(list => { homeworkCache = list; renderHomeworkList(); })
+    .catch(err => { homeworkCache = []; $('hw-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function renderHomeworkList(){
+  const box = $('hw-list'); if(!box) return; box.innerHTML = '';
+  const mine = h => myRole !== 'teacher' || !h.classId || classById(h.classId) && isMyClass(classById(h.classId)) || h.by === myEmail;
+  const week = 7 * 86400000;
+  let list = homeworkCache.filter(mine);
+  const overdueMissing = list.filter(h => hwPastDue(h) && hwAudience(h).some(s => hwStatus(h, s).key === 'late'));
+  $('tab-count-hw').textContent = overdueMissing.length || list.filter(h => !hwPastDue(h)).length;
+  if(hwFilter === 'active') list = list.filter(h => !hwPastDue(h) || Date.now() - hwDueEnd(h).getTime() < week);
+  if(hwFilter === 'overdue') list = list.filter(h => hwPastDue(h));
+  list.sort((a, b) => hwFilter === 'active' ? String(a.dueDate).localeCompare(String(b.dueDate)) : String(b.dueDate).localeCompare(String(a.dueDate)));
+  $('hw-empty').classList.toggle('hidden', list.length > 0);
+  list.forEach(h => {
+    const aud = hwAudience(h), st = aud.map(s => ({ s, st: hwStatus(h, s) })), done = st.filter(x => x.st.key === 'done' || x.st.key === 'lateDone').length,
+      late = st.filter(x => x.st.key === 'late').length, pct = aud.length ? Math.round(done / aud.length * 100) : 0;
+    const card = document.createElement('div'); card.className = 'hw-card' + (late ? ' overdue' : '');
+    const order = { late:0, pending:1, lateDone:2, done:3 };
+    st.sort((a, b) => order[a.st.key] - order[b.st.key] || String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username)));
+    card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="role-badge info">' + hwKindLabel(h) + '</span><span class="role-badge">' + (h.classId ? '🏫 ' + escapeHtml(className(h.classId)) : '👥 Everyone') + '</span>' +
+      '<span class="role-badge ' + (hwPastDue(h) ? 'bad' : 'warn') + '">' + (hwPastDue(h) ? 'Was due ' : 'Due ') + escapeHtml(fmtDue(h)) + '</span>' + (late ? '<span class="role-badge bad">' + late + ' late</span>' : '') + '</div>' +
+      '<h3>' + escapeHtml(h.title) + '</h3>' + (h.details ? '<div class="muted" style="white-space:pre-wrap">' + escapeHtml(h.details) + '</div>' : '') +
+      '<div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42;margin-top:8px"><span>' + done + ' of ' + aud.length + ' done</span><b>' + pct + '%</b></div><div class="bar" style="margin-top:4px"><span style="width:' + pct + '%"></span></div>' +
+      '<div class="ann-tools" style="margin-top:10px"><button class="btn ghost small" data-act="who">' + (hwOpen[h.id] ? '▴ Hide students' : '▾ See each student') + '</button>' +
+      (done < aud.length ? '<button class="btn sky small" data-act="remind">🔔 Remind ' + (aud.length - done) + ' not done</button>' : '') +
+      '<button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn danger small" data-act="del">Delete</button></div>' +
+      (hwOpen[h.id] ? '<table class="hw-table">' + st.map(x => '<tr><td>' + escapeHtml(x.s.displayName || x.s.username) + ' <span class="muted">@' + escapeHtml(x.s.username) + '</span></td><td class="hw-st ' + x.st.key + '">' +
+        ({ done:'✓ Done', lateDone:'✓ Done late', late:'⚠️ Late', pending:'… Not yet' })[x.st.key] + (x.st.at ? ' <span class="muted" style="font-weight:400">' + fmtTime(x.st.at) + '</span>' : '') + '</td><td style="text-align:right"><button class="linkbtn" data-open="' + escapeHtml(x.s.uid) + '">Open</button></td></tr>').join('') + '</table>' : '');
+    card.querySelector('[data-act="who"]').onclick = () => { hwOpen[h.id] = !hwOpen[h.id]; renderHomeworkList(); };
+    card.querySelector('[data-act="edit"]').onclick = () => startEditHw(h);
+    card.querySelector('[data-act="del"]').onclick = () => {
+      if(!confirm('Delete the homework “' + h.title + '”? Students will stop seeing it.')) return;
+      window.KidsCloud.adminDeleteHomework(h.id).then(() => { toast('Homework deleted'); return loadHomework(); }).catch(err => alert(friendlyError(err)));
+    };
+    const rb = card.querySelector('[data-act="remind"]');
+    if(rb) rb.onclick = () => remindHw(h, st.filter(x => x.st.key === 'late' || x.st.key === 'pending').map(x => x.s), rb);
+    card.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { const s = studentsCache.find(x => x.uid === b.dataset.open); if(s) openManager(s, 'profile'); });
+    box.appendChild(card);
+  });
+}
+function remindHw(h, targets, btn){
+  if(!targets.length || !confirm('Send a private reminder about “' + h.title + '” to ' + targets.length + ' student' + (targets.length > 1 ? 's' : '') + '?')) return;
+  const text = '📚 Reminder: “' + h.title + '” ' + (hwPastDue(h) ? 'was due ' : 'is due ') + fmtDue(h) + '. Please finish it soon — you’ll find it in Tajweed Quest under “From your teacher → Homework”.';
+  btn.disabled = true; let ok = 0;
+  targets.reduce((chain, s) => chain.then(() => window.KidsCloud.sendMessage(s.uid, { from:'teacher', text, authorName: $('certificate-teacher').dataset.me || '', studentName: s.displayName || s.username }).then(() => { ok++; }).catch(() => {})), Promise.resolve())
+    .then(() => { toast('Reminder sent to ' + ok + ' student' + (ok === 1 ? '' : 's')); btn.disabled = false; return loadThreads(); });
+}
+function wireHomework(){
+  resetHwForm();
+  $('hw-kind').onchange = syncHwForm; $('hw-from').oninput = () => { if(Number($('hw-to').value) < Number($('hw-from').value)) $('hw-to').value = $('hw-from').value; syncHwForm(); };
+  $('hw-to').oninput = syncHwForm; $('hw-quiz').onchange = syncHwForm;
+  $('hw-save').onclick = submitHw; $('hw-cancel').onclick = resetHwForm;
+  document.querySelectorAll('#hw-filters .chip').forEach(c => c.onclick = () => { hwFilter = c.dataset.hwf; document.querySelectorAll('#hw-filters .chip').forEach(x => x.classList.toggle('active', x === c)); renderHomeworkList(); });
 }
 
 /* ===================== data loading ===================== */
-function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); }
+function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); renderHomeworkList(); fillHwQuiz(); }
 function loadStudents(){
   return window.KidsCloud.adminListStudents().then(list => {
     studentsCache = list;
@@ -1669,7 +1838,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -1736,6 +1905,7 @@ function showDashboard(info){
   showTab('overview');
   loadStudents();
   loadClasses();
+  loadHomework();
   loadQuizzes();
   loadAnnouncements();
   loadThreads();
@@ -1795,6 +1965,7 @@ function wire(){
   $('msg-broadcast-btn').onclick = () => { activeThread = null; renderThreads(); ['chat-empty','chat-view'].forEach(id => $(id).classList.add('hidden')); $('chat-broadcast').classList.remove('hidden'); $('broadcast-text').focus(); };
   $('broadcast-send').onclick = sendBroadcast;
   wireClasses();
+  wireHomework();
   $('chat-send').onclick = sendChat;
   $('chat-text').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } };
   $('chat-profile').onclick = () => { if(activeThread) openManager(activeThread, 'profile'); };

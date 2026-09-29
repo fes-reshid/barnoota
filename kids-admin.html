@@ -288,6 +288,11 @@ match /kids_quest_classes/{classId} {
     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['studentUids'])
     && request.resource.data.studentUids.toSet().difference(resource.data.studentUids.toSet()).hasOnly([request.auth.uid])
     && resource.data.studentUids.toSet().difference(request.resource.data.studentUids.toSet()).hasOnly([request.auth.uid]);
+}
+// homework with due dates: students read, staff write
+match /kids_quest_homework/{hwId} {
+  allow get, list: if request.auth != null;
+  allow create, update, delete: if isStaff();
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -399,7 +404,7 @@ match /kids_quest_classes/{classId} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=12"></script>
+<script type="module" src="kids-quest-cloud.js?v=13"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);
