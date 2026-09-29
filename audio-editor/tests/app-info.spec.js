@@ -18,7 +18,8 @@ test('About shows the version and contact address, from the menu', async ({ page
   expect(errors).toEqual([]);
 });
 
-test('a phone-sized screen gets a one-time notice recommending a computer, then can continue', async ({ browser }) => {
+test('a phone-sized screen gets a one-time notice recommending a computer, then can continue', async ({ browser, browserName }) => {
+  test.skip(browserName === 'firefox', 'Firefox does not support isMobile in newContext(), which the iPhone 13 device profile sets');
   const ctx = await browser.newContext({ ...devices['iPhone 13'] });
   const page = await ctx.newPage();
   const errors = []; page.on('pageerror', e => errors.push(e.message)); page.on('dialog', d => d.accept());
