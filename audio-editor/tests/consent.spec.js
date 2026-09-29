@@ -30,9 +30,20 @@ test('blocks the editor until agreed, cannot be closed with Escape, and is remem
   expect(errors).toEqual([]);
 });
 
-test('"I Do Not Agree" leaves the site', async ({ page }) => {
-  await page.route('https://diinislaam.com/**', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>ok</h1>' }));
+test('"I Do Not Agree" cancels — it blocks the tool rather than sending them elsewhere, and can be undone', async ({ page }) => {
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto('./');
+
   await page.locator('#consentDecline').click();
-  await page.waitForURL('https://diinislaam.com/**');
+  await expect(page.locator('#consentView')).toBeHidden();
+  await expect(page.locator('#consentCancelled')).toBeVisible();
+  await expect(page.locator('#consentGate')).toBeVisible(); // still open and blocking — no navigation away
+  expect(page.url()).toContain('/audio-editor/');
+  expect(await page.evaluate(() => localStorage.getItem('ae-consent-v1'))).toBeNull();
+
+  // changing their mind goes back to the reminder, unanswered
+  await page.locator('#consentReconsider').click();
+  await expect(page.locator('#consentView')).toBeVisible();
+  await expect(page.locator('#consentAgree')).toBeDisabled();
+  expect(errors).toEqual([]);
 });

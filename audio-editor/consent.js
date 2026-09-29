@@ -10,16 +10,24 @@
 
   let agreed = false;
   try { agreed = localStorage.getItem(KEY) === 'yes'; } catch (e) {}
-  if (agreed) return;
+  if (agreed) return; // asked once per browser: already agreed here before, so skip straight to the app
 
-  const cb = document.getElementById('consentCheck'), agreeBtn = document.getElementById('consentAgree'), declineBtn = document.getElementById('consentDecline');
+  const view = document.getElementById('consentView'), cancelled = document.getElementById('consentCancelled');
+  const cb = document.getElementById('consentCheck'), agreeBtn = document.getElementById('consentAgree'), declineBtn = document.getElementById('consentDecline'), reconsiderBtn = document.getElementById('consentReconsider');
+
   cb.addEventListener('change', () => { agreeBtn.disabled = !cb.checked; });
   agreeBtn.addEventListener('click', () => {
     if (!cb.checked) return;
     try { localStorage.setItem(KEY, 'yes'); } catch (e) {}
     gate.close();
   });
-  declineBtn.addEventListener('click', () => { location.href = 'https://diinislaam.com/'; });
+  // Not agreeing cancels using the tool — it does not send them anywhere, it just stays closed.
+  declineBtn.addEventListener('click', () => {
+    view.hidden = true; cancelled.hidden = false;
+    cancelled.querySelector('h1').focus();
+    try { window.close(); } catch (e) {} // works only if this tab was opened by a script; otherwise nothing happens
+  });
+  reconsiderBtn.addEventListener('click', () => { cancelled.hidden = true; view.hidden = false; document.getElementById('consentTitle').focus(); });
   gate.addEventListener('cancel', e => e.preventDefault()); // no closing this one with Escape
   gate.showModal();
 })();
