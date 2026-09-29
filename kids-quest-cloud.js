@@ -51,6 +51,10 @@ const ANNOUNCEMENTS_COLLECTION = 'kids_quest_announcements';
 const MESSAGES_COLLECTION = 'kids_quest_messages';
 const CLASSES_COLLECTION = 'kids_quest_classes';
 const HOMEWORK_COLLECTION = 'kids_quest_homework';
+const PARENT_COLLECTION = 'kids_quest_parent';
+const RECORDINGS_COLLECTION = 'kids_quest_recordings';
+const ATTENDANCE_COLLECTION = 'kids_quest_attendance';
+const BOARDS_COLLECTION = 'kids_quest_boards';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -227,7 +231,7 @@ function onStudentAuth(cb){
     if(!user){ cb(null); return; }
     ensureStudentDoc(user, null).then(function(data){
       if(data.disabled){ signOut(auth); cb(null); return; }
-      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {} });
+      cb({ uid: user.uid, username: data.username, displayName: data.displayName || data.username, fullName: data.fullName || '', progress: data.progress || {}, teacherNotes: data.teacherNotes || {}, parentToken: data.parentToken || '' });
     }).catch(function(){ cb(null); });
   });
 }
@@ -265,7 +269,7 @@ function getStudentProfile(){
     if(!snap.exists()) return null;
     const data = snap.data();
     return { uid:user.uid, username:data.username, displayName:data.displayName || data.username,
-      fullName:data.fullName || '', progress:data.progress || {}, teacherNotes:data.teacherNotes || {} };
+      fullName:data.fullName || '', progress:data.progress || {}, teacherNotes:data.teacherNotes || {}, parentToken:data.parentToken || '' };
   });
 }
 
@@ -837,6 +841,7 @@ function adminUpdateClass(id, patch){
   if(p.name != null) data.name = String(p.name).trim().slice(0, 60);
   if(p.teacherName != null) data.teacherName = String(p.teacherName).trim().slice(0, 80);
   if(Array.isArray(p.studentUids)) data.studentUids = Array.from(new Set(p.studentUids.map(String)));
+  if(p.leaderboard != null) data.leaderboard = !!p.leaderboard;
   return setDoc(doc(db, CLASSES_COLLECTION, id), data, { merge:true });
 }
 function adminDeleteClass(id){
@@ -847,7 +852,7 @@ function listMyClasses(){
   if(!user) return Promise.resolve([]);
   return getDocs(query(collection(db, CLASSES_COLLECTION), where('studentUids', 'array-contains', user.uid))).then(function(snap){
     const out = [];
-    snap.forEach(function(d){ const c = classFromDoc(d); out.push({ id: c.id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '' }); });
+    snap.forEach(function(d){ const c = classFromDoc(d); out.push({ id: c.id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '', leaderboard: !!c.leaderboard, studentUids: c.studentUids }); });
     return out;
   });
 }
@@ -864,7 +869,7 @@ function studentJoinClass(code){
       // let this class's teacher see my record (my own doc, so I may write it)
       return c.teacherEmail ? setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { teacherEmails: arrayUnion(normalizeEmail(c.teacherEmail)) }, { merge:true }).catch(function(){}) : null;
     }).then(function(){
-      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '' };
+      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '', leaderboard: !!c.leaderboard, studentUids: (Array.isArray(c.studentUids) ? c.studentUids : []).concat([user.uid]) };
     });
   });
 }
@@ -924,6 +929,131 @@ function adminDeleteHomework(id){
   return deleteDoc(doc(db, HOMEWORK_COLLECTION, id));
 }
 
+/* ---- parent view ---- */
+/* kids_quest_parent/{token}: a read-only progress summary a parent opens
+   with a private link (the token is 24 random characters, so the link
+   itself is the key). Anyone may GET one doc by its token; nobody can
+   list them. `data` is written by the student app (and by staff when they
+   make the link); `staffData` (attendance) only by staff. Both are JSON
+   strings so the parent page can read them with one plain fetch. */
+function newToken(n){
+  const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789', a = new Uint32Array(n || 24);
+  crypto.getRandomValues(a);
+  return Array.from(a, function(v){ return chars[v % chars.length]; }).join('');
+}
+function adminEnsureParentToken(uid, existing){
+  if(existing) return Promise.resolve(existing);
+  const token = newToken(24);
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), { parentToken: token }, { merge:true }).then(function(){ return token; });
+}
+function adminResetParentToken(uid, oldToken){
+  const token = newToken(24);
+  return (oldToken ? deleteDoc(doc(db, PARENT_COLLECTION, oldToken)).catch(function(){}) : Promise.resolve())
+    .then(function(){ return setDoc(doc(db, STUDENTS_COLLECTION, uid), { parentToken: token }, { merge:true }); })
+    .then(function(){ return token; });
+}
+function writeParentSummary(token, uid, patch){
+  if(!token || !uid) return Promise.resolve();
+  const data = { uid: uid, updatedAt: new Date().toISOString() };
+  if(patch && patch.data != null) data.data = JSON.stringify(patch.data);
+  if(patch && patch.staffData != null) data.staffData = JSON.stringify(patch.staffData);
+  return setDoc(doc(db, PARENT_COLLECTION, token), data, { merge:true });
+}
+
+/* ---- Talqeen recordings ---- */
+/* kids_quest_recordings/{id}: a short voice recording (≤ 60 s, compressed,
+   stored inline as a data: URL) for one student and one line — from the
+   teacher (their recitation to copy) or from the student (their attempt,
+   for feedback). Only that student and staff can read it. */
+function listRecordings(studentUid){
+  return getDocs(query(collection(db, RECORDINGS_COLLECTION), where('studentUid', '==', studentUid))).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ id: d.id }, d.data())); });
+    out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+function listUnheardStudentRecordings(){
+  return getDocs(query(collection(db, RECORDINGS_COLLECTION), where('from', '==', 'student'), where('heard', '==', false))).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const x = d.data(); out.push({ id: d.id, studentUid: x.studentUid, studentName: x.studentName || '', line: x.line, createdAt: x.createdAt, duration: x.duration }); });
+    out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+function saveRecording(r){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const x = r || {}, data = String(x.data || '');
+  if(!/^data:audio\//.test(data)) return Promise.reject(new Error('That recording could not be read.'));
+  if(data.length > 950000) return Promise.reject(new Error('That recording is too long — keep it under a minute.'));
+  const ref = doc(collection(db, RECORDINGS_COLLECTION));
+  return setDoc(ref, {
+    studentUid: String(x.studentUid || ''),
+    from: x.from === 'teacher' ? 'teacher' : 'student',
+    game: String(x.game || ''),
+    line: Math.max(0, Number(x.line) || 0),
+    note: String(x.note || '').trim().slice(0, 500),
+    data: data,
+    duration: Math.round(Number(x.duration) || 0),
+    authorName: String(x.authorName || '').trim().slice(0, 80),
+    studentName: String(x.studentName || '').trim().slice(0, 80),
+    heard: false,
+    createdAt: new Date().toISOString()
+  }).then(function(){ return ref.id; });
+}
+function markRecording(id, patch){
+  const p = patch || {}, data = {};
+  if(p.heard != null){ data.heard = !!p.heard; data.heardAt = new Date().toISOString(); }
+  if(p.feedback != null){ data.feedback = String(p.feedback).trim().slice(0, 500); data.feedbackBy = String(p.feedbackBy || '').slice(0, 80); data.feedbackAt = new Date().toISOString(); }
+  return updateDoc(doc(db, RECORDINGS_COLLECTION, id), data);
+}
+function deleteRecording(id){ return deleteDoc(doc(db, RECORDINGS_COLLECTION, id)); }
+
+/* ---- attendance ---- */
+/* kids_quest_attendance/{classId}_{YYYY-MM-DD}: one class session, with a
+   mark per student: present | late | absent | excused. Staff only. */
+function listAttendance(){
+  return getDocs(collection(db, ATTENDANCE_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ id: d.id }, d.data())); });
+    out.sort(function(a, b){ return String(b.date || '').localeCompare(String(a.date || '')); });
+    return out;
+  });
+}
+function saveAttendance(a){
+  const x = a || {}, user = auth.currentUser;
+  if(!x.classId || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.date || ''))) return Promise.reject(new Error('Choose a class and a date.'));
+  const marks = {};
+  Object.keys(x.marks || {}).forEach(function(uid){ const m = x.marks[uid]; if(['present', 'late', 'absent', 'excused'].indexOf(m) >= 0) marks[uid] = m; });
+  const id = x.classId + '_' + x.date;
+  return setDoc(doc(db, ATTENDANCE_COLLECTION, id), {
+    classId: x.classId, date: x.date, marks: marks, note: String(x.note || '').trim().slice(0, 300),
+    by: (user && user.email) || null, updatedAt: new Date().toISOString()
+  }).then(function(){ return id; });
+}
+function deleteAttendance(id){ return deleteDoc(doc(db, ATTENDANCE_COLLECTION, id)); }
+
+/* ---- class leaderboard ---- */
+/* kids_quest_boards/{classId}: entries.<uid> = { name, avatar, stars,
+   memorised, streak, updatedAt }. Each class member writes only their own
+   entry; members and staff can read it. Shown only while the teacher has
+   the class's leaderboard switched on. */
+function getBoard(classId){
+  return getDoc(doc(db, BOARDS_COLLECTION, classId)).then(function(s){ return s.exists() ? (s.data().entries || {}) : {}; });
+}
+function studentUpdateBoard(classId, entry){
+  const user = auth.currentUser;
+  if(!user) return Promise.resolve();
+  const e = entry || {}, entries = {};
+  entries[user.uid] = {
+    name: String(e.name || '').slice(0, 40), avatar: String(e.avatar || '').slice(0, 8),
+    stars: Number(e.stars) || 0, memorised: Number(e.memorised) || 0, streak: Number(e.streak) || 0,
+    updatedAt: new Date().toISOString()
+  };
+  return setDoc(doc(db, BOARDS_COLLECTION, classId), { entries: entries }, { merge:true });
+}
+
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
 }
@@ -981,6 +1111,19 @@ window.KidsCloud = {
   markThreadRead: markThreadRead,
   currentUid: currentUid,
   listClasses: listClasses,
+  adminEnsureParentToken: adminEnsureParentToken,
+  adminResetParentToken: adminResetParentToken,
+  writeParentSummary: writeParentSummary,
+  listRecordings: listRecordings,
+  listUnheardStudentRecordings: listUnheardStudentRecordings,
+  saveRecording: saveRecording,
+  markRecording: markRecording,
+  deleteRecording: deleteRecording,
+  listAttendance: listAttendance,
+  saveAttendance: saveAttendance,
+  deleteAttendance: deleteAttendance,
+  getBoard: getBoard,
+  studentUpdateBoard: studentUpdateBoard,
   adminLinkStudentTeacher: adminLinkStudentTeacher,
   listHomework: listHomework,
   adminSaveHomework: adminSaveHomework,

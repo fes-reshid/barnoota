@@ -304,6 +304,53 @@ match /kids_quest_classes/{classId} {
 match /kids_quest_homework/{hwId} {
   allow get, list: if request.auth != null;
   allow create, update, delete: if isStaff();
+}
+// private parent pages: anyone with the link can read ONE page by its
+// secret id; nobody can list them. The student writes their own `data`;
+// only staff write `staffData` (attendance).
+match /kids_quest_parent/{token} {
+  allow get: if true;
+  allow create: if request.auth != null
+    && (isStaff() || (request.resource.data.uid == request.auth.uid
+        && !('staffData' in request.resource.data)));
+  allow update: if request.auth != null
+    && (isStaff() || (resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['staffData'])));
+  allow delete: if isStaff();
+}
+// Talqeen voice recordings: only that student and staff
+match /kids_quest_recordings/{recId} {
+  allow get, list: if isStaff()
+    || (request.auth != null && resource.data.studentUid == request.auth.uid);
+  allow create: if request.auth != null
+    && request.resource.data.data is string
+    && request.resource.data.data.size() < 1000000
+    && ((isStaff() && request.resource.data.from == 'teacher')
+        || (request.resource.data.from == 'student' && request.resource.data.studentUid == request.auth.uid));
+  allow update: if (isStaff() || (request.auth != null && resource.data.studentUid == request.auth.uid))
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['heard', 'heardAt', 'feedback', 'feedbackBy', 'feedbackAt']);
+  allow delete: if isStaff()
+    || (request.auth != null && resource.data.studentUid == request.auth.uid && resource.data.from == 'student');
+}
+// class attendance: staff only
+match /kids_quest_attendance/{sessionId} {
+  allow get, list, create, update, delete: if isStaff();
+}
+// class leaderboards: members read; each member writes only their own row
+match /kids_quest_boards/{classId} {
+  function isMember() {
+    return request.auth != null
+      && request.auth.uid in get(/databases/$(database)/documents/kids_quest_classes/$(classId)).data.studentUids;
+  }
+  allow get: if isStaff() || isMember();
+  allow create: if isMember()
+    && request.resource.data.keys().hasOnly(['entries'])
+    && request.resource.data.entries.keys().hasOnly([request.auth.uid]);
+  allow update: if isStaff() || (isMember()
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['entries'])
+    && request.resource.data.entries.diff(resource.data.entries).affectedKeys().hasOnly([request.auth.uid]));
+  allow delete: if isStaff();
 }</pre>
         </li>
         <li><b>Create the bootstrap super-admin document by hand</b> — this can't be done from inside the app,
@@ -415,7 +462,7 @@ match /kids_quest_homework/{hwId} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=14"></script>
+<script type="module" src="kids-quest-cloud.js?v=15"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

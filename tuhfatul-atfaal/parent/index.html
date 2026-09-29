@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Parent view · Tajweed Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Marcellus&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c3a55;--green:#2f6f55;--gold:#c9a653;--paper:#fffaf0;--ink:#3b2f22;--muted:#75684f;--line:#eadcb8}
+  *{box-sizing:border-box}
+  body{margin:0;background:#efe7d2;color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif}
+  header{background:linear-gradient(135deg,#1f5c47,#2f6f55);color:#fff;padding:18px 16px 22px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 16px}
+  header .brand{font:13px Marcellus;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+  header h1{margin:4px 0 2px;font:28px Marcellus}
+  header .sub{opacity:.9}
+  .ar{font:700 22px Amiri;float:right;opacity:.9}
+  main{padding:16px 0 50px}
+  .card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 14px}
+  h2{font:20px Marcellus;color:var(--navy);margin:0 0 8px}
+  .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:-30px 0 14px}
+  .tile{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(40,30,10,.08)}
+  .tile b{display:block;font:800 26px Nunito;color:var(--green)}
+  .tile span{font-size:13px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th{text-align:left;background:#f6efdc;padding:6px 8px;font-size:13.5px}
+  td{padding:6px 8px;border-bottom:1px solid #f0e6cc;vertical-align:top}
+  .st-done{color:#2f6f55;font-weight:800}.st-lateDone{color:#8a5a00;font-weight:800}.st-late{color:#b5452b;font-weight:800}.st-pending{color:var(--muted)}
+  .pill{display:inline-block;border-radius:10px;padding:2px 9px;font-size:13px;font-weight:800;background:#eef6ff;color:#1c4a66;margin:2px 4px 2px 0}
+  .note{background:#f4fbff;border-left:5px solid #3b8fc4;border-radius:10px;padding:8px 12px;margin:6px 0;white-space:pre-wrap}
+  .msg{border-radius:12px;padding:8px 12px;margin:6px 0;white-space:pre-wrap;background:#eef9ff}
+  .msg.me{background:#e3f3e5;margin-left:14%}
+  .msg small,.note small{display:block;color:#6b7a86;font-size:12.5px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px}
+  .badge{background:#fff7dc;border:2px solid #e8cf86;border-radius:14px;padding:6px 10px;font-weight:800;font-size:14px}
+  .bar{height:10px;background:#f1e7cc;border-radius:6px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#4f9d73,#2f6f55)}
+  .muted{color:var(--muted)}
+  .center{text-align:center;padding:60px 16px}
+  .att{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 30px}
+  @media(max-width:640px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}header h1{font-size:24px}.ar{display:none}th:nth-child(3),td:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="ar">تُحْفَةُ الأَطْفَال</span><div class="brand">Diin Islaam · Tajweed Quest · Parent view</div><h1 id="pName">Loading…</h1><div class="sub" id="pSub"></div></div></header>
+<main class="wrap" id="main"><div class="center muted">Loading your child’s progress…</div></main>
+<footer>This private page is read-only. Please don’t share the link — anyone with it can see this summary.<br>Questions? Message the teacher through your child’s account, or speak to them in class.</footer>
+<script>
+(function(){
+  const PROJECT = 'diinislaam-8fdeb';
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const day = iso => { if(!iso) return '—'; const d = new Date(String(iso).length === 10 ? iso + 'T12:00' : iso); return isNaN(d) ? '—' : d.toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short' }); };
+  const token = (new URLSearchParams(location.search).get('c') || '').replace(/[^A-Za-z0-9]/g, '');
+  const fail = msg => { $('pName').textContent = 'Parent view'; $('main').innerHTML = '<div class="card center"><div style="font-size:44px">🔒</div><h2>' + esc(msg) + '</h2><p class="muted">Ask your child’s teacher for a new parent link.</p></div>'; };
+  if(token.length < 16){ fail('This link is not complete.'); return; }
+  fetch('https://firestore.googleapis.com/v1/projects/' + PROJECT + '/databases/(default)/documents/kids_quest_parent/' + token)
+    .then(r => r.status === 404 ? null : r.ok ? r.json() : Promise.reject(new Error(r.status)))
+    .then(doc => {
+      if(!doc){ fail('This link has expired or was reset.'); return; }
+      const f = doc.fields || {}, parse = k => { try { return JSON.parse((f[k] && f[k].stringValue) || 'null'); } catch(e){ return null; } };
+      render(parse('data') || {}, parse('staffData') || {}, (f.updatedAt && f.updatedAt.stringValue) || '');
+    }).catch(() => fail('We couldn’t load the page. Check your connection and try again.'));
+
+  function render(d, sd, updated){
+    document.title = (d.name || 'Student') + ' · Parent view';
+    $('pName').textContent = d.name || 'Your child';
+    $('pSub').textContent = [d.username ? '@' + d.username : '', (d.classes || []).length ? '🏫 ' + d.classes.join(', ') : '', 'updated ' + day(updated)].filter(Boolean).join(' · ');
+    const lbl = { done:'✓ Done', lateDone:'✓ Done late', late:'⚠ Late — not done', pending:'… Not yet due', open:'… To do' };
+    const att = sd.attendance || null;
+    let h = '<div class="tiles">' +
+      '<div class="tile"><b>' + (d.pct || 0) + '%</b><span>of the course<br>' + (d.lessons || 0) + ' / ' + (d.total || 62) + ' lessons</span></div>' +
+      '<div class="tile"><b>' + (d.memorised || 0) + '</b><span>line' + (d.memorised === 1 ? '' : 's') + ' memorised' + ((d.memoWeek || []).length ? '<br>+' + d.memoWeek.length + ' this week' : '') + '</span></div>' +
+      '<div class="tile"><b>🔥 ' + ((d.streak && d.streak.count) || 0) + '</b><span>day streak<br>' + (d.streak && d.streak.last ? 'last ' + day(d.streak.last) : 'not started') + '</span></div>' +
+      '<div class="tile"><b>' + (att && att.total ? Math.round((att.present + att.late) / att.total * 100) + '%' : (d.certs || 0) + '/15') + '</b><span>' + (att && att.total ? 'attendance<br>' + att.total + ' sessions' : 'maps approved') + '</span></div></div>';
+    h += '<div class="card"><h2>📍 Where they are</h2><p style="margin:0 0 6px">Now on <b>' + esc(d.currentMap || 'Map 1') + '</b> · ' + (d.certs || 0) + ' of 15 maps approved by a teacher</p><div class="bar"><span style="width:' + (d.pct || 0) + '%"></span></div>' +
+      ((d.memoWeek || []).length ? '<p style="margin:10px 0 0">🧠 Memorised this week: <b>line ' + d.memoWeek.map(esc).join(', ') + '</b></p>' : '') + '</div>';
+    if((d.homework || []).length) h += '<div class="card"><h2>📚 Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.homework.map(x => '<tr><td>' + esc(x.title) + '</td><td>' + esc(day(x.due)) + '</td><td class="st-' + esc(x.status) + '">' + (lbl[x.status] || esc(x.status)) + (x.at ? ' <small class="muted">' + esc(day(x.at)) + '</small>' : '') + '</td></tr>').join('') + '</table></div>';
+    if(att && att.total) h += '<div class="card"><h2>📋 Attendance</h2><div class="att"><span class="pill">✅ Present ' + att.present + '</span><span class="pill">⏰ Late ' + att.late + '</span><span class="pill">❌ Absent ' + att.absent + '</span><span class="pill">📝 Excused ' + att.excused + '</span></div>' +
+      ((att.recent || []).length ? '<table><tr><th>Date</th><th>Class</th><th>Mark</th></tr>' + att.recent.map(r => '<tr><td>' + esc(day(r.date)) + '</td><td>' + esc(r.cls || '') + '</td><td>' + ({ present:'✅ Present', late:'⏰ Late', absent:'❌ Absent', excused:'📝 Excused' }[r.mark] || esc(r.mark)) + '</td></tr>').join('') + '</table>' : '') + '</div>';
+    if((d.badges || []).length) h += '<div class="card"><h2>🏅 Badges</h2><div class="badges">' + d.badges.map(b => '<span class="badge" title="' + esc(day(b.at)) + '">' + esc(b.icon) + ' ' + esc(b.name) + '</span>').join('') + '</div></div>';
+    if((d.notes || []).length) h += '<div class="card"><h2>💬 Teacher notes</h2>' + d.notes.map(n => '<div class="note"><small>' + esc(n.map) + (n.teacher ? ' · ' + esc(n.teacher) : '') + ' · ' + esc(day(n.at)) + '</small>' + esc(n.note) + '</div>').join('') + '</div>';
+    if((d.messages || []).length) h += '<div class="card"><h2>✉️ Recent messages with the teacher</h2>' + d.messages.map(m => '<div class="msg ' + (m.from === 'student' ? 'me' : '') + '">' + esc(m.text) + '<small>' + (m.from === 'student' ? esc(d.name || 'Student') : '🧑‍🏫 ' + esc(m.author || 'Teacher')) + ' · ' + esc(day(m.at)) + '</small></div>').join('') + '</div>';
+    if((d.quizzes || []).length) h += '<div class="card"><h2>📝 Teacher quizzes</h2><table><tr><th>Quiz</th><th>Best score</th><th>Last taken</th></tr>' + d.quizzes.map(q => '<tr><td>' + esc(q.title) + '</td><td>' + esc(q.best) + ' / ' + esc(q.total) + '</td><td>' + esc(day(q.at)) + '</td></tr>').join('') + '</table></div>';
+    if((d.maps || []).length) h += '<div class="card"><h2>🗺️ Maps</h2><table><tr><th>Map</th><th>Lessons</th><th>Challenge</th><th>Teacher check</th></tr>' + d.maps.map(m => '<tr><td>' + esc(m.name) + '</td><td>' + esc(m.done) + ' / ' + esc(m.count) + '</td><td>' + (m.challenge != null ? esc(m.challenge) + '/15' : '—') + '</td><td>' + (m.approved ? '✅' : '—') + '</td></tr>').join('') + '</table></div>';
+    $('main').innerHTML = h;
+  }
+})();
+</script>
+</body>
+</html>

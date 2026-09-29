@@ -276,6 +276,17 @@
   .hw-table td{padding:6px 4px;border-bottom:1px solid #f0e6cc}
   .hw-st{font-weight:700;white-space:nowrap}
   .hw-st.done{color:#2f6f55}.hw-st.late{color:#b5452b}.hw-st.lateDone{color:#8a5a00}.hw-st.pending{color:#6b5d44}
+  .rec-ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0}
+  .rec-row{border:1.5px solid #eadcb8;border-radius:14px;padding:10px 12px;margin-bottom:8px;background:#fffdf7}
+  .rec-row.student{border-left:5px solid #3b8fc4}.rec-row.teacher{border-left:5px solid #2f6f55}
+  .rec-row audio{width:100%;margin:6px 0 2px;height:36px}
+  .rec-row .fb{display:flex;gap:6px;margin-top:6px}.rec-row .fb input{flex:1;min-width:0}
+  .att-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0e6cc;flex-wrap:wrap}
+  .att-row .grow{flex:1;min-width:130px}
+  .att-btn{border:1.5px solid #e3d6b3;background:#fff;border-radius:10px;padding:5px 9px;font:inherit;font-size:13.5px;cursor:pointer}
+  .att-btn.on.present{background:#e3f3e5;border-color:#2f6f55}.att-btn.on.late{background:#fff1c9;border-color:#c9a653}.att-btn.on.absent{background:#ffe3d6;border-color:#b5452b}.att-btn.on.excused{background:#eef6ff;border-color:#3b8fc4}
+  .lb-box{background:#fffbef;border:1.5px dashed #d9b85c;border-radius:14px;padding:10px 12px;margin:10px 0}
+  .parent-link{display:flex;gap:6px;margin:10px 0}.parent-link input{flex:1;min-width:0;font:13px ui-monospace,monospace;padding:8px;border:1.5px solid #d9c9a3;border-radius:10px}
 </style>
 </head>
 <body>
@@ -342,6 +353,7 @@
       <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
       <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
       <button class="tab" data-tab="classes" role="tab">🏫 Classes <span class="count" id="tab-count-classes">0</span></button>
+      <button class="tab" data-tab="attendance" role="tab">📋 Attendance</button>
       <button class="tab" data-tab="homework" role="tab">📚 Homework <span class="count" id="tab-count-hw">0</span></button>
       <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
       <button class="tab" data-tab="announce" role="tab">📣 Announcements <span class="count" id="tab-count-ann">0</span></button>
@@ -374,6 +386,11 @@
         <div class="card">
           <h2>🌟 Leading learners</h2>
           <div id="leader-list"></div>
+        </div>
+        <div class="card">
+          <h2>🎙️ New recitations</h2>
+          <p class="muted" style="margin-top:-4px">Recordings students sent that no teacher has listened to yet.</p>
+          <div id="rec-inbox"><p class="muted">Loading…</p></div>
         </div>
         <div class="card" style="grid-column:1/-1">
           <h2>💬 Waiting for your reply</h2>
@@ -454,6 +471,9 @@
               <button class="btn ghost small" id="class-announce">📣 Announce to this class</button>
               <button class="btn ghost small" id="class-homework">📚 Homework for this class</button>
             </div>
+            <div class="lb-box"><label class="toggle"><input type="checkbox" id="class-leaderboard"> 🏆 Show a class leaderboard to students</label>
+              <div class="muted" style="font-size:13.5px;margin-top:4px">Students in this class see each other’s 🔥 streak, 🧠 lines memorised and ⭐ stars (names only). Turn it off any time.</div>
+              <div id="class-lb-preview"></div></div>
             <h3>Students <span class="muted" id="class-member-count"></span></h3>
             <div id="class-members"></div>
             <h3 style="margin-top:16px">Add students</h3>
@@ -463,6 +483,25 @@
             <button class="btn primary" id="class-add-btn">＋ Add selected</button>
             <div style="border-top:1px solid #eadcb8;margin-top:18px;padding-top:12px"><button class="btn danger small" id="class-delete">Delete class</button> <span class="muted">Students keep their progress; only the group is removed.</span></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE -->
+    <div class="tab-panel hidden" data-panel="attendance">
+      <div class="quiz-layout">
+        <div class="card">
+          <h2 style="margin-top:0">📋 Take attendance</h2>
+          <div class="row"><div class="field"><label for="att-class">Class</label><select id="att-class"></select></div><div class="field"><label for="att-date">Date</label><input type="date" id="att-date"></div></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"><button class="btn ghost small" id="att-all">✅ Everyone present</button><span class="muted" id="att-state" style="align-self:center"></span></div>
+          <div id="att-grid"></div>
+          <div class="field" style="margin-top:10px"><label for="att-note">Note (optional)</label><input id="att-note" maxlength="300" placeholder="e.g. Revision of lines 1–5"></div>
+          <button class="btn primary" id="att-save">💾 Save attendance</button>
+          <p class="msg" id="att-msg"></p>
+        </div>
+        <div>
+          <div class="card"><h2 style="margin-top:0">Sessions</h2><div id="att-history"></div></div>
+          <div class="card"><h2 style="margin-top:0">Each student</h2><div id="att-students"></div></div>
         </div>
       </div>
     </div>
@@ -477,6 +516,7 @@
             <option value="memorise">🧠 Memorise lines (Memorise mode, level 4)</option>
             <option value="lessons">▶ Finish lessons</option>
             <option value="quiz">📝 Pass a quiz</option>
+            <option value="record">🎙️ Record lines &amp; send to teacher</option>
             <option value="task">✏️ Other task (student ticks it)</option>
           </select></div>
           <div class="row" id="hw-lines-row">
@@ -713,6 +753,15 @@
 
 </div>
 
+<!-- PARENT LINK MODAL -->
+<div class="modal hidden" id="parent-modal" role="dialog" aria-modal="true" aria-labelledby="parent-title">
+  <div class="modal-panel" style="max-width:560px">
+    <div class="modal-head"><h2 id="parent-title" style="margin:0">👪 Parent link</h2><button class="btn ghost small" id="parent-close">✕ Close</button></div>
+    <p class="muted" id="parent-sub" style="margin-top:0"></p>
+    <div id="parent-body"><p class="muted">Preparing…</p></div>
+  </div>
+</div>
+
 <!-- STUDENT PROFILE MODAL -->
 <div class="modal hidden" id="student-modal" role="dialog" aria-modal="true" aria-labelledby="manage-title">
   <div class="modal-panel">
@@ -721,13 +770,14 @@
         <div class="avatar big" id="manage-avatar">🧒</div>
         <div><h1 id="manage-title" style="margin:0">Student</h1><p id="manage-sub" class="muted" style="margin:2px 0"></p><div id="manage-badges"></div></div>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn ghost small" id="modal-report">🖨️ Report</button><button class="btn sky small" id="modal-message">✉️ Message</button><button class="btn ghost small" id="close-modal">✕ Close</button></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn ghost small" id="modal-parent">👪 Parent link</button><button class="btn ghost small" id="modal-report">🖨️ Report</button><button class="btn sky small" id="modal-message">✉️ Message</button><button class="btn ghost small" id="close-modal">✕ Close</button></div>
     </div>
     <div class="subtabs" role="tablist">
       <button class="subtab active" data-sub="profile">👤 Profile</button>
       <button class="subtab" data-sub="progress">📈 Progress</button>
       <button class="subtab" data-sub="maps">🗺️ Maps &amp; certificates</button>
       <button class="subtab" data-sub="quizzes">📝 Quiz results</button>
+      <button class="subtab" data-sub="talqeen">🎙️ Talqeen</button>
       <button class="subtab" data-sub="account">⚙️ Account</button>
     </div>
 
@@ -797,6 +847,20 @@
       <div id="student-quiz-results"></div>
     </div>
 
+    <div class="sub-panel hidden" data-subpanel="talqeen">
+      <div class="card" style="margin-bottom:12px;box-shadow:none">
+        <h3 style="margin-top:0">🎙️ Record Talqeen for this student</h3>
+        <p class="muted" style="margin-top:-4px">Recite a line; it plays for this student under the map. Up to 60 seconds.</p>
+        <div class="row"><div class="field" style="max-width:120px"><label for="rec-line">Line</label><input id="rec-line" type="number" min="1" max="61" value="1"></div>
+          <div class="field" style="flex:3"><label for="rec-note">Note (optional)</label><input id="rec-note" maxlength="200" placeholder="e.g. Listen to the ghunnah on the noon"></div></div>
+        <div class="rec-ctl"><button class="btn primary" id="rec-start">⏺ Record</button><button class="btn danger hidden" id="rec-stop">⏹ Stop</button><span id="rec-time" class="muted"></span></div>
+        <div id="rec-preview"></div>
+        <p class="msg" id="rec-msg"></p>
+      </div>
+      <h3>Recordings</h3>
+      <div id="rec-list"><p class="muted">Loading…</p></div>
+    </div>
+
     <div class="sub-panel hidden" data-subpanel="account">
       <div class="teacher-work">
         <h3>Password</h3>
@@ -823,7 +887,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=14"></script>
+<script type="module" src="../kids-quest-cloud.js?v=15"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -967,7 +1031,8 @@ function summarize(s){
   else if(readyMaps.length) status = 'ready';
   else if(!hasCourse || lessons === 0) status = 'new';
   const hifz = Object.values(p.hifz && typeof p.hifz === 'object' ? p.hifz : {}).filter(h => h && Number(h.level) >= 4).length;
-  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
+  const badges = Object.keys(p.badges && typeof p.badges === 'object' ? p.badges : {}).length;
+  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, badges, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
 }
 function statusBadge(sum){
   return {
@@ -1082,7 +1147,7 @@ function renderStudentGrid(){
       '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
       '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
       '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.certs + '/15</b><small>certificates</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
-      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
+      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + (x.badges ? '<span class="role-badge warn">🏅 ' + x.badges + '</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
     el.onclick = () => openManager(s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
     el.onkeydown = e => { if(e.key === 'Enter') el.click(); };
     box.appendChild(el);
@@ -1094,6 +1159,7 @@ function showSub(name){
   document.querySelectorAll('.subtab').forEach(t => t.classList.toggle('active', t.dataset.sub === name));
   document.querySelectorAll('.sub-panel').forEach(p => p.classList.toggle('hidden', p.dataset.subpanel !== name));
   if(name === 'maps') requestAnimationFrame(() => { resizeSignature(); renderMapManager(); });
+  if(name === 'talqeen') renderTalqeen();
 }
 function openManager(student, sub, mapIndex){
   activeStudent = student; selectedMap = Number.isInteger(mapIndex) ? mapIndex : 0;
@@ -1101,7 +1167,7 @@ function openManager(student, sub, mapIndex){
   renderModal();
   showSub(sub || 'profile');
 }
-function closeManager(){ $('student-modal').classList.add('hidden'); document.body.style.overflow = ''; activeStudent = null; }
+function closeManager(){ if(teacherRec) teacherRec.stop(); $('student-modal').classList.add('hidden'); document.body.style.overflow = ''; activeStudent = null; }
 function renderModal(){
   if(!activeStudent) return;
   const x = summarize(activeStudent), s = activeStudent;
@@ -1640,6 +1706,7 @@ function renderClassDetail(){
   $('class-welcome').classList.toggle('hidden', !!c); $('class-detail').classList.toggle('hidden', !c);
   if(!c) return;
   $('class-name').value = c.name; $('class-code').textContent = c.id;
+  $('class-leaderboard').checked = !!c.leaderboard; renderLbPreview(c);
   $('class-sub').textContent = 'Teacher: ' + (c.teacherName || teacherDisplayName(c.teacherEmail)) + ' · created ' + fmtDate(c.createdAt);
   const members = c.studentUids.map(uid => studentsCache.find(s => s.uid === uid) || { uid, username: '(removed account)', missing: true });
   $('class-member-count').textContent = '(' + members.length + ')';
@@ -1762,17 +1829,18 @@ function hwStatus(h, s){
   if(done) return { key: e && new Date(done.at) > e ? 'lateDone' : 'done', at: done.at };
   return { key: hwPastDue(h) ? 'late' : 'pending' };
 }
-function hwKindLabel(h){ return { memorise:'🧠 Memorise', lessons:'▶ Lessons', quiz:'📝 Quiz', task:'✏️ Task' }[h.kind] || '✏️ Task'; }
+function hwKindLabel(h){ return { memorise:'🧠 Memorise', lessons:'▶ Lessons', quiz:'📝 Quiz', record:'🎙️ Recording', task:'✏️ Task' }[h.kind] || '✏️ Task'; }
 function hwAutoTitle(){
   const k = $('hw-kind').value, a = Number($('hw-from').value) || 1, b = Number($('hw-to').value) || a, r = a === b ? 'line ' + a : 'lines ' + Math.min(a, b) + '–' + Math.max(a, b);
   if(k === 'memorise') return 'Memorise ' + r;
+  if(k === 'record') return 'Record ' + r + ' and send it to your teacher';
   if(k === 'lessons') return 'Finish ' + r.replace('line', 'lesson for line').replace('lines', 'lessons for lines');
   if(k === 'quiz'){ const q = quizzesCache.find(x => x.id === $('hw-quiz').value); return q ? 'Pass the quiz “' + q.title + '”' : 'Pass the quiz'; }
   return '';
 }
 function syncHwForm(){
   const k = $('hw-kind').value;
-  $('hw-lines-row').classList.toggle('hidden', k !== 'memorise' && k !== 'lessons');
+  $('hw-lines-row').classList.toggle('hidden', k !== 'memorise' && k !== 'lessons' && k !== 'record');
   $('hw-quiz-row').classList.toggle('hidden', k !== 'quiz');
   $('hw-title').placeholder = hwAutoTitle() || 'e.g. Write the 4 rules of noon sakinah in your notebook';
 }
@@ -1795,7 +1863,7 @@ function startEditHw(h){
 }
 function submitHw(){
   const kind = $('hw-kind').value, from = Number($('hw-from').value), to = Number($('hw-to').value) || from;
-  if((kind === 'memorise' || kind === 'lessons') && !(from >= 1 && from <= 61 && to >= 1 && to <= 61)){ setMsg('hw-msg', 'Lines go from 1 to 61.', true); return; }
+  if((kind === 'memorise' || kind === 'lessons' || kind === 'record') && !(from >= 1 && from <= 61 && to >= 1 && to <= 61)){ setMsg('hw-msg', 'Lines go from 1 to 61.', true); return; }
   if(kind === 'quiz' && !$('hw-quiz').value){ setMsg('hw-msg', 'Make a quiz on the Quizzes tab first.', true); return; }
   const title = $('hw-title').value.trim() || hwAutoTitle();
   if(!title){ setMsg('hw-msg', 'Give the task a title.', true); return; }
@@ -1894,7 +1962,8 @@ function reportData(s){
     .filter(h => h.dueDate && Math.abs(daysAgo(h.dueDate + 'T12:00')) <= 14).map(h => ({ h, st: hwStatus(h, s) }))
     .sort((a, b) => String(a.h.dueDate).localeCompare(String(b.h.dueDate)));
   const notes = Object.entries((s.teacherNotes || {})[GAME_KEY] || {}).filter(([, n]) => n && n.note).map(([m, n]) => ({ map: Number(m), ...n })).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
-  return { x, p, memo, memoWeek, quizzes, quizzesWeek: quizzes.filter(q => daysAgo(q.at) <= 7), hw, notes, streak: streakOf(p), classes: classesOf(s.uid).map(c => c.name) };
+  const att = attendanceSummary(s.uid), badgeList = Object.values(p.badges && typeof p.badges === 'object' ? p.badges : {}).filter(b => b && b.name);
+  return { x, p, att, badgeList, badgesWeek: badgeList.filter(b => daysAgo(b.at) <= 7), memo, memoWeek, quizzes, quizzesWeek: quizzes.filter(q => daysAgo(q.at) <= 7), hw, notes, streak: streakOf(p), classes: classesOf(s.uid).map(c => c.name) };
 }
 function reportStudentPage(s){
   const d = reportData(s), x = d.x, name = s.fullName || s.displayName || s.username, e = escapeHtml;
@@ -1911,6 +1980,8 @@ function reportStudentPage(s){
     '<h2>This week</h2><ul class="week">' +
       '<li>🧠 ' + (d.memoWeek.length ? 'Memorised line' + (d.memoWeek.length > 1 ? 's ' : ' ') + d.memoWeek.map(k => lineOfLesson(Number(k))).join(', ') : 'No new lines memorised') + '</li>' +
       '<li>📝 ' + (d.quizzesWeek.length ? d.quizzesWeek.map(q => e(q.title) + ' ' + q.best + '/' + q.total).join(' · ') : 'No teacher quizzes taken') + '</li>' +
+      (d.att.total ? '<li>📋 Attendance: ' + d.att.present + ' present, ' + d.att.late + ' late, ' + d.att.absent + ' absent' + (d.att.excused ? ', ' + d.att.excused + ' excused' : '') + ' (' + d.att.total + ' sessions overall)</li>' : '') +
+      (d.badgesWeek.length ? '<li>🏅 New badges: ' + d.badgesWeek.map(b => e((b.icon || '') + ' ' + b.name)).join(', ') + '</li>' : '') +
       '<li>📚 Homework: ' + (d.hw.length ? hwDone + ' done' + (hwLate ? ', ' + hwLate + ' late' : '') + ' of ' + d.hw.length : 'none set') + '</li>' +
     '</ul>' +
     (d.hw.length ? '<h2>Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.hw.map(r => '<tr><td>' + e(r.h.title) + '</td><td>' + e(fmtDay(r.h.dueDate)) + '</td><td class="st-' + r.st.key + '">' + lbl[r.st.key] + (r.st.at ? ' <small>' + e(fmtDay(r.st.at)) + '</small>' : '') + '</td></tr>').join('') + '</table>' : '') +
@@ -1929,9 +2000,9 @@ function lineOfLesson(i){ for(let m = 0; m < MAPS.length; m++){ const [, range, 
 function reportSummaryPage(list, title){
   const e = escapeHtml, rows = list.map(s => ({ s, d: reportData(s) }));
   return '<section class="page"><header><div><div class="brand">Diin Islaam · Tuhfatul Atfaal</div><h1>' + e(title || 'Class') + ' — weekly summary</h1><div class="sub">' + list.length + ' student' + (list.length === 1 ? '' : 's') + '</div></div><div class="when">Week ending<br><b>' + e(fmtDay(new Date().toISOString())) + '</b></div></header>' +
-    '<table><tr><th>Student</th><th>Course</th><th>Memorised</th><th>This week</th><th>Streak</th><th>Homework (2 wks)</th><th>Maps ✓</th></tr>' +
+    '<table><tr><th>Student</th><th>Course</th><th>Memorised</th><th>This week</th><th>Streak</th><th>Attendance</th><th>Homework (2 wks)</th><th>Maps ✓</th></tr>' +
     rows.map(({ s, d }) => { const hd = d.hw.filter(r => r.st.key === 'done' || r.st.key === 'lateDone').length, hl = d.hw.filter(r => r.st.key === 'late').length;
-      return '<tr><td><b>' + e(s.displayName || s.username) + '</b></td><td>' + d.x.pct + '%</td><td>' + d.memo.length + '</td><td>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' lines' : '—') + (d.quizzesWeek.length ? ', ' + d.quizzesWeek.length + ' quiz' + (d.quizzesWeek.length > 1 ? 'zes' : '') : '') + '</td><td>' + (d.streak.count ? '🔥 ' + d.streak.count : '—') + '</td><td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '—') + '</td><td>' + d.x.certs + '</td></tr>'; }).join('') +
+      return '<tr><td><b>' + e(s.displayName || s.username) + '</b></td><td>' + d.x.pct + '%</td><td>' + d.memo.length + '</td><td>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' lines' : '—') + (d.quizzesWeek.length ? ', ' + d.quizzesWeek.length + ' quiz' + (d.quizzesWeek.length > 1 ? 'zes' : '') : '') + '</td><td>' + (d.streak.count ? '🔥 ' + d.streak.count : '—') + '</td><td>' + (d.att.total ? Math.round((d.att.present + d.att.late) / d.att.total * 100) + '%' + (d.att.absent ? ' <span class="st-late">(' + d.att.absent + ' absent)</span>' : '') : '—') + '</td><td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '—') + '</td><td>' + d.x.certs + '</td></tr>'; }).join('') +
     '</table><p class="muted">Each student’s own page follows.</p></section>';
 }
 function openReport(list, title){
@@ -1951,8 +2022,232 @@ function openReport(list, title){
   w.document.close();
 }
 
+/* ===================== voice recording (shared) ===================== */
+function pickAudioMime(){
+  const c = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+  return window.MediaRecorder && MediaRecorder.isTypeSupported ? (c.find(t => MediaRecorder.isTypeSupported(t)) || '') : '';
+}
+/* start() asks for the microphone and records until stop() or 60 s;
+   onDone gets a compact data: URL (about 3 KB a second) ready to save. */
+function makeRecorder(opts){
+  let rec = null, stream = null, chunks = [], t0 = 0, timer = null;
+  const api = {
+    start(){
+      if(!navigator.mediaDevices || !window.MediaRecorder) return Promise.reject(new Error('This browser can’t record audio. Try Chrome, Edge or a recent Safari.'));
+      return navigator.mediaDevices.getUserMedia({ audio: true }).then(st => {
+        stream = st; const mime = pickAudioMime();
+        rec = new MediaRecorder(st, Object.assign({ audioBitsPerSecond: 24000 }, mime ? { mimeType: mime } : {}));
+        chunks = []; rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+        rec.onstop = () => {
+          clearInterval(timer); stream.getTracks().forEach(t => t.stop());
+          const type = (rec.mimeType || mime || 'audio/webm').split(';')[0], blob = new Blob(chunks, { type }), dur = (Date.now() - t0) / 1000, fr = new FileReader();
+          fr.onload = () => opts.onDone(blob, String(fr.result).replace(/^data:[^,]*,/, 'data:' + type + ';base64,'), dur); fr.readAsDataURL(blob);
+        };
+        rec.start(250); t0 = Date.now();
+        timer = setInterval(() => { const sec = (Date.now() - t0) / 1000; if(opts.onTick) opts.onTick(sec); if(sec >= (opts.max || 60)) api.stop(); }, 250);
+      });
+    },
+    stop(){ if(rec && rec.state !== 'inactive') rec.stop(); },
+    active(){ return !!(rec && rec.state === 'recording'); }
+  };
+  return api;
+}
+function fmtSec(sec){ sec = Math.round(sec); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+
+/* ===================== Talqeen recordings ===================== */
+let teacherRec = null, pendingRec = null, recCache = {};
+function renderTalqeen(){
+  const s = activeStudent; if(!s) return;
+  $('rec-list').innerHTML = '<p class="muted">Loading…</p>';
+  window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list; if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
+    .catch(err => { $('rec-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+function renderRecList(){
+  const s = activeStudent, list = recCache[s.uid] || [], box = $('rec-list');
+  box.innerHTML = list.length ? '' : '<p class="muted">No recordings yet. Record a line above, or ask the student to send one from Tajweed Quest.</p>';
+  list.forEach(r => {
+    const el = document.createElement('div'); el.className = 'rec-row ' + r.from;
+    el.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><b>' + (r.from === 'teacher' ? '🧑‍🏫 ' + escapeHtml(r.authorName || 'Teacher') : '🧒 ' + escapeHtml(s.displayName || s.username)) + '</b><span class="role-badge info">Line ' + escapeHtml(r.line || '?') + '</span>' +
+      '<span class="muted">' + fmtTime(r.createdAt) + (r.duration ? ' · ' + fmtSec(r.duration) : '') + '</span>' +
+      (r.from === 'student' ? (r.heard ? '<span class="role-badge ok">✓ Listened</span>' : '<span class="role-badge warn">New</span>') : (r.heard ? '<span class="role-badge ok">Student listened ✓</span>' : '<span class="role-badge">Not played yet</span>')) +
+      '<button class="btn danger small" data-del style="margin-left:auto">Delete</button></div>' +
+      (r.note ? '<div class="muted" style="margin-top:4px">' + escapeHtml(r.note) + '</div>' : '') + '<audio controls preload="none" src="' + escapeHtml(r.data) + '"></audio>' +
+      (r.from === 'student' ? (r.feedback ? '<div style="margin-top:4px">💬 <b>Feedback:</b> ' + escapeHtml(r.feedback) + '</div>' : '') +
+        '<div class="fb"><input maxlength="500" placeholder="' + (r.feedback ? 'Change feedback…' : 'Feedback for the student, e.g. “Great madd! Hold the ghunnah longer.”') + '"><button class="btn primary small">Send</button></div>' : '');
+    const audio = el.querySelector('audio');
+    if(r.from === 'student' && !r.heard) audio.addEventListener('play', () => { window.KidsCloud.markRecording(r.id, { heard: true }).then(() => { r.heard = true; loadRecInbox(); }).catch(() => {}); }, { once: true });
+    const fb = el.querySelector('.fb');
+    if(fb){ const send = () => { const t = fb.querySelector('input').value.trim(); if(!t) return;
+      window.KidsCloud.markRecording(r.id, { heard: true, feedback: t, feedbackBy: $('certificate-teacher').dataset.me || '' }).then(() => { r.heard = true; r.feedback = t; toast('Feedback sent'); renderRecList(); loadRecInbox(); }).catch(err => alert(friendlyError(err))); };
+      fb.querySelector('button').onclick = send; fb.querySelector('input').onkeydown = e => { if(e.key === 'Enter') send(); }; }
+    el.querySelector('[data-del]').onclick = () => { if(!confirm('Delete this recording?')) return;
+      window.KidsCloud.deleteRecording(r.id).then(() => { recCache[s.uid] = list.filter(x => x.id !== r.id); renderRecList(); loadRecInbox(); }).catch(err => alert(friendlyError(err))); };
+    box.appendChild(el);
+  });
+}
+function wireTeacherRecorder(){
+  teacherRec = makeRecorder({
+    onTick: sec => { $('rec-time').textContent = '⏺ ' + fmtSec(sec) + ' / 1:00'; },
+    onDone: (blob, dataUrl, dur) => {
+      $('rec-start').classList.remove('hidden'); $('rec-stop').classList.add('hidden'); $('rec-time').textContent = '';
+      pendingRec = { dataUrl, dur };
+      $('rec-preview').innerHTML = '<audio controls src="' + dataUrl + '" style="width:100%;margin:6px 0"></audio><div class="rec-ctl"><button class="btn primary" id="rec-send">📤 Send to ' + escapeHtml(activeStudent ? (activeStudent.displayName || activeStudent.username) : 'student') + '</button><button class="btn ghost" id="rec-discard">Discard</button><span class="muted">' + fmtSec(dur) + ' · ' + Math.round(dataUrl.length / 1024) + ' KB</span></div>';
+      $('rec-discard').onclick = () => { pendingRec = null; $('rec-preview').innerHTML = ''; };
+      $('rec-send').onclick = sendTeacherRecording;
+    }
+  });
+  $('rec-start').onclick = () => {
+    pendingRec = null; $('rec-preview').innerHTML = ''; setMsg('rec-msg', '');
+    teacherRec.start().then(() => { $('rec-start').classList.add('hidden'); $('rec-stop').classList.remove('hidden'); })
+      .catch(err => setMsg('rec-msg', err && err.name === 'NotAllowedError' ? 'Microphone permission was blocked. Allow the microphone for this site and try again.' : (err.message || 'Could not start recording.'), true));
+  };
+  $('rec-stop').onclick = () => teacherRec.stop();
+}
+function sendTeacherRecording(){
+  const s = activeStudent, line = Number($('rec-line').value);
+  if(!s || !pendingRec) return;
+  if(!(line >= 1 && line <= 61)){ setMsg('rec-msg', 'Choose a line from 1 to 61.', true); return; }
+  $('rec-send').disabled = true; setMsg('rec-msg', 'Sending…');
+  window.KidsCloud.saveRecording({ studentUid: s.uid, from: 'teacher', game: GAME_KEY, line, note: $('rec-note').value, data: pendingRec.dataUrl, duration: pendingRec.dur, authorName: $('certificate-teacher').dataset.me || '', studentName: s.displayName || s.username })
+    .then(() => { pendingRec = null; $('rec-preview').innerHTML = ''; $('rec-note').value = ''; setMsg('rec-msg', 'Sent ✓ It plays for ' + (s.displayName || s.username) + ' under “From your teacher → Talqeen”.'); toast('Recording sent'); renderTalqeen(); })
+    .catch(err => { setMsg('rec-msg', friendlyError(err), true); $('rec-send').disabled = false; });
+}
+function loadRecInbox(){
+  if(!window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
+  return window.KidsCloud.listUnheardStudentRecordings().then(list => {
+    const box = $('rec-inbox'), mine = list.filter(r => studentsCache.some(s => s.uid === r.studentUid));
+    box.innerHTML = mine.length ? '' : '<p class="empty">No new recitations. 🌟</p>';
+    mine.slice(0, 8).forEach(r => { const s = studentsCache.find(x => x.uid === r.studentUid), el = document.createElement('div'); el.className = 'list-row';
+      el.innerHTML = '<div class="grow"><div class="sub" style="font-size:15px;color:var(--ink-brown)">🎙️ <b>' + escapeHtml(s.displayName || s.username) + '</b> recited line ' + escapeHtml(r.line) + (r.duration ? ' · ' + fmtSec(r.duration) : '') + '</div><div class="sub">' + fmtTime(r.createdAt) + '</div></div><button class="btn primary small">Listen →</button>';
+      el.onclick = () => openManager(s, 'talqeen'); box.appendChild(el); });
+  }).catch(() => { $('rec-inbox').innerHTML = '<p class="muted">Recordings will appear here once the new Firestore rules are published.</p>'; });
+}
+
+/* ===================== attendance ===================== */
+let attendanceCache = [], attMarks = {};
+const ATT_MARKS = [['present', '✅ Present'], ['late', '⏰ Late'], ['absent', '❌ Absent'], ['excused', '📝 Excused']];
+function loadAttendance(){
+  if(!window.KidsCloud.listAttendance) return Promise.resolve();
+  return window.KidsCloud.listAttendance().then(list => { attendanceCache = list; renderAttendance(); loadAttSession(); })
+    .catch(() => { attendanceCache = []; renderAttendance(); });
+}
+function attendanceSummary(uid){
+  const out = { present: 0, late: 0, absent: 0, excused: 0, total: 0, recent: [] };
+  attendanceCache.forEach(a => { const m = a.marks && a.marks[uid]; if(!m || out[m] == null) return; out[m]++; out.total++; if(out.recent.length < 8) out.recent.push({ date: a.date, cls: className(a.classId), mark: m }); });
+  return out;
+}
+function fillAttClass(){
+  const sel = $('att-class'), keep = sel.value, list = targetClasses();
+  sel.innerHTML = list.length ? list.map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(classOptionLabel(c)) + '</option>').join('') : '<option value="">Create a class first (Classes tab)</option>';
+  if([...sel.options].some(o => o.value === keep)) sel.value = keep;
+}
+function loadAttSession(){
+  const c = classById($('att-class').value), date = $('att-date').value, a = c && attendanceCache.find(x => x.id === c.id + '_' + date);
+  attMarks = a ? Object.assign({}, a.marks) : {}; $('att-note').value = a ? (a.note || '') : '';
+  $('att-state').textContent = !c ? '' : a ? 'Saved session — change and save again to update it.' : 'New session';
+  renderAttGrid();
+}
+function renderAttGrid(){
+  const c = classById($('att-class').value), box = $('att-grid');
+  if(!c){ box.innerHTML = '<p class="muted">Choose a class.</p>'; return; }
+  const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean).sort((a, b) => String(a.displayName || a.username).localeCompare(String(b.displayName || b.username)));
+  box.innerHTML = members.length ? '' : '<p class="muted">No students in this class yet.</p>';
+  members.forEach(s => {
+    const el = document.createElement('div'); el.className = 'att-row';
+    el.innerHTML = '<div class="grow"><b>' + escapeHtml(s.displayName || s.username) + '</b> <span class="muted">@' + escapeHtml(s.username) + '</span></div>' +
+      ATT_MARKS.map(([k, l]) => '<button class="att-btn ' + k + (attMarks[s.uid] === k ? ' on' : '') + '" data-mark="' + k + '">' + l + '</button>').join('');
+    el.querySelectorAll('[data-mark]').forEach(b => b.onclick = () => { if(attMarks[s.uid] === b.dataset.mark) delete attMarks[s.uid]; else attMarks[s.uid] = b.dataset.mark; renderAttGrid(); });
+    box.appendChild(el);
+  });
+}
+function renderAttendance(){
+  if(!$('att-class')) return;
+  fillAttClass();
+  const c = classById($('att-class').value);
+  const sessions = c ? attendanceCache.filter(a => a.classId === c.id) : [];
+  $('att-history').innerHTML = sessions.length ? '<table class="hw-table"><tr><th>Date</th><th>✅</th><th>⏰</th><th>❌</th><th>📝</th><th></th></tr>' + sessions.map(a => {
+    const v = Object.values(a.marks || {}), n = k => v.filter(x => x === k).length;
+    return '<tr><td>' + escapeHtml(fmtDay(a.date)) + (a.note ? '<br><span class="muted">' + escapeHtml(a.note) + '</span>' : '') + '</td><td>' + n('present') + '</td><td>' + n('late') + '</td><td>' + n('absent') + '</td><td>' + n('excused') + '</td><td style="text-align:right;white-space:nowrap"><button class="linkbtn" data-edit="' + escapeHtml(a.date) + '">Edit</button> · <button class="linkbtn" data-deld="' + escapeHtml(a.id) + '">Delete</button></td></tr>'; }).join('') + '</table>' : '<p class="muted">No sessions saved for this class yet.</p>';
+  $('att-history').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { $('att-date').value = b.dataset.edit; loadAttSession(); });
+  $('att-history').querySelectorAll('[data-deld]').forEach(b => b.onclick = () => { if(!confirm('Delete this attendance session?')) return;
+    window.KidsCloud.deleteAttendance(b.dataset.deld).then(() => { attendanceCache = attendanceCache.filter(a => a.id !== b.dataset.deld); renderAttendance(); loadAttSession(); toast('Session deleted'); }).catch(err => alert(friendlyError(err))); });
+  const members = c ? c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean) : [];
+  $('att-students').innerHTML = members.length && sessions.length ? '<table class="hw-table"><tr><th>Student</th><th>Attended</th><th>Absent</th></tr>' + members.map(s => {
+    const marks = sessions.map(a => a.marks && a.marks[s.uid]).filter(Boolean), came = marks.filter(m => m === 'present' || m === 'late').length, abs = marks.filter(m => m === 'absent').length;
+    return '<tr><td>' + escapeHtml(s.displayName || s.username) + '</td><td>' + (marks.length ? Math.round(came / marks.length * 100) + '% <span class="muted">(' + came + '/' + marks.length + ')</span>' : '—') + '</td><td class="' + (abs ? 'hw-st late' : '') + '">' + abs + '</td></tr>'; }).join('') + '</table>' : '<p class="muted">Attendance per student appears after the first session.</p>';
+}
+function saveAtt(){
+  const c = classById($('att-class').value), date = $('att-date').value;
+  if(!c || !date){ setMsg('att-msg', 'Choose a class and a date.', true); return; }
+  const unmarked = c.studentUids.filter(u => studentsCache.some(s => s.uid === u) && !attMarks[u]).length;
+  if(unmarked && !confirm(unmarked + ' student' + (unmarked > 1 ? 's are' : ' is') + ' not marked. Save anyway?')) return;
+  $('att-save').disabled = true; setMsg('att-msg', 'Saving…');
+  const note = $('att-note').value;
+  window.KidsCloud.saveAttendance({ classId: c.id, date, marks: attMarks, note }).then(id => {
+    const rec = { id, classId: c.id, date, marks: Object.assign({}, attMarks), note };
+    attendanceCache = [rec].concat(attendanceCache.filter(a => a.id !== id)).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    setMsg('att-msg', 'Saved ✓ ' + fmtDay(date)); toast('Attendance saved'); renderAttendance(); loadAttSession();
+    // keep parent pages' attendance up to date
+    c.studentUids.forEach(u => { const s = studentsCache.find(x => x.uid === u); if(s && s.parentToken) window.KidsCloud.writeParentSummary(s.parentToken, s.uid, { staffData: { attendance: attendanceSummary(s.uid) } }).catch(() => {}); });
+  }).catch(err => setMsg('att-msg', friendlyError(err), true)).finally(() => { $('att-save').disabled = false; });
+}
+
+/* ===================== leaderboard switch ===================== */
+function renderLbPreview(c){
+  const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean).map(summarize)
+    .sort((a, b) => b.hifz - a.hifz || b.stars - a.stars).slice(0, 5);
+  $('class-lb-preview').innerHTML = c.leaderboard && members.length ? '<div style="margin-top:8px;font-size:14px">' + members.map((x, i) => (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + escapeHtml(x.s.displayName || x.s.username) + ' — 🧠 ' + x.hifz + ' · ⭐ ' + x.stars).join('<br>') + '</div>' : '';
+}
+
+/* ===================== parent link ===================== */
+const PARENT_URL = 'https://diinislaam.com/tuhfatul-atfaal/parent/?c=';
+function parentDataFor(s, msgs){
+  const d = reportData(s), x = d.x, p = d.p;
+  return {
+    name: s.fullName || s.displayName || s.username, username: s.username, classes: d.classes,
+    pct: x.pct, lessons: x.lessons, total: TOTAL_LESSONS, memorised: d.memo.length, memoWeek: d.memoWeek.map(k => lineOfLesson(Number(k))),
+    streak: d.streak, certs: x.certs, currentMap: mapLabel(x.currentMap),
+    homework: d.hw.map(r => ({ title: r.h.title, due: r.h.dueDate, status: r.st.key, at: r.st.at || '' })),
+    quizzes: d.quizzes.slice(0, 8).map(q => ({ title: q.title, best: q.best, total: q.total, at: q.at || '' })),
+    notes: d.notes.slice(0, 5).map(n => ({ map: mapLabel(n.map), teacher: n.teacherName || '', note: n.note, at: n.at || '' })),
+    maps: MAPS.map((m, i) => { const q = p.mapQuizScores[i], a = p.teacherAssessments[i], done = mapLessonsDone(p, i);
+      return (done || q || (a && a.approved) || i <= x.currentMap) ? { name: 'Map ' + (i + 1) + ' · ' + m[0], done, count: m[3], challenge: q ? q.score : null, approved: !!(a && a.approved) } : null; }).filter(Boolean),
+    badges: d.badgeList.map(b => ({ icon: b.icon || '🏅', name: b.name, at: b.at || '' })),
+    messages: (msgs || []).slice(-5).map(m => ({ from: m.from, author: m.authorName || '', text: m.text, at: m.createdAt || '' }))
+  };
+}
+function openParentLink(s, reset){
+  $('parent-modal').classList.remove('hidden');
+  $('parent-sub').textContent = 'A private, read-only page for ' + (s.displayName || s.username) + '’s parents: progress, homework, attendance, badges, teacher notes and messages.';
+  $('parent-body').innerHTML = '<p class="muted">Preparing the link…</p>';
+  const tokenP = reset ? window.KidsCloud.adminResetParentToken(s.uid, s.parentToken) : window.KidsCloud.adminEnsureParentToken(s.uid, s.parentToken);
+  tokenP.then(token => { s.parentToken = token;
+    return window.KidsCloud.getMessages(s.uid).catch(() => []).then(msgs => window.KidsCloud.writeParentSummary(token, s.uid, { data: parentDataFor(s, msgs), staffData: { attendance: attendanceSummary(s.uid) } })).then(() => token);
+  }).then(token => {
+    const url = PARENT_URL + token, text = 'Assalāmu ʿalaykum. You can follow ' + (s.displayName || s.username) + '’s Tajweed progress here (private link, please don’t share): ' + url;
+    $('parent-body').innerHTML = '<div class="parent-link"><input readonly value="' + escapeHtml(url) + '" id="parent-url"><button class="btn primary small" id="parent-copy">📋 Copy</button></div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sky small" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(text) + '">💬 Send on WhatsApp</a><a class="btn ghost small" target="_blank" rel="noopener" href="' + escapeHtml(url) + '">👁️ Open it</a><button class="btn danger small" id="parent-reset" style="margin-left:auto">↻ Reset link</button></div>' +
+      '<p class="muted" style="font-size:13.5px;margin-top:12px">The page updates itself whenever ' + escapeHtml(s.displayName || s.username) + ' uses Tajweed Quest, and when you save attendance. “Reset link” stops the old link working (use it if it was shared by mistake).</p>';
+    $('parent-copy').onclick = () => { const i = $('parent-url'); i.select(); (navigator.clipboard ? navigator.clipboard.writeText(i.value) : Promise.reject()).then(() => toast('Link copied')).catch(() => document.execCommand('copy')); };
+    $('parent-reset').onclick = () => { if(confirm('Make a new link? The old one will stop working.')) openParentLink(s, true); };
+  }).catch(err => { $('parent-body').innerHTML = '<p class="msg error">' + escapeHtml(friendlyError(err)) + '</p>'; });
+}
+
+function wireExtras(){
+  wireTeacherRecorder();
+  $('modal-parent').onclick = () => { if(activeStudent) openParentLink(activeStudent, false); };
+  $('parent-close').onclick = () => $('parent-modal').classList.add('hidden');
+  $('att-date').value = isoDate(new Date());
+  $('att-class').onchange = () => { renderAttendance(); loadAttSession(); };
+  $('att-date').onchange = loadAttSession;
+  $('att-all').onclick = () => { const c = classById($('att-class').value); if(!c) return; c.studentUids.forEach(u => { if(studentsCache.some(s => s.uid === u)) attMarks[u] = 'present'; }); renderAttGrid(); };
+  $('att-save').onclick = saveAtt;
+  $('class-leaderboard').onchange = () => { const c = classById(activeClassId); if(!c) return; const on = $('class-leaderboard').checked;
+    window.KidsCloud.adminUpdateClass(c.id, { leaderboard: on }).then(() => { c.leaderboard = on; renderLbPreview(c); toast(on ? 'Leaderboard on for ' + c.name : 'Leaderboard off'); }).catch(err => { $('class-leaderboard').checked = !on; alert(friendlyError(err)); }); };
+}
+
 /* ===================== data loading ===================== */
-function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); renderHomeworkList(); fillHwQuiz(); }
+function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); renderHomeworkList(); fillHwQuiz(); renderAttendance(); loadRecInbox(); }
 function loadStudents(){
   return window.KidsCloud.adminListStudents().then(list => {
     // Teacher logins that once opened a quest game get a student record too
@@ -1972,7 +2267,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -2040,6 +2335,7 @@ function showDashboard(info){
   loadStudents();
   loadClasses();
   loadHomework();
+  loadAttendance();
   loadQuizzes();
   loadAnnouncements();
   loadThreads();
@@ -2100,6 +2396,7 @@ function wire(){
   $('broadcast-send').onclick = sendBroadcast;
   wireClasses();
   wireHomework();
+  wireExtras();
   $('student-report').onclick = () => { if(!lastGridStudents.length){ toast('No students shown'); return; } openReport(lastGridStudents, $('student-class').value && $('student-class').value !== '*mine' ? className($('student-class').value) : 'Students'); };
   $('modal-report').onclick = () => { if(activeStudent) openReport([activeStudent], ''); };
   $('class-report').onclick = () => { const c = classById(activeClassId); if(!c) return; const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean); if(!members.length){ toast('This class has no students yet'); return; } openReport(members, c.name); };
