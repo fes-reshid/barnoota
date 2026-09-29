@@ -877,9 +877,11 @@ function closeReadingGuard(){if(readingGuardTimer){clearInterval(readingGuardTim
 function advanceToNextActivity(targetStep){step=targetStep===null?step+1:targetStep;if(targetStep===6)hintReturn=false;renderLesson()}
 function requestNextActivity(targetStep){
  const elapsed=Math.floor((Date.now()-activityStartedAt)/1000);
- if(elapsed>=30){advanceToNextActivity(targetStep);return}
- openReadingGuard(Math.max(1,30-elapsed),targetStep)
+ if(elapsed>=READING_SECONDS){advanceToNextActivity(targetStep);return}
+ openReadingGuard(Math.max(1,READING_SECONDS-elapsed),targetStep)
 }
+/* How long a first-time reader must stay on the reading before the next activity. */
+var READING_SECONDS=19;
 function openReadingGuard(seconds,targetStep){
  closeReadingGuard();
  const advice=step===1?'Before moving on, open Explanation, Explore Words and Practise. Stay on each section and read it carefully.':'Read the Arabic and English carefully. Take your time so you can remember what you learned.';
