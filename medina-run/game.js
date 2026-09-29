@@ -51,6 +51,21 @@ function syncControls(){syncBoost();
 }
 function resize(){dpr=Math.min(devicePixelRatio||1,2);let r=canvas.getBoundingClientRect();W=r.width;H=r.height;canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
 function audio(type){if(!state.sound)return;try{const ac=audio.ac||(audio.ac=new (window.AudioContext||window.webkitAudioContext)());if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type=type==='bad'?'triangle':'sine';o.frequency.setValueAtTime(type==='bad'?220:620,t);o.frequency.exponentialRampToValueAtTime(type==='bad'?130:940,t+.16);g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.22)}catch(e){}}
+function jumpSound(){
+ if(!state.sound)return;
+ try{
+  const ac=audio.ac||(audio.ac=new(window.AudioContext||window.webkitAudioContext)());
+  if(ac.state==='suspended')ac.resume();
+  const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();
+  o.type='triangle';o.frequency.setValueAtTime(240,t);
+  o.frequency.exponentialRampToValueAtTime(570,t+.12);
+  o.frequency.exponentialRampToValueAtTime(400,t+.25);
+  g.gain.setValueAtTime(.001,t);
+  g.gain.exponentialRampToValueAtTime(.11,t+.025);
+  g.gain.exponentialRampToValueAtTime(.001,t+.27);
+  o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.28);
+ }catch(e){}
+}
 function renderUI(){
  travelSound(0);syncControls();
  $('starCount').textContent='✦ '+state.stars;$('bestCount').textContent='🏆 '+state.best;
@@ -193,7 +208,7 @@ function action(a){
  if(a==='left')state.targetLane=Math.max(0,state.targetLane-1);
  if(a==='right')state.targetLane=Math.min(2,state.targetLane+1);
  if(isDriving()){if(a==='brake'||a==='slide')state.brake=1.2;return}
- if(a==='jump'&&!state.jump){state.jump=.8;state.slide=0}
+ if(a==='jump'&&!state.jump){state.jump=.8;state.slide=0;jumpSound()}
  if(a==='slide'&&!state.slide){state.slide=.65;state.jump=0}
 }
 const keyActions={b:'boost',B:'boost',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',ArrowUp:'jump',w:'jump',' ':'jump',ArrowDown:'slide',s:'slide'};
