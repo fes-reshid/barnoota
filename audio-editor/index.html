@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="editor.css?v=202609280642">
+<link rel="stylesheet" href="editor.css?v=202609291154">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#2e6b58">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
@@ -19,6 +19,39 @@
 <script>/* theme and language before first paint */try{var t=localStorage.getItem('ae-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;var l=localStorage.getItem('ae-lang');if(l==='ar'){document.documentElement.lang='ar';document.documentElement.dir='rtl';}else if(l==='om')document.documentElement.lang='om';}catch(e){}</script>
 </head>
 <body>
+
+<!-- Purpose reminder: shown once per browser before the editor can be used. A native <dialog>
+     so it gets real focus-trapping and top-layer rendering; see consent.js right below it (kept
+     this early, ahead of the app's own scripts at the end of the body, so it opens before the
+     page has painted — no flash of the app for someone who hasn't agreed yet).
+     Wording note for the site owner: the Qur'an and hadith references below are commonly cited
+     and sourced, but please check the exact translation against your preferred mushaf/rendering
+     before relying on it, since precise wording matters here. -->
+<dialog id="consentGate" class="dlg" aria-labelledby="consentTitle">
+  <h1 id="consentTitle">Before you begin — please read</h1>
+  <div id="consentBody">
+    <p>This audio editor was built for <strong>halal use</strong> — reciting and checking Qur'an, dawah and lessons, lectures, podcasts, family recordings, and other permissible, work-related purposes.</p>
+    <p><strong>It is not for music or any haram use.</strong> If you use it for music or anything unlawful, that is between you and Allah — the one who made it is not responsible for it before Allah.</p>
+    <blockquote>
+      <p lang="ar" dir="rtl">فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ ﴿٧﴾ وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ ﴿٨﴾</p>
+      <p>"So whoever does an atom's weight of good will see it, and whoever does an atom's weight of evil will see it." — <cite>Surah Az-Zalzalah 99:7–8</cite></p>
+    </blockquote>
+    <blockquote>
+      <p>"The halal is clear and the haram is clear, and between them are doubtful matters that many people do not know…" — <cite>Hadith of Nu'man ibn Bashir, agreed upon (Bukhari &amp; Muslim)</cite></p>
+    </blockquote>
+    <blockquote>
+      <p>"Fear Allah wherever you are…" — <cite>Hadith narrated by Abu Dharr (Tirmidhi)</cite></p>
+    </blockquote>
+    <p class="consent-check-row">
+      <label><input type="checkbox" id="consentCheck"> I have read this, and I agree to use this tool only for halal purposes. I understand I am responsible before Allah for how I use it.</label>
+    </p>
+  </div>
+  <div class="consent-actions">
+    <button type="button" id="consentDecline" class="btn">I Do Not Agree — Leave</button>
+    <button type="button" id="consentAgree" class="btn primary" disabled>I Agree &amp; Continue</button>
+  </div>
+</dialog>
+<script src="consent.js?v=202609291154"></script>
 
 <header class="site">
   <div class="nav-row">
@@ -592,20 +625,20 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="busy">Working…</div>
 
-<script src="editor.js?v=202609280642"></script>
-<script src="editor-audio.js?v=202609280642"></script>
-<script src="editor-multitrack.js?v=202609280642"></script>
-<script src="editor-tools.js?v=202609280642"></script>
-<script src="editor-ui.js?v=202609280642"></script>
-<script src="compat.js?v=202609280642"></script>
-<script src="save-extras.js?v=202609280642"></script>
-<script src="autosave.js?v=202609280642"></script>
-<script src="recitation.js?v=202609280642"></script>
-<script src="editing-extras.js?v=202609280642"></script>
-<script src="sound-tools.js?v=202609280642"></script>
-<script src="i18n.js?v=202609280642"></script>
-<script src="ui-prefs.js?v=202609280642"></script>
-<script src="app-install.js?v=202609280642"></script>
+<script src="editor.js?v=202609291154"></script>
+<script src="editor-audio.js?v=202609291154"></script>
+<script src="editor-multitrack.js?v=202609291154"></script>
+<script src="editor-tools.js?v=202609291154"></script>
+<script src="editor-ui.js?v=202609291154"></script>
+<script src="compat.js?v=202609291154"></script>
+<script src="save-extras.js?v=202609291154"></script>
+<script src="autosave.js?v=202609291154"></script>
+<script src="recitation.js?v=202609291154"></script>
+<script src="editing-extras.js?v=202609291154"></script>
+<script src="sound-tools.js?v=202609291154"></script>
+<script src="i18n.js?v=202609291154"></script>
+<script src="ui-prefs.js?v=202609291154"></script>
+<script src="app-install.js?v=202609291154"></script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
