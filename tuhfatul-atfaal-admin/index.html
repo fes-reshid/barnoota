@@ -1821,11 +1821,19 @@ function wireHomework(){
   document.querySelectorAll('#hw-filters .chip').forEach(c => c.onclick = () => { hwFilter = c.dataset.hwf; document.querySelectorAll('#hw-filters .chip').forEach(x => x.classList.toggle('active', x === c)); renderHomeworkList(); });
 }
 
+function isStaffAccount(s){
+  const text = [s.username, s.email, s.loginEmail, s.displayName].map(v => String(v || '').toLowerCase()).join(' ');
+  return /quest-?teacher-/.test(text) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
+}
+
 /* ===================== data loading ===================== */
 function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); renderHomeworkList(); fillHwQuiz(); }
 function loadStudents(){
   return window.KidsCloud.adminListStudents().then(list => {
-    studentsCache = list;
+    // Teacher logins that once opened a quest game get a student record too
+    // (username like "fesbackupsquest-teacher-…gmail.com"). They aren't
+    // pupils, so keep them out of every student list, class and count.
+    studentsCache = list.filter(s => !isStaffAccount(s));
     if(activeStudent){ const fresh = list.find(s => s.uid === activeStudent.uid); if(fresh){ activeStudent = fresh; renderModal(); } }
     renderAll();
   }).catch(err => {
