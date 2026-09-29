@@ -325,13 +325,18 @@ function adminSignOut(){ return signOut(auth); }
    in but that email has no admin doc (so the page can say "not an admin"
    instead of just bouncing back to a blank sign-in form); otherwise
    cb({ email, role: 'admin' | 'super' }). */
+/* The signed-in staff member's role ('super' | 'admin' | 'teacher'), so
+   adminListStudents can ask only for what a teacher is allowed to read. */
+let staffRole = null, staffEmail = null;
 function onAdminAuth(cb){
   return onAuthStateChanged(auth, function(user){
+    staffRole = null; staffEmail = null;
     if(!user || !user.email){ cb(null); return; }
     const email = normalizeEmail(user.email);
     getDoc(doc(db, ADMINS_COLLECTION, email)).then(function(snap){
       if(!snap.exists()){ cb({ email: email, role: null }); return; }
       const data = snap.data();
+      staffRole = data.role || 'admin'; staffEmail = email;
       cb({ email: email, role: data.role || 'admin', fullName: data.fullName || '', contactEmail: data.contactEmail || '' });
     }).catch(function(){ cb({ email: email, role: null }); });
   });
@@ -438,6 +443,8 @@ function adminCreateStudent(username, displayName, password){
             displayName: displayName || clean,
             createdAt: new Date().toISOString(),
             createdBy: (auth.currentUser && auth.currentUser.email) || null,
+            // a teacher who creates an account can see it straight away
+            teacherEmails: staffRole === 'teacher' && staffEmail ? [staffEmail] : [],
             progress: {}
           });
         })
@@ -469,13 +476,30 @@ function adminForgotPassword(email){
   return sendPasswordResetEmail(auth, normalizeEmail(email));
 }
 
+/* Admins and super admins read every student. A teacher may only read
+   students linked to them (teacherEmails holds their email — set when the
+   student joins one of their classes, or when the teacher created the
+   account), so for a teacher we ask for exactly that; the Firestore rules
+   refuse anything wider. Sorted here rather than with orderBy so the
+   array-contains query needs no composite index. */
 function adminListStudents(){
-  return getDocs(query(collection(db, STUDENTS_COLLECTION), orderBy('createdAt', 'desc')))
-    .then(function(snap){
-      const out = [];
-      snap.forEach(function(d){ out.push(Object.assign({ uid: d.id }, d.data())); });
-      return out;
-    });
+  const q = staffRole === 'teacher' && staffEmail
+    ? query(collection(db, STUDENTS_COLLECTION), where('teacherEmails', 'array-contains', staffEmail))
+    : query(collection(db, STUDENTS_COLLECTION), orderBy('createdAt', 'desc'));
+  return getDocs(q).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ out.push(Object.assign({ uid: d.id }, d.data())); });
+    out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+/* Link / unlink a teacher to a student record (which is what lets that
+   teacher read it). Admins do this for anyone; a teacher only for
+   students they can already see. */
+function adminLinkStudentTeacher(uid, teacherEmail, linked){
+  const email = normalizeEmail(teacherEmail);
+  if(!uid || !email) return Promise.resolve();
+  return setDoc(doc(db, STUDENTS_COLLECTION, uid), { teacherEmails: linked === false ? arrayRemove(email) : arrayUnion(email) }, { merge:true });
 }
 
 /* "Reset username" = migrate to a new account under the new name,
@@ -503,6 +527,7 @@ function adminRenameStudent(oldUsername, oldPassword, newUsername, oldUid){
               contactEmail: oldData.contactEmail || '',
               createdAt: oldData.createdAt || new Date().toISOString(),
               createdBy: (auth.currentUser && auth.currentUser.email) || null,
+              teacherEmails: Array.isArray(oldData.teacherEmails) ? oldData.teacherEmails : [],
               progress: oldData.progress || {}
             }).then(function(){
               return deleteUser(cred.user).catch(function(){});
@@ -822,7 +847,7 @@ function listMyClasses(){
   if(!user) return Promise.resolve([]);
   return getDocs(query(collection(db, CLASSES_COLLECTION), where('studentUids', 'array-contains', user.uid))).then(function(snap){
     const out = [];
-    snap.forEach(function(d){ const c = classFromDoc(d); out.push({ id: c.id, name: c.name, game: c.game, teacherName: c.teacherName || '' }); });
+    snap.forEach(function(d){ const c = classFromDoc(d); out.push({ id: c.id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '' }); });
     return out;
   });
 }
@@ -834,16 +859,30 @@ function studentJoinClass(code){
   const ref = doc(db, CLASSES_COLLECTION, id);
   return getDoc(ref).then(function(snap){
     if(!snap.exists()) throw Object.assign(new Error('No class has that code. Check it with your teacher.'), { code: 'app/no-class' });
+    const c = snap.data();
     return updateDoc(ref, { studentUids: arrayUnion(user.uid) }).then(function(){
-      const c = snap.data();
-      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '' };
+      // let this class's teacher see my record (my own doc, so I may write it)
+      return c.teacherEmail ? setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { teacherEmails: arrayUnion(normalizeEmail(c.teacherEmail)) }, { merge:true }).catch(function(){}) : null;
+    }).then(function(){
+      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '' };
     });
   });
 }
 function studentLeaveClass(id){
   const user = auth.currentUser;
   if(!user) return Promise.reject(new Error('Not signed in'));
-  return updateDoc(doc(db, CLASSES_COLLECTION, id), { studentUids: arrayRemove(user.uid) });
+  const ref = doc(db, CLASSES_COLLECTION, id);
+  return getDoc(ref).then(function(snap){
+    const teacher = snap.exists() ? normalizeEmail(snap.data().teacherEmail || '') : '';
+    return updateDoc(ref, { studentUids: arrayRemove(user.uid) }).then(function(){
+      if(!teacher) return null;
+      // still in another class with the same teacher? then keep the link
+      return listMyClasses().then(function(rest){
+        if(rest.some(function(c){ return normalizeEmail(c.teacherEmail) === teacher; })) return null;
+        return setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { teacherEmails: arrayRemove(teacher) }, { merge:true });
+      }).catch(function(){});
+    });
+  });
 }
 
 /* ---- homework ---- */
@@ -942,6 +981,7 @@ window.KidsCloud = {
   markThreadRead: markThreadRead,
   currentUid: currentUid,
   listClasses: listClasses,
+  adminLinkStudentTeacher: adminLinkStudentTeacher,
   listHomework: listHomework,
   adminSaveHomework: adminSaveHomework,
   adminDeleteHomework: adminDeleteHomework,

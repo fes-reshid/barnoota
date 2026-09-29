@@ -193,14 +193,25 @@
 match /kids_quest_students/{uid} {
   // a student can only ever read/write their own saved progress
   allow get, create, update: if request.auth != null && request.auth.uid == uid;
-  // any listed admin, super admin OR teacher can view and edit every
-  // student's record (needed for teachers to grade Tuhfatul Atfaal)
-  allow get, list, create, update: if request.auth != null
-    && exists(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower()));
-  // but only an admin or super admin can delete a student outright —
-  // a teacher account can never do this, even by editing the page
-  allow delete: if request.auth != null
-    && get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.role in ['admin', 'super'];
+  // admins and super admins can view and edit every student
+  allow get, list, create, update: if isAdminOrSuper();
+  // a teacher only sees students linked to them — students who joined
+  // one of their classes, or accounts that teacher created
+  allow get, list, update: if isTeacher()
+    && request.auth.token.email.lower() in resource.data.get('teacherEmails', []);
+  allow create: if isTeacher()
+    && request.auth.token.email.lower() in request.resource.data.get('teacherEmails', []);
+  // only an admin or super admin can delete a student outright
+  allow delete: if isAdminOrSuper();
+}
+function staffRole() {
+  return get(/databases/$(database)/documents/kids_quest_admins/$(request.auth.token.email.lower())).data.get('role', 'admin');
+}
+function isAdminOrSuper() {
+  return isStaff() && staffRole() in ['admin', 'super'];
+}
+function isTeacher() {
+  return isStaff() && staffRole() == 'teacher';
 }
 match /kids_quest_usernames/{username} {
   // public read — needed to resolve a username to its login email
@@ -404,7 +415,7 @@ match /kids_quest_homework/{hwId} {
 
 </div>
 
-<script type="module" src="kids-quest-cloud.js?v=13"></script>
+<script type="module" src="kids-quest-cloud.js?v=14"></script>
 <script src="quran-tracker/admin-report.js?v=1" defer></script>
 <script type="module">
 const $ = id => document.getElementById(id);

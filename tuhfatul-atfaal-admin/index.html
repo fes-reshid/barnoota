@@ -399,6 +399,7 @@
           <option value="least">Sort: Least progress</option>
           <option value="newest">Sort: Newest first</option>
         </select>
+        <button class="btn ghost small" id="student-report" title="Printable weekly report for the students shown">🖨️ Weekly reports</button>
       </div>
       <div class="chips" id="student-filters">
         <button class="chip active" data-filter="all">All</button>
@@ -448,6 +449,7 @@
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
               <button class="btn sky small" id="class-view-students">👩‍🎓 View on Students tab</button>
+              <button class="btn ghost small" id="class-report">🖨️ Class report</button>
               <button class="btn ghost small" id="class-message">📨 Message this class</button>
               <button class="btn ghost small" id="class-announce">📣 Announce to this class</button>
               <button class="btn ghost small" id="class-homework">📚 Homework for this class</button>
@@ -455,6 +457,7 @@
             <h3>Students <span class="muted" id="class-member-count"></span></h3>
             <div id="class-members"></div>
             <h3 style="margin-top:16px">Add students</h3>
+            <p class="muted hidden" id="class-add-note" style="margin-top:-4px">Only students already in your classes, or accounts you created, are listed. Any other student joins by typing the class code above.</p>
             <div class="toolbar" style="margin-bottom:0"><div class="search"><input type="search" id="class-add-search" placeholder="Search students to add"></div></div>
             <div class="pick-list" id="class-add-list"></div>
             <button class="btn primary" id="class-add-btn">＋ Add selected</button>
@@ -718,7 +721,7 @@
         <div class="avatar big" id="manage-avatar">🧒</div>
         <div><h1 id="manage-title" style="margin:0">Student</h1><p id="manage-sub" class="muted" style="margin:2px 0"></p><div id="manage-badges"></div></div>
       </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn sky small" id="modal-message">✉️ Message</button><button class="btn ghost small" id="close-modal">✕ Close</button></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn ghost small" id="modal-report">🖨️ Report</button><button class="btn sky small" id="modal-message">✉️ Message</button><button class="btn ghost small" id="close-modal">✕ Close</button></div>
     </div>
     <div class="subtabs" role="tablist">
       <button class="subtab active" data-sub="profile">👤 Profile</button>
@@ -820,7 +823,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=13"></script>
+<script type="module" src="../kids-quest-cloud.js?v=14"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -837,7 +840,7 @@ const TOTAL_LESSONS = 62;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
 let classesCache = [], activeClassId = null, classFilterTouched = false;
-let homeworkCache = [], editingHw = null, hwFilter = 'active', hwOpen = {};
+let homeworkCache = [], editingHw = null, hwFilter = 'active', hwOpen = {}, lastGridStudents = [];
 
 /* ===================== helpers ===================== */
 function randomPassword(){
@@ -1064,6 +1067,7 @@ function renderStudentGrid(){
     : sort === 'newest' ? String(b.s.createdAt || '').localeCompare(String(a.s.createdAt || ''))
     : String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username)));
 
+  lastGridStudents = sums.map(x => x.s);
   const box = $('student-list'); box.innerHTML = '';
   $('student-empty').classList.toggle('hidden', sums.length > 0);
   $('student-empty').textContent = studentsCache.length && classSel && !sums.length && !q && studentFilter === 'all' ? 'No students in this class yet — add them on the Classes tab or share the class code.' : studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
@@ -1612,7 +1616,7 @@ function fillClassSelects(){
 }
 function loadClasses(){
   if(!window.KidsCloud.listClasses) return Promise.resolve();
-  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); })
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); })
     .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderClasses(){
@@ -1656,6 +1660,7 @@ function renderClassDetail(){
 }
 function renderClassAddList(){
   const c = activeClassId && classById(activeClassId); if(!c) return;
+  $('class-add-note').classList.toggle('hidden', myRole !== 'teacher');
   const q = $('class-add-search').value.trim().toLowerCase();
   let rows = studentsCache.filter(s => !c.studentUids.includes(s.uid) && !s.disabled);
   if(q) rows = rows.filter(s => [s.username, s.displayName, s.fullName].some(v => String(v || '').toLowerCase().includes(q)));
@@ -1664,8 +1669,46 @@ function renderClassAddList(){
     (classesOf(s.uid).length ? ' · in ' + escapeHtml(classesOf(s.uid).map(x => x.name).join(', ')) : '') + '</span></label>').join('') : '<p class="muted">' + (q ? 'No match.' : 'Every student is already in this class.') + '</p>';
 }
 function updateClassMembers(c, uids, msg){
-  return window.KidsCloud.adminUpdateClass(c.id, { studentUids: uids }).then(() => { c.studentUids = Array.from(new Set(uids)); toast(msg); renderClasses(); fillClassSelects(); renderStudentGrid(); })
+  const before = c.studentUids.slice(), after = Array.from(new Set(uids));
+  return window.KidsCloud.adminUpdateClass(c.id, { studentUids: after }).then(() => {
+    c.studentUids = after;
+    const added = after.filter(u => !before.includes(u)), removed = before.filter(u => !after.includes(u));
+    return Promise.all(added.map(u => linkTeacher(u, c.teacherEmail, true)).concat(removed.map(u => unlinkIfNoOtherClass(u, c))));
+  }).then(() => { toast(msg); renderClasses(); fillClassSelects(); renderStudentGrid(); })
     .catch(err => alert(friendlyError(err)));
+}
+/* Each student record lists the teachers allowed to read it
+   (teacherEmails). Joining / adding to a class links that class's teacher;
+   leaving the last class with that teacher unlinks them. */
+function linkTeacher(uid, email, on){
+  if(!window.KidsCloud.adminLinkStudentTeacher || !uid || !email) return Promise.resolve();
+  return window.KidsCloud.adminLinkStudentTeacher(uid, email, on).then(() => {
+    const s = studentsCache.find(x => x.uid === uid); if(!s) return;
+    const set = new Set(s.teacherEmails || []); on === false ? set.delete(email) : set.add(email); s.teacherEmails = [...set];
+  }).catch(() => {});
+}
+function unlinkIfNoOtherClass(uid, c){
+  const still = classesCache.some(o => o.id !== c.id && o.teacherEmail === c.teacherEmail && o.studentUids.includes(uid));
+  const s = studentsCache.find(x => x.uid === uid), creator = s && String(s.createdBy || '').toLowerCase() === String(c.teacherEmail || '').toLowerCase();
+  return still || creator ? Promise.resolve() : linkTeacher(uid, c.teacherEmail, false);
+}
+/* One-off catch-up for records made before teacher links existed: every
+   class member gets their class teacher linked, and students a teacher
+   created get that teacher. Runs quietly whenever the portal loads; after
+   the first run there is nothing left to write. */
+let linkSyncRunning = false;
+function syncTeacherLinks(){
+  if(linkSyncRunning || !studentsCache.length || !window.KidsCloud.adminLinkStudentTeacher) return;
+  const jobs = [];
+  classesCache.forEach(c => {
+    if(!c.teacherEmail || (myRole === 'teacher' && !isMyClass(c))) return;
+    c.studentUids.forEach(uid => { const s = studentsCache.find(x => x.uid === uid); if(s && !(s.teacherEmails || []).includes(c.teacherEmail)) jobs.push([uid, c.teacherEmail]); });
+  });
+  studentsCache.forEach(s => { const by = String(s.createdBy || '').toLowerCase(); if(/quest-?teacher-/.test(by) && !(s.teacherEmails || []).includes(by) && (myRole !== 'teacher' || by === String(myEmail).toLowerCase())) jobs.push([s.uid, by]); });
+  const seen = new Set(), todo = jobs.filter(j => { const k = j.join('|'); if(seen.has(k)) return false; seen.add(k); return true; });
+  if(!todo.length) return;
+  linkSyncRunning = true;
+  todo.reduce((chain, [uid, email]) => chain.then(() => linkTeacher(uid, email, true)), Promise.resolve()).finally(() => { linkSyncRunning = false; });
 }
 function wireClasses(){
   $('class-create').onclick = () => {
@@ -1690,7 +1733,9 @@ function wireClasses(){
   };
   $('class-delete').onclick = () => {
     const c = classById(activeClassId); if(!c || !confirm('Delete the class “' + c.name + '”? Students keep their progress and accounts; announcements or quizzes for this class will no longer show to anyone.')) return;
-    window.KidsCloud.adminDeleteClass(c.id).then(() => { toast('Class deleted'); activeClassId = null; return loadClasses(); }).catch(err => alert(friendlyError(err)));
+    const members = c.studentUids.slice();
+    window.KidsCloud.adminDeleteClass(c.id).then(() => { classesCache = classesCache.filter(x => x.id !== c.id); return Promise.all(members.map(u => unlinkIfNoOtherClass(u, c))); })
+      .then(() => { toast('Class deleted'); activeClassId = null; return loadClasses(); }).catch(err => alert(friendlyError(err)));
   };
   $('class-copy').onclick = () => {
     const c = classById(activeClassId); if(!c) return;
@@ -1828,6 +1873,84 @@ function isStaffAccount(s){
   return /quest-?teacher-/.test(text) || HIDDEN_ACCOUNTS.includes(String(s.username || '').toLowerCase()) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
 }
 
+/* ===================== weekly reports ===================== */
+/* A printable page per student (and a summary page for a group): overall
+   progress, the last 7 days, homework, quiz scores, teacher notes and the
+   15 maps — built from the same records the portal already has. Opens in
+   a new tab; Print there, or "Save as PDF" to send to parents. */
+function daysAgo(iso){ const t = new Date(iso).getTime(); return isNaN(t) ? Infinity : (Date.now() - t) / 86400000; }
+function fmtDay(iso){ if(!iso) return '—'; const d = new Date(String(iso).length === 10 ? iso + 'T12:00' : iso); return isNaN(d) ? '—' : d.toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short' }); }
+function streakOf(p){ const st = p.streak || {}; if(!st.last) return { count: 0, best: 0, last: '' };
+  const today = isoDate(new Date()), y = new Date(); y.setDate(y.getDate() - 1);
+  return { count: (st.last === today || st.last === isoDate(y)) ? (st.count || 0) : 0, best: st.best || 0, last: st.last }; }
+function reportData(s){
+  const x = summarize(s), p = x.p, hifz = p.hifz && typeof p.hifz === 'object' ? p.hifz : {};
+  const memo = Object.keys(hifz).filter(k => Number(hifz[k] && hifz[k].level) >= 4);
+  const memoWeek = memo.filter(k => daysAgo(hifz[k].at) <= 7);
+  const quizzes = Object.keys(p.teacherQuizResults || {}).map(id => { const r = p.teacherQuizResults[id], q = quizzesCache.find(z => z.id === id); const best = r.best != null ? r.best : r.score;
+    return { title: q ? q.title : 'Quiz', best, total: r.total, pct: r.total ? Math.round(best / r.total * 100) : 0, pass: q ? (r.total && best / r.total * 100 >= (q.passPercent || 70)) : null, at: r.at, attempts: r.attempts || 1 }; })
+    .sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
+  const hw = homeworkCache.filter(h => !h.classId || (classById(h.classId) || { studentUids: [] }).studentUids.includes(s.uid))
+    .filter(h => h.dueDate && Math.abs(daysAgo(h.dueDate + 'T12:00')) <= 14).map(h => ({ h, st: hwStatus(h, s) }))
+    .sort((a, b) => String(a.h.dueDate).localeCompare(String(b.h.dueDate)));
+  const notes = Object.entries((s.teacherNotes || {})[GAME_KEY] || {}).filter(([, n]) => n && n.note).map(([m, n]) => ({ map: Number(m), ...n })).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
+  return { x, p, memo, memoWeek, quizzes, quizzesWeek: quizzes.filter(q => daysAgo(q.at) <= 7), hw, notes, streak: streakOf(p), classes: classesOf(s.uid).map(c => c.name) };
+}
+function reportStudentPage(s){
+  const d = reportData(s), x = d.x, name = s.fullName || s.displayName || s.username, e = escapeHtml;
+  const hwDone = d.hw.filter(r => r.st.key === 'done' || r.st.key === 'lateDone').length, hwLate = d.hw.filter(r => r.st.key === 'late').length;
+  const lbl = { done:'✓ Done', lateDone:'✓ Done late', late:'⚠ Not done (late)', pending:'… Not yet due' };
+  return '<section class="page"><header><div><div class="brand">Diin Islaam · Tuhfatul Atfaal</div><h1>' + e(name) + '</h1><div class="sub">@' + e(s.username) + (d.classes.length ? ' · 🏫 ' + e(d.classes.join(', ')) : '') + '</div></div>' +
+    '<div class="when">Weekly report<br><b>' + e(fmtDay(new Date(Date.now() - 6 * 86400000).toISOString())) + ' – ' + e(fmtDay(new Date().toISOString())) + '</b></div></header>' +
+    '<div class="tiles">' +
+      '<div><b>' + x.pct + '%</b><span>course done<br>' + x.lessons + ' / ' + TOTAL_LESSONS + ' lessons</span></div>' +
+      '<div><b>' + d.memo.length + '</b><span>line' + (d.memo.length === 1 ? '' : 's') + ' memorised<br>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' this week' : 'none new this week') + '</span></div>' +
+      '<div><b>🔥 ' + d.streak.count + '</b><span>day streak<br>' + (d.streak.last ? 'last practised ' + e(fmtDay(d.streak.last)) : 'not started') + '</span></div>' +
+      '<div><b>' + x.certs + ' / 15</b><span>maps approved<br>now on ' + e(mapLabel(x.currentMap)) + '</span></div>' +
+    '</div>' +
+    '<h2>This week</h2><ul class="week">' +
+      '<li>🧠 ' + (d.memoWeek.length ? 'Memorised line' + (d.memoWeek.length > 1 ? 's ' : ' ') + d.memoWeek.map(k => lineOfLesson(Number(k))).join(', ') : 'No new lines memorised') + '</li>' +
+      '<li>📝 ' + (d.quizzesWeek.length ? d.quizzesWeek.map(q => e(q.title) + ' ' + q.best + '/' + q.total).join(' · ') : 'No teacher quizzes taken') + '</li>' +
+      '<li>📚 Homework: ' + (d.hw.length ? hwDone + ' done' + (hwLate ? ', ' + hwLate + ' late' : '') + ' of ' + d.hw.length : 'none set') + '</li>' +
+    '</ul>' +
+    (d.hw.length ? '<h2>Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.hw.map(r => '<tr><td>' + e(r.h.title) + '</td><td>' + e(fmtDay(r.h.dueDate)) + '</td><td class="st-' + r.st.key + '">' + lbl[r.st.key] + (r.st.at ? ' <small>' + e(fmtDay(r.st.at)) + '</small>' : '') + '</td></tr>').join('') + '</table>' : '') +
+    (d.quizzes.length ? '<h2>Teacher quizzes</h2><table><tr><th>Quiz</th><th>Best score</th><th>Tries</th><th>Last taken</th></tr>' + d.quizzes.slice(0, 8).map(q => '<tr><td>' + e(q.title) + '</td><td>' + q.best + '/' + q.total + ' (' + q.pct + '%)' + (q.pass === true ? ' ✓' : '') + '</td><td>' + q.attempts + '</td><td>' + e(fmtDay(q.at)) + '</td></tr>').join('') + '</table>' : '') +
+    '<h2>Maps</h2><table class="maps"><tr><th>Map</th><th>Lessons</th><th>Challenge</th><th>Teacher check</th></tr>' + MAPS.map((m, i) => {
+      const done = mapLessonsDone(d.p, i), q = d.p.mapQuizScores[i], a = d.p.teacherAssessments[i];
+      if(!done && !q && !(a && a.approved) && i > x.currentMap) return '';
+      return '<tr><td>' + (i + 1) + ' · ' + e(m[0]) + '</td><td>' + done + ' / ' + m[3] + '</td><td>' + (q ? e(String(q.score)) + '/15' + (q.passed || Number(q.score) >= 12 ? ' ✓' : '') : '—') + '</td><td>' + (a && a.approved ? '✓ ' + e(a.teacherName || '') + (a.approvedAt ? ' · ' + e(fmtDay(a.approvedAt)) : '') : '—') + '</td></tr>';
+    }).join('') + '</table>' +
+    (d.notes.length ? '<h2>Teacher notes</h2>' + d.notes.slice(0, 4).map(n => '<p class="note"><b>' + e(mapLabel(n.map)) + (n.teacherName ? ' · ' + e(n.teacherName) : '') + '</b><br>' + e(n.note) + '</p>').join('') : '') +
+    '<h2>Teacher’s comment</h2><div class="lines"></div>' +
+    '<footer><span>Teacher: ' + e($('certificate-teacher').dataset.me || '') + '</span><span>Signature: ______________________</span><span>Parent: ______________________</span></footer></section>';
+}
+/* lesson index → its line number(s) as shown in the course (lines 57 has two lessons) */
+function lineOfLesson(i){ for(let m = 0; m < MAPS.length; m++){ const [, range, start, count] = MAPS[m]; if(i >= start && i < start + count){ const from = Number(String(range).split(/[–-]/)[0]); return String(Math.min(61, from + (i - start))); } } return String(i + 1); }
+function reportSummaryPage(list, title){
+  const e = escapeHtml, rows = list.map(s => ({ s, d: reportData(s) }));
+  return '<section class="page"><header><div><div class="brand">Diin Islaam · Tuhfatul Atfaal</div><h1>' + e(title || 'Class') + ' — weekly summary</h1><div class="sub">' + list.length + ' student' + (list.length === 1 ? '' : 's') + '</div></div><div class="when">Week ending<br><b>' + e(fmtDay(new Date().toISOString())) + '</b></div></header>' +
+    '<table><tr><th>Student</th><th>Course</th><th>Memorised</th><th>This week</th><th>Streak</th><th>Homework (2 wks)</th><th>Maps ✓</th></tr>' +
+    rows.map(({ s, d }) => { const hd = d.hw.filter(r => r.st.key === 'done' || r.st.key === 'lateDone').length, hl = d.hw.filter(r => r.st.key === 'late').length;
+      return '<tr><td><b>' + e(s.displayName || s.username) + '</b></td><td>' + d.x.pct + '%</td><td>' + d.memo.length + '</td><td>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' lines' : '—') + (d.quizzesWeek.length ? ', ' + d.quizzesWeek.length + ' quiz' + (d.quizzesWeek.length > 1 ? 'zes' : '') : '') + '</td><td>' + (d.streak.count ? '🔥 ' + d.streak.count : '—') + '</td><td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '—') + '</td><td>' + d.x.certs + '</td></tr>'; }).join('') +
+    '</table><p class="muted">Each student’s own page follows.</p></section>';
+}
+function openReport(list, title){
+  const w = window.open('', '_blank');
+  if(!w){ alert('Your browser blocked the report window. Allow pop-ups for this site and try again.'); return; }
+  const css = '*{box-sizing:border-box}body{margin:0;background:#eee;font:14px/1.45 Georgia,serif;color:#2b2217}.bar{position:sticky;top:0;background:#1f5c47;color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;font-family:system-ui,sans-serif}.bar button{font:600 15px system-ui;padding:8px 16px;border-radius:10px;border:0;cursor:pointer;background:#f2d27a;color:#2b2217}' +
+    '.page{background:#fff;width:210mm;min-height:297mm;margin:12px auto;padding:14mm 14mm 12mm;box-shadow:0 2px 10px rgba(0,0,0,.15);page-break-after:always;display:flex;flex-direction:column}' +
+    'header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px double #c9a653;padding-bottom:8px;margin-bottom:10px}.brand{color:#8a6a1f;font-size:12px;letter-spacing:.08em;text-transform:uppercase}h1{margin:2px 0;font-size:24px;color:#1c3a55}.sub{color:#6b5d44}.when{text-align:right;color:#6b5d44;font-size:12.5px}.when b{color:#1c3a55;font-size:14px}' +
+    '.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 8px}.tiles div{border:1.5px solid #e3d6b3;border-radius:10px;padding:8px;text-align:center;background:#fffbef}.tiles b{display:block;font-size:22px;color:#1f5c47}.tiles span{font-size:11.5px;color:#6b5d44}' +
+    'h2{font-size:15px;color:#1c3a55;margin:12px 0 4px;border-bottom:1px solid #eadcb8;padding-bottom:2px}ul.week{margin:4px 0;padding-left:18px}table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:left;background:#f6efdc;padding:4px 6px}td{padding:4px 6px;border-bottom:1px solid #f0e6cc}.maps td{padding:3px 6px}' +
+    '.st-done{color:#2f6f55;font-weight:700}.st-lateDone{color:#8a5a00;font-weight:700}.st-late{color:#b5452b;font-weight:700}.st-pending{color:#6b5d44}.note{margin:4px 0;padding:6px 8px;background:#f4fbff;border-left:4px solid #3b8fc4}.muted{color:#6b5d44}' +
+    '.lines{flex:1;min-height:32mm;background:repeating-linear-gradient(#fff 0 8mm,#d9c9a3 8mm calc(8mm + 1px))}footer{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12.5px;color:#4a3d2a}' +
+    '@media print{body{background:#fff}.bar{display:none}.page{margin:0;box-shadow:none;width:auto;min-height:auto;height:277mm}@page{size:A4;margin:10mm}}';
+  const pages = (list.length > 1 ? reportSummaryPage(list, title) : '') + list.map(reportStudentPage).join('');
+  w.document.open();
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>' + escapeHtml((title || (list[0].displayName || list[0].username)) + ' — weekly report') + '</title><style>' + css + '</style></head><body><div class="bar"><b style="flex:1">🖨️ Weekly report · ' + list.length + ' page' + (list.length > 1 ? 's + summary' : '') + '</b><button onclick="print()">Print / Save as PDF</button></div>' + pages + '</body></html>');
+  w.document.close();
+}
+
 /* ===================== data loading ===================== */
 function renderAll(){ renderOverview(); renderStudentGrid(); renderQuizList(); renderThreads(); renderReplyList(); if(classesCache.length) renderClasses(); renderHomeworkList(); fillHwQuiz(); }
 function loadStudents(){
@@ -1836,6 +1959,7 @@ function loadStudents(){
     // (username like "fesbackupsquest-teacher-…gmail.com"). They aren't
     // pupils, so keep them out of every student list, class and count.
     studentsCache = list.filter(s => !isStaffAccount(s));
+    if(classesCache.length) syncTeacherLinks();
     if(activeStudent){ const fresh = list.find(s => s.uid === activeStudent.uid); if(fresh){ activeStudent = fresh; renderModal(); } }
     renderAll();
   }).catch(err => {
@@ -1976,6 +2100,9 @@ function wire(){
   $('broadcast-send').onclick = sendBroadcast;
   wireClasses();
   wireHomework();
+  $('student-report').onclick = () => { if(!lastGridStudents.length){ toast('No students shown'); return; } openReport(lastGridStudents, $('student-class').value && $('student-class').value !== '*mine' ? className($('student-class').value) : 'Students'); };
+  $('modal-report').onclick = () => { if(activeStudent) openReport([activeStudent], ''); };
+  $('class-report').onclick = () => { const c = classById(activeClassId); if(!c) return; const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean); if(!members.length){ toast('This class has no students yet'); return; } openReport(members, c.name); };
   $('chat-send').onclick = sendChat;
   $('chat-text').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } };
   $('chat-profile').onclick = () => { if(activeThread) openManager(activeThread, 'profile'); };
