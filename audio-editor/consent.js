@@ -8,6 +8,19 @@
   const gate = document.getElementById('consentGate');
   if (!gate || typeof gate.showModal !== 'function') return; // compat.js shows an unsupported-browser message instead
 
+  // A device blocked by halal-guard.js (repeated exports that looked like music) never gets back
+  // to the ordinary reminder — it goes straight to the permanent block screen instead.
+  let blocked = false;
+  try { blocked = localStorage.getItem('ae-hg-blocked') === 'yes'; } catch (e) {}
+  if (blocked) {
+    const blockedGate = document.getElementById('toolBlockedGate');
+    if (blockedGate && typeof blockedGate.showModal === 'function') {
+      blockedGate.addEventListener('cancel', e => e.preventDefault());
+      blockedGate.showModal();
+    }
+    return;
+  }
+
   let agreed = false;
   try { agreed = localStorage.getItem(KEY) === 'yes'; } catch (e) {}
   if (agreed) return; // asked once per browser: already agreed here before, so skip straight to the app

@@ -2,6 +2,9 @@
 const { expect } = require('@playwright/test');
 
 // A 16-bit WAV of tone "words" separated by silence: bursts = [[start, end], …] in seconds.
+// Note: the envelope below is only actually audible during the first quarter of each absolute
+// second (see its shape), so bursts need to be long/positioned enough to contain one of those
+// windows — don't shorten or reposition them without re-checking auto-split still finds 3 parts.
 function wav({ sr = 44100, secs = 6, channels = 1, bursts = [[0.5, 1.5], [2, 3], [3.6, 4.4], [5, 5.6]], freq = 220 } = {}) {
   const n = Math.round(sr * secs), data = Buffer.alloc(n * channels * 2);
   for (let i = 0; i < n; i++) {
@@ -48,4 +51,22 @@ async function download(page, action) {
   return { name: d.suggestedFilename(), bytes: Buffer.concat(chunks) };
 }
 
-module.exports = { wav, openEditor, loadAudio, seconds, menu, download };
+// A synthetic clip with a steady, mechanical 120 BPM click track (plus a held chord, just so it
+// sounds musical rather than like a metronome) — for testing halal-guard.js's beat check.
+function musicWav({ sr = 44100, secs = 8 } = {}) {
+  const n = Math.round(sr * secs), data = Buffer.alloc(n * 2);
+  for (let i = 0; i < n; i++) {
+    const t = i / sr;
+    let v = 0.15 * (Math.sin(2 * Math.PI * 261.63 * t) + Math.sin(2 * Math.PI * 329.63 * t) + Math.sin(2 * Math.PI * 392 * t));
+    const bt = t % 0.5; if (bt < 0.05) v += 0.6 * Math.exp(-bt * 60) * Math.sin(2 * Math.PI * 90 * t);
+    data.writeInt16LE(Math.round(Math.max(-1, Math.min(1, v)) * 32767), i * 2);
+  }
+  const h = Buffer.alloc(44);
+  h.write('RIFF', 0); h.writeUInt32LE(36 + data.length, 4); h.write('WAVE', 8); h.write('fmt ', 12);
+  h.writeUInt32LE(16, 16); h.writeUInt16LE(1, 20); h.writeUInt16LE(1, 22); h.writeUInt32LE(sr, 24);
+  h.writeUInt32LE(sr * 2, 28); h.writeUInt16LE(2, 32); h.writeUInt16LE(16, 34);
+  h.write('data', 36); h.writeUInt32LE(data.length, 40);
+  return Buffer.concat([h, data]);
+}
+
+module.exports = { wav, musicWav, openEditor, loadAudio, seconds, menu, download };
