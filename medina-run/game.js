@@ -296,14 +296,20 @@ function roadside(){
   const p=project(1,z),variation=Math.sin(i*17.27+side*4.7),s=(.22+Math.pow(z,1.65)*2.5)*Math.min(W/760,1.25);
   const x=p.x+side*p.half*(1.14+(i%3)*.12),y=p.y;
   if(road.kind==='town'){
-   const w=(32+(i%4)*9)*s,h=(44+(i%5)*11)*s;
-   ellipse(x,y,w*.62,Math.max(1,4*s),'#3a2d2740');
-   ctx.fillStyle=night?'#64717b':i%3?'#d9b98d':'#eee0bd';ctx.fillRect(x-w/2,y-h,w,h);
-   poly([[x-w/2,y-h],[x-w*.56,y-h-6*s],[x+w*.45,y-h-6*s],[x+w/2,y-h]],night?'#a1a6aa':'#f6e8c8');
-   ctx.fillStyle=night?'#27384b':'#745f4b';
-   for(let row=0;row<2;row++)for(let col=0;col<2;col++)ctx.fillRect(x-w*.28+col*w*.36,y-h*.72+row*h*.27,Math.max(1,5*s),Math.max(1,8*s));
-   ctx.fillRect(x-5*s,y-16*s,10*s,16*s);
-   if(i%4===0){const tx=x+side*w*.29,tw=7*s,th=h*.48;ctx.fillStyle=night?'#778794':'#e9d1a6';ctx.fillRect(tx-tw/2,y-h-th,tw,th);poly([[tx-tw,y-h-th],[tx,y-h-th-8*s],[tx+tw,y-h-th]],night?'#a1a6aa':'#f4dfb7')}
+   const w=(30+(i%4)*7)*s,h=(40+(i%5)*9)*s,depth=9*s;
+   ellipse(x,y,w*.65,Math.max(1,4*s),'#3a2d2740');
+   poly([[x-w/2,y-h],[x-w/2-side*depth,y-h-4*s],[x-w/2-side*depth,y-4*s],[x-w/2,y]],night?'#5d6170':'#976b49');
+   const face=ctx.createLinearGradient(x-w/2,y-h,x+w/2,y);face.addColorStop(0,night?'#777f8b':'#e9bd82');face.addColorStop(1,night?'#525c6a':'#aa784d');
+   ctx.fillStyle=face;ctx.fillRect(x-w/2,y-h,w,h);
+   poly([[x-w*.55,y-h],[x-w*.55,y-h-5*s],[x+w*.55,y-h-5*s],[x+w*.55,y-h]],night?'#a1a6aa':'#f4d4a0');
+   for(let j=0;j<4;j++)ctx.fillRect(x-w*.48+j*w*.29,y-h-9*s,4*s,5*s);
+   ctx.fillStyle=night?'#2d3b4a':'#554536';
+   for(let row=0;row<2;row++)for(let col=0;col<2;col++){
+    const wx=x-w*.27+col*w*.39,wy=y-h*.73+row*h*.28,r=3*s;
+    ctx.beginPath();ctx.moveTo(wx-r,wy+7*s);ctx.lineTo(wx-r,wy);ctx.quadraticCurveTo(wx,wy-5*s,wx+r,wy);ctx.lineTo(wx+r,wy+7*s);ctx.closePath();ctx.fill();
+   }
+   const doorX=x+side*w*.13;ctx.fillRect(doorX-5*s,y-13*s,10*s,13*s);
+   if(i%4===0){const tx=x+side*w*.32,tw=6*s,th=h*.4;ctx.fillStyle=night?'#778794':'#c99868';ctx.fillRect(tx-tw/2,y-h-th,tw,th);poly([[tx-tw,y-h-th],[tx,y-h-th-7*s],[tx+tw,y-h-th]],night?'#a1a6aa':'#f0d09c')}
   }else{
    const w=(36+(i%4)*14)*s,h=(24+(i%5)*8)*s;
    ellipse(x,y,w*.6,Math.max(1,3*s),'#3e31293b');
