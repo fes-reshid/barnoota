@@ -1,6 +1,11 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -29,7 +34,22 @@ let storage: FirebaseStorage | undefined;
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig);
   auth = getAuth(app);
-  db = getFirestore(app);
+  // Persistent local cache (IndexedDB): once a document has been fetched,
+  // later visits read it from disk immediately while Firestore refreshes it
+  // over the network in the background, instead of every navigation paying
+  // a full round trip. persistentMultipleTabManager keeps multiple open
+  // tabs sharing one cache instead of fighting over it.
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    // Firestore's default connection looks like a long-lived WebSocket,
+    // which some corporate/school networks (proxies that do TLS
+    // inspection, strict firewalls) silently hang instead of blocking
+    // outright — the app loads, but no data ever arrives. This detects
+    // that case automatically and falls back to plain HTTP long-polling,
+    // which passes through those networks normally. Has no effect on
+    // networks where the default connection already works fine.
+    experimentalAutoDetectLongPolling: true,
+  });
   storage = getStorage(app);
 }
 
