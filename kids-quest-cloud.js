@@ -787,6 +787,16 @@ function sendMessage(studentUid, m){
       return setDoc(doc(db, MESSAGES_COLLECTION, studentUid), summary, { merge:true });
     }).then(function(){ return ref.id; });
 }
+/* The author of a message (student or teacher) may correct its text.
+   isLast: also refresh the conversation summary shown in lists. */
+function editMessage(studentUid, messageId, text, isLast){
+  const clean = String(text || '').trim().slice(0, 2000);
+  if(!clean) return Promise.reject(new Error('A message can’t be empty.'));
+  const now = new Date().toISOString();
+  return updateDoc(doc(db, MESSAGES_COLLECTION, studentUid, 'thread', messageId), { text: clean, editedAt: now }).then(function(){
+    return isLast ? setDoc(doc(db, MESSAGES_COLLECTION, studentUid), { lastText: clean.slice(0, 140) }, { merge:true }).catch(function(){}) : null;
+  });
+}
 function markThreadRead(studentUid, who){
   const patch = {}; patch[who === 'staff' ? 'unreadForStaff' : 'unreadForStudent'] = false;
   return setDoc(doc(db, MESSAGES_COLLECTION, studentUid), patch, { merge:true });
@@ -1115,6 +1125,7 @@ window.KidsCloud = {
   getMessages: getMessages,
   sendMessage: sendMessage,
   markThreadRead: markThreadRead,
+  editMessage: editMessage,
   currentUid: currentUid,
   listClasses: listClasses,
   adminSetTalqeen: adminSetTalqeen,

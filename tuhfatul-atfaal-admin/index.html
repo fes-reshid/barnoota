@@ -302,6 +302,10 @@
   .chat-log{max-height:52vh;overflow:auto;padding:12px 2px;display:flex;flex-direction:column;gap:8px}
   .bubble{max-width:78%;padding:9px 13px;border-radius:16px;font-size:16.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
   .bubble small{display:block;font-size:12px;opacity:.75;margin-top:3px}
+  .bubble .msg-edit{border:0;background:none;color:inherit;font:700 12px inherit;cursor:pointer;text-decoration:underline;padding:0 0 0 4px}
+  .bubble.editing{background:#fff;color:var(--ink-navy);border:2px solid var(--green);width:78%}
+  .msg-edit-box{width:100%;min-height:80px;border:1.5px solid #d9c9a3;border-radius:10px;padding:8px;font:16px inherit;resize:vertical}
+  .msg-edit-actions{display:flex;gap:6px;margin-top:6px}
   .bubble.teacher{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:5px}
   .bubble.student{align-self:flex-start;background:var(--parchment);border:1.5px solid var(--gold-soft);border-bottom-left-radius:5px}
   .chat-compose{display:flex;gap:8px;align-items:flex-end;border-top:1px dashed var(--gold-soft);padding-top:10px}
@@ -1086,7 +1090,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=16"></script>
+<script type="module" src="../kids-quest-cloud.js?v=17"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1854,9 +1858,24 @@ function openThread(s){
   window.KidsCloud.getMessages(s.uid).then(ms => {
     if(!activeThread || activeThread.uid !== s.uid) return;
     const log = $('chat-log');
-    log.innerHTML = ms.length ? ms.map(m => '<div class="bubble ' + (m.from === 'teacher' ? 'teacher' : 'student') + '">' + escapeHtml(m.text) + '<small>' +
-      escapeHtml(m.from === 'teacher' ? (m.authorName || 'Teacher') : (s.displayName || s.username)) + ' · ' + fmtTime(m.createdAt) + '</small></div>').join('')
+    const me = window.KidsCloud.currentUid ? window.KidsCloud.currentUid() : null;
+    log.innerHTML = ms.length ? ms.map((m, i) => '<div class="bubble ' + (m.from === 'teacher' ? 'teacher' : 'student') + '">' + escapeHtml(m.text) + '<small>' +
+      escapeHtml(m.from === 'teacher' ? (m.authorName || 'Teacher') : (s.displayName || s.username)) + ' · ' + fmtTime(m.createdAt) + (m.editedAt ? ' · edited' : '') +
+      (m.from === 'teacher' && m.id && m.uid && m.uid === me ? ' <button class="msg-edit" data-medit="' + i + '">✏️ Edit</button>' : '') + '</small></div>').join('')
       : '<p class="muted">No messages yet — say salām!</p>';
+    /* teachers can correct their own messages */
+    log.querySelectorAll('[data-medit]').forEach(btn => btn.onclick = () => {
+      const i = +btn.dataset.medit, m = ms[i], bubble = btn.closest('.bubble');
+      bubble.classList.add('editing');
+      bubble.innerHTML = '<textarea class="msg-edit-box" maxlength="2000"></textarea><div class="msg-edit-actions"><button class="btn primary small" data-save>Save</button><button class="btn ghost small" data-cancel>Cancel</button></div>';
+      const box = bubble.querySelector('textarea'); box.value = m.text; box.focus();
+      bubble.querySelector('[data-cancel]').onclick = () => openThread(s);
+      bubble.querySelector('[data-save]').onclick = () => {
+        const t = box.value.trim(); if(!t || t === m.text){ openThread(s); return; }
+        window.KidsCloud.editMessage(s.uid, m.id, t, i === ms.length - 1).then(() => { toast('Message updated'); const th = threadsCache.find(x => x.studentUid === s.uid); if(th && i === ms.length - 1) th.lastText = t; openThread(s); })
+          .catch(err => alert(friendlyError(err)));
+      };
+    });
     log.scrollTop = log.scrollHeight;
     const t = threadsCache.find(x => x.studentUid === s.uid);
     if(t && t.unreadForStaff){ window.KidsCloud.markThreadRead(s.uid, 'staff').then(() => { t.unreadForStaff = false; renderThreads(); renderReplyList(); }).catch(() => {}); }
