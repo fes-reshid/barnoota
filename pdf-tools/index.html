@@ -1756,6 +1756,7 @@ async function saveAll(onlySel, saveAs) {
       }
     }
     const prot = $('pwChk').checked ? ' It is password protected.' : '';
+    if (window.DiinDonate) DiinDonate.saved(); // may kindly ask for a donation (see /donate.js)
     const done = handle ? `Saved “${saved}”.` : 'PDF saved.';
     toast(lostChars ? done + prot + ' Some characters are not supported by the built-in font and were replaced with “?”.' : done + prot, lostChars ? 5000 : 3000);
   } catch (e) {
@@ -1884,6 +1885,7 @@ async function doSplit() {
     } else {
       where = ' Use the links below to save each part.';
     }
+    if (window.DiinDonate) DiinDonate.saved();
     toast(`Cut into ${parts.length} file${parts.length === 1 ? '' : 's'}.` + where + (lost ? ' Some unsupported characters became “?”.' : ''), 4000);
   } catch (e) {
     console.error(e); toast('Sorry — cutting failed. ' + (e.message || ''), 5000);
@@ -3260,5 +3262,6 @@ setTool('select');
 window.__pdfTools = { get pages() { return pages; }, get ed() { return ed; }, get docs() { return docs; }, get curDocId() { return curDocId; }, get imgStore() { return imgStore; }, buildPdf, computeParts, addFiles, bidiRuns, pageText, isGarbled, get view() { return view; } };
 })();
 </script>
+<script src="/donate.js?v=20260930"></script>
 </body>
 </html>
