@@ -1,5 +1,5 @@
 import { usePageTitle } from '@/context/PageTitleContext';
-import { useRepoList } from '@/lib/useRepoList';
+import { useRepoListAll } from '@/lib/useRepoList';
 import { schoolsRepo } from '@/lib/services';
 import type { School } from '@/types';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
@@ -12,7 +12,7 @@ const STATUSES: School['subscriptionStatus'][] = ['active', 'past_due', 'cancele
 
 export default function SubscriptionsPage() {
   usePageTitle('Subscriptions');
-  const { data: schools, loading, reload } = useRepoList(schoolsRepo);
+  const { data: schools, loading, reload } = useRepoListAll(schoolsRepo);
   const { showToast } = useToast();
 
   async function updatePlan(school: School, plan: School['subscriptionPlan']) {

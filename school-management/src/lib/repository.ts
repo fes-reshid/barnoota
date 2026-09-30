@@ -37,6 +37,8 @@ function writeLocal<T>(key: string, value: T[]): void {
 
 export interface Repository<T extends BaseRecord> {
   list(schoolId: string): Promise<T[]>;
+  /** Every record in this collection, across every school — for super admin screens only. */
+  listAll(): Promise<T[]>;
   listWhere(schoolId: string, field: keyof T, value: unknown): Promise<T[]>;
   get(id: string): Promise<T | null>;
   create(data: Omit<T, 'id' | 'createdAt' | 'updatedAt'>): Promise<T>;
@@ -64,6 +66,14 @@ export function createRepository<T extends BaseRecord>(collectionName: string): 
         return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
       }
       return readLocal<T>(localKey).filter((r) => r.schoolId === schoolId);
+    },
+
+    async listAll() {
+      if (isFirebaseConfigured && db) {
+        const snap = await getDocs(collection(db, collectionName));
+        return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
+      }
+      return readLocal<T>(localKey);
     },
 
     async listWhere(schoolId, field, value) {

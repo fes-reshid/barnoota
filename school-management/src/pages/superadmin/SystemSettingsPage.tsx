@@ -1,5 +1,5 @@
 import { usePageTitle } from '@/context/PageTitleContext';
-import { useRepoList } from '@/lib/useRepoList';
+import { useRepoListAll } from '@/lib/useRepoList';
 import { schoolsRepo } from '@/lib/services';
 import type { School } from '@/types';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
@@ -15,7 +15,7 @@ const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; desc
 
 export default function SystemSettingsPage() {
   usePageTitle('System Settings');
-  const { data: schools, loading, reload } = useRepoList(schoolsRepo);
+  const { data: schools, loading, reload } = useRepoListAll(schoolsRepo);
   const { showToast } = useToast();
 
   async function toggleModule(school: School, key: keyof School['islamicModulesEnabled']) {

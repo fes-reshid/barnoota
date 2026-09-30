@@ -76,15 +76,16 @@ service cloud.firestore {
     // profile in their school. Nobody can change `role` or `schoolId`
     // except staff, preventing self-escalation.
     match /users/{userId} {
-      allow get: if isSignedIn() && (request.auth.uid == userId || (isSchoolStaff() && inMySchool(resource.data.schoolId)));
-      allow list: if isSchoolStaff();
-      allow create, update, delete: if isSchoolStaff() && inMySchool(request.resource.data.schoolId);
+      allow get: if isSignedIn() && (request.auth.uid == userId || isSuperAdmin() || (isSchoolStaff() && inMySchool(resource.data.schoolId)));
+      allow list: if isSuperAdmin() || isSchoolStaff();
+      allow create, update, delete: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId));
     }
 
     // Students: staff manage; a student can read their own record, a
-    // parent can read their linked children's records.
+    // parent can read their linked children's records; a super admin can
+    // read across every school (for platform-wide stats).
     match /students/{studentId} {
-      allow read: if canWriteInMySchool(resource.data) || isMyStudent(studentId) || isMyChild(studentId);
+      allow read: if isSuperAdmin() || canWriteInMySchool(resource.data) || isMyStudent(studentId) || isMyChild(studentId);
       allow write: if canWriteInMySchool(request.resource.data);
     }
 

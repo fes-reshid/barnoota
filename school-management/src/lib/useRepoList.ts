@@ -29,3 +29,29 @@ export function useRepoList<T extends BaseRecord>(repo: Repository<T>) {
 
   return { data, loading, reload, setData };
 }
+
+/**
+ * Loads every record in a repository across every school — only for super
+ * admin screens (Schools, cross-school subscriptions/settings), where
+ * Firestore rules already grant a super admin unrestricted read access.
+ */
+export function useRepoListAll<T extends BaseRecord>(repo: Repository<T>) {
+  const [data, setData] = useState<T[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      const items = await repo.listAll();
+      setData(items);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  return { data, loading, reload, setData };
+}

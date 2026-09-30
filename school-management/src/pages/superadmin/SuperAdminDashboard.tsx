@@ -1,6 +1,6 @@
 import { Building2, ShieldCheck, Wallet, GraduationCap } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
-import { useRepoList } from '@/lib/useRepoList';
+import { useRepoListAll } from '@/lib/useRepoList';
 import { schoolsRepo, usersRepo, studentsRepo } from '@/lib/services';
 import { StatCard } from '@/components/ui/StatCard';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
@@ -9,9 +9,9 @@ import { Badge } from '@/components/ui/Badge';
 
 export default function SuperAdminDashboard() {
   usePageTitle('System Overview');
-  const { data: schools, loading: l1 } = useRepoList(schoolsRepo);
-  const { data: users, loading: l2 } = useRepoList(usersRepo);
-  const { data: students, loading: l3 } = useRepoList(studentsRepo);
+  const { data: schools, loading: l1 } = useRepoListAll(schoolsRepo);
+  const { data: users, loading: l2 } = useRepoListAll(usersRepo);
+  const { data: students, loading: l3 } = useRepoListAll(studentsRepo);
 
   if (l1 || l2 || l3) return <Spinner />;
 

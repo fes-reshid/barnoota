@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
-import { useRepoList } from '@/lib/useRepoList';
-import { schoolsRepo, DEMO_SCHOOL_ID } from '@/lib/services';
+import { useRepoListAll } from '@/lib/useRepoList';
+import { schoolsRepo } from '@/lib/services';
 import type { School } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
@@ -15,7 +15,7 @@ const emptyForm = { name: '', address: '', phone: '', email: '', subscriptionPla
 
 export default function SchoolsPage() {
   usePageTitle('Schools');
-  const { data: schools, loading, reload } = useRepoList(schoolsRepo);
+  const { data: schools, loading, reload } = useRepoListAll(schoolsRepo);
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -24,12 +24,17 @@ export default function SchoolsPage() {
   async function handleCreate() {
     setSaving(true);
     try {
-      await schoolsRepo.create({
-        schoolId: DEMO_SCHOOL_ID,
+      // Each school is its own tenant, so it needs a fresh, unique schoolId
+      // rather than reusing the creating admin's — school documents are
+      // conventionally self-referencing (schoolId === their own doc id), so
+      // create first to get a real id, then patch it in.
+      const created = await schoolsRepo.create({
+        schoolId: 'pending',
         ...form,
         subscriptionStatus: 'active',
         islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true },
       });
+      await schoolsRepo.update(created.id, { schoolId: created.id });
       showToast('School added.');
       setOpen(false);
       setForm(emptyForm);
