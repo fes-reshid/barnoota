@@ -571,6 +571,8 @@
               <button class="btn primary" id="saveBtn" type="button">⬇ Save PDF…</button>
               <button class="btn" id="saveSelBtn" data-need-sel type="button" title="Select pages in the page organizer first">Save selected…</button>
             </div>
+            <label class="opt" id="directDlRow"><input type="checkbox" id="directDl">
+              <span>Save straight to Downloads<br><span class="sub">Skip the “Save as” window. Use this if your browser won't let you pick a folder.</span></span></label>
             <p class="sub hidden" id="saveNote" style="margin:10px 0 0">Your browser can't show a “Save as” window here, so files go to its Downloads folder. To choose a location every time, turn on <em>“Ask where to save each file”</em> in your browser's download settings.</p>
             <div class="warnbox hidden" id="whiteoutWarn" role="note">
               <strong>⚠ White-out only hides text from view.</strong> The covered text is still inside the file
@@ -784,20 +786,26 @@ const FILE_TYPES = {
 };
 // Must run straight from a click, before any slow work, or the browser refuses to show the window.
 // Resolves with a file handle, or null to fall back to a download; throws CANCELLED if the user cancels.
+// Chrome won't let a web page save into protected folders (the main user folder, Windows or system
+// folders) and says "can't open files in this folder because it contains system files". So the window
+// always starts in Documents, and cancelling explains where to save instead.
+const PICKER = { id: 'pdf-tools-save-v2', startIn: 'documents' };
+const PROTECTED_HINT = 'Not saved. If Chrome said it “can\'t open files in this folder”, pick Documents, Desktop or Downloads — or tick “Save straight to Downloads” under Save / Export.';
+const directDownload = () => { try { return localStorage.getItem('pdf-tools-direct') === '1'; } catch (e) { return false; } };
 async function askSaveFile(name, kind) {
-  if (!CAN_PICK_FILE) return null;
-  try { return await window.showSaveFilePicker({ suggestedName: name, types: FILE_TYPES[kind], id: 'pdf-tools-save' }); }
+  if (!CAN_PICK_FILE || directDownload()) return null;
+  try { return await window.showSaveFilePicker({ suggestedName: name, types: FILE_TYPES[kind], ...PICKER }); }
   catch (e) {
-    if (e && e.name === 'AbortError') throw CANCELLED;
+    if (e && e.name === 'AbortError') { toast(PROTECTED_HINT, 7000); throw CANCELLED; }
     console.warn('Save dialog unavailable, downloading instead', e);
     return null;
   }
 }
 async function askSaveFolder() {
-  if (!CAN_PICK_DIR) return null;
-  try { return await window.showDirectoryPicker({ mode: 'readwrite', id: 'pdf-tools-save' }); }
+  if (!CAN_PICK_DIR || directDownload()) return null;
+  try { return await window.showDirectoryPicker({ mode: 'readwrite', ...PICKER }); }
   catch (e) {
-    if (e && e.name === 'AbortError') throw CANCELLED;
+    if (e && e.name === 'AbortError') { toast(PROTECTED_HINT, 7000); throw CANCELLED; }
     console.warn('Folder dialog unavailable, falling back', e);
     return null;
   }
@@ -3013,6 +3021,9 @@ $('fromTabBtn').onclick = () => {
 };
 $('saveBtn').onclick = $('topSaveBtn').onclick = () => saveAll(false);
 $('saveNote').classList.toggle('hidden', CAN_PICK_FILE);
+$('directDlRow').classList.toggle('hidden', !CAN_PICK_FILE); // only meaningful where a Save as window exists
+$('directDl').checked = directDownload();
+$('directDl').onchange = () => { try { localStorage.setItem('pdf-tools-direct', $('directDl').checked ? '1' : '0'); } catch (e) { /* storage blocked */ } };
 $('pwChk').onchange = () => {
   $('pwFields').classList.toggle('hidden', !$('pwChk').checked);
   if ($('pwChk').checked) $('pwInput').focus();
