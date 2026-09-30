@@ -1090,7 +1090,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=17"></script>
+<script type="module" src="../kids-quest-cloud.js?v=18"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1748,8 +1748,10 @@ function renderAnnouncements(){
     const cs = commentsCache[a.id] || [], waiting = unansweredIn(cs);
     const card = document.createElement('div'); card.className = 'ann-card' + (a.pinned ? ' pinned' : ''); card.id = 'ann-' + a.id;
     const top = cs.filter(c => !c.replyTo || !cs.some(p => p.id === c.replyTo));
+    const meUid = window.KidsCloud.currentUid ? window.KidsCloud.currentUid() : null, own = canManageAnn(a);
     const cmtHtml = c => '<div class="cmt ' + (c.role === 'teacher' ? 'teacher' : '') + (waiting.includes(c) ? ' unanswered' : '') + '" data-cid="' + escapeHtml(c.id) + '"><div class="who">' +
-      (c.role === 'teacher' ? '🧑‍🏫 ' : '🧒 ') + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + ' <span class="muted">· ' + fmtTime(c.createdAt) + '</span>' +
+      (c.role === 'teacher' ? '🧑‍🏫 ' : '🧒 ') + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + ' <span class="muted">· ' + fmtTime(c.createdAt) + (c.editedAt ? ' · edited' : '') + '</span>' +
+      (c.uid && c.uid === meUid ? '<button class="linkbtn" data-cedit="' + escapeHtml(c.id) + '">✏️ Edit</button>' : '') +
       (waiting.includes(c) ? '<span class="role-badge warn">Needs reply</span>' : '') + '<button class="x" data-del="' + escapeHtml(c.id) + '" title="Remove comment">✕</button></div><p>' + escapeHtml(c.text) + '</p>' +
       (c.role === 'student' ? '<button class="linkbtn" data-reply="' + escapeHtml(c.id) + '">↩ Reply</button><div class="reply-box hidden" data-replybox="' + escapeHtml(c.id) + '"><input placeholder="Your answer…" maxlength="1000"><button class="btn primary small">Send</button></div>' : '') + '</div>';
     card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + (a.pinned ? '<span class="role-badge warn">📌 Pinned</span>' : '') +
@@ -1757,11 +1759,13 @@ function renderAnnouncements(){
       (waiting.length ? '<span class="role-badge warn">' + waiting.length + ' question' + (waiting.length > 1 ? 's' : '') + ' waiting</span>' : '') + '</div>' +
       '<h3>' + escapeHtml(a.title || 'Announcement') + '</h3><div class="muted">' + escapeHtml(a.authorName || 'Teacher') + ' · ' + fmtTime(a.createdAt) + '</div>' +
       '<div class="ann-body">' + escapeHtml(a.body) + '</div>' +
-      '<div class="ann-tools"><button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn ghost small" data-act="toggle">' + (a.commentsOpen ? '🔒 Close comments' : '🔓 Open comments') + '</button>' +
-      '<button class="btn ghost small" data-act="pin">' + (a.pinned ? 'Unpin' : '📌 Pin') + '</button><button class="btn danger small" data-act="del">Delete</button></div>' +
+      (own ? '<div class="ann-tools"><button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn ghost small" data-act="toggle">' + (a.commentsOpen ? '🔒 Close comments' : '🔓 Open comments') + '</button>' +
+      '<button class="btn ghost small" data-act="pin">' + (a.pinned ? 'Unpin' : '📌 Pin') + '</button><button class="btn danger small" data-act="del">Delete</button></div>'
+        : '<p class="muted" style="font-size:13.5px;margin:8px 0 0">Only ' + escapeHtml(a.authorName || 'the teacher who posted it') + ' (or an admin) can edit this announcement.</p>') +
       '<div class="comments"><h3 style="font-size:15px">💬 Comments (' + cs.length + ')</h3>' +
       (cs.length ? top.map(c => cmtHtml(c) + cs.filter(r => r.replyTo === c.id).map(cmtHtml).join('')).join('') : '<p class="muted">No comments yet.</p>') +
       '<div class="reply-box"><input data-general placeholder="Add a comment for everyone…" maxlength="1000"><button class="btn ghost small" data-act="comment">Post</button></div></div>';
+    if(own){
     card.querySelector('[data-act="edit"]').onclick = () => startEditAnn(a);
     card.querySelector('[data-act="toggle"]').onclick = () => saveAnnPatch(a, { commentsOpen: !a.commentsOpen }, a.commentsOpen ? 'Comments closed' : 'Comments opened');
     card.querySelector('[data-act="pin"]').onclick = () => saveAnnPatch(a, { pinned: !a.pinned }, a.pinned ? 'Unpinned' : 'Pinned to the top');
@@ -1769,6 +1773,16 @@ function renderAnnouncements(){
       if(!confirm('Delete “' + (a.title || 'this announcement') + '” and all its comments?')) return;
       window.KidsCloud.adminDeleteAnnouncement(a.id).then(() => { toast('Announcement deleted'); loadAnnouncements(); }).catch(err => alert(friendlyError(err)));
     };
+    }
+    card.querySelectorAll('[data-cedit]').forEach(b => b.onclick = () => {
+      const c = cs.find(x => x.id === b.dataset.cedit), el = card.querySelector('.cmt[data-cid="' + b.dataset.cedit + '"] p'); if(!c || !el) return;
+      el.outerHTML = '<div class="reply-box" data-editbox><input maxlength="1000"><button class="btn primary small" data-save>Save</button><button class="btn ghost small" data-cancel>Cancel</button></div>';
+      const eb = card.querySelector('[data-editbox]'), inp = eb.querySelector('input'); inp.value = c.text; inp.focus();
+      eb.querySelector('[data-cancel]').onclick = () => renderAnnouncements();
+      const save = () => { const t = inp.value.trim(); if(!t || t === c.text){ renderAnnouncements(); return; }
+        window.KidsCloud.editComment(a.id, c.id, t).then(() => { toast('Comment updated'); return refreshComments(a.id); }).catch(err => alert(friendlyError(err))); };
+      eb.querySelector('[data-save]').onclick = save; inp.onkeydown = e => { if(e.key === 'Enter') save(); };
+    });
     card.querySelectorAll('[data-reply]').forEach(b => b.onclick = () => { const box = card.querySelector('[data-replybox="' + b.dataset.reply + '"]'); box.classList.toggle('hidden'); box.querySelector('input').focus(); });
     card.querySelectorAll('[data-replybox]').forEach(rb => {
       const send = () => postComment(a, rb.querySelector('input').value, rb.dataset.replybox);
@@ -1784,6 +1798,8 @@ function renderAnnouncements(){
     box.appendChild(card);
   });
 }
+/* Announcements can be changed only by the teacher who posted them, or an admin. */
+function canManageAnn(a){ return myRole !== 'teacher' || !a.by || String(a.by).toLowerCase() === String(myEmail || '').toLowerCase(); }
 function refreshComments(id){
   return window.KidsCloud.listComments(id).then(cs => { commentsCache[id] = cs; renderAnnouncements(); renderReplyList(); });
 }

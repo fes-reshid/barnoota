@@ -738,6 +738,12 @@ function addComment(announcementId, c){
     createdAt: new Date().toISOString()
   }).then(function(){ return ref.id; });
 }
+/* The writer of a comment may correct its text. */
+function editComment(announcementId, commentId, text){
+  const clean = String(text || '').trim().slice(0, 1000);
+  if(!clean) return Promise.reject(new Error('A comment can’t be empty.'));
+  return updateDoc(doc(db, ANNOUNCEMENTS_COLLECTION, announcementId, 'comments', commentId), { text: clean, editedAt: new Date().toISOString() });
+}
 function deleteComment(announcementId, commentId){
   return deleteDoc(doc(db, ANNOUNCEMENTS_COLLECTION, announcementId, 'comments', commentId));
 }
@@ -1120,6 +1126,7 @@ window.KidsCloud = {
   listComments: listComments,
   addComment: addComment,
   deleteComment: deleteComment,
+  editComment: editComment,
   listMessageThreads: listMessageThreads,
   getMessageThread: getMessageThread,
   getMessages: getMessages,
