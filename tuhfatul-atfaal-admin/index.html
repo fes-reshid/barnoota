@@ -302,6 +302,10 @@
   .chat-log{max-height:52vh;overflow:auto;padding:12px 2px;display:flex;flex-direction:column;gap:8px}
   .bubble{max-width:78%;padding:9px 13px;border-radius:16px;font-size:16.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
   .bubble small{display:block;font-size:12px;opacity:.75;margin-top:3px}
+  .bubble .msg-edit{border:0;background:none;color:inherit;font:700 12px inherit;cursor:pointer;text-decoration:underline;padding:0 0 0 4px}
+  .bubble.editing{background:#fff;color:var(--ink-navy);border:2px solid var(--green);width:78%}
+  .msg-edit-box{width:100%;min-height:80px;border:1.5px solid #d9c9a3;border-radius:10px;padding:8px;font:16px inherit;resize:vertical}
+  .msg-edit-actions{display:flex;gap:6px;margin-top:6px}
   .bubble.teacher{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:5px}
   .bubble.student{align-self:flex-start;background:var(--parchment);border:1.5px solid var(--gold-soft);border-bottom-left-radius:5px}
   .chat-compose{display:flex;gap:8px;align-items:flex-end;border-top:1px dashed var(--gold-soft);padding-top:10px}
@@ -1086,7 +1090,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=16"></script>
+<script type="module" src="../kids-quest-cloud.js?v=18"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1744,8 +1748,10 @@ function renderAnnouncements(){
     const cs = commentsCache[a.id] || [], waiting = unansweredIn(cs);
     const card = document.createElement('div'); card.className = 'ann-card' + (a.pinned ? ' pinned' : ''); card.id = 'ann-' + a.id;
     const top = cs.filter(c => !c.replyTo || !cs.some(p => p.id === c.replyTo));
+    const meUid = window.KidsCloud.currentUid ? window.KidsCloud.currentUid() : null, own = canManageAnn(a);
     const cmtHtml = c => '<div class="cmt ' + (c.role === 'teacher' ? 'teacher' : '') + (waiting.includes(c) ? ' unanswered' : '') + '" data-cid="' + escapeHtml(c.id) + '"><div class="who">' +
-      (c.role === 'teacher' ? '🧑‍🏫 ' : '🧒 ') + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + ' <span class="muted">· ' + fmtTime(c.createdAt) + '</span>' +
+      (c.role === 'teacher' ? '🧑‍🏫 ' : '🧒 ') + escapeHtml(c.authorName || studentName(c.uid) || 'Student') + ' <span class="muted">· ' + fmtTime(c.createdAt) + (c.editedAt ? ' · edited' : '') + '</span>' +
+      (c.uid && c.uid === meUid ? '<button class="linkbtn" data-cedit="' + escapeHtml(c.id) + '">✏️ Edit</button>' : '') +
       (waiting.includes(c) ? '<span class="role-badge warn">Needs reply</span>' : '') + '<button class="x" data-del="' + escapeHtml(c.id) + '" title="Remove comment">✕</button></div><p>' + escapeHtml(c.text) + '</p>' +
       (c.role === 'student' ? '<button class="linkbtn" data-reply="' + escapeHtml(c.id) + '">↩ Reply</button><div class="reply-box hidden" data-replybox="' + escapeHtml(c.id) + '"><input placeholder="Your answer…" maxlength="1000"><button class="btn primary small">Send</button></div>' : '') + '</div>';
     card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + (a.pinned ? '<span class="role-badge warn">📌 Pinned</span>' : '') +
@@ -1753,11 +1759,13 @@ function renderAnnouncements(){
       (waiting.length ? '<span class="role-badge warn">' + waiting.length + ' question' + (waiting.length > 1 ? 's' : '') + ' waiting</span>' : '') + '</div>' +
       '<h3>' + escapeHtml(a.title || 'Announcement') + '</h3><div class="muted">' + escapeHtml(a.authorName || 'Teacher') + ' · ' + fmtTime(a.createdAt) + '</div>' +
       '<div class="ann-body">' + escapeHtml(a.body) + '</div>' +
-      '<div class="ann-tools"><button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn ghost small" data-act="toggle">' + (a.commentsOpen ? '🔒 Close comments' : '🔓 Open comments') + '</button>' +
-      '<button class="btn ghost small" data-act="pin">' + (a.pinned ? 'Unpin' : '📌 Pin') + '</button><button class="btn danger small" data-act="del">Delete</button></div>' +
+      (own ? '<div class="ann-tools"><button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn ghost small" data-act="toggle">' + (a.commentsOpen ? '🔒 Close comments' : '🔓 Open comments') + '</button>' +
+      '<button class="btn ghost small" data-act="pin">' + (a.pinned ? 'Unpin' : '📌 Pin') + '</button><button class="btn danger small" data-act="del">Delete</button></div>'
+        : '<p class="muted" style="font-size:13.5px;margin:8px 0 0">Only ' + escapeHtml(a.authorName || 'the teacher who posted it') + ' (or an admin) can edit this announcement.</p>') +
       '<div class="comments"><h3 style="font-size:15px">💬 Comments (' + cs.length + ')</h3>' +
       (cs.length ? top.map(c => cmtHtml(c) + cs.filter(r => r.replyTo === c.id).map(cmtHtml).join('')).join('') : '<p class="muted">No comments yet.</p>') +
       '<div class="reply-box"><input data-general placeholder="Add a comment for everyone…" maxlength="1000"><button class="btn ghost small" data-act="comment">Post</button></div></div>';
+    if(own){
     card.querySelector('[data-act="edit"]').onclick = () => startEditAnn(a);
     card.querySelector('[data-act="toggle"]').onclick = () => saveAnnPatch(a, { commentsOpen: !a.commentsOpen }, a.commentsOpen ? 'Comments closed' : 'Comments opened');
     card.querySelector('[data-act="pin"]').onclick = () => saveAnnPatch(a, { pinned: !a.pinned }, a.pinned ? 'Unpinned' : 'Pinned to the top');
@@ -1765,6 +1773,16 @@ function renderAnnouncements(){
       if(!confirm('Delete “' + (a.title || 'this announcement') + '” and all its comments?')) return;
       window.KidsCloud.adminDeleteAnnouncement(a.id).then(() => { toast('Announcement deleted'); loadAnnouncements(); }).catch(err => alert(friendlyError(err)));
     };
+    }
+    card.querySelectorAll('[data-cedit]').forEach(b => b.onclick = () => {
+      const c = cs.find(x => x.id === b.dataset.cedit), el = card.querySelector('.cmt[data-cid="' + b.dataset.cedit + '"] p'); if(!c || !el) return;
+      el.outerHTML = '<div class="reply-box" data-editbox><input maxlength="1000"><button class="btn primary small" data-save>Save</button><button class="btn ghost small" data-cancel>Cancel</button></div>';
+      const eb = card.querySelector('[data-editbox]'), inp = eb.querySelector('input'); inp.value = c.text; inp.focus();
+      eb.querySelector('[data-cancel]').onclick = () => renderAnnouncements();
+      const save = () => { const t = inp.value.trim(); if(!t || t === c.text){ renderAnnouncements(); return; }
+        window.KidsCloud.editComment(a.id, c.id, t).then(() => { toast('Comment updated'); return refreshComments(a.id); }).catch(err => alert(friendlyError(err))); };
+      eb.querySelector('[data-save]').onclick = save; inp.onkeydown = e => { if(e.key === 'Enter') save(); };
+    });
     card.querySelectorAll('[data-reply]').forEach(b => b.onclick = () => { const box = card.querySelector('[data-replybox="' + b.dataset.reply + '"]'); box.classList.toggle('hidden'); box.querySelector('input').focus(); });
     card.querySelectorAll('[data-replybox]').forEach(rb => {
       const send = () => postComment(a, rb.querySelector('input').value, rb.dataset.replybox);
@@ -1780,6 +1798,8 @@ function renderAnnouncements(){
     box.appendChild(card);
   });
 }
+/* Announcements can be changed only by the teacher who posted them, or an admin. */
+function canManageAnn(a){ return myRole !== 'teacher' || !a.by || String(a.by).toLowerCase() === String(myEmail || '').toLowerCase(); }
 function refreshComments(id){
   return window.KidsCloud.listComments(id).then(cs => { commentsCache[id] = cs; renderAnnouncements(); renderReplyList(); });
 }
@@ -1854,9 +1874,24 @@ function openThread(s){
   window.KidsCloud.getMessages(s.uid).then(ms => {
     if(!activeThread || activeThread.uid !== s.uid) return;
     const log = $('chat-log');
-    log.innerHTML = ms.length ? ms.map(m => '<div class="bubble ' + (m.from === 'teacher' ? 'teacher' : 'student') + '">' + escapeHtml(m.text) + '<small>' +
-      escapeHtml(m.from === 'teacher' ? (m.authorName || 'Teacher') : (s.displayName || s.username)) + ' · ' + fmtTime(m.createdAt) + '</small></div>').join('')
+    const me = window.KidsCloud.currentUid ? window.KidsCloud.currentUid() : null;
+    log.innerHTML = ms.length ? ms.map((m, i) => '<div class="bubble ' + (m.from === 'teacher' ? 'teacher' : 'student') + '">' + escapeHtml(m.text) + '<small>' +
+      escapeHtml(m.from === 'teacher' ? (m.authorName || 'Teacher') : (s.displayName || s.username)) + ' · ' + fmtTime(m.createdAt) + (m.editedAt ? ' · edited' : '') +
+      (m.from === 'teacher' && m.id && m.uid && m.uid === me ? ' <button class="msg-edit" data-medit="' + i + '">✏️ Edit</button>' : '') + '</small></div>').join('')
       : '<p class="muted">No messages yet — say salām!</p>';
+    /* teachers can correct their own messages */
+    log.querySelectorAll('[data-medit]').forEach(btn => btn.onclick = () => {
+      const i = +btn.dataset.medit, m = ms[i], bubble = btn.closest('.bubble');
+      bubble.classList.add('editing');
+      bubble.innerHTML = '<textarea class="msg-edit-box" maxlength="2000"></textarea><div class="msg-edit-actions"><button class="btn primary small" data-save>Save</button><button class="btn ghost small" data-cancel>Cancel</button></div>';
+      const box = bubble.querySelector('textarea'); box.value = m.text; box.focus();
+      bubble.querySelector('[data-cancel]').onclick = () => openThread(s);
+      bubble.querySelector('[data-save]').onclick = () => {
+        const t = box.value.trim(); if(!t || t === m.text){ openThread(s); return; }
+        window.KidsCloud.editMessage(s.uid, m.id, t, i === ms.length - 1).then(() => { toast('Message updated'); const th = threadsCache.find(x => x.studentUid === s.uid); if(th && i === ms.length - 1) th.lastText = t; openThread(s); })
+          .catch(err => alert(friendlyError(err)));
+      };
+    });
     log.scrollTop = log.scrollHeight;
     const t = threadsCache.find(x => x.studentUid === s.uid);
     if(t && t.unreadForStaff){ window.KidsCloud.markThreadRead(s.uid, 'staff').then(() => { t.unreadForStaff = false; renderThreads(); renderReplyList(); }).catch(() => {}); }
