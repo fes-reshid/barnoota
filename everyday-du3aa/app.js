@@ -11,7 +11,7 @@
     showBenefit: true,
     lang: "en",
     arabicFont: "amiri",
-    borderTheme: "gold",
+    borderTheme: "playful",
     printSize: "flashcard",
     orientation: "portrait",
     drawing: false,
@@ -180,26 +180,47 @@
     }).join('<span class="crumb-sep">/</span>') + "</nav>";
   }
 
+  // Cosmetic-only grouping of the data categories into "chapters" for the
+  // home page's journey layout, mirroring My Salah Adventure's home screen.
+  var HOME_CHAPTERS = [
+    { title: "Everyday Routine", hint: "Wake, sleep, wash and eat with a du’a", keys: ["wake", "sleep", "purify", "home", "food"] },
+    { title: "Prayer & Protection", hint: "Remembrance, hardship and refuge", keys: ["salah", "distress", "remembrance"] },
+    { title: "Life’s Big Moments", hint: "Children, marriage, sickness and Ḥajj", keys: ["children", "marriage", "sickness", "hajj"] },
+    { title: "Out in the World", hint: "Travel, weather, people and feelings", keys: ["travel", "nature", "social", "speech", "feelings"] }
+  ];
+  var TINTS = ["#d4f4df", "#dbf3fc", "#ffefce", "#e4e5ff", "#ffdfdc", "#dbf4ec", "#fae9ce", "#e8dcfa", "#dbf0ff", "#ffe1e4", "#daf4df", "#fde2c8"];
+
   function renderHome() {
     var cats = state.data.categories;
+    var total = state.data.meta.duaCount;
+    var known = state.known.size;
+    var pct = total ? Math.round((known / total) * 100) : 0;
     var html = "";
-    html += '<div class="hero">';
-    html += '<p class="eyebrow">Diin Islaam</p>';
-    html += '<h1><span class="arabic" dir="rtl" lang="ar">أذكار المسلم اليومية</span></h1>';
-    html += '<h2>Everyday Du’a — Memorize, Print &amp; Stick on the Wall</h2>';
-    html += '<p class="lead">All ' + state.data.meta.duaCount + ' supplications from <em>Hisnul Muslim</em> (Fortress of the Muslim), '
-      + 'organized by everyday moment. Add transliteration, a translation, and choose a language — '
-      + 'then print a flashcard deck, a wall poster, or start a memorize session.</p>';
+
+    html += '<section class="home-hero">';
+    html += '<div class="hero-copy">';
+    html += '<span class="eyebrow">DIIN ISLAAM · EVERYDAY DU’A</span>';
+    html += '<h1>Everyday Du’a Adventure<span dir="rtl" lang="ar">أذكار المسلم اليومية</span></h1>';
+    html += '<p>All ' + total + ' du’as from <em>Hisnul Muslim</em>, one everyday moment at a time. '
+      + 'Add transliteration and a translation, memorize with flip-cards, then print a flashcard deck, a wall poster '
+      + 'or even a certificate — with your own edits and choice of border.</p>';
+    html += '<a class="primary" href="#/kids">' + (known ? "Continue my journey" : "Start the journey") + " →</a>";
+    html += "</div>";
+    html += '<div class="hero-stage"><div class="hero-arch"></div><div class="hero-emoji" aria-hidden="true">🤲</div>'
+      + '<span class="hero-spark a">✦</span><span class="hero-spark b">✧</span></div>';
+    html += "</section>";
+
+    html += '<section class="progress-panel" aria-label="Memorize progress">'
+      + '<div class="progress-ring" style="--progress:' + pct + '%"><strong>' + pct + "%</strong></div>"
+      + "<div><h2>" + (known === 0 ? "Your memorize journey starts here" : known >= total ? "Every du’a memorized — masha’Allah!" : "Your journey continues") + "</h2>"
+      + "<p>" + known + " of " + total + " du’as marked memorized" + (known < total ? " · keep going" : "") + ".</p></div>"
+      + '<div class="star-count">✅ ' + known + "</div>"
+      + "</section>";
+
     html += '<form class="search-row" id="searchForm">'
       + '<input type="search" id="searchInput" placeholder="Search — e.g. ‘sleep’, ‘travel’, ‘rain’…" aria-label="Search du’as">'
       + '<button class="btn btn-primary" type="submit">Search</button>'
       + "</form>";
-    html += '<div class="hero-actions">'
-      + '<a class="btn btn-primary" href="#/kids">👶 Kids’ Daily Essentials</a>'
-      + '<a class="btn btn-ghost" href="#/memorize/all">🧠 Memorize mode</a>'
-      + '<button class="btn btn-ghost" type="button" id="openSettingsHero">🎨 Print &amp; language settings</button>'
-      + "</div>";
-    html += "</div>";
 
     html += '<div class="kids-strip">';
     html += '<div class="kids-strip-head"><h2>👶 Kids’ Daily Essentials</h2><a href="#/kids">See all &amp; print →</a></div>';
@@ -212,17 +233,33 @@
     });
     html += "</div></div>";
 
-    html += '<div class="cat-grid">';
-    cats.forEach(function (c) {
-      var chapters = chaptersInCategory(c.key);
-      var duaCount = chapters.reduce(function (n, ch) { return n + ch.duas.length; }, 0);
-      html += '<a class="cat-card" href="#/c/' + c.key + '">'
-        + '<span class="cat-icon" aria-hidden="true">' + c.icon + "</span>"
-        + '<span class="cat-label">' + esc(c.label) + "</span>"
-        + '<span class="cat-count">' + chapters.length + " topics · " + duaCount + " du’as</span>"
-        + "</a>";
+    html += '<div class="journey-title"><span class="eyebrow">CHOOSE A TOPIC</span><h2>Browse every du’a</h2>'
+      + "<p>Tap any topic to explore its du’as, memorize them, or print a set.</p></div>";
+
+    var tintIndex = 0;
+    HOME_CHAPTERS.forEach(function (chap, ci) {
+      html += '<section class="chapter"><div class="chapter-heading"><span>Chapter ' + (ci + 1) + " · " + esc(chap.title) + "</span><small>" + esc(chap.hint) + "</small></div>";
+      html += '<div class="journey-grid">';
+      chap.keys.forEach(function (key) {
+        var c = cats.find(function (cc) { return cc.key === key; });
+        if (!c) return;
+        var chapters = chaptersInCategory(c.key);
+        var duaCount = chapters.reduce(function (n, ch) { return n + ch.duas.length; }, 0);
+        var tint = TINTS[tintIndex % TINTS.length]; tintIndex++;
+        html += '<a class="journey-card" href="#/c/' + c.key + '" style="--tint:' + tint + '">'
+          + '<div class="journey-art">' + c.icon + "</div>"
+          + '<h3>' + esc(c.label) + "</h3>"
+          + '<div class="journey-footer"><span>' + chapters.length + " topics</span><b>" + duaCount + " du’as</b></div>"
+          + "</a>";
+      });
+      html += "</div></section>";
     });
-    html += "</div>";
+
+    html += '<div class="home-note"><span>🎨</span><p>'
+      + '<button type="button" class="link-btn" id="openSettingsHero">Open print &amp; language settings</button> to change the Arabic font, '
+      + "card border (including a bold Certificate style), print size and orientation — or edit any du’a’s text right "
+      + "before you print it.</p></div>";
+
     mount.innerHTML = html;
     bindHomeEvents();
   }
@@ -555,6 +592,7 @@
     var html = '<div class="print-card">';
     html += '<div class="print-card-inner">';
     html += '<div class="print-corners"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>';
+    html += '<div class="print-seal" aria-hidden="true"><span>۞</span></div>';
     html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>" + repeatBadge + "</header>";
     if (dua.arabic || editable) {
       html += '<p class="dua-arabic arabic' + editClass + '" dir="rtl" lang="ar"' + editAttrs("arabic") + ">" + esc(dua.arabic || "") + "</p>";
@@ -696,7 +734,14 @@
       var el = document.getElementById(idPrefix + c.suffix);
       if (!el) return;
       el.addEventListener(c.numeric ? "input" : "change", function (e) {
-        state.settings[c.key] = c.checkbox ? e.target.checked : (c.numeric ? Number(e.target.value) : e.target.value);
+        var value = c.checkbox ? e.target.checked : (c.numeric ? Number(e.target.value) : e.target.value);
+        state.settings[c.key] = value;
+        // The certificate border is designed as a one-per-page landscape
+        // piece, like an actual certificate, so picking it pulls those in too.
+        if (c.key === "borderTheme" && value === "certificate") {
+          state.settings.printSize = "poster";
+          state.settings.orientation = "landscape";
+        }
         saveSettings();
         afterChange(c.textish);
       });
