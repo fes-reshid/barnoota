@@ -16,7 +16,7 @@
     --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
     --sky:#2f97cb; --sky-bg:#e3f2fa;
     --coral:#e0703a; --danger:#a3352b; --danger-bg:#f7dede;
-    --maxw:1120px;
+    --maxw:1360px;
   }
   *{box-sizing:border-box;}
   html,body{ overflow-x:hidden; }
@@ -108,6 +108,66 @@
   .tab .count{ background:var(--parchment-deep); border-radius:999px; padding:1px 8px; font-size:12.5px; }
   .tab.active{ background:var(--green); border-color:var(--green); color:#fff; }
   .tab.active .count{ background:rgba(255,255,255,.2); }
+
+  /* ---- sidebar layout (like a tools panel) ---- */
+  .portal-shell{ display:grid; grid-template-columns:250px minmax(0,1fr); gap:18px; align-items:start; }
+  .portal-shell.collapsed{ grid-template-columns:70px minmax(0,1fr); }
+  .side-nav{ position:sticky; top:10px; background:#fbf6e9; border:2px solid var(--gold-soft); border-radius:20px; padding:10px 8px 12px;
+    box-shadow:0 8px 20px rgba(60,45,20,.08); max-height:calc(100vh - 20px); overflow:auto; }
+  .side-head{ display:flex; align-items:center; justify-content:space-between; padding:4px 8px 8px; border-bottom:1px solid #eadcb8; margin-bottom:4px; }
+  .side-head b{ font:20px 'Marcellus'; color:var(--ink-navy); }
+  .side-x{ border:0; background:none; font-size:20px; color:#8a7654; cursor:pointer; border-radius:10px; padding:2px 8px; }
+  .side-x:hover{ background:#f2e6c9; }
+  .side-group{ font:700 11.5px Nunito,system-ui; letter-spacing:.08em; text-transform:uppercase; color:#a08a5c; padding:10px 10px 4px; }
+  .side-nav .tab{ width:100%; display:flex; align-items:center; gap:11px; border:2px solid transparent; background:none; border-radius:14px;
+    padding:7px 8px; margin:1px 0; font-family:'Marcellus'; font-size:16px; color:var(--ink-navy); text-align:left; cursor:pointer; }
+  .side-nav .tab:hover{ background:#f2e6c9; }
+  .side-nav .tab.active{ background:#fff; border-color:var(--green); box-shadow:0 3px 10px rgba(46,107,88,.14); color:var(--green-dark); }
+  .side-nav .tab .ti{ flex:none; width:36px; height:36px; border-radius:11px; display:grid; place-items:center; font-size:18px;
+    background:var(--c); box-shadow:inset 0 -2px 0 rgba(0,0,0,.15); }
+  .side-nav .tab .tl{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .side-nav .tab .count{ background:var(--parchment-deep); border-radius:999px; padding:1px 8px; font:700 12.5px Nunito,system-ui; color:var(--ink-brown); }
+  .side-nav .tab.active .count{ background:var(--green); color:#fff; }
+  .side-nav .tab .arr{ color:#b59c68; font-size:13px; }
+  .portal-shell.collapsed .side-nav .tl, .portal-shell.collapsed .side-nav .arr, .portal-shell.collapsed .side-group,
+  .portal-shell.collapsed .side-head b, .portal-shell.collapsed .side-nav .count{ display:none; }
+  .portal-shell.collapsed .side-nav .tab{ justify-content:center; padding:6px 0; }
+  .portal-shell.collapsed .side-head{ justify-content:center; }
+  .portal-bar{ display:flex; align-items:center; gap:12px; background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:10px 14px; margin:0 0 16px; }
+  .pb-text{ flex:1; min-width:0; }
+  .pb-text h2{ margin:0; font:23px 'Marcellus'; color:var(--ink-navy); }
+  #section-desc{ display:block; color:#8a7654; font-size:14.5px; }
+  .menu-btn{ border:2px solid var(--gold-soft); background:#fbf6e9; border-radius:12px; width:42px; height:42px; font-size:20px; cursor:pointer; color:var(--ink-navy); }
+  .side-backdrop{ display:none; }
+  @media (max-width: 900px){
+    .portal-shell, .portal-shell.collapsed{ grid-template-columns:minmax(0,1fr); }
+    .side-nav{ position:fixed; top:0; left:0; bottom:0; width:280px; max-height:none; border-radius:0 20px 20px 0; z-index:60;
+      transform:translateX(-105%); transition:transform .22s ease; }
+    .portal-shell.open .side-nav{ transform:none; }
+    .portal-shell.open .side-backdrop{ display:block; position:fixed; inset:0; background:rgba(20,30,40,.35); z-index:55; }
+    .portal-shell.collapsed .side-nav .tl, .portal-shell.collapsed .side-nav .arr, .portal-shell.collapsed .side-group,
+    .portal-shell.collapsed .side-head b, .portal-shell.collapsed .side-nav .count{ display:revert; }
+    .portal-shell.collapsed .side-nav .tab{ justify-content:flex-start; padding:7px 8px; }
+  }
+  /* ---- teacher guide ---- */
+  .guide-hero{ background:linear-gradient(135deg,#fffaf0,#eef8f1); border:2px solid var(--gold-soft); border-radius:20px; padding:16px 18px; margin-bottom:14px; }
+  .guide-hero h2{ margin:0 0 4px; }
+  .guide-hero p{ margin:0 0 10px; color:#6b5d44; }
+  .guide-toc{ display:flex; flex-wrap:wrap; gap:6px; }
+  .guide-toc a{ text-decoration:none; background:#fff; border:1.5px solid #e3d6b3; border-radius:999px; padding:4px 11px; font-size:14px; color:var(--ink-navy); }
+  .guide-toc a:hover{ border-color:var(--green); }
+  .guide-sec{ background:#fff; border:2px solid #eadcb8; border-radius:18px; padding:14px 18px; margin-bottom:12px; scroll-margin-top:12px; }
+  .guide-sec h3{ display:flex; align-items:center; gap:10px; margin:0 0 8px; font:21px 'Marcellus'; color:var(--ink-navy); }
+  .guide-sec .gi{ width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--c); font-size:17px; }
+  .guide-steps, .guide-list{ margin:0 0 10px; padding-left:22px; line-height:1.65; }
+  .guide-steps li, .guide-list li{ margin-bottom:5px; }
+  .guide-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .guide-card{ background:#fbf6e9; border-radius:14px; padding:10px 12px; }
+  .guide-card ul{ margin:6px 0 0; padding-left:18px; line-height:1.55; }
+  .guide-sec details{ border-top:1px solid #f0e6cc; padding:8px 0; }
+  .guide-sec summary{ cursor:pointer; font-weight:700; color:var(--ink-navy); }
+  .guide-sec details p{ margin:6px 0 0; color:#4a3d2a; }
+  @media (max-width: 700px){ .guide-grid{ grid-template-columns:minmax(0,1fr); } }
 
   .stats{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin:0 0 18px; }
   .stat{ background:#fff; border:2px solid var(--gold-soft); border-radius:15px; padding:14px; text-align:center; cursor:pointer;
@@ -345,23 +405,34 @@
       <div class="hero-actions">
         <button class="btn" id="hero-new-quiz">📝 New quiz</button>
         <button class="btn" id="hero-review">✅ Review queue</button>
+        <button class="btn" id="hero-guide">📘 Teacher guide</button>
         <button class="btn alt" id="hero-refresh">↻ Refresh</button>
       </div>
     </div>
 
-    <nav class="tabs" role="tablist" aria-label="Teacher portal sections">
-      <button class="tab active" data-tab="overview" role="tab">📊 Overview</button>
-      <button class="tab" data-tab="students" role="tab">👩‍🎓 Students <span class="count" id="tab-count-students">0</span></button>
-      <button class="tab" data-tab="classes" role="tab">🏫 Classes <span class="count" id="tab-count-classes">0</span></button>
-      <button class="tab" data-tab="attendance" role="tab">📋 Attendance</button>
-      <button class="tab" data-tab="homework" role="tab">📚 Homework <span class="count" id="tab-count-hw">0</span></button>
-      <button class="tab" data-tab="quizzes" role="tab">📝 Quizzes <span class="count" id="tab-count-quizzes">0</span></button>
-      <button class="tab" data-tab="announce" role="tab">📣 Announcements <span class="count" id="tab-count-ann">0</span></button>
-      <button class="tab" data-tab="messages" role="tab">✉️ Messages <span class="count" id="tab-count-msg">0</span></button>
-      <button class="tab" data-tab="add" role="tab">➕ Add students</button>
-      <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers">🧑‍🏫 Teachers</button>
-      <button class="tab" data-tab="profile" role="tab" id="tab-profile">👤 My profile</button>
-    </nav>
+    <div class="portal-shell" id="portal-shell">
+    <aside class="side-nav" id="side-nav" role="tablist" aria-label="Teacher portal sections">
+      <div class="side-head"><b>Teacher tools</b><button class="side-x" id="side-x" aria-label="Hide menu" title="Hide menu">✕</button></div>
+      <div class="side-group">Today</div>
+      <button class="tab active" data-tab="overview" role="tab" title="Overview"><span class="ti" style="--c:#2e6b58">📊</span><span class="tl">Overview</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="messages" role="tab" title="Messages"><span class="ti" style="--c:#3b8fc4">✉️</span><span class="tl">Messages</span><span class="count" id="tab-count-msg">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="announce" role="tab" title="Announcements"><span class="ti" style="--c:#e0703a">📣</span><span class="tl">Announcements</span><span class="count" id="tab-count-ann">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <div class="side-group">My students</div>
+      <button class="tab" data-tab="students" role="tab" title="Students"><span class="ti" style="--c:#1c2b46">👩‍🎓</span><span class="tl">Students</span><span class="count" id="tab-count-students">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="classes" role="tab" title="Classes"><span class="ti" style="--c:#2a8a82">🏫</span><span class="tl">Classes</span><span class="count" id="tab-count-classes">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="attendance" role="tab" title="Attendance"><span class="ti" style="--c:#7a5aa8">📋</span><span class="tl">Attendance</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="add" role="tab" title="Add students"><span class="ti" style="--c:#4f9d73">➕</span><span class="tl">Add students</span><span class="arr" aria-hidden="true">▸</span></button>
+      <div class="side-group">Teaching</div>
+      <button class="tab" data-tab="homework" role="tab" title="Homework"><span class="ti" style="--c:#8a5a2b">📚</span><span class="tl">Homework</span><span class="count" id="tab-count-hw">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="quizzes" role="tab" title="Quizzes"><span class="ti" style="--c:#c2508a">📝</span><span class="tl">Quizzes</span><span class="count" id="tab-count-quizzes">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <div class="side-group">Help &amp; account</div>
+      <button class="tab" data-tab="guide" role="tab" title="Teacher guide"><span class="ti" style="--c:#a97c25">📘</span><span class="tl">Teacher guide</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers" title="Teachers"><span class="ti" style="--c:#44556e">🧑‍🏫</span><span class="tl">Teachers</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="profile" role="tab" id="tab-profile" title="My profile"><span class="ti" style="--c:#6b5d44">👤</span><span class="tl">My profile</span><span class="arr" aria-hidden="true">▸</span></button>
+    </aside>
+    <div class="side-backdrop" id="side-backdrop"></div>
+    <div class="portal-main">
+    <div class="portal-bar"><button class="menu-btn" id="menu-btn" aria-label="Show menu" title="Menu">☰</button><div class="pb-text"><h2 id="section-title">Overview</h2><span id="section-desc"></span></div><button class="btn ghost small" id="guide-btn">📘 Guide</button></div>
 
     <!-- OVERVIEW -->
     <div class="tab-panel" data-panel="overview">
@@ -749,6 +820,132 @@
         <div id="admin-list" style="margin-top:16px;"></div>
       </div>
     </div>
+    <!-- GUIDE -->
+    <div class="tab-panel hidden" data-panel="guide">
+      <div class="guide-hero">
+        <div><h2>📘 Teacher guide</h2><p>Everything you can do in the Teacher Portal, step by step. Tap <b>Go there →</b> to jump to that tool.</p></div>
+        <div class="guide-toc" id="guide-toc"></div>
+      </div>
+
+      <section class="guide-sec" id="g-start">
+        <h3><span class="gi" style="--c:#2e6b58">🚀</span> Quick start: your first day</h3>
+        <ol class="guide-steps">
+          <li><b>Add your full name.</b> It is printed on certificates you sign and shown to students. <button class="linkbtn" data-goto-tab="profile">My profile →</button></li>
+          <li><b>Create your class.</b> Classes → type a name (e.g. “Saturday Girls 8–10”) → <i>Create class</i>. You get a 6-letter class code. <button class="linkbtn" data-goto-tab="classes">Classes →</button></li>
+          <li><b>Bring students in.</b> Give students the code (📋 <i>Copy invite</i> makes a message for parents), or tick students in <i>Add students</i> on the class page. New children: <i>Add students</i> tab creates their login. <button class="linkbtn" data-goto-tab="add">Add students →</button></li>
+          <li><b>Set the first homework</b>, e.g. “Memorise line 1” due next week. <button class="linkbtn" data-goto-tab="homework">Homework →</button></li>
+          <li><b>Take attendance</b> each lesson. <button class="linkbtn" data-goto-tab="attendance">Attendance →</button></li>
+        </ol>
+      </section>
+
+      <section class="guide-sec" id="g-daily">
+        <h3><span class="gi" style="--c:#3b8fc4">☀️</span> Your weekly routine</h3>
+        <div class="guide-grid">
+          <div class="guide-card"><b>Before class</b><ul><li>Open <b>Overview</b>: “Needs your review”, “Waiting for your reply” and new recitations.</li><li>Answer messages and announcement questions.</li></ul></div>
+          <div class="guide-card"><b>In class</b><ul><li><b>Attendance</b> → Everyone present → change the few who are late or absent → Save.</li><li>Listen to Talqeen and approve finished maps (see below).</li></ul></div>
+          <div class="guide-card"><b>After class</b><ul><li>Set <b>homework</b> for next week.</li><li>Post an <b>announcement</b> if needed.</li><li>Friday: print <b>weekly reports</b> for parents.</li></ul></div>
+        </div>
+      </section>
+
+      <section class="guide-sec" id="g-students">
+        <h3><span class="gi" style="--c:#1c2b46">👩‍🎓</span> Students</h3>
+        <ul class="guide-list">
+          <li><b>Find a student:</b> search by name, username, email or guardian; filter by class or status (ready for review, in progress, not started…).</li>
+          <li><b>Open a student card</b> to see Profile, Progress, Maps &amp; certificates, Quiz results and Account. You can add a photo, date of birth and guardian details.</li>
+          <li><b>Personal note &amp; quiz:</b> in <i>Maps</i>, write a note for one map and attach a personal quiz → <i>Send note &amp; quiz to student</i>. It appears under that map for them only.</li>
+          <li><b>You only see your own students</b> — children in your classes, or accounts you created. Anyone else joins with your class code.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="students">Go to Students →</button>
+      </section>
+
+      <section class="guide-sec" id="g-review">
+        <h3><span class="gi" style="--c:#a97c25">✅</span> Approving a map (Talqeen check &amp; certificate)</h3>
+        <ol class="guide-steps">
+          <li>A student finishes every lesson in a map and scores 12/15 or more in its Map Challenge → they appear in <b>Overview → Needs your review</b>.</li>
+          <li>Tap <i>Review →</i>. Listen to the student recite every line of that map (Talqeen).</li>
+          <li>Tick hifz and recitation, write feedback, sign with your finger or mouse, then <i>Approve</i>.</li>
+          <li>The next map unlocks for the student and a certificate with your name is ready to print.</li>
+        </ol>
+        <button class="btn ghost small" data-goto-tab="overview">Go to Overview →</button>
+      </section>
+
+      <section class="guide-sec" id="g-classes">
+        <h3><span class="gi" style="--c:#2a8a82">🏫</span> Classes</h3>
+        <ul class="guide-list">
+          <li>Each class has a <b>join code</b>. Students type it under <i>From your teacher → Join your class</i>.</li>
+          <li>From a class you can message it, announce to it, set its homework and print a <b>class report</b>.</li>
+          <li><b>🏆 Class leaderboard:</b> switch it on to let the class see each other’s streak, lines memorised and stars. Switch off any time.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="classes">Go to Classes →</button>
+      </section>
+
+      <section class="guide-sec" id="g-homework">
+        <h3><span class="gi" style="--c:#8a5a2b">📚</span> Homework</h3>
+        <ul class="guide-list">
+          <li><b>Types:</b> Memorise lines (done at Memorise level 4) · Finish lessons · Pass a quiz · Record lines (students with Talqeen on) · Other task (the student ticks it).</li>
+          <li>Choose the lines, a due date and the class. The title fills itself in.</li>
+          <li>Each card shows who is done, done late or late. <b>🔔 Remind</b> sends a private message to everyone not done.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="homework">Go to Homework →</button>
+      </section>
+
+      <section class="guide-sec" id="g-quizzes">
+        <h3><span class="gi" style="--c:#c2508a">📝</span> Quizzes</h3>
+        <ul class="guide-list">
+          <li><i>New quiz</i> → title, map, pass mark → add multiple-choice or true/false questions → mark the right answer → tick <b>Published</b> → Save.</li>
+          <li><b>For</b> lets you aim it at one class. <b>Personal</b> quizzes only reach students you send them to from their Maps tab.</li>
+          <li><i>Preview</i> shows it as a student sees it; <i>Results</i> shows every score and which questions were hard.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="quizzes">Go to Quizzes →</button>
+      </section>
+
+      <section class="guide-sec" id="g-attendance">
+        <h3><span class="gi" style="--c:#7a5aa8">📋</span> Attendance</h3>
+        <ul class="guide-list">
+          <li>Pick the class and the date → <i>Everyone present</i> → change anyone late, absent or excused → <i>Save</i>.</li>
+          <li>Saved sessions can be edited or deleted. “Each student” shows attendance rates.</li>
+          <li>Attendance appears in weekly reports and on the parent page.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="attendance">Go to Attendance →</button>
+      </section>
+
+      <section class="guide-sec" id="g-talk">
+        <h3><span class="gi" style="--c:#e0703a">📣</span> Announcements &amp; messages</h3>
+        <ul class="guide-list">
+          <li><b>Announcements</b> show under a map (or all maps) for everyone or one class, with a comment section. Questions waiting for you are marked <i>Needs reply</i>.</li>
+          <li><b>Messages</b> are private between you and one student. <i>Message a class or everyone</i> sends the same note to each child privately.</li>
+        </ul>
+        <button class="btn ghost small" data-goto-tab="announce">Announcements →</button> <button class="btn ghost small" data-goto-tab="messages">Messages →</button>
+      </section>
+
+      <section class="guide-sec" id="g-parents">
+        <h3><span class="gi" style="--c:#3b8fc4">👪</span> Parents &amp; reports</h3>
+        <ul class="guide-list">
+          <li><b>Parent link:</b> open a student → <i>👪 Parent link</i> → Copy or send on WhatsApp. Parents see progress, homework, attendance, badges, your notes and messages — read-only, no login. <i>Reset link</i> stops an old link working.</li>
+          <li><b>Weekly reports:</b> 🖨️ on a student, a class, or the Students tab → <i>Print / Save as PDF</i>.</li>
+        </ul>
+      </section>
+
+      <section class="guide-sec" id="g-talqeen">
+        <h3><span class="gi" style="--c:#2e6b58">🎙️</span> Talqeen recordings (optional, per student)</h3>
+        <ul class="guide-list">
+          <li>Off for every student by default. Open a student → <i>🎙️ Talqeen</i> → tick <b>Talqeen on for this student</b>.</li>
+          <li>Record a line (up to 1 minute) → listen → Send. The student hears it under the map and can record themselves back; reply with feedback.</li>
+        </ul>
+      </section>
+
+      <section class="guide-sec" id="g-faq">
+        <h3><span class="gi" style="--c:#6b5d44">❓</span> Questions</h3>
+        <details><summary>A student says they can’t see my homework or announcement.</summary><p>Check it is for their class (or “Every student”) and that they joined the class with the code. Class-only posts show only to members.</p></details>
+        <details><summary>A student isn’t in my Students list.</summary><p>Teachers only see students in their classes or accounts they created. Share your class code, or ask an admin to add them to your class.</p></details>
+        <details><summary>A student forgot their password.</summary><p>Open the student → <i>Account</i> → send a reset or set a new password. If they signed up with their own email, “Forgot your password?” on the sign-in page emails them.</p></details>
+        <details><summary>Can I delete a student?</summary><p>No — only an admin can. You can disable an account in the student’s Account tab.</p></details>
+        <details><summary>“Not allowed for your account role”</summary><p>Your teacher account may not be approved yet, or the student isn’t linked to you. Ask an admin.</p></details>
+      </section>
+    </div>
+
+    </div>
+    </div>
   </section>
 
 </div>
@@ -1047,9 +1244,42 @@ function statusBadge(sum){
 }
 
 /* ===================== tabs ===================== */
+const SECTION_INFO = {
+  overview: ['Overview', 'What needs you today: reviews, replies, recitations and class progress.'],
+  messages: ['Messages', 'Private conversations with each student.'],
+  announce: ['Announcements', 'News under a map for everyone or one class, with comments.'],
+  students: ['Students', 'Find a student, open their card, notes, maps and certificates.'],
+  classes: ['Classes', 'Your classes, join codes, members and the class leaderboard.'],
+  attendance: ['Attendance', 'Mark each lesson: present, late, absent or excused.'],
+  add: ['Add students', 'Create logins for new students, one by one or from a list.'],
+  homework: ['Homework', 'Set work with a due date and see who has done it.'],
+  quizzes: ['Quizzes', 'Write quizzes that appear under a map, and see results.'],
+  guide: ['Teacher guide', 'How to use every tool in the portal, step by step.'],
+  teachers: ['Teachers', 'Approve and remove teacher accounts.'],
+  profile: ['My profile', 'Your full name and email, shown on certificates.']
+};
 function showTab(name){
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab').forEach(t => { const on = t.dataset.tab === name; t.classList.toggle('active', on); t.setAttribute('aria-selected', on); });
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('hidden', p.dataset.panel !== name));
+  const info = SECTION_INFO[name] || [name, ''];
+  if($('section-title')){ $('section-title').textContent = info[0]; $('section-desc').textContent = info[1]; }
+  const shell = $('portal-shell'); if(shell) shell.classList.remove('open');
+  if(name === 'guide') renderGuideToc();
+}
+function renderGuideToc(){
+  const toc = $('guide-toc'); if(!toc || toc.dataset.done) return; toc.dataset.done = '1';
+  toc.innerHTML = [...document.querySelectorAll('.guide-sec')].map(sec => '<a href="#' + sec.id + '">' + escapeHtml(sec.querySelector('h3').textContent.trim()) + '</a>').join('');
+  toc.querySelectorAll('a').forEach(a => a.onclick = e => { e.preventDefault(); document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior:'smooth', block:'start' }); });
+}
+function wireSideNav(){
+  const shell = $('portal-shell'), small = () => matchMedia('(max-width: 900px)').matches;
+  try { if(localStorage.getItem('tp-side-collapsed') === '1') shell.classList.add('collapsed'); } catch(e){}
+  $('menu-btn').onclick = () => { if(small()) shell.classList.toggle('open'); else { shell.classList.toggle('collapsed'); try { localStorage.setItem('tp-side-collapsed', shell.classList.contains('collapsed') ? '1' : '0'); } catch(e){} } };
+  $('side-x').onclick = () => { if(small()) shell.classList.remove('open'); else { shell.classList.add('collapsed'); try { localStorage.setItem('tp-side-collapsed', '1'); } catch(e){} } };
+  $('side-backdrop').onclick = () => shell.classList.remove('open');
+  const toGuide = () => showTab('guide');
+  $('guide-btn').onclick = toGuide; $('hero-guide').onclick = toGuide;
+  document.querySelectorAll('[data-goto-tab]').forEach(b => b.onclick = () => { showTab(b.dataset.gotoTab); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 }
 function setFilter(f){
   studentFilter = f;
@@ -2402,6 +2632,7 @@ function wire(){
   wireSignature();
 
   document.querySelectorAll('.tab').forEach(t => t.onclick = () => showTab(t.dataset.tab));
+  wireSideNav();
   document.querySelectorAll('.stat[data-goto]').forEach(st => st.onclick = () => { showTab(st.dataset.goto); if(st.dataset.filter) setFilter(st.dataset.filter); });
   document.querySelectorAll('#student-filters .chip').forEach(c => c.onclick = () => setFilter(c.dataset.filter));
   $('student-search').oninput = renderStudentGrid;
