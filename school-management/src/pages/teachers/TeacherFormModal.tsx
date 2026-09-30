@@ -88,8 +88,10 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
       }
       onSaved();
       onClose();
-    } catch {
-      showToast('Could not save teacher.', 'error');
+    } catch (err) {
+      console.error(err);
+      const message = err instanceof Error ? err.message : 'Could not save teacher.';
+      showToast(message, 'error');
     } finally {
       setSaving(false);
     }
