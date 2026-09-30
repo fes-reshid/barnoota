@@ -341,7 +341,8 @@
   .swatch{ width:26px; height:26px; border-radius:50%; background:var(--c); border:2px solid #fff; box-shadow:0 0 0 1.5px var(--gold-soft); padding:0; }
   .swatch[aria-pressed=true]{ box-shadow:0 0 0 2.5px var(--green); }
   .sig-saved{ margin-top:12px; }
-  #sigSaved{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  #sigSaved, .panel-sigs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .panel-sigs .sig-thumb img{ max-width:180px; }
   .sig-thumb{ position:relative; border:1px solid var(--gold-soft); background:#fff; border-radius:8px; padding:4px 8px; height:52px; }
   .sig-thumb img{ height:42px; max-width:160px; object-fit:contain; display:block; }
   .sig-thumb .forget{ position:absolute; top:-8px; right:-8px; width:20px; height:20px; border-radius:50%; border:1px solid var(--gold-soft); background:#fff; font-size:11px; padding:0; line-height:1; }
@@ -430,6 +431,7 @@
         <button type="button" data-open="all">All tools</button>
         <button type="button" data-open="edit">Edit</button>
         <button type="button" data-open="organize">Organize</button>
+        <button type="button" data-open="sign">Sign</button>
         <button type="button" data-open="protect">Protect</button>
         <button type="button" data-open="about">About</button>
       </nav>
@@ -454,7 +456,6 @@
               <button class="btn" type="button" data-tool="highlight">▨&nbsp; Highlight</button>
               <button class="btn" type="button" data-tool="select">⬚&nbsp; Select &amp; move items</button>
               <button class="btn" type="button" id="insImgBtn">🖼&nbsp; Insert image</button>
-              <button class="btn" type="button" id="sigBtn">✍&nbsp; Add signature</button>
             </div>
             <label class="fld">Font <select id="edFont" title="Arabic text uses an Arabic font automatically"></select></label>
             <div class="fld">Style
@@ -463,6 +464,18 @@
             <label class="fld">Size <input type="number" id="edSize" value="14" min="4" max="200" step="0.5"></label>
             <label class="fld">Colour <input type="color" id="edColor" value="#000000"></label>
             <div class="row"><button class="btn danger" id="edDelete" type="button" disabled>✕ Delete selected item</button></div>
+          </div>
+        </section>
+        <section class="tp-item" data-sec="sign">
+          <button type="button" class="tp-btn" aria-expanded="false"><span class="tp-ic ic-plum">✍</span>Fill &amp; Sign<span class="chev">▶</span></button>
+          <div class="tp-body">
+            <p class="tp-note">Sign by drawing, typing your name, or uploading a picture of your signature. It's placed on the page you're viewing — drag it into position and resize it with the corner handle.</p>
+            <div class="stack">
+              <button class="btn primary" type="button" id="sigBtn">✍&nbsp; Add signature</button>
+              <button class="btn" type="button" data-tool="text">T&nbsp; Fill in text</button>
+            </div>
+            <div class="sig-saved" id="panelSigsWrap" hidden><span class="sub">Your saved signatures — click to place:</span><div id="panelSigs" class="panel-sigs"></div></div>
+            <p class="sub" style="margin:10px 0 0">Saved signatures stay in this browser only. Manage them in the signature window.</p>
           </div>
         </section>
         <section class="tp-item" data-sec="organize">
@@ -2178,7 +2191,7 @@ async function menuAction(act) {
   }
   if (act !== 'crop' && ed.region) { ed.region = null; redrawEditor(); }
 }
-function setTool(t) {
+function setTool(t, keepPanel) {
   commitTextarea();
   closeMenu();
   ed.tool = t;
@@ -2191,7 +2204,7 @@ function setTool(t) {
   else clearLineBoxes();
   if (t === 'textsel') { for (const el of view.els.values()) if (el.__visible && el.__vp) ensureTextLayer(pageOf(el), el); }
   else { clearTextLayers(); window.getSelection().removeAllRanges(); }
-  if (TOOL_SECTION[t]) openSection(TOOL_SECTION[t]);
+  if (TOOL_SECTION[t] && !keepPanel) openSection(TOOL_SECTION[t]);
   document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
   $('edHint').textContent = HINTS[t];
   $('edHint').classList.toggle('warn', t === 'whiteout');
@@ -2698,7 +2711,7 @@ async function insertPicture(id, isSig) {
     x: center[0] - ux[0] * w / 2 - uy[0] * h / 2, y: center[1] - ux[1] * w / 2 - uy[1] * h / 2 };
   pushUndo();
   p.items.push(item);
-  setTool('select');
+  setTool('select', true); // keep the tools panel where it is (e.g. Fill & Sign)
   ed.selItem = item;
   redrawEditor();
   toast(isSig ? 'Signature placed — drag it into position, and use the corner handle to resize it.' : 'Image placed — drag to move it, and use the corner handle to resize it.', 4500);
@@ -2812,13 +2825,26 @@ async function placeSignature(dataUrl) {
     blob = await new Promise(r => t.toBlob(r, 'image/png'));
     if ($('sigRemember').checked) {
       const url = t.toDataURL('image/png');
-      if (url.length < 400000) setSavedSigs([url, ...savedSigs().filter(u => u !== url)].slice(0, 4));
+      if (url.length < 400000) { setSavedSigs([url, ...savedSigs().filter(u => u !== url)].slice(0, 4)); renderPanelSigs(); }
     }
   }
   closeSigDialog();
   await insertPicture(await storeImage(blob), true);
 }
+// Saved signatures, one click to place, in the Fill & Sign panel.
+function renderPanelSigs() {
+  const list = savedSigs(), box = $('panelSigs');
+  $('panelSigsWrap').hidden = !list.length;
+  box.textContent = '';
+  list.forEach(url => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sig-thumb'; b.title = 'Place this signature';
+    b.innerHTML = '<img alt="Saved signature">'; b.querySelector('img').src = url;
+    b.onclick = () => placeSignature(url);
+    box.appendChild(b);
+  });
+}
 function renderSavedSigs() {
+  renderPanelSigs();
   const list = savedSigs(), box = $('sigSaved');
   $('sigSavedWrap').hidden = !list.length;
   box.textContent = '';
@@ -2953,7 +2979,9 @@ $('undoBtn').onclick = undo;
 $('clearBtn').onclick = () => { if (curDocId != null) closeDoc(curDocId); };
 $('insImgBtn').onclick = $('stripImage').onclick = () => $('imgInput').click();
 $('imgInput').onchange = e => { const f = [...e.target.files]; e.target.value = ''; insertImageFiles(f); };
-$('sigBtn').onclick = $('stripSign').onclick = openSigDialog;
+$('sigBtn').onclick = openSigDialog;
+$('stripSign').onclick = () => { openSection('sign'); openSigDialog(); };
+renderPanelSigs();
 $('sigCancel').onclick = closeSigDialog;
 $('sigPlace').onclick = () => placeSignature(null);
 $('sigClear').onclick = clearPad;
