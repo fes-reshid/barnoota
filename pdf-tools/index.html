@@ -80,6 +80,13 @@
     display:flex; align-items:center; gap:8px; padding:6px 12px; background:var(--parchment);
     border-bottom:1px solid var(--gold-soft); min-height:50px;
   }
+  .doc-tabs{ display:flex; align-items:flex-end; gap:4px; min-width:0; overflow-x:auto; scrollbar-width:thin; flex:0 1 auto; }
+  .doc-tabs .new-tab{ flex:none; width:30px; height:30px; border-radius:8px; border:1px dashed var(--gold-soft); background:transparent; color:var(--green-dark); font-size:18px; line-height:1; }
+  .doc-tabs .new-tab:hover{ background:var(--green-bg); }
+  .doc-tab{ cursor:pointer; flex:none; opacity:.7; border-bottom-color:var(--gold-soft) !important; }
+  .doc-tab.active{ opacity:1; border-bottom-color:var(--green) !important; box-shadow:0 1px 4px rgba(60,45,20,.12); }
+  .doc-tab .x{ border:0; background:transparent; color:#8a7654; width:20px; height:20px; border-radius:5px; padding:0; font-size:12px; flex:none; }
+  .doc-tab .x:hover{ background:#f8e4df; color:var(--danger); }
   .doc-tab{
     display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--gold-soft); border-bottom:3px solid var(--green);
     border-radius:8px 8px 4px 4px; padding:5px 12px; max-width:280px; min-width:0;
@@ -212,7 +219,8 @@
       position:absolute; left:0; top:0; bottom:0; z-index:30; width:min(310px, 88vw);
       box-shadow:6px 0 24px rgba(0,0,0,.25);
     }
-    .app-menu, .doc-tab, .hide-sm{ display:none !important; }
+    .app-menu, .hide-sm{ display:none !important; }
+    .doc-tab{ max-width:130px; padding:4px 8px; }
     .item-bar select{ max-width:110px; }
     .tool-strip{ margin:8px 0 0 6px; padding:4px; }
     .tool-strip button{ width:34px; height:34px; }
@@ -323,6 +331,21 @@
   .dialog input{ width:100%; padding:8px 10px; border:1.5px solid var(--gold-soft); border-radius:8px; background:#fff; }
   .dialog .row{ display:flex; gap:8px; justify-content:flex-end; margin-top:14px; }
   .dialog.about{ max-width:440px; }
+  .dialog.sig{ max-width:560px; }
+  .dialog input[type=checkbox]{ width:auto; }
+  .dialog label.opt{ display:flex; gap:8px; align-items:center; font-size:14px; margin-top:12px; color:var(--ink-brown); cursor:pointer; }
+  .sig-tabs{ margin:4px 0 12px; }
+  .sig-canvas{ display:block; width:100%; height:170px; background:#fff; border:1.5px dashed var(--gold-soft); border-radius:10px; touch-action:none; cursor:crosshair; }
+  .sig-pane input[type=text]{ margin-bottom:10px; }
+  .sig-tools{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; color:#6b5a3f; }
+  .swatch{ width:26px; height:26px; border-radius:50%; background:var(--c); border:2px solid #fff; box-shadow:0 0 0 1.5px var(--gold-soft); padding:0; }
+  .swatch[aria-pressed=true]{ box-shadow:0 0 0 2.5px var(--green); }
+  .sig-saved{ margin-top:12px; }
+  #sigSaved, .panel-sigs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+  .panel-sigs .sig-thumb img{ max-width:180px; }
+  .sig-thumb{ position:relative; border:1px solid var(--gold-soft); background:#fff; border-radius:8px; padding:4px 8px; height:52px; }
+  .sig-thumb img{ height:42px; max-width:160px; object-fit:contain; display:block; }
+  .sig-thumb .forget{ position:absolute; top:-8px; right:-8px; width:20px; height:20px; border-radius:50%; border:1px solid var(--gold-soft); background:#fff; font-size:11px; padding:0; line-height:1; }
   .dialog.about p{ color:var(--ink-brown); font-size:14px; line-height:1.6; margin:0 0 8px; }
   .dialog.about .fine-print{ font-size:12px; color:#8a7654; }
   .dialog.about a{ color:var(--green-dark); }
@@ -384,7 +407,7 @@
     </div>
     <div id="panelFile" role="tabpanel" aria-labelledby="tabFile">
       <h2>Drop PDF files here</h2>
-      <p>or choose one or more files to start. Several files are joined in the order you add them.</p>
+      <p>or choose one or more files to start. Each file opens in its own tab — use <strong>Combine files</strong> to join them.</p>
       <button class="btn primary big" id="pickBtn" type="button">Choose PDF files</button>
     </div>
     <div id="panelUrl" role="tabpanel" aria-labelledby="tabUrl" hidden>
@@ -403,11 +426,12 @@
   <section class="app hidden" id="workspace">
     <div class="app-top">
       <button class="icon-btn" id="panelToggle" type="button" title="Show or hide All tools" aria-controls="toolsPanel" aria-expanded="true">☰</button>
-      <div class="doc-tab" title="Current document"><span class="doc-ic">▣</span><span class="name" id="docTitle">document.pdf</span></div>
+      <div class="doc-tabs" id="docTabs" role="tablist" aria-label="Open PDFs"></div>
       <nav class="app-menu" aria-label="Menu">
         <button type="button" data-open="all">All tools</button>
         <button type="button" data-open="edit">Edit</button>
         <button type="button" data-open="organize">Organize</button>
+        <button type="button" data-open="sign">Sign</button>
         <button type="button" data-open="protect">Protect</button>
         <button type="button" data-open="about">About</button>
       </nav>
@@ -415,7 +439,7 @@
       <button class="icon-btn" id="undoBtn" type="button" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>↶</button>
       <button class="icon-btn" id="printBtn" type="button" title="Print" aria-label="Print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 9V3h10v6M7 17H4v-7h16v7h-3"/><rect x="7" y="14" width="10" height="7"/></svg></button>
       <button class="btn primary" id="topSaveBtn" type="button" title="Save PDF">⬇ <span class="hide-sm">Save</span></button>
-      <button class="icon-btn" id="clearBtn" type="button" title="Close file and start over" aria-label="Close file">✕</button>
+      <button class="icon-btn" id="clearBtn" type="button" title="Close this PDF" aria-label="Close this PDF">✕</button>
     </div>
     <div class="app-body">
       <aside class="tools-panel" id="toolsPanel" aria-label="All tools">
@@ -431,6 +455,7 @@
               <button class="btn" type="button" data-tool="whiteout">▭&nbsp; White-out</button>
               <button class="btn" type="button" data-tool="highlight">▨&nbsp; Highlight</button>
               <button class="btn" type="button" data-tool="select">⬚&nbsp; Select &amp; move items</button>
+              <button class="btn" type="button" id="insImgBtn">🖼&nbsp; Insert image</button>
             </div>
             <label class="fld">Font <select id="edFont" title="Arabic text uses an Arabic font automatically"></select></label>
             <div class="fld">Style
@@ -439,6 +464,18 @@
             <label class="fld">Size <input type="number" id="edSize" value="14" min="4" max="200" step="0.5"></label>
             <label class="fld">Colour <input type="color" id="edColor" value="#000000"></label>
             <div class="row"><button class="btn danger" id="edDelete" type="button" disabled>✕ Delete selected item</button></div>
+          </div>
+        </section>
+        <section class="tp-item" data-sec="sign">
+          <button type="button" class="tp-btn" aria-expanded="false"><span class="tp-ic ic-plum">✍</span>Fill &amp; Sign<span class="chev">▶</span></button>
+          <div class="tp-body">
+            <p class="tp-note">Sign by drawing, typing your name, or uploading a picture of your signature. It's placed on the page you're viewing — drag it into position and resize it with the corner handle.</p>
+            <div class="stack">
+              <button class="btn primary" type="button" id="sigBtn">✍&nbsp; Add signature</button>
+              <button class="btn" type="button" data-tool="text">T&nbsp; Fill in text</button>
+            </div>
+            <div class="sig-saved" id="panelSigsWrap" hidden><span class="sub">Your saved signatures — click to place:</span><div id="panelSigs" class="panel-sigs"></div></div>
+            <p class="sub" style="margin:10px 0 0">Saved signatures stay in this browser only. Manage them in the signature window.</p>
           </div>
         </section>
         <section class="tp-item" data-sec="organize">
@@ -452,8 +489,10 @@
         <section class="tp-item" data-sec="combine">
           <button type="button" class="tp-btn" aria-expanded="false"><span class="tp-ic ic-navy">⧉</span>Combine files<span class="chev">▶</span></button>
           <div class="tp-body">
-            <p class="tp-note">Add more PDFs — their pages go after the current page.</p>
+            <p class="tp-note">Add more PDFs into this one — their pages go after the current page. To open a PDF separately, use the ＋ tab.</p>
             <div class="stack">
+              <label class="fld" style="margin:0 0 4px">From tab <select id="fromTabSel"></select></label>
+              <button class="btn" id="fromTabBtn" type="button">⧉ Insert pages from that tab</button>
               <button class="btn" id="addBtn" type="button">＋ Add PDF files</button>
               <button class="btn" id="addUrlBtn" type="button">＋ Add from URL</button>
               <button class="btn" id="blankHereBtn" type="button">＋ Blank page after current</button>
@@ -541,6 +580,7 @@
         </section>
         </div>
       </aside>
+      <input type="file" id="imgInput" accept="image/*" multiple hidden>
       <nav class="tool-strip" aria-label="Tools">
         <button type="button" data-tool="select" title="Select and move added items" aria-label="Select and move added items"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3l13 8-6 1.5L9 19z"/></svg></button>
         <button type="button" data-tool="edittext" title="Edit the PDF's own text" aria-label="Edit the PDF's own text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5V4h10v1M9 4v12M7 16h4"/><path d="M14.5 19.5l6-6-2-2-6 6-.5 2.5z"/></svg></button>
@@ -549,6 +589,9 @@
         <button type="button" data-tool="whiteout" title="White-out (cover content)" aria-label="White-out (cover content)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M6 10h8M6 14h5" stroke-linecap="round" opacity=".5"/></svg></button>
         <button type="button" data-tool="highlight" title="Highlight" aria-label="Highlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 4l6 6-8 8H6v-6z"/><path d="M4 21h16" stroke-linecap="round"/></svg></button>
         <button type="button" data-tool="crop" title="Crop, copy area as image or text" aria-label="Crop, copy area as image or text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M7 2v15h15M2 7h15v15"/></svg></button>
+              <hr>
+        <button type="button" id="stripImage" title="Insert image" aria-label="Insert image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg></button>
+        <button type="button" id="stripSign" title="Add signature" aria-label="Add signature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c2-4 4-9 6-9s-1 9 1 9 3-5 4-5 1 4 3 4 2-2 3-2"/><path d="M3 21h18"/></svg></button>
       </nav>
       <div class="doc-col">
         <div class="doc-area" id="docArea">
@@ -598,10 +641,42 @@
     <p>Built by <strong>Feysel Reshid</strong>.</p>
     <p>Version <span id="aboutVersion"></span></p>
     <p>Everything happens on your device. Your files are never uploaded.</p>
-    <p>Edit text, add Arabic or Latin text, white-out, highlight, crop, reorder, merge, split and password-protect PDFs — all in your browser.</p>
+    <p>Edit text, add Arabic or Latin text, images and signatures, white-out, highlight, crop, reorder, merge, split and password-protect PDFs — several at once in tabs, all in your browser.</p>
     <p>Questions, or something to report? <a href="mailto:fesbackups@gmail.com">fesbackups@gmail.com</a></p>
     <p class="fine-print">Fonts: Amiri, Scheherazade New, Lateef and Tajawal, under the SIL Open Font License. PDF engines: pdf-lib and pdf.js.</p>
     <div class="row"><button class="btn primary" id="aboutClose" type="button">Close</button></div>
+  </div>
+</div>
+
+<div class="dialog-back hidden" id="sigDialog" role="dialog" aria-modal="true" aria-labelledby="sigTitle">
+  <div class="dialog sig">
+    <h3 id="sigTitle">Add your signature</h3>
+    <div class="tabs sig-tabs" role="tablist">
+      <button type="button" role="tab" data-sigtab="draw" aria-selected="true">Draw</button>
+      <button type="button" role="tab" data-sigtab="type" aria-selected="false">Type</button>
+      <button type="button" role="tab" data-sigtab="upload" aria-selected="false">Upload</button>
+    </div>
+    <div class="sig-pane" data-pane="draw">
+      <canvas id="sigPad" class="sig-canvas" aria-label="Draw your signature here"></canvas>
+      <div class="sig-tools"><span>Ink</span>
+        <button type="button" class="swatch" data-ink="#111111" aria-pressed="true" title="Black" style="--c:#111111"></button>
+        <button type="button" class="swatch" data-ink="#1a3f8f" aria-pressed="false" title="Blue" style="--c:#1a3f8f"></button>
+        <button type="button" class="swatch" data-ink="#2e6b58" aria-pressed="false" title="Green" style="--c:#2e6b58"></button>
+        <span style="flex:1"></span><button type="button" class="btn" id="sigClear">Clear</button></div>
+    </div>
+    <div class="sig-pane hidden" data-pane="type">
+      <input type="text" id="sigText" placeholder="Type your name" aria-label="Your name" autocomplete="name">
+      <canvas id="sigTypeCanvas" class="sig-canvas" aria-label="Preview"></canvas>
+    </div>
+    <div class="sig-pane hidden" data-pane="upload">
+      <input type="file" id="sigFile" accept="image/*" hidden>
+      <div class="sig-tools"><button type="button" class="btn" id="sigUploadBtn">Choose image…</button>
+        <label class="opt" style="margin:0"><input type="checkbox" id="sigKnock" checked> Remove white background</label></div>
+      <canvas id="sigUpCanvas" class="sig-canvas" aria-label="Uploaded signature"></canvas>
+    </div>
+    <div class="sig-saved" id="sigSavedWrap" hidden><span class="sub">Saved on this device — click to use:</span><div id="sigSaved"></div></div>
+    <label class="opt"><input type="checkbox" id="sigRemember" checked> Remember this signature on this device</label>
+    <div class="row"><button class="btn" id="sigCancel" type="button">Cancel</button><button class="btn primary" id="sigPlace" type="button">Place signature</button></div>
   </div>
 </div>
 
@@ -672,6 +747,8 @@ let pages = [];
 let selected = new Set();
 let lastClicked = null;
 let undoStack = [];
+// Open documents (tabs). The globals above always hold the current tab's state.
+let docs = [], docSeq = 1, curDocId = null;
 let uidSeq = 1, srcSeq = 1;
 const renderCache = new Map(); // `${src}:${idx}:${rot}` -> Promise<{canvas, viewport}>
 
@@ -759,6 +836,7 @@ function totalRot(p) { return ((sources.get(p.src).pageInfo[p.idx].rotate + p.ro
 async function addFiles(files) {
   const list = [...files].filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
   if (!list.length) { toast('Please choose PDF files.'); return; }
+  if (!curDoc()) return openInTabs(list);
   busy(true, 'Opening PDF…');
   const before = pages.length;
   let added = [];
@@ -784,6 +862,129 @@ async function addFiles(files) {
   renderGrid();
   return true;
 }
+
+// Open each PDF in its own tab.
+async function openInTabs(files) {
+  const list = [...files].filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+  if (!list.length) { toast('Please choose PDF files.'); return false; }
+  let opened = 0;
+  busy(true, 'Opening PDF…');
+  try {
+    for (const f of list) {
+      try {
+        const ids = await addSource(f.name, new Uint8Array(await f.arrayBuffer()));
+        newDoc(f.name.replace(/\.pdf$/i, '') + '-edited.pdf', ids);
+        opened++;
+      } catch (e) {
+        console.error(e);
+        if (e !== CANCELLED) toast(`Could not open “${f.name}”.`, 4000);
+      }
+    }
+  } finally { busy(false); }
+  return opened > 0;
+}
+
+/* ---------- Tabs ---------- */
+const curDoc = () => docs.find(d => d.id === curDocId);
+function saveDocState() {
+  const d = curDoc(); if (!d) return;
+  commitTextarea();
+  Object.assign(d, {
+    pages, selected, lastClicked, undo: undoStack, name: $('outName').value,
+    zoom: view.zoom, scroll: $('docArea').scrollTop, current: view.current,
+    organizing: $('workspace').classList.contains('organizing'),
+  });
+}
+// Forget the page elements of the tab being left; the next tab builds its own.
+function resetViewer() {
+  commitTextarea(); closeMenu(); hideItemBar();
+  ed.el = null; ed.uid = null; ed.selItem = null; ed.region = null; ed.drag = null;
+  for (const el of view.els.values()) { if (view.io) view.io.unobserve(el); el.remove(); }
+  view.els.clear();
+}
+function loadDoc(d) {
+  resetViewer();
+  curDocId = d.id;
+  pages = d.pages; selected = d.selected; lastClicked = d.lastClicked; undoStack = d.undo;
+  $('outName').value = d.name;
+  view.zoom = d.zoom; view.current = d.current || 0;
+  $('zoomLbl').textContent = Math.round(view.zoom * 100) + '%';
+  $('undoBtn').disabled = !undoStack.length;
+  $('splitResults').textContent = '';
+  $('workspace').classList.toggle('organizing', !!d.organizing);
+  renderGrid();
+  renderTabs();
+  const keep = d.scroll || 0;
+  requestAnimationFrame(() => { $('docArea').scrollTop = keep; updateCurrentPage(); });
+}
+function newDoc(name, list) {
+  saveDocState();
+  const d = { id: docSeq++, name, pages: list, selected: new Set(), lastClicked: null, undo: [], zoom: 1, scroll: 0, current: 0, organizing: false };
+  docs.push(d);
+  loadDoc(d);
+}
+function switchDoc(id) {
+  if (id === curDocId) return;
+  saveDocState();
+  loadDoc(docs.find(d => d.id === id));
+}
+function closeDoc(id) {
+  if (id === curDocId) saveDocState();
+  const d = docs.find(x => x.id === id); if (!d) return;
+  if (d.undo.length && !confirm(`Close “${d.name}”? Changes you haven't saved will be lost.`)) return;
+  const i = docs.indexOf(d);
+  docs.splice(i, 1);
+  if (id === curDocId) {
+    const next = docs[i] || docs[i - 1];
+    if (next) loadDoc(next);
+    else {
+      resetViewer(); curDocId = null;
+      pages = []; selected = new Set(); undoStack = []; $('undoBtn').disabled = true;
+      $('workspace').classList.remove('organizing');
+      renderGrid(); renderTabs();
+    }
+  } else renderTabs();
+  pruneSources();
+}
+// Free PDFs no open tab (or its undo history) still uses.
+function pruneSources() {
+  const used = new Set([blankSrc]);
+  const mark = list => list.forEach(p => used.add(p.src));
+  mark(pages); undoStack.forEach(mark);
+  docs.forEach(d => { if (d.id !== curDocId) { mark(d.pages); d.undo.forEach(mark); } });
+  for (const [id, src] of sources) {
+    if (used.has(id)) continue;
+    try { src.pdfjs.destroy(); } catch (e) { /* already closed */ }
+    sources.delete(id);
+    for (const k of [...renderCache.keys()]) if (k.startsWith(id + ':')) renderCache.delete(k);
+    for (const k of [...lineCache.keys()]) if (k.startsWith(id + ':')) lineCache.delete(k);
+  }
+}
+function renderTabs() {
+  const bar = $('docTabs'); bar.textContent = '';
+  docs.forEach(d => {
+    const name = d.id === curDocId ? ($('outName').value.trim() || 'document.pdf') : d.name;
+    const t = document.createElement('div');
+    t.className = 'doc-tab' + (d.id === curDocId ? ' active' : '');
+    t.setAttribute('role', 'tab'); t.setAttribute('aria-selected', d.id === curDocId); t.tabIndex = 0; t.title = name;
+    t.innerHTML = '<span class="doc-ic">▣</span><span class="name"></span><button type="button" class="x" title="Close this PDF" aria-label="Close">✕</button>';
+    t.querySelector('.name').textContent = name;
+    t.onclick = e => { if (e.target.closest('.x')) closeDoc(d.id); else switchDoc(d.id); };
+    t.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); switchDoc(d.id); } };
+    bar.appendChild(t);
+  });
+  const plus = document.createElement('button');
+  plus.type = 'button'; plus.className = 'new-tab'; plus.textContent = '＋'; plus.title = 'Open another PDF in a new tab';
+  plus.onclick = () => { fileInputMode = 'tabs'; $('fileInput').click(); };
+  bar.appendChild(plus);
+  const act = bar.querySelector('.doc-tab.active'); if (act) act.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  // Combine: other open tabs can be inserted into this one.
+  const sel = $('fromTabSel'); sel.textContent = '';
+  docs.filter(d => d.id !== curDocId).forEach(d => { const o = document.createElement('option'); o.value = d.id; o.textContent = d.name; sel.appendChild(o); });
+  $('fromTabBtn').disabled = !sel.options.length;
+  if (!sel.options.length) { const o = document.createElement('option'); o.textContent = 'No other tabs open'; sel.appendChild(o); }
+}
+let fileInputMode = 'tabs';
 
 /* ---------- Opening from a URL ---------- */
 // Turn common "view" links into direct-download links.
@@ -847,12 +1048,13 @@ async function fetchPdf(raw) {
   } finally { clearTimeout(timer); busy(false); }
 }
 
-// Fetch a URL and add it. Returns '' on success, or an error message to show.
-async function addFromUrl(raw) {
+// Fetch a URL and open it in a new tab (or add it to this PDF). Returns '' on success, or an error message.
+async function addFromUrl(raw, intoCurrent) {
   let file;
   try { file = await fetchPdf(raw); }
   catch (msg) { if (typeof msg !== 'string') { console.error(msg); msg = 'Something went wrong while downloading.'; } return msg; }
-  return (await addFiles([file])) ? '' : 'The file was downloaded but could not be opened as a PDF.';
+  const ok = intoCurrent && pages.length ? await addFiles([file]) : await openInTabs([file]);
+  return ok ? '' : 'The file was downloaded but could not be opened as a PDF.';
 }
 
 const CANCELLED = new Error('cancelled');
@@ -1126,6 +1328,18 @@ function drawItems(ctx, p, vp, rot, selItem) {
         const b = textBox(ctx, it, vp);
         ctx.strokeStyle = '#2e6b58'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
         ctx.strokeRect(b.x - 3, b.y - 3, b.w + 6, b.h + 6);
+      }
+      ctx.restore();
+    } else if (it.type === 'image') {
+      const f = textFrame(it, vp, rot), k = vp.scale, im = imgStore.get(it.img);
+      ctx.save(); ctx.translate(f.ox, f.oy); ctx.rotate(f.ang);
+      if (im && im.el.complete && im.el.naturalWidth) ctx.drawImage(im.el, 0, -it.h * k, it.w * k, it.h * k);
+      if (it === selItem) {
+        ctx.strokeStyle = '#2e6b58'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]);
+        ctx.strokeRect(-2, -it.h * k - 2, it.w * k + 4, it.h * k + 4);
+        // Resize handle, bottom-right corner.
+        ctx.setLineDash([]); ctx.fillStyle = '#fff'; ctx.strokeStyle = '#2e6b58'; ctx.lineWidth = 2;
+        ctx.fillRect(it.w * k - 7, -7, 14, 14); ctx.strokeRect(it.w * k - 7, -7, 14, 14);
       }
       ctx.restore();
     } else {
@@ -1425,6 +1639,15 @@ async function buildPdf(list, opts = {}) {
     }
     return pdfFonts.get(file);
   }
+  // Each inserted picture is embedded once, however many times it is used.
+  const pdfImages = new Map();
+  async function pdfImageFor(id) {
+    if (!pdfImages.has(id)) {
+      const im = imgStore.get(id);
+      pdfImages.set(id, im.mime === 'image/png' ? await out.embedPng(im.bytes) : await out.embedJpg(im.bytes));
+    }
+    return pdfImages.get(id);
+  }
   let lostChars = false;
   // Copy each source's pages in one call, so fonts and images they share are copied once
   // (copying page by page duplicated them and made big documents many times larger).
@@ -1457,6 +1680,9 @@ async function buildPdf(list, opts = {}) {
           lostChars = lostChars || enc.lost;
           drawPdfText(pg, { ...it, text: enc.text }, font);
         } else drawPdfText(pg, it, font);
+      } else if (it.type === 'image') {
+        if (!imgStore.has(it.img)) continue;
+        pg.drawImage(await pdfImageFor(it.img), { x: it.x, y: it.y, width: it.w, height: it.h, rotate: degrees(it.rot) });
       } else {
         pg.drawRectangle({
           x: Math.min(it.x1, it.x2), y: Math.min(it.y1, it.y2),
@@ -1642,7 +1868,7 @@ async function doSplit() {
 /* ---------- Page editor ---------- */
 const ed = { uid: null, tool: 'select', vp: null, dpr: 1, rot: 0, selItem: null, drag: null, textarea: null };
 const HINTS = {
-  select: 'Click added text or a box to select it: a toolbar appears to edit the text, change font, size, bold, italic or colour. Drag to move, Delete removes it.',
+  select: 'Click added text, an image, a signature or a box to select it: a toolbar appears to edit the text, change font, size, bold, italic or colour. Drag to move, Delete removes it.',
   edittext: 'Click any line of the PDF\'s text to change it. The old line is covered and your text is written in its place, in a matching font, size and colour. Ctrl+Enter or click outside to finish.',
   text: 'Click where the text should start, type, then click outside or press Ctrl+Enter.',
   whiteout: '⚠ White-out only hides content from view — the text underneath stays in the file and can still be copied. Drag over the area to cover.',
@@ -1720,7 +1946,7 @@ async function paintPage(el) {
   if (el === ed.el) {
     ed.vp = r.viewport; ed.dpr = r.dpr; ed.rot = r.rot;
     if (ed.region) drawRegion();
-    if (ed.drag && ed.drag.kind !== 'move') overlayDragBox();
+    if (ed.drag && ed.drag.a) overlayDragBox(); // a box being drawn (white-out, highlight, crop)
   }
   if (ed.tool === 'textsel') ensureTextLayer(p, el);
   if (ed.tool === 'edittext') ensureLineBoxes(p, el);
@@ -1965,7 +2191,7 @@ async function menuAction(act) {
   }
   if (act !== 'crop' && ed.region) { ed.region = null; redrawEditor(); }
 }
-function setTool(t) {
+function setTool(t, keepPanel) {
   commitTextarea();
   closeMenu();
   ed.tool = t;
@@ -1978,7 +2204,7 @@ function setTool(t) {
   else clearLineBoxes();
   if (t === 'textsel') { for (const el of view.els.values()) if (el.__visible && el.__vp) ensureTextLayer(pageOf(el), el); }
   else { clearTextLayers(); window.getSelection().removeAllRanges(); }
-  if (TOOL_SECTION[t]) openSection(TOOL_SECTION[t]);
+  if (TOOL_SECTION[t] && !keepPanel) openSection(TOOL_SECTION[t]);
   document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === t));
   $('edHint').textContent = HINTS[t];
   $('edHint').classList.toggle('warn', t === 'whiteout');
@@ -1994,12 +2220,24 @@ function evPt(e) {
 }
 const toPdf = pt => ed.vp.convertToPdfPoint(pt[0], pt[1]);
 
+// An item's box in its own frame (origin at its anchor, canvas pixels).
+function localBox(ctx, it, vp) {
+  if (it.type === 'image') { const k = vp.scale; return { x: 0, y: -it.h * k, w: it.w * k, h: it.h * k }; }
+  return textBox(ctx, it, vp);
+}
+// Is the point on the selected image's resize handle?
+function onResizeHandle(pt) {
+  const it = ed.selItem; if (!it || it.type !== 'image') return false;
+  const f = textFrame(it, ed.vp, ed.rot), dx = pt[0] - f.ox, dy = pt[1] - f.oy, c = Math.cos(-f.ang), sn = Math.sin(-f.ang);
+  const lx = dx * c - dy * sn, ly = dx * sn + dy * c, k = ed.vp.scale, tol = 12 * ed.dpr;
+  return Math.abs(lx - it.w * k) < tol && Math.abs(ly) < tol;
+}
 function hitTest(pt) {
   const p = edPage(), ctx = edCanvas().getContext('2d');
   for (let k = p.items.length - 1; k >= 0; k--) {
     const it = p.items[k];
-    if (it.type === 'text') {
-      const f = textFrame(it, ed.vp, ed.rot), b = textBox(ctx, it, ed.vp);
+    if (it.type === 'text' || it.type === 'image') {
+      const f = textFrame(it, ed.vp, ed.rot), b = localBox(ctx, it, ed.vp);
       // Rotate the point into the text's local frame.
       const dx = pt[0] - f.ox, dy = pt[1] - f.oy, c = Math.cos(-f.ang), s = Math.sin(-f.ang);
       const lx = dx * c - dy * s, ly = dx * s + dy * c;
@@ -2020,6 +2258,13 @@ function onStageDown(e) {
   const p = edPage(); if (!p) return;
   const pt = evPt(e);
   if (ed.textarea) { commitTextarea(); if (ed.tool === 'text') return; }
+  if ((ed.tool === 'select' || ed.tool === 'edittext') && onResizeHandle(pt)) {
+    pushUndo();
+    ed.drag = { kind: 'resize', orig: clone(ed.selItem), moved: false };
+    ed.el.setPointerCapture(e.pointerId);
+    e.preventDefault();
+    return;
+  }
   if (ed.tool === 'select' || ed.tool === 'edittext') {
     ed.selItem = hitTest(pt);
     if (ed.selItem) syncStyleControls(ed.selItem);
@@ -2043,10 +2288,21 @@ function onStageDown(e) {
 function onStageMove(e) {
   if (!ed.drag) return;
   const pt = evPt(e);
+  if (ed.drag.kind === 'resize') {
+    // Keep the top-left corner where it is and the picture's proportions.
+    const it = ed.selItem, o = ed.drag.orig, cur = toPdf(pt), r = o.rot * Math.PI / 180;
+    const ux = [Math.cos(r), Math.sin(r)], uy = [-Math.sin(r), Math.cos(r)];
+    const tl = [o.x + uy[0] * o.h, o.y + uy[1] * o.h];
+    const w = Math.max(8, (cur[0] - tl[0]) * ux[0] + (cur[1] - tl[1]) * ux[1]), h = w * o.h / o.w;
+    it.w = w; it.h = h; it.x = tl[0] - uy[0] * h; it.y = tl[1] - uy[1] * h;
+    ed.drag.moved = true;
+    redrawEditor();
+    return;
+  }
   if (ed.drag.kind === 'move') {
     const cur = toPdf(pt), dx = cur[0] - ed.drag.start[0], dy = cur[1] - ed.drag.start[1];
     const it = ed.selItem, o = ed.drag.orig;
-    if (it.type === 'text') { it.x = o.x + dx; it.y = o.y + dy; }
+    if (it.type === 'text' || it.type === 'image') { it.x = o.x + dx; it.y = o.y + dy; }
     else { it.x1 = o.x1 + dx; it.x2 = o.x2 + dx; it.y1 = o.y1 + dy; it.y2 = o.y2 + dy; }
     ed.drag.moved = true;
     redrawEditor();
@@ -2069,7 +2325,7 @@ function onStageUp(e) {
   if (!ed.drag) return;
   const d = ed.drag; ed.drag = null;
   const p = edPage();
-  if (d.kind === 'move') {
+  if (d.kind === 'move' || d.kind === 'resize') {
     if (!d.moved) undoStack.pop(), $('undoBtn').disabled = !undoStack.length;
     redrawEditor(); return;
   }
@@ -2201,7 +2457,7 @@ function deleteSelItem() {
 // Style controls (panel and the floating bar) follow the selected item; changing them restyles it.
 const styleState = { bold: false, italic: false };
 function syncStyleControls(it) {
-  if (!it) return;
+  if (!it || it.type === 'image') return;
   $('edColor').value = it.color;
   if (it.type !== 'text') return;
   $('edFont').value = normFont(it.font);
@@ -2218,7 +2474,7 @@ function applyStyleToSel(change) {
     if (!change || change === 'bold') it.bold = styleState.bold;
     if (!change || change === 'italic') it.italic = styleState.italic;
   }
-  if (!change || change === 'color') it.color = $('edColor').value;
+  if ((!change || change === 'color') && it.type !== 'image') it.color = $('edColor').value;
   redrawEditor();
 }
 
@@ -2232,7 +2488,7 @@ itemBar.innerHTML = `<button type="button" data-ib="edit" class="ib-text" title=
   <button type="button" data-ib="bigger" class="ib-text" title="Bigger" aria-label="Bigger text">A+</button>
   <button type="button" data-ib="bold" class="ib-text" title="Bold (Ctrl+B)" aria-label="Bold"><b>B</b></button>
   <button type="button" data-ib="italic" class="ib-text" title="Italic (Ctrl+I)" aria-label="Italic"><i>I</i></button>
-  <input type="color" data-ib="color" title="Colour" aria-label="Colour">
+  <input type="color" data-ib="color" class="ib-color" title="Colour" aria-label="Colour">
   <button type="button" data-ib="delete" title="Delete (Del)" aria-label="Delete">🗑</button>`;
 function hideItemBar() { itemBar.remove(); }
 function placeItemBar() {
@@ -2240,6 +2496,7 @@ function placeItemBar() {
   if (!it || !ed.el || ed.textarea || !edPage() || !edPage().items.includes(it)) { hideItemBar(); return; }
   const isText = it.type === 'text';
   itemBar.querySelectorAll('.ib-text').forEach(n => n.hidden = !isText);
+  itemBar.querySelector('.ib-color').hidden = it.type === 'image';
   if (isText) {
     itemBar.querySelector('[data-ib=font]').value = normFont(it.font);
     itemBar.querySelector('[data-ib=size]').textContent = Math.round(it.size * 10) / 10 + ' pt';
@@ -2249,8 +2506,8 @@ function placeItemBar() {
   itemBar.querySelector('[data-ib=color]').value = it.color;
   // Bounding box of the item in CSS pixels on the page.
   let x0, y0, x1, y1;
-  if (isText) {
-    const f = textFrame(it, ed.vp, ed.rot), b = textBox(edCanvas().getContext('2d'), it, ed.vp), c = Math.cos(f.ang), sn = Math.sin(f.ang);
+  if (isText || it.type === 'image') {
+    const f = textFrame(it, ed.vp, ed.rot), b = localBox(edCanvas().getContext('2d'), it, ed.vp), c = Math.cos(f.ang), sn = Math.sin(f.ang);
     const pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].map(([x, y]) => [f.ox + x * c - y * sn, f.oy + x * sn + y * c]);
     x0 = Math.min(...pts.map(q => q[0])); x1 = Math.max(...pts.map(q => q[0])); y0 = Math.min(...pts.map(q => q[1])); y1 = Math.max(...pts.map(q => q[1]));
   } else { const r = cropRectView([it.x1, it.y1, it.x2, it.y2], ed.vp); x0 = r.x; y0 = r.y; x1 = r.x + r.w; y1 = r.y + r.h; }
@@ -2409,11 +2666,231 @@ async function startLineEdit(el, i) {
   openTextarea(null, it);
 }
 
+/* ---------- Pictures (Insert image, signatures) ----------
+ * Picture data lives in imgStore; page items only hold its id, so undo history stays small. */
+const imgStore = new Map();
+let imgSeq = 1;
+const loadImg = url => new Promise((ok, fail) => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => fail(new Error('Not an image')); im.src = url; });
+// Keep PNG and JPEG as they are (the PDF can use them directly); convert anything else, and shrink huge photos.
+async function storeImage(blob) {
+  const url = URL.createObjectURL(blob);
+  let el = await loadImg(url), mime = blob.type, out = blob;
+  const MAX = 2400, big = Math.max(el.naturalWidth, el.naturalHeight) > MAX;
+  if (!/^image\/(png|jpeg)$/.test(mime) || big) {
+    const k = Math.min(1, MAX / Math.max(el.naturalWidth, el.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(el.naturalWidth * k)); c.height = Math.max(1, Math.round(el.naturalHeight * k));
+    c.getContext('2d').drawImage(el, 0, 0, c.width, c.height);
+    mime = mime === 'image/jpeg' ? 'image/jpeg' : 'image/png';
+    out = await new Promise(r => c.toBlob(r, mime, 0.9));
+    URL.revokeObjectURL(url);
+    el = await loadImg(URL.createObjectURL(out));
+  }
+  const id = 'img' + (imgSeq++);
+  imgStore.set(id, { el, mime, bytes: new Uint8Array(await out.arrayBuffer()), w: el.naturalWidth, h: el.naturalHeight });
+  return id;
+}
+// Place a picture in the middle of the page being viewed, upright on screen, and select it.
+async function insertPicture(id, isSig) {
+  const p = pages[view.current]; if (!p) return;
+  const el = view.els.get(p.uid);
+  if (!el.__vp) await paintPage(el);
+  if (!activate(el)) return;
+  const im = imgStore.get(id), vp = ed.vp, R = ed.rot, r = R * Math.PI / 180;
+  const pageW = vp.width / vp.scale; // on-screen page width, in points
+  let w = Math.min(im.w * 0.75, pageW * (isSig ? 0.3 : 0.5)), h = w * im.h / im.w;
+  // Centre it in the part of the page that is on screen, so it appears where the user is looking.
+  const pr = el.getBoundingClientRect(), ar = $('docArea').getBoundingClientRect();
+  const vx0 = Math.max(pr.left, ar.left), vx1 = Math.min(pr.right, ar.right), vy0 = Math.max(pr.top, ar.top), vy1 = Math.min(pr.bottom, ar.bottom);
+  const cx = vx1 > vx0 ? ((vx0 + vx1) / 2 - pr.left) * ed.dpr : vp.width / 2, cy = vy1 > vy0 ? ((vy0 + vy1) / 2 - pr.top) * ed.dpr : vp.height / 2;
+  // Pictures placed one after another step down a little, so they don't hide each other.
+  const stack = p.items.filter(it => it.type === 'image').length % 6;
+  const center = toPdf([cx + stack * 18 * ed.dpr, cy + stack * 18 * ed.dpr]);
+  const ux = [Math.cos(r), Math.sin(r)], uy = [-Math.sin(r), Math.cos(r)];
+  const item = { type: 'image', img: id, w, h, rot: R, sig: !!isSig,
+    x: center[0] - ux[0] * w / 2 - uy[0] * h / 2, y: center[1] - ux[1] * w / 2 - uy[1] * h / 2 };
+  pushUndo();
+  p.items.push(item);
+  setTool('select', true); // keep the tools panel where it is (e.g. Fill & Sign)
+  ed.selItem = item;
+  redrawEditor();
+  toast(isSig ? 'Signature placed — drag it into position, and use the corner handle to resize it.' : 'Image placed — drag to move it, and use the corner handle to resize it.', 4500);
+}
+async function insertImageFiles(files) {
+  const list = [...files].filter(f => /^image\//.test(f.type));
+  if (!list.length) { toast('Please choose image files.'); return; }
+  if ($('workspace').classList.contains('organizing')) showView('viewer');
+  for (const f of list) {
+    try { await insertPicture(await storeImage(f), false); }
+    catch (e) { console.error(e); toast(`Could not use “${f.name}” — that image type isn't supported by this browser.`, 4500); }
+  }
+}
+
+/* ----- Signature dialog: draw, type or upload ----- */
+const sig = { tab: 'draw', ink: '#111111', strokes: 0, upload: null };
+const SIG_KEY = 'pdf-tools-signatures';
+function savedSigs() { try { return JSON.parse(localStorage.getItem(SIG_KEY) || '[]'); } catch (e) { return []; } }
+function setSavedSigs(list) { try { localStorage.setItem(SIG_KEY, JSON.stringify(list)); } catch (e) { /* storage full or blocked */ } }
+function sizeCanvas(c) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2), r = c.getBoundingClientRect();
+  c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
+  return dpr;
+}
+function openSigDialog() {
+  if ($('workspace').classList.contains('organizing')) showView('viewer');
+  $('sigDialog').classList.remove('hidden');
+  sigTab(sig.tab);
+  renderSavedSigs();
+}
+function closeSigDialog() { $('sigDialog').classList.add('hidden'); }
+function sigTab(t) {
+  sig.tab = t;
+  document.querySelectorAll('[data-sigtab]').forEach(b => b.setAttribute('aria-selected', b.dataset.sigtab === t));
+  document.querySelectorAll('.sig-pane').forEach(pn => pn.classList.toggle('hidden', pn.dataset.pane !== t));
+  requestAnimationFrame(() => {
+    if (t === 'draw' && !sig.strokes) clearPad();
+    if (t === 'type') { drawTypedSig(); $('sigText').focus(); }
+    if (t === 'upload') drawUploadedSig();
+  });
+}
+function clearPad() {
+  const c = $('sigPad'), dpr = sizeCanvas(c), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.save(); ctx.strokeStyle = '#e6d9b8'; ctx.lineWidth = dpr; ctx.setLineDash([6 * dpr, 5 * dpr]);
+  ctx.beginPath(); ctx.moveTo(20 * dpr, c.height - 34 * dpr); ctx.lineTo(c.width - 20 * dpr, c.height - 34 * dpr); ctx.stroke(); ctx.restore();
+  sig.strokes = 0; sig.guide = true;
+}
+function drawTypedSig() {
+  const c = $('sigTypeCanvas'), dpr = sizeCanvas(c), ctx = c.getContext('2d'), text = $('sigText').value.trim();
+  ctx.clearRect(0, 0, c.width, c.height);
+  if (!text) return;
+  const face = fontFaces.get('Amiri-Italic');
+  // Draw again once the handwriting-style font has loaded.
+  if (!face || face.status !== 'loaded') ensureFace('Amiri-Italic').then(() => { if (sig.tab === 'type') drawTypedSig(); });
+  let px = 64 * dpr;
+  ctx.fillStyle = sig.ink; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+  ctx.font = `${px}px "PDF-Amiri-Italic", "Amiri", cursive`;
+  while (ctx.measureText(text).width > c.width - 30 * dpr && px > 16) { px -= 4; ctx.font = `${px}px "PDF-Amiri-Italic", "Amiri", cursive`; }
+  ctx.direction = ARABIC_RE.test(text) ? 'rtl' : 'ltr';
+  ctx.fillText(text, c.width / 2, c.height / 2);
+}
+async function drawUploadedSig() {
+  const c = $('sigUpCanvas'), ctx = c.getContext('2d');
+  sizeCanvas(c); ctx.clearRect(0, 0, c.width, c.height);
+  if (!sig.upload) return;
+  const im = sig.upload, k = Math.min(c.width / im.naturalWidth, c.height / im.naturalHeight, 1);
+  const w = im.naturalWidth * k, h = im.naturalHeight * k;
+  ctx.drawImage(im, (c.width - w) / 2, (c.height - h) / 2, w, h);
+  if ($('sigKnock').checked) {
+    // Make paper white transparent, fading near-white edges so the ink stays smooth.
+    const d = ctx.getImageData(0, 0, c.width, c.height), a = d.data;
+    for (let i = 0; i < a.length; i += 4) {
+      const m = Math.min(a[i], a[i + 1], a[i + 2]);
+      if (m > 235) a[i + 3] = 0; else if (m > 190) a[i + 3] = Math.round(a[i + 3] * (235 - m) / 45);
+    }
+    ctx.putImageData(d, 0, 0);
+  }
+}
+// Crop a canvas to its visible ink (plus a small margin); null if it's empty.
+function trimCanvas(c, skipGuide) {
+  const ctx = c.getContext('2d'), { width: W, height: H } = c, d = ctx.getImageData(0, 0, W, H).data;
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 4;
+    if (d[i + 3] < 30) continue;
+    if (skipGuide && d[i] > 200 && d[i + 1] > 190 && d[i + 2] > 160) continue; // the dashed guide line
+    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+  }
+  if (x1 < 0) return null;
+  const pad = 6, out = document.createElement('canvas');
+  x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(W - 1, x1 + pad); y1 = Math.min(H - 1, y1 + pad);
+  out.width = x1 - x0 + 1; out.height = y1 - y0 + 1;
+  const o = out.getContext('2d');
+  o.drawImage(c, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
+  if (skipGuide) {
+    // Remove what's left of the guide line from the result.
+    const img = o.getImageData(0, 0, out.width, out.height), a = img.data;
+    for (let i = 0; i < a.length; i += 4) if (a[i] > 200 && a[i + 1] > 190 && a[i + 2] > 160) a[i + 3] = 0;
+    o.putImageData(img, 0, 0);
+  }
+  return out;
+}
+async function placeSignature(dataUrl) {
+  let blob;
+  if (dataUrl) blob = await (await fetch(dataUrl)).blob();
+  else {
+    const src = sig.tab === 'draw' ? $('sigPad') : sig.tab === 'type' ? $('sigTypeCanvas') : $('sigUpCanvas');
+    const t = sig.tab === 'draw' && !sig.strokes ? null : trimCanvas(src, sig.tab === 'draw');
+    if (!t) { toast(sig.tab === 'draw' ? 'Draw your signature first.' : sig.tab === 'type' ? 'Type your name first.' : 'Choose an image of your signature first.', 3500); return; }
+    blob = await new Promise(r => t.toBlob(r, 'image/png'));
+    if ($('sigRemember').checked) {
+      const url = t.toDataURL('image/png');
+      if (url.length < 400000) { setSavedSigs([url, ...savedSigs().filter(u => u !== url)].slice(0, 4)); renderPanelSigs(); }
+    }
+  }
+  closeSigDialog();
+  await insertPicture(await storeImage(blob), true);
+}
+// Saved signatures, one click to place, in the Fill & Sign panel.
+function renderPanelSigs() {
+  const list = savedSigs(), box = $('panelSigs');
+  $('panelSigsWrap').hidden = !list.length;
+  box.textContent = '';
+  list.forEach(url => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sig-thumb'; b.title = 'Place this signature';
+    b.innerHTML = '<img alt="Saved signature">'; b.querySelector('img').src = url;
+    b.onclick = () => placeSignature(url);
+    box.appendChild(b);
+  });
+}
+function renderSavedSigs() {
+  renderPanelSigs();
+  const list = savedSigs(), box = $('sigSaved');
+  $('sigSavedWrap').hidden = !list.length;
+  box.textContent = '';
+  list.forEach((url, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'sig-thumb'; b.title = 'Use this signature';
+    b.innerHTML = '<img alt="Saved signature"><span class="forget" title="Forget this signature" aria-label="Forget">✕</span>';
+    b.querySelector('img').src = url;
+    b.onclick = e => {
+      if (e.target.closest('.forget')) { const l = savedSigs(); l.splice(i, 1); setSavedSigs(l); renderSavedSigs(); }
+      else placeSignature(url);
+    };
+    box.appendChild(b);
+  });
+}
+// Drawing pad: smooth strokes through the midpoints of the pointer samples.
+(() => {
+  const c = $('sigPad'); let pts = null;
+  const pos = e => { const r = c.getBoundingClientRect(), k = c.width / r.width; return [(e.clientX - r.left) * k, (e.clientY - r.top) * k]; };
+  c.addEventListener('pointerdown', e => {
+    c.setPointerCapture(e.pointerId); pts = [pos(e)];
+    const ctx = c.getContext('2d'), k = c.width / c.getBoundingClientRect().width;
+    ctx.fillStyle = sig.ink; ctx.beginPath(); ctx.arc(pts[0][0], pts[0][1], 1.3 * k, 0, Math.PI * 2); ctx.fill();
+    sig.strokes++;
+  });
+  c.addEventListener('pointermove', e => {
+    if (!pts) return;
+    pts.push(pos(e));
+    if (pts.length < 3) return;
+    const ctx = c.getContext('2d'), k = c.width / c.getBoundingClientRect().width, n = pts.length;
+    const [a, b, d] = [pts[n - 3], pts[n - 2], pts[n - 1]];
+    ctx.strokeStyle = sig.ink; ctx.lineWidth = 2.6 * k; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo((a[0] + b[0]) / 2, (a[1] + b[1]) / 2);
+    ctx.quadraticCurveTo(b[0], b[1], (b[0] + d[0]) / 2, (b[1] + d[1]) / 2);
+    ctx.stroke();
+  });
+  const end = () => { pts = null; };
+  c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
+})();
+
 /* ---------- Wiring ---------- */
-$('pickBtn').onclick = $('addBtn').onclick = () => {
-  // New files go after the page being viewed.
+$('pickBtn').onclick = () => { fileInputMode = 'tabs'; $('fileInput').click(); };
+$('addBtn').onclick = () => {
+  // Files added to this PDF go after the page being viewed.
   if (pages.length && !$('workspace').classList.contains('organizing')) selected = new Set(pages[view.current] ? [pages[view.current].uid] : []);
-  $('fileInput').click();
+  fileInputMode = 'add'; $('fileInput').click();
 };
 
 // Upload-file / From-URL tabs
@@ -2452,7 +2929,7 @@ $('urlDlgForm').onsubmit = async e => {
   e.preventDefault();
   $('urlDlgErr').textContent = '';
   closeUrlDialog();
-  const err = await addFromUrl($('urlDlgInput').value);
+  const err = await addFromUrl($('urlDlgInput').value, true);
   if (err) { $('urlDlgErr').textContent = err; $('urlDialog').classList.remove('hidden'); $('urlDlgInput').focus(); }
 };
 
@@ -2463,7 +2940,10 @@ $('urlDlgForm').onsubmit = async e => {
   selectTab('url'); $('urlInput').value = q;
   $('urlForm').requestSubmit();
 })();
-$('fileInput').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
+$('fileInput').onchange = e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (fileInputMode === 'add' && pages.length) addFiles(files); else openInTabs(files);
+};
 
 ['dragenter', 'dragover'].forEach(t => document.addEventListener(t, e => {
   if (dragUids || !e.dataTransfer || ![...e.dataTransfer.types].includes('Files')) return;
@@ -2475,7 +2955,14 @@ $('fileInput').onchange = e => { addFiles(e.target.files); e.target.value = ''; 
 }));
 document.addEventListener('drop', e => {
   if (dragUids || !e.dataTransfer || !e.dataTransfer.files.length) return;
-  e.preventDefault(); addFiles(e.dataTransfer.files);
+  e.preventDefault();
+  const files = [...e.dataTransfer.files];
+  const pdfs = files.filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+  const imgs = files.filter(f => /^image\//.test(f.type));
+  if (pdfs.length) openInTabs(pdfs);
+  // Images dropped on an open PDF are placed on the current page.
+  if (imgs.length && pages.length) insertImageFiles(imgs);
+  if (!pdfs.length && !imgs.length) toast('Drop PDF files, or images to place on the page.');
 });
 
 $('selAllBtn').onclick = () => { selected = new Set(pages.map(p => p.uid)); renderGrid(); };
@@ -2489,14 +2976,40 @@ $('delBtn').onclick = deleteSel;
 $('blankBtn').onclick = insertBlank;
 $('reverseBtn').onclick = () => { pushUndo(); pages.reverse(); renderGrid(); };
 $('undoBtn').onclick = undo;
-$('clearBtn').onclick = () => {
-  if (!confirm('Remove all pages and start over?')) return;
-  pages = []; selected.clear(); undoStack = []; $('undoBtn').disabled = true;
-  sources.forEach(s => s.pdfjs.destroy()); sources.clear(); renderCache.clear(); blankSrc = null;
-  $('splitResults').textContent = '';
-  garbledPages.clear(); ed.el = null; ed.uid = null; ed.selItem = null;
-  $('workspace').classList.remove('organizing');
+$('clearBtn').onclick = () => { if (curDocId != null) closeDoc(curDocId); };
+$('insImgBtn').onclick = $('stripImage').onclick = () => $('imgInput').click();
+$('imgInput').onchange = e => { const f = [...e.target.files]; e.target.value = ''; insertImageFiles(f); };
+$('sigBtn').onclick = openSigDialog;
+$('stripSign').onclick = () => { openSection('sign'); openSigDialog(); };
+renderPanelSigs();
+$('sigCancel').onclick = closeSigDialog;
+$('sigPlace').onclick = () => placeSignature(null);
+$('sigClear').onclick = clearPad;
+document.querySelectorAll('[data-sigtab]').forEach(b => b.onclick = () => sigTab(b.dataset.sigtab));
+document.querySelectorAll('[data-ink]').forEach(b => b.onclick = () => {
+  sig.ink = b.dataset.ink;
+  document.querySelectorAll('[data-ink]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  if (sig.tab === 'type') drawTypedSig();
+});
+$('sigText').addEventListener('input', drawTypedSig);
+$('sigUploadBtn').onclick = () => $('sigFile').click();
+$('sigFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { sig.upload = await loadImg(URL.createObjectURL(f)); drawUploadedSig(); }
+  catch { toast('That file isn\'t an image this browser can open.', 4000); }
+};
+$('sigKnock').onchange = drawUploadedSig;
+$('sigDialog').addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); closeSigDialog(); } });
+$('sigDialog').addEventListener('click', e => { if (e.target === $('sigDialog')) closeSigDialog(); });
+$('fromTabBtn').onclick = () => {
+  const d = docs.find(x => x.id === +$('fromTabSel').value); if (!d) return;
+  pushUndo();
+  const copies = clone(d.pages).map(pg => ({ ...pg, uid: uidSeq++ }));
+  const at = Math.min(pages.length, view.current + 1);
+  pages.splice(at, 0, ...copies);
   renderGrid();
+  toast(`Inserted ${copies.length} page${copies.length === 1 ? '' : 's'} from “${d.name}”.`);
+  requestAnimationFrame(() => scrollToPage(at));
 };
 $('saveBtn').onclick = $('topSaveBtn').onclick = () => saveAll(false);
 $('saveNote').classList.toggle('hidden', CAN_PICK_FILE);
@@ -2674,7 +3187,7 @@ let resizeT; window.addEventListener('resize', () => {
   }, 150);
 });
 // Keep the tab title in step with the file name.
-const syncTitle = () => { $('docTitle').textContent = ($('outName').value.trim() || 'document.pdf'); };
+const syncTitle = () => { const d = curDoc(); if (d) d.name = $('outName').value; renderTabs(); };
 $('outName').addEventListener('input', syncTitle);
 new MutationObserver(syncTitle).observe($('outName'), { attributes: true });
 $('outName').addEventListener('change', syncTitle);
@@ -2705,12 +3218,12 @@ $('printBtn').onclick = async () => {
   }
 };
 
-window.addEventListener('beforeunload', e => { if (pages.length) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { if (pages.length || docs.length) { e.preventDefault(); e.returnValue = ''; } });
 
 setTool('select');
 
 // Test hook: lets automated checks inspect state without affecting normal use.
-window.__pdfTools = { get pages() { return pages; }, buildPdf, computeParts, addFiles, bidiRuns, pageText, isGarbled, get view() { return view; } };
+window.__pdfTools = { get pages() { return pages; }, get ed() { return ed; }, get docs() { return docs; }, get curDocId() { return curDocId; }, get imgStore() { return imgStore; }, buildPdf, computeParts, addFiles, bidiRuns, pageText, isGarbled, get view() { return view; } };
 })();
 </script>
 </body>
