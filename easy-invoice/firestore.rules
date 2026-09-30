@@ -1,0 +1,113 @@
+rules_version = '2';
+
+// Server-side multi-tenancy: every read/write to a business's data is
+// checked here, not just hidden behind UI buttons. A user can only touch a
+// business's documents if their uid appears in that business's `members`
+// map. This is the enforcement boundary the app relies on.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function business(businessId) {
+      return get(/databases/$(database)/documents/businesses/$(businessId));
+    }
+
+    function isMember(businessId) {
+      return isSignedIn() && request.auth.uid in business(businessId).data.members;
+    }
+
+    // Per-user pointer to the business(es) they belong to. A user may only
+    // read/write their own pointer document.
+    match /users/{uid} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    match /businesses/{businessId} {
+      allow read: if isMember(businessId);
+      allow create: if isSignedIn() && request.auth.uid in request.resource.data.members;
+      allow update: if isMember(businessId);
+      allow delete: if false;
+
+      match /customers/{id} {
+        allow read, create, update: if isMember(businessId);
+        // Real customers are archived, never hard-deleted, so historical
+        // invoices always keep something to reference. Demo/sample records
+        // may be removed outright to reset the demo.
+        allow delete: if isMember(businessId) && resource.data.isDemo == true;
+      }
+
+      match /products/{id} {
+        allow read, create, update: if isMember(businessId);
+        allow delete: if isMember(businessId) && resource.data.isDemo == true;
+      }
+
+      match /invoices/{id} {
+        allow read: if isMember(businessId);
+        allow create: if isMember(businessId) && request.resource.data.status == 'draft';
+        // Once a document leaves draft status its commercial content is
+        // frozen — only status/payment/void bookkeeping fields may change.
+        allow update: if isMember(businessId) && (
+          resource.data.status == 'draft' ||
+          (request.resource.data.lineItems == resource.data.lineItems &&
+           request.resource.data.customer == resource.data.customer &&
+           request.resource.data.totalCents == resource.data.totalCents &&
+           request.resource.data.get('invoiceNumber', null) == resource.data.get('invoiceNumber', null))
+        );
+        allow delete: if isMember(businessId) && resource.data.status == 'draft';
+      }
+
+      match /quotes/{id} {
+        allow read: if isMember(businessId);
+        allow create: if isMember(businessId) && request.resource.data.status == 'draft';
+        allow update: if isMember(businessId) && (
+          resource.data.status == 'draft' ||
+          (request.resource.data.lineItems == resource.data.lineItems &&
+           request.resource.data.customer == resource.data.customer &&
+           request.resource.data.totalCents == resource.data.totalCents)
+        );
+        allow delete: if isMember(businessId) && resource.data.status == 'draft';
+      }
+
+      match /payments/{id} {
+        allow read: if isMember(businessId);
+        allow create: if isMember(businessId);
+        // Payments are an audit trail: the only allowed change post-creation
+        // is flipping `voided`, never the amount or invoice it applies to.
+        allow update: if isMember(businessId) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['voided']);
+        allow delete: if false;
+      }
+
+      match /auditLog/{id} {
+        allow read: if isMember(businessId);
+        allow create: if isMember(businessId);
+        allow update, delete: if false;
+      }
+
+      // Atomic invoice/quote numbering. The race-free guarantee comes from
+      // Firestore's transaction layer itself: allocateNumber() (see
+      // src/lib/repo/numbering.ts) reads this counter and writes its
+      // increment inside one runTransaction, and Firestore aborts and
+      // silently auto-retries whichever concurrent transaction lost the
+      // race at the storage layer, before rules are even involved — that is
+      // what stands in for a SQL unique constraint + row lock here.
+      //
+      // Deliberately NOT validated further here (e.g. "new seq must be
+      // exactly old seq + 1"): a rule like that cannot tell a losing,
+      // about-to-be-retried transaction apart from a genuine bad write, so
+      // it fails the same way for both — with PERMISSION_DENIED, which the
+      // client SDK correctly does NOT auto-retry (unlike the ABORTED it
+      // gets from a real transaction conflict). Adding that check silently
+      // breaks concurrent allocation instead of protecting it; membership
+      // is the only thing worth gating here.
+      match /counters/{name} {
+        allow read: if isMember(businessId);
+        allow create, update: if isMember(businessId);
+        allow delete: if false;
+      }
+    }
+  }
+}
