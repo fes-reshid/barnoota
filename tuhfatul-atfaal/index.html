@@ -489,6 +489,21 @@ window.TAJWEED_AUDIO=window.TAJWEED_AUDIO||{};
 /* Recorded recitation: tuhfatul-atfaal/assets/audio/line-NNa.mp3 (first half) and line-NNb.mp3 (second half). Raise this when more lines are uploaded. */
 const RECORDED_LINES=31;
 Array.from({length:RECORDED_LINES},(_,i)=>i+1).forEach(n=>['a','b'].forEach(h=>{const k='line-'+String(n).padStart(2,'0')+h;if(!window.TAJWEED_AUDIO[k])window.TAJWEED_AUDIO[k]='/tuhfatul-atfaal/assets/audio/'+k+'.mp3'}));
+/* Wherever the app reads Arabic aloud (Line Match cards, word games, hints…),
+   a whole recorded line or half-line plays the teacher's recording instead
+   of the device voice. Anything else still uses the device voice. */
+const ttsArabic=sayArabic;let recordedTextMap=null;
+function normArabicText(t){return String(t||'').replace(/[|✦*…]/g,' ').replace(/\s+/g,' ').trim()}
+function recordedFor(text){
+ if(!recordedTextMap){recordedTextMap=new Map();lessons.forEach(l=>{const nums=lineNumbers(l),lines=String(l.matn).split('|');nums.forEach((n,idx)=>{const k='line-'+String(n).padStart(2,'0'),a=window.TAJWEED_AUDIO[k+'a'],b=window.TAJWEED_AUDIO[k+'b'];if(!a||!b)return;const line=lines[idx]||l.matn,parts=poemParts(line,n);
+  recordedTextMap.set(normArabicText(line),[a,b]);recordedTextMap.set(normArabicText(parts[0].join(' ')),[a]);recordedTextMap.set(normArabicText(parts[1].join(' ')),[b])})})}
+ return recordedTextMap.get(normArabicText(text))||null;
+}
+sayArabic=function(text){
+ const srcs=recordedFor(text);if(!srcs){ttsArabic(text);return}
+ if(!soundOn)return;stopVoicePlayback();const token=audioPlaybackToken;
+ (async()=>{for(const src of srcs){if(token!==audioPlaybackToken)return;await hifzClip(src,text)}if(token===audioPlaybackToken)activeMediaAudio=null})();
+};
 const $=s=>document.querySelector(s);const screens=['startScreen','mapScreen','lessonScreen','rewardScreen','mapQuizScreen','flashScreen','vocabScreen','certScreen','avatarScreen'];
 function show(id){screens.forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));scrollTo({top:0,behavior:'smooth'})}
 function normalizeProfile(p,name){const d=p&&typeof p==='object'?p:freshProfile(name),oldStars=Array.isArray(d.stars)?d.stars:[],oldMemory=Array.isArray(d.memoryDone)?d.memoryDone:[];d.name=name||d.name||'Explorer';d.avatar=AVATARS.includes(d.avatar)?d.avatar:'🧒';if(d.courseVersion!==COURSE_VERSION&&oldStars.length===allLessonRows.length){d.stars=lessons.map(l=>Number(oldStars[l.sourceIndex])||0);d.memoryDone=lessons.map(l=>!!oldMemory[l.sourceIndex]);d.unlocked=Math.max(1,(d.stars.findIndex(s=>!s)<0?TOTAL_LESSONS:d.stars.findIndex(s=>!s)+1));d.vocabDone=Array(worlds.length).fill(false);d.teacherAssessments=Array(worlds.length).fill(null)}else{d.stars=[...oldStars,...Array(TOTAL_LESSONS).fill(0)].slice(0,TOTAL_LESSONS);d.memoryDone=[...oldMemory,...Array(TOTAL_LESSONS).fill(false)].slice(0,TOTAL_LESSONS);d.unlocked=Math.max(1,Math.min(TOTAL_LESSONS,d.unlocked||1));d.vocabDone=Array.isArray(d.vocabDone)?[...d.vocabDone,...Array(worlds.length).fill(false)].slice(0,worlds.length):Array(worlds.length).fill(false);d.teacherAssessments=Array.isArray(d.teacherAssessments)?[...d.teacherAssessments,...Array(worlds.length).fill(null)].slice(0,worlds.length):Array(worlds.length).fill(null)}d.mapQuizScores=Array.isArray(d.mapQuizScores)?[...d.mapQuizScores,...Array(worlds.length).fill(null)].slice(0,worlds.length):Array(worlds.length).fill(null);d.mapQuizScores=d.mapQuizScores.map(record=>{if(!record)return null;if(Number(record.total)===MAP_QUIZ_TOTAL)return record;const converted=record.passed?MAP_QUIZ_TOTAL:Math.min(MAP_QUIZ_TOTAL,Math.round((Number(record.score)||0)/Math.max(1,Number(record.total)||15)*MAP_QUIZ_TOTAL));return{...record,score:converted,total:MAP_QUIZ_TOTAL}});d.teacherAssessments.forEach((record,i)=>{if(record&&record.approved&&!d.mapQuizScores[i])d.mapQuizScores[i]={score:MAP_QUIZ_TOTAL,total:MAP_QUIZ_TOTAL,passed:true,completedAt:record.approvedAt||new Date().toISOString()}});d.courseVersion=COURSE_VERSION;d.coins=Number(d.coins)||0;delete d.teacherListened;delete d.teacherTested;return d}
