@@ -100,6 +100,7 @@
   }
   .app-menu button:hover{ background:var(--green-bg); color:var(--green-dark); }
   .app-top .spacer{ flex:1; }
+  .show-sm{ display:none; }
   .icon-btn{
     width:36px; height:36px; flex:none; border-radius:9px; border:1px solid transparent; background:transparent;
     display:inline-flex; align-items:center; justify-content:center; color:var(--ink-brown); font-size:17px; padding:0;
@@ -220,6 +221,7 @@
       box-shadow:6px 0 24px rgba(0,0,0,.25);
     }
     .app-menu, .hide-sm{ display:none !important; }
+    .show-sm{ display:inline; }
     .doc-tab{ max-width:130px; padding:4px 8px; }
     .item-bar select{ max-width:110px; }
     .tool-strip{ margin:8px 0 0 6px; padding:4px; }
@@ -438,7 +440,8 @@
       <span class="spacer"></span>
       <button class="icon-btn" id="undoBtn" type="button" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>↶</button>
       <button class="icon-btn" id="printBtn" type="button" title="Print" aria-label="Print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 9V3h10v6M7 17H4v-7h16v7h-3"/><rect x="7" y="14" width="10" height="7"/></svg></button>
-      <button class="btn primary" id="topSaveBtn" type="button" title="Save PDF">⬇ <span class="hide-sm">Save</span></button>
+      <button class="btn primary" id="topSaveBtn" type="button" title="Save (Ctrl+S)">⬇ <span class="hide-sm">Save</span></button>
+      <button class="btn" id="topSaveAsBtn" type="button" title="Save as — choose a new name and folder (Ctrl+Shift+S)"><span class="hide-sm">Save as…</span><span class="show-sm">As…</span></button>
       <button class="icon-btn" id="clearBtn" type="button" title="Close this PDF" aria-label="Close this PDF">✕</button>
     </div>
     <div class="app-body">
@@ -568,7 +571,8 @@
               <input type="text" id="outName" value="edited.pdf">
             </div>
             <div class="row">
-              <button class="btn primary" id="saveBtn" type="button">⬇ Save PDF…</button>
+              <button class="btn primary" id="saveBtn" type="button" title="Ctrl+S">⬇ Save</button>
+              <button class="btn" id="saveAsBtn" type="button" title="Ctrl+Shift+S">Save as…</button>
               <button class="btn" id="saveSelBtn" data-need-sel type="button" title="Select pages in the page organizer first">Save selected…</button>
             </div>
             <label class="opt" id="directDlRow"><input type="checkbox" id="directDl">
@@ -939,7 +943,7 @@ function switchDoc(id) {
 function closeDoc(id) {
   if (id === curDocId) saveDocState();
   const d = docs.find(x => x.id === id); if (!d) return;
-  if (d.undo.length && !confirm(`Close “${d.name}”? Changes you haven't saved will be lost.`)) return;
+  if (d.undo.length !== (d.savedAt || 0) && !confirm(`Close “${d.name}”? Changes you haven't saved will be lost.`)) return;
   const i = docs.indexOf(d);
   docs.splice(i, 1);
   if (id === curDocId) {
@@ -1727,17 +1731,30 @@ function checkPasswordReady() {
   catch (msg) { toast(String(msg), 4000); if ($('pwChk').checked) $('pwInput').focus(); return false; }
 }
 
-async function saveAll(onlySel) {
+// Save: the first time asks where; after that it writes straight into the same file.
+// Save as (saveAs = true) always asks. Saving only the selected pages always asks too.
+async function saveAll(onlySel, saveAs) {
   const list = onlySel ? selPages() : pages;
   if (!list.length) { toast('No pages to save.'); return; }
   if (!checkPasswordReady()) return;
-  let handle;
-  try { handle = await askSaveFile(baseName() + (onlySel ? '-selected' : '') + '.pdf', 'pdf'); }
-  catch (e) { if (e === CANCELLED) return; throw e; }
+  const d = curDoc();
+  let handle = !onlySel && !saveAs && !directDownload() && d && d.handle ? d.handle : null;
+  if (!handle) {
+    try { handle = await askSaveFile(baseName() + (onlySel ? '-selected' : '') + '.pdf', 'pdf'); }
+    catch (e) { if (e === CANCELLED) return; throw e; }
+  }
   busy(true, 'Building PDF…');
   try {
     const { bytes, lostChars } = await buildPdf(list);
     const saved = await writeFile(handle, new Blob([bytes], { type: 'application/pdf' }), baseName() + (onlySel ? '-selected' : '') + '.pdf');
+    if (d && !onlySel) {
+      d.savedAt = undoStack.length; // nothing unsaved now
+      if (handle) {
+        // Remember the file so the next Save goes straight into it, and name the tab after it.
+        d.handle = handle;
+        if ($('outName').value !== saved) { $('outName').value = saved; syncTitle(); }
+      }
+    }
     const prot = $('pwChk').checked ? ' It is password protected.' : '';
     const done = handle ? `Saved “${saved}”.` : 'PDF saved.';
     toast(lostChars ? done + prot + ' Some characters are not supported by the built-in font and were replaced with “?”.' : done + prot, lostChars ? 5000 : 3000);
@@ -3019,7 +3036,13 @@ $('fromTabBtn').onclick = () => {
   toast(`Inserted ${copies.length} page${copies.length === 1 ? '' : 's'} from “${d.name}”.`);
   requestAnimationFrame(() => scrollToPage(at));
 };
-$('saveBtn').onclick = $('topSaveBtn').onclick = () => saveAll(false);
+$('saveBtn').onclick = $('topSaveBtn').onclick = () => saveAll(false, false);
+$('saveAsBtn').onclick = $('topSaveAsBtn').onclick = () => saveAll(false, true);
+// Ctrl+S / Ctrl+Shift+S save the PDF instead of the web page.
+document.addEventListener('keydown', e => {
+  if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 's' || !pages.length) return;
+  e.preventDefault(); commitTextarea(); saveAll(false, e.shiftKey);
+}, true);
 $('saveNote').classList.toggle('hidden', CAN_PICK_FILE);
 $('directDlRow').classList.toggle('hidden', !CAN_PICK_FILE); // only meaningful where a Save as window exists
 $('directDl').checked = directDownload();
@@ -3030,7 +3053,7 @@ $('pwChk').onchange = () => {
 };
 ['pwInput', 'pwConfirm'].forEach(id => $(id).addEventListener('input', updatePwStatus));
 $('pwShow').onchange = () => { const t = $('pwShow').checked ? 'text' : 'password'; $('pwInput').type = $('pwConfirm').type = t; };
-$('saveSelBtn').onclick = () => saveAll(true);
+$('saveSelBtn').onclick = () => saveAll(true, true);
 $('splitBtn').onclick = doSplit;
 document.querySelectorAll('input[name=splitMode]').forEach(r => r.onchange = renderGrid);
 ['rangesInput', 'everyInput'].forEach(id => $(id).addEventListener('input', updateSplitPreview));
