@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, RotateCcw, Sparkles, X } from "lucide-react";
 import { NAV_ITEMS } from "./nav";
 import { useApp } from "../../app/AppProvider";
 import { useAsyncAction } from "../../lib/useAsyncAction";
+import { demoResetAll } from "../../lib/demo/repo";
 
 function BrandMark({ logoUrl, name }: { logoUrl: string | null; name: string }) {
   if (logoUrl) {
@@ -39,10 +40,50 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function AppShell() {
-  const { business, signOutUser, user } = useApp();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+function AccountSection({ onNavigate }: { onNavigate?: () => void }) {
+  const { signOutUser, user, isDemoMode } = useApp();
   const signOutAction = useAsyncAction(async () => signOutUser());
+
+  const resetDemo = () => {
+    onNavigate?.();
+    if (!window.confirm("Reset the demo? This clears all sample data in this browser and starts fresh.")) return;
+    demoResetAll();
+    window.location.reload();
+  };
+
+  return (
+    <div className="border-t border-ink-200 p-3">
+      <div className="mb-2 truncate px-2 text-xs text-ink-400">{user?.email}</div>
+      {isDemoMode ? (
+        <button className="btn-ghost w-full justify-start" onClick={resetDemo}>
+          <RotateCcw className="h-4 w-4" /> Reset demo data
+        </button>
+      ) : (
+        <button className="btn-ghost w-full justify-start" onClick={() => signOutAction.run()} disabled={signOutAction.pending}>
+          <LogOut className="h-4 w-4" /> Sign out
+        </button>
+      )}
+    </div>
+  );
+}
+
+function DemoBanner() {
+  const { isDemoMode } = useApp();
+  if (!isDemoMode) return null;
+  return (
+    <div className="mb-6 flex items-start gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
+      <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
+      <p>
+        <strong>You're viewing a live demo.</strong> Everything here — including any changes you make — is sample data stored only in
+        this browser, not a real account. Connect a Firebase project to turn this into a real, secure multi-user app (see the project README).
+      </p>
+    </div>
+  );
+}
+
+export function AppShell() {
+  const { business } = useApp();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <div className="min-h-dvh bg-ink-50">
@@ -56,12 +97,7 @@ export function AppShell() {
           </div>
         </div>
         <NavList />
-        <div className="border-t border-ink-200 p-3">
-          <div className="mb-2 truncate px-2 text-xs text-ink-400">{user?.email}</div>
-          <button className="btn-ghost w-full justify-start" onClick={() => signOutAction.run()} disabled={signOutAction.pending}>
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
-        </div>
+        <AccountSection />
       </aside>
 
       {/* Mobile top bar */}
@@ -87,18 +123,14 @@ export function AppShell() {
               </button>
             </div>
             <NavList onNavigate={() => setDrawerOpen(false)} />
-            <div className="border-t border-ink-200 p-3">
-              <div className="mb-2 truncate px-2 text-xs text-ink-400">{user?.email}</div>
-              <button className="btn-ghost w-full justify-start" onClick={() => signOutAction.run()} disabled={signOutAction.pending}>
-                <LogOut className="h-4 w-4" /> Sign out
-              </button>
-            </div>
+            <AccountSection onNavigate={() => setDrawerOpen(false)} />
           </div>
         </div>
       )}
 
       <main className="px-4 py-6 sm:px-6 lg:ml-64 lg:px-8 lg:py-8">
         <div className="mx-auto max-w-6xl">
+          <DemoBanner />
           <Outlet />
         </div>
       </main>

@@ -14,6 +14,16 @@ const firebaseConfig = {
 
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 
+/**
+ * When no real Firebase project is configured, the app runs entirely against
+ * a localStorage-backed demo store instead (see src/lib/demo/) — same UI,
+ * same code paths, sample data seeded automatically, clearly labelled as a
+ * demo. The moment real Firebase config is supplied and the app rebuilt,
+ * this flips to false and every repo function below switches to Firestore
+ * with no other code changes required.
+ */
+export const isDemoMode = !isFirebaseConfigured;
+
 export const app = initializeApp(
   isFirebaseConfigured
     ? firebaseConfig

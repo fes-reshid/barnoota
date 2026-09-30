@@ -11,9 +11,9 @@ import { useAsyncAction } from "../../lib/useAsyncAction";
 import { voidPayment } from "../../lib/repo/invoices";
 
 export function PaymentsPage() {
-  const { business, businessId, user } = useApp();
+  const { business, businessId, user, isDemoMode } = useApp();
   const { data: payments, loading } = usePayments();
-  const [includeDemo, setIncludeDemo] = useState(false);
+  const [includeDemo, setIncludeDemo] = useState(isDemoMode);
   const currency = business?.currency ?? "AUD";
 
   const filtered = useMemo(() => (includeDemo ? payments : payments.filter((p) => !p.isDemo)), [payments, includeDemo]);

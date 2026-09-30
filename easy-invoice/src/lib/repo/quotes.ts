@@ -1,9 +1,20 @@
 import { doc, getDoc, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, isDemoMode } from "../firebase";
 import { bizCollection, bizSubDoc, withId } from "./common";
 import { logAudit } from "./audit";
 import { blankRawLine, buildLineItems, businessSnapshotFrom, createDraftInvoice, customerSnapshotFrom, todayIso, totalsFromLineItems, type RawLine } from "./invoices";
 import type { Business, Customer, Invoice, Quote } from "../types";
+import {
+  demoCreateDraftQuote,
+  demoGetQuote,
+  demoMarkQuoteAccepted,
+  demoMarkQuoteConverted,
+  demoMarkQuoteDeclined,
+  demoSendQuote,
+  demoSubscribeQuote,
+  demoSubscribeQuotes,
+  demoUpdateDraftQuote,
+} from "../demo/repo";
 
 function addDays(iso: string, days: number): string {
   const d = new Date(iso + "T00:00:00");
@@ -34,30 +45,36 @@ export function blankQuote(business: Business, customer: Customer | null): Omit<
 }
 
 export async function createDraftQuote(businessId: string, uid: string, data: Omit<Quote, "id">): Promise<string> {
+  if (isDemoMode) return demoCreateDraftQuote(data);
   const ref = doc(bizCollection(businessId, "quotes"));
   await setDoc(ref, { ...data, createdBy: uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
   return ref.id;
 }
 
 export async function updateDraftQuote(businessId: string, quoteId: string, patch: Partial<Quote>) {
+  if (isDemoMode) return demoUpdateDraftQuote(quoteId, patch);
   await updateDoc(bizSubDoc(businessId, "quotes", quoteId), { ...patch, updatedAt: serverTimestamp() });
 }
 
 export async function getQuote(businessId: string, quoteId: string): Promise<Quote | null> {
+  if (isDemoMode) return demoGetQuote(quoteId);
   const snap = await getDoc(bizSubDoc(businessId, "quotes", quoteId));
   return snap.exists() ? withId<Quote>(snap) : null;
 }
 
 export function subscribeQuote(businessId: string, quoteId: string, cb: (q: Quote | null) => void) {
+  if (isDemoMode) return demoSubscribeQuote(quoteId, cb);
   return onSnapshot(bizSubDoc(businessId, "quotes", quoteId), (snap) => cb(snap.exists() ? withId<Quote>(snap) : null));
 }
 
 export function subscribeQuotes(businessId: string, cb: (quotes: Quote[]) => void) {
+  if (isDemoMode) return demoSubscribeQuotes(cb);
   const q = query(bizCollection(businessId, "quotes"), orderBy("createdAt", "desc"));
   return onSnapshot(q, (snap) => cb(snap.docs.map((d) => withId<Quote>(d))));
 }
 
 export async function sendQuote(businessId: string, quoteId: string, business: Business, uid: string, email: string): Promise<string> {
+  if (isDemoMode) return demoSendQuote(quoteId, business.quotePrefix);
   const quoteRef = bizSubDoc(businessId, "quotes", quoteId);
   const counterRef = doc(db, "businesses", businessId, "counters", "quote");
 
@@ -91,11 +108,13 @@ export async function sendQuote(businessId: string, quoteId: string, business: B
 }
 
 export async function markQuoteAccepted(businessId: string, quoteId: string, uid: string, email: string) {
+  if (isDemoMode) return demoMarkQuoteAccepted(quoteId);
   await updateDoc(bizSubDoc(businessId, "quotes", quoteId), { status: "accepted", updatedAt: serverTimestamp() });
   await logAudit(businessId, { entityType: "quote", entityId: quoteId, action: "accepted", summary: "Marked accepted", performedBy: uid, performedByEmail: email });
 }
 
 export async function markQuoteDeclined(businessId: string, quoteId: string, uid: string, email: string) {
+  if (isDemoMode) return demoMarkQuoteDeclined(quoteId);
   await updateDoc(bizSubDoc(businessId, "quotes", quoteId), { status: "declined", updatedAt: serverTimestamp() });
   await logAudit(businessId, { entityType: "quote", entityId: quoteId, action: "declined", summary: "Marked declined", performedBy: uid, performedByEmail: email });
 }
@@ -154,6 +173,11 @@ export async function convertQuoteToInvoice(businessId: string, uid: string, ema
     createdBy: uid,
   };
   const invoiceId = await createDraftInvoice(businessId, uid, invoiceData);
+
+  if (isDemoMode) {
+    demoMarkQuoteConverted(quote.id, invoiceId);
+    return invoiceId;
+  }
 
   await updateDoc(bizSubDoc(businessId, "quotes", quote.id), { status: "converted", convertedInvoiceId: invoiceId, updatedAt: serverTimestamp() });
   await logAudit(businessId, { entityType: "quote", entityId: quote.id, action: "converted", summary: `Converted to draft invoice`, performedBy: uid, performedByEmail: email });

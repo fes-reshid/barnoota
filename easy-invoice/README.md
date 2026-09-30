@@ -8,6 +8,31 @@ Live at **https://diinislaam.com/invoice/** (built output committed to the repo'
 top-level `invoice/` folder, since this site is plain static hosting with no
 build step — see "Deployment" below).
 
+## Demo mode (what's live right now)
+
+No Firebase project is configured yet, so the deployed site currently runs in
+**Demo Mode**: the exact same app and code paths, but with a localStorage-backed
+store instead of Firestore. Visiting the site drops you straight onto a
+pre-populated dashboard — no sign-up, no login — clearly labelled with a green
+"You're viewing a live demo" banner. Every feature works (create customers,
+issue invoices, record payments, generate PDFs, quotes, reports, CSV export);
+the only difference is that data lives only in that one browser, not a shared
+account, and a **"Reset demo data"** button clears it and reseeds fresh sample
+data.
+
+**This flips to the real, secure, multi-tenant Firebase backend automatically**
+the moment a real Firebase project is configured (section 1 below) and the app
+is rebuilt — `isDemoMode` in `src/lib/firebase.ts` is simply `!isFirebaseConfigured`,
+and every repo function (`src/lib/repo/*.ts`) branches on it. No other code
+changes are needed to go from "demo you can click around" to "real app with
+real accounts" — just add the `.env` values, deploy the security rules, and
+run `npm run build` again.
+
+See `src/lib/demo/` for the demo store/repo implementation, and
+`scripts/demo-mode.smoke.mjs` for the browser test that verifies it (auto-seed
+on first visit, data persists across reloads, new invoices get their own
+sequential numbers, reset re-seeds cleanly).
+
 ## Tech stack
 
 - **React 19 + TypeScript + Vite**, Tailwind CSS v4 for styling
@@ -226,8 +251,14 @@ Firebase emulator (`scripts/*.smoke.mjs`):
 - A second account could not see the first account's customers or invoices
   (see the automated security-rules tests above for the enforced version of
   this check).
+- **Demo mode** (`scripts/demo-mode.smoke.mjs`, run against a build with no
+  Firebase env configured): visiting the site with no prior state lands
+  straight on a pre-seeded dashboard with no login step; all data survives a
+  full page reload (localStorage); a newly created invoice gets its own
+  correct sequential number (`INV-0002` alongside the seeded `INV-0001`); and
+  "Reset demo data" clears everything and re-seeds cleanly.
 
-**Two real bugs were found and fixed by this testing, not just by reading the
+**Four real bugs were found and fixed by this testing, not just by reading the
 code:**
 1. Both the invoice and quote editors initialized a `useState` flag backwards,
    so a brand-new document's issue/due (or issue/expiry) dates were silently
@@ -244,6 +275,14 @@ code:**
    rule, which the Firestore SDK — correctly — does *not* auto-retry the way
    it retries a genuine write conflict (`ABORTED`). Removed the redundant
    check; membership is the only thing the rule needs to gate.
+4. (Caught while verifying Demo Mode) The Dashboard, Reports, and Payments
+   pages default to *excluding* records flagged `isDemo` from their totals —
+   correct for a real account that clicked "Load sample data" to explore the
+   app alongside its real invoices, but every record in a genuine Demo Mode
+   account inherits `isDemo: true` from the business itself, so with that
+   same default the dashboard looked permanently empty no matter how much
+   demo data existed. Fixed by defaulting that filter to "include" whenever
+   the account itself is a demo account (`isDemoMode` from `useApp()`).
 
 Not run in this environment: this sandbox's egress policy blocks the one-time
 emulator binary download from `firebase-public.firebaseio.com` on a clean

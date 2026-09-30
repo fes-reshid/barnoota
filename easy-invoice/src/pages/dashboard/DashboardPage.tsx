@@ -14,10 +14,13 @@ import { loadDemoData } from "../../lib/repo/demoData";
 import { Spinner } from "../../components/ui/Spinner";
 
 export function DashboardPage() {
-  const { business, user, businessId } = useApp();
+  const { business, user, businessId, isDemoMode } = useApp();
   const { data: invoices, loading: invoicesLoading } = useInvoices();
   const { data: payments, loading: paymentsLoading } = usePayments();
-  const [includeDemo, setIncludeDemo] = useState(false);
+  // In demo mode every record is flagged isDemo (there's no "real" data to
+  // protect it from), so default to showing it — otherwise this screen
+  // would look permanently empty for anyone trying the demo.
+  const [includeDemo, setIncludeDemo] = useState(isDemoMode);
 
   const realInvoices = useMemo(() => (includeDemo ? invoices : invoices.filter((i) => !i.isDemo)), [invoices, includeDemo]);
   const realPayments = useMemo(() => (includeDemo ? payments : payments.filter((p) => !p.isDemo)), [payments, includeDemo]);

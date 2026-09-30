@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "test:emulator": "firebase emulators:exec --only firestore,auth \"vitest run --config vitest.emulator.config.ts\"",
     "smoke:golden-path": "node scripts/golden-path.smoke.mjs",
-    "smoke:pdf-multipage": "node scripts/pdf-multipage.smoke.mjs"
+    "smoke:pdf-multipage": "node scripts/pdf-multipage.smoke.mjs",
+    "smoke:quote-flow": "node scripts/quote-flow.smoke.mjs",
+    "smoke:demo-mode": "node scripts/demo-mode.smoke.mjs"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",

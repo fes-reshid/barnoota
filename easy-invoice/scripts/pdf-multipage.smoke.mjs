@@ -10,11 +10,6 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH 
 const page = await browser.newPage();
 page.on("pageerror", (err) => console.log("[pageerror]", err.message));
 
-async function gotoHash(hash) {
-  await page.evaluate((h) => { window.location.hash = h; }, hash);
-  await page.waitForTimeout(400);
-}
-
 const LONG_DESCRIPTION =
   "Comprehensive end-to-end website redesign engagement covering discovery workshops, competitor analysis, information architecture, wireframing across all breakpoints, high-fidelity visual design in three rounds of revisions, a full design system with reusable components, accessibility auditing against WCAG 2.1 AA, front-end implementation with semantic HTML and responsive CSS, cross-browser QA on Chrome/Firefox/Safari/Edge, performance tuning to hit sub-2-second load times, and a two-week hypercare period post-launch with same-day bug triage. " .repeat(3);
 

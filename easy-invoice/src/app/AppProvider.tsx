@@ -6,20 +6,29 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-  type User,
 } from "firebase/auth";
 import { doc } from "firebase/firestore";
-import { auth, db } from "../lib/firebase";
+import { auth, db, isDemoMode } from "../lib/firebase";
 import { createBusiness, getUserBusinessIds, linkUserToBusiness, subscribeBusiness } from "../lib/repo/business";
+import { DEMO_BUSINESS_ID, DEMO_USER_EMAIL, DEMO_USER_UID, demoEnsureBusiness, demoListCollection } from "../lib/demo/repo";
+import { loadDemoData } from "../lib/repo/demoData";
 import type { Business } from "../lib/types";
 
+/** The parts of a Firebase Auth `User` this app actually reads — narrow
+ * enough that a plain demo-mode object satisfies it too. */
+export interface AppUser {
+  uid: string;
+  email: string | null;
+}
+
 interface AppContextValue {
-  user: User | null;
+  user: AppUser | null;
   authLoading: boolean;
   business: Business | null;
   businessId: string | null;
   businessLoading: boolean;
   needsOnboarding: boolean;
+  isDemoMode: boolean;
   signUp: (email: string, password: string, businessName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOutUser: () => Promise<void>;
@@ -29,8 +38,51 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | null>(null);
 
-export function AppProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+function DemoAppProvider({ children }: { children: ReactNode }) {
+  const [business, setBusiness] = useState<Business | null>(null);
+  const [businessLoading, setBusinessLoading] = useState(true);
+
+  useEffect(() => {
+    const existed = Boolean(demoListCollection<Business>(DEMO_BUSINESS_ID, "business").length);
+    const biz = demoEnsureBusiness();
+    setBusiness(biz);
+    setBusinessLoading(false);
+
+    if (!existed) {
+      // First-ever visit in this browser: populate it immediately so there's
+      // something to look at, rather than an empty account.
+      loadDemoData(biz, DEMO_USER_UID, DEMO_USER_EMAIL).catch(() => {
+        // Demo seeding is a nicety, not a requirement — an empty demo
+        // account (with its own "Load sample data" button) is still fine.
+      });
+    }
+
+    return subscribeBusiness(DEMO_BUSINESS_ID, (b) => setBusiness(b));
+  }, []);
+
+  const value = useMemo<AppContextValue>(
+    () => ({
+      user: { uid: DEMO_USER_UID, email: DEMO_USER_EMAIL },
+      authLoading: false,
+      business,
+      businessId: DEMO_BUSINESS_ID,
+      businessLoading,
+      needsOnboarding: false,
+      isDemoMode: true,
+      signUp: async () => {},
+      signIn: async () => {},
+      signOutUser: async () => {},
+      resetPassword: async () => {},
+      completeOnboarding: async () => {},
+    }),
+    [business, businessLoading],
+  );
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+}
+
+function FirebaseAppProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AppUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [businessId, setBusinessId] = useState<string | null>(null);
   const [business, setBusiness] = useState<Business | null>(null);
@@ -39,7 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     return onAuthStateChanged(auth, (u) => {
-      setUser(u);
+      setUser(u ? { uid: u.uid, email: u.email } : null);
       setAuthLoading(false);
       if (!u) {
         setBusinessId(null);
@@ -111,6 +163,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       businessId,
       businessLoading,
       needsOnboarding: Boolean(user && checkedBusinessLink && !businessId),
+      isDemoMode: false,
       signUp,
       signIn,
       signOutUser,
@@ -122,6 +175,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+}
+
+export function AppProvider({ children }: { children: ReactNode }) {
+  return isDemoMode ? <DemoAppProvider>{children}</DemoAppProvider> : <FirebaseAppProvider>{children}</FirebaseAppProvider>;
 }
 
 export function useApp(): AppContextValue {

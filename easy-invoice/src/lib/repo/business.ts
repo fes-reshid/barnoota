@@ -1,9 +1,10 @@
 import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../firebase";
+import { db, isDemoMode, storage } from "../firebase";
 import { bizDoc, withId } from "./common";
 import type { Business } from "../types";
 import { EMPTY_ADDRESS } from "../types";
+import { demoGetBusiness, demoSubscribeBusiness, demoUpdateBusiness, demoUploadLogo } from "../demo/repo";
 
 export function defaultBusiness(name: string, ownerId: string, ownerEmail: string, isDemo = false): Omit<Business, "id"> {
   return {
@@ -38,22 +39,26 @@ export async function createBusiness(businessId: string, name: string, ownerId: 
 }
 
 export async function getBusiness(businessId: string): Promise<Business | null> {
+  if (isDemoMode) return demoGetBusiness();
   const snap = await getDoc(bizDoc(businessId));
   if (!snap.exists()) return null;
   return withId<Business>(snap);
 }
 
 export function subscribeBusiness(businessId: string, cb: (b: Business | null) => void) {
+  if (isDemoMode) return demoSubscribeBusiness(cb);
   return onSnapshot(bizDoc(businessId), (snap) => {
     cb(snap.exists() ? withId<Business>(snap) : null);
   });
 }
 
 export async function updateBusiness(businessId: string, patch: Partial<Business>) {
+  if (isDemoMode) return demoUpdateBusiness(patch);
   await updateDoc(bizDoc(businessId), { ...patch, updatedAt: new Date() });
 }
 
 export async function uploadBusinessLogo(businessId: string, file: File): Promise<string> {
+  if (isDemoMode) return demoUploadLogo(file);
   const path = `businesses/${businessId}/logo-${Date.now()}-${file.name}`;
   const storageRef = ref(storage, path);
   await uploadBytes(storageRef, file);

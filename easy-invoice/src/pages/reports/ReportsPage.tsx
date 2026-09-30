@@ -15,12 +15,12 @@ function firstOfMonthIso(): string {
 }
 
 export function ReportsPage() {
-  const { business } = useApp();
+  const { business, isDemoMode } = useApp();
   const { data: invoices } = useInvoices();
   const { data: payments } = usePayments();
   const [start, setStart] = useState(firstOfMonthIso());
   const [end, setEnd] = useState(new Date().toISOString().slice(0, 10));
-  const [includeDemo, setIncludeDemo] = useState(false);
+  const [includeDemo, setIncludeDemo] = useState(isDemoMode);
   const currency = business?.currency ?? "AUD";
 
   const invoicesInRange = useMemo(

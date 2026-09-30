@@ -10,12 +10,24 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, isDemoMode } from "../firebase";
 import { bizCollection, bizSubDoc, newLineItemId, withId } from "./common";
 import { logAudit } from "./audit";
 import { calculateLine, deriveInvoiceStatus, validatePaymentAmount, type DocumentTotals } from "../money";
 import type { Business, BusinessSnapshot, Customer, CustomerSnapshot, Invoice, LineItem, Payment, PaymentMethod } from "../types";
 import { EMPTY_ADDRESS } from "../types";
+import {
+  demoCreateDraftInvoice,
+  demoGetInvoice,
+  demoIssueInvoice,
+  demoRecordPayment,
+  demoSubscribeInvoice,
+  demoSubscribeInvoices,
+  demoSubscribeInvoicesForCustomer,
+  demoUpdateDraftInvoice,
+  demoVoidInvoice,
+  demoVoidPayment,
+} from "../demo/repo";
 
 export function businessSnapshotFrom(b: Business): BusinessSnapshot {
   return {
@@ -133,35 +145,42 @@ export function blankInvoice(business: Business, customer: Customer | null, type
 }
 
 export async function createDraftInvoice(businessId: string, uid: string, data: Omit<Invoice, "id">): Promise<string> {
+  if (isDemoMode) return demoCreateDraftInvoice(data);
   const ref = doc(bizCollection(businessId, "invoices"));
   await setDoc(ref, { ...data, createdBy: uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
   return ref.id;
 }
 
 export async function updateDraftInvoice(businessId: string, invoiceId: string, patch: Partial<Invoice>) {
+  if (isDemoMode) return demoUpdateDraftInvoice(invoiceId, patch);
   await updateDoc(bizSubDoc(businessId, "invoices", invoiceId), { ...patch, updatedAt: serverTimestamp() });
 }
 
 export async function getInvoice(businessId: string, invoiceId: string): Promise<Invoice | null> {
+  if (isDemoMode) return demoGetInvoice(invoiceId);
   const snap = await getDoc(bizSubDoc(businessId, "invoices", invoiceId));
   return snap.exists() ? withId<Invoice>(snap) : null;
 }
 
 export function subscribeInvoice(businessId: string, invoiceId: string, cb: (inv: Invoice | null) => void) {
+  if (isDemoMode) return demoSubscribeInvoice(invoiceId, cb);
   return onSnapshot(bizSubDoc(businessId, "invoices", invoiceId), (snap) => cb(snap.exists() ? withId<Invoice>(snap) : null));
 }
 
 export function subscribeInvoices(businessId: string, cb: (invoices: Invoice[]) => void) {
+  if (isDemoMode) return demoSubscribeInvoices(cb);
   const q = query(bizCollection(businessId, "invoices"), orderBy("createdAt", "desc"));
   return onSnapshot(q, (snap) => cb(snap.docs.map((d) => withId<Invoice>(d))));
 }
 
 export function subscribeInvoicesForCustomer(businessId: string, customerId: string, cb: (invoices: Invoice[]) => void) {
+  if (isDemoMode) return demoSubscribeInvoicesForCustomer(customerId, cb);
   const q = query(bizCollection(businessId, "invoices"), where("customerId", "==", customerId), orderBy("createdAt", "desc"));
   return onSnapshot(q, (snap) => cb(snap.docs.map((d) => withId<Invoice>(d))));
 }
 
 export async function issueInvoice(businessId: string, invoiceId: string, business: Business, uid: string, email: string): Promise<string> {
+  if (isDemoMode) return demoIssueInvoice(invoiceId, (type) => (type === "credit_note" ? "CN-" : business.invoicePrefix));
   const invoiceRef = bizSubDoc(businessId, "invoices", invoiceId);
   const counterName = "invoice";
   const counterRef = doc(db, "businesses", businessId, "counters", counterName);
@@ -207,6 +226,7 @@ export async function issueInvoice(businessId: string, invoiceId: string, busine
 
 export async function voidInvoice(businessId: string, invoiceId: string, reason: string, uid: string, email: string) {
   if (!reason.trim()) throw new Error("A reason is required to void an invoice.");
+  if (isDemoMode) return demoVoidInvoice(invoiceId, reason);
   const invoiceRef = bizSubDoc(businessId, "invoices", invoiceId);
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(invoiceRef);
@@ -298,6 +318,7 @@ export interface PaymentInput {
 
 export async function recordPayment(businessId: string, invoiceId: string, uid: string, email: string, input: PaymentInput) {
   if (!input.date) throw new Error("A payment date is required.");
+  if (isDemoMode) return demoRecordPayment(invoiceId, input);
   const invoiceRef = bizSubDoc(businessId, "invoices", invoiceId);
   const paymentRef = doc(bizCollection(businessId, "payments"));
 
@@ -348,6 +369,7 @@ export async function recordPayment(businessId: string, invoiceId: string, uid: 
 }
 
 export async function voidPayment(businessId: string, paymentId: string, uid: string, email: string) {
+  if (isDemoMode) return demoVoidPayment(paymentId);
   const paymentRef = bizSubDoc(businessId, "payments", paymentId);
 
   const invoiceId = await runTransaction(db, async (tx) => {

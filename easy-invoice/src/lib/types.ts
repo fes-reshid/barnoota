@@ -3,6 +3,11 @@ import type { Cents, DiscountType, TaxTreatment } from "./money";
 
 export type { TaxTreatment, DiscountType } from "./money";
 
+/** A real Firestore Timestamp in production, or a plain ISO string in demo
+ * mode (see src/lib/demo/) — nothing in the UI ever calls Timestamp-only
+ * methods on these fields, so both are safe to store interchangeably. */
+export type TimestampLike = Timestamp | string;
+
 export type ID = string;
 export type Role = "owner" | "admin" | "staff";
 
@@ -45,8 +50,8 @@ export interface Business {
   stripePaymentLinkUrl?: string;
   members: Record<ID, Role>;
   isDemo: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: TimestampLike;
+  updatedAt?: TimestampLike;
 }
 
 export type CustomerType = "individual" | "business";
@@ -63,8 +68,8 @@ export interface Customer {
   notes: string;
   archived: boolean;
   isDemo: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: TimestampLike;
+  updatedAt?: TimestampLike;
 }
 
 /** A frozen snapshot of a customer's details, captured onto a document at issue time. */
@@ -102,8 +107,8 @@ export interface Product {
   taxTreatment: TaxTreatment;
   archived: boolean;
   isDemo: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: TimestampLike;
+  updatedAt?: TimestampLike;
 }
 
 export interface LineItem {
@@ -147,14 +152,14 @@ export interface Invoice {
   notes: string;
   paymentInstructions: string;
   voidReason: string | null;
-  voidedAt?: Timestamp | null;
+  voidedAt?: TimestampLike | null;
   relatedInvoiceId: ID | null; // credit note -> original invoice
   quoteId: ID | null; // set when converted from a quote
   isDemo: boolean;
   createdBy: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
-  issuedAt?: Timestamp | null;
+  createdAt?: TimestampLike;
+  updatedAt?: TimestampLike;
+  issuedAt?: TimestampLike | null;
 }
 
 export type PaymentMethod = "bank_transfer" | "cash" | "card" | "cheque" | "other";
@@ -173,7 +178,7 @@ export interface Payment {
   voided: boolean;
   isDemo: boolean;
   createdBy: string;
-  createdAt?: Timestamp;
+  createdAt?: TimestampLike;
 }
 
 export type QuoteStatus = "draft" | "sent" | "accepted" | "declined" | "expired" | "converted";
@@ -197,8 +202,8 @@ export interface Quote {
   convertedInvoiceId: ID | null;
   isDemo: boolean;
   createdBy: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: TimestampLike;
+  updatedAt?: TimestampLike;
 }
 
 export type AuditAction =
@@ -221,5 +226,5 @@ export interface AuditEntry {
   summary: string;
   performedBy: string;
   performedByEmail: string;
-  at?: Timestamp;
+  at?: TimestampLike;
 }
