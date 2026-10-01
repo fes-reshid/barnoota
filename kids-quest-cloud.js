@@ -932,12 +932,13 @@ function listHomework(game){
 function adminSaveHomework(h){
   const x = h || {}, user = auth.currentUser, now = new Date().toISOString();
   const ref = x.id ? doc(db, HOMEWORK_COLLECTION, x.id) : doc(collection(db, HOMEWORK_COLLECTION));
-  const kinds = ['memorise', 'lessons', 'quiz', 'task'];
+  const kinds = ['memorise', 'lessons', 'quiz', 'record', 'task'];
   const data = {
     game: String(x.game || ''),
     kind: kinds.indexOf(x.kind) >= 0 ? x.kind : 'task',
     title: String(x.title || '').trim().slice(0, 100) || 'Homework',
     details: String(x.details || '').trim().slice(0, 1000),
+    videoUrl: String(x.videoUrl || '').trim().slice(0, 300),
     lineFrom: Math.max(0, Number(x.lineFrom) || 0),
     lineTo: Math.max(0, Number(x.lineTo) || 0),
     quizId: String(x.quizId || ''),

@@ -639,6 +639,7 @@
           <div class="field hidden" id="hw-quiz-row"><label for="hw-quiz">Quiz</label><select id="hw-quiz"></select></div>
           <div class="field"><label for="hw-title">Title</label><input id="hw-title" maxlength="100" placeholder="Filled in for you — change it if you like"></div>
           <div class="field"><label for="hw-details">Instructions (optional)</label><textarea id="hw-details" maxlength="1000" style="min-height:70px" placeholder="e.g. Recite to a parent 3 times before class."></textarea></div>
+          <div class="field"><label for="hw-video">🎬 YouTube video (optional)</label><input id="hw-video" maxlength="300" placeholder="Paste a YouTube link — it plays inside the homework for students"><small class="muted" id="hw-video-note"></small></div>
           <div class="row">
             <div class="field"><label for="hw-due">Due date</label><input id="hw-due" type="date"></div>
             <div class="field"><label for="hw-class">For</label><select id="hw-class" class="class-target"></select></div>
@@ -666,7 +667,7 @@
       <div class="quiz-layout">
         <div class="card">
           <h2 style="margin-top:0">📁 Share a PDF</h2>
-          <p class="muted" style="margin-top:-4px">Students see it under the map in <b>“📁 Class files”</b> and can download it. PDF only, up to 5 MB.</p>
+          <p class="muted" style="margin-top:-4px">Students see it under the map in <b>From your teacher → “📁 Class files”</b> and can download it. PDF only, up to 5 MB.</p>
           <div class="field"><label for="file-input">PDF file</label><input id="file-input" type="file" accept="application/pdf,.pdf"></div>
           <div class="field"><label for="file-title">Title</label><input id="file-title" maxlength="120" placeholder="e.g. Map 2 worksheet"></div>
           <div class="field"><label for="file-note">Note (optional)</label><input id="file-note" maxlength="300" placeholder="e.g. Print it and bring it on Saturday"></div>
@@ -942,7 +943,7 @@
         <h3><span class="gi" style="--c:#8a5a2b">📚</span> Homework</h3>
         <ul class="guide-list">
           <li><b>Types:</b> Memorise lines (done at Memorise level 4) · Finish lessons · Pass a quiz · Record lines (students with Talqeen on) · Other task (the student ticks it).</li>
-          <li>Choose the lines, a due date and the class. The title fills itself in.</li>
+          <li>Choose the lines, a due date and the class. The title fills itself in. Add a <b>🎬 YouTube link</b> and it plays inside the homework for students.</li>
           <li>Each card shows who is done, done late or late. <b>🔔 Remind</b> sends a private message to everyone not done.</li>
         </ul>
         <button class="btn ghost small" data-goto-tab="homework">Go to Homework →</button>
@@ -997,7 +998,7 @@
       <section class="guide-sec" id="g-files">
         <h3>📁 Class files (PDFs)</h3>
         <ol><li>Open <b>Teaching → Class files</b>.</li><li>Choose a PDF (up to 5 MB), give it a title and an optional note.</li><li>Pick <b>For</b>: one class, or every student. Tap <b>Upload &amp; share</b>.</li></ol>
-        <p>Students see it under the map in <b>“📁 Class files”</b> and tap <b>Download</b>. You can delete your own files at any time.</p>
+        <p>Students see it under the map in <b>From your teacher → “📁 Class files”</b> and tap <b>Download</b>. You can delete your own files at any time.</p>
       </section>
       <section class="guide-sec" id="g-faq">
         <h3><span class="gi" style="--c:#6b5d44">❓</span> Questions</h3>
@@ -1151,7 +1152,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=19"></script>
+<script type="module" src="../kids-quest-cloud.js?v=20"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2221,26 +2222,29 @@ function fillHwQuiz(){
   if([...sel.options].some(o => o.value === keep)) sel.value = keep;
 }
 function isoDate(d){ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+/* YouTube links: watch?v=, youtu.be/, shorts/, embed/, live/ → the 11-character video id. */
+function youtubeId(url){ const m = String(url || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#\s]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : ''; }
 function resetHwForm(){
   editingHw = null; $('hw-form-title').textContent = '📚 Set homework'; $('hw-save').textContent = '📚 Set homework'; $('hw-cancel').classList.add('hidden');
-  $('hw-title').value = ''; $('hw-details').value = ''; const d = new Date(); d.setDate(d.getDate() + 7); $('hw-due').value = isoDate(d);
+  $('hw-title').value = ''; $('hw-details').value = ''; $('hw-video').value = ''; $('hw-video-note').textContent = ''; const d = new Date(); d.setDate(d.getDate() + 7); $('hw-due').value = isoDate(d);
   syncHwForm();
 }
 function startEditHw(h){
   editingHw = h; $('hw-form-title').textContent = '✏️ Edit homework'; $('hw-save').textContent = '💾 Save changes'; $('hw-cancel').classList.remove('hidden');
   $('hw-kind').value = h.kind; $('hw-from').value = h.lineFrom || 1; $('hw-to').value = h.lineTo || h.lineFrom || 1; fillHwQuiz(); $('hw-quiz').value = h.quizId || '';
-  $('hw-title').value = h.title || ''; $('hw-details').value = h.details || ''; $('hw-due').value = h.dueDate || ''; fillClassSelects(); $('hw-class').value = h.classId || '';
+  $('hw-title').value = h.title || ''; $('hw-details').value = h.details || ''; $('hw-video').value = h.videoUrl || ''; $('hw-video-note').textContent = ''; $('hw-due').value = h.dueDate || ''; fillClassSelects(); $('hw-class').value = h.classId || '';
   syncHwForm(); $('hw-composer').scrollIntoView({ behavior:'smooth' });
 }
 function submitHw(){
   const kind = $('hw-kind').value, from = Number($('hw-from').value), to = Number($('hw-to').value) || from;
   if((kind === 'memorise' || kind === 'lessons' || kind === 'record') && !(from >= 1 && from <= 61 && to >= 1 && to <= 61)){ setMsg('hw-msg', 'Lines go from 1 to 61.', true); return; }
   if(kind === 'quiz' && !$('hw-quiz').value){ setMsg('hw-msg', 'Make a quiz on the Quizzes tab first.', true); return; }
+  if($('hw-video').value.trim() && !youtubeId($('hw-video').value)){ setMsg('hw-msg', 'That doesn’t look like a YouTube link. Copy it from YouTube’s Share button.', true); return; }
   const title = $('hw-title').value.trim() || hwAutoTitle();
   if(!title){ setMsg('hw-msg', 'Give the task a title.', true); return; }
   if(!$('hw-due').value){ setMsg('hw-msg', 'Choose a due date.', true); return; }
   const data = Object.assign({}, editingHw || {}, { game: GAME_KEY, kind, title, details: $('hw-details').value.trim(), lineFrom: Math.min(from, to) || 0, lineTo: Math.max(from, to) || 0,
-    quizId: kind === 'quiz' ? $('hw-quiz').value : '', dueDate: $('hw-due').value, classId: $('hw-class').value, authorName: (editingHw && editingHw.authorName) || $('certificate-teacher').dataset.me || '' });
+    quizId: kind === 'quiz' ? $('hw-quiz').value : '', videoUrl: $('hw-video').value.trim(), dueDate: $('hw-due').value, classId: $('hw-class').value, authorName: (editingHw && editingHw.authorName) || $('certificate-teacher').dataset.me || '' });
   $('hw-save').disabled = true; setMsg('hw-msg', 'Saving…');
   window.KidsCloud.adminSaveHomework(data).then(() => {
     setMsg('hw-msg', (editingHw ? 'Saved ✓' : 'Homework set ✓ ') + (editingHw ? '' : (data.classId ? className(data.classId) : 'Every student') + ' will see it, due ' + fmtDue(data) + '.'));
@@ -2294,7 +2298,7 @@ function wireFiles(){
     fr.onload = () => {
       const dataUrl = String(fr.result).replace(/^data:[^,]*,/, 'data:application/pdf;base64,');
       window.KidsCloud.uploadClassFile({ game: GAME_KEY, title: $('file-title').value, note: $('file-note').value, fileName: file.name, classId: $('file-class').value, authorName: $('certificate-teacher').dataset.me || '', dataUrl })
-        .then(() => { $('file-upload').disabled = false; $('file-input').value = ''; $('file-title').value = ''; $('file-note').value = ''; setMsg('file-msg', 'Shared ✓ Students see it under the map in “Class files”.'); toast('File shared'); return loadFiles(); })
+        .then(() => { $('file-upload').disabled = false; $('file-input').value = ''; $('file-title').value = ''; $('file-note').value = ''; setMsg('file-msg', 'Shared ✓ Students see it in From your teacher → Class files.'); toast('File shared'); return loadFiles(); })
         .catch(err => { $('file-upload').disabled = false; setMsg('file-msg', friendlyError(err), true); });
     };
     fr.onerror = () => { $('file-upload').disabled = false; setMsg('file-msg', 'Could not read that file.', true); };
@@ -2326,7 +2330,7 @@ function renderHomeworkList(){
     st.sort((a, b) => order[a.st.key] - order[b.st.key] || String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username)));
     card.innerHTML = '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="role-badge info">' + hwKindLabel(h) + '</span><span class="role-badge">' + (h.classId ? '🏫 ' + escapeHtml(className(h.classId)) : '👥 Everyone') + '</span>' +
       '<span class="role-badge ' + (hwPastDue(h) ? 'bad' : 'warn') + '">' + (hwPastDue(h) ? 'Was due ' : 'Due ') + escapeHtml(fmtDue(h)) + '</span>' + (late ? '<span class="role-badge bad">' + late + ' late</span>' : '') + '</div>' +
-      '<h3>' + escapeHtml(h.title) + '</h3>' + (h.details ? '<div class="muted" style="white-space:pre-wrap">' + escapeHtml(h.details) + '</div>' : '') +
+      '<h3>' + escapeHtml(h.title) + (youtubeId(h.videoUrl) ? ' <span title="Has a YouTube video">🎬</span>' : '') + '</h3>' + (h.details ? '<div class="muted" style="white-space:pre-wrap">' + escapeHtml(h.details) + '</div>' : '') +
       '<div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42;margin-top:8px"><span>' + done + ' of ' + aud.length + ' done</span><b>' + pct + '%</b></div><div class="bar" style="margin-top:4px"><span style="width:' + pct + '%"></span></div>' +
       '<div class="ann-tools" style="margin-top:10px"><button class="btn ghost small" data-act="who">' + (hwOpen[h.id] ? '▴ Hide students' : '▾ See each student') + '</button>' +
       (done < aud.length ? '<button class="btn sky small" data-act="remind">🔔 Remind ' + (aud.length - done) + ' not done</button>' : '') +
@@ -2357,6 +2361,7 @@ function wireHomework(){
   $('hw-kind').onchange = syncHwForm; $('hw-from').oninput = () => { if(Number($('hw-to').value) < Number($('hw-from').value)) $('hw-to').value = $('hw-from').value; syncHwForm(); };
   $('hw-to').oninput = syncHwForm; $('hw-quiz').onchange = syncHwForm;
   $('hw-save').onclick = submitHw; $('hw-cancel').onclick = resetHwForm;
+  $('hw-video').oninput = () => { const v = $('hw-video').value.trim(); $('hw-video-note').textContent = !v ? '' : youtubeId(v) ? '✓ YouTube video found — students can watch it inside the homework.' : 'Paste a youtube.com or youtu.be link.'; };
   document.querySelectorAll('#hw-filters .chip').forEach(c => c.onclick = () => { hwFilter = c.dataset.hwf; document.querySelectorAll('#hw-filters .chip').forEach(x => x.classList.toggle('active', x === c)); renderHomeworkList(); });
 }
 

@@ -113,6 +113,8 @@
 .class-files-card{flex-direction:column;align-items:stretch}.class-files-card>div:first-child{width:100%}
 .cf-list{display:flex;flex-direction:column;gap:8px}.cf-row{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #eadcb8;border-radius:16px;padding:10px 12px}.cf-ic{font-size:30px}.cf-t{flex:1;min-width:0}.cf-t b{display:block;font:700 17px Nunito;color:var(--navy)}.cf-t small{display:block;color:#75684f;font-size:13.5px}.cf-dl{text-decoration:none;white-space:nowrap;padding:8px 14px;font-size:15px}.cf-count{display:inline-block;background:#2f6f55;color:#fff;border-radius:999px;font:800 13px Nunito;padding:1px 9px;vertical-align:middle}
 @media(max-width:560px){.cf-row{flex-wrap:wrap}.cf-dl{width:100%;text-align:center}}
+.hw-vbtn{display:inline-flex;align-items:center;gap:6px;margin:6px 0 2px;border:2px solid #d9534f;background:#fff5f4;color:#b0302b;border-radius:999px;padding:5px 14px;font:800 14px Nunito;cursor:pointer}.hw-vbtn:hover{background:#ffe9e7}
+.hw-video{margin:8px 0 2px;width:100%}.hw-video.hidden{display:none}.hw-frame{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden;border:3px solid var(--gold2);background:#000}.hw-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
 @keyframes startBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .exit-bubble{cursor:pointer;animation:bubbleIn .35s ease-out}
@@ -133,8 +135,8 @@
     <div class="daily-card hidden" id="dailyCard"></div>
     <div class="map-frame"><div class="map-title" id="mapTitle"></div><button class="map-nav prev" id="prevWorld" aria-label="Previous world">◀</button><button class="map-nav next" id="nextWorld" aria-label="Next world">▶</button><svg id="mapSvg" viewBox="0 0 1000 620" role="img" aria-label="Tajweed lesson map"></svg></div>
     <p class="map-help" id="mapHelp">Tap the glowing lesson to begin!</p>
-    <div class="teacher-quizzes hidden" id="teacherQuizzes"><div class="tq-head"><span class="tq-icon">📝</span><div><h3>From your teacher</h3><p id="teacherQuizLead">Your teacher made these for this map. Try your best!</p></div></div><div id="classBox"></div><div id="hwBox"></div><div id="teacherNoteBox"></div><div id="msgPreview"></div><div id="talqeenBox"></div><div id="boardBox"></div><div id="annBox"></div><div id="teacherQuizList"></div><button class="tq-msgbar" id="openMessages">✉️ Messages with your teacher <span class="tq-unread hidden" id="msgUnread">New</span></button></div>
-    <div class="printable-card class-files-card" id="week1Printable"><div><h3>📁 Class files</h3><p>Worksheets and printables from your teacher — tap Download to save them.</p></div><div class="cf-list" id="classFilesList"></div></div>
+    <div class="teacher-quizzes hidden" id="teacherQuizzes"><div class="tq-head"><span class="tq-icon">📝</span><div><h3>From your teacher</h3><p id="teacherQuizLead">Your teacher made these for this map. Try your best!</p></div></div><div id="classBox"></div><div id="hwBox"></div><div id="filesBox"></div><div id="teacherNoteBox"></div><div id="msgPreview"></div><div id="talqeenBox"></div><div id="boardBox"></div><div id="annBox"></div><div id="teacherQuizList"></div><button class="tq-msgbar" id="openMessages">✉️ Messages with your teacher <span class="tq-unread hidden" id="msgUnread">New</span></button></div>
+    
     <div class="teacher-panel locked" id="teacherPanel"><div class="teacher-head"><span class="teacher-icon">👩‍🏫</span><div><h3>Talqeen Teacher Check</h3><p id="teacherGuide">Finish this map, then recite every line to your teacher.</p></div></div><div class="teacher-form" id="teacherForm"><div class="teacher-field"><label for="teacherName">Teacher’s name</label><input class="teacher-input" id="teacherName" maxlength="60" placeholder="Teacher writes their full name" disabled></div><div class="teacher-checks"><label class="teacher-check"><input type="checkbox" id="teacherHifz" disabled> Hifz completed</label><label class="teacher-check"><input type="checkbox" id="teacherRecitation" disabled> Good recitation</label></div><div class="teacher-field"><label for="teacherFeedback">Teacher feedback</label><textarea class="teacher-feedback" id="teacherFeedback" maxlength="500" placeholder="What was done well, and what should the student practise next?" disabled></textarea></div><div><span class="signature-label">Teacher signature</span><div class="signature-wrap"><canvas class="signature-canvas" id="teacherSignature" width="760" height="130" aria-label="Teacher signature pad"></canvas></div></div><div class="teacher-actions"><button class="ghost" id="clearSignature" disabled>Clear signature</button><button class="btn green" id="teacherApproveBtn" disabled>Approve this map ✓</button></div><div class="teacher-status" id="teacherStatus" aria-live="polite"></div></div><div class="verified-card hidden" id="verifiedTeacher"></div></div>
     <div class="below-map"><button class="btn green hidden" id="mapQuizBtn">🏆 Take 15-Question Map Challenge</button><button class="ghost" id="hifzBtn">🧠 Memorise</button><button class="ghost" id="glossaryBtn">📖 Tajweed rules</button><button class="ghost" id="badgeBtn">🏅 Badges</button><button class="ghost" id="avatarBtn">🎭 Change Avatar</button><button class="ghost" id="vocabBtn">🧩 Drag & Drop Words</button><button class="ghost" id="flashBtn">🃏 Map Flashcards</button><button class="ghost sound-status" id="soundToggle">🔊 Sound On</button><button class="ghost hidden" id="certBtn">🎓 Map Certificate</button><button class="ghost" id="resetBtn">Reset progress</button></div>
   </section>
@@ -691,7 +693,7 @@ async function forgotPassword(){if(!window.KidsCloud)return;const username=$('#a
 function wireCloudAuth(){if(authWired||!window.KidsCloud)return;authWired=true;$('#authSubmit').disabled=false;$('#authMessage').textContent='';$('#authMessage').classList.remove('auth-loading');window.KidsCloud.onStudentAuth(data=>{if(data)applyCloudAccount(data);else{cloudUser=null;profile=freshProfile();show('startScreen');$('#authSubmit').disabled=false}})}
 $('#signInTab').onclick=()=>setAuthMode('signin');$('#createTab').onclick=()=>setAuthMode('create');$('#authSubmit').onclick=submitAuth;$('#forgotPasswordBtn').onclick=forgotPassword;$('#authUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authPassword').focus()});$('#authPassword').addEventListener('keydown',e=>{if(e.key==='Enter')submitAuth()});$('#logoutBtn').onclick=()=>{if(window.KidsCloud)window.KidsCloud.studentLogout()};$('#prevWorld').onclick=()=>{if(viewWorld>0){viewWorld--;renderMap()}};$('#nextWorld').onclick=()=>{if(viewWorld<worlds.length-1&&worldUnlocked(viewWorld+1)){viewWorld++;renderMap()}};$('#homeBtn').onclick=()=>{renderMap();show('mapScreen')};$('#previousLessonBtn').onclick=previousLesson;$('#soundBtn').onclick=speak;$('#soundToggle').onclick=()=>{soundOn=!soundOn;if(!soundOn&&'speechSynthesis'in window)speechSynthesis.cancel();syncStats();if(soundOn)happySound()};$('#clearSignature').onclick=clearSignaturePad;$('#teacherApproveBtn').onclick=approveTeacherCheck;$('#mapQuizBtn').onclick=showMapQuiz;$('#studentAvatar').onclick=showAvatarPicker;$('#avatarBtn').onclick=showAvatarPicker;$('#avatarBack').onclick=()=>{renderMap();show('mapScreen')};$('#vocabBtn').onclick=showVocab;$('#vocabBack').onclick=()=>{renderMap();show('mapScreen')};$('#flashBtn').onclick=showFlash;$('#flashBack').onclick=()=>{renderMap();show('mapScreen')};$('#certBtn').onclick=showCert;$('#certBack').onclick=()=>{renderMap();show('mapScreen')};$('#continueBtn').onclick=continueQuest;$('#rewardMapBtn').onclick=()=>{renderMap();show('mapScreen')};$('#resetBtn').onclick=()=>{if(confirm('Reset all Tajweed Quest progress?')){localStorage.removeItem(progressKey());profile=freshProfile(profile.name);save();viewWorld=0;renderMap()}};setupSignaturePad();$('#year').textContent=new Date().getFullYear();window.addEventListener('kidscloud-ready',wireCloudAuth);if(window.KidsCloud)wireCloudAuth();
 </script>
-<script type="module" src="../kids-quest-cloud.js?v=19"></script>
+<script type="module" src="../kids-quest-cloud.js?v=20"></script>
 <script>
 /* Printed-poem presentation for all 61 verses */
 Object.assign(LINE_VOCAB,{
@@ -1044,7 +1046,7 @@ showAvatarPicker=function(){
  document.querySelectorAll('.avatar-choice').forEach(btn=>btn.onclick=()=>{profile.avatar=btn.dataset.avatar;save();happySound();showAvatarPicker()});show('avatarScreen')
 };
 $('#studentAvatar').onclick=showAvatarPicker;$('#avatarBtn').onclick=showAvatarPicker;
-const printableObserver=new MutationObserver(()=>{if(typeof renderClassFiles==='function')renderClassFiles()});
+const printableObserver=new MutationObserver(()=>{});
 printableObserver.observe($('#mapTitle'),{childList:true,subtree:true});
 const normalizeProfileBeforeTeacherPortal=normalizeProfile;
 normalizeProfile=function(p,name){const d=normalizeProfileBeforeTeacherPortal(p,name);d.teacherMapUnlocks=Array.isArray(d.teacherMapUnlocks)?[...d.teacherMapUnlocks,...Array(worlds.length).fill(false)].slice(0,worlds.length):Array(worlds.length).fill(false);return d};
@@ -1196,7 +1198,6 @@ function sendStudentMessage(){
   .catch(()=>{$('#stMsg').textContent='Could not send. Check your connection and try again.';$('#stMsg').className='feedback bad'}).finally(()=>{$('#stSend').disabled=false});
 }
 var studentMsgs=[],FOLD_KEY='tuhfah-folds-v1',folds={};try{folds=JSON.parse(localStorage.getItem(FOLD_KEY)||'{}')||{}}catch(e){}
-if(folds.week1Printable===undefined)folds.week1Printable=true;
 function setFold(id,open){folds[id]=open;try{localStorage.setItem(FOLD_KEY,JSON.stringify(folds))}catch(e){}}
 function foldHTML(id,icon,title,summary,badge,body){const open=!!folds[id];return `<div class="fold ${open?'open':''} ${badge?'hot':''}" data-fold="${id}"><button class="fold-head" aria-expanded="${open}"><span class="fi">${icon}</span><span class="ft"><b>${title}</b><small>${summary}</small></span>${badge?`<span class="tq-unread">${badge}</span>`:''}<span class="chev">▾</span></button><div class="fold-body">${body}</div></div>`}
 function wireFolds(root){root.querySelectorAll('.fold-head').forEach(h=>h.onclick=()=>{const f=h.parentElement,id=f.dataset.fold,o=!f.classList.contains('open');f.classList.toggle('open',o);h.setAttribute('aria-expanded',o);setFold(id,o);if(o)onFoldOpened(id)})}
@@ -1204,7 +1205,7 @@ function onFoldOpened(id){if(id==='msg')markMsgsRead();if(id==='ann'){markAnnsSe
 function markAnnsSeen(){const ids=studentAnnsHere().map(a=>a.id);if(ids.every(i=>seenAnns().includes(i)))return;profile.seenAnns=[...new Set(seenAnns().concat(ids))].slice(-200);save()}
 function cardFold(id,headSel){const card=$('#'+id);if(!card||card.dataset.foldWired)return;card.dataset.foldWired='1';const head=card.querySelector(headSel),btn=document.createElement('button');btn.className='card-fold-btn';head.append(btn);
  const apply=()=>{const open=!!folds[id];card.classList.toggle('folded',!open);btn.textContent=open?'Hide ▴':'Show ▾';btn.setAttribute('aria-expanded',open)};btn.onclick=()=>{setFold(id,!folds[id]);apply()};apply()}
-cardFold('week1Printable','div:first-child');cardFold('teacherPanel','.teacher-head');
+cardFold('teacherPanel','.teacher-head');
 function seenAnns(){return Array.isArray(profile.seenAnns)?profile.seenAnns:[]}
 function loadStudentMsgPreview(){
  const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!uid||!window.KidsCloud.getMessages)return;
@@ -1293,6 +1294,8 @@ function hwDueText(h){const end=hwDueEnd(h),st=hwState(h),d=hwDoneMap()[h.id];
  if(!end)return'No due date';const txt=end.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'});
  return st==='late'?'⚠️ Late — was due '+txt:st==='today'?'⏰ Due today':'Due '+txt}
 function hwOpenLine(i,mode){viewWorld=lessons[i].world;if(mode==='memorise'&&i<profile.unlocked){hifzLine=i;hifzLevel=Math.min(4,hifzBest(i)+1);renderHifz();show('hifzScreen')}else if(i<profile.unlocked)openLesson(i);else{renderMap();show('mapScreen');alert('Finish the lessons before this one first — it unlocks when you reach it on the map.')}}
+/* A YouTube video on homework (the teacher's “YouTube video” field, or a YouTube link in the instructions) plays inside the homework card. */
+function hwVideoId(h){const m=String((h&&h.videoUrl)||'').concat(' ',(h&&h.details)||'').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#\s]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);return m?m[1]:''}
 function renderHomework(){
  const box=$('#hwBox');if(!box)return;if(!cloudUser){box.innerHTML='';return}
  const recent=Date.now()-14*86400000,list=myHomework().filter(h=>{const d=hwDoneMap()[h.id];return!d||new Date(d.at).getTime()>recent});
@@ -1308,13 +1311,16 @@ function renderHomework(){
    else if(h.kind==='quiz'&&teacherQuizzes.some(q=>q.id===h.quizId))act=`<button class="btn green" data-hwgo="${escapeHtml(h.id)}">📝 Take quiz</button>`;
    else if(h.kind==='task')act=`<button class="btn green" data-hwtick="${escapeHtml(h.id)}">✓ I did it</button>`;
   }else if(h.kind==='task')act=`<button class="ghost" data-hwundo="${escapeHtml(h.id)}">Undo</button>`;
-  return `<div class="hw-item ${st}"><span class="hw-tick">${st==='done'?'✓':''}</span><div class="hw-main"><b>${escapeHtml(h.title)}</b><span class="hw-due ${st}">${hwDueText(h)}</span>${pr.total>1&&st!=='done'?` <span class="hw-progress">${pr.ok}/${pr.total} ${h.kind==='memorise'?'memorised':h.kind==='record'?'sent':'done'}</span>`:''}${h.details?`<p>${escapeHtml(h.details)}</p>`:''}</div><div class="hw-act">${act}</div></div>`}).join('');
+  return `<div class="hw-item ${st}"><span class="hw-tick">${st==='done'?'✓':''}</span><div class="hw-main"><b>${escapeHtml(h.title)}</b><span class="hw-due ${st}">${hwDueText(h)}</span>${pr.total>1&&st!=='done'?` <span class="hw-progress">${pr.ok}/${pr.total} ${h.kind==='memorise'?'memorised':h.kind==='record'?'sent':'done'}</span>`:''}${h.details?`<p>${escapeHtml(h.details)}</p>`:''}${hwVideoId(h)?`<button class="hw-vbtn" data-hwvid="${escapeHtml(h.id)}" aria-expanded="false">🎬 Watch the video</button><div class="hw-video hidden" data-hwvbox="${escapeHtml(h.id)}"></div>`:''}</div><div class="hw-act">${act}</div></div>`}).join('');
  box.innerHTML=foldHTML('hw','📚',todo.length?'Homework — '+todo.length+' to do':'Homework — all done ✓',todo.length?escapeHtml(todo[0].title)+' · '+hwDueText(todo[0]):'MashaAllah, well done!',late?'Late':today?'Due today':'',body);
  wireFolds(box);
  box.querySelectorAll('[data-hwgo]').forEach(b=>b.onclick=()=>{const h=studentHomework.find(x=>x.id===b.dataset.hwgo);if(!h)return;
   if(h.kind==='quiz'){startTeacherQuiz(h.quizId);return}
   if(h.kind==='record'){const a=Math.min(h.lineFrom||1,h.lineTo||h.lineFrom||1),sent=new Set(myRecs.filter(r=>r.from==='student'&&String(r.createdAt||'')>=String(h.createdAt||'')).map(r=>r.line));let n=a;while(sent.has(n)&&n<Math.max(h.lineFrom||1,h.lineTo||1))n++;const i=lessons.findIndex(l=>lineNumbers(l).includes(n));openRecScreen(i>=0&&i<profile.unlocked?i:undefined);return}
   const idx=hwLessonIdx(h),next=idx.find(i=>h.kind==='memorise'?hifzBest(i)<4:!(Number(profile.stars[i])>0));if(next!=null)hwOpenLine(next,h.kind)});
+ box.querySelectorAll('[data-hwvid]').forEach(b=>b.onclick=()=>{const h=studentHomework.find(x=>x.id===b.dataset.hwvid),v=box.querySelector(`[data-hwvbox="${b.dataset.hwvid}"]`);if(!h||!v)return;const open=v.classList.contains('hidden');
+  if(open){stopVoicePlayback();v.innerHTML=`<div class="hw-frame"><iframe src="https://www.youtube-nocookie.com/embed/${hwVideoId(h)}?rel=0&modestbranding=1&playsinline=1&autoplay=1" title="${escapeHtml(h.title)} — video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`}else v.innerHTML='';
+  v.classList.toggle('hidden',!open);b.textContent=open?'✕ Close the video':'🎬 Watch the video';b.setAttribute('aria-expanded',open)});
  box.querySelectorAll('[data-hwtick]').forEach(b=>b.onclick=()=>{hwDoneMap()[b.dataset.hwtick]={at:new Date().toISOString()};save();happySound();renderHomework();renderTeacherAlert()});
  box.querySelectorAll('[data-hwundo]').forEach(b=>b.onclick=()=>{delete hwDoneMap()[b.dataset.hwundo];save();renderHomework();renderTeacherAlert()});
 }
@@ -1982,24 +1988,29 @@ hifzPassLevel=function(){
 $('#hifzPass').onclick=()=>hifzPassLevel();
 /* Class files under the map: PDFs teachers share (for the student's class or
    everyone), plus the built-in Week 1 practice pack on Map 1. */
-var classFiles=[],classFilesLoaded=false,cfLastWorld=-1;
-function loadClassFiles(){if(!cloudUser||!window.KidsCloud||!window.KidsCloud.listClassFiles)return;window.KidsCloud.listClassFiles(GAME_KEY).then(l=>{classFiles=l;classFilesLoaded=true;renderClassFiles(true)}).catch(()=>{})}
+var classFiles=[],classFilesLoaded=false;
+function loadClassFiles(){if(!cloudUser||!window.KidsCloud||!window.KidsCloud.listClassFiles)return;window.KidsCloud.listClassFiles(GAME_KEY).then(l=>{classFiles=l;classFilesLoaded=true;renderClassFiles()}).catch(()=>{})}
 function cfSize(b){b=Number(b)||0;return b>=1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB'}
-function renderClassFiles(force){
- const card=$('#week1Printable'),box=$('#classFilesList');if(!card||!box)return;
- if(!force&&cfLastWorld===viewWorld&&box.dataset.n)return;cfLastWorld=viewWorld;
- const mine=classFiles.filter(f=>forMyClass(f)),rows=[];
+function seenFiles(){return Array.isArray(profile.seenFiles)?profile.seenFiles:[]}
+function renderClassFiles(){
+ const box=$('#filesBox');if(!box)return;if(!cloudUser){box.innerHTML='';return}
+ const mine=classFiles.filter(f=>forMyClass(f)),rows=[],fresh=mine.filter(f=>!seenFiles().includes(f.id));
  mine.forEach(f=>rows.push(`<div class="cf-row"><span class="cf-ic">📄</span><div class="cf-t"><b>${escapeHtml(f.title)}</b><small>${f.authorName?'🧑‍🏫 '+escapeHtml(f.authorName)+' · ':''}${new Date(f.createdAt).toLocaleDateString([], {day:'numeric',month:'short'})} · ${cfSize(f.size)}${f.note?' · '+escapeHtml(f.note):''}</small></div><button class="btn green cf-dl" data-cf="${escapeHtml(f.id)}">⬇️ Download</button></div>`));
  if(viewWorld===0)rows.push(`<div class="cf-row"><span class="cf-ic">🖨️</span><div class="cf-t"><b>Map 1 · Week 1 Whole-Week Practice Pack</b><small>Seven printable A5 pages for Lines 1–5</small></div><a class="btn green cf-dl" href="/tuhfatul-atfaal/printables/week-1-map-1.pdf?v=20260928-2" download="Tuhfatul-Atfaal-Map-1-Week-1-Practice.pdf">⬇️ Download</a></div>`);
- box.dataset.n=rows.length;card.classList.toggle('hidden',!rows.length);
- const head=card.querySelector('h3');if(head)head.innerHTML='📁 Class files'+(mine.length?` <span class="cf-count">${mine.length}</span>`:'');
- box.innerHTML=rows.join('')+'<p class="feedback" id="cfMsg"></p>';
+ if(!rows.length){box.innerHTML='';return}
+ const sum=mine.length?(fresh.length?escapeHtml(fresh[0].title)+(fresh.length>1?' and '+(fresh.length-1)+' more':''):mine.length+' file'+(mine.length===1?'':'s')+' to download'):'Week 1 practice pack';
+ box.innerHTML=foldHTML('files','📁','Class files'+(mine.length?' — '+mine.length:''),sum,fresh.length?'New':'',`<div class="cf-list">${rows.join('')}</div><p class="feedback" id="cfMsg"></p>`);
+ wireFolds(box);
  box.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{const f=classFiles.find(x=>x.id===b.dataset.cf);if(!f)return;b.disabled=true;const old=b.textContent;b.textContent='⏳ Downloading…';
   window.KidsCloud.getClassFileData(f).then(data=>{const bin=atob(data.split(',')[1]),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
    const url=URL.createObjectURL(new Blob([u8],{type:'application/pdf'})),a=document.createElement('a');a.href=url;a.download=/\.pdf$/i.test(f.fileName||'')?f.fileName:(f.title||'file')+'.pdf';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
    b.disabled=false;b.textContent='✅ Downloaded';setTimeout(()=>{b.textContent=old},2500)})
   .catch(err=>{b.disabled=false;b.textContent=old;const m=$('#cfMsg');if(m){m.textContent=(err&&err.message)||'Could not download. Check your connection.';m.className='feedback bad'}})});
 }
+const onFoldOpenedBeforeFiles=onFoldOpened;
+onFoldOpened=function(id){onFoldOpenedBeforeFiles.apply(this,arguments);if(id==='files'){const ids=classFiles.filter(f=>forMyClass(f)).map(f=>f.id);if(ids.some(i=>!seenFiles().includes(i))){profile.seenFiles=[...new Set(seenFiles().concat(ids))].slice(-200);save();setTimeout(renderClassFiles,600)}}};
+const renderTeacherQuizzesBeforeFiles=renderTeacherQuizzes;
+renderTeacherQuizzes=function(){renderTeacherQuizzesBeforeFiles.apply(this,arguments);renderClassFiles()};
 const renderMapBeforeFiles=renderMap;
 renderMap=function(){renderMapBeforeFiles.apply(this,arguments);if(cloudUser&&!classFilesLoaded){classFilesLoaded=true;loadClassFiles()}renderClassFiles()};
 setInterval(()=>{if(cloudUser&&!document.hidden&&!$('#mapScreen').classList.contains('hidden'))loadClassFiles()},180000);
