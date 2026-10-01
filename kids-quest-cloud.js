@@ -55,6 +55,8 @@ const PARENT_COLLECTION = 'kids_quest_parent';
 const RECORDINGS_COLLECTION = 'kids_quest_recordings';
 const ATTENDANCE_COLLECTION = 'kids_quest_attendance';
 const BOARDS_COLLECTION = 'kids_quest_boards';
+const FILES_COLLECTION = 'kids_quest_files';
+const FILE_DATA_COLLECTION = 'kids_quest_file_data';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -1032,6 +1034,58 @@ function markRecording(id, patch){
 }
 function deleteRecording(id){ return deleteDoc(doc(db, RECORDINGS_COLLECTION, id)); }
 
+/* ---- class files ---- */
+/* kids_quest_files/{id}: a PDF a teacher shares with a class (or everyone).
+   The file itself is split into ≤ 900 KB pieces in kids_quest_file_data/{id}_{n}
+   so the list stays light and files up to 5 MB fit. */
+const FILE_CHUNK = 900000, FILE_MAX_BYTES = 5 * 1024 * 1024;
+function listClassFiles(game){
+  return getDocs(collection(db, FILES_COLLECTION)).then(function(snap){
+    const out = [];
+    snap.forEach(function(d){ const x = d.data(); if(!game || !x.game || x.game === game) out.push(Object.assign({ id: d.id }, x)); });
+    out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
+    return out;
+  });
+}
+function uploadClassFile(f){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const x = f || {}, data = String(x.dataUrl || '');
+  if(!/^data:application\/pdf;base64,/.test(data)) return Promise.reject(new Error('Please choose a PDF file.'));
+  const size = Math.round((data.length - data.indexOf(',') - 1) * 3 / 4);
+  if(size > FILE_MAX_BYTES) return Promise.reject(new Error('That PDF is too big — the limit is 5 MB.'));
+  const ref = doc(collection(db, FILES_COLLECTION)), by = String(user.email || '').toLowerCase(), parts = [];
+  for(let i = 0; i < data.length; i += FILE_CHUNK) parts.push(data.slice(i, i + FILE_CHUNK));
+  return Promise.all(parts.map(function(part, n){ return setDoc(doc(db, FILE_DATA_COLLECTION, ref.id + '_' + n), { data: part, by: by }); }))
+    .then(function(){
+      return setDoc(ref, {
+        game: String(x.game || ''),
+        title: String(x.title || '').trim().slice(0, 120) || String(x.fileName || 'Class file'),
+        note: String(x.note || '').trim().slice(0, 300),
+        fileName: String(x.fileName || 'file.pdf').slice(0, 120),
+        size: size,
+        chunks: parts.length,
+        classId: String(x.classId || ''),
+        authorName: String(x.authorName || '').trim().slice(0, 80),
+        by: by,
+        createdAt: new Date().toISOString()
+      });
+    }).then(function(){ return ref.id; });
+}
+function getClassFileData(f){
+  const n = Math.max(1, Number(f && f.chunks) || 1), jobs = [];
+  for(let i = 0; i < n; i++) jobs.push(getDoc(doc(db, FILE_DATA_COLLECTION, f.id + '_' + i)));
+  return Promise.all(jobs).then(function(snaps){
+    if(snaps.some(function(d){ return !d.exists(); })) throw new Error('This file is no longer available.');
+    return snaps.map(function(d){ return d.data().data; }).join('');
+  });
+}
+function deleteClassFile(f){
+  const n = Math.max(1, Number(f && f.chunks) || 1), jobs = [];
+  for(let i = 0; i < n; i++) jobs.push(deleteDoc(doc(db, FILE_DATA_COLLECTION, f.id + '_' + i)).catch(function(){}));
+  return Promise.all(jobs).then(function(){ return deleteDoc(doc(db, FILES_COLLECTION, f.id)); });
+}
+
 /* ---- attendance ---- */
 /* kids_quest_attendance/{classId}_{YYYY-MM-DD}: one class session, with a
    mark per student: present | late | absent | excused. Staff only. */
@@ -1143,6 +1197,10 @@ window.KidsCloud = {
   listUnheardStudentRecordings: listUnheardStudentRecordings,
   saveRecording: saveRecording,
   markRecording: markRecording,
+  listClassFiles: listClassFiles,
+  uploadClassFile: uploadClassFile,
+  getClassFileData: getClassFileData,
+  deleteClassFile: deleteClassFile,
   deleteRecording: deleteRecording,
   listAttendance: listAttendance,
   saveAttendance: saveAttendance,

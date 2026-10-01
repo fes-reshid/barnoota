@@ -464,6 +464,7 @@
       <div class="side-group">Teaching</div>
       <button class="tab" data-tab="homework" role="tab" title="Homework"><span class="ti" style="--c:#8a5a2b">📚</span><span class="tl">Homework</span><span class="count" id="tab-count-hw">0</span><span class="arr" aria-hidden="true">▸</span></button>
       <button class="tab" data-tab="quizzes" role="tab" title="Quizzes"><span class="ti" style="--c:#c2508a">📝</span><span class="tl">Quizzes</span><span class="count" id="tab-count-quizzes">0</span><span class="arr" aria-hidden="true">▸</span></button>
+      <button class="tab" data-tab="files" role="tab" title="Class files"><span class="ti" style="--c:#2e6b8a">📁</span><span class="tl">Class files</span><span class="count" id="tab-count-files">0</span><span class="arr" aria-hidden="true">▸</span></button>
       <div class="side-group">Help &amp; account</div>
       <button class="tab" data-tab="guide" role="tab" title="Teacher guide"><span class="ti" style="--c:#a97c25">📘</span><span class="tl">Teacher guide</span><span class="arr" aria-hidden="true">▸</span></button>
       <button class="tab hidden" data-tab="teachers" role="tab" id="tab-teachers" title="Teachers"><span class="ti" style="--c:#44556e">🧑‍🏫</span><span class="tl">Teachers</span><span class="arr" aria-hidden="true">▸</span></button>
@@ -660,6 +661,23 @@
     </div>
 
     <!-- QUIZZES -->
+    <div class="tab-panel hidden" data-panel="files">
+      <div class="quiz-layout">
+        <div class="card">
+          <h2 style="margin-top:0">📁 Share a PDF</h2>
+          <p class="muted" style="margin-top:-4px">Students see it under the map in <b>“📁 Class files”</b> and can download it. PDF only, up to 5 MB.</p>
+          <div class="field"><label for="file-input">PDF file</label><input id="file-input" type="file" accept="application/pdf,.pdf"></div>
+          <div class="field"><label for="file-title">Title</label><input id="file-title" maxlength="120" placeholder="e.g. Map 2 worksheet"></div>
+          <div class="field"><label for="file-note">Note (optional)</label><input id="file-note" maxlength="300" placeholder="e.g. Print it and bring it on Saturday"></div>
+          <div class="field"><label for="file-class">For</label><select id="file-class" class="class-target"></select></div>
+          <button class="btn primary" id="file-upload">⬆️ Upload &amp; share</button>
+          <p class="msg" id="file-msg"></p>
+        </div>
+        <div>
+          <div id="file-list"><p class="muted">Loading…</p></div>
+        </div>
+      </div>
+    </div>
     <div class="tab-panel hidden" data-panel="quizzes">
       <div class="quiz-layout">
         <div class="card">
@@ -974,6 +992,11 @@
         </ul>
       </section>
 
+      <section class="guide-sec" id="g-files">
+        <h3>📁 Class files (PDFs)</h3>
+        <ol><li>Open <b>Teaching → Class files</b>.</li><li>Choose a PDF (up to 5 MB), give it a title and an optional note.</li><li>Pick <b>For</b>: one class, or every student. Tap <b>Upload &amp; share</b>.</li></ol>
+        <p>Students see it under the map in <b>“📁 Class files”</b> and tap <b>Download</b>. You can delete your own files at any time.</p>
+      </section>
       <section class="guide-sec" id="g-faq">
         <h3><span class="gi" style="--c:#6b5d44">❓</span> Questions</h3>
         <details><summary>A student says they can’t see my homework or announcement.</summary><p>Check it is for their class (or “Every student”) and that they joined the class with the code. Class-only posts show only to members.</p></details>
@@ -1126,7 +1149,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=18"></script>
+<script type="module" src="../kids-quest-cloud.js?v=19"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1295,6 +1318,7 @@ const SECTION_INFO = {
   add: ['Add students', 'Create logins for new students, one by one or from a list.'],
   homework: ['Homework', 'Set work with a due date and see who has done it.'],
   quizzes: ['Quizzes', 'Write quizzes that appear under a map, and see results.'],
+  files: ['Class files', 'Share PDFs (worksheets, printables) with a class or every student.'],
   guide: ['Teacher guide', 'How to use every tool in the portal, step by step.'],
   teachers: ['Teachers', 'Approve and remove teacher accounts.'],
   profile: ['My profile', 'Your full name and email, shown on certificates.']
@@ -2015,7 +2039,7 @@ function targetClasses(){ return myRole === 'teacher' ? myClasses() : classesCac
 function classOptionLabel(c){ return c.name + (isMyClass(c) ? '' : ' — ' + (c.teacherName || teacherDisplayName(c.teacherEmail))); }
 function fillClassSelects(){
   const opts = targetClasses().map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(classOptionLabel(c)) + ' (' + c.studentUids.length + ')</option>').join('');
-  [['quiz-class', 'Every student'], ['ann-class', '👥 Every student'], ['broadcast-class', '👥 Every student'], ['hw-class', '👥 Every student']].forEach(([id, all]) => {
+  [['quiz-class', 'Every student'], ['ann-class', '👥 Every student'], ['broadcast-class', '👥 Every student'], ['hw-class', '👥 Every student'], ['file-class', '👥 Every student']].forEach(([id, all]) => {
     const sel = $(id), keep = sel.value; sel.innerHTML = '<option value="">' + all + '</option>' + opts;
     if([...sel.options].some(o => o.value === keep)) sel.value = keep;
   });
@@ -2221,6 +2245,61 @@ function submitHw(){
     toast(editingHw ? 'Homework updated' : 'Homework set'); resetHwForm(); return loadHomework();
   }).catch(err => setMsg('hw-msg', friendlyError(err), true)).finally(() => { $('hw-save').disabled = false; });
 }
+/* ===================== class files ===================== */
+let filesCache = [];
+function fmtSize(b){ b = Number(b) || 0; return b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
+function loadFiles(){
+  if(!window.KidsCloud.listClassFiles) return Promise.resolve();
+  return window.KidsCloud.listClassFiles(GAME_KEY).then(list => { filesCache = list; renderFileList(); })
+    .catch(err => { $('file-list').innerHTML = '<p class="muted">Class files will appear here once the new Firestore rules are published. (' + escapeHtml(friendlyError(err)) + ')</p>'; });
+}
+function canManageFile(f){ return myRole !== 'teacher' || String(f.by || '').toLowerCase() === String(myEmail || '').toLowerCase(); }
+function renderFileList(){
+  const box = $('file-list'), mine = f => myRole !== 'teacher' || !f.classId || (classById(f.classId) && isMyClass(classById(f.classId))) || canManageFile(f);
+  const list = filesCache.filter(mine);
+  $('tab-count-files').textContent = list.length;
+  box.innerHTML = list.length ? '' : '<p class="empty">No files shared yet. Upload a PDF on the left.</p>';
+  list.forEach(f => {
+    const c = f.classId ? classById(f.classId) : null, el = document.createElement('div'); el.className = 'list-row';
+    el.innerHTML = '<div style="font-size:30px">📄</div><div class="grow"><div style="font-weight:800;color:var(--ink-brown)">' + escapeHtml(f.title) + '</div>' +
+      '<div class="sub">' + (c ? '🏫 ' + escapeHtml(c.name) : '👥 Every student') + ' · ' + fmtSize(f.size) + ' · ' + escapeHtml(f.authorName || f.by || '') + ' · ' + fmtTime(f.createdAt) + '</div>' +
+      (f.note ? '<div class="sub">' + escapeHtml(f.note) + '</div>' : '') + '</div>' +
+      '<button class="btn ghost small" data-fdl>⬇️ Download</button>' + (canManageFile(f) ? '<button class="btn danger small" data-fdel>Delete</button>' : '');
+    el.querySelector('[data-fdl]').onclick = () => downloadClassFile(f);
+    const del = el.querySelector('[data-fdel]');
+    if(del) del.onclick = () => { if(!confirm('Delete “' + f.title + '” for everyone?')) return;
+      window.KidsCloud.deleteClassFile(f).then(() => { toast('File deleted'); return loadFiles(); }).catch(err => alert(friendlyError(err))); };
+    box.appendChild(el);
+  });
+}
+function downloadClassFile(f){
+  toast('Preparing download…');
+  window.KidsCloud.getClassFileData(f).then(data => {
+    const bin = atob(data.split(',')[1]), u8 = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([u8], { type: 'application/pdf' })), a = document.createElement('a');
+    a.href = url; a.download = /\.pdf$/i.test(f.fileName || '') ? f.fileName : (f.title || 'file') + '.pdf'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }).catch(err => alert(friendlyError(err)));
+}
+function wireFiles(){
+  $('file-input').onchange = () => { const file = $('file-input').files[0]; if(file && !$('file-title').value.trim()) $('file-title').value = file.name.replace(/\.pdf$/i, '').replace(/[_-]+/g, ' '); };
+  $('file-upload').onclick = () => {
+    const file = $('file-input').files[0];
+    if(!file){ setMsg('file-msg', 'Choose a PDF file first.', true); return; }
+    if(!/pdf$/i.test(file.type) && !/\.pdf$/i.test(file.name)){ setMsg('file-msg', 'Only PDF files can be shared.', true); return; }
+    if(file.size > 5 * 1024 * 1024){ setMsg('file-msg', 'That PDF is ' + fmtSize(file.size) + ' — the limit is 5 MB. Try “Reduce file size” when saving the PDF.', true); return; }
+    $('file-upload').disabled = true; setMsg('file-msg', 'Uploading…');
+    const fr = new FileReader();
+    fr.onload = () => {
+      const dataUrl = String(fr.result).replace(/^data:[^,]*,/, 'data:application/pdf;base64,');
+      window.KidsCloud.uploadClassFile({ game: GAME_KEY, title: $('file-title').value, note: $('file-note').value, fileName: file.name, classId: $('file-class').value, authorName: $('certificate-teacher').dataset.me || '', dataUrl })
+        .then(() => { $('file-upload').disabled = false; $('file-input').value = ''; $('file-title').value = ''; $('file-note').value = ''; setMsg('file-msg', 'Shared ✓ Students see it under the map in “Class files”.'); toast('File shared'); return loadFiles(); })
+        .catch(err => { $('file-upload').disabled = false; setMsg('file-msg', friendlyError(err), true); });
+    };
+    fr.onerror = () => { $('file-upload').disabled = false; setMsg('file-msg', 'Could not read that file.', true); };
+    fr.readAsDataURL(file);
+  };
+}
+wireFiles();
 function loadHomework(){
   if(!window.KidsCloud.listHomework) return Promise.resolve();
   return window.KidsCloud.listHomework(GAME_KEY).then(list => { homeworkCache = list; renderHomeworkList(); })
@@ -2633,7 +2712,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads(), loadFiles()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -2701,6 +2780,7 @@ function showDashboard(info){
   loadStudents();
   loadClasses();
   loadHomework();
+  loadFiles();
   loadAttendance();
   loadQuizzes();
   loadAnnouncements();
