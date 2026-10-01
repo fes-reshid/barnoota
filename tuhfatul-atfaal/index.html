@@ -1738,6 +1738,16 @@ finishMapQuiz=function(){
  const rec=profile.mapQuizScores[viewWorld];if(rec){rec.lineMatch={lines:worlds[viewWorld].lessons.length,mistakes:mapMatchMistakes,at:new Date().toISOString()};save()}
  const res=document.querySelector('.map-quiz-result');if(res)res.insertAdjacentHTML('beforebegin',`<p class="map-quiz-match">🧩 Line match: all ${worlds[viewWorld].lessons.length} lines matched${mapMatchMistakes?` · ${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''}`:' · no mistakes ✨'}</p>`);
 };
+/* Header button: "← Back to map" inside lessons, games and other screens;
+   "← Games" on the map (and sign-in) screen, where it leaves the app. */
+const backPill=document.querySelector('.back-pill');
+function currentScreen(){return screens.find(id=>{const el=$('#'+id);return el&&!el.classList.contains('hidden')})||'startScreen'}
+function syncBackPill(){if(!backPill)return;const out=['mapScreen','startScreen'].includes(currentScreen());backPill.textContent=out?'← Games':'← Back to map';backPill.title=out?'All games':'Back to your map'}
+const showBeforeBackPill=show;show=function(){showBeforeBackPill.apply(this,arguments);syncBackPill()};
+if(backPill)backPill.addEventListener('click',e=>{if(['mapScreen','startScreen'].includes(currentScreen()))return;e.preventDefault();
+ stopVoicePlayback();closeReadingGuard();if(typeof stopHifz==='function'&&!$('#hifzScreen').classList.contains('hidden'))stopHifz();if(studentRec)studentRec.stop();
+ renderMap();show('mapScreen')});
+syncBackPill();
 $('#openMessages').onclick=openStudentMessages;$('#stSend').onclick=sendStudentMessage;
 $('#stText').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendStudentMessage()}});
 $('#stBack').onclick=()=>{renderMap();show('mapScreen')};
