@@ -1721,18 +1721,18 @@ $('#glossaryBtn').onclick=()=>openGlossary('mapScreen',0);
 $('#glossaryBack').onclick=()=>{stopVoicePlayback();if(glossaryFrom==='lessonScreen')show('lessonScreen');else{renderMap();show('mapScreen')}};
 $('#glossaryLessonBtn').onclick=()=>openGlossary('lessonScreen',lineNumbers(lessons[current])[0]);
 
-/* Map Challenge final task: after the 15 questions, match every line of the
-   map to its title (drag & drop, or tap a line then its title). Then the
-   usual result shows, with how the matching went. */
-let mapMatchDone=false,mapMatchMistakes=0,mqSelected=null;
+/* Map Challenge question 15: match every line of the map to its English
+   meaning (drag & drop, or tap a line then its meaning). */
+let mapMatchDone=false,mapMatchMistakes=0,mqSelected=null,MAP_MATCH_MAX_MISTAKES=2;
 function showMapLineMatch(){
  const w=worlds[viewWorld],items=w.lessons.map((l,i)=>({i,ar:l[7].split(/\s+/).slice(0,3).join(' ')+'…',full:l[7],en:LINE_TRANSLATIONS[l[8]]||`Line ${l[8]} · ${l[0].replace(/ · Line \d+$/,'')}`}));
  mapMatchMistakes=0;mqSelected=null;
- $('#mapQuizBody').innerHTML=`<div class="quiz-meta"><span>Final task</span><span class="quiz-dots">${Array(MAP_QUIZ_TOTAL).fill('<span class="quiz-dot done"></span>').join('')}<span class="quiz-dot current"></span></span></div><p class="kicker">Map ${viewWorld+1} Certificate Challenge</p><h1>Match every line</h1><p class="prompt" style="font-size:18px">Drag each Arabic line to its English meaning. On a phone, tap the line and then tap its meaning. Tap a line to hear it.</p><div class="vocab-bank" id="mqBank">${shuffled(items).map(x=>`<button class="vocab-card" draggable="true" data-mq="${x.i}" data-full="${escapeHtml(x.full)}" aria-label="Arabic line. Drag or tap it, then choose its English meaning">${x.ar} 🔊</button>`).join('')}</div><div class="vocab-targets" id="mqTargets">${shuffled(items).map(x=>`<div class="vocab-target" data-mqt="${x.i}" tabindex="0"><span>${escapeHtml(x.en)}</span><span>Drop here</span></div>`).join('')}</div><div class="vocab-result" id="mqResult" aria-live="polite"></div>`;
- $('#mapQuizActions').innerHTML='';
+ const dots=Array(MAP_QUIZ_TOTAL).fill(0).map((_,i)=>`<span class="quiz-dot ${i<mapQuizIndex?'done':i===mapQuizIndex?'current':''}"></span>`).join('');
+ $('#mapQuizBody').innerHTML=`<p class="kicker">Map ${viewWorld+1} Certificate Challenge</p><h1>${MAP_QUIZ_TOTAL} Questions</h1><div class="map-quiz-score">🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}</div><div class="quiz-meta"><span>Score ${MAP_QUIZ_PASS} or more to pass</span><span class="quiz-dots">${dots}</span></div><p class="prompt" style="font-size:18px">🧩 Match every line: drag each Arabic line to its English meaning (${MAP_MATCH_MAX_MISTAKES} mistakes or fewer earns the point). On a phone, tap the line and then tap its meaning. Tap a line to hear it.</p><div class="vocab-bank" id="mqBank">${shuffled(items).map(x=>`<button class="vocab-card" draggable="true" data-mq="${x.i}" data-full="${escapeHtml(x.full)}" aria-label="Arabic line. Drag or tap it, then choose its English meaning">${x.ar} 🔊</button>`).join('')}</div><div class="vocab-targets" id="mqTargets">${shuffled(items).map(x=>`<div class="vocab-target" data-mqt="${x.i}" tabindex="0"><span>${escapeHtml(x.en)}</span><span>Drop here</span></div>`).join('')}</div><div class="vocab-result" id="mqResult" aria-live="polite"></div>`;
+ $('#mapQuizActions').innerHTML='<button class="ghost" id="mapQuizExit">Exit to Map</button>';$('#mapQuizExit').onclick=()=>{renderMap();show('mapScreen')};
  const check=(term,target)=>{if(term==null||target.classList.contains('correct'))return;const card=document.querySelector(`[data-mq="${term}"]`);if(!card)return;
   if(+target.dataset.mqt===term){target.classList.add('correct');card.classList.remove('selected');card.classList.add('matched');card.draggable=false;target.lastElementChild.replaceWith(card);mqSelected=null;happySound();$('#mqResult').textContent='Correct match!';$('#mqResult').className='vocab-result good';
-   if(document.querySelectorAll('#mqTargets .vocab-card.matched').length===items.length){$('#mqResult').textContent=`🎉 All ${items.length} lines matched${mapMatchMistakes?` (${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''})`:' with no mistakes'}!`;$('#mapQuizActions').innerHTML='<button class="btn green" id="mqResultBtn">See My Result 🏆</button>';$('#mqResultBtn').onclick=()=>{mapMatchDone=true;finishMapQuiz()}}}
+   if(document.querySelectorAll('#mqTargets .vocab-card.matched').length===items.length){$('#mqResult').textContent=`🎉 All ${items.length} lines matched${mapMatchMistakes?` (${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''})`:' with no mistakes'}!`;const ok=mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES;if(ok)mapQuizCorrect++;mapMatchDone=true;const sc=document.querySelector('#mapQuizBody .map-quiz-score');if(sc)sc.innerHTML=`🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}`;$('#mqResult').textContent+=ok?' +1 point ⭐':` Too many mistakes for the point this time (${MAP_MATCH_MAX_MISTAKES} or fewer needed).`;$('#mapQuizActions').innerHTML='<button class="btn green" id="mqResultBtn">See My Result 🏆</button>';$('#mqResultBtn').onclick=()=>finishMapQuiz()}}
   else{mapMatchMistakes++;target.classList.add('wrong-drop');setTimeout(()=>target.classList.remove('wrong-drop'),600);tryAgainSound();$('#mqResult').textContent='Not that one — listen to the line again and try another meaning.';$('#mqResult').className='vocab-result bad'}};
  document.querySelectorAll('[data-mq]').forEach(card=>{
   card.addEventListener('dragstart',e=>{mqSelected=+card.dataset.mq;e.dataTransfer.setData('text/plain',card.dataset.mq);card.classList.add('selected');sayArabic(card.dataset.full)});
@@ -1743,12 +1743,15 @@ function showMapLineMatch(){
   t.addEventListener('drop',e=>{e.preventDefault();t.classList.remove('drag-over');check(+e.dataTransfer.getData('text/plain'),t)});
   t.onclick=()=>{if(mqSelected!=null)check(mqSelected,t)};t.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&mqSelected!=null){e.preventDefault();check(mqSelected,t)}}});
 }
+/* The line match is question 15 of the Map Challenge: 14 multiple-choice
+   questions come first, then the match counts as one point. */
+const renderMapQuizBeforeLineMatch=renderMapQuiz;
+renderMapQuiz=function(){if(mapQuizIndex===MAP_QUIZ_TOTAL-1){mapMatchDone=false;showMapLineMatch();return}renderMapQuizBeforeLineMatch.apply(this,arguments)};
 const finishMapQuizBeforeLineMatch=finishMapQuiz;
 finishMapQuiz=function(){
- if(!mapMatchDone){showMapLineMatch();return}
- mapMatchDone=false;finishMapQuizBeforeLineMatch.apply(this,arguments);
+ const played=mapMatchDone;mapMatchDone=false;finishMapQuizBeforeLineMatch.apply(this,arguments);if(!played)return;
  const rec=profile.mapQuizScores[viewWorld];if(rec){rec.lineMatch={lines:worlds[viewWorld].lessons.length,mistakes:mapMatchMistakes,at:new Date().toISOString()};save()}
- const res=document.querySelector('.map-quiz-result');if(res)res.insertAdjacentHTML('beforebegin',`<p class="map-quiz-match">🧩 Line match: all ${worlds[viewWorld].lessons.length} lines matched${mapMatchMistakes?` · ${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''}`:' · no mistakes ✨'}</p>`);
+ const res=document.querySelector('.map-quiz-result');if(res)res.insertAdjacentHTML('beforebegin',`<p class="map-quiz-match">🧩 Question ${MAP_QUIZ_TOTAL} · Line match: ${mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES?'+1 point':'no point'}${mapMatchMistakes?` · ${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''}`:' · no mistakes ✨'}</p>`);
 };
 /* Header button: "← Back to map" inside lessons, games and other screens;
    "← Games" on the map (and sign-in) screen, where it leaves the app. */
