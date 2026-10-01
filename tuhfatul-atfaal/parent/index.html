@@ -12,18 +12,19 @@
   :root{--navy:#1c3a55;--green:#2f6f55;--gold:#c9a653;--paper:#fffaf0;--ink:#3b2f22;--muted:#75684f;--line:#eadcb8}
   *{box-sizing:border-box}
   body{margin:0;background:#efe7d2;color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif}
-  header{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.12) 0 90px,transparent 91px),radial-gradient(circle at 8% 110%,rgba(201,166,83,.22) 0 120px,transparent 121px),linear-gradient(135deg,#1b5541,#2f6f55 60%,#3a7d61);color:#fff;padding:24px 0 66px;border-bottom:4px solid var(--gold)}
+  header{position:relative;overflow:hidden;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg fill='none' stroke='%23d9b866' stroke-opacity='.16' stroke-width='1.3'%3E%3Cpath d='M32 8l7 17 17 7-17 7-7 17-7-17-17-7 17-7z'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Cpath d='M0 0l8 8M64 0l-8 8M0 64l8-8M64 64l-8-8'/%3E%3C/g%3E%3C/svg%3E"),radial-gradient(ellipse at 50% 0,rgba(255,236,170,.16),transparent 60%),linear-gradient(160deg,#0c3b2c,#14533e 55%,#0f4433);color:#fff;padding:24px 0 66px;border-bottom:4px solid var(--gold);box-shadow:inset 0 -10px 0 -6px #e8cf86}
+  header::after{content:'';position:absolute;inset:10px;border:1.5px solid rgba(232,207,134,.45);border-radius:14px;pointer-events:none}
   .wrap{max-width:860px;margin:0 auto;padding:0 16px}
-  header .brand{font:13px Marcellus;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-  header h1{margin:6px 0 10px;font:32px Marcellus;text-shadow:0 2px 6px rgba(0,0,0,.18)}
+  header .brand{font:13px Marcellus;letter-spacing:.12em;text-transform:uppercase;color:#e8cf86}
+  header h1{margin:6px 0 10px;font:34px Marcellus;color:#f6e4a8;text-shadow:0 2px 8px rgba(0,0,0,.35)}
   header .sub{display:flex;flex-wrap:wrap;gap:8px}
-  header .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
-  .ar{font:700 22px Amiri;float:right;opacity:.9}
+  header .chip{color:#fff8e1;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+  .ar{font:700 24px Amiri;float:right;color:#e8cf86}
   main{padding:16px 0 50px}
   .card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 14px}
-  h2{font:20px Marcellus;color:var(--navy);margin:0 0 8px}
+  h2{font:20px Marcellus;color:#14533e;margin:0 0 8px}
   .tiles{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:-44px 0 16px}
-  .tile{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(40,30,10,.08)}
+  .tile{background:#fff;border:2px solid var(--line);border-top:4px solid var(--gold);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(40,30,10,.08)}
   .tile b{display:block;font:800 26px Nunito;color:var(--green)}
   .tile span{font-size:13px;color:var(--muted)}
   table{width:100%;border-collapse:collapse;font-size:15px}
@@ -39,10 +40,19 @@
   .badge{background:#fff7dc;border:2px solid #e8cf86;border-radius:14px;padding:6px 10px;font-weight:800;font-size:14px}
   .bar{height:10px;background:#f1e7cc;border-radius:6px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,#4f9d73,#2f6f55)}
   .muted{color:var(--muted)}
+  .banner{position:relative;margin:0 0 16px;padding:3px;background:linear-gradient(90deg,#b8913e,#f3dc8e 50%,#b8913e);border-radius:22px;box-shadow:0 8px 18px rgba(20,40,30,.22)}
+  .banner-in{position:relative;border-radius:19px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg fill='none' stroke='%23d9b866' stroke-opacity='.16' stroke-width='1.3'%3E%3Cpath d='M32 8l7 17 17 7-17 7-7 17-7-17-17-7 17-7z'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Cpath d='M0 0l8 8M64 0l-8 8M0 64l8-8M64 64l-8-8'/%3E%3C/g%3E%3C/svg%3E"),radial-gradient(ellipse at 50% 0,rgba(255,236,170,.18),transparent 65%),linear-gradient(160deg,#0c3b2c,#14533e 55%,#0f4433);color:#fff8e1;text-align:center;padding:22px 34px 20px}
+  .banner-in::before{content:'';position:absolute;inset:7px;border:1.5px solid rgba(232,207,134,.5);border-radius:14px;pointer-events:none}
+  .banner h3{margin:0 0 6px;font:800 21px Nunito;letter-spacing:.08em;text-transform:uppercase;color:#f3dc8e}
+  .banner .praise{margin:0 auto 12px;max-width:620px;font-size:16px}
+  .banner .hadith-ar{font:700 22px/1.9 Amiri;color:#f6e4a8;direction:rtl;margin:4px 0}
+  .banner .hadith-en{font-style:italic;max-width:640px;margin:0 auto}
+  .banner .ref{display:inline-block;margin-top:8px;font-size:12.5px;color:#e8cf86;border-top:1px solid rgba(232,207,134,.5);padding-top:4px}
+  .banner .orn{color:#e8cf86;letter-spacing:.4em;font-size:14px}
   .center{text-align:center;padding:60px 16px}
   .att{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
   footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 30px}
-  @media(max-width:640px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}header h1{font-size:24px}.ar{display:none}th:nth-child(3),td:nth-child(3){display:none}}
+  @media(max-width:640px){header .brand{font-size:11px;letter-spacing:.06em}header::after{inset:5px}.banner-in{padding:20px 20px 16px}.banner .hadith-ar{font-size:19px}header h1{font-size:28px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}header h1{font-size:24px}.ar{display:none}th:nth-child(3),td:nth-child(3){display:none}}
 </style>
 </head>
 <body>
@@ -77,6 +87,12 @@
       '<div class="tile"><b>' + (d.memorised || 0) + '</b><span>line' + (d.memorised === 1 ? '' : 's') + ' memorised' + ((d.memoWeek || []).length ? '<br>+' + d.memoWeek.length + ' this week' : '') + '</span></div>' +
       '<div class="tile"><b>🔥 ' + ((d.streak && d.streak.count) || 0) + '</b><span>day streak<br>' + (d.streak && d.streak.last ? 'last ' + day(d.streak.last) : 'not started') + '</span></div>' +
       '<div class="tile"><b>' + (att && att.total ? Math.round(((att.present || 0) + (att.late || 0)) / att.total * 100) + '%' : (d.certs || 0) + '/15') + '</b><span>' + (att && att.total ? 'attendance<br>' + att.total + ' session' + (att.total === 1 ? '' : 's') : 'maps approved') + '</span></div></div>';
+    const first = esc(String(d.name || 'Your child').split(/\s+/)[0]), approved = Number(d.certs) || 0;
+    h += '<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>' + (approved ? 'Mā shā’ Allāh — beautiful recitation!' : 'Every letter is rewarded') + '</h3>' +
+      '<p class="praise">' + (approved ? 'Well done, <b>' + first + '</b>! A teacher has listened to ' + first + '’s recitation and approved <b>' + approved + ' map' + (approved === 1 ? '' : 's') + '</b> for correct Tajweed and memorisation. May Allah make the Qur’an a light for them.' : '<b>' + first + '</b> is learning to recite the Qur’an with Tajweed. Every effort counts — whether the reading is already fluent or still takes effort. Please keep encouraging them at home.') + '</p>' +
+      '<p class="hadith-ar">«الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ، وَالَّذِي يَقْرَأُ الْقُرْآنَ وَيَتَتَعْتَعُ فِيهِ وَهُوَ عَلَيْهِ شَاقٌّ لَهُ أَجْرَانِ»</p>' +
+      '<p class="hadith-en">“The one who is skilled in reciting the Qur’an will be with the noble and righteous scribes (the angels), and the one who recites the Qur’an and stumbles over it, finding it difficult, will have two rewards.”</p>' +
+      '<span class="ref">The Prophet ﷺ · Sahih Muslim 798 · also in Sahih al-Bukhari 4937</span></div></section>';
     h += '<div class="card"><h2>📍 Where they are</h2><p style="margin:0 0 6px">Now on <b>' + esc(d.currentMap || 'Map 1') + '</b> · ' + (d.certs || 0) + ' of 15 maps approved by a teacher</p><div class="bar"><span style="width:' + (d.pct || 0) + '%"></span></div>' +
       ((d.memoWeek || []).length ? '<p style="margin:10px 0 0">🧠 Memorised this week: <b>line ' + d.memoWeek.map(esc).join(', ') + '</b></p>' : '') + '</div>';
     if((d.homework || []).length) h += '<div class="card"><h2>📚 Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.homework.map(x => '<tr><td>' + esc(x.title) + '</td><td>' + esc(day(x.due)) + '</td><td class="st-' + esc(x.status) + '">' + (lbl[x.status] || esc(x.status)) + (x.at ? ' <small class="muted">' + esc(day(x.at)) + '</small>' : '') + '</td></tr>').join('') + '</table></div>';
