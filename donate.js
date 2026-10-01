@@ -10,8 +10,11 @@
 (() => {
   'use strict';
   const DONATE_URL = '';
-  const url = window.DIIN_DONATE_URL || DONATE_URL;
-  if (!url) return;
+  // Only a genuine Stripe payment page is ever opened. The test override works on a developer's own
+  // computer (localhost) only, so nothing else running on the live site can swap the link.
+  const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const url = (isLocal && window.DIIN_DONATE_URL) || DONATE_URL;
+  if (!/^https:\/\/(buy|donate)\.stripe\.com\/[A-Za-z0-9_]+$/.test(url) && !(isLocal && url)) return;
 
   const DAY = 86400000;
   const KEY = 'diin-donate-v1';
@@ -124,6 +127,6 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 
-  window.DiinDonate = { show, saved, button, url };
+  window.DiinDonate = Object.freeze({ show, saved, button });
   document.dispatchEvent(new Event('diin-donate-ready'));
 })();
