@@ -94,9 +94,11 @@
 @keyframes doorGlow{0%,100%{opacity:.25}50%{opacity:.75}}
 .exit-door:hover .door-frame,.exit-door:focus .door-frame{stroke:#fff;stroke-width:3}
 .exit-door:focus{outline:none}
+.start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
+@keyframes startBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .exit-bubble{cursor:pointer;animation:bubbleIn .35s ease-out}
 @keyframes bubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){.exit-door .door-leaf{transition:none}.exit-door.ready .door-glow,.exit-bubble{animation:none}}
+@media(prefers-reduced-motion:reduce){.start-here{animation:none}.exit-door .door-leaf{transition:none}.exit-door.ready .door-glow,.exit-bubble{animation:none}}
 </style>
 </head>
 <body>
@@ -1846,12 +1848,29 @@ function enterNextMap(){
  $('#mapHelp').textContent=`Welcome to Map ${viewWorld+1} · ${worlds[viewWorld].title}!`;
  (function step(now){const raw=Math.min(1,(now-t0)/dur),t=raw*raw*(3-2*raw);walker.setAttribute('transform',`translate(${a.x+(b.x-a.x)*t} ${a.y+(b.y-a.y)*t-Math.sin(Math.PI*t)*8})`);
   if(raw<1){requestAnimationFrame(step);return}
-  walker.remove();exitAnimating=false;const gi=+first.dataset.i;mapAvatarPosition=gi;standingAvatarAt(first);first.classList.add('destination-glow');setTimeout(()=>first.classList.remove('destination-glow'),2300);happySound();
+  walker.remove();exitAnimating=false;const gi=+first.dataset.i;mapAvatarPosition=gi;if(!(firstLessonWaiting()===gi&&startHereAvatar(first)))standingAvatarAt(first);first.classList.add('destination-glow');setTimeout(()=>first.classList.remove('destination-glow'),2300);happySound();
   if(gi<profile.unlocked&&!profile.stars[gi])startAutoOpen(gi)
  })(performance.now())
 }
 const renderMapBeforeExitDoor=renderMap;
 renderMap=function(){hideExitBubble();renderMapBeforeExitDoor.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!exitAnimating)decorateExitDoor()}))};
+/* Start of a map: before the first lesson is done, the avatar stands beside
+   it and points at it with a moving hand, with a "Start here!" sign. */
+function firstLessonWaiting(){const gi=worldStarts[viewWorld];return gi<profile.unlocked&&!profile.stars[gi]?gi:null}
+function startHereAvatar(node){
+ const svg=$('#mapSvg'),p=translatedPoint(node);if(!svg||!p)return false;
+ svg.querySelectorAll('.standing-avatar-wrap,#startHereSign').forEach(x=>x.remove());
+ let m=mapPersonMarkup('standing-avatar start-avatar').replace('<g class="right-arm">','<g class="right-arm"><animateTransform attributeName="transform" type="rotate" values="-75 9 -7;-40 9 -7;-75 9 -7" dur="1.1s" repeatCount="indefinite"/>');
+ svg.insertAdjacentHTML('beforeend',`<g class="standing-avatar-wrap" transform="translate(${p.x-62} ${p.y-25})">${m}</g><g id="startHereSign" transform="translate(${p.x+16} ${p.y-62})" aria-hidden="true"><g class="start-here"><rect x="-52" y="-17" width="104" height="28" rx="14" fill="#fff8e1" stroke="#d6ad55" stroke-width="2"/><text x="0" y="2.5" text-anchor="middle" font-family="Nunito" font-size="14" font-weight="800" fill="#1c3a2e">Start here!</text><path d="M-22 11 L-16 19 L-10 11Z" fill="#d6ad55"/></g></g>`);
+ return true
+}
+const placeStandingMapAvatarBeforeStart=placeStandingMapAvatar;
+placeStandingMapAvatar=function(){
+ const svg=$('#mapSvg');svg&&svg.querySelectorAll('#startHereSign').forEach(x=>x.remove());
+ const gi=firstLessonWaiting(),node=gi!==null&&svg&&svg.querySelector(`.node[data-i="${gi}"]`);
+ if(node&&(mapAvatarPosition===null||mapAvatarPosition===gi)&&startHereAvatar(node))return;
+ placeStandingMapAvatarBeforeStart.apply(this,arguments)
+};
 /* Header button: "← Back to map" inside lessons, games and other screens;
    "← Games" on the map (and sign-in) screen, where it leaves the app. */
 const backPill=document.querySelector('.back-pill');
