@@ -1812,16 +1812,16 @@ function decorateExitDoor(){
  if(!mapQuizPassed(viewWorld))return;
  [...svg.querySelectorAll('text')].filter(t=>t.textContent==='📖'||t.textContent==='🕌').forEach(t=>t.remove());
  const approved=!!(assessment(viewWorld)&&assessment(viewWorld).approved),last=viewWorld>=worlds.length-1;
- const label=last?'Finish 🏁 — the end of the Tuhfah':approved?`Map ${viewWorld+2} → — open the door to Map ${viewWorld+2}`:'Exit — ask your teacher to sign';
+ const label=last?'Finish 🏁 — the end of the Tuhfah':approved?`Map ${viewWorld+2} → — open the door to Map ${viewWorld+2}`:'Exit — ask your teacher to listen to you and open the door';
  svg.insertAdjacentHTML('beforeend',exitDoorMarkup(approved?'ready':'locked',label));
  if(!pendingMapWalk&&!exitAnimating)exitAvatarAtDoor(false);
  const door=$('#mapExitDoor'),act=()=>tapExitDoor();door.onclick=act;door.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}};
- if(!pendingMapWalk)$('#mapHelp').textContent=approved?(last?'Mā shā’ Allāh — you finished every map! Tap the door to celebrate.':`Teacher signed! Tap the door to walk into Map ${viewWorld+2}.`):'Map Challenge passed! Tap the door — your teacher needs to sign your paper first.'
+ if(!pendingMapWalk)$('#mapHelp').textContent=approved?(last?'Mā shā’ Allāh — you finished every map! Tap the door to celebrate.':`Your teacher opened the door! Tap it to walk into Map ${viewWorld+2}.`):'Map Challenge passed! Ask your teacher to listen to you and open the door for you.'
 }
 function tapExitDoor(){
  if(exitAnimating)return;cancelAutoOpen();
  const approved=!!(assessment(viewWorld)&&assessment(viewWorld).approved),last=viewWorld>=worlds.length-1;
- if(!approved){exitAvatarAtDoor(true);tryAgainSound();showExitBubble(['Please ask your teacher','to sign your paper ✍️','(tap here to see the paper)'],goToTeacherPanel);return}
+ if(!approved){exitAvatarAtDoor(true);tryAgainSound();showExitBubble(['Please ask your teacher','to listen to you and','open the door for you 🔑','(tap here for the teacher check)'],goToTeacherPanel);return}
  if(last){exitAvatarAtDoor(false);happySound();showExitBubble(['Mā shā’ Allāh! 🎉','You finished the whole Tuhfah!']);return}
  walkThroughExitDoor()
 }
