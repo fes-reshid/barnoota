@@ -12,16 +12,17 @@
   :root{--navy:#1c3a55;--green:#2f6f55;--gold:#c9a653;--paper:#fffaf0;--ink:#3b2f22;--muted:#75684f;--line:#eadcb8}
   *{box-sizing:border-box}
   body{margin:0;background:#efe7d2;color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif}
-  header{background:linear-gradient(135deg,#1f5c47,#2f6f55);color:#fff;padding:18px 16px 22px}
+  header{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.12) 0 90px,transparent 91px),radial-gradient(circle at 8% 110%,rgba(201,166,83,.22) 0 120px,transparent 121px),linear-gradient(135deg,#1b5541,#2f6f55 60%,#3a7d61);color:#fff;padding:24px 0 66px;border-bottom:4px solid var(--gold)}
   .wrap{max-width:860px;margin:0 auto;padding:0 16px}
   header .brand{font:13px Marcellus;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-  header h1{margin:4px 0 2px;font:28px Marcellus}
-  header .sub{opacity:.9}
+  header h1{margin:6px 0 10px;font:32px Marcellus;text-shadow:0 2px 6px rgba(0,0,0,.18)}
+  header .sub{display:flex;flex-wrap:wrap;gap:8px}
+  header .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
   .ar{font:700 22px Amiri;float:right;opacity:.9}
   main{padding:16px 0 50px}
   .card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 14px}
   h2{font:20px Marcellus;color:var(--navy);margin:0 0 8px}
-  .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:-30px 0 14px}
+  .tiles{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:-44px 0 16px}
   .tile{background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(40,30,10,.08)}
   .tile b{display:block;font:800 26px Nunito;color:var(--green)}
   .tile span{font-size:13px;color:var(--muted)}
@@ -68,18 +69,18 @@
   function render(d, sd, updated){
     document.title = (d.name || 'Student') + ' · Parent view';
     $('pName').textContent = d.name || 'Your child';
-    $('pSub').textContent = [d.username ? '@' + d.username : '', (d.classes || []).length ? '🏫 ' + d.classes.join(', ') : '', 'updated ' + day(updated)].filter(Boolean).join(' · ');
+    $('pSub').innerHTML = [d.username ? '👤 @' + d.username : '', (d.classes || []).length ? '🏫 ' + d.classes.join(', ') : '', '🗓 Updated ' + day(updated)].filter(Boolean).map(t => '<span class="chip">' + esc(t) + '</span>').join('');
     const lbl = { done:'✓ Done', lateDone:'✓ Done late', late:'⚠ Late — not done', pending:'… Not yet due', open:'… To do' };
     const att = sd.attendance || null;
     let h = '<div class="tiles">' +
       '<div class="tile"><b>' + (d.pct || 0) + '%</b><span>of the course<br>' + (d.lessons || 0) + ' / ' + (d.total || 62) + ' lessons</span></div>' +
       '<div class="tile"><b>' + (d.memorised || 0) + '</b><span>line' + (d.memorised === 1 ? '' : 's') + ' memorised' + ((d.memoWeek || []).length ? '<br>+' + d.memoWeek.length + ' this week' : '') + '</span></div>' +
       '<div class="tile"><b>🔥 ' + ((d.streak && d.streak.count) || 0) + '</b><span>day streak<br>' + (d.streak && d.streak.last ? 'last ' + day(d.streak.last) : 'not started') + '</span></div>' +
-      '<div class="tile"><b>' + (att && att.total ? Math.round((att.present + att.late) / att.total * 100) + '%' : (d.certs || 0) + '/15') + '</b><span>' + (att && att.total ? 'attendance<br>' + att.total + ' sessions' : 'maps approved') + '</span></div></div>';
+      '<div class="tile"><b>' + (att && att.total ? Math.round(((att.present || 0) + (att.late || 0)) / att.total * 100) + '%' : (d.certs || 0) + '/15') + '</b><span>' + (att && att.total ? 'attendance<br>' + att.total + ' session' + (att.total === 1 ? '' : 's') : 'maps approved') + '</span></div></div>';
     h += '<div class="card"><h2>📍 Where they are</h2><p style="margin:0 0 6px">Now on <b>' + esc(d.currentMap || 'Map 1') + '</b> · ' + (d.certs || 0) + ' of 15 maps approved by a teacher</p><div class="bar"><span style="width:' + (d.pct || 0) + '%"></span></div>' +
       ((d.memoWeek || []).length ? '<p style="margin:10px 0 0">🧠 Memorised this week: <b>line ' + d.memoWeek.map(esc).join(', ') + '</b></p>' : '') + '</div>';
     if((d.homework || []).length) h += '<div class="card"><h2>📚 Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.homework.map(x => '<tr><td>' + esc(x.title) + '</td><td>' + esc(day(x.due)) + '</td><td class="st-' + esc(x.status) + '">' + (lbl[x.status] || esc(x.status)) + (x.at ? ' <small class="muted">' + esc(day(x.at)) + '</small>' : '') + '</td></tr>').join('') + '</table></div>';
-    if(att && att.total) h += '<div class="card"><h2>📋 Attendance</h2><div class="att"><span class="pill">✅ Present ' + att.present + '</span><span class="pill">⏰ Late ' + att.late + '</span><span class="pill">❌ Absent ' + att.absent + '</span><span class="pill">📝 Excused ' + att.excused + '</span></div>' +
+    if(att && att.total) h += '<div class="card"><h2>📋 Attendance</h2><div class="att"><span class="pill">✅ Present ' + (att.present || 0) + '</span><span class="pill">⏰ Late ' + (att.late || 0) + '</span><span class="pill">❌ Absent ' + (att.absent || 0) + '</span><span class="pill">📝 Excused ' + (att.excused || 0) + '</span></div>' +
       ((att.recent || []).length ? '<table><tr><th>Date</th><th>Class</th><th>Mark</th></tr>' + att.recent.map(r => '<tr><td>' + esc(day(r.date)) + '</td><td>' + esc(r.cls || '') + '</td><td>' + ({ present:'✅ Present', late:'⏰ Late', absent:'❌ Absent', excused:'📝 Excused' }[r.mark] || esc(r.mark)) + '</td></tr>').join('') + '</table>' : '') + '</div>';
     if((d.badges || []).length) h += '<div class="card"><h2>🏅 Badges</h2><div class="badges">' + d.badges.map(b => '<span class="badge" title="' + esc(day(b.at)) + '">' + esc(b.icon) + ' ' + esc(b.name) + '</span>').join('') + '</div></div>';
     if((d.notes || []).length) h += '<div class="card"><h2>💬 Teacher notes</h2>' + d.notes.map(n => '<div class="note"><small>' + esc(n.map) + (n.teacher ? ' · ' + esc(n.teacher) : '') + ' · ' + esc(day(n.at)) + '</small>' + esc(n.note) + '</div>').join('') + '</div>';
