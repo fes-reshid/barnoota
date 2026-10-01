@@ -217,6 +217,41 @@
   .s-metrics b{ display:block; font:700 17px 'Marcellus'; color:var(--green-dark); }
   .s-metrics small{ font-size:12px; color:#8a7654; }
   .s-foot{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .s-head .role-badge{ flex:none; font-size:11.5px; }
+  .s-metrics{ grid-template-columns:repeat(4,1fr) !important; }
+  .s-tag{ background:var(--parchment); border:1px solid #eadcb8; border-radius:999px; padding:2px 9px; font-size:12.5px; color:#5d4b2a; }
+  .s-tag.muted-tag{ color:#8a7654; }
+  .view-switch{ display:inline-flex; border:2px solid var(--gold-soft); border-radius:12px; overflow:hidden; background:#fff; }
+  .view-switch button{ border:0; background:none; padding:7px 12px; font:inherit; font-size:14px; color:var(--ink-navy); cursor:pointer; }
+  .view-switch button + button{ border-left:1.5px solid #eadcb8; }
+  .view-switch button.active{ background:var(--green); color:#fff; }
+  .student-view.view-list{ display:block; overflow-x:auto; background:#fff; border:2px solid var(--gold-soft); border-radius:16px; }
+  .student-view.view-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; }
+  .student-view.view-gallery{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; }
+  table.roster{ width:100%; border-collapse:collapse; font-size:14.5px; min-width:900px; }
+  table.roster th{ position:sticky; top:0; background:#f6efdc; text-align:left; padding:10px; font:700 12.5px Nunito,system-ui; letter-spacing:.03em; text-transform:uppercase; color:#6b5d44; }
+  table.roster th small{ text-transform:none; font-weight:400; }
+  table.roster td{ padding:9px 10px; border-top:1px solid #f0e6cc; vertical-align:middle; }
+  table.roster tbody tr{ cursor:pointer; }
+  table.roster tbody tr:hover{ background:#fffbef; }
+  table.roster tr.disabled{ opacity:.6; }
+  .r-who{ display:flex; align-items:center; gap:10px; }
+  .r-who b{ display:block; font:16px 'Marcellus'; color:var(--ink-navy); }
+  .r-who small{ color:#8a7654; }
+  .avatar.sm{ width:36px; height:36px; font-size:19px; flex:none; }
+  .r-pct{ min-width:120px; }
+  .r-pct .bar{ height:7px; margin:3px 0; }
+  .r-pct small{ color:#8a7654; font-size:12px; }
+  .st-late{ color:#b5452b; font-weight:700; }
+  .g-tile{ background:#fff; border:2px solid var(--gold-soft); border-radius:18px; padding:16px 10px 12px; text-align:center; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease; }
+  .g-tile:hover{ transform:translateY(-3px); box-shadow:0 10px 22px rgba(60,45,20,.14); border-color:var(--green); }
+  .g-tile.disabled{ opacity:.6; }
+  .g-ring{ width:104px; height:104px; margin:0 auto 8px; border-radius:50%; display:grid; place-items:center;
+    background:conic-gradient(var(--green) calc(var(--p) * 1%), #efe4c8 0); }
+  .g-ring .avatar.big{ width:88px; height:88px; font-size:44px; border:4px solid #fff; }
+  .g-name{ font:17px 'Marcellus'; color:var(--ink-navy); }
+  .g-sub{ font-size:12.5px; color:#8a7654; margin-top:2px; }
+  .g-icons{ display:flex; justify-content:center; gap:8px; margin-top:6px; font-size:13.5px; min-height:18px; }
 
   /* ---- modal ---- */
   .modal{position:fixed;inset:0;background:rgba(20,28,35,.68);z-index:50;display:flex;align-items:center;justify-content:center;padding:18px}
@@ -491,6 +526,7 @@
           <option value="least">Sort: Least progress</option>
           <option value="newest">Sort: Newest first</option>
         </select>
+        <div class="view-switch" id="view-switch" role="group" aria-label="View"><button data-view="list" title="List — like the weekly report">☰ List</button><button data-view="grid" title="Cards">▦ Grid</button><button data-view="gallery" title="Photos">🖼 Gallery</button></div>
         <button class="btn ghost small" id="student-report" title="Printable weekly report for the students shown">🖨️ Weekly reports</button>
       </div>
       <div class="chips" id="student-filters">
@@ -1108,6 +1144,7 @@ let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
 let classesCache = [], activeClassId = null, classFilterTouched = false;
 let homeworkCache = [], editingHw = null, hwFilter = 'active', hwOpen = {}, lastGridStudents = [];
+let studentView = 'list'; try { studentView = localStorage.getItem('tp-student-view') || 'list'; } catch(e){}
 
 /* ===================== helpers ===================== */
 function randomPassword(){
@@ -1372,21 +1409,54 @@ function renderStudentGrid(){
   const box = $('student-list'); box.innerHTML = '';
   $('student-empty').classList.toggle('hidden', sums.length > 0);
   $('student-empty').textContent = studentsCache.length && classSel && !sums.length && !q && studentFilter === 'all' ? 'No students in this class yet — add them on the Classes tab or share the class code.' : studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
+  box.className = 'student-view view-' + studentView;
+  document.querySelectorAll('#view-switch [data-view]').forEach(b => { const on = b.dataset.view === studentView; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
+  const open = x => openManager(x.s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
+  const onKey = (el, x) => { el.tabIndex = 0; el.onclick = () => open(x); el.onkeydown = e => { if(e.key === 'Enter') open(x); }; };
+  if(studentView === 'list'){
+    /* weekly-report style: one row per student */
+    const table = document.createElement('table'); table.className = 'roster';
+    table.innerHTML = '<thead><tr><th>Student</th><th>Class</th><th>Course</th><th>Memorised</th><th>This week</th><th>Streak</th><th>Attendance</th><th>Homework <small>(2 wks)</small></th><th>Maps ✓</th><th>Status</th></tr></thead><tbody></tbody>';
+    const tb = table.querySelector('tbody');
+    sums.forEach(x => {
+      const s = x.s, d = reportData(s), hd = d.hw.filter(r => r.st.key === 'done' || r.st.key === 'lateDone').length, hl = d.hw.filter(r => r.st.key === 'late').length;
+      const tr = document.createElement('tr'); if(s.disabled) tr.className = 'disabled';
+      tr.innerHTML = '<td><div class="r-who"><div class="avatar sm">' + avatarHtml(s, x.p) + '</div><div><b>' + escapeHtml(s.displayName || s.username) + '</b><small>@' + escapeHtml(s.username) + '</small></div></div></td>' +
+        '<td>' + (d.classes.length ? escapeHtml(d.classes.join(', ')) : '<span class="muted">—</span>') + '</td>' +
+        '<td><div class="r-pct"><b>' + x.pct + '%</b><div class="bar"><span style="width:' + x.pct + '%"></span></div><small>' + escapeHtml(mapLabel(x.currentMap)) + '</small></div></td>' +
+        '<td>' + (d.memo.length || '<span class="muted">0</span>') + '</td>' +
+        '<td>' + ([d.memoWeek.length ? '+' + d.memoWeek.length + ' line' + (d.memoWeek.length > 1 ? 's' : '') : '', d.quizzesWeek.length ? d.quizzesWeek.length + ' quiz' + (d.quizzesWeek.length > 1 ? 'zes' : '') : ''].filter(Boolean).join(', ') || '<span class="muted">—</span>') + '</td>' +
+        '<td>' + (d.streak.count ? '🔥 ' + d.streak.count : '<span class="muted">—</span>') + '</td>' +
+        '<td>' + (d.att.total ? Math.round((d.att.present + d.att.late) / d.att.total * 100) + '%' + (d.att.absent ? ' <span class="st-late">(' + d.att.absent + ' absent)</span>' : '') : '<span class="muted">—</span>') + '</td>' +
+        '<td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '<span class="muted">—</span>') + '</td>' +
+        '<td>' + x.certs + '/15</td>' +
+        '<td>' + statusBadge(x) + '</td>';
+      onKey(tr, x); tb.appendChild(tr);
+    });
+    box.appendChild(table);
+    return;
+  }
   sums.forEach(x => {
     const s = x.s, el = document.createElement('div');
-    el.className = 's-card' + (s.disabled ? ' disabled' : '');
-    el.tabIndex = 0;
-    const last = x.lastQuiz ? x.lastQuiz.score + '/' + x.lastQuiz.total : '—';
-    el.innerHTML =
-      '<div class="s-head"><div class="avatar">' + avatarHtml(s, x.p) + '</div><div style="min-width:0"><div class="s-name">' + escapeHtml(s.displayName || s.username) +
-      '</div><div class="s-user">@' + escapeHtml(s.username) + (s.dob ? ' · ' + escapeHtml(ageFrom(s.dob)) : '') + '</div></div></div>' +
-      '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
-      '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
-      '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.certs + '/15</b><small>certificates</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
-      '<div class="s-foot">' + statusBadge(x) + (x.hifz ? '<span class="role-badge ok">🧠 ' + x.hifz + ' memorised</span>' : '') + (x.badges ? '<span class="role-badge warn">🏅 ' + x.badges + '</span>' : '') + (s.talqeenEnabled ? '<span class="role-badge info">🎙️ Talqeen</span>' : '') + classesOf(s.uid).map(c => '<span class="role-badge">🏫 ' + escapeHtml(c.name) + '</span>').join('') + (s.selfSignup ? '<span class="role-badge info">Self sign-up</span>' : '') + '</div>';
-    el.onclick = () => openManager(s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
-    el.onkeydown = e => { if(e.key === 'Enter') el.click(); };
-    box.appendChild(el);
+    if(studentView === 'gallery'){
+      /* big photo tiles with a progress ring */
+      el.className = 'g-tile' + (s.disabled ? ' disabled' : '');
+      el.innerHTML = '<div class="g-ring" style="--p:' + x.pct + '"><div class="avatar big">' + avatarHtml(s, x.p) + '</div></div>' +
+        '<div class="g-name">' + escapeHtml(s.displayName || s.username) + '</div><div class="g-sub">' + x.pct + '% · ' + escapeHtml(mapLabel(x.currentMap)) + '</div>' +
+        '<div class="g-icons">' + (x.readyMaps.length ? '<span title="Ready for review">⏳</span>' : '') + (x.hifz ? '<span title="Lines memorised">🧠 ' + x.hifz + '</span>' : '') + (x.badges ? '<span title="Badges">🏅 ' + x.badges + '</span>' : '') + (s.disabled ? '<span title="Disabled">⛔</span>' : '') + '</div>';
+    } else {
+      /* tidy cards */
+      const last = x.lastQuiz ? x.lastQuiz.score + '/' + x.lastQuiz.total : '—', cls = classesOf(s.uid).map(c => c.name);
+      el.className = 's-card' + (s.disabled ? ' disabled' : '');
+      el.innerHTML =
+        '<div class="s-head"><div class="avatar">' + avatarHtml(s, x.p) + '</div><div style="min-width:0;flex:1"><div class="s-name">' + escapeHtml(s.displayName || s.username) +
+        '</div><div class="s-user">@' + escapeHtml(s.username) + (s.dob ? ' · ' + escapeHtml(ageFrom(s.dob)) : '') + '</div></div>' + statusBadge(x) + '</div>' +
+        '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
+        '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
+        '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.hifz + '</b><small>memorised</small></div><div><b>' + x.certs + '/15</b><small>maps ✓</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
+        '<div class="s-foot">' + (cls.length ? '<span class="s-tag">🏫 ' + escapeHtml(cls.join(', ')) + '</span>' : '') + (x.badges ? '<span class="s-tag">🏅 ' + x.badges + '</span>' : '') + (s.talqeenEnabled ? '<span class="s-tag">🎙️ Talqeen</span>' : '') + (s.selfSignup ? '<span class="s-tag muted-tag">Self sign-up</span>' : '') + '</div>';
+    }
+    onKey(el, x); box.appendChild(el);
   });
 }
 
@@ -2687,6 +2757,7 @@ function wire(){
   wireClasses();
   wireHomework();
   wireExtras();
+  document.querySelectorAll('#view-switch [data-view]').forEach(b => b.onclick = () => { studentView = b.dataset.view; try { localStorage.setItem('tp-student-view', studentView); } catch(e){} renderStudentGrid(); });
   $('student-report').onclick = () => { if(!lastGridStudents.length){ toast('No students shown'); return; } openReport(lastGridStudents, $('student-class').value && $('student-class').value !== '*mine' ? className($('student-class').value) : 'Students'); };
   $('modal-report').onclick = () => { if(activeStudent) openReport([activeStudent], ''); };
   $('class-report').onclick = () => { const c = classById(activeClassId); if(!c) return; const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean); if(!members.length){ toast('This class has no students yet'); return; } openReport(members, c.name); };
