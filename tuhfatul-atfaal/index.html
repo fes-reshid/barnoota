@@ -96,7 +96,10 @@
 .exit-door:focus{outline:none}
 .quiz-ayah{display:block;margin:12px auto 2px;font:700 30px/1.9 Amiri,serif;color:#1c3a2e}
 .quiz-ayah-ref{display:block;font-size:14px;color:#8a6a2c}
-.hifz-map-tag{flex:0 0 auto;align-self:center;writing-mode:vertical-rl;transform:rotate(180deg);font:800 11px Nunito;letter-spacing:.06em;text-transform:uppercase;color:#8a6a2c;border-left:2px solid #e5d3a4;padding:4px 2px;margin-left:6px}
+.hifz-map-tag{flex:0 0 auto;align-self:center;writing-mode:vertical-rl;transform:rotate(180deg);font:800 11px Nunito;letter-spacing:.06em;text-transform:uppercase;color:#8a6a2c;background:#fff8e1;border:1.5px solid #e5d3a4;border-radius:10px;padding:6px 3px;margin-left:6px;cursor:pointer}
+.hifz-map-tag:hover{background:#fbeec4}
+.hifz-map-tag.collapsed{writing-mode:horizontal-tb;transform:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 12px;font-size:13px;min-height:58px;border-radius:14px}
+.hifz-map-tag small{font:700 12px Nunito;letter-spacing:0;text-transform:none;color:#5b4a2c}
 .hifz-rec{border:2px solid #e3d6b3;background:#fffdf6;border-radius:16px;padding:12px 14px;margin:0 0 12px}
 .hrec-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.hrec-timer{font:800 15px Nunito;color:#b5452b}
 .hrec-h{margin:10px 0 6px;font:800 15px Nunito;color:var(--navy)}
@@ -1336,7 +1339,7 @@ function renderHifz(){
  const l=lessons[hifzLine],parts=poemParts(l.matn,l.lines),lines=hifzWorldLines(viewWorld),done=lines.filter(i=>hifzBest(i)>=4).length;
  $('#hifzTitle').textContent='Map '+(viewWorld+1)+' · Line '+l.lines+(l.world<viewWorld?' · review from Map '+(l.world+1):'');
  $('#hifzScore').textContent='⭐ '+done+'/'+lines.length+' memorised';
- $('#hifzLines').innerHTML=lines.map(i=>{const b=hifzBest(i),locked=i>=profile.unlocked,head=i===worldStarts[lessons[i].world]&&viewWorld>0?`<span class="hifz-map-tag">Map ${lessons[i].world+1}</span>`:'';return `${head}<button class="hifz-line ${i===hifzLine?'active':''}" data-hline="${i}" ${locked?'disabled':''} role="tab" aria-selected="${i===hifzLine}">Line ${escapeHtml(lessons[i].lines)}<small>${locked?'🔒':b>=4?'⭐':b>0?'🌱'.repeat(1)+b+'/4':'○'}</small></button>`}).join('');
+ $('#hifzLines').innerHTML=lines.map(i=>{const b=hifzBest(i),locked=i>=profile.unlocked,head=i===worldStarts[lessons[i].world]&&viewWorld>0?`<button class="hifz-map-tag" data-hmap="${lessons[i].world}">Map ${lessons[i].world+1}</button>`:'';return `${head}<button class="hifz-line ${i===hifzLine?'active':''}" data-hline="${i}" ${locked?'disabled':''} role="tab" aria-selected="${i===hifzLine}">Line ${escapeHtml(lessons[i].lines)}<small>${locked?'🔒':b>=4?'⭐':b>0?'🌱'.repeat(1)+b+'/4':'○'}</small></button>`}).join('');
  $('#hifzLevels').innerHTML=HIFZ_LEVELS.map((x,i)=>`<button class="hifz-level ${hifzLevel===i+1?'active':''} ${hifzBest(hifzLine)>=i+1?'done':''}" data-hlevel="${i+1}"><span>${hifzBest(hifzLine)>=i+1?'✅':x[0]}</span>${i+1}. ${x[1]}</button>`).join('');
  let n=0;$('#hifzVerse').innerHTML=parts.map((ws,h)=>`<span class="hifz-half" data-hhalf="${h}" lang="ar">${ws.map(w=>hifzWordHtml(w,n++)).join(' ')}</span>`).join('');
  $('#hifzHint').textContent=HIFZ_LEVELS[hifzLevel-1][2];const act=$('#hifzLines .hifz-line.active');if(act)act.scrollIntoView({block:'nearest',inline:'center'});
@@ -1967,6 +1970,24 @@ hifzPassLevel=function(){
  if(was===4){const msg=$('#hifzMsg').textContent;hifzLevel=5;renderHifz();$('#hifzMsg').textContent=msg+' Now record yourself — level 5.';$('#hifzMsg').className='feedback good'}
 };
 $('#hifzPass').onclick=()=>hifzPassLevel();
+/* Memorise line tabs: each "Map N" label folds its lines. By default only
+   the map the student is on is open; tap a label to open or close it. */
+var hifzOpenMaps=new Set();
+const openHifzBeforeFold=openHifz;
+openHifz=function(){hifzOpenMaps=new Set([viewWorld]);return openHifzBeforeFold.apply(this,arguments)};
+const renderHifzBeforeFold=renderHifz;
+renderHifz=function(){
+ renderHifzBeforeFold.apply(this,arguments);
+ document.querySelectorAll('#hifzLines [data-hmap]').forEach(tag=>{
+  const w=+tag.dataset.hmap,open=hifzOpenMaps.has(w),ids=mapOnlyLines(w),stars=ids.filter(i=>hifzBest(i)>=4).length;
+  tag.classList.toggle('collapsed',!open);tag.setAttribute('aria-expanded',open);
+  tag.innerHTML=open?`Map ${w+1} ▾`:`Map ${w+1} ▸<small>⭐ ${stars}/${ids.length}</small>`;
+  tag.title=open?'Hide these lines':'Show these lines';
+  ids.forEach(i=>{const b=document.querySelector(`#hifzLines [data-hline="${i}"]`);if(b)b.classList.toggle('hidden',!open)});
+  tag.onclick=()=>{if(hifzOpenMaps.has(w))hifzOpenMaps.delete(w);else hifzOpenMaps.add(w);renderHifz();if(hifzOpenMaps.has(w))document.querySelector(`#hifzLines [data-hline="${worldStarts[w]}"]`)?.scrollIntoView({block:'nearest',inline:'start',behavior:'smooth'})};
+ });
+ const act=$('#hifzLines .hifz-line.active:not(.hidden)');if(act)act.scrollIntoView({block:'nearest',inline:'center'})
+};
 const showBeforeHifzRec=show;show=function(id){if(id!=='hifzScreen'&&hifzRecorder&&hifzRecorder.active())hifzRecorder.stop();return showBeforeHifzRec.apply(this,arguments)};
 /* Header button: "← Back to map" inside lessons, games and other screens;
    "← Games" on the map (and sign-in) screen, where it leaves the app. */
