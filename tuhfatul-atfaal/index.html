@@ -106,6 +106,7 @@
 .hrec-row{border:1.5px solid #eadcb8;border-radius:12px;padding:8px 10px;margin:8px 0;background:#fff}.hrec-row.new{border-color:#4f9d73;box-shadow:0 0 0 3px rgba(79,157,115,.18)}
 .hrec-row audio{width:100%;margin:4px 0}.hrec-meta{font:700 13px Nunito;color:#75684f}
 .hrec-actions{display:flex;flex-wrap:wrap;gap:6px}.hrec-actions button{padding:6px 12px;font-size:14px;min-height:0}.hrec-del{color:#b5452b;border-color:#e3b3a5}
+.hrec-fb{font:700 13.5px Nunito;color:#5b4a2c;margin:2px 0 4px}.hrec-fb.has{background:#eef9f1;border-left:4px solid #4f9d73;border-radius:8px;padding:6px 10px;font-weight:600}
 .hrec-empty,.hrec-note{font:14px Nunito;color:#75684f;margin:8px 0 0}
 .start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
 @keyframes startBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
@@ -1923,10 +1924,12 @@ function hrecShare(r,target){
 }
 function hrecMsg(t,cls){const m=$('#hrecMsg');if(m){m.textContent=t;m.className='feedback '+(cls||'')}}
 function hrecSend(r,btn){
- const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!uid||!talqeenOn())return;
+ const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!uid)return;
  btn.disabled=true;hrecMsg('Sending…');
- window.KidsCloud.saveRecording({studentUid:uid,from:'student',game:GAME_KEY,line:lineNumbers(lessons[r.line])[0],data:r.data,duration:r.dur,studentName:myName()}).then(()=>{r.sent=true;hrecPut(r);hrecMsg('✅ Sent! Your teacher will listen and reply.','good');happySound();markActiveToday();if(typeof loadMyRecordings==='function')loadMyRecordings();renderHifzRecList()}).catch(err=>{btn.disabled=false;hrecMsg((err&&err.message)||'Could not send. Check your connection.','bad')})
+ window.KidsCloud.saveRecording({studentUid:uid,from:'student',game:GAME_KEY,line:lineNumbers(lessons[r.line])[0],note:'🧠 From Memorise — recited from memory',data:r.data,duration:r.dur,studentName:myName()}).then(id=>{r.sent=true;r.cloudId=id;hrecCloud=null;hrecPut(r);hrecMsg('✅ Sent! Your teacher will listen and reply.','good');happySound();markActiveToday();if(typeof loadMyRecordings==='function')loadMyRecordings();renderHifzRecList()}).catch(err=>{btn.disabled=false;hrecMsg((err&&err.message)||'Could not send. Check your connection.','bad')})
 }
+var hrecCloud=null;
+function hrecFeedback(){const uid=window.KidsCloud&&window.KidsCloud.currentUid&&window.KidsCloud.currentUid();if(!uid||!window.KidsCloud.listRecordings)return Promise.resolve({});if(!hrecCloud)hrecCloud=window.KidsCloud.listRecordings(uid).then(list=>{const m={};list.forEach(r=>m[r.id]=r);setTimeout(()=>{hrecCloud=null},30000);return m}).catch(()=>{hrecCloud=null;return{}});return hrecCloud}
 function renderHifzRecPanel(){
  const panel=$('#hifzRecPanel');if(!panel)return;const on=hifzLevel===5;panel.classList.toggle('hidden',!on);if(!on)return;
  panel.innerHTML=`<div class="hrec-top"><button class="btn green" id="hrecStart">🎙️ Record myself</button><button class="btn hidden" id="hrecStop" style="background:#b5452b">■ Stop</button><span class="hrec-timer" id="hrecTimer"></span></div><p class="feedback" id="hrecMsg"></p><div id="hrecList"></div><p class="hrec-note">🔒 Your recordings stay on this device until you send, share or download them.</p>`;
@@ -1941,11 +1944,12 @@ function renderHifzRecPanel(){
 function renderHifzRecList(newId){
  const box=$('#hrecList');if(!box)return;const line=hifzLine;
  hrecLoad(line).then(list=>{if(line!==hifzLine||!$('#hrecList'))return;
-  const canSend=talqeenOn()&&window.KidsCloud&&window.KidsCloud.saveRecording;
-  box.innerHTML=list.length?`<h4 class="hrec-h">My recordings · Line ${escapeHtml(lessons[line].lines)}</h4>`+list.map((r,n)=>`<div class="hrec-row ${r.id===newId?'new':''}" data-hrec="${r.id}"><div class="hrec-meta">#${list.length-n} · ${new Date(r.at).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})} · ${fmtSec(r.dur||0)}${r.sent?' · 📤 sent to teacher':''}</div><audio controls preload="metadata" src="${r.data}"></audio><div class="hrec-actions">${canSend?`<button class="btn green" data-hact="send" ${r.sent?'disabled':''}>📤 ${r.sent?'Sent':'Send to my teacher'}</button>`:''}<button class="ghost" data-hact="wa">🟢 WhatsApp</button><button class="ghost" data-hact="mail">✉️ Email</button><button class="ghost" data-hact="dl">⬇️ Download</button><button class="ghost hrec-del" data-hact="del">🗑 Delete</button></div></div>`).join(''):'<p class="hrec-empty">No recordings yet for this line. Tap “Record myself”, say the line from memory, then listen.</p>';
+  const canSend=!!(cloudUser&&window.KidsCloud&&window.KidsCloud.saveRecording);
+  box.innerHTML=list.length?`<h4 class="hrec-h">My recordings · Line ${escapeHtml(lessons[line].lines)}</h4>`+list.map((r,n)=>`<div class="hrec-row ${r.id===newId?'new':''}" data-hrec="${r.id}"><div class="hrec-meta">#${list.length-n} · ${new Date(r.at).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})} · ${fmtSec(r.dur||0)}${r.sent?' · 📤 sent to teacher':''}</div>${r.cloudId?`<div class="hrec-fb" data-hfb="${r.cloudId}"></div>`:''}<audio controls preload="metadata" src="${r.data}"></audio><div class="hrec-actions">${canSend?`<button class="btn green" data-hact="send" ${r.sent?'disabled':''}>📤 ${r.sent?'Sent':'Send to my teacher'}</button>`:''}<button class="ghost" data-hact="wa">🟢 WhatsApp</button><button class="ghost" data-hact="mail">✉️ Email</button><button class="ghost" data-hact="dl">⬇️ Download</button><button class="ghost hrec-del" data-hact="del">🗑 Delete</button></div></div>`).join(''):'<p class="hrec-empty">No recordings yet for this line. Tap “Record myself”, say the line from memory, then listen.</p>';
   box.querySelectorAll('[data-hrec]').forEach(row=>{const r=list.find(x=>x.id===row.dataset.hrec);row.querySelectorAll('[data-hact]').forEach(b=>b.onclick=()=>{const a=b.dataset.hact;
    if(a==='send')hrecSend(r,b);else if(a==='wa')hrecShare(r,'wa');else if(a==='mail')hrecShare(r,'mail');else if(a==='dl'){const n=hrecDownload(r);hrecMsg(`⬇️ Downloaded “${n}”.`,'good')}
    else if(a==='del'&&confirm('Delete this recording? This cannot be undone.'))hrecDelete(r.id).then(()=>{hrecMsg('🗑 Recording deleted.');renderHifzRecList()})})});
+  if(list.some(r=>r.cloudId))hrecFeedback().then(map=>box.querySelectorAll('[data-hfb]').forEach(el=>{const c=map[el.dataset.hfb];if(!c){el.innerHTML='';return}el.innerHTML=c.feedback?`<b>💬 Teacher feedback${c.feedbackBy?' · '+escapeHtml(c.feedbackBy):''}:</b> ${escapeHtml(c.feedback)}`:c.heard?'✓ Your teacher listened':'⏳ Waiting for your teacher to listen';el.classList.toggle('has',!!c.feedback)}));
   if(newId){const a=box.querySelector('.hrec-row.new audio');if(a)a.scrollIntoView({block:'nearest',behavior:'smooth'})}
  })
 }

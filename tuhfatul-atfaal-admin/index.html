@@ -2430,7 +2430,7 @@ function renderRecList(){
     if(r.from === 'student' && !r.heard) audio.addEventListener('play', () => { window.KidsCloud.markRecording(r.id, { heard: true }).then(() => { r.heard = true; loadRecInbox(); }).catch(() => {}); }, { once: true });
     const fb = el.querySelector('.fb');
     if(fb){ const send = () => { const t = fb.querySelector('input').value.trim(); if(!t) return;
-      window.KidsCloud.markRecording(r.id, { heard: true, feedback: t, feedbackBy: $('certificate-teacher').dataset.me || '' }).then(() => { r.heard = true; r.feedback = t; toast('Feedback sent'); renderRecList(); loadRecInbox(); }).catch(err => alert(friendlyError(err))); };
+      window.KidsCloud.markRecording(r.id, { heard: true, feedback: t, feedbackBy: $('certificate-teacher').dataset.me || '' }).then(() => { r.heard = true; r.feedback = t; r.feedbackBy = $('certificate-teacher').dataset.me || ''; r.feedbackAt = new Date().toISOString(); toast('Feedback sent'); renderRecList(); loadRecInbox(); syncParentStaff(s); }).catch(err => alert(friendlyError(err))); };
       fb.querySelector('button').onclick = send; fb.querySelector('input').onkeydown = e => { if(e.key === 'Enter') send(); }; }
     el.querySelector('[data-del]').onclick = () => { if(!confirm('Delete this recording?')) return;
       window.KidsCloud.deleteRecording(r.id).then(() => { recCache[s.uid] = list.filter(x => x.id !== r.id); renderRecList(); loadRecInbox(); }).catch(err => alert(friendlyError(err))); };
@@ -2540,7 +2540,7 @@ function saveAtt(){
     attendanceCache = [rec].concat(attendanceCache.filter(a => a.id !== id)).sort((a, b) => String(b.date).localeCompare(String(a.date)));
     setMsg('att-msg', 'Saved ✓ ' + fmtDay(date)); toast('Attendance saved'); renderAttendance(); loadAttSession();
     // keep parent pages' attendance up to date
-    c.studentUids.forEach(u => { const s = studentsCache.find(x => x.uid === u); if(s && s.parentToken) window.KidsCloud.writeParentSummary(s.parentToken, s.uid, { staffData: { attendance: attendanceSummary(s.uid) } }).catch(() => {}); });
+    c.studentUids.forEach(u => { const s = studentsCache.find(x => x.uid === u); syncParentStaff(s); });
   }).catch(err => setMsg('att-msg', friendlyError(err), true)).finally(() => { $('att-save').disabled = false; });
 }
 
@@ -2553,6 +2553,13 @@ function renderLbPreview(c){
 
 /* ===================== parent link ===================== */
 const PARENT_URL = 'https://diinislaam.com/tuhfatul-atfaal/parent/?c=';
+/* staffData for the parent page: attendance plus the teacher's feedback on recitations. */
+function staffDataFor(s){
+  const have = recCache[s.uid] ? Promise.resolve(recCache[s.uid]) : window.KidsCloud.listRecordings(s.uid).then(l => (recCache[s.uid] = l)).catch(() => []);
+  return have.then(list => ({ attendance: attendanceSummary(s.uid),
+    recitations: (list || []).filter(r => r.from === 'student' && r.feedback).slice(0, 8).map(r => ({ line: r.line, feedback: r.feedback, by: r.feedbackBy || '', at: r.feedbackAt || r.createdAt || '', memorise: /Memorise/.test(r.note || '') })) }));
+}
+function syncParentStaff(s){ if(s && s.parentToken) staffDataFor(s).then(sd => window.KidsCloud.writeParentSummary(s.parentToken, s.uid, { staffData: sd })).catch(() => {}); }
 function parentDataFor(s, msgs){
   const d = reportData(s), x = d.x, p = d.p;
   return {
@@ -2574,7 +2581,7 @@ function openParentLink(s, reset){
   $('parent-body').innerHTML = '<p class="muted">Preparing the link…</p>';
   const tokenP = reset ? window.KidsCloud.adminResetParentToken(s.uid, s.parentToken) : window.KidsCloud.adminEnsureParentToken(s.uid, s.parentToken);
   tokenP.then(token => { s.parentToken = token;
-    return window.KidsCloud.getMessages(s.uid).catch(() => []).then(msgs => window.KidsCloud.writeParentSummary(token, s.uid, { data: parentDataFor(s, msgs), staffData: { attendance: attendanceSummary(s.uid) } })).then(() => token);
+    return Promise.all([window.KidsCloud.getMessages(s.uid).catch(() => []), staffDataFor(s)]).then(([msgs, sd]) => window.KidsCloud.writeParentSummary(token, s.uid, { data: parentDataFor(s, msgs), staffData: sd })).then(() => token);
   }).then(token => {
     const url = PARENT_URL + token, text = 'Assalāmu ʿalaykum. You can follow ' + (s.displayName || s.username) + '’s Tajweed progress here (private link, please don’t share): ' + url;
     $('parent-body').innerHTML = '<div class="parent-link"><input readonly value="' + escapeHtml(url) + '" id="parent-url"><button class="btn primary small" id="parent-copy">📋 Copy</button></div>' +
