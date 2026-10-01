@@ -386,6 +386,7 @@
   .att-btn.on.present{background:#e3f3e5;border-color:#2f6f55}.att-btn.on.late{background:#fff1c9;border-color:#c9a653}.att-btn.on.absent{background:#ffe3d6;border-color:#b5452b}.att-btn.on.excused{background:#eef6ff;border-color:#3b8fc4}
   .lb-box{background:#fffbef;border:1.5px dashed #d9b85c;border-radius:14px;padding:10px 12px;margin:10px 0}
   .parent-link{display:flex;gap:6px;margin:10px 0}.parent-link input{flex:1;min-width:0;font:13px ui-monospace,monospace;padding:8px;border:1.5px solid #d9c9a3;border-radius:10px}
+.guide-full-link{display:inline-block;margin-top:10px;background:linear-gradient(160deg,#14533e,#2f6f55);color:#fff8e1;border:2px solid #e8cf86;border-radius:999px;padding:8px 16px;font-weight:800;text-decoration:none;box-shadow:0 4px 10px rgba(20,60,40,.2)}.guide-full-link:hover{filter:brightness(1.1)}
 </style>
 </head>
 <body>
@@ -881,7 +882,7 @@
     <!-- GUIDE -->
     <div class="tab-panel hidden" data-panel="guide">
       <div class="guide-hero">
-        <div><h2>📘 Teacher guide</h2><p>Everything you can do in the Teacher Portal, step by step. Tap <b>Go there →</b> to jump to that tool.</p></div>
+        <div><h2>📘 Teacher guide</h2><p>Everything you can do in the Teacher Portal, step by step. Tap <b>Go there →</b> to jump to that tool.</p><a class="guide-full-link" href="/tuhfatul-atfaal-admin/guide/" target="_blank" rel="noopener">📖 Open the illustrated Teacher Guide — with pictures, Qur’an &amp; hadith →</a></div>
         <div class="guide-toc" id="guide-toc"></div>
       </div>
 
@@ -985,9 +986,10 @@
       </section>
 
       <section class="guide-sec" id="g-talqeen">
-        <h3><span class="gi" style="--c:#2e6b58">🎙️</span> Talqeen recordings (optional, per student)</h3>
+        <h3><span class="gi" style="--c:#2e6b58">🎙️</span> Recitations &amp; Talqeen recordings</h3>
         <ul class="guide-list">
-          <li>Off for every student by default. Open a student → <i>🎙️ Talqeen</i> → tick <b>Talqeen on for this student</b>.</li>
+          <li><b>From Memorise:</b> every student can record a line in <i>Memorise → 5. Record &amp; listen</i> and send it to you. It arrives in <b>Overview → New recitations</b> and in the student’s <i>🎙️ Talqeen</i> tab. Play it, type feedback and Send — the child sees it under their recording, and parents see it in the parent report.</li>
+          <li><b>Talqeen (optional):</b> off by default. Open a student → <i>🎙️ Talqeen</i> → tick <b>Talqeen on for this student</b> to record lines for them to copy.</li>
           <li>Record a line (up to 1 minute) → listen → Send. The student hears it under the map and can record themselves back; reply with feedback.</li>
         </ul>
       </section>
@@ -2484,7 +2486,7 @@ let teacherRec = null, pendingRec = null, recCache = {};
 function syncTalqeenSwitch(){
   const s = activeStudent; if(!s) return; const on = !!s.talqeenEnabled;
   $('rec-enabled').checked = on; $('rec-card').classList.toggle('hidden', !on);
-  $('rec-enabled-note').textContent = on ? (s.displayName || s.username) + ' sees a Talqeen block under the map: your recordings, and a button to record themselves and send it to you.' : 'Hidden for this student (the default). Turn it on to record lines for them and let them send their recitation to you.';
+  $('rec-enabled-note').textContent = on ? (s.displayName || s.username) + ' sees a Talqeen block under the map: your recordings, and a button to record themselves and send it to you.' : 'Talqeen is off (the default) — recordings the student sends from Memorise still arrive below. Turn it on to record lines for them to copy.';
 }
 function renderTalqeen(){
   const s = activeStudent; if(!s) return;
