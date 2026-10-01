@@ -96,6 +96,7 @@
 .exit-door:focus{outline:none}
 .quiz-ayah{display:block;margin:12px auto 2px;font:700 30px/1.9 Amiri,serif;color:#1c3a2e}
 .quiz-ayah-ref{display:block;font-size:14px;color:#8a6a2c}
+.hifz-map-tag{flex:0 0 auto;align-self:center;writing-mode:vertical-rl;transform:rotate(180deg);font:800 11px Nunito;letter-spacing:.06em;text-transform:uppercase;color:#8a6a2c;border-left:2px solid #e5d3a4;padding:4px 2px;margin-left:6px}
 .start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
 @keyframes startBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .exit-bubble{cursor:pointer;animation:bubbleIn .35s ease-out}
@@ -1309,11 +1310,13 @@ const HIFZ_LEVELS=[['👀','Read along','Listen and read along with every word.'
 let hifzLine=0,hifzLevel=1,hifzRepeat=3,hifzPlaying=false;
 function hifzMap(){if(!profile.hifz||typeof profile.hifz!=='object')profile.hifz={};return profile.hifz}
 function hifzBest(i){return Number(hifzMap()[i]&&hifzMap()[i].level)||0}
-function hifzWorldLines(w){return worlds[w].lessons.map((_,i)=>worldStarts[w]+i)}
+function mapOnlyLines(w){return worlds[w].lessons.map((_,i)=>worldStarts[w]+i)}
+/* Memorise is cumulative: Map N lists every line from Map 1 up to Map N. */
+function hifzWorldLines(w){return Array.from({length:worldStarts[w]+worlds[w].lessons.length},(_,i)=>i)}
 function openHifz(){
  const lines=hifzWorldLines(viewWorld),open=lines.filter(i=>i<profile.unlocked);
  if(!open.length){alert('Start the first lesson of this map, then come back to memorise it.');return}
- hifzLine=open.find(i=>hifzBest(i)<4)??open[open.length-1];hifzLevel=Math.min(4,hifzBest(hifzLine)+1);
+ hifzLine=open.find(i=>lessons[i].world===viewWorld&&hifzBest(i)<4)??open.find(i=>hifzBest(i)<4)??open[open.length-1];hifzLevel=Math.min(4,hifzBest(hifzLine)+1);
  renderHifz();show('hifzScreen');
 }
 function firstLetter(w){const m=String(w).match(/^[ء-يٱ-ۓ][ً-ٰٟ]*/);return m?m[0]:String(w).slice(0,1)}
@@ -1324,12 +1327,12 @@ function hifzWordHtml(word,idx){
 }
 function renderHifz(){
  const l=lessons[hifzLine],parts=poemParts(l.matn,l.lines),lines=hifzWorldLines(viewWorld),done=lines.filter(i=>hifzBest(i)>=4).length;
- $('#hifzTitle').textContent='Map '+(viewWorld+1)+' · Line '+l.lines;
+ $('#hifzTitle').textContent='Map '+(viewWorld+1)+' · Line '+l.lines+(l.world<viewWorld?' · review from Map '+(l.world+1):'');
  $('#hifzScore').textContent='⭐ '+done+'/'+lines.length+' memorised';
- $('#hifzLines').innerHTML=lines.map(i=>{const b=hifzBest(i),locked=i>=profile.unlocked;return `<button class="hifz-line ${i===hifzLine?'active':''}" data-hline="${i}" ${locked?'disabled':''} role="tab" aria-selected="${i===hifzLine}">Line ${escapeHtml(lessons[i].lines)}<small>${locked?'🔒':b>=4?'⭐':b>0?'🌱'.repeat(1)+b+'/4':'○'}</small></button>`}).join('');
+ $('#hifzLines').innerHTML=lines.map(i=>{const b=hifzBest(i),locked=i>=profile.unlocked,head=i===worldStarts[lessons[i].world]&&viewWorld>0?`<span class="hifz-map-tag">Map ${lessons[i].world+1}</span>`:'';return `${head}<button class="hifz-line ${i===hifzLine?'active':''}" data-hline="${i}" ${locked?'disabled':''} role="tab" aria-selected="${i===hifzLine}">Line ${escapeHtml(lessons[i].lines)}<small>${locked?'🔒':b>=4?'⭐':b>0?'🌱'.repeat(1)+b+'/4':'○'}</small></button>`}).join('');
  $('#hifzLevels').innerHTML=HIFZ_LEVELS.map((x,i)=>`<button class="hifz-level ${hifzLevel===i+1?'active':''} ${hifzBest(hifzLine)>=i+1?'done':''}" data-hlevel="${i+1}"><span>${hifzBest(hifzLine)>=i+1?'✅':x[0]}</span>${i+1}. ${x[1]}</button>`).join('');
  let n=0;$('#hifzVerse').innerHTML=parts.map((ws,h)=>`<span class="hifz-half" data-hhalf="${h}" lang="ar">${ws.map(w=>hifzWordHtml(w,n++)).join(' ')}</span>`).join('');
- $('#hifzHint').textContent=HIFZ_LEVELS[hifzLevel-1][2];
+ $('#hifzHint').textContent=HIFZ_LEVELS[hifzLevel-1][2];const act=$('#hifzLines .hifz-line.active');if(act)act.scrollIntoView({block:'nearest',inline:'center'});
  $('#hifzRepeat').innerHTML=[1,3,5,10].map(r=>`<button class="hifz-chip ${r===hifzRepeat?'active':''}" data-hrep="${r}">${r}×</button>`).join('');
  $('#hifzPass').textContent=hifzLevel===4?'✓ I said the whole line from memory':'✓ I can say it at this level';
  $('#hifzMsg').textContent='';
@@ -1490,12 +1493,12 @@ function renderTalqeenBox(){
  $('#talRecord').onclick=()=>openRecScreen();
 }
 function openRecScreen(lessonIdx){
- const lines=hifzWorldLines(viewWorld).filter(i=>i<profile.unlocked);
+ const lines=mapOnlyLines(viewWorld).filter(i=>i<profile.unlocked);
  recLine=lessonIdx!=null?lessonIdx:(lines.length?lines[lines.length-1]:0);
  viewWorld=lessons[recLine].world;pendingRec=null;renderRecScreen();show('recScreen');
 }
 function renderRecScreen(){
- const l=lessons[recLine],parts=poemParts(l.matn,l.lines),lines=hifzWorldLines(viewWorld);
+ const l=lessons[recLine],parts=poemParts(l.matn,l.lines),lines=mapOnlyLines(viewWorld);
  $('#recTitle').textContent='Map '+(viewWorld+1)+' · Line '+l.lines;
  $('#recLines').innerHTML=lines.map(i=>{const locked=i>=profile.unlocked,sent=myRecs.some(r=>r.from==='student'&&r.line===lineNumbers(lessons[i])[0]);return `<button class="hifz-line ${i===recLine?'active':''}" data-rline="${i}" ${locked?'disabled':''}>Line ${escapeHtml(lessons[i].lines)}<small>${locked?'🔒':sent?'📤':'○'}</small></button>`}).join('');
  $('#recVerse').innerHTML=parts.map(ws=>`<span class="hifz-half" lang="ar">${ws.map(escapeHtml).join(' ')}</span>`).join('');
