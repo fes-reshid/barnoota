@@ -94,6 +94,8 @@
 @keyframes doorGlow{0%,100%{opacity:.25}50%{opacity:.75}}
 .exit-door:hover .door-frame,.exit-door:focus .door-frame{stroke:#fff;stroke-width:3}
 .exit-door:focus{outline:none}
+.quiz-ayah{display:block;margin:12px auto 2px;font:700 30px/1.9 Amiri,serif;color:#1c3a2e}
+.quiz-ayah-ref{display:block;font-size:14px;color:#8a6a2c}
 .start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
 @keyframes startBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .exit-bubble{cursor:pointer;animation:bubbleIn .35s ease-out}
@@ -492,7 +494,12 @@ function buildMapQuiz(worldIndex){
    {q:'What is Tanween?',choices:['A doubled vowel ending that makes an “n” sound','A long Madd sound','A letter with Shaddah','A silent Meem'],answer:0},
    {q:'How many Izhaar letters are there?',choices:['Four','Five','Six','Fifteen'],answer:2},
    {q:'Which one is NOT an Izhaar letter?',choices:['ء','ه','ب','غ'],answer:2}
-  )
+  );
+  const ayah=(t,ref)=>`<span class="quiz-ayah" dir="rtl" lang="ar">${t}</span><small class="quiz-ayah-ref">${ref}</small>`;
+  questions[5]={q:`Read this ayah from Juz ʿAmma. Which word has Izhaar with the letter Haa (ه)?${ayah('فَأَنتَ عَنْهُ تَلَهَّىٰ','Sūrah ʿAbasa 80:10')}`,choices:['فَأَنتَ','عَنْهُ','تَلَهَّىٰ'],answer:1,hint:'Look for a Noon Saakinah followed by ه — the Noon is read clearly.',source:'In عَنْهُ the Noon Saakinah meets ه, a throat letter, so it is Izhaar. In فَأَنتَ the Noon meets ت, which is Ikhfaa.'};
+  questions[6]={q:'What are the two Muhmalatān (مُهْمَلَتَانِ) letters?',choices:['ع and ح — ʿAyn and Ḥaa (the letters without dots)','غ and خ — Ghayn and Khaa','ء and ه — Hamzah and Haa'],answer:0,hint:'Muhmalah means “without dots”. Which two throat letters have no dots?',source:'هَمْزٌ فَهَاءٌ ثُمَّ عَيْنٌ حَاءُ مُهْمَلَتَانِ — the two letters without dots are ع and ح.'};
+  questions[8]={q:`Read this ayah from Juz ʿAmma. Which part has Izhaar with the letter Khaa (خ)?${ayah('الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ','Sūrah Quraysh 106:4')}`,choices:['مِّن جُوعٍ','مِّنْ خَوْفٍ','أَطْعَمَهُم'],answer:1,hint:'Find the Noon Saakinah that is followed by خ.',source:'In مِّنْ خَوْفٍ the Noon Saakinah meets خ, a throat letter, so it is Izhaar. In مِّن جُوعٍ the Noon meets ج, which is Ikhfaa.'};
+  questions[9]={q:'Which of the following are the Izhaar letters?',choices:['ي ر م ل و ن','ء ه ع ح غ خ','ب'],answer:1,hint:'The Izhaar letters are the six throat letters.',source:'The six Izhaar (throat) letters are ء ه ع ح غ خ.'};
  }
  return questions
 }
@@ -1745,7 +1752,7 @@ function showMapLineMatch(){
  $('#mapQuizActions').innerHTML='<button class="ghost" id="mapQuizExit">Exit to Map</button>';$('#mapQuizExit').onclick=()=>{renderMap();show('mapScreen')};
  const check=(term,target)=>{if(term==null||target.classList.contains('correct'))return;const card=document.querySelector(`[data-mq="${term}"]`);if(!card)return;
   if(+target.dataset.mqt===term){target.classList.add('correct');card.classList.remove('selected');card.classList.add('matched');card.draggable=false;target.lastElementChild.replaceWith(card);mqSelected=null;happySound();$('#mqResult').textContent='Correct match!';$('#mqResult').className='vocab-result good';
-   if(document.querySelectorAll('#mqTargets .vocab-card.matched').length===items.length){$('#mqResult').textContent=`🎉 All ${items.length} lines matched${mapMatchMistakes?` (${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''})`:' with no mistakes'}!`;const ok=mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES;if(ok)mapQuizCorrect++;mapMatchDone=true;const sc=document.querySelector('#mapQuizBody .map-quiz-score');if(sc)sc.innerHTML=`🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}`;$('#mqResult').textContent+=ok?' +1 point ⭐':` Too many mistakes for the point this time (${MAP_MATCH_MAX_MISTAKES} or fewer needed).`;$('#mapQuizActions').innerHTML='<button class="btn green" id="mqResultBtn">See My Result 🏆</button>';$('#mqResultBtn').onclick=()=>finishMapQuiz()}}
+   if(document.querySelectorAll('#mqTargets .vocab-card.matched').length===items.length){$('#mqResult').textContent=`🎉 All ${items.length} lines matched${mapMatchMistakes?` (${mapMatchMistakes} wrong tr${mapMatchMistakes>1?'ies':'y'} on the way)`:' with no wrong tries'}!`;const ok=mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES;if(ok)mapQuizCorrect++;mapMatchDone=true;const sc=document.querySelector('#mapQuizBody .map-quiz-score');if(sc)sc.innerHTML=`🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}`;$('#mqResult').textContent+=ok?' +1 point ⭐':` Too many mistakes for the point this time (${MAP_MATCH_MAX_MISTAKES} or fewer needed).`;$('#mapQuizActions').innerHTML='<button class="btn green" id="mqResultBtn">See My Result 🏆</button>';$('#mqResultBtn').onclick=()=>finishMapQuiz()}}
   else{mapMatchMistakes++;target.classList.add('wrong-drop');setTimeout(()=>target.classList.remove('wrong-drop'),600);tryAgainSound();$('#mqResult').textContent='Not that one — listen to the line again and try another meaning.';$('#mqResult').className='vocab-result bad'}};
  document.querySelectorAll('[data-mq]').forEach(card=>{
   card.addEventListener('dragstart',e=>{mqSelected=+card.dataset.mq;e.dataTransfer.setData('text/plain',card.dataset.mq);card.classList.add('selected');sayArabic(card.dataset.full)});
@@ -1764,7 +1771,7 @@ const finishMapQuizBeforeLineMatch=finishMapQuiz;
 finishMapQuiz=function(){
  const played=mapMatchDone;mapMatchDone=false;finishMapQuizBeforeLineMatch.apply(this,arguments);if(!played)return;
  const rec=profile.mapQuizScores[viewWorld];if(rec){rec.lineMatch={lines:worlds[viewWorld].lessons.length,mistakes:mapMatchMistakes,at:new Date().toISOString()};save()}
- const res=document.querySelector('.map-quiz-result');if(res)res.insertAdjacentHTML('beforebegin',`<p class="map-quiz-match">🧩 Question ${MAP_QUIZ_TOTAL} · Line match: ${mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES?'+1 point':'no point'}${mapMatchMistakes?` · ${mapMatchMistakes} mistake${mapMatchMistakes>1?'s':''}`:' · no mistakes ✨'}</p>`);
+ const res=document.querySelector('.map-quiz-result');if(res)res.insertAdjacentHTML('beforebegin',`<p class="map-quiz-match">🧩 Question ${MAP_QUIZ_TOTAL} · Line match: ${mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES?'✓ correct (+1 point)':'✗ no point'}${mapMatchMistakes?`<br><small>${mapMatchMistakes} wrong tr${mapMatchMistakes>1?'ies':'y'} before every line was matched${mapMatchMistakes<=MAP_MATCH_MAX_MISTAKES?` — up to ${MAP_MATCH_MAX_MISTAKES} still earns the point`:` — ${MAP_MATCH_MAX_MISTAKES} or fewer earns the point`}</small>`:' · no wrong tries ✨'}</p>`);
 };
 /* Map exit door: once the Map Challenge is passed, the avatar stands at the
    end of the road and points to a door. Tapping the door before the teacher
