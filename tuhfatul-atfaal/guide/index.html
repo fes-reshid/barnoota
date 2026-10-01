@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Guide · Tajweed Quest</title>
+<meta name="description" content="How to use Tajweed Quest — Tuhfatul Atfaal: join your class, walk the maps, memorise and recite to your teacher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Marcellus&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#2f6f55;--dark:#14533e;--gold:#c9a653;--gold2:#e8cf86;--ink:#3b2f22;--muted:#75684f;--line:#eadcb8}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#efe7d2;color:var(--ink);font:16.5px/1.6 Nunito,system-ui,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:0 16px}
+  header{position:relative;overflow:hidden;background:linear-gradient(90deg,transparent,rgba(9,46,34,.72) 18%,rgba(9,46,34,.72) 82%,transparent),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke-linejoin='miter' stroke-linecap='square'%3E%3Cg stroke='%23d4ad57' stroke-opacity='.5' stroke-width='6'%3E%3Cpath d='M45.00 0.00L22.50 9.32L31.82 31.82M31.82 31.82L9.32 22.50L0.00 45.00M0.00 45.00L-9.32 22.50L-31.82 31.82M-31.82 31.82L-22.50 9.32L-45.00 0.00M-45.00 0.00L-22.50 -9.32L-31.82 -31.82M-31.82 -31.82L-9.32 -22.50L-0.00 -45.00M-0.00 -45.00L9.32 -22.50L31.82 -31.82M31.82 -31.82L22.50 -9.32L45.00 0.00M135.00 0.00L112.50 9.32L121.82 31.82M121.82 31.82L99.32 22.50L90.00 45.00M90.00 45.00L80.68 22.50L58.18 31.82M58.18 31.82L67.50 9.32L45.00 0.00M45.00 0.00L67.50 -9.32L58.18 -31.82M58.18 -31.82L80.68 -22.50L90.00 -45.00M90.00 -45.00L99.32 -22.50L121.82 -31.82M121.82 -31.82L112.50 -9.32L135.00 0.00M45.00 90.00L22.50 99.32L31.82 121.82M31.82 121.82L9.32 112.50L0.00 135.00M0.00 135.00L-9.32 112.50L-31.82 121.82M-31.82 121.82L-22.50 99.32L-45.00 90.00M-45.00 90.00L-22.50 80.68L-31.82 58.18M-31.82 58.18L-9.32 67.50L-0.00 45.00M-0.00 45.00L9.32 67.50L31.82 58.18M31.82 58.18L22.50 80.68L45.00 90.00M135.00 90.00L112.50 99.32L121.82 121.82M121.82 121.82L99.32 112.50L90.00 135.00M90.00 135.00L80.68 112.50L58.18 121.82M58.18 121.82L67.50 99.32L45.00 90.00M45.00 90.00L67.50 80.68L58.18 58.18M58.18 58.18L80.68 67.50L90.00 45.00M90.00 45.00L99.32 67.50L121.82 58.18M121.82 58.18L112.50 80.68L135.00 90.00M58.18 58.18L45.00 52.72L31.82 58.18M31.82 58.18L37.28 45.00L31.82 31.82M31.82 31.82L45.00 37.28L58.18 31.82M58.18 31.82L52.72 45.00L58.18 58.18'/%3E%3C/g%3E%3Cg stroke='%23124a37' stroke-width='2.4'%3E%3Cpath d='M45.00 0.00L22.50 9.32L31.82 31.82M31.82 31.82L9.32 22.50L0.00 45.00M0.00 45.00L-9.32 22.50L-31.82 31.82M-31.82 31.82L-22.50 9.32L-45.00 0.00M-45.00 0.00L-22.50 -9.32L-31.82 -31.82M-31.82 -31.82L-9.32 -22.50L-0.00 -45.00M-0.00 -45.00L9.32 -22.50L31.82 -31.82M31.82 -31.82L22.50 -9.32L45.00 0.00M135.00 0.00L112.50 9.32L121.82 31.82M121.82 31.82L99.32 22.50L90.00 45.00M90.00 45.00L80.68 22.50L58.18 31.82M58.18 31.82L67.50 9.32L45.00 0.00M45.00 0.00L67.50 -9.32L58.18 -31.82M58.18 -31.82L80.68 -22.50L90.00 -45.00M90.00 -45.00L99.32 -22.50L121.82 -31.82M121.82 -31.82L112.50 -9.32L135.00 0.00M45.00 90.00L22.50 99.32L31.82 121.82M31.82 121.82L9.32 112.50L0.00 135.00M0.00 135.00L-9.32 112.50L-31.82 121.82M-31.82 121.82L-22.50 99.32L-45.00 90.00M-45.00 90.00L-22.50 80.68L-31.82 58.18M-31.82 58.18L-9.32 67.50L-0.00 45.00M-0.00 45.00L9.32 67.50L31.82 58.18M31.82 58.18L22.50 80.68L45.00 90.00M135.00 90.00L112.50 99.32L121.82 121.82M121.82 121.82L99.32 112.50L90.00 135.00M90.00 135.00L80.68 112.50L58.18 121.82M58.18 121.82L67.50 99.32L45.00 90.00M45.00 90.00L67.50 80.68L58.18 58.18M58.18 58.18L80.68 67.50L90.00 45.00M90.00 45.00L99.32 67.50L121.82 58.18M121.82 58.18L112.50 80.68L135.00 90.00M58.18 58.18L45.00 52.72L31.82 58.18M31.82 58.18L37.28 45.00L31.82 31.82M31.82 31.82L45.00 37.28L58.18 31.82M58.18 31.82L52.72 45.00L58.18 58.18'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),radial-gradient(ellipse at 50% 0,rgba(255,236,170,.16),transparent 60%),linear-gradient(160deg,#0c3b2c,#14533e 55%,#0f4433);color:#fff;padding:24px 0 66px;border-bottom:4px solid var(--gold);box-shadow:inset 0 -10px 0 -6px #e8cf86}
+  header::after{content:'';position:absolute;inset:10px;border:1.5px solid rgba(232,207,134,.45);border-radius:14px;pointer-events:none}
+  header .brand{font:13px Marcellus;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+  header h1{margin:6px 0 10px;font:34px Marcellus;color:#f6e4a8;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+  header .sub{display:flex;flex-wrap:wrap;gap:8px}
+  header .chip{color:#fff8e1;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+  .ar{font:700 24px Amiri;float:right;color:var(--gold2)}
+  .back{position:relative;z-index:2;display:inline-block;margin-bottom:10px;color:#fff8e1;text-decoration:none;font-weight:800;font-size:14px;border:1px solid rgba(232,207,134,.6);border-radius:999px;padding:4px 14px;background:rgba(0,0,0,.18)}
+  .back:hover{background:rgba(0,0,0,.3)}
+  main{padding:0 0 40px}
+  .tiles{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:-44px 0 16px}
+  .tile{background:#fff;border:2px solid var(--line);border-top:4px solid var(--gold);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(40,30,10,.08)}
+  .tile b{display:block;font:800 26px Nunito;color:var(--green)}
+  .tile span{font-size:13px;color:var(--muted)}
+  .banner{position:relative;margin:0 0 16px;padding:3px;background:linear-gradient(90deg,#b8913e,#f3dc8e 50%,#b8913e);border-radius:22px;box-shadow:0 8px 18px rgba(20,40,30,.22)}
+  .banner-in{position:relative;border-radius:19px;background:radial-gradient(ellipse 62% 70% at 50% 50%,rgba(9,46,34,.88),rgba(9,46,34,.55) 70%,transparent),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke-linejoin='miter' stroke-linecap='square'%3E%3Cg stroke='%23d4ad57' stroke-opacity='.5' stroke-width='6'%3E%3Cpath d='M45.00 0.00L22.50 9.32L31.82 31.82M31.82 31.82L9.32 22.50L0.00 45.00M0.00 45.00L-9.32 22.50L-31.82 31.82M-31.82 31.82L-22.50 9.32L-45.00 0.00M-45.00 0.00L-22.50 -9.32L-31.82 -31.82M-31.82 -31.82L-9.32 -22.50L-0.00 -45.00M-0.00 -45.00L9.32 -22.50L31.82 -31.82M31.82 -31.82L22.50 -9.32L45.00 0.00M135.00 0.00L112.50 9.32L121.82 31.82M121.82 31.82L99.32 22.50L90.00 45.00M90.00 45.00L80.68 22.50L58.18 31.82M58.18 31.82L67.50 9.32L45.00 0.00M45.00 0.00L67.50 -9.32L58.18 -31.82M58.18 -31.82L80.68 -22.50L90.00 -45.00M90.00 -45.00L99.32 -22.50L121.82 -31.82M121.82 -31.82L112.50 -9.32L135.00 0.00M45.00 90.00L22.50 99.32L31.82 121.82M31.82 121.82L9.32 112.50L0.00 135.00M0.00 135.00L-9.32 112.50L-31.82 121.82M-31.82 121.82L-22.50 99.32L-45.00 90.00M-45.00 90.00L-22.50 80.68L-31.82 58.18M-31.82 58.18L-9.32 67.50L-0.00 45.00M-0.00 45.00L9.32 67.50L31.82 58.18M31.82 58.18L22.50 80.68L45.00 90.00M135.00 90.00L112.50 99.32L121.82 121.82M121.82 121.82L99.32 112.50L90.00 135.00M90.00 135.00L80.68 112.50L58.18 121.82M58.18 121.82L67.50 99.32L45.00 90.00M45.00 90.00L67.50 80.68L58.18 58.18M58.18 58.18L80.68 67.50L90.00 45.00M90.00 45.00L99.32 67.50L121.82 58.18M121.82 58.18L112.50 80.68L135.00 90.00M58.18 58.18L45.00 52.72L31.82 58.18M31.82 58.18L37.28 45.00L31.82 31.82M31.82 31.82L45.00 37.28L58.18 31.82M58.18 31.82L52.72 45.00L58.18 58.18'/%3E%3C/g%3E%3Cg stroke='%23124a37' stroke-width='2.4'%3E%3Cpath d='M45.00 0.00L22.50 9.32L31.82 31.82M31.82 31.82L9.32 22.50L0.00 45.00M0.00 45.00L-9.32 22.50L-31.82 31.82M-31.82 31.82L-22.50 9.32L-45.00 0.00M-45.00 0.00L-22.50 -9.32L-31.82 -31.82M-31.82 -31.82L-9.32 -22.50L-0.00 -45.00M-0.00 -45.00L9.32 -22.50L31.82 -31.82M31.82 -31.82L22.50 -9.32L45.00 0.00M135.00 0.00L112.50 9.32L121.82 31.82M121.82 31.82L99.32 22.50L90.00 45.00M90.00 45.00L80.68 22.50L58.18 31.82M58.18 31.82L67.50 9.32L45.00 0.00M45.00 0.00L67.50 -9.32L58.18 -31.82M58.18 -31.82L80.68 -22.50L90.00 -45.00M90.00 -45.00L99.32 -22.50L121.82 -31.82M121.82 -31.82L112.50 -9.32L135.00 0.00M45.00 90.00L22.50 99.32L31.82 121.82M31.82 121.82L9.32 112.50L0.00 135.00M0.00 135.00L-9.32 112.50L-31.82 121.82M-31.82 121.82L-22.50 99.32L-45.00 90.00M-45.00 90.00L-22.50 80.68L-31.82 58.18M-31.82 58.18L-9.32 67.50L-0.00 45.00M-0.00 45.00L9.32 67.50L31.82 58.18M31.82 58.18L22.50 80.68L45.00 90.00M135.00 90.00L112.50 99.32L121.82 121.82M121.82 121.82L99.32 112.50L90.00 135.00M90.00 135.00L80.68 112.50L58.18 121.82M58.18 121.82L67.50 99.32L45.00 90.00M45.00 90.00L67.50 80.68L58.18 58.18M58.18 58.18L80.68 67.50L90.00 45.00M90.00 45.00L99.32 67.50L121.82 58.18M121.82 58.18L112.50 80.68L135.00 90.00M58.18 58.18L45.00 52.72L31.82 58.18M31.82 58.18L37.28 45.00L31.82 31.82M31.82 31.82L45.00 37.28L58.18 31.82M58.18 31.82L52.72 45.00L58.18 58.18'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),radial-gradient(ellipse at 50% 0,rgba(255,236,170,.18),transparent 65%),linear-gradient(160deg,#0c3b2c,#14533e 55%,#0f4433);color:#fff8e1;text-align:center;padding:22px 34px 20px}
+  .banner-in::before{content:'';position:absolute;inset:7px;border:1.5px solid rgba(232,207,134,.5);border-radius:14px;pointer-events:none}
+  .banner h3{margin:0 0 6px;font:800 19px Nunito;letter-spacing:.08em;text-transform:uppercase;color:#f3dc8e}
+  .banner .ar-q{font:700 27px/1.9 Amiri;color:#f6e4a8;direction:rtl;margin:4px 0}
+  .banner .en{font-style:italic;max-width:660px;margin:0 auto}
+  .banner .ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gold2);border-top:1px solid rgba(232,207,134,.5);padding-top:4px}
+  .banner .orn{color:var(--gold2);letter-spacing:.4em;font-size:14px}
+  .banner .cheer{margin:10px auto 0;max-width:620px;font-size:15.5px}
+  .toc{background:#fff;border:2px solid var(--line);border-radius:18px;padding:14px 16px;margin:0 0 16px}
+  .toc h2{margin:0 0 8px}
+  .toc ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
+  .toc a{display:flex;gap:8px;align-items:center;color:var(--dark);text-decoration:none;font-weight:800;padding:6px 8px;border-radius:10px}
+  .toc a:hover{background:#f6efdc}
+  .toc .n{flex:0 0 26px;height:26px;border-radius:50%;background:var(--dark);color:#f3dc8e;display:grid;place-items:center;font-size:13px}
+  h2{font:22px Marcellus;color:var(--dark);margin:0 0 8px}
+  .step{background:#fff;border:2px solid var(--line);border-radius:18px;padding:16px 18px;margin:0 0 16px;scroll-margin-top:12px}
+  .step-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .num{flex:0 0 44px;height:44px;border-radius:50%;background:linear-gradient(160deg,#0c3b2c,#2f6f55);color:#f6e4a8;border:3px solid var(--gold2);display:grid;place-items:center;font:800 19px Nunito}
+  .step-head h2{margin:0}
+  .step p{margin:6px 0}
+  .step ul,.step ol{margin:6px 0 8px;padding-left:22px}
+  .step li{margin:3px 0}
+  figure{margin:12px 0 4px}
+  figure a{display:block;border:3px solid var(--gold2);border-radius:14px;overflow:hidden;box-shadow:0 6px 16px rgba(40,30,10,.12);background:#f6efdc}
+  figure img{display:block;width:100%;height:auto}
+  figcaption{font-size:13.5px;color:var(--muted);text-align:center;margin-top:6px}
+  .pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tip{background:#f4fbf6;border-left:5px solid #4f9d73;border-radius:10px;padding:8px 12px;margin:10px 0 0}
+  .warn{background:#fff7e6;border-left:5px solid var(--gold);border-radius:10px;padding:8px 12px;margin:10px 0 0}
+  .levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:8px 0}
+  .levels div{background:#fffaf0;border:1.5px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;font-size:13.5px;font-weight:700}
+  .levels span{display:block;font-size:22px}
+  kbd{background:#f6efdc;border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:0 6px;font:800 14px Nunito}
+  .cta{text-align:center;margin:20px 0 6px}
+  .btn{display:inline-block;background:linear-gradient(160deg,#14533e,#2f6f55);color:#fff8e1;text-decoration:none;font:800 18px Nunito;border-radius:999px;padding:12px 28px;border:2px solid var(--gold2);box-shadow:0 6px 14px rgba(20,60,40,.25)}
+  .btn:hover{filter:brightness(1.1)}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 30px}
+  @media(max-width:700px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.toc ol{grid-template-columns:1fr}.pair{grid-template-columns:1fr}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}header h1{font-size:28px}header .brand{font-size:11px;letter-spacing:.06em}header::after{inset:5px}.ar{display:none}.banner-in{padding:20px 20px 16px}.banner .ar-q{font-size:22px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="back" href="/tuhfatul-atfaal/">← Back to my map</a><span class="ar">تُحْفَةُ الأَطْفَال</span><div class="brand">Diin Islaam · Tajweed Quest · Student guide</div><h1>How to use Tuhfatul Atfaal</h1>
+<div class="sub"><span class="chip">🗺️ 15 maps</span><span class="chip">📜 61 lines</span><span class="chip">🧠 Memorise &amp; recite</span><span class="chip">🧑‍🏫 With your teacher</span></div></div></header>
+<main class="wrap">
+<div class="tiles">
+  <div class="tile"><b>15</b><span>maps to travel</span></div>
+  <div class="tile"><b>61</b><span>lines of the Tuhfah</span></div>
+  <div class="tile"><b>7</b><span>steps in every lesson</span></div>
+  <div class="tile"><b>5</b><span>levels to memorise</span></div>
+</div>
+
+<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>Recite it beautifully</h3>
+<p class="ar-q">﴿وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا﴾</p>
+<p class="en">“And recite the Qur’an with measured, beautiful recitation.”</p>
+<span class="ref">Sūrah al-Muzzammil 73:4</span>
+<p class="ar-q" style="margin-top:12px">﴿وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ﴾</p>
+<p class="en">“And We have certainly made the Qur’an easy to remember — so is there anyone who will remember?”</p>
+<span class="ref">Sūrah al-Qamar 54:17</span>
+<p class="cheer">Tuhfatul Atfaal — <b>“A Gift for Children”</b> — teaches you the rules of Tajweed so you can read Allah’s Book the way it was revealed. Every lesson you finish brings you closer. Let’s begin! 🌟</p></div></section>
+
+<nav class="toc" aria-label="Guide contents"><h2>📘 In this guide</h2><ol>
+  <li><a href="#signin"><span class="n">1</span>Sign in or create your account</a></li>
+  <li><a href="#class"><span class="n">2</span>Join your class</a></li>
+  <li><a href="#map"><span class="n">3</span>Your map — start here</a></li>
+  <li><a href="#lesson"><span class="n">4</span>A lesson in 7 steps</a></li>
+  <li><a href="#road"><span class="n">5</span>Walk along the road</a></li>
+  <li><a href="#challenge"><span class="n">6</span>Practice Cards &amp; the 15-question challenge</a></li>
+  <li><a href="#door"><span class="n">7</span>Teacher check &amp; the door to the next map</a></li>
+  <li><a href="#memorise"><span class="n">8</span>Memorise in 5 levels</a></li>
+  <li><a href="#record"><span class="n">9</span>Record yourself &amp; send it to your teacher</a></li>
+  <li><a href="#more"><span class="n">10</span>Tajweed rules, badges &amp; messages</a></li>
+</ol></nav>
+
+<section class="step" id="signin"><div class="step-head"><span class="num">1</span><h2>Sign in or create your account</h2></div>
+<p>Open <b>diinislaam.com/tuhfatul-atfaal</b>. If you are new, tap <kbd>Create account</kbd>, choose a <b>username</b> (for example <i>amina123</i>) and a password with at least 6 letters or numbers. Next time just tap <kbd>Sign in</kbd>.</p>
+<figure><a href="img/01-signin.jpg" target="_blank" rel="noopener"><img src="img/01-signin.jpg" alt="The sign-in screen with Sign in and Create account" loading="lazy"></a><figcaption>The sign-in screen</figcaption></figure>
+<div class="tip">💡 Write your username down and keep it safe. Your teacher and parents use it to find you. The same account works for Seeraa Quest and the Qur’an Tracker.</div></section>
+
+<section class="step" id="class"><div class="step-head"><span class="num">2</span><h2>Join your class</h2></div>
+<ol><li>Ask your teacher for your <b>class code</b> — 6 letters, like <b>TQ7K2M</b>.</li><li>On your map page, scroll down to <b>“From your teacher”</b> and tap <b>🏫 Join your class</b>.</li><li>Type the code and tap <kbd>Join class</kbd>. ✅ Now you see your class news, homework, quizzes and the class leaderboard.</li></ol>
+<figure><a href="img/16-join-class.jpg" target="_blank" rel="noopener"><img src="img/16-join-class.jpg" alt="The Join your class box with a code typed in" loading="lazy"></a><figcaption>Type the code from your teacher</figcaption></figure>
+<figure><a href="img/17-teacher-hub.jpg" target="_blank" rel="noopener"><img src="img/17-teacher-hub.jpg" alt="From your teacher: homework, notes, messages, announcements and quizzes" loading="lazy"></a><figcaption>“From your teacher” — tap any block to open it. A <b>New</b> or <b>Due today</b> tag means it needs you!</figcaption></figure></section>
+
+<section class="step" id="map"><div class="step-head"><span class="num">3</span><h2>Your map — start here</h2></div>
+<p>The Tuhfah is split into <b>15 maps</b>. Each map is a road with a few lines of the poem. Your character stands next to the first lesson and points to it — <b>“Start here!”</b>. Tap the glowing circle to open the lesson.</p>
+<figure><a href="img/02-map-start.jpg" target="_blank" rel="noopener"><img src="img/02-map-start.jpg" alt="Map 1 with the avatar pointing at the first lesson and a Start here sign" loading="lazy"></a><figcaption>Map 1 — your character shows you where to begin</figcaption></figure>
+<p>The bar at the top shows how you are doing:</p>
+<figure><a href="img/03-topbar.jpg" target="_blank" rel="noopener"><img src="img/03-topbar.jpg" alt="Top bar with streak, coins, stars, memorised lines and lessons done" loading="lazy"></a></figure>
+<ul><li>🔥 <b>Streak</b> — days in a row you practised. Come back every day to keep it burning!</li><li>🪙 <b>Coins</b> and ⭐ <b>stars</b> — earned in lessons and challenges.</li><li>🧠 <b>Memorised</b> lines and 📍 <b>lessons done</b> out of 62.</li><li>Tap your character to change how they look — clothes, colours and hijab or turban.</li></ul></section>
+
+<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>The best of people</h3>
+<p class="ar-q">«خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ»</p>
+<p class="en">“The best of you are those who learn the Qur’an and teach it.”</p>
+<span class="ref">The Prophet ﷺ · Sahih al-Bukhari 5027</span>
+<p class="cheer">When you learn Tajweed today, you can teach your family and friends tomorrow — inshā’ Allāh!</p></div></section>
+
+<section class="step" id="lesson"><div class="step-head"><span class="num">4</span><h2>A lesson in 7 steps</h2></div>
+<p>Every lesson teaches one line of the Tuhfah. Follow the steps on the left, from top to bottom:</p>
+<figure><a href="img/04-lesson.jpg" target="_blank" rel="noopener"><img src="img/04-lesson.jpg" alt="Lesson screen with the 7 steps and the Arabic line" loading="lazy"></a><figcaption>Tap 🔊 to hear each half of the line recited</figcaption></figure>
+<ol><li>🎧 <b>Matn</b> — listen to the line and read along.</li><li>📖 <b>Learn</b> — what the line means and the Tajweed rule, with examples from the Qur’an.</li><li>🔤 <b>Words</b> — match each Arabic word with its meaning.</li><li>🗣️ <b>Memorise</b> — repeat the line until you can say it.</li><li>🃏 <b>Flash Card</b> — quick revision.</li><li>🧩 <b>Build</b> — put the words of the line in the right order.</li><li>🏆 <b>Five Questions</b> — a short quiz to finish the lesson.</li></ol>
+<div class="tip">✓ Steps you finish get a tick and stay open — you can go back and revise any time without waiting. If you finish a lesson again, it counts as a new attempt.</div></section>
+
+<section class="step" id="road"><div class="step-head"><span class="num">5</span><h2>Walk along the road</h2></div>
+<p>When you finish a lesson, your character <b>walks to the next lesson</b> on the road. After 3 seconds the next lesson opens by itself — or tap <kbd>Stay on map</kbd> to rest.</p>
+<figure><a href="img/05-map-progress.jpg" target="_blank" rel="noopener"><img src="img/05-map-progress.jpg" alt="Map with three lessons ticked and the avatar on lesson 4" loading="lazy"></a><figcaption>✓ = finished lessons · the coloured circle is your next lesson · 🔒 = still locked</figcaption></figure></section>
+
+<section class="step" id="challenge"><div class="step-head"><span class="num">6</span><h2>Practice Cards &amp; the 15-question challenge</h2></div>
+<p>After the last lesson of a map, two new stops open at the end of the road:</p>
+<ul><li>🃏 <b>Practice Cards</b> — flip every card to revise the whole map.</li><li>🏆 <b>15 Questions</b> — the Map Challenge. Score <b>12 or more</b> to pass.</li></ul>
+<figure><a href="img/06-map-complete.jpg" target="_blank" rel="noopener"><img src="img/06-map-complete.jpg" alt="Completed map with Practice Cards and 15 Questions" loading="lazy"></a></figure>
+<div class="pair">
+<figure><a href="img/07-challenge.jpg" target="_blank" rel="noopener"><img src="img/07-challenge.jpg" alt="A challenge question with an ayah from Juz Amma" loading="lazy"></a><figcaption>Some questions use ayāt from Juz ʿAmma</figcaption></figure>
+<figure><a href="img/08-line-match.jpg" target="_blank" rel="noopener"><img src="img/08-line-match.jpg" alt="Question 15: drag each Arabic line to its English meaning" loading="lazy"></a><figcaption>Question 15 — drag each line to its meaning</figcaption></figure></div>
+<div class="tip">💡 Didn’t pass yet? No problem — review the lessons and tap <kbd>Try Again ↻</kbd>. Your best score is always saved.</div></section>
+
+<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>Ten rewards for every letter</h3>
+<p class="ar-q">«مَنْ قَرَأَ حَرْفًا مِنْ كِتَابِ اللَّهِ فَلَهُ بِهِ حَسَنَةٌ، وَالْحَسَنَةُ بِعَشْرِ أَمْثَالِهَا»</p>
+<p class="en">“Whoever reads a letter from the Book of Allah gets a good deed, and each good deed is multiplied ten times.”</p>
+<span class="ref">The Prophet ﷺ · Jāmiʿ at-Tirmidhī 2910</span>
+<p class="cheer">Every line you practise is full of rewards — keep going!</p></div></section>
+
+<section class="step" id="door"><div class="step-head"><span class="num">7</span><h2>Teacher check &amp; the door to the next map</h2></div>
+<p>When you pass the challenge, a <b>door</b> appears at the end of the road and your character points to it. Tap the door:</p>
+<figure><a href="img/09-door-ask-teacher.jpg" target="_blank" rel="noopener"><img src="img/09-door-ask-teacher.jpg" alt="Avatar holding a paper: Please ask your teacher to listen to you and open the door for you" loading="lazy"></a><figcaption>The door is locked 🔒 until your teacher listens to you</figcaption></figure>
+<ol><li>Recite all the lines of the map to your teacher (<b>Talqeen</b>).</li><li>Your teacher fills in the <b>Talqeen Teacher Check</b> under the map and signs it.</li><li>The door opens! Tap it — your character walks through and into the next map. 🎉</li></ol>
+<div class="pair">
+<figure><a href="img/10-teacher-check.jpg" target="_blank" rel="noopener"><img src="img/10-teacher-check.jpg" alt="Talqeen Teacher Check approved by the teacher" loading="lazy"></a><figcaption>The teacher’s check and signature</figcaption></figure>
+<figure><a href="img/11-door-open.jpg" target="_blank" rel="noopener"><img src="img/11-door-open.jpg" alt="The open door glowing with Map 2" loading="lazy"></a><figcaption>Door open — on to Map 2!</figcaption></figure></div>
+<div class="tip">🏅 After the teacher signs, you can also open your <b>certificate</b> for that map.</div></section>
+
+<section class="step" id="memorise"><div class="step-head"><span class="num">8</span><h2>Memorise in 5 levels</h2></div>
+<p>Tap <kbd>🧠 Memorise</kbd> under the map. You see <b>every line up to your map</b> — your map is open, earlier maps are folded (tap <b>Map 1 ▸</b> to open them for revision).</p>
+<div class="levels"><div><span>👀</span>1. Read along</div><div><span>🌗</span>2. Half hidden</div><div><span>🔤</span>3. First letters</div><div><span>🧠</span>4. From memory</div><div><span>🎙️</span>5. Record &amp; listen</div></div>
+<figure><a href="img/12-memorise.jpg" target="_blank" rel="noopener"><img src="img/12-memorise.jpg" alt="Memorise screen with levels and half the words hidden" loading="lazy"></a><figcaption>Level 2 — every other word is hidden. Tap a box to peek.</figcaption></figure>
+<ul><li>Press <kbd>▶ Whole line</kbd> and choose how many repeats (1×, 3×, 5×, 10×). Keep “Pause for me to repeat” on so you can say it after the reciter.</li><li>When you can say it at that level, tap <kbd>✓ I can say it at this level</kbd>. Reach level 4 to earn ⭐ and 🪙 5 coins!</li></ul></section>
+
+<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>Read and rise</h3>
+<p class="ar-q">«يُقَالُ لِصَاحِبِ الْقُرْآنِ: اقْرَأْ وَارْتَقِ وَرَتِّلْ كَمَا كُنْتَ تُرَتِّلُ فِي الدُّنْيَا، فَإِنَّ مَنْزِلَكَ عِنْدَ آخِرِ آيَةٍ تَقْرَؤُهَا»</p>
+<p class="en">“It will be said to the companion of the Qur’an: Read, rise up, and recite as you used to recite in the world — your place will be at the last ayah you recite.”</p>
+<span class="ref">The Prophet ﷺ · Sunan Abī Dāwūd 1464 · Jāmiʿ at-Tirmidhī 2914</span>
+<p class="cheer">Just like you climb from map to map here, the people of the Qur’an climb in Jannah. Memorise a little every day!</p></div></section>
+
+<section class="step" id="record"><div class="step-head"><span class="num">9</span><h2>Record yourself &amp; send it to your teacher</h2></div>
+<p>In Memorise, open <b>🎙️ 5. Record &amp; listen</b>:</p>
+<ol><li>Tap <kbd>🎙️ Record myself</kbd> and say the whole line from memory. Tap <kbd>■ Stop</kbd>.</li><li>Press ▶ and <b>listen to yourself</b> — does it sound right?</li><li>Tap <kbd>📤 Send to my teacher</kbd>. When your teacher listens, you will see their feedback right under your recording. 💬</li></ol>
+<figure><a href="img/13-record.jpg" target="_blank" rel="noopener"><img src="img/13-record.jpg" alt="A recording with teacher feedback and Send, WhatsApp, Email, Download and Delete buttons" loading="lazy"></a><figcaption>Your recording, with feedback from your teacher</figcaption></figure>
+<ul><li>🟢 <b>WhatsApp</b> or ✉️ <b>Email</b> — send it to yourself or your family.</li><li>⬇️ <b>Download</b> — keep the audio file.</li><li>🗑 <b>Delete</b> — remove a recording you don’t want.</li></ul>
+<div class="warn">🔒 Recordings stay on your device until you send, share or download them. Your parents can see your teacher’s feedback in their parent report.</div></section>
+
+<section class="step" id="more"><div class="step-head"><span class="num">10</span><h2>Tajweed rules, badges &amp; messages</h2></div>
+<ul><li>📖 <b>Tajweed rules</b> — every rule of the Tuhfah with its letters and examples. Tap an example to hear it.</li><li>🏅 <b>Badges</b> — collect them for streaks, finished maps, memorised lines and more.</li><li>✉️ <b>Messages with your teacher</b> — ask a question or say salām. You can edit a message if you made a mistake.</li></ul>
+<div class="pair">
+<figure><a href="img/14-glossary.jpg" target="_blank" rel="noopener"><img src="img/14-glossary.jpg" alt="Tajweed rules page showing Izhar" loading="lazy"></a><figcaption>📖 Tajweed rules</figcaption></figure>
+<figure><a href="img/15-badges.jpg" target="_blank" rel="noopener"><img src="img/15-badges.jpg" alt="Badges page" loading="lazy"></a><figcaption>🏅 Your badges</figcaption></figure></div></section>
+
+<section class="banner"><div class="banner-in"><div class="orn">✦ ✦ ✦</div><h3>Your friend on the Day of Judgement</h3>
+<p class="ar-q">«اقْرَءُوا الْقُرْآنَ فَإِنَّهُ يَأْتِي يَوْمَ الْقِيَامَةِ شَفِيعًا لِأَصْحَابِهِ»</p>
+<p class="en">“Read the Qur’an, for it will come on the Day of Resurrection as an intercessor for its companions.”</p>
+<span class="ref">The Prophet ﷺ · Sahih Muslim 804</span>
+<p class="ar-q" style="margin-top:12px">«الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ، وَالَّذِي يَقْرَأُ الْقُرْآنَ وَيَتَتَعْتَعُ فِيهِ وَهُوَ عَلَيْهِ شَاقٌّ لَهُ أَجْرَانِ»</p>
+<p class="en">“The one skilled in the Qur’an is with the noble, righteous angels, and the one who stumbles over it, finding it hard, gets two rewards.”</p>
+<span class="ref">The Prophet ﷺ · Sahih Muslim 798</span>
+<p class="cheer">Finding it hard? You get <b>two</b> rewards! A little every day — 10 minutes is enough. May Allah make the Qur’an the light of your heart. 🤲</p></div></section>
+
+<div class="cta"><a class="btn" href="/tuhfatul-atfaal/">🗺️ Go to my map</a></div>
+</main>
+<footer>Diin Islaam · Tajweed Quest · Tuhfatul Atfaal<br>Questions? Ask your teacher in class or send them a message from your map.</footer>
+</body>
+</html>
