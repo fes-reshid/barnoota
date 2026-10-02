@@ -630,6 +630,7 @@
             <option value="lessons">▶ Finish lessons</option>
             <option value="quiz">📝 Pass a quiz</option>
             <option value="record">🎙️ Record lines &amp; send (students with Talqeen on)</option>
+            <option value="upload">📎 Hand in a file (PDF, Word or PowerPoint)</option>
             <option value="task">✏️ Other task (student ticks it)</option>
           </select></div>
           <div class="row" id="hw-lines-row">
@@ -942,7 +943,7 @@
       <section class="guide-sec" id="g-homework">
         <h3><span class="gi" style="--c:#8a5a2b">📚</span> Homework</h3>
         <ul class="guide-list">
-          <li><b>Types:</b> Memorise lines (done at Memorise level 4) · Finish lessons · Pass a quiz · Record lines (students with Talqeen on) · Other task (the student ticks it).</li>
+          <li><b>Types:</b> Memorise lines (done at Memorise level 4) · Finish lessons · Pass a quiz · Record lines (students with Talqeen on) · <b>Hand in a file</b> (PDF, Word or PowerPoint — open <i>See each student</i> to download each file and give feedback) · Other task (the student ticks it).</li>
           <li>Choose the lines, a due date and the class. The title fills itself in. Add a <b>🎬 YouTube link</b> and it plays inside the homework for students.</li>
           <li>Each card shows who is done, done late or late. <b>🔔 Remind</b> sends a private message to everyone not done.</li>
         </ul>
@@ -1152,7 +1153,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=20"></script>
+<script type="module" src="../kids-quest-cloud.js?v=21"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2201,11 +2202,12 @@ function hwStatus(h, s){
   if(done) return { key: e && new Date(done.at) > e ? 'lateDone' : 'done', at: done.at };
   return { key: hwPastDue(h) ? 'late' : 'pending' };
 }
-function hwKindLabel(h){ return { memorise:'🧠 Memorise', lessons:'▶ Lessons', quiz:'📝 Quiz', record:'🎙️ Recording', task:'✏️ Task' }[h.kind] || '✏️ Task'; }
+function hwKindLabel(h){ return { memorise:'🧠 Memorise', lessons:'▶ Lessons', quiz:'📝 Quiz', record:'🎙️ Recording', upload:'📎 File', task:'✏️ Task' }[h.kind] || '✏️ Task'; }
 function hwAutoTitle(){
   const k = $('hw-kind').value, a = Number($('hw-from').value) || 1, b = Number($('hw-to').value) || a, r = a === b ? 'line ' + a : 'lines ' + Math.min(a, b) + '–' + Math.max(a, b);
   if(k === 'memorise') return 'Memorise ' + r;
   if(k === 'record') return 'Record ' + r + ' and send it to your teacher';
+  if(k === 'upload') return 'Hand in your work (PDF, Word or PowerPoint)';
   if(k === 'lessons') return 'Finish ' + r.replace('line', 'lesson for line').replace('lines', 'lessons for lines');
   if(k === 'quiz'){ const q = quizzesCache.find(x => x.id === $('hw-quiz').value); return q ? 'Pass the quiz “' + q.title + '”' : 'Pass the quiz'; }
   return '';
@@ -2224,6 +2226,15 @@ function fillHwQuiz(){
 function isoDate(d){ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 /* YouTube links: watch?v=, youtu.be/, shorts/, embed/, live/ → the 11-character video id. */
 function youtubeId(url){ const m = String(url || '').match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#\s]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : ''; }
+let hwSubs = {};
+function downloadSubmission(sub){
+  toast('Preparing download…');
+  window.KidsCloud.getSubmissionData(sub).then(data => {
+    const bin = atob(data.split(',')[1]), u8 = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([u8], { type: sub.type || 'application/octet-stream' })), a = document.createElement('a');
+    a.href = url; a.download = (sub.studentName ? sub.studentName.replace(/[^\w\- ]+/g, '') + ' - ' : '') + sub.fileName; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }).catch(err => alert(friendlyError(err)));
+}
 function resetHwForm(){
   editingHw = null; $('hw-form-title').textContent = '📚 Set homework'; $('hw-save').textContent = '📚 Set homework'; $('hw-cancel').classList.add('hidden');
   $('hw-title').value = ''; $('hw-details').value = ''; $('hw-video').value = ''; $('hw-video-note').textContent = ''; const d = new Date(); d.setDate(d.getDate() + 7); $('hw-due').value = isoDate(d);
@@ -2308,7 +2319,7 @@ function wireFiles(){
 wireFiles();
 function loadHomework(){
   if(!window.KidsCloud.listHomework) return Promise.resolve();
-  return window.KidsCloud.listHomework(GAME_KEY).then(list => { homeworkCache = list; renderHomeworkList(); })
+  return window.KidsCloud.listHomework(GAME_KEY).then(list => { homeworkCache = list; hwSubs = {}; renderHomeworkList(); })
     .catch(err => { homeworkCache = []; $('hw-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderHomeworkList(){
@@ -2335,9 +2346,19 @@ function renderHomeworkList(){
       '<div class="ann-tools" style="margin-top:10px"><button class="btn ghost small" data-act="who">' + (hwOpen[h.id] ? '▴ Hide students' : '▾ See each student') + '</button>' +
       (done < aud.length ? '<button class="btn sky small" data-act="remind">🔔 Remind ' + (aud.length - done) + ' not done</button>' : '') +
       '<button class="btn ghost small" data-act="edit">✏️ Edit</button><button class="btn danger small" data-act="del">Delete</button></div>' +
-      (hwOpen[h.id] ? '<table class="hw-table">' + st.map(x => '<tr><td>' + escapeHtml(x.s.displayName || x.s.username) + ' <span class="muted">@' + escapeHtml(x.s.username) + '</span></td><td class="hw-st ' + x.st.key + '">' +
-        ({ done:'✓ Done', lateDone:'✓ Done late', late:'⚠️ Late', pending:'… Not yet' })[x.st.key] + (x.st.at ? ' <span class="muted" style="font-weight:400">' + fmtTime(x.st.at) + '</span>' : '') + '</td><td style="text-align:right"><button class="linkbtn" data-open="' + escapeHtml(x.s.uid) + '">Open</button></td></tr>').join('') + '</table>' : '');
+      (hwOpen[h.id] ? '<table class="hw-table">' + st.map(x => { const sub = h.kind === 'upload' ? (hwSubs[h.id] || []).find(u => u.studentUid === x.s.uid) : null;
+        return '<tr><td>' + escapeHtml(x.s.displayName || x.s.username) + ' <span class="muted">@' + escapeHtml(x.s.username) + '</span></td><td class="hw-st ' + x.st.key + '">' +
+        (sub && (x.st.key === 'late' || x.st.key === 'pending') ? '✓ Handed in' : ({ done:'✓ Done', lateDone:'✓ Done late', late:'⚠️ Late', pending:'… Not yet' })[x.st.key]) + (sub && !x.st.at ? ' <span class="muted" style="font-weight:400">' + fmtTime(sub.createdAt) + '</span>' : '') + (x.st.at ? ' <span class="muted" style="font-weight:400">' + fmtTime(x.st.at) + '</span>' : '') +
+        (sub ? '<div><button class="linkbtn" data-subdl="' + escapeHtml(sub.id) + '">' + (/\.pptx?$/i.test(sub.fileName) ? '📊' : /\.docx?$/i.test(sub.fileName) ? '📝' : '📄') + ' ' + escapeHtml(sub.fileName) + '</button> <span class="muted" style="font-weight:400">' + fmtSize(sub.size) + '</span></div>' : '') + '</td><td style="text-align:right"><button class="linkbtn" data-open="' + escapeHtml(x.s.uid) + '">Open</button></td></tr>' +
+        (sub ? '<tr class="sub-fb-row"><td colspan="3">' + (sub.feedback ? '<div style="margin-bottom:4px">💬 <b>Your feedback:</b> ' + escapeHtml(sub.feedback) + '</div>' : '') + '<div class="fb" data-subfb="' + escapeHtml(sub.id) + '"><input maxlength="500" placeholder="' + (sub.feedback ? 'Change feedback…' : 'Feedback on this work, e.g. “MashaAllah, neat work! Check the Idgham letters.”') + '"><button class="btn primary small">Send</button></div></td></tr>' : ''); }).join('') + '</table>' +
+        (h.kind === 'upload' && !hwSubs[h.id] ? '<p class="muted">Loading handed-in files…</p>' : '') : '');
     card.querySelector('[data-act="who"]').onclick = () => { hwOpen[h.id] = !hwOpen[h.id]; renderHomeworkList(); };
+    if(hwOpen[h.id] && h.kind === 'upload' && !(h.id in hwSubs) && window.KidsCloud.listSubmissions){ hwSubs[h.id] = null; window.KidsCloud.listSubmissions(h.id).then(l => { hwSubs[h.id] = l; renderHomeworkList(); }).catch(err => { hwSubs[h.id] = []; toast(friendlyError(err)); renderHomeworkList(); }); }
+    card.querySelectorAll('[data-subdl]').forEach(b => b.onclick = () => { const sub = (hwSubs[h.id] || []).find(u => u.id === b.dataset.subdl); if(sub) downloadSubmission(sub); });
+    card.querySelectorAll('[data-subfb]').forEach(f => { const sub = (hwSubs[h.id] || []).find(u => u.id === f.dataset.subfb); if(!sub) return;
+      const send = () => { const t = f.querySelector('input').value.trim(); if(!t) return;
+        window.KidsCloud.markSubmission(sub.id, { feedback: t, feedbackBy: $('certificate-teacher').dataset.me || '' }).then(() => { sub.feedback = t; toast('Feedback sent'); renderHomeworkList(); }).catch(err => alert(friendlyError(err))); };
+      f.querySelector('button').onclick = send; f.querySelector('input').onkeydown = e => { if(e.key === 'Enter') send(); }; });
     card.querySelector('[data-act="edit"]').onclick = () => startEditHw(h);
     card.querySelector('[data-act="del"]').onclick = () => {
       if(!confirm('Delete the homework “' + h.title + '”? Students will stop seeing it.')) return;

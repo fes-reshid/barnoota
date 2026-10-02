@@ -57,6 +57,8 @@ const ATTENDANCE_COLLECTION = 'kids_quest_attendance';
 const BOARDS_COLLECTION = 'kids_quest_boards';
 const FILES_COLLECTION = 'kids_quest_files';
 const FILE_DATA_COLLECTION = 'kids_quest_file_data';
+const SUBMISSIONS_COLLECTION = 'kids_quest_submissions';
+const SUBMISSION_DATA_COLLECTION = 'kids_quest_submission_data';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -932,7 +934,7 @@ function listHomework(game){
 function adminSaveHomework(h){
   const x = h || {}, user = auth.currentUser, now = new Date().toISOString();
   const ref = x.id ? doc(db, HOMEWORK_COLLECTION, x.id) : doc(collection(db, HOMEWORK_COLLECTION));
-  const kinds = ['memorise', 'lessons', 'quiz', 'record', 'task'];
+  const kinds = ['memorise', 'lessons', 'quiz', 'record', 'upload', 'task'];
   const data = {
     game: String(x.game || ''),
     kind: kinds.indexOf(x.kind) >= 0 ? x.kind : 'task',
@@ -1087,6 +1089,58 @@ function deleteClassFile(f){
   return Promise.all(jobs).then(function(){ return deleteDoc(doc(db, FILES_COLLECTION, f.id)); });
 }
 
+/* ---- homework file submissions ---- */
+/* kids_quest_submissions/{hwId}_{studentUid}: the one file a student hands
+   in for an “upload a file” homework (PDF, Word or PowerPoint, ≤ 5 MB),
+   split into ≤ 900 KB pieces in kids_quest_submission_data/{id}_{n}.
+   Handing in again replaces it; the teacher can add feedback. */
+const SUBMIT_TYPES = {
+  pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+};
+function submitHomeworkFile(x){
+  const user = auth.currentUser;
+  if(!user) return Promise.reject(new Error('Not signed in'));
+  const f = x || {}, ext = (String(f.fileName || '').match(/\.([a-z0-9]+)$/i) || [])[1], type = SUBMIT_TYPES[String(ext || '').toLowerCase()];
+  if(!type) return Promise.reject(new Error('Please choose a PDF, Word (.doc/.docx) or PowerPoint (.ppt/.pptx) file.'));
+  const raw = String(f.dataUrl || ''), comma = raw.indexOf(',');
+  if(comma < 0) return Promise.reject(new Error('That file could not be read.'));
+  const data = 'data:' + type + ';base64,' + raw.slice(comma + 1), size = Math.round((raw.length - comma - 1) * 3 / 4);
+  if(size > FILE_MAX_BYTES) return Promise.reject(new Error('That file is too big — the limit is 5 MB.'));
+  const id = String(f.hwId) + '_' + user.uid, parts = [];
+  for(let i = 0; i < data.length; i += FILE_CHUNK) parts.push(data.slice(i, i + FILE_CHUNK));
+  const meta = { hwId: String(f.hwId), studentUid: user.uid, studentName: String(f.studentName || '').trim().slice(0, 80), game: String(f.game || ''),
+    fileName: String(f.fileName).slice(0, 140), type: type, size: size, chunks: parts.length, createdAt: new Date().toISOString(), feedback: '', feedbackBy: '', feedbackAt: '' };
+  return Promise.all(parts.map(function(part, n){ return setDoc(doc(db, SUBMISSION_DATA_COLLECTION, id + '_' + n), { data: part, studentUid: user.uid }); }))
+    .then(function(){ return setDoc(doc(db, SUBMISSIONS_COLLECTION, id), meta); })
+    .then(function(){ return Object.assign({ id: id }, meta); });
+}
+function getMySubmission(hwId){
+  const user = auth.currentUser; if(!user) return Promise.resolve(null);
+  return getDoc(doc(db, SUBMISSIONS_COLLECTION, String(hwId) + '_' + user.uid)).then(function(d){ return d.exists() ? Object.assign({ id: d.id }, d.data()) : null; });
+}
+function listSubmissions(hwId){
+  return getDocs(query(collection(db, SUBMISSIONS_COLLECTION), where('hwId', '==', String(hwId)))).then(function(snap){
+    const out = []; snap.forEach(function(d){ out.push(Object.assign({ id: d.id }, d.data())); }); return out;
+  });
+}
+function getSubmissionData(sub){
+  const n = Math.max(1, Number(sub && sub.chunks) || 1), jobs = [];
+  for(let i = 0; i < n; i++) jobs.push(getDoc(doc(db, SUBMISSION_DATA_COLLECTION, sub.id + '_' + i)));
+  return Promise.all(jobs).then(function(snaps){
+    if(snaps.some(function(d){ return !d.exists(); })) throw new Error('This file is no longer available.');
+    return snaps.map(function(d){ return d.data().data; }).join('');
+  });
+}
+function deleteSubmission(sub){
+  const n = Math.max(1, Number(sub && sub.chunks) || 1), jobs = [];
+  for(let i = 0; i < n; i++) jobs.push(deleteDoc(doc(db, SUBMISSION_DATA_COLLECTION, sub.id + '_' + i)).catch(function(){}));
+  return Promise.all(jobs).then(function(){ return deleteDoc(doc(db, SUBMISSIONS_COLLECTION, sub.id)); });
+}
+function markSubmission(id, p){
+  return updateDoc(doc(db, SUBMISSIONS_COLLECTION, id), { feedback: String((p && p.feedback) || '').trim().slice(0, 500), feedbackBy: String((p && p.feedbackBy) || '').slice(0, 80), feedbackAt: new Date().toISOString() });
+}
+
 /* ---- attendance ---- */
 /* kids_quest_attendance/{classId}_{YYYY-MM-DD}: one class session, with a
    mark per student: present | late | absent | excused. Staff only. */
@@ -1199,6 +1253,12 @@ window.KidsCloud = {
   saveRecording: saveRecording,
   markRecording: markRecording,
   listClassFiles: listClassFiles,
+  submitHomeworkFile: submitHomeworkFile,
+  getMySubmission: getMySubmission,
+  listSubmissions: listSubmissions,
+  getSubmissionData: getSubmissionData,
+  deleteSubmission: deleteSubmission,
+  markSubmission: markSubmission,
   uploadClassFile: uploadClassFile,
   getClassFileData: getClassFileData,
   deleteClassFile: deleteClassFile,
