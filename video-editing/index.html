@@ -474,7 +474,7 @@ dialog#consentGate h1:focus-visible { outline: none; }
         </div>
     </div>
 </dialog>
-<script src="consent.js?v=202610020825"></script>
+<script src="consent.js?v=202610020829"></script>
 
 <header class="topbar">
     <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></span><span class="hide-narrow">Reel</span></div>
@@ -558,6 +558,7 @@ dialog#consentGate h1:focus-visible { outline: none; }
         <button id="tool-delete" class="ghost" title="Delete (Del) — Shift+Del closes the gap"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg><span class="hide-narrow">Delete</span></button>
         <button id="tool-duplicate" class="ghost" title="Duplicate (Ctrl+D)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></svg><span class="hide-narrow">Duplicate</span></button>
         <button id="add-text" class="ghost" title="Add a title at the playhead (T)"><svg viewBox="0 0 24 24"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg><span class="hide-narrow">Title</span></button>
+        <button id="add-handwrite" class="ghost" title="Add a title that a hand writes out (W)"><svg viewBox="0 0 24 24"><path d="M3 17c2-3 3-3 4 0s2 3 4 0 2-3 3 0"/><path d="M14 13l6-6-2-2-6 6-1 3z"/></svg><span class="hide-narrow">Write</span></button>
         <button id="add-draw" class="ghost" title="Draw on the video (D) — it is drawn on with a hand holding a pencil"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg><span class="hide-narrow">Draw</span></button>
         <button id="add-marker" class="ghost" title="Add a marker at the playhead (M) — markers become YouTube chapters"><svg viewBox="0 0 24 24"><path d="M6 21V4h12l-3 4 3 4H6"/></svg><span class="hide-narrow">Marker</span></button>
         <span class="sep"></span>
@@ -609,16 +610,16 @@ dialog#consentGate h1:focus-visible { outline: none; }
 <div id="media-host" class="media-host" aria-hidden="true"></div>
 
 <!-- ?v= is stamped with the release by tools/deploy-video-editor.sh, so browsers and the offline cache pick up new versions. -->
-<script src="timeline.js?v=202610020825"></script>
-<script src="audio-core.js?v=202610020825"></script>
-<script src="webm.js?v=202610020825"></script>
-<script src="hands.js?v=202610020825"></script>
-<script src="editor.js?v=202610020825"></script>
-<script src="media-store.js?v=202610020825"></script>
-<script src="audio-mix.js?v=202610020825"></script>
-<script src="export-fast.js?v=202610020825"></script>
-<script src="quran.js?v=202610020825"></script>
-<script src="captions.js?v=202610020825"></script>
+<script src="timeline.js?v=202610020829"></script>
+<script src="audio-core.js?v=202610020829"></script>
+<script src="webm.js?v=202610020829"></script>
+<script src="hands.js?v=202610020829"></script>
+<script src="editor.js?v=202610020829"></script>
+<script src="media-store.js?v=202610020829"></script>
+<script src="audio-mix.js?v=202610020829"></script>
+<script src="export-fast.js?v=202610020829"></script>
+<script src="quran.js?v=202610020829"></script>
+<script src="captions.js?v=202610020829"></script>
 <script>
 // Works offline after the first visit (http only; the service worker cannot run from a file).
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !/[?&]nosw\b/.test(location.search)) {
