@@ -58,6 +58,7 @@ const BOARDS_COLLECTION = 'kids_quest_boards';
 const FILES_COLLECTION = 'kids_quest_files';
 const FILE_DATA_COLLECTION = 'kids_quest_file_data';
 const SUBMISSIONS_COLLECTION = 'kids_quest_submissions';
+const CONTENT_COLLECTION = 'kids_quest_content';
 const SUBMISSION_DATA_COLLECTION = 'kids_quest_submission_data';
 
 const app = initializeApp(firebaseConfig);
@@ -1141,6 +1142,27 @@ function markSubmission(id, p){
   return updateDoc(doc(db, SUBMISSIONS_COLLECTION, id), { feedback: String((p && p.feedback) || '').trim().slice(0, 500), feedbackBy: String((p && p.feedbackBy) || '').slice(0, 80), feedbackAt: new Date().toISOString() });
 }
 
+/* ---- course content edits ---- */
+/* kids_quest_content/{game}_lesson_{line} and {game}_map_{n}: a teacher's
+   edits to the built-in course (lesson title / meaning / explanation /
+   five questions, a map's name and its challenge questions). Everyone
+   signed in reads them; only staff can change them. */
+function myStaffRole(){
+  const user = auth.currentUser;
+  if(!user || !user.email) return Promise.resolve(null);
+  return getDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(user.email))).then(function(s){ return s.exists() ? (s.data().role || 'admin') : null; }).catch(function(){ return null; });
+}
+function listContent(game){
+  return getDocs(collection(db, CONTENT_COLLECTION)).then(function(snap){
+    const out = []; snap.forEach(function(d){ const x = d.data(); if(!game || x.game === game) out.push(Object.assign({ id: d.id }, x)); }); return out;
+  });
+}
+function saveContent(id, data){
+  const user = auth.currentUser;
+  return setDoc(doc(db, CONTENT_COLLECTION, String(id)), Object.assign({}, data, { updatedAt: new Date().toISOString(), updatedBy: (user && user.email) ? normalizeEmail(user.email) : '' }));
+}
+function deleteContent(id){ return deleteDoc(doc(db, CONTENT_COLLECTION, String(id))); }
+
 /* ---- attendance ---- */
 /* kids_quest_attendance/{classId}_{YYYY-MM-DD}: one class session, with a
    mark per student: present | late | absent | excused. Staff only. */
@@ -1253,6 +1275,10 @@ window.KidsCloud = {
   saveRecording: saveRecording,
   markRecording: markRecording,
   listClassFiles: listClassFiles,
+  myStaffRole: myStaffRole,
+  listContent: listContent,
+  saveContent: saveContent,
+  deleteContent: deleteContent,
   submitHomeworkFile: submitHomeworkFile,
   getMySubmission: getMySubmission,
   listSubmissions: listSubmissions,
