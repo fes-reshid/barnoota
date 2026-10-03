@@ -256,6 +256,18 @@
     });
     html += "</div></div>";
 
+    html += '<section class="howto">'
+      + '<div class="howto-head"><span class="eyebrow">HOW TO USE</span><h2>Print it, laminate it, live with it</h2>'
+      + "<p>These du’as are meant to be seen every day, not read once and filed away.</p></div>"
+      + '<div class="howto-steps">'
+      + howtoStep("1", "🎯", "Pick a set", "Start with Kids’ Daily Essentials, or print a single du’a, a whole topic, or everything.")
+      + howtoStep("2", "🎨", "Make it yours", "Choose Arabic, transliteration, English and/or Afaan Oromoo, an Arabic font and a border — then edit any wording right in the print preview.")
+      + howtoStep("3", "🖨️", "Print", "Printing fills a landscape page by default, so there’s no page setup to fuss with.")
+      + howtoStep("4", "📎", "Laminate it", "A laminating pouch (or even clear contact paper or packing tape) protects it from little hands, bathroom steam and kitchen splashes, and makes it wipeable.")
+      + howtoStep("5", "📌", "Stick it where it’s said", "Bedroom door for waking &amp; sleeping, bathroom door for the toilet du’as, front door for leaving &amp; entering the house, kitchen for eating — right at eye level.")
+      + howtoStep("6", "🧠", "Let it memorize you", "Glance at it every time you pass. Mark a du’a “memorized” once you know it by heart, or drill it in Memorize mode.")
+      + "</div></section>";
+
     html += '<div class="journey-title"><span class="eyebrow">CHOOSE A TOPIC</span><h2>Browse every du’a</h2>'
       + "<p>Tap any topic to explore its du’as, memorize them, or print a set.</p></div>";
 
@@ -285,6 +297,11 @@
 
     mount.innerHTML = html;
     bindHomeEvents();
+  }
+
+  function howtoStep(num, icon, title, body) {
+    return '<div class="howto-step"><span class="howto-num">' + num + "</span>"
+      + '<div><h3>' + icon + " " + esc(title) + "</h3><p>" + body + "</p></div></div>";
   }
 
   function bindHomeEvents() {
@@ -440,8 +457,10 @@
         return tag + '<p class="dua-translation">' + esc(r.text) + "</p>";
       }).join("") + "</div>";
     }
-    if (dua.benefit && s.showBenefit) {
-      html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> ' + esc(dua.benefit) + "</p>";
+    if (s.showBenefit) {
+      html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> '
+        + '<span class="pp-editable" contenteditable="true" data-benefit-field title="Click to add or edit — saved on this device only">'
+        + esc(dua.benefit || "") + "</span></p>";
     }
     html += '<div class="drawing-box" aria-hidden="true"><span class="drawing-label">✏️ Draw a picture</span></div>';
     html += '<footer class="dua-card-foot">'
@@ -474,6 +493,36 @@
           }
         });
       });
+      var benefitEl = card.querySelector("[data-benefit-field]");
+      if (benefitEl) {
+        benefitEl.addEventListener("blur", function () {
+          var text = benefitEl.textContent.trim();
+          var found = findDua(duaId);
+          var originalBenefit = found ? (found.dua.benefit || "") : "";
+          if (text === originalBenefit) {
+            var o = state.overrides[duaId];
+            if (o && "benefit" in o) {
+              delete o.benefit;
+              if (!Object.keys(o).length) delete state.overrides[duaId];
+              saveOverrides();
+            }
+          } else {
+            setOverrideField(duaId, "benefit", null, text);
+          }
+          var hasEdit = state.overrides[duaId] && Object.keys(state.overrides[duaId]).length;
+          var head = card.querySelector(".dua-card-head");
+          var badge = head.querySelector(".edited-badge");
+          if (hasEdit && !badge) {
+            badge = document.createElement("span");
+            badge.className = "edited-badge";
+            badge.title = "You’ve edited this du’a’s text";
+            badge.textContent = "✏️ edited";
+            head.insertBefore(badge, head.children[1] || null);
+          } else if (!hasEdit && badge) {
+            badge.remove();
+          }
+        });
+      }
     });
   }
 

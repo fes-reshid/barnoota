@@ -217,6 +217,20 @@ nav.main-links a:hover{ background:var(--green-bg); }
 .home-note span{ font-size:24px; }
 .home-note p{ margin:0; line-height:1.5; font-size:14px; }
 
+/* ---------- "How to use" guide (home page) ---------- */
+.howto{ margin:30px 0 10px; padding:24px 22px; background:#fff; border:2px solid #dfebde; border-radius:24px; box-shadow:var(--shadow); }
+.howto-head{ text-align:center; margin-bottom:18px; }
+.howto-head h2{ font-size:clamp(22px,3.6vw,28px); margin:8px 0 5px; font-weight:900; color:var(--ink-navy); }
+.howto-head p{ color:#5c7873; margin:0; }
+.howto-steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+.howto-step{ display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:16px; background:linear-gradient(150deg,var(--green-bg),#fff); }
+.howto-num{
+  flex:0 0 auto; width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; background:var(--green-dark); color:#fff; font-weight:900; font-size:13px;
+}
+.howto-step h3{ margin:0 0 4px; font-size:15px; font-weight:900; color:var(--ink-navy); }
+.howto-step p{ margin:0; font-size:13px; line-height:1.5; color:#436158; }
+
 /* ---------- Crumbs ---------- */
 .crumbs{ font-size:14px; color:#5c7873; margin:18px 0 6px; }
 .crumbs a{ text-decoration:none; color:var(--green-dark); font-weight:700; }
@@ -394,10 +408,10 @@ footer .fine{ font-size:13px; color:#9fbcb4; max-width:640px; margin:0 auto 8px;
 html[data-drawing="on"] .print-card .drawing-box{ display:block; }
 .print-card .drawing-label{ position:absolute; top:6px; left:10px; font-size:11px; color:#8a9b96; }
 
-.print-card .pp-editable{ cursor:text; border-radius:4px; }
-.print-card .pp-editable:hover{ background:rgba(227,167,49,.1); }
-.print-card .pp-editable:focus{ outline:2px dashed var(--gold); background:rgba(227,167,49,.14); }
-.print-card .pp-editable:empty::before{ content:"Click to add\2026"; color:#8a9b96; font-style:italic; }
+.pp-editable{ cursor:text; border-radius:4px; }
+.pp-editable:hover{ background:rgba(227,167,49,.1); }
+.pp-editable:focus{ outline:2px dashed var(--gold); background:rgba(227,167,49,.14); }
+.pp-editable:empty::before{ content:"Click to add\2026"; color:#8a9b96; font-style:italic; }
 
 html[data-print-size="flashcard"] .print-card-inner{ min-height:82mm; }
 html[data-print-size="flashcard"] .print-card .dua-arabic{ font-size:calc(20px * var(--font-scale)) !important; }
