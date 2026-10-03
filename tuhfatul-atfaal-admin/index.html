@@ -499,6 +499,11 @@
           <h2>🌟 Leading learners</h2>
           <div id="leader-list"></div>
         </div>
+        <div class="card" id="new-students-card">
+          <h2>🆕 New students</h2>
+          <p class="muted" style="margin-top:-4px">Students who signed up but are not in a class yet. Add them to your class — or share your class code with them.</p>
+          <div id="new-students"><p class="muted">Loading…</p></div>
+        </div>
         <div class="card">
           <h2>🎙️ New recitations</h2>
           <p class="muted" style="margin-top:-4px">Recordings students sent that no teacher has listened to yet.</p>
@@ -1003,7 +1008,7 @@
       </section>
       <section class="guide-sec" id="g-edit">
         <h3>✏️ Edit the course (teacher mode)</h3>
-        <ol><li>Sign in to <b>Tajweed Quest</b> (the student app) with your teacher username — every map and lesson opens.</li><li>Tap <b>✏️ Edit Map N</b> to change a map’s name and its Map Challenge questions 1–14 (question 15 is the line match), or <b>✏️ Edit this lesson</b> inside a lesson for its title, English meaning, explanation and Five Questions.</li><li><b>Save for every student</b>, or <b>Reset to original</b> to undo.</li></ol>
+        <ol><li>Sign in to <b>Tajweed Quest</b> (the student app) with your teacher username — every map and lesson opens.</li><li>Tap <b>✏️ Edit Map N</b> to change a map’s name and its Map Challenge questions 1–14 (question 15 is the line match), or <b>✏️ Edit this lesson</b> inside a lesson for its title, English meaning, explanation, easy explanation, Qur’an examples and Five Questions.</li><li><b>Save for every student</b>, or <b>Reset to original</b> to undo.</li></ol>
       </section>
       <section class="guide-sec" id="g-faq">
         <h3><span class="gi" style="--c:#6b5d44">❓</span> Questions</h3>
@@ -1157,7 +1162,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=22"></script>
+<script type="module" src="../kids-quest-cloud.js?v=23"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2059,7 +2064,7 @@ function fillClassSelects(){
 }
 function loadClasses(){
   if(!window.KidsCloud.listClasses) return Promise.resolve();
-  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); })
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
     .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderClasses(){
@@ -2124,6 +2129,35 @@ function updateClassMembers(c, uids, msg){
 /* Each student record lists the teachers allowed to read it
    (teacherEmails). Joining / adding to a class links that class's teacher;
    leaving the last class with that teacher unlinks them. */
+/* ===================== new students ===================== */
+let newStudentsCache = [];
+function hiddenNew(){ try { return JSON.parse(localStorage.getItem('tp-new-hidden') || '[]'); } catch(e){ return []; } }
+function loadNewStudents(){
+  if(!window.KidsCloud.listNewStudents) return Promise.resolve();
+  return window.KidsCloud.listNewStudents(GAME_KEY).then(list => { newStudentsCache = list; renderNewStudents(); })
+    .catch(() => { $('new-students').innerHTML = '<p class="muted">New students will appear here once the new Firestore rules are published.</p>'; });
+}
+function renderNewStudents(){
+  const box = $('new-students'); if(!box) return;
+  const inClass = new Set(classesCache.flatMap(c => c.studentUids)), hidden = hiddenNew();
+  const list = newStudentsCache.filter(n => !inClass.has(n.uid) && !hidden.includes(n.uid) && !/teacher/i.test(n.username || '') && !HIDDEN_ACCOUNTS.includes(String(n.username || '').toLowerCase()));
+  const mine = myClasses();
+  box.innerHTML = list.length ? '' : '<p class="empty">No new students waiting. 🌟</p>';
+  list.slice(0, 12).forEach(n => {
+    const el = document.createElement('div'); el.className = 'list-row'; el.style.flexWrap = 'wrap';
+    el.innerHTML = '<div style="font-size:26px">🧒</div><div class="grow" style="flex:1 1 220px;min-width:0"><div style="font-weight:800;color:var(--ink-brown)">' + escapeHtml(n.name || n.username) + ' <span class="role-badge warn">New</span></div><div class="sub">@' + escapeHtml(n.username || '') + ' · joined ' + fmtTime(n.since) + ' · not in a class yet</div></div>' +
+      (mine.length ? '<select class="ns-class" aria-label="Class">' + mine.map(c => '<option value="' + escapeHtml(c.id) + '">🏫 ' + escapeHtml(c.name) + '</option>').join('') + '</select><button class="btn primary small" data-ns-add>➕ Add to my class</button>'
+        : '<button class="btn primary small" data-ns-make>🏫 Create a class</button>') + '<button class="linkbtn" data-ns-hide title="Hide from my list">Not mine</button>';
+    const add = el.querySelector('[data-ns-add]');
+    if(add) add.onclick = () => { const c = classById(el.querySelector('.ns-class').value); if(!c) return; add.disabled = true;
+      updateClassMembers(c, c.studentUids.concat(n.uid), (n.name || n.username) + ' added to ' + c.name + ' ✓').then(() => { loadStudents(); renderNewStudents(); }); };
+    const mk = el.querySelector('[data-ns-make]'); if(mk) mk.onclick = () => showTab('classes');
+    el.querySelector('[data-ns-hide]').onclick = () => { try { localStorage.setItem('tp-new-hidden', JSON.stringify(hiddenNew().concat(n.uid).slice(-300))); } catch(e){} renderNewStudents(); };
+    box.appendChild(el);
+  });
+  if(list.length > 12) box.insertAdjacentHTML('beforeend', '<p class="muted">…and ' + (list.length - 12) + ' more.</p>');
+  if(list.length && mine.length) box.insertAdjacentHTML('beforeend', '<p class="muted" style="margin-top:8px">💡 Once added, the student links to you the next time they open Tajweed Quest — then you can follow their progress. Or give them your class code: ' + mine.map(c => '<b>' + escapeHtml(c.name) + '</b> ' + escapeHtml(c.id)).join(' · ') + '</p>');
+}
 function linkTeacher(uid, email, on){
   if(!window.KidsCloud.adminLinkStudentTeacher || !uid || !email) return Promise.resolve();
   return window.KidsCloud.adminLinkStudentTeacher(uid, email, on).then(() => {
@@ -2744,7 +2778,7 @@ function loadQuizzes(){
   return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
-function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads(), loadFiles()]).then(() => toast('Up to date ✓')); }
+function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads(), loadFiles(), loadNewStudents()]).then(() => toast('Up to date ✓')); }
 
 function renderAdmins(list){
   const box = $('admin-list');
@@ -2813,6 +2847,7 @@ function showDashboard(info){
   loadClasses();
   loadHomework();
   loadFiles();
+  loadNewStudents();
   loadAttendance();
   loadQuizzes();
   loadAnnouncements();

@@ -59,6 +59,7 @@ const FILES_COLLECTION = 'kids_quest_files';
 const FILE_DATA_COLLECTION = 'kids_quest_file_data';
 const SUBMISSIONS_COLLECTION = 'kids_quest_submissions';
 const CONTENT_COLLECTION = 'kids_quest_content';
+const NEW_STUDENTS_COLLECTION = 'kids_quest_new_students';
 const SUBMISSION_DATA_COLLECTION = 'kids_quest_submission_data';
 
 const app = initializeApp(firebaseConfig);
@@ -1163,6 +1164,36 @@ function saveContent(id, data){
 }
 function deleteContent(id){ return deleteDoc(doc(db, CONTENT_COLLECTION, String(id))); }
 
+/* ---- new students waiting for a class ---- */
+/* kids_quest_new_students/{uid}: a student who is not in any class yet, so
+   teachers can spot them and add them to a class. The student removes it
+   once they are in a class. Staff can read; only the student writes. */
+function markNewStudent(info){
+  const user = auth.currentUser; if(!user) return Promise.resolve();
+  const x = info || {};
+  return setDoc(doc(db, NEW_STUDENTS_COLLECTION, user.uid), { uid: user.uid, game: String(x.game || ''), username: String(x.username || '').slice(0, 60), name: String(x.name || '').slice(0, 80), since: String(x.since || new Date().toISOString()), seenAt: new Date().toISOString() }, { merge:true });
+}
+function clearNewStudent(){
+  const user = auth.currentUser; if(!user) return Promise.resolve();
+  return deleteDoc(doc(db, NEW_STUDENTS_COLLECTION, user.uid)).catch(function(){});
+}
+function listNewStudents(game){
+  return getDocs(collection(db, NEW_STUDENTS_COLLECTION)).then(function(snap){
+    const out = []; snap.forEach(function(d){ const x = d.data(); if(!game || !x.game || x.game === game) out.push(Object.assign({ uid: d.id }, x)); });
+    out.sort(function(a, b){ return String(b.since || '').localeCompare(String(a.since || '')); });
+    return out;
+  });
+}
+/* A teacher may add a student to a class from the portal; the student's own
+   record then needs that teacher's email so the teacher can follow them.
+   The student app calls this with its classes' teacher emails. */
+function syncMyTeacherLinks(emails){
+  const user = auth.currentUser; if(!user) return Promise.resolve();
+  const list = (emails || []).map(normalizeEmail).filter(Boolean);
+  if(!list.length) return Promise.resolve();
+  return setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { teacherEmails: arrayUnion.apply(null, list) }, { merge:true });
+}
+
 /* ---- attendance ---- */
 /* kids_quest_attendance/{classId}_{YYYY-MM-DD}: one class session, with a
    mark per student: present | late | absent | excused. Staff only. */
@@ -1276,6 +1307,10 @@ window.KidsCloud = {
   markRecording: markRecording,
   listClassFiles: listClassFiles,
   myStaffRole: myStaffRole,
+  markNewStudent: markNewStudent,
+  clearNewStudent: clearNewStudent,
+  listNewStudents: listNewStudents,
+  syncMyTeacherLinks: syncMyTeacherLinks,
   listContent: listContent,
   saveContent: saveContent,
   deleteContent: deleteContent,
