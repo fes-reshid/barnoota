@@ -131,6 +131,9 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 .tm-row{display:grid;grid-template-columns:2fr 1fr;gap:8px}.tm-choices{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.tm-choice{display:flex;align-items:center;gap:6px}.tm-choice input[type=radio]{width:20px;height:20px;accent-color:#2f6f55;flex:none}.tm-choice .tm-in{margin:0}
 .tm-foot #tmMsg{margin:0 0 8px}.tm-foot #tmMsg:empty{display:none}
 .tm-ex{border:2px dashed #e3d6b3;border-radius:12px;padding:8px 10px;margin:8px 0;background:#fffaf0}.tm-ex .tm-in{margin-top:4px}.tm-ex .tm-row{align-items:center}
+.ex-rich{display:block;text-align:left;line-height:1.65}.ex-p{display:block;margin:0 0 .8em}.ex-h{display:block;font:700 1.15em Marcellus,serif;color:#14533e;margin:.4em 0 .4em}.ex-h2{color:#14533e}.ex-ul{display:block;margin:0 0 .8em}.ex-li{display:list-item;margin-left:1.3em}.ex-img{display:block;max-width:100%;height:auto;margin:.6em auto 1em;border-radius:12px;border:3px solid #e8cf86;background:#f6efdc;min-height:40px}.ex-missing{display:block;color:#a0927a;font-style:italic}
+.tm-tools{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0}.tm-tools button{padding:5px 12px;font-size:14px;min-height:0}textarea.tm-in.tm-xl{min-height:260px}
+.tm-pics{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 10px}.tm-pic{display:flex;flex-direction:column;gap:6px;align-items:flex-start;border:2px solid #eadcb8;border-radius:12px;padding:8px;background:#fff;width:190px}.tm-pic img{width:100%!important;margin:0;max-height:120px;object-fit:cover}.tm-pic select{font:14px Nunito;padding:3px}.tm-pic button{padding:3px 10px;font-size:13px;min-height:0}
 .tm-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;z-index:90;background:#14533e;color:#fff8e1;border:2px solid #e8cf86;border-radius:999px;padding:10px 18px;font:800 15px Nunito;transition:.3s;pointer-events:none}.tm-toast.on{opacity:1;transform:translate(-50%,0)}
 @media(max-width:620px){.tm-row,.tm-choices{grid-template-columns:1fr}.tm-edit-btn{right:10px;bottom:10px;padding:10px 16px;font-size:15px}}
 .start-here{pointer-events:none;animation:startBob 1.1s ease-in-out infinite}
@@ -711,7 +714,7 @@ async function forgotPassword(){if(!window.KidsCloud)return;const username=$('#a
 function wireCloudAuth(){if(authWired||!window.KidsCloud)return;authWired=true;$('#authSubmit').disabled=false;$('#authMessage').textContent='';$('#authMessage').classList.remove('auth-loading');window.KidsCloud.onStudentAuth(data=>{if(data)applyCloudAccount(data);else{cloudUser=null;profile=freshProfile();show('startScreen');$('#authSubmit').disabled=false}})}
 $('#signInTab').onclick=()=>setAuthMode('signin');$('#createTab').onclick=()=>setAuthMode('create');$('#authSubmit').onclick=submitAuth;$('#forgotPasswordBtn').onclick=forgotPassword;$('#authUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authPassword').focus()});$('#authPassword').addEventListener('keydown',e=>{if(e.key==='Enter')submitAuth()});$('#logoutBtn').onclick=()=>{if(window.KidsCloud)window.KidsCloud.studentLogout()};$('#prevWorld').onclick=()=>{if(viewWorld>0){viewWorld--;renderMap()}};$('#nextWorld').onclick=()=>{if(viewWorld<worlds.length-1&&worldUnlocked(viewWorld+1)){viewWorld++;renderMap()}};$('#homeBtn').onclick=()=>{renderMap();show('mapScreen')};$('#previousLessonBtn').onclick=previousLesson;$('#soundBtn').onclick=speak;$('#soundToggle').onclick=()=>{soundOn=!soundOn;if(!soundOn&&'speechSynthesis'in window)speechSynthesis.cancel();syncStats();if(soundOn)happySound()};$('#clearSignature').onclick=clearSignaturePad;$('#teacherApproveBtn').onclick=approveTeacherCheck;$('#mapQuizBtn').onclick=showMapQuiz;$('#studentAvatar').onclick=showAvatarPicker;$('#avatarBtn').onclick=showAvatarPicker;$('#avatarBack').onclick=()=>{renderMap();show('mapScreen')};$('#vocabBtn').onclick=showVocab;$('#vocabBack').onclick=()=>{renderMap();show('mapScreen')};$('#flashBtn').onclick=showFlash;$('#flashBack').onclick=()=>{renderMap();show('mapScreen')};$('#certBtn').onclick=showCert;$('#certBack').onclick=()=>{renderMap();show('mapScreen')};$('#continueBtn').onclick=continueQuest;$('#rewardMapBtn').onclick=()=>{renderMap();show('mapScreen')};$('#resetBtn').onclick=()=>{if(confirm('Reset all Tajweed Quest progress?')){localStorage.removeItem(progressKey());profile=freshProfile(profile.name);save();viewWorld=0;renderMap()}};setupSignaturePad();$('#year').textContent=new Date().getFullYear();window.addEventListener('kidscloud-ready',wireCloudAuth);if(window.KidsCloud)wireCloudAuth();
 </script>
-<script type="module" src="../kids-quest-cloud.js?v=23"></script>
+<script type="module" src="../kids-quest-cloud.js?v=24"></script>
 <script>
 /* Printed-poem presentation for all 61 verses */
 Object.assign(LINE_VOCAB,{
@@ -2095,7 +2098,7 @@ function markToBrackets(t){return stripTags(String(t||'').replace(/<mark>/g,'[')
 function lessonKey(i){return GAME_KEY+'_lesson_'+String(lessons[i].lines).replace(/[^0-9-]/g,'')}
 function mapKey(w){return GAME_KEY+'_map_'+w}
 function applyContentEdits(){
- lessons.forEach((l,i)=>{const o=LESSON_ORIG[i],e=contentEdits[lessonKey(i)]||{};l.title=e.title||o.title;l.translation=e.translation||o.translation;l.text=o.text;const k=String(l.lines),custom=e.text&&e.text!==o.text&&e.text!==o.explanation?e.text:'';if(custom)PDF_EXPLANATIONS[k]=custom;else if(PDF_ORIG[k]!=null)PDF_EXPLANATIONS[k]=PDF_ORIG[k];else delete PDF_EXPLANATIONS[k];if(custom&&PDF_ORIG[k]==null)l.text=custom;if(LINE_TRANSLATIONS)LINE_TRANSLATIONS[l.lines]=l.translation});
+ lessons.forEach((l,i)=>{const o=LESSON_ORIG[i],e=contentEdits[lessonKey(i)]||{};l.title=e.title||o.title;l.translation=e.translation||o.translation;l.text=o.text;const k=String(l.lines),custom=e.text&&e.text!==o.text&&e.text!==o.explanation?e.text:'';if(custom)PDF_EXPLANATIONS[k]=formatExplanation(custom);else if(PDF_ORIG[k]!=null)PDF_EXPLANATIONS[k]=PDF_ORIG[k];else delete PDF_EXPLANATIONS[k];if(custom&&PDF_ORIG[k]==null)l.text=formatExplanation(custom);if(LINE_TRANSLATIONS)LINE_TRANSLATIONS[l.lines]=l.translation});
  worlds.forEach((w,i)=>{const e=contentEdits[mapKey(i)]||{};w.title=e.mapTitle||WORLD_ORIG[i]});
 }
 function loadContentEdits(){
@@ -2103,6 +2106,27 @@ function loadContentEdits(){
  return window.KidsCloud.listContent(GAME_KEY).then(list=>{contentEdits={};list.forEach(d=>contentEdits[d.id]=d);contentLoaded=true;applyContentEdits();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}).catch(()=>{});
 }
 function editedQ(q){const qq={q:escapeHtml(q.q)+(q.ar?`<span class="quiz-ayah" dir="rtl" lang="ar">${escapeHtml(q.ar)}</span>${q.ref?`<small class="quiz-ayah-ref">${escapeHtml(q.ref)}</small>`:''}`:''),choices:q.choices.map(c=>escapeHtml(c)),answer:q.answer,hint:q.hint||'Ask your teacher or review the lesson.',source:q.explain||q.choices[q.answer]||''};return qq}
+/* Teacher-written explanation → safe HTML: an empty line starts a new
+   paragraph, a line break stays a line break, “# ” = heading, “- ” = list,
+   **bold**, and [[picture:ID:SIZE]] = a picture SIZE% wide. */
+const PIC_RE=/\[\[picture:([A-Za-z0-9_-]{6,40}):(\d{2,3})\]\]/g;
+function formatExplanation(text){
+ const inline=t=>escapeHtml(t).replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\[\[picture:([A-Za-z0-9_-]{6,40}):(\d{2,3})\]\]/g,(m,id,w)=>`<img class="ex-img" data-img="${id}" style="width:${Math.max(15,Math.min(100,+w))}%" alt="Picture from your teacher">`);
+ const blocks=String(text||'').replace(/\r/g,'').split(/\n\s*\n/).map(b=>b.replace(/^\n+|\n+$/g,'')).filter(Boolean);
+ return '<span class="ex-rich">'+blocks.map(b=>{const lines=b.split('\n');
+  if(lines.every(x=>/^\s*[-•]\s+/.test(x)))return '<span class="ex-ul">'+lines.map(x=>'<span class="ex-li">'+inline(x.replace(/^\s*[-•]\s+/,''))+'</span>').join('')+'</span>';
+  if(lines.length===1&&/^#\s+/.test(lines[0]))return '<span class="ex-h">'+inline(lines[0].replace(/^#\s+/,''))+'</span>';
+  return '<span class="ex-p">'+lines.map(x=>/^#\s+/.test(x)?'<b class="ex-h2">'+inline(x.replace(/^#\s+/,''))+'</b>':inline(x)).join('<br>')+'</span>'}).join('')+'</span>';
+}
+var exImgCache={};
+function fillExImages(root){(root||document).querySelectorAll('img.ex-img[data-img]:not([src])').forEach(img=>{const id=img.dataset.img;
+ const set=d=>{if(d)img.src=d;else img.replaceWith(Object.assign(document.createElement('span'),{className:'ex-missing',textContent:'(picture not available)'}))};
+ if(exImgCache[id]){Promise.resolve(exImgCache[id]).then(set);return}
+ exImgCache[id]=window.KidsCloud&&window.KidsCloud.getContentImage?window.KidsCloud.getContentImage(id).catch(()=>''):Promise.resolve('');exImgCache[id].then(d=>{exImgCache[id]=d;set(d)})})}
+/* shrink a chosen photo to ≤ 1200 px wide JPEG under ~700 KB */
+function compressPicture(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{let w=im.naturalWidth,h=im.naturalHeight,max=1200;if(w>max){h=Math.round(h*max/w);w=max}
+ const c=document.createElement('canvas');let q=.85,out='';for(let t=0;t<6;t++){c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,h);g.drawImage(im,0,0,w,h);out=c.toDataURL('image/jpeg',q);if(out.length<700000)break;q-=.12;w=Math.round(w*.8);h=Math.round(h*.8)}
+ URL.revokeObjectURL(url);out.length<950000?res(out):rej(new Error('That picture is too big.'))};im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('That file is not a picture.'))};im.src=url})}
 function lessonEditFor(l){const i=lessons.indexOf(l);return i>=0?contentEdits[lessonKey(i)]:null}
 const simpleExplanationForBeforeEdits=simpleExplanationFor;
 simpleExplanationFor=function(l){const e=lessonEditFor(l);return e&&e.simple?e.simple:simpleExplanationForBeforeEdits.apply(this,arguments)};
@@ -2162,18 +2186,34 @@ function openEditorRewire(ed,opts){ed.querySelectorAll('[data-qup],[data-qdown]'
 function closeEditor(){const e=$('#tmEditor');if(e)e.remove()}
 function toastTm(t){let el=$('#tmToast');if(!el){document.body.insertAdjacentHTML('beforeend','<div class="tm-toast" id="tmToast" role="status"></div>');el=$('#tmToast')}el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),3500)}
 function editedWhen(id){const e=contentEdits[id];return e?new Date(e.updatedAt||Date.now()).toLocaleDateString([], {day:'numeric',month:'short',year:'numeric'})+(e.updatedBy?' by '+escapeHtml(String(e.updatedBy).split('@')[0]):''):''}
+function rawExplanation(i){const o=LESSON_ORIG[i],e=contentEdits[lessonKey(i)];return e&&e.text&&e.text!==o.text&&e.text!==o.explanation?e.text:stripTags(o.explanation)}
+function insertAtCursor(ta,before,after,placeholder){const a=ta.selectionStart,b=ta.selectionEnd,sel=ta.value.slice(a,b)||placeholder||'';ta.value=ta.value.slice(0,a)+before+sel+(after||'')+ta.value.slice(b);ta.focus();const p=a+before.length;ta.setSelectionRange(p,p+sel.length);ta.dispatchEvent(new Event('input'))}
+function renderPicList(ed){const ta=ed.querySelector('#tmText'),box=ed.querySelector('#tmPics');if(!ta||!box)return;const pics=[...ta.value.matchAll(PIC_RE)];
+ box.innerHTML=pics.length?'<div class="tm-pics">'+pics.map((m,n)=>`<div class="tm-pic"><img data-img="${m[1]}" class="ex-img" alt=""><label>Size <select data-pic="${n}">${[[30,'Small'],[50,'Medium'],[75,'Large'],[100,'Full width']].map(([v,t])=>`<option value="${v}" ${+m[2]===v?'selected':''}>${t}</option>`).join('')}</select></label><button type="button" class="ghost tm-reset" data-picdel="${n}">✕ Remove</button></div>`).join('')+'</div>':'';
+ fillExImages(box);
+ box.querySelectorAll('[data-pic]').forEach(sel=>sel.onchange=()=>{let k=-1;ta.value=ta.value.replace(PIC_RE,(m,id,w)=>(++k===+sel.dataset.pic)?`[[picture:${id}:${sel.value}]]`:m);renderPicList(ed)});
+ box.querySelectorAll('[data-picdel]').forEach(b=>b.onclick=()=>{let k=-1;ta.value=ta.value.replace(PIC_RE,m=>(++k===+b.dataset.picdel)?'':m).replace(/\n{3,}/g,'\n\n');renderPicList(ed)});
+}
+function wireExplanationTools(ed){
+ const ta=ed.querySelector('#tmText');if(!ta)return;ta.addEventListener('input',()=>{clearTimeout(ta._t);ta._t=setTimeout(()=>renderPicList(ed),300)});renderPicList(ed);
+ ed.querySelectorAll('[data-fmt]').forEach(b=>b.onclick=()=>{const f=b.dataset.fmt;if(f==='b')insertAtCursor(ta,'**','**','bold words');else{const a=ta.selectionStart,start=ta.value.lastIndexOf('\n',a-1)+1;ta.setSelectionRange(start,start);insertAtCursor(ta,f==='h'?'# ':'- ','','')}});
+ const file=ed.querySelector('#tmPicFile');ed.querySelector('#tmPicBtn').onclick=()=>{file.value='';file.click()};
+ file.onchange=()=>{const f=file.files[0];if(!f)return;const m=ed.querySelector('#tmMsg');m.textContent='⏳ Adding the picture…';m.className='feedback';
+  compressPicture(f).then(d=>window.KidsCloud.saveContentImage(GAME_KEY,d).then(id=>{exImgCache[id]=d;const pos=ta.selectionStart||ta.value.length,pre=ta.value.slice(0,pos),gap=pre&&!/\n\n$/.test(pre)?(/\n$/.test(pre)?'\n':'\n\n'):'';ta.setSelectionRange(pos,pos);insertAtCursor(ta,gap+`[[picture:${id}:75]]`+'\n\n','','');m.textContent='✅ Picture added — choose its size below.';m.className='feedback good';renderPicList(ed)}))
+  .catch(err=>{m.textContent=(err&&/permission/i.test(err.code||err.message||''))?'Not allowed — check your teacher account.':(err&&err.message)||'Could not add the picture.';m.className='feedback bad'})};
+}
 function exEditorHTML(x){return `<div class="tm-ex"><div class="tm-row"><input class="tm-in" data-x="label" maxlength="80" value="${escapeHtml(x.label||'')}" placeholder="Title, e.g. Izhar before ه"><input class="tm-in" data-x="ref" maxlength="80" value="${escapeHtml(x.ref||'')}" placeholder="Reference, e.g. Az-Zumar 39:36"></div><input class="tm-in tm-ar" data-x="ar" dir="rtl" lang="ar" maxlength="400" value="${escapeHtml(x.ar||'')}" placeholder="Arabic — [highlight] the rule"><div class="tm-row"><input class="tm-in" data-x="note" maxlength="400" value="${escapeHtml(x.note||'')}" placeholder="What to notice"><button type="button" class="ghost tm-reset" data-x-del>✕ Remove</button></div></div>`}
 function readExs(ed){return[...ed.querySelectorAll('.tm-ex')].map(el=>({label:el.querySelector('[data-x="label"]').value.trim(),ar:el.querySelector('[data-x="ar"]').value.trim(),ref:el.querySelector('[data-x="ref"]').value.trim(),note:el.querySelector('[data-x="note"]').value.trim()})).filter(x=>x.ar||x.note)}
 function wireExs(ed){ed.querySelectorAll('[data-x-del]').forEach(b=>b.onclick=()=>b.closest('.tm-ex').remove());const add=ed.querySelector('#tmAddEx');if(add)add.onclick=()=>{ed.querySelector('#tmExs').insertAdjacentHTML('beforeend',exEditorHTML({}));wireExs(ed)}}
 function openLessonEditor(i){
  const l=lessons[i],id=lessonKey(i),qs=lessonQuizBank(i).map(qFromBuilt);
  openEditor({id,title:`Lesson · Line ${l.lines}`,edited:editedWhen(id),
-  fields:`<label class="tm-label">Lesson title<input class="tm-in" id="tmTitle" maxlength="120" value="${escapeHtml(l.title)}"></label><label class="tm-label">English meaning of the line<textarea class="tm-in" id="tmTrans" maxlength="600">${escapeHtml(l.translation)}</textarea></label><label class="tm-label">Explanation (Learn page)<textarea class="tm-in tm-tall" id="tmText" maxlength="5000">${escapeHtml(PDF_EXPLANATIONS[String(l.lines)]||l.text)}</textarea></label><label class="tm-label">Easy explanation (purple box)<textarea class="tm-in" id="tmSimple" maxlength="800">${escapeHtml(simpleExplanationFor(l))}</textarea></label>
+  fields:`<label class="tm-label">Lesson title<input class="tm-in" id="tmTitle" maxlength="120" value="${escapeHtml(l.title)}"></label><label class="tm-label">English meaning of the line<textarea class="tm-in" id="tmTrans" maxlength="600">${escapeHtml(l.translation)}</textarea></label><label class="tm-label">Explanation (Learn page)</label><div class="tm-tools"><button type="button" class="ghost" id="tmPicBtn">🖼️ Add a picture</button><button type="button" class="ghost" data-fmt="b" title="Bold">𝐁 Bold</button><button type="button" class="ghost" data-fmt="h" title="Heading">＃ Heading</button><button type="button" class="ghost" data-fmt="li" title="List">• List</button><input type="file" id="tmPicFile" accept="image/*" hidden></div><textarea class="tm-in tm-tall tm-xl" id="tmText" maxlength="20000">${escapeHtml(rawExplanation(i))}</textarea><p class="tm-help">Press Enter for a new line, and leave an empty line for a new paragraph. **Bold**, “# ” starts a heading, “- ” starts a list item.</p><div id="tmPics"></div><label class="tm-label">Easy explanation (purple box)<textarea class="tm-in" id="tmSimple" maxlength="800">${escapeHtml(simpleExplanationFor(l))}</textarea></label>
   <h3 class="tm-sub">📖 Find the Rule in the Qur’an</h3><p class="tm-help">Put [square brackets] around the words to highlight in the Arabic. Remove every example to hide this box.</p><div id="tmExs">${(lessonEditFor(l)&&Array.isArray(lessonEditFor(l).examples)?lessonEditFor(l).examples:LESSON_ORIG[i].examples).map(exEditorHTML).join('')}</div><button type="button" class="ghost" id="tmAddEx">＋ Add an example</button><p class="tm-help">The Arabic matn stays as in the Tuhfah.</p>`,
   readFields:ed=>{const o=LESSON_ORIG[i],exs=readExs(ed),text=$('#tmText').value.trim(),simple=$('#tmSimple').value.trim(),d={kind:'lesson',key:String(l.lines),title:$('#tmTitle').value.trim(),translation:$('#tmTrans').value.trim(),text:text&&text!==o.explanation?text:'',simple:simple&&simple!==o.simple?simple:''};if(JSON.stringify(exs)!==JSON.stringify(o.examples))d.examples=exs;return d},
   qTitle:'Five Questions (end of the lesson)',qs,qLabel:n=>'Question '+(n+1),
   after:()=>{lessonQuizQuestions=[];lessonQuizIndex=0;lessonQuizCorrect=0;renderLesson()}});
- const ed=$('#tmEditor');if(ed)wireExs(ed);
+ const ed=$('#tmEditor');if(ed){wireExs(ed);wireExplanationTools(ed)}
 }
 function openMapEditor(w){
  const id=mapKey(w),qs=buildMapQuiz(w).slice(0,MAP_QUIZ_TOTAL-1).map(qFromBuilt);
@@ -2183,6 +2223,7 @@ function openMapEditor(w){
   qTitle:`Map Challenge — questions 1 to ${MAP_QUIZ_TOTAL-1}`,qNote:`Question ${MAP_QUIZ_TOTAL} is always the line match (drag each line to its English meaning) — it uses the English meanings you set in each lesson. Pass mark: ${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL}.`,qs,qLabel:n=>'Question '+(n+1),
   after:()=>{if(currentScreen()==='mapQuizScreen')showMapQuiz();else renderMap()}});
 }
+const renderLessonBeforeExImg=renderLesson;renderLesson=function(){const r=renderLessonBeforeExImg.apply(this,arguments);fillExImages($('#stage'));return r};
 /* Sign-in hook: check the staff role and load everyone's content edits. */
 const applyCloudAccountBeforeTeacher=applyCloudAccount;
 applyCloudAccount=function(data){applyCloudAccountBeforeTeacher.apply(this,arguments);if(!data)return;loadContentEdits();const KC=window.KidsCloud;if(KC&&KC.myStaffRole)KC.myStaffRole().then(role=>{if(role){enterTeacherMode(role);return}checkClassLinks(data)})};

@@ -1154,7 +1154,7 @@ function myStaffRole(){
   return getDoc(doc(db, ADMINS_COLLECTION, normalizeEmail(user.email))).then(function(s){ return s.exists() ? (s.data().role || 'admin') : null; }).catch(function(){ return null; });
 }
 function listContent(game){
-  return getDocs(collection(db, CONTENT_COLLECTION)).then(function(snap){
+  return getDocs(game ? query(collection(db, CONTENT_COLLECTION), where('game', '==', game)) : collection(db, CONTENT_COLLECTION)).then(function(snap){
     const out = []; snap.forEach(function(d){ const x = d.data(); if(!game || x.game === game) out.push(Object.assign({ id: d.id }, x)); }); return out;
   });
 }
@@ -1163,6 +1163,16 @@ function saveContent(id, data){
   return setDoc(doc(db, CONTENT_COLLECTION, String(id)), Object.assign({}, data, { updatedAt: new Date().toISOString(), updatedBy: (user && user.email) ? normalizeEmail(user.email) : '' }));
 }
 function deleteContent(id){ return deleteDoc(doc(db, CONTENT_COLLECTION, String(id))); }
+/* Pictures in a lesson explanation: one compressed JPEG per doc
+   ({game}-img), so the content list stays light; fetched when shown. */
+function saveContentImage(game, dataUrl){
+  const user = auth.currentUser, data = String(dataUrl || '');
+  if(!/^data:image\/(jpeg|png|webp);base64,/.test(data)) return Promise.reject(new Error('That picture could not be read.'));
+  if(data.length > 950000) return Promise.reject(new Error('That picture is too big.'));
+  const ref = doc(collection(db, CONTENT_COLLECTION));
+  return setDoc(ref, { game: String(game || '') + '-img', data: data, updatedAt: new Date().toISOString(), updatedBy: (user && user.email) ? normalizeEmail(user.email) : '' }).then(function(){ return ref.id; });
+}
+function getContentImage(id){ return getDoc(doc(db, CONTENT_COLLECTION, String(id))).then(function(d){ return d.exists() ? d.data().data : ''; }); }
 
 /* ---- new students waiting for a class ---- */
 /* kids_quest_new_students/{uid}: a student who is not in any class yet, so
@@ -1314,6 +1324,8 @@ window.KidsCloud = {
   listContent: listContent,
   saveContent: saveContent,
   deleteContent: deleteContent,
+  saveContentImage: saveContentImage,
+  getContentImage: getContentImage,
   submitHomeworkFile: submitHomeworkFile,
   getMySubmission: getMySubmission,
   listSubmissions: listSubmissions,
