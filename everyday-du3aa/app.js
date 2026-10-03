@@ -264,7 +264,7 @@
       + howtoStep("2", "🎨", "Make it yours", "Choose Arabic, transliteration, English and/or Afaan Oromoo, an Arabic font and a border — then edit any wording right in the print preview.")
       + howtoStep("3", "🖨️", "Print", "Printing fills a landscape page by default, so there’s no page setup to fuss with.")
       + howtoStep("4", "📎", "Laminate it", "A laminating pouch (or even clear contact paper or packing tape) protects it from little hands, bathroom steam and kitchen splashes, and makes it wipeable.")
-      + howtoStep("5", "📌", "Stick it where it’s said", "Bedroom door for waking &amp; sleeping, washroom door for those du’as, front door for leaving &amp; entering the house, kitchen for eating — right at eye level.")
+      + howtoStep("5", "📌", "Stick it where it’s said", "Bedroom door for waking &amp; sleeping, front door for leaving &amp; entering the house, kitchen for eating — right at eye level. For the washroom du’as, don’t put the page on the washroom door itself — put it on the wall on the way there instead.")
       + howtoStep("6", "🧠", "Let it memorize you", "Glance at it every time you pass. Mark a du’a “memorized” once you know it by heart, or drill it in Memorize mode.")
       + "</div></section>";
 
