@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Everyday Du&rsquo;a &mdash; Diin Islaam</title>
-<meta name="description" content="All the du'as from Hisnul Muslim (Fortress of the Muslim), organized by everyday moment. Add transliteration and a translation, choose a language, then print flashcards or a wall poster, or practice with memorize mode.">
+<meta name="description" content="All the du'as from Hisnul Muslim (Fortress of the Muslim), organized by everyday moment. Mix and match Arabic, transliteration, English and Afaan Oromoo, then print a beautiful landscape wall poster or practice with memorize mode.">
 <meta property="og:title" content="Everyday Du'a &mdash; Diin Islaam">
-<meta property="og:description" content="Every du'a from Hisnul Muslim, printable as flashcards or a wall poster, with transliteration, translation and memorize mode.">
+<meta property="og:description" content="Every du'a from Hisnul Muslim, printable as a landscape wall poster or flashcards, with transliteration, English/Oromo translation and memorize mode.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#167b65">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,20 +53,22 @@
 
       <fieldset class="opt-group">
         <legend>Language &amp; text</legend>
-        <label class="opt-row">
-          <span>Translation language</span>
-          <select id="optLang">
-            <option value="en">English</option>
-            <option value="om">Afaan Oromoo</option>
-          </select>
+        <p class="opt-hint">Choose any mix &mdash; show just the Arabic, or stack Arabic with transliteration and both translations at once.</p>
+        <label class="opt-row opt-check">
+          <input type="checkbox" id="optArabic">
+          <span>Show Arabic text</span>
         </label>
         <label class="opt-row opt-check">
           <input type="checkbox" id="optTranslit">
           <span>Show transliteration (Latin letters)</span>
         </label>
         <label class="opt-row opt-check">
-          <input type="checkbox" id="optTranslation">
-          <span>Show translation</span>
+          <input type="checkbox" id="optEnglish">
+          <span>Show English translation</span>
+        </label>
+        <label class="opt-row opt-check">
+          <input type="checkbox" id="optOromo">
+          <span>Show Afaan Oromoo translation</span>
         </label>
         <label class="opt-row opt-check">
           <input type="checkbox" id="optBenefit">
@@ -142,12 +144,6 @@
     </div>
 
     <div class="pp-toolbar">
-      <label class="pp-tool"><span>Language</span>
-        <select id="ppOptLang">
-          <option value="en">English</option>
-          <option value="om">Afaan Oromoo</option>
-        </select>
-      </label>
       <label class="pp-tool"><span>Font</span>
         <select id="ppOptArabicFont">
           <option value="amiri">Amiri</option>
@@ -178,8 +174,10 @@
           <option value="landscape">Landscape</option>
         </select>
       </label>
+      <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptArabic"><span>Arabic</span></label>
       <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptTranslit"><span>Transliteration</span></label>
-      <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptTranslation"><span>Translation</span></label>
+      <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptEnglish"><span>English</span></label>
+      <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptOromo"><span>Afaan Oromoo</span></label>
       <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptBenefit"><span>Benefit note</span></label>
       <label class="pp-tool pp-tool-check"><input type="checkbox" id="ppOptDrawing"><span>Drawing box</span></label>
       <label class="pp-tool"><span>Text size</span><input type="range" id="ppOptFontScale" min="0.85" max="1.4" step="0.05"></label>

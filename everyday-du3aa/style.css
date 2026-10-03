@@ -255,8 +255,15 @@ h1{ color:var(--ink-navy); font-size:clamp(22px,3.4vw,30px); margin:6px 0 14px; 
 }
 .dua-note{ text-align:center; font-style:italic; color:#5c7873; font-size:14px; }
 .dua-translit{ text-align:center; font-style:italic; color:#b5811f; font-size:calc(16px * var(--font-scale)); margin:0 0 10px; line-height:1.5; }
-.dua-translation{ text-align:center; font-size:calc(17px * var(--font-scale)); line-height:1.6; margin:0; }
-.dua-lang-note{ text-align:center; font-size:12px; color:#8a9b96; margin:4px 0 0; }
+.dua-translation{ text-align:center; font-size:calc(17px * var(--font-scale)); line-height:1.6; margin:0 0 10px; }
+.dua-translation:last-child{ margin-bottom:0; }
+.dua-lang-note{ text-align:center; font-size:12px; font-style:italic; color:#8a9b96; margin:0 0 10px; }
+.dua-lang-note:last-child{ margin-bottom:0; }
+.dua-lang-tag{
+  display:block; text-align:center; font-size:11px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--green-dark); margin:0 0 3px;
+}
+.dua-translation-wrap > .dua-lang-tag:not(:first-child){ margin-top:8px; }
 .dua-benefit{
   background:var(--green-bg); border:1px solid #bfe3cc; border-radius:14px; color:var(--green-dark);
   font-size:calc(14px * var(--font-scale)); line-height:1.5; padding:10px 14px; margin:14px 0 0;
@@ -288,6 +295,7 @@ html[data-drawing="on"] .print-card .drawing-box{ display:block; }
 .opt-group{ border:0; border-top:1px solid #eedfc0; padding:14px 0; margin:0; }
 .opt-group:first-child{ border-top:0; }
 .opt-group legend{ font-size:13px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; font-weight:900; padding:0; margin-bottom:6px; }
+.opt-hint{ font-size:13px; color:#5c7873; margin:-2px 0 8px; }
 .opt-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 0; font-size:15px; }
 .opt-row select{ font-family:inherit; font-size:14px; padding:7px 10px; border-radius:12px; border:2px solid #eedfc0; background:#fff; max-width:60%; }
 .opt-row input[type="range"]{ max-width:55%; }
@@ -367,7 +375,12 @@ footer .fine{ font-size:13px; color:#9fbcb4; max-width:640px; margin:0 auto 8px;
 .print-card .dua-arabic{ direction:rtl; text-align:center; font-size:calc(26px * var(--font-scale)); line-height:1.9; color:#173b38; margin:8px 0 12px; }
 .print-card .dua-note{ text-align:center; font-style:italic; font-size:14px; color:#555; }
 .print-card .dua-translit{ text-align:center; font-style:italic; color:#b5811f; font-size:calc(15px * var(--font-scale)); margin:0 0 8px; }
-.print-card .dua-translation{ text-align:center; font-size:calc(16px * var(--font-scale)); line-height:1.55; color:#222; }
+.print-card .dua-translation{ text-align:center; font-size:calc(16px * var(--font-scale)); line-height:1.55; color:#222; margin:0 0 8px; }
+.print-card .dua-translation:last-child{ margin-bottom:0; }
+.print-card .dua-lang-tag{
+  display:block; text-align:center; font-size:10px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; color:#167b65; margin:6px 0 2px;
+}
 .print-card .dua-benefit{
   background:#eef6f1; border:1px solid #a9c9b9; border-radius:8px; color:#105b51;
   font-size:calc(12px * var(--font-scale)); line-height:1.45; padding:8px 10px; margin-top:10px;
@@ -389,12 +402,29 @@ html[data-drawing="on"] .print-card .drawing-box{ display:block; }
 html[data-print-size="flashcard"] .print-card-inner{ min-height:82mm; }
 html[data-print-size="flashcard"] .print-card .dua-arabic{ font-size:calc(20px * var(--font-scale)) !important; }
 
-html[data-print-size="poster"] .print-card-inner{ width:100%; max-width:180mm; padding:20mm; margin:0 auto; }
+/* Wall poster: the card fills most of the page, on a full-bleed tinted
+   background so the page itself feels designed rather than a card
+   floating on blank paper (the point of printing "like a certificate"). */
+html[data-print-size="poster"] .print-card{
+  display:flex; align-items:center; justify-content:center;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+html[data-print-size="poster"] .print-card-inner{ width:100%; max-width:180mm; padding:22mm; margin:0 auto; }
 html[data-print-size="poster"] .print-card .dua-arabic{ font-size:calc(42px * var(--font-scale)) !important; line-height:2 !important; }
 html[data-print-size="poster"] .print-card .dua-translit{ font-size:calc(20px * var(--font-scale)) !important; }
 html[data-print-size="poster"] .print-card .dua-translation{ font-size:calc(21px * var(--font-scale)) !important; }
+html[data-print-size="poster"] .print-card .dua-lang-tag{ font-size:13px !important; }
 html[data-print-size="poster"] .print-card .drawing-box{ min-height:200px !important; }
-html[data-orientation="landscape"][data-print-size="poster"] .print-card-inner{ max-width:250mm; }
+html[data-orientation="landscape"][data-print-size="poster"] .print-card-inner{
+  max-width:255mm; min-height:150mm; display:flex; flex-direction:column; justify-content:center;
+}
+
+html[data-print-size="poster"][data-border-theme="playful"] .print-card{ background:linear-gradient(160deg,#eafaf0,#fffaf0); }
+html[data-print-size="poster"][data-border-theme="certificate"] .print-card{ background:#fdfbf4; }
+html[data-print-size="poster"][data-border-theme="gold"] .print-card{ background:linear-gradient(160deg,#fff8e8,#fffdf6); }
+html[data-print-size="poster"][data-border-theme="kids"] .print-card{ background:linear-gradient(135deg,#fff3f3,#f0faff); }
+html[data-print-size="poster"][data-border-theme="floral"] .print-card{ background:linear-gradient(160deg,var(--green-bg),#fff); }
+html[data-print-size="poster"][data-border-theme="geometric"] .print-card{ background:#fdf6e3; }
 
 /* Card border themes */
 .corner{ position:absolute; }
@@ -462,6 +492,7 @@ html[data-border-theme="certificate"] .print-card .badge-repeat{
 }
 html[data-border-theme="certificate"] .print-card .dua-arabic{ color:var(--ink-navy); }
 html[data-border-theme="certificate"] .print-card .dua-translit{ color:var(--ink-navy); font-weight:600; }
+html[data-border-theme="certificate"] .print-card .dua-lang-tag{ color:var(--ink-navy); }
 html[data-border-theme="certificate"] .print-card .dua-benefit{
   background:none; border:0; border-left:5px solid var(--gold); border-radius:0;
   color:var(--ink-navy); text-align:left; padding:6px 0 6px 14px;

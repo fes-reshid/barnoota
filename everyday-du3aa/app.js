@@ -4,16 +4,21 @@
   var LS_SETTINGS = "edu3aa:settings";
   var LS_KNOWN = "edu3aa:known";
   var LS_OVERRIDES = "edu3aa:overrides";
+  // Bump when DEFAULT_SETTINGS' meaning changes, so loadSettings() can
+  // one-time-migrate a visitor's older saved settings to the new shape.
+  var SETTINGS_VERSION = 2;
 
   var DEFAULT_SETTINGS = {
+    _v: SETTINGS_VERSION,
+    showArabic: true,
     showTranslit: true,
-    showTranslation: true,
+    showEnglish: true,
+    showOromo: false,
     showBenefit: true,
-    lang: "en",
     arabicFont: "amiri",
     borderTheme: "playful",
-    printSize: "flashcard",
-    orientation: "portrait",
+    printSize: "poster",
+    orientation: "landscape",
     drawing: false,
     fontScale: 1
   };
@@ -33,7 +38,24 @@
       var raw = localStorage.getItem(LS_SETTINGS);
       if (!raw) return Object.assign({}, DEFAULT_SETTINGS);
       var parsed = JSON.parse(raw);
-      return Object.assign({}, DEFAULT_SETTINGS, parsed);
+      var merged = Object.assign({}, DEFAULT_SETTINGS, parsed);
+      if (!parsed._v || parsed._v < 2) {
+        // Pre-v2 settings had one "translation language" select (`lang`) and
+        // a single `showTranslation` toggle, and defaulted to a small
+        // portrait flashcard. Migrate once to the new independent
+        // English/Oromo toggles and the landscape wall-poster default.
+        var hadTranslation = parsed.showTranslation !== false;
+        merged.showEnglish = hadTranslation && parsed.lang !== "om";
+        merged.showOromo = hadTranslation && parsed.lang === "om";
+        merged.showArabic = true;
+        if (parsed.printSize === "flashcard" && parsed.orientation === "portrait") {
+          merged.printSize = "poster";
+          merged.orientation = "landscape";
+        }
+        merged._v = SETTINGS_VERSION;
+        try { localStorage.setItem(LS_SETTINGS, JSON.stringify(merged)); } catch (e) {}
+      }
+      return merged;
     } catch (e) {
       return Object.assign({}, DEFAULT_SETTINGS);
     }
@@ -111,9 +133,9 @@
     var h = location.hash.replace(/^#\/?/, "");
     var parts = h.split("?")[0].split("/").filter(Boolean);
     var qs = new URLSearchParams((h.split("?")[1] || ""));
-    if (qs.get("lang")) state.settings.lang = qs.get("lang");
     if (qs.get("translit")) state.settings.showTranslit = qs.get("translit") === "1";
-    if (qs.get("translation")) state.settings.showTranslation = qs.get("translation") === "1";
+    if (qs.get("en")) state.settings.showEnglish = qs.get("en") === "1";
+    if (qs.get("om")) state.settings.showOromo = qs.get("om") === "1";
 
     if (parts[0] === "c" && parts[1]) return { view: "category", cat: parts[1] };
     if (parts[0] === "ch" && parts[1]) return { view: "chapter", chapter: Number(parts[1]) };
@@ -157,9 +179,10 @@
     // The main settings panel ("optX" ids) and the print preview's toolbar
     // ("ppOptX" ids) are two separate control sets mirroring the same state.
     ["opt", "ppOpt"].forEach(function (p) {
-      setVal(p + "Lang", s.lang);
+      setChecked(p + "Arabic", s.showArabic);
       setChecked(p + "Translit", s.showTranslit);
-      setChecked(p + "Translation", s.showTranslation);
+      setChecked(p + "English", s.showEnglish);
+      setChecked(p + "Oromo", s.showOromo);
       setChecked(p + "Benefit", s.showBenefit);
       setVal(p + "ArabicFont", s.arabicFont);
       setVal(p + "BorderTheme", s.borderTheme);
@@ -378,12 +401,21 @@
     document.getElementById("printKidsBtn").addEventListener("click", printKidsSet);
   }
 
+  // Independent, simultaneous-capable translation rows: either, both, or
+  // neither of English/Afaan Oromoo can be on at once (per state.settings).
+  function translationRows(dua, s) {
+    var rows = [];
+    var t = dua.translation || {};
+    if (s.showEnglish) rows.push({ code: "en", label: "English", text: t.en || "" });
+    if (s.showOromo) rows.push({ code: "om", label: "Afaan Oromoo", text: t.om || "" });
+    return rows;
+  }
+
   function duaCardHTML(chapter, rawDua, overrideLabel) {
     var s = state.settings;
     var dua = effectiveDua(rawDua);
     var edited = state.overrides[rawDua.id] && Object.keys(state.overrides[rawDua.id]).length;
-    var transText = dua.translation ? dua.translation[s.lang] : null;
-    var fallback = !transText && s.lang !== "en" ? dua.translation.en : null;
+    var rows = translationRows(dua, s);
     var known = state.known.has(dua.id);
     var repeatBadge = dua.repeat > 1 ? '<span class="badge-repeat">🔁 ×' + dua.repeat + "</span>" : "";
     var html = '<article class="dua-card" data-dua-id="' + dua.id + '" data-chapter-id="' + chapter.id + '">';
@@ -392,19 +424,22 @@
       + (edited ? '<span class="edited-badge" title="You’ve edited this du’a’s text">✏️ edited</span>' : "")
       + repeatBadge
       + "</header>";
-    if (dua.arabic) {
+    if (dua.arabic && s.showArabic) {
       html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(dua.arabic) + "</p>";
     }
     if (dua.note) {
       html += '<p class="dua-note">📖 ' + esc(dua.note) + "</p>";
     }
-    html += '<div class="dua-translit-wrap"' + (s.showTranslit && dua.transliteration ? "" : ' style="display:none"') + '>'
-      + '<p class="dua-translit">' + esc(dua.transliteration || "") + "</p></div>";
-    var showT = s.showTranslation && (transText || fallback);
-    html += '<div class="dua-translation-wrap"' + (showT ? "" : ' style="display:none"') + '>'
-      + '<p class="dua-translation">' + esc(transText || fallback || "") + "</p>"
-      + (fallback ? '<p class="dua-lang-note">Not yet translated to ' + esc(langLabel(s.lang)) + " — showing English.</p>" : "")
-      + "</div>";
+    if (s.showTranslit && dua.transliteration) {
+      html += '<div class="dua-translit-wrap"><p class="dua-translit">' + esc(dua.transliteration) + "</p></div>";
+    }
+    if (rows.length) {
+      html += '<div class="dua-translation-wrap">' + rows.map(function (r) {
+        var tag = rows.length > 1 ? '<span class="dua-lang-tag">' + esc(r.label) + "</span>" : "";
+        if (!r.text) return tag + '<p class="dua-lang-note">Not yet translated to ' + esc(r.label) + ".</p>";
+        return tag + '<p class="dua-translation">' + esc(r.text) + "</p>";
+      }).join("") + "</div>";
+    }
     if (dua.benefit && s.showBenefit) {
       html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> ' + esc(dua.benefit) + "</p>";
     }
@@ -418,10 +453,6 @@
       + "</span></footer>";
     html += "</article>";
     return html;
-  }
-
-  function langLabel(code) {
-    return code === "om" ? "Afaan Oromoo" : code === "en" ? "English" : code;
   }
 
   function bindCardEvents() {
@@ -486,7 +517,7 @@
     var dua = effectiveDua(item.dua);
     var meta = categoryMeta(item.chapter.category);
     var s = state.settings;
-    var transText = dua.translation[s.lang] || dua.translation.en || "";
+    var mRows = translationRows(dua, s).filter(function (r) { return r.text; });
     var known = state.known.has(item.dua.id);
     var html = crumbs([{ href: "#/", label: "Home" }, { label: "Memorize" }]);
     html += '<div class="memorize-wrap">';
@@ -499,7 +530,10 @@
     html += '<p class="dua-arabic arabic" dir="rtl" lang="ar">' + esc(dua.arabic || "") + "</p>";
     html += '<div class="memorize-back">';
     if (s.showTranslit && dua.transliteration) html += '<p class="dua-translit">' + esc(dua.transliteration) + "</p>";
-    if (s.showTranslation && transText) html += '<p class="dua-translation">' + esc(transText) + "</p>";
+    mRows.forEach(function (r) {
+      html += (mRows.length > 1 ? '<span class="dua-lang-tag">' + esc(r.label) + "</span>" : "")
+        + '<p class="dua-translation">' + esc(r.text) + "</p>";
+    });
     if (s.showBenefit && dua.benefit) html += '<p class="dua-benefit">💡 ' + esc(dua.benefit) + "</p>";
     html += "</div>";
     html += '<p class="memorize-hint">' + (m.revealed ? "Tap card to hide again" : "Tap card to reveal") + "</p>";
@@ -581,7 +615,7 @@
     var s = state.settings;
     var dua = effectiveDua(rawDua);
     var editable = editIndex != null;
-    var transText = dua.translation[s.lang] || dua.translation.en || "";
+    var rows = translationRows(dua, s);
     var repeatBadge = dua.repeat > 1 ? '<span class="badge-repeat">🔁 ×' + dua.repeat + "</span>" : "";
     function editAttrs(field, extra) {
       if (!editable) return "";
@@ -594,16 +628,18 @@
     html += '<div class="print-corners"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>';
     html += '<div class="print-seal" aria-hidden="true"><span>۞</span></div>';
     html += '<header class="dua-card-head"><span class="dua-card-chapter">' + esc(overrideLabel || chapter.title) + "</span>" + repeatBadge + "</header>";
-    if (dua.arabic || editable) {
+    if ((dua.arabic && s.showArabic) || editable) {
       html += '<p class="dua-arabic arabic' + editClass + '" dir="rtl" lang="ar"' + editAttrs("arabic") + ">" + esc(dua.arabic || "") + "</p>";
     }
     if (dua.note) html += '<p class="dua-note">📖 ' + esc(dua.note) + "</p>";
     if (s.showTranslit && (dua.transliteration || editable)) {
       html += '<p class="dua-translit' + editClass + '"' + editAttrs("transliteration") + ">" + esc(dua.transliteration || "") + "</p>";
     }
-    if (s.showTranslation && (transText || editable)) {
-      html += '<p class="dua-translation' + editClass + '"' + editAttrs("translation", ' data-pp-lang="' + s.lang + '"') + ">" + esc(transText) + "</p>";
-    }
+    rows.forEach(function (r) {
+      if (!r.text && !editable) return;
+      var tag = rows.length > 1 ? '<span class="dua-lang-tag">' + esc(r.label) + "</span>" : "";
+      html += tag + '<p class="dua-translation' + editClass + '"' + editAttrs("translation", ' data-pp-lang="' + r.code + '"') + ">" + esc(r.text || "") + "</p>";
+    });
     if (s.showBenefit && (dua.benefit || editable)) {
       html += '<p class="dua-benefit">💡 <strong>Why we say this:</strong> <span' + (editable ? ' class="pp-editable"' : "") + editAttrs("benefit") + ">" + esc(dua.benefit || "") + "</span></p>";
     }
@@ -713,13 +749,14 @@
   function openSettings() { document.getElementById("settingsOverlay").classList.remove("is-hidden"); }
   function closeSettings() { document.getElementById("settingsOverlay").classList.add("is-hidden"); }
 
-  // Each entry: settings key, control id suffix ("optLang" -> "optLang"/"ppOptLang"),
+  // Each entry: settings key, control id suffix ("optArabic" -> "optArabic"/"ppOptArabic"),
   // whether it's a checkbox, and whether changing it needs a full re-render
   // (affects visible text/layout) or just applySettingsToDom (visual-only).
   var SETTINGS_CONTROLS = [
-    { key: "lang", suffix: "Lang", checkbox: false, textish: true },
+    { key: "showArabic", suffix: "Arabic", checkbox: true, textish: true },
     { key: "showTranslit", suffix: "Translit", checkbox: true, textish: true },
-    { key: "showTranslation", suffix: "Translation", checkbox: true, textish: true },
+    { key: "showEnglish", suffix: "English", checkbox: true, textish: true },
+    { key: "showOromo", suffix: "Oromo", checkbox: true, textish: true },
     { key: "showBenefit", suffix: "Benefit", checkbox: true, textish: true },
     { key: "arabicFont", suffix: "ArabicFont", checkbox: false, textish: false },
     { key: "borderTheme", suffix: "BorderTheme", checkbox: false, textish: false },
