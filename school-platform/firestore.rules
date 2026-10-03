@@ -1,0 +1,84 @@
+rules_version = '2';
+
+// Security model
+// ----------------
+// Each school is one document at /schools/{slug} — the slug IS the document
+// id, so a school's public profile (name, logo, color, class list) can be
+// fetched directly by anyone who has its URL (/s/:slug) with a single `get`,
+// without ever needing list/query access to the whole schools collection.
+//
+// Every signed-in user has a profile at /users/{uid} holding which school(s)
+// they belong to (schoolIds) and whether they are a platform admin (you —
+// the only role that can create new schools). The actual permission check
+// for a school's data is always against that school's own `members` map
+// (uid -> role), never against the user's own claim of membership, so a
+// user can never grant themselves access by editing their own profile.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isPlatformAdmin() {
+      return isSignedIn() && myUserDoc().data.isPlatformAdmin == true;
+    }
+
+    function schoolDoc(schoolId) {
+      return get(/databases/$(database)/documents/schools/$(schoolId));
+    }
+
+    function isMember(schoolId) {
+      return isSignedIn() && request.auth.uid in schoolDoc(schoolId).data.members;
+    }
+
+    function memberRole(schoolId) {
+      return schoolDoc(schoolId).data.members[request.auth.uid];
+    }
+
+    function isSchoolAdminOf(schoolId) {
+      return isSignedIn() && memberRole(schoolId) == 'school_admin';
+    }
+
+    // A school admin may edit their school's own profile/branding, but
+    // never its slug (the document id, already immutable), its members
+    // (who has access — only a platform admin grants that), or its
+    // subscription (billing state you control).
+    function onlyBrandingFieldsChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['name', 'email', 'phone', 'address', 'branding', 'updatedAt']);
+    }
+
+    // Per-user pointer to their own school membership + platform-admin
+    // status. A user may only ever read/write their own document, and may
+    // never set isPlatformAdmin to true themselves — that is granted by
+    // hand in the Firebase console, the same way the very first school
+    // admin account is bootstrapped.
+    match /users/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow create: if isSignedIn() && request.auth.uid == uid && request.resource.data.isPlatformAdmin == false;
+      allow update: if isSignedIn() && request.auth.uid == uid
+        && request.resource.data.isPlatformAdmin == resource.data.isPlatformAdmin;
+    }
+
+    match /schools/{schoolId} {
+      // Public: the branded landing page at /s/:slug needs no login to
+      // show a school's name/logo/colors. Only a direct get-by-id is
+      // allowed — not list — so the whole directory can't be scraped.
+      allow get: if true;
+      allow list: if isPlatformAdmin();
+      allow create: if isPlatformAdmin();
+      allow update: if isPlatformAdmin() || (isSchoolAdminOf(schoolId) && onlyBrandingFieldsChanged());
+      allow delete: if isPlatformAdmin();
+
+      match /classes/{classId} {
+        allow get, list: if true; // public: shown on the branded landing page
+        allow create, update, delete: if isPlatformAdmin() || isMember(schoolId);
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(schoolId) {
+      return isSignedIn() && request.auth.uid in
+        firestore.get(/databases/(default)/documents/schools/$(schoolId)).data.members;
+    }
+
+    // School logos are public to read (shown on the public /s/:slug page)
+    // but only that school's own members may upload/replace them.
+    match /schools/{schoolId}/logo-{fileName} {
+      allow read: if true;
+      allow write: if isMember(schoolId) && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
