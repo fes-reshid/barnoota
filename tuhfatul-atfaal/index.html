@@ -142,6 +142,7 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 @keyframes bubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.start-here{animation:none}.exit-door .door-leaf{transition:none}.exit-door.ready .door-glow,.exit-bubble{animation:none}}
 </style>
+<link rel="stylesheet" href="cartoon-avatar.css?v=20261004-1">
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -2262,5 +2263,6 @@ const renderMapBeforeAnnouncements=renderMap;renderMap=function(){if(typeof hwCh
 window.addEventListener('focus',()=>{loadTeacherQuizzes(true);refreshTeacherNotes();loadStudentAnnouncements(true)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshTeacherNotes()});
 </script>
+<script src="cartoon-avatar.js?v=20261004-1"></script>
 </body>
 </html>
