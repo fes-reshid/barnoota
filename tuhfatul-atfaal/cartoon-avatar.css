@@ -1,0 +1,14 @@
+#avatarScreen .avatar-screen{max-width:880px;padding:clamp(16px,4vw,32px);background:#fffdf8}
+#avatarScreen .avatar-screen>p{max-width:580px;margin:12px auto;color:#52645f;font:16px/1.6 'Nunito',sans-serif}
+#avatarScreen .avatar-preview-card{position:sticky;top:8px;z-index:2;width:100%;max-width:360px;box-sizing:border-box;background:radial-gradient(ellipse at 50% 35%,#fffdf0 0%,#e6f4e9 65%,#d1e8dd 100%);border:2px solid #bad7c6;box-shadow:0 8px 20px #234d3612}
+#avatarScreen .avatar-preview-card svg{width:100%;height:255px;overflow:visible}
+#avatarScreen .avatar-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+#avatarScreen .avatar-choice{aspect-ratio:auto;min-width:0;padding:10px 4px;border-radius:18px;background:#fff;transition:background .2s,border-color .2s}
+#avatarScreen .avatar-choice svg{display:block;width:100%;height:94px;margin:auto;pointer-events:none}
+#avatarScreen .avatar-choice small{font-size:12px;line-height:1.4}
+#avatarScreen .avatar-choice.selected{background:#e6f3e8;border-color:#2e6b58}
+#avatarScreen .colour-group{background:#fff;border-color:#e5e8de}
+#avatarScreen .colour-swatch:focus-visible,#avatarScreen .avatar-choice:focus-visible,#avatarScreen .outfit-choice:focus-visible{outline:3px solid #1a687c;outline-offset:5px}
+#avatarScreen .avatar-saved{text-align:center;color:#2e6b58;font:700 14px/1.5 'Nunito',sans-serif}
+.avatar .child-badge{width:100%;height:100%;display:block;overflow:hidden}.cartoon-child{filter:drop-shadow(0 1px 1px #24362622)}
+@media(max-width:520px){#avatarScreen .avatar-preview-card svg{height:185px}#avatarScreen .avatar-grid{gap:6px}#avatarScreen .avatar-choice svg{height:70px}#avatarScreen .avatar-choice small{font-size:10px}#avatarScreen .avatar-preview-card{position:static}#avatarScreen .colour-swatches{gap:12px}}
