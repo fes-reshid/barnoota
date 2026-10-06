@@ -387,6 +387,15 @@
   .lb-box{background:#fffbef;border:1.5px dashed #d9b85c;border-radius:14px;padding:10px 12px;margin:10px 0}
   .parent-link{display:flex;gap:6px;margin:10px 0}.parent-link input{flex:1;min-width:0;font:13px ui-monospace,monospace;padding:8px;border:1.5px solid #d9c9a3;border-radius:10px}
 .guide-full-link{display:inline-block;margin-top:10px;background:linear-gradient(160deg,#14533e,#2f6f55);color:#fff8e1;border:2px solid #e8cf86;border-radius:999px;padding:8px 16px;font-weight:800;text-decoration:none;box-shadow:0 4px 10px rgba(20,60,40,.2)}.guide-full-link:hover{filter:brightness(1.1)}
+.rc-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,35,28,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto}
+.rc-card{width:min(720px,100%);background:#fffdf6;border:3px solid #e8cf86;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:16px 18px}
+.rc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-bottom:2px solid #eadcb8;padding-bottom:8px;margin-bottom:6px}.rc-head h2{margin:2px 0 0;font-size:22px;color:#14533e}.rc-kicker{color:#8a6a2c;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.rc-card h3{margin:14px 0 6px;font-size:16px;color:#1c3a55}
+.rc-types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rc-type{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;border:2px solid #e3d6b3;border-radius:14px;padding:12px 8px;background:#fff;cursor:pointer}.rc-type input{position:absolute;opacity:0}.rc-type .rc-ic{font-size:30px}.rc-type small{color:#75684f;font-size:12.5px;line-height:1.3}.rc-type:has(input:checked){border-color:#2f6f55;background:#eef9f1;box-shadow:0 0 0 3px rgba(47,111,85,.18)}
+.rc-period,.rc-marks{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.rc-chip{display:inline-flex;align-items:center;gap:6px;border:2px solid #e3d6b3;border-radius:999px;padding:6px 14px;background:#fff;font-weight:700;cursor:pointer}.rc-chip input{accent-color:#2f6f55}.rc-marks .rc-chip:has(input:checked){border-color:var(--c);background:var(--b);color:var(--c)}.rc-period .rc-chip:has(input:checked){border-color:#2f6f55;background:#eef9f1}
+.rc-dates{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}.rc-dates label{font-weight:700}.rc-dates input{margin-left:4px;padding:6px 8px;border:2px solid #e3d6b3;border-radius:10px;font:15px inherit}.rc-quick{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.rc-att.rc-off{opacity:.35;pointer-events:none}.rc-count{margin:8px 0 0}.rc-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;border-top:2px solid #eadcb8;padding-top:10px}
+@media(max-width:600px){.rc-types{grid-template-columns:1fr}.rc-type{flex-direction:row;text-align:left;gap:10px}.rc-type small{display:none}}
 </style>
 </head>
 <body>
@@ -534,7 +543,7 @@
           <option value="newest">Sort: Newest first</option>
         </select>
         <div class="view-switch" id="view-switch" role="group" aria-label="View"><button data-view="list" title="List — like the weekly report">☰ List</button><button data-view="grid" title="Cards">▦ Grid</button><button data-view="gallery" title="Photos">🖼 Gallery</button></div>
-        <button class="btn ghost small" id="student-report" title="Printable weekly report for the students shown">🖨️ Weekly reports</button>
+        <button class="btn ghost small" id="student-report" title="Reports for the students shown: progress, attendance or both">🖨️ Reports</button>
       </div>
       <div class="chips" id="student-filters">
         <button class="chip active" data-filter="all">All</button>
@@ -988,7 +997,7 @@
         <h3><span class="gi" style="--c:#3b8fc4">👪</span> Parents &amp; reports</h3>
         <ul class="guide-list">
           <li><b>Parent link:</b> open a student → <i>👪 Parent link</i> → Copy or send on WhatsApp. Parents see progress, homework, attendance, badges, your notes and messages — read-only, no login. <i>Reset link</i> stops an old link working.</li>
-          <li><b>Weekly reports:</b> 🖨️ on a student, a class, or the Students tab → <i>Print / Save as PDF</i>.</li>
+          <li><b>Reports:</b> 🖨️ on a student, a class, or the Students tab → choose <b>Full</b>, <b>Progress</b> or <b>Attendance</b> report, the days (one day, from–to, or all days) and which marks to show (e.g. only present &amp; absent) → <i>Print / Save as PDF</i>.</li>
         </ul>
       </section>
 
@@ -2455,6 +2464,7 @@ function reportData(s){
   const att = attendanceSummary(s.uid), badgeList = Object.values(p.badges && typeof p.badges === 'object' ? p.badges : {}).filter(b => b && b.name);
   return { x, p, att, badgeList, badgesWeek: badgeList.filter(b => daysAgo(b.at) <= 7), memo, memoWeek, quizzes, quizzesWeek: quizzes.filter(q => daysAgo(q.at) <= 7), hw, notes, streak: streakOf(p), classes: classesOf(s.uid).map(c => c.name) };
 }
+let REPORT_OPTS_ACTIVE = { type: 'full', period: 'all', marks: ['present', 'late', 'absent', 'excused'] };
 function reportStudentPage(s){
   const d = reportData(s), x = d.x, name = s.fullName || s.displayName || s.username, e = escapeHtml;
   const hwDone = d.hw.filter(r => r.st.key === 'done' || r.st.key === 'lateDone').length, hwLate = d.hw.filter(r => r.st.key === 'late').length;
@@ -2470,7 +2480,7 @@ function reportStudentPage(s){
     '<h2>This week</h2><ul class="week">' +
       '<li>🧠 ' + (d.memoWeek.length ? 'Memorised line' + (d.memoWeek.length > 1 ? 's ' : ' ') + d.memoWeek.map(k => lineOfLesson(Number(k))).join(', ') : 'No new lines memorised') + '</li>' +
       '<li>📝 ' + (d.quizzesWeek.length ? d.quizzesWeek.map(q => e(q.title) + ' ' + q.best + '/' + q.total).join(' · ') : 'No teacher quizzes taken') + '</li>' +
-      (d.att.total ? '<li>📋 Attendance: ' + d.att.present + ' present, ' + d.att.late + ' late, ' + d.att.absent + ' absent' + (d.att.excused ? ', ' + d.att.excused + ' excused' : '') + ' (' + d.att.total + ' sessions overall)</li>' : '') +
+      (d.att.total && REPORT_OPTS_ACTIVE.type !== 'progress' ? '<li>📋 Attendance: ' + d.att.present + ' present, ' + d.att.late + ' late, ' + d.att.absent + ' absent' + (d.att.excused ? ', ' + d.att.excused + ' excused' : '') + ' (' + d.att.total + ' sessions overall)</li>' : '') +
       (d.badgesWeek.length ? '<li>🏅 New badges: ' + d.badgesWeek.map(b => e((b.icon || '') + ' ' + b.name)).join(', ') + '</li>' : '') +
       '<li>📚 Homework: ' + (d.hw.length ? hwDone + ' done' + (hwLate ? ', ' + hwLate + ' late' : '') + ' of ' + d.hw.length : 'none set') + '</li>' +
     '</ul>' +
@@ -2482,6 +2492,7 @@ function reportStudentPage(s){
       return '<tr><td>' + (i + 1) + ' · ' + e(m[0]) + '</td><td>' + done + ' / ' + m[3] + '</td><td>' + (q ? e(String(q.score)) + '/15' + (q.passed || Number(q.score) >= 12 ? ' ✓' : '') : '—') + '</td><td>' + (a && a.approved ? '✓ ' + e(a.teacherName || '') + (a.approvedAt ? ' · ' + e(fmtDay(a.approvedAt)) : '') : '—') + '</td></tr>';
     }).join('') + '</table>' +
     (d.notes.length ? '<h2>Teacher notes</h2>' + d.notes.slice(0, 4).map(n => '<p class="note"><b>' + e(mapLabel(n.map)) + (n.teacherName ? ' · ' + e(n.teacherName) : '') + '</b><br>' + e(n.note) + '</p>').join('') : '') +
+    (REPORT_OPTS_ACTIVE.type === 'full' ? reportAttSection(s, REPORT_OPTS_ACTIVE) : '') +
     '<h2>Teacher’s comment</h2><div class="lines"></div>' +
     '<footer><span>Teacher: ' + e($('certificate-teacher').dataset.me || '') + '</span><span>Signature: ______________________</span><span>Parent: ______________________</span></footer></section>';
 }
@@ -2495,7 +2506,87 @@ function reportSummaryPage(list, title){
       return '<tr><td><b>' + e(s.displayName || s.username) + '</b></td><td>' + d.x.pct + '%</td><td>' + d.memo.length + '</td><td>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' lines' : '—') + (d.quizzesWeek.length ? ', ' + d.quizzesWeek.length + ' quiz' + (d.quizzesWeek.length > 1 ? 'zes' : '') : '') + '</td><td>' + (d.streak.count ? '🔥 ' + d.streak.count : '—') + '</td><td>' + (d.att.total ? Math.round((d.att.present + d.att.late) / d.att.total * 100) + '%' + (d.att.absent ? ' <span class="st-late">(' + d.att.absent + ' absent)</span>' : '') : '—') + '</td><td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '—') + '</td><td>' + d.x.certs + '</td></tr>'; }).join('') +
     '</table><p class="muted">Each student’s own page follows.</p></section>';
 }
-function openReport(list, title){
+/* ===================== report chooser ===================== */
+/* Pick what to print: Full (progress + attendance), Progress only, or
+   Attendance only — for one day, a date range or all days — and which
+   marks to show (present / late / absent / excused). */
+let REPORT_OPTS = { type: 'full', period: 'all', from: '', to: '', marks: ['present', 'late', 'absent', 'excused'] };
+const ATT_META = { present: ['✅', 'Present', '#2f6f55', '#e3f3e5'], late: ['⏰', 'Late', '#8a5a00', '#fff3d6'], absent: ['❌', 'Absent', '#b5452b', '#fde6e1'], excused: ['📝', 'Excused', '#3b6fa0', '#e6f0fb'] };
+function reportSessions(list, o){
+  const uids = new Set(list.map(s => s.uid));
+  return attendanceCache.filter(a => a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to)))
+    && Object.keys(a.marks || {}).some(u => uids.has(u)) || (a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to))) && (classById(a.classId) || { studentUids: [] }).studentUids.some(u => uids.has(u))))
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)) || String(a.classId).localeCompare(String(b.classId)));
+}
+function periodLabel(o){ return o.period === 'all' ? 'All days' : o.period === 'day' ? fmtDay(o.from) : fmtDay(o.from) + ' – ' + fmtDay(o.to); }
+function attTally(uid, sessions){ const t = { present: 0, late: 0, absent: 0, excused: 0, total: 0 }; sessions.forEach(a => { const m = a.marks && a.marks[uid]; if(m && t[m] != null){ t[m]++; t.total++; } }); return t; }
+function attPill(m){ const x = ATT_META[m]; return x ? '<span class="pill" style="color:' + x[2] + ';background:' + x[3] + '">' + x[0] + ' ' + x[1] + '</span>' : '<span class="pill muted">— not marked</span>'; }
+function attTilesHTML(t, marks, unit){ unit = unit || 'session'; const pct = t.total ? Math.round((t.present + t.late) / t.total * 100) : null;
+  return '<div class="atiles">' + marks.map(m => '<div style="border-color:' + ATT_META[m][2] + ';background:' + ATT_META[m][3] + '"><b style="color:' + ATT_META[m][2] + '">' + t[m] + '</b><span>' + ATT_META[m][0] + ' ' + ATT_META[m][1] + '</span></div>').join('') +
+    '<div class="pct"><b>' + (pct == null ? '—' : pct + '%') + '</b><span>attendance<br>' + t.total + ' ' + unit + (t.total === 1 ? '' : 's') + (unit === 'student' ? ' marked' : '') + '</span></div></div>'; }
+function reportAttSection(s, o){
+  const ses = reportSessions([s], o).filter(a => a.marks && a.marks[s.uid] && o.marks.includes(a.marks[s.uid])), t = attTally(s.uid, reportSessions([s], o)), e = escapeHtml;
+  return '<h2>📋 Attendance · ' + e(periodLabel(o)) + '</h2>' + attTilesHTML(t, o.marks) +
+    (ses.length ? '<table><tr><th>Date</th><th>Class</th><th>Mark</th><th>Note</th></tr>' + ses.map(a => '<tr><td>' + e(fmtDay(a.date)) + '</td><td>' + e(className(a.classId)) + '</td><td>' + attPill(a.marks[s.uid]) + '</td><td class="muted">' + e(a.note || '') + '</td></tr>').join('') + '</table>' : '<p class="muted">No attendance marked for this period.</p>');
+}
+function attendancePages(list, title, o){
+  const e = escapeHtml, ses = reportSessions(list, o), head = (h1, sub) => '<header><div><div class="brand">Diin Islaam · Tuhfatul Atfaal · Attendance</div><h1>' + e(h1) + '</h1><div class="sub">' + sub + '</div></div><div class="when">Period<br><b>' + e(periodLabel(o)) + '</b></div></header>';
+  const legend = '<p class="legend">' + o.marks.map(m => attPill(m)).join(' ') + '</p>';
+  if(list.length === 1){ const s = list[0];
+    return '<section class="page">' + head(s.fullName || s.displayName || s.username, '@' + e(s.username) + (classesOf(s.uid).length ? ' · 🏫 ' + e(classesOf(s.uid).map(c => c.name).join(', ')) : '')) + reportAttSection(s, o).replace(/^<h2>[^<]*<\/h2>/, '') +
+      '<footer><span>Teacher: ' + e($('certificate-teacher').dataset.me || '') + '</span><span>Signature: ______________________</span></footer></section>'; }
+  const dates = [...new Set(ses.map(a => a.date))];
+  if(!dates.length) return '<section class="page">' + head((title || 'Class') + ' — attendance', list.length + ' students') + '<p class="muted" style="font-size:16px;margin-top:30px;text-align:center">No attendance was marked in this period.</p></section>';
+  const markOn = (s, d) => { const a = ses.find(x => x.date === d && x.marks && x.marks[s.uid]); return a ? a.marks[s.uid] : ''; };
+  if(dates.length === 1){ const d = dates[0], groups = {};
+    list.forEach(s => { const m = markOn(s, d) || 'none'; (groups[m] = groups[m] || []).push(s); });
+    const order = o.marks.concat(o.marks.length === 4 ? ['none'] : []);
+    return '<section class="page">' + head((title || 'Class') + ' — attendance', list.length + ' students · ' + e(fmtDay(d))) +
+      attTilesHTML(list.reduce((t, s) => { const m = markOn(s, d); if(m && t[m] != null){ t[m]++; t.total++; } return t; }, { present: 0, late: 0, absent: 0, excused: 0, total: 0 }), o.marks, 'student') +
+      '<div class="groups">' + order.map(m => { const g = groups[m] || [], meta = ATT_META[m] || ['❓', 'Not marked', '#6b5d44', '#f6efdc'];
+        return '<div class="group" style="border-color:' + meta[2] + '"><h3 style="background:' + meta[3] + ';color:' + meta[2] + '">' + meta[0] + ' ' + meta[1] + ' <span>' + g.length + '</span></h3>' + (g.length ? '<ol>' + g.map(s => '<li><b>' + e(s.displayName || s.username) + '</b> <span class="muted">@' + e(s.username) + '</span></li>').join('') + '</ol>' : '<p class="muted">None</p>') + '</div>'; }).join('') + '</div>' +
+      (ses.some(a => a.note) ? '<p class="muted">📝 ' + ses.filter(a => a.note).map(a => e(className(a.classId) + ': ' + a.note)).join(' · ') + '</p>' : '') +
+      '<footer><span>Teacher: ' + e($('certificate-teacher').dataset.me || '') + '</span><span>Signature: ______________________</span></footer></section>'; }
+  const SYM = { present: '✓', late: 'L', absent: '✗', excused: 'E' }, chunks = [];
+  for(let i = 0; i < dates.length; i += 14) chunks.push(dates.slice(i, i + 14));
+  return chunks.map((ds, ci) => '<section class="page wide">' + head((title || 'Class') + ' — attendance register', list.length + ' students · ' + dates.length + ' sessions' + (chunks.length > 1 ? ' · part ' + (ci + 1) + ' of ' + chunks.length : '')) + legend +
+    '<table class="reg"><tr><th>Student</th>' + ds.map(d => { const x = new Date(d + 'T12:00'); return '<th class="c">' + x.toLocaleDateString(undefined, { weekday: 'short' }) + '<br>' + x.getDate() + '/' + (x.getMonth() + 1) + '</th>'; }).join('') + o.marks.map(m => '<th class="c" style="color:' + ATT_META[m][2] + '">' + ATT_META[m][0] + '</th>').join('') + '<th class="c">%</th></tr>' +
+    list.map(s => { const t = attTally(s.uid, ses); return '<tr><td><b>' + e(s.displayName || s.username) + '</b></td>' + ds.map(d => { const m = markOn(s, d); return m && o.marks.includes(m) ? '<td class="c" style="background:' + ATT_META[m][3] + ';color:' + ATT_META[m][2] + ';font-weight:800">' + SYM[m] + '</td>' : '<td class="c muted">' + (m ? '' : '·') + '</td>'; }).join('') +
+      o.marks.map(m => '<td class="c"><b style="color:' + ATT_META[m][2] + '">' + t[m] + '</b></td>').join('') + '<td class="c"><b>' + (t.total ? Math.round((t.present + t.late) / t.total * 100) + '%' : '—') + '</b></td></tr>'; }).join('') + '</table>' +
+    '<p class="muted">✓ present · L late · ✗ absent · E excused · “·” not marked. % = (present + late) ÷ sessions marked.</p></section>').join('');
+}
+function openReportChooser(list, title){
+  if(!list.length){ toast('No students to report on'); return; }
+  document.querySelectorAll('.rc-overlay').forEach(x => x.remove());
+  const today = isoDate(new Date()), last = (attendanceCache.map(a => a.date).filter(Boolean).sort().pop()) || today, wk = isoDate(new Date(Date.now() - 6 * 86400000));
+  const o = Object.assign({}, REPORT_OPTS, { from: REPORT_OPTS.from || last, to: REPORT_OPTS.to || today });
+  const who = list.length === 1 ? (list[0].displayName || list[0].username) : (title || 'Students') + ' · ' + list.length + ' students';
+  document.body.insertAdjacentHTML('beforeend', '<div class="rc-overlay" role="dialog" aria-modal="true" aria-label="Choose a report"><div class="rc-card">' +
+    '<div class="rc-head"><div><div class="rc-kicker">🖨️ Report</div><h2>' + escapeHtml(who) + '</h2></div><button class="btn ghost small" data-rc-close>✕</button></div>' +
+    '<h3>1 · What report?</h3><div class="rc-types">' + [['full', '📚', 'Full report', 'Progress, homework, quizzes, maps and attendance'], ['progress', '📈', 'Progress report', 'Course, memorised lines, homework, quizzes, maps'], ['attendance', '📋', 'Attendance report', 'Present, late, absent and excused']].map(([v, i, t, d]) =>
+      '<label class="rc-type"><input type="radio" name="rc-type" value="' + v + '"' + (o.type === v ? ' checked' : '') + '><span class="rc-ic">' + i + '</span><b>' + t + '</b><small>' + d + '</small></label>').join('') + '</div>' +
+    '<div class="rc-att"><h3>2 · Which days?</h3><div class="rc-period">' + [['day', '📅 One day'], ['range', '🗓️ From – to'], ['all', '♾️ All days']].map(([v, t]) => '<label class="rc-chip"><input type="radio" name="rc-period" value="' + v + '"' + (o.period === v ? ' checked' : '') + '>' + t + '</label>').join('') + '</div>' +
+    '<div class="rc-dates"><label>From <input type="date" id="rc-from" value="' + o.from + '"></label><label class="rc-to">To <input type="date" id="rc-to" value="' + o.to + '"></label>' +
+    '</div><div class="rc-quick"><span class="muted">Quick:</span><button class="btn ghost small" data-q="last">Last session</button><button class="btn ghost small" data-q="2">Last 2 days</button><button class="btn ghost small" data-q="7">Last 7 days</button><button class="btn ghost small" data-q="30">Last 30 days</button></div>' +
+    '<h3>3 · Show these marks</h3><div class="rc-marks">' + Object.keys(ATT_META).map(m => '<label class="rc-chip" style="--c:' + ATT_META[m][2] + ';--b:' + ATT_META[m][3] + '"><input type="checkbox" value="' + m + '"' + (o.marks.includes(m) ? ' checked' : '') + '>' + ATT_META[m][0] + ' ' + ATT_META[m][1] + '</label>').join('') +
+    '<button class="btn ghost small" data-preset="pa">Only present &amp; absent</button></div><p class="rc-count muted" id="rc-count"></p></div>' +
+    '<div class="rc-foot"><button class="btn ghost" data-rc-close>Cancel</button><button class="btn primary" id="rc-open">🖨️ Open report</button></div></div></div>');
+  const ov = document.querySelector('.rc-overlay'), q = sel => ov.querySelector(sel);
+  const read = () => ({ type: q('input[name="rc-type"]:checked').value, period: q('input[name="rc-period"]:checked').value, from: q('#rc-from').value, to: q('#rc-to').value, marks: [...ov.querySelectorAll('.rc-marks input:checked')].map(i => i.value) });
+  const sync = () => { const r = read(); q('.rc-att').classList.toggle('rc-off', r.type === 'progress'); q('.rc-dates').classList.toggle('hidden', r.period === 'all'); q('.rc-to').classList.toggle('hidden', r.period !== 'range');
+    if(r.period === 'range' && r.from > r.to) q('#rc-to').value = r.from;
+    const n = reportSessions(list, Object.assign(r, { to: q('#rc-to').value })).length; q('#rc-count').textContent = r.type === 'progress' ? '' : n + ' attendance session' + (n === 1 ? '' : 's') + ' in this period.'; };
+  ov.querySelectorAll('input').forEach(i => i.addEventListener('change', sync));
+  ov.querySelectorAll('[data-q]').forEach(b => b.onclick = () => { const v = b.dataset.q; if(v === 'last'){ q('input[name="rc-period"][value="day"]').checked = true; q('#rc-from').value = last; } else { q('input[name="rc-period"][value="range"]').checked = true; q('#rc-from').value = isoDate(new Date(Date.now() - (Number(v) - 1) * 86400000)); q('#rc-to').value = today; } sync(); });
+  q('[data-preset="pa"]').onclick = () => { ov.querySelectorAll('.rc-marks input').forEach(i => { i.checked = i.value === 'present' || i.value === 'absent'; }); sync(); };
+  ov.querySelectorAll('[data-rc-close]').forEach(b => b.onclick = () => ov.remove());
+  ov.addEventListener('click', ev => { if(ev.target === ov) ov.remove(); });
+  q('#rc-open').onclick = () => { const r = read(); if(r.type !== 'progress' && !r.marks.length){ q('#rc-count').textContent = 'Tick at least one mark to show.'; return; } if(r.period !== 'all' && !r.from){ q('#rc-count').textContent = 'Choose a date.'; return; }
+    REPORT_OPTS = r; ov.remove(); openReport(list, title, r); };
+  sync();
+}
+function openReport(list, title, opts){
+  const o = opts || { type: 'full', period: 'all', marks: ['present', 'late', 'absent', 'excused'] };
   const w = window.open('', '_blank');
   if(!w){ alert('Your browser blocked the report window. Allow pop-ups for this site and try again.'); return; }
   const css = '*{box-sizing:border-box}body{margin:0;background:#eee;font:14px/1.45 Georgia,serif;color:#2b2217}.bar{position:sticky;top:0;background:#1f5c47;color:#fff;padding:10px 16px;display:flex;gap:10px;align-items:center;font-family:system-ui,sans-serif}.bar button{font:600 15px system-ui;padding:8px 16px;border-radius:10px;border:0;cursor:pointer;background:#f2d27a;color:#2b2217}' +
@@ -2505,10 +2596,15 @@ function openReport(list, title){
     'h2{font-size:15px;color:#1c3a55;margin:12px 0 4px;border-bottom:1px solid #eadcb8;padding-bottom:2px}ul.week{margin:4px 0;padding-left:18px}table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:left;background:#f6efdc;padding:4px 6px}td{padding:4px 6px;border-bottom:1px solid #f0e6cc}.maps td{padding:3px 6px}' +
     '.st-done{color:#2f6f55;font-weight:700}.st-lateDone{color:#8a5a00;font-weight:700}.st-late{color:#b5452b;font-weight:700}.st-pending{color:#6b5d44}.note{margin:4px 0;padding:6px 8px;background:#f4fbff;border-left:4px solid #3b8fc4}.muted{color:#6b5d44}' +
     '.lines{flex:1;min-height:32mm;background:repeating-linear-gradient(#fff 0 8mm,#d9c9a3 8mm calc(8mm + 1px))}footer{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-size:12.5px;color:#4a3d2a}' +
-    '@media print{body{background:#fff}.bar{display:none}.page{margin:0;box-shadow:none;width:auto;min-height:auto;height:277mm}@page{size:A4;margin:10mm}}';
-  const pages = (list.length > 1 ? reportSummaryPage(list, title) : '') + list.map(reportStudentPage).join('');
+    '.atiles{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}.atiles div{flex:1;min-width:90px;border:2px solid #e3d6b3;border-radius:12px;padding:8px;text-align:center}.atiles b{display:block;font-size:24px}.atiles span{font-size:12px;color:#4a3d2a}.atiles .pct{background:#1f5c47;border-color:#1f5c47}.atiles .pct b,.atiles .pct span{color:#fff}' +
+    '.pill{display:inline-block;border-radius:999px;padding:2px 10px;font:700 12px system-ui;white-space:nowrap}.legend{margin:2px 0 8px}.groups{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.group{border:2px solid;border-radius:12px;overflow:hidden}.group h3{margin:0;padding:6px 10px;font-size:15px;display:flex;justify-content:space-between}.group ol{margin:6px 0;padding-left:28px}.group li{margin:3px 0}.group p{margin:8px 10px}' +
+    '.reg th,.reg td{border:1px solid #eadcb8;padding:4px 5px}.reg .c{text-align:center}.reg th.c{font-size:11px;line-height:1.2}.page.wide{width:297mm;min-height:210mm}' +
+    '@media print{body{background:#fff}.bar{display:none}.page{margin:0;box-shadow:none;width:auto;min-height:auto;height:277mm}.page.wide{height:auto;min-height:0}@page{size:A4;margin:10mm}}' + (o.type === 'attendance' && list.length > 1 ? '@page{size:A4 landscape;margin:10mm}' : '');
+  REPORT_OPTS_ACTIVE = o;
+  const pages = o.type === 'attendance' ? attendancePages(list, title, o) : (list.length > 1 ? reportSummaryPage(list, title) : '') + list.map(reportStudentPage).join('');
+  const kind = o.type === 'attendance' ? 'Attendance report' : o.type === 'progress' ? 'Progress report' : 'Full report';
   w.document.open();
-  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>' + escapeHtml((title || (list[0].displayName || list[0].username)) + ' — weekly report') + '</title><style>' + css + '</style></head><body><div class="bar"><b style="flex:1">🖨️ Weekly report · ' + list.length + ' page' + (list.length > 1 ? 's + summary' : '') + '</b><button onclick="print()">Print / Save as PDF</button></div>' + pages + '</body></html>');
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>' + escapeHtml((title || (list[0].displayName || list[0].username)) + ' — ' + kind.toLowerCase()) + '</title><style>' + css + '</style></head><body><div class="bar"><b style="flex:1">🖨️ ' + kind + (o.type !== 'progress' ? ' · ' + escapeHtml(periodLabel(o)) : '') + ' · ' + list.length + ' student' + (list.length > 1 ? 's' : '') + '</b><button onclick="print()">Print / Save as PDF</button></div>' + pages + '</body></html>');
   w.document.close();
 }
 
@@ -2912,9 +3008,9 @@ function wire(){
   wireHomework();
   wireExtras();
   document.querySelectorAll('#view-switch [data-view]').forEach(b => b.onclick = () => { studentView = b.dataset.view; try { localStorage.setItem('tp-student-view', studentView); } catch(e){} renderStudentGrid(); });
-  $('student-report').onclick = () => { if(!lastGridStudents.length){ toast('No students shown'); return; } openReport(lastGridStudents, $('student-class').value && $('student-class').value !== '*mine' ? className($('student-class').value) : 'Students'); };
-  $('modal-report').onclick = () => { if(activeStudent) openReport([activeStudent], ''); };
-  $('class-report').onclick = () => { const c = classById(activeClassId); if(!c) return; const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean); if(!members.length){ toast('This class has no students yet'); return; } openReport(members, c.name); };
+  $('student-report').onclick = () => { if(!lastGridStudents.length){ toast('No students shown'); return; } openReportChooser(lastGridStudents, $('student-class').value && $('student-class').value !== '*mine' ? className($('student-class').value) : 'Students'); };
+  $('modal-report').onclick = () => { if(activeStudent) openReportChooser([activeStudent], ''); };
+  $('class-report').onclick = () => { const c = classById(activeClassId); if(!c) return; const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean); if(!members.length){ toast('This class has no students yet'); return; } openReportChooser(members, c.name); };
   $('chat-send').onclick = sendChat;
   $('chat-text').onkeydown = e => { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } };
   $('chat-profile').onclick = () => { if(activeThread) openManager(activeThread, 'profile'); };
