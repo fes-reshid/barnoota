@@ -311,8 +311,9 @@ html[data-drawing="on"] .print-card .drawing-box{ display:block; }
 .opt-group legend{ font-size:13px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; font-weight:900; padding:0; margin-bottom:6px; }
 .opt-hint{ font-size:13px; color:#5c7873; margin:-2px 0 8px; }
 .opt-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 0; font-size:15px; }
-.opt-row select{ font-family:inherit; font-size:14px; padding:7px 10px; border-radius:12px; border:2px solid #eedfc0; background:#fff; max-width:60%; }
-.opt-row input[type="range"]{ max-width:55%; }
+.opt-row:not(.opt-check){ flex-direction:column; align-items:stretch; gap:6px; }
+.opt-row select{ font-family:inherit; font-size:14px; padding:7px 10px; border-radius:12px; border:2px solid #eedfc0; background:#fff; width:100%; }
+.opt-row input[type="range"]{ width:100%; }
 .opt-check{ justify-content:flex-start; gap:10px; }
 .opt-check input{ width:18px; height:18px; }
 
