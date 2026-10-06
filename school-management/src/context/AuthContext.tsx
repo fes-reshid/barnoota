@@ -16,6 +16,7 @@ import type { AppUser } from '@/types';
 interface AuthContextValue {
   currentUser: AppUser | null;
   loading: boolean;
+  loadError: string | null;
   schoolId: string;
   login: (email: string, password: string) => Promise<AppUser>;
   loginWithGoogle: () => Promise<AppUser>;
@@ -31,6 +32,7 @@ const DEMO_SESSION_KEY = 'sms:demoSession';
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -45,19 +47,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (!fbUser) {
             if (!cancelled) {
               setCurrentUser(null);
+              setLoadError(null);
               setLoading(false);
             }
             return;
           }
-          // The user's profile document is keyed by their Firebase Auth uid
-          // (see createStaffAccount / setById) so this is a single cheap
-          // get() rather than a collection scan — which also lets Firestore
-          // security rules allow "read your own profile" without exposing
-          // the rest of the users collection.
-          const match = await usersRepo.get(fbUser.uid);
-          if (!cancelled) {
-            setCurrentUser(match);
-            setLoading(false);
+          try {
+            // The user's profile document is keyed by their Firebase Auth uid
+            // (see createStaffAccount / setById) so this is a single cheap
+            // get() rather than a collection scan — which also lets Firestore
+            // security rules allow "read your own profile" without exposing
+            // the rest of the users collection.
+            const match = await usersRepo.get(fbUser.uid);
+            if (!cancelled) {
+              setCurrentUser(match);
+              setLoadError(null);
+              setLoading(false);
+            }
+          } catch {
+            // A flaky connection must never leave the app stuck on
+            // "Loading your account…" forever with no way out — surface it
+            // instead so the person can retry.
+            if (!cancelled) {
+              setLoadError('Could not load your account. Check your connection and try again.');
+              setLoading(false);
+            }
           }
         });
       }
@@ -84,6 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       currentUser,
       loading,
+      loadError,
       // Falls back to the demo school only when nobody is signed in yet
       // (e.g. brief render before ProtectedRoute redirects to /login).
       // Every signed-in user's own schoolId drives what data they see.
@@ -156,7 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Demo mode: nothing to persist, the flow is illustrative only.
       },
     }),
-    [currentUser, loading],
+    [currentUser, loading, loadError],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
