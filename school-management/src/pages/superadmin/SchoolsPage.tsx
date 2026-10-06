@@ -3,6 +3,8 @@ import { Plus } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoListAll } from '@/lib/useRepoList';
 import { schoolsRepo } from '@/lib/services';
+import { createStaffAccount } from '@/lib/createStaffAccount';
+import { isFirebaseConfigured } from '@/firebase/config';
 import type { School } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
@@ -11,7 +13,10 @@ import { FormField } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
 import { useToast } from '@/components/ui/Toast';
 
-const emptyForm = { name: '', address: '', phone: '', email: '', subscriptionPlan: 'trial' as School['subscriptionPlan'] };
+const emptyForm = {
+  name: '', address: '', phone: '', email: '', subscriptionPlan: 'trial' as School['subscriptionPlan'],
+  adminName: '', adminEmail: '',
+};
 
 export default function SchoolsPage() {
   usePageTitle('Schools');
@@ -20,8 +25,14 @@ export default function SchoolsPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleCreate() {
+    setError('');
+    if (!form.adminName.trim() || !form.adminEmail.trim()) {
+      setError('The school admin\'s name and email are required.');
+      return;
+    }
     setSaving(true);
     try {
       // Each school is its own tenant, so it needs a fresh, unique schoolId
@@ -30,17 +41,36 @@ export default function SchoolsPage() {
       // create first to get a real id, then patch it in.
       const created = await schoolsRepo.create({
         schoolId: 'pending',
-        ...form,
+        name: form.name,
+        address: form.address,
+        phone: form.phone,
+        email: form.email,
+        subscriptionPlan: form.subscriptionPlan,
         subscriptionStatus: 'active',
         islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true },
       });
       await schoolsRepo.update(created.id, { schoolId: created.id });
-      showToast('School added.');
+
+      // Give the school its own admin login in the same step — without
+      // this, there's no way to sign in and manage the school's teachers,
+      // classes, etc. until someone creates that account by hand.
+      await createStaffAccount({
+        schoolId: created.id,
+        role: 'school_admin',
+        name: form.adminName,
+        email: form.adminEmail,
+      });
+
+      showToast(
+        isFirebaseConfigured
+          ? 'School added. A password setup email has been sent to the admin.'
+          : 'School added.',
+      );
       setOpen(false);
       setForm(emptyForm);
       reload();
-    } catch {
-      showToast('Could not add school.', 'error');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not add school.');
     } finally {
       setSaving(false);
     }
@@ -75,7 +105,7 @@ export default function SchoolsPage() {
       <Modal open={open} onClose={() => setOpen(false)} title="Add school"
         footer={<>
           <button className="btn-secondary" onClick={() => setOpen(false)}>Cancel</button>
-          <button className="btn-primary" onClick={handleCreate} disabled={saving || !form.name}>Save</button>
+          <button className="btn-primary" onClick={handleCreate} disabled={saving || !form.name || !form.adminEmail}>Save</button>
         </>}>
         <div className="space-y-3">
           <FormField label="School name" required>
@@ -98,6 +128,21 @@ export default function SchoolsPage() {
               <option value="premium">Premium</option>
             </select>
           </FormField>
+
+          <div className="border-t border-slate-100 pt-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">School admin login</p>
+            <div className="space-y-3">
+              <FormField label="Admin's name" required>
+                <input className="input" value={form.adminName} onChange={(e) => setForm({ ...form, adminName: e.target.value })} />
+              </FormField>
+              <FormField label="Admin's email" required>
+                <input className="input" type="email" value={form.adminEmail} onChange={(e) => setForm({ ...form, adminEmail: e.target.value })} />
+                <p className="mt-1 text-xs text-slate-500">They'll get an email to set their own password.</p>
+              </FormField>
+            </div>
+          </div>
+
+          {error && <p className="text-sm text-rose-600">{error}</p>}
         </div>
       </Modal>
     </div>
