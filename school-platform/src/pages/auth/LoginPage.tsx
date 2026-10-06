@@ -55,6 +55,10 @@ export default function LoginPage() {
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+
+        <a href="/demo" className="mt-4 block text-center text-sm text-brand-600 hover:underline">
+          See a live demo →
+        </a>
       </div>
     </div>
   );

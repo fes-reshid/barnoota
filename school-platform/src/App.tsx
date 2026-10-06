@@ -4,6 +4,7 @@ import LoginPage from '@/pages/auth/LoginPage';
 import SuperAdminDashboard from '@/pages/superadmin/SuperAdminDashboard';
 import SchoolAdminDashboard from '@/pages/schooladmin/SchoolAdminDashboard';
 import SchoolLandingPage from '@/pages/public/SchoolLandingPage';
+import DemoPage from '@/pages/demo/DemoPage';
 
 function Home() {
   const { firebaseUser, profile, loading } = useAuth();
@@ -25,6 +26,7 @@ export default function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/demo" element={<DemoPage />} />
           <Route path="/s/:slug" element={<SchoolLandingPage />} />
           <Route path="/" element={<Home />} />
         </Routes>
