@@ -396,6 +396,9 @@
 .rc-dates{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}.rc-dates label{font-weight:700}.rc-dates input{margin-left:4px;padding:6px 8px;border:2px solid #e3d6b3;border-radius:10px;font:15px inherit}.rc-quick{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
 .rc-att.rc-off{opacity:.35;pointer-events:none}.rc-count{margin:8px 0 0}.rc-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;border-top:2px solid #eadcb8;padding-top:10px}
 @media(max-width:600px){.rc-types{grid-template-columns:1fr}.rc-type{flex-direction:row;text-align:left;gap:10px}.rc-type small{display:none}}
+.done-summary{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.done-chip{display:inline-flex;gap:6px;align-items:center;background:#eef9f1;border:2px solid #9fd3b1;color:#1f5c47;border-radius:999px;padding:6px 14px;font-weight:700;text-decoration:none}.done-chip b{background:#1f5c47;color:#fff;border-radius:999px;padding:0 8px;font-size:13px}
+.done-group{background:#fff;border:2px solid var(--gold-soft,#e8d9b0);border-radius:18px;padding:12px 14px;margin:0 0 14px;scroll-margin-top:80px}.done-group h3{display:flex;gap:10px;align-items:center;margin:0 0 8px}.done-group h3 small{display:block;font-weight:400;font-size:13px;color:#7a6a4f}.done-num{flex:none;width:40px;height:40px;border-radius:50%;background:linear-gradient(160deg,#14533e,#2f6f55);color:#f6e4a8;display:grid;place-items:center;font-size:18px;border:3px solid #e8cf86}
+.done-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 6px;border-top:1px dashed #eadcb8;cursor:pointer;border-radius:10px}.done-row:hover{background:#fffaf0}.done-row.disabled{opacity:.55}.done-who{flex:1 1 160px;min-width:0}.done-who b{display:block}.done-who small{color:#7a6a4f}.done-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px}
 </style>
 <style id="mobile-clean">
 /* Phones: compact header, sticky section bar, cards instead of wide tables */
@@ -576,7 +579,7 @@
         <button class="chip" data-filter="ready">⏳ Ready for review</button>
         <button class="chip" data-filter="active">🚀 In progress</button>
         <button class="chip" data-filter="new">🌱 Not started</button>
-        <button class="chip" data-filter="done">🎓 Completed</button>
+        <button class="chip" data-filter="done" title="Students who finished at least one map, grouped by their highest map">🏁 Completed maps</button>
         <button class="chip" data-filter="disabled">⛔ Disabled</button>
       </div>
       <div class="student-grid" id="student-list"></div>
@@ -1343,7 +1346,8 @@ function summarize(s){
   else if(!hasCourse || lessons === 0) status = 'new';
   const hifz = Object.values(p.hifz && typeof p.hifz === 'object' ? p.hifz : {}).filter(h => h && Number(h.level) >= 4).length;
   const badges = Object.keys(p.badges && typeof p.badges === 'object' ? p.badges : {}).length;
-  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, badges, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
+  let topMap = -1; for(let i = MAPS.length - 1; i >= 0; i--){ if(mapComplete(p, i) || approved(p, i)){ topMap = i; break; } }
+  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, badges, topMap, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
 }
 function statusBadge(sum){
   return {
@@ -1469,7 +1473,7 @@ function renderStudentGrid(){
   let sums = studentsCache.map(summarize);
   const classSel = $('student-class').value;
   if(classSel){ const ids = classSel === '*mine' ? new Set(myClasses().flatMap(c => c.studentUids)) : new Set((classById(classSel) || { studentUids: [] }).studentUids); sums = sums.filter(x => ids.has(x.s.uid)); }
-  if(studentFilter !== 'all') sums = sums.filter(x => studentFilter === 'active' ? x.status === 'active' || x.status === 'ready' : x.status === studentFilter);
+  if(studentFilter !== 'all') sums = sums.filter(x => studentFilter === 'active' ? x.status === 'active' || x.status === 'ready' : studentFilter === 'done' ? x.topMap >= 0 : x.status === studentFilter);
   if(q) sums = sums.filter(x => [x.s.username, x.s.displayName, x.s.fullName, x.s.contactEmail, x.s.guardianName]
     .some(v => String(v || '').toLowerCase().includes(q)));
   const sort = $('student-sort').value;
@@ -1486,6 +1490,24 @@ function renderStudentGrid(){
   document.querySelectorAll('#view-switch [data-view]').forEach(b => { const on = b.dataset.view === studentView; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
   const open = x => openManager(x.s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
   const onKey = (el, x) => { el.tabIndex = 0; el.onclick = () => open(x); el.onkeydown = e => { if(e.key === 'Enter') open(x); }; };
+  if(studentFilter === 'done' && sums.length){
+    /* Completed maps: group students by the highest map they have finished */
+    box.className = 'student-view view-done';
+    const groups = {}; sums.forEach(x => (groups[x.topMap] = groups[x.topMap] || []).push(x));
+    box.insertAdjacentHTML('beforeend', '<div class="done-summary">' + Object.keys(groups).map(Number).sort((a, b) => b - a).map(i => '<a href="#done-map-' + i + '" class="done-chip">🏁 Map ' + (i + 1) + ' <b>' + groups[i].length + '</b></a>').join('') + '</div>');
+    Object.keys(groups).map(Number).sort((a, b) => b - a).forEach(i => {
+      const sec = document.createElement('section'); sec.className = 'done-group'; sec.id = 'done-map-' + i;
+      sec.innerHTML = '<h3><span class="done-num">' + (i + 1) + '</span><span><b>Map ' + (i + 1) + ' · ' + escapeHtml(MAPS[i][0]) + '</b><small>Highest map completed · ' + groups[i].length + ' student' + (groups[i].length === 1 ? '' : 's') + '</small></span></h3>';
+      groups[i].sort((a, b) => b.lessons - a.lessons || String(a.s.displayName || a.s.username).localeCompare(String(b.s.displayName || b.s.username))).forEach(x => {
+        const row = document.createElement('div'), ap = approved(x.p, i), qp = quizPassed(x.p, i); row.className = 'done-row' + (x.s.disabled ? ' disabled' : '');
+        row.innerHTML = '<div class="avatar sm">' + avatarHtml(x.s, x.p) + '</div><div class="done-who"><b>' + escapeHtml(x.s.fullName || x.s.displayName || x.s.username) + '</b><small>@' + escapeHtml(x.s.username) + (classesOf(x.s.uid).length ? ' · 🏫 ' + escapeHtml(classesOf(x.s.uid).map(c => c.name).join(', ')) : '') + '</small></div>' +
+          '<div class="done-tags"><span class="role-badge ' + (ap ? 'ok' : 'warn') + '">' + (ap ? '✓ Teacher approved' : '⏳ Not approved yet') + '</span><span class="role-badge ' + (qp ? 'ok' : '') + '">' + (qp ? '🏆 Challenge passed' : '🏆 Challenge not passed') + '</span><span class="muted">' + x.lessons + '/' + TOTAL_LESSONS + ' lessons · ' + x.pct + '%</span></div>';
+        onKey(row, x); sec.appendChild(row);
+      });
+      box.appendChild(sec);
+    });
+    return;
+  }
   if(studentView === 'list'){
     /* weekly-report style: one row per student */
     const table = document.createElement('table'); table.className = 'roster';
