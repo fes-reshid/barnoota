@@ -3,11 +3,13 @@ import { useAuth } from '@/context/AuthContext';
 import { homePathForRole } from '@/lib/roles';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { DemoModeBanner } from '@/components/DemoModeBanner';
 
 import Login from '@/pages/auth/Login';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
 import ResetPassword from '@/pages/auth/ResetPassword';
 import ParentInvite from '@/pages/auth/ParentInvite';
+import DemoEntry from '@/pages/DemoEntry';
 import NotFound from '@/pages/NotFound';
 
 import SuperAdminDashboard from '@/pages/superadmin/SuperAdminDashboard';
@@ -72,11 +74,14 @@ function RoleHomeRedirect() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <DemoModeBanner />
+      <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/invite/:token" element={<ParentInvite />} />
+      <Route path="/demo" element={<DemoEntry />} />
 
       <Route path="/" element={<RoleHomeRedirect />} />
 
@@ -160,6 +165,7 @@ export default function App() {
       </Route>
 
       <Route path="*" element={<NotFound />} />
-    </Routes>
+      </Routes>
+    </>
   );
 }

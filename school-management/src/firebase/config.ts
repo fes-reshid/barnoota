@@ -17,14 +17,39 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Visiting /demo sets this flag (see src/pages/DemoEntry.tsx) to force the
+// whole app into demo mode for that browser even though real Firebase
+// credentials ARE configured — so anyone can be handed a link that lets
+// them click through the entire real app (every module, every role) against
+// safe local data, with zero risk to real school data. Cleared by the "Exit
+// demo" banner (see DemoModeBanner.tsx).
+const FORCE_DEMO_KEY = 'sms:forceDemoMode';
+
+export function isForcedDemoMode(): boolean {
+  try {
+    return localStorage.getItem(FORCE_DEMO_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function enterForcedDemoMode(): void {
+  localStorage.setItem(FORCE_DEMO_KEY, '1');
+}
+
+export function exitForcedDemoMode(): void {
+  localStorage.removeItem(FORCE_DEMO_KEY);
+}
+
 // The app runs in "demo mode" (localStorage-backed data + mock auth)
-// whenever Firebase credentials have not been supplied. This lets the UI be
-// fully functional out of the box, while every data access point is written
-// against the same repository interface so switching to a real Firebase
-// project only requires setting the VITE_FIREBASE_* env vars.
+// whenever Firebase credentials have not been supplied, OR when forced on
+// via /demo above. This lets the UI be fully functional out of the box,
+// while every data access point is written against the same repository
+// interface so switching to a real Firebase project only requires setting
+// the VITE_FIREBASE_* env vars.
 export const isFirebaseConfigured = Boolean(
   firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId,
-);
+) && !isForcedDemoMode();
 
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
