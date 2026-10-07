@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/Badge';
 import { useToast } from '@/components/ui/Toast';
 
 const emptyForm = {
-  name: '', address: '', phone: '', email: '', subscriptionPlan: 'trial' as School['subscriptionPlan'],
+  name: '', address: '', phone: '', email: '', website: '', subscriptionPlan: 'trial' as School['subscriptionPlan'],
   adminName: '', adminEmail: '',
 };
 
@@ -72,6 +72,7 @@ export default function SchoolsPage() {
         address: form.address,
         phone: form.phone,
         email: form.email,
+        website: form.website.trim() || undefined,
         subscriptionPlan: form.subscriptionPlan,
         subscriptionStatus: 'active',
         islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true },
@@ -138,6 +139,9 @@ export default function SchoolsPage() {
           </FormField>
           <FormField label="Address">
             <input className="input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+          </FormField>
+          <FormField label="Website">
+            <input className="input" type="url" placeholder="https://example.com" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
           </FormField>
           <FormField label="Subscription plan">
             <select className="input" value={form.subscriptionPlan} onChange={(e) => setForm({ ...form, subscriptionPlan: e.target.value as School['subscriptionPlan'] })}>

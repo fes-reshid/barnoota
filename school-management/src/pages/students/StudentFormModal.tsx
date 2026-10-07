@@ -14,6 +14,7 @@ interface StudentFormModalProps {
   onClose: () => void;
   onSaved: () => void;
   classes: SchoolClass[];
+  students: Student[];
   student?: Student | null;
 }
 
@@ -23,7 +24,7 @@ const emptyForm = {
   emergencyContactName: '', emergencyContactPhone: '', medicalNotes: '',
 };
 
-export function StudentFormModal({ open, onClose, onSaved, classes, student }: StudentFormModalProps) {
+export function StudentFormModal({ open, onClose, onSaved, classes, students, student }: StudentFormModalProps) {
   const { schoolId } = useAuth();
   const { showToast } = useToast();
   const [form, setForm] = useState(emptyForm);
@@ -49,6 +50,20 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
     }
     setErrors({});
   }, [student, open, classes]);
+
+  // Two students can legitimately share a name (siblings, common names) —
+  // this never blocks saving, it just makes sure whoever's adding them
+  // notices and knows the student code (not the name) is what's actually
+  // unique, before it causes confusion later.
+  const duplicateMatch = students.find(
+    (s) =>
+      s.id !== student?.id &&
+      s.firstName.trim().toLowerCase() === form.firstName.trim().toLowerCase() &&
+      s.lastName.trim().toLowerCase() === form.lastName.trim().toLowerCase() &&
+      form.firstName.trim() &&
+      form.lastName.trim(),
+  );
+  const nextStudentCode = `S-${2000 + students.length + 1}`;
 
   function validate(): boolean {
     const e: Record<string, string> = {};
@@ -116,6 +131,13 @@ export function StudentFormModal({ open, onClose, onSaved, classes, student }: S
           onUploaded={(file) => setPhotoUrl(file.url)}
         />
       </div>
+      {duplicateMatch && (
+        <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
+          A student named <b>{form.firstName} {form.lastName}</b> already exists ({duplicateMatch.studentCode}). That's
+          fine — each student has a unique ID, so this one will get its own code
+          ({student ? student.studentCode : nextStudentCode}) to tell them apart.
+        </p>
+      )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <FormField label="First name" required error={errors.firstName}>
           <input className="input" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />

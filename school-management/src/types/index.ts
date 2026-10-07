@@ -17,6 +17,7 @@ export interface School extends BaseRecord {
   address: string;
   phone: string;
   email: string;
+  website?: string;
   logoUrl?: string;
   subscriptionPlan: 'trial' | 'basic' | 'standard' | 'premium';
   subscriptionStatus: 'active' | 'past_due' | 'canceled';

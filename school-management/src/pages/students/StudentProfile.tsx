@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon, Camera } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon, Camera, Printer, IdCard } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
@@ -8,7 +8,9 @@ import {
   studentsRepo, classesRepo, attendanceRepo, homeworkRepo, homeworkSubmissionsRepo,
   examResultsRepo, examsRepo, subjectsRepo, feeInvoicesRepo, feeStructuresRepo,
   studentDocumentsRepo, quranProgressRepo, iqraProgressRepo, islamicStudiesRepo, oromoProgressRepo,
+  schoolsRepo,
 } from '@/lib/services';
+import { schoolLoginDomain } from '@/lib/schoolLoginDomain';
 import { studentDocumentPath, studentPhotoPath, uploadFile } from '@/lib/fileStorage';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -20,7 +22,7 @@ import { FileLink } from '@/components/ui/FileLink';
 import { useToast } from '@/components/ui/Toast';
 import type { StudentDocument } from '@/types';
 
-const TABS = ['Overview', 'Attendance', 'Homework', 'Exams', 'Fees', 'Documents', 'Progress'] as const;
+const TABS = ['Overview', 'Attendance', 'Homework', 'Exams', 'Fees', 'Documents', 'Progress', 'ID Card'] as const;
 type Tab = (typeof TABS)[number];
 
 export default function StudentProfile() {
@@ -46,8 +48,9 @@ export default function StudentProfile() {
   const { data: iqra, loading: l13 } = useRepoList(iqraProgressRepo);
   const { data: islamic, loading: l14 } = useRepoList(islamicStudiesRepo);
   const { data: oromo, loading: l15 } = useRepoList(oromoProgressRepo);
+  const { data: schools, loading: l16 } = useRepoList(schoolsRepo);
 
-  const loading = [l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15].some(Boolean);
+  const loading = [l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16].some(Boolean);
 
   if (loading) return <Spinner label="Loading student profile…" />;
 
@@ -72,6 +75,74 @@ export default function StudentProfile() {
   const myIqra = iqra.filter((q) => q.studentId === student.id);
   const myIslamic = islamic.filter((q) => q.studentId === student.id);
   const myOromo = oromo.filter((q) => q.studentId === student.id);
+  const school = schools[0];
+  const loginId = `${student.studentCode}@${schoolLoginDomain(school?.name ?? 'school')}`;
+
+  function printIdCard() {
+    if (!school || !student) return;
+    const win = window.open('', '_blank', 'width=500,height=700');
+    if (!win) return;
+    const escape = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+    win.document.write(`<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${escape(student.firstName)} ${escape(student.lastName)} — Student ID</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 24px; background: #f1f5f9; display: flex; justify-content: center; }
+  .card {
+    width: 3.375in; height: 2.125in; border-radius: 14px; overflow: hidden;
+    background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); border: 1px solid #e2e8f0;
+    display: flex; flex-direction: column;
+  }
+  .head {
+    background: #1c5f41; color: #fff; padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .head img { width: 22px; height: 22px; border-radius: 4px; object-fit: cover; background: #fff; }
+  .head .school-name { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.2; }
+  .body { flex: 1; display: flex; gap: 10px; padding: 10px 12px; align-items: center; }
+  .photo { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; background: #e2e8f0; flex-shrink: 0; }
+  .photo-fallback {
+    width: 56px; height: 56px; border-radius: 8px; background: #dcf2e3; color: #1c5f41; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;
+  }
+  .info { min-width: 0; }
+  .name { font-size: 13px; font-weight: 700; color: #0f172a; }
+  .meta { font-size: 10px; color: #475569; margin-top: 2px; }
+  .code { font-size: 10px; font-weight: 700; color: #1c5f41; margin-top: 4px; letter-spacing: 0.03em; }
+  .foot { border-top: 1px dashed #cbd5e1; padding: 6px 12px; font-size: 9px; color: #64748b; }
+  .foot b { color: #1c5f41; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      ${school.logoUrl ? `<img src="${escape(school.logoUrl)}" alt="">` : ''}
+      <div class="school-name">${escape(school.name)}</div>
+    </div>
+    <div class="body">
+      ${student.photoUrl
+        ? `<img class="photo" src="${escape(student.photoUrl)}" alt="">`
+        : `<div class="photo-fallback">${escape(student.firstName[0] ?? '')}${escape(student.lastName[0] ?? '')}</div>`}
+      <div class="info">
+        <div class="name">${escape(student.firstName)} ${escape(student.lastName)}</div>
+        <div class="meta">${escape(studentClass?.name ?? '—')} · ${escape(student.yearLevel || '—')}</div>
+        <div class="meta">DOB ${escape(student.dob)}</div>
+        <div class="code">${escape(student.studentCode)}</div>
+      </div>
+    </div>
+    <div class="foot"><b>Login:</b> ${escape(loginId)}</div>
+  </div>
+  <script>window.onload = () => window.print();</script>
+</body>
+</html>`);
+    win.document.close();
+  }
 
   return (
     <div className="space-y-4">
@@ -360,6 +431,45 @@ export default function StudentProfile() {
             )}
           </Card>
         </div>
+      )}
+
+      {tab === 'ID Card' && (
+        <Card>
+          <CardHeader
+            title="Student ID card"
+            subtitle="A printable card with the school logo, photo, and this student's login ID."
+            action={
+              <button className="btn-primary" onClick={printIdCard} disabled={!school}>
+                <Printer className="h-4 w-4" /> Print ID card
+              </button>
+            }
+          />
+          <CardBody className="flex flex-col items-center gap-4 py-8">
+            <div className="flex w-full max-w-xs flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex items-center gap-2 bg-brand-700 px-3 py-2 text-white">
+                {school?.logoUrl ? (
+                  <img src={school.logoUrl} alt="" className="h-5 w-5 rounded bg-white object-cover" />
+                ) : (
+                  <IdCard className="h-5 w-5" />
+                )}
+                <p className="truncate text-xs font-bold tracking-wide">{school?.name ?? 'School'}</p>
+              </div>
+              <div className="flex items-center gap-3 p-3">
+                <Avatar photoUrl={student.photoUrl} initials={`${student.firstName[0]}${student.lastName[0]}`} />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-slate-900">{student.firstName} {student.lastName}</p>
+                  <p className="text-xs text-slate-500">{studentClass?.name ?? '—'} · {student.yearLevel || '—'}</p>
+                  <p className="text-xs text-slate-500">DOB {student.dob}</p>
+                  <p className="mt-1 text-xs font-bold tracking-wide text-brand-700">{student.studentCode}</p>
+                </div>
+              </div>
+              <div className="border-t border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500">
+                <span className="font-semibold text-brand-700">Login:</span> {loginId}
+              </div>
+            </div>
+            {!school && <p className="text-sm text-slate-500">No school record found — can't print an ID card yet.</p>}
+          </CardBody>
+        </Card>
       )}
     </div>
   );

@@ -188,6 +188,7 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
             onClose={() => setFormOpen(false)}
             onSaved={reload}
             classes={classes}
+            students={students}
             student={editing}
           />
           <ConfirmDialog
