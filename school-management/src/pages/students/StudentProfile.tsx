@@ -12,6 +12,7 @@ import {
 } from '@/lib/services';
 import { schoolLoginDomain } from '@/lib/schoolLoginDomain';
 import { printStudentIdCards } from '@/lib/printIdCards';
+import { printReportCard } from '@/lib/printReportCard';
 import { studentDocumentPath, studentPhotoPath, uploadFile } from '@/lib/fileStorage';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -343,7 +344,35 @@ export default function StudentProfile() {
 
       {tab === 'Exams' && (
         <Card>
-          <CardHeader title="Exam results" />
+          <CardHeader
+            title="Exam results"
+            action={myResults.length > 0 && school && (
+              <button
+                className="btn-secondary !py-1 !px-3 text-xs"
+                onClick={() => {
+                  if (!student) return;
+                  printReportCard(
+                    student,
+                    school,
+                    myResults.map((r) => {
+                      const exam = exams.find((e) => e.id === r.examId);
+                      const subject = subjects.find((s) => s.id === exam?.subjectId);
+                      return {
+                        examName: exam?.name ?? '—',
+                        subjectName: subject?.name ?? '—',
+                        marksObtained: r.marksObtained,
+                        maxMarks: exam?.maxMarks ?? 0,
+                        grade: r.grade,
+                        teacherComment: r.teacherComment,
+                      };
+                    }),
+                  );
+                }}
+              >
+                <Printer className="h-3.5 w-3.5" /> Print report card
+              </button>
+            )}
+          />
           {myResults.length === 0 ? (
             <EmptyState icon={FileSpreadsheet} title="No exam results recorded" />
           ) : (

@@ -1,12 +1,14 @@
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { feeInvoicesRepo, feeStructuresRepo, studentsRepo, feePaymentsRepo } from '@/lib/services';
+import { feeInvoicesRepo, feeStructuresRepo, studentsRepo, feePaymentsRepo, schoolsRepo } from '@/lib/services';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Wallet } from 'lucide-react';
+import { Wallet, Printer } from 'lucide-react';
+import { printFeeReceipt } from '@/lib/printFeeReceipt';
+import type { FeePayment, Student } from '@/types';
 
 export default function FeesViewPage() {
   usePageTitle('Fees');
@@ -15,8 +17,17 @@ export default function FeesViewPage() {
   const { data: invoices, loading: l2 } = useRepoList(feeInvoicesRepo);
   const { data: structures, loading: l3 } = useRepoList(feeStructuresRepo);
   const { data: payments, loading: l4 } = useRepoList(feePaymentsRepo);
+  const { data: schools, loading: l5 } = useRepoList(schoolsRepo);
 
-  if (l1 || l2 || l3 || l4) return <Spinner />;
+  if (l1 || l2 || l3 || l4 || l5) return <Spinner />;
+  const school = schools[0];
+
+  function handlePrintReceipt(payment: FeePayment, student: Student) {
+    if (!school) return;
+    const invoice = invoices.find((i) => i.id === payment.invoiceId);
+    const feeName = structures.find((f) => f.id === invoice?.feeStructureId)?.name ?? 'Fee payment';
+    printFeeReceipt(payment, student, feeName, school);
+  }
 
   const targets = currentUser?.role === 'student'
     ? students.filter((s) => s.id === currentUser.studentId)
@@ -64,7 +75,15 @@ export default function FeesViewPage() {
                         <p className="text-sm text-slate-700">{p.receiptNumber}</p>
                         <p className="text-xs text-slate-500">{new Date(p.paidAt).toLocaleDateString()} · {p.method.replace('_', ' ')}</p>
                       </div>
-                      <p className="text-sm font-semibold text-slate-800">${p.amount.toLocaleString()}</p>
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm font-semibold text-slate-800">${p.amount.toLocaleString()}</p>
+                        <button
+                          className="btn-secondary !py-1 !px-2.5 text-xs"
+                          onClick={() => handlePrintReceipt(p, student)}
+                        >
+                          <Printer className="h-3.5 w-3.5" /> Receipt
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </CardBody>

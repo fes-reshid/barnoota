@@ -154,6 +154,20 @@ in `.env.local`, then `npm run deploy` to rebuild and redeploy the app.
 
 From then on, a parent taps **Connect Telegram** on their dashboard, which opens the bot and sends `/start` automatically — no typing required — and every future notification also arrives there.
 
+## Scheduled reminders
+
+Three Cloud Functions in `functions/src/scheduled.ts` run on a timer instead of reacting to a Firestore write:
+
+| Function | Schedule | What it does |
+| --- | --- | --- |
+| `sendFeeDueReminders` | Daily, 8am | Emails/WhatsApps/Telegrams the guardian of any student whose fee invoice is due in exactly 3 days |
+| `sendLowAttendanceAlerts` | Weekly, Monday 7am | Alerts the guardian of any active student present less than 75% of school days over the last 2 weeks (ignores students with fewer than 3 attendance records — too small a sample to mean anything) |
+| `cleanupExpiredInvites` | Daily, 3am | Deletes any parent-invite link that's still unclaimed 7+ days after it was created |
+
+The two reminder functions reuse the same Gmail/WhatsApp/Telegram secrets as the event-triggered notifications above — set those up once and these start working too, no separate configuration. `cleanupExpiredInvites` needs no secrets at all.
+
+Deploying these for the first time may need the same one-time Cloud Scheduler API enablement Firebase prompts for on a fresh project (the CLI output tells you if so — run the `gcloud services enable` command it gives you, or click the console link, then redeploy).
+
 ## Project structure
 
 - `src/types` — domain model shared by every screen and the data layer.

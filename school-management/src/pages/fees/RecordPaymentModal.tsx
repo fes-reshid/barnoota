@@ -4,16 +4,20 @@ import { FormField } from '@/components/ui/FormField';
 import { useToast } from '@/components/ui/Toast';
 import { useAuth } from '@/context/AuthContext';
 import { feeInvoicesRepo, feePaymentsRepo } from '@/lib/services';
-import type { FeeInvoice, FeePayment } from '@/types';
+import { printFeeReceipt } from '@/lib/printFeeReceipt';
+import type { FeeInvoice, FeePayment, School, Student } from '@/types';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onSaved: () => void;
   invoice: FeeInvoice | null;
+  student?: Student | null;
+  school?: School | null;
+  feeName?: string;
 }
 
-export function RecordPaymentModal({ open, onClose, onSaved, invoice }: Props) {
+export function RecordPaymentModal({ open, onClose, onSaved, invoice, student, school, feeName }: Props) {
   const { schoolId, currentUser } = useAuth();
   const { showToast } = useToast();
   const balance = invoice ? invoice.amount - invoice.discount - invoice.amountPaid : 0;
@@ -32,11 +36,12 @@ export function RecordPaymentModal({ open, onClose, onSaved, invoice }: Props) {
       const newPaid = invoice.amountPaid + amount;
       const newStatus: FeeInvoice['status'] = newPaid >= invoice.amount - invoice.discount ? 'paid' : 'partial';
       await feeInvoicesRepo.update(invoice.id, { amountPaid: newPaid, status: newStatus });
-      await feePaymentsRepo.create({
+      const payment = await feePaymentsRepo.create({
         schoolId, invoiceId: invoice.id, studentId: invoice.studentId, amount, method,
         paidAt: new Date().toISOString(), receiptNumber: `RCPT-${Date.now()}`, recordedBy: currentUser?.id ?? '',
       });
       showToast('Payment recorded.');
+      if (student && school) printFeeReceipt(payment, student, feeName ?? 'Fee payment', school);
       onSaved();
       onClose();
     } catch {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Wallet, CheckCircle2, AlertCircle, Receipt, Settings2 } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { feeInvoicesRepo, feeStructuresRepo, studentsRepo } from '@/lib/services';
+import { feeInvoicesRepo, feeStructuresRepo, studentsRepo, schoolsRepo } from '@/lib/services';
 import type { FeeInvoice } from '@/types';
 import { StatCard } from '@/components/ui/StatCard';
 import { Card } from '@/components/ui/Card';
@@ -19,8 +19,11 @@ export default function FeesAdminPage() {
   const { data: invoices, loading, reload } = useRepoList(feeInvoicesRepo);
   const { data: structures } = useRepoList(feeStructuresRepo);
   const { data: students } = useRepoList(studentsRepo);
+  const { data: schools } = useRepoList(schoolsRepo);
 
   const [payingInvoice, setPayingInvoice] = useState<FeeInvoice | null>(null);
+  const payingStudent = payingInvoice ? students.find((s) => s.id === payingInvoice.studentId) : null;
+  const payingFeeName = payingInvoice ? structures.find((f) => f.id === payingInvoice.feeStructureId)?.name : undefined;
 
   const collected = invoices.reduce((sum, i) => sum + i.amountPaid, 0);
   const outstanding = invoices.reduce((sum, i) => sum + (i.amount - i.discount - i.amountPaid), 0);
@@ -77,7 +80,15 @@ export default function FeesAdminPage() {
         <Pagination page={page} pageSize={pageSize} total={filtered.length} onPageChange={setPage} />
       </Card>
 
-      <RecordPaymentModal open={!!payingInvoice} onClose={() => setPayingInvoice(null)} onSaved={reload} invoice={payingInvoice} />
+      <RecordPaymentModal
+        open={!!payingInvoice}
+        onClose={() => setPayingInvoice(null)}
+        onSaved={reload}
+        invoice={payingInvoice}
+        student={payingStudent}
+        school={schools[0]}
+        feeName={payingFeeName}
+      />
     </div>
   );
 }

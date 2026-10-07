@@ -1,81 +1,96 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { homePathForRole } from '@/lib/roles';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DemoModeBanner } from '@/components/DemoModeBanner';
+import { Spinner } from '@/components/ui/Spinner';
 
-import Login from '@/pages/auth/Login';
-import ForgotPassword from '@/pages/auth/ForgotPassword';
-import ResetPassword from '@/pages/auth/ResetPassword';
-import ParentInvite from '@/pages/auth/ParentInvite';
-import DemoEntry from '@/pages/DemoEntry';
-import NotFound from '@/pages/NotFound';
+// Every page is loaded lazily so the initial bundle is just the app shell
+// (router, auth, layout) — the ~30 page modules only download once a user
+// actually navigates to them, instead of all landing in one multi-MB chunk
+// nobody's first visit needs in full.
+const Login = lazy(() => import('@/pages/auth/Login'));
+const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'));
+const ParentInvite = lazy(() => import('@/pages/auth/ParentInvite'));
+const DemoEntry = lazy(() => import('@/pages/DemoEntry'));
+const NotFound = lazy(() => import('@/pages/NotFound'));
 
-import SuperAdminDashboard from '@/pages/superadmin/SuperAdminDashboard';
-import SchoolsPage from '@/pages/superadmin/SchoolsPage';
-import AdminsPage from '@/pages/superadmin/AdminsPage';
-import SubscriptionsPage from '@/pages/superadmin/SubscriptionsPage';
-import SystemSettingsPage from '@/pages/superadmin/SystemSettingsPage';
+const SuperAdminDashboard = lazy(() => import('@/pages/superadmin/SuperAdminDashboard'));
+const SchoolsPage = lazy(() => import('@/pages/superadmin/SchoolsPage'));
+const AdminsPage = lazy(() => import('@/pages/superadmin/AdminsPage'));
+const SubscriptionsPage = lazy(() => import('@/pages/superadmin/SubscriptionsPage'));
+const SystemSettingsPage = lazy(() => import('@/pages/superadmin/SystemSettingsPage'));
 
-import AdminDashboard from '@/pages/dashboard/AdminDashboard';
-import TeacherDashboard from '@/pages/dashboard/TeacherDashboard';
-import ParentDashboard from '@/pages/dashboard/ParentDashboard';
-import StudentDashboard from '@/pages/dashboard/StudentDashboard';
+const AdminDashboard = lazy(() => import('@/pages/dashboard/AdminDashboard'));
+const TeacherDashboard = lazy(() => import('@/pages/dashboard/TeacherDashboard'));
+const ParentDashboard = lazy(() => import('@/pages/dashboard/ParentDashboard'));
+const StudentDashboard = lazy(() => import('@/pages/dashboard/StudentDashboard'));
 
-import StudentList from '@/pages/students/StudentList';
-import StudentProfile from '@/pages/students/StudentProfile';
-import MyProfilePage from '@/pages/students/MyProfilePage';
+const StudentList = lazy(() => import('@/pages/students/StudentList'));
+const StudentProfile = lazy(() => import('@/pages/students/StudentProfile'));
+const MyProfilePage = lazy(() => import('@/pages/students/MyProfilePage'));
 
-import TeacherList from '@/pages/teachers/TeacherList';
-import TeacherClassesPage from '@/pages/teachers/TeacherClassesPage';
-import ParentsPage from '@/pages/parents/ParentsPage';
-import ParentChildrenPage from '@/pages/parents/ParentChildrenPage';
+const TeacherList = lazy(() => import('@/pages/teachers/TeacherList'));
+const TeacherClassesPage = lazy(() => import('@/pages/teachers/TeacherClassesPage'));
+const ParentsPage = lazy(() => import('@/pages/parents/ParentsPage'));
+const ParentChildrenPage = lazy(() => import('@/pages/parents/ParentChildrenPage'));
 
-import ClassesPage from '@/pages/classes/ClassesPage';
-import SubjectsPage from '@/pages/classes/SubjectsPage';
+const ClassesPage = lazy(() => import('@/pages/classes/ClassesPage'));
+const SubjectsPage = lazy(() => import('@/pages/classes/SubjectsPage'));
 
-import MarkAttendancePage from '@/pages/attendance/MarkAttendancePage';
-import AttendanceViewPage from '@/pages/attendance/AttendanceViewPage';
+const MarkAttendancePage = lazy(() => import('@/pages/attendance/MarkAttendancePage'));
+const AttendanceViewPage = lazy(() => import('@/pages/attendance/AttendanceViewPage'));
 
-import TimetableAdminPage from '@/pages/timetable/TimetableAdminPage';
-import TimetableViewPage from '@/pages/timetable/TimetableViewPage';
+const TimetableAdminPage = lazy(() => import('@/pages/timetable/TimetableAdminPage'));
+const TimetableViewPage = lazy(() => import('@/pages/timetable/TimetableViewPage'));
 
-import HomeworkListPage from '@/pages/homework/HomeworkListPage';
-import StudentHomeworkPage from '@/pages/homework/StudentHomeworkPage';
-import ParentHomeworkPage from '@/pages/homework/ParentHomeworkPage';
+const HomeworkListPage = lazy(() => import('@/pages/homework/HomeworkListPage'));
+const StudentHomeworkPage = lazy(() => import('@/pages/homework/StudentHomeworkPage'));
+const ParentHomeworkPage = lazy(() => import('@/pages/homework/ParentHomeworkPage'));
 
-import ExamsListPage from '@/pages/exams/ExamsListPage';
-import StudentExamsPage from '@/pages/exams/StudentExamsPage';
-import ParentExamsPage from '@/pages/exams/ParentExamsPage';
+const ExamsListPage = lazy(() => import('@/pages/exams/ExamsListPage'));
+const StudentExamsPage = lazy(() => import('@/pages/exams/StudentExamsPage'));
+const ParentExamsPage = lazy(() => import('@/pages/exams/ParentExamsPage'));
 
-import FeesAdminPage from '@/pages/fees/FeesAdminPage';
-import FeeStructuresPage from '@/pages/fees/FeeStructuresPage';
-import FeesViewPage from '@/pages/fees/FeesViewPage';
+const FeesAdminPage = lazy(() => import('@/pages/fees/FeesAdminPage'));
+const FeeStructuresPage = lazy(() => import('@/pages/fees/FeeStructuresPage'));
+const FeesViewPage = lazy(() => import('@/pages/fees/FeesViewPage'));
 
-import AnnouncementsPage from '@/pages/communication/AnnouncementsPage';
-import MessagesPage from '@/pages/communication/MessagesPage';
+const AnnouncementsPage = lazy(() => import('@/pages/communication/AnnouncementsPage'));
+const MessagesPage = lazy(() => import('@/pages/communication/MessagesPage'));
 
-import LibraryPage from '@/pages/library/LibraryPage';
-import TransportPage from '@/pages/transport/TransportPage';
-import ReportsPage from '@/pages/reports/ReportsPage';
+const LibraryPage = lazy(() => import('@/pages/library/LibraryPage'));
+const TransportPage = lazy(() => import('@/pages/transport/TransportPage'));
+const ReportsPage = lazy(() => import('@/pages/reports/ReportsPage'));
 
-import QuranProgressPage from '@/pages/islamic/QuranProgressPage';
-import IqraProgressPage from '@/pages/islamic/IqraProgressPage';
-import IslamicStudiesPage from '@/pages/islamic/IslamicStudiesPage';
-import OromoProgressPage from '@/pages/islamic/OromoProgressPage';
+const QuranProgressPage = lazy(() => import('@/pages/islamic/QuranProgressPage'));
+const IqraProgressPage = lazy(() => import('@/pages/islamic/IqraProgressPage'));
+const IslamicStudiesPage = lazy(() => import('@/pages/islamic/IslamicStudiesPage'));
+const OromoProgressPage = lazy(() => import('@/pages/islamic/OromoProgressPage'));
 
-import SettingsPage from '@/pages/settings/SettingsPage';
+const SettingsPage = lazy(() => import('@/pages/settings/SettingsPage'));
 
 function RoleHomeRedirect() {
   const { currentUser } = useAuth();
   return <Navigate to={currentUser ? homePathForRole(currentUser.role) : '/login'} replace />;
 }
 
+function RouteFallback() {
+  return (
+    <div className="flex h-[60vh] items-center justify-center">
+      <Spinner />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <>
       <DemoModeBanner />
+      <Suspense fallback={<RouteFallback />}>
       <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -166,6 +181,7 @@ export default function App() {
 
       <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
     </>
   );
 }

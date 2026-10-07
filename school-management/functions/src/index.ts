@@ -12,6 +12,7 @@ import {
 } from './recipients.js';
 
 export { onTelegramWebhook } from './telegram.js';
+export { sendFeeDueReminders, sendLowAttendanceAlerts, cleanupExpiredInvites } from './scheduled.js';
 
 initializeApp();
 setGlobalOptions({

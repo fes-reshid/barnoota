@@ -1,19 +1,21 @@
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { examResultsRepo, examsRepo, subjectsRepo, studentsRepo } from '@/lib/services';
+import { examResultsRepo, examsRepo, subjectsRepo, studentsRepo, schoolsRepo } from '@/lib/services';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Printer, FileSpreadsheet } from 'lucide-react';
+import { printReportCard } from '@/lib/printReportCard';
 
 export function ExamResultsFor({ studentId }: { studentId: string }) {
   const { data: results, loading: l1 } = useRepoList(examResultsRepo);
   const { data: exams, loading: l2 } = useRepoList(examsRepo);
   const { data: subjects, loading: l3 } = useRepoList(subjectsRepo);
   const { data: students, loading: l4 } = useRepoList(studentsRepo);
+  const { data: schools, loading: l5 } = useRepoList(schoolsRepo);
 
-  if (l1 || l2 || l3 || l4) return <Spinner />;
+  if (l1 || l2 || l3 || l4 || l5) return <Spinner />;
 
   const student = students.find((s) => s.id === studentId);
   const myResults = results.filter((r) => r.studentId === studentId);
@@ -28,13 +30,34 @@ export function ExamResultsFor({ studentId }: { studentId: string }) {
     return sum + (exam?.maxMarks ?? 0);
   }, 0);
   const average = totalMax ? Math.round((totalObtained / totalMax) * 100) : 0;
+  const school = schools[0];
+
+  function handlePrint() {
+    if (!student || !school) return;
+    printReportCard(
+      student,
+      school,
+      myResults.map((r) => {
+        const exam = exams.find((e) => e.id === r.examId);
+        const subject = subjects.find((s) => s.id === exam?.subjectId);
+        return {
+          examName: exam?.name ?? '—',
+          subjectName: subject?.name ?? '—',
+          marksObtained: r.marksObtained,
+          maxMarks: exam?.maxMarks ?? 0,
+          grade: r.grade,
+          teacherComment: r.teacherComment,
+        };
+      }),
+    );
+  }
 
   return (
     <Card>
       <CardHeader
         title="Report card"
         subtitle={student ? `${student.firstName} ${student.lastName} · ${student.yearLevel}` : undefined}
-        action={<button className="btn-secondary !py-1 !px-3 text-xs" onClick={() => window.print()}><Printer className="h-3.5 w-3.5" /> Print</button>}
+        action={<button className="btn-secondary !py-1 !px-3 text-xs" onClick={handlePrint}><Printer className="h-3.5 w-3.5" /> Print</button>}
       />
       <CardBody className="!p-0">
         <table className="w-full text-left text-sm">
