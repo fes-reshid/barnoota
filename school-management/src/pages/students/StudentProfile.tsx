@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon, Camera, Printer, IdCard, Link2, Copy, X } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, HeartPulse, CalendarCheck, ClipboardList, FileSpreadsheet, Wallet, FileText, Moon, Camera, Printer, IdCard, Link2, Copy, X, MessageCircle, Send } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
@@ -112,6 +112,14 @@ export default function StudentProfile() {
     }
   }
 
+  const inviteMessage = `You're invited to ${school?.name ?? 'the parent portal'} — set up your login to follow ${student?.firstName ?? 'your child'}'s attendance, homework, and progress: ${inviteUrl}`;
+  // These are WhatsApp/Telegram's own public "share" links — opening one
+  // just hands the pre-filled message to whichever app/contact the admin
+  // picks on their own device. No API keys or setup needed, unlike the
+  // automated notifications below.
+  const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(inviteMessage)}`;
+  const telegramShareUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(inviteMessage.replace(inviteUrl, '').trim())}`;
+
   function printIdCard() {
     if (!school || !student) return;
     printStudentIdCards([student], school, classes);
@@ -215,11 +223,21 @@ export default function StudentProfile() {
                 </div>
               )}
               {pendingInvite ? (
-                <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <Link2 className="h-4 w-4 shrink-0 text-slate-400" />
-                  <input readOnly value={inviteUrl} className="input !w-auto flex-1 !bg-white text-xs" onFocus={(e) => e.target.select()} />
-                  <button className="btn-secondary !px-2 !py-1.5" onClick={copyInviteLink} title="Copy link"><Copy className="h-3.5 w-3.5" /></button>
-                  <button className="btn-secondary !px-2 !py-1.5" onClick={handleRevokeInvite} title="Revoke"><X className="h-3.5 w-3.5" /></button>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                    <Link2 className="h-4 w-4 shrink-0 text-slate-400" />
+                    <input readOnly value={inviteUrl} className="input !w-auto flex-1 !bg-white text-xs" onFocus={(e) => e.target.select()} />
+                    <button className="btn-secondary !px-2 !py-1.5" onClick={copyInviteLink} title="Copy link"><Copy className="h-3.5 w-3.5" /></button>
+                    <button className="btn-secondary !px-2 !py-1.5" onClick={handleRevokeInvite} title="Revoke"><X className="h-3.5 w-3.5" /></button>
+                  </div>
+                  <div className="flex gap-2">
+                    <a className="btn-secondary !text-emerald-700" href={whatsappShareUrl} target="_blank" rel="noreferrer">
+                      <MessageCircle className="h-4 w-4" /> Share on WhatsApp
+                    </a>
+                    <a className="btn-secondary !text-sky-700" href={telegramShareUrl} target="_blank" rel="noreferrer">
+                      <Send className="h-4 w-4" /> Share on Telegram
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <button className="btn-secondary" onClick={handleGenerateInvite}>
