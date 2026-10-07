@@ -143,6 +143,8 @@ input[type="range"] { accent-color: var(--accent); min-width: 0; }
 .sync-photo span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sync-group { border-top: 1px solid rgba(255,255,255,.1); padding-top: 8px; margin-top: 6px; }
 .sync-found { font-weight: 600; }
+.occasion-preview { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 4px 0 8px; }
+.occasion-preview canvas { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line-2); }
 .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
 .library-card { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--panel-2, var(--panel)); min-width: 0; }
 .library-card.current { border-color: var(--accent); }
@@ -591,12 +593,6 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
     .panel-body{padding-bottom:max(12px,env(safe-area-inset-bottom));}
     .inspector-body{padding:12px max(12px,env(safe-area-inset-right)) 20px max(12px,env(safe-area-inset-left));}
 
-    .workspace-size-bar{gap:6px;padding:4px 8px;flex-wrap:nowrap;overflow-x:auto;min-height:44px;}
-    .workspace-size-bar label{flex:none;}
-    .workspace-size-bar button{font-size:11px;padding:5px 8px;min-height:34px;}
-    .workspace-size-bar input{width:82px;}
-    .studio-bar{max-height:none;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;gap:6px;padding:6px 8px;min-height:48px;}
-    .studio-bar button{flex:0 0 auto!important;min-height:36px;padding:7px 10px;}
     .preview-edit-bar{flex-wrap:nowrap;overflow-x:auto;padding:4px 8px;min-height:42px;}
     .preview-edit-bar>*{flex:none;}
     .stage{padding:4px;}
@@ -642,10 +638,25 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
 }
 @media(max-width:900px) and (orientation:landscape) and (max-height:520px){
     body{grid-template-rows:auto minmax(0,1fr) 8px var(--timeline-h,42dvh);}
-    .studio-bar{min-height:42px;padding-block:3px;}
-    .workspace-size-bar{min-height:38px;}
     .transport{min-height:42px;padding-block:2px;}
 }
+/* Phone: a top bar that fits without scrolling, and menus as a sheet from the bottom. */
+@media (max-width: 900px) {
+    .topbar { overflow-x: hidden; gap: 4px; }
+    .topbar > .brand, #resolution, #redo, .topbar > .sep { display: none !important; }
+    .topbar button, .menubar button { min-width: 36px; padding-left: 6px; padding-right: 6px; }
+    .project-tabs { max-width: 132px; }
+    .project-tabs .tab-add { display: none; }
+    .project-tab { max-width: 126px; }
+    .project-tab .tab-name { max-width: 98px; padding: 4px 6px; }
+    .menu { left: 0 !important; right: 0; top: auto !important; bottom: 0; width: 100%; max-width: none; min-width: 0;
+        max-height: 78dvh !important; border-radius: 16px 16px 0 0; padding: 8px 8px max(12px, env(safe-area-inset-bottom)); }
+    .menu::before { content: ''; display: block; width: 44px; height: 4px; border-radius: 4px; background: var(--line-2); margin: 2px auto 6px; }
+    .menu-item { min-height: 46px; align-items: center; font-size: 15px; }
+    body.menu-open::after { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 79; }
+    .preview-edit-bar { display: none; }
+}
+@media (max-width: 380px) { .project-tabs, .project-tab { max-width: 104px; } .project-tab .tab-name { max-width: 76px; } }
 </style>
 </head>
 <body>
@@ -689,7 +700,7 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
         </div>
     </div>
 </dialog>
-<script src="consent.js?v=202610070717"></script>
+<script src="consent.js?v=202610070934"></script>
 
 <header class="topbar">
     <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></span><span class="hide-narrow">Reel</span></div>
@@ -836,31 +847,35 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
 <div id="media-host" class="media-host" aria-hidden="true"></div>
 
 <!-- ?v= is stamped with the release by tools/deploy-video-editor.sh, so browsers and the offline cache pick up new versions. -->
-<script src="timeline.js?v=202610070717"></script>
-<script src="audio-core.js?v=202610070717"></script>
-<script src="webm.js?v=202610070717"></script>
-<script src="hands.js?v=202610070717"></script>
-<script src="handwriting.js?v=202610070717"></script>
-<script src="editor.js?v=202610070717"></script>
-<script src="media-store.js?v=202610070717"></script>
-<script src="audio-mix.js?v=202610070717"></script>
-<script src="export-fast.js?v=202610070717"></script>
-<script src="quran.js?v=202610070717"></script>
-<script src="captions.js?v=202610070717"></script>
-<script src="studio.js?v=202610070717"></script>
-<script src="creator-tools.js?v=202610070717"></script>
-<script src="creative-effects.js?v=202610070717"></script>
-<script src="art-gallery.js?v=202610070717"></script>
-<script src="preview-edit.js?v=202610070717"></script>
-<script src="hadith.js?v=202610070717"></script>
-<script src="workspace-layout.js?v=202610070717"></script>
-<script src="workspace-resize.js?v=202610070717"></script>
-<script src="brand.js?v=202610070717"></script>
-<script src="short.js?v=202610070717"></script>
-<script src="sounds.js?v=202610070717"></script>
-<script src="record.js?v=202610070717"></script>
-<script src="library.js?v=202610070717"></script>
-<script src="pauses.js?v=202610070717"></script>
+<script src="timeline.js?v=202610070934"></script>
+<script src="audio-core.js?v=202610070934"></script>
+<script src="webm.js?v=202610070934"></script>
+<script src="hands.js?v=202610070934"></script>
+<script src="handwriting.js?v=202610070934"></script>
+<script src="editor.js?v=202610070934"></script>
+<script src="media-store.js?v=202610070934"></script>
+<script src="audio-mix.js?v=202610070934"></script>
+<script src="export-fast.js?v=202610070934"></script>
+<script src="quran.js?v=202610070934"></script>
+<script src="captions.js?v=202610070934"></script>
+<script src="studio.js?v=202610070934"></script>
+<script src="creator-tools.js?v=202610070934"></script>
+<script src="creative-effects.js?v=202610070934"></script>
+<script src="art-gallery.js?v=202610070934"></script>
+<script src="preview-edit.js?v=202610070934"></script>
+<script src="hadith.js?v=202610070934"></script>
+<script src="workspace-layout.js?v=202610070934"></script>
+<script src="workspace-resize.js?v=202610070934"></script>
+<script src="brand.js?v=202610070934"></script>
+<script src="short.js?v=202610070934"></script>
+<script src="sounds.js?v=202610070934"></script>
+<script src="record.js?v=202610070934"></script>
+<script src="library.js?v=202610070934"></script>
+<script src="pauses.js?v=202610070934"></script>
+<script src="occasions.js?v=202610070934"></script>
+<script src="reframe.js?v=202610070934"></script>
+<script src="speak.js?v=202610070934"></script>
+<script src="mobile.js?v=202610070934"></script>
 <script>
 // Works offline after the first visit (http only; the service worker cannot run from a file).
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !/[?&]nosw\b/.test(location.search)) {
