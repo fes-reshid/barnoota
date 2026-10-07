@@ -4,7 +4,9 @@ import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoListAll } from '@/lib/useRepoList';
 import { schoolsRepo } from '@/lib/services';
 import { createStaffAccount } from '@/lib/createStaffAccount';
+import { setById } from '@/lib/repository';
 import { isFirebaseConfigured } from '@/firebase/config';
+import { friendlyErrorMessage } from '@/lib/friendlyError';
 import type { School } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
@@ -18,6 +20,8 @@ const emptyForm = {
   adminName: '', adminEmail: '',
 };
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function SchoolsPage() {
   usePageTitle('Schools');
   const { data: schools, loading, reload } = useRepoListAll(schoolsRepo);
@@ -26,21 +30,44 @@ export default function SchoolsPage() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  function validate(): boolean {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = 'Required.';
+    if (!form.phone.trim()) e.phone = 'Required.';
+    if (!form.email.trim()) e.email = 'Required.';
+    else if (!EMAIL_RE.test(form.email.trim())) e.email = 'Enter a valid email address.';
+    if (!form.adminName.trim()) e.adminName = 'Required.';
+    if (!form.adminEmail.trim()) e.adminEmail = 'Required.';
+    else if (!EMAIL_RE.test(form.adminEmail.trim())) e.adminEmail = 'Enter a valid email address.';
+    setFieldErrors(e);
+    return Object.keys(e).length === 0;
+  }
 
   async function handleCreate() {
     setError('');
-    if (!form.adminName.trim() || !form.adminEmail.trim()) {
-      setError('The school admin\'s name and email are required.');
-      return;
-    }
+    if (!validate()) return;
     setSaving(true);
     try {
-      // Each school is its own tenant, so it needs a fresh, unique schoolId
-      // rather than reusing the creating admin's — school documents are
-      // conventionally self-referencing (schoolId === their own doc id), so
-      // create first to get a real id, then patch it in.
-      const created = await schoolsRepo.create({
-        schoolId: 'pending',
+      // Each school is its own tenant with a fresh, unique id — generated
+      // up front (rather than letting Firestore auto-assign one after the
+      // fact) so the admin account can be created FIRST, against that id.
+      // If creating the admin's login fails (e.g. the email is already in
+      // use), nothing has been written to the schools collection at all —
+      // no half-created, admin-less school left behind to clean up.
+      const schoolId = crypto.randomUUID();
+
+      await createStaffAccount({
+        schoolId,
+        role: 'school_admin',
+        name: form.adminName,
+        email: form.adminEmail,
+      });
+
+      const now = new Date().toISOString();
+      await setById<School>('schools', schoolId, {
+        schoolId,
         name: form.name,
         address: form.address,
         phone: form.phone,
@@ -48,17 +75,8 @@ export default function SchoolsPage() {
         subscriptionPlan: form.subscriptionPlan,
         subscriptionStatus: 'active',
         islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true },
-      });
-      await schoolsRepo.update(created.id, { schoolId: created.id });
-
-      // Give the school its own admin login in the same step — without
-      // this, there's no way to sign in and manage the school's teachers,
-      // classes, etc. until someone creates that account by hand.
-      await createStaffAccount({
-        schoolId: created.id,
-        role: 'school_admin',
-        name: form.adminName,
-        email: form.adminEmail,
+        createdAt: now,
+        updatedAt: now,
       });
 
       showToast(
@@ -68,9 +86,10 @@ export default function SchoolsPage() {
       );
       setOpen(false);
       setForm(emptyForm);
+      setFieldErrors({});
       reload();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not add school.');
+      setError(friendlyErrorMessage(err, 'Could not add school.'));
     } finally {
       setSaving(false);
     }
@@ -108,13 +127,13 @@ export default function SchoolsPage() {
           <button className="btn-primary" onClick={handleCreate} disabled={saving || !form.name || !form.adminEmail}>Save</button>
         </>}>
         <div className="space-y-3">
-          <FormField label="School name" required>
+          <FormField label="School name" required error={fieldErrors.name}>
             <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </FormField>
-          <FormField label="Email">
+          <FormField label="Email" required error={fieldErrors.email}>
             <input className="input" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </FormField>
-          <FormField label="Phone">
+          <FormField label="Phone" required error={fieldErrors.phone}>
             <input className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
           </FormField>
           <FormField label="Address">
@@ -132,10 +151,10 @@ export default function SchoolsPage() {
           <div className="border-t border-slate-100 pt-3">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">School admin login</p>
             <div className="space-y-3">
-              <FormField label="Admin's name" required>
+              <FormField label="Admin's name" required error={fieldErrors.adminName}>
                 <input className="input" value={form.adminName} onChange={(e) => setForm({ ...form, adminName: e.target.value })} />
               </FormField>
-              <FormField label="Admin's email" required>
+              <FormField label="Admin's email" required error={fieldErrors.adminEmail}>
                 <input className="input" type="email" value={form.adminEmail} onChange={(e) => setForm({ ...form, adminEmail: e.target.value })} />
                 <p className="mt-1 text-xs text-slate-500">They'll get an email to set their own password.</p>
               </FormField>

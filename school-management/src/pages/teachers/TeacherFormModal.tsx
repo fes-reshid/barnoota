@@ -9,6 +9,7 @@ import { teachersRepo } from '@/lib/services';
 import { createStaffAccount } from '@/lib/createStaffAccount';
 import { teacherPhotoPath } from '@/lib/fileStorage';
 import { isFirebaseConfigured } from '@/firebase/config';
+import { friendlyErrorMessage } from '@/lib/friendlyError';
 import type { Subject, Teacher } from '@/types';
 
 interface Props {
@@ -90,7 +91,7 @@ export function TeacherFormModal({ open, onClose, onSaved, subjects, teacher }: 
       onClose();
     } catch (err) {
       console.error(err);
-      const message = err instanceof Error ? err.message : 'Could not save teacher.';
+      const message = friendlyErrorMessage(err, 'Could not save teacher.');
       showToast(message, 'error');
     } finally {
       setSaving(false);

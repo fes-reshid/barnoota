@@ -49,6 +49,13 @@ if (isFirebaseConfigured) {
     // which passes through those networks normally. Has no effect on
     // networks where the default connection already works fine.
     experimentalAutoDetectLongPolling: true,
+    // Several forms in this app build a record with optional fields left
+    // as `undefined` when not filled in (e.g. a new admin's phone number).
+    // Firestore rejects `undefined` outright rather than just omitting the
+    // field, which otherwise surfaces as a confusing "unsupported field
+    // value" error on save. Treat undefined the same as "don't write this
+    // field" everywhere, instead of requiring every call site to strip it.
+    ignoreUndefinedProperties: true,
   });
   storage = getStorage(app);
 }
