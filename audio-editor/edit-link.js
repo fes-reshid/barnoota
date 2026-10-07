@@ -1,8 +1,8 @@
 // Adds a small "✂ Edit in audio editor" link under every <audio controls> on a page
-// (including players added later). Include with: <script src="/audio-editor/edit-link.js" defer></script>
+// (including players added later). Include with: <script src="/audio-editor/edit-link.js" defer></script>. Opens NoorEditor (nooreditor.web.app); GitHub Pages serves the recordings with CORS, so it can load them.
 (() => {
   'use strict';
-  const EDITOR = '/audio-editor/';
+  const EDITOR = 'https://nooreditor.web.app/audio-editor/';
   const style = document.createElement('style');
   style.textContent = '.ae-edit-link{display:inline-block;margin:4px 0 0;font:13px/1.4 system-ui,sans-serif;color:#1f4f40;text-decoration:none;border-bottom:1px dotted #a97c25}.ae-edit-link:hover{color:#2e6b58;border-bottom-style:solid}';
   document.head.appendChild(style);
