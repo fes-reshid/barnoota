@@ -7,4 +7,5 @@ dist-ssr
 .env
 .env.local
 npm-debug.log*
+firebase-debug.log
 .DS_Store
