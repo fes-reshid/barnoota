@@ -85,6 +85,21 @@ export interface ParentInvite extends BaseRecord {
   usedAt?: string;
 }
 
+/** A one-off email a staff member sends to a student's guardian directly
+ * (as opposed to an Announcement, which always goes to a whole audience).
+ * Writing one of these is what actually triggers the send — see
+ * functions/src/index.ts onEmailRequestCreated, which resolves the
+ * guardian's current email server-side rather than trusting a client-
+ * supplied address. */
+export interface EmailRequest extends BaseRecord {
+  schoolId: string;
+  studentId: string;
+  subject: string;
+  body: string;
+  senderName: string;
+  status: 'queued' | 'sent' | 'failed';
+}
+
 export interface StudentDocument extends BaseRecord {
   studentId: string;
   name: string;

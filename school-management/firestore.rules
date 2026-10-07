@@ -120,6 +120,18 @@ service cloud.firestore {
       allow delete: if isSuperAdmin() || isSchoolStaff();
     }
 
+    // One-off emails a staff member sends to a student's guardian directly
+    // (as opposed to an Announcement). Writing one is what triggers the
+    // send — see functions/src/index.ts onEmailRequestCreated — so only
+    // staff can create them, and nobody can edit a message after it's
+    // queued (the Cloud Function alone updates `status` via the Admin SDK,
+    // which bypasses these rules).
+    match /emailRequests/{id} {
+      allow read: if isSuperAdmin() || (isSchoolStaff() && inMySchool(resource.data.schoolId));
+      allow create: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId));
+      allow update, delete: if false;
+    }
+
     // Students: staff manage; a student can read their own record, a
     // parent can read their linked children's records; a super admin can
     // read across every school (for platform-wide stats).

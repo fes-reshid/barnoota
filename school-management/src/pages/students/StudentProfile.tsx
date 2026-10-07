@@ -8,7 +8,7 @@ import {
   studentsRepo, classesRepo, attendanceRepo, homeworkRepo, homeworkSubmissionsRepo,
   examResultsRepo, examsRepo, subjectsRepo, feeInvoicesRepo, feeStructuresRepo,
   studentDocumentsRepo, quranProgressRepo, iqraProgressRepo, islamicStudiesRepo, oromoProgressRepo,
-  schoolsRepo, usersRepo, parentInvitesRepo,
+  schoolsRepo, usersRepo, parentInvitesRepo, emailRequestsRepo,
 } from '@/lib/services';
 import { schoolLoginDomain } from '@/lib/schoolLoginDomain';
 import { printStudentIdCards } from '@/lib/printIdCards';
@@ -20,6 +20,8 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Avatar } from '@/components/ui/Avatar';
 import { FileUpload } from '@/components/ui/FileUpload';
 import { FileLink } from '@/components/ui/FileLink';
+import { Modal } from '@/components/ui/Modal';
+import { FormField } from '@/components/ui/FormField';
 import { useToast } from '@/components/ui/Toast';
 import type { StudentDocument } from '@/types';
 
@@ -29,10 +31,15 @@ type Tab = (typeof TABS)[number];
 export default function StudentProfile() {
   usePageTitle('Student Profile');
   const { id } = useParams<{ id: string }>();
-  const { schoolId } = useAuth();
+  const { schoolId, currentUser } = useAuth();
   const { showToast } = useToast();
   const [tab, setTab] = useState<Tab>('Overview');
   const [docCategory, setDocCategory] = useState<StudentDocument['category']>('other');
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const { data: students, loading: l1, reload: reloadStudents } = useRepoList(studentsRepo);
   const { data: classes, loading: l2 } = useRepoList(classesRepo);
@@ -125,6 +132,35 @@ export default function StudentProfile() {
     printStudentIdCards([student], school, classes);
   }
 
+  async function handleSendEmail() {
+    if (!student) return;
+    setEmailError('');
+    if (!emailSubject.trim()) return setEmailError('Enter a subject.');
+    if (!emailBody.trim()) return setEmailError('Enter a message.');
+
+    setEmailSending(true);
+    try {
+      // Writing this is what sends it — functions/src/index.ts
+      // onEmailRequestCreated picks it up and emails the guardian.
+      await emailRequestsRepo.create({
+        schoolId,
+        studentId: student.id,
+        subject: emailSubject.trim(),
+        body: emailBody.trim(),
+        senderName: currentUser?.name ?? 'School staff',
+        status: 'queued',
+      });
+      showToast('Email queued to send.');
+      setEmailOpen(false);
+      setEmailSubject('');
+      setEmailBody('');
+    } catch {
+      setEmailError('Could not send — try again.');
+    } finally {
+      setEmailSending(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <Link to=".." className="flex w-fit items-center gap-1 text-sm text-slate-500 hover:text-slate-700">
@@ -199,7 +235,16 @@ export default function StudentProfile() {
             </CardBody>
           </Card>
           <Card>
-            <CardHeader title="Guardian & emergency contact" />
+            <CardHeader
+              title="Guardian & emergency contact"
+              action={
+                student.guardianEmail && (
+                  <button className="btn-secondary !px-2 !py-1.5 text-xs" onClick={() => setEmailOpen(true)}>
+                    <Mail className="h-3.5 w-3.5" /> Email parent
+                  </button>
+                )
+              }
+            />
             <CardBody className="space-y-3 text-sm">
               <p className="font-medium text-slate-700">{student.guardianName}</p>
               <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-slate-400" /> {student.guardianPhone}</p>
@@ -492,6 +537,31 @@ export default function StudentProfile() {
           </CardBody>
         </Card>
       )}
+
+      <Modal
+        open={emailOpen}
+        onClose={() => setEmailOpen(false)}
+        title={`Email ${student.guardianName || 'parent'}`}
+        footer={
+          <>
+            <button className="btn-secondary" onClick={() => setEmailOpen(false)}>Cancel</button>
+            <button className="btn-primary" onClick={handleSendEmail} disabled={emailSending}>
+              {emailSending ? 'Sending…' : 'Send'}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-3">
+          <p className="text-xs text-slate-500">To: {student.guardianEmail}</p>
+          <FormField label="Subject" required>
+            <input className="input" value={emailSubject} onChange={(e) => setEmailSubject(e.target.value)} />
+          </FormField>
+          <FormField label="Message" required>
+            <textarea className="input" rows={6} value={emailBody} onChange={(e) => setEmailBody(e.target.value)} />
+          </FormField>
+          {emailError && <p className="text-sm text-rose-600">{emailError}</p>}
+        </div>
+      </Modal>
     </div>
   );
 }

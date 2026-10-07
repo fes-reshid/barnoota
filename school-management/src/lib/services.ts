@@ -6,6 +6,7 @@ import type {
   AttendanceRecord,
   Book,
   BookLoan,
+  EmailRequest,
   Exam,
   ExamResult,
   ExamType,
@@ -39,6 +40,7 @@ export const usersRepo = createRepository<AppUser>('users');
 export const studentsRepo = createRepository<Student>('students');
 export const studentDocumentsRepo = createRepository<StudentDocument>('studentDocuments');
 export const parentInvitesRepo = createRepository<ParentInvite>('parentInvites');
+export const emailRequestsRepo = createRepository<EmailRequest>('emailRequests');
 export const teachersRepo = createRepository<Teacher>('teachers');
 export const academicYearsRepo = createRepository<AcademicYear>('academicYears');
 export const classesRepo = createRepository<SchoolClass>('classes');

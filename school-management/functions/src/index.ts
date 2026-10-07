@@ -238,6 +238,42 @@ export const onMessageCreated = onDocumentCreated('messages/{id}', async (event)
   });
 });
 
+// ---------------------------------------------------------------------------
+// A one-off email a staff member sends directly to a student's guardian
+// (see "Email parent" on the Student Profile) — distinct from Announcements,
+// which always go to a whole audience. The guardian's address is resolved
+// here from the student record rather than trusted from the client, so a
+// stale or tampered `to` field on the request can't redirect the email.
+// ---------------------------------------------------------------------------
+export const onEmailRequestCreated = onDocumentCreated('emailRequests/{id}', async (event) => {
+  const snap = event.data;
+  if (!snap) return;
+  const { studentId, subject, body, senderName } = snap.data() as {
+    studentId: string; subject: string; body: string; senderName: string;
+  };
+
+  const guardian = await guardianForStudent(studentId);
+  const ref = snap.ref;
+
+  if (!guardian?.email) {
+    await ref.update({ status: 'failed' });
+    return;
+  }
+
+  // sendMail logs and swallows its own failures (never throws) so a
+  // notification issue can't fail the write that triggered it — so
+  // "sent" here means "handed to Gmail", not a delivery confirmation.
+  await sendMail({
+    to: guardian.email,
+    subject,
+    html: emailLayout(subject, `
+      <p style="white-space: pre-wrap;">${escapeHtml(body)}</p>
+      <p style="color:#64748b; font-size: 13px;">— ${escapeHtml(senderName)}, regarding ${escapeHtml(guardian.studentName)}</p>
+    `),
+  });
+  await ref.update({ status: 'sent' });
+});
+
 function escapeHtml(input: string): string {
   return String(input ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
