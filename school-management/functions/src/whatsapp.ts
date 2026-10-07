@@ -1,4 +1,5 @@
 import { defineSecret } from 'firebase-functions/params';
+import { isSecretConfigured } from './secretPlaceholder.js';
 
 // WhatsApp Cloud API credentials (Meta's own API, not a paid reseller),
 // stored as Cloud Functions secrets. Set them once with:
@@ -24,7 +25,7 @@ function normalizePhone(raw: string): string {
 export async function sendWhatsApp(to: string, text: string): Promise<void> {
   const token = WHATSAPP_ACCESS_TOKEN.value();
   const phoneNumberId = WHATSAPP_PHONE_NUMBER_ID.value();
-  if (!token || !phoneNumberId) return;
+  if (!isSecretConfigured(token) || !isSecretConfigured(phoneNumberId)) return;
 
   const phone = normalizePhone(to);
   if (phone.length < 8) return; // too short to be a real number — don't waste an API call

@@ -260,10 +260,11 @@ export const onEmailRequestCreated = onDocumentCreated('emailRequests/{id}', asy
     return;
   }
 
-  // sendMail logs and swallows its own failures (never throws) so a
-  // notification issue can't fail the write that triggered it — so
-  // "sent" here means "handed to Gmail", not a delivery confirmation.
-  await sendMail({
+  // sendMail logs and swallows its own send failures (never throws) so a
+  // notification issue can't fail the write that triggered it — its return
+  // value tells "sent" apart from "Gmail isn't configured yet", though
+  // either way this is "handed to Gmail", not a delivery confirmation.
+  const sent = await sendMail({
     to: guardian.email,
     subject,
     html: emailLayout(subject, `
@@ -271,7 +272,7 @@ export const onEmailRequestCreated = onDocumentCreated('emailRequests/{id}', asy
       <p style="color:#64748b; font-size: 13px;">— ${escapeHtml(senderName)}, regarding ${escapeHtml(guardian.studentName)}</p>
     `),
   });
-  await ref.update({ status: 'sent' });
+  await ref.update({ status: sent ? 'sent' : 'failed' });
 });
 
 function escapeHtml(input: string): string {

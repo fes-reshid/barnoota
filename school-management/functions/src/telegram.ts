@@ -1,6 +1,7 @@
 import { defineSecret } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
+import { isSecretConfigured } from './secretPlaceholder.js';
 
 // Telegram bot token from @BotFather, stored as a Cloud Functions secret:
 //   firebase functions:secrets:set TELEGRAM_BOT_TOKEN
@@ -16,7 +17,7 @@ export const TELEGRAM_BOT_TOKEN = defineSecret('TELEGRAM_BOT_TOKEN');
  */
 export async function sendTelegram(chatId: string, text: string): Promise<void> {
   const token = TELEGRAM_BOT_TOKEN.value();
-  if (!token || !chatId) return;
+  if (!isSecretConfigured(token) || !chatId) return;
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {

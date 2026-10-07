@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { defineSecret } from 'firebase-functions/params';
+import { isSecretConfigured } from './secretPlaceholder.js';
 
 // Gmail SMTP credentials, stored as Cloud Functions secrets (never checked
 // into source). Set them once with:
@@ -33,21 +34,29 @@ export interface MailMessage {
 /**
  * Sends one email via Gmail SMTP. Failures are logged and swallowed rather
  * than thrown — a notification email failing to send should never fail the
- * Firestore write that triggered it.
+ * Firestore write that triggered it. Returns whether a send was actually
+ * attempted, so callers that track status (e.g. onEmailRequestCreated) can
+ * tell "sent" apart from "Gmail isn't configured yet".
  */
-export async function sendMail({ to, subject, html }: MailMessage): Promise<void> {
+export async function sendMail({ to, subject, html }: MailMessage): Promise<boolean> {
   const recipients = Array.isArray(to) ? to.filter(Boolean) : [to].filter(Boolean);
-  if (recipients.length === 0) return;
+  if (recipients.length === 0) return false;
+
+  const user = GMAIL_USER.value();
+  const pass = GMAIL_APP_PASSWORD.value();
+  if (!isSecretConfigured(user) || !isSecretConfigured(pass)) return false;
 
   try {
     await getTransporter().sendMail({
-      from: `"Barnoota Campus" <${GMAIL_USER.value()}>`,
+      from: `"Barnoota Campus" <${user}>`,
       to: recipients.join(','),
       subject,
       html,
     });
+    return true;
   } catch (err) {
     console.error(`Failed to send email "${subject}" to ${recipients.join(', ')}:`, err);
+    return false;
   }
 }
 
