@@ -448,7 +448,7 @@
       <h1 id="login-title">Teacher Sign In</h1>
       <p id="login-lead">Use your teacher username and password. Teacher usernames must contain “teacher”.</p>
       <div class="field"><label for="admin-email">Teacher username</label>
-        <input type="text" id="admin-email" autocomplete="username" placeholder="salah-teacher"></div>
+        <input type="text" id="admin-email" autocomplete="username" placeholder="username-teacher"></div>
       <div class="field"><label for="admin-password">Password</label>
         <input type="password" id="admin-password" autocomplete="current-password"></div>
       <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
@@ -917,7 +917,7 @@
           students but can never delete one, and can never sign into the main site admin panel.</p>
         <div class="row">
           <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
-            <input type="text" id="new-admin-email" placeholder="salah-teacher"></div>
+            <input type="text" id="new-admin-email" placeholder="username-teacher"></div>
         </div>
         <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
         <p class="msg" id="add-admin-msg"></p>
@@ -3021,7 +3021,7 @@ function setSignUpMode(on){
   isSignUp = on;
   $('login-title').textContent = on ? 'Create Teacher Account' : 'Teacher Sign In';
   $('login-lead').textContent = on
-    ? 'Choose a username containing “teacher”, for example salah-teacher. An admin or super administrator must approve it before you can see students.'
+    ? 'Choose a username containing “teacher”, for example username-teacher. An admin or super administrator must approve it before you can see students.'
     : 'Use your teacher username and password to manage Tuhfatul Atfaal students.';
   $('admin-signin-btn').textContent = on ? 'Create Account' : 'Sign In';
   $('login-toggle').textContent = on ? 'Already have a teacher account? Sign in' : 'New teacher? Create an account';
