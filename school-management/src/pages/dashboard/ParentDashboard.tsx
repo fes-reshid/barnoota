@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, CalendarCheck, Wallet, ClipboardList } from 'lucide-react';
+import { GraduationCap, CalendarCheck, Wallet, ClipboardList, Send, CheckCircle2 } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
@@ -26,8 +26,37 @@ export default function ParentDashboard() {
     return <EmptyState title="No children linked to this account" description="Contact the school office to link your children's profiles." />;
   }
 
+  const telegramBot = import.meta.env.VITE_TELEGRAM_BOT_USERNAME as string | undefined;
+
   return (
     <div className="space-y-6">
+      {telegramBot && (
+        <Card>
+          <CardBody className="flex flex-wrap items-center justify-between gap-3">
+            {currentUser?.telegramChatId ? (
+              <p className="flex items-center gap-2 text-sm text-emerald-700">
+                <CheckCircle2 className="h-4 w-4" /> Telegram notifications are connected.
+              </p>
+            ) : (
+              <>
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Get updates on Telegram</p>
+                  <p className="text-xs text-slate-500">Attendance, homework, and fee alerts, sent straight to Telegram.</p>
+                </div>
+                <a
+                  className="btn-secondary shrink-0"
+                  href={`https://t.me/${telegramBot}?start=${currentUser?.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Send className="h-4 w-4" /> Connect Telegram
+                </a>
+              </>
+            )}
+          </CardBody>
+        </Card>
+      )}
+
       {children.map((child) => {
         const childAttendance = attendance.filter((a) => a.studentId === child.id);
         const presentCount = childAttendance.filter((a) => a.status === 'present').length;

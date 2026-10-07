@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Download, Upload, GraduationCap, Archive, Pencil } from 'lucide-react';
+import { Plus, Download, Upload, GraduationCap, Archive, Pencil, IdCard } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { classesRepo, studentsRepo } from '@/lib/services';
+import { classesRepo, studentsRepo, schoolsRepo } from '@/lib/services';
 import type { Student } from '@/types';
 import { usePagedList } from '@/lib/usePagedList';
 import { exportToCsv, parseCsv } from '@/lib/csv';
+import { printStudentIdCards } from '@/lib/printIdCards';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
 import { Pagination } from '@/components/ui/Pagination';
@@ -23,6 +24,7 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
   const { schoolId, currentUser } = useAuth();
   const { data: students, loading, reload } = useRepoList(studentsRepo);
   const { data: classes } = useRepoList(classesRepo);
+  const { data: schools } = useRepoList(schoolsRepo);
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,6 +63,19 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
     showToast(archiving.status === 'archived' ? 'Student restored.' : 'Student archived.');
     setArchiving(null);
     reload();
+  }
+
+  function handlePrintIdCards() {
+    const school = schools[0];
+    if (!school) {
+      showToast('No school record found — can\'t print ID cards.', 'error');
+      return;
+    }
+    if (filtered.length === 0) {
+      showToast('No students to print — adjust your filters.', 'error');
+      return;
+    }
+    printStudentIdCards(filtered, school, classes);
   }
 
   function handleExport() {
@@ -157,6 +172,9 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
             <option value="graduated">Graduated</option>
             <option value="all">All statuses</option>
           </select>
+          <button className="btn-secondary" onClick={handlePrintIdCards} title="Print ID cards for the currently filtered students">
+            <IdCard className="h-4 w-4" /> Print ID cards
+          </button>
           <button className="btn-secondary" onClick={handleExport}><Download className="h-4 w-4" /> Export</button>
           {!readOnly && (
             <>

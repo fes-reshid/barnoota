@@ -41,6 +41,12 @@ export interface AppUser extends BaseRecord {
   studentId?: string;
   teacherId?: string;
   childrenIds?: string[]; // for parents
+  /** Only set at creation time, for a parent who self-registered via an
+   * invite link — lets the security rules verify the claim is legitimate. */
+  inviteToken?: string;
+  /** Set by the onTelegramWebhook Cloud Function once a parent links their
+   * Telegram account — see ConnectTelegram / functions/src/telegram.ts. */
+  telegramChatId?: string;
 }
 
 export type Gender = 'male' | 'female';
@@ -64,6 +70,19 @@ export interface Student extends BaseRecord {
   emergencyContactPhone: string;
   medicalNotes?: string;
   parentUserId?: string;
+}
+
+/** A one-time, shareable link letting a parent create their own portal
+ * login and link it to their child, without the school admin needing to
+ * know the parent's email ahead of time. Document id is the token itself
+ * (part of the /invite/:token URL). */
+export interface ParentInvite extends BaseRecord {
+  schoolId: string;
+  studentId: string;
+  studentName: string;
+  status: 'pending' | 'used';
+  usedByUid?: string;
+  usedAt?: string;
 }
 
 export interface StudentDocument extends BaseRecord {

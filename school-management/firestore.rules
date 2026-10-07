@@ -72,13 +72,52 @@ service cloud.firestore {
       allow write: if isSuperAdmin() || (isSchoolStaff() && inMySchool(schoolId));
     }
 
+    // A brand-new signed-up account may create its OWN profile as a parent
+    // only by presenting a still-pending invite token for that exact
+    // school/student — never any arbitrary role or school. See
+    // /parentInvites below: the invite is marked "used" in a separate,
+    // equally-guarded write right after this one.
+    function invite(token) {
+      return get(/databases/$(database)/documents/parentInvites/$(token)).data;
+    }
+    function isClaimingValidInvite(data) {
+      return 'inviteToken' in data
+        && invite(data.inviteToken).status == 'pending'
+        && invite(data.inviteToken).schoolId == data.schoolId
+        && data.role == 'parent'
+        && data.childrenIds.size() == 1
+        && data.childrenIds[0] == invite(data.inviteToken).studentId;
+    }
+
     // User profiles: anyone can read their own; staff can read/write every
     // profile in their school. Nobody can change `role` or `schoolId`
     // except staff, preventing self-escalation.
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isSuperAdmin() || (isSchoolStaff() && inMySchool(resource.data.schoolId)));
       allow list: if isSuperAdmin() || isSchoolStaff();
-      allow create, update, delete: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId));
+      allow create: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId))
+        || (isSignedIn() && request.auth.uid == userId && isClaimingValidInvite(request.resource.data));
+      allow update, delete: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId));
+    }
+
+    // Parent invite links: a school admin/teacher creates one per student;
+    // the public /invite/:token page reads it (before the parent is even
+    // signed in) to show which student it's for; and the newly-registered
+    // parent flips it to "used" themselves right after claiming it, which
+    // this rule restricts to only that exact transition on their own uid —
+    // they can't resurrect a used invite or redirect it to a different
+    // school/student.
+    match /parentInvites/{token} {
+      allow get: if true;
+      allow list: if isSuperAdmin() || isSchoolStaff();
+      allow create: if isSuperAdmin() || (isSchoolStaff() && inMySchool(request.resource.data.schoolId));
+      allow update: if isSignedIn()
+        && resource.data.status == 'pending'
+        && request.resource.data.status == 'used'
+        && request.resource.data.usedByUid == request.auth.uid
+        && request.resource.data.schoolId == resource.data.schoolId
+        && request.resource.data.studentId == resource.data.studentId;
+      allow delete: if isSuperAdmin() || isSchoolStaff();
     }
 
     // Students: staff manage; a student can read their own record, a

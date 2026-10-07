@@ -104,6 +104,56 @@ npm run deploy:functions
 
 That's it — from then on, the events in the table above send automatically. Check `npx firebase-tools functions:log` if an email doesn't arrive (most often: Blaze plan not enabled yet, or a typo in the App Password).
 
+## WhatsApp notifications
+
+The same events (announcement, homework, attendance, fee invoice, payment) also send over WhatsApp, using **Meta's own Cloud API directly** — not a paid reseller like Twilio — so there's a genuine free tier (1,000 conversations/month) and no markup. Messages go to each student's `guardianPhone`.
+
+### Set it up
+
+**1. Create a Meta app with WhatsApp enabled:**
+1. Go to [developers.facebook.com/apps](https://developers.facebook.com/apps) → **Create App** → choose **Business** → add the **WhatsApp** product.
+2. Under WhatsApp → **API Setup**, you'll see a **temporary access token** and a **Phone number ID** — the test number Meta gives you for free works fine to start (messages can only go to numbers you've manually verified as testers, until you verify your business and move to a permanent number — see Meta's own docs for that step when you're ready to go live).
+
+**2. Store the credentials as Cloud Functions secrets:**
+```bash
+npx firebase-tools functions:secrets:set WHATSAPP_ACCESS_TOKEN
+npx firebase-tools functions:secrets:set WHATSAPP_PHONE_NUMBER_ID
+```
+
+**3. Deploy:**
+```bash
+npm run deploy:functions
+```
+
+Guardian phone numbers are read as stored (digits only matter — spaces/dashes/parentheses are stripped automatically), so make sure they include a country code, e.g. `+1 614 555 0210`, not just a local number.
+
+## Telegram notifications
+
+Same events again, this time over Telegram — free, no business verification, but with one extra step: Telegram has no way to message a phone number directly, so each parent has to message your bot once to "connect" (a single tap from their dashboard).
+
+### Set it up
+
+**1. Create a bot** (two minutes, no account review):
+1. In Telegram, message **[@BotFather](https://t.me/BotFather)** → `/newbot` → follow the prompts (name it, pick a username ending in `bot`, e.g. `BarnootaCampusBot`).
+2. BotFather replies with a **token** — copy it.
+
+**2. Store the token as a secret and set the webhook** (this tells Telegram where to send incoming messages):
+```bash
+npx firebase-tools functions:secrets:set TELEGRAM_BOT_TOKEN
+
+npm run deploy:functions
+# after deploying, copy the onTelegramWebhook function's URL from the deploy output, then:
+curl "https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook?url=<ONTELEGRAMWEBHOOK_URL>"
+```
+
+**3. Add the bot's username to the app** so the "Connect Telegram" button appears on parents' dashboards:
+```
+VITE_TELEGRAM_BOT_USERNAME=BarnootaCampusBot
+```
+in `.env.local`, then `npm run deploy` to rebuild and redeploy the app.
+
+From then on, a parent taps **Connect Telegram** on their dashboard, which opens the bot and sends `/start` automatically — no typing required — and every future notification also arrives there.
+
 ## Project structure
 
 - `src/types` — domain model shared by every screen and the data layer.

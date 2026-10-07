@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useRepoList } from '@/lib/useRepoList';
 import { usersRepo, studentsRepo } from '@/lib/services';
@@ -8,11 +10,13 @@ import { DataTable, type Column } from '@/components/ui/DataTable';
 import { Pagination } from '@/components/ui/Pagination';
 import { SearchInput } from '@/components/ui/SearchInput';
 import { Badge } from '@/components/ui/Badge';
+import { ParentFormModal } from './ParentFormModal';
 
 export default function ParentsPage() {
   usePageTitle('Parents');
-  const { data: users, loading } = useRepoList(usersRepo);
+  const { data: users, loading, reload } = useRepoList(usersRepo);
   const { data: students } = useRepoList(studentsRepo);
+  const [formOpen, setFormOpen] = useState(false);
 
   const parents = users.filter((u) => u.role === 'parent');
   const { search, setSearch, page, setPage, filtered, paged, pageSize } = usePagedList<AppUser>(
@@ -40,13 +44,28 @@ export default function ParentsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="w-full max-w-xs">
-        <SearchInput value={search} onChange={setSearch} placeholder="Search parents…" />
+      <div className="flex items-center justify-between gap-3">
+        <div className="w-full max-w-xs">
+          <SearchInput value={search} onChange={setSearch} placeholder="Search parents…" />
+        </div>
+        <button className="btn-primary shrink-0" onClick={() => setFormOpen(true)}>
+          <Plus className="h-4 w-4" /> Add parent
+        </button>
       </div>
       <Card>
-        <DataTable columns={columns} rows={paged} rowKey={(p) => p.id} loading={loading} emptyTitle="No parents yet" />
+        <DataTable
+          columns={columns}
+          rows={paged}
+          rowKey={(p) => p.id}
+          loading={loading}
+          emptyTitle="No parents yet"
+          emptyDescription="Add a parent account and link it to their child's record."
+          emptyAction={<button className="btn-primary" onClick={() => setFormOpen(true)}><Plus className="h-4 w-4" /> Add parent</button>}
+        />
         <Pagination page={page} pageSize={pageSize} total={filtered.length} onPageChange={setPage} />
       </Card>
+
+      <ParentFormModal open={formOpen} onClose={() => setFormOpen(false)} onSaved={reload} students={students} />
     </div>
   );
 }

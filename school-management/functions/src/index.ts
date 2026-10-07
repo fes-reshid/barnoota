@@ -3,10 +3,22 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { onDocumentCreated, onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { GMAIL_USER, GMAIL_APP_PASSWORD, sendMail, emailLayout } from './mailer.js';
-import { guardianEmailsForClass, guardianEmailsForSchool, guardianForStudent, teacherEmailsForSchool } from './recipients.js';
+import { WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, sendWhatsAppToMany } from './whatsapp.js';
+import { TELEGRAM_BOT_TOKEN, sendTelegramToMany } from './telegram.js';
+import {
+  guardianEmailsForClass, guardianEmailsForSchool, guardianForStudent, teacherEmailsForSchool,
+  guardianPhonesForClass, guardianPhonesForSchool, telegramChatIdsForClass, telegramChatIdsForSchool,
+  telegramChatIdsForStudent,
+} from './recipients.js';
+
+export { onTelegramWebhook } from './telegram.js';
 
 initializeApp();
-setGlobalOptions({ region: 'us-central1', maxInstances: 10, secrets: [GMAIL_USER, GMAIL_APP_PASSWORD] });
+setGlobalOptions({
+  region: 'us-central1',
+  maxInstances: 10,
+  secrets: [GMAIL_USER, GMAIL_APP_PASSWORD, WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, TELEGRAM_BOT_TOKEN],
+});
 
 // ---------------------------------------------------------------------------
 // Announcements — emailed to whichever audience the announcement targets.
@@ -20,30 +32,47 @@ export const onAnnouncementCreated = onDocumentCreated('announcements/{id}', asy
   };
 
   let recipients: string[] = [];
+  let guardianPhones: string[] = [];
+  let telegramChatIds: string[] = [];
   if (audience === 'everyone') {
-    const [guardians, teachers] = await Promise.all([
+    const [guardians, teachers, phones, chatIds] = await Promise.all([
       guardianEmailsForSchool(schoolId),
       teacherEmailsForSchool(schoolId),
+      guardianPhonesForSchool(schoolId),
+      telegramChatIdsForSchool(schoolId),
     ]);
     recipients = [...guardians, ...teachers];
+    guardianPhones = phones;
+    telegramChatIds = chatIds;
   } else if (audience === 'teachers') {
     recipients = await teacherEmailsForSchool(schoolId);
   } else if (audience === 'parents' || audience === 'students') {
-    recipients = await guardianEmailsForSchool(schoolId);
+    [recipients, guardianPhones, telegramChatIds] = await Promise.all([
+      guardianEmailsForSchool(schoolId),
+      guardianPhonesForSchool(schoolId),
+      telegramChatIdsForSchool(schoolId),
+    ]);
   } else if (audience === 'class' && classId) {
-    recipients = await guardianEmailsForClass(schoolId, classId);
+    [recipients, guardianPhones, telegramChatIds] = await Promise.all([
+      guardianEmailsForClass(schoolId, classId),
+      guardianPhonesForClass(schoolId, classId),
+      telegramChatIdsForClass(schoolId, classId),
+    ]);
   }
 
-  if (recipients.length === 0) return;
-
-  await sendMail({
-    to: recipients,
-    subject: `New announcement: ${title}`,
-    html: emailLayout(title, `
-      <p style="white-space: pre-wrap;">${escapeHtml(body)}</p>
-      <p style="color:#64748b; font-size: 13px;">— ${escapeHtml(authorName)}</p>
-    `),
-  });
+  const whatsappText = `📢 ${title}\n\n${body}\n\n— ${authorName}`;
+  await Promise.all([
+    recipients.length > 0 && sendMail({
+      to: recipients,
+      subject: `New announcement: ${title}`,
+      html: emailLayout(title, `
+        <p style="white-space: pre-wrap;">${escapeHtml(body)}</p>
+        <p style="color:#64748b; font-size: 13px;">— ${escapeHtml(authorName)}</p>
+      `),
+    }),
+    guardianPhones.length > 0 && sendWhatsAppToMany(guardianPhones, whatsappText),
+    telegramChatIds.length > 0 && sendTelegramToMany(telegramChatIds, whatsappText),
+  ]);
 });
 
 // ---------------------------------------------------------------------------
@@ -57,18 +86,26 @@ export const onHomeworkCreated = onDocumentCreated('homework/{id}', async (event
     schoolId: string; classId: string; title: string; description: string; dueDate: string;
   };
 
-  const recipients = await guardianEmailsForClass(schoolId, classId);
-  if (recipients.length === 0) return;
+  const [recipients, guardianPhones, telegramChatIds] = await Promise.all([
+    guardianEmailsForClass(schoolId, classId),
+    guardianPhonesForClass(schoolId, classId),
+    telegramChatIdsForClass(schoolId, classId),
+  ]);
 
-  await sendMail({
-    to: recipients,
-    subject: `New homework assigned: ${title}`,
-    html: emailLayout('New homework assigned', `
-      <p><strong>${escapeHtml(title)}</strong></p>
-      <p>${escapeHtml(description)}</p>
-      <p style="color:#64748b; font-size: 13px;">Due ${escapeHtml(dueDate)}</p>
-    `),
-  });
+  const text = `📝 New homework: ${title}\n\n${description}\n\nDue ${dueDate}`;
+  await Promise.all([
+    recipients.length > 0 && sendMail({
+      to: recipients,
+      subject: `New homework assigned: ${title}`,
+      html: emailLayout('New homework assigned', `
+        <p><strong>${escapeHtml(title)}</strong></p>
+        <p>${escapeHtml(description)}</p>
+        <p style="color:#64748b; font-size: 13px;">Due ${escapeHtml(dueDate)}</p>
+      `),
+    }),
+    guardianPhones.length > 0 && sendWhatsAppToMany(guardianPhones, text),
+    telegramChatIds.length > 0 && sendTelegramToMany(telegramChatIds, text),
+  ]);
 });
 
 // ---------------------------------------------------------------------------
@@ -85,17 +122,26 @@ export const onAttendanceWritten = onDocumentWritten('attendance/{id}', async (e
   if (!notifiable || !statusChanged) return;
 
   const { studentId, date } = after as { studentId: string; date: string };
-  const guardian = await guardianForStudent(studentId);
+  const [guardian, telegramChatIds] = await Promise.all([
+    guardianForStudent(studentId),
+    telegramChatIdsForStudent(studentId),
+  ]);
   if (!guardian) return;
 
-  await sendMail({
-    to: guardian.email,
-    subject: `Attendance update for ${guardian.studentName}`,
-    html: emailLayout('Attendance update', `
-      <p><strong>${escapeHtml(guardian.studentName)}</strong> was marked <strong>${escapeHtml(after.status)}</strong> on ${escapeHtml(date)}.</p>
-      ${after.note ? `<p style="color:#64748b; font-size: 13px;">Note: ${escapeHtml(after.note)}</p>` : ''}
-    `),
-  });
+  const noteText = after.note ? `\nNote: ${after.note}` : '';
+  const text = `📅 Attendance update: ${guardian.studentName} was marked ${after.status} on ${date}.${noteText}`;
+  await Promise.all([
+    guardian.email && sendMail({
+      to: guardian.email,
+      subject: `Attendance update for ${guardian.studentName}`,
+      html: emailLayout('Attendance update', `
+        <p><strong>${escapeHtml(guardian.studentName)}</strong> was marked <strong>${escapeHtml(after.status)}</strong> on ${escapeHtml(date)}.</p>
+        ${after.note ? `<p style="color:#64748b; font-size: 13px;">Note: ${escapeHtml(after.note)}</p>` : ''}
+      `),
+    }),
+    guardian.phone && sendWhatsAppToMany([guardian.phone], text),
+    telegramChatIds.length > 0 && sendTelegramToMany(telegramChatIds, text),
+  ]);
 });
 
 // ---------------------------------------------------------------------------
@@ -106,16 +152,24 @@ export const onFeeInvoiceCreated = onDocumentCreated('feeInvoices/{id}', async (
   if (!data) return;
 
   const { studentId, amount, dueDate } = data as { studentId: string; amount: number; dueDate: string };
-  const guardian = await guardianForStudent(studentId);
+  const [guardian, telegramChatIds] = await Promise.all([
+    guardianForStudent(studentId),
+    telegramChatIdsForStudent(studentId),
+  ]);
   if (!guardian) return;
 
-  await sendMail({
-    to: guardian.email,
-    subject: `New fee invoice for ${guardian.studentName}`,
-    html: emailLayout('New fee invoice', `
-      <p>A new invoice of <strong>$${amount.toLocaleString()}</strong> has been assigned for <strong>${escapeHtml(guardian.studentName)}</strong>, due ${escapeHtml(dueDate)}.</p>
-    `),
-  });
+  const text = `💳 New fee invoice for ${guardian.studentName}: $${amount.toLocaleString()}, due ${dueDate}.`;
+  await Promise.all([
+    guardian.email && sendMail({
+      to: guardian.email,
+      subject: `New fee invoice for ${guardian.studentName}`,
+      html: emailLayout('New fee invoice', `
+        <p>A new invoice of <strong>$${amount.toLocaleString()}</strong> has been assigned for <strong>${escapeHtml(guardian.studentName)}</strong>, due ${escapeHtml(dueDate)}.</p>
+      `),
+    }),
+    guardian.phone && sendWhatsAppToMany([guardian.phone], text),
+    telegramChatIds.length > 0 && sendTelegramToMany(telegramChatIds, text),
+  ]);
 });
 
 export const onPaymentCreated = onDocumentCreated('payments/{id}', async (event) => {
@@ -125,17 +179,25 @@ export const onPaymentCreated = onDocumentCreated('payments/{id}', async (event)
   const { studentId, amount, method, receiptNumber } = data as {
     studentId: string; amount: number; method: string; receiptNumber: string;
   };
-  const guardian = await guardianForStudent(studentId);
+  const [guardian, telegramChatIds] = await Promise.all([
+    guardianForStudent(studentId),
+    telegramChatIdsForStudent(studentId),
+  ]);
   if (!guardian) return;
 
-  await sendMail({
-    to: guardian.email,
-    subject: `Payment received — receipt ${receiptNumber}`,
-    html: emailLayout('Payment received', `
-      <p>We've received a payment of <strong>$${amount.toLocaleString()}</strong> for <strong>${escapeHtml(guardian.studentName)}</strong> via ${escapeHtml(method.replace('_', ' '))}.</p>
-      <p style="color:#64748b; font-size: 13px;">Receipt: ${escapeHtml(receiptNumber)}</p>
-    `),
-  });
+  const text = `✅ Payment received for ${guardian.studentName}: $${amount.toLocaleString()} via ${method.replace('_', ' ')}. Receipt: ${receiptNumber}`;
+  await Promise.all([
+    guardian.email && sendMail({
+      to: guardian.email,
+      subject: `Payment received — receipt ${receiptNumber}`,
+      html: emailLayout('Payment received', `
+        <p>We've received a payment of <strong>$${amount.toLocaleString()}</strong> for <strong>${escapeHtml(guardian.studentName)}</strong> via ${escapeHtml(method.replace('_', ' '))}.</p>
+        <p style="color:#64748b; font-size: 13px;">Receipt: ${escapeHtml(receiptNumber)}</p>
+      `),
+    }),
+    guardian.phone && sendWhatsAppToMany([guardian.phone], text),
+    telegramChatIds.length > 0 && sendTelegramToMany(telegramChatIds, text),
+  ]);
 });
 
 // ---------------------------------------------------------------------------

@@ -11,6 +11,7 @@ interface NewStaffAccount {
   phone?: string;
   role: Role;
   teacherId?: string;
+  childrenIds?: string[];
 }
 
 /**
@@ -37,6 +38,7 @@ export async function createStaffAccount(input: NewStaffAccount): Promise<AppUse
       phone: input.phone,
       role: input.role,
       teacherId: input.teacherId,
+      childrenIds: input.childrenIds,
       active: true,
       createdAt: now,
       updatedAt: now,
@@ -59,6 +61,7 @@ export async function createStaffAccount(input: NewStaffAccount): Promise<AppUse
       phone: input.phone,
       role: input.role,
       teacherId: input.teacherId,
+      childrenIds: input.childrenIds,
       active: true,
       createdAt: now,
       updatedAt: now,

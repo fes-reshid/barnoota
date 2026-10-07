@@ -20,6 +20,7 @@ import type {
   Message,
   MessageThread,
   OromoProgress,
+  ParentInvite,
   QuranProgress,
   School,
   SchoolClass,
@@ -37,6 +38,7 @@ export const schoolsRepo = createRepository<School>('schools');
 export const usersRepo = createRepository<AppUser>('users');
 export const studentsRepo = createRepository<Student>('students');
 export const studentDocumentsRepo = createRepository<StudentDocument>('studentDocuments');
+export const parentInvitesRepo = createRepository<ParentInvite>('parentInvites');
 export const teachersRepo = createRepository<Teacher>('teachers');
 export const academicYearsRepo = createRepository<AcademicYear>('academicYears');
 export const classesRepo = createRepository<SchoolClass>('classes');

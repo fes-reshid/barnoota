@@ -7,6 +7,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import Login from '@/pages/auth/Login';
 import ForgotPassword from '@/pages/auth/ForgotPassword';
 import ResetPassword from '@/pages/auth/ResetPassword';
+import ParentInvite from '@/pages/auth/ParentInvite';
 import NotFound from '@/pages/NotFound';
 
 import SuperAdminDashboard from '@/pages/superadmin/SuperAdminDashboard';
@@ -75,6 +76,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/invite/:token" element={<ParentInvite />} />
 
       <Route path="/" element={<RoleHomeRedirect />} />
 
