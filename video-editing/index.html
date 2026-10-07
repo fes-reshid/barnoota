@@ -137,6 +137,12 @@ input[type="range"] { accent-color: var(--accent); min-width: 0; }
 @keyframes rec-blink { 50% { opacity: .25; } }
 .record-time { font-family: var(--mono); min-width: 120px; }
 .record-countdown { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; font-size: 160px; font-weight: 800; color: #fff; background: rgba(0,0,0,.55); pointer-events: none; }
+.sync-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px; max-height: 190px; overflow: auto; margin: 6px 0; }
+.sync-photo { display: flex; align-items: center; gap: 6px; font-size: 12px; background: var(--panel-2, rgba(255,255,255,.05)); border-radius: 6px; padding: 4px; cursor: pointer; min-width: 0; }
+.sync-photo img { width: 40px; height: 30px; object-fit: cover; border-radius: 4px; flex: none; }
+.sync-photo span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sync-group { border-top: 1px solid rgba(255,255,255,.1); padding-top: 8px; margin-top: 6px; }
+.sync-found { font-weight: 600; }
 .library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
 .library-card { display: grid; gap: 6px; padding: 8px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--panel-2, var(--panel)); min-width: 0; }
 .library-card.current { border-color: var(--accent); }
@@ -669,7 +675,7 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
         </div>
     </div>
 </dialog>
-<script src="consent.js?v=202610070616"></script>
+<script src="consent.js?v=202610070701"></script>
 
 <header class="topbar">
     <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></span><span class="hide-narrow">Reel</span></div>
@@ -808,30 +814,31 @@ body.drawing-focus .stage {padding-left:6px;padding-right:6px;padding-bottom:6px
 <div id="media-host" class="media-host" aria-hidden="true"></div>
 
 <!-- ?v= is stamped with the release by tools/deploy-video-editor.sh, so browsers and the offline cache pick up new versions. -->
-<script src="timeline.js?v=202610070616"></script>
-<script src="audio-core.js?v=202610070616"></script>
-<script src="webm.js?v=202610070616"></script>
-<script src="hands.js?v=202610070616"></script>
-<script src="handwriting.js?v=202610070616"></script>
-<script src="editor.js?v=202610070616"></script>
-<script src="media-store.js?v=202610070616"></script>
-<script src="audio-mix.js?v=202610070616"></script>
-<script src="export-fast.js?v=202610070616"></script>
-<script src="quran.js?v=202610070616"></script>
-<script src="captions.js?v=202610070616"></script>
-<script src="studio.js?v=202610070616"></script>
-<script src="creator-tools.js?v=202610070616"></script>
-<script src="creative-effects.js?v=202610070616"></script>
-<script src="art-gallery.js?v=202610070616"></script>
-<script src="preview-edit.js?v=202610070616"></script>
-<script src="hadith.js?v=202610070616"></script>
-<script src="workspace-layout.js?v=202610070616"></script>
-<script src="workspace-resize.js?v=202610070616"></script>
-<script src="brand.js?v=202610070616"></script>
-<script src="short.js?v=202610070616"></script>
-<script src="sounds.js?v=202610070616"></script>
-<script src="record.js?v=202610070616"></script>
-<script src="library.js?v=202610070616"></script>
+<script src="timeline.js?v=202610070701"></script>
+<script src="audio-core.js?v=202610070701"></script>
+<script src="webm.js?v=202610070701"></script>
+<script src="hands.js?v=202610070701"></script>
+<script src="handwriting.js?v=202610070701"></script>
+<script src="editor.js?v=202610070701"></script>
+<script src="media-store.js?v=202610070701"></script>
+<script src="audio-mix.js?v=202610070701"></script>
+<script src="export-fast.js?v=202610070701"></script>
+<script src="quran.js?v=202610070701"></script>
+<script src="captions.js?v=202610070701"></script>
+<script src="studio.js?v=202610070701"></script>
+<script src="creator-tools.js?v=202610070701"></script>
+<script src="creative-effects.js?v=202610070701"></script>
+<script src="art-gallery.js?v=202610070701"></script>
+<script src="preview-edit.js?v=202610070701"></script>
+<script src="hadith.js?v=202610070701"></script>
+<script src="workspace-layout.js?v=202610070701"></script>
+<script src="workspace-resize.js?v=202610070701"></script>
+<script src="brand.js?v=202610070701"></script>
+<script src="short.js?v=202610070701"></script>
+<script src="sounds.js?v=202610070701"></script>
+<script src="record.js?v=202610070701"></script>
+<script src="library.js?v=202610070701"></script>
+<script src="pauses.js?v=202610070701"></script>
 <script>
 // Works offline after the first visit (http only; the service worker cannot run from a file).
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !/[?&]nosw\b/.test(location.search)) {
