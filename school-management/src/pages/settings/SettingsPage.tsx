@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Lock, Mail, IdCard } from 'lucide-react';
+import { CheckCircle2, Lock, Mail, Palette } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
@@ -9,9 +9,11 @@ import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { FormField } from '@/components/ui/FormField';
 import { Spinner } from '@/components/ui/Spinner';
 import { Badge } from '@/components/ui/Badge';
+import { FileUpload } from '@/components/ui/FileUpload';
 import { useToast } from '@/components/ui/Toast';
 import { PLAN_LIMITS, planLimitsFor, isTrialExpired, trialDaysRemaining } from '@/lib/planLimits';
-import { ID_CARD_THEMES } from '@/lib/printIdCards';
+import { APP_THEMES, applyAppTheme } from '@/lib/appTheme';
+import { schoolLogoPath } from '@/lib/fileStorage';
 
 const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; description: string }[] = [
   { key: 'quran', label: 'Quran Progress', description: 'Surah/ayah memorisation tracking' },
@@ -34,10 +36,10 @@ export default function SettingsPage() {
   const trialExpired = isTrialExpired(school);
   const daysLeft = trialDaysRemaining(school);
 
-  const [form, setForm] = useState({ name: '', address: '', phone: '', email: '' });
+  const [form, setForm] = useState({ name: '', address: '', phone: '', email: '', website: '' });
 
   useEffect(() => {
-    if (school) setForm({ name: school.name, address: school.address, phone: school.phone, email: school.email });
+    if (school) setForm({ name: school.name, address: school.address, phone: school.phone, email: school.email, website: school.website ?? '' });
   }, [school]);
 
   async function saveGeneral() {
@@ -53,9 +55,16 @@ export default function SettingsPage() {
     reload();
   }
 
-  async function setIdCardTheme(theme: NonNullable<School['idCardTheme']>) {
+  async function setTheme(theme: NonNullable<School['theme']>) {
     if (!school || !limits.customBranding) return;
-    await schoolsRepo.update(school.id, { idCardTheme: theme });
+    await schoolsRepo.update(school.id, { theme });
+    applyAppTheme(theme);
+    reload();
+  }
+
+  async function setLogo(url: string) {
+    if (!school || !limits.customBranding) return;
+    await schoolsRepo.update(school.id, { logoUrl: url });
     reload();
   }
 
@@ -101,7 +110,7 @@ export default function SettingsPage() {
               ['Email notifications', limits.email],
               ['WhatsApp & Telegram notifications', limits.whatsappTelegram],
               ['Islamic studies modules', limits.islamicModules],
-              ['Custom branding (logo on cards)', limits.customBranding],
+              ['Custom branding (logo & theme)', limits.customBranding],
               ['Parent self-registration invites', limits.parentInvites],
             ] as const).map(([label, included]) => (
               <div key={label} className="flex items-center gap-2 text-sm">
@@ -130,6 +139,9 @@ export default function SettingsPage() {
           <FormField label="Email"><input className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></FormField>
           <FormField label="Phone"><input className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></FormField>
           <FormField label="Address"><input className="input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></FormField>
+          <FormField label="Website (optional)">
+            <input className="input" placeholder="https://yourschool.org" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
+          </FormField>
           <div className="sm:col-span-2">
             <button className="btn-primary" onClick={saveGeneral}>Save changes</button>
           </div>
@@ -170,31 +182,55 @@ export default function SettingsPage() {
 
       <Card>
         <CardHeader
-          title="ID card theme"
-          subtitle={limits.customBranding ? 'Applied to every printed student ID card' : `Available on the ${PLAN_LIMITS.standard.label} plan and above`}
+          title="Branding & theme"
+          subtitle={limits.customBranding ? 'Your logo and color theme, applied across the dashboard and on printed ID cards' : `Available on the ${PLAN_LIMITS.standard.label} plan and above`}
         />
-        <CardBody>
-          <div className="flex flex-wrap gap-3">
-            {(Object.entries(ID_CARD_THEMES) as [NonNullable<School['idCardTheme']>, typeof ID_CARD_THEMES[keyof typeof ID_CARD_THEMES]][]).map(([key, theme]) => {
-              const active = (school.idCardTheme ?? 'forest') === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  disabled={!limits.customBranding}
-                  onClick={() => setIdCardTheme(key)}
-                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${
-                    active ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  } ${!limits.customBranding ? 'cursor-not-allowed opacity-50' : ''}`}
-                >
-                  <span className="flex h-6 w-6 items-center justify-center rounded-md text-white" style={{ backgroundColor: theme.primary }}>
-                    <IdCard className="h-3.5 w-3.5" />
-                  </span>
-                  {theme.label}
-                  {active && <CheckCircle2 className="h-4 w-4 text-brand-600" />}
-                </button>
-              );
-            })}
+        <CardBody className="space-y-5">
+          <div>
+            <p className="label">School logo</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                {school.logoUrl ? (
+                  <img src={school.logoUrl} alt="School logo" className="h-full w-full object-cover" />
+                ) : (
+                  <Palette className="h-5 w-5 text-slate-300" />
+                )}
+              </div>
+              {limits.customBranding ? (
+                <FileUpload
+                  label={school.logoUrl ? 'Replace logo' : 'Upload logo'}
+                  accept="image/*"
+                  buildPath={(fileName) => schoolLogoPath(school.id, fileName)}
+                  onUploaded={(file) => setLogo(file.url)}
+                />
+              ) : (
+                <span className="flex items-center gap-1 text-xs text-slate-400"><Lock className="h-3.5 w-3.5" /> Locked</span>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <p className="label">Color theme</p>
+            <div className="flex flex-wrap gap-3">
+              {(Object.entries(APP_THEMES) as [NonNullable<School['theme']>, typeof APP_THEMES[keyof typeof APP_THEMES]][]).map(([key, theme]) => {
+                const active = (school.theme ?? 'forest') === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    disabled={!limits.customBranding}
+                    onClick={() => setTheme(key)}
+                    className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${
+                      active ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                    } ${!limits.customBranding ? 'cursor-not-allowed opacity-50' : ''}`}
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ backgroundColor: theme.scale['600'] }} />
+                    {theme.label}
+                    {active && <CheckCircle2 className="h-4 w-4 text-brand-600" />}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </CardBody>
       </Card>

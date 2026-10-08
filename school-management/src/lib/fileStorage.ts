@@ -68,6 +68,10 @@ export function teacherPhotoPath(schoolId: string, teacherId: string, fileName: 
   return `schools/${schoolId}/teachers/${teacherId}/photo/${fileName}`;
 }
 
+export function schoolLogoPath(schoolId: string, fileName: string): string {
+  return `schools/${schoolId}/branding/logo-${fileName}`;
+}
+
 export function homeworkAttachmentPath(schoolId: string, homeworkId: string, fileName: string): string {
   return `schools/${schoolId}/homework/${homeworkId}/${fileName}`;
 }

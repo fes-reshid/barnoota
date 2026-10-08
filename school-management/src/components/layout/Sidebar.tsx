@@ -1,13 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import { ChevronsLeft, ChevronsRight, GraduationCap } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, GraduationCap, ExternalLink } from 'lucide-react';
 import { NAV_BY_ROLE } from '@/lib/nav';
 import { ROLE_LABELS } from '@/lib/roles';
 import { useAuth } from '@/context/AuthContext';
+import { useMySchool } from '@/lib/useMySchool';
 
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const { currentUser } = useAuth();
+  const { school } = useMySchool();
   if (!currentUser) return null;
   const items = NAV_BY_ROLE[currentUser.role];
+  const schoolName = school?.name ?? 'Barnoota Campus';
 
   return (
     <aside
@@ -16,13 +19,29 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
       }`}
     >
       <div className="flex h-16 items-center gap-2 border-b border-slate-100 px-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white">
-          <GraduationCap className="h-5 w-5" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-brand-600 text-white">
+          {school?.logoUrl ? (
+            <img src={school.logoUrl} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <GraduationCap className="h-5 w-5" />
+          )}
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-slate-800">Barnoota Campus</p>
-            <p className="truncate text-[11px] text-slate-500">{ROLE_LABELS[currentUser.role]}</p>
+            <p className="truncate text-sm font-bold text-slate-800">{schoolName}</p>
+            {school?.website ? (
+              <a
+                href={school.website.startsWith('http') ? school.website : `https://${school.website}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-0.5 truncate text-[11px] text-brand-600 hover:underline"
+              >
+                <span className="truncate">{school.website.replace(/^https?:\/\//, '')}</span>
+                <ExternalLink className="h-2.5 w-2.5 shrink-0" />
+              </a>
+            ) : (
+              <p className="truncate text-[11px] text-slate-500">{ROLE_LABELS[currentUser.role]}</p>
+            )}
           </div>
         )}
       </div>

@@ -1,4 +1,5 @@
 import { schoolLoginDomain } from './schoolLoginDomain';
+import { themePrimaryHex, themePhotoBgHex } from './appTheme';
 import type { School, SchoolClass, Student } from '@/types';
 
 function escapeHtml(s: string): string {
@@ -6,21 +7,13 @@ function escapeHtml(s: string): string {
 }
 
 export interface IdCardTheme {
-  label: string;
   primary: string;
   photoBg: string;
 }
 
-/** Color themes an admin can pick in Settings — applied to every printed ID card school-wide. */
-export const ID_CARD_THEMES: Record<NonNullable<School['idCardTheme']>, IdCardTheme> = {
-  forest: { label: 'Forest', primary: '#1c5f41', photoBg: '#dcf2e3' },
-  navy: { label: 'Navy', primary: '#1e3a5f', photoBg: '#dbeafe' },
-  crimson: { label: 'Crimson', primary: '#7f1d1d', photoBg: '#fee2e2' },
-  slate: { label: 'Slate', primary: '#334155', photoBg: '#e2e8f0' },
-};
-
-export function themeFor(school: Pick<School, 'idCardTheme'> | null | undefined): IdCardTheme {
-  return ID_CARD_THEMES[school?.idCardTheme ?? 'forest'];
+/** The ID card's color pair for a school's chosen app theme (see src/lib/appTheme.ts). */
+export function themeFor(school: Pick<School, 'theme'> | null | undefined): IdCardTheme {
+  return { primary: themePrimaryHex(school?.theme), photoBg: themePhotoBgHex(school?.theme) };
 }
 
 /** Which optional fields appear on the card — editable per print run (see StudentProfile's ID Card tab). */
@@ -97,7 +90,7 @@ function cardStyles(theme: IdCardTheme): string {
  * card markup as the single-student view) and triggers the print dialog.
  * Self-contained HTML rather than reusing the app's own layout/CSS, so it
  * prints cleanly regardless of what page it was triggered from. Theme
- * comes from the school's own idCardTheme setting (see Settings → ID card
+ * comes from the school's own theme setting (see Settings → Branding &
  * theme); fields is the per-print-run field selection the admin picks
  * right before printing (see StudentProfile's ID Card tab).
  */

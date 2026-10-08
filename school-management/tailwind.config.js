@@ -4,18 +4,26 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Each shade resolves against a CSS custom property (defined in
+        // index.css, default = the original hardcoded "forest" palette)
+        // instead of a static hex value. src/lib/appTheme.ts overwrites
+        // those properties at runtime from the signed-in user's school
+        // record, so every `bg-brand-600`/`text-brand-700`/etc. class in
+        // the app repaints to that school's chosen theme — see Settings →
+        // Branding & theme. <alpha-value> keeps opacity modifiers
+        // (bg-brand-600/50) working.
         brand: {
-          50: '#f1faf4',
-          100: '#dcf2e3',
-          200: '#bbe4ca',
-          300: '#8ccfa8',
-          400: '#57b280',
-          500: '#349563',
-          600: '#24774f',
-          700: '#1c5f41',
-          800: '#194c36',
-          900: '#153f2e',
-          950: '#0a2419',
+          50: 'rgb(var(--brand-50) / <alpha-value>)',
+          100: 'rgb(var(--brand-100) / <alpha-value>)',
+          200: 'rgb(var(--brand-200) / <alpha-value>)',
+          300: 'rgb(var(--brand-300) / <alpha-value>)',
+          400: 'rgb(var(--brand-400) / <alpha-value>)',
+          500: 'rgb(var(--brand-500) / <alpha-value>)',
+          600: 'rgb(var(--brand-600) / <alpha-value>)',
+          700: 'rgb(var(--brand-700) / <alpha-value>)',
+          800: 'rgb(var(--brand-800) / <alpha-value>)',
+          900: 'rgb(var(--brand-900) / <alpha-value>)',
+          950: 'rgb(var(--brand-950) / <alpha-value>)',
         },
       },
       fontFamily: {

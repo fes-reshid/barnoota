@@ -2,9 +2,11 @@ import { NavLink } from 'react-router-dom';
 import { GraduationCap, X } from 'lucide-react';
 import { NAV_BY_ROLE } from '@/lib/nav';
 import { useAuth } from '@/context/AuthContext';
+import { useMySchool } from '@/lib/useMySchool';
 
 export function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { currentUser } = useAuth();
+  const { school } = useMySchool();
   if (!open || !currentUser) return null;
   const items = NAV_BY_ROLE[currentUser.role];
 
@@ -14,10 +16,14 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
       <div className="absolute inset-y-0 left-0 flex w-72 flex-col bg-white shadow-xl">
         <div className="flex h-16 items-center justify-between border-b border-slate-100 px-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white">
-              <GraduationCap className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-brand-600 text-white">
+              {school?.logoUrl ? (
+                <img src={school.logoUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <GraduationCap className="h-5 w-5" />
+              )}
             </div>
-            <p className="text-sm font-bold text-slate-800">Barnoota Campus</p>
+            <p className="truncate text-sm font-bold text-slate-800">{school?.name ?? 'Barnoota Campus'}</p>
           </div>
           <button type="button" onClick={onClose} className="rounded p-1 text-slate-400 hover:bg-slate-100">
             <X className="h-5 w-5" />

@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Default ("forest") brand palette, as "R G B" triplets so Tailwind's
+       rgb(var(...) / <alpha-value>) can apply opacity modifiers. Overwritten
+       at runtime per-school by src/lib/appTheme.ts — these are just the
+       values a page has before that JS runs (and whenever no school theme
+       applies, e.g. super admin or the public landing page). */
+    --brand-50: 241 250 244;
+    --brand-100: 220 242 227;
+    --brand-200: 187 228 202;
+    --brand-300: 140 207 168;
+    --brand-400: 87 178 128;
+    --brand-500: 52 149 99;
+    --brand-600: 36 119 79;
+    --brand-700: 28 95 65;
+    --brand-800: 25 76 54;
+    --brand-900: 21 63 46;
+    --brand-950: 10 36 25;
+  }
   html {
     @apply antialiased;
   }

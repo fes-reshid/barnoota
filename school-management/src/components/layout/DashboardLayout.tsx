@@ -1,14 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { MobileNav } from './MobileNav';
 import { PageTitleProvider, usePageTitleValue } from '@/context/PageTitleContext';
+import { useMySchool } from '@/lib/useMySchool';
+import { applyAppTheme } from '@/lib/appTheme';
 
 function LayoutBody() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const title = usePageTitleValue();
+  const { school } = useMySchool();
+
+  // Repaints the whole app (sidebar, buttons, badges — anything using the
+  // `brand-*` color scale) to this school's chosen theme the moment it's
+  // known, and back to the default the moment they sign out of a themed
+  // school (e.g. a super admin navigating around has no school at all).
+  useEffect(() => {
+    applyAppTheme(school?.theme);
+  }, [school?.theme]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
