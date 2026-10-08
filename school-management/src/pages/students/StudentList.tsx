@@ -9,6 +9,7 @@ import type { Student } from '@/types';
 import { usePagedList } from '@/lib/usePagedList';
 import { exportToCsv, parseCsv } from '@/lib/csv';
 import { printStudentIdCards } from '@/lib/printIdCards';
+import { planLimitsFor } from '@/lib/planLimits';
 import { Card } from '@/components/ui/Card';
 import { DataTable, type Column } from '@/components/ui/DataTable';
 import { Pagination } from '@/components/ui/Pagination';
@@ -33,6 +34,23 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Student | null>(null);
   const [archiving, setArchiving] = useState<Student | null>(null);
+
+  const school = schools[0];
+  const limits = planLimitsFor(school);
+  const activeCount = students.filter((s) => s.status === 'active').length;
+  const atCap = activeCount >= limits.studentCap;
+
+  function handleAddClick() {
+    if (atCap) {
+      showToast(
+        `You've reached the ${limits.label} plan's limit of ${limits.studentCap} students — upgrade to add more.`,
+        'error',
+      );
+      return;
+    }
+    setEditing(null);
+    setFormOpen(true);
+  }
 
   const teacherClassIds = readOnly && currentUser?.teacherId
     ? classes.filter((c) => c.classTeacherId === currentUser.teacherId).map((c) => c.id)
@@ -66,7 +84,6 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
   }
 
   function handlePrintIdCards() {
-    const school = schools[0];
     if (!school) {
       showToast('No school record found — can\'t print ID cards.', 'error');
       return;
@@ -94,8 +111,10 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
     const text = await file.text();
     const rows = parseCsv(text);
     let created = 0;
+    let skippedForLimit = 0;
     for (const row of rows) {
       if (!row.firstName || !row.lastName) continue;
+      if (activeCount + created >= limits.studentCap) { skippedForLimit = rows.length - created; break; }
       const targetClass = classes.find((c) => c.name === row.class) ?? classes[0];
       await studentsRepo.create({
         schoolId,
@@ -116,7 +135,12 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
       });
       created += 1;
     }
-    showToast(`Imported ${created} student${created === 1 ? '' : 's'}.`);
+    showToast(
+      skippedForLimit > 0
+        ? `Imported ${created} student${created === 1 ? '' : 's'} — stopped at the ${limits.label} plan's ${limits.studentCap}-student limit (${skippedForLimit} skipped).`
+        : `Imported ${created} student${created === 1 ? '' : 's'}.`,
+      skippedForLimit > 0 ? 'error' : undefined,
+    );
     e.target.value = '';
     reload();
   }
@@ -157,6 +181,12 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
 
   return (
     <div className="space-y-4">
+      {!readOnly && (
+        <p className={`text-xs ${atCap ? 'font-medium text-rose-600' : 'text-slate-500'}`}>
+          {activeCount} / {limits.studentCap === Infinity ? 'unlimited' : limits.studentCap} students on the {limits.label} plan
+          {atCap && ' — upgrade to add more'}
+        </p>
+      )}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="w-full max-w-xs">
           <SearchInput value={search} onChange={setSearch} placeholder="Search by name, code or guardian…" />
@@ -180,7 +210,7 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
             <>
               <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleImport} />
               <button className="btn-secondary" onClick={() => fileInputRef.current?.click()}><Upload className="h-4 w-4" /> Import</button>
-              <button className="btn-primary" onClick={() => { setEditing(null); setFormOpen(true); }}><Plus className="h-4 w-4" /> Add student</button>
+              <button className="btn-primary" onClick={handleAddClick}><Plus className="h-4 w-4" /> Add student</button>
             </>
           )}
         </div>
@@ -194,7 +224,7 @@ export default function StudentList({ readOnly = false }: { readOnly?: boolean }
           loading={loading}
           emptyTitle="No students found"
           emptyDescription="Try adjusting your filters, or add a new student."
-          emptyAction={!readOnly && <button className="btn-primary" onClick={() => setFormOpen(true)}><Plus className="h-4 w-4" /> Add student</button>}
+          emptyAction={!readOnly && <button className="btn-primary" onClick={handleAddClick}><Plus className="h-4 w-4" /> Add student</button>}
         />
         <Pagination page={page} pageSize={pageSize} total={filtered.length} onPageChange={setPage} />
       </Card>

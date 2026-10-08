@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
+import { CheckCircle2, Lock, Mail } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { schoolsRepo } from '@/lib/services';
+import { schoolsRepo, studentsRepo } from '@/lib/services';
 import type { School } from '@/types';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
 import { FormField } from '@/components/ui/FormField';
 import { Spinner } from '@/components/ui/Spinner';
+import { Badge } from '@/components/ui/Badge';
 import { useToast } from '@/components/ui/Toast';
+import { PLAN_LIMITS, planLimitsFor, isTrialExpired, trialDaysRemaining } from '@/lib/planLimits';
 
 const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; description: string }[] = [
   { key: 'quran', label: 'Quran Progress', description: 'Surah/ayah memorisation tracking' },
@@ -16,12 +19,19 @@ const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; desc
   { key: 'oromoLanguage', label: 'Oromo Language', description: 'Qubee, reading and writing progress' },
 ];
 
+const UPGRADE_EMAIL = 'mailto:sales@barnoota.school?subject=Upgrade%20my%20plan';
+
 export default function SettingsPage() {
   usePageTitle('Settings');
   const { schoolId } = useAuth();
   const { data: schools, loading, reload } = useRepoList(schoolsRepo);
+  const { data: students, loading: studentsLoading } = useRepoList(studentsRepo);
   const { showToast } = useToast();
   const school = schools.find((s) => s.id === schoolId);
+  const limits = planLimitsFor(school);
+  const activeCount = students.filter((s) => s.status === 'active').length;
+  const trialExpired = isTrialExpired(school);
+  const daysLeft = trialDaysRemaining(school);
 
   const [form, setForm] = useState({ name: '', address: '', phone: '', email: '' });
 
@@ -42,10 +52,70 @@ export default function SettingsPage() {
     reload();
   }
 
-  if (loading || !school) return <Spinner />;
+  if (loading || studentsLoading || !school) return <Spinner />;
+
+  const studentPct = limits.studentCap === Infinity ? 0 : Math.min(100, Math.round((activeCount / limits.studentCap) * 100));
 
   return (
     <div className="space-y-4">
+      <Card>
+        <CardHeader
+          title="Plan & usage"
+          action={<Badge tone={school.subscriptionPlan === 'premium' ? 'violet' : school.subscriptionPlan === 'trial' ? 'amber' : 'green'}>{limits.label}</Badge>}
+        />
+        <CardBody className="space-y-5">
+          {school.subscriptionPlan === 'trial' && (
+            <div className={`rounded-lg px-3 py-2 text-sm ${trialExpired ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700'}`}>
+              {trialExpired
+                ? "Your trial has ended. You can keep using what you've already set up, but upgrade to add more students or unlock paid features."
+                : `${daysLeft} day${daysLeft === 1 ? '' : 's'} left on your trial.`}
+            </div>
+          )}
+
+          <div>
+            <div className="mb-1.5 flex items-center justify-between text-sm">
+              <span className="text-slate-600">Students</span>
+              <span className="font-medium text-slate-800">
+                {activeCount} / {limits.studentCap === Infinity ? 'Unlimited' : limits.studentCap}
+              </span>
+            </div>
+            {limits.studentCap !== Infinity && (
+              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className={`h-full rounded-full ${studentPct >= 100 ? 'bg-rose-500' : studentPct >= 80 ? 'bg-amber-500' : 'bg-brand-500'}`}
+                  style={{ width: `${studentPct}%` }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {([
+              ['Email notifications', limits.email],
+              ['WhatsApp & Telegram notifications', limits.whatsappTelegram],
+              ['Islamic studies modules', limits.islamicModules],
+              ['Custom branding (logo on cards)', limits.customBranding],
+              ['Parent self-registration invites', limits.parentInvites],
+            ] as const).map(([label, included]) => (
+              <div key={label} className="flex items-center gap-2 text-sm">
+                {included ? (
+                  <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-brand-600" />
+                ) : (
+                  <Lock className="h-4 w-4 flex-shrink-0 text-slate-300" />
+                )}
+                <span className={included ? 'text-slate-700' : 'text-slate-400'}>{label}</span>
+              </div>
+            ))}
+          </div>
+
+          {school.subscriptionPlan !== 'premium' && (
+            <a href={UPGRADE_EMAIL} className="btn-primary w-fit">
+              <Mail className="h-4 w-4" /> Talk to us about upgrading
+            </a>
+          )}
+        </CardBody>
+      </Card>
+
       <Card>
         <CardHeader title="School details" />
         <CardBody className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -60,7 +130,10 @@ export default function SettingsPage() {
       </Card>
 
       <Card>
-        <CardHeader title="Islamic weekend school modules" subtitle="Enable or disable optional modules for your school" />
+        <CardHeader
+          title="Islamic weekend school modules"
+          subtitle={limits.islamicModules ? 'Enable or disable optional modules for your school' : `Available on the ${PLAN_LIMITS.standard.label} plan and above`}
+        />
         <CardBody className="!p-0 divide-y divide-slate-100">
           {MODULES.map((m) => (
             <div key={m.key} className="flex items-center justify-between px-5 py-3">
@@ -68,15 +141,21 @@ export default function SettingsPage() {
                 <p className="text-sm font-medium text-slate-700">{m.label}</p>
                 <p className="text-xs text-slate-500">{m.description}</p>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={school.islamicModulesEnabled[m.key]}
-                onClick={() => toggleModule(m.key)}
-                className={`relative h-6 w-11 rounded-full transition-colors ${school.islamicModulesEnabled[m.key] ? 'bg-brand-600' : 'bg-slate-300'}`}
-              >
-                <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${school.islamicModulesEnabled[m.key] ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
-              </button>
+              {limits.islamicModules ? (
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={school.islamicModulesEnabled[m.key]}
+                  onClick={() => toggleModule(m.key)}
+                  className={`relative h-6 w-11 rounded-full transition-colors ${school.islamicModulesEnabled[m.key] ? 'bg-brand-600' : 'bg-slate-300'}`}
+                >
+                  <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${school.islamicModulesEnabled[m.key] ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+                </button>
+              ) : (
+                <span title={`Upgrade to ${PLAN_LIMITS.standard.label} to enable`} className="flex items-center gap-1 text-xs text-slate-400">
+                  <Lock className="h-3.5 w-3.5" /> Locked
+                </span>
+              )}
             </div>
           ))}
         </CardBody>
