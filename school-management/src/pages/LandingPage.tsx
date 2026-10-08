@@ -1,8 +1,35 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   GraduationCap, ArrowRight, Sparkles, Users, CalendarCheck, Wallet, FileSpreadsheet,
   ClipboardList, MessageCircle, Link2, Moon, Smartphone, IdCard, CheckCircle2, Printer,
 } from 'lucide-react';
+import { detectCurrency, pricingFor, currencySymbol } from '@/lib/pricing';
+
+const PRICING_PLANS: Array<{
+  key: 'trial' | 'basic' | 'standard' | 'premium';
+  name: string;
+  students: string;
+  features: string[];
+  highlight?: boolean;
+}> = [
+  {
+    key: 'trial', name: 'Trial', students: 'Up to 30 students',
+    features: ['Core modules: students, attendance, fees, exams, homework', '14 days, no card required'],
+  },
+  {
+    key: 'basic', name: 'Basic', students: 'Up to 100 students',
+    features: ['Everything in Trial', 'Email notifications', 'Parent self-registration invites'],
+  },
+  {
+    key: 'standard', name: 'Standard', students: 'Up to 500 students', highlight: true,
+    features: ['Everything in Basic', 'WhatsApp & Telegram notifications', 'Islamic studies modules', 'Custom branding on cards'],
+  },
+  {
+    key: 'premium', name: 'Premium', students: 'Unlimited students',
+    features: ['Everything in Standard', 'Unlimited students', 'Priority support'],
+  },
+];
 
 const FEATURES: Array<{ icon: typeof Users; title: string; description: string }> = [
   { icon: Users, title: 'Students & staff', description: 'One record per student and teacher — profiles, classes, guardians, and printable photo ID cards, all in one place.' },
@@ -23,6 +50,11 @@ const HIGHLIGHTS = [
 ];
 
 export default function LandingPage() {
+  const [currency] = useState(() => detectCurrency());
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const prices = pricingFor(currency);
+  const symbol = currencySymbol(currency);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-white">
       {/* Nav */}
@@ -149,6 +181,78 @@ export default function LandingPage() {
               <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{f.description}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="border-t border-slate-100 bg-slate-50 py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl">Simple, honest pricing</h2>
+            <p className="mt-3 text-slate-600">
+              Start free, pay for what you grow into. No setup fees, cancel any time.
+              {currency === 'AUD' && <span className="block text-xs text-slate-400 mt-1">Prices shown in AUD for Australia.</span>}
+            </p>
+            <div className="mt-6 inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1">
+              <button
+                onClick={() => setBilling('monthly')}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${billing === 'monthly' ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBilling('yearly')}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${billing === 'yearly' ? 'bg-brand-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Yearly <span className="text-xs opacity-80">(2 months free)</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {PRICING_PLANS.map((plan) => {
+              const price = plan.key === 'trial' ? null : prices[plan.key];
+              const amount = price ? (billing === 'monthly' ? price.monthly : price.yearly) : 0;
+              return (
+                <div
+                  key={plan.key}
+                  className={`relative flex flex-col rounded-2xl border bg-white p-6 ${plan.highlight ? 'border-brand-500 shadow-lg ring-1 ring-brand-500' : 'border-slate-200 shadow-card'}`}
+                >
+                  {plan.highlight && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-white">
+                      Most popular
+                    </span>
+                  )}
+                  <h3 className="text-sm font-semibold text-slate-900">{plan.name}</h3>
+                  <p className="mt-0.5 text-xs text-slate-500">{plan.students}</p>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    {price ? (
+                      <>
+                        <span className="text-3xl font-extrabold text-slate-900">{symbol}{amount.toLocaleString()}</span>
+                        <span className="text-sm text-slate-500">/{billing === 'monthly' ? 'mo' : 'yr'}</span>
+                      </>
+                    ) : (
+                      <span className="text-3xl font-extrabold text-slate-900">Free</span>
+                    )}
+                  </div>
+                  <ul className="mt-5 flex-1 space-y-2.5">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm text-slate-600">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-600" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/demo"
+                    className={`mt-6 w-full text-center ${plan.highlight ? 'btn-primary' : 'btn-secondary'}`}
+                  >
+                    {plan.key === 'trial' ? 'Start free trial' : 'Try the demo'}
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
