@@ -16,6 +16,7 @@ const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'));
 const ParentInvite = lazy(() => import('@/pages/auth/ParentInvite'));
 const DemoEntry = lazy(() => import('@/pages/DemoEntry'));
+const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 const SuperAdminDashboard = lazy(() => import('@/pages/superadmin/SuperAdminDashboard'));
@@ -73,9 +74,16 @@ const OromoProgressPage = lazy(() => import('@/pages/islamic/OromoProgressPage')
 
 const SettingsPage = lazy(() => import('@/pages/settings/SettingsPage'));
 
-function RoleHomeRedirect() {
-  const { currentUser } = useAuth();
-  return <Navigate to={currentUser ? homePathForRole(currentUser.role) : '/login'} replace />;
+// The root route shows the marketing landing page to a signed-out visitor,
+// but sends an already-signed-in user straight to their dashboard instead
+// of making them click through the landing page every time. Waits out the
+// auth check first so a signed-in user doesn't see the landing page flash
+// before being redirected.
+function RootRoute() {
+  const { currentUser, loading } = useAuth();
+  if (loading) return <RouteFallback />;
+  if (currentUser) return <Navigate to={homePathForRole(currentUser.role)} replace />;
+  return <LandingPage />;
 }
 
 function RouteFallback() {
@@ -98,7 +106,7 @@ export default function App() {
       <Route path="/invite/:token" element={<ParentInvite />} />
       <Route path="/demo" element={<DemoEntry />} />
 
-      <Route path="/" element={<RoleHomeRedirect />} />
+      <Route path="/" element={<RootRoute />} />
 
       <Route element={<ProtectedRoute allow={['super_admin']} />}>
         <Route path="/super-admin" element={<DashboardLayout />}>
