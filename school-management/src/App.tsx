@@ -134,6 +134,7 @@ export default function App() {
           <Route path="fees" element={<FeesAdminPage />} />
           <Route path="fees/structures" element={<FeeStructuresPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
+          <Route path="messages" element={<MessagesPage />} />
           <Route path="library" element={<LibraryPage />} />
           <Route path="transport" element={<TransportPage />} />
           <Route path="reports" element={<ReportsPage />} />
@@ -183,6 +184,7 @@ export default function App() {
           <Route path="exams" element={<StudentExamsPage />} />
           <Route path="fees" element={<FeesViewPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
+          <Route path="messages" element={<MessagesPage />} />
           <Route path="profile" element={<MyProfilePage />} />
         </Route>
       </Route>

@@ -33,6 +33,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Exams', to: '/admin/exams', icon: FileSpreadsheet },
     { label: 'Fees', to: '/admin/fees', icon: Wallet },
     { label: 'Announcements', to: '/admin/announcements', icon: Megaphone },
+    { label: 'Messages', to: '/admin/messages', icon: MessageSquare },
     { label: 'Library', to: '/admin/library', icon: Library },
     { label: 'Transport', to: '/admin/transport', icon: Building2 },
     { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
@@ -72,6 +73,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Exams & Results', to: '/student/exams', icon: FileSpreadsheet },
     { label: 'Fees', to: '/student/fees', icon: Wallet },
     { label: 'Announcements', to: '/student/announcements', icon: Megaphone },
+    { label: 'Messages', to: '/student/messages', icon: MessageSquare },
     { label: 'Profile', to: '/student/profile', icon: UserCircle },
   ],
 };

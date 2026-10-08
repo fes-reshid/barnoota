@@ -1,21 +1,28 @@
-import { useState } from 'react';
-import { Plus, Send, MessageSquare, Mail } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Plus, Send, MessageSquare } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
-import { messageThreadsRepo, messagesRepo, teachersRepo, studentsRepo, classesRepo, usersRepo } from '@/lib/services';
+import { messageThreadsRepo, messagesRepo, teachersRepo, studentsRepo, classesRepo, usersRepo, timetableRepo } from '@/lib/services';
 import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { FormField } from '@/components/ui/FormField';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Spinner } from '@/components/ui/Spinner';
-import { useToast } from '@/components/ui/Toast';
+
+interface RecipientOption {
+  key: string;
+  kind: 'Teacher' | 'Parent' | 'Student';
+  userId: string;
+  /** Stored as the thread's participant name — kept clean (no "re: ..." suffix). */
+  label: string;
+  /** Extra context shown only in the picker, e.g. "re: Amina Hassan". */
+  hint?: string;
+}
 
 export default function MessagesPage() {
   usePageTitle('Messages');
   const { currentUser, schoolId } = useAuth();
-  const { showToast } = useToast();
-  const isTeacher = currentUser?.role === 'teacher';
 
   const { data: threads, loading: l1, reload: reloadThreads } = useRepoList(messageThreadsRepo);
   const { data: allMessages, loading: l2, reload: reloadMessages } = useRepoList(messagesRepo);
@@ -23,66 +30,104 @@ export default function MessagesPage() {
   const { data: students, loading: l4 } = useRepoList(studentsRepo);
   const { data: classes, loading: l5 } = useRepoList(classesRepo);
   const { data: users, loading: l6 } = useRepoList(usersRepo);
+  const { data: timetable, loading: l7 } = useRepoList(timetableRepo);
 
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [newOpen, setNewOpen] = useState(false);
   const [subject, setSubject] = useState('');
-  const [teacherId, setTeacherId] = useState('');
-  const [studentId, setStudentId] = useState('');
+  const [recipientKey, setRecipientKey] = useState('');
   const [draft, setDraft] = useState('');
 
-  if (l1 || l2 || l3 || l4 || l5 || l6) return <Spinner />;
+  const loading = l1 || l2 || l3 || l4 || l5 || l6 || l7;
+
+  // Who the signed-in user is allowed to start a conversation with — built
+  // fresh per role rather than one generic rule, since each role reaches
+  // people through a different relationship (admin sees everyone, a
+  // teacher only their own students/guardians, a student only the
+  // teachers actually teaching their class).
+  const recipientOptions = useMemo((): RecipientOption[] => {
+    if (!currentUser) return [];
+    const options: RecipientOption[] = [];
+
+    if (currentUser.role === 'school_admin') {
+      for (const u of users.filter((u) => u.role === 'teacher')) {
+        options.push({ key: `t-${u.id}`, kind: 'Teacher', userId: u.id, label: u.name });
+      }
+      for (const u of users.filter((u) => u.role === 'parent')) {
+        options.push({ key: `p-${u.id}`, kind: 'Parent', userId: u.id, label: u.name });
+      }
+      for (const u of users.filter((u) => u.role === 'student')) {
+        const s = students.find((s) => s.id === u.studentId);
+        options.push({ key: `s-${u.id}`, kind: 'Student', userId: u.id, label: u.name, hint: s?.yearLevel });
+      }
+      return options;
+    }
+
+    if (currentUser.role === 'teacher') {
+      const myClassIds = classes.filter((c) => c.classTeacherId === currentUser.teacherId).map((c) => c.id);
+      const teachableStudents = students.filter((s) => s.status === 'active' && (myClassIds.length === 0 || myClassIds.includes(s.classId)));
+
+      const seenParents = new Set<string>();
+      for (const s of teachableStudents) {
+        const parentUser = users.find((u) => u.role === 'parent' && (u.id === s.parentUserId || u.childrenIds?.includes(s.id)));
+        if (parentUser && !seenParents.has(parentUser.id)) {
+          seenParents.add(parentUser.id);
+          options.push({ key: `p-${parentUser.id}`, kind: 'Parent', userId: parentUser.id, label: parentUser.name, hint: `re: ${s.firstName} ${s.lastName}` });
+        }
+      }
+      for (const s of teachableStudents) {
+        const studentUser = users.find((u) => u.role === 'student' && u.studentId === s.id);
+        if (studentUser) {
+          options.push({ key: `s-${studentUser.id}`, kind: 'Student', userId: studentUser.id, label: studentUser.name });
+        }
+      }
+      return options;
+    }
+
+    if (currentUser.role === 'parent') {
+      for (const t of teachers) {
+        const teacherUser = users.find((u) => u.role === 'teacher' && u.teacherId === t.id);
+        if (teacherUser) options.push({ key: `t-${teacherUser.id}`, kind: 'Teacher', userId: teacherUser.id, label: teacherUser.name });
+      }
+      return options;
+    }
+
+    if (currentUser.role === 'student') {
+      const myStudent = students.find((s) => s.id === currentUser.studentId);
+      if (!myStudent) return options;
+      const myClass = classes.find((c) => c.id === myStudent.classId);
+      const teacherIds = new Set<string>();
+      if (myClass?.classTeacherId) teacherIds.add(myClass.classTeacherId);
+      timetable.filter((t) => t.classId === myStudent.classId).forEach((t) => teacherIds.add(t.teacherId));
+
+      for (const tid of teacherIds) {
+        const teacherUser = users.find((u) => u.role === 'teacher' && u.teacherId === tid);
+        if (teacherUser) options.push({ key: `t-${teacherUser.id}`, kind: 'Teacher', userId: teacherUser.id, label: teacherUser.name });
+      }
+      return options;
+    }
+
+    return options;
+  }, [currentUser, users, students, teachers, classes, timetable]);
+
+  if (loading) return <Spinner />;
 
   const myThreads = threads.filter((t) => t.participantIds.includes(currentUser?.id ?? ''));
   const activeThread = myThreads.find((t) => t.id === activeThreadId) ?? myThreads[0] ?? null;
   const threadMessages = activeThread ? allMessages.filter((m) => m.threadId === activeThread.id).sort((a, b) => a.sentAt.localeCompare(b.sentAt)) : [];
-
-  // A teacher's own students, scoped to the classes they teach (falls back
-  // to every student if they're not assigned as a class teacher anywhere).
-  const myClassIds = classes.filter((c) => c.classTeacherId === currentUser?.teacherId).map((c) => c.id);
-  const teachableStudents = students.filter((s) => s.status === 'active' && (myClassIds.length === 0 || myClassIds.includes(s.classId)));
-
-  function parentForStudent(sId: string) {
-    const student = students.find((s) => s.id === sId);
-    if (!student) return null;
-    const parentUser = users.find((u) => u.role === 'parent' && (u.id === student.parentUserId || u.childrenIds?.includes(sId)));
-    return { student, parentUser };
-  }
+  const selectedOption = recipientOptions.find((o) => o.key === recipientKey) ?? null;
 
   function resetNewConversationForm() {
     setSubject('');
-    setTeacherId(teachers[0]?.id ?? '');
-    setStudentId(teachableStudents[0]?.id ?? '');
+    setRecipientKey(recipientOptions[0]?.key ?? '');
   }
 
   async function createThread() {
-    if (!subject.trim() || !currentUser) return;
-
-    if (isTeacher) {
-      const result = parentForStudent(studentId);
-      if (!result?.parentUser) return; // guarded in the UI — button is disabled without a linked parent account
-      const thread = await messageThreadsRepo.create({
-        schoolId, subject,
-        participantIds: [currentUser.id, result.parentUser.id],
-        participantNames: [currentUser.name, result.parentUser.name],
-        lastMessagePreview: '', lastMessageAt: new Date().toISOString(),
-      });
-      setActiveThreadId(thread.id);
-      setNewOpen(false);
-      reloadThreads();
-      return;
-    }
-
-    const teacher = teachers.find((t) => t.id === teacherId);
-    const teacherUser = users.find((u) => u.role === 'teacher' && u.teacherId === teacherId);
-    if (!teacherUser) {
-      showToast('This teacher does not have a login account yet — ask your school admin to add one.', 'error');
-      return;
-    }
+    if (!subject.trim() || !currentUser || !selectedOption) return;
     const thread = await messageThreadsRepo.create({
       schoolId, subject,
-      participantIds: [currentUser.id, teacherUser.id],
-      participantNames: [currentUser.name, teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Teacher'],
+      participantIds: [currentUser.id, selectedOption.userId],
+      participantNames: [currentUser.name, selectedOption.label],
       lastMessagePreview: '', lastMessageAt: new Date().toISOString(),
     });
     setActiveThreadId(thread.id);
@@ -102,7 +147,8 @@ export default function MessagesPage() {
     reloadThreads();
   }
 
-  const selectedResult = isTeacher ? parentForStudent(studentId) : null;
+  const groupedOptions: Record<RecipientOption['kind'], RecipientOption[]> = { Teacher: [], Parent: [], Student: [] };
+  for (const o of recipientOptions) groupedOptions[o.kind].push(o);
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -161,42 +207,22 @@ export default function MessagesPage() {
       <Modal open={newOpen} onClose={() => setNewOpen(false)} title="New conversation"
         footer={<>
           <button className="btn-secondary" onClick={() => setNewOpen(false)}>Cancel</button>
-          <button
-            className="btn-primary"
-            onClick={createThread}
-            disabled={!subject.trim() || (isTeacher && !selectedResult?.parentUser)}
-          >
-            Start
-          </button>
+          <button className="btn-primary" onClick={createThread} disabled={!subject.trim() || !selectedOption}>Start</button>
         </>}>
         <div className="space-y-4">
           <FormField label="Subject"><input className="input" value={subject} onChange={(e) => setSubject(e.target.value)} /></FormField>
-          {isTeacher ? (
-            <>
-              <FormField label="Student">
-                <select className="input" value={studentId} onChange={(e) => setStudentId(e.target.value)}>
-                  {teachableStudents.length === 0 && <option value="">No students available</option>}
-                  {teachableStudents.map((s) => <option key={s.id} value={s.id}>{s.firstName} {s.lastName}</option>)}
-                </select>
-              </FormField>
-              {studentId && !selectedResult?.parentUser && (
-                <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
-                  This student's guardian doesn't have a parent login account yet, so they can't be messaged in-app.
-                  {selectedResult?.student?.guardianEmail && (
-                    <>
-                      {' '}Email them directly instead:{' '}
-                      <a href={`mailto:${selectedResult.student.guardianEmail}`} className="inline-flex items-center gap-1 font-medium underline">
-                        <Mail className="h-3 w-3" /> {selectedResult.student.guardianEmail}
-                      </a>
-                    </>
-                  )}
-                </div>
-              )}
-            </>
+          {recipientOptions.length === 0 ? (
+            <p className="text-sm text-slate-500">No one available to message yet.</p>
           ) : (
-            <FormField label="Teacher">
-              <select className="input" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
-                {teachers.map((t) => <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>)}
+            <FormField label="To">
+              <select className="input" value={recipientKey} onChange={(e) => setRecipientKey(e.target.value)}>
+                {(['Teacher', 'Parent', 'Student'] as const).map((kind) => groupedOptions[kind].length > 0 && (
+                  <optgroup key={kind} label={`${kind}s`}>
+                    {groupedOptions[kind].map((o) => (
+                      <option key={o.key} value={o.key}>{o.label}{o.hint ? ` — ${o.hint}` : ''}</option>
+                    ))}
+                  </optgroup>
+                ))}
               </select>
             </FormField>
           )}
