@@ -1,6 +1,6 @@
 ARABIC LEVEL 1 — DIIN ISLAAM
 
-This course is designed to sit at /iqra-1/ in the fes-reshid/barnoota GitHub Pages repository. It uses the existing shared KidsCloud authentication, so learners sign in with their current Tuhfatul Atfaal / Seeraa Quest / Qur'an Tracker username and password. The course is shown to students as "Arabic Level 1"; the URL, the `iqra-1` game key and the `iqra1-…` content ids keep their original names so existing progress and recordings carry over.
+This course is designed to sit at /arabic-level-1/ (the old /iqra-1/ address forwards here) in the fes-reshid/barnoota GitHub Pages repository. It uses the existing shared KidsCloud authentication, so learners sign in with their current Tuhfatul Atfaal / Seeraa Quest / Qur'an Tracker username and password. The course is shown to students as "Arabic Level 1"; the `iqra-1` game key and the `iqra1-…` content ids keep their original names so existing progress and recordings carry over.
 
 The learning journey has 16 map tabs, each with a winding road and five lesson stops. Maps and lesson stops unlock as the student completes the previous map/lesson. The look is a bright, Reading Eggs-style kids' game: a sky-and-hills background, the rounded Fredoka font (Amiri for Arabic letters), chunky 3D buttons, colourful letter tiles, an owl mascot that cheers, confetti and bouncing stars. Every tap makes a soft pop; right answers, mistakes and finished lessons have their own sounds, and a 🔔 Sounds button in the header mutes them (remembered per device).
 
