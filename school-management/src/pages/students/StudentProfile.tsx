@@ -11,7 +11,7 @@ import {
   schoolsRepo, usersRepo, parentInvitesRepo, emailRequestsRepo,
 } from '@/lib/services';
 import { schoolLoginDomain } from '@/lib/schoolLoginDomain';
-import { printStudentIdCards } from '@/lib/printIdCards';
+import { printStudentIdCards, themeFor, DEFAULT_ID_CARD_FIELDS, type IdCardFields } from '@/lib/printIdCards';
 import { printReportCard } from '@/lib/printReportCard';
 import { studentDocumentPath, studentPhotoPath, uploadFile } from '@/lib/fileStorage';
 import { Card, CardBody, CardHeader } from '@/components/ui/Card';
@@ -41,6 +41,7 @@ export default function StudentProfile() {
   const [emailBody, setEmailBody] = useState('');
   const [emailSending, setEmailSending] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [idCardFields, setIdCardFields] = useState<IdCardFields>(DEFAULT_ID_CARD_FIELDS);
 
   const { data: students, loading: l1, reload: reloadStudents } = useRepoList(studentsRepo);
   const { data: classes, loading: l2 } = useRepoList(classesRepo);
@@ -130,7 +131,7 @@ export default function StudentProfile() {
 
   function printIdCard() {
     if (!school || !student) return;
-    printStudentIdCards([student], school, classes);
+    printStudentIdCards([student], school, classes, idCardFields);
   }
 
   async function handleSendEmail() {
@@ -539,9 +540,9 @@ export default function StudentProfile() {
               </button>
             }
           />
-          <CardBody className="flex flex-col items-center gap-4 py-8">
+          <CardBody className="flex flex-col items-center gap-6 py-8 sm:flex-row sm:items-start sm:justify-center">
             <div className="flex w-full max-w-xs flex-col overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-              <div className="flex items-center gap-2 bg-brand-700 px-3 py-2 text-white">
+              <div className="flex items-center gap-2 px-3 py-2 text-white" style={{ backgroundColor: themeFor(school).primary }}>
                 {school?.logoUrl ? (
                   <img src={school.logoUrl} alt="" className="h-5 w-5 rounded bg-white object-cover" />
                 ) : (
@@ -554,14 +555,47 @@ export default function StudentProfile() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-slate-900">{student.firstName} {student.lastName}</p>
                   <p className="text-xs text-slate-500">{studentClass?.name ?? '—'} · {student.yearLevel || '—'}</p>
-                  <p className="text-xs text-slate-500">DOB {student.dob}</p>
-                  <p className="mt-1 text-xs font-bold tracking-wide text-brand-700">{student.studentCode}</p>
+                  {idCardFields.showDob && <p className="text-xs text-slate-500">DOB {student.dob}</p>}
+                  {idCardFields.showGuardianPhone && <p className="text-xs text-slate-500">Guardian {student.guardianPhone}</p>}
+                  <p className="mt-1 text-xs font-bold tracking-wide" style={{ color: themeFor(school).primary }}>{student.studentCode}</p>
                 </div>
               </div>
               <div className="border-t border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500">
-                <span className="font-semibold text-brand-700">Login:</span> {loginId}
+                <p className="truncate"><span className="font-semibold" style={{ color: themeFor(school).primary }}>Login:</span> {loginId}</p>
+                {idCardFields.validUntil && <p className="mt-0.5">Valid until {idCardFields.validUntil}</p>}
               </div>
             </div>
+
+            <div className="w-full max-w-xs space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Customize before printing</p>
+              <label className="flex items-center justify-between text-sm text-slate-700">
+                Show date of birth
+                <input
+                  type="checkbox"
+                  checked={idCardFields.showDob}
+                  onChange={(e) => setIdCardFields({ ...idCardFields, showDob: e.target.checked })}
+                />
+              </label>
+              <label className="flex items-center justify-between text-sm text-slate-700">
+                Show guardian phone
+                <input
+                  type="checkbox"
+                  checked={idCardFields.showGuardianPhone}
+                  onChange={(e) => setIdCardFields({ ...idCardFields, showGuardianPhone: e.target.checked })}
+                />
+              </label>
+              <div>
+                <label className="mb-1 block text-sm text-slate-700">Valid until (optional)</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={idCardFields.validUntil}
+                  onChange={(e) => setIdCardFields({ ...idCardFields, validUntil: e.target.value })}
+                />
+              </div>
+              <p className="text-xs text-slate-400">Card color comes from your school's ID card theme in Settings.</p>
+            </div>
+
             {!school && <p className="text-sm text-slate-500">No school record found — can't print an ID card yet.</p>}
           </CardBody>
         </Card>

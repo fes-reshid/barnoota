@@ -19,6 +19,8 @@ export interface School extends BaseRecord {
   email: string;
   website?: string;
   logoUrl?: string;
+  /** Color theme applied to printed ID cards — see src/lib/printIdCards.ts. Defaults to 'forest'. */
+  idCardTheme?: 'forest' | 'navy' | 'crimson' | 'slate';
   subscriptionPlan: 'trial' | 'basic' | 'standard' | 'premium';
   subscriptionStatus: 'active' | 'past_due' | 'canceled';
   islamicModulesEnabled: {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Lock, Mail } from 'lucide-react';
+import { CheckCircle2, Lock, Mail, IdCard } from 'lucide-react';
 import { usePageTitle } from '@/context/PageTitleContext';
 import { useAuth } from '@/context/AuthContext';
 import { useRepoList } from '@/lib/useRepoList';
@@ -11,6 +11,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { Badge } from '@/components/ui/Badge';
 import { useToast } from '@/components/ui/Toast';
 import { PLAN_LIMITS, planLimitsFor, isTrialExpired, trialDaysRemaining } from '@/lib/planLimits';
+import { ID_CARD_THEMES } from '@/lib/printIdCards';
 
 const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; description: string }[] = [
   { key: 'quran', label: 'Quran Progress', description: 'Surah/ayah memorisation tracking' },
@@ -49,6 +50,12 @@ export default function SettingsPage() {
   async function toggleModule(key: keyof School['islamicModulesEnabled']) {
     if (!school) return;
     await schoolsRepo.update(school.id, { islamicModulesEnabled: { ...school.islamicModulesEnabled, [key]: !school.islamicModulesEnabled[key] } });
+    reload();
+  }
+
+  async function setIdCardTheme(theme: NonNullable<School['idCardTheme']>) {
+    if (!school || !limits.customBranding) return;
+    await schoolsRepo.update(school.id, { idCardTheme: theme });
     reload();
   }
 
@@ -158,6 +165,37 @@ export default function SettingsPage() {
               )}
             </div>
           ))}
+        </CardBody>
+      </Card>
+
+      <Card>
+        <CardHeader
+          title="ID card theme"
+          subtitle={limits.customBranding ? 'Applied to every printed student ID card' : `Available on the ${PLAN_LIMITS.standard.label} plan and above`}
+        />
+        <CardBody>
+          <div className="flex flex-wrap gap-3">
+            {(Object.entries(ID_CARD_THEMES) as [NonNullable<School['idCardTheme']>, typeof ID_CARD_THEMES[keyof typeof ID_CARD_THEMES]][]).map(([key, theme]) => {
+              const active = (school.idCardTheme ?? 'forest') === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  disabled={!limits.customBranding}
+                  onClick={() => setIdCardTheme(key)}
+                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${
+                    active ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  } ${!limits.customBranding ? 'cursor-not-allowed opacity-50' : ''}`}
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-md text-white" style={{ backgroundColor: theme.primary }}>
+                    <IdCard className="h-3.5 w-3.5" />
+                  </span>
+                  {theme.label}
+                  {active && <CheckCircle2 className="h-4 w-4 text-brand-600" />}
+                </button>
+              );
+            })}
+          </div>
         </CardBody>
       </Card>
     </div>
