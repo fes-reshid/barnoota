@@ -6,6 +6,9 @@ import type {
   AttendanceRecord,
   Book,
   BookLoan,
+  Course,
+  CourseLesson,
+  CoursePurchase,
   EmailRequest,
   Exam,
   ExamResult,
@@ -68,3 +71,6 @@ export const islamicStudiesRepo = createRepository<IslamicStudiesProgress>('isla
 export const oromoProgressRepo = createRepository<OromoProgress>('oromoProgress');
 export const tuhfatulAtfaalProgressRepo = createRepository<TuhfatulAtfaalProgress>('tuhfatulAtfaalProgress');
 export const transportRoutesRepo = createRepository<TransportRoute>('transportRoutes');
+export const coursesRepo = createRepository<Course>('courses');
+export const courseLessonsRepo = createRepository<CourseLesson>('courseLessons');
+export const coursePurchasesRepo = createRepository<CoursePurchase>('coursePurchases');

@@ -3,6 +3,7 @@ import {
   LayoutDashboard, Users, GraduationCap, UserCircle, School, BookOpen, CalendarCheck,
   CalendarClock, ClipboardList, FileSpreadsheet, Wallet, Megaphone, Library, BarChart3,
   Settings, Building2, ShieldCheck, MessageSquare, Moon, BookMarked, Languages, ScrollText,
+  ShoppingBag,
 } from 'lucide-react';
 import type { Role } from '@/types';
 
@@ -42,6 +43,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Islamic Studies', to: '/admin/islamic-studies', icon: BookOpen },
     { label: 'Oromo Language', to: '/admin/oromo', icon: Languages },
     { label: 'Tuhfatul Atfaal', to: '/admin/tuhfatul-atfaal', icon: ScrollText },
+    { label: 'Content Marketplace', to: '/admin/content', icon: ShoppingBag },
     { label: 'Settings', to: '/admin/settings', icon: Settings },
   ],
   teacher: [
@@ -65,6 +67,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Fees', to: '/parent/fees', icon: Wallet },
     { label: 'Announcements', to: '/parent/announcements', icon: Megaphone },
     { label: 'Messages', to: '/parent/messages', icon: MessageSquare },
+    { label: 'Courses', to: '/parent/content', icon: ShoppingBag },
   ],
   student: [
     { label: 'Dashboard', to: '/student', icon: LayoutDashboard },
@@ -75,6 +78,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Fees', to: '/student/fees', icon: Wallet },
     { label: 'Announcements', to: '/student/announcements', icon: Megaphone },
     { label: 'Messages', to: '/student/messages', icon: MessageSquare },
+    { label: 'Courses', to: '/student/content', icon: ShoppingBag },
     { label: 'Profile', to: '/student/profile', icon: UserCircle },
   ],
 };

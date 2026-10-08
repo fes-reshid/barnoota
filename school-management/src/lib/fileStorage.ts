@@ -72,6 +72,14 @@ export function schoolLogoPath(schoolId: string, fileName: string): string {
   return `schools/${schoolId}/branding/logo-${fileName}`;
 }
 
+export function courseCoverPath(schoolId: string, courseId: string, fileName: string): string {
+  return `schools/${schoolId}/courses/${courseId}/cover-${fileName}`;
+}
+
+export function courseLessonAttachmentPath(schoolId: string, courseId: string, lessonId: string, fileName: string): string {
+  return `schools/${schoolId}/courses/${courseId}/lessons/${lessonId}/${fileName}`;
+}
+
 export function homeworkAttachmentPath(schoolId: string, homeworkId: string, fileName: string): string {
   return `schools/${schoolId}/homework/${homeworkId}/${fileName}`;
 }

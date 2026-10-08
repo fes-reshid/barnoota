@@ -65,6 +65,8 @@ const MessagesPage = lazy(() => import('@/pages/communication/MessagesPage'));
 
 const LibraryPage = lazy(() => import('@/pages/library/LibraryPage'));
 const TransportPage = lazy(() => import('@/pages/transport/TransportPage'));
+const CoursesPage = lazy(() => import('@/pages/content/CoursesPage'));
+const CourseDetailPage = lazy(() => import('@/pages/content/CourseDetailPage'));
 const ReportsPage = lazy(() => import('@/pages/reports/ReportsPage'));
 
 const QuranProgressPage = lazy(() => import('@/pages/islamic/QuranProgressPage'));
@@ -144,6 +146,8 @@ export default function App() {
           <Route path="islamic-studies" element={<IslamicStudiesPage />} />
           <Route path="oromo" element={<OromoProgressPage />} />
           <Route path="tuhfatul-atfaal" element={<TuhfatulAtfaalProgressPage />} />
+          <Route path="content" element={<CoursesPage />} />
+          <Route path="content/:id" element={<CourseDetailPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Route>
@@ -174,6 +178,8 @@ export default function App() {
           <Route path="fees" element={<FeesViewPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="messages" element={<MessagesPage />} />
+          <Route path="content" element={<CoursesPage />} />
+          <Route path="content/:id" element={<CourseDetailPage />} />
         </Route>
       </Route>
 
@@ -187,6 +193,8 @@ export default function App() {
           <Route path="fees" element={<FeesViewPage />} />
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="messages" element={<MessagesPage />} />
+          <Route path="content" element={<CoursesPage />} />
+          <Route path="content/:id" element={<CourseDetailPage />} />
           <Route path="profile" element={<MyProfilePage />} />
         </Route>
       </Route>

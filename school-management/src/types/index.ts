@@ -358,6 +358,39 @@ export interface TransportRoute extends BaseRecord {
   stops: string;
 }
 
+// --- Content marketplace — paid courses a school creates and sells to its
+// own parents/students. No payment processor is wired up yet (see
+// CoursePurchase.status): a buyer "enrolls", which creates a pending
+// purchase, and a school admin records the payment the same way they
+// record a fee payment — at which point the course unlocks for them.
+
+export interface Course extends BaseRecord {
+  title: string;
+  description: string;
+  price: number; // 0 = free
+  coverImageUrl?: string;
+  published: boolean;
+  createdBy: string; // AppUser id
+}
+
+export interface CourseLesson extends BaseRecord {
+  courseId: string;
+  title: string;
+  body: string;
+  attachmentUrl?: string;
+  order: number;
+}
+
+export interface CoursePurchase extends BaseRecord {
+  courseId: string;
+  buyerUserId: string; // AppUser id (parent or student)
+  buyerName: string;
+  amount: number;
+  status: 'pending' | 'paid';
+  method?: 'cash' | 'card' | 'bank_transfer' | 'mobile_money';
+  paidAt?: string;
+}
+
 export interface ID {
   id: string;
 }

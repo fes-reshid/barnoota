@@ -239,6 +239,30 @@ service cloud.firestore {
       allow read: if canReadStudentScoped(resource.data);
       allow write: if canWriteInMySchool(request.resource.data);
     }
+    match /tuhfatulAtfaalProgress/{docId} {
+      allow read: if canReadStudentScoped(resource.data);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+
+    // Content marketplace: a school's own paid courses. Courses/lessons are
+    // readable by anyone in the school (the client hides unpublished ones
+    // and locks lesson content behind a paid purchase); only staff can
+    // write them. A purchase is created by the buyer themselves (self
+    // enroll) or by staff (manually granting access); only staff can mark
+    // one paid, same pattern as recording a fee payment.
+    match /courses/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /courseLessons/{docId} {
+      allow read: if inMySchool(resource.data.schoolId);
+      allow write: if canWriteInMySchool(request.resource.data);
+    }
+    match /coursePurchases/{docId} {
+      allow read: if canWriteInMySchool(resource.data) || resource.data.buyerUserId == request.auth.uid;
+      allow create: if canWriteInMySchool(request.resource.data) || (isSignedIn() && request.resource.data.buyerUserId == request.auth.uid && request.resource.data.status == 'pending');
+      allow update, delete: if canWriteInMySchool(request.resource.data);
+    }
 
     // Announcements: staff write; everyone in the school can read (the
     // client filters by audience).
