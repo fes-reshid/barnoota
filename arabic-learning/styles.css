@@ -16,3 +16,71 @@ dialog{border:0;border-radius:23px;padding:27px;width:min(560px,calc(100vw - 30p
 @media(max-width:580px){.stage-tabs{grid-template-columns:repeat(3,1fr)}.stage-tab{font-size:13px;padding:8px 6px;display:flex;align-items:center;justify-content:center;gap:6px}.stage-tab span{margin:0;flex-shrink:0}.map{height:440px}.stage-tab.active{box-shadow:inset 0 -2px 0 #9581d8}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{.sidebar,.topbar,footer,.button-row,.page-heading,.progress-stats,.progress-worlds,.card:not(.certificate),.skip-link,dialog,#toast{display:none!important}.app-shell{margin:0;padding:0}body{background:#fff}main{padding:0}.certificate{margin:20mm auto;break-inside:avoid}.certificate p{color:#333}}
+
+/* Tajweed Quest-inspired course theme: warm parchment, deep garden green and quiet gold. */
+:root{--ink:#263a31;--muted:#718077;--purple:#28624f;--purple-dark:#184938;--line:#e7ddc6;--page:#f5f0e4;--teal:#327767;--yellow:#d5a546;--green:#287154;--red:#a34b45;--shadow:0 9px 30px #493b1b10;--arabic:'Noto Naskh Arabic','Noto Sans Arabic',Tahoma,Arial,sans-serif}
+body{background:var(--page)}
+h1,h2,h3,.activity-top h2,.next-card h3{font-family:'Lora',Georgia,serif;font-weight:600;letter-spacing:-.01em}
+.sidebar,.topbar{background:#fffdf8}
+.sidebar{border-right-color:#e5dbc1}
+.brand{font-family:'Lora',Georgia,serif;font-weight:600}
+.brand-mark{background:#28624f;border:2px solid #c9a85c;border-radius:50%;box-shadow:0 3px 0 #174637}
+.brand-sub{color:#a47e33;letter-spacing:.08em}
+.sidebar nav{margin-top:42px}
+.nav-button{color:#66766d}
+.nav-button:hover,.nav-button.active{background:#edf2e9;color:#245c48}
+.avatar{background:#f2ead5}
+.topbar{border-bottom-color:#e4d9bd}
+.icon-button{background:#f5f0e4;border:1px solid #e3d5b3;color:#3b6854}
+.account-button{border-color:#c7a45a;color:#235d49;background:#f7f0de}
+main{background:transparent}
+.page-heading{padding:17px 20px;margin-bottom:19px;background:#fffdf8;border:1px solid #e0cf9f;border-radius:18px;box-shadow:0 7px 22px #493b1b09}
+.eyebrow{color:#8d6c2b}
+.intro-text{color:#68766c}
+.pill{border-color:#d9c58e;background:#f8f3e5;color:#365b48}
+.primary{background:#28624f;box-shadow:0 4px 0 #184938}
+.primary:hover{background:#34735d}
+.secondary{border-color:#d7c698;background:#fffdf7;color:#365b48}
+.teal{background:#edf3eb;color:#2c7059;border-color:#d6e4d3}
+.text-button{color:#28624f}
+.card,.journey-panel{background:#fffdf8;border-color:#e4d7b8;box-shadow:0 9px 28px #493b1b0a}
+.stage-tab{border-color:#e3d9c2;background:#fffdf8;color:#66766d}
+.stage-tab.active,.activity-tab.active{background:#edf3e9;border-color:#c8d7c0;color:#245c48}
+.world-layout{gap:20px}
+.map-heading h2{color:#2f4e3d}
+.map-heading .arabic{color:#9a793c}
+.map{border:2px solid #cfb979;border-radius:19px}
+.map-path .path-shadow{stroke:#fffdf1}
+.map-path .path-core{stroke:#d4ad56}
+.lesson-node.current .node-circle{background:#28624f;box-shadow:0 5px 0 #184938,0 0 0 7px #fffdf1b8,0 10px 24px #1c264950}
+.lesson-node.complete .node-circle{background:#277354}
+.lesson-node.locked .node-circle{background:#f5f0e4;color:#92866d;box-shadow:0 5px 0 #d3c9b4,0 7px 15px #172d5130}
+.node-label{color:#274335;background:#fffdf1ed}
+.node-stars{color:#d9aa48}
+.map-flag{background:#fffdf1ed;border-color:#d9c68e;color:#2d654c}
+.map-footer{color:#66776a}
+.progress-track{background:#eee8d8}
+.progress-fill{background:linear-gradient(90deg,#367b5e,#d1aa4f)}
+.next-card{background:linear-gradient(145deg,#fffdf8,#f5edda);border-color:#d9c485}
+.next-card .big-icon{display:inline-grid;place-items:center;width:58px;height:58px;border-radius:50%;background:#f3ead1;border:1px solid #dcc88e}
+.activity-chips span{background:#f2ecdc;color:#41644f}
+.daily-card{background:#edf3e9;border-color:#d0ddc8}
+.daily-card h3{color:#315e47}
+.goal-track{background:#dce7d5}
+.goal-track>div{background:#4f9070}
+.activity-tab>span{border-color:#d9c796;background:#fffdf7}
+.activity-tab.done{color:#317254}
+.activity-card{border-color:#dfd1ac}
+.world-card-content{background:#fffdf8}
+.world-card .world-foot{color:#326b52}
+.world-art .world-number{border:1px solid #dfcf9f;color:#375b45}
+.instruction,.modal-note{background:#f6f0df;border-color:#ddc98f;color:#485b4d}
+.choices .choice:hover,.match-tile:hover{border-color:#bb9b50;background:#faf4e3}
+.choice.correct,.match-tile.selected{border-color:#4e8662;background:#edf4ea;color:#245b45}
+.certificate{border-color:#c9a85c;background:#fffdf7}
+dialog{background:#fffdf8;border-color:#c7a45a;color:var(--ink)}
+dialog::backdrop{background:#193a2db0}
+footer button{color:#28624f}
+#toast{background:#275b48}
+@media(max-width:580px){.page-heading{padding:14px 15px;border-radius:15px}.sidebar{background:#fffdf8}}
+
