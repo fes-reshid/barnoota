@@ -75,7 +75,7 @@ export default function SchoolsPage() {
         website: form.website.trim() || undefined,
         subscriptionPlan: form.subscriptionPlan,
         subscriptionStatus: 'active',
-        islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true },
+        islamicModulesEnabled: { quran: true, iqra: true, islamicStudies: true, oromoLanguage: true, tuhfatulAtfaal: true },
         createdAt: now,
         updatedAt: now,
       });

@@ -8,7 +8,7 @@ import {
   studentsRepo, classesRepo, attendanceRepo, homeworkRepo, homeworkSubmissionsRepo,
   examResultsRepo, examsRepo, subjectsRepo, feeInvoicesRepo, feeStructuresRepo,
   studentDocumentsRepo, quranProgressRepo, iqraProgressRepo, islamicStudiesRepo, oromoProgressRepo,
-  schoolsRepo, usersRepo, parentInvitesRepo, emailRequestsRepo,
+  tuhfatulAtfaalProgressRepo, schoolsRepo, usersRepo, parentInvitesRepo, emailRequestsRepo,
 } from '@/lib/services';
 import { schoolLoginDomain } from '@/lib/schoolLoginDomain';
 import { printStudentIdCards, themeFor, DEFAULT_ID_CARD_FIELDS, type IdCardFields } from '@/lib/printIdCards';
@@ -58,11 +58,12 @@ export default function StudentProfile() {
   const { data: iqra, loading: l13 } = useRepoList(iqraProgressRepo);
   const { data: islamic, loading: l14 } = useRepoList(islamicStudiesRepo);
   const { data: oromo, loading: l15 } = useRepoList(oromoProgressRepo);
+  const { data: tuhfatulAtfaal, loading: l19 } = useRepoList(tuhfatulAtfaalProgressRepo);
   const { data: schools, loading: l16 } = useRepoList(schoolsRepo);
   const { data: users, loading: l17 } = useRepoList(usersRepo);
   const { data: invites, loading: l18, reload: reloadInvites } = useRepoList(parentInvitesRepo);
 
-  const loading = [l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18].some(Boolean);
+  const loading = [l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19].some(Boolean);
 
   if (loading) return <Spinner label="Loading student profile…" />;
 
@@ -87,6 +88,7 @@ export default function StudentProfile() {
   const myIqra = iqra.filter((q) => q.studentId === student.id);
   const myIslamic = islamic.filter((q) => q.studentId === student.id);
   const myOromo = oromo.filter((q) => q.studentId === student.id);
+  const myTuhfatulAtfaal = tuhfatulAtfaal.filter((q) => q.studentId === student.id);
   const school = schools[0];
   const loginId = `${student.studentCode}@${schoolLoginDomain(school?.name ?? 'school')}`;
 
@@ -521,6 +523,19 @@ export default function StudentProfile() {
                   <div key={q.id} className="px-5 py-3">
                     <p className="text-sm font-medium text-slate-700">{q.vocabulary}</p>
                     <p className="text-xs text-slate-500">Reading: {q.reading} · Writing: {q.writing} · {q.date}</p>
+                  </div>
+                ))}
+              </CardBody>
+            )}
+          </Card>
+          <Card>
+            <CardHeader title="Tuhfatul Atfaal" />
+            {myTuhfatulAtfaal.length === 0 ? <EmptyState title="No Tuhfatul Atfaal progress recorded" /> : (
+              <CardBody className="!p-0 divide-y divide-slate-100">
+                {myTuhfatulAtfaal.map((q) => (
+                  <div key={q.id} className="px-5 py-3">
+                    <p className="text-sm font-medium text-slate-700">{q.chapter} ({q.verseRange})</p>
+                    <p className="text-xs text-slate-500">{q.memorisationStatus.replace('_', ' ')} · {q.recitationLevel} · {q.date}</p>
                   </div>
                 ))}
               </CardBody>

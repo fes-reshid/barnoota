@@ -11,6 +11,7 @@ const MODULES: { key: keyof School['islamicModulesEnabled']; label: string; desc
   { key: 'iqra', label: 'Iqra', description: 'Iqra book level progress' },
   { key: 'islamicStudies', label: 'Islamic Studies', description: 'Book level, topics and assessments' },
   { key: 'oromoLanguage', label: 'Oromo Language', description: 'Qubee, reading and writing progress' },
+  { key: 'tuhfatulAtfaal', label: 'Tuhfatul Atfaal', description: 'Tajweed poem memorisation tracking for children' },
 ];
 
 export default function SystemSettingsPage() {

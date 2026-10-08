@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard, Users, GraduationCap, UserCircle, School, BookOpen, CalendarCheck,
   CalendarClock, ClipboardList, FileSpreadsheet, Wallet, Megaphone, Library, BarChart3,
-  Settings, Building2, ShieldCheck, MessageSquare, Moon, BookMarked, Languages,
+  Settings, Building2, ShieldCheck, MessageSquare, Moon, BookMarked, Languages, ScrollText,
 } from 'lucide-react';
 import type { Role } from '@/types';
 
@@ -41,6 +41,7 @@ export const NAV_BY_ROLE: Record<Role, NavItem[]> = {
     { label: 'Iqra', to: '/admin/iqra', icon: BookMarked },
     { label: 'Islamic Studies', to: '/admin/islamic-studies', icon: BookOpen },
     { label: 'Oromo Language', to: '/admin/oromo', icon: Languages },
+    { label: 'Tuhfatul Atfaal', to: '/admin/tuhfatul-atfaal', icon: ScrollText },
     { label: 'Settings', to: '/admin/settings', icon: Settings },
   ],
   teacher: [

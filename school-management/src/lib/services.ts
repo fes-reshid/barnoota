@@ -31,6 +31,7 @@ import type {
   Teacher,
   TimetableSlot,
   TransportRoute,
+  TuhfatulAtfaalProgress,
 } from '@/types';
 
 export const DEMO_SCHOOL_ID = 'demo-school';
@@ -65,4 +66,5 @@ export const quranProgressRepo = createRepository<QuranProgress>('quranProgress'
 export const iqraProgressRepo = createRepository<IqraProgress>('iqraProgress');
 export const islamicStudiesRepo = createRepository<IslamicStudiesProgress>('islamicStudies');
 export const oromoProgressRepo = createRepository<OromoProgress>('oromoProgress');
+export const tuhfatulAtfaalProgressRepo = createRepository<TuhfatulAtfaalProgress>('tuhfatulAtfaalProgress');
 export const transportRoutesRepo = createRepository<TransportRoute>('transportRoutes');

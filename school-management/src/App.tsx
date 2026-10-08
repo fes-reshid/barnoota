@@ -71,6 +71,7 @@ const QuranProgressPage = lazy(() => import('@/pages/islamic/QuranProgressPage')
 const IqraProgressPage = lazy(() => import('@/pages/islamic/IqraProgressPage'));
 const IslamicStudiesPage = lazy(() => import('@/pages/islamic/IslamicStudiesPage'));
 const OromoProgressPage = lazy(() => import('@/pages/islamic/OromoProgressPage'));
+const TuhfatulAtfaalProgressPage = lazy(() => import('@/pages/islamic/TuhfatulAtfaalProgressPage'));
 
 const SettingsPage = lazy(() => import('@/pages/settings/SettingsPage'));
 
@@ -142,6 +143,7 @@ export default function App() {
           <Route path="iqra" element={<IqraProgressPage />} />
           <Route path="islamic-studies" element={<IslamicStudiesPage />} />
           <Route path="oromo" element={<OromoProgressPage />} />
+          <Route path="tuhfatul-atfaal" element={<TuhfatulAtfaalProgressPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Route>

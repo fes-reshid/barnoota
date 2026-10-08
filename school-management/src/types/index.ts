@@ -29,6 +29,7 @@ export interface School extends BaseRecord {
     iqra: boolean;
     islamicStudies: boolean;
     oromoLanguage: boolean;
+    tuhfatulAtfaal: boolean;
   };
 }
 
@@ -331,6 +332,20 @@ export interface OromoProgress extends BaseRecord {
   writing: 'not_started' | 'in_progress' | 'proficient';
   vocabulary: string;
   progress: 'not_started' | 'in_progress' | 'completed';
+  date: string;
+}
+
+/** Tuhfatul Atfaal — Sulayman al-Jamzuri's short tajweed poem for children,
+ * traditionally memorised chapter by chapter (makharij al-huruf, noon
+ * sakinah rules, qalqalah, waqf, etc.). Tracked the same way as Quran
+ * memorisation, just keyed by chapter instead of surah. */
+export interface TuhfatulAtfaalProgress extends BaseRecord {
+  studentId: string;
+  chapter: string; // e.g. "Makharij al-Huruf", "Ahkam al-Noon al-Sakinah"
+  verseRange: string; // e.g. "Verses 10-14"
+  memorisationStatus: 'not_started' | 'in_progress' | 'memorised' | 'revised';
+  recitationLevel: 'beginner' | 'intermediate' | 'advanced';
+  teacherComment?: string;
   date: string;
 }
 

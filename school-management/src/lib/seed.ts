@@ -25,6 +25,7 @@ import {
   iqraProgressRepo,
   islamicStudiesRepo,
   oromoProgressRepo,
+  tuhfatulAtfaalProgressRepo,
 } from './services';
 import type {
   AcademicYear,
@@ -52,6 +53,7 @@ import type {
   Subject,
   Teacher,
   TimetableSlot,
+  TuhfatulAtfaalProgress,
 } from '@/types';
 
 const NOW = new Date().toISOString();
@@ -104,6 +106,7 @@ export async function seedDemoData(): Promise<void> {
         iqra: true,
         islamicStudies: true,
         oromoLanguage: true,
+        tuhfatulAtfaal: true,
       },
     } as School,
   ]);
@@ -455,5 +458,10 @@ export async function seedDemoData(): Promise<void> {
   await oromoProgressRepo.seedIfEmpty(DEMO_SCHOOL_ID, () => [
     { ...base('op-1'), studentId: 'student-4', qubee: 'A - Z', reading: 'in_progress', writing: 'in_progress', vocabulary: 'Family & greetings', progress: 'in_progress', date: isoDaysAgo(2) } as OromoProgress,
     { ...base('op-2'), studentId: 'student-16', qubee: 'A - M', reading: 'proficient', writing: 'in_progress', vocabulary: 'Numbers & colors', progress: 'in_progress', date: isoDaysAgo(5) } as OromoProgress,
+  ]);
+
+  await tuhfatulAtfaalProgressRepo.seedIfEmpty(DEMO_SCHOOL_ID, () => [
+    { ...base('ta-1'), studentId: 'student-1', chapter: 'Makharij al-Huruf', verseRange: 'Verses 7-9', memorisationStatus: 'memorised', recitationLevel: 'intermediate', teacherComment: 'Clear articulation of letter points.', date: isoDaysAgo(3) } as TuhfatulAtfaalProgress,
+    { ...base('ta-2'), studentId: 'student-13', chapter: 'Ahkam al-Noon al-Sakinah wal Tanwin', verseRange: 'Verses 10-14', memorisationStatus: 'in_progress', recitationLevel: 'beginner', date: isoDaysAgo(1) } as TuhfatulAtfaalProgress,
   ]);
 }
