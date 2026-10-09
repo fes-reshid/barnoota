@@ -21,10 +21,17 @@
    ========================================================================== */
 
 window.AOCAV_FIREBASE = {
+  // These two are already correct for your project — leave them alone.
+  projectId:         "aocav-e5490",
+  authDomain:        "aocav-e5490.firebaseapp.com",
+
+  // Copy these three from the Firebase console:
+  //   gear icon -> Project settings -> Your apps -> the web app -> Config
   apiKey:            "PASTE_YOUR_API_KEY",
-  authDomain:        "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "PASTE_YOUR_PROJECT_ID",
-  storageBucket:     "PASTE_YOUR_PROJECT_ID.firebasestorage.app",
   messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId:             "PASTE_YOUR_APP_ID"
+  appId:             "PASTE_YOUR_APP_ID",
+
+  // Copy this one exactly as the console shows it. Newer projects end in
+  // .firebasestorage.app and older ones in .appspot.com — do not guess.
+  storageBucket:     "PASTE_YOUR_STORAGE_BUCKET"
 };
