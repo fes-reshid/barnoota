@@ -132,24 +132,30 @@ window.AocavCms = (function () {
 
   /* ------------------------------------------------------------- render */
   // content: { key: { en, om } }
-  var originals = null;
+  var items = null;        // collected ONCE, before anything is translated
+  var originals = null;    // the wording the HTML itself shipped with
 
   function apply(content, lang) {
     content = content || {};
-    var items = collect(document);
 
-    // Remember the wording written in the HTML, so switching back to English
-    // (or clearing an override) restores it.
-    if (!originals) {
+    // Keys are built from the English words on the page. The moment a
+    // translation is written, those words are gone — so collecting again
+    // would produce keys made of Afaan Oromoo, match nothing, and leave the
+    // page stuck in whatever language it happened to be in. Collect once,
+    // keep the node references, and reuse them for every later switch.
+    if (!items) {
+      items = collect(document);
       originals = {};
       items.forEach(function (it) { originals[it.key] = it.text; });
     }
 
     items.forEach(function (it) {
+      if (!it.node || !it.node.parentNode) return;
       var rec = content[it.key] || {};
-      var value = (lang === 'om' && rec.om) ? rec.om
-                : (rec.en || originals[it.key] || it.text);
-      if (value !== it.text) setText(it.node, value);
+      var value = (lang === 'om' && rec.om) ? rec.om : (rec.en || originals[it.key]);
+      if (value === undefined || value === null) return;
+      var showing = it.node.nodeValue.replace(/\s+/g, ' ').trim();
+      if (value !== showing) setText(it.node, value);
     });
 
     document.documentElement.lang = lang === 'om' ? 'om' : 'en';
