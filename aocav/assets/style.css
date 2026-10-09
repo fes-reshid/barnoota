@@ -239,13 +239,22 @@ p{margin:0 0 1.1em;}
   -webkit-mask-image:radial-gradient(70% 60% at 50% 42%, #000 20%, transparent 100%);
   mask-image:radial-gradient(70% 60% at 50% 42%, #000 20%, transparent 100%);
 }
-.hero-tree{
-  position:absolute; right:-6%; bottom:-8%; width:min(58vw, 760px); z-index:-1;
-  opacity:.17; pointer-events:none;
-  animation:sway 11s ease-in-out infinite alternate;
-  transform-origin:50% 100%;
+/* Australia behind the emblem. A map should not tilt, so it drifts and
+   breathes very slightly instead of swaying like the tree did. */
+.hero-map{
+  /* sized and placed so the whole continent sits behind the emblem
+     rather than running off the right edge */
+  position:absolute; right:4%; bottom:13%; width:min(52vw, 700px); z-index:-1;
+  opacity:.16; pointer-events:none;
+  animation:mapDrift 18s ease-in-out infinite alternate;
 }
-@keyframes sway{0%{transform:rotate(-1.2deg) translateY(0);}100%{transform:rotate(1.2deg) translateY(-12px);}}
+@media (max-width:980px){
+  .hero-map{ right:-8%; bottom:4%; width:min(92vw, 560px); opacity:.11; }
+}
+@keyframes mapDrift{
+  0%{transform:translate3d(0,0,0) scale(1);}
+  100%{transform:translate3d(-20px,-14px,0) scale(1.035);}
+}
 
 .hero-grid{display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap:56px; align-items:center; position:relative;}
 @media (max-width:980px){ .hero-grid{grid-template-columns:1fr; gap:44px; text-align:center;} }
