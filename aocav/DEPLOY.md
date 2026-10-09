@@ -25,6 +25,7 @@ can fetch it directly.
 2. Paste these in, one line at a time:
 
    ```
+   cd ~
    rm -rf ~/barnoota
    git clone --branch claude/stoic-bell-wo79sa https://github.com/fes-reshid/barnoota.git
    cd ~/barnoota/aocav
@@ -32,8 +33,12 @@ can fetch it directly.
    firebase deploy --only hosting
    ```
 
-   The first line clears any earlier half-finished copy, so you do not end up
-   with a clone inside a clone — that would upload the wrong files.
+   `cd ~` first is not optional. Deleting the folder you are standing in leaves
+   the shell with no working directory, and then every command after it fails
+   with `No such file or directory` or `process.cwd failed`.
+
+   The `rm -rf` clears any earlier half-finished copy, so you do not end up with
+   a clone inside a clone — that would upload the wrong files.
 
    On the `firebase login` line it prints a long link. Open it, sign in, copy
    the code it gives back, paste it into the shell, press Enter.
@@ -83,6 +88,8 @@ firebase deploy --only hosting
 | `Error: Not in a Firebase project directory` | Wrong folder. `ls` should show `firebase.json`. If not, `cd ~/barnoota/aocav`. |
 | `HTTP Error: 403` | Signed in with the wrong Google account. `firebase logout`, then `firebase login` again. |
 | It says **0 files** | Wrong folder. `pwd` should end in `/barnoota/aocav`. |
+| `process.cwd failed` / `uv_cwd` / `No such file or directory` right after an `rm -rf` | The folder you were standing in was deleted. Run `cd ~` and start again. |
+| `could not create work tree dir` | Same cause — `cd ~` first, then clone. |
 
 ---
 
