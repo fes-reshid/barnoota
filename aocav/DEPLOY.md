@@ -97,26 +97,40 @@ Open that and your website is live.
 
 ---
 
-## About the name: `aucav` or `aocav`?
+## The name is staying as `aucav`
 
-Your site is **`aucav`** (a-u-c-a-v) but the association is **AOCAV** and your
-domain is **aocav.com**. If the current name was a typo, fix it before you tell
-people the address:
+That is settled — nothing to change. `aucav.web.app` is only Firebase's own
+address for the site. Once `aocav.com` points at it (next section), that is the
+address you give people, and the spelling of the Firebase one stops mattering.
 
-1. Firebase console → **Hosting** → **Add another site** → name it `aocav`
-2. Open `firebase.json` and change `"site": "aucav"` to `"site": "aocav"`
-3. Deploy again — the site appears at `https://aocav.web.app`
+The pages already tell search engines their proper home is
+`https://www.aocav.com/`, so nothing needs editing when the domain goes live.
 
 ---
 
-## Using your own domain, aocav.com
+## Pointing aocav.com at the site
 
-Once the site is up on Firebase:
+Do this once the site is uploaded.
 
-1. Firebase console → **Hosting** → **Add custom domain**
-2. Type `aocav.com`
-3. Firebase gives you two DNS records to add wherever you bought the domain
-4. It can take a few hours for the certificate to be issued
+1. Firebase console → **Hosting** → select the **aucav** site → **Add custom
+   domain**
+2. Enter `aocav.com`. Tick the option to also redirect `www.aocav.com` if it
+   offers it.
+3. Firebase shows you the DNS records to create — usually one **TXT** record to
+   prove you own the domain, then two **A** records.
+
+   **Use the exact values Firebase shows you.** Do not copy them from a guide or
+   an old screenshot; they are specific to your site and they do change.
+
+4. Add those records wherever you bought `aocav.com` (the registrar's control
+   panel, under DNS or Name Servers).
+5. Back in Firebase, press **Verify**.
+
+Then wait. Ownership usually verifies within an hour. The security certificate
+can take up to 24 hours after that — until it is issued the browser may warn
+that the connection is not private. That is normal and clears by itself.
+
+While you wait, `aucav.web.app` keeps working, so you can still show people.
 
 ---
 
