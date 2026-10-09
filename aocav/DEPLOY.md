@@ -8,13 +8,53 @@ deployed an app yet."* One upload replaces that with the website.
 
 **GitHub is not involved.** You are uploading a folder of files.
 
-Pick whichever route suits your computer:
+## The quickest way — all in your browser, 4 lines
+
+Nothing to install, no zip to upload, no Netlify. Your code is already on
+GitHub in a public repository, so Cloud Shell can fetch it directly.
+
+1. Open **https://shell.cloud.google.com** and sign in with the **same Google
+   account** that owns the Firebase project. Click **Continue** if it offers to
+   start the machine.
+
+2. Paste these four lines in, one at a time:
+
+   ```
+   git clone --branch claude/stoic-bell-wo79sa https://github.com/fes-reshid/barnoota.git
+   cd barnoota/aocav
+   firebase login --no-localhost
+   firebase deploy --only hosting
+   ```
+
+   On the third line it prints a long link. Open it, sign in, copy the code it
+   gives back, paste it into the shell and press Enter.
+
+   If it says `firebase: command not found`, run `npm install -g firebase-tools`
+   first — that works in Cloud Shell without any admin rights.
+
+3. The last line finishes with:
+
+   ```
+   Hosting URL: https://aucav.web.app
+   ```
+
+   Open it. The website is live.
+
+**To update it later**, come back to Cloud Shell and run:
+
+```
+cd ~/barnoota && git pull && cd aocav && firebase deploy --only hosting
+```
+
+---
+
+Or pick whichever other route suits your computer:
 
 - **Route 1 — your own computer.** Needs Node.js installed.
-- **Route 2 — Google Cloud Shell, in the browser.** Nothing to install. Use
-  this if your work computer will not let you install software.
+- **Route 2 — Cloud Shell with the zip**, if you would rather upload the folder
+  than pull it from GitHub.
 
-Both end in the same place.
+Every route ends in the same place.
 
 ---
 
