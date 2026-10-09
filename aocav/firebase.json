@@ -10,6 +10,7 @@
       "storage.rules",
       "README.md",
       "ADMIN-SETUP.md",
+      "DEPLOY.md",
       "**/.*",
       "**/node_modules/**"
     ],
@@ -17,17 +18,33 @@
     "headers": [
       {
         "source": "**/*.@(jpg|jpeg|png|gif|webp|svg|ico)",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800"
+          }
+        ]
       },
       {
         "source": "assets/**/*.@(js|css)",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
       },
       {
         "source": "/admin.html",
         "headers": [
-          { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
-          { "key": "Cache-Control", "value": "no-store" }
+          {
+            "key": "X-Robots-Tag",
+            "value": "noindex, nofollow"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
         ]
       }
     ]
