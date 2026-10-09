@@ -195,6 +195,16 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
  .printable-card,.teacher-quizzes{border-radius:18px}
 }
 </style>
+<style id="topic-heads">
+.topic-head{text-align:center;margin:0 0 10px;padding:0 0 10px;border-bottom:1px dashed #d9c48f;border-radius:14px;transition:background .2s}
+.topic-head.playing{background:#fff1b8}
+.topic-kick{display:inline-block;font:700 12px Nunito,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#8a6a1f;background:#fff4d2;border:1px solid #ecd59a;border-radius:10px;padding:2px 10px}
+.topic-ar{margin:4px 0 0;font:700 clamp(25px,4vw,36px)/1.7 Amiri,serif;color:#2f6f55}
+.topic-orn{color:var(--gold);font-size:.7em;margin:0 .35em;vertical-align:.1em}
+.topic-en{display:block;font:16px Marcellus,serif;color:var(--navy)}
+.topic-play{margin-top:8px;border:2px solid var(--gold2);background:#fff;border-radius:16px;padding:5px 14px;font:15px Marcellus,serif;color:var(--brown);cursor:pointer}
+.topic-play:hover{background:#fff4d2}
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -1489,6 +1499,13 @@ async function hifzPlay(which){
  hifzPlaying=true;$('#hifzStop').classList.remove('hidden');
  for(let r=1;r<=hifzRepeat;r++){
   let heard=0;
+  const tp=which===2&&typeof topicAt==='function'?topicAt(l):null;
+  if(tp){
+   if(token!==audioPlaybackToken)return;
+   status.className='hifz-status';status.textContent='🔊 Topic title… '+r+' of '+hifzRepeat;
+   const th=document.querySelector('#hifzVerse .topic-head');if(th)th.classList.add('playing');
+   heard+=await hifzClip(tp.src,tp.ar);if(th)th.classList.remove('playing');
+  }
   for(const h of halves){
    if(token!==audioPlaybackToken)return;
    status.className='hifz-status';status.textContent='🔊 Listen… '+r+' of '+hifzRepeat;
@@ -2334,6 +2351,40 @@ const hifzPassLevelBeforeLesson=hifzPassLevel;
 hifzPassLevel=function(){const r=hifzPassLevelBeforeLesson.apply(this,arguments);const inLesson=hifzBoxEl()&&hifzBoxEl().classList.contains('in-lesson');if(inLesson)setTimeout(lessonHifzNext,350);return r};
 const renderLessonBeforeLessonHifz=renderLesson;renderLesson=function(){restoreHifzBox();return renderLessonBeforeLessonHifz.apply(this,arguments)};
 const showBeforeLessonHifz=show;show=function(id){if(id!=='lessonScreen')restoreHifzBox();return showBeforeLessonHifz.apply(this,arguments)};
+/* Topic (chapter) headings of the poem, in Arabic, at the first line of each
+   topic — in the Matn step and in Memorise. Recorded audio goes in
+   assets/audio/topic-01.mp3 … topic-10.mp3; until a file is there the
+   device voice reads the heading. */
+var POEM_TOPICS=[
+ [1,'مُقَدِّمَةٌ','Introduction · Muqaddimah'],
+ [6,'أَحْكَامُ النُّونِ السَّاكِنَةِ وَالتَّنْوِينِ','Rules of Nūn Sākinah and Tanwīn'],
+ [17,'أَحْكَامُ النُّونِ وَالْمِيمِ الْمُشَدَّدَتَيْنِ','Rules of Nūn and Mīm with Shaddah'],
+ [18,'أَحْكَامُ الْمِيمِ السَّاكِنَةِ','Rules of Mīm Sākinah'],
+ [24,'أَحْكَامُ لَامِ أَلْ وَلَامِ الْفِعْلِ','Rules of the Lām of “al” and the Lām of verbs'],
+ [30,'فِي الْمِثْلَيْنِ وَالْمُتَقَارِبَيْنِ وَالْمُتَجَانِسَيْنِ','Mithlayn, Mutaqāribayn and Mutajānisayn'],
+ [35,'أَقْسَامُ الْمَدِّ','Types of Madd'],
+ [42,'أَحْكَامُ الْمَدِّ','Rulings of Madd'],
+ [48,'أَقْسَامُ الْمَدِّ اللَّازِمِ','Types of Madd Lāzim'],
+ [58,'خَاتِمَةٌ','Conclusion · Khātimah']
+];
+function topicAt(l){
+ const i=POEM_TOPICS.findIndex(t=>t[0]===lineNumbers(l)[0]);if(i<0)return null;
+ const k='topic-'+String(i+1).padStart(2,'0');
+ return{n:i+1,ar:POEM_TOPICS[i][1],en:POEM_TOPICS[i][2],src:window.TAJWEED_AUDIO[k]||'/tuhfatul-atfaal/assets/audio/'+k+'.mp3'}
+}
+function topicHTML(t){return `<div class="topic-head"><span class="topic-kick">📖 Topic ${t.n} of ${POEM_TOPICS.length}</span><div class="topic-ar" lang="ar" dir="rtl"><span class="topic-orn" aria-hidden="true">۞</span><span>${t.ar}</span><span class="topic-orn" aria-hidden="true">۞</span></div><span class="topic-en">${escapeHtml(t.en)}</span><button class="topic-play" type="button" aria-label="Listen to the topic title">🔊 Listen to the title</button></div>`}
+const renderMatnBeforeTopic=renderMatn;
+renderMatn=function(l){
+ renderMatnBeforeTopic.apply(this,arguments);
+ const t=topicAt(l),card=$('#stage .matn-card');if(!t||!card)return;
+ card.insertAdjacentHTML('afterbegin',topicHTML(t));card.querySelector('.topic-play').onclick=()=>playAudioFiles([t.src],t.ar);
+};
+const renderHifzBeforeTopic=renderHifz;
+renderHifz=function(){
+ renderHifzBeforeTopic.apply(this,arguments);
+ const t=topicAt(lessons[hifzLine]),verse=$('#hifzVerse');if(!t||!verse)return;
+ verse.insertAdjacentHTML('afterbegin',topicHTML(t));verse.querySelector('.topic-play').onclick=()=>{stopHifz();playAudioFiles([t.src],t.ar)};
+};
 /* Header button: "← Back to map" inside lessons, games and other screens;
    "← Games" on the map (and sign-in) screen, where it leaves the app. */
 const backPill=document.querySelector('.back-pill');
