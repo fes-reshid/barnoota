@@ -69,7 +69,14 @@ window.AocavCards = (function () {
     return real;
   }
   function fmtDate(d) {
+    if (lang === 'om') {
+      return OM_DAYS[d.getDay()] + ', ' + d.getDate() + ' ' + OM_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+    }
     return d.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function fmtMonthShort(d) {
+    return lang === 'om' ? OM_MONTHS_SHORT[d.getMonth()]
+                         : d.toLocaleDateString('en-AU', { month: 'short' });
   }
   function fmtTime(d) {
     return d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' })
@@ -90,6 +97,26 @@ window.AocavCards = (function () {
   // ---------------------------------------------------------------- language
   var lang = 'en';
   function setLang(l) { lang = (l === 'om') ? 'om' : 'en'; }
+
+  // Wording the renderer produces itself, rather than taking from an event.
+  var UI = {
+    en: { held:'Held', ongoing:'Ongoing', saveDate:'Save the date', upcoming:'Upcoming',
+          ongoingProgram:'Ongoing program', register:'Register',
+          addToCalendar:'Add to calendar', viewPoster:'View poster',
+          untitled:'Untitled event', poster:'event poster', playFor:'Play the video for' },
+    om: { held:'Darbeera', ongoing:'Itti fufaa', saveDate:'Guyyaa qabadhaa', upcoming:'Dhufaa jira',
+          ongoingProgram:'Sagantaa itti fufaa', register:'Galmaa\u2019aa',
+          addToCalendar:'Kaalendaritti dabalaa', viewPoster:'Poostara ilaalaa',
+          untitled:'Taatee maqaa hin qabne', poster:'poostara taatee', playFor:'Viidiyoo kana taphachiisi:' }
+  };
+  function T(k) { return (UI[lang] && UI[lang][k]) || UI.en[k]; }
+
+  // en-AU gives English weekday and month names, and there is no reliable
+  // Afaan Oromoo locale in browsers, so the names are spelled out here.
+  var OM_DAYS = ['Dilbata','Wiixata','Kibxata','Roobii','Kamisa','Jimaata','Sanbata'];
+  var OM_MONTHS = ['Amajjii','Guraandhala','Bitootessa','Elba','Caamsaa','Waxabajjii',
+                   'Adoolessa','Hagayya','Fuulbana','Onkoloolessa','Sadaasa','Muddee'];
+  var OM_MONTHS_SHORT = ['Ama','Gur','Bit','Elb','Caa','Wax','Ado','Hag','Ful','Onk','Sad','Mud'];
   // Afaan Oromoo wording when the committee has written it, English otherwise.
   function L(ev, field) {
     if (lang === 'om') {
@@ -119,7 +146,7 @@ window.AocavCards = (function () {
     var label = esc(plain(L(ev, 'title')) || 'event video');
     return '<div class="ev-video">' +
       '<button type="button" class="yt-facade" data-yt="' + id + '" ' +
-      'aria-label="Play the video for ' + label + '">' +
+      'aria-label="' + esc(T('playFor')) + ' ' + label + '">' +
       '<img src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" alt="" loading="lazy" decoding="async">' +
       '<span class="yt-play">' + PLAY + '</span></button></div>';
   }
@@ -176,7 +203,7 @@ window.AocavCards = (function () {
   function metaList(ev, limited) {
     var rows = [];
     if (ev.recurring) {
-      rows.push([ICON.repeat, esc(L(ev, 'when') || 'Ongoing program')]);
+      rows.push([ICON.repeat, esc(L(ev, 'when') || T('ongoingProgram'))]);
     } else if (ev.startDate) {
       rows.push([ICON.cal, fmtDate(ev.startDate)]);
       rows.push([ICON.clock, fmtTime(ev.startDate) + (ev.endDate ? ' – ' + fmtTime(ev.endDate) : '')]);
@@ -192,10 +219,10 @@ window.AocavCards = (function () {
   }
 
   function chip(ev) {
-    if (ev.past) return '<span class="ev-chip past">Held</span>';
-    if (ev.recurring) return '<span class="ev-chip weekly">Ongoing</span>';
-    if (ev.status === 'save-date') return '<span class="ev-chip save">Save the date</span>';
-    return '<span class="ev-chip">Upcoming</span>';
+    if (ev.past) return '<span class="ev-chip past">' + esc(T('held')) + '</span>';
+    if (ev.recurring) return '<span class="ev-chip weekly">' + esc(T('ongoing')) + '</span>';
+    if (ev.status === 'save-date') return '<span class="ev-chip save">' + esc(T('saveDate')) + '</span>';
+    return '<span class="ev-chip">' + esc(T('upcoming')) + '</span>';
   }
 
   function dateBadge(ev) {
@@ -204,21 +231,21 @@ window.AocavCards = (function () {
         ICON.repeat.replace('<svg', '<svg width="22" height="22"') + '</span></div>';
     }
     return '<div class="ev-date"><span class="d">' + ev.startDate.getDate() + '</span><span class="m">' +
-      ev.startDate.toLocaleDateString('en-AU', { month: 'short' }) + '</span></div>';
+      fmtMonthShort(ev.startDate) + '</span></div>';
   }
 
   function actions(ev, opts) {
     if (opts && opts.preview) return '';
     var out = [];
     if (ev.rsvp && !ev.past) {
-      out.push('<a class="btn btn-primary btn-sm" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || 'Register') + '</a>');
+      out.push('<a class="btn btn-primary btn-sm" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || T('register')) + '</a>');
     }
     if (!ev.past && !ev.recurring && ev.startDate) {
-      out.push('<button class="btn btn-ghost btn-sm" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + 'Add to calendar</button>');
+      out.push('<button class="btn btn-ghost btn-sm" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + esc(T('addToCalendar')) + '</button>');
     }
     if (ev.flyer) {
       out.push('<button class="btn btn-ghost btn-sm" type="button" data-zoom="' + esc(safeUrl(ev.flyer)) +
-        '" data-zoom-alt="' + esc(plain(L(ev, 'title'))) + ' event poster">View poster</button>');
+        '" data-zoom-alt="' + esc(plain(L(ev, 'title'))) + ' ' + esc(T('poster')) + '">' + esc(T('viewPoster')) + '</button>');
     }
     return out.length ? '<div class="ev-actions">' + out.join('') + '</div>' : '';
   }
@@ -231,7 +258,7 @@ window.AocavCards = (function () {
     if (!opts || !opts.preview) cls.push('reveal');
     return '<article class="' + cls.join(' ') + '" id="event-' + esc(ev.id) + '">' +
       '<div class="ev-top"><div class="ev-top-row">' + dateBadge(ev) + chip(ev) + '</div>' +
-      '<h3 class="ev-title">' + esc(L(ev, 'title') || 'Untitled event') + '</h3></div>' +
+      '<h3 class="ev-title">' + esc(L(ev, 'title') || T('untitled')) + '</h3></div>' +
       '<div class="ev-body">' + metaList(ev, false) +
       '<p class="ev-desc">' + esc(L(ev, 'desc') || '') + '</p>' +
       videoBlock(ev) + galleryBlock(ev) + actions(ev, opts) + '</div></article>';
@@ -254,18 +281,19 @@ window.AocavCards = (function () {
 
   function featureHTML(ev, opts) {
     var preview = !!(opts && opts.preview);
-    var list = (ev.highlights || []).map(function (h) {
+    var hl = (lang === 'om' && ev.highlightsOm && ev.highlightsOm.length) ? ev.highlightsOm : (ev.highlights || []);
+    var list = hl.map(function (h) {
       return '<li>' + ICON.heart + '<span>' + esc(h) + '</span></li>';
     }).join('');
     return '<div class="feature' + (preview ? '' : ' reveal') + '" id="event-' + esc(ev.id) + '">' +
       '<div class="feature-body">' + chip(ev) +
-      '<h3>' + esc(L(ev, 'title') || 'Untitled event') + '</h3>' +
+      '<h3>' + esc(L(ev, 'title') || T('untitled')) + '</h3>' +
       '<p>' + esc(L(ev, 'desc') || '') + '</p>' + metaList(ev, false) +
       (list ? '<ul class="tick" style="margin-top:22px">' + list + '</ul>' : '') +
       (preview ? '' :
         '<div class="ev-actions" style="margin-top:28px">' +
-        (ev.rsvp ? '<a class="btn btn-light" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || 'Register') + ICON.arrow + '</a>' : '') +
-        (ev.startDate ? '<button class="btn btn-light" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + 'Add to calendar</button>' : '') +
+        (ev.rsvp ? '<a class="btn btn-light" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || T('register')) + ICON.arrow + '</a>' : '') +
+        (ev.startDate ? '<button class="btn btn-light" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + esc(T('addToCalendar')) + '</button>' : '') +
         '</div>') +
       '</div><div class="feature-side">' + (videoBlock(ev) || capArt()) + '</div></div>';
   }
@@ -338,7 +366,7 @@ window.AocavCards = (function () {
   /* ------------------------------------ serialise back to events.js */
   var FIELDS = ['id', 'title', 'titleOm', 'start', 'end', 'when', 'whenOm', 'status',
     'theme', 'category', 'featured', 'venue', 'address', 'cost', 'costOm',
-    'desc', 'descOm', 'highlights', 'flyer', 'photos', 'video',
+    'desc', 'descOm', 'highlights', 'highlightsOm', 'flyer', 'photos', 'video',
     'funder', 'rsvp', 'rsvpLabel', 'rsvpLabelOm', 'published'];
 
   function toSeedFile(events) {
@@ -368,7 +396,7 @@ window.AocavCards = (function () {
   return {
     TZ: TZ, ICON: ICON, FIELDS: FIELDS,
     esc: esc, plain: plain, slugify: slugify, safeUrl: safeUrl,
-    setLang: setLang, L: L, ytId: ytId, videoBlock: videoBlock, galleryBlock: galleryBlock,
+    setLang: setLang, L: L, T: T, ytId: ytId, videoBlock: videoBlock, galleryBlock: galleryBlock,
     parseLocal: parseLocal, melbourneInstant: melbourneInstant,
     fmtDate: fmtDate, fmtTime: fmtTime,
     normalise: normalise, sortUpcoming: sortUpcoming, sortAll: sortAll,

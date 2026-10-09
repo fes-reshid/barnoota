@@ -39,6 +39,17 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'graduation-2026',
+    titleOm: "Ayyaana Eebbaa fi Milkaa'inaa Waggaa",
+    descOm: "Guyyaa waggaatti itti caalaa boonnu. Hawaasni guutuun walitti dhufee Oromoo-Awustiraaliyaa kutaa 12, TAFE, leenjii ogummaa, digrii yunivarsiitii yookaan ragaa mana barumsaa Afaan Oromoo xumure hunda ni kabaja. Haasaa eebbifamtootaa, sirna bunaa aadaa, walaloo fi nyaata waliinii kan hamma maatiin dhumaa deemutti itti fufu ni jiraata.",
+    costOm: "Bilisa — maatiin fi hiriyoonni baga nagaan dhuftan",
+    rsvpLabelOm: "Eebbifamaa dhiyeessaa",
+    highlightsOm: [
+      "Eebbifamaa hundaaf kofiyyaa fi ragaa",
+      "Eebba maanguddootaa fi ibsaa Odaa qabsiisuu",
+      "Sirna bunaa fi irbaata hawaasaa waliinii",
+      "Dhiyeessa aadaa dargaggoota keenyaan",
+      "Suuraa maatii iddoo biqiltuu keessatti"
+    ],
     title: 'Annual Graduation & Achievement Ceremony',
     start: '2026-12-06T13:00',
     end: '2026-12-06T17:30',
@@ -63,6 +74,10 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'elders-voices-2026',
+    titleOm: "Sagalee Maanguddootaa",
+    descOm: "Walgahii simannaa kan aadaa Oromoo kabajuuf, seenaa wal qooduuf fi dhaloota gidduutti hariiroo ijaaruuf buna tokkoon wal arginu. Dhaloota walitti fiduu, aadaa eeguu, hawaasa jabeessuu.",
+    costOm: "Bilisa — maanguddoonni, maatiin fi dargaggoonni hundi baga nagaan dhuftan",
+    rsvpLabelOm: "Akka dhuftan nuuf himaa",
     title: 'Elders Voices',
     start: '2026-10-17T14:00',
     end: '2026-10-17T17:00',
@@ -81,6 +96,10 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'cultural-night-2026',
+    titleOm: "Galgala Aadaa Oromoo fi Irbaata Hawaasaa",
+    descOm: "Galgala muuziqaa Oromoo, uffata aadaa, walaloo fi oduu durii, irbaata hawaasaa guutuu waliin. Halkan hawaasummaa guddaa waggaa keenyaa, akkasumas hiriyoota fi ollaa aadaa Oromoo haaraatti beekaniif seensa gaarii.",
+    costOm: "Tikeetii — gatiin maatii ni jira",
+    rsvpLabelOm: "Tarree keessummootaatti makamaa",
     title: 'Oromo Cultural Night & Community Dinner',
     start: '2026-11-21T17:30',
     end: '2026-11-21T21:30',
@@ -97,6 +116,10 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'family-fun-day-2027',
+    titleOm: "Guyyaa Kubbaa Miilaa fi Gammachuu Maatii",
+    descOm: "Dorgommii kubbaa miilaa dargaggootaa fi gurguddootaa, ijoollee xixiqqoof iddoo taphaa, barbecue, akkasumas saaxilaa odeeffannoo fayyaa fi qubannaa. Guyyaa tasgabbaa'aa maatiin osoo waggaan barnootaa hin jalqabin wal baran.",
+    costOm: "Bilisa",
+    rsvpLabelOm: "Garee galmeessaa",
     title: 'Community Soccer & Family Fun Day',
     start: '2027-02-14T10:00',
     end: '2027-02-14T16:00',
@@ -115,6 +138,11 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'afaan-oromoo-school',
+    titleOm: "Mana Barumsaa Afaan Oromoo Sanbataa",
+    descOm: "Ijoollee umurii 5–16'f dubbisuu, barreessuu fi Afaan Oromoo dubbachuu, barsiisota tola ooltota hawaasa keenyaa keessaa dhufaniin kan barsiifamu. Barattoonni waggaa xumuran ayyaana eebbaa Muddee irratti ragaa ni argatu.",
+    whenOm: "Sanbata hunda, ganama 10:00 – waaree booda 1:00 (yeroo barnootaa)",
+    costOm: "Miseensotaaf bilisa",
+    rsvpLabelOm: "Mucaa galmeessaa",
     title: 'Afaan Oromoo Saturday School',
     when: 'Every Saturday, 10:00am – 1:00pm (school terms)',
     status: 'recurring',
@@ -130,6 +158,11 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'youth-leadership',
+    titleOm: "Marsaa Hoogganummaa fi Qajeelcha Dargaggootaa",
+    descOm: "Qajeelcha, deeggarsa barnootaa, dubbii ummata duratti dhiyeessuu fi guddina hoogganummaa dargaggoota umurii 14–25'f — barattoota yunivarsiitii fi ogeeyyii hawaasa keenyaa kan karaa walfakkaataa deeman waliin.",
+    whenOm: "Sanbata lammaffaa ji'a hundaa, waaree booda 3:00 – 5:30",
+    costOm: "Bilisa",
+    rsvpLabelOm: "Marsaatti makamaa",
     title: 'Youth Leadership & Mentoring Circle',
     when: 'Second Saturday of each month, 3:00pm – 5:30pm',
     status: 'recurring',
@@ -145,6 +178,11 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'womens-buna',
+    titleOm: "Marsaa Buna fi Fayyaa Dubartootaa",
+    descOm: "Iddoo ho'aa dubartoonni Oromoo itti sirna bunaa wal qoodan, Afaan Ingiliffaa shaakalan, waa'ee fayyaa fi nagaa maatii mari'atan, wal deeggaran. Dubbistoonni keessummaa waa'ee fayyaa, manaa fi tajaajila maatii irratti yeroo hedduu ni dhufu.",
+    whenOm: "Roobii torban lamatti al tokko, ganama 11:00 – waaree booda 1:00",
+    costOm: "Bilisa — kunuunsi ijoollee ni jira",
+    rsvpLabelOm: "Kottaa",
     title: 'Women’s Buna & Wellbeing Circle',
     when: 'Fortnightly Wednesdays, 11:00am – 1:00pm',
     status: 'recurring',
@@ -160,6 +198,11 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'settlement-desk',
+    titleOm: "Deeskii Gargaarsa Qubannaa fi Waraqaa",
+    descOm: "Afaan Oromootiin gargaarsa unka Centrelink fi Medicare, iyyannoo manaa, galmee mana barumsaa, xalayaa mootummaa irraa dhufuuf, akkasumas gara tajaajila seeraa, fayyaa fi hojiitti ergamuuf. Kallattiin kottaa yookaan dursaa beellama qabadhaa.",
+    whenOm: "Kamisa hunda, ganama 10:00 – waaree booda 2:00",
+    costOm: "Bilisa",
+    rsvpLabelOm: "Beellama qabadhaa",
     title: 'Settlement & Paperwork Help Desk',
     when: 'Every Thursday, 10:00am – 2:00pm',
     status: 'recurring',
@@ -177,6 +220,9 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'irreecha-2026',
+    titleOm: "Irreecha Birraa — Ayyaana Galateeffannaa",
+    descOm: "Hawaasni keenya uffata adii fi halluu qabuun, marga jiidhaa fi daraaraa qabatee, dhuma ganamaa fi dhufaatii birraatiif galateeffachuuf bishaan bira walitti dhufe — ayyaana kaalendarii Oromoo keessaa isa durii fi jaallatamaa.",
+    costOm: "Bilisa",
     title: 'Irreecha Birraa — Thanksgiving Festival',
     start: '2026-10-04T11:00',
     end: '2026-10-04T16:00',
@@ -191,6 +237,9 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'health-morning-2026',
+    titleOm: "Ganama Fayyaa fi Nagaa Hawaasaa",
+    descOm: "Sakatta'a fayyaa bilisaa, hiiktuu waliin, akkasumas odeeffannoo afaan salphaadhaan waa'ee sukkaaraa, fayyaa onnee fi fayyaa sammuu, tajaajila fayyaa naannoo waliin kan dhiyaate.",
+    costOm: "Bilisa",
     title: 'Community Health & Wellbeing Morning',
     start: '2026-08-15T10:00',
     end: '2026-08-15T13:00',

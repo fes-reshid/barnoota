@@ -88,7 +88,7 @@
       status: 'confirmed', theme: '', category: 'community',
       featured: false, published: true,
       venue: '', address: '', cost: '',
-      highlights: [], flyer: '', photos: [], video: '',
+      highlights: [], highlightsOm: [], flyer: '', photos: [], video: '',
       funder: '', rsvp: '', rsvpLabel: '', rsvpLabelOm: '', costOm: ''
     };
   }
@@ -124,7 +124,8 @@
       funder: get('funder'),
       rsvp: get('rsvp'),
       rsvpLabel: get('rsvpLabel'),
-      highlights: get('highlights').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)
+      highlights: get('highlights').split('\n').map(function (s) { return s.trim(); }).filter(Boolean),
+      highlightsOm: get('highlightsOm').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)
     };
     if (recurring) {
       ev.when = get('when');
@@ -154,6 +155,7 @@
     set('whenOm', ev.whenOm);
     set('rsvp', ev.rsvp); set('rsvpLabel', ev.rsvpLabel);
     set('highlights', (ev.highlights || []).join('\n'));
+    set('highlightsOm', (ev.highlightsOm || []).join('\n'));
     check('featured', ev.featured);
     check('published', ev.published !== false);
     check('isRecurring', ev.status === 'recurring' || (!ev.start && !!ev.when));
@@ -265,6 +267,7 @@
       ? C.featureHTML(ev, { preview: true })
       : C.cardHTML(ev, { preview: true });
     $('[data-highlights-group]').classList.toggle('hidden', !ev.featured);
+    $('[data-highlightsom-wrap]').classList.toggle('hidden', !ev.featured);
     $('[data-ed-draft]').classList.toggle('hidden', ev.published !== false);
   }
 
