@@ -28,7 +28,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'graduation-2026',
-    title: 'Annual Graduation &amp; Achievement Ceremony',
+    title: 'Annual Graduation & Achievement Ceremony',
     start: '2026-12-06T13:00',
     end: '2026-12-06T17:30',
     status: 'save-date',
@@ -70,7 +70,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'cultural-night-2026',
-    title: 'Oromo Cultural Night &amp; Community Dinner',
+    title: 'Oromo Cultural Night & Community Dinner',
     start: '2026-11-21T17:30',
     end: '2026-11-21T21:30',
     status: 'save-date',
@@ -86,7 +86,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'family-fun-day-2027',
-    title: 'Community Soccer &amp; Family Fun Day',
+    title: 'Community Soccer & Family Fun Day',
     start: '2027-02-14T10:00',
     end: '2027-02-14T16:00',
     status: 'save-date',
@@ -119,7 +119,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'youth-leadership',
-    title: 'Youth Leadership &amp; Mentoring Circle',
+    title: 'Youth Leadership & Mentoring Circle',
     when: 'Second Saturday of each month, 3:00pm – 5:30pm',
     status: 'recurring',
     theme: '',
@@ -134,7 +134,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'womens-buna',
-    title: 'Women’s Buna &amp; Wellbeing Circle',
+    title: 'Women’s Buna & Wellbeing Circle',
     when: 'Fortnightly Wednesdays, 11:00am – 1:00pm',
     status: 'recurring',
     theme: '',
@@ -149,7 +149,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'settlement-desk',
-    title: 'Settlement &amp; Paperwork Help Desk',
+    title: 'Settlement & Paperwork Help Desk',
     when: 'Every Thursday, 10:00am – 2:00pm',
     status: 'recurring',
     theme: '',
@@ -180,7 +180,7 @@ window.AOCAV_EVENTS = [
 
   {
     id: 'health-morning-2026',
-    title: 'Community Health &amp; Wellbeing Morning',
+    title: 'Community Health & Wellbeing Morning',
     start: '2026-08-15T10:00',
     end: '2026-08-15T13:00',
     status: 'confirmed',

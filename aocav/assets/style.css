@@ -593,7 +593,7 @@ section{position:relative;}
   font-family:var(--body); font-size:1rem; color:var(--ink);
   padding:14px 16px; border-radius:var(--r-sm); border:1px solid var(--line);
   background:var(--paper); transition:border-color .2s, box-shadow .2s;
-  width:100%;
+  width:100%; min-width:0;
 }
 .field textarea{min-height:140px; resize:vertical;}
 .field input:focus,.field select:focus,.field textarea:focus{

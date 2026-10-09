@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// ===========================================================================
+// AOCAV — Cloud Storage security rules (event posters)
+// Publish with:  firebase deploy --only storage
+// ===========================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null
+          && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+
+    // Posters are shown on the public website, so anyone may read them.
+    // Only committee members may upload, and only images up to 8 MB.
+    match /posters/{file} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && request.resource.size < 8 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

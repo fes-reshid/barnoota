@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — AOCAV</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a3d23">
+<link rel="icon" href="images/favicon-64.png" sizes="any">
+<link rel="apple-touch-icon" href="images/aocav-logo-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="admin">
+
+<!-- ====================== SETUP (Firebase not configured) ============== -->
+<section class="gate hidden" data-screen="setup">
+  <div class="gate-card wide">
+    <img class="mark" src="images/aocav-logo.png" alt="AOCAV logo" width="82" height="82">
+    <h1>Let's connect your admin page</h1>
+    <p class="sub">
+      The website is working fine right now — it is reading events from the file
+      <code class="inline">assets/events.js</code>. To edit events from this page instead of editing
+      code, connect it to the Firebase project you created. It takes about five minutes, once.
+    </p>
+
+    <ol class="steps">
+      <li>
+        <b>Turn on the two services you need</b>
+        <p>
+          In the <a href="https://console.firebase.google.com" target="_blank" rel="noopener">Firebase console</a>,
+          open your project and enable <b>Authentication</b> (Sign-in method → Email/Password) and
+          <b>Firestore Database</b> (start in production mode). Enable <b>Storage</b> too if you want to
+          upload event posters from this page.
+        </p>
+      </li>
+      <li>
+        <b>Copy your web config</b>
+        <p>
+          Project settings → Your apps → the web app → <b>Config</b>. Paste those values into
+          <code class="inline">assets/firebase-config.js</code> in your GitHub repository, replacing the
+          <code class="inline">PASTE_…</code> placeholders. They are not secret — every Firebase site
+          publishes them.
+        </p>
+      </li>
+      <li>
+        <b>Publish the security rules</b>
+        <p>
+          Upload <code class="inline">firestore.rules</code> and <code class="inline">storage.rules</code>
+          from this folder (Firebase CLI: <code class="inline">firebase deploy --only firestore:rules,storage</code>).
+          These are what actually protect your data — they let anyone read events, and only listed
+          committee members write them.
+        </p>
+      </li>
+      <li>
+        <b>Create your admin account</b>
+        <p>
+          Authentication → Users → Add user, with your email and a password. Then in Firestore create a
+          collection called <code class="inline">admins</code> and add a document whose
+          <b>Document ID is that user's UID</b> (copy it from the Users list). Put one field in it:
+          <code class="inline">email</code>. Repeat for each committee member who should have access.
+        </p>
+      </li>
+      <li>
+        <b>Come back and sign in</b>
+        <p>Reload this page. You will get a login box, and then you can add and edit events here.</p>
+      </li>
+    </ol>
+
+    <p class="muted" style="margin-top:28px">
+      Full instructions, including the exact commands, are in <code class="inline">ADMIN-SETUP.md</code>.
+    </p>
+    <p style="margin-top:20px"><a class="btn btn-ghost" href="index.html">← Back to the website</a></p>
+  </div>
+</section>
+
+<!-- ============================== LOGIN ================================ -->
+<section class="gate hidden" data-screen="login">
+  <div class="gate-card">
+    <img class="mark" src="images/aocav-logo.png" alt="AOCAV logo" width="82" height="82">
+    <h1>Committee sign in</h1>
+    <p class="sub">Manage the events shown on the AOCAV website.</p>
+
+    <form class="form" data-form="login">
+      <div class="field">
+        <label for="lg-email">Email</label>
+        <input id="lg-email" name="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="lg-pass">Password</label>
+        <input id="lg-pass" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary" type="submit" data-login-btn>Sign in</button>
+      <p class="form-note center">
+        <button class="btn btn-ghost btn-sm" type="button" data-reset-pass>Forgot your password?</button>
+      </p>
+      <p class="form-note center" data-login-msg role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="muted" style="margin-top:26px"><a href="index.html">← Back to the website</a></p>
+  </div>
+</section>
+
+<!-- ============================== CONSOLE ============================== -->
+<div class="hidden" data-screen="app">
+  <header class="adm-bar">
+    <a class="brand" href="index.html">
+      <img src="images/aocav-logo.png" alt="" aria-hidden="true" width="42" height="42">
+      <span class="brand-txt"><b>AOCAV Admin</b><span>Events</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="pill live" data-conn><span class="dot"></span><span data-conn-text>Connected</span></span>
+    <span class="adm-who">
+      <span class="email" data-user-email></span>
+      <button class="btn btn-light btn-sm" type="button" data-signout>Sign out</button>
+    </span>
+  </header>
+
+  <main>
+    <div class="adm-wrap">
+      <div class="warnbox hidden" data-empty-warning style="margin-bottom:22px">
+        <b>Nothing in the database yet.</b> The website is still showing the events bundled in
+        <code class="inline">assets/events.js</code>. Press <b>Import bundled events</b> below to copy them
+        into Firebase once — after that, this page is in charge.
+      </div>
+
+      <div class="adm-grid">
+
+        <!-- -------------------------------- list -------------------------------- -->
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Events</h2>
+            <span class="spacer"></span>
+            <button class="btn btn-primary btn-sm" type="button" data-new>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              New
+            </button>
+          </div>
+
+          <div class="adm-search">
+            <input type="search" placeholder="Search events…" aria-label="Search events" data-search>
+          </div>
+
+          <div class="adm-tabs" role="group" aria-label="Filter events">
+            <button type="button" data-tab="all" aria-pressed="true">All</button>
+            <button type="button" data-tab="upcoming" aria-pressed="false">Upcoming</button>
+            <button type="button" data-tab="programs" aria-pressed="false">Programs</button>
+            <button type="button" data-tab="past" aria-pressed="false">Past</button>
+            <button type="button" data-tab="draft" aria-pressed="false">Drafts</button>
+          </div>
+
+          <ul class="adm-list" data-list></ul>
+          <p class="adm-empty hidden" data-list-empty>No events match.</p>
+
+          <div class="ed-actions">
+            <button class="btn btn-ghost btn-sm" type="button" data-seed>Import bundled events</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-export>Export events.js</button>
+          </div>
+        </section>
+
+        <!-- ------------------------------- editor ------------------------------- -->
+        <section class="panel" data-editor-panel>
+          <div class="panel-head">
+            <h2 data-ed-title>New event</h2>
+            <span class="spacer"></span>
+            <span class="pill draft hidden" data-ed-draft>Draft</span>
+          </div>
+
+          <div class="panel-body">
+            <div class="ed-grid">
+              <form class="form" data-form="event" novalidate>
+
+                <fieldset class="ed-group">
+                  <legend>The basics</legend>
+                  <div class="field">
+                    <label for="f-title">Event name</label>
+                    <input id="f-title" name="title" type="text" required placeholder="Annual Graduation &amp; Achievement Ceremony">
+                  </div>
+                  <div class="field">
+                    <label for="f-desc">Description <small class="hint">— shown on the card</small></label>
+                    <textarea id="f-desc" name="desc" placeholder="What happens, who it is for, and why someone should come."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="f-id">Web address <small class="hint">— letters and dashes only; fills itself in</small></label>
+                    <input id="f-id" name="id" type="text" pattern="[a-z0-9\-]+" placeholder="graduation-2026">
+                  </div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>When</legend>
+                  <label class="switch">
+                    <input type="checkbox" name="isRecurring" data-recurring>
+                    <span class="track"></span>
+                    <span class="lbl"><b>This repeats</b><small>A weekly or monthly program rather than a one-off date</small></span>
+                  </label>
+
+                  <div data-when-once>
+                    <div class="row-split">
+                      <div class="field">
+                        <label for="f-start">Starts</label>
+                        <input id="f-start" name="start" type="datetime-local">
+                      </div>
+                      <div class="field">
+                        <label for="f-end">Ends <small class="hint">— optional</small></label>
+                        <input id="f-end" name="end" type="datetime-local">
+                      </div>
+                    </div>
+                    <p class="ed-help">Times are Melbourne time. Visitors see the day of the week worked out for them.</p>
+                  </div>
+
+                  <div class="field hidden" data-when-repeat>
+                    <label for="f-when">How often</label>
+                    <input id="f-when" name="when" type="text" placeholder="Every Saturday, 10:00am – 1:00pm (school terms)">
+                  </div>
+
+                  <div class="field">
+                    <label for="f-status">Status</label>
+                    <select id="f-status" name="status">
+                      <option value="confirmed">Confirmed — date and venue locked in</option>
+                      <option value="save-date">Save the date — details still to come</option>
+                      <option value="recurring">Ongoing program</option>
+                    </select>
+                  </div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Where &amp; how much</legend>
+                  <div class="field">
+                    <label for="f-venue">Venue</label>
+                    <input id="f-venue" name="venue" type="text" placeholder="Oromo Resource Centre">
+                  </div>
+                  <div class="field">
+                    <label for="f-address">Address</label>
+                    <input id="f-address" name="address" type="text" placeholder="664–678 Downing St, Mount Cottrell VIC 3024">
+                  </div>
+                  <div class="field">
+                    <label for="f-cost">Cost</label>
+                    <input id="f-cost" name="cost" type="text" placeholder="Free — all welcome">
+                  </div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Look &amp; placement</legend>
+                  <div class="row-split">
+                    <div class="field">
+                      <label for="f-category">Category <small class="hint">— used by the filters</small></label>
+                      <select id="f-category" name="category">
+                        <option value="community">Community</option>
+                        <option value="graduation">Graduation</option>
+                        <option value="culture">Culture</option>
+                        <option value="youth">Youth</option>
+                        <option value="women">Women</option>
+                        <option value="support">Support</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="f-theme">Card colour</label>
+                      <select id="f-theme" name="theme">
+                        <option value="">Green (default)</option>
+                        <option value="grad">Deep red (graduation)</option>
+                        <option value="culture">Gold (cultural)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <label class="switch">
+                    <input type="checkbox" name="featured" data-featured>
+                    <span class="track"></span>
+                    <span class="lbl"><b>Make this the banner event</b><small>The big card at the top of the home and events pages. Only one event can hold it.</small></span>
+                  </label>
+
+                  <label class="switch">
+                    <input type="checkbox" name="published" checked>
+                    <span class="track"></span>
+                    <span class="lbl"><b>Visible on the website</b><small>Turn off to keep it as a draft only you can see</small></span>
+                  </label>
+                </fieldset>
+
+                <fieldset class="ed-group" data-highlights-group>
+                  <legend>Highlights</legend>
+                  <p class="ed-help">Only shown on the banner event. One per line.</p>
+                  <div class="field">
+                    <label for="f-highlights" class="visually-hidden">Highlights, one per line</label>
+                    <textarea id="f-highlights" name="highlights" placeholder="Capping and certificates for every graduate&#10;Elders' blessing&#10;Coffee ceremony and shared dinner"></textarea>
+                  </div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Poster</legend>
+                  <div class="poster-row">
+                    <div class="poster-thumb" data-poster-thumb>No poster</div>
+                    <div style="flex:1; min-width:220px">
+                      <div class="field">
+                        <label for="f-flyer">Image address</label>
+                        <input id="f-flyer" name="flyer" type="text" placeholder="images/elders-voices-flyer.jpg">
+                      </div>
+                      <p style="margin:12px 0 0">
+                        <label class="btn btn-ghost btn-sm" for="f-upload" style="cursor:pointer">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
+                          Upload an image
+                        </label>
+                        <input id="f-upload" type="file" accept="image/*" class="visually-hidden" data-upload>
+                      </p>
+                      <div class="bar hidden" data-upload-bar><i></i></div>
+                      <p class="muted" style="margin:9px 0 0" data-upload-note>Needs Firebase Storage. You can also type the file name of an image already in the <code class="inline">images</code> folder.</p>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Registration button</legend>
+                  <div class="field">
+                    <label for="f-rsvp">Link <small class="hint">— an email address or a web address</small></label>
+                    <input id="f-rsvp" name="rsvp" type="text" placeholder="mailto:info@aocav.com?subject=Graduation 2026">
+                  </div>
+                  <div class="field">
+                    <label for="f-rsvpLabel">Button wording</label>
+                    <input id="f-rsvpLabel" name="rsvpLabel" type="text" placeholder="Nominate a graduate">
+                  </div>
+                  <div class="field">
+                    <label for="f-funder">Funded or supported by <small class="hint">— optional</small></label>
+                    <input id="f-funder" name="funder" type="text" placeholder="Funded by the City of Melbourne">
+                  </div>
+                </fieldset>
+              </form>
+
+              <!-- live preview -->
+              <aside class="preview-wrap">
+                <h3>Live preview</h3>
+                <div class="preview-stage" data-preview></div>
+                <p class="muted" style="margin-top:12px">This is exactly how the event will look on the website.</p>
+              </aside>
+            </div>
+          </div>
+
+          <div class="ed-actions">
+            <button class="btn btn-primary" type="button" data-save>Save event</button>
+            <button class="btn btn-ghost" type="button" data-duplicate>Duplicate</button>
+            <span class="spacer"></span>
+            <button class="btn btn-danger btn-sm" type="button" data-delete>Delete</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-host" data-toasts aria-live="polite"></div>
+
+<script src="assets/events.js"></script>
+<script src="assets/firebase-config.js"></script>
+<script src="assets/cards.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

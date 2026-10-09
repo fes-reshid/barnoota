@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// ===========================================================================
+// AOCAV — Firestore security rules
+//
+// This file, not the admin page, is what protects your data. Anyone can open
+// admin.html; only people listed in the `admins` collection can change
+// anything.
+//
+// Publish with:  firebase deploy --only firestore:rules
+// ===========================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A committee member is someone with a document in `admins` whose
+    // document ID is their Firebase Authentication UID. Add them from the
+    // Firebase console — nobody can add themselves.
+    function isAdmin() {
+      return request.auth != null
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function validEvent(d) {
+      return d.keys().hasAll(['id', 'title', 'published'])
+          && d.id is string && d.id.size() > 0 && d.id.size() < 80
+          && d.title is string && d.title.size() > 0 && d.title.size() < 300
+          && d.published is bool
+          && (!('desc' in d) || d.desc.size() < 5000)
+          && (!('highlights' in d) || d.highlights.size() <= 20);
+    }
+
+    // Events the website shows. Published ones are public — that is the whole
+    // point. Drafts stay private to the committee.
+    match /events/{eventId} {
+      allow read:   if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && validEvent(request.resource.data);
+      allow update: if isAdmin() && validEvent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // The list of committee members. An admin may check their own entry;
+    // nobody may write here from the web. Manage it in the Firebase console.
+    match /admins/{uid} {
+      allow read:  if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
