@@ -400,6 +400,7 @@
 .done-group{background:#fff;border:2px solid var(--gold-soft,#e8d9b0);border-radius:18px;padding:12px 14px;margin:0 0 14px;scroll-margin-top:80px}.done-group h3{display:flex;gap:10px;align-items:center;margin:0 0 8px}.done-group h3 small{display:block;font-weight:400;font-size:13px;color:#7a6a4f}.done-num{flex:none;width:40px;height:40px;border-radius:50%;background:linear-gradient(160deg,#14533e,#2f6f55);color:#f6e4a8;display:grid;place-items:center;font-size:18px;border:3px solid #e8cf86}
 .done-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 6px;border-top:1px dashed #eadcb8;cursor:pointer;border-radius:10px}.done-row:hover{background:#fffaf0}.done-row.disabled{opacity:.55}.done-who{flex:1 1 160px;min-width:0}.done-who b{display:block}.done-who small{color:#7a6a4f}.done-tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px}
 #parent-modal{z-index:70}
+.lead-rank{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 14px Nunito,sans-serif;color:#7a5a12;background:#fff4d2;border:2px solid #e8cf86}.lead-rank.medal{background:none;border:0;font-size:22px}
 </style>
 <style id="mobile-clean">
 /* Phones: compact header, sticky section bar, cards instead of wide tables */
@@ -536,6 +537,7 @@
         </div>
         <div class="card">
           <h2>🌟 Leading learners</h2>
+          <p class="muted" id="leader-count" style="margin-top:-4px"></p>
           <div id="leader-list"></div>
         </div>
         <div class="card" id="new-students-card">
@@ -1447,11 +1449,12 @@ function renderOverview(){
   });
 
   const leaders = $('leader-list'); leaders.innerHTML = '';
-  const top = sums.filter(x => x.lessons > 0).sort((a, b) => b.lessons - a.lessons || b.stars - a.stars).slice(0, 6);
+  const top = sums.filter(x => x.lessons > 0).sort((a, b) => b.lessons - a.lessons || b.stars - a.stars);
+  $('leader-count').textContent = top.length ? top.length + ' student' + (top.length > 1 ? 's have' : ' has') + ' started — ranked by lessons, then stars.' : '';
   if(!top.length) leaders.innerHTML = '<p class="empty">No one has started yet.</p>';
   top.forEach((x, n) => {
     const el = document.createElement('div'); el.className = 'list-row';
-    el.innerHTML = '<div style="font:700 20px Marcellus;width:26px;text-align:center;color:var(--gold)">' + ['🥇','🥈','🥉'][n] + (n > 2 ? (n + 1) : '') + '</div><div class="avatar">' + avatarHtml(x.s, x.p) +
+    el.innerHTML = (n < 3 ? '<div class="lead-rank medal">' + ['🥇','🥈','🥉'][n] + '</div>' : '<div class="lead-rank">' + (n + 1) + '</div>') + '<div class="avatar">' + avatarHtml(x.s, x.p) +
       '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) + '</div><div class="bar" style="margin-top:5px"><span style="width:' + x.pct + '%"></span></div></div><span class="muted">' + x.lessons + '/62 · ⭐' + x.stars + '</span>';
     el.onclick = () => openManager(x.s, 'progress');
     leaders.appendChild(el);
