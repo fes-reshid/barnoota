@@ -21,7 +21,18 @@
      category  "graduation" | "community" | "culture" | "youth" | "women" | "support"
      featured  true on ONE event only — it becomes the big banner card
      flyer     path to a poster image (optional)
+     video     a YouTube link (optional) — any of these work:
+               https://www.youtube.com/watch?v=XXXXXXXXXXX
+               https://youtu.be/XXXXXXXXXXX
+               https://www.youtube.com/shorts/XXXXXXXXXXX
+               The card shows a picture with a play button; YouTube is only
+               contacted once somebody presses it.
+     photos    a list of image addresses (optional), e.g.
+               photos: ["images/grad-1.jpg", "images/grad-2.jpg"]
      rsvp      a mailto: or https: link (optional)
+
+   Afaan Oromoo (all optional — anything left out shows in English):
+     titleOm, descOm, whenOm, costOm, rsvpLabelOm
    ========================================================================== */
 
 window.AOCAV_EVENTS = [

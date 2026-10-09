@@ -112,6 +112,11 @@
       <img src="images/aocav-logo.png" alt="" aria-hidden="true" width="42" height="42">
       <span class="brand-txt"><b>AOCAV Admin</b><span>Events</span></span>
     </a>
+    <nav class="adm-nav" aria-label="Sections">
+      <button type="button" data-admtab="events" aria-pressed="true">Events</button>
+      <button type="button" data-admtab="content" aria-pressed="false">Website text</button>
+      <button type="button" data-admtab="links" aria-pressed="false">Links</button>
+    </nav>
     <span class="spacer"></span>
     <span class="pill live" data-conn><span class="dot"></span><span data-conn-text>Connected</span></span>
     <span class="adm-who">
@@ -128,7 +133,7 @@
         into Firebase once — after that, this page is in charge.
       </div>
 
-      <div class="adm-grid">
+      <div class="adm-grid" data-tab-panel="events">
 
         <!-- -------------------------------- list -------------------------------- -->
         <section class="panel">
@@ -280,6 +285,57 @@
                   </label>
                 </fieldset>
 
+                <fieldset class="ed-group">
+                  <legend>Video</legend>
+                  <p class="ed-help">Paste a YouTube address. A picture with a play button shows on the card, and YouTube is only contacted once someone presses play.</p>
+                  <div class="field">
+                    <label for="f-video">YouTube link</label>
+                    <input id="f-video" name="video" type="text" placeholder="https://www.youtube.com/watch?v=...">
+                  </div>
+                  <p class="muted" data-video-note></p>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Photos</legend>
+                  <p class="ed-help">Photos from the day. They appear as small pictures on the event card and open full size when tapped.</p>
+                  <div class="photo-strip" data-photo-strip></div>
+                  <p style="margin:12px 0 0">
+                    <label class="btn btn-ghost btn-sm" for="f-photos" style="cursor:pointer">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-4 4 3 3-2 4 3"/></svg>
+                      Add photos
+                    </label>
+                    <input id="f-photos" type="file" accept="image/*" multiple class="visually-hidden" data-photos-input>
+                  </p>
+                  <div class="bar hidden" data-photos-bar><i></i></div>
+                </fieldset>
+
+                <fieldset class="ed-group">
+                  <legend>Afaan Oromoo</legend>
+                  <p class="ed-help">Optional. Shown when a visitor picks AFO. Anything left blank shows in English.</p>
+                  <div class="field">
+                    <label for="f-titleOm">Event name in Afaan Oromoo</label>
+                    <input id="f-titleOm" name="titleOm" type="text" lang="om">
+                  </div>
+                  <div class="field">
+                    <label for="f-descOm">Description in Afaan Oromoo</label>
+                    <textarea id="f-descOm" name="descOm" lang="om"></textarea>
+                  </div>
+                  <div class="row-split">
+                    <div class="field">
+                      <label for="f-costOm">Cost in Afaan Oromoo</label>
+                      <input id="f-costOm" name="costOm" type="text" lang="om">
+                    </div>
+                    <div class="field">
+                      <label for="f-rsvpLabelOm">Button wording in Afaan Oromoo</label>
+                      <input id="f-rsvpLabelOm" name="rsvpLabelOm" type="text" lang="om">
+                    </div>
+                  </div>
+                  <div class="field hidden" data-whenom-wrap>
+                    <label for="f-whenOm">How often, in Afaan Oromoo</label>
+                    <input id="f-whenOm" name="whenOm" type="text" lang="om">
+                  </div>
+                </fieldset>
+
                 <fieldset class="ed-group" data-highlights-group>
                   <legend>Highlights</legend>
                   <p class="ed-help">Only shown on the banner event. One per line.</p>
@@ -346,6 +402,143 @@
         </section>
 
       </div>
+
+      <!-- ============================ WEBSITE TEXT ============================ -->
+      <div data-tab-panel="content" hidden>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Website text &amp; translations</h2>
+            <span class="spacer"></span>
+            <span class="pill ok" data-content-count></span>
+            <button class="btn btn-primary btn-sm" type="button" data-content-save>Save changes</button>
+          </div>
+
+          <div class="panel-body">
+            <p class="ed-help" style="margin-bottom:18px">
+              Every piece of writing on the website is listed here. Change the English, add the Afaan Oromoo, or
+              leave a box empty to keep what the page already says. Nothing is published until you press
+              <b>Save changes</b>.
+            </p>
+            <div class="content-toolbar">
+              <div class="field" style="min-width:200px">
+                <label for="c-page">Page</label>
+                <select id="c-page" data-content-page></select>
+              </div>
+              <div class="field" style="flex:1; min-width:220px">
+                <label for="c-find">Find a phrase</label>
+                <input id="c-find" type="search" data-content-find placeholder="Type a few words…">
+              </div>
+              <label class="switch" style="align-self:flex-end">
+                <input type="checkbox" data-content-untranslated>
+                <span class="track"></span>
+                <span class="lbl"><b>Needs translating</b><small>Only show what has no Afaan Oromoo yet</small></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="content-list" data-content-list></div>
+          <p class="adm-empty hidden" data-content-empty>Nothing matches.</p>
+
+          <div class="ed-actions">
+            <button class="btn btn-primary" type="button" data-content-save>Save changes</button>
+            <span class="muted" data-content-dirty></span>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================================ LINKS =============================== -->
+      <div class="adm-grid" data-tab-panel="links" hidden>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Useful links</h2>
+            <span class="spacer"></span>
+            <button class="btn btn-primary btn-sm" type="button" data-link-new>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              New
+            </button>
+          </div>
+          <div class="adm-search">
+            <input type="search" placeholder="Search links…" aria-label="Search links" data-link-search-admin>
+          </div>
+          <ul class="adm-list" data-link-list></ul>
+          <p class="adm-empty hidden" data-link-list-empty>No links match.</p>
+          <div class="ed-actions">
+            <button class="btn btn-ghost btn-sm" type="button" data-link-seed>Import bundled links</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-link-ed-title>New link</h2>
+          </div>
+          <div class="panel-body">
+            <form class="form" data-form="link" novalidate>
+              <fieldset class="ed-group">
+                <legend>The link</legend>
+                <div class="field">
+                  <label for="l-title">Name</label>
+                  <input id="l-title" name="title" type="text" required placeholder="Services Australia — Centrelink &amp; Medicare">
+                </div>
+                <div class="field">
+                  <label for="l-desc">What it is for</label>
+                  <textarea id="l-desc" name="desc" placeholder="Say plainly what someone would use this for."></textarea>
+                </div>
+                <div class="row-split">
+                  <div class="field">
+                    <label for="l-url">Web address</label>
+                    <input id="l-url" name="url" type="url" placeholder="https://www.servicesaustralia.gov.au/">
+                  </div>
+                  <div class="field">
+                    <label for="l-phone">Phone <small class="hint">— optional</small></label>
+                    <input id="l-phone" name="phone" type="text" placeholder="131 202">
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="ed-group">
+                <legend>Afaan Oromoo</legend>
+                <div class="field">
+                  <label for="l-titleOm">Name in Afaan Oromoo</label>
+                  <input id="l-titleOm" name="titleOm" type="text" lang="om">
+                </div>
+                <div class="field">
+                  <label for="l-descOm">Description in Afaan Oromoo</label>
+                  <textarea id="l-descOm" name="descOm" lang="om"></textarea>
+                </div>
+              </fieldset>
+
+              <fieldset class="ed-group">
+                <legend>Where it goes</legend>
+                <div class="row-split">
+                  <div class="field">
+                    <label for="l-cat">Section</label>
+                    <select id="l-cat" name="cat" data-link-cats></select>
+                  </div>
+                  <div class="field">
+                    <label for="l-order">Position <small class="hint">— lower shows first</small></label>
+                    <input id="l-order" name="order" type="number" min="0" step="1" value="10">
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="l-id">Web address id <small class="hint">— fills itself in</small></label>
+                  <input id="l-id" name="id" type="text" pattern="[a-z0-9\-]+">
+                </div>
+                <label class="switch">
+                  <input type="checkbox" name="published" checked>
+                  <span class="track"></span>
+                  <span class="lbl"><b>Visible on the website</b><small>Turn off to hide it without deleting</small></span>
+                </label>
+              </fieldset>
+            </form>
+          </div>
+          <div class="ed-actions">
+            <button class="btn btn-primary" type="button" data-link-save>Save link</button>
+            <span class="spacer"></span>
+            <button class="btn btn-danger btn-sm" type="button" data-link-delete>Delete</button>
+          </div>
+        </section>
+      </div>
+
     </div>
   </main>
 </div>
@@ -353,8 +546,11 @@
 <div class="toast-host" data-toasts aria-live="polite"></div>
 
 <script src="assets/events.js"></script>
+<script src="assets/links.js"></script>
+<script src="assets/content.js"></script>
 <script src="assets/firebase-config.js"></script>
 <script src="assets/cards.js"></script>
+<script src="assets/cms.js"></script>
 <script src="assets/store.js"></script>
 <script src="assets/admin.js"></script>
 </body>

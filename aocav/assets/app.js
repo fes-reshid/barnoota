@@ -10,10 +10,14 @@
 
   var C = window.AocavCards;
   var Store = window.AocavStore;
+  var Cms = window.AocavCms;
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   var EVENTS = [];
+  var LINKS = [];
+  var CONTENT = {};
+  var LANG = 'en';
 
   /* -------------------------------------------------------------- header */
   var header = $('.site-header');
@@ -32,7 +36,7 @@
     toggle.addEventListener('click', function () {
       var open = nav.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      document.body.style.overflow = open && window.innerWidth <= 980 ? 'hidden' : '';
+      document.body.style.overflow = open && window.innerWidth <= 1200 ? 'hidden' : '';
     });
     nav.addEventListener('click', function (e) {
       if (e.target.closest('a')) {
@@ -141,6 +145,69 @@
     observeReveals();
   }
 
+  /* -------------------------------------------------------------- links */
+  function linkCard(l) {
+    var title = (LANG === 'om' && l.titleOm) ? l.titleOm : (l.title || '');
+    var desc = (LANG === 'om' && l.descOm) ? l.descOm : (l.desc || '');
+    var url = C.safeUrl(l.url);
+    var bits = [];
+    if (l.phone) {
+      bits.push('<a class="btn btn-red btn-sm" href="tel:' + C.esc(String(l.phone).replace(/[^\d+]/g, '')) + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 12l5 2v4a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3Z"/></svg>' +
+        C.esc(l.phone) + '</a>');
+    }
+    if (url) {
+      bits.push('<a class="btn btn-ghost btn-sm" href="' + C.esc(url) + '" target="_blank" rel="noopener noreferrer">' +
+        'Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>');
+    }
+    var host = '';
+    if (url && /^https?:/i.test(url)) {
+      try { host = new URL(url).hostname.replace(/^www\./, ''); } catch (e) { host = ''; }
+    }
+    return '<article class="link-card reveal">' +
+      '<h3>' + C.esc(title) + '</h3>' +
+      (host ? '<span class="link-host">' + C.esc(host) + '</span>' : '') +
+      '<p>' + C.esc(desc) + '</p>' +
+      (bits.length ? '<div class="link-actions">' + bits.join('') + '</div>' : '') +
+      '</article>';
+  }
+
+  function renderLinks() {
+    var host = $('[data-links]');
+    if (!host) return;
+    var cats = window.AOCAV_LINK_CATEGORIES || [];
+    var q = ($('[data-link-search]') || {}).value || '';
+    q = q.trim().toLowerCase();
+
+    var html = cats.map(function (cat) {
+      var rows = LINKS
+        .filter(function (l) { return l.cat === cat.id && l.published !== false; })
+        .filter(function (l) {
+          if (!q) return true;
+          return [l.title, l.titleOm, l.desc, l.descOm, l.url, l.phone]
+            .join(' ').toLowerCase().indexOf(q) !== -1;
+        })
+        .sort(function (a, b) { return (Number(a.order) || 0) - (Number(b.order) || 0); });
+      if (!rows.length) return '';
+      var heading = (LANG === 'om' && cat.titleOm) ? cat.titleOm : cat.title;
+      return '<section class="link-group" id="links-' + C.esc(cat.id) + '">' +
+        '<h2 class="link-group-head">' + C.esc(heading) + '</h2>' +
+        '<div class="link-grid">' + rows.map(linkCard).join('') + '</div></section>';
+    }).join('');
+
+    host.innerHTML = html || '<p class="sec-sub center">Nothing matches that search.</p>';
+
+    var jump = $('[data-link-jump]');
+    if (jump && !jump.childElementCount) {
+      jump.innerHTML = cats.map(function (cat) {
+        return '<a class="chip" href="#links-' + C.esc(cat.id) + '">' +
+          C.esc((LANG === 'om' && cat.titleOm) ? cat.titleOm : cat.title) + '</a>';
+      }).join('');
+    }
+    observeReveals(host);
+  }
+
   /* ------------------------------------------------------------ filters */
   function wireFilters() {
     var bar = $('[data-filters]');
@@ -206,6 +273,20 @@
       if (ev) C.downloadICS(ev);
       return;
     }
+    var yt = e.target.closest('[data-yt]');
+    if (yt) {
+      // Only now does the browser talk to YouTube.
+      var id = yt.getAttribute('data-yt');
+      var frame = document.createElement('iframe');
+      frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+      frame.title = yt.getAttribute('aria-label') || 'Video';
+      frame.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      frame.setAttribute('allowfullscreen', '');
+      frame.setAttribute('loading', 'lazy');
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      yt.replaceWith(frame);
+      return;
+    }
     var zoom = e.target.closest('[data-zoom]');
     if (zoom) {
       e.preventDefault();
@@ -238,22 +319,53 @@
   });
 
   /* ---------------------------------------------------------------- init */
+  function applyLanguage(lang) {
+    LANG = lang;
+    C.setLang(lang);
+    Cms.apply(CONTENT, lang);
+    render();
+    renderLinks();
+  }
+
   function init() {
     $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
     wireFilters();
-    observeReveals();
     startCounters();
 
-    // Paint the bundled events immediately so the page is never empty, then
-    // swap in whatever Firebase has once it answers.
-    EVENTS = C.normalise(Store.bundled());
-    render();
+    LANG = Cms.getLang();
+    C.setLang(LANG);
 
-    if (Store.configured()) {
-      Store.loadEvents().then(function (res) {
+    var search = $('[data-link-search]');
+    if (search) search.addEventListener('input', renderLinks);
+
+    // Paint from the bundled copies first so the page is never empty or
+    // untranslated, then refresh from Firebase if it is connected.
+    CONTENT = Store.bundledContent();
+    EVENTS = C.normalise(Store.bundled());
+    LINKS = Store.bundledLinks();
+    Cms.apply(CONTENT, LANG);
+    render();
+    renderLinks();
+    Cms.mountSwitcher(applyLanguage);
+    observeReveals();
+
+    if (!Store.configured()) return;
+
+    Store.loadContent().then(function (res) {
+      if (res.source !== 'firebase') return;
+      CONTENT = res.content;
+      Cms.apply(CONTENT, LANG);
+    });
+    Store.loadEvents().then(function (res) {
+      if (res.source !== 'firebase') return;
+      EVENTS = C.normalise(res.events);
+      render();
+    });
+    if ($('[data-links]')) {
+      Store.loadLinks().then(function (res) {
         if (res.source !== 'firebase') return;
-        EVENTS = C.normalise(res.events);
-        render();
+        LINKS = res.links;
+        renderLinks();
       });
     }
   }

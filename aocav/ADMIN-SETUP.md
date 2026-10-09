@@ -134,7 +134,9 @@ works on any host.
 
 ## Day-to-day use
 
-Go to `/admin.html` on your site and sign in.
+Go to `/admin.html` on your site and sign in. There are three tabs.
+
+### Events
 
 - **New** — add an event. The name, a date and a venue are enough.
 - Click any event in the left-hand list to edit it. The preview on the right is
@@ -145,8 +147,33 @@ Go to `/admin.html` on your site and sign in.
 - **Ctrl+S** (or **Cmd+S**) saves.
 - Deleting asks first, and cannot be undone.
 
+- **YouTube link** — paste any YouTube address. The card shows a picture with a
+  play button and only loads YouTube when someone presses it.
+- **Photos** — add as many as you like. Tap the × on one to remove it.
+- **Afaan Oromoo** — optional translations for that event. Blank means English.
+
 Past events sort themselves to the bottom once their date passes. You never
 need to delete them.
+
+### Website text
+
+Every phrase on every page, found automatically. For each one you get the words
+the page shows now, a box to change the English, and a box for the Afaan
+Oromoo. Tick **Needs translating** to see only what still has no translation.
+Changes are not live until you press **Save changes**.
+
+Over 400 phrases are listed. Do not try to do them in one sitting — the English
+keeps showing wherever a translation is missing, so a half-finished translation
+never looks broken.
+
+### Links
+
+The government and community services on `links.html`. Each one has a name, a
+description, a web address and/or a phone number, a section, and optional Afaan
+Oromoo wording. Press **Import bundled links** once to load the starting set.
+
+Only `https://` addresses are accepted. Please check a link still works before
+you add it.
 
 ---
 
@@ -160,6 +187,8 @@ need to delete them.
 | "Email sign-in is switched off" | Authentication → Sign-in method → enable Email/Password. |
 | The upload button fails | Storage is not enabled, or `storage.rules` was never published. |
 | The website shows old events | Press **Export events.js** and replace `assets/events.js`, or check that the events are marked visible. |
+| The Website text tab is empty | It reads the real pages over the network. Make sure you opened the admin page from your website, not from a file on your computer. |
+| A translation did not appear | Press **Save changes**, then reload the public page and switch to AFO. |
 
 ---
 

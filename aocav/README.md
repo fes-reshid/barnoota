@@ -12,14 +12,18 @@ aocav/
   events.html         Full calendar + the Elders Voices spotlight
   get-involved.html   Membership, volunteering, partnerships, support
   contact.html        Addresses, enquiry form, urgent-help numbers
-  admin.html          Committee login — add and edit events
+  links.html          Government & Oromo services for families in Australia
+  admin.html          Committee login — events, website text, links
   assets/
     style.css         All styling (light + dark mode)
     admin.css         Styling for the admin page only
     events.js         The events, as a plain file (the fallback copy)
+    links.js          The useful links (the fallback copy)
+    content.js        Afaan Oromoo translations (the fallback copy)
     cards.js          How an event card is drawn — shared by both
-    store.js          Where events come from: Firebase, or events.js
-    app.js            Menu, filters, calendar export, lightbox
+    cms.js            Finds every phrase on the site; switches language
+    store.js          Where things come from: Firebase, or the files above
+    app.js            Menu, filters, calendar export, lightbox, links page
     admin.js          The admin console
     firebase-config.js  ← paste your Firebase settings here
   images/
@@ -48,6 +52,44 @@ and the event information Google reads. Past events move to the bottom
 automatically once their date passes — you never need to delete them.
 
 Only one event can be the banner card. Setting it on one clears the others.
+
+An event can also carry a **YouTube link** and **photos**. The video shows as a
+picture with a play button; YouTube is only contacted once a visitor actually
+presses play, so pages stay fast and visitors are not tracked for simply
+reading. Photos appear as small pictures that open full size when tapped.
+
+## The two languages
+
+Every visitor gets an **ENG / AFO** switch in the menu. Their choice is
+remembered as they move around the site.
+
+Afaan Oromoo wording lives in `assets/content.js` to begin with, and in
+Firebase once the admin page is connected. **Anything not yet translated shows
+in English**, so the site is never half-empty.
+
+The menu, footer, buttons and the main heading of every page are translated.
+The long paragraphs are not — there are over 400 separate phrases on the site,
+and they should be written by people who speak the language, not guessed. Open
+the admin page, go to **Website text**, tick **Needs translating**, and work
+through them a few at a time.
+
+## Editing the words on the website
+
+The admin page's **Website text** tab lists every phrase on every page, with
+the English the page currently shows, a box to replace it, and a box for the
+Afaan Oromoo. Nothing is published until you press **Save changes**.
+
+The list is not maintained by hand — the admin page reads the real pages and
+finds the text itself, so it is always complete and never out of date.
+
+## Useful links
+
+`links.html` holds government and community services for Oromo people living in
+Australia — interpreters, Centrelink, visas, English classes, health, housing,
+schools, legal help and Afaan Oromoo media.
+
+Edit them in the admin page's **Links** tab, or in `assets/links.js`. Please
+check a link still works before adding it: government pages move.
 
 ## Changing text, photos or contact details
 
@@ -78,6 +120,10 @@ change it to your address.
 - Event titles and descriptions are treated as plain text and escaped before
   being shown, so nothing typed into the admin page can inject code into the
   public site.
+- Translations are applied by writing text nodes only. Icons and bold tags on
+  the page are left alone, and no markup from the database is ever inserted.
+- Links are checked: only `https://` addresses are accepted, and every outside
+  link opens in a new tab with `rel="noopener noreferrer"`.
 - Donations are not handled here on purpose: AOCAV is a registered charity but
   is not endorsed as a deductible gift recipient, and the site says so plainly
   rather than implying donations are tax-deductible.

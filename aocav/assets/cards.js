@@ -87,6 +87,59 @@ window.AocavCards = (function () {
     return '';
   }
 
+  // ---------------------------------------------------------------- language
+  var lang = 'en';
+  function setLang(l) { lang = (l === 'om') ? 'om' : 'en'; }
+  // Afaan Oromoo wording when the committee has written it, English otherwise.
+  function L(ev, field) {
+    if (lang === 'om') {
+      var v = ev[field + 'Om'];
+      if (v && String(v).trim()) return v;
+    }
+    return ev[field] || '';
+  }
+
+  // ------------------------------------------------------------------ video
+  // Accepts any YouTube address a person is likely to paste.
+  function ytId(url) {
+    var u = String(url || '').trim();
+    if (!u) return '';
+    var m = u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (m) return m[1];
+    return /^[A-Za-z0-9_-]{11}$/.test(u) ? u : '';
+  }
+
+  var PLAY = '<svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.5a8.6 8.6 0 0 0-6-6C55.2 0 34 0 34 0S12.8 0 7.5 1.4a8.6 8.6 0 0 0-6 6A90 90 0 0 0 0 24a90 90 0 0 0 1.5 16.5 8.6 8.6 0 0 0 6 6C12.8 48 34 48 34 48s21.2 0 26.5-1.4a8.6 8.6 0 0 0 6-6A90 90 0 0 0 68 24a90 90 0 0 0-1.5-16.5Z" fill="#d61f2e"/><path d="M27 34 45 24 27 14Z" fill="#fff"/></svg>';
+
+  // A still image with a play button: YouTube is only contacted once the
+  // visitor actually asks to watch, so the page stays fast and private.
+  function videoBlock(ev) {
+    var id = ytId(ev.video);
+    if (!id) return '';
+    var label = esc(plain(L(ev, 'title')) || 'event video');
+    return '<div class="ev-video">' +
+      '<button type="button" class="yt-facade" data-yt="' + id + '" ' +
+      'aria-label="Play the video for ' + label + '">' +
+      '<img src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" alt="" loading="lazy" decoding="async">' +
+      '<span class="yt-play">' + PLAY + '</span></button></div>';
+  }
+
+  function photoList(ev) {
+    return (ev.photos || []).map(safeUrl).filter(Boolean);
+  }
+
+  function galleryBlock(ev) {
+    var pics = photoList(ev);
+    if (!pics.length) return '';
+    var label = esc(plain(L(ev, 'title')));
+    return '<div class="ev-gallery">' + pics.map(function (src, i) {
+      return '<button type="button" class="ev-thumb" data-zoom="' + esc(src) +
+        '" data-zoom-alt="' + label + ' — photo ' + (i + 1) + '">' +
+        '<img src="' + esc(src) + '" alt="' + label + ' — photo ' + (i + 1) + '" loading="lazy" decoding="async">' +
+        '</button>';
+    }).join('') + '</div>';
+  }
+
   function slugify(s) {
     return plain(s).toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -123,7 +176,7 @@ window.AocavCards = (function () {
   function metaList(ev, limited) {
     var rows = [];
     if (ev.recurring) {
-      rows.push([ICON.repeat, esc(ev.when || 'Ongoing program')]);
+      rows.push([ICON.repeat, esc(L(ev, 'when') || 'Ongoing program')]);
     } else if (ev.startDate) {
       rows.push([ICON.cal, fmtDate(ev.startDate)]);
       rows.push([ICON.clock, fmtTime(ev.startDate) + (ev.endDate ? ' – ' + fmtTime(ev.endDate) : '')]);
@@ -132,7 +185,7 @@ window.AocavCards = (function () {
       rows.push([ICON.pin, esc(ev.venue) +
         (ev.address && !limited ? '<br><span style="opacity:.75">' + esc(ev.address) + '</span>' : '')]);
     }
-    if (ev.cost && !limited) rows.push([ICON.ticket, esc(ev.cost)]);
+    if (L(ev, 'cost') && !limited) rows.push([ICON.ticket, esc(L(ev, 'cost'))]);
     return '<ul class="ev-meta">' + rows.map(function (r) {
       return '<li>' + r[0] + '<span>' + r[1] + '</span></li>';
     }).join('') + '</ul>';
@@ -158,14 +211,14 @@ window.AocavCards = (function () {
     if (opts && opts.preview) return '';
     var out = [];
     if (ev.rsvp && !ev.past) {
-      out.push('<a class="btn btn-primary btn-sm" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(ev.rsvpLabel || 'Register') + '</a>');
+      out.push('<a class="btn btn-primary btn-sm" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || 'Register') + '</a>');
     }
     if (!ev.past && !ev.recurring && ev.startDate) {
       out.push('<button class="btn btn-ghost btn-sm" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + 'Add to calendar</button>');
     }
     if (ev.flyer) {
       out.push('<button class="btn btn-ghost btn-sm" type="button" data-zoom="' + esc(safeUrl(ev.flyer)) +
-        '" data-zoom-alt="' + esc(plain(ev.title)) + ' event poster">View poster</button>');
+        '" data-zoom-alt="' + esc(plain(L(ev, 'title'))) + ' event poster">View poster</button>');
     }
     return out.length ? '<div class="ev-actions">' + out.join('') + '</div>' : '';
   }
@@ -178,9 +231,10 @@ window.AocavCards = (function () {
     if (!opts || !opts.preview) cls.push('reveal');
     return '<article class="' + cls.join(' ') + '" id="event-' + esc(ev.id) + '">' +
       '<div class="ev-top"><div class="ev-top-row">' + dateBadge(ev) + chip(ev) + '</div>' +
-      '<h3 class="ev-title">' + esc(ev.title || 'Untitled event') + '</h3></div>' +
+      '<h3 class="ev-title">' + esc(L(ev, 'title') || 'Untitled event') + '</h3></div>' +
       '<div class="ev-body">' + metaList(ev, false) +
-      '<p class="ev-desc">' + esc(ev.desc || '') + '</p>' + actions(ev, opts) + '</div></article>';
+      '<p class="ev-desc">' + esc(L(ev, 'desc') || '') + '</p>' +
+      videoBlock(ev) + galleryBlock(ev) + actions(ev, opts) + '</div></article>';
   }
 
   function capArt() {
@@ -205,15 +259,15 @@ window.AocavCards = (function () {
     }).join('');
     return '<div class="feature' + (preview ? '' : ' reveal') + '" id="event-' + esc(ev.id) + '">' +
       '<div class="feature-body">' + chip(ev) +
-      '<h3>' + esc(ev.title || 'Untitled event') + '</h3>' +
-      '<p>' + esc(ev.desc || '') + '</p>' + metaList(ev, false) +
+      '<h3>' + esc(L(ev, 'title') || 'Untitled event') + '</h3>' +
+      '<p>' + esc(L(ev, 'desc') || '') + '</p>' + metaList(ev, false) +
       (list ? '<ul class="tick" style="margin-top:22px">' + list + '</ul>' : '') +
       (preview ? '' :
         '<div class="ev-actions" style="margin-top:28px">' +
-        (ev.rsvp ? '<a class="btn btn-light" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(ev.rsvpLabel || 'Register') + ICON.arrow + '</a>' : '') +
+        (ev.rsvp ? '<a class="btn btn-light" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || 'Register') + ICON.arrow + '</a>' : '') +
         (ev.startDate ? '<button class="btn btn-light" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + 'Add to calendar</button>' : '') +
         '</div>') +
-      '</div><div class="feature-side">' + capArt() + '</div></div>';
+      '</div><div class="feature-side">' + (videoBlock(ev) || capArt()) + '</div></div>';
   }
 
   /* ------------------------------------------------- calendar (.ics) */
@@ -233,8 +287,8 @@ window.AocavCards = (function () {
       'BEGIN:VEVENT', 'UID:' + ev.id + '@aocav.com', 'DTSTAMP:' + utcStamp(new Date()),
       'DTSTART;TZID=Australia/Melbourne:' + wallStamp(ev.start),
       'DTEND;TZID=Australia/Melbourne:' + wallStamp(ev.end || ev.start),
-      'SUMMARY:' + icsText(plain(ev.title)),
-      'DESCRIPTION:' + icsText(plain(ev.desc) + ' — Australian Oromo Community Association in Victoria.'),
+      'SUMMARY:' + icsText(plain(L(ev, 'title'))),
+      'DESCRIPTION:' + icsText(plain(L(ev, 'desc')) + ' — Australian Oromo Community Association in Victoria.'),
       'LOCATION:' + icsText([ev.venue, ev.address].filter(Boolean).join(', ')),
       'END:VEVENT', 'END:VCALENDAR'
     ].join('\r\n');
@@ -258,12 +312,12 @@ window.AocavCards = (function () {
       var s = melbourneInstant(e.start), en = e.end ? melbourneInstant(e.end) : null;
       return {
         '@context': 'https://schema.org', '@type': 'Event',
-        name: plain(e.title),
+        name: plain(L(e, 'title')),
         startDate: s ? s.toISOString() : undefined,
         endDate: en ? en.toISOString() : undefined,
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         eventStatus: 'https://schema.org/EventScheduled',
-        description: plain(e.desc),
+        description: plain(L(e, 'desc')),
         image: e.flyer ? [new URL(e.flyer, location.href).href] : undefined,
         location: {
           '@type': 'Place', name: plain(e.venue || ''),
@@ -282,9 +336,10 @@ window.AocavCards = (function () {
   }
 
   /* ------------------------------------ serialise back to events.js */
-  var FIELDS = ['id', 'title', 'start', 'end', 'when', 'status', 'theme', 'category',
-    'featured', 'venue', 'address', 'cost', 'desc', 'highlights', 'flyer',
-    'funder', 'rsvp', 'rsvpLabel', 'published'];
+  var FIELDS = ['id', 'title', 'titleOm', 'start', 'end', 'when', 'whenOm', 'status',
+    'theme', 'category', 'featured', 'venue', 'address', 'cost', 'costOm',
+    'desc', 'descOm', 'highlights', 'flyer', 'photos', 'video',
+    'funder', 'rsvp', 'rsvpLabel', 'rsvpLabelOm', 'published'];
 
   function toSeedFile(events) {
     var body = events.map(function (ev) {
@@ -313,6 +368,7 @@ window.AocavCards = (function () {
   return {
     TZ: TZ, ICON: ICON, FIELDS: FIELDS,
     esc: esc, plain: plain, slugify: slugify, safeUrl: safeUrl,
+    setLang: setLang, L: L, ytId: ytId, videoBlock: videoBlock, galleryBlock: galleryBlock,
     parseLocal: parseLocal, melbourneInstant: melbourneInstant,
     fmtDate: fmtDate, fmtTime: fmtTime,
     normalise: normalise, sortUpcoming: sortUpcoming, sortAll: sortAll,

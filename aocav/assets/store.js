@@ -12,6 +12,8 @@ window.AocavStore = (function () {
   // Pinned on purpose: an unpinned CDN URL can change under the site.
   var SDK = 'https://www.gstatic.com/firebasejs/12.19.0/';
   var COLLECTION = 'events';
+  var CONTENT = 'content';
+  var LINKS = 'links';
   var cfg = window.AOCAV_FIREBASE || {};
   var appPromise = null;
   var mods = {};
@@ -80,6 +82,99 @@ window.AocavStore = (function () {
       if (window.console) console.warn('AOCAV: using the bundled events —', err && err.message);
       return { events: bundled(), source: 'bundled', error: err };
     });
+  }
+
+  /* --------------------------------------------------- content & links */
+  function bundledContent() {
+    var out = {};
+    var src = window.AOCAV_CONTENT || {};
+    for (var k in src) if (Object.prototype.hasOwnProperty.call(src, k)) out[k] = src[k];
+    return out;
+  }
+
+  // Always resolves. Firebase entries are merged over the bundled ones, so a
+  // translation that has not been edited yet still shows.
+  function loadContent() {
+    var base = bundledContent();
+    if (!configured()) return Promise.resolve({ content: base, source: 'bundled' });
+    return db().then(function (h) {
+      return h.fs.getDocs(h.fs.collection(h.db, CONTENT));
+    }).then(function (snap) {
+      snap.forEach(function (d) {
+        var v = d.data() || {};
+        base[d.id] = { en: v.en || '', om: v.om || '' };
+      });
+      return { content: base, source: 'firebase' };
+    }).catch(function (err) {
+      if (window.console) console.warn('AOCAV: using the bundled wording —', err && err.message);
+      return { content: base, source: 'bundled', error: err };
+    });
+  }
+
+  function saveContent(key, rec) {
+    return db().then(function (h) {
+      var doc = h.fs.doc(h.db, CONTENT, key);
+      var clean = { en: (rec.en || '').trim(), om: (rec.om || '').trim() };
+      if (!clean.en && !clean.om) return h.fs.deleteDoc(doc);
+      clean.updatedAt = h.fs.serverTimestamp();
+      return h.fs.setDoc(doc, clean);
+    });
+  }
+
+  function bundledLinks() { return (window.AOCAV_LINKS || []).slice(); }
+
+  function loadLinks(opts) {
+    var includeDrafts = !!(opts && opts.includeDrafts);
+    if (!configured()) return Promise.resolve({ links: bundledLinks(), source: 'bundled' });
+    return db().then(function (h) {
+      var col = h.fs.collection(h.db, LINKS);
+      return h.fs.getDocs(includeDrafts ? col : h.fs.query(col, h.fs.where('published', '==', true)));
+    }).then(function (snap) {
+      var list = [];
+      snap.forEach(function (d) {
+        var v = d.data() || {};
+        v.id = v.id || d.id;
+        list.push(v);
+      });
+      if (!list.length && !includeDrafts) return { links: bundledLinks(), source: 'bundled', empty: true };
+      return { links: list, source: 'firebase' };
+    }).catch(function (err) {
+      if (window.console) console.warn('AOCAV: using the bundled links —', err && err.message);
+      return { links: bundledLinks(), source: 'bundled', error: err };
+    });
+  }
+
+  var LINK_FIELDS = ['id', 'cat', 'title', 'titleOm', 'desc', 'descOm', 'url', 'phone', 'order', 'published'];
+
+  function saveLink(link) {
+    var data = {};
+    LINK_FIELDS.forEach(function (f) { if (link[f] !== undefined) data[f] = link[f]; });
+    data.id = link.id;
+    data.published = link.published !== false;
+    data.order = Number(link.order) || 0;
+    return db().then(function (h) {
+      data.updatedAt = h.fs.serverTimestamp();
+      return h.fs.setDoc(h.fs.doc(h.db, LINKS, link.id), data).then(function () { return data; });
+    });
+  }
+
+  function deleteLink(id) {
+    return db().then(function (h) { return h.fs.deleteDoc(h.fs.doc(h.db, LINKS, id)); });
+  }
+
+  function seedLinks() {
+    var list = bundledLinks();
+    return db().then(function (h) {
+      return Promise.all(list.map(function (l) {
+        var data = {};
+        LINK_FIELDS.forEach(function (f) { if (l[f] !== undefined) data[f] = l[f]; });
+        data.id = l.id;
+        data.published = l.published !== false;
+        data.order = Number(l.order) || 0;
+        data.updatedAt = h.fs.serverTimestamp();
+        return h.fs.setDoc(h.fs.doc(h.db, LINKS, l.id), data, { merge: true });
+      }));
+    }).then(function () { return list.length; });
   }
 
   /* ------------------------------------------------------------ write */
@@ -153,10 +248,14 @@ window.AocavStore = (function () {
   }
 
   return {
-    SDK: SDK, COLLECTION: COLLECTION, config: cfg,
+    SDK: SDK, COLLECTION: COLLECTION, CONTENT: CONTENT, LINKS: LINKS,
+    LINK_FIELDS: LINK_FIELDS, config: cfg,
     configured: configured, mod: mod, app: app, db: db, bundled: bundled,
     loadEvents: loadEvents, saveEvent: saveEvent, deleteEvent: deleteEvent,
     makeSoleFeatured: makeSoleFeatured, seedFromBundle: seedFromBundle,
-    uploadPoster: uploadPoster
+    uploadPoster: uploadPoster,
+    bundledContent: bundledContent, loadContent: loadContent, saveContent: saveContent,
+    bundledLinks: bundledLinks, loadLinks: loadLinks, saveLink: saveLink,
+    deleteLink: deleteLink, seedLinks: seedLinks
   };
 })();

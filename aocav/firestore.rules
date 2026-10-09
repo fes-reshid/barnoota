@@ -30,12 +30,40 @@ service cloud.firestore {
           && (!('highlights' in d) || d.highlights.size() <= 20);
     }
 
+    function validLink(d) {
+      return d.keys().hasAll(['id', 'title', 'published'])
+          && d.id is string && d.id.size() > 0 && d.id.size() < 80
+          && d.title is string && d.title.size() > 0 && d.title.size() < 300
+          && d.published is bool
+          && (!('url' in d) || (d.url is string && d.url.matches('https?://.*') && d.url.size() < 500))
+          && (!('desc' in d) || d.desc.size() < 2000);
+    }
+
     // Events the website shows. Published ones are public — that is the whole
     // point. Drafts stay private to the committee.
     match /events/{eventId} {
       allow read:   if resource.data.published == true || isAdmin();
       allow create: if isAdmin() && validEvent(request.resource.data);
       allow update: if isAdmin() && validEvent(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Website wording and Afaan Oromoo translations. Everyone reads them —
+    // they are the words on the public pages.
+    match /content/{key} {
+      allow read: if true;
+      allow write: if isAdmin()
+                   && (!('en' in request.resource.data) || request.resource.data.en is string)
+                   && (!('om' in request.resource.data) || request.resource.data.om is string)
+                   && (!('en' in request.resource.data) || request.resource.data.en.size() < 4000)
+                   && (!('om' in request.resource.data) || request.resource.data.om.size() < 4000);
+      allow delete: if isAdmin();
+    }
+
+    // Useful links. Same shape as events: public reads the visible ones.
+    match /links/{linkId} {
+      allow read:   if resource.data.published == true || isAdmin();
+      allow create, update: if isAdmin() && validLink(request.resource.data);
       allow delete: if isAdmin();
     }
 
