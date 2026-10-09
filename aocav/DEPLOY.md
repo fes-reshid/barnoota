@@ -1,46 +1,57 @@
 # Putting the website live on Firebase
 
-The target is **https://aucav.web.app**.
+Your Firebase project is **`aocav-e5490`** (display name *aocav*). Deploying
+puts the site at:
 
-It currently says *"Site Not Found"* because the site exists in Firebase but
-nothing has been uploaded to it yet. The page says so itself: *"You haven't
-deployed an app yet."* One upload replaces that with the website.
+> **https://aocav-e5490.web.app**
 
-**GitHub is not involved.** You are uploading a folder of files.
+A note on the name: **`aucav.web.app` is not yours.** That is a different,
+empty Firebase site, which is why it always showed *"Site Not Found"* no matter
+what. Your project is spelled correctly — a-o-c-a-v. See *A shorter address*
+below if you want `aocav.web.app` instead of the long default.
 
-## The quickest way — all in your browser, 4 lines
+**GitHub is not involved in hosting.** You are uploading a folder of files.
 
-Nothing to install, no zip to upload, no Netlify. Your code is already on
-GitHub in a public repository, so Cloud Shell can fetch it directly.
+---
+
+## The quickest way — all in your browser
+
+Nothing to install. Your code is in a public GitHub repository, so Cloud Shell
+can fetch it directly.
 
 1. Open **https://shell.cloud.google.com** and sign in with the **same Google
-   account** that owns the Firebase project. Click **Continue** if it offers to
-   start the machine.
+   account** that owns the Firebase project.
 
-2. Paste these four lines in, one at a time:
+2. Paste these in, one line at a time:
 
    ```
+   rm -rf ~/barnoota
    git clone --branch claude/stoic-bell-wo79sa https://github.com/fes-reshid/barnoota.git
-   cd barnoota/aocav
+   cd ~/barnoota/aocav
    firebase login --no-localhost
    firebase deploy --only hosting
    ```
 
-   On the third line it prints a long link. Open it, sign in, copy the code it
-   gives back, paste it into the shell and press Enter.
+   The first line clears any earlier half-finished copy, so you do not end up
+   with a clone inside a clone — that would upload the wrong files.
+
+   On the `firebase login` line it prints a long link. Open it, sign in, copy
+   the code it gives back, paste it into the shell, press Enter.
 
    If it says `firebase: command not found`, run `npm install -g firebase-tools`
-   first — that works in Cloud Shell without any admin rights.
+   first — that works in Cloud Shell without admin rights.
 
-3. The last line finishes with:
+3. The deploy prints:
 
    ```
-   Hosting URL: https://aucav.web.app
+   ✔ hosting: found 34 files in .
+   ✔ Deploy complete!
+   Hosting URL: https://aocav-e5490.web.app
    ```
 
-   Open it. The website is live.
+   Open that address. The website is live.
 
-**To update it later**, come back to Cloud Shell and run:
+**To update it later:**
 
 ```
 cd ~/barnoota && git pull && cd aocav && firebase deploy --only hosting
@@ -48,111 +59,17 @@ cd ~/barnoota && git pull && cd aocav && firebase deploy --only hosting
 
 ---
 
-Or pick whichever other route suits your computer:
+## From your own computer instead
 
-- **Route 1 — your own computer.** Needs Node.js installed.
-- **Route 2 — Cloud Shell with the zip**, if you would rather upload the folder
-  than pull it from GitHub.
-
-Every route ends in the same place.
-
----
-
-## Route 1 — from your own computer
-
-### 1. Check for Node.js
-
-Open Terminal (Mac) or Command Prompt (Windows):
+Only if you can install software.
 
 ```
-node --version
-```
-
-A version number like `v20.11.0` means you are set. "Command not found" means
-install it from **https://nodejs.org** (the LTS button), then close and reopen
-the terminal. If you are not allowed to install it, skip to Route 2.
-
-### 2. Install the Firebase tool
-
-```
-npm install -g firebase-tools
-```
-
-Mac may need `sudo npm install -g firebase-tools` and your password.
-
-### 3. Sign in
-
-```
+node --version                      # need a version number; if not, nodejs.org
+npm install -g firebase-tools       # Mac may need sudo
 firebase login
-```
-
-A browser opens. Use the **same Google account** that owns the Firebase
-project, and allow access.
-
-### 4. Go to the folder and upload
-
-Unzip the website first, then point the terminal at that folder:
-
-```
-cd ~/Desktop/aocav
+cd ~/Desktop/aocav                  # wherever you unzipped it
 firebase deploy --only hosting
 ```
-
-Windows looks more like `cd C:\Users\YourName\Desktop\aocav`.
-
-A minute later it prints:
-
-```
-Hosting URL: https://aucav.web.app
-```
-
-Open it. You are live.
-
----
-
-## Route 2 — Google Cloud Shell, nothing to install
-
-A free Linux terminal that runs in your browser, on your Google account. The
-Firebase tool is already there.
-
-1. Go to **https://shell.cloud.google.com** and sign in with the **same Google
-   account** that owns the Firebase project. Click **Continue** if it asks to
-   start the machine.
-
-2. Upload the website zip: the **⋮** (three dots) menu at the top right of the
-   shell → **Upload** → **File** → choose `aocav-website.zip`. It lands in your
-   home folder.
-
-3. In the shell, type:
-
-   ```
-   unzip aocav-website.zip
-   cd aocav
-   ```
-
-4. Sign in to Firebase:
-
-   ```
-   firebase login --no-localhost
-   ```
-
-   It prints a long link. Open it, sign in, copy the code it gives you, paste
-   it back into the shell and press Enter.
-
-   If it says `firebase: command not found`, run
-   `npm install -g firebase-tools` first — it works here without any admin
-   rights.
-
-5. Upload:
-
-   ```
-   firebase deploy --only hosting
-   ```
-
-   It prints `Hosting URL: https://aucav.web.app`. Done.
-
-Cloud Shell wipes itself after a while of not being used. That does not affect
-the website — once deployed, it stays up.
 
 ---
 
@@ -160,11 +77,32 @@ the website — once deployed, it stays up.
 
 | Message | What to do |
 |---|---|
-| `Failed to get Firebase project aucav` / `project not found` | The project has a different name from the site. Run `firebase projects:list`, find the **Project ID**, run `firebase use THAT-ID`, deploy again. |
-| `Specified site does not exist` | Run `firebase hosting:sites:list`, then open `firebase.json` and change `"site": "aucav"` to the name it shows. |
-| `command not found: firebase` | The install did not finish. Close the terminal, reopen, try again. |
-| `Error: Not in a Firebase project directory` | Wrong folder. `ls` should show `firebase.json`. If not, `cd` into the folder that does. |
+| `Failed to get Firebase project` / `project not found` | Run `firebase use --add`, pick **aocav** from the menu, deploy again. |
+| `Specified site does not exist` | Run `firebase hosting:sites:list` and use a name it shows, or remove the `"site"` line from `firebase.json` to use the project default. |
+| `command not found: firebase` | Run `npm install -g firebase-tools`, then try again. |
+| `Error: Not in a Firebase project directory` | Wrong folder. `ls` should show `firebase.json`. If not, `cd ~/barnoota/aocav`. |
 | `HTTP Error: 403` | Signed in with the wrong Google account. `firebase logout`, then `firebase login` again. |
+| It says **0 files** | Wrong folder. `pwd` should end in `/barnoota/aocav`. |
+
+---
+
+## A shorter address, if you want one
+
+The default is `aocav-e5490.web.app`. It works, but it is not pretty.
+
+For a clean **`aocav.web.app`**:
+
+1. Firebase console → **Hosting** → **Add another site**
+2. Name it `aocav`
+3. In `firebase.json`, add the site back at the top of the hosting block:
+
+   ```json
+   "hosting": {
+     "site": "aocav",
+     "public": ".",
+   ```
+
+4. Deploy again.
 
 ---
 
@@ -183,9 +121,7 @@ see `ADMIN-SETUP.md`. Until then, events and links are edited in
 
 ## Later: pointing aocav.com at it
 
-Do this once the site is up and you have access to your domain's DNS.
-
-1. Firebase console → **Hosting** → the **aucav** site → **Add custom domain**
+1. Firebase console → **Hosting** → your site → **Add custom domain**
 2. Enter `aocav.com`. Accept the `www` redirect if offered.
 3. Firebase shows the DNS records to create — usually one **TXT** to prove
    ownership, then two **A** records.
@@ -195,15 +131,9 @@ Do this once the site is up and you have access to your domain's DNS.
 
 4. Add them at your registrar, then press **Verify** in Firebase.
 
-Ownership usually verifies within the hour. The security certificate can take
-up to 24 hours after that, and browsers may warn the connection is not private
-until it is issued — normal, and it clears by itself.
+Ownership usually verifies within the hour. The certificate can take up to 24
+hours after that, and browsers may warn the connection is not private until it
+is issued — normal, and it clears by itself.
 
-`aucav.web.app` keeps working throughout, so you can keep showing people.
-
----
-
-## Updating the site later
-
-Change the files, run `firebase deploy --only hosting` again. Nothing to
-rebuild.
+The `.web.app` address keeps working throughout, so you can keep showing
+people.

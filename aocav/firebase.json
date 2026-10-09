@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "aucav",
     "public": ".",
     "ignore": [
       "firebase.json",
