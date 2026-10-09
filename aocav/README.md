@@ -102,8 +102,12 @@ check a link still works before adding it: government pages move.
 
 ## Publishing
 
-Upload the contents of this folder to your web host. There is nothing to build
-or install.
+**See `DEPLOY.md`** — it walks through putting the site online, with or without
+a terminal. GitHub is not needed.
+
+The short version: drag this folder onto https://app.netlify.com/drop for an
+instant link, or run `firebase deploy --only hosting` from inside it. There is
+nothing to build or install first.
 
 The pages currently tell search engines their home is `https://www.aocav.com/`.
 If you publish somewhere else, search the `.html` files for `www.aocav.com` and
