@@ -49,12 +49,12 @@ window.AOCAV_EVENTS = [
     venue: 'Oromo Resource Centre',
     address: '664–678 Downing St, Mount Cottrell VIC 3024',
     cost: 'Free — families and friends warmly welcome',
-    desc: 'Our proudest day of the year. The whole community gathers to cap and congratulate every Oromo-Australian who finished Year 12, TAFE, an apprenticeship, a university degree or an Afaan Oromoo school certificate. Expect speeches from our graduates, a traditional coffee ceremony, singing, dancing and a shared meal that runs until the last family leaves.',
+    desc: 'Our proudest day of the year. The whole community gathers to cap and congratulate every Oromo-Australian who finished Year 12, TAFE, an apprenticeship, a university degree or an Afaan Oromoo school certificate. Expect speeches from our graduates, a traditional coffee ceremony, poetry and a shared meal that runs until the last family leaves.',
     highlights: [
       'Capping and certificates for every graduate',
       'Elders’ blessing and the lighting of the Odaa candle',
       'Buna (coffee) ceremony and shared community dinner',
-      'Cultural performance by our youth dance group',
+      'Cultural performance by our young people',
       'Family photographs in the garden'
     ],
     rsvp: 'mailto:info@aocav.com?subject=Graduation%20Ceremony%202026&body=Hello%20AOCAV%2C%0A%0AI%20would%20like%20to%20register%20for%20the%20Annual%20Graduation%20%26%20Achievement%20Ceremony.%0A%0AGraduate%20name%3A%0AQualification%20completed%3A%0AInstitution%3A%0ANumber%20of%20guests%3A%0AContact%20phone%3A%0A%0AThank%20you.',
@@ -90,7 +90,7 @@ window.AOCAV_EVENTS = [
     venue: 'Venue to be announced — Melbourne’s west',
     address: 'Details confirmed closer to the date',
     cost: 'Tickets — family pricing available',
-    desc: 'An evening of Oromo music, shaggoyyee and ragadaa dancing, traditional dress, poetry and a full community dinner. Our biggest social night of the year and a wonderful first introduction for friends and neighbours who are new to Oromo culture.',
+    desc: 'An evening of Oromo music, traditional dress, poetry and storytelling, with a full community dinner. Our biggest social night of the year and a wonderful first introduction for friends and neighbours who are new to Oromo culture.',
     rsvp: 'mailto:info@aocav.com?subject=Oromo%20Cultural%20Night%20—%2021%20November',
     rsvpLabel: 'Join the guest list'
   },

@@ -128,7 +128,12 @@ p{margin:0 0 1.1em;}
 
 .brand{display:flex; align-items:center; gap:13px; text-decoration:none; flex:none;}
 .brand img{width:48px; height:48px; border-radius:50%; transition:transform .5s var(--ease), width .35s var(--ease), height .35s var(--ease); filter:drop-shadow(0 4px 10px rgba(0,0,0,.18));}
+.brand img{animation:brandIn .85s var(--ease) backwards;}
 .brand:hover img{transform:rotate(-8deg) scale(1.06);}
+@keyframes brandIn{
+  0%{ opacity:0; transform:scale(.55) rotate(-35deg); }
+  100%{ opacity:1; transform:scale(1) rotate(0); }
+}
 .is-stuck .brand img{width:42px; height:42px;}
 .brand-txt{display:flex; flex-direction:column; line-height:1.08;}
 .brand-txt b{font-family:var(--display); font-size:1.14rem; font-weight:700; letter-spacing:-.02em; color:var(--ink);}
@@ -273,12 +278,56 @@ p{margin:0 0 1.1em;}
 
 /* hero medallion */
 .medallion{position:relative; display:grid; place-items:center; aspect-ratio:1; max-width:430px; margin-inline:auto; width:100%;}
-.medallion img{
-  width:66%; border-radius:50%; position:relative; z-index:3;
+/* the emblem: arrives, breathes, and catches the light */
+.medallion .emblem{
+  position:relative; z-index:3; display:block;
+  width:66%; aspect-ratio:1; border-radius:50%; overflow:hidden;
   filter:drop-shadow(0 28px 54px rgba(0,0,0,.5));
-  animation:floaty 7s ease-in-out infinite alternate;
+  animation:emblemIn 1.15s var(--ease) backwards,
+            floaty 7s ease-in-out 1.15s infinite alternate;
+  transition:transform .6s var(--ease);
+}
+.medallion .emblem img{ width:100%; height:100%; display:block; border-radius:50%; }
+@keyframes emblemIn{
+  0%{ opacity:0; transform:scale(.64) rotate(-24deg); }
+  60%{ opacity:1; }
+  100%{ opacity:1; transform:scale(1) rotate(0); }
 }
 @keyframes floaty{0%{transform:translateY(-8px);}100%{transform:translateY(10px);}}
+
+/* a slow glint travelling across the badge */
+.medallion .shine{ position:absolute; inset:0; border-radius:50%; overflow:hidden; pointer-events:none; }
+.medallion .shine::before{
+  content:""; position:absolute; top:-60%; left:-130%;
+  width:48%; height:220%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.22) 35%, rgba(255,255,255,.85) 50%, rgba(255,255,255,.22) 65%, transparent);
+  transform:rotate(22deg);
+  mix-blend-mode:screen;
+  animation:sweep 7s ease-in-out 1.8s infinite;
+}
+@keyframes sweep{ 0%,58%{ left:-130%; } 88%,100%{ left:175%; } }
+
+/* three small lights orbiting the badge */
+.medallion .orbit{ position:absolute; inset:3%; z-index:2; pointer-events:none; animation:spin 26s linear infinite; }
+.medallion .orbit i{ position:absolute; border-radius:50%; }
+.medallion .orbit i:nth-child(1){
+  top:-5px; left:50%; translate:-50% 0; width:10px; height:10px;
+  background:var(--gold); box-shadow:0 0 14px rgba(201,162,39,.95);
+}
+.medallion .orbit i:nth-child(2){
+  bottom:9%; right:3%; width:7px; height:7px;
+  background:var(--leaf-bright); box-shadow:0 0 12px rgba(34,197,94,.95);
+}
+.medallion .orbit i:nth-child(3){
+  bottom:14%; left:1%; width:5px; height:5px;
+  background:#fff; opacity:.85; box-shadow:0 0 10px rgba(255,255,255,.85);
+}
+
+/* lean in when someone points at it */
+.medallion:hover .emblem{ transform:scale(1.05); }
+.medallion:hover .ring{ animation-duration:14s; }
+.medallion:hover .ring.r2{ animation-duration:10s; }
+.medallion:hover .halo{ animation-duration:2.6s; }
 .ring{
   position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,.17);
   inset:0; animation:spin 46s linear infinite;
