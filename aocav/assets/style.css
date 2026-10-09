@@ -799,3 +799,12 @@ section{position:relative;}
 }
 .warnbox-note .sec-sub{ color:var(--ink-soft); }
 .warnbox-note b{ color:var(--leaf); }
+
+/* The call-to-action in the menu is a button, not a nav link: `.nav a` is more
+   specific than `.btn-primary`, so without this its label turns dark green on
+   green once the header sticks, and in the mobile drawer. */
+.nav a.btn-primary,
+.site-header:not(.is-stuck).on-dark .nav a.btn-primary{ color:#fff; }
+@media (max-width:1200px){
+  .nav a.btn-primary{ color:#fff !important; }
+}
