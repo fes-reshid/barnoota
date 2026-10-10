@@ -116,6 +116,9 @@
       <button type="button" data-admtab="events" aria-pressed="true">Events</button>
       <button type="button" data-admtab="content" aria-pressed="false">Website text</button>
       <button type="button" data-admtab="links" aria-pressed="false">Links</button>
+      <button type="button" data-admtab="enquiries" aria-pressed="false">
+        Enquiries <span class="tab-count hidden" data-enq-count aria-label="unread enquiries"></span>
+      </button>
     </nav>
     <span class="spacer"></span>
     <span class="pill live" data-conn><span class="dot"></span><span data-conn-text>Connected</span></span>
@@ -127,13 +130,13 @@
 
   <main>
     <div class="adm-wrap">
-      <div class="warnbox hidden" data-empty-warning style="margin-bottom:22px">
-        <b>Nothing in the database yet.</b> The website is still showing the events bundled in
-        <code class="inline">assets/events.js</code>. Press <b>Import bundled events</b> below to copy them
-        into Firebase once — after that, this page is in charge.
-      </div>
 
       <div class="adm-grid" data-tab-panel="events">
+        <div class="warnbox hidden" data-empty-warning style="grid-column:1/-1; margin-bottom:0">
+          <b>Nothing in the database yet.</b> The website is still showing the events bundled in
+          <code class="inline">assets/events.js</code>. Press <b>Import bundled events</b> below to copy them
+          into Firebase once — after that, this page is in charge.
+        </div>
 
         <!-- -------------------------------- list -------------------------------- -->
         <section class="panel">
@@ -539,6 +542,53 @@
             <button class="btn btn-primary" type="button" data-link-save>Save link</button>
             <span class="spacer"></span>
             <button class="btn btn-danger btn-sm" type="button" data-link-delete>Delete</button>
+          </div>
+        </section>
+      </div>
+
+
+      <!-- ============================= ENQUIRIES ============================== -->
+      <div class="adm-grid" data-tab-panel="enquiries" hidden>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Enquiries</h2>
+            <span class="spacer"></span>
+            <button class="btn btn-ghost btn-sm" type="button" data-enq-reload>Refresh</button>
+            <button class="btn btn-primary btn-sm" type="button" data-enq-csv>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+              Download spreadsheet
+            </button>
+          </div>
+          <div class="adm-tabs" role="group" aria-label="Filter enquiries">
+            <button type="button" data-enqtab="new" aria-pressed="true">To answer</button>
+            <button type="button" data-enqtab="all" aria-pressed="false">All</button>
+            <button type="button" data-enqtab="Membership enquiry" aria-pressed="false">Membership</button>
+            <button type="button" data-enqtab="Partnership enquiry" aria-pressed="false">Partnership</button>
+            <button type="button" data-enqtab="Website enquiry" aria-pressed="false">Website</button>
+            <button type="button" data-enqtab="handled" aria-pressed="false">Answered</button>
+          </div>
+          <div class="adm-search">
+            <input type="search" placeholder="Search name, email or message…" aria-label="Search enquiries" data-enq-search>
+          </div>
+          <ul class="adm-list" data-enq-list></ul>
+          <p class="adm-empty hidden" data-enq-empty>Nothing here yet.</p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-enq-title>No enquiry selected</h2>
+          </div>
+          <div class="panel-body">
+            <p class="adm-empty" data-enq-none>Pick an enquiry on the left to read it.</p>
+            <div class="hidden" data-enq-detail>
+              <dl class="enq-dl" data-enq-fields></dl>
+            </div>
+          </div>
+          <div class="ed-actions hidden" data-enq-actions>
+            <a class="btn btn-primary btn-sm" data-enq-reply href="#">Reply by email</a>
+            <button class="btn btn-ghost btn-sm" type="button" data-enq-handled>Mark as answered</button>
+            <span class="spacer"></span>
+            <button class="btn btn-danger btn-sm" type="button" data-enq-delete>Delete</button>
           </div>
         </section>
       </div>

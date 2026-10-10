@@ -14,6 +14,7 @@ window.AocavStore = (function () {
   var COLLECTION = 'events';
   var CONTENT = 'content';
   var LINKS = 'links';
+  var SUBMISSIONS = 'submissions';
   var cfg = window.AOCAV_FIREBASE || {};
   var appPromise = null;
   var mods = {};
@@ -230,6 +231,68 @@ window.AocavStore = (function () {
     }).then(function () { return list.length; });
   }
 
+  /* ------------------------------------------------------ enquiries */
+  // What the website's contact, membership and partnership forms write.
+  // Anyone may add one; only a signed-in admin can read them back. The
+  // security rules cap these same lengths, so trim here rather than let
+  // the write be rejected for an extra character.
+  function cut(v, n) { return String(v == null ? '' : v).trim().slice(0, n); }
+
+  function saveSubmission(rec) {
+    var fields = {};
+    var src = rec.fields || {};
+    var keys = Object.keys(src).slice(0, 24);
+    keys.forEach(function (k) { fields[cut(k, 60)] = cut(src[k], 4000); });
+    return db().then(function (h) {
+      return h.fs.addDoc(h.fs.collection(h.db, SUBMISSIONS), {
+        form:    cut(rec.form, 40) || 'enquiry',
+        subject: cut(rec.subject, 160),
+        name:    cut(rec.name, 160),
+        email:   cut(rec.email, 200),
+        phone:   cut(rec.phone, 60),
+        page:    cut(rec.page, 200),
+        fields:  fields,
+        handled: false,
+        createdAt: h.fs.serverTimestamp()
+      });
+    }).then(function (ref) { return ref.id; });
+  }
+
+  // Admin only. Newest first. Unlike the public reads this one rejects,
+  // because an admin needs to know the inbox could not be opened.
+  function loadSubmissions(max) {
+    return db().then(function (h) {
+      return h.fs.getDocs(h.fs.query(
+        h.fs.collection(h.db, SUBMISSIONS),
+        h.fs.orderBy('createdAt', 'desc'),
+        h.fs.limit(Number(max) || 500)
+      ));
+    }).then(function (snap) {
+      var list = [];
+      snap.forEach(function (d) {
+        var v = d.data() || {};
+        v._docId = d.id;
+        // a serverTimestamp is null for the instant between the local echo
+        // and the server's reply, so fall back to now rather than to 1970
+        v.at = v.createdAt && v.createdAt.toDate ? v.createdAt.toDate() : new Date();
+        list.push(v);
+      });
+      return list;
+    });
+  }
+
+  function setSubmissionHandled(docId, handled) {
+    return db().then(function (h) {
+      return h.fs.updateDoc(h.fs.doc(h.db, SUBMISSIONS, docId), { handled: !!handled });
+    });
+  }
+
+  function deleteSubmission(docId) {
+    return db().then(function (h) {
+      return h.fs.deleteDoc(h.fs.doc(h.db, SUBMISSIONS, docId));
+    });
+  }
+
   /* ----------------------------------------------------------- upload */
   // Returns the public download URL for a poster image.
   function uploadPoster(file, onProgress) {
@@ -249,6 +312,7 @@ window.AocavStore = (function () {
 
   return {
     SDK: SDK, COLLECTION: COLLECTION, CONTENT: CONTENT, LINKS: LINKS,
+    SUBMISSIONS: SUBMISSIONS,
     LINK_FIELDS: LINK_FIELDS, config: cfg,
     configured: configured, mod: mod, app: app, db: db, bundled: bundled,
     loadEvents: loadEvents, saveEvent: saveEvent, deleteEvent: deleteEvent,
@@ -256,6 +320,8 @@ window.AocavStore = (function () {
     uploadPoster: uploadPoster,
     bundledContent: bundledContent, loadContent: loadContent, saveContent: saveContent,
     bundledLinks: bundledLinks, loadLinks: loadLinks, saveLink: saveLink,
-    deleteLink: deleteLink, seedLinks: seedLinks
+    deleteLink: deleteLink, seedLinks: seedLinks,
+    saveSubmission: saveSubmission, loadSubmissions: loadSubmissions,
+    setSubmissionHandled: setSubmissionHandled, deleteSubmission: deleteSubmission
   };
 })();

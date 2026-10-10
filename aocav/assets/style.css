@@ -911,6 +911,11 @@ section{position:relative;}
   .ev-row-go{ display:none; }
 }
 
+/* The honeypot. A real visitor never sees it or tabs into it; a spam bot
+   fills in every input it can find, and a filled one means we drop the
+   message. Off-screen rather than display:none, which bots know to skip. */
+.hp{ position:absolute !important; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+
 /* ==========================================================================
    Engage — the menu of ways to take part
    ========================================================================== */

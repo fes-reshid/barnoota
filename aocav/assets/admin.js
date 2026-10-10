@@ -31,7 +31,9 @@
     edits: {},         // unsaved changes, by key
     cPage: 'all', cFind: '', cUntranslated: false,
     // links
-    links: [], link: null, linkIsNew: true, linkSearch: ''
+    links: [], link: null, linkIsNew: true, linkSearch: '',
+    // enquiries sent from the website's forms
+    enq: [], enqPick: null, enqTab: 'new', enqFind: '', enqLoaded: false
   };
 
   var PAGES = ['index', 'about', 'events', 'links', 'get-involved', 'contact'];
@@ -713,6 +715,208 @@
     });
   }
 
+  /* ------------------------------------------------------------ enquiries */
+  // Everything people send from the contact, membership and partnership
+  // forms. Read-only apart from the "answered" flag — the committee never
+  // edits somebody else's words.
+
+  function enqWhen(d) {
+    return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) + ' ' +
+           d.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+  }
+
+  // yyyy-mm-dd hh:mm — sorts correctly as text and Excel reads it as a date
+  function enqStamp(d) {
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+           ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  function enqSummary(r) {
+    var f = r.fields || {};
+    for (var k in f) {
+      if (!Object.prototype.hasOwnProperty.call(f, k)) continue;
+      if (/note|detail|message|know/i.test(k) && f[k]) return f[k];
+    }
+    return r.subject || r.email || '';
+  }
+
+  function visibleEnquiries() {
+    var tab = state.enqTab, q = state.enqFind.toLowerCase();
+    return state.enq.filter(function (r) {
+      if (tab === 'new' && r.handled) return false;
+      if (tab === 'handled' && !r.handled) return false;
+      if (tab !== 'new' && tab !== 'all' && tab !== 'handled' && r.form !== tab) return false;
+      if (!q) return true;
+      var hay = [r.name, r.email, r.phone, r.subject, r.form].join(' ');
+      var f = r.fields || {};
+      for (var k in f) if (Object.prototype.hasOwnProperty.call(f, k)) hay += ' ' + k + ' ' + f[k];
+      return hay.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function renderEnqCount() {
+    var n = state.enq.filter(function (r) { return !r.handled; }).length;
+    var el = $('[data-enq-count]');
+    if (!el) return;
+    el.textContent = n;
+    el.classList.toggle('hidden', n === 0);
+  }
+
+  function renderEnqList() {
+    var rows = visibleEnquiries();
+    $('[data-enq-list]').innerHTML = rows.map(function (r) {
+      return '<li><button type="button" class="adm-item" data-enq-pick="' + C.esc(r._docId) + '"' +
+        (state.enqPick && state.enqPick._docId === r._docId ? ' aria-current="true"' : '') + '>' +
+        '<span class="when" style="font-size:.62rem; padding:8px 2px">' + C.esc(enqWhen(r.at)) + '</span>' +
+        '<span class="t"><b>' + C.esc(r.name || r.email || 'Someone') + '</b><small>' +
+        C.esc(enqSummary(r).slice(0, 90)) + '</small></span>' +
+        '<span class="flags">' + (r.handled ? '' : '<span class="pill draft">New</span>') + '</span>' +
+        '</button></li>';
+    }).join('');
+    $('[data-enq-empty]').classList.toggle('hidden', rows.length > 0);
+    renderEnqCount();
+  }
+
+  function showEnquiry(r) {
+    state.enqPick = r;
+    $('[data-enq-none]').classList.toggle('hidden', !!r);
+    $('[data-enq-detail]').classList.toggle('hidden', !r);
+    $('[data-enq-actions]').classList.toggle('hidden', !r);
+    if (!r) { $('[data-enq-title]').textContent = 'No enquiry selected'; renderEnqList(); return; }
+
+    $('[data-enq-title]').textContent = r.form || 'Enquiry';
+    var rows = [['Received', enqWhen(r.at)], ['Form', r.form || '']];
+    if (r.subject) rows.push(['About', r.subject]);
+    var f = r.fields || {};
+    for (var k in f) if (Object.prototype.hasOwnProperty.call(f, k)) rows.push([k, f[k]]);
+    rows.push(['Sent from', r.page || '']);
+    $('[data-enq-fields]').innerHTML = rows.map(function (kv) {
+      return '<dt>' + C.esc(kv[0]) + '</dt><dd>' + C.esc(kv[1]) + '</dd>';
+    }).join('');
+
+    var reply = $('[data-enq-reply]');
+    if (r.email) {
+      reply.classList.remove('hidden');
+      reply.href = 'mailto:' + encodeURIComponent(r.email) +
+        '?subject=' + encodeURIComponent('Re: ' + (r.form || 'Your enquiry') +
+                                         (r.subject ? ' — ' + r.subject : ''));
+    } else {
+      reply.classList.add('hidden');
+    }
+    $('[data-enq-handled]').textContent = r.handled ? 'Mark as still to answer' : 'Mark as answered';
+    renderEnqList();
+  }
+
+  /* ------------------------------------------------------- spreadsheet */
+  // A cell starting with = + - or @ is a formula to Excel, so a message
+  // beginning "=2+2" would run when the file opens. The leading apostrophe
+  // is Excel's own "this is text" marker and is not shown in the cell.
+  function csvCell(v) {
+    var t = v == null ? '' : String(v);
+    if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
+    return /[",\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+  }
+
+  function enqCsv(rows) {
+    var head = ['Received', 'Form', 'About', 'Name', 'Email', 'Phone', 'Answered'];
+    var extra = [];
+    // oldest first, so the column order does not shuffle as replies arrive
+    rows.slice().reverse().forEach(function (r) {
+      var f = r.fields || {};
+      for (var k in f) {
+        if (Object.prototype.hasOwnProperty.call(f, k) &&
+            head.indexOf(k) === -1 && extra.indexOf(k) === -1) extra.push(k);
+      }
+    });
+    var cols = head.concat(extra, ['Sent from page']);
+    var lines = [cols.map(csvCell).join(',')];
+    rows.forEach(function (r) {
+      var f = r.fields || {};
+      var line = [enqStamp(r.at), r.form || '', r.subject || '', r.name || '',
+                  r.email || '', r.phone || '', r.handled ? 'yes' : 'no'];
+      extra.forEach(function (k) { line.push(f[k] || ''); });
+      line.push(r.page || '');
+      lines.push(line.map(csvCell).join(','));
+    });
+    // CRLF and a byte-order mark: what Excel expects of a UTF-8 csv, and
+    // without the mark it mangles the Afaan Oromoo characters.
+    return '﻿' + lines.join('\r\n') + '\r\n';
+  }
+
+  function downloadEnq() {
+    var rows = visibleEnquiries();
+    if (!rows.length) { toast('Nothing to download in this view.', 'warn'); return; }
+    var d = new Date();
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    var name = 'aocav-enquiries-' + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '.csv';
+    var blob = new Blob([enqCsv(rows)], { type: 'text/csv;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast('Downloaded ' + rows.length + ' enquir' + (rows.length === 1 ? 'y' : 'ies') + '.', 'ok');
+  }
+
+  function reloadEnquiries() {
+    return Store.loadSubmissions().then(function (list) {
+      state.enq = list;
+      state.enqLoaded = true;
+      var keep = state.enqPick && list.filter(function (r) {
+        return r._docId === state.enqPick._docId;
+      })[0];
+      showEnquiry(keep || null);
+      return list;
+    });
+  }
+
+  function wireEnquiries() {
+    $$('[data-enqtab]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.enqTab = b.getAttribute('data-enqtab');
+        $$('[data-enqtab]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        renderEnqList();
+      });
+    });
+    $('[data-enq-search]').addEventListener('input', function (e) {
+      state.enqFind = e.target.value.trim(); renderEnqList();
+    });
+    $('[data-enq-list]').addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-enq-pick]');
+      if (!btn) return;
+      var id = btn.getAttribute('data-enq-pick');
+      var r = state.enq.filter(function (x) { return x._docId === id; })[0];
+      if (r) showEnquiry(r);
+    });
+    $('[data-enq-reload]').addEventListener('click', function () {
+      reloadEnquiries().then(function (l) { toast(l.length + ' enquiries loaded.', 'ok'); })
+        .catch(function (err) { toast(humanError(err), 'err'); });
+    });
+    $('[data-enq-csv]').addEventListener('click', downloadEnq);
+    $('[data-enq-handled]').addEventListener('click', function () {
+      var r = state.enqPick;
+      if (!r) return;
+      var next = !r.handled;
+      Store.setSubmissionHandled(r._docId, next).then(function () {
+        r.handled = next;
+        showEnquiry(r);
+        toast(next ? 'Marked as answered.' : 'Put back on the list.', 'ok');
+      }).catch(function (err) { toast(humanError(err), 'err'); });
+    });
+    $('[data-enq-delete]').addEventListener('click', function () {
+      var r = state.enqPick;
+      if (!r) return;
+      if (!window.confirm('Delete this enquiry from ' + (r.name || r.email || 'the website') +
+                          '? This cannot be undone.')) return;
+      Store.deleteSubmission(r._docId).then(function () {
+        state.enq = state.enq.filter(function (x) { return x._docId !== r._docId; });
+        showEnquiry(null);
+        toast('Enquiry deleted.', 'ok');
+      }).catch(function (err) { toast(humanError(err), 'err'); });
+    });
+  }
+
   /* ----------------------------------------------------------------- tabs */
   function wireTabs() {
     $$('[data-admtab]').forEach(function (b) {
@@ -724,6 +928,9 @@
         });
         if (name === 'content' && !state.items.length) {
           loadContentItems().then(renderContent);
+        }
+        if (name === 'enquiries' && !state.enqLoaded) {
+          reloadEnquiries().catch(function (err) { toast(humanError(err), 'err'); });
         }
       });
     });
@@ -745,6 +952,9 @@
             editLink(blankLink(), true);
             reload().catch(function (err) { toast(humanError(err), 'err'); });
             reloadLinks().catch(function (err) { toast(humanError(err), 'err'); });
+            reloadEnquiries().catch(function (err) {
+              if (window.console) console.warn('AOCAV: enquiries not loaded —', err && err.message);
+            });
             Store.loadContent().then(function (res) {
               state.content = res.content || {};
               if (state.items.length) renderContent();
@@ -859,6 +1069,7 @@
     wireTabs();
     wireContent();
     wireLinks();
+    wireEnquiries();
     wireAuth();
     screen('login');
     startAuth().catch(function (err) {

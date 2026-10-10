@@ -175,6 +175,60 @@ Oromoo wording. Press **Import bundled links** once to load the starting set.
 Only `https://` addresses are accepted. Please check a link still works before
 you add it.
 
+### Enquiries
+
+Everything people send from the three forms on the website — the contact form,
+the membership enquiry and the partnership enquiry.
+
+**Where they go.** Straight into Firebase, into a collection called
+`submissions`, the moment somebody presses send. They are not emailed anywhere
+and they do not pass through any other company. Only the people in your
+`admins` list can read them; the security rules refuse everyone else, so they
+are private even though anyone can write one.
+
+**Reading them.** The tab shows a gold number for how many nobody has answered
+yet. Pick one to read the whole thing, press **Reply by email** to answer it
+from your own address, then **Mark as answered** so it drops off the list. The
+filters along the top split them by form, and the search box looks inside the
+messages.
+
+**Getting them into Excel.** Press **Download spreadsheet**. You get a `.csv`
+file — `aocav-enquiries-2026-03-14.csv` — that opens in Excel, Numbers or
+Google Sheets with a double-click. It contains exactly what the list in front
+of you shows, so pick the **Membership** filter first if you want a membership
+list rather than everything.
+
+Each form's own questions become their own columns, so a membership export has
+Suburb and Membership type, and a partnership export has Organisation. Dates
+are written `2026-03-14 19:40`, which sorts properly.
+
+**If somebody never arrives.** If Firebase is unreachable when a visitor
+presses send, the page does not pretend the message got through. It says so
+and offers them a link that opens their own email app with every answer
+already written in, addressed to `info@aocav.com`. Nothing they typed is lost,
+but the enquiry will arrive in your inbox rather than in this tab.
+
+### Getting an email when an enquiry arrives
+
+The website cannot send email by itself — static hosting has no mail server,
+and a password put in these files would be downloaded by every visitor. So out
+of the box, enquiries wait for you in the Enquiries tab. Two ways to be told
+about them instead:
+
+1. **Check the tab.** Open the admin page once a day; the gold number tells you
+   at a glance whether anything is waiting. Free, nothing to set up.
+2. **The Trigger Email extension.** In the Firebase console, Extensions →
+   *Trigger Email from Firestore*. Point it at the `submissions` collection and
+   give it an SMTP account (your own Gmail with an app password works, so does
+   Mailgun or SendGrid). Every new enquiry then also lands in your inbox.
+   This needs the **Blaze** pay-as-you-go plan. Blaze still gives you the same
+   free allowance every month, and an association of our size would not come
+   close to paying anything — but it does ask for a credit card, so it is the
+   committee's decision, not a technical one.
+
+Either way the enquiry is already safe in Firebase. Email is a notification,
+not the record.
+
 ---
 
 ## If something goes wrong
@@ -189,6 +243,8 @@ you add it.
 | The website shows old events | Press **Export events.js** and replace `assets/events.js`, or check that the events are marked visible. |
 | The Website text tab is empty | It reads the real pages over the network. Make sure you opened the admin page from your website, not from a file on your computer. |
 | A translation did not appear | Press **Save changes**, then reload the public page and switch to AFO. |
+| The Enquiries tab is empty but people say they wrote to you | Check Firestore → Data for a `submissions` collection. If the rules in step 3 were never published, the write was refused and those people got the email-app link instead — look in `info@aocav.com`. |
+| The spreadsheet opens with strange characters | Open it from inside Excel (Data → From Text/CSV, encoding UTF-8) rather than double-clicking, or open it in Google Sheets. |
 
 ---
 

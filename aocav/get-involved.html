@@ -132,7 +132,7 @@
 
     <div class="card reveal" data-delay="120" style="padding:34px 30px">
       <h3>Membership enquiry</h3>
-      <p style="margin-bottom:22px">Fill this in and your email app will open with the details ready to send.</p>
+      <p style="margin-bottom:22px">Fill this in and it goes straight to the committee. No email app needed.</p>
       <form class="form" data-mailto="info@aocav.com" data-subject="Membership enquiry">
         <div class="form-row">
           <div class="field">
@@ -172,11 +172,16 @@
           <label for="m-note">Anything you'd like us to know</label>
           <textarea id="m-note" name="Notes" placeholder="Interests, skills, the ages of your children, or questions for the committee."></textarea>
         </div>
+        <div class="hp" aria-hidden="true" data-cms-ignore>
+          <label for="m-hp">Leave this field empty</label>
+          <input id="m-hp" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
         <button class="btn btn-primary" type="submit">Send my enquiry
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/></svg>
         </button>
-        <p class="form-note" data-sent hidden>Your email app should now be open with your details filled in. If nothing happened, email us directly at <a href="mailto:info@aocav.com">info@aocav.com</a>.</p>
-        <p class="form-note">We use your details only to process your membership and keep you informed about AOCAV. We never sell or share them.</p>
+        <p class="form-note" data-sent="saved" hidden>Thank you — your enquiry is with the committee. Somebody will be in touch about joining.</p>
+        <p class="form-note" data-sent="mail" hidden>We could not reach our server. <a href="mailto:info@aocav.com" data-mail-link>Open your email app with these details filled in</a>, or email <a href="mailto:info@aocav.com">info@aocav.com</a> yourself — nothing you typed is lost.</p>
+        <p class="form-note">Your details are stored securely and used only to process your membership and keep you informed about AOCAV. We never sell or share them.</p>
       </form>
     </div>
   </div>
@@ -262,8 +267,13 @@
           <label for="p-detail">Details</label>
           <textarea id="p-detail" name="Details" placeholder="What you have in mind, who it is for, and any timing you are working to."></textarea>
         </div>
+        <div class="hp" aria-hidden="true" data-cms-ignore>
+          <label for="p-hp">Leave this field empty</label>
+          <input id="p-hp" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
         <button class="btn btn-primary" type="submit">Send enquiry</button>
-        <p class="form-note" data-sent hidden>Your email app should now be open. If nothing happened, email <a href="mailto:info@aocav.com">info@aocav.com</a>.</p>
+        <p class="form-note" data-sent="saved" hidden>Thank you — your enquiry is with the committee. We will come back to you.</p>
+        <p class="form-note" data-sent="mail" hidden>We could not reach our server. <a href="mailto:info@aocav.com" data-mail-link>Open your email app with this enquiry ready</a>, or email <a href="mailto:info@aocav.com">info@aocav.com</a> yourself — nothing you typed is lost.</p>
       </form>
     </div>
   </div>

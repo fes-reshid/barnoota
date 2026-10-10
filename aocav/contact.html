@@ -129,7 +129,7 @@
       <div class="card" style="padding:34px 30px; position:sticky; top:110px">
         <span class="kicker">Send a message</span>
         <h2 style="font-size:1.9rem">How can we help?</h2>
-        <p style="margin-bottom:22px">Fill this in and your email app will open with everything ready to send.</p>
+        <p style="margin-bottom:22px">Fill this in and it goes straight to the committee. No email app needed.</p>
 
         <form class="form" data-mailto="info@aocav.com" data-subject="Website enquiry">
           <div class="form-row">
@@ -166,11 +166,16 @@
             <label for="c-msg">Your message</label>
             <textarea id="c-msg" name="Message" required placeholder="Tell us what you need. Write in Afaan Oromoo or English — whichever is easier."></textarea>
           </div>
+          <div class="hp" aria-hidden="true" data-cms-ignore>
+            <label for="c-hp">Leave this field empty</label>
+            <input id="c-hp" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
           <button class="btn btn-primary" type="submit">Send message
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/></svg>
           </button>
-          <p class="form-note" data-sent hidden>Your email app should now be open with your message ready. If nothing happened, write to <a href="mailto:info@aocav.com">info@aocav.com</a> directly.</p>
-          <p class="form-note">This website does not store anything you type here — the form simply opens your own email app. Anything you share with the help desk stays confidential.</p>
+          <p class="form-note" data-sent="saved" hidden>Thank you — your message is with the committee. We usually reply within a few days.</p>
+          <p class="form-note" data-sent="mail" hidden>We could not reach our server. <a href="mailto:info@aocav.com" data-mail-link>Open your email app with this message ready</a>, or write to <a href="mailto:info@aocav.com">info@aocav.com</a> yourself — nothing you typed is lost.</p>
+          <p class="form-note">Your message is stored securely and read only by the AOCAV committee. Anything you share with the help desk stays confidential.</p>
         </form>
       </div>
     </div>

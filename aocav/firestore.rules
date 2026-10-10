@@ -67,6 +67,36 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Enquiries sent from the website's forms. Anyone may leave one —
+    // that is what a contact form is — but only the committee can read
+    // them back, and nobody can edit someone else's message.
+    //
+    // `handled` must start false and `createdAt` must be the server's own
+    // clock, so a sender cannot post-date a message or mark it dealt with.
+    function validSubmission(d) {
+      return d.keys().hasOnly(['form', 'subject', 'name', 'email', 'phone',
+                               'page', 'fields', 'handled', 'createdAt'])
+          && d.form is string && d.form.size() > 0 && d.form.size() <= 40
+          && d.subject is string && d.subject.size() <= 160
+          && d.name is string && d.name.size() <= 160
+          && d.email is string && d.email.size() <= 200
+          && d.phone is string && d.phone.size() <= 60
+          && d.page is string && d.page.size() <= 200
+          && d.fields is map && d.fields.size() <= 24
+          && d.handled == false
+          && d.createdAt == request.time;
+    }
+
+    match /submissions/{id} {
+      allow create: if validSubmission(request.resource.data);
+      allow read, delete: if isAdmin();
+      // the committee only ever flips the "handled" flag
+      allow update: if isAdmin()
+                    && request.resource.data.diff(resource.data)
+                       .affectedKeys().hasOnly(['handled'])
+                    && request.resource.data.handled is bool;
+    }
+
     // The list of committee members. An admin may check their own entry;
     // nobody may write here from the web. Manage it in the Firebase console.
     match /admins/{uid} {

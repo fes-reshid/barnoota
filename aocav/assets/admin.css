@@ -308,3 +308,30 @@ pre.code{
   box-shadow:0 0 0 3px color-mix(in srgb, var(--leaf-bright) 18%, transparent);
 }
 .content-fields label:last-child textarea{ border-left:3px solid var(--gold); }
+
+/* ==========================================================================
+   Enquiries — what people send from the website's forms
+   ========================================================================== */
+/* the count of enquiries nobody has answered yet, on the tab itself */
+.tab-count{
+  display:inline-block; min-width:20px; margin-left:6px; padding:1px 6px;
+  border-radius:999px; background:var(--gold); color:#2b2206;
+  font-size:.72rem; font-weight:800; line-height:1.5; text-align:center;
+  vertical-align:1px;
+}
+
+.enq-dl{ display:grid; grid-template-columns:minmax(0,160px) minmax(0,1fr); gap:2px 18px; margin:0; }
+.enq-dl dt{
+  font-size:.72rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--muted); padding:11px 0 11px; border-top:1px solid var(--line);
+}
+.enq-dl dd{
+  margin:0; padding:11px 0; border-top:1px solid var(--line);
+  color:var(--ink); white-space:pre-wrap; overflow-wrap:anywhere;
+}
+.enq-dl dt:first-of-type, .enq-dl dd:first-of-type{ border-top:0; }
+@media (max-width:620px){
+  .enq-dl{ grid-template-columns:minmax(0,1fr); gap:0; }
+  .enq-dl dt{ padding-bottom:0; border-top:1px solid var(--line); }
+  .enq-dl dd{ padding-top:4px; border-top:0; }
+}

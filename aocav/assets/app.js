@@ -371,26 +371,85 @@
   });
 
   /* --------------------------------------------------------------- forms */
-  // Static hosting has no mail server, so enquiry forms open the visitor's
-  // email client with everything already filled in.
+  // Enquiries are saved to Firebase, where the committee reads them in the
+  // admin page and exports them as a spreadsheet. If Firebase is not set up
+  // yet, is unreachable, or refuses the write, we fall back to opening the
+  // visitor's own email app with everything filled in — a form that loses
+  // somebody's message is worse than one that asks them to press send.
+  var HONEYPOT = 'website';
+
+  function fieldLabel(k) {
+    return k.replace(/_/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); });
+  }
+
+  function mailtoUrl(form, fd) {
+    var to = form.getAttribute('data-mailto');
+    var subject = form.getAttribute('data-subject') || 'Website enquiry';
+    var body = [];
+    fd.forEach(function (v, k) {
+      if (k !== HONEYPOT && String(v).trim()) body.push(fieldLabel(k) + ': ' + v);
+    });
+    body.push('', 'Sent from aocav.com');
+    var pick = fd.get('subject');
+    if (pick) subject += ' \u2014 ' + pick;
+    return 'mailto:' + to +
+      '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(body.join('\n'));
+  }
+
   $$('form[data-mailto]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var to = form.getAttribute('data-mailto');
       var fd = new FormData(form);
-      var subject = form.getAttribute('data-subject') || 'Website enquiry';
-      var body = [];
-      fd.forEach(function (v, k) {
-        if (String(v).trim()) body.push(k.replace(/_/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }) + ': ' + v);
+      // a bot fills every input it finds, including the one nobody can see
+      if (String(fd.get(HONEYPOT) || '').trim()) return;
+
+      var btn = form.querySelector('button[type="submit"]');
+      var label = btn ? btn.textContent : '';
+      var notes = {};
+      $$('[data-sent]', form).forEach(function (n) {
+        notes[n.getAttribute('data-sent') || 'mail'] = n;
+        n.hidden = true;
       });
-      body.push('', 'Sent from aocav.com');
-      var pick = fd.get('subject');
-      if (pick) subject += ' — ' + pick;
-      window.location.href = 'mailto:' + to +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body.join('\n'));
-      var note = form.querySelector('[data-sent]');
-      if (note) note.hidden = false;
+      function show(which) { if (notes[which]) notes[which].hidden = false; }
+
+      var fields = {};
+      fd.forEach(function (v, k) {
+        if (k !== HONEYPOT && String(v).trim()) fields[fieldLabel(k)] = String(v).trim();
+      });
+
+      var rec = {
+        form:    form.getAttribute('data-subject') || 'Website enquiry',
+        subject: fd.get('subject') || '',
+        name:    fd.get('Name') || fd.get('Contact_name') ||
+                 [fd.get('First_name'), fd.get('Family_name')].filter(Boolean).join(' '),
+        email:   fd.get('Email') || '',
+        phone:   fd.get('Phone') || '',
+        page:    (location.pathname.split('/').pop() || 'index.html'),
+        fields:  fields
+      };
+
+      if (btn) { btn.disabled = true; btn.textContent = btn.getAttribute('data-busy') || 'Sending\u2026'; }
+      var S = window.AocavStore;
+      var save = (S && S.configured()) ? S.saveSubmission(rec)
+                                       : Promise.reject(new Error('Firebase is not configured yet'));
+      save.then(function () {
+        form.reset();
+        show('saved');
+      }, function (err) {
+        if (window.console) console.warn('AOCAV: enquiry not saved, offering the email app \u2014', err && err.message);
+        // The save is asynchronous, so by now the click that started it is no
+        // longer a "user gesture" and a browser may refuse to hand off to the
+        // mail app on its own. Put the ready-made message behind a link the
+        // visitor can press instead of hoping the hand-off lands.
+        var url = mailtoUrl(form, fd);
+        var link = notes.mail && notes.mail.querySelector('[data-mail-link]');
+        if (link) link.href = url;
+        show('mail');
+        try { window.location.href = url; } catch (e) { /* the link is the fallback */ }
+      }).then(function () {
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+      });
     });
   });
 
