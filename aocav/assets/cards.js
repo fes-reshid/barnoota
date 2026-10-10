@@ -250,6 +250,21 @@ window.AocavCards = (function () {
     return out.length ? '<div class="ev-actions">' + out.join('') + '</div>' : '';
   }
 
+  // A single slim line: date, name, when and where. Used on the home page,
+  // where a full card grid was more than the page needed.
+  function rowHTML(ev) {
+    var when = ev.startDate ? fmtDate(ev.startDate) : (L(ev, 'when') || '');
+    var where = ev.venue || '';
+    var sub = [when, where].filter(Boolean).join(' \u00b7 ');
+    return '<a class="ev-row reveal" href="events.html#event-' + esc(ev.id) + '">' +
+      '<span class="ev-row-date' + (ev.theme === 'grad' ? ' is-grad' : ev.theme === 'culture' ? ' is-culture' : '') + '">' +
+      '<b>' + (ev.startDate ? ev.startDate.getDate() : '\u21bb') + '</b>' +
+      '<span>' + (ev.startDate ? esc(fmtMonthShort(ev.startDate)) : '') + '</span></span>' +
+      '<span class="ev-row-main"><b>' + esc(L(ev, 'title') || T('untitled')) + '</b>' +
+      '<small>' + esc(sub) + '</small></span>' +
+      '<span class="ev-row-go" aria-hidden="true">' + ICON.arrow + '</span></a>';
+  }
+
   function cardHTML(ev, opts) {
     var cls = ['ev'];
     if (ev.theme === 'grad') cls.push('is-grad');
@@ -400,7 +415,7 @@ window.AocavCards = (function () {
     parseLocal: parseLocal, melbourneInstant: melbourneInstant,
     fmtDate: fmtDate, fmtTime: fmtTime,
     normalise: normalise, sortUpcoming: sortUpcoming, sortAll: sortAll,
-    cardHTML: cardHTML, featureHTML: featureHTML, chip: chip, metaList: metaList,
+    cardHTML: cardHTML, featureHTML: featureHTML, rowHTML: rowHTML, chip: chip, metaList: metaList,
     buildICS: buildICS, downloadICS: downloadICS, download: download,
     schemaFor: schemaFor, toSeedFile: toSeedFile
   };

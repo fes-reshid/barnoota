@@ -875,3 +875,38 @@ section{position:relative;}
 @media (max-width:1060px){
   .nav a.btn-primary{ color:#fff !important; }
 }
+
+/* ==========================================================================
+   Compact event list — the home page's short "what's on"
+   ========================================================================== */
+.ev-list{ display:grid; gap:12px; max-width:860px; margin-inline:auto; }
+.ev-row{
+  display:grid; grid-template-columns:58px minmax(0,1fr) 24px; gap:18px; align-items:center;
+  padding:15px 20px; border-radius:var(--r-md);
+  background:var(--paper); border:1px solid var(--line);
+  text-decoration:none; color:inherit; box-shadow:var(--shadow-sm);
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+}
+.ev-row:hover{
+  transform:translateX(5px);
+  box-shadow:var(--shadow-md);
+  border-color:color-mix(in srgb, var(--leaf) 40%, var(--line));
+}
+.ev-row-date{
+  flex:none; text-align:center; border-radius:12px; padding:7px 0; line-height:1.05;
+  background:linear-gradient(140deg,#0b4527,#06301b); color:#fff;
+}
+.ev-row-date.is-grad{ background:linear-gradient(140deg,#7a0d18,#3f0609); }
+.ev-row-date.is-culture{ background:linear-gradient(140deg,#8a6d12,#4a3a08); }
+.ev-row-date b{ display:block; font-family:var(--display); font-size:1.25rem; font-weight:700; }
+.ev-row-date span{ display:block; font-size:.58rem; letter-spacing:.11em; text-transform:uppercase; opacity:.85; }
+.ev-row-main{ min-width:0; }
+.ev-row-main b{ display:block; font-family:var(--display); font-size:1.12rem; font-weight:700; line-height:1.25; }
+.ev-row-main small{ display:block; color:var(--muted); font-size:.86rem; margin-top:3px; }
+.ev-row-go{ color:var(--muted); transition:transform .3s var(--ease), color .3s; }
+.ev-row-go svg{ width:20px; height:20px; display:block; }
+.ev-row:hover .ev-row-go{ color:var(--leaf); transform:translateX(3px); }
+@media (max-width:520px){
+  .ev-row{ grid-template-columns:50px minmax(0,1fr); gap:14px; padding:13px 16px; }
+  .ev-row-go{ display:none; }
+}

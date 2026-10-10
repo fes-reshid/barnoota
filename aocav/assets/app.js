@@ -149,6 +149,16 @@
     var fHost = $('[data-events="featured"]');
     if (fHost && featured) fHost.innerHTML = C.featureHTML(featured);
 
+    // the home page shows a short list rather than a grid of full cards
+    var nHost = $('[data-events="next"]');
+    if (nHost) {
+      var nLimit = +(nHost.getAttribute('data-limit') || 3);
+      var next = EVENTS.filter(function (e) { return !e.past && !e.recurring && e.startDate; })
+        .sort(C.sortUpcoming).slice(0, nLimit);
+      nHost.innerHTML = next.map(function (e) { return C.rowHTML(e); }).join('') ||
+        '<p class="sec-sub">New dates are being planned — please check back soon.</p>';
+    }
+
     var uHost = $('[data-events="upcoming"]');
     if (uHost) {
       var limit = +(uHost.getAttribute('data-limit') || 3);
