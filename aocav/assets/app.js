@@ -61,6 +61,22 @@
   }
 
   /* ------------------------------------------------------- scroll reveal */
+  // Siblings in a grid come in one after another, so a row of cards cascades
+  // instead of appearing all at once. An explicit data-delay still wins.
+  function staggerDelay(el) {
+    var set = el.getAttribute('data-delay');
+    if (set !== null) return +set;
+    var parent = el.parentNode;
+    if (!parent || !parent.children) return 0;
+    var i = 0;
+    for (var n = 0; n < parent.children.length; n++) {
+      var sib = parent.children[n];
+      if (sib === el) break;
+      if (sib.classList && sib.classList.contains('reveal')) i++;
+    }
+    return Math.min(i, 6) * 85;
+  }
+
   function observeReveals(scope) {
     var items = $$('.reveal:not(.in)', scope || document);
     if (!('IntersectionObserver' in window)) {
@@ -71,11 +87,34 @@
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
         var el = en.target;
-        setTimeout(function () { el.classList.add('in'); }, +(el.getAttribute('data-delay') || 0));
+        setTimeout(function () { el.classList.add('in'); }, staggerDelay(el));
         io.unobserve(el);
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
     items.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ------------------------------------------------------------ parallax */
+  // The continent drifts a little slower than the page. `translate` is a
+  // separate property from `transform`, so this does not fight the CSS
+  // drift animation already running on the same element.
+  function wireParallax() {
+    var map = $('.hero-map');
+    if (!map) return;
+    if ('matchMedia' in window && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ticking = false;
+    var update = function () {
+      ticking = false;
+      var y = window.scrollY;
+      if (y > window.innerHeight) return;
+      map.style.translate = '0 ' + Math.round(y * 0.16) + 'px';
+    };
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }, { passive: true });
+    update();
   }
 
   /* ------------------------------------------------------------ counters */
@@ -331,6 +370,7 @@
     $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
     wireFilters();
     startCounters();
+    wireParallax();
 
     LANG = Cms.getLang();
     C.setLang(LANG);
