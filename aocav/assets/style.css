@@ -867,14 +867,12 @@ section{position:relative;}
 .warnbox-note .sec-sub{ color:var(--ink-soft); }
 .warnbox-note b{ color:var(--leaf); }
 
-/* The call-to-action in the menu is a button, not a nav link: `.nav a` is more
-   specific than `.btn-primary`, so without this its label turns dark green on
-   green once the header sticks, and in the mobile drawer. */
-.nav a.btn-primary,
-.site-header:not(.is-stuck).on-dark .nav a.btn-primary{ color:#fff; }
-@media (max-width:1060px){
-  .nav a.btn-primary{ color:#fff !important; }
-}
+/* The Engage menu's links sit on a white card, but they are still `.nav a`
+   descendants: over the dark hero the header paints nav links white, which
+   would leave them white on white. Pin the card's own colours back. */
+.site-header:not(.is-stuck).on-dark .engage-menu a{ color:var(--ink); }
+.site-header:not(.is-stuck).on-dark .engage-menu a:hover{ color:var(--leaf); }
+.site-header:not(.is-stuck).on-dark .engage-menu .engage-all{ color:var(--ink-soft); }
 
 /* ==========================================================================
    Compact event list — the home page's short "what's on"
@@ -909,4 +907,60 @@ section{position:relative;}
 @media (max-width:520px){
   .ev-row{ grid-template-columns:50px minmax(0,1fr); gap:14px; padding:13px 16px; }
   .ev-row-go{ display:none; }
+}
+
+/* ==========================================================================
+   Engage — the menu of ways to take part
+   ========================================================================== */
+.engage{ position:relative; margin-left:8px; }
+.engage-btn .chev{ width:15px; height:15px; transition:transform .3s var(--ease); }
+.engage[data-open] .engage-btn .chev{ transform:rotate(180deg); }
+
+.engage-menu{
+  position:absolute; right:0; top:calc(100% + 12px); z-index:60;
+  min-width:252px; padding:8px;
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:var(--r-md); box-shadow:var(--shadow-lg);
+  display:grid; gap:2px;
+  opacity:0; transform:translateY(-10px) scale(.97); transform-origin:top right;
+  pointer-events:none;
+  /* visibility, not just opacity: without it the five links stay in the tab
+     order and the accessibility tree while the menu looks closed */
+  visibility:hidden;
+  transition:opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+}
+.engage[data-open] .engage-menu{ opacity:1; transform:none; pointer-events:auto; visibility:visible; }
+.engage-menu::before{
+  content:""; position:absolute; top:-7px; right:26px; width:12px; height:12px;
+  background:var(--paper); border-left:1px solid var(--line); border-top:1px solid var(--line);
+  transform:rotate(45deg);
+}
+.engage-menu a{
+  position:relative; display:flex; align-items:center; gap:12px;
+  padding:11px 14px; border-radius:11px;
+  text-decoration:none; color:var(--ink);
+  font-size:.93rem; font-weight:600; white-space:nowrap;
+  transition:background .2s, color .2s, padding-left .25s var(--ease);
+}
+.engage-menu a svg{ width:19px; height:19px; flex:none; color:var(--leaf); transition:color .2s; }
+.engage-menu a:hover{ background:color-mix(in srgb, var(--leaf-bright) 12%, transparent); color:var(--leaf); padding-left:18px; }
+.engage-menu .engage-all{
+  margin-top:4px; border-top:1px solid var(--line); border-radius:0 0 9px 9px;
+  justify-content:space-between; color:var(--ink-soft); font-size:.85rem;
+}
+.engage-menu .engage-all svg{ color:currentColor; width:16px; height:16px; }
+
+/* in the phone drawer it is a plain list, not a floating card */
+@media (max-width:1060px){
+  .engage{ margin:12px 0 0; }
+  .engage-btn{ width:100%; justify-content:center; }
+  .engage-menu{
+    position:static; opacity:1; transform:none; pointer-events:auto; visibility:visible;
+    box-shadow:none; border:0; border-top:1px solid var(--line);
+    border-radius:0; margin-top:10px; padding:6px 0 0; min-width:0;
+  }
+  .engage-menu::before{ display:none; }
+  .engage[data-open] .engage-btn .chev{ transform:none; }
+  .engage-btn .chev{ display:none; }
+  .engage-menu a{ font-size:1rem; padding:13px 12px; }
 }

@@ -50,6 +50,33 @@
     });
   }
 
+  /* ---------------------------------------------------------- engage menu */
+  var engage = $('[data-engage]');
+  if (engage) {
+    var engageBtn = $('.engage-btn', engage);
+    var floating = function () { return window.innerWidth > 1060; };
+    var setOpen = function (open) {
+      if (open) engage.setAttribute('data-open', '');
+      else engage.removeAttribute('data-open');
+      engageBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    engageBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      // in the phone drawer the list is always shown, so there is nothing to toggle
+      if (!floating()) { window.location.href = 'get-involved.html'; return; }
+      setOpen(!engage.hasAttribute('data-open'));
+    });
+    document.addEventListener('click', function (e) {
+      if (!engage.contains(e.target)) setOpen(false);
+    });
+    engage.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { setOpen(false); engageBtn.focus(); }
+    });
+    $$('a', engage).forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+  }
+
   /* --------------------------------------------------------- back to top */
   var totop = $('.totop');
   if (totop) {
