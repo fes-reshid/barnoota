@@ -1,0 +1,30 @@
+{
+  "id": "/arabic-level-1/",
+  "name": "Iqra 1 — Diin Islaam",
+  "short_name": "Iqra 1",
+  "description": "A playful, map-based Arabic and Iqra learning course.",
+  "start_url": "/arabic-level-1/",
+  "scope": "/arabic-level-1/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#f1f8ff",
+  "theme_color": "#63c9f5",
+  "icons": [
+    {
+      "src": "/arabic-level-1/icons/iqra-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/arabic-level-1/icons/iqra-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
