@@ -205,6 +205,37 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 .topic-play{margin-top:8px;border:2px solid var(--gold2);background:#fff;border-radius:16px;padding:5px 14px;font:15px Marcellus,serif;color:var(--brown);cursor:pointer}
 .topic-play:hover{background:#fff4d2}
 </style>
+<style id="big-map">
+/* Big map: fills the screen under the account bar and map tabs (sized in JS). */
+#mapScreen .map-frame{margin-left:auto;margin-right:auto;max-width:none}
+.map-pan{position:relative;line-height:0}
+.map-frame.pan .map-pan{height:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.map-frame.pan .map-pan::-webkit-scrollbar{display:none}
+.map-frame.pan #mapSvg{max-width:none}
+.map-swipe{position:absolute;left:50%;bottom:14px;z-index:6;transform:translateX(-50%);background:rgba(28,43,70,.8);color:#fff;border-radius:999px;padding:7px 16px;font:700 14px Nunito,sans-serif;white-space:nowrap;pointer-events:none;animation:mapSwipe 1.4s ease-in-out 4}
+@keyframes mapSwipe{50%{transform:translateX(calc(-50% + 12px))}}
+#mapScreen>.daily-card{margin-top:4px}
+/* Teacher messages: a notification on top of the map */
+.map-frame .teacher-alert{position:absolute;z-index:8;top:10px;left:10px;display:block;margin:0;padding:0;overflow:visible}
+.map-frame .teacher-alert.hidden{display:none}
+.map-frame .teacher-alert .na-bell{position:relative;flex:none;display:grid;place-items:center;width:48px;height:48px;padding:0!important;border:3px solid #fff;border-radius:50%!important;background:#fff8e1;box-shadow:0 4px 12px rgba(0,0,0,.22);font-size:23px;cursor:pointer;animation:none}
+.map-frame .teacher-alert .na-bell.ring{animation:naRing 1s ease-in-out 3}
+@keyframes naRing{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+.na-count{position:absolute;top:-7px;right:-7px;min-width:23px;height:23px;padding:0 5px;border:2px solid #fff;border-radius:12px;background:#e0703a;color:#fff;font:800 12px/19px Nunito,sans-serif;text-align:center}
+.na-panel{display:none;position:absolute;top:0;left:0;width:min(440px,calc(100vw - 44px));padding:8px;background:rgba(255,253,246,.97);border:2px solid var(--gold2);border-radius:18px;box-shadow:0 12px 28px rgba(30,25,10,.28);animation:naDrop .35s ease-out}
+.map-frame .teacher-alert.open .na-panel{display:block}
+.map-frame .teacher-alert.open .na-bell{visibility:hidden}
+@keyframes naDrop{from{transform:translateY(-14px);opacity:0}}
+.na-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 4px 7px;font:800 14px Nunito,sans-serif;color:#6b5d44}
+.map-frame .teacher-alert .na-x{flex:none;width:30px;height:30px;padding:0!important;border:0;border-radius:50%!important;background:#f1e9d6;color:#5d4b2a;font-size:14px;cursor:pointer;box-shadow:none;animation:none}
+.na-list{display:flex;flex-direction:column;gap:6px}
+.map-frame .teacher-alert .na-list button{flex:none;width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:8px 12px!important;border:2px solid var(--gold2);border-radius:14px!important;background:#fff8e1;font:15px Nunito,sans-serif;color:var(--navy);box-shadow:none;animation:none;cursor:pointer}
+.map-frame .teacher-alert .na-list button.msg{border-color:#9fd8f2;background:#eef9ff}
+.map-frame .teacher-alert .na-list button>span:last-child{flex:1;min-width:0}
+.map-frame .teacher-alert .na-list b{display:block;font:16px Marcellus,serif}
+.map-frame .teacher-alert .na-list small{display:block!important;max-width:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;color:#6b5d44}
+.map-frame .teacher-alert .na-list .ic{font-size:22px}
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -223,10 +254,9 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
   <section id="mapScreen" class="hidden">
     <div class="topbar"><div class="player"><button class="avatar avatar-button" id="studentAvatar" aria-label="Change avatar">🧒</button><span id="displayName">Explorer</span><button class="account-out" id="logoutBtn">Sign out</button><a class="guide-link" href="/tuhfatul-atfaal/guide/" title="How to use Tajweed Quest">📘 Guide</a></div><div class="stats"><span class="stat streak-stat" title="Days in a row you practised">🔥 <b id="streakCount">0</b></span><span class="stat">🪙 <b id="coins">0</b></span><span class="stat">⭐ <b id="stars">0</b></span><span class="stat">🧠 <b id="memoryCount">0</b></span><span class="stat">📍 <b id="done">0</b>/<b id="totalLessons">62</b></span></div></div>
     <div class="world-tabs" id="worldTabs"></div>
-    <div class="teacher-alert hidden" id="teacherAlert"></div>
-    <div class="daily-card hidden" id="dailyCard"></div>
-    <div class="map-frame"><div class="map-title" id="mapTitle"></div><button class="map-nav prev" id="prevWorld" aria-label="Previous world">◀</button><button class="map-nav next" id="nextWorld" aria-label="Next world">▶</button><svg id="mapSvg" viewBox="0 0 1000 620" role="img" aria-label="Tajweed lesson map"></svg></div>
+    <div class="map-frame"><div class="map-title" id="mapTitle"></div><div class="teacher-alert hidden" id="teacherAlert"></div><button class="map-nav prev" id="prevWorld" aria-label="Previous world">◀</button><button class="map-nav next" id="nextWorld" aria-label="Next world">▶</button><div class="map-pan" id="mapPan"><svg id="mapSvg" viewBox="0 0 1000 620" role="img" aria-label="Tajweed lesson map"></svg></div></div>
     <p class="map-help" id="mapHelp">Tap the glowing lesson to begin!</p>
+    <div class="daily-card hidden" id="dailyCard"></div>
     <div class="teacher-quizzes hidden" id="teacherQuizzes"><div class="tq-head"><span class="tq-icon">📝</span><div><h3>From your teacher</h3><p id="teacherQuizLead">Your teacher made these for this map. Try your best!</p></div></div><div id="classBox"></div><div id="hwBox"></div><div id="filesBox"></div><div id="teacherNoteBox"></div><div id="msgPreview"></div><div id="talqeenBox"></div><div id="boardBox"></div><div id="annBox"></div><div id="teacherQuizList"></div><button class="tq-msgbar" id="openMessages">✉️ Messages with your teacher <span class="tq-unread hidden" id="msgUnread">New</span></button></div>
     
     <div class="teacher-panel locked" id="teacherPanel"><div class="teacher-head"><span class="teacher-icon">👩‍🏫</span><div><h3>Talqeen Teacher Check</h3><p id="teacherGuide">Finish this map, then recite every line to your teacher.</p></div></div><div class="teacher-form" id="teacherForm"><div class="teacher-field"><label for="teacherName">Teacher’s name</label><input class="teacher-input" id="teacherName" maxlength="60" placeholder="Teacher writes their full name" disabled></div><div class="teacher-checks"><label class="teacher-check"><input type="checkbox" id="teacherHifz" disabled> Hifz completed</label><label class="teacher-check"><input type="checkbox" id="teacherRecitation" disabled> Good recitation</label></div><div class="teacher-field"><label for="teacherFeedback">Teacher feedback</label><textarea class="teacher-feedback" id="teacherFeedback" maxlength="500" placeholder="What was done well, and what should the student practise next?" disabled></textarea></div><div><span class="signature-label">Teacher signature</span><div class="signature-wrap"><canvas class="signature-canvas" id="teacherSignature" width="760" height="130" aria-label="Teacher signature pad"></canvas></div></div><div class="teacher-actions"><button class="ghost" id="clearSignature" disabled>Clear signature</button><button class="btn green" id="teacherApproveBtn" disabled>Approve this map ✓</button></div><div class="teacher-status" id="teacherStatus" aria-live="polite"></div></div><div class="verified-card hidden" id="verifiedTeacher"></div></div>
@@ -2407,6 +2437,74 @@ $('#stBack').onclick=()=>{renderMap();show('mapScreen')};
 const renderMapBeforeAnnouncements=renderMap;renderMap=function(){if(typeof hwCheck==='function'&&cloudUser&&hwCheck())save();renderMapBeforeAnnouncements();loadStudentAnnouncements(false)};
 window.addEventListener('focus',()=>{loadTeacherQuizzes(true);refreshTeacherNotes();loadStudentAnnouncements(true)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshTeacherNotes()});
+/* Big map. The map fills the screen under the account bar and map tabs: on
+   wide screens it grows to the window height; on tall phones it fills the
+   height and pans sideways, centred on the student's lesson. Teacher
+   messages show as a notification (🔔) on top of the map. */
+var MAP_RATIO=1000/620,mapCentredOn='',mapSizeW=0,mapSizeH=0,mapSwipeShown=false;
+function sizeMap(){
+ const scr=$('#mapScreen'),frame=scr&&scr.querySelector('.map-frame'),svg=$('#mapSvg'),pan=$('#mapPan');
+ if(!frame||!svg||!pan||scr.classList.contains('hidden'))return;
+ const vw=document.documentElement.clientWidth,vh=window.innerHeight,maxW=vw-(vw<=640?16:32);
+ mapSizeW=vw;mapSizeH=vh;
+ const top=frame.getBoundingClientRect().top+window.scrollY,avail=Math.max(260,vh-top-14),fitW=avail*MAP_RATIO;
+ const pan_=vh>vw&&maxW/MAP_RATIO<avail*.8;
+ frame.classList.toggle('pan',pan_);
+ if(pan_){
+  const h=Math.round(Math.min(avail,760));
+  frame.style.width=maxW+'px';frame.style.height=h+'px';
+  svg.style.height=(h-6)+'px';svg.style.width=Math.round((h-6)*MAP_RATIO)+'px';
+ }else{
+  const w=Math.round(Math.min(maxW,Math.max(fitW,Math.min(maxW,900))));
+  frame.style.width=w+'px';frame.style.height='';svg.style.width='';svg.style.height='';
+ }
+ frame.style.marginLeft=frame.style.marginRight='calc(50% - '+(parseFloat(frame.style.width)/2)+'px)';
+ centreMap(false);
+}
+function mapFocusEl(){
+ const svg=$('#mapSvg');if(!svg)return null;
+ const pulse=svg.querySelector('.node .pulse');
+ return(pulse&&pulse.closest('.node'))||svg.querySelector('.standing-avatar-wrap')||svg.querySelector('.node')
+}
+function centreMap(smooth){
+ const frame=$('#mapScreen .map-frame'),pan=$('#mapPan'),svg=$('#mapSvg');if(!frame||!pan||!svg||!frame.classList.contains('pan'))return;
+ const p=translatedPoint(mapFocusEl());if(!p)return;
+ const key=viewWorld+':'+Math.round(p.x)+':'+svg.style.width;if(key===mapCentredOn)return;mapCentredOn=key;
+ const x=p.x/1000*svg.getBoundingClientRect().width-pan.clientWidth/2;
+ pan.scrollTo({left:Math.max(0,x),behavior:smooth?'smooth':'auto'});
+ if(!mapSwipeShown){mapSwipeShown=true;frame.insertAdjacentHTML('beforeend','<div class="map-swipe" id="mapSwipe">👈 Swipe to see the whole map 👉</div>');setTimeout(()=>{const t=$('#mapSwipe');if(t)t.remove()},5600)}
+}
+function sizeMapSoon(){cancelAnimationFrame(sizeMapSoon.r);sizeMapSoon.r=requestAnimationFrame(sizeMap)}
+const renderMapBeforeBigMap=renderMap;
+renderMap=function(){renderMapBeforeBigMap.apply(this,arguments);sizeMapSoon();setTimeout(()=>centreMap(true),60)};
+const showBeforeBigMap=show;
+show=function(id){const r=showBeforeBigMap.apply(this,arguments);if(id==='mapScreen'){mapCentredOn='';sizeMapSoon()}return r};
+window.addEventListener('resize',()=>{if(document.documentElement.clientWidth!==mapSizeW||Math.abs(window.innerHeight-mapSizeH)>150)sizeMapSoon()});
+window.addEventListener('orientationchange',()=>setTimeout(sizeMapSoon,350));
+if(window.ResizeObserver){const ro=new ResizeObserver(sizeMapSoon);['.topbar','#worldTabs'].forEach(q=>{const e=document.querySelector('#mapScreen '+q);if(e)ro.observe(e)})}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sizeMapSoon);
+/* Notification on the map: a bell with a count; new notifications drop down
+   once per session, then fold back into the bell. */
+var naState='closed',naTimer=null;
+function naSeen(sig){try{if(sig===undefined)return sessionStorage.getItem('tq-na-sig')||'';sessionStorage.setItem('tq-na-sig',sig)}catch(e){return''}}
+function naSet(open,auto){
+ const el=$('#teacherAlert');naState=open?'open':'closed';clearTimeout(naTimer);if(!el)return;
+ el.classList.toggle('open',open);
+ const bell=el.querySelector('.na-bell');if(bell&&!open){bell.classList.remove('ring');void bell.offsetWidth;bell.classList.add('ring')}
+ if(open&&auto)naTimer=setTimeout(()=>naSet(false),9000);
+}
+const renderTeacherAlertBeforeMapNote=renderTeacherAlert;
+renderTeacherAlert=function(){
+ renderTeacherAlertBeforeMapNote.apply(this,arguments);
+ const el=$('#teacherAlert');if(!el||el.classList.contains('hidden'))return;
+ const items=[...el.querySelectorAll(':scope > [data-alert]')];if(!items.length)return;
+ const sig=items.map(b=>b.dataset.alert+':'+b.textContent).join('|'),n=items.length;
+ el.innerHTML=`<button class="na-bell" type="button" aria-label="${n} notification${n>1?'s':''}">🔔<span class="na-count">${n}</span></button><div class="na-panel" role="dialog" aria-label="Notifications"><div class="na-head"><span>🔔 ${n>1?n+' notifications':'1 notification'}</span><button class="na-x" type="button" aria-label="Close notifications">✕</button></div><div class="na-list"></div></div>`;
+ const list=el.querySelector('.na-list');items.forEach(b=>{list.appendChild(b);b.addEventListener('click',()=>naSet(false))});
+ el.querySelector('.na-bell').onclick=()=>naSet(true,false);el.querySelector('.na-x').onclick=()=>naSet(false);
+ el.querySelector('.na-panel').addEventListener('pointerdown',()=>clearTimeout(naTimer));
+ if(sig!==naSeen()){naSeen(sig);naSet(true,true)}else el.classList.toggle('open',naState==='open');
+};
 </script>
 <script src="cartoon-avatar-67a81bb3.js"></script>
 </body>
