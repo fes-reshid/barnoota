@@ -253,7 +253,9 @@ p{margin:0 0 1.1em;}
    breathes very slightly instead of swaying like the tree did. */
 .hero-map{
   /* sized and placed so the whole continent sits behind the emblem
-     rather than running off the right edge */
+     rather than running off the right edge. Width only, on purpose: the
+     height follows the viewBox, which is why this drawing — unlike the
+     icons — carries no width/height attributes in the HTML. */
   position:absolute; right:4%; bottom:13%; width:min(52vw, 700px); z-index:-1;
   opacity:.16; pointer-events:none;
   animation:mapDrift 18s ease-in-out infinite alternate;
@@ -456,7 +458,7 @@ section{position:relative;}
   background:linear-gradient(155deg,#0b4527,#052a17);
   display:grid; place-items:center; box-shadow:var(--shadow-lg);
 }
-.split-art svg.tree{width:78%; opacity:.9;}
+.split-art svg.tree{width:78%; opacity:.9;}   /* height follows the viewBox — see .hero-map */
 .split-art .badge{
   position:absolute; left:22px; bottom:22px; right:22px;
   background:rgba(255,255,255,.1); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
