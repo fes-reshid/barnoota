@@ -236,6 +236,16 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 .map-frame .teacher-alert .na-list small{display:block!important;max-width:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px;color:#6b5d44}
 .map-frame .teacher-alert .na-list .ic{font-size:22px}
 </style>
+<style>
+/* Student rank changes */
+.student-board-dialog{box-sizing:border-box;width:min(680px,calc(100% - 24px));max-height:90dvh;border:3px solid #d7af51;border-radius:28px;padding:24px;color:#1c2b46;background:linear-gradient(155deg,#fff9e5,#fff 45%,#eaf7f4);box-shadow:0 24px 80px #122d3f55;overflow:auto}
+.student-board-dialog::backdrop{background:#102d46aa;backdrop-filter:blur(5px)}
+.student-board-panel{margin:18px 0;padding:18px;border:2px solid #dfc581;border-radius:22px;background:#fffdf4}
+.lb-welcome{text-align:center}.lb-welcome>span{font-size:40px}.lb-welcome h2{font:clamp(24px,5vw,34px) Marcellus,serif;margin:8px 0;color:#246853}.lb-welcome p{margin:5px 0 12px}.lb-welcome strong{display:inline-block;background:#e1f3ee;border-radius:20px;padding:8px 18px;color:#205d4d}
+.lb-metrics{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:20px 0 8px}.lb-caption{font:14px/1.5 Nunito,sans-serif;color:#596878;text-align:center}.lb-list{display:grid;gap:8px;margin:16px 0;isolation:isolate}.lb-list .lb-row{position:relative;background:white;border:1px solid #dce6e7;min-height:54px;padding:9px;gap:8px;box-sizing:border-box;font:16px Nunito,sans-serif}.lb-list .lb-row.me{background:#fff1c4;border-color:#d9a840}.lb-list .lb-name{overflow-wrap:anywhere;font-size:16px}.lb-list .lb-rank{flex:0 0 30px}.lb-score{white-space:nowrap;font-weight:800}.lb-change{min-width:40px;text-align:center;border-radius:20px;padding:5px 3px;font-size:13px;font-weight:800}.lb-change.up{color:#126749;background:#dff5e9}.lb-change.down{color:#815220;background:#fff0d8}.lb-change.same{color:#596878;background:#eef2f6}.lb-encourage{text-align:center;font:15px/1.6 Nunito,sans-serif;color:#346352}.lb-continue,.lb-open{display:block;margin:18px auto 0;border:0;border-radius:24px;background:#2e6b58;color:white;padding:13px 24px;font:700 17px Nunito,sans-serif;cursor:pointer;min-height:44px}.lb-more{text-align:center;margin:2px;color:#596878}.lb-continue:focus-visible,.lb-open:focus-visible{outline:3px solid #349ccd;outline-offset:4px}
+@media(max-width:480px){.student-board-dialog{padding:16px 10px}.student-board-panel{padding:10px}.lb-list .lb-row{gap:5px;padding:8px 5px}.lb-list .lb-name{font-size:14px}.lb-list .lb-rank{flex-basis:24px}.lb-score{font-size:13px}.lb-change{min-width:33px;font-size:12px}.lb-av{font-size:20px}}
+
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -811,10 +821,10 @@ const finishLessonBeforeQuizLabel=finishLesson;finishLesson=function(){finishLes
 function speak(){const l=lessons[current],srcs=[],text=String(l.matn).replace(/\|/g,' ');lineNumbers(l).forEach(n=>{const k='line-'+String(n).padStart(2,'0');['a','b'].forEach(h=>{if(window.TAJWEED_AUDIO[k+h])srcs.push(window.TAJWEED_AUDIO[k+h])})});if(srcs.length)playAudioFiles(srcs,text);else sayArabic(text)}
 function setAuthMode(mode){authMode=mode;const registrationClosed=mode==='create';document.querySelector('.auth-card').classList.toggle('registration-closed',registrationClosed);$('#registrationClosedNotice').classList.toggle('hidden',!registrationClosed);if(registrationClosed){$('#signInTab').classList.remove('active');$('#createTab').classList.add('active');$('#registrationClosedNotice').focus({preventScroll:true});return;}const creating=mode==='create';$('#signInTab').classList.toggle('active',!creating);$('#createTab').classList.toggle('active',creating);$('#fullNameField').classList.toggle('hidden',!creating);$('#authEmailField').classList.toggle('hidden',!creating);$('#forgotPasswordNote').classList.toggle('hidden',creating);$('#authPassword').autocomplete=creating?'new-password':'current-password';$('#authSubmit').textContent=creating?'Create account':'Sign in';$('#authMessage').textContent='';$('#authMessage').classList.remove('auth-loading')}
 function friendlyAuthError(err){const code=String(err&&err.code||'');if(code.includes('invalid-credential')||code.includes('wrong-password')||code.includes('user-not-found'))return 'That username or password is not correct.';if(code.includes('email-already-in-use'))return 'That username is already taken. Try signing in.';if(code.includes('weak-password'))return 'Choose a password with at least six characters.';if(code.includes('too-many-requests'))return 'Too many attempts. Please wait a few minutes and try again.';if(code.includes('network'))return 'No connection. Check the internet and try again.';return err&&err.message?err.message:'The account could not be opened. Please try again.'}
-function applyCloudAccount(data){if(!data)return;cloudUser=data;const display=data.displayName||data.fullName||data.username||'Explorer',remote=data.progress&&data.progress[GAME_KEY];let stored=remote;try{if(!stored)stored=JSON.parse(localStorage.getItem(key+'-'+data.uid)||'null')}catch(e){}profile=normalizeProfile(stored,display);save();start()}
+function applyCloudAccount(data){if(!data)return;if(boardSessionUid!==data.uid){resetStudentBoard();boardSessionUid=data.uid;myClassList=[];studentAnnsAt=0}cloudUser=data;const display=data.displayName||data.fullName||data.username||'Explorer',remote=data.progress&&data.progress[GAME_KEY];let stored=remote;try{if(!stored)stored=JSON.parse(localStorage.getItem(key+'-'+data.uid)||'null')}catch(e){}profile=normalizeProfile(stored,display);save();start()}
 async function submitAuth(){if(authMode==='create'){setAuthMode('create');return}if(!window.KidsCloud)return;const username=$('#authUsername').value.trim(),password=$('#authPassword').value,fullName=$('#authFullName').value.trim(),email=$('#authEmail').value.trim(),msg=$('#authMessage');if(!username||!password){msg.textContent='Enter your username and password.';return}if(authMode==='create'&&password.length<6){msg.textContent='Choose a password with at least six characters.';return}msg.textContent=authMode==='create'?'Creating your account…':'Signing you in…';msg.classList.add('auth-loading');$('#authSubmit').disabled=true;try{const data=authMode==='create'?await window.KidsCloud.studentSignUp(username,email,password,fullName):await window.KidsCloud.studentLogin(username,password);applyCloudAccount(data)}catch(err){msg.textContent=friendlyAuthError(err);msg.classList.remove('auth-loading');$('#authSubmit').disabled=false}}
 async function forgotPassword(){if(!window.KidsCloud)return;const username=$('#authUsername').value.trim(),msg=$('#authMessage');if(!username){msg.textContent='Enter your username above first, then tap "Forgot your password?" again.';return}msg.textContent='Sending…';msg.classList.add('auth-loading');try{await window.KidsCloud.studentForgotPassword(username);msg.textContent='Reset link sent to the email on file — open it, set a new password, then sign in.';msg.classList.remove('auth-loading')}catch(err){msg.textContent=err&&err.code==='app/no-email-on-file'?err.message:friendlyAuthError(err);msg.classList.remove('auth-loading')}}
-function wireCloudAuth(){if(authWired||!window.KidsCloud)return;authWired=true;$('#authSubmit').disabled=false;$('#authMessage').textContent='';$('#authMessage').classList.remove('auth-loading');window.KidsCloud.onStudentAuth(data=>{if(data)applyCloudAccount(data);else{cloudUser=null;profile=freshProfile();show('startScreen');$('#authSubmit').disabled=false}})}
+function wireCloudAuth(){if(authWired||!window.KidsCloud)return;authWired=true;$('#authSubmit').disabled=false;$('#authMessage').textContent='';$('#authMessage').classList.remove('auth-loading');window.KidsCloud.onStudentAuth(data=>{if(data)applyCloudAccount(data);else{resetStudentBoard();myClassList=[];studentAnnsAt=0;cloudUser=null;profile=freshProfile();show('startScreen');$('#authSubmit').disabled=false}})}
 $('#signInTab').onclick=()=>setAuthMode('signin');$('#createTab').onclick=()=>setAuthMode('create');$('#authSubmit').onclick=submitAuth;$('#forgotPasswordBtn').onclick=forgotPassword;$('#authUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authPassword').focus()});$('#authPassword').addEventListener('keydown',e=>{if(e.key==='Enter')submitAuth()});$('#logoutBtn').onclick=()=>{if(window.KidsCloud)window.KidsCloud.studentLogout()};$('#prevWorld').onclick=()=>{if(viewWorld>0){viewWorld--;renderMap()}};$('#nextWorld').onclick=()=>{if(viewWorld<worlds.length-1&&worldUnlocked(viewWorld+1)){viewWorld++;renderMap()}};$('#homeBtn').onclick=()=>{renderMap();show('mapScreen')};$('#previousLessonBtn').onclick=previousLesson;$('#soundBtn').onclick=speak;$('#soundToggle').onclick=()=>{soundOn=!soundOn;if(!soundOn&&'speechSynthesis'in window)speechSynthesis.cancel();syncStats();if(soundOn)happySound()};$('#clearSignature').onclick=clearSignaturePad;$('#teacherApproveBtn').onclick=approveTeacherCheck;$('#mapQuizBtn').onclick=showMapQuiz;$('#studentAvatar').onclick=showAvatarPicker;$('#avatarBtn').onclick=showAvatarPicker;$('#avatarBack').onclick=()=>{renderMap();show('mapScreen')};$('#vocabBtn').onclick=showVocab;$('#vocabBack').onclick=()=>{renderMap();show('mapScreen')};$('#flashBtn').onclick=showFlash;$('#flashBack').onclick=()=>{renderMap();show('mapScreen')};$('#certBtn').onclick=showCert;$('#certBack').onclick=()=>{renderMap();show('mapScreen')};$('#continueBtn').onclick=continueQuest;$('#rewardMapBtn').onclick=()=>{renderMap();show('mapScreen')};$('#resetBtn').onclick=()=>{if(confirm('Reset all Tajweed Quest progress?')){localStorage.removeItem(progressKey());profile=freshProfile(profile.name);save();viewWorld=0;renderMap()}};setupSignaturePad();$('#year').textContent=new Date().getFullYear();window.addEventListener('kidscloud-ready',wireCloudAuth);if(window.KidsCloud)wireCloudAuth();
 </script>
 <script type="module" src="../kids-quest-cloud.js?v=24"></script>
@@ -1516,7 +1526,8 @@ var myClassList=[],classJoinMsg='';
 function forMyClass(x){return !x||!x.classId||myClassList.some(c=>c.id===x.classId)}
 function loadMyClasses(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.listMyClasses)return;
- window.KidsCloud.listMyClasses().then(list=>{const before=JSON.stringify(myClassList);myClassList=list.filter(c=>!c.game||c.game===GAME_KEY);loadBoard();checkBadgesSoon();if(JSON.stringify(myClassList)!==before&&!$('#mapScreen').classList.contains('hidden'))renderTeacherQuizzes()}).catch(()=>{});
+ const classOwner=window.KidsCloud.currentUid();
+ window.KidsCloud.listMyClasses().then(list=>{if(!cloudUser||classOwner!==window.KidsCloud.currentUid())return;const before=JSON.stringify(myClassList);myClassList=list.filter(c=>!c.game||c.game===GAME_KEY);loadBoard();checkBadgesSoon();if(JSON.stringify(myClassList)!==before&&!$('#mapScreen').classList.contains('hidden'))renderTeacherQuizzes()}).catch(()=>{});
 }
 function renderClassBox(){
  const box=$('#classBox');if(!box)return;if(!cloudUser){box.innerHTML='';return}
@@ -1858,28 +1869,76 @@ function sendStudentRecording(){
 }
 
 /* ---------- class leaderboard ---------- */
-var boardData={},boardMetric='memorised',boardWrittenAt={};
+var boardData={},boardMetric='memorised',boardWrittenAt={},boardPrevious={},boardLoaded={},boardShownFor='',boardSessionUid='',boardRequest=0;
 function boardClass(){return myClassList.find(c=>c.leaderboard)||null}
-function myBoardEntry(){const n=String(myName()).split(/\s+/)[0];return{name:n,avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count}}
+function resetStudentBoard(){
+ boardRequest++;boardData={};boardPrevious={};boardLoaded={};boardWrittenAt={};boardShownFor='';boardSessionUid='';
+ const dialog=document.getElementById('studentBoardDialog');if(dialog){if(dialog.open)dialog.close();dialog.remove()}
+ const box=$('#boardBox');if(box)box.innerHTML='';
+}
+function myBoardEntry(){return{name:String(myName()).split(/\s+/)[0],avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count}}
+function boardEntries(c,metric){
+ const uid=window.KidsCloud.currentUid(),members=new Set(c.studentUids||[]);
+ return Object.entries(boardData[c.id]||{}).filter(([u])=>members.has(u)||u===uid).map(([u,e])=>Object.assign({},e,{uid:u})).sort((a,b)=>(Number(b[metric])||0)-(Number(a[metric])||0)||String(a.name).localeCompare(String(b.name))||a.uid.localeCompare(b.uid));
+}
+function rememberBoard(c,uid){
+ ['memorised','streak','stars'].forEach(metric=>{
+  const key='tuhfatul-board-v1:'+uid+':'+c.id+':'+metric;
+  if(!Object.prototype.hasOwnProperty.call(boardPrevious,key)){
+   try{const saved=JSON.parse(localStorage.getItem(key)||'null');boardPrevious[key]=saved&&saved.ranks||{}}catch(e){boardPrevious[key]={}}
+  }
+  const ranks={};boardEntries(c,metric).forEach((e,i)=>{ranks[e.uid]=i+1});
+  try{localStorage.setItem(key,JSON.stringify({ranks:ranks}))}catch(e){}
+ });
+}
 function loadBoard(){
- const c=boardClass();if(!c||!window.KidsCloud.getBoard){renderBoard();return}
- const uid=window.KidsCloud.currentUid(),me=myBoardEntry(),key=JSON.stringify(me);
- const write=boardWrittenAt[c.id]===key?Promise.resolve():window.KidsCloud.studentUpdateBoard(c.id,me).then(()=>{boardWrittenAt[c.id]=key}).catch(()=>{});
- write.then(()=>window.KidsCloud.getBoard(c.id)).then(e=>{boardData[c.id]=e;if(uid)boardData[c.id][uid]=Object.assign({},me);renderBoard()}).catch(()=>renderBoard());
+ const c=boardClass();if(!cloudUser||!c||!window.KidsCloud.getBoard){renderBoard();return}
+ const uid=window.KidsCloud.currentUid(),request=++boardRequest,me=myBoardEntry(),key=JSON.stringify(me);
+ const write=boardWrittenAt[c.id]===key?Promise.resolve():window.KidsCloud.studentUpdateBoard(c.id,me).then(()=>{if(request===boardRequest)boardWrittenAt[c.id]=key}).catch(()=>{});
+ write.then(()=>window.KidsCloud.getBoard(c.id)).then(entries=>{
+  if(request!==boardRequest||!cloudUser||uid!==window.KidsCloud.currentUid()||!boardClass()||boardClass().id!==c.id)return;
+  boardData[c.id]=Object.assign({},entries);if(uid)boardData[c.id][uid]=Object.assign({},me);
+  boardLoaded[c.id]=true;rememberBoard(c,uid);renderBoard();
+ }).catch(()=>{if(request===boardRequest)renderBoard()});
+}
+function boardContent(c){
+ const uid=window.KidsCloud.currentUid(),all=boardEntries(c,boardMetric),myRank=all.findIndex(e=>e.uid===uid)+1;
+ const labels={memorised:['🧠','lines memorised'],streak:['🔥','day streak'],stars:['⭐','stars']},label=labels[boardMetric];
+ const previous=boardPrevious['tuhfatul-board-v1:'+uid+':'+c.id+':'+boardMetric]||{};
+ const row=(e,i)=>{
+  const old=Number(previous[e.uid]),delta=old?old-(i+1):0,change=!old?'New':delta>0?'↑ '+delta:delta<0?'↓ '+Math.abs(delta):'—';
+  const description=!old?'First appearance':delta>0?'Up '+delta+' places':delta<0?'Down '+Math.abs(delta)+' places':'Same position';
+  return `<div class="lb-row ${e.uid===uid?'me':''}" data-rank-shift="${delta}"><span class="lb-rank">${['🥇','🥈','🥉'][i]||i+1}</span><span class="lb-av" aria-hidden="true">${escapeHtml(e.avatar||'🧒')}</span><span class="lb-name">${escapeHtml(String(e.name||'Student').split(/\s+/)[0])}${e.uid===uid?' <small>(you)</small>':''}</span><span class="lb-score">${label[0]} ${Number(e[boardMetric])||0}</span><span class="lb-change ${delta>0?'up':delta<0?'down':'same'}" aria-label="${description}">${change}</span></div>`;
+ };
+ return `<div class="lb-welcome"><span aria-hidden="true">🏆</span><h2>Your class leaderboard</h2><p>${escapeHtml(c.name||'Your class')}</p><strong>${myRank?'You are #'+myRank+' of '+all.length:'Let’s grow together!'}</strong></div><div class="lb-metrics" aria-label="Rank by">${Object.entries({memorised:'🧠 Memorised',streak:'🔥 Streak',stars:'⭐ Stars'}).map(([k,t])=>`<button type="button" aria-pressed="${k===boardMetric}" class="hifz-chip ${k===boardMetric?'active':''}" data-lbm="${k}">${t}</button>`).join('')}</div><p class="lb-caption">Ranked by ${label[1]}. Arrows show changes since your previous visit on this device.</p><div class="lb-list">${all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>'}</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>`;
+}
+function wireBoard(box){
+ box.querySelectorAll('[data-lbm]').forEach(b=>b.onclick=()=>{boardMetric=b.dataset.lbm;renderBoard()});
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ box.querySelectorAll('[data-rank-shift]').forEach((row,i)=>{
+  const shift=Number(row.dataset.rankShift);if(!shift||!row.animate)return;
+  const distance=Math.max(-260,Math.min(260,shift*(row.getBoundingClientRect().height+8)));
+  row.animate([{transform:'translateY('+distance+'px)',opacity:.25},{transform:'translateY(0)',opacity:1}],{duration:950,delay:i*45,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'});
+ });
+}
+function openStudentBoard(){
+ const c=boardClass();if(!cloudUser||!c||!boardLoaded[c.id])return;
+ let dialog=document.getElementById('studentBoardDialog');
+ if(!dialog){dialog=document.createElement('dialog');dialog.id='studentBoardDialog';dialog.className='student-board-dialog';dialog.setAttribute('aria-label','Your class leaderboard');document.body.append(dialog)}
+ dialog.innerHTML=boardContent(c)+'<button type="button" class="lb-continue" autofocus>Continue to my map →</button>';
+ dialog.querySelector('.lb-continue').onclick=()=>dialog.close();
+ if(!dialog.open)dialog.showModal();wireBoard(dialog);
 }
 function renderBoard(){
- const box=$('#boardBox');if(!box)return;const c=boardClass();if(!cloudUser||!c){box.innerHTML='';return}
- const uid=window.KidsCloud.currentUid(),members=new Set(c.studentUids||[]),all=Object.entries(boardData[c.id]||{}).filter(([u])=>members.has(u)||u===uid).map(([u,e])=>Object.assign({uid:u},e));
- const lbl={memorised:['🧠','lines'],streak:['🔥','days'],stars:['⭐','stars']};
- all.sort((a,b)=>(b[boardMetric]||0)-(a[boardMetric]||0)||String(a.name).localeCompare(String(b.name)));
- const myRank=all.findIndex(e=>e.uid===uid)+1,top=all.slice(0,10),medal=i=>['🥇','🥈','🥉'][i]||(i+1)+'.';
- const row=(e,i)=>`<div class="lb-row ${e.uid===uid?'me':''}"><span class="lb-rank">${medal(i)}</span><span class="lb-av">${escapeHtml(e.avatar||'🧒')}</span><span class="lb-name">${escapeHtml(e.name||'Student')}${e.uid===uid?' (you)':''}</span><b>${lbl[boardMetric][0]} ${e[boardMetric]||0}</b></div>`;
- const body=`<div class="hifz-chips" style="margin-bottom:8px">${Object.entries({memorised:'🧠 Memorised',streak:'🔥 Streak',stars:'⭐ Stars'}).map(([k,t])=>`<button class="hifz-chip ${k===boardMetric?'active':''}" data-lbm="${k}">${t}</button>`).join('')}</div>`+
-  (all.length?top.map(row).join('')+(myRank>10?'<div style="text-align:center;color:#75684f">…</div>'+row(all[myRank-1],myRank-1):''):'<p style="color:#75684f">No one on the board yet.</p>');
- box.innerHTML=foldHTML('board','🏆','Class leaderboard · '+escapeHtml(c.name),myRank?'You are #'+myRank+' of '+all.length+' for '+lbl[boardMetric][1]:'See how your class is doing','',body);
- wireFolds(box);box.querySelectorAll('[data-lbm]').forEach(b=>b.onclick=()=>{boardMetric=b.dataset.lbm;renderBoard()});
+ const box=$('#boardBox');if(!box)return;const c=boardClass();
+ if(!cloudUser||!c){box.innerHTML='';const d=document.getElementById('studentBoardDialog');if(d&&d.open)d.close();return}
+ if(!boardLoaded[c.id]){box.innerHTML='<p class="lb-caption">Your class leaderboard is loading.</p>';return}
+ box.innerHTML='<section class="student-board-panel">'+boardContent(c)+'<button type="button" class="lb-open">Open leaderboard ↗</button></section>';
+ box.querySelector('.lb-open').onclick=openStudentBoard;wireBoard(box);
+ const uid=window.KidsCloud.currentUid(),d=document.getElementById('studentBoardDialog');
+ if(d&&d.open)openStudentBoard();
+ else if(boardShownFor!==uid+':'+c.id&&!$('#mapScreen').classList.contains('hidden')){boardShownFor=uid+':'+c.id;openStudentBoard()}
 }
-
 /* ---------- badges ---------- */
 screens.push('badgeScreen');
 function passedTeacherQuizCount(){return Object.keys(tqResults()).filter(id=>hwQuizPassed(id)).length}
