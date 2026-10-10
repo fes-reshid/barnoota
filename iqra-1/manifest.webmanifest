@@ -3,7 +3,7 @@
   "name": "Iqra 1 — Diin Islaam",
   "short_name": "Iqra 1",
   "description": "A playful 15-map Iqra Book 1 course with teacher audio.",
-  "start_url": "/iqra-1/",
+  "start_url": "/iqra-1/?app=1",
   "scope": "/iqra-1/",
   "display": "standalone",
   "display_override": [
