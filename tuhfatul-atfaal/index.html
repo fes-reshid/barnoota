@@ -1869,11 +1869,10 @@ function sendStudentRecording(){
 }
 
 /* ---------- class leaderboard ---------- */
-var boardData={},boardMetric='memorised',boardWrittenAt={},boardPrevious={},boardLoaded={},boardShownFor='',boardSessionUid='',boardRequest=0;
+var boardData={},boardMetric='memorised',boardWrittenAt={},boardPrevious={},boardLoaded={},boardSessionUid='',boardRequest=0;
 function boardClass(){return myClassList.find(c=>c.leaderboard)||null}
 function resetStudentBoard(){
- boardRequest++;boardData={};boardPrevious={};boardLoaded={};boardWrittenAt={};boardShownFor='';boardSessionUid='';
- const dialog=document.getElementById('studentBoardDialog');if(dialog){if(dialog.open)dialog.close();dialog.remove()}
+ boardRequest++;boardData={};boardPrevious={};boardLoaded={};boardWrittenAt={};boardSessionUid='';
  const box=$('#boardBox');if(box)box.innerHTML='';
 }
 function myBoardEntry(){return{name:String(myName()).split(/\s+/)[0],avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count}}
@@ -1910,7 +1909,7 @@ function boardContent(c){
   const description=!old?'First appearance':delta>0?'Up '+delta+' places':delta<0?'Down '+Math.abs(delta)+' places':'Same position';
   return `<div class="lb-row ${e.uid===uid?'me':''}" data-rank-shift="${delta}"><span class="lb-rank">${['🥇','🥈','🥉'][i]||i+1}</span><span class="lb-av" aria-hidden="true">${escapeHtml(e.avatar||'🧒')}</span><span class="lb-name">${escapeHtml(String(e.name||'Student').split(/\s+/)[0])}${e.uid===uid?' <small>(you)</small>':''}</span><span class="lb-score">${label[0]} ${Number(e[boardMetric])||0}</span><span class="lb-change ${delta>0?'up':delta<0?'down':'same'}" aria-label="${description}">${change}</span></div>`;
  };
- return `<div class="lb-welcome"><span aria-hidden="true">🏆</span><h2>Your class leaderboard</h2><p>${escapeHtml(c.name||'Your class')}</p><strong>${myRank?'You are #'+myRank+' of '+all.length:'Let’s grow together!'}</strong></div><div class="lb-metrics" aria-label="Rank by">${Object.entries({memorised:'🧠 Memorised',streak:'🔥 Streak',stars:'⭐ Stars'}).map(([k,t])=>`<button type="button" aria-pressed="${k===boardMetric}" class="hifz-chip ${k===boardMetric?'active':''}" data-lbm="${k}">${t}</button>`).join('')}</div><p class="lb-caption">Ranked by ${label[1]}. Arrows show changes since your previous visit on this device.</p><div class="lb-list">${all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>'}</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>`;
+ return `<div class="lb-metrics" aria-label="Rank by">${Object.entries({memorised:'🧠 Memorised',streak:'🔥 Streak',stars:'⭐ Stars'}).map(([k,t])=>`<button type="button" aria-pressed="${k===boardMetric}" class="hifz-chip ${k===boardMetric?'active':''}" data-lbm="${k}">${t}</button>`).join('')}</div><p class="lb-caption">Ranked by ${label[1]}. Arrows show changes since your previous visit on this device.</p><div class="lb-list">${all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>'}</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>`;
 }
 function wireBoard(box){
  box.querySelectorAll('[data-lbm]').forEach(b=>b.onclick=()=>{boardMetric=b.dataset.lbm;renderBoard()});
@@ -1921,23 +1920,16 @@ function wireBoard(box){
   row.animate([{transform:'translateY('+distance+'px)',opacity:.25},{transform:'translateY(0)',opacity:1}],{duration:950,delay:i*45,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'});
  });
 }
-function openStudentBoard(){
- const c=boardClass();if(!cloudUser||!c||!boardLoaded[c.id])return;
- let dialog=document.getElementById('studentBoardDialog');
- if(!dialog){dialog=document.createElement('dialog');dialog.id='studentBoardDialog';dialog.className='student-board-dialog';dialog.setAttribute('aria-label','Your class leaderboard');document.body.append(dialog)}
- dialog.innerHTML=boardContent(c)+'<button type="button" class="lb-continue" autofocus>Continue to my map →</button>';
- dialog.querySelector('.lb-continue').onclick=()=>dialog.close();
- if(!dialog.open)dialog.showModal();wireBoard(dialog);
-}
 function renderBoard(){
  const box=$('#boardBox');if(!box)return;const c=boardClass();
- if(!cloudUser||!c){box.innerHTML='';const d=document.getElementById('studentBoardDialog');if(d&&d.open)d.close();return}
- if(!boardLoaded[c.id]){box.innerHTML='<p class="lb-caption">Your class leaderboard is loading.</p>';return}
- box.innerHTML='<section class="student-board-panel">'+boardContent(c)+'<button type="button" class="lb-open">Open leaderboard ↗</button></section>';
- box.querySelector('.lb-open').onclick=openStudentBoard;wireBoard(box);
- const uid=window.KidsCloud.currentUid(),d=document.getElementById('studentBoardDialog');
- if(d&&d.open)openStudentBoard();
- else if(boardShownFor!==uid+':'+c.id&&!$('#mapScreen').classList.contains('hidden')){boardShownFor=uid+':'+c.id;openStudentBoard()}
+ if(!cloudUser||!c){box.innerHTML='';return}
+ const uid=window.KidsCloud.currentUid(),all=boardEntries(c,boardMetric),myRank=all.findIndex(e=>e.uid===uid)+1;
+ const labels={memorised:'lines memorised',streak:'day streak',stars:'stars'};
+ const body=boardLoaded[c.id]?boardContent(c):'<p class="lb-caption">Your class leaderboard is loading.</p>';
+ box.innerHTML=foldHTML('board','🏆','Class leaderboard · '+escapeHtml(c.name),myRank?'You are #'+myRank+' of '+all.length+' for '+labels[boardMetric]:'See how your class is doing','',body);
+ wireFolds(box);
+ box.querySelector('.fold-head').addEventListener('click',()=>{if(box.querySelector('.fold.open'))requestAnimationFrame(()=>wireBoard(box))});
+ wireBoard(box);
 }
 /* ---------- badges ---------- */
 screens.push('badgeScreen');
