@@ -1944,6 +1944,8 @@ screens.push('badgeScreen');
 function passedTeacherQuizCount(){return Object.keys(tqResults()).filter(id=>hwQuizPassed(id)).length}
 function onTimeHomework(){const m=hwDoneMap();return studentHomework.filter(h=>m[h.id]&&(!h.dueDate||new Date(m[h.id].at)<=hwDueEnd(h))).length}
 function worldsDone(){return worlds.filter((_,w)=>worldComplete(w)).length}
+function memorisedPoemLines(){return new Set(memorisedLines().flatMap(i=>lineNumbers(lessons[i])))}
+function wholePoemMemorised(){const memorised=memorisedPoemLines();return lessons.length>0&&lessons.every(l=>lineNumbers(l).every(n=>memorised.has(n)))}
 const BADGES=[
  ['first_lesson','🌱','First lesson','Finish your first lesson',()=>doneCount()>=1],
  ['lessons10','📘','10 lessons','Finish 10 lessons',()=>doneCount()>=10],
@@ -1952,9 +1954,14 @@ const BADGES=[
  ['map1','🗺️','First map done','Finish every lesson in a map',()=>worldsDone()>=1],
  ['challenge','🏆','Challenge champion','Pass a 15-question map challenge',()=>worlds.some((_,w)=>mapQuizPassed(w))],
  ['cert1','📜','Teacher approved','Get a map approved by your teacher',()=>worlds.some((_,w)=>assessment(w)&&assessment(w).approved)],
- ['memo1','🧠','First line memorised','Memorise a line (level 4)',()=>memorisedLines().length>=1],
- ['memo5','🌟','5 lines by heart','Memorise 5 lines',()=>memorisedLines().length>=5],
- ['memo15','💎','15 lines by heart','Memorise 15 lines',()=>memorisedLines().length>=15],
+ ['memo1','🧠','First line memorised','Memorise a line (level 4)',()=>memorisedPoemLines().size>=1],
+ ['memo5','🌟','5 lines by heart','Memorise 5 lines',()=>memorisedPoemLines().size>=5],
+ ['memo15','💎','15 lines by heart','Memorise 15 lines',()=>memorisedPoemLines().size>=15],
+ ['memo25','🌠','25 lines memorised','Memorise 25 lines',()=>memorisedPoemLines().size>=25],
+ ['memo35','🏅','35 lines memorised','Memorise 35 lines',()=>memorisedPoemLines().size>=35],
+ ['memo45','👑','45 lines memorised','Memorise 45 lines',()=>memorisedPoemLines().size>=45],
+ ['memo55','🏆','55 lines memorised','Memorise 55 lines',()=>memorisedPoemLines().size>=55],
+ ['memo_complete','🎓','Completed memorisation','Memorise every line of Tuhfatul Atfaal',()=>wholePoemMemorised()],
  ['streak3','🔥','3-day streak','Practise 3 days in a row',()=>((profile.streak&&profile.streak.best)||0)>=3],
  ['streak7','🔥','7-day streak','Practise 7 days in a row',()=>((profile.streak&&profile.streak.best)||0)>=7],
  ['streak30','☀️','30-day streak','Practise 30 days in a row',()=>((profile.streak&&profile.streak.best)||0)>=30],
