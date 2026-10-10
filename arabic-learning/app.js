@@ -34,7 +34,7 @@
   const audioIndex={};
   Object.entries(window.ARABIC_ADVENTURE_AUDIO_MANIFEST?.ar||{}).forEach(([t,src])=>{audioIndex[norm(t)]='../'+src.replace(/^\/+/,'');});
   ALPHABET.forEach(l=>{if(audioIndex[norm(l[0])])audioIndex[norm(l[1])]=audioIndex[norm(l[0])];});
-  function fresh(name='Explorer'){return {version:1,name,avatar:'🌟',done:{},activity:{},practice:{},daily:{},startAt:0,updatedAt:0,preferences:{roman:true,translation:true}};}
+  function fresh(name='Explorer'){return {version:1,name,avatar:'🌟',done:{},activity:{},practice:{},daily:{},startAt:0,updatedAt:0,preferences:{roman:true,translation:true,fullScreenMap:false}};}
   function normaliseProfile(raw,name){
     const p=fresh(name);
     if(!raw||typeof raw!=='object')return p;
@@ -43,7 +43,7 @@
     for(const field of ['done','activity','practice','daily'])if(raw[field]&&typeof raw[field]==='object'&&!Array.isArray(raw[field]))p[field]=raw[field];
     p.startAt=Math.min(138,Math.max(0,Math.floor(Number(raw.startAt)||0)));
     p.updatedAt=Number(raw.updatedAt)||0;
-    if(raw.preferences&&typeof raw.preferences==='object')p.preferences={roman:raw.preferences.roman!==false,translation:raw.preferences.translation!==false};
+    if(raw.preferences&&typeof raw.preferences==='object')p.preferences={roman:raw.preferences.roman!==false,translation:raw.preferences.translation!==false,fullScreenMap:raw.preferences.fullScreenMap===true};
     Object.keys(p.done).forEach(k=>{if(!LESSONS[Number(k)-1]||!p.done[k]||typeof p.done[k]!=='object')delete p.done[k];});
     return p;
   }
@@ -136,6 +136,7 @@
     cleanActivity();stopMedia();stopAudio();lessonSession=null;route=r;render();window.scrollTo({top:0,behavior:'instant'});
   }
   function render(){
+    document.body.classList.toggle('map-fullscreen-mode',route==='journey'&&!!profile.preferences.fullScreenMap);
     renderNav();updateStats();
     if(route==='journey')renderJourney();else if(route==='worlds')renderWorlds();else if(route==='library')renderLibrary();else if(route==='practice')renderPractice();else if(route==='progress')renderProgress();else if(route==='lesson')renderLesson();
   }
@@ -154,8 +155,9 @@
     }).join('');
     const stage=STAGES[w.stage],allDone=completed()===LESSONS.length;
     $('#main').innerHTML=heading('Your next little adventure',user?'Welcome back, '+profile.name+'. Let’s make Arabic part of your day.':'Learn a little. Play a little. Say something new.','24 worlds · 144 lessons')+stageTabs()+
-      '<div class="world-layout"><div><section class="journey-panel"><div class="map-heading"><div><div class="label">World '+w.id+' / 24 · '+esc(stage.label)+'</div><h2>'+esc(w.title)+'</h2><div>'+ar(w.arabic)+'</div></div><div class="map-step"><button data-action="previous-world" aria-label="Previous world" '+(viewWorld===0?'disabled':'')+'>‹</button><button data-action="next-world" aria-label="Next world" '+(viewWorld===23?'disabled':'')+'>›</button></div></div><div class="map" style="'+artStyle(w.stage)+'"><span class="map-flag">'+w.icon+' '+(done===6?'World complete':!canStart(w.lessons[0].id)?'Explore this world':'Your speaking journey')+'</span><svg class="map-path" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><path class="path-shadow" d="'+path+'"/><path class="path-core" d="'+path+'"/></svg>'+nodes+'</div><div class="map-footer"><span>'+done+' of 6 lessons complete</span><span>9 activities in every lesson</span></div><div class="progress-track"><div class="progress-fill" style="width:'+(done/6*100)+'%"></div></div></section><div class="under-map">'+button('World guide','world-guide','text-button')+'<span data-sync></span>'+button('Choose a starting point','placement','text-button')+'</div></div>'+
+      '<div class="world-layout"><div><section class="journey-panel"><div class="map-heading"><div><div class="label">World '+w.id+' / 24 · '+esc(stage.label)+'</div><h2>'+esc(w.title)+'</h2><div>'+ar(w.arabic)+'</div></div><div class="map-step"><button data-action="previous-world" aria-label="Previous world" '+(viewWorld===0?'disabled':'')+'>‹</button><button data-action="next-world" aria-label="Next world" '+(viewWorld===23?'disabled':'')+'>›</button><button class="map-expand" data-action="toggle-map-fullscreen" aria-label="Open journey map full screen" title="Open full screen">⛶ <span>Full screen</span></button></div></div><div class="map" style="'+artStyle(w.stage)+'"><button class="map-exit" data-action="exit-map-fullscreen">← Return to course</button><span class="map-flag">'+w.icon+' '+(done===6?'World complete':!canStart(w.lessons[0].id)?'Explore this world':'Your speaking journey')+'</span><svg class="map-path" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><path class="path-shadow" d="'+path+'"/><path class="path-core" d="'+path+'"/></svg>'+nodes+'</div><div class="map-footer"><span>'+done+' of 6 lessons complete</span><span>9 activities in every lesson</span></div><div class="progress-track"><div class="progress-fill" style="width:'+(done/6*100)+'%"></div></div></section><div class="under-map">'+button('World guide','world-guide','text-button')+'<span data-sync></span>'+button('Choose a starting point','placement','text-button')+'</div></div>'+
       '<div class="side-stack"><section class="card next-card"><div class="eyebrow">'+(allDone?'JOURNEY COMPLETE':done===6?'REVISIT A FAVOURITE':'YOUR NEXT LESSON')+'</div><div class="big-icon">'+(viewWorld===0?'🔤':w.icon)+'</div><h3>'+esc(active.title)+'</h3><p>'+esc(w.goal)+'</p><div class="activity-chips"><span>Listen</span><span>Play</span><span>Speak</span></div>'+button(profile.activity[active.id]&&!profile.done[active.id]?'Continue lesson':canStart(active.id)?'Start this lesson':'Preview this lesson','open-lesson','primary','data-lesson="'+active.id+'"')+'<p class="small" style="margin-top:12px">About '+(w.stage>3?'15–20':'10–15')+' minutes · Work at your pace</p></section><section class="card daily-card"><h3>☀️ A little every day</h3><p>Your goal: one lesson and one speaking practice.</p><div class="goal-track"><div style="width:'+Math.min(100,((profile.daily[dateKey()]?.lessons||0)+(profile.daily[dateKey()]?.practice||0))/2*100)+'%"></div></div><small>'+((profile.daily[dateKey()]?.lessons||0)>0?'Lesson complete':'One lesson to explore')+' · '+((profile.daily[dateKey()]?.practice||0)>0?'Speaking practised':'A voice to use')+'</small></section><button class="card mini-card" data-action="navigate" data-route="practice"><span>🎤</span><span><b>Speaking studio</b><small>Practise with your own voice</small></span></button></div></div>';
+    document.body.classList.toggle('map-fullscreen-mode',!!profile.preferences.fullScreenMap);
     updateStats();
   }
   function renderWorlds(){
@@ -537,8 +539,9 @@
     });
   }
   function accountModal(){
-    openModal('Your learning account','<div class="modal-note"><b>'+esc(profile.name)+'</b><br>'+esc(user?.username||'Guest explorer')+'<br>'+(user?'Same Diin Islaam account · Arabic speaking progress':'Practice is saved on this device')+'</div><h3>Choose your explorer</h3><div class="avatar-options">'+AVATARS.map(a=>button(a,'avatar','', 'data-avatar="'+a+'" aria-label="Choose '+a+'"')).join('')+'</div><div class="speaking-checks"><label><input type="checkbox" id="romanPreference" '+(profile.preferences.roman?'checked':'')+'> Show transliteration in beginner lessons</label></div><div class="button-row">'+button(soundOn?'Turn sound off':'Turn sound on','toggle-sound','secondary')+(user?button('Sign out','logout','secondary'):button('Sign in','login','primary'))+'</div>');
+    openModal('Your learning account','<div class="modal-note"><b>'+esc(profile.name)+'</b><br>'+esc(user?.username||'Guest explorer')+'<br>'+(user?'Same Diin Islaam account · Arabic speaking progress':'Practice is saved on this device')+'</div><h3>Choose your explorer</h3><div class="avatar-options">'+AVATARS.map(a=>button(a,'avatar','', 'data-avatar="'+a+'" aria-label="Choose '+a+'"')).join('')+'</div><div class="speaking-checks"><label><input type="checkbox" id="romanPreference" '+(profile.preferences.roman?'checked':'')+'> Show transliteration in beginner lessons</label><label><input type="checkbox" id="fullScreenMapPreference" '+(profile.preferences.fullScreenMap?'checked':'')+'> Open the journey map full screen</label></div><div class="button-row">'+button(soundOn?'Turn sound off':'Turn sound on','toggle-sound','secondary')+(user?button('Sign out','logout','secondary'):button('Sign in','login','primary'))+'</div>');
     $('#romanPreference').onchange=e=>{profile.preferences.roman=e.target.checked;save();};
+    $('#fullScreenMapPreference').onchange=e=>{profile.preferences.fullScreenMap=e.target.checked;save();document.body.classList.toggle('map-fullscreen-mode',e.target.checked&&route==='journey');};
   }
   function guideModal(){
     openModal('A little Arabic, every day','<ol class="guide-list"><li><b>Begin with a world.</b> Each of the six stops has nine activities. Completed activities are saved so you can continue later.</li><li><b>Listen and say it.</b> Read the short teaching tip. Use the normal and slow audio models.</li><li><b>Build meaning.</b> Match, order words, read a story and respond to a partner.</li><li><b>Use your voice.</b> Record and listen back, or practise aloud. Then try your own idea with a real partner.</li><li><b>Pass the checkpoint.</b> Get at least four of five answers correct to move on. You can retry and review.</li><li><b>Sign in to continue elsewhere.</b> Use your Tuhfatul Atfaal username and password. Watch the saved-progress status.</li></ol><div class="instruction">Many letter and word cards use existing hosted Arabic recordings. Longer models use your device’s Arabic voice. If your device has no Arabic voice, use the written models with a parent or teacher. A microphone is optional.</div>');
@@ -549,6 +552,8 @@
   document.addEventListener('click',async e=>{
     const b=e.target.closest('[data-action]');if(!b||b.disabled)return;const a=b.dataset.action;
     if(a==='navigate'){closeModal();changeRoute(b.dataset.route);}
+    else if(a==='toggle-map-fullscreen'){document.body.classList.add('map-fullscreen-mode');}
+    else if(a==='exit-map-fullscreen'){document.body.classList.remove('map-fullscreen-mode');}
     else if(a==='stage'){viewWorld=Number(b.dataset.stage)*4;renderJourney();}
     else if(a==='select-world'){closeModal();viewWorld=Number(b.dataset.world);changeRoute('journey');}
     else if(a==='previous-world'){viewWorld=Math.max(0,viewWorld-1);renderJourney();}
