@@ -25,7 +25,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy,
-  where, updateDoc, arrayUnion, arrayRemove
+  where, updateDoc, arrayUnion, arrayRemove, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1236,6 +1236,9 @@ function deleteAttendance(id){ return deleteDoc(doc(db, ATTENDANCE_COLLECTION, i
 function getBoard(classId){
   return getDoc(doc(db, BOARDS_COLLECTION, classId)).then(function(s){ return s.exists() ? (s.data().entries || {}) : {}; });
 }
+function watchBoard(classId, onChange, onError){
+ return onSnapshot(doc(db, BOARDS_COLLECTION, classId), function(s){ onChange(s.exists() ? (s.data().entries || {}) : {}); }, onError);
+}
 function studentUpdateBoard(classId, entry){
   const user = auth.currentUser;
   if(!user) return Promise.resolve();
@@ -1249,11 +1252,11 @@ function studentUpdateBoard(classId, entry){
   if(e.currentMap != null) entries[user.uid].currentMap = Math.max(1, Math.min(15, Math.floor(Number(e.currentMap) || 1)));
   const ref = doc(db, BOARDS_COLLECTION, classId);
   // Older rules may not accept map fields yet; keep the existing permitted fields.
-  return setDoc(ref, { entries: entries }, { merge:true }).catch(function(err){
+  return setDoc(ref, { entries: entries }, { merge:true }).then(function(){ return { mapSaved: true }; }).catch(function(err){
     if(!err || err.code !== 'permission-denied') throw err;
     delete entries[user.uid].maps;
     delete entries[user.uid].currentMap;
-    return setDoc(ref, { entries: entries }, { merge:true });
+    return setDoc(ref, { entries: entries }, { merge:true }).then(function(){ return { mapSaved: false }; });
   });
 }
 
@@ -1362,6 +1365,7 @@ window.KidsCloud = {
   saveAttendance: saveAttendance,
   deleteAttendance: deleteAttendance,
   getBoard: getBoard,
+  watchBoard: watchBoard,
   studentUpdateBoard: studentUpdateBoard,
   adminSyncBoard: adminSyncBoard,
   adminLinkStudentTeacher: adminLinkStudentTeacher,
