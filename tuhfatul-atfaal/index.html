@@ -246,6 +246,24 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 @media(max-width:480px){.student-board-dialog{padding:16px 10px}.student-board-panel{padding:10px}.lb-list .lb-row{gap:5px;padding:8px 5px}.lb-list .lb-name{font-size:14px}.lb-list .lb-rank{flex-basis:24px}.lb-score{font-size:13px}.lb-change{min-width:33px;font-size:12px}.lb-av{font-size:20px}}
 
 </style>
+<style id="below-fold">
+/* No teacher signature in the student app */
+#teacherPanel .signature-label,#teacherPanel .signature-wrap,#clearSignature,#mapScreen .cert-signature,#certScreen .cert-signature{display:none!important}
+/* Below the map: one line that opens on tap */
+.below-fold{max-width:1000px;margin:6px auto 0}
+.below-fold-head{display:flex;align-items:center;gap:10px;width:100%;background:#fff;border:2px solid var(--gold2);border-radius:18px;padding:11px 16px;cursor:pointer;font:16px Marcellus,serif;color:var(--navy);text-align:left;box-shadow:0 4px 12px rgba(60,45,20,.08)}
+.below-fold-head:hover{background:#fffaf0}
+.below-fold.open .below-fold-head{border-color:var(--green)}
+.bf-ic{flex:none;font-size:22px}
+.bf-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bf-tags{display:flex;gap:6px;flex:none}
+.bf-tag{background:#e0703a;color:#fff;border-radius:999px;padding:2px 9px;font:800 12px Nunito,sans-serif}
+.bf-tag.soft{background:#fff1c9;color:#8a5a00}
+.bf-chev{flex:none;font:700 13px Nunito,sans-serif;color:#7a5a12;background:#fff4d2;border:1px solid #ecd59a;border-radius:12px;padding:4px 10px}
+.below-fold-body{display:none;margin-top:12px}
+.below-fold.open .below-fold-body{display:block}
+@media(max-width:560px){.below-fold-head{padding:10px 12px;gap:8px}.bf-t{font-size:15px}.bf-tag.soft{display:none}}
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -805,7 +823,7 @@ function wireVocab(){document.querySelectorAll('.vocab-card').forEach(card=>{car
 function checkVocab(term,target){if(target.classList.contains('correct'))return;const card=document.querySelector(`.vocab-card[data-term="${term}"]`);if(+target.dataset.target===term){target.classList.add('correct');card.classList.remove('selected');card.classList.add('matched');card.draggable=false;target.lastElementChild.replaceWith(card);selectedVocab=null;happySound();$('#vocabResult').textContent='Excellent match!';$('#vocabResult').className='vocab-result good';if(document.querySelectorAll('.vocab-card.matched').length===worlds[viewWorld].lessons.length){if(!profile.vocabDone[viewWorld]){profile.vocabDone[viewWorld]=true;profile.coins+=5;save();syncStats();$('#vocabResult').textContent='World vocabulary complete! You earned 5 coins 🪙'}else $('#vocabResult').textContent='World vocabulary complete! ⭐'}}else{target.classList.remove('shake');void target.offsetWidth;target.classList.add('shake');tryAgainSound();$('#vocabResult').textContent='Not that one — try again.';$('#vocabResult').className='vocab-result bad'}}
 function showCert(){const w=worlds[viewWorld],record=assessment(viewWorld),quiz=mapQuizResult(viewWorld);if(!record||!record.approved||!quiz||!quiz.passed)return;const date=record.approvedAt?new Date(record.approvedAt).toLocaleDateString():'Recorded';$('#certBody').innerHTML=`<div class="cert"><div class="seal">${profile.avatar} 🏆</div><h2>Certificate of Achievement</h2><h3>شَهَادَةُ إِنْجَاز</h3><p>This certificate is proudly presented to</p><div class="student">${escapeHtml(profile.name)}</div><p>for completing the lessons and memorisation for</p><h2>${escapeHtml(w.title)}</h2><p class="world-summary">Tajweed Quest · Tuhfatul Atfaal · Map ${viewWorld+1} of ${worlds.length}</p><p>⭐ ${w.lessons.reduce((s,_,i)=>s+profile.stars[worldStarts[viewWorld]+i],0)} stars earned &nbsp; · &nbsp; 🧠 Map Challenge ${quiz.score}/${MAP_QUIZ_TOTAL}</p><p>✓ ${MAP_QUIZ_TOTAL}-question map assessment &nbsp; · &nbsp; ✓ Hifz completed &nbsp; · &nbsp; ✓ Good recitation</p><div class="cert-feedback"><strong>Teacher feedback</strong><br>${escapeHtml(record.feedback)}</div>${record.signature?`<img class="cert-signature" src="${record.signature}" alt="Teacher signature">`:''}<p>Signed by <strong>${escapeHtml(record.teacherName)}</strong><br><small>${escapeHtml(date)}</small></p></div>`;show('certScreen')}
 function showAvatarPicker(){$('#avatarGrid').innerHTML=AVATARS.map(a=>`<button class="avatar-choice ${a===profile.avatar?'selected':''}" data-avatar="${a}" aria-label="Choose ${a} avatar">${a}</button>`).join('');document.querySelectorAll('.avatar-choice').forEach(btn=>btn.onclick=()=>{profile.avatar=btn.dataset.avatar;save();happySound();showAvatarPicker()});show('avatarScreen')}
-function approveTeacherCheck(){if(!worldComplete(viewWorld)||!mapQuizPassed(viewWorld))return;const name=$('#teacherName').value.trim(),feedback=$('#teacherFeedback').value.trim(),hifz=$('#teacherHifz').checked,recitation=$('#teacherRecitation').checked,status=$('#teacherStatus');if(!name||!hifz||!recitation||!feedback||!signatureDirty){status.textContent='Please add the teacher name, both checks, feedback and a signature.';status.style.color='#b5452b';return}const wasApproved=!!(assessment(viewWorld)&&assessment(viewWorld).approved);profile.teacherAssessments[viewWorld]={teacherName:name,hifz,recitation,feedback,signature:$('#teacherSignature').toDataURL('image/png'),approved:true,approvedAt:new Date().toISOString()};if(!wasApproved)profile.coins+=10;save();happySound();renderMap()}
+function approveTeacherCheck(){if(!worldComplete(viewWorld)||!mapQuizPassed(viewWorld))return;const name=$('#teacherName').value.trim(),feedback=$('#teacherFeedback').value.trim(),hifz=$('#teacherHifz').checked,recitation=$('#teacherRecitation').checked,status=$('#teacherStatus');if(!name||!hifz||!recitation||!feedback){status.textContent='Please add the teacher name, both checks and feedback.';status.style.color='#b5452b';return}const wasApproved=!!(assessment(viewWorld)&&assessment(viewWorld).approved);profile.teacherAssessments[viewWorld]={teacherName:name,hifz,recitation,feedback,signature:'',approved:true,approvedAt:new Date().toISOString()};if(!wasApproved)profile.coins+=10;save();happySound();renderMap()}
 function setupSignaturePad(){const canvas=$('#teacherSignature'),ctx=canvas.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1c2b46';let drawing=false;function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}canvas.addEventListener('pointerdown',e=>{if(canvas.style.pointerEvents==='none')return;drawing=true;signatureDirty=true;canvas.setPointerCapture(e.pointerId);const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);ctx.stroke()});['pointerup','pointercancel','pointerleave'].forEach(type=>canvas.addEventListener(type,()=>{drawing=false}))}
 const freshProfileBeforeFlashPractice=freshProfile;freshProfile=function(name='Explorer'){const p=freshProfileBeforeFlashPractice(name);p.flashPracticeDone=Array(worlds.length).fill(false);return p};profile.flashPracticeDone=Array.isArray(profile.flashPracticeDone)?profile.flashPracticeDone:Array(worlds.length).fill(false);
 const normalizeProfileBeforeFlashPractice=normalizeProfile;normalizeProfile=function(p,name){const d=normalizeProfileBeforeFlashPractice(p,name);d.flashPracticeDone=Array.isArray(d.flashPracticeDone)?[...d.flashPracticeDone,...Array(worlds.length).fill(false)].slice(0,worlds.length):Array(worlds.length).fill(false);return d};
@@ -1893,10 +1911,10 @@ function rememberBoard(c,uid){
 function loadBoard(){
  const c=boardClass();if(!cloudUser||!c||!window.KidsCloud.getBoard){renderBoard();return}
  const uid=window.KidsCloud.currentUid(),request=++boardRequest,me=myBoardEntry(),key=JSON.stringify(me);
- const write=boardWrittenAt[c.id]===key?Promise.resolve():window.KidsCloud.studentUpdateBoard(c.id,me).then(()=>{if(request===boardRequest)boardWrittenAt[c.id]=key}).catch(()=>{});
+ const write=boardWrittenAt[c.id]===key||(typeof teacherMode!=='undefined'&&teacherMode)?Promise.resolve():window.KidsCloud.studentUpdateBoard(c.id,me).then(()=>{if(request===boardRequest)boardWrittenAt[c.id]=key}).catch(()=>{});
  write.then(()=>window.KidsCloud.getBoard(c.id)).then(entries=>{
   if(request!==boardRequest||!cloudUser||uid!==window.KidsCloud.currentUid()||!boardClass()||boardClass().id!==c.id)return;
-  boardData[c.id]=Object.assign({},entries);if(uid)boardData[c.id][uid]=Object.assign({},me);
+  boardData[c.id]=Object.assign({},entries);if(uid&&!(typeof teacherMode!=='undefined'&&teacherMode))boardData[c.id][uid]=Object.assign({},me);
   boardLoaded[c.id]=true;rememberBoard(c,uid);renderBoard();
  }).catch(()=>{if(request===boardRequest)renderBoard()});
 }
@@ -2649,6 +2667,33 @@ $('#stBack').onclick=()=>{renderMap();show('mapScreen')};
 const renderMapBeforeAnnouncements=renderMap;renderMap=function(){if(typeof hwCheck==='function'&&cloudUser&&hwCheck())save();renderMapBeforeAnnouncements();loadStudentAnnouncements(false)};
 window.addEventListener('focus',()=>{loadTeacherQuizzes(true);refreshTeacherNotes();loadStudentAnnouncements(true)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshTeacherNotes()});
+/* Below the map: everything folds into one line by default and opens with a
+   tap. It opens by itself when a notification jumps to something inside. */
+var belowOpen=false;try{belowOpen=sessionStorage.getItem('tq-below-open')==='1'}catch(e){}
+function setBelowOpen(open){
+ belowOpen=!!open;try{sessionStorage.setItem('tq-below-open',belowOpen?'1':'0')}catch(e){}
+ const f=$('#belowFold');if(!f)return;f.classList.toggle('open',belowOpen);
+ const h=$('#belowFoldHead');h.setAttribute('aria-expanded',String(belowOpen));h.querySelector('.bf-chev').textContent=belowOpen?'Hide ▴':'Show ▾';
+}
+function belowFoldSummary(){
+ const tags=$('#belowFoldTags');if(!tags)return;
+ const hot=document.querySelectorAll('#belowFoldBody #teacherQuizzes:not(.hidden) .fold.hot').length,dc=$('#dailyCard'),due=!!(dc&&!dc.classList.contains('hidden')&&!dc.classList.contains('done'));
+ tags.innerHTML=(hot?`<span class="bf-tag">${hot} new</span>`:'')+(due?'<span class="bf-tag soft">🔁 Review today</span>':'');
+}
+function setupBelowFold(){
+ const help=$('#mapHelp');if(!help)return;let fold=$('#belowFold');
+ if(!fold){
+  help.insertAdjacentHTML('afterend','<section class="below-fold" id="belowFold"><button type="button" class="below-fold-head" id="belowFoldHead" aria-expanded="false" aria-controls="belowFoldBody"><span class="bf-ic">📋</span><span class="bf-t">Daily review · From your teacher · Memorise &amp; more</span><span class="bf-tags" id="belowFoldTags"></span><span class="bf-chev">Show ▾</span></button><div class="below-fold-body" id="belowFoldBody"></div></section>');
+  fold=$('#belowFold');$('#belowFoldHead').onclick=()=>setBelowOpen(!belowOpen);
+  if(window.MutationObserver)new MutationObserver(()=>{cancelAnimationFrame(belowFoldSummary.r);belowFoldSummary.r=requestAnimationFrame(belowFoldSummary)}).observe($('#belowFoldBody'),{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+ }
+ const body=$('#belowFoldBody');let el=fold.nextElementSibling;while(el){const next=el.nextElementSibling;body.appendChild(el);el=next}
+ setBelowOpen(belowOpen);belowFoldSummary();
+}
+const scrollIntoViewBeforeFold=Element.prototype.scrollIntoView;
+Element.prototype.scrollIntoView=function(){const body=document.getElementById('belowFoldBody');if(body&&!belowOpen&&body.contains(this))setBelowOpen(true);return scrollIntoViewBeforeFold.apply(this,arguments)};
+const renderMapBeforeBelowFold=renderMap;renderMap=function(){const r=renderMapBeforeBelowFold.apply(this,arguments);setupBelowFold();return r};
+setupBelowFold();
 /* Big map. The map fills the screen under the account bar and map tabs: on
    wide screens it grows to the window height; on tall phones it fills the
    height and pans sideways, centred on the student's lesson. Teacher

@@ -2490,7 +2490,9 @@ function wireHomework(){
 const HIDDEN_ACCOUNTS = ['fesfes.com'];
 function isStaffAccount(s){
   const text = [s.username, s.email, s.loginEmail, s.displayName].map(v => String(v || '').toLowerCase()).join(' ');
-  return /quest-?teacher-/.test(text) || HIDDEN_ACCOUNTS.includes(String(s.username || '').toLowerCase()) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
+  // Teacher logins: old "…quest-teacher-…" accounts and "username-teacher" ones.
+  const login = [s.username, s.email, s.loginEmail].map(v => String(v || '').toLowerCase()).join(' ');
+  return /quest-?teacher-/.test(text) || /-teacher\b/.test(login) || HIDDEN_ACCOUNTS.includes(String(s.username || '').toLowerCase()) || (!!myEmail && text.split(' ').includes(String(myEmail).toLowerCase()));
 }
 
 /* ===================== weekly reports ===================== */
