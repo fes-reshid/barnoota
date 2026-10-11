@@ -1912,7 +1912,7 @@ function sendStudentRecording(){
 }
 
 /* ---------- class leaderboard ---------- */
-var boardData={},boardMetric='currentMap',boardWrittenAt={},boardPrevious={},boardLoaded={},boardSessionUid='',boardRequest=0,boardUnsubscribe=null,boardWatching='',boardError='';
+var boardData={},boardMetric='maps',boardWrittenAt={},boardPrevious={},boardLoaded={},boardSessionUid='',boardRequest=0,boardUnsubscribe=null,boardWatching='',boardError='';
 function boardClass(){return myClassList.find(c=>c.leaderboard)||null}
 function resetStudentBoard(){
  if(boardUnsubscribe)boardUnsubscribe();boardUnsubscribe=null;boardWatching='';boardError='';
@@ -1932,13 +1932,13 @@ function leaderboardMapReached(p,ranges){
 function mapsCompleted(){return worlds.filter((_,w)=>{const a=assessment(w);return worldComplete(w)||!!(a&&a.approved)}).length}
 function myBoardEntry(){return{name:String(myName()).split(/\s+/)[0],avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count,maps:mapsCompleted(),currentMap:leaderboardMapReached(profile,worlds.map((w,i)=>[worldStarts[i],w.lessons.length]))}}
 /* Rank by the map reached, using the dedicated field so old completion counts are not mislabelled. */
-function boardValue(e,metric=boardMetric){if(metric!=='currentMap')return Math.max(0,Number(e[metric])||0);const n=Number(e.currentMap);return Number.isInteger(n)&&n>=1&&n<=worlds.length?n:0}
+function boardValue(e,metric=boardMetric){if(metric!=='maps')return Math.max(0,Number(e[metric])||0);const n=Number(e.maps);return e.maps!=null&&Number.isInteger(n)&&n>=0&&n<=worlds.length?n:-1}
 function boardEntries(c,metric=boardMetric){
  const uid=window.KidsCloud.currentUid(),members=new Set(c.studentUids||[]);
  return Object.entries(boardData[c.id]||{}).filter(([u])=>members.has(u)||u===uid).map(([u,e])=>Object.assign({},e,{uid:u})).sort((a,b)=>boardValue(b,metric)-boardValue(a,metric)||String(a.name).localeCompare(String(b.name))||a.uid.localeCompare(b.uid));
 }
 function rememberBoard(c,uid){
- ['currentMap','memorised','stars'].forEach(metric=>{
+ ['maps','memorised','stars'].forEach(metric=>{
   const key='tuhfatul-board-v1:'+uid+':'+c.id+':'+metric;
   if(!Object.prototype.hasOwnProperty.call(boardPrevious,key)){
    try{const saved=JSON.parse(localStorage.getItem(key)||'null');boardPrevious[key]=saved&&saved.ranks||{}}catch(e){boardPrevious[key]={}}
@@ -1968,11 +1968,11 @@ function boardContent(c){
  const uid=window.KidsCloud.currentUid(),all=boardEntries(c),myRank=all.findIndex(e=>e.uid===uid)+1;
  const previous=boardPrevious['tuhfatul-board-v1:'+uid+':'+c.id+':'+boardMetric]||{};
  const row=(e,i)=>{
-  const old=Number(previous[e.uid]),delta=old&&!(boardMetric==='currentMap'&&!boardValue(e))?old-(i+1):0,n=boardValue(e),known=boardMetric!=='currentMap'||n>0;
+  const old=Number(previous[e.uid]),delta=old&&!(boardMetric==='maps'&&boardValue(e)<0)?old-(i+1):0,n=boardValue(e),known=boardMetric!=='maps'||n>=0;
   const movement=boardMetric!=='stars'?'<span class="lb-change same" aria-label="'+(Number(e.stars)||0)+' stars">⭐ '+(Number(e.stars)||0)+'</span>':'';
-  return '<div class="lb-row '+(e.uid===uid?'me':'')+'" data-rank-shift="'+delta+'"><span class="lb-rank">'+(known&&(boardMetric!=='currentMap'||all.every(x=>boardValue(x,'currentMap')>0))?(['🥇','🥈','🥉'][i]||i+1):'')+'</span><span class="lb-av" aria-hidden="true">'+escapeHtml(e.avatar||'🧒')+'</span><span class="lb-name">'+escapeHtml(String(e.name||'Student').split(/\s+/)[0])+(e.uid===uid?' <small>(you)</small>':'')+'</span><span class="lb-score" aria-label="'+(boardMetric==='currentMap'?(n?'Map '+n+' of '+worlds.length:'Map not synced'):n+' '+(boardMetric==='memorised'?'lines memorised':'stars'))+'">'+(boardMetric==='currentMap'?(n?n+'/'+worlds.length:'Not synced'):(boardMetric==='memorised'?'🧠 ':'⭐ ')+n)+'</span>'+movement+'</div>';
+  return '<div class="lb-row '+(e.uid===uid?'me':'')+'" data-rank-shift="'+delta+'"><span class="lb-rank">'+(known&&(boardMetric!=='maps'||all.every(x=>boardValue(x,'maps')>=0))?(['🥇','🥈','🥉'][i]||i+1):'')+'</span><span class="lb-av" aria-hidden="true">'+escapeHtml(e.avatar||'🧒')+'</span><span class="lb-name">'+escapeHtml(String(e.name||'Student').split(/\s+/)[0])+(e.uid===uid?' <small>(you)</small>':'')+'</span><span class="lb-score" aria-label="'+(boardMetric==='maps'?(n>=0?n+' maps completed out of '+worlds.length:'Map not synced'):n+' '+(boardMetric==='memorised'?'lines memorised':'stars'))+'">'+(boardMetric==='maps'?(n>=0?n+'/'+worlds.length:'Not synced'):(boardMetric==='memorised'?'🧠 ':'⭐ ')+n)+'</span>'+movement+'</div>';
  };
- return '<div class="lb-metrics" aria-label="Rank by">'+Object.entries({currentMap:'🗺️ Maps',memorised:'🧠 Memorised',stars:'⭐ Stars'}).map(([k,t])=>'<button type="button" class="hifz-chip '+(k===boardMetric?'active':'')+'" aria-pressed="'+(k===boardMetric)+'" data-lbm="'+k+'">'+t+'</button>').join('')+'</div><p class="lb-caption"><strong>'+(boardMetric==='currentMap'?'Based on the map students are on':boardMetric==='memorised'?'Based on lines memorised':'Based on stars earned')+'</strong>'+(boardMetric==='currentMap'?'<br>Current map out of '+worlds.length+'.':'')+'</p>'+(boardMetric==='currentMap'&&all.some(e=>!boardValue(e,'currentMap'))?'<p class="lb-caption">Some map positions are not synced yet. Memorised and Stars scores are available now.</p>':'')+'<div class="lb-list">'+(all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>')+'</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>';
+ return '<div class="lb-metrics" aria-label="Rank by">'+Object.entries({maps:'🗺️ Maps',memorised:'🧠 Memorised',stars:'⭐ Stars'}).map(([k,t])=>'<button type="button" class="hifz-chip '+(k===boardMetric?'active':'')+'" aria-pressed="'+(k===boardMetric)+'" data-lbm="'+k+'">'+t+'</button>').join('')+'</div><p class="lb-caption"><strong>'+(boardMetric==='maps'?'Based on completed maps':boardMetric==='memorised'?'Based on lines memorised':'Based on stars earned')+'</strong>'+(boardMetric==='maps'?'<br>Completed maps out of '+worlds.length+'.':'')+'</p>'+(boardMetric==='maps'&&all.some(e=>boardValue(e,'maps')<0)?'<p class="lb-caption">Some completed map totals are not synced yet. Memorised and Stars scores are available now.</p>':'')+'<div class="lb-list">'+(all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>')+'</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>';
 }
 function wireBoard(box){
  box.querySelectorAll('[data-lbm]').forEach(b=>b.onclick=()=>{boardMetric=b.dataset.lbm;renderBoard()});
@@ -1989,7 +1989,7 @@ function renderBoard(){
  if(!cloudUser||!c){box.innerHTML='';return}
  const uid=window.KidsCloud.currentUid(),all=boardEntries(c,boardMetric),myRank=all.findIndex(e=>e.uid===uid)+1;
  const body=(boardLoaded[c.id]?boardContent(c):'<p class="lb-caption">'+(boardError||'Your class leaderboard is loading.')+'</p>')+(boardError&&boardLoaded[c.id]?'<p class="lb-caption" role="status">'+boardError+'</p>':'')+'<button type="button" class="hifz-chip" data-board-refresh>↻ Refresh leaderboard</button>';
- box.innerHTML=foldHTML('board','🏆','Class leaderboard · '+escapeHtml(c.name),boardMetric==='currentMap'&&all.some(e=>!boardValue(e,'currentMap'))?'Map positions awaiting sync':myRank?'You are #'+myRank+' of '+all.length+' · '+({currentMap:'based on current map',memorised:'lines memorised',stars:'stars earned'}[boardMetric]):'See how your class is doing','',body);
+ box.innerHTML=foldHTML('board','🏆','Class leaderboard · '+escapeHtml(c.name),boardMetric==='maps'&&all.some(e=>boardValue(e,'maps')<0)?'Completed map totals awaiting sync':myRank?'You are #'+myRank+' of '+all.length+' · '+({maps:'completed maps',memorised:'lines memorised',stars:'stars earned'}[boardMetric]):'See how your class is doing','',body);
  wireFolds(box);
  box.querySelector('.fold-head').addEventListener('click',()=>{if(box.querySelector('.fold.open'))requestAnimationFrame(()=>wireBoard(box))});
  wireBoard(box);

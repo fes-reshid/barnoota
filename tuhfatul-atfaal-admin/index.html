@@ -558,6 +558,7 @@
         <div class="card">
           <h2>🗺️ Class across the 15 maps</h2>
           <p class="muted" style="margin-top:-4px">How many students have finished each map’s lessons.</p>
+          <p class="muted" id="leaderboard-sync-status" role="status"></p>
           <div id="map-distribution"></div>
         </div>
       </div>
@@ -2248,7 +2249,8 @@ function leaderboardMapReached(p,ranges){
  });
  return Math.min(ranges.length,Math.max(1,reached));
 }
-const boardSynced = {};
+const boardSynced = {}, boardSyncMessages = {};
+function showBoardSyncStatus(){const el=$('leaderboard-sync-status');if(el)el.textContent=Object.values(boardSyncMessages).join(' · ');}
 function syncBoardMaps(){
   const KC = window.KidsCloud; if(!KC.adminSyncBoard || !KC.getBoard || !studentsCache.length) return;
   classesCache.filter(c => c.leaderboard && (myRole !== 'teacher' || isMyClass(c))).forEach(c => {
@@ -2261,7 +2263,11 @@ function syncBoardMaps(){
       const out = {};
       Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap } : vals[u]; });
       if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
-    }).catch((err) => { boardSynced[c.id] = ''; toast('Leaderboard sync failed for '+c.name+': '+friendlyError(err)); });
+    }).then(() => KC.getBoard(c.id)).then(entries => {
+      const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&entries[u].maps!=null&&Number(entries[u].maps)===vals[u].maps).length;
+      boardSyncMessages[c.id]=c.name+': completed maps synced for '+ok+'/'+ids.length+' students';
+      showBoardSyncStatus();
+    }).catch((err) => { boardSynced[c.id] = ''; boardSyncMessages[c.id]='Leaderboard sync failed for '+c.name+': '+friendlyError(err);showBoardSyncStatus();toast(boardSyncMessages[c.id]); });
   });
 }
 function syncTeacherLinks(){
