@@ -1203,7 +1203,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=26"></script>
+<script type="module" src="../kids-quest-cloud.js?v=27-map-rank"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2237,20 +2237,29 @@ function unlinkIfNoOtherClass(uid, c){
    created get that teacher. Runs quietly whenever the portal loads; after
    the first run there is nothing left to write. */
 let linkSyncRunning = false;
-/* Class leaderboard: fill in every member's maps-completed total (out of 15)
-   so the ranking is right even before a student opens the updated app. */
+/* Keep each member’s current map on the class leaderboard in sync with saved course progress. */
+/* Highest course map reached; revisiting an earlier map does not reduce it. */
+function leaderboardMapReached(p,ranges){
+ const stars=Array.isArray(p.stars)?p.stars:[],assessments=p.teacherAssessments||[],unlocks=p.teacherMapUnlocks||[];
+ let reached=1;
+ ranges.forEach(([start,count],i)=>{
+  if(i===0||(assessments[i-1]&&assessments[i-1].approved)||unlocks[i-1]||stars.slice(start,start+count).some(v=>Number(v)>0))reached=Math.max(reached,i+1);
+  if(assessments[i]&&assessments[i].approved)reached=Math.max(reached,Math.min(ranges.length,i+2));
+ });
+ return Math.min(ranges.length,Math.max(1,reached));
+}
 const boardSynced = {};
 function syncBoardMaps(){
   const KC = window.KidsCloud; if(!KC.adminSyncBoard || !KC.getBoard || !studentsCache.length) return;
   classesCache.filter(c => c.leaderboard && (myRole !== 'teacher' || isMyClass(c))).forEach(c => {
     const vals = {};
     c.studentUids.forEach(uid => { const s = studentsCache.find(x => x.uid === uid); if(!s) return; const p = courseProfile(s), sm = summarize(s);
-      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
-    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps]));
+      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, currentMap: leaderboardMapReached(p, MAPS.map(m => [m[2], m[3]])), name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
+    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps, vals[u].currentMap]));
     if(boardSynced[c.id] === key) return; boardSynced[c.id] = key;
     KC.getBoard(c.id).then(entries => {
       const out = {};
-      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps) return; out[u] = e ? { maps: vals[u].maps } : vals[u]; });
+      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap } : vals[u]; });
       if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
     }).catch(() => { boardSynced[c.id] = ''; });
   });
