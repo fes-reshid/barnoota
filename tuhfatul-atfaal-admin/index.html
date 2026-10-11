@@ -1204,7 +1204,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=28-live-board"></script>
+<script type="module" src="../kids-quest-cloud.js?v=29"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2238,17 +2238,8 @@ function unlinkIfNoOtherClass(uid, c){
    created get that teacher. Runs quietly whenever the portal loads; after
    the first run there is nothing left to write. */
 let linkSyncRunning = false;
-/* Keep each member’s current map on the class leaderboard in sync with saved course progress. */
-/* Highest course map reached; revisiting an earlier map does not reduce it. */
-function leaderboardMapReached(p,ranges){
- const stars=Array.isArray(p.stars)?p.stars:[],assessments=p.teacherAssessments||[],unlocks=p.teacherMapUnlocks||[];
- let reached=1;
- ranges.forEach(([start,count],i)=>{
-  if(i===0||(assessments[i-1]&&assessments[i-1].approved)||unlocks[i-1]||stars.slice(start,start+count).some(v=>Number(v)>0))reached=Math.max(reached,i+1);
-  if(assessments[i]&&assessments[i].approved)reached=Math.max(reached,Math.min(ranges.length,i+2));
- });
- return Math.min(ranges.length,Math.max(1,reached));
-}
+/* Keep each member’s current map on the class leaderboard in sync with saved course progress:
+   the same “Now on Map N” as the Progress page, plus lessons done for ties. */
 const boardSynced = {}, boardSyncMessages = {};
 function showBoardSyncStatus(){const el=$('leaderboard-sync-status');if(el)el.textContent=Object.values(boardSyncMessages).join(' · ');}
 function syncBoardMaps(){
@@ -2256,16 +2247,16 @@ function syncBoardMaps(){
   classesCache.filter(c => c.leaderboard && (myRole !== 'teacher' || isMyClass(c))).forEach(c => {
     const vals = {};
     c.studentUids.forEach(uid => { const s = studentsCache.find(x => x.uid === uid); if(!s) return; const p = courseProfile(s), sm = summarize(s);
-      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, currentMap: leaderboardMapReached(p, MAPS.map(m => [m[2], m[3]])), name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
-    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps, vals[u].currentMap]));
+      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, currentMap: sm.currentMap + 1, lessons: sm.lessons || 0, name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
+    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps, vals[u].currentMap, vals[u].lessons]));
     if(boardSynced[c.id] === key) return; boardSynced[c.id] = key;
     KC.getBoard(c.id).then(entries => {
       const out = {};
-      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap } : vals[u]; });
+      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap && Number(e.lessons) === vals[u].lessons) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap, lessons: vals[u].lessons } : vals[u]; });
       if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
     }).then(() => KC.getBoard(c.id)).then(entries => {
-      const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&entries[u].maps!=null&&Number(entries[u].maps)===vals[u].maps).length;
-      boardSyncMessages[c.id]=c.name+': completed maps synced for '+ok+'/'+ids.length+' students';
+      const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&Number(entries[u].currentMap)===vals[u].currentMap).length;
+      boardSyncMessages[c.id]=c.name+': current map synced for '+ok+'/'+ids.length+' students';
       showBoardSyncStatus();
     }).catch((err) => { boardSynced[c.id] = ''; boardSyncMessages[c.id]='Leaderboard sync failed for '+c.name+': '+friendlyError(err);showBoardSyncStatus();toast(boardSyncMessages[c.id]); });
   });

@@ -1230,7 +1230,7 @@ function deleteAttendance(id){ return deleteDoc(doc(db, ATTENDANCE_COLLECTION, i
 
 /* ---- class leaderboard ---- */
 /* kids_quest_boards/{classId}: entries.<uid> = { name, avatar, stars,
-   memorised, streak, maps, currentMap, updatedAt }. Each class member writes only their own
+   memorised, streak, maps, currentMap, lessons, updatedAt }. Each class member writes only their own
    entry; members and staff can read it. Shown only while the teacher has
    the class's leaderboard switched on. */
 function getBoard(classId){
@@ -1250,23 +1250,26 @@ function studentUpdateBoard(classId, entry){
     updatedAt: new Date().toISOString()
   };
   if(e.currentMap != null) entries[user.uid].currentMap = Math.max(1, Math.min(15, Math.floor(Number(e.currentMap) || 1)));
+  if(e.lessons != null) entries[user.uid].lessons = Math.max(0, Math.floor(Number(e.lessons) || 0));
   const ref = doc(db, BOARDS_COLLECTION, classId);
   // Older rules may not accept map fields yet; keep the existing permitted fields.
   return setDoc(ref, { entries: entries }, { merge:true }).then(function(){ return { mapSaved: true }; }).catch(function(err){
     if(!err || err.code !== 'permission-denied') throw err;
     delete entries[user.uid].maps;
     delete entries[user.uid].currentMap;
+    delete entries[user.uid].lessons;
     return setDoc(ref, { entries: entries }, { merge:true }).then(function(){ return { mapSaved: false }; });
   });
 }
 
-/* Staff fill in members' map totals and current map from saved progress.
+/* Staff fill in members' map totals, current map and lessons done from saved progress.
    Only the given fields are merged into each entry. */
 function adminSyncBoard(classId, entries){
   const clean = {}, now = new Date().toISOString();
   Object.keys(entries || {}).forEach(function(uid){
     const e = entries[uid] || {}, o = { maps: Number(e.maps) || 0 };
     if(e.currentMap != null) o.currentMap = Math.max(1, Math.min(15, Math.floor(Number(e.currentMap) || 1)));
+    if(e.lessons != null) o.lessons = Math.max(0, Math.floor(Number(e.lessons) || 0));
     if(e.name != null){ o.name = String(e.name).slice(0, 40); o.avatar = String(e.avatar || '').slice(0, 8); o.stars = Number(e.stars) || 0; o.memorised = Number(e.memorised) || 0; o.streak = 0; o.updatedAt = now; }
     clean[uid] = o;
   });
