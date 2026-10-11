@@ -1255,6 +1255,18 @@ function studentUpdateBoard(classId, entry){
   });
 }
 
+/* Staff fill in members' maps-completed totals (each student's own app also
+   sends it). Only the given fields are merged into each entry. */
+function adminSyncBoard(classId, entries){
+  const clean = {}, now = new Date().toISOString();
+  Object.keys(entries || {}).forEach(function(uid){
+    const e = entries[uid] || {}, o = { maps: Number(e.maps) || 0 };
+    if(e.name != null){ o.name = String(e.name).slice(0, 40); o.avatar = String(e.avatar || '').slice(0, 8); o.stars = Number(e.stars) || 0; o.memorised = Number(e.memorised) || 0; o.streak = 0; o.updatedAt = now; }
+    clean[uid] = o;
+  });
+  return setDoc(doc(db, BOARDS_COLLECTION, String(classId)), { entries: clean }, { merge:true });
+}
+
 function adminDeleteQuiz(id){
   return deleteDoc(doc(db, QUIZZES_COLLECTION, id));
 }
@@ -1348,6 +1360,7 @@ window.KidsCloud = {
   deleteAttendance: deleteAttendance,
   getBoard: getBoard,
   studentUpdateBoard: studentUpdateBoard,
+  adminSyncBoard: adminSyncBoard,
   adminLinkStudentTeacher: adminLinkStudentTeacher,
   listHomework: listHomework,
   adminSaveHomework: adminSaveHomework,

@@ -1203,7 +1203,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=25"></script>
+<script type="module" src="../kids-quest-cloud.js?v=26"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2237,7 +2237,26 @@ function unlinkIfNoOtherClass(uid, c){
    created get that teacher. Runs quietly whenever the portal loads; after
    the first run there is nothing left to write. */
 let linkSyncRunning = false;
+/* Class leaderboard: fill in every member's maps-completed total (out of 15)
+   so the ranking is right even before a student opens the updated app. */
+const boardSynced = {};
+function syncBoardMaps(){
+  const KC = window.KidsCloud; if(!KC.adminSyncBoard || !KC.getBoard || !studentsCache.length) return;
+  classesCache.filter(c => c.leaderboard && (myRole !== 'teacher' || isMyClass(c))).forEach(c => {
+    const vals = {};
+    c.studentUids.forEach(uid => { const s = studentsCache.find(x => x.uid === uid); if(!s) return; const p = courseProfile(s), sm = summarize(s);
+      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
+    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps]));
+    if(boardSynced[c.id] === key) return; boardSynced[c.id] = key;
+    KC.getBoard(c.id).then(entries => {
+      const out = {};
+      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps) return; out[u] = e ? { maps: vals[u].maps } : vals[u]; });
+      if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
+    }).catch(() => { boardSynced[c.id] = ''; });
+  });
+}
 function syncTeacherLinks(){
+  syncBoardMaps();
   if(linkSyncRunning || !studentsCache.length || !window.KidsCloud.adminLinkStudentTeacher) return;
   const jobs = [];
   classesCache.forEach(c => {
