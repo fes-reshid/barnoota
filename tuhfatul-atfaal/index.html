@@ -263,6 +263,12 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 .below-fold-body{display:none;margin-top:12px}
 .below-fold.open .below-fold-body{display:block}
 @media(max-width:560px){.below-fold-head{padding:10px 12px;gap:8px}.bf-t{font-size:15px}.bf-tag.soft{display:none}}
+/* Talqeen Teacher Check: a message to the teacher instead of the approval form */
+#teacherPanel #teacherForm{display:none!important}
+.teacher-ask{background:#f4fbff;border:2px solid #9fd8f2;border-radius:16px;padding:12px 14px}
+.teacher-ask.hidden{display:none}
+.teacher-ask .ta-text{margin:0 0 10px;font-size:17px;line-height:1.5;color:var(--navy)}
+.teacher-ask .ta-msg{width:auto;padding:10px 22px;font-size:16px}
 </style>
 </head>
 <body>
@@ -2690,6 +2696,24 @@ function setupBelowFold(){
  const body=$('#belowFoldBody');let el=fold.nextElementSibling;while(el){const next=el.nextElementSibling;body.appendChild(el);el=next}
  setBelowOpen(belowOpen);belowFoldSummary();
 }
+/* Talqeen Teacher Check (student view): no approval form. The student
+   messages or calls the teacher and recites; the teacher opens the door
+   from the Teacher Portal. */
+const renderTeacherCheckBeforeAsk=renderTeacherCheck;
+renderTeacherCheck=function(){
+ const r=renderTeacherCheckBeforeAsk.apply(this,arguments);
+ const panel=$('#teacherPanel'),form=$('#teacherForm');if(!panel||!form)return r;
+ const complete=worldComplete(viewWorld),passed=mapQuizPassed(viewWorld),rec=assessment(viewWorld),approved=!!(rec&&rec.approved),ready=complete&&passed;
+ let ask=$('#teacherAsk');if(!ask){form.insertAdjacentHTML('beforebegin','<div class="teacher-ask" id="teacherAsk"></div>');ask=$('#teacherAsk')}
+ panel.classList.remove('locked','folded');panel.querySelector('.card-fold-btn')?.remove();ask.classList.toggle('hidden',approved);
+ $('#teacherGuide').textContent=approved?'Your teacher opened the door. The next map is unlocked.':ready?'MashaAllah! You finished this map.':'Finish this map, then recite it to your teacher.';
+ if(approved)return r;
+ const how='Then <b>send a message to your teacher</b> or <b>call your teacher</b>, recite every line to them, and ask them to <b>open the door</b> for you.';
+ ask.innerHTML=`<p class="ta-text">${ready?'🎉 Now <b>send a message to your teacher</b> or <b>call your teacher</b>. Recite every line of this map to them, then ask them to <b>open the door</b> for you.':!complete?`📚 Finish every lesson in this map and pass the ${MAP_QUIZ_TOTAL}-question Map Challenge. ${how}`:`🏆 Pass the ${MAP_QUIZ_TOTAL}-question Map Challenge (${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL} or more). ${how}`}</p>${cloudUser?'<button class="btn green ta-msg" id="teacherAskMsg" type="button">✉️ Message my teacher</button>':''}`;
+ const b=$('#teacherAskMsg');
+ if(b)b.onclick=()=>{const w=worlds[viewWorld],lines=w&&w.range?` (Lines ${w.range[0]}–${w.range[1]})`:'';openStudentMessages();const t=$('#stText');if(ready&&t&&!t.value.trim())t.value=`Assalāmu ʿalaykum. I finished Map ${viewWorld+1}${lines} and passed the Map Challenge. Please listen to my recitation and open the door for me. JazākAllāhu khayran.`};
+ return r
+};
 const scrollIntoViewBeforeFold=Element.prototype.scrollIntoView;
 Element.prototype.scrollIntoView=function(){const body=document.getElementById('belowFoldBody');if(body&&!belowOpen&&body.contains(this))setBelowOpen(true);return scrollIntoViewBeforeFold.apply(this,arguments)};
 const renderMapBeforeBelowFold=renderMap;renderMap=function(){const r=renderMapBeforeBelowFold.apply(this,arguments);setupBelowFold();return r};
