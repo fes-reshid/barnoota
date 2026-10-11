@@ -288,6 +288,49 @@ textarea.tm-in{min-height:60px;resize:vertical}.tm-tall{min-height:130px}.tm-ar{
 @media(max-width:560px){.course-book{padding:9px 12px;gap:10px}.course-book .cb-t b{font-size:16px}.course-book .cb-t small{font-size:13px}.course-book .cb-go{padding:6px 11px;font-size:13px}}
 @media print{.course-book{display:none}}
 </style>
+<style id="full-map">
+/* Full-screen map. Everything else lives in the ☰ menu (a drawer from the left). */
+html:has(#mapScreen:not(.hidden)),html.tq-mapfull,html:has(#mapScreen:not(.hidden)) body,html.tq-mapfull body{overflow:hidden;overscroll-behavior:none}
+#mapScreen .map-frame{position:fixed;inset:0;z-index:55;width:auto!important;height:auto!important;margin:0!important;max-width:none;border:0;border-radius:0;box-shadow:none}
+#mapScreen .map-pan{position:absolute;inset:0;height:auto;overflow:hidden}
+#mapScreen #mapSvg{width:100%!important;height:100%!important;max-width:none}
+#mapScreen .map-title{top:max(10px,env(safe-area-inset-top));max-width:calc(100% - 140px);overflow:hidden;text-overflow:ellipsis}
+#mapScreen .map-frame .teacher-alert{top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left))}
+.map-menu-btn{position:absolute;z-index:9;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));display:grid;align-content:center;justify-items:center;gap:5px;width:48px;height:48px;padding:0;border:3px solid #fff;border-radius:50%;background:#fff8e1;box-shadow:0 4px 12px rgba(0,0,0,.22);cursor:pointer}
+.map-menu-btn span{display:block;width:22px;height:3px;border-radius:3px;background:#5d3a12}
+.map-menu-btn:hover{background:#ffe7a8}
+.map-menu-btn:focus-visible,.md-x:focus-visible,.md-full:focus-visible{outline:3px solid #2d6cdf;outline-offset:2px}
+.map-menu-btn .md-dot{position:absolute;top:-2px;right:-2px;width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#e0703a}
+.map-menu-btn .md-dot[hidden]{display:none}
+.map-drawer-shade{position:fixed;inset:0;z-index:56;background:rgba(20,30,40,.42);opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+.map-drawer-shade.show{opacity:1;visibility:visible;transition:opacity .25s}
+.map-drawer{position:fixed;top:0;bottom:0;left:0;z-index:57;width:min(440px,90vw);display:flex;flex-direction:column;background:#fbf6ea;border-right:3px solid var(--gold2);box-shadow:8px 0 30px rgba(30,20,5,.25);transform:translateX(-104%);visibility:hidden;transition:transform .28s ease,visibility 0s .28s}
+.map-drawer.open{transform:none;visibility:visible;transition:transform .28s ease}
+.md-head{display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 10px;border-bottom:2px solid var(--gold2);background:#fff8e1;font:21px Marcellus,serif;color:var(--navy)}
+.md-head b{flex:1;font-weight:400}
+.md-full{flex:none;padding:6px 12px;border:2px solid var(--gold2);border-radius:14px;background:#fff;color:var(--navy);font:700 14px Nunito,sans-serif;cursor:pointer}
+.md-full[hidden]{display:none}
+.md-x{flex:none;display:grid;place-items:center;width:40px;height:40px;padding:0;border:2px solid var(--gold2);border-radius:50%;background:#fff4d2;color:#5d3a12;font:900 22px/1 Nunito,sans-serif;cursor:pointer}
+.md-x:hover,.md-full:hover{background:#ffe7a8}
+.md-body{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 12px max(28px,env(safe-area-inset-bottom))}
+.md-body>*{max-width:none!important;margin-left:0!important;margin-right:0!important}
+.map-drawer .topbar{flex-direction:column;align-items:stretch;gap:10px;padding:10px 12px}
+.map-drawer .topbar .player{flex-wrap:wrap}
+.map-drawer .topbar .stats{width:auto;justify-content:flex-start}
+.map-drawer .world-tabs{flex-wrap:wrap;overflow:visible;padding-bottom:4px}
+.map-drawer .map-help{margin:12px 0 4px;font-size:16px}
+.map-drawer .below-fold{margin-top:8px}
+.map-drawer .below-fold-head{display:none}
+.map-drawer .below-fold-body{display:block;margin-top:0}
+.map-drawer .below-map{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.map-drawer .below-map .btn{grid-column:1/-1}
+/* Leaderboard hidden for now */
+#boardBox{display:none!important}
+.map-toast{position:absolute;z-index:8;left:50%;top:calc(max(10px,env(safe-area-inset-top)) + 62px);transform:translateX(-50%);width:max-content;max-width:min(560px,calc(100% - 32px));background:rgba(28,43,70,.92);color:#fff;border-radius:16px;padding:10px 16px;font:700 15px/1.4 Nunito,sans-serif;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.25);pointer-events:none;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.map-toast.show{opacity:1;visibility:visible;transition:opacity .3s}
+@media(max-width:520px){#mapScreen .map-title{max-width:calc(100% - 132px)}}
+@media(prefers-reduced-motion:reduce){.map-drawer,.map-drawer.open,.map-drawer-shade,.map-toast{transition:none}}
+</style>
 </head>
 <body>
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
@@ -2792,7 +2835,17 @@ var MAP_LAYOUTS={
   scenery:[[22,430],[22,770],[222,975],[320,978],[466,898],[515,606],[540,428]]}
 };
 var MAP_GEO=null,BASE_ROAD='M 105 515 C 220 540 265 440 375 440 C 485 440 510 375 625 350 C 735 325 790 245 900 190';
-function mapPortrait(){return window.innerWidth<window.innerHeight&&window.innerWidth<=900}
+function mapPortrait(){return window.innerWidth<window.innerHeight}
+/* The map fills the whole screen. The layout is stretched (never squashed) to
+   the screen's shape, so the road always runs corner to corner. */
+function mapAspect(){const f=document.querySelector('#mapScreen .map-frame'),w=(f&&f.clientWidth)||document.documentElement.clientWidth||window.innerWidth,h=(f&&f.clientHeight)||window.innerHeight;return Math.max(.35,Math.min(3,w/h))}
+function fitLayout(base,aspect){
+ const v=base.vb.split(' ').map(Number),bw=v[2],bh=v[3];let W=bw,H=bh;
+ if(aspect<bw/bh)H=Math.round(bw/aspect);else W=Math.round(bh*aspect);
+ const sx=W/bw,sy=H/bh,P=p=>p?[Math.round(p[0]*sx),Math.round(p[1]*sy)]:p;
+ return Object.assign({},base,{base:base,W:W,H:H,sx:sx,sy:sy,vb:'0 0 '+W+' '+H,entry:P(base.entry),exit:P(base.exit),flash:P(base.flash),quiz:P(base.quiz),lessons:base.lessons.map(P),sun:P(base.sun),pill:P(base.pill),icon:P(base.icon),book:P(base.book),scenery:base.scenery.map(P),
+  lake:[Math.round(base.lake[0]*sx),Math.round(base.lake[1]*sy),Math.round(base.lake[2]*sx),Math.round(base.lake[3]*sy)]});
+}
 function mapExitAt(){return (MAP_GEO||MAP_LAYOUTS.wide).exit}
 function mapEntryAt(){return (MAP_GEO||MAP_LAYOUTS.wide).entry}
 function smoothPath(pts){
@@ -2805,14 +2858,17 @@ function entryDoorMarkup(at){
  return `<g class="exit-door entry-door" id="mapEntryDoor" transform="translate(${at[0]} ${at[1]})" aria-hidden="true"><defs><linearGradient id="entryLight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe6"/><stop offset="1" stop-color="#ffd977"/></linearGradient><linearGradient id="entryWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1f5a45"/><stop offset="1" stop-color="#2e7a5d"/></linearGradient></defs><ellipse cx="0" cy="2" rx="34" ry="6" fill="rgba(60,40,10,.25)"/><path class="door-frame" d="M-28 0V-56A28 28 0 0 1 28-56V0Z" fill="#d6ad55" stroke="#8a6320" stroke-width="2"/><path class="door-light" d="M-21 0V-55A21 21 0 0 1 21-55V0Z" fill="url(#entryLight)"/><g class="door-leaf"><path d="M-21 0V-55A21 21 0 0 1 21-55V0Z" fill="url(#entryWood)" stroke="#123d2f" stroke-width="1.5"/><path d="M-13-6V-50A13 13 0 0 1 13-50V-6Z" fill="none" stroke="#d6ad55" stroke-width="1.6" opacity=".85"/><path d="M0-62 L4-56 0-50-4-56Z M-8-30h16" stroke="#d6ad55" stroke-width="1.4" fill="#d6ad55" opacity=".8"/><circle cx="12" cy="-26" r="2.6" fill="#f3d27a" stroke="#8a6320"/></g><rect x="-30" y="-100" width="60" height="19" rx="9" fill="#fff8e1" stroke="#d6ad55" stroke-width="1.5"/><text x="0" y="-86.5" text-anchor="middle" font-family="Marcellus" font-size="11.5" font-weight="700" fill="#1c3a2e">Map ${viewWorld+1}</text></g>`
 }
 function layoutMapRoad(){
- const svg=$('#mapSvg');if(!svg)return;const L=mapPortrait()?MAP_LAYOUTS.tall:MAP_LAYOUTS.wide;MAP_GEO=L;
- svg.setAttribute('viewBox',L.vb);const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('tall',L===MAP_LAYOUTS.tall);
+ const svg=$('#mapSvg');if(!svg)return;const base=mapPortrait()?MAP_LAYOUTS.tall:MAP_LAYOUTS.wide,L=fitLayout(base,mapAspect());MAP_GEO=L;
+ svg.setAttribute('viewBox',L.vb);const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('tall',base===MAP_LAYOUTS.tall);
+ /* Keep the exit door clear of the ☰ menu button in the top-right corner. */
+ const fw=(frame&&frame.clientWidth)||document.documentElement.clientWidth||window.innerWidth,sc=fw/L.W;
+ if((L.exit[1]-105)*sc<72&&(L.exit[0]+46)*sc>fw-72)L.exit=[Math.round((fw-72)/sc-46),L.exit[1]];
  const nodes=[...svg.querySelectorAll('.node')],n=nodes.length,slots=L.lessons;
  nodes.forEach((node,i)=>{const p=n===1?slots[3]:slots[Math.round(i*(slots.length-1)/(n-1))];node.setAttribute('transform',`translate(${p[0]} ${p[1]})`)});
  const f=$('#roadFlashBtn'),q=$('#roadQuizBtn');if(f)f.setAttribute('transform',`translate(${L.flash[0]} ${L.flash[1]})`);if(q)q.setAttribute('transform',`translate(${L.quiz[0]} ${L.quiz[1]})`);
  const d=smoothPath([[L.entry[0]+4,L.entry[1]-14],...slots,L.flash,L.quiz,[L.exit[0]-6,L.exit[1]-6]]);
  const paths=[...svg.querySelectorAll('path')];paths.forEach(p=>{if(p.getAttribute('d')===BASE_ROAD)p.setAttribute('d',d)});
- const hills=paths.find(p=>/^M0 500 Q180 420/.test(p.getAttribute('d')||''));if(hills)hills.setAttribute('d',L.hills);
+ const hills=paths.find(p=>/^M0 500 Q180 420/.test(p.getAttribute('d')||''));if(hills){hills.setAttribute('d',L.hills);hills.setAttribute('transform',`translate(0 ${L.H-Number(base.vb.split(' ')[3])}) scale(${L.sx} 1)`)}
  const sun=svg.querySelector('circle[r="46"]');if(sun){sun.setAttribute('cx',L.sun[0]);sun.setAttribute('cy',L.sun[1])}
  const lake=svg.querySelector('ellipse[rx="115"]');if(lake){lake.setAttribute('cx',L.lake[0]);lake.setAttribute('cy',L.lake[1]);lake.setAttribute('rx',L.lake[2]);lake.setAttribute('ry',L.lake[3])}
  const pill=svg.querySelector('rect[width="160"][height="36"]'),pt=svg.querySelector('.map-progress');if(pill&&pt){pill.setAttribute('x',L.pill[0]-80);pill.setAttribute('y',L.pill[1]-18);pt.setAttribute('x',L.pill[0]);pt.setAttribute('y',L.pill[1]+6)}
@@ -2885,6 +2941,65 @@ renderTeacherAlert=function(){
  el.querySelector('.na-panel').addEventListener('pointerdown',()=>clearTimeout(naTimer));
  if(sig!==naSeen()){naSeen(sig);naSet(true,true)}else el.classList.toggle('open',naState==='open');
 };
+/* Full-screen map with a ☰ menu. The account bar, map tabs, course book and
+   everything that was below the map open in a drawer from the left. Tips
+   that used to appear under the map pop up on the map for a few seconds. */
+var mapMenuOpen=false,mapToastTimer=null,mapHelpObserver=null,mapTapAt=0,mapDrawnAt=0;
+function setMapMenu(open){
+ const d=$('#mapDrawer'),sh=$('#mapDrawerShade'),b=$('#mapMenuBtn');open=!!open;if(!d||open===mapMenuOpen)return;mapMenuOpen=open;
+ d.classList.toggle('open',open);sh.classList.toggle('show',open);d.setAttribute('aria-hidden',String(!open));if(b)b.setAttribute('aria-expanded',String(open));
+ if(open){const t=$('#mapToast');if(t)t.classList.remove('show');fsLabel();$('#mapDrawerX').focus({preventScroll:true})}
+ else if(b&&d.contains(document.activeElement))b.focus({preventScroll:true});
+}
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement||null}
+function fsCan(){const e=document.documentElement;return!!((document.fullscreenEnabled||document.webkitFullscreenEnabled)&&(e.requestFullscreen||e.webkitRequestFullscreen))}
+function fsLabel(){const b=$('#mapFullBtn');if(!b)return;b.hidden=!fsCan();b.textContent=fsEl()?'⤡ Exit full screen':'⛶ Full screen'}
+function fsToggle(){
+ const e=document.documentElement;
+ try{const p=fsEl()?(document.exitFullscreen||document.webkitExitFullscreen).call(document):(e.requestFullscreen||e.webkitRequestFullscreen).call(e);if(p&&p.catch)p.catch(()=>{})}catch(err){}
+ setMapMenu(false);
+}
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{fsLabel();sizeMapSoon()}));
+function showMapToast(text){
+ const t=$('#mapToast');if(!t||!text||mapMenuOpen||$('#mapScreen').classList.contains('hidden'))return;
+ t.textContent=text;t.classList.add('show');clearTimeout(mapToastTimer);mapToastTimer=setTimeout(()=>t.classList.remove('show'),5000);
+}
+function setupMapMenu(){
+ const scr=$('#mapScreen'),frame=scr&&scr.querySelector('.map-frame');if(!frame)return;
+ if(!$('#mapDrawer')){
+  frame.insertAdjacentHTML('beforeend','<button type="button" class="map-menu-btn" id="mapMenuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mapDrawer"><span></span><span></span><span></span><i class="md-dot" id="mapMenuDot" hidden></i></button><div class="map-toast" id="mapToast" role="status" aria-live="polite"></div>');
+  scr.insertAdjacentHTML('beforeend','<div class="map-drawer-shade" id="mapDrawerShade"></div><aside class="map-drawer" id="mapDrawer" aria-label="Menu" aria-hidden="true"><div class="md-head"><b>Menu</b><button type="button" class="md-full" id="mapFullBtn" hidden>⛶ Full screen</button><button type="button" class="md-x" id="mapDrawerX" aria-label="Close menu">✕</button></div><div class="md-body" id="mapDrawerBody"></div></aside>');
+  $('#mapMenuBtn').onclick=()=>setMapMenu(true);$('#mapDrawerX').onclick=()=>setMapMenu(false);$('#mapDrawerShade').onclick=()=>setMapMenu(false);$('#mapFullBtn').onclick=fsToggle;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mapMenuOpen)setMapMenu(false)});
+  const tabs=$('#worldTabs');if(tabs)tabs.addEventListener('click',e=>{if(e.target.closest('button'))setTimeout(()=>setMapMenu(false),0)});
+  const help=$('#mapHelp');
+  if(help&&window.MutationObserver){mapHelpObserver=new MutationObserver(()=>{const now=Date.now();if(now-mapTapAt<1500&&now-mapDrawnAt>900)showMapToast(help.textContent.trim())});mapHelpObserver.observe(help,{childList:true,characterData:true,subtree:true})}
+  ['pointerdown','keydown'].forEach(ev=>frame.addEventListener(ev,()=>{mapTapAt=Date.now()},true));
+  fsLabel();
+ }
+ const body=$('#mapDrawerBody');
+ ['.topbar','#worldTabs','#courseBook','#mapHelp','#belowFold'].forEach(q=>{const el=scr.querySelector(q);if(el&&el.parentElement!==body)body.appendChild(el)});
+ const tags=$('#belowFoldTags'),dot=$('#mapMenuDot');if(dot)dot.hidden=!(tags&&tags.children.length);
+}
+/* Only tips that answer a tap on the map pop up; ones set while drawing do not. */
+const renderMapBeforeMenu=renderMap;
+renderMap=function(){const r=renderMapBeforeMenu.apply(this,arguments);setupMapMenu();if(mapHelpObserver)mapHelpObserver.takeRecords();mapDrawnAt=Date.now();return r};
+const belowFoldSummaryBeforeMenu=belowFoldSummary;
+belowFoldSummary=function(){const r=belowFoldSummaryBeforeMenu.apply(this,arguments);const tags=$('#belowFoldTags'),dot=$('#mapMenuDot');if(dot)dot.hidden=!(tags&&tags.children.length);return r};
+const showBeforeMenu=show;
+show=function(id){if(id!=='mapScreen')setMapMenu(false);const r=showBeforeMenu.apply(this,arguments);document.documentElement.classList.toggle('tq-mapfull',id==='mapScreen');return r};
+const scrollIntoViewBeforeMenu=Element.prototype.scrollIntoView;
+Element.prototype.scrollIntoView=function(){const d=document.getElementById('mapDrawer');if(d&&!mapMenuOpen&&d.contains(this)&&!$('#mapScreen').classList.contains('hidden'))setMapMenu(true);return scrollIntoViewBeforeMenu.apply(this,arguments)};
+/* Redraw the map when the screen changes shape, so it always fills it. */
+sizeMap=function(){
+ const scr=$('#mapScreen');if(!scr||scr.classList.contains('hidden')||!MAP_GEO)return;
+ const base=mapPortrait()?MAP_LAYOUTS.tall:MAP_LAYOUTS.wide,want=fitLayout(base,mapAspect());
+ if(MAP_GEO.base===base&&Math.abs(want.W-MAP_GEO.W)<=MAP_GEO.W*.03&&Math.abs(want.H-MAP_GEO.H)<=MAP_GEO.H*.03)return;
+ if(exitAnimating||pendingMapWalk){clearTimeout(sizeMap.retry);sizeMap.retry=setTimeout(sizeMapSoon,1500);return}
+ renderMap();
+};
+window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(sizeMapSoon,160)});
+setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
 <script src="cartoon-avatar-67a81bb3.js"></script>
 </body>
