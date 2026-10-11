@@ -1243,9 +1243,16 @@ function studentUpdateBoard(classId, entry){
   entries[user.uid] = {
     name: String(e.name || '').slice(0, 40), avatar: String(e.avatar || '').slice(0, 8),
     stars: Number(e.stars) || 0, memorised: Number(e.memorised) || 0, streak: Number(e.streak) || 0,
+    maps: Number(e.maps) || 0,
     updatedAt: new Date().toISOString()
   };
-  return setDoc(doc(db, BOARDS_COLLECTION, classId), { entries: entries }, { merge:true });
+  const ref = doc(db, BOARDS_COLLECTION, classId);
+  // If the rules do not allow the maps count yet, save the entry without it.
+  return setDoc(ref, { entries: entries }, { merge:true }).catch(function(err){
+    if(!err || err.code !== 'permission-denied') throw err;
+    delete entries[user.uid].maps;
+    return setDoc(ref, { entries: entries }, { merge:true });
+  });
 }
 
 function adminDeleteQuiz(id){
