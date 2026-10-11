@@ -450,7 +450,7 @@
       <h1 id="login-title">Teacher Sign In</h1>
       <p id="login-lead">Use your teacher username and password. Teacher usernames must contain “teacher”.</p>
       <div class="field"><label for="admin-email">Teacher username</label>
-        <input type="text" id="admin-email" autocomplete="username" placeholder="username-teacher"></div>
+        <input type="text" id="admin-email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username-teacher"></div>
       <div class="field"><label for="admin-password">Password</label>
         <input type="password" id="admin-password" autocomplete="current-password"></div>
       <button class="btn primary" id="admin-signin-btn" style="width:100%; justify-content:center;">Sign In</button>
@@ -632,7 +632,7 @@
               <button class="btn ghost small" id="class-homework">📚 Homework for this class</button>
             </div>
             <div class="lb-box"><label class="toggle"><input type="checkbox" id="class-leaderboard"> 🏆 Show a class leaderboard to students</label>
-              <div class="muted" style="font-size:13.5px;margin-top:4px">Students in this class see each other’s 🔥 streak, 🧠 lines memorised and ⭐ stars (names only). Turn it off any time.</div>
+              <div class="muted" style="font-size:13.5px;margin-top:4px">Off until you switch it on. Students in this class then see each other’s 🏁 maps finished, 🧠 lines memorised and ⭐ stars (first names only) under 🏆 Class leaderboard in the ☰ menu on their map. Turn it off any time.</div>
               <div id="class-lb-preview"></div></div>
             <h3>Students <span class="muted" id="class-member-count"></span></h3>
             <div id="class-members"></div>
@@ -858,7 +858,7 @@
         <div class="card">
           <h2>Add a student</h2>
           <div class="field"><label for="new-username">Username</label>
-            <input type="text" id="new-username" placeholder="amina123"></div>
+            <input type="text" id="new-username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="amina123"></div>
           <div class="field"><label for="new-displayname">Display name (optional)</label>
             <input type="text" id="new-displayname" placeholder="Amina"></div>
           <div class="row">
@@ -921,7 +921,7 @@
           students but can never delete one, and can never sign into the main site admin panel.</p>
         <div class="row">
           <div class="field" style="flex:2;"><label for="new-admin-email">Teacher username</label>
-            <input type="text" id="new-admin-email" placeholder="username-teacher"></div>
+            <input type="text" id="new-admin-email" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username-teacher"></div>
         </div>
         <button class="btn primary" id="add-admin-btn">Approve Teacher</button>
         <p class="msg" id="add-admin-msg"></p>
@@ -982,7 +982,7 @@
         <ul class="guide-list">
           <li>Each class has a <b>join code</b>. Students type it under <i>From your teacher → Join your class</i>.</li>
           <li>From a class you can message it, announce to it, set its homework and print a <b>class report</b>.</li>
-          <li><b>🏆 Class leaderboard:</b> switch it on to let the class see each other’s streak, lines memorised and stars. Switch off any time.</li>
+          <li><b>🏆 Class leaderboard:</b> it is off until you switch it on. Then the class sees each other’s maps finished, lines memorised and stars in the ☰ menu on their map. Switch off any time.</li>
         </ul>
         <button class="btn ghost small" data-goto-tab="classes">Go to Classes →</button>
       </section>
@@ -1204,7 +1204,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=29"></script>
+<script type="module" src="../kids-quest-cloud.js?v=30"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -3223,6 +3223,9 @@ function wire(){
       .catch(err => setMsg('acct-msg', friendlyError(err), true));
   };
 
+  /* Phone keyboards can type a long dash or minus instead of "-"; show the plain one. */
+  ['admin-email', 'new-username', 'new-admin-email'].forEach(id => { const el = $(id); if(!el) return;
+    el.addEventListener('input', () => { const v = el.value, n = v.replace(/[\u2010-\u2015\u2212\u2043\uFE58\uFE63\uFF0D]/g, '-'); if(n !== v){ const p = el.selectionStart; el.value = n; try{ el.setSelectionRange(p, p); }catch(e){} } }); });
   $('login-toggle').addEventListener('click', () => setSignUpMode(!isSignUp));
   $('admin-signin-btn').addEventListener('click', () => {
     const email = $('admin-email').value.trim();

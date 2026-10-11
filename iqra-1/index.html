@@ -149,4 +149,4 @@ if(installAppBtn&&!appStandalone){
  installAppBtn.onclick=async()=>{if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;installAppBtn.classList.add('hidden')}else if(iosDevice){installHelp.textContent='In Safari, tap Share, then “Add to Home Screen”. If this page is inside another app, first open it in Safari.';installHelp.classList.remove('hidden')}else{installHelp.textContent='Open your browser menu and choose “Install app” or “Add to Home screen”.';installHelp.classList.remove('hidden')}}
 }
 
-</script><script type="module" src="../kids-quest-cloud.js?v=29"></script><script>if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("/iqra-1/sw.js",{scope:"/iqra-1/"}).catch(e=>console.warn("App update service unavailable",e))}</script></body></html>
+</script><script type="module" src="../kids-quest-cloud.js?v=30"></script><script>if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("/iqra-1/sw.js",{scope:"/iqra-1/"}).catch(e=>console.warn("App update service unavailable",e))}</script></body></html>

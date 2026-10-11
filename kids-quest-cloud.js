@@ -69,15 +69,26 @@ const db = getFirestore(app);
 /* Turn a plain username into the synthetic login email Firebase Auth
    actually stores. Deterministic and reversible-by-convention — no
    Firestore lookup needed before signing in. */
+/* Phone keyboards can type look-alike characters: a long dash or minus
+   instead of "-", full-width letters, or Arabic-Indic digits. Turn them
+   into the plain ones so "nuradin–teacher" signs in as "nuradin-teacher". */
+function plainLoginText(value){
+  let v = String(value || '');
+  try { v = v.normalize('NFKC'); } catch(e){}
+  return v.replace(/[\u2010-\u2015\u2212\u2043\uFE58\uFE63\uFF0D]/g, '-')
+    .replace(/[\u0660-\u0669]/g, function(d){ return String(d.charCodeAt(0) - 0x660); })
+    .replace(/[\u06F0-\u06F9]/g, function(d){ return String(d.charCodeAt(0) - 0x6F0); })
+    .replace(/[\u00AD\u200B-\u200F\u2060\uFEFF]/g, '');
+}
 function usernameToEmail(username){
-  const clean = String(username || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+  const clean = plainLoginText(username).trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
   return ADMIN_LOCAL + '+quest-' + clean + '@' + ADMIN_DOMAIN;
 }
 function normalizeUsername(username){
-  return String(username || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
+  return plainLoginText(username).trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
 }
 function normalizeEmail(email){
-  return String(email || '').trim().toLowerCase();
+  return plainLoginText(email).trim().toLowerCase();
 }
 function teacherUsernameToEmail(username){
   const clean = normalizeUsername(username);
@@ -308,7 +319,7 @@ function adminSignIn(email, password){
   return signInWithEmailAndPassword(auth, email, password);
 }
 function teacherSignIn(usernameOrEmail, password){
-  const value = String(usernameOrEmail || '').trim();
+  const value = plainLoginText(usernameOrEmail).trim();
   const email = value.indexOf('@') >= 0 ? normalizeEmail(value) : teacherUsernameToEmail(value);
   return adminSignIn(email, password);
 }
@@ -394,7 +405,7 @@ function superRemoveAdmin(email){
    the doc, approved or not doesn't exist as a separate idea here —
    same as how a regular admin doc works today. */
 function adminAddTeacher(usernameOrEmail){
-  const value = String(usernameOrEmail || '').trim();
+  const value = plainLoginText(usernameOrEmail).trim();
   const email = value.indexOf('@') >= 0 ? normalizeEmail(value) : teacherUsernameToEmail(value);
   const user = auth.currentUser;
   return setDoc(doc(db, ADMINS_COLLECTION, email), {
@@ -828,9 +839,11 @@ function newClassCode(){
   for(let i = 0; i < 6; i++) out += CLASS_CODE_CHARS[Math.floor(Math.random() * CLASS_CODE_CHARS.length)];
   return out;
 }
+/* The class leaderboard follows showBoard, which starts off for every class
+   until its teacher switches it on in the Teacher Portal. */
 function classFromDoc(d){
   const data = d.data();
-  return Object.assign({ id: d.id }, data, { studentUids: Array.isArray(data.studentUids) ? data.studentUids : [] });
+  return Object.assign({ id: d.id }, data, { studentUids: Array.isArray(data.studentUids) ? data.studentUids : [], leaderboard: data.showBoard === true });
 }
 function listClasses(game){
   return getDocs(collection(db, CLASSES_COLLECTION)).then(function(snap){
@@ -869,7 +882,7 @@ function adminUpdateClass(id, patch){
   if(p.name != null) data.name = String(p.name).trim().slice(0, 60);
   if(p.teacherName != null) data.teacherName = String(p.teacherName).trim().slice(0, 80);
   if(Array.isArray(p.studentUids)) data.studentUids = Array.from(new Set(p.studentUids.map(String)));
-  if(p.leaderboard != null) data.leaderboard = !!p.leaderboard;
+  if(p.leaderboard != null) data.showBoard = data.leaderboard = !!p.leaderboard;
   return setDoc(doc(db, CLASSES_COLLECTION, id), data, { merge:true });
 }
 function adminDeleteClass(id){
@@ -897,7 +910,7 @@ function studentJoinClass(code){
       // let this class's teacher see my record (my own doc, so I may write it)
       return c.teacherEmail ? setDoc(doc(db, STUDENTS_COLLECTION, user.uid), { teacherEmails: arrayUnion(normalizeEmail(c.teacherEmail)) }, { merge:true }).catch(function(){}) : null;
     }).then(function(){
-      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '', leaderboard: !!c.leaderboard, studentUids: (Array.isArray(c.studentUids) ? c.studentUids : []).concat([user.uid]) };
+      return { id: id, name: c.name, game: c.game, teacherName: c.teacherName || '', teacherEmail: c.teacherEmail || '', leaderboard: c.showBoard === true, studentUids: (Array.isArray(c.studentUids) ? c.studentUids : []).concat([user.uid]) };
     });
   });
 }
