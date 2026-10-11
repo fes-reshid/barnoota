@@ -2998,7 +2998,7 @@ var MAP_THEMES=[
  {k:'sea',sky:'#6fcaff,#bfe9ff 30%,#f6e6b8 56%,#ecd193',hill:'#efd394',hill2:'#f6e2b0',road:'boardwalk',sun:1,sea:1,decor:['🐚','⛵','🦀','🌴','🐬','🐚','🌴']},
  {k:'autumn',sky:'#ffcf99,#ffe8c9 36%,#efd2a0 56%,#d9a35a',hill:'#d39a52',hill2:'#e2b26d',road:'autumn',sun:.85,fx:'leaves',lake:'#7fb7c9',decor:['🍁','🍂','🦔','🍄','🍁','🌰','🍂']},
  {k:'night',sky:'#14224a,#2a3d72 38%,#2f5148 58%,#264536',hill:'#2f5a46',hill2:'#3a6a52',road:'night',moon:1,stars:1,fx:'fireflies',lake:'#3d6b8a',decor:['🦉','🌲','🦊','🌲','🍄','🌲','🦉']},
- {k:'rainbow',sky:'#8ea2b6,#c9d6e2 36%,#bfdcae 54%,#8fc874',hill:'#86c46a',hill2:'#9fd383',road:'wet',rainbow:1,dark:3,fx:'drizzle',lake:'#88b8cf',decor:['🌷','🐸','🌳','☔','🌼','🐌','🌳']},
+ {k:'drizzle',sky:'#8ea2b6,#c9d6e2 36%,#bfdcae 54%,#8fc874',hill:'#86c46a',hill2:'#9fd383',road:'wet',dark:3,fx:'drizzle',lake:'#88b8cf',decor:['🌷','🐸','🌳','☔','🌼','🐌','🌳']},
  {k:'blossom',sky:'#ffc9e0,#ffeaf3 36%,#e2f4d2 56%,#a8d88b',hill:'#9ad57d',hill2:'#b4e09b',road:'pale',sun:1,fx:'petals',lake:'#8fd0e8',decor:['🌸','🌷','🐝','🌸','🦋','🌼','🌸']},
  {k:'canyon',sky:'#8fcfff,#d3ecff 34%,#efd9bd 56%,#d6a473',hill:'#cf9c69',hill2:'#dcb284',road:'stone',sun:1,mountains:'red',river:1,clouds:2,decor:['🌵','🦅','🪨','🌵','🐐','🪨','🌵']},
  {k:'fog',sky:'#b9c3cc,#e1e6ea 38%,#d2dfcb 56%,#9fbf90',hill:'#a2c294',hill2:'#b8d2ab',road:'dirt',sun:.35,fx:'fog',lake:'#a9c3cf',decor:['🌳','🦆','🌾','🌳','🐄','🌾','🌳']},
@@ -3011,7 +3011,7 @@ function mapCloud(x,y,s,fill,op,rng){return `<g transform="translate(${Math.roun
 function mapThemeDecor(T,L,rng,sun){
  const W=L.W,H=L.H,tall=L.base===MAP_LAYOUTS.tall,horizon=H*(tall?.47:.52);let sky='',land='';
  if(T.stars)for(let i=0;i<46;i++)sky+=`<circle class="mt-star" cx="${Math.round(rng()*W)}" cy="${Math.round(rng()*H*.48)}" r="${(1+rng()*1.8).toFixed(1)}" style="animation-delay:-${(rng()*4).toFixed(1)}s"/>`;
- if(T.rainbow){const cx=W*(tall?.32:.3),cy=horizon+10,r0=W*(tall?.36:.26);['#ff6b6b','#ffa94d','#ffe066','#69db7c','#4dabf7','#9775fa'].forEach((c,i)=>{const r=r0-i*11;sky+=`<path d="M${(cx-r).toFixed(0)} ${cy} A${r} ${r} 0 0 1 ${(cx+r).toFixed(0)} ${cy}" fill="none" stroke="${c}" stroke-width="11" opacity=".6"/>`})}
+
  if(T.rays&&sun){let r='';for(let i=0;i<12;i++){const a=i*Math.PI/6;r+=`<line x1="${(Math.cos(a)*60).toFixed(1)}" y1="${(Math.sin(a)*60).toFixed(1)}" x2="${(Math.cos(a)*82).toFixed(1)}" y2="${(Math.sin(a)*82).toFixed(1)}"/>`}sky+=`<g transform="translate(${sun[0]} ${sun[1]})"><g class="mt-rays" stroke="#ffd84d" stroke-width="7" stroke-linecap="round" opacity=".8">${r}</g></g>`}
  if(T.moon&&sun)land+=`<circle cx="${sun[0]+20}" cy="${sun[1]-14}" r="40" fill="${T.sky.split(',')[0]}"/>`;
  if(T.mountains){
