@@ -2238,8 +2238,8 @@ function unlinkIfNoOtherClass(uid, c){
    created get that teacher. Runs quietly whenever the portal loads; after
    the first run there is nothing left to write. */
 let linkSyncRunning = false;
-/* Keep each member’s current map on the class leaderboard in sync with saved course progress:
-   the same “Now on Map N” as the Progress page, plus lessons done for ties. */
+/* Keep each member’s finished-maps total (ranking), lessons done (ties) and current map
+   (the same “Now on Map N” as the Progress page) on the class leaderboard in sync. */
 const boardSynced = {}, boardSyncMessages = {};
 function showBoardSyncStatus(){const el=$('leaderboard-sync-status');if(el)el.textContent=Object.values(boardSyncMessages).join(' · ');}
 function syncBoardMaps(){
@@ -2255,8 +2255,8 @@ function syncBoardMaps(){
       Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap && Number(e.lessons) === vals[u].lessons) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap, lessons: vals[u].lessons } : vals[u]; });
       if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
     }).then(() => KC.getBoard(c.id)).then(entries => {
-      const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&Number(entries[u].currentMap)===vals[u].currentMap).length;
-      boardSyncMessages[c.id]=c.name+': current map synced for '+ok+'/'+ids.length+' students';
+      const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&entries[u].maps!=null&&Number(entries[u].maps)===vals[u].maps).length;
+      boardSyncMessages[c.id]=c.name+': finished maps synced for '+ok+'/'+ids.length+' students';
       showBoardSyncStatus();
     }).catch((err) => { boardSynced[c.id] = ''; boardSyncMessages[c.id]='Leaderboard sync failed for '+c.name+': '+friendlyError(err);showBoardSyncStatus();toast(boardSyncMessages[c.id]); });
   });
