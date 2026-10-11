@@ -354,6 +354,20 @@ html:has(#mapScreen:not(.hidden)),html.tq-mapfull,html:has(#mapScreen:not(.hidde
 .ms-body .tq-head{display:none}
 .ms-body #teacherQuizzes{display:block;padding:0;border:0;background:none;box-shadow:none}
 #teacherQuizzes #boardBox{display:none}
+.ll-lead{margin:0 2px 12px;font:16px/1.45 'Cormorant Garamond',serif;color:#7a6a4f}
+.ll-list{display:grid;gap:10px;isolation:isolate}
+.ll-row{position:relative;display:flex;align-items:center;gap:12px;padding:11px 13px;border:2px solid #e3c98d;border-radius:18px;background:#fbf3df}
+.ll-row.me{background:#fff1c4;border-color:#d9a840;box-shadow:0 0 0 2px #f2b640}
+.ll-rank{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:800 15px Nunito,sans-serif;color:#7a5a12;background:#fff4d2;border:2px solid #e8cf86}
+.ll-rank.medal{background:none;border:0;font-size:26px}
+.ll-av{flex:none;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#e4f1fb;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:28px;line-height:1}
+.ll-mid{flex:1;min-width:0;display:grid;gap:7px}
+.ll-name{font:17px Marcellus,serif;color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ll-name small{font-size:13px;color:#8a6a2a}
+.ll-bar{display:block;height:10px;border-radius:99px;background:#efe3c6;overflow:hidden}
+.ll-bar span{display:block;height:100%;min-width:10px;border-radius:99px;background:linear-gradient(90deg,#68c083,#2e7d55)}
+.ll-score{flex:none;font:15px 'Cormorant Garamond',serif;color:#6b5a3e;white-space:nowrap}
+@media(max-width:420px){.ll-row{gap:8px;padding:9px 10px}.ll-rank{width:30px;height:30px;font-size:14px}.ll-av{width:42px;height:42px;font-size:23px}.ll-name{font-size:15.5px}.ll-score{font-size:14px}}
 .ms-body #boardBox .fold-head{display:none}
 .ms-body #boardBox .fold-body{display:block;padding:0}
 .ms-body #boardBox .fold{border:0;background:none;box-shadow:none;margin:0}
@@ -2029,7 +2043,7 @@ function sendStudentRecording(){
 }
 
 /* ---------- class leaderboard ---------- */
-var boardData={},boardMetric='maps',boardWrittenAt={},boardPrevious={},boardLoaded={},boardSessionUid='',boardRequest=0,boardUnsubscribe=null,boardWatching='',boardError='';
+var boardData={},boardMetric='lessons',boardWrittenAt={},boardPrevious={},boardLoaded={},boardSessionUid='',boardRequest=0,boardUnsubscribe=null,boardWatching='',boardError='';
 function boardClass(){return myClassList.find(c=>c.leaderboard)||null}
 function resetStudentBoard(){
  if(boardUnsubscribe)boardUnsubscribe();boardUnsubscribe=null;boardWatching='';boardError='';
@@ -2039,22 +2053,22 @@ function resetStudentBoard(){
 /* The map the student is on now — the same "Now on Map N" the teacher sees on the portal's Progress page: the first map whose lessons are not all finished. */
 function currentMapNo(){const w=worlds.findIndex((_,i)=>!worldComplete(i));return(w<0?worlds.length-1:w)+1}
 function mapsCompleted(){return worlds.filter((_,w)=>{const a=assessment(w);return worldComplete(w)||!!(a&&a.approved)}).length}
-function myBoardEntry(){return{name:String(myName()).split(/\s+/)[0],avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count,maps:mapsCompleted(),currentMap:currentMapNo(),lessons:doneCount()}}
-/* Maps: rank by maps finished (0–15, lessons all done or teacher approved); a classmate whose total is not synced yet ranks last. */
-function boardValue(e,metric=boardMetric){if(metric!=='maps')return Math.max(0,Number(e[metric])||0);const n=Number(e.maps);return e.maps!=null&&Number.isInteger(n)&&n>=0&&n<=worlds.length?n:-1}
-function boardEntries(c,metric=boardMetric){
+function myBoardEntry(){return{name:String(myName()).trim().slice(0,40),avatar:profile.avatar,stars:totalStars(),memorised:memorisedLines().length,streak:streakInfo().count,maps:mapsCompleted(),currentMap:currentMapNo(),lessons:doneCount()}}
+/* Leading learners: everyone in the class who has started, ranked by lessons,
+   then stars (the same list teachers see in the Teacher Portal). */
+function boardValue(e,metric=boardMetric){const n=Number(e[metric]);return e[metric]!=null&&isFinite(n)?Math.max(0,n):-1}
+function boardEntries(c){
  const uid=window.KidsCloud.currentUid(),members=new Set(c.studentUids||[]);
- return Object.entries(boardData[c.id]||{}).filter(([u])=>members.has(u)||u===uid).map(([u,e])=>Object.assign({},e,{uid:u})).sort((a,b)=>boardValue(b,metric)-boardValue(a,metric)||(metric==='maps'?(Number(b.lessons)||0)-(Number(a.lessons)||0)||(Number(b.memorised)||0)-(Number(a.memorised)||0):0)||String(a.name).localeCompare(String(b.name))||a.uid.localeCompare(b.uid));
+ return Object.entries(boardData[c.id]||{}).filter(([u])=>members.has(u)||u===uid).map(([u,e])=>Object.assign({},e,{uid:u})).filter(e=>boardValue(e,'lessons')>0)
+  .sort((a,b)=>boardValue(b,'lessons')-boardValue(a,'lessons')||(Number(b.stars)||0)-(Number(a.stars)||0)||String(a.name).localeCompare(String(b.name))||a.uid.localeCompare(b.uid));
 }
 function rememberBoard(c,uid){
- ['maps','memorised','stars'].forEach(metric=>{
-  const key='tuhfatul-board-v1:'+uid+':'+c.id+':'+metric;
-  if(!Object.prototype.hasOwnProperty.call(boardPrevious,key)){
-   try{const saved=JSON.parse(localStorage.getItem(key)||'null');boardPrevious[key]=saved&&saved.ranks||{}}catch(e){boardPrevious[key]={}}
-  }
-  const ranks={};boardEntries(c,metric).forEach((e,i)=>{ranks[e.uid]=i+1});
-  try{localStorage.setItem(key,JSON.stringify({ranks:ranks}))}catch(e){}
- });
+ const key='tuhfatul-board-v2:'+uid+':'+c.id;
+ if(!Object.prototype.hasOwnProperty.call(boardPrevious,key)){
+  try{const saved=JSON.parse(localStorage.getItem(key)||'null');boardPrevious[key]=saved&&saved.ranks||{}}catch(e){boardPrevious[key]={}}
+ }
+ const ranks={};boardEntries(c).forEach((e,i)=>{ranks[e.uid]=i+1});
+ try{localStorage.setItem(key,JSON.stringify({ranks:ranks}))}catch(e){}
 }
 function loadBoard(){
  const c=boardClass();if(!cloudUser||!c||!window.KidsCloud.getBoard){if(boardUnsubscribe)boardUnsubscribe();boardUnsubscribe=null;boardWatching='';renderBoard();return}
@@ -2074,14 +2088,13 @@ function loadBoard(){
  }
 }
 function boardContent(c){
- const uid=window.KidsCloud.currentUid(),all=boardEntries(c),myRank=all.findIndex(e=>e.uid===uid)+1;
- const previous=boardPrevious['tuhfatul-board-v1:'+uid+':'+c.id+':'+boardMetric]||{};
+ const uid=window.KidsCloud.currentUid(),all=boardEntries(c),myRank=all.findIndex(e=>e.uid===uid)+1,previous=boardPrevious['tuhfatul-board-v2:'+uid+':'+c.id]||{};
  const row=(e,i)=>{
-  const old=Number(previous[e.uid]),delta=old&&!(boardMetric==='maps'&&boardValue(e)<0)?old-(i+1):0,n=boardValue(e),known=boardMetric!=='maps'||n>=0;
-  const movement=boardMetric!=='stars'?'<span class="lb-change same" aria-label="'+(Number(e.stars)||0)+' stars">⭐ '+(Number(e.stars)||0)+'</span>':'';
-  return '<div class="lb-row '+(e.uid===uid?'me':'')+'" data-rank-shift="'+delta+'"><span class="lb-rank">'+(known?(['🥇','🥈','🥉'][i]||i+1):'')+'</span><span class="lb-av" aria-hidden="true">'+escapeHtml(e.avatar||'🧒')+'</span><span class="lb-name">'+escapeHtml(String(e.name||'Student').split(/\s+/)[0])+(e.uid===uid?' <small>(you)</small>':'')+'</span><span class="lb-score" aria-label="'+(boardMetric==='maps'?(n>=0?n+' of '+worlds.length+' maps finished':'Maps not synced'):n+' '+(boardMetric==='memorised'?'lines memorised':'stars'))+'">'+(boardMetric==='maps'?(n>=0?'🏁 '+n+'/'+worlds.length+' maps':'Not synced'):(boardMetric==='memorised'?'🧠 ':'⭐ ')+n)+'</span>'+movement+'</div>';
+  const old=Number(previous[e.uid]),delta=old?old-(i+1):0,n=boardValue(e,'lessons'),st=Number(e.stars)||0,pct=Math.min(100,Math.round(n/TOTAL_LESSONS*100));
+  return `<div class="ll-row${e.uid===uid?' me':''}" data-rank-shift="${delta}"><span class="ll-rank${i<3?' medal':''}">${i<3?['🥇','🥈','🥉'][i]:i+1}</span><span class="ll-av" aria-hidden="true">${escapeHtml(e.avatar||'🧒')}</span><span class="ll-mid"><span class="ll-name">${escapeHtml(String(e.name||'Student'))}${e.uid===uid?' <small>(you)</small>':''}</span><span class="ll-bar"><span style="width:${pct}%"></span></span></span><span class="ll-score" aria-label="${n} of ${TOTAL_LESSONS} lessons, ${st} stars">${n}/${TOTAL_LESSONS} · ⭐${st}</span></div>`;
  };
- return '<div class="lb-metrics" aria-label="Rank by">'+Object.entries({maps:'🗺️ Maps',memorised:'🧠 Memorised',stars:'⭐ Stars'}).map(([k,t])=>'<button type="button" class="hifz-chip '+(k===boardMetric?'active':'')+'" aria-pressed="'+(k===boardMetric)+'" data-lbm="'+k+'">'+t+'</button>').join('')+'</div><p class="lb-caption"><strong>'+(boardMetric==='maps'?'Based on maps finished':boardMetric==='memorised'?'Based on lines memorised':'Based on stars earned')+'</strong>'+(boardMetric==='maps'?'<br>Maps finished out of '+worlds.length+'. Same number of maps? More lessons done ranks higher.':'')+'</p>'+(boardMetric==='maps'&&all.some(e=>boardValue(e,'maps')<0)?'<p class="lb-caption">Some classmates’ finished maps are not synced yet. They appear when your teacher opens the Teacher Portal. Memorised and Stars scores are available now.</p>':'')+'<div class="lb-list">'+(all.length?all.slice(0,10).map(row).join('')+(myRank>10?'<p class="lb-more">Your position</p>'+row(all[myRank-1],myRank-1):''):'<p>Your class leaderboard is getting ready. Keep practising!</p>')+'</div><p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>';
+ const lead=all.length?all.length+' student'+(all.length>1?'s have':' has')+' started — ranked by lessons, then stars.':'';
+ return `<p class="ll-lead">${lead}</p><div class="ll-list">${all.length?all.map(row).join(''):'<p class="lb-caption">No one has started yet. Finish your first lesson to be the first!</p>'}</div>${!myRank&&all.length?'<p class="lb-caption">Finish your first lesson to join the list!</p>':''}<p class="lb-encourage">🌱 Every little practice helps you grow. Keep going at your own pace!</p>`;
 }
 function wireBoard(box){
  box.querySelectorAll('[data-lbm]').forEach(b=>b.onclick=()=>{boardMetric=b.dataset.lbm;renderBoard()});
@@ -2096,9 +2109,9 @@ function wireBoard(box){
 function renderBoard(){
  const box=$('#boardBox');if(!box)return;const c=boardClass();
  if(!cloudUser||!c){box.innerHTML='';return}
- const uid=window.KidsCloud.currentUid(),all=boardEntries(c,boardMetric),myRank=all.findIndex(e=>e.uid===uid)+1;
+ const uid=window.KidsCloud.currentUid(),all=boardEntries(c),myRank=all.findIndex(e=>e.uid===uid)+1;
  const body=(boardLoaded[c.id]?boardContent(c):'<p class="lb-caption">'+(boardError||'Your class leaderboard is loading.')+'</p>')+(boardError&&boardLoaded[c.id]?'<p class="lb-caption" role="status">'+boardError+'</p>':'')+'<button type="button" class="hifz-chip" data-board-refresh>↻ Refresh leaderboard</button>';
- box.innerHTML=foldHTML('board','🏆','Class leaderboard · '+escapeHtml(c.name),boardMetric==='maps'&&all.some(e=>boardValue(e,'maps')<0)?'Some finished maps are awaiting sync':myRank?'You are #'+myRank+' of '+all.length+' · '+({maps:'maps finished',memorised:'lines memorised',stars:'stars earned'}[boardMetric]):'See how your class is doing','',body);
+ box.innerHTML=foldHTML('board','🌟','Leading learners · '+escapeHtml(c.name),myRank?'You are #'+myRank+' of '+all.length:'See who is leading in your class','',body);
  wireFolds(box);
  box.querySelector('.fold-head').addEventListener('click',()=>{if(box.querySelector('.fold.open'))requestAnimationFrame(()=>wireBoard(box))});
  wireBoard(box);
@@ -3166,7 +3179,7 @@ renderTeacherAlert=function(){
    as panels over the map; the tools open their own screens. Tips that used
    to appear under the map pop up on the map for a few seconds. */
 var mapMenuOpen=false,mapSheetKey='',mapSheetBack=null,mapSheetTimer=null,mapToastTimer=null,mapHelpObserver=null,mapTapAt=0,mapDrawnAt=0;
-const MAP_SHEETS={maps:['🗺️','My maps','#worldTabs'],teacher:['📝','From your teacher','#teacherQuizzes'],check:['👩‍🏫','Teacher check','#teacherPanel'],review:['🔁','Daily review','#dailyCard'],board:['🏆','Class leaderboard','#boardBox']};
+const MAP_SHEETS={maps:['🗺️','My maps','#worldTabs'],teacher:['📝','From your teacher','#teacherQuizzes'],check:['👩‍🏫','Teacher check','#teacherPanel'],review:['🔁','Daily review','#dailyCard'],board:['🌟','Leading learners','#boardBox']};
 function setMapMenu(open){
  const d=$('#mapDrawer'),sh=$('#mapDrawerShade'),b=$('#mapMenuBtn');open=!!open;if(!d||open===mapMenuOpen)return;mapMenuOpen=open;
  d.classList.toggle('open',open);sh.classList.toggle('show',open);d.setAttribute('aria-hidden',String(!open));if(b)b.setAttribute('aria-expanded',String(open));
@@ -3199,7 +3212,7 @@ function refreshMapMenu(){
  const g=$('#teacherGuide');$('#mdCheckSub').textContent=g?g.textContent:'';
  const dc=$('#dailyCard'),dcOn=!!(dc&&!dc.classList.contains('hidden')),due=dcOn&&!dc.classList.contains('done'),dt=dc&&dc.querySelector('.dc-text b');
  $('#mdReviewRow').hidden=!dcOn;$('#mdReviewSub').textContent=dt?dt.textContent.replace(/^Daily review\s*·\s*/,''):'';$('#mdReviewTag').hidden=!due;
- $('#mdBoardRow').hidden=!(cloudUser&&typeof boardClass==='function'&&boardClass());
+ $('#mdBoardRow').hidden=!(cloudUser&&typeof boardClass==='function'&&boardClass());$('#mdBoardSub').textContent='Ranked by lessons, then stars';
  const cb=$('#courseBook');if(cb)$('#mdBook').href=cb.href;
  const dot=$('#mapMenuDot');if(dot)dot.hidden=!(hot||due);
 }
@@ -3228,7 +3241,7 @@ function setupMapMenu(){
    +row('data-sheet="teacher" id="mdTeacherRow"','📝','From your teacher','','<span class="md-tag" id="mdTeacherTag" hidden></span>')
    +row('data-sheet="check"','👩‍🏫','Teacher check','id="mdCheckSub"')
    +row('data-sheet="review" id="mdReviewRow" hidden','🔁','Daily review','id="mdReviewSub"','<span class="md-tag soft" id="mdReviewTag" hidden>Today</span>')
-   +row('data-sheet="board" id="mdBoardRow" hidden','🏆','Class leaderboard','','')
+   +row('data-sheet="board" id="mdBoardRow" hidden','🌟','Leading learners','id="mdBoardSub"','')
    +'<a class="md-row" id="mdBook" href="#" target="_blank" rel="noopener" download="Tuhfat-al-Atfaal-Course-Book.pdf"><span class="md-ic">📘</span><span class="md-t">Course book<small>Download, print and follow along</small></span><span class="md-go" aria-hidden="true">⬇</span></a>'
    +'</nav><p class="md-label">Practise</p><div class="md-tools" id="mdTools"></div><div class="md-foot" id="mdFoot"><button type="button" class="md-chip" id="mapFullBtn" hidden>⛶ Full screen</button></div></div></aside>'
    +'<div class="map-sheet-shade" id="mapSheetShade"></div><section class="map-sheet" id="mapSheet" role="dialog" aria-modal="true" aria-labelledby="mapSheetTitle" aria-hidden="true"><div class="ms-head"><span class="ms-ic" id="mapSheetIc" aria-hidden="true"></span><h2 id="mapSheetTitle"></h2><button type="button" class="md-x" id="mapSheetX" aria-label="Close">✕</button></div><div class="ms-body" id="mapSheetBody"></div></section><div id="mapStore"></div>');

@@ -638,7 +638,7 @@ body{font-variant-numeric:lining-nums}
               <button class="btn ghost small" id="class-homework">📚 Homework for this class</button>
             </div>
             <div class="lb-box"><label class="toggle"><input type="checkbox" id="class-leaderboard"> 🏆 Show a class leaderboard to students</label>
-              <div class="muted" style="font-size:13.5px;margin-top:4px">Off until you switch it on. Students in this class then see each other’s 🏁 maps finished, 🧠 lines memorised and ⭐ stars (first names only) under 🏆 Class leaderboard in the ☰ menu on their map. Turn it off any time.</div>
+              <div class="muted" style="font-size:13.5px;margin-top:4px">Off until you switch it on. Students in this class then see 🌟 Leading learners in the ☰ menu on their map: everyone who has started, ranked by lessons, then stars, with their name, lessons done and stars (the same list as on your Overview). Turn it off any time.</div>
               <div id="class-lb-preview"></div></div>
             <h3>Students <span class="muted" id="class-member-count"></span></h3>
             <div id="class-members"></div>
@@ -988,7 +988,7 @@ body{font-variant-numeric:lining-nums}
         <ul class="guide-list">
           <li>Each class has a <b>join code</b>. Students type it under <i>From your teacher → Join your class</i>.</li>
           <li>From a class you can message it, announce to it, set its homework and print a <b>class report</b>.</li>
-          <li><b>🏆 Class leaderboard:</b> it is off until you switch it on. Then the class sees each other’s maps finished, lines memorised and stars in the ☰ menu on their map. Switch off any time.</li>
+          <li><b>🏆 Class leaderboard:</b> it is off until you switch it on. Then the class sees 🌟 Leading learners in the ☰ menu on their map — everyone who has started, ranked by lessons, then stars, like your Overview. Switch off any time.</li>
         </ul>
         <button class="btn ghost small" data-goto-tab="classes">Go to Classes →</button>
       </section>
@@ -2253,12 +2253,12 @@ function syncBoardMaps(){
   classesCache.filter(c => c.leaderboard && (myRole !== 'teacher' || isMyClass(c))).forEach(c => {
     const vals = {};
     c.studentUids.forEach(uid => { const s = studentsCache.find(x => x.uid === uid); if(!s) return; const p = courseProfile(s), sm = summarize(s);
-      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, currentMap: sm.currentMap + 1, lessons: sm.lessons || 0, name: String(s.displayName || s.username || 'Student').split(/\s+/)[0], avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
-    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps, vals[u].currentMap, vals[u].lessons]));
+      vals[uid] = { maps: MAPS.filter((_, i) => mapComplete(p, i) || approved(p, i)).length, currentMap: sm.currentMap + 1, lessons: sm.lessons || 0, name: String(s.displayName || s.username || 'Student').trim().slice(0, 40), avatar: p.avatar || '🧒', stars: sm.stars || 0, memorised: sm.hifz || 0 }; });
+    const key = JSON.stringify(Object.keys(vals).sort().map(u => [u, vals[u].maps, vals[u].currentMap, vals[u].lessons, vals[u].stars, vals[u].name, vals[u].avatar]));
     if(boardSynced[c.id] === key) return; boardSynced[c.id] = key;
     KC.getBoard(c.id).then(entries => {
       const out = {};
-      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap && Number(e.lessons) === vals[u].lessons) return; out[u] = e ? { maps: vals[u].maps, currentMap: vals[u].currentMap, lessons: vals[u].lessons } : vals[u]; });
+      Object.keys(vals).forEach(u => { const e = entries[u]; if(e && Number(e.maps) === vals[u].maps && Number(e.currentMap) === vals[u].currentMap && Number(e.lessons) === vals[u].lessons && Number(e.stars) === vals[u].stars && e.name === vals[u].name && e.avatar === vals[u].avatar) return; out[u] = vals[u]; });
       if(Object.keys(out).length) return KC.adminSyncBoard(c.id, out);
     }).then(() => KC.getBoard(c.id)).then(entries => {
       const ids=Object.keys(vals),ok=ids.filter(u=>entries[u]&&entries[u].maps!=null&&Number(entries[u].maps)===vals[u].maps).length;
