@@ -62,6 +62,17 @@ const CONTENT_COLLECTION = 'kids_quest_content';
 const NEW_STUDENTS_COLLECTION = 'kids_quest_new_students';
 const SUBMISSION_DATA_COLLECTION = 'kids_quest_submission_data';
 
+/* Sign-in boxes on every game page: a plain font, so "1" never looks like "I"
+   and "-" does not lean (the decorative Cormorant font draws them that way). */
+try {
+  if(typeof document !== 'undefined' && !document.getElementById('kq-login-font')){
+    const st = document.createElement('style');
+    st.id = 'kq-login-font';
+    st.textContent = 'input[autocomplete=username],input[autocomplete=email],input[type=email]{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:lining-nums}';
+    (document.head || document.documentElement).appendChild(st);
+  }
+} catch(e){}
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);

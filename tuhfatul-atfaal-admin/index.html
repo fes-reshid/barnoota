@@ -428,6 +428,12 @@
  .two-col>.card,.tab-panel>.card{margin-bottom:12px!important}
 }
 </style>
+<style id="clear-typing">
+/* Typing boxes use a plain font: in Cormorant Garamond "1" looks like "I" and "-" leans. */
+input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:lining-nums}
+.parent-link input:not([type=checkbox]):not([type=radio]):not([type=range]){font-family:ui-monospace,monospace}
+body{font-variant-numeric:lining-nums}
+</style>
 </head>
 <body>
 
@@ -1204,7 +1210,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=30"></script>
+<script type="module" src="../kids-quest-cloud.js?v=31"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
