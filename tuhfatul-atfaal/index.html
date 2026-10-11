@@ -1037,14 +1037,14 @@ function placeStandingMapAvatar(){
  if(!target){const latest=Math.max(0,profile.unlocked-1);target=svg.querySelector(`.node[data-i="${latest}"]`)||svg.querySelector('.node:not(.locked)')}
  standingAvatarAt(target)
 }
-/* After the avatar reaches the next lesson, open it by itself after 3 s
+/* After the avatar reaches the next lesson, open it by itself after 15 s
    (with "Open now" and "Stay on map"). Cancelled if the student leaves the map. */
 let autoOpenTimer=null;
 function cancelAutoOpen(){clearInterval(autoOpenTimer);autoOpenTimer=null;const el=$('#autoOpen');if(el)el.remove()}
 function startAutoOpen(i){
  cancelAutoOpen();if(!(i<profile.unlocked)||!lessons[i])return;
- let left=3;const name='Line '+lessons[i].lines;
- document.body.insertAdjacentHTML('beforeend',`<div class="auto-open" id="autoOpen" role="status"><span class="ao-ring"><b id="aoCount">3</b></span><span class="ao-text">Opening <b>${escapeHtml(name)}</b>…</span><button class="btn green" id="aoNow">Open now ▶</button><button class="ghost" id="aoStay">Stay on map</button></div>`);
+ const AUTO_OPEN_SECONDS=15;let left=AUTO_OPEN_SECONDS;const name='Line '+lessons[i].lines;
+ document.body.insertAdjacentHTML('beforeend',`<div class="auto-open" id="autoOpen" role="status"><span class="ao-ring"><b id="aoCount">${left}</b></span><span class="ao-text">Opening <b>${escapeHtml(name)}</b>…</span><button class="btn green" id="aoNow">Open now ▶</button><button class="ghost" id="aoStay">Stay on map</button></div>`);
  const go=()=>{cancelAutoOpen();if(!$('#mapScreen').classList.contains('hidden'))openLesson(i)};
  $('#aoNow').onclick=go;$('#aoStay').onclick=cancelAutoOpen;
  autoOpenTimer=setInterval(()=>{if($('#mapScreen').classList.contains('hidden')){cancelAutoOpen();return}left--;const c=$('#aoCount');if(c)c.textContent=Math.max(left,0);if(left<=0)go()},1000);
