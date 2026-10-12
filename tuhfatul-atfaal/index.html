@@ -301,9 +301,6 @@ html:has(#mapScreen:not(.hidden)),html.tq-mapfull,html:has(#mapScreen:not(.hidde
 #mapStore{display:none!important}
 .map-menu-btn{position:absolute;z-index:9;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));display:grid;align-content:center;justify-items:center;gap:5px;width:48px;height:48px;padding:0;border:3px solid #fff;border-radius:50%;background:#fff8e1;box-shadow:0 4px 12px rgba(0,0,0,.22);cursor:pointer}
 .map-menu-btn span{display:block;width:22px;height:3px;border-radius:3px;background:#5d3a12}
-.map-leaders-btn{position:absolute;z-index:9;bottom:max(12px,env(safe-area-inset-bottom));left:max(12px,env(safe-area-inset-left));max-width:calc(100% - 130px);padding:10px 14px;border:2px solid #d7af51;border-radius:18px;background:#fff8e1;color:#1c2b46;font:700 15px Nunito,sans-serif;box-shadow:0 3px 10px #122d3f33;cursor:pointer}
-.map-leaders-btn[hidden]{display:none}
-.map-leaders-btn:focus-visible{outline:3px solid #2d6cdf;outline-offset:3px}
 .map-menu-btn:hover{background:#ffe7a8}
 .map-menu-btn .md-dot{position:absolute;top:-2px;right:-2px;width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#e0703a}
 .map-menu-btn .md-dot[hidden]{display:none}
@@ -3243,7 +3240,6 @@ function refreshMapMenu(){
  const g=$('#teacherGuide');$('#mdCheckSub').textContent=g?g.textContent:'';
  const dc=$('#dailyCard'),dcOn=!!(dc&&!dc.classList.contains('hidden')),due=dcOn&&!dc.classList.contains('done'),dt=dc&&dc.querySelector('.dc-text b');
  $('#mdReviewRow').hidden=!dcOn;$('#mdReviewSub').textContent=dt?dt.textContent.replace(/^Daily review\s*·\s*/,''):'';$('#mdReviewTag').hidden=!due;
- const leaders=$('#mapLeadersBtn');if(leaders)leaders.hidden=!cloudUser;
  $('#mdBoardRow').hidden=!cloudUser;$('#mdBoardSub').textContent='Ranked by lessons, then stars';
  const cb=$('#courseBook');if(cb)$('#mdBook').href=cb.href;
  const dot=$('#mapMenuDot');if(dot)dot.hidden=!(hot||due);
@@ -3281,8 +3277,6 @@ function setupMapMenu(){
   if(me)$('#mdMe').appendChild(me);if(stats)$('#mdStats').appendChild(stats);if(tools)$('#mdTools').appendChild(tools);
   const sound=$('#soundToggle'),guide=scr.querySelector('.guide-link'),out=$('#logoutBtn'),reset=$('#resetBtn');
   if(sound)foot.prepend(sound);if(guide)foot.appendChild(guide);if(out)$('#mdSignout').appendChild(out);if(reset)foot.appendChild(reset);const avatar=$('#avatarBtn');if(avatar)foot.prepend(avatar);
-  frame.insertAdjacentHTML('beforeend','<button type="button" class="map-leaders-btn" id="mapLeadersBtn" hidden>🌟 Leading learners</button>');
-  $('#mapLeadersBtn').onclick=()=>openMapSheet('board');
   const avatarTap=e=>{
    if(!e.target.closest('.standing-avatar-wrap'))return;
    if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;
