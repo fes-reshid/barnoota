@@ -2435,17 +2435,42 @@ function tapEntryDoor(){
  exitAnimating=true;hideExitBubble();
  setTimeout(()=>{exitAnimating=false;viewWorld--;mapAvatarPosition=null;renderMap()},reduced?0:550);
 }
+/* Leaving a map: the character turns to face the door (seen from behind),
+   walks along the road to it, reaches out and opens it, then steps through. */
+function mapPersonBackMarkup(extraClass=''){return mapPersonMarkup(extraClass)}
 function walkThroughExitDoor(){
  const svg=$('#mapSvg'),door=$('#mapExitDoor'),q=translatedPoint($('#roadQuizBtn'));if(!svg||!door||!q)return;
- exitAnimating=true;hideExitBubble();door.classList.add('open');happySound();
+ exitAnimating=true;hideExitBubble();cancelAutoOpen();
  svg.querySelectorAll('.standing-avatar-wrap').forEach(x=>x.remove());
- svg.insertAdjacentHTML('beforeend',`<g id="exitWalker" class="walking-avatar-wrap">${mapPersonMarkup('walking-avatar')}</g>`);
- const walker=$('#exitWalker'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,dur=reduced?300:1700,a={x:q.x,y:q.y-59},b={x:mapExitAt()[0],y:mapExitAt()[1]-31},t0=performance.now()+(reduced?0:600);
- $('#mapHelp').textContent=`The door is open — walking to Map ${viewWorld+2}…`;
- (function step(now){const raw=Math.max(0,Math.min(1,(now-t0)/dur)),t=raw*raw*(3-2*raw),s=1-.45*Math.max(0,(raw-.6)/.4);
-  walker.setAttribute('transform',`translate(${a.x+(b.x-a.x)*t} ${a.y+(b.y-a.y)*t-Math.sin(Math.PI*t)*8}) scale(${s})`);walker.style.opacity=raw>.75?String(1-(raw-.75)/.25):'1';
-  if(raw<1){requestAnimationFrame(step);return}
-  setTimeout(()=>{viewWorld++;mapAvatarPosition=null;renderMap();requestAnimationFrame(()=>requestAnimationFrame(enterNextMap))},reduced?0:250)
+ svg.insertAdjacentHTML('beforeend',`<g id="exitWalker" class="walking-avatar-wrap">${mapPersonBackMarkup('walking-avatar')}</g>`);
+ const walker=$('#exitWalker'),person=walker.firstElementChild,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,E=mapExitAt(),G=MAP_GEO||{};
+ /* stop just in front of the door so the door can be seen opening */
+ const road=G.road,s0=G.quizS||0,len=road?road[road.length-1][2]:0,stopAt=Math.max(s0,len-54),onRoad=road&&stopAt>s0;
+ const pathAt=t=>onRoad?pointAtLen(road,s0+(stopAt-s0)*t):[q.x+(E[0]-30-q.x)*t,q.y+(E[1]+20-q.y)*t];
+ const stand=pathAt(1),left=E[0]<stand[0]-4,arm=walker.querySelector(left?'.left-arm':'.right-arm');
+ const walkDur=reduced?300:Math.max(1100,Math.min(2400,(onRoad?len-s0:400)*3.2)),reachDur=reduced?200:800,inDur=reduced?200:850,pause=reduced?0:380;
+ const place=(x,y,sc)=>walker.setAttribute('transform',`translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${sc.toFixed(3)})`);
+ place(q.x,q.y-59,1);$('#mapHelp').textContent=`Walking to the door of Map ${viewWorld+2}…`;
+ const t0=performance.now()+pause;
+ (function walk(now){
+  const raw=Math.max(0,Math.min(1,(now-t0)/walkDur)),t=raw<.5?2*raw*raw:1-Math.pow(2-2*raw,2)/2,p=pathAt(t);
+  place(p[0],p[1]-59+28*Math.min(1,raw*4),1);
+  if(raw<1){requestAnimationFrame(walk);return}
+  person.classList.remove('walking-avatar');const tr=performance.now();let opened=false;
+  (function reach(now){
+   const r=Math.max(0,Math.min(1,(now-tr)/reachDur));
+   if(arm)arm.setAttribute('transform',`rotate(${((left?125:-125)*Math.sin(Math.PI/2*Math.min(1,r*1.7))).toFixed(1)} ${left?-10:10} -8)`);
+   if(!opened&&r>.5){opened=true;door.classList.add('open');happySound();$('#mapHelp').textContent=`The door is open — into Map ${viewWorld+2}!`}
+   if(r<1){requestAnimationFrame(reach);return}
+   if(arm)arm.removeAttribute('transform');person.classList.add('walking-avatar');
+   const ti=performance.now(),from=stand,fy=from[1]-31,ty=E[1]-46;
+   (function enter(now){
+    const e=Math.max(0,Math.min(1,(now-ti)/inDur));
+    place(from[0]+(E[0]-from[0])*e,fy+(ty-fy)*e,1-.45*e);walker.style.opacity=e>.35?String(Math.max(0,1-(e-.35)/.65)):'1';
+    if(e<1){requestAnimationFrame(enter);return}
+    setTimeout(()=>{viewWorld++;mapAvatarPosition=null;renderMap();requestAnimationFrame(()=>requestAnimationFrame(enterNextMap))},reduced?0:250)
+   })(performance.now())
+  })(performance.now())
  })(performance.now())
 }
 function enterNextMap(){
@@ -3106,7 +3131,8 @@ function layoutMapRoad(){
  if((L.exit[1]-105)*sc<72&&(L.exit[0]+46)*sc>fw-72)L.exit=[Math.round((fw-72)/sc-46),L.exit[1]];
  /* the road */
  const pts=[[L.entry[0]+4,L.entry[1]-14],...ROAD_SHAPES[tall?'tall':'wide'][wi].map(p=>[Math.round(p[0]*L.W),Math.round(p[1]*L.H)]),[L.exit[0]-6,L.exit[1]-6]];
- const samp=sampleRoad(pts),nodes=[...svg.querySelectorAll('.node')],n=nodes.length,spots=placeAlong(samp,n+2).map(x=>x.p);
+ const samp=sampleRoad(pts),nodes=[...svg.querySelectorAll('.node')],n=nodes.length,placed=placeAlong(samp,n+2),spots=placed.map(x=>x.p);
+ L.road=samp;L.quizS=placed[n+1].s;
  nodes.forEach((node,i)=>node.setAttribute('transform',`translate(${spots[i][0]} ${spots[i][1]})`));
  L.lessons=spots.slice(0,n);L.flash=spots[n];L.quiz=spots[n+1];
  const f=$('#roadFlashBtn'),q=$('#roadQuizBtn');if(f)f.setAttribute('transform',`translate(${L.flash[0]} ${L.flash[1]})`);if(q)q.setAttribute('transform',`translate(${L.quiz[0]} ${L.quiz[1]})`);
@@ -3330,6 +3356,6 @@ sizeMap=function(){
 window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(sizeMapSoon,160)});
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
-<script src="cartoon-avatar-67a81bb3.js"></script>
+<script src="cartoon-avatar-14a08346.js"></script>
 </body>
 </html>

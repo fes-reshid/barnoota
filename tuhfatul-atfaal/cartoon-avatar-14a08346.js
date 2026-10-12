@@ -13,7 +13,7 @@
       if (!palettes[key].some(([c]) => c === profile[key])) profile[key] = key === 'hijabColor' ? profile.shirtColor : palettes[key][0][0];
     }
   };
-  function character(p, extraClass = '') {
+  function character(p, extraClass = '', back = false) {
     const s=p.skinTone,c=p.shirtColor,t=p.trouserColor,h=p.hijabColor,hair=p.hairColor,shoe=p.shoeColor;
     const hijab=p.avatar==='🧕',braids=p.avatar==='👧',curly=p.avatar==='🧒',turban=p.avatar==='👳';
     const feminine=hijab||braids;
@@ -36,9 +36,19 @@
     const backHair=braids?`<path d="M-9-29 Q-15-23-12-10 M9-29 Q15-23 12-10" fill="none" stroke="${hair}" stroke-width="6" stroke-linecap="round"/><path d="M-14-13 L-10-12 M10-12 L14-13" stroke="${c}" stroke-width="2"/>`:'';
     const face=`${hijab?'':`<ellipse cy="-13" rx="3.5" ry="5" fill="${s}"/><ellipse cx="-11" cy="-25" rx="2.2" ry="3.4" fill="${s}"/><ellipse cx="11" cy="-25" rx="2.2" ry="3.4" fill="${s}"/>`}<path d="${feminine?'M-10-29 Q-10-37 0-37 Q10-37 10-29 Q11-22 7-18 Q4-14 0-14 Q-4-14-7-18 Q-11-22-10-29Z':'M-10-29 Q-10-37 0-37 Q10-37 10-29 L10-22 Q9-16 4-14 L-4-14 Q-9-16-10-22Z'}" fill="${s}" ${edge}/><path d="${feminine?'M-8-31 Q-5-33-2-31 M2-31 Q5-33 8-31':'M-8-30.5 Q-5-31-2-30 M2-30 Q5-31 8-30.5'}" fill="none" stroke="${hair}" stroke-width="${feminine?.7:1.2}" stroke-linecap="round"/><ellipse cx="-4.7" cy="-26.5" rx="${feminine?2.4:2}" ry="${feminine?2.6:2.2}" fill="#fff"/><ellipse cx="4.7" cy="-26.5" rx="${feminine?2.4:2}" ry="${feminine?2.6:2.2}" fill="#fff"/><ellipse cx="-4.5" cy="-26.2" rx="1.25" ry="1.8" fill="#30271F"/><ellipse cx="4.5" cy="-26.2" rx="1.25" ry="1.8" fill="#30271F"/><circle cx="-4.9" cy="-27" r=".55" fill="#fff"/><circle cx="4.1" cy="-27" r=".55" fill="#fff"/>${feminine?'<path d="M-6.4-28 L-7.6-29.1 M6.4-28 L7.6-29.1" stroke="#30271F" stroke-width=".7" stroke-linecap="round"/>':''}<path d="M0-25 L-1-22 Q0-21 1-22" fill="none" stroke="#774C38" stroke-opacity=".45" stroke-width=".6"/><ellipse cx="-6.8" cy="-21.7" rx="2.2" ry="1.1" fill="#D67875" opacity=".24"/><ellipse cx="6.8" cy="-21.7" rx="2.2" ry="1.1" fill="#D67875" opacity=".24"/><path d="${feminine?'M-3-20 Q0-17 3-20 Q0-18.8-3-20Z':'M-4-20 Q0-15.7 4-20 Q0-18.5-4-20Z'}" fill="#96594D"/><path d="M-2.5-19.5 Q0-18.5 2.5-19.5" stroke="#fff" stroke-width=".7" fill="none"/>`;
     const topHair=hijab?'':turban?`<path d="M-12-31 Q-14-40 0-41 Q13-40 12-31 Q0-27-12-31Z" fill="${h}" ${edge}/><path d="M-10-36 Q0-29 10-35 M-8-39 Q1-33 10-36" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1.1"/>`:curly?`<path d="M-11-26 Q-14-33-9-36 Q-9-42-3-40 Q1-44 5-40 Q12-41 12-35 Q16-31 10-27 L9-32 Q4-29 0-33 Q-5-30-9-31Z" fill="${hair}"/><path d="M-6-37 Q-3-40 0-36 M3-38 Q7-40 8-35" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="1.2"/>`:`<path d="M-11-26 Q-14-39 0-41 Q14-40 11-26 L8-32 Q1-30-3-35 Q-6-31-10-30Z" fill="${hair}"/><path d="M-6-36 Q0-40 7-35" fill="none" stroke="#fff" stroke-opacity=".15" stroke-width="1.2"/>`;
+    if(back){
+      /* Seen from behind (walking to a door): no face, the back of the head instead. */
+      const neck=hijab?'':`<ellipse cy="-13" rx="3.5" ry="5" fill="${s}"/><ellipse cx="-11" cy="-25" rx="2.2" ry="3.4" fill="${s}"/><ellipse cx="11" cy="-25" rx="2.2" ry="3.4" fill="${s}"/>`;
+      const headBack=hijab
+        ? `<path d="M0-43 C-12-43-17-34-16-23 C-16-15-20-7-19-2 Q-12 5 0 8 Q12 5 19-2 C20-7 16-15 16-23 C17-34 12-43 0-43Z" fill="${h}" ${edge}/><path d="M0-40 Q2-20 0 6 M-12-31 Q0-25 12-31" fill="none" stroke="#000" stroke-opacity=".12" stroke-width="1.2"/>`
+        : `<path d="M-10-29 Q-10-38 0-38 Q10-38 10-29 L10-23 Q9-17 4-15 L-4-15 Q-9-17-10-23Z" fill="${hair}" ${edge}/><path d="M-6-34 Q0-37 6-34" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="1.2"/>`;
+      const braidsBack=braids?`<path d="M-4-18 Q-6-10-5-3 M4-18 Q6-10 5-3" fill="none" stroke="${hair}" stroke-width="5" stroke-linecap="round"/><path d="M-7-4 L-3-4 M3-4 L7-4" stroke="${c}" stroke-width="2"/>`:'';
+      return `<g class="map-person cartoon-child back-view ${extraClass}" aria-hidden="true">${legs}${arms}<path d="${bodyShape}" fill="${c}" ${edge}/><g class="avatar-head">${neck}${headBack}${hijab?'':topHair}${braidsBack}</g></g>`;
+    }
     return `<g class="map-person cartoon-child ${extraClass}" aria-hidden="true">${legs}${arms}${body}<g class="avatar-head">${backHair}${scarf}${face}${topHair}</g></g>`;
   }
   mapPersonMarkup=function(extraClass=''){ensureAvatarColours();return character(profile,extraClass)};
+  mapPersonBackMarkup=function(extraClass=''){ensureAvatarColours();return character(profile,extraClass,true)};
   function preview(p, cls=''){return `<svg class="${cls}" viewBox="-24 -47 48 82" aria-hidden="true">${character(p)}</svg>`}
   function refreshBadges(){ensureAvatarColours();['studentAvatar','sideAvatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=preview(profile,'child-badge')})}
   const previousStats=syncStats;syncStats=function(){previousStats();refreshBadges()};
