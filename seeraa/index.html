@@ -1447,9 +1447,9 @@ renderLessonQuiz=function(){
    (tries.length?`<ul class="attempt-list">${tries.map((t,i)=>t.score==null?`<li><b>Attempt ${i+1}</b><span>✓ Completed</span><small>earlier visit</small></li>`:`<li><b>Attempt ${i+1}</b><span>${t.score}/${t.total} right first time</span><span>${'⭐'.repeat(Math.max(1,Math.round(t.score/t.total*3)))}</span><small>${when(t.at)}</small></li>`).join('')}</ul>`:'')+
    `<div class="done-actions"><button class="btn done-again" id="quizAgain">↻ Attempt ${tries.length+1} — try again</button></div>`;
   $('#quizAgain').onclick=()=>{quizFresh=true;quizMissed=new Set();lessonQuizQuestions=[];lessonQuizIndex=0;lessonQuizCorrect=0;quizMistakes=0;answered=false;wrong=0;$('#lessonActions').innerHTML='';renderLessonQuiz()};
-  const next=current+1<TOTAL_LESSONS&&current+1<profile.unlocked;
+  const next=current+1<TOTAL_LESSONS&&current+1<profile.unlocked&&lessons[current+1].world===lessons[current].world;
   $('#lessonActions').innerHTML=next?'<button class="btn green" id="doneNext">Next lesson →</button>':'<button class="btn green" id="doneMap">Back to map</button>';
-  if(next)$('#doneNext').onclick=()=>openLesson(current+1);else $('#doneMap').onclick=()=>{renderMap();show('mapScreen')};
+  const walkFromCompletedLesson=()=>{pendingMapWalk=null;returnToMapWithWalk()};if(next)$('#doneNext').onclick=walkFromCompletedLesson;else $('#doneMap').onclick=walkFromCompletedLesson;
   return;
  }
  renderLessonQuizBeforeDone();
@@ -3370,7 +3370,7 @@ setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapSc
 </script>
 <script src="cartoon-avatar-14a08346.js?v=direction-3"></script>
 <script src="seeraa-activities.js"></script>
-<script src="historical-worlds.js?v=walking-direction-7"></script>
+<script src="historical-worlds.js?v=completed-walk-8"></script>
 </body>
 </html>
 
