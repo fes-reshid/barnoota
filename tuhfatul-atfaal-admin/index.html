@@ -1189,9 +1189,20 @@ body{font-variant-numeric:lining-nums}
 
     <div class="sub-panel hidden" data-subpanel="account">
       <div class="teacher-work">
-        <h3>Password</h3>
-        <p class="muted">Sends Firebase’s reset link to the student’s own email if they gave one at sign-up, otherwise to the site’s admin inbox.</p>
-        <button class="btn ghost" id="acct-reset">✉️ Send password reset</button>
+        <h3>🔑 Reset password</h3>
+        <p class="muted">Type a new password for this student. You also need their current password — the one you set when you added them, or one the student or a parent remembers. Their progress, classes and messages stay the same.</p>
+        <div class="row">
+          <div class="field"><label for="acct-new-pass">New password</label><input type="text" id="acct-new-pass" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="at least 6 characters"></div>
+          <div class="field"><label for="acct-old-pass">Current password</label><input type="text" id="acct-old-pass" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="acct-set-pass">🔑 Reset password</button>
+          <button class="btn ghost" id="acct-gen-pass" type="button">🎲 Make a new password</button>
+        </div>
+        <details style="margin-top:12px"><summary style="cursor:pointer;font-family:'Marcellus'">No one knows the current password?</summary>
+          <p class="muted" style="margin:8px 0">Send Firebase’s reset link instead. It goes to the student’s own email if they gave one at sign-up — otherwise to the Diin Islaam admin inbox, so ask the admin to open it and set the new password.</p>
+          <button class="btn ghost" id="acct-reset">✉️ Email a reset link</button>
+        </details>
         <div id="acct-rename-box">
           <h3 style="margin-top:18px">Rename username</h3>
           <div class="row">
@@ -1213,7 +1224,7 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=31"></script>
+<script type="module" src="../kids-quest-cloud.js?v=32"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1642,6 +1653,7 @@ function renderModal(){
   $('acct-rename-box').classList.toggle('hidden', isTeacher);
   $('acct-delete').classList.toggle('hidden', isTeacher);
   $('acct-disable').textContent = s.disabled ? 'Enable account' : 'Disable account';
+  $('acct-new-pass').value = ''; $('acct-old-pass').value = '';
   setMsg('acct-msg', '');
 }
 function renderStudentQuizResults(x){
@@ -3206,9 +3218,24 @@ function wire(){
       renderNoteBlock(); toast('Removed');
     }).catch(err => setMsg('note-msg', friendlyError(err), true));
   };
+  $('acct-gen-pass').onclick = () => { $('acct-new-pass').value = randomPassword(); $('acct-new-pass').focus(); };
+  $('acct-set-pass').onclick = () => {
+    if(!activeStudent) return;
+    const s = activeStudent, next = $('acct-new-pass').value.trim(), cur = $('acct-old-pass').value;
+    if(next.length < 6){ setMsg('acct-msg', 'The new password needs at least 6 characters — or tap 🎲 Make a new password.', true); $('acct-new-pass').focus(); return; }
+    if(!cur){ setMsg('acct-msg', 'Type the student’s current password too. If no one knows it, use “No one knows the current password?” below.', true); $('acct-old-pass').focus(); return; }
+    $('acct-set-pass').disabled = true; setMsg('acct-msg', 'Resetting…');
+    window.KidsCloud.adminSetStudentPassword(s.username, s.uid, cur, next).then(() => {
+      setMsg('acct-msg', '✓ Done. Give ' + (s.displayName || s.username) + ' the new password: ' + next + ' (username: ' + s.username + ')');
+      $('acct-old-pass').value = ''; toast('Password reset');
+    }).catch(err => {
+      const code = (err && err.code) || '';
+      setMsg('acct-msg', /wrong-password|invalid-credential|user-not-found/.test(code) ? 'That current password is not right. Check it with the student or a parent — or use “No one knows the current password?” below.' : friendlyError(err), true);
+    }).finally(() => { $('acct-set-pass').disabled = false; });
+  };
   $('acct-reset').onclick = () => {
     if(!activeStudent) return;
-    window.KidsCloud.adminSendPasswordReset(activeStudent.username).then(() => setMsg('acct-msg', 'Reset link sent — open it, set a new password, then tell the student.'))
+    window.KidsCloud.adminSendPasswordReset(activeStudent.username).then(() => setMsg('acct-msg', 'Reset link sent — whoever opens it (the student’s email, or the admin inbox) sets the new password.'))
       .catch(err => setMsg('acct-msg', friendlyError(err), true));
   };
   $('acct-rename').onclick = () => {

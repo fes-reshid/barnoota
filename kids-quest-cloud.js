@@ -21,7 +21,7 @@ import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.
 import {
   getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
   onAuthStateChanged, signOut, sendPasswordResetEmail, deleteUser,
-  updateProfile, updateEmail
+  updateProfile, updateEmail, updatePassword
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy,
@@ -496,6 +496,35 @@ function adminCreateStudent(username, displayName, password){
 function adminSendPasswordReset(username){
   return resolveLoginEmail(username).then(function(email){
     return sendPasswordResetEmail(auth, email);
+  });
+}
+
+/* Teacher or admin changes a student's password. The client SDK can only
+   change a password while signed in as that account, so this needs the
+   student's CURRENT password (the one the teacher set when adding them, or
+   one the student or a parent remembers). It signs in on a throwaway second
+   app, checks it is the right account and sets the new password. The
+   account stays the same, so progress, classes and messages are untouched.
+   Passwords are never stored. */
+function adminSetStudentPassword(username, uid, currentPassword, newPassword){
+  if(String(newPassword || '').length < 6) return Promise.reject(Object.assign(new Error('The new password needs at least 6 characters.'), { code: 'auth/weak-password' }));
+  const secondary = initializeApp(firebaseConfig, 'admin-pass-' + Date.now());
+  const secondaryAuth = getAuth(secondary);
+  let closed = false;
+  return resolveLoginEmail(username).then(function(email){
+    return signInWithEmailAndPassword(secondaryAuth, email, String(currentPassword || ''));
+  }).then(function(cred){
+    if(uid && cred.user.uid !== uid) throw Object.assign(new Error('That username belongs to a different account.'), { code: 'app/wrong-account' });
+    return updatePassword(cred.user, String(newPassword));
+  }).then(function(){
+    return signOut(secondaryAuth);
+  }).then(function(){
+    closed = true;
+    return deleteApp(secondary);
+  }).then(function(){
+    return uid ? setDoc(doc(db, STUDENTS_COLLECTION, uid), { passwordChangedAt: new Date().toISOString(), passwordChangedBy: (auth.currentUser && auth.currentUser.email) || null }, { merge:true }).catch(function(){}) : null;
+  }).catch(function(err){
+    return (closed ? Promise.resolve() : deleteApp(secondary).catch(function(){})).then(function(){ throw err; });
   });
 }
 
@@ -1325,6 +1354,7 @@ window.KidsCloud = {
   onAdminAuth: onAdminAuth,
   adminCreateStudent: adminCreateStudent,
   adminSendPasswordReset: adminSendPasswordReset,
+  adminSetStudentPassword: adminSetStudentPassword,
   adminForgotPassword: adminForgotPassword,
   adminListStudents: adminListStudents,
   adminRenameStudent: adminRenameStudent,
