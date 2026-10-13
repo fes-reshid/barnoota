@@ -1210,9 +1210,11 @@ function animateMapAvatar(walk){
  svg.querySelectorAll('.standing-avatar-wrap').forEach(x=>x.remove());
  svg.insertAdjacentHTML('beforeend',`<g id="walkingMapAvatar" class="walking-avatar-wrap" transform="translate(${a.x} ${a.y-59})">${mapPersonMarkup('walking-avatar')}</g>`);
  const walker=$('#walkingMapAvatar'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,duration=reduced?350:2300,start=performance.now();
+ const road=MAP_GEO?.road,s0=road?nearestWalkingDistance(road,a):0,s1=road?nearestWalkingDistance(road,b):1;
  frame.classList.add('avatar-walking');$('#mapHelp').textContent=walk.to===null?'Great work! Walking to the practice cards…':'Great work! Walking to the next lesson…';
  function step(now){
-  const raw=Math.min(1,(now-start)/duration),t=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,x=a.x+(b.x-a.x)*t,y=a.y+(b.y-a.y)*t-59-Math.sin(Math.PI*t)*10;
+  const raw=Math.min(1,(now-start)/duration),t=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2,s=s0+(s1-s0)*t,p=road?pointAtLen(road,s):[a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t],x=p[0],y=p[1]-59-Math.sin(raw*Math.PI*14)*1.5;
+  const look=road?pointAtLen(road,Math.max(0,Math.min(road.at(-1)[2],s+(s1>=s0?10:-10)))):[b.x,b.y];faceWalkingDirection(walker,look[0]-p[0],look[1]-p[1]);
   walker.setAttribute('transform',`translate(${x} ${y})`);
   if(raw<1){requestAnimationFrame(step);return}
   walker.remove();frame.classList.remove('avatar-walking');to.classList.add('destination-glow');setTimeout(()=>to.classList.remove('destination-glow'),2300);standingAvatarAt(to);mapAvatarPosition=walk.to;$('#mapHelp').textContent=walk.to===null?'Lesson road complete! Open Practice Cards when you are ready.':'You reached the next lesson — tap the glowing point to begin!';happySound();if(walk.to!==null)startAutoOpen(walk.to)
@@ -2479,6 +2481,7 @@ function enterNextMap(){
  svg.insertAdjacentHTML('beforeend',`<g id="enterWalker" class="walking-avatar-wrap">${mapPersonMarkup('walking-avatar')}</g>`);
  const walker=$('#enterWalker'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,dur=reduced?300:1700,e=mapEntryAt(),a={x:e[0],y:e[1]-31},b={x:p.x,y:p.y-59},t0=performance.now()+(reduced?0:450),entry=$('#mapEntryDoor');if(entry)entry.classList.add('open');
  $('#mapHelp').textContent=`Welcome to Map ${viewWorld+1} · ${worlds[viewWorld].title}!`;
+ faceWalkingDirection(walker,b.x-a.x,b.y-a.y);
  (function step(now){const raw=Math.max(0,Math.min(1,(now-t0)/dur)),t=raw*raw*(3-2*raw),sc=.55+.45*Math.min(1,raw/.35);walker.setAttribute('transform',`translate(${a.x+(b.x-a.x)*t} ${a.y+(b.y-a.y)*t-Math.sin(Math.PI*t)*8}) scale(${sc})`);walker.style.opacity=String(Math.min(1,.15+raw*3));
   if(raw<1){requestAnimationFrame(step);return}
   if(entry)entry.classList.remove('open');walker.remove();exitAnimating=false;const gi=+first.dataset.i;mapAvatarPosition=gi;if(!(firstLessonWaiting()===gi&&startHereAvatar(first)))standingAvatarAt(first);first.classList.add('destination-glow');setTimeout(()=>first.classList.remove('destination-glow'),2300);happySound();
@@ -3365,9 +3368,9 @@ sizeMap=function(){
 window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(sizeMapSoon,160)});
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
-<script src="cartoon-avatar-14a08346.js?v=period-2"></script>
+<script src="cartoon-avatar-14a08346.js?v=direction-3"></script>
 <script src="seeraa-activities.js"></script>
-<script src="historical-worlds.js?v=dust-trail-6"></script>
+<script src="historical-worlds.js?v=walking-direction-7"></script>
 </body>
 </html>
 

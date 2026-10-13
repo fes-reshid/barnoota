@@ -55,6 +55,20 @@
   }
   mapPersonMarkup=function(extraClass=''){ensureAvatarColours();return character(profile,extraClass)};
   mapPersonBackMarkup=function(extraClass=''){ensureAvatarColours();return character(profile,extraClass,true)};
+  mapPersonSideMarkup=function(extraClass='',left=false){
+    ensureAvatarColours();const p=profile,s=p.skinTone,h=p.hijabColor,hair=p.hairColor,hijab=p.avatar==='🧕',feminine=hijab||p.avatar==='👧';
+    const shell=document.createElementNS('http://www.w3.org/2000/svg','svg');shell.innerHTML=character(p,extraClass);const person=shell.firstElementChild;
+    person.classList.add('side-view');person.setAttribute('transform',`scale(${left?-0.82:0.82} 1)`);
+    person.querySelector('.avatar-head').innerHTML=`<ellipse cx="0" cy="-13" rx="3.5" ry="5" fill="${s}"/>
+      ${hijab?`<path d="M-10-38 Q3-46 10-34 L5-17 L10-4 Q0 4-14-2 L-12-22Z" fill="${h}"/>`:''}
+      <path d="M-8-30 Q-8-38 2-38 Q11-36 10-29 L14-25 Q16-23 10-22 L10-18 Q5-13 0-15 L-5-20Z" fill="${s}" stroke="#74513a" stroke-width=".6"/>
+      <ellipse cx="6.5" cy="-27" rx="1.9" ry="2.2" fill="white"/><ellipse cx="7.2" cy="-26.8" rx="1" ry="1.6" fill="#30271f"/>
+      <path d="M4-30 Q7-32 9-30 M7-19 Q9-18 11-19" stroke="#674735" stroke-width=".8" fill="none"/>
+      <ellipse cx="-3" cy="-25" rx="2.4" ry="3" fill="${s}" stroke="#a87c60" stroke-width=".5"/>
+      ${p.avatar==='👳'?`<path d="M-2-19 Q4-13 10-19 Q8-8 1-10Z" fill="${hair}"/>`:''}
+      ${hijab?`<path d="M-12-28 Q-13-42 0-43 Q9-42 10-34 L3-34 Q-7-35-5-21 L-11-12Z" fill="${h}"/>`:feminine?`<path d="M-10-24 Q-15-42 0-42 Q8-41 10-33 L1-33 Q-7-32-5-23Z" fill="${hair}"/><path d="M-9-24 Q-12-12-8-4" stroke="${hair}" stroke-width="5" fill="none"/>`:`<path d="M-11-31 Q-13-42 0-43 Q11-41 11-32 Q0-28-11-31Z" fill="${h}" stroke="#9a7b55" stroke-width=".6"/><path d="M-9-37 Q0-30 9-36 M-7-40 Q1-34 10-38" stroke="#fff" stroke-opacity=".4" fill="none"/>`}`;
+    return person.outerHTML;
+  };
   function preview(p, cls=''){return `<svg class="${cls}" viewBox="-24 -47 48 82" aria-hidden="true">${character(p)}</svg>`}
   function refreshBadges(){ensureAvatarColours();['studentAvatar','sideAvatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=preview(profile,'child-badge')})}
   const previousStats=syncStats;syncStats=function(){previousStats();refreshBadges()};
