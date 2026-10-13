@@ -80,15 +80,15 @@ const MAP_LIFE=[
  {road:['p','p'],hill:['g'],birds:0},                                  // 19 ʿAqabah at night
  {road:['p','c'],hill:[],birds:0},                                     // 20 Leaving Makkah at night
  {road:['p','g','g'],hill:['g','g'],birds:2},                          // 21 Hijrah (its two camels have their own scene)
- {road:['p','w','p','c','g','w'],hill:['g','g'],birds:3},              // 22 Qubāʾ and Madīnah
+ {road:['g','w'],hill:['g','g'],birds:3},                          // 22 Qubāʾ and Madīnah (the welcome has its own scene)
  {road:['p','w','cl','p','w'],hill:['g'],birds:3},                     // 23 The masjid and the market
  {road:['p','w','s','s','p'],hill:['g','g'],birds:4},                  // 24 Palm gardens
- {road:['c','c','p','p'],hill:['g'],birds:2},                          // 25 Badr
- {road:['p','c','p','w'],hill:['g','g','g'],birds:2},                  // 26 Uḥud
+ {road:['c'],hill:['g'],birds:2},                                  // 25 Badr (the battle has its own scene)
+ {road:['c'],hill:['g','g','g'],birds:2},                          // 26 Uḥud (the battle has its own scene)
  {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 27 The Trench
- {road:['p','p','c','c','p'],hill:['g','g'],birds:2},                  // 28 Ḥudaybiyyah
+ {road:['g'],hill:['g','g'],birds:2},                              // 28 Ḥudaybiyyah (the camp has its own scene)
  {road:['p','cl','p','c','g'],hill:['g','g'],birds:2},                 // 29 Khaybar
- {road:['p','w','p','w','p','c','cl'],hill:['g','g'],birds:3},         // 30 Makkah opens its gates
+ {road:['w'],hill:['g','g'],birds:3},                              // 30 Makkah opens its gates (the march has its own scene)
  {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 31 The final years
 ];
 const ROBES=['#e9dcc2','#d8c3a0','#b98a5a','#8e5a3a','#f2ece0','#c9b28a','#a7764f'],WRAPS=['#f4efe2','#d9cdb4','#b2493b','#e8e2d0','#7c5236'],ABAYAS=['#3b3433','#4a3b35','#5b4636','#2f3438'];
@@ -326,13 +326,13 @@ const SCENES=[
 function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
 function paintElephantSpot(){
  const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;
- svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());
+ svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());document.querySelectorAll('.lw-scene-cap,.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());if(window.SeeraaNasheed)window.SeeraaNasheed.stop();
  if(!Array.isArray(L.road)||L.road.length<2)return;const P=photoBox(svg);if(!P)return;
  SCENES.forEach(sc=>{
   const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
   const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','lw-road-scene');g.setAttribute('aria-hidden','true');g.setAttribute('pointer-events','none');
   (svg.querySelector('.historical-dust-road')||svg.querySelector('.lw-life')||svg.querySelector('.history-scene')).insertAdjacentElement('afterend',g);
-  const th=sc.road(g,L,P);if(reduced())th.tick(6);else{LW.theatres.add(th);run()}
+  const th=sc.road(g,L,P);if(reduced())th.tick(th.still??6);else{LW.theatres.add(th);run()}
  });
 }
 
@@ -355,7 +355,7 @@ function dressStory(l){
  if(title){title.classList.add('lw-title');const intro=document.createElement('p');intro.className='lw-intro';intro.textContent='Read a little. Think together. Then explore the lesson.';title.insertAdjacentElement('afterend',intro)}
  if(card){card.classList.add('lw-reading');const listen=card.querySelector('#storyListen');if(listen)listen.classList.add('lw-listen')}
  /* the lesson's scene (Year of the Elephant, the Hijrah) plays above the story */
- const sc=SCENES.find(x=>x.re.test(String(l.title||'')));
+ const sc=SCENES.find(x=>x.make&&(x.story||x.re).test(String(l.title||'')));
  if(sc&&card){
   const fig=document.createElement('figure');fig.className='lw-theatre';
   fig.innerHTML='<svg viewBox="0 0 600 260" role="img"></svg><figcaption aria-live="polite"></figcaption><button type="button" class="lw-replay">▶ Watch again</button>';fig.querySelector('svg').setAttribute('aria-label',sc.label);
@@ -436,4 +436,6 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 @media(max-width:640px){.lw-head{padding:18px}.lw-emblem{width:38px;height:38px;font-size:20px}.lw-theatre figcaption{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
 </style>`);
+/* shared with seeraa-event-scenes.js (Badr, Uḥud, Ḥudaybiyyah, the Opening of Makkah) */
+window.SeeraaLiving={LW,run,reduced,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
 })();
