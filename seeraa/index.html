@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Seeraa Adventure — Seeraa Adventure</title>
+  <title>Seeraa Adventure · Diin Islaam</title>
   <meta name="description" content="Seeraa for ages 7–15: 15 interactive maps following The Sealed Nectar, with shared student accounts and teacher-editable lessons.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3139,7 +3139,7 @@ function layoutMapRoad(){
  const fw=(frame&&frame.clientWidth)||document.documentElement.clientWidth||window.innerWidth,sc=fw/L.W;
  if((L.exit[1]-105)*sc<72&&(L.exit[0]+46)*sc>fw-72)L.exit=[Math.round((fw-72)/sc-46),L.exit[1]];
  /* the road */
- const pts=[[L.entry[0]+4,L.entry[1]-14],...ROAD_SHAPES[tall?'tall':'wide'][wi].map(p=>[Math.round(p[0]*L.W),Math.round(p[1]*L.H)]),[L.exit[0]-6,L.exit[1]-6]];
+ const pts=typeof historicalRoadPoints==='function'?historicalRoadPoints(L):[[L.entry[0]+4,L.entry[1]-14],...ROAD_SHAPES[tall?'tall':'wide'][wi].map(p=>[Math.round(p[0]*L.W),Math.round(p[1]*L.H)]),[L.exit[0]-6,L.exit[1]-6]];
  const samp=sampleRoad(pts),nodes=[...svg.querySelectorAll('.node')],n=nodes.length,placed=placeAlong(samp,n+2),spots=placed.map(x=>x.p);
  L.road=samp;L.quizS=placed[n+1].s;
  nodes.forEach((node,i)=>node.setAttribute('transform',`translate(${spots[i][0]} ${spots[i][1]})`));
@@ -3365,8 +3365,9 @@ sizeMap=function(){
 window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(sizeMapSoon,160)});
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
-<script src="cartoon-avatar-14a08346.js"></script>
+<script src="cartoon-avatar-14a08346.js?v=period-2"></script>
 <script src="seeraa-activities.js"></script>
+<script src="historical-worlds.js?v=2"></script>
 </body>
 </html>
 
