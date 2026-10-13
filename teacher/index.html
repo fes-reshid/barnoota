@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Teacher Portal — Diin Islaam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2b46; --brown:#3c2f26; --paper:#faf3e0; --paper-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c; --green:#2e6b58; --green-dark:#1f4f40;
+    --danger:#a3352b; --bar:60px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--paper);color:var(--brown);font-family:'Cormorant Garamond',serif;font-size:18px;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums}
+  .hidden{display:none!important}
+  /* top bar: brand, course switch, sign out */
+  .tp-bar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 14px;background:#fffaf0;border-bottom:2px solid var(--gold-soft);box-shadow:0 2px 10px rgba(60,45,20,.08)}
+  .tp-brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);flex:none}
+  .tp-mark{font-size:24px}
+  .tp-name{font:19px Marcellus,serif}
+  .tp-switch{display:flex;gap:4px;margin:0 auto;padding:4px;background:var(--paper-deep);border:1.5px solid var(--gold-soft);border-radius:999px}
+  .tp-switch button{display:flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 16px;background:none;color:var(--brown);font:16px Marcellus,serif;cursor:pointer;white-space:nowrap}
+  .tp-switch button:hover{background:#fff6dc}
+  .tp-switch button[aria-selected="true"]{background:var(--green);color:var(--paper);box-shadow:0 2px 6px rgba(31,79,64,.3)}
+  .tp-switch button:focus-visible,.tp-out:focus-visible,.tp-btn:focus-visible,.tp-link:focus-visible{outline:3px solid #2d6cdf;outline-offset:2px}
+  .tp-right{display:flex;align-items:center;gap:10px;flex:none;margin-left:auto}
+  .tp-switch:not(.hidden)+.tp-right{margin-left:0}
+  .tp-who{font:14px Marcellus,serif;color:#8a7654;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tp-out{border:1.5px solid var(--gold-soft);border-radius:999px;background:#fff;color:var(--brown);padding:6px 14px;font:14px Marcellus,serif;cursor:pointer}
+  .tp-out:hover{background:#fff6dc}
+  /* the selected course's portal */
+  .tp-frames{position:fixed;top:var(--bar);left:0;right:0;bottom:0}
+  .tp-frames iframe{display:block;width:100%;height:100%;border:0;background:var(--paper)}
+  /* sign in */
+  .tp-page{min-height:100%;padding:calc(var(--bar) + 28px) 16px 40px}
+  .tp-card{max-width:440px;margin:0 auto;background:#fff;border:2px solid var(--gold-soft);border-radius:22px;padding:26px 24px;box-shadow:0 10px 26px rgba(60,45,20,.1);text-align:center}
+  .tp-card h1{margin:4px 0 6px;font:28px Marcellus,serif;color:var(--ink)}
+  .tp-card p{margin:0 0 14px;line-height:1.45}
+  .tp-icon{font-size:38px}
+  .tp-courses{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+  .tp-courses span{background:var(--paper);border:1.5px solid var(--gold-soft);border-radius:999px;padding:4px 12px;font:14px Marcellus,serif;color:var(--ink)}
+  .tp-field{text-align:left;margin:0 0 12px}
+  .tp-field label{display:block;margin:0 0 4px;font:14px Marcellus,serif;color:var(--ink)}
+  .tp-field input{width:100%;padding:11px 13px;border:2px solid #d8c395;border-radius:12px;background:#fff;color:var(--ink);font:17px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  .tp-field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(46,107,88,.18)}
+  .tp-btn{width:100%;border:0;border-radius:14px;padding:12px 18px;background:var(--green);color:var(--paper);font:18px Marcellus,serif;cursor:pointer;box-shadow:0 4px 0 var(--green-dark)}
+  .tp-btn:disabled{opacity:.6;cursor:wait}
+  .tp-msg{min-height:22px;margin:10px 0 0;font:15px Marcellus,serif}
+  .tp-msg.error{color:var(--danger)}
+  .tp-msg.ok{color:var(--green-dark)}
+  .tp-link{border:0;background:none;color:var(--green-dark);font:15px Marcellus,serif;text-decoration:underline;cursor:pointer;margin-top:8px}
+  .tp-note{max-width:440px;margin:16px auto 0;text-align:center;font-size:16px;color:#7a6a4f}
+  .tp-loading{position:fixed;inset:var(--bar) 0 0;display:grid;place-items:center;font:18px Marcellus,serif;color:#8a7654}
+  @media(max-width:640px){
+    .tp-bar{gap:8px;padding:8px 10px}
+    .tp-name{display:none}
+    .tp-switch button{padding:7px 11px;font-size:15px}
+    .tp-who{display:none}
+    .tp-out{padding:6px 10px;font-size:13px}
+  }
+  @media(max-width:380px){.tp-switch button .tp-long{display:none}}
+</style>
+</head>
+<body>
+
+<header class="tp-bar" id="tpBar">
+  <a class="tp-brand" href="/" title="Diin Islaam home"><span class="tp-mark" aria-hidden="true">📚</span><span class="tp-name">Teacher Portal</span></a>
+  <nav class="tp-switch hidden" id="tpSwitch" role="tablist" aria-label="Course">
+    <button type="button" role="tab" id="tab-tuhfatul-atfaal" data-course="tuhfatul-atfaal" aria-selected="true" aria-controls="tpFrames">📜 <span>Tuhfatul<span class="tp-long"> Atfaal</span></span></button>
+    <button type="button" role="tab" id="tab-seeraa" data-course="seeraa" aria-selected="false" aria-controls="tpFrames" tabindex="-1">🌙 <span>Seeraa</span></button>
+  </nav>
+  <div class="tp-right">
+    <span class="tp-who" id="tpWho"></span>
+    <button type="button" class="tp-out hidden" id="tpOut">Sign out</button>
+  </div>
+</header>
+
+<div class="tp-loading" id="tpLoading">Loading…</div>
+
+<main class="tp-page hidden" id="tpLogin">
+  <div class="tp-card">
+    <div class="tp-icon" aria-hidden="true">🔑</div>
+    <h1 id="tpTitle">Teacher sign in</h1>
+    <p id="tpLead">One login for both courses. After you sign in, switch between them at the top.</p>
+    <div class="tp-courses" aria-hidden="true"><span>📜 Tuhfatul Atfaal</span><span>🌙 Seeraa</span></div>
+    <div class="tp-field"><label for="tpUser">Teacher username</label>
+      <input type="text" id="tpUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username-teacher"></div>
+    <div class="tp-field"><label for="tpPass">Password</label>
+      <input type="password" id="tpPass" autocomplete="current-password"></div>
+    <button type="button" class="tp-btn" id="tpGo">Sign in</button>
+    <p class="tp-msg" id="tpMsg" role="status" aria-live="polite"></p>
+    <button type="button" class="tp-link" id="tpForgot">Forgot password?</button>
+  </div>
+  <p class="tp-note"><button type="button" class="tp-link" id="tpMode">New teacher? Create an account</button></p>
+  <p class="tp-note">A new teacher account must be approved by an admin before any student information is shown.</p>
+</main>
+
+<main class="tp-page hidden" id="tpWait">
+  <div class="tp-card">
+    <div class="tp-icon" aria-hidden="true">⏳</div>
+    <h1>Awaiting approval</h1>
+    <p id="tpWaitMsg">An admin must approve this teacher account before it can see student records.</p>
+    <button type="button" class="tp-btn" id="tpWaitOut">Sign out</button>
+  </div>
+</main>
+
+<div class="tp-frames hidden" id="tpFrames" role="tabpanel"></div>
+
+<script type="module" src="../kids-quest-cloud.js?v=31"></script>
+<script>
+/* One teacher login for every course. The selected course's own Teacher
+   Portal (students, progress, approvals, classes, homework) opens below
+   the switch; both portals share the same sign-in, so switching never
+   asks again. */
+const COURSES = {
+  'tuhfatul-atfaal': { name: 'Tuhfatul Atfaal', src: '/tuhfatul-atfaal-admin/?embed=1' },
+  'seeraa': { name: 'Seeraa', src: '/seeraa-admin/?embed=1' }
+};
+const $ = id => document.getElementById(id);
+let course = firstCourse(), signUp = false, signedIn = false;
+
+function firstCourse(){
+  const q = new URLSearchParams(location.search).get('course');
+  if(COURSES[q]) return q;
+  try { const s = localStorage.getItem('tp-course'); if(COURSES[s]) return s; } catch(e){}
+  return 'tuhfatul-atfaal';
+}
+function fitBar(){ document.documentElement.style.setProperty('--bar', $('tpBar').offsetHeight + 'px'); }
+function show(state){
+  $('tpLoading').classList.toggle('hidden', state !== 'loading');
+  $('tpLogin').classList.toggle('hidden', state !== 'login');
+  $('tpWait').classList.toggle('hidden', state !== 'wait');
+  $('tpFrames').classList.toggle('hidden', state !== 'portal');
+  $('tpSwitch').classList.toggle('hidden', state !== 'portal');
+  $('tpOut').classList.toggle('hidden', state !== 'portal' && state !== 'wait');
+  requestAnimationFrame(fitBar);
+}
+function setCourse(c){
+  course = c;
+  try { localStorage.setItem('tp-course', c); } catch(e){}
+  try { history.replaceState(null, '', '?course=' + c); } catch(e){}
+  document.title = COURSES[c].name + ' — Teacher Portal';
+  document.querySelectorAll('#tpSwitch [data-course]').forEach(b => {
+    const on = b.dataset.course === c;
+    b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+  });
+  const box = $('tpFrames');
+  box.setAttribute('aria-labelledby', 'tab-' + c);
+  let frame = box.querySelector('iframe[data-course="' + c + '"]');
+  if(!frame){
+    frame = document.createElement('iframe');
+    frame.dataset.course = c; frame.title = COURSES[c].name + ' teacher portal'; frame.src = COURSES[c].src;
+    box.appendChild(frame);
+  }
+  box.querySelectorAll('iframe').forEach(f => f.classList.toggle('hidden', f !== frame));
+}
+function clearFrames(){ $('tpFrames').innerHTML = ''; }
+function friendly(err){
+  const code = (err && err.code) || '';
+  if(/wrong-password|invalid-credential|user-not-found/.test(code)) return 'Wrong username or password.';
+  if(code.indexOf('email-already-in-use') >= 0) return 'That username already has an account — try signing in instead.';
+  if(code.indexOf('weak-password') >= 0) return 'Password needs to be at least 6 characters.';
+  if(code.indexOf('too-many-requests') >= 0) return 'Too many tries — wait a bit and try again.';
+  if(code.indexOf('network') >= 0) return 'No connection — check the internet and try again.';
+  return (err && err.message) || 'Something went wrong.';
+}
+function setMsg(text, kind){ const m = $('tpMsg'); m.textContent = text || ''; m.className = 'tp-msg' + (kind ? ' ' + kind : ''); }
+function setMode(up){
+  signUp = up;
+  $('tpTitle').textContent = up ? 'Create a teacher account' : 'Teacher sign in';
+  $('tpGo').textContent = up ? 'Create account' : 'Sign in';
+  $('tpMode').textContent = up ? 'Already have an account? Sign in' : 'New teacher? Create an account';
+  $('tpForgot').classList.toggle('hidden', up);
+  $('tpPass').setAttribute('autocomplete', up ? 'new-password' : 'current-password');
+  setMsg('');
+}
+
+function wire(){
+  const KC = window.KidsCloud;
+  /* phone keyboards can type a long dash or minus instead of "-" */
+  $('tpUser').addEventListener('input', e => { const el = e.target, v = el.value, n = v.replace(/[‐-―−⁃﹘﹣－]/g, '-'); if(n !== v){ const p = el.selectionStart; el.value = n; try { el.setSelectionRange(p, p); } catch(err){} } });
+  $('tpUser').addEventListener('keydown', e => { if(e.key === 'Enter') $('tpPass').focus(); });
+  $('tpPass').addEventListener('keydown', e => { if(e.key === 'Enter') $('tpGo').click(); });
+  $('tpMode').onclick = () => setMode(!signUp);
+  $('tpGo').onclick = () => {
+    const user = $('tpUser').value.trim(), pass = $('tpPass').value;
+    if(!user || !pass){ setMsg('Enter your teacher username and password.', 'error'); return; }
+    $('tpGo').disabled = true; setMsg(signUp ? 'Creating your account…' : 'Signing you in…');
+    let action;
+    try { action = signUp ? KC.teacherSignUp(user, pass) : KC.teacherSignIn(user, pass); }
+    catch(err){ action = Promise.reject(err); }
+    action.then(() => setMsg('')).catch(err => setMsg(friendly(err), 'error')).finally(() => { $('tpGo').disabled = false; });
+  };
+  $('tpForgot').onclick = () => {
+    const user = $('tpUser').value.trim();
+    if(!user){ setMsg('Type your teacher username above, then tap “Forgot password?” again.', 'error'); return; }
+    let email;
+    try { email = user.indexOf('@') >= 0 ? user : KC.teacherUsernameToEmail(user); }
+    catch(err){ setMsg(friendly(err), 'error'); return; }
+    KC.adminForgotPassword(email).then(() => setMsg('A password reset link has been sent to the email on this account.', 'ok')).catch(err => setMsg(friendly(err), 'error'));
+  };
+  const out = () => KC.adminSignOut().then(() => { clearFrames(); });
+  $('tpOut').onclick = out; $('tpWaitOut').onclick = out;
+  const tabs = [...document.querySelectorAll('#tpSwitch [data-course]')];
+  tabs.forEach((b, i) => {
+    b.onclick = () => setCourse(b.dataset.course);
+    b.onkeydown = e => {
+      if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault(); const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus(); setCourse(next.dataset.course);
+    };
+  });
+  KC.onAdminAuth(info => {
+    if(!info){ signedIn = false; clearFrames(); $('tpWho').textContent = ''; show('login'); return; }
+    $('tpWho').textContent = info.fullName || String(info.email || '').split('@')[0];
+    if(!info.role){ signedIn = false; clearFrames(); $('tpWaitMsg').textContent = 'An admin must approve ' + (info.email || 'this teacher account') + ' before it can see student records.'; show('wait'); return; }
+    if(!signedIn){ signedIn = true; setCourse(course); }
+    show('portal');
+  });
+}
+window.addEventListener('resize', fitBar);
+fitBar();
+if(window.KidsCloud) wire(); else window.addEventListener('kidscloud-ready', wire);
+</script>
+</body>
+</html>

@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
+<script>/* Inside diinislaam.com/teacher/ (one login, a course switch): its bar has the sign-out, so hide this header. */
+if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.add('embedded')</script>
+<style>html.embedded header.site{display:none}</style>
 <title>Seeraa Adventure — Teacher Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -483,7 +486,7 @@ body{font-variant-numeric:lining-nums}
   <section id="dashboard-screen" class="hidden">
     <div class="hero">
       <div>
-        <div class="arabic">تُحْفَةُ الأَطْفَال</div>
+        <div class="arabic">السِّيرَةُ النَّبَوِيَّة</div>
         <h1 id="hero-greeting">Teacher Portal</h1>
         <p id="hero-sub">Follow every learner, review maps, sign certificates and set your own quizzes.</p>
         <p id="hero-name-prompt" class="hidden" style="margin-top:8px"><button class="btn small" id="hero-add-name" style="background:#f3d98f;color:#3c2f26">✍️ Add your full name</button> <span style="color:#f3d98f">— it’s printed on the certificates you sign.</span></p>
@@ -2905,7 +2908,7 @@ function openParentLink(s, reset){
   tokenP.then(token => { s.parentToken = token;
     return Promise.all([window.KidsCloud.getMessages(s.uid).catch(() => []), staffDataFor(s)]).then(([msgs, sd]) => window.KidsCloud.writeParentSummary(token, s.uid, { data: parentDataFor(s, msgs), staffData: sd })).then(() => token);
   }).then(token => {
-    const url = PARENT_URL + token, text = 'Assalāmu ʿalaykum. You can follow ' + (s.displayName || s.username) + '’s Tajweed progress here (private link, please don’t share): ' + url;
+    const url = PARENT_URL + token, text = 'Assalāmu ʿalaykum. You can follow ' + (s.displayName || s.username) + '’s Seeraa progress here (private link, please don’t share): ' + url;
     $('parent-body').innerHTML = '<div class="parent-link"><input readonly value="' + escapeHtml(url) + '" id="parent-url"><button class="btn primary small" id="parent-copy">📋 Copy</button></div>' +
       '<div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sky small" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(text) + '">💬 Send on WhatsApp</a><a class="btn ghost small" target="_blank" rel="noopener" href="' + escapeHtml(url) + '">👁️ Open it</a><button class="btn danger small" id="parent-reset" style="margin-left:auto">↻ Reset link</button></div>' +
       '<p class="muted" style="font-size:13.5px;margin-top:12px">The page updates itself whenever ' + escapeHtml(s.displayName || s.username) + ' uses Seeraa Adventure, and when you save attendance. “Reset link” stops the old link working (use it if it was shared by mistake).</p>';
