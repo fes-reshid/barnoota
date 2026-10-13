@@ -566,7 +566,7 @@ body{font-variant-numeric:lining-nums}
           <div id="reply-list"></div>
         </div>
         <div class="card">
-          <h2>🗺️ Class across the 15 maps</h2>
+          <h2>🗺️ Class across all the maps</h2>
           <p class="muted" style="margin-top:-4px">How many students have finished each map’s lessons.</p>
           <p class="muted" id="leaderboard-sync-status" role="status"></p>
           <div id="map-distribution"></div>
@@ -1227,8 +1227,9 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="../seeraa/seeraa-enrichment-data.js?v=expanded-stories-10"></script>
-<script src="extra-progress.js?v=shared-teacher-2"></script>
+<script src="../seeraa/course-data.js?v=maps-31"></script>
+<script src="../seeraa/seeraa-enrichment-data.js?v=maps-31"></script>
+<script src="extra-progress.js?v=maps-31"></script>
 <script type="module" src="../kids-quest-cloud.js?v=33"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
@@ -1236,8 +1237,9 @@ let isSignUp = false;
 let myEmail = '';
 let myRole = '';
 const GAME_KEY = 'seeraa';
-const MAPS = [["Arabia Before Islam","1–4",0,4],["Childhood","5–8",4,4],["Trust and Fairness","9–12",8,4],["The First Revelation","13–16",12,4],["The First Muslims","17–20",16,4],["Faith and Refuge","21–24",20,4],["Patience in Makkah","25–28",24,4],["A New Hope","29–32",28,4],["The Hijrah Journey","33–36",32,4],["Building Madinah","37–40",36,4],["Badr and Uhud","41–44",40,4],["Teamwork and Peace","45–48",44,4],["Returning to Makkah","49–52",48,4],["The Wider Community","53–56",52,4],["Guidance to Remember","57–60",56,4]];
-const TOTAL_LESSONS = 60;
+// Maps and lesson counts come from the student course itself (seeraa/course-data.js), so they always match.
+const MAPS = (window.SEERAA_COURSE || []).reduce((out, m) => { const start = out.length ? out[out.length - 1][2] + out[out.length - 1][3] : 0; out.push([m.title.replace(/^Map \d+ · /, ''), m.range[0] + '–' + m.range[1], start, m.lessons.length]); return out; }, []);
+const TOTAL_LESSONS = MAPS.reduce((n, m) => n + m[3], 0), MAP_COUNT = MAPS.length;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
 let classesCache = [], activeClassId = null, classFilterTouched = false;
@@ -1335,11 +1337,11 @@ function courseProfile(student){
   const p = original && typeof original === 'object' ? JSON.parse(JSON.stringify(original)) : {};
   p.stars = [...(Array.isArray(p.stars) ? p.stars : []), ...Array(TOTAL_LESSONS).fill(0)].slice(0,TOTAL_LESSONS);
   p.memoryDone = [...(Array.isArray(p.memoryDone) ? p.memoryDone : []), ...Array(TOTAL_LESSONS).fill(false)].slice(0,TOTAL_LESSONS);
-  p.vocabDone = [...(Array.isArray(p.vocabDone) ? p.vocabDone : []), ...Array(15).fill(false)].slice(0,15);
-  p.teacherAssessments = [...(Array.isArray(p.teacherAssessments) ? p.teacherAssessments : []), ...Array(15).fill(null)].slice(0,15);
-  p.mapQuizScores = [...(Array.isArray(p.mapQuizScores) ? p.mapQuizScores : []), ...Array(15).fill(null)].slice(0,15);
-  p.flashPracticeDone = [...(Array.isArray(p.flashPracticeDone) ? p.flashPracticeDone : []), ...Array(15).fill(false)].slice(0,15);
-  p.teacherMapUnlocks = [...(Array.isArray(p.teacherMapUnlocks) ? p.teacherMapUnlocks : []), ...Array(15).fill(false)].slice(0,15);
+  p.vocabDone = [...(Array.isArray(p.vocabDone) ? p.vocabDone : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
+  p.teacherAssessments = [...(Array.isArray(p.teacherAssessments) ? p.teacherAssessments : []), ...Array(MAP_COUNT).fill(null)].slice(0,MAP_COUNT);
+  p.mapQuizScores = [...(Array.isArray(p.mapQuizScores) ? p.mapQuizScores : []), ...Array(MAP_COUNT).fill(null)].slice(0,MAP_COUNT);
+  p.flashPracticeDone = [...(Array.isArray(p.flashPracticeDone) ? p.flashPracticeDone : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
+  p.teacherMapUnlocks = [...(Array.isArray(p.teacherMapUnlocks) ? p.teacherMapUnlocks : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
   p.teacherQuizResults = p.teacherQuizResults && typeof p.teacherQuizResults === 'object' ? p.teacherQuizResults : {};
   p.unlocked = Math.max(1, Number(p.unlocked)||1); p.coins = Number(p.coins)||0;
   return p;
@@ -1365,7 +1367,7 @@ function summarize(s){
   const lastQuiz = quizzes.slice().sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))[0] || null;
   let status = 'active';
   if(s.disabled) status = 'disabled';
-  else if(certs === 15) status = 'done';
+  else if(certs === MAP_COUNT) status = 'done';
   else if(readyMaps.length) status = 'ready';
   else if(!hasCourse || lessons === 0) status = 'new';
   const hifz = Object.values(p.hifz && typeof p.hifz === 'object' ? p.hifz : {}).filter(h => h && Number(h.level) >= 4).length;
@@ -1549,7 +1551,7 @@ function renderStudentGrid(){
         '<td>' + (d.streak.count ? '🔥 ' + d.streak.count : '<span class="muted">—</span>') + '</td>' +
         '<td>' + (d.att.total ? Math.round((d.att.present + d.att.late) / d.att.total * 100) + '%' + (d.att.absent ? ' <span class="st-late">(' + d.att.absent + ' absent)</span>' : '') : '<span class="muted">—</span>') + '</td>' +
         '<td>' + (d.hw.length ? hd + '/' + d.hw.length + (hl ? ' <span class="st-late">(' + hl + ' late)</span>' : '') : '<span class="muted">—</span>') + '</td>' +
-        '<td>' + x.certs + '/15</td>' +
+        '<td>' + x.certs + '/' + MAP_COUNT + '</td>' +
         '<td>' + statusBadge(x) + '</td>';
       onKey(tr, x); tb.appendChild(tr);
     });
@@ -1573,7 +1575,7 @@ function renderStudentGrid(){
         '</div><div class="s-user">@' + escapeHtml(s.username) + (s.dob ? ' · ' + escapeHtml(ageFrom(s.dob)) : '') + '</div></div>' + statusBadge(x) + '</div>' +
         '<div><div style="display:flex;justify-content:space-between;font-size:13.5px;color:#725f42"><span>Now on ' + escapeHtml(mapLabel(x.currentMap)) + '</span><b>' + x.pct + '%</b></div>' +
         '<div class="bar" style="margin-top:4px"><span style="width:' + x.pct + '%"></span></div></div>' +
-        '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.hifz + '</b><small>memorised</small></div><div><b>' + x.certs + '/15</b><small>maps ✓</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
+        '<div class="s-metrics"><div><b>' + x.lessons + '</b><small>lessons</small></div><div><b>' + x.hifz + '</b><small>memorised</small></div><div><b>' + x.certs + '/' + MAP_COUNT + '</b><small>maps ✓</small></div><div><b>' + last + '</b><small>last quiz</small></div></div>' +
         '<div class="s-foot">' + (cls.length ? '<span class="s-tag">🏫 ' + escapeHtml(cls.join(', ')) + '</span>' : '') + (x.badges ? '<span class="s-tag">🏅 ' + x.badges + '</span>' : '') + (s.talqeenEnabled ? '<span class="s-tag">🎙️ Talqeen</span>' : '') + (s.selfSignup ? '<span class="s-tag muted-tag">Self sign-up</span>' : '') + '</div>';
     }
     onKey(el, x); box.appendChild(el);
@@ -1611,7 +1613,7 @@ function renderModal(){
     ['Last teacher update', fmtDate(s.lastTeacherUpdateAt)],
     ['Lessons done', x.lessons + ' / ' + TOTAL_LESSONS],
     ['Stars · coins', '⭐ ' + x.stars + ' · 🪙 ' + x.p.coins],
-    ['Certificates', x.certs + ' / 15']
+    ['Certificates', x.certs + ' / ' + MAP_COUNT]
   ];
   $('profile-info').innerHTML = info.map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('') +
     (s.notes ? '<div class="info" style="grid-column:1/-1"><small>Teacher notes</small><span>' + escapeHtml(s.notes) + '</span></div>' : '');
@@ -1629,7 +1631,7 @@ function renderModal(){
   const avg = quizResults.length ? Math.round(quizResults.reduce((a, r) => a + (r.total ? r.score / r.total : 0), 0) / quizResults.length * 100) + '%' : '—';
   $('progress-summary').innerHTML = [
     ['Overall', x.pct + '%'], ['Currently on', mapLabel(x.currentMap)], ['Story matching practice', x.p.memoryDone.filter(Boolean).length + ' / ' + TOTAL_LESSONS], ['Extra stories explored', window.SeeraaTeacherProgress.count(x.p) + ' / 30'],
-    ['Map challenges passed', x.p.mapQuizScores.filter(q => q && (q.passed || Number(q.score) >= 12)).length + ' / 15'],
+    ['Map challenges passed', x.p.mapQuizScores.filter(q => q && (q.passed || Number(q.score) >= 12)).length + ' / ' + MAP_COUNT],
     ['Teacher quizzes taken', String(quizResults.length)], ['Teacher quiz average', avg]
   ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');
   $('progress-rows').innerHTML = MAPS.map((m, i) => {
@@ -2546,7 +2548,7 @@ function isStaffAccount(s){
 /* ===================== weekly reports ===================== */
 /* A printable page per student (and a summary page for a group): overall
    progress, the last 7 days, homework, quiz scores, teacher notes and the
-   15 maps — built from the same records the portal already has. Opens in
+   maps — built from the same records the portal already has. Opens in
    a new tab; Print there, or "Save as PDF" to send to parents. */
 function daysAgo(iso){ const t = new Date(iso).getTime(); return isNaN(t) ? Infinity : (Date.now() - t) / 86400000; }
 function fmtDay(iso){ if(!iso) return '—'; const d = new Date(String(iso).length === 10 ? iso + 'T12:00' : iso); return isNaN(d) ? '—' : d.toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short' }); }
@@ -2578,7 +2580,7 @@ function reportStudentPage(s){
       '<div><b>' + x.pct + '%</b><span>course done<br>' + x.lessons + ' / ' + TOTAL_LESSONS + ' lessons</span></div>' +
       '<div><b>' + d.memo.length + '</b><span>line' + (d.memo.length === 1 ? '' : 's') + ' memorised<br>' + (d.memoWeek.length ? '+' + d.memoWeek.length + ' this week' : 'none new this week') + '</span></div>' +
       '<div><b>🔥 ' + d.streak.count + '</b><span>day streak<br>' + (d.streak.last ? 'last practised ' + e(fmtDay(d.streak.last)) : 'not started') + '</span></div>' +
-      '<div><b>' + x.certs + ' / 15</b><span>maps approved<br>now on ' + e(mapLabel(x.currentMap)) + '</span></div>' +
+      '<div><b>' + x.certs + ' / ' + MAP_COUNT + '</b><span>maps approved<br>now on ' + e(mapLabel(x.currentMap)) + '</span></div>' +
     '</div>' +
     '<h2>This week</h2><ul class="week">' +
       '<li>🧠 ' + (d.memoWeek.length ? 'Memorised line' + (d.memoWeek.length > 1 ? 's ' : ' ') + d.memoWeek.map(k => lineOfLesson(Number(k))).join(', ') : 'No new lessons memorised') + '</li>' +
@@ -3184,7 +3186,7 @@ function wire(){
     saveActiveProfile(p,'Selected map reset.').then(renderMapManager);
   });
   $('reset-course').addEventListener('click', ()=>{
-    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(TOTAL_LESSONS).fill(0);p.memoryDone=Array(TOTAL_LESSONS).fill(false);p.seeraaExplored={};p.vocabDone=Array(15).fill(false);p.flashPracticeDone=Array(15).fill(false);p.mapQuizScores=Array(15).fill(null);p.teacherAssessments=Array(15).fill(null);p.teacherMapUnlocks=Array(15).fill(false);p.unlocked=1;p.coins=0;
+    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(TOTAL_LESSONS).fill(0);p.memoryDone=Array(TOTAL_LESSONS).fill(false);p.seeraaExplored={};p.vocabDone=Array(MAP_COUNT).fill(false);p.flashPracticeDone=Array(MAP_COUNT).fill(false);p.mapQuizScores=Array(MAP_COUNT).fill(null);p.teacherAssessments=Array(MAP_COUNT).fill(null);p.teacherMapUnlocks=Array(MAP_COUNT).fill(false);p.unlocked=1;p.coins=0;
     saveActiveProfile(p,'The complete Seeraa Adventure course has been reset.').then(renderMapManager);
   });
 

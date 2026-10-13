@@ -1,7 +1,8 @@
+/* Seeraa course: 31 maps × 4 lessons, in order, following Ar-Raheeq al-Makhtum. */
 window.SEERAA_COURSE=[
   {
     "title": "Map 1 · Arabia Before Islam",
-    "icon": "🕋",
+    "icon": "🏜️",
     "colour": "#7a5aa8",
     "range": [
       1,
@@ -10,35 +11,75 @@ window.SEERAA_COURSE=[
     "lessons": [
       {
         "title": "Arabia Before Islam",
-        "arabic": "الْعَرَب",
-        "story": "Arabia included deserts, towns and trading routes. Families lived in tribes, and Makkah was an important meeting place. Learning about this setting helps us understand the world into which Prophet Muhammad ﷺ was born.",
+        "arabic": "جَزِيرَةُ الْعَرَب",
+        "story": "Imagine a huge land of golden deserts, black lava fields and rocky mountains, with a few green oases where date palms grow beside wells. This is the Arabian Peninsula, with seas on three sides. Some Arabs were Bedouin who moved with their camels and sheep, searching for grass and water. Others lived in towns like Makkah, Yathrib and Ṭāʾif. Every person belonged to a tribe, and the tribe was everything: it protected you, and you defended it, right or wrong. The Arabs were famous for their poetry, their memory and their generosity to guests. Great empires surrounded them — Rome to the north and Persia to the east — but no empire ruled the heart of Arabia. In the middle of it all stood Makkah, a dry valley with no farms, yet visited by people from everywhere because of the Kaʿbah and its busy markets.",
         "picks": [
           {
-            "q": "What helps us understand the beginning of Seeraa?",
+            "q": "What surrounds the Arabian Peninsula on three sides?",
             "options": [
-              "The setting of Arabia",
-              "The weather in Australia",
-              "Modern computers"
+              "Seas",
+              "Forests",
+              "Snowy mountains"
+            ]
+          },
+          {
+            "q": "What protected a person in Arabia?",
+            "options": [
+              "Their tribe",
+              "A king",
+              "A police force"
+            ]
+          },
+          {
+            "q": "Why did people from everywhere visit Makkah?",
+            "options": [
+              "The Kaʿbah and its markets",
+              "Its rivers",
+              "Its farms"
             ]
           }
         ],
-        "benefit": "Learn about a place before judging its people.",
-        "emoji": "📖",
+        "benefit": "We learn about the world the Prophet ﷺ was born into, so we understand how much Islam changed it.",
+        "emoji": "🏜️",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "جَزِيرَة",
+            "peninsula"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "قَبِيلَة",
+            "tribe"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "صَحْرَاء",
+            "desert"
           ]
         ],
-        "chapter": "Arabia Before Islam"
+        "chapter": "Arabia Before Islam",
+        "teach": "The land and its people",
+        "order": {
+          "prompt": "From the land to Makkah",
+          "items": [
+            "The great desert peninsula",
+            "Bedouin move with their animals",
+            "Towns grow around wells",
+            "Makkah stands around the Kaʿbah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Some Arabs moved from place to place with their animals.",
+            "a": true
+          },
+          {
+            "s": "Rome and Persia ruled the heart of Arabia.",
+            "a": false
+          },
+          {
+            "s": "The Arabs were famous for poetry and generosity.",
+            "a": true
+          }
+        ]
       },
       {
         "title": "The House of Allah",
@@ -98,51 +139,689 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that our masjids and prayers are for worshipping Allah alone, not anyone or anything else.",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "الْكَعْبَة",
+            "the Kaʿbah"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "إِبْرَاهِيم",
+            "Ibrāhīm"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "بَيْتُ اللّٰه",
+            "the House of Allah"
+          ]
+        ],
+        "chapter": "Arabia Before Islam"
+      },
+      {
+        "title": "How the Idols Came",
+        "teach": "Tawḥīd forgotten and changed",
+        "emoji": "🗿",
+        "arabic": "عَمْرُو بْنُ لُحَيّ",
+        "story": "For hundreds of years after Ibrāhīm and Ismāʿīl, the people of Makkah worshipped Allah alone, just as Ibrāhīm had taught them. Then a powerful chief called ʿAmr ibn Luḥayy travelled north to Shām. There he saw people praying to statues, and he liked it. He brought an idol called Hubal back with him and set it up at the Kaʿbah. Little by little, other tribes made idols of their own — al-Lāt in Ṭāʾif, al-ʿUzzā near Nakhlah and Manāt by the coast. By the time the Prophet ﷺ was born, about three hundred and sixty idols stood around the House that had been built for Allah alone. Yet some things from Ibrāhīm’s way remained: people still honoured the Kaʿbah, still made Ḥajj, and some still called on Allah when they were in real trouble. The truth had been covered with dust, but it had not disappeared.",
+        "picks": [
+          {
+            "q": "Who first brought idols to the Kaʿbah?",
+            "options": [
+              "ʿAmr ibn Luḥayy",
+              "Abrahah",
+              "Ismāʿīl"
+            ]
+          },
+          {
+            "q": "Where did he see people praying to statues?",
+            "options": [
+              "In Shām",
+              "In Yemen",
+              "In Abyssinia"
+            ]
+          },
+          {
+            "q": "What remained from the way of Ibrāhīm?",
+            "options": [
+              "Honouring the Kaʿbah and making Ḥajj",
+              "Nothing at all",
+              "Only the idols"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story of the idols in order",
+          "items": [
+            "Ibrāhīm and Ismāʿīl build the Kaʿbah",
+            "People worship Allah alone for many years",
+            "ʿAmr ibn Luḥayy brings Hubal from Shām",
+            "Idols fill the space around the Kaʿbah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Kaʿbah was built for the worship of Allah alone.",
+            "a": true
+          },
+          {
+            "s": "The people of Makkah always had idols, from the very beginning.",
+            "a": false
+          },
+          {
+            "s": "Some people still made Ḥajj even when there were idols.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the truth can be forgotten slowly, so we must protect our worship of Allah alone.",
+        "vocab": [
+          [
+            "التَّوْحِيد",
+            "believing Allah is One"
+          ],
+          [
+            "صَنَم",
+            "idol"
+          ],
+          [
+            "الْحَجّ",
+            "pilgrimage"
           ]
         ],
         "chapter": "Arabia Before Islam"
       },
       {
         "title": "A Society in Need of Guidance",
-        "arabic": "الْهِدَايَة",
-        "story": "People valued hospitality and courage, but injustice and tribal quarrels also harmed society. Many worshipped idols. Islam called people to worship Allah alone and treat others fairly. A strong family name could never make cruelty right.",
+        "arabic": "الْجَاهِلِيَّة",
+        "story": "The time before Islam is called al-Jāhiliyyah — the time of ignorance. The Arabs had wonderful qualities. They were generous: a poor man might slaughter his only camel to feed a guest. They were brave, kept their promises and loved freedom. But there were also terrible wrongs. Tribes fought wars for years over a camel or a horse race. The strong took from the weak, and orphans and widows were often treated unfairly. Some fathers were ashamed when a baby girl was born, and some even buried their daughters alive. Many people drank wine, gambled and worshipped idols they had carved with their own hands. Later, Jaʿfar ibn Abī Ṭālib described those days: “We were a people of ignorance. We worshipped idols and the strong among us oppressed the weak — until Allah sent us a messenger.” Arabia had good hearts in it, but it needed guidance.",
         "picks": [
           {
-            "q": "What did Islam call people to do?",
+            "q": "What is the time before Islam called?",
             "options": [
-              "Worship Allah alone and act fairly",
-              "Follow every tribal quarrel",
-              "Worship idols"
+              "Al-Jāhiliyyah",
+              "Al-Hijrah",
+              "Al-Fatḥ"
+            ]
+          },
+          {
+            "q": "Which good quality did the Arabs have?",
+            "options": [
+              "Generosity to guests",
+              "Kindness to baby girls",
+              "Avoiding war"
+            ]
+          },
+          {
+            "q": "Which wrong was common before Islam?",
+            "options": [
+              "The strong oppressing the weak",
+              "Too much charity",
+              "Too much prayer"
             ]
           }
         ],
-        "benefit": "Choose fairness even when your friends disagree.",
-        "emoji": "📖",
+        "benefit": "We learn that Islam kept the good qualities people had and removed the injustice.",
+        "emoji": "⚖️",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "جَاهِلِيَّة",
+            "time of ignorance"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "ظُلْم",
+            "injustice"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "كَرَم",
+            "generosity"
           ]
         ],
-        "chapter": "Arabia Before Islam"
+        "chapter": "Arabia Before Islam",
+        "teach": "Good qualities and serious wrongs",
+        "order": {
+          "prompt": "From darkness to guidance",
+          "items": [
+            "People carve idols",
+            "Tribes fight long wars",
+            "The weak are treated unfairly",
+            "Allah sends a messenger with guidance"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Arabs before Islam had both good and bad qualities.",
+            "a": true
+          },
+          {
+            "s": "Everyone treated orphans fairly before Islam.",
+            "a": false
+          },
+          {
+            "s": "Jaʿfar described the days of ignorance to the Najāshī.",
+            "a": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 2 · The Prophet’s Family",
+    "icon": "🌳",
+    "colour": "#2e6b58",
+    "range": [
+      5,
+      8
+    ],
+    "lessons": [
+      {
+        "title": "The Line of Ibrāhīm",
+        "teach": "The Prophet’s noble family line",
+        "emoji": "🌳",
+        "arabic": "النَّسَبُ الشَّرِيف",
+        "story": "Every family has a story, and the Prophet ﷺ came from one of the most honoured families in Arabia. His full name was Muḥammad, son of ʿAbdullāh, son of ʿAbd al-Muṭṭalib, son of Hāshim, son of ʿAbd Manāf, son of Quṣayy. Go back further and further, and the line reaches ʿAdnān — and from ʿAdnān all the way back to Prophet Ismāʿīl, the son of Prophet Ibrāhīm. The Prophet ﷺ said that Allah chose Kinānah from the children of Ismāʿīl, chose Quraysh from Kinānah, chose Banū Hāshim from Quraysh, and chose him from Banū Hāshim. Quṣayy, his great-great-great-grandfather, had brought Quraysh together in Makkah and organised care for the pilgrims. So when the final Prophet came, he came from the very family that had looked after the House of Allah for generations — and from the line of the prophets who had built it.",
+        "picks": [
+          {
+            "q": "Which prophet is the Prophet ﷺ descended from?",
+            "options": [
+              "Ismāʿīl, son of Ibrāhīm",
+              "Mūsā",
+              "Nūḥ"
+            ]
+          },
+          {
+            "q": "What was the Prophet’s tribe?",
+            "options": [
+              "Quraysh",
+              "Thaqīf",
+              "Khazraj"
+            ]
+          },
+          {
+            "q": "What was the name of the Prophet’s clan?",
+            "options": [
+              "Banū Hāshim",
+              "Banū Makhzūm",
+              "Banū Saʿd"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the family line in order, from oldest to newest",
+          "items": [
+            "Ibrāhīm",
+            "Ismāʿīl",
+            "Hāshim",
+            "ʿAbdullāh"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet’s father was called ʿAbdullāh.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ came from the tribe of Quraysh.",
+            "a": true
+          },
+          {
+            "s": "His family had nothing to do with the Kaʿbah.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that Allah chose the Prophet ﷺ from a noble family, yet he was honoured most for his character.",
+        "vocab": [
+          [
+            "نَسَب",
+            "family line"
+          ],
+          [
+            "قُرَيْش",
+            "Quraysh"
+          ],
+          [
+            "بَنُو هَاشِم",
+            "Banū Hāshim"
+          ]
+        ],
+        "chapter": "The Prophet’s Family"
+      },
+      {
+        "title": "Hāshim, Who Shared Bread",
+        "teach": "Feeding guests and travellers",
+        "emoji": "🍞",
+        "arabic": "هَاشِم",
+        "story": "Long before the Prophet ﷺ was born, a terrible famine struck Makkah. There was hardly any food, and pilgrims were arriving tired and hungry. His great-grandfather, whose name was ʿAmr, set off with his own money and brought back flour. He baked bread, broke it into pieces with his hands and soaked it in a rich broth so that everyone could eat. People called him “Hāshim” — the one who crumbles bread — and the name stayed with him for ever. Hāshim was in charge of giving water and food to the pilgrims of the Kaʿbah. He is also remembered as the one who began the two great trading journeys of Quraysh: one to Yemen in the winter and one to Shām in the summer. Allah mentions these journeys in Sūrat Quraysh, reminding them that it was Allah who fed them in hunger and kept them safe from fear.",
+        "picks": [
+          {
+            "q": "Why was he called “Hāshim”?",
+            "options": [
+              "He crumbled bread for hungry people",
+              "He was a great fighter",
+              "He built a well"
+            ]
+          },
+          {
+            "q": "Which two journeys did Quraysh make?",
+            "options": [
+              "Winter to Yemen and summer to Shām",
+              "Spring to Egypt and autumn to Iraq",
+              "Only one journey to Persia"
+            ]
+          },
+          {
+            "q": "Which sūrah mentions these journeys?",
+            "options": [
+              "Sūrat Quraysh",
+              "Sūrat al-Fīl",
+              "Sūrat al-Kawthar"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Hāshim’s story in order",
+          "items": [
+            "A famine strikes Makkah",
+            "He brings flour to the city",
+            "He soaks broken bread in broth for everyone",
+            "People call him Hāshim"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Hāshim fed pilgrims during a famine.",
+            "a": true
+          },
+          {
+            "s": "Hāshim’s real name was ʿAmr.",
+            "a": true
+          },
+          {
+            "s": "Quraysh never travelled for trade.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that feeding people in need is a noble act that people remember for generations.",
+        "vocab": [
+          [
+            "خُبْز",
+            "bread"
+          ],
+          [
+            "الشِّتَاء",
+            "winter"
+          ],
+          [
+            "الصَّيْف",
+            "summer"
+          ]
+        ],
+        "chapter": "The Prophet’s Family"
+      },
+      {
+        "title": "ʿAbd al-Muṭṭalib Finds Zamzam",
+        "teach": "A buried blessing found again",
+        "emoji": "💧",
+        "arabic": "زَمْزَم",
+        "story": "The well of Zamzam had once gushed for baby Ismāʿīl and his mother Hājar. But many years later a tribe called Jurhum filled it in when they left Makkah, and over time nobody remembered exactly where it was. The Prophet’s grandfather, ʿAbd al-Muṭṭalib, began to have the same dream again and again: “Dig Zamzam!” In the dream he was shown signs of the place, near the Kaʿbah. At that time he had only one son, al-Ḥārith, so the two of them took their tools and dug, and dug, while some people laughed at them. Then the stone lining of the old well appeared, and fresh water began to flow. ʿAbd al-Muṭṭalib called out “Allāhu Akbar!” From that day he gave Zamzam water to the pilgrims, and to this day millions of people drink from that same blessed well.",
+        "picks": [
+          {
+            "q": "Who had covered up the well of Zamzam?",
+            "options": [
+              "The tribe of Jurhum",
+              "Abrahah’s army",
+              "The people of Ṭāʾif"
+            ]
+          },
+          {
+            "q": "How did ʿAbd al-Muṭṭalib learn to dig it?",
+            "options": [
+              "Through a dream he saw again and again",
+              "A map he found",
+              "A traveller from Shām told him"
+            ]
+          },
+          {
+            "q": "Who helped him dig?",
+            "options": [
+              "His son al-Ḥārith",
+              "His grandson Muḥammad",
+              "The whole tribe"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story of Zamzam in order",
+          "items": [
+            "Zamzam gushes for Ismāʿīl and Hājar",
+            "Jurhum fills in the well",
+            "ʿAbd al-Muṭṭalib dreams “Dig Zamzam!”",
+            "The water flows again"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Zamzam is near the Kaʿbah.",
+            "a": true
+          },
+          {
+            "s": "ʿAbd al-Muṭṭalib dug with many sons at first.",
+            "a": false
+          },
+          {
+            "s": "People still drink Zamzam water today.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that patience and effort can bring back a blessing, even when others laugh at us.",
+        "vocab": [
+          [
+            "بِئْر",
+            "well"
+          ],
+          [
+            "مَاء",
+            "water"
+          ],
+          [
+            "رُؤْيَا",
+            "dream"
+          ]
+        ],
+        "chapter": "The Prophet’s Family"
+      },
+      {
+        "title": "ʿAbdullāh and Āminah",
+        "teach": "The Prophet’s parents",
+        "emoji": "🕯️",
+        "arabic": "عَبْدُ اللّٰه وَآمِنَة",
+        "story": "ʿAbd al-Muṭṭalib once made a promise: if Allah gave him ten sons who grew up, he would sacrifice one of them at the Kaʿbah. Years later he had ten sons, and when lots were drawn, the name that came out was ʿAbdullāh — his youngest and most beloved son. The leaders of Quraysh begged him not to do it. In the end they drew lots between ʿAbdullāh and camels, adding ten camels each time, until the lot finally fell on a hundred camels. ʿAbdullāh was saved, and the meat was shared with people and even with wild animals. ʿAbdullāh grew into a kind young man and married Āminah bint Wahb, a noble woman of Makkah. Soon after the wedding he travelled with a trading caravan to Shām. On the way home he fell ill and passed away in Yathrib, among his mother’s relatives. He never saw his son — but the baby Āminah was carrying would change the world.",
+        "picks": [
+          {
+            "q": "How many camels were given instead of ʿAbdullāh?",
+            "options": [
+              "One hundred",
+              "Ten",
+              "One thousand"
+            ]
+          },
+          {
+            "q": "Whom did ʿAbdullāh marry?",
+            "options": [
+              "Āminah bint Wahb",
+              "Ḥalīmah",
+              "Khadījah"
+            ]
+          },
+          {
+            "q": "Where did ʿAbdullāh pass away?",
+            "options": [
+              "In Yathrib",
+              "In Makkah",
+              "In Shām"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put ʿAbdullāh’s story in order",
+          "items": [
+            "ʿAbd al-Muṭṭalib makes a promise",
+            "The lot falls on ʿAbdullāh",
+            "One hundred camels are given instead",
+            "ʿAbdullāh marries Āminah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAbdullāh was saved from being sacrificed.",
+            "a": true
+          },
+          {
+            "s": "ʿAbdullāh saw his son grow up.",
+            "a": false
+          },
+          {
+            "s": "ʿAbdullāh fell ill while returning from a trading journey.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah protects and plans, even when people cannot see what is coming.",
+        "vocab": [
+          [
+            "أَب",
+            "father"
+          ],
+          [
+            "أُمّ",
+            "mother"
+          ],
+          [
+            "قَافِلَة",
+            "caravan"
+          ]
+        ],
+        "chapter": "The Prophet’s Family"
+      }
+    ]
+  },
+  {
+    "title": "Map 3 · The Year of the Elephant",
+    "icon": "🐘",
+    "colour": "#a97c25",
+    "range": [
+      9,
+      12
+    ],
+    "lessons": [
+      {
+        "title": "Abrahah’s Plan",
+        "teach": "Pride and jealousy",
+        "emoji": "👑",
+        "arabic": "أَبْرَهَة",
+        "story": "In Yemen, south of Makkah, there ruled a proud governor named Abrahah. Every year he watched crowds of Arabs travel north to visit the Kaʿbah, and it made him jealous. “I will give them something greater,” he decided. In the city of Ṣanʿāʾ he built a huge and beautiful church, decorated with gold and coloured stone, and announced that the Arabs must now make their pilgrimage there instead. But the Arabs loved the Kaʿbah, the house built by Ibrāhīm, and nobody wanted to go anywhere else. When Abrahah heard that someone had shown disrespect to his church, he became furious. He gathered a mighty army — some say sixty thousand soldiers — and, at the front, enormous elephants that the Arabs had never seen in war. His aim was simple: knock down the Kaʿbah, so that nobody would visit it ever again.",
+        "picks": [
+          {
+            "q": "Why did Abrahah build a great church?",
+            "options": [
+              "To turn the pilgrims away from the Kaʿbah",
+              "To store his gold",
+              "To welcome the Prophet ﷺ"
+            ]
+          },
+          {
+            "q": "Where did Abrahah rule?",
+            "options": [
+              "Yemen",
+              "Shām",
+              "Persia"
+            ]
+          },
+          {
+            "q": "What did his army bring that the Arabs had never seen in war?",
+            "options": [
+              "Elephants",
+              "Ships",
+              "Iron towers"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Abrahah’s plan in order",
+          "items": [
+            "Abrahah sees the Arabs visiting the Kaʿbah",
+            "He builds a great church in Ṣanʿāʾ",
+            "The Arabs keep loving the Kaʿbah",
+            "He marches with an army and elephants"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abrahah was jealous of the Kaʿbah.",
+            "a": true
+          },
+          {
+            "s": "The Arabs happily went to his church instead.",
+            "a": false
+          },
+          {
+            "s": "Abrahah wanted to destroy the Kaʿbah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that jealousy and pride push people to do wrong, so we should be happy when others are blessed.",
+        "vocab": [
+          [
+            "الْكَعْبَة",
+            "the Kaʿbah"
+          ],
+          [
+            "جَيْش",
+            "army"
+          ],
+          [
+            "فِيل",
+            "elephant"
+          ]
+        ],
+        "chapter": "The Year of the Elephant"
+      },
+      {
+        "title": "“The House Has a Lord”",
+        "teach": "Trusting Allah",
+        "emoji": "🐫",
+        "arabic": "لِلْبَيْتِ رَبٌّ يَحْمِيه",
+        "story": "As the army came close to Makkah, Abrahah’s soldiers rounded up animals from the fields, including two hundred camels belonging to ʿAbd al-Muṭṭalib, the leader of Makkah. ʿAbd al-Muṭṭalib went to meet Abrahah in his camp. He was tall and dignified, and Abrahah respected him so much that he came down from his throne and sat beside him. “What do you want?” asked Abrahah. “Return my camels to me,” said ʿAbd al-Muṭṭalib. Abrahah was amazed. “I have come to destroy the House that is the honour of your people, and you only speak to me about your camels?” ʿAbd al-Muṭṭalib replied calmly: “I am the owner of the camels. The House has a Lord who will protect it.” He went back and told the people of Makkah to leave the city and wait in the mountains. Then he held the door of the Kaʿbah and called upon Allah to protect His House.",
+        "picks": [
+          {
+            "q": "What did ʿAbd al-Muṭṭalib ask Abrahah for?",
+            "options": [
+              "His camels",
+              "Gold and silver",
+              "A peace treaty"
+            ]
+          },
+          {
+            "q": "What did he say about the Kaʿbah?",
+            "options": [
+              "“The House has a Lord who will protect it”",
+              "“We will fight to defend it”",
+              "“Take it, we do not need it”"
+            ]
+          },
+          {
+            "q": "Where did the people of Makkah go?",
+            "options": [
+              "Up into the mountains",
+              "To Yemen",
+              "Into the Kaʿbah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the meeting in order",
+          "items": [
+            "Soldiers take ʿAbd al-Muṭṭalib’s camels",
+            "He goes to meet Abrahah",
+            "He says the House has a Lord",
+            "The people wait in the mountains"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abrahah respected ʿAbd al-Muṭṭalib when he met him.",
+            "a": true
+          },
+          {
+            "s": "ʿAbd al-Muṭṭalib promised to fight the elephants himself.",
+            "a": false
+          },
+          {
+            "s": "ʿAbd al-Muṭṭalib called upon Allah at the Kaʿbah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that when something is beyond our power, we do what we can and trust Allah with the rest.",
+        "vocab": [
+          [
+            "رَبّ",
+            "Lord"
+          ],
+          [
+            "إِبِل",
+            "camels"
+          ],
+          [
+            "جَبَل",
+            "mountain"
+          ]
+        ],
+        "chapter": "The Year of the Elephant"
+      },
+      {
+        "title": "The Elephant Who Would Not Walk",
+        "teach": "All creatures obey Allah",
+        "emoji": "🐘",
+        "arabic": "الْفِيلُ مَحْمُود",
+        "story": "The next morning Abrahah’s army lined up to march into Makkah. At the very front stood the biggest elephant of all. His name was Maḥmūd. The soldiers turned him towards the Kaʿbah and urged him forward — but Maḥmūd knelt down on the ground and would not move. They pulled him, pushed him and struck him, but he stayed kneeling. Then they turned him to face Yemen, and he stood up and trotted off quickly. They turned him towards the east, then towards Shām, and each time he walked. But whenever they turned him back towards the Kaʿbah, he knelt down again. This happened in a valley called Muḥassir, between Muzdalifah and Minā. The great elephant, the pride of the army, was obeying a command the soldiers could not hear. Even an animal knew that this House was not to be harmed. And the army had no idea what was coming next from the sky.",
+        "picks": [
+          {
+            "q": "What was the name of the leading elephant?",
+            "options": [
+              "Maḥmūd",
+              "Hubal",
+              "Qaṣwāʾ"
+            ]
+          },
+          {
+            "q": "What did the elephant do when turned towards the Kaʿbah?",
+            "options": [
+              "He knelt and would not move",
+              "He ran towards it",
+              "He fell asleep"
+            ]
+          },
+          {
+            "q": "In which valley did this happen?",
+            "options": [
+              "Muḥassir",
+              "Badr",
+              "Ḥudaybiyyah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the elephant’s story in order",
+          "items": [
+            "The army lines up to march",
+            "Maḥmūd is turned towards the Kaʿbah",
+            "He kneels and will not move",
+            "He walks happily in other directions"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The elephant refused to walk towards the Kaʿbah.",
+            "a": true
+          },
+          {
+            "s": "The elephant walked when turned towards Yemen.",
+            "a": true
+          },
+          {
+            "s": "The soldiers easily made the elephant obey.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that every creature obeys Allah, and no army can do what Allah does not allow.",
+        "vocab": [
+          [
+            "فِيل",
+            "elephant"
+          ],
+          [
+            "وَادٍ",
+            "valley"
+          ],
+          [
+            "طَاعَة",
+            "obedience"
+          ]
+        ],
+        "chapter": "The Year of the Elephant"
       },
       {
         "title": "The Year of the Elephant",
@@ -202,31 +881,103 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that Allah is always able to protect what belongs to Him, no matter how strong the enemy seems.",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "الْفِيل",
+            "the elephant"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "طَيْرًا أَبَابِيل",
+            "birds in flocks"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "حِجَارَة",
+            "stones"
           ]
         ],
-        "chapter": "Arabia Before Islam"
+        "chapter": "The Year of the Elephant"
       }
     ]
   },
   {
-    "title": "Map 2 · Childhood",
-    "icon": "🌅",
-    "colour": "#2e6b58",
+    "title": "Map 4 · A Blessed Birth",
+    "icon": "🌙",
+    "colour": "#b4553a",
     "range": [
-      5,
-      8
+      13,
+      16
     ],
     "lessons": [
+      {
+        "title": "Good News Before His Birth",
+        "teach": "The duʿāʾ of Ibrāhīm and the news of ʿĪsā",
+        "emoji": "🌟",
+        "arabic": "دَعْوَةُ إِبْرَاهِيم",
+        "story": "Long before the Prophet ﷺ was born, his coming had already been prayed for and announced. When Ibrāhīm and Ismāʿīl raised the walls of the Kaʿbah, they made a duʿāʾ: “Our Lord, send among them a messenger from themselves, who will recite Your verses to them and teach them the Book and wisdom.” That duʿāʾ was answered many centuries later in the same valley. Prophet ʿĪsā also told his people: “I give you good news of a messenger who will come after me, whose name is Aḥmad.” The Prophet ﷺ later said: “I am the answer to the duʿāʾ of my father Ibrāhīm, the good news of ʿĪsā, and my mother saw, when she was carrying me, a light coming out of her that lit up the palaces of Shām.” So the whole story of the earlier prophets was leading towards this one baby.",
+        "picks": [
+          {
+            "q": "Who made a duʿāʾ for a messenger from the people of Makkah?",
+            "options": [
+              "Ibrāhīm and Ismāʿīl",
+              "Nūḥ and his sons",
+              "Mūsā and Hārūn"
+            ]
+          },
+          {
+            "q": "Which prophet gave the good news of “Aḥmad”?",
+            "options": [
+              "ʿĪsā",
+              "Yūsuf",
+              "Sulaymān"
+            ]
+          },
+          {
+            "q": "What did Āminah see?",
+            "options": [
+              "A light that lit up the palaces of Shām",
+              "A great flood",
+              "A star falling into Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the good news in order",
+          "items": [
+            "Ibrāhīm and Ismāʿīl build the Kaʿbah",
+            "They ask Allah for a messenger",
+            "ʿĪsā gives news of Aḥmad",
+            "Āminah sees a great light"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Aḥmad is one of the names of the Prophet ﷺ.",
+            "a": true
+          },
+          {
+            "s": "The earlier prophets knew nothing about the final Prophet.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ is the answer to Ibrāhīm’s duʿāʾ.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah answers duʿāʾ, sometimes long after the person who made it.",
+        "vocab": [
+          [
+            "دُعَاء",
+            "supplication"
+          ],
+          [
+            "بُشْرَى",
+            "good news"
+          ],
+          [
+            "نُور",
+            "light"
+          ]
+        ],
+        "chapter": "A Blessed Birth"
+      },
       {
         "title": "A Blessed Birth",
         "teach": "Born in Makkah",
@@ -285,19 +1036,91 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that Allah can care for anyone, even someone who begins life without a mother or father close by.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "مُحَمَّد",
+            "the praised one"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "مَوْلِد",
+            "birth"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "يَتِيم",
+            "orphan"
           ]
         ],
-        "chapter": "Childhood"
+        "chapter": "A Blessed Birth"
+      },
+      {
+        "title": "Ḥalīmah’s Blessed Journey",
+        "teach": "Blessing comes with goodness",
+        "emoji": "🫏",
+        "arabic": "حَلِيمَةُ السَّعْدِيَّة",
+        "story": "It was a year of drought. Women from the tribe of Banū Saʿd rode to Makkah looking for babies to nurse, hoping the families would pay them well. Ḥalīmah came on a thin, slow donkey that kept falling behind, with an old she-camel that gave no milk. Her own baby cried all night from hunger. In Makkah, every woman was offered baby Muḥammad ﷺ, and every one said no — he was an orphan, so what reward could his family give? Ḥalīmah could not find another baby. “I will not go back empty-handed,” she told her husband. “I will take that orphan.” The moment she held him, her milk flowed and both babies drank until they were full. That night the old camel was full of milk too. On the way home, her weak donkey raced past all the others, and the women called out, “Isn’t this the same donkey you came on?”",
+        "picks": [
+          {
+            "q": "Why did the other women refuse baby Muḥammad ﷺ?",
+            "options": [
+              "He was an orphan",
+              "He was always crying",
+              "His family lived far away"
+            ]
+          },
+          {
+            "q": "What happened to Ḥalīmah’s old she-camel?",
+            "options": [
+              "It was suddenly full of milk",
+              "It ran away",
+              "It was sold in Makkah"
+            ]
+          },
+          {
+            "q": "What did the women notice on the way home?",
+            "options": [
+              "Ḥalīmah’s weak donkey was now the fastest",
+              "Ḥalīmah had two camels",
+              "The baby was speaking"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Ḥalīmah’s journey in order",
+          "items": [
+            "Ḥalīmah rides to Makkah on a weak donkey",
+            "Nobody else takes the orphan",
+            "She takes baby Muḥammad ﷺ",
+            "Her donkey races ahead on the way home"
+          ]
+        },
+        "tf": [
+          {
+            "s": "It was a year of drought when Ḥalīmah came to Makkah.",
+            "a": true
+          },
+          {
+            "s": "Ḥalīmah was the first woman to choose him.",
+            "a": false
+          },
+          {
+            "s": "Blessings came to Ḥalīmah’s family after she took him.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that kindness to an orphan brings blessing, even when it seems to bring no reward.",
+        "vocab": [
+          [
+            "يَتِيم",
+            "orphan"
+          ],
+          [
+            "بَرَكَة",
+            "blessing"
+          ],
+          [
+            "حَلِيب",
+            "milk"
+          ]
+        ],
+        "chapter": "A Blessed Birth"
       },
       {
         "title": "Out in the Desert",
@@ -357,19 +1180,174 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that kindness to a child, even one who is not your own, can bring great blessing into a whole family.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "بَادِيَة",
+            "open desert"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "رَضَاعَة",
+            "nursing a baby"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "فَصِيح",
+            "pure, clear Arabic"
           ]
         ],
-        "chapter": "Childhood"
+        "chapter": "A Blessed Birth"
+      }
+    ]
+  },
+  {
+    "title": "Map 5 · Growing Up in Makkah",
+    "icon": "🐑",
+    "colour": "#2f6f8f",
+    "range": [
+      17,
+      20
+    ],
+    "lessons": [
+      {
+        "title": "The Washing of the Heart",
+        "teach": "Allah prepares His Prophet",
+        "emoji": "💚",
+        "arabic": "شَقُّ الصَّدْر",
+        "story": "Muḥammad ﷺ grew up healthy and strong in the open desert with Ḥalīmah’s family, playing with her children and helping with the sheep. One day, when he was about four years old, he was out with the other children when the Angel Jibrīl came to him. In an authentic report, Jibrīl opened his chest, took out his heart, and removed a small dark part, saying, “This was Shayṭān’s share of you.” Then he washed the heart in a golden basin with Zamzam water and returned it to its place. The other children ran to Ḥalīmah shouting that something had happened to Muḥammad. They found him standing, a little pale, but safe and well. Ḥalīmah and her husband became worried and decided to take him back to his mother Āminah in Makkah. Allah was preparing a pure heart that would one day carry the Qurʾān.",
+        "picks": [
+          {
+            "q": "Who came to the young Muḥammad ﷺ?",
+            "options": [
+              "The Angel Jibrīl",
+              "A traveller from Shām",
+              "His grandfather"
+            ]
+          },
+          {
+            "q": "What was his heart washed with?",
+            "options": [
+              "Zamzam water",
+              "Milk",
+              "Rain water"
+            ]
+          },
+          {
+            "q": "What did Ḥalīmah decide afterwards?",
+            "options": [
+              "To return him to his mother",
+              "To move to Yemen",
+              "To keep it secret for ever"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "He plays with the children in the desert",
+            "Jibrīl comes to him",
+            "His heart is washed with Zamzam",
+            "Ḥalīmah takes him back to Āminah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "This happened while he lived with Ḥalīmah’s family.",
+            "a": true
+          },
+          {
+            "s": "The children ran to tell Ḥalīmah.",
+            "a": true
+          },
+          {
+            "s": "He was badly hurt and became ill for years.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that Allah gave His Prophet a pure heart, and we can ask Allah to purify our hearts too.",
+        "vocab": [
+          [
+            "قَلْب",
+            "heart"
+          ],
+          [
+            "مَلَك",
+            "angel"
+          ],
+          [
+            "طَاهِر",
+            "pure"
+          ]
+        ],
+        "chapter": "Growing Up in Makkah"
+      },
+      {
+        "title": "A Journey to Yathrib",
+        "teach": "Love for parents",
+        "emoji": "🌅",
+        "arabic": "الْأَبْوَاء",
+        "story": "When Muḥammad ﷺ was six years old, his mother Āminah decided to take him on a long journey north to Yathrib — the city that would one day be called Madīnah. His father ʿAbdullāh was buried there, and his family had relatives from Banū an-Najjār. With them travelled Umm Ayman, a kind helper of the family who loved the little boy deeply. They stayed in Yathrib for about a month. The young boy saw the houses and palm gardens of the city, never imagining he would return there one day as a Prophet. On the way back to Makkah, Āminah fell ill. At a place called al-Abwāʾ she passed away, and she was buried there. Umm Ayman carried the grieving child home to his grandfather. Many years later, the Prophet ﷺ visited his mother’s grave and wept, and the companions with him wept too.",
+        "picks": [
+          {
+            "q": "How old was Muḥammad ﷺ when his mother took him to Yathrib?",
+            "options": [
+              "Six years old",
+              "One year old",
+              "Twelve years old"
+            ]
+          },
+          {
+            "q": "Who travelled with them and looked after him?",
+            "options": [
+              "Umm Ayman",
+              "Ḥalīmah",
+              "Khadījah"
+            ]
+          },
+          {
+            "q": "Where did Āminah pass away?",
+            "options": [
+              "At al-Abwāʾ",
+              "In Makkah",
+              "In Ṭāʾif"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the journey in order",
+          "items": [
+            "Āminah sets out for Yathrib",
+            "They stay for about a month",
+            "Āminah falls ill on the way back",
+            "Umm Ayman brings him home"
+          ]
+        },
+        "tf": [
+          {
+            "s": "His father was buried in Yathrib.",
+            "a": true
+          },
+          {
+            "s": "Āminah lived to see him become a Prophet.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ later visited his mother’s grave.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to love and honour our parents, and to make duʿāʾ for those who have passed away.",
+        "vocab": [
+          [
+            "سَفَر",
+            "journey"
+          ],
+          [
+            "قَبْر",
+            "grave"
+          ],
+          [
+            "حُزْن",
+            "sadness"
+          ]
+        ],
+        "chapter": "Growing Up in Makkah"
       },
       {
         "title": "Cared For and Loved",
@@ -429,19 +1407,19 @@ window.SEERAA_COURSE=[
         "benefit": "We learn to be gentle and caring towards orphans, just as his family cared so lovingly for him.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "جَدّ",
+            "grandfather"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "عَمّ",
+            "uncle"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "رِعَايَة",
+            "care"
           ]
         ],
-        "chapter": "Childhood"
+        "chapter": "Growing Up in Makkah"
       },
       {
         "title": "The Young Shepherd",
@@ -501,31 +1479,247 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that even small, humble jobs can teach us skills we will need for much bigger responsibilities later in life.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "رَاعِي",
+            "shepherd"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "غَنَم",
+            "sheep"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "مَسْؤُولِيَّة",
+            "responsibility"
           ]
         ],
-        "chapter": "Childhood"
+        "chapter": "Growing Up in Makkah"
       }
     ]
   },
   {
-    "title": "Map 3 · Trust and Fairness",
-    "icon": "🤝",
-    "colour": "#a97c25",
+    "title": "Map 6 · A Young Man of Honour",
+    "icon": "🧭",
+    "colour": "#7a5aa8",
     "range": [
-      9,
-      12
+      21,
+      24
     ],
     "lessons": [
+      {
+        "title": "The Monk Baḥīrā",
+        "teach": "Signs recognised by the wise",
+        "emoji": "⛪",
+        "arabic": "بَحِيرَى الرَّاهِب",
+        "story": "When Muḥammad ﷺ was about twelve, his uncle Abū Ṭālib prepared to travel with a trading caravan to Shām. The boy held on to his uncle and did not want to be left behind, so Abū Ṭālib took him along. Near the town of Buṣrā lived a Christian monk named Baḥīrā, who knew the old scriptures well. Caravans passed by his monastery all the time and he never came out to greet them — but this time he did. He walked among the travellers until he reached the boy and took him by the hand. “This is the master of the worlds,” he said. “Allah will send him as a mercy.” He had noticed signs that matched what he had read, including a mark between the boy’s shoulders known as the seal of prophethood. Baḥīrā warned Abū Ṭālib to take his nephew home and keep him safe. So Abū Ṭālib sent him back to Makkah.",
+        "picks": [
+          {
+            "q": "Who took the young Muḥammad ﷺ to Shām?",
+            "options": [
+              "His uncle Abū Ṭālib",
+              "His grandfather",
+              "Ḥalīmah"
+            ]
+          },
+          {
+            "q": "What did Baḥīrā recognise?",
+            "options": [
+              "Signs that he would be a prophet",
+              "That he was a great trader",
+              "That he was from Yemen"
+            ]
+          },
+          {
+            "q": "What did Baḥīrā advise?",
+            "options": [
+              "Take him home and keep him safe",
+              "Take him to Rome",
+              "Leave him at the monastery"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story of Baḥīrā in order",
+          "items": [
+            "Abū Ṭālib prepares a caravan to Shām",
+            "The boy goes with his uncle",
+            "Baḥīrā comes out to meet the caravan",
+            "Abū Ṭālib sends him back to Makkah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Baḥīrā usually came out to greet every caravan.",
+            "a": false
+          },
+          {
+            "s": "Baḥīrā knew the earlier scriptures.",
+            "a": true
+          },
+          {
+            "s": "The boy was about twelve years old.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that people with true knowledge can recognise the truth when they see it.",
+        "vocab": [
+          [
+            "رَاهِب",
+            "monk"
+          ],
+          [
+            "الشَّام",
+            "Shām (Syria)"
+          ],
+          [
+            "عَلَامَة",
+            "sign"
+          ]
+        ],
+        "chapter": "A Young Man of Honour"
+      },
+      {
+        "title": "Protected by Allah",
+        "teach": "Keeping away from wrong",
+        "emoji": "🛡️",
+        "arabic": "الْعِصْمَة",
+        "story": "As a young man in Makkah, Muḥammad ﷺ was surrounded by idols, wild parties and bad habits — yet he never bowed to an idol, not even once, and he disliked hearing people swear by them. It is reported that he later told his companions that only twice in his youth did he think about joining the late-night entertainment that young men enjoyed in Makkah. Both times he asked a friend to watch his sheep and set off to the town. Both times, as he reached a wedding party and sat down to listen, Allah made him fall asleep, and he woke only when the sun was hot the next morning. After that, he never thought of it again. People noticed that he was different. While others spent their time and money on things that harmed them, he kept his heart clean — because Allah was protecting him for something great.",
+        "picks": [
+          {
+            "q": "Did he ever bow to an idol?",
+            "options": [
+              "No, never",
+              "Only as a child",
+              "Only during Ḥajj"
+            ]
+          },
+          {
+            "q": "What happened when he went towards the party in town?",
+            "options": [
+              "He fell asleep until morning",
+              "He was stopped by a guard",
+              "He got lost in the desert"
+            ]
+          },
+          {
+            "q": "Who was protecting him?",
+            "options": [
+              "Allah",
+              "His friends",
+              "The leaders of Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "He looks after sheep outside Makkah",
+            "He asks a friend to watch the sheep",
+            "He falls asleep near the wedding party",
+            "He wakes when the sun is hot"
+          ]
+        },
+        "tf": [
+          {
+            "s": "He never bowed to an idol.",
+            "a": true
+          },
+          {
+            "s": "He spent many nights at wild parties.",
+            "a": false
+          },
+          {
+            "s": "Allah kept him away from wrong even before prophethood.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to stay away from places and habits that harm the heart, and to ask Allah to protect us.",
+        "vocab": [
+          [
+            "حِفْظ",
+            "protection"
+          ],
+          [
+            "نَوْم",
+            "sleep"
+          ],
+          [
+            "غَنَم",
+            "sheep"
+          ]
+        ],
+        "chapter": "A Young Man of Honour"
+      },
+      {
+        "title": "The Pact of Fairness",
+        "arabic": "حِلْفُ الْفُضُول",
+        "story": "A trader from Zabīd in Yemen came to Makkah and sold his goods to a powerful man named al-ʿĀṣ ibn Wāʾil. But al-ʿĀṣ refused to pay. The stranger had no tribe in Makkah to help him, so he climbed the hill of Abū Qubays near the Kaʿbah and called out in a poem, begging the people of Makkah to help a wronged man far from home. Some of the leaders of Makkah felt ashamed. They gathered in the house of ʿAbdullāh ibn Judʿān and made a solemn promise: whenever anyone in Makkah was treated unjustly — whether from their own tribe or a stranger — they would stand together with him until his right was returned. Then they went to al-ʿĀṣ and made him pay. The young Muḥammad ﷺ was there. Years later, as a Prophet, he said: “I would not exchange that pact even for red camels. If I were called to something like it in Islam, I would answer.”",
+        "picks": [
+          {
+            "q": "Why did the trader from Yemen call for help?",
+            "options": [
+              "A powerful man refused to pay him",
+              "He was lost",
+              "His camel was ill"
+            ]
+          },
+          {
+            "q": "What did the leaders promise?",
+            "options": [
+              "To stand with anyone treated unjustly",
+              "To trade only with Yemen",
+              "To build a new market"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about the pact later?",
+            "options": [
+              "He would not exchange it for red camels",
+              "It was a mistake",
+              "He did not remember it"
+            ]
+          }
+        ],
+        "benefit": "We learn to stand up for anyone treated unfairly, even if they are not from our group.",
+        "emoji": "🤝",
+        "vocab": [
+          [
+            "حِلْف",
+            "pact"
+          ],
+          [
+            "حَقّ",
+            "right"
+          ],
+          [
+            "مَظْلُوم",
+            "wronged person"
+          ]
+        ],
+        "chapter": "A Young Man of Honour",
+        "teach": "Standing up for the wronged",
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "A trader is cheated",
+            "He calls out for help from a hill",
+            "Leaders make the Pact of Fairness",
+            "His money is returned"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The pact protected strangers as well as locals.",
+            "a": true
+          },
+          {
+            "s": "The young Muḥammad ﷺ was present at the pact.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ later said the pact was unimportant.",
+            "a": false
+          }
+        ]
+      },
       {
         "title": "The Trustworthy One",
         "teach": "Al-Amīn",
@@ -584,20 +1778,31 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that honesty and keeping our promises earns people’s trust, even before they know anything else about us.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "الْأَمِين",
+            "the trustworthy"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "الصَّادِق",
+            "the truthful"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "أَمَانَة",
+            "something kept in trust"
           ]
         ],
-        "chapter": "Trust and Fairness"
-      },
+        "chapter": "A Young Man of Honour"
+      }
+    ]
+  },
+  {
+    "title": "Map 7 · Trade and Marriage",
+    "icon": "💍",
+    "colour": "#2e6b58",
+    "range": [
+      25,
+      28
+    ],
+    "lessons": [
       {
         "title": "The Honest Trader",
         "teach": "Journeys to Shām",
@@ -656,19 +1861,91 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that being fair and truthful in our dealings with others, even in small things like buying and selling, matters greatly to Allah.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "تَاجِر",
+            "trader"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "مِيزَان",
+            "scales"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "غِشّ",
+            "cheating"
           ]
         ],
-        "chapter": "Trust and Fairness"
+        "chapter": "Trade and Marriage"
+      },
+      {
+        "title": "Maysarah’s Report",
+        "teach": "Good manners on the road",
+        "emoji": "🧳",
+        "arabic": "مَيْسَرَة",
+        "story": "When Khadījah sent Muḥammad ﷺ to trade for her in Shām, she sent her young servant Maysarah with him. Maysarah watched him closely every day of the long journey. He saw that Muḥammad ﷺ never raised his voice, never cheated, never broke a promise and treated even the camel boys kindly. In the markets of Shām he bought and sold so fairly that people trusted him at once, and the trade brought back almost double the usual profit. Maysarah also told of things that amazed him on the road: a monk who saw him resting under a tree and said that only a prophet had ever rested beneath it. When they returned to Makkah, Maysarah could not stop talking. He told Khadījah everything — about the honesty, the gentleness and the blessing he had seen. What he described made Khadījah realise that this was no ordinary man.",
+        "picks": [
+          {
+            "q": "Who travelled with Muḥammad ﷺ to watch over Khadījah’s goods?",
+            "options": [
+              "Her servant Maysarah",
+              "Her cousin Waraqah",
+              "His uncle Ḥamzah"
+            ]
+          },
+          {
+            "q": "What happened to the profit of the trip?",
+            "options": [
+              "It was nearly double",
+              "It was all lost",
+              "It was given to the monk"
+            ]
+          },
+          {
+            "q": "What did Maysarah do when they came back?",
+            "options": [
+              "Told Khadījah all he had seen",
+              "Kept everything secret",
+              "Left Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the journey in order",
+          "items": [
+            "Khadījah hires Muḥammad ﷺ to trade",
+            "Maysarah travels with him",
+            "They trade honestly in Shām",
+            "Maysarah tells Khadījah what he saw"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Maysarah saw that Muḥammad ﷺ was always honest.",
+            "a": true
+          },
+          {
+            "s": "The journey lost money.",
+            "a": false
+          },
+          {
+            "s": "Khadījah learned about his character through Maysarah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that good manners when nobody is checking show who we really are.",
+        "vocab": [
+          [
+            "تِجَارَة",
+            "trade"
+          ],
+          [
+            "رِبْح",
+            "profit"
+          ],
+          [
+            "صِدْق",
+            "truthfulness"
+          ]
+        ],
+        "chapter": "Trade and Marriage"
       },
       {
         "title": "Khadījah",
@@ -728,61 +2005,101 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that good character — honesty, kindness, and trustworthiness — is worth far more than wealth or appearance.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "زَوْجَة",
+            "wife"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "خُلُق",
+            "character"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "زَوَاج",
+            "marriage"
           ]
         ],
-        "chapter": "Trust and Fairness"
+        "chapter": "Trade and Marriage"
       },
       {
-        "title": "The Pact of Fairness",
-        "arabic": "الْعَدْل",
-        "story": "Before prophethood, Muhammad ﷺ joined a pact in Makkah to support people who had been treated unjustly. The agreement is known as Hilf al-Fudul. He valued helping the wronged, even when the person came from outside the local tribe.",
+        "title": "Zayd Chooses to Stay",
+        "teach": "Love that is earned",
+        "emoji": "🏡",
+        "arabic": "زَيْدُ بْنُ حَارِثَة",
+        "story": "Zayd ibn Ḥārithah was stolen from his family as a little boy and sold in the market of Makkah. Khadījah’s nephew bought him and gave him to Khadījah, and she gave him to her husband Muḥammad ﷺ. Zayd grew up in their home, surrounded by kindness. Far away, his father Ḥārithah had never stopped searching and crying for him. One day he found out where Zayd was and rushed to Makkah with his brother, ready to pay anything to take him home. Muḥammad ﷺ said, “Let him choose. If he chooses you, you may take him without paying. If he chooses me, I will not force him away.” They called Zayd, and he said: “I will never choose anyone over him.” His father was shocked — “You choose to stay rather than be free with your family?” Zayd answered, “I have seen in this man something that makes me never want to leave him.”",
         "picks": [
           {
-            "q": "What was the purpose of Hilf al-Fudul?",
+            "q": "How did Zayd come to Makkah?",
             "options": [
-              "To help people treated unjustly",
-              "To choose the fastest camel",
-              "To stop all trade"
+              "He was stolen and sold as a boy",
+              "He came to trade",
+              "He came for Ḥajj"
+            ]
+          },
+          {
+            "q": "What did Muḥammad ﷺ do when Zayd’s father came?",
+            "options": [
+              "He let Zayd choose",
+              "He sent Zayd away",
+              "He asked for a lot of money"
+            ]
+          },
+          {
+            "q": "Whom did Zayd choose?",
+            "options": [
+              "Muḥammad ﷺ",
+              "His father",
+              "Neither of them"
             ]
           }
         ],
-        "benefit": "Stand up for someone who is being treated unfairly.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put Zayd’s story in order",
+          "items": [
+            "Zayd is taken from his family",
+            "He grows up in the Prophet’s home",
+            "His father comes to Makkah",
+            "Zayd chooses to stay"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Zayd’s father never searched for him.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ did not force Zayd to stay.",
+            "a": true
+          },
+          {
+            "s": "Zayd chose to stay because of the kindness he had seen.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that kindness and good character win people’s hearts more than anything else.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "اِخْتِيَار",
+            "choice"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "أُسْرَة",
+            "family"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "حُبّ",
+            "love"
           ]
         ],
-        "chapter": "Trust and Fairness"
+        "chapter": "Trade and Marriage"
       }
     ]
   },
   {
-    "title": "Map 4 · The First Revelation",
-    "icon": "📖",
-    "colour": "#7a5aa8",
+    "title": "Map 8 · Before the Message",
+    "icon": "⛰️",
+    "colour": "#a97c25",
     "range": [
-      13,
-      16
+      29,
+      32
     ],
     "lessons": [
       {
@@ -843,19 +2160,163 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that a wise and fair solution can bring people together instead of letting pride and rivalry divide them.",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "الْحَجَرُ الْأَسْوَد",
+            "the Black Stone"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "رِدَاء",
+            "cloak"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "حِكْمَة",
+            "wisdom"
           ]
         ],
-        "chapter": "The First Revelation"
+        "chapter": "Before the Message"
+      },
+      {
+        "title": "Seekers of the Truth",
+        "teach": "Refusing idols",
+        "emoji": "🔎",
+        "arabic": "الْحُنَفَاء",
+        "story": "Even before Islam, a few people in Makkah felt that something was wrong with the idols. They were called the ḥunafāʾ — people who were searching for the pure religion of Ibrāhīm. One of them was Zayd ibn ʿAmr ibn Nufayl. He would stand with his back against the Kaʿbah and say, “O people of Quraysh, none of you follows the religion of Ibrāhīm except me.” He refused to eat meat that had been sacrificed to idols, saying, “Allah created the sheep, sent down rain for it and grew grass from the earth for it — and then you sacrifice it to something other than Allah?” He even rescued baby girls whose fathers did not want them, and raised them himself. He used to pray, “O Allah, if I knew how You wanted to be worshipped, I would worship You that way.” He travelled far searching for the truth, but passed away a few years before the message came to Muḥammad ﷺ.",
+        "picks": [
+          {
+            "q": "What were people searching for the religion of Ibrāhīm called?",
+            "options": [
+              "The ḥunafāʾ",
+              "The Anṣār",
+              "The Muhājirūn"
+            ]
+          },
+          {
+            "q": "What did Zayd ibn ʿAmr refuse to eat?",
+            "options": [
+              "Meat sacrificed to idols",
+              "Bread made in Makkah",
+              "Dates from Ṭāʾif"
+            ]
+          },
+          {
+            "q": "What did Zayd do for baby girls?",
+            "options": [
+              "He rescued them and raised them",
+              "He sold them",
+              "He ignored them"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Zayd ibn ʿAmr’s story in order",
+          "items": [
+            "He sees that the idols are wrong",
+            "He speaks out at the Kaʿbah",
+            "He rescues unwanted baby girls",
+            "He travels to search for the truth"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Everyone in Makkah was happy with the idols.",
+            "a": false
+          },
+          {
+            "s": "Zayd ibn ʿAmr asked Allah to guide him.",
+            "a": true
+          },
+          {
+            "s": "He rescued baby girls whose fathers did not want them.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that a sincere heart searches for the truth and asks Allah for guidance.",
+        "vocab": [
+          [
+            "حَنِيف",
+            "upright believer"
+          ],
+          [
+            "بَحْث",
+            "search"
+          ],
+          [
+            "هِدَايَة",
+            "guidance"
+          ]
+        ],
+        "chapter": "Before the Message"
+      },
+      {
+        "title": "Dreams Like the Dawn",
+        "teach": "The first signs of revelation",
+        "emoji": "🌄",
+        "arabic": "الرُّؤْيَا الصَّادِقَة",
+        "story": "As the Prophet ﷺ came close to the age of forty, something new began to happen. ʿĀʾishah later described it: the first thing that came to him was true dreams. Every dream he saw came true, clear and bright, just like the light of dawn breaking over the mountains. Then Allah made him love to be alone. He would take some food and water and climb to the little cave of Ḥirāʾ on a mountain near Makkah. There he spent many nights worshipping Allah, thinking about the One who created the stars above and the desert below, and praying the way of Ibrāhīm. When his supplies ran out, he came home to Khadījah, who prepared more for him, and then he went back up the mountain. Down below, Makkah was busy with trade and idols. Up in the quiet cave, his heart was being prepared for the greatest moment in history.",
+        "picks": [
+          {
+            "q": "What was the first sign before revelation?",
+            "options": [
+              "True dreams",
+              "A loud voice in the market",
+              "A letter from Shām"
+            ]
+          },
+          {
+            "q": "What were the dreams like?",
+            "options": [
+              "Like the light of dawn",
+              "Like a dark night",
+              "Like a storm"
+            ]
+          },
+          {
+            "q": "Where did he go to be alone?",
+            "options": [
+              "The cave of Ḥirāʾ",
+              "The cave of Thawr",
+              "The house of al-Arqam"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the signs in order",
+          "items": [
+            "He begins to see true dreams",
+            "He loves to be alone",
+            "He climbs to the cave of Ḥirāʾ",
+            "Khadījah prepares supplies for him"
+          ]
+        },
+        "tf": [
+          {
+            "s": "His dreams came true like the light of dawn.",
+            "a": true
+          },
+          {
+            "s": "He went to the cave to hide from his family.",
+            "a": false
+          },
+          {
+            "s": "Khadījah supported him by preparing food.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that quiet time to remember Allah and think about His creation softens the heart.",
+        "vocab": [
+          [
+            "فَجْر",
+            "dawn"
+          ],
+          [
+            "غَار",
+            "cave"
+          ],
+          [
+            "عِبَادَة",
+            "worship"
+          ]
+        ],
+        "chapter": "Before the Message"
       },
       {
         "title": "The Cave of Ḥirāʾ",
@@ -915,20 +2376,31 @@ window.SEERAA_COURSE=[
         "benefit": "We learn the value of quiet time away from distractions, to think deeply about Allah and about right and wrong.",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "غَارُ حِرَاء",
+            "the Cave of Ḥirāʾ"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "تَفَكُّر",
+            "reflection"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "خَلْوَة",
+            "time alone"
           ]
         ],
-        "chapter": "The First Revelation"
-      },
+        "chapter": "Before the Message"
+      }
+    ]
+  },
+  {
+    "title": "Map 9 · The First Revelation",
+    "icon": "📖",
+    "colour": "#b4553a",
+    "range": [
+      33,
+      36
+    ],
+    "lessons": [
       {
         "title": "Read!",
         "teach": "The first revelation",
@@ -985,58 +2457,234 @@ window.SEERAA_COURSE=[
           }
         ],
         "benefit": "We learn that the Qurʾān is Allah’s own words, sent down to guide us, and it is worth reading and reflecting on every single day.",
-        "quran": {
-          "arabic": "ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِي خَلَقَ",
-          "translit": "Iqraʾ bismi Rabbika-lladhī khalaq",
-          "translation": "Read in the name of your Lord who created.",
-          "ref": "Surah Al-ʿAlaq, 96:1",
-          "surahNum": 96,
-          "ayahNum": 1
-        },
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "اقْرَأْ",
+            "Read!"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "جِبْرِيل",
+            "Jibrīl"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "وَحْي",
+            "revelation"
           ]
         ],
         "chapter": "The First Revelation"
       },
       {
-        "title": "Comfort from Khadijah",
+        "title": "Comfort from Khadījah",
         "arabic": "خَدِيجَة",
-        "story": "After the first revelation, Khadijah comforted the Prophet ﷺ. She reminded him of his kindness, honesty and care for people. She took him to Waraqah, who recognised the connection with earlier revelation. Support from a trusted person can help during a frightening experience.",
+        "story": "The Prophet ﷺ came down from the cave of Ḥirāʾ with his heart trembling, and hurried into the house. “Cover me! Cover me!” he said to Khadījah. She wrapped him in a cloak and stayed beside him until his fear calmed. Then he told her everything that had happened and said, “I was afraid for myself.” Khadījah did not panic, and she did not doubt him. She said: “Never! By Allah, Allah will never disgrace you. You keep good ties with your relatives, you help those who are tired and weak, you give to people who have nothing, you honour your guests and you stand by people in times of trouble.” She knew his character better than anyone, and she knew that Allah does not abandon someone like that. Her calm, wise words were exactly what he needed in that moment.",
         "picks": [
           {
-            "q": "Who comforted him after the first revelation?",
+            "q": "What did the Prophet ﷺ ask Khadījah to do?",
             "options": [
-              "Khadijah",
-              "Abrahah",
-              "The king of Persia"
+              "Cover him",
+              "Call a doctor",
+              "Go to the market"
+            ]
+          },
+          {
+            "q": "What did Khadījah say?",
+            "options": [
+              "“Allah will never disgrace you”",
+              "“Let us leave Makkah”",
+              "“You must have been dreaming”"
+            ]
+          },
+          {
+            "q": "How did she know he would be safe?",
+            "options": [
+              "She knew his good character",
+              "She had a dream",
+              "A traveller told her"
             ]
           }
         ],
-        "benefit": "Listen kindly when someone feels worried.",
-        "emoji": "📖",
+        "benefit": "We learn to comfort people we love with calm, kind and wise words.",
+        "emoji": "🤍",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "طُمَأْنِينَة",
+            "calmness"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "ضَيْف",
+            "guest"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "رَحِم",
+            "family ties"
+          ]
+        ],
+        "chapter": "The First Revelation",
+        "teach": "Support in a frightening moment",
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "He comes down from Ḥirāʾ trembling",
+            "Khadījah covers him",
+            "He tells her what happened",
+            "She reminds him of his good character"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Khadījah stayed calm and comforted him.",
+            "a": true
+          },
+          {
+            "s": "Khadījah doubted what he told her.",
+            "a": false
+          },
+          {
+            "s": "She listed his kindness to relatives, the weak and guests.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Waraqah’s Words",
+        "teach": "The truth recognised",
+        "emoji": "📜",
+        "arabic": "وَرَقَةُ بْنُ نَوْفَل",
+        "story": "Khadījah took the Prophet ﷺ to her cousin, Waraqah ibn Nawfal. Waraqah was an old man who had become blind. Long before, he had left the idols and become a Christian, and he had studied the earlier scriptures and could write in Hebrew. “O cousin,” said Khadījah, “listen to what your nephew is saying.” The Prophet ﷺ told him everything that had happened in the cave. Waraqah answered: “This is the same angel whom Allah sent to Mūsā! I wish I were young. I wish I could be alive when your people drive you out.” The Prophet ﷺ was surprised: “Will they drive me out?” “Yes,” said Waraqah. “No man has ever come with what you have brought without being treated as an enemy. If I live to see that day, I will support you with all my strength.” But Waraqah passed away a short time later.",
+        "picks": [
+          {
+            "q": "Who was Waraqah ibn Nawfal?",
+            "options": [
+              "Khadījah’s cousin who knew the earlier scriptures",
+              "A leader of Ṭāʾif",
+              "A trader from Yemen"
+            ]
+          },
+          {
+            "q": "Which prophet did Waraqah say the same angel came to?",
+            "options": [
+              "Mūsā",
+              "Nūḥ",
+              "Yūnus"
+            ]
+          },
+          {
+            "q": "What did Waraqah say would happen?",
+            "options": [
+              "His people would drive him out",
+              "Everyone would follow him at once",
+              "He would become a king"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the visit in order",
+          "items": [
+            "Khadījah takes the Prophet ﷺ to Waraqah",
+            "The Prophet ﷺ describes the cave",
+            "Waraqah says it is the angel of Mūsā",
+            "Waraqah wishes he could help him"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Waraqah was blind and old.",
+            "a": true
+          },
+          {
+            "s": "Waraqah said everyone would welcome the message.",
+            "a": false
+          },
+          {
+            "s": "Waraqah recognised the angel who came to Mūsā.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the message of the Prophet ﷺ is the same message brought by the earlier prophets.",
+        "vocab": [
+          [
+            "مَلَك",
+            "angel"
+          ],
+          [
+            "تَوْرَاة",
+            "Torah"
+          ],
+          [
+            "نَبِيّ",
+            "prophet"
+          ]
+        ],
+        "chapter": "The First Revelation"
+      },
+      {
+        "title": "“Arise and Warn”",
+        "teach": "The command to call people",
+        "emoji": "📣",
+        "arabic": "قُمْ فَأَنْذِرْ",
+        "story": "After the first revelation, Jibrīl did not come again for a while. The Prophet ﷺ waited, and he longed for the angel to return. Then one day, while he was walking, he heard a voice from the sky. He looked up and saw the same angel from Ḥirāʾ, sitting on a throne between the sky and the earth. He hurried home and said, “Cover me! Cover me!” Then Allah revealed the opening of Sūrat al-Muddaththir: “O you who are wrapped up, arise and warn! Declare the greatness of your Lord, keep your clothes pure, and stay away from idols.” From that moment, revelation came again and again. The Prophet ﷺ now had a mission: not only to worship Allah himself, but to call others to worship Allah alone and to warn them about the Day when everyone will meet their Lord.",
+        "picks": [
+          {
+            "q": "What happened after the first revelation?",
+            "options": [
+              "Revelation paused for a while",
+              "Jibrīl came every hour",
+              "The Prophet ﷺ left Makkah"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say when he reached home?",
+            "options": [
+              "“Cover me!”",
+              "“Open the door!”",
+              "“Call my uncle!”"
+            ]
+          },
+          {
+            "q": "What was he commanded to do?",
+            "options": [
+              "Arise and warn",
+              "Build a palace",
+              "Travel to Shām"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the events in order",
+          "items": [
+            "The first revelation in Ḥirāʾ",
+            "Revelation pauses",
+            "He sees the angel between sky and earth",
+            "Sūrat al-Muddaththir is revealed"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Al-Muddaththir means “the one wrapped up”.",
+            "a": true
+          },
+          {
+            "s": "He was told to keep his clothes pure.",
+            "a": true
+          },
+          {
+            "s": "After this, revelation never came again.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that the message of Islam is meant to be shared, starting with our own good example.",
+        "vocab": [
+          [
+            "قُمْ",
+            "arise"
+          ],
+          [
+            "أَنْذِرْ",
+            "warn"
+          ],
+          [
+            "طَهِّرْ",
+            "purify"
           ]
         ],
         "chapter": "The First Revelation"
@@ -1044,85 +2692,85 @@ window.SEERAA_COURSE=[
     ]
   },
   {
-    "title": "Map 5 · The First Muslims",
+    "title": "Map 10 · The First Believers",
     "icon": "🌱",
-    "colour": "#2e6b58",
+    "colour": "#2f6f8f",
     "range": [
-      17,
-      20
+      37,
+      40
     ],
     "lessons": [
       {
-        "title": "The First to Believe",
-        "teach": "Khadījah believes",
-        "emoji": "💚",
-        "arabic": "أَوَّلُ مُؤْمِنَة",
-        "story": "When Muhammad ﷺ told Khadījah what had happened, she did not doubt him for a moment. \"Allah would never disgrace you,\" she said, \"for you keep good ties, carry the weak, and help those in need.\" She was the very first person to believe in him. She took him to her cousin Waraqah, an old scholar, who said the same angel had come to Mūsā. Her calm and immediate belief gave him the strength and comfort he needed at the most frightening moment of his life.",
+        "title": "The First Prayers",
+        "teach": "Prayer from the very beginning",
+        "emoji": "🤲",
+        "arabic": "أَوَّلُ صَلَاة",
+        "story": "From the earliest days of Islam, the Angel Jibrīl taught the Prophet ﷺ how to make wuḍūʾ and how to pray. The Prophet ﷺ then taught Khadījah, and they prayed together in their home. At first the prayer was two rakʿahs in the morning and two in the evening. One day young ʿAlī, who lived with them, walked in and saw them bowing and prostrating. “What is this?” he asked. The Prophet ﷺ explained that this was the worship of Allah alone, and invited ʿAlī to believe. ʿAlī became the first child to accept Islam. Sometimes the Prophet ﷺ and ʿAlī would slip away into the valleys around Makkah to pray where no one could see them. A visitor once saw a man, a woman and a boy praying together near the Kaʿbah, and wondered who they were. Prayer was there from the very start — long before the Muslims had a masjid.",
         "picks": [
           {
-            "q": "Who was the first to believe?",
+            "q": "Who taught the Prophet ﷺ how to pray?",
             "options": [
-              "Khadījah",
-              "Abū Bakr",
-              "ʿAlī"
+              "The Angel Jibrīl",
+              "Waraqah",
+              "Abū Ṭālib"
             ]
           },
           {
-            "q": "Who was Waraqah?",
+            "q": "Who was the first child to accept Islam?",
             "options": [
-              "Khadījah’s cousin, an old scholar",
-              "A merchant from Yemen",
-              "A poet of Makkah"
+              "ʿAlī",
+              "Zayd",
+              "ʿAmmār"
             ]
           },
           {
-            "q": "What did Waraqah tell them?",
+            "q": "How was the early prayer?",
             "options": [
-              "The same angel had come to Mūsā",
-              "It was only a dream",
-              "It could not be true"
+              "Two rakʿahs morning and evening",
+              "Five prayers from day one",
+              "Only on Fridays"
             ]
           }
         ],
         "order": {
-          "prompt": "Put the story in order",
+          "prompt": "Put the first prayers in order",
           "items": [
-            "He tells Khadījah what happened",
-            "She comforts him and believes",
-            "They visit her cousin Waraqah",
-            "Waraqah says this is the same angel sent to Mūsā"
+            "Jibrīl teaches wuḍūʾ and prayer",
+            "The Prophet ﷺ prays with Khadījah",
+            "ʿAlī sees them and asks",
+            "ʿAlī accepts Islam"
           ]
         },
         "tf": [
           {
-            "s": "Khadījah believed him straight away.",
+            "s": "Prayer began in the very early days of Islam.",
             "a": true
           },
           {
-            "s": "Waraqah recognised the sign of prophethood.",
-            "a": true
-          },
-          {
-            "s": "Khadījah laughed at him.",
+            "s": "ʿAlī was an adult when he became Muslim.",
             "a": false
+          },
+          {
+            "s": "They sometimes prayed in the valleys to stay hidden.",
+            "a": true
           }
         ],
-        "benefit": "We learn that standing by someone we love in their most difficult moment, with kindness and belief in them, can make all the difference.",
+        "benefit": "We learn that prayer was the first practice of Islam, so we guard it as the most important.",
         "vocab": [
           [
-            "الْعَدْل",
-            "justice"
+            "صَلَاة",
+            "prayer"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "وُضُوء",
+            "ablution"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "رَكْعَة",
+            "unit of prayer"
           ]
         ],
-        "chapter": "The First Muslims"
+        "chapter": "The First Believers"
       },
       {
         "title": "Friends Who Believed",
@@ -1182,19 +2830,91 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that true friendship means standing firmly beside someone, even when believing them costs us something.",
         "vocab": [
           [
-            "الْعَدْل",
-            "justice"
+            "الصِّدِّيق",
+            "the truthful one"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "صَاحِب",
+            "companion"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "إِسْلَام",
+            "Islam"
           ]
         ],
-        "chapter": "The First Muslims"
+        "chapter": "The First Believers"
+      },
+      {
+        "title": "Abū Bakr Brings His Friends",
+        "teach": "A good friend leads to good",
+        "emoji": "🤝",
+        "arabic": "أَبُو بَكْرٍ الصِّدِّيق",
+        "story": "Abū Bakr was a well-liked merchant of Makkah. People loved to sit with him because he was gentle, knowledgeable about the families of Arabia, and easy to talk to. As soon as he became Muslim, he began to use that friendship for good. Quietly, one by one, he spoke to the people who trusted him. Through Abū Bakr, ʿUthmān ibn ʿAffān accepted Islam. So did az-Zubayr ibn al-ʿAwwām, ʿAbd ar-Raḥmān ibn ʿAwf, Saʿd ibn Abī Waqqāṣ and Ṭalḥah ibn ʿUbaydillāh. Abū Bakr brought each of them to the Prophet ﷺ, and they believed. Five of the ten companions who were later given the good news of Paradise came to Islam through one kind friend. Abū Bakr also spent his own wealth freeing people who were being hurt because of their faith. He did not just believe — he helped others find the way.",
+        "picks": [
+          {
+            "q": "How did Abū Bakr share Islam?",
+            "options": [
+              "Quietly, with friends who trusted him",
+              "By shouting in the market",
+              "By writing letters to kings"
+            ]
+          },
+          {
+            "q": "Which of these accepted Islam through Abū Bakr?",
+            "options": [
+              "ʿUthmān ibn ʿAffān",
+              "Abū Jahl",
+              "Abū Lahab"
+            ]
+          },
+          {
+            "q": "What else did Abū Bakr spend his wealth on?",
+            "options": [
+              "Freeing people who were hurt for their faith",
+              "Building a palace",
+              "Buying idols"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Abū Bakr accepts Islam",
+            "He speaks to his trusted friends",
+            "He brings them to the Prophet ﷺ",
+            "They accept Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Bakr was liked and trusted by many people.",
+            "a": true
+          },
+          {
+            "s": "ʿUthmān, az-Zubayr and Ṭalḥah came to Islam through Abū Bakr.",
+            "a": true
+          },
+          {
+            "s": "Abū Bakr kept Islam only to himself.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that a good friend guides others towards goodness with gentleness and trust.",
+        "vocab": [
+          [
+            "صَدِيق",
+            "friend"
+          ],
+          [
+            "صِدِّيق",
+            "truthful one"
+          ],
+          [
+            "دَعْوَة",
+            "invitation"
+          ]
+        ],
+        "chapter": "The First Believers"
       },
       {
         "title": "The Quiet Years",
@@ -1254,19 +2974,102 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that learning the Qurʾān together, and supporting one another, helps our faith grow strong even in hard times.",
         "vocab": [
           [
-            "الْعَدْل",
-            "justice"
+            "سِرّ",
+            "secret"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "دَارُ الْأَرْقَم",
+            "the house of al-Arqam"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "حَلْقَة",
+            "study circle"
           ]
         ],
-        "chapter": "The First Muslims"
+        "chapter": "The First Believers"
+      }
+    ]
+  },
+  {
+    "title": "Map 11 · The Call in the Open",
+    "icon": "📣",
+    "colour": "#7a5aa8",
+    "range": [
+      41,
+      44
+    ],
+    "lessons": [
+      {
+        "title": "Warn Your Nearest Family",
+        "teach": "Starting with family",
+        "emoji": "🍲",
+        "arabic": "وَأَنْذِرْ عَشِيرَتَكَ",
+        "story": "After three quiet years, Allah revealed: “And warn your nearest relatives.” So the Prophet ﷺ invited his family, Banū Hāshim, to a meal — about forty-five men. Before he could speak, his uncle Abū Lahab jumped up and spoiled the gathering, and everyone left. The Prophet ﷺ did not give up. He invited them again. This time he praised Allah and said: “I have brought you the best of this world and the next. Allah has commanded me to call you to Him.” Most of them stayed silent. But his uncle Abū Ṭālib said, “By Allah, we will keep protecting you, even though I cannot leave the religion of ʿAbd al-Muṭṭalib.” The family did not all accept Islam, but they heard the message clearly from someone they knew had never lied.",
+        "picks": [
+          {
+            "q": "Whom was the Prophet ﷺ told to warn first?",
+            "options": [
+              "His nearest relatives",
+              "The kings of Persia",
+              "The people of Yemen"
+            ]
+          },
+          {
+            "q": "Who spoiled the first gathering?",
+            "options": [
+              "Abū Lahab",
+              "Abū Ṭālib",
+              "Ḥamzah"
+            ]
+          },
+          {
+            "q": "What did Abū Ṭālib promise?",
+            "options": [
+              "To keep protecting him",
+              "To become Muslim at once",
+              "To leave Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Allah commands him to warn his relatives",
+            "Abū Lahab spoils the first meal",
+            "He invites them again and speaks",
+            "Abū Ṭālib promises protection"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ gave up after the first meal.",
+            "a": false
+          },
+          {
+            "s": "Abū Ṭālib promised to protect him.",
+            "a": true
+          },
+          {
+            "s": "He invited his family to a meal.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to share goodness with our own family first, with patience and good manners.",
+        "vocab": [
+          [
+            "عَشِيرَة",
+            "clan"
+          ],
+          [
+            "طَعَام",
+            "food"
+          ],
+          [
+            "أَقَارِب",
+            "relatives"
+          ]
+        ],
+        "chapter": "The Call in the Open"
       },
       {
         "title": "Calling from Ṣafā",
@@ -1326,37 +3129,181 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that speaking the truth openly takes courage, especially when we know not everyone will want to hear it.",
         "vocab": [
           [
-            "الْعَدْل",
-            "justice"
+            "الصَّفَا",
+            "Ṣafā"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "جَهْر",
+            "openly"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "نَذِير",
+            "warner"
           ]
         ],
-        "chapter": "The First Muslims"
+        "chapter": "The Call in the Open"
+      },
+      {
+        "title": "What Shall We Tell the Pilgrims?",
+        "teach": "The Qurʾān cannot be matched",
+        "emoji": "🗣️",
+        "arabic": "الْوَلِيدُ بْنُ الْمُغِيرَة",
+        "story": "The season of Ḥajj was coming, and the leaders of Quraysh were worried. Crowds of Arabs would arrive, and they might hear the Qurʾān. The leaders met at the house of al-Walīd ibn al-Mughīrah, an old and clever chief, to agree on one thing to tell everyone. “Let us say he is a fortune-teller,” said one. “No,” said al-Walīd, “his words are nothing like a fortune-teller’s mumbling.” “Then we will say he is mad.” “He is not mad — we know madness.” “A poet?” “We know every kind of poetry, and this is not poetry.” “A magician?” “He does not use magicians’ tricks.” Then al-Walīd admitted: “His speech is sweet, its roots are strong and its branches are full of fruit.” In the end they chose to call him a magician who divides families. But the plan backfired: everyone went home talking about the Prophet ﷺ, and his name spread across Arabia.",
+        "picks": [
+          {
+            "q": "Why did the leaders of Quraysh meet?",
+            "options": [
+              "To agree what to tell the pilgrims",
+              "To plan a trade journey",
+              "To rebuild the Kaʿbah"
+            ]
+          },
+          {
+            "q": "What did al-Walīd admit about the Qurʾān?",
+            "options": [
+              "Its speech is sweet and strong",
+              "It was ordinary poetry",
+              "It was easy to copy"
+            ]
+          },
+          {
+            "q": "What happened in the end?",
+            "options": [
+              "The Prophet’s name spread across Arabia",
+              "Nobody heard about him",
+              "The pilgrims stayed home"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the meeting in order",
+          "items": [
+            "Ḥajj season comes near",
+            "The leaders meet at al-Walīd’s house",
+            "Every false label is rejected",
+            "They choose to call him a magician"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Al-Walīd said the Qurʾān was not poetry.",
+            "a": true
+          },
+          {
+            "s": "The leaders easily found a true fault in the Qurʾān.",
+            "a": false
+          },
+          {
+            "s": "Their plan made more people talk about the Prophet ﷺ.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the Qurʾān is the speech of Allah, and even its enemies could not find a fault in it.",
+        "vocab": [
+          [
+            "شِعْر",
+            "poetry"
+          ],
+          [
+            "سِحْر",
+            "magic"
+          ],
+          [
+            "كَلَام",
+            "speech"
+          ]
+        ],
+        "chapter": "The Call in the Open"
+      },
+      {
+        "title": "Abū Ṭālib Stands Firm",
+        "teach": "Steadfastness",
+        "emoji": "☀️",
+        "arabic": "أَبُو طَالِب",
+        "story": "The leaders of Quraysh went to Abū Ṭālib again and again. “Your nephew insults our gods,” they said. “Stop him, or let us deal with him.” At last they threatened Abū Ṭālib himself. The old man was troubled, and he called his nephew. “Do not put on me a burden I cannot carry,” he said. The Prophet ﷺ thought his uncle might be about to give up protecting him. His eyes filled with tears, and it is reported that he said: “O my uncle, by Allah, if they put the sun in my right hand and the moon in my left hand to make me leave this matter, I would not leave it until Allah makes it succeed, or I die trying.” Then he turned to go. Abū Ṭālib called him back: “Go, my nephew, and say whatever you like. By Allah, I will never hand you over to them.”",
+        "picks": [
+          {
+            "q": "What did the leaders of Quraysh want Abū Ṭālib to do?",
+            "options": [
+              "Stop his nephew from calling to Islam",
+              "Lead their army",
+              "Leave Makkah"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say he would not leave the message for?",
+            "options": [
+              "Even the sun and the moon",
+              "Nothing at all",
+              "A little gold"
+            ]
+          },
+          {
+            "q": "What did Abū Ṭālib decide?",
+            "options": [
+              "He would never hand him over",
+              "He would stop protecting him",
+              "He would become a trader"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Quraysh complain to Abū Ṭālib",
+            "They threaten him",
+            "The Prophet ﷺ refuses to leave the message",
+            "Abū Ṭālib promises to protect him"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Ṭālib gave his nephew to Quraysh.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ stayed firm on his message.",
+            "a": true
+          },
+          {
+            "s": "Quraysh threatened Abū Ṭālib.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to hold firmly to the truth even when people offer us the whole world to leave it.",
+        "vocab": [
+          [
+            "شَمْس",
+            "sun"
+          ],
+          [
+            "قَمَر",
+            "moon"
+          ],
+          [
+            "ثَبَات",
+            "steadfastness"
+          ]
+        ],
+        "chapter": "The Call in the Open"
       }
     ]
   },
   {
-    "title": "Map 6 · Faith and Refuge",
-    "icon": "⛵",
-    "colour": "#a97c25",
+    "title": "Map 12 · Patience Under Pressure",
+    "icon": "💎",
+    "colour": "#2e6b58",
     "range": [
-      21,
-      24
+      45,
+      48
     ],
     "lessons": [
       {
         "title": "Bilāl Stays Firm",
         "teach": "Patience under hardship",
         "emoji": "🔥",
-        "arabic": "بِلَال",
-        "story": "Bilal believed in Allah alone. He faced cruel treatment from those who opposed Islam, but held firmly to his faith. Abu Bakr helped him gain freedom. His story teaches courage, faith and the duty to protect people from injustice.",
+        "arabic": "أَحَدٌ أَحَد",
+        "story": "Bilāl ibn Rabāḥ was an enslaved man in Makkah, owned by Umayyah ibn Khalaf, one of the fiercest enemies of Islam. When Bilāl believed in Allah alone, Umayyah was furious. At midday, when the desert sand was burning hot, he had Bilāl dragged out, laid on his back and a heavy rock placed on his chest. “You will stay like this until you die, or until you reject Muḥammad and worship al-Lāt and al-ʿUzzā!” But Bilāl answered with only one word, again and again: “Aḥad… Aḥad…” — “One… One…” Allah is One. One day Abū Bakr passed by and could not bear it. He bought Bilāl from Umayyah and set him free for the sake of Allah. ʿUmar later said, “Abū Bakr is our master, and he freed our master” — meaning Bilāl. Years later, Bilāl’s beautiful voice became the first to call the adhān, and the man who had once been crushed under a rock stood on top of the Kaʿbah to call the whole of Makkah to prayer.",
         "picks": [
           {
             "q": "What word did Bilāl repeat?",
@@ -1387,8 +3334,8 @@ window.SEERAA_COURSE=[
           "prompt": "Put Bilāl’s story in order",
           "items": [
             "Bilāl accepts Islam",
-            "He is harmed for his faith",
-            "He says only \"Aḥad, Aḥad\"",
+            "He is harmed under a heavy rock",
+            "He says only “Aḥad, Aḥad”",
             "Abū Bakr buys his freedom"
           ]
         },
@@ -1406,202 +3353,848 @@ window.SEERAA_COURSE=[
             "a": false
           }
         ],
-        "benefit": "We learn that true patience means holding on to what is right, even when it is painful and difficult to do so.",
+        "benefit": "We learn that true patience means holding on to what is right, even when it is painful.",
         "vocab": [
           [
-            "الْهِجْرَة",
-            "migration"
+            "أَحَد",
+            "One"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "حُرِّيَّة",
+            "freedom"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "ثَبَات",
+            "firmness"
           ]
         ],
-        "chapter": "Faith and Refuge"
+        "chapter": "Patience Under Pressure"
       },
       {
-        "title": "Across the Sea",
-        "teach": "Abyssinia",
-        "emoji": "⛵",
-        "arabic": "ٱلْحَبَشَة",
-        "story": "Life became so hard for the Muslims that the Prophet ﷺ told a group to sail to Abyssinia, where a just Christian king called the Negus ruled. Makkah sent men to demand they be handed back. Jaʿfar stood before the king and recited verses about ʿĪsā and Maryam. The Negus wept and said, \"You are safe in my land.\" This safe journey became known as the first Hijrah, years before the more famous migration to Madīnah.",
+        "title": "The Family of Yāsir",
+        "teach": "Paradise is the promise",
+        "emoji": "🌺",
+        "arabic": "آلُ يَاسِر",
+        "story": "Yāsir, his wife Sumayyah and their son ʿAmmār were among the first Muslims in Makkah. They were poor and had no powerful tribe to protect them, so the enemies of Islam made them suffer. In the hottest part of the day they were taken out into the burning sun of the desert and hurt, to force them to give up Islam. The Prophet ﷺ could not stop it, but he passed by them and said words that gave them strength: “Be patient, O family of Yāsir — your meeting place is Paradise!” Sumayyah never gave up her faith. She became the first person in Islam to give her life for believing in Allah. Her husband Yāsir also passed away from the harm he suffered. Their son ʿAmmār lived on, grew into a great companion, and later helped to build the first masjid in Madīnah.",
         "picks": [
           {
-            "q": "Where did the Muslims go?",
+            "q": "Who were the family of Yāsir?",
             "options": [
-              "Abyssinia",
-              "Yemen",
-              "Egypt"
+              "Yāsir, Sumayyah and ʿAmmār",
+              "Abū Bakr and his children",
+              "Ḥamzah and his sons"
             ]
           },
           {
-            "q": "What did the Negus decide?",
+            "q": "What did the Prophet ﷺ promise them?",
             "options": [
-              "They could stay safely",
-              "To send them back",
-              "To imprison them"
+              "Paradise",
+              "Gold and silver",
+              "A big house"
             ]
           },
           {
-            "q": "What is this early journey known as?",
+            "q": "Who was the first person in Islam to give her life for her faith?",
             "options": [
-              "The first Hijrah",
-              "The Night Journey",
-              "The Farewell"
+              "Sumayyah",
+              "Khadījah",
+              "Āminah"
             ]
           }
         ],
         "order": {
-          "prompt": "Put the journey in order",
+          "prompt": "Put the story in order",
           "items": [
-            "Life in Makkah becomes very hard",
-            "A group sails to Abyssinia",
-            "Makkah sends men to bring them back",
-            "The Negus lets them stay in safety"
+            "The family of Yāsir accept Islam",
+            "They are hurt in the hot sun",
+            "The Prophet ﷺ tells them to be patient",
+            "Sumayyah stays firm to the end"
           ]
         },
         "tf": [
           {
-            "s": "The Negus was a just king.",
+            "s": "The family of Yāsir had a powerful tribe to protect them.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ told them their meeting place was Paradise.",
             "a": true
           },
           {
-            "s": "Jaʿfar refused to speak in front of the king.",
+            "s": "ʿAmmār later helped to build a masjid in Madīnah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that patience for the sake of Allah is never wasted, and Paradise is the greatest reward.",
+        "vocab": [
+          [
+            "صَبْر",
+            "patience"
+          ],
+          [
+            "الْجَنَّة",
+            "Paradise"
+          ],
+          [
+            "إِيمَان",
+            "faith"
+          ]
+        ],
+        "chapter": "Patience Under Pressure"
+      },
+      {
+        "title": "Khabbāb and the Promise",
+        "teach": "Patience and hope",
+        "emoji": "⚒️",
+        "arabic": "خَبَّابُ بْنُ الْأَرَتّ",
+        "story": "Khabbāb ibn al-Aratt was a blacksmith in Makkah who made swords. When he became Muslim, the people who controlled him punished him cruelly, even using the hot iron from his own workshop. One day Khabbāb came to the Prophet ﷺ, who was resting in the shade of the Kaʿbah with his cloak as a pillow. “Will you not ask Allah to help us? Will you not pray for us?” The Prophet ﷺ sat up, his face red. He told Khabbāb that believers before them had been harmed terribly and still did not give up their faith. Then he made a promise: “By Allah, Allah will complete this matter until a rider can travel from Ṣanʿāʾ to Ḥaḍramawt fearing no one except Allah, and the wolf for his sheep. But you are in a hurry.” Years later, Khabbāb lived to see exactly that — peace and safety across Arabia.",
+        "picks": [
+          {
+            "q": "What was Khabbāb’s work?",
+            "options": [
+              "A blacksmith",
+              "A shepherd",
+              "A sailor"
+            ]
+          },
+          {
+            "q": "What did Khabbāb ask the Prophet ﷺ?",
+            "options": [
+              "To ask Allah for help",
+              "To give him money",
+              "To let him leave Makkah"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ promise?",
+            "options": [
+              "That one day travellers would be safe across Arabia",
+              "That Khabbāb would become rich",
+              "That the hardship would end that night"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Khabbāb accepts Islam",
+            "He is punished for his faith",
+            "He asks the Prophet ﷺ to pray for help",
+            "The Prophet ﷺ promises safety will come"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ told Khabbāb not to be in a hurry.",
+            "a": true
+          },
+          {
+            "s": "Khabbāb never saw the promise come true.",
             "a": false
           },
           {
-            "s": "The Muslims were sent back to Makkah.",
+            "s": "Believers before them were also tested.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah’s help comes at the right time, so we stay patient and keep hoping.",
+        "vocab": [
+          [
+            "حَدَّاد",
+            "blacksmith"
+          ],
+          [
+            "أَمْن",
+            "safety"
+          ],
+          [
+            "وَعْد",
+            "promise"
+          ]
+        ],
+        "chapter": "Patience Under Pressure"
+      },
+      {
+        "title": "Ibn Masʿūd Recites Aloud",
+        "teach": "Courage with the Qurʾān",
+        "emoji": "📖",
+        "arabic": "عَبْدُ اللّٰهِ بْنُ مَسْعُود",
+        "story": "ʿAbdullāh ibn Masʿūd was a young shepherd, small and thin, with no powerful family. One day the companions said, “Quraysh have never heard the Qurʾān recited out loud. Who will make them hear it?” “I will,” said Ibn Masʿūd. “We are afraid for you,” they said. “We want a man with a strong family to protect him.” “Let me go,” he replied. “Allah will protect me.” The next morning he went to the Kaʿbah while the leaders of Quraysh sat in their gatherings. He stood and recited in a loud, clear voice: “Ar-Raḥmān! He taught the Qurʾān. He created man…” The leaders asked, “What is he saying?” Then they realised, and they jumped up and hit him. But he kept reciting as long as he could. When he returned with bruises on his face, he said, “The enemies of Allah have never seemed weaker to me. If you like, I will do it again tomorrow!”",
+        "picks": [
+          {
+            "q": "What did Ibn Masʿūd volunteer to do?",
+            "options": [
+              "Recite the Qurʾān aloud at the Kaʿbah",
+              "Fight the leaders of Quraysh",
+              "Leave for Abyssinia"
+            ]
+          },
+          {
+            "q": "Which sūrah did he recite?",
+            "options": [
+              "Sūrat ar-Raḥmān",
+              "Sūrat al-Fīl",
+              "Sūrat Quraysh"
+            ]
+          },
+          {
+            "q": "How did he feel afterwards?",
+            "options": [
+              "Brave and ready to do it again",
+              "Afraid and sorry",
+              "Angry with the companions"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The companions ask who will recite aloud",
+            "Ibn Masʿūd volunteers",
+            "He recites Sūrat ar-Raḥmān at the Kaʿbah",
+            "He offers to do it again"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ibn Masʿūd had a powerful family to protect him.",
             "a": false
-          }
-        ],
-        "benefit": "We learn that when things become too hard in one place, it can be wise and courageous to seek safety elsewhere, trusting Allah.",
-        "vocab": [
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ],
-          [
-            "الْقِبْلَة",
-            "prayer direction"
-          ]
-        ],
-        "chapter": "Faith and Refuge"
-      },
-      {
-        "title": "The Just King",
-        "arabic": "النَّجَاشِي",
-        "story": "Muslims who migrated to Abyssinia sought safety under a just ruler, the Najashi. Jaʿfar explained their faith and spoke about Maryam and ʿIsa. The king protected them rather than sending them back to those who wished to harm them.",
-        "picks": [
+          },
           {
-            "q": "Why did Muslims seek refuge in Abyssinia?",
-            "options": [
-              "To find safety under a just ruler",
-              "To search for treasure",
-              "To conquer the country"
-            ]
-          }
-        ],
-        "benefit": "Offer safety and respect to people who need help.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ],
-          [
-            "الْقِبْلَة",
-            "prayer direction"
-          ]
-        ],
-        "chapter": "Faith and Refuge"
-      },
-      {
-        "title": "Hamzah Accepts Islam",
-        "arabic": "حَمْزَة",
-        "story": "Hamzah became a Muslim during the difficult Makkah period. His support strengthened the believers. Courage is valuable when it protects others and serves what is right; it should never become an excuse to bully someone weaker.",
-        "picks": [
+            "s": "He recited the Qurʾān aloud near the Kaʿbah.",
+            "a": true
+          },
           {
-            "q": "What did Hamzah’s acceptance bring?",
-            "options": [
-              "Support for the believers",
-              "The end of all prayer",
-              "A new trading route"
-            ]
+            "s": "He was hurt but stayed brave.",
+            "a": true
           }
         ],
-        "benefit": "Use your strength to protect others.",
-        "emoji": "📖",
+        "benefit": "We learn that courage comes from trusting Allah, not from being big or powerful.",
         "vocab": [
           [
-            "الْهِجْرَة",
-            "migration"
+            "الرَّحْمٰن",
+            "the Most Merciful"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "تِلَاوَة",
+            "recitation"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "شَجَاعَة",
+            "courage"
           ]
         ],
-        "chapter": "Faith and Refuge"
+        "chapter": "Patience Under Pressure"
       }
     ]
   },
   {
-    "title": "Map 7 · Patience in Makkah",
-    "icon": "🌿",
-    "colour": "#7a5aa8",
+    "title": "Map 13 · Refuge Across the Sea",
+    "icon": "⛵",
+    "colour": "#a97c25",
     "range": [
-      25,
-      28
+      49,
+      52
     ],
     "lessons": [
       {
-        "title": "Umar Accepts Islam",
-        "arabic": "عُمَر",
-        "story": "Umar ibn al-Khattab accepted Islam after previously opposing it. His acceptance strengthened the Muslim community in Makkah. Seeraa reminds us that a person can change, learn and choose a better direction. We should welcome sincere improvement.",
+        "title": "Across the Sea",
+        "teach": "Seeking safety for faith",
+        "emoji": "⛵",
+        "arabic": "الْهِجْرَةُ إِلَى الْحَبَشَة",
+        "story": "In the fifth year of prophethood, life in Makkah had become very dangerous for the weaker Muslims. The Prophet ﷺ told them: “In Abyssinia there is a king who wrongs no one. It is a land of truthfulness. Go there until Allah makes a way out for you.” One night, a small group of about twelve men and four women slipped out of Makkah. Among them were ʿUthmān ibn ʿAffān and his wife Ruqayyah, the Prophet’s daughter. They walked to the coast and found two merchant ships about to sail. They paid a small fare and set off across the Red Sea. When Quraysh discovered they had gone, they chased after them to the shore — but the ships had already left. Later a larger group of more than eighty Muslims, led by Jaʿfar ibn Abī Ṭālib, followed them. It was the first hijrah in Islam: leaving home to keep one’s faith safe.",
         "picks": [
           {
-            "q": "What can Umar’s change teach us?",
+            "q": "Why did the Prophet ﷺ choose Abyssinia?",
             "options": [
-              "People can change for the better",
-              "People can never learn",
-              "Anger is always correct"
+              "Its king wronged no one",
+              "It was close to Yemen",
+              "It had a great market"
+            ]
+          },
+          {
+            "q": "Who was among the first group?",
+            "options": [
+              "ʿUthmān and Ruqayyah",
+              "Abū Jahl and his sons",
+              "Abrahah"
+            ]
+          },
+          {
+            "q": "How did they cross to Abyssinia?",
+            "options": [
+              "On ships across the Red Sea",
+              "On camels through the desert",
+              "On foot over mountains"
             ]
           }
         ],
-        "benefit": "Welcome someone who sincerely chooses to improve.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the first hijrah in order",
+          "items": [
+            "Life becomes dangerous in Makkah",
+            "The Prophet ﷺ advises going to Abyssinia",
+            "A small group leaves secretly at night",
+            "They sail before Quraysh reach the shore"
+          ]
+        },
+        "tf": [
+          {
+            "s": "This was the first hijrah in Islam.",
+            "a": true
+          },
+          {
+            "s": "Quraysh caught them at the shore.",
+            "a": false
+          },
+          {
+            "s": "A larger group led by Jaʿfar followed later.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that protecting our faith is worth great sacrifice, and that Allah provides a way out.",
         "vocab": [
           [
-            "الْأَمِين",
-            "trustworthy"
+            "بَحْر",
+            "sea"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "سَفِينَة",
+            "ship"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "الْحَبَشَة",
+            "Abyssinia"
           ]
         ],
-        "chapter": "Patience in Makkah"
+        "chapter": "Refuge Across the Sea"
       },
+      {
+        "title": "Gifts from Makkah",
+        "teach": "Justice cannot be bought",
+        "emoji": "🎁",
+        "arabic": "هَدَايَا قُرَيْش",
+        "story": "When Quraysh learned that the Muslims were living safely in Abyssinia, they were furious. They chose two clever men, ʿAmr ibn al-ʿĀṣ and ʿAbdullāh ibn Abī Rabīʿah, and loaded them with the finest leather and gifts. First the two men visited the king’s advisers and gave each of them a present. “Some foolish young people have run away from our religion,” they said. “When we speak to the king, tell him to hand them back without listening to them.” The advisers agreed. Then they went to the Najāshī himself, laid the gifts before him and asked for the Muslims to be sent home. The advisers all said, “They are right, O King — return them!” But the Najāshī became angry. “No, by Allah! People who have come to my land and chosen me over everyone else — I will not hand them over until I have called them and heard what they say.”",
+        "picks": [
+          {
+            "q": "Whom did Quraysh send to Abyssinia?",
+            "options": [
+              "ʿAmr ibn al-ʿĀṣ and ʿAbdullāh ibn Abī Rabīʿah",
+              "Abū Bakr and ʿUmar",
+              "Abū Lahab and Abū Jahl"
+            ]
+          },
+          {
+            "q": "What did they give the king’s advisers?",
+            "options": [
+              "Gifts, so they would support them",
+              "Nothing at all",
+              "Copies of the Qurʾān"
+            ]
+          },
+          {
+            "q": "What did the Najāshī insist on?",
+            "options": [
+              "Hearing the Muslims first",
+              "Taking the gifts and agreeing",
+              "Sending the Muslims away at once"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Quraysh send two men with gifts",
+            "They give presents to the advisers",
+            "They ask the king to return the Muslims",
+            "The Najāshī insists on hearing the Muslims"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The advisers were given gifts to support Quraysh.",
+            "a": true
+          },
+          {
+            "s": "The Najāshī handed the Muslims back straight away.",
+            "a": false
+          },
+          {
+            "s": "The Najāshī wanted to hear both sides.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that a just person listens to both sides and cannot be bought with gifts.",
+        "vocab": [
+          [
+            "هَدِيَّة",
+            "gift"
+          ],
+          [
+            "مَلِك",
+            "king"
+          ],
+          [
+            "عَدْل",
+            "justice"
+          ]
+        ],
+        "chapter": "Refuge Across the Sea"
+      },
+      {
+        "title": "The Just King",
+        "arabic": "النَّجَاشِيّ",
+        "story": "The Najāshī called the Muslims to his court. The bishops sat around him with their books open. The Muslims chose Jaʿfar ibn Abī Ṭālib to speak for them. “What is this religion that has made you leave your people?” asked the king. Jaʿfar answered: “O King, we were a people of ignorance. We worshipped idols, ate dead animals, did shameful things, cut off our relatives and treated our neighbours badly, and the strong among us oppressed the weak. Then Allah sent us a messenger from among us, whose family, honesty and trustworthiness we knew. He called us to worship Allah alone, to speak the truth, keep our trusts, be good to our relatives and neighbours, and to pray, give charity and fast.” The king asked, “Do you have anything that he brought from Allah?” Jaʿfar recited the beginning of Sūrat Maryam. The Najāshī wept until his beard was wet, and so did his bishops. “This and what ʿĪsā brought come from the same source of light,” he said.",
+        "picks": [
+          {
+            "q": "Who spoke for the Muslims?",
+            "options": [
+              "Jaʿfar ibn Abī Ṭālib",
+              "ʿAmr ibn al-ʿĀṣ",
+              "ʿUthmān"
+            ]
+          },
+          {
+            "q": "Which sūrah did Jaʿfar recite?",
+            "options": [
+              "Sūrat Maryam",
+              "Sūrat al-Baqarah",
+              "Sūrat Yūsuf"
+            ]
+          },
+          {
+            "q": "How did the Najāshī react?",
+            "options": [
+              "He wept",
+              "He laughed",
+              "He left the room"
+            ]
+          }
+        ],
+        "benefit": "We learn to explain Islam clearly and respectfully, letting the Qurʾān speak to hearts.",
+        "emoji": "👑",
+        "vocab": [
+          [
+            "مَلِك",
+            "king"
+          ],
+          [
+            "عَدْل",
+            "justice"
+          ],
+          [
+            "مَرْيَم",
+            "Maryam"
+          ]
+        ],
+        "chapter": "Refuge Across the Sea",
+        "teach": "Speaking the truth clearly",
+        "order": {
+          "prompt": "Put the court scene in order",
+          "items": [
+            "The Najāshī calls the Muslims",
+            "Jaʿfar describes life before Islam",
+            "Jaʿfar recites Sūrat Maryam",
+            "The king and bishops weep"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Jaʿfar explained what Islam teaches.",
+            "a": true
+          },
+          {
+            "s": "The Najāshī was angry with the Qurʾān.",
+            "a": false
+          },
+          {
+            "s": "The Najāshī said the message came from the same source as ʿĪsā’s.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "A Line in the Sand",
+        "teach": "The truth about ʿĪsā",
+        "emoji": "✏️",
+        "arabic": "عِيسَى عَبْدُ اللّٰه",
+        "story": "ʿAmr ibn al-ʿĀṣ did not give up. The next day he went back to the Najāshī with a new trick. “Ask them what they say about ʿĪsā, son of Maryam,” he said. “They say something terrible about him.” The Muslims were worried, because the king and his court were Christians. But they agreed: “We will say what Allah has said, whatever happens.” Jaʿfar stood before the king and answered: “We say about him what our Prophet ﷺ brought: he is the servant of Allah, His messenger, His spirit, and His word which He gave to Maryam, the pure virgin.” The Najāshī bent down, picked up a small stick from the ground and said, “By Allah, ʿĪsā is not more than what you have said, even by the length of this stick.” He told the Muslims they were safe in his land, and he gave the gifts back to Quraysh. ʿAmr and his friend went home with nothing.",
+        "picks": [
+          {
+            "q": "What new question did ʿAmr tell the king to ask?",
+            "options": [
+              "What the Muslims say about ʿĪsā",
+              "How much money they had",
+              "Where the Prophet ﷺ lived"
+            ]
+          },
+          {
+            "q": "What did Jaʿfar say ʿĪsā is?",
+            "options": [
+              "The servant and messenger of Allah",
+              "A king of Rome",
+              "Only a poet"
+            ]
+          },
+          {
+            "q": "What did the Najāshī do with the gifts?",
+            "options": [
+              "He gave them back",
+              "He kept them all",
+              "He gave them to the Muslims"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "ʿAmr returns with a new trick",
+            "The Muslims decide to tell the truth",
+            "Jaʿfar explains what Islam says about ʿĪsā",
+            "The Najāshī returns the gifts"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Muslims decided to say only what Allah said.",
+            "a": true
+          },
+          {
+            "s": "The Najāshī became angry with the Muslims.",
+            "a": false
+          },
+          {
+            "s": "ʿAmr went home without the Muslims.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to speak the truth clearly and politely, even when we are worried about the result.",
+        "vocab": [
+          [
+            "عِيسَى",
+            "ʿĪsā (Jesus)"
+          ],
+          [
+            "مَرْيَم",
+            "Maryam (Mary)"
+          ],
+          [
+            "رَسُول",
+            "messenger"
+          ]
+        ],
+        "chapter": "Refuge Across the Sea"
+      }
+    ]
+  },
+  {
+    "title": "Map 14 · Two Brave Men",
+    "icon": "🦁",
+    "colour": "#b4553a",
+    "range": [
+      53,
+      56
+    ],
+    "lessons": [
+      {
+        "title": "Ḥamzah Accepts Islam",
+        "arabic": "حَمْزَةُ بْنُ عَبْدِ الْمُطَّلِب",
+        "story": "One day Abū Jahl insulted the Prophet ﷺ cruelly near the hill of Ṣafā. The Prophet ﷺ did not answer him. A woman nearby saw everything. That evening, the Prophet’s uncle Ḥamzah came back from hunting with his bow over his shoulder. He was the strongest and bravest man of Quraysh. The woman told him what Abū Jahl had done to his nephew. Ḥamzah was furious. He marched straight to the Kaʿbah, where Abū Jahl sat with the leaders, and struck him with his bow. “You insult him, when I follow his religion and say what he says?” Abū Jahl’s friends jumped up, but Abū Jahl stopped them: “Leave him — I did insult his nephew badly.” At first Ḥamzah had spoken in anger. But then Allah opened his heart, and he truly believed. The Muslims were overjoyed. Ḥamzah became known as Asad Allāh — the Lion of Allah.",
+        "picks": [
+          {
+            "q": "What had Abū Jahl done?",
+            "options": [
+              "Insulted the Prophet ﷺ",
+              "Stolen Ḥamzah’s bow",
+              "Broken the Kaʿbah"
+            ]
+          },
+          {
+            "q": "Where was Ḥamzah coming back from?",
+            "options": [
+              "Hunting",
+              "Trading in Shām",
+              "Ṭāʾif"
+            ]
+          },
+          {
+            "q": "What title was Ḥamzah given?",
+            "options": [
+              "The Lion of Allah",
+              "The Truthful",
+              "The Sword of Allah"
+            ]
+          }
+        ],
+        "benefit": "We learn that strength is best used to protect people who are being wronged.",
+        "emoji": "🦁",
+        "vocab": [
+          [
+            "أَسَد",
+            "lion"
+          ],
+          [
+            "قُوَّة",
+            "strength"
+          ],
+          [
+            "قَوْس",
+            "bow"
+          ]
+        ],
+        "chapter": "Two Brave Men",
+        "teach": "Strength used to protect",
+        "order": {
+          "prompt": "Put Ḥamzah’s story in order",
+          "items": [
+            "Abū Jahl insults the Prophet ﷺ",
+            "A woman tells Ḥamzah",
+            "Ḥamzah confronts Abū Jahl",
+            "Allah opens Ḥamzah’s heart to Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ḥamzah was the Prophet’s uncle.",
+            "a": true
+          },
+          {
+            "s": "Ḥamzah was weak and afraid.",
+            "a": false
+          },
+          {
+            "s": "Ḥamzah truly believed after Allah opened his heart.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "ʿUmar Accepts Islam",
+        "arabic": "عُمَرُ بْنُ الْخَطَّاب",
+        "story": "ʿUmar ibn al-Khaṭṭāb was strong, tall and feared, and he hated Islam. One day he set out with his sword to kill the Prophet ﷺ. On the way, a man named Nuʿaym stopped him: “Before you do that, look at your own family! Your sister Fāṭimah and her husband have become Muslim.” ʿUmar rushed to his sister’s house. Inside, Khabbāb was teaching them Sūrat Ṭā-Hā from a page. ʿUmar burst in and struck his brother-in-law, and when his sister stood between them, she was hurt too. Seeing her bleed, but still brave, softened his heart. “Give me that page.” “You must wash first,” she said. He washed and read: “Ṭā-Hā. We did not send down the Qurʾān to you to make you suffer…” “How beautiful and noble these words are!” he said. He went to the house of al-Arqam and declared his Islam, and the Muslims cried “Allāhu Akbar!” so loudly that Makkah heard. After that, the Muslims prayed openly at the Kaʿbah.",
+        "picks": [
+          {
+            "q": "Where did Nuʿaym tell ʿUmar to look?",
+            "options": [
+              "At his own family",
+              "At the market",
+              "At the Kaʿbah"
+            ]
+          },
+          {
+            "q": "Which sūrah did ʿUmar read?",
+            "options": [
+              "Sūrat Ṭā-Hā",
+              "Sūrat Yā-Sīn",
+              "Sūrat al-Mulk"
+            ]
+          },
+          {
+            "q": "What happened after ʿUmar became Muslim?",
+            "options": [
+              "The Muslims prayed openly at the Kaʿbah",
+              "The Muslims left Makkah",
+              "Nothing changed"
+            ]
+          }
+        ],
+        "benefit": "We learn that anyone can change, so we never give up hope in people.",
+        "emoji": "⚡",
+        "vocab": [
+          [
+            "تَوْبَة",
+            "turning back to Allah"
+          ],
+          [
+            "أُخْت",
+            "sister"
+          ],
+          [
+            "صَفْحَة",
+            "page"
+          ]
+        ],
+        "chapter": "Two Brave Men",
+        "teach": "Hearts can change",
+        "order": {
+          "prompt": "Put ʿUmar’s story in order",
+          "items": [
+            "ʿUmar sets out with his sword",
+            "Nuʿaym tells him about his sister",
+            "He reads Sūrat Ṭā-Hā",
+            "He declares Islam at the house of al-Arqam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿUmar hated Islam at first.",
+            "a": true
+          },
+          {
+            "s": "His sister gave up Islam when he was angry.",
+            "a": false
+          },
+          {
+            "s": "The words of the Qurʾān softened ʿUmar’s heart.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "ʿUtbah’s Offer",
+        "teach": "The message is not for sale",
+        "emoji": "💰",
+        "arabic": "عُتْبَةُ بْنُ رَبِيعَة",
+        "story": "When Ḥamzah and ʿUmar became Muslim, the leaders of Quraysh grew worried. ʿUtbah ibn Rabīʿah, a respected chief, said, “Let me speak to him and offer him some things. Perhaps he will accept one and stop.” He sat with the Prophet ﷺ and said: “If you want wealth, we will collect money until you are the richest of us. If you want honour, we will make you our leader. If you want to be king, we will make you our king. And if something is troubling you, we will find you a doctor.” The Prophet ﷺ listened politely until he finished. “Have you finished, Abū al-Walīd?” “Yes.” “Then listen to me.” He recited the opening of Sūrat Fuṣṣilat. ʿUtbah sat still, leaning back on his hands, listening. When he returned, his friends said, “He has come back with a different face!” ʿUtbah told them: “I have heard words like nothing I have ever heard. Leave this man alone.”",
+        "picks": [
+          {
+            "q": "What did ʿUtbah offer the Prophet ﷺ?",
+            "options": [
+              "Wealth, leadership and kingship",
+              "A trip to Shām",
+              "A new house in Ṭāʾif"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ answer?",
+            "options": [
+              "He listened, then recited the Qurʾān",
+              "He accepted the money",
+              "He walked away without speaking"
+            ]
+          },
+          {
+            "q": "What did ʿUtbah tell his friends?",
+            "options": [
+              "He had heard words like nothing before",
+              "He had won the argument",
+              "The Prophet ﷺ had agreed to stop"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "ʿUtbah offers wealth and power",
+            "The Prophet ﷺ listens politely",
+            "He recites Sūrat Fuṣṣilat",
+            "ʿUtbah returns with a changed face"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ let ʿUtbah finish speaking first.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ accepted the offer to be king.",
+            "a": false
+          },
+          {
+            "s": "ʿUtbah was moved by the Qurʾān.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to listen politely to others, and that our faith is not for sale at any price.",
+        "vocab": [
+          [
+            "مَال",
+            "wealth"
+          ],
+          [
+            "مُلْك",
+            "kingship"
+          ],
+          [
+            "اِسْتِمَاع",
+            "listening"
+          ]
+        ],
+        "chapter": "Two Brave Men"
+      },
+      {
+        "title": "The Moon Splits",
+        "teach": "A sign from Allah",
+        "emoji": "🌕",
+        "arabic": "انْشِقَاقُ الْقَمَر",
+        "story": "The people of Makkah kept demanding miracles from the Prophet ﷺ. “Show us a sign, and then we will believe!” One night, under a bright full moon, they asked for a sign once more. By Allah’s permission, the moon split into two pieces — one piece above the mountain and one piece on the other side — so clearly that people could see the mountain of Ḥirāʾ between them. The Prophet ﷺ said, “Bear witness!” Allah revealed: “The Hour has come near, and the moon has split. Yet if they see a sign, they turn away and say, ‘This is magic that keeps on going.’” Many of them did exactly that. Some even said, “He has put a spell on our eyes — let us ask the travellers.” But travellers arriving from far away said they had seen it too. A sign can only help a heart that is ready to believe.",
+        "picks": [
+          {
+            "q": "What did the people of Makkah ask for?",
+            "options": [
+              "A sign or miracle",
+              "More food",
+              "A new idol"
+            ]
+          },
+          {
+            "q": "What happened to the moon?",
+            "options": [
+              "It split into two",
+              "It disappeared for a month",
+              "It turned red"
+            ]
+          },
+          {
+            "q": "How did many of them react?",
+            "options": [
+              "They called it magic and turned away",
+              "They all believed at once",
+              "They left Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the events in order",
+          "items": [
+            "Quraysh demand a sign",
+            "The moon splits into two",
+            "The Prophet ﷺ says “Bear witness!”",
+            "Many call it magic and turn away"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The splitting of the moon is mentioned in the Qurʾān.",
+            "a": true
+          },
+          {
+            "s": "Everyone who saw it believed.",
+            "a": false
+          },
+          {
+            "s": "Travellers from far away also saw it.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that guidance is in the heart, and we should ask Allah to keep our hearts open to the truth.",
+        "vocab": [
+          [
+            "قَمَر",
+            "moon"
+          ],
+          [
+            "آيَة",
+            "sign"
+          ],
+          [
+            "شَاهِد",
+            "witness"
+          ]
+        ],
+        "chapter": "Two Brave Men"
+      }
+    ]
+  },
+  {
+    "title": "Map 15 · The Valley of the Boycott",
+    "icon": "📜",
+    "colour": "#2f6f8f",
+    "range": [
+      57,
+      60
+    ],
+    "lessons": [
       {
         "title": "Three Hard Years",
         "teach": "The boycott",
@@ -1660,19 +4253,163 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that patience during hardship, without losing hope in Allah, is one of the strongest forms of faith.",
         "vocab": [
           [
-            "الْأَمِين",
-            "trustworthy"
+            "مُقَاطَعَة",
+            "boycott"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "شِعْب",
+            "narrow valley"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "جُوع",
+            "hunger"
           ]
         ],
-        "chapter": "Patience in Makkah"
+        "chapter": "The Valley of the Boycott"
+      },
+      {
+        "title": "Ḥakīm’s Secret Food",
+        "teach": "Kindness under pressure",
+        "emoji": "🌾",
+        "arabic": "حَكِيمُ بْنُ حِزَام",
+        "story": "During the boycott, the Prophet’s family were trapped in a narrow valley with hardly anything to eat. Children cried from hunger, and the sound could be heard outside. Some people in Makkah felt this was terribly unfair, even though they were not Muslims. One of them was Ḥakīm ibn Ḥizām, the nephew of Khadījah. One night he quietly loaded a camel with wheat to take to his aunt in the valley. On the way, Abū Jahl caught him. “You are taking food to Banū Hāshim? I will expose you in front of all Makkah!” Just then another man, Abū al-Bakhtarī, came by. “Leave him,” he said. “It is his aunt’s food that he is taking to her.” When Abū Jahl refused, they argued and Abū al-Bakhtarī struck him. Another man, Hishām ibn ʿAmr, would load camels with food at night and send them into the valley. Small acts of kindness kept the family going.",
+        "picks": [
+          {
+            "q": "Who was Ḥakīm taking food to?",
+            "options": [
+              "His aunt Khadījah",
+              "Abū Jahl",
+              "The pilgrims"
+            ]
+          },
+          {
+            "q": "Who tried to stop him?",
+            "options": [
+              "Abū Jahl",
+              "Abū Ṭālib",
+              "Ḥamzah"
+            ]
+          },
+          {
+            "q": "Who defended Ḥakīm?",
+            "options": [
+              "Abū al-Bakhtarī",
+              "Abū Lahab",
+              "ʿUtbah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The family suffer hunger in the valley",
+            "Ḥakīm loads a camel with wheat",
+            "Abū Jahl catches him",
+            "Abū al-Bakhtarī lets him pass"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Some non-Muslims felt the boycott was unfair.",
+            "a": true
+          },
+          {
+            "s": "Ḥakīm took food to his aunt secretly.",
+            "a": true
+          },
+          {
+            "s": "The boycott gave the family plenty of food.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to stand up against unfairness and help people in need, even when others disapprove.",
+        "vocab": [
+          [
+            "جُوع",
+            "hunger"
+          ],
+          [
+            "قَمْح",
+            "wheat"
+          ],
+          [
+            "ظُلْم",
+            "injustice"
+          ]
+        ],
+        "chapter": "The Valley of the Boycott"
+      },
+      {
+        "title": "The Paper Eaten Away",
+        "teach": "Allah’s help after hardship",
+        "emoji": "🐜",
+        "arabic": "الصَّحِيفَة",
+        "story": "The boycott lasted about three years. Then some fair-minded men of Makkah decided it had to end. Hishām ibn ʿAmr went to Zuhayr ibn Abī Umayyah: “Are you happy to eat and dress well while your relatives are starving?” Together they persuaded al-Muṭʿim ibn ʿAdī, Abū al-Bakhtarī and Zamʿah ibn al-Aswad. The next morning at the Kaʿbah, Zuhayr stood up: “O people of Makkah, shall we eat and drink while Banū Hāshim are dying? By Allah, I will not sit down until this unjust paper is torn up!” Meanwhile, Abū Ṭālib came with surprising news. “My nephew says Allah sent termites to eat your paper, and they have left nothing except the words ‘In Your name, O Allah.’” Al-Muṭʿim went into the Kaʿbah to tear the paper — and found it exactly as the Prophet ﷺ had said. The boycott was over, and the family walked out of the valley.",
+        "picks": [
+          {
+            "q": "How long did the boycott last?",
+            "options": [
+              "About three years",
+              "Three days",
+              "Ten years"
+            ]
+          },
+          {
+            "q": "What had eaten the paper?",
+            "options": [
+              "Termites",
+              "A goat",
+              "Fire"
+            ]
+          },
+          {
+            "q": "Which words were left on the paper?",
+            "options": [
+              "“In Your name, O Allah”",
+              "The names of the leaders",
+              "Nothing at all"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the end of the boycott in order",
+          "items": [
+            "The family suffer for three years",
+            "Fair-minded men plan to end it",
+            "Zuhayr speaks at the Kaʿbah",
+            "The paper is found eaten away"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Some leaders of Makkah helped to end the boycott.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ said what had happened to the paper before anyone looked.",
+            "a": true
+          },
+          {
+            "s": "The paper was found perfect and untouched.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that after hardship Allah brings relief, and that brave people can end injustice together.",
+        "vocab": [
+          [
+            "صَحِيفَة",
+            "written page"
+          ],
+          [
+            "أَرَضَة",
+            "termites"
+          ],
+          [
+            "فَرَج",
+            "relief"
+          ]
+        ],
+        "chapter": "The Valley of the Boycott"
       },
       {
         "title": "The Year of Sorrow",
@@ -1732,312 +4469,1524 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that even in our saddest times, we can still hold on to patience and keep doing what is right.",
         "vocab": [
           [
-            "الْأَمِين",
-            "trustworthy"
+            "عَامُ الْحُزْن",
+            "the Year of Sorrow"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "حُزْن",
+            "sadness"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "وَفَاء",
+            "loyalty"
           ]
         ],
-        "chapter": "Patience in Makkah"
-      },
+        "chapter": "The Valley of the Boycott"
+      }
+    ]
+  },
+  {
+    "title": "Map 16 · Ṭāʾif and Beyond",
+    "icon": "🍇",
+    "colour": "#7a5aa8",
+    "range": [
+      61,
+      64
+    ],
+    "lessons": [
       {
         "title": "The Day of Ṭāʾif",
-        "teach": "Mercy, not revenge",
-        "emoji": "🍇",
-        "arabic": "ٱلطَّائِف",
-        "story": "The Prophet ﷺ went to Taif to invite its people to Islam. They rejected him and treated him harshly. When offered the destruction of those who had harmed him, he chose mercy and hoped that later generations would worship Allah alone.",
+        "teach": "Choosing mercy",
+        "emoji": "⛰️",
+        "arabic": "يَوْمُ الطَّائِف",
+        "story": "After the Year of Sorrow, the Prophet ﷺ walked about a hundred kilometres over the mountains to Ṭāʾif with Zayd ibn Ḥārithah, hoping its people would accept Islam. He spoke to the three brothers who led the city, but they mocked him. One said, “Could Allah find no one else to send?” Then they set the boys and servants of the town on him. The crowd lined the road and threw stones at him until his feet bled and his sandals filled with blood. Zayd tried to shield him with his own body and was hurt on the head. Later the Prophet ﷺ told ʿĀʾishah that this was one of the hardest days of his life. On the way back, the Angel Jibrīl came with the angel of the mountains, who said: “If you wish, I will crush them between the two mountains.” The Prophet ﷺ answered, “No. I hope that Allah will bring from their children people who worship Allah alone.” And that is what happened: Ṭāʾif later became Muslim.",
         "picks": [
           {
-            "q": "What did the angel offer?",
+            "q": "Who went with the Prophet ﷺ to Ṭāʾif?",
             "options": [
-              "To crush the town between two mountains",
+              "Zayd ibn Ḥārithah",
+              "Abū Bakr",
+              "ʿAlī"
+            ]
+          },
+          {
+            "q": "What did the angel of the mountains offer?",
+            "options": [
+              "To crush the people between the mountains",
               "To carry him home",
-              "To make it rain"
+              "To build him a house"
             ]
           },
           {
             "q": "What did the Prophet ﷺ choose?",
             "options": [
-              "Mercy, and duʿāʾ for their children",
-              "Revenge",
-              "To never speak again"
+              "Mercy, hoping their children would believe",
+              "Punishment",
+              "To never return"
             ]
           }
         ],
         "order": {
           "prompt": "Put the day of Ṭāʾif in order",
           "items": [
-            "He walks to Ṭāʾif to invite them",
-            "The people drive him out with stones",
-            "He rests and makes duʿāʾ",
-            "He refuses the angel and asks for mercy"
+            "He walks to Ṭāʾif with Zayd",
+            "The leaders mock him",
+            "The crowd throws stones",
+            "He refuses to have them destroyed"
           ]
         },
         "tf": [
           {
-            "s": "He refused to have Ṭāʾif destroyed.",
+            "s": "Zayd tried to protect the Prophet ﷺ.",
             "a": true
           },
           {
-            "s": "He hoped their children would worship Allah.",
+            "s": "The Prophet ﷺ asked for the people to be destroyed.",
+            "a": false
+          },
+          {
+            "s": "The people of Ṭāʾif later became Muslim.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to answer harm with mercy and to hope for the guidance of others.",
+        "vocab": [
+          [
+            "رَحْمَة",
+            "mercy"
+          ],
+          [
+            "حِجَارَة",
+            "stones"
+          ],
+          [
+            "جِبَال",
+            "mountains"
+          ]
+        ],
+        "chapter": "Ṭāʾif and Beyond"
+      },
+      {
+        "title": "ʿAddās and the Grapes",
+        "teach": "All prophets are brothers",
+        "emoji": "🍇",
+        "arabic": "عَدَّاس",
+        "story": "After the people of Ṭāʾif had driven him out, the Prophet ﷺ rested, hurt and tired, in a garden owned by two brothers from Makkah, ʿUtbah and Shaybah. They felt sorry for him and sent their servant ʿAddās, a Christian, with a plate of grapes. The Prophet ﷺ took a grape and said, “Bismillāh — in the name of Allah.” ʿAddās was surprised. “People in this land do not say that!” “Where are you from, ʿAddās?” asked the Prophet ﷺ. “From Nīnawā.” “The town of the righteous man Yūnus, son of Mattā?” ʿAddās was amazed. “How do you know about Yūnus?” The Prophet ﷺ answered, “He was my brother. He was a prophet, and I am a prophet.” ʿAddās bent down and kissed his head, his hands and his feet. On the saddest day of his journey, Allah sent the Prophet ﷺ a stranger with a sweet gift and an open heart.",
+        "picks": [
+          {
+            "q": "What did ʿAddās bring?",
+            "options": [
+              "A plate of grapes",
+              "Water from Zamzam",
+              "A letter from Makkah"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say before eating?",
+            "options": [
+              "“Bismillāh”",
+              "“Thank you”",
+              "Nothing"
+            ]
+          },
+          {
+            "q": "Which prophet came from ʿAddās’s town?",
+            "options": [
+              "Yūnus",
+              "Mūsā",
+              "Ibrāhīm"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Prophet ﷺ rests in a garden after Ṭāʾif",
+            "ʿAddās brings grapes",
+            "The Prophet ﷺ says Bismillāh",
+            "He tells ʿAddās that Yūnus was his brother"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAddās came from Nīnawā, the town of Yūnus.",
             "a": true
           },
           {
-            "s": "He asked Allah to punish them at once.",
+            "s": "The Prophet ﷺ said all prophets are brothers.",
+            "a": true
+          },
+          {
+            "s": "ʿAddās was rude to the Prophet ﷺ.",
             "a": false
           }
         ],
-        "benefit": "We learn to answer cruelty with mercy and duʿāʾ instead of anger and revenge, just as he chose to do.",
+        "benefit": "We learn to say Bismillāh before we eat, and that all the prophets brought the same message.",
         "vocab": [
           [
-            "الْأَمِين",
-            "trustworthy"
+            "عِنَب",
+            "grapes"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "بِسْمِ اللّٰه",
+            "in the name of Allah"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "أَخ",
+            "brother"
           ]
         ],
-        "chapter": "Patience in Makkah"
+        "chapter": "Ṭāʾif and Beyond"
+      },
+      {
+        "title": "The Jinn Listen",
+        "teach": "The Qurʾān reaches every heart",
+        "emoji": "✨",
+        "arabic": "اسْتِمَاعُ الْجِنّ",
+        "story": "On the way back from Ṭāʾif, the Prophet ﷺ stopped at a place called Nakhlah. People had rejected him, and he did not know what would happen when he reached Makkah. In the night he stood in prayer and recited the Qurʾān. He did not know that he had listeners. A group of jinn — creatures made by Allah from smokeless fire, whom we cannot see — were passing by. They stopped and listened, and they said to each other, “Be quiet and listen!” When the recitation finished, they hurried back to their people: “We have heard an amazing Qurʾān! It guides to what is right, and we believe in it.” Allah told the Prophet ﷺ about them in Sūrat al-Aḥqāf and Sūrat al-Jinn. People had turned him away, yet others had listened and believed — Allah’s message was reaching further than he could see.",
+        "picks": [
+          {
+            "q": "Where did the Prophet ﷺ stop on the way back from Ṭāʾif?",
+            "options": [
+              "Nakhlah",
+              "Badr",
+              "Qubāʾ"
+            ]
+          },
+          {
+            "q": "Who listened to his recitation?",
+            "options": [
+              "A group of jinn",
+              "The people of Ṭāʾif",
+              "Abū Jahl’s men"
+            ]
+          },
+          {
+            "q": "What did they say about the Qurʾān?",
+            "options": [
+              "“We have heard an amazing Qurʾān”",
+              "“It is only poetry”",
+              "“We did not understand it”"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Prophet ﷺ leaves Ṭāʾif",
+            "He prays at night at Nakhlah",
+            "The jinn stop to listen",
+            "They return to their people and believe"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Jinn are created from smokeless fire.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ could see the jinn listening.",
+            "a": false
+          },
+          {
+            "s": "There is a sūrah in the Qurʾān called al-Jinn.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the Qurʾān is a guidance for all, and that Allah’s help may come in ways we cannot see.",
+        "vocab": [
+          [
+            "جِنّ",
+            "jinn"
+          ],
+          [
+            "قُرْآن",
+            "Qurʾān"
+          ],
+          [
+            "عَجَب",
+            "amazing"
+          ]
+        ],
+        "chapter": "Ṭāʾif and Beyond"
+      },
+      {
+        "title": "Under Muṭʿim’s Protection",
+        "teach": "Gratitude for kindness",
+        "emoji": "🛡️",
+        "arabic": "الْمُطْعِمُ بْنُ عَدِيّ",
+        "story": "The Prophet ﷺ could not simply walk back into Makkah after Ṭāʾif. Abū Ṭālib had passed away, and the leaders of Quraysh were waiting to harm him. In Arabia, a person could enter a city safely if a chief promised to protect him. The Prophet ﷺ sent messages to some chiefs. Two refused. Then he asked al-Muṭʿim ibn ʿAdī — a man who was not a Muslim, but who had helped to end the boycott. Al-Muṭʿim agreed. In the morning, he and his sons put on their armour and stood around the Kaʿbah. “I have given Muḥammad my protection,” he announced. “Let no one harm him.” The Prophet ﷺ entered, prayed at the Kaʿbah and went home safely. He never forgot this kindness. Years later, he said that if al-Muṭʿim had been alive and asked him to free the captives of Badr, he would have freed them all for his sake.",
+        "picks": [
+          {
+            "q": "Why could the Prophet ﷺ not enter Makkah easily?",
+            "options": [
+              "Abū Ṭālib had died and enemies were waiting",
+              "The gates were locked for the winter",
+              "He was not allowed to enter the Kaʿbah"
+            ]
+          },
+          {
+            "q": "Who gave him protection?",
+            "options": [
+              "Al-Muṭʿim ibn ʿAdī",
+              "Abū Lahab",
+              "ʿUtbah ibn Rabīʿah"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ show gratitude later?",
+            "options": [
+              "He spoke about freeing the captives for al-Muṭʿim’s sake",
+              "He forgot about him",
+              "He gave him the Kaʿbah keys"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Prophet ﷺ returns from Ṭāʾif",
+            "Two chiefs refuse to protect him",
+            "Al-Muṭʿim agrees",
+            "He enters Makkah and prays at the Kaʿbah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Al-Muṭʿim was not a Muslim but still protected him.",
+            "a": true
+          },
+          {
+            "s": "Al-Muṭʿim’s sons stood with him at the Kaʿbah.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ forgot al-Muṭʿim’s kindness.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to be grateful for kindness, even from people who do not share our faith.",
+        "vocab": [
+          [
+            "جِوَار",
+            "protection"
+          ],
+          [
+            "شُكْر",
+            "gratitude"
+          ],
+          [
+            "مَعْرُوف",
+            "kindness"
+          ]
+        ],
+        "chapter": "Ṭāʾif and Beyond"
       }
     ]
   },
   {
-    "title": "Map 8 · A New Hope",
-    "icon": "🌙",
+    "title": "Map 17 · The Night Journey",
+    "icon": "🌌",
     "colour": "#2e6b58",
     "range": [
-      29,
-      32
+      65,
+      68
     ],
     "lessons": [
       {
-        "title": "The Night Journey",
-        "teach": "Isrāʾ and Miʿrāj",
+        "title": "Al-Burāq to Al-Aqṣā",
+        "teach": "The Night Journey",
         "emoji": "🌙",
-        "arabic": "ٱلْإِسْرَاء وَٱلْمِعْرَاج",
-        "story": "One night Allah took His Prophet ﷺ from Makkah to Masjid al-Aqṣā in Jerusalem, where he led all the earlier prophets in prayer. Then he was raised through the heavens. On that night Allah gave the Muslims their greatest gift: the five daily prayers. When he told the people of Makkah what had happened, some mocked him, but Abū Bakr believed him without a moment’s doubt.",
+        "arabic": "الْإِسْرَاء",
+        "story": "One night, while the Prophet ﷺ was in Makkah, the Angel Jibrīl came to him. He was brought an animal called al-Burāq — white, a little bigger than a donkey and smaller than a mule, and each of its steps reached as far as its eye could see. Riding al-Burāq, he travelled in one night from al-Masjid al-Ḥarām in Makkah to al-Masjid al-Aqṣā in Jerusalem, a journey that took caravans about a month. At the gate of al-Aqṣā he tied al-Burāq to the ring where the earlier prophets used to tie their animals. Inside, the prophets were gathered, and he led them all in prayer. Then Jibrīl brought him two cups, one of milk and one of wine. He chose the milk. Jibrīl said, “You have chosen the fiṭrah — the pure, natural way.” Allah says: “Glory be to Him who took His servant by night from al-Masjid al-Ḥarām to al-Masjid al-Aqṣā.”",
         "picks": [
           {
-            "q": "Where was he taken first?",
+            "q": "What was the name of the animal he rode?",
             "options": [
-              "Masjid al-Aqṣā in Jerusalem",
-              "Madīnah",
-              "Ṭāʾif"
+              "Al-Burāq",
+              "Al-Qaṣwāʾ",
+              "Maḥmūd"
             ]
           },
           {
-            "q": "What was given that night?",
+            "q": "Where did the Night Journey go from Makkah?",
             "options": [
-              "The five daily prayers",
-              "Fasting in Ramaḍān",
-              "Zakāh"
+              "To al-Masjid al-Aqṣā in Jerusalem",
+              "To Ṭāʾif",
+              "To Abyssinia"
             ]
           },
           {
-            "q": "Who believed him straight away when he told the story?",
+            "q": "Which cup did he choose?",
             "options": [
-              "Abū Bakr",
-              "Abū Jahl",
-              "Abū Lahab"
+              "Milk",
+              "Wine",
+              "Honey"
             ]
           }
         ],
         "order": {
           "prompt": "Put the Night Journey in order",
           "items": [
-            "He is taken from Makkah by night",
-            "He reaches Masjid al-Aqṣā",
+            "Jibrīl comes to him in Makkah",
+            "He rides al-Burāq to Jerusalem",
             "He leads the prophets in prayer",
-            "He is raised through the heavens"
+            "He chooses the cup of milk"
           ]
         },
         "tf": [
           {
-            "s": "The five daily prayers were given on this night.",
+            "s": "The journey from Makkah to Jerusalem happened in one night.",
             "a": true
           },
           {
-            "s": "He journeyed there completely alone, meeting no one.",
+            "s": "He prayed alone in al-Aqṣā.",
             "a": false
           },
           {
-            "s": "The journey took many months.",
-            "a": false
+            "s": "Choosing milk meant choosing the pure, natural way.",
+            "a": true
           }
         ],
-        "benefit": "We learn the importance of the five daily prayers, a precious gift given directly on this remarkable night.",
+        "benefit": "We learn to love al-Masjid al-Aqṣā, the place where all the prophets prayed together.",
         "vocab": [
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "الْأَقْصَى",
+            "al-Aqṣā"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "لَيْل",
+            "night"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "الْفِطْرَة",
+            "pure nature"
           ]
         ],
-        "chapter": "A New Hope"
+        "chapter": "The Night Journey"
       },
       {
-        "title": "Promises at ʿAqabah",
-        "teach": "The people of Yathrib",
-        "emoji": "🤲",
-        "arabic": "بَيْعَةُ ٱلْعَقَبَة",
-        "story": "At the yearly pilgrimage he met a small group from a city to the north called Yathrib. They listened, believed, and carried Islam home. The next year more came, and at a place called ʿAqabah they promised to protect the Prophet ﷺ as they would protect their own families, and invited him to their city. These quiet meetings at the pilgrimage laid the foundation for the Muslims’ new home away from Makkah.",
+        "title": "Up Through the Heavens",
+        "teach": "Meeting the prophets",
+        "emoji": "🌌",
+        "arabic": "الْمِعْرَاج",
+        "story": "From Jerusalem, the Prophet ﷺ was taken up through the seven heavens with Jibrīl. At each heaven a gate opened, and the angels asked, “Who is with you?” “Muḥammad.” “Has he been sent for?” “Yes.” “Welcome to him!” In the first heaven he met Ādam, the father of mankind. In the second were ʿĪsā and Yaḥyā, the cousins. In the third was Yūsuf, who had been given half of all beauty. In the fourth was Idrīs, in the fifth Hārūn, and in the sixth Mūsā. In the seventh heaven he met Ibrāhīm, leaning his back against al-Bayt al-Maʿmūr — a house in the heavens where seventy thousand angels enter every day to worship, never returning. Each prophet greeted him: “Welcome, righteous brother!” or “Welcome, righteous son!” Then he was raised to Sidrat al-Muntahā, a great tree of light at the furthest boundary, covered with colours so beautiful that no one can describe them.",
         "picks": [
           {
-            "q": "Where were these people from?",
+            "q": "Whom did he meet in the first heaven?",
             "options": [
-              "Yathrib",
-              "Ṭāʾif",
-              "Abyssinia"
+              "Ādam",
+              "Ibrāhīm",
+              "Mūsā"
             ]
           },
           {
-            "q": "What did they promise at ʿAqabah?",
+            "q": "Whom did he meet in the seventh heaven?",
             "options": [
-              "To protect him like their own families",
-              "To pay him money",
-              "To keep Islam secret forever"
+              "Ibrāhīm",
+              "Yūsuf",
+              "Idrīs"
             ]
           },
           {
-            "q": "What did the meetings at the pilgrimage lead to?",
+            "q": "What is al-Bayt al-Maʿmūr?",
             "options": [
-              "A new home for the Muslims in Yathrib",
-              "A war with Makkah",
-              "The end of Islam"
+              "A house in the heavens visited by angels",
+              "A masjid in Makkah",
+              "A palace in Shām"
             ]
           }
         ],
         "order": {
-          "prompt": "Put the pledges in order",
+          "prompt": "Put the meetings in order, going up",
           "items": [
-            "He meets men from Yathrib at the pilgrimage",
-            "They believe and carry Islam home",
-            "More come the following year",
-            "They pledge at ʿAqabah to protect him"
+            "Ādam in the first heaven",
+            "Yūsuf in the third heaven",
+            "Mūsā in the sixth heaven",
+            "Ibrāhīm in the seventh heaven"
           ]
         },
         "tf": [
           {
-            "s": "Yathrib later became Madīnah.",
+            "s": "The angels welcomed him at every heaven.",
             "a": true
           },
           {
-            "s": "They invited him to their city.",
+            "s": "ʿĪsā and Yaḥyā were in the second heaven.",
             "a": true
           },
           {
-            "s": "They refused to help him.",
+            "s": "He met no prophets on the journey.",
             "a": false
           }
         ],
-        "benefit": "We learn that keeping a promise, especially one that protects and helps others, is a mark of true faith and honour.",
+        "benefit": "We learn that the prophets are one family of believers, and we love and respect all of them.",
         "vocab": [
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "سَمَاء",
+            "heaven / sky"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "مَلَائِكَة",
+            "angels"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "سِدْرَة",
+            "lote tree"
           ]
         ],
-        "chapter": "A New Hope"
+        "chapter": "The Night Journey"
       },
       {
-        "title": "Musʿab the Teacher",
-        "arabic": "مُصْعَب",
-        "story": "After the first pledge at Aqabah, Musʿab ibn Umayr went to Yathrib to teach the Qur’an and explain Islam. His patient teaching helped new Muslims learn. A good teacher listens, explains clearly and gives learners time to understand.",
+        "title": "The Gift of Prayer",
+        "teach": "The five daily prayers",
+        "emoji": "🕌",
+        "arabic": "فَرْضُ الصَّلَاة",
+        "story": "At the highest point of his journey, beyond the seventh heaven, Allah gave the Prophet ﷺ a gift for his whole Ummah: prayer. At first Allah commanded fifty prayers every day and night. On the way down, the Prophet ﷺ passed Mūsā, who asked, “What did your Lord command for your people?” “Fifty prayers.” “Your people will not be able to do that,” said Mūsā. “I tested the Children of Isrāʾīl. Go back and ask your Lord to make it lighter.” So the Prophet ﷺ went back, and the number was reduced. This happened again and again, until it became five. Mūsā said, “Ask for less,” but the Prophet ﷺ said, “I feel too shy before my Lord to ask again.” Then Allah declared: these are five prayers, but each one counts as ten — five in number, fifty in reward. The prayer is the only pillar of Islam given in the heavens, not on earth.",
         "picks": [
           {
-            "q": "Why did Musʿab go to Yathrib?",
+            "q": "How many prayers were first commanded?",
             "options": [
-              "To teach Islam and the Qur’an",
-              "To build a palace",
-              "To collect taxes"
+              "Fifty",
+              "Five",
+              "Ten"
+            ]
+          },
+          {
+            "q": "Which prophet advised him to ask for less?",
+            "options": [
+              "Mūsā",
+              "Ibrāhīm",
+              "ʿĪsā"
+            ]
+          },
+          {
+            "q": "What is the reward of the five prayers?",
+            "options": [
+              "Like fifty",
+              "Like five only",
+              "Like one"
             ]
           }
         ],
-        "benefit": "Explain something patiently to a younger learner.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the gift of prayer in order",
+          "items": [
+            "Allah commands fifty prayers",
+            "Mūsā advises asking for less",
+            "The number is reduced again and again",
+            "Five prayers with the reward of fifty"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Prayer was given in the heavens.",
+            "a": true
+          },
+          {
+            "s": "The prayers were reduced to three.",
+            "a": false
+          },
+          {
+            "s": "Five prayers carry the reward of fifty.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the five prayers are a special gift from Allah, so we treasure them every day.",
         "vocab": [
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "صَلَاة",
+            "prayer"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "خَمْس",
+            "five"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "أَجْر",
+            "reward"
           ]
         ],
-        "chapter": "A New Hope"
+        "chapter": "The Night Journey"
       },
       {
-        "title": "Preparing for Hijrah",
-        "arabic": "الْهِجْرَة",
-        "story": "The Muslims were given permission to migrate to Yathrib. Leaving Makkah meant leaving homes and familiar places. The Prophet ﷺ planned carefully, and Allah’s help remained central. Trusting Allah goes together with taking sensible steps.",
+        "title": "Abū Bakr the Truthful",
+        "teach": "Trusting the truthful",
+        "emoji": "💎",
+        "arabic": "الصِّدِّيق",
+        "story": "In the morning, the Prophet ﷺ told the people of Makkah about the Night Journey. Abū Jahl was delighted — he thought this would make everyone laugh at him. He gathered a crowd. “Tell them what you told me!” Some people clapped their hands in disbelief. A few weak Muslims even began to doubt. People ran to Abū Bakr: “Your friend says he went to Jerusalem and came back in one night!” Abū Bakr asked, “Did he really say that?” “Yes!” “Then it is true,” said Abū Bakr. “I believe him about news from the heavens that comes to him morning and evening — so why would I not believe this?” From that day he was called aṣ-Ṣiddīq, the one who always confirms the truth. Then the people tested the Prophet ﷺ: “Describe Jerusalem to us!” Allah showed the city before his eyes, and he described it door by door. He even told them about one of their caravans on the road, and it arrived just as he had said.",
         "picks": [
           {
-            "q": "What went together during Hijrah?",
+            "q": "Why was Abū Jahl happy at first?",
             "options": [
-              "Trust in Allah and careful planning",
-              "Carelessness and guessing",
-              "Only staying at home"
+              "He thought people would laugh at the Prophet ﷺ",
+              "He believed the story",
+              "He wanted to visit Jerusalem"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr say?",
+            "options": [
+              "“If he said it, then it is true”",
+              "“I need to think about it”",
+              "“That is impossible”"
+            ]
+          },
+          {
+            "q": "What title was Abū Bakr given?",
+            "options": [
+              "Aṣ-Ṣiddīq",
+              "Al-Fārūq",
+              "Sayf Allāh"
             ]
           }
         ],
-        "benefit": "Prepare carefully and ask Allah for help.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the morning in order",
+          "items": [
+            "The Prophet ﷺ tells of the Night Journey",
+            "Abū Jahl gathers a crowd",
+            "Abū Bakr confirms it at once",
+            "The Prophet ﷺ describes Jerusalem"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Bakr believed straight away.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ could not describe Jerusalem.",
+            "a": false
+          },
+          {
+            "s": "Aṣ-Ṣiddīq means the one who confirms the truth.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that true friendship and faith mean trusting the truthful even when others mock.",
         "vocab": [
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "صِدْق",
+            "truth"
           ],
           [
-            "الْمَسْجِد",
-            "masjid"
+            "تَصْدِيق",
+            "believing / confirming"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "قَافِلَة",
+            "caravan"
           ]
         ],
-        "chapter": "A New Hope"
+        "chapter": "The Night Journey"
       }
     ]
   },
   {
-    "title": "Map 9 · The Hijrah Journey",
-    "icon": "🐪",
+    "title": "Map 18 · New Hearts from Afar",
+    "icon": "✨",
     "colour": "#a97c25",
     "range": [
-      33,
-      36
+      69,
+      72
+    ],
+    "lessons": [
+      {
+        "title": "Ṭufayl’s Light",
+        "teach": "Listening for yourself",
+        "emoji": "🔦",
+        "arabic": "الطُّفَيْلُ بْنُ عَمْرٍو الدَّوْسِيّ",
+        "story": "Ṭufayl ibn ʿAmr was a famous poet and the chief of the tribe of Daws. When he arrived in Makkah, the leaders of Quraysh rushed to warn him: “Do not listen to Muḥammad — his words will divide you from your people!” They warned him so much that he stuffed cotton into his ears before going to the Kaʿbah. But Allah let him hear a little of the Qurʾān anyway, and it was beautiful. Ṭufayl said to himself, “I am a clever man and a poet. I can tell good speech from bad. Why should I not listen?” He followed the Prophet ﷺ home, listened properly and accepted Islam. Then he asked for a sign to help him with his people. A light appeared on his forehead. “Not on my face,” he said, “they might think it is a punishment!” So the light moved to the end of his whip, shining like a lamp as he rode home. Years later he came to Madīnah with many families of Daws — and among them was Abū Hurayrah.",
+        "picks": [
+          {
+            "q": "Why did Ṭufayl put cotton in his ears?",
+            "options": [
+              "Quraysh told him not to listen",
+              "It was very windy",
+              "He was ill"
+            ]
+          },
+          {
+            "q": "What did Ṭufayl decide?",
+            "options": [
+              "To listen and judge for himself",
+              "To go home without listening",
+              "To argue with the Prophet ﷺ"
+            ]
+          },
+          {
+            "q": "Which famous companion came from Daws?",
+            "options": [
+              "Abū Hurayrah",
+              "Bilāl",
+              "Salmān"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Ṭufayl’s story in order",
+          "items": [
+            "Quraysh warn Ṭufayl",
+            "He stuffs cotton in his ears",
+            "He hears the Qurʾān and decides to listen",
+            "He returns home with a shining light"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ṭufayl was a poet and a chief.",
+            "a": true
+          },
+          {
+            "s": "The light stayed on his face.",
+            "a": false
+          },
+          {
+            "s": "Ṭufayl later brought families of Daws to Madīnah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to think for ourselves and listen to the truth instead of following rumours.",
+        "vocab": [
+          [
+            "شَاعِر",
+            "poet"
+          ],
+          [
+            "أُذُن",
+            "ear"
+          ],
+          [
+            "نُور",
+            "light"
+          ]
+        ],
+        "chapter": "New Hearts from Afar"
+      },
+      {
+        "title": "Abū Dharr’s Search",
+        "teach": "Seeking the truth bravely",
+        "emoji": "🧭",
+        "arabic": "أَبُو ذَرٍّ الْغِفَارِيّ",
+        "story": "Abū Dharr belonged to the tribe of Ghifār, who lived on the trade route north of Makkah. When he heard of a man in Makkah saying he was a prophet, he sent his brother to find out more — but the answer was not enough. So he travelled to Makkah himself. He did not know anyone and was afraid to ask questions, so he stayed in the Masjid al-Ḥarām, drinking only Zamzam water. One evening ʿAlī noticed the stranger and invited him home as a guest. On the third day ʿAlī asked why he had come. Abū Dharr made him promise to keep it secret, then explained. ʿAlī said, “He is the Messenger of Allah. Follow me.” Abū Dharr met the Prophet ﷺ and accepted Islam at once. He was so happy that he went straight to the Kaʿbah and shouted the shahādah in front of everyone. People attacked him, until al-ʿAbbās warned them: “He is from Ghifār, on your trade road!” And the next day, he did it again!",
+        "picks": [
+          {
+            "q": "Which tribe was Abū Dharr from?",
+            "options": [
+              "Ghifār",
+              "Daws",
+              "Thaqīf"
+            ]
+          },
+          {
+            "q": "What did he drink while waiting in Makkah?",
+            "options": [
+              "Zamzam water",
+              "Milk",
+              "Nothing at all"
+            ]
+          },
+          {
+            "q": "Who took him to the Prophet ﷺ?",
+            "options": [
+              "ʿAlī",
+              "Abū Bakr",
+              "Ḥamzah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Abū Dharr’s search in order",
+          "items": [
+            "He hears about the Prophet ﷺ",
+            "He travels to Makkah",
+            "ʿAlī hosts him as a guest",
+            "He declares the shahādah at the Kaʿbah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Dharr asked everyone about the Prophet ﷺ openly.",
+            "a": false
+          },
+          {
+            "s": "ʿAlī looked after him as a guest.",
+            "a": true
+          },
+          {
+            "s": "Abū Dharr announced his Islam loudly at the Kaʿbah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to search for the truth with patience and to be proud of our faith.",
+        "vocab": [
+          [
+            "ضَيْف",
+            "guest"
+          ],
+          [
+            "شَهَادَة",
+            "declaration of faith"
+          ],
+          [
+            "زَمْزَم",
+            "Zamzam"
+          ]
+        ],
+        "chapter": "New Hearts from Afar"
+      },
+      {
+        "title": "Six Men from Yathrib",
+        "teach": "Ready hearts",
+        "emoji": "🌴",
+        "arabic": "أَهْلُ يَثْرِب",
+        "story": "Every Ḥajj season, the Prophet ﷺ walked among the tents of the visiting tribes, inviting them to Islam. Most turned him away. Then one night, at a place called ʿAqabah in Minā, he heard a small group of men talking. “Who are you?” he asked. “From the Khazraj of Yathrib.” He sat with them, recited the Qurʾān and called them to Allah. The six young men looked at each other. In Yathrib they lived beside Jewish tribes, who often said, “A prophet will come soon, and we will follow him.” The men whispered: “This is the prophet they told us about! Let us not let them reach him before us.” All six accepted Islam that night. “Our people are torn by fighting,” they said. “Perhaps Allah will unite them through you.” They went home and spoke about Islam, and soon there was hardly a house in Yathrib where the Prophet ﷺ was not being mentioned.",
+        "picks": [
+          {
+            "q": "Where did the Prophet ﷺ meet the six men?",
+            "options": [
+              "At ʿAqabah in Minā",
+              "In the market of Ṭāʾif",
+              "In Abyssinia"
+            ]
+          },
+          {
+            "q": "Which city were they from?",
+            "options": [
+              "Yathrib",
+              "Ṣanʿāʾ",
+              "Jerusalem"
+            ]
+          },
+          {
+            "q": "What had they heard from their Jewish neighbours?",
+            "options": [
+              "That a prophet would come soon",
+              "That Makkah would fall",
+              "That the Kaʿbah would move"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the meeting in order",
+          "items": [
+            "The Prophet ﷺ visits the tribes at Ḥajj",
+            "He meets six men from Yathrib",
+            "They recognise him as the promised prophet",
+            "They spread Islam in Yathrib"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The six men were from the Khazraj tribe.",
+            "a": true
+          },
+          {
+            "s": "The six men refused to listen.",
+            "a": false
+          },
+          {
+            "s": "They hoped Islam would unite their people.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep inviting to goodness patiently, because one meeting can change a whole city.",
+        "vocab": [
+          [
+            "حَجّ",
+            "pilgrimage"
+          ],
+          [
+            "يَثْرِب",
+            "Yathrib"
+          ],
+          [
+            "اِتِّحَاد",
+            "unity"
+          ]
+        ],
+        "chapter": "New Hearts from Afar"
+      },
+      {
+        "title": "The First Pledge of ʿAqabah",
+        "teach": "Promises that build a community",
+        "emoji": "🤲",
+        "arabic": "بَيْعَةُ الْعَقَبَةِ الْأُولَى",
+        "story": "One year after the six men from Yathrib had accepted Islam, twelve men came back for the Ḥajj — five of the six, and seven new believers. They met the Prophet ﷺ again at ʿAqabah in Minā, and there they made a pledge, a solemn promise. They promised not to worship anything except Allah, not to steal, not to do shameful things, not to harm their children, not to spread lies about others, and not to disobey him in anything good. The Prophet ﷺ told them, “Whoever keeps this promise, his reward is with Allah.” This became known as the First Pledge of ʿAqabah. When they returned home, the Prophet ﷺ sent with them a young companion, Muṣʿab ibn ʿUmayr, to teach them the Qurʾān and help them understand Islam. Through these twelve men and their teacher, Islam began to spread through the city that would soon become the home of the Muslims.",
+        "picks": [
+          {
+            "q": "How many men made the First Pledge?",
+            "options": [
+              "Twelve",
+              "Six",
+              "Seventy-three"
+            ]
+          },
+          {
+            "q": "Which promise was part of the pledge?",
+            "options": [
+              "Not to worship anything except Allah",
+              "To build a palace",
+              "To travel to Shām"
+            ]
+          },
+          {
+            "q": "Whom did the Prophet ﷺ send back with them?",
+            "options": [
+              "Muṣʿab ibn ʿUmayr",
+              "Abū Bakr",
+              "Bilāl"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the first pledge in order",
+          "items": [
+            "Six men accept Islam",
+            "Twelve return the next year",
+            "They pledge at ʿAqabah",
+            "Muṣʿab goes with them to teach"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The pledge included a promise not to steal or lie.",
+            "a": true
+          },
+          {
+            "s": "The twelve men refused to make any promise.",
+            "a": false
+          },
+          {
+            "s": "Muṣʿab was sent to teach the Qurʾān in Yathrib.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that a strong community is built on promises to Allah and good character.",
+        "vocab": [
+          [
+            "بَيْعَة",
+            "pledge"
+          ],
+          [
+            "أَجْر",
+            "reward"
+          ],
+          [
+            "أَمَانَة",
+            "faithfulness"
+          ]
+        ],
+        "chapter": "New Hearts from Afar"
+      }
+    ]
+  },
+  {
+    "title": "Map 19 · Promises at ʿAqabah",
+    "icon": "🤝",
+    "colour": "#b4553a",
+    "range": [
+      73,
+      76
+    ],
+    "lessons": [
+      {
+        "title": "Muṣʿab the Teacher",
+        "arabic": "مُصْعَبُ بْنُ عُمَيْر",
+        "story": "Muṣʿab ibn ʿUmayr had been the most stylish young man in Makkah. He wore the finest clothes and the best perfume, and his mother gave him everything. When he became Muslim, his family took all that away, but Muṣʿab chose Allah over every luxury. After the first pledge at ʿAqabah, the Prophet ﷺ sent Muṣʿab to Yathrib as its teacher — the first ambassador of Islam. He stayed with Asʿad ibn Zurārah and went from home to home and garden to garden, reciting the Qurʾān and explaining Islam gently. People called him al-Muqriʾ, “the reciter”. He never forced anyone, and he never lost his temper, even when people came to him angry. He answered questions patiently and gave people time to think. Within a year, there was hardly a family in Yathrib without a Muslim in it. When he returned to Makkah for the next Ḥajj, he brought news that would change history.",
+        "picks": [
+          {
+            "q": "What was Muṣʿab like before Islam?",
+            "options": [
+              "The most stylish young man in Makkah",
+              "A poor shepherd",
+              "A sailor"
+            ]
+          },
+          {
+            "q": "What job did the Prophet ﷺ give him?",
+            "options": [
+              "Teacher of Islam in Yathrib",
+              "Leader of the army",
+              "Trader in Shām"
+            ]
+          },
+          {
+            "q": "What were people in Yathrib calling him?",
+            "options": [
+              "Al-Muqriʾ, the reciter",
+              "The Lion",
+              "The Truthful"
+            ]
+          }
+        ],
+        "benefit": "We learn that a patient, gentle teacher can open many hearts to the truth.",
+        "emoji": "📚",
+        "vocab": [
+          [
+            "مُعَلِّم",
+            "teacher"
+          ],
+          [
+            "مُقْرِئ",
+            "reciter"
+          ],
+          [
+            "صَبْر",
+            "patience"
+          ]
+        ],
+        "chapter": "Promises at ʿAqabah",
+        "teach": "The first teacher of Madīnah",
+        "order": {
+          "prompt": "Put Muṣʿab’s story in order",
+          "items": [
+            "Muṣʿab lives a life of luxury",
+            "He chooses Islam over riches",
+            "He is sent to teach in Yathrib",
+            "Islam spreads to almost every family"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Muṣʿab gave up luxury for Islam.",
+            "a": true
+          },
+          {
+            "s": "Muṣʿab forced people to accept Islam.",
+            "a": false
+          },
+          {
+            "s": "He stayed with Asʿad ibn Zurārah in Yathrib.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Usayd and Saʿd Listen",
+        "teach": "Gentle invitation",
+        "emoji": "🌳",
+        "arabic": "أُسَيْدٌ وَسَعْد",
+        "story": "Muṣʿab ibn ʿUmayr was teaching Islam in Yathrib, sitting in a garden with Asʿad ibn Zurārah and some new Muslims. Usayd ibn Ḥuḍayr, a chief of the Aws, marched up with his spear, furious. “Why have you come to fool our weak people? Leave, if you value your life!” Muṣʿab answered calmly: “Will you sit and listen? If you like what you hear, accept it. If you dislike it, we will stop.” “That is fair,” said Usayd, and he planted his spear in the ground and sat down. Muṣʿab explained Islam and recited the Qurʾān. Before Usayd even spoke, they could see Islam shining on his face. “How beautiful this is! What do you do to enter this religion?” He accepted Islam. Then he sent Saʿd ibn Muʿādh, the greatest chief of the Aws. The same thing happened. Saʿd went to his tribe and said, “I will not speak to any of you until you believe in Allah and His Messenger.” By evening, his whole clan had become Muslim.",
+        "picks": [
+          {
+            "q": "How did Usayd arrive?",
+            "options": [
+              "Angry, carrying his spear",
+              "Smiling with gifts",
+              "Riding a camel with a letter"
+            ]
+          },
+          {
+            "q": "What did Muṣʿab ask him to do?",
+            "options": [
+              "Sit and listen first",
+              "Leave immediately",
+              "Fight him"
+            ]
+          },
+          {
+            "q": "What happened to Saʿd’s clan?",
+            "options": [
+              "They all became Muslim by evening",
+              "They left Yathrib",
+              "They refused Islam"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Usayd comes in anger",
+            "Muṣʿab asks him to listen",
+            "Usayd accepts Islam",
+            "Saʿd’s whole clan becomes Muslim"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Muṣʿab answered anger with calm words.",
+            "a": true
+          },
+          {
+            "s": "Usayd refused to sit down.",
+            "a": false
+          },
+          {
+            "s": "Saʿd ibn Muʿādh was a great chief of the Aws.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that calm words and fairness can turn anger into understanding.",
+        "vocab": [
+          [
+            "هُدُوء",
+            "calmness"
+          ],
+          [
+            "سَيِّد",
+            "chief"
+          ],
+          [
+            "قَوْم",
+            "people"
+          ]
+        ],
+        "chapter": "Promises at ʿAqabah"
+      },
+      {
+        "title": "The Second Pledge",
+        "teach": "A promise for Paradise",
+        "emoji": "🌠",
+        "arabic": "بَيْعَةُ الْعَقَبَةِ الثَّانِيَة",
+        "story": "The next Ḥajj season, many Muslims from Yathrib came to Makkah. They arranged to meet the Prophet ﷺ secretly at ʿAqabah in the middle of the night. One by one they slipped away from their sleeping companions — seventy-three men and two women. The Prophet ﷺ came with his uncle al-ʿAbbās, who was not yet a Muslim but wanted to be sure his nephew would be safe. The Prophet ﷺ recited the Qurʾān and asked them to promise: to listen and obey in good times and hard times, to spend in Allah’s way, to call to good and forbid evil, and to protect him as they protected their own families. “And what will we get for that?” asked one of them. “Paradise,” he answered. “Stretch out your hand!” they said, and they made the pledge. He chose twelve leaders from among them. Under the dark sky of Minā, the way to the Hijrah had been opened.",
+        "picks": [
+          {
+            "q": "When did the meeting happen?",
+            "options": [
+              "Secretly, in the middle of the night",
+              "At noon in the market",
+              "On the day of ʿĪd"
+            ]
+          },
+          {
+            "q": "Who came with the Prophet ﷺ?",
+            "options": [
+              "His uncle al-ʿAbbās",
+              "Abū Lahab",
+              "Khadījah"
+            ]
+          },
+          {
+            "q": "What did he promise them?",
+            "options": [
+              "Paradise",
+              "Gold",
+              "A kingdom"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the pledge in order",
+          "items": [
+            "Muslims from Yathrib come for Ḥajj",
+            "They slip away at night to ʿAqabah",
+            "They promise to protect the Prophet ﷺ",
+            "Twelve leaders are chosen"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Two women were among those who made the pledge.",
+            "a": true
+          },
+          {
+            "s": "The meeting was held openly in front of Quraysh.",
+            "a": false
+          },
+          {
+            "s": "They promised to protect him like their own families.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep our promises to Allah, hoping for the reward of Paradise.",
+        "vocab": [
+          [
+            "بَيْعَة",
+            "pledge"
+          ],
+          [
+            "عَهْد",
+            "promise"
+          ],
+          [
+            "نَصْر",
+            "support"
+          ]
+        ],
+        "chapter": "Promises at ʿAqabah"
+      },
+      {
+        "title": "Umm Salamah’s Long Wait",
+        "teach": "Patience and kindness",
+        "emoji": "🐫",
+        "arabic": "أُمُّ سَلَمَة",
+        "story": "When the Muslims began to move to Madīnah, Abū Salamah set out with his wife Umm Salamah and their baby son. Her family blocked the road. “You may go,” they told Abū Salamah, “but you will not take our daughter.” Then his family arrived. “If she stays, our grandson comes with us!” They pulled the baby away. In one moment, the family was split three ways: the father went to Madīnah alone, the mother stayed with her family and the baby went to his father’s clan. Every morning for almost a year, Umm Salamah sat at the edge of the valley and cried. At last a relative felt sorry for her, and the families let her take her son and go. She set off alone on a camel. On the way, ʿUthmān ibn Ṭalḥah — who was not yet a Muslim — saw her travelling alone. He led her camel all the way to Qubāʾ, walking respectfully and keeping his distance, then went back to Makkah. She said she had never met a more honourable companion.",
+        "picks": [
+          {
+            "q": "Why was the family separated?",
+            "options": [
+              "Their relatives blocked them from leaving together",
+              "They got lost",
+              "They had an argument"
+            ]
+          },
+          {
+            "q": "How long did Umm Salamah wait?",
+            "options": [
+              "About a year",
+              "One day",
+              "Ten years"
+            ]
+          },
+          {
+            "q": "Who helped her reach Qubāʾ?",
+            "options": [
+              "ʿUthmān ibn Ṭalḥah",
+              "Abū Jahl",
+              "Surāqah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Umm Salamah’s story in order",
+          "items": [
+            "The family set out for Madīnah",
+            "They are separated",
+            "She waits and cries for a year",
+            "ʿUthmān ibn Ṭalḥah leads her to Qubāʾ"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Salamah reached Madīnah first.",
+            "a": true
+          },
+          {
+            "s": "Umm Salamah gave up and stayed in Makkah.",
+            "a": false
+          },
+          {
+            "s": "ʿUthmān ibn Ṭalḥah treated her with honour.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that patience brings relief, and that honourable people help others even when they differ.",
+        "vocab": [
+          [
+            "هِجْرَة",
+            "migration"
+          ],
+          [
+            "اِنْتِظَار",
+            "waiting"
+          ],
+          [
+            "شَرَف",
+            "honour"
+          ]
+        ],
+        "chapter": "Promises at ʿAqabah"
+      }
+    ]
+  },
+  {
+    "title": "Map 20 · Leaving Makkah",
+    "icon": "🚪",
+    "colour": "#2f6f8f",
+    "range": [
+      77,
+      80
+    ],
+    "lessons": [
+      {
+        "title": "Preparing for Hijrah",
+        "arabic": "الْإِذْنُ بِالْهِجْرَة",
+        "story": "After the second pledge at ʿAqabah, the Prophet ﷺ gave the Muslims permission to move to Yathrib. They left quietly, in small groups, often at night, leaving behind houses, businesses and relatives. Soon almost the only Muslims left in Makkah were the Prophet ﷺ, Abū Bakr, ʿAlī and those who could not escape. Abū Bakr asked to go too, but the Prophet ﷺ said, “Wait — perhaps Allah will give you a companion.” Abū Bakr understood, and he began to prepare. He bought two strong camels and fed them carefully for four months. Then one hot afternoon, at a time he never usually visited, the Prophet ﷺ came to Abū Bakr’s house with his head covered. “Allah has given me permission to leave.” “Companionship, O Messenger of Allah?” asked Abū Bakr. “Companionship.” Abū Bakr wept with joy. They hired a trustworthy guide, ʿAbdullāh ibn Urayqiṭ, and agreed to meet at the cave of Thawr.",
+        "picks": [
+          {
+            "q": "How did the Muslims leave Makkah?",
+            "options": [
+              "Quietly, in small groups",
+              "All together in one big caravan",
+              "On ships"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr prepare?",
+            "options": [
+              "Two strong camels",
+              "A big army",
+              "A house in Ṭāʾif"
+            ]
+          },
+          {
+            "q": "Why did Abū Bakr weep?",
+            "options": [
+              "With joy at being chosen as companion",
+              "Because he was ill",
+              "Because he lost his money"
+            ]
+          }
+        ],
+        "benefit": "We learn to plan carefully and to trust Allah at the same time.",
+        "emoji": "🗺️",
+        "vocab": [
+          [
+            "تَخْطِيط",
+            "planning"
+          ],
+          [
+            "رَفِيق",
+            "companion"
+          ],
+          [
+            "تَوَكُّل",
+            "trust in Allah"
+          ]
+        ],
+        "chapter": "Leaving Makkah",
+        "teach": "Planning and trusting Allah",
+        "order": {
+          "prompt": "Put the preparations in order",
+          "items": [
+            "The Muslims receive permission to migrate",
+            "Abū Bakr prepares two camels",
+            "The Prophet ﷺ comes at an unusual hour",
+            "They hire a guide and plan to meet at Thawr"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Bakr fed the camels for months.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ left with the first group of Muslims.",
+            "a": false
+          },
+          {
+            "s": "They hired a guide called ʿAbdullāh ibn Urayqiṭ.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Ṣuhayb’s Best Trade",
+        "teach": "Choosing Allah over wealth",
+        "emoji": "🪙",
+        "arabic": "صُهَيْبٌ الرُّومِيّ",
+        "story": "Ṣuhayb, known as ar-Rūmī, had come to Makkah as a poor young man and worked hard until he became wealthy. When he tried to leave for Madīnah, men from Quraysh surrounded him. “You came to us poor and became rich among us. Now you want to leave with your money? Never!” Ṣuhayb thought for a moment. “If I give you all my wealth, will you let me go?” “Yes.” So he told them where all his money was hidden, and they let him ride away with nothing. When he reached Madīnah and the Prophet ﷺ saw him, he smiled and said, “Your trade has made a profit, Abū Yaḥyā! Your trade has made a profit!” It is said that Allah revealed about him: “And among the people is one who sells himself seeking the pleasure of Allah.” Ṣuhayb had lost a fortune — and gained something far more valuable.",
+        "picks": [
+          {
+            "q": "Why did Quraysh stop Ṣuhayb?",
+            "options": [
+              "They did not want him to take his wealth",
+              "He owed them a debt",
+              "He had insulted their gods"
+            ]
+          },
+          {
+            "q": "What did Ṣuhayb give up?",
+            "options": [
+              "All his wealth",
+              "His camel only",
+              "Nothing"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say to him?",
+            "options": [
+              "“Your trade has made a profit!”",
+              "“You should have kept your money”",
+              "“Go back to Makkah”"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Ṣuhayb’s story in order",
+          "items": [
+            "Ṣuhayb becomes wealthy in Makkah",
+            "Quraysh block him from leaving",
+            "He gives them all his wealth",
+            "The Prophet ﷺ says his trade made a profit"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ṣuhayb arrived in Madīnah with all his money.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ was pleased with what Ṣuhayb did.",
+            "a": true
+          },
+          {
+            "s": "Ṣuhayb chose Allah over his wealth.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that what we give up for Allah is never lost — it is the best trade of all.",
+        "vocab": [
+          [
+            "تِجَارَة",
+            "trade"
+          ],
+          [
+            "رِبْح",
+            "profit"
+          ],
+          [
+            "رِضَا",
+            "pleasure / approval"
+          ]
+        ],
+        "chapter": "Leaving Makkah"
+      },
+      {
+        "title": "The Plot at Dār an-Nadwah",
+        "teach": "Allah is the best of planners",
+        "emoji": "🏛️",
+        "arabic": "دَارُ النَّدْوَة",
+        "story": "Most of the Muslims had now reached Madīnah, and the leaders of Quraysh were alarmed. If the Prophet ﷺ joined them, Islam would grow strong. So they met in their council house, Dār an-Nadwah, to decide what to do. “Lock him up in chains,” said one. “No, his followers will come to free him.” “Send him out of Makkah,” said another. “No, he will win over other tribes with his beautiful words.” Then Abū Jahl spoke: “Let us choose one strong young man from every clan. They will all strike him together, so that the blame is shared among all the tribes, and his family cannot fight everyone.” They all agreed. But Allah was watching their meeting. Jibrīl came to the Prophet ﷺ and told him about the plan, and that he had permission to migrate. Allah says: “They plan, and Allah plans — and Allah is the best of planners.”",
+        "picks": [
+          {
+            "q": "Where did Quraysh hold their meeting?",
+            "options": [
+              "Dār an-Nadwah",
+              "The house of al-Arqam",
+              "The cave of Ḥirāʾ"
+            ]
+          },
+          {
+            "q": "Whose plan did they choose?",
+            "options": [
+              "Abū Jahl’s",
+              "Abū Ṭālib’s",
+              "Al-Walīd’s"
+            ]
+          },
+          {
+            "q": "Who told the Prophet ﷺ about the plot?",
+            "options": [
+              "Jibrīl",
+              "Abū Bakr",
+              "ʿUmar"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the plot in order",
+          "items": [
+            "Quraysh meet in Dār an-Nadwah",
+            "They reject prison and exile",
+            "They choose Abū Jahl’s plan",
+            "Jibrīl warns the Prophet ﷺ"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Quraysh wanted to stop the Prophet ﷺ reaching Madīnah.",
+            "a": true
+          },
+          {
+            "s": "Their secret plan stayed hidden from the Prophet ﷺ.",
+            "a": false
+          },
+          {
+            "s": "Allah is the best of planners.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that no plan against the truth can succeed unless Allah allows it.",
+        "vocab": [
+          [
+            "مَكْر",
+            "plotting"
+          ],
+          [
+            "مَجْلِس",
+            "council"
+          ],
+          [
+            "خَيْرُ الْمَاكِرِين",
+            "the best of planners"
+          ]
+        ],
+        "chapter": "Leaving Makkah"
+      },
+      {
+        "title": "ʿAlī in the Bed",
+        "teach": "Courage and returning trusts",
+        "emoji": "🛏️",
+        "arabic": "عَلِيُّ بْنُ أَبِي طَالِب",
+        "story": "On the night of the plot, the young men of Quraysh surrounded the Prophet’s house, waiting for him to come out. Inside, the Prophet ﷺ asked his young cousin ʿAlī to lie down in his bed, wrapped in his green cloak. ʿAlī did not hesitate, even though he knew the danger. The Prophet ﷺ also gave him an important job: to stay behind and return all the valuables that people had left with him for safekeeping — even the people who were now his enemies still trusted him with their things! Then the Prophet ﷺ walked out of the door. He took a handful of dust, scattered it over the heads of the men and recited from Sūrat Yā-Sīn: “And We have put a barrier in front of them and a barrier behind them, and covered them, so they cannot see.” None of them saw him go. In the morning they burst in — and found only ʿAlī getting out of bed.",
+        "picks": [
+          {
+            "q": "Who slept in the Prophet’s bed?",
+            "options": [
+              "ʿAlī",
+              "Abū Bakr",
+              "Zayd"
+            ]
+          },
+          {
+            "q": "What job did ʿAlī have after?",
+            "options": [
+              "To return the trusts people had left",
+              "To guard the Kaʿbah",
+              "To lead the army"
+            ]
+          },
+          {
+            "q": "Which sūrah did the Prophet ﷺ recite as he left?",
+            "options": [
+              "Sūrat Yā-Sīn",
+              "Sūrat al-Fātiḥah",
+              "Sūrat al-Ikhlāṣ"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the night in order",
+          "items": [
+            "Men surround the house",
+            "ʿAlī lies down in the bed",
+            "The Prophet ﷺ walks out reciting Yā-Sīn",
+            "In the morning they find only ʿAlī"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Even his enemies trusted the Prophet ﷺ with their valuables.",
+            "a": true
+          },
+          {
+            "s": "The men saw the Prophet ﷺ leave.",
+            "a": false
+          },
+          {
+            "s": "ʿAlī was brave on that dangerous night.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to return what people trust us with, even to those who treat us badly.",
+        "vocab": [
+          [
+            "أَمَانَة",
+            "trust"
+          ],
+          [
+            "فِرَاش",
+            "bed"
+          ],
+          [
+            "شَجَاعَة",
+            "courage"
+          ]
+        ],
+        "chapter": "Leaving Makkah"
+      }
+    ]
+  },
+  {
+    "title": "Map 21 · The Hijrah Journey",
+    "icon": "🐪",
+    "colour": "#7a5aa8",
+    "range": [
+      81,
+      84
     ],
     "lessons": [
       {
@@ -2098,83 +6047,390 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that true trust in Allah means staying calm and hopeful even when danger feels very close.",
         "vocab": [
           [
-            "الْمَسْجِد",
-            "masjid"
+            "غَارُ ثَوْر",
+            "the Cave of Thawr"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "لَا تَحْزَنْ",
+            "do not grieve"
           ],
           [
-            "الْوَفَاء",
-            "keeping promises"
+            "إِنَّ اللّٰهَ مَعَنَا",
+            "Allah is with us"
+          ]
+        ],
+        "chapter": "The Hijrah Journey"
+      },
+      {
+        "title": "Asmāʾ of the Two Belts",
+        "teach": "Helping in secret",
+        "emoji": "🎀",
+        "arabic": "ذَاتُ النِّطَاقَيْن",
+        "story": "While the Prophet ﷺ and Abū Bakr hid in the cave of Thawr, Abū Bakr’s family helped in clever, secret ways. His daughter Asmāʾ prepared the food for the journey. When she could not find anything to tie the food bag with, she took off her waist belt, tore it into two and used one half to tie the bag. From then on she was called Dhāt an-Niṭāqayn — “the one with the two belts”. Her brother ʿAbdullāh spent each day in Makkah listening to the news, then slipped up to the cave at night to tell them what Quraysh were planning. A shepherd, ʿĀmir ibn Fuhayrah, brought his sheep to the cave each evening to give them fresh milk — and the sheep walked over ʿAbdullāh’s footprints, wiping them away. When Asmāʾ’s blind grandfather worried that Abū Bakr had taken all the money, she put stones where the money used to be, covered them with a cloth and let him feel them, so he would not worry.",
+        "picks": [
+          {
+            "q": "Why is Asmāʾ called “the one with the two belts”?",
+            "options": [
+              "She tore her belt to tie the food bag",
+              "She owned two beautiful belts",
+              "Her father gave her two belts"
+            ]
+          },
+          {
+            "q": "What did her brother ʿAbdullāh do?",
+            "options": [
+              "Brought news from Makkah at night",
+              "Guarded the cave with a sword",
+              "Went to Madīnah first"
+            ]
+          },
+          {
+            "q": "How were the footprints hidden?",
+            "options": [
+              "ʿĀmir’s sheep walked over them",
+              "It rained all night",
+              "Asmāʾ swept them away"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the family’s help in order",
+          "items": [
+            "Asmāʾ prepares the food",
+            "She ties the bag with half her belt",
+            "ʿAbdullāh brings news at night",
+            "ʿĀmir’s sheep cover the footprints"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Bakr’s whole family helped with the Hijrah.",
+            "a": true
+          },
+          {
+            "s": "ʿĀmir ibn Fuhayrah brought them milk from his sheep.",
+            "a": true
+          },
+          {
+            "s": "Asmāʾ told Quraysh where the cave was.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that everyone, young or old, can help in a good cause with what they have.",
+        "vocab": [
+          [
+            "نِطَاق",
+            "belt"
+          ],
+          [
+            "زَاد",
+            "travel food"
+          ],
+          [
+            "غَنَم",
+            "sheep"
           ]
         ],
         "chapter": "The Hijrah Journey"
       },
       {
         "title": "A Carefully Planned Journey",
-        "arabic": "السَّفَر",
-        "story": "After sheltering in the cave of Thawr, the Prophet ﷺ and Abu Bakr continued towards Madinah with a skilled guide. Helpers brought supplies and information. Their journey shows how teamwork and planning can support a difficult task.",
+        "arabic": "الطَّرِيقُ إِلَى الْمَدِينَة",
+        "story": "After three days in the cave of Thawr, the search began to die down. The guide, ʿAbdullāh ibn Urayqiṭ, arrived with the two camels as planned. He was not a Muslim, but he was honest and knew the desert well. Instead of taking the usual road north, he led them south first, then west towards the coast of the Red Sea, then north along routes few people used. They travelled mostly at night and rested in the heat of the day. ʿĀmir ibn Fuhayrah came with them to serve them. Once, Abū Bakr found a shady rock, spread a cloth for the Prophet ﷺ to rest and went to find milk from a shepherd. When people asked Abū Bakr, “Who is this man with you?” he answered, “He is a man who guides me on the way” — they thought he meant the road, but he meant the way of goodness. Every part of the journey was carefully planned, yet their hearts relied on Allah.",
         "picks": [
           {
-            "q": "What helped the journey?",
+            "q": "Who guided them through the desert?",
             "options": [
-              "A guide, helpers and planning",
-              "Travelling without directions",
-              "Ignoring every helper"
+              "ʿAbdullāh ibn Urayqiṭ",
+              "Surāqah",
+              "Abū Sufyān"
+            ]
+          },
+          {
+            "q": "Why did they take an unusual route?",
+            "options": [
+              "To avoid the searchers",
+              "To visit Yemen",
+              "To trade on the way"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr say about the Prophet ﷺ?",
+            "options": [
+              "“A man who guides me on the way”",
+              "“A trader from Makkah”",
+              "“My servant”"
             ]
           }
         ],
-        "benefit": "Give each team member a useful task.",
-        "emoji": "📖",
+        "benefit": "We learn to use wisdom and good planning, and to work as a team.",
+        "emoji": "🧭",
         "vocab": [
           [
-            "الْمَسْجِد",
-            "masjid"
+            "دَلِيل",
+            "guide"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "طَرِيق",
+            "road"
           ],
           [
-            "الْوَفَاء",
-            "keeping promises"
+            "سَاحِل",
+            "coast"
           ]
         ],
-        "chapter": "The Hijrah Journey"
+        "chapter": "The Hijrah Journey",
+        "teach": "Teamwork and wisdom",
+        "order": {
+          "prompt": "Put the journey in order",
+          "items": [
+            "They wait three days in the cave",
+            "The guide arrives with the camels",
+            "They head south and then along the coast",
+            "They travel by night towards Madīnah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The guide was trustworthy and knew the desert.",
+            "a": true
+          },
+          {
+            "s": "They took the most common road north.",
+            "a": false
+          },
+          {
+            "s": "They often rested during the hot day.",
+            "a": true
+          }
+        ]
       },
       {
-        "title": "The Masjid at Quba",
-        "arabic": "قُبَاء",
-        "story": "Before entering central Madinah, the Prophet ﷺ stayed at Quba and helped establish its masjid. Worship and community came first. A masjid is a place to pray, learn and care for others, so we should enter it respectfully.",
+        "title": "Surāqah’s Horse",
+        "teach": "Allah’s protection",
+        "emoji": "🐎",
+        "arabic": "سُرَاقَةُ بْنُ مَالِك",
+        "story": "Quraysh announced a huge reward: a hundred camels for anyone who caught the Prophet ﷺ or Abū Bakr. Surāqah ibn Mālik, a skilled rider, heard that travellers had been seen on the coast road. Wanting the reward for himself, he quietly took his horse and his spear and galloped after them. As he came close, his horse stumbled and threw him off. He climbed back on. He came so close that he could hear the Prophet ﷺ reciting the Qurʾān. The Prophet ﷺ did not look round, but Abū Bakr kept turning back, worried. Then Surāqah’s horse sank into the sand up to its knees, and smoke-like dust rose around it. Surāqah understood that they were protected by Allah. He called out, asking for safety, and the Prophet ﷺ granted it. Surāqah offered them food and help; they asked only that he keep their news secret. On his way back he sent every searcher in another direction. Years later, Surāqah himself became a Muslim.",
         "picks": [
           {
-            "q": "Which place was reached before central Madinah?",
+            "q": "What reward did Quraysh offer?",
             "options": [
-              "Quba",
-              "Taif",
-              "Khaybar"
+              "One hundred camels",
+              "A house in Makkah",
+              "A chest of gold"
+            ]
+          },
+          {
+            "q": "What happened to Surāqah’s horse?",
+            "options": [
+              "It sank into the sand",
+              "It ran away",
+              "It became ill"
+            ]
+          },
+          {
+            "q": "What did Surāqah do on his way back?",
+            "options": [
+              "Sent the searchers in another direction",
+              "Told Quraysh where they were",
+              "Waited for an army"
             ]
           }
         ],
-        "benefit": "Respect the masjid and help keep it clean.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put Surāqah’s chase in order",
+          "items": [
+            "Quraysh offer a reward",
+            "Surāqah gallops after them",
+            "His horse sinks into the sand",
+            "He asks for safety and turns back"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Surāqah rode a horse.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ kept looking back in fear.",
+            "a": false
+          },
+          {
+            "s": "Surāqah later became a Muslim.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that when Allah protects someone, no one can harm them.",
         "vocab": [
           [
-            "الْمَسْجِد",
-            "masjid"
+            "فَرَس",
+            "horse"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "أَمَان",
+            "safety"
           ],
           [
-            "الْوَفَاء",
-            "keeping promises"
+            "حِمَايَة",
+            "protection"
           ]
         ],
         "chapter": "The Hijrah Journey"
+      }
+    ]
+  },
+  {
+    "title": "Map 22 · Welcome to Madīnah",
+    "icon": "🌴",
+    "colour": "#2e6b58",
+    "range": [
+      85,
+      88
+    ],
+    "lessons": [
+      {
+        "title": "Umm Maʿbad’s Tent",
+        "teach": "Blessing and generosity",
+        "emoji": "⛺",
+        "arabic": "أُمُّ مَعْبَد",
+        "story": "On the long road to Madīnah, the travellers stopped at a tent belonging to an old woman named Umm Maʿbad. She was known for welcoming travellers, but that year was a year of drought. “Do you have any meat or dates to sell?” they asked. “By Allah, if I had anything, I would give it to you freely,” she said. In the corner of the tent stood one thin sheep, too weak to go out with the flock. “May I milk her?” asked the Prophet ﷺ. “If you see any milk in her, go ahead!” He wiped the sheep’s udder, said the name of Allah and made duʿāʾ. The milk began to flow — enough to fill a big pot. Umm Maʿbad drank, his companions drank, and he drank last. Then he milked the sheep again and left the pot full for her. When her husband came home and saw the milk, he was astonished. Umm Maʿbad described the visitor so beautifully that her words are still remembered today.",
+        "picks": [
+          {
+            "q": "What did Umm Maʿbad have to offer?",
+            "options": [
+              "Nothing, because of the drought",
+              "Plenty of meat",
+              "A big sack of dates"
+            ]
+          },
+          {
+            "q": "What happened when the Prophet ﷺ milked the thin sheep?",
+            "options": [
+              "It gave plenty of milk",
+              "It ran away",
+              "Nothing came out"
+            ]
+          },
+          {
+            "q": "Who drank last?",
+            "options": [
+              "The Prophet ﷺ",
+              "Umm Maʿbad",
+              "The sheep’s owner"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the visit in order",
+          "items": [
+            "The travellers reach Umm Maʿbad’s tent",
+            "She has no food to give",
+            "The thin sheep gives plenty of milk",
+            "Her husband returns amazed"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Umm Maʿbad would have shared food if she had any.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ drank first.",
+            "a": false
+          },
+          {
+            "s": "He left her a full pot of milk.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that the one who serves others should drink last, and that blessing comes from Allah.",
+        "vocab": [
+          [
+            "خَيْمَة",
+            "tent"
+          ],
+          [
+            "شَاة",
+            "sheep"
+          ],
+          [
+            "كَرَم",
+            "generosity"
+          ]
+        ],
+        "chapter": "Welcome to Madīnah"
+      },
+      {
+        "title": "The Masjid at Qubāʾ",
+        "arabic": "مَسْجِدُ قُبَاء",
+        "story": "For days, the Muslims of Madīnah went out every morning to the lava fields at the edge of the city to watch the road, going home only when the sun became too hot. One day a man standing on a high fort saw white-dressed travellers shimmering in the heat and shouted, “O people, your guest has arrived!” The Muslims rushed out with joy. The Prophet ﷺ first stopped at Qubāʾ, a village on the edge of Madīnah, and stayed there for some days. ʿAlī, who had returned everyone’s trusts in Makkah, caught up with him there. And the very first thing the Prophet ﷺ did was to build a masjid. He worked with his own hands, carrying stones with the companions. Masjid Qubāʾ was the first masjid built in Islam. Allah praises it as a masjid “founded on taqwā from the first day.” The Prophet ﷺ later said that praying in Masjid Qubāʾ brings a reward like ʿUmrah.",
+        "picks": [
+          {
+            "q": "What did the Prophet ﷺ build first at Qubāʾ?",
+            "options": [
+              "A masjid",
+              "A market",
+              "A fort"
+            ]
+          },
+          {
+            "q": "Who caught up with him at Qubāʾ?",
+            "options": [
+              "ʿAlī",
+              "Abū Jahl",
+              "Waraqah"
+            ]
+          },
+          {
+            "q": "What is the reward of praying in Masjid Qubāʾ?",
+            "options": [
+              "Like an ʿUmrah",
+              "Nothing special",
+              "Like a fast"
+            ]
+          }
+        ],
+        "benefit": "We learn that a community is built around worship, and a masjid is its heart.",
+        "emoji": "🕌",
+        "vocab": [
+          [
+            "مَسْجِد",
+            "masjid"
+          ],
+          [
+            "تَقْوَى",
+            "mindfulness of Allah"
+          ],
+          [
+            "بِنَاء",
+            "building"
+          ]
+        ],
+        "chapter": "Welcome to Madīnah",
+        "teach": "Worship comes first",
+        "order": {
+          "prompt": "Put the arrival at Qubāʾ in order",
+          "items": [
+            "The Muslims wait every morning",
+            "A man shouts that the guest has arrived",
+            "The Prophet ﷺ stays at Qubāʾ",
+            "He builds the first masjid"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Masjid Qubāʾ was the first masjid built in Islam.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ watched while others worked.",
+            "a": false
+          },
+          {
+            "s": "Allah says it was founded on taqwā.",
+            "a": true
+          }
+        ]
       },
       {
         "title": "Welcome to Madīnah",
@@ -2234,29 +6490,101 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that true hospitality — welcoming and sharing with others warmly — brings great joy and blessing to a whole community.",
         "vocab": [
           [
-            "الْمَسْجِد",
-            "masjid"
+            "الْمَدِينَة",
+            "the City (Madīnah)"
           ],
           [
-            "الْعِلْم",
-            "knowledge"
+            "نَاقَة",
+            "she-camel"
           ],
           [
-            "الْوَفَاء",
-            "keeping promises"
+            "فَرَح",
+            "joy"
           ]
         ],
-        "chapter": "The Hijrah Journey"
+        "chapter": "Welcome to Madīnah"
+      },
+      {
+        "title": "The House of Abū Ayyūb",
+        "teach": "Honouring a guest",
+        "emoji": "🏠",
+        "arabic": "أَبُو أَيُّوبَ الْأَنْصَارِيّ",
+        "story": "When the Prophet’s camel knelt in Madīnah, the nearest house belonged to Abū Ayyūb al-Anṣārī. He quickly carried the Prophet’s luggage inside, and the Prophet ﷺ said with a smile, “A man goes with his luggage.” The house had two floors. The Prophet ﷺ chose the ground floor so visitors could reach him easily, and Abū Ayyūb and his wife lived upstairs. But they could hardly sleep. “We are walking above the Messenger of Allah!” They tiptoed in the corners. One night a jar of water broke. Afraid it would drip on him, they used their only blanket to soak it up. In the morning Abū Ayyūb begged the Prophet ﷺ to move upstairs, and he kindly agreed. Abū Ayyūb and his wife sent him food every day, and when the plate came back, they would eat from the place his fingers had touched. He stayed with them for months while his masjid and rooms were being built.",
+        "picks": [
+          {
+            "q": "Why did the Prophet ﷺ stay with Abū Ayyūb?",
+            "options": [
+              "His camel knelt near his house",
+              "It was the biggest house",
+              "Abū Ayyūb was his uncle"
+            ]
+          },
+          {
+            "q": "What did they use to soak up the spilled water?",
+            "options": [
+              "Their only blanket",
+              "A towel from the market",
+              "Sand"
+            ]
+          },
+          {
+            "q": "How long did he stay?",
+            "options": [
+              "Several months",
+              "One night",
+              "Ten years"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The camel kneels near Abū Ayyūb’s house",
+            "The Prophet ﷺ stays downstairs",
+            "A water jar breaks upstairs",
+            "The Prophet ﷺ agrees to move upstairs"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Ayyūb carried the luggage inside.",
+            "a": true
+          },
+          {
+            "s": "Abū Ayyūb did not care about his guest.",
+            "a": false
+          },
+          {
+            "s": "He stayed there while the masjid was being built.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to honour our guests with love and care, even giving up our own comfort.",
+        "vocab": [
+          [
+            "بَيْت",
+            "house"
+          ],
+          [
+            "ضِيَافَة",
+            "hospitality"
+          ],
+          [
+            "أَنْصَار",
+            "helpers"
+          ]
+        ],
+        "chapter": "Welcome to Madīnah"
       }
     ]
   },
   {
-    "title": "Map 10 · Building Madinah",
+    "title": "Map 23 · Building Madīnah",
     "icon": "🕌",
-    "colour": "#7a5aa8",
+    "colour": "#a97c25",
     "range": [
-      37,
-      40
+      89,
+      92
     ],
     "lessons": [
       {
@@ -2317,83 +6645,617 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that sharing what we have with others in need can turn strangers into the closest of brothers and sisters.",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "الْمُهَاجِرُون",
+            "the emigrants"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "الْأَنْصَار",
+            "the helpers"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "أُخُوَّة",
+            "brotherhood"
           ]
         ],
-        "chapter": "Building Madinah"
+        "chapter": "Building Madīnah"
       },
       {
-        "title": "Living Together in Madinah",
-        "arabic": "الْمَدِينَة",
-        "story": "Madinah included people from different communities. The Prophet ﷺ organised agreements about shared responsibilities and security. Building a community required clear duties, justice and keeping agreements. Living near someone creates responsibilities towards them.",
+        "title": "“Show Me the Market”",
+        "teach": "Generosity and self-reliance",
+        "emoji": "🏪",
+        "arabic": "دُلُّونِي عَلَى السُّوق",
+        "story": "In Madīnah, the Prophet ﷺ paired each Muhājir with an Anṣārī as a brother. ʿAbd ar-Raḥmān ibn ʿAwf, who had left all his wealth in Makkah, was made the brother of Saʿd ibn ar-Rabīʿ, one of the richest men of Madīnah. Saʿd said to him, “I have the most wealth in Madīnah. I will divide everything I own into two halves, and one half is yours.” It was an amazing offer. But ʿAbd ar-Raḥmān answered, “May Allah bless you in your family and your wealth. Just show me the way to the market.” He went to the market and began buying and selling cheese and butter. Each day he earned a little more, and before long he was able to marry and build a home. In time he became one of the wealthiest and most generous companions, giving huge amounts in charity. Both brothers were heroes: one for his generosity, and one for his dignity.",
         "picks": [
           {
-            "q": "What helps a community live together?",
+            "q": "What did Saʿd offer ʿAbd ar-Raḥmān?",
             "options": [
-              "Clear duties and keeping agreements",
-              "Breaking every promise",
-              "Ignoring neighbours"
+              "Half of everything he owned",
+              "A job in his garden",
+              "A camel to go home"
+            ]
+          },
+          {
+            "q": "What did ʿAbd ar-Raḥmān ask for instead?",
+            "options": [
+              "The way to the market",
+              "A bigger share",
+              "A house near the masjid"
+            ]
+          },
+          {
+            "q": "What did he trade in at first?",
+            "options": [
+              "Cheese and butter",
+              "Swords",
+              "Horses"
             ]
           }
         ],
-        "benefit": "Keep the promises you make to other people.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Muhājirūn and Anṣār become brothers",
+            "Saʿd offers half his wealth",
+            "ʿAbd ar-Raḥmān asks for the market",
+            "He trades and becomes successful"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Saʿd was generous to his new brother.",
+            "a": true
+          },
+          {
+            "s": "ʿAbd ar-Raḥmān took half of Saʿd’s wealth.",
+            "a": false
+          },
+          {
+            "s": "ʿAbd ar-Raḥmān later gave a lot in charity.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to be generous like Saʿd and to work hard and stand on our own feet like ʿAbd ar-Raḥmān.",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "سُوق",
+            "market"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "أُخُوَّة",
+            "brotherhood"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "صَدَقَة",
+            "charity"
           ]
         ],
-        "chapter": "Building Madinah"
+        "chapter": "Building Madīnah"
+      },
+      {
+        "title": "Living Together in Madīnah",
+        "arabic": "صَحِيفَةُ الْمَدِينَة",
+        "story": "Madīnah was home to many different groups: the Muhājirūn from Makkah, the Anṣār from the tribes of Aws and Khazraj, Jewish tribes, and people who had not yet accepted Islam. The Aws and Khazraj had fought each other for years. To help everyone live together in peace, the Prophet ﷺ wrote an agreement, often called the Charter of Madīnah. It explained that the believers were one community who must help each other, pay debts and ransoms together, and never protect a criminal. The Jewish tribes kept their own religion and were to be treated fairly, as long as they kept the agreement. Everyone would defend Madīnah together if it was attacked, and disagreements would be brought to Allah and His Messenger ﷺ. Neighbours were to be protected like oneself. For the first time, a city of many tribes had one written agreement about rights and duties.",
+        "picks": [
+          {
+            "q": "Why did Madīnah need an agreement?",
+            "options": [
+              "Many different groups lived there",
+              "There was no water",
+              "To build a market"
+            ]
+          },
+          {
+            "q": "What did the agreement say about defending Madīnah?",
+            "options": [
+              "Everyone would defend it together",
+              "Only the Muslims would defend it",
+              "No one would defend it"
+            ]
+          },
+          {
+            "q": "How were neighbours to be treated?",
+            "options": [
+              "Protected like oneself",
+              "Ignored",
+              "Sent away"
+            ]
+          }
+        ],
+        "benefit": "We learn that living together needs fairness, clear agreements and care for neighbours.",
+        "emoji": "📃",
+        "vocab": [
+          [
+            "جَار",
+            "neighbour"
+          ],
+          [
+            "حُقُوق",
+            "rights"
+          ],
+          [
+            "عَهْد",
+            "agreement"
+          ]
+        ],
+        "chapter": "Building Madīnah",
+        "teach": "Rights and responsibilities",
+        "order": {
+          "prompt": "Building peace in Madīnah",
+          "items": [
+            "Different groups live in Madīnah",
+            "Old tribal fights cause problems",
+            "The Prophet ﷺ writes an agreement",
+            "Everyone has clear rights and duties"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Aws and Khazraj had fought for years.",
+            "a": true
+          },
+          {
+            "s": "The Jewish tribes were forced to leave their religion.",
+            "a": false
+          },
+          {
+            "s": "The agreement said everyone would defend the city together.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "The First Adhān",
+        "teach": "The call to prayer",
+        "emoji": "🔊",
+        "arabic": "الْأَذَان",
+        "story": "When the masjid in Madīnah was built, the Muslims needed a way to call everyone to prayer at the right time. Some suggested ringing a bell like the Christians. Others suggested blowing a horn like the Jews, or lighting a fire. Then a companion named ʿAbdullāh ibn Zayd had a dream. He saw a man teaching him beautiful words: “Allāhu Akbar, Allāhu Akbar… Ashhadu an lā ilāha illā Allāh…” In the morning he told the Prophet ﷺ. “It is a true dream, in shāʾ Allāh,” said the Prophet ﷺ. “Teach it to Bilāl, for his voice is stronger than yours.” So Bilāl climbed onto a high roof and called the adhān for the first time. When ʿUmar heard it, he came running, dragging his cloak: “By the One who sent you with the truth, I saw the same dream!” Since that day, the same words have been called five times a day, all around the world.",
+        "picks": [
+          {
+            "q": "How did ʿAbdullāh ibn Zayd learn the adhān?",
+            "options": [
+              "In a dream",
+              "From a book",
+              "From a traveller"
+            ]
+          },
+          {
+            "q": "Who called the first adhān?",
+            "options": [
+              "Bilāl",
+              "Abū Bakr",
+              "ʿAbdullāh ibn Zayd"
+            ]
+          },
+          {
+            "q": "Why was Bilāl chosen?",
+            "options": [
+              "His voice was stronger",
+              "He was the oldest",
+              "He lived next to the masjid"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Muslims discuss how to call to prayer",
+            "ʿAbdullāh ibn Zayd sees a dream",
+            "The Prophet ﷺ tells him to teach Bilāl",
+            "Bilāl calls the first adhān"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Muslims decided to use a bell.",
+            "a": false
+          },
+          {
+            "s": "ʿUmar saw the same dream.",
+            "a": true
+          },
+          {
+            "s": "The adhān is still called five times a day.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to answer the adhān with love and hurry to prayer when we hear it.",
+        "vocab": [
+          [
+            "أَذَان",
+            "call to prayer"
+          ],
+          [
+            "مُؤَذِّن",
+            "caller to prayer"
+          ],
+          [
+            "اللّٰهُ أَكْبَر",
+            "Allah is the Greatest"
+          ]
+        ],
+        "chapter": "Building Madīnah"
+      }
+    ]
+  },
+  {
+    "title": "Map 24 · Faith Grows in Madīnah",
+    "icon": "🌙",
+    "colour": "#b4553a",
+    "range": [
+      93,
+      96
+    ],
+    "lessons": [
+      {
+        "title": "ʿAbdullāh ibn Salām",
+        "teach": "Honesty about the truth",
+        "emoji": "📘",
+        "arabic": "عَبْدُ اللّٰهِ بْنُ سَلَام",
+        "story": "ʿAbdullāh ibn Salām was one of the most learned Jewish scholars of Madīnah. When the Prophet ﷺ arrived, he went with the crowds to see him. The first words he heard the Prophet ﷺ say were: “O people, spread peace, feed others, keep good ties with your relatives, and pray at night while people are sleeping — and you will enter Paradise in peace.” ʿAbdullāh said, “When I looked at his face, I knew it was not the face of a liar.” He asked the Prophet ﷺ three questions that only a prophet would know, and he received the right answers. He accepted Islam at once. Then he said, “My people will say bad things about me once they know. Ask them about me first.” The Prophet ﷺ asked them, and they said, “He is our best, and the son of our best!” Then ʿAbdullāh came out and declared the shahādah. Immediately they changed their words, but ʿAbdullāh stayed firm.",
+        "picks": [
+          {
+            "q": "Who was ʿAbdullāh ibn Salām?",
+            "options": [
+              "A learned Jewish scholar of Madīnah",
+              "A chief of Quraysh",
+              "A trader from Yemen"
+            ]
+          },
+          {
+            "q": "What were the first words he heard?",
+            "options": [
+              "“Spread peace, feed others…”",
+              "“Prepare for battle…”",
+              "“Build a market…”"
+            ]
+          },
+          {
+            "q": "What did he notice about the Prophet’s face?",
+            "options": [
+              "It was not the face of a liar",
+              "It was tired",
+              "It was angry"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Prophet ﷺ arrives in Madīnah",
+            "ʿAbdullāh hears him speak",
+            "He asks three questions",
+            "He declares his Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAbdullāh asked questions only a prophet would know.",
+            "a": true
+          },
+          {
+            "s": "His people praised him before they knew he was Muslim.",
+            "a": true
+          },
+          {
+            "s": "He gave up Islam when people criticised him.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to spread peace, feed others and follow the truth when we recognise it.",
+        "vocab": [
+          [
+            "سَلَام",
+            "peace"
+          ],
+          [
+            "عَالِم",
+            "scholar"
+          ],
+          [
+            "سُؤَال",
+            "question"
+          ]
+        ],
+        "chapter": "Faith Grows in Madīnah"
+      },
+      {
+        "title": "Salmān’s Long Search",
+        "teach": "Never give up seeking the truth",
+        "emoji": "🔍",
+        "arabic": "سَلْمَانُ الْفَارِسِيّ",
+        "story": "Salmān grew up in Persia, the son of a rich landowner. His job was to keep the sacred fire of his people burning. One day he passed a church and liked the way the Christians prayed to Allah. His father chained him at home, but he escaped to Shām. There he served one wise monk after another. The last monk, before he passed away, told him: “A prophet will soon appear with the religion of Ibrāhīm. He will migrate to a land of date palms between two fields of black stones. He will not eat charity, he will accept gifts, and between his shoulders is the seal of prophethood.” Salmān paid some travellers to take him to Arabia, but they betrayed him and sold him as a slave. He ended up working in the palm gardens of Madīnah — the very land the monk had described! When the Prophet ﷺ arrived, Salmān tested all three signs. Every one was true. He accepted Islam, and the Prophet ﷺ helped him win his freedom, planting date palms with his own blessed hands.",
+        "picks": [
+          {
+            "q": "Where did Salmān come from?",
+            "options": [
+              "Persia",
+              "Yemen",
+              "Egypt"
+            ]
+          },
+          {
+            "q": "What happened to Salmān on the way to Arabia?",
+            "options": [
+              "He was betrayed and sold as a slave",
+              "He became a king",
+              "He got lost at sea"
+            ]
+          },
+          {
+            "q": "Which was one of the signs the monk described?",
+            "options": [
+              "He will not eat charity but will accept gifts",
+              "He will ride an elephant",
+              "He will live in a palace"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Salmān’s journey in order",
+          "items": [
+            "He tends the fire in Persia",
+            "He serves monks in Shām",
+            "He is sold as a slave in Madīnah",
+            "He recognises the signs and accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Salmān never gave up searching for the truth.",
+            "a": true
+          },
+          {
+            "s": "The monk said the prophet would live in a land of date palms.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ refused to help Salmān.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that Allah guides the sincere seeker, even through long and difficult journeys.",
+        "vocab": [
+          [
+            "بَحْث",
+            "search"
+          ],
+          [
+            "نَخْل",
+            "date palms"
+          ],
+          [
+            "حُرِّيَّة",
+            "freedom"
+          ]
+        ],
+        "chapter": "Faith Grows in Madīnah"
       },
       {
         "title": "A New Direction of Prayer",
-        "arabic": "الْقِبْلَة",
-        "story": "In Madinah, the direction of prayer changed from Jerusalem to the Kaʿbah in Makkah by Allah’s command. The Muslims obeyed. The qiblah brings Muslims together in one direction, while worship itself belongs to Allah alone.",
+        "arabic": "تَحْوِيلُ الْقِبْلَة",
+        "story": "For about sixteen or seventeen months after the Hijrah, the Muslims prayed facing Bayt al-Maqdis in Jerusalem. But the Prophet ﷺ loved the Kaʿbah, the house built by Ibrāhīm, and he would often turn his face towards the sky, hoping for a command. Then Allah revealed: “We have seen you turning your face to the sky. So turn your face towards al-Masjid al-Ḥarām.” From then on, the Kaʿbah became the qiblah. News spread quickly. In a masjid of the tribe of Banū Salimah, the people were in the middle of a prayer when a man came in and called out that the qiblah had changed. Right there, in the middle of the prayer, they all turned around to face the Kaʿbah. That masjid is still called Masjid al-Qiblatayn — the masjid of the two qiblahs. Some people complained about the change, but the believers simply obeyed.",
         "picks": [
           {
-            "q": "What became the direction of prayer?",
+            "q": "Which direction did the Muslims face first in Madīnah?",
             "options": [
-              "The Kaʿbah in Makkah",
-              "Any mountain",
-              "A trading market"
+              "Jerusalem",
+              "Yemen",
+              "Persia"
+            ]
+          },
+          {
+            "q": "What did the people in the Banū Salimah masjid do?",
+            "options": [
+              "Turned around in the middle of the prayer",
+              "Stopped praying",
+              "Argued about it"
+            ]
+          },
+          {
+            "q": "What is the name of that masjid?",
+            "options": [
+              "Masjid al-Qiblatayn",
+              "Masjid Qubāʾ",
+              "Masjid al-Aqṣā"
             ]
           }
         ],
-        "benefit": "Learn the qiblah and prepare carefully for prayer.",
-        "emoji": "📖",
+        "benefit": "We learn to obey Allah’s commands quickly, and that Muslims everywhere face one qiblah together.",
+        "emoji": "🧭",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "قِبْلَة",
+            "prayer direction"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "سَمَاء",
+            "sky"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "طَاعَة",
+            "obedience"
           ]
         ],
-        "chapter": "Building Madinah"
+        "chapter": "Faith Grows in Madīnah",
+        "teach": "Obeying Allah quickly",
+        "order": {
+          "prompt": "Put the change in order",
+          "items": [
+            "The Muslims pray towards Jerusalem",
+            "The Prophet ﷺ looks to the sky hoping",
+            "Allah commands facing the Kaʿbah",
+            "A congregation turns in the middle of prayer"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ loved the Kaʿbah.",
+            "a": true
+          },
+          {
+            "s": "The qiblah changed from Makkah to Jerusalem.",
+            "a": false
+          },
+          {
+            "s": "The believers obeyed the change straight away.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "The First Ramaḍān",
+        "teach": "Fasting brings taqwā",
+        "emoji": "🌙",
+        "arabic": "رَمَضَان",
+        "story": "In the second year after the Hijrah, Allah revealed: “O you who believe, fasting has been prescribed for you as it was prescribed for those before you, so that you may have taqwā.” The month of Ramaḍān had arrived — the month in which the Qurʾān was first sent down. For the first time, the Muslims of Madīnah woke before dawn to eat suḥūr, then stayed without food and drink until sunset. The Prophet ﷺ taught them that fasting is not only about leaving food: it means guarding your tongue from lies and unkind words. He was the most generous of people, and in Ramaḍān he was more generous than ever, like a wind that brings rain. At the end of the month, the Muslims gave zakāt al-fiṭr so that poor families would have food, and they celebrated the first ʿĪd al-Fiṭr together. That same first Ramaḍān also saw the great day of Badr.",
+        "picks": [
+          {
+            "q": "When did fasting Ramaḍān become an obligation?",
+            "options": [
+              "In the second year after the Hijrah",
+              "Before the first revelation",
+              "After the conquest of Makkah"
+            ]
+          },
+          {
+            "q": "What is fasting meant to bring?",
+            "options": [
+              "Taqwā — mindfulness of Allah",
+              "Wealth",
+              "Fame"
+            ]
+          },
+          {
+            "q": "What was given at the end of the month?",
+            "options": [
+              "Zakāt al-fiṭr",
+              "New clothes from the king",
+              "Nothing"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the first Ramaḍān in order",
+          "items": [
+            "Allah prescribes fasting",
+            "The Muslims eat suḥūr before dawn",
+            "They fast until sunset",
+            "They give zakāt al-fiṭr and celebrate ʿĪd"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Qurʾān was first sent down in Ramaḍān.",
+            "a": true
+          },
+          {
+            "s": "Fasting only means leaving food, not bad words.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ was most generous in Ramaḍān.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that fasting trains us to control ourselves, speak kindly and care for the poor.",
+        "vocab": [
+          [
+            "صَوْم",
+            "fasting"
+          ],
+          [
+            "سُحُور",
+            "pre-dawn meal"
+          ],
+          [
+            "تَقْوَى",
+            "mindfulness of Allah"
+          ]
+        ],
+        "chapter": "Faith Grows in Madīnah"
+      }
+    ]
+  },
+  {
+    "title": "Map 25 · The Day of Badr",
+    "icon": "🛡️",
+    "colour": "#2f6f8f",
+    "range": [
+      97,
+      100
+    ],
+    "lessons": [
+      {
+        "title": "The Caravan and the Choice",
+        "teach": "Shūrā — consulting together",
+        "emoji": "🗨️",
+        "arabic": "الشُّورَى",
+        "story": "In Ramaḍān of the second year after the Hijrah, news arrived that a huge Quraysh caravan led by Abū Sufyān was returning from Shām. The Prophet ﷺ set out with about three hundred and thirteen men, only two horses and seventy camels — so three men took turns on each camel. The Prophet ﷺ shared a camel with ʿAlī and another companion. They offered to walk so he could ride, but he said, “You are not stronger than me, and I am not less in need of reward than you.” Abū Sufyān escaped by the coast and called Makkah for help, and an army of about a thousand marched out. Now the Muslims faced a choice. The Prophet ﷺ consulted his companions. Al-Miqdād said, “We will not say what Banū Isrāʾīl said to Mūsā. We will go with you!” Saʿd ibn Muʿādh, for the Anṣār, said, “If you crossed this sea, we would cross it with you.” The Prophet’s face lit up with happiness.",
+        "picks": [
+          {
+            "q": "How did three men share each camel?",
+            "options": [
+              "They took turns riding",
+              "They all rode together",
+              "They walked the whole way"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about walking his turn?",
+            "options": [
+              "“I am not less in need of reward than you”",
+              "“I am the leader, so I ride”",
+              "“Let the camel rest”"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ do before deciding?",
+            "options": [
+              "He consulted his companions",
+              "He decided alone",
+              "He went back to Madīnah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the events in order",
+          "items": [
+            "News of the caravan arrives",
+            "The Muslims set out with few camels",
+            "The caravan escapes and an army comes",
+            "The Prophet ﷺ consults his companions"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ took his turn walking like everyone else.",
+            "a": true
+          },
+          {
+            "s": "The Muslims had many horses.",
+            "a": false
+          },
+          {
+            "s": "Saʿd ibn Muʿādh promised the Anṣār would stand with him.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that good leaders consult others and share the hard work themselves.",
+        "vocab": [
+          [
+            "شُورَى",
+            "consultation"
+          ],
+          [
+            "قَافِلَة",
+            "caravan"
+          ],
+          [
+            "قَائِد",
+            "leader"
+          ]
+        ],
+        "chapter": "The Day of Badr"
       },
       {
         "title": "The Day of Badr",
@@ -2453,127 +7315,474 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that sincere duʿāʾ and trust in Allah can bring victory even when everything seems impossible.",
         "vocab": [
           [
-            "مَكَّة",
-            "Makkah"
+            "بَدْر",
+            "Badr"
           ],
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "دُعَاء",
+            "supplication"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "نَصْر",
+            "victory"
           ]
         ],
-        "chapter": "Building Madinah"
+        "chapter": "The Day of Badr"
+      },
+      {
+        "title": "Lessons from Badr",
+        "arabic": "دُرُوسُ بَدْر",
+        "story": "The night before Badr, Allah sent gentle rain. It firmed the sand under the Muslims’ feet and gave them water, and Allah sent a calm sleep upon them. When they arrived at Badr, the Prophet ﷺ chose a place to camp. A companion called al-Ḥubāb ibn al-Mundhir asked, “Is this a place Allah has commanded, or is it your own opinion and a plan of war?” “It is my opinion.” “Then this is not the best place,” said al-Ḥubāb, and he suggested camping by the last well, so that the Muslims would have water. The Prophet ﷺ happily accepted his advice. All night the Prophet ﷺ stood in prayer, raising his hands to Allah. Victory came from Allah, who sent angels to help them. After the battle there was no boasting. Allah reminded them in Sūrat al-Anfāl that victory comes only from Him.",
+        "picks": [
+          {
+            "q": "What did Allah send the night before Badr?",
+            "options": [
+              "Gentle rain and calm sleep",
+              "A sandstorm",
+              "Snow"
+            ]
+          },
+          {
+            "q": "Whose advice about the camp did the Prophet ﷺ accept?",
+            "options": [
+              "Al-Ḥubāb ibn al-Mundhir",
+              "Abū Sufyān",
+              "ʿUtbah"
+            ]
+          },
+          {
+            "q": "Where does victory come from?",
+            "options": [
+              "From Allah alone",
+              "From numbers",
+              "From weapons"
+            ]
+          }
+        ],
+        "benefit": "We learn to listen to good advice and to thank Allah, not ourselves, for success.",
+        "emoji": "🌧️",
+        "vocab": [
+          [
+            "مَطَر",
+            "rain"
+          ],
+          [
+            "رَأْي",
+            "opinion"
+          ],
+          [
+            "نَصْر",
+            "victory"
+          ]
+        ],
+        "chapter": "The Day of Badr",
+        "teach": "Humility in victory",
+        "order": {
+          "prompt": "Put Badr’s lessons in order",
+          "items": [
+            "Rain falls the night before",
+            "Al-Ḥubāb gives his advice",
+            "The Prophet ﷺ prays all night",
+            "Allah grants victory"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ accepted a companion’s advice.",
+            "a": true
+          },
+          {
+            "s": "The Muslims boasted after the battle.",
+            "a": false
+          },
+          {
+            "s": "The rain made the ground firm for the Muslims.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Captives Who Taught Reading",
+        "teach": "Mercy and the value of learning",
+        "emoji": "✍️",
+        "arabic": "الْأَسْرَى",
+        "story": "After Badr, about seventy men of Quraysh were held as captives in Madīnah. In those days, captives were often treated harshly. But the Prophet ﷺ told his companions, “Treat the captives well.” One captive later said that the Muslims gave him their bread and ate only dates themselves, because they had been told to be kind to prisoners. Allah praises those who “give food, despite loving it, to the poor, the orphan and the captive.” The Prophet ﷺ consulted his companions about what to do with the captives, and it was decided that they could be released for a ransom. Some captives had no money but knew how to read and write. For them, the Prophet ﷺ set a special ransom: each one could earn his freedom by teaching ten children of Madīnah to read and write. Even after a battle, the Prophet ﷺ was thinking about education and kindness.",
+        "picks": [
+          {
+            "q": "How did the Prophet ﷺ tell the Muslims to treat the captives?",
+            "options": [
+              "Well and kindly",
+              "Harshly",
+              "With no food"
+            ]
+          },
+          {
+            "q": "What was the special ransom for captives with no money?",
+            "options": [
+              "Teaching ten children to read and write",
+              "Working on farms",
+              "Giving their horses"
+            ]
+          },
+          {
+            "q": "What did the Muslims give the captives to eat?",
+            "options": [
+              "Bread, while they ate dates",
+              "Nothing",
+              "Only water"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The captives are brought to Madīnah",
+            "The Prophet ﷺ orders kindness",
+            "Ransoms are decided by consultation",
+            "Some captives teach children to read"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Some captives earned freedom by teaching.",
+            "a": true
+          },
+          {
+            "s": "The captives were starved.",
+            "a": false
+          },
+          {
+            "s": "Allah praises feeding the captive.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that knowledge is precious and mercy should be shown even to those who were enemies.",
+        "vocab": [
+          [
+            "أَسِير",
+            "captive"
+          ],
+          [
+            "قِرَاءَة",
+            "reading"
+          ],
+          [
+            "كِتَابَة",
+            "writing"
+          ]
+        ],
+        "chapter": "The Day of Badr"
       }
     ]
   },
   {
-    "title": "Map 11 · Badr and Uhud",
+    "title": "Map 26 · Uḥud",
     "icon": "⛰️",
-    "colour": "#2e6b58",
+    "colour": "#7a5aa8",
     "range": [
-      41,
-      44
+      101,
+      104
     ],
     "lessons": [
       {
-        "title": "Lessons from Badr",
-        "arabic": "بَدْر",
-        "story": "Badr was a major event early in the Madinah period. The Prophet ﷺ consulted his companions, prepared and prayed to Allah. Victory did not give anyone permission to be proud or cruel. Gratitude and responsibility matter when a difficult task succeeds.",
+        "title": "The Battle of Uḥud",
+        "arabic": "غَزْوَةُ أُحُد",
+        "story": "One year after Badr, Quraysh came towards Madīnah with three thousand men to take revenge. The Muslims went out to Mount Uḥud with about seven hundred. The Prophet ﷺ placed fifty archers on a small hill, led by ʿAbdullāh ibn Jubayr, to protect the Muslims from behind. He gave them a very clear instruction: “Do not leave this place, even if you see birds snatching us, until I send for you.” At first the Muslims were winning, and the army of Quraysh began to run away. Some archers saw this and said, “The battle is over — let us go down!” Their leader reminded them of the Prophet’s command, but most of them left the hill anyway. Khālid ibn al-Walīd, who was not yet a Muslim, saw the empty hill and led his horsemen around behind the Muslims. In moments, the battle turned. Many Muslims were martyred, and the Prophet ﷺ himself was wounded.",
         "picks": [
           {
-            "q": "What should success bring?",
+            "q": "What instruction were the archers given?",
             "options": [
-              "Gratitude and responsibility",
-              "Pride and cruelty",
-              "Forgetting every helper"
+              "Do not leave the hill until called",
+              "Chase the enemy",
+              "Go home early"
+            ]
+          },
+          {
+            "q": "Why did most archers leave?",
+            "options": [
+              "They thought the battle was over",
+              "They were hungry",
+              "They were tired"
+            ]
+          },
+          {
+            "q": "Who led the horsemen around the empty hill?",
+            "options": [
+              "Khālid ibn al-Walīd",
+              "Abū Bakr",
+              "Bilāl"
             ]
           }
         ],
-        "benefit": "Thank Allah and the people who helped you.",
-        "emoji": "📖",
+        "benefit": "We learn that following instructions carefully can protect many people.",
+        "emoji": "⛰️",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "جَبَل",
+            "mountain"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "رُمَاة",
+            "archers"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "أَمْر",
+            "command"
           ]
         ],
-        "chapter": "Badr and Uhud"
+        "chapter": "Uḥud",
+        "teach": "Listening to instructions",
+        "order": {
+          "prompt": "Put the battle in order",
+          "items": [
+            "Quraysh march towards Madīnah",
+            "Archers are placed on the hill",
+            "Most archers leave their position",
+            "Khālid attacks from behind"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The archers were told to stay even if things looked over.",
+            "a": true
+          },
+          {
+            "s": "All the archers stayed in their place.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ was wounded at Uḥud.",
+            "a": true
+          }
+        ]
       },
       {
-        "title": "The Battle of Uhud",
-        "arabic": "أُحُد",
-        "story": "Near Mount Uhud, the Muslims faced a difficult battle. Archers were given an important instruction about their position. When some left it, danger followed. We study this event gently, focusing on listening, responsibility and caring for those affected.",
+        "title": "Umm ʿUmārah’s Courage",
+        "teach": "Brave service",
+        "emoji": "🛡️",
+        "arabic": "أُمُّ عُمَارَة",
+        "story": "Nusaybah bint Kaʿb, known as Umm ʿUmārah, was one of the two women who had made the pledge at ʿAqabah. At Uḥud she came out with a water skin, to give water to the thirsty and care for the wounded. But when the archers left the hill and the battle suddenly turned, many Muslims were scattered and only a few remained around the Prophet ﷺ. Umm ʿUmārah put down her water skin and stood in front of him with her husband and sons, defending him with everything she had. She was wounded many times. The Prophet ﷺ later said, “Wherever I turned, to my right or to my left, I saw her defending me.” When he asked what she wished for, she said, “Ask Allah that we be your companions in Paradise.” He made that duʿāʾ for her family. Umm ʿUmārah said, “After that, I did not care what happened to me in this world.”",
         "picks": [
           {
-            "q": "What lesson does the archers’ position teach?",
+            "q": "Why did Umm ʿUmārah first go to Uḥud?",
             "options": [
-              "Follow important instructions",
-              "Ignore the team plan",
-              "Leave whenever you like"
+              "To give water and care for the wounded",
+              "To lead the army",
+              "To trade"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about her?",
+            "options": [
+              "Wherever he turned he saw her defending him",
+              "She should go home",
+              "She was too young"
+            ]
+          },
+          {
+            "q": "What did she ask for?",
+            "options": [
+              "To be his companion in Paradise",
+              "Gold and silver",
+              "A big house"
             ]
           }
         ],
-        "benefit": "Listen carefully to instructions that protect your group.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put her story in order",
+          "items": [
+            "She brings water to Uḥud",
+            "The battle suddenly turns",
+            "She stands to defend the Prophet ﷺ",
+            "She asks to be with him in Paradise"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Umm ʿUmārah had made the pledge at ʿAqabah.",
+            "a": true
+          },
+          {
+            "s": "She ran away when the battle turned.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ made duʿāʾ for her family.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that courage and service to others are honoured by Allah, whether by men or women.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "شَجَاعَة",
+            "courage"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "مَاء",
+            "water"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "جَرِيح",
+            "wounded"
           ]
         ],
-        "chapter": "Badr and Uhud"
+        "chapter": "Uḥud"
       },
       {
         "title": "Learning after a Setback",
-        "arabic": "الصَّبْر",
-        "story": "Uhud brought loss and sadness. The Prophet ﷺ and his companions continued their responsibilities rather than giving up. A setback can teach us to reflect, correct mistakes and support one another. We do not mock people who are learning from difficulty.",
+        "arabic": "بَعْدَ أُحُد",
+        "story": "After Uḥud, Madīnah was full of sadness. Seventy companions had been martyred, including the Prophet’s beloved uncle Ḥamzah. The Prophet ﷺ himself had been wounded on his face. Some might have expected him to be angry with the archers who had left the hill. Instead, Allah revealed: “It is by mercy from Allah that you are gentle with them. If you had been harsh and hard-hearted, they would have scattered from around you. So forgive them, ask forgiveness for them and consult them.” Allah taught the believers to learn from what had happened, not to blame each other, and not to lose hope: “Do not weaken and do not grieve, for you will be uppermost if you are believers.” A mistake had been made — and the community grew wiser, gentler and stronger through it.",
         "picks": [
           {
-            "q": "What is a helpful response to a setback?",
+            "q": "How did the Prophet ﷺ treat the companions after Uḥud?",
             "options": [
-              "Reflect, improve and support others",
-              "Mock the people involved",
-              "Stop trying forever"
+              "Gently, with mercy",
+              "Harshly",
+              "He sent them away"
+            ]
+          },
+          {
+            "q": "What did Allah tell him to do with the companions?",
+            "options": [
+              "Forgive them and consult them",
+              "Punish them",
+              "Send them away"
+            ]
+          },
+          {
+            "q": "What did Allah say about losing hope?",
+            "options": [
+              "“Do not weaken and do not grieve”",
+              "“Give up now”",
+              "“Leave Madīnah”"
             ]
           }
         ],
-        "benefit": "Admit a mistake and make a better plan.",
-        "emoji": "📖",
+        "benefit": "We learn to be gentle when others make mistakes and to learn from setbacks without giving up.",
+        "emoji": "🌱",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
-          ],
-          [
-            "الصَّبْر",
-            "patience"
-          ],
-          [
-            "الرَّحْمَة",
+            "رَحْمَة",
             "mercy"
+          ],
+          [
+            "مَغْفِرَة",
+            "forgiveness"
+          ],
+          [
+            "أَمَل",
+            "hope"
           ]
         ],
-        "chapter": "Badr and Uhud"
+        "chapter": "Uḥud",
+        "teach": "Mercy and reflection",
+        "order": {
+          "prompt": "Put the lessons in order",
+          "items": [
+            "The Muslims return sad from Uḥud",
+            "People wonder who is to blame",
+            "Allah tells him to be gentle and consult them",
+            "The community learns and grows stronger"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ḥamzah was martyred at Uḥud.",
+            "a": true
+          },
+          {
+            "s": "Allah told the Prophet ﷺ to be harsh with them.",
+            "a": false
+          },
+          {
+            "s": "Allah told the believers not to lose hope.",
+            "a": true
+          }
+        ]
       },
+      {
+        "title": "“Allah Is Enough for Us”",
+        "teach": "Trust after hardship",
+        "emoji": "💪",
+        "arabic": "حَسْبُنَا اللّٰه",
+        "story": "The day after Uḥud, the Muslims were tired, wounded and sad. Then the Prophet ﷺ gave a surprising order: everyone who had been at Uḥud should march out again to follow the army of Quraysh, so that they would not think the Muslims were weak. Even the wounded got up and went. They camped at Ḥamrāʾ al-Asad, a few miles from Madīnah, and at night they lit hundreds of fires so that their camp looked enormous. A traveller told Abū Sufyān, “Muḥammad is coming after you with an army bigger than any you have seen!” Quraysh hurried back to Makkah. When some people tried to frighten the Muslims, saying, “The people have gathered against you, so fear them,” it only made their faith stronger. They said: “Ḥasbunallāhu wa niʿma l-wakīl — Allah is enough for us, and He is the best One to rely on.” Allah praised them in the Qurʾān.",
+        "picks": [
+          {
+            "q": "What did the Prophet ﷺ order the day after Uḥud?",
+            "options": [
+              "To march out again after Quraysh",
+              "To rest for a month",
+              "To leave Madīnah"
+            ]
+          },
+          {
+            "q": "Why did they light many fires?",
+            "options": [
+              "To make the camp look huge",
+              "To cook a feast",
+              "Because it was cold"
+            ]
+          },
+          {
+            "q": "What did they say when people tried to frighten them?",
+            "options": [
+              "“Allah is enough for us”",
+              "“Let us run away”",
+              "“We give up”"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the events in order",
+          "items": [
+            "The Muslims return tired from Uḥud",
+            "They march out again the next day",
+            "They light hundreds of fires",
+            "Quraysh hurry back to Makkah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Even wounded companions marched out.",
+            "a": true
+          },
+          {
+            "s": "The Muslims were frightened into giving up.",
+            "a": false
+          },
+          {
+            "s": "“Ḥasbunallāh” means Allah is enough for us.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to say “Ḥasbunallāh” and rely on Allah when we feel tired or afraid.",
+        "vocab": [
+          [
+            "حَسْبُنَا اللّٰه",
+            "Allah is enough for us"
+          ],
+          [
+            "تَوَكُّل",
+            "reliance on Allah"
+          ],
+          [
+            "نَار",
+            "fire"
+          ]
+        ],
+        "chapter": "Uḥud"
+      }
+    ]
+  },
+  {
+    "title": "Map 27 · The Trench",
+    "icon": "⛏️",
+    "colour": "#2e6b58",
+    "range": [
+      105,
+      108
+    ],
+    "lessons": [
       {
         "title": "The Trench",
         "teach": "Salmān’s idea",
@@ -2632,655 +7841,1431 @@ window.SEERAA_COURSE=[
         "benefit": "We learn that creative thinking and teamwork can overcome even the biggest and most frightening challenges.",
         "vocab": [
           [
-            "الْمَدِينَة",
-            "Madinah"
+            "خَنْدَق",
+            "trench"
           ],
           [
-            "الصَّبْر",
-            "patience"
+            "حَفْر",
+            "digging"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "تَعَاوُن",
+            "working together"
           ]
         ],
-        "chapter": "Badr and Uhud"
+        "chapter": "The Trench"
+      },
+      {
+        "title": "The Rock and the Good News",
+        "teach": "Hope in hard times",
+        "emoji": "⛏️",
+        "arabic": "الصَّخْرَة",
+        "story": "While the Muslims were digging the trench, they came to a huge, hard rock. Their picks bounced off it. They went to the Prophet ﷺ, who came down into the trench, took the pick and said, “Bismillāh.” He struck the rock, and a third of it broke away. “Allāhu Akbar!” he said. “I have been given the keys of Shām. By Allah, I can see its red palaces right now.” He struck a second time, and another third broke. “Allāhu Akbar! I have been given the keys of Persia. I can see the white palace of al-Madāʾin.” He struck a third time, and the rest of the rock broke. “Allāhu Akbar! I have been given the keys of Yemen. I can see the gates of Ṣanʿāʾ.” The hypocrites laughed: “We are digging a ditch because we are afraid, and he promises us palaces!” But the believers trusted him — and within a few years, every one of those promises came true.",
+        "picks": [
+          {
+            "q": "What could the companions not break?",
+            "options": [
+              "A huge, hard rock",
+              "An iron door",
+              "A wooden wall"
+            ]
+          },
+          {
+            "q": "How many times did the Prophet ﷺ strike the rock?",
+            "options": [
+              "Three times",
+              "Once",
+              "Ten times"
+            ]
+          },
+          {
+            "q": "Which lands did he give good news about?",
+            "options": [
+              "Shām, Persia and Yemen",
+              "Rome, India and China",
+              "Egypt only"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The diggers reach a huge rock",
+            "The Prophet ﷺ strikes it saying Bismillāh",
+            "He gives good news of three lands",
+            "The promises later come true"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ said Bismillāh before striking.",
+            "a": true
+          },
+          {
+            "s": "The hypocrites believed the good news.",
+            "a": false
+          },
+          {
+            "s": "The promises came true within a few years.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep hope and trust in Allah’s promise, even in the hardest moments.",
+        "vocab": [
+          [
+            "صَخْرَة",
+            "rock"
+          ],
+          [
+            "مِفْتَاح",
+            "key"
+          ],
+          [
+            "بُشْرَى",
+            "good news"
+          ]
+        ],
+        "chapter": "The Trench"
+      },
+      {
+        "title": "Jābir’s Little Meal",
+        "teach": "Blessing in sharing",
+        "emoji": "🍲",
+        "arabic": "جَابِرُ بْنُ عَبْدِ اللّٰه",
+        "story": "Digging the trench was hard work, and food was very short. Jābir ibn ʿAbdillāh noticed that the Prophet ﷺ was so hungry he had tied a stone to his stomach. Jābir rushed home. His wife had a small young goat and a little barley. They prepared the meat and dough, and Jābir went quietly to the Prophet ﷺ: “I have a little food — please come, with one or two others.” But the Prophet ﷺ called out to everyone in the trench: “People of the trench! Jābir has made a feast — come!” Jābir was worried and embarrassed. The Prophet ﷺ told him, “Do not take the pot off the fire or bake the bread until I come.” When he arrived, he blessed the dough and the pot. Then the bread was baked and the meat served, group after group. About a thousand people ate until they were full — and the pot was still bubbling and full, and the dough was still being baked.",
+        "picks": [
+          {
+            "q": "Why did Jābir prepare food?",
+            "options": [
+              "He saw the Prophet ﷺ was very hungry",
+              "It was ʿĪd",
+              "He was selling food"
+            ]
+          },
+          {
+            "q": "Whom did the Prophet ﷺ invite?",
+            "options": [
+              "Everyone digging the trench",
+              "Only Abū Bakr",
+              "No one"
+            ]
+          },
+          {
+            "q": "How many people ate?",
+            "options": [
+              "About a thousand",
+              "Three",
+              "Ten"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "Jābir sees the Prophet ﷺ is hungry",
+            "His wife prepares a small meal",
+            "The Prophet ﷺ invites the whole trench",
+            "Everyone eats and the food remains"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ tied a stone to his stomach from hunger.",
+            "a": true
+          },
+          {
+            "s": "Only Jābir’s family ate the meal.",
+            "a": false
+          },
+          {
+            "s": "The food was still left after everyone ate.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that sharing brings blessing, and Allah can make a little enough for many.",
+        "vocab": [
+          [
+            "خُبْز",
+            "bread"
+          ],
+          [
+            "قِدْر",
+            "cooking pot"
+          ],
+          [
+            "بَرَكَة",
+            "blessing"
+          ]
+        ],
+        "chapter": "The Trench"
+      },
+      {
+        "title": "The Wind That Ended the Siege",
+        "arabic": "رِيحُ الْأَحْزَاب",
+        "story": "For about a month, ten thousand soldiers camped outside Madīnah, unable to cross the trench. The Muslims were cold, hungry and tired, and some were very afraid. Allah describes how their eyes grew wide and their hearts rose up to their throats. Then help began to arrive. A man named Nuʿaym ibn Masʿūd had secretly become Muslim. With clever words, he made the different groups of the enemy army stop trusting one another. Then, one freezing night, Allah sent a fierce wind. It knocked over their cooking pots, blew out their fires and tore down their tents. The Prophet ﷺ sent Ḥudhayfah to see what was happening in the enemy camp. He came back with the news: Abū Sufyān was telling everyone to pack up and leave. In the morning, the huge army had gone. Allah says: “We sent against them a wind and armies you did not see.”",
+        "picks": [
+          {
+            "q": "How long did the siege last?",
+            "options": [
+              "About a month",
+              "One day",
+              "One year"
+            ]
+          },
+          {
+            "q": "What did Allah send one freezing night?",
+            "options": [
+              "A fierce wind",
+              "A flood",
+              "An earthquake"
+            ]
+          },
+          {
+            "q": "Whom did the Prophet ﷺ send to the enemy camp?",
+            "options": [
+              "Ḥudhayfah",
+              "Khālid",
+              "Abū Sufyān"
+            ]
+          }
+        ],
+        "benefit": "We learn that after patience, Allah’s help can come in ways we never expected.",
+        "emoji": "🌬️",
+        "vocab": [
+          [
+            "رِيح",
+            "wind"
+          ],
+          [
+            "حِصَار",
+            "siege"
+          ],
+          [
+            "خَنْدَق",
+            "trench"
+          ]
+        ],
+        "chapter": "The Trench",
+        "teach": "Allah’s help after patience",
+        "order": {
+          "prompt": "Put the end of the siege in order",
+          "items": [
+            "The enemy camp outside the trench",
+            "Nuʿaym spreads distrust among them",
+            "A fierce wind blows one night",
+            "The army leaves by morning"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The enemy could not cross the trench.",
+            "a": true
+          },
+          {
+            "s": "The wind helped the enemy army.",
+            "a": false
+          },
+          {
+            "s": "Nuʿaym had secretly become Muslim.",
+            "a": true
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 12 · Teamwork and Peace",
+    "title": "Map 28 · Peace at Ḥudaybiyyah",
     "icon": "🕊️",
     "colour": "#a97c25",
     "range": [
-      45,
-      48
+      109,
+      112
     ],
     "lessons": [
       {
-        "title": "Teamwork at the Trench",
-        "arabic": "التَّعَاوُن",
-        "story": "When Madinah faced a large threat, the Muslims worked together to dig a defensive trench. Salman’s suggestion was valued, and the Prophet ﷺ joined the work. Good ideas can come from different backgrounds, and shared work needs patience.",
+        "title": "The Pledge under the Tree",
+        "teach": "Loyalty",
+        "emoji": "🌳",
+        "arabic": "بَيْعَةُ الرِّضْوَان",
+        "story": "In the sixth year after the Hijrah, the Prophet ﷺ set out with about fourteen hundred companions to perform ʿUmrah. They wore iḥrām and brought animals to sacrifice, showing they had come only to worship. Quraysh blocked their way, and the Muslims camped at Ḥudaybiyyah, near Makkah. Water ran short, and the Prophet ﷺ placed an arrow in the dry well, and water rose up for everyone. He sent ʿUthmān ibn ʿAffān into Makkah to explain that they had come in peace. ʿUthmān was delayed so long that a rumour spread that he had been killed. The Prophet ﷺ sat under a tree and called the companions to make a pledge that they would stand firm and not run away. Every one of them came forward. For ʿUthmān, the Prophet ﷺ placed one of his own hands on the other and said, “This is for ʿUthmān.” Allah revealed: “Allah was pleased with the believers when they pledged to you under the tree.” Then ʿUthmān returned safely.",
         "picks": [
           {
-            "q": "Whose suggestion helped with the trench?",
+            "q": "Why did the Muslims travel towards Makkah?",
             "options": [
-              "Salman al-Farisi",
-              "Abrahah",
-              "The ruler of Persia"
+              "To perform ʿUmrah",
+              "To fight",
+              "To trade"
+            ]
+          },
+          {
+            "q": "Whom did the Prophet ﷺ send into Makkah?",
+            "options": [
+              "ʿUthmān ibn ʿAffān",
+              "ʿUmar",
+              "Khālid"
+            ]
+          },
+          {
+            "q": "Where did they make the pledge?",
+            "options": [
+              "Under a tree",
+              "Inside the Kaʿbah",
+              "In the cave of Ḥirāʾ"
             ]
           }
         ],
-        "benefit": "Listen to useful ideas from every member of the team.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The Muslims set out for ʿUmrah",
+            "Quraysh block them at Ḥudaybiyyah",
+            "A rumour spreads about ʿUthmān",
+            "They pledge under the tree"
+          ]
+        },
+        "tf": [
+          {
+            "s": "They wore iḥrām to show they came to worship.",
+            "a": true
+          },
+          {
+            "s": "ʿUthmān was really killed.",
+            "a": false
+          },
+          {
+            "s": "Allah was pleased with those who made the pledge.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to be loyal to the truth and stand together when our friends need us.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "شَجَرَة",
+            "tree"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "رِضْوَان",
+            "Allah’s pleasure"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "عُمْرَة",
+            "ʿUmrah"
           ]
         ],
-        "chapter": "Teamwork and Peace"
+        "chapter": "Peace at Ḥudaybiyyah"
       },
       {
-        "title": "The Treaty of Hudaybiyyah",
-        "arabic": "الْحُدَيْبِيَة",
-        "story": "The Muslims travelled intending to perform Umrah but were stopped near Makkah. The Prophet ﷺ agreed to a treaty at Hudaybiyyah. Some terms felt difficult to the companions, yet the agreement opened a period in which people could meet and hear Islam more peacefully.",
+        "title": "The Treaty of Ḥudaybiyyah",
+        "arabic": "صُلْحُ الْحُدَيْبِيَة",
+        "story": "Quraysh sent Suhayl ibn ʿAmr to make an agreement with the Prophet ﷺ. ʿAlī began writing: “In the name of Allah, the Most Gracious, the Most Merciful.” Suhayl objected: “We do not know ‘ar-Raḥmān’. Write ‘In Your name, O Allah’.” The Prophet ﷺ agreed. ʿAlī wrote: “This is what Muḥammad, the Messenger of Allah, has agreed.” Suhayl objected again: “If we believed you were the Messenger of Allah, we would not have fought you. Write ‘Muḥammad son of ʿAbdullāh’.” ʿAlī could not bring himself to rub it out, so the Prophet ﷺ asked where the words were and erased them himself. The terms seemed hard: there would be peace for ten years; the Muslims would go home this year and come back for ʿUmrah next year; anyone who fled from Quraysh to the Muslims would be sent back, but not the other way round. Many companions were upset. But the Prophet ﷺ trusted Allah, and he knew peace would open doors.",
         "picks": [
           {
-            "q": "What was agreed at Hudaybiyyah?",
+            "q": "Who came to make the agreement for Quraysh?",
             "options": [
-              "A treaty",
-              "A race",
-              "A new qiblah"
+              "Suhayl ibn ʿAmr",
+              "Abū Jahl",
+              "Heraclius"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ do when ʿAlī could not erase the words?",
+            "options": [
+              "He erased them himself",
+              "He cancelled the treaty",
+              "He became angry with ʿAlī"
+            ]
+          },
+          {
+            "q": "How long was the peace to last?",
+            "options": [
+              "Ten years",
+              "One month",
+              "Forever"
             ]
           }
         ],
-        "benefit": "Be patient when a wise decision is hard to understand.",
-        "emoji": "📖",
+        "benefit": "We learn that sometimes we accept something difficult now for a greater good later.",
+        "emoji": "📝",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "صُلْح",
+            "treaty"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "شَرْط",
+            "condition"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "سَلَام",
+            "peace"
           ]
         ],
-        "chapter": "Teamwork and Peace"
+        "chapter": "Peace at Ḥudaybiyyah",
+        "teach": "Patience for a greater good",
+        "order": {
+          "prompt": "Put the treaty in order",
+          "items": [
+            "Suhayl arrives to make an agreement",
+            "Suhayl objects to the words",
+            "The Prophet ﷺ erases the title himself",
+            "The terms are agreed"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ accepted changes to the wording for the sake of peace.",
+            "a": true
+          },
+          {
+            "s": "All the terms seemed easy for the Muslims.",
+            "a": false
+          },
+          {
+            "s": "The Muslims would return for ʿUmrah the next year.",
+            "a": true
+          }
+        ]
       },
       {
-        "title": "Keeping Agreements",
-        "arabic": "الْوَفَاء",
-        "story": "Hudaybiyyah teaches patience and respect for agreements. Peace created opportunities for people to learn and meet. Keeping a promise may be difficult, but trust grows when people honour their commitments. Ask a trusted adult when a promise is unclear.",
+        "title": "Umm Salamah’s Wise Advice",
+        "teach": "Leading by example",
+        "emoji": "💡",
+        "arabic": "رَأْيُ أُمِّ سَلَمَة",
+        "story": "After the treaty of Ḥudaybiyyah was signed, the Muslims could not perform ʿUmrah that year. The companions were deeply disappointed. The Prophet ﷺ told them, “Get up, sacrifice your animals and shave your heads.” But nobody moved — they were still hoping something would change. He said it three times, and still they sat. He went into his tent, where his wife Umm Salamah was, and told her what had happened. She said: “O Messenger of Allah, go out and do not say a word to anyone. Sacrifice your animal and call your barber to shave your head.” He did exactly that. When the companions saw him do it, they jumped up, sacrificed their animals and began shaving one another’s heads, so quickly it seemed they might hurt each other. Her advice solved the problem in a moment. Sometimes people follow what you do far more than what you say.",
         "picks": [
           {
-            "q": "What builds trust?",
+            "q": "Why were the companions not moving?",
             "options": [
-              "Honouring commitments",
-              "Changing every promise",
-              "Hiding every agreement"
+              "They were disappointed and still hoping",
+              "They were asleep",
+              "They did not hear him"
+            ]
+          },
+          {
+            "q": "What did Umm Salamah advise?",
+            "options": [
+              "Do it himself without speaking",
+              "Shout louder",
+              "Go back to Madīnah"
+            ]
+          },
+          {
+            "q": "What happened when they saw him?",
+            "options": [
+              "They all followed straight away",
+              "They left the camp",
+              "They argued with him"
             ]
           }
         ],
-        "benefit": "Keep your word and ask for help when needed.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "The treaty is signed",
+            "The companions do not move",
+            "Umm Salamah gives her advice",
+            "They follow the Prophet’s example"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ listened to his wife’s advice.",
+            "a": true
+          },
+          {
+            "s": "Umm Salamah told him to give up.",
+            "a": false
+          },
+          {
+            "s": "People often follow actions more than words.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to value good advice, and that leading by example is powerful.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "نَصِيحَة",
+            "advice"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "قُدْوَة",
+            "example"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "حِكْمَة",
+            "wisdom"
           ]
         ],
-        "chapter": "Teamwork and Peace"
+        "chapter": "Peace at Ḥudaybiyyah"
       },
       {
-        "title": "Letters beyond Arabia",
-        "arabic": "الرَّسَائِل",
-        "story": "The Prophet ﷺ sent letters inviting rulers beyond Arabia to Islam. Messengers carried the invitation to different lands. The message was not limited to one tribe. Sharing what we believe should involve clear words, respect and wisdom.",
+        "title": "A Clear Victory",
+        "teach": "Peace opens hearts",
+        "emoji": "🕊️",
+        "arabic": "فَتْحٌ مُبِين",
+        "story": "On the way home from Ḥudaybiyyah, many companions still felt the treaty was unfair. Then Allah revealed Sūrat al-Fatḥ: “Indeed, We have given you a clear victory.” ʿUmar asked in surprise, “O Messenger of Allah, is it really a victory?” “Yes,” he answered. At first it was hard to see how. But now there was peace. People from Makkah and Madīnah could visit each other, talk and travel safely. Many who had only heard angry rumours about Islam now saw Muslims up close — their honesty, their prayer and their kindness. In the two years after Ḥudaybiyyah, more people accepted Islam than in all the years before. Even famous leaders of Quraysh, like Khālid ibn al-Walīd and ʿAmr ibn al-ʿĀṣ, travelled to Madīnah and became Muslim. At Ḥudaybiyyah the Muslims were about fourteen hundred; two years later, ten thousand marched with the Prophet ﷺ.",
         "picks": [
           {
-            "q": "What did the letters contain?",
+            "q": "Which sūrah was revealed on the way home?",
             "options": [
-              "An invitation to Islam",
-              "A request for a sports match",
-              "Instructions to stop learning"
+              "Sūrat al-Fatḥ",
+              "Sūrat al-Fīl",
+              "Sūrat al-Kahf"
+            ]
+          },
+          {
+            "q": "Why was the treaty a victory?",
+            "options": [
+              "Peace let people see Islam clearly",
+              "The Muslims won a battle",
+              "Quraysh gave them gold"
+            ]
+          },
+          {
+            "q": "Which leaders became Muslim after the treaty?",
+            "options": [
+              "Khālid ibn al-Walīd and ʿAmr ibn al-ʿĀṣ",
+              "Abū Lahab and Abū Jahl",
+              "Abrahah and Heraclius"
             ]
           }
         ],
-        "benefit": "Speak clearly and respectfully about your beliefs.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the events in order",
+          "items": [
+            "The treaty is signed",
+            "Sūrat al-Fatḥ is revealed",
+            "People meet and learn about Islam in peace",
+            "Many accept Islam, even Khālid and ʿAmr"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿUmar was surprised that it was called a victory.",
+            "a": true
+          },
+          {
+            "s": "Fewer people accepted Islam after the treaty.",
+            "a": false
+          },
+          {
+            "s": "Peace helped people learn about Islam.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that patience and peace can achieve more than anger and fighting.",
         "vocab": [
           [
-            "الصَّبْر",
-            "patience"
+            "فَتْح",
+            "opening / victory"
           ],
           [
-            "الرَّحْمَة",
-            "mercy"
+            "سَلَام",
+            "peace"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "صُلْح",
+            "treaty"
           ]
         ],
-        "chapter": "Teamwork and Peace"
+        "chapter": "Peace at Ḥudaybiyyah"
       }
     ]
   },
   {
-    "title": "Map 13 · Returning to Makkah",
-    "icon": "🕋",
-    "colour": "#7a5aa8",
+    "title": "Map 29 · Letters and Khaybar",
+    "icon": "✉️",
+    "colour": "#b4553a",
     "range": [
-      49,
-      52
+      113,
+      116
     ],
     "lessons": [
       {
-        "title": "Khaybar",
-        "arabic": "خَيْبَر",
-        "story": "Khaybar was an important event after Hudaybiyyah. It involved fortified settlements north of Madinah. For young learners, we focus on the order of events and the responsibilities that follow conflict, rather than violent details. Ask your teacher about the historical setting.",
+        "title": "Letters beyond Arabia",
+        "arabic": "رَسَائِلُ إِلَى الْمُلُوك",
+        "story": "With peace at home after Ḥudaybiyyah, the Prophet ﷺ decided to invite the rulers of the world to Islam. He was told that kings would not read a letter unless it was sealed, so he had a silver ring made, engraved with three lines: Allāh, Rasūl, Muḥammad — “Muḥammad, the Messenger of Allah”. Then messengers rode out in every direction. Diḥyah al-Kalbī carried a letter to Heraclius, the emperor of Rome. ʿAbdullāh ibn Ḥudhāfah took one to Kisrā, the emperor of Persia. Ḥāṭib ibn Abī Baltaʿah went to al-Muqawqis, the ruler of Egypt, and ʿAmr ibn Umayyah went to the Najāshī of Abyssinia. Each letter began: “In the name of Allah, the Most Gracious, the Most Merciful,” and invited the king to Islam politely, saying, “Accept Islam and you will be safe.” Some kings honoured the letter and sent gifts. Kisrā tore his letter to pieces — and the Prophet ﷺ said that Allah would tear his kingdom apart, which is what happened.",
         "picks": [
           {
-            "q": "When did Khaybar occur in this course timeline?",
+            "q": "Why did the Prophet ﷺ have a ring made?",
             "options": [
-              "After Hudaybiyyah",
-              "Before the Prophet’s birth",
-              "Before the first revelation"
+              "To seal his letters to kings",
+              "As a gift for Abū Bakr",
+              "To pay a debt"
+            ]
+          },
+          {
+            "q": "Who took the letter to Heraclius?",
+            "options": [
+              "Diḥyah al-Kalbī",
+              "Khālid",
+              "Abū Sufyān"
+            ]
+          },
+          {
+            "q": "What did Kisrā do with his letter?",
+            "options": [
+              "He tore it up",
+              "He framed it",
+              "He sent it back with gifts"
             ]
           }
         ],
-        "benefit": "Ask questions when a historical event needs more explanation.",
-        "emoji": "📖",
+        "benefit": "We learn to share our faith with clear, polite words and good manners.",
+        "emoji": "✉️",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "رِسَالَة",
+            "letter"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "خَاتَم",
+            "seal ring"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "مَلِك",
+            "king"
           ]
         ],
-        "chapter": "Returning to Makkah"
+        "chapter": "Letters and Khaybar",
+        "teach": "Inviting with respect",
+        "order": {
+          "prompt": "Put the letters in order",
+          "items": [
+            "Peace comes after Ḥudaybiyyah",
+            "A silver seal ring is made",
+            "Messengers ride to the kings",
+            "The kings respond in different ways"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The ring said “Muḥammad, the Messenger of Allah”.",
+            "a": true
+          },
+          {
+            "s": "The letters were rude and threatening.",
+            "a": false
+          },
+          {
+            "s": "Letters were sent to Rome, Persia, Egypt and Abyssinia.",
+            "a": true
+          }
+        ]
       },
       {
-        "title": "Returning for Umrah",
-        "arabic": "الْعُمْرَة",
-        "story": "Under the Hudaybiyyah agreement, the Muslims returned the next year to perform Umrah. They entered Makkah for the agreed visit and worshipped at the Kaʿbah. Waiting patiently and keeping an agreement can make a long-awaited goal possible.",
+        "title": "Heraclius Asks Questions",
+        "teach": "Truth shines through",
+        "emoji": "👑",
+        "arabic": "هِرَقْل",
+        "story": "The Prophet’s letter reached Heraclius, the emperor of Rome, while he was in Jerusalem. He wanted to know more, so he called for any Arabs in the city. By chance, Abū Sufyān — still an enemy of Islam — was there trading, and he was brought before the emperor. Heraclius placed Abū Sufyān’s companions behind him and said, “If he lies, tell me.” Abū Sufyān later admitted he would have lied if he had not been ashamed in front of his friends. Heraclius asked: Is his family noble? “Yes.” Has he ever lied? “Never.” Are his followers the powerful or the weak? “The weak.” Are they increasing? “Increasing.” Does anyone leave his religion out of dislike? “No.” Does he break promises? “No.” What does he command? “To worship Allah alone, to pray, to be truthful, pure and kind to relatives.” Heraclius said, “If what you say is true, he will rule the very ground beneath my feet. If I could reach him, I would wash his feet.”",
         "picks": [
           {
-            "q": "Why could the Muslims return for Umrah?",
+            "q": "Who answered Heraclius’s questions?",
             "options": [
-              "The agreement allowed a later visit",
-              "They had forgotten the treaty",
-              "The qiblah had moved again"
+              "Abū Sufyān",
+              "Abū Bakr",
+              "Diḥyah"
+            ]
+          },
+          {
+            "q": "Why did Abū Sufyān not lie?",
+            "options": [
+              "He was ashamed in front of his companions",
+              "He had become Muslim",
+              "He did not know how"
+            ]
+          },
+          {
+            "q": "What did Heraclius conclude?",
+            "options": [
+              "These were the signs of a true prophet",
+              "The letter was a trick",
+              "Abū Sufyān was a prophet"
             ]
           }
         ],
-        "benefit": "Work patiently towards a good goal.",
-        "emoji": "📖",
+        "order": {
+          "prompt": "Put the meeting in order",
+          "items": [
+            "The letter reaches Heraclius",
+            "Abū Sufyān is brought before him",
+            "Heraclius asks his questions",
+            "He recognises the signs of a prophet"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Sufyān was a Muslim when he met Heraclius.",
+            "a": false
+          },
+          {
+            "s": "Abū Sufyān said the Prophet ﷺ had never lied.",
+            "a": true
+          },
+          {
+            "s": "Heraclius said the Prophet ﷺ commanded truthfulness and prayer.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that a truthful life speaks for itself, even through the words of an enemy.",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "رِسَالَة",
+            "letter"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "إِمْبِرَاطُور",
+            "emperor"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "أَمَانَة",
+            "trustworthiness"
           ]
         ],
-        "chapter": "Returning to Makkah"
+        "chapter": "Letters and Khaybar"
+      },
+      {
+        "title": "Khaybar",
+        "arabic": "خَيْبَر",
+        "story": "Khaybar was a group of strong forts surrounded by palm groves, to the north of Madīnah. Some of its leaders had helped gather the great army against Madīnah at the Trench, and they were still plotting. In the seventh year after the Hijrah, the Prophet ﷺ marched there with about fourteen hundred companions. The forts were hard to reach. One evening the Prophet ﷺ said, “Tomorrow I will give the flag to a man who loves Allah and His Messenger, and Allah and His Messenger love him.” Everyone hoped it would be them. In the morning he called for ʿAlī, who had sore eyes. The Prophet ﷺ placed his blessed saliva on ʿAlī’s eyes, and they were healed. Giving him the flag, he said: “Invite them to Islam first. By Allah, if Allah guides even one person through you, it is better for you than the finest red camels.” The forts opened, and the people of Khaybar were allowed to stay and farm their land.",
+        "picks": [
+          {
+            "q": "What was Khaybar?",
+            "options": [
+              "A group of forts north of Madīnah",
+              "A market in Makkah",
+              "A port by the sea"
+            ]
+          },
+          {
+            "q": "To whom did the Prophet ﷺ give the flag?",
+            "options": [
+              "ʿAlī",
+              "ʿUmar",
+              "Khālid"
+            ]
+          },
+          {
+            "q": "What did he say is better than red camels?",
+            "options": [
+              "Guiding even one person",
+              "Winning a battle",
+              "Finding treasure"
+            ]
+          }
+        ],
+        "benefit": "We learn that helping someone find guidance is more precious than any treasure.",
+        "emoji": "🏰",
+        "vocab": [
+          [
+            "حِصْن",
+            "fort"
+          ],
+          [
+            "رَايَة",
+            "flag"
+          ],
+          [
+            "هِدَايَة",
+            "guidance"
+          ]
+        ],
+        "chapter": "Letters and Khaybar",
+        "teach": "Guidance is the greatest prize",
+        "order": {
+          "prompt": "Put Khaybar in order",
+          "items": [
+            "The Muslims march to Khaybar",
+            "The Prophet ﷺ promises the flag to someone special",
+            "ʿAlī’s eyes are healed",
+            "He is told to invite them to Islam first"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAlī had sore eyes that were healed.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ said winning is better than guiding people.",
+            "a": false
+          },
+          {
+            "s": "The people of Khaybar were allowed to farm their land.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Returning for ʿUmrah",
+        "arabic": "عُمْرَةُ الْقَضَاء",
+        "story": "One year after Ḥudaybiyyah, just as the treaty said, the Prophet ﷺ set out with about two thousand Muslims to perform ʿUmrah. Quraysh left the city and watched from the mountains for three days. As the Muslims entered, Quraysh whispered, “The fever of Yathrib has made them weak.” So the Prophet ﷺ told the Muslims to jog lightly in the first rounds of ṭawāf, showing their strength. This is called ramal, and men still do it in ṭawāf today. ʿAbdullāh ibn Rawāḥah walked in front of the Prophet’s camel reciting poetry with joy. The Muhājirūn had not seen the Kaʿbah for seven years, and their hearts were full of joy. After exactly three days, as the treaty said, the Muslims packed up and left. Their honesty and discipline amazed many people of Makkah — and soon more of them would become Muslim.",
+        "picks": [
+          {
+            "q": "How many days did the Muslims stay in Makkah?",
+            "options": [
+              "Three days",
+              "Three months",
+              "One day"
+            ]
+          },
+          {
+            "q": "What is ramal?",
+            "options": [
+              "Jogging lightly in ṭawāf",
+              "Shaving the head",
+              "Throwing stones"
+            ]
+          },
+          {
+            "q": "Why did they do ramal?",
+            "options": [
+              "To show they were strong",
+              "Because they were late",
+              "Because it was raining"
+            ]
+          }
+        ],
+        "benefit": "We learn to keep agreements exactly and to show the best of Islam through our actions.",
+        "emoji": "🕋",
+        "vocab": [
+          [
+            "طَوَاف",
+            "circling the Kaʿbah"
+          ],
+          [
+            "عُمْرَة",
+            "ʿUmrah"
+          ],
+          [
+            "وَفَاء",
+            "keeping promises"
+          ]
+        ],
+        "chapter": "Letters and Khaybar",
+        "teach": "Keeping promises, showing strength",
+        "order": {
+          "prompt": "Put the ʿUmrah in order",
+          "items": [
+            "They set out one year after the treaty",
+            "Quraysh watch from the mountains",
+            "The Muslims jog in ṭawāf",
+            "They leave after three days"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Muslims kept the treaty’s three-day limit.",
+            "a": true
+          },
+          {
+            "s": "The Muslims looked weak and ill.",
+            "a": false
+          },
+          {
+            "s": "Men still do ramal in ṭawāf today.",
+            "a": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 30 · Makkah Opens Its Gates",
+    "icon": "🕋",
+    "colour": "#2f6f8f",
+    "range": [
+      117,
+      120
+    ],
+    "lessons": [
+      {
+        "title": "Jaʿfar of the Two Wings",
+        "teach": "Loyalty and caring for orphans",
+        "emoji": "🕊️",
+        "arabic": "مُؤْتَة",
+        "story": "The Prophet ﷺ sent a messenger with a letter to a ruler in the north, but the messenger was killed — a terrible crime. So an army of three thousand set out to Muʾtah, in the land of Shām. The Prophet ﷺ named three leaders in turn: Zayd ibn Ḥārithah, then Jaʿfar ibn Abī Ṭālib, then ʿAbdullāh ibn Rawāḥah. At Muʾtah they faced an enormous Roman army. All three leaders held the flag bravely and were martyred, one after another. Then the Muslims chose Khālid ibn al-Walīd, who led the army wisely back to safety. In Madīnah, the Prophet ﷺ told the people what had happened before any messenger arrived, with tears in his eyes. He said that Allah had given Jaʿfar two wings to fly with the angels in Paradise. Then he went to Jaʿfar’s house, hugged his little children and comforted them, and told the companions to cook food for Jaʿfar’s family, because they were busy with their grief.",
+        "picks": [
+          {
+            "q": "How many leaders did the Prophet ﷺ name in turn?",
+            "options": [
+              "Three",
+              "One",
+              "Ten"
+            ]
+          },
+          {
+            "q": "Who brought the army safely home?",
+            "options": [
+              "Khālid ibn al-Walīd",
+              "Abū Sufyān",
+              "Salmān"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ do for Jaʿfar’s family?",
+            "options": [
+              "Comforted his children and had food made for them",
+              "Sent them away",
+              "Nothing"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the story in order",
+          "items": [
+            "A messenger of the Prophet ﷺ is killed",
+            "The army goes to Muʾtah",
+            "The three leaders are martyred",
+            "Khālid brings the army home"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Jaʿfar is called “the one with two wings”.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ forgot Jaʿfar’s children.",
+            "a": false
+          },
+          {
+            "s": "Khālid led the army wisely back to safety.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to care for orphans and grieving families, and to cook for them in hard times.",
+        "vocab": [
+          [
+            "جَنَاح",
+            "wing"
+          ],
+          [
+            "يَتِيم",
+            "orphan"
+          ],
+          [
+            "رَايَة",
+            "flag"
+          ]
+        ],
+        "chapter": "Makkah Opens Its Gates"
       },
       {
         "title": "Return to Makkah",
-        "teach": "The day of forgiveness",
-        "emoji": "🕊️",
+        "teach": "Forgiveness when you are strong",
+        "emoji": "🌄",
         "arabic": "فَتْحُ مَكَّة",
-        "story": "Eight years after leaving as a hunted man, he returned to Makkah with ten thousand Muslims — and the city surrendered without a battle. He rode in with his head bowed low in thankfulness. To the people who had hurt him for years he said: \"Go — you are free.\" The idols were cleared from the Kaʿbah, and Bilāl climbed up to call the adhān. Many of the very people who had once harmed him accepted Islam that day, moved deeply by his forgiveness.",
+        "story": "Two years after Ḥudaybiyyah, Quraysh’s allies attacked a tribe allied to the Muslims at night, and Quraysh secretly helped them. The treaty was broken. In Ramaḍān of the eighth year, the Prophet ﷺ marched with ten thousand Muslims. They camped near Makkah and lit ten thousand fires, and the leaders of Makkah realised they could not resist. Abū Sufyān came out, met the Prophet ﷺ and accepted Islam. The Prophet ﷺ announced: “Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.” He entered Makkah riding on his camel, his head bowed so low in thankfulness that his beard almost touched the saddle. Then he gathered the people of Makkah, who had hurt him and his companions for twenty years. “What do you think I will do with you?” “Good — you are a noble brother, son of a noble brother.” He said: “Go, you are free.”",
         "picks": [
+          {
+            "q": "Why did the Prophet ﷺ march to Makkah?",
+            "options": [
+              "Quraysh had helped break the treaty",
+              "To trade in the market",
+              "To visit relatives"
+            ]
+          },
+          {
+            "q": "How did he enter Makkah?",
+            "options": [
+              "With his head bowed in thankfulness",
+              "Boasting loudly",
+              "Hidden at night"
+            ]
+          },
           {
             "q": "What did he say to the people of Makkah?",
             "options": [
-              "\"Go — you are free\"",
-              "\"Leave the city\"",
-              "\"Pay for what you did\""
-            ]
-          },
-          {
-            "q": "Who called the adhān that day?",
-            "options": [
-              "Bilāl",
-              "Abū Bakr",
-              "Zayd"
-            ]
-          },
-          {
-            "q": "How many Muslims returned with him to Makkah?",
-            "options": [
-              "Ten thousand",
-              "One hundred",
-              "One thousand"
+              "“Go, you are free”",
+              "“You will all be punished”",
+              "“Leave the city”"
             ]
           }
         ],
         "order": {
           "prompt": "Put the return to Makkah in order",
           "items": [
-            "He returns after eight years",
-            "The city surrenders without a battle",
-            "He forgives the people of Makkah",
-            "The idols are cleared and the adhān is called"
+            "The treaty is broken",
+            "Ten thousand Muslims camp near Makkah",
+            "Abū Sufyān accepts Islam",
+            "The Prophet ﷺ forgives the people of Makkah"
           ]
         },
         "tf": [
           {
-            "s": "Makkah was taken without a battle.",
+            "s": "The Muslims lit ten thousand fires.",
             "a": true
           },
           {
-            "s": "He forgave those who had harmed him.",
-            "a": true
-          },
-          {
-            "s": "He took revenge on the people of Makkah.",
+            "s": "The Prophet ﷺ took revenge on Makkah.",
             "a": false
+          },
+          {
+            "s": "Whoever stayed in his home was safe.",
+            "a": true
           }
         ],
-        "benefit": "We learn that forgiving those who have wronged us, even when we have the power to punish them, is true strength.",
+        "benefit": "We learn that true strength is shown by forgiving when we have the power to punish.",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "فَتْح",
+            "opening"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "عَفْو",
+            "forgiveness"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "أَمَان",
+            "safety"
           ]
         ],
-        "chapter": "Returning to Makkah"
+        "chapter": "Makkah Opens Its Gates"
       },
       {
         "title": "Mercy in Makkah",
-        "arabic": "الرَّحْمَة",
-        "story": "When Makkah came under Muslim rule, the Prophet ﷺ showed mercy to many people who had opposed him. The Kaʿbah was cleared of idols. The event teaches that strength should be guided by justice, restraint and worship of Allah alone.",
+        "arabic": "تَطْهِيرُ الْكَعْبَة",
+        "story": "After entering Makkah, the Prophet ﷺ went to the Kaʿbah. Around it stood three hundred and sixty idols. He pointed at them one by one with a stick, reciting: “Truth has come, and falsehood has vanished. Falsehood is bound to vanish.” The idols toppled to the ground. The pictures inside the Kaʿbah were wiped away. Then he asked ʿUthmān ibn Ṭalḥah for the key of the Kaʿbah, opened it and prayed inside. When he came out, he gave the key back to ʿUthmān and his family, saying it would stay with them forever — and it still does. At the time of prayer, Bilāl — who had once been tortured in Makkah — climbed onto the roof of the Kaʿbah and called the adhān for all the city to hear. The House that Ibrāhīm and Ismāʿīl had built for the worship of Allah alone was finally pure again, after centuries of idols.",
         "picks": [
           {
-            "q": "What should guide strength?",
+            "q": "How many idols stood around the Kaʿbah?",
             "options": [
-              "Justice and mercy",
-              "Revenge against everyone",
-              "Boasting about power"
+              "Three hundred and sixty",
+              "Ten",
+              "One thousand"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ recite as the idols fell?",
+            "options": [
+              "“Truth has come, and falsehood has vanished”",
+              "“Allah is enough for us”",
+              "“Read in the name of your Lord”"
+            ]
+          },
+          {
+            "q": "To whom did he give back the key?",
+            "options": [
+              "ʿUthmān ibn Ṭalḥah",
+              "Abū Sufyān",
+              "ʿAlī"
             ]
           }
         ],
-        "benefit": "Choose restraint when you have the power to retaliate.",
-        "emoji": "📖",
+        "benefit": "We learn that the Kaʿbah is for the worship of Allah alone, and trusts must be returned to their owners.",
+        "emoji": "🕊️",
         "vocab": [
           [
-            "الرَّحْمَة",
-            "mercy"
+            "حَقّ",
+            "truth"
           ],
           [
-            "الْعَدْل",
-            "justice"
+            "بَاطِل",
+            "falsehood"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "مِفْتَاح",
+            "key"
           ]
         ],
-        "chapter": "Returning to Makkah"
+        "chapter": "Makkah Opens Its Gates",
+        "teach": "The Kaʿbah cleansed, hearts forgiven",
+        "order": {
+          "prompt": "Put the cleansing in order",
+          "items": [
+            "The Prophet ﷺ goes to the Kaʿbah",
+            "The idols fall as he recites",
+            "He prays inside the Kaʿbah",
+            "Bilāl calls the adhān from the roof"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The key of the Kaʿbah is still with the family of ʿUthmān ibn Ṭalḥah.",
+            "a": true
+          },
+          {
+            "s": "The idols were kept inside the Kaʿbah.",
+            "a": false
+          },
+          {
+            "s": "Bilāl called the adhān from the Kaʿbah’s roof.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Ḥunayn",
+        "arabic": "غَزْوَةُ حُنَيْن",
+        "story": "Soon after Makkah opened, the tribes of Hawāzin and Thaqīf gathered a large army. The Muslims marched out with twelve thousand men — the biggest army they had ever had. Some said proudly, “We will not be defeated today because of small numbers!” At dawn, as the Muslims entered the narrow valley of Ḥunayn, the enemy, hidden in the mountains, attacked suddenly. Many Muslims panicked and ran. But the Prophet ﷺ stood firm on his white mule and called out: “I am the Prophet, this is no lie! I am the son of ʿAbd al-Muṭṭalib!” His uncle al-ʿAbbās, who had a very loud voice, called the companions back, and they returned, crying “Labbayk! Labbayk!” Then Allah sent down calm and help, and the battle turned. Allah reminds them: “On the day of Ḥunayn, your great numbers made you proud, but they did not help you at all.” Afterwards, the Prophet ﷺ returned the captives of Hawāzin when they asked kindly, and many of them became Muslim.",
+        "picks": [
+          {
+            "q": "How many Muslims marched to Ḥunayn?",
+            "options": [
+              "Twelve thousand",
+              "Three hundred",
+              "One thousand"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ do when many ran?",
+            "options": [
+              "He stood firm and called out",
+              "He ran too",
+              "He went back to Makkah"
+            ]
+          },
+          {
+            "q": "What lesson did Allah teach about numbers?",
+            "options": [
+              "Great numbers alone do not help",
+              "Bigger armies always win",
+              "Numbers are everything"
+            ]
+          }
+        ],
+        "benefit": "We learn not to rely on our numbers or strength, but on Allah.",
+        "emoji": "🏔️",
+        "vocab": [
+          [
+            "كَثْرَة",
+            "great numbers"
+          ],
+          [
+            "سَكِينَة",
+            "calm"
+          ],
+          [
+            "غُرُور",
+            "pride"
+          ]
+        ],
+        "chapter": "Makkah Opens Its Gates",
+        "teach": "Numbers alone do not bring victory",
+        "order": {
+          "prompt": "Put Ḥunayn in order",
+          "items": [
+            "A large Muslim army sets out",
+            "They are ambushed at dawn",
+            "The Prophet ﷺ stands firm and calls them back",
+            "Allah sends calm and help"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Some Muslims were proud of their big numbers.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ left the battlefield.",
+            "a": false
+          },
+          {
+            "s": "Al-ʿAbbās called the companions back with his loud voice.",
+            "a": true
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 14 · The Wider Community",
+    "title": "Map 31 · The Final Years",
     "icon": "🌍",
-    "colour": "#2e6b58",
+    "colour": "#7a5aa8",
     "range": [
-      53,
-      56
+      121,
+      124
     ],
     "lessons": [
       {
-        "title": "Hunayn",
-        "arabic": "حُنَيْن",
-        "story": "After the conquest of Makkah, the Muslims faced another challenge at Hunayn. Large numbers alone did not guarantee success. The event reminds learners to avoid overconfidence and to rely on Allah while doing their responsibilities carefully.",
+        "title": "The Journey to Tabūk",
+        "arabic": "غَزْوَةُ تَبُوك",
+        "story": "In the ninth year after the Hijrah, news came that the Roman army was gathering in the north. It was the hottest time of the year, the dates were ready to harvest and the journey to Tabūk was very long. This expedition was called “the army of hardship”. The Prophet ﷺ asked everyone to give. ʿUthmān equipped hundreds of camels and brought a thousand gold coins. ʿUmar brought half of everything he owned. Abū Bakr brought everything he had: “I have left them Allah and His Messenger.” Poor companions wept because they had no camel to ride. About thirty thousand marched out. The Romans never came, and the Prophet ﷺ made peace agreements with the towns of the north. Back in Madīnah, three companions who had stayed behind without an excuse, including Kaʿb ibn Mālik, refused to make up lies. For fifty days no one spoke to them, until Allah revealed that He had forgiven them. Kaʿb said, “Allah saved me because I told the truth.”",
         "picks": [
           {
-            "q": "What does Hunayn warn against?",
+            "q": "Why was it called the army of hardship?",
             "options": [
-              "Overconfidence in numbers",
-              "Preparing carefully",
-              "Asking Allah for help"
-            ]
-          }
-        ],
-        "benefit": "Prepare well instead of assuming a task will be easy.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْعَدْل",
-            "justice"
-          ],
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ]
-        ],
-        "chapter": "The Wider Community"
-      },
-      {
-        "title": "The Journey to Tabuk",
-        "arabic": "تَبُوك",
-        "story": "The expedition to Tabuk involved a long journey in demanding conditions. Believers contributed what they could and faced tests of sincerity. A useful lesson for children is that helping a community may require effort, generosity and honesty about our abilities.",
-        "picks": [
-          {
-            "q": "What qualities helped during hardship?",
-            "options": [
-              "Effort, generosity and sincerity",
-              "Excuses and dishonesty",
-              "Showing off possessions"
-            ]
-          }
-        ],
-        "benefit": "Offer useful help even when your contribution is small.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْعَدْل",
-            "justice"
-          ],
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ]
-        ],
-        "chapter": "The Wider Community"
-      },
-      {
-        "title": "Visitors to Madinah",
-        "arabic": "الْوُفُود",
-        "story": "Delegations came to Madinah to meet the Prophet ﷺ and learn about Islam. Visitors represented different tribes and places. Welcoming guests, answering questions and teaching clearly helped communities learn. Seeraa is also a story of conversations and patient explanation.",
-        "picks": [
-          {
-            "q": "Why did delegations visit Madinah?",
-            "options": [
-              "To meet and learn",
-              "To move the Kaʿbah",
-              "To stop every lesson"
-            ]
-          }
-        ],
-        "benefit": "Welcome visitors and answer their questions kindly.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْعَدْل",
-            "justice"
-          ],
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ]
-        ],
-        "chapter": "The Wider Community"
-      },
-      {
-        "title": "The Farewell",
-        "teach": "His last advice",
-        "emoji": "🤍",
-        "arabic": "حَجَّةُ ٱلْوَدَاع",
-        "story": "In his last year he made Ḥajj with over a hundred thousand Muslims and gave his farewell sermon on the plain of ʿArafah. He told them that no Arab is better than a non-Arab except by taqwā, that women have rights, that a Muslim’s life and property are sacred, and that he was leaving them the Qurʾān. Soon after, he passed away in Madīnah — and his message has been carried ever since. His words that day were preserved carefully and are still recited and studied by Muslims all around the world today.",
-        "picks": [
-          {
-            "q": "Where did he give the farewell sermon?",
-            "options": [
-              "The plain of ʿArafah",
-              "Inside the Kaʿbah",
-              "On Mount Uḥud"
+              "It was very hot and the journey was long",
+              "There was too much food",
+              "It was short and easy"
             ]
           },
           {
-            "q": "What makes one person better than another?",
+            "q": "What did Abū Bakr give?",
             "options": [
-              "Taqwā — awareness of Allah",
-              "Their tribe",
-              "Their wealth"
+              "Everything he had",
+              "Half his wealth",
+              "One camel"
             ]
           },
           {
-            "q": "What did he say he was leaving them?",
+            "q": "What saved Kaʿb ibn Mālik?",
             "options": [
-              "The Qurʾān",
-              "A new city",
-              "His wealth"
+              "Telling the truth",
+              "Making an excuse",
+              "Running away"
+            ]
+          }
+        ],
+        "benefit": "We learn to give generously and always to tell the truth, even when it is hard.",
+        "emoji": "🏜️",
+        "vocab": [
+          [
+            "صِدْق",
+            "truthfulness"
+          ],
+          [
+            "عُسْرَة",
+            "hardship"
+          ],
+          [
+            "إِنْفَاق",
+            "spending for Allah"
+          ]
+        ],
+        "chapter": "The Final Years",
+        "teach": "Generosity and honesty",
+        "order": {
+          "prompt": "Put Tabūk in order",
+          "items": [
+            "News comes of an army in the north",
+            "The companions give generously",
+            "Thirty thousand march to Tabūk",
+            "Kaʿb tells the truth and is forgiven"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿUthmān gave hundreds of camels for the army.",
+            "a": true
+          },
+          {
+            "s": "Kaʿb made up an excuse to escape blame.",
+            "a": false
+          },
+          {
+            "s": "Allah forgave the three who told the truth.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "Visitors to Madīnah",
+        "arabic": "عَامُ الْوُفُود",
+        "story": "After Makkah opened and Tabūk ended, tribes from all over Arabia began sending groups of visitors to Madīnah. This time is called the Year of Delegations. They came from the deserts and mountains, from Yemen, Ṭāʾif, Najd and Baḥrain. The Prophet ﷺ welcomed every group, gave them good places to stay and answered their questions patiently. A Christian group from Najrān even prayed in his masjid. Among the visitors was ʿAdiyy, the son of Ḥātim aṭ-Ṭāʾī, the most generous man the Arabs had known. The Prophet ﷺ gave ʿAdiyy a cushion and sat on the floor himself. He told him: “You will see a woman travel alone from al-Ḥīrah to the Kaʿbah fearing no one but Allah, and the treasures of Kisrā will be opened.” ʿAdiyy accepted Islam — and lived to see both promises come true. Teachers went home with each tribe, and Islam spread across all of Arabia.",
+        "picks": [
+          {
+            "q": "What is this time called?",
+            "options": [
+              "The Year of Delegations",
+              "The Year of Sorrow",
+              "The Year of the Elephant"
+            ]
+          },
+          {
+            "q": "Whose son was ʿAdiyy?",
+            "options": [
+              "Ḥātim aṭ-Ṭāʾī, the generous",
+              "Abū Jahl",
+              "Heraclius"
+            ]
+          },
+          {
+            "q": "Where did the Prophet ﷺ sit when ʿAdiyy had the cushion?",
+            "options": [
+              "On the floor",
+              "On a throne",
+              "On a horse"
+            ]
+          }
+        ],
+        "benefit": "We learn to welcome guests warmly and teach them with patience and humility.",
+        "emoji": "🐪",
+        "vocab": [
+          [
+            "وَفْد",
+            "delegation"
+          ],
+          [
+            "ضَيْف",
+            "guest"
+          ],
+          [
+            "تَوَاضُع",
+            "humility"
+          ]
+        ],
+        "chapter": "The Final Years",
+        "teach": "The Year of Delegations",
+        "order": {
+          "prompt": "Put the year in order",
+          "items": [
+            "Makkah opens and Tabūk ends",
+            "Tribes send visitors to Madīnah",
+            "The Prophet ﷺ welcomes and teaches them",
+            "Teachers go home with each tribe"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ answered visitors’ questions patiently.",
+            "a": true
+          },
+          {
+            "s": "Only one tribe came to Madīnah.",
+            "a": false
+          },
+          {
+            "s": "ʿAdiyy lived to see the promises come true.",
+            "a": true
+          }
+        ]
+      },
+      {
+        "title": "The Farewell Pilgrimage",
+        "teach": "The religion completed",
+        "emoji": "🕋",
+        "arabic": "حَجَّةُ الْوَدَاع",
+        "story": "In the tenth year after the Hijrah, the Prophet ﷺ announced that he would perform Ḥajj. People came from every part of Arabia — more than a hundred thousand pilgrims — to travel with him and learn. He told them, “Take your rites of Ḥajj from me, for I may not meet you after this year.” On the plain of ʿArafah, sitting on his camel al-Qaṣwāʾ, he gave a great sermon. “Your lives, your property and your honour are sacred to one another. Fear Allah in the way you treat women. I have left among you something which, if you hold onto it, you will never go astray: the Book of Allah.” In those days he also taught: “No Arab is better than a non-Arab, and no non-Arab is better than an Arab, except by taqwā.” Then he asked, “Have I conveyed the message?” “Yes!” they cried. He raised his finger to the sky: “O Allah, bear witness.” That day Allah revealed: “Today I have perfected your religion for you.”",
+        "picks": [
+          {
+            "q": "How many pilgrims came with him?",
+            "options": [
+              "More than a hundred thousand",
+              "About fifty",
+              "Exactly one thousand"
+            ]
+          },
+          {
+            "q": "What did he say about Arabs and non-Arabs?",
+            "options": [
+              "No one is better except by taqwā",
+              "Arabs are always better",
+              "Non-Arabs cannot be Muslim"
+            ]
+          },
+          {
+            "q": "What did Allah reveal that day?",
+            "options": [
+              "“Today I have perfected your religion”",
+              "“Read in the name of your Lord”",
+              "“Arise and warn”"
             ]
           }
         ],
         "order": {
-          "prompt": "Put his final year in order",
+          "prompt": "Put the Farewell Pilgrimage in order",
           "items": [
-            "He makes Ḥajj with over a hundred thousand",
-            "He gives the farewell sermon at ʿArafah",
-            "He reminds them to hold to the Qurʾān",
-            "He passes away in Madīnah"
+            "The Prophet ﷺ announces Ḥajj",
+            "Pilgrims gather from all over Arabia",
+            "He gives the sermon at ʿArafah",
+            "Allah reveals the religion is perfected"
           ]
         },
         "tf": [
           {
-            "s": "He taught that no Arab is better than a non-Arab except by taqwā.",
+            "s": "He said lives, property and honour are sacred.",
             "a": true
           },
           {
-            "s": "He asked his ummah to write a new scripture after him.",
+            "s": "He said one race is better than another.",
             "a": false
           },
           {
-            "s": "He said tribe and wealth decide who is best.",
-            "a": false
+            "s": "He asked Allah to bear witness that he had conveyed the message.",
+            "a": true
           }
         ],
-        "benefit": "We learn that his final advice — piety, fairness, and holding on to the Qurʾān — is timeless guidance for every generation.",
+        "benefit": "We learn that all people are equal before Allah, and the best are those with the most taqwā.",
         "vocab": [
           [
-            "الْعَدْل",
-            "justice"
+            "وَدَاع",
+            "farewell"
           ],
           [
-            "الْهِجْرَة",
-            "migration"
+            "عَرَفَة",
+            "ʿArafah"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "خُطْبَة",
+            "sermon"
           ]
         ],
-        "chapter": "The Wider Community"
-      }
-    ]
-  },
-  {
-    "title": "Map 15 · Guidance to Remember",
-    "icon": "🏆",
-    "colour": "#a97c25",
-    "range": [
-      57,
-      60
-    ],
-    "lessons": [
-      {
-        "title": "The Farewell Sermon",
-        "arabic": "الْوَصِيَّة",
-        "story": "During the Farewell Pilgrimage, the Prophet ﷺ taught essential responsibilities. People’s lives and property deserved protection. He stressed faithfulness and passing the message on. We learn to respect others and remember that being responsible matters more than boasting about our background.",
-        "picks": [
-          {
-            "q": "What should we respect?",
-            "options": [
-              "People’s lives and property",
-              "Only our own belongings",
-              "Only people from our tribe"
-            ]
-          }
-        ],
-        "benefit": "Respect others and protect what belongs to them.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ],
-          [
-            "الْقِبْلَة",
-            "prayer direction"
-          ]
-        ],
-        "chapter": "Guidance to Remember"
+        "chapter": "The Final Years"
       },
       {
         "title": "The Final Days",
-        "arabic": "الْوَدَاع",
-        "story": "The Prophet ﷺ became ill and later passed away in Madinah. His companions were deeply saddened. Abu Bakr reminded them that Allah lives and never dies. Muslims continued to worship Allah and hold to the guidance the Prophet ﷺ had taught.",
+        "arabic": "الرَّفِيقُ الْأَعْلَى",
+        "story": "A few months after the Farewell Pilgrimage, the Prophet ﷺ became ill with a strong fever. He stayed in the room of ʿĀʾishah next to the masjid, and he asked Abū Bakr to lead the people in prayer. On his last Monday morning, he lifted the curtain of his room and looked at the Muslims standing in neat rows for Fajr. He smiled, happy to see them united in prayer. His final advice was: “The prayer, the prayer — and be kind to those in your care.” Later that day, with his head resting on ʿĀʾishah, he looked up and said, “With the highest companion,” and he passed away, at the age of sixty-three. The companions were overcome with grief. ʿUmar could not believe it. Then Abū Bakr stood and said: “Whoever worshipped Muḥammad, Muḥammad has died. Whoever worships Allah, Allah is alive and never dies.” He left behind no gold and no palaces — only the Qurʾān, the Sunnah and a perfect example of good character to follow.",
         "picks": [
           {
-            "q": "Who lives and never dies?",
+            "q": "Who led the prayer during his illness?",
             "options": [
-              "Allah",
-              "Every human being",
-              "Every ruler"
+              "Abū Bakr",
+              "ʿUmar",
+              "ʿAlī"
+            ]
+          },
+          {
+            "q": "What did he see when he lifted the curtain?",
+            "options": [
+              "The Muslims praying in rows",
+              "An empty masjid",
+              "A caravan"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr remind everyone?",
+            "options": [
+              "Allah is alive and never dies",
+              "They should leave Madīnah",
+              "Nothing would change"
             ]
           }
         ],
-        "benefit": "In sadness, seek support and keep doing what is right.",
-        "emoji": "📖",
+        "benefit": "We learn to guard our prayers and follow the Prophet’s example of good character all our lives.",
+        "emoji": "🤍",
         "vocab": [
           [
-            "الْهِجْرَة",
-            "migration"
+            "وَفَاة",
+            "passing away"
           ],
           [
-            "الْأَمِين",
-            "trustworthy"
+            "سُنَّة",
+            "the Prophet’s way"
           ],
           [
-            "الْقِبْلَة",
-            "prayer direction"
+            "أَخْلَاق",
+            "good character"
           ]
         ],
-        "chapter": "Guidance to Remember"
-      },
-      {
-        "title": "A Life of Good Character",
-        "arabic": "الْأَخْلَاق",
-        "story": "The Prophet ﷺ taught by his words and conduct. Honesty, mercy, patience and care for neighbours appear throughout Seeraa. Learning his life should change how we behave at home, at school and with friends. Choose one good habit to practise this week.",
-        "picks": [
+        "chapter": "The Final Years",
+        "teach": "His example lives on",
+        "order": {
+          "prompt": "Put the final days in order",
+          "items": [
+            "He falls ill after the Farewell Pilgrimage",
+            "Abū Bakr leads the prayers",
+            "He smiles at the rows of worshippers",
+            "Abū Bakr reminds everyone that Allah never dies"
+          ]
+        },
+        "tf": [
           {
-            "q": "What should learning Seeraa improve?",
-            "options": [
-              "Our behaviour",
-              "Only our game score",
-              "Our ability to boast"
-            ]
-          }
-        ],
-        "benefit": "Practise one kind and honest action every day.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ],
-          [
-            "الْقِبْلَة",
-            "prayer direction"
-          ]
-        ],
-        "chapter": "Guidance to Remember"
-      },
-      {
-        "title": "Learning and Passing It On",
-        "arabic": "الْعِلْم",
-        "story": "You have travelled from Arabia before Islam through Makkah and Madinah. Review the timeline, explain a lesson to someone younger and ask your teacher about anything unclear. Knowing names is useful; applying honesty and mercy makes the learning meaningful.",
-        "picks": [
+            "s": "His final advice was about the prayer.",
+            "a": true
+          },
           {
-            "q": "What is a good way to finish this course?",
-            "options": [
-              "Review and practise what you learned",
-              "Forget the whole timeline",
-              "Stop asking questions"
-            ]
+            "s": "He left behind great wealth and palaces.",
+            "a": false
+          },
+          {
+            "s": "He passed away at the age of sixty-three.",
+            "a": true
           }
-        ],
-        "benefit": "Teach one lesson kindly and keep learning.",
-        "emoji": "📖",
-        "vocab": [
-          [
-            "الْهِجْرَة",
-            "migration"
-          ],
-          [
-            "الْأَمِين",
-            "trustworthy"
-          ],
-          [
-            "الْقِبْلَة",
-            "prayer direction"
-          ]
-        ],
-        "chapter": "Guidance to Remember"
+        ]
       }
     ]
   }

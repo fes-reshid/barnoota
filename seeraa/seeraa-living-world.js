@@ -57,23 +57,39 @@ const LANES={
  uhud:{roads:[[[.72,.99],[.58,.70],[.46,.44],[.40,.35]],[[.44,.33],[.58,.31],[.72,.30]]],hills:[[[.74,.29],[.82,.32]],[[.48,.12],[.56,.10],[.64,.13]],[[.86,.15],[.93,.17]]],dusty:1},
  tabuk:{roads:[[[.58,.99],[.50,.70],[.44,.47],[.46,.37]],[[.26,.31],[.40,.30],[.58,.29]]],hills:[[[.86,.12],[.92,.10]],[[.30,.15],[.38,.13]],[[.06,.14],[.12,.12]]],dusty:1}
 };
-/* What walks on each of the 15 maps. */
+/* What walks on each of the 31 maps. */
 const MAP_LIFE=[
- {road:['cl','p','w','cl','p'],hill:['g','g','g'],birds:3},            // 1 Arabia before Islam: traders' caravan
- {road:['s','s','s','p','s','c'],hill:['g','g'],birds:2},              // 2 Childhood: a shepherd with his flock
- {road:['cl','cl','p','w','p','cl'],hill:['g'],birds:2},               // 3 Trust and fairness: market caravans
- {road:['p','g','g','w'],hill:['g','g','g','g'],birds:4},              // 4 Hira: goats on the mountain
- {road:['p','w','p','p','c'],hill:['g','g'],birds:2},                  // 5 The first Muslims
- {road:['p','w','p','c'],hill:['g','g'],birds:3},                      // 6 Abyssinia
- {road:['p','w','s','s','p'],hill:['g','g','g'],birds:3},              // 7 Taif: gardens and flocks
- {road:['p','c','p'],hill:['g'],birds:1},                              // 8 Aqabah
- {road:['p','g','g'],hill:['g','g'],birds:2},                         // 9 Hijrah (its two camels have their own scene)
- {road:['p','w','p','c','g','w'],hill:['g','g'],birds:3},              // 10 Quba and Madinah
- {road:['p','c','p','w'],hill:['g','g','g'],birds:2},                  // 11 Uhud
- {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 12 Madinah
- {road:['p','w','p','w','p','c','cl'],hill:['g','g'],birds:3},         // 13 Returning to Makkah
- {road:['cl','cl','cl','c','p'],hill:['g','g'],birds:2},               // 14 Tabuk: a long caravan
- {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 15 Madinah
+ {road:['cl','p','w','cl','p'],hill:['g','g','g'],birds:3},            // 1 Arabia: traders' caravan
+ {road:['p','w','p','c','g'],hill:['g','g'],birds:2},                  // 2 The Prophet's family
+ {road:['p','w','g'],hill:['g','g'],birds:2},                          // 3 Year of the Elephant (the army has its own scene)
+ {road:['p','w','w','p','c'],hill:['g','g'],birds:3},                  // 4 A blessed birth
+ {road:['s','s','w','s','s','g','p'],hill:['g','g','g'],birds:2},      // 5 Desert of Banū Saʿd: flocks
+ {road:['cl','cl','p','cl','c'],hill:['g','g'],birds:2},               // 6 The caravan road to Shām
+ {road:['cl','p','w','p','cl','w'],hill:['g'],birds:2},                // 7 Trade and marriage: market
+ {road:['p','w','p','c'],hill:['g','g'],birds:3},                      // 8 Before the message
+ {road:['p','g','g','w'],hill:['g','g','g','g'],birds:4},              // 9 Ḥirāʾ: goats on the mountain
+ {road:['p','w','p'],hill:['g','g'],birds:2},                          // 10 The first believers
+ {road:['p','w','p','p','c'],hill:['g','g'],birds:2},                  // 11 The call in the open
+ {road:['p','p','w'],hill:['g'],birds:1},                              // 12 The burning plain
+ {road:['p','w','p','c'],hill:['g','g'],birds:3},                      // 13 Abyssinia
+ {road:['p','w','p','w','p'],hill:['g','g'],birds:3},                  // 14 Around the Kaʿbah
+ {road:['p','w'],hill:['g','g'],birds:1},                              // 15 The boycott valley
+ {road:['p','w','s','s','p'],hill:['g','g','g'],birds:3},              // 16 Ṭāʾif: gardens and flocks
+ {road:['p'],hill:[],birds:0},                                         // 17 Night Journey
+ {road:['p','w','p','c','cl','p'],hill:['g','g'],birds:2},             // 18 Minā at Ḥajj
+ {road:['p','p'],hill:['g'],birds:0},                                  // 19 ʿAqabah at night
+ {road:['p','c'],hill:[],birds:0},                                     // 20 Leaving Makkah at night
+ {road:['p','g','g'],hill:['g','g'],birds:2},                          // 21 Hijrah (its two camels have their own scene)
+ {road:['p','w','p','c','g','w'],hill:['g','g'],birds:3},              // 22 Qubāʾ and Madīnah
+ {road:['p','w','cl','p','w'],hill:['g'],birds:3},                     // 23 The masjid and the market
+ {road:['p','w','s','s','p'],hill:['g','g'],birds:4},                  // 24 Palm gardens
+ {road:['c','c','p','p'],hill:['g'],birds:2},                          // 25 Badr
+ {road:['p','c','p','w'],hill:['g','g','g'],birds:2},                  // 26 Uḥud
+ {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 27 The Trench
+ {road:['p','p','c','c','p'],hill:['g','g'],birds:2},                  // 28 Ḥudaybiyyah
+ {road:['p','cl','p','c','g'],hill:['g','g'],birds:2},                 // 29 Khaybar
+ {road:['p','w','p','w','p','c','cl'],hill:['g','g'],birds:3},         // 30 Makkah opens its gates
+ {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 31 The final years
 ];
 const ROBES=['#e9dcc2','#d8c3a0','#b98a5a','#8e5a3a','#f2ece0','#c9b28a','#a7764f'],WRAPS=['#f4efe2','#d9cdb4','#b2493b','#e8e2d0','#7c5236'],ABAYAS=['#3b3433','#4a3b35','#5b4636','#2f3438'];
 function figureFor(kind,i){
@@ -108,7 +124,7 @@ function photoBox(svg){const img=svg.querySelector('.history-photo');if(!img)ret
 function paintLife(){
  const svg=document.getElementById('mapSvg');if(!svg||typeof SEERAA_SCENES==='undefined')return;
  svg.querySelectorAll('.lw-life').forEach(g=>g.remove());LW.figs=LW.figs.filter(f=>f.el.isConnected&&f.el.closest('#mapSvg')!==svg);
- const P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%15)+15)%15],lanes=LANES[S.asset],life=MAP_LIFE[((viewWorld%15)+15)%15];if(!P||!lanes||!life)return;
+ const P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%SEERAA_SCENES.length)+SEERAA_SCENES.length)%SEERAA_SCENES.length],lanes=LANES[S.asset],life=MAP_LIFE[((viewWorld%MAP_LIFE.length)+MAP_LIFE.length)%MAP_LIFE.length];if(!P||!lanes||!life)return;
  const L=typeof MAP_GEO!=='undefined'&&MAP_GEO,u0=L?clamp(-P.x/P.w,0,1):0,u1=L?clamp((L.W-P.x)/P.w,0,1):1,squeeze=u1-u0<.8;
  const toMap=([u,v])=>[P.x+(squeeze?u0+.04*(u1-u0)+u*.92*(u1-u0):u)*P.w,P.y+v*P.h];let html='';const plan=[];
  life.road.forEach((kind,i)=>{const lane=lanes.roads[i%lanes.roads.length];plan.push({kind,pts:lane.map(toMap),i})});
@@ -121,8 +137,32 @@ function paintLife(){
  plan.forEach((f,n)=>{const el=g.querySelector(`[data-n="${n}"]`),len=polyLen(f.pts);LW.figs.push({el,pts:f.pts,len,P,k:f.F.k,min:f.hill?.42*Math.max(P.w/1536,.6):0,speed:f.F.speed*(f.hill?.35:1)*P.w/1536*(.85+(n%3)*.12),off:(n*0.37%1)*len*2});if(reduced()){const p=polyAt(f.pts,len*((n*.29)%1)),v=clamp((p[1]-P.y)/P.h,0,1),sc=(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*P.w/1536*f.F.k;el.setAttribute('transform',`translate(${p[0]} ${p[1]}) scale(${sc})`)}});
  /* birds glide across the sky */
  for(let b=0;b<life.birds;b++){const el=g.querySelector(`[data-b="${b}"]`),y=P.y+P.h*(.04+b*.03),x0=P.x-40,x1=P.x+P.w+40;LW.figs.push({el,pts:b%2?[[x1,y],[x0,y+20]]:[[x0,y],[x1,y+15]],len:P.w+80,P:{x:P.x,y:P.y-P.h*2,w:P.w,h:P.h*3},k:1.1,speed:55*P.w/1536,off:b*P.w*.6})}
+ paintMood(svg,P,S.mood||'');
  const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('lw-dusty',!!lanes.dusty);
  scheduleGust(frame,!!lanes.dusty);run();
+}
+/* light and sky for each map: night (stars and a crescent), dawn, dusk, and passing rain */
+function paintMood(svg,P,mood){
+ svg.querySelectorAll('.lw-mood').forEach(g=>g.remove());const frame=svg.closest('.map-frame');
+ if(frame){['night','dawn','dusk','rain'].forEach(m=>frame.classList.toggle('lw-m-'+m,m===mood));frame.querySelector('.lw-rain')?.remove()}
+ clearTimeout(LW.rainTimer);if(!mood)return;
+ const scene=svg.querySelector('.history-scene');if(!scene)return;
+ const L=typeof MAP_GEO!=='undefined'&&MAP_GEO,W=L?L.W:P.w,H=L?L.H:P.h;let h='';
+ if(mood==='night'){
+  h+=`<defs><linearGradient id="lwNightSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1430" stop-opacity=".82"/><stop offset=".45" stop-color="#16224a" stop-opacity=".45"/><stop offset="1" stop-color="#1a1f3a" stop-opacity=".18"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#lwNightSky)"/>`;
+  let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<46;i++){const x=rnd()*W,y=rnd()*H*.36,r=(.6+rnd()*1.3).toFixed(2);h+=`<circle class="lw-star" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="#fffbe8" style="animation-delay:${(rnd()*3).toFixed(2)}s"/>`}
+  const mx=W*.78,my=H*.13,mr=Math.max(14,W*.022);
+  h+=`<circle cx="${mx}" cy="${my}" r="${mr*2.4}" fill="#fff6c8" opacity=".12"/><circle cx="${mx}" cy="${my}" r="${mr}" fill="#fff4cc"/><circle cx="${mx+mr*.45}" cy="${my-mr*.18}" r="${mr*.9}" fill="#18234a"/>`;
+ }
+ if(mood==='dawn')h+=`<defs><linearGradient id="lwDawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7a46b" stop-opacity=".42"/><stop offset=".5" stop-color="#ffd7a8" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#lwDawn)"/>`;
+ if(mood==='dusk')h+=`<defs><linearGradient id="lwDuskSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b4a8a" stop-opacity=".42"/><stop offset=".4" stop-color="#e48a5a" stop-opacity=".26"/><stop offset="1" stop-color="#e48a5a" stop-opacity=".06"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#lwDuskSky)"/>`;
+ if(mood==='rain')h+=`<rect width="${W}" height="${H}" fill="#5d6f86" opacity=".16"/>`;
+ scene.insertAdjacentHTML('afterend',`<g class="lw-mood" aria-hidden="true" pointer-events="none">${h}</g>`);
+ if(mood==='rain'&&frame&&!reduced()){const shower=()=>{const scr=document.getElementById('mapScreen');if(!frame.isConnected||!frame.classList.contains('lw-m-rain'))return;
+  if(scr&&!scr.classList.contains('hidden')&&!document.hidden){let r=frame.querySelector('.lw-rain');if(!r){frame.insertAdjacentHTML('beforeend','<div class="lw-rain" aria-hidden="true"></div>');r=frame.querySelector('.lw-rain')}
+   let d='';for(let i=0;i<70;i++)d+=`<i style="left:${(Math.random()*104-2).toFixed(1)}%;animation-delay:${(Math.random()*1.1).toFixed(2)}s;animation-duration:${(.55+Math.random()*.35).toFixed(2)}s"></i>`;r.innerHTML=d;r.classList.remove('go');void r.offsetWidth;r.classList.add('go')}
+  LW.rainTimer=setTimeout(shower,14000+Math.random()*9000)};LW.rainTimer=setTimeout(shower,2500)}
 }
 /* gusts of wind with blowing sand on the desert maps */
 function scheduleGust(frame,on){clearTimeout(LW.gustTimer);if(!frame||!on||reduced())return;LW.gustTimer=setTimeout(()=>{gust(frame);scheduleGust(frame,frame.classList.contains('lw-dusty'))},9000+Math.random()*12000)}
@@ -305,7 +345,7 @@ if(typeof layoutMapRoad==='function'){
 /* ---------- the lesson story, like the Extra story panel ---------- */
 function esc(s){return typeof escapeHtml==='function'?escapeHtml(String(s)):String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function dressStory(l){
- const stage=document.getElementById('stage');if(!stage||!l)return;const wi=((l.world||0)%15+15)%15,S=typeof SEERAA_SCENES!=='undefined'?SEERAA_SCENES[wi]:null;
+ const stage=document.getElementById('stage');if(!stage||!l)return;const wi=Math.max(0,l.world||0),S=typeof SEERAA_SCENES!=='undefined'?SEERAA_SCENES[wi%SEERAA_SCENES.length]:null;
  stage.classList.add('lw-story');
  const kicker=stage.querySelector('.kicker'),title=stage.querySelector('.lesson-title'),card=stage.querySelector('.matn-card');
  if(kicker)kicker.classList.add('lw-hide');
@@ -348,6 +388,14 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lw-life .lw-wing{transform-box:fill-box;transform-origin:50% 100%;animation:lwFlap .35s ease-in-out infinite alternate}
 @keyframes lwFlap{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
 .lw-wind{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.lw-rain{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden;opacity:0;transition:opacity 1.2s}
+.lw-rain.go{animation:lwShower 9s ease-in-out forwards}
+.lw-rain i{position:absolute;top:-12%;width:1.5px;height:7%;background:linear-gradient(180deg,rgba(220,232,245,0),rgba(214,228,244,.85));transform:rotate(12deg);animation:lwDrop .7s linear infinite}
+@keyframes lwShower{0%,100%{opacity:0}15%,80%{opacity:.85}}
+@keyframes lwDrop{from{transform:translate(0,0) rotate(12deg)}to{transform:translate(-14vh,118vh) rotate(12deg)}}
+.lw-mood .lw-star{animation:lwTwinkle 2.6s ease-in-out infinite alternate}
+@keyframes lwTwinkle{from{opacity:.35}to{opacity:1}}
+.lw-m-night .lw-life .lw-fig,.lw-m-night .lw-road-scene{filter:brightness(.62) saturate(.8)}
 .lw-wind i{position:absolute;left:-40%;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,240,205,0),rgba(255,236,196,.95),rgba(255,240,205,0));opacity:0}
 .lw-wind b{position:absolute;left:-5%;width:3px;height:3px;border-radius:50%;background:#f3dcab;opacity:0}
 .lw-wind.go i{animation:lwGust 2.6s ease-in forwards}
@@ -386,6 +434,6 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lesson-side .side-step.done{background:linear-gradient(180deg,#e9f8e5,#cdeec7);border-color:#bfe6b6}
 @keyframes lwGlow{0%,100%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 0 rgba(255,207,77,.0)}50%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 6px rgba(255,207,77,.35)}}
 @media(max-width:640px){.lw-head{padding:18px}.lw-emblem{width:38px;height:38px;font-size:20px}.lw-theatre figcaption{font-size:14px}}
-@media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current{animation:none}.lw-wind{display:none}}
+@media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
 </style>`);
 })();

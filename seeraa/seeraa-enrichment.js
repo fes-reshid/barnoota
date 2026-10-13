@@ -33,17 +33,19 @@
     </article>`).join('')}</div>`;
   }
 
-  // A clearly labelled map reflection alongside each of the 60 original stories.
+  // A clearly labelled map reflection alongside each lesson story.
   const mapEvidence = [
     ['one','intent'], ['orphans','care'], ['trust','honesty'], ['read','learn'], ['faith','six'],
     ['equal','brother'], ['wisdom','gentle'], ['isra','miraj'], ['cave','help'], ['give','five'],
     ['consult','brother'], ['promise','help'], ['peace','gentle'], ['hajj','rights'], ['example','pass']
   ];
+  // Which reflection set each of the 31 maps uses.
+  const MAP_EVIDENCE_OF = [0,0,0,1,1,2,2,3,3,4,4,5,5,5,6,6,7,4,11,8,8,9,9,9,10,10,11,12,12,12,14];
   const beforeStory = renderMatn;
   renderMatn = function (lesson) {
     const result = beforeStory.apply(this, arguments);
     const own = contentEdits[GAME_KEY + '_map_evidence_' + lesson.world];
-    const cards = mapEvidence[lesson.world].map((key, i) => Object.assign({}, data.evidence[key], own && own.evidenceCards && own.evidenceCards[i]));
+    const cards = mapEvidence[MAP_EVIDENCE_OF[lesson.world] ?? 0].map((key, i) => Object.assign({}, data.evidence[key], own && own.evidenceCards && own.evidenceCards[i]));
     document.querySelector('#stage').insertAdjacentHTML('beforeend', `<details class="se-reflection"><summary>Qur’an &amp; Hadith · reflect on this map</summary>
       <p class="se-source-note">Related guidance for Map ${lesson.world + 1}. English meanings are simplified for young readers. A quotation is labelled when it is an excerpt.</p>${evidenceHTML(cards)}${teacherMode ? '<button type="button" class="ghost" id="seEditMapEvidence">✏ Edit this map’s quotations</button>' : ''}</details>`);
     document.querySelector('#seEditMapEvidence')?.addEventListener('click', () => editMapEvidence(lesson.world, cards));
@@ -58,7 +60,8 @@
     const menu = document.querySelector('#mapDrawer .md-list');
     if (menu) menu.after(shelf); else help.after(shelf);
     const stories = data.stories.filter(s => s.map === viewWorld).map(s => storyFor(s.id));
-    shelf.innerHTML = `<div class="se-shelf-heading"><b>Explore more · Map ${viewWorld + 1}</b><span>${stories.filter(s => complete(s.id)).length} / 2 explored</span></div><div class="se-shelf-links">${stories.map((s, i) => `<button type="button" data-extra-story="${s.id}" ${accessible(s) ? '' : 'disabled'}><span class="se-book-letter">${complete(s.id) ? '✓' : ['A','B'][i]}</span><span>${esc(s.title)}<small>Story · matching · challenge</small></span></button>`).join('')}</div>`;
+    shelf.hidden = !stories.length;
+    shelf.innerHTML = `<div class="se-shelf-heading"><b>Explore more · Map ${viewWorld + 1}</b><span>${stories.filter(s => complete(s.id)).length} / ${stories.length} explored</span></div><div class="se-shelf-links">${stories.map((s, i) => `<button type="button" data-extra-story="${s.id}" ${accessible(s) ? '' : 'disabled'}><span class="se-book-letter">${complete(s.id) ? '✓' : ['A','B'][i]}</span><span>${esc(s.title)}<small>Story · matching · challenge</small></span></button>`).join('')}</div>`;
     shelf.querySelectorAll('[data-extra-story]').forEach(b => b.onclick = () => openStory(b.dataset.extraStory));
   }
 

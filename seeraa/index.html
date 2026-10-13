@@ -434,7 +434,7 @@ body{font-variant-numeric:lining-nums}
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
 <main class="wrap">
   <section id="startScreen">
-    <div class="start-box"><div class="title-art-wrap"><img class="start-art" src="./assets/course-title.webp" alt="Open Qur'an in an Islamic garden"><div class="title-overlay"><span class="en">Seeraa Adventure</span><span class="ar" lang="ar" dir="rtl">السِّيرَة النَّبَوِيَّة</span></div></div><div class="start-icons">📖 🌙 🪙</div><h1>Seeraa Adventure</h1><h2 class="arabic">رِحْلَةُ السِّيرَة النَّبَوِيَّة</h2><p>Explore 60 Seeraa lessons across 15 maps, with stories, games, retelling and teacher checks for ages 7–15.</p><div class="auth-card"><div class="auth-tabs"><button class="auth-tab active" id="signInTab">Sign in</button><button class="auth-tab" id="createTab">Create account</button></div><section id="registrationClosedNotice" class="registration-notice hidden" tabindex="-1" aria-labelledby="registrationClosedTitle">
+    <div class="start-box"><div class="title-art-wrap"><img class="start-art" src="./assets/course-title.webp" alt="Open Qur'an in an Islamic garden"><div class="title-overlay"><span class="en">Seeraa Adventure</span><span class="ar" lang="ar" dir="rtl">السِّيرَة النَّبَوِيَّة</span></div></div><div class="start-icons">📖 🌙 🪙</div><h1>Seeraa Adventure</h1><h2 class="arabic">رِحْلَةُ السِّيرَة النَّبَوِيَّة</h2><p>Explore 124 Seeraa lessons across 31 maps, with stories, games, retelling and teacher checks for ages 7–15.</p><div class="auth-card"><div class="auth-tabs"><button class="auth-tab active" id="signInTab">Sign in</button><button class="auth-tab" id="createTab">Create account</button></div><section id="registrationClosedNotice" class="registration-notice hidden" tabindex="-1" aria-labelledby="registrationClosedTitle">
 <div class="registration-icon" aria-hidden="true">✦</div>
 <h2 id="registrationClosedTitle">Registration is now closed</h2>
 <p>Use your existing student account. Please contact your teacher if you need an account for Seeraa.</p>
@@ -507,7 +507,7 @@ body{font-variant-numeric:lining-nums}
   <section id="avatarScreen" class="hidden"><div class="avatar-screen"><h2>Create Your Explorer</h2><p>Choose a human style, skin tone and clothes. Your choices are saved to your student account.</p><div class="avatar-preview-card"><svg id="avatarPreview" viewBox="0 0 160 180" role="img" aria-label="Your full-body avatar preview"></svg></div><div class="avatar-customiser" id="avatarCustomiser"></div><h3 class="avatar-style-title">Choose hair or headwear</h3><div class="avatar-grid" id="avatarGrid"></div><button class="ghost" id="avatarBack">Save &amp; Back to Map</button></div></section>
 </main>
 <footer><p class="dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</p><p>Original child-friendly summaries following Ar-Raheeq Al-Makhtum (The Sealed Nectar) by Safiur Rahman al-Mubarakpuri.</p><p>© <span id="year"></span> Diin Islaam · Seeraa Adventure</p></footer>
-<script src="course-data.js"></script>
+<script src="course-data.js?v=maps-31"></script>
 <script>
 const draftWorlds=[
  {title:'World 1 · Tajweed Gate',icon:'🌙',colour:'#7a5aa8',lessons:[
@@ -841,7 +841,7 @@ function buildMapQuiz(worldIndex){
 }
 Object.keys(PDF_EXPLANATIONS).forEach(k=>delete PDF_EXPLANATIONS[k]);
 const worldStarts=[];let tally=0;worlds.forEach(w=>{worldStarts.push(tally);tally+=w.lessons.length});
-const key='seeraa-progress-v1',GAME_KEY='seeraa',COURSE_VERSION=5,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
+const key='seeraa-progress-v1',GAME_KEY='seeraa',COURSE_VERSION=6,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
 window.TAJWEED_AUDIO=window.TAJWEED_AUDIO||{};
 /* Recorded recitation: tuhfatul-atfaal/assets/audio/line-NNa.mp3 (first half) and line-NNb.mp3 (second half). Raise this when more lines are uploaded. */
 const RECORDED_LINES=0;
@@ -1512,6 +1512,9 @@ const printableObserver=new MutationObserver(()=>{});
 printableObserver.observe($('#mapTitle'),{childList:true,subtree:true});
 const normalizeProfileBeforeTeacherPortal=normalizeProfile;
 normalizeProfile=function(p,name){const d=normalizeProfileBeforeTeacherPortal(p,name);d.teacherMapUnlocks=Array.isArray(d.teacherMapUnlocks)?[...d.teacherMapUnlocks,...Array(worlds.length).fill(false)].slice(0,worlds.length):Array(worlds.length).fill(false);return d};
+// Course version 6 reorganised Seeraa into 31 maps in order of events, so lesson and map positions changed.
+// Progress saved under the old 15-map layout no longer matches any lesson, so it starts fresh (coins and avatar stay).
+const normalizeProfileBeforeMaps31=normalizeProfile;normalizeProfile=function(p,name){if(p&&typeof p==='object'&&Number(p.courseVersion)<6){['stars','memoryDone','vocabDone','teacherAssessments','mapQuizScores','flashPracticeDone','teacherMapUnlocks'].forEach(k=>delete p[k]);p.unlocked=1}return normalizeProfileBeforeMaps31(p,name)};
 worldUnlocked=function(w){return w===0||!!(assessment(w-1)&&assessment(w-1).approved)||!!(profile.teacherMapUnlocks&&profile.teacherMapUnlocks[w-1])};
 async function syncTeacherPortalUpdates(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.getStudentProfile)return;
@@ -2140,7 +2143,7 @@ const BADGES=[
  ['first_lesson','🌱','First lesson','Finish your first lesson',()=>doneCount()>=1],
  ['lessons10','📘','10 lessons','Finish 10 lessons',()=>doneCount()>=10],
  ['half','📗','Half way','Finish 31 lessons',()=>doneCount()>=31],
- ['course','🎓','Whole course','Finish all 62 lessons',()=>doneCount()>=TOTAL_LESSONS],
+ ['course','🎓','Whole course',`Finish all ${TOTAL_LESSONS} lessons`,()=>doneCount()>=TOTAL_LESSONS],
  ['map1','🗺️','First map done','Finish every lesson in a map',()=>worldsDone()>=1],
  ['challenge','🏆','Challenge champion','Pass a 15-question map challenge',()=>worlds.some((_,w)=>mapQuizPassed(w))],
  ['cert1','📜','Teacher approved','Get a map approved by your teacher',()=>worlds.some((_,w)=>assessment(w)&&assessment(w).approved)],
@@ -3371,12 +3374,12 @@ window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeo
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
 <script src="cartoon-avatar-14a08346.js?v=direction-3"></script>
-<script src="seeraa-activities.js?v=editable-activities-11"></script>
+<script src="seeraa-activities.js?v=maps-31"></script>
 <script src="seeraa-content-editor.js?v=editable-activities-11"></script>
-<script src="historical-worlds.js?v=expanded-stories-10"></script>
-<script src="seeraa-enrichment-data.js?v=expanded-stories-10"></script>
-<script src="seeraa-enrichment.js?v=expanded-stories-10"></script>
-<script src="seeraa-living-world.js?v=living-2"></script>
+<script src="historical-worlds.js?v=maps-31"></script>
+<script src="seeraa-enrichment-data.js?v=maps-31"></script>
+<script src="seeraa-enrichment.js?v=maps-31"></script>
+<script src="seeraa-living-world.js?v=maps-31"></script>
 </body>
 </html>
 

@@ -289,7 +289,7 @@ window.SEERAA_ENRICHMENT={
   "stories": [
     {
       "id": "m1-story-1",
-      "map": 0,
+      "map": 1,
       "title": "Zamzam: effort and trust",
       "place": "Makkah · Safa, Marwa and Zamzam",
       "story": [
@@ -372,7 +372,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m2-story-1",
-      "map": 1,
+      "map": 4,
       "title": "A child surrounded by care",
       "place": "Makkah · Family homes",
       "story": [
@@ -412,7 +412,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m2-story-2",
-      "map": 1,
+      "map": 4,
       "title": "The young shepherd: learning responsibility",
       "place": "Hills around Makkah",
       "story": [
@@ -455,7 +455,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m3-story-1",
-      "map": 2,
+      "map": 6,
       "title": "An honest day in the market",
       "place": "Makkah · Trading lanes",
       "story": [
@@ -495,7 +495,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m3-story-2",
-      "map": 2,
+      "map": 5,
       "title": "Fairness beyond your own friends",
       "place": "Makkah · The pact of fairness",
       "story": [
@@ -535,7 +535,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m4-story-1",
-      "map": 3,
+      "map": 8,
       "title": "Jibril and the beginning of revelation",
       "place": "Makkah · Hira on Jabal al-Noor",
       "story": [
@@ -578,7 +578,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m4-story-2",
-      "map": 3,
+      "map": 8,
       "title": "Comfort, listening and learning",
       "place": "Makkah · Khadijah’s home",
       "story": [
@@ -621,7 +621,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m5-story-1",
-      "map": 4,
+      "map": 9,
       "title": "Arkan al-Iman: the six pillars of faith",
       "place": "Makkah · Learning faith; later teaching connection",
       "story": [
@@ -673,7 +673,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m5-story-2",
-      "map": 4,
+      "map": 9,
       "title": "Arkan al-Islam: five foundations",
       "place": "Makkah to Madinah · A learning overview",
       "story": [
@@ -721,7 +721,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m6-story-1",
-      "map": 5,
+      "map": 12,
       "title": "Across the sea: finding safety",
       "place": "Abyssinia · Across the Red Sea",
       "story": [
@@ -761,7 +761,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m6-story-2",
-      "map": 5,
+      "map": 11,
       "title": "Bilal: dignity is not measured by status",
       "place": "Makkah · The early Muslim community",
       "story": [
@@ -801,7 +801,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m7-story-1",
-      "map": 6,
+      "map": 15,
       "title": "Taif: choosing mercy after hurt",
       "place": "Taif · Mountain town",
       "story": [
@@ -844,7 +844,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m7-story-2",
-      "map": 6,
+      "map": 14,
       "title": "Patience is an active choice",
       "place": "Makkah · Difficult years",
       "story": [
@@ -884,7 +884,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m8-story-1",
-      "map": 7,
+      "map": 16,
       "title": "Al-Isra: from Makkah to Al-Aqsa",
       "place": "Makkah → Jerusalem · Al-Masjid al-Aqsa",
       "story": [
@@ -924,7 +924,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m8-story-2",
-      "map": 7,
+      "map": 16,
       "title": "Al-Mi‘raj and the gift of salah",
       "place": "The ascent · Learning the five daily prayers",
       "story": [
@@ -972,7 +972,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m9-story-1",
-      "map": 8,
+      "map": 20,
       "title": "Thawr: careful planning and trust",
       "place": "Makkah · The Cave of Thawr",
       "story": [
@@ -1016,7 +1016,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m9-story-2",
-      "map": 8,
+      "map": 21,
       "title": "Quba: a community begins with worship",
       "place": "Quba · Near Madinah",
       "story": [
@@ -1056,7 +1056,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m10-story-1",
-      "map": 9,
+      "map": 23,
       "title": "Ramadan in Madinah: learning sawm",
       "place": "Madinah · Ramadan in the second Hijri year",
       "story": [
@@ -1096,7 +1096,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m10-story-2",
-      "map": 9,
+      "map": 22,
       "title": "Zakah: a right for those in need",
       "place": "Madinah · Caring for the community",
       "story": [
@@ -1136,7 +1136,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m11-story-1",
-      "map": 10,
+      "map": 25,
       "title": "Uhud: learning after a mistake",
       "place": "Madinah · Mount Uhud",
       "story": [
@@ -1179,7 +1179,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m11-story-2",
-      "map": 10,
+      "map": 23,
       "title": "A shield for words and actions",
       "place": "Madinah · Practising self-control",
       "story": [
@@ -1219,7 +1219,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m12-story-1",
-      "map": 11,
+      "map": 26,
       "title": "The Trench: many hands working together",
       "place": "Madinah · The defensive trench",
       "story": [
@@ -1262,7 +1262,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m12-story-2",
-      "map": 11,
+      "map": 27,
       "title": "Hudaybiyyah: keeping an agreement",
       "place": "Hudaybiyyah · Outside Makkah",
       "story": [
@@ -1302,7 +1302,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m13-story-1",
-      "map": 12,
+      "map": 28,
       "title": "Umrah: remembering earlier prophets",
       "place": "Makkah · Kaʿbah, Safa and Marwa",
       "story": [
@@ -1342,7 +1342,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m13-story-2",
-      "map": 12,
+      "map": 29,
       "title": "Mercy when you have the advantage",
       "place": "Makkah · The return",
       "story": [
@@ -1382,7 +1382,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m14-story-1",
-      "map": 13,
+      "map": 30,
       "title": "The Farewell Hajj: places on the journey",
       "place": "Makkah · Mina, Arafat and Muzdalifah",
       "story": [
@@ -1429,7 +1429,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m14-story-2",
-      "map": 13,
+      "map": 29,
       "title": "The Farewell teaching: protect people’s rights",
       "place": "The Hajj gathering · Human dignity",
       "story": [
@@ -1469,7 +1469,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m15-story-1",
-      "map": 14,
+      "map": 22,
       "title": "Jibril’s questions: faith, Islam and ihsan",
       "place": "Madinah · A teaching conversation",
       "story": [
@@ -1509,7 +1509,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m15-story-2",
-      "map": 14,
+      "map": 30,
       "title": "Carry the good forward",
       "place": "Madinah and beyond · Your own community",
       "story": [

@@ -12,6 +12,7 @@
     const date = raw && new Date(raw);
     return date && !isNaN(date.getTime()) ? date.toLocaleDateString(undefined, {day:'numeric',month:'short',year:'numeric'}) : '';
   }
+  const onMap = map => stories.filter(s => s.map === map).length;
   const count = (profile, map) => stories.filter(s => (map == null || s.map === map) && done(profile, s.id)).length;
   function rows(profile, map) {
     return `<ul class="extra-story-list">${stories.filter(s => s.map === map).map((s, i) => {
@@ -21,12 +22,13 @@
   }
   function render(container, profile, maps) {
     if (!container) return;
-    container.innerHTML = `<div class="extra-progress-head"><h3>Extra Seeraa stories</h3><strong>${count(profile)} / ${stories.length} explored</strong></div><p class="muted">Two extra stories on each map. An explored story means the student completed its matching activity and understanding question. These optional stories have their own progress count.</p>` +
-      maps.map((map, i) => `<details class="extra-map"><summary><span>Map ${i + 1} · ${escape(map[0])}</span><b>${count(profile, i)} / 2</b></summary>${rows(profile, i)}</details>`).join('');
+    container.innerHTML = `<div class="extra-progress-head"><h3>Extra Seeraa stories</h3><strong>${count(profile)} / ${stories.length} explored</strong></div><p class="muted">Up to two extra stories on many maps. An explored story means the student completed its matching activity and understanding question. These optional stories have their own progress count.</p>` +
+      maps.map((map, i) => onMap(i) ? `<details class="extra-map"><summary><span>Map ${i + 1} · ${escape(map[0])}</span><b>${count(profile, i)} / ${onMap(i)}</b></summary>${rows(profile, i)}</details>` : '').join('');
   }
   function renderMap(container, profile, map) {
     if (!container) return;
-    container.innerHTML = `<details class="extra-map"><summary><span>Extra stories on this map</span><b>${count(profile, map)} / 2</b></summary>${rows(profile, map)}<p class="muted">Additional practice for discussion during your teacher check.</p></details>`;
+    if (!onMap(map)) { container.innerHTML = ''; return; }
+    container.innerHTML = `<details class="extra-map"><summary><span>Extra stories on this map</span><b>${count(profile, map)} / ${onMap(map)}</b></summary>${rows(profile, map)}<p class="muted">Additional practice for discussion during your teacher check.</p></details>`;
   }
   function clearMap(profile, map) {
     if (!profile.seeraaExplored) return;
