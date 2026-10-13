@@ -1,0 +1,329 @@
+/* Seeraa living world.
+   1. Living maps: people, camels, goats and sheep walk the roads of each
+      painted scene (smaller far away), goats wander on the mountains, birds
+      cross the sky and gusts of sand blow over the desert maps. Each map has
+      its own mix. Figures sit behind the stops and never catch taps.
+   2. Story scenes beside their lesson's stop and at the top of its story:
+      the Year of the Elephant (Sūrat al-Fīl) on Map 1, and the Hijrah on
+      Map 9 — the two camels with a light above them (no riders shown) and
+      Surāqah on his horse, whose legs sink into the sand.
+   3. The lesson story looks like the Extra story panel, and the lesson steps
+      look like game tiles.
+   The Prophet ﷺ and Abū Bakr are never drawn — only their camels. */
+(function(){
+const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t<.5?2*t*t:1-Math.pow(2-2*t,2)/2;
+
+/* ---------- figures (facing right, feet at 0,0) ---------- */
+const SKIN=['#c68e5f','#a9714b','#8d5a3b','#d7a57a'];
+function personSvg(o){
+ const robe=o.robe||'#e9dcc2',wrap=o.wrap||'#f4efe2',skin=o.skin||SKIN[0],woman=o.woman;
+ const load=o.load==='basket'?'<path d="M-6-52h12l-2 6h-8z" fill="#a0743f" stroke="#6d4a26" stroke-width=".8"/>':o.load==='bundle'?'<rect x="-13" y="-36" width="8" height="13" rx="3" fill="#9b7a54"/>':o.load==='staff'?'<line x1="10" y1="-40" x2="14" y2="0" stroke="#6d4a26" stroke-width="2"/>':'';
+ return `<g class="lw-legs"><line class="lw-leg a" x1="-2.5" y1="-15" x2="-3" y2="0"/><line class="lw-leg b" x1="2.5" y1="-15" x2="3" y2="0"/></g>`
+  +`<path d="M-8-${woman?5:12} L-6-35 Q0-38 6-35 L${woman?9:8}-${woman?5:12} Z" fill="${robe}" stroke="#00000022" stroke-width=".8"/>`
+  +`<line class="lw-arm" x1="5" y1="-31" x2="9" y2="-19" stroke="${robe}" stroke-width="4" stroke-linecap="round"/>`
+  +(woman?`<path d="M-7-36 Q-8-50 0-50 Q8-50 7-36 Q8-30 0-31 Q-8-30-7-36Z" fill="${wrap}"/><circle cx="2.5" cy="-42" r="3.6" fill="${skin}"/>`
+         :`<circle cx="0" cy="-42" r="5.6" fill="${skin}"/><path d="M-7-41 Q-7-50 0-50 Q7-50 7-43 L8-37 Q4-39 2-42 L-1-42 Q-4-40-8-37Z" fill="${wrap}"/><path d="M-7-44 Q0-47 7-44" stroke="#00000030" fill="none" stroke-width="1.2"/>`)
+  +load;
+}
+function camelSvg(o){
+ const c=o.color||'#c79a63',d=o.dark||'#9c7445',saddle=o.saddle||'#9b2f2a';
+ const bags=o.load?`<rect x="-16" y="-44" width="9" height="13" rx="2" fill="#7c5a37" stroke="#4f3820" stroke-width=".8"/><rect x="7" y="-44" width="9" height="13" rx="2" fill="#866041" stroke="#4f3820" stroke-width=".8"/>`:'';
+ return `<g class="lw-legs"><line class="lw-leg a" x1="-15" y1="-27" x2="-16" y2="0"/><line class="lw-leg b" x1="-9" y1="-27" x2="-8" y2="0"/><line class="lw-leg b" x1="12" y1="-27" x2="11" y2="0"/><line class="lw-leg a" x1="18" y1="-27" x2="19" y2="0"/></g>`
+  +`<path d="M-24-32q-5 4-3 11" stroke="${d}" fill="none" stroke-width="2"/>`
+  +`<path d="M-25-29 Q-24-45-10-46 Q-3-60 6-47 Q15-45 20-35 L23-31 Q10-24-21-25Z" fill="${c}" stroke="${d}" stroke-width=".8"/>`
+  +`<path d="M17-35 Q29-38 30-52 Q31-60 37-59 L42-56 Q44-52 39-52 Q35-51 35-45 Q33-31 22-28Z" fill="${c}" stroke="${d}" stroke-width=".8"/>`
+  +`<circle cx="38" cy="-56" r=".9" fill="#3a2a1a"/>`
+  +`<path d="M-11-45 Q-2-55 9-46 L8-39 Q-1-42-10-39Z" fill="${saddle}"/><path d="M-11-45 Q-2-55 9-46" stroke="#e4b85a" fill="none" stroke-width="1.2"/>`+bags;
+}
+function goatSvg(o){
+ const c=o.color||'#e8e1d2',d=o.dark||'#7d6a52',sheep=o.sheep;
+ return `<g class="lw-legs"><line class="lw-leg a" x1="-6" y1="-8" x2="-6.5" y2="0"/><line class="lw-leg b" x1="-3" y1="-8" x2="-2.5" y2="0"/><line class="lw-leg b" x1="4" y1="-8" x2="3.5" y2="0"/><line class="lw-leg a" x1="7" y1="-8" x2="7.5" y2="0"/></g>`
+  +(sheep?`<path d="M-10-10 q-1-6 4-7 q3-4 7-1 q5-2 7 3 q4 3 0 7 q-3 3-8 2 q-6 2-10-4Z" fill="${c}" stroke="#00000025" stroke-width=".7"/><path d="M8-12 l6-3 q2 2 0 6 l-5 1Z" fill="${d}"/>`
+         :`<ellipse cx="0" cy="-11" rx="9.5" ry="5" fill="${c}" stroke="#00000025" stroke-width=".7"/><path d="M7-13 L13-18 Q15.5-16 14.5-12 L9-9Z" fill="${c}" stroke="#00000025" stroke-width=".7"/><path d="M12-18q-2-5-6-6" stroke="${d}" fill="none" stroke-width="1.4"/><path d="M-9-13l-3-3" stroke="${c}" stroke-width="2" stroke-linecap="round"/>`);
+}
+function birdSvg(){return `<path class="lw-wing" d="M-9 0Q-4-6 0 0Q4-6 9 0" stroke="#3b2f25" fill="none" stroke-width="1.8" stroke-linecap="round"/>`}
+
+/* ---------- where things walk, per painted scene (fractions of the picture) ---------- */
+/* Each lane: points along a road or slope. Kinds: p person, w woman, c camel,
+   cl camel with goods, g goat, s sheep. */
+const LANES={
+ makkah:{roads:[[[.62,.99],[.56,.72],[.49,.54],[.43,.43]],[[.97,.36],[.80,.335],[.62,.32],[.47,.30]],[[.30,.64],[.45,.62],[.60,.66]]],hills:[[[.47,.14],[.55,.12],[.62,.15]],[[.80,.09],[.88,.07],[.95,.10]],[[.05,.13],[.12,.12]]],dusty:1},
+ hira:{roads:[[[.68,.99],[.60,.74],[.52,.56],[.53,.44],[.60,.33]],[[.08,.43],[.20,.45],[.30,.47]]],hills:[[[.62,.27],[.70,.24],[.77,.27]],[[.40,.33],[.46,.30]],[[.84,.22],[.90,.25]]],dusty:1},
+ madinah:{roads:[[[.72,.99],[.60,.72],[.47,.48],[.36,.33]],[[.62,.36],[.75,.355],[.88,.36]]],hills:[[[.20,.09],[.30,.08]],[[.62,.10],[.70,.11]],[[.88,.09],[.95,.10]]]},
+ taif:{roads:[[[.56,.99],[.52,.76],[.56,.56],[.59,.42]],[[.22,.74],[.30,.72],[.36,.74]]],hills:[[[.74,.14],[.80,.12]],[[.30,.12],[.38,.11]],[[.92,.20],[.97,.18]]]},
+ abyssinia:{roads:[[[.62,.99],[.56,.74],[.49,.52],[.52,.42]],[[.62,.40],[.70,.40],[.76,.42]]],hills:[[[.38,.26],[.47,.24]],[[.20,.22],[.28,.20]],[[.86,.14],[.92,.13]]]},
+ hijrah:{roads:[[[.88,.99],[.70,.74],[.60,.55],[.62,.40],[.70,.30]],[[.38,.21],[.60,.20],[.84,.19]],[[.16,.30],[.28,.40],[.40,.47]]],hills:[[[.22,.28],[.30,.26]],[[.40,.10],[.48,.09]],[[.76,.11],[.84,.10]]],dusty:1},
+ uhud:{roads:[[[.72,.99],[.58,.70],[.46,.44],[.40,.35]],[[.44,.33],[.58,.31],[.72,.30]]],hills:[[[.74,.29],[.82,.32]],[[.48,.12],[.56,.10],[.64,.13]],[[.86,.15],[.93,.17]]],dusty:1},
+ tabuk:{roads:[[[.58,.99],[.50,.70],[.44,.47],[.46,.37]],[[.26,.31],[.40,.30],[.58,.29]]],hills:[[[.86,.12],[.92,.10]],[[.30,.15],[.38,.13]],[[.06,.14],[.12,.12]]],dusty:1}
+};
+/* What walks on each of the 15 maps. */
+const MAP_LIFE=[
+ {road:['cl','p','w','cl','p'],hill:['g','g','g'],birds:3},            // 1 Arabia before Islam: traders' caravan
+ {road:['s','s','s','p','s','c'],hill:['g','g'],birds:2},              // 2 Childhood: a shepherd with his flock
+ {road:['cl','cl','p','w','p','cl'],hill:['g'],birds:2},               // 3 Trust and fairness: market caravans
+ {road:['p','g','g','w'],hill:['g','g','g','g'],birds:4},              // 4 Hira: goats on the mountain
+ {road:['p','w','p','p','c'],hill:['g','g'],birds:2},                  // 5 The first Muslims
+ {road:['p','w','p','c'],hill:['g','g'],birds:3},                      // 6 Abyssinia
+ {road:['p','w','s','s','p'],hill:['g','g','g'],birds:3},              // 7 Taif: gardens and flocks
+ {road:['p','c','p'],hill:['g'],birds:1},                              // 8 Aqabah
+ {road:['p','g','g'],hill:['g','g'],birds:2},                         // 9 Hijrah (its two camels have their own scene)
+ {road:['p','w','p','c','g','w'],hill:['g','g'],birds:3},              // 10 Quba and Madinah
+ {road:['p','c','p','w'],hill:['g','g','g'],birds:2},                  // 11 Uhud
+ {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 12 Madinah
+ {road:['p','w','p','w','p','c','cl'],hill:['g','g'],birds:3},         // 13 Returning to Makkah
+ {road:['cl','cl','cl','c','p'],hill:['g','g'],birds:2},               // 14 Tabuk: a long caravan
+ {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 15 Madinah
+];
+const ROBES=['#e9dcc2','#d8c3a0','#b98a5a','#8e5a3a','#f2ece0','#c9b28a','#a7764f'],WRAPS=['#f4efe2','#d9cdb4','#b2493b','#e8e2d0','#7c5236'],ABAYAS=['#3b3433','#4a3b35','#5b4636','#2f3438'];
+function figureFor(kind,i){
+ if(kind==='p')return{h:personSvg({robe:ROBES[i%ROBES.length],wrap:WRAPS[(i*3)%WRAPS.length],skin:SKIN[i%SKIN.length],load:['bundle','basket','staff',''][i%4]}),k:1,speed:16};
+ if(kind==='w')return{h:personSvg({woman:1,robe:ABAYAS[i%ABAYAS.length],wrap:ABAYAS[(i+1)%ABAYAS.length],skin:SKIN[(i+1)%SKIN.length],load:i%2?'basket':''}),k:.96,speed:14};
+ if(kind==='c'||kind==='cl')return{h:camelSvg({load:kind==='cl',saddle:['#9b2f2a','#2f5c7a','#6a3d7a','#9a6a1f'][i%4],color:['#c79a63','#b98b55','#d2a874'][i%3]}),k:1.15,speed:12};
+ if(kind==='s')return{h:goatSvg({sheep:1,color:['#f2ede2','#e7dfcf'][i%2],dark:'#4a3b2c'}),k:.75,speed:9};
+ return{h:goatSvg({color:['#e8e1d2','#6b4f3a','#2f2a26','#b58a5c'][i%4],dark:'#4f3d2b'}),k:.75,speed:7};
+}
+
+/* ---------- the animation engine (one loop for everything) ---------- */
+const LW={figs:[],theatres:new Set(),raf:0,t0:performance.now(),gustTimer:0};
+function polyLen(pts){let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);return L}
+function polyAt(pts,s){for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=l||i===pts.length-1){const t=l?clamp(s/l,0,1):0;return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,b[0]-a[0]]}s-=l}return pts[pts.length-1].concat([1])}
+function tick(now){
+ LW.raf=0;
+ const scr=document.getElementById('mapScreen'),mapOn=scr&&!scr.classList.contains('hidden')&&!document.hidden,t=(now-LW.t0)/1000;
+ if(mapOn&&!reduced())LW.figs.forEach(f=>{
+  if(!f.el.isConnected)return;
+  const span=f.len*2,d=(f.off+t*f.speed)%span,back=d>f.len,s=back?span-d:d,p=polyAt(f.pts,s),dir=(p[2]>=0?1:-1)*(back?-1:1);
+  const v=clamp((p[1]-f.P.y)/f.P.h,0,1),sc=Math.max(f.min||0,(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*f.P.w/1536*f.k);
+  f.el.setAttribute('transform',`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) scale(${(sc*dir).toFixed(3)} ${sc.toFixed(3)})`);
+ });
+ LW.theatres.forEach(th=>{if(!th.svg.isConnected){LW.theatres.delete(th);return}if(th.visible())th.tick(((now-th.start)/1000)%th.cycle)});
+ if(LW.figs.length||LW.theatres.size)LW.raf=requestAnimationFrame(tick);
+}
+function run(){if(!LW.raf)LW.raf=requestAnimationFrame(tick)}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
+
+/* ---------- living map ---------- */
+function photoBox(svg){const img=svg.querySelector('.history-photo');if(!img)return null;return{x:+img.getAttribute('x'),y:+img.getAttribute('y'),w:+img.getAttribute('width'),h:+img.getAttribute('height')}}
+function paintLife(){
+ const svg=document.getElementById('mapSvg');if(!svg||typeof SEERAA_SCENES==='undefined')return;
+ svg.querySelectorAll('.lw-life').forEach(g=>g.remove());LW.figs=LW.figs.filter(f=>f.el.isConnected&&f.el.closest('#mapSvg')!==svg);
+ const P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%15)+15)%15],lanes=LANES[S.asset],life=MAP_LIFE[((viewWorld%15)+15)%15];if(!P||!lanes||!life)return;
+ const L=typeof MAP_GEO!=='undefined'&&MAP_GEO,u0=L?clamp(-P.x/P.w,0,1):0,u1=L?clamp((L.W-P.x)/P.w,0,1):1,squeeze=u1-u0<.8;
+ const toMap=([u,v])=>[P.x+(squeeze?u0+.04*(u1-u0)+u*.92*(u1-u0):u)*P.w,P.y+v*P.h];let html='';const plan=[];
+ life.road.forEach((kind,i)=>{const lane=lanes.roads[i%lanes.roads.length];plan.push({kind,pts:lane.map(toMap),i})});
+ life.hill.forEach((kind,i)=>{const lane=lanes.hills[i%lanes.hills.length];plan.push({kind,pts:lane.map(toMap),i:i+7,hill:1})});
+ plan.forEach((f,n)=>{const F=figureFor(f.kind,f.i);html+=`<g class="lw-fig lw-k-${f.kind}" data-n="${n}">${F.h}</g>`;f.F=F});
+ for(let b=0;b<life.birds;b++)html+=`<g class="lw-bird" data-b="${b}">${birdSvg()}</g>`;
+ const scene=svg.querySelector('.history-scene');if(!scene)return;
+ scene.insertAdjacentHTML('afterend',`<g class="lw-life" aria-hidden="true" pointer-events="none">${html}</g>`);
+ const g=svg.querySelector('.lw-life');
+ plan.forEach((f,n)=>{const el=g.querySelector(`[data-n="${n}"]`),len=polyLen(f.pts);LW.figs.push({el,pts:f.pts,len,P,k:f.F.k,min:f.hill?.42*Math.max(P.w/1536,.6):0,speed:f.F.speed*(f.hill?.35:1)*P.w/1536*(.85+(n%3)*.12),off:(n*0.37%1)*len*2});if(reduced()){const p=polyAt(f.pts,len*((n*.29)%1)),v=clamp((p[1]-P.y)/P.h,0,1),sc=(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*P.w/1536*f.F.k;el.setAttribute('transform',`translate(${p[0]} ${p[1]}) scale(${sc})`)}});
+ /* birds glide across the sky */
+ for(let b=0;b<life.birds;b++){const el=g.querySelector(`[data-b="${b}"]`),y=P.y+P.h*(.04+b*.03),x0=P.x-40,x1=P.x+P.w+40;LW.figs.push({el,pts:b%2?[[x1,y],[x0,y+20]]:[[x0,y],[x1,y+15]],len:P.w+80,P:{x:P.x,y:P.y-P.h*2,w:P.w,h:P.h*3},k:1.1,speed:55*P.w/1536,off:b*P.w*.6})}
+ const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('lw-dusty',!!lanes.dusty);
+ scheduleGust(frame,!!lanes.dusty);run();
+}
+/* gusts of wind with blowing sand on the desert maps */
+function scheduleGust(frame,on){clearTimeout(LW.gustTimer);if(!frame||!on||reduced())return;LW.gustTimer=setTimeout(()=>{gust(frame);scheduleGust(frame,frame.classList.contains('lw-dusty'))},9000+Math.random()*12000)}
+function gust(frame){
+ const scr=document.getElementById('mapScreen');if(!frame.isConnected||(scr&&scr.classList.contains('hidden'))||document.hidden)return;
+ let w=frame.querySelector('.lw-wind');if(!w){frame.insertAdjacentHTML('beforeend','<div class="lw-wind" aria-hidden="true"></div>');w=frame.querySelector('.lw-wind')}
+ let h='';for(let i=0;i<9;i++)h+=`<i style="top:${(18+Math.random()*70).toFixed(1)}%;width:${(14+Math.random()*22).toFixed(0)}%;animation-delay:${(Math.random()*.9).toFixed(2)}s;opacity:${(.25+Math.random()*.35).toFixed(2)}"></i>`;
+ for(let i=0;i<26;i++)h+=`<b style="top:${(30+Math.random()*65).toFixed(1)}%;animation-delay:${(Math.random()*1.2).toFixed(2)}s"></b>`;
+ w.innerHTML=h;w.classList.remove('go');void w.offsetWidth;w.classList.add('go');
+}
+
+/* ---------- the Year of the Elephant ---------- */
+const ELEPHANT_CAPTIONS=[[0,'Abrahah marches towards Makkah with a great army and an elephant, to destroy the Kaʿbah.'],[8,'The elephant kneels down. It will not walk towards the Kaʿbah.'],[9.6,'Allah sends flocks of birds — ṭayran abābīl — each carrying small stones.'],[12.6,'The stones strike the army, and it is left like straw that has been eaten. (Sūrat al-Fīl, 105)'],[16.5,'Allah protected His House. The Prophet Muhammad ﷺ was born in this same year.']];
+function soldierSvg(i){const tunic=['#7a4b2b','#5c6b3c','#6d3a2e','#4f5b6a'][i%4];return `<g class="lw-legs"><line class="lw-leg a" x1="-3" y1="-16" x2="-4" y2="0"/><line class="lw-leg b" x1="3" y1="-16" x2="4" y2="0"/></g><path d="M-8-14 L-6-36 Q0-39 6-36 L8-14Z" fill="${tunic}"/><circle cx="0" cy="-42" r="6" fill="${SKIN[i%SKIN.length]}"/><path d="M-7-43 Q0-53 7-43Z" fill="#9aa1a8" stroke="#5d646b" stroke-width=".8"/><line x1="9" y1="-48" x2="13" y2="2" stroke="#6b4b2b" stroke-width="1.8"/><path d="M10.5-53 l2.5 6 -4 0Z" fill="#b8bec4"/><ellipse cx="-7" cy="-25" rx="5" ry="7" fill="#8a5a2b" stroke="#4d3015" stroke-width="1"/>`}
+function elephantSvg(){return `<g class="lwE-back"><rect x="-27" y="-24" width="11" height="24" rx="3" fill="#858c96"/><rect x="-13" y="-24" width="11" height="24" rx="3" fill="#7d848e"/></g>`
+ +`<g class="lwE-front"><rect x="9" y="-24" width="11" height="24" rx="3" fill="#858c96"/><rect x="22" y="-24" width="11" height="24" rx="3" fill="#7d848e"/></g>`
+ +`<path d="M-34-40 q-7 6-5 15" stroke="#6d747e" fill="none" stroke-width="2.5"/>`
+ +`<ellipse cx="0" cy="-44" rx="38" ry="25" fill="#959ca6"/><circle cx="36" cy="-52" r="17" fill="#959ca6"/><ellipse cx="27" cy="-52" rx="10" ry="14" fill="#7f8690"/>`
+ +`<path d="M49-52 Q58-40 54-26 Q53-20 58-18" stroke="#959ca6" fill="none" stroke-width="8" stroke-linecap="round"/><path d="M45-40 q8 2 11 -3" stroke="#fff8e8" fill="none" stroke-width="3" stroke-linecap="round"/><circle cx="41" cy="-57" r="1.6" fill="#2b2b2b"/>`
+ +`<path d="M-18-66 Q0-76 18-66 L16-54 L-16-54Z" fill="#9b2f2a"/><path d="M-18-66 Q0-76 18-66" stroke="#e4b85a" fill="none" stroke-width="2"/>`
+ +`<g class="lwE-king"><path d="M-6-66 L-4-88 Q0-91 4-88 L6-66Z" fill="#5a2f6e"/><circle cx="0" cy="-94" r="6" fill="${SKIN[1]}"/><path d="M-6-99 L-6-104 -3-101 0-106 3-101 6-104 6-99Z" fill="#e4b85a" stroke="#9a7220" stroke-width=".6"/></g>`}
+function kaabaSvg(){return `<path d="M-38 0 L-38-56 L0-66 L38-56 L38 0 L0 8Z" fill="#1f1f22"/><path d="M0-66 L38-56 L38 0 L0 8Z" fill="#2c2c30"/><path d="M-38-44 L0-53 L38-44 L38-38 L0-47 L-38-38Z" fill="#c9a43a"/><rect x="-6" y="-22" width="12" height="22" fill="#b38d2a" opacity=".85"/>`}
+/* Builds the scene into an <svg> with viewBox 0 0 600 260. full: sky, hills and the Kaʿbah behind. */
+function elephantTheatre(svg,full,captionEl){
+ const soldiers=[-160,-122,-86,78,112];let h='';
+ if(full)h+=`<defs><linearGradient id="lwSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c98a"/><stop offset=".6" stop-color="#fbe4b8"/><stop offset="1" stop-color="#f3d9a6"/></linearGradient></defs><rect width="600" height="260" fill="url(#lwSky)"/><circle cx="110" cy="70" r="28" fill="#fff1c4" opacity=".9"/><path d="M0 170 L60 120 L110 150 L170 95 L240 150 L300 112 L360 150 L430 100 L500 140 L560 110 L600 130 L600 260 L0 260Z" fill="#c9a06a"/><path d="M0 190 L80 160 L160 185 L250 158 L340 186 L430 165 L520 184 L600 170 L600 260 L0 260Z" fill="#d9b27a"/><rect y="214" width="600" height="46" fill="#e2c08a"/><g transform="translate(535 216)">${kaabaSvg()}</g>`;
+ else h+=`<ellipse cx="300" cy="218" rx="260" ry="14" fill="#5b4126" opacity=".16"/>`;
+ h+=`<g class="lwE-army">`+soldiers.map((x,i)=>i<3?`<g transform="translate(${x+300} 216)"><g class="lwE-s" data-s="${i}">${soldierSvg(i)}</g></g>`:'').join('')
+  +`<g transform="translate(300 216)"><g class="lwE-el">${elephantSvg()}</g></g>`
+  +soldiers.map((x,i)=>i>=3?`<g transform="translate(${x+300} 216)"><g class="lwE-s" data-s="${i}">${soldierSvg(i)}</g></g>`:'').join('')+`</g>`;
+ const birds=[...soldiers,0].map((x,i)=>({hx:x+300+(i%2?6:-6),hy:58+(i%3)*14,sx:620+i*40,sy:-20-i*12,ex:-60-i*30,ey:-40-i*10}));
+ h+=birds.map((b,i)=>`<circle class="lwE-stone" data-b="${i}" r="3.6" fill="#7a6650" stroke="#3d3022" stroke-width="1"/>`).join('');
+ h+=birds.map((b,i)=>`<g class="lwE-bird" data-b="${i}"><path class="lwE-wing" d="M-12 0Q-6-9 0 0Q6-9 12 0" stroke="#3a2c20" fill="none" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="1" rx="4" ry="2.6" fill="#4a3826"/></g>`).join('');
+ svg.innerHTML=h;
+ const army=svg.querySelector('.lwE-army'),el=svg.querySelector('.lwE-el'),front=svg.querySelector('.lwE-front'),king=svg.querySelector('.lwE-king'),S=[...svg.querySelectorAll('.lwE-s')],B=[...svg.querySelectorAll('.lwE-bird')],ST=[...svg.querySelectorAll('.lwE-stone')],legs=[...svg.querySelectorAll('.lwE-army .lw-leg')];
+ let lastCap=-1;
+ const th={svg,cycle:24,start:performance.now(),visible:()=>!document.hidden&&svg.getBoundingClientRect().width>0,
+  tick(t){
+   const walk=t<8,ax=walk?lerp(-300,0,ease(t/8)):0,aOp=t<.6?t/.6:t>21?clamp(1-(t-21)/2,0,1):1;
+   army.setAttribute('transform',`translate(${ax.toFixed(1)} 0)`);army.setAttribute('opacity',aOp.toFixed(2));
+   const swing=walk?Math.sin(t*9)*16:0;legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?swing:-swing).toFixed(1)} ${x} ${y})`)});
+   const k=clamp((t-8)/1.2,0,1);el.setAttribute('transform',`rotate(${(k*9).toFixed(2)} -27 0)`);{const sc=1-.4*k;front.setAttribute('transform',`translate(0 ${(-24*(1-sc)).toFixed(2)}) scale(1 ${sc.toFixed(3)})`)}
+   S.forEach((s,i)=>{const f=clamp((t-13-i*.12)/1.1,0,1),o=1-clamp((t-14.4-i*.12)/1.6,0,1);s.setAttribute('transform',`rotate(${(f*84*(i<3?-1:1)).toFixed(1)} 0 0)`);s.setAttribute('opacity',o.toFixed(2))});
+   {const f=clamp((t-13.3)/1.1,0,1),o=1-clamp((t-14.6)/1.6,0,1);king.setAttribute('transform',`rotate(${(-f*70).toFixed(1)} 0 -66)`);king.setAttribute('opacity',o.toFixed(2))}
+   birds.forEach((b,i)=>{const fin=ease(clamp((t-9-i*.15)/2.8,0,1)),fout=ease(clamp((t-15.2-i*.1)/2.6,0,1));let x=lerp(b.sx,b.hx,fin),y=lerp(b.sy,b.hy,fin);if(fout>0){x=lerp(b.hx,b.ex,fout);y=lerp(b.hy,b.ey,fout)}const on=t>8.8&&t<18.5;B[i].setAttribute('transform',`translate(${x.toFixed(1)} ${(y+Math.sin(t*6+i)*3).toFixed(1)}) scale(${fout>0?-1:-1} 1)`);B[i].setAttribute('opacity',on?1:0);B[i].querySelector('.lwE-wing').setAttribute('transform',`scale(1 ${(0.35+0.65*Math.abs(Math.sin(t*14+i))).toFixed(2)})`);
+    const d=clamp((t-12-i*.12)/1.1,0,1),stoneOn=t>11.6+i*.12&&d<1;ST[i].setAttribute('cx',b.hx.toFixed(1));ST[i].setAttribute('cy',(t<12+i*.12?b.hy+4:lerp(b.hy+4,198,d*d)).toFixed(1));ST[i].setAttribute('opacity',stoneOn?1:0)});
+   if(captionEl){let c=0;ELEPHANT_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=ELEPHANT_CAPTIONS[c][1]}}
+  }};
+ if(reduced())th.tick(16.6);else{LW.theatres.add(th);run()}
+ return th;
+}
+/* ---------- the Hijrah: Surāqah and the two camels ---------- */
+/* Only the two camels of the Prophet ﷺ and Abū Bakr are shown — no riders —
+   with a soft light above them. Surāqah ibn Mālik rides a horse, as the
+   sources describe; its legs sink into the sand and he turns back. */
+const HIJRAH_CAPTIONS=[[0,'The Prophet ﷺ and Abū Bakr travel towards Madinah. Allah’s protection is with them.'],[2.6,'Surāqah ibn Mālik rides fast on his horse, hoping to catch them for a reward.'],[8,'As he comes close, his horse’s legs sink into the sand.'],[11.4,'Surāqah understands they are protected. He asks for safety and turns back.'],[15.5,'He even sends other searchers away. Allah protected His Messenger ﷺ on the Hijrah.']];
+function horseSvg(){return `<g class="lwH-legs"><line class="lw-leg a" x1="-15" y1="-25" x2="-17" y2="0"/><line class="lw-leg b" x1="-9" y1="-25" x2="-8" y2="0"/><g class="lwH-front"><line class="lw-leg b" x1="12" y1="-25" x2="13" y2="0"/><line class="lw-leg a" x1="18" y1="-25" x2="20" y2="0"/></g></g>`
+ +`<path d="M-23-35q-9 4-7 15" stroke="#3a2416" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M-24-31 Q-22-43 -5-43 L14-43 Q23-43 25-35 L23-27 Q0-23-21-25Z" fill="#7a4e2d"/><path d="M16-41 L26-57 Q30-63 37-59 L41-53 Q39-50 35-51 L29-45 L23-34Z" fill="#7a4e2d"/><path d="M18-43 L28-59" stroke="#3a2416" stroke-width="3.2" stroke-linecap="round"/><circle cx="35" cy="-56" r="1.2" fill="#1d120a"/>`
+ +`<g class="lwH-rider"><path d="M-7-42 L-5-62 Q1-65 7-62 L9-42Z" fill="#b2493b"/><line x1="6" y1="-58" x2="14" y2="-48" stroke="#b2493b" stroke-width="4" stroke-linecap="round"/><circle cx="1" cy="-69" r="5.5" fill="${SKIN[1]}"/><path d="M-6-68 Q-6-77 1-77 Q8-77 8-70 L9-64 Q5-66 3-69 L0-69 Q-3-67-7-64Z" fill="#e8e2d0"/><line x1="-8" y1="-80" x2="22" y2="-38" stroke="#6b4b2b" stroke-width="1.8"/></g>`}
+function hijrahTheatre(svg,full,captionEl){
+ let h=`<defs><radialGradient id="lwGlow${full?'F':'M'}"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffe9a0" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs>`;
+ if(full)h+=`<defs><linearGradient id="lwDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b4a7a"/><stop offset=".55" stop-color="#d9927a"/><stop offset="1" stop-color="#f1c48d"/></linearGradient></defs><rect width="600" height="260" fill="url(#lwDusk)"/><circle cx="470" cy="60" r="3" fill="#fff" opacity=".8"/><circle cx="520" cy="38" r="2" fill="#fff" opacity=".7"/><circle cx="380" cy="30" r="2" fill="#fff" opacity=".6"/><path d="M0 160 L70 110 L120 140 L190 96 L250 140 L330 104 L400 146 L470 112 L540 140 L600 118 L600 260 L0 260Z" fill="#8a6a54"/><path d="M0 196 Q120 170 240 192 T480 186 T600 190 L600 260 L0 260Z" fill="#d7ad76"/><rect y="214" width="600" height="46" fill="#e4bd84"/><path d="M28 214 Q20 170 60 160 Q92 164 96 214Z" fill="#6e5546"/><path d="M48 214 Q50 188 64 186 Q76 190 76 214Z" fill="#2c2018"/>`;
+ else h+=`<ellipse cx="300" cy="218" rx="270" ry="14" fill="#5b4126" opacity=".16"/>`;
+ h+=`<g class="lwH-pair"><g class="lwH-light"><ellipse cx="0" cy="${full?118:126}" rx="96" ry="58" fill="url(#lwGlow${full?'F':'M'})"/><g stroke="#fff3b8" stroke-width="3" stroke-linecap="round" opacity=".7">${[...Array(10)].map((_,i)=>{const a=i*Math.PI/5;return `<line x1="${(Math.cos(a)*18).toFixed(1)}" y1="${((full?100:108)+Math.sin(a)*18).toFixed(1)}" x2="${(Math.cos(a)*34).toFixed(1)}" y2="${((full?100:108)+Math.sin(a)*34).toFixed(1)}"/>`}).join('')}</g><circle cx="0" cy="${full?100:108}" r="12" fill="#fffbe6"/></g><g transform="translate(-38 216)"><g class="lwH-c">${camelSvg({saddle:'#2f5c7a',color:'#cfa36b'})}</g></g><g transform="translate(38 216)"><g class="lwH-c">${camelSvg({saddle:'#7a2f2a',color:'#c4955d'})}</g></g></g>`;
+ h+=`<g class="lwH-dust"><circle cx="0" cy="0" r="10" fill="#e8cf9e" opacity=".7"/><circle cx="14" cy="-4" r="8" fill="#ead6ab" opacity=".6"/><circle cx="-12" cy="-3" r="7" fill="#e3c792" opacity=".6"/></g><g class="lwH-horse"><g class="lwH-flip">${horseSvg()}</g></g>`;
+ svg.innerHTML=h;
+ const pair=svg.querySelector('.lwH-pair'),light=svg.querySelector('.lwH-light'),horse=svg.querySelector('.lwH-horse'),flip=svg.querySelector('.lwH-flip'),front=svg.querySelector('.lwH-front'),rider=svg.querySelector('.lwH-rider'),dust=svg.querySelector('.lwH-dust');
+ const camelLegs=[...svg.querySelectorAll('.lwH-c .lw-leg')],horseLegs=[...svg.querySelectorAll('.lwH-horse .lw-leg')];
+ svg.querySelectorAll('.lw-leg').forEach(l=>{l.setAttribute('stroke',l.closest('.lwH-horse')?'#5e3b21':'#9c7445');l.setAttribute('stroke-width',l.closest('.lwH-horse')?'4':'4.2');l.setAttribute('stroke-linecap','round')});
+ let lastCap=-1;
+ const swingLegs=(legs,a)=>legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?a:-a).toFixed(1)} ${x} ${y})`)});
+ const pairX=t=>lerp(190,470,clamp(t/18,0,1)),stopX=pairX(8)-150;
+ const th={svg,cycle:22,start:performance.now(),visible:()=>!document.hidden&&svg.getBoundingClientRect().width>0,
+  tick(t){
+   const pOp=t<.6?t/.6:t>19.5?clamp(1-(t-19.5)/2,0,1):1;
+   pair.setAttribute('transform',`translate(${pairX(t).toFixed(1)} 0)`);pair.setAttribute('opacity',pOp.toFixed(2));swingLegs(camelLegs,Math.sin(t*5)*12);
+   light.setAttribute('opacity',(0.82+0.18*Math.sin(t*2.2)).toFixed(2));
+   let hx,dir=1,gallop=0;
+   if(t<2)hx=-120;else if(t<8){hx=lerp(-120,stopX,ease((t-2)/6));gallop=1}else if(t<12.4){hx=stopX;dir=t<11.4?1:-1}else{hx=lerp(stopX,-160,ease(clamp((t-12.4)/4,0,1)));dir=-1;gallop=t<16.4?1:0}
+   const sink=t>=8&&t<11.4?Math.min(1,(t-8)/.6)*(t>10.6?1-(t-10.6)/.8:1):0;
+   horse.setAttribute('transform',`translate(${hx.toFixed(1)} ${(216+sink*9).toFixed(1)})`);flip.setAttribute('transform',`scale(${dir} 1)`);
+   front.setAttribute('transform',`scale(1 ${(1-.5*sink).toFixed(3)})`);rider.setAttribute('transform',`rotate(${(sink*14).toFixed(1)} 0 -42)`);
+   swingLegs(horseLegs,gallop?Math.sin(t*16)*24:0);
+   const dustOn=gallop||sink>0;dust.setAttribute('transform',`translate(${(hx+(dir>0?-24:24)).toFixed(1)} 214) scale(${dustOn?1:.01})`);dust.setAttribute('opacity',dustOn?'.8':'0');
+   horse.setAttribute('opacity',t<2||t>17?'0':'1');
+   if(captionEl){let c=0;HIJRAH_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=HIJRAH_CAPTIONS[c][1]}}
+  }};
+ if(reduced())th.tick(9);else{LW.theatres.add(th);run()}
+ return th;
+}
+/* which lesson each scene belongs to */
+const SCENES=[{re:/year of the elephant/i,make:(svg,full,cap)=>elephantTheatre(svg,full,cap),label:"Animated scene: Abrahah's army and the elephant, the birds and the stones"},{re:/cave of thawr/i,make:(svg,full,cap)=>hijrahTheatre(svg,full,cap),label:'Animated scene: the two camels of the Hijrah with a light above them, and Surāqah on his horse'}];
+function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
+function elephantLessonIndex(){return typeof lessons!=='undefined'?lessons.findIndex(l=>/year of the elephant/i.test(String(l.title||''))):-1}
+/* Map 1: the scene plays beside the Year of the Elephant stop. */
+function paintElephantSpot(){
+ const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;svg.querySelectorAll('.lw-elephant-spot').forEach(x=>x.remove());
+ SCENES.forEach(sc=>paintSceneSpot(svg,L,sc));
+}
+function paintSceneSpot(svg,L,sc){
+ const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
+ const node=svg.querySelector(`.node[data-i="${gi}"]`),p=node&&typeof translatedPoint==='function'?translatedPoint(node):null;if(!p)return;
+ const tallMap=L.base===MAP_LAYOUTS.tall,w=tallMap?clamp(L.W*.56,250,420):clamp(L.W*.44,250,400),h=w*200/400,marks=[...(L.lessons||[]),...(L.extraStories||[]),L.flash,L.quiz,L.entry,L.exit].filter(Boolean);
+ const spots=[[p.x-w-34,p.y-h*.8],[p.x+34,p.y-h*.8],[p.x-w/2,p.y-h-46],[p.x-w/2,p.y+38],[p.x-w-34,p.y-h*.2],[p.x+34,p.y-h*.2]];
+ const score=([x,y])=>{let bad=0;if(x<6||y<100||x+w>L.W-6||y+h>L.H-6)bad+=1000;marks.forEach(m=>{const cx=clamp(m[0],x,x+w),cy=clamp(m[1],y,y+h),d=Math.hypot(m[0]-cx,m[1]-cy);if(d<52)bad+=52-d});return bad};
+ const best=spots.map(s=>[score(s),s]).sort((a,b)=>a[0]-b[0])[0][1];
+ const ns='http://www.w3.org/2000/svg',spot=document.createElementNS(ns,'svg');spot.setAttribute('class','lw-elephant-spot');spot.setAttribute('x',best[0].toFixed(1));spot.setAttribute('y',best[1].toFixed(1));spot.setAttribute('width',w.toFixed(1));spot.setAttribute('height',h.toFixed(1));spot.setAttribute('viewBox','110 30 400 200');spot.setAttribute('aria-hidden','true');spot.setAttribute('pointer-events','none');
+ (svg.querySelector('.historical-dust-road')||svg.querySelector('.lw-life')||svg.querySelector('.history-scene')).insertAdjacentElement('afterend',spot);
+ sc.make(spot,false,null);
+}
+
+/* ---------- wire into the map ---------- */
+if(typeof layoutMapRoad==='function'){
+ const layoutBeforeLiving=layoutMapRoad;
+ layoutMapRoad=function(){const r=layoutBeforeLiving.apply(this,arguments);try{paintLife();paintElephantSpot()}catch(e){console.warn('living map',e)}return r};
+}
+
+/* ---------- the lesson story, like the Extra story panel ---------- */
+function esc(s){return typeof escapeHtml==='function'?escapeHtml(String(s)):String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function dressStory(l){
+ const stage=document.getElementById('stage');if(!stage||!l)return;const wi=((l.world||0)%15+15)%15,S=typeof SEERAA_SCENES!=='undefined'?SEERAA_SCENES[wi]:null;
+ stage.classList.add('lw-story');
+ const kicker=stage.querySelector('.kicker'),title=stage.querySelector('.lesson-title'),card=stage.querySelector('.matn-card');
+ if(kicker)kicker.classList.add('lw-hide');
+ const head=document.createElement('header');head.className='lw-head';if(S){head.style.setProperty('--lw-photo',`url("assets/scenes/${S.asset}.webp")`);head.style.setProperty('--lw-focus',`${Math.round(S.focus*100)}% 55%`)}
+ head.innerHTML=`<div><p class="lw-eyebrow">Map ${wi+1} · Lesson ${esc(l.lines||'')}</p><p class="lw-place">${esc(S?S.place:(l.seerah&&l.seerah.chapter)||'Seeraa')}</p></div><span class="lw-emblem" aria-hidden="true">${esc((l.seerah&&l.seerah.emoji)||'📜')}</span>`;
+ stage.insertBefore(head,stage.firstChild);
+ if(title){title.classList.add('lw-title');const intro=document.createElement('p');intro.className='lw-intro';intro.textContent='Read a little. Think together. Then explore the lesson.';title.insertAdjacentElement('afterend',intro)}
+ if(card){card.classList.add('lw-reading');const listen=card.querySelector('#storyListen');if(listen)listen.classList.add('lw-listen')}
+ /* the lesson's scene (Year of the Elephant, the Hijrah) plays above the story */
+ const sc=SCENES.find(x=>x.re.test(String(l.title||'')));
+ if(sc&&card){
+  const fig=document.createElement('figure');fig.className='lw-theatre';
+  fig.innerHTML='<svg viewBox="0 0 600 260" role="img"></svg><figcaption aria-live="polite"></figcaption><button type="button" class="lw-replay">▶ Watch again</button>';fig.querySelector('svg').setAttribute('aria-label',sc.label);
+  card.parentNode.insertBefore(fig,card);
+  let th=sc.make(fig.querySelector('svg'),true,fig.querySelector('figcaption'));
+  fig.querySelector('.lw-replay').onclick=()=>{LW.theatres.delete(th);th=sc.make(fig.querySelector('svg'),true,fig.querySelector('figcaption'));th.start=performance.now()};
+ }
+ /* talk together, by age */
+ const picks=(l.seerah&&Array.isArray(l.seerah.picks)&&l.seerah.picks)||[];
+ if(card&&!stage.querySelector('.lw-think')){
+  const q1=picks[0]&&picks[0].q?picks[0].q:'Retell what happened in your own words.',q2=picks[1]&&picks[1].q?picks[1].q:'Why does this part of the Seeraa matter?';
+  card.insertAdjacentHTML('afterend',`<div class="lw-think"><strong>Ages 7–10 · Talk together</strong><p>${esc(q1)}</p><details><summary>Ages 11–15 · Think deeper</summary><p>${esc(q2)} Which lesson from this story can you practise this week?</p></details></div>`);
+ }
+}
+if(typeof renderMatn==='function'){
+ const renderMatnBeforeLiving=renderMatn;
+ renderMatn=function(l){const r=renderMatnBeforeLiving.apply(this,arguments);try{dressStory(l)}catch(e){console.warn('story look',e)}return r};
+}
+
+/* ---------- styles ---------- */
+document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
+.lw-life .lw-leg{stroke:#3f3021;stroke-width:2.4;stroke-linecap:round}
+.lw-life .lw-k-c .lw-leg,.lw-life .lw-k-cl .lw-leg{stroke:#9c7445;stroke-width:3.4}
+.lw-life .lw-k-g .lw-leg,.lw-life .lw-k-s .lw-leg{stroke:#4f3d2b;stroke-width:1.6}
+.lw-life .lw-fig .lw-leg{transform-box:fill-box;transform-origin:50% 0;animation:lwStep .55s ease-in-out infinite alternate}
+.lw-life .lw-fig .lw-leg.b{animation-direction:alternate-reverse}
+.lw-life .lw-k-c .lw-leg,.lw-life .lw-k-cl .lw-leg{animation-duration:.8s}
+.lw-life .lw-fig{filter:drop-shadow(0 2px 1.5px rgba(40,25,10,.35))}
+@keyframes lwStep{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+.lw-life .lw-wing{transform-box:fill-box;transform-origin:50% 100%;animation:lwFlap .35s ease-in-out infinite alternate}
+@keyframes lwFlap{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+.lw-wind{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.lw-wind i{position:absolute;left:-40%;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,240,205,0),rgba(255,236,196,.95),rgba(255,240,205,0));opacity:0}
+.lw-wind b{position:absolute;left:-5%;width:3px;height:3px;border-radius:50%;background:#f3dcab;opacity:0}
+.lw-wind.go i{animation:lwGust 2.6s ease-in forwards}
+.lw-wind.go b{animation:lwSand 2.4s ease-in forwards}
+@keyframes lwGust{0%{transform:translateX(0);opacity:0}25%{opacity:1}100%{transform:translateX(320%);opacity:0}}
+@keyframes lwSand{0%{transform:translate(0,0);opacity:0}20%{opacity:.9}100%{transform:translate(110vw,-30px);opacity:0}}
+.lw-elephant-spot{overflow:hidden}
+/* lesson story like the Extra story panel */
+#stage.lw-story{padding:0;overflow:hidden;text-align:left}
+#stage.lw-story>*:not(.lw-head){margin-left:clamp(16px,4vw,36px);margin-right:clamp(16px,4vw,36px)}
+.lw-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:24px clamp(18px,4vw,32px);background:linear-gradient(90deg,#493721ed,#49372185),var(--lw-photo,none) var(--lw-focus,center) /cover;color:#fff7e7;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.lw-eyebrow{margin:0 0 4px;font:800 11px/1.4 Nunito,system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase}
+.lw-place{margin:0;font:15px/1.4 Nunito,system-ui,sans-serif}
+.lw-emblem{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#fff3;border:1px solid #fff8;font-size:24px}
+.lw-hide{display:none!important}
+#stage.lw-story .lw-title{margin-top:24px;margin-bottom:6px;font:800 clamp(26px,4vw,37px)/1.2 Nunito,system-ui,sans-serif;color:#503c28;text-align:left}
+.lw-intro{margin:0 0 6px;color:#7c694c;font:14px/1.5 Nunito,system-ui,sans-serif}
+#stage.lw-story .lw-reading{background:none;border:0;box-shadow:none;padding:0;margin-top:8px}
+#stage.lw-story .lw-reading p{font:400 clamp(17px,2.2vw,19px)/1.85 Nunito,system-ui,sans-serif!important;color:#3d3225;margin:16px 0}
+#stage.lw-story .lw-listen{background:#fffaf0;color:#3d3225;border:2px solid #d4b26b;border-radius:999px;box-shadow:none;padding:10px 22px;font:16px Marcellus,serif}
+#stage.lw-story .lw-listen:hover{background:#fff1d0}
+.lw-think{margin:22px 0;padding:14px 20px;background:#eef1e5;border-left:4px solid #6a7a53;border-radius:0 12px 12px 0;font:15px/1.6 Nunito,system-ui,sans-serif;color:#3d3225}
+.lw-think strong{display:block;font-size:13px;margin-bottom:4px}
+.lw-think p{margin:6px 0}
+.lw-think summary{font-weight:700;font-size:14px;cursor:pointer}
+#stage.lw-story .source-note{font:12px/1.6 Nunito,system-ui,sans-serif;color:#77664d}
+.lw-theatre{position:relative;margin:18px 0 6px;border:1px solid #d9c299;border-radius:16px;overflow:hidden;background:#fbe4b8}
+.lw-theatre svg{display:block;width:100%;height:auto}
+.lw-theatre figcaption{min-height:3.2em;padding:10px 14px;background:#fffaf0;border-top:1px solid #e6d3ad;font:600 15px/1.5 Nunito,system-ui,sans-serif;color:#4a3826}
+.lw-replay{position:absolute;top:10px;right:10px;border:1px solid #fff9;border-radius:999px;background:#3d2c1ccc;color:#fff7e7;padding:6px 12px;font:700 13px Nunito,system-ui,sans-serif;cursor:pointer}
+/* lesson steps as game tiles */
+.lesson-side .side-step{position:relative;gap:10px;min-height:46px;border-radius:16px;border-width:3px;box-shadow:0 3px 0 rgba(0,0,0,.12);transition:transform .15s,box-shadow .15s}
+.lesson-side .side-step.can-open:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(0,0,0,.14)}
+.lesson-side .side-step.can-open:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.14)}
+.lesson-side .side-step.current{background:linear-gradient(180deg,#fff8d9,#ffe9a3);border-color:#ffcf4d;animation:lwGlow 1.8s ease-in-out infinite}
+.lesson-side .side-step.done{background:linear-gradient(180deg,#e9f8e5,#cdeec7);border-color:#bfe6b6}
+@keyframes lwGlow{0%,100%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 0 rgba(255,207,77,.0)}50%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 6px rgba(255,207,77,.35)}}
+@media(max-width:640px){.lw-head{padding:18px}.lw-emblem{width:38px;height:38px;font-size:20px}.lw-theatre figcaption{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current{animation:none}.lw-wind{display:none}}
+</style>`);
+})();
