@@ -32,6 +32,7 @@
   .tp-switch:not(.hidden)+.tp-right{margin-left:0}
   .tp-who{font:14px Marcellus,serif;color:#8a7654;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .tp-out{border:1.5px solid var(--gold-soft);border-radius:999px;background:#fff;color:var(--brown);padding:6px 14px;font:14px Marcellus,serif;cursor:pointer}
+  .tp-edit{text-decoration:none;white-space:nowrap}
   .tp-out:hover{background:#fff6dc}
   /* the selected course's portal */
   .tp-frames{position:fixed;top:var(--bar);left:0;right:0;bottom:0}
@@ -57,7 +58,8 @@
   .tp-note{max-width:440px;margin:16px auto 0;text-align:center;font-size:16px;color:#7a6a4f}
   .tp-loading{position:fixed;inset:var(--bar) 0 0;display:grid;place-items:center;font:18px Marcellus,serif;color:#8a7654}
   @media(max-width:640px){
-    .tp-bar{gap:8px;padding:8px 10px}
+    .tp-bar{gap:8px;padding:8px 10px;flex-wrap:wrap}
+    .tp-right{margin-left:auto!important}
     .tp-name{display:none}
     .tp-switch button{padding:7px 11px;font-size:15px}
     .tp-who{display:none}
@@ -76,6 +78,7 @@
   </nav>
   <div class="tp-right">
     <span class="tp-who" id="tpWho"></span>
+    <a class="tp-out tp-edit hidden" id="tpEdit" target="_blank" rel="noopener" href="/tuhfatul-atfaal/?v=editable-activities-11">✏ Edit course ↗</a>
     <button type="button" class="tp-out hidden" id="tpOut">Sign out</button>
   </div>
 </header>
@@ -111,23 +114,23 @@
 
 <div class="tp-frames hidden" id="tpFrames" role="tabpanel"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=32"></script>
+<script type="module" src="../kids-quest-cloud.js?v=33"></script>
 <script>
 /* One teacher login for every course. The selected course's own Teacher
    Portal (students, progress, approvals, classes, homework) opens below
    the switch; both portals share the same sign-in, so switching never
    asks again. */
 const COURSES = {
-  'tuhfatul-atfaal': { name: 'Tuhfatul Atfaal', src: '/tuhfatul-atfaal-admin/?embed=1' },
-  'seeraa': { name: 'Seeraa', src: '/seeraa-admin/?embed=1' }
+  'tuhfatul-atfaal': { name: 'Tuhfatul Atfaal', src: '/tuhfatul-atfaal-admin/?embed=1&v=shared-teacher-2' },
+  'seeraa': { name: 'Seeraa', src: '/seeraa-admin/?embed=1&v=shared-teacher-2' }
 };
 const $ = id => document.getElementById(id);
 let course = firstCourse(), signUp = false, signedIn = false;
 
 function firstCourse(){
   const q = new URLSearchParams(location.search).get('course');
-  if(COURSES[q]) return q;
-  try { const s = localStorage.getItem('tp-course'); if(COURSES[s]) return s; } catch(e){}
+  if(Object.prototype.hasOwnProperty.call(COURSES,q)) return q;
+  try { const s = localStorage.getItem('tp-course'); if(Object.prototype.hasOwnProperty.call(COURSES,s)) return s; } catch(e){}
   return 'tuhfatul-atfaal';
 }
 function fitBar(){ document.documentElement.style.setProperty('--bar', $('tpBar').offsetHeight + 'px'); }
@@ -137,14 +140,18 @@ function show(state){
   $('tpWait').classList.toggle('hidden', state !== 'wait');
   $('tpFrames').classList.toggle('hidden', state !== 'portal');
   $('tpSwitch').classList.toggle('hidden', state !== 'portal');
+  $('tpEdit').classList.toggle('hidden', state !== 'portal');
   $('tpOut').classList.toggle('hidden', state !== 'portal' && state !== 'wait');
   requestAnimationFrame(fitBar);
 }
 function setCourse(c){
+  if(!signedIn || !Object.prototype.hasOwnProperty.call(COURSES, c)) return;
   course = c;
   try { localStorage.setItem('tp-course', c); } catch(e){}
   try { history.replaceState(null, '', '?course=' + c); } catch(e){}
   document.title = COURSES[c].name + ' — Teacher Portal';
+  $('tpEdit').href = '/' + c + '/?v=editable-activities-11';
+  $('tpEdit').setAttribute('aria-label', 'Edit ' + COURSES[c].name + ' course (opens in a new tab)');
   document.querySelectorAll('#tpSwitch [data-course]').forEach(b => {
     const on = b.dataset.course === c;
     b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
@@ -217,6 +224,7 @@ function wire(){
   });
   KC.onAdminAuth(info => {
     if(!info){ signedIn = false; clearFrames(); $('tpWho').textContent = ''; show('login'); return; }
+    $('tpPass').value = '';
     $('tpWho').textContent = info.fullName || String(info.email || '').split('@')[0];
     if(!info.role){ signedIn = false; clearFrames(); $('tpWaitMsg').textContent = 'An admin must approve ' + (info.email || 'this teacher account') + ' before it can see student records.'; show('wait'); return; }
     if(!signedIn){ signedIn = true; setCourse(course); }

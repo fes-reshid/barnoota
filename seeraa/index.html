@@ -2753,7 +2753,7 @@ const stepIsDoneBeforeTeacher=stepIsDone;stepIsDone=function(i,s){return teacher
 function enterTeacherMode(role){
  teacherMode=true;profile.unlocked=TOTAL_LESSONS;profile.flashPracticeDone=worlds.map(()=>true);
  document.body.classList.add('teacher-mode');
- if(!$('#teacherModeBar'))$('#mapScreen').insertAdjacentHTML('afterbegin',`<div class="tm-bar" id="teacherModeBar"><span>🧑‍🏫 <b>Teacher mode</b> — every map and lesson is open. Tap <b>✏️ Edit</b> to change a lesson or this map’s challenge; changes show for every student.</span></div>`);
+ if(!$('#teacherModeBar'))$('#mapScreen').insertAdjacentHTML('afterbegin',`<div class="tm-bar" id="teacherModeBar"><span>🧑‍🏫 <b>Teacher mode</b> — every map and lesson is open. Tap <b>✏️ Edit</b> to change stories, lesson activities or this map’s challenge. <a href="/teacher/?course=seeraa">Teacher portal →</a></span></div>`);
  if(!$('#tmEditBtn'))document.body.insertAdjacentHTML('beforeend','<button class="tm-edit-btn" id="tmEditBtn" type="button">✏️ Edit</button>');
  $('#tmEditBtn').onclick=()=>{const sc=currentScreen();if(sc==='lessonScreen')openLessonEditor(current);else openMapEditor(viewWorld)};
  syncTmBtn();renderMap();
@@ -2776,6 +2776,7 @@ function qEditorHTML(q,n,label){
 function readQs(box){return[...box.querySelectorAll('.tm-q')].map(el=>{const n=el.dataset.qn,checked=el.querySelector(`input[name="tmA${n}"]:checked`),raw=[...el.querySelectorAll('[data-ch]')].map(i=>i.value.trim());let ans=checked?+checked.value:0;const choices=[];let newAns=0;raw.forEach((c,k)=>{if(c){if(k===ans)newAns=choices.length;choices.push(c)}});
   return{q:el.querySelector('[data-f="q"]').value.trim(),ar:el.querySelector('[data-f="ar"]').value.trim(),ref:el.querySelector('[data-f="ref"]').value.trim(),choices,answer:raw[ans]?newAns:-1}})}
 function openEditor(opts){
+ if(!teacherMode)return;
  closeEditor();
  document.body.insertAdjacentHTML('beforeend',`<div class="tm-overlay" id="tmEditor" role="dialog" aria-modal="true" aria-label="${escapeHtml(opts.title)}"><div class="tm-card"><div class="tm-head"><div><div class="kicker">✏️ Teacher edit</div><h2>${escapeHtml(opts.title)}</h2>${opts.edited?`<small class="tm-edited">Edited ${opts.edited}</small>`:'<small class="tm-edited">Original course content</small>'}</div><button type="button" class="ghost" id="tmClose">✕ Close</button></div>
  <div class="tm-body">${opts.fields}<h3 class="tm-sub">${escapeHtml(opts.qTitle)}</h3>${opts.qNote?`<p class="tm-help">${opts.qNote}</p>`:''}<div id="tmQs">${opts.qs.map((q,n)=>qEditorHTML(q,n,opts.qLabel(n))).join('')}</div></div>
@@ -2784,7 +2785,8 @@ function openEditor(opts){
  ed.querySelectorAll('[data-qup],[data-qdown]').forEach(b=>b.onclick=()=>{const qs=readQs(ed),n=+(b.dataset.qup??b.dataset.qdown),m=b.dataset.qup!=null?n-1:n+1;if(m<0||m>=qs.length)return;qs.forEach(q=>{if(q.answer<0)q.answer=0});[qs[n],qs[m]]=[qs[m],qs[n]];$('#tmQs').innerHTML=qs.map((q,k)=>qEditorHTML(q,k,opts.qLabel(k))).join('');openEditorRewire(ed,opts)});
  $('#tmSave').onclick=()=>{const qs=readQs(ed),bad=qs.findIndex(q=>!q.q||q.choices.length<2||q.answer<0);
   if(bad>=0){const m=$('#tmMsg');m.textContent=`${opts.qLabel(bad)}: write the question, at least 2 answers, and mark the correct one.`;m.className='feedback bad';ed.querySelectorAll('.tm-q')[bad].scrollIntoView({block:'center',behavior:'smooth'});return}
-  const data=Object.assign({game:GAME_KEY},opts.readFields(ed),{questions:qs});$('#tmSave').disabled=true;$('#tmMsg').textContent='Saving…';$('#tmMsg').className='feedback';
+  let fields;try{fields=opts.readFields(ed)}catch(err){$('#tmMsg').textContent=err.message||'Please check the activity fields.';$('#tmMsg').className='feedback bad';return}
+  const data=Object.assign({game:GAME_KEY},fields,{questions:qs});$('#tmSave').disabled=true;$('#tmMsg').textContent='Saving…';$('#tmMsg').className='feedback';
   window.KidsCloud.saveContent(opts.id,data).then(()=>{contentEdits[opts.id]=Object.assign({id:opts.id,updatedAt:new Date().toISOString()},data);applyContentEdits();closeEditor();opts.after();toastTm('✅ Saved — every student now sees your changes.')})
   .catch(err=>{$('#tmSave').disabled=false;const m=$('#tmMsg');m.textContent=(err&&/permission/i.test(err.code||err.message||''))?'Not allowed — publish the new Firestore rules, or check your teacher account is approved.':(err&&err.message)||'Could not save.';m.className='feedback bad'})};
  const r=$('#tmReset');if(r)r.onclick=()=>{if(!confirm('Reset to the original course content? Your edits for this will be removed for every student.'))return;
@@ -3369,7 +3371,8 @@ window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeo
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
 <script src="cartoon-avatar-14a08346.js?v=direction-3"></script>
-<script src="seeraa-activities.js?v=expanded-stories-10"></script>
+<script src="seeraa-activities.js?v=editable-activities-11"></script>
+<script src="seeraa-content-editor.js?v=editable-activities-11"></script>
 <script src="historical-worlds.js?v=expanded-stories-10"></script>
 <script src="seeraa-enrichment-data.js?v=expanded-stories-10"></script>
 <script src="seeraa-enrichment.js?v=expanded-stories-10"></script>

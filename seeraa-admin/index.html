@@ -446,6 +446,7 @@ body{font-variant-numeric:lining-nums}
     <span class="brand-text">Seeraa Adventure Teachers</span>
   </a>
   <div class="header-right">
+    <a class="btn ghost small" href="/teacher/?course=seeraa">Both courses</a>
     <span class="who" id="who-am-i"></span>
     <button class="btn ghost small" id="signout-top">Sign out</button>
   </div>
@@ -1059,7 +1060,8 @@ body{font-variant-numeric:lining-nums}
       </section>
       <section class="guide-sec" id="g-edit">
         <h3>✏️ Edit the course (teacher mode)</h3>
-        <ol><li>Sign in to <b>Seeraa Adventure</b> (the student app) with your teacher username — every map and lesson opens.</li><li>Tap <b>✏️ Edit Map N</b> to change a map’s name and its Map Challenge questions 1–14 (question 15 is the line match), or <b>✏️ Edit this lesson</b> inside a lesson for its title, English meaning, explanation, easy explanation, Qur’an examples and Five Questions.</li><li><b>Save for every student</b>, or <b>Reset to original</b> to undo.</li></ol>
+        <p><a class="btn ghost small" href="/seeraa/?v=editable-activities-11" target="_blank" rel="noopener">Open Seeraa to edit ↗</a></p>
+        <ol><li>Open the course with your approved teacher account. Every map and lesson is available.</li><li>Inside a numbered lesson, tap <b>✏️ Edit this lesson</b> to change the story, explanation, vocabulary, matching cards, du‘a, story challenge and Five Questions.</li><li>Tap <b>✏️ Edit Map N</b> for the map title and challenge questions. The final matching activity uses the lesson titles and summaries.</li><li>Open an extra book stop <b>A or B</b> and choose <b>Edit this story</b>. For the map’s Arabic Qur’an and hadith, open the quotation panel in a lesson and choose <b>Edit this map’s quotations</b>.</li><li>Choose <b>Save for every student</b>, or <b>Reset to original</b> to undo the saved content edits.</li></ol>
       </section>
       <section class="guide-sec" id="g-faq">
         <h3><span class="gi" style="--c:#6b5d44">❓</span> Questions</h3>
@@ -1134,6 +1136,7 @@ body{font-variant-numeric:lining-nums}
         <thead><tr><th>Map</th><th>Lessons</th><th>Map challenge</th><th>Teacher check</th></tr></thead>
         <tbody id="progress-rows"></tbody>
       </table>
+      <section id="seeraa-extra-progress" aria-label="Extra Seeraa story progress"></section>
       <p class="muted" id="other-games" style="margin-top:12px"></p>
     </div>
 
@@ -1141,9 +1144,9 @@ body{font-variant-numeric:lining-nums}
       <p class="muted" style="margin:0">Choose a map. <span class="role-badge warn">Gold</span> = ready for your review, <span class="role-badge ok">Green</span> = certificate signed.</p>
       <div class="map-grid" id="map-grid"></div>
       <div class="teacher-work">
-        <h2 id="selected-map-title">Map review</h2><p id="map-status"></p>
+        <h2 id="selected-map-title">Map review</h2><p id="map-status"></p><div id="seeraa-extra-review"></div>
         <div class="row"><div class="field"><label>Teacher name</label><input id="certificate-teacher"></div><div class="field"><label>Teacher feedback</label><input id="certificate-feedback" placeholder="Strengths and next practice step"></div></div>
-        <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Hifz completed</label><label><input type="checkbox" id="certificate-recitation"> Good recitation</label></div>
+        <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Story understood</label><label><input type="checkbox" id="certificate-recitation"> Key lesson explained</label></div>
         <label style="font-family:'Marcellus';color:var(--ink-navy)">Teacher signature</label><canvas id="signature"></canvas>
         <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" id="clear-signature">Clear signature</button><button class="btn primary" id="approve-map">✍️ Sign certificate &amp; unlock next map</button><button class="btn ghost" id="manual-unlock">Open next map</button></div>
         <p class="msg" id="manage-msg"></p>
@@ -1153,7 +1156,7 @@ body{font-variant-numeric:lining-nums}
         <h2 id="note-title">💬 Personal note &amp; quiz</h2>
         <p class="muted" style="margin-top:-4px">Only this student sees these, in a “From your teacher” box directly under this map.</p>
         <div class="field"><label for="map-note">Note to the student</label>
-          <textarea id="map-note" maxlength="600" placeholder="e.g. MashaAllah, beautiful recitation of line 3! Practise the ghunnah in line 4 three times before next class."></textarea></div>
+          <textarea id="map-note" maxlength="600" placeholder="e.g. MashaAllah, you explained the Hijrah clearly. Review Hira and Thawr before next class."></textarea></div>
         <div class="row">
           <div class="field" style="flex:2"><label for="map-note-quiz">Quiz for this student (optional)</label><select id="map-note-quiz"></select></div>
           <div class="field" style="align-self:end;flex:0 0 auto"><button class="btn ghost" id="note-new-quiz" type="button">＋ Write a new quiz</button></div>
@@ -1224,7 +1227,9 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=32"></script>
+<script src="../seeraa/seeraa-enrichment-data.js?v=expanded-stories-10"></script>
+<script src="extra-progress.js?v=shared-teacher-2"></script>
+<script type="module" src="../kids-quest-cloud.js?v=33"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -1471,7 +1476,7 @@ function renderOverview(){
   top.forEach((x, n) => {
     const el = document.createElement('div'); el.className = 'list-row';
     el.innerHTML = (n < 3 ? '<div class="lead-rank medal">' + ['🥇','🥈','🥉'][n] + '</div>' : '<div class="lead-rank">' + (n + 1) + '</div>') + '<div class="avatar">' + avatarHtml(x.s, x.p) +
-      '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) + '</div><div class="bar" style="margin-top:5px"><span style="width:' + x.pct + '%"></span></div></div><span class="muted">' + x.lessons + '/62 · ⭐' + x.stars + '</span>';
+      '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) + '</div><div class="bar" style="margin-top:5px"><span style="width:' + x.pct + '%"></span></div></div><span class="muted">' + x.lessons + '/' + TOTAL_LESSONS + ' · ⭐' + x.stars + '</span>';
     el.onclick = () => openManager(x.s, 'progress');
     leaders.appendChild(el);
   });
@@ -1604,7 +1609,7 @@ function renderModal(){
     ['Guardian phone', s.guardianPhone || '—'],
     ['Joined', fmtDate(s.createdAt)],
     ['Last teacher update', fmtDate(s.lastTeacherUpdateAt)],
-    ['Lessons done', x.lessons + ' / 62'],
+    ['Lessons done', x.lessons + ' / ' + TOTAL_LESSONS],
     ['Stars · coins', '⭐ ' + x.stars + ' · 🪙 ' + x.p.coins],
     ['Certificates', x.certs + ' / 15']
   ];
@@ -1623,7 +1628,7 @@ function renderModal(){
   const quizResults = Object.values(x.p.teacherQuizResults || {});
   const avg = quizResults.length ? Math.round(quizResults.reduce((a, r) => a + (r.total ? r.score / r.total : 0), 0) / quizResults.length * 100) + '%' : '—';
   $('progress-summary').innerHTML = [
-    ['Overall', x.pct + '%'], ['Currently on', mapLabel(x.currentMap)], ['Memorisation practice', x.p.memoryDone.filter(Boolean).length + ' / 62'],
+    ['Overall', x.pct + '%'], ['Currently on', mapLabel(x.currentMap)], ['Story matching practice', x.p.memoryDone.filter(Boolean).length + ' / ' + TOTAL_LESSONS], ['Extra stories explored', window.SeeraaTeacherProgress.count(x.p) + ' / 30'],
     ['Map challenges passed', x.p.mapQuizScores.filter(q => q && (q.passed || Number(q.score) >= 12)).length + ' / 15'],
     ['Teacher quizzes taken', String(quizResults.length)], ['Teacher quiz average', avg]
   ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');
@@ -1642,6 +1647,7 @@ function renderModal(){
   });
   $('other-games').textContent = other.length ? 'Other Kids Corner games — ' + other.join(' · ') : '';
 
+  window.SeeraaTeacherProgress.render(document.getElementById("seeraa-extra-progress"), x.p, MAPS);
   renderStudentQuizResults(x);
 
   const isTeacher = myRole === 'teacher';
@@ -1693,6 +1699,7 @@ function renderMapManager(){
   $('selected-map-title').textContent='Map '+(selectedMap+1)+' · '+m[0]+' · Lessons '+m[1];
   $('map-status').innerHTML='Lessons: <b>'+mapLessonsDone(p,selectedMap)+'/'+m[3]+(complete?' ✓':'')+'</b> · 15-question challenge: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
   renderNoteBlock();
+  window.SeeraaTeacherProgress.renderMap(document.getElementById('seeraa-extra-review'),p,selectedMap);
   $('certificate-teacher').value=a.teacherName||$('certificate-teacher').dataset.me||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
 }
 function mapNote(s, i){ const n = s.teacherNotes && s.teacherNotes[GAME_KEY] && s.teacherNotes[GAME_KEY][String(i)]; return n && (n.note || n.quizId) ? n : null; }
@@ -2143,7 +2150,7 @@ function fillClassSelects(){
 }
 function loadClasses(){
   if(!window.KidsCloud.listClasses) return Promise.resolve();
-  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderAttendance(); if(activeStudent) renderModal(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
     .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderClasses(){
@@ -2582,7 +2589,7 @@ function reportStudentPage(s){
     '</ul>' +
     (d.hw.length ? '<h2>Homework</h2><table><tr><th>Task</th><th>Due</th><th>Status</th></tr>' + d.hw.map(r => '<tr><td>' + e(r.h.title) + '</td><td>' + e(fmtDay(r.h.dueDate)) + '</td><td class="st-' + r.st.key + '">' + lbl[r.st.key] + (r.st.at ? ' <small>' + e(fmtDay(r.st.at)) + '</small>' : '') + '</td></tr>').join('') + '</table>' : '') +
     (d.quizzes.length ? '<h2>Teacher quizzes</h2><table><tr><th>Quiz</th><th>Best score</th><th>Tries</th><th>Last taken</th></tr>' + d.quizzes.slice(0, 8).map(q => '<tr><td>' + e(q.title) + '</td><td>' + q.best + '/' + q.total + ' (' + q.pct + '%)' + (q.pass === true ? ' ✓' : '') + '</td><td>' + q.attempts + '</td><td>' + e(fmtDay(q.at)) + '</td></tr>').join('') + '</table>' : '') +
-    '<h2>Maps</h2><table class="maps"><tr><th>Map</th><th>Lessons</th><th>Challenge</th><th>Teacher check</th></tr>' + MAPS.map((m, i) => {
+    window.SeeraaTeacherProgress.reportHTML(d.p) + '<h2>Maps</h2><table class="maps"><tr><th>Map</th><th>Lessons</th><th>Challenge</th><th>Teacher check</th></tr>' + MAPS.map((m, i) => {
       const done = mapLessonsDone(d.p, i), q = d.p.mapQuizScores[i], a = d.p.teacherAssessments[i];
       if(!done && !q && !(a && a.approved) && i > x.currentMap) return '';
       return '<tr><td>' + (i + 1) + ' · ' + e(m[0]) + '</td><td>' + done + ' / ' + m[3] + '</td><td>' + (q ? e(String(q.score)) + '/15' + (q.passed || Number(q.score) >= 12 ? ' ✓' : '') : '—') + '</td><td>' + (a && a.approved ? '✓ ' + e(a.teacherName || '') + (a.approvedAt ? ' · ' + e(fmtDay(a.approvedAt)) : '') : '—') + '</td></tr>';
@@ -2610,7 +2617,7 @@ let REPORT_OPTS = { type: 'full', period: 'all', from: '', to: '', marks: ['pres
 const ATT_META = { present: ['✅', 'Present', '#2f6f55', '#e3f3e5'], late: ['⏰', 'Late', '#8a5a00', '#fff3d6'], absent: ['❌', 'Absent', '#b5452b', '#fde6e1'], excused: ['📝', 'Excused', '#3b6fa0', '#e6f0fb'] };
 function reportSessions(list, o){
   const uids = new Set(list.map(s => s.uid));
-  return attendanceCache.filter(a => a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to)))
+  return courseAttendance().filter(a => a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to)))
     && Object.keys(a.marks || {}).some(u => uids.has(u)) || (a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to))) && (classById(a.classId) || { studentUids: [] }).studentUids.some(u => uids.has(u))))
     .sort((a, b) => String(a.date).localeCompare(String(b.date)) || String(a.classId).localeCompare(String(b.classId)));
 }
@@ -2654,7 +2661,7 @@ function attendancePages(list, title, o){
 function openReportChooser(list, title){
   if(!list.length){ toast('No students to report on'); return; }
   document.querySelectorAll('.rc-overlay').forEach(x => x.remove());
-  const today = isoDate(new Date()), last = (attendanceCache.map(a => a.date).filter(Boolean).sort().pop()) || today, wk = isoDate(new Date(Date.now() - 6 * 86400000));
+  const today = isoDate(new Date()), last = (courseAttendance().map(a => a.date).filter(Boolean).sort().pop()) || today, wk = isoDate(new Date(Date.now() - 6 * 86400000));
   const o = Object.assign({}, REPORT_OPTS, { from: REPORT_OPTS.from || last, to: REPORT_OPTS.to || today });
   const who = list.length === 1 ? (list[0].displayName || list[0].username) : (title || 'Students') + ' · ' + list.length + ' students';
   document.body.insertAdjacentHTML('beforeend', '<div class="rc-overlay" role="dialog" aria-modal="true" aria-label="Choose a report"><div class="rc-card">' +
@@ -2739,6 +2746,8 @@ function fmtSec(sec){ sec = Math.round(sec); return Math.floor(sec / 60) + ':' +
 /* ===================== Talqeen recordings ===================== */
 /* Talqeen is off for each student until a teacher turns it on for them. */
 let teacherRec = null, pendingRec = null, recCache = {};
+// Recordings without a course belong to the original Tajweed course.
+function recordBelongsToCourse(r){ return r.game === GAME_KEY || (!r.game && GAME_KEY === 'tuhfatul-atfaal'); }
 function syncTalqeenSwitch(){
   const s = activeStudent; if(!s) return; const on = !!s.talqeenEnabled;
   $('rec-enabled').checked = on; $('rec-card').classList.toggle('hidden', !on);
@@ -2748,7 +2757,7 @@ function renderTalqeen(){
   const s = activeStudent; if(!s) return;
   syncTalqeenSwitch();
   $('rec-list').innerHTML = '<p class="muted">Loading…</p>';
-  window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list; if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
+  window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list.filter(recordBelongsToCourse); if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
     .catch(err => { $('rec-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderRecList(){
@@ -2762,7 +2771,7 @@ function renderRecList(){
       '<button class="btn danger small" data-del style="margin-left:auto">Delete</button></div>' +
       (r.note ? '<div class="muted" style="margin-top:4px">' + escapeHtml(r.note) + '</div>' : '') + '<audio controls preload="none" src="' + escapeHtml(r.data) + '"></audio>' +
       (r.from === 'student' ? (r.feedback ? '<div style="margin-top:4px">💬 <b>Feedback:</b> ' + escapeHtml(r.feedback) + '</div>' : '') +
-        '<div class="fb"><input maxlength="500" placeholder="' + (r.feedback ? 'Change feedback…' : 'Feedback for the student, e.g. “Great madd! Hold the ghunnah longer.”') + '"><button class="btn primary small">Send</button></div>' : '');
+        '<div class="fb"><input maxlength="500" placeholder="' + (r.feedback ? 'Change feedback…' : 'Feedback for the student, e.g. “You remembered the people and places clearly.”') + '"><button class="btn primary small">Send</button></div>' : '');
     const audio = el.querySelector('audio');
     if(r.from === 'student' && !r.heard) audio.addEventListener('play', () => { window.KidsCloud.markRecording(r.id, { heard: true }).then(() => { r.heard = true; loadRecInbox(); }).catch(() => {}); }, { once: true });
     const fb = el.querySelector('.fb');
@@ -2804,7 +2813,7 @@ function sendTeacherRecording(){
 function loadRecInbox(){
   if(!window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
   return window.KidsCloud.listUnheardStudentRecordings().then(list => {
-    const box = $('rec-inbox'), mine = list.filter(r => studentsCache.some(s => s.uid === r.studentUid));
+    const box = $('rec-inbox'), mine = list.filter(r => recordBelongsToCourse(r) && studentsCache.some(s => s.uid === r.studentUid));
     box.innerHTML = mine.length ? '' : '<p class="empty">No new recitations. 🌟</p>';
     mine.slice(0, 8).forEach(r => { const s = studentsCache.find(x => x.uid === r.studentUid), el = document.createElement('div'); el.className = 'list-row';
       el.innerHTML = '<div class="grow"><div class="sub" style="font-size:15px;color:var(--ink-brown)">🎙️ <b>' + escapeHtml(s.displayName || s.username) + '</b> recited line ' + escapeHtml(r.line) + (r.duration ? ' · ' + fmtSec(r.duration) : '') + '</div><div class="sub">' + fmtTime(r.createdAt) + '</div></div><button class="btn primary small">Listen →</button>';
@@ -2814,6 +2823,7 @@ function loadRecInbox(){
 
 /* ===================== attendance ===================== */
 let attendanceCache = [], attMarks = {};
+function courseAttendance(){ const ids = new Set(classesCache.map(c => c.id)); return attendanceCache.filter(a => ids.has(a.classId)); }
 const ATT_MARKS = [['present', '✅ Present'], ['late', '⏰ Late'], ['absent', '❌ Absent'], ['excused', '📝 Excused']];
 function loadAttendance(){
   if(!window.KidsCloud.listAttendance) return Promise.resolve();
@@ -2822,7 +2832,7 @@ function loadAttendance(){
 }
 function attendanceSummary(uid){
   const out = { present: 0, late: 0, absent: 0, excused: 0, total: 0, recent: [] };
-  attendanceCache.forEach(a => { const m = a.marks && a.marks[uid]; if(!m || out[m] == null) return; out[m]++; out.total++; if(out.recent.length < 8) out.recent.push({ date: a.date, cls: className(a.classId), mark: m }); });
+  courseAttendance().forEach(a => { const m = a.marks && a.marks[uid]; if(!m || out[m] == null) return; out[m]++; out.total++; if(out.recent.length < 8) out.recent.push({ date: a.date, cls: className(a.classId), mark: m }); });
   return out;
 }
 function fillAttClass(){
@@ -2892,7 +2902,7 @@ function renderLbPreview(c){
 const PARENT_URL = 'https://diinislaam.com/seeraa/parent/?c=';
 /* staffData for the parent page: attendance plus the teacher's feedback on recitations. */
 function staffDataFor(s){
-  const have = recCache[s.uid] ? Promise.resolve(recCache[s.uid]) : window.KidsCloud.listRecordings(s.uid).then(l => (recCache[s.uid] = l)).catch(() => []);
+  const have = recCache[s.uid] ? Promise.resolve(recCache[s.uid]) : window.KidsCloud.listRecordings(s.uid).then(l => (recCache[s.uid] = l.filter(recordBelongsToCourse))).catch(() => []);
   return have.then(list => ({ attendance: attendanceSummary(s.uid),
     recitations: (list || []).filter(r => r.from === 'student' && r.feedback).slice(0, 8).map(r => ({ line: r.line, feedback: r.feedback, by: r.feedbackBy || '', at: r.feedbackAt || r.createdAt || '', memorise: /Memorise/.test(r.note || '') })) }));
 }
@@ -3170,11 +3180,11 @@ function wire(){
   });
   $('reset-map').addEventListener('click', ()=>{
     if(!activeStudent||!confirm('Reset this map’s lessons, quiz, teacher check and certificate?'))return;const p=currentProfile(),m=MAPS[selectedMap];
-    for(let i=m[2];i<m[2]+m[3];i++){p.stars[i]=0;p.memoryDone[i]=false}p.vocabDone[selectedMap]=false;p.flashPracticeDone[selectedMap]=false;p.mapQuizScores[selectedMap]=null;p.teacherAssessments[selectedMap]=null;p.teacherMapUnlocks[selectedMap]=false;
+    for(let i=m[2];i<m[2]+m[3];i++){p.stars[i]=0;p.memoryDone[i]=false}window.SeeraaTeacherProgress.clearMap(p,selectedMap);p.vocabDone[selectedMap]=false;p.flashPracticeDone[selectedMap]=false;p.mapQuizScores[selectedMap]=null;p.teacherAssessments[selectedMap]=null;p.teacherMapUnlocks[selectedMap]=false;
     saveActiveProfile(p,'Selected map reset.').then(renderMapManager);
   });
   $('reset-course').addEventListener('click', ()=>{
-    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(62).fill(0);p.memoryDone=Array(62).fill(false);p.vocabDone=Array(15).fill(false);p.flashPracticeDone=Array(15).fill(false);p.mapQuizScores=Array(15).fill(null);p.teacherAssessments=Array(15).fill(null);p.teacherMapUnlocks=Array(15).fill(false);p.unlocked=1;p.coins=0;
+    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(TOTAL_LESSONS).fill(0);p.memoryDone=Array(TOTAL_LESSONS).fill(false);p.seeraaExplored={};p.vocabDone=Array(15).fill(false);p.flashPracticeDone=Array(15).fill(false);p.mapQuizScores=Array(15).fill(null);p.teacherAssessments=Array(15).fill(null);p.teacherMapUnlocks=Array(15).fill(false);p.unlocked=1;p.coins=0;
     saveActiveProfile(p,'The complete Seeraa Adventure course has been reset.').then(renderMapManager);
   });
 

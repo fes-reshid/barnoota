@@ -1058,7 +1058,7 @@ function listRecordings(studentUid){
 function listUnheardStudentRecordings(){
   return getDocs(query(collection(db, RECORDINGS_COLLECTION), where('from', '==', 'student'), where('heard', '==', false))).then(function(snap){
     const out = [];
-    snap.forEach(function(d){ const x = d.data(); out.push({ id: d.id, studentUid: x.studentUid, studentName: x.studentName || '', line: x.line, createdAt: x.createdAt, duration: x.duration }); });
+    snap.forEach(function(d){ const x = d.data(); out.push({ id: d.id, studentUid: x.studentUid, studentName: x.studentName || '', game: x.game || 'tuhfatul-atfaal', line: x.line, createdAt: x.createdAt, duration: x.duration }); });
     out.sort(function(a, b){ return String(b.createdAt || '').localeCompare(String(a.createdAt || '')); });
     return out;
   });

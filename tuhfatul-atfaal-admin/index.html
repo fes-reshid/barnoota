@@ -446,6 +446,7 @@ body{font-variant-numeric:lining-nums}
     <span class="brand-text">Tuhfatul Atfaal Teachers</span>
   </a>
   <div class="header-right">
+    <a class="btn ghost small" href="/teacher/?course=tuhfatul-atfaal">Both courses</a>
     <span class="who" id="who-am-i"></span>
     <button class="btn ghost small" id="signout-top">Sign out</button>
   </div>
@@ -1059,6 +1060,7 @@ body{font-variant-numeric:lining-nums}
       </section>
       <section class="guide-sec" id="g-edit">
         <h3>✏️ Edit the course (teacher mode)</h3>
+        <p><a class="btn ghost small" href="/tuhfatul-atfaal/?v=editable-activities-11" target="_blank" rel="noopener">Open Tuhfatul Atfaal to edit ↗</a></p>
         <ol><li>Sign in to <b>Tajweed Quest</b> (the student app) with your teacher username — every map and lesson opens.</li><li>Tap <b>✏️ Edit Map N</b> to change a map’s name and its Map Challenge questions 1–14 (question 15 is the line match), or <b>✏️ Edit this lesson</b> inside a lesson for its title, English meaning, explanation, easy explanation, Qur’an examples and Five Questions.</li><li><b>Save for every student</b>, or <b>Reset to original</b> to undo.</li></ol>
       </section>
       <section class="guide-sec" id="g-faq">
@@ -1224,7 +1226,7 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=32"></script>
+<script type="module" src="../kids-quest-cloud.js?v=33"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2148,7 +2150,7 @@ function fillClassSelects(){
 }
 function loadClasses(){
   if(!window.KidsCloud.listClasses) return Promise.resolve();
-  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderAttendance(); if(activeStudent) renderModal(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
     .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderClasses(){
@@ -2615,7 +2617,7 @@ let REPORT_OPTS = { type: 'full', period: 'all', from: '', to: '', marks: ['pres
 const ATT_META = { present: ['✅', 'Present', '#2f6f55', '#e3f3e5'], late: ['⏰', 'Late', '#8a5a00', '#fff3d6'], absent: ['❌', 'Absent', '#b5452b', '#fde6e1'], excused: ['📝', 'Excused', '#3b6fa0', '#e6f0fb'] };
 function reportSessions(list, o){
   const uids = new Set(list.map(s => s.uid));
-  return attendanceCache.filter(a => a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to)))
+  return courseAttendance().filter(a => a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to)))
     && Object.keys(a.marks || {}).some(u => uids.has(u)) || (a.date && (o.period === 'all' || (a.date >= o.from && a.date <= (o.period === 'day' ? o.from : o.to))) && (classById(a.classId) || { studentUids: [] }).studentUids.some(u => uids.has(u))))
     .sort((a, b) => String(a.date).localeCompare(String(b.date)) || String(a.classId).localeCompare(String(b.classId)));
 }
@@ -2659,7 +2661,7 @@ function attendancePages(list, title, o){
 function openReportChooser(list, title){
   if(!list.length){ toast('No students to report on'); return; }
   document.querySelectorAll('.rc-overlay').forEach(x => x.remove());
-  const today = isoDate(new Date()), last = (attendanceCache.map(a => a.date).filter(Boolean).sort().pop()) || today, wk = isoDate(new Date(Date.now() - 6 * 86400000));
+  const today = isoDate(new Date()), last = (courseAttendance().map(a => a.date).filter(Boolean).sort().pop()) || today, wk = isoDate(new Date(Date.now() - 6 * 86400000));
   const o = Object.assign({}, REPORT_OPTS, { from: REPORT_OPTS.from || last, to: REPORT_OPTS.to || today });
   const who = list.length === 1 ? (list[0].displayName || list[0].username) : (title || 'Students') + ' · ' + list.length + ' students';
   document.body.insertAdjacentHTML('beforeend', '<div class="rc-overlay" role="dialog" aria-modal="true" aria-label="Choose a report"><div class="rc-card">' +
@@ -2744,6 +2746,8 @@ function fmtSec(sec){ sec = Math.round(sec); return Math.floor(sec / 60) + ':' +
 /* ===================== Talqeen recordings ===================== */
 /* Talqeen is off for each student until a teacher turns it on for them. */
 let teacherRec = null, pendingRec = null, recCache = {};
+// Recordings without a course belong to the original Tajweed course.
+function recordBelongsToCourse(r){ return r.game === GAME_KEY || (!r.game && GAME_KEY === 'tuhfatul-atfaal'); }
 function syncTalqeenSwitch(){
   const s = activeStudent; if(!s) return; const on = !!s.talqeenEnabled;
   $('rec-enabled').checked = on; $('rec-card').classList.toggle('hidden', !on);
@@ -2753,7 +2757,7 @@ function renderTalqeen(){
   const s = activeStudent; if(!s) return;
   syncTalqeenSwitch();
   $('rec-list').innerHTML = '<p class="muted">Loading…</p>';
-  window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list; if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
+  window.KidsCloud.listRecordings(s.uid).then(list => { recCache[s.uid] = list.filter(recordBelongsToCourse); if(activeStudent && activeStudent.uid === s.uid) renderRecList(); })
     .catch(err => { $('rec-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderRecList(){
@@ -2809,7 +2813,7 @@ function sendTeacherRecording(){
 function loadRecInbox(){
   if(!window.KidsCloud.listUnheardStudentRecordings) return Promise.resolve();
   return window.KidsCloud.listUnheardStudentRecordings().then(list => {
-    const box = $('rec-inbox'), mine = list.filter(r => studentsCache.some(s => s.uid === r.studentUid));
+    const box = $('rec-inbox'), mine = list.filter(r => recordBelongsToCourse(r) && studentsCache.some(s => s.uid === r.studentUid));
     box.innerHTML = mine.length ? '' : '<p class="empty">No new recitations. 🌟</p>';
     mine.slice(0, 8).forEach(r => { const s = studentsCache.find(x => x.uid === r.studentUid), el = document.createElement('div'); el.className = 'list-row';
       el.innerHTML = '<div class="grow"><div class="sub" style="font-size:15px;color:var(--ink-brown)">🎙️ <b>' + escapeHtml(s.displayName || s.username) + '</b> recited line ' + escapeHtml(r.line) + (r.duration ? ' · ' + fmtSec(r.duration) : '') + '</div><div class="sub">' + fmtTime(r.createdAt) + '</div></div><button class="btn primary small">Listen →</button>';
@@ -2819,6 +2823,7 @@ function loadRecInbox(){
 
 /* ===================== attendance ===================== */
 let attendanceCache = [], attMarks = {};
+function courseAttendance(){ const ids = new Set(classesCache.map(c => c.id)); return attendanceCache.filter(a => ids.has(a.classId)); }
 const ATT_MARKS = [['present', '✅ Present'], ['late', '⏰ Late'], ['absent', '❌ Absent'], ['excused', '📝 Excused']];
 function loadAttendance(){
   if(!window.KidsCloud.listAttendance) return Promise.resolve();
@@ -2827,7 +2832,7 @@ function loadAttendance(){
 }
 function attendanceSummary(uid){
   const out = { present: 0, late: 0, absent: 0, excused: 0, total: 0, recent: [] };
-  attendanceCache.forEach(a => { const m = a.marks && a.marks[uid]; if(!m || out[m] == null) return; out[m]++; out.total++; if(out.recent.length < 8) out.recent.push({ date: a.date, cls: className(a.classId), mark: m }); });
+  courseAttendance().forEach(a => { const m = a.marks && a.marks[uid]; if(!m || out[m] == null) return; out[m]++; out.total++; if(out.recent.length < 8) out.recent.push({ date: a.date, cls: className(a.classId), mark: m }); });
   return out;
 }
 function fillAttClass(){
@@ -2897,7 +2902,7 @@ function renderLbPreview(c){
 const PARENT_URL = 'https://diinislaam.com/tuhfatul-atfaal/parent/?c=';
 /* staffData for the parent page: attendance plus the teacher's feedback on recitations. */
 function staffDataFor(s){
-  const have = recCache[s.uid] ? Promise.resolve(recCache[s.uid]) : window.KidsCloud.listRecordings(s.uid).then(l => (recCache[s.uid] = l)).catch(() => []);
+  const have = recCache[s.uid] ? Promise.resolve(recCache[s.uid]) : window.KidsCloud.listRecordings(s.uid).then(l => (recCache[s.uid] = l.filter(recordBelongsToCourse))).catch(() => []);
   return have.then(list => ({ attendance: attendanceSummary(s.uid),
     recitations: (list || []).filter(r => r.from === 'student' && r.feedback).slice(0, 8).map(r => ({ line: r.line, feedback: r.feedback, by: r.feedbackBy || '', at: r.feedbackAt || r.createdAt || '', memorise: /Memorise/.test(r.note || '') })) }));
 }
