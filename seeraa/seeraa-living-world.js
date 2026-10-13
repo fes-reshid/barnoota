@@ -213,25 +213,87 @@ function hijrahTheatre(svg,full,captionEl){
  if(reduced())th.tick(9);else{LW.theatres.add(th);run()}
  return th;
 }
-/* which lesson each scene belongs to */
-const SCENES=[{re:/year of the elephant/i,make:(svg,full,cap)=>elephantTheatre(svg,full,cap),label:"Animated scene: Abrahah's army and the elephant, the birds and the stones"},{re:/cave of thawr/i,make:(svg,full,cap)=>hijrahTheatre(svg,full,cap),label:'Animated scene: the two camels of the Hijrah with a light above them, and Surāqah on his horse'}];
-function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
-function elephantLessonIndex(){return typeof lessons!=='undefined'?lessons.findIndex(l=>/year of the elephant/i.test(String(l.title||''))):-1}
-/* Map 1: the scene plays beside the Year of the Elephant stop. */
-function paintElephantSpot(){
- const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;svg.querySelectorAll('.lw-elephant-spot').forEach(x=>x.remove());
- SCENES.forEach(sc=>paintSceneSpot(svg,L,sc));
+/* ---------- the same scenes, walking along the map road ---------- */
+/* The road is MAP_GEO.road: samples [x,y,distance]. Figures shrink with depth like the walkers. */
+function roadAt(R,s){s=clamp(s,0,R[R.length-1][2]);let lo=0,hi=R.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(R[m][2]<s)lo=m;else hi=m}const a=R[lo],b=R[hi],t=b[2]>a[2]?(s-a[2])/(b[2]-a[2]):0;return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]}
+function roadDir(R,s,prev){const a=roadAt(R,s-4),b=roadAt(R,s+4),dx=b[0]-a[0];return Math.abs(dx)<.6?(prev||1):dx>0?1:-1}
+function depthAt(y,P,k,floor){const v=clamp((y-P.y)/P.h,0,1);return Math.max(floor||0,.36*Math.max(P.w/1536,.6),(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*P.w/1536)*k}
+function mapShowing(){const scr=document.getElementById('mapScreen');return!!scr&&!scr.classList.contains('hidden')&&!document.hidden}
+const swingAll=(legs,a)=>legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?a:-a).toFixed(1)} ${x} ${y})`)});
+const ROAD_BIRD=`<path class="lwR-wing" d="M-12 0Q-6-9 0 0Q6-9 12 0" stroke="#3a2c20" fill="none" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="1" rx="4" ry="2.6" fill="#4a3826"/>`;
+/* Abrahah's army marches up the road, the elephant kneels, the birds come with stones. */
+function elephantRoad(g,L,P){
+ const R=L.road,len=R[R.length-1][2],crew=[{o:2.2,s:0},{o:1.35,s:1},{o:0,e:1},{o:-1.35,s:2},{o:-2.1,s:3},{o:-2.85,s:0}];
+ g.innerHTML=crew.map((c,i)=>`<g class="lwR-m" data-m="${i}"><g class="lwR-body">${c.e?elephantSvg():soldierSvg(c.s)}</g></g>`).join('')
+  +crew.map((c,i)=>`<circle class="lwR-stone" r="3.4" fill="#7a6650" stroke="#3d3022" stroke-width="1" opacity="0"/>`).join('')
+  +crew.map((c,i)=>`<g class="lwR-bird" opacity="0">${ROAD_BIRD}</g>`).join('');
+ const M=[...g.querySelectorAll('.lwR-m')],body=M.map(m=>m.querySelector('.lwR-body')),ST=[...g.querySelectorAll('.lwR-stone')],B=[...g.querySelectorAll('.lwR-bird')],legs=[...g.querySelectorAll('.lw-leg')],front=g.querySelector('.lwE-front'),king=g.querySelector('.lwE-king'),dirs=[];
+ const s0=len*.07,s1=len*.42;
+ const th={svg:g,cycle:30,start:performance.now(),visible:mapShowing,
+  tick(t){
+   const centre=lerp(s0,s1,ease(clamp(t/13,0,1))),cp=roadAt(R,centre),step=96*depthAt(cp[1],P,1,L.H*.095/100);
+   g.setAttribute('opacity',(t<.8?t/.8:t>23?clamp(1-(t-23)/1.6,0,1):1).toFixed(2));
+   swingAll(legs,t<13?Math.sin(t*8)*16:0);
+   crew.forEach((c,i)=>{const s=centre+c.o*step,p=roadAt(R,s),d=dirs[i]=roadDir(R,s,dirs[i]),k=Math.min(depthAt(p[1],P,c.e?1.1:.95,c.e?L.H*.105/100:L.H*.075/55),c.e?L.W*.24/100:L.W*.15/55);c.p=p;c.k=k;
+    M[i].setAttribute('transform',`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) scale(${(k*d).toFixed(3)} ${k.toFixed(3)})`);
+    if(c.e){const q=clamp((t-13)/1.2,0,1);body[i].setAttribute('transform',`rotate(${(q*9).toFixed(2)} -27 0)`);const sc=1-.4*q;front.setAttribute('transform',`translate(0 ${(-24*(1-sc)).toFixed(2)}) scale(1 ${sc.toFixed(3)})`)}
+    else{const f=clamp((t-18.6-i*.1)/1.1,0,1),o=1-clamp((t-19.6-i*.1)/1.4,0,1);body[i].setAttribute('transform',`rotate(${(-f*84).toFixed(1)})`);body[i].setAttribute('opacity',o.toFixed(2))}
+    const hx=p[0],hy=p[1]-(c.e?128:84)*k,fin=ease(clamp((t-14.5-i*.15)/2.8,0,1)),fout=ease(clamp((t-20.4-i*.1)/2.6,0,1));
+    let x=lerp(p[0]+L.W*.75,hx,fin),y=lerp(-50-i*14,hy,fin);if(fout>0){x=lerp(hx,p[0]-L.W*.8,fout);y=lerp(hy,-60-i*12,fout)}
+    const bk=Math.max(k*1.1,.6);B[i].setAttribute('transform',`translate(${x.toFixed(1)} ${(y+Math.sin(t*6+i)*3).toFixed(1)}) scale(${bk.toFixed(3)})`);B[i].setAttribute('opacity',t>14.3&&t<23.5?'1':'0');
+    B[i].querySelector('.lwR-wing').setAttribute('transform',`scale(1 ${(0.35+0.65*Math.abs(Math.sin(t*14+i))).toFixed(2)})`);
+    const dd=clamp((t-17.5-i*.12)/1.1,0,1);ST[i].setAttribute('cx',hx.toFixed(1));ST[i].setAttribute('cy',lerp(hy+4,p[1]-22*k,dd*dd).toFixed(1));ST[i].setAttribute('r',Math.max(2.2,3.6*bk).toFixed(1));ST[i].setAttribute('opacity',t>17.4+i*.12&&dd<1?'1':'0');
+   });
+   const kf=clamp((t-18.9)/1.1,0,1);king.setAttribute('transform',`rotate(${(-kf*70).toFixed(1)} 0 -66)`);king.setAttribute('opacity',(1-clamp((t-19.9)/1.5,0,1)).toFixed(2));
+  }};
+ return th;
 }
-function paintSceneSpot(svg,L,sc){
- const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
- const node=svg.querySelector(`.node[data-i="${gi}"]`),p=node&&typeof translatedPoint==='function'?translatedPoint(node):null;if(!p)return;
- const tallMap=L.base===MAP_LAYOUTS.tall,w=tallMap?clamp(L.W*.56,250,420):clamp(L.W*.44,250,400),h=w*200/400,marks=[...(L.lessons||[]),...(L.extraStories||[]),L.flash,L.quiz,L.entry,L.exit].filter(Boolean);
- const spots=[[p.x-w-34,p.y-h*.8],[p.x+34,p.y-h*.8],[p.x-w/2,p.y-h-46],[p.x-w/2,p.y+38],[p.x-w-34,p.y-h*.2],[p.x+34,p.y-h*.2]];
- const score=([x,y])=>{let bad=0;if(x<6||y<100||x+w>L.W-6||y+h>L.H-6)bad+=1000;marks.forEach(m=>{const cx=clamp(m[0],x,x+w),cy=clamp(m[1],y,y+h),d=Math.hypot(m[0]-cx,m[1]-cy);if(d<52)bad+=52-d});return bad};
- const best=spots.map(s=>[score(s),s]).sort((a,b)=>a[0]-b[0])[0][1];
- const ns='http://www.w3.org/2000/svg',spot=document.createElementNS(ns,'svg');spot.setAttribute('class','lw-elephant-spot');spot.setAttribute('x',best[0].toFixed(1));spot.setAttribute('y',best[1].toFixed(1));spot.setAttribute('width',w.toFixed(1));spot.setAttribute('height',h.toFixed(1));spot.setAttribute('viewBox','110 30 400 200');spot.setAttribute('aria-hidden','true');spot.setAttribute('pointer-events','none');
- (svg.querySelector('.historical-dust-road')||svg.querySelector('.lw-life')||svg.querySelector('.history-scene')).insertAdjacentElement('afterend',spot);
- sc.make(spot,false,null);
+/* The Hijrah: two camels (no riders) with a light above them; Surāqah gallops up the road behind them, sinks and turns back. */
+function hijrahRoad(g,L,P){
+ const R=L.road,len=R[R.length-1][2];
+ g.innerHTML=`<defs><radialGradient id="lwGlowR"><stop offset="0" stop-color="#fff6c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffe9a0" stop-opacity=".45"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs>`
+  +`<g class="lwR-light"><ellipse cx="0" cy="0" rx="96" ry="58" fill="url(#lwGlowR)"/><g stroke="#fff3b8" stroke-width="3" stroke-linecap="round" opacity=".75">${[...Array(10)].map((_,i)=>{const a=i*Math.PI/5;return `<line x1="${(Math.cos(a)*18).toFixed(1)}" y1="${(-18+Math.sin(a)*18).toFixed(1)}" x2="${(Math.cos(a)*34).toFixed(1)}" y2="${(-18+Math.sin(a)*34).toFixed(1)}"/>`}).join('')}</g><circle cx="0" cy="-18" r="12" fill="#fffbe6"/></g>`
+  +`<g class="lwR-m"><g class="lwR-body">${camelSvg({saddle:'#7a2f2a',color:'#c4955d'})}</g></g><g class="lwR-m"><g class="lwR-body">${camelSvg({saddle:'#2f5c7a',color:'#cfa36b'})}</g></g>`
+  +`<g class="lwR-dust" opacity="0"><circle r="10" fill="#e8cf9e" opacity=".7"/><circle cx="14" cy="-4" r="8" fill="#ead6ab" opacity=".6"/><circle cx="-12" cy="-3" r="7" fill="#e3c792" opacity=".6"/></g><g class="lwR-horse" opacity="0"><g class="lwR-body">${horseSvg()}</g></g>`;
+ const M=[...g.querySelectorAll(':scope > .lwR-m')],light=g.querySelector('.lwR-light'),horse=g.querySelector('.lwR-horse'),hb=horse.querySelector('.lwR-body'),front=g.querySelector('.lwH-front'),rider=g.querySelector('.lwH-rider'),dust=g.querySelector('.lwR-dust');
+ const camelLegs=M.flatMap(m=>[...m.querySelectorAll('.lw-leg')]),horseLegs=[...horse.querySelectorAll('.lw-leg')],dirs=[];
+ g.querySelectorAll('.lw-leg').forEach(l=>{const h=!!l.closest('.lwR-horse');l.setAttribute('stroke',h?'#5e3b21':'#9c7445');l.setAttribute('stroke-width',h?'4':'4.2');l.setAttribute('stroke-linecap','round')});
+ const pairS=t=>lerp(len*.12,len*.72,clamp(t/22,0,1)),stepAt=s=>92*depthAt(roadAt(R,s)[1],P,1,L.H*.085/60),catchS=pairS(10)-2.6*stepAt(pairS(10));
+ const th={svg:g,cycle:26,start:performance.now(),visible:mapShowing,
+  tick(t){
+   g.setAttribute('opacity',(t<.8?t/.8:t>23?clamp(1-(t-23)/1.8,0,1):1).toFixed(2));
+   const ps=pairS(t),step=stepAt(ps),pts=[];
+   [0,-1.25].forEach((o,i)=>{const s=ps+o*step,p=roadAt(R,s),d=dirs[i]=roadDir(R,s,dirs[i]),k=Math.min(depthAt(p[1],P,1.1,L.H*.085/60),L.W*.17/60);pts.push([p,k]);M[i].setAttribute('transform',`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) scale(${(k*d).toFixed(3)} ${k.toFixed(3)})`)});
+   swingAll(camelLegs,Math.sin(t*5)*12);
+   const mx=(pts[0][0][0]+pts[1][0][0])/2,my=Math.min(pts[0][0][1],pts[1][0][1]),lk=(pts[0][1]+pts[1][1])/2;
+   light.setAttribute('transform',`translate(${mx.toFixed(1)} ${(my-88*lk).toFixed(1)}) scale(${(lk*.8).toFixed(3)})`);light.setAttribute('opacity',(0.82+0.18*Math.sin(t*2.2)).toFixed(2));
+   let hs,dir=null,gallop=0;
+   if(t<3)hs=len*.01;else if(t<10){hs=lerp(len*.01,catchS,ease((t-3)/7));gallop=1}else if(t<13.4){hs=catchS}else{hs=lerp(catchS,len*.0,ease(clamp((t-13.4)/4.6,0,1)));gallop=t<18?1:0}
+   const hp=roadAt(R,hs),hk=Math.min(depthAt(hp[1],P,1.1,L.H*.1/80),L.W*.2/80);dir=roadDir(R,hs,dirs[2]);dirs[2]=dir;if(t>=12.4)dir=-dir;
+   const sink=t>=10&&t<13.4?Math.min(1,(t-10)/.6)*(t>12.6?1-(t-12.6)/.8:1):0;
+   horse.setAttribute('transform',`translate(${hp[0].toFixed(1)} ${(hp[1]+sink*9*hk).toFixed(1)}) scale(${(hk*dir).toFixed(3)} ${hk.toFixed(3)})`);horse.setAttribute('opacity',t<3||t>18.5?'0':'1');
+   front.setAttribute('transform',`scale(1 ${(1-.5*sink).toFixed(3)})`);rider.setAttribute('transform',`rotate(${(sink*14).toFixed(1)} 0 -42)`);
+   swingAll(horseLegs,gallop?Math.sin(t*16)*24:0);
+   const dustOn=(gallop||sink>0)&&t>=3&&t<=18.5;dust.setAttribute('transform',`translate(${(hp[0]-dir*24*hk).toFixed(1)} ${(hp[1]-2).toFixed(1)}) scale(${(dustOn?hk:.01).toFixed(3)})`);dust.setAttribute('opacity',dustOn?'.8':'0');
+  }};
+ return th;
+}
+/* which lessons each scene belongs to: story = lessons that play it above the story; road = the map that shows it on the road */
+const SCENES=[
+ {re:/year of the elephant/i,road:elephantRoad,make:(svg,full,cap)=>elephantTheatre(svg,full,cap),label:"Animated scene: Abrahah's army and the elephant, the birds and the stones"},
+ {re:/cave of thawr|surāqah|suraqah/i,road:hijrahRoad,make:(svg,full,cap)=>hijrahTheatre(svg,full,cap),label:'Animated scene: the two camels of the Hijrah with a light above them, and Surāqah on his horse'}
+];
+function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
+function paintElephantSpot(){
+ const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;
+ svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());
+ if(!Array.isArray(L.road)||L.road.length<2)return;const P=photoBox(svg);if(!P)return;
+ SCENES.forEach(sc=>{
+  const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','lw-road-scene');g.setAttribute('aria-hidden','true');g.setAttribute('pointer-events','none');
+  (svg.querySelector('.historical-dust-road')||svg.querySelector('.lw-life')||svg.querySelector('.history-scene')).insertAdjacentElement('afterend',g);
+  const th=sc.road(g,L,P);if(reduced())th.tick(6);else{LW.theatres.add(th);run()}
+ });
 }
 
 /* ---------- wire into the map ---------- */
@@ -292,7 +354,7 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lw-wind.go b{animation:lwSand 2.4s ease-in forwards}
 @keyframes lwGust{0%{transform:translateX(0);opacity:0}25%{opacity:1}100%{transform:translateX(320%);opacity:0}}
 @keyframes lwSand{0%{transform:translate(0,0);opacity:0}20%{opacity:.9}100%{transform:translate(110vw,-30px);opacity:0}}
-.lw-elephant-spot{overflow:hidden}
+.lw-road-scene{will-change:transform}
 /* lesson story like the Extra story panel */
 #stage.lw-story{padding:0;overflow:hidden;text-align:left}
 #stage.lw-story>*:not(.lw-head){margin-left:clamp(16px,4vw,36px);margin-right:clamp(16px,4vw,36px)}
