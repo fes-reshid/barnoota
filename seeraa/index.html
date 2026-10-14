@@ -2764,6 +2764,7 @@ function enterTeacherMode(role){
 }
 function syncTmBtn(){const b=$('#tmEditBtn');if(!b)return;const sc=currentScreen(),on=teacherMode&&['mapScreen','lessonScreen','mapQuizScreen'].includes(sc);b.classList.toggle('hidden',!on);b.textContent=sc==='lessonScreen'?'✏️ Edit this lesson':'✏️ Edit Map '+(viewWorld+1)}
 const showBeforeTeacher=show;show=function(){const r=showBeforeTeacher.apply(this,arguments);syncTmBtn();return r};
+const renderMapBeforeTeacher=renderMap;renderMap=function(){const r=renderMapBeforeTeacher.apply(this,arguments);syncTmBtn();return r};
 /* ---- editor ---- */
 function qFromBuilt(q){
  const html=String(q.q||''),m=html.match(/<span class="quiz-ayah"[^>]*>([\s\S]*?)<\/span>(?:<small class="quiz-ayah-ref">([\s\S]*?)<\/small>)?/);
@@ -3377,11 +3378,11 @@ setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapSc
 <script src="cartoon-avatar-14a08346.js?v=direction-3"></script>
 <script src="seeraa-activities.js?v=maps-31"></script>
 <script src="seeraa-content-editor.js?v=editable-activities-11"></script>
-<script src="historical-worlds.js?v=map-polish-2"></script>
+<script src="historical-worlds.js?v=trail-2"></script>
 <script src="seeraa-enrichment-data.js?v=maps-31"></script>
 <script src="seeraa-enrichment.js?v=maps-31"></script>
-<script src="seeraa-living-world.js?v=map-polish-2"></script>
-<script src="seeraa-event-scenes.js?v=map-polish-2"></script>
+<script src="seeraa-living-world.js?v=trail-2"></script>
+<script src="seeraa-event-scenes.js?v=trail-2"></script>
 <script src="seeraa-map-polish.js?v=map-polish-2"></script>
 </body>
 </html>

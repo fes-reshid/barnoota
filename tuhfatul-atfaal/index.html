@@ -2748,6 +2748,7 @@ function enterTeacherMode(role){
 }
 function syncTmBtn(){const b=$('#tmEditBtn');if(!b)return;const sc=currentScreen(),on=teacherMode&&['mapScreen','lessonScreen','mapQuizScreen'].includes(sc);b.classList.toggle('hidden',!on);b.textContent=sc==='lessonScreen'?'✏️ Edit this lesson':'✏️ Edit Map '+(viewWorld+1)}
 const showBeforeTeacher=show;show=function(){const r=showBeforeTeacher.apply(this,arguments);syncTmBtn();return r};
+const renderMapBeforeTeacher=renderMap;renderMap=function(){const r=renderMapBeforeTeacher.apply(this,arguments);syncTmBtn();return r};
 /* ---- editor ---- */
 function qFromBuilt(q){
  const html=String(q.q||''),m=html.match(/<span class="quiz-ayah"[^>]*>([\s\S]*?)<\/span>(?:<small class="quiz-ayah-ref">([\s\S]*?)<\/small>)?/);

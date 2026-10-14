@@ -57,7 +57,7 @@ const ADHAN=`<g class="lwX-arcs" fill="none" stroke="#fff6d8" stroke-width="2.4"
 
 /* ---------- where things go: the map road, or a straight road in the story picture ---------- */
 function mapCtx(L,P){
- const R=L.road,len=R[R.length-1][2],wide=L.W>L.H,floor=L.H*(wide?.068:.05),cap=Math.min(L.W*.13,L.H*(wide?.092:.085));
+ const R=L.street||L.road,len=R[R.length-1][2],wide=L.W>L.H,floor=L.H*(wide?.068:.05),cap=Math.min(L.W*.13,L.H*(wide?.092:.085));
  const near=y=>clamp(depthAt(y,P,1),.35,1.6);
  return{story:false,W:L.W,H:L.H,
   at:f=>roadAt(R,f*len),dir:(f,prev)=>roadDir(R,f*len,prev),
