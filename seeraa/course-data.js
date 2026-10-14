@@ -79,7 +79,21 @@ window.SEERAA_COURSE=[
             "s": "The Arabs were famous for poetry and generosity.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "Allah made people into nations and tribes so that they would get to know one another, not to look down on each other.",
+            "Knowing how people lived before Islam helps us see how much the Prophet ﷺ changed their lives.",
+            "Generosity to guests was a good Arab habit that Islam kept and made even better."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُم مِّن ذَكَرٍ وَأُنثَىٰ وَجَعَلْنَاكُمْ شُعُوبًا وَقَبَائِلَ لِتَعَارَفُوا",
+            "en": "O people, We created you from a male and a female and made you nations and tribes so that you may know one another.",
+            "ref": "Sūrat al-Ḥujurāt 49:13"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The House of Allah",
@@ -151,7 +165,21 @@ window.SEERAA_COURSE=[
             "the House of Allah"
           ]
         ],
-        "chapter": "Arabia Before Islam"
+        "chapter": "Arabia Before Islam",
+        "learn": {
+          "points": [
+            "The Kaʿbah was built for one purpose: the worship of Allah alone.",
+            "Ibrāhīm and Ismāʿīl worked hard and still asked Allah to accept their work — we should do the same.",
+            "Muslims all over the world face the same House when they pray, as one family."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "رَبَّنَا تَقَبَّلْ مِنَّا ۖ إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ",
+            "en": "Our Lord, accept this from us. You are the All-Hearing, the All-Knowing.",
+            "ref": "Sūrat al-Baqarah 2:127"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "How the Idols Came",
@@ -223,7 +251,21 @@ window.SEERAA_COURSE=[
             "pilgrimage"
           ]
         ],
-        "chapter": "Arabia Before Islam"
+        "chapter": "Arabia Before Islam",
+        "learn": {
+          "points": [
+            "The truth can be forgotten slowly, one small change at a time, so we must guard our tawḥīd.",
+            "Copying others without thinking can lead people far away from what is right.",
+            "Ibrāhīm asked Allah to keep him and his children away from idols — we can make the same duʿāʾ."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَاجْنُبْنِي وَبَنِيَّ أَن نَّعْبُدَ الْأَصْنَامَ",
+            "en": "And keep me and my children away from worshipping idols.",
+            "ref": "Sūrat Ibrāhīm 14:35"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "A Society in Need of Guidance",
@@ -294,6 +336,26 @@ window.SEERAA_COURSE=[
           {
             "s": "Jaʿfar described the days of ignorance to the Najāshī.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "Islam kept the good things people already had, like generosity and courage.",
+            "Islam removed injustice, cruelty to girls and the oppression of the weak.",
+            "A strong family name never makes it right to be unfair to anyone."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ",
+            "en": "Indeed, Allah commands justice and doing good.",
+            "ref": "Sūrat an-Naḥl 16:90"
+          }
+        },
+        "quotes": [
+          {
+            "en": "We were a people of ignorance. We worshipped idols and the strong among us oppressed the weak — until Allah sent us a messenger.",
+            "ar": "كُنَّا قَوْمًا أَهْلَ جَاهِلِيَّةٍ، نَعْبُدُ الْأَصْنَامَ … وَيَأْكُلُ الْقَوِيُّ مِنَّا الضَّعِيفَ، حَتَّى بَعَثَ اللَّهُ إِلَيْنَا رَسُولًا مِنَّا",
+            "ref": "Jaʿfar ibn Abī Ṭālib, Musnad Aḥmad"
           }
         ]
       }
@@ -378,7 +440,21 @@ window.SEERAA_COURSE=[
             "Banū Hāshim"
           ]
         ],
-        "chapter": "The Prophet’s Family"
+        "chapter": "The Prophet’s Family",
+        "learn": {
+          "points": [
+            "Allah chose the Prophet ﷺ from the noblest family, from the line of Ibrāhīm and Ismāʿīl.",
+            "A good family is a blessing, but our own deeds are what count with Allah.",
+            "Knowing our family history helps us thank Allah for the people who came before us."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "إِنَّ اللَّهَ اصْطَفَى كِنَانَةَ مِنْ وَلَدِ إِسْمَاعِيلَ، وَاصْطَفَى قُرَيْشًا مِنْ كِنَانَةَ، وَاصْطَفَى مِنْ قُرَيْشٍ بَنِي هَاشِمٍ، وَاصْطَفَانِي مِنْ بَنِي هَاشِمٍ",
+            "en": "Allah chose Kinānah from the children of Ismāʿīl, chose Quraysh from Kinānah, chose Banū Hāshim from Quraysh, and chose me from Banū Hāshim.",
+            "ref": "Ṣaḥīḥ Muslim 2276"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Hāshim, Who Shared Bread",
@@ -450,7 +526,21 @@ window.SEERAA_COURSE=[
             "summer"
           ]
         ],
-        "chapter": "The Prophet’s Family"
+        "chapter": "The Prophet’s Family",
+        "learn": {
+          "points": [
+            "Feeding hungry people is a deed that people remember for generations.",
+            "It is Allah who feeds us when we are hungry and keeps us safe when we are afraid.",
+            "Serving guests, like the pilgrims, was an honour for the family of the Prophet ﷺ."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ ۝ الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ",
+            "en": "So let them worship the Lord of this House, who fed them in hunger and kept them safe from fear.",
+            "ref": "Sūrat Quraysh 106:3–4"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "ʿAbd al-Muṭṭalib Finds Zamzam",
@@ -522,7 +612,21 @@ window.SEERAA_COURSE=[
             "dream"
           ]
         ],
-        "chapter": "The Prophet’s Family"
+        "chapter": "The Prophet’s Family",
+        "learn": {
+          "points": [
+            "Keep trying even when people laugh at your good work.",
+            "Zamzam is a blessed gift from Allah that began with the patience of Hājar.",
+            "When Allah gives us a blessing, we should share it with others, like the water given to pilgrims."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَاءُ زَمْزَمَ لِمَا شُرِبَ لَهُ",
+            "en": "The water of Zamzam is for whatever it is drunk for.",
+            "ref": "Sunan Ibn Mājah 3062"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "ʿAbdullāh and Āminah",
@@ -594,7 +698,21 @@ window.SEERAA_COURSE=[
             "caravan"
           ]
         ],
-        "chapter": "The Prophet’s Family"
+        "chapter": "The Prophet’s Family",
+        "learn": {
+          "points": [
+            "Allah protects and plans for His servants, even before they are born.",
+            "Parents deserve our love, care and duʿāʾ, whether they are alive or have passed away.",
+            "The Prophet ﷺ grew up an orphan, so he understood people who have lost a parent."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَقَضَىٰ رَبُّكَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ وَبِالْوَالِدَيْنِ إِحْسَانًا",
+            "en": "Your Lord has commanded that you worship none but Him, and that you be good to your parents.",
+            "ref": "Sūrat al-Isrāʾ 17:23"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -677,7 +795,21 @@ window.SEERAA_COURSE=[
             "elephant"
           ]
         ],
-        "chapter": "The Year of the Elephant"
+        "chapter": "The Year of the Elephant",
+        "learn": {
+          "points": [
+            "Jealousy can push a person to do terrible things, so we should be happy when others are blessed.",
+            "No plan against Allah’s House can ever succeed.",
+            "Showing off with money and buildings does not change what is in people’s hearts."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ ۝ أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ",
+            "en": "Have you not seen how your Lord dealt with the people of the elephant? Did He not make their plan go wrong?",
+            "ref": "Sūrat al-Fīl 105:1–2"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "“The House Has a Lord”",
@@ -749,7 +881,21 @@ window.SEERAA_COURSE=[
             "mountain"
           ]
         ],
-        "chapter": "The Year of the Elephant"
+        "chapter": "The Year of the Elephant",
+        "learn": {
+          "points": [
+            "When something is too big for us, we do what we can and trust Allah with the rest.",
+            "Speaking calmly and with dignity earns respect, even from an enemy.",
+            "Allah is the true Protector of His House and of His servants."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ",
+            "en": "So let them worship the Lord of this House.",
+            "ref": "Sūrat Quraysh 106:3"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Elephant Who Would Not Walk",
@@ -821,7 +967,21 @@ window.SEERAA_COURSE=[
             "obedience"
           ]
         ],
-        "chapter": "The Year of the Elephant"
+        "chapter": "The Year of the Elephant",
+        "learn": {
+          "points": [
+            "Every creature obeys Allah, even a giant elephant.",
+            "An army can be strong, but it cannot do what Allah does not allow.",
+            "Years later at Ḥudaybiyyah, the Prophet ﷺ remembered this elephant when his own camel knelt."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "حَبَسَهَا حَابِسُ الْفِيلِ",
+            "en": "She was held back by the One who held back the elephant.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Year of the Elephant",
@@ -893,7 +1053,21 @@ window.SEERAA_COURSE=[
             "stones"
           ]
         ],
-        "chapter": "The Year of the Elephant"
+        "chapter": "The Year of the Elephant",
+        "learn": {
+          "points": [
+            "Allah can use the smallest creatures to defeat the biggest army.",
+            "Allah protects what belongs to Him, so we trust Him in every difficulty.",
+            "The Prophet ﷺ was born in this blessed year, after Allah protected His House."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ ۝ تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ ۝ فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ",
+            "en": "And He sent against them birds in flocks, striking them with stones of baked clay, and He left them like straw that has been eaten.",
+            "ref": "Sūrat al-Fīl 105:3–5"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -976,7 +1150,37 @@ window.SEERAA_COURSE=[
             "light"
           ]
         ],
-        "chapter": "A Blessed Birth"
+        "chapter": "A Blessed Birth",
+        "learn": {
+          "points": [
+            "Allah answers duʿāʾ, sometimes long after the person who made it.",
+            "The earlier prophets knew the final Prophet ﷺ was coming, so all prophets are one family.",
+            "We love all the prophets, and we follow the last of them, Muḥammad ﷺ."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَنَا دَعْوَةُ أَبِي إِبْرَاهِيمَ، وَبِشَارَةُ عِيسَى، وَرَأَتْ أُمِّي حِينَ حَمَلَتْ بِي أَنَّهُ خَرَجَ مِنْهَا نُورٌ أَضَاءَتْ لَهُ قُصُورُ الشَّامِ",
+            "en": "I am the answer to the duʿāʾ of my father Ibrāhīm, the good news of ʿĪsā, and my mother saw, when she was carrying me, a light come out of her that lit up the palaces of Shām.",
+            "ref": "Musnad Aḥmad"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Our Lord, send among them a messenger from themselves, who will recite Your verses to them and teach them the Book and wisdom.",
+            "ar": "رَبَّنَا وَابْعَثْ فِيهِمْ رَسُولًا مِّنْهُمْ يَتْلُو عَلَيْهِمْ آيَاتِكَ وَيُعَلِّمُهُمُ الْكِتَابَ وَالْحِكْمَةَ",
+            "ref": "Sūrat al-Baqarah 2:129"
+          },
+          {
+            "en": "I give you good news of a messenger who will come after me, whose name is Aḥmad.",
+            "ar": "وَمُبَشِّرًا بِرَسُولٍ يَأْتِي مِن بَعْدِي اسْمُهُ أَحْمَدُ",
+            "ref": "Sūrat aṣ-Ṣaff 61:6"
+          },
+          {
+            "en": "I am the answer to the duʿāʾ of my father Ibrāhīm, the good news of ʿĪsā, and my mother saw, when she was carrying me, a light coming out of her that lit up the palaces of Shām.",
+            "ar": "أَنَا دَعْوَةُ أَبِي إِبْرَاهِيمَ، وَبِشَارَةُ عِيسَى، وَرَأَتْ أُمِّي حِينَ حَمَلَتْ بِي أَنَّهُ خَرَجَ مِنْهَا نُورٌ أَضَاءَتْ لَهُ قُصُورُ الشَّامِ",
+            "ref": "Musnad Aḥmad"
+          }
+        ]
       },
       {
         "title": "A Blessed Birth",
@@ -1048,7 +1252,21 @@ window.SEERAA_COURSE=[
             "orphan"
           ]
         ],
-        "chapter": "A Blessed Birth"
+        "chapter": "A Blessed Birth",
+        "learn": {
+          "points": [
+            "The Prophet ﷺ was sent as a mercy to all the worlds.",
+            "Even without a father, Allah surrounded him with people who loved him.",
+            "His name Muḥammad means “the praised one” — and he is praised until today."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَا أَرْسَلْنَاكَ إِلَّا رَحْمَةً لِّلْعَالَمِينَ",
+            "en": "And We have not sent you except as a mercy to the worlds.",
+            "ref": "Sūrat al-Anbiyāʾ 21:107"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Ḥalīmah’s Blessed Journey",
@@ -1120,7 +1338,21 @@ window.SEERAA_COURSE=[
             "milk"
           ]
         ],
-        "chapter": "A Blessed Birth"
+        "chapter": "A Blessed Birth",
+        "learn": {
+          "points": [
+            "Kindness to an orphan brings blessing, even when it seems to bring no reward.",
+            "Ḥalīmah chose to do good when nobody else would — be the one who helps.",
+            "Blessing (barakah) comes from Allah, and it can change hard times into good times."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَأَمَّا الْيَتِيمَ فَلَا تَقْهَرْ",
+            "en": "So as for the orphan, do not treat him harshly.",
+            "ref": "Sūrat aḍ-Ḍuḥā 93:9"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Out in the Desert",
@@ -1192,7 +1424,21 @@ window.SEERAA_COURSE=[
             "pure, clear Arabic"
           ]
         ],
-        "chapter": "A Blessed Birth"
+        "chapter": "A Blessed Birth",
+        "learn": {
+          "points": [
+            "Fresh air, hard work and clear Arabic helped the young Prophet ﷺ grow strong.",
+            "Allah took care of the orphan boy and gave him a loving home.",
+            "We can be grateful for the people who help raise us, not only our parents."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "أَلَمْ يَجِدْكَ يَتِيمًا فَآوَىٰ",
+            "en": "Did He not find you an orphan and give you shelter?",
+            "ref": "Sūrat aḍ-Ḍuḥā 93:6"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -1275,7 +1521,27 @@ window.SEERAA_COURSE=[
             "pure"
           ]
         ],
-        "chapter": "Growing Up in Makkah"
+        "chapter": "Growing Up in Makkah",
+        "learn": {
+          "points": [
+            "Allah prepared His Prophet ﷺ with a pure heart to carry His message.",
+            "A clean heart, free of jealousy and hate, is more important than anything we own.",
+            "We can ask Allah every day to purify our hearts."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَوْمَ لَا يَنفَعُ مَالٌ وَلَا بَنُونَ ۝ إِلَّا مَنْ أَتَى اللَّهَ بِقَلْبٍ سَلِيمٍ",
+            "en": "The Day when neither wealth nor children will help, except for the one who comes to Allah with a sound heart.",
+            "ref": "Sūrat ash-Shuʿarāʾ 26:88–89"
+          }
+        },
+        "quotes": [
+          {
+            "en": "This was Shayṭān’s share of you.",
+            "ar": "هَذَا حَظُّ الشَّيْطَانِ مِنْكَ",
+            "ref": "Ṣaḥīḥ Muslim 162"
+          }
+        ]
       },
       {
         "title": "A Journey to Yathrib",
@@ -1347,7 +1613,21 @@ window.SEERAA_COURSE=[
             "sadness"
           ]
         ],
-        "chapter": "Growing Up in Makkah"
+        "chapter": "Growing Up in Makkah",
+        "learn": {
+          "points": [
+            "The Prophet ﷺ lost his mother when he was only six, so he knew what sadness felt like.",
+            "Caring helpers like Umm Ayman are a gift from Allah — we should thank and honour them.",
+            "We make duʿāʾ for our parents, as Allah taught us."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَقُل رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا",
+            "en": "And say: My Lord, have mercy on them both, as they raised me when I was small.",
+            "ref": "Sūrat al-Isrāʾ 17:24"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Cared For and Loved",
@@ -1419,7 +1699,21 @@ window.SEERAA_COURSE=[
             "care"
           ]
         ],
-        "chapter": "Growing Up in Makkah"
+        "chapter": "Growing Up in Makkah",
+        "learn": {
+          "points": [
+            "Grandparents, uncles and relatives can fill a child’s life with love.",
+            "Looking after orphans is one of the best deeds in Islam.",
+            "Even in loss, Allah never leaves His servants alone."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَنَا وَكَافِلُ الْيَتِيمِ فِي الْجَنَّةِ هَكَذَا",
+            "en": "I and the one who looks after an orphan will be in Paradise like this (close together).",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5304"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Young Shepherd",
@@ -1491,7 +1785,21 @@ window.SEERAA_COURSE=[
             "responsibility"
           ]
         ],
-        "chapter": "Growing Up in Makkah"
+        "chapter": "Growing Up in Makkah",
+        "learn": {
+          "points": [
+            "Every prophet looked after sheep, which taught them patience and care.",
+            "Honest work with our hands is something to be proud of.",
+            "Looking after those who are weak is a training for leadership."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَا بَعَثَ اللَّهُ نَبِيًّا إِلَّا رَعَى الْغَنَمَ",
+            "en": "Allah did not send any prophet except that he looked after sheep.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2262"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -1574,7 +1882,32 @@ window.SEERAA_COURSE=[
             "sign"
           ]
         ],
-        "chapter": "A Young Man of Honour"
+        "chapter": "A Young Man of Honour",
+        "learn": {
+          "points": [
+            "People with real knowledge recognise the truth when they see it.",
+            "The signs of the final Prophet ﷺ were written in the earlier scriptures.",
+            "A caring uncle protects his family, as Abū Ṭālib protected his nephew."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "الرَّسُولَ النَّبِيَّ الْأُمِّيَّ الَّذِي يَجِدُونَهُ مَكْتُوبًا عِندَهُمْ فِي التَّوْرَاةِ وَالْإِنجِيلِ",
+            "en": "The Messenger, the unlettered Prophet, whom they find written in what they have of the Torah and the Gospel.",
+            "ref": "Sūrat al-Aʿrāf 7:157"
+          }
+        },
+        "quotes": [
+          {
+            "en": "This is the master of the worlds,",
+            "ar": "هَذَا سَيِّدُ الْعَالَمِينَ",
+            "ref": "Sunan at-Tirmidhī 3620"
+          },
+          {
+            "en": "Allah will send him as a mercy.",
+            "ar": "يَبْعَثُهُ اللَّهُ رَحْمَةً لِلْعَالَمِينَ",
+            "ref": "Sunan at-Tirmidhī 3620"
+          }
+        ]
       },
       {
         "title": "Protected by Allah",
@@ -1646,7 +1979,21 @@ window.SEERAA_COURSE=[
             "sheep"
           ]
         ],
-        "chapter": "A Young Man of Honour"
+        "chapter": "A Young Man of Honour",
+        "learn": {
+          "points": [
+            "Allah protected the Prophet ﷺ from wrong even before he became a Prophet.",
+            "Staying away from bad places and bad habits keeps our hearts clean.",
+            "The Prophet ﷺ is the best example for us in every part of life."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "لَّقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ",
+            "en": "Indeed, in the Messenger of Allah you have an excellent example.",
+            "ref": "Sūrat al-Aḥzāb 33:21"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Pact of Fairness",
@@ -1717,6 +2064,26 @@ window.SEERAA_COURSE=[
           {
             "s": "The Prophet ﷺ later said the pact was unimportant.",
             "a": false
+          }
+        ],
+        "learn": {
+          "points": [
+            "We stand up for anyone treated unfairly, even if they are a stranger.",
+            "Justice is for everyone — not only for our friends or our tribe.",
+            "Good agreements that protect people are loved by Allah and His Messenger ﷺ."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "اعْدِلُوا هُوَ أَقْرَبُ لِلتَّقْوَىٰ",
+            "en": "Be just: that is closest to taqwā.",
+            "ref": "Sūrat al-Māʾidah 5:8"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I would not exchange that pact even for red camels. If I were called to something like it in Islam, I would answer.",
+            "ar": "مَا أُحِبُّ أَنَّ لِي بِهِ حُمْرَ النَّعَمِ، وَلَوْ أُدْعَى بِهِ فِي الْإِسْلَامِ لَأَجَبْتُ",
+            "ref": "as-Sunan al-Kubrā of al-Bayhaqī"
           }
         ]
       },
@@ -1790,7 +2157,21 @@ window.SEERAA_COURSE=[
             "something kept in trust"
           ]
         ],
-        "chapter": "A Young Man of Honour"
+        "chapter": "A Young Man of Honour",
+        "learn": {
+          "points": [
+            "A good name like “al-Amīn” is earned by being honest every single day.",
+            "People trust those who keep their promises and look after what is given to them.",
+            "Good character was the first thing people noticed about the Prophet ﷺ."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ",
+            "en": "And you are truly of a great character.",
+            "ref": "Sūrat al-Qalam 68:4"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -1873,7 +2254,21 @@ window.SEERAA_COURSE=[
             "cheating"
           ]
         ],
-        "chapter": "Trade and Marriage"
+        "chapter": "Trade and Marriage",
+        "learn": {
+          "points": [
+            "Honest trade brings blessing, even if cheating seems to make more money.",
+            "Weighing and measuring fairly is part of our faith.",
+            "Our reputation travels further than we do."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "التَّاجِرُ الصَّدُوقُ الْأَمِينُ مَعَ النَّبِيِّينَ وَالصِّدِّيقِينَ وَالشُّهَدَاءِ",
+            "en": "The truthful, trustworthy trader will be with the prophets, the truthful and the martyrs.",
+            "ref": "Sunan at-Tirmidhī 1209"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Maysarah’s Report",
@@ -1945,7 +2340,21 @@ window.SEERAA_COURSE=[
             "truthfulness"
           ]
         ],
-        "chapter": "Trade and Marriage"
+        "chapter": "Trade and Marriage",
+        "learn": {
+          "points": [
+            "Good manners when nobody is checking show who we really are.",
+            "Being kind to workers and helpers is part of good character.",
+            "Allah commands us to look after what people trust us with."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّ اللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ أَهْلِهَا",
+            "en": "Indeed, Allah commands you to return trusts to their owners.",
+            "ref": "Sūrat an-Nisāʾ 4:58"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Khadījah",
@@ -2017,7 +2426,21 @@ window.SEERAA_COURSE=[
             "marriage"
           ]
         ],
-        "chapter": "Trade and Marriage"
+        "chapter": "Trade and Marriage",
+        "learn": {
+          "points": [
+            "Khadījah chose her husband for his honesty and good character.",
+            "A happy home is built on respect, kindness and support.",
+            "Khadījah is one of the best women of all time."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "خَيْرُ نِسَائِهَا مَرْيَمُ ابْنَةُ عِمْرَانَ، وَخَيْرُ نِسَائِهَا خَدِيجَةُ بِنْتُ خُوَيْلِدٍ",
+            "en": "The best of its women was Maryam, daughter of ʿImrān, and the best of its women is Khadījah, daughter of Khuwaylid.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3432"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Zayd Chooses to Stay",
@@ -2089,7 +2512,21 @@ window.SEERAA_COURSE=[
             "love"
           ]
         ],
-        "chapter": "Trade and Marriage"
+        "chapter": "Trade and Marriage",
+        "learn": {
+          "points": [
+            "Kindness wins people’s hearts more than anything else.",
+            "The Prophet ﷺ never forced anyone; he let Zayd choose freely.",
+            "True believers love the Prophet ﷺ even more than their own families."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى أَكُونَ أَحَبَّ إِلَيْهِ مِنْ وَالِدِهِ وَوَلَدِهِ وَالنَّاسِ أَجْمَعِينَ",
+            "en": "None of you truly believes until I am more beloved to him than his father, his child and all people.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 15"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -2172,7 +2609,21 @@ window.SEERAA_COURSE=[
             "wisdom"
           ]
         ],
-        "chapter": "Before the Message"
+        "chapter": "Before the Message",
+        "learn": {
+          "points": [
+            "A wise idea can stop an argument before it becomes a fight.",
+            "Including everyone makes people feel respected.",
+            "Allah loves those who make peace between people."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّمَا الْمُؤْمِنُونَ إِخْوَةٌ فَأَصْلِحُوا بَيْنَ أَخَوَيْكُمْ",
+            "en": "The believers are brothers, so make peace between your brothers.",
+            "ref": "Sūrat al-Ḥujurāt 49:10"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Seekers of the Truth",
@@ -2244,7 +2695,27 @@ window.SEERAA_COURSE=[
             "guidance"
           ]
         ],
-        "chapter": "Before the Message"
+        "chapter": "Before the Message",
+        "learn": {
+          "points": [
+            "A sincere heart searches for the truth and asks Allah for guidance.",
+            "Saying no to wrong, even when everyone else does it, takes courage.",
+            "Ibrāhīm’s pure religion was the worship of Allah alone."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "مَا كَانَ إِبْرَاهِيمُ يَهُودِيًّا وَلَا نَصْرَانِيًّا وَلَٰكِن كَانَ حَنِيفًا مُّسْلِمًا",
+            "en": "Ibrāhīm was neither a Jew nor a Christian, but he was upright, a Muslim who submitted to Allah.",
+            "ref": "Sūrat Āl ʿImrān 3:67"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O people of Quraysh, none of you follows the religion of Ibrāhīm except me.",
+            "ar": "يَا مَعْشَرَ قُرَيْشٍ، وَاللَّهِ مَا مِنْكُمْ عَلَى دِينِ إِبْرَاهِيمَ غَيْرِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3828"
+          }
+        ]
       },
       {
         "title": "Dreams Like the Dawn",
@@ -2316,7 +2787,21 @@ window.SEERAA_COURSE=[
             "worship"
           ]
         ],
-        "chapter": "Before the Message"
+        "chapter": "Before the Message",
+        "learn": {
+          "points": [
+            "Revelation began with true dreams, as clear as the light of dawn.",
+            "Quiet time to remember Allah prepares the heart for good.",
+            "Khadījah supported her husband’s worship by preparing his food."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَوَّلُ مَا بُدِئَ بِهِ رَسُولُ اللَّهِ ﷺ مِنَ الْوَحْيِ الرُّؤْيَا الصَّالِحَةُ فِي النَّوْمِ، فَكَانَ لَا يَرَى رُؤْيَا إِلَّا جَاءَتْ مِثْلَ فَلَقِ الصُّبْحِ",
+            "en": "The first revelation to the Messenger of Allah ﷺ began with true dreams in sleep; every dream he saw came true like the break of dawn.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Cave of Ḥirāʾ",
@@ -2388,7 +2873,21 @@ window.SEERAA_COURSE=[
             "time alone"
           ]
         ],
-        "chapter": "Before the Message"
+        "chapter": "Before the Message",
+        "learn": {
+          "points": [
+            "Thinking about Allah’s creation leads us to know Him better.",
+            "Sometimes we need quiet away from noise to hear our own hearts.",
+            "The Prophet ﷺ refused the idols and the unfairness around him."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَيَتَفَكَّرُونَ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا",
+            "en": "And they reflect on the creation of the heavens and the earth: “Our Lord, You did not create this without purpose.”",
+            "ref": "Sūrat Āl ʿImrān 3:191"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -2471,7 +2970,32 @@ window.SEERAA_COURSE=[
             "revelation"
           ]
         ],
-        "chapter": "The First Revelation"
+        "chapter": "The First Revelation",
+        "learn": {
+          "points": [
+            "The very first word of the Qurʾān was “Read!” — Islam loves knowledge.",
+            "Learning should always begin in the name of Allah.",
+            "Allah teaches people what they did not know."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ ۝ خَلَقَ الْإِنسَانَ مِنْ عَلَقٍ ۝ اقْرَأْ وَرَبُّكَ الْأَكْرَمُ",
+            "en": "Read in the name of your Lord who created — created man from a clinging clot. Read, and your Lord is the Most Generous.",
+            "ref": "Sūrat al-ʿAlaq 96:1–3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Iqraʾ",
+            "ar": "اقْرَأْ",
+            "ref": "Sūrat al-ʿAlaq 96:1"
+          },
+          {
+            "en": "Read in the name of your Lord who created.",
+            "ar": "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",
+            "ref": "Sūrat al-ʿAlaq 96:1"
+          }
+        ]
       },
       {
         "title": "Comfort from Khadījah",
@@ -2542,6 +3066,36 @@ window.SEERAA_COURSE=[
           {
             "s": "She listed his kindness to relatives, the weak and guests.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "When someone is frightened, we comfort them calmly and kindly.",
+            "Good deeds — family ties, helping the weak, honouring guests — are a sign that Allah will not abandon a person.",
+            "A good wife and friend stands by you on the hardest day."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "كَلَّا وَاللَّهِ مَا يُخْزِيكَ اللَّهُ أَبَدًا، إِنَّكَ لَتَصِلُ الرَّحِمَ، وَتَحْمِلُ الْكَلَّ، وَتَكْسِبُ الْمَعْدُومَ، وَتَقْرِي الضَّيْفَ، وَتُعِينُ عَلَى نَوَائِبِ الْحَقِّ",
+            "en": "Never! By Allah, Allah will never disgrace you. You keep family ties, carry the weak, give to those who have nothing, honour your guests and help people in times of trouble.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Cover me! Cover me!",
+            "ar": "زَمِّلُونِي زَمِّلُونِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          },
+          {
+            "en": "I was afraid for myself.",
+            "ar": "لَقَدْ خَشِيتُ عَلَى نَفْسِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          },
+          {
+            "en": "Never! By Allah, Allah will never disgrace you. You keep good ties with your relatives, you help those who are tired and weak, you give to people who have nothing, you honour your guests and you stand by people in times of trouble.",
+            "ar": "كَلَّا وَاللَّهِ مَا يُخْزِيكَ اللَّهُ أَبَدًا، إِنَّكَ لَتَصِلُ الرَّحِمَ، وَتَحْمِلُ الْكَلَّ، وَتَكْسِبُ الْمَعْدُومَ، وَتَقْرِي الضَّيْفَ، وَتُعِينُ عَلَى نَوَائِبِ الْحَقِّ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
           }
         ]
       },
@@ -2615,7 +3169,37 @@ window.SEERAA_COURSE=[
             "prophet"
           ]
         ],
-        "chapter": "The First Revelation"
+        "chapter": "The First Revelation",
+        "learn": {
+          "points": [
+            "The message of the Prophet ﷺ is the same message brought by Mūsā and the earlier prophets.",
+            "Doing what is right is sometimes hard, and people may oppose it.",
+            "Wise people help us understand what is happening to us."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "هَذَا النَّامُوسُ الَّذِي نَزَّلَ اللَّهُ عَلَى مُوسَى",
+            "en": "This is the angel whom Allah sent down to Mūsā.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "This is the same angel whom Allah sent to Mūsā! I wish I were young. I wish I could be alive when your people drive you out.",
+            "ar": "هَذَا النَّامُوسُ الَّذِي نَزَّلَ اللَّهُ عَلَى مُوسَى، يَا لَيْتَنِي فِيهَا جَذَعًا، لَيْتَنِي أَكُونُ حَيًّا إِذْ يُخْرِجُكَ قَوْمُكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          },
+          {
+            "en": "Will they drive me out?",
+            "ar": "أَوَمُخْرِجِيَّ هُمْ؟",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          },
+          {
+            "en": "No man has ever come with what you have brought without being treated as an enemy. If I live to see that day, I will support you with all my strength.",
+            "ar": "لَمْ يَأْتِ رَجُلٌ قَطُّ بِمِثْلِ مَا جِئْتَ بِهِ إِلَّا عُودِيَ، وَإِنْ يُدْرِكْنِي يَوْمُكَ أَنْصُرْكَ نَصْرًا مُؤَزَّرًا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3"
+          }
+        ]
       },
       {
         "title": "“Arise and Warn”",
@@ -2687,7 +3271,32 @@ window.SEERAA_COURSE=[
             "purify"
           ]
         ],
-        "chapter": "The First Revelation"
+        "chapter": "The First Revelation",
+        "learn": {
+          "points": [
+            "Islam is not only for ourselves — we share it with others.",
+            "Calling to good begins with keeping ourselves and our clothes clean and pure.",
+            "We declare Allah’s greatness with our words and our actions."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الْمُدَّثِّرُ ۝ قُمْ فَأَنذِرْ ۝ وَرَبَّكَ فَكَبِّرْ ۝ وَثِيَابَكَ فَطَهِّرْ ۝ وَالرُّجْزَ فَاهْجُرْ",
+            "en": "O you who are wrapped up, arise and warn, declare the greatness of your Lord, purify your clothes, and keep away from idols.",
+            "ref": "Sūrat al-Muddaththir 74:1–5"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Cover me! Cover me!",
+            "ar": "زَمِّلُونِي زَمِّلُونِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4925"
+          },
+          {
+            "en": "O you who are wrapped up, arise and warn! Declare the greatness of your Lord, keep your clothes pure, and stay away from idols.",
+            "ar": "يَا أَيُّهَا الْمُدَّثِّرُ ۝ قُمْ فَأَنذِرْ ۝ وَرَبَّكَ فَكَبِّرْ ۝ وَثِيَابَكَ فَطَهِّرْ ۝ وَالرُّجْزَ فَاهْجُرْ",
+            "ref": "Sūrat al-Muddaththir 74:1–5"
+          }
+        ]
       }
     ]
   },
@@ -2770,7 +3379,21 @@ window.SEERAA_COURSE=[
             "unit of prayer"
           ]
         ],
-        "chapter": "The First Believers"
+        "chapter": "The First Believers",
+        "learn": {
+          "points": [
+            "Prayer was the very first act of worship in Islam, from the earliest days.",
+            "Children can be among the first to do great good, like young ʿAlī.",
+            "We pray to remember Allah, wherever we are."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَقِمِ الصَّلَاةَ لِذِكْرِي",
+            "en": "And establish prayer to remember Me.",
+            "ref": "Sūrat Ṭā-Hā 20:14"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Friends Who Believed",
@@ -2842,7 +3465,21 @@ window.SEERAA_COURSE=[
             "Islam"
           ]
         ],
-        "chapter": "The First Believers"
+        "chapter": "The First Believers",
+        "learn": {
+          "points": [
+            "A true friend believes you and stands with you.",
+            "The friends we choose shape the people we become.",
+            "Abū Bakr, ʿAlī and Zayd show that faith can grow in every kind of person."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "الْمَرْءُ عَلَى دِينِ خَلِيلِهِ، فَلْيَنْظُرْ أَحَدُكُمْ مَنْ يُخَالِلُ",
+            "en": "A person follows the way of his close friend, so let each of you look carefully at whom he befriends.",
+            "ref": "Sunan Abī Dāwūd 4833"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Abū Bakr Brings His Friends",
@@ -2914,7 +3551,21 @@ window.SEERAA_COURSE=[
             "invitation"
           ]
         ],
-        "chapter": "The First Believers"
+        "chapter": "The First Believers",
+        "learn": {
+          "points": [
+            "Whoever guides someone to good gets the same reward as the one who does it.",
+            "Gentle words and trust open hearts more than shouting.",
+            "Using our wealth to free and help others is a great deed."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ",
+            "en": "Whoever guides someone to something good will have a reward like the one who does it.",
+            "ref": "Ṣaḥīḥ Muslim 1893"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Quiet Years",
@@ -2986,7 +3637,21 @@ window.SEERAA_COURSE=[
             "study circle"
           ]
         ],
-        "chapter": "The First Believers"
+        "chapter": "The First Believers",
+        "learn": {
+          "points": [
+            "Wisdom means choosing the right time and the right way to share the message.",
+            "A safe place to learn together makes faith stronger.",
+            "Small beginnings can grow into something great with patience."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "ادْعُ إِلَىٰ سَبِيلِ رَبِّكَ بِالْحِكْمَةِ وَالْمَوْعِظَةِ الْحَسَنَةِ",
+            "en": "Invite to the way of your Lord with wisdom and good advice.",
+            "ref": "Sūrat an-Naḥl 16:125"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -3069,7 +3734,27 @@ window.SEERAA_COURSE=[
             "relatives"
           ]
         ],
-        "chapter": "The Call in the Open"
+        "chapter": "The Call in the Open",
+        "learn": {
+          "points": [
+            "We share goodness with our own family first.",
+            "If the first try does not go well, try again kindly.",
+            "Family members can protect and support us even when they think differently."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَنذِرْ عَشِيرَتَكَ الْأَقْرَبِينَ",
+            "en": "And warn your nearest relatives.",
+            "ref": "Sūrat ash-Shuʿarāʾ 26:214"
+          }
+        },
+        "quotes": [
+          {
+            "en": "And warn your nearest relatives.",
+            "ar": "وَأَنذِرْ عَشِيرَتَكَ الْأَقْرَبِينَ",
+            "ref": "Sūrat ash-Shuʿarāʾ 26:214"
+          }
+        ]
       },
       {
         "title": "Calling from Ṣafā",
@@ -3141,7 +3826,32 @@ window.SEERAA_COURSE=[
             "warner"
           ]
         ],
-        "chapter": "The Call in the Open"
+        "chapter": "The Call in the Open",
+        "learn": {
+          "points": [
+            "Being known as honest makes people listen when you speak the truth.",
+            "The Prophet ﷺ first reminded people of his honesty, then gave the message.",
+            "Some people reject the truth even when they know the speaker is truthful."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَرَأَيْتَكُمْ لَوْ أَخْبَرْتُكُمْ أَنَّ خَيْلًا بِالْوَادِي تُرِيدُ أَنْ تُغِيرَ عَلَيْكُمْ، أَكُنْتُمْ مُصَدِّقِيَّ؟ قَالُوا: نَعَمْ، مَا جَرَّبْنَا عَلَيْكَ إِلَّا صِدْقًا",
+            "en": "If I told you that horsemen in the valley were about to attack you, would you believe me? They said: Yes, we have only ever found you truthful.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4770"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If I told you an army was behind this hill, would you believe me?",
+            "ar": "أَرَأَيْتَكُمْ لَوْ أَخْبَرْتُكُمْ أَنَّ خَيْلًا بِالْوَادِي تُرِيدُ أَنْ تُغِيرَ عَلَيْكُمْ، أَكُنْتُمْ مُصَدِّقِيَّ؟",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4770"
+          },
+          {
+            "en": "Yes — we have never known you to lie.",
+            "ar": "نَعَمْ، مَا جَرَّبْنَا عَلَيْكَ إِلَّا صِدْقًا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4770"
+          }
+        ]
       },
       {
         "title": "What Shall We Tell the Pilgrims?",
@@ -3213,7 +3923,21 @@ window.SEERAA_COURSE=[
             "speech"
           ]
         ],
-        "chapter": "The Call in the Open"
+        "chapter": "The Call in the Open",
+        "learn": {
+          "points": [
+            "The Qurʾān is the speech of Allah — no one can make anything like it.",
+            "Even its enemies could not find a fault in it.",
+            "Rumours often spread the very thing people try to hide."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قُل لَّئِنِ اجْتَمَعَتِ الْإِنسُ وَالْجِنُّ عَلَىٰ أَن يَأْتُوا بِمِثْلِ هَٰذَا الْقُرْآنِ لَا يَأْتُونَ بِمِثْلِهِ",
+            "en": "Say: If all mankind and jinn came together to produce something like this Qurʾān, they could not produce anything like it.",
+            "ref": "Sūrat al-Isrāʾ 17:88"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Abū Ṭālib Stands Firm",
@@ -3285,7 +4009,27 @@ window.SEERAA_COURSE=[
             "steadfastness"
           ]
         ],
-        "chapter": "The Call in the Open"
+        "chapter": "The Call in the Open",
+        "learn": {
+          "points": [
+            "We hold on to the truth even if we are offered the whole world to leave it.",
+            "Kind relatives who protect us deserve our thanks and love.",
+            "Being firm on the truth can soften the hearts of others."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَاسْتَقِمْ كَمَا أُمِرْتَ",
+            "en": "So stand firm as you have been commanded.",
+            "ref": "Sūrat Hūd 11:112"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O my uncle, by Allah, if they put the sun in my right hand and the moon in my left hand to make me leave this matter, I would not leave it until Allah makes it succeed, or I die trying.",
+            "ar": "يَا عَمِّ، وَاللَّهِ لَوْ وَضَعُوا الشَّمْسَ فِي يَمِينِي وَالْقَمَرَ فِي يَسَارِي عَلَى أَنْ أَتْرُكَ هَذَا الْأَمْرَ حَتَّى يُظْهِرَهُ اللَّهُ أَوْ أَهْلِكَ فِيهِ مَا تَرَكْتُهُ",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       }
     ]
   },
@@ -3368,7 +4112,32 @@ window.SEERAA_COURSE=[
             "firmness"
           ]
         ],
-        "chapter": "Patience Under Pressure"
+        "chapter": "Patience Under Pressure",
+        "learn": {
+          "points": [
+            "Patience means holding on to what is right, even when it hurts.",
+            "Faith does not depend on wealth, family or skin colour.",
+            "Freeing and helping the oppressed is one of the best uses of wealth."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+            "en": "Say: He is Allah, the One.",
+            "ref": "Sūrat al-Ikhlāṣ 112:1"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Aḥad… Aḥad…",
+            "ar": "أَحَدٌ… أَحَدٌ…",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "Abū Bakr is our master, and he freed our master",
+            "ar": "أَبُو بَكْرٍ سَيِّدُنَا، وَأَعْتَقَ سَيِّدَنَا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3754"
+          }
+        ]
       },
       {
         "title": "The Family of Yāsir",
@@ -3440,7 +4209,27 @@ window.SEERAA_COURSE=[
             "faith"
           ]
         ],
-        "chapter": "Patience Under Pressure"
+        "chapter": "Patience Under Pressure",
+        "learn": {
+          "points": [
+            "Patience for the sake of Allah is never wasted.",
+            "Paradise is the greatest reward for those who stay firm.",
+            "Women like Sumayyah were heroes of faith from the very beginning."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "صَبْرًا آلَ يَاسِرٍ، فَإِنَّ مَوْعِدَكُمُ الْجَنَّةُ",
+            "en": "Be patient, O family of Yāsir, for your meeting place is Paradise.",
+            "ref": "al-Mustadrak of al-Ḥākim"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Be patient, O family of Yāsir — your meeting place is Paradise!",
+            "ar": "صَبْرًا آلَ يَاسِرٍ، فَإِنَّ مَوْعِدَكُمُ الْجَنَّةُ",
+            "ref": "al-Mustadrak of al-Ḥākim"
+          }
+        ]
       },
       {
         "title": "Khabbāb and the Promise",
@@ -3512,7 +4301,27 @@ window.SEERAA_COURSE=[
             "promise"
           ]
         ],
-        "chapter": "Patience Under Pressure"
+        "chapter": "Patience Under Pressure",
+        "learn": {
+          "points": [
+            "Allah’s help comes at the right time, so we keep patient and hopeful.",
+            "Believers before us were tested too and stayed firm.",
+            "The Prophet’s ﷺ promises came true — safety did spread across Arabia."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "وَاللَّهِ لَيُتِمَّنَّ هَذَا الْأَمْرَ حَتَّى يَسِيرَ الرَّاكِبُ مِنْ صَنْعَاءَ إِلَى حَضْرَمَوْتَ لَا يَخَافُ إِلَّا اللَّهَ وَالذِّئْبَ عَلَى غَنَمِهِ، وَلَكِنَّكُمْ تَسْتَعْجِلُونَ",
+            "en": "By Allah, Allah will complete this matter until a rider travels from Ṣanʿāʾ to Ḥaḍramawt fearing no one except Allah, and the wolf for his sheep — but you are in a hurry.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3612"
+          }
+        },
+        "quotes": [
+          {
+            "en": "By Allah, Allah will complete this matter until a rider can travel from Ṣanʿāʾ to Ḥaḍramawt fearing no one except Allah, and the wolf for his sheep. But you are in a hurry.",
+            "ar": "وَاللَّهِ لَيُتِمَّنَّ هَذَا الْأَمْرَ حَتَّى يَسِيرَ الرَّاكِبُ مِنْ صَنْعَاءَ إِلَى حَضْرَمَوْتَ لَا يَخَافُ إِلَّا اللَّهَ وَالذِّئْبَ عَلَى غَنَمِهِ، وَلَكِنَّكُمْ تَسْتَعْجِلُونَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3612"
+          }
+        ]
       },
       {
         "title": "Ibn Masʿūd Recites Aloud",
@@ -3584,7 +4393,27 @@ window.SEERAA_COURSE=[
             "courage"
           ]
         ],
-        "chapter": "Patience Under Pressure"
+        "chapter": "Patience Under Pressure",
+        "learn": {
+          "points": [
+            "Courage comes from trusting Allah, not from being big or powerful.",
+            "The Qurʾān deserves to be heard, loved and recited beautifully.",
+            "One brave person can do what a whole crowd is afraid to do."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "الرَّحْمَٰنُ ۝ عَلَّمَ الْقُرْآنَ ۝ خَلَقَ الْإِنسَانَ",
+            "en": "The Most Merciful. He taught the Qurʾān. He created man.",
+            "ref": "Sūrat ar-Raḥmān 55:1–3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Ar-Raḥmān! He taught the Qurʾān. He created man…",
+            "ar": "الرَّحْمَٰنُ ۝ عَلَّمَ الْقُرْآنَ ۝ خَلَقَ الْإِنسَانَ",
+            "ref": "Sūrat ar-Raḥmān 55:1–3"
+          }
+        ]
       }
     ]
   },
@@ -3667,7 +4496,27 @@ window.SEERAA_COURSE=[
             "Abyssinia"
           ]
         ],
-        "chapter": "Refuge Across the Sea"
+        "chapter": "Refuge Across the Sea",
+        "learn": {
+          "points": [
+            "Protecting our faith can be worth leaving our home.",
+            "Allah always provides a way out for those who are patient.",
+            "A just ruler is a blessing for everyone, whatever their religion."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا",
+            "en": "And whoever is mindful of Allah, He will make a way out for him.",
+            "ref": "Sūrat aṭ-Ṭalāq 65:2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "In Abyssinia there is a king who wrongs no one. It is a land of truthfulness. Go there until Allah makes a way out for you.",
+            "ar": "إِنَّ بِأَرْضِ الْحَبَشَةِ مَلِكًا لَا يُظْلَمُ عِنْدَهُ أَحَدٌ، وَهِيَ أَرْضُ صِدْقٍ، فَالْحَقُوا بِبِلَادِهِ حَتَّى يَجْعَلَ اللَّهُ لَكُمْ فَرَجًا",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       },
       {
         "title": "Gifts from Makkah",
@@ -3739,7 +4588,21 @@ window.SEERAA_COURSE=[
             "justice"
           ]
         ],
-        "chapter": "Refuge Across the Sea"
+        "chapter": "Refuge Across the Sea",
+        "learn": {
+          "points": [
+            "A just person listens to both sides before deciding.",
+            "Gifts given to change a judgement are a bribe, and they are wrong.",
+            "Allah protected the Muslims through the fairness of a good king."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِذَا حَكَمْتُم بَيْنَ النَّاسِ أَن تَحْكُمُوا بِالْعَدْلِ",
+            "en": "And when you judge between people, judge with justice.",
+            "ref": "Sūrat an-Nisāʾ 4:58"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Just King",
@@ -3810,6 +4673,26 @@ window.SEERAA_COURSE=[
           {
             "s": "The Najāshī said the message came from the same source as ʿĪsā’s.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We explain Islam clearly and politely, and let the Qurʾān touch hearts.",
+            "Islam teaches truthfulness, keeping trusts and kindness to relatives and neighbours.",
+            "People who love Allah are moved when they hear His words."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِذَا سَمِعُوا مَا أُنزِلَ إِلَى الرَّسُولِ تَرَىٰ أَعْيُنَهُمْ تَفِيضُ مِنَ الدَّمْعِ مِمَّا عَرَفُوا مِنَ الْحَقِّ",
+            "en": "When they hear what has been sent down to the Messenger, you see their eyes overflowing with tears because of the truth they recognise.",
+            "ref": "Sūrat al-Māʾidah 5:83"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O King, we were a people of ignorance. We worshipped idols, ate dead animals, did shameful things, cut off our relatives and treated our neighbours badly, and the strong among us oppressed the weak. Then Allah sent us a messenger from among us, whose family, honesty and trustworthiness we knew. He called us to worship Allah alone, to speak the truth, keep our trusts, be good to our relatives and neighbours, and to pray, give charity and fast.",
+            "ar": "أَيُّهَا الْمَلِكُ، كُنَّا قَوْمًا أَهْلَ جَاهِلِيَّةٍ، نَعْبُدُ الْأَصْنَامَ، وَنَأْكُلُ الْمَيْتَةَ، وَنَأْتِي الْفَوَاحِشَ، وَنَقْطَعُ الْأَرْحَامَ، وَنُسِيءُ الْجِوَارَ، وَيَأْكُلُ الْقَوِيُّ مِنَّا الضَّعِيفَ، حَتَّى بَعَثَ اللَّهُ إِلَيْنَا رَسُولًا مِنَّا نَعْرِفُ نَسَبَهُ وَصِدْقَهُ وَأَمَانَتَهُ وَعَفَافَهُ، فَدَعَانَا إِلَى اللَّهِ لِنُوَحِّدَهُ وَنَعْبُدَهُ … وَأَمَرَنَا بِصِدْقِ الْحَدِيثِ، وَأَدَاءِ الْأَمَانَةِ، وَصِلَةِ الرَّحِمِ، وَحُسْنِ الْجِوَارِ … وَأَمَرَنَا بِالصَّلَاةِ وَالزَّكَاةِ وَالصِّيَامِ",
+            "ref": "Jaʿfar ibn Abī Ṭālib, Musnad Aḥmad"
           }
         ]
       },
@@ -3883,7 +4766,27 @@ window.SEERAA_COURSE=[
             "messenger"
           ]
         ],
-        "chapter": "Refuge Across the Sea"
+        "chapter": "Refuge Across the Sea",
+        "learn": {
+          "points": [
+            "We speak the truth politely, even when we are worried about the result.",
+            "Muslims love and respect ʿĪsā as a servant and messenger of Allah.",
+            "Allah protects those who are honest and trust Him."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّمَا الْمَسِيحُ عِيسَى ابْنُ مَرْيَمَ رَسُولُ اللَّهِ وَكَلِمَتُهُ أَلْقَاهَا إِلَىٰ مَرْيَمَ وَرُوحٌ مِّنْهُ",
+            "en": "The Messiah, ʿĪsā son of Maryam, was a messenger of Allah and His word which He gave to Maryam, and a spirit from Him.",
+            "ref": "Sūrat an-Nisāʾ 4:171"
+          }
+        },
+        "quotes": [
+          {
+            "en": "We say about him what our Prophet ﷺ brought: he is the servant of Allah, His messenger, His spirit, and His word which He gave to Maryam, the pure virgin.",
+            "ar": "نَقُولُ فِيهِ الَّذِي جَاءَ بِهِ نَبِيُّنَا ﷺ: هُوَ عَبْدُ اللَّهِ وَرَسُولُهُ وَرُوحُهُ وَكَلِمَتُهُ أَلْقَاهَا إِلَى مَرْيَمَ الْعَذْرَاءِ الْبَتُولِ",
+            "ref": "Jaʿfar ibn Abī Ṭālib, Musnad Aḥmad"
+          }
+        ]
       }
     ]
   },
@@ -3966,7 +4869,21 @@ window.SEERAA_COURSE=[
             "s": "Ḥamzah truly believed after Allah opened his heart.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "Strength is best used to protect people who are wronged.",
+            "A good action can open the door to faith in the heart.",
+            "Ḥamzah became a lion for the truth and a hero of the believers."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "سَيِّدُ الشُّهَدَاءِ حَمْزَةُ بْنُ عَبْدِ الْمُطَّلِبِ",
+            "en": "The master of the martyrs is Ḥamzah ibn ʿAbd al-Muṭṭalib.",
+            "ref": "al-Mustadrak of al-Ḥākim"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "ʿUmar Accepts Islam",
@@ -4037,6 +4954,26 @@ window.SEERAA_COURSE=[
           {
             "s": "The words of the Qurʾān softened ʿUmar’s heart.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "Anyone can change, so we never give up hope in people.",
+            "The words of the Qurʾān can soften the hardest heart.",
+            "Brave family members like Fāṭimah can guide others to the truth."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "اللَّهُمَّ أَعِزَّ الْإِسْلَامَ بِأَحَبِّ هَذَيْنِ الرَّجُلَيْنِ إِلَيْكَ: بِأَبِي جَهْلٍ أَوْ بِعُمَرَ بْنِ الْخَطَّابِ",
+            "en": "O Allah, strengthen Islam through whichever of these two men is more beloved to You: Abū Jahl or ʿUmar ibn al-Khaṭṭāb.",
+            "ref": "Sunan at-Tirmidhī 3681"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Ṭā-Hā. We did not send down the Qurʾān to you to make you suffer…",
+            "ar": "طه ۝ مَا أَنزَلْنَا عَلَيْكَ الْقُرْآنَ لِتَشْقَىٰ",
+            "ref": "Sūrat Ṭā-Hā 20:1–2"
           }
         ]
       },
@@ -4110,7 +5047,21 @@ window.SEERAA_COURSE=[
             "listening"
           ]
         ],
-        "chapter": "Two Brave Men"
+        "chapter": "Two Brave Men",
+        "learn": {
+          "points": [
+            "We listen politely to others, even when we disagree.",
+            "Our faith is not for sale at any price.",
+            "The Qurʾān can change a person’s face and heart."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "حم ۝ تَنزِيلٌ مِّنَ الرَّحْمَٰنِ الرَّحِيمِ ۝ كِتَابٌ فُصِّلَتْ آيَاتُهُ قُرْآنًا عَرَبِيًّا لِّقَوْمٍ يَعْلَمُونَ",
+            "en": "Ḥā Mīm. A revelation from the Most Gracious, the Most Merciful: a Book whose verses are made clear, a Qurʾān in Arabic for people who know.",
+            "ref": "Sūrat Fuṣṣilat 41:1–3"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Moon Splits",
@@ -4182,7 +5133,32 @@ window.SEERAA_COURSE=[
             "witness"
           ]
         ],
-        "chapter": "Two Brave Men"
+        "chapter": "Two Brave Men",
+        "learn": {
+          "points": [
+            "Allah can show amazing signs, but guidance is in the heart.",
+            "A sign helps only the person who is ready to believe.",
+            "The Qurʾān records this miracle for all time."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ ۝ وَإِن يَرَوْا آيَةً يُعْرِضُوا وَيَقُولُوا سِحْرٌ مُّسْتَمِرٌّ",
+            "en": "The Hour has come near and the moon has split. Yet if they see a sign, they turn away and say: “Magic that keeps on going.”",
+            "ref": "Sūrat al-Qamar 54:1–2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Bear witness!",
+            "ar": "اشْهَدُوا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3636"
+          },
+          {
+            "en": "The Hour has come near, and the moon has split. Yet if they see a sign, they turn away and say, ‘This is magic that keeps on going.’",
+            "ar": "اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ ۝ وَإِن يَرَوْا آيَةً يُعْرِضُوا وَيَقُولُوا سِحْرٌ مُّسْتَمِرٌّ",
+            "ref": "Sūrat al-Qamar 54:1–2"
+          }
+        ]
       }
     ]
   },
@@ -4265,7 +5241,21 @@ window.SEERAA_COURSE=[
             "hunger"
           ]
         ],
-        "chapter": "The Valley of the Boycott"
+        "chapter": "The Valley of the Boycott",
+        "learn": {
+          "points": [
+            "Believers stay firm even when they are hungry and tired.",
+            "Families support each other in hard times.",
+            "Allah tests people, and good news is for the patient."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَلَنَبْلُوَنَّكُم بِشَيْءٍ مِّنَ الْخَوْفِ وَالْجُوعِ وَنَقْصٍ مِّنَ الْأَمْوَالِ وَالْأَنفُسِ وَالثَّمَرَاتِ ۗ وَبَشِّرِ الصَّابِرِينَ",
+            "en": "We will surely test you with some fear and hunger, and loss of wealth, lives and crops — and give good news to the patient.",
+            "ref": "Sūrat al-Baqarah 2:155"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Ḥakīm’s Secret Food",
@@ -4337,7 +5327,21 @@ window.SEERAA_COURSE=[
             "injustice"
           ]
         ],
-        "chapter": "The Valley of the Boycott"
+        "chapter": "The Valley of the Boycott",
+        "learn": {
+          "points": [
+            "We help people in need, even when others disapprove.",
+            "Standing against unfairness is right, whoever the victim is.",
+            "Small secret acts of kindness can keep people going."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ ۖ وَلَا تَعَاوَنُوا عَلَى الْإِثْمِ وَالْعُدْوَانِ",
+            "en": "Help one another in goodness and taqwā, and do not help one another in sin and wrongdoing.",
+            "ref": "Sūrat al-Māʾidah 5:2"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Paper Eaten Away",
@@ -4409,7 +5413,21 @@ window.SEERAA_COURSE=[
             "relief"
           ]
         ],
-        "chapter": "The Valley of the Boycott"
+        "chapter": "The Valley of the Boycott",
+        "learn": {
+          "points": [
+            "After hardship, Allah brings ease.",
+            "Brave people working together can end injustice.",
+            "Allah told His Prophet ﷺ about the paper before anyone looked — a sign of his truthfulness."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+            "en": "So surely with hardship comes ease. Surely with hardship comes ease.",
+            "ref": "Sūrat ash-Sharḥ 94:5–6"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Year of Sorrow",
@@ -4481,7 +5499,21 @@ window.SEERAA_COURSE=[
             "loyalty"
           ]
         ],
-        "chapter": "The Valley of the Boycott"
+        "chapter": "The Valley of the Boycott",
+        "learn": {
+          "points": [
+            "It is natural to feel sad when we lose people we love.",
+            "We remember that we belong to Allah and we return to Him.",
+            "We honour those who helped us, like Khadījah and Abū Ṭālib."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+            "en": "Indeed we belong to Allah, and to Him we shall return.",
+            "ref": "Sūrat al-Baqarah 2:156"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -4564,7 +5596,32 @@ window.SEERAA_COURSE=[
             "mountains"
           ]
         ],
-        "chapter": "Ṭāʾif and Beyond"
+        "chapter": "Ṭāʾif and Beyond",
+        "learn": {
+          "points": [
+            "We answer harm with mercy, as the Prophet ﷺ did.",
+            "We hope for people’s guidance instead of wishing them harm.",
+            "A loyal friend like Zayd stands by us when things are hardest."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "بَلْ أَرْجُو أَنْ يُخْرِجَ اللَّهُ مِنْ أَصْلَابِهِمْ مَنْ يَعْبُدُ اللَّهَ وَحْدَهُ لَا يُشْرِكُ بِهِ شَيْئًا",
+            "en": "Rather, I hope that Allah will bring from their descendants people who worship Allah alone, without associating anything with Him.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3231"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If you wish, I will crush them between the two mountains.",
+            "ar": "إِنْ شِئْتَ أَنْ أُطْبِقَ عَلَيْهِمُ الْأَخْشَبَيْنِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3231"
+          },
+          {
+            "en": "No. I hope that Allah will bring from their children people who worship Allah alone.",
+            "ar": "بَلْ أَرْجُو أَنْ يُخْرِجَ اللَّهُ مِنْ أَصْلَابِهِمْ مَنْ يَعْبُدُ اللَّهَ وَحْدَهُ لَا يُشْرِكُ بِهِ شَيْئًا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3231"
+          }
+        ]
       },
       {
         "title": "ʿAddās and the Grapes",
@@ -4636,7 +5693,32 @@ window.SEERAA_COURSE=[
             "brother"
           ]
         ],
-        "chapter": "Ṭāʾif and Beyond"
+        "chapter": "Ṭāʾif and Beyond",
+        "learn": {
+          "points": [
+            "We say “Bismillāh” before we eat.",
+            "All the prophets are brothers who brought the same message.",
+            "Allah can send comfort through a stranger on a sad day."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "يَا غُلَامُ، سَمِّ اللَّهَ، وَكُلْ بِيَمِينِكَ، وَكُلْ مِمَّا يَلِيكَ",
+            "en": "Young boy, say the name of Allah, eat with your right hand, and eat from what is in front of you.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5376"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Bismillāh — in the name of Allah.",
+            "ar": "بِسْمِ اللَّهِ",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "He was my brother. He was a prophet, and I am a prophet.",
+            "ar": "ذَاكَ أَخِي، كَانَ نَبِيًّا وَأَنَا نَبِيٌّ",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       },
       {
         "title": "The Jinn Listen",
@@ -4708,7 +5790,32 @@ window.SEERAA_COURSE=[
             "amazing"
           ]
         ],
-        "chapter": "Ṭāʾif and Beyond"
+        "chapter": "Ṭāʾif and Beyond",
+        "learn": {
+          "points": [
+            "The Qurʾān is guidance for all of Allah’s creation.",
+            "Allah’s help may come in ways we cannot see.",
+            "When the Qurʾān is recited, we listen quietly."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قُلْ أُوحِيَ إِلَيَّ أَنَّهُ اسْتَمَعَ نَفَرٌ مِّنَ الْجِنِّ فَقَالُوا إِنَّا سَمِعْنَا قُرْآنًا عَجَبًا ۝ يَهْدِي إِلَى الرُّشْدِ فَآمَنَّا بِهِ",
+            "en": "Say: It has been revealed to me that a group of jinn listened and said, “We have heard an amazing Qurʾān. It guides to what is right, and we believe in it.”",
+            "ref": "Sūrat al-Jinn 72:1–2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Be quiet and listen!",
+            "ar": "أَنصِتُوا",
+            "ref": "Sūrat al-Aḥqāf 46:29"
+          },
+          {
+            "en": "We have heard an amazing Qurʾān! It guides to what is right, and we believe in it.",
+            "ar": "إِنَّا سَمِعْنَا قُرْآنًا عَجَبًا ۝ يَهْدِي إِلَى الرُّشْدِ فَآمَنَّا بِهِ",
+            "ref": "Sūrat al-Jinn 72:1–2"
+          }
+        ]
       },
       {
         "title": "Under Muṭʿim’s Protection",
@@ -4780,7 +5887,21 @@ window.SEERAA_COURSE=[
             "kindness"
           ]
         ],
-        "chapter": "Ṭāʾif and Beyond"
+        "chapter": "Ṭāʾif and Beyond",
+        "learn": {
+          "points": [
+            "We thank people for their kindness, even if they do not share our faith.",
+            "The Prophet ﷺ never forgot a favour done to him.",
+            "Wise planning and trusting Allah go together."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَنْ لَا يَشْكُرُ النَّاسَ لَا يَشْكُرُ اللَّهَ",
+            "en": "Whoever does not thank people does not thank Allah.",
+            "ref": "Sunan at-Tirmidhī 1954"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -4863,7 +5984,32 @@ window.SEERAA_COURSE=[
             "pure nature"
           ]
         ],
-        "chapter": "The Night Journey"
+        "chapter": "The Night Journey",
+        "learn": {
+          "points": [
+            "Allah honoured His Prophet ﷺ with an amazing journey in one night.",
+            "Al-Masjid al-Aqṣā is a blessed place where all the prophets prayed together.",
+            "Choosing the pure, natural way (the fiṭrah) is choosing what Allah loves."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ لَيْلًا مِّنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى الَّذِي بَارَكْنَا حَوْلَهُ",
+            "en": "Glory be to Him who took His servant by night from al-Masjid al-Ḥarām to al-Masjid al-Aqṣā, whose surroundings We have blessed.",
+            "ref": "Sūrat al-Isrāʾ 17:1"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You have chosen the fiṭrah — the pure, natural way.",
+            "ar": "اخْتَرْتَ الْفِطْرَةَ",
+            "ref": "Ṣaḥīḥ Muslim 168"
+          },
+          {
+            "en": "Glory be to Him who took His servant by night from al-Masjid al-Ḥarām to al-Masjid al-Aqṣā.",
+            "ar": "سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ لَيْلًا مِّنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى",
+            "ref": "Sūrat al-Isrāʾ 17:1"
+          }
+        ]
       },
       {
         "title": "Up Through the Heavens",
@@ -4935,7 +6081,32 @@ window.SEERAA_COURSE=[
             "lote tree"
           ]
         ],
-        "chapter": "The Night Journey"
+        "chapter": "The Night Journey",
+        "learn": {
+          "points": [
+            "The prophets are one family who welcomed each other with love.",
+            "The heavens are full of angels worshipping Allah.",
+            "We love and respect every prophet Allah sent."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "عِندَ سِدْرَةِ الْمُنتَهَىٰ ۝ عِندَهَا جَنَّةُ الْمَأْوَىٰ ۝ إِذْ يَغْشَى السِّدْرَةَ مَا يَغْشَىٰ",
+            "en": "By the Lote Tree of the furthest boundary, near which is the Garden of Refuge, when the Lote Tree was covered by what covered it.",
+            "ref": "Sūrat an-Najm 53:14–16"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Welcome, righteous brother!",
+            "ar": "مَرْحَبًا بِالْأَخِ الصَّالِحِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3207"
+          },
+          {
+            "en": "Welcome, righteous son!",
+            "ar": "مَرْحَبًا بِالِابْنِ الصَّالِحِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3207"
+          }
+        ]
       },
       {
         "title": "The Gift of Prayer",
@@ -5007,7 +6178,32 @@ window.SEERAA_COURSE=[
             "reward"
           ]
         ],
-        "chapter": "The Night Journey"
+        "chapter": "The Night Journey",
+        "learn": {
+          "points": [
+            "The five prayers are a special gift given in the heavens.",
+            "Five prayers carry the reward of fifty — Allah is so generous.",
+            "Good advice from others, like Mūsā’s, can make things easier."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "هِيَ خَمْسٌ، وَهِيَ خَمْسُونَ، لَا يُبَدَّلُ الْقَوْلُ لَدَيَّ",
+            "en": "They are five, and they are fifty; My word does not change.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 349"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Your people will not be able to do that,",
+            "ar": "فَإِنَّ أُمَّتَكَ لَا تُطِيقُ ذَلِكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 349"
+          },
+          {
+            "en": "I feel too shy before my Lord to ask again.",
+            "ar": "قَدِ اسْتَحْيَيْتُ مِنْ رَبِّي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 349"
+          }
+        ]
       },
       {
         "title": "Abū Bakr the Truthful",
@@ -5079,7 +6275,27 @@ window.SEERAA_COURSE=[
             "caravan"
           ]
         ],
-        "chapter": "The Night Journey"
+        "chapter": "The Night Journey",
+        "learn": {
+          "points": [
+            "A true friend trusts the truthful even when others laugh.",
+            "Abū Bakr was called aṣ-Ṣiddīq because he always confirmed the truth.",
+            "Allah supports His Prophet ﷺ with clear proofs."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَالَّذِي جَاءَ بِالصِّدْقِ وَصَدَّقَ بِهِ ۙ أُولَٰئِكَ هُمُ الْمُتَّقُونَ",
+            "en": "And the one who brought the truth and the one who confirmed it — they are the people of taqwā.",
+            "ref": "Sūrat az-Zumar 39:33"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Then it is true,",
+            "ar": "لَئِنْ كَانَ قَالَ ذَلِكَ لَقَدْ صَدَقَ",
+            "ref": "al-Mustadrak of al-Ḥākim"
+          }
+        ]
       }
     ]
   },
@@ -5162,7 +6378,21 @@ window.SEERAA_COURSE=[
             "light"
           ]
         ],
-        "chapter": "New Hearts from Afar"
+        "chapter": "New Hearts from Afar",
+        "learn": {
+          "points": [
+            "We think for ourselves and listen to the truth instead of following rumours.",
+            "A clever person judges words by what they really say.",
+            "One person who believes can bring a whole tribe to Islam."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "الَّذِينَ يَسْتَمِعُونَ الْقَوْلَ فَيَتَّبِعُونَ أَحْسَنَهُ",
+            "en": "Those who listen to what is said and follow the best of it.",
+            "ref": "Sūrat az-Zumar 39:18"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Abū Dharr’s Search",
@@ -5234,7 +6464,21 @@ window.SEERAA_COURSE=[
             "Zamzam"
           ]
         ],
-        "chapter": "New Hearts from Afar"
+        "chapter": "New Hearts from Afar",
+        "learn": {
+          "points": [
+            "We search for the truth with patience, even far from home.",
+            "Kind hosts like ʿAlī help guests feel safe.",
+            "We can be proud and brave about our faith."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "إِنَّهَا مُبَارَكَةٌ، إِنَّهَا طَعَامُ طُعْمٍ",
+            "en": "It (Zamzam) is blessed; it is food that nourishes.",
+            "ref": "Ṣaḥīḥ Muslim 2473"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Six Men from Yathrib",
@@ -5306,7 +6550,21 @@ window.SEERAA_COURSE=[
             "unity"
           ]
         ],
-        "chapter": "New Hearts from Afar"
+        "chapter": "New Hearts from Afar",
+        "learn": {
+          "points": [
+            "We keep inviting to good patiently, because one meeting can change a city.",
+            "Ready hearts recognise the truth quickly.",
+            "Islam brought love and unity to people who used to fight."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَاذْكُرُوا نِعْمَتَ اللَّهِ عَلَيْكُمْ إِذْ كُنتُمْ أَعْدَاءً فَأَلَّفَ بَيْنَ قُلُوبِكُمْ فَأَصْبَحْتُم بِنِعْمَتِهِ إِخْوَانًا",
+            "en": "Remember Allah’s favour on you when you were enemies and He joined your hearts, so by His favour you became brothers.",
+            "ref": "Sūrat Āl ʿImrān 3:103"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The First Pledge of ʿAqabah",
@@ -5378,7 +6636,27 @@ window.SEERAA_COURSE=[
             "faithfulness"
           ]
         ],
-        "chapter": "New Hearts from Afar"
+        "chapter": "New Hearts from Afar",
+        "learn": {
+          "points": [
+            "A strong community is built on promises to Allah.",
+            "The pledge was about good character: no stealing, no lying, no harming children.",
+            "Allah rewards those who keep their promises."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَوْفُوا بِالْعَهْدِ ۖ إِنَّ الْعَهْدَ كَانَ مَسْئُولًا",
+            "en": "And keep your promises; every promise will be asked about.",
+            "ref": "Sūrat al-Isrāʾ 17:34"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Whoever keeps this promise, his reward is with Allah.",
+            "ar": "فَمَنْ وَفَى مِنْكُمْ فَأَجْرُهُ عَلَى اللَّهِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 18"
+          }
+        ]
       }
     ]
   },
@@ -5461,7 +6739,21 @@ window.SEERAA_COURSE=[
             "s": "He stayed with Asʿad ibn Zurārah in Yathrib.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "A patient, gentle teacher can open many hearts.",
+            "Giving up luxury for Allah is never a loss.",
+            "Learning and teaching the Qurʾān is one of the best things we can do."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
+            "en": "The best of you are those who learn the Qurʾān and teach it.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5027"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Usayd and Saʿd Listen",
@@ -5533,7 +6825,21 @@ window.SEERAA_COURSE=[
             "people"
           ]
         ],
-        "chapter": "Promises at ʿAqabah"
+        "chapter": "Promises at ʿAqabah",
+        "learn": {
+          "points": [
+            "Calm, fair words can turn anger into understanding.",
+            "Inviting people means letting them listen and choose.",
+            "A leader’s good choice can guide a whole community."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "يَسِّرُوا وَلَا تُعَسِّرُوا، وَبَشِّرُوا وَلَا تُنَفِّرُوا",
+            "en": "Make things easy and do not make them hard; give good news and do not drive people away.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 69"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Second Pledge",
@@ -5605,7 +6911,21 @@ window.SEERAA_COURSE=[
             "support"
           ]
         ],
-        "chapter": "Promises at ʿAqabah"
+        "chapter": "Promises at ʿAqabah",
+        "learn": {
+          "points": [
+            "We keep our promises to Allah, hoping for Paradise.",
+            "The Anṣār promised to protect the Prophet ﷺ like their own families.",
+            "Women were part of this great pledge too."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّ اللَّهَ اشْتَرَىٰ مِنَ الْمُؤْمِنِينَ أَنفُسَهُمْ وَأَمْوَالَهُم بِأَنَّ لَهُمُ الْجَنَّةَ",
+            "en": "Indeed, Allah has bought from the believers their lives and their wealth in exchange for Paradise.",
+            "ref": "Sūrat at-Tawbah 9:111"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Umm Salamah’s Long Wait",
@@ -5677,7 +6997,21 @@ window.SEERAA_COURSE=[
             "honour"
           ]
         ],
-        "chapter": "Promises at ʿAqabah"
+        "chapter": "Promises at ʿAqabah",
+        "learn": {
+          "points": [
+            "Patience brings relief in the end.",
+            "Families should never be torn apart unfairly.",
+            "Honourable people help others, even when they differ in faith."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
+            "en": "O you who believe, seek help through patience and prayer. Indeed, Allah is with the patient.",
+            "ref": "Sūrat al-Baqarah 2:153"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -5760,6 +7094,26 @@ window.SEERAA_COURSE=[
             "s": "They hired a guide called ʿAbdullāh ibn Urayqiṭ.",
             "a": true
           }
+        ],
+        "learn": {
+          "points": [
+            "We plan carefully and trust Allah at the same time.",
+            "True friends are happy to share hard journeys with us.",
+            "Leaving things behind for Allah’s sake is never a loss."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ",
+            "en": "And whoever relies on Allah, He is enough for him.",
+            "ref": "Sūrat aṭ-Ṭalāq 65:3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Allah has given me permission to leave.",
+            "ar": "فَإِنِّي قَدْ أُذِنَ لِي فِي الْخُرُوجِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3905"
+          }
         ]
       },
       {
@@ -5832,7 +7186,32 @@ window.SEERAA_COURSE=[
             "pleasure / approval"
           ]
         ],
-        "chapter": "Leaving Makkah"
+        "chapter": "Leaving Makkah",
+        "learn": {
+          "points": [
+            "What we give up for Allah is the best trade of all.",
+            "Money is useful, but faith is more precious.",
+            "The Prophet ﷺ was happy when his companions chose Allah."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمِنَ النَّاسِ مَن يَشْرِي نَفْسَهُ ابْتِغَاءَ مَرْضَاتِ اللَّهِ",
+            "en": "And among the people is one who sells himself seeking the pleasure of Allah.",
+            "ref": "Sūrat al-Baqarah 2:207"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Your trade has made a profit, Abū Yaḥyā! Your trade has made a profit!",
+            "ar": "رَبِحَ الْبَيْعُ أَبَا يَحْيَى، رَبِحَ الْبَيْعُ",
+            "ref": "al-Mustadrak of al-Ḥākim"
+          },
+          {
+            "en": "And among the people is one who sells himself seeking the pleasure of Allah.",
+            "ar": "وَمِنَ النَّاسِ مَن يَشْرِي نَفْسَهُ ابْتِغَاءَ مَرْضَاتِ اللَّهِ",
+            "ref": "Sūrat al-Baqarah 2:207"
+          }
+        ]
       },
       {
         "title": "The Plot at Dār an-Nadwah",
@@ -5904,7 +7283,27 @@ window.SEERAA_COURSE=[
             "the best of planners"
           ]
         ],
-        "chapter": "Leaving Makkah"
+        "chapter": "Leaving Makkah",
+        "learn": {
+          "points": [
+            "No plan against the truth can succeed unless Allah allows it.",
+            "Allah sees every secret meeting.",
+            "When we are afraid of people’s plans, we remember Allah is the best of planners."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَيَمْكُرُونَ وَيَمْكُرُ اللَّهُ ۖ وَاللَّهُ خَيْرُ الْمَاكِرِينَ",
+            "en": "They plan, and Allah plans — and Allah is the best of planners.",
+            "ref": "Sūrat al-Anfāl 8:30"
+          }
+        },
+        "quotes": [
+          {
+            "en": "They plan, and Allah plans — and Allah is the best of planners.",
+            "ar": "وَيَمْكُرُونَ وَيَمْكُرُ اللَّهُ ۖ وَاللَّهُ خَيْرُ الْمَاكِرِينَ",
+            "ref": "Sūrat al-Anfāl 8:30"
+          }
+        ]
       },
       {
         "title": "ʿAlī in the Bed",
@@ -5976,7 +7375,27 @@ window.SEERAA_COURSE=[
             "courage"
           ]
         ],
-        "chapter": "Leaving Makkah"
+        "chapter": "Leaving Makkah",
+        "learn": {
+          "points": [
+            "Brave young people can do great things for Allah.",
+            "We return what people trust us with, even to those who treat us badly.",
+            "Allah protects His servants in ways no one can see."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَدِّ الْأَمَانَةَ إِلَى مَنِ ائْتَمَنَكَ، وَلَا تَخُنْ مَنْ خَانَكَ",
+            "en": "Return the trust to the one who trusted you, and do not betray the one who betrayed you.",
+            "ref": "Sunan Abī Dāwūd 3535"
+          }
+        },
+        "quotes": [
+          {
+            "en": "And We have put a barrier in front of them and a barrier behind them, and covered them, so they cannot see.",
+            "ar": "وَجَعَلْنَا مِن بَيْنِ أَيْدِيهِمْ سَدًّا وَمِنْ خَلْفِهِمْ سَدًّا فَأَغْشَيْنَاهُمْ فَهُمْ لَا يُبْصِرُونَ",
+            "ref": "Sūrat Yā-Sīn 36:9"
+          }
+        ]
       }
     ]
   },
@@ -6059,7 +7478,27 @@ window.SEERAA_COURSE=[
             "Allah is with us"
           ]
         ],
-        "chapter": "The Hijrah Journey"
+        "chapter": "The Hijrah Journey",
+        "learn": {
+          "points": [
+            "When we are afraid, we remember that Allah is with us.",
+            "Taking care and hiding wisely is part of trusting Allah.",
+            "The Hijrah is so important that the Islamic calendar begins with it."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَا ظَنُّكَ يَا أَبَا بَكْرٍ بِاثْنَيْنِ اللَّهُ ثَالِثُهُمَا",
+            "en": "What do you think, Abū Bakr, of two when Allah is the third of them?",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3653"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do not grieve — Allah is with us.",
+            "ar": "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
+            "ref": "Sūrat at-Tawbah 9:40"
+          }
+        ]
       },
       {
         "title": "Asmāʾ of the Two Belts",
@@ -6131,7 +7570,21 @@ window.SEERAA_COURSE=[
             "sheep"
           ]
         ],
-        "chapter": "The Hijrah Journey"
+        "chapter": "The Hijrah Journey",
+        "learn": {
+          "points": [
+            "Everyone, young or old, can help in a good cause with what they have.",
+            "Clever ideas can solve problems quickly.",
+            "Allah helps us as long as we are helping others."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "وَاللَّهُ فِي عَوْنِ الْعَبْدِ مَا كَانَ الْعَبْدُ فِي عَوْنِ أَخِيهِ",
+            "en": "Allah helps a person as long as that person helps his brother.",
+            "ref": "Ṣaḥīḥ Muslim 2699"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "A Carefully Planned Journey",
@@ -6203,7 +7656,21 @@ window.SEERAA_COURSE=[
             "s": "They often rested during the hot day.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "We use wisdom and good planning, then rely on Allah.",
+            "An honest guide can be trusted, whatever his religion.",
+            "A true guide on the way of goodness is worth following."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "اعْقِلْهَا وَتَوَكَّلْ",
+            "en": "Tie your camel, and then trust in Allah.",
+            "ref": "Sunan at-Tirmidhī 2517"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Surāqah’s Horse",
@@ -6275,7 +7742,21 @@ window.SEERAA_COURSE=[
             "protection"
           ]
         ],
-        "chapter": "The Hijrah Journey"
+        "chapter": "The Hijrah Journey",
+        "learn": {
+          "points": [
+            "When Allah protects someone, no one can harm them.",
+            "The Prophet ﷺ stayed calm and kept reciting the Qurʾān.",
+            "Even someone chasing you today may become a friend tomorrow."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَأَنزَلَ اللَّهُ سَكِينَتَهُ عَلَيْهِ وَأَيَّدَهُ بِجُنُودٍ لَّمْ تَرَوْهَا",
+            "en": "Then Allah sent down His calm upon him and supported him with forces you did not see.",
+            "ref": "Sūrat at-Tawbah 9:40"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -6358,7 +7839,21 @@ window.SEERAA_COURSE=[
             "generosity"
           ]
         ],
-        "chapter": "Welcome to Madīnah"
+        "chapter": "Welcome to Madīnah",
+        "learn": {
+          "points": [
+            "The one who serves others should drink last.",
+            "Blessing comes from Allah — a little can become plenty.",
+            "Generous people share even when they have little."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "سَاقِي الْقَوْمِ آخِرُهُمْ شُرْبًا",
+            "en": "The one who gives drink to the people drinks last.",
+            "ref": "Ṣaḥīḥ Muslim 681"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Masjid at Qubāʾ",
@@ -6429,6 +7924,26 @@ window.SEERAA_COURSE=[
           {
             "s": "Allah says it was founded on taqwā.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "A community is built around worship, and a masjid is its heart.",
+            "The Prophet ﷺ worked with his own hands alongside everyone.",
+            "Praying in Masjid Qubāʾ brings a reward like ʿUmrah."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "صَلَاةٌ فِي مَسْجِدِ قُبَاءَ كَعُمْرَةٍ",
+            "en": "A prayer in Masjid Qubāʾ is like an ʿUmrah.",
+            "ref": "Sunan at-Tirmidhī 324"
+          }
+        },
+        "quotes": [
+          {
+            "en": "founded on taqwā from the first day.",
+            "ar": "لَّمَسْجِدٌ أُسِّسَ عَلَى التَّقْوَىٰ مِنْ أَوَّلِ يَوْمٍ",
+            "ref": "Sūrat at-Tawbah 9:108"
           }
         ]
       },
@@ -6502,7 +8017,21 @@ window.SEERAA_COURSE=[
             "joy"
           ]
         ],
-        "chapter": "Welcome to Madīnah"
+        "chapter": "Welcome to Madīnah",
+        "learn": {
+          "points": [
+            "We welcome guests with joy, like the people of Madīnah.",
+            "The Prophet ﷺ let Allah choose where he would stay, so no family felt left out.",
+            "Madīnah became the City of the Prophet ﷺ and the home of Islam."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "خَلُّوا سَبِيلَهَا، فَإِنَّهَا مَأْمُورَةٌ",
+            "en": "Let her go, for she is under command.",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The House of Abū Ayyūb",
@@ -6574,7 +8103,27 @@ window.SEERAA_COURSE=[
             "helpers"
           ]
         ],
-        "chapter": "Welcome to Madīnah"
+        "chapter": "Welcome to Madīnah",
+        "learn": {
+          "points": [
+            "We honour our guests with love and care.",
+            "Giving up our own comfort for others is a beautiful deed.",
+            "Respect for the Prophet ﷺ was shown in the smallest things."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الْآخِرِ فَلْيُكْرِمْ ضَيْفَهُ",
+            "en": "Whoever believes in Allah and the Last Day, let him honour his guest.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 6018"
+          }
+        },
+        "quotes": [
+          {
+            "en": "A man goes with his luggage.",
+            "ar": "الْمَرْءُ مَعَ رَحْلِهِ",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       }
     ]
   },
@@ -6657,7 +8206,21 @@ window.SEERAA_COURSE=[
             "brotherhood"
           ]
         ],
-        "chapter": "Building Madīnah"
+        "chapter": "Building Madīnah",
+        "learn": {
+          "points": [
+            "Believers are brothers and sisters who share and care.",
+            "The Anṣār gave even when they were in need themselves.",
+            "Working together, like building the masjid, makes a community strong."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَيُؤْثِرُونَ عَلَىٰ أَنفُسِهِمْ وَلَوْ كَانَ بِهِمْ خَصَاصَةٌ",
+            "en": "And they put others before themselves, even when they are in need.",
+            "ref": "Sūrat al-Ḥashr 59:9"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "“Show Me the Market”",
@@ -6729,7 +8292,21 @@ window.SEERAA_COURSE=[
             "charity"
           ]
         ],
-        "chapter": "Building Madīnah"
+        "chapter": "Building Madīnah",
+        "learn": {
+          "points": [
+            "Be generous like Saʿd, and stand on your own feet like ʿAbd ar-Raḥmān.",
+            "Honest work and trade are blessed.",
+            "Wealth earned well can be given generously in charity."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَا أَكَلَ أَحَدٌ طَعَامًا قَطُّ خَيْرًا مِنْ أَنْ يَأْكُلَ مِنْ عَمَلِ يَدِهِ",
+            "en": "No one has ever eaten better food than what he eats from the work of his own hands.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2072"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Living Together in Madīnah",
@@ -6801,7 +8378,21 @@ window.SEERAA_COURSE=[
             "s": "The agreement said everyone would defend the city together.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "Living together needs fairness and clear agreements.",
+            "Neighbours have rights, whatever their background.",
+            "Everyone shares the duty to keep the community safe."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "مَا زَالَ جِبْرِيلُ يُوصِينِي بِالْجَارِ حَتَّى ظَنَنْتُ أَنَّهُ سَيُوَرِّثُهُ",
+            "en": "Jibrīl kept advising me about the neighbour until I thought he would make him an heir.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 6014"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The First Adhān",
@@ -6873,7 +8464,37 @@ window.SEERAA_COURSE=[
             "Allah is the Greatest"
           ]
         ],
-        "chapter": "Building Madīnah"
+        "chapter": "Building Madīnah",
+        "learn": {
+          "points": [
+            "We answer the adhān with love and hurry to prayer.",
+            "Good ideas can come through anyone, even in a dream.",
+            "Bilāl’s beautiful voice was used for the best words."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "إِنَّهَا لَرُؤْيَا حَقٍّ إِنْ شَاءَ اللَّهُ",
+            "en": "It is a true dream, if Allah wills.",
+            "ref": "Sunan Abī Dāwūd 499"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Allāhu Akbar, Allāhu Akbar… Ashhadu an lā ilāha illā Allāh…",
+            "ar": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ… أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ…",
+            "ref": "Sunan Abī Dāwūd 499"
+          },
+          {
+            "en": "It is a true dream, in shāʾ Allāh,",
+            "ar": "إِنَّهَا لَرُؤْيَا حَقٍّ إِنْ شَاءَ اللَّهُ",
+            "ref": "Sunan Abī Dāwūd 499"
+          },
+          {
+            "en": "Teach it to Bilāl, for his voice is stronger than yours.",
+            "ar": "فَقُمْ مَعَ بِلَالٍ فَأَلْقِ عَلَيْهِ مَا رَأَيْتَ فَلْيُؤَذِّنْ بِهِ، فَإِنَّهُ أَنْدَى صَوْتًا مِنْكَ",
+            "ref": "Sunan Abī Dāwūd 499"
+          }
+        ]
       }
     ]
   },
@@ -6956,7 +8577,27 @@ window.SEERAA_COURSE=[
             "question"
           ]
         ],
-        "chapter": "Faith Grows in Madīnah"
+        "chapter": "Faith Grows in Madīnah",
+        "learn": {
+          "points": [
+            "Spread peace, feed others, keep family ties and pray at night.",
+            "Follow the truth when you recognise it, whatever people say.",
+            "A truthful face and truthful words go together."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "أَيُّهَا النَّاسُ، أَفْشُوا السَّلَامَ، وَأَطْعِمُوا الطَّعَامَ، وَصِلُوا الْأَرْحَامَ، وَصَلُّوا بِاللَّيْلِ وَالنَّاسُ نِيَامٌ، تَدْخُلُوا الْجَنَّةَ بِسَلَامٍ",
+            "en": "O people, spread peace, feed others, keep family ties and pray at night while people sleep — you will enter Paradise in peace.",
+            "ref": "Sunan at-Tirmidhī 2485"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O people, spread peace, feed others, keep good ties with your relatives, and pray at night while people are sleeping — and you will enter Paradise in peace.",
+            "ar": "أَيُّهَا النَّاسُ، أَفْشُوا السَّلَامَ، وَأَطْعِمُوا الطَّعَامَ، وَصِلُوا الْأَرْحَامَ، وَصَلُّوا بِاللَّيْلِ وَالنَّاسُ نِيَامٌ، تَدْخُلُوا الْجَنَّةَ بِسَلَامٍ",
+            "ref": "Sunan at-Tirmidhī 2485"
+          }
+        ]
       },
       {
         "title": "Salmān’s Long Search",
@@ -7028,7 +8669,21 @@ window.SEERAA_COURSE=[
             "freedom"
           ]
         ],
-        "chapter": "Faith Grows in Madīnah"
+        "chapter": "Faith Grows in Madīnah",
+        "learn": {
+          "points": [
+            "Allah guides the sincere seeker, even through long journeys.",
+            "Never give up searching for the truth.",
+            "Helping someone win their freedom is a beautiful deed."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا",
+            "en": "And those who strive for Us, We will surely guide them to Our ways.",
+            "ref": "Sūrat al-ʿAnkabūt 29:69"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "A New Direction of Prayer",
@@ -7099,6 +8754,26 @@ window.SEERAA_COURSE=[
           {
             "s": "The believers obeyed the change straight away.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We obey Allah’s commands quickly, like the people who turned in prayer.",
+            "All Muslims face one qiblah, as one community.",
+            "Our worship is for Allah alone, whichever way He tells us to face."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قَدْ نَرَىٰ تَقَلُّبَ وَجْهِكَ فِي السَّمَاءِ ۖ فَلَنُوَلِّيَنَّكَ قِبْلَةً تَرْضَاهَا ۚ فَوَلِّ وَجْهَكَ شَطْرَ الْمَسْجِدِ الْحَرَامِ",
+            "en": "We have seen you turning your face to the sky, so We will turn you to a qiblah that pleases you: turn your face towards al-Masjid al-Ḥarām.",
+            "ref": "Sūrat al-Baqarah 2:144"
+          }
+        },
+        "quotes": [
+          {
+            "en": "We have seen you turning your face to the sky. So turn your face towards al-Masjid al-Ḥarām.",
+            "ar": "قَدْ نَرَىٰ تَقَلُّبَ وَجْهِكَ فِي السَّمَاءِ … فَوَلِّ وَجْهَكَ شَطْرَ الْمَسْجِدِ الْحَرَامِ",
+            "ref": "Sūrat al-Baqarah 2:144"
           }
         ]
       },
@@ -7172,7 +8847,27 @@ window.SEERAA_COURSE=[
             "mindfulness of Allah"
           ]
         ],
-        "chapter": "Faith Grows in Madīnah"
+        "chapter": "Faith Grows in Madīnah",
+        "learn": {
+          "points": [
+            "Fasting trains us to control ourselves and to speak kindly.",
+            "Ramaḍān is the month of the Qurʾān and of generosity.",
+            "Zakāt al-fiṭr makes sure poor families can enjoy ʿĪd too."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ",
+            "en": "O you who believe, fasting has been prescribed for you as it was prescribed for those before you, so that you may have taqwā.",
+            "ref": "Sūrat al-Baqarah 2:183"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O you who believe, fasting has been prescribed for you as it was prescribed for those before you, so that you may have taqwā.",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ",
+            "ref": "Sūrat al-Baqarah 2:183"
+          }
+        ]
       }
     ]
   },
@@ -7255,7 +8950,27 @@ window.SEERAA_COURSE=[
             "leader"
           ]
         ],
-        "chapter": "The Day of Badr"
+        "chapter": "The Day of Badr",
+        "learn": {
+          "points": [
+            "Good leaders consult others before deciding.",
+            "A leader shares the hard work, like walking his turn.",
+            "Loyal friends promise to stand together through every difficulty."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَمْرُهُمْ شُورَىٰ بَيْنَهُمْ",
+            "en": "And their affairs are decided by consultation among them.",
+            "ref": "Sūrat ash-Shūrā 42:38"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You are not stronger than me, and I am not less in need of reward than you.",
+            "ar": "مَا أَنْتُمَا بِأَقْوَى مِنِّي، وَلَا أَنَا بِأَغْنَى عَنِ الْأَجْرِ مِنْكُمَا",
+            "ref": "Musnad Aḥmad"
+          }
+        ]
       },
       {
         "title": "The Day of Badr",
@@ -7327,7 +9042,21 @@ window.SEERAA_COURSE=[
             "victory"
           ]
         ],
-        "chapter": "The Day of Badr"
+        "chapter": "The Day of Badr",
+        "learn": {
+          "points": [
+            "Victory comes from Allah, not from numbers or weapons.",
+            "Sincere duʿāʾ is a powerful weapon of the believer.",
+            "Badr gave the small Muslim community new confidence in Allah’s help."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَلَقَدْ نَصَرَكُمُ اللَّهُ بِبَدْرٍ وَأَنتُمْ أَذِلَّةٌ ۖ فَاتَّقُوا اللَّهَ لَعَلَّكُمْ تَشْكُرُونَ",
+            "en": "Allah had already given you victory at Badr when you were weak, so be mindful of Allah so that you may be grateful.",
+            "ref": "Sūrat Āl ʿImrān 3:123"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Lessons from Badr",
@@ -7399,7 +9128,21 @@ window.SEERAA_COURSE=[
             "s": "The rain made the ground firm for the Muslims.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "We listen to good advice, even when we are the leader.",
+            "Allah sent rain and calm sleep to strengthen the believers.",
+            "After success we thank Allah instead of boasting."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِذْ يُغَشِّيكُمُ النُّعَاسَ أَمَنَةً مِّنْهُ وَيُنَزِّلُ عَلَيْكُم مِّنَ السَّمَاءِ مَاءً لِّيُطَهِّرَكُم بِهِ",
+            "en": "When He covered you with sleep as a calm from Him, and sent down rain upon you from the sky to purify you.",
+            "ref": "Sūrat al-Anfāl 8:11"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Captives Who Taught Reading",
@@ -7471,7 +9214,32 @@ window.SEERAA_COURSE=[
             "writing"
           ]
         ],
-        "chapter": "The Day of Badr"
+        "chapter": "The Day of Badr",
+        "learn": {
+          "points": [
+            "Knowledge is so precious that teaching could buy someone’s freedom.",
+            "Islam teaches mercy even to people who were enemies.",
+            "Feeding others before ourselves is loved by Allah."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَيُطْعِمُونَ الطَّعَامَ عَلَىٰ حُبِّهِ مِسْكِينًا وَيَتِيمًا وَأَسِيرًا",
+            "en": "And they give food, despite loving it, to the poor, the orphan and the captive.",
+            "ref": "Sūrat al-Insān 76:8"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Treat the captives well.",
+            "ar": "اسْتَوْصُوا بِالْأُسَارَى خَيْرًا",
+            "ref": "al-Muʿjam al-Kabīr of aṭ-Ṭabarānī"
+          },
+          {
+            "en": "give food, despite loving it, to the poor, the orphan and the captive.",
+            "ar": "وَيُطْعِمُونَ الطَّعَامَ عَلَىٰ حُبِّهِ مِسْكِينًا وَيَتِيمًا وَأَسِيرًا",
+            "ref": "Sūrat al-Insān 76:8"
+          }
+        ]
       }
     ]
   },
@@ -7554,6 +9322,26 @@ window.SEERAA_COURSE=[
             "s": "The Prophet ﷺ was wounded at Uḥud.",
             "a": true
           }
+        ],
+        "learn": {
+          "points": [
+            "Following instructions carefully can protect many people.",
+            "Wanting quick rewards can make us forget what we were told.",
+            "The Prophet ﷺ was patient even when he was hurt."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَطِيعُوا اللَّهَ وَالرَّسُولَ لَعَلَّكُمْ تُرْحَمُونَ",
+            "en": "And obey Allah and the Messenger so that you may receive mercy.",
+            "ref": "Sūrat Āl ʿImrān 3:132"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do not leave this place, even if you see birds snatching us, until I send for you.",
+            "ar": "إِنْ رَأَيْتُمُونَا تَخْطَفُنَا الطَّيْرُ فَلَا تَبْرَحُوا مَكَانَكُمْ هَذَا حَتَّى أُرْسِلَ إِلَيْكُمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3039"
+          }
         ]
       },
       {
@@ -7626,7 +9414,21 @@ window.SEERAA_COURSE=[
             "wounded"
           ]
         ],
-        "chapter": "Uḥud"
+        "chapter": "Uḥud",
+        "learn": {
+          "points": [
+            "Courage and service are honoured by Allah, from women and men alike.",
+            "Helping the wounded and thirsty is a brave and kind deed.",
+            "The best thing to ask for is to be with the Prophet ﷺ in Paradise."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَالْمُؤْمِنُونَ وَالْمُؤْمِنَاتُ بَعْضُهُمْ أَوْلِيَاءُ بَعْضٍ",
+            "en": "The believing men and believing women are protectors of one another.",
+            "ref": "Sūrat at-Tawbah 9:71"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Learning after a Setback",
@@ -7697,6 +9499,31 @@ window.SEERAA_COURSE=[
           {
             "s": "Allah told the believers not to lose hope.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We are gentle with people when they make mistakes.",
+            "We learn from setbacks instead of blaming each other.",
+            "Believers never lose hope in Allah."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَبِمَا رَحْمَةٍ مِّنَ اللَّهِ لِنتَ لَهُمْ",
+            "en": "It is by mercy from Allah that you were gentle with them.",
+            "ref": "Sūrat Āl ʿImrān 3:159"
+          }
+        },
+        "quotes": [
+          {
+            "en": "It is by mercy from Allah that you are gentle with them. If you had been harsh and hard-hearted, they would have scattered from around you. So forgive them, ask forgiveness for them and consult them.",
+            "ar": "فَبِمَا رَحْمَةٍ مِّنَ اللَّهِ لِنتَ لَهُمْ ۖ وَلَوْ كُنتَ فَظًّا غَلِيظَ الْقَلْبِ لَانفَضُّوا مِنْ حَوْلِكَ ۖ فَاعْفُ عَنْهُمْ وَاسْتَغْفِرْ لَهُمْ وَشَاوِرْهُمْ فِي الْأَمْرِ",
+            "ref": "Sūrat Āl ʿImrān 3:159"
+          },
+          {
+            "en": "Do not weaken and do not grieve, for you will be uppermost if you are believers.",
+            "ar": "وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنتُمُ الْأَعْلَوْنَ إِن كُنتُم مُّؤْمِنِينَ",
+            "ref": "Sūrat Āl ʿImrān 3:139"
           }
         ]
       },
@@ -7770,7 +9597,32 @@ window.SEERAA_COURSE=[
             "fire"
           ]
         ],
-        "chapter": "Uḥud"
+        "chapter": "Uḥud",
+        "learn": {
+          "points": [
+            "When we feel tired or afraid, we say “Ḥasbunallāh”.",
+            "Getting up again after a hard day shows real strength.",
+            "Fear from people can make a believer’s faith grow stronger."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَزَادَهُمْ إِيمَانًا وَقَالُوا حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+            "en": "But it increased them in faith, and they said: “Allah is enough for us, and He is the best One to rely on.”",
+            "ref": "Sūrat Āl ʿImrān 3:173"
+          }
+        },
+        "quotes": [
+          {
+            "en": "The people have gathered against you, so fear them,",
+            "ar": "إِنَّ النَّاسَ قَدْ جَمَعُوا لَكُمْ فَاخْشَوْهُمْ",
+            "ref": "Sūrat Āl ʿImrān 3:173"
+          },
+          {
+            "en": "Ḥasbunallāhu wa niʿma l-wakīl — Allah is enough for us, and He is the best One to rely on.",
+            "ar": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+            "ref": "Sūrat Āl ʿImrān 3:173"
+          }
+        ]
       }
     ]
   },
@@ -7853,7 +9705,21 @@ window.SEERAA_COURSE=[
             "working together"
           ]
         ],
-        "chapter": "The Trench"
+        "chapter": "The Trench",
+        "learn": {
+          "points": [
+            "Good ideas can come from anyone, like Salmān from Persia.",
+            "Everyone working together, the Prophet ﷺ included, makes a team strong.",
+            "Hard work feels lighter when we remember the Hereafter."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "اللَّهُمَّ لَا عَيْشَ إِلَّا عَيْشُ الْآخِرَهْ، فَاغْفِرْ لِلْأَنْصَارِ وَالْمُهَاجِرَهْ",
+            "en": "O Allah, there is no true life except the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2834"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "The Rock and the Good News",
@@ -7925,7 +9791,37 @@ window.SEERAA_COURSE=[
             "good news"
           ]
         ],
-        "chapter": "The Trench"
+        "chapter": "The Trench",
+        "learn": {
+          "points": [
+            "We keep hope in Allah’s promise, even in the hardest moments.",
+            "We begin our work with “Bismillāh”.",
+            "Every promise of the Prophet ﷺ came true."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "هَٰذَا مَا وَعَدَنَا اللَّهُ وَرَسُولُهُ وَصَدَقَ اللَّهُ وَرَسُولُهُ",
+            "en": "This is what Allah and His Messenger promised us, and Allah and His Messenger told the truth.",
+            "ref": "Sūrat al-Aḥzāb 33:22"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I have been given the keys of Shām. By Allah, I can see its red palaces right now.",
+            "ar": "أُعْطِيتُ مَفَاتِيحَ الشَّامِ، وَاللَّهِ إِنِّي لَأُبْصِرُ قُصُورَهَا الْحُمْرَ السَّاعَةَ",
+            "ref": "Musnad Aḥmad"
+          },
+          {
+            "en": "Allāhu Akbar! I have been given the keys of Persia. I can see the white palace of al-Madāʾin.",
+            "ar": "اللَّهُ أَكْبَرُ، أُعْطِيتُ مَفَاتِيحَ فَارِسَ، وَاللَّهِ إِنِّي لَأُبْصِرُ قَصْرَ الْمَدَائِنِ الْأَبْيَضَ",
+            "ref": "Musnad Aḥmad"
+          },
+          {
+            "en": "Allāhu Akbar! I have been given the keys of Yemen. I can see the gates of Ṣanʿāʾ.",
+            "ar": "اللَّهُ أَكْبَرُ، أُعْطِيتُ مَفَاتِيحَ الْيَمَنِ، وَاللَّهِ إِنِّي لَأُبْصِرُ أَبْوَابَ صَنْعَاءَ",
+            "ref": "Musnad Aḥmad"
+          }
+        ]
       },
       {
         "title": "Jābir’s Little Meal",
@@ -7997,7 +9893,32 @@ window.SEERAA_COURSE=[
             "blessing"
           ]
         ],
-        "chapter": "The Trench"
+        "chapter": "The Trench",
+        "learn": {
+          "points": [
+            "Sharing brings blessing, and Allah can make a little enough for many.",
+            "The Prophet ﷺ never ate alone while his companions were hungry.",
+            "Noticing when someone is hungry and helping them is a great kindness."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "طَعَامُ الِاثْنَيْنِ كَافِي الثَّلَاثَةِ، وَطَعَامُ الثَّلَاثَةِ كَافِي الْأَرْبَعَةِ",
+            "en": "Food for two is enough for three, and food for three is enough for four.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5392"
+          }
+        },
+        "quotes": [
+          {
+            "en": "People of the trench! Jābir has made a feast — come!",
+            "ar": "يَا أَهْلَ الْخَنْدَقِ، إِنَّ جَابِرًا قَدْ صَنَعَ سُورًا، فَحَيَّ هَلًا بِكُمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4102"
+          },
+          {
+            "en": "Do not take the pot off the fire or bake the bread until I come.",
+            "ar": "لَا تُنْزِلُنَّ بُرْمَتَكُمْ، وَلَا تَخْبِزُنَّ عَجِينَكُمْ حَتَّى أَجِيءَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4102"
+          }
+        ]
       },
       {
         "title": "The Wind That Ended the Siege",
@@ -8068,6 +9989,26 @@ window.SEERAA_COURSE=[
           {
             "s": "Nuʿaym had secretly become Muslim.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "After patience, Allah’s help can come in ways we never expected.",
+            "Allah has armies we cannot see, even the wind.",
+            "Being brave and doing our duty matters, even on cold, frightening nights."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَأَرْسَلْنَا عَلَيْهِمْ رِيحًا وَجُنُودًا لَّمْ تَرَوْهَا",
+            "en": "So We sent against them a wind and armies you did not see.",
+            "ref": "Sūrat al-Aḥzāb 33:9"
+          }
+        },
+        "quotes": [
+          {
+            "en": "We sent against them a wind and armies you did not see.",
+            "ar": "فَأَرْسَلْنَا عَلَيْهِمْ رِيحًا وَجُنُودًا لَّمْ تَرَوْهَا",
+            "ref": "Sūrat al-Aḥzāb 33:9"
           }
         ]
       }
@@ -8152,7 +10093,32 @@ window.SEERAA_COURSE=[
             "ʿUmrah"
           ]
         ],
-        "chapter": "Peace at Ḥudaybiyyah"
+        "chapter": "Peace at Ḥudaybiyyah",
+        "learn": {
+          "points": [
+            "We stay loyal to the truth and stand together when friends need us.",
+            "Allah was pleased with those who made the pledge.",
+            "The Prophet ﷺ included ʿUthmān even though he was absent."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "لَّقَدْ رَضِيَ اللَّهُ عَنِ الْمُؤْمِنِينَ إِذْ يُبَايِعُونَكَ تَحْتَ الشَّجَرَةِ",
+            "en": "Allah was pleased with the believers when they pledged to you under the tree.",
+            "ref": "Sūrat al-Fatḥ 48:18"
+          }
+        },
+        "quotes": [
+          {
+            "en": "This is for ʿUthmān.",
+            "ar": "هَذِهِ لِعُثْمَانَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3698"
+          },
+          {
+            "en": "Allah was pleased with the believers when they pledged to you under the tree.",
+            "ar": "لَّقَدْ رَضِيَ اللَّهُ عَنِ الْمُؤْمِنِينَ إِذْ يُبَايِعُونَكَ تَحْتَ الشَّجَرَةِ",
+            "ref": "Sūrat al-Fatḥ 48:18"
+          }
+        ]
       },
       {
         "title": "The Treaty of Ḥudaybiyyah",
@@ -8223,6 +10189,31 @@ window.SEERAA_COURSE=[
           {
             "s": "The Muslims would return for ʿUmrah the next year.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "Sometimes we accept something hard now for a greater good later.",
+            "Peace is better than fighting when it is possible.",
+            "Patience with wording and pride can open the door to peace."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِن جَنَحُوا لِلسَّلْمِ فَاجْنَحْ لَهَا وَتَوَكَّلْ عَلَى اللَّهِ",
+            "en": "And if they lean towards peace, then lean towards it too, and rely on Allah.",
+            "ref": "Sūrat al-Anfāl 8:61"
+          }
+        },
+        "quotes": [
+          {
+            "en": "In the name of Allah, the Most Gracious, the Most Merciful.",
+            "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
+          },
+          {
+            "en": "This is what Muḥammad, the Messenger of Allah, has agreed.",
+            "ar": "هَذَا مَا قَاضَى عَلَيْهِ مُحَمَّدٌ رَسُولُ اللَّهِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
           }
         ]
       },
@@ -8296,7 +10287,27 @@ window.SEERAA_COURSE=[
             "wisdom"
           ]
         ],
-        "chapter": "Peace at Ḥudaybiyyah"
+        "chapter": "Peace at Ḥudaybiyyah",
+        "learn": {
+          "points": [
+            "We value good advice, wherever it comes from.",
+            "People follow what we do more than what we say.",
+            "The Prophet ﷺ listened to his wife and respected her wisdom."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "الدِّينُ النَّصِيحَةُ",
+            "en": "The religion is sincere advice.",
+            "ref": "Ṣaḥīḥ Muslim 55"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Get up, sacrifice your animals and shave your heads.",
+            "ar": "قُومُوا فَانْحَرُوا ثُمَّ احْلِقُوا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
+          }
+        ]
       },
       {
         "title": "A Clear Victory",
@@ -8368,7 +10379,32 @@ window.SEERAA_COURSE=[
             "treaty"
           ]
         ],
-        "chapter": "Peace at Ḥudaybiyyah"
+        "chapter": "Peace at Ḥudaybiyyah",
+        "learn": {
+          "points": [
+            "Patience and peace can achieve more than anger and fighting.",
+            "What looks like a loss can be a victory from Allah.",
+            "When people see Muslims up close, they can recognise the beauty of Islam."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ ۝ وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا",
+            "en": "When Allah’s help and the victory come, and you see the people entering Allah’s religion in crowds.",
+            "ref": "Sūrat an-Naṣr 110:1–2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Indeed, We have given you a clear victory.",
+            "ar": "إِنَّا فَتَحْنَا لَكَ فَتْحًا مُّبِينًا",
+            "ref": "Sūrat al-Fatḥ 48:1"
+          },
+          {
+            "en": "O Messenger of Allah, is it really a victory?",
+            "ar": "يَا رَسُولَ اللَّهِ، أَوَفَتْحٌ هُوَ؟",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3182"
+          }
+        ]
       }
     ]
   },
@@ -8451,6 +10487,36 @@ window.SEERAA_COURSE=[
             "s": "Letters were sent to Rome, Persia, Egypt and Abyssinia.",
             "a": true
           }
+        ],
+        "learn": {
+          "points": [
+            "The message of Islam is for all people, not one tribe.",
+            "We share our faith with clear, polite words.",
+            "Respect and good manners belong in every invitation."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَا أَرْسَلْنَاكَ إِلَّا كَافَّةً لِّلنَّاسِ بَشِيرًا وَنَذِيرًا",
+            "en": "And We have sent you to all of humanity, as a bringer of good news and a warner.",
+            "ref": "Sūrat Sabaʾ 34:28"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Muḥammad, the Messenger of Allah",
+            "ar": "مُحَمَّدٌ رَسُولُ اللَّهِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5872"
+          },
+          {
+            "en": "In the name of Allah, the Most Gracious, the Most Merciful,",
+            "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 7"
+          },
+          {
+            "en": "Accept Islam and you will be safe.",
+            "ar": "أَسْلِمْ تَسْلَمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 7"
+          }
         ]
       },
       {
@@ -8523,7 +10589,32 @@ window.SEERAA_COURSE=[
             "trustworthiness"
           ]
         ],
-        "chapter": "Letters and Khaybar"
+        "chapter": "Letters and Khaybar",
+        "learn": {
+          "points": [
+            "A truthful life speaks for itself, even through an enemy’s words.",
+            "The Prophet ﷺ never lied and never broke a promise.",
+            "Islam calls to prayer, truthfulness, purity and kindness to relatives."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "يَأْمُرُنَا بِالصَّلَاةِ وَالصِّدْقِ وَالْعَفَافِ وَالصِّلَةِ",
+            "en": "He commands us to pray, to be truthful, to be pure and to keep family ties.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 7"
+          }
+        },
+        "quotes": [
+          {
+            "en": "To worship Allah alone, to pray, to be truthful, pure and kind to relatives.",
+            "ar": "اعْبُدُوا اللَّهَ وَحْدَهُ … وَيَأْمُرُنَا بِالصَّلَاةِ وَالصِّدْقِ وَالْعَفَافِ وَالصِّلَةِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 7"
+          },
+          {
+            "en": "If what you say is true, he will rule the very ground beneath my feet. If I could reach him, I would wash his feet.",
+            "ar": "فَإِنْ كَانَ مَا تَقُولُ حَقًّا فَسَيَمْلِكُ مَوْضِعَ قَدَمَيَّ هَاتَيْنِ … وَلَوْ كُنْتُ عِنْدَهُ لَغَسَلْتُ عَنْ قَدَمِهِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 7"
+          }
+        ]
       },
       {
         "title": "Khaybar",
@@ -8594,6 +10685,31 @@ window.SEERAA_COURSE=[
           {
             "s": "The people of Khaybar were allowed to farm their land.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "Helping someone find guidance is more precious than any treasure.",
+            "We invite people to good before anything else.",
+            "Allah and His Messenger ﷺ love those who love Allah and His Messenger."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "فَوَاللَّهِ لَأَنْ يَهْدِيَ اللَّهُ بِكَ رَجُلًا وَاحِدًا خَيْرٌ لَكَ مِنْ أَنْ يَكُونَ لَكَ حُمْرُ النَّعَمِ",
+            "en": "By Allah, if Allah guides one person through you, it is better for you than owning the finest red camels.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3009"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Tomorrow I will give the flag to a man who loves Allah and His Messenger, and Allah and His Messenger love him.",
+            "ar": "لَأُعْطِيَنَّ الرَّايَةَ غَدًا رَجُلًا يُحِبُّ اللَّهَ وَرَسُولَهُ، وَيُحِبُّهُ اللَّهُ وَرَسُولُهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3009"
+          },
+          {
+            "en": "Invite them to Islam first. By Allah, if Allah guides even one person through you, it is better for you than the finest red camels.",
+            "ar": "ادْعُهُمْ إِلَى الْإِسْلَامِ … فَوَاللَّهِ لَأَنْ يَهْدِيَ اللَّهُ بِكَ رَجُلًا وَاحِدًا خَيْرٌ لَكَ مِنْ أَنْ يَكُونَ لَكَ حُمْرُ النَّعَمِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3009"
           }
         ]
       },
@@ -8667,7 +10783,21 @@ window.SEERAA_COURSE=[
             "s": "Men still do ramal in ṭawāf today.",
             "a": true
           }
-        ]
+        ],
+        "learn": {
+          "points": [
+            "We keep agreements exactly, to the very day.",
+            "Our actions can show the beauty and strength of Islam.",
+            "Allah’s promises come true at the right time."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "لَتَدْخُلُنَّ الْمَسْجِدَ الْحَرَامَ إِن شَاءَ اللَّهُ آمِنِينَ مُحَلِّقِينَ رُءُوسَكُمْ وَمُقَصِّرِينَ",
+            "en": "You will surely enter al-Masjid al-Ḥarām, if Allah wills, in safety, with heads shaved or hair shortened.",
+            "ref": "Sūrat al-Fatḥ 48:27"
+          }
+        },
+        "quotes": []
       }
     ]
   },
@@ -8750,7 +10880,21 @@ window.SEERAA_COURSE=[
             "flag"
           ]
         ],
-        "chapter": "Makkah Opens Its Gates"
+        "chapter": "Makkah Opens Its Gates",
+        "learn": {
+          "points": [
+            "We care for orphans and grieving families.",
+            "Cooking food for a family in grief is a kind sunnah.",
+            "Wise leadership, like Khālid’s, can save many lives."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "اصْنَعُوا لِآلِ جَعْفَرٍ طَعَامًا، فَقَدْ أَتَاهُمْ مَا يَشْغَلُهُمْ",
+            "en": "Make food for the family of Jaʿfar, for something has come to them that keeps them busy.",
+            "ref": "Sunan Abī Dāwūd 3132"
+          }
+        },
+        "quotes": []
       },
       {
         "title": "Return to Makkah",
@@ -8822,7 +10966,37 @@ window.SEERAA_COURSE=[
             "safety"
           ]
         ],
-        "chapter": "Makkah Opens Its Gates"
+        "chapter": "Makkah Opens Its Gates",
+        "learn": {
+          "points": [
+            "True strength is forgiving when you have the power to punish.",
+            "Thankfulness to Allah, not pride, is how we celebrate success.",
+            "Mercy can turn enemies into friends."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "اذْهَبُوا فَأَنْتُمُ الطُّلَقَاءُ",
+            "en": "Go, for you are free.",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.",
+            "ar": "مَنْ دَخَلَ دَارَ أَبِي سُفْيَانَ فَهُوَ آمِنٌ، وَمَنْ أَغْلَقَ بَابَهُ فَهُوَ آمِنٌ، وَمَنْ دَخَلَ الْمَسْجِدَ فَهُوَ آمِنٌ",
+            "ref": "Ṣaḥīḥ Muslim 1780; Sīrat Ibn Hishām"
+          },
+          {
+            "en": "What do you think I will do with you?",
+            "ar": "مَا تَرَوْنَ أَنِّي فَاعِلٌ بِكُمْ؟",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "Go, you are free.",
+            "ar": "اذْهَبُوا فَأَنْتُمُ الطُّلَقَاءُ",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       },
       {
         "title": "Mercy in Makkah",
@@ -8893,6 +11067,26 @@ window.SEERAA_COURSE=[
           {
             "s": "Bilāl called the adhān from the Kaʿbah’s roof.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "The Kaʿbah is for the worship of Allah alone.",
+            "Trusts must be returned to their owners, like the key of the Kaʿbah.",
+            "The person once hurt in Makkah, Bilāl, was honoured to call the adhān."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَقُلْ جَاءَ الْحَقُّ وَزَهَقَ الْبَاطِلُ ۚ إِنَّ الْبَاطِلَ كَانَ زَهُوقًا",
+            "en": "And say: Truth has come, and falsehood has vanished. Indeed, falsehood is bound to vanish.",
+            "ref": "Sūrat al-Isrāʾ 17:81"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Truth has come, and falsehood has vanished. Falsehood is bound to vanish.",
+            "ar": "جَاءَ الْحَقُّ وَزَهَقَ الْبَاطِلُ ۚ إِنَّ الْبَاطِلَ كَانَ زَهُوقًا",
+            "ref": "Sūrat al-Isrāʾ 17:81"
           }
         ]
       },
@@ -8965,6 +11159,31 @@ window.SEERAA_COURSE=[
           {
             "s": "Al-ʿAbbās called the companions back with his loud voice.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We do not rely on our numbers or strength, but on Allah.",
+            "Pride can make us careless.",
+            "Standing firm and calling others back can turn a hard moment around."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَيَوْمَ حُنَيْنٍ ۙ إِذْ أَعْجَبَتْكُمْ كَثْرَتُكُمْ فَلَمْ تُغْنِ عَنكُمْ شَيْئًا",
+            "en": "And on the day of Ḥunayn, when your great numbers made you proud, but they did not help you at all.",
+            "ref": "Sūrat at-Tawbah 9:25"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I am the Prophet, this is no lie! I am the son of ʿAbd al-Muṭṭalib!",
+            "ar": "أَنَا النَّبِيُّ لَا كَذِبْ، أَنَا ابْنُ عَبْدِ الْمُطَّلِبْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2864"
+          },
+          {
+            "en": "On the day of Ḥunayn, your great numbers made you proud, but they did not help you at all.",
+            "ar": "وَيَوْمَ حُنَيْنٍ ۙ إِذْ أَعْجَبَتْكُمْ كَثْرَتُكُمْ فَلَمْ تُغْنِ عَنكُمْ شَيْئًا",
+            "ref": "Sūrat at-Tawbah 9:25"
           }
         ]
       }
@@ -9049,6 +11268,31 @@ window.SEERAA_COURSE=[
             "s": "Allah forgave the three who told the truth.",
             "a": true
           }
+        ],
+        "learn": {
+          "points": [
+            "We give generously, each according to what we have.",
+            "We always tell the truth, even when it is hard.",
+            "Allah forgives those who are honest and turn back to Him."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ",
+            "en": "O you who believe, be mindful of Allah and be with those who are truthful.",
+            "ref": "Sūrat at-Tawbah 9:119"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I have left them Allah and His Messenger.",
+            "ar": "أَبْقَيْتُ لَهُمُ اللَّهَ وَرَسُولَهُ",
+            "ref": "Sunan at-Tirmidhī 3675"
+          },
+          {
+            "en": "Allah saved me because I told the truth.",
+            "ar": "إِنَّ اللَّهَ إِنَّمَا نَجَّانِي بِالصِّدْقِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4418"
+          }
         ]
       },
       {
@@ -9120,6 +11364,26 @@ window.SEERAA_COURSE=[
           {
             "s": "ʿAdiyy lived to see the promises come true.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We welcome guests warmly and teach them patiently.",
+            "Humble leaders give the best seat to their guests.",
+            "The Prophet’s ﷺ promises about safety and the treasures of Kisrā came true."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "فَإِنْ طَالَتْ بِكَ حَيَاةٌ لَتَرَيَنَّ الظَّعِينَةَ تَرْتَحِلُ مِنَ الْحِيرَةِ حَتَّى تَطُوفَ بِالْكَعْبَةِ لَا تَخَافُ أَحَدًا إِلَّا اللَّهَ",
+            "en": "If you live long, you will see a woman travel from al-Ḥīrah until she walks around the Kaʿbah, fearing no one except Allah.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3595"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You will see a woman travel alone from al-Ḥīrah to the Kaʿbah fearing no one but Allah, and the treasures of Kisrā will be opened.",
+            "ar": "لَتَرَيَنَّ الظَّعِينَةَ تَرْتَحِلُ مِنَ الْحِيرَةِ حَتَّى تَطُوفَ بِالْكَعْبَةِ لَا تَخَافُ أَحَدًا إِلَّا اللَّهَ … وَلَتُفْتَحَنَّ كُنُوزُ كِسْرَى",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3595"
           }
         ]
       },
@@ -9193,7 +11457,52 @@ window.SEERAA_COURSE=[
             "sermon"
           ]
         ],
-        "chapter": "The Final Years"
+        "chapter": "The Final Years",
+        "learn": {
+          "points": [
+            "All people are equal before Allah; the best are those with the most taqwā.",
+            "Lives, property and honour are sacred, so we never harm others.",
+            "Holding on to the Book of Allah keeps us from going astray."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "الْيَوْمَ أَكْمَلْتُ لَكُمْ دِينَكُمْ وَأَتْمَمْتُ عَلَيْكُمْ نِعْمَتِي وَرَضِيتُ لَكُمُ الْإِسْلَامَ دِينًا",
+            "en": "Today I have perfected your religion for you, completed My favour upon you, and chosen Islam as your religion.",
+            "ref": "Sūrat al-Māʾidah 5:3"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Take your rites of Ḥajj from me, for I may not meet you after this year.",
+            "ar": "لِتَأْخُذُوا مَنَاسِكَكُمْ، فَإِنِّي لَا أَدْرِي لَعَلِّي لَا أَحُجُّ بَعْدَ حَجَّتِي هَذِهِ",
+            "ref": "Ṣaḥīḥ Muslim 1297"
+          },
+          {
+            "en": "Your lives, your property and your honour are sacred to one another. Fear Allah in the way you treat women. I have left among you something which, if you hold onto it, you will never go astray: the Book of Allah.",
+            "ar": "إِنَّ دِمَاءَكُمْ وَأَمْوَالَكُمْ وَأَعْرَاضَكُمْ بَيْنَكُمْ حَرَامٌ … فَاتَّقُوا اللَّهَ فِي النِّسَاءِ … وَقَدْ تَرَكْتُ فِيكُمْ مَا لَنْ تَضِلُّوا بَعْدَهُ إِنِ اعْتَصَمْتُمْ بِهِ: كِتَابَ اللَّهِ",
+            "ref": "Ṣaḥīḥ Muslim 1218"
+          },
+          {
+            "en": "No Arab is better than a non-Arab, and no non-Arab is better than an Arab, except by taqwā.",
+            "ar": "لَا فَضْلَ لِعَرَبِيٍّ عَلَى أَعْجَمِيٍّ، وَلَا لِعَجَمِيٍّ عَلَى عَرَبِيٍّ … إِلَّا بِالتَّقْوَى",
+            "ref": "Musnad Aḥmad 23489"
+          },
+          {
+            "en": "Have I conveyed the message?",
+            "ar": "أَلَا هَلْ بَلَّغْتُ؟",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1741"
+          },
+          {
+            "en": "O Allah, bear witness.",
+            "ar": "اللَّهُمَّ اشْهَدْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1741"
+          },
+          {
+            "en": "Today I have perfected your religion for you.",
+            "ar": "الْيَوْمَ أَكْمَلْتُ لَكُمْ دِينَكُمْ",
+            "ref": "Sūrat al-Māʾidah 5:3"
+          }
+        ]
       },
       {
         "title": "The Final Days",
@@ -9264,6 +11573,36 @@ window.SEERAA_COURSE=[
           {
             "s": "He passed away at the age of sixty-three.",
             "a": true
+          }
+        ],
+        "learn": {
+          "points": [
+            "We guard our five prayers all our lives, as the Prophet ﷺ advised at the very end.",
+            "We are kind to everyone in our care.",
+            "Allah is alive and never dies, so our worship is for Him alone."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌ قَدْ خَلَتْ مِن قَبْلِهِ الرُّسُلُ",
+            "en": "Muḥammad is only a messenger; messengers have passed away before him.",
+            "ref": "Sūrat Āl ʿImrān 3:144"
+          }
+        },
+        "quotes": [
+          {
+            "en": "The prayer, the prayer — and be kind to those in your care.",
+            "ar": "الصَّلَاةَ الصَّلَاةَ، وَمَا مَلَكَتْ أَيْمَانُكُمْ",
+            "ref": "Sunan Abī Dāwūd 5156"
+          },
+          {
+            "en": "With the highest companion,",
+            "ar": "اللَّهُمَّ الرَّفِيقَ الْأَعْلَى",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4463"
+          },
+          {
+            "en": "Whoever worshipped Muḥammad, Muḥammad has died. Whoever worships Allah, Allah is alive and never dies.",
+            "ar": "مَنْ كَانَ يَعْبُدُ مُحَمَّدًا فَإِنَّ مُحَمَّدًا قَدْ مَاتَ، وَمَنْ كَانَ يَعْبُدُ اللَّهَ فَإِنَّ اللَّهَ حَيٌّ لَا يَمُوتُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3668"
           }
         ]
       }

@@ -358,6 +358,33 @@ if(typeof layoutMapRoad==='function'){
 
 /* ---------- the lesson story, like the Extra story panel ---------- */
 function esc(s){return typeof escapeHtml==='function'?escapeHtml(String(s)):String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function storyWithArabic(text,quotes){
+ const found=[];quotes.forEach(q=>{const at=String(text).indexOf(q.en);if(at>=0)found.push({at,end:at+q.en.length,q})});
+ if(!found.length)return'';found.sort((a,b)=>a.at-b.at);let pos=0,html='';
+ found.forEach(f=>{if(f.at<pos)return;let s0=f.at,e0=f.end;if(/[“"]/.test(text[s0-1]||''))s0--;if(/[”"]/.test(text[e0]||''))e0++;
+  html+=esc(text.slice(pos,s0))+`<span class="lw-q"><span class="lw-q-ar" lang="ar" dir="rtl">${esc(f.q.ar)}</span><span class="lw-q-en">“${esc(f.q.en)}”</span><span class="lw-q-ref">${esc(f.q.ref)}</span></span>`;pos=e0});
+ return html+esc(text.slice(pos));
+}
+/* ---------- the Learn step: what we learn from the story (not the story again) ---------- */
+function renderLearnPage(l){
+ const L=l.seerah.learn,v=L.verse,stage=document.getElementById('stage'),edit=typeof lessonEditFor==='function'?lessonEditFor(l):null;
+ const notes=edit&&edit.text?(typeof formatExplanation==='function'?formatExplanation(edit.text):esc(edit.text)):'';
+ const tryText=typeof simpleExplanationFor==='function'?simpleExplanationFor(l):l.seerah.benefit;
+ stage.innerHTML=`<div class="kicker">What we learn · Lesson ${esc(l.lines)}</div><h1 class="lesson-title">${esc(l.title)}</h1>`
+  +`<figure class="lw-verse ${v.kind}"><figcaption>${v.kind==='quran'?'📖 From the Qurʾān':'🌿 From the hadith'}</figcaption><p class="lw-verse-ar" lang="ar" dir="rtl">${esc(v.ar)}</p><p class="lw-verse-en">“${esc(v.en)}”</p><p class="lw-verse-ref">${esc(v.ref)}</p><div class="lw-verse-say"><button type="button" class="ghost" id="lwSayAr">🔊 Arabic</button><button type="button" class="ghost" id="lwSayEn">🔊 Meaning</button></div></figure>`
+  +`<h2 class="lw-learn-h">3 lessons from this story</h2><ol class="lw-points">${L.points.map((p,i)=>`<li><span class="lw-pt-n" aria-hidden="true">${i+1}</span><span>${esc(p)}</span></li>`).join('')}</ol>`
+  +(notes?`<div class="lw-teacher"><h3>👩‍🏫 Notes from your teacher</h3><div>${notes}</div></div>`:'')
+  +`<div class="simple-box lw-try"><h3>💡 Try this week</h3><p>${esc(tryText)}</p></div>`
+  +`<p class="builder-tip">Ages 7–10: which of the 3 lessons will you practise today?<br>Ages 11–15: explain to someone how the verse or hadith connects to the story.</p>`;
+ const say=(t,lang)=>{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=lang==='ar-SA'?.8:.88;speechSynthesis.speak(u)};
+ document.getElementById('lwSayAr').onclick=()=>typeof sayArabic==='function'?sayArabic(v.ar):say(v.ar,'ar-SA');
+ document.getElementById('lwSayEn').onclick=()=>say(v.en,'en-AU');
+ if(typeof nextButton==='function')nextButton('Match the words →');
+}
+if(typeof renderExplanation==='function'){
+ const renderExplanationBeforeLearn=renderExplanation;
+ renderExplanation=function(l){if(l&&l.seerah&&l.seerah.learn){try{return renderLearnPage(l)}catch(e){console.warn('learn page',e)}}return renderExplanationBeforeLearn.apply(this,arguments)};
+}
 function dressStory(l){
  const stage=document.getElementById('stage');if(!stage||!l)return;const wi=Math.max(0,l.world||0),S=typeof SEERAA_SCENES!=='undefined'?SEERAA_SCENES[wi%SEERAA_SCENES.length]:null;
  stage.classList.add('lw-story');
@@ -368,6 +395,9 @@ function dressStory(l){
  stage.insertBefore(head,stage.firstChild);
  if(title){title.classList.add('lw-title');const intro=document.createElement('p');intro.className='lw-intro';intro.textContent='Read a little. Think together. Then explore the lesson.';title.insertAdjacentElement('afterend',intro)}
  if(card){card.classList.add('lw-reading');const listen=card.querySelector('#storyListen');if(listen)listen.classList.add('lw-listen')}
+ /* each Qur'an verse or hadith quoted in the story: Arabic first, then the English */
+ const para=card&&card.querySelector('p'),quotes=(l.seerah&&l.seerah.quotes)||[];
+ if(para&&quotes.length){const html=storyWithArabic(typeof storyText==='function'?storyText(l):l.translation,quotes);if(html)para.innerHTML=html}
  /* the lesson's scene (Year of the Elephant, the Hijrah) plays above the story */
  const sc=SCENES.find(x=>x.make&&(x.story||x.re).test(String(l.title||'')));
  if(sc&&card){
@@ -436,6 +466,25 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lw-think p{margin:6px 0}
 .lw-think summary{font-weight:700;font-size:14px;cursor:pointer}
 #stage.lw-story .source-note{font:12px/1.6 Nunito,system-ui,sans-serif;color:#77664d}
+.lw-q{display:block;margin:.8em 0;padding:.7em .95em;border-inline-start:4px solid #d6b36a;background:#fff8e6;border-radius:12px}
+.lw-q-ar{display:block;font:700 clamp(20px,4.6vw,26px)/1.9 Amiri,'Noto Naskh Arabic',serif;color:#4b3417;text-align:right;direction:rtl}
+.lw-q-en{display:block;font-style:italic}
+.lw-q-ref{display:block;margin-top:2px;font:700 12px/1.3 Nunito,system-ui,sans-serif;color:#8a7356}
+.lw-verse{margin:14px 0 18px;padding:16px 18px;border:1px solid #e3c995;border-radius:18px;background:linear-gradient(180deg,#fffaf0,#fff1d6);text-align:center;box-shadow:0 3px 0 #e8d3a8}
+.lw-verse.hadith{background:linear-gradient(180deg,#f6fbf2,#e6f3dc);border-color:#bcd8a8;box-shadow:0 3px 0 #cfe3bf}
+.lw-verse figcaption{font:800 12px/1 Nunito,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8a6320}
+.lw-verse.hadith figcaption{color:#3f6b33}
+.lw-verse-ar{margin:10px 0 6px;font:700 clamp(23px,5.4vw,32px)/1.9 Amiri,'Noto Naskh Arabic',serif;color:#4b3417;direction:rtl}
+.lw-verse-en{margin:0 0 6px;font:700 17px/1.55 Nunito,system-ui,sans-serif;color:#3f3021}
+.lw-verse-ref{margin:0;font:700 12.5px/1.3 Nunito,system-ui,sans-serif;color:#8a7356}
+.lw-verse-say{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.lw-verse-say button{padding:6px 12px;font-size:13px}
+.lw-learn-h{margin:6px 0 10px;font:800 19px/1.3 Nunito,system-ui,sans-serif;color:#4a3826}
+.lw-points{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:10px}
+.lw-points li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid #e6d3ad;border-radius:14px;background:#fffdf7;font:600 16px/1.5 Nunito,system-ui,sans-serif;color:#3f3021;box-shadow:0 2px 0 #eadbbd}
+.lw-pt-n{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#2e6b58;color:#fff;font:800 15px/1 Nunito,system-ui,sans-serif}
+.lw-teacher{margin:0 0 14px;padding:12px 14px;border:1px dashed #c9a86a;border-radius:14px;background:#fffaf0}
+.lw-teacher h3,.lw-try h3{margin:0 0 6px}
 .lw-theatre{position:relative;margin:18px 0 6px;border:1px solid #d9c299;border-radius:16px;overflow:hidden;background:#fbe4b8}
 .lw-theatre svg{display:block;width:100%;height:auto}
 .lw-theatre figcaption{min-height:3.2em;padding:10px 14px;background:#fffaf0;border-top:1px solid #e6d3ad;font:600 15px/1.5 Nunito,system-ui,sans-serif;color:#4a3826}
