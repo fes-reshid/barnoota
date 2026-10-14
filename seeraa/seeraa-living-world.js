@@ -125,10 +125,12 @@ function paintLife(){
  const svg=document.getElementById('mapSvg');if(!svg||typeof SEERAA_SCENES==='undefined')return;
  svg.querySelectorAll('.lw-life').forEach(g=>g.remove());LW.figs=LW.figs.filter(f=>f.el.isConnected&&f.el.closest('#mapSvg')!==svg);
  const P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%SEERAA_SCENES.length)+SEERAA_SCENES.length)%SEERAA_SCENES.length],lanes=LANES[S.asset],life=MAP_LIFE[((viewWorld%MAP_LIFE.length)+MAP_LIFE.length)%MAP_LIFE.length];if(!P||!lanes||!life)return;
- const L=typeof MAP_GEO!=='undefined'&&MAP_GEO,u0=L?clamp(-P.x/P.w,0,1):0,u1=L?clamp((L.W-P.x)/P.w,0,1):1,squeeze=u1-u0<.8;
- const toMap=([u,v])=>[P.x+(squeeze?u0+.04*(u1-u0)+u*.92*(u1-u0):u)*P.w,P.y+v*P.h];let html='';const plan=[];
- life.road.forEach((kind,i)=>{const lane=lanes.roads[i%lanes.roads.length];plan.push({kind,pts:lane.map(toMap),i})});
- life.hill.forEach((kind,i)=>{const lane=lanes.hills[i%lanes.hills.length];plan.push({kind,pts:lane.map(toMap),i:i+7,hill:1})});
+ const L=typeof MAP_GEO!=='undefined'&&MAP_GEO,R=L&&Array.isArray(L.road)&&L.road.length>1?L.road:null;let html='';const plan=[];
+ const toMap=([u,v])=>[P.x+u*P.w,P.y+v*P.h],onScreen=pts=>!L||pts.some(([x,y])=>x>0&&x<L.W&&y>0&&y<L.H);
+ /* people and animals walk on the painted street itself, both ways, keeping to either side */
+ life.road.forEach((kind,i)=>{const a=.04+((i*.17)%.42),b=Math.min(.97,a+.42+((i*.11)%.15)),off=(i%2?1:-1)*(7+(i%3)*6);
+  const pts=R?streetLane(R,a,b,off,P):lanes.roads[i%lanes.roads.length].map(toMap);plan.push({kind,pts,i})});
+ life.hill.forEach((kind,i)=>{const pts=lanes.hills[i%lanes.hills.length].map(toMap);if(onScreen(pts))plan.push({kind,pts,i:i+7,hill:1})});
  plan.forEach((f,n)=>{const F=figureFor(f.kind,f.i);html+=`<g class="lw-fig lw-k-${f.kind}" data-n="${n}">${F.h}</g>`;f.F=F});
  for(let b=0;b<life.birds;b++)html+=`<g class="lw-bird" data-b="${b}">${birdSvg()}</g>`;
  const scene=svg.querySelector('.history-scene');if(!scene)return;
@@ -141,6 +143,8 @@ function paintLife(){
  const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('lw-dusty',!!lanes.dusty);
  scheduleGust(frame,!!lanes.dusty);run();
 }
+/* a walking lane beside the painted street, from fraction a to b of its length, offset to one side */
+function streetLane(R,a,b,off,P){const len=R[R.length-1][2],out=[];for(let i=0;i<=24;i++){const s=(a+(b-a)*i/24)*len,p=roadAt(R,s),q=roadAt(R,s+6),r=roadAt(R,s-6),dx=q[0]-r[0],dy=q[1]-r[1],l=Math.hypot(dx,dy)||1,k=clamp(depthAt(p[1],P,1),.3,1.4);out.push([p[0]-dy/l*off*k,p[1]+dx/l*off*k])}return out}
 /* light and sky for each map: night (stars and a crescent), dawn, dusk, and passing rain */
 function paintMood(svg,P,mood){
  svg.querySelectorAll('.lw-mood').forEach(g=>g.remove());const frame=svg.closest('.map-frame');
@@ -336,10 +340,20 @@ function paintElephantSpot(){
  });
 }
 
+/* ---------- lesson numbers on every stop of the road (a small lock or tick sits on the edge) ---------- */
+function numberStops(){
+ const svg=document.getElementById('mapSvg');if(!svg||typeof lessons==='undefined')return;
+ svg.querySelectorAll('.node').forEach(n=>{const i=Number(n.dataset.i),l=lessons[i],t=n.querySelector('text[y="8"]');if(!l||!t)return;
+  const locked=n.classList.contains('locked'),done=typeof profile!=='undefined'&&profile.stars&&profile.stars[i]>0,num=String(l.lines);
+  t.textContent=num;t.setAttribute('font-size',num.length>2?'17':'20');t.setAttribute('font-weight','700');
+  n.querySelector('.lw-stop-badge')?.remove();
+  if(locked||done)n.insertAdjacentHTML('beforeend',`<g class="lw-stop-badge" transform="translate(21 -21)" pointer-events="none"><circle r="11" fill="${done?'#2e6b58':'#6b5a45'}" stroke="#fff" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="${done?13:10}" fill="#fff">${done?'✓':'🔒'}</text></g>`);
+  n.setAttribute('aria-label',`Lesson ${num}: ${l.title}${locked?' (locked)':done?' (done)':''}`)});
+}
 /* ---------- wire into the map ---------- */
 if(typeof layoutMapRoad==='function'){
  const layoutBeforeLiving=layoutMapRoad;
- layoutMapRoad=function(){const r=layoutBeforeLiving.apply(this,arguments);try{paintLife();paintElephantSpot()}catch(e){console.warn('living map',e)}return r};
+ layoutMapRoad=function(){const r=layoutBeforeLiving.apply(this,arguments);try{paintLife();paintElephantSpot()}catch(e){console.warn('living map',e)}try{numberStops()}catch(e){console.warn('stop numbers',e)}return r};
 }
 
 /* ---------- the lesson story, like the Extra story panel ---------- */

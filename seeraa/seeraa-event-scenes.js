@@ -311,7 +311,11 @@ function mapNasheed(){const frame=document.getElementById('mapSvg')?.closest('.m
  Nasheed.stop();frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
  const box=document.createElement('div');box.className='lw-lyrics';box.setAttribute('aria-live','polite');frame.appendChild(box);nasheedButton(frame,box)}
 /* ---------- register: one engine for the map road and for the story picture ---------- */
-function mapCaption(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return null;let el=frame.querySelector('.lw-scene-cap');if(!el){el=document.createElement('div');el.className='lw-scene-cap';el.setAttribute('aria-hidden','true');frame.appendChild(el)}return el}
+function mapCaption(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return null;let el=frame.querySelector('.lw-scene-cap');if(!el){el=document.createElement('div');el.className='lw-scene-cap';el.setAttribute('aria-hidden','true');frame.appendChild(el)}
+ /* sit at the bottom corner away from the entry door (and above the arrow buttons on phones) */
+ const G=typeof MAP_GEO!=='undefined'&&MAP_GEO,fw=frame.clientWidth||innerWidth,doorX=G&&G.entry?G.entry[0]*fw/G.W:0,tall=frame.classList.contains('tall');
+ Object.assign(el.style,doorX>fw/2?{left:'12px',right:'auto',bottom:'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'}:{left:'auto',right:'12px',bottom:tall?'calc(70px + env(safe-area-inset-bottom,0px))':'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'});
+ return el}
 function theatre(g,ctx,sc,capEl){
  const play=sc.build(g,ctx);let last=-1;
  return{svg:g,cycle:sc.cycle,still:sc.still,start:performance.now(),
@@ -326,7 +330,7 @@ function theatre(g,ctx,sc,capEl){
 window.SeeraaNasheed=Nasheed;
 
 document.head.insertAdjacentHTML('beforeend',`<style id="lwx-style">
-.lw-scene-cap{position:absolute;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;width:max-content;max-width:min(440px,calc(100% - 210px));box-sizing:border-box;padding:6px 12px;border-radius:12px;background:rgba(255,249,232,.94);border:1px solid #e3c995;color:#4d3928;font:800 12.5px/1.35 Nunito,system-ui,sans-serif;text-align:center;box-shadow:0 2px 10px #38271630;pointer-events:none}
+.lw-scene-cap{position:absolute;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;width:max-content;max-width:min(400px,calc(50% - 24px));box-sizing:border-box;padding:6px 12px;border-radius:12px;background:rgba(255,249,232,.94);border:1px solid #e3c995;color:#4d3928;font:800 12.5px/1.35 Nunito,system-ui,sans-serif;text-align:center;box-shadow:0 2px 10px #38271630;pointer-events:none}
 .lw-scene-cap:empty{display:none}
 .lw-nasheed-btn{position:absolute;z-index:6;left:12px;top:118px;border:1px solid #d9b56a;background:linear-gradient(180deg,#fff8e6,#f6e2b4);color:#5a3d17;border-radius:999px;padding:7px 13px;font:800 13px/1 Nunito,system-ui,sans-serif;box-shadow:0 2px 8px #38271630;cursor:pointer}
 .lw-nasheed-btn[aria-pressed="true"]{background:linear-gradient(180deg,#e9f6e5,#cdeec7);border-color:#9cc98f}
