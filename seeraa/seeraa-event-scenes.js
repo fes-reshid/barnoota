@@ -326,7 +326,7 @@ function theatre(g,ctx,sc,capEl){
  road:(g,L,P)=>{const th=theatre(g,mapCtx(L,P),sc,mapCaption());if(sc.nasheed)mapNasheed();return th},
  make:(svg,full,cap)=>{svg.innerHTML=sc.bg();const g=document.createElementNS(NS,'g');svg.appendChild(g);const th=theatre(g,storyCtx(),sc,cap);
   const fig=svg.parentNode;if(sc.nasheed&&fig&&!fig.querySelector('.lw-nasheed-btn')){const box=document.createElement('div');box.className='lw-lyrics inline';box.setAttribute('aria-live','polite');fig.appendChild(box);nasheedButton(fig,box)}
-  if(reduced())th.tick(sc.still);else{LW.theatres.add(th);run()}return th}}));
+  if(reduced()){th.tick(sc.still);th.pausedT=sc.still}LW.theatres.add(th);run();return th}}));
 window.SeeraaNasheed=Nasheed;
 
 document.head.insertAdjacentHTML('beforeend',`<style id="lwx-style">

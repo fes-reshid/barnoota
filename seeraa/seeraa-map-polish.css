@@ -1,0 +1,55 @@
+/* Warm parchment controls and small, optional moments of motion. */
+.seeraa-polished .map-frame .map-title{border-radius:18px;background:linear-gradient(135deg,#684d31ed,#97764de8);box-shadow:0 5px 18px #2b211433,inset 0 1px #fff4;backdrop-filter:blur(10px);letter-spacing:.015em}
+.map-frame .sp-tools{position:absolute;z-index:8;left:12px;top:72px;right:76px;display:flex;align-items:center;flex-wrap:wrap;gap:6px;pointer-events:none}
+.sp-tools #placeInfoButton,.sp-tools .sp-tool{position:static;pointer-events:auto;min-height:36px;border:1px solid #dbc298;border-radius:999px;padding:8px 12px;background:#fff9ecef;color:#4d3927;font:700 12px/1.2 Nunito,system-ui,sans-serif;box-shadow:0 3px 10px #3f2c1726,inset 0 1px #fff;backdrop-filter:blur(8px);cursor:pointer;transition:background .18s,box-shadow .18s}
+.sp-tools button:hover{background:#fff4d8;box-shadow:0 4px 14px #3f2c1738}
+.sp-tools button[aria-pressed=true]{background:#e9efdf;border-color:#9aaa82;color:#385235}
+.sp-tools button:disabled{opacity:.85;cursor:default}
+.sp-tool[hidden]{display:none!important}
+.sp-tools button:focus-visible,.sp-place-dialog button:focus-visible,.sp-place-dialog a:focus-visible{outline:3px solid #386d63;outline-offset:3px}
+#mapSvg .node:focus-visible{outline:none}
+#mapSvg .node:focus-visible .disc{stroke:#fff7ce!important;stroke-width:5!important;filter:drop-shadow(0 0 5px #3c6150)}
+#mapSvg .node .disc{transition:stroke .18s,filter .18s}
+#mapSvg .node:not(.locked):hover .disc{filter:drop-shadow(0 3px 4px #50361c66)}
+.sp-arrive .history-scene{animation:spSceneIn .7s ease-out both}
+.sp-arrive #mapSvg .node{animation:spStopIn .55s ease-out both}
+.sp-arrive #mapSvg .node:nth-of-type(2n){animation-delay:.08s}
+.sp-read-in{animation:spReadIn .3s ease-out both}
+@keyframes spSceneIn{from{opacity:.35}to{opacity:1}}
+@keyframes spStopIn{from{opacity:.25}to{opacity:1}}
+@keyframes spReadIn{from{opacity:.5;translate:0 6px}to{opacity:1;translate:0 0}}
+.seeraa-polished .historical-caption{box-shadow:0 12px 32px #34271826;border-color:#d8bf90}
+.historical-caption .sp-photo-license{display:block;margin-top:3px;font:10px/1.4 Nunito,system-ui;color:#655338}
+.sp-viewer-open{overflow:hidden}
+.sp-place-dialog{width:min(850px,calc(100% - 28px));max-height:92dvh;padding:0;border:1px solid #d1b788;border-radius:24px;background:#fff9ed;color:#443321;box-shadow:0 24px 90px #1e170a77;overflow:auto;font:16px/1.6 Nunito,system-ui,sans-serif}
+.sp-place-dialog::backdrop{background:#241c13b5;backdrop-filter:blur(5px)}
+.sp-place-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 24px 12px}
+.sp-eyebrow{margin:0;color:#88704a;font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.16em}
+.sp-place-head h2{font:700 clamp(25px,4vw,34px)/1.2 Marcellus,serif;margin:5px 0}
+.sp-close{flex:none;display:grid;place-items:center;width:40px;height:40px;border:1px solid #d7c3a0;border-radius:50%;background:#f5ead5;color:#5e482b;font:26px/1 system-ui;cursor:pointer}
+.sp-place-tabs{display:flex;gap:5px;width:max-content;margin:0 24px 16px;padding:4px;background:#eee1c8;border:1px solid #decbaa;border-radius:999px}
+.sp-place-tabs button{padding:8px 18px;border:0;border-radius:999px;background:transparent;color:#634c2e;font:700 13px Nunito,system-ui;cursor:pointer;min-height:36px}
+.sp-place-tabs button[aria-selected=true]{background:#47654d;color:#fffbef;box-shadow:0 2px 6px #2d49342b}
+.sp-place-dialog figure{margin:0}
+.sp-image-wrap{background:#d6c6a9;min-height:120px;display:grid;align-items:center}
+.sp-image-wrap img{display:block;width:100%;height:auto;max-height:51dvh;object-fit:contain;background:#d6c6a9}
+.sp-image-wrap img.sp-panorama{min-height:180px;object-fit:contain;background:#554b3f}
+.sp-image-wrap img[hidden],#spPhotoError[hidden]{display:none}
+#spPhotoError{padding:24px;text-align:center}
+.sp-place-dialog figcaption{padding:10px 24px;color:#75654e;font-size:12px;line-height:1.5;border-bottom:1px solid #e5d7bd}
+.sp-place-bottom{padding:16px 24px 20px}
+.sp-place-bottom details{padding:12px 16px;background:#ecf0e2;border:1px solid #d6dfc7;border-radius:12px;color:#3f543a;font-size:14px}
+.sp-place-bottom summary{font-weight:800;cursor:pointer}.sp-place-bottom details p{margin:9px 0 0}
+.sp-place-links{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:14px;font-size:12px}.sp-place-links a,.sp-credit a{color:#48654a}
+.sp-credit{font-size:10px;color:#7f7059;line-height:1.6;margin:12px 0 0}
+.sp-celebration{position:fixed;left:50%;top:40%;width:0;height:0;z-index:140;pointer-events:none}
+.sp-celebration i{position:absolute;left:0;top:0;font-style:normal;font-size:18px;color:#b68b34;text-shadow:0 1px #fff6d0;animation:spBurst 1s ease-out var(--sp-delay) both}
+.sp-celebration i:nth-child(3n){color:#59774a;font-size:14px}
+@keyframes spBurst{0%{opacity:0;transform:translate(0,0) scale(.2)}25%{opacity:1}100%{opacity:0;transform:translate(var(--sp-x),var(--sp-y)) rotate(var(--sp-turn)) scale(.7)}}
+.seeraa-calm .lw-life *,.seeraa-calm .lw-mood *,.seeraa-calm .lw-road-scene *,.seeraa-calm .lw-theatre *,.seeraa-calm .side-step,.seeraa-calm #mapSvg .pulse{animation-play-state:paused!important}
+.seeraa-calm .lw-wind,.seeraa-calm .lw-rain,.seeraa-calm .sp-celebration{display:none!important}
+.seeraa-calm .sp-read-in,.seeraa-calm .sp-arrive .history-scene,.seeraa-calm .sp-arrive #mapSvg .node{animation:none!important}
+@media(max-width:620px){.map-frame .sp-tools{top:66px;left:10px;right:10px;gap:5px}.sp-tools #placeInfoButton,.sp-tools .sp-tool{padding:8px 10px;font-size:11px;min-height:36px}.sp-place-head{padding:18px 18px 12px}.sp-place-tabs{margin-left:18px}.sp-place-dialog figcaption,.sp-place-bottom{padding-left:18px;padding-right:18px}.sp-place-dialog{border-radius:20px}.sp-image-wrap img.sp-panorama{min-height:130px}}
+@media(prefers-reduced-motion:reduce){.sp-arrive .history-scene,.sp-arrive #mapSvg .node,.sp-read-in,.sp-celebration i{animation:none!important}.sp-celebration{display:none}.sp-tools button,#mapSvg .node .disc{transition:none}}
+
+@media(max-width:360px){.sp-tools #placeInfoButton,.sp-tools .sp-tool{font-size:10px;padding:7px 8px}}

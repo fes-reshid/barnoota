@@ -11,7 +11,7 @@
       look like game tiles.
    The Prophet ﷺ and Abū Bakr are never drawn — only their camels. */
 (function(){
-const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced=()=>window.SeeraaMotion?window.SeeraaMotion.paused():matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t<.5?2*t*t:1-Math.pow(2-2*t,2)/2;
 
 /* ---------- figures (facing right, feet at 0,0) ---------- */
@@ -48,6 +48,8 @@ function birdSvg(){return `<path class="lw-wing" d="M-9 0Q-4-6 0 0Q4-6 9 0" stro
 /* Each lane: points along a road or slope. Kinds: p person, w woman, c camel,
    cl camel with goods, g goat, s sheep. */
 const LANES={
+ badr:{roads:[[[.08,.97],[.30,.77],[.52,.66],[.72,.53],[.85,.34]],[[.08,.56],[.26,.60],[.44,.61]]],hills:[[[.16,.25],[.22,.22]],[[.48,.24],[.58,.23]]],dusty:1},
+ 'uhud-v2':{roads:[[[.07,.97],[.27,.78],[.49,.67],[.57,.60],[.81,.53],[.90,.42]],[[.15,.55],[.26,.56],[.37,.57]]],hills:[[[.73,.40],[.81,.36],[.86,.43]],[[.45,.18],[.53,.15]]],dusty:1},
  makkah:{roads:[[[.62,.99],[.56,.72],[.49,.54],[.43,.43]],[[.97,.36],[.80,.335],[.62,.32],[.47,.30]],[[.30,.64],[.45,.62],[.60,.66]]],hills:[[[.47,.14],[.55,.12],[.62,.15]],[[.80,.09],[.88,.07],[.95,.10]],[[.05,.13],[.12,.12]]],dusty:1},
  hira:{roads:[[[.68,.99],[.60,.74],[.52,.56],[.53,.44],[.60,.33]],[[.08,.43],[.20,.45],[.30,.47]]],hills:[[[.62,.27],[.70,.24],[.77,.27]],[[.40,.33],[.46,.30]],[[.84,.22],[.90,.25]]],dusty:1},
  madinah:{roads:[[[.72,.99],[.60,.72],[.47,.48],[.36,.33]],[[.62,.36],[.75,.355],[.88,.36]]],hills:[[[.20,.09],[.30,.08]],[[.62,.10],[.70,.11]],[[.88,.09],[.95,.10]]]},
@@ -106,6 +108,7 @@ function polyLen(pts){let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][
 function polyAt(pts,s){for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=l||i===pts.length-1){const t=l?clamp(s/l,0,1):0;return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,b[0]-a[0]]}s-=l}return pts[pts.length-1].concat([1])}
 function tick(now){
  LW.raf=0;
+ if(document.hidden||reduced())return;
  const scr=document.getElementById('mapScreen'),mapOn=scr&&!scr.classList.contains('hidden')&&!document.hidden,t=(now-LW.t0)/1000;
  if(mapOn&&!reduced())LW.figs.forEach(f=>{
   if(!f.el.isConnected)return;
@@ -116,7 +119,7 @@ function tick(now){
  LW.theatres.forEach(th=>{if(!th.svg.isConnected){LW.theatres.delete(th);return}if(th.visible())th.tick(((now-th.start)/1000)%th.cycle)});
  if(LW.figs.length||LW.theatres.size)LW.raf=requestAnimationFrame(tick);
 }
-function run(){if(!LW.raf)LW.raf=requestAnimationFrame(tick)}
+function run(){if(!LW.raf&&!document.hidden&&!reduced())LW.raf=requestAnimationFrame(tick)}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)run()});
 
 /* ---------- living map ---------- */
@@ -136,9 +139,9 @@ function paintLife(){
  const scene=svg.querySelector('.history-scene');if(!scene)return;
  scene.insertAdjacentHTML('afterend',`<g class="lw-life" aria-hidden="true" pointer-events="none">${html}</g>`);
  const g=svg.querySelector('.lw-life');
- plan.forEach((f,n)=>{const el=g.querySelector(`[data-n="${n}"]`),len=polyLen(f.pts);LW.figs.push({el,pts:f.pts,len,P,k:f.F.k,min:f.hill?.42*Math.max(P.w/1536,.6):0,speed:f.F.speed*(f.hill?.35:1)*P.w/1536*(.85+(n%3)*.12),off:(n*0.37%1)*len*2});if(reduced()){const p=polyAt(f.pts,len*((n*.29)%1)),v=clamp((p[1]-P.y)/P.h,0,1),sc=(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*P.w/1536*f.F.k;el.setAttribute('transform',`translate(${p[0]} ${p[1]}) scale(${sc})`)}});
+ plan.forEach((f,n)=>{const el=g.querySelector(`[data-n="${n}"]`),len=polyLen(f.pts);LW.figs.push({el,pts:f.pts,len,P,k:f.F.k,min:f.hill?.42*Math.max(P.w/1536,.6):0,speed:f.F.speed*(f.hill?.35:1)*P.w/1536*(.85+(n%3)*.12),off:(n*0.37%1)*len*2});{const p=polyAt(f.pts,len*((n*.29)%1)),v=clamp((p[1]-P.y)/P.h,0,1),sc=(0.1+0.95*Math.pow(clamp((v-.08)/.85,0,1),1.15))*P.w/1536*f.F.k;el.setAttribute('transform',`translate(${p[0]} ${p[1]}) scale(${sc})`)}});
  /* birds glide across the sky */
- for(let b=0;b<life.birds;b++){const el=g.querySelector(`[data-b="${b}"]`),y=P.y+P.h*(.04+b*.03),x0=P.x-40,x1=P.x+P.w+40;LW.figs.push({el,pts:b%2?[[x1,y],[x0,y+20]]:[[x0,y],[x1,y+15]],len:P.w+80,P:{x:P.x,y:P.y-P.h*2,w:P.w,h:P.h*3},k:1.1,speed:55*P.w/1536,off:b*P.w*.6})}
+ for(let b=0;b<life.birds;b++){const el=g.querySelector(`[data-b="${b}"]`),y=P.y+P.h*(.04+b*.03),x0=P.x-40,x1=P.x+P.w+40;el.setAttribute('transform',`translate(${P.x+P.w*(.25+b*.22)} ${y}) scale(.7)`);LW.figs.push({el,pts:b%2?[[x1,y],[x0,y+20]]:[[x0,y],[x1,y+15]],len:P.w+80,P:{x:P.x,y:P.y-P.h*2,w:P.w,h:P.h*3},k:1.1,speed:55*P.w/1536,off:b*P.w*.6})}
  paintMood(svg,P,S.mood||'');
  const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('lw-dusty',!!lanes.dusty);
  scheduleGust(frame,!!lanes.dusty);run();
@@ -215,7 +218,7 @@ function elephantTheatre(svg,full,captionEl){
     const d=clamp((t-12-i*.12)/1.1,0,1),stoneOn=t>11.6+i*.12&&d<1;ST[i].setAttribute('cx',b.hx.toFixed(1));ST[i].setAttribute('cy',(t<12+i*.12?b.hy+4:lerp(b.hy+4,198,d*d)).toFixed(1));ST[i].setAttribute('opacity',stoneOn?1:0)});
    if(captionEl){let c=0;ELEPHANT_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=ELEPHANT_CAPTIONS[c][1]}}
   }};
- if(reduced())th.tick(16.6);else{LW.theatres.add(th);run()}
+ if(reduced()){th.tick(16.6);th.pausedT=16.6}LW.theatres.add(th);run()
  return th;
 }
 /* ---------- the Hijrah: Surāqah and the two camels ---------- */
@@ -254,7 +257,7 @@ function hijrahTheatre(svg,full,captionEl){
    horse.setAttribute('opacity',t<2||t>17?'0':'1');
    if(captionEl){let c=0;HIJRAH_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=HIJRAH_CAPTIONS[c][1]}}
   }};
- if(reduced())th.tick(9);else{LW.theatres.add(th);run()}
+ if(reduced()){th.tick(9);th.pausedT=9}LW.theatres.add(th);run()
  return th;
 }
 /* ---------- the same scenes, walking along the map road ---------- */
@@ -330,13 +333,13 @@ const SCENES=[
 function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
 function paintElephantSpot(){
  const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;
- svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());document.querySelectorAll('.lw-scene-cap,.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());if(window.SeeraaNasheed)window.SeeraaNasheed.stop();
+ svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());LW.theatres.forEach(th=>{if(!th.svg.isConnected)LW.theatres.delete(th)});document.querySelectorAll('.lw-scene-cap,.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());if(window.SeeraaNasheed)window.SeeraaNasheed.stop();
  if(!Array.isArray(L.road)||L.road.length<2)return;const P=photoBox(svg);if(!P)return;
  SCENES.forEach(sc=>{
   const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
   const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('class','lw-road-scene');g.setAttribute('aria-hidden','true');g.setAttribute('pointer-events','none');
   (svg.querySelector('.historical-dust-road')||svg.querySelector('.lw-life')||svg.querySelector('.history-scene')).insertAdjacentElement('afterend',g);
-  const th=sc.road(g,L,P);if(reduced())th.tick(th.still??6);else{LW.theatres.add(th);run()}
+  const th=sc.road(g,L,P);if(reduced()){th.pausedT=th.still??6;th.tick(th.pausedT)}LW.theatres.add(th);run()
  });
 }
 
@@ -500,5 +503,5 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 @media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
 </style>`);
 /* shared with seeraa-event-scenes.js (Badr, Uḥud, Ḥudaybiyyah, the Opening of Makkah) */
-window.SeeraaLiving={LW,run,reduced,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
+window.SeeraaLiving={LW,run,reduced,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,resumeWeather:()=>{const svg=document.getElementById('mapSvg'),P=svg&&photoBox(svg),S=SEERAA_SCENES[viewWorld];if(P&&S){paintMood(svg,P,S.mood||'');scheduleGust(svg.closest('.map-frame'),!!LANES[S.asset]?.dusty)}},repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
 })();

@@ -1,0 +1,30 @@
+{
+  "badr-today.webp": {
+    "title": "General view of the battlefield and burial ground of Badr (4)",
+    "author": "Prof. Mortel",
+    "date": "2021-06-09",
+    "source": "https://commons.wikimedia.org/wiki/File:General_view_of_the_battlefield_and_burial_ground_of_Badr,_Saudi_Arabia,_site_of_the_historic_battle_between_the_Prophet_Muhammad_and_the_Quraysh_in_624_(4).jpg",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "changes": "Resized and converted to WebP"
+  },
+  "uhud-today.webp": {
+    "title": "Mount Uhud Panorama",
+    "author": "Ahmed Abdulbasit (Pakistan)",
+    "date": "2019-01-06",
+    "source": "https://commons.wikimedia.org/wiki/File:Mount_Uhud_Panorama.jpg",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "changes": "Resized and converted to WebP; derivative remains CC BY-SA 4.0"
+  },
+  "../scenes/badr.webp": {
+    "type": "AI-generated historically inspired illustration",
+    "date": "2026-10-14",
+    "note": "Imaginative course setting; not a photograph or archaeological reconstruction"
+  },
+  "../scenes/uhud-v2.webp": {
+    "type": "AI-generated historically inspired illustration",
+    "date": "2026-10-14",
+    "note": "Imaginative course setting; not a photograph or archaeological reconstruction"
+  }
+}
