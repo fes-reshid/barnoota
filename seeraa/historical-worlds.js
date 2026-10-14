@@ -1,25 +1,25 @@
 /* Historically inspired village scenes. Captions describe locations, not exact surviving buildings. */
 const SEERAA_SCENES=[
  {place:'Arabia · Desert routes to Makkah',asset:'tabuk',focus:0.42,light:'sepia(.12)',landmark:'Caravan routes',note:'Deserts, oases and trade routes crossed Arabia. Makkah, with the Kaʿbah, was a meeting place for the tribes.',present:1},
- {place:'Makkah · The Kaʿbah and Zamzam',asset:'makkah',focus:0.7,light:'sepia(.15)',landmark:'The well of Zamzam',note:'ʿAbd al-Muṭṭalib dug Zamzam again near the Kaʿbah. The houses are an imaginative reconstruction.',present:0,zoom:1.15},
+ {place:'Makkah · The Kaʿbah and Zamzam',asset:'makkah',trail:'kaaba',focus:0.7,light:'sepia(.15)',landmark:'The well of Zamzam',note:'ʿAbd al-Muṭṭalib dug Zamzam again near the Kaʿbah. The houses are an imaginative reconstruction.',present:0,zoom:1.15},
  {place:'Makkah · The valley Abrahah marched towards',asset:'makkah',focus:0.2,light:'sepia(.22) saturate(.9) brightness(1.05)',landmark:'The road into Makkah',note:'Abrahah’s army came from Yemen to destroy the Kaʿbah. The people of Makkah waited in the mountains.',present:1,zoom:1.12,mood:'dusk'},
- {place:'Makkah · Childhood neighbourhood',asset:'makkah',focus:0.32,light:'sepia(.12) brightness(1.04)',landmark:'Homes of old Makkah',note:'Prophet Muhammad ﷺ was born in Makkah. These houses are an imaginative reconstruction, not his identified house.',present:1,zoom:1.28,mood:'dawn'},
+ {place:'Makkah · Childhood neighbourhood',asset:'makkah',trail:'market',focus:0.32,light:'sepia(.12) brightness(1.04)',landmark:'Homes of old Makkah',note:'Prophet Muhammad ﷺ was born in Makkah. These houses are an imaginative reconstruction, not his identified house.',present:1,zoom:1.28,mood:'dawn'},
  {place:'The desert of Banū Saʿd · Tents and flocks',asset:'hijrah',road:'oasis',focus:0.3,light:'sepia(.1) saturate(1.05)',landmark:'Ḥalīmah’s desert',note:'The Prophet ﷺ spent his early years in the open desert with Ḥalīmah’s family, then returned to Makkah.',present:-1,zoom:1.15},
  {place:'The caravan road to Shām',asset:'tabuk',focus:0.6,light:'sepia(.15) brightness(1.02)',landmark:'The road north to Buṣrā',note:'Caravans from Makkah travelled north to Shām. Baḥīrā met the young Muhammad ﷺ near Buṣrā.',present:-1,zoom:1.1},
- {place:'Makkah · The old market lanes',asset:'makkah',focus:0.46,light:'sepia(.2) saturate(.85)',landmark:'Trading courtyards',note:'The young Muhammad ﷺ was known for honesty in trade and was trusted by everyone in Makkah.',present:2,zoom:1.18},
- {place:'Makkah · Rebuilding the Kaʿbah',asset:'makkah',focus:0.76,light:'brightness(1.05)',landmark:'The Kaʿbah rebuilt',note:'When the Kaʿbah was rebuilt, his fair solution placed the Black Stone without a fight.',present:0},
+ {place:'Makkah · The old market lanes',asset:'makkah',trail:'lanes',focus:0.46,light:'sepia(.2) saturate(.85)',landmark:'Trading courtyards',note:'The young Muhammad ﷺ was known for honesty in trade and was trusted by everyone in Makkah.',present:2,zoom:1.18},
+ {place:'Makkah · Rebuilding the Kaʿbah',asset:'makkah',trail:'kaaba',focus:0.76,light:'brightness(1.05)',landmark:'The Kaʿbah rebuilt',note:'When the Kaʿbah was rebuilt, his fair solution placed the Black Stone without a fight.',present:0},
  {place:'Jabal al-Nūr · The Cave of Ḥirāʾ',asset:'hira',focus:0.56,light:'',landmark:'Cave of Ḥirāʾ',note:'The first revelation came at Ḥirāʾ on Jabal al-Nūr, a mountain outside Makkah.',present:3},
  {place:'Makkah · The house of al-Arqam',asset:'makkah',focus:0.58,light:'brightness(.93) saturate(.9)',landmark:'Near Ṣafā',note:'For about three years the first Muslims met quietly in the house of al-Arqam near Ṣafā.',present:4,zoom:1.1},
- {place:'Makkah · The hill of Ṣafā',asset:'makkah',focus:0.62,light:'sepia(.1) brightness(.98)',landmark:'Ṣafā',note:'The Prophet ﷺ called the people of Makkah openly from the hill of Ṣafā.',present:4,zoom:1.22},
- {place:'Makkah · The burning plain',asset:'makkah',focus:0.4,light:'sepia(.3) saturate(1.2) brightness(1.06)',landmark:'The heat of Makkah',note:'The weakest Muslims were harmed in the midday heat, yet they stayed firm.',present:1,zoom:1.2},
+ {place:'Makkah · The hill of Ṣafā',asset:'makkah',trail:'market',focus:0.62,light:'sepia(.1) brightness(.98)',landmark:'Ṣafā',note:'The Prophet ﷺ called the people of Makkah openly from the hill of Ṣafā.',present:4,zoom:1.22},
+ {place:'Makkah · The burning plain',asset:'makkah',trail:'lanes',focus:0.4,light:'sepia(.3) saturate(1.2) brightness(1.06)',landmark:'The heat of Makkah',note:'The weakest Muslims were harmed in the midday heat, yet they stayed firm.',present:1,zoom:1.2},
  {place:'Abyssinia · A place of refuge',asset:'abyssinia',focus:0.5,light:'',landmark:'Refuge under the Najāshī',note:'Some early Muslims crossed the sea to Abyssinia, where a just ruler gave them protection.',present:5,zoom:1.3},
- {place:'Makkah · Around the Kaʿbah',asset:'makkah',focus:0.7,light:'brightness(.96)',landmark:'The Kaʿbah courtyard',note:'After Ḥamzah and ʿUmar accepted Islam, the Muslims prayed openly at the Kaʿbah.',present:0,zoom:1.15},
+ {place:'Makkah · Around the Kaʿbah',asset:'makkah',trail:'kaaba',focus:0.7,light:'brightness(.96)',landmark:'The Kaʿbah courtyard',note:'After Ḥamzah and ʿUmar accepted Islam, the Muslims prayed openly at the Kaʿbah.',present:0,zoom:1.15},
  {place:'Makkah · The valley of Abū Ṭālib',asset:'hira',focus:0.3,light:'sepia(.25) saturate(.8) brightness(.9)',landmark:'Shiʿb Abī Ṭālib',note:'For about three years the Prophet’s family were boycotted in a narrow valley of Makkah.',present:1,zoom:1.15},
  {place:'Ṭāʾif · Mountain village and gardens',asset:'taif',focus:0.5,light:'',landmark:'Ṭāʾif',note:'The Prophet ﷺ visited Ṭāʾif during the difficult Makkah years and chose mercy when people rejected him.',present:6,zoom:1.25},
- {place:'Makkah to al-Aqṣā · The Night Journey',asset:'makkah',focus:0.65,light:'brightness(.58) saturate(.62) contrast(1.05)',landmark:'From Makkah to al-Masjid al-Aqṣā',note:'In one night Allah took His Prophet ﷺ from Makkah to al-Aqṣā in Jerusalem and up through the heavens.',present:0,mood:'night'},
+ {place:'Makkah to al-Aqṣā · The Night Journey',asset:'makkah',trail:'lanes',focus:0.65,light:'brightness(.58) saturate(.62) contrast(1.05)',landmark:'From Makkah to al-Masjid al-Aqṣā',note:'In one night Allah took His Prophet ﷺ from Makkah to al-Aqṣā in Jerusalem and up through the heavens.',present:0,mood:'night'},
  {place:'Minā · Tents of the pilgrims',asset:'hijrah',road:'oasis',focus:0.62,light:'sepia(.15) brightness(.95)',landmark:'Minā at Ḥajj time',note:'At Ḥajj the Prophet ﷺ visited the tribes. Here he met the first believers from Yathrib.',present:7},
  {place:'ʿAqabah · Hills outside Makkah at night',asset:'hijrah',road:'cave',focus:0.52,light:'brightness(.58) saturate(.62) contrast(1.05)',landmark:'The pledges at ʿAqabah',note:'The pledges at ʿAqabah near Minā prepared the way for the migration to Madīnah.',present:7,zoom:1.2,mood:'night'},
- {place:'Makkah · Quiet lanes at night',asset:'makkah',focus:0.3,light:'brightness(.58) saturate(.62) contrast(1.05)',landmark:'Leaving Makkah',note:'The Muslims left Makkah quietly, often at night. The Prophet ﷺ left last, with Abū Bakr.',present:1,zoom:1.12,mood:'night'},
+ {place:'Makkah · Quiet lanes at night',asset:'makkah',trail:'market',focus:0.3,light:'brightness(.58) saturate(.62) contrast(1.05)',landmark:'Leaving Makkah',note:'The Muslims left Makkah quietly, often at night. The Prophet ﷺ left last, with Abū Bakr.',present:1,zoom:1.12,mood:'night'},
  {place:'The Hijrah · Thawr to the oasis',asset:'hijrah',road:'cave',focus:0.48,light:'',landmark:'The journey to Madīnah',note:'The Prophet ﷺ and Abū Bakr sheltered in the Cave of Thawr, then continued towards Madīnah.',present:8},
  {place:'Qubāʾ and Madīnah · A new home',asset:'madinah',focus:0.38,light:'',landmark:'The first masjid',note:'The Prophet ﷺ reached Qubāʾ before central Madīnah. The early masjids had simple architecture.',present:9,zoom:1.15,mood:'dawn'},
  {place:'Madīnah · The masjid and the market',asset:'madinah',road:'plaza',focus:0.55,light:'sepia(.08)',landmark:'The Prophet’s Masjid',note:'The Muhājirūn and Anṣār built the masjid together and became brothers.',present:9,zoom:1.1},
@@ -66,7 +66,11 @@ function pictureRoad(S){const r=PICTURE_ROADS[S.asset]||PICTURE_ROADS.makkah;ret
 /* The lesson trail on each painting, as fractions of the picture: a tour that starts near the bottom,
    wanders over the open ground and ends at the top right. "wide" is for wide screens, "tall" for phones. */
 const PICTURE_TRAILS={
- makkah:{wide:[[.54,.91],[.62,.84],[.53,.76],[.42,.67],[.36,.57],[.30,.47],[.24,.37],[.33,.31],[.47,.29],[.60,.31],[.72,.35],[.86,.32]],tall:[[.55,.95],[.66,.88],[.58,.79],[.54,.70],[.60,.60],[.64,.51],[.68,.43],[.75,.37],[.82,.335]]},
+ makkah:{wide:[[.54,.91],[.62,.84],[.53,.76],[.42,.67],[.36,.57],[.30,.47],[.24,.37],[.33,.31],[.47,.29],[.60,.31],[.72,.35],[.86,.32]],tall:[[.55,.95],[.66,.88],[.58,.79],[.54,.70],[.60,.60],[.64,.51],[.68,.43],[.75,.37],[.82,.335]],
+  /* other routes through the same painting, so the Makkah maps do not all look alike */
+  market:{wide:[[.40,.93],[.55,.95],[.68,.90],[.70,.82],[.60,.76],[.47,.71],[.42,.62],[.50,.60],[.60,.56],[.635,.50],[.66,.445],[.68,.38],[.72,.345],[.82,.36],[.90,.33]],tall:[[.62,.95],[.70,.87],[.60,.80],[.56,.70],[.60,.60],[.66,.46],[.67,.40],[.70,.35],[.80,.36],[.88,.31]]},
+  lanes:{wide:[[.62,.93],[.70,.86],[.62,.80],[.50,.78],[.43,.72],[.47,.64],[.40,.58],[.33,.50],[.28,.42],[.36,.36],[.46,.37],[.56,.40],[.64,.44],[.70,.38],[.80,.35],[.90,.31]],tall:[[.44,.95],[.56,.90],[.50,.80],[.43,.74],[.46,.66],[.38,.60],[.32,.52],[.30,.44],[.26,.37],[.34,.31],[.44,.28]]},
+  kaaba:{wide:[[.45,.94],[.58,.90],[.66,.82],[.58,.74],[.56,.66],[.60,.57],[.64,.49],[.66,.42],[.68,.36],[.74,.345],[.82,.36],[.90,.35],[.95,.30]],tall:[[.56,.95],[.66,.89],[.60,.80],[.56,.71],[.62,.62],[.66,.52],[.64,.44],[.70,.39],[.78,.375],[.86,.36],[.88,.30]]}},
  madinah:{wide:[[.64,.94],[.72,.85],[.62,.74],[.52,.64],[.42,.53],[.36,.43],[.30,.33],[.42,.37],[.52,.44],[.63,.47],[.74,.45],[.86,.40]],tall:[[.58,.95],[.70,.86],[.62,.75],[.54,.65],[.47,.55],[.55,.47],[.64,.46],[.72,.44]]},
  hijrah:{wide:[[.50,.93],[.63,.85],[.56,.75],[.46,.67],[.46,.56],[.36,.46],[.25,.36],[.18,.29],[.32,.34],[.48,.39],[.62,.42],[.67,.34],[.78,.27]],tall:[[.52,.95],[.64,.86],[.56,.76],[.50,.66],[.55,.56],[.63,.49],[.68,.42],[.63,.36],[.70,.30]]},
  tabuk:{wide:[[.42,.93],[.55,.86],[.60,.76],[.68,.68],[.53,.62],[.44,.53],[.42,.45],[.49,.39],[.58,.33],[.70,.30],[.82,.27]],tall:[[.44,.95],[.56,.87],[.48,.77],[.42,.67],[.50,.58],[.44,.50],[.45,.42],[.52,.36]]},
@@ -77,7 +81,7 @@ const PICTURE_TRAILS={
  'uhud-v2':{wide:[[.10,.93],[.20,.82],[.30,.74],[.22,.64],[.32,.58],[.44,.62],[.52,.56],[.46,.48],[.58,.46],[.70,.50],[.82,.47],[.90,.42]],tall:[[.30,.95],[.40,.87],[.32,.78],[.36,.70],[.46,.64],[.56,.58],[.50,.52],[.58,.47],[.64,.43]]},
  abyssinia:{wide:[[.38,.94],[.50,.88],[.62,.80],[.55,.70],[.42,.64],[.40,.55],[.48,.48],[.45,.42],[.55,.36],[.66,.29],[.76,.22]],tall:[[.42,.95],[.55,.88],[.60,.79],[.50,.70],[.42,.62],[.47,.54],[.50,.47],[.46,.41]]}
 };
-function pictureTrail(S,tall){const t=PICTURE_TRAILS[S.asset]||PICTURE_TRAILS.makkah;return tall?t.tall:t.wide}
+function pictureTrail(S,tall){const a=PICTURE_TRAILS[S.asset]||PICTURE_TRAILS.makkah,t=(S.trail&&a[S.trail])||a;return tall?t.tall:t.wide}
 function mapFrameScale(L){const frame=document.querySelector('#mapScreen .map-frame')||document.querySelector('.map-frame');return((frame&&frame.clientWidth)||window.innerWidth)/L.W}
 /* the part of the map the trail may use: below the title and the map label, clear of the side arrows */
 function trailBox(L,tall,k){return tall?[L.W*.13,L.W*.87,Math.max(L.H*.2,150/k),L.H*.9]:[L.W*.075,L.W*.925,Math.max(L.H*.18,118/k),L.H*.92]}
@@ -101,12 +105,15 @@ function historicalRoadPoints(L){const tall=L.base===MAP_LAYOUTS.tall,P=historic
  const pts=pictureTrail(P.S,tall).map(proj).map(([x,y])=>[Math.round(Math.min(B[1],Math.max(B[0],x))),Math.round(Math.min(B[3],Math.max(B[2],y)))]);
  const lo=Math.max(48,58/k),bottom=L.H-Math.max(24,26/k);L.entry=[Math.round(lo),Math.round(bottom)];
  L.exit=[Math.round(L.W-34-14/k),Math.round(100+76/k)];
- const out=[L.entry,[L.entry[0]+70,L.entry[1]-26],...pts.filter(p=>p[0]>L.entry[0]+120||p[1]<L.entry[1]-150),[L.exit[0]-60,L.exit[1]+34],L.exit];
+ const rest=pts.filter(p=>p[0]>L.entry[0]+120||p[1]<L.entry[1]-150),hook=[L.entry[0]+70,L.entry[1]-26],first=rest[0];
+ /* a long way from the door to the painted trail rises gently, so the first stops are not on one flat line */
+ const rise=first&&first[0]-hook[0]>L.W*.28?[[Math.round(hook[0]+(first[0]-hook[0])*.45),Math.round(Math.max(B[2],Math.min(hook[1],first[1])-L.H*(tall?.07:.13)))]]:[];
+ const out=[L.entry,hook,...rise,...rest,[L.exit[0]-60,L.exit[1]+34],L.exit];
  return out}
 // The avatar and the translucent village trail use the same continuous geometry.
 placeAlong=function(samp,m){const len=samp.at(-1)[2],G=MAP_GEO,dk=G?mapFrameScale(G):1,dx=Math.max(80,62/dk),clear=(p,d)=>!d||Math.abs(p[0]-d[0])>dx||p[1]<d[1]-Math.max(140,120/dk)||p[1]>d[1]+42;
  /* stops never sit on the doors: the trail now starts and ends at a door on the painted street */
- const first=samp.find(p=>clear(p,G&&G.entry)),last=[...samp].reverse().find(p=>clear(p,G&&G.exit)),start=Math.max(len*.04,first?first[2]:len*.08),end=Math.min(len*.97,last?last[2]:len*.94);/* on phones the ◀ ▶ buttons sit in the bottom-right corner */const tallMap=G&&G.base===MAP_LAYOUTS.tall,underArrows=p=>tallMap&&p[0]>G.W-125/dk&&p[1]>G.H-90/dk,candidates=samp.filter(p=>p[2]>=start&&p[2]<=end&&!underArrows(p));let selected=[];
+ const first=samp.find(p=>clear(p,G&&G.entry)),last=[...samp].reverse().find(p=>clear(p,G&&G.exit)),start=Math.max(len*.04,first?first[2]:len*.08),end=Math.min(len*.97,last?last[2]:len*.94);/* on phones the ◀ ▶ buttons sit in the bottom-right corner */const tallMap=G&&G.base===MAP_LAYOUTS.tall,underArrows=p=>tallMap&&p[0]>G.W-150/dk&&p[1]>G.H-95/dk,candidates=samp.filter(p=>p[2]>=start&&p[2]<=end&&!underArrows(p));let selected=[];
  // Select stops across the visible lane, rejecting positions that overlap earlier stops.
  // Search all candidates together so a bend or a cropped lane cannot stack numbers.
  const gap=MAP_GEO.base===MAP_LAYOUTS.tall?92:80;let attempts=0;

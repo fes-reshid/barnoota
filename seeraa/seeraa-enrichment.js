@@ -71,15 +71,16 @@
     svg.querySelectorAll('.se-story-stop').forEach(el => el.remove());
     const nodes = [...svg.querySelectorAll('.node')];
     if (nodes.length !== 4) return;
-    const spots = placeAlong(L.road, 8);
-    const lessonSlots = [0, 1, 3, 4];
-    L.lessons = lessonSlots.map(i => spots[i].p);
+    // Only the stops this map has are spread along the trail, so there are no empty gaps.
+    const stories = data.stories.filter(s => s.map === viewWorld).slice(0, 2);
+    const order = ['l0', 'l1', ...(stories[0] ? ['s0'] : []), 'l2', 'l3', ...(stories[1] ? ['s1'] : []), 'cards', 'quiz'];
+    const spots = placeAlong(L.road, order.length), at = key => spots[order.indexOf(key)];
+    L.lessons = [0, 1, 2, 3].map(i => at('l' + i).p);
     nodes.forEach((node, i) => node.setAttribute('transform', `translate(${L.lessons[i].join(' ')})`));
-    L.flash = spots[6].p; L.quiz = spots[7].p; L.quizS = spots[7].s;
+    L.flash = at('cards').p; L.quiz = at('quiz').p; L.quizS = at('quiz').s;
     document.querySelector('#roadFlashBtn')?.setAttribute('transform', `translate(${L.flash.join(' ')})`);
     document.querySelector('#roadQuizBtn')?.setAttribute('transform', `translate(${L.quiz.join(' ')})`);
-    L.extraStories = [spots[2].p, spots[5].p];
-    const stories = data.stories.filter(s => s.map === viewWorld);
+    L.extraStories = stories.map((_, i) => at('s' + i).p);
     stories.forEach((original, i) => {
       const s = storyFor(original.id), p = L.extraStories[i], done = complete(s.id), allowed = accessible(s);
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
