@@ -162,7 +162,20 @@ document.head.insertAdjacentHTML('beforeend',`<style>.present-day-photo[hidden]{
 
 document.head.insertAdjacentHTML('beforeend',`<style>#mapSvg .node .disc,#mapSvg .quiz-disc{fill:url(#dustMarker)!important;stroke-width:2!important}#mapSvg .node.locked .disc,#mapSvg .map-quiz-road.locked .quiz-disc{fill-opacity:.66}#mapSvg .node .pulse,#mapSvg .map-quiz-road .pulse{stroke:#c29d64;stroke-width:3;opacity:.65}#mapSvg .node text[y="8"]{fill:#493722!important;font-weight:700}.map-frame .map-title{background:#846442;border-color:#e9d7b1}#mapSvg .node:hover .disc{stroke:#f3e0b4;stroke-width:3!important}</style>`);
 
-function faceWalkingDirection(walker,dx,dy){if(!walker||Math.hypot(dx,dy)<.01)return;const facing=Math.abs(dy)>Math.abs(dx)*2?(dy<0?'away':'toward'):(dx<0?'left':'right');if(walker.dataset.facing===facing)return;walker.dataset.facing=facing;walker.innerHTML=facing==='away'?mapPersonBackMarkup('walking-avatar'):facing==='toward'?mapPersonMarkup('walking-avatar'):mapPersonSideMarkup('walking-avatar',facing==='left')}
+/* The explorer faces where it is going: seen from behind when heading up the map (into the picture),
+   side-on when the way runs across, and from the front when coming down. A new facing must hold for a few
+   frames before the figure turns, so bends in the path do not make it flicker. */
+function faceWalkingDirection(walker,dx,dy){if(!walker||Math.hypot(dx,dy)<.01)return;
+ const facing=dy<-Math.abs(dx)*.75?'away':dy>Math.abs(dx)*1.2?'toward':dx<0?'left':'right';
+ if(walker.dataset.facing===facing){walker.dataset.want='';return}
+ if(walker.dataset.facing){if(walker.dataset.want!==facing){walker.dataset.want=facing;walker.dataset.wantN='1';return}if(+walker.dataset.wantN<6){walker.dataset.wantN=String(+walker.dataset.wantN+1);return}}
+ walker.dataset.facing=facing;walker.dataset.want='';
+ walker.innerHTML=facing==='away'?mapPersonBackMarkup('walking-avatar'):facing==='toward'?mapPersonMarkup('walking-avatar'):(typeof mapPersonProfileMarkup==='function'?mapPersonProfileMarkup('walking-avatar',facing==='left'):mapPersonSideMarkup('walking-avatar',facing==='left'))}
+/* swing the legs and arms of the side-on walker (front and back views swing with CSS) */
+function strideWalker(walker,ms){const pv=walker&&walker.querySelector('.profile-view');if(!pv)return;const ph=ms/1000*Math.PI*2*1.7,a=Math.sin(ph)*26,b=Math.abs(Math.cos(ph))*1.4;
+ const set=(sel,ang,x,y)=>{const e=pv.querySelector(sel);if(e)e.setAttribute('transform',`rotate(${ang.toFixed(1)} ${x} ${y})`)};
+ set('.pw-leg.near',a,0,2);set('.pw-leg.far',-a,0,2);set('.pw-arm.near',-a*.8,0,-9);set('.pw-arm.far',a*.8,0,-9);
+ const torso=pv.querySelector('.pw-torso');if(torso)torso.setAttribute('transform',`translate(0 ${(-b).toFixed(2)})`)}
 function nearestWalkingDistance(road,p){return road.reduce((best,q)=>Math.hypot(q[0]-p.x,q[1]-p.y)<Math.hypot(best[0]-p.x,best[1]-p.y)?q:best,road[0])[2]}
 
 document.head.insertAdjacentHTML('beforeend',`<style>#mapSvg .node .disc,#mapSvg .quiz-disc,#mapSvg .se-stop-disc{stroke:#fff8e6!important;stroke-width:3!important;filter:drop-shadow(0 3px 3px rgba(40,25,8,.45))}#mapSvg .node text[y="8"]{fill:#4a3010!important}.trail-v2 .trail-dots{animation:trailFlow 1.4s linear infinite}@keyframes trailFlow{to{stroke-dashoffset:-16.1}}@media(prefers-reduced-motion:reduce){.trail-v2 .trail-dots{animation:none}}</style>`);

@@ -1,4 +1,6 @@
-/* Seeraa event scenes: Badr, Uḥud, Ḥudaybiyyah and the Opening of Makkah.
+/* Seeraa event scenes: Badr, Uḥud, Ḥudaybiyyah, the Opening of Makkah, the Madinah welcome,
+   Zamzam, the Black Stone, the first revelation, Abyssinia, building the masjid, the Trench
+   and the Farewell Pilgrimage.
    Each scene plays along the dusty road of its map (figures shrink with
    distance, a short caption at the bottom) and again, with fuller captions,
    at the top of its lesson story. Fighting is shown gently — raised swords,
@@ -310,6 +312,226 @@ function nasheedButton(host,lyricBox,stillHere){
 function mapNasheed(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return;
  Nasheed.stop();frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
  const box=document.createElement('div');box.className='lw-lyrics';box.setAttribute('aria-live','polite');frame.appendChild(box);nasheedButton(frame,box)}
+/* ---------- more Seerah moments (each with Arabic-first speech where the words are reported) ---------- */
+const pingpong=x=>{const m=((x%2)+2)%2;return m<1?m:2-m};
+const fadeIO=(t,end)=>f3(t<.8?t/.8:t>end?clamp(1-(t-end)/1.8,0,1):1);
+function plainBg(c1,c2,c3,hill,ground,extra=''){const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset=".6" stop-color="${c2}"/><stop offset="1" stop-color="${c3}"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 168 L70 128 L130 150 L210 112 L290 150 L370 118 L450 152 L530 120 L600 140 L600 260 L0 260Z" fill="${hill}"/><path d="M0 196 Q150 176 300 194 T600 188 L600 260 L0 260Z" fill="${ground}"/><rect y="216" width="600" height="44" fill="${ground}"/>${extra}`}
+function workerSvg(o){const i=o.i||0,tunic=o.tunic||['#efe6d2','#d9c9a8','#c9b28a','#e2d6bd','#b98a5a'][i%5],skin=SKIN[i%SKIN.length],wrap=['#f4efe2','#e8e2d0','#d9cdb4','#7c5236'][i%4],woman=o.woman;
+ let tool;
+ if(o.tool==='pick')tool=`<line x1="5" y1="-32" x2="12" y2="-40" stroke="${tunic}" stroke-width="4" stroke-linecap="round"/><line x1="12" y1="-40" x2="16" y2="-14" stroke="#6b4b2b" stroke-width="2.2" stroke-linecap="round"/><path d="M8-15 Q16-20 25-13" stroke="#7d848e" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
+ else if(o.tool==='brick')tool=`<line x1="5" y1="-32" x2="10" y2="-25" stroke="${tunic}" stroke-width="4" stroke-linecap="round"/><g class="lwX-load"><rect x="5" y="-31" width="14" height="8" rx="1.5" fill="#b0784a" stroke="#6e4528" stroke-width="1"/><path d="M12-31 v8" stroke="#6e4528" stroke-width=".7"/></g>`;
+ else if(o.tool==='basket')tool=`<line x1="5" y1="-32" x2="5" y2="-50" stroke="${tunic}" stroke-width="4" stroke-linecap="round"/><g class="lwX-load"><path d="M-9-58 h18 l-3 8 h-12Z" fill="#a0743f" stroke="#6d4a26" stroke-width="1"/><path d="M-7-58 q7-6 14 0" fill="#9c7a52"/></g>`;
+ else if(o.tool==='jug')tool=`<line x1="5" y1="-32" x2="9" y2="-21" stroke="${tunic}" stroke-width="4" stroke-linecap="round"/><path d="M7-23 q-5 0-5 7 q0 6 7 6 q7 0 7-6 q0-7-5-7 v-3 h-4Z" fill="#b5643a" stroke="#6e3a1f" stroke-width="1"/>`;
+ else if(o.tool==='gift')tool=`<line x1="5" y1="-32" x2="9" y2="-24" stroke="${tunic}" stroke-width="4" stroke-linecap="round"/><g class="lwX-load"><rect x="3" y="-31" width="17" height="11" rx="2" fill="#8a5a2b" stroke="#4d3015" stroke-width="1"/><path d="M3-26 h17 M11-31 v11" stroke="#e4b85a" stroke-width="1.4"/></g>`;
+ else tool=`<line x1="5" y1="-32" x2="9" y2="-20" stroke="${woman?['#3b3433','#4a3b35','#5b4636'][i%3]:tunic}" stroke-width="4" stroke-linecap="round"/>`;
+ return `<g>${LEG(-3,-15,-4,0,'a','#3f3021',2.6)}${LEG(3,-15,4,0,'b','#3f3021',2.6)}</g><path d="M-8-${woman?4:13} L-6-36 Q0-39 6-36 L${woman?9:8}-${woman?4:13}Z" fill="${woman?['#3b3433','#4a3b35','#5b4636'][i%3]:tunic}" stroke="#00000030" stroke-width=".8"/>`
+  +(woman?`<path d="M-7-36 Q-8-50 0-50 Q8-50 7-36 Q8-30 0-31 Q-8-30-7-36Z" fill="${['#3b3433','#4a3b35','#2f3438'][i%3]}"/><circle cx="2.5" cy="-42" r="3.6" fill="${skin}"/>`
+         :`<circle cx="0" cy="-42" r="5.6" fill="${skin}"/><path d="M-7-41 Q-7-51 0-51 Q7-51 7-43 L8-38 Q4-40 2-42 L-1-42 Q-4-40-8-38Z" fill="${wrap}"/>`)
+  +`<g class="lwX-arm">${tool}</g>`}
+const KING=`<path d="M-15 0 V-46 Q-15-54-7-54 H7 Q15-54 15-46 V0Z" fill="#c9a43a" stroke="#8a6d1f" stroke-width="1.2"/><path d="M-12-2 V-44 H12 V-2Z" fill="#7a2f5a"/><path d="M-8-4 L-6-30 Q0-34 6-30 L8-4Z" fill="#f2ead8"/><path d="M-9-24 h18" stroke="#c9a43a" stroke-width="2"/><circle cx="0" cy="-37" r="5.8" fill="${SKIN[2]}"/><path d="M-6-41 L-6-47 -3-44 0-49 3-44 6-47 6-41Z" fill="#e4b85a" stroke="#9a7220" stroke-width=".6"/>`;
+const TEAR=`<ellipse rx="1.6" ry="2.4" fill="#8fd0ff" stroke="#3d7fb0" stroke-width=".5"/>`;
+const CLOAK=`<path d="M-30-3 Q0 4 30-3 L28 5 Q0 11-28 5Z" fill="#9b2f2a" stroke="#5e1b18" stroke-width="1"/><path d="M-26 1 Q0 7 26 1" stroke="#e4b85a" stroke-width="1.2" fill="none"/>`;
+const STONE=`<ellipse cx="0" cy="-5" rx="9" ry="6.5" fill="#1d1a1a" stroke="#000" stroke-width=".8"/><ellipse cx="-3" cy="-7" rx="3" ry="1.6" fill="#fff" opacity=".18"/>`;
+const PILE=`<path d="M-22 0 L-18-7 H18 L22 0Z" fill="#a46c40"/><path d="M-16-7 L-13-13 H13 L16-7Z" fill="#b0784a"/><path d="M-10-13 L-8-18 H8 L10-13Z" fill="#a46c40"/><path d="M-18-7 H18 M-13-13 H13 M-6-7 V0 M6-7 V0 M0-13 V-7" stroke="#6e4528" stroke-width=".8"/>`;
+const EARTH=`<path d="M-24 0 Q-14-16 0-18 Q14-16 24 0Z" fill="#b8925f" stroke="#8a6a3f" stroke-width="1"/>`;
+const SPRAY=[...Array(9)].map((_,i)=>`<circle class="lwX-drop" data-d="${i}" r="2.6" fill="#7fc6ef" stroke="#3d86b8" stroke-width=".6"/>`).join('');
+const WIND=[...Array(7)].map((_,i)=>`<path class="lwX-gust" d="M0 0 q40-8 80 0 t80 0" stroke="#fff" stroke-opacity=".75" stroke-width="2.2" fill="none" stroke-linecap="round"/>`).join('');
+function depthSort(g,list,top){if(!list.length)return;list._n=(list._n||0)+1;if(list._n%4!==1)return;[...list].filter(m=>m.y!=null).sort((a,b)=>a.y-b.y).forEach(m=>g.appendChild(m.el));(top||[]).forEach(m=>g.appendChild(m.el))}
+const place=(m,p,k,d=1)=>{m.x=p[0];m.y=p[1];put(m.el,p,k,d)};
+const headOf=(m,p,k,h=62)=>[p[0],p[1]-h*k];
+const Q={
+ zamzam:{who:'ʿAbd al-Muṭṭalib · Ibn Isḥāq',k:'sahabi',ar:'اللَّهُ أَكْبَرُ',en:'Allah is the Greatest!'},
+ amin:{who:'The people of Quraysh · Ibn Isḥāq',k:'people',ar:'هَذَا الْأَمِينُ، رَضِينَا',en:'This is al-Amīn, the trustworthy one — we are happy with him!'},
+ alaq1:{who:'The first words of the Qurʾān · 96:1',k:'quran',ar:'اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ',en:'Read in the name of your Lord who created.'},
+ alaq3:{who:'Sūrat al-ʿAlaq 96:3–4',k:'quran',ar:'اقْرَأْ وَرَبُّكَ الْأَكْرَمُ ۝ الَّذِي عَلَّمَ بِالْقَلَمِ',en:'Read, and your Lord is the Most Generous, who taught by the pen.'},
+ jafar:{who:'Jaʿfar ibn Abī Ṭālib · Aḥmad 1740',k:'sahabi',ar:'أَيُّهَا الْمَلِكُ، كُنَّا قَوْمًا أَهْلَ جَاهِلِيَّةٍ… حَتَّى بَعَثَ اللَّهُ إِلَيْنَا رَسُولًا مِنَّا',en:'O King, we were a people of ignorance… until Allah sent us a Messenger from among us.'},
+ najashi:{who:'The Najāshī, king of Abyssinia · Aḥmad 1740',k:'king',ar:'اذْهَبُوا فَأَنْتُمْ سُيُومٌ بِأَرْضِي',en:'Go — you are safe in my land.'},
+ masjid:{who:'The Prophet ﷺ, building with them · al-Bukhārī 428',k:'nabi',ar:'اللَّهُمَّ لَا خَيْرَ إِلَّا خَيْرُ الْآخِرَهْ، فَاغْفِرْ لِلْأَنْصَارِ وَالْمُهَاجِرَهْ',en:'O Allah, there is no good except the good of the Hereafter, so forgive the Anṣār and the Muhājirūn.'},
+ trench1:{who:'The Prophet ﷺ · al-Bukhārī 2834',k:'nabi',ar:'اللَّهُمَّ إِنَّ الْعَيْشَ عَيْشُ الْآخِرَهْ، فَاغْفِرْ لِلْأَنْصَارِ وَالْمُهَاجِرَهْ',en:'O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.'},
+ trench2:{who:'The companions replied · al-Bukhārī 2834',k:'people',ar:'نَحْنُ الَّذِينَ بَايَعُوا مُحَمَّدَا، عَلَى الْجِهَادِ مَا بَقِينَا أَبَدَا',en:'We are the ones who pledged to Muhammad ﷺ to strive for as long as we live!'},
+ ask:{who:'The Prophet ﷺ at ʿArafah · Muslim 1218',k:'nabi',ar:'وَأَنْتُمْ تُسْأَلُونَ عَنِّي، فَمَا أَنْتُمْ قَائِلُونَ؟',en:'You will be asked about me. What will you say?'},
+ witness:{who:'The pilgrims · Muslim 1218',k:'people',ar:'نَشْهَدُ أَنَّكَ قَدْ بَلَّغْتَ وَأَدَّيْتَ وَنَصَحْتَ',en:'We bear witness that you conveyed the message, fulfilled it and gave sincere advice.'},
+ ishhad:{who:'The Prophet ﷺ · Muslim 1218',k:'nabi',ar:'اللَّهُمَّ اشْهَدْ، اللَّهُمَّ اشْهَدْ',en:'O Allah, be witness! O Allah, be witness!'},
+ akmaltu:{who:'Revealed at ʿArafah · al-Māʾidah 5:3',k:'quran',ar:'الْيَوْمَ أَكْمَلْتُ لَكُمْ دِينَكُمْ',en:'Today I have perfected your religion for you.'}
+};
+const sayIn=(t,list)=>{for(const [a,b,q,at] of list)if(t>=a&&t<b)return{say:[q,at[0],at[1]]};return null};
+
+/* ---------- Zamzam (Map 2) ---------- */
+const ZAMZAM={
+ re:/zamzam/i,story:/zamzam/i,cycle:26,still:12,
+ label:'Animated scene: ʿAbd al-Muṭṭalib and his son dig, the old well appears and Zamzam water flows again',
+ caps:[[0,'ʿAbd al-Muṭṭalib dreams that he must dig Zamzam — the blessed well of Ismāʿīl that had been covered and lost.','A dream: dig Zamzam!'],[3.5,'With his only son, al-Ḥārith, he digs near the Kaʿbah, day after day.','Digging with his son al-Ḥārith'],[10,'The stones of the old well appear. “Allāhu akbar!”','The old well appears!'],[14,'Zamzam water flows again, and the pilgrims come to drink.','Zamzam flows again']],
+ bg:()=>plainBg('#f6c98a','#fbe4b8','#f3d9a6','#c9a06a','#e2c08a',`<g transform="translate(540 216)">${kaabaSvg()}</g>`),
+ build(g,c){
+  const spot=c.side(.6,c.story?0:34),mound=mk(g,EARTH),well=mk(g,WELL),spray=mk(g,SPRAY);
+  const D=[mk(g,workerSvg({i:0,tool:'pick'}),{ph:0}),mk(g,workerSvg({i:3,tool:'pick'}),{ph:1.6})];
+  const V=[0,1,2,3,4].map(i=>mk(g,workerSvg({i:i+1,woman:i%2===0,tool:'jug'}),{ph:i*.9}));
+  const drops=[...spray.el.querySelectorAll('.lwX-drop')],all=[...D,...V];
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,23.5));
+   const ks=c.k(spot[1],56);
+   place(mound,[spot[0]+30*ks,spot[1]+2*ks],ks*(.35+.65*seg(t,3.5,10)));show(mound,1);
+   place(well,[spot[0],spot[1]+1],c.k(spot[1],20,.9));show(well,seg(t,9.6,10.6));
+   put(spray.el,[spot[0],spot[1]-10*ks],ks);show(spray,t>10.4&&t<15?1:0);
+   drops.forEach((d,i)=>{const ph=((t*1.6+i/9)%1),a=(i/9-.5)*1.6;d.setAttribute('cx',f1(Math.sin(a)*26*ph));d.setAttribute('cy',f1(-38*ph*(1-ph)*2.2+ph*6))});
+   D.forEach((m,j)=>{const home=[spot[0]+(j?-20:20)*ks,spot[1]+(j?-3:4)*ks],from=c.side(.18,j?-14:14),w=seg(t,0,3.4),p=mix(from,home,ease(w));
+    place(m,p,c.k(p[1],m.h),t<3.4?(home[0]>=from[0]?1:-1):(j?1:-1));stride(m,t,t<3.4);swing(m,t>=3.6&&t<9.8?Math.sin(t*5+m.ph)*38-10:0)});
+   V.forEach((m,j)=>{const to=c.side(.6-.05*(j+1),(j%2?-1:1)*(16+j*5)),from=c.side(.02,(j%2?-1:1)*10),w=seg(t,13+j*.6,18+j*.6),p=mix(from,to,ease(w));
+    place(m,p,c.k(p[1],m.h),to[0]>=from[0]?1:-1);show(m,t>13+j*.6?1:0);stride(m,t,w>0&&w<1)});
+   depthSort(g,all,[spray]);
+   return sayIn(t,[[10.4,13.8,Q.zamzam,headOf(D[0],[spot[0]+20*ks,spot[1]+4*ks],ks)]]);
+  };
+ }
+};
+
+/* ---------- The Black Stone (Map 8) ---------- */
+const BLACKSTONE={
+ re:/^the black stone$/i,story:/^the black stone$/i,cycle:27,still:15,
+ label:'Animated scene: the tribes argue over the Black Stone, then four leaders lift it together on a cloak and it is put back in the Kaʿbah',
+ caps:[[0,'Quraysh rebuild the Kaʿbah. Who will have the honour of putting the Black Stone back?','Who will place the Black Stone?'],[3.5,'The tribes argue. They agree: the first man through the gate will decide.','The tribes argue'],[7,'The first to come is Muhammad ﷺ, the one they call al-Amīn.','“This is al-Amīn!”'],[11,'He puts the stone on a cloak, and a leader from each tribe holds a corner.','Every tribe holds the cloak'],[16.5,'Together they carry it, and he puts the stone in its place with his own hands. Everyone is happy.','The stone is back in its place']],
+ bg:()=>plainBg('#f6c98a','#fbe4b8','#f3d9a6','#c9a06a','#e2c08a',`<g transform="translate(520 216)">${kaabaSvg()}</g>`),
+ build(g,c){
+  let K=c.story?[488,182]:c.pic(.752,.31);if(!c.story&&(!K||K[0]<c.W*.05||K[0]>c.W*.95||K[1]<c.H*.14))K=c.side(.95,-20);
+  const C0=c.story?c.at(.42):c.at(.5),cloak=mk(g,CLOAK),stone=mk(g,STONE),glow=mk(g,lightSvg());
+  const tribes=['#7a2f2a','#2f5c7a','#5c6b3c','#6a3d7a'],LDR=tribes.map((col,i)=>mk(g,workerSvg({i:i+1,tunic:col}),{ph:i}));
+  const corner=[[-26,-5],[26,-5],[-22,5],[22,5]];
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,24.5));
+   const carry=ease(seg(t,13.5,17)),Kfront=mix(C0,K,.82),ctr=mix(C0,Kfront,carry),k=c.k(ctr[1],56),lift=seg(t,11,12.6)*(1-seg(t,19.5,20.8));
+   const cl=[ctr[0],ctr[1]-(4+16*lift)*k];place(cloak,cl,k);
+   LDR.forEach((m,i)=>{const p=[ctr[0]+corner[i][0]*k,ctr[1]+corner[i][1]*k];place(m,p,c.k(p[1],m.h),i%2?-1:1);stride(m,t,t>=13.5&&t<17);
+    const argue=t<6.6?Math.sin(t*6+i*1.7)*30-20:0;swing(m,lift>0?-100*lift:argue)});
+   const up=ease(seg(t,17.2,19.2)),sp=mix([cl[0],cl[1]-2*k],[K[0],K[1]-26*k],up);place(stone,sp,k*(1-.25*up));
+   const lp=t<6?c.side(.06,-30):t<9?mix(c.side(.06,-30),[C0[0]-40*k,C0[1]],ease(seg(t,6,9))):mix([C0[0]-40*k,C0[1]],[K[0]-30*k,K[1]],carry*.8+up*.2);
+   put(glow.el,[lp[0],lp[1]-30*k],k*.62);show(glow,t>5.6?.85+.15*Math.sin(t*2.2):0);
+   depthSort(g,[...LDR,cloak],[stone,glow]);
+   return sayIn(t,[[7.4,10.8,Q.amin,headOf(LDR[0],[ctr[0]+corner[0][0]*k,ctr[1]+corner[0][1]*k],k)]]);
+  };
+ }
+};
+
+/* ---------- The first revelation, the cave of Ḥirāʾ (Map 9) ---------- */
+const HIRA={
+ re:/^read!$/i,story:/^read!$/i,cycle:22,still:8,
+ label:'Animated scene: a light at the cave of Ḥirāʾ and the first words of the Qurʾān',
+ caps:[[0,'The Prophet ﷺ often went alone to the cave of Ḥirāʾ, on Jabal al-Nūr, to think and to worship Allah.','The cave of Ḥirāʾ'],[4.5,'In Ramaḍān, when he was forty, the angel Jibrīl came with the first words of the Qurʾān.','The first revelation'],[12.5,'The light of the Qurʾān had begun — guidance for all people.','A light for all people']],
+ bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2650"/><stop offset=".55" stop-color="#4a4f7a"/><stop offset="1" stop-color="#c79a74"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/>${[...Array(26)].map((_,i)=>`<circle cx="${(i*97)%600}" cy="${(i*53)%110+8}" r="${1+(i%3)*.5}" fill="#fffbe8" opacity="${.5+(i%4)*.12}"/>`).join('')}<path d="M180 260 L330 70 L420 110 L560 260Z" fill="#7a5a44"/><path d="M330 70 L360 112 L400 104 L420 110 L380 150 L340 120Z" fill="#664a37"/><path d="M0 230 Q150 200 300 226 T600 220 L600 260 L0 260Z" fill="#a8825c"/><path d="M372 136 Q384 120 398 136 L398 150 L372 150Z" fill="#241a14"/>`},
+ build(g,c){
+  const P=c.story?[385,142]:(()=>{const a=c.at(.6);return[a[0]+c.k(a[1],56)*40,a[1]-c.k(a[1],56)*46]})(),glow=mk(g,lightSvg()),sp=[...Array(6)].map(()=>mk(g,SPARK));
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,19.5));
+   const k=c.story?1.2:c.k(P[1],56)*1.8,bright=t<4.2?.55+.15*Math.sin(t*2):1;
+   put(glow.el,[P[0],P[1]+15*k*.6],k*(t<4.2?.5:.5+.25*seg(t,4.2,5.4)+.04*Math.sin(t*3)));show(glow,bright);
+   sp.forEach((s,i)=>{const a=t*.8+i*Math.PI/3,r=(26+6*Math.sin(t*2+i))*k;put(s.el,[P[0]+Math.cos(a)*r,P[1]+Math.sin(a)*r*.6],k*.55);show(s,t>4.4&&((t*3+i*.4)%1)<.6)});
+   return sayIn(t,[[5,11.6,Q.alaq1,[P[0],P[1]-22*k]],[12,17.8,Q.alaq3,[P[0],P[1]-22*k]]]);
+  };
+ }
+};
+
+/* ---------- Abyssinia: the just king (Map 13) ---------- */
+const NAJASHI={
+ re:/^the just king$/i,story:/^(gifts from makkah|the just king)$/i,cycle:27,still:16,
+ label:'Animated scene: the Muslims before the Najāshī, king of Abyssinia; Jaʿfar speaks, the king protects them and the gifts are sent back',
+ caps:[[0,'Quraysh send two men with fine leather gifts to the Najāshī: “Send these Muslims back to us!”','Gifts from Makkah'],[6,'The king calls the Muslims to speak for themselves. Jaʿfar ibn Abī Ṭālib speaks for them.','Jaʿfar speaks'],[12.4,'Jaʿfar recites from Sūrat Maryam. The king weeps until his beard is wet.','The king weeps at Sūrat Maryam'],[15,'The king protects them, and the gifts are sent back.','“You are safe in my land”']],
+ bg:()=>plainBg('#9fcbe0','#e6efd0','#cfe0a8','#8fae6a','#b9c98a'),
+ build(g,c){
+  const T=c.story?[520,216]:c.side(.9,-26),king=mk(g,KING,{h:56}),guards=[0,1].map(i=>mk(g,warriorSvg({side:'m',i:i+2,weapon:'spear'}))),tears=[0,1,2].map(()=>mk(g,TEAR));
+  const E=[0,1].map(i=>mk(g,workerSvg({i:i+2,tunic:['#8a2f28','#5a2c3a'][i],tool:'gift'}),{ph:i}));
+  const M=[...Array(8)].map((_,i)=>mk(g,workerSvg({i,woman:i%3===2}),{ph:i*.8}));
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,24.5));
+   const kk=c.k(T[1],56);place(king,T,kk*1.1,-1);
+   guards.forEach((m,i)=>{const p=[T[0]+(i?28:-28)*kk,T[1]+(i?2:-2)*kk];place(m,p,c.k(p[1],m.h),-1)});
+   tears.forEach((m,i)=>{const ph=(t*1.2+i/3)%1,on=t>=12.6&&t<15.4;put(m.el,[T[0]-3*kk,T[1]-(38-14*ph)*kk*1.1],kk*1.1);show(m,on?1-ph:0)});
+   E.forEach((m,i)=>{const stand=c.story?[T[0]-(56+i*26),T[1]]:c.side(.8-i*.04,i?-14:14),away=c.side(.18,i?-12:12),w=ease(seg(t,18.6,23.5)),p=mix(stand,away,w);
+    place(m,p,c.k(p[1],m.h),t<18.6?1:-1);stride(m,t,w>0&&w<1)});
+   M.forEach((m,i)=>{const row=Math.floor(i/2),to=c.story?[T[0]-120-row*30-(i%2)*12,T[1]]:c.side(.66-row*.045,(i%2?-1:1)*(10+row*3)),from=c.side(-.02,(i%2?-1:1)*8),w=ease(seg(t,1+i*.35,7+i*.35)),p=mix(from,to,w);
+    place(m,p,c.k(p[1],m.h),1);show(m,t>1+i*.35?1:0);stride(m,t,w>0&&w<1)});
+   depthSort(g,[king,...guards,...E,...M],tears);
+   const j0=c.story?[T[0]-120,T[1]]:c.side(.66,10),kj=c.k(j0[1],56);
+   return sayIn(t,[[8,12.4,Q.jafar,headOf(M[0],j0,kj)],[15.2,18.6,Q.najashi,[T[0],T[1]-62*kk*1.1]]]);
+  };
+ }
+};
+
+/* ---------- Building the masjid in Madīnah (Map 23) ---------- */
+const MASJID={
+ re:/^the masjid and the bond$/i,story:/^the masjid and the bond$/i,cycle:24,still:11,
+ label:'Animated scene: the Muhājirūn and Anṣār carry mud bricks together and build the masjid in Madīnah',
+ caps:[[0,'In Madīnah, the first thing the Prophet ﷺ built was a masjid, on land bought from two orphan boys.','Building the masjid'],[4.5,'Everyone helped. Muhājirūn and Anṣār carried mud bricks together, and the Prophet ﷺ carried bricks with them.','Everyone carries bricks'],[13.5,'Palm trunks became the pillars and palm leaves the roof. The masjid became the heart of Madīnah.','Palm-trunk pillars, a palm-leaf roof']],
+ bg:()=>plainBg('#a9d3ee','#f0e4c8','#ead3a2','#b99a6a','#e2c896'),
+ build(g,c){
+  const S=c.story?[440,216]:c.side(.7,30),B=c.story?[110,216]:c.side(.32,-28),pile=mk(g,PILE),wall=mk(g,''),glow=mk(g,lightSvg());
+  const C=[...Array(7)].map((_,i)=>mk(g,workerSvg({i:i+1,tool:'brick'}),{ph:i*.53}));
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,21.5));
+   const ks=c.k(S[1],56),hgt=4+18*seg(t,2,14),pil=seg(t,12.5,14),roof=seg(t,14,15.6);
+   wall.el.innerHTML=`<rect x="-62" y="${-hgt}" width="124" height="${hgt}" fill="#b98656" stroke="#7a5230" stroke-width="1"/>${[...Array(Math.floor(hgt/5))].map((_,r)=>`<path d="M-62 ${-5*(r+1)} H62" stroke="#7a5230" stroke-width=".6"/>`).join('')}${pil?[-48,-16,16,48].map(x=>`<rect x="${x-3}" y="${-24-26*pil}" width="6" height="${26*pil}" fill="#7a5a36"/>`).join(''):''}${roof?`<path d="M-66 ${-50+2*(1-roof)} Q0 ${-58} 66 ${-50} L66 -45 L-66 -45Z" fill="#6f8e45" opacity="${f3(roof)}"/><path d="M-60-50 l8 6 M-40-52 l7 7 M-20-53 l7 7 M0-53 l7 7 M20-52 l7 7 M40-51 l7 6" stroke="#9fbf6a" stroke-width="1.6" opacity="${f3(roof)}"/>`:''}`;
+   put(wall.el,S,ks);put(pile.el,B,c.k(B[1],56));
+   C.forEach((m,i)=>{const u=pingpong(t*.22+m.ph),going=Math.floor((((t*.22+m.ph)%2)+2)%2)===0,lat=(i%2?-1:1)*(6+i*3),a=c.story?[B[0]+30,B[1]]:c.side(.34,lat),b=c.story?[S[0]-80,S[1]]:c.side(.66,lat),p=mix(a,b,ease(u));
+    place(m,p,c.k(p[1],m.h),(going?1:-1)*(b[0]>=a[0]?1:-1));stride(m,t,true,7);const ld=m.el.querySelector('.lwX-load');if(ld)ld.setAttribute('opacity',going?'1':'0')});
+   const lp=[S[0]-70*ks,S[1]-34*ks+Math.sin(t*1.4)*3*ks];put(glow.el,lp,ks*.62);show(glow,.8+.2*Math.sin(t*2.1));
+   depthSort(g,[pile,wall,...C],[glow]);
+   return sayIn(t,[[7.5,12.5,Q.masjid,[lp[0],lp[1]-26*ks]]]);
+  };
+ }
+};
+
+/* ---------- The Trench (Map 27) ---------- */
+const TRENCH={
+ re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,
+ label:'Animated scene: the believers dig the trench and sing, the army cannot cross, and a wind sends it home',
+ caps:[[0,'Year 5: an army of 10,000 is coming to Madīnah. Salmān al-Fārisī suggests digging a trench.','Salmān’s idea: a trench'],[4,'Everyone digs, cold and hungry — and they sing as they work.','Everyone digs and sings'],[13,'The enemy army arrives, but it cannot cross the trench.','The army cannot cross'],[18.5,'After weeks, Allah sends a cold, strong wind. Their tents and fires blow away, and they go home.','A wind from Allah ends the siege']],
+ bg:()=>plainBg('#b8c8d6','#ece2cc','#e8d2a2','#b48e64','#dcc08e'),
+ build(g,c){
+  const f0=c.story?.5:.55,T0=c.at(f0),band=mk(g,''),heap=mk(g,EARTH),glow=mk(g,lightSvg()),gust=mk(g,WIND);
+  const D=[...Array(5)].map((_,i)=>mk(g,workerSvg({i,tool:'pick'}),{ph:i*1.3})),K=[...Array(3)].map((_,i)=>mk(g,workerSvg({i:i+5,tool:'basket'}),{ph:i*.6}));
+  const E=army(g,['spear','h',{w:'flag',flag:'#a3272b'},'sword','h','spear'],'q'),tents=[0,1,2].map(i=>mk(g,tentSvg(['#c9b28a','#a8875a','#d9c39a'][i])));
+  const dir=(()=>{const a=c.at(f0-.02),b=c.at(f0+.02),dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;return[dx/l,dy/l]})(),nrm=[-dir[1],dir[0]];
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,25.5));
+   const k=c.k(T0[1],56),len=(c.story?230:170*k)*seg(t,2,11),wdt=(c.story?6:9*k);
+   const P=(s,w)=>c.story?[T0[0]+s,T0[1]+w]:[T0[0]+nrm[0]*s+dir[0]*w*.5,T0[1]+nrm[1]*s*.28+Math.abs(dir[1])*w*.5];
+   if(len>1){const q=c.story?[[T0[0]-len,T0[1]-wdt],[T0[0]+len,T0[1]-wdt],[T0[0]+len,T0[1]+wdt],[T0[0]-len,T0[1]+wdt]]:[P(-len,-wdt),P(len,-wdt),P(len,wdt),P(-len,wdt)];band.el.innerHTML=`<path d="M${q.map(p=>f1(p[0])+' '+f1(p[1])).join(' L')}Z" fill="#4a3624" stroke="#2c1f14" stroke-width="1.5"/>`}else band.el.innerHTML='';
+   const hp=c.story?[T0[0]-150,T0[1]]:c.side(f0-.12,-34);place(heap,hp,c.k(hp[1],56)*(.4+.6*seg(t,3,12)));
+   const keep=t<13,dig=t>=2&&t<12.6;
+   D.forEach((m,i)=>{const s=(i-2)*(c.story?44:36*k),p=c.story?[T0[0]+s-6,T0[1]-wdt-1]:(()=>{const b=P(s,-wdt*2.2);return[b[0],b[1]]})();place(m,p,c.k(p[1],m.h),i%2?1:-1);swing(m,dig?Math.sin(t*5+m.ph)*40-12:0);stride(m,t,false)});
+   K.forEach((m,i)=>{const u=pingpong(t*.25+m.ph),a=c.story?[T0[0]-40-i*16,T0[1]]:c.side(f0-.03,(i-1)*22),b=hp,p=mix(a,b,ease(u));place(m,p,c.k(p[1],m.h),(Math.floor((((t*.25+m.ph)%2)+2)%2)===0?1:-1)*(b[0]>=a[0]?1:-1));stride(m,t,keep);show(m,t<18?1:0)});
+   const wind=seg(t,18.5,20),leave=ease(seg(t,20,25));
+   E.forEach((m,i)=>{const row=Math.floor(i/2),stop=c.story?[T0[0]+60+row*44+(i%2)*18,T0[1]]:c.side(f0+.08+row*.05,(i%2?-1:1)*14),from=c.story?[640+i*30,T0[1]]:c.side(1.08,(i%2?-1:1)*10),arrive=ease(seg(t,13,16.5)),p=leave>0?mix(stop,from,leave):mix(from,stop,arrive);
+    place(m,p,c.k(p[1],m.h,m.big),leave>0?1:-1);stride(m,t,(arrive>0&&arrive<1)||(leave>0&&leave<1),m.horse?10:8,m.horse?22:16);show(m,t>13?(leave>.8?1-(leave-.8)*5:1):0)});
+   tents.forEach((m,i)=>{const at=c.story?[T0[0]+130+i*50,T0[1]-4]:c.side(f0+.2+i*.06,(i-1)*40),blow=ease(seg(t,18.8+i*.2,21.5+i*.2)),p=[at[0]+blow*(c.story?260:c.W*.25),at[1]-blow*30*k];place(m,p,c.k(at[1],30)*(1-.3*blow));m.el.setAttribute('transform',m.el.getAttribute('transform')+` rotate(${f1(blow*70)})`);show(m,t>15?1-blow:0)});
+   const gp=c.story?[60,150]:[c.W*.15,T0[1]-60*k];put(gust.el,[gp[0]+((t*260)%(c.story?400:c.W*.7)),gp[1]],c.story?1:k*1.4);show(gust,wind>0&&t<23?.8:0);
+   const lp=[T0[0]-nrm[0]*0-40*(c.story?1:k),T0[1]-(c.story?70:62*k)];put(glow.el,lp,(c.story?1:k)*.6);show(glow,t<18?.8+.2*Math.sin(t*2):0);
+   depthSort(g,[heap,...D,...K,...E,...tents],[glow,gust]);
+   const d0=D[0].y!=null?[D[0].x,D[0].y]:T0;
+   return sayIn(t,[[4.6,8.4,Q.trench1,[lp[0],lp[1]-20*(c.story?1:k)]],[8.6,12.6,Q.trench2,[d0[0],d0[1]-62*k]]]);
+  };
+ }
+};
+
+/* ---------- The Farewell Pilgrimage (Map 31) ---------- */
+const FAREWELL={
+ re:/^the farewell pilgrimage$/i,story:/^the farewell pilgrimage$/i,cycle:27,still:13.5,
+ label:'Animated scene: the pilgrims at ʿArafah answer the Prophet ﷺ, who is shown only as a light above his camel',
+ caps:[[0,'Year 10: more than 100,000 Muslims come to Ḥajj with the Prophet ﷺ.','100,000 pilgrims at Ḥajj'],[6,'At ʿArafah he speaks to them from his camel, al-Qaṣwāʾ.','The sermon at ʿArafah'],[19.5,'That day Allah revealed: “Today I have perfected your religion for you.”','“Today I have perfected your religion”']],
+ bg:()=>plainBg('#f3c58c','#fbe6c0','#f0d6a2','#c79a62','#e6c890',`<path d="M380 216 Q430 150 480 150 Q530 150 560 216Z" fill="#b38a5a"/>`),
+ build(g,c){
+  const A=c.story?[470,216]:c.side(.86,-20),cam=mk(g,camel({saddle:'#9b2f2a'}),{h:60,big:1.1,camel:1}),glow=mk(g,lightSvg());
+  const Pg=[...Array(16)].map((_,i)=>mk(g,pilgrimSvg(i),{ph:i*.7}));
+  return t=>{
+   g.setAttribute('opacity',fadeIO(t,24.5));
+   const ka=c.k(A[1],60,1.1);place(cam,A,ka,-1);stride(cam,t,false);
+   const lp=[A[0],A[1]-80*ka];put(glow.el,lp,ka*.7);show(glow,.85+.15*Math.sin(t*2));
+   Pg.forEach((m,i)=>{const row=Math.floor(i/4),col=i%4,to=c.story?[A[0]-90-row*42-col*9,A[1]-(col%2)*5]:c.side(.74-row*.05,(col-1.5)*16),from=c.side(-.02,(col-1.5)*8),w=ease(seg(t,i*.25,5+i*.25)),p=mix(from,to,w);
+    place(m,p,c.k(p[1],m.h),to[0]>=from[0]?1:-1);stride(m,t,w>0&&w<1);show(m,t>i*.25?1:0);swing(m,t>=12&&t<16?-60-Math.sin(t*4+i)*20:0)});
+   depthSort(g,[cam,...Pg],[glow]);
+   const cr=c.story?[A[0]-150,A[1]]:c.side(.66,0),kc=c.k(cr[1],56);
+   return sayIn(t,[[8,11.8,Q.ask,[lp[0],lp[1]-24*ka]],[12,15.8,Q.witness,[cr[0],cr[1]-62*kc]],[16,19.2,Q.ishhad,[lp[0],lp[1]-24*ka]],[19.6,24,Q.akmaltu,[lp[0],lp[1]-24*ka]]]);
+  };
+ }
+};
+
 /* ---------- register: one engine for the map road and for the story picture ---------- */
 function mapCaption(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return null;let el=frame.querySelector('.lw-scene-cap');if(!el){el=document.createElement('div');el.className='lw-scene-cap';el.setAttribute('aria-hidden','true');frame.appendChild(el)}
  /* sit at the bottom corner away from the entry door (and above the arrow buttons on phones) */
@@ -317,12 +539,17 @@ function mapCaption(){const frame=document.getElementById('mapSvg')?.closest('.m
  Object.assign(el.style,doorX>fw/2?{left:'12px',right:'auto',bottom:'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'}:{left:'auto',right:'12px',bottom:tall?'calc(70px + env(safe-area-inset-bottom,0px))':'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'});
  return el}
 function theatre(g,ctx,sc,capEl){
- const play=sc.build(g,ctx);let last=-1;
+ const play=sc.build(g,ctx);let last=-1,say=null;
+ /* a scene's play(t) may return {say:[quote,x,y]} (picture coordinates): a speech bubble over the picture */
+ function bubble(r){const svg=g.ownerSVGElement;if(!svg||!SL.sayBox)return;
+  if(!say){const host=ctx.story?svg.closest('.lw-theatre'):svg.closest('.map-frame');if(!host)return;say=SL.sayBox(host,ctx.story?48:64)}
+  if(!r||!r.say){say.set(null);return}
+  const [q,x,y]=r.say,rc=svg.getBoundingClientRect(),hr=say.el.parentNode.getBoundingClientRect(),vb=svg.viewBox&&svg.viewBox.baseVal,k=rc.width/((vb&&vb.width)||ctx.W);say.set(q,rc.left-hr.left+x*k,rc.top-hr.top+y*k)}
  return{svg:g,cycle:sc.cycle,still:sc.still,start:performance.now(),
   visible:ctx.story?()=>!document.hidden&&!!g.ownerSVGElement&&g.ownerSVGElement.getBoundingClientRect().width>0:mapShowing,
-  tick(t){play(t);if(capEl){let n=0;sc.caps.forEach((x,i)=>{if(t>=x[0])n=i});if(n!==last){last=n;capEl.textContent=sc.caps[n][ctx.story?1:2]}}}};
+  tick(t){const r=play(t);if(r||say)bubble(r);if(capEl){let n=0;sc.caps.forEach((x,i)=>{if(t>=x[0])n=i});if(n!==last){last=n;capEl.textContent=sc.caps[n][ctx.story?1:2]}}}};
 }
-[MADINAH,BADR,UHUD,HUDAYBIYYAH,FATH].forEach(sc=>SCENES.push({re:sc.re,story:sc.story,label:sc.label,
+[MADINAH,BADR,UHUD,HUDAYBIYYAH,FATH,ZAMZAM,BLACKSTONE,HIRA,NAJASHI,MASJID,TRENCH,FAREWELL].forEach(sc=>SCENES.push({re:sc.re,story:sc.story,label:sc.label,
  road:(g,L,P)=>{const th=theatre(g,mapCtx(L,P),sc,mapCaption());if(sc.nasheed)mapNasheed();return th},
  make:(svg,full,cap)=>{svg.innerHTML=sc.bg();const g=document.createElementNS(NS,'g');svg.appendChild(g);const th=theatre(g,storyCtx(),sc,cap);
   const fig=svg.parentNode;if(sc.nasheed&&fig&&!fig.querySelector('.lw-nasheed-btn')){const box=document.createElement('div');box.className='lw-lyrics inline';box.setAttribute('aria-live','polite');fig.appendChild(box);nasheedButton(fig,box)}
