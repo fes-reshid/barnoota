@@ -268,7 +268,24 @@ function elephantTheatre(svg,full,captionEl){
 /* Only the two camels of the Prophet ﷺ and Abū Bakr are shown — no riders —
    with a soft light above them. Surāqah ibn Mālik rides a horse, as the
    sources describe; its legs sink into the sand and he turns back. */
-const HIJRAH_CAPTIONS=[[0,'The Prophet ﷺ and Abū Bakr travel towards Madinah. Allah’s protection is with them.'],[2.6,'Surāqah ibn Mālik rides fast on his horse, hoping to catch them for a reward.'],[8,'As he comes close, his horse’s legs sink into the sand.'],[11.4,'Surāqah understands they are protected. He asks for safety and turns back.'],[15.5,'He even sends other searchers away. Allah protected His Messenger ﷺ on the Hijrah.']];
+const HIJRAH_CAPTIONS=[[0,'The Prophet ﷺ and Abū Bakr travel towards Madinah. Allah’s protection is with them.'],[2.4,'Surāqah ibn Mālik rides fast on his horse, hoping to catch them for a reward.'],[8,'As he comes close, his horse’s legs sink into the sand.'],[10.6,'Surāqah understands they are protected. He asks them to pray for him.'],[13.8,'He rides back and sends the other searchers away. Allah protected His Messenger ﷺ.']];
+/* What was said (Ṣaḥīḥ al-Bukhārī 3615 and 3652). Only words are shown: the Prophet ﷺ and Abū Bakr are never drawn. */
+const HIJRAH_SAYS=[
+ {k:'abubakr',who:'Abū Bakr',ar:'هَذَا الطَّلَبُ قَدْ لَحِقَنَا يَا رَسُولَ اللَّهِ',en:'O Messenger of Allah, the pursuer has caught up with us!'},
+ {k:'nabi',who:'The Prophet ﷺ',ar:'لَا تَحْزَنْ، إِنَّ اللَّهَ مَعَنَا',en:'Do not be sad. Allah is with us.'},
+ {k:'suraqah',who:'Surāqah',ar:'ادْعُوَا لِي، فَاللَّهُ لَكُمَا أَنْ أَرُدَّ عَنْكُمَا الطَّلَبَ',en:'Pray for me, and by Allah I will turn the searchers away from you.'},
+ {k:'suraqah',who:'Surāqah, to the searchers',ar:'قَدْ كَفَيْتُكُمْ مَا هُنَا',en:'I have already searched here for you.'}
+];
+/* a speech bubble over the picture; x, y is where its tail points, in pixels inside host */
+function sayBox(host,minTop){let el=host.querySelector(':scope > .lw-say');if(!el){el=document.createElement('div');el.className='lw-say';el.setAttribute('aria-live','polite');el.innerHTML='<b></b><span class="lw-say-ar" lang="ar" dir="rtl"></span><span class="lw-say-en"></span>';host.appendChild(el)}
+ let cur=-1,w=0,h=0;
+ return{el,set(i,x,y){
+  if(i>=0&&(x<-4||x>host.clientWidth+4||y<0||y>host.clientHeight))i=-1;
+  if(i!==cur){cur=i;el.classList.toggle('on',i>=0);if(i>=0){const q=HIJRAH_SAYS[i];el.dataset.who=q.k;el.querySelector('b').textContent=q.who;el.querySelector('.lw-say-ar').textContent=q.ar;el.querySelector('.lw-say-en').textContent=q.en;w=el.offsetWidth;h=el.offsetHeight}}
+  if(i<0)return;const W=host.clientWidth,left=clamp(x-w/2,6,Math.max(6,W-w-6)),top=Math.max(minTop||4,y-h-14);
+  el.style.transform=`translate(${left.toFixed(0)}px,${top.toFixed(0)}px)`;el.style.setProperty('--tail',clamp(x-left,16,w-16).toFixed(0)+'px');el.classList.toggle('below',y-h-14<(minTop||4))}};
+}
+const sayAt=(t,plan)=>{for(const [a,b,i] of plan)if(t>=a&&t<b)return i;return -1};
 function horseSvg(){return `<g class="lwH-legs"><line class="lw-leg a" x1="-15" y1="-25" x2="-17" y2="0"/><line class="lw-leg b" x1="-9" y1="-25" x2="-8" y2="0"/><g class="lwH-front"><line class="lw-leg b" x1="12" y1="-25" x2="13" y2="0"/><line class="lw-leg a" x1="18" y1="-25" x2="20" y2="0"/></g></g>`
  +`<path d="M-23-35q-9 4-7 15" stroke="#3a2416" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M-24-31 Q-22-43 -5-43 L14-43 Q23-43 25-35 L23-27 Q0-23-21-25Z" fill="#7a4e2d"/><path d="M16-41 L26-57 Q30-63 37-59 L41-53 Q39-50 35-51 L29-45 L23-34Z" fill="#7a4e2d"/><path d="M18-43 L28-59" stroke="#3a2416" stroke-width="3.2" stroke-linecap="round"/><circle cx="35" cy="-56" r="1.2" fill="#1d120a"/>`
  +`<g class="lwH-rider"><path d="M-7-42 L-5-62 Q1-65 7-62 L9-42Z" fill="#b2493b"/><line x1="6" y1="-58" x2="14" y2="-48" stroke="#b2493b" stroke-width="4" stroke-linecap="round"/><circle cx="1" cy="-69" r="5.5" fill="${SKIN[1]}"/><path d="M-6-68 Q-6-77 1-77 Q8-77 8-70 L9-64 Q5-66 3-69 L0-69 Q-3-67-7-64Z" fill="#e8e2d0"/><line x1="-8" y1="-80" x2="22" y2="-38" stroke="#6b4b2b" stroke-width="1.8"/></g>`}
@@ -284,23 +301,26 @@ function hijrahTheatre(svg,full,captionEl){
  svg.querySelectorAll('.lw-leg').forEach(l=>{l.setAttribute('stroke',l.closest('.lwH-horse')?'#5e3b21':'#9c7445');l.setAttribute('stroke-width',l.closest('.lwH-horse')?'4':'4.2');l.setAttribute('stroke-linecap','round')});
  let lastCap=-1;
  const swingLegs=(legs,a)=>legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?a:-a).toFixed(1)} ${x} ${y})`)});
- const pairX=t=>lerp(190,470,clamp(t/18,0,1)),stopX=pairX(8)-150;
- const th={svg,cycle:22,start:performance.now(),visible:()=>!document.hidden&&svg.getBoundingClientRect().width>0,
+ /* they pause while Surāqah is stuck, then go on */
+ const along=t=>t<7.5?t:t<13.5?7.5:t-6,pairX=t=>lerp(190,470,clamp(along(t)/18,0,1)),stopX=pairX(8)-150;
+ const host=svg.closest('.lw-theatre'),say=host&&sayBox(host,4),SAY=[[4.6,7.6,0],[7.8,10.4,1],[10.6,13.4,2],[13.9,16.6,3]];
+ const th={svg,cycle:26,start:performance.now(),visible:()=>!document.hidden&&svg.getBoundingClientRect().width>0,
   tick(t){
-   const pOp=t<.6?t/.6:t>19.5?clamp(1-(t-19.5)/2,0,1):1;
-   pair.setAttribute('transform',`translate(${pairX(t).toFixed(1)} 0)`);pair.setAttribute('opacity',pOp.toFixed(2));swingLegs(camelLegs,Math.sin(t*5)*12);
+   const pOp=t<.6?t/.6:t>23.5?clamp(1-(t-23.5)/2,0,1):1,px=pairX(t);
+   pair.setAttribute('transform',`translate(${px.toFixed(1)} 0)`);pair.setAttribute('opacity',pOp.toFixed(2));swingLegs(camelLegs,t>=7.5&&t<13.5?0:Math.sin(t*5)*12);
    light.setAttribute('opacity',(0.82+0.18*Math.sin(t*2.2)).toFixed(2));
    let hx,dir=1,gallop=0;
-   if(t<2)hx=-120;else if(t<8){hx=lerp(-120,stopX,ease((t-2)/6));gallop=1}else if(t<12.4){hx=stopX;dir=t<11.4?1:-1}else{hx=lerp(stopX,-160,ease(clamp((t-12.4)/4,0,1)));dir=-1;gallop=t<16.4?1:0}
-   const sink=t>=8&&t<11.4?Math.min(1,(t-8)/.6)*(t>10.6?1-(t-10.6)/.8:1):0;
+   if(t<2)hx=-120;else if(t<8){hx=lerp(-120,stopX,ease((t-2)/6));gallop=1}else if(t<13.8){hx=stopX;dir=t<13.2?1:-1}else{hx=lerp(stopX,-160,ease(clamp((t-13.8)/6,0,1)));dir=-1;gallop=t<19.8?1:0}
+   const sink=t>=8&&t<13.8?Math.min(1,(t-8)/.6)*(t>13?1-(t-13)/.8:1):0;
    horse.setAttribute('transform',`translate(${hx.toFixed(1)} ${(216+sink*9).toFixed(1)})`);flip.setAttribute('transform',`scale(${dir} 1)`);
    front.setAttribute('transform',`scale(1 ${(1-.5*sink).toFixed(3)})`);rider.setAttribute('transform',`rotate(${(sink*14).toFixed(1)} 0 -42)`);
    swingLegs(horseLegs,gallop?Math.sin(t*16)*24:0);
    const dustOn=gallop||sink>0;dust.setAttribute('transform',`translate(${(hx+(dir>0?-24:24)).toFixed(1)} 214) scale(${dustOn?1:.01})`);dust.setAttribute('opacity',dustOn?'.8':'0');
-   horse.setAttribute('opacity',t<2||t>17?'0':'1');
+   horse.setAttribute('opacity',t<2||t>20?'0':'1');
    if(captionEl){let c=0;HIJRAH_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=HIJRAH_CAPTIONS[c][1]}}
+   if(say){const i=sayAt(t,SAY);if(i<0)say.set(-1);else{const r=svg.getBoundingClientRect(),hr=host.getBoundingClientRect(),k=r.width/600,ox=r.left-hr.left,oy=r.top-hr.top,[x,y]=i<2?[px,full?82:90]:[hx,140];say.set(i,ox+x*k,oy+y*k)}}
   }};
- if(reduced()){th.tick(9);th.pausedT=9}LW.theatres.add(th);run()
+ if(reduced()){th.tick(11.5);th.pausedT=11.5}LW.theatres.add(th);run()
  return th;
 }
 /* ---------- the same scenes, walking along the map road ---------- */
@@ -348,23 +368,28 @@ function hijrahRoad(g,L,P){
  const M=[...g.querySelectorAll(':scope > .lwR-m')],light=g.querySelector('.lwR-light'),horse=g.querySelector('.lwR-horse'),hb=horse.querySelector('.lwR-body'),front=g.querySelector('.lwH-front'),rider=g.querySelector('.lwH-rider'),dust=g.querySelector('.lwR-dust');
  const camelLegs=M.flatMap(m=>[...m.querySelectorAll('.lw-leg')]),horseLegs=[...horse.querySelectorAll('.lw-leg')],dirs=[];
  g.querySelectorAll('.lw-leg').forEach(l=>{const h=!!l.closest('.lwR-horse');l.setAttribute('stroke',h?'#5e3b21':'#9c7445');l.setAttribute('stroke-width',h?'4':'4.2');l.setAttribute('stroke-linecap','round')});
- const pairS=t=>lerp(len*.12,len*.72,clamp(t/22,0,1)),stepAt=s=>92*depthAt(roadAt(R,s)[1],P,1,L.H*.085/60),catchS=pairS(10)-2.6*stepAt(pairS(10));
- const th={svg:g,cycle:26,start:performance.now(),visible:mapShowing,
+ /* the pair pauses while Surāqah is stuck in the sand, then goes on */
+ const along=t=>t<9.5?t:t<16?9.5:t-6.5,pairS=t=>lerp(len*.12,len*.72,clamp(along(t)/20,0,1)),stepAt=s=>92*depthAt(roadAt(R,s)[1],P,1,L.H*.085/60),catchS=pairS(10)-2.4*stepAt(pairS(10));
+ const frame=g.closest('.map-frame'),say=frame&&sayBox(frame,64),SAY=[[6.2,9.4,0],[9.6,12.4,1],[12.6,15.6,2],[16,19,3]];
+ const th={svg:g,cycle:30,start:performance.now(),visible:mapShowing,still:13.5,
   tick(t){
-   g.setAttribute('opacity',(t<.8?t/.8:t>23?clamp(1-(t-23)/1.8,0,1):1).toFixed(2));
-   const ps=pairS(t),step=stepAt(ps),pts=[];
+   g.setAttribute('opacity',(t<.8?t/.8:t>27?clamp(1-(t-27)/1.8,0,1):1).toFixed(2));
+   const ps=pairS(t),step=stepAt(ps),pts=[],paused=t>=9.5&&t<16;
    [0,-1.25].forEach((o,i)=>{const s=ps+o*step,p=roadAt(R,s),d=dirs[i]=roadDir(R,s,dirs[i]),k=Math.min(depthAt(p[1],P,1.1,L.H*.085/60),L.W*.17/60);pts.push([p,k]);M[i].setAttribute('transform',`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) scale(${(k*d).toFixed(3)} ${k.toFixed(3)})`)});
-   swingAll(camelLegs,Math.sin(t*5)*12);
-   const mx=(pts[0][0][0]+pts[1][0][0])/2,my=Math.min(pts[0][0][1],pts[1][0][1]),lk=(pts[0][1]+pts[1][1])/2;
-   light.setAttribute('transform',`translate(${mx.toFixed(1)} ${(my-88*lk).toFixed(1)}) scale(${(lk*.8).toFixed(3)})`);light.setAttribute('opacity',(0.82+0.18*Math.sin(t*2.2)).toFixed(2));
+   swingAll(camelLegs,paused?0:Math.sin(t*5)*12);
+   const mx=(pts[0][0][0]+pts[1][0][0])/2,my=Math.min(pts[0][0][1],pts[1][0][1]),lk=(pts[0][1]+pts[1][1])/2,ly=my-88*lk;
+   light.setAttribute('transform',`translate(${mx.toFixed(1)} ${ly.toFixed(1)}) scale(${(lk*.8).toFixed(3)})`);light.setAttribute('opacity',(0.82+0.18*Math.sin(t*2.2)).toFixed(2));
+   /* Surāqah: a little smaller than the camels */
    let hs,dir=null,gallop=0;
-   if(t<3)hs=len*.01;else if(t<10){hs=lerp(len*.01,catchS,ease((t-3)/7));gallop=1}else if(t<13.4){hs=catchS}else{hs=lerp(catchS,len*.0,ease(clamp((t-13.4)/4.6,0,1)));gallop=t<18?1:0}
-   const hp=roadAt(R,hs),hk=Math.min(depthAt(hp[1],P,1.1,L.H*.1/80),L.W*.2/80);dir=roadDir(R,hs,dirs[2]);dirs[2]=dir;if(t>=12.4)dir=-dir;
-   const sink=t>=10&&t<13.4?Math.min(1,(t-10)/.6)*(t>12.6?1-(t-12.6)/.8:1):0;
-   horse.setAttribute('transform',`translate(${hp[0].toFixed(1)} ${(hp[1]+sink*9*hk).toFixed(1)}) scale(${(hk*dir).toFixed(3)} ${hk.toFixed(3)})`);horse.setAttribute('opacity',t<3||t>18.5?'0':'1');
+   if(t<3)hs=len*.01;else if(t<10){hs=lerp(len*.01,catchS,ease((t-3)/7));gallop=1}else if(t<15.8){hs=catchS}else{hs=lerp(catchS,len*.0,ease(clamp((t-15.8)/4.6,0,1)));gallop=t<20.4?1:0}
+   const hp=roadAt(R,hs),hk=Math.min(depthAt(hp[1],P,.95,L.H*.08/80),L.W*.15/80);dir=roadDir(R,hs,dirs[2]);dirs[2]=dir;if(t>=15.2)dir=-dir;
+   const sink=t>=10&&t<15.8?Math.min(1,(t-10)/.6)*(t>15?1-(t-15)/.8:1):0;
+   horse.setAttribute('transform',`translate(${hp[0].toFixed(1)} ${(hp[1]+sink*9*hk).toFixed(1)}) scale(${(hk*dir).toFixed(3)} ${hk.toFixed(3)})`);horse.setAttribute('opacity',t<3||t>21.6?'0':'1');
    front.setAttribute('transform',`scale(1 ${(1-.5*sink).toFixed(3)})`);rider.setAttribute('transform',`rotate(${(sink*14).toFixed(1)} 0 -42)`);
    swingAll(horseLegs,gallop?Math.sin(t*16)*24:0);
-   const dustOn=(gallop||sink>0)&&t>=3&&t<=18.5;dust.setAttribute('transform',`translate(${(hp[0]-dir*24*hk).toFixed(1)} ${(hp[1]-2).toFixed(1)}) scale(${(dustOn?hk:.01).toFixed(3)})`);dust.setAttribute('opacity',dustOn?'.8':'0');
+   const dustOn=(gallop||sink>0)&&t>=3&&t<=21;dust.setAttribute('transform',`translate(${(hp[0]-dir*24*hk).toFixed(1)} ${(hp[1]-2).toFixed(1)}) scale(${(dustOn?hk:.01).toFixed(3)})`);dust.setAttribute('opacity',dustOn?'.8':'0');
+   /* speech bubbles: Abū Bakr and the Prophet's ﷺ reply rise from the light; Surāqah's from above his head */
+   if(say){const i=t>27?-1:sayAt(t,SAY);if(i<0)say.set(-1);else{const svgEl=g.ownerSVGElement,r=svgEl.getBoundingClientRect(),fr=frame.getBoundingClientRect(),k=r.width/L.W,[x,y]=i<2?[mx,ly-30*lk]:[hp[0],hp[1]-84*hk];say.set(i,r.left-fr.left+x*k,r.top-fr.top+y*k)}}
   }};
  return th;
 }
@@ -376,7 +401,7 @@ const SCENES=[
 function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
 function paintElephantSpot(){
  const svg=document.getElementById('mapSvg'),L=typeof MAP_GEO!=='undefined'&&MAP_GEO;if(!svg||!L)return;
- svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());LW.theatres.forEach(th=>{if(!th.svg.isConnected)LW.theatres.delete(th)});document.querySelectorAll('.lw-scene-cap,.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());if(window.SeeraaNasheed)window.SeeraaNasheed.stop();
+ svg.querySelectorAll('.lw-elephant-spot,.lw-road-scene').forEach(x=>x.remove());LW.theatres.forEach(th=>{if(!th.svg.isConnected)LW.theatres.delete(th)});document.querySelectorAll('.lw-scene-cap,.lw-nasheed-btn,.lw-lyrics,.map-frame > .lw-say').forEach(x=>x.remove());if(window.SeeraaNasheed)window.SeeraaNasheed.stop();
  if(!Array.isArray(L.road)||L.road.length<2)return;const P=photoBox(svg);if(!P)return;
  SCENES.forEach(sc=>{
   const gi=lessonIndexFor(sc.re);if(gi<0||lessons[gi].world!==viewWorld)return;
@@ -502,6 +527,19 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 @keyframes lwGust{0%{transform:translateX(0);opacity:0}25%{opacity:1}100%{transform:translateX(320%);opacity:0}}
 @keyframes lwSand{0%{transform:translate(0,0);opacity:0}20%{opacity:.9}100%{transform:translate(110vw,-30px);opacity:0}}
 .lw-road-scene{will-change:transform}
+.lw-road-scene .lwR-horse{filter:drop-shadow(0 0 1.6px rgba(255,250,235,.95)) drop-shadow(0 2px 2px rgba(40,25,10,.45))}
+.lw-say{position:absolute;left:0;top:0;z-index:6;max-width:min(300px,72%);box-sizing:border-box;padding:7px 12px 8px;border-radius:14px;background:#fffaf0;border:2px solid #d6b36a;box-shadow:0 3px 12px rgba(56,39,22,.28);color:#3f3021;pointer-events:none;opacity:0;transition:opacity .35s;text-align:center}
+.lw-say.on{opacity:1}
+.lw-say::after{content:'';position:absolute;left:var(--tail,50%);bottom:-9px;width:14px;height:14px;margin-left:-7px;background:inherit;border:inherit;border-top:0;border-left:0;transform:rotate(45deg);border-radius:0 0 3px 0}
+.lw-say.below::after{display:none}
+.lw-theatre .lw-replay{z-index:7}
+.lw-say b{display:block;font:800 11px/1.2 Nunito,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#8a6320;margin-bottom:2px}
+.lw-say[data-who="nabi"]{background:#fffbe6;border-color:#e8c45a}
+.lw-say[data-who="abubakr"]{background:#f3f8ee;border-color:#9cc08a}.lw-say[data-who="abubakr"] b{color:#3f6b33}
+.lw-say[data-who="suraqah"]{background:#fdf1ec;border-color:#c98a6e}.lw-say[data-who="suraqah"] b{color:#9a3f2a}
+.lw-say-ar{display:block;font:700 17px/1.7 Amiri,'Noto Naskh Arabic',serif;color:#3a2814}
+.lw-say-en{display:block;font:700 12.5px/1.35 Nunito,system-ui,sans-serif}
+@media(max-width:640px){.lw-say{max-width:min(250px,80%);padding:6px 10px}.lw-say-ar{font-size:15px}.lw-say-en{font-size:11.5px}}
 /* lesson story like the Extra story panel */
 #stage.lw-story{padding:0;overflow:hidden;text-align:left}
 #stage.lw-story>*:not(.lw-head){margin-left:clamp(16px,4vw,36px);margin-right:clamp(16px,4vw,36px)}
