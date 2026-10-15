@@ -547,7 +547,7 @@ window.SEERAA_COURSE=[
         "teach": "A buried blessing found again",
         "emoji": "💧",
         "arabic": "زَمْزَم",
-        "story": "The well of Zamzam had once gushed for baby Ismāʿīl and his mother Hājar. But many years later a tribe called Jurhum filled it in when they left Makkah, and over time nobody remembered exactly where it was. The Prophet’s grandfather, ʿAbd al-Muṭṭalib, began to have the same dream again and again: “Dig Zamzam!” In the dream he was shown signs of the place, near the Kaʿbah. At that time he had only one son, al-Ḥārith, so the two of them took their tools and dug, and dug, while some people laughed at them. Then the stone lining of the old well appeared, and fresh water began to flow. ʿAbd al-Muṭṭalib called out “Allāhu Akbar!” From that day he gave Zamzam water to the pilgrims, and to this day millions of people drink from that same blessed well.",
+        "story": "The well of Zamzam had once gushed for baby Ismāʿīl and his mother Hājar. Many years later, when the tribe of Jurhum were forced to leave Makkah, they filled the well in, levelled its place and buried many things in it — and in time nobody knew where it was. The Prophet’s grandfather, ʿAbd al-Muṭṭalib, was ordered in a dream to dig Zamzam in a particular place. He dug there and found the things Jurhum had buried: swords, armour and two deer made of gold. The gold of the swords and the two deer was used for the door of the Kaʿbah. When Zamzam water gushed out again, the leaders of Quraysh wanted a share in the well, but ʿAbd al-Muṭṭalib refused, saying that Allah had chosen him alone for this honour. They agreed to ask a diviner (a fortune-teller) of Banū Saʿd to settle it, and on the way Allah showed them signs that the well was his to care for. From then on, giving Zamzam water to the pilgrims became a tradition — and to this day millions of people drink from that same blessed well.",
         "picks": [
           {
             "q": "Who had covered up the well of Zamzam?",
@@ -560,17 +560,17 @@ window.SEERAA_COURSE=[
           {
             "q": "How did ʿAbd al-Muṭṭalib learn to dig it?",
             "options": [
-              "Through a dream he saw again and again",
+              "He was ordered in a dream",
               "A map he found",
               "A traveller from Shām told him"
             ]
           },
           {
-            "q": "Who helped him dig?",
+            "q": "What did he find buried in the well?",
             "options": [
-              "His son al-Ḥārith",
-              "His grandson Muḥammad",
-              "The whole tribe"
+              "Swords, armour and two golden deer",
+              "A box of old letters",
+              "Nothing at all"
             ]
           }
         ],
@@ -589,15 +589,15 @@ window.SEERAA_COURSE=[
             "a": true
           },
           {
-            "s": "ʿAbd al-Muṭṭalib dug with many sons at first.",
-            "a": false
+            "s": "Quraysh wanted a share in the well.",
+            "a": true
           },
           {
             "s": "People still drink Zamzam water today.",
             "a": true
           }
         ],
-        "benefit": "We learn that patience and effort can bring back a blessing, even when others laugh at us.",
+        "benefit": "We learn that Allah can bring back a lost blessing, and that a blessing is for sharing — like Zamzam water given to the pilgrims.",
         "vocab": [
           [
             "بِئْر",
@@ -615,7 +615,7 @@ window.SEERAA_COURSE=[
         "chapter": "The Prophet’s Family",
         "learn": {
           "points": [
-            "Keep trying even when people laugh at your good work.",
+            "Work hard to bring back something good that was lost, as ʿAbd al-Muṭṭalib dug Zamzam again.",
             "Zamzam is a blessed gift from Allah that began with the patience of Hājar.",
             "When Allah gives us a blessing, we should share it with others, like the water given to pilgrims."
           ],
@@ -4523,7 +4523,7 @@ window.SEERAA_COURSE=[
         "teach": "Justice cannot be bought",
         "emoji": "🎁",
         "arabic": "هَدَايَا قُرَيْش",
-        "story": "When Quraysh learned that the Muslims were living safely in Abyssinia, they were furious. They chose two clever men, ʿAmr ibn al-ʿĀṣ and ʿAbdullāh ibn Abī Rabīʿah, and loaded them with the finest leather and gifts. First the two men visited the king’s advisers and gave each of them a present. “Some foolish young people have run away from our religion,” they said. “When we speak to the king, tell him to hand them back without listening to them.” The advisers agreed. Then they went to the Najāshī himself, laid the gifts before him and asked for the Muslims to be sent home. The advisers all said, “They are right, O King — return them!” But the Najāshī became angry. “No, by Allah! People who have come to my land and chosen me over everyone else — I will not hand them over until I have called them and heard what they say.”",
+        "story": "When Quraysh learned that the Muslims were living safely in Abyssinia, they were furious. They chose two clever men, ʿAmr ibn al-ʿĀṣ and ʿAbdullāh ibn Abī Rabīʿah, and loaded them with valuable gifts for the king and his bishops. First the two men visited the king’s advisers and gave each of them a present. “Some foolish young people have run away from our religion,” they said. “When we speak to the king, tell him to hand them back without listening to them.” The advisers agreed. Then they went to the Najāshī himself, laid the gifts before him and asked for the Muslims to be sent home. The advisers all said, “They are right, O King — return them!” But the Najāshī became angry. “No, by Allah! People who have come to my land and chosen me over everyone else — I will not hand them over until I have called them and heard what they say.”",
         "picks": [
           {
             "q": "Whom did Quraysh send to Abyssinia?",
@@ -15174,7 +15174,7 @@ window.SEERAA_COURSE=[
         "teach": "Forgiveness when you are strong",
         "emoji": "🌄",
         "arabic": "فَتْحُ مَكَّة",
-        "story": "On the morning the Muslims entered Makkah, the Prophet ﷺ divided the army into groups to enter from different sides, with orders not to fight anyone unless they were attacked. The announcement went out: “Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.” Most of Makkah stayed quietly at home. Only a small group resisted near one entrance, and Khālid’s soldiers quickly stopped them. The Prophet ﷺ entered riding his camel, reciting Sūrat al-Fatḥ in a beautiful, rising voice, his head bowed so low in thankfulness to Allah that his beard almost touched the saddle. Eight years earlier he had left this city secretly at night, hunted by Quraysh; now he came back as a conqueror, without any pride. Then he gathered the people of Makkah, who had hurt him and his companions for twenty years. “What do you think I will do with you?” he asked. “Good — you are a noble brother, the son of a noble brother.” He told them that he would say to them what Yūsuf said to his brothers: “No blame on you today.” Then he said: “Go, you are free.”",
+        "story": "On the morning the Muslims entered Makkah, the Prophet ﷺ divided the army into groups to enter from different sides, with orders not to fight anyone unless they were attacked. The announcement went out: “Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.” Most of Makkah stayed quietly at home. Only a small group resisted near one entrance, and Khālid’s soldiers quickly stopped them. The Prophet ﷺ entered riding his camel, reciting Sūrat al-Fatḥ in a beautiful, rising voice. A tent was pitched for him, and there he prayed to thank Allah for the victory. Eight years earlier he had left this city secretly at night, hunted by Quraysh; now he came back as a conqueror, without any pride. Then he gathered the people of Makkah, who had hurt him and his companions for twenty years. “What do you think I will do with you?” he asked. “Good — you are a noble brother, the son of a noble brother.” He told them that he would say to them what Yūsuf said to his brothers: “No blame on you today.” Then he said: “Go, you are free.”",
         "picks": [
           {
             "q": "Who was safe when the Muslims entered Makkah?",
@@ -15187,7 +15187,7 @@ window.SEERAA_COURSE=[
           {
             "q": "How did the Prophet ﷺ enter Makkah?",
             "options": [
-              "With his head bowed in thankfulness",
+              "Reciting Sūrat al-Fatḥ and thanking Allah",
               "Boasting loudly",
               "Hidden at night"
             ]
@@ -15206,7 +15206,7 @@ window.SEERAA_COURSE=[
           "items": [
             "The army enters Makkah from different sides",
             "Safety is announced to the people",
-            "The Prophet ﷺ rides in with his head bowed",
+            "The Prophet ﷺ rides in reciting Sūrat al-Fatḥ",
             "He forgives the people of Makkah"
           ]
         },

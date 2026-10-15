@@ -85,7 +85,7 @@ function army(g,list,side){return list.map((x,i)=>x==='h'||(typeof x==='object'&
 const BADR={
  re:/^the day of badr$/i,story:/^the day of badr$/i,cycle:32,still:18,
  label:'Animated scene: the small Muslim army at the wells of Badr meets the larger army of Quraysh, which runs away',
- caps:[[0,'Ramaḍān, year 2: about 313 Muslims, with only 70 camels and 2 horses, reach the wells of Badr.','313 Muslims reach the wells of Badr'],[5.5,'The army of Quraysh — about a thousand, with many horses — comes down the valley.','Quraysh come with about 1,000'],[10.5,'The night before, Allah sent rain and calm sleep. The Prophet ﷺ prayed all night in a small shelter.','Rain, calm sleep and a night of duʿāʾ'],[15,'The armies meet. The believers stand firm together, and Allah sends His help.','The believers stand firm — Allah helps them'],[22.5,'The army of Quraysh breaks and runs. Allah gave the believers victory at Badr.','Quraysh run away — victory at Badr']],
+ caps:[[0,'Ramaḍān, year 2: about 313 Muslims, with only 70 camels and 2 horses, reach the wells of Badr.','313 Muslims reach the wells of Badr'],[5.5,'The army of Quraysh — about a thousand, with many horses — comes down the valley.','Quraysh come with about 1,000'],[10.5,'The night before, Allah sent rain and calm sleep, and the Prophet ﷺ spent the whole night in prayer.','Rain, calm sleep and a night of duʿāʾ'],[15,'The armies meet. The believers stand firm together, and Allah sends His help.','The believers stand firm — Allah helps them'],[22.5,'The army of Quraysh breaks and runs. Allah gave the believers victory at Badr.','Quraysh run away — victory at Badr']],
  bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb7c9"/><stop offset=".6" stop-color="#e9dcc0"/><stop offset="1" stop-color="#efd9a8"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 168 L70 128 L130 150 L210 112 L290 150 L370 118 L450 152 L530 120 L600 140 L600 260 L0 260Z" fill="#c9a06a"/><path d="M0 196 Q150 176 300 194 T600 188 L600 260 L0 260Z" fill="#dcb67e"/><rect y="216" width="600" height="44" fill="#e5c48d"/>`},
  build(g,c){
   const arish=mk(g,ARISH),glow=mk(g,lightSvg()),wells=[mk(g,WELL),mk(g,WELL)];
@@ -198,7 +198,7 @@ const HUDAYBIYYAH={
 const FATH={
  re:/^return to makkah$/i,story:/^(return to makkah|mercy in makkah)$/i,cycle:36,still:17,
  label:'Animated scene: ten thousand Muslims march into Makkah with banners, the idols around the Kaʿbah fall and the adhān is called',
- caps:[[0,'Ramaḍān, year 8: ten thousand Muslims march towards Makkah with their banners.','10,000 Muslims march to Makkah'],[6.5,'The Prophet ﷺ enters with his head bowed in thankfulness. Makkah opens without a battle.','Makkah opens without a battle'],[12.5,'Around the Kaʿbah stand 360 idols. “Truth has come, and falsehood has vanished.”','“Truth has come, falsehood has vanished”'],[19.5,'The idols have fallen. Bilāl calls the adhān from the roof of the Kaʿbah.','The adhān from the Kaʿbah'],[25.5,'“Go, you are free.” The people of Makkah are forgiven, and many accept Islam.','“Go, you are free”']],
+ caps:[[0,'Ramaḍān, year 8: ten thousand Muslims march towards Makkah with their banners.','10,000 Muslims march to Makkah'],[6.5,'The Prophet ﷺ enters Makkah and offers prayers of thanks to Allah. There is hardly any fighting.','Makkah opens with hardly any fighting'],[12.5,'Around the Kaʿbah stand 360 idols. “Truth has come, and falsehood has vanished.”','“Truth has come, falsehood has vanished”'],[19.5,'The idols have fallen. Bilāl calls the adhān from the roof of the Kaʿbah.','The adhān from the Kaʿbah'],[25.5,'“Go, you are free.” The people of Makkah are forgiven, and many accept Islam.','“Go, you are free”']],
  bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c68d"/><stop offset=".6" stop-color="#fbe2b6"/><stop offset="1" stop-color="#f1d6a2"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 150 L60 104 L120 132 L190 84 L260 128 L330 96 L400 134 L470 92 L540 126 L600 108 L600 260 L0 260Z" fill="#b98a5e"/>${[[40,176,46,30],[96,170,40,36],[150,180,44,26],[330,174,42,32],[380,168,48,38],[600-120,172,40,34]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#d9b98a" stroke="#a8875a" stroke-width="1"/><rect x="${x+w*.4}" y="${y+h*.45}" width="${w*.2}" height="${h*.55}" fill="#8a6440"/>`).join('')}<rect y="214" width="600" height="46" fill="#e6c995"/>`},
  build(g,c){
   let kp=c.pic(.795,.29),kh=0,own=null;
@@ -240,8 +240,8 @@ function welcomerSvg(i,kind){
 }
 const MADINAH={
  re:/^welcome to madīnah$/i,story:/^(welcome to madīnah|the house of abū ayyūb)$/i,cycle:30,still:13,nasheed:true,
- label:'Animated scene: the people of Madīnah line the road to welcome the Prophet’s camel, which kneels by the house of Abū Ayyūb',
- caps:[[0,'For days the people of Madīnah have waited on the road every morning for the Prophet ﷺ.','Madīnah waits on the road'],[4.5,'He arrives! Families, children and girls with dafs come out singing “Ṭalaʿa l-badru ʿalaynā”.','“Ṭalaʿa l-badru ʿalaynā!”'],[11,'Every family calls out: “Stay with us!” He says: “Let her go — she is guided by Allah.”','“Let her go — she is guided”'],[20,'Al-Qaṣwāʾ kneels by the house of Abū Ayyūb. The Prophet’s Masjid will be built here.','She kneels by Abū Ayyūb’s house']],
+ label:'Animated scene: the people of Madīnah line the road to welcome the Prophet’s camel, which kneels where his Masjid will be built',
+ caps:[[0,'For days the people of Madīnah have waited on the road every morning for the Prophet ﷺ.','Madīnah waits on the road'],[4.5,'He arrives! Shouts of “Allāhu Akbar” ring out, and the girls of Madīnah chant verses of welcome.','Madīnah welcomes him'],[11,'Everyone calls out: “Stay with us, O Messenger of Allah!” He answers: “This camel is commanded by Allah — wherever it stops will be my home.”','“This camel is commanded by Allah”'],[20,'The camel kneels where the Prophet’s Masjid will be built, and Abū Ayyūb takes him into his home.','The camel kneels — Abū Ayyūb’s home']],
  bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6e4"/><stop offset=".6" stop-color="#eef0dc"/><stop offset="1" stop-color="#e9d7aa"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 170 L80 150 L170 164 L260 146 L360 166 L460 150 L600 162 L600 260 L0 260Z" fill="#b9a27a"/>${[40,110,190,420,500,560].map((x,i)=>`<g transform="translate(${x} ${178+(i%2)*6})"><path d="M0 0 L2-38" stroke="#7a5a33" stroke-width="3"/><path d="M2-38 q-16 2-22 12 M2-38 q14-2 21 10 M2-38 q-6-12-18-14 M2-38 q8-12 19-12" stroke="#5f8a3a" stroke-width="4" fill="none" stroke-linecap="round"/></g>`).join('')}<rect y="214" width="600" height="46" fill="#e6cf9c"/>`},
  build(g,c){
   const hp=c.side(.82,c.story?110:62),house=mk(g,HOUSE);
@@ -264,8 +264,8 @@ const MADINAH={
  }
 };
 
-/* The welcome nasheed, made in the browser: a hummed tune on the vowels of each word, with a soft daf beat.
-   Plays only when someone taps the button. */
+/* The welcome nasheed “Ṭalaʿa l-badru ʿalaynā”: a recording (assets/audio/tala3al.mp3), played only
+   when someone taps the button. The words are shown while it plays. */
 const NASHEED_LINES=[
  ['طَلَعَ الْبَدْرُ عَلَيْنَا','Ṭalaʿa l-badru ʿalaynā','The full moon has risen over us','ṭa la ʿal bad ru ʿa lay nā',[62,65,67,69,69,67,65,67]],
  ['مِنْ ثَنِيَّاتِ الْوَدَاعْ','min thaniyyāti l-wadāʿ','from the hills of al-Wadāʿ','min tha niy yā til wa dāʿ',[69,69,70,69,67,65,64]],
@@ -274,34 +274,19 @@ const NASHEED_LINES=[
  ['أَيُّهَا الْمَبْعُوثُ فِينَا','Ayyuha l-mabʿūthu fīnā','O you who were sent to us','ay yu hal mab ʿū thu fī nā',[69,69,72,70,69,67,65,69]],
  ['جِئْتَ بِالْأَمْرِ الْمُطَاعْ','jiʾta bil-amri l-muṭāʿ','you came with a command to be obeyed','ji ʾta bil am ril mu ṭāʿ',[67,65,64,65,67,64,62]]];
 const Nasheed=(()=>{
- let ac=null,noise=null,cur=null,watch=0;
- const vowelOf=sy=>/[iī]/.test(sy)?'i':/[uū]/.test(sy)?'u':'a';
- const FORM={a:[[730,1,6],[1090,.55,9],[2440,.2,9]],i:[[300,1,6],[2000,.45,9],[2800,.2,9]],u:[[320,1,6],[870,.55,9],[2240,.15,9]]};
- function sing(bus,midi,v,at,dur){const f=440*Math.pow(2,(midi-69)/12),o=ac.createOscillator(),o2=ac.createOscillator(),vib=ac.createOscillator(),vg=ac.createGain(),out=ac.createGain(),low=ac.createGain();
-  o.type='sawtooth';o.frequency.value=f;o2.type='triangle';o2.frequency.value=f/2;vib.frequency.value=5.2;vg.gain.value=f*.007;vib.connect(vg);vg.connect(o.frequency);
-  out.gain.setValueAtTime(0,at);out.gain.linearRampToValueAtTime(.34,at+.06);out.gain.setValueAtTime(.34,at+Math.max(.07,dur-.1));out.gain.linearRampToValueAtTime(0,at+dur+.05);
-  FORM[v].forEach(([fr,gn,q])=>{const bp=ac.createBiquadFilter(),g=ac.createGain();bp.type='bandpass';bp.frequency.value=fr;bp.Q.value=q;g.gain.value=gn;o.connect(bp);bp.connect(g);g.connect(out)});
-  low.gain.value=.12;o2.connect(low);low.connect(out);out.connect(bus);[o,o2,vib].forEach(x=>{x.start(at);x.stop(at+dur+.1)})}
- function hit(bus,at,deep){const n=ac.createBufferSource(),bp=ac.createBiquadFilter(),g=ac.createGain();n.buffer=noise;bp.type='bandpass';bp.frequency.value=deep?420:2600;bp.Q.value=deep?1.2:1.6;g.gain.setValueAtTime(deep?.5:.32,at);g.gain.exponentialRampToValueAtTime(.001,at+(deep?.22:.09));n.connect(bp);bp.connect(g);g.connect(bus);n.start(at,Math.random()*.5,.3);
-  if(deep){const o=ac.createOscillator(),og=ac.createGain();o.frequency.setValueAtTime(150,at);o.frequency.exponentialRampToValueAtTime(72,at+.2);og.gain.setValueAtTime(.0001,at);og.gain.exponentialRampToValueAtTime(.75,at+.006);og.gain.exponentialRampToValueAtTime(.001,at+.34);o.connect(og);og.connect(bus);o.start(at);o.stop(at+.36)}}
- function stop(){if(!cur)return;const c=cur;cur=null;clearInterval(watch);c.timers.forEach(clearTimeout);try{c.master.gain.cancelScheduledValues(ac.currentTime);c.master.gain.setTargetAtTime(0,ac.currentTime,.08);setTimeout(()=>c.master.disconnect(),600)}catch(e){}c.onEnd&&c.onEnd()}
+ let audio=null,cur=null,watch=0;
+ function stop(){if(!cur)return;const c=cur;cur=null;clearInterval(watch);try{audio.pause();audio.currentTime=0}catch(e){}if(c.onEnd)c.onEnd()}
  function play(onLine,onEnd,stillHere){
-  stop();const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;ac=ac||new AC();if(ac.state==='suspended')ac.resume();
-  if(!noise){noise=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=noise.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
-  const E=.3,t0=ac.currentTime+.12,master=ac.createGain(),voice=ac.createGain(),drum=ac.createGain(),delay=ac.createDelay(),fb=ac.createGain(),wet=ac.createGain();
-  master.gain.value=.9;master.connect(ac.destination);voice.gain.value=.6;drum.gain.value=.5;delay.delayTime.value=.19;fb.gain.value=.22;wet.gain.value=.2;
-  voice.connect(master);voice.connect(delay);delay.connect(fb);fb.connect(delay);delay.connect(wet);wet.connect(master);drum.connect(master);
-  const beat=['D','','T','','D','T','T',''],bars=1+NASHEED_LINES.length*2;
-  for(let b=0;b<bars;b++)beat.forEach((x,e)=>{if(x)hit(drum,t0+(b*8+e)*E,x==='D')});
-  const timers=[];let at=t0+8*E;
-  NASHEED_LINES.forEach((ln,li)=>{const syl=ln[3].split(' '),durs=syl.length===8?[1,1,2,2,2,1,1,6]:[1,1,2,2,2,2,6];timers.push(setTimeout(()=>onLine&&onLine(li),Math.max(0,(at-ac.currentTime)*1000)));
-   syl.forEach((sy,i)=>{sing(voice,ln[4][i],vowelOf(sy),at,durs[i]*E*.96);at+=durs[i]*E})});
-  timers.push(setTimeout(()=>{if(cur&&cur.master===master)stop()},Math.max(0,(t0+bars*8*E+.6-ac.currentTime)*1000)));
-  cur={master,timers,onEnd};watch=setInterval(()=>{if(stillHere&&!stillHere())stop()},400);return true;
+  stop();audio=audio||Object.assign(new Audio('assets/audio/tala3al.mp3'),{preload:'none'});
+  const c={onEnd};cur=c;
+  audio.onended=()=>{if(cur===c)stop()};audio.onerror=()=>{if(cur===c)stop()};audio.onplaying=()=>{if(cur===c&&onLine)onLine(0)};
+  try{audio.currentTime=0}catch(e){}
+  const pr=audio.play();if(pr&&pr.catch)pr.catch(()=>{if(cur===c)stop()});
+  watch=setInterval(()=>{if(stillHere&&!stillHere())stop()},400);return true;
  }
  return{play,stop,get playing(){return!!cur}};
 })();
-function lyricHTML(i){const l=NASHEED_LINES[i];return `<span class="lw-ly-ar" lang="ar" dir="rtl">${l[0]}</span><span class="lw-ly-tr">${l[1]}</span><span class="lw-ly-en">${l[2]}</span>`}
+function lyricHTML(){const l=NASHEED_LINES[0];return `<span class="lw-ly-ar" lang="ar" dir="rtl">${l[0]}</span><span class="lw-ly-tr">${l[1]}</span><span class="lw-ly-en">${l[2]}</span>`}
 function nasheedButton(host,lyricBox,stillHere){
  const b=document.createElement('button');b.type='button';b.className='lw-nasheed-btn';
  const idle=()=>{b.textContent='🔊 Welcome nasheed';b.setAttribute('aria-pressed','false');lyricBox.classList.remove('on')};idle();
@@ -340,8 +325,7 @@ function depthSort(g,list,top){if(!list.length)return;list._n=(list._n||0)+1;if(
 const place=(m,p,k,d=1)=>{m.x=p[0];m.y=p[1];put(m.el,p,k,d)};
 const headOf=(m,p,k,h=62)=>[p[0],p[1]-h*k];
 const Q={
- zamzam:{who:'ʿAbd al-Muṭṭalib · Ibn Isḥāq',k:'sahabi',ar:'اللَّهُ أَكْبَرُ',en:'Allah is the Greatest!'},
- amin:{who:'The people of Quraysh · Ibn Isḥāq',k:'people',ar:'هَذَا الْأَمِينُ، رَضِينَا',en:'This is al-Amīn, the trustworthy one — we are happy with him!'},
+ amin:{who:'The people of Quraysh · Ar-Raheeq al-Makhtūm',k:'people',ar:'هَذَا الْأَمِينُ، رَضِينَا',en:'Al-Amīn, the trustworthy one, has come — we are content with his decision!'},
  alaq1:{who:'The first words of the Qurʾān · 96:1',k:'quran',ar:'اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ',en:'Read in the name of your Lord who created.'},
  alaq3:{who:'Sūrat al-ʿAlaq 96:3–4',k:'quran',ar:'اقْرَأْ وَرَبُّكَ الْأَكْرَمُ ۝ الَّذِي عَلَّمَ بِالْقَلَمِ',en:'Read, and your Lord is the Most Generous, who taught by the pen.'},
  jafar:{who:'Jaʿfar ibn Abī Ṭālib · Aḥmad 1740',k:'sahabi',ar:'أَيُّهَا الْمَلِكُ، كُنَّا قَوْمًا أَهْلَ جَاهِلِيَّةٍ… حَتَّى بَعَثَ اللَّهُ إِلَيْنَا رَسُولًا مِنَّا',en:'O King, we were a people of ignorance… until Allah sent us a Messenger from among us.'},
@@ -359,8 +343,8 @@ const sayIn=(t,list)=>{for(const [a,b,q,at] of list)if(t>=a&&t<b)return{say:[q,a
 /* ---------- Zamzam (Map 2) ---------- */
 const ZAMZAM={
  re:/zamzam/i,story:/zamzam/i,cycle:26,still:12,
- label:'Animated scene: ʿAbd al-Muṭṭalib and his son dig, the old well appears and Zamzam water flows again',
- caps:[[0,'ʿAbd al-Muṭṭalib dreams that he must dig Zamzam — the blessed well of Ismāʿīl that had been covered and lost.','A dream: dig Zamzam!'],[3.5,'With his only son, al-Ḥārith, he digs near the Kaʿbah, day after day.','Digging with his son al-Ḥārith'],[10,'The stones of the old well appear. “Allāhu akbar!”','The old well appears!'],[14,'Zamzam water flows again, and the pilgrims come to drink.','Zamzam flows again']],
+ label:'Animated scene: ʿAbd al-Muṭṭalib digs where his dream showed him, finds what Jurhum had buried, and Zamzam water flows again',
+ caps:[[0,'In a dream, ʿAbd al-Muṭṭalib is ordered to dig Zamzam in a particular place — the well that Jurhum had filled in when they left Makkah.','A dream: dig Zamzam!'],[3.5,'He digs in the place shown to him, near the Kaʿbah.','Digging where the dream showed'],[10,'He finds what Jurhum had buried there: swords, armour and two deer made of gold.','The old well appears!'],[14,'Zamzam water gushes again, and giving it to the pilgrims becomes a tradition.','Zamzam flows again']],
  bg:()=>plainBg('#f6c98a','#fbe4b8','#f3d9a6','#c9a06a','#e2c08a',`<g transform="translate(540 216)">${kaabaSvg()}</g>`),
  build(g,c){
   const spot=c.side(.6,c.story?0:34),mound=mk(g,EARTH),well=mk(g,WELL),spray=mk(g,SPRAY);
@@ -379,7 +363,7 @@ const ZAMZAM={
    V.forEach((m,j)=>{const to=c.side(.6-.05*(j+1),(j%2?-1:1)*(16+j*5)),from=c.side(.02,(j%2?-1:1)*10),w=seg(t,13+j*.6,18+j*.6),p=mix(from,to,ease(w));
     place(m,p,c.k(p[1],m.h),to[0]>=from[0]?1:-1);show(m,t>13+j*.6?1:0);stride(m,t,w>0&&w<1)});
    depthSort(g,all,[spray]);
-   return sayIn(t,[[10.4,13.8,Q.zamzam,headOf(D[0],[spot[0]+20*ks,spot[1]+4*ks],ks)]]);
+   return null; /* no words are quoted here: Ar-Raheeq al-Makhtūm tells this event without them */
   };
  }
 };
@@ -442,7 +426,7 @@ const HIRA={
 const NAJASHI={
  re:/^the just king$/i,story:/^(gifts from makkah|the just king)$/i,cycle:27,still:16,
  label:'Animated scene: the Muslims before the Najāshī, king of Abyssinia; Jaʿfar speaks, the king protects them and the gifts are sent back',
- caps:[[0,'Quraysh send two men with fine leather gifts to the Najāshī: “Send these Muslims back to us!”','Gifts from Makkah'],[6,'The king calls the Muslims to speak for themselves. Jaʿfar ibn Abī Ṭālib speaks for them.','Jaʿfar speaks'],[12.4,'Jaʿfar recites from Sūrat Maryam. The king weeps until his beard is wet.','The king weeps at Sūrat Maryam'],[15,'The king protects them, and the gifts are sent back.','“You are safe in my land”']],
+ caps:[[0,'Quraysh send two men with valuable gifts to the Najāshī: “Send these Muslims back to us!”','Gifts from Makkah'],[6,'The king calls the Muslims to speak for themselves. Jaʿfar ibn Abī Ṭālib speaks for them.','Jaʿfar speaks'],[12.4,'Jaʿfar recites from Sūrat Maryam. The king weeps until his beard is wet.','The king weeps at Sūrat Maryam'],[15,'The king protects them, and the gifts are sent back.','“You are safe in my land”']],
  bg:()=>plainBg('#9fcbe0','#e6efd0','#cfe0a8','#8fae6a','#b9c98a'),
  build(g,c){
   const T=c.story?[520,216]:c.side(.9,-26),king=mk(g,KING,{h:56}),guards=[0,1].map(i=>mk(g,warriorSvg({side:'m',i:i+2,weapon:'spear'}))),tears=[0,1,2].map(()=>mk(g,TEAR));
@@ -514,7 +498,7 @@ function buildPaintedTrench(g,c){
 const TRENCH={
  re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,
  label:'Animated scene: the believers dig the trench and sing, the army cannot cross, and a wind sends it home',
- caps:[[0,'Year 5: an army of 10,000 is coming to Madīnah. Salmān al-Fārisī suggests digging a trench.','Salmān’s idea: a trench'],[4,'Everyone digs, cold and hungry — and they sing as they work.','Everyone digs and sings'],[13,'The enemy army arrives, but it cannot cross the trench.','The army cannot cross'],[18.5,'After weeks, Allah sends a cold, strong wind. Their tents and fires blow away, and they go home.','A wind from Allah ends the siege']],
+ caps:[[0,'Year 5: an army of 10,000 is coming to Madīnah. Salmān al-Fārisī suggests digging a trench.','Salmān’s idea: a trench'],[4,'Everyone digs, cold and hungry — and they sing as they work.','Everyone digs and sings'],[13,'The enemy army arrives, and the trench stops it.','The trench stops the army'],[18.5,'After weeks, Allah sends a cold, strong wind. Their tents and fires blow away, and they go home.','A wind from Allah ends the siege']],
  bg:()=>plainBg('#b8c8d6','#ece2cc','#e8d2a2','#b48e64','#dcc08e'),
  build(g,c){
   if(!c.story&&c.asset==='trench')return buildPaintedTrench(g,c);
