@@ -62,7 +62,6 @@ edit('seeraa/index.html', [['href="/teacher/', `href="${SITE_URL}/teacher/`]]);
    (viewport-fit=cover) and app-shell.css keeps the map, menus and lessons inside
    the safe area. The website itself is unchanged. */
 fs.writeFileSync(path.join(WWW, 'seeraa/app-shell.css'), `/* Seeraa Quest app only (added by seeraa-app/scripts/build-www.mjs) */
-html{background:#f3e3bf}
 body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 #mapScreen .map-frame{top:env(safe-area-inset-top)!important;right:env(safe-area-inset-right)!important;bottom:env(safe-area-inset-bottom)!important;left:env(safe-area-inset-left)!important}
 .map-drawer{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}

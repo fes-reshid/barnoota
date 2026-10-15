@@ -71,6 +71,14 @@ function splash(dark) {
    <text x="1366" y="1790" text-anchor="middle" font-family="Marcellus" font-size="150" fill="${ink}" letter-spacing="4">Seeraa Quest</text>
    <text x="1366" y="1965" text-anchor="middle" font-family="Amiri" font-weight="700" font-size="128" fill="${gold}" direction="rtl">السِّيرَةُ النَّبَوِيَّة</text>`);
 }
+/* Google Play feature graphic (1024 x 500) */
+FILES['feature-graphic.png'] = [1024, 500, svg(1024, 500, `<defs><radialGradient id="fg" cx="30%" cy="40%" r="90%"><stop offset="0" stop-color="#23805f"/><stop offset=".6" stop-color="#14583f"/><stop offset="1" stop-color="#0b3528"/></radialGradient></defs>
+ <rect width="1024" height="500" fill="url(#fg)"/>
+ <g opacity=".08" stroke="#f6e3a1" stroke-width="2" fill="none">${[...Array(5)].map((_, i) => `<circle cx="250" cy="250" r="${260 + i * 40}"/>`).join('')}</g>
+ <g transform="translate(250 262) scale(.6) translate(-512 -518)">${art('g')}</g>
+ <text x="700" y="215" text-anchor="middle" font-family="Marcellus" font-size="66" fill="#f8ecc9">Seeraa Quest</text>
+ <text x="700" y="300" text-anchor="middle" font-family="Amiri" font-weight="700" font-size="54" fill="#e8c873" direction="rtl">السِّيرَةُ النَّبَوِيَّة</text>
+ <text x="700" y="360" text-anchor="middle" font-family="Marcellus" font-size="25" fill="#f8ecc9" opacity=".9">31 maps · 124 lessons · the life of the Prophet ﷺ</text>`), false];
 FILES['splash.png'] = [2732, 2732, splash(false), false];
 FILES['splash-dark.png'] = [2732, 2732, splash(true), false];
 

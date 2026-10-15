@@ -83,8 +83,9 @@ You already have a Play developer account (Hisnul Muslim is published).
      teacher); all sent over HTTPS, not shared, not used for advertising; accounts are created
      and deleted by the school/admin
    - **Content rating** questionnaire (educational, no violence beyond the gentle battle scenes)
-4. **Store listing**: short + full description, the 512×512 icon (`assets/icon-only.png`
-   scaled down), a 1024×500 feature graphic, and at least 2 phone screenshots.
+4. **Store listing**: short + full description, a 512×512 icon (`assets/icon-only.png`
+   scaled down), the 1024×500 feature graphic (`assets/feature-graphic.png`), and at least
+   2 phone screenshots (1080×1920; Play rejects images more than twice as tall as wide).
 5. Upload the `.aab` to **Internal testing** first, try it on a phone, then promote to **Production**.
 
 ## Publishing on the App Store
