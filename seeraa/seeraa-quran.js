@@ -24,7 +24,7 @@ const isQuranRef=s=>/^\s*(s[uū]ra|qur)/i.test(s)||/^\s*\d{1,3}\s*:\s*\d{1,3}/.t
 /* compare words by their letters only: no vowel marks, and the hamza, alif and tā’ marbūṭa
    spellings that differ between the course's text and Quran.com's are made the same */
 const MARKS=/[ؐ-ًؚ-ٰٟۖ-ۭـ]/g;
-const skel=w=>String(w).replace(MARKS,'').replace(/[ءأإآٱؤئا]/g,'').replace(/[ىی]/g,'ي').replace(/ة/g,'ه').replace(/[^ء-ي]/g,'');
+const skel=w=>String(w).replace(MARKS,'').replace(/[ءأإآٱا]/g,'').replace(/ؤ/g,'و').replace(/[ئىی]/g,'ي').replace(/ة/g,'ه').replace(/[^ء-ي]/g,'');
 const words=s=>String(s).split(/\s+/).map(skel).filter(Boolean);
 const sim=(a,b)=>a===b?1:a.length>2&&b.length>2&&(a.startsWith(b)||b.startsWith(a)||a.endsWith(b)||b.endsWith(a))?.5:0;
 /* where the quotation Q starts and ends among the ayahs' words W (by its first and last three words) */
