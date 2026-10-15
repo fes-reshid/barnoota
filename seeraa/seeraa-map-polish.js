@@ -29,7 +29,9 @@
     stopped = next;
     const button = $('spMotion');
     if (button) {
-      button.textContent = media.matches ? 'Reduced motion' : next ? '▶ Play animation' : 'Ⅱ Pause animation';
+      const label = media.matches ? 'Reduced motion' : next ? 'Play animation' : 'Pause animation';
+      button.innerHTML = '<span class="sp-control-icon" aria-hidden="true">' + (next ? '▶' : 'Ⅱ') + '</span><span class="sp-control-label">' + label + '</span>';
+      button.setAttribute('aria-label', label);
       button.setAttribute('aria-pressed', String(next)); button.disabled = media.matches;
       button.title = media.matches ? 'Your device requests reduced motion.' : 'Pause or resume the scenery and story animations';
     }
@@ -40,13 +42,17 @@
     let bar = $('spTools');
     if (!bar) {
       bar = document.createElement('div');bar.id = 'spTools';bar.className = 'sp-tools';
-      const about = $('placeInfoButton'); if (about) bar.appendChild(about);
-      bar.insertAdjacentHTML('beforeend', '<button type="button" id="spPlace" class="sp-tool">▧ Place today</button><button type="button" id="spMotion" class="sp-tool" aria-pressed="false">Ⅱ Pause animation</button>');
+      const about = $('placeInfoButton'); if (about) {
+        about.innerHTML = '<span class="sp-control-icon sp-info-icon" aria-hidden="true">i</span><span class="sp-control-label">About this place</span>';
+        about.setAttribute('aria-label', 'About this place');about.title = 'About this place';bar.appendChild(about);
+      }
+      bar.insertAdjacentHTML('beforeend', '<button type="button" id="spPlace" class="sp-tool" title="Place today"><span class="sp-control-icon" aria-hidden="true">▧</span><span class="sp-control-label">Place today</span></button><button type="button" id="spMotion" class="sp-tool" aria-pressed="false">Ⅱ Pause animation</button>');
       frame.appendChild(bar);
       $('spPlace').onclick = () => openPlace(here());
       $('spMotion').onclick = () => {preference = !preference;try {localStorage.setItem('seeraa-pause-animation', String(preference));} catch (_) {}syncMotion();};
     }
     const p = here(); $('spPlace').hidden = !p;
+    frame.style.setProperty('--sp-mobile-tools-width', p ? '128px' : '84px');
     if (p) $('spPlace').setAttribute('aria-label', 'Explore the illustration and real photograph of ' + p.name);
     syncMotion();
   }

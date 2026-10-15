@@ -53,3 +53,14 @@
 @media(prefers-reduced-motion:reduce){.sp-arrive .history-scene,.sp-arrive #mapSvg .node,.sp-read-in,.sp-celebration i{animation:none!important}.sp-celebration{display:none}.sp-tools button,#mapSvg .node .disc{transition:none}}
 
 @media(max-width:360px){.sp-tools #placeInfoButton,.sp-tools .sp-tool{font-size:10px;padding:7px 8px}}
+
+/* Compact mobile controls share the title row, leaving the story text clear. */
+.sp-control-icon{display:none}
+@media(max-width:620px){
+  #mapScreen .map-frame .sp-tools{top:max(10px,env(safe-area-inset-top));left:6px;right:auto;width:var(--sp-mobile-tools-width,84px);height:44px;gap:4px;flex-wrap:nowrap}
+  #mapScreen .sp-tools #placeInfoButton,#mapScreen .sp-tools .sp-tool{box-sizing:border-box;display:grid;place-items:center;flex:0 0 40px;width:40px;min-width:40px;height:44px;min-height:44px;padding:0;border-radius:14px;font-size:19px;line-height:1}
+  #mapScreen .sp-tools .sp-control-icon{display:block}
+  #mapScreen .sp-tools .sp-info-icon{font:bold 22px/1 Georgia,serif}
+  #mapScreen .sp-tools .sp-control-label{display:none}
+  #mapScreen .map-frame .map-title{box-sizing:border-box;top:max(10px,env(safe-area-inset-top));left:calc(var(--sp-mobile-tools-width,84px) + 14px);right:66px;transform:none;width:auto;max-width:none;height:44px;line-height:28px;padding:5px 7px;font-size:12px;text-align:center}
+}
