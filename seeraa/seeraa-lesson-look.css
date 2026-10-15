@@ -1,0 +1,80 @@
+/* Seeraa lesson screen: one calm parchment-and-gold look.
+   The lesson panel, the step tabs and the progress bar used to be bright blue with
+   yellow buttons, above a parchment story card. They now match the card: warm paper,
+   a thin gold border, deep brown writing and the course's green for progress.
+   Linked at the end of <body>, so it comes after the styles the scripts add to <head>. */
+
+/* Nunito draws ʿ and ʾ (as in ʿAbd, Jaʿfar, Qurʾān) with a wide gap after them. These two tiny
+   files hold just those letters from Nunito with normal spacing; being declared after the Google
+   Fonts faces, they are used for these two letters only (SIL Open Font License, assets/fonts). */
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/nunito-ayn-hamza-400.woff2) format('woff2');unicode-range:U+02BE-02BF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/nunito-ayn-hamza-600.woff2) format('woff2');unicode-range:U+02BE-02BF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(assets/fonts/nunito-ayn-hamza-700.woff2) format('woff2');unicode-range:U+02BE-02BF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(assets/fonts/nunito-ayn-hamza-800.woff2) format('woff2');unicode-range:U+02BE-02BF}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:900;font-display:swap;src:url(assets/fonts/nunito-ayn-hamza-900.woff2) format('woff2');unicode-range:U+02BE-02BF}
+
+#lessonScreen{--ll-paper:#fffdf7;--ll-paper2:#f8ecd2;--ll-line:#e6d3a8;--ll-gold:#d2ad5e;--ll-gold-deep:#a8802f;--ll-ink:#3f2f1f;--ll-muted:#7c694c;--ll-green:#2e6b58}
+
+/* ---------- the lesson panel ---------- */
+#lessonScreen .lesson-side{background:linear-gradient(180deg,var(--ll-paper),var(--ll-paper2));border:2px solid var(--ll-gold);border-radius:20px;padding:10px;box-shadow:0 8px 22px rgba(74,55,30,.16);color:var(--ll-ink)}
+#lessonScreen .side-name{background:none;border:0;border-bottom:1px solid var(--ll-line);border-radius:0;color:var(--ll-ink);font:20px/1.3 Marcellus,serif;padding:2px 4px 8px}
+#lessonScreen .side-summary{background:#fff;border:1px solid var(--ll-line);border-radius:14px;padding:6px 12px;box-shadow:0 1px 0 #efe2c4;color:var(--ll-ink)}
+#lessonScreen .side-summary .label{font:800 10.5px/1.2 Nunito,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ll-gold-deep)}
+#lessonScreen .side-summary .big{font:28px/1.05 Marcellus,serif;color:var(--ll-ink)}
+#lessonScreen #sideCoins{font:800 15px/1 Nunito,system-ui,sans-serif;color:var(--ll-ink)}
+
+/* home · listen · words: quiet paper buttons instead of yellow blocks */
+#lessonScreen .side-tools{gap:8px}
+#lessonScreen .side-tools .tool{background:#fff;border:1px solid var(--ll-line);border-radius:12px;box-shadow:0 2px 0 #ead9b4;min-height:42px;padding:6px 0;font-size:19px;transition:transform .12s,box-shadow .12s,background .12s}
+#lessonScreen .side-tools .tool:hover{background:#fff8e6}
+#lessonScreen .side-tools .tool:active{transform:translateY(1px);box-shadow:0 1px 0 #ead9b4}
+#lessonScreen .side-tools .tool:focus-visible{outline:3px solid var(--ll-gold);outline-offset:2px}
+
+/* the seven steps */
+#lessonScreen .side-steps{gap:8px}
+#lessonScreen .lesson-side .side-step{background:#fff;border:1.5px solid var(--ll-line);border-radius:14px;box-shadow:0 2px 0 #ecdcb9;color:var(--ll-ink);font:700 14px/1.25 Nunito,system-ui,sans-serif;padding:8px 11px;min-height:44px;gap:8px;animation:none}
+#lessonScreen .lesson-side .side-step>span:nth-child(2){white-space:nowrap}
+@media(max-width:720px){#lessonScreen .lesson-side .side-step{flex:0 0 auto;min-width:0}}
+#lessonScreen .lesson-side .side-step.can-open:hover{transform:translateY(-1px);box-shadow:0 3px 0 #e2cfa5;filter:none}
+#lessonScreen .lesson-side .side-step.current{background:linear-gradient(180deg,#fff8e4,#fbe7b5);border-color:var(--ll-gold);box-shadow:0 0 0 3px rgba(210,173,94,.25),0 2px 0 #e2c98f}
+#lessonScreen .lesson-side .side-step.done{background:#f2f8ef;border-color:#bcd9b0;color:#264d39}
+#lessonScreen .lesson-side .side-step.done>span:last-child{display:grid;place-items:center;flex:none;width:20px;height:20px;margin-left:auto;border-radius:50%;background:var(--ll-green);color:#fff;font:900 11px/1 Nunito,system-ui,sans-serif}
+
+/* ---------- the progress bar ---------- */
+#lessonScreen .stage-top{background:linear-gradient(180deg,var(--ll-paper),var(--ll-paper2));border:2px solid var(--ll-gold);border-radius:16px;padding:7px 12px;gap:10px;box-shadow:0 6px 16px rgba(74,55,30,.12)}
+#lessonScreen .step-pill{background:#fff;border:1px solid var(--ll-line);border-radius:999px;padding:3px 11px;color:var(--ll-ink);font:800 13.5px/1.4 Nunito,system-ui,sans-serif}
+#lessonScreen .track{height:12px;background:#efe3c6;border:0;border-radius:999px;box-shadow:inset 0 1px 2px rgba(74,55,30,.18)}
+#lessonScreen .fill{border-radius:999px;background:linear-gradient(90deg,#4f9a72,var(--ll-green))}
+#lessonScreen .stage-top>span:last-child{font-size:17px;line-height:1}
+
+/* ---------- the lesson card: warm paper, one title style on every step ---------- */
+#lessonScreen #stage{background:#fffdf8;border:2px solid var(--ll-gold);box-shadow:0 10px 26px rgba(74,55,30,.14)}
+#lessonScreen #stage .kicker{margin-top:4px;color:var(--ll-gold-deep);font:800 11.5px/1.5 Nunito,system-ui,sans-serif;letter-spacing:.14em}
+#lessonScreen #stage .lesson-title,#lessonScreen #stage.lw-story .lw-title{font:clamp(27px,4.4vw,36px)/1.2 Marcellus,serif;color:var(--ll-ink);letter-spacing:.005em}
+#lessonScreen #stage .lw-intro{color:var(--ll-muted);font:600 14.5px/1.5 Nunito,system-ui,sans-serif}
+#lessonScreen #stage .lw-eyebrow{font:800 11px/1.4 Nunito,system-ui,sans-serif;letter-spacing:.16em}
+#lessonScreen #stage .lw-place{font:600 15.5px/1.4 Nunito,system-ui,sans-serif}
+/* the story text keeps clear of the card's edges */
+#lessonScreen #stage.lw-story .lw-reading{padding:0 clamp(16px,4vw,34px);margin-left:0;margin-right:0;box-sizing:border-box;width:100%}
+#lessonScreen #stage.lw-story .lw-reading p{color:#3a2e21;letter-spacing:.003em}
+
+/* the buttons under the card */
+#lessonScreen .lesson-nav-btn{border:1.5px solid var(--ll-gold);border-radius:999px;background:#fff;color:var(--ll-ink);font:800 14px/1.2 Nunito,system-ui,sans-serif;box-shadow:0 2px 0 #e2cfa5}
+
+/* ---------- the floating buttons: smaller, so they cover less of the story ---------- */
+.back-pill.sq-back{gap:8px;padding:4px 16px 4px 4px;border-width:1.5px;font:800 14.5px/1 Nunito,system-ui,sans-serif;letter-spacing:.01em;bottom:calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 6px 16px rgba(20,40,30,.3),inset 0 1px 0 rgba(255,255,255,.2)}
+.back-pill.sq-back .sq-back-ic{width:30px;height:30px;font-size:16px}
+.tm-edit-btn{padding:8px 15px;border-width:2px;font:800 14px/1.2 Nunito,system-ui,sans-serif;bottom:calc(12px + env(safe-area-inset-bottom,0px));right:12px;box-shadow:0 6px 16px rgba(20,40,30,.26)}
+
+/* "Try this week" and the small tips: the same friendly lettering as the rest of the card */
+#lessonScreen #stage .lw-try{background:#fffaf0;border:1px solid var(--ll-line);border-radius:14px;padding:12px 16px;text-align:left}
+#lessonScreen #stage .lw-try h3{font:800 16px/1.3 Nunito,system-ui,sans-serif;color:var(--ll-ink)}
+#lessonScreen #stage .lw-try p{margin:0;font:600 15.5px/1.6 Nunito,system-ui,sans-serif;color:#4a3a28}
+#lessonScreen #stage .builder-tip{font:600 14px/1.55 Nunito,system-ui,sans-serif;color:var(--ll-muted)}
+
+/* every other piece of writing in the lesson (answers, feedback, the du'a card) in the same friendly
+   font, instead of the page's thin serif; titles keep Marcellus and Arabic keeps Amiri */
+#lessonScreen{font-family:Nunito,system-ui,sans-serif}
+#lessonScreen #stage .seeraa-choice,#lessonScreen #stage .choice{font-family:Nunito,system-ui,sans-serif;font-weight:700}
+#lessonScreen #stage .seeraa-dua-ar{text-align:center}
+#lessonScreen #stage .quiz-meta{box-sizing:border-box;width:100%;padding:2px 14px 0;font:800 12.5px/1.4 Nunito,system-ui,sans-serif;letter-spacing:.04em;color:var(--ll-muted)}
