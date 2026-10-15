@@ -274,29 +274,54 @@ const NASHEED_LINES=[
  ['أَيُّهَا الْمَبْعُوثُ فِينَا','Ayyuha l-mabʿūthu fīnā','O you who were sent to us','ay yu hal mab ʿū thu fī nā',[69,69,72,70,69,67,65,69]],
  ['جِئْتَ بِالْأَمْرِ الْمُطَاعْ','jiʾta bil-amri l-muṭāʿ','you came with a command to be obeyed','ji ʾta bil am ril mu ṭāʿ',[67,65,64,65,67,64,62]]];
 const Nasheed=(()=>{
- let audio=null,cur=null,watch=0;
+ const SRC='assets/audio/tala3al.mp3',le=(v,n)=>String.fromCharCode(...Array.from({length:n},(_,i)=>v>>8*i&255));
+ /* a moment of silence played inside the first tap lets the same <audio> start the nasheed by itself later (iPhone) */
+ const SILENT='data:audio/wav;base64,'+btoa('RIFF'+le(436,4)+'WAVEfmt '+le(16,4)+le(1,2)+le(1,2)+le(8000,4)+le(8000,4)+le(1,2)+le(8,2)+'data'+le(400,4)+'\x80'.repeat(400));
+ let audio=null,cur=null,watch=0,primed=false;
+ const el=()=>audio||(audio=Object.assign(new Audio(),{preload:'none'}));
+ function prime(){if(primed||cur)return;primed=true;const a=el();try{a.src=SILENT;const p=a.play();if(p&&p.then)p.then(()=>{if(!cur)a.pause()},()=>{primed=false})}catch(e){primed=false}}
+ ['pointerdown','touchend','keydown'].forEach(e=>addEventListener(e,prime,{capture:true,passive:true}));
  function stop(){if(!cur)return;const c=cur;cur=null;clearInterval(watch);try{audio.pause();audio.currentTime=0}catch(e){}if(c.onEnd)c.onEnd()}
  function play(onLine,onEnd,stillHere){
-  stop();audio=audio||Object.assign(new Audio('assets/audio/tala3al.mp3'),{preload:'none'});
+  stop();el();if(!audio.src||!audio.src.endsWith(SRC))audio.src=SRC;
   const c={onEnd};cur=c;
   audio.onended=()=>{if(cur===c)stop()};audio.onerror=()=>{if(cur===c)stop()};audio.onplaying=()=>{if(cur===c&&onLine)onLine(0)};
   try{audio.currentTime=0}catch(e){}
   const pr=audio.play();if(pr&&pr.catch)pr.catch(()=>{if(cur===c)stop()});
   watch=setInterval(()=>{if(stillHere&&!stillHere())stop()},400);return true;
  }
- return{play,stop,get playing(){return!!cur}};
+ return{play,stop,get playing(){return!!cur},get unlocked(){return primed}};
 })();
 function lyricHTML(){const l=NASHEED_LINES[0];return `<span class="lw-ly-ar" lang="ar" dir="rtl">${l[0]}</span><span class="lw-ly-tr">${l[1]}</span><span class="lw-ly-en">${l[2]}</span>`}
 function nasheedButton(host,lyricBox,stillHere){
  const b=document.createElement('button');b.type='button';b.className='lw-nasheed-btn';
- const idle=()=>{b.textContent='🔊 Welcome nasheed';b.setAttribute('aria-pressed','false');lyricBox.classList.remove('on')};idle();
+ const idle=()=>{b.textContent='♫';b.title='Play the welcome nasheed';b.setAttribute('aria-label','Play the welcome nasheed, Ṭalaʿa l-badru ʿalaynā');b.setAttribute('aria-pressed','false');lyricBox.classList.remove('on')};idle();
  b.onclick=e=>{e.stopPropagation();if(Nasheed.playing){Nasheed.stop();return}
-  if(Nasheed.play(i=>{lyricBox.innerHTML=lyricHTML(i);lyricBox.classList.add('on')},idle,()=>b.isConnected&&b.offsetParent!==null)){b.textContent='⏹ Stop nasheed';b.setAttribute('aria-pressed','true');lyricBox.innerHTML='<span class="lw-ly-tr">♪ …</span>';lyricBox.classList.add('on')}};
+  if(Nasheed.play(i=>{lyricBox.innerHTML=lyricHTML(i);lyricBox.classList.add('on')},idle,()=>b.isConnected&&b.offsetParent!==null)){b.textContent='■';b.title='Stop the nasheed';b.setAttribute('aria-label','Stop the nasheed');b.setAttribute('aria-pressed','true');lyricBox.innerHTML='<span class="lw-ly-tr">♪ …</span>';lyricBox.classList.add('on')}};
  host.appendChild(b);return b;
 }
+/* On the map the nasheed has a small icon in the top toolbar, beside “About this place” and the pause button,
+   on every screen. It starts by itself as the Prophet ﷺ arrives (once per visit to the map), if sound is on
+   and the page has been tapped; leaving the map stops it. */
+let nasheedWorld=null,nasheedAuto=false;
+const mapOpen=()=>{const m=document.getElementById('mapScreen');return!!m&&!m.classList.contains('hidden')};
+function toolsWidth(){const bar=document.getElementById('spTools'),frame=bar&&bar.closest('.map-frame');if(frame)frame.style.setProperty('--sp-mobile-tools-width',([...bar.children].filter(b=>!b.hidden).length*44-4)+'px')}
+function nasheedIcon(on){const b=document.getElementById('spNasheed');if(!b)return;b.setAttribute('aria-pressed',String(on));b.querySelector('.sp-control-icon').textContent=on?'■':'♫';
+ const label=on?'Stop the nasheed':'Play the welcome nasheed';b.title=label;b.setAttribute('aria-label',on?label:label+', Ṭalaʿa l-badru ʿalaynā')}
+function startNasheed(){const here=nasheedWorld;
+ if(Nasheed.play(()=>nasheedIcon(true),()=>nasheedIcon(false),()=>mapOpen()&&nasheedWorld===here&&!!document.getElementById('spNasheed')))nasheedIcon(true)}
 function mapNasheed(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return;
- Nasheed.stop();frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
- const box=document.createElement('div');box.className='lw-lyrics';box.setAttribute('aria-live','polite');frame.appendChild(box);nasheedButton(frame,box)}
+ nasheedWorld=typeof viewWorld!=='undefined'?viewWorld:null;frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
+ let tries=0;(function place(){const bar=document.getElementById('spTools');if(!bar){if(tries++<30)requestAnimationFrame(place);return}
+  if(!document.getElementById('spNasheed')){bar.insertAdjacentHTML('beforeend','<button type="button" id="spNasheed" class="sp-tool sp-nasheed" aria-pressed="false"><span class="sp-control-icon" aria-hidden="true">♫</span></button>');
+   const b=document.getElementById('spNasheed');b.onclick=e=>{e.stopPropagation();if(Nasheed.playing)Nasheed.stop();else startNasheed()};nasheedIcon(Nasheed.playing)}
+  toolsWidth()})();
+ if(nasheedAuto)return;nasheedAuto=true;const w=nasheedWorld;
+ setTimeout(()=>{const activated=navigator.userActivation?navigator.userActivation.hasBeenActive:Nasheed.unlocked;
+  if(w!==nasheedWorld||!mapOpen()||Nasheed.playing||!activated||(typeof soundOn!=='undefined'&&!soundOn)||document.hidden||(window.SeeraaQuran&&SeeraaQuran.playing))return;startNasheed()},4500)}
+/* another map: the icon goes, and the nasheed stops */
+if(typeof renderMap==='function'){const renderMapBeforeNasheed=renderMap;renderMap=function(){const r=renderMapBeforeNasheed.apply(this,arguments);
+ if(nasheedWorld!==null&&typeof viewWorld!=='undefined'&&viewWorld!==nasheedWorld){Nasheed.stop();document.getElementById('spNasheed')?.remove();nasheedWorld=null;nasheedAuto=false;toolsWidth()}return r}}
 /* ---------- more Seerah moments (each with Arabic-first speech where the words are reported) ---------- */
 const pingpong=x=>{const m=((x%2)+2)%2;return m<1?m:2-m};
 const fadeIO=(t,end)=>f3(t<.8?t/.8:t>end?clamp(1-(t-end)/1.8,0,1):1);
@@ -579,7 +604,12 @@ window.SeeraaNasheed=Nasheed;
 document.head.insertAdjacentHTML('beforeend',`<style id="lwx-style">
 .lw-scene-cap{position:absolute;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;width:max-content;max-width:min(400px,calc(50% - 24px));box-sizing:border-box;padding:6px 12px;border-radius:12px;background:rgba(255,249,232,.94);border:1px solid #e3c995;color:#4d3928;font:800 12.5px/1.35 Nunito,system-ui,sans-serif;text-align:center;box-shadow:0 2px 10px #38271630;pointer-events:none}
 .lw-scene-cap:empty{display:none}
-.lw-nasheed-btn{position:absolute;z-index:6;left:12px;top:118px;border:1px solid #d9b56a;background:linear-gradient(180deg,#fff8e6,#f6e2b4);color:#5a3d17;border-radius:999px;padding:7px 13px;font:800 13px/1 Nunito,system-ui,sans-serif;box-shadow:0 2px 8px #38271630;cursor:pointer}
+.lw-nasheed-btn{position:absolute;z-index:6;left:12px;top:118px;display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #d9b56a;background:linear-gradient(180deg,#fff8e6,#f6e2b4);color:#5a3d17;border-radius:50%;font:800 18px/1 Nunito,system-ui,sans-serif;box-shadow:0 2px 8px #38271630;cursor:pointer}
+.sp-tools #spNasheed{display:grid;place-items:center;width:36px;min-width:36px;padding:0;font-size:17px}
+.sp-tools #spNasheed .sp-control-icon{display:block;line-height:1}
+.sp-tools #spNasheed[aria-pressed="true"] .sp-control-icon{animation:lwNasheedBeat 1.1s ease-in-out infinite}
+@keyframes lwNasheedBeat{50%{transform:scale(.82)}}
+@media (prefers-reduced-motion:reduce){.sp-tools #spNasheed[aria-pressed="true"] .sp-control-icon{animation:none}}
 .lw-nasheed-btn[aria-pressed="true"]{background:linear-gradient(180deg,#e9f6e5,#cdeec7);border-color:#9cc98f}
 .lw-lyrics{position:absolute;z-index:5;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(460px,calc(100% - 24px));box-sizing:border-box;padding:10px 14px;border-radius:16px;background:rgba(36,28,20,.78);color:#fff8e6;text-align:center;display:none;flex-direction:column;gap:2px;pointer-events:none;box-shadow:0 4px 18px #0006}
 .lw-lyrics.on{display:flex}

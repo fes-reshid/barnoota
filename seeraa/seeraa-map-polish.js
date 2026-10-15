@@ -52,7 +52,8 @@
       $('spMotion').onclick = () => {preference = !preference;try {localStorage.setItem('seeraa-pause-animation', String(preference));} catch (_) {}syncMotion();};
     }
     const p = here(); $('spPlace').hidden = !p;
-    frame.style.setProperty('--sp-mobile-tools-width', p ? '128px' : '84px');
+    /* 44px per visible button (another script may add one, like the welcome nasheed on Map 22) */
+    frame.style.setProperty('--sp-mobile-tools-width', ([...bar.children].filter(b => !b.hidden).length * 44 - 4) + 'px');
     if (p) $('spPlace').setAttribute('aria-label', 'Explore the illustration and real photograph of ' + p.name);
     syncMotion();
   }
