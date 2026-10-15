@@ -53,7 +53,8 @@ const LANES={
  'uhud-v2':{roads:[[[.08,1],[.15,.88],[.24,.80],[.29,.72],[.40,.66],[.49,.63],[.52,.58],[.65,.54],[.79,.515],[.91,.485]],[[.15,.55],[.26,.56],[.37,.57]],[[.25,.68],[.40,.71],[.55,.72]]],
   yards:[[.30,.70],[.50,.72],[.45,.55],[.65,.60]],hills:[[[.73,.40],[.81,.36],[.86,.43]],[[.45,.18],[.53,.15]]],dusty:1},
  makkah:{roads:[[[.62,1],[.60,.88],[.565,.78],[.545,.70],[.57,.62],[.60,.56],[.635,.50],[.66,.445],[.69,.39],[.72,.345]],[[.41,.67],[.47,.64],[.56,.65]],[[.95,.33],[.80,.35],[.66,.34]],[[.40,.64],[.36,.56],[.29,.45],[.24,.33]],[[.50,.96],[.60,.94],[.68,.92]]],
-  yards:[[.66,.86],[.47,.64],[.88,.35],[.63,.44],[.28,.42]],hills:[[[.47,.14],[.55,.12],[.62,.15]],[[.80,.09],[.88,.07],[.95,.10]],[[.05,.13],[.12,.12]]],dusty:1,kaaba:[.794,.292,.082,.03,.722,.866,.17]},
+  yards:[[.66,.86],[.47,.64],[.88,.35],[.63,.44],[.28,.42]],hills:[[[.47,.14],[.55,.12],[.62,.15]],[[.80,.09],[.88,.07],[.95,.10]],[[.05,.13],[.12,.12]]],dusty:1,kaaba:[.794,.292,.082,.03,.722,.866,.17],
+  ridges:[[.03,.12],[.07,.135],[.11,.145],[.24,.14],[.28,.13],[.33,.125],[.37,.135],[.44,.165],[.50,.14],[.53,.13],[.56,.12],[.59,.115],[.62,.125],[.52,.155],[.57,.15],[.61,.155],[.65,.14],[.67,.15],[.70,.105],[.73,.095],[.76,.09],[.79,.085],[.82,.09],[.86,.095],[.89,.11],[.92,.12]]},
  hira:{roads:[[[.72,1],[.70,.86],[.65,.75],[.56,.65],[.50,.56],[.49,.48],[.50,.42],[.55,.36],[.59,.31],[.61,.26]],[[.26,.63],[.36,.66],[.48,.67],[.58,.66]],[[.60,.95],[.75,.92],[.90,.93]]],
   yards:[[.82,.86],[.40,.66],[.62,.72],[.52,.50]],hills:[[[.62,.27],[.70,.24],[.77,.27]],[[.40,.33],[.46,.30]],[[.84,.22],[.90,.25]]],dusty:1},
  madinah:{roads:[[[.70,1],[.62,.88],[.585,.76],[.565,.64],[.54,.55],[.47,.47],[.42,.41],[.37,.35],[.33,.30]],[[.50,.47],[.60,.46],[.70,.45]],[[.80,.97],[.72,.86],[.66,.76]]],
@@ -73,7 +74,7 @@ const LANES={
 const MAP_LIFE=[
  {road:['cl','p','w','cl','p'],hill:['g','g','g'],birds:3},            // 1 Arabia: traders' caravan
  {road:['p','w','p','c','g'],hill:['g','g'],birds:2},                  // 2 The Prophet's family
- {road:['p','w','g'],hill:['g','g'],birds:2},                          // 3 Year of the Elephant (the army has its own scene)
+ {road:['g'],hill:['g','g'],birds:2},                                  // 3 Year of the Elephant: the people watch from the mountains, the army has its own scene
  {road:['p','w','w','p','c'],hill:['g','g'],birds:3},                  // 4 A blessed birth
  {road:['s','s','w','s','s','g','p'],hill:['g','g','g'],birds:2},      // 5 Desert of Banū Saʿd: flocks
  {road:['cl','cl','p','cl','c'],hill:['g','g'],birds:2},               // 6 The caravan road to Shām
@@ -106,7 +107,7 @@ const MAP_LIFE=[
 /* More life on each map: extra people, small herds (g goats, s sheep, h hens) and people walking
    around the Kaʿbah (ṭawāf) on the Makkah maps where it can be seen. */
 const MAP_MORE=[
- {crowd:4,herd:'g3 h3'},{crowd:6,herd:'g2 h4',tawaf:20},{crowd:0,herd:'g2'},{crowd:5,herd:'g3 h5',tawaf:12},
+ {crowd:4,herd:'g3 h3'},{crowd:6,herd:'g2 h4',tawaf:20},{crowd:0,herd:'g2',watch:30},{crowd:5,herd:'g3 h5',tawaf:12},
  {crowd:3,herd:'s6 g4 h3'},{crowd:4,herd:'g2 h3'},{crowd:8,herd:'h4 g2',tawaf:12},{crowd:6,herd:'g2 h3',tawaf:8},
  {crowd:3,herd:'g4 h3'},{crowd:5,herd:'h4 g2',tawaf:12},{crowd:7,herd:'g2 h3',tawaf:12},{crowd:4,herd:'g2',tawaf:10},
  {crowd:6,herd:'g3 h5 s3'},{crowd:7,herd:'h3 g2',tawaf:26},{crowd:2,herd:'g2'},{crowd:5,herd:'s5 g3 h4'},
@@ -130,7 +131,35 @@ function figureFor(kind,i){
 }
 
 /* ---------- the animation engine (one loop for everything) ---------- */
-const LW={figs:[],theatres:new Set(),raf:0,t0:performance.now(),gustTimer:0};
+const LW={figs:[],theatres:new Set(),raf:0,t0:performance.now(),gustTimer:0,birdTimer:0};
+/* ---------- sounds of the maps (synthesised, so nothing to download) ----------
+   They start after the first tap (browsers allow sound only after one), follow the app's
+   sound switch and stop with "Pause animation". */
+const SFX=(()=>{
+ let ac=null,out=null,nb=null,unlocked=false;
+ function ctx(){if(!ac){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ac=new AC();out=ac.createGain();out.gain.value=.6;const comp=ac.createDynamicsCompressor();out.connect(comp);comp.connect(ac.destination)}if(ac.state==='suspended')ac.resume().catch(()=>{});return ac}
+ const unlock=()=>{unlocked=true;ctx()};['pointerdown','touchend','keydown'].forEach(e=>addEventListener(e,unlock,{capture:true,passive:true}));
+ const ok=()=>unlocked&&!!ac&&ac.state==='running'&&(typeof soundOn==='undefined'||soundOn)&&!reduced()&&!document.hidden;
+ function noise(){if(!nb){nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}const n=ac.createBufferSource();n.buffer=nb;n.loop=true;return n}
+ function env(g,t,a,peak,hold,rel){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,peak),t+a);g.gain.setValueAtTime(Math.max(.0002,peak),t+a+hold);g.gain.exponentialRampToValueAtTime(.0001,t+a+hold+rel)}
+ /* a brassy, rasping blare that rises and falls; pitch < 1 sounds lower and tired */
+ function trumpet(vol=1,pitch=1,dur=1.3){if(!ok())return;const t=ac.currentTime+.02,g=ac.createGain(),bp=ac.createBiquadFilter(),hp=ac.createBiquadFilter(),sh=ac.createWaveShaper(),lfo=ac.createOscillator(),lg=ac.createGain(),curve=new Float32Array(256);
+  for(let i=0;i<256;i++)curve[i]=Math.tanh(3*(i/128-1));sh.curve=curve;bp.type='bandpass';bp.frequency.value=1150*pitch;bp.Q.value=.8;hp.type='highpass';hp.frequency.value=240;lfo.frequency.value=29;lg.gain.value=24*pitch;lfo.connect(lg);
+  [0,9].forEach(det=>{const o=ac.createOscillator(),f=o.frequency;o.type='sawtooth';o.detune.value=det;f.setValueAtTime(320*pitch,t);f.exponentialRampToValueAtTime(780*pitch,t+.17);f.linearRampToValueAtTime(700*pitch,t+dur*.6);f.exponentialRampToValueAtTime(500*pitch,t+dur);lg.connect(f);o.connect(sh);o.start(t);o.stop(t+dur+.1)});
+  sh.connect(hp);hp.connect(bp);bp.connect(g);g.connect(out);env(g,t,.06,.45*vol,dur*.55,dur*.4);
+  const n=noise(),nf=ac.createBiquadFilter(),ng=ac.createGain();nf.type='bandpass';nf.frequency.value=2500;nf.Q.value=1.1;n.connect(nf);nf.connect(ng);ng.connect(out);env(ng,t,.05,.1*vol,dur*.5,dur*.4);n.start(t);n.stop(t+dur+.1);lfo.start(t);lfo.stop(t+dur+.1)}
+ function chirp(t,f0,f1,d,v){const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(out);o.start(t);o.stop(t+d+.02)}
+ /* n little birds singing over `spread` seconds */
+ function birds(n=4,spread=1.2,vol=.5){if(!ok())return;const t0=ac.currentTime+.03;for(let i=0;i<n;i++){const t=t0+Math.random()*spread,f=2500+Math.random()*1900,up=Math.random()<.5,notes=1+Math.floor(Math.random()*3);for(let j=0;j<notes;j++){const tt=t+j*(.07+Math.random()*.05);up?chirp(tt,f,f*1.45,.065,.11*vol):chirp(tt,f*1.35,f*.8,.075,.11*vol)}}}
+ /* many wings beating */
+ function flutter(dur=2.5,vol=.5){if(!ok())return;const t=ac.currentTime+.02,n=noise(),lp=ac.createBiquadFilter(),am=ac.createGain(),g=ac.createGain(),lfo=ac.createOscillator(),lg=ac.createGain();lp.type='lowpass';lp.frequency.value=1100;am.gain.value=.5;lfo.type='square';lfo.frequency.value=13;lg.gain.value=.5;lfo.connect(lg);lg.connect(am.gain);n.connect(lp);lp.connect(am);am.connect(g);g.connect(out);env(g,t,.4,.22*vol,dur-.9,.5);n.start(t);n.stop(t+dur+.1);lfo.start(t);lfo.stop(t+dur+.1)}
+ function wind(dur=3,vol=.6){if(!ok())return;const t=ac.currentTime+.02,n=noise(),bp=ac.createBiquadFilter(),g=ac.createGain();bp.type='bandpass';bp.Q.value=.6;bp.frequency.setValueAtTime(320,t);bp.frequency.linearRampToValueAtTime(950,t+dur*.45);bp.frequency.linearRampToValueAtTime(380,t+dur);n.connect(bp);bp.connect(g);g.connect(out);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3*vol,t+dur*.4);g.gain.exponentialRampToValueAtTime(.0001,t+dur);n.start(t,Math.random()*1.5);n.stop(t+dur+.05)}
+ /* small stones landing */
+ function stones(n=6,spread=1.4,vol=.6){if(!ok())return;const t0=ac.currentTime+.02;for(let i=0;i<n;i++){const t=t0+Math.random()*spread,o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(150+Math.random()*60,t);o.frequency.exponentialRampToValueAtTime(48,t+.16);o.connect(g);g.connect(out);env(g,t,.004,.35*vol,.01,.16);o.start(t);o.stop(t+.22)}}
+ return{ok,trumpet,birds,flutter,wind,stones};
+})();
+/* fire each cue once as an animation's clock passes it (and again on the next loop) */
+function cueRunner(list){let last=null;return(t,allowed)=>{if(last===null||t<last)last=t-.0001;for(const [at,fn] of list)if(at>last&&at<=t&&allowed())fn();last=t}}
 function polyLen(pts){let L=0;for(let i=1;i<pts.length;i++)L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);return L}
 function polyAt(pts,s){for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(s<=l||i===pts.length-1){const t=l?clamp(s/l,0,1):0;return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,b[0]-a[0]]}s-=l}return pts[pts.length-1].concat([1])}
 function tick(now){
@@ -175,9 +204,23 @@ function paintLife(){
  /* birds glide across the sky */
  for(let b=0;b<life.birds;b++){const el=g.querySelector(`[data-b="${b}"]`),y=P.y+P.h*(.04+b*.03),x0=P.x-40,x1=P.x+P.w+40;el.setAttribute('transform',`translate(${P.x+P.w*(.25+b*.22)} ${y}) scale(.7)`);LW.figs.push({el,pts:b%2?[[x1,y],[x0,y+20]]:[[x0,y],[x1,y+15]],len:P.w+80,P:{x:P.x,y:P.y-P.h*2,w:P.w,h:P.h*3},k:1.1,speed:55*P.w/1536,off:b*P.w*.6})}
  if(lanes.kaaba&&more.tawaf)tawaf(g.querySelector('.lw-tawaf'),lanes.kaaba,more.tawaf,P,L);
+ if(more.watch&&lanes.ridges)watchers(g,lanes.ridges,more.watch,P,L);
  paintMood(svg,P,S.mood||'');
  const frame=svg.closest('.map-frame');if(frame)frame.classList.toggle('lw-dusty',!!lanes.dusty);
- scheduleGust(frame,!!lanes.dusty);run();
+ scheduleGust(frame,!!lanes.dusty);scheduleBirdSong(life.birds);run();
+}
+function scheduleBirdSong(n){clearTimeout(LW.birdTimer);if(!n)return;LW.birdTimer=setTimeout(()=>{if(mapShowing())SFX.birds(2+Math.floor(Math.random()*3),1.4,.45);scheduleBirdSong(n)},8000+Math.random()*11000)}
+/* people standing on the mountains, looking down at the town (the Year of the Elephant: Quraysh
+   left Makkah for the mountains). Only spots that are on screen and clear of the buttons are used. */
+function watchers(g,spots,n,P,L){
+ const frame=g.closest('.map-frame'),fw=(frame&&frame.clientWidth)||innerWidth,k=L?fw/L.W:1,midU=.62;
+ const fr=frame?frame.getBoundingClientRect():{left:0,top:0},busy=[...document.querySelectorAll('#spTools button,#placeInfoButton,.map-title,.map-menu-btn,#mapMenuBtn,#mapExitDoor,.na-bell,#naBell')].map(e=>e.getBoundingClientRect()).filter(r=>r.width).map(r=>[r.left-fr.left-14,r.top-fr.top-30,r.right-fr.left+14,r.bottom-fr.top+3]);
+ const vis=spots.map(([u,v])=>({u,x:P.x+u*P.w,y:P.y+v*P.h})).filter(p=>{const sx=p.x*k,sy=p.y*k;return L&&p.x>L.W*.03&&p.x<L.W*.97&&sy>40&&!busy.some(b=>sx>b[0]&&sx<b[2]&&sy>b[1]&&sy<b[3])});
+ if(!vis.length)return;const sc=Math.max(.5*Math.max(P.w/1536,.6),.3);let h='';
+ for(let i=0;i<n;i++){const p=vis[i%vis.length],ring=Math.floor(i/vis.length),dx=((i*37)%7-3)*7*sc+(ring%2?9:-9)*sc*ring,dy=((i*53)%5-2)*2*sc,face=p.u<midU?1:-1,woman=i%3===1,point=i%4===0;
+  const o={robe:woman?ABAYAS[i%ABAYAS.length]:ROBES[i%ROBES.length],wrap:woman?ABAYAS[(i+1)%ABAYAS.length]:WRAPS[(i*3)%WRAPS.length],skin:SKIN[i%SKIN.length],woman};
+  h+=`<g class="lw-watch${point?' lw-pointer':''}" transform="translate(${(p.x+dx).toFixed(1)} ${(p.y+dy).toFixed(1)}) scale(${(sc*face).toFixed(3)} ${sc.toFixed(3)})"><ellipse cx="0" cy="1" rx="9" ry="2.6" fill="#2a1b0e" opacity=".35"/><g class="lw-lean" style="animation-delay:-${(i*.37%3).toFixed(2)}s">${personSvg(o).replace('class="lw-arm"',point?'class="lw-arm" transform="rotate(-118 5 -31)"':'class="lw-arm"')}</g></g>`}
+ g.insertAdjacentHTML('afterbegin',`<g class="lw-watchers">${h}</g>`);
 }
 /* part of a lane (from fraction a to b of its length), shifted a little to one side */
 function laneSlice(lane,a,b,off,P){const R=[];let d=0;lane.forEach((p,i)=>{if(i)d+=Math.hypot(p[0]-lane[i-1][0],p[1]-lane[i-1][1]);R.push([p[0],p[1],d])});if(d<1)return lane;return streetLane(R,a,b,off,P)}
@@ -221,7 +264,7 @@ function gust(frame){
  let w=frame.querySelector('.lw-wind');if(!w){frame.insertAdjacentHTML('beforeend','<div class="lw-wind" aria-hidden="true"></div>');w=frame.querySelector('.lw-wind')}
  let h='';for(let i=0;i<9;i++)h+=`<i style="top:${(18+Math.random()*70).toFixed(1)}%;width:${(14+Math.random()*22).toFixed(0)}%;animation-delay:${(Math.random()*.9).toFixed(2)}s;opacity:${(.25+Math.random()*.35).toFixed(2)}"></i>`;
  for(let i=0;i<26;i++)h+=`<b style="top:${(30+Math.random()*65).toFixed(1)}%;animation-delay:${(Math.random()*1.2).toFixed(2)}s"></b>`;
- w.innerHTML=h;w.classList.remove('go');void w.offsetWidth;w.classList.add('go');
+ w.innerHTML=h;w.classList.remove('go');void w.offsetWidth;w.classList.add('go');SFX.wind(2.8,.55);
 }
 
 /* ---------- the Year of the Elephant ---------- */
@@ -251,6 +294,8 @@ function elephantTheatre(svg,full,captionEl){
  if(full)h+=`<defs><linearGradient id="lwSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c98a"/><stop offset=".6" stop-color="#fbe4b8"/><stop offset="1" stop-color="#f3d9a6"/></linearGradient></defs><rect width="600" height="260" fill="url(#lwSky)"/><circle cx="110" cy="70" r="28" fill="#fff1c4" opacity=".9"/><path d="M0 170 L60 120 L110 150 L170 95 L240 150 L300 112 L360 150 L430 100 L500 140 L560 110 L600 130 L600 260 L0 260Z" fill="#c9a06a"/><path d="M0 190 L80 160 L160 185 L250 158 L340 186 L430 165 L520 184 L600 170 L600 260 L0 260Z" fill="#d9b27a"/><rect y="214" width="600" height="46" fill="#e2c08a"/><g transform="translate(540 216)">${kaabaSvg()}</g>`;
  else h+=`<ellipse cx="300" cy="218" rx="280" ry="14" fill="#5b4126" opacity=".16"/>`;
  const rowY=[203,224],rowK=[.7,.92];
+ /* the people of Makkah watch from the mountains */
+ if(full)h+=`<g class="lwE-watchers">`+[[34,141,1],[48,131,1],[62,121,1],[150,108,1],[164,99,1],[180,101,-1],[194,111,-1],[288,118,1],[302,113,-1],[318,122,-1],[416,107,1],[430,101,-1],[446,108,-1],[462,116,-1],[548,114,-1],[566,113,-1],[582,118,-1]].map(([x,y,f],i)=>`<g transform="translate(${x} ${y}) scale(${.34*f} .34)">${personSvg({robe:i%3===1?ABAYAS[i%ABAYAS.length]:ROBES[i%ROBES.length],wrap:i%3===1?ABAYAS[(i+1)%ABAYAS.length]:WRAPS[i%WRAPS.length],skin:SKIN[i%SKIN.length],woman:i%3===1}).replace('class="lw-arm"',i%4===0?'class="lw-arm" transform="rotate(-118 5 -31)"':'class="lw-arm"')}</g>`).join('')+`</g>`;
  h+=`<g class="lwE-army">`+ARMY_SIDE.map((m,i)=>`<g transform="translate(${m.x} ${rowY[m.r]}) scale(${rowK[m.r]})"><g class="lwE-s${m.e?' lwE-el':''}${m.king?' lwE-lead':''}" data-s="${i}"${m.r?'':' opacity=".92"'}>${m.e?elephantSvg({king:m.king,i:m.i||0}):soldierSvg(i,m.b)}</g></g>`).join('')+`</g>`;
  const birds=ARMY_SIDE.map((m,i)=>({hx:m.x+(m.e?10:0),hy:(m.e?60:96)+(i%3)*10-(m.r?0:14),gy:rowY[m.r]-(m.e?30:18),sx:640+i*34,sy:-20-(i%5)*14,ex:-60-i*22,ey:-40-(i%4)*12}));
  h+=birds.map((b,i)=>`<circle class="lwE-stone" data-b="${i}" r="3.4" fill="#7a6650" stroke="#3d3022" stroke-width="1"/>`).join('');
@@ -258,9 +303,12 @@ function elephantTheatre(svg,full,captionEl){
  svg.innerHTML=h;
  svg.querySelectorAll('.lwE-army .lw-leg').forEach(l=>{l.setAttribute('stroke','#3f3021');l.setAttribute('stroke-width','2.6');l.setAttribute('stroke-linecap','round')});
  const army=svg.querySelector('.lwE-army'),lead=svg.querySelector('.lwE-lead'),front=lead.querySelector('.lwE-front'),king=lead.querySelector('.lwE-king'),S=[...svg.querySelectorAll('.lwE-s')],B=[...svg.querySelectorAll('.lwE-bird')],ST=[...svg.querySelectorAll('.lwE-stone')],legs=[...svg.querySelectorAll('.lwE-army .lw-leg')];
+ svg.querySelectorAll('.lwE-watchers .lw-leg').forEach(l=>{l.setAttribute('stroke','#3f3021');l.setAttribute('stroke-width','2.4')});
  let lastCap=-1;
+ const inView=()=>{const r=svg.getBoundingClientRect();return r.width>0&&r.bottom>0&&r.top<innerHeight&&!(window.speechSynthesis&&speechSynthesis.speaking)};
+ const sound=cueRunner([[.6,()=>SFX.trumpet(.4,1)],[4.6,()=>SFX.trumpet(.55,1.05)],[8.1,()=>SFX.trumpet(.65,.8,1.6)],[9.1,()=>{SFX.birds(12,3,.6);SFX.flutter(3.2,.55)}],[11.9,()=>SFX.stones(9,1.6,.6)],[14.6,()=>SFX.wind(4.2,.9)],[16.2,()=>SFX.birds(5,2,.45)]]);
  const th={svg,cycle:24,start:performance.now(),visible:()=>!document.hidden&&svg.getBoundingClientRect().width>0,
-  tick(t){
+  tick(t){sound(t,()=>inView()&&SFX.ok());
    const walk=t<8,ax=walk?lerp(-360,0,ease(t/8)):0,aOp=t<.6?t/.6:t>21?clamp(1-(t-21)/2,0,1):1;
    army.setAttribute('transform',`translate(${ax.toFixed(1)} ${walk?(Math.abs(Math.sin(t*4.5))*-1.5).toFixed(2):0})`);army.setAttribute('opacity',aOp.toFixed(2));
    const sw=walk?Math.sin(t*9)*16:0;legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?sw:-sw).toFixed(1)} ${x} ${y})`)});
@@ -358,8 +406,9 @@ function elephantRoad(g,L,P){
  /* one soldier's height on screen near the middle of the march */
  const hsAt=s=>{const p=roadAt(R,s);return 55*Math.min(depthAt(p[1],P,.95,L.H*.07/55),L.W*.13/55)};
  const hs0=hsAt(len*.3),s1=Math.max(len*.2,Math.min(len*.5,len-6.6*hs0)),s0=Math.max(3.4*hs0,len*.04);
+ const sound=cueRunner([[.4,()=>SFX.wind(3,.45)],[1.2,()=>SFX.trumpet(.4,1)],[7,()=>SFX.trumpet(.6,1.05)],[13.1,()=>SFX.trumpet(.7,.8,1.6)],[14.2,()=>{SFX.birds(12,3,.65);SFX.flutter(3.4,.6)}],[16.6,()=>SFX.birds(8,2.4,.55)],[17.5,()=>SFX.stones(10,1.8,.65)],[20.2,()=>SFX.wind(4.6,1)]]);
  const th={svg:g,cycle:30,start:performance.now(),visible:mapShowing,still:16,
-  tick(t){
+  tick(t){sound(t,()=>mapShowing()&&SFX.ok());
    const centre=lerp(s0,s1,ease(clamp(t/13,0,1))),hs=hsAt(centre);
    g.setAttribute('opacity',(t<.8?t/.8:t>23?clamp(1-(t-23)/1.6,0,1):1).toFixed(2));
    swingAll(legs,t<13?Math.sin(t*8)*16:0);
@@ -523,7 +572,9 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lw-life .lw-fig .lw-leg{transform-box:fill-box;transform-origin:50% 0;animation:lwStep .55s ease-in-out infinite alternate}
 .lw-life .lw-fig .lw-leg.b{animation-direction:alternate-reverse}
 .lw-life .lw-k-c .lw-leg,.lw-life .lw-k-cl .lw-leg{animation-duration:.8s}
-.lw-life .lw-fig{filter:drop-shadow(0 2px 1.5px rgba(40,25,10,.35))}
+.lw-life .lw-fig,.lw-watch{filter:drop-shadow(0 2px 1.5px rgba(40,25,10,.35))}
+.lw-watch .lw-lean{animation:lwLean 4.5s ease-in-out infinite alternate}
+@keyframes lwLean{from{transform:translateY(0)}to{transform:translateY(-1.5px)}}
 .lw-life .lw-k-h .lw-leg{stroke:#d9a33a;stroke-width:1.4}
 .lw-life .lw-k-h .lw-peck{transform-box:fill-box;transform-origin:0 100%;animation:lwPeck 1.7s ease-in-out infinite}
 @keyframes lwPeck{0%,55%,100%{transform:rotate(0)}65%,80%{transform:rotate(38deg) translate(1px,3px)}}
@@ -615,8 +666,9 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lesson-side .side-step.done{background:linear-gradient(180deg,#e9f8e5,#cdeec7);border-color:#bfe6b6}
 @keyframes lwGlow{0%,100%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 0 rgba(255,207,77,.0)}50%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 6px rgba(255,207,77,.35)}}
 @media(max-width:640px){.lw-head{padding:18px}.lw-emblem{width:38px;height:38px;font-size:20px}.lw-theatre figcaption{font-size:14px}}
-@media(prefers-reduced-motion:reduce){.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
+.seeraa-calm .lw-watch .lw-lean{animation:none}
+@media(prefers-reduced-motion:reduce){.lw-watch .lw-lean,.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
 </style>`);
 /* shared with seeraa-event-scenes.js (Badr, Uḥud, Ḥudaybiyyah, the Opening of Makkah) */
-window.SeeraaLiving={sayBox,LW,run,reduced,elephantSvg,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,resumeWeather:()=>{const svg=document.getElementById('mapSvg'),P=svg&&photoBox(svg),S=SEERAA_SCENES[viewWorld];if(P&&S){paintMood(svg,P,S.mood||'');scheduleGust(svg.closest('.map-frame'),!!LANES[S.asset]?.dusty)}},repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
+window.SeeraaLiving={SFX,cueRunner,sayBox,LW,run,reduced,elephantSvg,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,resumeWeather:()=>{const svg=document.getElementById('mapSvg'),P=svg&&photoBox(svg),S=SEERAA_SCENES[viewWorld];if(P&&S){paintMood(svg,P,S.mood||'');scheduleGust(svg.closest('.map-frame'),!!LANES[S.asset]?.dusty)}},repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
 })();
