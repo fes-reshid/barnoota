@@ -124,7 +124,12 @@ function teacherUsernameToEmail(username){
    before this feature existed keeps working with zero migration. */
 function resolveLoginEmail(username){
   const clean = normalizeUsername(username);
-  return getDoc(doc(db, USERNAMES_COLLECTION, clean)).then(function(snap){
+  const look = function(){ return getDoc(doc(db, USERNAMES_COLLECTION, clean)); };
+  /* a lookup that fails (a slow or just-opened connection) is tried once more:
+     falling back too early sends an account with a real email to the wrong address */
+  return look().catch(function(){
+    return new Promise(function(r){ setTimeout(r, 700); }).then(look);
+  }).then(function(snap){
     return (snap.exists() && snap.data().email) ? snap.data().email : usernameToEmail(clean);
   }).catch(function(){ return usernameToEmail(clean); });
 }
@@ -132,11 +137,20 @@ function resolveLoginEmail(username){
 /* Logs a child in with their plain username + password. Resolves with
    the Firestore profile doc (creating a blank one on first-ever login,
    in case an admin-created account hasn't been touched yet). Rejects
-   (and signs back out) if an admin has disabled the account. */
+   (and signs back out) if an admin has disabled the account.
+   A teacher may type their teacher username (for example salah-teacher)
+   here too: teacher logins live at their own address (see
+   teacherUsernameToEmail), so when the student address does not match,
+   the teacher address is tried with the same password. */
 function studentLogin(username, password){
   const clean = normalizeUsername(username);
+  const notFound = function(err){ return /invalid-credential|wrong-password|user-not-found|invalid-email/.test(String(err && err.code || '')); };
   return resolveLoginEmail(clean).then(function(email){
-    return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password).catch(function(err){
+      if(!notFound(err) || clean.indexOf('teacher') < 0) throw err;
+      return signInWithEmailAndPassword(auth, teacherUsernameToEmail(clean), password)
+        .catch(function(err2){ throw notFound(err2) ? err : err2; });
+    });
   }).then(function(cred){
     return ensureStudentDoc(cred.user, clean).then(function(data){
       if(data.disabled){
