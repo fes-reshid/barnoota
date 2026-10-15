@@ -31,11 +31,14 @@
   function profile(p) {
     if (!p || typeof p !== 'object' || Number(p.courseVersion) !== 6) return p;
     const { lessons, maps } = counts();
-    p.stars = list(p.stars, lesson, lessons, 0);
-    p.memoryDone = list(p.memoryDone, lesson, lessons, false);
-    ['vocabDone', 'flashPracticeDone', 'teacherMapUnlocks'].forEach(k => { p[k] = list(p[k], map, maps, false); });
-    ['teacherAssessments', 'mapQuizScores'].forEach(k => { p[k] = list(p[k], map, maps, null); });
-    ['stepDone', 'lessonQuizAttempts', 'hifz'].forEach(k => { p[k] = keyed(p[k], lesson); });
+    /* only fields the record has are moved: a missing field must stay missing,
+       never become undefined, which the cloud refuses to save */
+    const move = (k, fn) => { if (p[k] != null) p[k] = fn(p[k]); };
+    move('stars', a => list(a, lesson, lessons, 0));
+    move('memoryDone', a => list(a, lesson, lessons, false));
+    ['vocabDone', 'flashPracticeDone', 'teacherMapUnlocks'].forEach(k => move(k, a => list(a, map, maps, false)));
+    ['teacherAssessments', 'mapQuizScores'].forEach(k => move(k, a => list(a, map, maps, null)));
+    ['stepDone', 'lessonQuizAttempts', 'hifz'].forEach(k => move(k, o => keyed(o, lesson)));
     const open = Math.max(1, Number(p.unlocked) || 1);
     p.unlocked = Math.min(lessons, lesson(open - 1) + 1);
     p.courseVersion = 7;
