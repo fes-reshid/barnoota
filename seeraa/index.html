@@ -2925,6 +2925,30 @@ const showBeforeBackPill=show;show=function(){showBeforeBackPill.apply(this,argu
 if(backPill)backPill.addEventListener('click',e=>{e.preventDefault();if(['mapScreen','startScreen'].includes(currentScreen()))return;
  stopVoicePlayback();closeReadingGuard();if(typeof stopHifz==='function'&&!$('#hifzScreen').classList.contains('hidden'))stopHifz();if(studentRec)studentRec.stop();
  renderMap();show('mapScreen')});
+/* No site header or footer inside the app. On every screen except the map and sign-in,
+   one floating "Back to map" button sits at the bottom (the header pill, moved and restyled). */
+document.head.insertAdjacentHTML('beforeend',`<style id="sq-chrome">
+body>header,body>footer{display:none!important}
+.back-pill.sq-back{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:58;display:inline-flex;align-items:center;gap:10px;margin:0;padding:7px 22px 7px 7px;border-radius:999px;border:2px solid #e8cf86;background:linear-gradient(180deg,#22745a,#14533e);color:#fff8e1;font:800 16px/1 Nunito,system-ui,sans-serif;letter-spacing:.01em;text-decoration:none;white-space:nowrap;box-shadow:0 8px 20px rgba(20,40,30,.32),0 2px 0 #0e3d2d,inset 0 1px 0 rgba(255,255,255,.22);cursor:pointer;transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+.back-pill.sq-back .sq-back-ic{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffdf3,#f3e1b0);box-shadow:inset 0 0 0 2px #e8cf86,0 1px 2px rgba(0,0,0,.25);font-size:19px;line-height:1}
+.back-pill.sq-back:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 12px 24px rgba(20,40,30,.36),0 2px 0 #0e3d2d,inset 0 1px 0 rgba(255,255,255,.22)}
+.back-pill.sq-back:active{transform:translateX(-50%) translateY(1px);box-shadow:0 4px 10px rgba(20,40,30,.3),inset 0 1px 0 rgba(255,255,255,.22)}
+.back-pill.sq-back:focus-visible{outline:3px solid #ffd977;outline-offset:3px}
+body.sq-has-back main.wrap{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+body.teacher-mode .back-pill.sq-back{left:16px;transform:none}
+body.teacher-mode .back-pill.sq-back:hover{transform:translateY(-2px)}body.teacher-mode .back-pill.sq-back:active{transform:translateY(1px)}
+@media(max-width:420px){.back-pill.sq-back{font-size:15px;padding:6px 18px 6px 6px}.back-pill.sq-back .sq-back-ic{width:32px;height:32px;font-size:17px}}
+@media print{.back-pill.sq-back{display:none!important}}
+</style>`);
+if(backPill){document.body.appendChild(backPill);backPill.classList.add('sq-back');backPill.setAttribute('role','button')}
+/* The screens' own plain "Back to map" buttons are hidden; the floating button presses them instead,
+   so their extra steps (stopping audio, "Leave this quiz?" and so on) still happen. */
+const SQ_DUPES=['flashBack','vocabBack','certBack','mapQuizExit','finishMapQuizBack','hifzBack','reviewBack','rvDone','recBack','badgeBack','avatarBack','stBack','rewardMapBtn','tqQuit','tqMap'];
+document.head.insertAdjacentHTML('beforeend','<style id="sq-dupes">'+SQ_DUPES.map(id=>'#'+id).join(',')+'{display:none!important}</style>');
+document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('.sq-back');if(!b)return;const scr=document.getElementById(currentScreen()),d=scr&&SQ_DUPES.map(id=>scr.querySelector('#'+id)).find(Boolean);if(!d)return;e.preventDefault();e.stopPropagation();d.click()},true);
+
+syncBackPill=function(){if(!backPill)return;const out=['mapScreen','startScreen'].includes(currentScreen());backPill.hidden=out;backPill.style.display=out?'none':'';document.body.classList.toggle('sq-has-back',!out);
+ if(!backPill.querySelector('.sq-back-ic'))backPill.innerHTML='<span class="sq-back-ic" aria-hidden="true">🗺️</span><span>Back to map</span>';backPill.title='Back to your map';backPill.setAttribute('aria-label','Back to your map')};
 syncBackPill();
 /* Stay inside Seeraa Adventure: the brand logo and the browser/phone Back
    button never leave the app — Back returns to the map instead. */
