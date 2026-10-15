@@ -9,9 +9,9 @@ jobs:
     steps:
       - run: |
           sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1 || true
-          curl -sSL -A "Mozilla/5.0" -o book.pdf https://www.muslim-library.com/dl/books/English_ArRaheeq_AlMakhtum_THE_SEALED_NECTAR.pdf || true
-          if ! pdftotext book.pdf book.txt 2>/dev/null; then echo "muslim-library copy unreadable, using archive.org"; curl -sSL -o book.pdf https://archive.org/download/Ar-raheeqAl-makhtum/sealed-nectar.pdf; pdftotext book.pdf book.txt; fi
-          ls -la book.pdf; wc -l book.txt
+          curl -sSL -m 90 --retry 1 -A "Mozilla/5.0" -o book.pdf https://www.muslim-library.com/dl/books/English_ArRaheeq_AlMakhtum_THE_SEALED_NECTAR.pdf || true
+          if ! pdftotext book.pdf book.txt 2>/dev/null; then echo "muslim-library copy unreadable, using archive.org"; curl -sSL -m 120 -o book.pdf https://archive.org/download/Ar-raheeqAl-makhtum/sealed-nectar.pdf; pdftotext book.pdf book.txt; fi
+          ls -la book.pdf; wc -l book.txt; head -c 300 book.txt | tr "\n" " "; echo
           tr '\n' ' ' < book.txt | sed 's/  */ /g' > flat.txt
           show() { echo; echo "=== $1"; grep -o -i -E ".{0,260}($2).{0,260}" flat.txt | head -${3:-4} || true; echo "(matches: $(grep -o -i -E "$2" flat.txt | wc -l))"; }
           show "Zamzam: takbir?" "dig Zamzam|well of Zamzam gushed" 3
