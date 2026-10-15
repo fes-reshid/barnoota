@@ -139,7 +139,7 @@ const SFX=(()=>{
  let ac=null,out=null,nb=null,unlocked=false;
  function ctx(){if(!ac){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;ac=new AC();out=ac.createGain();out.gain.value=.6;const comp=ac.createDynamicsCompressor();out.connect(comp);comp.connect(ac.destination)}if(ac.state==='suspended')ac.resume().catch(()=>{});return ac}
  const unlock=()=>{unlocked=true;ctx()};['pointerdown','touchend','keydown'].forEach(e=>addEventListener(e,unlock,{capture:true,passive:true}));
- const ok=()=>unlocked&&!!ac&&ac.state==='running'&&(typeof soundOn==='undefined'||soundOn)&&!reduced()&&!document.hidden;
+ const ok=()=>unlocked&&!!ac&&ac.state==='running'&&(typeof soundOn==='undefined'||soundOn)&&!reduced()&&!document.hidden&&!(window.SeeraaQuran&&SeeraaQuran.playing);
  function noise(){if(!nb){nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}const n=ac.createBufferSource();n.buffer=nb;n.loop=true;return n}
  function env(g,t,a,peak,hold,rel){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,peak),t+a);g.gain.setValueAtTime(Math.max(.0002,peak),t+a+hold);g.gain.exponentialRampToValueAtTime(.0001,t+a+hold+rel)}
  /* a brassy, rasping blare that rises and falls; pitch < 1 sounds lower and tired */

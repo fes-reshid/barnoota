@@ -549,15 +549,17 @@ function mapCaption(){const frame=document.getElementById('mapSvg')?.closest('.m
  Object.assign(el.style,doorX>fw/2?{left:'12px',right:'auto',bottom:'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'}:{left:'auto',right:'12px',bottom:tall?'calc(70px + env(safe-area-inset-bottom,0px))':'calc(14px + env(safe-area-inset-bottom,0px))',transform:'none'});
  return el}
 function theatre(g,ctx,sc,capEl){
- const play=sc.build(g,ctx);let last=-1,say=null;
+ const play=sc.build(g,ctx);let last=-1,say=null,heardNow=null;const heard=new Set();
  /* a scene's play(t) may return {say:[quote,x,y]} (picture coordinates): a speech bubble over the picture */
  function bubble(r){const svg=g.ownerSVGElement;if(!svg||!SL.sayBox)return;
   if(!say){const host=ctx.story?svg.closest('.lw-theatre'):svg.closest('.map-frame');if(!host)return;say=SL.sayBox(host,ctx.story?48:64)}
   if(!r||!r.say){say.set(null);return}
   const [q,x,y]=r.say,rc=svg.getBoundingClientRect(),hr=say.el.parentNode.getBoundingClientRect(),vb=svg.viewBox&&svg.viewBox.baseVal,k=rc.width/((vb&&vb.width)||ctx.W);say.set(q,rc.left-hr.left+x*k,rc.top-hr.top+y*k)}
- return{svg:g,cycle:sc.cycle,still:sc.still,start:performance.now(),
-  visible:ctx.story?()=>!document.hidden&&!!g.ownerSVGElement&&g.ownerSVGElement.getBoundingClientRect().width>0:mapShowing,
-  tick(t){const r=play(t);if(r||say)bubble(r);if(capEl){let n=0;sc.caps.forEach((x,i)=>{if(t>=x[0])n=i});if(n!==last){last=n;capEl.textContent=sc.caps[n][ctx.story?1:2]}}}};
+ const visible=ctx.story?()=>!document.hidden&&!!g.ownerSVGElement&&g.ownerSVGElement.getBoundingClientRect().width>0:mapShowing;
+ /* a Qurʾān bubble is recited (Mishary al-ʿAfasy, seeraa-quran.js) the first time it appears */
+ function recite(r){const q=r&&r.say&&r.say[0];if(q===heardNow)return;heardNow=q;if(q&&q.k==='quran'&&!heard.has(q)&&window.SeeraaQuran&&SeeraaQuran.auto(q,visible))heard.add(q)}
+ return{svg:g,cycle:sc.cycle,still:sc.still,start:performance.now(),visible,
+  tick(t){const r=play(t);if(r||say)bubble(r);recite(r);if(capEl){let n=0;sc.caps.forEach((x,i)=>{if(t>=x[0])n=i});if(n!==last){last=n;capEl.textContent=sc.caps[n][ctx.story?1:2]}}}};
 }
 [MADINAH,BADR,UHUD,HUDAYBIYYAH,FATH,ZAMZAM,BLACKSTONE,HIRA,NAJASHI,MASJID,TRENCH,FAREWELL].forEach(sc=>SCENES.push({re:sc.re,story:sc.story,label:sc.label,
  road:(g,L,P)=>{const th=theatre(g,mapCtx(L,P),sc,mapCaption());if(sc.nasheed)mapNasheed();return th},
