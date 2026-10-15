@@ -78,3 +78,10 @@
 #lessonScreen #stage .seeraa-choice,#lessonScreen #stage .choice{font-family:Nunito,system-ui,sans-serif;font-weight:700}
 #lessonScreen #stage .seeraa-dua-ar{text-align:center}
 #lessonScreen #stage .quiz-meta{box-sizing:border-box;width:100%;padding:2px 14px 0;font:800 12.5px/1.4 Nunito,system-ui,sans-serif;letter-spacing:.04em;color:var(--ll-muted)}
+
+/* ---------- the map's scene behind the top blocks, as in the story card's header ---------- */
+#lessonScreen .lesson-side,#lessonScreen .stage-top{background:linear-gradient(90deg,#493721e6,#4937218f),var(--ll-photo,none) var(--ll-focus,center)/cover,linear-gradient(180deg,var(--ll-paper),var(--ll-paper2))}
+#lessonScreen .side-name{color:#fff7e7;border-bottom-color:rgba(255,247,231,.35)}
+#lessonScreen .track{background:rgba(255,250,240,.88)}
+/* the story card's photo header spans the whole card (on wide screens it was a narrow band) */
+#lessonScreen #stage.lw-story .lw-head{align-self:stretch;box-sizing:border-box;width:100%}
