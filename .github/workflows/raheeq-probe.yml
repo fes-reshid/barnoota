@@ -1,0 +1,17 @@
+# Temporary (removed after one run): prints what Ar-Raheeq al-Makhtum (The Sealed Nectar) says about Zamzam.
+name: Ar-Raheeq Zamzam check (temporary)
+on:
+  push:
+    paths: ['.github/workflows/raheeq-probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1 || true
+          curl -sSL -o book.pdf https://archive.org/download/Ar-raheeqAl-makhtum/sealed-nectar.pdf
+          ls -la book.pdf
+          pdftotext book.pdf book.txt && wc -l book.txt
+          echo "=== every line naming Zamzam"; grep -n -i "zamzam" book.txt | head -40
+          echo "=== takbir words anywhere near Zamzam"; grep -n -i -C 15 "zamzam" book.txt | grep -i -E "akbar|greatest|takbir|exclaim|cried" || echo "(none)"
+          echo "=== the passages"; grep -n -i -C 18 "zamzam" book.txt | head -260
