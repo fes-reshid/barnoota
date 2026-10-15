@@ -24,16 +24,12 @@ jobs:
         timeout-minutes: 2
         run: |
           export LC_ALL=C.UTF-8
-          show() { echo; echo "=== $1 (matching lines: $(grep -c -i -E "$2" book.txt))"; grep -n -i -E -B 3 -A 4 "$2" book.txt | head -$(( ${3:-3} * 9 )) || true; }
-          show "Zamzam: takbir?" "dig Zamzam|well of Zamzam gushed" 3
-          show "Black Stone: al-Amin" "Al-Ameen|Ameen" 6
-          show "Negus: safe in my land" "safe in my land|secure in my land|safe in my country|my land in safety" 4
-          show "Ja'far's speech" "people (of|in a state of) ignorance|in ignorance" 3
-          show "Building the mosque / Trench: Hereafter" "of the Hereafter|the Hereafter, so|Ansar and the" 6
-          show "Trench: pledge as long as we live" "as long as we|to Muhammad to" 4
-          show "Farewell: asked about me" "asked about me|be asked about me" 3
-          show "Farewell: bear witness" "bear witness that you|O All.h, bear witness|O All.h! Bear witness" 4
-          show "5:3 perfected your religion" "perfected your religion" 3
-          show "Suraqah" "Suraqa" 4
-          show "Hijrah: pursuers caught up" "caught up with us|overtaken|pursuer" 4
-          show "Hira: Read" "Read in the Name of your Lord" 2
+          show() { echo; echo "=== $1 (matching lines: $(grep -c -i -E "$2" book.txt))"; grep -n -i -E -B ${4:-2} -A ${5:-14} "$2" book.txt | head -$(( ${3:-3} * 18 )) || true; }
+          show "Black Stone and al-Amin" "Black Stone" 4 2 14
+          show "al-Amin spelled with a space" "Al- Ameen|Al-Ameen|the trustworthy" 4 4 6
+          show "Ja'far before the Negus" "O king|O King" 3 2 22
+          show "Negus answers" "Negus (said|replied|answered)|said the Negus|Go, you|you may go|are safe|in safety|in security" 5 3 6
+          show "Trench chant" "[Tt]rench" 3 1 12
+          show "Trench: we pledged / Jihad" "for Jihad|[Jj]ihad as long|swore|sworn allegiance|pledge(d)? (to|of allegiance)" 4 3 5
+          show "Suraqah's words" "begged of the Prophet" 1 4 14
+          show "Hira: first revelation" "Read!|Read in the|Iqra" 2 3 12
