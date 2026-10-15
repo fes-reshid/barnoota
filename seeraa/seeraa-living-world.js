@@ -154,7 +154,7 @@ function photoBox(svg){const img=svg.querySelector('.history-photo');if(!img)ret
 function paintLife(){
  const svg=document.getElementById('mapSvg');if(!svg||typeof SEERAA_SCENES==='undefined')return;
  svg.querySelectorAll('.lw-life').forEach(g=>g.remove());LW.figs=LW.figs.filter(f=>f.el.isConnected&&f.el.closest('#mapSvg')!==svg);
- const wi=((viewWorld%MAP_LIFE.length)+MAP_LIFE.length)%MAP_LIFE.length,P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%SEERAA_SCENES.length)+SEERAA_SCENES.length)%SEERAA_SCENES.length],lanes=LANES[S.asset],life=MAP_LIFE[wi],more=MAP_MORE[wi]||{};if(!P||!lanes||!life)return;
+ const wi=((viewWorld%MAP_LIFE.length)+MAP_LIFE.length)%MAP_LIFE.length,P=photoBox(svg),S=SEERAA_SCENES[((viewWorld%SEERAA_SCENES.length)+SEERAA_SCENES.length)%SEERAA_SCENES.length],lanes=LANES[S.asset],life=MAP_LIFE[wi],more=MAP_MORE[wi]||{};if(!P||S.empty||!lanes||!life)return;
  const L=typeof MAP_GEO!=='undefined'&&MAP_GEO;let html='';const plan=[];
  const toMap=([u,v])=>[P.x+u*P.w,P.y+v*P.h],inView=([x,y])=>!L||(x>-30&&x<L.W+30&&y>L.H*.06&&y<L.H+30),onScreen=pts=>pts.some(inView);
  /* people and animals walk only on the open ground of the painting (streets, squares, paths), both ways */

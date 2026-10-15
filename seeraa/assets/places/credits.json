@@ -26,5 +26,10 @@
     "type": "AI-generated historically inspired illustration",
     "date": "2026-10-14",
     "note": "Imaginative course setting; not a photograph or archaeological reconstruction"
+  },
+  "../scenes/hira-mountain.webp": {
+    "type": "AI-generated illustration inspired by the user-provided Jabal al-Noor photograph",
+    "date": "2026-10-15",
+    "note": "No people or buildings. Representative cave placement, not an exact archaeological reconstruction. Light added in code is symbolic."
   }
 }

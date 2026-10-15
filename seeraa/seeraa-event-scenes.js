@@ -411,19 +411,29 @@ const BLACKSTONE={
 };
 
 /* ---------- The first revelation, the cave of Ḥirāʾ (Map 9) ---------- */
+// All five ayahs of the first revelation: Qurʾān 96:1–5; Ṣaḥīḥ al-Bukhārī 4953.
+const HIRA_AYAHS=[
+ {ar:'اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ',en:'Read in the name of your Lord, the Creator.'},
+ {ar:'خَلَقَ الْإِنْسَانَ مِنْ عَلَقٍ',en:'He made the human being from a clinging clot.'},
+ {ar:'اقْرَأْ وَرَبُّكَ الْأَكْرَمُ',en:'Read! Your Lord is supremely generous.'},
+ {ar:'الَّذِي عَلَّمَ بِالْقَلَمِ',en:'He taught through the pen.'},
+ {ar:'عَلَّمَ الْإِنْسَانَ مَا لَمْ يَعْلَمْ',en:'He taught the human being what they did not know.'}
+].map((q,i)=>({...q,k:'quran',who:'The first revelation · Al-ʿAlaq 96:'+(i+1),verse:i+1}));
+SL.hiraVerses=HIRA_AYAHS;
 const HIRA={
- re:/^read!$/i,story:/^read!$/i,cycle:22,still:8,
- label:'Animated scene: a light at the cave of Ḥirāʾ and the first words of the Qurʾān',
- caps:[[0,'The Prophet ﷺ often went alone to the cave of Ḥirāʾ, on Jabal al-Nūr, to think and to worship Allah.','The cave of Ḥirāʾ'],[4.5,'In Ramaḍān, when he was forty, the angel Jibrīl came with the first words of the Qurʾān.','The first revelation'],[12.5,'The light of the Qurʾān had begun — guidance for all people.','A light for all people']],
- bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2650"/><stop offset=".55" stop-color="#4a4f7a"/><stop offset="1" stop-color="#c79a74"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/>${[...Array(26)].map((_,i)=>`<circle cx="${(i*97)%600}" cy="${(i*53)%110+8}" r="${1+(i%3)*.5}" fill="#fffbe8" opacity="${.5+(i%4)*.12}"/>`).join('')}<path d="M180 260 L330 70 L420 110 L560 260Z" fill="#7a5a44"/><path d="M330 70 L360 112 L400 104 L420 110 L380 150 L340 120Z" fill="#664a37"/><path d="M0 230 Q150 200 300 226 T600 220 L600 260 L0 260Z" fill="#a8825c"/><path d="M372 136 Q384 120 398 136 L398 150 L372 150Z" fill="#241a14"/>`},
+ re:/^read!$/i,story:/^read!$/i,cycle:58,still:8,
+ label:'Jabal al-Nūr and the cave of Ḥirāʾ: symbolic light and the five ayahs of the first revelation, with no people depicted',
+ caps:[[0,'The first revelation came in the cave of Ḥirāʾ on Jabal al-Nūr, outside Makkah.','Ḥirāʾ · Jabal al-Nūr'],[4,'Read all five ayahs of the first revelation: Al-ʿAlaq 96:1–5.','The first revelation · 96:1–5'],[54,'The glow is a symbolic teaching effect. The mountain scene is an illustration inspired by the real landscape.','Symbolic light · illustrated setting']],
+ bg:()=>'<image href="assets/scenes/hira-mountain.webp" width="600" height="400" y="-8" preserveAspectRatio="none"/>',
  build(g,c){
-  const P=c.story?[385,142]:(()=>{const a=c.at(.6);return[a[0]+c.k(a[1],56)*40,a[1]-c.k(a[1],56)*46]})(),glow=mk(g,lightSvg()),sp=[...Array(6)].map(()=>mk(g,SPARK));
+  const P=c.story?[.579*600,.285*400-8]:c.pic(.579,.285),glow=mk(g,lightSvg()),sp=[...Array(6)].map(()=>mk(g,SPARK));
+  g.classList.add('hira-cave-light');g.dataset.caveX=P[0];g.dataset.caveY=P[1];
   return t=>{
-   g.setAttribute('opacity',fadeIO(t,19.5));
-   const k=c.story?1.2:c.k(P[1],56)*1.8,bright=t<4.2?.55+.15*Math.sin(t*2):1;
-   put(glow.el,[P[0],P[1]+15*k*.6],k*(t<4.2?.5:.5+.25*seg(t,4.2,5.4)+.04*Math.sin(t*3)));show(glow,bright);
-   sp.forEach((s,i)=>{const a=t*.8+i*Math.PI/3,r=(26+6*Math.sin(t*2+i))*k;put(s.el,[P[0]+Math.cos(a)*r,P[1]+Math.sin(a)*r*.6],k*.55);show(s,t>4.4&&((t*3+i*.4)%1)<.6)});
-   return sayIn(t,[[5,11.6,Q.alaq1,[P[0],P[1]-22*k]],[12,17.8,Q.alaq3,[P[0],P[1]-22*k]]]);
+   const k=c.story?.9:Math.min(c.W,c.H)/620,bright=.82+.10*Math.sin(t*.8);
+   g.setAttribute('opacity','1');
+   put(glow.el,[P[0],P[1]+15*k*.6],k*(.6+.04*Math.sin(t)));show(glow,bright);
+   sp.forEach((s,i)=>{const a=t*.25+i*Math.PI/3,r=(24+3*Math.sin(t+i))*k;put(s.el,[P[0]+Math.cos(a)*r,P[1]+Math.sin(a)*r*.6],k*.4);show(s,.35+.2*Math.sin(t+i))});
+   return c.story?sayIn(t,HIRA_AYAHS.map((q,i)=>[4+i*10,14+i*10,q,[P[0],P[1]-22*k]])):null;
   };
  }
 };
