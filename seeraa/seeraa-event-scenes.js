@@ -83,7 +83,7 @@ function army(g,list,side){return list.map((x,i)=>x==='h'||(typeof x==='object'&
 
 /* ---------- Badr ---------- */
 const BADR={
- re:/^the day of badr$/i,story:/^(the day of badr|lessons from badr)$/i,cycle:32,still:18,
+ re:/^the day of badr$/i,story:/^the day of badr$/i,cycle:32,still:18,
  label:'Animated scene: the small Muslim army at the wells of Badr meets the larger army of Quraysh, which runs away',
  caps:[[0,'Ramaḍān, year 2: about 313 Muslims, with only 70 camels and 2 horses, reach the wells of Badr.','313 Muslims reach the wells of Badr'],[5.5,'The army of Quraysh — about a thousand, with many horses — comes down the valley.','Quraysh come with about 1,000'],[10.5,'The night before, Allah sent rain and calm sleep. The Prophet ﷺ prayed all night in a small shelter.','Rain, calm sleep and a night of duʿāʾ'],[15,'The armies meet. The believers stand firm together, and Allah sends His help.','The believers stand firm — Allah helps them'],[22.5,'The army of Quraysh breaks and runs. Allah gave the believers victory at Badr.','Quraysh run away — victory at Badr']],
  bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb7c9"/><stop offset=".6" stop-color="#e9dcc0"/><stop offset="1" stop-color="#efd9a8"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 168 L70 128 L130 150 L210 112 L290 150 L370 118 L450 152 L530 120 L600 140 L600 260 L0 260Z" fill="#c9a06a"/><path d="M0 196 Q150 176 300 194 T600 188 L600 260 L0 260Z" fill="#dcb67e"/><rect y="216" width="600" height="44" fill="#e5c48d"/>`},
@@ -510,7 +510,7 @@ function buildPaintedTrench(g,c){
  };
 }
 
-/* ---------- The Trench (Map 27) ---------- */
+/* ---------- The Trench (Map 32) ---------- */
 const TRENCH={
  re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,
  label:'Animated scene: the believers dig the trench and sing, the army cannot cross, and a wind sends it home',
@@ -544,7 +544,7 @@ const TRENCH={
  }
 };
 
-/* ---------- The Farewell Pilgrimage (Map 31) ---------- */
+/* ---------- The Farewell Pilgrimage (Map 45) ---------- */
 const FAREWELL={
  re:/^the farewell pilgrimage$/i,story:/^the farewell pilgrimage$/i,cycle:27,still:13.5,
  label:'Animated scene: the pilgrims at ʿArafah answer the Prophet ﷺ, who is shown only as a light above his camel',

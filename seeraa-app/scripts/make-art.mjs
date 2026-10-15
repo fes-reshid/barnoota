@@ -78,7 +78,7 @@ FILES['feature-graphic.png'] = [1024, 500, svg(1024, 500, `<defs><radialGradient
  <g transform="translate(250 262) scale(.6) translate(-512 -518)">${art('g')}</g>
  <text x="700" y="215" text-anchor="middle" font-family="Marcellus" font-size="66" fill="#f8ecc9">Seeraa Quest</text>
  <text x="700" y="300" text-anchor="middle" font-family="Amiri" font-weight="700" font-size="54" fill="#e8c873" direction="rtl">السِّيرَةُ النَّبَوِيَّة</text>
- <text x="700" y="360" text-anchor="middle" font-family="Marcellus" font-size="25" fill="#f8ecc9" opacity=".9">31 maps · 124 lessons · the life of the Prophet ﷺ</text>`), false];
+ <text x="700" y="360" text-anchor="middle" font-family="Marcellus" font-size="25" fill="#f8ecc9" opacity=".9">45 maps · 180 lessons · the life of the Prophet ﷺ</text>`), false];
 FILES['splash.png'] = [2732, 2732, splash(false), false];
 FILES['splash-dark.png'] = [2732, 2732, splash(true), false];
 

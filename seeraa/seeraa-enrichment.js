@@ -5,6 +5,8 @@
   if (!data) return;
   const esc = escapeHtml;
   const keyFor = id => GAME_KEY + '_extra_' + id;
+  /* a map's own quotations; maps after 24 use the course-version-7 key (course-v7.js) */
+  const evidenceKey = world => window.SeeraaCourseV7 ? window.SeeraaCourseV7.evidenceKey(GAME_KEY, world) : GAME_KEY + '_map_evidence_' + world;
   const safeUrl = value => { try { const u = new URL(value); return u.protocol === 'https:' ? u.href : ''; } catch (_) { return ''; } };
   const link = (url, label) => safeUrl(url) ? `<a href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>` : esc(label);
   const complete = id => !!(profile && profile.seeraaExplored && profile.seeraaExplored[id]);
@@ -37,14 +39,16 @@
   const mapEvidence = [
     ['one','intent'], ['orphans','care'], ['trust','honesty'], ['read','learn'], ['faith','six'],
     ['equal','brother'], ['wisdom','gentle'], ['isra','miraj'], ['cave','help'], ['give','five'],
-    ['consult','brother'], ['promise','help'], ['peace','gentle'], ['hajj','rights'], ['example','pass']
+    ['consult','brother'], ['promise','help'], ['peace','gentle'], ['hajj','rights'], ['example','pass'],
+    ['defend','limits'], ['victory','calluponme'], ['promise','mercyhadith'], ['patient','martyrs'], ['rumour','tongue'],
+    ['repent','forgive'], ['ease','prayer'], ['generous','truthhadith'], ['noforce','wisdom']
   ];
-  // Which reflection set each of the 31 maps uses.
-  const MAP_EVIDENCE_OF = [0,0,0,1,1,2,2,3,3,4,4,5,5,5,6,6,7,4,11,8,8,9,9,9,10,10,11,12,12,12,14];
+  // Which reflection set each of the 45 maps uses.
+  const MAP_EVIDENCE_OF = [0,0,0,1,1,2,2,3,3,4,4,5,5,5,6,6,7,4,11,8,8,9, 9,9,15,16,10,17,10,18,11,11,20,19,12,8,12,21,18,12,5,6,22,23,14];
   const beforeStory = renderMatn;
   renderMatn = function (lesson) {
     const result = beforeStory.apply(this, arguments);
-    const own = contentEdits[GAME_KEY + '_map_evidence_' + lesson.world];
+    const own = contentEdits[evidenceKey(lesson.world)];
     const cards = mapEvidence[MAP_EVIDENCE_OF[lesson.world] ?? 0].map((key, i) => Object.assign({}, data.evidence[key], own && own.evidenceCards && own.evidenceCards[i]));
     document.querySelector('#stage').insertAdjacentHTML('beforeend', `<details class="se-reflection"><summary>Qur’an &amp; Hadith · reflect on this map</summary>
       <p class="se-source-note">Related guidance for Map ${lesson.world + 1}. English meanings are simplified for young readers. A quotation is labelled when it is an excerpt.</p>${evidenceHTML(cards)}${teacherMode ? '<button type="button" class="ghost" id="seEditMapEvidence">✏ Edit this map’s quotations</button>' : ''}</details>`);
@@ -189,7 +193,7 @@
 
   function editMapEvidence(map, cards) {
     if (!teacherMode) return;
-    const id = GAME_KEY + '_map_evidence_' + map;
+    const id = evidenceKey(map);
     const field = (label, name, value, extra = '') => `<label class="tm-lab">${esc(label)}<textarea class="tm-in" id="${name}" ${extra}>${esc(value)}</textarea></label>`;
     openEditor({id, title: `Map ${map + 1} · Qur’an and hadith`, edited: editedWhen(id),
       fields: '<p class="tm-help">These quotations appear with all four original stories on this map. Verify Arabic and English against the linked source before saving.</p>' + cards.map((e, i) => `<fieldset><legend>${esc(e.kind)}</legend>${field('Reference', 'seMapRef' + i, e.ref)}${field('Arabic', 'seMapAr' + i, e.ar, 'lang="ar" dir="rtl"')}${field('English meaning', 'seMapEn' + i, e.en)}${field('Full source HTTPS link', 'seMapUrl' + i, e.url)}<label><input type="checkbox" id="seMapExcerpt${i}" ${e.excerpt ? 'checked' : ''}> This is an excerpt</label></fieldset>`).join(''),

@@ -284,6 +284,126 @@ window.SEERAA_ENRICHMENT={
       "en": "Pass on my teaching, even if only one ayah.",
       "excerpt": true,
       "url": "https://sunnah.com/bukhari:3461"
+    },
+    "defend": {
+      "kind": "Qur’an",
+      "ref": "22:39",
+      "ar": "أُذِنَ لِلَّذِينَ يُقَاتَلُونَ بِأَنَّهُمْ ظُلِمُوا ۚ وَإِنَّ اللَّهَ عَلَىٰ نَصْرِهِمْ لَقَدِيرٌ",
+      "en": "Permission is given to those who are being fought, because they have been wronged — and Allah is able to help them.",
+      "excerpt": false,
+      "url": "https://quran.com/22/39"
+    },
+    "limits": {
+      "kind": "Qur’an",
+      "ref": "2:190",
+      "ar": "وَلَا تَعْتَدُوا ۚ إِنَّ اللَّهَ لَا يُحِبُّ الْمُعْتَدِينَ",
+      "en": "Do not go beyond the limits. Allah does not love those who go beyond the limits.",
+      "excerpt": true,
+      "url": "https://quran.com/2/190"
+    },
+    "victory": {
+      "kind": "Qur’an",
+      "ref": "8:10",
+      "ar": "وَمَا النَّصْرُ إِلَّا مِنْ عِنْدِ اللَّهِ",
+      "en": "Victory comes only from Allah.",
+      "excerpt": true,
+      "url": "https://quran.com/8/10"
+    },
+    "calluponme": {
+      "kind": "Qur’an",
+      "ref": "40:60",
+      "ar": "وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ",
+      "en": "Your Lord says: Call on Me, and I will answer you.",
+      "excerpt": true,
+      "url": "https://quran.com/40/60"
+    },
+    "mercyhadith": {
+      "kind": "Hadith",
+      "ref": "Sahih al-Bukhari 6013",
+      "ar": "مَنْ لَا يَرْحَمُ لَا يُرْحَمُ",
+      "en": "Whoever does not show mercy will not be shown mercy.",
+      "excerpt": true,
+      "url": "https://sunnah.com/bukhari:6013"
+    },
+    "patient": {
+      "kind": "Qur’an",
+      "ref": "2:153",
+      "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
+      "en": "O you who believe, seek help through patience and prayer. Allah is with those who are patient.",
+      "excerpt": false,
+      "url": "https://quran.com/2/153"
+    },
+    "martyrs": {
+      "kind": "Qur’an",
+      "ref": "3:169",
+      "ar": "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا ۚ بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ",
+      "en": "Do not think of those killed in the way of Allah as dead. No — they are alive with their Lord, receiving provision.",
+      "excerpt": false,
+      "url": "https://quran.com/3/169"
+    },
+    "rumour": {
+      "kind": "Qur’an",
+      "ref": "49:6",
+      "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا إِنْ جَاءَكُمْ فَاسِقٌ بِنَبَإٍ فَتَبَيَّنُوا",
+      "en": "O you who believe, if a wrongdoer brings you news, check it carefully.",
+      "excerpt": true,
+      "url": "https://quran.com/49/6"
+    },
+    "tongue": {
+      "kind": "Hadith",
+      "ref": "Sahih al-Bukhari 6018",
+      "ar": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
+      "en": "Whoever believes in Allah and the Last Day should say something good or stay silent.",
+      "excerpt": true,
+      "url": "https://sunnah.com/bukhari:6018"
+    },
+    "repent": {
+      "kind": "Qur’an",
+      "ref": "39:53",
+      "ar": "قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنْفُسِهِمْ لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ",
+      "en": "Say: O My servants who have wronged themselves, do not lose hope in Allah’s mercy.",
+      "excerpt": true,
+      "url": "https://quran.com/39/53"
+    },
+    "forgive": {
+      "kind": "Qur’an",
+      "ref": "24:22",
+      "ar": "وَلْيَعْفُوا وَلْيَصْفَحُوا ۗ أَلَا تُحِبُّونَ أَنْ يَغْفِرَ اللَّهُ لَكُمْ ۗ وَاللَّهُ غَفُورٌ رَحِيمٌ",
+      "en": "Let them forgive and overlook. Do you not love that Allah should forgive you? Allah is Forgiving, Merciful.",
+      "excerpt": true,
+      "url": "https://quran.com/24/22"
+    },
+    "ease": {
+      "kind": "Qur’an",
+      "ref": "2:185",
+      "ar": "يُرِيدُ اللَّهُ بِكُمُ الْيُسْرَ وَلَا يُرِيدُ بِكُمُ الْعُسْرَ",
+      "en": "Allah wants ease for you; He does not want hardship for you.",
+      "excerpt": true,
+      "url": "https://quran.com/2/185"
+    },
+    "generous": {
+      "kind": "Qur’an",
+      "ref": "2:261",
+      "ar": "مَثَلُ الَّذِينَ يُنْفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنْبَتَتْ سَبْعَ سَنَابِلَ فِي كُلِّ سُنْبُلَةٍ مِائَةُ حَبَّةٍ",
+      "en": "Those who spend their wealth in the way of Allah are like a seed that grows seven ears, with a hundred grains in every ear.",
+      "excerpt": true,
+      "url": "https://quran.com/2/261"
+    },
+    "truthhadith": {
+      "kind": "Hadith",
+      "ref": "Sahih al-Bukhari 6094",
+      "ar": "إِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ، وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ",
+      "en": "Truthfulness leads to goodness, and goodness leads to Paradise.",
+      "excerpt": true,
+      "url": "https://sunnah.com/bukhari:6094"
+    },
+    "noforce": {
+      "kind": "Qur’an",
+      "ref": "2:256",
+      "ar": "لَا إِكْرَاهَ فِي الدِّينِ ۖ قَدْ تَبَيَّنَ الرُّشْدُ مِنَ الْغَيِّ",
+      "en": "There is no compulsion in religion. The right way has become clear from the wrong way.",
+      "excerpt": true,
+      "url": "https://quran.com/2/256"
     }
   },
   "stories": [
@@ -1136,7 +1256,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m11-story-1",
-      "map": 25,
+      "map": 29,
       "title": "Uhud: learning after a mistake",
       "place": "Madinah · Mount Uhud",
       "story": [
@@ -1219,7 +1339,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m12-story-1",
-      "map": 26,
+      "map": 31,
       "title": "The Trench: many hands working together",
       "place": "Madinah · The defensive trench",
       "story": [
@@ -1262,7 +1382,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m12-story-2",
-      "map": 27,
+      "map": 34,
       "title": "Hudaybiyyah: keeping an agreement",
       "place": "Hudaybiyyah · Outside Makkah",
       "story": [
@@ -1302,7 +1422,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m13-story-1",
-      "map": 28,
+      "map": 37,
       "title": "Umrah: remembering earlier prophets",
       "place": "Makkah · Kaʿbah, Safa and Marwa",
       "story": [
@@ -1342,7 +1462,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m13-story-2",
-      "map": 29,
+      "map": 39,
       "title": "Mercy when you have the advantage",
       "place": "Makkah · The return",
       "story": [
@@ -1382,7 +1502,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m14-story-1",
-      "map": 30,
+      "map": 44,
       "title": "The Farewell Hajj: places on the journey",
       "place": "Makkah · Mina, Arafat and Muzdalifah",
       "story": [
@@ -1429,7 +1549,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m14-story-2",
-      "map": 29,
+      "map": 40,
       "title": "The Farewell teaching: protect people’s rights",
       "place": "The Hajj gathering · Human dignity",
       "story": [
@@ -1509,7 +1629,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m15-story-2",
-      "map": 30,
+      "map": 44,
       "title": "Carry the good forward",
       "place": "Madinah and beyond · Your own community",
       "story": [

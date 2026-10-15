@@ -1,4 +1,4 @@
-/* Seeraa course: 31 maps × 4 lessons, in order, following Ar-Raheeq al-Makhtum. */
+/* Seeraa course: 45 maps × 4 lessons, in order, following Ar-Raheeq al-Makhtum. */
 window.SEERAA_COURSE=[
   {
     "title": "Map 1 · Arabia Before Islam",
@@ -8141,7 +8141,7 @@ window.SEERAA_COURSE=[
         "teach": "Muhājirūn and Anṣār",
         "emoji": "🕌",
         "arabic": "ٱلْمَسْجِدُ ٱلنَّبَوِيّ",
-        "story": "The first thing he built in Madīnah was a masjid, and he carried the bricks himself alongside everyone else. Then he joined each Muhājir who had left everything in Makkah with an Anṣārī of Madīnah, as brothers. The Anṣār shared their homes, their food, and their land, and history has never seen generosity like it. This brotherhood between the Muhājirūn and the Anṣār became one of the most remarkable examples of generosity in history.",
+        "story": "When the Prophet’s camel knelt in Madīnah, the land where it rested belonged to two orphan boys, Sahl and Suhayl. They offered it as a gift, but the Prophet ﷺ insisted on paying a fair price. There the Muslims built the masjid, with walls of mud bricks, pillars of palm trunks and a roof of palm leaves. The Prophet ﷺ carried bricks himself alongside everyone else, and they sang as they worked: “O Allah, there is no good except the good of the Hereafter, so forgive the Anṣār and the Muhājirūn.” ʿAmmār ibn Yāsir carried two bricks at a time. Then the Prophet ﷺ joined each Muhājir, who had left everything behind in Makkah, with an Anṣārī of Madīnah, as brothers. The Anṣār shared their homes, their food and their palm gardens. They even offered to divide their date palms with the Muhājirūn, and in the end the Muhājirūn worked in the gardens and shared the harvest. Allah praises the Anṣār: “They give others preference over themselves, even when they are in need.” This brotherhood between the Muhājirūn and the Anṣār became one of the most remarkable examples of generosity in history.",
         "picks": [
           {
             "q": "What did he build first?",
@@ -8183,7 +8183,7 @@ window.SEERAA_COURSE=[
             "a": true
           },
           {
-            "s": "The Muhājirūn kept all their wealth from Makkah.",
+            "s": "The Prophet ﷺ took the orphans’ land without paying.",
             "a": false
           },
           {
@@ -8220,7 +8220,18 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat al-Ḥashr 59:9"
           }
         },
-        "quotes": []
+        "quotes": [
+          {
+            "en": "O Allah, there is no good except the good of the Hereafter, so forgive the Anṣār and the Muhājirūn.",
+            "ar": "اللَّهُمَّ لَا خَيْرَ إِلَّا خَيْرُ الآخِرَهْ فَاغْفِرْ لِلأَنْصَارِ وَالْمُهَاجِرَهْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 428"
+          },
+          {
+            "en": "They give others preference over themselves, even when they are in need.",
+            "ar": "وَيُؤْثِرُونَ عَلَىٰ أَنْفُسِهِمْ وَلَوْ كَانَ بِهِمْ خَصَاصَةٌ",
+            "ref": "Sūrat al-Ḥashr 59:9"
+          }
+        ]
       },
       {
         "title": "“Show Me the Market”",
@@ -8872,12 +8883,416 @@ window.SEERAA_COURSE=[
     ]
   },
   {
-    "title": "Map 25 · The Day of Badr",
+    "title": "Map 25 · Guarding Madīnah",
     "icon": "🛡️",
     "colour": "#2f6f8f",
     "range": [
       97,
       100
+    ],
+    "lessons": [
+      {
+        "title": "Two Faces in Madīnah",
+        "teach": "Being the same inside and out",
+        "emoji": "🎭",
+        "arabic": "ٱلْمُنَافِقُون",
+        "story": "Before the Prophet ﷺ arrived, the people of Madīnah had been preparing a crown for a chief called ʿAbdullāh ibn Ubayy ibn Salūl. They wanted to make him their king. Then the Prophet ﷺ came, the hearts of the people turned to Islam, and the crown was never used. ʿAbdullāh ibn Ubayy never forgot it. After the victory at Badr, when Islam had become strong in Madīnah, he and a group of others announced that they were Muslims too. They prayed in the masjid and sat with the companions, but in secret they disliked Islam and looked for ways to cause trouble. These people are called the munāfiqūn, the hypocrites: people who show one face outside and hide another inside. Allah describes them in the Qurʾān: “Among the people are some who say, ‘We believe in Allah and the Last Day,’ but they are not believers.” The Prophet ﷺ knew that only Allah sees what is inside hearts, so he treated people by what they showed, and he was patient with them, hoping they would change. The believers learned to watch their own hearts too, and to make their words, their actions and their hearts the same.",
+        "picks": [
+          {
+            "q": "Who was about to be made king of Madīnah?",
+            "options": [
+              "ʿAbdullāh ibn Ubayy",
+              "Abū Sufyān",
+              "Saʿd ibn Muʿādh"
+            ]
+          },
+          {
+            "q": "What is a munāfiq?",
+            "options": [
+              "Someone who shows faith outside but hides disbelief inside",
+              "Someone who travels a lot",
+              "A brave soldier"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ treat the hypocrites?",
+            "options": [
+              "By what they showed, and with patience",
+              "He punished everyone he suspected",
+              "He banned them from the city"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Madīnah prepares a crown for Ibn Ubayy",
+            "The Prophet ﷺ arrives and hearts turn to Islam",
+            "After Badr, Ibn Ubayy says he is Muslim",
+            "Allah describes the hypocrites in the Qurʾān"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAbdullāh ibn Ubayy was crowned king of Madīnah.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ treated people by what they showed outwardly.",
+            "a": true
+          },
+          {
+            "s": "Hypocrites show one face outside and hide another inside.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep our hearts, our words and our actions the same, because Allah sees what is hidden.",
+        "vocab": [
+          [
+            "مُنَافِق",
+            "hypocrite"
+          ],
+          [
+            "قَلْب",
+            "heart"
+          ],
+          [
+            "صِدْق",
+            "truthfulness"
+          ]
+        ],
+        "chapter": "Guarding Madīnah",
+        "learn": {
+          "points": [
+            "Allah sees what is in our hearts, not only what people see.",
+            "Make your words and your actions match: do what you say.",
+            "Leave the judging of hearts to Allah, and treat people by what they show."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا لِمَ تَقُولُونَ مَا لَا تَفْعَلُونَ",
+            "en": "O you who believe, why do you say what you do not do?",
+            "ref": "Sūrat aṣ-Ṣaff 61:2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Among the people are some who say, ‘We believe in Allah and the Last Day,’ but they are not believers.",
+            "ar": "وَمِنَ النَّاسِ مَنْ يَقُولُ آمَنَّا بِاللَّهِ وَبِالْيَوْمِ الْآخِرِ وَمَا هُمْ بِمُؤْمِنِينَ",
+            "ref": "Sūrat al-Baqarah 2:8"
+          }
+        ]
+      },
+      {
+        "title": "Guards at Night",
+        "teach": "Allah is the best Protector",
+        "emoji": "🌙",
+        "arabic": "ٱلْحِرَاسَة",
+        "story": "In the first days in Madīnah, the Muslims had enemies all around them, and the Prophet ﷺ was in danger. One night he could not sleep, and he said, “If only a righteous man from my companions would guard me tonight!” Soon they heard the clinking of weapons outside. “Who is that?” he asked. “I am Saʿd ibn Abī Waqqāṣ. I have come to guard you.” And the Prophet ﷺ slept peacefully. For a time, the companions took turns guarding him at night. Then Allah revealed: “Allah will protect you from the people.” The Prophet ﷺ put his head out of his tent and said to the guards, “O people, go away, for Allah has protected me.” From then on he no longer kept guards at night. He had taken sensible care, but his heart always relied on Allah, the best Protector. And he never forgot the people who helped him: Saʿd became one of the great heroes of Islam.",
+        "picks": [
+          {
+            "q": "Who came to guard the Prophet ﷺ?",
+            "options": [
+              "Saʿd ibn Abī Waqqāṣ",
+              "Abū Jahl",
+              "Waraqah"
+            ]
+          },
+          {
+            "q": "What did Allah reveal?",
+            "options": [
+              "“Allah will protect you from the people.”",
+              "“Build a wall around Madīnah.”",
+              "“Leave Madīnah.”"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ tell the guards after the ayah?",
+            "options": [
+              "Go away, Allah has protected me",
+              "Guard me every night forever",
+              "Bring more weapons"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the nights of guarding in order",
+          "items": [
+            "The Prophet ﷺ cannot sleep",
+            "Saʿd comes to guard him",
+            "Companions take turns guarding",
+            "Allah reveals that He will protect him"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Saʿd ibn Abī Waqqāṣ came to guard the Prophet ﷺ.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ kept guards every night after the ayah came.",
+            "a": false
+          },
+          {
+            "s": "Taking sensible care is part of trusting Allah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to take sensible care while trusting that Allah is the best Protector.",
+        "vocab": [
+          [
+            "حَارِس",
+            "guard"
+          ],
+          [
+            "يَعْصِمُكَ",
+            "He protects you"
+          ],
+          [
+            "حَافِظ",
+            "guardian"
+          ]
+        ],
+        "chapter": "Guarding Madīnah",
+        "learn": {
+          "points": [
+            "We take sensible care and still rely on Allah.",
+            "Allah is the best Protector.",
+            "Thank the people who help you, and pray for them."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَاللَّهُ خَيْرٌ حَافِظًا ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ",
+            "en": "Allah is the best Guardian, and He is the Most Merciful of those who show mercy.",
+            "ref": "Sūrat Yūsuf 12:64"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If only a righteous man from my companions would guard me tonight!",
+            "ar": "لَيْتَ رَجُلًا مِنْ أَصْحَابِي صَالِحًا يَحْرُسُنِي اللَّيْلَةَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2885"
+          },
+          {
+            "en": "Allah will protect you from the people.",
+            "ar": "وَاللَّهُ يَعْصِمُكَ مِنَ النَّاسِ",
+            "ref": "Sūrat al-Māʾidah 5:67"
+          },
+          {
+            "en": "O people, go away, for Allah has protected me.",
+            "ar": "يَا أَيُّهَا النَّاسُ انْصَرِفُوا فَقَدْ عَصَمَنِي اللَّهُ",
+            "ref": "Sunan at-Tirmidhī 3046"
+          }
+        ]
+      },
+      {
+        "title": "Permission to Defend",
+        "teach": "Standing against injustice, never cruelty",
+        "emoji": "⚖️",
+        "arabic": "ٱلْإِذْنُ بِٱلْقِتَال",
+        "story": "For thirteen years in Makkah, the Muslims had been beaten, starved and driven from their homes, yet Allah told them to be patient and not to fight back. Even after the Hijrah, Quraysh did not leave them in peace. They took over the houses and wealth the Muhājirūn had left behind, and they sent threats to Madīnah. When Saʿd ibn Muʿādh went to Makkah for ʿUmrah, Abū Jahl stopped him by the Kaʿbah and said, “Do I see you walking around Makkah in safety, when you have sheltered those who left our religion?” The small community in Madīnah was in danger. Then Allah revealed: “Permission is given to those who are being fought, because they have been wronged — and Allah is able to help them.” For the first time, the Muslims were allowed to defend themselves. But Allah also set limits: “Fight in the way of Allah those who fight you, but do not go beyond the limits. Allah does not love those who go beyond the limits.” The Prophet ﷺ taught his armies never to cheat, never to break a promise and never to harm children. Defending was allowed; cruelty never was.",
+        "picks": [
+          {
+            "q": "Why were the Muslims given permission to fight?",
+            "options": [
+              "Because they had been wronged",
+              "To become rich",
+              "To take revenge on everyone"
+            ]
+          },
+          {
+            "q": "Which limit did Allah set?",
+            "options": [
+              "Do not go beyond the limits",
+              "Fight anyone you like",
+              "Harm the enemy’s children"
+            ]
+          },
+          {
+            "q": "Who threatened Saʿd ibn Muʿādh at the Kaʿbah?",
+            "options": [
+              "Abū Jahl",
+              "Abū Bakr",
+              "Al-Ḥubāb"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Muslims are patient in Makkah",
+            "Quraysh take their homes and wealth",
+            "Abū Jahl threatens Saʿd at the Kaʿbah",
+            "Allah gives permission to defend"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Muslims fought back during the years in Makkah.",
+            "a": false
+          },
+          {
+            "s": "Allah said: do not go beyond the limits.",
+            "a": true
+          },
+          {
+            "s": "Harming children in war is forbidden in Islam.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Islam stands against injustice, and that even when defending ourselves we must stay fair and merciful.",
+        "vocab": [
+          [
+            "ظُلْم",
+            "injustice"
+          ],
+          [
+            "إِذْن",
+            "permission"
+          ],
+          [
+            "لَا تَعْتَدُوا",
+            "do not go beyond the limits"
+          ]
+        ],
+        "chapter": "Guarding Madīnah",
+        "learn": {
+          "points": [
+            "In Makkah the Muslims were patient for thirteen years.",
+            "Islam allows defending against injustice, but never cruelty.",
+            "Even in conflict, a Muslim keeps promises and protects the innocent."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "الَّذِينَ أُخْرِجُوا مِنْ دِيَارِهِمْ بِغَيْرِ حَقٍّ إِلَّا أَنْ يَقُولُوا رَبُّنَا اللَّهُ",
+            "en": "Those who were driven out of their homes unjustly, only because they said, ‘Our Lord is Allah.’",
+            "ref": "Sūrat al-Ḥajj 22:40"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do I see you walking around Makkah in safety, when you have sheltered those who left our religion?",
+            "ar": "أَلَا أَرَاكَ تَطُوفُ بِمَكَّةَ آمِنًا، وَقَدْ أَوَيْتُمُ الصُّبَاةَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3950"
+          },
+          {
+            "en": "Permission is given to those who are being fought, because they have been wronged — and Allah is able to help them.",
+            "ar": "أُذِنَ لِلَّذِينَ يُقَاتَلُونَ بِأَنَّهُمْ ظُلِمُوا ۚ وَإِنَّ اللَّهَ عَلَىٰ نَصْرِهِمْ لَقَدِيرٌ",
+            "ref": "Sūrat al-Ḥajj 22:39"
+          },
+          {
+            "en": "Fight in the way of Allah those who fight you, but do not go beyond the limits. Allah does not love those who go beyond the limits.",
+            "ar": "وَقَاتِلُوا فِي سَبِيلِ اللَّهِ الَّذِينَ يُقَاتِلُونَكُمْ وَلَا تَعْتَدُوا ۚ إِنَّ اللَّهَ لَا يُحِبُّ الْمُعْتَدِينَ",
+            "ref": "Sūrat al-Baqarah 2:190"
+          }
+        ]
+      },
+      {
+        "title": "The Sealed Letter",
+        "teach": "Obedience and honesty",
+        "emoji": "✉️",
+        "arabic": "سَرِيَّةُ نَخْلَة",
+        "story": "In Rajab, in the second year after the Hijrah, the Prophet ﷺ called ʿAbdullāh ibn Jaḥsh and gave him a letter. “Do not open it until you have travelled for two days,” he said. ʿAbdullāh set out with a small group of Muhājirūn, and after two days he opened the letter. It told him to go on to Nakhlah, between Makkah and Ṭāʾif, to watch the caravans of Quraysh and bring back news — and not to force any of his companions to go with him. ʿAbdullāh told his men, “Whoever wishes to go on, come with me; whoever does not may go back.” Every one of them went on. At Nakhlah they met a small Quraysh caravan on the last day of Rajab, one of the sacred months in which fighting was not allowed. There was a clash: a man of Quraysh was killed and two were taken captive. When the group returned, the Prophet ﷺ was displeased. “I did not command you to fight in the sacred month,” he said. Quraysh spread the news everywhere: “Muḥammad has broken the sacred month!” Then Allah revealed the truth, weighing every wrong fairly: “They ask you about fighting in the sacred month. Say: ‘Fighting in it is a serious matter, but turning people away from Allah’s path, disbelieving in Him, and driving His people out of the Sacred Masjid are even greater in Allah’s sight.’”",
+        "picks": [
+          {
+            "q": "When was ʿAbdullāh ibn Jaḥsh allowed to open the letter?",
+            "options": [
+              "After two days of travel",
+              "Straight away",
+              "Never"
+            ]
+          },
+          {
+            "q": "Where did the letter send them?",
+            "options": [
+              "Nakhlah, between Makkah and Ṭāʾif",
+              "Jerusalem",
+              "Yemen"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ feel about the fighting in the sacred month?",
+            "options": [
+              "He was displeased",
+              "He celebrated",
+              "He gave them prizes"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the sealed letter in order",
+          "items": [
+            "The Prophet ﷺ gives ʿAbdullāh a sealed letter",
+            "He opens it after two days",
+            "They meet a caravan at Nakhlah",
+            "Allah reveals an ayah about the sacred month"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAbdullāh forced his companions to continue.",
+            "a": false
+          },
+          {
+            "s": "The clash happened in a sacred month.",
+            "a": true
+          },
+          {
+            "s": "Allah’s ayah weighed the wrongs of both sides fairly.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to follow good instructions faithfully and to be honest about mistakes, even our own side’s.",
+        "vocab": [
+          [
+            "رِسَالَة",
+            "letter"
+          ],
+          [
+            "الشَّهْرُ الْحَرَام",
+            "the sacred month"
+          ],
+          [
+            "طَاعَة",
+            "obedience"
+          ]
+        ],
+        "chapter": "Guarding Madīnah",
+        "learn": {
+          "points": [
+            "The companions obeyed instructions even before they knew them.",
+            "The Prophet ﷺ did not excuse his own side when they made a mistake.",
+            "The Qurʾān judges fairly, weighing every wrong honestly."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا أَطِيعُوا اللَّهَ وَأَطِيعُوا الرَّسُولَ",
+            "en": "O you who believe, obey Allah and obey the Messenger.",
+            "ref": "Sūrat an-Nisāʾ 4:59"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I did not command you to fight in the sacred month",
+            "ar": "مَا أَمَرْتُكُمْ بِقِتَالٍ فِي الشَّهْرِ الْحَرَامِ",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "They ask you about fighting in the sacred month. Say: ‘Fighting in it is a serious matter, but turning people away from Allah’s path, disbelieving in Him, and driving His people out of the Sacred Masjid are even greater in Allah’s sight.’",
+            "ar": "يَسْأَلُونَكَ عَنِ الشَّهْرِ الْحَرَامِ قِتَالٍ فِيهِ ۖ قُلْ قِتَالٌ فِيهِ كَبِيرٌ ۖ وَصَدٌّ عَنْ سَبِيلِ اللَّهِ وَكُفْرٌ بِهِ وَالْمَسْجِدِ الْحَرَامِ وَإِخْرَاجُ أَهْلِهِ مِنْهُ أَكْبَرُ عِنْدَ اللَّهِ",
+            "ref": "Sūrat al-Baqarah 2:217"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 26 · The Road to Badr",
+    "icon": "🌧️",
+    "colour": "#7a5aa8",
+    "range": [
+      101,
+      104
     ],
     "lessons": [
       {
@@ -8950,7 +9365,7 @@ window.SEERAA_COURSE=[
             "leader"
           ]
         ],
-        "chapter": "The Day of Badr",
+        "chapter": "The Road to Badr",
         "learn": {
           "points": [
             "Good leaders consult others before deciding.",
@@ -8973,11 +9388,318 @@ window.SEERAA_COURSE=[
         ]
       },
       {
+        "title": "Sawād and the Straight Rows",
+        "teach": "Justice even from the leader",
+        "emoji": "🏹",
+        "arabic": "سَوَادُ بْنُ غَزِيَّة",
+        "story": "On the morning of Badr, the Prophet ﷺ walked along the lines of the Muslim army with an arrow in his hand, straightening the rows. One man, Sawād ibn Ghaziyyah, was standing a little ahead of the line. The Prophet ﷺ gently pressed his stomach with the arrow and said, “Stand straight, Sawād.” “O Messenger of Allah, you have hurt me!” said Sawād. “Allah has sent you with truth and justice, so let me take my right from you.” Everyone was surprised. But the Prophet ﷺ did not become angry. He lifted his garment from his own stomach and said, “Take your right.” Sawād stepped forward — and instead of poking him, he hugged him and kissed his stomach. “What made you do this, Sawād?” asked the Prophet ﷺ. “O Messenger of Allah, you can see what is about to happen. I wanted the last moment I have with you to be my skin touching your skin.” The Prophet ﷺ made duʿāʾ for him. That morning showed two beautiful things: a leader who let an ordinary soldier ask for justice from him, and a companion whose love was greater than his fear. The straight rows were just as Allah loves: “Allah loves those who fight in His way in rows, as if they were one solid building.”",
+        "picks": [
+          {
+            "q": "What was the Prophet ﷺ holding while straightening the rows?",
+            "options": [
+              "An arrow",
+              "A sword",
+              "A flag"
+            ]
+          },
+          {
+            "q": "What did Sawād do when he was allowed to take his right?",
+            "options": [
+              "He hugged him and kissed his stomach",
+              "He poked him hard",
+              "He walked away"
+            ]
+          },
+          {
+            "q": "What does Allah love?",
+            "options": [
+              "Believers standing together in rows like one building",
+              "People pushing ahead of the line",
+              "Each person standing alone"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the morning of Badr in order",
+          "items": [
+            "The Prophet ﷺ straightens the rows with an arrow",
+            "He presses Sawād’s stomach",
+            "Sawād asks for his right",
+            "Sawād hugs him instead"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ became angry with Sawād.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ uncovered his stomach so Sawād could take his right.",
+            "a": true
+          },
+          {
+            "s": "Straight rows are part of a complete prayer.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that fairness applies to everyone, even leaders, and that love for the Prophet ﷺ shows in how we follow him.",
+        "vocab": [
+          [
+            "صَفّ",
+            "row"
+          ],
+          [
+            "عَدْل",
+            "justice"
+          ],
+          [
+            "بُنْيَانٌ مَرْصُوص",
+            "a solid building"
+          ]
+        ],
+        "chapter": "The Road to Badr",
+        "learn": {
+          "points": [
+            "A good leader lets people ask for their rights, even from him.",
+            "Love for the Prophet ﷺ means following him and loving to be near him.",
+            "Straight, united rows make the Muslims strong, in prayer and in life."
+          ],
+          "verse": {
+            "kind": "hadith",
+            "ar": "سَوُّوا صُفُوفَكُمْ فَإِنَّ تَسْوِيَةَ الصُّفُوفِ مِنْ إِقَامَةِ الصَّلَاةِ",
+            "en": "Straighten your rows, for straight rows are part of establishing the prayer.",
+            "ref": "Ṣaḥīḥ al-Bukhārī 723"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Stand straight, Sawād.",
+            "ar": "اسْتَوِ يَا سَوَادُ",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "Allah loves those who fight in His way in rows, as if they were one solid building.",
+            "ar": "إِنَّ اللَّهَ يُحِبُّ الَّذِينَ يُقَاتِلُونَ فِي سَبِيلِهِ صَفًّا كَأَنَّهُمْ بُنْيَانٌ مَرْصُوصٌ",
+            "ref": "Sūrat aṣ-Ṣaff 61:4"
+          }
+        ]
+      },
+      {
+        "title": "Rain and Good Advice",
+        "arabic": "دُرُوسُ بَدْر",
+        "story": "On the night before Badr, the Muslims camped near the wells. They were tired and worried, for the army of Quraysh was three times larger. Then Allah sent two gifts. The first was a gentle rain. It washed them, gave them water to drink and pressed the soft sand under their feet so that it was firm to walk on, while the same rain turned the ground into mud on the enemy’s side. The second gift was sleep: a deep, calm sleep came over the Muslims, and they woke refreshed. Allah describes that night: “He covered you with sleep as a calm from Him, and sent down rain from the sky to purify you, to remove the whispers of Shayṭān from you, to strengthen your hearts and to make your feet firm.” When the army first stopped, a companion called al-Ḥubāb ibn al-Mundhir asked, “Is this a place Allah has commanded, or is it your own opinion and a plan of war?” “It is my opinion and a plan,” said the Prophet ﷺ. “Then this is not the best place,” said al-Ḥubāb, and he suggested camping at the well nearest the enemy and closing off the others, so that only the Muslims would have water. The Prophet ﷺ happily accepted his advice. Saʿd ibn Muʿādh then suggested building a small shelter of palm branches from which the Prophet ﷺ could direct the army, and the Prophet ﷺ agreed and prayed for him. A wise leader listens to good advice.",
+        "picks": [
+          {
+            "q": "What did Allah send the night before Badr?",
+            "options": [
+              "Gentle rain and calm sleep",
+              "A sandstorm",
+              "Snow"
+            ]
+          },
+          {
+            "q": "Whose advice about the camp did the Prophet ﷺ accept?",
+            "options": [
+              "Al-Ḥubāb ibn al-Mundhir",
+              "Abū Sufyān",
+              "ʿUtbah"
+            ]
+          },
+          {
+            "q": "Who suggested building a shelter for the Prophet ﷺ?",
+            "options": [
+              "Saʿd ibn Muʿādh",
+              "Abū Jahl",
+              "Khālid"
+            ]
+          }
+        ],
+        "benefit": "We learn to listen to good advice and to thank Allah, not ourselves, for success.",
+        "emoji": "🌧️",
+        "vocab": [
+          [
+            "مَطَر",
+            "rain"
+          ],
+          [
+            "رَأْي",
+            "opinion"
+          ],
+          [
+            "نَصْر",
+            "victory"
+          ]
+        ],
+        "chapter": "The Road to Badr",
+        "teach": "Humility in victory",
+        "order": {
+          "prompt": "Put the night before Badr in order",
+          "items": [
+            "The army stops near the wells",
+            "Al-Ḥubāb suggests a better place",
+            "Rain falls and calm sleep comes",
+            "A shelter is built for the Prophet ﷺ"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ accepted a companion’s advice.",
+            "a": true
+          },
+          {
+            "s": "The rain made the ground firm for the Muslims.",
+            "a": true
+          },
+          {
+            "s": "The Muslims could not sleep at all that night.",
+            "a": false
+          }
+        ],
+        "learn": {
+          "points": [
+            "We listen to good advice, even when we are the leader.",
+            "Allah sent rain and calm sleep to strengthen the believers.",
+            "Good planning and trust in Allah go together."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِذْ يُغَشِّيكُمُ النُّعَاسَ أَمَنَةً مِّنْهُ وَيُنَزِّلُ عَلَيْكُم مِّنَ السَّمَاءِ مَاءً لِّيُطَهِّرَكُم بِهِ",
+            "en": "When He covered you with sleep as a calm from Him, and sent down rain upon you from the sky to purify you.",
+            "ref": "Sūrat al-Anfāl 8:11"
+          }
+        },
+        "quotes": [
+          {
+            "en": "He covered you with sleep as a calm from Him, and sent down rain from the sky to purify you, to remove the whispers of Shayṭān from you, to strengthen your hearts and to make your feet firm.",
+            "ar": "إِذْ يُغَشِّيكُمُ النُّعَاسَ أَمَنَةً مِنْهُ وَيُنَزِّلُ عَلَيْكُمْ مِنَ السَّمَاءِ مَاءً لِيُطَهِّرَكُمْ بِهِ وَيُذْهِبَ عَنْكُمْ رِجْزَ الشَّيْطَانِ وَلِيَرْبِطَ عَلَىٰ قُلُوبِكُمْ وَيُثَبِّتَ بِهِ الْأَقْدَامَ",
+            "ref": "Sūrat al-Anfāl 8:11"
+          }
+        ]
+      },
+      {
+        "title": "The Prayer in the Shelter",
+        "teach": "Duʿāʾ is the believer’s strength",
+        "emoji": "🤲",
+        "arabic": "دُعَاءُ بَدْر",
+        "story": "Before the battle began, the Prophet ﷺ looked at his companions — about three hundred — and at the army of Quraysh — about a thousand. Then he turned towards the qiblah, stretched out his hands and called on his Lord: “O Allah, fulfil for me what You promised me. O Allah, give me what You promised me. O Allah, if this small band of the people of Islam is destroyed, You will not be worshipped on the earth.” He kept calling on Allah with his hands raised until his cloak slipped from his shoulders. Abū Bakr picked it up, put it back on his shoulders, held him gently from behind and said, “O Prophet of Allah, this is enough calling on your Lord. He will fulfil what He promised you.” Then Allah revealed: “Remember when you called on your Lord for help, and He answered you: ‘I will help you with a thousand angels, one after another.’” The Prophet ﷺ came out of the little shelter full of confidence, reciting: “The gathering will be defeated, and they will turn their backs and run.” He had done everything he could to prepare — choosing the place, straightening the rows, listening to advice — and then he turned to Allah with his whole heart.",
+        "picks": [
+          {
+            "q": "What did the Prophet ﷺ do before the battle?",
+            "options": [
+              "He raised his hands in duʿāʾ",
+              "He slept",
+              "He went back to Madīnah"
+            ]
+          },
+          {
+            "q": "What did Allah promise in reply?",
+            "options": [
+              "A thousand angels",
+              "A thousand camels",
+              "Ten thousand soldiers"
+            ]
+          },
+          {
+            "q": "Who said, “This is enough; Allah will fulfil His promise”?",
+            "options": [
+              "Abū Bakr",
+              "Abū Jahl",
+              "Khālid"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the duʿāʾ of Badr in order",
+          "items": [
+            "The Prophet ﷺ looks at the two armies",
+            "He raises his hands in duʿāʾ",
+            "Abū Bakr puts his cloak back on",
+            "Allah promises a thousand angels"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ prepared carefully and also made long duʿāʾ.",
+            "a": true
+          },
+          {
+            "s": "Abū Bakr stayed close to him.",
+            "a": true
+          },
+          {
+            "s": "The Muslims were more numerous than Quraysh at Badr.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to do our best and then turn to Allah with all our hearts, because victory comes only from Him.",
+        "vocab": [
+          [
+            "عَرِيش",
+            "shelter"
+          ],
+          [
+            "اسْتِغَاثَة",
+            "calling for help"
+          ],
+          [
+            "مَلَائِكَة",
+            "angels"
+          ]
+        ],
+        "chapter": "The Road to Badr",
+        "learn": {
+          "points": [
+            "Prepare as well as you can, then rely on Allah with your whole heart.",
+            "Duʿāʾ is powerful: Allah answered the Prophet’s duʿāʾ at Badr.",
+            "True friends comfort and strengthen each other, like Abū Bakr."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَا النَّصْرُ إِلَّا مِنْ عِنْدِ اللَّهِ ۚ إِنَّ اللَّهَ عَزِيزٌ حَكِيمٌ",
+            "en": "Victory comes only from Allah. Allah is Almighty, All-Wise.",
+            "ref": "Sūrat al-Anfāl 8:10"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Allah, fulfil for me what You promised me. O Allah, give me what You promised me. O Allah, if this small band of the people of Islam is destroyed, You will not be worshipped on the earth.",
+            "ar": "اللَّهُمَّ أَنْجِزْ لِي مَا وَعَدْتَنِي اللَّهُمَّ آتِ مَا وَعَدْتَنِي اللَّهُمَّ إِنْ تَهْلِكْ هَذِهِ الْعِصَابَةُ مِنْ أَهْلِ الإِسْلَامِ لَا تُعْبَدْ فِي الأَرْضِ",
+            "ref": "Ṣaḥīḥ Muslim 1763"
+          },
+          {
+            "en": "O Prophet of Allah, this is enough calling on your Lord. He will fulfil what He promised you.",
+            "ar": "يَا نَبِيَّ اللَّهِ كَذَاكَ مُنَاشَدَتُكَ رَبَّكَ فَإِنَّهُ سَيُنْجِزُ لَكَ مَا وَعَدَكَ",
+            "ref": "Ṣaḥīḥ Muslim 1763"
+          },
+          {
+            "en": "Remember when you called on your Lord for help, and He answered you: ‘I will help you with a thousand angels, one after another.’",
+            "ar": "إِذْ تَسْتَغِيثُونَ رَبَّكُمْ فَاسْتَجَابَ لَكُمْ أَنِّي مُمِدُّكُمْ بِأَلْفٍ مِنَ الْمَلَائِكَةِ مُرْدِفِينَ",
+            "ref": "Sūrat al-Anfāl 8:9"
+          },
+          {
+            "en": "The gathering will be defeated, and they will turn their backs and run.",
+            "ar": "سَيُهْزَمُ الْجَمْعُ وَيُوَلُّونَ الدُّبُرَ",
+            "ref": "Sūrat al-Qamar 54:45"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 27 · Victory at Badr",
+    "icon": "🌟",
+    "colour": "#2e6b58",
+    "range": [
+      105,
+      108
+    ],
+    "lessons": [
+      {
         "title": "The Day of Badr",
         "teach": "Allah helps the few",
         "emoji": "🌟",
         "arabic": "بَدْر",
-        "story": "Two years after the Hijrah the Muslims faced a far larger army at a place called Badr. They were only about three hundred, poorly equipped, against nearly a thousand. The Prophet ﷺ raised his hands and asked Allah for help all night long. Allah gave them victory, and Badr became a sign that help comes from Allah, not from numbers. The victory at Badr gave the small Muslim community new confidence that Allah’s help does not depend on numbers or weapons.",
+        "story": "On the morning of the seventeenth of Ramaḍān, in the second year after the Hijrah, the two armies faced each other at Badr: about three hundred Muslims against about a thousand men of Quraysh. As was the custom of the Arabs, three champions of Quraysh stepped forward — ʿUtbah, his brother Shaybah and his son al-Walīd — and called for opponents. The Prophet ﷺ sent three from his own family: his uncle Ḥamzah, his cousin ʿAlī and ʿUbaydah ibn al-Ḥārith. Ḥamzah and ʿAlī quickly defeated their opponents and then helped ʿUbaydah, who had been badly wounded. Then the armies met. Allah sent the angels to strengthen the believers: “Your Lord inspired the angels: ‘I am with you, so make the believers firm.’” The Prophet ﷺ picked up a handful of pebbles and dust and threw it towards Quraysh. Allah later said: “It was not you who threw when you threw, but it was Allah who threw.” Soon the great army of Quraysh broke and ran. Seventy of them were killed, including Abū Jahl, and seventy were captured; fourteen Muslims were martyred. Badr came to be called the Day of the Criterion, because on that day Allah made the truth stand out clearly, and the small Muslim community learned that help comes from Allah, not from numbers.",
         "picks": [
           {
             "q": "How many Muslims were at Badr?",
@@ -8988,29 +9710,29 @@ window.SEERAA_COURSE=[
             ]
           },
           {
+            "q": "Who went out to answer the three champions of Quraysh?",
+            "options": [
+              "Ḥamzah, ʿAlī and ʿUbaydah",
+              "Abū Bakr, ʿUmar and ʿUthmān",
+              "Three young boys"
+            ]
+          },
+          {
             "q": "What did Badr teach?",
             "options": [
               "Help comes from Allah, not numbers",
               "Big armies always win",
               "Fighting solves everything"
             ]
-          },
-          {
-            "q": "What did the Prophet ﷺ do all night before the battle?",
-            "options": [
-              "He prayed and asked Allah for help",
-              "He slept",
-              "He trained the soldiers"
-            ]
           }
         ],
         "order": {
           "prompt": "Put the day of Badr in order",
           "items": [
-            "A far larger army marches out",
-            "The small Muslim group meets them at Badr",
-            "The Prophet ﷺ prays all night for help",
-            "Allah grants them victory"
+            "The two armies face each other",
+            "Ḥamzah, ʿAlī and ʿUbaydah answer the champions",
+            "The Prophet ﷺ throws a handful of pebbles",
+            "The army of Quraysh breaks and runs"
           ]
         },
         "tf": [
@@ -9019,7 +9741,7 @@ window.SEERAA_COURSE=[
             "a": true
           },
           {
-            "s": "The Prophet ﷺ made long duʿāʾ before the battle.",
+            "s": "Allah sent angels to make the believers firm.",
             "a": true
           },
           {
@@ -9042,7 +9764,7 @@ window.SEERAA_COURSE=[
             "victory"
           ]
         ],
-        "chapter": "The Day of Badr",
+        "chapter": "Victory at Badr",
         "learn": {
           "points": [
             "Victory comes from Allah, not from numbers or weapons.",
@@ -9056,93 +9778,115 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat Āl ʿImrān 3:123"
           }
         },
-        "quotes": []
+        "quotes": [
+          {
+            "en": "Your Lord inspired the angels: ‘I am with you, so make the believers firm.’",
+            "ar": "إِذْ يُوحِي رَبُّكَ إِلَى الْمَلَائِكَةِ أَنِّي مَعَكُمْ فَثَبِّتُوا الَّذِينَ آمَنُوا",
+            "ref": "Sūrat al-Anfāl 8:12"
+          },
+          {
+            "en": "It was not you who threw when you threw, but it was Allah who threw.",
+            "ar": "وَمَا رَمَيْتَ إِذْ رَمَيْتَ وَلَٰكِنَّ اللَّهَ رَمَىٰ",
+            "ref": "Sūrat al-Anfāl 8:17"
+          }
+        ]
       },
       {
-        "title": "Lessons from Badr",
-        "arabic": "دُرُوسُ بَدْر",
-        "story": "The night before Badr, Allah sent gentle rain. It firmed the sand under the Muslims’ feet and gave them water, and Allah sent a calm sleep upon them. When they arrived at Badr, the Prophet ﷺ chose a place to camp. A companion called al-Ḥubāb ibn al-Mundhir asked, “Is this a place Allah has commanded, or is it your own opinion and a plan of war?” “It is my opinion.” “Then this is not the best place,” said al-Ḥubāb, and he suggested camping by the last well, so that the Muslims would have water. The Prophet ﷺ happily accepted his advice. All night the Prophet ﷺ stood in prayer, raising his hands to Allah. Victory came from Allah, who sent angels to help them. After the battle there was no boasting. Allah reminded them in Sūrat al-Anfāl that victory comes only from Him.",
+        "title": "Two Young Heroes",
+        "teach": "Courage and love for the Prophet ﷺ",
+        "emoji": "⚔️",
+        "arabic": "مُعَاذٌ وَمُعَاذ",
+        "story": "During the battle of Badr, ʿAbd ar-Raḥmān ibn ʿAwf was standing in the row when he looked to his right and to his left. On each side stood a young boy of the Anṣār. He thought, “I wish I were standing between strong grown men!” Then one of the boys nudged him and whispered, “Uncle, do you know Abū Jahl?” “Yes,” said ʿAbd ar-Raḥmān. “What do you want with him, my nephew?” “I have been told that he insults the Messenger of Allah ﷺ. By the One in whose hand is my soul, if I see him, I will not leave him until one of us is gone.” ʿAbd ar-Raḥmān was amazed. Then the boy on the other side whispered the very same thing. A little later, ʿAbd ar-Raḥmān saw Abū Jahl moving among the soldiers of Quraysh, and he pointed: “There is the man you asked about.” The two boys rushed at him like hawks and struck him down. Then they ran to the Prophet ﷺ, each saying, “I killed him!” “Have you wiped your swords?” he asked. “No.” He looked at both swords and said, “Both of you killed him.” Their names were Muʿādh ibn ʿAfrāʾ and Muʿādh ibn ʿAmr ibn al-Jamūḥ. Abū Jahl, who had hurt the Muslims for so many years, was brought down by two young boys who loved the Prophet ﷺ.",
         "picks": [
           {
-            "q": "What did Allah send the night before Badr?",
+            "q": "Who stood on either side of ʿAbd ar-Raḥmān ibn ʿAwf?",
             "options": [
-              "Gentle rain and calm sleep",
-              "A sandstorm",
-              "Snow"
+              "Two young boys of the Anṣār",
+              "Two old men",
+              "Two horsemen"
             ]
           },
           {
-            "q": "Whose advice about the camp did the Prophet ﷺ accept?",
+            "q": "Why did the boys look for Abū Jahl?",
             "options": [
-              "Al-Ḥubāb ibn al-Mundhir",
-              "Abū Sufyān",
-              "ʿUtbah"
+              "He insulted the Messenger of Allah ﷺ",
+              "He owed them money",
+              "They wanted his horse"
             ]
           },
           {
-            "q": "Where does victory come from?",
+            "q": "What did the Prophet ﷺ say after looking at their swords?",
             "options": [
-              "From Allah alone",
-              "From numbers",
-              "From weapons"
+              "Both of you killed him",
+              "Neither of you did",
+              "Only the taller one did"
             ]
           }
         ],
-        "benefit": "We learn to listen to good advice and to thank Allah, not ourselves, for success.",
-        "emoji": "🌧️",
-        "vocab": [
-          [
-            "مَطَر",
-            "rain"
-          ],
-          [
-            "رَأْي",
-            "opinion"
-          ],
-          [
-            "نَصْر",
-            "victory"
-          ]
-        ],
-        "chapter": "The Day of Badr",
-        "teach": "Humility in victory",
         "order": {
-          "prompt": "Put Badr’s lessons in order",
+          "prompt": "Put the story in order",
           "items": [
-            "Rain falls the night before",
-            "Al-Ḥubāb gives his advice",
-            "The Prophet ﷺ prays all night",
-            "Allah grants victory"
+            "ʿAbd ar-Raḥmān stands between two boys",
+            "Each boy asks about Abū Jahl",
+            "He points Abū Jahl out",
+            "The Prophet ﷺ looks at their swords"
           ]
         },
         "tf": [
           {
-            "s": "The Prophet ﷺ accepted a companion’s advice.",
+            "s": "ʿAbd ar-Raḥmān at first wished for stronger men beside him.",
             "a": true
           },
           {
-            "s": "The Muslims boasted after the battle.",
+            "s": "The two boys were from Quraysh.",
             "a": false
           },
           {
-            "s": "The rain made the ground firm for the Muslims.",
+            "s": "The Prophet ﷺ said both boys killed Abū Jahl.",
             "a": true
           }
         ],
+        "benefit": "We learn never to underestimate young people, and that love for the Prophet ﷺ can make even the young very brave.",
+        "vocab": [
+          [
+            "شَابّ",
+            "young man"
+          ],
+          [
+            "شَجَاعَة",
+            "courage"
+          ],
+          [
+            "أَنْصَار",
+            "the Helpers of Madīnah"
+          ]
+        ],
+        "chapter": "Victory at Badr",
         "learn": {
           "points": [
-            "We listen to good advice, even when we are the leader.",
-            "Allah sent rain and calm sleep to strengthen the believers.",
-            "After success we thank Allah instead of boasting."
+            "Young people can be brave heroes for the truth.",
+            "Love for the Prophet ﷺ means defending his honour.",
+            "Never judge people by their age or size."
           ],
           "verse": {
             "kind": "quran",
-            "ar": "إِذْ يُغَشِّيكُمُ النُّعَاسَ أَمَنَةً مِّنْهُ وَيُنَزِّلُ عَلَيْكُم مِّنَ السَّمَاءِ مَاءً لِّيُطَهِّرَكُم بِهِ",
-            "en": "When He covered you with sleep as a calm from Him, and sent down rain upon you from the sky to purify you.",
-            "ref": "Sūrat al-Anfāl 8:11"
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا إِنْ تَنْصُرُوا اللَّهَ يَنْصُرْكُمْ وَيُثَبِّتْ أَقْدَامَكُمْ",
+            "en": "O you who believe, if you help the cause of Allah, He will help you and make your feet firm.",
+            "ref": "Sūrat Muḥammad 47:7"
           }
         },
-        "quotes": []
+        "quotes": [
+          {
+            "en": "Uncle, do you know Abū Jahl?",
+            "ar": "يَا عَمِّ، هَلْ تَعْرِفُ أَبَا جَهْلٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3141"
+          },
+          {
+            "en": "Both of you killed him.",
+            "ar": "كِلَاكُمَا قَتَلَهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3141"
+          }
+        ]
       },
       {
         "title": "Captives Who Taught Reading",
@@ -9214,7 +9958,7 @@ window.SEERAA_COURSE=[
             "writing"
           ]
         ],
-        "chapter": "The Day of Badr",
+        "chapter": "Victory at Badr",
         "learn": {
           "points": [
             "Knowledge is so precious that teaching could buy someone’s freedom.",
@@ -9240,18 +9984,698 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat al-Insān 76:8"
           }
         ]
+      },
+      {
+        "title": "ʿUmayr’s Secret Plan",
+        "teach": "Allah knows every secret",
+        "emoji": "🤫",
+        "arabic": "عُمَيْرُ بْنُ وَهْب",
+        "story": "After Badr, two men of Quraysh sat by the Kaʿbah, talking bitterly. One was Ṣafwān ibn Umayyah, whose father had died at Badr. The other was ʿUmayr ibn Wahb, whose son was a captive in Madīnah. “If I did not have debts and a family to look after,” said ʿUmayr, “I would ride to Madīnah and kill Muḥammad.” Ṣafwān said at once, “I will pay your debts and look after your family as my own.” So ʿUmayr sharpened his sword, coated it with poison and rode to Madīnah. ʿUmar saw him arrive with his sword and brought him to the Prophet ﷺ. “What brings you here, ʿUmayr?” asked the Prophet ﷺ. “I have come about my son, your captive.” “Then why the sword around your neck?” ʿUmayr made an excuse. “Tell me the truth,” said the Prophet ﷺ, and then he told ʿUmayr, word for word, the secret plan he had made with Ṣafwān by the Kaʿbah. ʿUmayr was stunned. No one else had been there! He said, “I bear witness that you are the Messenger of Allah,” for only Allah could have told him. The Prophet ﷺ told the companions, “Teach your brother his religion, teach him the Qurʾān, and set his captive free.” ʿUmayr went back to Makkah — not to kill, but to invite people to Islam.",
+        "picks": [
+          {
+            "q": "Why did ʿUmayr say he had come to Madīnah?",
+            "options": [
+              "For his captive son",
+              "To trade",
+              "To visit family"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ know ʿUmayr’s secret plan?",
+            "options": [
+              "Allah told him",
+              "Ṣafwān wrote to him",
+              "A spy heard it"
+            ]
+          },
+          {
+            "q": "What did ʿUmayr do when he went back to Makkah?",
+            "options": [
+              "Invited people to Islam",
+              "Fought the Muslims",
+              "Hid in his house"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put ʿUmayr’s story in order",
+          "items": [
+            "ʿUmayr and Ṣafwān make a secret plan",
+            "ʿUmayr rides to Madīnah with a poisoned sword",
+            "The Prophet ﷺ tells him his secret",
+            "ʿUmayr accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ṣafwān promised to pay ʿUmayr’s debts.",
+            "a": true
+          },
+          {
+            "s": "Someone else overheard the plan and told the Prophet ﷺ.",
+            "a": false
+          },
+          {
+            "s": "ʿUmayr became a caller to Islam.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that nothing is hidden from Allah, and that even an enemy’s heart can turn to the truth.",
+        "vocab": [
+          [
+            "سِرّ",
+            "secret"
+          ],
+          [
+            "أَسِير",
+            "captive"
+          ],
+          [
+            "أَشْهَدُ",
+            "I bear witness"
+          ]
+        ],
+        "chapter": "Victory at Badr",
+        "learn": {
+          "points": [
+            "Allah knows every secret, even plans whispered in private.",
+            "Hearts can change completely, even a heart full of anger.",
+            "The Prophet ﷺ welcomed new Muslims and made sure they were taught."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِنْ تَجْهَرْ بِالْقَوْلِ فَإِنَّهُ يَعْلَمُ السِّرَّ وَأَخْفَى",
+            "en": "Whether you speak aloud or not, He knows the secret and what is even more hidden.",
+            "ref": "Sūrat Ṭā-Hā 20:7"
+          }
+        },
+        "quotes": [
+          {
+            "en": "I bear witness that you are the Messenger of Allah",
+            "ar": "أَشْهَدُ أَنَّكَ رَسُولُ اللَّهِ",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "Teach your brother his religion, teach him the Qurʾān, and set his captive free.",
+            "ar": "فَقِّهُوا أَخَاكُمْ فِي دِينِهِ، وَأَقْرِئُوهُ الْقُرْآنَ، وَأَطْلِقُوا لَهُ أَسِيرَهُ",
+            "ref": "Sīrat Ibn Hishām"
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 26 · Uḥud",
-    "icon": "⛰️",
-    "colour": "#7a5aa8",
+    "title": "Map 28 · After Badr",
+    "icon": "🏡",
+    "colour": "#a97c25",
     "range": [
-      101,
-      104
+      109,
+      112
     ],
     "lessons": [
+      {
+        "title": "ʿUthmān Stays Behind",
+        "teach": "Caring for family is worship",
+        "emoji": "💛",
+        "arabic": "ذُو النُّورَيْن",
+        "story": "When the Muslims marched out to Badr, ʿUthmān ibn ʿAffān stayed behind in Madīnah. He was not afraid. His wife Ruqayyah, the daughter of the Prophet ﷺ, was very ill, and the Prophet ﷺ asked him to stay and care for her. ʿUthmān nursed her day and night. The Prophet ﷺ told him, “You will have the reward of a man who was present at Badr, and his share.” But Ruqayyah’s illness grew worse, and she passed away. On the very day the Muslims in Madīnah were burying her, Zayd ibn Ḥārithah rode into the city with the good news of the victory at Badr. Joy and sadness came together. When the Prophet ﷺ returned, he grieved for his daughter. Later he gave his daughter Umm Kulthūm in marriage to ʿUthmān, and so ʿUthmān was given a beautiful title: Dhū an-Nūrayn, “the one with two lights”, because he married two daughters of the Prophet ﷺ. Caring for a sick family member was not a small deed compared with going to battle: Allah counted it as worship.",
+        "picks": [
+          {
+            "q": "Why did ʿUthmān stay behind from Badr?",
+            "options": [
+              "To nurse his sick wife Ruqayyah",
+              "He was afraid",
+              "He was travelling"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ promise him?",
+            "options": [
+              "The reward of someone present at Badr",
+              "A new house",
+              "Nothing"
+            ]
+          },
+          {
+            "q": "What does Dhū an-Nūrayn mean?",
+            "options": [
+              "The one with two lights",
+              "The one with two swords",
+              "The one with two camels"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The army leaves for Badr",
+            "ʿUthmān nurses Ruqayyah",
+            "News of victory arrives as she is buried",
+            "ʿUthmān marries Umm Kulthūm"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿUthmān stayed behind because the Prophet ﷺ asked him to care for Ruqayyah.",
+            "a": true
+          },
+          {
+            "s": "ʿUthmān got no reward for Badr.",
+            "a": false
+          },
+          {
+            "s": "He married two daughters of the Prophet ﷺ.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that looking after family members who are sick is worship, and that Allah rewards sincere intentions.",
+        "vocab": [
+          [
+            "مَرِيض",
+            "sick"
+          ],
+          [
+            "أَجْر",
+            "reward"
+          ],
+          [
+            "نُور",
+            "light"
+          ]
+        ],
+        "chapter": "After Badr",
+        "learn": {
+          "points": [
+            "Caring for the sick in our family is a great act of worship.",
+            "Allah rewards good intentions, even when we cannot do everything.",
+            "ʿUthmān was honoured with the name Dhū an-Nūrayn."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً",
+            "en": "Among His signs is that He created for you spouses from among yourselves so that you may find peace with them, and He placed between you love and mercy.",
+            "ref": "Sūrat ar-Rūm 30:21"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You will have the reward of a man who was present at Badr, and his share.",
+            "ar": "إِنَّ لَكَ أَجْرَ رَجُلٍ مِمَّنْ شَهِدَ بَدْرًا وَسَهْمَهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3130"
+          }
+        ]
+      },
+      {
+        "title": "Zaynab’s Necklace",
+        "teach": "Loyalty and a gentle heart",
+        "emoji": "📿",
+        "arabic": "قِلَادَةُ زَيْنَب",
+        "story": "Among the captives of Badr was Abū al-ʿĀṣ, the husband of the Prophet’s eldest daughter Zaynab. He had not yet accepted Islam and had fought on the side of Quraysh, but Zaynab still loved him. To free him, she sent a ransom from Makkah — and with it a necklace. It was the necklace her mother Khadījah had given her on her wedding day. When the Prophet ﷺ saw Khadījah’s necklace, his heart filled with tenderness. He said gently to the companions, “If you think it right, free her captive and give back to her what is hers.” The companions agreed at once. The Prophet ﷺ freed Abū al-ʿĀṣ on one condition: that he let Zaynab come to Madīnah. Abū al-ʿĀṣ kept his promise. Years later, Abū al-ʿĀṣ was carrying goods that people of Makkah had trusted to him. He returned every single item to its owner, and then he declared that there is no god but Allah and that Muḥammad is His Messenger. The Prophet ﷺ praised him: “He spoke to me and told the truth, and he promised me and kept his promise.” A loyal heart and a kept promise led him to Islam.",
+        "picks": [
+          {
+            "q": "What did Zaynab send with the ransom?",
+            "options": [
+              "Her mother Khadījah’s necklace",
+              "A golden sword",
+              "A horse"
+            ]
+          },
+          {
+            "q": "What condition did the Prophet ﷺ set for freeing Abū al-ʿĀṣ?",
+            "options": [
+              "To let Zaynab come to Madīnah",
+              "To fight for the Muslims",
+              "To pay twice"
+            ]
+          },
+          {
+            "q": "What did Abū al-ʿĀṣ do before accepting Islam?",
+            "options": [
+              "Returned everyone’s goods",
+              "Ran away with them",
+              "Hid the money"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Zaynab’s story in order",
+          "items": [
+            "Abū al-ʿĀṣ is captured at Badr",
+            "Zaynab sends Khadījah’s necklace",
+            "He is freed and lets Zaynab go to Madīnah",
+            "He returns the trusts and accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The companions agreed to free Abū al-ʿĀṣ.",
+            "a": true
+          },
+          {
+            "s": "The necklace had belonged to Khadījah.",
+            "a": true
+          },
+          {
+            "s": "Abū al-ʿĀṣ kept the people’s goods for himself.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that gentleness, kept promises and honesty with trusts can change hearts.",
+        "vocab": [
+          [
+            "قِلَادَة",
+            "necklace"
+          ],
+          [
+            "فِدَاء",
+            "ransom"
+          ],
+          [
+            "وَفَاء",
+            "keeping promises"
+          ]
+        ],
+        "chapter": "After Badr",
+        "learn": {
+          "points": [
+            "The Prophet ﷺ had a tender heart and loved his family deeply.",
+            "Kindness to a captive can open his heart to Islam.",
+            "Keeping promises and returning trusts are signs of a good heart."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنْ يَعْلَمِ اللَّهُ فِي قُلُوبِكُمْ خَيْرًا يُؤْتِكُمْ خَيْرًا مِمَّا أُخِذَ مِنْكُمْ وَيَغْفِرْ لَكُمْ",
+            "en": "If Allah knows any good in your hearts, He will give you something better than what was taken from you, and He will forgive you.",
+            "ref": "Sūrat al-Anfāl 8:70"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If you think it right, free her captive and give back to her what is hers.",
+            "ar": "إِنْ رَأَيْتُمْ أَنْ تُطْلِقُوا لَهَا أَسِيرَهَا وَتَرُدُّوا عَلَيْهَا الَّذِي لَهَا",
+            "ref": "Sunan Abī Dāwūd 2692"
+          },
+          {
+            "en": "He spoke to me and told the truth, and he promised me and kept his promise.",
+            "ar": "حَدَّثَنِي فَصَدَقَنِي، وَوَعَدَنِي فَوَفَى لِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3110"
+          }
+        ]
+      },
+      {
+        "title": "Banū Qaynuqāʿ Break the Peace",
+        "teach": "Keeping agreements",
+        "emoji": "🛠️",
+        "arabic": "بَنُو قَيْنُقَاع",
+        "story": "The Jewish tribe of Banū Qaynuqāʿ lived inside Madīnah and were skilled goldsmiths. They had agreed to live in peace with the Muslims and to defend the city together. But after Badr they grew jealous and angry. The Prophet ﷺ went to their market, gathered them and advised them to think about the truth before it was too late. They answered rudely: “O Muḥammad, do not be fooled because you killed some men of Quraysh who knew nothing about fighting. If you fought us, you would know that we are the real men!” Allah answered such boasting: “There was already a sign for you in the two armies that met: one fighting in the way of Allah, and another disbelieving.” Soon afterwards, a Muslim woman came to sell her goods in their market. Some of them mocked her and played a shameful trick on her in front of everyone. A Muslim man rushed to defend her and was killed. The agreement had been broken. The Prophet ﷺ surrounded their fortress for fifteen days until they surrendered. ʿAbdullāh ibn Ubayy begged again and again for them to be spared, and in the end they were allowed to leave Madīnah with their families. They went to live in the land of Shām. Breaking a promise of peace had cost them their home.",
+        "picks": [
+          {
+            "q": "What work were Banū Qaynuqāʿ known for?",
+            "options": [
+              "Goldsmithing",
+              "Farming dates",
+              "Fishing"
+            ]
+          },
+          {
+            "q": "What broke the agreement?",
+            "options": [
+              "They humiliated a Muslim woman and a Muslim was killed",
+              "The Muslims attacked first",
+              "A storm"
+            ]
+          },
+          {
+            "q": "Where did Banū Qaynuqāʿ go after leaving Madīnah?",
+            "options": [
+              "Shām",
+              "Yemen",
+              "Abyssinia"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Banū Qaynuqāʿ agree to live in peace",
+            "They boast after Badr",
+            "A Muslim woman is humiliated in their market",
+            "They are surrounded and leave Madīnah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Banū Qaynuqāʿ had agreed to defend Madīnah together.",
+            "a": true
+          },
+          {
+            "s": "They answered the Prophet’s advice politely.",
+            "a": false
+          },
+          {
+            "s": "Allah does not love those who betray.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep our promises and agreements, and never to let pride lead us to betrayal.",
+        "vocab": [
+          [
+            "عَهْد",
+            "agreement"
+          ],
+          [
+            "خِيَانَة",
+            "betrayal"
+          ],
+          [
+            "سُوق",
+            "market"
+          ]
+        ],
+        "chapter": "After Badr",
+        "learn": {
+          "points": [
+            "Agreements of peace must be kept.",
+            "Boasting and pride lead to loss.",
+            "Even when a treaty ends, Islam teaches openness and fairness."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِمَّا تَخَافَنَّ مِنْ قَوْمٍ خِيَانَةً فَانْبِذْ إِلَيْهِمْ عَلَىٰ سَوَاءٍ ۚ إِنَّ اللَّهَ لَا يُحِبُّ الْخَائِنِينَ",
+            "en": "If you fear betrayal from a people, openly end your agreement with them on equal terms. Allah does not love those who betray.",
+            "ref": "Sūrat al-Anfāl 8:58"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Muḥammad, do not be fooled because you killed some men of Quraysh who knew nothing about fighting. If you fought us, you would know that we are the real men!",
+            "ar": "يَا مُحَمَّدُ لَا يَغُرَّنَّكَ مِنْ نَفْسِكَ أَنَّكَ قَتَلْتَ نَفَرًا مِنْ قُرَيْشٍ كَانُوا أَغْمَارًا لَا يَعْرِفُونَ الْقِتَالَ إِنَّكَ لَوْ قَاتَلْتَنَا لَعَرَفْتَ أَنَّا نَحْنُ النَّاسُ",
+            "ref": "Sunan Abī Dāwūd 3001"
+          },
+          {
+            "en": "There was already a sign for you in the two armies that met: one fighting in the way of Allah, and another disbelieving.",
+            "ar": "قَدْ كَانَ لَكُمْ آيَةٌ فِي فِئَتَيْنِ الْتَقَتَا ۖ فِئَةٌ تُقَاتِلُ فِي سَبِيلِ اللَّهِ وَأُخْرَىٰ كَافِرَةٌ",
+            "ref": "Sūrat Āl ʿImrān 3:13"
+          }
+        ]
+      },
+      {
+        "title": "Fāṭimah’s Wedding",
+        "teach": "Simplicity and contentment",
+        "emoji": "🌸",
+        "arabic": "فَاطِمَةُ الزَّهْرَاء",
+        "story": "Fāṭimah, the youngest daughter of the Prophet ﷺ, was known for her goodness and for how much she was like her father. After Badr, ʿAlī ibn Abī Ṭālib came shyly to ask to marry her, and the Prophet ﷺ and Fāṭimah agreed. “Give her something,” said the Prophet ﷺ. “I have nothing,” said ʿAlī. “Where is your armour?” So ʿAlī gave his armour as her marriage gift. Their home was very simple: a blanket, a leather pillow stuffed with palm fibres, a water skin and a stone hand-mill for grinding grain. Fāṭimah ground the grain herself until her hands were sore. Once she went to her father to ask for a servant to help her. That night the Prophet ﷺ came to their home, sat between them and said, “Shall I not teach you something better than what you asked me for? When you go to bed, say Allāhu Akbar thirty-four times, Subḥān Allāh thirty-three times and al-ḥamdu lillāh thirty-three times. That is better for you than a servant.” ʿAlī said he never stopped saying them after that. Their simple home was full of love, remembrance and blessing, and from them came al-Ḥasan and al-Ḥusayn.",
+        "picks": [
+          {
+            "q": "What did ʿAlī give as Fāṭimah’s marriage gift?",
+            "options": [
+              "His armour",
+              "A palace",
+              "A herd of camels"
+            ]
+          },
+          {
+            "q": "What did Fāṭimah ask her father for?",
+            "options": [
+              "A servant to help her",
+              "New clothes",
+              "Gold"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ teach them instead?",
+            "options": [
+              "Dhikr before sleeping",
+              "To buy a new mill",
+              "To move house"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Fāṭimah’s story in order",
+          "items": [
+            "ʿAlī asks to marry Fāṭimah",
+            "He gives his armour as her gift",
+            "Fāṭimah’s hands grow sore from work",
+            "The Prophet ﷺ teaches them dhikr at bedtime"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Their home was full of expensive furniture.",
+            "a": false
+          },
+          {
+            "s": "ʿAlī kept saying the dhikr after that night.",
+            "a": true
+          },
+          {
+            "s": "Al-Ḥasan and al-Ḥusayn were their children.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that remembering Allah and being content make a home happy, more than wealth does.",
+        "vocab": [
+          [
+            "مَهْر",
+            "marriage gift"
+          ],
+          [
+            "تَسْبِيح",
+            "saying Subḥān Allāh"
+          ],
+          [
+            "قَنَاعَة",
+            "contentment"
+          ]
+        ],
+        "chapter": "After Badr",
+        "learn": {
+          "points": [
+            "A happy home is built on faith and love, not on expensive things.",
+            "Remembering Allah gives strength for hard work.",
+            "Contentment with what Allah gives brings blessing."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+            "en": "Our Lord, give us joy in our spouses and our children, and make us leaders of those who are mindful of You.",
+            "ref": "Sūrat al-Furqān 25:74"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Give her something",
+            "ar": "أَعْطِهَا شَيْئًا",
+            "ref": "Sunan Abī Dāwūd 2125"
+          },
+          {
+            "en": "Shall I not teach you something better than what you asked me for? When you go to bed, say Allāhu Akbar thirty-four times, Subḥān Allāh thirty-three times and al-ḥamdu lillāh thirty-three times. That is better for you than a servant.",
+            "ar": "أَلَا أُعَلِّمُكُمَا خَيْرًا مِمَّا سَأَلْتُمَانِي إِذَا أَخَذْتُمَا مَضَاجِعَكُمَا تُكَبِّرَا أَرْبَعًا وَثَلَاثِينَ، وَتُسَبِّحَا ثَلَاثًا وَثَلَاثِينَ، وَتَحْمَدَا ثَلَاثَةً وَثَلَاثِينَ، فَهْوَ خَيْرٌ لَكُمَا مِنْ خَادِمٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3705"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 29 · The March to Uḥud",
+    "icon": "⛰️",
+    "colour": "#b4553a",
+    "range": [
+      113,
+      116
+    ],
+    "lessons": [
+      {
+        "title": "Out to Uḥud",
+        "teach": "Consult, decide, then trust Allah",
+        "emoji": "🌅",
+        "arabic": "ٱلْخُرُوجُ إِلَى أُحُد",
+        "story": "One year after Badr, Quraysh marched towards Madīnah with three thousand soldiers, seeking revenge. The Prophet’s uncle al-ʿAbbās, who still lived in Makkah, secretly sent a letter to warn him. The Prophet ﷺ gathered the companions to consult them. He had seen a dream that worried him, and his own opinion was to stay inside Madīnah and defend the city from its streets and houses. But many young men who had missed Badr were eager: “Let us go out and meet them!” After listening, the Prophet ﷺ went into his house and came out wearing his armour, ready to march. The young men felt they had pressed him too hard and said, “Stay, if you prefer.” But he answered that once a prophet has put on his armour, he does not take it off until Allah judges between him and his enemy. A decision had been made together, and he would not waver. Early in the morning, the army set out towards Mount Uḥud, north of the city. Allah describes that morning: “Remember when you left your family at dawn to place the believers in their positions for battle — and Allah hears and knows everything.”",
+        "picks": [
+          {
+            "q": "How many soldiers did Quraysh bring?",
+            "options": [
+              "About three thousand",
+              "About three hundred",
+              "About thirty thousand"
+            ]
+          },
+          {
+            "q": "What was the Prophet’s own opinion?",
+            "options": [
+              "To defend from inside Madīnah",
+              "To march to Makkah",
+              "To give up"
+            ]
+          },
+          {
+            "q": "Why did he not take off his armour when the young men changed their minds?",
+            "options": [
+              "A prophet who puts on armour does not take it off until Allah judges",
+              "He was cold",
+              "He had lost the key"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the march to Uḥud in order",
+          "items": [
+            "Quraysh march with three thousand men",
+            "Al-ʿAbbās sends a warning letter",
+            "The Prophet ﷺ consults the companions",
+            "He puts on his armour and marches to Uḥud"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The young men who missed Badr wanted to go out and fight.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ refused to listen to anyone.",
+            "a": false
+          },
+          {
+            "s": "The army set out at dawn.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to consult others, and once a decision is made, to stay firm and trust Allah.",
+        "vocab": [
+          [
+            "شُورَى",
+            "consultation"
+          ],
+          [
+            "لَأْمَة",
+            "armour"
+          ],
+          [
+            "عَزْم",
+            "firm decision"
+          ]
+        ],
+        "chapter": "The March to Uḥud",
+        "learn": {
+          "points": [
+            "Good leaders ask for advice, even when they have their own opinion.",
+            "Once a decision is made together, we stay firm and trust Allah.",
+            "The Prophet ﷺ respected the views of young people."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَشَاوِرْهُمْ فِي الْأَمْرِ ۖ فَإِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللَّهِ ۚ إِنَّ اللَّهَ يُحِبُّ الْمُتَوَكِّلِينَ",
+            "en": "Consult them in matters, and once you have decided, put your trust in Allah. Allah loves those who trust in Him.",
+            "ref": "Sūrat Āl ʿImrān 3:159"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Remember when you left your family at dawn to place the believers in their positions for battle — and Allah hears and knows everything.",
+            "ar": "وَإِذْ غَدَوْتَ مِنْ أَهْلِكَ تُبَوِّئُ الْمُؤْمِنِينَ مَقَاعِدَ لِلْقِتَالِ ۗ وَاللَّهُ سَمِيعٌ عَلِيمٌ",
+            "ref": "Sūrat Āl ʿImrān 3:121"
+          }
+        ]
+      },
+      {
+        "title": "Who Turned Back, Who Stood Up",
+        "teach": "Sincerity at the moment of testing",
+        "emoji": "🤼",
+        "arabic": "رَافِعٌ وَسَمُرَة",
+        "story": "On the way to Uḥud, at a place called ash-Shawṭ, something sad happened. ʿAbdullāh ibn Ubayy suddenly turned back towards Madīnah, taking about three hundred men with him — almost a third of the army. “He listened to them and not to me,” he complained. A companion ran after them, begging them to come back and defend their city, but they made excuses. Allah exposed them: “They say with their mouths what is not in their hearts.” Two groups of the believers nearly lost courage too and thought of turning back, but Allah kept their hearts firm. Now the army was only about seven hundred. Yet some people were desperate to join it! The Prophet ﷺ checked the army and sent home the boys who were too young. Among them was Rāfiʿ ibn Khadīj — but someone said, “Rāfiʿ is an excellent archer,” so he was allowed to stay. Then young Samurah ibn Jundub cried, “I am stronger than Rāfiʿ — I can beat him at wrestling!” The Prophet ﷺ let them wrestle, and Samurah threw Rāfiʿ to the ground, so Samurah was allowed to stay too. Grown men with excuses turned back, while young boys wrestled for a place. Allah says of the believers who nearly lost heart: “Allah was their Protector, and in Allah let the believers put their trust.”",
+        "picks": [
+          {
+            "q": "How many men turned back with ʿAbdullāh ibn Ubayy?",
+            "options": [
+              "About three hundred",
+              "About thirty",
+              "About three thousand"
+            ]
+          },
+          {
+            "q": "Why was Rāfiʿ ibn Khadīj allowed to stay?",
+            "options": [
+              "He was an excellent archer",
+              "He was the oldest",
+              "He had a horse"
+            ]
+          },
+          {
+            "q": "How did Samurah win his place?",
+            "options": [
+              "He beat Rāfiʿ at wrestling",
+              "He paid money",
+              "He hid in the army"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The army sets out towards Uḥud",
+            "Ibn Ubayy turns back with three hundred men",
+            "The Prophet ﷺ sends home boys who are too young",
+            "Samurah wrestles Rāfiʿ and wins a place"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ibn Ubayy stayed with the army until the end.",
+            "a": false
+          },
+          {
+            "s": "Samurah won the wrestling match.",
+            "a": true
+          },
+          {
+            "s": "Two groups of believers nearly lost courage, but Allah kept them firm.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that sincere faith shows when it is tested, and that eagerness to do good is a sign of a living heart.",
+        "vocab": [
+          [
+            "فَشَل",
+            "losing courage"
+          ],
+          [
+            "وَلِيّ",
+            "protector"
+          ],
+          [
+            "مُصَارَعَة",
+            "wrestling"
+          ]
+        ],
+        "chapter": "The March to Uḥud",
+        "learn": {
+          "points": [
+            "Real faith shows at the moment of testing, not only in words.",
+            "Allah protects hearts that turn to Him when they feel weak.",
+            "Young people can be keen to serve and to do good."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِذْ هَمَّتْ طَائِفَتَانِ مِنْكُمْ أَنْ تَفْشَلَا وَاللَّهُ وَلِيُّهُمَا ۗ وَعَلَى اللَّهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ",
+            "en": "When two groups among you nearly lost courage — but Allah was their Protector. In Allah let the believers put their trust.",
+            "ref": "Sūrat Āl ʿImrān 3:122"
+          }
+        },
+        "quotes": [
+          {
+            "en": "They say with their mouths what is not in their hearts.",
+            "ar": "يَقُولُونَ بِأَفْوَاهِهِمْ مَا لَيْسَ فِي قُلُوبِهِمْ",
+            "ref": "Sūrat Āl ʿImrān 3:167"
+          },
+          {
+            "en": "Allah was their Protector, and in Allah let the believers put their trust.",
+            "ar": "وَاللَّهُ وَلِيُّهُمَا ۗ وَعَلَى اللَّهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ",
+            "ref": "Sūrat Āl ʿImrān 3:122"
+          }
+        ]
+      },
       {
         "title": "The Battle of Uḥud",
         "arabic": "غَزْوَةُ أُحُد",
@@ -9298,7 +10722,7 @@ window.SEERAA_COURSE=[
             "command"
           ]
         ],
-        "chapter": "Uḥud",
+        "chapter": "The March to Uḥud",
         "teach": "Listening to instructions",
         "order": {
           "prompt": "Put the battle in order",
@@ -9344,6 +10768,119 @@ window.SEERAA_COURSE=[
           }
         ]
       },
+      {
+        "title": "Anas and the Scent of Paradise",
+        "teach": "Staying true when things go wrong",
+        "emoji": "🌺",
+        "arabic": "أَنَسُ بْنُ النَّضْر",
+        "story": "Anas ibn an-Naḍr had missed the battle of Badr, and it hurt him deeply. “If Allah lets me be present when we meet the idol-worshippers again,” he said, “Allah will see what I do.” At Uḥud, when the archers left the hill and the battle turned, someone shouted a terrible rumour: “Muḥammad has been killed!” Many Muslims lost heart. Some sat down with their swords hanging from their hands. Anas came upon them and asked, “Why are you sitting here?” “The Messenger of Allah has been killed.” “Then what will you do with life after him?” said Anas. “Get up and give your lives for what he gave his life for!” Then he met Saʿd ibn Muʿādh and cried, “O Saʿd ibn Muʿādh, Paradise! By the Lord of an-Naḍr, I can smell its scent from beyond Uḥud!” He fought on bravely until he was martyred, and afterwards only his sister could recognise him, by his fingertips. The rumour was not true: the Prophet ﷺ had been wounded, but he was alive. Allah taught the believers that their faith must not depend on any person: “Muḥammad is only a messenger; messengers have passed away before him.” And about men like Anas, Allah revealed: “Among the believers are men who have been true to their promise to Allah.”",
+        "picks": [
+          {
+            "q": "Which battle had Anas missed?",
+            "options": [
+              "Badr",
+              "Uḥud",
+              "The Trench"
+            ]
+          },
+          {
+            "q": "What rumour spread at Uḥud?",
+            "options": [
+              "That the Prophet ﷺ had been killed",
+              "That Makkah had fallen",
+              "That the rain had stopped"
+            ]
+          },
+          {
+            "q": "What did Anas say he could smell?",
+            "options": [
+              "The scent of Paradise",
+              "Rain",
+              "Food"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Anas’s story in order",
+          "items": [
+            "Anas misses Badr and makes a promise",
+            "A false rumour spreads at Uḥud",
+            "Anas tells the companions to stand up",
+            "Allah reveals ayahs about the true believers"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ was killed at Uḥud.",
+            "a": false
+          },
+          {
+            "s": "Anas kept the promise he made after Badr.",
+            "a": true
+          },
+          {
+            "s": "Allah taught that faith must not depend on any person.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to stay true to Allah in hard moments, and never to let a rumour shake our faith.",
+        "vocab": [
+          [
+            "إِشَاعَة",
+            "rumour"
+          ],
+          [
+            "عَهْد",
+            "promise"
+          ],
+          [
+            "الْجَنَّة",
+            "Paradise"
+          ]
+        ],
+        "chapter": "The March to Uḥud",
+        "learn": {
+          "points": [
+            "Keep your promises to Allah, even when things go wrong.",
+            "Our faith is in Allah, who never dies — not in any person.",
+            "Do not believe or spread a rumour without checking it."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "مِنَ الْمُؤْمِنِينَ رِجَالٌ صَدَقُوا مَا عَاهَدُوا اللَّهَ عَلَيْهِ ۖ فَمِنْهُمْ مَنْ قَضَىٰ نَحْبَهُ وَمِنْهُمْ مَنْ يَنْتَظِرُ ۖ وَمَا بَدَّلُوا تَبْدِيلًا",
+            "en": "Among the believers are men who have been true to their promise to Allah: some have fulfilled their vow, and some are still waiting, and they have not changed in the least.",
+            "ref": "Sūrat al-Aḥzāb 33:23"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Saʿd ibn Muʿādh, Paradise! By the Lord of an-Naḍr, I can smell its scent from beyond Uḥud!",
+            "ar": "يَا سَعْدُ بْنَ مُعَاذٍ، الْجَنَّةَ، وَرَبِّ النَّضْرِ إِنِّي أَجِدُ رِيحَهَا مِنْ دُونِ أُحُدٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2805"
+          },
+          {
+            "en": "Muḥammad is only a messenger; messengers have passed away before him.",
+            "ar": "وَمَا مُحَمَّدٌ إِلَّا رَسُولٌ قَدْ خَلَتْ مِنْ قَبْلِهِ الرُّسُلُ",
+            "ref": "Sūrat Āl ʿImrān 3:144"
+          },
+          {
+            "en": "Among the believers are men who have been true to their promise to Allah.",
+            "ar": "مِنَ الْمُؤْمِنِينَ رِجَالٌ صَدَقُوا مَا عَاهَدُوا اللَّهَ عَلَيْهِ",
+            "ref": "Sūrat al-Aḥzāb 33:23"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 30 · Heroes of Uḥud",
+    "icon": "🦁",
+    "colour": "#2f6f8f",
+    "range": [
+      117,
+      120
+    ],
+    "lessons": [
       {
         "title": "Umm ʿUmārah’s Courage",
         "teach": "Brave service",
@@ -9414,7 +10951,7 @@ window.SEERAA_COURSE=[
             "wounded"
           ]
         ],
-        "chapter": "Uḥud",
+        "chapter": "Heroes of Uḥud",
         "learn": {
           "points": [
             "Courage and service are honoured by Allah, from women and men alike.",
@@ -9429,6 +10966,205 @@ window.SEERAA_COURSE=[
           }
         },
         "quotes": []
+      },
+      {
+        "title": "Shields around the Prophet ﷺ",
+        "teach": "Sacrifice and loyalty",
+        "emoji": "🛡️",
+        "arabic": "طَلْحَةُ وَسَعْد",
+        "story": "When the battle of Uḥud suddenly turned, the enemy pushed towards the Prophet ﷺ himself. Only a small group of companions were near him, and they made their own bodies into his shield. Ṭalḥah ibn ʿUbaydillāh blocked the arrows and blows with his hand, until it was so badly injured that it stayed weak for the rest of his life. Abū Ṭalḥah stood in front of the Prophet ﷺ with his shield, and when the Prophet ﷺ raised his head to look at the battle, Abū Ṭalḥah said, “Do not raise your head, or one of their arrows may hit you. My chest before your chest!” Abū Dujānah bent over him, letting the arrows strike his own back. Saʿd ibn Abī Waqqāṣ shot arrow after arrow, and the Prophet ﷺ handed him the arrows and said, “Shoot, may my father and mother be your ransom!” The Prophet ﷺ was wounded in his face and a tooth was broken, yet he stayed calm and patient. Allah praises believers like these: “How many prophets fought alongside many devoted believers! They did not lose heart at what struck them in Allah’s way, nor did they weaken or give in. Allah loves those who are patient.”",
+        "picks": [
+          {
+            "q": "What happened to Ṭalḥah’s hand?",
+            "options": [
+              "It was injured shielding the Prophet ﷺ",
+              "It held the flag",
+              "It wrote the treaty"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say to Saʿd as he shot arrows?",
+            "options": [
+              "Shoot, may my father and mother be your ransom!",
+              "Stop shooting",
+              "Run away"
+            ]
+          },
+          {
+            "q": "How was the Prophet ﷺ hurt at Uḥud?",
+            "options": [
+              "His face was wounded and a tooth broken",
+              "He lost his sight",
+              "He was not hurt at all"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The battle suddenly turns",
+            "Companions gather around the Prophet ﷺ",
+            "Ṭalḥah and Abū Ṭalḥah shield him",
+            "Saʿd shoots the arrows he is handed"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Only a small group stayed close to the Prophet ﷺ at that moment.",
+            "a": true
+          },
+          {
+            "s": "Abū Dujānah protected the Prophet ﷺ with his back.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ lost his patience at Uḥud.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn about loyalty and sacrifice, and that Allah loves those who stay patient in hardship.",
+        "vocab": [
+          [
+            "فِدَاء",
+            "ransom, sacrifice"
+          ],
+          [
+            "تُرْس",
+            "shield"
+          ],
+          [
+            "سَهْم",
+            "arrow"
+          ]
+        ],
+        "chapter": "Heroes of Uḥud",
+        "learn": {
+          "points": [
+            "The companions loved the Prophet ﷺ more than themselves.",
+            "True friends protect each other in danger.",
+            "Allah loves those who stay patient in hardship."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا وَاتَّقُوا اللَّهَ لَعَلَّكُمْ تُفْلِحُونَ",
+            "en": "O you who believe, be patient, outlast others in patience, stand firm together, and be mindful of Allah so that you may succeed.",
+            "ref": "Sūrat Āl ʿImrān 3:200"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do not raise your head, or one of their arrows may hit you. My chest before your chest!",
+            "ar": "لَا تُشْرِفْ يُصِيبُكَ سَهْمٌ مِنْ سِهَامِ الْقَوْمِ، نَحْرِي دُونَ نَحْرِكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3811"
+          },
+          {
+            "en": "Shoot, may my father and mother be your ransom!",
+            "ar": "ارْمِ فِدَاكَ أَبِي وَأُمِّي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4055"
+          },
+          {
+            "en": "How many prophets fought alongside many devoted believers! They did not lose heart at what struck them in Allah’s way, nor did they weaken or give in. Allah loves those who are patient.",
+            "ar": "وَكَأَيِّنْ مِنْ نَبِيٍّ قَاتَلَ مَعَهُ رِبِّيُّونَ كَثِيرٌ فَمَا وَهَنُوا لِمَا أَصَابَهُمْ فِي سَبِيلِ اللَّهِ وَمَا ضَعُفُوا وَمَا اسْتَكَانُوا ۗ وَاللَّهُ يُحِبُّ الصَّابِرِينَ",
+            "ref": "Sūrat Āl ʿImrān 3:146"
+          }
+        ]
+      },
+      {
+        "title": "Ḥamzah and Muṣʿab",
+        "teach": "Martyrs are alive with their Lord",
+        "emoji": "🦁",
+        "arabic": "أَسَدُ اللّٰه",
+        "story": "At Uḥud, the Prophet’s uncle Ḥamzah fought so bravely that he was called “the Lion of Allah”. A slave named Waḥshī had been promised his freedom if he killed Ḥamzah. He hid behind a rock, waited, and threw his spear from far away. Ḥamzah fell as a martyr. When the battle was over and the Prophet ﷺ found his beloved uncle, he wept with great sorrow. Nearby lay Muṣʿab ibn ʿUmayr, who had once worn the finest clothes in Makkah and had left it all for Islam. He had carried the flag of the Muslims until he was martyred. Now all he owned was one short striped cloak. As Khabbāb remembered, “When we covered his head with it, his feet showed, and when we covered his feet, his head showed.” The Prophet ﷺ told them to cover his head and to place fragrant grass over his feet. Seventy companions were buried at Uḥud. Allah comforted the believers: “Do not think of those killed in the way of Allah as dead. No — they are alive with their Lord, receiving provision.” Years later, Waḥshī himself came to the Prophet ﷺ and accepted Islam, and he was forgiven, for Islam wipes away what came before.",
+        "picks": [
+          {
+            "q": "What was Ḥamzah called?",
+            "options": [
+              "The Lion of Allah",
+              "The Sword of Allah",
+              "The Truthful"
+            ]
+          },
+          {
+            "q": "What did Muṣʿab own when he was martyred?",
+            "options": [
+              "Only one short cloak",
+              "A big house",
+              "Many horses"
+            ]
+          },
+          {
+            "q": "What happened to Waḥshī years later?",
+            "options": [
+              "He accepted Islam",
+              "He became a king",
+              "He moved to Rome"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Ḥamzah fights bravely at Uḥud",
+            "Waḥshī throws his spear from hiding",
+            "Muṣʿab is buried in his short cloak",
+            "Waḥshī later accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ wept for his uncle Ḥamzah.",
+            "a": true
+          },
+          {
+            "s": "Muṣʿab was buried in fine Makkan clothes.",
+            "a": false
+          },
+          {
+            "s": "Allah says martyrs are alive with their Lord.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that what matters is what we take to Allah, not what we leave behind, and that Allah’s forgiveness is wide.",
+        "vocab": [
+          [
+            "شَهِيد",
+            "martyr"
+          ],
+          [
+            "أَسَد",
+            "lion"
+          ],
+          [
+            "كَفَن",
+            "shroud"
+          ]
+        ],
+        "chapter": "Heroes of Uḥud",
+        "learn": {
+          "points": [
+            "Martyrs are alive with their Lord.",
+            "Muṣʿab gave up comfort for faith, and Allah honoured him.",
+            "Allah’s door of forgiveness is open even to people who did great wrong."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَرِحِينَ بِمَا آتَاهُمُ اللَّهُ مِنْ فَضْلِهِ",
+            "en": "Rejoicing in what Allah has given them of His bounty.",
+            "ref": "Sūrat Āl ʿImrān 3:170"
+          }
+        },
+        "quotes": [
+          {
+            "en": "When we covered his head with it, his feet showed, and when we covered his feet, his head showed.",
+            "ar": "إِذَا غَطَّيْنَا بِهَا رَأْسَهُ خَرَجَتْ رِجْلَاهُ، وَإِذَا غَطَّيْنَا رِجْلَيْهِ خَرَجَ رَأْسُهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1276"
+          },
+          {
+            "en": "Do not think of those killed in the way of Allah as dead. No — they are alive with their Lord, receiving provision.",
+            "ar": "وَلَا تَحْسَبَنَّ الَّذِينَ قُتِلُوا فِي سَبِيلِ اللَّهِ أَمْوَاتًا ۚ بَلْ أَحْيَاءٌ عِنْدَ رَبِّهِمْ يُرْزَقُونَ",
+            "ref": "Sūrat Āl ʿImrān 3:169"
+          }
+        ]
       },
       {
         "title": "Learning after a Setback",
@@ -9476,7 +11212,7 @@ window.SEERAA_COURSE=[
             "hope"
           ]
         ],
-        "chapter": "Uḥud",
+        "chapter": "Heroes of Uḥud",
         "teach": "Mercy and reflection",
         "order": {
           "prompt": "Put the lessons in order",
@@ -9526,7 +11262,18 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat Āl ʿImrān 3:139"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "title": "Map 31 · After Uḥud",
+    "icon": "💪",
+    "colour": "#7a5aa8",
+    "range": [
+      121,
+      124
+    ],
+    "lessons": [
       {
         "title": "“Allah Is Enough for Us”",
         "teach": "Trust after hardship",
@@ -9597,7 +11344,7 @@ window.SEERAA_COURSE=[
             "fire"
           ]
         ],
-        "chapter": "Uḥud",
+        "chapter": "After Uḥud",
         "learn": {
           "points": [
             "When we feel tired or afraid, we say “Ḥasbunallāh”.",
@@ -9623,16 +11370,322 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat Āl ʿImrān 3:173"
           }
         ]
+      },
+      {
+        "title": "Teachers Who Were Betrayed",
+        "teach": "Faith that does not bend",
+        "emoji": "📖",
+        "arabic": "خُبَيْبٌ وَحَرَام",
+        "story": "In the year after Uḥud, some tribes came to Madīnah saying, “Send us teachers to teach us Islam and the Qurʾān.” The Prophet ﷺ sent good men — but twice they were betrayed. At a place called ar-Rajīʿ, a small group of teachers was ambushed. Khubayb ibn ʿAdiyy was captured and sold in Makkah to people who wanted revenge for Badr. He was kept as a prisoner in a house, and the woman of the house later said, “By Allah, I never saw a prisoner better than Khubayb. By Allah, one day I found him eating from a bunch of grapes in his hand while he was chained in iron, and there was no fruit in Makkah.” She used to say it was provision from Allah. One day her little boy wandered over to Khubayb while he was holding a razor, and she was terrified. Khubayb said, “Are you afraid that I would kill him? I would never do that.” When Quraysh took him out to be killed, he asked to pray two rakʿahs first, and he prayed them calmly. Soon after, seventy teachers who knew the Qurʾān by heart were sent to the people of Najd. At the well of Maʿūnah they were attacked. Ḥarām ibn Milḥān, who carried the Prophet’s letter, was stabbed from behind, and as he fell he said, “I have won, by the Lord of the Kaʿbah!” The Prophet ﷺ grieved for them deeply and made duʿāʾ in his prayers for a whole month.",
+        "picks": [
+          {
+            "q": "What did the tribes ask the Prophet ﷺ to send?",
+            "options": [
+              "Teachers",
+              "Soldiers",
+              "Gold"
+            ]
+          },
+          {
+            "q": "What did the woman find Khubayb eating?",
+            "options": [
+              "Grapes, when there was no fruit in Makkah",
+              "Bread",
+              "Dates from Madīnah"
+            ]
+          },
+          {
+            "q": "What did Ḥarām ibn Milḥān say as he fell?",
+            "options": [
+              "I have won, by the Lord of the Kaʿbah!",
+              "Help me!",
+              "I give up"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Tribes ask for teachers",
+            "Khubayb is captured at ar-Rajīʿ",
+            "Khubayb prays two rakʿahs",
+            "Seventy teachers are attacked at Biʾr Maʿūnah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Khubayb harmed the little boy.",
+            "a": false
+          },
+          {
+            "s": "Khubayb prayed two rakʿahs before he died.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ made duʿāʾ in his prayer for a month.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to value the Qurʾān and its teachers, and that a believer’s real success is Allah’s pleasure.",
+        "vocab": [
+          [
+            "مُعَلِّم",
+            "teacher"
+          ],
+          [
+            "رِزْق",
+            "provision"
+          ],
+          [
+            "فَوْز",
+            "success, winning"
+          ]
+        ],
+        "chapter": "After Uḥud",
+        "learn": {
+          "points": [
+            "Teaching the Qurʾān is precious and brave work.",
+            "A believer stays kind and honest even towards enemies, like Khubayb with the child.",
+            "Winning Allah’s pleasure is the real success."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَلَا تَقُولُوا لِمَنْ يُقْتَلُ فِي سَبِيلِ اللَّهِ أَمْوَاتٌ ۚ بَلْ أَحْيَاءٌ وَلَٰكِنْ لَا تَشْعُرُونَ",
+            "en": "Do not say of those killed in the way of Allah, ‘They are dead.’ No — they are alive, but you do not perceive it.",
+            "ref": "Sūrat al-Baqarah 2:154"
+          }
+        },
+        "quotes": [
+          {
+            "en": "By Allah, I never saw a prisoner better than Khubayb. By Allah, one day I found him eating from a bunch of grapes in his hand while he was chained in iron, and there was no fruit in Makkah.",
+            "ar": "وَاللَّهِ مَا رَأَيْتُ أَسِيرًا قَطُّ خَيْرًا مِنْ خُبَيْبٍ، وَاللَّهِ لَقَدْ وَجَدْتُهُ يَوْمًا يَأْكُلُ مِنْ قِطْفِ عِنَبٍ فِي يَدِهِ، وَإِنَّهُ لَمُوثَقٌ فِي الْحَدِيدِ، وَمَا بِمَكَّةَ مِنْ ثَمَرٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3045"
+          },
+          {
+            "en": "Are you afraid that I would kill him? I would never do that.",
+            "ar": "تَخْشَيْنَ أَنْ أَقْتُلَهُ مَا كُنْتُ لأَفْعَلَ ذَلِكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3045"
+          },
+          {
+            "en": "I have won, by the Lord of the Kaʿbah!",
+            "ar": "فُزْتُ وَرَبِّ الْكَعْبَةِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4092"
+          }
+        ]
+      },
+      {
+        "title": "Banū an-Naḍīr",
+        "teach": "Allah protects His Messenger",
+        "emoji": "🏰",
+        "arabic": "بَنُو النَّضِير",
+        "story": "Two men from a tribe at peace with the Muslims had been killed by mistake, and compensation had to be paid to their families. Under the agreement of Madīnah, the Jewish tribe of Banū an-Naḍīr was supposed to help. So the Prophet ﷺ went to them with Abū Bakr, ʿUmar, ʿAlī and a few others. They welcomed him with smiles and asked him to sit by the wall of one of their houses while they got ready. But in secret they planned to roll a heavy millstone off the roof onto his head. Allah sent Jibrīl to warn him. The Prophet ﷺ stood up quietly, as if he were going to fetch something, and went back to Madīnah. Allah reminds the believers of such moments: “O you who believe, remember Allah’s favour to you when some people wanted to stretch out their hands against you, and He held back their hands from you.” The Prophet ﷺ gave Banū an-Naḍīr ten days to leave. ʿAbdullāh ibn Ubayy secretly promised to help them, so they refused — but his help never came. After a short siege, they agreed to leave with whatever their camels could carry. They even pulled out the doors and windows of their own houses to take them along. Allah says: “He is the One who drove out the disbelievers among the People of the Book from their homes at the first gathering.”",
+        "picks": [
+          {
+            "q": "Why did the Prophet ﷺ visit Banū an-Naḍīr?",
+            "options": [
+              "To ask their help with compensation, as agreed",
+              "To buy dates",
+              "To go to a feast"
+            ]
+          },
+          {
+            "q": "What did they plan to do?",
+            "options": [
+              "Drop a millstone on him",
+              "Give him a gift",
+              "Hold a celebration"
+            ]
+          },
+          {
+            "q": "Who warned the Prophet ﷺ?",
+            "options": [
+              "Jibrīl, by Allah’s command",
+              "Abū Sufyān",
+              "A child"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Prophet ﷺ visits Banū an-Naḍīr",
+            "They plot to drop a millstone",
+            "Jibrīl warns him and he leaves",
+            "They are given ten days, then leave the city"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ibn Ubayy’s promised help arrived.",
+            "a": false
+          },
+          {
+            "s": "Banū an-Naḍīr took even their doors and windows.",
+            "a": true
+          },
+          {
+            "s": "The plot against the Prophet ﷺ succeeded.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn that Allah protects His Messenger ﷺ and that betrayal leads to loss, so we keep our promises.",
+        "vocab": [
+          [
+            "مَكْر",
+            "plot"
+          ],
+          [
+            "حِصَار",
+            "siege"
+          ],
+          [
+            "عِبْرَة",
+            "lesson"
+          ]
+        ],
+        "chapter": "After Uḥud",
+        "learn": {
+          "points": [
+            "Allah protects His Messenger ﷺ from every plot.",
+            "Betraying a promise brings loss, even to the strong.",
+            "A wise person learns lessons from what happens to others."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَاعْتَبِرُوا يَا أُولِي الْأَبْصَارِ",
+            "en": "So take a lesson, O people of insight!",
+            "ref": "Sūrat al-Ḥashr 59:2"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O you who believe, remember Allah’s favour to you when some people wanted to stretch out their hands against you, and He held back their hands from you.",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا نِعْمَتَ اللَّهِ عَلَيْكُمْ إِذْ هَمَّ قَوْمٌ أَنْ يَبْسُطُوا إِلَيْكُمْ أَيْدِيَهُمْ فَكَفَّ أَيْدِيَهُمْ عَنْكُمْ",
+            "ref": "Sūrat al-Māʾidah 5:11"
+          },
+          {
+            "en": "He is the One who drove out the disbelievers among the People of the Book from their homes at the first gathering.",
+            "ar": "هُوَ الَّذِي أَخْرَجَ الَّذِينَ كَفَرُوا مِنْ أَهْلِ الْكِتَابِ مِنْ دِيَارِهِمْ لِأَوَّلِ الْحَشْرِ",
+            "ref": "Sūrat al-Ḥashr 59:2"
+          }
+        ]
+      },
+      {
+        "title": "We Hear and We Obey",
+        "teach": "Obeying Allah quickly",
+        "emoji": "🫗",
+        "arabic": "سَمِعْنَا وَأَطَعْنَا",
+        "story": "Before Islam, the Arabs loved drinking khamr, alcohol that makes people lose control of their minds. Allah did not forbid it all at once. First He taught that its harm is greater than its benefit. Then He told the believers not to come near prayer while drunk. Then, in Madīnah, the final command came: “O you who believe, khamr, gambling, idols and fortune-telling arrows are filthy work of Shayṭān, so stay away from them, so that you may succeed.” And Allah asked: “So will you not stop?” ʿUmar answered at once: “We have stopped!” Anas ibn Mālik was a boy serving drinks to some guests in the house of Abū Ṭalḥah when a caller passed through the streets announcing: “Khamr has been forbidden!” Abū Ṭalḥah did not wait to finish his cup, or ask questions, or see what others would do. He told Anas, “Go out and pour it away.” Anas poured it out, and all over the city people did the same, until it ran through the streets of Madīnah. Nobody argued or delayed. Allah praises believers who, when they are called to Allah and His Messenger, answer: “We hear and we obey.”",
+        "picks": [
+          {
+            "q": "Was khamr forbidden all at once?",
+            "options": [
+              "No, step by step",
+              "Yes, on the first day of Islam",
+              "It was never forbidden"
+            ]
+          },
+          {
+            "q": "What did Abū Ṭalḥah tell Anas to do?",
+            "options": [
+              "Pour it all away",
+              "Hide it",
+              "Sell it"
+            ]
+          },
+          {
+            "q": "What did ʿUmar say?",
+            "options": [
+              "We have stopped!",
+              "Let us wait",
+              "One more cup"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Allah says khamr’s harm is greater than its benefit",
+            "Allah forbids coming to prayer while drunk",
+            "The final ayah forbids khamr",
+            "The people of Madīnah pour it into the streets"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Ṭalḥah finished his drink before pouring it out.",
+            "a": false
+          },
+          {
+            "s": "Khamr ran through the streets of Madīnah.",
+            "a": true
+          },
+          {
+            "s": "Allah taught this rule gradually.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to obey Allah’s commands quickly and happily, trusting that He knows what is best for us.",
+        "vocab": [
+          [
+            "خَمْر",
+            "intoxicating drink"
+          ],
+          [
+            "اجْتَنِبُوهُ",
+            "stay away from it"
+          ],
+          [
+            "سَمِعْنَا وَأَطَعْنَا",
+            "we hear and we obey"
+          ]
+        ],
+        "chapter": "After Uḥud",
+        "learn": {
+          "points": [
+            "Allah taught step by step, with wisdom and mercy.",
+            "Believers obey Allah quickly, without excuses.",
+            "Staying away from harmful things protects our minds and our families."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّمَا كَانَ قَوْلَ الْمُؤْمِنِينَ إِذَا دُعُوا إِلَى اللَّهِ وَرَسُولِهِ لِيَحْكُمَ بَيْنَهُمْ أَنْ يَقُولُوا سَمِعْنَا وَأَطَعْنَا ۚ وَأُولَٰئِكَ هُمُ الْمُفْلِحُونَ",
+            "en": "When the believers are called to Allah and His Messenger to judge between them, their only answer is: ‘We hear and we obey.’ They are the successful ones.",
+            "ref": "Sūrat an-Nūr 24:51"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O you who believe, khamr, gambling, idols and fortune-telling arrows are filthy work of Shayṭān, so stay away from them, so that you may succeed.",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا إِنَّمَا الْخَمْرُ وَالْمَيْسِرُ وَالْأَنْصَابُ وَالْأَزْلَامُ رِجْسٌ مِنْ عَمَلِ الشَّيْطَانِ فَاجْتَنِبُوهُ لَعَلَّكُمْ تُفْلِحُونَ",
+            "ref": "Sūrat al-Māʾidah 5:90"
+          },
+          {
+            "en": "So will you not stop?",
+            "ar": "فَهَلْ أَنْتُمْ مُنْتَهُونَ",
+            "ref": "Sūrat al-Māʾidah 5:91"
+          },
+          {
+            "en": "We have stopped!",
+            "ar": "انْتَهَيْنَا",
+            "ref": "Sunan Abī Dāwūd 3670"
+          },
+          {
+            "en": "Khamr has been forbidden!",
+            "ar": "الْخَمْرَ قَدْ حُرِّمَتْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2464"
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 27 · The Trench",
+    "title": "Map 32 · The Trench",
     "icon": "⛏️",
     "colour": "#2e6b58",
     "range": [
-      105,
-      108
+      125,
+      128
     ],
     "lessons": [
       {
@@ -9640,7 +11693,7 @@ window.SEERAA_COURSE=[
         "teach": "Salmān’s idea",
         "emoji": "🛡️",
         "arabic": "ٱلْخَنْدَق",
-        "story": "A huge army came to surround Madīnah. Salmān al-Fārisī suggested something the Arabs had never done: dig a deep trench across the open side of the city. Everyone dug together, hungry and cold, singing as they worked — the Prophet ﷺ carrying earth with them. The army could not cross, and after weeks a fierce wind sent them home. Working side by side through hunger and cold, the Muslims’ unity became just as important as the trench itself.",
+        "story": "In the fifth year after the Hijrah, leaders of Banū an-Naḍīr travelled around Arabia, stirring up the tribes against Madīnah. Quraysh, Ghaṭafān and others joined together into one huge army of about ten thousand soldiers — al-Aḥzāb, the Confederates. When the news reached Madīnah, the Prophet ﷺ consulted his companions. Salmān al-Fārisī said that in Persia, when people feared an attack by horsemen, they dug a trench around themselves. The Arabs had never seen such a thing! Madīnah was protected on most sides by lava fields, rocky hills and thick palm gardens, so the Muslims only needed to dig a trench across the open northern side. Each group of ten men dug forty arm-lengths. The Prophet ﷺ dug and carried earth with them until the dust covered his chest. It was winter, food was short, and they were cold and hungry, but they sang as they worked. When the Prophet ﷺ saw how tired and hungry they were, he said: “O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.” They answered: “We are the ones who pledged to Muḥammad to strive for as long as we live!” In about six days the trench was finished, just before the enemy arrived. When the great army reached Madīnah and saw the deep ditch, they stopped in astonishment, unable to cross.",
         "picks": [
           {
             "q": "Whose idea was the trench?",
@@ -9651,29 +11704,29 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "Why did the army leave?",
+            "q": "Why did the Muslims only dig on one side of Madīnah?",
             "options": [
-              "They could not cross, and a fierce wind came",
-              "They ran out of horses",
-              "They were invited in"
+              "Lava fields, hills and gardens protected the other sides",
+              "They ran out of time",
+              "The enemy asked them to"
             ]
           },
           {
-            "q": "What eventually made the enemy army leave?",
+            "q": "How many soldiers were in the Confederate army?",
             "options": [
-              "A fierce wind",
-              "A flood",
-              "Another army arriving"
+              "About ten thousand",
+              "About one hundred",
+              "About one thousand"
             ]
           }
         ],
         "order": {
           "prompt": "Put the Trench in order",
           "items": [
-            "A huge army marches on Madīnah",
+            "The tribes join into one huge army",
             "Salmān suggests digging a trench",
             "Everyone digs together, the Prophet ﷺ too",
-            "The army cannot cross and goes home"
+            "The army arrives and cannot cross"
           ]
         },
         "tf": [
@@ -9686,8 +11739,8 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "Only the leaders did the digging.",
-            "a": false
+            "s": "The companions sang as they worked.",
+            "a": true
           }
         ],
         "benefit": "We learn that creative thinking and teamwork can overcome even the biggest and most frightening challenges.",
@@ -9719,7 +11772,18 @@ window.SEERAA_COURSE=[
             "ref": "Ṣaḥīḥ al-Bukhārī 2834"
           }
         },
-        "quotes": []
+        "quotes": [
+          {
+            "en": "O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.",
+            "ar": "اللَّهُمَّ إِنَّ الْعَيْشَ عَيْشُ الآخِرَهْ فَاغْفِرْ لِلأَنْصَارِ وَالْمُهَاجِرَهْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2834"
+          },
+          {
+            "en": "We are the ones who pledged to Muḥammad to strive for as long as we live!",
+            "ar": "نَحْنُ الَّذِينَ بَايَعُوا مُحَمَّدًا عَلَى الْجِهَادِ مَا بَقِينَا أَبَدًا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2834"
+          }
+        ]
       },
       {
         "title": "The Rock and the Good News",
@@ -9921,6 +11985,109 @@ window.SEERAA_COURSE=[
         ]
       },
       {
+        "title": "Ṣafiyyah Guards the Fort",
+        "teach": "Courage and alertness",
+        "emoji": "🏯",
+        "arabic": "صَفِيَّةُ بِنْتُ عَبْدِ الْمُطَّلِب",
+        "story": "While the Muslim men were guarding the trench, the women and children of Madīnah were sheltered in strong forts inside the city. Then terrible news came: Banū Qurayẓah, a Jewish tribe living inside Madīnah behind the Muslims, had torn up their agreement and joined the enemy. Now there was danger in front of the Muslims and behind them. Allah describes those days: “When they came at you from above you and from below you, and when eyes grew wide and hearts leapt up to the throats.” In one fort, the Prophet’s aunt Ṣafiyyah bint ʿAbd al-Muṭṭalib was keeping watch. She saw a man from Banū Qurayẓah creeping around the walls, looking for a way in. If he found out that the fort had no soldiers, the enemy could attack the women and children. There was no man to send. Ṣafiyyah tied her clothes tightly, picked up a heavy wooden pole, crept down and struck him down. When his tribe heard nothing back from their spy, they believed the forts were well guarded, and they did not dare to attack. A brave, alert woman had protected the families of Madīnah.",
+        "picks": [
+          {
+            "q": "Who was Ṣafiyyah bint ʿAbd al-Muṭṭalib?",
+            "options": [
+              "The Prophet’s aunt",
+              "The Prophet’s daughter",
+              "A queen of Yemen"
+            ]
+          },
+          {
+            "q": "Which tribe broke its agreement during the siege?",
+            "options": [
+              "Banū Qurayẓah",
+              "The Anṣār",
+              "Banū Hāshim"
+            ]
+          },
+          {
+            "q": "Why did the enemy not attack the forts after that?",
+            "options": [
+              "They thought the forts were well guarded",
+              "It rained",
+              "They became Muslims"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The men guard the trench",
+            "Banū Qurayẓah break their agreement",
+            "Ṣafiyyah sees a spy at the fort",
+            "She stops him and the forts stay safe"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The women and children stayed in forts during the siege.",
+            "a": true
+          },
+          {
+            "s": "Ṣafiyyah waited for soldiers to come.",
+            "a": false
+          },
+          {
+            "s": "Banū Qurayẓah lived inside Madīnah, behind the Muslims.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to be brave and alert in protecting others, and to trust Allah during hard tests.",
+        "vocab": [
+          [
+            "حِصْن",
+            "fort"
+          ],
+          [
+            "يَقَظَة",
+            "alertness"
+          ],
+          [
+            "ابْتِلَاء",
+            "test"
+          ]
+        ],
+        "chapter": "The Trench",
+        "learn": {
+          "points": [
+            "Courage is not only for men: Ṣafiyyah protected a whole fort.",
+            "Stay alert, and act wisely when others are in danger.",
+            "Hard tests show who is truly strong in faith."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "هُنَالِكَ ابْتُلِيَ الْمُؤْمِنُونَ وَزُلْزِلُوا زِلْزَالًا شَدِيدًا",
+            "en": "There the believers were tested, and shaken with a severe shaking.",
+            "ref": "Sūrat al-Aḥzāb 33:11"
+          }
+        },
+        "quotes": [
+          {
+            "en": "When they came at you from above you and from below you, and when eyes grew wide and hearts leapt up to the throats.",
+            "ar": "إِذْ جَاءُوكُمْ مِنْ فَوْقِكُمْ وَمِنْ أَسْفَلَ مِنْكُمْ وَإِذْ زَاغَتِ الْأَبْصَارُ وَبَلَغَتِ الْقُلُوبُ الْحَنَاجِرَ",
+            "ref": "Sūrat al-Aḥzāb 33:10"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 33 · The Siege Ends",
+    "icon": "🌬️",
+    "colour": "#a97c25",
+    "range": [
+      129,
+      132
+    ],
+    "lessons": [
+      {
         "title": "The Wind That Ended the Siege",
         "arabic": "رِيحُ الْأَحْزَاب",
         "story": "For about a month, ten thousand soldiers camped outside Madīnah, unable to cross the trench. The Muslims were cold, hungry and tired, and some were very afraid. Allah describes how their eyes grew wide and their hearts rose up to their throats. Then help began to arrive. A man named Nuʿaym ibn Masʿūd had secretly become Muslim. With clever words, he made the different groups of the enemy army stop trusting one another. Then, one freezing night, Allah sent a fierce wind. It knocked over their cooking pots, blew out their fires and tore down their tents. The Prophet ﷺ sent Ḥudhayfah to see what was happening in the enemy camp. He came back with the news: Abū Sufyān was telling everyone to pack up and leave. In the morning, the huge army had gone. Allah says: “We sent against them a wind and armies you did not see.”",
@@ -9966,7 +12133,7 @@ window.SEERAA_COURSE=[
             "trench"
           ]
         ],
-        "chapter": "The Trench",
+        "chapter": "The Siege Ends",
         "teach": "Allah’s help after patience",
         "order": {
           "prompt": "Put the end of the siege in order",
@@ -10011,16 +12178,721 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat al-Aḥzāb 33:9"
           }
         ]
+      },
+      {
+        "title": "Banū Qurayẓah",
+        "teach": "The weight of a broken promise",
+        "emoji": "⚖️",
+        "arabic": "بَنُو قُرَيْظَة",
+        "story": "On the very day the great army left, the Prophet ﷺ came home, put down his weapons and washed. Then Jibrīl came and told him that the angels had not yet put down theirs, and pointed towards Banū Qurayẓah, who had broken their agreement at the most dangerous moment and joined the enemy. The Prophet ﷺ told the companions: “No one should pray ʿAṣr except at Banū Qurayẓah.” On the way, the time for ʿAṣr was running out. Some companions said, “He meant that we should hurry, not that we should miss the prayer,” and they prayed on the road. Others said, “We will pray only when we get there.” When the Prophet ﷺ heard about it, he did not blame either group, for both had sincerely tried to obey. The Muslims surrounded the forts of Banū Qurayẓah for about twenty-five nights. At last the tribe agreed to accept the judgement of Saʿd ibn Muʿādh, the chief of their old allies, the Aws. Saʿd judged that the men who had betrayed Madīnah in wartime should be put to death, and that the women and children should be kept safe. The Prophet ﷺ said that Saʿd had judged with Allah’s judgement. Allah says: “He brought down those of the People of the Book who had helped the enemy from their strongholds.”",
+        "picks": [
+          {
+            "q": "Who came to the Prophet ﷺ after the Trench?",
+            "options": [
+              "Jibrīl",
+              "Abū Sufyān",
+              "The Najāshī"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about ʿAṣr?",
+            "options": [
+              "No one should pray ʿAṣr except at Banū Qurayẓah",
+              "Pray ʿAṣr at home",
+              "Miss ʿAṣr today"
+            ]
+          },
+          {
+            "q": "Whose judgement did Banū Qurayẓah accept?",
+            "options": [
+              "Saʿd ibn Muʿādh",
+              "ʿUmar",
+              "Abū Sufyān"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Confederates leave Madīnah",
+            "Jibrīl tells the Prophet ﷺ to go to Banū Qurayẓah",
+            "Companions pray ʿAṣr in two different ways",
+            "Saʿd ibn Muʿādh gives his judgement"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ blamed the companions who prayed on the way.",
+            "a": false
+          },
+          {
+            "s": "Banū Qurayẓah broke their agreement during the siege.",
+            "a": true
+          },
+          {
+            "s": "They agreed to be judged by Saʿd ibn Muʿādh.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn how serious it is to betray a promise, and to respect sincere people who understand things differently.",
+        "vocab": [
+          [
+            "نَقْضُ الْعَهْد",
+            "breaking a covenant"
+          ],
+          [
+            "حُكْم",
+            "judgement"
+          ],
+          [
+            "صَلَاةُ الْعَصْر",
+            "the ʿAṣr prayer"
+          ]
+        ],
+        "chapter": "The Siege Ends",
+        "learn": {
+          "points": [
+            "Breaking a promise in a time of danger is a very serious betrayal.",
+            "Sincere people can understand an instruction differently, and both be trying to obey.",
+            "Justice is given by a fair judge."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَأَوْفُوا بِعَهْدِ اللَّهِ إِذَا عَاهَدْتُمْ وَلَا تَنْقُضُوا الْأَيْمَانَ بَعْدَ تَوْكِيدِهَا",
+            "en": "Fulfil Allah’s covenant when you have made a promise, and do not break oaths after making them firm.",
+            "ref": "Sūrat an-Naḥl 16:91"
+          }
+        },
+        "quotes": [
+          {
+            "en": "No one should pray ʿAṣr except at Banū Qurayẓah.",
+            "ar": "لَا يُصَلِّيَنَّ أَحَدٌ الْعَصْرَ إِلَّا فِي بَنِي قُرَيْظَةَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4119"
+          },
+          {
+            "en": "He brought down those of the People of the Book who had helped the enemy from their strongholds.",
+            "ar": "وَأَنْزَلَ الَّذِينَ ظَاهَرُوهُمْ مِنْ أَهْلِ الْكِتَابِ مِنْ صَيَاصِيهِمْ",
+            "ref": "Sūrat al-Aḥzāb 33:26"
+          }
+        ]
+      },
+      {
+        "title": "Abū Lubābah and the Pillar",
+        "teach": "Sincere repentance",
+        "emoji": "🪵",
+        "arabic": "أُسْطُوَانَةُ التَّوْبَة",
+        "story": "While the Muslims surrounded the forts of Banū Qurayẓah, the tribe asked to speak to Abū Lubābah, a companion from the Aws who had once been their friend. When he came in, the women and children gathered around him crying, and the men asked, “Shall we accept Muḥammad’s judgement?” “Yes,” he said — but at the same moment he pointed to his throat, warning them that they would be killed. As soon as he had done it, his heart sank. “I have betrayed Allah and His Messenger,” he thought. He did not go back to the Prophet ﷺ. Instead he went straight to the masjid and tied himself to one of its palm-trunk pillars. “I will not leave this place until Allah forgives me,” he said. The Prophet ﷺ said that if Abū Lubābah had come to him, he would have asked forgiveness for him; but now he would wait until Allah accepted his repentance. For about six days Abū Lubābah stayed tied to the pillar, and his wife untied him only for prayer and his needs. Then, one early morning, Allah accepted his repentance. Many scholars say this ayah came about him and people like him: “Others have admitted their sins; they mixed a good deed with a bad one. Perhaps Allah will turn to them in mercy. Allah is Forgiving, Merciful.” People rushed to untie him, but he said, “No — only the Messenger of Allah will untie me.” And the Prophet ﷺ untied him with his own hands. That pillar in the Prophet’s Masjid is still known as the Pillar of Repentance.",
+        "picks": [
+          {
+            "q": "What mistake did Abū Lubābah make?",
+            "options": [
+              "He gave away a secret by pointing to his throat",
+              "He ran away from battle",
+              "He stole money"
+            ]
+          },
+          {
+            "q": "Where did he tie himself?",
+            "options": [
+              "To a pillar in the masjid",
+              "To a tree",
+              "To a camel"
+            ]
+          },
+          {
+            "q": "Who untied him in the end?",
+            "options": [
+              "The Prophet ﷺ himself",
+              "His wife",
+              "ʿUmar"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Banū Qurayẓah ask to speak to Abū Lubābah",
+            "He points to his throat",
+            "He ties himself to a pillar of the masjid",
+            "Allah accepts his repentance"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Lubābah tried to hide his mistake.",
+            "a": false
+          },
+          {
+            "s": "He stayed tied to the pillar for about six days.",
+            "a": true
+          },
+          {
+            "s": "The Pillar of Repentance is still in the Prophet’s Masjid.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to admit our mistakes quickly and to turn to Allah with sincere repentance, never losing hope in His mercy.",
+        "vocab": [
+          [
+            "تَوْبَة",
+            "repentance"
+          ],
+          [
+            "أُسْطُوَانَة",
+            "pillar"
+          ],
+          [
+            "نَدَم",
+            "regret"
+          ]
+        ],
+        "chapter": "The Siege Ends",
+        "learn": {
+          "points": [
+            "When we make a mistake, we admit it straight away.",
+            "Sincere repentance means real regret and turning back to Allah.",
+            "Allah’s mercy is wide, so never lose hope in it."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنْفُسِهِمْ لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ ۚ إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا",
+            "en": "Say: ‘O My servants who have wronged themselves, do not lose hope in Allah’s mercy. Allah forgives all sins.’",
+            "ref": "Sūrat az-Zumar 39:53"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Others have admitted their sins; they mixed a good deed with a bad one. Perhaps Allah will turn to them in mercy. Allah is Forgiving, Merciful.",
+            "ar": "وَآخَرُونَ اعْتَرَفُوا بِذُنُوبِهِمْ خَلَطُوا عَمَلًا صَالِحًا وَآخَرَ سَيِّئًا عَسَى اللَّهُ أَنْ يَتُوبَ عَلَيْهِمْ ۚ إِنَّ اللَّهَ غَفُورٌ رَحِيمٌ",
+            "ref": "Sūrat at-Tawbah 9:102"
+          }
+        ]
+      },
+      {
+        "title": "Saʿd ibn Muʿādh",
+        "teach": "A life given to Allah",
+        "emoji": "🌟",
+        "arabic": "سَعْدُ بْنُ مُعَاذ",
+        "story": "Saʿd ibn Muʿādh was the chief of the Aws. He accepted Islam through Muṣʿab ibn ʿUmayr in a single afternoon, and that same evening his whole tribe became Muslim with him. At Badr he told the Prophet ﷺ, “If you crossed this sea, we would cross it with you.” During the siege of the Trench, an arrow struck Saʿd in the arm and cut a large vein. The Prophet ﷺ had a tent put up for him in the masjid, so that he could visit him often. Saʿd made duʿāʾ, asking Allah to keep him alive long enough to see the end of the treachery against Madīnah. After he gave his judgement about Banū Qurayẓah, his wound opened again, and he passed away. The Prophet ﷺ said: “The Throne shook at the death of Saʿd ibn Muʿādh.” Some time later, someone gave the Prophet ﷺ a beautiful garment of silk, and the companions touched it, amazed at how soft it was. The Prophet ﷺ said, “Are you amazed at how soft this is? The handkerchiefs of Saʿd ibn Muʿādh are better than it” — meaning his handkerchiefs in Paradise. Saʿd lived only about six years as a Muslim, yet he filled them with faith, courage and service.",
+        "picks": [
+          {
+            "q": "Which tribe did Saʿd lead?",
+            "options": [
+              "The Aws",
+              "Quraysh",
+              "Thaqīf"
+            ]
+          },
+          {
+            "q": "Where did the Prophet ﷺ put up a tent for Saʿd?",
+            "options": [
+              "In the masjid",
+              "In Makkah",
+              "At Badr"
+            ]
+          },
+          {
+            "q": "What shook at Saʿd’s death?",
+            "options": [
+              "The Throne",
+              "Mount Uḥud",
+              "The trench"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Saʿd’s life in order",
+          "items": [
+            "Saʿd accepts Islam through Muṣʿab",
+            "An arrow wounds him at the Trench",
+            "He judges Banū Qurayẓah",
+            "He passes away and the Throne shakes"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Saʿd was wounded by an arrow during the siege.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ never visited Saʿd.",
+            "a": false
+          },
+          {
+            "s": "Saʿd’s handkerchiefs in Paradise are better than fine silk.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that a life spent sincerely for Allah is precious, however long or short it is.",
+        "vocab": [
+          [
+            "عَرْش",
+            "Throne"
+          ],
+          [
+            "خَيْمَة",
+            "tent"
+          ],
+          [
+            "مِنْدِيل",
+            "handkerchief"
+          ]
+        ],
+        "chapter": "The Siege Ends",
+        "learn": {
+          "points": [
+            "A short life filled with faith can be greater than a long, empty one.",
+            "Allah honoured Saʿd’s courage and service.",
+            "Paradise is better than the finest things of this world."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيَّتُهَا النَّفْسُ الْمُطْمَئِنَّةُ ۝ ارْجِعِي إِلَىٰ رَبِّكِ رَاضِيَةً مَرْضِيَّةً",
+            "en": "O soul at peace, return to your Lord, well-pleased and pleasing to Him.",
+            "ref": "Sūrat al-Fajr 89:27–28"
+          }
+        },
+        "quotes": [
+          {
+            "en": "The Throne shook at the death of Saʿd ibn Muʿādh.",
+            "ar": "اهْتَزَّ الْعَرْشُ لِمَوْتِ سَعْدِ بْنِ مُعَاذٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3803"
+          },
+          {
+            "en": "Are you amazed at how soft this is? The handkerchiefs of Saʿd ibn Muʿādh are better than it",
+            "ar": "أَتَعْجَبُونَ مِنْ لِينِ هَذِهِ لَمَنَادِيلُ سَعْدِ بْنِ مُعَاذٍ خَيْرٌ مِنْهَا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3802"
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 28 · Peace at Ḥudaybiyyah",
-    "icon": "🕊️",
-    "colour": "#a97c25",
+    "title": "Map 34 · Tests of Truth",
+    "icon": "💧",
+    "colour": "#b4553a",
     "range": [
-      109,
-      112
+      133,
+      136
+    ],
+    "lessons": [
+      {
+        "title": "Juwayriyyah’s Blessing",
+        "teach": "Generosity that frees people",
+        "emoji": "💫",
+        "arabic": "جُوَيْرِيَةُ بِنْتُ الْحَارِث",
+        "story": "In Shaʿbān, news came that the tribe of Banū al-Muṣṭaliq, led by al-Ḥārith ibn Abī Ḍirār, was gathering an army to attack Madīnah. The Prophet ﷺ marched out quickly and met them at a well called al-Muraysīʿ. The battle was short, and many of the tribe were taken captive. Among them was Juwayriyyah, the daughter of their chief. She came to the Prophet ﷺ to ask for help in buying her freedom. He offered to pay for her freedom and to marry her, and she agreed. When the companions heard that Juwayriyyah had become the wife of the Messenger of Allah ﷺ, they said, “These people are now his in-laws!” and they set free all of their captives. ʿĀʾishah said: “We have never seen a woman who was a greater blessing to her people than her: because of her, a hundred families of Banū al-Muṣṭaliq were set free.” Many of the tribe accepted Islam. Juwayriyyah loved to remember Allah. Once the Prophet ﷺ left her sitting in prayer after Fajr and came back late in the morning to find her still there. He taught her four short phrases that weigh more than hours of dhikr: “Subḥān Allāhi wa bi-ḥamdih, as many as His creation, as much as pleases Him, as heavy as His Throne, and as much as the ink of His words.”",
+        "picks": [
+          {
+            "q": "Whose daughter was Juwayriyyah?",
+            "options": [
+              "The chief of Banū al-Muṣṭaliq",
+              "Abū Bakr",
+              "Abū Sufyān"
+            ]
+          },
+          {
+            "q": "What did the companions do when she married the Prophet ﷺ?",
+            "options": [
+              "Freed the captives of her tribe",
+              "Asked for more money",
+              "Left Madīnah"
+            ]
+          },
+          {
+            "q": "How many families were freed?",
+            "options": [
+              "About a hundred",
+              "Two",
+              "Ten thousand"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Banū al-Muṣṭaliq gather an army",
+            "The Muslims meet them at al-Muraysīʿ",
+            "The Prophet ﷺ marries Juwayriyyah",
+            "The companions free a hundred families"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Juwayriyyah’s marriage brought freedom to many of her people.",
+            "a": true
+          },
+          {
+            "s": "The companions kept all the captives.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ taught her short, heavy words of dhikr.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that generosity and kindness can bless many people, and that sincere dhikr is precious.",
+        "vocab": [
+          [
+            "بَرَكَة",
+            "blessing"
+          ],
+          [
+            "عِتْق",
+            "setting free"
+          ],
+          [
+            "ذِكْر",
+            "remembrance of Allah"
+          ]
+        ],
+        "chapter": "Tests of Truth",
+        "learn": {
+          "points": [
+            "Kind and generous actions can bring blessing to a whole people.",
+            "The wives of the Prophet ﷺ are the Mothers of the Believers.",
+            "A few sincere words of dhikr can be very heavy on the scales."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "النَّبِيُّ أَوْلَىٰ بِالْمُؤْمِنِينَ مِنْ أَنْفُسِهِمْ ۖ وَأَزْوَاجُهُ أُمَّهَاتُهُمْ",
+            "en": "The Prophet is closer to the believers than their own selves, and his wives are their mothers.",
+            "ref": "Sūrat al-Aḥzāb 33:6"
+          }
+        },
+        "quotes": [
+          {
+            "en": "We have never seen a woman who was a greater blessing to her people than her: because of her, a hundred families of Banū al-Muṣṭaliq were set free.",
+            "ar": "فَمَا رَأَيْنَا امْرَأَةً كَانَتْ أَعْظَمَ بَرَكَةً عَلَى قَوْمِهَا مِنْهَا أُعْتِقَ فِي سَبَبِهَا مِائَةُ أَهْلِ بَيْتٍ مِنْ بَنِي الْمُصْطَلِقِ",
+            "ref": "Sunan Abī Dāwūd 3931"
+          },
+          {
+            "en": "Subḥān Allāhi wa bi-ḥamdih, as many as His creation, as much as pleases Him, as heavy as His Throne, and as much as the ink of His words.",
+            "ar": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ وَرِضَا نَفْسِهِ وَزِنَةَ عَرْشِهِ وَمِدَادَ كَلِمَاتِهِ",
+            "ref": "Ṣaḥīḥ Muslim 2726"
+          }
+        ]
+      },
+      {
+        "title": "Words at the Well",
+        "teach": "Unity and a truthful tongue",
+        "emoji": "🪣",
+        "arabic": "زَيْدُ بْنُ أَرْقَم",
+        "story": "On the way home from al-Muraysīʿ, the army stopped at a well. Two men began to argue over the water — one from the Muhājirūn and one from the Anṣār — and one struck the other. At once each called out to his own group: “O Anṣār!” “O Muhājirūn!” The Prophet ﷺ came quickly and stopped the tribal shouting: “Leave it, for it is rotten.” But ʿAbdullāh ibn Ubayy saw his chance to stir up trouble. He said to his friends, “When we return to Madīnah, the more honourable will drive out the more humble!” — meaning that he would drive out the Prophet ﷺ. A boy named Zayd ibn Arqam heard him and reported it. ʿUmar was furious and wanted to punish Ibn Ubayy, but the Prophet ﷺ said, “Leave him, so that people will not say that Muḥammad kills his companions.” Ibn Ubayy swore he had never said it, and some people thought young Zayd had made a mistake. Then Allah revealed Sūrat al-Munāfiqūn, repeating Ibn Ubayy’s very words and answering them: “Honour belongs to Allah, His Messenger and the believers.” The Prophet ﷺ told Zayd that Allah had confirmed he was telling the truth. When the army reached Madīnah, Ibn Ubayy’s own son ʿAbdullāh, a sincere believer, stood at the gate and would not let his father in until the Prophet ﷺ gave permission.",
+        "picks": [
+          {
+            "q": "What did the Prophet ﷺ call the tribal shouting?",
+            "options": [
+              "Rotten",
+              "Brave",
+              "Clever"
+            ]
+          },
+          {
+            "q": "Who reported Ibn Ubayy’s words?",
+            "options": [
+              "Young Zayd ibn Arqam",
+              "ʿUmar",
+              "Bilāl"
+            ]
+          },
+          {
+            "q": "Who stopped Ibn Ubayy at the gate of Madīnah?",
+            "options": [
+              "His own son ʿAbdullāh",
+              "Abū Bakr",
+              "A guard from Quraysh"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Two men quarrel at the well",
+            "The Prophet ﷺ stops the tribal shouting",
+            "Ibn Ubayy speaks against the Prophet ﷺ",
+            "Allah confirms Zayd’s report in the Qurʾān"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ allowed ʿUmar to punish Ibn Ubayy.",
+            "a": false
+          },
+          {
+            "s": "Allah revealed Sūrat al-Munāfiqūn about this.",
+            "a": true
+          },
+          {
+            "s": "Ibn Ubayy’s son was a sincere believer.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to reject tribal pride, to speak the truth bravely, and that real honour belongs to Allah, His Messenger and the believers.",
+        "vocab": [
+          [
+            "عِزَّة",
+            "honour"
+          ],
+          [
+            "عَصَبِيَّة",
+            "tribal pride"
+          ],
+          [
+            "مُنْتِنَة",
+            "rotten"
+          ]
+        ],
+        "chapter": "Tests of Truth",
+        "learn": {
+          "points": [
+            "Tribal pride and name-calling are “rotten”: Muslims are one family.",
+            "Tell the truth even if you are young and others doubt you.",
+            "Wise leaders avoid actions that would cause greater harm."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَقُولُونَ لَئِنْ رَجَعْنَا إِلَى الْمَدِينَةِ لَيُخْرِجَنَّ الْأَعَزُّ مِنْهَا الْأَذَلَّ ۚ وَلِلَّهِ الْعِزَّةُ وَلِرَسُولِهِ وَلِلْمُؤْمِنِينَ وَلَٰكِنَّ الْمُنَافِقِينَ لَا يَعْلَمُونَ",
+            "en": "They say, ‘If we return to Madīnah, the more honourable will surely drive out the more humble.’ But honour belongs to Allah, His Messenger and the believers — yet the hypocrites do not know.",
+            "ref": "Sūrat al-Munāfiqūn 63:8"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Leave it, for it is rotten.",
+            "ar": "دَعُوهَا فَإِنَّهَا مُنْتِنَةٌ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4905"
+          },
+          {
+            "en": "Leave him, so that people will not say that Muḥammad kills his companions.",
+            "ar": "دَعْهُ لَا يَتَحَدَّثُ النَّاسُ أَنَّ مُحَمَّدًا يَقْتُلُ أَصْحَابَهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4905"
+          },
+          {
+            "en": "Honour belongs to Allah, His Messenger and the believers.",
+            "ar": "وَلِلَّهِ الْعِزَّةُ وَلِرَسُولِهِ وَلِلْمُؤْمِنِينَ",
+            "ref": "Sūrat al-Munāfiqūn 63:8"
+          }
+        ]
+      },
+      {
+        "title": "The Lost Necklace",
+        "teach": "Ease after difficulty",
+        "emoji": "🏜️",
+        "arabic": "آيَةُ التَّيَمُّم",
+        "story": "On one journey — many scholars say on the way back from Banū al-Muṣṭaliq — ʿĀʾishah lost a necklace she had borrowed. The Prophet ﷺ stopped the whole army so that people could search for it. But they had camped at a place with no water, and they had no water with them, and soon it would be time for Fajr. Some people complained to Abū Bakr: “Look what ʿĀʾishah has done! She has kept the Messenger of Allah and everyone in a place with no water.” Abū Bakr went to his daughter and scolded her. The Prophet ﷺ was asleep with his head resting on her lap, so she did not move at all. Morning came, and there was still no water for wuḍūʾ. Then Allah revealed a new ruling of ease, tayammum: “If you cannot find water, then use clean earth, and wipe your faces and your hands with it.” Everyone prayed. Usayd ibn Ḥuḍayr said joyfully, “This is not the first of your blessings, O family of Abū Bakr!” Then they made ʿĀʾishah’s camel stand up — and there was the necklace, lying underneath it. A small problem had brought a mercy for the whole ummah until the end of time.",
+        "picks": [
+          {
+            "q": "What did ʿĀʾishah lose?",
+            "options": [
+              "A necklace",
+              "A water skin",
+              "A book"
+            ]
+          },
+          {
+            "q": "What ruling did Allah reveal?",
+            "options": [
+              "Tayammum with clean earth",
+              "Fasting on journeys",
+              "Praying only at home"
+            ]
+          },
+          {
+            "q": "Where was the necklace found?",
+            "options": [
+              "Under her camel",
+              "In the well",
+              "In Madīnah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "ʿĀʾishah loses her necklace",
+            "The army stops where there is no water",
+            "Allah reveals the ruling of tayammum",
+            "The necklace is found under the camel"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The army had plenty of water that night.",
+            "a": false
+          },
+          {
+            "s": "Tayammum means wiping the face and hands with clean earth when there is no water.",
+            "a": true
+          },
+          {
+            "s": "Usayd said the family of Abū Bakr had brought blessings before.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah makes things easy for us, and that a small difficulty can bring a great mercy.",
+        "vocab": [
+          [
+            "تَيَمُّم",
+            "dry purification"
+          ],
+          [
+            "صَعِيد",
+            "clean earth"
+          ],
+          [
+            "عِقْد",
+            "necklace"
+          ]
+        ],
+        "chapter": "Tests of Truth",
+        "learn": {
+          "points": [
+            "Allah makes the religion easy for us.",
+            "A small difficulty can bring a great mercy.",
+            "Tayammum lets us pray even when there is no water."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "مَا يُرِيدُ اللَّهُ لِيَجْعَلَ عَلَيْكُمْ مِنْ حَرَجٍ وَلَٰكِنْ يُرِيدُ لِيُطَهِّرَكُمْ وَلِيُتِمَّ نِعْمَتَهُ عَلَيْكُمْ لَعَلَّكُمْ تَشْكُرُونَ",
+            "en": "Allah does not want to make things hard for you, but He wants to purify you and complete His favour on you, so that you may be grateful.",
+            "ref": "Sūrat al-Māʾidah 5:6"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If you cannot find water, then use clean earth, and wipe your faces and your hands with it.",
+            "ar": "فَلَمْ تَجِدُوا مَاءً فَتَيَمَّمُوا صَعِيدًا طَيِّبًا فَامْسَحُوا بِوُجُوهِكُمْ وَأَيْدِيكُمْ مِنْهُ",
+            "ref": "Sūrat al-Māʾidah 5:6"
+          },
+          {
+            "en": "This is not the first of your blessings, O family of Abū Bakr!",
+            "ar": "مَا هِيَ بِأَوَّلِ بَرَكَتِكُمْ يَا آلَ أَبِي بَكْرٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 334"
+          }
+        ]
+      },
+      {
+        "title": "A Lie and Beautiful Patience",
+        "teach": "Never spread rumours",
+        "emoji": "🤐",
+        "arabic": "صَبْرٌ جَمِيل",
+        "story": "On the way home from that same journey, ʿĀʾishah stepped away from the camp to look for her lost necklace. While she was gone, the army set off, thinking she was inside her covered seat on the camel. When she came back, everyone had left. She sat down and waited, hoping they would come back for her. A companion called Ṣafwān, who was travelling behind the army, found her. He made his camel kneel, she rode, and he walked leading it until they reached the army. The hypocrites, led by ʿAbdullāh ibn Ubayy, used this to invent a wicked lie about ʿĀʾishah, and some people repeated it without thinking. For a whole month the lie spread around Madīnah. ʿĀʾishah fell ill and wept day and night. She said that she could only say what the father of Yūsuf had said: “Beautiful patience — and it is Allah whose help is sought against what you describe.” Then Allah revealed ayahs in Sūrat an-Nūr declaring her completely innocent, and teaching the believers: “Why, when you heard it, did the believing men and women not think well of their own people?” and “You thought it was a small thing, but in Allah’s sight it was very serious.” Abū Bakr had been supporting a poor relative named Misṭaḥ, who had repeated the lie, and he swore to stop helping him. Then Allah revealed: “Let them forgive and overlook. Do you not love that Allah should forgive you?” Abū Bakr said, “Yes, by Allah, I love that Allah should forgive me,” and he went on helping Misṭaḥ.",
+        "picks": [
+          {
+            "q": "Who started the lie about ʿĀʾishah?",
+            "options": [
+              "The hypocrites led by Ibn Ubayy",
+              "Ṣafwān",
+              "Abū Bakr"
+            ]
+          },
+          {
+            "q": "What did ʿĀʾishah say, like the father of Yūsuf?",
+            "options": [
+              "Beautiful patience",
+              "I will take revenge",
+              "I don’t care"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr do after the ayah about forgiving?",
+            "options": [
+              "He went on helping Misṭaḥ",
+              "He left Madīnah",
+              "He stopped speaking"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "ʿĀʾishah is left behind looking for her necklace",
+            "Ṣafwān brings her back to the army",
+            "The hypocrites spread a lie",
+            "Allah reveals her innocence in Sūrat an-Nūr"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Allah declared ʿĀʾishah innocent in the Qurʾān.",
+            "a": true
+          },
+          {
+            "s": "Spreading a rumour is a small thing.",
+            "a": false
+          },
+          {
+            "s": "Abū Bakr forgave Misṭaḥ.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to check news, think well of others, refuse to spread rumours, and forgive those who wrong us.",
+        "vocab": [
+          [
+            "إِفْك",
+            "a wicked lie"
+          ],
+          [
+            "صَبْرٌ جَمِيل",
+            "beautiful patience"
+          ],
+          [
+            "تَبَيَّنُوا",
+            "check carefully"
+          ]
+        ],
+        "chapter": "Tests of Truth",
+        "learn": {
+          "points": [
+            "Never repeat something bad about someone without proof.",
+            "Think well of other believers.",
+            "Forgiving those who hurt us brings Allah’s forgiveness."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا إِنْ جَاءَكُمْ فَاسِقٌ بِنَبَإٍ فَتَبَيَّنُوا",
+            "en": "O you who believe, if a wrongdoer brings you news, check it carefully.",
+            "ref": "Sūrat al-Ḥujurāt 49:6"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Beautiful patience — and it is Allah whose help is sought against what you describe.",
+            "ar": "فَصَبْرٌ جَمِيلٌ ۖ وَاللَّهُ الْمُسْتَعَانُ عَلَىٰ مَا تَصِفُونَ",
+            "ref": "Sūrat Yūsuf 12:18"
+          },
+          {
+            "en": "Why, when you heard it, did the believing men and women not think well of their own people?",
+            "ar": "لَوْلَا إِذْ سَمِعْتُمُوهُ ظَنَّ الْمُؤْمِنُونَ وَالْمُؤْمِنَاتُ بِأَنْفُسِهِمْ خَيْرًا",
+            "ref": "Sūrat an-Nūr 24:12"
+          },
+          {
+            "en": "You thought it was a small thing, but in Allah’s sight it was very serious.",
+            "ar": "وَتَحْسَبُونَهُ هَيِّنًا وَهُوَ عِنْدَ اللَّهِ عَظِيمٌ",
+            "ref": "Sūrat an-Nūr 24:15"
+          },
+          {
+            "en": "Let them forgive and overlook. Do you not love that Allah should forgive you?",
+            "ar": "وَلْيَعْفُوا وَلْيَصْفَحُوا ۗ أَلَا تُحِبُّونَ أَنْ يَغْفِرَ اللَّهُ لَكُمْ",
+            "ref": "Sūrat an-Nūr 24:22"
+          },
+          {
+            "en": "Yes, by Allah, I love that Allah should forgive me",
+            "ar": "بَلَى، وَاللَّهِ إِنِّي أُحِبُّ أَنْ يَغْفِرَ اللَّهُ لِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4750"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 35 · Peace at Ḥudaybiyyah",
+    "icon": "🕊️",
+    "colour": "#2f6f8f",
+    "range": [
+      137,
+      140
     ],
     "lessons": [
       {
@@ -10409,14 +13281,208 @@ window.SEERAA_COURSE=[
     ]
   },
   {
-    "title": "Map 29 · Letters and Khaybar",
+    "title": "Map 36 · After the Treaty",
     "icon": "✉️",
-    "colour": "#b4553a",
+    "colour": "#7a5aa8",
     "range": [
-      113,
-      116
+      141,
+      144
     ],
     "lessons": [
+      {
+        "title": "Abū Jandal in Chains",
+        "teach": "Keeping your word when it is hard",
+        "emoji": "⛓️",
+        "arabic": "أَبُو جَنْدَل",
+        "story": "While the treaty of Ḥudaybiyyah was being written, a young man came stumbling into the Muslim camp, dragging heavy chains on his feet. It was Abū Jandal, the son of Suhayl ibn ʿAmr — the very man writing the treaty for Quraysh. Abū Jandal had accepted Islam, and his family had chained him and hurt him for it. He had escaped, and now he threw himself among the Muslims. Suhayl said, “This is the first one you must give back to me under our agreement.” The Prophet ﷺ asked him again and again to let Abū Jandal stay, but Suhayl refused. Abū Jandal cried out, “O Muslims! Am I to be sent back to the idol-worshippers when I have come as a Muslim? Do you not see what I have suffered?” It was one of the hardest moments for the companions. ʿUmar went to the Prophet ﷺ and asked, “Are you not truly the Prophet of Allah? Are we not on the truth?” “Yes,” he answered. “I am the Messenger of Allah; I do not disobey Him, and He is my Helper.” The Prophet ﷺ had given his word, so he kept it, and he told Abū Jandal to be patient, for Allah would make a way out for him and for the other weak believers. Allah had already taught: “Perhaps you dislike something while it is good for you.” And very soon, a way out did come.",
+        "picks": [
+          {
+            "q": "Who was Abū Jandal’s father?",
+            "options": [
+              "Suhayl ibn ʿAmr",
+              "Abū Bakr",
+              "Abū Sufyān"
+            ]
+          },
+          {
+            "q": "Why was Abū Jandal sent back?",
+            "options": [
+              "The Prophet ﷺ kept the agreement",
+              "He wanted to go back",
+              "He was a spy"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ tell Abū Jandal?",
+            "options": [
+              "Be patient; Allah will make a way out",
+              "Fight your father",
+              "Forget Islam"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The treaty is being written",
+            "Abū Jandal arrives in chains",
+            "Suhayl demands him back",
+            "The Prophet ﷺ keeps his word and tells him to be patient"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Jandal had been chained because he became Muslim.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ broke the agreement to keep him.",
+            "a": false
+          },
+          {
+            "s": "ʿUmar found this moment very hard.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep our promises even when it is painful, trusting that Allah knows what is best.",
+        "vocab": [
+          [
+            "قَيْد",
+            "chain"
+          ],
+          [
+            "صَبْر",
+            "patience"
+          ],
+          [
+            "فَرَج",
+            "relief"
+          ]
+        ],
+        "chapter": "After the Treaty",
+        "learn": {
+          "points": [
+            "A Muslim keeps his word, even when it is very hard.",
+            "What we dislike may be good for us; Allah knows best.",
+            "Patience and trust in Allah open a way out."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَعَسَىٰ أَنْ تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَكُمْ ۖ وَعَسَىٰ أَنْ تُحِبُّوا شَيْئًا وَهُوَ شَرٌّ لَكُمْ ۗ وَاللَّهُ يَعْلَمُ وَأَنْتُمْ لَا تَعْلَمُونَ",
+            "en": "Perhaps you dislike something while it is good for you, and perhaps you love something while it is bad for you. Allah knows and you do not know.",
+            "ref": "Sūrat al-Baqarah 2:216"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Muslims! Am I to be sent back to the idol-worshippers when I have come as a Muslim? Do you not see what I have suffered?",
+            "ar": "أَيْ مَعْشَرَ الْمُسْلِمِينَ، أُرَدُّ إِلَى الْمُشْرِكِينَ وَقَدْ جِئْتُ مُسْلِمًا أَلَا تَرَوْنَ مَا قَدْ لَقِيتُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
+          },
+          {
+            "en": "I am the Messenger of Allah; I do not disobey Him, and He is my Helper.",
+            "ar": "إِنِّي رَسُولُ اللَّهِ، وَلَسْتُ أَعْصِيهِ وَهْوَ نَاصِرِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2731"
+          },
+          {
+            "en": "Perhaps you dislike something while it is good for you.",
+            "ar": "وَعَسَىٰ أَنْ تَكْرَهُوا شَيْئًا وَهُوَ خَيْرٌ لَكُمْ",
+            "ref": "Sūrat al-Baqarah 2:216"
+          }
+        ]
+      },
+      {
+        "title": "Abū Baṣīr by the Sea",
+        "teach": "Allah opens a way out",
+        "emoji": "🌊",
+        "arabic": "أَبُو بَصِير",
+        "story": "Soon after the treaty, another young Muslim named Abū Baṣīr escaped from Makkah and walked all the way to Madīnah. Quraysh sent two men to bring him back, and the Prophet ﷺ, keeping his word, handed him over. On the road, at Dhul-Ḥulayfah, Abū Baṣīr struggled with his guards and escaped; one guard was killed, and the other ran back to Madīnah in terror. Abū Baṣīr knew that if he stayed in Madīnah, he would be sent back again under the treaty. So he went to the seashore, on the road the Quraysh caravans took to Shām. Then Abū Jandal escaped from his chains and joined him, and other Muslims who had been trapped in Makkah slipped away to join them too. Soon there were about seventy of them by the sea, and every Quraysh caravan that passed was in danger. Now it was Quraysh who were in trouble! They sent a message to the Prophet ﷺ, begging him by Allah and by their family ties to take these men into Madīnah — and agreeing that whoever came to him from Makkah could stay. The very condition that had seemed so unfair was cancelled by Quraysh themselves. Allah had promised: “Whoever is mindful of Allah, He will make a way out for him, and provide for him from where he does not expect.”",
+        "picks": [
+          {
+            "q": "Where did Abū Baṣīr go after escaping?",
+            "options": [
+              "The seashore on the caravan road",
+              "Back to Makkah",
+              "Abyssinia"
+            ]
+          },
+          {
+            "q": "Who joined him there?",
+            "options": [
+              "Abū Jandal and other Muslims",
+              "Abū Sufyān",
+              "The Romans"
+            ]
+          },
+          {
+            "q": "Who asked to cancel the unfair condition?",
+            "options": [
+              "Quraysh themselves",
+              "The Anṣār",
+              "The Najāshī"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Abū Baṣīr reaches Madīnah",
+            "He is handed back but escapes",
+            "He settles by the sea and others join him",
+            "Quraysh ask to cancel the condition"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ refused to hand Abū Baṣīr back.",
+            "a": false
+          },
+          {
+            "s": "About seventy Muslims gathered by the sea.",
+            "a": true
+          },
+          {
+            "s": "Quraysh asked the Prophet ﷺ to take these men into Madīnah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah makes a way out for those who are patient and mindful of Him, so we never lose hope.",
+        "vocab": [
+          [
+            "سَاحِل",
+            "seashore"
+          ],
+          [
+            "مَخْرَج",
+            "way out"
+          ],
+          [
+            "رَجَاء",
+            "hope"
+          ]
+        ],
+        "chapter": "After the Treaty",
+        "learn": {
+          "points": [
+            "Keeping promises brought a better result than breaking them.",
+            "Allah makes a way out for those who are mindful of Him.",
+            "Never lose hope, even when something looks unfair."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَلَا تَيْأَسُوا مِنْ رَوْحِ اللَّهِ",
+            "en": "Do not lose hope in Allah’s mercy.",
+            "ref": "Sūrat Yūsuf 12:87"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Whoever is mindful of Allah, He will make a way out for him, and provide for him from where he does not expect.",
+            "ar": "وَمَنْ يَتَّقِ اللَّهَ يَجْعَلْ لَهُ مَخْرَجًا ۝ وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
+            "ref": "Sūrat aṭ-Ṭalāq 65:2–3"
+          }
+        ]
+      },
       {
         "title": "Letters beyond Arabia",
         "arabic": "رَسَائِلُ إِلَى الْمُلُوك",
@@ -10463,7 +13529,7 @@ window.SEERAA_COURSE=[
             "king"
           ]
         ],
-        "chapter": "Letters and Khaybar",
+        "chapter": "After the Treaty",
         "teach": "Inviting with respect",
         "order": {
           "prompt": "Put the letters in order",
@@ -10589,7 +13655,7 @@ window.SEERAA_COURSE=[
             "trustworthiness"
           ]
         ],
-        "chapter": "Letters and Khaybar",
+        "chapter": "After the Treaty",
         "learn": {
           "points": [
             "A truthful life speaks for itself, even through an enemy’s words.",
@@ -10615,7 +13681,18 @@ window.SEERAA_COURSE=[
             "ref": "Ṣaḥīḥ al-Bukhārī 7"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "title": "Map 37 · Khaybar",
+    "icon": "🏰",
+    "colour": "#2e6b58",
+    "range": [
+      145,
+      148
+    ],
+    "lessons": [
       {
         "title": "Khaybar",
         "arabic": "خَيْبَر",
@@ -10662,7 +13739,7 @@ window.SEERAA_COURSE=[
             "guidance"
           ]
         ],
-        "chapter": "Letters and Khaybar",
+        "chapter": "Khaybar",
         "teach": "Guidance is the greatest prize",
         "order": {
           "prompt": "Put Khaybar in order",
@@ -10714,6 +13791,594 @@ window.SEERAA_COURSE=[
         ]
       },
       {
+        "title": "Jaʿfar Comes Home",
+        "teach": "No sacrifice for Allah is wasted",
+        "emoji": "⛵",
+        "arabic": "أَهْلُ السَّفِينَة",
+        "story": "More than fifteen years earlier, Jaʿfar ibn Abī Ṭālib had led the Muslims who fled from Makkah across the sea to Abyssinia. There he had spoken so beautifully before the Najāshī that the king protected them. For all those years Jaʿfar and his companions lived far from home. Now, in the seventh year after the Hijrah, their ships finally sailed back. A group of Muslims from Yemen, among them Abū Mūsā al-Ashʿarī, had been blown by the wind to Abyssinia and came back with them. They reached the Prophet ﷺ just as Khaybar was opened, and he welcomed Jaʿfar with great joy. Later, Jaʿfar’s wife Asmāʾ bint ʿUmays was visiting Ḥafṣah when ʿUmar came in and teased her: “We made the Hijrah before you, so we have more right to the Messenger of Allah than you.” Asmāʾ was upset. “You were with the Messenger of Allah, who fed your hungry and taught your unlearned, while we were far away in a strange land — all for Allah and His Messenger!” She told the Prophet ﷺ, who said: “He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.” The people of the ship came to Asmāʾ in groups to hear those words again, and nothing in the world made them happier. The Prophet ﷺ also said to Jaʿfar, “You resemble me in looks and in character.”",
+        "picks": [
+          {
+            "q": "Where had Jaʿfar lived for many years?",
+            "options": [
+              "Abyssinia",
+              "Persia",
+              "Yemen"
+            ]
+          },
+          {
+            "q": "When did Jaʿfar come back?",
+            "options": [
+              "When Khaybar was opened",
+              "At Badr",
+              "At the Farewell Ḥajj"
+            ]
+          },
+          {
+            "q": "How many hijrahs did the Prophet ﷺ say the people of the ship had?",
+            "options": [
+              "Two",
+              "One",
+              "None"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Jaʿfar leads the Muslims to Abyssinia",
+            "Years pass far from home",
+            "The ships return at the time of Khaybar",
+            "The Prophet ﷺ tells Asmāʾ they have two hijrahs"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Jaʿfar returned at the time of Khaybar.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ said ʿUmar had more right to him than Asmāʾ.",
+            "a": false
+          },
+          {
+            "s": "Abū Mūsā al-Ashʿarī came back with the ships.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that no sacrifice for Allah is ever wasted, and that patience far from home brings a double reward.",
+        "vocab": [
+          [
+            "سَفِينَة",
+            "ship"
+          ],
+          [
+            "هِجْرَة",
+            "emigration"
+          ],
+          [
+            "خُلُق",
+            "character"
+          ]
+        ],
+        "chapter": "Khaybar",
+        "learn": {
+          "points": [
+            "Every sacrifice made for Allah is counted and rewarded.",
+            "Stand up kindly for what is true, as Asmāʾ did.",
+            "The Prophet ﷺ honoured those who had been patient far from home."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَنْ يُهَاجِرْ فِي سَبِيلِ اللَّهِ يَجِدْ فِي الْأَرْضِ مُرَاغَمًا كَثِيرًا وَسَعَةً",
+            "en": "Whoever emigrates for the sake of Allah will find many places of refuge and plenty on the earth.",
+            "ref": "Sūrat an-Nisāʾ 4:100"
+          }
+        },
+        "quotes": [
+          {
+            "en": "He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.",
+            "ar": "لَيْسَ بِأَحَقَّ بِي مِنْكُمْ، وَلَهُ وَلأَصْحَابِهِ هِجْرَةٌ وَاحِدَةٌ، وَلَكُمْ أَنْتُمْ أَهْلَ السَّفِينَةِ هِجْرَتَانِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4231"
+          },
+          {
+            "en": "You resemble me in looks and in character.",
+            "ar": "أَشْبَهْتَ خَلْقِي وَخُلُقِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2699"
+          }
+        ]
+      },
+      {
+        "title": "Ṣafiyyah, Mother of the Believers",
+        "teach": "No mocking, only honour",
+        "emoji": "🌷",
+        "arabic": "صَفِيَّةُ بِنْتُ حُيَيّ",
+        "story": "Among the captives of Khaybar was Ṣafiyyah, the daughter of Ḥuyayy ibn Akhṭab, a chief of Banū an-Naḍīr. Her father and her husband had died in the wars against the Muslims. The Prophet ﷺ set her free and offered to marry her, and she chose Islam and chose to marry him. Her freedom was her marriage gift. On the journey back to Madīnah, the Prophet ﷺ prepared a seat for her on the camel, then sat down by the camel and placed his knee so that Ṣafiyyah could step on it to climb up. One day Ṣafiyyah heard that Ḥafṣah had called her “the daughter of a Jew”, and she wept. When the Prophet ﷺ found her crying and heard why, he comforted her: “You are the daughter of a prophet, your uncle is a prophet, and you are married to a prophet — so what can she boast over you?” For Ṣafiyyah came from the family of Prophet Hārūn, and Prophet Mūsā was his brother. Then he told Ḥafṣah to fear Allah. Allah says: “Let no people mock another people; perhaps they are better than them.” Ṣafiyyah lived as one of the Mothers of the Believers, known for her gentleness, wisdom and generosity.",
+        "picks": [
+          {
+            "q": "Whose daughter was Ṣafiyyah?",
+            "options": [
+              "Ḥuyayy ibn Akhṭab",
+              "Abū Bakr",
+              "ʿUmar"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ help her climb onto the camel?",
+            "options": [
+              "He placed his knee for her to step on",
+              "He called a servant",
+              "He asked her to walk"
+            ]
+          },
+          {
+            "q": "Which prophet was Ṣafiyyah descended from?",
+            "options": [
+              "Hārūn",
+              "Nūḥ",
+              "Yūnus"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Ṣafiyyah is among the captives of Khaybar",
+            "The Prophet ﷺ frees her and marries her",
+            "He helps her onto the camel with his knee",
+            "He comforts her when she is mocked"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Ṣafiyyah’s freedom was her marriage gift.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ agreed with the words that hurt her.",
+            "a": false
+          },
+          {
+            "s": "Islam forbids mocking people for their background.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn never to mock anyone, and to comfort people with kind and true words.",
+        "vocab": [
+          [
+            "سُخْرِيَة",
+            "mockery"
+          ],
+          [
+            "أُمَّهَاتُ الْمُؤْمِنِين",
+            "Mothers of the Believers"
+          ],
+          [
+            "كَرَامَة",
+            "dignity"
+          ]
+        ],
+        "chapter": "Khaybar",
+        "learn": {
+          "points": [
+            "Never mock anyone for their family, race or background.",
+            "The Prophet ﷺ was gentle and protective with his family.",
+            "Comfort people who are hurt with kind and true words."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا لَا يَسْخَرْ قَوْمٌ مِنْ قَوْمٍ عَسَىٰ أَنْ يَكُونُوا خَيْرًا مِنْهُمْ وَلَا نِسَاءٌ مِنْ نِسَاءٍ عَسَىٰ أَنْ يَكُنَّ خَيْرًا مِنْهُنَّ",
+            "en": "O you who believe, let no people mock another people; perhaps they are better than them. Nor let women mock other women; perhaps they are better than them.",
+            "ref": "Sūrat al-Ḥujurāt 49:11"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You are the daughter of a prophet, your uncle is a prophet, and you are married to a prophet — so what can she boast over you?",
+            "ar": "إِنَّكِ لَابْنَةُ نَبِيٍّ وَإِنَّ عَمَّكِ لَنَبِيٌّ وَإِنَّكِ لَتَحْتَ نَبِيٍّ فَفِيمَ تَفْخَرُ عَلَيْكِ",
+            "ref": "Sunan at-Tirmidhī 3894"
+          },
+          {
+            "en": "Let no people mock another people; perhaps they are better than them.",
+            "ar": "لَا يَسْخَرْ قَوْمٌ مِنْ قَوْمٍ عَسَىٰ أَنْ يَكُونُوا خَيْرًا مِنْهُمْ",
+            "ref": "Sūrat al-Ḥujurāt 49:11"
+          }
+        ]
+      },
+      {
+        "title": "Abū Hurayrah and the Cup of Milk",
+        "teach": "Serve others first",
+        "emoji": "🥛",
+        "arabic": "أَهْلُ الصُّفَّة",
+        "story": "In the year of Khaybar, a man from the tribe of Daws came to Madīnah and accepted Islam. His name was Abū Hurayrah, “the father of the little cat”, because he loved to carry a kitten with him. He was poor and had no home, so he lived with the Ahl aṣ-Ṣuffah, poor Muslims who slept on a shaded platform at the side of the masjid and spent their days learning. One day Abū Hurayrah was so hungry that he pressed a stone against his stomach and sat by the road, hoping someone would invite him for a meal. The Prophet ﷺ passed by and smiled, understanding exactly how he felt, and took him home. There was a single bowl of milk that someone had given as a gift. “Go and call the people of the Ṣuffah,” he told Abū Hurayrah. Abū Hurayrah thought, “What is one bowl of milk among all of them? I hoped to drink some to get my strength!” But he obeyed. The Prophet ﷺ told him to pass the bowl to each person, and each one drank until he was full, and the bowl kept coming back with milk in it. At last the Prophet ﷺ smiled and said, “Sit and drink,” and Abū Hurayrah drank. “Drink,” he said again, and again, until Abū Hurayrah said, “No, by the One who sent you with the truth, I have no more room for it!” Then the Prophet ﷺ praised Allah and drank what was left — last of all. Abū Hurayrah went on to remember and pass on more of the Prophet’s words than almost anyone.",
+        "picks": [
+          {
+            "q": "Where did the Ahl aṣ-Ṣuffah live?",
+            "options": [
+              "At the side of the masjid",
+              "In palaces",
+              "In Makkah"
+            ]
+          },
+          {
+            "q": "Who drank first from the bowl?",
+            "options": [
+              "The people of the Ṣuffah",
+              "The Prophet ﷺ",
+              "Abū Bakr"
+            ]
+          },
+          {
+            "q": "Who drank last?",
+            "options": [
+              "The Prophet ﷺ",
+              "Abū Hurayrah",
+              "Nobody"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Abū Hurayrah sits hungry by the road",
+            "The Prophet ﷺ takes him home",
+            "Each of the Ahl aṣ-Ṣuffah drinks until full",
+            "The Prophet ﷺ drinks last"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Hurayrah accepted Islam around the time of Khaybar.",
+            "a": true
+          },
+          {
+            "s": "The bowl ran out before everyone had drunk.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ served himself first.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to share what we have, to serve others first, and to trust that Allah puts blessing in what is shared.",
+        "vocab": [
+          [
+            "الصُّفَّة",
+            "the shaded platform"
+          ],
+          [
+            "لَبَن",
+            "milk"
+          ],
+          [
+            "إِيثَار",
+            "putting others first"
+          ]
+        ],
+        "chapter": "Khaybar",
+        "learn": {
+          "points": [
+            "The Prophet ﷺ noticed and cared for people who were hungry.",
+            "When you serve others, serve yourself last.",
+            "Blessing comes when food is shared."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "لِلْفُقَرَاءِ الَّذِينَ أُحْصِرُوا فِي سَبِيلِ اللَّهِ لَا يَسْتَطِيعُونَ ضَرْبًا فِي الْأَرْضِ يَحْسَبُهُمُ الْجَاهِلُ أَغْنِيَاءَ مِنَ التَّعَفُّفِ",
+            "en": "Give to the poor who are devoted to Allah’s way and cannot travel to earn a living. Those who do not know them think they are rich, because they do not beg.",
+            "ref": "Sūrat al-Baqarah 2:273"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Sit and drink",
+            "ar": "اقْعُدْ فَاشْرَبْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 6452"
+          },
+          {
+            "en": "No, by the One who sent you with the truth, I have no more room for it!",
+            "ar": "لَا وَالَّذِي بَعَثَكَ بِالْحَقِّ، مَا أَجِدُ لَهُ مَسْلَكًا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 6452"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 38 · Journeys of Faith",
+    "icon": "🐪",
+    "colour": "#a97c25",
+    "range": [
+      149,
+      152
+    ],
+    "lessons": [
+      {
+        "title": "“Who Will Protect You from Me?”",
+        "teach": "Trust in Allah, and forgiveness",
+        "emoji": "🌳",
+        "arabic": "ذَاتُ الرِّقَاع",
+        "story": "After Khaybar, the Prophet ﷺ led an expedition into the rough land of Najd. The ground was so rocky that the companions’ feet were cut and their nails came off, so they wrapped their feet in pieces of cloth. That is why it was called the expedition of Dhāt ar-Riqāʿ, “the one with the rags”. One hot afternoon the army stopped to rest in a valley of thorny trees, and everyone spread out to find shade. The Prophet ﷺ hung his sword on a tree and lay down to sleep. Suddenly a man from the enemy tribe crept up, took the sword down and held it over him. “Are you afraid of me?” he said. “No,” said the Prophet ﷺ calmly. The man asked again: “Who will protect you from me?” “Allah.” He asked a third time, and again the answer was “Allah.” The man lowered the sword, put it back in its sheath and sat down. The companions gathered around, but the Prophet ﷺ did not punish him; he let him go. A heart that truly trusts Allah stays calm even in danger, just as Allah teaches: “Say: ‘Nothing will happen to us except what Allah has written for us.’” And a heart full of mercy forgives, even when it has the power to punish.",
+        "picks": [
+          {
+            "q": "Why was it called Dhāt ar-Riqāʿ?",
+            "options": [
+              "They wrapped their injured feet in rags",
+              "There were many flags",
+              "It rained cloth"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ answer when asked who would protect him?",
+            "options": [
+              "Allah",
+              "My army",
+              "Nobody"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ do with the man?",
+            "options": [
+              "He did not punish him",
+              "He imprisoned him",
+              "He took his camel"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The army marches over rocky ground",
+            "They rest under trees at midday",
+            "A man takes the sword and threatens the Prophet ﷺ",
+            "The Prophet ﷺ answers “Allah” and forgives him"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ was afraid of the man.",
+            "a": false
+          },
+          {
+            "s": "The companions’ feet were injured on the rocks.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ let the man go.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to trust Allah completely and to forgive even when we are able to punish.",
+        "vocab": [
+          [
+            "رِقَاع",
+            "rags"
+          ],
+          [
+            "تَوَكُّل",
+            "trust in Allah"
+          ],
+          [
+            "عَفْو",
+            "forgiveness"
+          ]
+        ],
+        "chapter": "Journeys of Faith",
+        "learn": {
+          "points": [
+            "Real trust in Allah keeps the heart calm in danger.",
+            "Forgiving when you have the power to punish is noble.",
+            "Nothing happens except what Allah has written."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "قُلْ لَنْ يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا هُوَ مَوْلَانَا ۚ وَعَلَى اللَّهِ فَلْيَتَوَكَّلِ الْمُؤْمِنُونَ",
+            "en": "Say: ‘Nothing will happen to us except what Allah has written for us. He is our Protector.’ And in Allah let the believers put their trust.",
+            "ref": "Sūrat at-Tawbah 9:51"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Who will protect you from me?",
+            "ar": "مَنْ يَمْنَعُكَ مِنِّي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4136"
+          },
+          {
+            "en": "Say: ‘Nothing will happen to us except what Allah has written for us.’",
+            "ar": "قُلْ لَنْ يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا",
+            "ref": "Sūrat at-Tawbah 9:51"
+          }
+        ]
+      },
+      {
+        "title": "Prayer Even in Danger",
+        "teach": "Never leaving ṣalāh",
+        "emoji": "🙏",
+        "arabic": "صَلَاةُ الْخَوْف",
+        "story": "On that same journey, the Muslims came close to a large enemy force just when the time for prayer arrived. How could they pray together without leaving themselves open to attack? Allah taught them the prayer of fear: “When you are among them and lead them in prayer, let one group of them stand with you.” The army split into two groups. One group prayed behind the Prophet ﷺ while the other stood guard facing the enemy; then they changed places, so that everyone prayed with him and no one was left unprotected. Prayer was not dropped, even in danger! That night the Prophet ﷺ asked two men to guard the mouth of the valley: one from the Muhājirūn and one from the Anṣār. The Muhājir lay down to rest, while the Anṣārī, ʿAbbād ibn Bishr, stood to pray. An enemy saw him and shot an arrow. It struck him — and he pulled it out and kept praying. A second arrow, then a third: each time he pulled it out and carried on. Only after he had finished his bowing and prostration did he wake his friend, who cried, “Why didn’t you wake me at the first arrow?” He answered, “I was in a sūrah I was reciting, and I did not want to cut it short.”",
+        "picks": [
+          {
+            "q": "How did the army pray near the enemy?",
+            "options": [
+              "In two groups taking turns",
+              "They did not pray",
+              "Each person alone at home"
+            ]
+          },
+          {
+            "q": "What did ʿAbbād do when the arrow struck him?",
+            "options": [
+              "Pulled it out and kept praying",
+              "Stopped and ran",
+              "Shouted for help at once"
+            ]
+          },
+          {
+            "q": "Why didn’t he stop his prayer?",
+            "options": [
+              "He did not want to cut short the sūrah he was reciting",
+              "He was asleep",
+              "He did not notice"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The army comes close to the enemy",
+            "Allah teaches the prayer of fear",
+            "ʿAbbād prays while guarding",
+            "He finishes his prayer before waking his friend"
+          ]
+        },
+        "tf": [
+          {
+            "s": "In the prayer of fear one group guards while the other prays.",
+            "a": true
+          },
+          {
+            "s": "ʿAbbād stopped his prayer at the first arrow.",
+            "a": false
+          },
+          {
+            "s": "The two guards were a Muhājir and an Anṣārī.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to guard our prayers in every situation and to love the Qurʾān deeply.",
+        "vocab": [
+          [
+            "صَلَاةُ الْخَوْف",
+            "the prayer of fear"
+          ],
+          [
+            "حِرَاسَة",
+            "guarding"
+          ],
+          [
+            "خُشُوع",
+            "humble focus"
+          ]
+        ],
+        "chapter": "Journeys of Faith",
+        "learn": {
+          "points": [
+            "Ṣalāh is never dropped, even in danger.",
+            "Teamwork lets everyone worship and stay safe.",
+            "Love of the Qurʾān can make a person stronger than pain."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "حَافِظُوا عَلَى الصَّلَوَاتِ وَالصَّلَاةِ الْوُسْطَىٰ وَقُومُوا لِلَّهِ قَانِتِينَ",
+            "en": "Guard your prayers, especially the middle prayer, and stand before Allah in devotion.",
+            "ref": "Sūrat al-Baqarah 2:238"
+          }
+        },
+        "quotes": [
+          {
+            "en": "When you are among them and lead them in prayer, let one group of them stand with you.",
+            "ar": "وَإِذَا كُنْتَ فِيهِمْ فَأَقَمْتَ لَهُمُ الصَّلَاةَ فَلْتَقُمْ طَائِفَةٌ مِنْهُمْ مَعَكَ",
+            "ref": "Sūrat an-Nisāʾ 4:102"
+          },
+          {
+            "en": "I was in a sūrah I was reciting, and I did not want to cut it short.",
+            "ar": "كُنْتُ فِي سُورَةٍ أَقْرَأُهَا فَلَمْ أُحِبَّ أَنْ أَقْطَعَهَا",
+            "ref": "Sunan Abī Dāwūd 198"
+          }
+        ]
+      },
+      {
+        "title": "Jābir’s Tired Camel",
+        "teach": "Kindness to those who struggle",
+        "emoji": "🐪",
+        "arabic": "جَمَلُ جَابِر",
+        "story": "On the way home from a journey, Jābir ibn ʿAbdillāh was riding a camel so tired and slow that it kept falling behind everyone else. The Prophet ﷺ, who often walked at the back of the army to help anyone in difficulty, came up to him. “What is the matter, Jābir?” “My camel is slow and tired.” The Prophet ﷺ prodded the camel and made duʿāʾ for it — and suddenly it raced ahead of all the others! “Will you sell it to me?” he asked. Jābir agreed, on condition that he could ride it home to Madīnah. On the way the Prophet ﷺ asked about his family. Jābir explained that his father had been martyred at Uḥud, leaving behind several daughters, so he had married an experienced woman who could look after his young sisters and care for them. The Prophet ﷺ made duʿāʾ for him: “May Allah bless you.” When they reached Madīnah, Jābir brought the camel to the masjid. The Prophet ﷺ paid him the full price and added more — and then gave him back the camel as well! Jābir came home with the money, the camel and a duʿāʾ.",
+        "picks": [
+          {
+            "q": "What was wrong with Jābir’s camel?",
+            "options": [
+              "It was tired and slow",
+              "It was lost",
+              "It was too fast"
+            ]
+          },
+          {
+            "q": "Why did Jābir marry an experienced woman?",
+            "options": [
+              "To care for his young sisters",
+              "Because she was rich",
+              "Because she was from Makkah"
+            ]
+          },
+          {
+            "q": "What did Jābir get in the end?",
+            "options": [
+              "The price, extra money and his camel back",
+              "Nothing",
+              "Only the price"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Jābir’s camel falls behind",
+            "The Prophet ﷺ makes duʿāʾ and it races ahead",
+            "Jābir sells the camel on the way",
+            "In Madīnah he gets the money and the camel"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ often walked at the back to help others.",
+            "a": true
+          },
+          {
+            "s": "Jābir’s father was martyred at Uḥud.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ kept the camel for himself.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to help people who are struggling, to care for family, and to be generous beyond what is expected.",
+        "vocab": [
+          [
+            "جَمَل",
+            "camel"
+          ],
+          [
+            "يَتِيم",
+            "orphan"
+          ],
+          [
+            "كَرَم",
+            "generosity"
+          ]
+        ],
+        "chapter": "Journeys of Faith",
+        "learn": {
+          "points": [
+            "The Prophet ﷺ looked out for people who were struggling at the back.",
+            "Caring for younger brothers and sisters is a beautiful sacrifice.",
+            "Generosity gives more than people expect."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَاعْبُدُوا اللَّهَ وَلَا تُشْرِكُوا بِهِ شَيْئًا ۖ وَبِالْوَالِدَيْنِ إِحْسَانًا وَبِذِي الْقُرْبَىٰ وَالْيَتَامَىٰ",
+            "en": "Worship Allah and do not associate anything with Him, and be good to your parents, your relatives and orphans.",
+            "ref": "Sūrat an-Nisāʾ 4:36"
+          }
+        },
+        "quotes": [
+          {
+            "en": "May Allah bless you.",
+            "ar": "بَارَكَ اللَّهُ لَكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 5367"
+          }
+        ]
+      },
+      {
         "title": "Returning for ʿUmrah",
         "arabic": "عُمْرَةُ الْقَضَاء",
         "story": "One year after Ḥudaybiyyah, just as the treaty said, the Prophet ﷺ set out with about two thousand Muslims to perform ʿUmrah. Quraysh left the city and watched from the mountains for three days. As the Muslims entered, Quraysh whispered, “The fever of Yathrib has made them weak.” So the Prophet ﷺ told the Muslims to jog lightly in the first rounds of ṭawāf, showing their strength. This is called ramal, and men still do it in ṭawāf today. ʿAbdullāh ibn Rawāḥah walked in front of the Prophet’s camel reciting poetry with joy. The Muhājirūn had not seen the Kaʿbah for seven years, and their hearts were full of joy. After exactly three days, as the treaty said, the Muslims packed up and left. Their honesty and discipline amazed many people of Makkah — and soon more of them would become Muslim.",
@@ -10759,7 +14424,7 @@ window.SEERAA_COURSE=[
             "keeping promises"
           ]
         ],
-        "chapter": "Letters and Khaybar",
+        "chapter": "Journeys of Faith",
         "teach": "Keeping promises, showing strength",
         "order": {
           "prompt": "Put the ʿUmrah in order",
@@ -10802,14 +14467,111 @@ window.SEERAA_COURSE=[
     ]
   },
   {
-    "title": "Map 30 · Makkah Opens Its Gates",
-    "icon": "🕋",
-    "colour": "#2f6f8f",
+    "title": "Map 39 · Brave Hearts at Muʾtah",
+    "icon": "⚔️",
+    "colour": "#b4553a",
     "range": [
-      117,
-      120
+      153,
+      156
     ],
     "lessons": [
+      {
+        "title": "Khālid and ʿAmr Choose Islam",
+        "teach": "Islam wipes away the past",
+        "emoji": "🤝",
+        "arabic": "إِسْلَامُ خَالِدٍ وَعَمْرو",
+        "story": "Two of the cleverest and bravest men of Quraysh had spent years fighting against Islam. Khālid ibn al-Walīd had led the horsemen who turned the battle at Uḥud. ʿAmr ibn al-ʿĀṣ had even gone to the Najāshī to try to have the Muslims sent back from Abyssinia. But after Ḥudaybiyyah, both began to think deeply. They had seen the Muslims’ honesty, their prayer and their discipline. Khālid said to himself that the truth was clear: this man was the Messenger of Allah. He set out for Madīnah with ʿUthmān ibn Ṭalḥah, and on the way they met ʿAmr, travelling for the very same reason! In the eighth year after the Hijrah, they came to the Prophet ﷺ. When ʿAmr stretched out his hand to give his pledge, he suddenly pulled it back. “What is wrong, ʿAmr?” “I want to make a condition: that I will be forgiven.” The Prophet ﷺ said: “Do you not know that Islam wipes out what came before it?” Allah had already promised: “Tell those who disbelieve that if they stop, what has passed will be forgiven them.” From that day, Khālid and ʿAmr used all their courage and cleverness for Islam.",
+        "picks": [
+          {
+            "q": "Which battle had Khālid turned against the Muslims?",
+            "options": [
+              "Uḥud",
+              "Badr",
+              "Ḥunayn"
+            ]
+          },
+          {
+            "q": "Whom did Khālid meet on the road to Madīnah?",
+            "options": [
+              "ʿAmr ibn al-ʿĀṣ",
+              "Abū Sufyān",
+              "Bilāl"
+            ]
+          },
+          {
+            "q": "Why did ʿAmr pull back his hand?",
+            "options": [
+              "He wanted to be sure he would be forgiven",
+              "He was afraid",
+              "He changed his mind"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Khālid and ʿAmr fight against Islam",
+            "After Ḥudaybiyyah they think deeply",
+            "They meet on the road to Madīnah",
+            "They give their pledge to the Prophet ﷺ"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿAmr and Khālid came to Madīnah to accept Islam.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ said their past would be held against them forever.",
+            "a": false
+          },
+          {
+            "s": "They used their talents for Islam afterwards.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah’s door is always open and that anyone can make a fresh start.",
+        "vocab": [
+          [
+            "يَهْدِمُ",
+            "wipes away"
+          ],
+          [
+            "تَوْبَة",
+            "repentance"
+          ],
+          [
+            "بَيْعَة",
+            "pledge"
+          ]
+        ],
+        "chapter": "Brave Hearts at Muʾtah",
+        "learn": {
+          "points": [
+            "Islam wipes away a person’s past and gives a fresh start.",
+            "Watching good Muslims can open hearts.",
+            "Talents once used against Islam can be used for it."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِلَّا مَنْ تَابَ وَآمَنَ وَعَمِلَ عَمَلًا صَالِحًا فَأُولَٰئِكَ يُبَدِّلُ اللَّهُ سَيِّئَاتِهِمْ حَسَنَاتٍ",
+            "en": "Except those who repent, believe and do good deeds: for them Allah will change their bad deeds into good deeds.",
+            "ref": "Sūrat al-Furqān 25:70"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do you not know that Islam wipes out what came before it?",
+            "ar": "أَمَا عَلِمْتَ أَنَّ الإِسْلَامَ يَهْدِمُ مَا كَانَ قَبْلَهُ",
+            "ref": "Ṣaḥīḥ Muslim 121"
+          },
+          {
+            "en": "Tell those who disbelieve that if they stop, what has passed will be forgiven them.",
+            "ar": "قُلْ لِلَّذِينَ كَفَرُوا إِنْ يَنْتَهُوا يُغْفَرْ لَهُمْ مَا قَدْ سَلَفَ",
+            "ref": "Sūrat al-Anfāl 8:38"
+          }
+        ]
+      },
       {
         "title": "Jaʿfar of the Two Wings",
         "teach": "Loyalty and caring for orphans",
@@ -10880,7 +14642,7 @@ window.SEERAA_COURSE=[
             "flag"
           ]
         ],
-        "chapter": "Makkah Opens Its Gates",
+        "chapter": "Brave Hearts at Muʾtah",
         "learn": {
           "points": [
             "We care for orphans and grieving families.",
@@ -10897,22 +14659,523 @@ window.SEERAA_COURSE=[
         "quotes": []
       },
       {
+        "title": "Khālid, the Sword of Allah",
+        "teach": "Wisdom that saves lives",
+        "emoji": "🗡️",
+        "arabic": "سَيْفُ اللّٰه",
+        "story": "At Muʾtah, three thousand Muslims faced a Roman army many times bigger. When Zayd, Jaʿfar and ʿAbdullāh ibn Rawāḥah had all been martyred one after another, the flag fell. A companion picked it up and called, “O Muslims, agree on a leader!” They chose Khālid ibn al-Walīd, who had become Muslim only a few months earlier. Khālid fought so hard that nine swords broke in his hand that day. But he knew that beating such a huge army was impossible, and the wisest thing was to save the Muslims. That night he made a clever plan. He moved the soldiers on the right to the left and the left to the right, brought fresh men from the back to the front, and had a small group raise dust behind the army. In the morning, the Romans saw new faces and clouds of dust and thought a great army had come to help the Muslims. They held back, and Khālid led the Muslims safely away. In Madīnah, before any messenger had arrived, the Prophet ﷺ told the people: “Zayd took the flag and was struck down, then Jaʿfar took it and was struck down, then Ibn Rawāḥah took it and was struck down — and his eyes were shedding tears — until a sword from the swords of Allah took the flag, and Allah gave them victory.” When the army came home, some people shouted at them, “Runaways!” But the Prophet ﷺ said they were not runaways; they would return to the field again, in shāʾ Allāh.",
+        "picks": [
+          {
+            "q": "How many swords broke in Khālid’s hand at Muʾtah?",
+            "options": [
+              "Nine",
+              "One",
+              "Ninety"
+            ]
+          },
+          {
+            "q": "What was Khālid’s clever plan?",
+            "options": [
+              "Changing the soldiers’ places so the Romans thought help had arrived",
+              "Running away at night",
+              "Surrendering"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ call Khālid?",
+            "options": [
+              "A sword from the swords of Allah",
+              "The Lion of Allah",
+              "The Truthful One"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Muʾtah in order",
+          "items": [
+            "Three leaders are martyred one after another",
+            "The Muslims choose Khālid",
+            "Khālid changes the army’s places at night",
+            "The Muslims return safely to Madīnah"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ told the news before any messenger arrived.",
+            "a": true
+          },
+          {
+            "s": "Khālid had been Muslim for many years.",
+            "a": false
+          },
+          {
+            "s": "The Romans thought help had come to the Muslims.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that wisdom is part of courage, and that protecting people’s lives is a great service.",
+        "vocab": [
+          [
+            "رَايَة",
+            "flag"
+          ],
+          [
+            "سَيْف",
+            "sword"
+          ],
+          [
+            "حِكْمَة",
+            "wisdom"
+          ]
+        ],
+        "chapter": "Brave Hearts at Muʾtah",
+        "learn": {
+          "points": [
+            "Bravery and wisdom go together: saving lives is also a victory.",
+            "Allah gives ability to people who use it in His way.",
+            "The Prophet ﷺ cared deeply for his companions and wept for them."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "كَمْ مِنْ فِئَةٍ قَلِيلَةٍ غَلَبَتْ فِئَةً كَثِيرَةً بِإِذْنِ اللَّهِ ۗ وَاللَّهُ مَعَ الصَّابِرِينَ",
+            "en": "How many a small group has overcome a large group, by Allah’s permission! Allah is with those who are patient.",
+            "ref": "Sūrat al-Baqarah 2:249"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Zayd took the flag and was struck down, then Jaʿfar took it and was struck down, then Ibn Rawāḥah took it and was struck down — and his eyes were shedding tears — until a sword from the swords of Allah took the flag, and Allah gave them victory.",
+            "ar": "أَخَذَ الرَّايَةَ زَيْدٌ فَأُصِيبَ، ثُمَّ أَخَذَ جَعْفَرٌ فَأُصِيبَ، ثُمَّ أَخَذَ ابْنُ رَوَاحَةَ فَأُصِيبَ — وَعَيْنَاهُ تَذْرِفَانِ — حَتَّى أَخَذَ الرَّايَةَ سَيْفٌ مِنْ سُيُوفِ اللَّهِ حَتَّى فَتَحَ اللَّهُ عَلَيْهِمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4262"
+          }
+        ]
+      },
+      {
+        "title": "ʿAmr at Dhāt as-Salāsil",
+        "teach": "Humility and the ease of Islam",
+        "emoji": "❄️",
+        "arabic": "ذَاتُ السَّلَاسِل",
+        "story": "A few months after Muʾtah, the Prophet ﷺ sent ʿAmr ibn al-ʿĀṣ to lead an army to a place called Dhāt as-Salāsil, in the north. When ʿAmr needed more soldiers, the Prophet ﷺ sent Abū ʿUbaydah ibn al-Jarrāḥ with two hundred men — among them Abū Bakr and ʿUmar! Abū ʿUbaydah remembered that the Prophet ﷺ had told them not to quarrel, so he followed ʿAmr’s lead. Great companions served under a new Muslim without any pride. One freezing night, ʿAmr woke needing a full bath before prayer. The water was icy, and he feared it could kill him in that cold. So he did tayammum with earth and led the Fajr prayer. When they returned, people told the Prophet ﷺ. ʿAmr explained and recited the ayah: “Do not kill yourselves. Allah is Most Merciful to you.” The Prophet ﷺ laughed and said nothing more, which showed that he approved. On that journey ʿAmr wondered whether he might be the Prophet’s favourite, so he asked him, “Who is the most beloved person to you?” “ʿĀʾishah.” “And among the men?” “Her father.” “Then who?” “ʿUmar.” And ʿAmr fell silent, realising how much he still had to learn.",
+        "picks": [
+          {
+            "q": "Who came with the extra soldiers?",
+            "options": [
+              "Abū ʿUbaydah, with Abū Bakr and ʿUmar",
+              "Khālid alone",
+              "The Najāshī"
+            ]
+          },
+          {
+            "q": "Why did ʿAmr do tayammum?",
+            "options": [
+              "The water was dangerously cold",
+              "He was lazy",
+              "He forgot"
+            ]
+          },
+          {
+            "q": "Whom did the Prophet ﷺ name as most beloved among the men?",
+            "options": [
+              "Abū Bakr",
+              "ʿAmr",
+              "Bilāl"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "ʿAmr leads an army to Dhāt as-Salāsil",
+            "Abū ʿUbaydah arrives and follows ʿAmr",
+            "ʿAmr does tayammum on a freezing night",
+            "The Prophet ﷺ laughs and approves"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Bakr and ʿUmar served in ʿAmr’s army.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ was angry with ʿAmr for doing tayammum.",
+            "a": false
+          },
+          {
+            "s": "Islam does not want us to harm ourselves.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn humility in following others, and that Allah’s religion is one of ease and care for life.",
+        "vocab": [
+          [
+            "يُسْر",
+            "ease"
+          ],
+          [
+            "بَرْد",
+            "cold"
+          ],
+          [
+            "تَوَاضُع",
+            "humility"
+          ]
+        ],
+        "chapter": "Brave Hearts at Muʾtah",
+        "learn": {
+          "points": [
+            "Great people can follow a leader without pride.",
+            "Islam is a religion of ease: Allah does not want us to harm ourselves.",
+            "Humility is learned from the people around us."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يُرِيدُ اللَّهُ بِكُمُ الْيُسْرَ وَلَا يُرِيدُ بِكُمُ الْعُسْرَ",
+            "en": "Allah wants ease for you; He does not want hardship for you.",
+            "ref": "Sūrat al-Baqarah 2:185"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Do not kill yourselves. Allah is Most Merciful to you.",
+            "ar": "وَلَا تَقْتُلُوا أَنْفُسَكُمْ ۚ إِنَّ اللَّهَ كَانَ بِكُمْ رَحِيمًا",
+            "ref": "Sūrat an-Nisāʾ 4:29"
+          },
+          {
+            "en": "Who is the most beloved person to you?",
+            "ar": "أَيُّ النَّاسِ أَحَبُّ إِلَيْكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3662"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 40 · The Road to Makkah",
+    "icon": "🔥",
+    "colour": "#2f6f8f",
+    "range": [
+      157,
+      160
+    ],
+    "lessons": [
+      {
+        "title": "The Broken Treaty",
+        "teach": "Standing by those who trust you",
+        "emoji": "📜",
+        "arabic": "نَقْضُ الصُّلْح",
+        "story": "The treaty of Ḥudaybiyyah said that any tribe could ally with the Muslims or with Quraysh, and that all of them would live in peace. The tribe of Khuzāʿah allied with the Muslims, and the tribe of Banū Bakr allied with Quraysh. But less than two years later, Banū Bakr attacked Khuzāʿah at night by a well, and Quraysh secretly helped them with weapons and men. Even when Khuzāʿah fled into the sacred area of Makkah, they were not spared. A man of Khuzāʿah named ʿAmr ibn Sālim rode all the way to Madīnah. Standing in the masjid, he recited a poem begging the Prophet ﷺ to help his allies. The Prophet ﷺ answered, “You will be helped, ʿAmr ibn Sālim.” Quraysh realised what they had done, and their leader Abū Sufyān hurried to Madīnah to try to mend the treaty. He visited his own daughter, Umm Ḥabībah, who was a wife of the Prophet ﷺ. When he went to sit on a mat, she folded it away. “This is the mat of the Messenger of Allah,” she said, “and you are still an idol-worshipper.” Abū Sufyān went to Abū Bakr, to ʿUmar and to ʿAlī, but none of them would speak for him, and he went home with nothing. Later Allah described people like those who broke this treaty: “Will you not fight a people who broke their oaths, plotted to drive out the Messenger, and attacked you first?”",
+        "picks": [
+          {
+            "q": "Who attacked Khuzāʿah?",
+            "options": [
+              "Banū Bakr, helped by Quraysh",
+              "The Romans",
+              "The Anṣār"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ tell ʿAmr ibn Sālim?",
+            "options": [
+              "You will be helped",
+              "Go away",
+              "Ask Quraysh"
+            ]
+          },
+          {
+            "q": "What did Umm Ḥabībah do when her father came?",
+            "options": [
+              "Folded away the Prophet’s mat",
+              "Gave him a feast",
+              "Asked him to stay forever"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Khuzāʿah allies with the Muslims",
+            "Banū Bakr and Quraysh attack them at night",
+            "ʿAmr ibn Sālim asks the Prophet ﷺ for help",
+            "Abū Sufyān fails to mend the treaty"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Quraysh secretly helped Banū Bakr.",
+            "a": true
+          },
+          {
+            "s": "Abū Sufyān’s visit to Madīnah mended the treaty.",
+            "a": false
+          },
+          {
+            "s": "Umm Ḥabībah was Abū Sufyān’s daughter.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to keep our agreements and stand by those who trust us, and that breaking promises has consequences.",
+        "vocab": [
+          [
+            "حَلِيف",
+            "ally"
+          ],
+          [
+            "نَقْض",
+            "breaking"
+          ],
+          [
+            "أَيْمَان",
+            "oaths"
+          ]
+        ],
+        "chapter": "The Road to Makkah",
+        "learn": {
+          "points": [
+            "Muslims keep their agreements as long as the other side keeps them.",
+            "Standing by allies who trust you is part of keeping your word.",
+            "Faith comes before family ties, as Umm Ḥabībah showed."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَمَا اسْتَقَامُوا لَكُمْ فَاسْتَقِيمُوا لَهُمْ ۚ إِنَّ اللَّهَ يُحِبُّ الْمُتَّقِينَ",
+            "en": "As long as they keep true to you, keep true to them. Allah loves those who are mindful of Him.",
+            "ref": "Sūrat at-Tawbah 9:7"
+          }
+        },
+        "quotes": [
+          {
+            "en": "You will be helped, ʿAmr ibn Sālim.",
+            "ar": "نُصِرْتَ يَا عَمْرُو بْنَ سَالِمٍ",
+            "ref": "Sīrat Ibn Hishām"
+          },
+          {
+            "en": "Will you not fight a people who broke their oaths, plotted to drive out the Messenger, and attacked you first?",
+            "ar": "أَلَا تُقَاتِلُونَ قَوْمًا نَكَثُوا أَيْمَانَهُمْ وَهَمُّوا بِإِخْرَاجِ الرَّسُولِ وَهُمْ بَدَءُوكُمْ أَوَّلَ مَرَّةٍ",
+            "ref": "Sūrat at-Tawbah 9:13"
+          }
+        ]
+      },
+      {
+        "title": "Ḥāṭib’s Letter",
+        "teach": "Remember people’s good deeds",
+        "emoji": "🔎",
+        "arabic": "كِتَابُ حَاطِب",
+        "story": "The Prophet ﷺ began preparing to march to Makkah, but he kept the plan secret, so that there would be no fighting in the sacred city. Then one day he called ʿAlī, az-Zubayr and al-Miqdād. “Ride to the garden of Khākh. There you will find a woman travelling with a letter. Take it from her.” They galloped there and found the woman exactly where he had said. At first she denied having any letter, but when they insisted, she pulled it out of her hair. It was from Ḥāṭib ibn Abī Baltaʿah, a companion who had fought at Badr, warning Quraysh about the Prophet’s plan! “O Ḥāṭib, what is this?” asked the Prophet ﷺ. Ḥāṭib explained honestly: his family in Makkah had no tribe to protect them, and he had wanted to do Quraysh a favour so that they would leave his family alone; he had not done it because he had left his religion. The Prophet ﷺ said, “He has told you the truth.” ʿUmar was angry and wanted to punish him. But the Prophet ﷺ said, “He was present at Badr. How do you know? Perhaps Allah looked at the people of Badr and said, ‘Do what you wish, for I have forgiven you.’” Allah revealed: “O you who believe, do not take My enemy and your enemy as close allies.” Ḥāṭib had made a serious mistake, but his honesty and his past sacrifice were not forgotten.",
+        "picks": [
+          {
+            "q": "Where was the woman with the letter?",
+            "options": [
+              "The garden of Khākh",
+              "Badr",
+              "Ṭāʾif"
+            ]
+          },
+          {
+            "q": "Why did Ḥāṭib write the letter?",
+            "options": [
+              "To protect his family in Makkah",
+              "To leave Islam",
+              "For money"
+            ]
+          },
+          {
+            "q": "Why did the Prophet ﷺ forgive Ḥāṭib?",
+            "options": [
+              "He was honest and had fought at Badr",
+              "He was rich",
+              "He was a relative"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Prophet ﷺ keeps the march secret",
+            "He sends ʿAlī, az-Zubayr and al-Miqdād",
+            "They find the letter in the woman’s hair",
+            "Ḥāṭib explains and is forgiven"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Allah let the Prophet ﷺ know about the letter.",
+            "a": true
+          },
+          {
+            "s": "Ḥāṭib lied about why he wrote it.",
+            "a": false
+          },
+          {
+            "s": "Ḥāṭib had fought at Badr.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to be honest about our mistakes and to remember the good in people, while keeping our loyalty to Allah first.",
+        "vocab": [
+          [
+            "رِسَالَة",
+            "letter"
+          ],
+          [
+            "سِرّ",
+            "secret"
+          ],
+          [
+            "حَسَنَات",
+            "good deeds"
+          ]
+        ],
+        "chapter": "The Road to Makkah",
+        "learn": {
+          "points": [
+            "Be honest when you make a mistake, as Ḥāṭib was.",
+            "Remember people’s good deeds, not only their mistakes.",
+            "Loyalty to Allah and His Messenger comes first."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّ الْحَسَنَاتِ يُذْهِبْنَ السَّيِّئَاتِ ۚ ذَٰلِكَ ذِكْرَىٰ لِلذَّاكِرِينَ",
+            "en": "Good deeds wipe away bad deeds. That is a reminder for those who remember.",
+            "ref": "Sūrat Hūd 11:114"
+          }
+        },
+        "quotes": [
+          {
+            "en": "He has told you the truth.",
+            "ar": "لَقَدْ صَدَقَكُمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3007"
+          },
+          {
+            "en": "He was present at Badr. How do you know? Perhaps Allah looked at the people of Badr and said, ‘Do what you wish, for I have forgiven you.’",
+            "ar": "إِنَّهُ قَدْ شَهِدَ بَدْرًا، وَمَا يُدْرِيكَ لَعَلَّ اللَّهَ أَنْ يَكُونَ قَدِ اطَّلَعَ عَلَى أَهْلِ بَدْرٍ فَقَالَ اعْمَلُوا مَا شِئْتُمْ، فَقَدْ غَفَرْتُ لَكُمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3007"
+          },
+          {
+            "en": "O you who believe, do not take My enemy and your enemy as close allies.",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا لَا تَتَّخِذُوا عَدُوِّي وَعَدُوَّكُمْ أَوْلِيَاءَ",
+            "ref": "Sūrat al-Mumtaḥanah 60:1"
+          }
+        ]
+      },
+      {
+        "title": "Ten Thousand Fires",
+        "teach": "Allah keeps His promise",
+        "emoji": "🔥",
+        "arabic": "عَشَرَةُ آلَافِ نَار",
+        "story": "In Ramaḍān, in the eighth year after the Hijrah, the Prophet ﷺ set out from Madīnah with ten thousand Muslims — the largest army Madīnah had ever seen. On the way they met his uncle al-ʿAbbās, who was at last leaving Makkah to join the Muslims with his family. The army camped at Marr aẓ-Ẓahrān, near Makkah, and at night every group lit a fire. Ten thousand fires lit up the valley! Abū Sufyān came out of Makkah in the dark to find out what was happening, and he was astonished. Al-ʿAbbās, riding the Prophet’s white mule, found him and brought him to the camp under his protection. The next morning Abū Sufyān stood before the Prophet ﷺ, the man he had fought for twenty years. The Prophet ﷺ spoke to him gently, and Abū Sufyān accepted Islam. Then he was taken to a narrow pass to watch the army march by, tribe after tribe, flags flying. When Saʿd ibn ʿUbādah passed with the Anṣār, he called out to him, “Today is the day of the great battle!” Abū Sufyān worried for his people. But the Prophet ﷺ said, “Saʿd is mistaken. Rather, this is a day on which Allah will honour the Kaʿbah, and a day on which the Kaʿbah will be covered.” Years before, when he had left Makkah in secret, Allah had promised him: “The One who gave you the Qurʾān will surely bring you back to the place of return.”",
+        "picks": [
+          {
+            "q": "How many Muslims marched to Makkah?",
+            "options": [
+              "Ten thousand",
+              "One thousand",
+              "One hundred"
+            ]
+          },
+          {
+            "q": "Who brought Abū Sufyān to the camp?",
+            "options": [
+              "Al-ʿAbbās",
+              "ʿUmar",
+              "Khālid"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about that day?",
+            "options": [
+              "Allah will honour the Kaʿbah",
+              "It is a day of revenge",
+              "It is a day of sadness"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The army leaves Madīnah in Ramaḍān",
+            "Al-ʿAbbās joins them on the way",
+            "Ten thousand fires are lit near Makkah",
+            "Abū Sufyān accepts Islam and watches the army pass"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The army lit ten thousand fires.",
+            "a": true
+          },
+          {
+            "s": "Abū Sufyān refused Islam that day.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ corrected Saʿd ibn ʿUbādah’s words.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah fulfils His promises, and that the Prophet ﷺ chose mercy over revenge.",
+        "vocab": [
+          [
+            "نَار",
+            "fire"
+          ],
+          [
+            "جَيْش",
+            "army"
+          ],
+          [
+            "وَعْد",
+            "promise"
+          ]
+        ],
+        "chapter": "The Road to Makkah",
+        "learn": {
+          "points": [
+            "Allah’s promises always come true, in His time.",
+            "Showing strength can prevent fighting.",
+            "Even a lifelong enemy can be welcomed to Islam."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "هُوَ الَّذِي أَرْسَلَ رَسُولَهُ بِالْهُدَىٰ وَدِينِ الْحَقِّ لِيُظْهِرَهُ عَلَى الدِّينِ كُلِّهِ",
+            "en": "He is the One who sent His Messenger with guidance and the religion of truth, to make it prevail over every religion.",
+            "ref": "Sūrat al-Fatḥ 48:28"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Today is the day of the great battle!",
+            "ar": "الْيَوْمُ يَوْمُ الْمَلْحَمَةِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4280"
+          },
+          {
+            "en": "Saʿd is mistaken. Rather, this is a day on which Allah will honour the Kaʿbah, and a day on which the Kaʿbah will be covered.",
+            "ar": "كَذَبَ سَعْدٌ، وَلَكِنْ هَذَا يَوْمٌ يُعَظِّمُ اللَّهُ فِيهِ الْكَعْبَةَ، وَيَوْمٌ تُكْسَى فِيهِ الْكَعْبَةُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4280"
+          },
+          {
+            "en": "The One who gave you the Qurʾān will surely bring you back to the place of return.",
+            "ar": "إِنَّ الَّذِي فَرَضَ عَلَيْكَ الْقُرْآنَ لَرَادُّكَ إِلَىٰ مَعَادٍ",
+            "ref": "Sūrat al-Qaṣaṣ 28:85"
+          }
+        ]
+      },
+      {
         "title": "Return to Makkah",
         "teach": "Forgiveness when you are strong",
         "emoji": "🌄",
         "arabic": "فَتْحُ مَكَّة",
-        "story": "Two years after Ḥudaybiyyah, Quraysh’s allies attacked a tribe allied to the Muslims at night, and Quraysh secretly helped them. The treaty was broken. In Ramaḍān of the eighth year, the Prophet ﷺ marched with ten thousand Muslims. They camped near Makkah and lit ten thousand fires, and the leaders of Makkah realised they could not resist. Abū Sufyān came out, met the Prophet ﷺ and accepted Islam. The Prophet ﷺ announced: “Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.” He entered Makkah riding on his camel, his head bowed so low in thankfulness that his beard almost touched the saddle. Then he gathered the people of Makkah, who had hurt him and his companions for twenty years. “What do you think I will do with you?” “Good — you are a noble brother, son of a noble brother.” He said: “Go, you are free.”",
+        "story": "On the morning the Muslims entered Makkah, the Prophet ﷺ divided the army into groups to enter from different sides, with orders not to fight anyone unless they were attacked. The announcement went out: “Whoever enters the house of Abū Sufyān is safe. Whoever closes his door is safe. Whoever enters the Masjid al-Ḥarām is safe.” Most of Makkah stayed quietly at home. Only a small group resisted near one entrance, and Khālid’s soldiers quickly stopped them. The Prophet ﷺ entered riding his camel, reciting Sūrat al-Fatḥ in a beautiful, rising voice, his head bowed so low in thankfulness to Allah that his beard almost touched the saddle. Eight years earlier he had left this city secretly at night, hunted by Quraysh; now he came back as a conqueror, without any pride. Then he gathered the people of Makkah, who had hurt him and his companions for twenty years. “What do you think I will do with you?” he asked. “Good — you are a noble brother, the son of a noble brother.” He told them that he would say to them what Yūsuf said to his brothers: “No blame on you today.” Then he said: “Go, you are free.”",
         "picks": [
           {
-            "q": "Why did the Prophet ﷺ march to Makkah?",
+            "q": "Who was safe when the Muslims entered Makkah?",
             "options": [
-              "Quraysh had helped break the treaty",
-              "To trade in the market",
-              "To visit relatives"
+              "Whoever stayed home, entered Abū Sufyān’s house or the Masjid al-Ḥarām",
+              "Only the soldiers",
+              "Nobody"
             ]
           },
           {
-            "q": "How did he enter Makkah?",
+            "q": "How did the Prophet ﷺ enter Makkah?",
             "options": [
               "With his head bowed in thankfulness",
               "Boasting loudly",
@@ -10931,15 +15194,15 @@ window.SEERAA_COURSE=[
         "order": {
           "prompt": "Put the return to Makkah in order",
           "items": [
-            "The treaty is broken",
-            "Ten thousand Muslims camp near Makkah",
-            "Abū Sufyān accepts Islam",
-            "The Prophet ﷺ forgives the people of Makkah"
+            "The army enters Makkah from different sides",
+            "Safety is announced to the people",
+            "The Prophet ﷺ rides in with his head bowed",
+            "He forgives the people of Makkah"
           ]
         },
         "tf": [
           {
-            "s": "The Muslims lit ten thousand fires.",
+            "s": "The Prophet ﷺ recited Sūrat al-Fatḥ as he entered.",
             "a": true
           },
           {
@@ -10966,7 +15229,7 @@ window.SEERAA_COURSE=[
             "safety"
           ]
         ],
-        "chapter": "Makkah Opens Its Gates",
+        "chapter": "The Road to Makkah",
         "learn": {
           "points": [
             "True strength is forgiving when you have the power to punish.",
@@ -10974,10 +15237,10 @@ window.SEERAA_COURSE=[
             "Mercy can turn enemies into friends."
           ],
           "verse": {
-            "kind": "hadith",
-            "ar": "اذْهَبُوا فَأَنْتُمُ الطُّلَقَاءُ",
-            "en": "Go, for you are free.",
-            "ref": "Sīrat Ibn Hishām"
+            "kind": "quran",
+            "ar": "قَالَ لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ ۖ يَغْفِرُ اللَّهُ لَكُمْ ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ",
+            "en": "He said: ‘No blame on you today. May Allah forgive you; He is the Most Merciful of those who show mercy.’",
+            "ref": "Sūrat Yūsuf 12:92"
           }
         },
         "quotes": [
@@ -10992,12 +15255,28 @@ window.SEERAA_COURSE=[
             "ref": "Sīrat Ibn Hishām"
           },
           {
+            "en": "No blame on you today.",
+            "ar": "لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ",
+            "ref": "Sūrat Yūsuf 12:92"
+          },
+          {
             "en": "Go, you are free.",
             "ar": "اذْهَبُوا فَأَنْتُمُ الطُّلَقَاءُ",
             "ref": "Sīrat Ibn Hishām"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "title": "Map 41 · Makkah Opens Its Gates",
+    "icon": "🕋",
+    "colour": "#7a5aa8",
+    "range": [
+      161,
+      164
+    ],
+    "lessons": [
       {
         "title": "Mercy in Makkah",
         "arabic": "تَطْهِيرُ الْكَعْبَة",
@@ -11091,6 +15370,313 @@ window.SEERAA_COURSE=[
         ]
       },
       {
+        "title": "The Sermon at the Kaʿbah’s Door",
+        "teach": "All people are equal before Allah",
+        "emoji": "🚪",
+        "arabic": "خُطْبَةُ الْفَتْح",
+        "story": "On the day Makkah opened, the Prophet ﷺ stood at the door of the Kaʿbah, and the people of Makkah gathered before him. He began: “There is no god but Allah alone. He has kept His promise, helped His servant, and defeated the Confederates alone.” Then he spoke about the pride of the days of ignorance, when families boasted about their ancestors and looked down on others. “O people, Allah has removed from you the arrogance of the days of ignorance and its boasting about forefathers. People are of two kinds: a good, mindful person who is honoured by Allah, and a wicked, wretched person who is lowly before Allah. People are the children of Ādam, and Allah created Ādam from dust.” Then he recited: “O people, We created you from a male and a female, and made you nations and tribes so that you may know one another. The most honoured of you in Allah’s sight is the one most mindful of Him.” He also told them that Makkah is a sacred city, made sacred by Allah on the day He created the heavens and the earth: its thorn trees must not be cut, and its animals must not be chased. Then Bilāl, who had once been beaten on the burning sand of Makkah, climbed onto the Kaʿbah to call the adhān — a living example of those very words.",
+        "picks": [
+          {
+            "q": "Where did the Prophet ﷺ stand to give the sermon?",
+            "options": [
+              "At the door of the Kaʿbah",
+              "On Mount Uḥud",
+              "In Madīnah"
+            ]
+          },
+          {
+            "q": "What makes a person most honoured by Allah?",
+            "options": [
+              "Taqwā, being mindful of Him",
+              "A famous family",
+              "Wealth"
+            ]
+          },
+          {
+            "q": "Who called the adhān from the Kaʿbah?",
+            "options": [
+              "Bilāl",
+              "Abū Sufyān",
+              "ʿAmr"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put the sermon in order",
+          "items": [
+            "The Prophet ﷺ stands at the door of the Kaʿbah",
+            "He praises Allah who kept His promise",
+            "He says all people come from Ādam",
+            "He recites the ayah about nations and tribes"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ said people are honoured by their ancestors.",
+            "a": false
+          },
+          {
+            "s": "All people are children of Ādam, created from dust.",
+            "a": true
+          },
+          {
+            "s": "Makkah’s animals must not be chased.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that all people are equal before Allah except by taqwā, and to respect the sacred city of Makkah.",
+        "vocab": [
+          [
+            "تَقْوَى",
+            "mindfulness of Allah"
+          ],
+          [
+            "تُرَاب",
+            "dust"
+          ],
+          [
+            "حَرَم",
+            "sacred area"
+          ]
+        ],
+        "chapter": "Makkah Opens Its Gates",
+        "learn": {
+          "points": [
+            "No one is better than another because of family, colour or wealth — only by taqwā.",
+            "Allah always keeps His promises.",
+            "Makkah is a sacred city of peace and safety."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَإِذْ جَعَلْنَا الْبَيْتَ مَثَابَةً لِلنَّاسِ وَأَمْنًا",
+            "en": "Remember when We made the House a place for people to return to, and a place of safety.",
+            "ref": "Sūrat al-Baqarah 2:125"
+          }
+        },
+        "quotes": [
+          {
+            "en": "There is no god but Allah alone. He has kept His promise, helped His servant, and defeated the Confederates alone.",
+            "ar": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ صَدَقَ وَعْدَهُ وَنَصَرَ عَبْدَهُ وَهَزَمَ الأَحْزَابَ وَحْدَهُ",
+            "ref": "Sunan Abī Dāwūd 4547"
+          },
+          {
+            "en": "O people, Allah has removed from you the arrogance of the days of ignorance and its boasting about forefathers. People are of two kinds: a good, mindful person who is honoured by Allah, and a wicked, wretched person who is lowly before Allah. People are the children of Ādam, and Allah created Ādam from dust.",
+            "ar": "يَا أَيُّهَا النَّاسُ إِنَّ اللَّهَ قَدْ أَذْهَبَ عَنْكُمْ عُبِّيَّةَ الْجَاهِلِيَّةِ وَتَعَاظُمَهَا بِآبَائِهَا فَالنَّاسُ رَجُلَانِ رَجُلٌ بَرٌّ تَقِيٌّ كَرِيمٌ عَلَى اللَّهِ وَفَاجِرٌ شَقِيٌّ هَيِّنٌ عَلَى اللَّهِ وَالنَّاسُ بَنُو آدَمَ وَخَلَقَ اللَّهُ آدَمَ مِنْ تُرَابٍ",
+            "ref": "Sunan at-Tirmidhī 3270"
+          },
+          {
+            "en": "O people, We created you from a male and a female, and made you nations and tribes so that you may know one another. The most honoured of you in Allah’s sight is the one most mindful of Him.",
+            "ar": "يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُمْ مِنْ ذَكَرٍ وَأُنْثَىٰ وَجَعَلْنَاكُمْ شُعُوبًا وَقَبَائِلَ لِتَعَارَفُوا ۚ إِنَّ أَكْرَمَكُمْ عِنْدَ اللَّهِ أَتْقَاكُمْ",
+            "ref": "Sūrat al-Ḥujurāt 49:13"
+          }
+        ]
+      },
+      {
+        "title": "ʿIkrimah Comes Home",
+        "teach": "Turning enemies into brothers",
+        "emoji": "⛈️",
+        "arabic": "عِكْرِمَةُ بْنُ أَبِي جَهْل",
+        "story": "When Makkah opened, ʿIkrimah, the son of Abū Jahl, fled. He had fought the Muslims all his life, and he did not believe he could ever be forgiven. He reached the sea and boarded a boat. Out at sea a terrible storm struck, and the sailors cried, “Call on Allah alone, sincerely! Your idols cannot help you at all out here.” Allah describes such moments: “When they board a ship, they call on Allah, sincere in their faith in Him alone.” ʿIkrimah thought: if nothing but sincerity to Allah could save him at sea, then nothing else could save him on land. He promised: “O Allah, I make You a promise: if You save me from this, I will go to Muḥammad and put my hand in his hand, and I will surely find him forgiving and generous.” Meanwhile his wife, Umm Ḥakīm, had accepted Islam. She asked the Prophet ﷺ to grant ʿIkrimah safety, and he agreed. She travelled after her husband and brought him back. When ʿIkrimah arrived, the Prophet ﷺ rose joyfully to welcome him, and ʿIkrimah accepted Islam. The Prophet ﷺ told his companions not to insult ʿIkrimah’s father in front of him, so that his feelings would not be hurt. ʿIkrimah spent the rest of his life serving Islam with the same energy he had once used against it.",
+        "picks": [
+          {
+            "q": "Whose son was ʿIkrimah?",
+            "options": [
+              "Abū Jahl’s",
+              "Abū Bakr’s",
+              "ʿUmar’s"
+            ]
+          },
+          {
+            "q": "What happened at sea?",
+            "options": [
+              "A storm, and he promised Allah to go to the Prophet ﷺ",
+              "He found treasure",
+              "He met the Najāshī"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ tell the companions?",
+            "options": [
+              "Not to insult ʿIkrimah’s father in front of him",
+              "To punish him",
+              "To ignore him"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "ʿIkrimah flees from Makkah",
+            "A storm strikes his boat",
+            "Umm Ḥakīm brings him back with a promise of safety",
+            "The Prophet ﷺ welcomes him and he accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Umm Ḥakīm asked the Prophet ﷺ to grant her husband safety.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ refused to see ʿIkrimah.",
+            "a": false
+          },
+          {
+            "s": "ʿIkrimah later served Islam bravely.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that sincerity to Allah saves us, and that kindness can turn enemies into brothers.",
+        "vocab": [
+          [
+            "عَاصِفَة",
+            "storm"
+          ],
+          [
+            "إِخْلَاص",
+            "sincerity"
+          ],
+          [
+            "أَمَان",
+            "safety"
+          ]
+        ],
+        "chapter": "Makkah Opens Its Gates",
+        "learn": {
+          "points": [
+            "In hard moments people remember that only Allah can save.",
+            "The Prophet ﷺ welcomed former enemies with joy and protected their feelings.",
+            "Good manners can turn an enemy into a friend."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "ادْفَعْ بِالَّتِي هِيَ أَحْسَنُ فَإِذَا الَّذِي بَيْنَكَ وَبَيْنَهُ عَدَاوَةٌ كَأَنَّهُ وَلِيٌّ حَمِيمٌ",
+            "en": "Repel evil with what is better, and the one who was your enemy will become like a close friend.",
+            "ref": "Sūrat Fuṣṣilat 41:34"
+          }
+        },
+        "quotes": [
+          {
+            "en": "When they board a ship, they call on Allah, sincere in their faith in Him alone.",
+            "ar": "فَإِذَا رَكِبُوا فِي الْفُلْكِ دَعَوُا اللَّهَ مُخْلِصِينَ لَهُ الدِّينَ",
+            "ref": "Sūrat al-ʿAnkabūt 29:65"
+          },
+          {
+            "en": "O Allah, I make You a promise: if You save me from this, I will go to Muḥammad and put my hand in his hand, and I will surely find him forgiving and generous.",
+            "ar": "اللَّهُمَّ إِنَّ لَكَ عَلَيَّ عَهْدًا إِنْ أَنْتَ عَافَيْتَنِي مِمَّا أَنَا فِيهِ أَنْ آتِيَ مُحَمَّدًا ﷺ حَتَّى أَضَعَ يَدِي فِي يَدِهِ فَلأَجِدَنَّهُ عَفُوًّا كَرِيمًا",
+            "ref": "Sunan an-Nasāʾī 4067"
+          }
+        ]
+      },
+      {
+        "title": "Abū Quḥāfah’s White Hair",
+        "teach": "Honouring elders and parents",
+        "emoji": "👴",
+        "arabic": "أَبُو قُحَافَة",
+        "story": "On the day Makkah opened, Abū Bakr went home to fetch his father, Abū Quḥāfah. He was very old and almost blind, and his hair and beard were as white as snow. He had never accepted Islam. For years Abū Bakr had followed Allah’s command about parents who are not Muslim: “Keep company with them in this world kindly.” Now he held his father’s hand and led him slowly to the Prophet ﷺ. When the Prophet ﷺ saw them coming, he said, “Why didn’t you leave the old man at home, so that I could go to him there?” He wanted to honour the elderly man by visiting him himself, rather than making him walk. Abū Bakr replied, “O Messenger of Allah, it is more fitting that he should walk to you than that you should walk to him.” The Prophet ﷺ sat Abū Quḥāfah in front of him, gently placed his hand on his chest and invited him to Islam, and the old man accepted. Abū Bakr was overjoyed. Looking at the old man’s white hair, the Prophet ﷺ said, “Change this with something.” Even on the greatest day of victory, the Prophet ﷺ found time to show respect and tenderness to an old man.",
+        "picks": [
+          {
+            "q": "Who was Abū Quḥāfah?",
+            "options": [
+              "Abū Bakr’s father",
+              "ʿUmar’s son",
+              "A king of Yemen"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ wish Abū Bakr had done?",
+            "options": [
+              "Left his father at home so he could visit him",
+              "Brought him faster",
+              "Left him in Madīnah"
+            ]
+          },
+          {
+            "q": "What did Abū Quḥāfah do?",
+            "options": [
+              "Accepted Islam",
+              "Ran away",
+              "Refused to come"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Makkah opens to the Muslims",
+            "Abū Bakr leads his old father to the Prophet ﷺ",
+            "The Prophet ﷺ honours the old man",
+            "Abū Quḥāfah accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Abū Quḥāfah was old and almost blind.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ made the old man stand for a long time.",
+            "a": false
+          },
+          {
+            "s": "Abū Bakr was kind to his father for many years.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to honour our parents and elderly people, and to be gentle with them always.",
+        "vocab": [
+          [
+            "شَيْخ",
+            "old man"
+          ],
+          [
+            "وَالِد",
+            "father"
+          ],
+          [
+            "بِرّ",
+            "kindness to parents"
+          ]
+        ],
+        "chapter": "Makkah Opens Its Gates",
+        "learn": {
+          "points": [
+            "Honour elderly people and make things easy for them.",
+            "Be kind to parents, even before they accept the truth.",
+            "Even in victory, the Prophet ﷺ remembered gentleness."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "أَنِ اشْكُرْ لِي وَلِوَالِدَيْكَ إِلَيَّ الْمَصِيرُ",
+            "en": "Be grateful to Me and to your parents; to Me is the final return.",
+            "ref": "Sūrat Luqmān 31:14"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Keep company with them in this world kindly.",
+            "ar": "وَصَاحِبْهُمَا فِي الدُّنْيَا مَعْرُوفًا",
+            "ref": "Sūrat Luqmān 31:15"
+          },
+          {
+            "en": "Change this with something.",
+            "ar": "غَيِّرُوا هَذَا بِشَيْءٍ",
+            "ref": "Ṣaḥīḥ Muslim 2102"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 42 · Ḥunayn and Ṭāʾif",
+    "icon": "🏔️",
+    "colour": "#2e6b58",
+    "range": [
+      165,
+      168
+    ],
+    "lessons": [
+      {
         "title": "Ḥunayn",
         "arabic": "غَزْوَةُ حُنَيْن",
         "story": "Soon after Makkah opened, the tribes of Hawāzin and Thaqīf gathered a large army. The Muslims marched out with twelve thousand men — the biggest army they had ever had. Some said proudly, “We will not be defeated today because of small numbers!” At dawn, as the Muslims entered the narrow valley of Ḥunayn, the enemy, hidden in the mountains, attacked suddenly. Many Muslims panicked and ran. But the Prophet ﷺ stood firm on his white mule and called out: “I am the Prophet, this is no lie! I am the son of ʿAbd al-Muṭṭalib!” His uncle al-ʿAbbās, who had a very loud voice, called the companions back, and they returned, crying “Labbayk! Labbayk!” Then Allah sent down calm and help, and the battle turned. Allah reminds them: “On the day of Ḥunayn, your great numbers made you proud, but they did not help you at all.” Afterwards, the Prophet ﷺ returned the captives of Hawāzin when they asked kindly, and many of them became Muslim.",
@@ -11136,7 +15722,7 @@ window.SEERAA_COURSE=[
             "pride"
           ]
         ],
-        "chapter": "Makkah Opens Its Gates",
+        "chapter": "Ḥunayn and Ṭāʾif",
         "teach": "Numbers alone do not bring victory",
         "order": {
           "prompt": "Put Ḥunayn in order",
@@ -11186,22 +15772,313 @@ window.SEERAA_COURSE=[
             "ref": "Sūrat at-Tawbah 9:25"
           }
         ]
+      },
+      {
+        "title": "Shaymāʾ, His Foster Sister",
+        "teach": "Never forget those who cared for you",
+        "emoji": "🧺",
+        "arabic": "الشَّيْمَاءُ بِنْتُ الْحَارِث",
+        "story": "After Ḥunayn, many people of Hawāzin were taken captive. Among them was an older woman who kept telling the soldiers, “I am the sister of your Prophet!” They did not believe her, but they brought her to him. “O Messenger of Allah,” she said, “I am your sister, Shaymāʾ, the daughter of Ḥalīmah.” Long ago, when the Prophet ﷺ was a baby living in the desert of Banū Saʿd, Shaymāʾ had carried him on her hip and sung to him. She showed him a mark on her back: “You bit me there when I was carrying you as a child.” The Prophet ﷺ recognised the mark and remembered. He spread out his own cloak on the ground for her to sit on and welcomed her warmly. He told her that she could stay with him, loved and honoured, or return to her people with gifts. Shaymāʾ chose to go home, and the Prophet ﷺ sent her back with generous gifts. Soon after, a group from Hawāzin came, and the Prophet ﷺ told the companions, “These brothers of yours have come to us repenting,” and asked them to return their families to them. The companions gladly agreed. More than fifty years had passed, but he had not forgotten the people who cared for him as a child. Allah says: “Be mindful of Allah, in whose name you ask one another, and of the ties of family.”",
+        "picks": [
+          {
+            "q": "Who was Shaymāʾ?",
+            "options": [
+              "The daughter of Ḥalīmah, who cared for him as a baby",
+              "A queen of Persia",
+              "Abū Bakr’s sister"
+            ]
+          },
+          {
+            "q": "What sign did she show?",
+            "options": [
+              "A bite mark from when she carried him",
+              "A letter",
+              "A ring"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ spread out for her?",
+            "options": [
+              "His cloak",
+              "A Persian carpet",
+              "Palm leaves"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Shaymāʾ is taken captive after Ḥunayn",
+            "She tells the soldiers she is his sister",
+            "She shows the mark from childhood",
+            "He spreads his cloak for her and honours her"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ had forgotten his childhood in the desert.",
+            "a": false
+          },
+          {
+            "s": "Shaymāʾ chose to go back to her people.",
+            "a": true
+          },
+          {
+            "s": "The families of Hawāzin were returned to them.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to remember and repay kindness, and to honour family ties and the people who cared for us.",
+        "vocab": [
+          [
+            "أُخْت",
+            "sister"
+          ],
+          [
+            "رَضَاعَة",
+            "nursing"
+          ],
+          [
+            "إِحْسَان",
+            "goodness"
+          ]
+        ],
+        "chapter": "Ḥunayn and Ṭāʾif",
+        "learn": {
+          "points": [
+            "Never forget the people who were kind to you.",
+            "Honour your relatives, including your milk relatives.",
+            "Goodness should be repaid with goodness."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ",
+            "en": "Is the reward for goodness anything but goodness?",
+            "ref": "Sūrat ar-Raḥmān 55:60"
+          }
+        },
+        "quotes": [
+          {
+            "en": "These brothers of yours have come to us repenting",
+            "ar": "إِنَّ إِخْوَانَكُمْ هَؤُلَاءِ قَدْ جَاءُونَا تَائِبِينَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 2307"
+          },
+          {
+            "en": "Be mindful of Allah, in whose name you ask one another, and of the ties of family.",
+            "ar": "وَاتَّقُوا اللَّهَ الَّذِي تَسَاءَلُونَ بِهِ وَالْأَرْحَامَ",
+            "ref": "Sūrat an-Nisāʾ 4:1"
+          }
+        ]
+      },
+      {
+        "title": "The Siege of Ṭāʾif",
+        "teach": "Praying for people’s guidance",
+        "emoji": "🍇",
+        "arabic": "حِصَارُ الطَّائِف",
+        "story": "After Ḥunayn, the soldiers of Thaqīf ran back to their city, Ṭāʾif, and shut themselves inside its strong walls. Ten years earlier, the people of Ṭāʾif had thrown stones at the Prophet ﷺ when he came alone to invite them to Islam. Now he came with a great army and surrounded the city. For about twenty days, arrows rained down from the walls, and some Muslims were hurt. The Prophet ﷺ announced that any slave who came down from the fort would be set free. One man let himself down the wall using a pulley and was freed; from then on he was called Abū Bakrah, “the man of the pulley”. But the walls held firm, and the Prophet ﷺ decided to lift the siege and go back. The companions said, “O Messenger of Allah, the arrows of Thaqīf have torn us apart. Pray against them!” But the Prophet ﷺ raised his hands and said: “O Allah, guide Thaqīf.” Just as he had done ten years before, he prayed for them, not against them. And Allah answered. The very next year, a group from Thaqīf rode to Madīnah, and the whole tribe accepted Islam.",
+        "picks": [
+          {
+            "q": "What had the people of Ṭāʾif done ten years earlier?",
+            "options": [
+              "Thrown stones at the Prophet ﷺ",
+              "Welcomed him",
+              "Sent him gifts"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ pray for Thaqīf?",
+            "options": [
+              "O Allah, guide Thaqīf",
+              "O Allah, destroy them",
+              "Nothing"
+            ]
+          },
+          {
+            "q": "What happened the next year?",
+            "options": [
+              "Thaqīf came to Madīnah and accepted Islam",
+              "They attacked Madīnah",
+              "They moved to Yemen"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Thaqīf shut themselves in Ṭāʾif",
+            "The Muslims surround the city",
+            "The siege is lifted",
+            "The Prophet ﷺ prays for Thaqīf’s guidance"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Slaves who came down from the fort were set free.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ prayed against Thaqīf.",
+            "a": false
+          },
+          {
+            "s": "Thaqīf later accepted Islam.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to pray for the guidance of others, even those who have hurt us.",
+        "vocab": [
+          [
+            "حِصَار",
+            "siege"
+          ],
+          [
+            "هِدَايَة",
+            "guidance"
+          ],
+          [
+            "سُور",
+            "city wall"
+          ]
+        ],
+        "chapter": "Ḥunayn and Ṭāʾif",
+        "learn": {
+          "points": [
+            "Pray for people’s guidance, even when they hurt you.",
+            "The Prophet ﷺ freed slaves whenever he could.",
+            "Patience and mercy win hearts in the end."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "خُذِ الْعَفْوَ وَأْمُرْ بِالْعُرْفِ وَأَعْرِضْ عَنِ الْجَاهِلِينَ",
+            "en": "Hold to forgiveness, command what is good, and turn away from the ignorant.",
+            "ref": "Sūrat al-Aʿrāf 7:199"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Allah, guide Thaqīf.",
+            "ar": "اللَّهُمَّ اهْدِ ثَقِيفًا",
+            "ref": "Sunan at-Tirmidhī 3942"
+          }
+        ]
+      },
+      {
+        "title": "The Anṣār’s Tears",
+        "teach": "True wealth is faith",
+        "emoji": "🫂",
+        "arabic": "الْأَنْصَار",
+        "story": "After Ḥunayn there were huge spoils: thousands of camels and sheep and much silver. The Prophet ﷺ gave large gifts to the leaders of Makkah and other tribes who had only just become Muslim, to soften their hearts towards Islam. But to the Anṣār of Madīnah, who had stood by him from the very beginning, he gave nothing from these gifts. Some of the young Anṣār felt hurt. The Prophet ﷺ gathered the Anṣār and said: “O Anṣār, did I not find you astray, and Allah guided you through me? You were divided, and Allah united you through me; and you were poor, and Allah made you rich through me.” Each time, they answered, “Allah and His Messenger are more generous.” Then he said: “Are you not pleased that people go home with sheep and camels, while you go home with the Prophet to your houses? If it were not for the Hijrah, I would have been one of the Anṣār. If the people went through a valley and a mountain pass, I would go through the valley and pass of the Anṣār.” The Anṣār wept until their beards were wet, and said that they were pleased to have the Messenger of Allah as their share. Allah says of the believers: “He united their hearts. Even if you had spent everything on earth, you could not have united their hearts — but Allah united them.”",
+        "picks": [
+          {
+            "q": "Why did the Prophet ﷺ give large gifts to new Muslims?",
+            "options": [
+              "To soften their hearts towards Islam",
+              "Because he loved them more",
+              "By mistake"
+            ]
+          },
+          {
+            "q": "What did the Anṣār take home instead of sheep and camels?",
+            "options": [
+              "The Prophet ﷺ",
+              "More silver",
+              "Horses"
+            ]
+          },
+          {
+            "q": "How did the Anṣār react to his words?",
+            "options": [
+              "They wept and were pleased",
+              "They left angrily",
+              "They asked for more"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The spoils of Ḥunayn are shared out",
+            "Some young Anṣār feel hurt",
+            "The Prophet ﷺ speaks to the Anṣār",
+            "They weep and say they are pleased"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Anṣār received the biggest gifts from the spoils.",
+            "a": false
+          },
+          {
+            "s": "The Prophet ﷺ said he would follow the valley of the Anṣār.",
+            "a": true
+          },
+          {
+            "s": "Allah united the hearts of the believers.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that faith and closeness to the Prophet ﷺ are worth more than any wealth, and to talk openly when hearts are hurt.",
+        "vocab": [
+          [
+            "غَنَائِم",
+            "spoils"
+          ],
+          [
+            "تَأْلِيفُ الْقُلُوب",
+            "softening hearts"
+          ],
+          [
+            "رِضَا",
+            "contentment"
+          ]
+        ],
+        "chapter": "Ḥunayn and Ṭāʾif",
+        "learn": {
+          "points": [
+            "Closeness to the Prophet ﷺ is worth more than any wealth.",
+            "Speak openly with people who feel hurt, and remind them of Allah’s blessings.",
+            "Gifts can soften new hearts, while old friends are trusted with their faith."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَالسَّابِقُونَ الْأَوَّلُونَ مِنَ الْمُهَاجِرِينَ وَالْأَنْصَارِ وَالَّذِينَ اتَّبَعُوهُمْ بِإِحْسَانٍ رَضِيَ اللَّهُ عَنْهُمْ وَرَضُوا عَنْهُ",
+            "en": "The first to lead the way, of the Muhājirūn and the Anṣār, and those who followed them in goodness — Allah is pleased with them and they are pleased with Him.",
+            "ref": "Sūrat at-Tawbah 9:100"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Anṣār, did I not find you astray, and Allah guided you through me? You were divided, and Allah united you through me; and you were poor, and Allah made you rich through me.",
+            "ar": "يَا مَعْشَرَ الأَنْصَارِ أَلَمْ أَجِدْكُمْ ضُلَّالًا فَهَدَاكُمُ اللَّهُ بِي، وَكُنْتُمْ مُتَفَرِّقِينَ فَأَلَّفَكُمُ اللَّهُ بِي وَعَالَةً، فَأَغْنَاكُمُ اللَّهُ بِي",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4330"
+          },
+          {
+            "en": "Are you not pleased that people go home with sheep and camels, while you go home with the Prophet to your houses? If it were not for the Hijrah, I would have been one of the Anṣār. If the people went through a valley and a mountain pass, I would go through the valley and pass of the Anṣār.",
+            "ar": "أَتَرْضَوْنَ أَنْ يَذْهَبَ النَّاسُ بِالشَّاةِ وَالْبَعِيرِ، وَتَذْهَبُونَ بِالنَّبِيِّ ﷺ إِلَى رِحَالِكُمْ، لَوْلَا الْهِجْرَةُ لَكُنْتُ امْرَأً مِنَ الأَنْصَارِ، وَلَوْ سَلَكَ النَّاسُ وَادِيًا وَشِعْبًا لَسَلَكْتُ وَادِيَ الأَنْصَارِ وَشِعْبَهَا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4330"
+          },
+          {
+            "en": "He united their hearts. Even if you had spent everything on earth, you could not have united their hearts — but Allah united them.",
+            "ar": "وَأَلَّفَ بَيْنَ قُلُوبِهِمْ ۚ لَوْ أَنْفَقْتَ مَا فِي الْأَرْضِ جَمِيعًا مَا أَلَّفْتَ بَيْنَ قُلُوبِهِمْ وَلَٰكِنَّ اللَّهَ أَلَّفَ بَيْنَهُمْ",
+            "ref": "Sūrat al-Anfāl 8:63"
+          }
+        ]
       }
     ]
   },
   {
-    "title": "Map 31 · The Final Years",
-    "icon": "🌍",
-    "colour": "#7a5aa8",
+    "title": "Map 43 · Tabūk",
+    "icon": "🏜️",
+    "colour": "#a97c25",
     "range": [
-      121,
-      124
+      169,
+      172
     ],
     "lessons": [
       {
         "title": "The Journey to Tabūk",
         "arabic": "غَزْوَةُ تَبُوك",
-        "story": "In the ninth year after the Hijrah, news came that the Roman army was gathering in the north. It was the hottest time of the year, the dates were ready to harvest and the journey to Tabūk was very long. This expedition was called “the army of hardship”. The Prophet ﷺ asked everyone to give. ʿUthmān equipped hundreds of camels and brought a thousand gold coins. ʿUmar brought half of everything he owned. Abū Bakr brought everything he had: “I have left them Allah and His Messenger.” Poor companions wept because they had no camel to ride. About thirty thousand marched out. The Romans never came, and the Prophet ﷺ made peace agreements with the towns of the north. Back in Madīnah, three companions who had stayed behind without an excuse, including Kaʿb ibn Mālik, refused to make up lies. For fifty days no one spoke to them, until Allah revealed that He had forgiven them. Kaʿb said, “Allah saved me because I told the truth.”",
+        "story": "In the ninth year after the Hijrah, news came that the Romans were gathering a great army in the north. It was the hottest time of the year, the dates were ripe for harvest, and the journey to Tabūk was very long. It was called “the army of hardship”, and the Prophet ﷺ told everyone clearly where they were going so that they could prepare. He asked everyone to give. ʿUthmān equipped hundreds of camels and brought a thousand gold coins. ʿUmar brought half of everything he owned. Abū Bakr brought everything he had: “I have left them Allah and His Messenger.” About thirty thousand marched out. On the way they passed al-Ḥijr, the ruins of the people of Thamūd, whom Allah had destroyed. The Prophet ﷺ said: “Do not enter the dwellings of these punished people except weeping.” At Tabūk, the Romans never came. The Prophet ﷺ stayed about twenty days and made peace agreements with the towns of the north, then returned to Madīnah. The strength of Islam was now known across Arabia. Allah praises those who spend in His way: “The example of those who spend their wealth in the way of Allah is like a seed that grows seven ears.”",
         "picks": [
           {
             "q": "Why was it called the army of hardship?",
@@ -11220,15 +16097,15 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What saved Kaʿb ibn Mālik?",
+            "q": "How did the Prophet ﷺ tell them to pass the ruins of Thamūd?",
             "options": [
-              "Telling the truth",
-              "Making an excuse",
-              "Running away"
+              "Weeping and humble",
+              "Laughing",
+              "Stopping to drink there"
             ]
           }
         ],
-        "benefit": "We learn to give generously and always to tell the truth, even when it is hard.",
+        "benefit": "We learn to give generously for good causes, and to be humble and learn from the past.",
         "emoji": "🏜️",
         "vocab": [
           [
@@ -11244,15 +16121,15 @@ window.SEERAA_COURSE=[
             "spending for Allah"
           ]
         ],
-        "chapter": "The Final Years",
+        "chapter": "Tabūk",
         "teach": "Generosity and honesty",
         "order": {
           "prompt": "Put Tabūk in order",
           "items": [
             "News comes of an army in the north",
             "The companions give generously",
-            "Thirty thousand march to Tabūk",
-            "Kaʿb tells the truth and is forgiven"
+            "They pass the ruins of Thamūd",
+            "They make peace agreements at Tabūk"
           ]
         },
         "tf": [
@@ -11261,25 +16138,25 @@ window.SEERAA_COURSE=[
             "a": true
           },
           {
-            "s": "Kaʿb made up an excuse to escape blame.",
+            "s": "The Romans came and fought at Tabūk.",
             "a": false
           },
           {
-            "s": "Allah forgave the three who told the truth.",
+            "s": "About thirty thousand Muslims marched to Tabūk.",
             "a": true
           }
         ],
         "learn": {
           "points": [
             "We give generously, each according to what we have.",
-            "We always tell the truth, even when it is hard.",
-            "Allah forgives those who are honest and turn back to Him."
+            "We pass the ruins of punished people humbly, taking a lesson.",
+            "Striving with wealth and effort is part of faith."
           ],
           "verse": {
             "kind": "quran",
-            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ",
-            "en": "O you who believe, be mindful of Allah and be with those who are truthful.",
-            "ref": "Sūrat at-Tawbah 9:119"
+            "ar": "انْفِرُوا خِفَافًا وَثِقَالًا وَجَاهِدُوا بِأَمْوَالِكُمْ وَأَنْفُسِكُمْ فِي سَبِيلِ اللَّهِ",
+            "en": "Go out, whether lightly or heavily equipped, and strive with your wealth and yourselves in the way of Allah.",
+            "ref": "Sūrat at-Tawbah 9:41"
           }
         },
         "quotes": [
@@ -11289,12 +16166,344 @@ window.SEERAA_COURSE=[
             "ref": "Sunan at-Tirmidhī 3675"
           },
           {
-            "en": "Allah saved me because I told the truth.",
-            "ar": "إِنَّ اللَّهَ إِنَّمَا نَجَّانِي بِالصِّدْقِ",
-            "ref": "Ṣaḥīḥ al-Bukhārī 4418"
+            "en": "Do not enter the dwellings of these punished people except weeping.",
+            "ar": "لَا تَدْخُلُوا عَلَى هَؤُلَاءِ الْمُعَذَّبِينَ إِلَّا أَنْ تَكُونُوا بَاكِينَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 433"
+          },
+          {
+            "en": "The example of those who spend their wealth in the way of Allah is like a seed that grows seven ears.",
+            "ar": "مَثَلُ الَّذِينَ يُنْفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنْبَتَتْ سَبْعَ سَنَابِلَ",
+            "ref": "Sūrat al-Baqarah 2:261"
           }
         ]
       },
+      {
+        "title": "Those Who Wept",
+        "teach": "Sincere intentions count",
+        "emoji": "😢",
+        "arabic": "الْبَكَّاؤُون",
+        "story": "When the Prophet ﷺ called the Muslims to prepare for Tabūk, some poor companions came to him with tears in their eyes. They longed to go, but they had no camel to ride and no money to buy one. “Find us something to ride,” they begged. “I cannot find anything to carry you,” he said sadly, and they turned away weeping, because they had nothing to give. They became known as al-Bakkāʾūn, “those who wept”, and Allah honoured them in the Qurʾān: “Nor is there blame on those who came to you to be given mounts, and you said, ‘I cannot find anything to carry you,’ and they turned away with their eyes overflowing with tears, sad that they had nothing to spend.” Another companion, Abū Khaythamah, stayed behind at first. One scorching day he came home to a cool, shaded garden with fresh water and food. He stopped and thought: the Messenger of Allah was out in the sun, the wind and the heat, while he sat in the cool shade — that was not fair! He jumped on his camel and rode after the army. In the desert, the Prophet ﷺ saw a rider far away and said, “Be Abū Khaythamah!” — and it was him. On the way home, the Prophet ﷺ said: “In Madīnah there are people who were with you on every road you travelled and in every valley you crossed.” “Even though they are in Madīnah?” asked the companions. “Even though they are in Madīnah. They were held back by a real excuse.”",
+        "picks": [
+          {
+            "q": "Why did the poor companions weep?",
+            "options": [
+              "They had nothing to ride",
+              "They were afraid",
+              "They were tired"
+            ]
+          },
+          {
+            "q": "What made Abū Khaythamah ride after the army?",
+            "options": [
+              "He felt it was unfair to rest in the shade while the Prophet ﷺ was in the heat",
+              "His wife told him to",
+              "He wanted spoils"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about people held back by a real excuse?",
+            "options": [
+              "They were with you on every road",
+              "They will be punished",
+              "They are hypocrites"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The call to prepare for Tabūk",
+            "The poor companions weep",
+            "Abū Khaythamah rides after the army",
+            "The Prophet ﷺ praises those held back by an excuse"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Allah blamed the poor companions who wept.",
+            "a": false
+          },
+          {
+            "s": "Abū Khaythamah caught up with the army.",
+            "a": true
+          },
+          {
+            "s": "A sincere intention can earn reward.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah rewards sincere intentions, and that we should not let comfort stop us from doing good.",
+        "vocab": [
+          [
+            "نِيَّة",
+            "intention"
+          ],
+          [
+            "دَمْع",
+            "tears"
+          ],
+          [
+            "عُذْر",
+            "excuse"
+          ]
+        ],
+        "chapter": "Tabūk",
+        "learn": {
+          "points": [
+            "Allah rewards sincere intentions, even when we cannot act.",
+            "Do not let comfort hold you back from doing good.",
+            "Tears of longing to do good are precious to Allah."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "مَا عَلَى الْمُحْسِنِينَ مِنْ سَبِيلٍ ۚ وَاللَّهُ غَفُورٌ رَحِيمٌ",
+            "en": "There is no blame on those who do good. Allah is Forgiving, Merciful.",
+            "ref": "Sūrat at-Tawbah 9:91"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Nor is there blame on those who came to you to be given mounts, and you said, ‘I cannot find anything to carry you,’ and they turned away with their eyes overflowing with tears, sad that they had nothing to spend.",
+            "ar": "وَلَا عَلَى الَّذِينَ إِذَا مَا أَتَوْكَ لِتَحْمِلَهُمْ قُلْتَ لَا أَجِدُ مَا أَحْمِلُكُمْ عَلَيْهِ تَوَلَّوْا وَأَعْيُنُهُمْ تَفِيضُ مِنَ الدَّمْعِ حَزَنًا أَلَّا يَجِدُوا مَا يُنْفِقُونَ",
+            "ref": "Sūrat at-Tawbah 9:92"
+          },
+          {
+            "en": "Be Abū Khaythamah!",
+            "ar": "كُنْ أَبَا خَيْثَمَةَ",
+            "ref": "Ṣaḥīḥ Muslim 2769"
+          },
+          {
+            "en": "In Madīnah there are people who were with you on every road you travelled and in every valley you crossed.",
+            "ar": "إِنَّ بِالْمَدِينَةِ أَقْوَامًا مَا سِرْتُمْ مَسِيرًا وَلَا قَطَعْتُمْ وَادِيًا إِلَّا كَانُوا مَعَكُمْ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4423"
+          },
+          {
+            "en": "They were held back by a real excuse.",
+            "ar": "حَبَسَهُمُ الْعُذْرُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4423"
+          }
+        ]
+      },
+      {
+        "title": "Kaʿb Tells the Truth",
+        "teach": "Truthfulness saves",
+        "emoji": "✅",
+        "arabic": "كَعْبُ بْنُ مَالِك",
+        "story": "Kaʿb ibn Mālik was a brave companion who had been at almost every battle. When the call to Tabūk came, he was richer and stronger than ever, with two camels ready. But each day he said to himself, “I will get ready tomorrow.” Tomorrow became the next day, and the next, until the army was far away. Kaʿb had stayed behind with no excuse at all. When the Prophet ﷺ returned, more than eighty men who had stayed behind came with excuses and swore oaths, and he accepted what they showed and left their hearts to Allah. Then Kaʿb came. The Prophet ﷺ smiled the smile of someone who is upset and asked, “What kept you behind?” Kaʿb said that with anyone else he could escape blame with a clever excuse — but if he lied to the Messenger of Allah today, Allah would soon make him angry with him. “By Allah, I had no excuse.” The Prophet ﷺ said, “As for this man, he has told the truth. Get up, until Allah decides about you.” Two others, Murārah and Hilāl, also told the truth. For fifty days no one in Madīnah spoke to the three of them. A king from Ghassān secretly sent Kaʿb a letter inviting him to come and be honoured, but Kaʿb threw it into the fire, saying it was another test. On the fiftieth morning, a man shouted from the top of a hill, “O Kaʿb ibn Mālik, good news!” Allah had forgiven them. The Prophet’s face shone with joy as he said, “Rejoice at the best day you have had since your mother gave birth to you!” Kaʿb said, “Allah saved me only because I told the truth.” And Allah revealed: “O you who believe, be mindful of Allah and be with the truthful.”",
+        "picks": [
+          {
+            "q": "Why did Kaʿb miss Tabūk?",
+            "options": [
+              "He kept putting off his preparations",
+              "He was ill",
+              "He was told to stay"
+            ]
+          },
+          {
+            "q": "What did Kaʿb tell the Prophet ﷺ?",
+            "options": [
+              "The truth: he had no excuse",
+              "A clever excuse",
+              "Nothing"
+            ]
+          },
+          {
+            "q": "What did Kaʿb do with the letter from Ghassān?",
+            "options": [
+              "Threw it into the fire",
+              "Accepted the offer",
+              "Hid it"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put Kaʿb’s story in order",
+          "items": [
+            "Kaʿb keeps saying “tomorrow”",
+            "The army leaves without him",
+            "He tells the Prophet ﷺ the truth",
+            "After fifty days Allah forgives the three"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Kaʿb made up an excuse.",
+            "a": false
+          },
+          {
+            "s": "No one spoke to the three for fifty days.",
+            "a": true
+          },
+          {
+            "s": "Allah forgave them in the Qurʾān.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn not to put off good deeds, and that honesty brings Allah’s forgiveness even after a mistake.",
+        "vocab": [
+          [
+            "صِدْق",
+            "truthfulness"
+          ],
+          [
+            "تَسْوِيف",
+            "putting things off"
+          ],
+          [
+            "بُشْرَى",
+            "good news"
+          ]
+        ],
+        "chapter": "Tabūk",
+        "learn": {
+          "points": [
+            "Never put off good deeds until “tomorrow”.",
+            "Telling the truth is hard at first, but it saves you in the end.",
+            "Allah forgives those who repent sincerely."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَعَلَى الثَّلَاثَةِ الَّذِينَ خُلِّفُوا حَتَّىٰ إِذَا ضَاقَتْ عَلَيْهِمُ الْأَرْضُ بِمَا رَحُبَتْ وَضَاقَتْ عَلَيْهِمْ أَنْفُسُهُمْ وَظَنُّوا أَنْ لَا مَلْجَأَ مِنَ اللَّهِ إِلَّا إِلَيْهِ ثُمَّ تَابَ عَلَيْهِمْ لِيَتُوبُوا",
+            "en": "And to the three who were left behind: when the earth, wide as it is, felt narrow to them, and their own souls felt tight, and they knew there was no refuge from Allah except in Him, He turned to them in mercy so that they could repent.",
+            "ref": "Sūrat at-Tawbah 9:118"
+          }
+        },
+        "quotes": [
+          {
+            "en": "As for this man, he has told the truth. Get up, until Allah decides about you.",
+            "ar": "أَمَّا هَذَا فَقَدْ صَدَقَ، فَقُمْ حَتَّى يَقْضِيَ اللَّهُ فِيكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4418"
+          },
+          {
+            "en": "Rejoice at the best day you have had since your mother gave birth to you!",
+            "ar": "أَبْشِرْ بِخَيْرِ يَوْمٍ مَرَّ عَلَيْكَ مُنْذُ وَلَدَتْكَ أُمُّكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4418"
+          },
+          {
+            "en": "Allah saved me only because I told the truth.",
+            "ar": "إِنَّ اللَّهَ إِنَّمَا نَجَّانِي بِالصِّدْقِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4418"
+          },
+          {
+            "en": "O you who believe, be mindful of Allah and be with the truthful.",
+            "ar": "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ",
+            "ref": "Sūrat at-Tawbah 9:119"
+          }
+        ]
+      },
+      {
+        "title": "The Masjid of Harm",
+        "teach": "Building for Allah alone",
+        "emoji": "🧱",
+        "arabic": "مَسْجِدُ الضِّرَار",
+        "story": "Before the Prophet ﷺ left for Tabūk, a group of hypocrites came to him. “We have built a new masjid for the sick and for rainy nights,” they said. “Please come and pray in it.” The Prophet ﷺ said he was about to travel and would see when he returned. But the truth was hidden: the masjid had been built to divide the believers and to be a secret base for a man called Abū ʿĀmir, who had fought against Islam and had gone to the Roman emperor to bring an army against Madīnah. On the way back from Tabūk, Allah revealed the truth: “And there are those who built a masjid to cause harm, to spread disbelief, to divide the believers, and as a base for someone who had fought Allah and His Messenger before.” Allah commanded: “Never stand to pray in it.” Instead Allah pointed to the masjid of Qubāʾ, built by the Prophet ﷺ himself in his first days in Madīnah: “A masjid founded on taqwā from the first day is more worthy for you to stand in. In it are men who love to purify themselves, and Allah loves those who purify themselves.” The Prophet ﷺ sent companions to pull down the masjid of harm. A building is only as good as the intention behind it.",
+        "picks": [
+          {
+            "q": "Why did the hypocrites build their masjid?",
+            "options": [
+              "To cause harm and divide the believers",
+              "Only for the sick",
+              "To honour Qubāʾ"
+            ]
+          },
+          {
+            "q": "When was the truth revealed?",
+            "options": [
+              "On the way back from Tabūk",
+              "Before Badr",
+              "At the Farewell Ḥajj"
+            ]
+          },
+          {
+            "q": "Which masjid did Allah praise instead?",
+            "options": [
+              "The masjid of Qubāʾ, founded on taqwā",
+              "A masjid in Shām",
+              "The masjid of harm"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Hypocrites build a masjid",
+            "They ask the Prophet ﷺ to pray in it",
+            "Allah reveals the truth after Tabūk",
+            "The masjid of harm is pulled down"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ prayed in the masjid of harm.",
+            "a": false
+          },
+          {
+            "s": "Allah praised the people of Qubāʾ for loving purity.",
+            "a": true
+          },
+          {
+            "s": "Intentions matter in Allah’s sight.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that Allah judges by intentions, and that masjids are for uniting, not dividing.",
+        "vocab": [
+          [
+            "ضِرَار",
+            "harm"
+          ],
+          [
+            "إِخْلَاص",
+            "sincerity"
+          ],
+          [
+            "طَهَارَة",
+            "purity"
+          ]
+        ],
+        "chapter": "Tabūk",
+        "learn": {
+          "points": [
+            "Allah looks at intentions, not only at buildings and appearances.",
+            "Never use good things to cause division.",
+            "Love purity of heart and body, like the people of Qubāʾ."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمَا أُمِرُوا إِلَّا لِيَعْبُدُوا اللَّهَ مُخْلِصِينَ لَهُ الدِّينَ",
+            "en": "They were commanded only to worship Allah, sincere in their devotion to Him.",
+            "ref": "Sūrat al-Bayyinah 98:5"
+          }
+        },
+        "quotes": [
+          {
+            "en": "And there are those who built a masjid to cause harm, to spread disbelief, to divide the believers, and as a base for someone who had fought Allah and His Messenger before.",
+            "ar": "وَالَّذِينَ اتَّخَذُوا مَسْجِدًا ضِرَارًا وَكُفْرًا وَتَفْرِيقًا بَيْنَ الْمُؤْمِنِينَ وَإِرْصَادًا لِمَنْ حَارَبَ اللَّهَ وَرَسُولَهُ مِنْ قَبْلُ",
+            "ref": "Sūrat at-Tawbah 9:107"
+          },
+          {
+            "en": "Never stand to pray in it.",
+            "ar": "لَا تَقُمْ فِيهِ أَبَدًا",
+            "ref": "Sūrat at-Tawbah 9:108"
+          },
+          {
+            "en": "A masjid founded on taqwā from the first day is more worthy for you to stand in. In it are men who love to purify themselves, and Allah loves those who purify themselves.",
+            "ar": "لَمَسْجِدٌ أُسِّسَ عَلَى التَّقْوَىٰ مِنْ أَوَّلِ يَوْمٍ أَحَقُّ أَنْ تَقُومَ فِيهِ ۚ فِيهِ رِجَالٌ يُحِبُّونَ أَنْ يَتَطَهَّرُوا ۚ وَاللَّهُ يُحِبُّ الْمُطَّهِّرِينَ",
+            "ref": "Sūrat at-Tawbah 9:108"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 44 · The Year of Delegations",
+    "icon": "🐫",
+    "colour": "#b4553a",
+    "range": [
+      173,
+      176
+    ],
+    "lessons": [
       {
         "title": "Visitors to Madīnah",
         "arabic": "عَامُ الْوُفُود",
@@ -11341,7 +16550,7 @@ window.SEERAA_COURSE=[
             "humility"
           ]
         ],
-        "chapter": "The Final Years",
+        "chapter": "The Year of Delegations",
         "teach": "The Year of Delegations",
         "order": {
           "prompt": "Put the year in order",
@@ -11384,6 +16593,420 @@ window.SEERAA_COURSE=[
             "en": "You will see a woman travel alone from al-Ḥīrah to the Kaʿbah fearing no one but Allah, and the treasures of Kisrā will be opened.",
             "ar": "لَتَرَيَنَّ الظَّعِينَةَ تَرْتَحِلُ مِنَ الْحِيرَةِ حَتَّى تَطُوفَ بِالْكَعْبَةِ لَا تَخَافُ أَحَدًا إِلَّا اللَّهَ … وَلَتُفْتَحَنَّ كُنُوزُ كِسْرَى",
             "ref": "Ṣaḥīḥ al-Bukhārī 3595"
+          }
+        ]
+      },
+      {
+        "title": "Ḍimām’s Questions",
+        "teach": "Asking good questions",
+        "emoji": "❓",
+        "arabic": "ضِمَامُ بْنُ ثَعْلَبَة",
+        "story": "One day, while the Prophet ﷺ was sitting with his companions in the masjid, a Bedouin rode in on his camel, made it kneel and tied it up. “Which of you is Muḥammad?” he asked — for the Prophet ﷺ was sitting among them like one of them. They pointed him out. “O son of ʿAbd al-Muṭṭalib,” said the man, “I am going to ask you some questions, and I will be tough in my asking, so do not be upset with me.” “Ask whatever you like,” said the Prophet ﷺ. “I ask you by your Lord and the Lord of those before you: has Allah sent you to all people?” “By Allah, yes.” He asked whether Allah had commanded five prayers every day and night, fasting in Ramaḍān and taking zakāh from the rich to give to the poor, and each time the Prophet ﷺ answered patiently, “By Allah, yes.” Then the man said, “I believe in what you have brought. I am Ḍimām ibn Thaʿlabah, sent by my people.” He promised to do exactly what he had been taught, adding nothing and leaving nothing out. As he left, the Prophet ﷺ said, “If he is truthful, he will enter Paradise.” Ḍimām went home and spoke to his people, and by that evening the people of his tribe had accepted Islam. Good questions, asked honestly, lead to the truth.",
+        "picks": [
+          {
+            "q": "Why did Ḍimām ask “Which of you is Muḥammad?”",
+            "options": [
+              "He sat among his companions like one of them",
+              "He was hiding",
+              "It was dark"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say when Ḍimām warned he would ask tough questions?",
+            "options": [
+              "Ask whatever you like",
+              "Go away",
+              "Ask someone else"
+            ]
+          },
+          {
+            "q": "What happened to Ḍimām’s tribe?",
+            "options": [
+              "They accepted Islam that evening",
+              "They fought him",
+              "They moved away"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Ḍimām rides into the masjid",
+            "He asks which one is Muḥammad",
+            "He asks his questions one by one",
+            "His tribe accepts Islam"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ became angry at Ḍimām’s questions.",
+            "a": false
+          },
+          {
+            "s": "Ḍimām promised to add nothing and leave nothing out.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ sat apart on a throne.",
+            "a": false
+          }
+        ],
+        "benefit": "We learn to ask questions sincerely, to answer them patiently, and to act on what we learn.",
+        "vocab": [
+          [
+            "سُؤَال",
+            "question"
+          ],
+          [
+            "عِلْم",
+            "knowledge"
+          ],
+          [
+            "قَوْم",
+            "people, tribe"
+          ]
+        ],
+        "chapter": "The Year of Delegations",
+        "learn": {
+          "points": [
+            "Asking sincere questions is a path to knowledge.",
+            "The Prophet ﷺ was patient and humble, sitting like one of his companions.",
+            "Act on what you learn, without adding or taking away."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "فَاسْأَلُوا أَهْلَ الذِّكْرِ إِنْ كُنْتُمْ لَا تَعْلَمُونَ",
+            "en": "Ask the people of knowledge if you do not know.",
+            "ref": "Sūrat an-Naḥl 16:43"
+          }
+        },
+        "quotes": [
+          {
+            "en": "Ask whatever you like",
+            "ar": "سَلْ عَمَّا بَدَا لَكَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 63"
+          },
+          {
+            "en": "If he is truthful, he will enter Paradise.",
+            "ar": "لَئِنْ صَدَقَ لَيَدْخُلَنَّ الْجَنَّةَ",
+            "ref": "Ṣaḥīḥ Muslim 12"
+          }
+        ]
+      },
+      {
+        "title": "The Christians of Najrān",
+        "teach": "Inviting with wisdom and respect",
+        "emoji": "🕊️",
+        "arabic": "وَفْدُ نَجْرَان",
+        "story": "From Najrān, in the green valleys of the south, a group of Christian scholars and leaders rode to Madīnah to talk with the Prophet ﷺ about religion. He welcomed them and spoke with them patiently about Prophet ʿĪsā, whom Muslims love and honour as a great messenger of Allah. Allah revealed: “The example of ʿĪsā in Allah’s sight is like that of Ādam: He created him from dust, then said to him, ‘Be,’ and he was.” The Prophet ﷺ also recited the invitation Allah taught him: “Say: ‘O People of the Book, come to a word that is fair between us and you: that we worship none but Allah, and associate nothing with Him.’” The leaders of Najrān did not accept Islam that day, but they chose to make a peace agreement with the Muslims, keeping their own religion under the Muslims’ protection. They asked the Prophet ﷺ to send a trustworthy man with them. “I will send with you a man who is truly trustworthy,” he said, and every companion hoped it would be him. He chose Abū ʿUbaydah ibn al-Jarrāḥ, of whom he also said: “Every nation has a trustworthy one, and the trustworthy one of this ummah is Abū ʿUbaydah ibn al-Jarrāḥ.” The Prophet ﷺ invited with wisdom and respect, and left hearts to Allah.",
+        "picks": [
+          {
+            "q": "Where did the visitors come from?",
+            "options": [
+              "Najrān",
+              "Persia",
+              "Rome"
+            ]
+          },
+          {
+            "q": "To whom did Allah compare ʿĪsā?",
+            "options": [
+              "Ādam",
+              "Mūsā",
+              "Nūḥ"
+            ]
+          },
+          {
+            "q": "Who was called the trustworthy one of this ummah?",
+            "options": [
+              "Abū ʿUbaydah ibn al-Jarrāḥ",
+              "Abū Sufyān",
+              "Khālid"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The visitors from Najrān arrive",
+            "They talk about Prophet ʿĪsā",
+            "They choose a peace agreement",
+            "Abū ʿUbaydah goes with them as a trustworthy man"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ forced them to accept Islam.",
+            "a": false
+          },
+          {
+            "s": "They made a peace agreement and kept their religion.",
+            "a": true
+          },
+          {
+            "s": "Muslims honour ʿĪsā as a messenger of Allah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to invite others with wisdom and respect, and that faith cannot be forced.",
+        "vocab": [
+          [
+            "أَهْلُ الْكِتَاب",
+            "People of the Book"
+          ],
+          [
+            "أَمِين",
+            "trustworthy"
+          ],
+          [
+            "إِكْرَاه",
+            "compulsion"
+          ]
+        ],
+        "chapter": "The Year of Delegations",
+        "learn": {
+          "points": [
+            "Muslims love and honour Prophet ʿĪsā.",
+            "Invite to Islam with wisdom, respect and clear words.",
+            "There is no compulsion in religion."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "لَا إِكْرَاهَ فِي الدِّينِ ۖ قَدْ تَبَيَّنَ الرُّشْدُ مِنَ الْغَيِّ",
+            "en": "There is no compulsion in religion. The right way has become clear from the wrong way.",
+            "ref": "Sūrat al-Baqarah 2:256"
+          }
+        },
+        "quotes": [
+          {
+            "en": "The example of ʿĪsā in Allah’s sight is like that of Ādam: He created him from dust, then said to him, ‘Be,’ and he was.",
+            "ar": "إِنَّ مَثَلَ عِيسَىٰ عِنْدَ اللَّهِ كَمَثَلِ آدَمَ ۖ خَلَقَهُ مِنْ تُرَابٍ ثُمَّ قَالَ لَهُ كُنْ فَيَكُونُ",
+            "ref": "Sūrat Āl ʿImrān 3:59"
+          },
+          {
+            "en": "Say: ‘O People of the Book, come to a word that is fair between us and you: that we worship none but Allah, and associate nothing with Him.’",
+            "ar": "قُلْ يَا أَهْلَ الْكِتَابِ تَعَالَوْا إِلَىٰ كَلِمَةٍ سَوَاءٍ بَيْنَنَا وَبَيْنَكُمْ أَلَّا نَعْبُدَ إِلَّا اللَّهَ وَلَا نُشْرِكَ بِهِ شَيْئًا",
+            "ref": "Sūrat Āl ʿImrān 3:64"
+          },
+          {
+            "en": "I will send with you a man who is truly trustworthy",
+            "ar": "لأَبْعَثَنَّ مَعَكُمْ رَجُلًا أَمِينًا حَقَّ أَمِينٍ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4380"
+          },
+          {
+            "en": "Every nation has a trustworthy one, and the trustworthy one of this ummah is Abū ʿUbaydah ibn al-Jarrāḥ.",
+            "ar": "لِكُلِّ أُمَّةٍ أَمِينٌ، وَأَمِينُ هَذِهِ الأُمَّةِ أَبُو عُبَيْدَةَ بْنُ الْجَرَّاحِ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4382"
+          }
+        ]
+      },
+      {
+        "title": "Abū Bakr Leads the Ḥajj",
+        "teach": "Worship that is pure",
+        "emoji": "📢",
+        "arabic": "حَجَّةُ أَبِي بَكْر",
+        "story": "In the ninth year after the Hijrah, the Prophet ﷺ stayed in Madīnah and sent Abū Bakr to lead the pilgrims on Ḥajj. At that time, idol-worshippers still came to Makkah for their own rites — and some even walked around the Kaʿbah without clothes, saying they would not worship in clothes in which they had sinned. Soon after Abū Bakr left, Allah revealed the opening of Sūrat at-Tawbah: “An announcement from Allah and His Messenger to the people on the day of the greater Ḥajj.” The Prophet ﷺ sent ʿAlī to catch up and announce it to the pilgrims. On the Day of Sacrifice at Minā, the announcers called out to the crowds: “No idol-worshipper may perform Ḥajj after this year, and no one may walk around the House unclothed.” Treaties with those who had kept their promises would be honoured until their end, and everyone was given time to think. The Kaʿbah, built by Ibrāhīm and Ismāʿīl for the worship of Allah alone, would never again see idol-worship. Abū Bakr led the pilgrims with dignity, and this Ḥajj prepared the way for the next year, when the Prophet ﷺ himself would lead the great Farewell Pilgrimage.",
+        "picks": [
+          {
+            "q": "Who led the Ḥajj in the ninth year?",
+            "options": [
+              "Abū Bakr",
+              "ʿUmar",
+              "The Prophet ﷺ"
+            ]
+          },
+          {
+            "q": "Who was sent to announce the opening of Sūrat at-Tawbah?",
+            "options": [
+              "ʿAlī",
+              "Khālid",
+              "Bilāl"
+            ]
+          },
+          {
+            "q": "What was announced at Minā?",
+            "options": [
+              "No idol-worshipper may perform Ḥajj after this year",
+              "Ḥajj is cancelled",
+              "Everyone must leave Makkah"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Prophet ﷺ sends Abū Bakr to lead the Ḥajj",
+            "The opening of Sūrat at-Tawbah is revealed",
+            "ʿAlī catches up to announce it",
+            "The announcement is made at Minā"
+          ]
+        },
+        "tf": [
+          {
+            "s": "Walking around the Kaʿbah unclothed was stopped.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ himself led the Ḥajj of the ninth year.",
+            "a": false
+          },
+          {
+            "s": "Treaties with those who kept their promises were honoured.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that worship must be pure, for Allah alone, and done with dignity and modesty.",
+        "vocab": [
+          [
+            "أَذَان",
+            "announcement"
+          ],
+          [
+            "حَجّ",
+            "pilgrimage"
+          ],
+          [
+            "زِينَة",
+            "good clothing"
+          ]
+        ],
+        "chapter": "The Year of Delegations",
+        "learn": {
+          "points": [
+            "Worship must be for Allah alone, in the way He taught.",
+            "Dressing well and modestly is part of worship.",
+            "Abū Bakr was trusted to lead the Muslims."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "يَا بَنِي آدَمَ خُذُوا زِينَتَكُمْ عِنْدَ كُلِّ مَسْجِدٍ",
+            "en": "O children of Ādam, wear your good clothes at every place of prayer.",
+            "ref": "Sūrat al-Aʿrāf 7:31"
+          }
+        },
+        "quotes": [
+          {
+            "en": "An announcement from Allah and His Messenger to the people on the day of the greater Ḥajj.",
+            "ar": "وَأَذَانٌ مِنَ اللَّهِ وَرَسُولِهِ إِلَى النَّاسِ يَوْمَ الْحَجِّ الْأَكْبَرِ",
+            "ref": "Sūrat at-Tawbah 9:3"
+          },
+          {
+            "en": "No idol-worshipper may perform Ḥajj after this year, and no one may walk around the House unclothed.",
+            "ar": "لَا يَحُجَّ بَعْدَ الْعَامِ مُشْرِكٌ، وَلَا يَطُوفَ بِالْبَيْتِ عُرْيَانٌ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 369"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Map 45 · The Final Years",
+    "icon": "🤍",
+    "colour": "#2f6f8f",
+    "range": [
+      177,
+      180
+    ],
+    "lessons": [
+      {
+        "title": "Ibrāhīm, the Little Son",
+        "teach": "Patience and truth in grief",
+        "emoji": "🌑",
+        "arabic": "إِبْرَاهِيمُ ابْنُ النَّبِيّ",
+        "story": "In the eighth year after the Hijrah, the Prophet ﷺ was given a baby son by his wife Māriyah. He named him Ibrāhīm, after his forefather Prophet Ibrāhīm. The little boy was cared for by a nurse on the edge of Madīnah, and the Prophet ﷺ often went there to visit him. He would take him in his arms, kiss him and smell him. But when Ibrāhīm was still very small, he became very ill. The Prophet ﷺ held him as he was dying, and tears flowed from his eyes. ʿAbd ar-Raḥmān ibn ʿAwf was surprised that he too was crying. The Prophet ﷺ said, “O Ibn ʿAwf, it is mercy.” Then he said: “The eyes shed tears and the heart grieves, but we say only what pleases our Lord. O Ibrāhīm, we are truly saddened by your parting.” On the day Ibrāhīm died, the sun was darkened by an eclipse, and people said, “The sun has eclipsed because of Ibrāhīm’s death!” It would have been easy to let them believe it. But the Prophet ﷺ corrected them: “The sun and the moon do not eclipse for the death of anyone or for his life. When you see it, pray and call upon Allah.” Even in his deepest sadness, he would not let a false idea spread.",
+        "picks": [
+          {
+            "q": "Who was Ibrāhīm’s mother?",
+            "options": [
+              "Māriyah",
+              "Khadījah",
+              "Ḥalīmah"
+            ]
+          },
+          {
+            "q": "What did the Prophet ﷺ say about his tears?",
+            "options": [
+              "It is mercy",
+              "It is weakness",
+              "It is anger"
+            ]
+          },
+          {
+            "q": "What did he teach about the eclipse?",
+            "options": [
+              "It is not for anyone’s death; pray and call upon Allah",
+              "It was because of Ibrāhīm",
+              "It means bad luck"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "Ibrāhīm is born to Māriyah",
+            "The Prophet ﷺ visits and kisses him",
+            "Ibrāhīm passes away and the Prophet ﷺ weeps",
+            "He corrects the people about the eclipse"
+          ]
+        },
+        "tf": [
+          {
+            "s": "The Prophet ﷺ cried when his son died.",
+            "a": true
+          },
+          {
+            "s": "He said the eclipse happened because of Ibrāhīm.",
+            "a": false
+          },
+          {
+            "s": "In grief we should say only what pleases Allah.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn that tears of mercy are natural, that we stay content with Allah in grief, and that the truth must always be told.",
+        "vocab": [
+          [
+            "دَمْع",
+            "tears"
+          ],
+          [
+            "كُسُوف",
+            "eclipse"
+          ],
+          [
+            "رَحْمَة",
+            "mercy"
+          ]
+        ],
+        "chapter": "The Final Years",
+        "learn": {
+          "points": [
+            "Crying when we lose someone is mercy, not weakness.",
+            "In grief we say only what pleases Allah.",
+            "Never let a false idea spread, even if it seems to honour you."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "وَمِنْ آيَاتِهِ اللَّيْلُ وَالنَّهَارُ وَالشَّمْسُ وَالْقَمَرُ ۚ لَا تَسْجُدُوا لِلشَّمْسِ وَلَا لِلْقَمَرِ وَاسْجُدُوا لِلَّهِ الَّذِي خَلَقَهُنَّ",
+            "en": "Among His signs are the night and the day, the sun and the moon. Do not bow down to the sun or to the moon, but bow down to Allah who created them.",
+            "ref": "Sūrat Fuṣṣilat 41:37"
+          }
+        },
+        "quotes": [
+          {
+            "en": "O Ibn ʿAwf, it is mercy.",
+            "ar": "يَا ابْنَ عَوْفٍ إِنَّهَا رَحْمَةٌ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1303"
+          },
+          {
+            "en": "The eyes shed tears and the heart grieves, but we say only what pleases our Lord. O Ibrāhīm, we are truly saddened by your parting.",
+            "ar": "إِنَّ الْعَيْنَ تَدْمَعُ، وَالْقَلْبَ يَحْزَنُ، وَلَا نَقُولُ إِلَّا مَا يَرْضَى رَبُّنَا، وَإِنَّا بِفِرَاقِكَ يَا إِبْرَاهِيمُ لَمَحْزُونُونَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1303"
+          },
+          {
+            "en": "The sun and the moon do not eclipse for the death of anyone or for his life. When you see it, pray and call upon Allah.",
+            "ar": "إِنَّ الشَّمْسَ وَالْقَمَرَ لَا يَنْكَسِفَانِ لِمَوْتِ أَحَدٍ وَلَا لِحَيَاتِهِ، فَإِذَا رَأَيْتُمْ فَصَلُّوا وَادْعُوا اللَّهَ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 1043"
           }
         ]
       },
@@ -11501,6 +17124,98 @@ window.SEERAA_COURSE=[
             "en": "Today I have perfected your religion for you.",
             "ar": "الْيَوْمَ أَكْمَلْتُ لَكُمْ دِينَكُمْ",
             "ref": "Sūrat al-Māʾidah 5:3"
+          }
+        ]
+      },
+      {
+        "title": "Usāmah’s Army",
+        "teach": "Leaders chosen for ability",
+        "emoji": "🏳️",
+        "arabic": "جَيْشُ أُسَامَة",
+        "story": "In the last weeks of his life, the Prophet ﷺ prepared an army to go north towards Shām, where Zayd ibn Ḥārithah had been martyred at Muʾtah. To lead it, he chose Zayd’s son, Usāmah — a young man of only about eighteen. Great companions, even ʿUmar, were placed under his command. Some people grumbled about having such a young leader. The Prophet ﷺ, although he was ill, stood up and said: “If you criticise his leadership, you used to criticise the leadership of his father before him. By Allah, he was worthy of leadership, and he was one of the people dearest to me, and this one is one of the people dearest to me after him.” The army gathered outside Madīnah, but the Prophet’s illness grew worse, and they waited. After the Prophet ﷺ passed away, many advised Abū Bakr to keep the army at home. But Abū Bakr said he would never lower a flag that the Messenger of Allah had raised. He walked beside Usāmah as the young leader rode out, and he even asked Usāmah’s permission to keep ʿUmar in Madīnah to help him. The army returned safely, and the tribes of Arabia saw that the Muslims were still strong and united.",
+        "picks": [
+          {
+            "q": "Who led the army?",
+            "options": [
+              "Usāmah ibn Zayd",
+              "ʿUmar",
+              "Khālid"
+            ]
+          },
+          {
+            "q": "About how old was Usāmah?",
+            "options": [
+              "Eighteen",
+              "Fifty",
+              "Ten"
+            ]
+          },
+          {
+            "q": "What did Abū Bakr do with the army after the Prophet ﷺ passed away?",
+            "options": [
+              "Sent it out as the Prophet ﷺ had planned",
+              "Cancelled it",
+              "Led it himself"
+            ]
+          }
+        ],
+        "order": {
+          "prompt": "Put it in order",
+          "items": [
+            "The Prophet ﷺ chooses Usāmah to lead",
+            "Some people grumble about his age",
+            "The Prophet ﷺ defends Usāmah",
+            "Abū Bakr sends the army out"
+          ]
+        },
+        "tf": [
+          {
+            "s": "ʿUmar was placed in Usāmah’s army.",
+            "a": true
+          },
+          {
+            "s": "The Prophet ﷺ agreed that Usāmah was too young.",
+            "a": false
+          },
+          {
+            "s": "Abū Bakr walked beside Usāmah as he rode out.",
+            "a": true
+          }
+        ],
+        "benefit": "We learn to choose leaders for their ability and trustworthiness, and to respect young people whom Allah has blessed with skill.",
+        "vocab": [
+          [
+            "إِمَارَة",
+            "leadership"
+          ],
+          [
+            "الْقَوِيُّ الْأَمِين",
+            "strong and trustworthy"
+          ],
+          [
+            "جَيْش",
+            "army"
+          ]
+        ],
+        "chapter": "The Final Years",
+        "learn": {
+          "points": [
+            "Leaders are chosen for ability and trustworthiness, not age or family.",
+            "Respect the people the Prophet ﷺ chose and loved.",
+            "Abū Bakr held firmly to the Prophet’s instructions."
+          ],
+          "verse": {
+            "kind": "quran",
+            "ar": "إِنَّ خَيْرَ مَنِ اسْتَأْجَرْتَ الْقَوِيُّ الْأَمِينُ",
+            "en": "The best one to hire is the one who is strong and trustworthy.",
+            "ref": "Sūrat al-Qaṣaṣ 28:26"
+          }
+        },
+        "quotes": [
+          {
+            "en": "If you criticise his leadership, you used to criticise the leadership of his father before him. By Allah, he was worthy of leadership, and he was one of the people dearest to me, and this one is one of the people dearest to me after him.",
+            "ar": "إِنْ تَطْعُنُوا فِي إِمَارَتِهِ فَقَدْ كُنْتُمْ تَطْعُنُونَ فِي إِمَارَةِ أَبِيهِ مِنْ قَبْلُ، وَايْمُ اللَّهِ إِنْ كَانَ لَخَلِيقًا لِلإِمَارَةِ، وَإِنْ كَانَ لَمِنْ أَحَبِّ النَّاسِ إِلَيَّ، وَإِنَّ هَذَا لَمِنْ أَحَبِّ النَّاسِ إِلَيَّ بَعْدَهُ",
+            "ref": "Ṣaḥīḥ al-Bukhārī 4469"
           }
         ]
       },

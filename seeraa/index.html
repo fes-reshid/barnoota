@@ -446,7 +446,7 @@ body{font-variant-numeric:lining-nums}
 <header><div class="nav"><a class="brand" href="#"><span class="brand-mark arabic">د</span><span class="brand-text">Diin Islaam<small>دين الإسلام</small></span></a><a class="back-pill" href="#" hidden>← Games</a></div></header>
 <main class="wrap">
   <section id="startScreen">
-    <div class="start-box"><div class="title-art-wrap"><img class="start-art" src="./assets/course-title.webp" alt="Open Qur'an in an Islamic garden"><div class="title-overlay"><span class="en">Seeraa Adventure</span><span class="ar" lang="ar" dir="rtl">السِّيرَة النَّبَوِيَّة</span></div></div><div class="start-icons">📖 🌙 🪙</div><h1>Seeraa Adventure</h1><h2 class="arabic">رِحْلَةُ السِّيرَة النَّبَوِيَّة</h2><p>Explore 124 Seeraa lessons across 31 maps, with stories, games, retelling and teacher checks for ages 7–15.</p><div class="auth-card"><div class="auth-tabs"><button class="auth-tab active" id="signInTab">Sign in</button><button class="auth-tab" id="createTab">Create account</button></div><section id="registrationClosedNotice" class="registration-notice hidden" tabindex="-1" aria-labelledby="registrationClosedTitle">
+    <div class="start-box"><div class="title-art-wrap"><img class="start-art" src="./assets/course-title.webp" alt="Open Qur'an in an Islamic garden"><div class="title-overlay"><span class="en">Seeraa Adventure</span><span class="ar" lang="ar" dir="rtl">السِّيرَة النَّبَوِيَّة</span></div></div><div class="start-icons">📖 🌙 🪙</div><h1>Seeraa Adventure</h1><h2 class="arabic">رِحْلَةُ السِّيرَة النَّبَوِيَّة</h2><p>Explore 180 Seeraa lessons across 45 maps, with stories, games, retelling and teacher checks for ages 7–15.</p><div class="auth-card"><div class="auth-tabs"><button class="auth-tab active" id="signInTab">Sign in</button><button class="auth-tab" id="createTab">Create account</button></div><section id="registrationClosedNotice" class="registration-notice hidden" tabindex="-1" aria-labelledby="registrationClosedTitle">
 <div class="registration-icon" aria-hidden="true">✦</div>
 <h2 id="registrationClosedTitle">Registration is now closed</h2>
 <p>Use your existing student account. Please contact your teacher if you need an account for Seeraa.</p>
@@ -519,7 +519,8 @@ body{font-variant-numeric:lining-nums}
   <section id="avatarScreen" class="hidden"><div class="avatar-screen"><h2>Create Your Explorer</h2><p>Choose a human style, skin tone and clothes. Your choices are saved to your student account.</p><div class="avatar-preview-card"><svg id="avatarPreview" viewBox="0 0 160 180" role="img" aria-label="Your full-body avatar preview"></svg></div><div class="avatar-customiser" id="avatarCustomiser"></div><h3 class="avatar-style-title">Choose hair or headwear</h3><div class="avatar-grid" id="avatarGrid"></div><button class="ghost" id="avatarBack">Save &amp; Back to Map</button></div></section>
 </main>
 <footer><p class="dua">وَقُل رَّبِّ زِدْنِي عِلْمًا</p><p>Original child-friendly summaries following Ar-Raheeq Al-Makhtum (The Sealed Nectar) by Safiur Rahman al-Mubarakpuri.</p><p>© <span id="year"></span> Diin Islaam · Seeraa Adventure</p></footer>
-<script src="course-data.js?v=learn-1"></script>
+<script src="course-data.js?v=maps-45"></script>
+<script src="course-v7.js?v=maps-45"></script>
 <script>
 const draftWorlds=[
  {title:'World 1 · Tajweed Gate',icon:'🌙',colour:'#7a5aa8',lessons:[
@@ -853,7 +854,7 @@ function buildMapQuiz(worldIndex){
 }
 Object.keys(PDF_EXPLANATIONS).forEach(k=>delete PDF_EXPLANATIONS[k]);
 const worldStarts=[];let tally=0;worlds.forEach(w=>{worldStarts.push(tally);tally+=w.lessons.length});
-const key='seeraa-progress-v1',GAME_KEY='seeraa',COURSE_VERSION=6,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
+const key='seeraa-progress-v1',GAME_KEY='seeraa',COURSE_VERSION=7,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
 window.TAJWEED_AUDIO=window.TAJWEED_AUDIO||{};
 /* Recorded recitation: tuhfatul-atfaal/assets/audio/line-NNa.mp3 (first half) and line-NNb.mp3 (second half). Raise this when more lines are uploaded. */
 const RECORDED_LINES=0;
@@ -1529,6 +1530,8 @@ normalizeProfile=function(p,name){const d=normalizeProfileBeforeTeacherPortal(p,
 // Course version 6 reorganised Seeraa into 31 maps in order of events, so lesson and map positions changed.
 // Progress saved under the old 15-map layout no longer matches any lesson, so it starts fresh (coins and avatar stay).
 const normalizeProfileBeforeMaps31=normalizeProfile;normalizeProfile=function(p,name){if(p&&typeof p==='object'&&Number(p.courseVersion)<6){['stars','memoryDone','vocabDone','teacherAssessments','mapQuizScores','flashPracticeDone','teacherMapUnlocks'].forEach(k=>delete p[k]);p.unlocked=1}return normalizeProfileBeforeMaps31(p,name)};
+/* Course version 7 (45 maps): progress saved with the 31-map course moves to the new lesson and map places. */
+const normalizeProfileBeforeMaps45=normalizeProfile;normalizeProfile=function(p,name){if(window.SeeraaCourseV7)window.SeeraaCourseV7.profile(p);return normalizeProfileBeforeMaps45(p,name)};
 worldUnlocked=function(w){return w===0||!!(assessment(w-1)&&assessment(w-1).approved)||!!(profile.teacherMapUnlocks&&profile.teacherMapUnlocks[w-1])};
 async function syncTeacherPortalUpdates(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.getStudentProfile)return;
@@ -1547,7 +1550,7 @@ function loadTeacherQuizzes(force){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.listQuizzes)return;
  if(!force&&Date.now()-teacherQuizzesLoadedAt<60000)return;
  teacherQuizzesLoadedAt=Date.now();
- window.KidsCloud.listQuizzes(GAME_KEY).then(list=>{teacherQuizzes=list.filter(q=>Array.isArray(q.questions)&&q.questions.length);renderTeacherQuizzes()}).catch(()=>{teacherQuizzes=[];renderTeacherQuizzes()});
+ window.KidsCloud.listQuizzes(GAME_KEY).then(list=>{teacherQuizzes=list.filter(q=>Array.isArray(q.questions)&&q.questions.length).map(q=>window.SeeraaCourseV7?SeeraaCourseV7.quiz(q):q);renderTeacherQuizzes()}).catch(()=>{teacherQuizzes=[];renderTeacherQuizzes()});
 }
 let myTeacherNotes={};
 function myMapNote(i){const n=myTeacherNotes&&myTeacherNotes[GAME_KEY]&&myTeacherNotes[GAME_KEY][String(i)];return n&&(n.note||n.quizId)?n:null}
@@ -2721,15 +2724,15 @@ var teacherMode=false,contentEdits={},contentLoaded=false;
 const LESSON_ORIG=lessons.map(l=>({title:l.title,translation:l.translation,text:l.text,explanation:PDF_EXPLANATIONS[String(l.lines)]||l.text,simple:simpleExplanationFor(l),examples:quranExamplesForLine(l.lines).map(x=>({label:stripTags(x.label),ar:markToBrackets(x.ar),ref:stripTags(x.ref),note:stripTags(x.note)}))})),WORLD_ORIG=worlds.map(w=>w.title),PDF_ORIG=Object.assign({},PDF_EXPLANATIONS);
 function stripTags(t){const d=document.createElement('div');d.innerHTML=String(t||'');return d.textContent.trim()}
 function markToBrackets(t){return stripTags(String(t||'').replace(/<mark>/g,'[').replace(/<\/mark>/g,']'))}
-function lessonKey(i){return GAME_KEY+'_lesson_'+String(lessons[i].lines).replace(/[^0-9-]/g,'')}
-function mapKey(w){return GAME_KEY+'_map_'+w}
+function lessonKey(i){const n=String(lessons[i].lines).replace(/[^0-9-]/g,'');return window.SeeraaCourseV7?SeeraaCourseV7.lessonKey(GAME_KEY,+n):GAME_KEY+'_lesson_'+n}
+function mapKey(w){return window.SeeraaCourseV7?SeeraaCourseV7.mapKey(GAME_KEY,w):GAME_KEY+'_map_'+w}
 function applyContentEdits(){
  lessons.forEach((l,i)=>{const o=LESSON_ORIG[i],e=contentEdits[lessonKey(i)]||{};l.title=e.title||o.title;l.translation=e.translation||o.translation;l.text=o.text;const k=String(l.lines),custom=e.text&&e.text!==o.text&&e.text!==o.explanation?e.text:'';if(custom)PDF_EXPLANATIONS[k]=formatExplanation(custom);else if(PDF_ORIG[k]!=null)PDF_EXPLANATIONS[k]=PDF_ORIG[k];else delete PDF_EXPLANATIONS[k];if(custom&&PDF_ORIG[k]==null)l.text=formatExplanation(custom);if(LINE_TRANSLATIONS)LINE_TRANSLATIONS[l.lines]=l.translation});
  worlds.forEach((w,i)=>{const e=contentEdits[mapKey(i)]||{};w.title=e.mapTitle||WORLD_ORIG[i]});
 }
 function loadContentEdits(){
  if(!window.KidsCloud||!window.KidsCloud.listContent)return Promise.resolve();
- return window.KidsCloud.listContent(GAME_KEY).then(list=>{contentEdits={};list.forEach(d=>contentEdits[d.id]=d);contentLoaded=true;applyContentEdits();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}).catch(()=>{});
+ return window.KidsCloud.listContent(GAME_KEY).then(list=>{contentEdits={};list.forEach(d=>contentEdits[d.id]=d);if(window.SeeraaCourseV7)SeeraaCourseV7.edits(contentEdits,GAME_KEY);contentLoaded=true;applyContentEdits();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}).catch(()=>{});
 }
 function editedQ(q){const qq={q:escapeHtml(q.q)+(q.ar?`<span class="quiz-ayah" dir="rtl" lang="ar">${escapeHtml(q.ar)}</span>${q.ref?`<small class="quiz-ayah-ref">${escapeHtml(q.ref)}</small>`:''}`:''),choices:q.choices.map(c=>escapeHtml(c)),answer:q.answer,hint:q.hint||'Ask your teacher or review the lesson.',source:q.explain||q.choices[q.answer]||''};return qq}
 /* Teacher-written explanation → safe HTML: an empty line starts a new
@@ -3413,13 +3416,13 @@ window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeo
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
 </script>
 <script src="cartoon-avatar-14a08346.js?v=walk-4"></script>
-<script src="seeraa-activities.js?v=maps-31"></script>
+<script src="seeraa-activities.js?v=maps-45"></script>
 <script src="seeraa-content-editor.js?v=editable-activities-11"></script>
-<script src="historical-worlds.js?v=map27-20261015"></script>
-<script src="seeraa-enrichment-data.js?v=maps-31"></script>
-<script src="seeraa-enrichment.js?v=trail-3"></script>
-<script src="seeraa-living-world.js?v=map27-20261015"></script>
-<script src="seeraa-event-scenes.js?v=map27-20261015"></script>
+<script src="historical-worlds.js?v=maps-45"></script>
+<script src="seeraa-enrichment-data.js?v=maps-45"></script>
+<script src="seeraa-enrichment.js?v=maps-45"></script>
+<script src="seeraa-living-world.js?v=maps-45"></script>
+<script src="seeraa-event-scenes.js?v=maps-45"></script>
 <script src="seeraa-map-polish.js?v=mobile-controls-3"></script>
 <script src="seeraa-hira.js?v=hira-1"></script>
 <script src="seeraa-quran.js?v=mishary-2"></script>

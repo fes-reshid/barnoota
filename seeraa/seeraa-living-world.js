@@ -71,7 +71,7 @@ const LANES={
  tabuk:{roads:[[[.50,1],[.52,.86],[.53,.75],[.49,.65],[.45,.56],[.435,.48],[.45,.42],[.48,.38],[.49,.35]],[[.40,.78],[.50,.74],[.60,.73]],[[.40,.93],[.55,.95],[.68,.92]]],
   yards:[[.47,.82],[.62,.68],[.46,.56],[.58,.90]],hills:[[[.86,.12],[.92,.10]],[[.30,.15],[.38,.13]],[[.06,.14],[.12,.12]]],dusty:1}
 };
-/* What walks on each of the 31 maps. */
+/* What walks on each of the 45 maps. */
 const MAP_LIFE=[
  {road:['cl','p','w','cl','p'],hill:['g','g','g'],birds:3},            // 1 Arabia: traders' caravan
  {road:['p','w','p','c','g'],hill:['g','g'],birds:2},                  // 2 The Prophet's family
@@ -94,16 +94,30 @@ const MAP_LIFE=[
  {road:['p','p'],hill:['g'],birds:0},                                  // 19 ʿAqabah at night
  {road:['p','c'],hill:[],birds:0},                                     // 20 Leaving Makkah at night
  {road:['p','g','g'],hill:['g','g'],birds:2},                          // 21 Hijrah (its two camels have their own scene)
- {road:['g','w'],hill:['g','g'],birds:3},                          // 22 Qubāʾ and Madīnah (the welcome has its own scene)
+ {road:['g','w'],hill:['g','g'],birds:3},                              // 22 Qubāʾ and Madīnah (the welcome has its own scene)
  {road:['p','w','cl','p','w'],hill:['g'],birds:3},                     // 23 The masjid and the market
  {road:['p','w','s','s','p'],hill:['g','g'],birds:4},                  // 24 Palm gardens
- {road:['c'],hill:['g'],birds:2},                                  // 25 Badr (the battle has its own scene)
- {road:['c'],hill:['g','g','g'],birds:2},                          // 26 Uḥud (the battle has its own scene)
- {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 27 The Trench
- {road:['g'],hill:['g','g'],birds:2},                              // 28 Ḥudaybiyyah (the camp has its own scene)
- {road:['p','cl','p','c','g'],hill:['g','g'],birds:2},                 // 29 Khaybar
- {road:['w'],hill:['g','g'],birds:3},                              // 30 Makkah opens its gates (the march has its own scene)
- {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 31 The final years
+ {road:['p','p','c'],hill:['g'],birds:0},                              // 25 Guarding Madīnah: watchful nights
+ {road:['c','cl','p','c'],hill:['g'],birds:1},                         // 26 The road to Badr: a rainy night
+ {road:['c'],hill:['g'],birds:2},                                      // 27 Badr (the battle has its own scene)
+ {road:['p','w','cl','p','w','c'],hill:['g'],birds:3},                 // 28 After Badr: homes and market
+ {road:['c'],hill:['g','g','g'],birds:2},                              // 29 Uḥud (the battle has its own scene)
+ {road:['p','w'],hill:['g','g'],birds:2},                              // 30 Heroes of Uḥud
+ {road:['p','w','s','s','p'],hill:['g','g'],birds:3},                  // 31 After Uḥud: palm gardens
+ {road:['p','p','w','c','s'],hill:['g','g'],birds:2},                  // 32 The Trench
+ {road:['p','c'],hill:['g'],birds:0},                                  // 33 The siege ends: a windy night
+ {road:['cl','p','w','c','g'],hill:['g','g'],birds:2},                 // 34 Al-Muraysīʿ: a desert well
+ {road:['g'],hill:['g','g'],birds:2},                                  // 35 Ḥudaybiyyah (the camp has its own scene)
+ {road:['cl','p','cl','c'],hill:['g'],birds:2},                        // 36 The coast road: letters to the kings
+ {road:['p','cl','p','c','g'],hill:['g','g'],birds:2},                 // 37 Khaybar
+ {road:['c','p','c','g'],hill:['g','g'],birds:2},                      // 38 Najd and the road to Makkah
+ {road:['c','p','cl'],hill:['g'],birds:1},                             // 39 Muʾtah: the road to Shām
+ {road:['w'],hill:['g','g'],birds:3},                                  // 40 The road to Makkah (the march has its own scene)
+ {road:['p','w','p','c'],hill:['g','g'],birds:3},                      // 41 Makkah opens its gates: around the Kaʿbah
+ {road:['p','w','s','s','p'],hill:['g','g','g'],birds:3},              // 42 Ṭāʾif: walls and vineyards
+ {road:['cl','cl','p','c','cl'],hill:['g'],birds:1},                   // 43 Tabūk: the army of hardship
+ {road:['cl','p','c','w','cl','p'],hill:['g'],birds:3},                // 44 The Year of Delegations
+ {road:['p','w','p','c','g'],hill:['g','g'],birds:3}                   // 45 The final years
 ];
 /* More life on each map: extra people, small herds (g goats, s sheep, h hens) and people walking
    around the Kaʿbah (ṭawāf) on the Makkah maps where it can be seen. */
@@ -114,8 +128,12 @@ const MAP_MORE=[
  {crowd:6,herd:'g3 h5 s3'},{crowd:7,herd:'h3 g2',tawaf:26},{crowd:2,herd:'g2'},{crowd:5,herd:'s5 g3 h4'},
  {crowd:1,herd:'',tawaf:6},{crowd:8,herd:'s4 g3'},{crowd:2,herd:'g2'},{crowd:1,herd:'',tawaf:5},
  {crowd:2,herd:'g3 s3'},{crowd:4,herd:'h5 g3 s3'},{crowd:8,herd:'h5 g2'},{crowd:5,herd:'s5 g3 h5'},
- {crowd:0,herd:'g2'},{crowd:0,herd:'g3'},{crowd:4,herd:'h3 g2'},{crowd:2,herd:'g3 s3'},
- {crowd:5,herd:'g3 h4 s3'},{crowd:2,herd:'g2'},{crowd:6,herd:'h4 g3 s3'}
+ {crowd:2,herd:'g2'},{crowd:2,herd:'g2'},{crowd:0,herd:'g2'},{crowd:7,herd:'h5 g2'},
+ {crowd:0,herd:'g3'},{crowd:2,herd:'g2'},{crowd:4,herd:'s4 g3 h4'},{crowd:4,herd:'h3 g2'},
+ {crowd:1,herd:''},{crowd:3,herd:'g3 s3'},{crowd:2,herd:'g3 s3'},{crowd:2,herd:'g2'},
+ {crowd:5,herd:'g3 h4 s3'},{crowd:2,herd:'g3 s2'},{crowd:1,herd:'g2'},{crowd:2,herd:'g2'},
+ {crowd:6,herd:'h3 g2',tawaf:24},{crowd:4,herd:'s5 g3 h3'},{crowd:3,herd:'g2'},{crowd:8,herd:'h4 g2'},
+ {crowd:6,herd:'h4 g3 s3'}
 ];
 function henSvg(o){const c=o.color||'#c2622d',d=o.dark||'#7a3b1f';
  return `<g class="lw-legs"><line class="lw-leg a" x1="-1.5" y1="-4" x2="-2" y2="0"/><line class="lw-leg b" x1="1.5" y1="-4" x2="2" y2="0"/></g>`

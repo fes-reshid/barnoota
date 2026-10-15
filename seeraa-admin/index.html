@@ -1227,9 +1227,10 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="../seeraa/course-data.js?v=learn-1"></script>
-<script src="../seeraa/seeraa-enrichment-data.js?v=maps-31"></script>
-<script src="extra-progress.js?v=maps-31"></script>
+<script src="../seeraa/course-data.js?v=maps-45"></script>
+<script src="../seeraa/course-v7.js?v=maps-45"></script>
+<script src="../seeraa/seeraa-enrichment-data.js?v=maps-45"></script>
+<script src="extra-progress.js?v=maps-45"></script>
 <script type="module" src="../kids-quest-cloud.js?v=33"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
@@ -1335,6 +1336,8 @@ function parseCSV(text){
 function courseProfile(student){
   const original = student.progress && student.progress[GAME_KEY];
   const p = original && typeof original === 'object' ? JSON.parse(JSON.stringify(original)) : {};
+  // Progress saved with the 31-map course (version 6) moves to the 45-map places.
+  if (window.SeeraaCourseV7) window.SeeraaCourseV7.profile(p);
   p.stars = [...(Array.isArray(p.stars) ? p.stars : []), ...Array(TOTAL_LESSONS).fill(0)].slice(0,TOTAL_LESSONS);
   p.memoryDone = [...(Array.isArray(p.memoryDone) ? p.memoryDone : []), ...Array(TOTAL_LESSONS).fill(false)].slice(0,TOTAL_LESSONS);
   p.vocabDone = [...(Array.isArray(p.vocabDone) ? p.vocabDone : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
@@ -2979,7 +2982,7 @@ function loadStudents(){
   });
 }
 function loadQuizzes(){
-  return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = list; renderAll(); })
+  return window.KidsCloud.listQuizzes(GAME_KEY).then(list => { quizzesCache = window.SeeraaCourseV7 ? list.map(window.SeeraaCourseV7.quiz) : list; renderAll(); })
     .catch(err => { quizzesCache = []; $('quiz-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function refreshAll(){ return Promise.all([loadStudents(), loadClasses(), loadHomework(), loadAttendance(), loadRecInbox(), loadQuizzes(), loadAdmins(), loadAnnouncements(), loadThreads(), loadFiles(), loadNewStudents()]).then(() => toast('Up to date ✓')); }
