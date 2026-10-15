@@ -1,0 +1,77 @@
+# Builds the Seeraa Quest phone app from seeraa-app/ whenever the app or the Seeraa
+# website it bundles changes (or by hand: Actions > Seeraa Quest app > Run workflow).
+#   android: a test APK you can download and install on an Android phone
+#   ios:     checks the iPhone app compiles (signing and the App Store upload need a Mac)
+name: Seeraa Quest app
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'seeraa-app/**'
+      - 'seeraa/**'
+      - 'kids-quest-cloud.js'
+      - '.github/workflows/seeraa-app.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seeraa-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: seeraa-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: seeraa-app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: node scripts/build-www.mjs && npx cap sync android
+      - name: Build the test APK
+        working-directory: seeraa-app/android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seeraa-quest-android-test
+          path: seeraa-app/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: seeraa-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: seeraa-app/package-lock.json
+      - run: npm ci
+      - run: node scripts/build-www.mjs && npx cap sync ios
+      - name: Build for the iPhone simulator (no signing)
+        working-directory: seeraa-app/ios/App
+        run: |
+          xcodebuild -version
+          xcodebuild -list -project App.xcodeproj
+          xcodebuild -project App.xcodeproj -scheme App -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO build \
+          || xcodebuild -project App.xcodeproj -target App -configuration Debug \
+            -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build

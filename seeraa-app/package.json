@@ -1,0 +1,22 @@
+{
+  "name": "seeraa-quest-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Native app wrapper (Capacitor) for Seeraa Quest, the Seerah adventure in ../seeraa",
+  "scripts": {
+    "build": "node scripts/build-www.mjs",
+    "sync": "node scripts/build-www.mjs && npx cap sync",
+    "assets": "npx @capacitor/assets generate --android --ios --iconBackgroundColor '#14533e' --iconBackgroundColorDark '#14533e' --splashBackgroundColor '#f3e3bf' --splashBackgroundColorDark '#14533e'"
+  },
+  "dependencies": {
+    "@capacitor-community/text-to-speech": "^8.0.2",
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
+    "@capacitor/splash-screen": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

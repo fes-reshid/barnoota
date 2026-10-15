@@ -1,0 +1,20 @@
+node_modules/
+
+# Rebuilt from ../seeraa by `npm run sync` - never edit or commit these copies.
+www/
+android/app/src/main/assets/public/
+ios/App/App/public/
+
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/.idea/
+android/*.iml
+android/app/*.iml
+android/captures/
+
+ios/App/Pods/
+ios/App/build/
+ios/.idea/
+ios/**/xcuserdata/

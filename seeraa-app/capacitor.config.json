@@ -1,0 +1,17 @@
+{
+  "appId": "com.diinislaam.seeraa",
+  "appName": "Seeraa Quest",
+  "webDir": "www",
+  "backgroundColor": "#f3e3bf",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#f3e3bf",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    }
+  }
+}
