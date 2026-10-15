@@ -7411,9 +7411,9 @@ window.SEERAA_COURSE=[
       {
         "title": "The Cave of Thawr",
         "teach": "The Hijrah begins",
-        "emoji": "🕸️",
+        "emoji": "⛰️",
         "arabic": "ٱلْهِجْرَة",
-        "story": "Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. Abū Bakr was afraid, and the Prophet ﷺ told him, \"Do not grieve — Allah is with us.\" The Hijrah is where the Islamic calendar begins. A spider’s web and a bird’s nest at the cave’s entrance made the search party believe no one could be inside.",
+        "story": "Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. The searchers came so close that Abū Bakr whispered, “If one of them looked down under his feet, he would see us!” The Prophet ﷺ answered calmly, “What do you think, Abū Bakr, of two when Allah is the third of them?” Allah tells us in the Qurʾān that he said to his companion, “Do not grieve — Allah is with us.” Allah protected them, and the searchers went away without finding them. The Hijrah is where the Islamic calendar begins.",
         "picks": [
           {
             "q": "Who travelled with him?",
@@ -7432,11 +7432,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What made the search party think no one was in the cave?",
+            "q": "What did Abū Bakr whisper when the searchers came close?",
             "options": [
-              "A spider’s web and a bird’s nest",
-              "A locked door",
-              "A guard outside"
+              "“If one of them looked down, he would see us”",
+              "“Let us run away”",
+              "“I am not afraid at all”"
             ]
           }
         ],
@@ -7493,6 +7493,16 @@ window.SEERAA_COURSE=[
           }
         },
         "quotes": [
+          {
+            "en": "If one of them looked down under his feet, he would see us!",
+            "ar": "لَوْ أَنَّ أَحَدَهُمْ نَظَرَ تَحْتَ قَدَمَيْهِ لأَبْصَرَنَا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3653"
+          },
+          {
+            "en": "What do you think, Abū Bakr, of two when Allah is the third of them?",
+            "ar": "مَا ظَنُّكَ يَا أَبَا بَكْرٍ بِاثْنَيْنِ اللَّهُ ثَالِثُهُمَا",
+            "ref": "Ṣaḥīḥ al-Bukhārī 3653"
+          },
           {
             "en": "Do not grieve — Allah is with us.",
             "ar": "لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا",
@@ -11693,7 +11703,7 @@ window.SEERAA_COURSE=[
         "teach": "Salmān’s idea",
         "emoji": "🛡️",
         "arabic": "ٱلْخَنْدَق",
-        "story": "In the fifth year after the Hijrah, leaders of Banū an-Naḍīr travelled around Arabia, stirring up the tribes against Madīnah. Quraysh, Ghaṭafān and others joined together into one huge army of about ten thousand soldiers — al-Aḥzāb, the Confederates. When the news reached Madīnah, the Prophet ﷺ consulted his companions. Salmān al-Fārisī said that in Persia, when people feared an attack by horsemen, they dug a trench around themselves. The Arabs had never seen such a thing! Madīnah was protected on most sides by lava fields, rocky hills and thick palm gardens, so the Muslims only needed to dig a trench across the open northern side. Each group of ten men dug forty arm-lengths. The Prophet ﷺ dug and carried earth with them until the dust covered his chest. It was winter, food was short, and they were cold and hungry, but they sang as they worked. When the Prophet ﷺ saw how tired and hungry they were, he said: “O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.” They answered: “We are the ones who pledged to Muḥammad to strive for as long as we live!” In about six days the trench was finished, just before the enemy arrived. When the great army reached Madīnah and saw the deep ditch, they stopped in astonishment, unable to cross.",
+        "story": "In the fifth year after the Hijrah, leaders of Banū an-Naḍīr travelled around Arabia, stirring up the tribes against Madīnah. Quraysh, Ghaṭafān and others joined together into one huge army of about ten thousand soldiers — al-Aḥzāb, the Confederates. When the news reached Madīnah, the Prophet ﷺ consulted his companions. Salmān al-Fārisī said that in Persia, when people feared an attack by horsemen, they dug a trench around themselves. The Arabs had never seen such a thing! Madīnah was protected on most sides by lava fields, rocky hills and thick palm gardens, so the Muslims only needed to dig a trench across the open northern side. Each group of ten men dug forty arm-lengths. The Prophet ﷺ dug and carried earth with them until the dust covered his chest. It was winter, food was short, and they were cold and hungry, but they sang as they worked. When the Prophet ﷺ saw how tired and hungry they were, he said: “O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.” They answered: “We are the ones who pledged to Muḥammad to strive for as long as we live!” In about six days the trench was finished, just before the enemy arrived. When the great army reached Madīnah and saw the deep ditch, they stopped in astonishment: the army could not cross it. Once, a few horsemen led by ʿAmr ibn ʿAbd Wudd found a narrow place and made their horses leap over, but ʿAlī ibn Abī Ṭālib faced ʿAmr and defeated him, and the others fled back across.",
         "picks": [
           {
             "q": "Whose idea was the trench?",
@@ -11726,7 +11736,7 @@ window.SEERAA_COURSE=[
             "The tribes join into one huge army",
             "Salmān suggests digging a trench",
             "Everyone digs together, the Prophet ﷺ too",
-            "The army arrives and cannot cross"
+            "The army arrives and is stopped by the trench"
           ]
         },
         "tf": [
@@ -11790,7 +11800,7 @@ window.SEERAA_COURSE=[
         "teach": "Hope in hard times",
         "emoji": "⛏️",
         "arabic": "الصَّخْرَة",
-        "story": "While the Muslims were digging the trench, they came to a huge, hard rock. Their picks bounced off it. They went to the Prophet ﷺ, who came down into the trench, took the pick and said, “Bismillāh.” He struck the rock, and a third of it broke away. “Allāhu Akbar!” he said. “I have been given the keys of Shām. By Allah, I can see its red palaces right now.” He struck a second time, and another third broke. “Allāhu Akbar! I have been given the keys of Persia. I can see the white palace of al-Madāʾin.” He struck a third time, and the rest of the rock broke. “Allāhu Akbar! I have been given the keys of Yemen. I can see the gates of Ṣanʿāʾ.” The hypocrites laughed: “We are digging a ditch because we are afraid, and he promises us palaces!” But the believers trusted him — and within a few years, every one of those promises came true.",
+        "story": "While the Muslims were digging the trench, they came to a huge, hard rock. Their picks bounced off it. They went to the Prophet ﷺ, who came down into the trench, took the pick and said, “Bismillāh.” He struck the rock, and a third of it broke away. “Allāhu Akbar!” he said. “I have been given the keys of Shām. By Allah, I can see its red palaces right now.” He struck a second time, and another third broke. “Allāhu Akbar! I have been given the keys of Persia. I can see the white palace of al-Madāʾin.” He struck a third time, and the rest of the rock broke. “Allāhu Akbar! I have been given the keys of Yemen. I can see the gates of Ṣanʿāʾ.” The hypocrites laughed: “We are digging a ditch because we are afraid, and he promises us palaces!” But the believers trusted him — and in the years that followed, Yemen, Shām and Persia all became lands of Islam, just as he had said.",
         "picks": [
           {
             "q": "What could the companions not break?",
@@ -11836,7 +11846,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "The promises came true within a few years.",
+            "s": "Yemen, Shām and Persia later became lands of Islam.",
             "a": true
           }
         ],
@@ -11860,7 +11870,7 @@ window.SEERAA_COURSE=[
           "points": [
             "We keep hope in Allah’s promise, even in the hardest moments.",
             "We begin our work with “Bismillāh”.",
-            "Every promise of the Prophet ﷺ came true."
+            "The good news about Shām, Persia and Yemen came true in the years that followed."
           ],
           "verse": {
             "kind": "quran",
@@ -11961,7 +11971,7 @@ window.SEERAA_COURSE=[
         "learn": {
           "points": [
             "Sharing brings blessing, and Allah can make a little enough for many.",
-            "The Prophet ﷺ never ate alone while his companions were hungry.",
+            "The Prophet ﷺ shared Jābir’s small meal with everyone in the trench instead of eating it alone.",
             "Noticing when someone is hungry and helping them is a great kindness."
           ],
           "verse": {
@@ -11989,7 +11999,7 @@ window.SEERAA_COURSE=[
         "teach": "Courage and alertness",
         "emoji": "🏯",
         "arabic": "صَفِيَّةُ بِنْتُ عَبْدِ الْمُطَّلِب",
-        "story": "While the Muslim men were guarding the trench, the women and children of Madīnah were sheltered in strong forts inside the city. Then terrible news came: Banū Qurayẓah, a Jewish tribe living inside Madīnah behind the Muslims, had torn up their agreement and joined the enemy. Now there was danger in front of the Muslims and behind them. Allah describes those days: “When they came at you from above you and from below you, and when eyes grew wide and hearts leapt up to the throats.” In one fort, the Prophet’s aunt Ṣafiyyah bint ʿAbd al-Muṭṭalib was keeping watch. She saw a man from Banū Qurayẓah creeping around the walls, looking for a way in. If he found out that the fort had no soldiers, the enemy could attack the women and children. There was no man to send. Ṣafiyyah tied her clothes tightly, picked up a heavy wooden pole, crept down and struck him down. When his tribe heard nothing back from their spy, they believed the forts were well guarded, and they did not dare to attack. A brave, alert woman had protected the families of Madīnah.",
+        "story": "While the Muslim men were guarding the trench, the women and children of Madīnah were sheltered in strong forts inside the city. Then terrible news came: Banū Qurayẓah, a Jewish tribe living inside Madīnah behind the Muslims, had torn up their agreement and joined the enemy. Now there was danger in front of the Muslims and behind them. Allah describes those days: “When they came at you from above you and from below you, and when eyes grew wide and hearts leapt up to the throats.” In one fort, the Prophet’s aunt Ṣafiyyah bint ʿAbd al-Muṭṭalib was keeping watch. She saw a man from Banū Qurayẓah creeping around the walls, looking for a way in. If he found out that the fort had no soldiers, the enemy could attack the women and children. The only man inside the fort was the elderly poet Ḥassān ibn Thābit, who was not a fighter. So Ṣafiyyah did not wait. She tied her clothes tightly, picked up a heavy wooden pole, crept down and struck him down. When his tribe heard nothing back from their spy, they believed the forts were well guarded, and they did not dare to attack. A brave, alert woman had protected the families of Madīnah.",
         "picks": [
           {
             "q": "Who was Ṣafiyyah bint ʿAbd al-Muṭṭalib?",
@@ -12090,7 +12100,7 @@ window.SEERAA_COURSE=[
       {
         "title": "The Wind That Ended the Siege",
         "arabic": "رِيحُ الْأَحْزَاب",
-        "story": "For about a month, ten thousand soldiers camped outside Madīnah, unable to cross the trench. The Muslims were cold, hungry and tired, and some were very afraid. Allah describes how their eyes grew wide and their hearts rose up to their throats. Then help began to arrive. A man named Nuʿaym ibn Masʿūd had secretly become Muslim. With clever words, he made the different groups of the enemy army stop trusting one another. Then, one freezing night, Allah sent a fierce wind. It knocked over their cooking pots, blew out their fires and tore down their tents. The Prophet ﷺ sent Ḥudhayfah to see what was happening in the enemy camp. He came back with the news: Abū Sufyān was telling everyone to pack up and leave. In the morning, the huge army had gone. Allah says: “We sent against them a wind and armies you did not see.”",
+        "story": "For about a month, ten thousand soldiers camped outside Madīnah, and the trench kept their army out. The Muslims were cold, hungry and tired, and some were very afraid. Allah describes how their eyes grew wide and their hearts rose up to their throats. Then help began to arrive. A man named Nuʿaym ibn Masʿūd had secretly become Muslim. With clever words, he made the different groups of the enemy army stop trusting one another. Then, one freezing night, Allah sent a fierce wind. It knocked over their cooking pots, blew out their fires and tore down their tents. The Prophet ﷺ sent Ḥudhayfah to see what was happening in the enemy camp. He came back with the news: Abū Sufyān was telling everyone to pack up and leave. In the morning, the huge army had gone. Allah says: “We sent against them a wind and armies you did not see.”",
         "picks": [
           {
             "q": "How long did the siege last?",
@@ -12146,7 +12156,7 @@ window.SEERAA_COURSE=[
         },
         "tf": [
           {
-            "s": "The enemy could not cross the trench.",
+            "s": "The trench kept the enemy army out of Madīnah.",
             "a": true
           },
           {
@@ -12184,7 +12194,7 @@ window.SEERAA_COURSE=[
         "teach": "The weight of a broken promise",
         "emoji": "⚖️",
         "arabic": "بَنُو قُرَيْظَة",
-        "story": "On the very day the great army left, the Prophet ﷺ came home, put down his weapons and washed. Then Jibrīl came and told him that the angels had not yet put down theirs, and pointed towards Banū Qurayẓah, who had broken their agreement at the most dangerous moment and joined the enemy. The Prophet ﷺ told the companions: “No one should pray ʿAṣr except at Banū Qurayẓah.” On the way, the time for ʿAṣr was running out. Some companions said, “He meant that we should hurry, not that we should miss the prayer,” and they prayed on the road. Others said, “We will pray only when we get there.” When the Prophet ﷺ heard about it, he did not blame either group, for both had sincerely tried to obey. The Muslims surrounded the forts of Banū Qurayẓah for about twenty-five nights. At last the tribe agreed to accept the judgement of Saʿd ibn Muʿādh, the chief of their old allies, the Aws. Saʿd judged that the men who had betrayed Madīnah in wartime should be put to death, and that the women and children should be kept safe. The Prophet ﷺ said that Saʿd had judged with Allah’s judgement. Allah says: “He brought down those of the People of the Book who had helped the enemy from their strongholds.”",
+        "story": "On the very day the great army left, the Prophet ﷺ came home, put down his weapons and washed. Then Jibrīl came and told him that the angels had not yet put down theirs, and pointed towards Banū Qurayẓah, who had broken their agreement at the most dangerous moment and joined the enemy. The Prophet ﷺ told the companions: “No one should pray ʿAṣr except at Banū Qurayẓah.” On the way, the time for ʿAṣr was running out. Some companions said, “He meant that we should hurry, not that we should miss the prayer,” and they prayed on the road. Others said, “We will pray only when we get there.” When the Prophet ﷺ heard about it, he did not blame either group, for both had sincerely tried to obey. The Muslims surrounded the forts of Banū Qurayẓah for about twenty-five nights. At last the tribe agreed to accept the judgement of Saʿd ibn Muʿādh, the chief of their old allies, the Aws. Saʿd judged that the men who had betrayed Madīnah in wartime should be put to death, and that the women and children should not be harmed, but taken as captives. The Prophet ﷺ said that Saʿd had judged with Allah’s judgement. Allah says: “He brought down those of the People of the Book who had helped the enemy from their strongholds.”",
         "picks": [
           {
             "q": "Who came to the Prophet ﷺ after the Trench?",
@@ -13260,9 +13270,9 @@ window.SEERAA_COURSE=[
           ],
           "verse": {
             "kind": "quran",
-            "ar": "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ ۝ وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا",
-            "en": "When Allah’s help and the victory come, and you see the people entering Allah’s religion in crowds.",
-            "ref": "Sūrat an-Naṣr 110:1–2"
+            "ar": "إِنَّا فَتَحْنَا لَكَ فَتْحًا مُبِينًا",
+            "en": "Indeed, We have given you a clear victory.",
+            "ref": "Sūrat al-Fatḥ 48:1"
           }
         },
         "quotes": [
@@ -13795,7 +13805,7 @@ window.SEERAA_COURSE=[
         "teach": "No sacrifice for Allah is wasted",
         "emoji": "⛵",
         "arabic": "أَهْلُ السَّفِينَة",
-        "story": "More than fifteen years earlier, Jaʿfar ibn Abī Ṭālib had led the Muslims who fled from Makkah across the sea to Abyssinia. There he had spoken so beautifully before the Najāshī that the king protected them. For all those years Jaʿfar and his companions lived far from home. Now, in the seventh year after the Hijrah, their ships finally sailed back. A group of Muslims from Yemen, among them Abū Mūsā al-Ashʿarī, had been blown by the wind to Abyssinia and came back with them. They reached the Prophet ﷺ just as Khaybar was opened, and he welcomed Jaʿfar with great joy. Later, Jaʿfar’s wife Asmāʾ bint ʿUmays was visiting Ḥafṣah when ʿUmar came in and teased her: “We made the Hijrah before you, so we have more right to the Messenger of Allah than you.” Asmāʾ was upset. “You were with the Messenger of Allah, who fed your hungry and taught your unlearned, while we were far away in a strange land — all for Allah and His Messenger!” She told the Prophet ﷺ, who said: “He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.” The people of the ship came to Asmāʾ in groups to hear those words again, and nothing in the world made them happier. The Prophet ﷺ also said to Jaʿfar, “You resemble me in looks and in character.”",
+        "story": "Many years earlier — about thirteen — Jaʿfar ibn Abī Ṭālib had led the Muslims who fled from Makkah across the sea to Abyssinia. There he had spoken so beautifully before the Najāshī that the king protected them. For all those years Jaʿfar and his companions lived far from home. Now, in the seventh year after the Hijrah, their ships finally sailed back. A group of Muslims from Yemen, among them Abū Mūsā al-Ashʿarī, had been blown by the wind to Abyssinia and came back with them. They reached the Prophet ﷺ just as Khaybar was opened, and he welcomed Jaʿfar with great joy. Later, Jaʿfar’s wife Asmāʾ bint ʿUmays was visiting Ḥafṣah when ʿUmar came in and teased her: “We made the Hijrah before you, so we have more right to the Messenger of Allah than you.” Asmāʾ was upset. “You were with the Messenger of Allah, who fed your hungry and taught your unlearned, while we were far away in a strange land — all for Allah and His Messenger!” She told the Prophet ﷺ, who said: “He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.” The people of the ship came to Asmāʾ in groups to hear those words again, and nothing in the world made them happier. The Prophet ﷺ also said to Jaʿfar, “You resemble me in looks and in character.”",
         "picks": [
           {
             "q": "Where had Jaʿfar lived for many years?",
@@ -16913,7 +16923,7 @@ window.SEERAA_COURSE=[
         "teach": "Patience and truth in grief",
         "emoji": "🌑",
         "arabic": "إِبْرَاهِيمُ ابْنُ النَّبِيّ",
-        "story": "In the eighth year after the Hijrah, the Prophet ﷺ was given a baby son by his wife Māriyah. He named him Ibrāhīm, after his forefather Prophet Ibrāhīm. The little boy was cared for by a nurse on the edge of Madīnah, and the Prophet ﷺ often went there to visit him. He would take him in his arms, kiss him and smell him. But when Ibrāhīm was still very small, he became very ill. The Prophet ﷺ held him as he was dying, and tears flowed from his eyes. ʿAbd ar-Raḥmān ibn ʿAwf was surprised that he too was crying. The Prophet ﷺ said, “O Ibn ʿAwf, it is mercy.” Then he said: “The eyes shed tears and the heart grieves, but we say only what pleases our Lord. O Ibrāhīm, we are truly saddened by your parting.” On the day Ibrāhīm died, the sun was darkened by an eclipse, and people said, “The sun has eclipsed because of Ibrāhīm’s death!” It would have been easy to let them believe it. But the Prophet ﷺ corrected them: “The sun and the moon do not eclipse for the death of anyone or for his life. When you see it, pray and call upon Allah.” Even in his deepest sadness, he would not let a false idea spread.",
+        "story": "In the eighth year after the Hijrah, the Prophet ﷺ was given a baby son, born to Māriyah al-Qibṭiyyah. He named him Ibrāhīm, after his forefather Prophet Ibrāhīm. The little boy was cared for by a nurse on the edge of Madīnah, and the Prophet ﷺ often went there to visit him. He would take him in his arms, kiss him and smell him. But when Ibrāhīm was still very small, he became very ill. The Prophet ﷺ held him as he was dying, and tears flowed from his eyes. ʿAbd ar-Raḥmān ibn ʿAwf was surprised that he too was crying. The Prophet ﷺ said, “O Ibn ʿAwf, it is mercy.” Then he said: “The eyes shed tears and the heart grieves, but we say only what pleases our Lord. O Ibrāhīm, we are truly saddened by your parting.” On the day Ibrāhīm died, the sun was darkened by an eclipse, and people said, “The sun has eclipsed because of Ibrāhīm’s death!” It would have been easy to let them believe it. But the Prophet ﷺ corrected them: “The sun and the moon do not eclipse for the death of anyone or for his life. When you see it, pray and call upon Allah.” Even in his deepest sadness, he would not let a false idea spread.",
         "picks": [
           {
             "q": "Who was Ibrāhīm’s mother?",

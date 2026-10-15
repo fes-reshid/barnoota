@@ -310,12 +310,12 @@ window.SEERAH = [
          {s:'They refused to help him.', a:false} ],
     benefit:'We learn that keeping a promise, especially one that protects and helps others, is a mark of true faith and honour.' },
 
-  { title:'The Cave of Thawr', teach:'The Hijrah begins', emoji:'🕸️', arabic:'ٱلْهِجْرَة',
-    story:'Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. Abū Bakr was afraid, and the Prophet ﷺ told him, "Do not grieve — Allah is with us." The Hijrah is where the Islamic calendar begins. A spider’s web and a bird’s nest at the cave’s entrance made the search party believe no one could be inside.',
+  { title:'The Cave of Thawr', teach:'The Hijrah begins', emoji:'⛰️', arabic:'ٱلْهِجْرَة',
+    story:'Allah gave permission to leave Makkah. The Prophet ﷺ set out with Abū Bakr, and they hid three days in the cave of Thawr while search parties passed right outside. The searchers came so close that Abū Bakr whispered, “If one of them looked down under his feet, he would see us!” The Prophet ﷺ answered calmly, “What do you think, Abū Bakr, of two when Allah is the third of them?” Allah tells us in the Qurʾān that he said to his companion, “Do not grieve — Allah is with us.” Allah protected them, and the searchers went away without finding them. The Hijrah is where the Islamic calendar begins.',
     picks:[
       {q:'Who travelled with him?', options:['Abū Bakr','ʿUmar','Bilāl']},
       {q:'What did he say inside the cave?', options:['"Do not grieve — Allah is with us"','"Let us go back"','"Call the others"']},
-      {q:'What made the search party think no one was in the cave?', options:['A spider’s web and a bird’s nest','A locked door','A guard outside']}],
+      {q:'What did Abū Bakr whisper when the searchers came close?', options:['“If one of them looked down, he would see us”','“Let us run away”','“I am not afraid at all”']}],
     order:{ prompt:'Put the Hijrah in order',
             items:['Allah gives permission to migrate','They leave Makkah at night','They hide in the cave of Thawr','They travel on towards Yathrib'] },
     tf:[ {s:'The Islamic calendar begins with the Hijrah.', a:true},

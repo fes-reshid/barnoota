@@ -65,7 +65,7 @@
     if (menu) menu.after(shelf); else help.after(shelf);
     const stories = data.stories.filter(s => s.map === viewWorld).map(s => storyFor(s.id));
     shelf.hidden = !stories.length;
-    shelf.innerHTML = `<div class="se-shelf-heading"><b>Explore more · Map ${viewWorld + 1}</b><span>${stories.filter(s => complete(s.id)).length} / ${stories.length} explored</span></div><div class="se-shelf-links">${stories.map((s, i) => `<button type="button" data-extra-story="${s.id}" ${accessible(s) ? '' : 'disabled'}><span class="se-book-letter">${complete(s.id) ? '✓' : ['A','B'][i]}</span><span>${esc(s.title)}<small>Story · matching · challenge</small></span></button>`).join('')}</div>`;
+    shelf.innerHTML = `<div class="se-shelf-heading"><b>Explore more · Map ${viewWorld + 1}</b><span>${stories.filter(s => complete(s.id)).length} / ${stories.length} explored</span></div><div class="se-shelf-links">${stories.map((s, i) => `<button type="button" data-extra-story="${s.id}" ${accessible(s) ? '' : 'disabled'}><span class="se-book-letter">${complete(s.id) ? '✓' : ['A','B','C'][i]}</span><span>${esc(s.title)}<small>Story · matching · challenge</small></span></button>`).join('')}</div>`;
     shelf.querySelectorAll('[data-extra-story]').forEach(b => b.onclick = () => openStory(b.dataset.extraStory));
   }
 
@@ -76,8 +76,8 @@
     const nodes = [...svg.querySelectorAll('.node')];
     if (nodes.length !== 4) return;
     // Only the stops this map has are spread along the trail, so there are no empty gaps.
-    const stories = data.stories.filter(s => s.map === viewWorld).slice(0, 2);
-    const order = ['l0', 'l1', ...(stories[0] ? ['s0'] : []), 'l2', 'l3', ...(stories[1] ? ['s1'] : []), 'cards', 'quiz'];
+    const stories = data.stories.filter(s => s.map === viewWorld).slice(0, 3);
+    const order = ['l0', 'l1', ...(stories[0] ? ['s0'] : []), 'l2', 'l3', ...(stories[1] ? ['s1'] : []), ...(stories[2] ? ['s2'] : []), 'cards', 'quiz'];
     const spots = placeAlong(L.road, order.length), at = key => spots[order.indexOf(key)];
     L.lessons = [0, 1, 2, 3].map(i => at('l' + i).p);
     nodes.forEach((node, i) => node.setAttribute('transform', `translate(${L.lessons[i].join(' ')})`));
@@ -93,7 +93,7 @@
       g.setAttribute('tabindex', allowed ? '0' : '-1'); g.setAttribute('aria-disabled', String(!allowed));
       g.setAttribute('aria-label', `Extra story ${i + 1}: ${s.title}${done ? ', explored' : ''}`);
       g.dataset.storyId = s.id;
-      g.innerHTML = `<title>${esc(s.title)}</title><circle r="40" fill="transparent"/><circle class="se-stop-disc" r="28" fill="url(#dustMarker)" stroke="${done ? '#496e45' : '#755832'}" stroke-width="2"/><path d="M-16-12Q-8-15 0-10Q8-15 16-12V8Q8 5 0 10Q-8 5-16 8Z" fill="#f6e7c6" stroke="#7e623e" stroke-width="1.7"/><path d="M0-10V10" stroke="#7e623e"/><text x="0" y="8" text-anchor="middle" font-size="16" font-weight="800" fill="#4b3925">${done ? '✓' : ['A','B'][i]}</text>`;
+      g.innerHTML = `<title>${esc(s.title)}</title><circle r="40" fill="transparent"/><circle class="se-stop-disc" r="28" fill="url(#dustMarker)" stroke="${done ? '#496e45' : '#755832'}" stroke-width="2"/><path d="M-16-12Q-8-15 0-10Q8-15 16-12V8Q8 5 0 10Q-8 5-16 8Z" fill="#f6e7c6" stroke="#7e623e" stroke-width="1.7"/><path d="M0-10V10" stroke="#7e623e"/><text x="0" y="8" text-anchor="middle" font-size="16" font-weight="800" fill="#4b3925">${done ? '✓' : ['A','B','C'][i]}</text>`;
       const open = () => { if (allowed) openStory(s.id); };
       g.onclick = open; g.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
       svg.appendChild(g);

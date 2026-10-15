@@ -1549,7 +1549,7 @@ window.SEERAA_ENRICHMENT={
     },
     {
       "id": "m14-story-2",
-      "map": 40,
+      "map": 44,
       "title": "The Farewell teaching: protect people’s rights",
       "place": "The Hajj gathering · Human dignity",
       "story": [
