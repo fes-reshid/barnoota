@@ -61,7 +61,7 @@ const ADHAN=`<g class="lwX-arcs" fill="none" stroke="#fff6d8" stroke-width="2.4"
 function mapCtx(L,P){
  const R=L.street||L.road,len=R[R.length-1][2],wide=L.W>L.H,floor=L.H*(wide?.068:.05),cap=Math.min(L.W*.13,L.H*(wide?.092:.085));
  const near=y=>clamp(depthAt(y,P,1),.35,1.6);
- return{story:false,W:L.W,H:L.H,
+ return{story:false,W:L.W,H:L.H,asset:typeof SEERAA_SCENES!=='undefined'?SEERAA_SCENES[viewWorld]?.asset:null,
   at:f=>roadAt(R,f*len),dir:(f,prev)=>roadDir(R,f*len,prev),
   k:(y,h,big=1)=>clamp(depthAt(y,P,1)*h,floor*big,cap*big)/h,
   side:(f,d)=>{const a=roadAt(R,f*len-8),b=roadAt(R,f*len+8),dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1,p=roadAt(R,f*len),kk=near(p[1])*Math.max(1,L.H/900);return[clamp(p[0]-dy/l*d*kk,L.W*.1,L.W*.9),clamp(p[1]+dx/l*d*kk,L.H*.16,L.H*.93)]},
@@ -487,6 +487,29 @@ const MASJID={
  }
 };
 
+/* Picture coordinates keep both armies on their own bank when the map resizes. */
+function buildPaintedTrench(g,c){
+ const diggers=Array.from({length:6},(_,i)=>mk(g,workerSvg({i,tool:'pick'}),{ph:i*.8}));
+ const carriers=Array.from({length:3},(_,i)=>mk(g,workerSvg({i:i+6,tool:'basket'}),{ph:i*.7}));
+ const enemy=army(g,['spear','h',{w:'flag',flag:'#a3272b'},'sword','h','spear'],'q');
+ const tents=[0,1,2].map(i=>mk(g,tentSvg(['#c9b28a','#a8875a','#d9c39a'][i])));
+ const gust=mk(g,WIND),heap=mk(g,EARTH);
+ // The image's long trench runs just above v=.33. People stay on either bank.
+ const scale=()=>Math.max(.25,Math.min(c.W*.052,c.H*.042)/56);
+ return t=>{
+  g.setAttribute('opacity',fadeIO(t,25.5));const k=scale(),dig=t>=2&&t<12.6;
+  diggers.forEach((m,i)=>{const p=c.pic(.37+i*.075,.348);place(m,p,k,i%2?1:-1);swing(m,dig?Math.sin(t*5+m.ph)*40-12:0);stride(m,t,false)});
+  const hp=c.pic(.57,.39);place(heap,hp,k*(.4+.6*seg(t,3,12)));
+  carriers.forEach((m,i)=>{const u=pingpong(t*.25+m.ph),p=mix(c.pic(.46+i*.07,.35),hp,ease(u));place(m,p,k,Math.floor((((t*.25+m.ph)%2)+2)%2)===0?1:-1);stride(m,t,t<13);show(m,t<18)});
+  const arrive=ease(seg(t,13,16.5)),leave=ease(seg(t,20,25));
+  enemy.forEach((m,i)=>{const stop=c.pic(.35+i*.075,.247-(i%2)*.018),from=c.pic(.89+i*.014,.18),p=leave>0?mix(stop,from,leave):mix(from,stop,arrive);place(m,p,k*.8,leave>0?1:-1);stride(m,t,(arrive>0&&arrive<1)||(leave>0&&leave<1));show(m,t>13?(leave>.8?1-(leave-.8)*5:1):0)});
+  tents.forEach((m,i)=>{const at=c.pic(.43+i*.12,.211),blow=ease(seg(t,18.8+i*.2,21.5+i*.2)),p=[at[0]+blow*c.W*.25,at[1]-blow*30*k];place(m,p,k*.9);m.el.setAttribute('transform',m.el.getAttribute('transform')+` rotate(${f1(blow*70)})`);show(m,t>15?1-blow:0)});
+  const windAt=c.pic(.25+((t*.17)% .65),.25);put(gust.el,windAt,k*1.7);show(gust,t>18.5&&t<23?.8:0);
+  depthSort(g,[heap,...diggers,...carriers,...enemy,...tents],[gust]);
+  return sayIn(t,[[4.6,8.4,Q.trench1,c.pic(.57,.29)],[8.6,12.6,Q.trench2,c.pic(.57,.29)]]);
+ };
+}
+
 /* ---------- The Trench (Map 27) ---------- */
 const TRENCH={
  re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,
@@ -494,6 +517,7 @@ const TRENCH={
  caps:[[0,'Year 5: an army of 10,000 is coming to Madīnah. Salmān al-Fārisī suggests digging a trench.','Salmān’s idea: a trench'],[4,'Everyone digs, cold and hungry — and they sing as they work.','Everyone digs and sings'],[13,'The enemy army arrives, but it cannot cross the trench.','The army cannot cross'],[18.5,'After weeks, Allah sends a cold, strong wind. Their tents and fires blow away, and they go home.','A wind from Allah ends the siege']],
  bg:()=>plainBg('#b8c8d6','#ece2cc','#e8d2a2','#b48e64','#dcc08e'),
  build(g,c){
+  if(!c.story&&c.asset==='trench')return buildPaintedTrench(g,c);
   const f0=c.story?.5:.55,T0=c.at(f0),band=mk(g,''),heap=mk(g,EARTH),glow=mk(g,lightSvg()),gust=mk(g,WIND);
   const D=[...Array(5)].map((_,i)=>mk(g,workerSvg({i,tool:'pick'}),{ph:i*1.3})),K=[...Array(3)].map((_,i)=>mk(g,workerSvg({i:i+5,tool:'basket'}),{ph:i*.6}));
   const E=army(g,['spear','h',{w:'flag',flag:'#a3272b'},'sword','h','spear'],'q'),tents=[0,1,2].map(i=>mk(g,tentSvg(['#c9b28a','#a8875a','#d9c39a'][i])));
