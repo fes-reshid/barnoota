@@ -6,20 +6,31 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - run: |
-          sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1 || true
-          curl -sSL -m 90 --retry 1 -A "Mozilla/5.0" -o book.pdf https://www.muslim-library.com/dl/books/English_ArRaheeq_AlMakhtum_THE_SEALED_NECTAR.pdf || true
-          if ! pdftotext book.pdf book.txt 2>/dev/null; then echo "muslim-library copy unreadable, using archive.org"; curl -sSL -m 120 -o book.pdf https://archive.org/download/Ar-raheeqAl-makhtum/sealed-nectar.pdf; pdftotext book.pdf book.txt; fi
-          ls -la book.pdf; wc -l book.txt; head -c 300 book.txt | tr "\n" " "; echo
-          tr '\n' ' ' < book.txt | sed 's/  */ /g' > flat.txt
-          show() { echo; echo "=== $1"; grep -o -i -E ".{0,260}($2).{0,260}" flat.txt | head -${3:-4} || true; echo "(matches: $(grep -o -i -E "$2" flat.txt | wc -l))"; }
+      - name: tools
+        timeout-minutes: 4
+        run: |
+          echo "start $(date -u +%T)"; command -v pdftotext || (sudo apt-get -o DPkg::Lock::Timeout=60 install -y -qq poppler-utils >/dev/null 2>&1; echo "installed $(date -u +%T)"); command -v pdftotext
+      - name: book
+        timeout-minutes: 5
+        run: |
+          echo "download $(date -u +%T)"
+          curl -sSL -m 90 -A "Mozilla/5.0" -o book.pdf https://www.muslim-library.com/dl/books/English_ArRaheeq_AlMakhtum_THE_SEALED_NECTAR.pdf || echo "muslim-library download failed"
+          ls -la book.pdf 2>/dev/null; file book.pdf 2>/dev/null || true
+          if ! timeout 120 pdftotext book.pdf book.txt 2>/dev/null || [ ! -s book.txt ]; then echo "using archive.org $(date -u +%T)"; curl -sSL -m 120 -o book.pdf https://archive.org/download/Ar-raheeqAl-makhtum/sealed-nectar.pdf; timeout 120 pdftotext book.pdf book.txt; fi
+          echo "text $(date -u +%T)"; wc -l book.txt; head -c 200 book.txt | tr "\n" " "; echo
+      - name: search
+        timeout-minutes: 2
+        run: |
+          export LC_ALL=C.UTF-8
+          show() { echo; echo "=== $1 (matching lines: $(grep -c -i -E "$2" book.txt))"; grep -n -i -E -B 3 -A 4 "$2" book.txt | head -$(( ${3:-3} * 9 )) || true; }
           show "Zamzam: takbir?" "dig Zamzam|well of Zamzam gushed" 3
           show "Black Stone: al-Amin" "Al-Ameen|Ameen" 6
           show "Negus: safe in my land" "safe in my land|secure in my land|safe in my country|my land in safety" 4
           show "Ja'far's speech" "people (of|in a state of) ignorance|in ignorance" 3
-          show "Building the mosque / Trench: Hereafter" "life of the Hereafter|good of the Hereafter|life but the life" 6
-          show "Trench: pledge as long as we live" "as long as we (live|are alive|remain)|pledged? to Muhammad|pledge to Muhammad" 4
+          show "Building the mosque / Trench: Hereafter" "of the Hereafter|the Hereafter, so|Ansar and the" 6
+          show "Trench: pledge as long as we live" "as long as we|to Muhammad to" 4
           show "Farewell: asked about me" "asked about me|be asked about me" 3
           show "Farewell: bear witness" "bear witness that you|O All.h, bear witness|O All.h! Bear witness" 4
           show "5:3 perfected your religion" "perfected your religion" 3
