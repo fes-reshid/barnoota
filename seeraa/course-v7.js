@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   /* the moment course version 7 went live: quizzes last saved before it still use old map numbers */
-  const SINCE = '2026-10-15T14:40:00.000Z';
+  const SINCE = '2026-10-15T14:29:30.000Z';
   /* old lesson index (0-based) → new lesson index, for the lessons that moved */
   const LESSON = {96:100,97:104,98:102,99:106,100:114,101:116,102:119,103:120,104:124,105:125,106:126,107:128,108:136,109:137,110:138,111:139,112:142,113:143,114:144,115:151,116:153,117:159,118:160,119:164,120:168,121:172,122:177,123:179};
   /* old map index (0-based) → the new map that holds most of its lessons */
