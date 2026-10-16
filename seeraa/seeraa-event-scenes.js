@@ -239,7 +239,7 @@ function welcomerSvg(i,kind){
   +`<g class="lwX-arm"><line x1="5" y1="-32" x2="10" y2="-26" stroke="${robe}" stroke-width="3.6" stroke-linecap="round"/>${kind==='daf'?DAF:kind==='frond'?FROND:''}</g>`;
 }
 const MADINAH={
- re:/^welcome to madīnah$/i,story:/^(welcome to madīnah|the house of abū ayyūb)$/i,cycle:30,still:13,nasheed:true,
+ re:/^welcome to madīnah$/i,story:/^(welcome to madīnah|the house of abū ayyūb)$/i,cycle:30,still:13,nasheed:'welcome',
  label:'Animated scene: the people of Madīnah line the road to welcome the Prophet’s camel, which kneels where his Masjid will be built',
  caps:[[0,'For days the people of Madīnah have waited on the road every morning for the Prophet ﷺ.','Madīnah waits on the road'],[4.5,'He arrives! Shouts of “Allāhu Akbar” ring out, and the girls of Madīnah chant verses of welcome.','Madīnah welcomes him'],[11,'Everyone calls out: “Stay with us, O Messenger of Allah!” He answers: “This camel is commanded by Allah — wherever it stops will be my home.”','“This camel is commanded by Allah”'],[20,'The camel kneels where the Prophet’s Masjid will be built, and Abū Ayyūb takes him into his home.','The camel kneels — Abū Ayyūb’s home']],
  bg:()=>{const id='lwXs'+(++uid);return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6e4"/><stop offset=".6" stop-color="#eef0dc"/><stop offset="1" stop-color="#e9d7aa"/></linearGradient></defs><rect width="600" height="260" fill="url(#${id})"/><path d="M0 170 L80 150 L170 164 L260 146 L360 166 L460 150 L600 162 L600 260 L0 260Z" fill="#b9a27a"/>${[40,110,190,420,500,560].map((x,i)=>`<g transform="translate(${x} ${178+(i%2)*6})"><path d="M0 0 L2-38" stroke="#7a5a33" stroke-width="3"/><path d="M2-38 q-16 2-22 12 M2-38 q14-2 21 10 M2-38 q-6-12-18-14 M2-38 q8-12 19-12" stroke="#5f8a3a" stroke-width="4" fill="none" stroke-linecap="round"/></g>`).join('')}<rect y="214" width="600" height="46" fill="#e6cf9c"/>`},
@@ -264,8 +264,9 @@ const MADINAH={
  }
 };
 
-/* The welcome nasheed “Ṭalaʿa l-badru ʿalaynā”: a recording (assets/audio/tala3al.mp3), played only
-   when someone taps the button. The words are shown while it plays. */
+/* Two recordings: the welcome nasheed “Ṭalaʿa l-badru ʿalaynā” (Madīnah, assets/audio/tala3al.mp3) and the
+   diggers’ chant “Naḥnu lladhīna bāyaʿū” (the Trench, assets/audio/nahnu-alladhina.mp3, al-Bukhārī 2834).
+   In a lesson they play when someone taps the button, and the words are shown while it plays. */
 const NASHEED_LINES=[
  ['طَلَعَ الْبَدْرُ عَلَيْنَا','Ṭalaʿa l-badru ʿalaynā','The full moon has risen over us','ṭa la ʿal bad ru ʿa lay nā',[62,65,67,69,69,67,65,67]],
  ['مِنْ ثَنِيَّاتِ الْوَدَاعْ','min thaniyyāti l-wadāʿ','from the hills of al-Wadāʿ','min tha niy yā til wa dāʿ',[69,69,70,69,67,65,64]],
@@ -273,8 +274,11 @@ const NASHEED_LINES=[
  ['مَا دَعَا لِلّٰهِ دَاعْ','mā daʿā lillāhi dāʿ','as long as anyone calls to Allah','mā da ʿā lil lā hi dāʿ',[69,67,65,64,65,64,62]],
  ['أَيُّهَا الْمَبْعُوثُ فِينَا','Ayyuha l-mabʿūthu fīnā','O you who were sent to us','ay yu hal mab ʿū thu fī nā',[69,69,72,70,69,67,65,69]],
  ['جِئْتَ بِالْأَمْرِ الْمُطَاعْ','jiʾta bil-amri l-muṭāʿ','you came with a command to be obeyed','ji ʾta bil am ril mu ṭāʿ',[67,65,64,65,67,64,62]]];
+const SONGS={
+ welcome:{src:'assets/audio/tala3al.mp3',name:'the welcome nasheed',line:NASHEED_LINES[0],at:4500},
+ trench:{src:'assets/audio/nahnu-alladhina.mp3',name:'the Trench nasheed',line:['نَحْنُ الَّذِينَ بَايَعُوا مُحَمَّدَا','Naḥnu lladhīna bāyaʿū Muḥammadā','We are the ones who pledged to Muḥammad\u00a0ﷺ'],at:4000}};
 const Nasheed=(()=>{
- const SRC='assets/audio/tala3al.mp3',le=(v,n)=>String.fromCharCode(...Array.from({length:n},(_,i)=>v>>8*i&255));
+ const le=(v,n)=>String.fromCharCode(...Array.from({length:n},(_,i)=>v>>8*i&255));
  /* a moment of silence played inside the first tap lets the same <audio> start the nasheed by itself later (iPhone) */
  const SILENT='data:audio/wav;base64,'+btoa('RIFF'+le(436,4)+'WAVEfmt '+le(16,4)+le(1,2)+le(1,2)+le(8000,4)+le(8000,4)+le(1,2)+le(8,2)+'data'+le(400,4)+'\x80'.repeat(400));
  let audio=null,cur=null,watch=0,primed=false;
@@ -282,8 +286,8 @@ const Nasheed=(()=>{
  function prime(){if(primed||cur)return;primed=true;const a=el();try{a.src=SILENT;const p=a.play();if(p&&p.then)p.then(()=>{if(!cur)a.pause()},()=>{primed=false})}catch(e){primed=false}}
  ['pointerdown','touchend','keydown'].forEach(e=>addEventListener(e,prime,{capture:true,passive:true}));
  function stop(){if(!cur)return;const c=cur;cur=null;clearInterval(watch);try{audio.pause();audio.currentTime=0}catch(e){}if(c.onEnd)c.onEnd()}
- function play(onLine,onEnd,stillHere){
-  stop();el();if(!audio.src||!audio.src.endsWith(SRC))audio.src=SRC;
+ function play(src,onLine,onEnd,stillHere){
+  stop();el();if(!audio.src||!audio.src.endsWith(src))audio.src=src;
   const c={onEnd};cur=c;
   audio.onended=()=>{if(cur===c)stop()};audio.onerror=()=>{if(cur===c)stop()};audio.onplaying=()=>{if(cur===c&&onLine)onLine(0)};
   try{audio.currentTime=0}catch(e){}
@@ -292,36 +296,38 @@ const Nasheed=(()=>{
  }
  return{play,stop,get playing(){return!!cur},get unlocked(){return primed}};
 })();
-function lyricHTML(){const l=NASHEED_LINES[0];return `<span class="lw-ly-ar" lang="ar" dir="rtl">${l[0]}</span><span class="lw-ly-tr">${l[1]}</span><span class="lw-ly-en">${l[2]}</span>`}
-function nasheedButton(host,lyricBox,stillHere){
+function lyricHTML(song){const l=song.line;return `<span class="lw-ly-ar" lang="ar" dir="rtl">${l[0]}</span><span class="lw-ly-tr">${l[1]}</span><span class="lw-ly-en">${l[2]}</span>`}
+function nasheedButton(host,lyricBox,song,stillHere){
  const b=document.createElement('button');b.type='button';b.className='lw-nasheed-btn';
- const idle=()=>{b.textContent='♫';b.title='Play the welcome nasheed';b.setAttribute('aria-label','Play the welcome nasheed, Ṭalaʿa l-badru ʿalaynā');b.setAttribute('aria-pressed','false');lyricBox.classList.remove('on')};idle();
+ const idle=()=>{b.textContent='♫';b.title='Play '+song.name;b.setAttribute('aria-label','Play '+song.name+', '+song.line[1]);b.setAttribute('aria-pressed','false');lyricBox.classList.remove('on')};idle();
  b.onclick=e=>{e.stopPropagation();if(Nasheed.playing){Nasheed.stop();return}
-  if(Nasheed.play(i=>{lyricBox.innerHTML=lyricHTML(i);lyricBox.classList.add('on')},idle,()=>b.isConnected&&b.offsetParent!==null)){b.textContent='■';b.title='Stop the nasheed';b.setAttribute('aria-label','Stop the nasheed');b.setAttribute('aria-pressed','true');lyricBox.innerHTML='<span class="lw-ly-tr">♪ …</span>';lyricBox.classList.add('on')}};
+  if(Nasheed.play(song.src,()=>{lyricBox.innerHTML=lyricHTML(song);lyricBox.classList.add('on')},idle,()=>b.isConnected&&b.offsetParent!==null)){b.textContent='■';b.title='Stop the nasheed';b.setAttribute('aria-label','Stop the nasheed');b.setAttribute('aria-pressed','true');lyricBox.innerHTML='<span class="lw-ly-tr">♪ …</span>';lyricBox.classList.add('on')}};
  host.appendChild(b);return b;
 }
 /* On the map the nasheed has a small icon in the top toolbar, beside “About this place” and the pause button,
-   on every screen. It starts by itself as the Prophet ﷺ arrives (once per visit to the map), if sound is on
-   and the page has been tapped; leaving the map stops it. */
-let nasheedWorld=null,nasheedAuto=false;
+   on every screen. It starts by itself once per visit to the map — as the Prophet ﷺ arrives in Madīnah, as the
+   believers start digging the Trench — if sound is on and the page has been tapped; leaving the map stops it. */
+let nasheedWorld=null,nasheedAuto=false,nasheedSong=null;
 const mapOpen=()=>{const m=document.getElementById('mapScreen');return!!m&&!m.classList.contains('hidden')};
 function toolsWidth(){const bar=document.getElementById('spTools'),frame=bar&&bar.closest('.map-frame');if(frame)frame.style.setProperty('--sp-mobile-tools-width',([...bar.children].filter(b=>!b.hidden).length*44-4)+'px')}
 function nasheedIcon(on){const b=document.getElementById('spNasheed');if(!b)return;b.setAttribute('aria-pressed',String(on));b.querySelector('.sp-control-icon').textContent=on?'■':'♫';
- const label=on?'Stop the nasheed':'Play the welcome nasheed';b.title=label;b.setAttribute('aria-label',on?label:label+', Ṭalaʿa l-badru ʿalaynā')}
-function startNasheed(){const here=nasheedWorld;
- if(Nasheed.play(()=>nasheedIcon(true),()=>nasheedIcon(false),()=>mapOpen()&&nasheedWorld===here&&!!document.getElementById('spNasheed')))nasheedIcon(true)}
-function mapNasheed(){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame)return;
- nasheedWorld=typeof viewWorld!=='undefined'?viewWorld:null;frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
+ const song=nasheedSong||SONGS.welcome,label=on?'Stop the nasheed':'Play '+song.name;b.title=label;b.setAttribute('aria-label',on?label:label+', '+song.line[1])}
+function startNasheed(){const here=nasheedWorld,song=nasheedSong;if(!song)return;
+ if(Nasheed.play(song.src,()=>nasheedIcon(true),()=>nasheedIcon(false),()=>mapOpen()&&nasheedWorld===here&&!!document.getElementById('spNasheed')))nasheedIcon(true)}
+function mapNasheed(song){const frame=document.getElementById('mapSvg')?.closest('.map-frame');if(!frame||!song)return;
+ const w0=typeof viewWorld!=='undefined'?viewWorld:null;
+ if(w0!==nasheedWorld||song!==nasheedSong){if(nasheedSong&&song!==nasheedSong)Nasheed.stop();document.getElementById('spNasheed')?.remove();nasheedAuto=false}
+ nasheedWorld=w0;nasheedSong=song;frame.querySelectorAll('.lw-nasheed-btn,.lw-lyrics').forEach(x=>x.remove());
  let tries=0;(function place(){const bar=document.getElementById('spTools');if(!bar){if(tries++<30)requestAnimationFrame(place);return}
   if(!document.getElementById('spNasheed')){bar.insertAdjacentHTML('beforeend','<button type="button" id="spNasheed" class="sp-tool sp-nasheed" aria-pressed="false"><span class="sp-control-icon" aria-hidden="true">♫</span></button>');
    const b=document.getElementById('spNasheed');b.onclick=e=>{e.stopPropagation();if(Nasheed.playing)Nasheed.stop();else startNasheed()};nasheedIcon(Nasheed.playing)}
   toolsWidth()})();
  if(nasheedAuto)return;nasheedAuto=true;const w=nasheedWorld;
  setTimeout(()=>{const activated=navigator.userActivation?navigator.userActivation.hasBeenActive:Nasheed.unlocked;
-  if(w!==nasheedWorld||!mapOpen()||Nasheed.playing||!activated||(typeof soundOn!=='undefined'&&!soundOn)||document.hidden||(window.SeeraaQuran&&SeeraaQuran.playing))return;startNasheed()},4500)}
+  if(w!==nasheedWorld||song!==nasheedSong||!mapOpen()||Nasheed.playing||!activated||(typeof soundOn!=='undefined'&&!soundOn)||document.hidden||(window.SeeraaQuran&&SeeraaQuran.playing))return;startNasheed()},song.at||4500)}
 /* another map: the icon goes, and the nasheed stops */
 if(typeof renderMap==='function'){const renderMapBeforeNasheed=renderMap;renderMap=function(){const r=renderMapBeforeNasheed.apply(this,arguments);
- if(nasheedWorld!==null&&typeof viewWorld!=='undefined'&&viewWorld!==nasheedWorld){Nasheed.stop();document.getElementById('spNasheed')?.remove();nasheedWorld=null;nasheedAuto=false;toolsWidth()}return r}}
+ if(nasheedWorld!==null&&typeof viewWorld!=='undefined'&&viewWorld!==nasheedWorld){Nasheed.stop();document.getElementById('spNasheed')?.remove();nasheedWorld=null;nasheedSong=null;nasheedAuto=false;toolsWidth()}return r}}
 /* ---------- more Seerah moments (each with Arabic-first speech where the words are reported) ---------- */
 const pingpong=x=>{const m=((x%2)+2)%2;return m<1?m:2-m};
 const fadeIO=(t,end)=>f3(t<.8?t/.8:t>end?clamp(1-(t-end)/1.8,0,1):1);
@@ -521,7 +527,7 @@ function buildPaintedTrench(g,c){
 
 /* ---------- The Trench (Map 32) ---------- */
 const TRENCH={
- re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,
+ re:/^the trench$/i,story:/^(the trench|the wind that ended the siege)$/i,cycle:28,still:10,nasheed:'trench',
  label:'Animated scene: the believers dig the trench and sing, the army cannot cross, and a wind sends it home',
  caps:[[0,'Year 5: an army of 10,000 is coming to Madīnah. Salmān al-Fārisī suggests digging a trench.','Salmān’s idea: a trench'],[4,'Everyone digs, cold and hungry — and they sing as they work.','Everyone digs and sings'],[13,'The enemy army arrives, and the trench stops it.','The trench stops the army'],[18.5,'After weeks, Allah sends a cold, strong wind. Their tents and fires blow away, and they go home.','A wind from Allah ends the siege']],
  bg:()=>plainBg('#b8c8d6','#ece2cc','#e8d2a2','#b48e64','#dcc08e'),
@@ -595,9 +601,9 @@ function theatre(g,ctx,sc,capEl){
   tick(t){const r=play(t);if(r||say)bubble(r);recite(r);if(capEl){let n=0;sc.caps.forEach((x,i)=>{if(t>=x[0])n=i});if(n!==last){last=n;capEl.textContent=sc.caps[n][ctx.story?1:2]}}}};
 }
 [MADINAH,BADR,UHUD,HUDAYBIYYAH,FATH,ZAMZAM,BLACKSTONE,HIRA,NAJASHI,MASJID,TRENCH,FAREWELL].forEach(sc=>SCENES.push({re:sc.re,story:sc.story,label:sc.label,
- road:(g,L,P)=>{const th=theatre(g,mapCtx(L,P),sc,mapCaption());if(sc.nasheed)mapNasheed();return th},
+ road:(g,L,P)=>{const th=theatre(g,mapCtx(L,P),sc,mapCaption());if(sc.nasheed)mapNasheed(SONGS[sc.nasheed]);return th},
  make:(svg,full,cap)=>{svg.innerHTML=sc.bg();const g=document.createElementNS(NS,'g');svg.appendChild(g);const th=theatre(g,storyCtx(),sc,cap);
-  const fig=svg.parentNode;if(sc.nasheed&&fig&&!fig.querySelector('.lw-nasheed-btn')){const box=document.createElement('div');box.className='lw-lyrics inline';box.setAttribute('aria-live','polite');fig.appendChild(box);nasheedButton(fig,box)}
+  const fig=svg.parentNode;if(sc.nasheed&&fig&&!fig.querySelector('.lw-nasheed-btn')){const box=document.createElement('div');box.className='lw-lyrics inline';box.setAttribute('aria-live','polite');fig.appendChild(box);nasheedButton(fig,box,SONGS[sc.nasheed])}
   if(reduced()){th.tick(sc.still);th.pausedT=sc.still}LW.theatres.add(th);run();return th}}));
 window.SeeraaNasheed=Nasheed;
 
