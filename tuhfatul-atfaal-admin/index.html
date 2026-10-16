@@ -1639,7 +1639,8 @@ function renderModal(){
     return '<tr><td><b>' + (i + 1) + '.</b> ' + escapeHtml(m[0]) + ' <span class="muted">(lines ' + m[1] + ')</span>' + (mapNote(s, i) ? ' <span title="Personal note sent">💬</span>' : '') + '</td>' +
       '<td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1;min-width:60px"><span style="width:' + Math.round(done / m[3] * 100) + '%"></span></div><span class="acc">' + done + '/' + m[3] + '</span></div></td>' +
       '<td>' + (q ? (quizPassed(x.p, i) ? '<span class="role-badge ok">' : '<span class="role-badge warn">') + escapeHtml(String(q.score)) + '/15</span>' : '<span class="muted">—</span>') + '</td>' +
-      '<td>' + (a && a.approved ? '<span class="role-badge ok">✓ ' + escapeHtml(a.teacherName || 'Signed') + '</span>' : readyForReview(x.p, i) ? '<button class="btn primary small" data-review="' + i + '">Review</button>' : '<span class="muted">—</span>') + '</td></tr>';
+      '<td>' + (a && a.approved ? '<span class="role-badge ok">✓ ' + escapeHtml(a.teacherName || 'Signed') + '</span>' : readyForReview(x.p, i) ? '<button class="btn primary small" data-review="' + i + '">Review</button>' : '<span class="muted">—</span>') +
+      (!(a && a.approved) && x.p.teacherMapUnlocks[i] ? ' <span class="role-badge warn" title="A teacher pressed “Open next map”: the next map is open, but this map has no signed certificate">🚪 Next map opened, not signed</span>' : '') + '</td></tr>';
   }).join('');
   document.querySelectorAll('[data-review]').forEach(b => b.onclick = () => { selectedMap = +b.dataset.review; showSub('maps'); });
   const other = [];

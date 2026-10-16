@@ -3365,6 +3365,22 @@ sizeMap=function(){
 };
 window.addEventListener('resize',()=>{clearTimeout(sizeMap.t);sizeMap.t=setTimeout(sizeMapSoon,160)});
 setupMapMenu();document.documentElement.classList.toggle('tq-mapfull',!$('#mapScreen').classList.contains('hidden'));
+/* The teacher's door. A map opens only when the teacher has signed the map before it, or opened its door.
+   Finishing the last lesson of a map also unlocks the first lesson of the next map, so the "Next lesson" button
+   on a finished lesson, homework links and the glossary could step into a locked map. Every way in goes through
+   openLesson or renderMap, so both check the door here. */
+function mapOpenFor(i){return!!lessons[i]&&worldUnlocked(lessons[i].world)}
+function lastOpenWorld(w){w=Math.max(0,Math.min(w,worlds.length-1));while(w>0&&!worldUnlocked(w))w--;return w}
+function lockedMapNote(w){const msg=`🔒 Map ${w+1} is still locked. Recite Map ${w} to your teacher — your teacher opens the door.`;showMapToast(msg);const t=$('#mapToast');if(!t||!t.classList.contains('show')||t.textContent!==msg)alert(msg)}
+function backToOpenMap(w){cancelAutoOpen();viewWorld=lastOpenWorld(w);mapAvatarPosition=null;renderMap();show('mapScreen');lockedMapNote(w)}
+const openLessonBeforeDoor=openLesson;
+openLesson=function(i){if(lessons[i]&&!mapOpenFor(i)){backToOpenMap(lessons[i].world);return}return openLessonBeforeDoor.apply(this,arguments)};
+const renderMapBeforeDoor=renderMap;
+renderMap=function(){if(!worldUnlocked(viewWorld)){viewWorld=lastOpenWorld(viewWorld);mapAvatarPosition=null}return renderMapBeforeDoor.apply(this,arguments)};
+const hwOpenLineBeforeDoor=hwOpenLine;
+hwOpenLine=function(i,mode){if(lessons[i]&&!mapOpenFor(i)){backToOpenMap(lessons[i].world);return}return hwOpenLineBeforeDoor.apply(this,arguments)};
+const renderLessonQuizBeforeDoor=renderLessonQuiz;
+renderLessonQuiz=function(){const r=renderLessonQuizBeforeDoor.apply(this,arguments);if($('#doneNext')&&!mapOpenFor(current+1)){$('#lessonActions').innerHTML='<button class="btn green" id="doneMap">Back to map</button>';$('#doneMap').onclick=()=>{renderMap();show('mapScreen')}}return r};
 </script>
 <script src="cartoon-avatar-14a08346.js"></script>
 </body>
