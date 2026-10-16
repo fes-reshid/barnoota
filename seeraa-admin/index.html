@@ -1144,7 +1144,7 @@ body{font-variant-numeric:lining-nums}
       <p class="muted" style="margin:0">Choose a map. <span class="role-badge warn">Gold</span> = ready for your review, <span class="role-badge ok">Green</span> = certificate signed.</p>
       <div class="map-grid" id="map-grid"></div>
       <div class="teacher-work">
-        <h2 id="selected-map-title">Map review</h2><p id="map-status"></p><div id="seeraa-extra-review"></div>
+        <h2 id="selected-map-title">Map review</h2><p id="map-status"></p><div id="seeraa-extra-review"></div><div id="seeraa-writing-review"></div>
         <div class="row"><div class="field"><label>Teacher name</label><input id="certificate-teacher"></div><div class="field"><label>Teacher feedback</label><input id="certificate-feedback" placeholder="Strengths and next practice step"></div></div>
         <div class="check-row"><label><input type="checkbox" id="certificate-hifz"> Story understood</label><label><input type="checkbox" id="certificate-recitation"> Key lesson explained</label></div>
         <label style="font-family:'Marcellus';color:var(--ink-navy)">Teacher signature</label><canvas id="signature"></canvas>
@@ -1231,6 +1231,7 @@ body{font-variant-numeric:lining-nums}
 <script src="../seeraa/course-v7.js?v=maps-45b"></script>
 <script src="../seeraa/seeraa-enrichment-data.js?v=review-1"></script>
 <script src="extra-progress.js?v=maps-45"></script>
+<script src="writing-review.js?v=1"></script>
 <script type="module" src="../kids-quest-cloud.js?v=34"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
@@ -1346,6 +1347,7 @@ function courseProfile(student){
   p.flashPracticeDone = [...(Array.isArray(p.flashPracticeDone) ? p.flashPracticeDone : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
   p.teacherMapUnlocks = [...(Array.isArray(p.teacherMapUnlocks) ? p.teacherMapUnlocks : []), ...Array(MAP_COUNT).fill(false)].slice(0,MAP_COUNT);
   p.teacherQuizResults = p.teacherQuizResults && typeof p.teacherQuizResults === 'object' ? p.teacherQuizResults : {};
+  window.SeeraaWritingReview.normalize(p, MAP_COUNT);
   p.unlocked = Math.max(1, Number(p.unlocked)||1); p.coins = Number(p.coins)||0;
   return p;
 }
@@ -1364,6 +1366,7 @@ function summarize(s){
   const stars = p.stars.reduce((a, b) => a + (Number(b) || 0), 0);
   const certs = p.teacherAssessments.filter(a => a && a.approved).length;
   const readyMaps = MAPS.map((_, i) => i).filter(i => readyForReview(p, i));
+  const toRead = MAPS.map((_, i) => i).filter(i => window.SeeraaWritingReview.needsReading(p, i));
   let currentMap = MAPS.findIndex((_, i) => !mapComplete(p, i));
   if(currentMap < 0) currentMap = 14;
   const quizzes = Object.values(p.teacherQuizResults || {});
@@ -1376,7 +1379,7 @@ function summarize(s){
   const hifz = Object.values(p.hifz && typeof p.hifz === 'object' ? p.hifz : {}).filter(h => h && Number(h.level) >= 4).length;
   const badges = Object.keys(p.badges && typeof p.badges === 'object' ? p.badges : {}).length;
   let topMap = -1; for(let i = MAPS.length - 1; i >= 0; i--){ if(mapComplete(p, i) || approved(p, i)){ topMap = i; break; } }
-  return { s, p, hasCourse, lessons, stars, certs, readyMaps, currentMap, lastQuiz, status, hifz, badges, topMap, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
+  return { s, p, hasCourse, lessons, stars, certs, readyMaps, toRead, currentMap, lastQuiz, status, hifz, badges, topMap, pct: Math.round(lessons / TOTAL_LESSONS * 100) };
 }
 function statusBadge(sum){
   return {
@@ -1447,12 +1450,12 @@ function renderOverview(){
 
   const review = $('review-list'); review.innerHTML = '';
   const items = [];
-  sums.forEach(x => x.readyMaps.forEach(i => items.push({ x, i })));
+  sums.forEach(x => { x.readyMaps.forEach(i => items.push({ x, i })); x.toRead.filter(i => !x.readyMaps.includes(i)).forEach(i => items.push({ x, i })); });
   if(!items.length) review.innerHTML = '<p class="empty">Nothing waiting — every finished map has been reviewed. 🌟</p>';
   items.slice(0, 12).forEach(({ x, i }) => {
     const el = document.createElement('div'); el.className = 'list-row';
     el.innerHTML = '<div class="avatar">' + avatarHtml(x.s, x.p) + '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) +
-      '</div><div class="sub">' + escapeHtml(mapLabel(i)) + ' · challenge ' + escapeHtml(String((x.p.mapQuizScores[i] || {}).score || 0)) + '/15</div></div><button class="btn primary small">Review →</button>';
+      '</div><div class="sub">' + escapeHtml(mapLabel(i)) + ' · challenge ' + escapeHtml(String((x.p.mapQuizScores[i] || {}).score || 0)) + '/15' + (x.toRead.includes(i) ? ' · ✍️ writing to read' : '') + '</div></div><button class="btn primary small">Review →</button>';
     el.onclick = () => openManager(x.s, 'maps', i);
     review.appendChild(el);
   });
@@ -1518,7 +1521,7 @@ function renderStudentGrid(){
   $('student-empty').textContent = studentsCache.length && classSel && !sums.length && !q && studentFilter === 'all' ? 'No students in this class yet — add them on the Classes tab or share the class code.' : studentsCache.length ? 'No student matches this search or filter.' : 'No students yet — add one in the “Add students” tab.';
   box.className = 'student-view view-' + studentView;
   document.querySelectorAll('#view-switch [data-view]').forEach(b => { const on = b.dataset.view === studentView; b.classList.toggle('active', on); b.setAttribute('aria-pressed', on); });
-  const open = x => openManager(x.s, x.readyMaps.length ? 'maps' : 'profile', x.readyMaps.length ? x.readyMaps[0] : 0);
+  const open = x => { const at = x.readyMaps.length ? x.readyMaps[0] : x.toRead.length ? x.toRead[0] : -1; openManager(x.s, at >= 0 ? 'maps' : 'profile', Math.max(0, at)); };
   const onKey = (el, x) => { el.tabIndex = 0; el.onclick = () => open(x); el.onkeydown = e => { if(e.key === 'Enter') open(x); }; };
   if(studentFilter === 'done' && sums.length){
     /* Completed maps: group students by the highest map they have finished */
@@ -1568,7 +1571,7 @@ function renderStudentGrid(){
       el.className = 'g-tile' + (s.disabled ? ' disabled' : '');
       el.innerHTML = '<div class="g-ring" style="--p:' + x.pct + '"><div class="avatar big">' + avatarHtml(s, x.p) + '</div></div>' +
         '<div class="g-name">' + escapeHtml(s.displayName || s.username) + '</div><div class="g-sub">' + x.pct + '% · ' + escapeHtml(mapLabel(x.currentMap)) + '</div>' +
-        '<div class="g-icons">' + (x.readyMaps.length ? '<span title="Ready for review">⏳</span>' : '') + (x.hifz ? '<span title="Lessons memorised">🧠 ' + x.hifz + '</span>' : '') + (x.badges ? '<span title="Badges">🏅 ' + x.badges + '</span>' : '') + (s.disabled ? '<span title="Disabled">⛔</span>' : '') + '</div>';
+        '<div class="g-icons">' + (x.readyMaps.length ? '<span title="Ready for review">⏳</span>' : '') + (x.toRead.length ? '<span title="Writing to read">✍️</span>' : '') + (x.hifz ? '<span title="Lessons memorised">🧠 ' + x.hifz + '</span>' : '') + (x.badges ? '<span title="Badges">🏅 ' + x.badges + '</span>' : '') + (s.disabled ? '<span title="Disabled">⛔</span>' : '') + '</div>';
     } else {
       /* tidy cards */
       const last = x.lastQuiz ? x.lastQuiz.score + '/' + x.lastQuiz.total : '—', cls = classesOf(s.uid).map(c => c.name);
@@ -1641,7 +1644,7 @@ function renderModal(){
     const done = mapLessonsDone(x.p, i), q = x.p.mapQuizScores[i], a = x.p.teacherAssessments[i];
     return '<tr><td><b>' + (i + 1) + '.</b> ' + escapeHtml(m[0]) + ' <span class="muted">(lessons ' + m[1] + ')</span>' + (mapNote(s, i) ? ' <span title="Personal note sent">💬</span>' : '') + '</td>' +
       '<td><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1;min-width:60px"><span style="width:' + Math.round(done / m[3] * 100) + '%"></span></div><span class="acc">' + done + '/' + m[3] + '</span></div></td>' +
-      '<td>' + (q ? (quizPassed(x.p, i) ? '<span class="role-badge ok">' : '<span class="role-badge warn">') + escapeHtml(String(q.score)) + '/15</span>' : '<span class="muted">—</span>') + '</td>' +
+      '<td>' + (q ? (quizPassed(x.p, i) ? '<span class="role-badge ok">' : '<span class="role-badge warn">') + escapeHtml(String(q.score)) + '/15</span>' : '<span class="muted">—</span>') + window.SeeraaWritingReview.badge(x.p, i) + '</td>' +
       '<td>' + (a && a.approved ? '<span class="role-badge ok">✓ ' + escapeHtml(a.teacherName || 'Signed') + '</span>' : readyForReview(x.p, i) ? '<button class="btn primary small" data-review="' + i + '">Review</button>' : '<span class="muted">—</span>') + '</td></tr>';
   }).join('');
   document.querySelectorAll('[data-review]').forEach(b => b.onclick = () => { selectedMap = +b.dataset.review; showSub('maps'); });
@@ -1697,7 +1700,7 @@ function renderMapManager(){
   MAPS.forEach((m,i)=>{
     const b=document.createElement('button'), done=mapLessonsDone(p,i);
     b.className='map-pick'+(i===selectedMap?' active':'')+(approved(p,i)?' approved':readyForReview(p,i)?' ready':'');
-    b.innerHTML='Map '+(i+1)+(approved(p,i)?' ✓':readyForReview(p,i)?' ⏳':'')+'<br><small>'+escapeHtml(m[0])+'</small><div class="mini"><span style="width:'+Math.round(done/m[3]*100)+'%"></span></div>';
+    b.innerHTML='Map '+(i+1)+(approved(p,i)?' ✓':readyForReview(p,i)?' ⏳':'')+(window.SeeraaWritingReview.needsReading(p,i)?' ✍️':'')+'<br><small>'+escapeHtml(m[0])+'</small><div class="mini"><span style="width:'+Math.round(done/m[3]*100)+'%"></span></div>';
     b.onclick=()=>{selectedMap=i;renderMapManager();};grid.appendChild(b);
   });
   const m=MAPS[selectedMap],a=p.teacherAssessments[selectedMap]||{},complete=mapComplete(p,selectedMap),passed=quizPassed(p,selectedMap),manual=!!p.teacherMapUnlocks[selectedMap];
@@ -1705,7 +1708,23 @@ function renderMapManager(){
   $('map-status').innerHTML='Lessons: <b>'+mapLessonsDone(p,selectedMap)+'/'+m[3]+(complete?' ✓':'')+'</b> · 15-question challenge: <b>'+(passed?'passed':'not passed')+'</b> · Next map: <b>'+((a.approved||manual)?'open':'locked')+'</b>';
   renderNoteBlock();
   window.SeeraaTeacherProgress.renderMap(document.getElementById('seeraa-extra-review'),p,selectedMap);
+  window.SeeraaWritingReview.render(document.getElementById('seeraa-writing-review'),p,selectedMap,{key:activeStudent.uid+':'+selectedMap,save:saveWritingReview});
   $('certificate-teacher').value=a.teacherName||$('certificate-teacher').dataset.me||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
+}
+/* Question 15 writing: answer the newest copy, so a version the student has just sent is never overwritten */
+function saveWritingReview(status, text, note, sentAt){
+  if(!activeStudent) return Promise.resolve(false);
+  const uid = activeStudent.uid, map = selectedMap, by = ($('certificate-teacher').dataset.me || $('certificate-teacher').value || '').trim();
+  setManageMessage('Saving…');
+  return loadStudents().then(() => {
+    if(!activeStudent || activeStudent.uid !== uid) return false;
+    const p = currentProfile(), w = p.mapWritings[map];
+    if(!w){ setManageMessage('This writing is no longer there.', true); return false; }
+    if(w.at !== sentAt){ selectedMap = map; renderMapManager(); setManageMessage('The student has just sent a new version — read it, then answer again.', true); return false; }
+    w.review = { status, text, note, by, at: new Date().toISOString(), for: w.at };
+    selectedMap = map;
+    return saveActiveProfile(p, status === 'rewrite' ? 'Sent back ↩ The student will be asked to write it again.' : 'Writing accepted ✓ The student will see your note.').then(() => { const ok = !!(activeStudent && activeStudent.progress && activeStudent.progress[GAME_KEY] === p); if(ok) renderMapManager(); return ok; });
+  });
 }
 function mapNote(s, i){ const n = s.teacherNotes && s.teacherNotes[GAME_KEY] && s.teacherNotes[GAME_KEY][String(i)]; return n && (n.note || n.quizId) ? n : null; }
 function renderNoteBlock(){
@@ -3184,12 +3203,12 @@ function wire(){
     const p=currentProfile();p.teacherMapUnlocks[selectedMap]=true;saveActiveProfile(p,'Next map opened. The certificate still requires the Talqeen teacher check.').then(renderMapManager);
   });
   $('reset-map').addEventListener('click', ()=>{
-    if(!activeStudent||!confirm('Reset this map’s lessons, quiz, teacher check and certificate?'))return;const p=currentProfile(),m=MAPS[selectedMap];
-    for(let i=m[2];i<m[2]+m[3];i++){p.stars[i]=0;p.memoryDone[i]=false}window.SeeraaTeacherProgress.clearMap(p,selectedMap);p.vocabDone[selectedMap]=false;p.flashPracticeDone[selectedMap]=false;p.mapQuizScores[selectedMap]=null;p.teacherAssessments[selectedMap]=null;p.teacherMapUnlocks[selectedMap]=false;
+    if(!activeStudent||!confirm('Reset this map’s lessons, quiz, writing, teacher check and certificate?'))return;const p=currentProfile(),m=MAPS[selectedMap];
+    for(let i=m[2];i<m[2]+m[3];i++){p.stars[i]=0;p.memoryDone[i]=false}window.SeeraaTeacherProgress.clearMap(p,selectedMap);p.vocabDone[selectedMap]=false;p.flashPracticeDone[selectedMap]=false;p.mapQuizScores[selectedMap]=null;p.teacherAssessments[selectedMap]=null;p.teacherMapUnlocks[selectedMap]=false;p.mapWritings[selectedMap]=null;
     saveActiveProfile(p,'Selected map reset.').then(renderMapManager);
   });
   $('reset-course').addEventListener('click', ()=>{
-    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(TOTAL_LESSONS).fill(0);p.memoryDone=Array(TOTAL_LESSONS).fill(false);p.seeraaExplored={};p.vocabDone=Array(MAP_COUNT).fill(false);p.flashPracticeDone=Array(MAP_COUNT).fill(false);p.mapQuizScores=Array(MAP_COUNT).fill(null);p.teacherAssessments=Array(MAP_COUNT).fill(null);p.teacherMapUnlocks=Array(MAP_COUNT).fill(false);p.unlocked=1;p.coins=0;
+    if(!activeStudent||!confirm('Reset all Seeraa Adventure progress for this student? This removes every map certificate.'))return;const p=currentProfile();p.stars=Array(TOTAL_LESSONS).fill(0);p.memoryDone=Array(TOTAL_LESSONS).fill(false);p.seeraaExplored={};p.vocabDone=Array(MAP_COUNT).fill(false);p.flashPracticeDone=Array(MAP_COUNT).fill(false);p.mapQuizScores=Array(MAP_COUNT).fill(null);p.teacherAssessments=Array(MAP_COUNT).fill(null);p.teacherMapUnlocks=Array(MAP_COUNT).fill(false);p.mapWritings=Array(MAP_COUNT).fill(null);p.unlocked=1;p.coins=0;
     saveActiveProfile(p,'The complete Seeraa Adventure course has been reset.').then(renderMapManager);
   });
 

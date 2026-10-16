@@ -1535,7 +1535,7 @@ const normalizeProfileBeforeMaps45=normalizeProfile;normalizeProfile=function(p,
 worldUnlocked=function(w){return w===0||!!(assessment(w-1)&&assessment(w-1).approved)||!!(profile.teacherMapUnlocks&&profile.teacherMapUnlocks[w-1])};
 async function syncTeacherPortalUpdates(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.getStudentProfile)return;
- try{const data=await window.KidsCloud.getStudentProfile(),remote=data&&data.progress&&data.progress[GAME_KEY];if(!remote)return;const before=JSON.stringify({a:profile.teacherAssessments,u:profile.teacherMapUnlocks}),updated=normalizeProfile(remote,data.displayName||profile.name),after=JSON.stringify({a:updated.teacherAssessments,u:updated.teacherMapUnlocks});if(before===after)return;profile=updated;try{localStorage.setItem(progressKey(),JSON.stringify(profile))}catch(e){}loadBoard();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}catch(e){}
+ try{const data=await window.KidsCloud.getStudentProfile(),remote=data&&data.progress&&data.progress[GAME_KEY];if(!remote)return;const replies=x=>(Array.isArray(x.mapWritings)?x.mapWritings:[]).map(w=>w&&w.review||null),before=JSON.stringify({a:profile.teacherAssessments,u:profile.teacherMapUnlocks,w:replies(profile)}),updated=normalizeProfile(remote,data.displayName||profile.name),after=JSON.stringify({a:updated.teacherAssessments,u:updated.teacherMapUnlocks,w:replies(updated)});if(before===after)return;profile=updated;try{localStorage.setItem(progressKey(),JSON.stringify(profile))}catch(e){}loadBoard();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}catch(e){}
 }
 window.addEventListener('focus',syncTeacherPortalUpdates);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTeacherPortalUpdates()});
@@ -2370,8 +2370,8 @@ function showMapLineMatch(){
   t.addEventListener('drop',e=>{e.preventDefault();t.classList.remove('drag-over');check(+e.dataTransfer.getData('text/plain'),t)});
   t.onclick=()=>{if(mqSelected!=null)check(mqSelected,t)};t.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&mqSelected!=null){e.preventDefault();check(mqSelected,t)}}});
 }
-/* The story match is question 15 of the Map Challenge: 14 multiple-choice
-   questions come first, then the match counts as one point. */
+/* The story match was question 15 of the Map Challenge; question 15 is now the
+   writing task the student sends to the teacher (seeraa-writing.js). */
 const renderMapQuizBeforeLineMatch=renderMapQuiz;
 renderMapQuiz=function(){if(mapQuizIndex===MAP_QUIZ_TOTAL-1){mapMatchDone=false;showMapLineMatch();return}renderMapQuizBeforeLineMatch.apply(this,arguments)};
 const finishMapQuizBeforeLineMatch=finishMapQuiz;
@@ -2718,7 +2718,7 @@ Object.keys(LINE_TRANSLATIONS).forEach(k=>delete LINE_TRANSLATIONS[k]);lessons.f
 /* Teacher mode: a teacher/admin who signs in here can open every map and
    lesson, and edit the course for everyone — a lesson's title, English
    meaning, explanation and five questions; a map's name and its Map
-   Challenge questions (question 15 is always the story match). Edits live in
+   Challenge questions and its writing task (question 15). Edits live in
    kids_quest_content and are applied for every student when they sign in. */
 var teacherMode=false,contentEdits={},contentLoaded=false;
 const LESSON_ORIG=lessons.map(l=>({title:l.title,translation:l.translation,text:l.text,explanation:PDF_EXPLANATIONS[String(l.lines)]||l.text,simple:simpleExplanationFor(l),examples:quranExamplesForLine(l.lines).map(x=>({label:stripTags(x.label),ar:markToBrackets(x.ar),ref:stripTags(x.ref),note:stripTags(x.note)}))})),WORLD_ORIG=worlds.map(w=>w.title),PDF_ORIG=Object.assign({},PDF_EXPLANATIONS);
@@ -2857,9 +2857,9 @@ function openLessonEditor(i){
 function openMapEditor(w){
  const id=mapKey(w),qs=buildMapQuiz(w).slice(0,MAP_QUIZ_TOTAL-1).map(qFromBuilt);
  openEditor({id,title:/^map\s*\d+/i.test(worlds[w].title)?worlds[w].title:`Map ${w+1} · ${worlds[w].title}`,edited:editedWhen(id),
-  fields:`<label class="tm-label">Map name<input class="tm-in" id="tmMapTitle" maxlength="120" value="${escapeHtml(worlds[w].title)}"></label>`,
-  readFields:()=>({kind:'map',key:String(w),mapTitle:$('#tmMapTitle').value.trim()}),
-  qTitle:`Map Challenge — questions 1 to ${MAP_QUIZ_TOTAL-1}`,qNote:`Question ${MAP_QUIZ_TOTAL} is always the story match (drag each line to its English meaning) — it uses the English meanings you set in each lesson. Pass mark: ${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL}.`,qs,qLabel:n=>'Question '+(n+1),
+  fields:`<label class="tm-label">Map name<input class="tm-in" id="tmMapTitle" maxlength="120" value="${escapeHtml(worlds[w].title)}"></label>`+(window.SeeraaWriting?`<label class="tm-label">✍️ Question ${MAP_QUIZ_TOTAL} — writing task<textarea class="tm-in" id="tmWritePrompt" maxlength="600">${escapeHtml(SeeraaWriting.promptFor(w))}</textarea></label><p class="tm-help">Students write at least ${SeeraaWriting.MIN_WORDS} words and send it to you before they see their result. Read, correct and answer their writing in the Teacher portal → Maps. Empty this box to use the original task.</p>`:''),
+  readFields:()=>{const d={kind:'map',key:String(w),mapTitle:$('#tmMapTitle').value.trim()},wp=$('#tmWritePrompt');if(wp){const v=wp.value.trim();if(v&&v!==SeeraaWriting.defaultPrompt(w))d.writePrompt=v}return d},
+  qTitle:`Map Challenge — questions 1 to ${MAP_QUIZ_TOTAL-1}`,qNote:`Question ${MAP_QUIZ_TOTAL} is the writing task above. Pass mark: ${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL}.`,qs,qLabel:n=>'Question '+(n+1),
   after:()=>{if(currentScreen()==='mapQuizScreen')showMapQuiz();else renderMap()}});
 }
 const renderLessonBeforeExImg=renderLesson;renderLesson=function(){const r=renderLessonBeforeExImg.apply(this,arguments);fillExImages($('#stage'));return r};
@@ -3440,6 +3440,7 @@ hwOpenLine=function(i,mode){if(lessons[i]&&!mapOpenFor(i)){backToOpenMap(lessons
 </script>
 <script src="cartoon-avatar-14a08346.js?v=walk-4"></script>
 <script src="seeraa-activities.js?v=maps-45"></script>
+<script src="seeraa-writing.js?v=1"></script>
 <script src="seeraa-content-editor.js?v=editable-activities-11"></script>
 <script src="historical-worlds.js?v=maps-45"></script>
 <script src="seeraa-enrichment-data.js?v=review-1"></script>
