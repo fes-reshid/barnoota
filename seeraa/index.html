@@ -2857,9 +2857,9 @@ function openLessonEditor(i){
 function openMapEditor(w){
  const id=mapKey(w),qs=buildMapQuiz(w).slice(0,MAP_QUIZ_TOTAL-1).map(qFromBuilt);
  openEditor({id,title:/^map\s*\d+/i.test(worlds[w].title)?worlds[w].title:`Map ${w+1} · ${worlds[w].title}`,edited:editedWhen(id),
-  fields:`<label class="tm-label">Map name<input class="tm-in" id="tmMapTitle" maxlength="120" value="${escapeHtml(worlds[w].title)}"></label>`+(window.SeeraaWriting?`<label class="tm-label">✍️ Question ${MAP_QUIZ_TOTAL} — writing task<textarea class="tm-in" id="tmWritePrompt" maxlength="600">${escapeHtml(SeeraaWriting.promptFor(w))}</textarea></label><p class="tm-help">Students write at least ${SeeraaWriting.MIN_WORDS} words and send it to you before they see their result. Read, correct and answer their writing in the Teacher portal → Maps. Empty this box to use the original task.</p>`:''),
-  readFields:()=>{const d={kind:'map',key:String(w),mapTitle:$('#tmMapTitle').value.trim()},wp=$('#tmWritePrompt');if(wp){const v=wp.value.trim();if(v&&v!==SeeraaWriting.defaultPrompt(w))d.writePrompt=v}return d},
-  qTitle:`Map Challenge — questions 1 to ${MAP_QUIZ_TOTAL-1}`,qNote:`Question ${MAP_QUIZ_TOTAL} is the writing task above. Pass mark: ${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL}.`,qs,qLabel:n=>'Question '+(n+1),
+  fields:`<label class="tm-label">Map name<input class="tm-in" id="tmMapTitle" maxlength="120" value="${escapeHtml(worlds[w].title)}"></label>`+(window.SeeraaWriting?SeeraaWriting.editorHTML(w):''),
+  readFields:()=>Object.assign({kind:'map',key:String(w),mapTitle:$('#tmMapTitle').value.trim()},window.SeeraaWriting?SeeraaWriting.readEditor(w):{}),
+  qTitle:`Map Challenge — questions 1 to ${MAP_QUIZ_TOTAL-1}`,qNote:`Question ${MAP_QUIZ_TOTAL} is the reflection above. Pass mark: ${MAP_QUIZ_PASS}/${MAP_QUIZ_TOTAL}.`,qs,qLabel:n=>'Question '+(n+1),
   after:()=>{if(currentScreen()==='mapQuizScreen')showMapQuiz();else renderMap()}});
 }
 const renderLessonBeforeExImg=renderLesson;renderLesson=function(){const r=renderLessonBeforeExImg.apply(this,arguments);fillExImages($('#stage'));return r};
@@ -3440,7 +3440,7 @@ hwOpenLine=function(i,mode){if(lessons[i]&&!mapOpenFor(i)){backToOpenMap(lessons
 </script>
 <script src="cartoon-avatar-14a08346.js?v=walk-4"></script>
 <script src="seeraa-activities.js?v=maps-45"></script>
-<script src="seeraa-writing.js?v=1"></script>
+<script src="seeraa-writing.js?v=2"></script>
 <script src="seeraa-content-editor.js?v=editable-activities-11"></script>
 <script src="historical-worlds.js?v=maps-45"></script>
 <script src="seeraa-enrichment-data.js?v=review-1"></script>

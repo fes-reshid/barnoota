@@ -1231,7 +1231,7 @@ body{font-variant-numeric:lining-nums}
 <script src="../seeraa/course-v7.js?v=maps-45b"></script>
 <script src="../seeraa/seeraa-enrichment-data.js?v=review-1"></script>
 <script src="extra-progress.js?v=maps-45"></script>
-<script src="writing-review.js?v=1"></script>
+<script src="writing-review.js?v=2"></script>
 <script type="module" src="../kids-quest-cloud.js?v=34"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
@@ -1455,7 +1455,7 @@ function renderOverview(){
   items.slice(0, 12).forEach(({ x, i }) => {
     const el = document.createElement('div'); el.className = 'list-row';
     el.innerHTML = '<div class="avatar">' + avatarHtml(x.s, x.p) + '</div><div class="grow"><div class="title">' + escapeHtml(x.s.displayName || x.s.username) +
-      '</div><div class="sub">' + escapeHtml(mapLabel(i)) + ' · challenge ' + escapeHtml(String((x.p.mapQuizScores[i] || {}).score || 0)) + '/15' + (x.toRead.includes(i) ? ' · ✍️ writing to read' : '') + '</div></div><button class="btn primary small">Review →</button>';
+      '</div><div class="sub">' + escapeHtml(mapLabel(i)) + ' · challenge ' + escapeHtml(String((x.p.mapQuizScores[i] || {}).score || 0)) + '/15' + (x.toRead.includes(i) ? ' · ✍️ reflection to read' : '') + '</div></div><button class="btn primary small">Review →</button>';
     el.onclick = () => openManager(x.s, 'maps', i);
     review.appendChild(el);
   });
@@ -1571,7 +1571,7 @@ function renderStudentGrid(){
       el.className = 'g-tile' + (s.disabled ? ' disabled' : '');
       el.innerHTML = '<div class="g-ring" style="--p:' + x.pct + '"><div class="avatar big">' + avatarHtml(s, x.p) + '</div></div>' +
         '<div class="g-name">' + escapeHtml(s.displayName || s.username) + '</div><div class="g-sub">' + x.pct + '% · ' + escapeHtml(mapLabel(x.currentMap)) + '</div>' +
-        '<div class="g-icons">' + (x.readyMaps.length ? '<span title="Ready for review">⏳</span>' : '') + (x.toRead.length ? '<span title="Writing to read">✍️</span>' : '') + (x.hifz ? '<span title="Lessons memorised">🧠 ' + x.hifz + '</span>' : '') + (x.badges ? '<span title="Badges">🏅 ' + x.badges + '</span>' : '') + (s.disabled ? '<span title="Disabled">⛔</span>' : '') + '</div>';
+        '<div class="g-icons">' + (x.readyMaps.length ? '<span title="Ready for review">⏳</span>' : '') + (x.toRead.length ? '<span title="Reflection to read">✍️</span>' : '') + (x.hifz ? '<span title="Lessons memorised">🧠 ' + x.hifz + '</span>' : '') + (x.badges ? '<span title="Badges">🏅 ' + x.badges + '</span>' : '') + (s.disabled ? '<span title="Disabled">⛔</span>' : '') + '</div>';
     } else {
       /* tidy cards */
       const last = x.lastQuiz ? x.lastQuiz.score + '/' + x.lastQuiz.total : '—', cls = classesOf(s.uid).map(c => c.name);
@@ -1711,7 +1711,7 @@ function renderMapManager(){
   window.SeeraaWritingReview.render(document.getElementById('seeraa-writing-review'),p,selectedMap,{key:activeStudent.uid+':'+selectedMap,save:saveWritingReview});
   $('certificate-teacher').value=a.teacherName||$('certificate-teacher').dataset.me||'';$('certificate-feedback').value=a.feedback||'';$('certificate-hifz').checked=!!a.hifz;$('certificate-recitation').checked=!!a.recitation;drawSavedSignature(a.signature||'');setManageMessage('',false);
 }
-/* Question 15 writing: answer the newest copy, so a version the student has just sent is never overwritten */
+/* Question 15 reflection: answer the newest copy, so a version the student has just sent is never overwritten */
 function saveWritingReview(status, text, note, sentAt){
   if(!activeStudent) return Promise.resolve(false);
   const uid = activeStudent.uid, map = selectedMap, by = ($('certificate-teacher').dataset.me || $('certificate-teacher').value || '').trim();
@@ -1723,7 +1723,16 @@ function saveWritingReview(status, text, note, sentAt){
     if(w.at !== sentAt){ selectedMap = map; renderMapManager(); setManageMessage('The student has just sent a new version — read it, then answer again.', true); return false; }
     w.review = { status, text, note, by, at: new Date().toISOString(), for: w.at };
     selectedMap = map;
-    return saveActiveProfile(p, status === 'rewrite' ? 'Sent back ↩ The student will be asked to write it again.' : 'Writing accepted ✓ The student will see your note.').then(() => { const ok = !!(activeStudent && activeStudent.progress && activeStudent.progress[GAME_KEY] === p); if(ok) renderMapManager(); return ok; });
+    return saveActiveProfile(p, status === 'rewrite' ? 'Sent back ↩ The student will be asked to write it again.' : 'Reflection accepted ✓ The student will see your note.').then(() => {
+      const ok = !!(activeStudent && activeStudent.progress && activeStudent.progress[GAME_KEY] === p); if(!ok) return false;
+      renderMapManager();
+      /* the answer also reaches the student as a message from you (the existing messages) */
+      const where = 'Open Map ' + (map + 1) + ' → From your teacher → My reflection.';
+      const msg = (status === 'rewrite' ? '✍️ Please write your Map ' + (map + 1) + ' reflection again.' : '✍️ Your Map ' + (map + 1) + ' reflection: ✓ Accepted.') +
+        (note ? '\n\n' + note : '') + (status === 'rewrite' ? '\n\n' + where + ' Tap ✍️ Write it again.' : text ? '\n\nI made some corrections. ' + where : '');
+      window.KidsCloud.sendMessage(uid, { from:'teacher', text: msg, authorName: by, studentName: activeStudent.displayName || activeStudent.username }).catch(() => {});
+      return true;
+    });
   });
 }
 function mapNote(s, i){ const n = s.teacherNotes && s.teacherNotes[GAME_KEY] && s.teacherNotes[GAME_KEY][String(i)]; return n && (n.note || n.quizId) ? n : null; }
