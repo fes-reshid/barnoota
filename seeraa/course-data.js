@@ -8357,7 +8357,7 @@ window.SEERAA_COURSE=[
       {
         "title": "Living Together in Madīnah",
         "arabic": "صَحِيفَةُ الْمَدِينَة",
-        "story": "Madīnah was home to many different groups: the Muhājirūn from Makkah, the Anṣār from the tribes of Aws and Khazraj, Jewish tribes, and people who had not yet accepted Islam. The Aws and Khazraj had fought each other for years. To help everyone live together in peace, the Prophet ﷺ wrote an agreement, often called the Charter of Madīnah. It explained that the believers were one community who must help each other, pay debts and ransoms together, and never protect a criminal. The Jewish tribes kept their own religion and were to be treated fairly, as long as they kept the agreement. Everyone would defend Madīnah together if it was attacked, and disagreements would be brought to Allah and His Messenger ﷺ. Neighbours were to be protected like oneself. For the first time, a city of many tribes had one written agreement about rights and duties.",
+        "story": "Madīnah was home to many different groups: the Muhājirūn from Makkah, the Anṣār from the tribes of Aws and Khazraj, Jewish tribes, and people who had not yet accepted Islam. The Aws and Khazraj had fought each other for years. To help everyone live together in peace, the Prophet ﷺ wrote an agreement, often called the Charter of Madīnah. It explained that the believers were one community who must help each other, pay debts and ransoms together, and never protect a criminal. The Jewish tribes kept their own religion and were to be treated fairly, as long as they kept the agreement. Everyone would defend Madīnah together if it was attacked, and disagreements would be brought to Allah and His Messenger ﷺ. The protection of Allah was the same for the humblest believer as for the greatest. For the first time, a city of many tribes had one written agreement about rights and duties.",
         "picks": [
           {
             "q": "Why did Madīnah need an agreement?",
@@ -8376,11 +8376,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "How were neighbours to be treated?",
+            "q": "What did the agreement say about a criminal?",
             "options": [
-              "Protected like oneself",
-              "Ignored",
-              "Sent away"
+              "No one may help him or give him shelter",
+              "His tribe may hide him",
+              "He may buy his freedom with money"
             ]
           }
         ],
@@ -8734,7 +8734,7 @@ window.SEERAA_COURSE=[
       {
         "title": "A New Direction of Prayer",
         "arabic": "تَحْوِيلُ الْقِبْلَة",
-        "story": "For about sixteen or seventeen months after the Hijrah, the Muslims prayed facing Bayt al-Maqdis in Jerusalem. But the Prophet ﷺ loved the Kaʿbah, the house built by Ibrāhīm, and he would often turn his face towards the sky, hoping for a command. Then Allah revealed: “We have seen you turning your face to the sky. So turn your face towards al-Masjid al-Ḥarām.” From then on, the Kaʿbah became the qiblah. News spread quickly. In a masjid of the tribe of Banū Salimah, the people were in the middle of a prayer when a man came in and called out that the qiblah had changed. Right there, in the middle of the prayer, they all turned around to face the Kaʿbah. That masjid is still called Masjid al-Qiblatayn — the masjid of the two qiblahs. Some people complained about the change, but the believers simply obeyed.",
+        "story": "For about sixteen or seventeen months after the Hijrah, the Muslims prayed facing Bayt al-Maqdis in Jerusalem. But the Prophet ﷺ loved the Kaʿbah, the house built by Ibrāhīm, and he would often turn his face towards the sky, hoping for a command. Then Allah revealed: “We have seen you turning your face to the sky. So turn your face towards al-Masjid al-Ḥarām.” From then on, the Kaʿbah became the qiblah. News spread quickly. In one masjid of Madīnah, the people were bowing in the ʿAṣr prayer when a man who had just prayed with the Prophet ﷺ passed by and called out that the qiblah had changed. Right there, in the middle of the prayer, they all turned around to face the Kaʿbah. The next morning the people of Qubāʾ did the same in the middle of Fajr. A masjid in Madīnah is still called Masjid al-Qiblatayn — the masjid of the two qiblahs. Some people complained about the change, but the believers simply obeyed.",
         "picks": [
           {
             "q": "Which direction did the Muslims face first in Madīnah?",
@@ -8745,7 +8745,7 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What did the people in the Banū Salimah masjid do?",
+            "q": "What did the people in that masjid do?",
             "options": [
               "Turned around in the middle of the prayer",
               "Stopped praying",
@@ -9227,7 +9227,7 @@ window.SEERAA_COURSE=[
         "teach": "Obedience and honesty",
         "emoji": "✉️",
         "arabic": "سَرِيَّةُ نَخْلَة",
-        "story": "In Rajab, in the second year after the Hijrah, the Prophet ﷺ called ʿAbdullāh ibn Jaḥsh and gave him a letter. “Do not open it until you have travelled for two days,” he said. ʿAbdullāh set out with a small group of Muhājirūn, and after two days he opened the letter. It told him to go on to Nakhlah, between Makkah and Ṭāʾif, to watch the caravans of Quraysh and bring back news — and not to force any of his companions to go with him. ʿAbdullāh told his men, “Whoever wishes to go on, come with me; whoever does not may go back.” Every one of them went on. At Nakhlah they met a small Quraysh caravan on the last day of Rajab, one of the sacred months in which fighting was not allowed. There was a clash: a man of Quraysh was killed and two were taken captive. When the group returned, the Prophet ﷺ was displeased. “I did not command you to fight in the sacred month,” he said. Quraysh spread the news everywhere: “Muḥammad has broken the sacred month!” Then Allah revealed the truth, weighing every wrong fairly: “They ask you about fighting in the sacred month. Say: ‘Fighting in it is a serious matter, but turning people away from Allah’s path, disbelieving in Him, and driving His people out of the Sacred Masjid are even greater in Allah’s sight.’”",
+        "story": "In Rajab, in the second year after the Hijrah, the Prophet ﷺ called ʿAbdullāh ibn Jaḥsh and gave him a letter. “Do not open it until you have travelled for two days,” he said. ʿAbdullāh set out with a small group of Muhājirūn, and after two days he opened the letter. It told him to go on to Nakhlah, between Makkah and Ṭāʾif, to watch for a caravan of Quraysh and bring back news of their plans. ʿAbdullāh told his twelve companions what the letter said, and every one of them obeyed. At Nakhlah they met a small Quraysh caravan on the last day of Rajab, one of the sacred months in which fighting was not allowed. There was a clash: a man of Quraysh was killed and two were taken captive. When the group returned, the Prophet ﷺ was displeased with what they had done in the sacred month, and he held back the captives and the goods. Quraysh spread the news everywhere: “Muḥammad has broken the sacred month!” Then Allah revealed the truth, weighing every wrong fairly: “They ask you about fighting in the sacred month. Say: ‘Fighting in it is a serious matter, but turning people away from Allah’s path, disbelieving in Him, and driving His people out of the Sacred Masjid are even greater in Allah’s sight.’” Later the two captives were set free, and blood money was paid to the family of the man who had been killed.",
         "picks": [
           {
             "q": "When was ʿAbdullāh ibn Jaḥsh allowed to open the letter?",
@@ -9265,7 +9265,7 @@ window.SEERAA_COURSE=[
         },
         "tf": [
           {
-            "s": "ʿAbdullāh forced his companions to continue.",
+            "s": "ʿAbdullāh opened the letter as soon as he left Madīnah.",
             "a": false
           },
           {
@@ -9307,11 +9307,6 @@ window.SEERAA_COURSE=[
           }
         },
         "quotes": [
-          {
-            "en": "I did not command you to fight in the sacred month",
-            "ar": "مَا أَمَرْتُكُمْ بِقِتَالٍ فِي الشَّهْرِ الْحَرَامِ",
-            "ref": "Sīrat Ibn Hishām"
-          },
           {
             "en": "They ask you about fighting in the sacred month. Say: ‘Fighting in it is a serious matter, but turning people away from Allah’s path, disbelieving in Him, and driving His people out of the Sacred Masjid are even greater in Allah’s sight.’",
             "ar": "يَسْأَلُونَكَ عَنِ الشَّهْرِ الْحَرَامِ قِتَالٍ فِيهِ ۖ قُلْ قِتَالٌ فِيهِ كَبِيرٌ ۖ وَصَدٌّ عَنْ سَبِيلِ اللَّهِ وَكُفْرٌ بِهِ وَالْمَسْجِدِ الْحَرَامِ وَإِخْرَاجُ أَهْلِهِ مِنْهُ أَكْبَرُ عِنْدَ اللَّهِ",
@@ -9423,12 +9418,28 @@ window.SEERAA_COURSE=[
         ]
       },
       {
-        "title": "Sawād and the Straight Rows",
-        "teach": "Justice even from the leader",
+        "title": "Truth at the Wells of Badr",
+        "teach": "Honesty and unity",
         "emoji": "🏹",
-        "arabic": "سَوَادُ بْنُ غَزِيَّة",
-        "story": "On the morning of Badr, the Prophet ﷺ walked along the lines of the Muslim army with an arrow in his hand, straightening the rows. One man, Sawād ibn Ghaziyyah, was standing a little ahead of the line. The Prophet ﷺ gently pressed his stomach with the arrow and said, “Stand straight, Sawād.” “O Messenger of Allah, you have hurt me!” said Sawād. “Allah has sent you with truth and justice, so let me take my right from you.” Everyone was surprised. But the Prophet ﷺ did not become angry. He lifted his garment from his own stomach and said, “Take your right.” Sawād stepped forward — and instead of poking him, he hugged him and kissed his stomach. “What made you do this, Sawād?” asked the Prophet ﷺ. “O Messenger of Allah, you can see what is about to happen. I wanted the last moment I have with you to be my skin touching your skin.” The Prophet ﷺ made duʿāʾ for him. That morning showed two beautiful things: a leader who let an ordinary soldier ask for justice from him, and a companion whose love was greater than his fear. The straight rows were just as Allah loves: “Allah loves those who fight in His way in rows, as if they were one solid building.”",
+        "arabic": "الصِّدْق",
+        "story": "On the evening before Badr, the Prophet ﷺ sent ʿAlī, az-Zubayr and Saʿd ibn Abī Waqqāṣ to scout for news of the enemy. Near the wells they caught some water-carriers of Quraysh, among them a young boy. Some of the Muslims hoped he belonged to Abū Sufyān’s rich caravan. When the boy told the truth — “I carry water for the army of Quraysh: Abū Jahl, ʿUtbah and Umayyah are here” — they beat him. When he lied and said, “Abū Sufyān is near,” they left him alone. The Prophet ﷺ was praying. When he finished, he said: “By the One in whose hand my soul is, you beat him when he tells you the truth, and leave him alone when he lies to you!” Then he asked the water-carriers about the army himself. “How many camels do they slaughter each day?” “Nine one day and ten the next.” “Then they are between nine hundred and a thousand,” he said. When he heard which chiefs had come, he told the Muslims: “Quraysh have sent out to you their most precious men.” The next morning he walked along the lines of his little army with an arrow in his hand, straightening the rows, for Allah says: “Allah loves those who fight in His way in rows, as if they were one solid building.”",
         "picks": [
+          {
+            "q": "Why did the Prophet ﷺ scold some of the men?",
+            "options": [
+              "They beat the boy for telling the truth",
+              "They ran away from the wells",
+              "They slept too long"
+            ]
+          },
+          {
+            "q": "How did the Prophet ﷺ work out the size of the army?",
+            "options": [
+              "From the camels they slaughtered each day",
+              "By counting their tents",
+              "From a letter he found"
+            ]
+          },
           {
             "q": "What was the Prophet ﷺ holding while straightening the rows?",
             "options": [
@@ -9436,40 +9447,24 @@ window.SEERAA_COURSE=[
               "A sword",
               "A flag"
             ]
-          },
-          {
-            "q": "What did Sawād do when he was allowed to take his right?",
-            "options": [
-              "He hugged him and kissed his stomach",
-              "He poked him hard",
-              "He walked away"
-            ]
-          },
-          {
-            "q": "What does Allah love?",
-            "options": [
-              "Believers standing together in rows like one building",
-              "People pushing ahead of the line",
-              "Each person standing alone"
-            ]
           }
         ],
         "order": {
-          "prompt": "Put the morning of Badr in order",
+          "prompt": "Put the night and morning of Badr in order",
           "items": [
-            "The Prophet ﷺ straightens the rows with an arrow",
-            "He presses Sawād’s stomach",
-            "Sawād asks for his right",
-            "Sawād hugs him instead"
+            "Scouts go out to the wells",
+            "They catch a water-carrier boy",
+            "The Prophet ﷺ scolds them for beating a truth-teller",
+            "He straightens the rows with an arrow"
           ]
         },
         "tf": [
           {
-            "s": "The Prophet ﷺ became angry with Sawād.",
+            "s": "The Prophet ﷺ was pleased that the boy was beaten.",
             "a": false
           },
           {
-            "s": "The Prophet ﷺ uncovered his stomach so Sawād could take his right.",
+            "s": "The Prophet ﷺ learned the size of the army by asking wise questions.",
             "a": true
           },
           {
@@ -9477,15 +9472,15 @@ window.SEERAA_COURSE=[
             "a": true
           }
         ],
-        "benefit": "We learn that fairness applies to everyone, even leaders, and that love for the Prophet ﷺ shows in how we follow him.",
+        "benefit": "We learn to value the truth, even from an enemy, and to stand together in straight, united rows.",
         "vocab": [
+          [
+            "صِدْق",
+            "truthfulness"
+          ],
           [
             "صَفّ",
             "row"
-          ],
-          [
-            "عَدْل",
-            "justice"
           ],
           [
             "بُنْيَانٌ مَرْصُوص",
@@ -9495,8 +9490,8 @@ window.SEERAA_COURSE=[
         "chapter": "The Road to Badr",
         "learn": {
           "points": [
-            "A good leader lets people ask for their rights, even from him.",
-            "Love for the Prophet ﷺ means following him and loving to be near him.",
+            "Truth must never be punished, even when it is not what we hoped to hear.",
+            "A good leader asks wise questions and learns from the answers.",
             "Straight, united rows make the Muslims strong, in prayer and in life."
           ],
           "verse": {
@@ -9508,9 +9503,9 @@ window.SEERAA_COURSE=[
         },
         "quotes": [
           {
-            "en": "Stand straight, Sawād.",
-            "ar": "اسْتَوِ يَا سَوَادُ",
-            "ref": "Sīrat Ibn Hishām"
+            "en": "By the One in whose hand my soul is, you beat him when he tells you the truth, and leave him alone when he lies to you!",
+            "ar": "وَالَّذِي نَفْسِي بِيَدِهِ لَتَضْرِبُوهُ إِذَا صَدَقَكُمْ وَتَتْرُكُوهُ إِذَا كَذَبَكُمْ",
+            "ref": "Ṣaḥīḥ Muslim 1779"
           },
           {
             "en": "Allah loves those who fight in His way in rows, as if they were one solid building.",
@@ -10225,7 +10220,7 @@ window.SEERAA_COURSE=[
         "teach": "Loyalty and a gentle heart",
         "emoji": "📿",
         "arabic": "قِلَادَةُ زَيْنَب",
-        "story": "Among the captives of Badr was Abū al-ʿĀṣ, the husband of the Prophet’s eldest daughter Zaynab. He had not yet accepted Islam and had fought on the side of Quraysh, but Zaynab still loved him. To free him, she sent a ransom from Makkah — and with it a necklace. It was the necklace her mother Khadījah had given her on her wedding day. When the Prophet ﷺ saw Khadījah’s necklace, his heart filled with tenderness. He said gently to the companions, “If you think it right, free her captive and give back to her what is hers.” The companions agreed at once. The Prophet ﷺ freed Abū al-ʿĀṣ on one condition: that he let Zaynab come to Madīnah. Abū al-ʿĀṣ kept his promise. Years later, Abū al-ʿĀṣ was carrying goods that people of Makkah had trusted to him. He returned every single item to its owner, and then he declared that there is no god but Allah and that Muḥammad is His Messenger. The Prophet ﷺ praised him: “He spoke to me and told the truth, and he promised me and kept his promise.” A loyal heart and a kept promise led him to Islam.",
+        "story": "Among the captives of Badr was Abū al-ʿĀṣ, the husband of the Prophet’s eldest daughter Zaynab. He had not yet accepted Islam and had fought on the side of Quraysh, but Zaynab still loved him. To free him, she sent a ransom from Makkah — and with it a necklace. It was the necklace her mother Khadījah had given her on her wedding day. When the Prophet ﷺ saw Khadījah’s necklace, his heart filled with tenderness. He said gently to the companions, “If you think it right, free her captive and give back to her what is hers.” The companions agreed at once. The Prophet ﷺ freed Abū al-ʿĀṣ on one condition: that he let Zaynab come to Madīnah. Abū al-ʿĀṣ kept his promise. Years later, a trading caravan that Abū al-ʿĀṣ was leading was captured by the Muslims. He slipped into Madīnah and took refuge with Zaynab, and the Prophet ﷺ asked the Muslims — without forcing them — to return his goods. They gave back every single thing. Abū al-ʿĀṣ went back to Makkah, returned every trust to its owner, and then declared that there is no god but Allah and that Muḥammad is His Messenger, and he came to live in Madīnah. The Prophet ﷺ praised him: “He spoke to me and told the truth, and he promised me and kept his promise.” A loyal heart and a kept promise led him to Islam.",
         "picks": [
           {
             "q": "What did Zaynab send with the ransom?",
@@ -10619,7 +10614,7 @@ window.SEERAA_COURSE=[
         "teach": "Sincerity at the moment of testing",
         "emoji": "🤼",
         "arabic": "رَافِعٌ وَسَمُرَة",
-        "story": "On the way to Uḥud, at a place called ash-Shawṭ, something sad happened. ʿAbdullāh ibn Ubayy suddenly turned back towards Madīnah, taking about three hundred men with him — almost a third of the army. “He listened to them and not to me,” he complained. A companion ran after them, begging them to come back and defend their city, but they made excuses. Allah exposed them: “They say with their mouths what is not in their hearts.” Two groups of the believers nearly lost courage too and thought of turning back, but Allah kept their hearts firm. Now the army was only about seven hundred. Yet some people were desperate to join it! The Prophet ﷺ checked the army and sent home the boys who were too young. Among them was Rāfiʿ ibn Khadīj — but someone said, “Rāfiʿ is an excellent archer,” so he was allowed to stay. Then young Samurah ibn Jundub cried, “I am stronger than Rāfiʿ — I can beat him at wrestling!” The Prophet ﷺ let them wrestle, and Samurah threw Rāfiʿ to the ground, so Samurah was allowed to stay too. Grown men with excuses turned back, while young boys wrestled for a place. Allah says of the believers who nearly lost heart: “Allah was their Protector, and in Allah let the believers put their trust.”",
+        "story": "On the way to Uḥud, at a place called ash-Shaykhān, the Prophet ﷺ checked his army and sent home the boys who were too young to fight. Among them was Rāfiʿ ibn Khadīj — but he was allowed to stay, because he was an excellent archer. Then young Samurah ibn Jundub cried, “I am stronger than Rāfiʿ — I can beat him at wrestling!” The Prophet ﷺ let them wrestle, and Samurah threw Rāfiʿ to the ground, so Samurah was allowed to stay too. But the next morning, at a place called ash-Shawṭ, something sad happened. ʿAbdullāh ibn Ubayy suddenly turned back towards Madīnah, taking about three hundred men with him — a third of the army. He complained that the Prophet ﷺ had followed the others’ advice and not his. ʿAbdullāh ibn Ḥarām ran after them, begging them to come back and defend their city, but they made excuses: “If we knew there would be fighting, we would follow you.” Allah exposed them: “They say with their mouths what is not in their hearts.” Two clans of the believers nearly lost courage too and thought of turning back, but Allah kept their hearts firm. Now the army was only about seven hundred. Grown men with excuses had turned back, while young boys had wrestled for a place. Allah says of the believers who nearly lost heart: “Allah was their Protector, and in Allah let the believers put their trust.”",
         "picks": [
           {
             "q": "How many men turned back with ʿAbdullāh ibn Ubayy?",
@@ -10650,9 +10645,9 @@ window.SEERAA_COURSE=[
           "prompt": "Put it in order",
           "items": [
             "The army sets out towards Uḥud",
-            "Ibn Ubayy turns back with three hundred men",
             "The Prophet ﷺ sends home boys who are too young",
-            "Samurah wrestles Rāfiʿ and wins a place"
+            "Samurah wrestles Rāfiʿ and wins a place",
+            "Ibn Ubayy turns back with three hundred men"
           ]
         },
         "tf": [
@@ -10921,40 +10916,40 @@ window.SEERAA_COURSE=[
         "teach": "Brave service",
         "emoji": "🛡️",
         "arabic": "أُمُّ عُمَارَة",
-        "story": "Nusaybah bint Kaʿb, known as Umm ʿUmārah, was one of the two women who had made the pledge at ʿAqabah. At Uḥud she came out with a water skin, to give water to the thirsty and care for the wounded. But when the archers left the hill and the battle suddenly turned, many Muslims were scattered and only a few remained around the Prophet ﷺ. Umm ʿUmārah put down her water skin and stood in front of him with her husband and sons, defending him with everything she had. She was wounded many times. The Prophet ﷺ later said, “Wherever I turned, to my right or to my left, I saw her defending me.” When he asked what she wished for, she said, “Ask Allah that we be your companions in Paradise.” He made that duʿāʾ for her family. Umm ʿUmārah said, “After that, I did not care what happened to me in this world.”",
+        "story": "Nusaybah bint Kaʿb, known as Umm ʿUmārah, was one of the two women who had made the pledge at ʿAqabah. At Uḥud, when the archers left the hill and the battle suddenly turned, many Muslims were scattered and only a few remained around the Prophet ﷺ. Umm ʿUmārah was among those who stood and defended him. She faced Ibn Qamīʾah — the man who had struck the Prophet ﷺ — and hit him with her sword again and again, but he survived, because he was wearing two coats of armour. She was wounded on her shoulder, and she kept fighting until she had twelve wounds. Other women served in other ways that day: ʿĀʾishah and Umm Sulaym carried water skins on their shoulders and poured water into the mouths of the wounded, then hurried back to fill them again, and ʿUmar said that Umm Salīṭ too carried water skins for the Muslims on the day of Uḥud.",
         "picks": [
           {
-            "q": "Why did Umm ʿUmārah first go to Uḥud?",
+            "q": "What did Umm ʿUmārah do when the battle turned?",
             "options": [
-              "To give water and care for the wounded",
-              "To lead the army",
-              "To trade"
+              "She stood and defended the Prophet ﷺ",
+              "She went home",
+              "She hid behind the hill"
             ]
           },
           {
-            "q": "What did the Prophet ﷺ say about her?",
+            "q": "How many wounds did she have by the end?",
             "options": [
-              "Wherever he turned he saw her defending him",
-              "She should go home",
-              "She was too young"
+              "Twelve",
+              "One",
+              "None at all"
             ]
           },
           {
-            "q": "What did she ask for?",
+            "q": "What did ʿĀʾishah and Umm Sulaym carry at Uḥud?",
             "options": [
-              "To be his companion in Paradise",
-              "Gold and silver",
-              "A big house"
+              "Water skins for the wounded",
+              "Swords",
+              "The flag"
             ]
           }
         ],
         "order": {
           "prompt": "Put her story in order",
           "items": [
-            "She brings water to Uḥud",
-            "The battle suddenly turns",
+            "Umm ʿUmārah makes the pledge at ʿAqabah",
+            "The battle at Uḥud suddenly turns",
             "She stands to defend the Prophet ﷺ",
-            "She asks to be with him in Paradise"
+            "She strikes Ibn Qamīʾah again and again"
           ]
         },
         "tf": [
@@ -10967,7 +10962,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "The Prophet ﷺ made duʿāʾ for her family.",
+            "s": "Some women carried water to the wounded at Uḥud.",
             "a": true
           }
         ],
@@ -10991,7 +10986,7 @@ window.SEERAA_COURSE=[
           "points": [
             "Courage and service are honoured by Allah, from women and men alike.",
             "Helping the wounded and thirsty is a brave and kind deed.",
-            "The best thing to ask for is to be with the Prophet ﷺ in Paradise."
+            "Women served Islam bravely, defending the Prophet ﷺ and caring for the wounded."
           ],
           "verse": {
             "kind": "quran",
@@ -11314,7 +11309,7 @@ window.SEERAA_COURSE=[
         "teach": "Trust after hardship",
         "emoji": "💪",
         "arabic": "حَسْبُنَا اللّٰه",
-        "story": "The day after Uḥud, the Muslims were tired, wounded and sad. Then the Prophet ﷺ gave a surprising order: everyone who had been at Uḥud should march out again to follow the army of Quraysh, so that they would not think the Muslims were weak. Even the wounded got up and went. They camped at Ḥamrāʾ al-Asad, a few miles from Madīnah, and at night they lit hundreds of fires so that their camp looked enormous. A traveller told Abū Sufyān, “Muḥammad is coming after you with an army bigger than any you have seen!” Quraysh hurried back to Makkah. When some people tried to frighten the Muslims, saying, “The people have gathered against you, so fear them,” it only made their faith stronger. They said: “Ḥasbunallāhu wa niʿma l-wakīl — Allah is enough for us, and He is the best One to rely on.” Allah praised them in the Qurʾān.",
+        "story": "The day after Uḥud, the Muslims were tired, wounded and sad. Then the Prophet ﷺ gave a surprising order: everyone who had been at Uḥud — and only they — should march out again after the army of Quraysh, in case Quraysh turned back to attack Madīnah. Even the wounded got up and went. They camped at Ḥamrāʾ al-Asad, about eight miles from Madīnah. There a man called Maʿbad, of the tribe of Khuzāʿah, met the Prophet ﷺ, then rode on to Abū Sufyān — who was already talking about turning back to attack. “Muḥammad is coming after you with an army bigger than any I have ever seen!” Maʿbad told him. So Quraysh hurried back to Makkah. When some people tried to frighten the Muslims, saying, “The people have gathered against you, so fear them,” it only made their faith stronger. They said: “Ḥasbunallāhu wa niʿma l-wakīl — Allah is enough for us, and He is the best One to rely on.” Allah praised them in the Qurʾān.",
         "picks": [
           {
             "q": "What did the Prophet ﷺ order the day after Uḥud?",
@@ -11325,11 +11320,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "Why did they light many fires?",
+            "q": "Who told Abū Sufyān that a huge army was coming?",
             "options": [
-              "To make the camp look huge",
-              "To cook a feast",
-              "Because it was cold"
+              "Maʿbad of Khuzāʿah",
+              "Abū Bakr",
+              "Surāqah"
             ]
           },
           {
@@ -11346,7 +11341,7 @@ window.SEERAA_COURSE=[
           "items": [
             "The Muslims return tired from Uḥud",
             "They march out again the next day",
-            "They light hundreds of fires",
+            "Maʿbad warns Abū Sufyān of a great army",
             "Quraysh hurry back to Makkah"
           ]
         },
@@ -11513,7 +11508,7 @@ window.SEERAA_COURSE=[
         "teach": "Allah protects His Messenger",
         "emoji": "🏰",
         "arabic": "بَنُو النَّضِير",
-        "story": "Two men from a tribe at peace with the Muslims had been killed by mistake, and compensation had to be paid to their families. Under the agreement of Madīnah, the Jewish tribe of Banū an-Naḍīr was supposed to help. So the Prophet ﷺ went to them with Abū Bakr, ʿUmar, ʿAlī and a few others. They welcomed him with smiles and asked him to sit by the wall of one of their houses while they got ready. But in secret they planned to roll a heavy millstone off the roof onto his head. Allah sent Jibrīl to warn him. The Prophet ﷺ stood up quietly, as if he were going to fetch something, and went back to Madīnah. Allah reminds the believers of such moments: “O you who believe, remember Allah’s favour to you when some people wanted to stretch out their hands against you, and He held back their hands from you.” The Prophet ﷺ gave Banū an-Naḍīr ten days to leave. ʿAbdullāh ibn Ubayy secretly promised to help them, so they refused — but his help never came. After a short siege, they agreed to leave with whatever their camels could carry. They even pulled out the doors and windows of their own houses to take them along. Allah says: “He is the One who drove out the disbelievers among the People of the Book from their homes at the first gathering.”",
+        "story": "Two men from a tribe at peace with the Muslims had been killed by mistake, and compensation had to be paid to their families. Under the agreement of Madīnah, the Jewish tribe of Banū an-Naḍīr was supposed to help. So the Prophet ﷺ went to them with Abū Bakr, ʿUmar, ʿAlī and a few others. They welcomed him with smiles and asked him to sit by the wall of one of their houses while they got ready. But in secret they planned to roll a heavy millstone off the roof onto his head. Allah sent Jibrīl to warn him. The Prophet ﷺ stood up quietly, as if he were going to fetch something, and went back to Madīnah. Allah reminds the believers of such moments: “O you who believe, remember Allah’s favour to you when some people wanted to stretch out their hands against you, and He held back their hands from you.” The Prophet ﷺ gave Banū an-Naḍīr ten days to leave. ʿAbdullāh ibn Ubayy secretly promised to help them, so they refused — but his help never came. After a short siege, they agreed to leave with whatever their camels could carry. They even pulled out the beams and pegs of their own houses to take them along. Allah says: “He is the One who drove out the disbelievers among the People of the Book from their homes at the first gathering.”",
         "picks": [
           {
             "q": "Why did the Prophet ﷺ visit Banū an-Naḍīr?",
@@ -11555,7 +11550,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "Banū an-Naḍīr took even their doors and windows.",
+            "s": "Banū an-Naḍīr even took the beams of their houses with them.",
             "a": true
           },
           {
@@ -11728,7 +11723,7 @@ window.SEERAA_COURSE=[
         "teach": "Salmān’s idea",
         "emoji": "🛡️",
         "arabic": "ٱلْخَنْدَق",
-        "story": "In the fifth year after the Hijrah, leaders of Banū an-Naḍīr travelled around Arabia, stirring up the tribes against Madīnah. Quraysh, Ghaṭafān and others joined together into one huge army of about ten thousand soldiers — al-Aḥzāb, the Confederates. When the news reached Madīnah, the Prophet ﷺ consulted his companions. Salmān al-Fārisī said that in Persia, when people feared an attack by horsemen, they dug a trench around themselves. The Arabs had never seen such a thing! Madīnah was protected on most sides by lava fields, rocky hills and thick palm gardens, so the Muslims only needed to dig a trench across the open northern side. Each group of ten men dug forty arm-lengths. The Prophet ﷺ dug and carried earth with them until the dust covered his chest. It was winter, food was short, and they were cold and hungry, but they sang as they worked. When the Prophet ﷺ saw how tired and hungry they were, he said: “O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.” They answered: “We are the ones who pledged to Muḥammad to strive for as long as we live!” In about six days the trench was finished, just before the enemy arrived. When the great army reached Madīnah and saw the deep ditch, they stopped in astonishment: the army could not cross it. Once, a few horsemen led by ʿAmr ibn ʿAbd Wudd found a narrow place and made their horses leap over, but ʿAlī ibn Abī Ṭālib faced ʿAmr and defeated him, and the others fled back across.",
+        "story": "In the fifth year after the Hijrah, leaders of Banū an-Naḍīr travelled around Arabia, stirring up the tribes against Madīnah. Quraysh, Ghaṭafān and others joined together into one huge army of about ten thousand soldiers — al-Aḥzāb, the Confederates. When the news reached Madīnah, the Prophet ﷺ consulted his companions. Salmān al-Fārisī said that in Persia, when people feared an attack by horsemen, they dug a trench around themselves. The Arabs had never seen such a thing! Madīnah was protected on most sides by lava fields, rocky hills and thick palm gardens, so the Muslims only needed to dig a trench across the open northern side. Each group of ten men dug forty arm-lengths. The Prophet ﷺ dug and carried earth with them until the dust covered his chest. It was winter, food was short, and they were cold and hungry, but they sang as they worked. When the Prophet ﷺ saw how tired and hungry they were, he said: “O Allah, the real life is the life of the Hereafter, so forgive the Anṣār and the Muhājirūn.” They answered: “We are the ones who pledged to Muḥammad to strive for as long as we live!” They dug for several days, working by day and going home at night, and the trench was finished just before the enemy arrived. When the great army reached Madīnah and saw the deep ditch, they stopped in astonishment: the army could not cross it. Once, a few horsemen led by ʿAmr ibn ʿAbd Wudd found a narrow place and made their horses leap over, but ʿAlī ibn Abī Ṭālib faced ʿAmr and defeated him, and the others fled back across.",
         "picks": [
           {
             "q": "Whose idea was the trench?",
@@ -12613,7 +12608,7 @@ window.SEERAA_COURSE=[
         "teach": "Unity and a truthful tongue",
         "emoji": "🪣",
         "arabic": "زَيْدُ بْنُ أَرْقَم",
-        "story": "On the way home from al-Muraysīʿ, the army stopped at a well. Two men began to argue over the water — one from the Muhājirūn and one from the Anṣār — and one struck the other. At once each called out to his own group: “O Anṣār!” “O Muhājirūn!” The Prophet ﷺ came quickly and stopped the tribal shouting: “Leave it, for it is rotten.” But ʿAbdullāh ibn Ubayy saw his chance to stir up trouble. He said to his friends, “When we return to Madīnah, the more honourable will drive out the more humble!” — meaning that he would drive out the Prophet ﷺ. A boy named Zayd ibn Arqam heard him and reported it. ʿUmar was furious and wanted to punish Ibn Ubayy, but the Prophet ﷺ said, “Leave him, so that people will not say that Muḥammad kills his companions.” Ibn Ubayy swore he had never said it, and some people thought young Zayd had made a mistake. Then Allah revealed Sūrat al-Munāfiqūn, repeating Ibn Ubayy’s very words and answering them: “Honour belongs to Allah, His Messenger and the believers.” The Prophet ﷺ told Zayd that Allah had confirmed he was telling the truth. When the army reached Madīnah, Ibn Ubayy’s own son ʿAbdullāh, a sincere believer, stood at the gate and would not let his father in until the Prophet ﷺ gave permission.",
+        "story": "On the way home from al-Muraysīʿ, the army stopped at a well. Two men began to argue over the water — one from the Muhājirūn and one from the Anṣār — and one struck the other. At once each called out to his own group: “O Anṣār!” “O Muhājirūn!” The Prophet ﷺ came quickly and stopped the tribal shouting: “Leave it, for it is rotten.” But ʿAbdullāh ibn Ubayy saw his chance to stir up trouble. He said to his friends, “When we return to Madīnah, the more honourable will drive out the more humble!” — meaning that he would drive out the Prophet ﷺ. A boy named Zayd ibn Arqam heard him and reported it. ʿUmar was furious and wanted to punish Ibn Ubayy, but the Prophet ﷺ said, “Leave him, so that people will not say that Muḥammad kills his companions.” Ibn Ubayy swore he had never said it, and some people thought young Zayd had made a mistake. Then Allah revealed Sūrat al-Munāfiqūn, repeating Ibn Ubayy’s very words and answering them: “Honour belongs to Allah, His Messenger and the believers.” The Prophet ﷺ told Zayd that Allah had confirmed he was telling the truth. When the army reached Madīnah, Ibn Ubayy’s own son ʿAbdullāh, a sincere believer, drew his sword at the gate and would not let his father in until he admitted that he himself was the humble one, and the Messenger of Allah ﷺ the honourable one.",
         "picks": [
           {
             "q": "What did the Prophet ﷺ call the tribal shouting?",
@@ -13431,7 +13426,7 @@ window.SEERAA_COURSE=[
         "teach": "Allah opens a way out",
         "emoji": "🌊",
         "arabic": "أَبُو بَصِير",
-        "story": "Soon after the treaty, another young Muslim named Abū Baṣīr escaped from Makkah and walked all the way to Madīnah. Quraysh sent two men to bring him back, and the Prophet ﷺ, keeping his word, handed him over. On the road, at Dhul-Ḥulayfah, Abū Baṣīr struggled with his guards and escaped; one guard was killed, and the other ran back to Madīnah in terror. Abū Baṣīr knew that if he stayed in Madīnah, he would be sent back again under the treaty. So he went to the seashore, on the road the Quraysh caravans took to Shām. Then Abū Jandal escaped from his chains and joined him, and other Muslims who had been trapped in Makkah slipped away to join them too. Soon there were about seventy of them by the sea, and every Quraysh caravan that passed was in danger. Now it was Quraysh who were in trouble! They sent a message to the Prophet ﷺ, begging him by Allah and by their family ties to take these men into Madīnah — and agreeing that whoever came to him from Makkah could stay. The very condition that had seemed so unfair was cancelled by Quraysh themselves. Allah had promised: “Whoever is mindful of Allah, He will make a way out for him, and provide for him from where he does not expect.”",
+        "story": "Soon after the treaty, another young Muslim named Abū Baṣīr escaped from Makkah and walked all the way to Madīnah. Quraysh sent two men to bring him back, and the Prophet ﷺ, keeping his word, handed him over. On the road, at Dhul-Ḥulayfah, Abū Baṣīr struggled with his guards and escaped; one guard was killed, and the other ran back to Madīnah in terror. Abū Baṣīr knew that if he stayed in Madīnah, he would be sent back again under the treaty. So he went to the seashore, on the road the Quraysh caravans took to Shām. Then Abū Jandal escaped from his chains and joined him, and other Muslims who had been trapped in Makkah slipped away to join them too. Soon there was a whole band of them by the sea, and every Quraysh caravan that passed was in danger. Now it was Quraysh who were in trouble! They sent a message to the Prophet ﷺ, begging him by Allah and by their family ties to take these men into Madīnah — and agreeing that whoever came to him from Makkah could stay. The very condition that had seemed so unfair was cancelled by Quraysh themselves. Allah had promised: “Whoever is mindful of Allah, He will make a way out for him, and provide for him from where he does not expect.”",
         "picks": [
           {
             "q": "Where did Abū Baṣīr go after escaping?",
@@ -13473,7 +13468,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "About seventy Muslims gathered by the sea.",
+            "s": "Abū Jandal escaped and joined Abū Baṣīr by the sea.",
             "a": true
           },
           {
@@ -13830,7 +13825,7 @@ window.SEERAA_COURSE=[
         "teach": "No sacrifice for Allah is wasted",
         "emoji": "⛵",
         "arabic": "أَهْلُ السَّفِينَة",
-        "story": "Many years earlier — about thirteen — Jaʿfar ibn Abī Ṭālib had led the Muslims who fled from Makkah across the sea to Abyssinia. There he had spoken so beautifully before the Najāshī that the king protected them. For all those years Jaʿfar and his companions lived far from home. Now, in the seventh year after the Hijrah, their ships finally sailed back. A group of Muslims from Yemen, among them Abū Mūsā al-Ashʿarī, had been blown by the wind to Abyssinia and came back with them. They reached the Prophet ﷺ just as Khaybar was opened, and he welcomed Jaʿfar with great joy. Later, Jaʿfar’s wife Asmāʾ bint ʿUmays was visiting Ḥafṣah when ʿUmar came in and teased her: “We made the Hijrah before you, so we have more right to the Messenger of Allah than you.” Asmāʾ was upset. “You were with the Messenger of Allah, who fed your hungry and taught your unlearned, while we were far away in a strange land — all for Allah and His Messenger!” She told the Prophet ﷺ, who said: “He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.” The people of the ship came to Asmāʾ in groups to hear those words again, and nothing in the world made them happier. The Prophet ﷺ also said to Jaʿfar, “You resemble me in looks and in character.”",
+        "story": "Many years earlier — about thirteen — Jaʿfar ibn Abī Ṭālib had gone with the Muslims who fled from Makkah across the sea to Abyssinia. There he had spoken so beautifully before the Najāshī that the king protected them. For all those years Jaʿfar and his companions lived far from home. Now, in the seventh year after the Hijrah, their ships finally sailed back. A group of Muslims from Yemen, among them Abū Mūsā al-Ashʿarī, had been blown by the wind to Abyssinia and came back with them. They reached the Prophet ﷺ just as Khaybar was opened, and he welcomed Jaʿfar with great joy. Later, Jaʿfar’s wife Asmāʾ bint ʿUmays was visiting Ḥafṣah when ʿUmar came in and teased her: “We made the Hijrah before you, so we have more right to the Messenger of Allah than you.” Asmāʾ was upset. “You were with the Messenger of Allah, who fed your hungry and taught your unlearned, while we were far away in a strange land — all for Allah and His Messenger!” She told the Prophet ﷺ, who said: “He does not have more right to me than you. He and his companions have one hijrah, and you, the people of the ship, have two hijrahs.” The people of the ship came to Asmāʾ in groups to hear those words again, and nothing in the world made them happier. The Prophet ﷺ also said to Jaʿfar, “You resemble me in looks and in character.”",
         "picks": [
           {
             "q": "Where had Jaʿfar lived for many years?",
@@ -13860,7 +13855,7 @@ window.SEERAA_COURSE=[
         "order": {
           "prompt": "Put it in order",
           "items": [
-            "Jaʿfar leads the Muslims to Abyssinia",
+            "Jaʿfar goes with the Muslims to Abyssinia",
             "Years pass far from home",
             "The ships return at the time of Khaybar",
             "The Prophet ﷺ tells Asmāʾ they have two hijrahs"
@@ -14515,7 +14510,7 @@ window.SEERAA_COURSE=[
         "teach": "Islam wipes away the past",
         "emoji": "🤝",
         "arabic": "إِسْلَامُ خَالِدٍ وَعَمْرو",
-        "story": "Two of the cleverest and bravest men of Quraysh had spent years fighting against Islam. Khālid ibn al-Walīd had led the horsemen who turned the battle at Uḥud. ʿAmr ibn al-ʿĀṣ had even gone to the Najāshī to try to have the Muslims sent back from Abyssinia. But after Ḥudaybiyyah, both began to think deeply. They had seen the Muslims’ honesty, their prayer and their discipline. Khālid said to himself that the truth was clear: this man was the Messenger of Allah. He set out for Madīnah with ʿUthmān ibn Ṭalḥah, and on the way they met ʿAmr, travelling for the very same reason! In the eighth year after the Hijrah, they came to the Prophet ﷺ. When ʿAmr stretched out his hand to give his pledge, he suddenly pulled it back. “What is wrong, ʿAmr?” “I want to make a condition: that I will be forgiven.” The Prophet ﷺ said: “Do you not know that Islam wipes out what came before it?” Allah had already promised: “Tell those who disbelieve that if they stop, what has passed will be forgiven them.” From that day, Khālid and ʿAmr used all their courage and cleverness for Islam.",
+        "story": "Two of the cleverest and bravest men of Quraysh had spent years fighting against Islam. Khālid ibn al-Walīd had led the horsemen who turned the battle at Uḥud. ʿAmr ibn al-ʿĀṣ had even gone to the Najāshī to try to have the Muslims sent back from Abyssinia. But after Ḥudaybiyyah, both began to think deeply. They had seen the Muslims’ honesty, their prayer and their discipline. Khālid said to himself that the truth was clear: this man was the Messenger of Allah. He set out for Madīnah with ʿUthmān ibn Ṭalḥah, and on the way they met ʿAmr, travelling for the very same reason! Early in the seventh year after the Hijrah, they came to the Prophet ﷺ, and he said: “Makkah has given us its own dearest sons.” When ʿAmr stretched out his hand to give his pledge, he suddenly pulled it back. “What is wrong, ʿAmr?” “I want to make a condition: that I will be forgiven.” The Prophet ﷺ said: “Do you not know that Islam wipes out what came before it?” Allah had already promised: “Tell those who disbelieve that if they stop, what has passed will be forgiven them.” From that day, Khālid and ʿAmr used all their courage and cleverness for Islam.",
         "picks": [
           {
             "q": "Which battle had Khālid turned against the Muslims?",
@@ -14698,7 +14693,7 @@ window.SEERAA_COURSE=[
         "teach": "Wisdom that saves lives",
         "emoji": "🗡️",
         "arabic": "سَيْفُ اللّٰه",
-        "story": "At Muʾtah, three thousand Muslims faced a Roman army many times bigger. When Zayd, Jaʿfar and ʿAbdullāh ibn Rawāḥah had all been martyred one after another, the flag fell. A companion picked it up and called, “O Muslims, agree on a leader!” They chose Khālid ibn al-Walīd, who had become Muslim only a few months earlier. Khālid fought so hard that nine swords broke in his hand that day. But he knew that beating such a huge army was impossible, and the wisest thing was to save the Muslims. That night he made a clever plan. He moved the soldiers on the right to the left and the left to the right, brought fresh men from the back to the front, and had a small group raise dust behind the army. In the morning, the Romans saw new faces and clouds of dust and thought a great army had come to help the Muslims. They held back, and Khālid led the Muslims safely away. In Madīnah, before any messenger had arrived, the Prophet ﷺ told the people: “Zayd took the flag and was struck down, then Jaʿfar took it and was struck down, then Ibn Rawāḥah took it and was struck down — and his eyes were shedding tears — until a sword from the swords of Allah took the flag, and Allah gave them victory.” When the army came home, some people shouted at them, “Runaways!” But the Prophet ﷺ said they were not runaways; they would return to the field again, in shāʾ Allāh.",
+        "story": "At Muʾtah, three thousand Muslims faced a Roman army many times bigger. When Zayd, Jaʿfar and ʿAbdullāh ibn Rawāḥah had all been martyred one after another, the flag fell. A companion picked it up and called, “O Muslims, agree on a leader!” They chose Khālid ibn al-Walīd, who had become Muslim only a few months earlier. Khālid fought so hard that nine swords broke in his hand that day. But he knew that beating such a huge army was impossible, and the wisest thing was to save the Muslims. That night he made a clever plan. He moved the soldiers on the right to the left and the left to the right, and brought fresh men from the back to the front. In the morning, the Romans saw new faces and thought a great army had come to help the Muslims. Then Khālid pulled the Muslims back slowly and in good order, and the Romans, afraid of being drawn into a trap in the desert, did not follow. Only twelve Muslims were martyred. In Madīnah, before any messenger had arrived, the Prophet ﷺ told the people: “Zayd took the flag and was struck down, then Jaʿfar took it and was struck down, then Ibn Rawāḥah took it and was struck down — and his eyes were shedding tears — until a sword from the swords of Allah took the flag, and Allah gave them victory.” After Muʾtah, many tribes saw the courage of the Muslims and came to accept Islam.",
         "picks": [
           {
             "q": "How many swords broke in Khālid’s hand at Muʾtah?",
@@ -14790,7 +14785,7 @@ window.SEERAA_COURSE=[
         "teach": "Humility and the ease of Islam",
         "emoji": "❄️",
         "arabic": "ذَاتُ السَّلَاسِل",
-        "story": "A few months after Muʾtah, the Prophet ﷺ sent ʿAmr ibn al-ʿĀṣ to lead an army to a place called Dhāt as-Salāsil, in the north. When ʿAmr needed more soldiers, the Prophet ﷺ sent Abū ʿUbaydah ibn al-Jarrāḥ with two hundred men — among them Abū Bakr and ʿUmar! Abū ʿUbaydah remembered that the Prophet ﷺ had told them not to quarrel, so he followed ʿAmr’s lead. Great companions served under a new Muslim without any pride. One freezing night, ʿAmr woke needing a full bath before prayer. The water was icy, and he feared it could kill him in that cold. So he did tayammum with earth and led the Fajr prayer. When they returned, people told the Prophet ﷺ. ʿAmr explained and recited the ayah: “Do not kill yourselves. Allah is Most Merciful to you.” The Prophet ﷺ laughed and said nothing more, which showed that he approved. On that journey ʿAmr wondered whether he might be the Prophet’s favourite, so he asked him, “Who is the most beloved person to you?” “ʿĀʾishah.” “And among the men?” “Her father.” “Then who?” “ʿUmar.” And ʿAmr fell silent, realising how much he still had to learn.",
+        "story": "A few months after Muʾtah, the Prophet ﷺ sent ʿAmr ibn al-ʿĀṣ to lead an army to a place called Dhāt as-Salāsil, in the north. When ʿAmr needed more soldiers, the Prophet ﷺ sent Abū ʿUbaydah ibn al-Jarrāḥ with two hundred men — among them Abū Bakr and ʿUmar! Abū ʿUbaydah remembered that the Prophet ﷺ had told them not to quarrel, so he followed ʿAmr’s lead. Great companions served under a new Muslim without any pride. One freezing night, ʿAmr woke needing a full bath before prayer. The water was icy, and he feared it could kill him in that cold. So he did tayammum with earth and led the Fajr prayer. When they returned, people told the Prophet ﷺ. ʿAmr explained and recited the ayah: “Do not kill yourselves. Allah is Most Merciful to you.” The Prophet ﷺ laughed and said nothing more, which showed that he approved. On that journey ʿAmr wondered whether he might be the Prophet’s favourite, so he asked him, “Who is the most beloved person to you?” “ʿĀʾishah.” “And among the men?” “Her father.” “Then who?” “ʿUmar.” And ʿAmr fell silent, afraid that he would be named last of all.",
         "picks": [
           {
             "q": "Who came with the extra soldiers?",
@@ -14898,7 +14893,7 @@ window.SEERAA_COURSE=[
         "teach": "Standing by those who trust you",
         "emoji": "📜",
         "arabic": "نَقْضُ الصُّلْح",
-        "story": "The treaty of Ḥudaybiyyah said that any tribe could ally with the Muslims or with Quraysh, and that all of them would live in peace. The tribe of Khuzāʿah allied with the Muslims, and the tribe of Banū Bakr allied with Quraysh. But less than two years later, Banū Bakr attacked Khuzāʿah at night by a well, and Quraysh secretly helped them with weapons and men. Even when Khuzāʿah fled into the sacred area of Makkah, they were not spared. A man of Khuzāʿah named ʿAmr ibn Sālim rode all the way to Madīnah. Standing in the masjid, he recited a poem begging the Prophet ﷺ to help his allies. The Prophet ﷺ answered, “You will be helped, ʿAmr ibn Sālim.” Quraysh realised what they had done, and their leader Abū Sufyān hurried to Madīnah to try to mend the treaty. He visited his own daughter, Umm Ḥabībah, who was a wife of the Prophet ﷺ. When he went to sit on a mat, she folded it away. “This is the mat of the Messenger of Allah,” she said, “and you are still an idol-worshipper.” Abū Sufyān went to Abū Bakr, to ʿUmar and to ʿAlī, but none of them would speak for him, and he went home with nothing. Later Allah described people like those who broke this treaty: “Will you not fight a people who broke their oaths, plotted to drive out the Messenger, and attacked you first?”",
+        "story": "The treaty of Ḥudaybiyyah said that any tribe could ally with the Muslims or with Quraysh, and that all of them would live in peace. The tribe of Khuzāʿah allied with the Muslims, and the tribe of Banū Bakr allied with Quraysh. But less than two years later, Banū Bakr attacked Khuzāʿah at night by a well, and Quraysh secretly helped them with weapons and men. Even when Khuzāʿah fled into the sacred area of Makkah, they were not spared. A man of Khuzāʿah named ʿAmr ibn Sālim rode all the way to Madīnah with forty horsemen and told the Prophet ﷺ what had happened, begging him to help his allies. The Prophet ﷺ promised to stand by them. Quraysh realised what they had done, and their leader Abū Sufyān hurried to Madīnah to try to mend the treaty. He visited his own daughter, Umm Ḥabībah, who was a wife of the Prophet ﷺ. When he went to sit on a mat, she folded it away. “This is the mat of the Messenger of Allah,” she said, “and you are still an idol-worshipper.” Abū Sufyān went to Abū Bakr, to ʿUmar and to ʿAlī, but none of them would speak for him, and he went home with nothing. Later Allah described people like those who broke this treaty: “Will you not fight a people who broke their oaths, plotted to drive out the Messenger, and attacked you first?”",
         "picks": [
           {
             "q": "Who attacked Khuzāʿah?",
@@ -14909,11 +14904,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What did the Prophet ﷺ tell ʿAmr ibn Sālim?",
+            "q": "What did the Prophet ﷺ promise ʿAmr ibn Sālim?",
             "options": [
-              "You will be helped",
-              "Go away",
-              "Ask Quraysh"
+              "To stand by Khuzāʿah, his allies",
+              "Nothing at all",
+              "To ask Quraysh what to do"
             ]
           },
           {
@@ -14978,11 +14973,6 @@ window.SEERAA_COURSE=[
           }
         },
         "quotes": [
-          {
-            "en": "You will be helped, ʿAmr ibn Sālim.",
-            "ar": "نُصِرْتَ يَا عَمْرُو بْنَ سَالِمٍ",
-            "ref": "Sīrat Ibn Hishām"
-          },
           {
             "en": "Will you not fight a people who broke their oaths, plotted to drive out the Messenger, and attacked you first?",
             "ar": "أَلَا تُقَاتِلُونَ قَوْمًا نَكَثُوا أَيْمَانَهُمْ وَهَمُّوا بِإِخْرَاجِ الرَّسُولِ وَهُمْ بَدَءُوكُمْ أَوَّلَ مَرَّةٍ",
@@ -15093,11 +15083,11 @@ window.SEERAA_COURSE=[
         ]
       },
       {
-        "title": "Ten Thousand Fires",
+        "title": "Fires at Marr aẓ-Ẓahrān",
         "teach": "Allah keeps His promise",
         "emoji": "🔥",
         "arabic": "عَشَرَةُ آلَافِ نَار",
-        "story": "In Ramaḍān, in the eighth year after the Hijrah, the Prophet ﷺ set out from Madīnah with ten thousand Muslims — the largest army Madīnah had ever seen. On the way they met his uncle al-ʿAbbās, who was at last leaving Makkah to join the Muslims with his family. The army camped at Marr aẓ-Ẓahrān, near Makkah, and at night every group lit a fire. Ten thousand fires lit up the valley! Abū Sufyān came out of Makkah in the dark to find out what was happening, and he was astonished. Al-ʿAbbās, riding the Prophet’s white mule, found him and brought him to the camp under his protection. The next morning Abū Sufyān stood before the Prophet ﷺ, the man he had fought for twenty years. The Prophet ﷺ spoke to him gently, and Abū Sufyān accepted Islam. Then he was taken to a narrow pass to watch the army march by, tribe after tribe, flags flying. When Saʿd ibn ʿUbādah passed with the Anṣār, he called out to him, “Today is the day of the great battle!” Abū Sufyān worried for his people. But the Prophet ﷺ said, “Saʿd is mistaken. Rather, this is a day on which Allah will honour the Kaʿbah, and a day on which the Kaʿbah will be covered.” Years before, when he had left Makkah in secret, Allah had promised him: “The One who gave you the Qurʾān will surely bring you back to the place of return.”",
+        "story": "In Ramaḍān, in the eighth year after the Hijrah, the Prophet ﷺ set out from Madīnah with ten thousand Muslims — the largest army Madīnah had ever seen. On the way they met his uncle al-ʿAbbās, who was at last leaving Makkah to join the Muslims with his family. The army camped at Marr aẓ-Ẓahrān, near Makkah. The Prophet ﷺ did not want to take Quraysh by surprise, so at night he had fires lit all around the camp, so that Quraysh could see how great the army was and not throw their lives away in a hopeless fight. Abū Sufyān came out of Makkah in the dark to find out what was happening, and he was astonished. Al-ʿAbbās met him and brought him to the camp under his protection. The next morning Abū Sufyān stood before the Prophet ﷺ, the man he had fought for twenty years. The Prophet ﷺ spoke to him gently, and Abū Sufyān accepted Islam. Then he was taken to a narrow pass to watch the army march by, tribe after tribe, flags flying. When Saʿd ibn ʿUbādah passed with the Anṣār, he called out to him, “Today is the day of the great battle!” Abū Sufyān worried for his people. But the Prophet ﷺ said, “Saʿd is mistaken. Rather, this is a day on which Allah will honour the Kaʿbah, and a day on which the Kaʿbah will be covered.” Years before, when he had left Makkah in secret, Allah had promised him: “The One who gave you the Qurʾān will surely bring you back to the place of return.”",
         "picks": [
           {
             "q": "How many Muslims marched to Makkah?",
@@ -15129,13 +15119,13 @@ window.SEERAA_COURSE=[
           "items": [
             "The army leaves Madīnah in Ramaḍān",
             "Al-ʿAbbās joins them on the way",
-            "Ten thousand fires are lit near Makkah",
+            "Fires are lit all around the camp",
             "Abū Sufyān accepts Islam and watches the army pass"
           ]
         },
         "tf": [
           {
-            "s": "The army lit ten thousand fires.",
+            "s": "The Prophet ﷺ had fires lit all around the camp.",
             "a": true
           },
           {
@@ -15511,7 +15501,7 @@ window.SEERAA_COURSE=[
         "teach": "Turning enemies into brothers",
         "emoji": "⛈️",
         "arabic": "عِكْرِمَةُ بْنُ أَبِي جَهْل",
-        "story": "When Makkah opened, ʿIkrimah, the son of Abū Jahl, fled. He had fought the Muslims all his life, and he did not believe he could ever be forgiven. He reached the sea and boarded a boat. Out at sea a terrible storm struck, and the sailors cried, “Call on Allah alone, sincerely! Your idols cannot help you at all out here.” Allah describes such moments: “When they board a ship, they call on Allah, sincere in their faith in Him alone.” ʿIkrimah thought: if nothing but sincerity to Allah could save him at sea, then nothing else could save him on land. He promised: “O Allah, I make You a promise: if You save me from this, I will go to Muḥammad and put my hand in his hand, and I will surely find him forgiving and generous.” Meanwhile his wife, Umm Ḥakīm, had accepted Islam. She asked the Prophet ﷺ to grant ʿIkrimah safety, and he agreed. She travelled after her husband and brought him back. When ʿIkrimah arrived, the Prophet ﷺ rose joyfully to welcome him, and ʿIkrimah accepted Islam. The Prophet ﷺ told his companions not to insult ʿIkrimah’s father in front of him, so that his feelings would not be hurt. ʿIkrimah spent the rest of his life serving Islam with the same energy he had once used against it.",
+        "story": "When Makkah opened, ʿIkrimah, the son of Abū Jahl, fled. He had fought the Muslims all his life, and he did not believe he could ever be forgiven. He reached the sea and boarded a boat. Out at sea a terrible storm struck, and the sailors cried, “Call on Allah alone, sincerely! Your idols cannot help you at all out here.” Allah describes such moments: “When they board a ship, they call on Allah, sincere in their faith in Him alone.” ʿIkrimah thought: if nothing but sincerity to Allah could save him at sea, then nothing else could save him on land. He promised: “O Allah, I make You a promise: if You save me from this, I will go to Muḥammad and put my hand in his hand, and I will surely find him forgiving and generous.” Meanwhile his wife, Umm Ḥakīm, had accepted Islam. She asked the Prophet ﷺ to grant ʿIkrimah safety, and he agreed. She travelled after her husband and brought him back. When ʿIkrimah arrived, the Prophet ﷺ jumped up joyfully to welcome him, so quickly that he did not even stop to put on his cloak, and ʿIkrimah accepted Islam. ʿIkrimah spent the rest of his life serving Islam with the same energy he had once used against it.",
         "picks": [
           {
             "q": "Whose son was ʿIkrimah?",
@@ -15530,11 +15520,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What did the Prophet ﷺ tell the companions?",
+            "q": "How did the Prophet ﷺ greet ʿIkrimah?",
             "options": [
-              "Not to insult ʿIkrimah’s father in front of him",
-              "To punish him",
-              "To ignore him"
+              "He jumped up joyfully to welcome him",
+              "He turned away from him",
+              "He sent him to prison"
             ]
           }
         ],
@@ -15580,7 +15570,7 @@ window.SEERAA_COURSE=[
         "learn": {
           "points": [
             "In hard moments people remember that only Allah can save.",
-            "The Prophet ﷺ welcomed former enemies with joy and protected their feelings.",
+            "The Prophet ﷺ welcomed former enemies with joy.",
             "Good manners can turn an enemy into a friend."
           ],
           "verse": {
@@ -15714,7 +15704,7 @@ window.SEERAA_COURSE=[
       {
         "title": "Ḥunayn",
         "arabic": "غَزْوَةُ حُنَيْن",
-        "story": "Soon after Makkah opened, the tribes of Hawāzin and Thaqīf gathered a large army. The Muslims marched out with twelve thousand men — the biggest army they had ever had. Some said proudly, “We will not be defeated today because of small numbers!” At dawn, as the Muslims entered the narrow valley of Ḥunayn, the enemy, hidden in the mountains, attacked suddenly. Many Muslims panicked and ran. But the Prophet ﷺ stood firm on his white mule and called out: “I am the Prophet, this is no lie! I am the son of ʿAbd al-Muṭṭalib!” His uncle al-ʿAbbās, who had a very loud voice, called the companions back, and they returned, crying “Labbayk! Labbayk!” Then Allah sent down calm and help, and the battle turned. Allah reminds them: “On the day of Ḥunayn, your great numbers made you proud, but they did not help you at all.” Afterwards, the Prophet ﷺ returned the captives of Hawāzin when they asked kindly, and many of them became Muslim.",
+        "story": "Soon after Makkah opened, the tribes of Hawāzin and Thaqīf gathered a large army. The Muslims marched out with twelve thousand men — the biggest army they had ever had. Some of them felt proud of their great numbers. At dawn, as the Muslims entered the narrow valley of Ḥunayn, the enemy, hidden in the mountains, attacked suddenly. Many Muslims panicked and ran. But the Prophet ﷺ stood firm on his white mule and called out: “I am the Prophet, this is no lie! I am the son of ʿAbd al-Muṭṭalib!” His uncle al-ʿAbbās, who had a very loud voice, called the companions back, and they returned, crying “Labbayk! Labbayk!” Then Allah sent down calm and help, and the battle turned. Allah reminds them: “On the day of Ḥunayn, your great numbers made you proud, but they did not help you at all.” Afterwards, the Prophet ﷺ returned the captives of Hawāzin when they asked kindly, and many of them became Muslim.",
         "picks": [
           {
             "q": "How many Muslims marched to Ḥunayn?",
@@ -15813,7 +15803,7 @@ window.SEERAA_COURSE=[
         "teach": "Never forget those who cared for you",
         "emoji": "🧺",
         "arabic": "الشَّيْمَاءُ بِنْتُ الْحَارِث",
-        "story": "After Ḥunayn, many people of Hawāzin were taken captive. Among them was an older woman who kept telling the soldiers, “I am the sister of your Prophet!” They did not believe her, but they brought her to him. “O Messenger of Allah,” she said, “I am your sister, Shaymāʾ, the daughter of Ḥalīmah.” Long ago, when the Prophet ﷺ was a baby living in the desert of Banū Saʿd, Shaymāʾ had carried him on her hip and sung to him. She showed him a mark on her back: “You bit me there when I was carrying you as a child.” The Prophet ﷺ recognised the mark and remembered. He spread out his own cloak on the ground for her to sit on and welcomed her warmly. He told her that she could stay with him, loved and honoured, or return to her people with gifts. Shaymāʾ chose to go home, and the Prophet ﷺ sent her back with generous gifts. Soon after, a group from Hawāzin came, and the Prophet ﷺ told the companions, “These brothers of yours have come to us repenting,” and asked them to return their families to them. The companions gladly agreed. More than fifty years had passed, but he had not forgotten the people who cared for him as a child. Allah says: “Be mindful of Allah, in whose name you ask one another, and of the ties of family.”",
+        "story": "After Ḥunayn, many people of Hawāzin were taken captive. Among them was an older woman who kept telling the soldiers, “I am the sister of your Prophet!” They did not believe her, but they brought her to him. “O Messenger of Allah,” she said, “I am your sister, Shaymāʾ, the daughter of Ḥalīmah.” Long ago, when the Prophet ﷺ was a baby living in the desert of Banū Saʿd, Shaymāʾ had helped her mother look after him. She showed him a mark from those childhood days, and the Prophet ﷺ recognised it and remembered. He spread out his own cloak on the ground for her to sit on and honoured her. Then he set her free and sent her back to her people with honour. Soon after, a group from Hawāzin came, and the Prophet ﷺ told the companions, “These brothers of yours have come to us repenting,” and asked them to return their families to them. The companions gladly agreed. More than fifty years had passed, but he had not forgotten the people who cared for him as a child. Allah says: “Be mindful of Allah, in whose name you ask one another, and of the ties of family.”",
         "picks": [
           {
             "q": "Who was Shaymāʾ?",
@@ -15824,11 +15814,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What sign did she show?",
+            "q": "How did the Prophet ﷺ know she was Shaymāʾ?",
             "options": [
-              "A bite mark from when she carried him",
-              "A letter",
-              "A ring"
+              "He recognised a mark from his childhood",
+              "She showed him a letter",
+              "She wore a ring of his"
             ]
           },
           {
@@ -15845,7 +15835,7 @@ window.SEERAA_COURSE=[
           "items": [
             "Shaymāʾ is taken captive after Ḥunayn",
             "She tells the soldiers she is his sister",
-            "She shows the mark from childhood",
+            "He recognises a mark from his childhood",
             "He spreads his cloak for her and honours her"
           ]
         },
@@ -15855,7 +15845,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "Shaymāʾ chose to go back to her people.",
+            "s": "The Prophet ﷺ set Shaymāʾ free and sent her back to her people.",
             "a": true
           },
           {
@@ -15910,7 +15900,7 @@ window.SEERAA_COURSE=[
         "teach": "Praying for people’s guidance",
         "emoji": "🍇",
         "arabic": "حِصَارُ الطَّائِف",
-        "story": "After Ḥunayn, the soldiers of Thaqīf ran back to their city, Ṭāʾif, and shut themselves inside its strong walls. Ten years earlier, the people of Ṭāʾif had thrown stones at the Prophet ﷺ when he came alone to invite them to Islam. Now he came with a great army and surrounded the city. For about twenty days, arrows rained down from the walls, and some Muslims were hurt. The Prophet ﷺ announced that any slave who came down from the fort would be set free. One man let himself down the wall using a pulley and was freed; from then on he was called Abū Bakrah, “the man of the pulley”. But the walls held firm, and the Prophet ﷺ decided to lift the siege and go back. The companions said, “O Messenger of Allah, the arrows of Thaqīf have torn us apart. Pray against them!” But the Prophet ﷺ raised his hands and said: “O Allah, guide Thaqīf.” Just as he had done ten years before, he prayed for them, not against them. And Allah answered. The very next year, a group from Thaqīf rode to Madīnah, and the whole tribe accepted Islam.",
+        "story": "After Ḥunayn, the soldiers of Thaqīf ran back to their city, Ṭāʾif, and shut themselves inside its strong walls. Ten years earlier, the people of Ṭāʾif had thrown stones at the Prophet ﷺ when he came alone to invite them to Islam. Now he came with a great army and surrounded the city. For between ten and twenty days, arrows rained down from the walls like swarms of locusts, and some Muslims were hurt. The Prophet ﷺ announced that any slave who came down from the fort would be set free. One man let himself down the wall using a pulley and was freed; from then on he was called Abū Bakrah, “the man of the pulley”. But the walls held firm, and the Prophet ﷺ decided to lift the siege and go back. The companions said, “O Messenger of Allah, the arrows of Thaqīf have torn us apart. Pray against them!” But the Prophet ﷺ raised his hands and said: “O Allah, guide Thaqīf.” Just as he had done ten years before, he prayed for them, not against them. And Allah answered. The very next year, a group from Thaqīf rode to Madīnah, and the whole tribe accepted Islam.",
         "picks": [
           {
             "q": "What had the people of Ṭāʾif done ten years earlier?",
@@ -16113,7 +16103,7 @@ window.SEERAA_COURSE=[
       {
         "title": "The Journey to Tabūk",
         "arabic": "غَزْوَةُ تَبُوك",
-        "story": "In the ninth year after the Hijrah, news came that the Romans were gathering a great army in the north. It was the hottest time of the year, the dates were ripe for harvest, and the journey to Tabūk was very long. It was called “the army of hardship”, and the Prophet ﷺ told everyone clearly where they were going so that they could prepare. He asked everyone to give. ʿUthmān equipped hundreds of camels and brought a thousand gold coins. ʿUmar brought half of everything he owned. Abū Bakr brought everything he had: “I have left them Allah and His Messenger.” About thirty thousand marched out. On the way they passed al-Ḥijr, the ruins of the people of Thamūd, whom Allah had destroyed. The Prophet ﷺ said: “Do not enter the dwellings of these punished people except weeping.” At Tabūk, the Romans never came. The Prophet ﷺ stayed about twenty days and made peace agreements with the towns of the north, then returned to Madīnah. The strength of Islam was now known across Arabia. Allah praises those who spend in His way: “The example of those who spend their wealth in the way of Allah is like a seed that grows seven ears.”",
+        "story": "In the ninth year after the Hijrah, news came that the Romans were gathering a great army in the north. It was the hottest time of the year, the dates were ripe for harvest, and the journey to Tabūk was very long. It was called “the army of hardship”, and the Prophet ﷺ told everyone clearly where they were going so that they could prepare. He asked everyone to give. ʿUthmān equipped hundreds of camels and brought a thousand gold coins. ʿUmar brought half of everything he owned. Abū Bakr brought everything he had: “I have left them Allah and His Messenger.” About thirty thousand marched out. On the way they passed al-Ḥijr, the ruins of the people of Thamūd, whom Allah had destroyed. The Prophet ﷺ said: “Do not enter the dwellings of these punished people except weeping.” At Tabūk, the Romans never came. The Prophet ﷺ stayed about twenty days and made peace agreements with the towns of the north, then returned to Madīnah. As the army came home, the women, boys and little children of Madīnah came out to meet them, singing: “The full moon has risen over us from the hills of al-Wadāʿ; thanks are due from us for as long as anyone calls on Allah.” The strength of Islam was now known across Arabia. Allah praises those who spend in His way: “The example of those who spend their wealth in the way of Allah is like a seed that grows seven ears.”",
         "picks": [
           {
             "q": "Why was it called the army of hardship?",
@@ -16217,7 +16207,7 @@ window.SEERAA_COURSE=[
         "teach": "Sincere intentions count",
         "emoji": "😢",
         "arabic": "الْبَكَّاؤُون",
-        "story": "When the Prophet ﷺ called the Muslims to prepare for Tabūk, some poor companions came to him with tears in their eyes. They longed to go, but they had no camel to ride and no money to buy one. “Find us something to ride,” they begged. “I cannot find anything to carry you,” he said sadly, and they turned away weeping, because they had nothing to give. They became known as al-Bakkāʾūn, “those who wept”, and Allah honoured them in the Qurʾān: “Nor is there blame on those who came to you to be given mounts, and you said, ‘I cannot find anything to carry you,’ and they turned away with their eyes overflowing with tears, sad that they had nothing to spend.” Another companion, Abū Khaythamah, stayed behind at first. One scorching day he came home to a cool, shaded garden with fresh water and food. He stopped and thought: the Messenger of Allah was out in the sun, the wind and the heat, while he sat in the cool shade — that was not fair! He jumped on his camel and rode after the army. In the desert, the Prophet ﷺ saw a rider far away and said, “Be Abū Khaythamah!” — and it was him. On the way home, the Prophet ﷺ said: “In Madīnah there are people who were with you on every road you travelled and in every valley you crossed.” “Even though they are in Madīnah?” asked the companions. “Even though they are in Madīnah. They were held back by a real excuse.”",
+        "story": "When the Prophet ﷺ called the Muslims to prepare for Tabūk, some poor companions came to him with tears in their eyes. They longed to go, but they had no camel to ride and no money to buy one. “Find us something to ride,” they begged. “I cannot find anything to carry you,” he said sadly, and they turned away weeping, because they had nothing to give. They became known as al-Bakkāʾūn, “those who wept”, and Allah honoured them in the Qurʾān: “Nor is there blame on those who came to you to be given mounts, and you said, ‘I cannot find anything to carry you,’ and they turned away with their eyes overflowing with tears, sad that they had nothing to spend.” Another companion, Abū Khaythamah, was left behind at first, but he set out alone after the army and rode through the desert to catch up. One day the Prophet ﷺ saw a rider far away, shimmering in the heat, and said, “Be Abū Khaythamah!” — and it was him. He was the same man who had once given a single measure of dates in charity, when that was all he had, and the hypocrites had mocked him for it. On the way home, the Prophet ﷺ said: “In Madīnah there are people who were with you on every road you travelled and in every valley you crossed.” “Even though they are in Madīnah?” asked the companions. “Even though they are in Madīnah. They were held back by a real excuse.”",
         "picks": [
           {
             "q": "Why did the poor companions weep?",
@@ -16228,11 +16218,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "What made Abū Khaythamah ride after the army?",
+            "q": "Who did the Prophet ﷺ say the far-off rider should be?",
             "options": [
-              "He felt it was unfair to rest in the shade while the Prophet ﷺ was in the heat",
-              "His wife told him to",
-              "He wanted spoils"
+              "Abū Khaythamah",
+              "Abū Sufyān",
+              "Khālid ibn al-Walīd"
             ]
           },
           {
@@ -16431,7 +16421,7 @@ window.SEERAA_COURSE=[
         "teach": "Building for Allah alone",
         "emoji": "🧱",
         "arabic": "مَسْجِدُ الضِّرَار",
-        "story": "Before the Prophet ﷺ left for Tabūk, a group of hypocrites came to him. “We have built a new masjid for the sick and for rainy nights,” they said. “Please come and pray in it.” The Prophet ﷺ said he was about to travel and would see when he returned. But the truth was hidden: the masjid had been built to divide the believers and to be a secret base for a man called Abū ʿĀmir, who had fought against Islam and had gone to the Roman emperor to bring an army against Madīnah. On the way back from Tabūk, Allah revealed the truth: “And there are those who built a masjid to cause harm, to spread disbelief, to divide the believers, and as a base for someone who had fought Allah and His Messenger before.” Allah commanded: “Never stand to pray in it.” Instead Allah pointed to the masjid of Qubāʾ, built by the Prophet ﷺ himself in his first days in Madīnah: “A masjid founded on taqwā from the first day is more worthy for you to stand in. In it are men who love to purify themselves, and Allah loves those who purify themselves.” The Prophet ﷺ sent companions to pull down the masjid of harm. A building is only as good as the intention behind it.",
+        "story": "Before the Prophet ﷺ left for Tabūk, a group of hypocrites came to him. “We have built a new masjid for the sick and for rainy nights,” they said. “Please come and pray in it.” The Prophet ﷺ said he was about to travel and would see when he returned. But the truth was hidden: the masjid had been built to divide the believers and to be a secret base for an enemy who had fought against Allah and His Messenger before. On the way back from Tabūk, Allah revealed the truth: “And there are those who built a masjid to cause harm, to spread disbelief, to divide the believers, and as a base for someone who had fought Allah and His Messenger before.” Allah commanded: “Never stand to pray in it.” Instead Allah pointed to the masjid of Qubāʾ, built by the Prophet ﷺ himself in his first days in Madīnah: “A masjid founded on taqwā from the first day is more worthy for you to stand in. In it are men who love to purify themselves, and Allah loves those who purify themselves.” The Prophet ﷺ sent companions to pull down the masjid of harm. A building is only as good as the intention behind it.",
         "picks": [
           {
             "q": "Why did the hypocrites build their masjid?",
@@ -16542,7 +16532,7 @@ window.SEERAA_COURSE=[
       {
         "title": "Visitors to Madīnah",
         "arabic": "عَامُ الْوُفُود",
-        "story": "After Makkah opened and Tabūk ended, tribes from all over Arabia began sending groups of visitors to Madīnah. This time is called the Year of Delegations. They came from the deserts and mountains, from Yemen, Ṭāʾif, Najd and Baḥrain. The Prophet ﷺ welcomed every group, gave them good places to stay and answered their questions patiently. A Christian group from Najrān even prayed in his masjid. Among the visitors was ʿAdiyy, the son of Ḥātim aṭ-Ṭāʾī, the most generous man the Arabs had known. The Prophet ﷺ gave ʿAdiyy a cushion and sat on the floor himself. He told him: “You will see a woman travel alone from al-Ḥīrah to the Kaʿbah fearing no one but Allah, and the treasures of Kisrā will be opened.” ʿAdiyy accepted Islam — and lived to see both promises come true. Teachers went home with each tribe, and Islam spread across all of Arabia.",
+        "story": "After Makkah opened and Tabūk ended, tribes from all over Arabia began sending groups of visitors to Madīnah. This time is called the Year of Delegations. They came from the deserts and mountains, from Yemen, Ṭāʾif, Najd and Baḥrain. The Prophet ﷺ welcomed every group, gave them good places to stay and answered their questions patiently. Among the visitors was ʿAdiyy, the son of Ḥātim aṭ-Ṭāʾī, the most generous man the Arabs had known. ʿAdiyy had once fled from the Muslims to Shām, but his sister was treated so kindly by the Prophet ﷺ that she told him to go and meet him. The Prophet ﷺ took ʿAdiyy to his own home and talked with him kindly. He told him: “You will see a woman travel alone from al-Ḥīrah to the Kaʿbah fearing no one but Allah, and the treasures of Kisrā will be opened.” ʿAdiyy accepted Islam — and lived to see both promises come true. Teachers went home with each tribe, and Islam spread across all of Arabia.",
         "picks": [
           {
             "q": "What is this time called?",
@@ -16561,11 +16551,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "Where did the Prophet ﷺ sit when ʿAdiyy had the cushion?",
+            "q": "Where did the Prophet ﷺ take ʿAdiyy to talk with him?",
             "options": [
-              "On the floor",
-              "On a throne",
-              "On a horse"
+              "To his own home",
+              "To the market",
+              "To the battlefield"
             ]
           }
         ],
@@ -16613,7 +16603,7 @@ window.SEERAA_COURSE=[
         "learn": {
           "points": [
             "We welcome guests warmly and teach them patiently.",
-            "Humble leaders give the best seat to their guests.",
+            "The Prophet ﷺ honoured his guests and talked with them kindly.",
             "The Prophet’s ﷺ promises about safety and the treasures of Kisrā came true."
           ],
           "verse": {
@@ -16733,7 +16723,7 @@ window.SEERAA_COURSE=[
         "teach": "Inviting with wisdom and respect",
         "emoji": "🕊️",
         "arabic": "وَفْدُ نَجْرَان",
-        "story": "From Najrān, in the green valleys of the south, a group of Christian scholars and leaders rode to Madīnah to talk with the Prophet ﷺ about religion. He welcomed them and spoke with them patiently about Prophet ʿĪsā, whom Muslims love and honour as a great messenger of Allah. Allah revealed: “The example of ʿĪsā in Allah’s sight is like that of Ādam: He created him from dust, then said to him, ‘Be,’ and he was.” The Prophet ﷺ also recited the invitation Allah taught him: “Say: ‘O People of the Book, come to a word that is fair between us and you: that we worship none but Allah, and associate nothing with Him.’” The leaders of Najrān did not accept Islam that day, but they chose to make a peace agreement with the Muslims, keeping their own religion under the Muslims’ protection. They asked the Prophet ﷺ to send a trustworthy man with them. “I will send with you a man who is truly trustworthy,” he said, and every companion hoped it would be him. He chose Abū ʿUbaydah ibn al-Jarrāḥ, of whom he also said: “Every nation has a trustworthy one, and the trustworthy one of this ummah is Abū ʿUbaydah ibn al-Jarrāḥ.” The Prophet ﷺ invited with wisdom and respect, and left hearts to Allah.",
+        "story": "From Najrān, in the green valleys of the south, a group of Christian scholars and leaders rode to Madīnah to talk with the Prophet ﷺ about religion. He welcomed them and spoke with them patiently about Prophet ʿĪsā, whom Muslims love and honour as a great messenger of Allah. Allah revealed: “The example of ʿĪsā in Allah’s sight is like that of Ādam: He created him from dust, then said to him, ‘Be,’ and he was.” The Prophet ﷺ also recited the invitation Allah taught him: “Say: ‘O People of the Book, come to a word that is fair between us and you: that we worship none but Allah, and associate nothing with Him.’” The leaders of Najrān did not accept Islam. When they still refused, the Prophet ﷺ invited them to pray together that Allah’s curse should fall on whichever side was lying, and he came out with al-Ḥasan and al-Ḥusayn under his cloak and Fāṭimah walking behind him. The leaders of Najrān were afraid to do it, so they chose to make a peace agreement with the Muslims instead, keeping their own religion under the Muslims’ protection. They asked the Prophet ﷺ to send a trustworthy man with them. “I will send with you a man who is truly trustworthy,” he said, and every companion hoped it would be him. He chose Abū ʿUbaydah ibn al-Jarrāḥ, of whom he also said: “Every nation has a trustworthy one, and the trustworthy one of this ummah is Abū ʿUbaydah ibn al-Jarrāḥ.” The Prophet ﷺ invited with wisdom and respect, and left hearts to Allah.",
         "picks": [
           {
             "q": "Where did the visitors come from?",
@@ -17167,7 +17157,7 @@ window.SEERAA_COURSE=[
         "teach": "Leaders chosen for ability",
         "emoji": "🏳️",
         "arabic": "جَيْشُ أُسَامَة",
-        "story": "In the last weeks of his life, the Prophet ﷺ prepared an army to go north towards Shām, where Zayd ibn Ḥārithah had been martyred at Muʾtah. To lead it, he chose Zayd’s son, Usāmah — a young man of only about eighteen. Great companions, even ʿUmar, were placed under his command. Some people grumbled about having such a young leader. The Prophet ﷺ, although he was ill, stood up and said: “If you criticise his leadership, you used to criticise the leadership of his father before him. By Allah, he was worthy of leadership, and he was one of the people dearest to me, and this one is one of the people dearest to me after him.” The army gathered outside Madīnah, but the Prophet’s illness grew worse, and they waited. After the Prophet ﷺ passed away, many advised Abū Bakr to keep the army at home. But Abū Bakr said he would never lower a flag that the Messenger of Allah had raised. He walked beside Usāmah as the young leader rode out, and he even asked Usāmah’s permission to keep ʿUmar in Madīnah to help him. The army returned safely, and the tribes of Arabia saw that the Muslims were still strong and united.",
+        "story": "In the last weeks of his life, the Prophet ﷺ prepared an army to go north towards Shām, where Zayd ibn Ḥārithah had been martyred at Muʾtah. To lead it, he chose Zayd’s son, Usāmah — a young man, not yet twenty. Great companions, even ʿUmar, were placed under his command. Some people grumbled about having such a young leader. The Prophet ﷺ, although he was ill, stood up and said: “If you criticise his leadership, you used to criticise the leadership of his father before him. By Allah, he was worthy of leadership, and he was one of the people dearest to me, and this one is one of the people dearest to me after him.” The army gathered outside Madīnah, but the Prophet’s illness grew worse, and they waited. After the Prophet ﷺ passed away, Abū Bakr sent Usāmah’s army out, just as the Prophet ﷺ had planned — it was the very first army sent out in Abū Bakr’s time as caliph — and the tribes of Arabia saw that the Muslims were still strong and united.",
         "picks": [
           {
             "q": "Who led the army?",
@@ -17178,11 +17168,11 @@ window.SEERAA_COURSE=[
             ]
           },
           {
-            "q": "About how old was Usāmah?",
+            "q": "How old was Usāmah?",
             "options": [
-              "Eighteen",
-              "Fifty",
-              "Ten"
+              "Not yet twenty",
+              "About fifty",
+              "About seventy"
             ]
           },
           {
@@ -17213,7 +17203,7 @@ window.SEERAA_COURSE=[
             "a": false
           },
           {
-            "s": "Abū Bakr walked beside Usāmah as he rode out.",
+            "s": "Usāmah’s army was the first army Abū Bakr sent out as caliph.",
             "a": true
           }
         ],
