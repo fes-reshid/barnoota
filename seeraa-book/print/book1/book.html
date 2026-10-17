@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seeraa Quest — Book One</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="print.css">
+</head>
+<body>
+<div id="book"></div>
+<script src="content.js"></script>
+<script>
+(function(){
+  'use strict';
+  var B = window.BOOK1, out = [], pageNo = 0;
+
+  var esc = function(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+  var rich = function(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<i>$1</i>'); };
+  var art = function(k){ return 'art/' + k + '.jpg'; };
+
+  function page(cls, inner, dark){
+    pageNo++;
+    var foot = pageNo > 1
+      ? '<div class="foot">Seeraa Quest &nbsp;•&nbsp; Book One &nbsp;•&nbsp; ' + pageNo + '</div>' : '';
+    out.push('<section class="pg ' + cls + (dark ? ' dark' : '') + '">' + inner + foot + '</section>');
+  }
+
+  /* ---------- panels ---------- */
+  function items(list){
+    return (list||[]).map(function(it){
+      if(it.cap != null) return '<div class="cap' + (it.night?' night':'') + '">' + rich(it.cap) + '</div>';
+      return '<div class="say' + (it.r?' r':'') + (it.shout?' shout':'') + '">'
+           + (it.who ? '<span class="who">' + esc(it.who) + '</span>' : '')
+           + rich(it.say) + '</div>';
+    }).join('');
+  }
+  function sfx(list){
+    return (list||[]).map(function(f){
+      return '<span class="sfx ' + (f.c||'md') + '" data-hx="' + parseFloat(f.x) + '" data-hy="' + parseFloat(f.y)
+           + '" style="left:' + f.x + ';top:' + f.y
+           + ';transform:rotate(' + (f.rot==null?-7:f.rot) + 'deg)">' + esc(f.w) + '</span>';
+    }).join('');
+  }
+  function panel(p, srcKey, i, last, layout){
+    var src = art(srcKey + '__' + (p.t || 'day'));
+    /* close a 3-panel page with text low, so pages don't all read top-down */
+    var btm = p.btm || (i === last && (layout === 'a' || layout === 'c'));
+    var st = "background-image:url('" + src + "');"
+           + '--z:' + (p.z||'cover') + ';--px:' + (p.px||'50%') + ';--py:' + (p.py||'50%') + ';';
+    return '<div class="pan t-' + (p.t||'day') + (btm?' btm':'') + ' p' + (i+1) + '">'
+         + '<div class="bg" style="' + st + '"></div><div class="tint"></div>'
+         + sfx(p.sfx) + items(p.items) + '</div>';
+  }
+
+  /* ---------- front matter ---------- */
+  page('pg-title dark',
+      '<div class="bleedart" style="background-image:url(' + art('cover') + ')"></div>'
+    + '<div class="shade full"></div>'
+    + '<div class="tt-wrap">'
+    +   '<div><div class="eyebrow">An original Islamic history adventure</div>'
+    +   '<h1>SEERAA<br>QUEST</h1>'
+    +   '<div class="badge">BOOK ONE</div></div>'
+    +   '<div><div class="strap">From a valley full of idols<br>to the first word of the Qurʾān</div>'
+    +   '<div class="byline">Feysel Reshid</div></div>'
+    + '</div>', true);
+
+  page('pg-about',
+      '<div class="safe">'
+    +   '<div class="ribbon"><h2>About this book</h2><p>How to get the most out of it</p></div>'
+    +   '<div class="about" style="margin-top:.3in">'
+    +   '<p class="lead">Book One follows the early life of Prophet Muḥammad (peace be upon him) across <b>nine maps</b> and <b>thirty-six stories</b> — from the Arabia he was born into, to the night the Qurʾān began.</p>'
+    +   '<p class="lead">Every story is told in panels, like a comic. Read the pictures as well as the words. At the end of each map there is a <b>Quest Check</b> to see what you remember, a question to think hard about, and a box to draw in.</p>'
+    +   '<dl><dt>Author</dt><dd>Feysel Reshid</dd>'
+    +   '<dt>Series</dt><dd>Seeraa Quest — Book 1 of 5</dd>'
+    +   '<dt>Source</dt><dd>The Seeraa Quest course, following widely taught accounts of the sīrah including <i>Ar-Raḥīq al-Makhtūm</i> (The Sealed Nectar).</dd></dl>'
+    +   '<div class="note-box"><span class="lbl">How the pictures work</span>The Prophet (peace be upon him) and his Companions are never drawn. The scenes show the places, the objects and the landscapes — and where he speaks, his words appear as words.</div>'
+    +   '<div class="note-box"><span class="lbl">Before you sell this book</span>Have a qualified Islamic content review done, and proofread every Arabic, Qurʾān and ḥadīth reference against the edition you teach from.</div>'
+    +   '<p style="margin-top:.3in;font-size:9pt;color:#6b6184">Copyright © 2026 Feysel Reshid. All rights reserved. No part of this publication may be reproduced, stored or distributed for commercial purposes without written permission from the copyright owner.</p>'
+    +   '</div></div>');
+
+  page('pg-journey',
+      '<div class="safe">'
+    +   '<div class="ribbon"><h2>Your Book One Journey</h2><p>Nine maps &nbsp;•&nbsp; thirty-six stories &nbsp;•&nbsp; one remarkable beginning</p></div>'
+    +   '<div class="trail">'
+    +   B.maps.map(function(m){
+          return '<div class="stop" style="background:linear-gradient(145deg,' + m.colour + ',rgba(0,0,0,.45))">'
+               + '<span class="n">' + m.n + '</span>'
+               + '<span class="t">' + esc(m.title) + '</span>'
+               + '<span class="s">4 stories</span></div>';
+        }).join('')
+    +   '</div>'
+    +   '<div class="note-box" style="margin-top:auto"><b>Follow the clues</b>Notice the lessons. Complete the quest. A strong reader goes back to the story and explains <i>why</i>.</div>'
+    + '</div>');
+
+  var firstStoryPage = 5;   /* plate of map 1 lands here */
+  page('pg-contents',
+      '<div class="safe">'
+    +   '<div class="ribbon"><h2>Contents</h2></div>'
+    +   '<div class="toc">'
+    +   B.maps.map(function(m, i){
+          return '<div class="row">'
+               + '<span class="n" style="background:' + m.colour + '">' + m.n + '</span>'
+               + '<span class="t">' + esc(m.title) + '</span>'
+               + '<span class="hook">' + esc(m.kick) + '</span>'
+               + '<span class="p">' + (firstStoryPage + i*6) + '</span></div>';
+        }).join('')
+    +   '</div>'
+    +   '<div class="toc" style="margin-top:auto">'
+    +     '<div class="row"><span class="n" style="background:#7a6f90">W</span><span class="t">Word Treasure</span><span class="p">59</span></div>'
+    +     '<div class="row"><span class="n" style="background:#7a6f90">A</span><span class="t">Quest Answer Key</span><span class="p">61</span></div>'
+    +   '</div>'
+    + '</div>');
+
+  /* ---------- maps ---------- */
+  B.maps.forEach(function(m){
+    /* chapter plate */
+    page('pg-plate dark',
+        '<div class="bleedart" style="background-image:url(' + art('plate-' + m.n) + ')"></div>'
+      + '<div class="shade full"></div>'
+      + '<div class="num">' + m.n + '</div>'
+      + '<div class="ttl"><div class="kick">Map ' + m.n + ' &nbsp;•&nbsp; ' + esc(m.kick) + '</div>'
+      +   '<h2>' + esc(m.title) + '</h2></div>'
+      + '<div class="hookline">' + esc(m.hook).replace(/\n/g, '<br>') + '</div>'
+      + '<div class="inside"><span class="lbl">In this map</span><ol>'
+      +   m.stories.map(function(s){ return '<li>' + esc(s.title) + '</li>'; }).join('')
+      + '</ol></div>', true);
+
+    /* four story pages */
+    m.stories.forEach(function(s){
+      page('pg-story',
+          '<div class="safe">'
+        +   '<div class="sthead">'
+        +     '<span class="chip">MAP ' + m.n + ' • STORY ' + s.n + '</span>'
+        +     '<h3>' + esc(s.title) + '</h3>'
+        +     '<span class="kick">' + esc(s.kick) + '</span>'
+        +   '</div>'
+        +   '<div class="grid L-' + s.layout + '">'
+        +     s.panels.map(function(p, i){ return panel(p, s.art, i, s.panels.length-1, s.layout); }).join('')
+        +   '</div>'
+        +   '<div class="treasure"><span class="coin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.6l3.1 6.6 7 1-5 5 1.2 7.2L12 18l-6.3 3.4L6.9 14.2l-5-5 7-1z"/></svg></span>'
+        +     '<div><span class="lbl">Story Treasure</span><p>' + rich(s.treasure) + '</p></div></div>'
+        +   (s.cliff ? '<div class="cliff"><span class="lbl">' + esc(s.cliff.eyebrow) + '</span><p>'
+                      + rich(s.cliff.line) + '</p></div>' : '')
+        + '</div>');
+    });
+
+    /* quest check */
+    var q = m.quest;
+    page('pg-quest',
+        '<div class="safe">'
+      +   '<div class="ribbon"><h2>Map ' + m.n + ' Quest Check</h2><p>' + esc(m.title) + '</p></div>'
+      +   '<div class="strip">'
+      +     m.stories.map(function(s){
+              return '<div style="background-image:url(' + art('th-' + s.art) + ')"></div>';
+            }).join('')
+      +   '</div>'
+      +   q.qs.map(function(x, i){
+            return '<div class="q"><div class="qt">' + (i+1) + '. ' + esc(x.q) + '</div><ul>'
+                 + x.o.map(function(o){ return '<li><span class="o"></span>' + esc(o) + '</li>'; }).join('')
+                 + '</ul></div>';
+          }).join('')
+      +   '<div class="think"><span class="lbl">Think deeper</span><p>' + rich(q.think) + '</p>'
+      +     '<div class="rule"></div><div class="rule" style="margin-top:.19in"></div></div>'
+      +   '<div class="drawhead"><span class="lbl">Your turn to draw</span><p>' + rich(q.draw) + '</p></div>'
+      +   '<div class="drawbox"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>'
+      +     '<svg class="pencil" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.3V21h3.7L17.6 10.1l-3.7-3.7zM20.7 7a1 1 0 000-1.4l-2.3-2.3a1 1 0 00-1.4 0l-1.8 1.8 3.7 3.7z"/></svg></div>'
+      + '</div>');
+  });
+
+  /* ---------- back matter ---------- */
+  [['words1','The words of Book One — part one'],
+   ['words2','The words of Book One — part two']].forEach(function(w){
+    page('pg-words',
+        '<div class="safe">'
+      +   '<div class="ribbon"><h2>Word Treasure</h2><p>' + w[1] + '</p></div>'
+      +   '<div class="words">'
+      +     B[w[0]].map(function(p){
+            return '<div class="word"><div class="ar">' + esc(p[0]) + '</div><div class="en">' + esc(p[1]) + '</div></div>';
+          }).join('')
+      +   '</div></div>');
+  });
+
+  page('pg-key',
+      '<div class="safe">'
+    +   '<div class="ribbon"><h2>Quest Answer Key</h2><p>Check it, then go back to the story and say why</p></div>'
+    +   '<div style="margin-top:.26in">'
+    +   B.maps.map(function(m){
+          return '<div class="keyrow"><b>Map ' + m.n + '</b>'
+               + m.quest.qs.map(function(x){ return esc(x.o[0]); }).join(' &nbsp;|&nbsp; ') + '</div>';
+        }).join('')
+    +   '</div>'
+    +   '<div class="note-box" style="margin-top:auto"><b>A strong learner</b>…checks the answer, returns to the story, and explains <i>why</i> it is the answer.</div>'
+    + '</div>');
+
+  page('pg-end dark',
+      '<div class="bleedart" style="background-image:url(' + art('m9-s4__gold') + ')"></div>'
+    + '<div class="shade full"></div>'
+    + '<div class="mid"><div class="tick"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 52 L42 72 L79 30"/></svg></div>'
+    +   '<h2>BOOK ONE<br>COMPLETE!</h2>'
+    +   '<p>You travelled from Arabia before Islam all the way to the first word of the Qurʾān — nine maps and thirty-six stories.</p>'
+    +   '<div class="next"><b>Next, in Book Two:</b><br>the first believers, the call in the open, and a city that turns on its own.</div>'
+    + '</div>', true);
+
+  document.getElementById('book').innerHTML = out.join('');
+
+  /* ----------------------------------------------------------
+     Place every sound effect in the clearest part of its panel.
+     Authored x/y are a hint; if the word would land under a
+     speech bubble or caption, it is moved to the best free spot.
+     ---------------------------------------------------------- */
+  function placeSfx(){
+    var PAD = 6;
+    document.querySelectorAll('.pan').forEach(function(pan){
+      var sfxs = [].slice.call(pan.querySelectorAll('.sfx'));
+      if(!sfxs.length) return;
+      var pr = pan.getBoundingClientRect();
+      var taken = [].slice.call(pan.querySelectorAll('.say,.cap')).map(function(e){
+        var r = e.getBoundingClientRect();
+        return { l:r.left-pr.left, t:r.top-pr.top, r:r.right-pr.left, b:r.bottom-pr.top };
+      });
+      sfxs.forEach(function(s){
+        /* if the panel is text-heavy, step the word down until it fits in the clear */
+        var baseSize = parseFloat(getComputedStyle(s).fontSize);
+        for(var shrink = 0; shrink < 5; shrink++){
+          s.style.fontSize = (baseSize * Math.pow(0.82, shrink)).toFixed(2) + 'px';
+          if(fit(s, pan, pr, taken, shrink === 4)) break;
+        }
+      });
+    });
+    function fit(s, pan, pr, taken, force){
+        var sr = s.getBoundingClientRect(), w = sr.width, hgt = sr.height;
+        var best = null;
+        for(var xi=0; xi<=10; xi++){
+          for(var yi=0; yi<=10; yi++){
+            var x = PAD + (pr.width  - w - PAD*2) * (xi/10);
+            var y = PAD + (pr.height - hgt - PAD*2) * (yi/10);
+            if(x < 0 || y < 0) continue;
+            var box = { l:x, t:y, r:x+w, b:y+hgt };
+            var over = 0;
+            taken.forEach(function(t){
+              var ow = Math.max(0, Math.min(box.r,t.r) - Math.max(box.l,t.l));
+              var oh = Math.max(0, Math.min(box.b,t.b) - Math.max(box.t,t.t));
+              over += ow*oh;
+            });
+            /* prefer clear space, then the author's intended corner */
+            var hintX = parseFloat(s.dataset.hx)/100 * pr.width;
+            var hintY = parseFloat(s.dataset.hy)/100 * pr.height;
+            var dist = Math.hypot(x-hintX, y-hintY);
+            var score = over*1000 + dist;
+            if(!best || score < best.score) best = { x:x, y:y, score:score, over:over };
+          }
+        }
+        if(!best) return true;
+        var clear = best.over <= (w*hgt) * 0.04;
+        if(clear || force){
+          s.style.left = best.x.toFixed(1) + 'px';
+          s.style.top  = best.y.toFixed(1) + 'px';
+          taken.push({ l:best.x, t:best.y, r:best.x+w, b:best.y+hgt });
+          return true;
+        }
+        return false;
+    }
+  }
+  placeSfx();
+  window.addEventListener('load', placeSfx);
+  document.title = 'Seeraa Quest — Book One (' + pageNo + ' pages)';
+  window.__pageCount = pageNo;
+})();
+</script>
+</body>
+</html>

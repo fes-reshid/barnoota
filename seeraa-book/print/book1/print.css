@@ -1,0 +1,313 @@
+/* ============================================================
+   SEERAA QUEST — BOOK ONE · KDP interior
+   Trim 8.5 x 11 in · bleed PDF 8.625 x 11.25 in
+   ============================================================ */
+
+:root{
+  --bleed: .125in;
+  --safe:  .62in;          /* keeps text clear of trim and gutter */
+
+  --ink:    #140c2e;
+  --navy:   #15213f;
+  --plum:   #3b1d6e;
+  --plum-d: #26114a;
+  --gold:   #f6b93b;
+  --gold-l: #ffd97a;
+  --pink:   #ef4b78;
+  --teal:   #19b3c4;
+  --cream:  #fff8ec;
+  --paper:  #fdf4e3;
+
+  --f-disp: 'Baloo 2', 'Amiri', sans-serif;
+  --f-let:  'Baloo 2', 'Amiri', sans-serif;
+  --f-body: 'Nunito', 'Baloo 2', 'Amiri', sans-serif;
+  --f-ar:   'Amiri', serif;
+}
+
+*,*::before,*::after{ box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact }
+
+@page{ size:8.625in 11.25in; margin:0 }
+
+html,body{ margin:0; padding:0; background:#555; font-family:var(--f-body) }
+
+.pg{
+  position:relative; overflow:hidden;
+  width:8.625in; height:11.25in;
+  background:var(--paper);
+  page-break-after:always; break-after:page;
+  font-family:var(--f-body); color:var(--ink);
+}
+.pg:last-child{ page-break-after:auto; break-after:auto }
+
+/* the printable area inside bleed + safe margin */
+.safe{ position:absolute; inset:var(--safe); display:flex; flex-direction:column }
+
+/* running foot */
+.foot{
+  position:absolute; left:0; right:0; bottom:.34in;
+  text-align:center; font-size:7.5pt; letter-spacing:.14em;
+  font-weight:700; color:#9a8fb5; text-transform:uppercase;
+}
+.pg.dark .foot{ color:rgba(255,255,255,.5) }
+
+/* ============================================================
+   FULL-BLEED ART
+   ============================================================ */
+.bleedart{ position:absolute; inset:0; background-size:cover; background-position:center }
+.shade{ position:absolute; inset:0 }
+.shade.btm{ background:linear-gradient(180deg,rgba(10,5,28,0) 34%,rgba(10,5,28,.93) 88%) }
+.shade.full{ background:linear-gradient(180deg,rgba(10,5,28,.74) 0%,rgba(10,5,28,.3) 26%,rgba(10,5,28,.34) 52%,rgba(10,5,28,.93) 100%) }
+.shade.top{ background:linear-gradient(180deg,rgba(10,5,28,.9),rgba(10,5,28,0) 55%) }
+
+/* ============================================================
+   TITLE PAGE
+   ============================================================ */
+.pg-title .tt-wrap{ position:absolute; inset:0; display:flex; flex-direction:column;
+  justify-content:space-between; padding:1.1in .78in .95in; text-align:center }
+.pg-title .eyebrow{
+  font-family:var(--f-disp); font-size:12.5pt; letter-spacing:.2em;
+  color:var(--gold-l); text-transform:uppercase; text-shadow:0 2px 10px rgba(0,0,0,.8) }
+.pg-title h1{
+  font-family:var(--f-disp); font-size:58pt; line-height:.92; margin:.1in 0 0;
+  color:#fff; text-shadow:0 4px 26px rgba(0,0,0,.85), 0 0 50px rgba(246,185,59,.3) }
+.pg-title .badge{
+  display:inline-block; margin-top:.2in; padding:.1in .42in; border-radius:999px;
+  background:var(--pink); color:#fff; font-family:var(--f-disp); font-size:17pt;
+  letter-spacing:.1em; box-shadow:0 6px 18px rgba(0,0,0,.45) }
+.pg-title .strap{
+  background:rgba(18,10,46,.88); border:2px solid rgba(246,185,59,.45);
+  border-radius:.18in; padding:.22in .3in; color:#fff;
+  font-family:var(--f-disp); font-size:19pt; line-height:1.22 }
+.pg-title .byline{ margin-top:.22in; font-family:var(--f-disp); font-size:12pt;
+  letter-spacing:.16em; color:var(--gold-l); text-transform:uppercase }
+
+/* ============================================================
+   GENERIC HEADINGS
+   ============================================================ */
+.ribbon{
+  background:linear-gradient(135deg,var(--plum),var(--plum-d));
+  color:#fff; border-radius:.16in; padding:.2in .3in; text-align:center;
+  box-shadow:0 .06in 0 rgba(0,0,0,.18) }
+.ribbon h2{ font-family:var(--f-disp); font-size:27pt; margin:0; letter-spacing:.01em }
+.ribbon p{ margin:.06in 0 0; font-size:10.5pt; color:rgba(255,255,255,.8) }
+
+h2.plain{ font-family:var(--f-disp); font-size:27pt; margin:0 0 .18in; color:var(--plum) }
+.lead{ font-size:11.5pt; line-height:1.62 }
+
+/* ============================================================
+   ABOUT PAGE
+   ============================================================ */
+.about dl{ margin:.22in 0 0; display:grid; grid-template-columns:1.5in 1fr; gap:.1in .16in; font-size:10.5pt }
+.about dt{ font-weight:800; color:var(--plum) }
+.about dd{ margin:0 }
+.note-box{
+  margin-top:.28in; border-left:.05in solid var(--gold);
+  background:#fff6e0; border-radius:0 .12in .12in 0; padding:.18in .22in; font-size:10pt; line-height:1.6 }
+.note-box .lbl{ display:block; font-family:var(--f-disp); color:#9a6b05; letter-spacing:.08em;
+  text-transform:uppercase; font-size:9pt; margin-bottom:.05in }
+
+/* ============================================================
+   JOURNEY + CONTENTS
+   ============================================================ */
+.trail{ display:grid; grid-template-columns:repeat(3,1fr); gap:.17in; margin-top:.26in }
+.stop{ border-radius:.16in; padding:.2in .14in; color:#fff; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:.07in;
+  box-shadow:0 .05in 0 rgba(0,0,0,.2); min-height:1.46in; justify-content:center }
+.stop .n{ width:.46in; height:.46in; border-radius:50%; display:grid; place-items:center;
+  background:var(--gold); color:#4a2f00; font-family:var(--f-disp); font-size:16pt }
+.stop .t{ font-family:var(--f-disp); font-size:12pt; line-height:1.14 }
+.stop .s{ font-size:8pt; color:rgba(255,255,255,.72) }
+
+.toc{ display:flex; flex-direction:column; gap:.11in; margin-top:.2in }
+.toc a, .toc div.row{ display:flex; align-items:center; gap:.16in; text-decoration:none;
+  background:#fff; border:.022in solid #e3d8c4; border-radius:.14in; padding:.13in .18in;
+  box-shadow:0 .03in 0 rgba(0,0,0,.05) }
+.toc .n{ width:.34in; height:.34in; border-radius:50%; display:grid; place-items:center;
+  color:#fff; font-family:var(--f-disp); font-size:12pt; flex:none }
+.toc .t{ flex:1; font-family:var(--f-disp); font-size:14pt; color:var(--navy) }
+.toc .hook{ font-size:8.6pt; color:#7a6f90; font-style:italic; flex:none; max-width:2.5in; text-align:right }
+.toc .p{ font-family:var(--f-disp); font-size:13pt; color:var(--pink); width:.42in; text-align:right; flex:none }
+
+/* ============================================================
+   CHAPTER PLATE
+   ============================================================ */
+.pg-plate .num{
+  position:absolute; top:.72in; left:.72in; width:1.02in; height:1.02in; border-radius:50%;
+  background:var(--gold); color:#3d2600; display:grid; place-items:center;
+  font-family:var(--f-disp); font-size:40pt; box-shadow:0 .07in .2in rgba(0,0,0,.5) }
+.pg-plate .ttl{ position:absolute; left:.72in; right:.72in; top:2.25in; text-align:center }
+.pg-plate .ttl .kick{ font-family:var(--f-disp); font-size:12pt; letter-spacing:.26em;
+  color:var(--gold-l); text-transform:uppercase; text-shadow:0 2px 12px #000 }
+.pg-plate .ttl h2{ font-family:var(--f-disp); font-size:42pt; line-height:1.02; margin:.08in 0 0;
+  color:#fff; text-shadow:0 4px 24px rgba(0,0,0,.9) }
+.pg-plate .hookline{
+  position:absolute; left:1.0in; right:1.0in; top:4.1in; text-align:center;
+  font-family:var(--f-let); font-size:17pt; line-height:1.34; color:var(--gold-l);
+  text-shadow:0 2px 14px rgba(0,0,0,.9) }
+.pg-plate .inside{
+  position:absolute; left:.72in; right:.72in; bottom:1.12in;
+  background:rgba(14,8,34,.9); border:.02in solid rgba(246,185,59,.4);
+  border-radius:.16in; padding:.2in .24in; color:#fff }
+.pg-plate .inside .lbl{ display:block; font-family:var(--f-disp); font-size:9.5pt; letter-spacing:.2em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:.09in; text-align:center }
+.pg-plate .inside ol{ margin:0; padding-left:.26in; columns:2; column-gap:.3in;
+  font-size:10.5pt; line-height:1.55 }
+
+/* ============================================================
+   STORY PAGE  —  the comic
+   ============================================================ */
+.sthead{ display:flex; align-items:flex-end; gap:.16in; margin-bottom:.14in }
+.sthead .chip{ background:var(--pink); color:#fff; font-family:var(--f-disp); font-size:9pt;
+  letter-spacing:.12em; padding:.055in .16in; border-radius:999px; white-space:nowrap }
+.sthead h3{ font-family:var(--f-disp); font-size:23pt; margin:0; color:var(--navy); line-height:1.02; flex:1 }
+.sthead .kick{ font-size:8.6pt; color:#7a6f90; font-style:italic; text-align:right; max-width:2.2in; line-height:1.3 }
+
+.grid{ flex:1; display:grid; gap:.13in; min-height:0 }
+.L-a{ grid-template-columns:1fr 1fr; grid-template-rows:2.45in 1fr }
+.L-a .p1{ grid-column:1/-1 }
+.L-b{ grid-template-columns:1.06fr 1fr; grid-template-rows:1fr 1.35in }
+.L-b .p1{ grid-row:1/3 }
+.L-c{ grid-template-columns:1fr; grid-template-rows:1.62in 1fr 1.62in }
+.L-d{ grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr }
+.L-e{ grid-template-columns:1fr; grid-template-rows:1fr }
+
+.pan{
+  position:relative; overflow:hidden; border-radius:.07in;
+  border:.028in solid #120a26; background:#241a3f;
+  box-shadow:0 .035in 0 rgba(0,0,0,.25);
+  display:flex; flex-direction:column; padding:.12in; gap:.09in }
+.pan.btm{ justify-content:flex-end }
+.pan .bg{ position:absolute; inset:0; background-repeat:no-repeat;
+  background-size:var(--z,cover); background-position:var(--px,50%) var(--py,50%) }
+.pan .tint{ position:absolute; inset:0 }
+.pan > *:not(.bg):not(.tint):not(.sfx){ position:relative; z-index:2 }
+.pan .sfx{ white-space:nowrap }
+
+/* treatments — one illustration, many moods */
+.t-night .tint{ background:linear-gradient(180deg,rgba(26,30,96,.45),rgba(8,10,40,.6)) }
+.t-drama .tint{ background:radial-gradient(120% 90% at 50% 45%,transparent 38%,rgba(5,2,18,.72)) }
+.t-sil   .tint{ background:linear-gradient(180deg,rgba(60,20,80,.4),rgba(8,4,24,.75)) }
+.t-fire  .tint{ background:linear-gradient(180deg,rgba(120,30,10,.22),rgba(60,10,30,.4)) }
+
+/* speech — a bubble with a tail */
+.say{
+  font-weight:500;
+  align-self:flex-start; max-width:72%;
+  background:#fffdf7; color:#19122b; border:.025in solid #120a26;
+  border-radius:.19in .21in .19in .22in / .22in .19in .23in .19in;
+  padding:.1in .15in .1in; font-family:var(--f-let); font-size:11.4pt; line-height:1.21;
+  box-shadow:.025in .03in 0 rgba(0,0,0,.3); position:relative }
+.say.r{ align-self:flex-end }
+.say::after{ content:''; position:absolute; bottom:-.085in; left:16%;
+  border:.07in solid transparent; border-top-color:#120a26; border-bottom:0 }
+.say.r::after{ left:auto; right:16% }
+.say .who{ display:block; font-family:var(--f-disp); font-size:7.4pt; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--pink); margin-bottom:.02in }
+.say b{ color:#b3104a }
+.say.shout{ font-size:13pt; background:#fff; border-width:.035in }
+
+/* narration — a caption box, no tail, clearly not speech */
+.cap{
+  align-self:stretch; background:linear-gradient(180deg,#fff3d6,#ffe7b4);
+  color:#3a2708; border:.022in solid #4a3210; border-radius:.05in;
+  padding:.1in .14in; font-family:var(--f-body); font-weight:700; font-size:9.8pt; line-height:1.34;
+  box-shadow:.03in .035in 0 rgba(0,0,0,.32) }
+.cap.night{ background:linear-gradient(180deg,#2c2270,#1b1450); color:#e9e2ff; border-color:#0d0828 }
+
+/* hand-lettered sound effects */
+.sfx{ position:absolute; z-index:3; font-family:var(--f-let); font-weight:800; color:#fff;
+  -webkit-text-stroke:.035in rgba(12,6,28,.9); paint-order:stroke fill; line-height:.86;
+  text-shadow:0 0 .14in rgba(255,255,255,.35) }
+.sfx.pink{ color:var(--pink) } .sfx.gold{ color:var(--gold-l) }
+.sfx.xl{ font-size:40pt } .sfx.lg{ font-size:28pt } .sfx.md{ font-size:19pt } .sfx.sm{ font-size:13pt }
+
+/* treasure footer */
+.treasure{
+  margin-top:.13in; display:flex; align-items:flex-start; gap:.16in;
+  background:linear-gradient(135deg,#2b1660,#1b0e42); border-radius:.14in;
+  padding:.17in .2in; color:#fff; box-shadow:0 .05in 0 rgba(0,0,0,.2) }
+.treasure .coin{ width:.44in; height:.44in; border-radius:50%; flex:none;
+  background:linear-gradient(180deg,var(--gold-l),var(--gold));
+  display:grid; place-items:center }
+.treasure .coin svg{ width:.24in; height:.24in; fill:#6b4300 }
+.treasure .lbl{ display:block; font-family:var(--f-disp); font-size:8.6pt; letter-spacing:.17em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:.03in }
+.treasure p{ margin:0; font-size:10.2pt; line-height:1.42 }
+
+/* cliffhanger strip, last story of a chapter */
+.cliff{
+  margin-top:.11in; background:linear-gradient(135deg,var(--pink),#b61f52); color:#fff;
+  border-radius:.14in; padding:.15in .2in; text-align:center; box-shadow:0 .05in 0 rgba(0,0,0,.2) }
+.cliff .lbl{ font-family:var(--f-disp); font-size:8.6pt; letter-spacing:.17em; text-transform:uppercase;
+  color:#ffd9e6; display:block; margin-bottom:.03in }
+.cliff p{ margin:0; font-family:var(--f-disp); font-size:13pt; line-height:1.24 }
+
+/* ============================================================
+   QUEST CHECK
+   ============================================================ */
+.strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:.09in; margin:.16in 0 .14in }
+.strip div{ height:.82in; border-radius:.09in; background-size:cover; background-position:center;
+  border:.022in solid #cbbfa8 }
+
+.q{ background:#fff; border:.022in solid #ddd2bc; border-radius:.13in; padding:.11in .15in;
+  margin-bottom:.085in; box-shadow:0 .03in 0 rgba(0,0,0,.05) }
+.q .qt{ font-family:var(--f-disp); font-size:12pt; color:var(--navy); margin-bottom:.07in; line-height:1.14 }
+.q ul{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:.09in }
+.q li{ display:flex; align-items:center; gap:.08in; font-size:9.4pt; line-height:1.22 }
+.q .o{ width:.17in; height:.17in; border-radius:50%; border:.022in solid var(--teal); flex:none }
+
+.think{ background:#eef8fa; border:.022in solid var(--teal); border-radius:.13in;
+  padding:.12in .16in; margin-bottom:.1in }
+.think .lbl{ font-family:var(--f-disp); font-size:8.6pt; letter-spacing:.16em; color:#0d6f7c;
+  text-transform:uppercase; display:block; margin-bottom:.04in }
+.think p{ margin:0 0 .09in; font-size:10.4pt; line-height:1.4 }
+.rule{ height:.02in; background:repeating-linear-gradient(90deg,#b9c9cc 0 .14in,transparent .14in .22in);
+  margin-top:.07in }
+
+.drawhead{ margin-top:.02in }
+.drawhead .lbl{ font-family:var(--f-disp); font-size:8.6pt; letter-spacing:.16em; color:#9a6b05;
+  text-transform:uppercase; display:block; margin-bottom:.04in }
+.drawhead p{ margin:0 0 .09in; font-size:10.4pt; line-height:1.4 }
+
+.drawbox{ flex:1 1 auto; min-height:1.05in; border:.03in dashed #c3b49a; border-radius:.14in;
+  background:#fffdf6; position:relative }
+.drawbox i{ position:absolute; width:.17in; height:.17in; border:.028in solid var(--pink); opacity:.55 }
+.drawbox i.tl{ top:.09in; left:.09in; border-right:0; border-bottom:0; border-radius:.05in 0 0 0 }
+.drawbox i.tr{ top:.09in; right:.09in; border-left:0; border-bottom:0; border-radius:0 .05in 0 0 }
+.drawbox i.bl{ bottom:.09in; left:.09in; border-right:0; border-top:0; border-radius:0 0 0 .05in }
+.drawbox i.br{ bottom:.09in; right:.09in; border-left:0; border-top:0; border-radius:0 0 .05in 0 }
+.drawbox .pencil{ position:absolute; right:.18in; bottom:.13in; width:.2in; height:.2in; fill:#e0d2b8 }
+
+/* ============================================================
+   WORD TREASURE / KEY / END
+   ============================================================ */
+.words{ display:grid; grid-template-columns:repeat(3,1fr); gap:.12in; margin-top:.2in }
+.word{ background:#fff; border:.022in solid #e0d4ea; border-radius:.13in; padding:.12in .08in;
+  text-align:center; box-shadow:0 .03in 0 rgba(0,0,0,.04) }
+.word .ar{ font-family:var(--f-ar); font-weight:700; font-size:17pt; color:var(--plum); direction:rtl; line-height:1.5 }
+.word .en{ font-size:9pt; color:#5b5170; margin-top:.02in }
+
+.keyrow{ background:#fff; border:.022in solid #d7cdbb; border-radius:.12in;
+  padding:.12in .16in; margin-bottom:.09in; font-size:9.6pt; line-height:1.45 }
+.keyrow b{ font-family:var(--f-disp); color:var(--pink); font-size:11pt; margin-right:.08in }
+
+.pg-end .mid{ position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; padding:1in .9in; color:#fff }
+.pg-end .tick{ width:1.35in; height:1.35in; border-radius:50%;
+  background:linear-gradient(180deg,var(--gold-l),var(--gold));
+  display:grid; place-items:center;
+  box-shadow:0 .1in .3in rgba(0,0,0,.45) }
+.pg-end .tick svg{ width:.74in; height:.74in; fill:none; stroke:#5c3900; stroke-width:9;
+  stroke-linecap:round; stroke-linejoin:round }
+.pg-end h2{ font-family:var(--f-disp); font-size:40pt; margin:.26in 0 .12in; line-height:1.02 }
+.pg-end p{ font-size:12.5pt; line-height:1.6; max-width:5.3in; margin:0 0 .16in; color:rgba(255,255,255,.88) }
+.pg-end .next{ background:var(--pink); border-radius:.16in; padding:.2in .3in;
+  font-family:var(--f-disp); font-size:14.5pt; line-height:1.3; margin-top:.1in }
+
+/* inline emphasis inside a labelled component stays inline */
+.treasure p b,.cliff p b,.think p b,.drawhead p b,.note-box b:not(.lbl){ display:inline; font-family:inherit; font-size:inherit; letter-spacing:normal; text-transform:none; color:inherit; font-weight:800; margin:0 }
+.treasure p b{ color:var(--gold-l) }
+.cliff p b{ color:#ffe3ec }
+
+/* every italic run resolves to a real italic face (no synthetic fallback) */
+i,em,.sthead .kick,.toc .hook{ font-family:'Nunito','Amiri',sans-serif; font-style:italic }
