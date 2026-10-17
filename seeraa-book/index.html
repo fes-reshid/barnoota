@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Seeraa Quest — The Illustrated Books</title>
+<meta name="description" content="The life of the Prophet Muhammad (peace be upon him), told in five illustrated books: comic pages, reflection and drawing.">
+<meta name="theme-color" content="#120b2e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Patrick+Hand&family=Lora:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/book.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">An illustrated series</p>
+    <h1>Seeraa&nbsp;Quest</h1>
+    <p class="sub">The life of the Prophet Muhammad ﷺ, from a valley full of idols to the day the gates opened — in comic pages, with room to stop, think and draw.</p>
+  </header>
+
+  <section class="shelf" id="shelf"></section>
+
+  <section class="note">
+    <h3>How these books are drawn</h3>
+    <p>Following the practice of Islamic publishing, the Prophet ﷺ and his Companions are <strong>never pictured</strong>. The storytelling is carried by light, by silhouette and by landscape — and where his words appear, they appear as words.</p>
+    <p>The history follows <em>Ar-Raheeq al-Makhtum</em> (The Sealed Nectar), in order, from the age before Islam to the final years.</p>
+  </section>
+
+  <section class="note">
+    <h3>How to read them</h3>
+    <p><strong>Turn the pages</strong> with the arrows, the arrow keys, or a swipe. <strong>Chapters</strong> opens the contents. Your place is kept, so you can stop anywhere and come back to it.</p>
+    <p><strong>Pause and Think</strong> pages have room to write. <strong>Your Turn to Draw</strong> pages have an empty panel and a few tips from the artist. Use <strong>Print</strong> to put the whole book on paper, drawing pages and all.</p>
+  </section>
+
+</div>
+
+<script src="js/art.js"></script>
+<script>
+var BOOKS = [
+  { n:1, title:'The Light Before Dawn',      range:'Chapters I–IX',     blurb:'From the age of idols to the first revelation',
+    art:['kaaba','sacred'],  ready:true },
+  { n:2, title:'The Years of Fire',          range:'Chapters X–XVIII',  blurb:'The first believers, and a city that turned on them',
+    art:['hands','blood'],   ready:true },
+  { n:3, title:'The Longest Night',          range:'Chapters XIX–XXVII',blurb:'Out of Makkah, and the day of Badr',
+    art:['nightsky','deep'],    ready:true },
+  { n:4, title:'The Mountain and the Trench',range:'Chapters XXVIII–XXXVI', blurb:'Uḥud, the siege, and a peace nobody understood',
+    art:['storm','storm'],  ready:true },
+  { n:5, title:'The Gates Open',             range:'Chapters XXXVII–XLV', blurb:'Khaybar, Makkah, and the final years',
+    art:['gate','dawn'],     ready:true }
+];
+
+document.getElementById('shelf').innerHTML = BOOKS.map(function(b){
+  return '<a class="cover" href="read.html?b=' + b.n + '">'
+    + '<span class="spine"></span>'
+    + '<span class="art">' + window.ART.scene(b.art[0], b.art[1], b.n * 17) + '</span>'
+    + '<span class="shade"></span>'
+    + '<span class="meta">'
+    +   '<span class="bn">Book ' + b.n + ' · ' + b.range + '</span>'
+    +   '<span class="tt">' + b.title + '</span>'
+    +   '<span class="rg">' + b.blurb + '</span>'
+    + '</span></a>';
+}).join('');
+</script>
+</body>
+</html>

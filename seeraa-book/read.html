@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Seeraa Quest — Reader</title>
+<meta name="description" content="An illustrated Seerah book: the life of the Prophet Muhammad (peace be upon him), told in comic pages with reflection and drawing.">
+<meta name="theme-color" content="#120b2e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Patrick+Hand&family=Lora:ital,wght@0,400;0,600;1,400&family=Amiri:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/book.css">
+</head>
+<body>
+
+<div class="rail"><i></i></div>
+
+<header class="topbar">
+  <a class="btn" href="index.html" aria-label="Back to the shelf">← Shelf</a>
+  <div class="booktitle" id="bt">Seeraa Quest</div>
+  <div class="spacer"></div>
+  <button class="btn" id="printall" title="Print or save the whole book">⎙ Print</button>
+  <button class="btn gold" id="toc">☰ Chapters</button>
+</header>
+
+<main class="stage" id="stage"></main>
+
+<nav class="footnav">
+  <button class="btn" id="prev">‹ Back</button>
+  <div class="pos" id="pos"></div>
+  <button class="btn pink" id="next">Next ›</button>
+</nav>
+
+<div class="drawer" id="drawer" role="dialog" aria-label="Chapters">
+  <div class="panelbox">
+    <h3>Chapters</h3>
+    <ul class="toclist" id="toclist"></ul>
+    <p style="text-align:center;margin:1rem 0 .2rem">
+      <button class="btn" id="closedrawer">Close</button>
+    </p>
+  </div>
+</div>
+
+<script src="js/art.js"></script>
+<script>
+(function(){
+  var n = parseInt(new URLSearchParams(location.search).get('b'), 10);
+  if(!(n >= 1 && n <= 5)) n = 1;
+  var s = document.createElement('script');
+  s.src = 'js/book-' + n + '.js';
+  s.onload = function(){
+    var r = document.createElement('script');
+    r.src = 'js/reader.js';
+    document.body.appendChild(r);
+  };
+  s.onerror = function(){
+    document.getElementById('stage').innerHTML =
+      '<p style="padding:3rem;font-family:Lora,serif">This book is not on the shelf yet.</p>';
+  };
+  document.body.appendChild(s);
+})();
+</script>
+</body>
+</html>
