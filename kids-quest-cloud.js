@@ -1009,6 +1009,7 @@ function adminSaveHomework(h){
     kind: kinds.indexOf(x.kind) >= 0 ? x.kind : 'task',
     title: String(x.title || '').trim().slice(0, 100) || 'Homework',
     details: String(x.details || '').trim().slice(0, 1000),
+    attachment: x.attachment ? { id: String(x.attachment.id), fileName: String(x.attachment.fileName).slice(0, 140), type: String(x.attachment.type || 'application/pdf'), size: Number(x.attachment.size) || 0, chunks: Number(x.attachment.chunks) || 1, classId: String(x.classId || '') } : null,
     videoUrl: String(x.videoUrl || '').trim().slice(0, 300),
     lineFrom: Math.max(0, Number(x.lineFrom) || 0),
     lineTo: Math.max(0, Number(x.lineTo) || 0),
@@ -1122,10 +1123,9 @@ function listClassFiles(game){
 function uploadClassFile(f){
   const user = auth.currentUser;
   if(!user) return Promise.reject(new Error('Not signed in'));
-  const x = f || {}, data = String(x.dataUrl || '');
-  if(!/^data:application\/pdf;base64,/.test(data)) return Promise.reject(new Error('Please choose a PDF file.'));
-  const size = Math.round((data.length - data.indexOf(',') - 1) * 3 / 4);
-  if(size > FILE_MAX_BYTES) return Promise.reject(new Error('That PDF is too big — the limit is 5 MB.'));
+  const x = f || {};
+  let parsed; try { parsed = parseHomeworkFile(x); } catch(err) { return Promise.reject(err); }
+  const {data, size, type} = parsed;
   const ref = doc(collection(db, FILES_COLLECTION)), by = String(user.email || '').toLowerCase(), parts = [];
   for(let i = 0; i < data.length; i += FILE_CHUNK) parts.push(data.slice(i, i + FILE_CHUNK));
   return Promise.all(parts.map(function(part, n){ return setDoc(doc(db, FILE_DATA_COLLECTION, ref.id + '_' + n), { data: part, by: by }); }))
@@ -1134,7 +1134,8 @@ function uploadClassFile(f){
         game: String(x.game || ''),
         title: String(x.title || '').trim().slice(0, 120) || String(x.fileName || 'Class file'),
         note: String(x.note || '').trim().slice(0, 300),
-        fileName: String(x.fileName || 'file.pdf').slice(0, 120),
+        fileName: String(x.fileName || 'file.pdf').slice(0, 140),
+        type: type,
         size: size,
         chunks: parts.length,
         classId: String(x.classId || ''),
@@ -1167,15 +1168,23 @@ const SUBMIT_TYPES = {
   pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
 };
+function parseHomeworkFile(f){
+  const ext = (String(f.fileName || '').match(/\.([a-z0-9]+)$/i) || [])[1];
+  const type = SUBMIT_TYPES[String(ext || '').toLowerCase()];
+  if(!type) throw new Error('Please choose a PDF, Word (.doc/.docx) or PowerPoint (.ppt/.pptx) file.');
+  const raw = String(f.dataUrl || ''), match = raw.match(/^data:[^,]*;base64,([A-Za-z0-9+/]+={0,2})$/);
+  if(!match || match[1].length % 4) throw new Error('That file is empty or could not be read.');
+  const payload = match[1], padding = (payload.match(/=+$/) || [''])[0].length;
+  const size = payload.length * 3 / 4 - padding;
+  if(size > FILE_MAX_BYTES) throw new Error('That file is too big — the limit is 5 MB.');
+  return {data:'data:' + type + ';base64,' + payload, size:size, type:type};
+}
 function submitHomeworkFile(x){
   const user = auth.currentUser;
   if(!user) return Promise.reject(new Error('Not signed in'));
-  const f = x || {}, ext = (String(f.fileName || '').match(/\.([a-z0-9]+)$/i) || [])[1], type = SUBMIT_TYPES[String(ext || '').toLowerCase()];
-  if(!type) return Promise.reject(new Error('Please choose a PDF, Word (.doc/.docx) or PowerPoint (.ppt/.pptx) file.'));
-  const raw = String(f.dataUrl || ''), comma = raw.indexOf(',');
-  if(comma < 0) return Promise.reject(new Error('That file could not be read.'));
-  const data = 'data:' + type + ';base64,' + raw.slice(comma + 1), size = Math.round((raw.length - comma - 1) * 3 / 4);
-  if(size > FILE_MAX_BYTES) return Promise.reject(new Error('That file is too big — the limit is 5 MB.'));
+  const f = x || {};
+  let parsed; try { parsed = parseHomeworkFile(f); } catch(err) { return Promise.reject(err); }
+  const {data, size, type} = parsed;
   const id = String(f.hwId) + '_' + user.uid, parts = [];
   for(let i = 0; i < data.length; i += FILE_CHUNK) parts.push(data.slice(i, i + FILE_CHUNK));
   const meta = { hwId: String(f.hwId), studentUid: user.uid, studentName: String(f.studentName || '').trim().slice(0, 80), game: String(f.game || ''),

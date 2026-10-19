@@ -697,6 +697,7 @@ body{font-variant-numeric:lining-nums}
           <div class="field hidden" id="hw-quiz-row"><label for="hw-quiz">Quiz</label><select id="hw-quiz"></select></div>
           <div class="field"><label for="hw-title">Title</label><input id="hw-title" maxlength="100" placeholder="Filled in for you — change it if you like"></div>
           <div class="field"><label for="hw-details">Instructions (optional)</label><textarea id="hw-details" maxlength="1000" style="min-height:70px" placeholder="e.g. Recite to a parent 3 times before class."></textarea></div>
+          <div class="field"><label for="hw-attachment">📎 Assignment file (optional)</label><input id="hw-attachment" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"><small class="muted">PDF, Word or PowerPoint · up to 5 MB. Students can download this with the homework. Choose “Hand in a file” above to collect their answers.</small><p id="hw-attachment-current" class="muted" aria-live="polite"></p><label><input type="checkbox" id="hw-attachment-remove"> Remove the attached file from this homework</label></div>
           <div class="field"><label for="hw-video">🎬 YouTube video (optional)</label><input id="hw-video" maxlength="300" placeholder="Paste a YouTube link — it plays inside the homework for students"><small class="muted" id="hw-video-note"></small></div>
           <div class="row">
             <div class="field"><label for="hw-due">Due date</label><input id="hw-due" type="date"></div>
@@ -724,9 +725,9 @@ body{font-variant-numeric:lining-nums}
     <div class="tab-panel hidden" data-panel="files">
       <div class="quiz-layout">
         <div class="card">
-          <h2 style="margin-top:0">📁 Share a PDF</h2>
-          <p class="muted" style="margin-top:-4px">Students see it under the map in <b>From your teacher → “📁 Class files”</b> and can download it. PDF only, up to 5 MB.</p>
-          <div class="field"><label for="file-input">PDF file</label><input id="file-input" type="file" accept="application/pdf,.pdf"></div>
+          <h2 style="margin-top:0">📁 Share a class file</h2>
+          <p class="muted" style="margin-top:-4px">Students see it under the map in <b>From your teacher → “📁 Class files”</b> and can download it. PDF, Word or PowerPoint, up to 5 MB.</p>
+          <div class="field"><label for="file-input">PDF, Word or PowerPoint file</label><input id="file-input" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"></div>
           <div class="field"><label for="file-title">Title</label><input id="file-title" maxlength="120" placeholder="e.g. Map 2 worksheet"></div>
           <div class="field"><label for="file-note">Note (optional)</label><input id="file-note" maxlength="300" placeholder="e.g. Print it and bring it on Saturday"></div>
           <div class="field"><label for="file-class">For</label><select id="file-class" class="class-target"></select></div>
@@ -1226,7 +1227,7 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=34"></script>
+<script type="module" src="../kids-quest-cloud.js?v=assignments-35"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2384,18 +2385,48 @@ function downloadSubmission(sub){
     a.href = url; a.download = (sub.studentName ? sub.studentName.replace(/[^\w\- ]+/g, '') + ' - ' : '') + sub.fileName; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
   }).catch(err => alert(friendlyError(err)));
 }
+let hwAttachment = null, hwSaveInFlight = false;
+function showHwAttachment(){
+  $('hw-attachment-current').textContent = hwAttachment ? 'Attached: ' + hwAttachment.fileName : 'No file attached.';
+}
 function resetHwForm(){
+  if(hwSaveInFlight) return;
+  hwAttachment = null; $('hw-attachment').value = ''; $('hw-attachment-remove').checked = false; showHwAttachment();
   editingHw = null; $('hw-form-title').textContent = '📚 Set homework'; $('hw-save').textContent = '📚 Set homework'; $('hw-cancel').classList.add('hidden');
   $('hw-title').value = ''; $('hw-details').value = ''; $('hw-video').value = ''; $('hw-video-note').textContent = ''; const d = new Date(); d.setDate(d.getDate() + 7); $('hw-due').value = isoDate(d);
   syncHwForm();
 }
 function startEditHw(h){
+  if(hwSaveInFlight) return;
+  hwAttachment = h.attachment || null; $('hw-attachment').value = ''; $('hw-attachment-remove').checked = false; showHwAttachment();
   editingHw = h; $('hw-form-title').textContent = '✏️ Edit homework'; $('hw-save').textContent = '💾 Save changes'; $('hw-cancel').classList.remove('hidden');
   $('hw-kind').value = h.kind; $('hw-from').value = h.lineFrom || 1; $('hw-to').value = h.lineTo || h.lineFrom || 1; fillHwQuiz(); $('hw-quiz').value = h.quizId || '';
   $('hw-title').value = h.title || ''; $('hw-details').value = h.details || ''; $('hw-video').value = h.videoUrl || ''; $('hw-video-note').textContent = ''; $('hw-due').value = h.dueDate || ''; fillClassSelects(); $('hw-class').value = h.classId || '';
   syncHwForm(); $('hw-composer').scrollIntoView({ behavior:'smooth' });
 }
+function readAssignmentFile(file){
+  return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result)); reader.onerror = () => reject(new Error('Could not read that file.')); reader.readAsDataURL(file); });
+}
+async function saveHwWithAttachment(data, file){
+  if(file){
+    const dataUrl = await readAssignmentFile(file);
+    const id = await window.KidsCloud.uploadClassFile({game:GAME_KEY, title:data.title, fileName:file.name, classId:data.classId, authorName:data.authorName, dataUrl});
+    const types = {pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation'};
+    const type = types[file.name.split('.').pop().toLowerCase()];
+    const normalizedLength = ('data:' + type + ';base64,').length + dataUrl.split(',')[1].length;
+    // Retain a successful upload if saving homework fails, so Retry does not upload it twice.
+    hwAttachment = {id, fileName:file.name, type, size:file.size, chunks:Math.ceil(normalizedLength / 900000), classId:data.classId};
+    $('hw-attachment').value = ''; $('hw-attachment-remove').checked = false; showHwAttachment();
+    loadFiles();
+  }
+  data.attachment = $('hw-attachment-remove').checked ? null : hwAttachment;
+  return window.KidsCloud.adminSaveHomework(data);
+}
 function submitHw(){
+  if($('hw-save').disabled) return;
+  const file = $('hw-attachment').files[0];
+  if(file && (!/\.(pdf|docx?|pptx?)$/i.test(file.name) || !file.size || file.size > 5 * 1024 * 1024)){setMsg('hw-msg','Choose a non-empty PDF, Word or PowerPoint file up to 5 MB.',true);return;}
+  if(!file && hwAttachment && !$('hw-attachment-remove').checked && (hwAttachment.classId || '') !== $('hw-class').value){setMsg('hw-msg','Remove or replace the attachment before changing its class.',true);return;}
   const kind = $('hw-kind').value, from = Number($('hw-from').value), to = Number($('hw-to').value) || from;
   if((kind === 'memorise' || kind === 'lessons' || kind === 'record') && !(from >= 1 && from <= 61 && to >= 1 && to <= 61)){ setMsg('hw-msg', 'Lines go from 1 to 61.', true); return; }
   if(kind === 'quiz' && !$('hw-quiz').value){ setMsg('hw-msg', 'Make a quiz on the Quizzes tab first.', true); return; }
@@ -2405,11 +2436,12 @@ function submitHw(){
   if(!$('hw-due').value){ setMsg('hw-msg', 'Choose a due date.', true); return; }
   const data = Object.assign({}, editingHw || {}, { game: GAME_KEY, kind, title, details: $('hw-details').value.trim(), lineFrom: Math.min(from, to) || 0, lineTo: Math.max(from, to) || 0,
     quizId: kind === 'quiz' ? $('hw-quiz').value : '', videoUrl: $('hw-video').value.trim(), dueDate: $('hw-due').value, classId: $('hw-class').value, authorName: (editingHw && editingHw.authorName) || $('certificate-teacher').dataset.me || '' });
-  $('hw-save').disabled = true; setMsg('hw-msg', 'Saving…');
-  window.KidsCloud.adminSaveHomework(data).then(() => {
+  hwSaveInFlight = true; $('hw-composer').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true); setMsg('hw-msg', file ? 'Uploading attachment and saving…' : 'Saving…');
+  saveHwWithAttachment(data, file).then(() => {
+    hwSaveInFlight = false;
     setMsg('hw-msg', (editingHw ? 'Saved ✓' : 'Homework set ✓ ') + (editingHw ? '' : (data.classId ? className(data.classId) : 'Every student') + ' will see it, due ' + fmtDue(data) + '.'));
     toast(editingHw ? 'Homework updated' : 'Homework set'); resetHwForm(); return loadHomework();
-  }).catch(err => setMsg('hw-msg', friendlyError(err), true)).finally(() => { $('hw-save').disabled = false; });
+  }).catch(err => setMsg('hw-msg', friendlyError(err), true)).finally(() => { hwSaveInFlight = false; $('hw-composer').querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = false); });
 }
 /* ===================== class files ===================== */
 let filesCache = [];
@@ -2424,7 +2456,7 @@ function renderFileList(){
   const box = $('file-list'), mine = f => myRole !== 'teacher' || !f.classId || (classById(f.classId) && isMyClass(classById(f.classId))) || canManageFile(f);
   const list = filesCache.filter(mine);
   $('tab-count-files').textContent = list.length;
-  box.innerHTML = list.length ? '' : '<p class="empty">No files shared yet. Upload a PDF on the left.</p>';
+  box.innerHTML = list.length ? '' : '<p class="empty">No files shared yet. Upload a PDF, Word or PowerPoint file on the left.</p>';
   list.forEach(f => {
     const c = f.classId ? classById(f.classId) : null, el = document.createElement('div'); el.className = 'list-row';
     el.innerHTML = '<div style="font-size:30px">📄</div><div class="grow"><div style="font-weight:800;color:var(--ink-brown)">' + escapeHtml(f.title) + '</div>' +
@@ -2442,21 +2474,21 @@ function downloadClassFile(f){
   toast('Preparing download…');
   window.KidsCloud.getClassFileData(f).then(data => {
     const bin = atob(data.split(',')[1]), u8 = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-    const url = URL.createObjectURL(new Blob([u8], { type: 'application/pdf' })), a = document.createElement('a');
-    a.href = url; a.download = /\.pdf$/i.test(f.fileName || '') ? f.fileName : (f.title || 'file') + '.pdf'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
+    const url = URL.createObjectURL(new Blob([u8], { type: f.type || 'application/pdf' })), a = document.createElement('a');
+    a.href = url; a.download = f.fileName || (f.title || 'file') + '.pdf'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 5000);
   }).catch(err => alert(friendlyError(err)));
 }
 function wireFiles(){
-  $('file-input').onchange = () => { const file = $('file-input').files[0]; if(file && !$('file-title').value.trim()) $('file-title').value = file.name.replace(/\.pdf$/i, '').replace(/[_-]+/g, ' '); };
+  $('file-input').onchange = () => { const file = $('file-input').files[0]; if(file && !$('file-title').value.trim()) $('file-title').value = file.name.replace(/\.(pdf|docx?|pptx?)$/i, '').replace(/[_-]+/g, ' '); };
   $('file-upload').onclick = () => {
     const file = $('file-input').files[0];
-    if(!file){ setMsg('file-msg', 'Choose a PDF file first.', true); return; }
-    if(!/pdf$/i.test(file.type) && !/\.pdf$/i.test(file.name)){ setMsg('file-msg', 'Only PDF files can be shared.', true); return; }
-    if(file.size > 5 * 1024 * 1024){ setMsg('file-msg', 'That PDF is ' + fmtSize(file.size) + ' — the limit is 5 MB. Try “Reduce file size” when saving the PDF.', true); return; }
+    if(!file){ setMsg('file-msg', 'Choose a PDF, Word or PowerPoint file first.', true); return; }
+    if(!/\.(pdf|docx?|pptx?)$/i.test(file.name)){ setMsg('file-msg', 'Choose a PDF, Word (.doc/.docx) or PowerPoint (.ppt/.pptx) file.', true); return; }
+    if(file.size > 5 * 1024 * 1024){ setMsg('file-msg', 'That file is ' + fmtSize(file.size) + ' — the limit is 5 MB. Try compressing the file or saving a smaller PDF.', true); return; }
     $('file-upload').disabled = true; setMsg('file-msg', 'Uploading…');
     const fr = new FileReader();
     fr.onload = () => {
-      const dataUrl = String(fr.result).replace(/^data:[^,]*,/, 'data:application/pdf;base64,');
+      const dataUrl = String(fr.result);
       window.KidsCloud.uploadClassFile({ game: GAME_KEY, title: $('file-title').value, note: $('file-note').value, fileName: file.name, classId: $('file-class').value, authorName: $('certificate-teacher').dataset.me || '', dataUrl })
         .then(() => { $('file-upload').disabled = false; $('file-input').value = ''; $('file-title').value = ''; $('file-note').value = ''; setMsg('file-msg', 'Shared ✓ Students see it in From your teacher → Class files.'); toast('File shared'); return loadFiles(); })
         .catch(err => { $('file-upload').disabled = false; setMsg('file-msg', friendlyError(err), true); });
@@ -2501,6 +2533,7 @@ function renderHomeworkList(){
         (sub ? '<div><button class="linkbtn" data-subdl="' + escapeHtml(sub.id) + '">' + (/\.pptx?$/i.test(sub.fileName) ? '📊' : /\.docx?$/i.test(sub.fileName) ? '📝' : '📄') + ' ' + escapeHtml(sub.fileName) + '</button> <span class="muted" style="font-weight:400">' + fmtSize(sub.size) + '</span></div>' : '') + '</td><td style="text-align:right"><button class="linkbtn" data-open="' + escapeHtml(x.s.uid) + '">Open</button></td></tr>' +
         (sub ? '<tr class="sub-fb-row"><td colspan="3">' + (sub.feedback ? '<div style="margin-bottom:4px">💬 <b>Your feedback:</b> ' + escapeHtml(sub.feedback) + '</div>' : '') + '<div class="fb" data-subfb="' + escapeHtml(sub.id) + '"><input maxlength="500" placeholder="' + (sub.feedback ? 'Change feedback…' : 'Feedback on this work, e.g. “MashaAllah, neat work! Check the Idgham letters.”') + '"><button class="btn primary small">Send</button></div></td></tr>' : ''); }).join('') + '</table>' +
         (h.kind === 'upload' && !hwSubs[h.id] ? '<p class="muted">Loading handed-in files…</p>' : '') : '');
+    if(h.attachment){const b=document.createElement('button');b.className='btn ghost small';b.textContent='📎 '+h.attachment.fileName;b.onclick=()=>downloadClassFile(h.attachment);card.querySelector('.ann-tools').prepend(b);}
     card.querySelector('[data-act="who"]').onclick = () => { hwOpen[h.id] = !hwOpen[h.id]; renderHomeworkList(); };
     if(hwOpen[h.id] && h.kind === 'upload' && !(h.id in hwSubs) && window.KidsCloud.listSubmissions){ hwSubs[h.id] = null; window.KidsCloud.listSubmissions(h.id).then(l => { hwSubs[h.id] = l; renderHomeworkList(); }).catch(err => { hwSubs[h.id] = []; toast(friendlyError(err)); renderHomeworkList(); }); }
     card.querySelectorAll('[data-subdl]').forEach(b => b.onclick = () => { const sub = (hwSubs[h.id] || []).find(u => u.id === b.dataset.subdl); if(sub) downloadSubmission(sub); });
