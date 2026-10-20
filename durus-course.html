@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
-<title>الدروس المهمة — Durūs al-Muhimmah (6-Week Course)</title>
-<meta name="description" content="Durūs al-Muhimmah lil ʿĀmmah — Important Lessons for Every Muslim. A 6-week interactive course with weekly quizzes, a midterm, a final exam, and a certificate of completion.">
+<title>الدروس المهمة — Interactive Important Lessons Course</title>
+<meta name="description" content="Study the 18 Important Lessons for Every Muslim in an interactive six-week course with the complete book, read-aloud tools, practice activities, quizzes, exams, and a certificate.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Marcellus&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/inside-theme.css?v=20261021-1">
 <style>
   :root{
     --scale:1.15;
@@ -523,6 +524,101 @@
     .wrap{ max-width:none; padding:0; }
     .cert-card{ box-shadow:none; }
   }
+
+  /* ===== 2026 Diin Islaam course refresh ===== */
+  :root{
+    --parchment:#fbf8f0; --parchment-deep:#f0eadc; --ink-navy:#172a44; --ink-brown:#46505b;
+    --gold:#e6b83f; --gold-soft:#f3d986; --green:#118568; --green-dark:#09614f; --green-bg:#e8f7f1;
+    --blue:#2788a8; --blue-bg:#e6f4f8; --purple:#8066c8; --purple-bg:#eeeafd;
+  }
+  body{ font-family:'Nunito',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:linear-gradient(180deg,#fffaf0 0,#f8fbf7 42%,#fff 100%); }
+  .wrap{ max-width:1080px; padding:0 22px 72px; }
+  header.site{ background:rgba(255,252,245,.96); border-bottom:1px solid rgba(17,133,104,.14); box-shadow:0 6px 24px rgba(23,42,68,.06); }
+  header.site .brand-mark{ border-radius:14px; background:linear-gradient(145deg,#11956f,#0b7059); box-shadow:0 8px 18px rgba(17,133,104,.22); }
+  header.site .brand-text{ font-family:'Playfair Display','Cormorant Garamond',serif; font-weight:800; }
+  header.site .brand-text small{ color:var(--green-dark); font-family:'Amiri',serif; }
+  header.site nav.site-links a{ font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; }
+  .topbar{ top:67px; background:rgba(255,252,245,.96); border-bottom:1px solid rgba(17,133,104,.16); backdrop-filter:blur(12px); }
+  .topbar-title .en,.back-to-weeks-btn,.lang-pill,.auth-input,.auth-primary-btn,.auth-secondary-btn,.auth-link-btn,#logout-btn,.qbtn{ font-family:'Nunito',sans-serif; }
+  .course-hero{ max-width:none; margin:0 -22px; padding:62px clamp(22px,7vw,90px) 56px; color:white; background:radial-gradient(circle at 12% 10%,rgba(255,255,255,.17),transparent 27%),linear-gradient(120deg,#0b6a52 0%,#118568 48%,#227f9f 100%); border-radius:0 0 42% 7% / 0 0 13% 5%; }
+  .course-hero-title{ color:#fff; font-family:'Playfair Display','Cormorant Garamond',serif; font-size:clamp(38px,6vw,68px); letter-spacing:-.035em; }
+  .course-hero-sub{ color:#ffe48c; font-size:clamp(22px,3vw,31px); }
+  .course-hero-desc{ color:rgba(255,255,255,.9); font-size:calc(16px * var(--scale)); }
+  .course-hero-tag{ background:#ffe070; color:#17354b; font-family:'Nunito',sans-serif; }
+  .course-badge{ background:linear-gradient(160deg,#ffe78a,#efb934); box-shadow:0 22px 46px rgba(4,45,42,.3); }
+  .course-badge .badge-name,.course-badge .badge-sub{ color:#17354b; }
+  .course-benefits{ max-width:1000px; margin-top:-22px; position:relative; z-index:2; }
+  .benefit-col{ border:1px solid rgba(17,133,104,.14); border-radius:24px; box-shadow:0 16px 45px rgba(23,42,68,.09); text-align:left; }
+  .benefit-icon{ border-radius:15px; margin-left:0; }
+  .benefit-col h3{ font-family:'Playfair Display','Cormorant Garamond',serif; font-size:calc(19px * var(--scale)); }
+  hr.hero-divider{ display:none; }
+  .name-gate-box,.quiz-shell{ border:1px solid rgba(17,133,104,.18); border-radius:24px; box-shadow:0 18px 44px rgba(23,42,68,.09); }
+  .auth-primary-btn,.qbtn.solid,.week-select-btn{ background:linear-gradient(135deg,#0f8a6b,#0a6a55); color:#fff; box-shadow:0 8px 20px rgba(17,133,104,.2); }
+  .week-select-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+  .week-select-btn{ border-radius:18px; min-height:76px; flex-direction:column; gap:2px; }
+  #week-select{ max-width:820px; }
+
+  .book-study-panel{ max-width:1000px; margin:8px auto 46px; padding:26px; border:1px solid rgba(17,133,104,.18); border-radius:28px; background:linear-gradient(145deg,#fff,#f0fbf6); box-shadow:0 18px 50px rgba(23,42,68,.1); }
+  .book-summary{ display:grid; grid-template-columns:150px 1fr; gap:28px; align-items:center; }
+  .book-cover{ aspect-ratio:3/4; border-radius:9px 18px 18px 9px; padding:18px 14px; display:flex; flex-direction:column; justify-content:center; text-align:center; background:linear-gradient(145deg,#123f59,#0d765f); color:#fff; box-shadow:-8px 10px 0 #e0b64b,0 18px 30px rgba(23,42,68,.2); position:relative; overflow:hidden; }
+  .book-cover::before{ content:''; position:absolute; inset:9px; border:1px solid rgba(255,224,112,.65); border-radius:5px 13px 13px 5px; }
+  .book-cover strong{ font-family:'Playfair Display','Cormorant Garamond',serif; font-size:20px; line-height:1.15; position:relative; }
+  .book-cover span{ font-family:'Amiri',serif; color:#ffe070; margin-top:8px; font-size:19px; position:relative; }
+  .book-copy .eyebrow{ margin:0 0 6px; color:var(--green); font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+  .book-copy h2{ margin:0 0 8px; color:var(--ink-navy); font-family:'Playfair Display','Cormorant Garamond',serif; font-size:clamp(26px,4vw,40px); line-height:1.15; }
+  .book-copy p{ margin:0 0 14px; max-width:700px; }
+  .book-author{ color:#637078; font-size:14px; font-weight:700; }
+  .book-actions,.lesson-audio-tools{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .book-action,.lesson-tool-btn{ border:0; border-radius:999px; padding:11px 17px; background:var(--green); color:#fff; font:800 14px 'Nunito',sans-serif; text-decoration:none; cursor:pointer; box-shadow:0 8px 18px rgba(17,133,104,.18); }
+  .book-action.secondary,.lesson-tool-btn.secondary{ background:#fff; color:var(--ink-navy); border:1px solid rgba(17,133,104,.24); box-shadow:none; }
+  .book-action:hover,.lesson-tool-btn:hover{ transform:translateY(-2px); }
+  .lesson-explorer{ margin-top:24px; padding-top:24px; border-top:1px dashed rgba(17,133,104,.3); }
+  .lesson-explorer[hidden]{ display:none; }
+  .lesson-explorer h3{ font-family:'Playfair Display','Cormorant Garamond',serif; color:var(--ink-navy); margin:0 0 5px; font-size:27px; }
+  .lesson-explorer-lead{ margin:0 0 16px; color:#657078; font-size:14px; }
+  .book-lesson-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .book-lesson-btn{ min-height:82px; padding:13px; text-align:left; background:#fff; border:1px solid rgba(17,133,104,.17); border-radius:16px; color:var(--ink-navy); font:800 13px/1.35 'Nunito',sans-serif; cursor:pointer; transition:.2s ease; }
+  .book-lesson-btn:hover,.book-lesson-btn.active{ transform:translateY(-2px); border-color:var(--green); box-shadow:0 10px 24px rgba(23,42,68,.09); }
+  .book-lesson-btn .lesson-number{ display:block; color:var(--green); font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:5px; }
+  .book-lesson-btn.studied::after{ content:' ✓ Studied'; display:block; color:var(--green); font-size:11px; margin-top:6px; }
+  .book-lesson-detail{ margin-top:14px; padding:22px; border-radius:20px; background:linear-gradient(135deg,#0b6a52,#237d9c); color:#fff; }
+  .book-lesson-detail[hidden]{ display:none; }
+  .book-lesson-detail h4{ margin:0 0 9px; font-family:'Playfair Display','Cormorant Garamond',serif; font-size:25px; color:#fff; }
+  .book-lesson-detail p{ margin:7px 0; color:rgba(255,255,255,.9); }
+  .book-lesson-detail b{ color:#ffe070; }
+  .book-lesson-detail .book-action.secondary{ background:#fff; }
+  .lesson-tools-panel{ margin:0 0 22px; padding:16px 18px; border:1px solid rgba(17,133,104,.17); border-radius:18px; background:#fff; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .lesson-tools-panel strong{ color:var(--ink-navy); display:block; }
+  .lesson-tools-panel small{ color:#68747d; }
+  .lesson-enrichment{ margin:32px 0 10px; padding:24px; border-radius:24px; background:linear-gradient(145deg,#eaf8f2,#edf6fb); border:1px solid rgba(17,133,104,.17); }
+  .lesson-enrichment h2{ margin:0 0 7px; color:var(--ink-navy); font-family:'Playfair Display','Cormorant Garamond',serif; }
+  .lesson-enrichment .enrichment-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px; }
+  .enrichment-card{ background:#fff; border:1px solid rgba(17,133,104,.13); border-radius:16px; padding:16px; }
+  .enrichment-card b{ color:var(--green-dark); display:block; margin-bottom:6px; }
+  .enrichment-card p{ margin:0; font-size:14px; }
+  .section-title{ font-family:'Playfair Display','Cormorant Garamond',serif; }
+  .def-card,.sub-rule,.note-box,.rule-box{ border-radius:18px; }
+  .sound-toggle.on{ background:var(--green); color:#fff; border-color:var(--green); }
+  @media(max-width:760px){
+    .book-summary{ grid-template-columns:96px 1fr; gap:18px; align-items:start; }
+    .book-cover{ padding:10px 8px; }
+    .book-cover strong{ font-size:14px; }.book-cover span{ font-size:14px; }
+    .book-lesson-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .lesson-enrichment .enrichment-grid{ grid-template-columns:1fr; }
+    .course-hero{ border-radius:0 0 24% 4% / 0 0 5% 2%; }
+  }
+  @media(max-width:520px){
+    .wrap{ padding-inline:14px; }
+    .course-hero{ margin-inline:-14px; padding:46px 20px 42px; }
+    .course-badge{ width:130px; height:145px; }
+    .course-benefits{ padding-inline:0; }
+    .book-study-panel{ padding:18px; }
+    .book-summary{ grid-template-columns:1fr; }
+    .book-cover{ width:132px; margin:0 auto; }
+    .book-copy{ text-align:center; }.book-actions{ justify-content:center; }
+    .book-lesson-grid,.week-select-grid{ grid-template-columns:1fr; }
+    .lesson-tools-panel{ flex-direction:column; align-items:flex-start; }
+  }
 </style>
 </head>
 <body>
@@ -531,7 +627,7 @@
   <div class="nav-row">
     <a class="brand" href="/">
       <span class="brand-mark" style="font-family:'Amiri',serif;">د</span>
-      <span class="brand-text">Diin Islaam<small>دين الإسلام</small></span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام · Learn with purpose</small></span>
     </a>
     <button class="menu-btn" id="siteMenuBtn" type="button" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <nav class="site-links" id="siteMainNav">
@@ -549,13 +645,14 @@
     <span class="btw-en">☰ Weeks</span><span class="btw-ar">الأسابيع</span>
   </button>
   <div class="font-size-control" id="font-size-control">
+    <button id="sound-toggle" class="sound-toggle on" type="button" aria-label="Turn course sounds off" aria-pressed="true" title="Course sounds">🔊</button>
     <button id="font-decrease-btn" aria-label="Decrease font size">−</button>
     <span id="font-size-readout">100%</span>
     <button id="font-increase-btn" aria-label="Increase font size">+</button>
   </div>
   <div class="topbar-title">
     <span class="ar">الدروس المهمة لعامة الأمة</span>
-    <span class="en">Durūs al-Muhimmah — 6-Week Course</span>
+    <span class="en">Durūs al-Muhimmah — Interactive Book Course</span>
   </div>
   <div class="lang-toggle">
     <span id="account-name" style="display:none;"></span>
@@ -569,15 +666,15 @@
   <div id="course-hero-section">
     <div class="course-hero">
       <div class="course-hero-text">
-        <span class="course-hero-tag">Free · 6-Week Course</span>
+        <span class="course-hero-tag">18 Book Lessons · 6 Study Weeks · Free</span>
         <h1 class="course-hero-title">Durūs al-Muhimmah lil ʿĀmmah</h1>
         <p class="course-hero-sub">الدروس المهمة لعامة الأمة</p>
-        <p class="course-hero-desc">A foundational 6-week course covering everything every Muslim must know — from the pillars of Islam to purification, prayer, and character — with quizzes along the way and a certificate at the end.</p>
+        <p class="course-hero-desc">A guided, interactive study of Shaykh ʿAbdul-ʿAzīz ibn Bāz's Important Lessons for Every Muslim — with the complete book, clear summaries, listen buttons, practice activities, quizzes, exams, and a certificate.</p>
       </div>
       <div class="course-badge">
         <span class="badge-circle">د</span>
         <p class="badge-name">Durūs al-Muhimmah</p>
-        <p class="badge-sub">6-Week Course</p>
+        <p class="badge-sub">18 Essential Lessons</p>
       </div>
     </div>
     <hr class="hero-divider">
@@ -598,6 +695,31 @@
         <p>A solid foundation for correct worship and sound belief, and the confidence to keep learning deeper Islamic sciences.</p>
       </div>
     </div>
+
+    <section class="book-study-panel" aria-labelledby="book-study-title">
+      <div class="book-summary">
+        <div class="book-cover" aria-hidden="true">
+          <strong>Explanation of Important Lessons</strong>
+          <span>شرح الدروس المهمة</span>
+        </div>
+        <div class="book-copy">
+          <p class="eyebrow">Your course book</p>
+          <h2 id="book-study-title">Read the book as you learn</h2>
+          <p>The course is now organised around all 18 lessons in the text. Open the full book at any time, or use the interactive lesson explorer for a short explanation, learning goal, practice task, and spoken summary.</p>
+          <p class="book-author">Text by Shaykh ʿAbdul-ʿAzīz ibn Bāz · Expanded explanation edition</p>
+          <div class="book-actions">
+            <a class="book-action sound-click" href="/Explanation-of-the-Important-Lessons-for-Every-Muslim.pdf" target="_blank" rel="noopener">📖 Open the complete book</a>
+            <button class="book-action secondary sound-click" id="toggle-lesson-explorer" type="button" aria-expanded="false" aria-controls="lesson-explorer">✨ Explore all 18 lessons</button>
+          </div>
+        </div>
+      </div>
+      <div class="lesson-explorer" id="lesson-explorer" hidden>
+        <h3>18-Lesson Book Companion</h3>
+        <p class="lesson-explorer-lead">Choose a lesson to see its focus and a practical study activity. Your studied lessons are remembered on this device.</p>
+        <div class="book-lesson-grid" id="book-lesson-grid"></div>
+        <div class="book-lesson-detail" id="book-lesson-detail" hidden aria-live="polite"></div>
+      </div>
+    </section>
   </div>
 
   <div id="auth-gate">
@@ -707,16 +829,19 @@ function applyFontScale(){
   document.getElementById('font-increase-btn').disabled = (currentFontScale >= FONT_SCALE_MAX - 0.001);
 }
 document.getElementById('font-decrease-btn').addEventListener('click', function(){
+  playClickSound();
   currentFontScale = Math.max(FONT_SCALE_MIN, +(currentFontScale - FONT_SCALE_STEP).toFixed(2));
   applyFontScale();
 });
 document.getElementById('font-increase-btn').addEventListener('click', function(){
+  playClickSound();
   currentFontScale = Math.min(FONT_SCALE_MAX, +(currentFontScale + FONT_SCALE_STEP).toFixed(2));
   applyFontScale();
 });
 applyFontScale();
 
 /* ===================== SOUND ENGINE ===================== */
+var soundEnabled = localStorage.getItem('durusSoundEnabled') !== 'false';
 var audioCtx = null;
 function getAudioCtx(){
   if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -737,10 +862,12 @@ function playNote(ctx, freq, startTime, duration, type, gainPeak){
   osc.stop(startTime + duration + 0.02);
 }
 function playClickSound(){
+  if(!soundEnabled) return;
   var ctx = getAudioCtx();
   playNote(ctx, 720, ctx.currentTime, 0.09, 'sine', 0.10);
 }
 function playCorrectSound(){
+  if(!soundEnabled) return;
   var ctx = getAudioCtx();
   var t = ctx.currentTime;
   [523.25, 659.25, 783.99].forEach(function(freq, i){
@@ -748,11 +875,121 @@ function playCorrectSound(){
   });
 }
 function playWrongSound(){
+  if(!soundEnabled) return;
   var ctx = getAudioCtx();
   var t = ctx.currentTime;
   playNote(ctx, 196.00, t, 0.2, 'sawtooth', 0.11);
   playNote(ctx, 174.61, t + 0.13, 0.24, 'sawtooth', 0.11);
 }
+
+function syncSoundToggle(){
+  var btn = document.getElementById('sound-toggle');
+  btn.textContent = soundEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('on', soundEnabled);
+  btn.setAttribute('aria-pressed', String(soundEnabled));
+  btn.setAttribute('aria-label', soundEnabled ? 'Turn course sounds off' : 'Turn course sounds on');
+}
+document.getElementById('sound-toggle').addEventListener('click', function(){
+  soundEnabled = !soundEnabled;
+  localStorage.setItem('durusSoundEnabled', String(soundEnabled));
+  syncSoundToggle();
+  if(soundEnabled) playClickSound();
+});
+syncSoundToggle();
+
+/* ===================== 18-LESSON BOOK COMPANION ===================== */
+var IMPORTANT_LESSONS = [
+  { title:'Al-Fātiḥah and the short sūrahs', ar:'الفاتحة وقصار السور', focus:'Recite, memorise, understand, and act upon Al-Fātiḥah and the short sūrahs from Az-Zalzalah to An-Nās.', practice:'Choose one short sūrah. Read its meaning, identify its main message, then recite it slowly three times.' },
+  { title:'The meaning of the Shahādah', ar:'معنى الشهادتين', focus:'Understand that worship belongs to Allah alone and that following the Messenger ﷺ is part of the testimony.', practice:'Explain both parts of the Shahādah in your own words without looking at the lesson.' },
+  { title:'The six pillars of Īmān', ar:'أركان الإيمان الستة', focus:'Build a clear foundation of belief in Allah, His angels, books, messengers, the Last Day, and divine decree.', practice:'Name all six pillars, then give one way each belief changes a Muslim’s daily life.' },
+  { title:'Tawḥīd and the categories of shirk', ar:'التوحيد وأقسام الشرك', focus:'Distinguish Allah’s lordship, His sole right to worship, and His names and attributes; recognise major and minor shirk.', practice:'Sort three everyday examples under Rubūbiyyah, Ulūhiyyah, or Names and Attributes.' },
+  { title:'The five pillars of Islam', ar:'أركان الإسلام الخمسة', focus:'See how the Shahādah, prayer, zakāh, fasting, and ḥajj form the visible structure of a Muslim’s worship.', practice:'Put the five pillars in order and write one sentence about the purpose of each.' },
+  { title:'The conditions of prayer', ar:'شروط الصلاة', focus:'Learn what must be present before prayer begins, including purity, time, covering, qiblah, and intention.', practice:'Use the conditions as a preparation checklist before your next ṣalāh.' },
+  { title:'The pillars of prayer', ar:'أركان الصلاة', focus:'Identify the essential actions and words that cannot be left out of the prayer.', practice:'Mentally walk through one rakʿah and name each pillar in order.' },
+  { title:'The obligations of prayer', ar:'واجبات الصلاة', focus:'Recognise the required acts of prayer and understand how they differ from pillars and recommended acts.', practice:'Create a three-column chart: pillars, obligations, and sunnahs.' },
+  { title:'The Tashahhud', ar:'التشهد', focus:'Learn the wording, meaning, and place of the Tashahhud and the prayers upon the Prophet ﷺ.', practice:'Listen, repeat in short phrases, then explain two meanings found in the Tashahhud.' },
+  { title:'Recommended acts of prayer', ar:'سنن الصلاة', focus:'Add beauty and completeness to prayer through the established verbal and physical sunnahs.', practice:'Choose two sunnahs to practise consistently during this week.' },
+  { title:'Nullifiers of prayer', ar:'مبطلات الصلاة', focus:'Know the actions that invalidate prayer, such as deliberate speech, eating, drinking, and losing purity.', practice:'Read five short scenarios and decide whether the prayer continues or must be repeated.' },
+  { title:'The conditions of wuḍūʾ', ar:'شروط الوضوء', focus:'Understand the requirements that make purification valid before beginning its actions.', practice:'Teach the wuḍūʾ preparation checklist to someone else.' },
+  { title:'The obligatory acts of wuḍūʾ', ar:'فروض الوضوء', focus:'Learn the Qurʾānic acts of washing and wiping, together with order and continuity.', practice:'Perform wuḍūʾ slowly and name each obligatory act as you complete it.' },
+  { title:'Nullifiers of wuḍūʾ', ar:'نواقض الوضوء', focus:'Recognise what ends the state of purification and when fresh wuḍūʾ is needed.', practice:'Make a simple “breaks wuḍūʾ / does not break wuḍūʾ” review list.' },
+  { title:'Noble Islamic character', ar:'الأخلاق المشروعة', focus:'Develop truthfulness, trustworthiness, modesty, courage, generosity, loyalty, and care for neighbours and people in need.', practice:'Select one character quality and record one deliberate action you will complete today.' },
+  { title:'Everyday Islamic etiquette', ar:'الآداب الإسلامية', focus:'Practise salām, cheerfulness, right-hand etiquette, manners of homes and masājid, travel, family ties, visits, and condolences.', practice:'Choose three etiquettes and practise them intentionally with your family.' },
+  { title:'Warning against shirk and major sins', ar:'التحذير من الشرك والمعاصي', focus:'Protect faith and society by recognising shirk and serious sins such as magic, murder, ribā, false testimony, and harming others.', practice:'Write a private action plan for avoiding one harmful habit and replacing it with a good deed.' },
+  { title:'Preparing the deceased and Janāzah', ar:'تجهيز الميت والصلاة عليه', focus:'Learn the essential sequence of washing, shrouding, funeral prayer, and burial with dignity and care.', practice:'Review the four takbīrs of the Janāzah prayer and what is recited after each.' }
+];
+
+function studiedLessonNumbers(){
+  try { return JSON.parse(localStorage.getItem('durusBookStudied') || '[]'); }
+  catch(e){ return []; }
+}
+function saveStudiedLessonNumbers(items){ localStorage.setItem('durusBookStudied', JSON.stringify(items)); }
+
+function renderBookLessonGrid(){
+  var grid = document.getElementById('book-lesson-grid');
+  var studied = studiedLessonNumbers();
+  grid.innerHTML = IMPORTANT_LESSONS.map(function(item, index){
+    return '<button class="book-lesson-btn' + (studied.indexOf(index + 1) !== -1 ? ' studied' : '') + '" type="button" data-book-lesson="' + index + '">' +
+      '<span class="lesson-number">Lesson ' + (index + 1) + ' · ' + item.ar + '</span>' + item.title + '</button>';
+  }).join('');
+  grid.querySelectorAll('.book-lesson-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ playClickSound(); showBookLesson(parseInt(btn.dataset.bookLesson,10)); });
+  });
+}
+
+function speakStudyText(text, lang, button){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  var utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang || 'en-US';
+  utter.rate = 0.92;
+  var voice = pickMaleVoice(utter.lang);
+  if(voice) utter.voice = voice;
+  if(button){
+    var original = button.textContent;
+    button.textContent = '⏹ Stop';
+    utter.onend = utter.onerror = function(){ button.textContent = original; };
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+function showBookLesson(index){
+  var item = IMPORTANT_LESSONS[index];
+  var detail = document.getElementById('book-lesson-detail');
+  document.querySelectorAll('.book-lesson-btn').forEach(function(btn){ btn.classList.toggle('active', parseInt(btn.dataset.bookLesson,10) === index); });
+  detail.hidden = false;
+  detail.innerHTML = '<h4>Lesson ' + (index + 1) + ': ' + item.title + '</h4>' +
+    '<p class="arabic" dir="rtl">' + item.ar + '</p>' +
+    '<p><b>Learning focus:</b> ' + item.focus + '</p>' +
+    '<p><b>Try it:</b> ' + item.practice + '</p>' +
+    '<div class="book-actions">' +
+      '<button class="book-action" id="listen-book-lesson" type="button">🔊 Listen to summary</button>' +
+      '<button class="book-action secondary" id="mark-book-lesson" type="button">✓ Mark as studied</button>' +
+      '<a class="book-action secondary" href="/Explanation-of-the-Important-Lessons-for-Every-Muslim.pdf" target="_blank" rel="noopener">Open book</a>' +
+    '</div>';
+  document.getElementById('listen-book-lesson').addEventListener('click', function(){ playClickSound(); speakStudyText(item.title + '. ' + item.focus + ' Practice activity. ' + item.practice, 'en-US', this); });
+  document.getElementById('mark-book-lesson').addEventListener('click', function(){
+    playCorrectSound();
+    var studied = studiedLessonNumbers();
+    if(studied.indexOf(index + 1) === -1) studied.push(index + 1);
+    saveStudiedLessonNumbers(studied);
+    renderBookLessonGrid();
+    showBookLesson(index);
+    this.textContent = '✓ Studied';
+  });
+  detail.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.getElementById('toggle-lesson-explorer').addEventListener('click', function(){
+  var explorer = document.getElementById('lesson-explorer');
+  var willOpen = explorer.hidden;
+  explorer.hidden = !willOpen;
+  this.setAttribute('aria-expanded', String(willOpen));
+  this.textContent = willOpen ? 'Hide lesson explorer' : '✨ Explore all 18 lessons';
+  if(willOpen){ renderBookLessonGrid(); explorer.scrollIntoView({behavior:'smooth',block:'start'}); }
+});
+document.querySelectorAll('.sound-click').forEach(function(el){ el.addEventListener('click', playClickSound); });
+renderBookLessonGrid();
 
 /* ===================== STUDENT NAME / ENCOURAGEMENT ===================== */
 var studentName = '';
@@ -1750,6 +1987,63 @@ function escapeHTML(str){
   return div.innerHTML;
 }
 
+var WEEK_ENRICHMENT = {
+  0: {
+    en:{ title:'Book study lab: Qurʾān foundations', intro:'Connect the first book lesson to recitation, understanding, and action.', cards:[['Remember','Al-Fātiḥah is recited in every rakʿah and gathers praise, worship, reliance, and guidance.'],['Practise','Recite one short sūrah, read its meaning, and state its central message in one sentence.'],['Reflect','What change should today’s recitation produce in your speech, prayer, or conduct?']] },
+    ar:{ title:'مختبر الكتاب: أسس القرآن', intro:'اربط الدرس الأول بالتلاوة والفهم والعمل.', cards:[['تذكّر','تُقرأ الفاتحة في كل ركعة، وقد جمعت الثناء والعبادة والاستعانة والهداية.'],['تدرّب','اقرأ سورة قصيرة، واقرأ معناها، ثم لخّص مقصدها في جملة واحدة.'],['تدبّر','ما الأثر الذي ينبغي أن تُحدثه تلاوة اليوم في كلامك أو صلاتك أو أخلاقك؟']] }
+  },
+  2: {
+    en:{ title:'Book study lab: Islam, Īmān and Iḥsān', intro:'See the dīn as outward worship, inward belief, and excellent awareness of Allah.', cards:[['Remember','Islam has five pillars; Īmān has six pillars; Iḥsān perfects both through sincerity and watchfulness.'],['Practise','Teach the pillars to a family member using your own words.'],['Reflect','Which act of worship becomes stronger when you remember that Allah sees you?']] },
+    ar:{ title:'مختبر الكتاب: الإسلام والإيمان والإحسان', intro:'تعرّف على الدين: عبادة ظاهرة، وإيمان باطن، ومراقبة وإتقان.', cards:[['تذكّر','للإسلام خمسة أركان، وللإيمان ستة أركان، والإحسان يكمّلهما بالإخلاص والمراقبة.'],['تدرّب','اشرح الأركان لأحد أفراد أسرتك بأسلوبك.'],['تدبّر','أي عبادة تتحسن أكثر حين تستحضر أن الله يراك؟']] }
+  },
+  4: {
+    en:{ title:'Book study lab: Tawḥīd in daily life', intro:'Move from definitions to recognising who you worship, trust, fear, hope in, and call upon.', cards:[['Remember','All acts of worship belong to Allah alone; His names and attributes are affirmed without distortion or comparison.'],['Practise','Classify duʿāʾ, sacrifice, reliance, and hope under the correct aspect of Tawḥīd.'],['Reflect','How can hidden showing-off enter a good deed, and how can sincere intention protect it?']] },
+    ar:{ title:'مختبر الكتاب: التوحيد في الحياة', intro:'انتقل من التعريف إلى تطبيق العبادة والتوكل والخوف والرجاء والدعاء لله وحده.', cards:[['تذكّر','كل العبادة لله وحده، وتُثبت أسماؤه وصفاته بلا تحريف ولا تمثيل.'],['تدرّب','صنّف الدعاء والذبح والتوكل والرجاء تحت باب التوحيد المناسب.'],['تدبّر','كيف يدخل الرياء في العمل الصالح؟ وكيف تحميه النية الخالصة؟']] }
+  },
+  7: {
+    en:{ title:'Book study lab: Build a sound prayer', intro:'Use the book’s conditions, pillars, obligations, sunnahs, and nullifiers as one clear prayer framework.', cards:[['Remember','A condition comes before prayer; a pillar remains essential inside it; an obligation differs in how forgetfulness is corrected.'],['Practise','Walk through a two-rakʿah prayer and label each major action.'],['Reflect','Choose one sunnah that will help you pray with greater calm and attention.']] },
+    ar:{ title:'مختبر الكتاب: بناء الصلاة الصحيحة', intro:'اجمع شروط الصلاة وأركانها وواجباتها وسننها ومبطلاتها في صورة واضحة.', cards:[['تذكّر','الشرط قبل الصلاة، والركن داخلها لا يسقط، والواجب له حكم عند النسيان.'],['تدرّب','راجع صلاة ركعتين وسمِّ كل فعل أساسي فيها.'],['تدبّر','اختر سنة تعينك على الطمأنينة والخشوع.']] }
+  },
+  9: {
+    en:{ title:'Book study lab: Purification and worship', intro:'Connect correct preparation with prayer, fasting, zakāh, and ḥajj.', cards:[['Remember','Wuḍūʾ has conditions, obligatory acts, and nullifiers; each category answers a different question.'],['Practise','Demonstrate wuḍūʾ in order and explain why continuity matters.'],['Reflect','How does careful purification prepare the heart as well as the body?']] },
+    ar:{ title:'مختبر الكتاب: الطهارة والعبادة', intro:'اربط الاستعداد الصحيح بالصلاة والصيام والزكاة والحج.', cards:[['تذكّر','للوضوء شروط وفروض ونواقض، ولكل قسم وظيفة مختلفة.'],['تدرّب','طبّق الوضوء بالترتيب واشرح معنى الموالاة.'],['تدبّر','كيف تهيئ الطهارة القلب مع البدن؟']] }
+  },
+  11: {
+    en:{ title:'Book study lab: Character, etiquette and responsibility', intro:'Complete the course by turning knowledge into noble conduct and service to people.', cards:[['Remember','Truthfulness, trustworthiness, modesty, courage, generosity, and good neighbourliness are lived signs of faith.'],['Practise','Choose one manner from Lesson 16 and practise it intentionally for seven days.'],['Reflect','Prepare a respectful summary of the Janāzah prayer sequence so you can support your community.']] },
+    ar:{ title:'مختبر الكتاب: الأخلاق والآداب والمسؤولية', intro:'اختم المقرر بتحويل العلم إلى خلق كريم وخدمة للناس.', cards:[['تذكّر','الصدق والأمانة والعفة والشجاعة والكرم وحسن الجوار من آثار الإيمان.'],['تدرّب','اختر أدبًا من الدرس السادس عشر وداوم عليه سبعة أيام.'],['تدبّر','لخّص ترتيب صلاة الجنازة لتكون نافعًا لمجتمعك.']] }
+  }
+};
+
+function lessonEnrichmentHTML(stepIndex){
+  var group = WEEK_ENRICHMENT[stepIndex];
+  if(!group) return '';
+  var data = group[currentLang] || group.en;
+  return '<section class="lesson-enrichment"><h2>' + data.title + '</h2><p>' + data.intro + '</p><div class="enrichment-grid">' +
+    data.cards.map(function(card){ return '<div class="enrichment-card"><b>' + card[0] + '</b><p>' + card[1] + '</p></div>'; }).join('') +
+    '</div></section>';
+}
+
+function enhanceLessonView(stepIndex){
+  var viewport = document.getElementById('step-viewport');
+  var isAr = currentLang === 'ar';
+  var tools = document.createElement('div');
+  tools.className = 'lesson-tools-panel';
+  tools.innerHTML = '<div><strong>' + (isAr ? 'استمع وتعلّم' : 'Listen and learn') + '</strong><small>' + (isAr ? 'يمكن قراءة الدرس بصوت واضح، وفتح الكتاب الكامل في أي وقت.' : 'Hear this lesson read aloud and keep the complete book beside your course.') + '</small></div>' +
+    '<div class="lesson-audio-tools"><button class="lesson-tool-btn" id="listen-current-lesson" type="button">🔊 ' + (isAr ? 'استمع للدرس' : 'Listen to lesson') + '</button>' +
+    '<button class="lesson-tool-btn secondary" id="stop-current-lesson" type="button">⏹ ' + (isAr ? 'إيقاف' : 'Stop') + '</button>' +
+    '<a class="lesson-tool-btn secondary" href="/Explanation-of-the-Important-Lessons-for-Every-Muslim.pdf" target="_blank" rel="noopener">📖 ' + (isAr ? 'الكتاب' : 'Book') + '</a></div>';
+  viewport.insertBefore(tools, viewport.firstChild ? viewport.firstChild.nextSibling : null);
+  viewport.insertAdjacentHTML('beforeend', lessonEnrichmentHTML(stepIndex));
+  document.getElementById('listen-current-lesson').addEventListener('click', function(){
+    playClickSound();
+    var clone = viewport.cloneNode(true);
+    clone.querySelectorAll('button,a,.lesson-tools-panel').forEach(function(el){ el.remove(); });
+    speakStudyText(clone.textContent.replace(/\s+/g,' ').trim(), isAr ? 'ar-SA' : 'en-US', this);
+  });
+  document.getElementById('stop-current-lesson').addEventListener('click', function(){ playClickSound(); if('speechSynthesis' in window) window.speechSynthesis.cancel(); });
+  viewport.querySelectorAll('.lesson-tool-btn').forEach(function(el){ if(el.tagName === 'A') el.addEventListener('click', playClickSound); });
+}
+
 function renderStep(i){
   currentStepIndex = i;
   var def = STEP_DEFS[i];
@@ -1763,6 +2057,7 @@ function renderStep(i){
   if(def.type === 'lesson'){
     var html = window[(currentLang === 'ar') ? def.htmlAR : def.htmlEN];
     viewport.innerHTML = weekBadgeHTML(def) + html;
+    enhanceLessonView(i);
     nextBtn.style.display = '';
     nextBtn.disabled = false;
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
@@ -1820,6 +2115,7 @@ function refreshCurrentStepLanguage(){
   if(def.type === 'lesson'){
     var html = window[(currentLang === 'ar') ? def.htmlAR : def.htmlEN];
     document.getElementById('step-viewport').innerHTML = weekBadgeHTML(def) + html;
+    enhanceLessonView(currentStepIndex);
     nextBtn.textContent = (currentLang === 'ar') ? 'التالي' : 'Next';
   } else if(def.type === 'quiz'){
     var titleEl = document.getElementById('active-quiz-title');
@@ -2432,3 +2728,4 @@ onAuthStateChanged(auth, function(user){
 <script src="/cursor.js" defer></script>
 </body>
 </html>
+
