@@ -25,7 +25,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, orderBy,
-  where, updateDoc, arrayUnion, arrayRemove, onSnapshot
+  where, updateDoc, arrayUnion, arrayRemove, onSnapshot, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1211,10 +1211,16 @@ function getSubmissionData(sub){
   });
 }
 function deleteSubmission(sub){
-  const n = Math.max(1, Number(sub && sub.chunks) || 1), jobs = [];
-  for(let i = 0; i < n; i++) jobs.push(deleteDoc(doc(db, SUBMISSION_DATA_COLLECTION, sub.id + '_' + i)).catch(function(){}));
-  return Promise.all(jobs).then(function(){ return deleteDoc(doc(db, SUBMISSIONS_COLLECTION, sub.id)); });
+  if(!auth.currentUser) return Promise.reject(new Error('Not signed in'));
+  const n = Number(sub && sub.chunks) || 1;
+  if(!sub || !sub.id || !Number.isInteger(n) || n < 1 || n > 16) return Promise.reject(new Error('This file could not be removed. Refresh and try again.'));
+  // Delete metadata and all file parts together: a failed operation leaves the submission intact.
+  const batch = writeBatch(db);
+  for(let i = 0; i < n; i++) batch.delete(doc(db, SUBMISSION_DATA_COLLECTION, sub.id + '_' + i));
+  batch.delete(doc(db, SUBMISSIONS_COLLECTION, sub.id));
+  return batch.commit();
 }
+
 function markSubmission(id, p){
   return updateDoc(doc(db, SUBMISSIONS_COLLECTION, id), { feedback: String((p && p.feedback) || '').trim().slice(0, 500), feedbackBy: String((p && p.feedbackBy) || '').slice(0, 80), feedbackAt: new Date().toISOString() });
 }
@@ -1315,6 +1321,10 @@ function getBoard(classId){
 function watchBoard(classId, onChange, onError){
  return onSnapshot(doc(db, BOARDS_COLLECTION, classId), function(s){ onChange(s.exists() ? (s.data().entries || {}) : {}); }, onError);
 }
+function boardMapNumber(value){
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(1, Math.floor(n)) : 1;
+}
 function studentUpdateBoard(classId, entry){
   const user = auth.currentUser;
   if(!user) return Promise.resolve();
@@ -1325,7 +1335,7 @@ function studentUpdateBoard(classId, entry){
     maps: Number(e.maps) || 0,
     updatedAt: new Date().toISOString()
   };
-  if(e.currentMap != null) entries[user.uid].currentMap = Math.max(1, Math.min(15, Math.floor(Number(e.currentMap) || 1)));
+  if(e.currentMap != null) entries[user.uid].currentMap = boardMapNumber(e.currentMap);
   if(e.lessons != null) entries[user.uid].lessons = Math.max(0, Math.floor(Number(e.lessons) || 0));
   const ref = doc(db, BOARDS_COLLECTION, classId);
   // Older rules may not accept map fields yet; keep the existing permitted fields.
@@ -1344,7 +1354,7 @@ function adminSyncBoard(classId, entries){
   const clean = {}, now = new Date().toISOString();
   Object.keys(entries || {}).forEach(function(uid){
     const e = entries[uid] || {}, o = { maps: Number(e.maps) || 0 };
-    if(e.currentMap != null) o.currentMap = Math.max(1, Math.min(15, Math.floor(Number(e.currentMap) || 1)));
+    if(e.currentMap != null) o.currentMap = boardMapNumber(e.currentMap);
     if(e.lessons != null) o.lessons = Math.max(0, Math.floor(Number(e.lessons) || 0));
     if(e.name != null){ o.name = String(e.name).slice(0, 40); o.avatar = String(e.avatar || '').slice(0, 8); o.stars = Number(e.stars) || 0; o.memorised = Number(e.memorised) || 0; o.streak = 0; o.updatedAt = now; }
     clean[uid] = o;
