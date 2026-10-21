@@ -151,7 +151,15 @@
 const A=[['أ','أَسَد','🦁'],['ب','بَطَّة','🦆'],['ت','تُفَّاحَة','🍎'],['ث','ثَعْلَب','🦊'],['ج','جَمَل','🐫'],['ح','حِصَان','🐎'],['خ','خَرُوف','🐑'],['د','دَجَاجَة','🐔'],['ذ','ذُرَة','🌽'],['ر','رُمَّان','🍎'],['ز','زَهْرَة','🌸'],['س','سَمَكَة','🐟'],['ش','شَمْس','☀️'],['ص','صَقْر','🦅'],['ض','ضِفْدَع','🐸'],['ط','طَائِرَة','✈️'],['ظ','ظَبْي','🦌'],['ع','عِنَب','🍇'],['غ','غَزَال','🦌'],['ف','فِيل','🐘'],['ق','قَمَر','🌙'],['ك','كِتَاب','📕'],['ل','لَيْمُون','🍋'],['م','مَوْز','🍌'],['ن','نَحْلَة','🐝'],['ه','هُدْهُد','🐦'],['و','وَرْدَة','🌹'],['ي','يَد','✋']];
 const EXAMPLES=[[['أسد','🦁'],['أرنب','🐇'],['أوزة','🪿']],[['بطة','🦆'],['بقرة','🐄'],['ببغاء','🦜']],[['تمساح','🐊'],['تيس','🐐'],['تنين','🐉']],[['ثعلب','🦊'],['ثور','🐂'],['ثعبان','🐍']],[['جمل','🐫'],['جرادة','🦗'],['جرو','🐕']],[['حصان','🐎'],['حوت','🐋'],['حمامة','🕊️']],[['خروف','🐑'],['خفاش','🦇'],['خنفساء','🪲']],[['دجاجة','🐔'],['دب','🐻'],['دلفين','🐬']],[['ذئب','🐺'],['ذبابة','🪰'],['ذرة','🌽']],[['رنة','🦌'],['روبيان','🦐'],['ريم','🦌']],[['زرافة','🦒'],['زرزور','🐦'],['زنبور','🐝']],[['سمكة','🐟'],['سلحفاة','🐢'],['سنجاب','🐿️']],[['شمبانزي','🐒'],['شاهين','🦅'],['شبل','🦁']],[['صقر','🦅'],['صوص','🐤'],['صرصور','🪳']],[['ضفدع','🐸'],['ضبع','🐕'],['ضب','🦎']],[['طاووس','🦚'],['طائر','🐦'],['طنان','🐦']],[['ظبي','🦌'],['ظليم','🐦'],['ظربان','🦨']],[['عصفور','🐦'],['عقرب','🦂'],['عنكبوت','🕷️']],[['غزال','🦌'],['غراب','🐦‍⬛'],['غوريلا','🦍']],[['فيل','🐘'],['فراشة','🦋'],['فقمة','🦭']],[['قرد','🐒'],['قطة','🐈'],['قرش','🦈']],[['كلب','🐕'],['كنغر','🦘'],['كتكوت','🐥']],[['لقلق','🐦'],['لبؤة','🦁'],['لاما','🦙']],[['ماعز','🐐'],['مهر','🐴'],['محار','🦪']],[['نحلة','🐝'],['نمر','🐅'],['نسر','🦅']],[['هدهد','🐦'],['هرة','🐈'],['هامستر','🐹']],[['وحيد القرن','🦏'],['وزغ','🦎'],['وبر','🐹']],[['يمامة','🕊️'],['يعسوب','🪰'],['يربوع','🐭']]];
 let soundOn=localStorage.sound!=='off',stars=+(localStorage.stars||0),listen=0,word=0,example=0,build=0,runTarget=1,runScore=0,lives=3,audio,mediaAudio,mediaStopTimer,mediaGuardTimer,mediaToken=0,clack,feet,letterMotionTimer,puzzleParts=0,puzzleLetters=0,puzzleTotal=0,puzzleDone=false,swipedHome=false,puzzleTimers=[],puzzleEpoch=0;
-const animalCueCache={};
+const animalCueCache={},humanLetterClips={},animalSoundClips={},localAudioUrls={};
+let humanBundleSettled=false,animalBundleSettled=false,audioUnlocked=false;
+function decodeClip(key,b64){
+  if(localAudioUrls[key])return localAudioUrls[key];
+  let raw=atob(b64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  return localAudioUrls[key]=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));
+}
+const humanBundleReady=fetch('assets/human-letters.b64.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(x=>{Object.assign(humanLetterClips,x);humanBundleSettled=true;return true}).catch(()=>{humanBundleSettled=true;return false});
+const animalBundleReady=fetch('assets/animal-sounds.b64.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(x=>{Object.assign(animalSoundClips,x);animalBundleSettled=true;return true}).catch(()=>{animalBundleSettled=true;return false});
 const COMMONS_MP3={
 'Lion raring-sound1TamilNadu178.ogg':'https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7d/Lion_raring-sound1TamilNadu178.ogg/Lion_raring-sound1TamilNadu178.ogg.mp3',
 'Anas platyrhynchos - Mallard - XC62258.ogg':'https://upload.wikimedia.org/wikipedia/commons/transcoded/f/fa/Anas_platyrhynchos_-_Mallard_-_XC62258.ogg/Anas_platyrhynchos_-_Mallard_-_XC62258.ogg.mp3',
@@ -249,7 +257,9 @@ function playUnifiedMedia(src,{volume=.94,onFail=null,guard=3200}={}){
 }
 function ttsUrl(t){return 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ar&q='+encodeURIComponent(t)}
 function playLetterSound(ch){
-  let key=ch==='ا'?'أ':ch,name=LETTER_NAMES[ch]||LETTER_NAMES[key]||ch;
+  let key=ch==='ا'?'أ':ch,name=LETTER_NAMES[ch]||LETTER_NAMES[key]||ch,b64=humanLetterClips[key];
+  if(b64)return playUnifiedMedia(decodeClip('letter:'+key,b64),{volume:1,onFail:()=>speechFallback(name),guard:2200});
+  if(!humanBundleSettled){humanBundleReady.then(ok=>ok?playLetterSound(ch):speechFallback(name));return true}
   return playUnifiedMedia(ttsUrl(name),{volume:1,onFail:()=>speechFallback(name),guard:3500});
 }
 function speak(t){
@@ -265,6 +275,15 @@ function wavData(samples,rate=22050){
   let bin='',step=8192;for(let i=0;i<bytes.length;i+=step)bin+=String.fromCharCode(...bytes.subarray(i,i+step));
   return 'data:audio/wav;base64,'+btoa(bin);
 }
+const SILENT_UNLOCK=wavData(new Float32Array(2205));
+function unlockMedia(){
+  if(audioUnlocked||!soundOn)return;
+  let a=ensureMedia(),silent=SILENT_UNLOCK;
+  a.src=silent;a.volume=.01;
+  let p=a.play();if(p&&p.then)p.then(()=>{audioUnlocked=true;if(a.src===silent)a.pause()}).catch(()=>{});
+}
+document.addEventListener('pointerdown',unlockMedia,{capture:true,passive:true});
+document.addEventListener('touchstart',unlockMedia,{capture:true,passive:true});
 function makeAnimalCue(icon){
   const rate=22050,dur=.82,n=Math.floor(rate*dur),s=new Float32Array(n),noise=()=>Math.random()*2-1;
   for(let i=0;i<n;i++){
@@ -283,11 +302,16 @@ function makeAnimalCue(icon){
 }
 function animalCue(icon){if(!soundOn||icon==='🌽')return false;let src=animalCueCache[icon]||(animalCueCache[icon]=makeAnimalCue(icon));return playUnifiedMedia(src,{volume:.96,guard:1800})}
 function hasAnimalSound(i,j=example){let e=EXAMPLES[i]?.[j];return !!(soundOn&&(WORD_SOUNDS[e?.[0]]||ANIMAL_SOUNDS[i]&&j===0||e?.[1]!=='🌽'))}
+function localAnimalSource(src){
+  let key=Object.keys(COMMONS_MP3).find(k=>COMMONS_MP3[k]===src),b64=key&&animalSoundClips[key];
+  return b64?decodeClip('animal:'+key,b64):src;
+}
 function playAnimalSound(i,j=example){
   let e=EXAMPLES[i]?.[j],src=WORD_SOUNDS[e?.[0]]||(j===0?ANIMAL_SOUNDS[i]:null);
   if(!soundOn)return false;
   if(!src)return animalCue(e?.[1]);
-  return playUnifiedMedia(src,{volume:.94,onFail:()=>animalCue(e?.[1]),guard:3200});
+  if(!animalBundleSettled){animalBundleReady.then(()=>playAnimalSound(i,j));return true}
+  return playUnifiedMedia(localAnimalSource(src),{volume:1,onFail:()=>animalCue(e?.[1]),guard:2500});
 }
 function addStars(n=1){stars+=n;localStorage.stars=stars;$('#starCount').textContent=stars}
 function show(page){stopPuzzle();stopMediaSound();$$('.page').forEach(p=>p.classList.remove('active'));$('#'+page).classList.add('active');$('#gameMenu').classList.remove('show');document.body.classList.toggle('home-mode',page==='homePage');$('#home').textContent='⌂';clearInterval(clack);clearInterval(feet);speechSynthesis?.cancel();if(page==='homePage')renderHome();if(page==='puzzlePage'){startPuzzle(word);startLetterMotion()}}
