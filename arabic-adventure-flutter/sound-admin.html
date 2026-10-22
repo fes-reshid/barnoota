@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#27b96c">
+<title>إدارة أصوات الحروف</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;color:#173d5d;background:repeating-linear-gradient(0deg,transparent 0,transparent 47px,#d8f3ff 48px,#d8f3ff 49px),#fffdf6;min-height:100vh}
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:linear-gradient(135deg,#25bd70,#20a6dc);color:white;box-shadow:0 4px 18px #17506b30}
+h1{font-size:clamp(20px,3vw,30px);margin:0}.back{color:#17405e;background:white;text-decoration:none;padding:10px 18px;border-radius:18px;font-weight:900;box-shadow:0 4px 0 #117c9c}
+main{max-width:1120px;margin:auto;padding:22px}.intro{background:white;border:4px solid #ffc943;border-radius:24px;padding:16px 20px;box-shadow:0 7px 0 #e4a82e;margin-bottom:20px;text-align:center}
+.intro p{margin:5px;font-weight:700}.toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
+button,.filebtn{border:0;border-radius:16px;padding:11px 15px;font:800 16px Tahoma,Arial;cursor:pointer;color:#fff;box-shadow:0 4px 0 #173d5d33}
+.export{background:#7750dc}.import{background:#2e9bd4}.danger{background:#f05b50}.filebtn input{display:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+.card{background:white;border:3px solid #c9e9f5;border-radius:24px;padding:15px;box-shadow:0 7px 0 #86b3c5;display:grid;grid-template-columns:70px 1fr;gap:12px;align-items:center}
+.letter{width:70px;height:70px;border-radius:20px;background:linear-gradient(145deg,#9a63ed,#6841ca);color:white;font-size:44px;font-weight:900;display:grid;place-items:center;box-shadow:0 5px 0 #4d2c9e}
+.name{font-size:20px;font-weight:900}.status{font-size:13px;color:#658296;margin:5px 0 10px;min-height:20px}
+.actions{display:flex;flex-wrap:wrap;gap:7px}.actions button,.actions label{padding:8px 10px;border-radius:12px;font-size:14px;box-shadow:0 3px 0 #0002}
+.record{background:#f04d62}.record.on{animation:pulse .8s infinite;background:#c91f3a}.upload{background:#ee9c25}.play{background:#2aa9df}.delete{background:#8796a3}
+.saved{border-color:#28bd70;background:#f2fff8}.saved .status{color:#16894d}.busy{opacity:.55;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(100px);background:#173d5d;color:white;padding:13px 22px;border-radius:18px;font-weight:900;transition:.3s;z-index:20}.toast.show{transform:translateX(-50%) translateY(0)}
+@keyframes pulse{50%{transform:scale(1.06)}}@media(max-width:600px){header{padding:10px}main{padding:14px}.grid{grid-template-columns:1fr}.back{padding:8px 11px}}
+</style>
+</head>
+<body>
+<header><h1>🎙️ إدارة أصوات الحروف</h1><a class="back" href="./?v=29">افتح اللعبة ←</a></header>
+<main>
+<section class="intro">
+<p>سجّل اسم كل حرف بصوت واضح، أو ارفع ملفاً صوتياً.</p>
+<p>سيتم رفع مستوى الصوت تلقائياً وحفظ التسجيل على هذا الجهاز.</p>
+<div class="toolbar">
+<button class="export" id="exportPack">تنزيل حزمة التسجيلات</button>
+<label class="filebtn import">استيراد حزمة<input id="importPack" type="file" accept=".json,application/json"></label>
+<button class="danger" id="clearAll">حذف جميع التسجيلات</button>
+</div>
+</section>
+<div class="grid" id="grid"></div>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const LETTERS=[['أ','ألف'],['ب','باء'],['ت','تاء'],['ث','ثاء'],['ج','جيم'],['ح','حاء'],['خ','خاء'],['د','دال'],['ذ','ذال'],['ر','راء'],['ز','زاي'],['س','سين'],['ش','شين'],['ص','صاد'],['ض','ضاد'],['ط','طاء'],['ظ','ظاء'],['ع','عين'],['غ','غين'],['ف','فاء'],['ق','قاف'],['ك','كاف'],['ل','لام'],['م','ميم'],['ن','نون'],['ه','هاء'],['و','واو'],['ي','ياء']];
+let db,recorder,chunks=[],recordingLetter=null,preview=null,pending={};
+const toast=t=>{let x=document.querySelector('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)};
+function openDB(){return new Promise((ok,no)=>{let r=indexedDB.open('arabic-adventure-audio',1);r.onupgradeneeded=()=>r.result.createObjectStore('letters',{keyPath:'letter'});r.onsuccess=()=>{db=r.result;ok(db)};r.onerror=()=>no(r.error)})}
+function all(){return new Promise((ok,no)=>{let r=db.transaction('letters').objectStore('letters').getAll();r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+function get(ch){return new Promise((ok,no)=>{let r=db.transaction('letters').objectStore('letters').get(ch);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+function put(ch,blob){return new Promise((ok,no)=>{let r=db.transaction('letters','readwrite').objectStore('letters').put({letter:ch,blob,updated:Date.now()});r.onsuccess=ok;r.onerror=()=>no(r.error)})}
+function del(ch){return new Promise((ok,no)=>{let r=db.transaction('letters','readwrite').objectStore('letters').delete(ch);r.onsuccess=ok;r.onerror=()=>no(r.error)})}
+function card(ch,name){let e=document.createElement('section');e.className='card';e.dataset.letter=ch;e.innerHTML=`<div class="letter">${ch}</div><div><div class="name">${name}</div><div class="status">لا يوجد تسجيل خاص</div><div class="actions"><button class="record">● تسجيل</button><label class="filebtn upload">⬆ رفع<input type="file" accept="audio/*"></label><button class="play">▶ استماع</button><button class="delete">حذف</button></div></div>`;e.querySelector('.record').onclick=()=>toggleRecord(ch,e);e.querySelector('input').onchange=async ev=>{let f=ev.target.files[0];if(f)await prepare(ch,e,f);ev.target.value=''};e.querySelector('.play').onclick=()=>play(ch);e.querySelector('.delete').onclick=async()=>{pending[ch]=null;await del(ch);update(e,false);toast('تم حذف تسجيل '+name)};return e}
+function update(e,saved,pendingNow=false){e.classList.toggle('saved',saved);e.querySelector('.status').textContent=pendingNow?'جاهز للحفظ…':saved?'تم حفظ تسجيلك ✓':'لا يوجد تسجيل خاص'}
+async function normalise(blob){
+ let ac=new (window.AudioContext||window.webkitAudioContext)(),buf=await ac.decodeAudioData(await blob.arrayBuffer()),rate=buf.sampleRate,n=buf.length,data=new Float32Array(n),peak=0;
+ for(let c=0;c<buf.numberOfChannels;c++){let a=buf.getChannelData(c);for(let i=0;i<n;i++)data[i]+=a[i]/buf.numberOfChannels}
+ for(let v of data)peak=Math.max(peak,Math.abs(v));let gain=peak?Math.min(8,.92/peak):1;for(let i=0;i<n;i++)data[i]*=gain;await ac.close();
+ let out=new ArrayBuffer(44+n*2),v=new DataView(out),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);for(let i=0;i<n;i++)v.setInt16(44+i*2,Math.max(-1,Math.min(1,data[i]))*32767,true);return new Blob([out],{type:'audio/wav'})
+}
+async function prepare(ch,e,blob){e.classList.add('busy');try{let loud=await normalise(blob);await put(ch,loud);pending[ch]=null;update(e,true);toast('تم حفظ صوت حرف '+ch)}catch(err){toast('تعذر قراءة الملف الصوتي')}finally{e.classList.remove('busy')}}
+async function toggleRecord(ch,e){
+ let b=e.querySelector('.record');
+ if(recorder&&recorder.state==='recording'){recorder.stop();return}
+ try{let stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});chunks=[];recordingLetter=ch;recorder=new MediaRecorder(stream);recorder.ondataavailable=x=>{if(x.data.size)chunks.push(x.data)};recorder.onstop=async()=>{b.classList.remove('on');b.textContent='● تسجيل';stream.getTracks().forEach(t=>t.stop());let blob=new Blob(chunks,{type:recorder.mimeType});await prepare(ch,e,blob);recordingLetter=null};recorder.start();b.classList.add('on');b.textContent='■ إيقاف';toast('ابدأ النطق الآن')}
+ catch(err){toast('يرجى السماح باستخدام الميكروفون')}
+}
+async function play(ch){if(preview){preview.pause();preview=null}let p=pending[ch],row=p?{blob:p}:await get(ch);if(!row){toast('سجّل الصوت أولاً');return}preview=new Audio(URL.createObjectURL(row.blob));preview.volume=1;preview.play()}
+function dataUrl(blob){return new Promise(ok=>{let r=new FileReader;r.onload=()=>ok(r.result);r.readAsDataURL(blob)})}
+function fromData(s){let [h,b]=s.split(','),mime=(h.match(/data:([^;]+)/)||[])[1]||'audio/wav',raw=atob(b),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return new Blob([a],{type:mime})}
+document.querySelector('#exportPack').onclick=async()=>{let rows=await all(),letters={};for(let x of rows)letters[x.letter]=await dataUrl(x.blob);let blob=new Blob([JSON.stringify({version:1,created:new Date().toISOString(),letters})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='arabic-letter-recordings.json';a.click();toast('تم تنزيل الحزمة')};
+document.querySelector('#importPack').onchange=async e=>{try{let j=JSON.parse(await e.target.files[0].text());for(let [ch,s] of Object.entries(j.letters||{}))if(LETTERS.some(x=>x[0]===ch))await put(ch,fromData(s));await refresh();toast('تم استيراد التسجيلات')}catch(err){toast('ملف غير صالح')}e.target.value=''};
+document.querySelector('#clearAll').onclick=async()=>{if(!confirm('هل تريد حذف جميع التسجيلات؟'))return;let tx=db.transaction('letters','readwrite');tx.objectStore('letters').clear();tx.oncomplete=()=>{refresh();toast('تم حذف جميع التسجيلات')}};
+async function refresh(){let saved=new Set((await all()).map(x=>x.letter));document.querySelectorAll('.card').forEach(e=>update(e,saved.has(e.dataset.letter)))}
+(async()=>{await openDB();for(let x of LETTERS)document.querySelector('#grid').append(card(...x));await refresh()})().catch(()=>toast('تعذر فتح مخزن التسجيلات'));
+</script>
+</body></html>
