@@ -1230,7 +1230,7 @@ body{font-variant-numeric:lining-nums}
 
 <script src="../seeraa/course-data.js?v=book-3"></script>
 <script src="../seeraa/course-v7.js?v=maps-45b"></script>
-<script src="../seeraa/seeraa-enrichment-data.js?v=review-1"></script>
+<script src="../seeraa/seeraa-enrichment-data.js?v=intro-1"></script>
 <script src="extra-progress.js?v=maps-45"></script>
 <script src="writing-review.js?v=2"></script>
 <script type="module" src="../kids-quest-cloud.js?v=seeraa-fixes-36"></script>
@@ -1641,7 +1641,7 @@ function renderModal(){
   const quizResults = Object.values(x.p.teacherQuizResults || {});
   const avg = quizResults.length ? Math.round(quizResults.reduce((a, r) => a + (r.total ? r.score / r.total : 0), 0) / quizResults.length * 100) + '%' : '—';
   $('progress-summary').innerHTML = [
-    ['Overall', x.pct + '%'], ['Currently on', studentMapLabel(x)], ['Story matching practice', x.p.memoryDone.filter(Boolean).length + ' / ' + TOTAL_LESSONS], ['Extra stories explored', window.SeeraaTeacherProgress.count(x.p) + ' / 30'],
+    ['Overall', x.pct + '%'], ['Currently on', studentMapLabel(x)], ['Story matching practice', x.p.memoryDone.filter(Boolean).length + ' / ' + TOTAL_LESSONS], ['Extra stories explored', window.SeeraaTeacherProgress.count(x.p) + ' / ' + window.SEERAA_ENRICHMENT.stories.length],
     ['Map challenges passed', x.p.mapQuizScores.filter(q => q && (q.passed || Number(q.score) >= 12)).length + ' / ' + MAP_COUNT],
     ['Teacher quizzes taken', String(quizResults.length)], ['Teacher quiz average', avg]
   ].map(([k, v]) => '<div class="info"><small>' + escapeHtml(k) + '</small><span>' + escapeHtml(v) + '</span></div>').join('');

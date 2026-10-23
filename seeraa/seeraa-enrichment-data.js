@@ -404,9 +404,83 @@ window.SEERAA_ENRICHMENT={
       "en": "There is no compulsion in religion. The right way has become clear from the wrong way.",
       "excerpt": true,
       "url": "https://quran.com/2/256"
+    },
+    "intro_example": {
+      "kind": "Qur’an",
+      "ref": "33:21",
+      "ar": "لَقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ لِمَنْ كَانَ يَرْجُو اللَّهَ وَالْيَوْمَ الْآخِرَ وَذَكَرَ اللَّهَ كَثِيرًا",
+      "en": "Indeed, in the Messenger of Allah you have an excellent example for whoever has hope in Allah and the Last Day, and remembers Allah often.",
+      "excerpt": false,
+      "url": "https://quran.com/33/21"
+    },
+    "intro_character": {
+      "kind": "Qur’an",
+      "ref": "68:4",
+      "ar": "وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ",
+      "en": "You are surely of magnificent character.",
+      "excerpt": false,
+      "url": "https://quran.com/68/4"
+    },
+    "intro_intention": {
+      "kind": "Hadith",
+      "ref": "Sahih al-Bukhari 1",
+      "ar": "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى",
+      "en": "Actions are judged by intentions, and each person receives according to their intention.",
+      "excerpt": true,
+      "url": "https://sunnah.com/bukhari:1"
     }
   },
   "stories": [
+    {
+      "id": "m1-introduction",
+      "map": 0,
+      "introduction": true,
+      "title": "Start here · Why do we learn Seeraa?",
+      "place": "Welcome to your Seeraa journey",
+      "story": [
+        "What is Seeraa? Seeraa is the study of the life of Prophet Muhammad ﷺ. We learn about his family, his message, his journeys and the way he treated people. We explore the world before his birth, his life in Makkah and Madinah, and the lessons we can practise today.",
+        "Why do we learn it? We want to know and love the Messenger of Allah ﷺ and follow his example. Allah describes him as an excellent example in Al-Ahzab 33:21 and praises his magnificent character in Al-Qalam 68:4. His life teaches us truthfulness, mercy, patience, courage and care for others. This is more than remembering names and dates: we try to become better Muslims.",
+        "What is niyyah? Niyyah means your intention: the reason in your heart for doing something. The Prophet ﷺ taught that actions are judged by intentions. Before learning, pause and intend to please Allah, understand His Messenger’s ﷺ example and practise what you learn.",
+        "Can learning bring ajr? Ajr means reward from Allah. When we learn beneficial knowledge sincerely for Allah and try to follow it, we hope for His reward. We do not study only to show off, win praise or collect game points. The stars in this app are encouragement; they do not measure Allah’s reward.",
+        "An intention to think about: “I am learning Seeraa to please Allah, to know and love His Messenger ﷺ, and to follow his good example.” This is a suggested thought, not a special du‘a or a hadith to recite. Your intention belongs in your heart; you do not have to say a fixed sentence aloud.",
+        "Put it into practice today. Choose one good action: tell the truth even when it is difficult, help someone at home, speak kindly, or be patient with a friend. At the end of a lesson, ask yourself: What did I learn, and how can I use it?"
+      ],
+      "younger": "What does Seeraa mean? Name one kind action you want to practise today.",
+      "older": "How can two students do the same learning activity with different intentions? How could you renew your intention if you start wanting only praise?",
+      "pairs": [
+        [
+          "Seeraa",
+          "Learning about the life of Prophet Muhammad ﷺ"
+        ],
+        [
+          "Niyyah",
+          "The intention in your heart"
+        ],
+        [
+          "Ajr",
+          "Reward from Allah"
+        ],
+        [
+          "Good character",
+          "Putting kindness, truthfulness and patience into practice"
+        ]
+      ],
+      "question": {
+        "q": "Which intention is best when we learn Seeraa?",
+        "choices": [
+          "To please Allah and follow the Prophet’s ﷺ good example",
+          "Only to show others that I know more",
+          "Only to collect stars without practising what I learn"
+        ],
+        "answer": 0
+      },
+      "evidence": [
+        "intro_example",
+        "intro_character",
+        "intro_intention"
+      ],
+      "chapter": "Introduction to studying Seeraa; Qur’an 33:21 and 68:4; Sahih al-Bukhari 1"
+    },
     {
       "id": "m1-story-1",
       "map": 1,
