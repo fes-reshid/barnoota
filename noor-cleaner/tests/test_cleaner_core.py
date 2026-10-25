@@ -18,7 +18,7 @@ class CleanerTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def write(self, rel, data, age_hours=0):
-        path = os.path.join(self.root, rel)
+        path = os.path.normpath(os.path.join(self.root, rel))
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "wb") as f:
             f.write(data)

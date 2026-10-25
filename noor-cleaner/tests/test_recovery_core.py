@@ -89,7 +89,7 @@ class RestorePointTests(unittest.TestCase):
     def test_find_and_restore_missing(self):
         with tempfile.TemporaryDirectory() as snap, tempfile.TemporaryDirectory() as live:
             def write(root, rel, data=b"x"):
-                path = os.path.join(root, rel)
+                path = os.path.normpath(os.path.join(root, rel))
                 os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, "wb") as f:
                     f.write(data)

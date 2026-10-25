@@ -164,7 +164,7 @@ class ScannerTests(unittest.TestCase):
     def test_full_scan_and_quarantine(self):
         with tempfile.TemporaryDirectory() as root, tempfile.TemporaryDirectory() as appdir:
             def write(rel, data):
-                path = os.path.join(root, rel)
+                path = os.path.normpath(os.path.join(root, rel))
                 os.makedirs(os.path.dirname(path), exist_ok=True)
                 with open(path, "wb") as f:
                     f.write(data)
