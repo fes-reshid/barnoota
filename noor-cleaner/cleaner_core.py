@@ -19,6 +19,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 
 import scanner_core as core
+from i18n import _
 
 FILE_TYPES = {
     "Videos": {".mp4", ".mkv", ".avi", ".mov", ".wmv", ".m4v", ".flv", ".webm", ".mpg", ".mpeg", ".3gp", ".ts"},
@@ -37,6 +38,14 @@ _TYPE_OF = {ext: name for name, exts in FILE_TYPES.items() for ext in exts}
 
 def file_type(path):
     return _TYPE_OF.get(os.path.splitext(path)[1].lower(), "Other")
+
+
+def file_type_label(kind):
+    """The file type name (a FILE_TYPES key or "Other") in the user's language."""
+    return {"Videos": _("Videos"), "Photos & pictures": _("Photos & pictures"), "Music & audio": _("Music & audio"),
+            "Documents": _("Documents"), "Archives & disk images": _("Archives & disk images"),
+            "Programs & installers": _("Programs & installers"), "Game & app data": _("Game & app data"),
+            }.get(kind, _("Other"))
 
 
 # --------------------------------------------------------------------------- what uses the space
@@ -134,7 +143,7 @@ def junk_categories():
     env = os.environ.get
     if not core.IS_WINDOWS:  # development on Linux/macOS
         cache = os.path.expanduser("~/.cache")
-        return [JunkCategory("cache", "App caches", "Files apps keep to start faster; they are rebuilt.", [cache])]
+        return [JunkCategory("cache", _("App caches"), _("Files apps keep to start faster; they are rebuilt."), [cache])]
     local, windir, programdata = env("LOCALAPPDATA"), env("SYSTEMROOT", r"C:\Windows"), env("PROGRAMDATA")
 
     browsers = []
@@ -145,24 +154,24 @@ def junk_categories():
     browsers.append(_join(local, r"Mozilla\Firefox\Profiles\*\cache2"))
 
     categories = [
-        JunkCategory("recycle", "Recycle Bin", "Files you already deleted. They still use space until the bin is emptied."),
-        JunkCategory("temp", "Temporary files", "Leftovers programs and installers did not clean up (older than 1 day).",
+        JunkCategory("recycle", _("Recycle Bin"), _("Files you already deleted. They still use space until the bin is emptied.")),
+        JunkCategory("temp", _("Temporary files"), _("Leftovers programs and installers did not clean up (older than 1 day)."),
                      [env("TEMP")], min_age_hours=24),
-        JunkCategory("wintemp", "Windows temporary files", "Windows' own leftovers (older than 1 day).",
+        JunkCategory("wintemp", _("Windows temporary files"), _("Windows' own leftovers (older than 1 day)."),
                      [_join(windir, "Temp")], min_age_hours=24, needs_admin=True),
-        JunkCategory("browser", "Browser cache", "Saved copies of websites from Chrome, Edge, Brave, Opera and Firefox. "
-                     "Close your browser first. Passwords and history are not touched.", browsers),
-        JunkCategory("thumbs", "Thumbnail cache", "Picture previews; Windows rebuilds them when needed.",
+        JunkCategory("browser", _("Browser cache"), _("Saved copies of websites from Chrome, Edge, Brave, Opera and "
+                     "Firefox. Close your browser first. Passwords and history are not touched."), browsers),
+        JunkCategory("thumbs", _("Thumbnail cache"), _("Picture previews; Windows rebuilds them when needed."),
                      [_join(local, r"Microsoft\Windows\Explorer")], ("thumbcache_*.db", "iconcache_*.db")),
-        JunkCategory("crash", "Crash dumps & error reports", "Reports saved when programs crashed.",
+        JunkCategory("crash", _("Crash dumps & error reports"), _("Reports saved when programs crashed."),
                      [_join(local, "CrashDumps"), _join(windir, "Minidump"),
                       _join(local, r"Microsoft\Windows\WER\ReportArchive"),
                       _join(local, r"Microsoft\Windows\WER\ReportQueue"),
                       _join(programdata, r"Microsoft\Windows\WER\ReportArchive"),
                       _join(programdata, r"Microsoft\Windows\WER\ReportQueue")]),
-        JunkCategory("update", "Windows Update downloads", "Update installers Windows has already used.",
+        JunkCategory("update", _("Windows Update downloads"), _("Update installers Windows has already used."),
                      [_join(windir, r"SoftwareDistribution\Download")], min_age_hours=24, needs_admin=True),
-        JunkCategory("delivery", "Delivery Optimization cache", "Update pieces Windows shared with other PCs.",
+        JunkCategory("delivery", _("Delivery Optimization cache"), _("Update pieces Windows shared with other PCs."),
                      [_join(windir, r"ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows"
                                     r"\DeliveryOptimization\Cache")], needs_admin=True),
     ]
@@ -305,3 +314,46 @@ def _split(group, key):
         if k is not None:
             buckets[k].append(e)
     return [b for b in buckets.values() if len(b) > 1]
+
+
+# --------------------------------------------------------------------------- old downloads
+
+# Things people download once, run or unpack, and forget: installers, archives and disk images.
+LEFTOVER_DOWNLOAD_TYPES = {".exe", ".msi", ".msix", ".appx", ".zip", ".rar", ".7z", ".gz", ".tar", ".iso",
+                           ".img", ".dmg", ".apk", ".torrent", ".part", ".crdownload", ".tmp"}
+
+
+def downloads_folder():
+    """The user's Downloads folder, even if it has been moved (e.g. to D:)."""
+    if core.IS_WINDOWS:
+        try:
+            import uuid
+            guid = uuid.UUID("374DE290-123F-4565-9164-39C4925E467B").bytes_le  # FOLDERID_Downloads
+            path = ctypes.c_wchar_p()
+            if ctypes.windll.shell32.SHGetKnownFolderPath(ctypes.c_char_p(guid), 0, None, ctypes.byref(path)) == 0:
+                folder = path.value
+                ctypes.windll.ole32.CoTaskMemFree(path)
+                return folder
+        except (OSError, AttributeError, ValueError):
+            pass
+    return os.path.join(os.path.expanduser("~"), "Downloads")
+
+
+def old_downloads(folder=None, min_age_days=90, now=None):
+    """Installers, archives and disk images in Downloads not changed for min_age_days, biggest first."""
+    folder = folder or downloads_folder()
+    cutoff = (now or time.time()) - min_age_days * 86400
+    found = []
+    for dirpath, _dirs, files in os.walk(folder):
+        for name in files:
+            if os.path.splitext(name)[1].lower() not in LEFTOVER_DOWNLOAD_TYPES:
+                continue
+            path = os.path.join(dirpath, name)
+            try:
+                st = os.stat(path)
+            except OSError:
+                continue
+            if st.st_mtime < cutoff:
+                found.append(core.FileEntry(path, st.st_size, st.st_mtime))
+    found.sort(key=lambda e: e.size, reverse=True)
+    return found

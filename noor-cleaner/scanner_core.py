@@ -27,6 +27,8 @@ import zipfile
 import zlib
 from dataclasses import dataclass
 
+from i18n import _
+
 IS_WINDOWS = sys.platform == "win32"
 
 APP_DIR = os.path.join(
@@ -104,9 +106,14 @@ def list_drives():
 def drive_label(root):
     if not IS_WINDOWS:
         return root
-    kinds = {2: "Removable", 3: "Local disk", 4: "Network", 5: "CD/DVD", 6: "RAM disk"}
-    kind = kinds.get(ctypes.windll.kernel32.GetDriveTypeW(root), "Drive")
+    kinds = {2: _("Removable"), 3: _("Local disk"), 4: _("Network"), 5: _("CD/DVD"), 6: _("RAM disk")}
+    kind = kinds.get(ctypes.windll.kernel32.GetDriveTypeW(root), _("Drive"))
     return f"{root}  ({kind})"
+
+
+def drive_is_optional(root):
+    """Network and CD/DVD drives are left unticked by default."""
+    return IS_WINDOWS and ctypes.windll.kernel32.GetDriveTypeW(root) in (4, 5)
 
 
 class BlockedAsVirus(Exception):
@@ -145,7 +152,7 @@ def check_corruption(path, size, deep=False, cancel=None):
     ext = os.path.splitext(path)[1].lower()
     if size == 0:
         if ext in NEVER_EMPTY:
-            return "File is empty (0 bytes) - its contents have been lost."
+            return _("File is empty (0 bytes) - its contents have been lost.")
         return None
     try:
         if deep:
@@ -163,29 +170,31 @@ def check_corruption(path, size, deep=False, cancel=None):
         if isinstance(exc, PermissionError):
             return None  # in use or protected: cannot judge, so do not accuse it
         if _is_disk_error(exc):
-            return "The disk could not read this file (damaged sector or failing drive)."
+            return _("The disk could not read this file (damaged sector or failing drive).")
         return None
 
 
 def _check_format(path, f, ext, size, head, tail, deep):
+    wrong_header = _("Not a valid {kind} file (wrong header).")
+    cut_off_image = _("The image is cut off (missing end of image).")
     if _all_zero(head):
-        return "The start of the file is blank (all zeros) - the data has been wiped or damaged."
+        return _("The start of the file is blank (all zeros) - the data has been wiped or damaged.")
 
     if ext in ZIP_TYPES:
         if not head.startswith((b"PK\x03\x04", b"PK\x05\x06")):
-            return "Not a valid archive/Office file (wrong header)."
+            return wrong_header.format(kind=ext[1:].upper())
         try:
             with zipfile.ZipFile(path) as zf:
                 if deep:
                     bad = zf.testzip()
                     if bad:
-                        return f"Damaged data inside the file (part '{bad}' fails its checksum)."
+                        return _("Damaged data inside the file (part '{part}' fails its checksum).").format(part=bad)
         except zipfile.BadZipFile:
-            return "The file structure is broken (incomplete copy or download)."
+            return _("The file structure is broken (incomplete copy or download).")
         except (RuntimeError, NotImplementedError):
             pass  # password-protected or unusual compression: cannot verify
         except (zlib.error, EOFError):
-            return "Damaged compressed data inside the file."
+            return _("Damaged compressed data inside the file.")
         return None
 
     if ext in OLE_TYPES:
@@ -193,127 +202,131 @@ def _check_format(path, f, ext, size, head, tail, deep):
             return None
         if _looks_like_text(head):
             return None  # old Office happily saves HTML/CSV under these names
-        return "Not a valid Office file (wrong header)."
+        return wrong_header.format(kind=ext[1:].upper())
 
     if ext == ".pdf":
         if b"%PDF" not in head[:1024]:
-            return "Not a valid PDF (missing PDF header)."
+            return wrong_header.format(kind="PDF")
         if b"%%EOF" not in tail:
-            return "The PDF is cut off (missing end marker) - probably an incomplete download or copy."
+            return _("The PDF is cut off (missing end marker) - probably an incomplete download or copy.")
         return None
 
     if ext == ".png":
         if not head.startswith(b"\x89PNG\r\n\x1a\n"):
-            return "Not a valid PNG image (wrong header)."
+            return wrong_header.format(kind="PNG")
         if b"IEND" not in tail[-64:]:
-            return "The image is cut off (missing end of image)."
+            return cut_off_image
         if deep:
             return _check_png_chunks(f, size)
         return None
 
     if ext in JPEG_TYPES:
         if not head.startswith(b"\xff\xd8\xff"):
-            return "Not a valid JPEG image (wrong header)."
+            return wrong_header.format(kind="JPEG")
         if b"\xff\xd9" not in tail:
-            return "The image is cut off (missing end of image)."
+            return cut_off_image
         return None
 
     if ext == ".gif":
         if not head.startswith((b"GIF87a", b"GIF89a")):
-            return "Not a valid GIF image (wrong header)."
+            return wrong_header.format(kind="GIF")
         if not tail.rstrip(b"\x00").endswith(b";"):
-            return "The image is cut off (missing end of image)."
+            return cut_off_image
         return None
 
     if ext == ".bmp":
         if not head.startswith(b"BM") or len(head) < 6:
-            return "Not a valid BMP image (wrong header)."
+            return wrong_header.format(kind="BMP")
         declared = struct.unpack_from("<I", head, 2)[0]
         if declared > size:
-            return "The image is cut off (file is smaller than its header says)."
+            return _("The file is cut off (smaller than its header says).")
         return None
 
     if ext in RIFF_TYPES:
         if not head.startswith(b"RIFF") or len(head) < 12:
-            return "Not a valid media file (wrong header)."
+            return wrong_header.format(kind=ext[1:].upper())
         declared = struct.unpack_from("<I", head, 4)[0] + 8
         if declared > size:
-            return "The file is cut off (smaller than its header says)."
+            return _("The file is cut off (smaller than its header says).")
         return None
 
     if ext in MP4_TYPES:
-        return _check_mp4_boxes(f, size, head)
+        return _check_mp4_boxes(f, size, head, ext)
 
     if ext in PE_TYPES:
         return _check_pe(f, size, head)
 
     if ext == ".7z" and not head.startswith(b"7z\xbc\xaf\x27\x1c"):
-        return "Not a valid 7-Zip archive (wrong header)."
+        return wrong_header.format(kind="7-Zip")
     if ext == ".rar" and not head.startswith(b"Rar!\x1a\x07"):
-        return "Not a valid RAR archive (wrong header)."
+        return wrong_header.format(kind="RAR")
     if ext == ".gz":
         if not head.startswith(b"\x1f\x8b"):
-            return "Not a valid GZip archive (wrong header)."
+            return wrong_header.format(kind="GZip")
         if deep:
             try:
                 with gzip.open(path, "rb") as gz:
                     while gz.read(1024 * 1024):
                         pass
             except (OSError, EOFError, zlib.error):
-                return "Damaged compressed data inside the archive."
+                return _("Damaged compressed data inside the file.")
     return None
 
 
 def _check_png_chunks(f, size):
+    cut_off = _("The image is cut off (missing end of image).")
     f.seek(8)
     while f.tell() < size:
         header = f.read(8)
         if len(header) < 8:
-            return "The image is cut off (incomplete data block)."
+            return cut_off
         length, kind = struct.unpack(">I4s", header)
         data = f.read(length)
         crc = f.read(4)
         if len(data) < length or len(crc) < 4:
-            return "The image is cut off (incomplete data block)."
+            return cut_off
         if zlib.crc32(kind + data) & 0xFFFFFFFF != struct.unpack(">I", crc)[0]:
-            return f"Damaged image data (block '{kind.decode('latin-1')}' fails its checksum)."
+            return _("Damaged data inside the file (part '{part}' fails its checksum).").format(
+                part=kind.decode("latin-1"))
         if kind == b"IEND":
             return None
-    return "The image is cut off (missing end of image)."
+    return cut_off
 
 
-def _check_mp4_boxes(f, size, head):
+def _check_mp4_boxes(f, size, head, ext):
+    broken = _("The file structure is broken (incomplete copy or download).")
     if len(head) < 8 or head[4:8] not in (b"ftyp", b"moov", b"mdat", b"wide", b"free", b"skip"):
-        return "Not a valid video/audio file (wrong header)."
+        return _("Not a valid {kind} file (wrong header).").format(kind=ext[1:].upper())
     pos = 0
     while pos < size:
         f.seek(pos)
         header = f.read(16)
         if len(header) < 8:
-            return "The file is cut off (incomplete data block)."
+            return broken
         box_size = struct.unpack(">I", header[:4])[0]
         if box_size == 1:
             if len(header) < 16:
-                return "The file is cut off (incomplete data block)."
+                return broken
             box_size = struct.unpack(">Q", header[8:16])[0]
         elif box_size == 0:
             return None  # box runs to the end of the file
         if box_size < 8:
-            return "The file structure is broken (invalid data block)."
+            return broken
         if pos + box_size > size:
-            return "The video/audio is cut off - probably an incomplete download, copy or recording."
+            return _("The video/audio is cut off - probably an incomplete download, copy or recording.")
         pos += box_size
     return None
 
 
 def _check_pe(f, size, head):
+    cut_off = _("The program file is cut off - it will not run (incomplete install or download).")
     if not head.startswith(b"MZ"):
-        return "Not a valid Windows program (missing 'MZ' header)."
+        return _("Not a valid {kind} file (wrong header).").format(kind="Windows program")
     if len(head) < 0x40:
-        return "The program file is cut off."
+        return cut_off
     pe_offset = struct.unpack_from("<I", head, 0x3C)[0]
     if pe_offset + 24 > size:
-        return "The program file is cut off (missing PE header)."
+        return cut_off
     f.seek(pe_offset)
     pe = f.read(24)
     if pe[:4] != b"PE\x00\x00":
@@ -322,11 +335,11 @@ def _check_pe(f, size, head):
     f.seek(pe_offset + 24 + opt_size)
     table = f.read(40 * sections)
     if len(table) < 40 * sections:
-        return "The program file is cut off (incomplete section table)."
+        return cut_off
     for i in range(sections):
         raw_size, raw_ptr = struct.unpack_from("<II", table, 40 * i + 16)
         if raw_size and raw_ptr + raw_size > size:
-            return "The program file is cut off - it will not run (incomplete install or download)."
+            return cut_off
     return None
 
 
@@ -342,7 +355,7 @@ def load_signatures(paths):
                     line = line.split("#", 1)[0].strip()
                     if not line:
                         continue
-                    digest, _, name = line.partition(" ")
+                    digest, _sep, name = line.partition(" ")
                     if re.fullmatch(r"[0-9a-fA-F]{64}", digest):
                         signatures[digest.lower()] = name.strip() or "Known malware"
         except OSError:
@@ -385,32 +398,32 @@ def check_threat(path, size, signatures, cancel=None):
         if len(_EICAR) <= size <= 128:
             with open(path, "rb") as f:
                 if f.read(128).startswith(_EICAR):
-                    return THREAT, "EICAR antivirus test file (harmless, made for testing scanners)"
+                    return THREAT, _("EICAR antivirus test file (harmless, made for testing scanners)")
         if signatures and ext in RUNNABLE_TYPES and size <= MAX_HASH_SIZE:
             digest = sha256_of(path, cancel)
             if digest in signatures:
-                return THREAT, f"Known malware: {signatures[digest]}"
+                return THREAT, _("Known malware: {name}").format(name=signatures[digest])
     except OSError as exc:
         if getattr(exc, "winerror", None) in _VIRUS_WINERRORS:
-            return THREAT, "Windows Security blocked this file because it contains a virus"
+            return THREAT, _("Windows Security blocked this file because it contains a virus")
 
     if "\u202e" in name:
-        return SUSPICIOUS, "Name uses a hidden right-to-left character to disguise its real type"
+        return SUSPICIOUS, _("Name uses a hidden right-to-left character to disguise its real type")
     if ext in RUNNABLE_TYPES:
         stem = os.path.splitext(name)[0]
         inner = os.path.splitext(stem.rstrip(" ."))[1].lower()
         if inner in DOCUMENT_LOOKALIKES:
-            return SUSPICIOUS, f"Program disguised as a '{inner}' file (double extension) - a common virus trick"
+            return SUSPICIOUS, _("Program disguised as a '{ext}' file (double extension) - a common virus trick").format(ext=inner)
         if re.search(r"\s{5,}$", stem):
-            return SUSPICIOUS, "Program name is padded with spaces to hide its real type"
+            return SUSPICIOUS, _("Program name is padded with spaces to hide its real type")
         if os.path.normcase(os.path.dirname(path)) in _STARTUP_FOLDERS and ext != ".lnk":
-            return SUSPICIOUS, "Program/script placed directly in the Startup folder (runs at every login)"
+            return SUSPICIOUS, _("Program/script placed directly in the Startup folder (runs at every login)")
     if name.lower() == "autorun.inf" and os.path.dirname(path) == os.path.splitdrive(path)[0] + os.sep:
         try:
             with open(path, "rb") as f:
                 text = f.read(8192).lower()
             if re.search(rb"^\s*(open|shellexecute|shell\\[^=]*\\command)\s*=", text, re.M):
-                return SUSPICIOUS, "Drive autorun file that launches a program (typical of USB worms)"
+                return SUSPICIOUS, _("Drive autorun file that launches a program (typical of USB worms)")
         except OSError:
             pass
     return None
@@ -460,7 +473,7 @@ def defender_scan(root, cancel, timeout=None):
     """
     exe = find_defender()
     if not exe:
-        raise RuntimeError("Microsoft Defender was not found on this computer.")
+        raise RuntimeError(_("Microsoft Defender was not found on this computer."))
     flags = subprocess.CREATE_NO_WINDOW if IS_WINDOWS else 0
     proc = subprocess.Popen([exe, "-Scan", "-ScanType", "3", "-File", root, "-DisableRemediation"],
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -477,8 +490,9 @@ def defender_scan(root, cancel, timeout=None):
     reader.join(5)
     text = b"".join(output).decode("utf-8", "replace")
     if proc.returncode not in (0, 2):  # 0 = clean, 2 = threats found
-        last = next((l for l in reversed(text.splitlines()) if l.strip()), "no details")
-        raise RuntimeError(f"Microsoft Defender could not scan {root}: {last.strip()}")
+        last = next((l for l in reversed(text.splitlines()) if l.strip()), "")
+        raise RuntimeError(_("Microsoft Defender could not scan {place}: {details}").format(
+            place=root, details=last.strip()))
     return parse_defender_output(text)
 
 
@@ -517,20 +531,19 @@ class Scanner:
         for root in self.roots:
             if self.cancel.is_set():
                 break
-            self.on_status(f"Scanning {root}")
+            self.on_status(_("Scanning {place}").format(place=root))
             self._walk(root)
         if self.use_defender and not self.cancel.is_set():
             for root in self.roots:
                 if self.cancel.is_set():
                     break
-                self.on_status(f"Microsoft Defender is scanning {root} (this can take a while)...")
+                self.on_status(_("Microsoft Defender is scanning {place} (this can take a while)...").format(place=root))
                 try:
                     for threat, path in defender_scan(root, self.cancel):
                         size = os.path.getsize(path) if os.path.isfile(path) else 0
                         self.on_finding(Finding(path, THREAT, threat, size, "Microsoft Defender"))
                 except (RuntimeError, OSError) as exc:
                     self.errors.append(str(exc))
-        self.on_status("Scan stopped." if self.cancel.is_set() else "Scan finished.")
 
     def _walk(self, root):
         stack = [root]
@@ -582,8 +595,8 @@ class Scanner:
             try:
                 problem = check_corruption(path, size, self.deep, self.cancel)
             except BlockedAsVirus:
-                self.on_finding(Finding(path, THREAT, "Windows Security blocked this file because "
-                                                      "it contains a virus", size, "Windows Security"))
+                self.on_finding(Finding(path, THREAT, _("Windows Security blocked this file because it "
+                                                        "contains a virus"), size, "Windows Security"))
                 return
             if problem:
                 self.on_finding(Finding(path, CORRUPTED, problem, size))
@@ -632,7 +645,7 @@ def move_to_recycle_bin(path):
                          fFlags=FOF_SILENT | FOF_NOCONFIRMATION | FOF_ALLOWUNDO | FOF_NOERRORUI)
     result = ctypes.windll.shell32.SHFileOperationW(ctypes.byref(op))
     if result or op.fAnyOperationsAborted or os.path.exists(path):
-        raise OSError(f"Windows could not move the file to the Recycle Bin (code {result}).")
+        raise OSError(_("Windows could not move the file to the Recycle Bin (code {code}).").format(code=result))
 
 
 def _read_index():
@@ -688,12 +701,16 @@ def delete_from_quarantine(stored):
     _write_index([i for i in _read_index() if i["stored"] != stored])
 
 
+def run_elevated_console(command, banner):
+    """Opens an administrator command window running command, keeping it open afterwards."""
+    if not IS_WINDOWS:
+        raise RuntimeError(_("This is only available on Windows."))
+    args = f"/k echo NoorCleaner: {banner} && {command}"
+    if ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", args, None, 1) <= 32:
+        raise RuntimeError(_("Windows did not allow this to start (administrator approval is needed)."))
+
+
 def repair_windows_system_files():
     """Opens an administrator window running Microsoft's own system-file repair tools."""
-    if not IS_WINDOWS:
-        raise RuntimeError("System file repair is only available on Windows.")
-    command = ("/k echo NoorCleaner: repairing Windows system files. Keep this window open. && "
-               "DISM /Online /Cleanup-Image /RestoreHealth && sfc /scannow")
-    result = ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", command, None, 1)
-    if result <= 32:
-        raise RuntimeError("Windows did not allow the repair to start (administrator approval is needed).")
+    run_elevated_console("DISM /Online /Cleanup-Image /RestoreHealth && sfc /scannow",
+                         "repairing Windows system files. Keep this window open.")

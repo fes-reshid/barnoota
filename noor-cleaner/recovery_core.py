@@ -18,6 +18,7 @@ import time
 from dataclasses import dataclass
 
 import scanner_core as core
+from i18n import _
 
 _FILETIME_EPOCH = 116444736000000000  # 1601-01-01 to 1970-01-01, in 100 ns steps
 _NO_WINDOW = subprocess.CREATE_NO_WINDOW if core.IS_WINDOWS else 0
@@ -186,8 +187,8 @@ def list_shadow_copies():
     result = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", _SHADOW_SCRIPT],
                             capture_output=True, text=True, timeout=120, creationflags=_NO_WINDOW)
     if result.returncode != 0:
-        raise RuntimeError("Windows would not list restore points. Run NoorCleaner as administrator.\n\n"
-                           + result.stderr.strip()[-300:])
+        raise RuntimeError(_("Windows would not list restore points. Run NoorCleaner as administrator.")
+                           + "\n\n" + result.stderr.strip()[-300:])
     return parse_shadow_json(result.stdout)
 
 
@@ -260,25 +261,22 @@ def winfr_command(source_drive, destination, patterns, thorough=False):
     """The Windows File Recovery command line. patterns: e.g. '*.docx, *.pdf' or 'holiday'."""
     source = os.path.splitdrive(source_drive)[0] or source_drive.rstrip(":\\") + ":"
     if os.path.splitdrive(os.path.abspath(destination))[0].lower() == source.lower():
-        raise ValueError("Recovered files must be saved to a different drive than the one you recover from, "
-                         "or they could overwrite the very files you are trying to get back.")
+        raise ValueError(_("Recovered files must be saved to a different drive than the one you recover from, "
+                           "or they could overwrite the very files you are trying to get back."))
     filters = []
     for pattern in patterns.replace(",", " ").split():
         if not any(ch in pattern for ch in "*?\\"):
             pattern = f"*{pattern}*"
         filters += ["/n", pattern]
     if not filters:
-        raise ValueError("Type what to look for, for example  *.docx  or  holiday")
+        raise ValueError(_("Type what to look for, for example  *.docx  or  holiday"))
     parts = ["winfr", source, f'"{destination}"', "/extensive" if thorough else "/regular"] + filters
     return " ".join(parts)
 
 
 def run_winfr(command):
     """Opens the recovery in an administrator console, where the user confirms and watches it."""
-    import ctypes
-    args = "/k echo NoorCleaner: Windows File Recovery - answer y to start. && " + command
-    if ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", args, None, 1) <= 32:
-        raise RuntimeError("Windows did not allow the recovery to start (administrator approval is needed).")
+    core.run_elevated_console(command, "Windows File Recovery - answer y to start.")
 
 
 def format_time(timestamp):

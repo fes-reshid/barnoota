@@ -1,5 +1,7 @@
-# Builds NoorCleaner.exe (the Windows storage cleaner & virus scanner in noor-cleaner/) whenever it
-# changes (or by hand: Actions > NoorCleaner > Run workflow).
+# Builds NoorCleaner (the Windows storage cleaner & virus scanner in noor-cleaner/) whenever it
+# changes (or by hand: Actions > NoorCleaner > Run workflow):
+#   NoorCleaner-Setup.exe  the installer (asks for English / Arabic / Afaan Oromoo)
+#   NoorCleaner.exe        the same app as a single file that runs without installing
 name: NoorCleaner
 
 on:
@@ -20,7 +22,7 @@ concurrency:
 jobs:
   windows:
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: noor-cleaner
@@ -29,10 +31,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0
       - run: python -m unittest discover -s tests -v
-      - run: python -m pip install pyinstaller==6.11.1
       - name: Build NoorCleaner.exe
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" noor_cleaner.py
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" noor_cleaner.py
       - name: Check the exe starts
         shell: pwsh
         run: |
@@ -40,10 +42,20 @@ jobs:
           Start-Sleep -Seconds 8
           if ($p.HasExited) { throw "NoorCleaner.exe exited straight away (code $($p.ExitCode))" }
           Stop-Process -Id $p.Id
-      # Only keep the exe when run by hand, so routine pushes don't use Actions storage.
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y }
+          $version = python -c "import ui_base; print(ui_base.VERSION)"
+          & $iscc "/DAppVersion=$version" installer\NoorCleaner.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+      # Only keep the files when run by hand, so routine pushes don't use Actions storage.
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'workflow_dispatch'
         with:
           name: NoorCleaner-Windows
-          path: noor-cleaner/dist/NoorCleaner.exe
+          path: |
+            noor-cleaner/dist/NoorCleaner-Setup.exe
+            noor-cleaner/dist/NoorCleaner.exe
           retention-days: 7
