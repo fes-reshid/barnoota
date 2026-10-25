@@ -3,9 +3,12 @@
 A Windows app that shows **what is taking up your storage**, frees space safely, and finds
 **corrupted files** and **viruses**. It removes only the files *you* choose.
 
+It shares Noor Shield's look: the same palette, shield logo, sidebar and rounded panels
+(`theme.py` recreates `noor-shield-pc/src/renderer/styles.css` in Tkinter).
+
 ## What it does
 
-| Tab | |
+| Page | |
 |---|---|
 | **What's using space** | How full each drive is, the **biggest folders** (open them to see what's inside), space **by type** (videos, photos, music, documents, installers...) and the **biggest files**. |
 | **Junk files** | Safe-to-delete clutter with its size: Recycle Bin, temporary files, browser cache (Chrome, Edge, Brave, Opera, Firefox), thumbnail cache, crash dumps, used Windows Update downloads. Untick anything you want to keep, then *Clean selected*. A button opens Windows Disk Cleanup for things like old Windows versions. |
@@ -47,4 +50,6 @@ python -m unittest discover -s tests -v
 ```
 
 `scanner_core.py` walks the drives and checks for corruption and threats, `cleaner_core.py` works out
-storage use, junk and duplicates, and `noor_cleaner.py` is the window (Tkinter, standard library only).
+storage use, junk and duplicates, `noor_cleaner.py` is the window and `theme.py` its Noor Shield styling
+(Tkinter, standard library only). The logo and icon come from `assets/logo.svg`; after changing it run
+`node tools/build_assets.js` to regenerate `logo_data.py` and `assets/icon.ico`.

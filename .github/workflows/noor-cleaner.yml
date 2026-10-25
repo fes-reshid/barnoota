@@ -32,7 +32,7 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - run: python -m pip install pyinstaller==6.11.1
       - name: Build NoorCleaner.exe
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --add-data "signatures.txt;." noor_cleaner.py
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" noor_cleaner.py
       - name: Check the exe starts
         shell: pwsh
         run: |
