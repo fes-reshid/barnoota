@@ -73,6 +73,7 @@ def make_tree(parent, columns, tree_title=None, tree_width=300, sortable=True, h
     In right-to-left languages the columns run right to left and text lines up on the right.
     """
     rtl = i18n.is_rtl()
+    scale = max(1.0, parent.winfo_fpixels("1i") / 96)  # widths are given for a 100% screen
     frame = ttk.Frame(parent)
     options = {"height": height} if height else {}
     tree = ttk.Treeview(frame, columns=[c[0] for c in columns], selectmode="extended",
@@ -80,8 +81,9 @@ def make_tree(parent, columns, tree_title=None, tree_width=300, sortable=True, h
     text_anchor = "e" if rtl else "w"
     if tree_title:
         tree.heading("#0", text=tree_title, anchor=text_anchor)
-        tree.column("#0", width=tree_width, stretch=True, anchor=text_anchor)
+        tree.column("#0", width=round(tree_width * scale), stretch=True, anchor=text_anchor)
     for col, title, width in columns:
+        width = round(width * scale)
         tree.heading(col, text=title, command=(lambda c=col: sort_tree(tree, c, False)) if sortable else "")
         fixed = col in NUMERIC_COLUMNS
         tree.column(col, width=width, minwidth=width if fixed else 40, stretch=not fixed,
@@ -149,8 +151,10 @@ class BaseApp:
         head = ttk.Frame(view)
         head.pack(fill="x", pady=(0, px(14)))
         ttk.Label(head, text=title, style="H1.TLabel").pack(anchor=self.W)
-        ttk.Label(head, text=subtitle, style="Sub.TLabel", justify=self.JUSTIFY,
-                  wraplength=px(900)).pack(anchor=self.W, pady=(px(2), 0))
+        sub = ttk.Label(head, text=subtitle, style="Sub.TLabel", justify=self.JUSTIFY, anchor=self.W,
+                        wraplength=px(900))
+        sub.pack(anchor=self.W, fill="x", pady=(px(2), 0))
+        self._wrap_to_width(sub)
         self.views[name] = view
         return view
 
@@ -178,11 +182,18 @@ class BaseApp:
         return button
 
     def _text(self, parent, text, style="CardSub.TLabel", wrap=860, **pack):
-        label = ttk.Label(parent, text=text, style=style, justify=self.JUSTIFY,
+        """A paragraph that wraps to the space it actually gets, so no language is ever cut off."""
+        label = ttk.Label(parent, text=text, style=style, justify=self.JUSTIFY, anchor=self.W,
                           wraplength=self.theme.px(wrap) if wrap else 0)
+        if wrap:
+            pack.setdefault("fill", "x")
+            self._wrap_to_width(label)
         pack.setdefault("anchor", self.W)
         label.pack(**pack)
         return label
+
+    def _wrap_to_width(self, label):
+        label.bind("<Configure>", lambda e: label.configure(wraplength=max(e.width - 4, 60)), add="+")
 
     def _bullets(self, card, lines, style="Note.TLabel", wrap=860):
         for line in lines:

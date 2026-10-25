@@ -163,7 +163,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         status.grid(row=0, column=self.col(0, 2), sticky="nsew", padx=self.pad(0, px(14)))
         self.status_pill = ttk.Label(status, text=_("Ready"), style="Pill.TLabel")
         self.status_pill.pack(anchor=self.W)
-        self.status_detail = self._text(status, self._idle_text(), wrap=560, fill="x", pady=(px(10), px(8)))
+        self.status_detail = self._text(status, self._idle_text(), wrap=520, pady=(px(10), px(8)))
         self.progress = ttk.Progressbar(status, mode="indeterminate", style="Green.Horizontal.TProgressbar")
         self.progress.pack(fill="x", pady=(0, px(12)))
         buttons = self._row(status)
@@ -175,13 +175,13 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.metric_values = {}
         names = (("files", _("Files checked")), ("space", _("Space used")), ("threats", _("Threats")),
                  ("corrupt", _("Corrupted")))
-        for i, (key, label) in enumerate(names):
-            column = self.col(i, len(names))
-            metrics.columnconfigure(column, weight=1)
+        for i, (key, label) in enumerate(names):  # a 2 x 2 grid, so long numbers and words always fit
+            row, column = 2 * (i // 2), self.col(i % 2, 2)
+            metrics.columnconfigure(column, weight=1, uniform="metric")
             value = ttk.Label(metrics, text="0", style="Metric.TLabel")
-            value.grid(row=0, column=column, pady=(px(10), 0))
-            ttk.Label(metrics, text=label, style="MetricLabel.TLabel", wraplength=px(84), justify="center").grid(
-                row=1, column=column, sticky="n")
+            value.grid(row=row, column=column, pady=(px(4) if row else 0, 0))
+            ttk.Label(metrics, text=label, style="MetricLabel.TLabel", wraplength=px(130), justify="center").grid(
+                row=row + 1, column=column, sticky="n", pady=(0, px(4)))
             self.metric_values[key] = value
 
         where = self._card(view, _("What to scan"), fill="x", **self._gap())
@@ -257,9 +257,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         panes = ttk.PanedWindow(view, orient="horizontal")
         panes.pack(fill="both", expand=True)
         left = self._card(panes, _("Biggest folders"))
-        frame, self.folder_tree = make_tree(left, [("size", _("Size"), 85), ("share", _("Share"), 60),
-                                                   ("files", _("Files"), 70)],
-                                            tree_title=_("Folder (open to look inside)"), tree_width=260, sortable=False)
+        frame, self.folder_tree = make_tree(left, [("size", _("Size"), 80), ("share", _("Share"), 55),
+                                                   ("files", _("Files"), 65)],
+                                            tree_title=_("Folder (open to look inside)"), tree_width=170, sortable=False)
         self.folder_tree.folders = {}  # iid -> folder path
         self.folder_tree.bind("<<TreeviewOpen>>", self._open_folder_node)
         self.folder_tree.bind("<Double-1>", lambda e: self.open_selected_folder())
@@ -279,12 +279,17 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         frame, self.big_tree = make_tree(big_box, [("name", _("File"), 200), ("size", _("Size"), 85),
                                                    ("type", _("Type"), 120), ("folder", _("Folder"), 260)])
         self.big_tree.bind("<Double-1>", lambda e: self.open_selected(self.big_tree))
-        self._action_bar(big_box, self.big_tree, export=self.export_all_files, select_all=False,
-                         quarantine=False, short=True).pack(fill="x", side="bottom", pady=(px(10), 0))
+        self._action_bar(big_box, self.big_tree, select_all=False, quarantine=False, short=True).pack(fill="x", side="bottom", pady=(px(10), 0))
         frame.pack(fill="both", expand=True)
         right.add(big_box, weight=3)
         for pane in ((right, left) if self.rtl else (left, right)):
             panes.add(pane, weight=1)
+
+        def split_evenly(event, done=[]):  # otherwise the wider right side squeezes the folder list
+            if not done and event.width > 200:
+                done.append(True)
+                panes.sashpos(0, int(event.width * (0.55 if self.rtl else 0.45)))
+        panes.bind("<Configure>", split_evenly, add="+")
 
     def refresh_drives(self):
         for child in self.drives_box.winfo_children():
@@ -711,7 +716,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
                               ("photos", _("Similar photos"), self._photos_page)])
 
     def _group_tree(self, card, columns):
-        frame, tree = make_tree(card, columns, tree_title=_("File"), tree_width=300)
+        frame, tree = make_tree(card, columns, tree_title=_("File"), tree_width=260)
         tree.bind("<Double-1>", lambda e: self.open_selected(tree))
         self.group_trees.append(tree)
         return frame, tree
@@ -723,7 +728,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self._button(top, _("Find duplicates"), self.find_duplicates, style="Primary.TButton", gap=12)
         self.dup_status = ttk.Label(top, text=_("Run a scan first, then press Find duplicates."), style="CardSub.TLabel")
         self.dup_status.pack(side=self.L)
-        frame, self.dup_tree = self._group_tree(card, [("size", _("Size"), 90), ("modified", _("Modified"), 140),
+        frame, self.dup_tree = self._group_tree(card, [("size", _("Size"), 125), ("modified", _("Modified"), 140),
                                                        ("folder", _("Folder"), 480)])
         self._action_bar(card, self.dup_tree, export=self.export_duplicates, select_all=False,
                          extra=[(_("Select extra copies"), lambda: self.select_extra_copies(self.dup_tree))]
@@ -742,7 +747,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
                                       else _("Similar photo search is not available in this version."),
                                       style="CardSub.TLabel")
         self.photo_status.pack(side=self.L)
-        frame, self.photo_tree = self._group_tree(card, [("size", _("Size"), 90), ("pixels", _("Resolution"), 110),
+        frame, self.photo_tree = self._group_tree(card, [("size", _("Size"), 125), ("pixels", _("Resolution"), 110),
                                                          ("modified", _("Modified"), 140), ("folder", _("Folder"), 400)])
         self._action_bar(card, self.photo_tree, select_all=False,
                          extra=[(_("Select extra copies"), lambda: self.select_extra_copies(self.photo_tree))]

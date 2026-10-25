@@ -227,7 +227,7 @@ class NoorStyle:
         s = self.style
         s.configure("Card.TCheckbutton", background=SURFACE, foreground=INK, indicatorbackground=SURFACE,
                     indicatorforeground="#ffffff", upperbordercolor=LINE, lowerbordercolor=LINE,
-                    indicatormargin=(0, 0, self.px(6), 0), padding=(0, self.px(2)))
+                    indicatormargin=(0, 0, self.px(6), 0), padding=(0, self.px(2)), indicatorsize=self.px(13))
         s.map("Card.TCheckbutton",
               indicatorbackground=[("disabled", SURFACE_2), ("selected", GREEN_DIM)],
               upperbordercolor=[("selected", GREEN_DIM)], lowerbordercolor=[("selected", GREEN_DIM)],
@@ -235,7 +235,7 @@ class NoorStyle:
         s.configure("Bold.Card.TCheckbutton", font=(FONT, 10, "bold"))
         s.configure("Card.TRadiobutton", background=SURFACE, foreground=INK, indicatorbackground=SURFACE,
                     indicatorforeground="#ffffff", upperbordercolor=LINE, lowerbordercolor=LINE,
-                    indicatormargin=(0, 0, self.px(6), 0), padding=(0, self.px(2)))
+                    indicatormargin=(0, 0, self.px(6), 0), padding=(0, self.px(2)), indicatorsize=self.px(13))
         s.map("Card.TRadiobutton",
               indicatorbackground=[("selected", GREEN_DIM)], upperbordercolor=[("selected", GREEN_DIM)],
               lowerbordercolor=[("selected", GREEN_DIM)], background=[("active", SURFACE)])
