@@ -1,4 +1,4 @@
-"""NoorScanner engine.
+"""NoorCleaner scanning engine.
 
 Walks drives and folders, checks each file for corruption and threats, and
 recycles, quarantines or deletes the files the user picks. Nothing here touches
@@ -30,7 +30,7 @@ from dataclasses import dataclass
 IS_WINDOWS = sys.platform == "win32"
 
 APP_DIR = os.path.join(
-    os.environ.get("LOCALAPPDATA") or os.path.expanduser("~/.local/share"), "NoorScanner"
+    os.environ.get("LOCALAPPDATA") or os.path.expanduser("~/.local/share"), "NoorCleaner"
 )
 QUARANTINE_DIR = os.path.join(APP_DIR, "Quarantine")
 QUARANTINE_INDEX = os.path.join(QUARANTINE_DIR, "index.json")
@@ -75,7 +75,7 @@ _EICAR = (b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$" +
           b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*")
 
 
-@dataclass
+@dataclass(slots=True)  # one per file on the disk, so keep them small
 class FileEntry:
     path: str
     size: int
@@ -88,7 +88,7 @@ class Finding:
     kind: str          # CORRUPTED, THREAT or SUSPICIOUS
     reason: str
     size: int = 0
-    source: str = "NoorScanner"
+    source: str = "NoorCleaner"
 
 
 # --------------------------------------------------------------------------- drives
@@ -652,7 +652,7 @@ def _write_index(items):
 
 
 def quarantine(path, reason=""):
-    """Moves the file into NoorScanner's quarantine, renamed so it cannot run."""
+    """Moves the file into NoorCleaner's quarantine, renamed so it cannot run."""
     os.makedirs(QUARANTINE_DIR, exist_ok=True)
     stored = os.path.join(QUARANTINE_DIR, f"{time.strftime('%Y%m%d-%H%M%S')}-"
                                           f"{os.urandom(3).hex()}-{os.path.basename(path)}.quarantined")
@@ -692,7 +692,7 @@ def repair_windows_system_files():
     """Opens an administrator window running Microsoft's own system-file repair tools."""
     if not IS_WINDOWS:
         raise RuntimeError("System file repair is only available on Windows.")
-    command = ("/k echo NoorScanner: repairing Windows system files. Keep this window open. && "
+    command = ("/k echo NoorCleaner: repairing Windows system files. Keep this window open. && "
                "DISM /Online /Cleanup-Image /RestoreHealth && sfc /scannow")
     result = ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", command, None, 1)
     if result <= 32:
