@@ -44,7 +44,9 @@ jobs:
       - name: Build the test APK
         working-directory: seeraa-app/android
         run: ./gradlew assembleDebug --no-daemon --stacktrace
+      # Only keep the APK when run by hand, so routine pushes don't use Actions storage.
       - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
         with:
           name: seeraa-quest-android-test
           path: seeraa-app/android/app/build/outputs/apk/debug/app-debug.apk
