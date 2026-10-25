@@ -6,6 +6,7 @@ Run with:  python noor_cleaner.py
 """
 
 import csv
+import ntpath
 import os
 import queue
 import subprocess
@@ -17,6 +18,7 @@ from tkinter import filedialog, messagebox, ttk
 
 import cleaner_core as storage
 import logo_data
+import recovery_core as recovery
 import scanner_core as core
 import theme
 
@@ -184,7 +186,7 @@ class NoorCleanerApp:
 
         for key, text in (("scan", "Scan"), ("space", "What's using space"), ("junk", "Junk files"),
                           ("dups", "Duplicates"), ("threats", "Viruses & threats"), ("corrupt", "Corrupted files"),
-                          ("files", "All files"), ("quarantine", "Quarantine")):
+                          ("files", "All files"), ("recover", "Recover deleted files"), ("quarantine", "Quarantine")):
             button = ttk.Button(sidebar, text=text, style="Nav.TButton", takefocus=False,
                                 command=lambda k=key: self.show_view(k))
             button.pack(fill="x", pady=(0, px(2)))
@@ -227,6 +229,7 @@ class NoorCleanerApp:
             "Files that are damaged, cut off or unreadable. Broken Windows files should be repaired, not deleted.",
             finding_cols, show_repair=True)
         self._all_files_view()
+        self._recover_view()
         self._quarantine_view()
 
     def _scan_view(self):
@@ -679,6 +682,14 @@ class NoorCleanerApp:
                     self.dup_status.config(text=f"Comparing files... {values[0]:,} of {values[1]:,} size groups")
                 elif kind == "dup_done":
                     self._show_duplicates(values[0])
+                elif kind == "bin_done":
+                    self._show_recycle_bin(values[0])
+                elif kind == "points_done":
+                    self._show_restore_points(*values)
+                elif kind == "points_progress":
+                    self.points_status.config(text=f"Comparing... {values[0]:,} files checked, {values[1]:,} missing")
+                elif kind == "missing_done":
+                    self._show_missing(values[0])
         except queue.Empty:
             pass
         if self.scanner and self.scan_thread and self.scan_thread.is_alive():
@@ -896,6 +907,312 @@ class NoorCleanerApp:
         tree.selection_set(extra)
         if not extra:
             messagebox.showinfo(APP_NAME, "Press 'Find duplicates' first.")
+
+    # ------------------------------------------------------------------ recover deleted files
+
+    def _recover_view(self):
+        px = self.theme.px
+        view = self._view("recover", "Recover deleted files", "Get back files you deleted. Try as soon as you can, and "
+                                                             "avoid saving new files to that drive until you have.")
+        tabs = ttk.Frame(view)
+        tabs.pack(fill="x", pady=(0, px(12)))
+        body = ttk.Frame(view)
+        body.pack(fill="both", expand=True)
+        body.rowconfigure(0, weight=1)
+        body.columnconfigure(0, weight=1)
+        self.recover_tabs = {}
+        for key, text in (("bin", "Recycle Bin"), ("points", "Restore points"), ("deep", "Permanently deleted")):
+            button = ttk.Button(tabs, text=text, style="GhostSand.TButton", command=lambda k=key: self._show_recover(k))
+            button.pack(side="left", padx=(0, px(8)))
+            self.recover_tabs[key] = button
+        self.recover_pages = {"bin": self._recycle_page(body), "points": self._points_page(body),
+                              "deep": self._deep_page(body)}
+        for page in self.recover_pages.values():
+            page.grid(row=0, column=0, sticky="nsew")
+        self._show_recover("bin")
+
+    def _show_recover(self, key):
+        self.recover_pages[key].tkraise()
+        for k, button in self.recover_tabs.items():
+            button.configure(style="PrimarySand.TButton" if k == key else "GhostSand.TButton")
+
+    def _restore_bar(self, card, tree, restore):
+        px = self.theme.px
+        bar = ttk.Frame(card, style="Plain.TFrame")
+        ttk.Button(bar, text="Select all", style="Ghost.TButton",
+                   command=lambda: tree.selection_set(list(tree.items))).pack(side="left")
+        ttk.Button(bar, text="Restore", style="Primary.TButton", command=lambda: restore(False)).pack(side="left", padx=px(6))
+        ttk.Button(bar, text="Restore to a folder...", style="Ghost.TButton", command=lambda: restore(True)).pack(side="left")
+        return bar
+
+    def _recycle_page(self, parent):
+        px = self.theme.px
+        card = self._card(parent)
+        top = ttk.Frame(card, style="Plain.TFrame")
+        top.pack(fill="x", pady=(0, px(10)))
+        ttk.Button(top, text="Look in the Recycle Bin", style="Primary.TButton", command=self.load_recycle_bin).pack(side="left")
+        self.bin_status = ttk.Label(top, text="Files you deleted normally wait here until the bin is emptied.",
+                                    style="CardSub.TLabel")
+        self.bin_status.pack(side="left", padx=px(12))
+        frame, self.bin_tree = make_tree(card, [("name", "File", 220), ("size", "Size", 85), ("deleted", "Deleted on", 140),
+                                                ("original", "Original location", 420)])
+        self.bin_tree.items = {}  # iid -> RecycledItem
+        self._restore_bar(card, self.bin_tree, self.restore_from_bin).pack(fill="x", side="bottom", pady=(px(10), 0))
+        frame.pack(fill="both", expand=True)
+        return card
+
+    def _points_page(self, parent):
+        px = self.theme.px
+        card = self._card(parent)
+        row1 = ttk.Frame(card, style="Plain.TFrame")
+        row1.pack(fill="x")
+        ttk.Button(row1, text="Find restore points", style="Primary.TButton", command=self.load_restore_points).pack(side="left")
+        self.point_var = tk.StringVar()
+        self.point_box = ttk.Combobox(row1, textvariable=self.point_var, state="readonly", width=30)
+        self.point_box.pack(side="left", padx=px(10))
+        self.points_status = ttk.Label(row1, text="Needs administrator rights and System Protection turned on.",
+                                       style="Hint.TLabel")
+        self.points_status.pack(side="left", padx=px(4))
+        row2 = ttk.Frame(card, style="Plain.TFrame")
+        row2.pack(fill="x", pady=(px(10), px(10)))
+        ttk.Label(row2, text="Folder to check:", style="Card.TLabel").pack(side="left")
+        self.points_folder = tk.StringVar(value=os.path.expanduser("~"))
+        ttk.Entry(row2, textvariable=self.points_folder, width=48).pack(side="left", padx=px(8))
+        ttk.Button(row2, text="Browse...", style="Ghost.TButton",
+                   command=lambda: self._browse_into(self.points_folder)).pack(side="left")
+        ttk.Button(row2, text="Look for missing files", style="Primary.TButton",
+                   command=self.find_missing).pack(side="left", padx=px(8))
+        frame, self.points_tree = make_tree(card, [("name", "File", 220), ("size", "Size", 85),
+                                                   ("modified", "Modified", 140), ("folder", "Was in", 420)])
+        self.points_tree.items = {}  # iid -> MissingFile
+        self.shadows = []
+        self._restore_bar(card, self.points_tree, self.restore_from_point).pack(fill="x", side="bottom", pady=(px(10), 0))
+        frame.pack(fill="both", expand=True)
+        return card
+
+    def _deep_page(self, parent):
+        px = self.theme.px
+        card = self._card(parent)
+        ttk.Label(card, text="For files deleted with Shift+Delete, emptied from the Recycle Bin, or deleted permanently "
+                             "by a program. NoorCleaner sets up Microsoft's free Windows File Recovery tool for you; it "
+                             "reads the deleted data straight off the drive.", style="CardSub.TLabel",
+                  wraplength=px(860)).pack(anchor="w", pady=(0, px(12)))
+        form = ttk.Frame(card, style="Plain.TFrame")
+        form.pack(fill="x")
+        drives = [d.rstrip("\\") for d in core.list_drives()]
+        self.deep_source = tk.StringVar(value="C:" if "C:" in drives else drives[0])
+        self.deep_patterns = tk.StringVar(value="*.docx *.pdf *.jpg")
+        other = next((d for d in drives if d != self.deep_source.get()), "")
+        self.deep_dest = tk.StringVar(value=os.path.join(other + os.sep, "Recovered files") if other else "")
+        self.deep_thorough = tk.BooleanVar(value=False)
+        rows = (("Drive the files were on:", ttk.Combobox(form, textvariable=self.deep_source, values=drives,
+                                                          state="readonly", width=8), None),
+                ("Look for:", ttk.Entry(form, textvariable=self.deep_patterns, width=40),
+                 "File types like  *.jpg  or part of a name like  holiday  (separate several with spaces)"),
+                ("Save recovered files to:", ttk.Entry(form, textvariable=self.deep_dest, width=40),
+                 "Must be a different drive, such as a USB stick, so nothing gets overwritten"))
+        for r, (label, widget, hint) in enumerate(rows):
+            ttk.Label(form, text=label, style="Card.TLabel").grid(row=2 * r, column=0, sticky="w", pady=(px(6), 0))
+            widget.grid(row=2 * r, column=1, sticky="w", padx=px(10), pady=(px(6), 0))
+            if hint:
+                ttk.Label(form, text=hint, style="Hint.TLabel").grid(row=2 * r + 1, column=1, columnspan=2,
+                                                                     sticky="w", padx=px(10))
+        ttk.Button(form, text="Browse...", style="Ghost.TButton",
+                   command=lambda: self._browse_into(self.deep_dest)).grid(row=4, column=2, sticky="w", pady=(px(6), 0))
+        ttk.Checkbutton(card, text="Thorough mode - slower, also finds files deleted longer ago or on USB sticks",
+                        variable=self.deep_thorough, style="Card.TCheckbutton").pack(anchor="w", pady=(px(10), 0))
+        bar = ttk.Frame(card, style="Plain.TFrame")
+        bar.pack(anchor="w", pady=(px(14), px(14)))
+        ttk.Button(bar, text="Start recovery", style="Primary.TButton", command=self.start_deep_recovery).pack(side="left")
+        if not recovery.find_winfr():
+            ttk.Button(bar, text="Get Windows File Recovery (free, Microsoft Store)", style="Ghost.TButton",
+                       command=self.get_winfr).pack(side="left", padx=px(8))
+        note = self._card(card, "Good to know", style="Note.TFrame", fill="x")
+        for line in ("The sooner you try, the better: new files can overwrite deleted ones at any moment.",
+                     "On SSDs, Windows usually wipes deleted data quickly, so permanently deleted files may be "
+                     "gone for good. Restore points and the Recycle Bin are your best chance there.",
+                     "A window opens where Windows File Recovery asks you to confirm (press y) and shows its progress."):
+            ttk.Label(note, text="•  " + line, style="Note.TLabel", wraplength=px(820)).pack(anchor="w", pady=px(2))
+        return card
+
+    def _browse_into(self, variable):
+        folder = filedialog.askdirectory(title="Choose a folder", initialdir=variable.get() or None)
+        if folder:
+            variable.set(os.path.normpath(folder))
+
+    def _restore_target(self, to_folder):
+        if not to_folder:
+            return None, True
+        folder = filedialog.askdirectory(title="Restore the files into...")
+        return (os.path.normpath(folder), True) if folder else (None, False)
+
+    def _report_restore(self, done, failed, where):
+        self.refresh_drives()
+        message = f"{done} item(s) restored{where}."
+        if failed:
+            message += "\n\nSome could not be restored:\n\n" + "\n".join(failed[:10])
+            messagebox.showwarning(APP_NAME, message)
+        else:
+            messagebox.showinfo(APP_NAME, message)
+
+    def load_recycle_bin(self):
+        if self._busy():
+            return
+        self.bin_status.config(text="Looking...")
+        self.worker = threading.Thread(target=lambda: self.events.put(("bin_done", recovery.list_recycle_bin())),
+                                       daemon=True)
+        self.worker.start()
+
+    def _show_recycle_bin(self, items):
+        tree = self.bin_tree
+        clear_tree(tree)
+        tree.items = {}
+        for item in items:
+            name = ntpath.basename(item.original) + ("  (folder)" if item.is_folder else "")
+            iid = tree.insert("", "end", values=(name, human_size(item.size), recovery.format_time(item.deleted),
+                                                 ntpath.dirname(item.original)))
+            tree.items[iid] = item
+            tree.sizes[iid] = item.size
+        total = sum(i.size for i in items)
+        self.bin_status.config(text=f"{len(items):,} item(s) in the Recycle Bin ({human_size(total)})" if items
+                               else "The Recycle Bin is empty. Try 'Restore points' or 'Permanently deleted'.")
+
+    def restore_from_bin(self, to_folder):
+        chosen = [self.bin_tree.items[i] for i in self.bin_tree.selection() if i in self.bin_tree.items]
+        if not chosen:
+            messagebox.showinfo(APP_NAME, "Press 'Look in the Recycle Bin', then select the files to restore.")
+            return
+        target, go = self._restore_target(to_folder)
+        if not go:
+            return
+        done, failed = 0, []
+        for item in chosen:
+            try:
+                recovery.restore_recycled(item, target)
+                done += 1
+            except Exception as exc:
+                failed.append(f"{ntpath.basename(item.original)}: {exc}")
+        self.load_recycle_bin()
+        self._report_restore(done, failed, f" to {target}" if target else " to where they came from")
+
+    def load_restore_points(self):
+        if self._busy():
+            return
+        self.points_status.config(text="Looking for restore points...")
+
+        def work():
+            try:
+                self.events.put(("points_done", recovery.list_shadow_copies(), None))
+            except Exception as exc:
+                self.events.put(("points_done", [], str(exc)))
+
+        self.worker = threading.Thread(target=work, daemon=True)
+        self.worker.start()
+
+    def _show_restore_points(self, copies, error):
+        self.shadows = copies
+        self.point_box.config(values=[c.label for c in copies])
+        if copies:
+            self.point_box.current(0)
+            self.points_status.config(text=f"{len(copies)} restore point(s) found. Pick one, then a folder.")
+        else:
+            self.point_var.set("")
+            self.points_status.config(text="No restore points found." if not error else "Could not list restore points.")
+            if error:
+                messagebox.showwarning(APP_NAME, error)
+            elif core.IS_WINDOWS:
+                messagebox.showinfo(APP_NAME, "This PC has no restore points, so there are no older copies to "
+                                              "recover from.\n\nTo have them in future, search Windows for 'Create a "
+                                              "restore point' and turn on Protection for drive C:.")
+
+    def find_missing(self):
+        if self._busy():
+            return
+        index = self.point_box.current()
+        if index < 0:
+            messagebox.showinfo(APP_NAME, "Press 'Find restore points' and pick one first.")
+            return
+        shadow = self.shadows[index]
+        folder = self.points_folder.get().strip()
+        drive = os.path.splitdrive(os.path.abspath(folder))[0]
+        if shadow.drive != "?" and drive.lower() != shadow.drive.lower():
+            messagebox.showinfo(APP_NAME, f"This restore point is for drive {shadow.drive}. Choose a folder on that drive.")
+            return
+        snapshot = recovery.snapshot_path(shadow, folder)
+        if not os.path.isdir(snapshot):
+            messagebox.showinfo(APP_NAME, "That folder did not exist yet when this restore point was made.")
+            return
+        clear_tree(self.points_tree)
+        self.points_tree.items = {}
+        self.points_status.config(text="Comparing with the restore point...")
+
+        def work():
+            found = recovery.find_missing_files(
+                snapshot, folder, on_progress=lambda s, m: self.events.put(("points_progress", s, m)) if s % 200 < 20 else None)
+            self.events.put(("missing_done", found))
+
+        self.worker = threading.Thread(target=work, daemon=True)
+        self.worker.start()
+
+    def _show_missing(self, items):
+        tree = self.points_tree
+        for item in sorted(items, key=lambda i: i.mtime, reverse=True):
+            iid = tree.insert("", "end", values=(os.path.basename(item.live_path), human_size(item.size),
+                                                 recovery.format_time(item.mtime), os.path.dirname(item.live_path)))
+            tree.items[iid] = item
+            tree.sizes[iid] = item.size
+        self.points_status.config(text=f"{len(items):,} file(s) that exist in the restore point but are gone now."
+                                  if items else "Nothing missing: every file in the restore point is still here.")
+
+    def restore_from_point(self, to_folder):
+        chosen = [self.points_tree.items[i] for i in self.points_tree.selection() if i in self.points_tree.items]
+        if not chosen:
+            messagebox.showinfo(APP_NAME, "Look for missing files first, then select the ones to restore.")
+            return
+        target, go = self._restore_target(to_folder)
+        if not go:
+            return
+        done, failed, restored = 0, [], set()
+        for item in chosen:
+            try:
+                recovery.restore_missing(item, target)
+                done += 1
+                restored.add(item.live_path)
+            except Exception as exc:
+                failed.append(f"{os.path.basename(item.live_path)}: {exc}")
+        if target is None:  # back in place, so no longer missing
+            for iid, item in list(self.points_tree.items.items()):
+                if item.live_path in restored:
+                    self.points_tree.delete(iid)
+                    del self.points_tree.items[iid]
+        self._report_restore(done, failed, f" to {target}" if target else " to where they were")
+
+    def get_winfr(self):
+        try:
+            os.startfile(recovery.WINFR_STORE_URL)
+        except (AttributeError, OSError):
+            messagebox.showinfo(APP_NAME, "Search the Microsoft Store for 'Windows File Recovery' (free).")
+
+    def start_deep_recovery(self):
+        try:
+            command = recovery.winfr_command(self.deep_source.get(), self.deep_dest.get().strip(),
+                                             self.deep_patterns.get(), self.deep_thorough.get())
+        except ValueError as exc:
+            messagebox.showinfo(APP_NAME, str(exc))
+            return
+        if not recovery.find_winfr():
+            if messagebox.askyesno(APP_NAME, "Windows File Recovery is not installed yet. It is a free tool from "
+                                             "Microsoft.\n\nOpen the Microsoft Store to install it now? Afterwards, "
+                                             "press Start recovery again."):
+                self.get_winfr()
+            return
+        if not messagebox.askyesno(APP_NAME, "NoorCleaner will open Windows File Recovery as administrator with:\n\n"
+                                             f"{command}\n\nRecovered files go to {self.deep_dest.get()}. Start?"):
+            return
+        try:
+            recovery.run_winfr(command)
+        except Exception as exc:
+            messagebox.showerror(APP_NAME, str(exc))
 
     # ------------------------------------------------------------------ removing files
 

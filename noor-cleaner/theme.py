@@ -221,6 +221,15 @@ class NoorStyle:
                     lightcolor=LINE, darkcolor=LINE, padding=(self.px(8), self.px(5)))
         s.map("TEntry", bordercolor=[("focus", GREEN_DIM)], lightcolor=[("focus", GREEN_DIM)])
 
+        s.configure("TCombobox", fieldbackground=SURFACE, background=SURFACE, foreground=INK, bordercolor=LINE,
+                    lightcolor=LINE, darkcolor=LINE, arrowcolor=INK_SOFT, padding=(self.px(8), self.px(4)))
+        s.map("TCombobox", fieldbackground=[("readonly", SURFACE)], selectbackground=[("readonly", SURFACE)],
+              selectforeground=[("readonly", INK)], bordercolor=[("focus", GREEN_DIM)],
+              background=[("active", SURFACE_2)])
+        self.root.option_add("*TCombobox*Listbox.background", SURFACE)
+        self.root.option_add("*TCombobox*Listbox.selectBackground", GREEN_DIM)
+        self.root.option_add("*TCombobox*Listbox.font", (FONT, 10))
+
         s.configure("Treeview", background=SURFACE, fieldbackground=SURFACE, foreground=INK,
                     rowheight=self.px(26), borderwidth=0, font=(FONT, 10))
         s.map("Treeview", background=[("selected", GREEN_DIM)], foreground=[("selected", "#ffffff")])

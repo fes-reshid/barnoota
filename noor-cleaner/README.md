@@ -16,6 +16,7 @@ It shares Noor Shield's look: the same palette, shield logo, sidebar and rounded
 | **Viruses & threats** | Optional full **Microsoft Defender** scan, plus NoorCleaner's own checks: known-malware hashes (`signatures.txt`), files Windows Security blocks, programs disguised as documents (`invoice.pdf.exe`), scripts in the Startup folder, USB `autorun.inf` worms. |
 | **Corrupted files** | Empty or wiped files, cut-off downloads/copies (PDF, photos, videos, Office files, ZIPs, programs) and files the disk can no longer read. *Deep scan* also reads every byte. A button runs Microsoft's own repair for Windows system files (DISM + SFC). |
 | **All files** | Every file found, searchable, largest first. Export the full list to Excel (CSV). |
+| **Recover deleted files** | **Recycle Bin**: see what's in it and restore files to where they came from (or to another folder). **Restore points**: find files that existed in a Windows restore point ("previous versions") but are gone now, and copy them back - needs administrator and System Protection turned on. **Permanently deleted**: sets up Microsoft's free *Windows File Recovery* tool to read deleted files straight off the drive, saving them to a different drive. |
 | **Quarantine** | Files you quarantined, locked so they cannot run. Restore or delete them for good. |
 
 For any file you can choose **Quarantine**, **Move to Recycle Bin** or **Delete permanently**.
@@ -36,6 +37,8 @@ Windows SmartScreen may warn about a new, unsigned app: choose *More info > Run 
 ## Good to know
 
 * Files moved to the Recycle Bin still use space until you empty it (Junk files tab).
+* Recovering permanently deleted files works best straight away. On SSDs Windows usually wipes deleted
+  data quickly, so the Recycle Bin and restore points are the most reliable way back.
 * NoorCleaner's own virus checks are **not** a full antivirus. Real virus detection comes from
   Microsoft Defender, which NoorCleaner runs for you; keep Windows Security turned on.
 * To test virus detection safely, save the harmless [EICAR test file](https://www.eicar.org/download-anti-malware-testfile/)
@@ -50,6 +53,6 @@ python -m unittest discover -s tests -v
 ```
 
 `scanner_core.py` walks the drives and checks for corruption and threats, `cleaner_core.py` works out
-storage use, junk and duplicates, `noor_cleaner.py` is the window and `theme.py` its Noor Shield styling
+storage use, junk and duplicates, `recovery_core.py` gets deleted files back, `noor_cleaner.py` is the window and `theme.py` its Noor Shield styling
 (Tkinter, standard library only). The logo and icon come from `assets/logo.svg`; after changing it run
 `node tools/build_assets.js` to regenerate `logo_data.py` and `assets/icon.ico`.
