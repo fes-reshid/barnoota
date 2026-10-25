@@ -1,0 +1,5 @@
+# NoorCleaner known-malware list: one "SHA-256  name" per line. Lines starting with # are ignored.
+# Only programs and scripts (.exe, .dll, .bat, .vbs, .js, .ps1, ...) are checked against this list.
+# You can add your own entries in %LOCALAPPDATA%\NoorCleaner\signatures.txt (same format).
+# Real virus detection comes from Microsoft Defender, which NoorCleaner runs for you.
+275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f  EICAR-Test-File

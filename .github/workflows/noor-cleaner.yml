@@ -1,0 +1,61 @@
+# Builds NoorCleaner (the Windows storage cleaner & virus scanner in noor-cleaner/) whenever it
+# changes (or by hand: Actions > NoorCleaner > Run workflow):
+#   NoorCleaner-Setup.exe  the installer (asks for English / Arabic / Afaan Oromoo)
+#   NoorCleaner.exe        the same app as a single file that runs without installing
+name: NoorCleaner
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'noor-cleaner/**'
+      - '.github/workflows/noor-cleaner.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noor-cleaner-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: noor-cleaner
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0
+      - run: python -m unittest discover -s tests -v
+      - name: Build NoorCleaner.exe
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" noor_cleaner.py
+      - name: Check the exe starts
+        shell: pwsh
+        run: |
+          $p = Start-Process dist\NoorCleaner.exe -PassThru
+          Start-Sleep -Seconds 8
+          if ($p.HasExited) { throw "NoorCleaner.exe exited straight away (code $($p.ExitCode))" }
+          Stop-Process -Id $p.Id
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y }
+          $version = python -c "import ui_base; print(ui_base.VERSION)"
+          & $iscc "/DAppVersion=$version" installer\NoorCleaner.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+      # Only keep the files when run by hand, so routine pushes don't use Actions storage.
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          name: NoorCleaner-Windows
+          path: |
+            noor-cleaner/dist/NoorCleaner-Setup.exe
+            noor-cleaner/dist/NoorCleaner.exe
+          retention-days: 7
