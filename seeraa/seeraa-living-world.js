@@ -27,14 +27,8 @@ function personSvg(o){
   +load;
 }
 function camelSvg(o){
- const c=o.color||'#c79a63',d=o.dark||'#9c7445',saddle=o.saddle||'#9b2f2a';
- const bags=o.load?`<rect x="-16" y="-44" width="9" height="13" rx="2" fill="#7c5a37" stroke="#4f3820" stroke-width=".8"/><rect x="7" y="-44" width="9" height="13" rx="2" fill="#866041" stroke="#4f3820" stroke-width=".8"/>`:'';
- return `<g class="lw-legs"><line class="lw-leg a" x1="-15" y1="-27" x2="-16" y2="0"/><line class="lw-leg b" x1="-9" y1="-27" x2="-8" y2="0"/><line class="lw-leg b" x1="12" y1="-27" x2="11" y2="0"/><line class="lw-leg a" x1="18" y1="-27" x2="19" y2="0"/></g>`
-  +`<path d="M-24-32q-5 4-3 11" stroke="${d}" fill="none" stroke-width="2"/>`
-  +`<path d="M-25-29 Q-24-45-10-46 Q-3-60 6-47 Q15-45 20-35 L23-31 Q10-24-21-25Z" fill="${c}" stroke="${d}" stroke-width=".8"/>`
-  +`<path d="M17-35 Q29-38 30-52 Q31-60 37-59 L42-56 Q44-52 39-52 Q35-51 35-45 Q33-31 22-28Z" fill="${c}" stroke="${d}" stroke-width=".8"/>`
-  +`<circle cx="38" cy="-56" r=".9" fill="#3a2a1a"/>`
-  +`<path d="M-11-45 Q-2-55 9-46 L8-39 Q-1-42-10-39Z" fill="${saddle}"/><path d="M-11-45 Q-2-55 9-46" stroke="#e4b85a" fill="none" stroke-width="1.2"/>`+bags;
+ const base='assets/characters/';
+ return `<g class="lw-real-camel" aria-hidden="true">${[0,1,2,3].map(i=>`<image class="lw-real-camel-frame lw-cf${i}" href="${base}camel-real-${i}.webp" x="-40" y="-66" width="82" height="66" preserveAspectRatio="xMidYMax meet"/>`).join('')}</g>`;
 }
 function goatSvg(o){
  const c=o.color||'#e8e1d2',d=o.dark||'#7d6a52',sheep=o.sheep;
@@ -288,26 +282,22 @@ function gust(frame){
 
 /* ---------- the Year of the Elephant ---------- */
 const ELEPHANT_CAPTIONS=[[0,'Abrahah marches towards Makkah with a great army and elephants, to destroy the Kaʿbah.'],[8,'His great elephant kneels down. It will not walk towards the Kaʿbah.'],[9.6,'Allah sends flocks of birds — ṭayran abābīl — each carrying small stones.'],[12.6,'The stones strike the army, and it is left like straw that has been eaten. (Sūrat al-Fīl, 105)'],[16.5,'Allah protected His House. The Prophet Muhammad ﷺ was born in this same year.']];
-function soldierSvg(i,banner){const tunic=['#7a4b2b','#5c6b3c','#6d3a2e','#4f5b6a'][i%4];return `<g class="lw-legs"><line class="lw-leg a" x1="-3" y1="-16" x2="-4" y2="0"/><line class="lw-leg b" x1="3" y1="-16" x2="4" y2="0"/></g><path d="M-8-14 L-6-36 Q0-39 6-36 L8-14Z" fill="${tunic}"/><path d="M-7-22 h14" stroke="#3a2a20" stroke-width="1.6"/><circle cx="0" cy="-42" r="6" fill="${SKIN[i%SKIN.length]}"/><path d="M-7-43 Q0-53 7-43Z" fill="#9aa1a8" stroke="#5d646b" stroke-width=".8"/>`
- +(banner?`<line x1="10" y1="-74" x2="12" y2="2" stroke="#5b4026" stroke-width="2"/><path class="lwE-flag" d="M10-74 Q20-78 29-73 Q23-67 29-61 Q20-65 10-62Z" fill="${banner}" stroke="#00000040" stroke-width=".7"/>`:`<line x1="9" y1="-48" x2="13" y2="2" stroke="#6b4b2b" stroke-width="1.8"/><path d="M10.5-53 l2.5 6 -4 0Z" fill="#b8bec4"/>`)
- +`<ellipse cx="-7" cy="-25" rx="5" ry="7" fill="#8a5a2b" stroke="#4d3015" stroke-width="1"/>`}
+function soldierSvg(i,banner){
+ return `<g class="lwE-real-soldier"><image href="assets/characters/soldier-real.webp" x="-18" y="-52" width="36" height="52" preserveAspectRatio="xMidYMax meet"/>${banner?`<path d="M12-48v48" stroke="#5b3a20" stroke-width="2"/><path d="M13-47h18v13H13Z" fill="${banner}"/>`:''}</g>`;
+}
 /* o.king: Abrahah rides in a canopy (only the lead elephant kneels); otherwise a soldier rides it */
-function elephantSvg(o={}){const g=o.grey||['#959ca6','#8c939d','#9aa0a9','#868d97'][(o.i||0)%4],gd=o.dark||'#7f8690',cloth=o.cloth||['#9b2f2a','#2f5c7a','#6a3d7a','#8a5a1f'][(o.i||0)%4];
- return `<g class="lwE-back"><rect x="-27" y="-24" width="11" height="24" rx="3" fill="${gd}"/><rect x="-13" y="-24" width="11" height="24" rx="3" fill="${gd}"/></g>`
- +`<g class="lwE-front"><rect x="9" y="-24" width="11" height="24" rx="3" fill="${g}"/><rect x="22" y="-24" width="11" height="24" rx="3" fill="${gd}"/></g>`
- +`<path d="M-34-40 q-7 6-5 15" stroke="#6d747e" fill="none" stroke-width="2.5"/>`
- +`<ellipse cx="0" cy="-44" rx="38" ry="25" fill="${g}"/><circle cx="36" cy="-52" r="17" fill="${g}"/><ellipse cx="27" cy="-52" rx="10" ry="14" fill="${gd}"/>`
- +`<path d="M49-52 Q58-40 54-26 Q53-20 58-18" stroke="${g}" fill="none" stroke-width="8" stroke-linecap="round"/><path d="M45-40 q8 2 11 -3" stroke="#fff8e8" fill="none" stroke-width="3" stroke-linecap="round"/><circle cx="41" cy="-57" r="1.6" fill="#2b2b2b"/>`
- +`<path d="M-20-66 Q0-77 20-66 L18-50 Q0-46-18-50Z" fill="${cloth}"/><path d="M-20-66 Q0-77 20-66" stroke="#e4b85a" fill="none" stroke-width="2"/><path d="M-17-52 Q0-48 17-52" stroke="#e4b85a" fill="none" stroke-width="1.6" stroke-dasharray="3 2"/>`
- +(o.king?`<g class="lwE-king"><path d="M-14-66 L-14-100 M14-66 L14-100" stroke="#c9a43a" stroke-width="2"/><path d="M-18-100 Q0-112 18-100Z" fill="#7a2f5a"/><path d="M-6-66 L-4-88 Q0-91 4-88 L6-66Z" fill="#5a2f6e"/><circle cx="0" cy="-94" r="6" fill="${SKIN[1]}"/><path d="M-6-99 L-6-104 -3-101 0-106 3-101 6-104 6-99Z" fill="#e4b85a" stroke="#9a7220" stroke-width=".6"/></g>`
-  :`<g class="lwE-rider"><path d="M-5-66 L-4-84 Q0-87 4-84 L5-66Z" fill="${['#7a4b2b','#5c6b3c','#6d3a2e'][(o.i||0)%3]}"/><circle cx="0" cy="-90" r="5.4" fill="${SKIN[((o.i||0)+2)%SKIN.length]}"/><path d="M-6-91 Q0-100 6-91Z" fill="#9aa1a8" stroke="#5d646b" stroke-width=".8"/><line x1="6" y1="-104" x2="9" y2="-64" stroke="#6b4b2b" stroke-width="1.8"/><path d="M5.6-109 l2.4 6 -4 0Z" fill="#b8bec4"/></g>`)}
+function elephantSvg(o={}){
+ const frames=[0,1,2,3].map((i)=>`<image class="lwE-real-frame" data-ef="${i}" href="assets/characters/elephant-real-${i}.webp" x="-44" y="-79" width="100" height="79" preserveAspectRatio="xMidYMax meet" opacity="${i===0?1:0}"/>`).join('');
+ const commander=o.king?`<image class="lwE-king" href="assets/characters/abraha-real.webp" x="-75" y="-73" width="38" height="68" preserveAspectRatio="xMidYMax meet"/>`:'';
+ return `<g class="lwE-real-elephant">${frames}<g class="lwE-front"></g>${commander}</g>`;
+}
 function kaabaSvg(){return `<path d="M-38 0 L-38-56 L0-66 L38-56 L38 0 L0 8Z" fill="#1f1f22"/><path d="M0-66 L38-56 L38 0 L0 8Z" fill="#2c2c30"/><path d="M-38-44 L0-53 L38-44 L38-38 L0-47 L-38-38Z" fill="#c9a43a"/><rect x="-6" y="-22" width="12" height="22" fill="#b38d2a" opacity=".85"/>`}
 /* Builds the scene into an <svg> with viewBox 0 0 600 260. full: sky, hills and the Kaʿbah behind.
-   The army marches in two ranks (the far rank smaller): soldiers with spears and banners, and four elephants;
-   the great elephant in front carries Abrahah and kneels. */
-const ARMY_SIDE=[ // x at the end of the march, row 0 = far rank, 1 = near rank
- {x:446,r:0},{x:422,r:0},{x:398,r:0},{x:372,r:0},{x:250,r:0,e:1,i:1},{x:130,r:0,e:1,i:2},{x:56,r:0},{x:32,r:0},{x:8,r:0},
- {x:462,r:1,b:'#a3272b'},{x:436,r:1},{x:410,r:1},{x:320,r:1,e:1,king:1},{x:190,r:1,e:1,i:3},{x:96,r:1},{x:70,r:1,b:'#5a2f6e'},{x:44,r:1},{x:18,r:1}];
+   The army marches in two ranks (the far rank smaller): soldiers with spears and banners, and one representative elephant;
+   the elephant kneels and Abrahah stands beside it. */
+const ARMY_SIDE=[ // one representative elephant and a restrained column, leaving the road readable
+ {x:210,r:0},{x:172,r:0},{x:134,r:0},{x:96,r:0},
+ {x:300,r:1,e:1,king:1},{x:236,r:1,b:'#a3272b'},{x:202,r:1},{x:168,r:1},{x:134,r:1,b:'#5a2f6e'},{x:100,r:1},{x:66,r:1},{x:32,r:1}];
 function elephantTheatre(svg,full,captionEl){
  let h='';
  if(full)h+=`<defs><linearGradient id="lwSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6c98a"/><stop offset=".6" stop-color="#fbe4b8"/><stop offset="1" stop-color="#f3d9a6"/></linearGradient></defs><rect width="600" height="260" fill="url(#lwSky)"/><circle cx="110" cy="70" r="28" fill="#fff1c4" opacity=".9"/><path d="M0 170 L60 120 L110 150 L170 95 L240 150 L300 112 L360 150 L430 100 L500 140 L560 110 L600 130 L600 260 L0 260Z" fill="#c9a06a"/><path d="M0 190 L80 160 L160 185 L250 158 L340 186 L430 165 L520 184 L600 170 L600 260 L0 260Z" fill="#d9b27a"/><rect y="214" width="600" height="46" fill="#e2c08a"/><g transform="translate(540 216)">${kaabaSvg()}</g>`;
@@ -321,7 +311,7 @@ function elephantTheatre(svg,full,captionEl){
  h+=birds.map((b,i)=>`<g class="lwE-bird" data-b="${i}"><path class="lwE-wing" d="M-12 0Q-6-9 0 0Q6-9 12 0" stroke="#3a2c20" fill="none" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="1" rx="4" ry="2.6" fill="#4a3826"/></g>`).join('');
  svg.innerHTML=h;
  svg.querySelectorAll('.lwE-army .lw-leg').forEach(l=>{l.setAttribute('stroke','#3f3021');l.setAttribute('stroke-width','2.6');l.setAttribute('stroke-linecap','round')});
- const army=svg.querySelector('.lwE-army'),lead=svg.querySelector('.lwE-lead'),front=lead.querySelector('.lwE-front'),king=lead.querySelector('.lwE-king'),S=[...svg.querySelectorAll('.lwE-s')],B=[...svg.querySelectorAll('.lwE-bird')],ST=[...svg.querySelectorAll('.lwE-stone')],legs=[...svg.querySelectorAll('.lwE-army .lw-leg')];
+ const army=svg.querySelector('.lwE-army'),lead=svg.querySelector('.lwE-lead'),front=lead.querySelector('.lwE-front'),king=lead.querySelector('.lwE-king'),elephantFrames=[...lead.querySelectorAll('.lwE-real-frame')],S=[...svg.querySelectorAll('.lwE-s')],B=[...svg.querySelectorAll('.lwE-bird')],ST=[...svg.querySelectorAll('.lwE-stone')],legs=[...svg.querySelectorAll('.lwE-army .lw-leg')];
  svg.querySelectorAll('.lwE-watchers .lw-leg').forEach(l=>{l.setAttribute('stroke','#3f3021');l.setAttribute('stroke-width','2.4')});
  let lastCap=-1;
  const inView=()=>{const r=svg.getBoundingClientRect();return r.width>0&&r.bottom>0&&r.top<innerHeight&&!(window.speechSynthesis&&speechSynthesis.speaking)};
@@ -331,9 +321,9 @@ function elephantTheatre(svg,full,captionEl){
    const walk=t<8,ax=walk?lerp(-360,0,ease(t/8)):0,aOp=t<.6?t/.6:t>21?clamp(1-(t-21)/2,0,1):1;
    army.setAttribute('transform',`translate(${ax.toFixed(1)} ${walk?(Math.abs(Math.sin(t*4.5))*-1.5).toFixed(2):0})`);army.setAttribute('opacity',aOp.toFixed(2));
    const sw=walk?Math.sin(t*9)*16:0;legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?sw:-sw).toFixed(1)} ${x} ${y})`)});
-   const k=clamp((t-8)/1.2,0,1);lead.setAttribute('transform',`rotate(${(k*9).toFixed(2)} -27 0)`);{const sc=1-.4*k;front.setAttribute('transform',`translate(0 ${(-24*(1-sc)).toFixed(2)}) scale(1 ${sc.toFixed(3)})`)}
-   S.forEach((el,i)=>{if(el===lead)return;const m=ARMY_SIDE[i],f=clamp((t-13-(i%6)*.12)/1.1,0,1),o=1-clamp((t-14.4-(i%6)*.12)/1.6,0,1);el.setAttribute('transform',m.e?`rotate(${(f*12).toFixed(1)} -27 0)`:`rotate(${(f*84*(i%2?1:-1)).toFixed(1)} 0 0)`);el.setAttribute('opacity',(o*(m.r?1:.92)).toFixed(2))});
-   {const f=clamp((t-13.3)/1.1,0,1),o=1-clamp((t-14.6)/1.6,0,1);king.setAttribute('transform',`rotate(${(-f*70).toFixed(1)} 0 -66)`);king.setAttribute('opacity',o.toFixed(2))}
+   const k=clamp((t-8)/1.2,0,1),ef=walk?1+(Math.floor(t*3)%2):(k>.5?3:0);elephantFrames.forEach((el,j)=>el.setAttribute('opacity',j===ef?'1':'0'));lead.setAttribute('transform',`translate(0 ${(k*2).toFixed(2)})`);front.removeAttribute('transform')
+   S.forEach((el,i)=>{if(el===lead)return;const m=ARMY_SIDE[i],f=clamp((t-13-(i%6)*.12)/1.1,0,1),o=1-clamp((t-14.4-(i%6)*.12)/1.6,0,1);el.setAttribute('transform',m.e?'':`translate(0 ${(f*3).toFixed(1)}) rotate(${(f*22*(i%2?1:-1)).toFixed(1)} 0 0)`);el.setAttribute('opacity',(o*(m.r?1:.92)).toFixed(2))});
+   {const f=clamp((t-13.3)/1.1,0,1),o=1-clamp((t-14.6)/1.6,0,1);king.setAttribute('transform',`translate(0 ${(f*4).toFixed(1)}) rotate(${(-f*12).toFixed(1)} -55 -5)`);king.setAttribute('opacity',o.toFixed(2))}
    birds.forEach((b,i)=>{const fin=ease(clamp((t-9-(i%9)*.13)/2.8,0,1)),fout=ease(clamp((t-15.2-(i%9)*.09)/2.6,0,1));let x=lerp(b.sx,b.hx,fin),y=lerp(b.sy,b.hy,fin);if(fout>0){x=lerp(b.hx,b.ex,fout);y=lerp(b.hy,b.ey,fout)}const on=t>8.8&&t<18.5;B[i].setAttribute('transform',`translate(${x.toFixed(1)} ${(y+Math.sin(t*6+i)*3).toFixed(1)}) scale(-.85 .85)`);B[i].setAttribute('opacity',on?1:0);B[i].querySelector('.lwE-wing').setAttribute('transform',`scale(1 ${(0.35+0.65*Math.abs(Math.sin(t*14+i))).toFixed(2)})`);
     const d=clamp((t-12-(i%6)*.12)/1.1,0,1),stoneOn=t>11.6+(i%6)*.12&&d<1;ST[i].setAttribute('cx',b.hx.toFixed(1));ST[i].setAttribute('cy',(t<12+(i%6)*.12?b.hy+4:lerp(b.hy+4,b.gy,d*d)).toFixed(1));ST[i].setAttribute('opacity',stoneOn?1:0)});
    if(captionEl){let c=0;ELEPHANT_CAPTIONS.forEach((x,i)=>{if(t>=x[0])c=i});if(c!==lastCap){lastCap=c;captionEl.textContent=ELEPHANT_CAPTIONS[c][1]}}
@@ -410,18 +400,17 @@ function mapShowing(){const scr=document.getElementById('mapScreen');return!!scr
 const swingAll=(legs,a)=>legs.forEach((l,i)=>{const x=+l.getAttribute('x1'),y=+l.getAttribute('y1');l.setAttribute('transform',`rotate(${(i%2?a:-a).toFixed(1)} ${x} ${y})`)});
 const ROAD_BIRD=`<path class="lwR-wing" d="M-12 0Q-6-9 0 0Q6-9 12 0" stroke="#3a2c20" fill="none" stroke-width="3" stroke-linecap="round"/><ellipse cx="0" cy="1" rx="4" ry="2.6" fill="#4a3826"/>`;
 /* Abrahah's army marches up the road, the elephant kneels, the birds come with stones. */
-/* The army in ranks on the street, front to back: banners, soldiers, the great elephant with Abrahah,
-   three more elephants, more soldiers. a = along the street, l = across it (in soldier heights). */
-const ARMY_ROAD=[{a:6.2,l:-.55,b:'#a3272b'},{a:6.2,l:.55,b:'#5a2f6e'},{a:5.5,l:-1},{a:5.5,l:0},{a:5.5,l:1},{a:4.8,l:-1},{a:4.8,l:0},{a:4.8,l:1},
- {a:3.2,l:0,e:1,king:1},{a:1.5,l:-1,e:1,i:1},{a:1.5,l:1,e:1,i:2},{a:-.2,l:0,e:1,i:3},
- {a:-1.7,l:-1},{a:-1.7,l:0},{a:-1.7,l:1},{a:-2.4,l:-1},{a:-2.4,l:0},{a:-2.4,l:1},{a:-3.1,l:-.55},{a:-3.1,l:.55,b:'#a3272b'}];
+/* A restrained road scene: one representative elephant with Abrahah and a small column of soldiers.
+   a = along the street, l = across it (in soldier heights). */
+const ARMY_ROAD=[{a:4.2,l:-.55,b:'#a3272b'},{a:4.2,l:.55,b:'#5a2f6e'},{a:3.4,l:-.7},{a:3.4,l:.7},
+ {a:2.1,l:0,e:1,king:1},{a:.7,l:-.7},{a:.7,l:.7},{a:-.2,l:0}];
 function elephantRoad(g,L,P){
  const R=L.street||L.road,len=R[R.length-1][2],crew=ARMY_ROAD.map((m,i)=>Object.assign({i},m)).sort((x,y)=>y.a-x.a);
  g.innerHTML=crew.map(c=>`<g class="lwR-m" data-m="${c.i}"><g class="lwR-body">${c.e?elephantSvg({king:c.king,i:c.i}):soldierSvg(c.i,c.b)}</g></g>`).join('')
   +crew.map(()=>`<circle class="lwR-stone" r="3.4" fill="#7a6650" stroke="#3d3022" stroke-width="1" opacity="0"/>`).join('')
   +crew.map(()=>`<g class="lwR-bird" opacity="0">${ROAD_BIRD}</g>`).join('');
  g.querySelectorAll('.lw-leg').forEach(l=>{l.setAttribute('stroke','#3f3021');l.setAttribute('stroke-width','2.6');l.setAttribute('stroke-linecap','round')});
- const M=[...g.querySelectorAll('.lwR-m')],body=M.map(m=>m.querySelector('.lwR-body')),ST=[...g.querySelectorAll('.lwR-stone')],B=[...g.querySelectorAll('.lwR-bird')],legs=[...g.querySelectorAll('.lw-leg')],leadIx=crew.findIndex(c=>c.king),front=M[leadIx].querySelector('.lwE-front'),king=M[leadIx].querySelector('.lwE-king'),dirs=[];
+ const M=[...g.querySelectorAll('.lwR-m')],body=M.map(m=>m.querySelector('.lwR-body')),ST=[...g.querySelectorAll('.lwR-stone')],B=[...g.querySelectorAll('.lwR-bird')],legs=[...g.querySelectorAll('.lw-leg')],leadIx=crew.findIndex(c=>c.king),front=M[leadIx].querySelector('.lwE-front'),king=M[leadIx].querySelector('.lwE-king'),elephantFrames=[...M[leadIx].querySelectorAll('.lwE-real-frame')],dirs=[];
  /* one soldier's height on screen near the middle of the march */
  const hsAt=s=>{const p=roadAt(R,s);return 55*Math.min(depthAt(p[1],P,.95,L.H*.07/55),L.W*.13/55)};
  const hs0=hsAt(len*.3),s1=Math.max(len*.2,Math.min(len*.5,len-6.6*hs0)),s0=Math.max(3.4*hs0,len*.04);
@@ -434,15 +423,15 @@ function elephantRoad(g,L,P){
    crew.forEach((c,i)=>{const s=centre+c.a*hs,p0=roadAt(R,s),q0=roadAt(R,s-8),q1=roadAt(R,s+8),dx=q1[0]-q0[0],dy=q1[1]-q0[1],ln=Math.hypot(dx,dy)||1,d=dirs[i]=roadDir(R,s,dirs[i]);
     const p=[p0[0]-dy/ln*c.l*hs*.75,p0[1]+dx/ln*c.l*hs*.35],k=Math.min(depthAt(p[1],P,c.e?1.05:.95,c.e?L.H*.1/100:L.H*.07/55),c.e?L.W*.2/100:L.W*.13/55);c.p=p;c.k=k;
     M[i].setAttribute('transform',`translate(${p[0].toFixed(1)} ${p[1].toFixed(1)}) scale(${(k*d).toFixed(3)} ${k.toFixed(3)})`);
-    if(c.king){const q=clamp((t-13)/1.2,0,1);body[i].setAttribute('transform',`rotate(${(q*9).toFixed(2)} -27 0)`);const sc=1-.4*q;front.setAttribute('transform',`translate(0 ${(-24*(1-sc)).toFixed(2)}) scale(1 ${sc.toFixed(3)})`)}
-    else{const f=clamp((t-18.6-(i%7)*.1)/1.1,0,1),o=1-clamp((t-19.6-(i%7)*.1)/1.4,0,1);body[i].setAttribute('transform',c.e?`rotate(${(f*12).toFixed(1)} -27 0)`:`rotate(${(-f*84).toFixed(1)})`);body[i].setAttribute('opacity',o.toFixed(2))}
+    if(c.king){const q=clamp((t-13)/1.2,0,1),ef=t<13?1+(Math.floor(t*3)%2):(q>.5?3:0);elephantFrames.forEach((el,j)=>el.setAttribute('opacity',j===ef?'1':'0'));body[i].setAttribute('transform',`translate(0 ${(q*2).toFixed(2)})`);front.removeAttribute('transform')}
+    else{const f=clamp((t-18.6-(i%7)*.1)/1.1,0,1),o=1-clamp((t-19.6-(i%7)*.1)/1.4,0,1);body[i].setAttribute('transform',c.e?'':`translate(0 ${(f*3).toFixed(1)}) rotate(${(-f*22).toFixed(1)})`);body[i].setAttribute('opacity',o.toFixed(2))}
     const hx=p[0],hy=p[1]-(c.e?128:84)*k,fin=ease(clamp((t-14.5-(i%9)*.13)/2.8,0,1)),fout=ease(clamp((t-20.4-(i%9)*.08)/2.6,0,1));
     let x=lerp(p[0]+L.W*.75,hx,fin),y=lerp(-50-(i%6)*14,hy,fin);if(fout>0){x=lerp(hx,p[0]-L.W*.8,fout);y=lerp(hy,-60-(i%6)*12,fout)}
     const bk=Math.max(k*1.1,.5);B[i].setAttribute('transform',`translate(${x.toFixed(1)} ${(y+Math.sin(t*6+i)*3).toFixed(1)}) scale(${bk.toFixed(3)})`);B[i].setAttribute('opacity',t>14.3&&t<23.5?'1':'0');
     B[i].querySelector('.lwR-wing').setAttribute('transform',`scale(1 ${(0.35+0.65*Math.abs(Math.sin(t*14+i))).toFixed(2)})`);
     const dd=clamp((t-17.5-(i%6)*.12)/1.1,0,1);ST[i].setAttribute('cx',hx.toFixed(1));ST[i].setAttribute('cy',lerp(hy+4,p[1]-22*k,dd*dd).toFixed(1));ST[i].setAttribute('r',Math.max(2,3.4*bk).toFixed(1));ST[i].setAttribute('opacity',t>17.4+(i%6)*.12&&dd<1?'1':'0');
    });
-   const kf=clamp((t-18.9)/1.1,0,1);king.setAttribute('transform',`rotate(${(-kf*70).toFixed(1)} 0 -66)`);king.setAttribute('opacity',(1-clamp((t-19.9)/1.5,0,1)).toFixed(2));
+   const kf=clamp((t-18.9)/1.1,0,1);king.setAttribute('transform',`translate(0 ${(kf*4).toFixed(1)}) rotate(${(-kf*12).toFixed(1)} -55 -5)`);king.setAttribute('opacity',(1-clamp((t-19.9)/1.5,0,1)).toFixed(2));
   }};
  return th;
 }
@@ -483,7 +472,7 @@ function hijrahRoad(g,L,P){
 }
 /* which lessons each scene belongs to: story = lessons that play it above the story; road = the map that shows it on the road */
 const SCENES=[
- {re:/year of the elephant/i,story:/year of the elephant|elephant who would not walk/i,road:elephantRoad,make:(svg,full,cap)=>elephantTheatre(svg,full,cap),label:"Animated scene: Abrahah's army with its elephants, the birds and the stones"},
+ {re:/year of the elephant/i,story:/year of the elephant|elephant who would not walk/i,road:elephantRoad,make:(svg,full,cap)=>elephantTheatre(svg,full,cap),label:"Animated scene: Abrahah's army, the kneeling elephant, the birds and the stones"},
  {re:/cave of thawr|surāqah|suraqah/i,road:hijrahRoad,make:(svg,full,cap)=>hijrahTheatre(svg,full,cap),label:'Animated scene: the two camels of the Hijrah with a light above them, and Surāqah on his horse'}
 ];
 function lessonIndexFor(re){return typeof lessons!=='undefined'?lessons.findIndex(l=>re.test(String(l.title||''))):-1}
@@ -587,6 +576,10 @@ if(typeof renderMatn==='function'){
 document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 .lw-life .lw-leg{stroke:#3f3021;stroke-width:2.4;stroke-linecap:round}
 .lw-life .lw-k-c .lw-leg,.lw-life .lw-k-cl .lw-leg{stroke:#9c7445;stroke-width:3.4}
+.lw-real-camel-frame{opacity:0;filter:drop-shadow(0 1px 1px rgba(35,22,12,.35));animation:lwCamelFrame .88s step-end infinite}
+.lw-real-camel-frame.lw-cf1{animation-delay:-.22s}.lw-real-camel-frame.lw-cf2{animation-delay:-.44s}.lw-real-camel-frame.lw-cf3{animation-delay:-.66s}
+@keyframes lwCamelFrame{0%,24.99%{opacity:1}25%,100%{opacity:0}}
+.lwE-real-frame,.lwE-real-soldier image,.lwE-king{filter:drop-shadow(0 1px 1px rgba(35,22,12,.35))}
 .lw-life .lw-k-g .lw-leg,.lw-life .lw-k-s .lw-leg{stroke:#4f3d2b;stroke-width:1.6}
 .lw-life .lw-fig .lw-leg{transform-box:fill-box;transform-origin:50% 0;animation:lwStep .55s ease-in-out infinite alternate}
 .lw-life .lw-fig .lw-leg.b{animation-direction:alternate-reverse}
@@ -686,7 +679,7 @@ document.head.insertAdjacentHTML('beforeend',`<style id="lw-style">
 @keyframes lwGlow{0%,100%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 0 rgba(255,207,77,.0)}50%{box-shadow:0 3px 0 rgba(0,0,0,.12),0 0 0 6px rgba(255,207,77,.35)}}
 @media(max-width:640px){.lw-head{padding:18px}.lw-emblem{width:38px;height:38px;font-size:20px}.lw-theatre figcaption{font-size:14px}}
 .seeraa-calm .lw-watch .lw-lean{animation:none}
-@media(prefers-reduced-motion:reduce){.lw-watch .lw-lean,.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star{animation:none}.lw-wind,.lw-rain{display:none}}
+@media(prefers-reduced-motion:reduce){.lw-watch .lw-lean,.lw-life .lw-fig .lw-leg,.lw-life .lw-wing,.lesson-side .side-step.current,.lw-mood .lw-star,.lw-real-camel-frame{animation:none}.lw-real-camel-frame{opacity:0}.lw-real-camel-frame.lw-cf0{opacity:1}.lw-wind,.lw-rain{display:none}}
 </style>`);
 /* shared with seeraa-event-scenes.js (Badr, Uḥud, Ḥudaybiyyah, the Opening of Makkah) */
 window.SeeraaLiving={SFX,cueRunner,sayBox,LW,run,reduced,elephantSvg,clamp,lerp,ease,SKIN,personSvg,camelSvg,goatSvg,soldierSvg,horseSvg,kaabaSvg,roadAt,roadDir,depthAt,mapShowing,photoBox,swingAll,SCENES,resumeWeather:()=>{const svg=document.getElementById('mapSvg'),P=svg&&photoBox(svg),S=SEERAA_SCENES[viewWorld];if(P&&S){paintMood(svg,P,S.mood||'');scheduleGust(svg.closest('.map-frame'),!!LANES[S.asset]?.dusty)}},repaint:()=>{try{paintElephantSpot()}catch(e){console.warn('living map',e)}}};
