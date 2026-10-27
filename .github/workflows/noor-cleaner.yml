@@ -2,6 +2,7 @@
 # changes (or by hand: Actions > NoorCleaner > Run workflow):
 #   NoorCleaner-Setup.exe  the installer (asks for English / Arabic / Afaan Oromoo)
 #   NoorCleaner.exe        the same app as a single file that runs without installing
+# A hand-run also publishes both as the public 'NoorCleaner (latest)' release.
 name: NoorCleaner
 
 on:
@@ -13,7 +14,7 @@ on:
       - '.github/workflows/noor-cleaner.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: noor-cleaner-${{ github.ref }}
@@ -59,3 +60,18 @@ jobs:
             noor-cleaner/dist/NoorCleaner-Setup.exe
             noor-cleaner/dist/NoorCleaner.exe
           retention-days: 7
+      - name: Publish the download (release noorcleaner-latest)
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = python -c "import ui_base; print(ui_base.VERSION)"
+          gh release view noorcleaner-latest --repo ${{ github.repository }} 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create noorcleaner-latest --repo ${{ github.repository }} --target ${{ github.sha }} --title "NoorCleaner" --notes "Free storage cleaner for Windows. Download NoorCleaner-Setup.exe and run it."
+            if ($LASTEXITCODE -ne 0) { throw "Could not create the release" }
+          }
+          gh release edit noorcleaner-latest --repo ${{ github.repository }} --title "NoorCleaner $version"
+          gh release upload noorcleaner-latest dist/NoorCleaner-Setup.exe dist/NoorCleaner.exe --clobber --repo ${{ github.repository }}
+          if ($LASTEXITCODE -ne 0) { throw "Could not upload the files" }
