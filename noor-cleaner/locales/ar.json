@@ -382,6 +382,8 @@
  "Language and reminders.": "اللغة والتذكيرات.",
  "Language": "اللغة",
  "Save and restart NoorCleaner": "احفظ وأعد تشغيل نور كلينر",
+ "Scan sound": "صوت الفحص",
+ "Play soft computer sounds while scanning": "تشغيل أصوات حاسوب هادئة أثناء الفحص",
  "Junk reminder": "تذكير الملفات غير الضرورية",
  "NoorCleaner can quietly check for junk when you sign in and tell you when there is a lot to clean. Nothing is deleted without you.": "يمكن لنور كلينر أن يتحقق بهدوء من الملفات غير الضرورية عند تسجيل دخولك ويخبرك عندما يكون هناك الكثير لتنظيفه. لا يُحذف شيء دون إذنك.",
  "Count installers and zip files in Downloads as old after:": "اعتبر ملفات التثبيت والملفات المضغوطة في التنزيلات قديمة بعد:",

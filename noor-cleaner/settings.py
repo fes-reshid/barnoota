@@ -16,6 +16,7 @@ DEFAULTS = {
     "reminder_days": 0,        # 0 = off, 7 = weekly, 30 = monthly
     "last_reminder": 0,        # unix time the reminder last ran
     "old_download_days": 90,
+    "scan_sound": True,        # soft sounds while scanning
 }
 
 

@@ -382,6 +382,8 @@
  "Language and reminders.": "Afaan fi yaadachiisa.",
  "Language": "Afaan",
  "Save and restart NoorCleaner": "Olkaa'iitii NoorCleaner irra deebi'ii bani",
+ "Scan sound": "Sagalee sakatta'uu",
+ "Play soft computer sounds while scanning": "Yeroo sakatta'amu sagalee kompiitaraa laafaa taphachiisi",
  "Junk reminder": "Yaadachiisa kosii",
  "NoorCleaner can quietly check for junk when you sign in and tell you when there is a lot to clean. Nothing is deleted without you.": "NoorCleaner yeroo seentu callisee kosii ilaaluu fi yeroo kosiin baay'ee jiru sitti himuu danda'a. Si malee homtuu hin haqamu.",
  "Count installers and zip files in Downloads as old after:": "Fe'aawwanii fi faayiloota zip buufannaa keessa jiran erga kana booda akka durii lakkaa'i:",

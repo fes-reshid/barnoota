@@ -19,6 +19,7 @@ import cleaner_core as storage
 import i18n
 import logo_data
 import photos_core as photos
+import scan_fx
 import scanner_core as core
 import settings
 import theme
@@ -60,6 +61,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.junk_sizes = {}
         self.views, self.nav_buttons = {}, {}
         self.group_trees = []         # trees that show sets (duplicates, similar photos)
+        self.sound = scan_fx.ScanSound(bool(config.get("scan_sound", True)))
+        self.fx_index = 0             # how many of all_files the scan screen has shown
+        self.fx_running = False
 
         self._build_ui()
         self.refresh_drives()
@@ -183,6 +187,10 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
             ttk.Label(metrics, text=label, style="MetricLabel.TLabel", wraplength=px(130), justify="center").grid(
                 row=row + 1, column=column, sticky="n", pady=(0, px(4)))
             self.metric_values[key] = value
+
+        self.screen = scan_fx.ScanScreen(view, px, height=6)
+        self.screen.pack(fill="x", **self._gap())
+        self.screen.idle(VERSION)
 
         where = self._card(view, _("What to scan"), fill="x", **self._gap())
         self.drive_vars = {}
@@ -446,6 +454,26 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.start_btn.config(state="disabled")
         self.stop_btn.config(state="normal")
         self.progress.start(12)
+        self.screen.begin([os.path.normpath(r) for r in roots])
+        self.fx_index = 0
+        if not self.fx_running:
+            self.fx_running = True
+            self._fx_tick()
+
+    def _fx_tick(self):
+        """Streams the files the scan has just checked onto the green screen, a few lines at a time."""
+        files = self.all_files
+        new = files[self.fx_index:]
+        if new:
+            self.fx_index = len(files)
+            if len(new) > 4:  # the scan is faster than the eye: show an even sample
+                new = [new[i * len(new) // 4] for i in range(4)]
+            self.screen.checked(new)
+            self.sound.tick()
+        if self.scan_thread and self.scan_thread.is_alive():
+            self.root.after(80, self._fx_tick)
+        else:
+            self.fx_running = False
 
     def _run_scan(self):
         try:
@@ -497,6 +525,10 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
                     del self.corrupt_tree.paths[iid]
         self.findings[finding.path] = finding
         tree = self.corrupt_tree if finding.kind == core.CORRUPTED else self.threat_tree
+        is_threat = finding.kind != core.CORRUPTED
+        self.screen.finding(finding, is_threat)
+        if is_threat:
+            self.sound.threat()
         problem = finding.reason if finding.kind != core.SUSPICIOUS else _("Suspicious: {reason}").format(
             reason=finding.reason)
         iid = tree.insert("", "end", values=(os.path.basename(finding.path), problem, finding.source,
@@ -520,6 +552,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         s = self.scanner
         threats, corrupted = len(self.threat_tree.paths), len(self.corrupt_tree.paths)
         total = self.report.total_bytes if self.report else 0
+        self.screen.finished(s.files_seen, threats, corrupted, stopped=s.cancel.is_set())
+        if not s.cancel.is_set() and not threats:
+            self.sound.finished()
         summary = _("Checked {files} files using {size}.").format(files=f"{s.files_seen:,}", size=human_size(total))
         if self.opt_threats.get() or self.opt_defender.get():
             summary += " " + _("Threats found: {count}.").format(count=threats)
@@ -1105,6 +1140,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
             if not self.ask(_("A scan is running. Stop it and close NoorCleaner?")):
                 return
             self.scanner.stop()
+        self.sound.stop()
         self.root.destroy()
 
 
