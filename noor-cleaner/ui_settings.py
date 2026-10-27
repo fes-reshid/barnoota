@@ -53,6 +53,11 @@ class SettingsMixin:
         self._button(self._row(language, pady=(px(12), 0)), _("Save and restart NoorCleaner"), self.save_language,
                      style="Primary.TButton")
 
+        effects = self._card(view, _("Scan sound"), fill="x", **self._gap())
+        self.sound_var = tk.BooleanVar(value=bool(self.config.get("scan_sound", True)))
+        ttk.Checkbutton(effects, text=_("Play soft computer sounds while scanning"), variable=self.sound_var,
+                        style="Card.TCheckbutton", command=self.save_sound).pack(anchor=self.W)
+
         remind = self._card(view, _("Junk reminder"), fill="x", **self._gap())
         self._text(remind, _("NoorCleaner can quietly check for junk when you sign in and tell you when there is "
                              "a lot to clean. Nothing is deleted without you."), pady=(0, px(8)))
@@ -84,6 +89,14 @@ class SettingsMixin:
         self.config["language"] = code
         settings.save(self.config)
         self.restart_app()
+
+    def save_sound(self):
+        on = self.sound_var.get()
+        self.config["scan_sound"] = on
+        settings.save(self.config)
+        self.sound.set_enabled(on)
+        if on:
+            self.sound.finished()  # a short preview
 
     def save_reminder(self):
         days = self.reminder_var.get()
