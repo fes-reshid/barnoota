@@ -192,7 +192,7 @@ class NoorStyle:
         self._element("NavOn", 8, (GREEN, None))
         for name, fg, weight in (("Nav", NAV_TEXT, "normal"), ("NavOn", "#ffffff", "bold")):
             s.configure(f"{name}.TButton", background=GREEN_DEEP, foreground=fg, font=(FONT, 10, weight),
-                        padding=(self.px(12), self.px(7)), width=0)
+                        padding=(self.px(12), self.px(2)), width=0)
         self.set_direction(rtl=False)
         s.map("Nav.TButton", foreground=[("active", "#ffffff")])
 

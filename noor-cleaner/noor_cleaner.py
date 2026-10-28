@@ -29,6 +29,8 @@ from ui_base import (APP_NAME, VERSION, BaseApp, clear_tree, human_size, is_admi
                      share_text)
 from ui_health import HealthMixin
 from ui_network import NetworkMixin
+from ui_privacy import PrivacyMixin
+from ui_security import SecurityMixin
 from ui_programs import ProgramsMixin
 from ui_recover import RecoverMixin
 from ui_settings import SettingsMixin, choose_language_first_run
@@ -36,7 +38,8 @@ from ui_settings import SettingsMixin, choose_language_first_run
 MAX_LISTED_FILES = 5000  # rows shown at once in "All files"; search narrows it down
 
 
-class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SettingsMixin):
+class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SecurityMixin,
+                     PrivacyMixin, SettingsMixin):
     def __init__(self, root, config):
         self.root = root
         self.config = config
@@ -45,7 +48,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.theme = theme.get_style(root)
         px = self.theme.px
         root.geometry(f"{px(1240)}x{px(820)}")
-        root.minsize(px(1060), px(660))
+        root.minsize(px(1060), px(740))
         root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.scanner = None
@@ -67,6 +70,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.fx_index = 0             # how many of all_files the scan screen has shown
         self.fx_running = False
         self.scan_total = 0
+        self._scan_roots = []
         self._eta_smooth = None
 
         self._build_ui()
@@ -74,6 +78,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.refresh_quarantine()
         self.show_view("scan")
         self.root.after(150, self.poll)
+        if self.monitor_var.get():
+            self.root.after(5000, self._monitor_tick)
 
     # ------------------------------------------------------------------ shell
 
@@ -96,7 +102,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         pages = (("scan", _("Scan")), ("space", _("What's using space")), ("junk", _("Junk files")),
                  ("dups", _("Duplicates")), ("programs", _("Programs")), ("threats", _("Viruses & threats")),
                  ("corrupt", _("Corrupted files")), ("health", _("Disk health")), ("network", _("Network & ports")),
-                 ("files", _("All files")),
+                 ("security", _("Security check")), ("privacy", _("Privacy tools")), ("files", _("All files")),
                  ("recover", _("Recover deleted files")), ("quarantine", _("Quarantine")), ("settings", _("Settings")))
         self.nav_titles = dict(pages)
         for key, text in pages:
@@ -134,6 +140,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
                               "downloads_done": self._show_old_downloads, "photo_progress": self._photo_progress,
                               "photos_done": self._show_similar_photos, "worker_error": self._worker_error})
         self._scan_view()
+        self._show_free_space()
         self._space_view()
         self._junk_view()
         self._duplicates_view()
@@ -150,6 +157,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
             finding_cols, show_repair=True)
         self._health_view()
         self._network_view()
+        self._security_view()
+        self._privacy_view()
         self._all_files_view()
         self._recover_view()
         self._quarantine_view()
@@ -185,9 +194,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         metrics = self._card(row)
         metrics.grid(row=0, column=self.col(1, 2), sticky="new")
         self.metric_values = {}
-        names = (("files", _("Files checked")), ("space", _("Space used")), ("threats", _("Threats")),
-                 ("corrupt", _("Corrupted")))
-        for i, (key, label) in enumerate(names):  # a 2 x 2 grid, so long numbers and words always fit
+        names = (("files", _("Files checked")), ("space", _("Space used")), ("free", _("Free space")),
+                 ("size", _("Drive size")), ("threats", _("Threats")), ("corrupt", _("Corrupted")))
+        for i, (key, label) in enumerate(names):  # a 2-column grid, so long numbers and words always fit
             row, column = 2 * (i // 2), self.col(i % 2, 2)
             metrics.columnconfigure(column, weight=1, uniform="metric")
             value = ttk.Label(metrics, text="0", style="Metric.TLabel")
@@ -235,6 +244,28 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
                              _("Microsoft Defender does the real virus detection. NoorCleaner's own checks catch known "
                                "malware, disguised programs and USB worms, but they are not a full antivirus."),
                              _("Files sent to the Recycle Bin still use space until you empty it (Junk files).")))
+
+    def _selected_roots(self):
+        roots = [d for d, var in self.drive_vars.items() if var.get()]
+        return roots + [f for f in self.extra_folders if f not in roots]
+
+    def _show_free_space(self, roots=None):
+        """Free space and total size of the drives being scanned (each drive counted once)."""
+        free = total = 0
+        seen = set()
+        for root in roots if roots is not None else self._selected_roots():
+            anchor = os.path.splitdrive(os.path.abspath(root))[0].lower() or "/"
+            if anchor in seen:
+                continue
+            seen.add(anchor)
+            try:
+                usage = shutil.disk_usage(root)
+            except OSError:
+                continue
+            free += usage.free
+            total += usage.total
+        self.metric_values["free"].config(text=human_size(free) if total else "-")
+        self.metric_values["size"].config(text=human_size(total) if total else "-")
 
     def _idle_text(self):
         text = _("Tick the drives to scan and press Start scan.")
@@ -442,6 +473,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.all_label.config(text=_("Scanning... the list fills in when the scan finishes (or press Search)."))
         for value in self.metric_values.values():
             value.config(text="0")
+        self._show_free_space(roots)
         self.status_pill.config(text=_("Scanning..."), style="Pill.TLabel")
         self.status_detail.config(text=_("Starting..."))
 
@@ -461,6 +493,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.scan_thread.start()
         self.start_btn.config(state="disabled")
         self.stop_btn.config(state="normal")
+        self._scan_roots = roots
         self.scan_total = self._estimate_total(roots)
         self._eta_smooth = None
         if self.scan_total:  # whole drives: the bar can show real progress
@@ -565,6 +598,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
                 self._last_size_update = elapsed
                 scanned = sum(e.size for e in files)
                 self.metric_values["space"].config(text=human_size(scanned))
+                self._show_free_space(self._scan_roots)
                 if self.scan_total:
                     self._update_eta(elapsed, scanned)
             self.side_status.config(text=_("Scanning... {files} files  ·  {minutes}m {seconds}s").format(
@@ -636,6 +670,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.side_status.config(text="")
         self.metric_values["files"].config(text=f"{s.files_seen:,}")
         self.metric_values["space"].config(text=human_size(total))
+        self._show_free_space(self._scan_roots)
         self.metric_values["threats"].config(text=str(threats))
         self.metric_values["corrupt"].config(text=str(corrupted))
         self.show_storage()
@@ -1132,7 +1167,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
     def _drop_rows(self, paths):
         gone = set(paths)
         for tree in (self.threat_tree, self.corrupt_tree, self.files_tree, self.big_tree, self.downloads_tree,
-                     *self.group_trees):
+                     self.sig_tree, *self.group_trees):
             for iid, path in list(tree.paths.items()):
                 if path in gone:
                     tree.delete(iid)

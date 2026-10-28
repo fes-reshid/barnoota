@@ -9,8 +9,12 @@ rights.
 import ipaddress
 import json
 import ntpath
+import os
 import re
+import socket
 import subprocess
+import time
+from concurrent.futures import ThreadPoolExecutor
 from collections import Counter
 from dataclasses import dataclass
 
@@ -279,3 +283,143 @@ def stop_program(pid, program):
     result = _run(["taskkill", "/PID", str(int(pid)), "/F"])
     if result.returncode != 0:
         raise RuntimeError((result.stdout or result.stderr).strip())
+
+
+# --------------------------------------------------------------------------- devices on your network
+
+@dataclass
+class Device:
+    address: str
+    mac: str
+    is_router: bool = False
+    is_this_pc: bool = False
+
+
+def parse_route(text):
+    """The default gateway (your router) from `route print -4`; the lowest metric wins."""
+    best = None
+    for line in text.splitlines():
+        parts = line.split()
+        if len(parts) >= 5 and parts[0] == "0.0.0.0" and parts[1] == "0.0.0.0":
+            try:
+                ipaddress.ip_address(parts[2])
+                metric = int(parts[4])
+            except ValueError:
+                continue
+            if best is None or metric < best[0]:
+                best = (metric, parts[2], parts[3])
+    return (best[1], best[2]) if best else (None, None)  # (router, this PC's address)
+
+
+def parse_arp(text):
+    """[(ip, mac)] from `arp -a`, without broadcast and multicast entries."""
+    devices = []
+    for line in text.splitlines():
+        match = re.match(r"\s*(\d+\.\d+\.\d+\.\d+)\s+([0-9a-fA-F]{2}(?:-[0-9a-fA-F]{2}){5})", line)
+        if not match:
+            continue
+        ip, mac = match.group(1), match.group(2).lower()
+        first = int(ip.split(".")[0])
+        if mac == "ff-ff-ff-ff-ff-ff" or mac.startswith("01-00-5e") or ip.endswith(".255") or first >= 224:
+            continue
+        devices.append((ip, mac))
+    return devices
+
+
+def _ping(address):
+    try:
+        _run(["ping", "-n", "1", "-w", "300", address], timeout=3)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def read_devices():
+    """Devices that answered on your home network (the /24 around this PC). Windows only."""
+    if not core.IS_WINDOWS:
+        raise RuntimeError(_("Network checks are only available on Windows."))
+    router, mine = parse_route(_run(["route", "print", "-4"]).stdout)
+    if not mine:
+        raise RuntimeError(_("This PC does not seem to be connected to a network."))
+    base = ".".join(mine.split(".")[:3])
+    with ThreadPoolExecutor(max_workers=48) as pool:
+        list(pool.map(_ping, [f"{base}.{n}" for n in range(1, 255)]))
+    found = {ip: mac for ip, mac in parse_arp(_run(["arp", "-a"]).stdout) if ip.startswith(base + ".")}
+    devices = [Device(ip, mac, ip == router, False) for ip, mac in found.items()]
+    devices.append(Device(mine, "", False, True))
+    devices.sort(key=lambda d: tuple(int(x) for x in d.address.split(".")))
+    return devices, router
+
+
+def router_check(router):
+    """Quick look at the router's own doors. Returns [(level, text)]."""
+    if not router:
+        return []
+
+    def open_port(port):
+        try:
+            with socket.create_connection((router, port), timeout=0.8):
+                return True
+        except OSError:
+            return False
+
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        ports = dict(zip((21, 23, 80, 443, 7547, 8080), pool.map(open_port, (21, 23, 80, 443, 7547, 8080))))
+    findings = []
+    if ports[23]:
+        findings.append((HIGH, _("Your router accepts Telnet (port 23). This old remote control has no encryption and "
+                                 "is used by router botnets. Turn it off in the router settings.")))
+    if ports[21]:
+        findings.append((MEDIUM, _("Your router accepts FTP (port 21). Turn it off unless you use it.")))
+    if ports[7547]:
+        findings.append((MEDIUM, _("Your router answers on port 7547 (remote management by your internet provider). "
+                                   "Attackers have abused this on some routers; keep the router updated.")))
+    if ports[80] and not ports[443]:
+        findings.append((LOW, _("Your router's settings page uses plain http, so only log in to it from your own "
+                                "home network.")))
+    if not findings:
+        findings.append((INFO, _("No weak doors found on the router.")))
+    findings.append((INFO, _("NoorCleaner cannot see the router's password. Make sure you changed it from the one on "
+                             "the sticker.")))
+    return findings
+
+
+# --------------------------------------------------------------------------- attack history
+
+LOG_FILE = os.path.join(core.APP_DIR, "attack_log.json")
+LOG_LIMIT = 500
+
+
+def load_log(path=None):
+    try:
+        with open(path or LOG_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, list) else []
+    except (OSError, ValueError):
+        return []
+
+
+def log_event(address, reason, count, action="detected", path=None, now=None):
+    """Adds an entry unless the same address and reason was logged in the last hour."""
+    path = path or LOG_FILE
+    now = now or time.time()
+    entries = load_log(path)
+    for entry in reversed(entries):
+        if now - entry.get("time", 0) > 3600:
+            break
+        if (entry.get("address"), entry.get("reason"), entry.get("action")) == (address, reason, action):
+            return False
+    entries.append({"time": now, "address": address, "reason": reason, "count": count, "action": action})
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(entries[-LOG_LIMIT:], f)
+    except OSError:
+        return False
+    return True
+
+
+def clear_log(path=None):
+    try:
+        os.remove(path or LOG_FILE)
+    except OSError:
+        pass
