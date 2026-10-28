@@ -493,5 +493,7 @@
  "Remote screen control, often weakly protected.": "تحكم بالشاشة عن بُعد، وغالبًا حمايته ضعيفة.",
  "Remote management (WinRM)": "الإدارة عن بُعد (WinRM)",
  "Remote administration of this PC.": "إدارة هذا الجهاز عن بُعد.",
- "A website or web proxy running on this PC.": "موقع ويب أو وكيل ويب يعمل على هذا الجهاز."
+ "A website or web proxy running on this PC.": "موقع ويب أو وكيل ويب يعمل على هذا الجهاز.",
+ "Free space": "المساحة الحرة",
+ "Drive size": "حجم القرص"
 }
