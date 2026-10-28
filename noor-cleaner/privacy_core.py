@@ -251,3 +251,60 @@ def wipe_free_space(drive):
     if not re.fullmatch(r"[A-Za-z]:\\?", drive):
         raise ValueError(_("That is not a drive."))
     subprocess.Popen(["cmd", "/k", "cipher", f"/w:{drive.rstrip(chr(92))}\\"], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+
+# =========================================================================== SSD and USB awareness
+
+SSD, HDD, USB, UNKNOWN = "ssd", "hdd", "usb", "unknown"
+
+_KIND_SCRIPT = r"""
+@($env:NC_LETTERS.Split(',') | Where-Object { $_ } | ForEach-Object {
+  $d = $null; try { $d = Get-Partition -DriveLetter $_ -ErrorAction Stop | Get-Disk | Get-PhysicalDisk -ErrorAction Stop } catch {}
+  [pscustomobject]@{ letter=$_; media=[string]$d.MediaType; bus=[string]$d.BusType } }) | ConvertTo-Json -Compress
+"""
+
+
+def classify_drive(media, bus):
+    """ssd, hdd, usb or unknown, from what Windows reports for a physical disk."""
+    bus, media = (bus or "").upper(), (media or "").upper()
+    if bus == "USB":
+        return USB
+    if media == "SSD" or bus == "NVME":
+        return SSD
+    if media == "HDD":
+        return HDD
+    return UNKNOWN
+
+
+def drive_letters(paths):
+    letters = []
+    for path in paths:
+        drive = ntpath.splitdrive(path)[0]
+        if len(drive) == 2 and drive[1] == ":" and drive[0].upper() not in letters:
+            letters.append(drive[0].upper())
+    return letters
+
+
+def drive_kinds(letters):
+    """{'C': 'ssd', ...} for the drive letters (unknown when Windows does not say)."""
+    winutil.require_windows()
+    letters = [l for l in letters if re.fullmatch(r"[A-Za-z]", l)]
+    if not letters:
+        return {}
+    try:
+        rows = winutil.powershell_json(_KIND_SCRIPT, timeout=40, env={"NC_LETTERS": ",".join(letters)})
+    except RuntimeError:
+        rows = []
+    found = {r.get("letter", "").upper(): classify_drive(r.get("media"), r.get("bus")) for r in rows}
+    return {l.upper(): found.get(l.upper(), UNKNOWN) for l in letters}
+
+
+def trim_drive(letter):
+    """Tells an SSD to discard the space freed by deleted files (TRIM). Needs administrator rights."""
+    winutil.require_windows()
+    if not re.fullmatch(r"[A-Za-z]", letter):
+        raise ValueError(_("That is not a drive."))
+    result = winutil.powershell("Optimize-Volume -DriveLetter $env:NC_L -ReTrim", timeout=300, env={"NC_L": letter})
+    if result.returncode != 0:
+        raise RuntimeError((result.stderr or result.stdout).strip().splitlines()[0]
+                           if (result.stderr or result.stdout).strip() else _("administrator rights are needed"))

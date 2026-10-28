@@ -201,5 +201,59 @@ Interface: 192.168.1.23 --- 0x7
             self.assertEqual(net.load_log(path), [])
 
 
+class FollowUpTests(unittest.TestCase):
+    def test_country_lookup_only_sends_public_addresses(self):
+        calls = []
+
+        def opener(request, timeout):
+            calls.append(request.full_url)
+            return io.BytesIO(b'{"success": true, "country": "Germany", "country_code": "DE"}')
+
+        self.assertEqual(net.country_for("93.184.216.34", opener), "Germany (DE)")
+        self.assertEqual(len(calls), 1)
+        self.assertIn("93.184.216.34", calls[0])
+        for private in ("192.168.1.5", "10.0.0.2", "127.0.0.1", "not an ip"):
+            self.assertIsNone(net.country_for(private, opener))
+        self.assertEqual(len(calls), 1)  # nothing private was ever sent
+        self.assertIsNone(net.parse_country('{"success": false}'))
+        self.assertIsNone(net.parse_country("not json"))
+
+    def test_country_is_added_to_the_log(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = os.path.join(folder, "log.json")
+            net.log_event("93.184.216.34", "scan", 7, path=path, now=1000)
+            net.set_log_country("93.184.216.34", "Germany (DE)", path)
+            self.assertEqual(net.load_log(path)[0]["country"], "Germany (DE)")
+
+    def test_router_page_is_described_without_logging_in(self):
+        self.assertEqual(net.parse_router_page({"WWW-Authenticate": 'Basic realm="TP-Link Router"', "Server": "lighttpd"},
+                                               "<html><title> Login </title>"),
+                         "TP-Link Router | Login | lighttpd")
+        self.assertEqual(net.parse_router_page({}, ""), "")
+        self.assertEqual(net.router_identity(None), "")
+
+    def test_drive_kinds(self):
+        self.assertEqual(privacy.classify_drive("SSD", "SATA"), privacy.SSD)
+        self.assertEqual(privacy.classify_drive("Unspecified", "NVMe"), privacy.SSD)
+        self.assertEqual(privacy.classify_drive("HDD", "SATA"), privacy.HDD)
+        self.assertEqual(privacy.classify_drive("HDD", "USB"), privacy.USB)
+        self.assertEqual(privacy.classify_drive("", ""), privacy.UNKNOWN)
+        self.assertEqual(privacy.drive_letters([r"C:\a.txt", r"c:\b\c.txt", r"D:\x"]), ["C", "D"])
+
+    def test_tray_is_optional(self):
+        import queue
+        import tray
+        real = tray.pystray
+        tray.pystray = None
+        try:
+            t = tray.Tray(queue.Queue(), "none.ico", "Open", "Quit")
+            self.assertFalse(t.available)
+            self.assertFalse(t.start())
+            t.notify("hello")
+            t.stop()
+        finally:
+            tray.pystray = real
+
+
 if __name__ == "__main__":
     unittest.main()

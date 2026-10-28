@@ -52,6 +52,24 @@ def set_reminder(days, data=None):
                 pass
 
 
+TRAY_VALUE = "NoorCleanerTray"
+
+
+def set_tray_autostart(enabled):
+    """Starts NoorCleaner hidden in the tray when you sign in, so live protection is always on."""
+    if not core.IS_WINDOWS:
+        return
+    import winreg
+    with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, RUN_PATH, 0, winreg.KEY_SET_VALUE) as key:
+        if enabled:
+            winreg.SetValueEx(key, TRAY_VALUE, 0, winreg.REG_SZ, app_command("--tray"))
+        else:
+            try:
+                winreg.DeleteValue(key, TRAY_VALUE)
+            except FileNotFoundError:
+                pass
+
+
 def is_due(data, now=None):
     days = data.get("reminder_days") or 0
     return bool(days) and (now or time.time()) - (data.get("last_reminder") or 0) >= days * 86400

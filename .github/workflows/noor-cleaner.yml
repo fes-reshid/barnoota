@@ -32,10 +32,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0
+      - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0 pystray==0.19.5
       - run: python -m unittest discover -s tests -v
       - name: Build NoorCleaner.exe
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" noor_cleaner.py
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" noor_cleaner.py
       - name: Check the exe starts
         shell: pwsh
         run: |

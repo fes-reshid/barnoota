@@ -14,6 +14,8 @@ import re
 import socket
 import subprocess
 import time
+import urllib.error
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from collections import Counter
 from dataclasses import dataclass
@@ -398,7 +400,7 @@ def load_log(path=None):
         return []
 
 
-def log_event(address, reason, count, action="detected", path=None, now=None):
+def log_event(address, reason, count, action="detected", path=None, now=None, country=""):
     """Adds an entry unless the same address and reason was logged in the last hour."""
     path = path or LOG_FILE
     now = now or time.time()
@@ -408,7 +410,8 @@ def log_event(address, reason, count, action="detected", path=None, now=None):
             break
         if (entry.get("address"), entry.get("reason"), entry.get("action")) == (address, reason, action):
             return False
-    entries.append({"time": now, "address": address, "reason": reason, "count": count, "action": action})
+    entries.append({"time": now, "address": address, "reason": reason, "count": count, "action": action,
+                    "country": country})
     try:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
@@ -423,3 +426,86 @@ def clear_log(path=None):
         os.remove(path or LOG_FILE)
     except OSError:
         pass
+
+
+# --------------------------------------------------------------------------- country of an address (optional, online)
+
+COUNTRY_URL = "https://ipwho.is/"
+
+
+def parse_country(body):
+    """'Germany (DE)' from the lookup service's answer, or None."""
+    try:
+        data = json.loads(body)
+    except ValueError:
+        return None
+    if not isinstance(data, dict) or not data.get("success") or not data.get("country"):
+        return None
+    code = data.get("country_code")
+    return f"{data['country']} ({code})" if code else str(data["country"])
+
+
+def country_for(address, opener=urllib.request.urlopen):
+    """The country an internet address belongs to. Only that one address is sent to the service, and only
+    when the user turned this on. Addresses on your own network are never sent."""
+    try:
+        ip = ipaddress.ip_address(address.split("%")[0])
+    except ValueError:
+        return None
+    if not ip.is_global:
+        return None
+    request = urllib.request.Request(COUNTRY_URL + str(ip) + "?fields=success,country,country_code",
+                                     headers={"User-Agent": "NoorCleaner"})
+    try:
+        with opener(request, timeout=8) as response:
+            return parse_country(response.read().decode("utf-8", "replace"))
+    except (urllib.error.URLError, OSError, ValueError):
+        return None
+
+
+def set_log_country(address, country, path=None):
+    """Adds the country to log entries for this address that do not have one yet."""
+    path = path or LOG_FILE
+    entries = load_log(path)
+    changed = False
+    for entry in entries:
+        if entry.get("address") == address and not entry.get("country"):
+            entry["country"] = country
+            changed = True
+    if changed:
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(entries, f)
+        except OSError:
+            pass
+
+
+# --------------------------------------------------------------------------- what the router says it is (read only)
+
+def parse_router_page(headers, body):
+    """Short description of the device behind a login page, from its title, server name or login realm."""
+    parts = []
+    realm = re.search(r'realm="?([^",]+)', headers.get("WWW-Authenticate", "") or "", re.I)
+    if realm:
+        parts.append(realm.group(1).strip())
+    title = re.search(r"<title[^>]*>(.*?)</title>", body or "", re.I | re.S)
+    if title and title.group(1).strip():
+        parts.append(re.sub(r"\s+", " ", title.group(1)).strip()[:80])
+    server = (headers.get("Server") or "").strip()
+    if server:
+        parts.append(server[:60])
+    return " | ".join(dict.fromkeys(parts))
+
+
+def router_identity(router, opener=urllib.request.urlopen):
+    """What the router's own web page calls itself. It only reads the page; it never tries to log in."""
+    if not router:
+        return ""
+    try:
+        with opener(urllib.request.Request(f"http://{router}/", headers={"User-Agent": "NoorCleaner"}),
+                    timeout=3) as response:
+            return parse_router_page(response.headers, response.read(20000).decode("utf-8", "replace"))
+    except urllib.error.HTTPError as exc:  # 401 is normal: the page asks for a password
+        return parse_router_page(exc.headers, "")
+    except (urllib.error.URLError, OSError, ValueError):
+        return ""
