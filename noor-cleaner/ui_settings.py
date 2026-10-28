@@ -58,6 +58,14 @@ class SettingsMixin:
         ttk.Checkbutton(effects, text=_("Play soft computer sounds while scanning"), variable=self.sound_var,
                         style="Card.TCheckbutton", command=self.save_sound).pack(anchor=self.W)
 
+        tray_card = self._card(view, _("Live protection in the tray"), fill="x", **self._gap())
+        self._text(tray_card, _("NoorCleaner can start with Windows, sit quietly in the notification area and warn "
+                                "you if someone attacks your PC. Closing the window keeps it running there; use the "
+                                "tray icon to open or quit."), pady=(0, px(8)))
+        self.tray_var = tk.BooleanVar(value=bool(self.config.get("tray_autostart")))
+        ttk.Checkbutton(tray_card, text=_("Start with Windows and keep watching in the tray"), variable=self.tray_var,
+                        style="Card.TCheckbutton", command=self.save_tray).pack(anchor=self.W)
+
         remind = self._card(view, _("Junk reminder"), fill="x", **self._gap())
         self._text(remind, _("NoorCleaner can quietly check for junk when you sign in and tell you when there is "
                              "a lot to clean. Nothing is deleted without you."), pady=(0, px(8)))
@@ -89,6 +97,24 @@ class SettingsMixin:
         self.config["language"] = code
         settings.save(self.config)
         self.restart_app()
+
+    def save_tray(self):
+        on = self.tray_var.get()
+        if on and not self.tray.available:
+            self.tray_var.set(False)
+            self.info(_("The tray icon is not available in this copy of NoorCleaner."))
+            return
+        self.config["tray_autostart"] = on
+        if on:
+            self.config["live_monitor"] = True
+            if not self.monitor_var.get():
+                self.monitor_var.set(True)
+                self._monitor_tick()
+        settings.save(self.config)
+        try:
+            reminder.set_tray_autostart(on)
+        except OSError as exc:
+            self.error(str(exc))
 
     def save_sound(self):
         on = self.sound_var.get()

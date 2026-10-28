@@ -16,7 +16,9 @@ class NetworkMixin:
     def _network_view(self):
         px = self.theme.px
         self.handlers.update({"net_done": self._show_network, "blocks_done": self._show_blocks,
-                              "net_devices": self._show_devices, "net_alert": self._net_alert})
+                              "net_devices": self._show_devices, "net_alert": self._net_alert,
+                              "net_countries": self._got_countries, "net_router": self._show_router_identity})
+        self.country_cache = {}         # address -> "Germany (DE)" or "" when unknown
         self._monitor_seen = set()      # attackers and risky ports already announced, so each is announced once
         self._monitor_ports = None      # reachable risky ports at the last check
         self._monitor_busy = False
@@ -37,6 +39,11 @@ class NetworkMixin:
         ttk.Checkbutton(top, text=_("Live protection: watch for attacks while NoorCleaner is open and warn me"),
                         variable=self.monitor_var, style="Card.TCheckbutton", command=self.toggle_monitor).pack(
             anchor=self.W, pady=(px(8), 0))
+        self.country_var = tk.BooleanVar(value=bool(self.config.get("country_lookup", False)))
+        ttk.Checkbutton(top, text=_("Show the country of attackers (online: sends only the attacker's address to "
+                                    "ipwho.is)"),
+                        variable=self.country_var, style="Card.TCheckbutton", command=self.toggle_country).pack(
+            anchor=self.W, pady=(px(4), 0))
         for line in (_("This is a helper, not a full firewall. Keep Windows Firewall and Windows Security turned on."),
                      _("Blocking uses Windows Firewall, so it needs administrator rights. You can undo every block "
                        "under 'Blocked'.")):
@@ -136,6 +143,7 @@ class NetworkMixin:
             self.conns_tree.items[iid] = c
         self.net_suspects = net.find_suspects(conns, logons)
         self._show_suspects(note)
+        self._lookup_countries([x.address for x in self.net_suspects])
         exposed = sum(1 for p in ports if p.reachable and p.risk()[0] == net.HIGH)
         self.net_status.config(text=_("Open ports: {ports}  ·  connections: {conns}  ·  risky ports open to the "
                                       "network: {risky}").format(ports=len(ports), conns=len(conns), risky=exposed))
@@ -154,7 +162,10 @@ class NetworkMixin:
                 row.pack(fill="x", pady=(px(3), 0))
                 self._button(row, _("Block"), lambda a=s.address: self.block_address_now(a), style="Danger.TButton",
                              gap=12)
-                ttk.Label(row, text=f"{s.address}  -  {s.reason} ({s.count})", style="Note.TLabel").pack(side=self.L)
+                where = self.country_cache.get(s.address)
+                where = f"  [{where}]" if where else ""
+                ttk.Label(row, text=f"{s.address}{where}  -  {s.reason} ({s.count})", style="Note.TLabel").pack(
+                    side=self.L)
         elif note:
             self._text(self._card(self.attack_box, style="Note.TFrame", fill="x", **self._gap()), note,
                        style="Note.TLabel")
@@ -165,6 +176,35 @@ class NetworkMixin:
         else:
             self._text(self._card(self.attack_box, style="Note.TFrame", fill="x", **self._gap()),
                        _("No signs of an attack right now."), style="Note.TLabel")
+
+    # ------------------------------------------------------------------ country of attackers (optional)
+
+    def toggle_country(self):
+        self.config["country_lookup"] = self.country_var.get()
+        settings.save(self.config)
+        if self.country_var.get():
+            self.info(_("When an attacker is found, NoorCleaner will ask ipwho.is which country its address belongs "
+                        "to. Only that address is sent: never your files, your name or your own address."))
+            self._lookup_countries([x.address for x in self.net_suspects])
+
+    def _lookup_countries(self, addresses):
+        todo = [a for a in dict.fromkeys(addresses) if a not in self.country_cache]
+        if not todo or not self.country_var.get():
+            return
+
+        def work():
+            found = {a: (net.country_for(a) or "") for a in todo}
+            self.events.put(("net_countries", found))
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _got_countries(self, found):
+        self.country_cache.update(found)
+        for address, country in found.items():
+            if country:
+                net.set_log_country(address, country)
+        self._show_suspects(None)
+        self.load_history()
 
     # ------------------------------------------------------------------ blocking
 
@@ -278,6 +318,7 @@ class NetworkMixin:
         self._button(bar, _("Block this device"), self.block_selected_device, style="Danger.TButton")
         bar.pack_configure(side="bottom")
         self.router_box.pack(fill="x", side="bottom", pady=(px(8), 0))
+        self.router_ip = None
         frame.pack(fill="both", expand=True)
         return card
 
@@ -325,6 +366,44 @@ class NetworkMixin:
         labels = {net.HIGH: _("High"), net.MEDIUM: _("Medium"), net.LOW: _("Low"), net.INFO: _("Fine")}
         for level, text in router_findings:
             self._text(self.router_box, f"{labels[level]}:  {text}", style="CardSub.TLabel", wrap=820)
+        router = next((d.address for d in devices if d.is_router), None)
+        self.router_ip = router
+        if router:
+            self._router_checklist(router)
+
+    def _router_checklist(self, router):
+        """The one thing NoorCleaner cannot check for you: the router's own password. It never tries to log in."""
+        px = self.theme.px
+        self.router_identity = ttk.Label(self.router_box, text="", style="Hint.TLabel")
+        self.router_identity.pack(anchor=self.W, pady=(px(6), 0))
+        threading.Thread(target=lambda: self.events.put(("net_router", net.router_identity(router))),
+                         daemon=True).start()
+        row = self._row(self.router_box, pady=(px(6), 0))
+        self._button(row, _("Open my router's page"), lambda: self._open_router(router), gap=12)
+        done = self.config.get("router_password_changed")
+        self.router_done = tk.BooleanVar(value=bool(done))
+        ttk.Checkbutton(row, text=_("I changed my router's password and turned off remote management"),
+                        variable=self.router_done, style="Card.TCheckbutton", command=self.toggle_router_done).pack(
+            side=self.L)
+        self._bullets(self.router_box, (
+            _("Log in to the router page (the password is often on a sticker under the router)."),
+            _("Change the admin password to a long, new one. Change the Wi-Fi password too."),
+            _("Turn off remote management / remote administration, WPS and UPnP if you do not need them."),
+            _("Install the router's firmware update if one is offered.")), style="CardSub.TLabel", wrap=820)
+
+    def _show_router_identity(self, text):
+        label = getattr(self, "router_identity", None)
+        if label is not None and label.winfo_exists():
+            label.config(text=_("Your router's login page calls itself: {name}").format(name=text) if text
+                         else _("Could not read the router's login page."))
+
+    def _open_router(self, router):
+        import webbrowser
+        webbrowser.open(f"http://{router}/")
+
+    def toggle_router_done(self):
+        self.config["router_password_changed"] = time.strftime("%Y-%m-%d") if self.router_done.get() else ""
+        settings.save(self.config)
 
     def mark_known(self):
         chosen = [d for d in self._selected_items(self.devices_tree) if d.mac]
@@ -361,7 +440,8 @@ class NetworkMixin:
                                         style="CardSub.TLabel")
         self.history_status.pack(side=self.L)
         frame, self.history_tree = make_tree(card, [("time", _("When"), 140), ("address", _("Address"), 170),
-                                                    ("what", _("What happened"), 480), ("action", _("Action"), 110)])
+                                                    ("country", _("Country"), 140),
+                                                    ("what", _("What happened"), 380), ("action", _("Action"), 100)])
         bar = self._row(card, pady=(px(10), 0))
         self._button(bar, _("Clear history"), self.clear_history)
         bar.pack_configure(side="bottom")
@@ -375,7 +455,8 @@ class NetworkMixin:
         actions = {"detected": _("Noticed"), "blocked": _("Blocked")}
         for e in reversed(entries):
             when = time.strftime("%Y-%m-%d %H:%M", time.localtime(e.get("time", 0)))
-            self.history_tree.insert("", "end", values=(when, e.get("address", ""), e.get("reason", ""),
+            self.history_tree.insert("", "end", values=(when, e.get("address", ""), e.get("country") or "-",
+                                                        e.get("reason", ""),
                                                         actions.get(e.get("action"), e.get("action", ""))))
         self.history_status.config(text=_("Events: {count}").format(count=len(entries)) if entries
                                    else _("Nothing yet. Attacks NoorCleaner notices will be listed here."))
@@ -426,7 +507,7 @@ class NetworkMixin:
         lines = []
         for s in suspects:
             key = (s.address, s.reason)
-            net.log_event(s.address, s.reason, s.count)
+            net.log_event(s.address, s.reason, s.count, country=self.country_cache.get(s.address, ""))
             if key not in self._monitor_seen:
                 self._monitor_seen.add(key)
                 lines.append(f"{s.address}: {s.reason} ({s.count})")
@@ -436,7 +517,12 @@ class NetworkMixin:
                 for protocol, port in sorted(risky - self._monitor_ports):
                     lines.append(_("A risky door just opened: port {port} ({kind}).").format(port=port, kind=protocol))
             self._monitor_ports = risky
-        if lines:
+        if lines and self.root.state() == "withdrawn":  # running in the tray: a notification, no window
+            self.sound.threat()
+            self.tray.notify(_("NoorCleaner noticed something:") + "\n" + "\n".join(lines[:3]),
+                             _("Possible attack"))
+            self.load_history()
+        elif lines:
             self.sound.threat()
             self.side_status.config(text=_("Warning: possible attack - see Network & ports"))
             self.show_view("network")

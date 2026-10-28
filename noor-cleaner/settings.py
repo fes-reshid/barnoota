@@ -18,6 +18,9 @@ DEFAULTS = {
     "old_download_days": 90,
     "scan_sound": True,        # soft sounds while scanning
     "live_monitor": False,     # watch for network attacks while the app is open
+    "country_lookup": False,   # ask an online service which country an attacker is in (opt-in)
+    "router_password_changed": "",  # date the user ticked "I changed my router password"
+    "tray_autostart": False,   # start hidden in the tray when signing in to Windows
     "known_devices": [],       # hardware IDs of devices on the home network the user said are theirs
 }
 

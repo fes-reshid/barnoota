@@ -1,6 +1,7 @@
 """The "Privacy tools" page: camera and microphone use, password-leak check and secure delete."""
 
 import os
+import subprocess
 import threading
 import tkinter as tk
 from tkinter import filedialog, ttk
@@ -169,6 +170,10 @@ class PrivacyMixin:
         self._bullets(card, (_("On SSDs and USB sticks, the drive may keep old copies that no program can reach. "
                                "For the strongest protection, turn on BitLocker encryption too."),),
                       style="CardSub.TLabel", wrap=760)
+        row = self._row(card, pady=(px(6), 0))
+        self._button(row, _("Open BitLocker"), lambda: subprocess.Popen(["control", "/name",
+                                                                         "Microsoft.BitLockerDriveEncryption"]))
+        self._button(row, _("Tell my SSD to discard deleted data (TRIM)"), self.trim_now)
         return card
 
     def _add_shred_path(self, path):
@@ -200,6 +205,19 @@ class PrivacyMixin:
         if not self.ask(_("Permanently wipe {count} item(s)? Nothing can bring them back.").format(count=len(paths)),
                         danger=True):
             return
+        flash = []
+        if core.IS_WINDOWS:
+            self.shred_status.config(text=_("Checking the drive type..."))
+            self.root.update_idletasks()
+            kinds = privacy.drive_kinds(privacy.drive_letters(paths))
+            flash = [letter for letter, kind in kinds.items() if kind != privacy.HDD]
+        if flash and not self.ask(_("Drive {drives} is an SSD, a USB stick or a drive Windows could not identify. "
+                                    "Overwriting cannot reach every copy on those. NoorCleaner will wipe the files "
+                                    "and then tell the drive to discard the freed space (TRIM), which is the best that "
+                                    "can be done. For full protection, also turn on BitLocker. Continue?").format(
+                                        drives=", ".join(f"{l}:" for l in flash)), danger=True):
+            self.shred_status.config(text="")
+            return
         passes = self.shred_passes.get()
         self.shred_status.config(text=_("Wiping..."))
 
@@ -207,23 +225,44 @@ class PrivacyMixin:
             try:
                 done, problems = privacy.shred_paths(
                     paths, passes, on_progress=lambda d, t: self.events.put(("priv_shred_progress", d, t)))
-                self.events.put(("priv_shred", done, problems))
             except privacy.ShredError as exc:
-                self.events.put(("priv_shred", 0, [str(exc)]))
+                self.events.put(("priv_shred", 0, [str(exc)], ""))
+                return
+            notes = []
+            for letter in flash:  # tell SSDs to discard the freed space
+                try:
+                    privacy.trim_drive(letter)
+                    notes.append(_("Drive {drive}: TRIM done.").format(drive=f"{letter}:"))
+                except Exception as exc:
+                    notes.append(_("Drive {drive}: TRIM did not run ({details}).").format(drive=f"{letter}:",
+                                                                                          details=exc))
+            self.events.put(("priv_shred", done, problems, "\n".join(notes)))
 
         self._start_worker(work)
 
     def _shred_progress(self, done, total):
         self.shred_status.config(text=_("Wiped {done} of {total} files...").format(done=done, total=total))
 
-    def _show_shred(self, done, problems):
+    def _show_shred(self, done, problems, notes=""):
         clear_tree(self.shred_tree)
         self.shred_status.config(text=_("Files wiped: {count}").format(count=done))
         self.refresh_drives()
+        extra = ("\n\n" + notes) if notes else ""
         if problems:
-            self.warn(_("Some could not be wiped:") + "\n\n" + "\n".join(problems[:10]))
+            self.warn(_("Some could not be wiped:") + "\n\n" + "\n".join(problems[:10]) + extra)
         else:
-            self.info(_("Files wiped: {count}").format(count=done))
+            self.info(_("Files wiped: {count}").format(count=done) + extra)
+
+    def trim_now(self):
+        if not self.admin_gate(_("Telling an SSD to discard deleted data needs administrator rights.")):
+            return
+        letter = self.wipe_drive.get().rstrip(":\\")
+        try:
+            privacy.trim_drive(letter)
+        except Exception as exc:
+            self.error(str(exc))
+            return
+        self.info(_("Drive {drive}: TRIM done.").format(drive=f"{letter}:"))
 
     def start_wipe_free(self):
         try:

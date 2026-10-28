@@ -24,6 +24,7 @@ import scan_fx
 import scanner_core as core
 import settings
 import theme
+import tray
 from i18n import _
 from ui_base import (APP_NAME, VERSION, BaseApp, clear_tree, human_size, is_admin, make_tree, open_location,
                      share_text)
@@ -40,7 +41,7 @@ MAX_LISTED_FILES = 5000  # rows shown at once in "All files"; search narrows it 
 
 class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SecurityMixin,
                      PrivacyMixin, SettingsMixin):
-    def __init__(self, root, config):
+    def __init__(self, root, config, start_hidden=False):
         self.root = root
         self.config = config
         self._setup_direction()
@@ -67,6 +68,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.views, self.nav_buttons = {}, {}
         self.group_trees = []         # trees that show sets (duplicates, similar photos)
         self.sound = scan_fx.ScanSound(bool(config.get("scan_sound", True)))
+        icon = os.path.join(getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__))), "assets", "icon.ico")
+        self.tray = tray.Tray(self.events, icon, _("Open NoorCleaner"), _("Quit"))
         self.fx_index = 0             # how many of all_files the scan screen has shown
         self.fx_running = False
         self.scan_total = 0
@@ -80,6 +83,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.root.after(150, self.poll)
         if self.monitor_var.get():
             self.root.after(5000, self._monitor_tick)
+        if start_hidden and self.monitor_var.get() and self.tray.start():
+            self.root.withdraw()  # started with Windows: sit in the tray and watch
 
     # ------------------------------------------------------------------ shell
 
@@ -138,7 +143,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
                               "junk_size": self._show_junk_size, "junk_done": self._junk_done,
                               "dup_progress": self._dup_progress, "dup_done": self._show_duplicates,
                               "downloads_done": self._show_old_downloads, "photo_progress": self._photo_progress,
-                              "photos_done": self._show_similar_photos, "worker_error": self._worker_error})
+                              "photos_done": self._show_similar_photos, "worker_error": self._worker_error,
+                              "tray": self._tray_command})
         self._scan_view()
         self._show_free_space()
         self._space_view()
@@ -1236,12 +1242,31 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
             self.error(str(exc))
 
     def on_close(self):
-        if self.scan_thread and self.scan_thread.is_alive():
+        scanning = self.scan_thread and self.scan_thread.is_alive()
+        if self.monitor_var.get() and not scanning and self.tray.start():
+            self.root.withdraw()  # live protection keeps watching from the tray
+            self.tray.notify(_("NoorCleaner is still protecting your PC. Right-click its icon to open or quit."))
+            return
+        if scanning:
             if not self.ask(_("A scan is running. Stop it and close NoorCleaner?")):
                 return
             self.scanner.stop()
+        self.quit_app()
+
+    def quit_app(self):
+        if self.scanner and self.scan_thread and self.scan_thread.is_alive():
+            self.scanner.stop()
         self.sound.stop()
+        self.tray.stop()
         self.root.destroy()
+
+    def _tray_command(self, action):
+        if action == "open":
+            self.root.deiconify()
+            self.root.lift()
+            self.root.focus_force()
+        elif action == "quit":
+            self.quit_app()
 
 
 def main():
@@ -1264,7 +1289,7 @@ def main():
         config["language"] = choose_language_first_run(root)
         settings.save(config)
     i18n.set_language(config["language"])
-    NoorCleanerApp(root, config)
+    NoorCleanerApp(root, config, start_hidden="--tray" in sys.argv)
     root.mainloop()
 
 
