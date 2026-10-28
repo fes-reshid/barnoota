@@ -7,8 +7,8 @@ nothing to install. On other systems the sounds are simply skipped.
 
 import io
 import itertools
-import math
 import os
+import random
 import struct
 import sys
 import time
@@ -27,36 +27,74 @@ AMBER = "#ffc857"
 RED = "#ff5c5c"
 
 RATE = 22050
-TICK_NOTES = (1320, 1568, 1760, 1976, 2349)  # a pentatonic-ish run, so the ticks sound like a machine thinking
 MAX_LINES = 400
 
 
-def _tone(notes, millis, volume=0.35):
-    """WAV bytes for the given notes played one after another, each fading out."""
-    frames = bytearray()
-    for note in notes:
-        count = int(RATE * millis / 1000)
-        for i in range(count):
-            fade = (1 - i / count) ** 2
-            frames += struct.pack("<h", int(32767 * volume * fade * math.sin(2 * math.pi * note * i / RATE)))
+def _wav(samples):
     out = io.BytesIO()
     with wave.open(out, "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(RATE)
-        w.writeframes(bytes(frames))
+        w.writeframes(b"".join(struct.pack("<h", max(-32767, min(32767, int(v * 32767)))) for v in samples))
     return out.getvalue()
 
 
+def _chirp(f1, f2, millis, volume=0.3, shape="square"):
+    """Samples of a digital blip that slides from pitch f1 to f2 and fades out."""
+    count = int(RATE * millis / 1000)
+    phase, samples = 0.0, []
+    for i in range(count):
+        f = f1 * (f2 / f1) ** (i / count)
+        phase += f / RATE
+        frac = phase % 1.0
+        wave_value = (1.0 if frac < 0.5 else -1.0) if shape == "square" else 2 * frac - 1  # square or saw
+        samples.append(volume * wave_value * (1 - i / count) ** 1.5)
+    return samples
+
+
+def _click(volume=0.35, millis=9, seed=1):
+    """A short burst of noise, like a key being struck."""
+    rng = random.Random(seed)
+    count = int(RATE * millis / 1000)
+    return [volume * (rng.random() * 2 - 1) * (1 - i / count) ** 2 for i in range(count)]
+
+
+def _mix(*parts):
+    """Plays the (delay_ms, samples) parts on top of each other."""
+    length = max(int(RATE * delay / 1000) + len(samples) for delay, samples in parts)
+    mixed = [0.0] * length
+    for delay, samples in parts:
+        start = int(RATE * delay / 1000)
+        for i, v in enumerate(samples):
+            mixed[start + i] += v
+    return mixed
+
+
+def _tick_sounds():
+    """A few different data-burst ticks: a key click with one or two quick rising chirps."""
+    sounds = []
+    for n in range(6):
+        base = 700 + 260 * n
+        parts = [(0, _click(0.3, 9, n)), (4, _chirp(base, base * 1.7, 30, 0.2))]
+        if n % 2:
+            parts.append((34, _chirp(base * 2, base * 2.7, 22, 0.14)))
+        sounds.append(_wav(_mix(*parts)))
+    return sounds
+
+
 class ScanSound:
-    """Soft ticks while scanning, a rising chime when it finishes and a low double beep for a threat."""
+    """Hacker-style sounds: a boot-up sweep, data-burst ticks while scanning, a rising chirp when it ends and a siren for a threat."""
 
     def __init__(self, enabled=True):
         self.available = winsound is not None
         self.enabled = enabled and self.available
-        self._ticks = itertools.cycle([_tone([n], 22, 0.22) for n in TICK_NOTES]) if self.available else None
-        self._done = _tone([880, 1175, 1568], 120) if self.available else None
-        self._alarm = _tone([330, 262, 330, 262], 110, 0.45) if self.available else None
+        self._ticks = itertools.cycle(_tick_sounds()) if self.available else None
+        self._start = _wav(_chirp(200, 1800, 450, 0.25, "saw")) if self.available else None
+        self._done = _wav(_mix((0, _chirp(500, 1000, 120, 0.3)), (130, _chirp(800, 1600, 120, 0.3)),
+                               (260, _chirp(1200, 2400, 260, 0.3)))) if self.available else None
+        self._alarm = _wav(_mix((0, _chirp(900, 300, 220, 0.4, "saw")), (260, _chirp(900, 300, 220, 0.4, "saw")))
+                           ) if self.available else None
         self._last_tick = 0.0
 
     def _play(self, data):
@@ -77,6 +115,9 @@ class ScanSound:
         if self.enabled and now - self._last_tick > 0.09:
             self._last_tick = now
             self._play(next(self._ticks))
+
+    def started(self):
+        self._play(self._start)
 
     def finished(self):
         self._play(self._done)

@@ -456,6 +456,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.progress.start(12)
         self.screen.begin([os.path.normpath(r) for r in roots])
         self.fx_index = 0
+        self.sound.started()
         if not self.fx_running:
             self.fx_running = True
             self._fx_tick()
