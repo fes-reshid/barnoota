@@ -9,6 +9,7 @@ Run with:  python noor_cleaner.py            (python noor_cleaner.py --remind ru
 import csv
 import os
 import queue
+import shutil
 import sys
 import threading
 import time
@@ -64,6 +65,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.sound = scan_fx.ScanSound(bool(config.get("scan_sound", True)))
         self.fx_index = 0             # how many of all_files the scan screen has shown
         self.fx_running = False
+        self.scan_total = 0
+        self._eta_smooth = None
 
         self._build_ui()
         self.refresh_drives()
@@ -169,7 +172,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.status_pill.pack(anchor=self.W)
         self.status_detail = self._text(status, self._idle_text(), wrap=520, pady=(px(10), px(8)))
         self.progress = ttk.Progressbar(status, mode="indeterminate", style="Green.Horizontal.TProgressbar")
-        self.progress.pack(fill="x", pady=(0, px(12)))
+        self.progress.pack(fill="x", pady=(0, px(6)))
+        self.eta_label = ttk.Label(status, text="", style="Hint.TLabel", justify=self.JUSTIFY)
+        self.eta_label.pack(anchor=self.W, pady=(0, px(8)))
         buttons = self._row(status)
         self.start_btn = self._button(buttons, _("Start scan"), self.start_scan, style="Primary.TButton", gap=8)
         self.stop_btn = self._button(buttons, _("Stop"), self.stop_scan, state="disabled")
@@ -188,7 +193,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
                 row=row + 1, column=column, sticky="n", pady=(0, px(4)))
             self.metric_values[key] = value
 
-        self.screen = scan_fx.ScanScreen(view, px, height=6)
+        self.screen = scan_fx.ScanScreen(view, px, height=5)
         self.screen.pack(fill="x", **self._gap())
         self.screen.idle(VERSION)
 
@@ -453,13 +458,58 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.scan_thread.start()
         self.start_btn.config(state="disabled")
         self.stop_btn.config(state="normal")
-        self.progress.start(12)
+        self.scan_total = self._estimate_total(roots)
+        self._eta_smooth = None
+        if self.scan_total:  # whole drives: the bar can show real progress
+            self.progress.config(mode="determinate", maximum=100, value=0)
+            self.eta_label.config(text=_("Working out the time left..."))
+        else:
+            self.progress.config(mode="indeterminate")
+            self.progress.start(12)
+            self.eta_label.config(text="")
         self.screen.begin([os.path.normpath(r) for r in roots])
         self.fx_index = 0
         self.sound.started()
         if not self.fx_running:
             self.fx_running = True
             self._fx_tick()
+
+    @staticmethod
+    def _estimate_total(roots):
+        """Bytes in use on the drives being scanned, or 0 when a folder is scanned (its size is not known)."""
+        total = 0
+        for root in roots:
+            if root not in core.list_drives():
+                return 0
+            try:
+                total += shutil.disk_usage(root).used
+            except OSError:
+                return 0
+        return total
+
+    @staticmethod
+    def _format_duration(seconds):
+        minutes = max(1, round(seconds / 60))
+        if seconds < 60:
+            return _("less than a minute")
+        if minutes >= 60:
+            return _("{hours} h {minutes} min").format(hours=minutes // 60, minutes=minutes % 60)
+        return _("{minutes} min").format(minutes=minutes)
+
+    def _update_eta(self, elapsed, scanned):
+        """Progress is the share of the used space already read; the time left follows from the speed so far."""
+        share = min(scanned / self.scan_total, 0.99)
+        self.progress.config(value=share * 100)
+        if elapsed < 8 or share < 0.01:
+            return
+        remaining = elapsed * (1 - share) / share
+        self._eta_smooth = remaining if self._eta_smooth is None else 0.7 * self._eta_smooth + 0.3 * remaining
+        if share >= 0.98:
+            text = _("{percent}% done  ·  almost finished").format(percent=int(share * 100))
+        else:
+            text = _("{percent}% done  ·  about {time} left").format(percent=int(share * 100),
+                                                                     time=self._format_duration(self._eta_smooth))
+        self.eta_label.config(text=text)
 
     def _fx_tick(self):
         """Streams the files the scan has just checked onto the green screen, a few lines at a time."""
@@ -510,7 +560,10 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
             self.metric_values["corrupt"].config(text=str(len(self.corrupt_tree.paths)))
             if elapsed != getattr(self, "_last_size_update", None):  # adding up sizes once a second is plenty
                 self._last_size_update = elapsed
-                self.metric_values["space"].config(text=human_size(sum(e.size for e in files)))
+                scanned = sum(e.size for e in files)
+                self.metric_values["space"].config(text=human_size(scanned))
+                if self.scan_total:
+                    self._update_eta(elapsed, scanned)
             self.side_status.config(text=_("Scanning... {files} files  ·  {minutes}m {seconds}s").format(
                 files=f"{self.scanner.files_seen:,}", minutes=elapsed // 60, seconds=f"{elapsed % 60:02d}"))
         self.root.after(150, self.poll)
@@ -548,6 +601,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
 
     def _scan_done(self):
         self.progress.stop()
+        if self.scan_total and not self.scanner.cancel.is_set():
+            self.progress.config(value=100)
+        self.eta_label.config(text="")
         self.start_btn.config(state="normal")
         self.stop_btn.config(state="disabled")
         s = self.scanner
@@ -564,6 +620,9 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         if s.skipped_dirs:
             summary += " " + _("Protected folders that could not be opened: {count}.").format(
                 count=f"{s.skipped_dirs:,}")
+            if core.IS_WINDOWS and not is_admin():
+                summary += " " + _("NoorCleaner is not running as administrator; use 'Run as admin' (bottom left) "
+                                   "to include them.")
         if s.cancel.is_set():
             self.status_pill.config(text=_("Stopped"), style="PillOff.TLabel")
         elif threats:
@@ -1127,6 +1186,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self._save_csv("duplicates", [_("Set"), _("File"), _("Size (bytes)")], rows)
 
     def repair_windows(self):
+        if not self.admin_gate(_("Repairing Windows system files needs administrator rights.")):
+            return
         if not self.ask(_("This opens Microsoft's own repair tools (DISM and System File Checker) as administrator. "
                           "They fix corrupted Windows system files and can take 15-30 minutes.") + "\n\n"
                         + _("Start the repair now?")):

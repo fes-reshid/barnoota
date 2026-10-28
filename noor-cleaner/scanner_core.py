@@ -390,8 +390,21 @@ def _startup_folders():
 _STARTUP_FOLDERS = _startup_folders()
 
 
-def check_threat(path, size, signatures, cancel=None):
-    """Returns (kind, reason) for a threat or suspicious file, or None."""
+DEVELOPER_FOLDERS = ("node_modules", ".git", "site-packages", "__pycache__", ".venv", "venv")
+
+
+def in_developer_folder(path):
+    """True for files inside package and project folders (node_modules, .git, Python libraries...)."""
+    parts = os.path.normcase(path).replace("/", "\\").split("\\")
+    return any(folder in parts[:-1] for folder in DEVELOPER_FOLDERS)
+
+
+def check_threat(path, size, signatures, cancel=None, guess=True):
+    """Returns (kind, reason) for a threat or suspicious file, or None.
+
+    guess=False keeps only the exact checks (test file, known malware hashes) and skips the
+    "looks disguised" ones, which are noisy inside developer folders.
+    """
     name = os.path.basename(path)
     ext = os.path.splitext(name)[1].lower()
     try:
@@ -407,6 +420,8 @@ def check_threat(path, size, signatures, cancel=None):
         if getattr(exc, "winerror", None) in _VIRUS_WINERRORS:
             return THREAT, _("Windows Security blocked this file because it contains a virus")
 
+    if not guess:
+        return None
     if "\u202e" in name:
         return SUSPICIOUS, _("Name uses a hidden right-to-left character to disguise its real type")
     if ext in RUNNABLE_TYPES:
@@ -586,12 +601,13 @@ class Scanner:
     def _scan_file(self, path, size, mtime):
         self.files_seen += 1
         self.on_file(FileEntry(path, size, mtime))
+        developer_files = in_developer_folder(path)  # thousands of odd-looking files that are normal there
         if self.check_threats:
-            hit = check_threat(path, size, self.signatures, self.cancel)
+            hit = check_threat(path, size, self.signatures, self.cancel, guess=not developer_files)
             if hit:
                 self.on_finding(Finding(path, hit[0], hit[1], size))
                 return
-        if self.check_corrupted:
+        if self.check_corrupted and not developer_files:
             try:
                 problem = check_corruption(path, size, self.deep, self.cancel)
             except BlockedAsVirus:

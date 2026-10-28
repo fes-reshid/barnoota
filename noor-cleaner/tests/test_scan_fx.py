@@ -27,6 +27,35 @@ class ScanFxTests(unittest.TestCase):
         sound.set_enabled(False)
         self.assertFalse(sound.enabled)
 
+    def test_sounds_are_played_from_files_not_memory(self):
+        """Windows refuses SND_MEMORY together with SND_ASYNC, which once left the app silent."""
+        played = []
+
+        class FakeWinsound:
+            SND_FILENAME, SND_ASYNC, SND_NODEFAULT, SND_MEMORY, SND_PURGE = 0x20000, 1, 2, 4, 0x40
+
+            @staticmethod
+            def PlaySound(sound, flags):
+                played.append((sound, flags))
+
+        real = scan_fx.winsound
+        scan_fx.winsound = FakeWinsound
+        try:
+            sound = scan_fx.ScanSound(True)
+            self.assertTrue(sound.enabled)
+            sound.started()
+            sound.threat()
+            sound.finished()
+            sound._quiet_until = 0
+            sound.tick()
+        finally:
+            scan_fx.winsound = real
+        self.assertEqual(len(played), 4)
+        for path, flags in played:
+            self.assertTrue(os.path.isfile(path), path)
+            self.assertTrue(flags & FakeWinsound.SND_FILENAME)
+            self.assertFalse(flags & FakeWinsound.SND_MEMORY)
+
 
 if __name__ == "__main__":
     unittest.main()

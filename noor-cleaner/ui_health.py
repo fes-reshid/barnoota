@@ -37,7 +37,8 @@ class HealthMixin:
         self._button(row, _("Check this drive"), self.check_drive)
 
     def load_health(self):
-        if self._busy():
+        if self._busy() or not self.admin_gate(_("Temperature, wear and error readings of your drives need "
+                                                 "administrator rights.")):
             return
         self.health_status.config(text=_("Asking Windows..."))
 
@@ -95,6 +96,8 @@ class HealthMixin:
 
     def check_drive(self):
         drive = self.chkdsk_drive.get()
+        if not self.admin_gate(_("Checking a drive for errors needs administrator rights.")):
+            return
         if not self.ask(_("Check drive {drive} for errors now? A window opens and shows the result.").format(drive=drive)):
             return
         try:

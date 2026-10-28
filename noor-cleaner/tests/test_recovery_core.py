@@ -139,6 +139,16 @@ class WinfrTests(unittest.TestCase):
             with self.assertRaises(ValueError):  # never recover onto the same drive
                 recovery.winfr_command("C:", r"C:\Recovered", "*.pdf")
 
+    def test_winfr_command_can_search_one_folder(self):
+        dest = r"E:\Recovered" if os.name == "nt" else "/tmp/Recovered"
+        cmd = recovery.winfr_command("C:", dest, "*.docx holiday", folder=r"C:\Users\Me\Documents")
+        self.assertEqual(cmd, f'winfr C: "{dest}" /regular /n "\\Users\\Me\\Documents\\*.docx" '
+                              f'/n "\\Users\\Me\\Documents\\*holiday*"')
+        everything = recovery.winfr_command("C:", dest, "", folder="C:\\Users\\Me\\Documents\\")
+        self.assertTrue(everything.endswith('/n "\\Users\\Me\\Documents\\"'))
+        with self.assertRaises(ValueError):
+            recovery.winfr_command("C:", dest, "*.pdf", folder=r"D:\Photos")
+
     def test_unique_target(self):
         with tempfile.TemporaryDirectory() as root:
             path = os.path.join(root, "a.txt")

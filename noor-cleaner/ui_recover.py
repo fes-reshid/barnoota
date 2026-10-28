@@ -37,6 +37,7 @@ class RecoverMixin:
         self.bin_status = ttk.Label(top, text=_("Files you deleted normally wait here until the bin is emptied."),
                                     style="CardSub.TLabel")
         self.bin_status.pack(side=self.L)
+        self.bin_filter = self._search_box(card, self._fill_bin)
         frame, self.bin_tree = make_tree(card, [("name", _("File"), 220), ("size", _("Size"), 85),
                                                 ("deleted", _("Deleted on"), 140),
                                                 ("original", _("Original location"), 420)])
@@ -61,9 +62,11 @@ class RecoverMixin:
         ttk.Entry(row2, textvariable=self.points_folder, width=48).pack(side=self.L, padx=px(8))
         self._button(row2, _("Browse..."), lambda: self._browse_into(self.points_folder), gap=8)
         self._button(row2, _("Look for missing files"), self.find_missing, style="Primary.TButton")
+        self.points_filter = self._search_box(card, self._fill_missing)
         frame, self.points_tree = make_tree(card, [("name", _("File"), 220), ("size", _("Size"), 85),
                                                    ("modified", _("Modified"), 140), ("folder", _("Was in"), 420)])
         self.shadows = []
+        self.missing_all = []
         self._restore_bar(card, self.points_tree, self.restore_from_point).pack(fill="x", side="bottom",
                                                                                pady=(px(10), 0))
         frame.pack(fill="both", expand=True)
@@ -83,12 +86,15 @@ class RecoverMixin:
         other = next((d for d in drives if d != self.deep_source.get()), "")
         self.deep_dest = tk.StringVar(value=os.path.join(other + os.sep, "Recovered files") if other else "")
         self.deep_thorough = tk.BooleanVar(value=False)
+        self.deep_folder = tk.StringVar()
         rows = ((_("Drive the files were on:"), ttk.Combobox(form, textvariable=self.deep_source, values=drives,
                                                              state="readonly", width=8), None),
                 (_("Look for:"), ttk.Entry(form, textvariable=self.deep_patterns, width=40),
                  _("File types like  *.jpg  or part of a name like  holiday  (separate several with spaces)")),
+                (_("Search only in this folder:"), ttk.Entry(form, textvariable=self.deep_folder, width=40),
+                 _("Optional. Leave empty to search the whole drive.")),
                 (_("Save recovered files to:"), ttk.Entry(form, textvariable=self.deep_dest, width=40),
-                 _("Must be a different drive, such as a USB stick, so nothing gets overwritten")))
+                 _("Any folder on a different drive, such as a USB stick, so nothing gets overwritten")))
         for r, (label, widget, hint) in enumerate(rows):
             ttk.Label(form, text=label, style="Card.TLabel").grid(row=2 * r, column=self.col(0, 3), sticky=self.W,
                                                                   pady=(px(6), 0))
@@ -96,9 +102,10 @@ class RecoverMixin:
             if hint:
                 ttk.Label(form, text=hint, style="Hint.TLabel").grid(row=2 * r + 1, column=self.col(1, 3),
                                                                      sticky=self.W, padx=px(10))
-        ttk.Button(form, text=_("Browse..."), style="Ghost.TButton",
-                   command=lambda: self._browse_into(self.deep_dest)).grid(row=4, column=self.col(2, 3),
-                                                                           sticky=self.W, pady=(px(6), 0))
+        for row, variable in ((4, self.deep_folder), (6, self.deep_dest)):
+            ttk.Button(form, text=_("Browse..."), style="Ghost.TButton",
+                       command=lambda v=variable: self._browse_into(v)).grid(row=row, column=self.col(2, 3),
+                                                                             sticky=self.W, pady=(px(6), 0))
         ttk.Checkbutton(card, text=_("Thorough mode - slower, also finds files deleted longer ago or on USB sticks"),
                         variable=self.deep_thorough, style="Card.TCheckbutton").pack(anchor=self.W, pady=(px(10), 0))
         bar = self._row(card, pady=(px(14), px(14)))
@@ -112,6 +119,23 @@ class RecoverMixin:
                              _("A window opens where Windows File Recovery asks you to confirm (press y) and shows "
                                "its progress.")), wrap=820)
         return card
+
+    def _search_box(self, card, refill):
+        """A 'Search' row above a list: typing narrows the list to rows whose name or folder contains the text."""
+        row = self._row(card, pady=(0, self.theme.px(8)))
+        ttk.Label(row, text=_("Search:"), style="Card.TLabel").pack(side=self.L)
+        text = tk.StringVar()
+        entry = ttk.Entry(row, textvariable=text, width=36)
+        entry.pack(side=self.L, padx=self.pad(self.theme.px(8)))
+        ttk.Label(row, text=_("Shows only files whose name or folder contains this text."),
+                  style="Hint.TLabel").pack(side=self.L)
+        text.trace_add("write", lambda *_a: refill())
+        return text
+
+    @staticmethod
+    def _matches(query, *texts):
+        query = query.strip().lower()
+        return not query or any(query in t.lower() for t in texts)
 
     def _restore_target(self, to_folder):
         if not to_folder:
@@ -137,18 +161,24 @@ class RecoverMixin:
         self._start_worker(lambda: self.events.put(("bin_done", recovery.list_recycle_bin())))
 
     def _show_recycle_bin(self, items):
+        self.bin_all = items
+        self._fill_bin()
+        total = sum(i.size for i in items)
+        self.bin_status.config(text=_("Items in the Recycle Bin: {count} ({size})").format(
+            count=f"{len(items):,}", size=human_size(total)) if items
+            else _("The Recycle Bin is empty. Try 'Restore points' or 'Permanently deleted'."))
+
+    def _fill_bin(self):
         tree = self.bin_tree
         clear_tree(tree)
-        for item in items:
+        for item in getattr(self, "bin_all", []):
+            if not self._matches(self.bin_filter.get(), item.original):
+                continue
             name = ntpath.basename(item.original) + ("  " + _("(folder)") if item.is_folder else "")
             iid = tree.insert("", "end", values=(name, human_size(item.size), recovery.format_time(item.deleted),
                                                  ntpath.dirname(item.original)))
             tree.items[iid] = item
             tree.sizes[iid] = item.size
-        total = sum(i.size for i in items)
-        self.bin_status.config(text=_("Items in the Recycle Bin: {count} ({size})").format(
-            count=f"{len(items):,}", size=human_size(total)) if items
-            else _("The Recycle Bin is empty. Try 'Restore points' or 'Permanently deleted'."))
 
     def restore_from_bin(self, to_folder):
         chosen = self._selected_items(self.bin_tree)
@@ -171,7 +201,7 @@ class RecoverMixin:
     # ------------------------------------------------------------------ restore points
 
     def load_restore_points(self):
-        if self._busy():
+        if self._busy() or not self.admin_gate(_("Listing restore points needs administrator rights.")):
             return
         self.points_status.config(text=_("Looking for restore points..."))
 
@@ -229,14 +259,21 @@ class RecoverMixin:
             seen=f"{seen:,}", missing=f"{missing:,}"))
 
     def _show_missing(self, items):
+        self.missing_all = sorted(items, key=lambda i: i.mtime, reverse=True)
+        self._fill_missing()
+        self.points_status.config(text=_("Files in the restore point that are gone now: {count}").format(
+            count=f"{len(items):,}") if items else _("Nothing missing: every file in the restore point is still here."))
+
+    def _fill_missing(self):
         tree = self.points_tree
-        for item in sorted(items, key=lambda i: i.mtime, reverse=True):
+        clear_tree(tree)
+        for item in self.missing_all:
+            if not self._matches(self.points_filter.get(), item.live_path):
+                continue
             iid = tree.insert("", "end", values=(os.path.basename(item.live_path), human_size(item.size),
                                                  recovery.format_time(item.mtime), os.path.dirname(item.live_path)))
             tree.items[iid] = item
             tree.sizes[iid] = item.size
-        self.points_status.config(text=_("Files in the restore point that are gone now: {count}").format(
-            count=f"{len(items):,}") if items else _("Nothing missing: every file in the restore point is still here."))
 
     def restore_from_point(self, to_folder):
         chosen = self._selected_items(self.points_tree)
@@ -255,10 +292,8 @@ class RecoverMixin:
             except Exception as exc:
                 failed.append(f"{os.path.basename(item.live_path)}: {exc}")
         if target is None:  # back in place, so no longer missing
-            for iid, item in list(self.points_tree.items.items()):
-                if item.live_path in restored:
-                    self.points_tree.delete(iid)
-                    del self.points_tree.items[iid]
+            self.missing_all = [i for i in self.missing_all if i.live_path not in restored]
+            self._fill_missing()
         self._report_restore(done, failed, target)
 
     # ------------------------------------------------------------------ Windows File Recovery
@@ -272,7 +307,8 @@ class RecoverMixin:
     def start_deep_recovery(self):
         try:
             command = recovery.winfr_command(self.deep_source.get(), self.deep_dest.get().strip(),
-                                             self.deep_patterns.get(), self.deep_thorough.get())
+                                             self.deep_patterns.get(), self.deep_thorough.get(),
+                                             self.deep_folder.get().strip())
         except ValueError as exc:
             self.info(str(exc))
             return
@@ -280,6 +316,8 @@ class RecoverMixin:
             if self.ask(_("Windows File Recovery is not installed yet. It is a free tool from Microsoft.") + "\n\n"
                         + _("Open the Microsoft Store to install it now? Afterwards, press Start recovery again.")):
                 self.get_winfr()
+            return
+        if not self.admin_gate(_("Recovering permanently deleted files needs administrator rights.")):
             return
         if not self.ask(_("NoorCleaner will open Windows File Recovery as administrator with:") + f"\n\n{command}\n\n"
                         + _("Recovered files go to {folder}. Start?").format(folder=self.deep_dest.get())):
