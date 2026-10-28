@@ -224,5 +224,18 @@ class ScannerTests(unittest.TestCase):
             self.assertEqual(len(seen), 1)
 
 
+class DeveloperFolderTests(unittest.TestCase):
+    def test_developer_folders_are_recognised(self):
+        self.assertTrue(core.in_developer_folder(r"C:\code\app\node_modules\x\a.html.js"))
+        self.assertTrue(core.in_developer_folder("/home/me/app/.git/objects/ab"))
+        self.assertFalse(core.in_developer_folder(r"C:\Users\Me\Downloads\node_modules.zip"))
+        self.assertFalse(core.in_developer_folder(r"C:\Users\Me\Documents\invoice.pdf.exe"))
+
+    def test_disguise_guess_skipped_but_exact_checks_kept(self):
+        path = r"C:\Users\Me\Downloads\invoice.pdf.exe"
+        self.assertIsNotNone(core.check_threat(path, 10, {}))
+        self.assertIsNone(core.check_threat(path, 10, {}, guess=False))
+
+
 if __name__ == "__main__":
     unittest.main()

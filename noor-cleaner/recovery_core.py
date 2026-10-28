@@ -257,17 +257,28 @@ def find_winfr():
     return candidate if os.path.exists(candidate) else None
 
 
-def winfr_command(source_drive, destination, patterns, thorough=False):
-    """The Windows File Recovery command line. patterns: e.g. '*.docx, *.pdf' or 'holiday'."""
+def winfr_command(source_drive, destination, patterns, thorough=False, folder=""):
+    """The Windows File Recovery command line. patterns: e.g. '*.docx, *.pdf' or 'holiday'.
+
+    folder (optional) limits the search to one folder of the source drive, e.g. C:\\Users\\Me\\Documents.
+    """
     source = os.path.splitdrive(source_drive)[0] or source_drive.rstrip(":\\") + ":"
     if os.path.splitdrive(os.path.abspath(destination))[0].lower() == source.lower():
         raise ValueError(_("Recovered files must be saved to a different drive than the one you recover from, "
                            "or they could overwrite the very files you are trying to get back."))
+    where = ""
+    if folder:
+        drive, rest = ntpath.splitdrive(folder)
+        if drive and drive.lower() != source.lower():
+            raise ValueError(_("The folder to search must be on the drive {drive}.").format(drive=source))
+        where = "\\" + rest.strip("\\/").replace("/", "\\") + "\\" if rest.strip("\\/") else "\\"
     filters = []
     for pattern in patterns.replace(",", " ").split():
         if not any(ch in pattern for ch in "*?\\"):
             pattern = f"*{pattern}*"
-        filters += ["/n", pattern]
+        filters += ["/n", f'"{where}{pattern}"' if where else pattern]
+    if where and not filters:
+        filters = ["/n", f'"{where}"']  # everything in that folder
     if not filters:
         raise ValueError(_("Type what to look for, for example  *.docx  or  holiday"))
     parts = ["winfr", source, f'"{destination}"', "/extensive" if thorough else "/regular"] + filters

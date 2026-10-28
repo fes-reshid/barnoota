@@ -1,8 +1,8 @@
 """The "hacking style" scan screen: a green terminal that streams the files being checked,
 and soft computer sounds that play while NoorCleaner scans.
 
-Sounds are tiny tones made in memory and played with winsound, so there are no sound files and
-nothing to install. On other systems the sounds are simply skipped.
+Sounds are tiny tones the app makes itself and plays with winsound, so there is nothing to install.
+On other systems the sounds are simply skipped.
 """
 
 import io
@@ -11,6 +11,7 @@ import os
 import random
 import struct
 import sys
+import tempfile
 import time
 import tkinter as tk
 import wave
@@ -84,24 +85,47 @@ def _tick_sounds():
 
 
 class ScanSound:
-    """Hacker-style sounds: a boot-up sweep, data-burst ticks while scanning, a rising chirp when it ends and a siren for a threat."""
+    """Hacker-style sounds: a boot-up sweep, data-burst ticks while scanning, a rising chirp when it ends
+    and a siren for a threat.
+
+    Windows cannot play a sound from memory in the background, so the sounds are written once as small
+    .wav files in the temp folder and played from there.
+    """
 
     def __init__(self, enabled=True):
         self.available = winsound is not None
         self.enabled = enabled and self.available
-        self._ticks = itertools.cycle(_tick_sounds()) if self.available else None
-        self._start = _wav(_chirp(200, 1800, 450, 0.25, "saw")) if self.available else None
-        self._done = _wav(_mix((0, _chirp(500, 1000, 120, 0.3)), (130, _chirp(800, 1600, 120, 0.3)),
-                               (260, _chirp(1200, 2400, 260, 0.3)))) if self.available else None
-        self._alarm = _wav(_mix((0, _chirp(900, 300, 220, 0.4, "saw")), (260, _chirp(900, 300, 220, 0.4, "saw")))
-                           ) if self.available else None
         self._last_tick = 0.0
-
-    def _play(self, data):
-        if not self.enabled:
+        self._quiet_until = 0.0  # ticks wait while a longer sound is still playing
+        self._ticks = self._start = self._done = self._alarm = None
+        if not self.available:
             return
         try:
-            winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
+            folder = os.path.join(tempfile.gettempdir(), "NoorCleaner-sounds")
+            os.makedirs(folder, exist_ok=True)
+            self._ticks = itertools.cycle([self._save(folder, f"tick{n}", data) for n, data in enumerate(_tick_sounds())])
+            self._start = self._save(folder, "start", _wav(_chirp(200, 1800, 450, 0.25, "saw")))
+            self._done = self._save(folder, "done", _wav(_mix((0, _chirp(500, 1000, 120, 0.3)),
+                                                              (130, _chirp(800, 1600, 120, 0.3)),
+                                                              (260, _chirp(1200, 2400, 260, 0.3)))))
+            self._alarm = self._save(folder, "alarm", _wav(_mix((0, _chirp(900, 300, 220, 0.4, "saw")),
+                                                               (260, _chirp(900, 300, 220, 0.4, "saw")))))
+        except OSError:
+            self.available = self.enabled = False  # cannot write the sound files: run silently
+
+    @staticmethod
+    def _save(folder, name, data):
+        path = os.path.join(folder, name + ".wav")
+        with open(path, "wb") as f:
+            f.write(data)
+        return path
+
+    def _play(self, path, seconds=0.0):
+        if not self.enabled or not path:
+            return
+        try:
+            winsound.PlaySound(path, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
+            self._quiet_until = time.monotonic() + seconds
         except (RuntimeError, OSError):
             self.enabled = False  # no sound device: stop trying
 
@@ -112,18 +136,18 @@ class ScanSound:
 
     def tick(self):
         now = time.monotonic()
-        if self.enabled and now - self._last_tick > 0.09:
+        if self.enabled and now - self._last_tick > 0.09 and now > self._quiet_until:
             self._last_tick = now
             self._play(next(self._ticks))
 
     def started(self):
-        self._play(self._start)
+        self._play(self._start, 0.45)
 
     def finished(self):
-        self._play(self._done)
+        self._play(self._done, 0.6)
 
     def threat(self):
-        self._play(self._alarm)
+        self._play(self._alarm, 0.5)
 
     def stop(self):
         if self.available:

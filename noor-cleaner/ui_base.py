@@ -289,6 +289,21 @@ class BaseApp:
         for _iid, path in selected[:5]:
             open_location(path)
 
+    def admin_gate(self, reason):
+        """True to go ahead. When NoorCleaner is not running as administrator, says so, explains what needs
+        it, and offers to restart as administrator (answering No carries on without)."""
+        if not core.IS_WINDOWS or is_admin():
+            return True
+        answer = messagebox.askyesnocancel(
+            APP_NAME, _("NoorCleaner is not running as administrator.") + "\n\n" + reason + "\n\n"
+            + _("Restart as administrator now? Choose No to carry on without."), icon="warning")
+        if answer is None:
+            return False
+        if answer:
+            self.restart_app(as_admin=True)
+            return False
+        return True
+
     def restart_app(self, as_admin=False):
         """Starts a fresh NoorCleaner (optionally as administrator) and closes this one."""
         if self.scan_thread and self.scan_thread.is_alive() or self.worker and self.worker.is_alive():
