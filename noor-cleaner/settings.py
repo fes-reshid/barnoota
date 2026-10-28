@@ -17,6 +17,8 @@ DEFAULTS = {
     "last_reminder": 0,        # unix time the reminder last ran
     "old_download_days": 90,
     "scan_sound": True,        # soft sounds while scanning
+    "live_monitor": False,     # watch for network attacks while the app is open
+    "known_devices": [],       # hardware IDs of devices on the home network the user said are theirs
 }
 
 

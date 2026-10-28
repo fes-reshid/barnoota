@@ -29,6 +29,8 @@ from ui_base import (APP_NAME, VERSION, BaseApp, clear_tree, human_size, is_admi
                      share_text)
 from ui_health import HealthMixin
 from ui_network import NetworkMixin
+from ui_privacy import PrivacyMixin
+from ui_security import SecurityMixin
 from ui_programs import ProgramsMixin
 from ui_recover import RecoverMixin
 from ui_settings import SettingsMixin, choose_language_first_run
@@ -36,7 +38,8 @@ from ui_settings import SettingsMixin, choose_language_first_run
 MAX_LISTED_FILES = 5000  # rows shown at once in "All files"; search narrows it down
 
 
-class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SettingsMixin):
+class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SecurityMixin,
+                     PrivacyMixin, SettingsMixin):
     def __init__(self, root, config):
         self.root = root
         self.config = config
@@ -45,7 +48,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.theme = theme.get_style(root)
         px = self.theme.px
         root.geometry(f"{px(1240)}x{px(820)}")
-        root.minsize(px(1060), px(660))
+        root.minsize(px(1060), px(740))
         root.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.scanner = None
@@ -75,6 +78,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         self.refresh_quarantine()
         self.show_view("scan")
         self.root.after(150, self.poll)
+        if self.monitor_var.get():
+            self.root.after(5000, self._monitor_tick)
 
     # ------------------------------------------------------------------ shell
 
@@ -97,7 +102,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
         pages = (("scan", _("Scan")), ("space", _("What's using space")), ("junk", _("Junk files")),
                  ("dups", _("Duplicates")), ("programs", _("Programs")), ("threats", _("Viruses & threats")),
                  ("corrupt", _("Corrupted files")), ("health", _("Disk health")), ("network", _("Network & ports")),
-                 ("files", _("All files")),
+                 ("security", _("Security check")), ("privacy", _("Privacy tools")), ("files", _("All files")),
                  ("recover", _("Recover deleted files")), ("quarantine", _("Quarantine")), ("settings", _("Settings")))
         self.nav_titles = dict(pages)
         for key, text in pages:
@@ -152,6 +157,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
             finding_cols, show_repair=True)
         self._health_view()
         self._network_view()
+        self._security_view()
+        self._privacy_view()
         self._all_files_view()
         self._recover_view()
         self._quarantine_view()
@@ -1160,7 +1167,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkM
     def _drop_rows(self, paths):
         gone = set(paths)
         for tree in (self.threat_tree, self.corrupt_tree, self.files_tree, self.big_tree, self.downloads_tree,
-                     *self.group_trees):
+                     self.sig_tree, *self.group_trees):
             for iid, path in list(tree.paths.items()):
                 if path in gone:
                     tree.delete(iid)

@@ -19,7 +19,7 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 
 
 def human_size(size):

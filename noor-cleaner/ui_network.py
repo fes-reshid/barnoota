@@ -1,10 +1,13 @@
 """The "Network & ports" page: open ports, who is connected, attack warnings, and blocking."""
 
 import threading
+import time
+import tkinter as tk
 from tkinter import ttk
 
 import network_core as net
 import scanner_core as core
+import settings
 from i18n import _
 from ui_base import clear_tree, is_admin, make_tree, open_location
 
@@ -12,7 +15,12 @@ from ui_base import clear_tree, is_admin, make_tree, open_location
 class NetworkMixin:
     def _network_view(self):
         px = self.theme.px
-        self.handlers.update({"net_done": self._show_network, "blocks_done": self._show_blocks})
+        self.handlers.update({"net_done": self._show_network, "blocks_done": self._show_blocks,
+                              "net_devices": self._show_devices, "net_alert": self._net_alert})
+        self._monitor_seen = set()      # attackers and risky ports already announced, so each is announced once
+        self._monitor_ports = None      # reachable risky ports at the last check
+        self._monitor_busy = False
+        self._monitor_round = 0
         view = self._view("network", _("Network & ports"),
                           _("See which doors your PC has open to the network, who is connected, and block what you "
                             "do not want. Nothing is blocked unless you choose it."))
@@ -25,13 +33,19 @@ class NetworkMixin:
         self.attack_box = ttk.Frame(view)
         self.attack_box.pack(fill="x")
         self.net_suspects = []
+        self.monitor_var = tk.BooleanVar(value=bool(self.config.get("live_monitor", False)))
+        ttk.Checkbutton(top, text=_("Live protection: watch for attacks while NoorCleaner is open and warn me"),
+                        variable=self.monitor_var, style="Card.TCheckbutton", command=self.toggle_monitor).pack(
+            anchor=self.W, pady=(px(8), 0))
         for line in (_("This is a helper, not a full firewall. Keep Windows Firewall and Windows Security turned on."),
                      _("Blocking uses Windows Firewall, so it needs administrator rights. You can undo every block "
                        "under 'Blocked'.")):
             self._text(view, line, style="Sub.TLabel", side="bottom", pady=(px(2), 0))
         self._segments(view, [("ports", _("Open ports"), self._ports_page),
                               ("conns", _("Connections"), self._conns_page),
-                              ("blocks", _("Blocked"), self._blocks_page)])
+                              ("blocks", _("Blocked"), self._blocks_page),
+                              ("devices", _("Devices"), self._devices_page),
+                              ("history", _("History"), self._history_page)])
 
     # ------------------------------------------------------------------ pages
 
@@ -215,6 +229,8 @@ class NetworkMixin:
                 address=address), danger=True):
             return
         if self._blocked(lambda: net.block_address(address)):
+            net.log_event(address, _("Blocked by you"), 0, "blocked")
+            self.load_history()
             self.info(_("{address} is blocked.").format(address=address))
 
     def load_blocks(self):
@@ -242,3 +258,189 @@ class NetworkMixin:
             return
         if self._blocked(lambda: [net.unblock(name) for name in chosen]):
             self.info(_("Removed."))
+
+    # ------------------------------------------------------------------ devices on your network
+
+    def _devices_page(self, parent):
+        px = self.theme.px
+        card = self._card(parent)
+        row = self._row(card, pady=(0, px(8)))
+        self._button(row, _("Find devices"), self.load_devices, style="Primary.TButton", gap=12)
+        self.devices_status = ttk.Label(row, text=_("Phones, TVs and computers on your Wi-Fi. A device you do not "
+                                                    "recognise may be a stranger."), style="CardSub.TLabel")
+        self.devices_status.pack(side=self.L)
+        frame, self.devices_tree = make_tree(card, [("address", _("Address"), 140), ("mac", _("Hardware ID (MAC)"), 190),
+                                                    ("what", _("What"), 220), ("known", _("Status"), 140)])
+        self.router_box = ttk.Frame(card, style="Plain.TFrame")
+        bar = self._row(card, pady=(px(10), 0))
+        self._button(bar, _("This is mine: remember it"), self.mark_known, style="Primary.TButton")
+        self._button(bar, _("Forget"), self.forget_known)
+        self._button(bar, _("Block this device"), self.block_selected_device, style="Danger.TButton")
+        bar.pack_configure(side="bottom")
+        self.router_box.pack(fill="x", side="bottom", pady=(px(8), 0))
+        frame.pack(fill="both", expand=True)
+        return card
+
+    def load_devices(self):
+        if self._busy():
+            return
+        self.devices_status.config(text=_("Looking around your network (about 20 seconds)..."))
+
+        def work():
+            try:
+                devices, router = net.read_devices()
+                self.events.put(("net_devices", devices, net.router_check(router), None))
+            except Exception as exc:
+                self.events.put(("net_devices", [], [], str(exc)))
+
+        self._start_worker(work)
+
+    def _known_devices(self):
+        return set(self.config.get("known_devices") or [])
+
+    def _show_devices(self, devices, router_findings, error):
+        clear_tree(self.devices_tree)
+        for child in self.router_box.winfo_children():
+            child.destroy()
+        if error:
+            self.devices_status.config(text=_("Could not look."))
+            self.warn(error)
+            return
+        known = self._known_devices()
+        new = 0
+        for d in devices:
+            if d.is_this_pc:
+                what, state = _("This PC"), _("You")
+            else:
+                what = _("Your router") if d.is_router else _("Another device")
+                if d.is_router or d.mac in known:
+                    state = _("Known")
+                else:
+                    state = _("New: do you know it?")
+                    new += 1
+            iid = self.devices_tree.insert("", "end", values=(d.address, d.mac or "-", what, state))
+            self.devices_tree.items[iid] = d
+        self.devices_status.config(text=_("Devices found: {count}  ·  not yet marked as yours: {new}").format(
+            count=len(devices), new=new))
+        labels = {net.HIGH: _("High"), net.MEDIUM: _("Medium"), net.LOW: _("Low"), net.INFO: _("Fine")}
+        for level, text in router_findings:
+            self._text(self.router_box, f"{labels[level]}:  {text}", style="CardSub.TLabel", wrap=820)
+
+    def mark_known(self):
+        chosen = [d for d in self._selected_items(self.devices_tree) if d.mac]
+        if not chosen:
+            self.info(_("Select a device first."))
+            return
+        known = self._known_devices() | {d.mac for d in chosen}
+        self.config["known_devices"] = sorted(known)
+        settings.save(self.config)
+        self.load_devices()
+
+    def forget_known(self):
+        chosen = self._selected_items(self.devices_tree)
+        known = self._known_devices() - {d.mac for d in chosen}
+        self.config["known_devices"] = sorted(known)
+        settings.save(self.config)
+        self.load_devices()
+
+    def block_selected_device(self):
+        chosen = [d for d in self._selected_items(self.devices_tree) if not d.is_this_pc and not d.is_router]
+        if not chosen:
+            self.info(_("Select a device that is not your router or this PC."))
+            return
+        self.block_address_now(chosen[0].address)
+
+    # ------------------------------------------------------------------ history
+
+    def _history_page(self, parent):
+        px = self.theme.px
+        card = self._card(parent)
+        row = self._row(card, pady=(0, px(8)))
+        self._button(row, _("Refresh"), self.load_history, style="Primary.TButton", gap=12)
+        self.history_status = ttk.Label(row, text=_("Attacks NoorCleaner noticed and blocks you made, newest first."),
+                                        style="CardSub.TLabel")
+        self.history_status.pack(side=self.L)
+        frame, self.history_tree = make_tree(card, [("time", _("When"), 140), ("address", _("Address"), 170),
+                                                    ("what", _("What happened"), 480), ("action", _("Action"), 110)])
+        bar = self._row(card, pady=(px(10), 0))
+        self._button(bar, _("Clear history"), self.clear_history)
+        bar.pack_configure(side="bottom")
+        frame.pack(fill="both", expand=True)
+        self.load_history()
+        return card
+
+    def load_history(self):
+        clear_tree(self.history_tree)
+        entries = net.load_log()
+        actions = {"detected": _("Noticed"), "blocked": _("Blocked")}
+        for e in reversed(entries):
+            when = time.strftime("%Y-%m-%d %H:%M", time.localtime(e.get("time", 0)))
+            self.history_tree.insert("", "end", values=(when, e.get("address", ""), e.get("reason", ""),
+                                                        actions.get(e.get("action"), e.get("action", ""))))
+        self.history_status.config(text=_("Events: {count}").format(count=len(entries)) if entries
+                                   else _("Nothing yet. Attacks NoorCleaner notices will be listed here."))
+
+    def clear_history(self):
+        if self.ask(_("Clear the attack history?")):
+            net.clear_log()
+            self.load_history()
+
+    # ------------------------------------------------------------------ live protection
+
+    def toggle_monitor(self):
+        self.config["live_monitor"] = self.monitor_var.get()
+        settings.save(self.config)
+        if self.monitor_var.get():
+            self._monitor_ports = None
+            self.info(_("Live protection is on. NoorCleaner checks every 30 seconds while it is open (you can "
+                        "minimise it) and warns you if someone attacks. Nothing is blocked without you."))
+            self._monitor_tick()
+
+    def _monitor_tick(self):
+        """Every 30 seconds: look at connections and open ports; warn about new attackers or new risky doors."""
+        if not self.monitor_var.get():
+            return
+        if core.IS_WINDOWS and not self._monitor_busy:
+            self._monitor_busy = True
+            self._monitor_round += 1
+            check_logons = is_admin() and self._monitor_round % 10 == 1  # the sign-in log is slower: every 5 minutes
+
+            def work():
+                try:
+                    ports, conns = net.parse_netstat(net._run(["netstat", "-ano"]).stdout)
+                    logons = None
+                    if check_logons:
+                        try:
+                            logons = net.failed_logons()
+                        except Exception:
+                            logons = None
+                    self.events.put(("net_alert", net.find_suspects(conns, logons), ports))
+                except Exception:
+                    self.events.put(("net_alert", [], None))
+
+            threading.Thread(target=work, daemon=True).start()
+        self.root.after(30000, self._monitor_tick)
+
+    def _net_alert(self, suspects, ports):
+        self._monitor_busy = False
+        lines = []
+        for s in suspects:
+            key = (s.address, s.reason)
+            net.log_event(s.address, s.reason, s.count)
+            if key not in self._monitor_seen:
+                self._monitor_seen.add(key)
+                lines.append(f"{s.address}: {s.reason} ({s.count})")
+        if ports is not None:
+            risky = {(p.protocol, p.port) for p in ports if p.reachable and p.risk()[0] == net.HIGH}
+            if self._monitor_ports is not None:
+                for protocol, port in sorted(risky - self._monitor_ports):
+                    lines.append(_("A risky door just opened: port {port} ({kind}).").format(port=port, kind=protocol))
+            self._monitor_ports = risky
+        if lines:
+            self.sound.threat()
+            self.side_status.config(text=_("Warning: possible attack - see Network & ports"))
+            self.show_view("network")
+            self.load_history()
+            self.scan_network()
+            self.warn(_("NoorCleaner noticed something:") + "\n\n" + "\n".join(lines) + "\n\n"
+                      + _("Open 'Network & ports' to block it."))
