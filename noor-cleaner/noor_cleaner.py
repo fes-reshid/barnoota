@@ -28,6 +28,7 @@ from i18n import _
 from ui_base import (APP_NAME, VERSION, BaseApp, clear_tree, human_size, is_admin, make_tree, open_location,
                      share_text)
 from ui_health import HealthMixin
+from ui_network import NetworkMixin
 from ui_programs import ProgramsMixin
 from ui_recover import RecoverMixin
 from ui_settings import SettingsMixin, choose_language_first_run
@@ -35,7 +36,7 @@ from ui_settings import SettingsMixin, choose_language_first_run
 MAX_LISTED_FILES = 5000  # rows shown at once in "All files"; search narrows it down
 
 
-class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, SettingsMixin):
+class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SettingsMixin):
     def __init__(self, root, config):
         self.root = root
         self.config = config
@@ -94,7 +95,8 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
         self.theme.set_direction(self.rtl)
         pages = (("scan", _("Scan")), ("space", _("What's using space")), ("junk", _("Junk files")),
                  ("dups", _("Duplicates")), ("programs", _("Programs")), ("threats", _("Viruses & threats")),
-                 ("corrupt", _("Corrupted files")), ("health", _("Disk health")), ("files", _("All files")),
+                 ("corrupt", _("Corrupted files")), ("health", _("Disk health")), ("network", _("Network & ports")),
+                 ("files", _("All files")),
                  ("recover", _("Recover deleted files")), ("quarantine", _("Quarantine")), ("settings", _("Settings")))
         self.nav_titles = dict(pages)
         for key, text in pages:
@@ -147,6 +149,7 @@ class NoorCleanerApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, Settings
             _("Files that are damaged, cut off or unreadable. Broken Windows files should be repaired, not deleted."),
             finding_cols, show_repair=True)
         self._health_view()
+        self._network_view()
         self._all_files_view()
         self._recover_view()
         self._quarantine_view()
