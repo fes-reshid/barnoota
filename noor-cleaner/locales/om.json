@@ -393,7 +393,6 @@
  "Translations into Arabic and Afaan Oromo: corrections are welcome.": "Hiikkaa Arabiffaa fi Afaan Oromoo: sirreeffamni ni simatama.",
  "Your files never leave this PC: NoorCleaner works without the internet.": "Faayiloonni kee kompiitara kana irraa gonkumaa hin ba'an: NoorCleaner interneetii malee hojjeta.",
  "This language is already in use.": "Afaan kun duraanuu hojii irra jira.",
- "NoorCleaner {version}, from the makers of Noor Shield.": "NoorCleaner {version}, hojjettoota Noor Shield irraa.",
  "Reminder on. NoorCleaner will check for junk when you sign in, every {days} days.": "Yaadachiisni ka'eera. NoorCleaner yeroo seentu, guyyaa {days} hundumaa kosii ni ilaala.",
  "{days} days": "Guyyaa {days}",
  "less than a minute": "daqiiqaa tokko gadi",
@@ -769,5 +768,6 @@
  "Open 'Viruses & threats' to quarantine or delete them.": "Isaan cufuu ykn haquuf 'Vaayirasii fi balaa' bani.",
  "No threats were found.": "Balaan tokko illee hin argamne.",
  "Nothing leaves this PC unless you turn on a feature that needs the internet (the country of an attacker, the password-leak check).": "Amalli interneetii barbaadu (biyya weeraraa, sakatta'iinsa dhangala'aa jecha icciitii) yoo banne malee homtuu kompiitara kana hin lakkisu.",
- "Language, sound and live protection.": "Afaan, sagalee fi eegumsa yeroo dhugaa."
+ "Language, sound and live protection.": "Afaan, sagalee fi eegumsa yeroo dhugaa.",
+ "NoorCleaner {version}, by Noorsoft.": "NoorCleaner {version}, Noorsoft irraa."
 }

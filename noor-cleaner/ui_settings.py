@@ -91,7 +91,7 @@ class SettingsMixin:
         privacy = (_("Your files never leave this PC: NoorCleaner works without the internet.") if self.cleaner
                    else _("Nothing leaves this PC unless you turn on a feature that needs the internet (the country of "
                           "an attacker, the password-leak check)."))
-        self._bullets(about, (_("NoorCleaner {version}, from the makers of Noor Shield.").format(version=VERSION),
+        self._bullets(about, (_("NoorCleaner {version}, by Noorsoft.").format(version=VERSION),
                               _("Translations into Arabic and Afaan Oromo: corrections are welcome."), privacy))
 
     def save_language(self):

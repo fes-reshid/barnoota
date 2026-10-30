@@ -26,7 +26,7 @@
 AppId={#AppGuid}
 AppName={#AppName}
 AppVersion={#AppVersion}
-AppPublisher=Diin Islaam
+AppPublisher=Noorsoft
 DefaultDirName={localappdata}\Programs\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes

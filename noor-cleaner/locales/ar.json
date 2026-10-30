@@ -393,7 +393,6 @@
  "Translations into Arabic and Afaan Oromo: corrections are welcome.": "الترجمة إلى العربية والأورومو: نرحب بالتصحيحات.",
  "Your files never leave this PC: NoorCleaner works without the internet.": "ملفاتك لا تغادر هذا الجهاز أبدًا: نور كلينر يعمل دون إنترنت.",
  "This language is already in use.": "هذه اللغة مستخدمة بالفعل.",
- "NoorCleaner {version}, from the makers of Noor Shield.": "نور كلينر {version}، من صانعي نور شيلد.",
  "Reminder on. NoorCleaner will check for junk when you sign in, every {days} days.": "التذكير مفعّل. سيتحقق نور كلينر من الملفات غير الضرورية عند تسجيل دخولك، كل {days} يومًا.",
  "{days} days": "{days} يومًا",
  "less than a minute": "أقل من دقيقة",
@@ -769,5 +768,6 @@
  "Open 'Viruses & threats' to quarantine or delete them.": "افتح «الفيروسات والتهديدات» لعزلها أو حذفها.",
  "No threats were found.": "لم يُعثر على أي تهديدات.",
  "Nothing leaves this PC unless you turn on a feature that needs the internet (the country of an attacker, the password-leak check).": "لا يغادر شيء هذا الجهاز ما لم تفعّل ميزة تحتاج إلى الإنترنت (دولة المهاجم، فحص تسريب كلمات المرور).",
- "Language, sound and live protection.": "اللغة والصوت والحماية المباشرة."
+ "Language, sound and live protection.": "اللغة والصوت والحماية المباشرة.",
+ "NoorCleaner {version}, by Noorsoft.": "نور كلينر {version}، من نورسوفت."
 }
