@@ -19,7 +19,13 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.2.0"
+VERSION = "2.3.0"
+
+
+def set_app_name(name):
+    """The name shown in dialog titles (NoorCleaner or NoorGuard)."""
+    global APP_NAME
+    APP_NAME = name
 
 
 def human_size(size):
@@ -58,10 +64,10 @@ def open_location(path, select=True):
 
 
 def app_launch_args():
-    """The program and arguments that start NoorCleaner again."""
+    """The program and arguments that start this program again."""
     if getattr(sys, "frozen", False):
         return sys.executable, ""
-    return sys.executable, f'"{os.path.join(os.path.dirname(os.path.abspath(__file__)), "noor_cleaner.py")}"'
+    return sys.executable, f'"{os.path.abspath(sys.argv[0])}"'
 
 
 NUMERIC_COLUMNS = ("size", "files", "share", "modified", "deleted", "date", "installed", "pixels")

@@ -15,6 +15,7 @@ RTL_LANGUAGES = {"ar"}
 
 _current = "en"
 _table = {}
+_brand = ("NoorCleaner", "نور كلينر")  # (English name, Arabic name) of the program being run
 
 
 def locales_dir():
@@ -46,5 +47,14 @@ def is_rtl():
     return _current in RTL_LANGUAGES
 
 
+def set_brand(name, name_ar):
+    """Texts are written for NoorCleaner; the other program shows its own name in their place."""
+    global _brand
+    _brand = (name, name_ar)
+
+
 def _(text):
-    return _table.get(text, text)
+    text = _table.get(text, text)
+    if _brand[0] != "NoorCleaner":
+        text = text.replace("NoorCleaner", _brand[0]).replace("نور كلينر", _brand[1])
+    return text
