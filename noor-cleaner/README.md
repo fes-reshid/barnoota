@@ -1,4 +1,4 @@
-# NoorCleaner and NoorGuard
+# NoorCleaner and NoorGuard, by Noorsoft
 
 Two Windows programs built from one code base, so each does one job:
 

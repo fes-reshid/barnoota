@@ -33,12 +33,12 @@ jobs:
             name: NoorCleaner
             entry: noor_cleaner.py
             tag: noorcleaner-latest
-            notes: Free storage cleaner for Windows. Download NoorCleaner-Setup.exe and run it.
+            notes: Free storage cleaner for Windows, by Noorsoft. Download NoorCleaner-Setup.exe and run it.
           - key: guard
             name: NoorGuard
             entry: noor_guard.py
             tag: noorguard-latest
-            notes: Free security program for Windows. Download NoorGuard-Setup.exe and run it.
+            notes: Free security program for Windows, by Noorsoft. Download NoorGuard-Setup.exe and run it.
     defaults:
       run:
         working-directory: noor-cleaner
