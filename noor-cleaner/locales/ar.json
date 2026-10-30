@@ -760,5 +760,14 @@
  "Live protection in the tray": "الحماية المباشرة في منطقة الإشعارات",
  "NoorCleaner can start with Windows, sit quietly in the notification area and warn you if someone attacks your PC. Closing the window keeps it running there; use the tray icon to open or quit.": "يمكن لنور كلينر أن يبدأ مع ويندوز ويبقى بهدوء في منطقة الإشعارات وينبّهك إذا هاجم أحد جهازك. إغلاق النافذة يُبقيه يعمل هناك؛ استخدم الأيقونة للفتح أو الإنهاء.",
  "The tray icon is not available in this copy of NoorCleaner.": "أيقونة منطقة الإشعارات غير متوفرة في هذه النسخة من نور كلينر.",
- "Start with Windows and keep watching in the tray": "ابدأ مع ويندوز وواصل المراقبة في منطقة الإشعارات"
+ "Start with Windows and keep watching in the tray": "ابدأ مع ويندوز وواصل المراقبة في منطقة الإشعارات",
+ "Virus scan": "فحص الفيروسات",
+ "See what is filling your storage and find corrupted files. Nothing is removed unless you choose it.": "اعرف ما الذي يملأ مساحة التخزين وابحث عن الملفات التالفة. لا يُزال شيء إلا إذا اخترته.",
+ "Scan for viruses": "افحص بحثًا عن الفيروسات",
+ "Look for viruses and suspicious files. Nothing is removed unless you choose it.": "ابحث عن الفيروسات والملفات المشبوهة. لا يُزال شيء إلا إذا اخترته.",
+ "Time": "الوقت",
+ "Open 'Viruses & threats' to quarantine or delete them.": "افتح «الفيروسات والتهديدات» لعزلها أو حذفها.",
+ "No threats were found.": "لم يُعثر على أي تهديدات.",
+ "Nothing leaves this PC unless you turn on a feature that needs the internet (the country of an attacker, the password-leak check).": "لا يغادر شيء هذا الجهاز ما لم تفعّل ميزة تحتاج إلى الإنترنت (دولة المهاجم، فحص تسريب كلمات المرور).",
+ "Language, sound and live protection.": "اللغة والصوت والحماية المباشرة."
 }

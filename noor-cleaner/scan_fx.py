@@ -212,10 +212,10 @@ class ScanScreen(tk.Frame):
         keep = max(8, (room - 3) // 2)
         return path[:keep] + "..." + path[-keep:]
 
-    def idle(self, version):
+    def idle(self, version, name="NoorCleaner", status="storage analyser online"):
         self.clear()
-        self.lines([(f"NOORCLEANER v{version}  //  READY", "ok"),
-                    ("> storage analyser online", "dim"), ("> awaiting your command_", "dim")])
+        self.lines([(f"{name.upper()} v{version}  //  READY", "ok"),
+                    (f"> {status}", "dim"), ("> awaiting your command_", "dim")])
 
     def begin(self, places):
         self.clear()

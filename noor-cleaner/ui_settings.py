@@ -14,18 +14,18 @@ from ui_base import VERSION
 CHOOSE_LANGUAGE = ("Choose your language", "اختر لغتك", "Afaan kee filadhu")
 
 
-def choose_language_first_run(root):
+def choose_language_first_run(root, name="NoorCleaner"):
     """Shown once, when no language has been chosen yet (e.g. the app was not installed with the installer)."""
     style = theme.get_style(root)
     px = style.px
-    root.title("NoorCleaner")
+    root.title(name)
     chosen = tk.StringVar()
     root.protocol("WM_DELETE_WINDOW", lambda: chosen.set("en"))
     outer = ttk.Frame(root, padding=px(40))
     outer.pack(fill="both", expand=True)
     card = ttk.Frame(outer, style="Card.TFrame", padding=(px(40), px(32)))
     card.pack(expand=True)
-    ttk.Label(card, text="NoorCleaner", style="Metric.TLabel").pack(pady=(0, px(16)))
+    ttk.Label(card, text=name, style="Metric.TLabel").pack(pady=(0, px(16)))
     for line in CHOOSE_LANGUAGE:
         ttk.Label(card, text=line, style="CardSub.TLabel").pack()
     buttons = ttk.Frame(card, style="Plain.TFrame")
@@ -42,7 +42,8 @@ def choose_language_first_run(root):
 class SettingsMixin:
     def _settings_view(self):
         px = self.theme.px
-        view = self._view("settings", _("Settings"), _("Language and reminders."))
+        view = self._view("settings", _("Settings"), _("Language and reminders.") if self.cleaner
+                          else _("Language, sound and live protection."))
 
         language = self._card(view, _("Language"), fill="x", **self._gap())
         self.language_var = tk.StringVar(value=i18n.language())
@@ -58,36 +59,40 @@ class SettingsMixin:
         ttk.Checkbutton(effects, text=_("Play soft computer sounds while scanning"), variable=self.sound_var,
                         style="Card.TCheckbutton", command=self.save_sound).pack(anchor=self.W)
 
-        tray_card = self._card(view, _("Live protection in the tray"), fill="x", **self._gap())
-        self._text(tray_card, _("NoorCleaner can start with Windows, sit quietly in the notification area and warn "
-                                "you if someone attacks your PC. Closing the window keeps it running there; use the "
-                                "tray icon to open or quit."), pady=(0, px(8)))
-        self.tray_var = tk.BooleanVar(value=bool(self.config.get("tray_autostart")))
-        ttk.Checkbutton(tray_card, text=_("Start with Windows and keep watching in the tray"), variable=self.tray_var,
-                        style="Card.TCheckbutton", command=self.save_tray).pack(anchor=self.W)
+        if not self.cleaner:
+            tray_card = self._card(view, _("Live protection in the tray"), fill="x", **self._gap())
+            self._text(tray_card, _("NoorCleaner can start with Windows, sit quietly in the notification area and warn "
+                                    "you if someone attacks your PC. Closing the window keeps it running there; use the "
+                                    "tray icon to open or quit."), pady=(0, px(8)))
+            self.tray_var = tk.BooleanVar(value=bool(self.config.get("tray_autostart")))
+            ttk.Checkbutton(tray_card, text=_("Start with Windows and keep watching in the tray"), variable=self.tray_var,
+                            style="Card.TCheckbutton", command=self.save_tray).pack(anchor=self.W)
 
-        remind = self._card(view, _("Junk reminder"), fill="x", **self._gap())
-        self._text(remind, _("NoorCleaner can quietly check for junk when you sign in and tell you when there is "
-                             "a lot to clean. Nothing is deleted without you."), pady=(0, px(8)))
-        self.reminder_var = tk.IntVar(value=int(self.config.get("reminder_days") or 0))
-        row = self._row(remind)
-        for days, label in ((0, _("Off")), (7, _("Every week")), (30, _("Every month"))):
-            ttk.Radiobutton(row, text=label, value=days, variable=self.reminder_var, style="Card.TRadiobutton",
-                            command=self.save_reminder).pack(side=self.L, padx=self.pad(0, px(28)))
+        if self.cleaner:
+            remind = self._card(view, _("Junk reminder"), fill="x", **self._gap())
+            self._text(remind, _("NoorCleaner can quietly check for junk when you sign in and tell you when there is "
+                                 "a lot to clean. Nothing is deleted without you."), pady=(0, px(8)))
+            self.reminder_var = tk.IntVar(value=int(self.config.get("reminder_days") or 0))
+            row = self._row(remind)
+            for days, label in ((0, _("Off")), (7, _("Every week")), (30, _("Every month"))):
+                ttk.Radiobutton(row, text=label, value=days, variable=self.reminder_var, style="Card.TRadiobutton",
+                                command=self.save_reminder).pack(side=self.L, padx=self.pad(0, px(28)))
 
-        downloads = self._card(view, _("Old downloads"), fill="x", **self._gap())
-        self._text(downloads, _("Count installers and zip files in Downloads as old after:"), pady=(0, px(8)))
-        self.download_days_var = tk.IntVar(value=int(self.config.get("old_download_days") or 90))
-        row = self._row(downloads)
-        for days in (30, 90, 180, 365):
-            ttk.Radiobutton(row, text=_("{days} days").format(days=days), value=days, variable=self.download_days_var,
-                            style="Card.TRadiobutton", command=self.save_download_days).pack(
-                side=self.L, padx=self.pad(0, px(28)))
+            downloads = self._card(view, _("Old downloads"), fill="x", **self._gap())
+            self._text(downloads, _("Count installers and zip files in Downloads as old after:"), pady=(0, px(8)))
+            self.download_days_var = tk.IntVar(value=int(self.config.get("old_download_days") or 90))
+            row = self._row(downloads)
+            for days in (30, 90, 180, 365):
+                ttk.Radiobutton(row, text=_("{days} days").format(days=days), value=days, variable=self.download_days_var,
+                                style="Card.TRadiobutton", command=self.save_download_days).pack(
+                    side=self.L, padx=self.pad(0, px(28)))
 
         about = self._card(view, _("About"), style="Note.TFrame", fill="x")
+        privacy = (_("Your files never leave this PC: NoorCleaner works without the internet.") if self.cleaner
+                   else _("Nothing leaves this PC unless you turn on a feature that needs the internet (the country of "
+                          "an attacker, the password-leak check)."))
         self._bullets(about, (_("NoorCleaner {version}, from the makers of Noor Shield.").format(version=VERSION),
-                              _("Translations into Arabic and Afaan Oromo: corrections are welcome."),
-                              _("Your files never leave this PC: NoorCleaner works without the internet.")))
+                              _("Translations into Arabic and Afaan Oromo: corrections are welcome."), privacy))
 
     def save_language(self):
         code = self.language_var.get()
@@ -112,7 +117,7 @@ class SettingsMixin:
                 self._monitor_tick()
         settings.save(self.config)
         try:
-            reminder.set_tray_autostart(on)
+            reminder.set_tray_autostart(on, self.edition.run_value)
         except OSError as exc:
             self.error(str(exc))
 

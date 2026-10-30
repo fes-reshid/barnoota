@@ -1,9 +1,10 @@
-# Builds NoorCleaner (the Windows storage cleaner & virus scanner in noor-cleaner/) whenever it
-# changes (or by hand: Actions > NoorCleaner > Run workflow):
-#   NoorCleaner-Setup.exe  the installer (asks for English / Arabic / Afaan Oromoo)
-#   NoorCleaner.exe        the same app as a single file that runs without installing
-# A hand-run also publishes both as the public 'NoorCleaner (latest)' release.
-name: NoorCleaner
+# Builds the two Windows programs in noor-cleaner/ whenever it changes (or by hand:
+# Actions > NoorCleaner and NoorGuard > Run workflow):
+#   NoorCleaner  storage cleaner:  NoorCleaner-Setup.exe (installer) and NoorCleaner.exe
+#   NoorGuard    security program: NoorGuard-Setup.exe (installer) and NoorGuard.exe
+# The installers ask for English / Arabic / Afaan Oromoo. A hand-run also publishes each program as its
+# own public release (noorcleaner-latest and noorguard-latest).
+name: NoorCleaner and NoorGuard
 
 on:
   workflow_dispatch:
@@ -24,6 +25,20 @@ jobs:
   windows:
     runs-on: windows-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - key: cleaner
+            name: NoorCleaner
+            entry: noor_cleaner.py
+            tag: noorcleaner-latest
+            notes: Free storage cleaner for Windows. Download NoorCleaner-Setup.exe and run it.
+          - key: guard
+            name: NoorGuard
+            entry: noor_guard.py
+            tag: noorguard-latest
+            notes: Free security program for Windows. Download NoorGuard-Setup.exe and run it.
     defaults:
       run:
         working-directory: noor-cleaner
@@ -34,14 +49,14 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0 pystray==0.19.5
       - run: python -m unittest discover -s tests -v
-      - name: Build NoorCleaner.exe
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name NoorCleaner --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" noor_cleaner.py
+      - name: Build ${{ matrix.name }}.exe
+        run: python -m PyInstaller --noconfirm --onefile --windowed --name ${{ matrix.name }} --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" ${{ matrix.entry }}
       - name: Check the exe starts
         shell: pwsh
         run: |
-          $p = Start-Process dist\NoorCleaner.exe -PassThru
+          $p = Start-Process dist\${{ matrix.name }}.exe -PassThru
           Start-Sleep -Seconds 8
-          if ($p.HasExited) { throw "NoorCleaner.exe exited straight away (code $($p.ExitCode))" }
+          if ($p.HasExited) { throw "${{ matrix.name }}.exe exited straight away (code $($p.ExitCode))" }
           Stop-Process -Id $p.Id
       - name: Build the installer
         shell: pwsh
@@ -49,29 +64,29 @@ jobs:
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y }
           $version = python -c "import ui_base; print(ui_base.VERSION)"
-          & $iscc "/DAppVersion=$version" installer\NoorCleaner.iss
+          & $iscc "/DAppKey=${{ matrix.key }}" "/DAppVersion=$version" installer\NoorApp.iss
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
       # Only keep the files when run by hand, so routine pushes don't use Actions storage.
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'workflow_dispatch'
         with:
-          name: NoorCleaner-Windows
+          name: ${{ matrix.name }}-Windows
           path: |
-            noor-cleaner/dist/NoorCleaner-Setup.exe
-            noor-cleaner/dist/NoorCleaner.exe
+            noor-cleaner/dist/${{ matrix.name }}-Setup.exe
+            noor-cleaner/dist/${{ matrix.name }}.exe
           retention-days: 7
-      - name: Publish the download (release noorcleaner-latest)
+      - name: Publish the download (release ${{ matrix.tag }})
         if: github.event_name == 'workflow_dispatch'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = python -c "import ui_base; print(ui_base.VERSION)"
-          gh release view noorcleaner-latest --repo ${{ github.repository }} 2>$null
+          gh release view ${{ matrix.tag }} --repo ${{ github.repository }} 2>$null
           if ($LASTEXITCODE -ne 0) {
-            gh release create noorcleaner-latest --repo ${{ github.repository }} --target ${{ github.sha }} --title "NoorCleaner" --notes "Free storage cleaner for Windows. Download NoorCleaner-Setup.exe and run it."
+            gh release create ${{ matrix.tag }} --repo ${{ github.repository }} --target ${{ github.sha }} --title "${{ matrix.name }}" --notes "${{ matrix.notes }}"
             if ($LASTEXITCODE -ne 0) { throw "Could not create the release" }
           }
-          gh release edit noorcleaner-latest --repo ${{ github.repository }} --title "NoorCleaner $version"
-          gh release upload noorcleaner-latest dist/NoorCleaner-Setup.exe dist/NoorCleaner.exe --clobber --repo ${{ github.repository }}
+          gh release edit ${{ matrix.tag }} --repo ${{ github.repository }} --title "${{ matrix.name }} $version"
+          gh release upload ${{ matrix.tag }} dist/${{ matrix.name }}-Setup.exe dist/${{ matrix.name }}.exe --clobber --repo ${{ github.repository }}
           if ($LASTEXITCODE -ne 0) { throw "Could not upload the files" }

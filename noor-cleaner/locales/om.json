@@ -760,5 +760,14 @@
  "Live protection in the tray": "Eegumsa yeroo dhugaa tray keessatti",
  "NoorCleaner can start with Windows, sit quietly in the notification area and warn you if someone attacks your PC. Closing the window keeps it running there; use the tray icon to open or quit.": "NoorCleaner Windows waliin jalqabee naannoo beeksisaa keessatti calluma teessee nama yoo kompiitara kee weerare si akeekkachiisuu danda'a. Foddaa cufuun achitti hojjechaa akka jiru godha; banuuf ykn ba'uuf mallattoo tray fayyadami.",
  "The tray icon is not available in this copy of NoorCleaner.": "Mallattoon tray garagalcha NoorCleaner kana keessatti hin jiru.",
- "Start with Windows and keep watching in the tray": "Windows waliin jalqabi, tray keessatti eegaa turi"
+ "Start with Windows and keep watching in the tray": "Windows waliin jalqabi, tray keessatti eegaa turi",
+ "Virus scan": "Sakatta'iinsa vaayirasii",
+ "See what is filling your storage and find corrupted files. Nothing is removed unless you choose it.": "Wanti kuusaa kee guutu ilaali, faayiloota badan barbaadi. Ati yoo filatte malee homtuu hin haqamu.",
+ "Scan for viruses": "Vaayirasii sakatta'i",
+ "Look for viruses and suspicious files. Nothing is removed unless you choose it.": "Vaayirasii fi faayiloota shakkisiisoo barbaadi. Ati yoo filatte malee homtuu hin haqamu.",
+ "Time": "Yeroo",
+ "Open 'Viruses & threats' to quarantine or delete them.": "Isaan cufuu ykn haquuf 'Vaayirasii fi balaa' bani.",
+ "No threats were found.": "Balaan tokko illee hin argamne.",
+ "Nothing leaves this PC unless you turn on a feature that needs the internet (the country of an attacker, the password-leak check).": "Amalli interneetii barbaadu (biyya weeraraa, sakatta'iinsa dhangala'aa jecha icciitii) yoo banne malee homtuu kompiitara kana hin lakkisu.",
+ "Language, sound and live protection.": "Afaan, sagalee fi eegumsa yeroo dhugaa."
 }

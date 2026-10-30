@@ -28,7 +28,7 @@ def app_command(extra=""):
         windowless = os.path.join(os.path.dirname(python), "pythonw.exe")
         if os.path.exists(windowless):
             python = windowless
-        command = f'"{python}" "{os.path.join(os.path.dirname(os.path.abspath(__file__)), "noor_cleaner.py")}"'
+        command = f'"{python}" "{os.path.abspath(sys.argv[0])}"'
     return f"{command} {extra}".strip()
 
 
@@ -55,17 +55,17 @@ def set_reminder(days, data=None):
 TRAY_VALUE = "NoorCleanerTray"
 
 
-def set_tray_autostart(enabled):
+def set_tray_autostart(enabled, value_name=TRAY_VALUE):
     """Starts NoorCleaner hidden in the tray when you sign in, so live protection is always on."""
     if not core.IS_WINDOWS:
         return
     import winreg
     with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, RUN_PATH, 0, winreg.KEY_SET_VALUE) as key:
         if enabled:
-            winreg.SetValueEx(key, TRAY_VALUE, 0, winreg.REG_SZ, app_command("--tray"))
+            winreg.SetValueEx(key, value_name, 0, winreg.REG_SZ, app_command("--tray"))
         else:
             try:
-                winreg.DeleteValue(key, TRAY_VALUE)
+                winreg.DeleteValue(key, value_name)
             except FileNotFoundError:
                 pass
 
