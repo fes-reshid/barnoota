@@ -1044,7 +1044,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, S
         card = self._card(view, fill="both", expand=True)
         frame, tree = make_tree(card, columns)
         tree.bind("<Double-1>", lambda e: self.open_selected(tree))
-        self._action_bar(card, tree, show_repair, export=self.export_findings).pack(
+        self._action_bar(card, tree, show_repair, export=None if show_repair else self.export_findings, short=show_repair).pack(
             fill="x", side="bottom", pady=(self.theme.px(10), 0))
         frame.pack(fill="both", expand=True)
         return tree

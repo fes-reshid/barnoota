@@ -8,6 +8,7 @@ from tkinter import ttk
 import network_core as net
 import scanner_core as core
 import settings
+import theme
 from i18n import _
 from ui_base import clear_tree, is_admin, make_tree, open_location
 
@@ -158,7 +159,7 @@ class NetworkMixin:
             self._text(card, _("These addresses are behaving like an attacker. Block them to cut them off."),
                        style="Note.TLabel", pady=(0, px(6)))
             for s in self.net_suspects[:8]:
-                row = ttk.Frame(card, style="Note.TFrame")
+                row = tk.Frame(card, bg=theme.SURFACE_2)  # flat, so no rounded-corner pieces show in a short row
                 row.pack(fill="x", pady=(px(3), 0))
                 self._button(row, _("Block"), lambda a=s.address: self.block_address_now(a), style="Danger.TButton",
                              gap=12)

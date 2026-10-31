@@ -19,7 +19,7 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.3.0"
+VERSION = "2.3.1"
 
 
 def set_app_name(name):
@@ -225,6 +225,7 @@ class BaseApp:
             page.grid(row=0, column=0, sticky="nsew")
             group["pages"][key] = page
         self._show_segment(group, items[0][0])
+        view.segments = group  # so a page can be switched from outside (screenshots, tests)
         return group
 
     def _show_segment(self, group, key):
