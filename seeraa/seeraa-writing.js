@@ -164,28 +164,31 @@ function showWriting(mode){
  const w=viewWorld,prev=mine(w),inChallenge=mode==='challenge',c=cfg(w);
  const was=k=>{const p=prev&&Array.isArray(prev.parts)?prev.parts.find(x=>x.k===k):null;return p||null};
  const d=getDraft(w)||{learn:was('learn')?was('learn').a:(prev?prev.text:''),apply:was('apply')?was('apply').a:'',dua:was('dua')?was('dua').a:'',practice:was('practice')?was('practice').a:'',how:was('practice')?was('practice').how||'':''};
- const head=inChallenge?`<p class="kicker">Map ${w+1} Certificate Challenge</p><h1>${MAP_QUIZ_TOTAL} Questions</h1><div class="map-quiz-score">🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}</div><div class="quiz-meta"><span>Score ${MAP_QUIZ_PASS} or more to pass</span><span class="quiz-dots">${Array(MAP_QUIZ_TOTAL).fill(0).map((_,i)=>`<span class="quiz-dot ${i<mapQuizIndex?'done':i===mapQuizIndex?'current':''}"></span>`).join('')}</span></div>`
+ const head=inChallenge?mapQuizHead()
   :`<p class="kicker">Map ${w+1} · My reflection</p><h1>Write it again</h1>`;
  const box=(k,n,body)=>{const L=PART.find(x=>x[0]===k);return `<section class="wr-part" data-part="${k}"><h3><span class="wr-n">${n}</span>${L[1]} ${esc(L[2])}</h3>${body}<p class="wr-need-msg" aria-live="polite"></p></section>`};
  const area=(k,rows,ph)=>`<textarea id="wr-${k}" class="wr-text" rows="${rows}" maxlength="1500" placeholder="${esc(ph)}" spellcheck="true" autocapitalize="sentences">${esc(d[k]||'')}</textarea><div class="wr-count" data-count="${k}"></div>`;
- q('#mapQuizBody').innerHTML=`${head}<div class="wr-task"><span class="wr-tag">✍️ My reflection · your teacher will read it</span><p class="wr-rule">Answer the four parts in your own words. It goes to your teacher like a message.</p></div>${prev&&!inChallenge?reviewHTML(prev):''}${prev&&inChallenge?`<p class="wr-before">You sent a reflection on ${fmtDate(prev.at)}. Read it again, make it better, and send it.</p>`:''}`
+ q('#mapQuizBody').innerHTML=`${head}<div class="wr-task"><span class="wr-tag">✍️ My reflection · your teacher will read it</span><p class="wr-rule">Answer the four parts in your own words. It goes to your teacher like a message.</p>${inChallenge?`<p class="wr-rule wr-submit-note">Sending it also submits your ${MAP_QUIZ_TOTAL} answers — check them first with ← Previous.</p>`:''}</div>${prev&&!inChallenge?reviewHTML(prev):''}${prev&&inChallenge?`<p class="wr-before">You sent a reflection on ${fmtDate(prev.at)}. Read it again, make it better, and send it.</p>`:''}`
   +box('learn',1,`<p class="wr-prompt" id="wrPrompt">${esc(c.learn)}</p>${area('learn',6,'Start writing here…')}`)
   +box('apply',2,`<p class="wr-prompt">${esc(c.apply)}</p>${area('apply',3,'I will…')}`)
   +box('dua',3,`${duaHTML(c.dua)}<p class="wr-prompt">${esc(c.duaQ)}</p>${area('dua',3,'The duʿāʾ, and when I say it…')}`)
   +box('practice',4,`<p class="wr-prompt">${esc(PRACTICE_Q)}</p><div class="wr-choices" role="radiogroup" aria-label="${esc(PRACTICE_Q)}">${PRACTICE.map((t,i)=>`<label class="wr-choice"><input type="radio" name="wr-practice" value="${esc(t)}" ${d.practice===t?'checked':''}><span>${['✅','🙂','⏳'][i]} ${esc(t)}</span></label>`).join('')}</div><input id="wr-how" class="wr-how" maxlength="300" placeholder="How? When? (optional)" value="${esc(d.how||'')}">`)
   +`${typeof cloudUser!=='undefined'&&cloudUser?'':'<p class="wr-guest">Sign in so your teacher can read it — for now it stays on this device.</p>'}<div class="feedback" id="wrMsg" aria-live="polite"></div>`;
- q('#mapQuizActions').innerHTML=`<button class="btn green" id="wrSend">📨 Send to my teacher</button><button class="ghost" id="wrExit">${inChallenge?'Exit to Map':'Back to map'}</button>`;
+ if(inChallenge)mapQuizNav('<button class="btn green" id="wrSend">📨 Send to my teacher</button>');
+ else q('#mapQuizActions').innerHTML='<button class="btn green" id="wrSend">📨 Send to my teacher</button><button class="ghost" id="wrExit">Back to map</button>';
  const body=q('#mapQuizBody'),val=k=>(q('#wr-'+k)||{}).value||'',practice=()=>{const r=body.querySelector('input[name="wr-practice"]:checked');return r?r.value:''};
  const current=()=>({learn:val('learn').trim(),apply:val('apply').trim(),dua:val('dua').trim(),practice:practice(),how:val('how').trim()});
  const count=k=>{const el=body.querySelector(`[data-count="${k}"]`),n=words(val(k)).length;if(el){el.textContent=n>=MIN[k]?`✓ ${n} words`:`${n} / ${MIN[k]} words`;el.className='wr-count'+(n>=MIN[k]?' ok':'')}};
  const clearNeed=part=>{part.classList.remove('wr-need');part.querySelector('.wr-need-msg').textContent='';const m=q('#wrMsg');if(m&&m.classList.contains('bad')&&!body.querySelector('.wr-part.wr-need')){m.textContent='';m.className='feedback'}};
  Object.keys(MIN).forEach(k=>{count(k);q('#wr-'+k).addEventListener('input',()=>{count(k);clearNeed(q('#wr-'+k).closest('.wr-part'));setDraft(w,current())})});
  body.querySelectorAll('input[name="wr-practice"]').forEach(r=>r.onchange=()=>{clearNeed(r.closest('.wr-part'));setDraft(w,current())});q('#wr-how').oninput=()=>setDraft(w,current());
- q('#wrExit').onclick=()=>{renderMap();show('mapScreen')};
+ const exit=q('#wrExit');if(exit)exit.onclick=()=>{renderMap();show('mapScreen')};
  const send=q('#wrSend'),msg=q('#wrMsg');
  send.onclick=()=>{
   const v=current(),need=(k,t)=>{const part=body.querySelector(`[data-part="${k}"]`);part.classList.add('wr-need');part.querySelector('.wr-need-msg').textContent=t;return part};
   body.querySelectorAll('.wr-part').forEach(clearNeed);msg.textContent='';msg.className='feedback';
+  /* the challenge is submitted with the reflection: every question needs an answer */
+  const miss=inChallenge?mapQuizMissing():-1;if(miss>=0){msg.textContent=`Question ${miss+1} has no answer yet — go back with ← Previous.`;msg.className='feedback bad';return}
   const bad=[];
   if(words(v.learn).length<MIN.learn)bad.push(need('learn',`Write at least ${MIN.learn} words about what you learned.`));
   else if(different(v.learn)<6||v.learn.toLowerCase()===c.learn.toLowerCase())bad.push(need('learn','Use your own words — tell it like you would tell a friend.'));
@@ -199,12 +202,11 @@ function showWriting(mode){
   const n=words(v.learn).length+words(v.apply).length+words(v.dua).length;
   const rec=same?prev:{prompt:c.learn,parts,text,words:n,at:new Date().toISOString(),review:prev&&prev.review||null};
   list()[w]=rec;setDraft(w,null);
-  if(inChallenge){mapQuizCorrect++;challengeDone=true;sentWords=n}
+  if(inChallenge){mapQuizExtra=1;challengeDone=true;sentWords=n}
   save();if(typeof syncStats==='function')syncStats();if(typeof happySound==='function')happySound();
   body.querySelectorAll('textarea,input').forEach(x=>x.disabled=true);
-  msg.textContent=same?'📨 Your reflection is with your teacher.':`📨 Sent to your teacher!${inChallenge?' +1 point ⭐':' Your teacher will read it again.'}`;msg.className='feedback good';
+  msg.textContent=same?'📨 Your reflection is with your teacher.':`📨 Sent to your teacher!${inChallenge?' +1 point ⭐ Your answers are submitted.':' Your teacher will read it again.'}`;msg.className='feedback good';
   if(!same)messageTeacher(w,rec).then(ok=>{if(ok&&msg.isConnected)msg.textContent+=' It is in your messages too.'});
-  const sc=body.querySelector('.map-quiz-score');if(sc)sc.innerHTML=`🏆 Question ${mapQuizIndex+1}/${MAP_QUIZ_TOTAL} &nbsp; · &nbsp; Score ${mapQuizCorrect}`;
   q('#mapQuizActions').innerHTML=inChallenge?'<button class="btn green" id="wrResult">See My Result 🏆</button>':'<button class="btn green" id="wrResult">Back to map</button>';
   q('#wrResult').onclick=()=>{if(inChallenge)finishMapQuiz();else{renderMap();show('mapScreen')}};q('#wrResult').focus();
  };
