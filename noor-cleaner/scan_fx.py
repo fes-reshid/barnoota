@@ -158,8 +158,9 @@ class ScanSound:
 
 
 def _font(px):
+    """Points, like the rest of the window's text: Tk already scales them to the screen's DPI."""
     family = "Consolas" if sys.platform == "win32" else "DejaVu Sans Mono"
-    return (family, max(9, round(9 * px(1))))
+    return (family, 9)
 
 
 class ScanScreen(tk.Frame):
