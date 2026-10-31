@@ -1309,6 +1309,26 @@ function saveAttendance(a){
   }).then(function(){ return id; });
 }
 function deleteAttendance(id){ return deleteDoc(doc(db, ATTENDANCE_COLLECTION, id)); }
+/* One session, a single student's mark, and a live view of one session —
+   for the class check-in page (a student types their username on a device
+   a teacher has signed in) and the portal's Attendance tab. Same collection
+   and the same staff-only rules as above. markAttendance merges, so it never
+   wipes the other students' marks or the teacher's note. */
+function getAttendance(id){
+  return getDoc(doc(db, ATTENDANCE_COLLECTION, String(id))).then(function(d){ return d.exists() ? Object.assign({ id: d.id }, d.data()) : null; });
+}
+function markAttendance(classId, date, uid, mark){
+  const user = auth.currentUser;
+  if(!classId || !uid || !/^\d{4}-\d{2}-\d{2}$/.test(String(date || ''))) return Promise.reject(new Error('Choose a class and a date.'));
+  if(['present', 'late', 'absent', 'excused'].indexOf(mark) < 0) return Promise.reject(new Error('Unknown attendance mark.'));
+  const id = classId + '_' + date, marks = {};
+  marks[uid] = mark;
+  return setDoc(doc(db, ATTENDANCE_COLLECTION, id), { classId: classId, date: date, marks: marks, by: (user && user.email) || null, updatedAt: new Date().toISOString() }, { merge:true })
+    .then(function(){ return id; });
+}
+function watchAttendance(id, onChange, onError){
+  return onSnapshot(doc(db, ATTENDANCE_COLLECTION, String(id)), function(s){ onChange(s.exists() ? Object.assign({ id: s.id }, s.data()) : null); }, onError);
+}
 
 /* ---- class leaderboard ---- */
 /* kids_quest_boards/{classId}: entries.<uid> = { name, avatar, stars,
@@ -1454,6 +1474,9 @@ window.KidsCloud = {
   listAttendance: listAttendance,
   saveAttendance: saveAttendance,
   deleteAttendance: deleteAttendance,
+  getAttendance: getAttendance,
+  markAttendance: markAttendance,
+  watchAttendance: watchAttendance,
   getBoard: getBoard,
   watchBoard: watchBoard,
   studentUpdateBoard: studentUpdateBoard,

@@ -662,6 +662,7 @@ body{font-variant-numeric:lining-nums}
       <div class="quiz-layout">
         <div class="card">
           <h2 style="margin-top:0">📋 Take attendance</h2>
+          <p class="muted" style="margin:-4px 0 10px">📱 Students can check themselves in: open <a href="/tuhfatul-atfaal-present/" target="_blank" rel="noopener"><b>diinislaam.com/tuhfatul-atfaal-present</b></a> on the class phone or computer, sign in, and each student types their username. They appear here as ✅ Present straight away.</p>
           <div class="row"><div class="field"><label for="att-class">Class</label><select id="att-class"></select></div><div class="field"><label for="att-date">Date</label><input type="date" id="att-date"></div></div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"><button class="btn ghost small" id="att-all">✅ Everyone present</button><span class="muted" id="att-state" style="align-self:center"></span></div>
           <div id="att-grid"></div>
@@ -1227,7 +1228,7 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=assignments-35"></script>
+<script type="module" src="../kids-quest-cloud.js?v=attendance-36"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2856,7 +2857,7 @@ function loadRecInbox(){
 }
 
 /* ===================== attendance ===================== */
-let attendanceCache = [], attMarks = {};
+let attendanceCache = [], attMarks = {}, attTouched = new Set(), attNoteDirty = false, attUnwatch = null, attWatchId = '';
 function courseAttendance(){ const ids = new Set(classesCache.map(c => c.id)); return attendanceCache.filter(a => ids.has(a.classId)); }
 const ATT_MARKS = [['present', '✅ Present'], ['late', '⏰ Late'], ['absent', '❌ Absent'], ['excused', '📝 Excused']];
 function loadAttendance(){
@@ -2876,9 +2877,27 @@ function fillAttClass(){
 }
 function loadAttSession(){
   const c = classById($('att-class').value), date = $('att-date').value, a = c && attendanceCache.find(x => x.id === c.id + '_' + date);
-  attMarks = a ? Object.assign({}, a.marks) : {}; $('att-note').value = a ? (a.note || '') : '';
+  attMarks = a ? Object.assign({}, a.marks) : {}; attTouched = new Set(); attNoteDirty = false; $('att-note').value = a ? (a.note || '') : '';
   $('att-state').textContent = !c ? '' : a ? 'Saved session — change and save again to update it.' : 'New session';
-  renderAttGrid();
+  renderAttGrid(); watchAttSession(c && date ? c.id + '_' + date : '');
+}
+/* Students who check themselves in (tuhfatul-atfaal-present) appear in the open
+   session straight away; a mark the teacher has changed here and not saved yet stays as it is. */
+function watchAttSession(id){
+  if(id === attWatchId) return;
+  if(attUnwatch){ try { attUnwatch(); } catch(e){} } attUnwatch = null; attWatchId = id;
+  if(!id || !window.KidsCloud.watchAttendance) return;
+  attUnwatch = window.KidsCloud.watchAttendance(id, doc => {
+    if(id !== attWatchId) return;
+    attendanceCache = attendanceCache.filter(a => a.id !== id); if(doc) attendanceCache.push(doc);
+    attendanceCache.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    const remote = (doc && doc.marks) || {};
+    Object.keys(remote).forEach(u => { if(!attTouched.has(u)) attMarks[u] = remote[u]; });
+    Object.keys(attMarks).forEach(u => { if(!attTouched.has(u) && !(u in remote)) delete attMarks[u]; });
+    if(doc && !attNoteDirty) $('att-note').value = doc.note || '';
+    if(doc) $('att-state').textContent = '🟢 Live — check-ins appear here as students arrive. Saved session.';
+    renderAttGrid(); renderAttendance();
+  }, () => {});
 }
 function renderAttGrid(){
   const c = classById($('att-class').value), box = $('att-grid');
@@ -2889,7 +2908,7 @@ function renderAttGrid(){
     const el = document.createElement('div'); el.className = 'att-row';
     el.innerHTML = '<div class="grow"><b>' + escapeHtml(s.displayName || s.username) + '</b> <span class="muted">@' + escapeHtml(s.username) + '</span></div>' +
       ATT_MARKS.map(([k, l]) => '<button class="att-btn ' + k + (attMarks[s.uid] === k ? ' on' : '') + '" data-mark="' + k + '">' + l + '</button>').join('');
-    el.querySelectorAll('[data-mark]').forEach(b => b.onclick = () => { if(attMarks[s.uid] === b.dataset.mark) delete attMarks[s.uid]; else attMarks[s.uid] = b.dataset.mark; renderAttGrid(); });
+    el.querySelectorAll('[data-mark]').forEach(b => b.onclick = () => { attTouched.add(s.uid); if(attMarks[s.uid] === b.dataset.mark) delete attMarks[s.uid]; else attMarks[s.uid] = b.dataset.mark; renderAttGrid(); });
     box.appendChild(el);
   });
 }
@@ -2919,7 +2938,7 @@ function saveAtt(){
   window.KidsCloud.saveAttendance({ classId: c.id, date, marks: attMarks, note }).then(id => {
     const rec = { id, classId: c.id, date, marks: Object.assign({}, attMarks), note };
     attendanceCache = [rec].concat(attendanceCache.filter(a => a.id !== id)).sort((a, b) => String(b.date).localeCompare(String(a.date)));
-    setMsg('att-msg', 'Saved ✓ ' + fmtDay(date)); toast('Attendance saved'); renderAttendance(); loadAttSession();
+    setMsg('att-msg', 'Saved ✓ ' + fmtDay(date)); toast('Attendance saved'); attTouched = new Set(); renderAttendance(); loadAttSession();
     // keep parent pages' attendance up to date
     c.studentUids.forEach(u => { const s = studentsCache.find(x => x.uid === u); syncParentStaff(s); });
   }).catch(err => setMsg('att-msg', friendlyError(err), true)).finally(() => { $('att-save').disabled = false; });
@@ -2985,7 +3004,8 @@ function wireExtras(){
   $('att-date').value = isoDate(new Date());
   $('att-class').onchange = () => { renderAttendance(); loadAttSession(); };
   $('att-date').onchange = loadAttSession;
-  $('att-all').onclick = () => { const c = classById($('att-class').value); if(!c) return; c.studentUids.forEach(u => { if(studentsCache.some(s => s.uid === u)) attMarks[u] = 'present'; }); renderAttGrid(); };
+  $('att-note').oninput = () => { attNoteDirty = true; };
+  $('att-all').onclick = () => { const c = classById($('att-class').value); if(!c) return; c.studentUids.forEach(u => { if(studentsCache.some(s => s.uid === u)){ attMarks[u] = 'present'; attTouched.add(u); } }); renderAttGrid(); };
   $('att-save').onclick = saveAtt;
   $('class-leaderboard').onchange = () => { const c = classById(activeClassId); if(!c) return; const on = $('class-leaderboard').checked;
     window.KidsCloud.adminUpdateClass(c.id, { leaderboard: on }).then(() => { c.leaderboard = on; renderLbPreview(c); toast(on ? 'Leaderboard on for ' + c.name : 'Leaderboard off'); }).catch(err => { $('class-leaderboard').checked = !on; alert(friendlyError(err)); }); };
