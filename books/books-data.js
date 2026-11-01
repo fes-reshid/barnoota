@@ -21,7 +21,7 @@ window.DI_BOOKS = {
   "moonlight-5": { title: "Kings, Whales and Wise Men", series: "Moonlight Stories of the Prophets · Book 5", cover: "moonlight-stories-book-5.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-6": { title: "Maryam and 'Isa", series: "Moonlight Stories of the Prophets · Book 6", cover: "moonlight-stories-book-6.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-7": { title: "Our Prophet Muhammad ﷺ", series: "Moonlight Stories of the Prophets · Book 7", cover: "moonlight-stories-book-7.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
-  "sahabah-1": { title: "Friends of the Prophet ﷺ", series: "Moonlight Stories of the Sahabah · Book 1", cover: "moonlight-sahabah-book-1.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" }
+  "sahabah-1": { title: "Friends of the Prophet ﷺ", series: "Moonlight Stories of the Sahabah · Book 1", cover: "moonlight-sahabah-book-1.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" }
 };
 
 /* Turn every  <a class="buy" data-book="...">  into a live Amazon button, or a quiet "coming soon" one. */
