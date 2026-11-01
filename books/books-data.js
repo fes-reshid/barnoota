@@ -4,11 +4,11 @@
 window.DI_BOOKS = {
   "house": {
     title: "A House in Paradise", sub: "Stories of Good Wives and Bad Wives from the Qur'an, the Sunnah and Islamic History",
-    cover: "a-house-in-paradise.webp", shape: "tall", preview: { pages: 12, total: 123 }, amazon: ""
+    cover: "a-house-in-paradise.webp", shape: "tall", preview: { pages: 12, total: 124 }, amazon: ""
   },
   "steady-heart": {
     title: "Stories for a Steady Heart", sub: "23 Lessons from the Prophets, the Sahabah and the Tabi'in",
-    cover: "stories-for-a-steady-heart.webp", shape: "tall", preview: { pages: 13, total: 170 }, amazon: ""
+    cover: "stories-for-a-steady-heart.webp", shape: "tall", preview: { pages: 13, total: 171 }, amazon: ""
   },
   "seeraa-1": {
     title: "Seeraa Quest, Book One", sub: "From Arabia Before Islam to the First Revelation",
