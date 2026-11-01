@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Read a Free Preview — Diin Islaam Books</title>
+<meta name="description" content="Read a free preview of books by Feysel Reshid online: Moonlight Stories of the Prophets, Moonlight Stories of the Sahabah, A House in Paradise and Stories for a Steady Heart.">
+<link rel="canonical" href="https://diinislaam.com/books/read/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{ --night:#0d1430; --night2:#1a2350; --gold:#d3ac5c; --cream:#faf3e0; --green:#2e6b58; --green-dark:#1f4f40; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{ background:radial-gradient(ellipse at 50% 0%, #26306a 0%, var(--night) 60%); color:var(--cream);
+    font-family:'Cormorant Garamond', serif; display:flex; flex-direction:column; min-height:100vh; overflow-x:hidden; }
+  .saw{ font-family:'Amiri', serif; }
+  header{ display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid rgba(211,172,92,.25); }
+  header a.back{ color:var(--gold); text-decoration:none; font-family:'Marcellus'; font-size:15px; white-space:nowrap; }
+  header .t{ flex:1; min-width:0; text-align:center; }
+  header .t b{ display:block; font-family:'Marcellus'; font-weight:400; font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  header .t small{ display:block; font-size:14px; color:#c9c2e0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  header .badge{ font-family:'Marcellus'; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#0d1430;
+    background:var(--gold); border-radius:999px; padding:4px 10px; white-space:nowrap; }
+
+  main{ flex:1; display:flex; align-items:center; justify-content:center; padding:18px 12px; position:relative; touch-action:pan-y; }
+  .stage{ display:flex; gap:0; align-items:center; justify-content:center; max-width:100%; }
+  .stage img{ display:block; background:#fff; box-shadow:0 18px 40px rgba(0,0,0,.45); user-select:none; -webkit-user-drag:none; }
+  .stage.square img{ width:min(86vw, calc(100vh - 190px)); height:auto; }
+  .stage.tall img{ height:calc(100vh - 190px); max-height:1100px; width:auto; max-width:88vw; }
+  .stage.spread.square img{ width:min(44vw, calc(100vh - 190px)); }
+  .stage.spread.tall img{ max-width:44vw; }
+  .stage.spread img + img{ box-shadow:12px 18px 40px rgba(0,0,0,.45); }
+  .stage.spread img:first-child{ box-shadow:-12px 18px 40px rgba(0,0,0,.45); }
+
+  .nav{ position:absolute; top:50%; transform:translateY(-50%); width:48px; height:48px; border-radius:50%;
+    border:1px solid rgba(211,172,92,.6); background:rgba(13,20,48,.75); color:var(--cream); font-size:22px; cursor:pointer; }
+  .nav:disabled{ opacity:.25; cursor:default; }
+  .nav.prev{ left:10px; } .nav.next{ right:10px; }
+  footer.bar{ padding:10px 18px 16px; text-align:center; font-size:15px; color:#c9c2e0; }
+  .progress{ height:4px; background:rgba(255,255,255,.12); border-radius:4px; max-width:520px; margin:0 auto 8px; overflow:hidden; }
+  .progress i{ display:block; height:100%; background:var(--gold); width:0; transition:width .25s; }
+
+  .end{ background:var(--cream); color:#3c2f26; border-radius:18px; max-width:560px; width:100%; padding:30px 28px; text-align:center;
+    box-shadow:0 18px 40px rgba(0,0,0,.45); }
+  .stage .end img{ width:170px; max-width:170px; height:auto; border-radius:6px; box-shadow:0 10px 24px rgba(20,20,40,.3); margin:0 auto 18px; display:block; }
+  .end .kick{ font-family:'Marcellus'; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#a97c25; margin:0 0 6px; }
+  .end h2{ font-family:'Marcellus'; font-weight:400; font-size:26px; color:#1c2b46; margin:0 0 10px; }
+  .end p{ font-size:18px; line-height:1.5; margin:0 0 18px; color:#5a4a33; }
+  .btns{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .btn{ display:inline-block; text-decoration:none; font-family:'Cormorant Garamond', serif; font-weight:700; font-size:17px;
+    padding:10px 22px; border-radius:26px; cursor:pointer; border:0; }
+  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary:hover{ background:var(--green-dark); }
+  .btn-ghost{ background:transparent; color:#1f4f40; border:1.5px solid var(--gold); }
+  .buy.is-soon{ background:#f3ecd8; color:#6b5a3f; border:1.5px dashed var(--gold); cursor:default; }
+  .note{ font-size:15px !important; color:#8a7654 !important; margin:14px 0 0 !important; }
+  .missing{ text-align:center; } .missing a{ color:var(--gold); }
+  @media (max-width:640px){ .nav{ width:40px; height:40px; font-size:18px; } header .badge{ display:none; } main.at-end .nav{ display:none; } }
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="/books/">← All books</a>
+  <div class="t"><b id="bt">Free preview</b><small id="bs"></small></div>
+  <span class="badge">Free preview</span>
+</header>
+
+<main id="main">
+  <button class="nav prev" id="prev" type="button" aria-label="Previous page">‹</button>
+  <div class="stage" id="stage" aria-live="polite"></div>
+  <button class="nav next" id="next" type="button" aria-label="Next page">›</button>
+</main>
+
+<footer class="bar">
+  <div class="progress"><i id="prog"></i></div>
+  <span id="count"></span>
+</footer>
+
+<script src="/books/books-data.js"></script>
+<script>
+(function () {
+  var key = new URLSearchParams(location.search).get('b');
+  var book = window.DI_BOOKS[key];
+  var stage = document.getElementById('stage');
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var pretty = function (s) { return esc(s).replace(/ﷺ/g, '<span class="saw">ﷺ</span>'); };
+
+  if (!book || !book.preview) {
+    stage.innerHTML = '<div class="missing"><p>This preview could not be found.</p><p><a href="/books/">See all books</a></p></div>';
+    document.getElementById('prev').hidden = document.getElementById('next').hidden = true;
+    return;
+  }
+
+  document.title = book.title.replace('ﷺ', '') + ' — Free Preview — Diin Islaam';
+  document.getElementById('bt').innerHTML = pretty(book.title);
+  document.getElementById('bs').innerHTML = pretty(book.series || book.sub || '');
+  stage.classList.add(book.shape);
+
+  var n = book.preview.pages, pages = [];
+  for (var i = 1; i <= n; i++) pages.push('/books/read/' + key + '/p' + (i < 10 ? '0' : '') + i + '.webp');
+
+  var views = [], at = 0;
+  function makeViews() {
+    var wide = window.innerWidth >= 900 && window.innerWidth > window.innerHeight;
+    views = [];
+    if (wide) {                       // like a real book: first page alone, then facing pairs
+      views.push([0]);
+      for (var k = 1; k < n; k += 2) views.push(k + 1 < n ? [k, k + 1] : [k]);
+    } else {
+      for (var j = 0; j < n; j++) views.push([j]);
+    }
+    views.push('end');
+  }
+
+  function endCard() {
+    var cover = '/books/covers/' + book.cover;
+    var rest = book.preview.total - n;
+    return '<div class="end">' +
+      '<img src="' + cover + '" alt="' + esc(book.title.replace('ﷺ', '')) + ' — cover">' +
+      '<p class="kick">End of the free preview</p>' +
+      '<h2>Enjoyed it? Get the full book</h2>' +
+      '<p>You have read the first ' + n + ' pages. The full book has ' + book.preview.total + ' pages, with ' + rest + ' more pages to enjoy.</p>' +
+      '<div class="btns"><a class="btn btn-primary buy" data-book="' + esc(key) + '" href="#">Buy on Amazon</a>' +
+      '<a class="btn btn-ghost" href="/books/">More books</a></div>' +
+      '<p class="note" id="soonNote" hidden>The book is on its way to Amazon. The link will appear here as soon as it is ready.</p>' +
+      '<p class="note"><a href="#" id="again" style="color:#1f4f40">Read the preview again</a></p>' +
+    '</div>';
+  }
+
+  function show() {
+    var v = views[at], last = views.length - 1;
+    document.getElementById('main').classList.toggle('at-end', v === 'end');
+    if (v === 'end') {
+      stage.classList.remove('spread');
+      stage.innerHTML = endCard();
+      window.DI_wireBuyButtons(stage);
+      if (!book.amazon) document.getElementById('soonNote').hidden = false;
+      document.getElementById('again').onclick = function (e) { e.preventDefault(); at = 0; show(); };
+      document.getElementById('count').textContent = 'Free preview finished · ' + n + ' of ' + book.preview.total + ' pages';
+    } else {
+      stage.classList.toggle('spread', v.length === 2);
+      stage.innerHTML = v.map(function (p) {
+        return '<img src="' + pages[p] + '" alt="Page ' + (p + 1) + ' of the free preview" draggable="false">';
+      }).join('');
+      var label = v.length === 2 ? 'Pages ' + (v[0] + 1) + '–' + (v[1] + 1) : 'Page ' + (v[0] + 1);
+      document.getElementById('count').textContent = label + ' of ' + n + ' · free preview';
+      [v[v.length - 1] + 1, v[v.length - 1] + 2].forEach(function (p) { if (p < n) { var im = new Image(); im.src = pages[p]; } });
+    }
+    document.getElementById('prev').disabled = at === 0;
+    document.getElementById('next').disabled = at === last;
+    document.getElementById('prog').style.width = (100 * at / last) + '%';
+  }
+
+  function go(d) { var t = Math.max(0, Math.min(views.length - 1, at + d)); if (t !== at) { at = t; show(); } }
+  document.getElementById('prev').onclick = function () { go(-1); };
+  document.getElementById('next').onclick = function () { go(1); };
+  document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); });
+  stage.addEventListener('contextmenu', function (e) { if (e.target.tagName === 'IMG') e.preventDefault(); });
+
+  var x0 = null;
+  var main = document.getElementById('main');
+  main.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  main.addEventListener('touchend', function (e) {
+    if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+  });
+
+  var firstPageOfView = function () { var v = views[at]; return v === 'end' ? null : v[0]; };
+  window.addEventListener('resize', function () {
+    var p = firstPageOfView(); makeViews();
+    if (p === null) { at = views.length - 1; } else { at = views.findIndex(function (v) { return v !== 'end' && v.indexOf(p) >= 0; }); }
+    show();
+  });
+
+  makeViews(); show();
+})();
+</script>
+</body>
+</html>

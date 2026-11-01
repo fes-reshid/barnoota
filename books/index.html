@@ -191,6 +191,7 @@
   .moon-card h3{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:2px 0 6px; }
   .moon-card p{ font-size:15px; color:#6b5a3f; line-height:1.45; margin:0 0 14px; flex:1; }
   .moon-card .btn{ font-size:15px; padding:8px 16px; }
+  .card-btns{ display:flex; flex-direction:column; gap:8px; align-items:flex-start; }
   .moon-card .buy.is-soon{ padding:6.5px 14px; }
   .saw{ font-family:'Amiri', serif; }
   .moon-card .num{ margin:0!important; flex:none; } .moon-card h3{ margin:2px 0 6px!important; min-height:0; }
@@ -225,11 +226,12 @@
 <div class="page-head">
   <p class="eyebrow">Diin Islaam Books</p>
   <h1>Books by Feysel Reshid</h1>
-  <p>Islamic books for adults, families and children: true stories from the Qur'an, the Sunnah and our history, written to be read slowly and lived.</p>
+  <p>Islamic books for adults, families and children: true stories from the Qur'an, the Sunnah and our history, written to be read slowly and lived. Read a free preview of any book online.</p>
   <nav class="chips" aria-label="Book collections">
     <a href="#adults">For adults &amp; families</a>
     <a href="#seeraa">Seeraa Quest</a>
     <a href="#moonlight">Moonlight Stories</a>
+    <a href="#sahabah">Stories of the Sahabah</a>
   </nav>
 </div>
 
@@ -251,7 +253,7 @@
         <li>A "For Husbands Too" section in every chapter, and a whole chapter for husbands</li>
         <li>A meaningful gift for brides, newlyweds and every Muslim home</li>
       </ul>
-      <div class="btn-row"><a class="btn btn-primary buy" data-book="house" href="#">Coming soon on Amazon</a></div>
+      <div class="btn-row"><a class="btn btn-primary buy" data-book="house" href="#">Coming soon on Amazon</a><a class="btn btn-ghost" href="/books/read/?b=house">Read a free preview</a></div>
       <p class="facts">Paperback, 6 × 9 in, 123 pages · Kindle eBook</p>
     </div>
   </article>
@@ -268,7 +270,7 @@
         <li>Practical wisdom, a weekly practice, questions and a prayer</li>
         <li>For readers, families and study circles</li>
       </ul>
-      <div class="btn-row"><a class="btn btn-primary buy" data-book="steady-heart" href="#">Coming soon on Amazon</a></div>
+      <div class="btn-row"><a class="btn btn-primary buy" data-book="steady-heart" href="#">Coming soon on Amazon</a><a class="btn btn-ghost" href="/books/read/?b=steady-heart">Read a free preview</a></div>
       <p class="facts">Paperback, 6 × 9 in, 170 pages · Kindle eBook</p>
     </div>
   </article>
@@ -318,52 +320,75 @@
       <p class="num">Book 1</p>
       <h3>From Adam to Ibrahim</h3>
       <p>Adam, Nuh and the ark, Hud, Salih's camel, and young Ibrahim.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-1" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-1">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-1" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-2.webp" alt="Moonlight Stories of the Prophets, Book 2: Ibrahim's Family — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 2</p>
       <h3>Ibrahim's Family</h3>
       <p>Zamzam, the Ka'bah, the call to Hajj, Lut, Ishaq and Ya'qub.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-2" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-2">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-2" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-3.webp" alt="Moonlight Stories of the Prophets, Book 3: Yusuf and His Dream — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 3</p>
       <h3>Yusuf and His Dream</h3>
       <p>The whole story of Yusuf, told gently over ten nights.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-3" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-3">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-3" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-4.webp" alt="Moonlight Stories of the Prophets, Book 4: Musa and the Sea — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 4</p>
       <h3>Musa and the Sea</h3>
       <p>The basket on the river, the burning bush, Pharaoh and the parting of the sea.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-4" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-4">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-4" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-5.webp" alt="Moonlight Stories of the Prophets, Book 5: Kings, Whales and Wise Men — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 5</p>
       <h3>Kings, Whales and Wise Men</h3>
       <p>Shu'ayb, Dawud, Sulayman and the ant, Yunus, Ayyub and Luqman.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-5" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-5">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-5" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-6.webp" alt="Moonlight Stories of the Prophets, Book 6: Maryam and 'Isa — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 6</p>
       <h3>Maryam and 'Isa</h3>
       <p>Maryam's mother, Zakariyya, Yahya, the palm tree and baby 'Isa.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-6" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-6">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-6" href="#">Coming soon on Amazon</a></div>
     </div>
     <div class="moon-card">
       <img src="covers/moonlight-stories-book-7.webp" alt="Moonlight Stories of the Prophets, Book 7: Our Prophet Muhammad — front cover" width="480" height="480" loading="lazy">
       <p class="num">Book 7</p>
       <h3>Our Prophet Muhammad <span class="saw">ﷺ</span></h3>
       <p>Ten gentle stories from his life, from the Year of the Elephant to his bedtime du'a.</p>
-      <a class="btn btn-primary buy" data-book="moonlight-7" href="#">Coming soon on Amazon</a>
+      <div class="card-btns"><a class="btn btn-ghost" href="/books/read/?b=moonlight-7">Read a free preview</a><a class="btn btn-primary buy" data-book="moonlight-7" href="#">Coming soon on Amazon</a></div>
     </div>
   </div>
   <p class="facts" style="text-align:center;margin-top:22px">Colour paperbacks, 8.5 × 8.5 in, 26 pages each.</p>
+</section>
+
+<section class="shelf" id="sahabah">
+  <div class="shelf-head">
+    <p class="eyebrow">New series</p>
+    <h2>Moonlight Stories of the Sahabah</h2>
+    <p>The same gentle goodnight style, now with the brave and kind friends of the Prophet <span class="saw">ﷺ</span>. Ten stories in every book, from authentic hadith and the seerah.</p>
+  </div>
+  <article class="feature">
+    <img src="covers/moonlight-sahabah-book-1.webp" alt="Moonlight Stories of the Sahabah, Book 1: Friends of the Prophet — front cover" width="480" height="480" loading="lazy">
+    <div>
+      <h3>Friends of the Prophet <span class="saw">ﷺ</span></h3>
+      <p class="sub">Book 1 · 10 Gentle Goodnight Stories of the Companions</p>
+      <p class="by">by Feysel Reshid</p>
+      <p>Hear Bilal's beautiful voice call the very first adhan, watch Abu Bakr give away everything he had, keep very still with brave 'Ali in the Prophet's bed, and see why one family blew out their lamp so a hungry guest could eat.</p>
+      <ul>
+        <li>Abu Bakr, Bilal, 'Ali, Asma', 'Uthman, 'Umar, Anas, Abu Hurayrah, Ibn 'Abbas and the family with the lamp</li>
+        <li>A little lesson, a sleepy question and the Prophet's <span class="saw">ﷺ</span> bedtime du'a</li>
+      </ul>
+      <div class="btn-row"><a class="btn btn-primary buy" data-book="sahabah-1" href="#">Coming soon on Amazon</a><a class="btn btn-ghost" href="/books/read/?b=sahabah-1">Read a free preview</a></div>
+      <p class="facts">Colour paperback, 8.5 × 8.5 in, 26 pages · Ages 3–8</p>
+    </div>
+  </article>
 </section>
 
 <footer>
@@ -392,27 +417,8 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
 </script>
-<script>
-/* Amazon links: paste each book's Amazon address between the quotes when it goes live.
-   Until then the button shows "Coming soon on Amazon". */
-const AMAZON = {
-  "house": "",
-  "steady-heart": "",
-  "seeraa-1": "",
-  "moonlight-1": "", "moonlight-2": "", "moonlight-3": "", "moonlight-4": "",
-  "moonlight-5": "", "moonlight-6": "", "moonlight-7": ""
-};
-document.querySelectorAll('a.buy').forEach(a => {
-  const url = AMAZON[a.dataset.book];
-  if (url) {
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = 'Buy on Amazon';
-  } else {
-    a.classList.add('is-soon'); a.removeAttribute('href');
-    a.setAttribute('aria-disabled', 'true');
-  }
-});
-</script>
+<script src="/books/books-data.js"></script>
+<script>window.DI_wireBuyButtons();</script>
 <script src="/cursor.js" defer></script>
 </body>
 </html>
