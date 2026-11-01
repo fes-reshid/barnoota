@@ -79,7 +79,9 @@
   .s-form .btn{font-size:22px;padding:15px 22px}
   .btn.huge{width:100%;max-width:380px;font-size:26px;padding:18px 28px;border-radius:20px;margin:6px auto 2px}
   .hint{margin:14px 0 0;font-size:14.5px;color:var(--muted)}
-  .kiosk .classes{max-width:460px;margin:12px auto 0}
+  .kiosk .classes{max-width:460px;margin:12px auto 14px}
+  .cls.on{border-color:var(--green);background:#eef7f1;box-shadow:0 0 0 4px rgba(47,111,85,.14)}
+  .cls.on small{color:#2f6f55;font-weight:800}
   .teacher-bar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px;font-size:14.5px;color:var(--muted);padding:6px 0 0}
   footer{text-align:center;color:var(--muted);font-size:13px;padding:6px 16px 26px}
   footer a{color:#2f6f55;font-weight:800}
@@ -95,14 +97,14 @@
   <section class="card kiosk" id="vSLogin" hidden>
     <p class="salam" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ</p>
     <h2>Welcome to class!</h2>
-    <p class="lead">Write your <b>username</b> and <b>password</b> — the same as in the Tuhfatul Atfaal app — and tap <b>Present</b>.</p>
+    <p class="lead">Write your <b>username</b> and <b>password</b> — the same as in the Tuhfatul Atfaal app — and tap <b>Sign in</b>.</p>
     <form class="s-form" id="sForm" autocomplete="on">
       <label for="sUser">Username</label><input id="sUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="60" required>
       <label for="sPass">Password</label><input id="sPass" type="password" autocomplete="current-password" required>
-      <button class="btn wide" id="sGo" type="submit">Present ✓</button>
+      <button class="btn wide" id="sGo" type="submit">Sign in</button>
       <p class="msg" id="sMsg" aria-live="polite"></p>
     </form>
-    <p class="hint">📱 This phone will remember you — next time you only tap <b>Present</b>.</p>
+    <p class="hint">📱 This phone will remember you — next time you only tap <b>I’m here</b>.</p>
   </section>
 
   <section class="card kiosk" id="vSHere" hidden>
@@ -309,14 +311,14 @@
      Saved in the student's own record (progress.<game>.checkins.<date> = {at, classId, cls}),
      which a student may always write. The Teacher portal turns it into ✅ Present in that
      day's attendance, and the parents' page shows it straight away. Once a day. */
-  let student = null, myClasses2 = [], pendingPresent = false, justNow = false;
+  let student = null, myClasses2 = [], picked = null, justNow = false;
   function wireStudent(){
     if(KC || !window.KidsCloud) return; KC = window.KidsCloud;
     $('sForm').onsubmit = e => {
       e.preventDefault(); const u = $('sUser').value.trim(), p = $('sPass').value; if(!u || !p) return;
-      $('sGo').disabled = true; $('sMsg').className = 'msg'; $('sMsg').textContent = 'Checking…'; pendingPresent = true;
+      $('sGo').disabled = true; $('sMsg').className = 'msg'; $('sMsg').textContent = 'Checking…';
       let action; try { action = KC.studentLogin(u, p); } catch(err){ action = Promise.reject(err); }
-      action.then(() => { $('sMsg').textContent = ''; }).catch(err => { pendingPresent = false; $('sMsg').className = 'msg err'; $('sMsg').textContent = friendly(err); }).finally(() => { $('sGo').disabled = false; });
+      action.then(() => { $('sMsg').textContent = ''; }).catch(err => { $('sMsg').className = 'msg err'; $('sMsg').textContent = friendly(err); }).finally(() => { $('sGo').disabled = false; });
     };
     $('sOut').onclick = () => { justNow = false; (KC.studentLogout || KC.adminSignOut)(); };
     $('sStaffOut').onclick = () => (KC.adminSignOut || KC.studentLogout)();
@@ -326,11 +328,10 @@
       view('vLoading');
       Promise.all([KC.myStaffRole ? KC.myStaffRole().catch(() => null) : null, KC.listMyClasses ? KC.listMyClasses().catch(() => []) : []]).then(([role, classes]) => {
         if(student !== data) return;
-        if(role){ pendingPresent = false; view('vSStaff'); return; }
+        if(role){ view('vSStaff'); return; }
         myClasses2 = (classes || []).filter(c => c.game === GAME);
+        picked = myClasses2.length === 1 ? myClasses2[0].id : null;
         showHere(); view('vSHere');
-        /* signed in by tapping Present: check in at once when there is one class */
-        if(pendingPresent){ pendingPresent = false; if(!checkedToday() && myClasses2.length === 1) present(myClasses2[0]); }
       });
     });
   }
@@ -351,14 +352,14 @@
       return;
     }
     if(!myClasses2.length){ $('hClass').hidden = true; $('sBody').innerHTML = '<div class="res no"><div class="big">🏫</div><h3>You are not in a class yet</h3><p>Ask your teacher for the class code, then join the class in the Tuhfatul Atfaal app.</p></div>'; return; }
-    if(myClasses2.length === 1){
-      const c = myClasses2[0]; $('hClass').textContent = '🏫 ' + c.name; $('hClass').hidden = false;
-      $('sBody').innerHTML = '<p class="lead">Tap <b>Present</b> to tell your teacher you are in class.</p><button class="btn huge" type="button" data-present="' + esc(c.id) + '">Present ✓</button>';
-    } else {
-      $('hClass').hidden = true;
-      $('sBody').innerHTML = '<p class="lead">Which class are you in now?</p><div class="classes">' + myClasses2.map(c => '<button class="cls" type="button" data-present="' + esc(c.id) + '">🏫<span>' + esc(c.name) + '<small>Tap to say you are here</small></span><span class="go">✓</span></button>').join('') + '</div>';
-    }
-    $('sBody').querySelectorAll('[data-present]').forEach(b => b.onclick = () => present(myClasses2.find(c => c.id === b.dataset.present)));
+    /* the student taps their class (already chosen when there is only one), then "I'm here" */
+    const sel = myClasses2.find(c => c.id === picked) || null;
+    $('hClass').textContent = sel ? '🏫 ' + sel.name : ''; $('hClass').hidden = !sel;
+    $('sBody').innerHTML = '<p class="lead">' + (myClasses2.length > 1 ? 'Tap your class, then tap <b>I’m here</b>.' : 'Your class:') + '</p><div class="classes">' +
+      myClasses2.map(c => '<button class="cls' + (c.id === picked ? ' on' : '') + '" type="button" data-pick="' + esc(c.id) + '" aria-pressed="' + (c.id === picked) + '">🏫<span>' + esc(c.name) + '<small>' + (c.id === picked ? 'Your class today' : 'Tap if you are in this class') + '</small></span><span class="go">' + (c.id === picked ? '✓' : '') + '</span></button>').join('') + '</div>' +
+      (sel ? '<button class="btn huge" type="button" id="sImHere">I’m here ✓</button>' : '');
+    $('sBody').querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { picked = b.dataset.pick; showHere(); const go = $('sImHere'); if(go){ go.scrollIntoView({ block:'center', behavior:'smooth' }); go.focus({ preventScroll:true }); } });
+    const go = $('sImHere'); if(go) go.onclick = () => present(sel);
   }
   async function present(c){
     if(busy || !c || !student) return;
