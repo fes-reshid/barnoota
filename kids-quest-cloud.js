@@ -568,6 +568,19 @@ function adminListStudents(){
     return out;
   });
 }
+/* A live view of the same students adminListStudents returns: cb gets the
+   records that were added or changed. The Teacher portal uses it to turn a
+   student's class check-in (saved in their own record) into attendance. */
+function watchStudents(onChange, onError){
+  const q = staffRole === 'teacher' && staffEmail
+    ? query(collection(db, STUDENTS_COLLECTION), where('teacherEmails', 'array-contains', staffEmail))
+    : query(collection(db, STUDENTS_COLLECTION), orderBy('createdAt', 'desc'));
+  return onSnapshot(q, function(snap){
+    const changed = [];
+    snap.docChanges().forEach(function(ch){ if(ch.type !== 'removed') changed.push(Object.assign({ uid: ch.doc.id }, ch.doc.data())); });
+    onChange(changed);
+  }, onError);
+}
 /* Link / unlink a teacher to a student record (which is what lets that
    teacher read it). Admins do this for anyone; a teacher only for
    students they can already see. */
@@ -1049,6 +1062,15 @@ function adminResetParentToken(uid, oldToken){
     .then(function(){ return setDoc(doc(db, STUDENTS_COLLECTION, uid), { parentToken: token }, { merge:true }); })
     .then(function(){ return token; });
 }
+/* One parent page, read by its token (anyone may GET one by its token). */
+function getParentSummary(token){
+  if(!token) return Promise.resolve(null);
+  return getDoc(doc(db, PARENT_COLLECTION, String(token))).then(function(d){
+    if(!d.exists()) return null;
+    const x = d.data(), parse = function(v){ try { return JSON.parse(v || 'null'); } catch(e){ return null; } };
+    return { uid: x.uid || '', data: parse(x.data), staffData: parse(x.staffData) };
+  });
+}
 function writeParentSummary(token, uid, patch){
   if(!token || !uid) return Promise.resolve();
   const data = { uid: uid, updatedAt: new Date().toISOString() };
@@ -1477,6 +1499,8 @@ window.KidsCloud = {
   getAttendance: getAttendance,
   markAttendance: markAttendance,
   watchAttendance: watchAttendance,
+  watchStudents: watchStudents,
+  getParentSummary: getParentSummary,
   getBoard: getBoard,
   watchBoard: watchBoard,
   studentUpdateBoard: studentUpdateBoard,

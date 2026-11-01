@@ -75,8 +75,14 @@
   .chip2{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#eef7f1;border:1.5px solid #bfe0cb;font-weight:800;font-size:15px;color:#22513c}
   .chip2.late{background:#fff6e0;border-color:#ecd28d;color:#7a5600}
   .chip2.new{animation:pop .4s ease-out;box-shadow:0 0 0 4px rgba(47,138,95,.18)}
+  .s-form{max-width:420px;margin:0 auto;text-align:left}
+  .s-form .btn{font-size:22px;padding:15px 22px}
+  .btn.huge{width:100%;max-width:380px;font-size:26px;padding:18px 28px;border-radius:20px;margin:6px auto 2px}
+  .hint{margin:14px 0 0;font-size:14.5px;color:var(--muted)}
+  .kiosk .classes{max-width:460px;margin:12px auto 0}
   .teacher-bar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px;font-size:14.5px;color:var(--muted);padding:6px 0 0}
   footer{text-align:center;color:var(--muted);font-size:13px;padding:6px 16px 26px}
+  footer a{color:#2f6f55;font-weight:800}
   @media(max-width:560px){header .ar{display:none}header h1{font-size:28px}header .brand{font-size:11px;letter-spacing:.06em}.ci-form{flex-direction:column}.ci-form .btn{width:100%}.kiosk .salam{font-size:30px}.kiosk h2{font-size:24px}.card{padding:16px}}
   @media(prefers-reduced-motion:reduce){.res,.chip2.new{animation:none}.tick path{animation:none;stroke-dashoffset:0}}
 </style>
@@ -86,8 +92,36 @@
 <main class="wrap">
   <section class="card center" id="vLoading"><p class="muted">Loading…</p></section>
 
+  <section class="card kiosk" id="vSLogin" hidden>
+    <p class="salam" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ</p>
+    <h2>Welcome to class!</h2>
+    <p class="lead">Write your <b>username</b> and <b>password</b> — the same as in the Tuhfatul Atfaal app — and tap <b>Present</b>.</p>
+    <form class="s-form" id="sForm" autocomplete="on">
+      <label for="sUser">Username</label><input id="sUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="60" required>
+      <label for="sPass">Password</label><input id="sPass" type="password" autocomplete="current-password" required>
+      <button class="btn wide" id="sGo" type="submit">Present ✓</button>
+      <p class="msg" id="sMsg" aria-live="polite"></p>
+    </form>
+    <p class="hint">📱 This phone will remember you — next time you only tap <b>Present</b>.</p>
+  </section>
+
+  <section class="card kiosk" id="vSHere" hidden>
+    <p class="salam" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ</p>
+    <h2 id="sHello">Assalāmu ʿalaykum!</h2>
+    <div id="sBody"></div>
+    <div class="result" id="sResult" aria-live="assertive" hidden></div>
+    <p class="hint"><span id="sNotYou"></span> <button class="link" id="sOut" type="button">Sign out</button></p>
+  </section>
+
+  <section class="card center" id="vSStaff" hidden>
+    <div style="font-size:44px">🧑‍🏫</div><h2>You are signed in as a teacher</h2>
+    <p class="muted">Students check in here on their own phone with their own username and password. To let students check in on one class tablet instead, open the tablet mode.</p>
+    <p><a class="btn" href="?teacher">Class tablet mode</a></p>
+    <button class="link" id="sStaffOut" type="button">Sign out</button>
+  </section>
+
   <section class="card" id="vLogin" hidden>
-    <h2>🧑‍🏫 Teacher sign-in</h2>
+    <h2>🧑‍🏫 Teacher sign-in · class tablet</h2>
     <p class="muted" style="margin:0">Sign in once on this phone or computer. Then each student types their username to say they are in class — it goes straight into your Teacher portal attendance and the parents’ page.</p>
     <form id="loginForm" autocomplete="on">
       <label for="tUser">Teacher username</label><input id="tUser" autocomplete="username" autocapitalize="none" spellcheck="false" required>
@@ -128,8 +162,8 @@
     <div class="teacher-bar"><span>🧑‍🏫 Teacher</span> · <button class="link" id="chgClass" type="button">Change class</button> · <button class="link" id="ciOut" type="button">Sign out</button></div>
   </section>
 </main>
-<footer>Each student checks in once a day. The teacher can change any mark in the Teacher portal → Attendance.</footer>
-<script type="module" src="../kids-quest-cloud.js?v=attendance-36"></script>
+<footer id="foot">Each student checks in once a day. The teacher can change any mark in the Teacher portal → Attendance.</footer>
+<script type="module" src="../kids-quest-cloud.js?v=checkin-37"></script>
 <script>
 (function(){
   'use strict';
@@ -138,7 +172,10 @@
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
   const isoDate = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   const niceDay = iso => new Date(iso + 'T12:00').toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long' });
-  const views = ['vLoading', 'vLogin', 'vNoAccess', 'vClass', 'vCheck'];
+  const views = ['vLoading', 'vLogin', 'vNoAccess', 'vClass', 'vCheck', 'vSLogin', 'vSHere', 'vSStaff'];
+  /* students check in on their own phone; ?teacher opens the class-tablet mode */
+  const MODE = /[?&]teacher\b/.test(location.search) ? 'teacher' : 'student';
+  const TICK = '<svg class="tick" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="40"/><path d="M24 43 L37 56 L61 30"/></svg>';
   const view = id => views.forEach(v => { $(v).hidden = v !== id; });
   const store = { get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }, set(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch(e){} } };
   const nameOf = s => s.fullName || s.displayName || s.username;
@@ -156,6 +193,7 @@
     if(/invalid-credential|wrong-password|user-not-found|invalid-email|invalid-login/.test(code)) return 'Wrong username or password.';
     if(/too-many-requests/.test(code)) return 'Too many tries — wait a minute and try again.';
     if(/network|unavailable|offline/i.test(code)) return 'No internet connection — check it and try again.';
+    if(/account-disabled/.test(code)) return 'This account is turned off — please ask your teacher.';
     if(/permission/i.test(code)) return 'This account is not allowed to take attendance.';
     return (err && err.message) || 'Something went wrong — please try again.';
   }
@@ -267,8 +305,92 @@
     }).catch(() => {});
   }
 
+  /* ---- a student checks in on their own phone ----
+     Saved in the student's own record (progress.<game>.checkins.<date> = {at, classId, cls}),
+     which a student may always write. The Teacher portal turns it into ✅ Present in that
+     day's attendance, and the parents' page shows it straight away. Once a day. */
+  let student = null, myClasses2 = [], pendingPresent = false, justNow = false;
+  function wireStudent(){
+    if(KC || !window.KidsCloud) return; KC = window.KidsCloud;
+    $('sForm').onsubmit = e => {
+      e.preventDefault(); const u = $('sUser').value.trim(), p = $('sPass').value; if(!u || !p) return;
+      $('sGo').disabled = true; $('sMsg').className = 'msg'; $('sMsg').textContent = 'Checking…'; pendingPresent = true;
+      let action; try { action = KC.studentLogin(u, p); } catch(err){ action = Promise.reject(err); }
+      action.then(() => { $('sMsg').textContent = ''; }).catch(err => { pendingPresent = false; $('sMsg').className = 'msg err'; $('sMsg').textContent = friendly(err); }).finally(() => { $('sGo').disabled = false; });
+    };
+    $('sOut').onclick = () => { justNow = false; (KC.studentLogout || KC.adminSignOut)(); };
+    $('sStaffOut').onclick = () => (KC.adminSignOut || KC.studentLogout)();
+    KC.onStudentAuth(data => {
+      student = data; justNow = false;
+      if(!data){ $('sPass').value = ''; $('hClass').hidden = true; view('vSLogin'); return; }
+      view('vLoading');
+      Promise.all([KC.myStaffRole ? KC.myStaffRole().catch(() => null) : null, KC.listMyClasses ? KC.listMyClasses().catch(() => []) : []]).then(([role, classes]) => {
+        if(student !== data) return;
+        if(role){ pendingPresent = false; view('vSStaff'); return; }
+        myClasses2 = (classes || []).filter(c => c.game === GAME);
+        showHere(); view('vSHere');
+        /* signed in by tapping Present: check in at once when there is one class */
+        if(pendingPresent){ pendingPresent = false; if(!checkedToday() && myClasses2.length === 1) present(myClasses2[0]); }
+      });
+    });
+  }
+  const studentFirst = () => String(student.fullName || student.displayName || student.username || '').trim().split(/\s+/)[0];
+  function checkinsOf(){ const p = student && student.progress && student.progress[GAME]; return p && p.checkins && typeof p.checkins === 'object' ? p.checkins : {}; }
+  function checkedToday(){ return checkinsOf()[isoDate(new Date())] || null; }
+  const timeOf = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleTimeString(undefined, { hour:'numeric', minute:'2-digit' }); };
+  function showHere(){
+    today = isoDate(new Date()); $('hDate').textContent = '📅 ' + niceDay(today);
+    const first = studentFirst(), done = checkedToday();
+    $('sHello').textContent = 'Assalāmu ʿalaykum, ' + first + '!'; $('sNotYou').textContent = 'Not ' + first + '?';
+    $('sResult').hidden = true; $('sResult').innerHTML = '';
+    if(done){
+      $('hClass').textContent = '🏫 ' + (done.cls || ''); $('hClass').hidden = !done.cls;
+      $('sBody').innerHTML = justNow
+        ? '<div class="res ok">' + TICK + '<p class="ar" lang="ar" dir="rtl">مَا شَاءَ اللَّه</p><h3>Mā shā’ Allāh, ' + esc(first) + '!</h3><p>Welcome to today’s class 🌟</p><p class="muted">Your teacher can see it now.</p></div>'
+        : '<div class="res ok">' + TICK + '<h3>You are here today ✓</h3><p>You checked in' + (done.cls ? ' to <b>' + esc(done.cls) + '</b>' : '') + ' at ' + esc(timeOf(done.at)) + '. Mā shā’ Allāh!</p></div>';
+      return;
+    }
+    if(!myClasses2.length){ $('hClass').hidden = true; $('sBody').innerHTML = '<div class="res no"><div class="big">🏫</div><h3>You are not in a class yet</h3><p>Ask your teacher for the class code, then join the class in the Tuhfatul Atfaal app.</p></div>'; return; }
+    if(myClasses2.length === 1){
+      const c = myClasses2[0]; $('hClass').textContent = '🏫 ' + c.name; $('hClass').hidden = false;
+      $('sBody').innerHTML = '<p class="lead">Tap <b>Present</b> to tell your teacher you are in class.</p><button class="btn huge" type="button" data-present="' + esc(c.id) + '">Present ✓</button>';
+    } else {
+      $('hClass').hidden = true;
+      $('sBody').innerHTML = '<p class="lead">Which class are you in now?</p><div class="classes">' + myClasses2.map(c => '<button class="cls" type="button" data-present="' + esc(c.id) + '">🏫<span>' + esc(c.name) + '<small>Tap to say you are here</small></span><span class="go">✓</span></button>').join('') + '</div>';
+    }
+    $('sBody').querySelectorAll('[data-present]').forEach(b => b.onclick = () => present(myClasses2.find(c => c.id === b.dataset.present)));
+  }
+  async function present(c){
+    if(busy || !c || !student) return;
+    if(checkedToday()){ showHere(); return; }
+    busy = true; $('sBody').querySelectorAll('button').forEach(b => { b.disabled = true; });
+    const date = isoDate(new Date()), rec = { at: new Date().toISOString(), classId: c.id, cls: c.name };
+    try {
+      await KC.saveProgress(GAME, { checkins: { [date]: rec } });
+      student.progress = student.progress || {};
+      const p = student.progress[GAME] = student.progress[GAME] || {}; p.checkins = Object.assign({}, p.checkins, { [date]: rec });
+      justNow = true; chime(); showHere(); tellParent(date, rec);
+    } catch(err){
+      $('sResult').hidden = false; $('sResult').innerHTML = '<div class="res no"><div class="big">⚠️</div><h3>Not saved</h3><p>' + esc(friendly(err)) + '</p></div>';
+      $('sBody').querySelectorAll('button').forEach(b => { b.disabled = false; });
+    } finally { busy = false; }
+  }
+  /* the parents' page shows the check-in at once (the student may update its own summary) */
+  function tellParent(date, rec){
+    if(!student.parentToken || !KC.getParentSummary || !KC.writeParentSummary) return;
+    KC.getParentSummary(student.parentToken).then(p => {
+      if(!p || !p.data) return;
+      const list = (Array.isArray(p.data.checkins) ? p.data.checkins : []).filter(x => x && x.date !== date);
+      list.unshift({ date, cls: rec.cls, at: rec.at }); p.data.checkins = list.slice(0, 20);
+      return KC.writeParentSummary(student.parentToken, student.uid, { data: p.data });
+    }).catch(() => {});
+  }
+
   $('hDate').textContent = '📅 ' + niceDay(today);
-  if(window.KidsCloud) wire(); else window.addEventListener('kidscloud-ready', wire);
+  if(MODE === 'student') $('foot').innerHTML = 'Check in once a day — your teacher and your parents see it straight away.<br>Teacher? <a href="?teacher">Class tablet mode</a>';
+  else $('foot').innerHTML = 'Each student checks in once a day. The teacher can change any mark in the Teacher portal → Attendance.<br><a href="./">Students’ own-phone check-in</a>';
+  const go = () => MODE === 'teacher' ? wire() : wireStudent();
+  if(window.KidsCloud) go(); else window.addEventListener('kidscloud-ready', go);
   setTimeout(() => { if(!KC) $('vLoading').innerHTML = '<p class="muted">Still loading… check the internet connection, then reload this page.</p>'; }, 12000);
 })();
 </script>

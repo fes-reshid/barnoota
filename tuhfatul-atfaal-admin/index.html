@@ -662,7 +662,7 @@ body{font-variant-numeric:lining-nums}
       <div class="quiz-layout">
         <div class="card">
           <h2 style="margin-top:0">📋 Take attendance</h2>
-          <p class="muted" style="margin:-4px 0 10px">📱 Students can check themselves in: open <a href="/tuhfatul-atfaal-present/" target="_blank" rel="noopener"><b>diinislaam.com/tuhfatul-atfaal-present</b></a> on the class phone or computer, sign in, and each student types their username. They appear here as ✅ Present straight away.</p>
+          <p class="muted" style="margin:-4px 0 10px">📱 Students check in on their own phone at <a href="/tuhfatul-atfaal-present/" target="_blank" rel="noopener"><b>diinislaam.com/tuhfatul-atfaal-present</b></a> with their app username and password (the phone remembers them, so next time it is one tap). They appear here as ✅ Present straight away — a mark you have already given stays as it is. For one class tablet instead, open <a href="/tuhfatul-atfaal-present/?teacher" target="_blank" rel="noopener">the tablet mode</a>.</p>
           <div class="row"><div class="field"><label for="att-class">Class</label><select id="att-class"></select></div><div class="field"><label for="att-date">Date</label><input type="date" id="att-date"></div></div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"><button class="btn ghost small" id="att-all">✅ Everyone present</button><span class="muted" id="att-state" style="align-self:center"></span></div>
           <div id="att-grid"></div>
@@ -1228,7 +1228,7 @@ body{font-variant-numeric:lining-nums}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="../kids-quest-cloud.js?v=attendance-36"></script>
+<script type="module" src="../kids-quest-cloud.js?v=checkin-37"></script>
 <script type="module">
 const $ = id => document.getElementById(id);
 let isSignUp = false;
@@ -2153,7 +2153,7 @@ function fillClassSelects(){
 }
 function loadClasses(){
   if(!window.KidsCloud.listClasses) return Promise.resolve();
-  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); renderClasses(); renderStudentGrid(); renderAttendance(); if(activeStudent) renderModal(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
+  return window.KidsCloud.listClasses(GAME_KEY).then(list => { classesCache = list; fillClassSelects(); applyCheckins(); renderClasses(); renderStudentGrid(); renderAttendance(); if(activeStudent) renderModal(); renderQuizList(); renderAnnouncements(); syncTeacherLinks(); if(typeof renderNewStudents === "function") renderNewStudents(); })
     .catch(err => { classesCache = []; $('class-list').innerHTML = '<p class="empty">' + escapeHtml(friendlyError(err)) + '</p>'; });
 }
 function renderClasses(){
@@ -2944,6 +2944,49 @@ function saveAtt(){
   }).catch(err => setMsg('att-msg', friendlyError(err), true)).finally(() => { $('att-save').disabled = false; });
 }
 
+/* ===================== class check-ins ===================== */
+/* A student checks in on their own phone (diinislaam.com/tuhfatul-atfaal-present).
+   It is saved in their own record — progress.<game>.checkins.<date> = {at, classId, cls}
+   — because only staff may write attendance. Here it becomes ✅ Present in that day's
+   attendance (unless the teacher already gave that student a mark), and the parent
+   page is refreshed. Runs when the portal opens, and live while it is open. */
+const checkinsSeen = new Set();
+let checkinWatch = null;
+function checkinsOf(s){ const p = s && s.progress && s.progress[GAME_KEY]; return p && p.checkins && typeof p.checkins === 'object' ? p.checkins : {}; }
+function applyCheckins(list){
+  const KC = window.KidsCloud;
+  if(!KC.markAttendance || !KC.getAttendance || !classesCache.length) return;
+  const since = isoDate(new Date(Date.now() - 14 * 86400000));
+  (list || studentsCache).forEach(s => {
+    Object.entries(checkinsOf(s)).forEach(([date, rec]) => {
+      if(!rec || !/^\d{4}-\d{2}-\d{2}$/.test(date) || date < since) return;
+      const c = classById(rec.classId); if(!c || !c.studentUids.includes(s.uid)) return;
+      const key = s.uid + '|' + c.id + '|' + date; if(checkinsSeen.has(key)) return; checkinsSeen.add(key);
+      const id = c.id + '_' + date, cached = attendanceCache.find(a => a.id === id);
+      if(cached && cached.marks && cached.marks[s.uid]) return;
+      KC.getAttendance(id).then(doc => {
+        if(doc && doc.marks && doc.marks[s.uid]) return;   // the teacher's own mark stays
+        return KC.markAttendance(c.id, date, s.uid, 'present').then(() => {
+          let a = attendanceCache.find(x => x.id === id);
+          if(!a){ a = Object.assign({ id, classId: c.id, date, marks: {} }, doc || {}); attendanceCache.push(a); }
+          a.marks = Object.assign({}, a.marks, { [s.uid]: 'present' });
+          attendanceCache.sort((x, y) => String(y.date || '').localeCompare(String(x.date || '')));
+          renderAttendance();
+          syncParentStaff(studentsCache.find(x => x.uid === s.uid) || s);
+        });
+      }).catch(() => { checkinsSeen.delete(key); });
+    });
+  });
+}
+function watchCheckins(){
+  if(checkinWatch || !window.KidsCloud.watchStudents) return;
+  checkinWatch = window.KidsCloud.watchStudents(changed => {
+    const fresh = [];
+    changed.forEach(n => { const s = studentsCache.find(x => x.uid === n.uid); if(s){ s.progress = n.progress; fresh.push(s); } });
+    applyCheckins(fresh);
+  }, () => { checkinWatch = null; });
+}
+
 /* ===================== leaderboard switch ===================== */
 function renderLbPreview(c){
   const members = c.studentUids.map(u => studentsCache.find(s => s.uid === u)).filter(Boolean).map(summarize)
@@ -3023,6 +3066,7 @@ function loadStudents(){
     studentsReadyResolve();
     if(activeStudent){ const fresh = list.find(s => s.uid === activeStudent.uid); if(fresh){ activeStudent = fresh; renderModal(); } }
     renderAll();
+    applyCheckins(); watchCheckins();
   }).catch(err => {
     studentsReadyResolve();
     $('student-list').innerHTML = '';

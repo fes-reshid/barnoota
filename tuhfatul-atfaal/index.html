@@ -1554,7 +1554,7 @@ normalizeProfile=function(p,name){const d=normalizeProfileBeforeTeacherPortal(p,
 worldUnlocked=function(w){return w===0||!!(assessment(w-1)&&assessment(w-1).approved)||!!(profile.teacherMapUnlocks&&profile.teacherMapUnlocks[w-1])};
 async function syncTeacherPortalUpdates(){
  if(!cloudUser||!window.KidsCloud||!window.KidsCloud.getStudentProfile)return;
- try{const data=await window.KidsCloud.getStudentProfile(),remote=data&&data.progress&&data.progress[GAME_KEY];if(!remote)return;const before=JSON.stringify({a:profile.teacherAssessments,u:profile.teacherMapUnlocks}),updated=normalizeProfile(remote,data.displayName||profile.name),after=JSON.stringify({a:updated.teacherAssessments,u:updated.teacherMapUnlocks});if(before===after)return;profile=updated;try{localStorage.setItem(progressKey(),JSON.stringify(profile))}catch(e){}loadBoard();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}catch(e){}
+ try{const data=await window.KidsCloud.getStudentProfile(),remote=data&&data.progress&&data.progress[GAME_KEY];if(!remote)return;if(remote.checkins&&typeof remote.checkins==='object')profile.checkins=Object.assign({},profile.checkins,remote.checkins);const before=JSON.stringify({a:profile.teacherAssessments,u:profile.teacherMapUnlocks}),updated=normalizeProfile(remote,data.displayName||profile.name),after=JSON.stringify({a:updated.teacherAssessments,u:updated.teacherMapUnlocks});if(before===after)return;profile=updated;try{localStorage.setItem(progressKey(),JSON.stringify(profile))}catch(e){}loadBoard();if(!$('#mapScreen').classList.contains('hidden'))renderMap()}catch(e){}
 }
 window.addEventListener('focus',syncTeacherPortalUpdates);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncTeacherPortalUpdates()});
@@ -2239,6 +2239,8 @@ function parentSummary(){
  let cur=worlds.findIndex((_,w)=>!worldComplete(w));if(cur<0)cur=worlds.length-1;
  return{
   name:(cloudUser&&(cloudUser.fullName||cloudUser.displayName))||profile.name,username:cloudUser&&cloudUser.username,classes:myClassList.map(c=>c.name),
+  /* class check-ins from tuhfatul-atfaal-present (kept in progress.checkins) */
+  checkins:Object.entries(profile.checkins&&typeof profile.checkins==='object'?profile.checkins:{}).filter(([d,c])=>c&&/^\d{4}-\d{2}-\d{2}$/.test(d)).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,20).map(([date,c])=>({date,cls:c.cls||'',at:c.at||''})),
   pct:Math.round(doneCount()/TOTAL_LESSONS*100),lessons:doneCount(),total:TOTAL_LESSONS,memorised:memorisedLines().length,
   memoWeek:memorisedLines().filter(i=>Date.now()-new Date(hifzMap()[i].at).getTime()<=7*86400000).map(i=>lessons[i].lines),
   streak:Object.assign({},profile.streak||{},{count:streakInfo().count}),certs:worlds.filter((_,w)=>assessment(w)&&assessment(w).approved).length,currentMap:worlds[cur].title,
