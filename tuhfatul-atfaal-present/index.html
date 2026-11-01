@@ -107,7 +107,7 @@
     <h2>Choose your class</h2>
     <p class="muted" style="margin:0">Students will be marked <b>present</b> for <b id="pickDate">today</b>.</p>
     <div class="classes" id="classList"></div>
-    <div class="teacher-bar"><span id="tWho"></span> · <button class="link" id="pickOut" type="button">Sign out</button></div>
+    <div class="teacher-bar"><span>🧑‍🏫 Teacher signed in</span> · <button class="link" id="pickOut" type="button">Sign out</button></div>
   </section>
 
   <section id="vCheck" hidden>
@@ -125,7 +125,7 @@
       <h3>✅ Here today <span class="count" id="ciCount">0</span></h3>
       <div class="chips" id="ciList"><span class="muted">No one has checked in yet.</span></div>
     </div>
-    <div class="teacher-bar"><span>🧑‍🏫 <span id="tWho2"></span></span> · <button class="link" id="chgClass" type="button">Change class</button> · <button class="link" id="ciOut" type="button">Sign out</button></div>
+    <div class="teacher-bar"><span>🧑‍🏫 Teacher</span> · <button class="link" id="chgClass" type="button">Change class</button> · <button class="link" id="ciOut" type="button">Sign out</button></div>
   </section>
 </main>
 <footer>Each student checks in once a day. The teacher can change any mark in the Teacher portal → Attendance.</footer>
@@ -144,7 +144,9 @@
   const nameOf = s => s.fullName || s.displayName || s.username;
   const firstName = s => String(nameOf(s)).trim().split(/\s+/)[0];
   /* teacher logins also have student records; never treat them as pupils */
-  const isStaffAccount = s => /quest-?teacher-|-teacher\b/.test([s.username, s.email, s.loginEmail].map(v => String(v || '').toLowerCase()).join(' '));
+  const HIDDEN_ACCOUNTS = ['fesfes.com'];
+  const isStaffAccount = s => { const login = [s.username, s.email, s.loginEmail].map(v => String(v || '').toLowerCase()), text = login.concat(String(s.displayName || '').toLowerCase()).join(' ');
+    return /quest-?teacher-/.test(text) || /-teacher\b/.test(login.join(' ')) || HIDDEN_ACCOUNTS.includes(String(s.username || '').toLowerCase()) || (!!me && !!me.email && text.split(' ').includes(String(me.email).toLowerCase())); };
   const cleanUser = v => String(v || '').trim().replace(/^@+/, '').replace(/\s+/g, '').toLowerCase();
 
   let KC = null, me = null, allClasses = [], students = [], cls = null, today = isoDate(new Date()), session = null, attendance = [], unwatch = null, busy = false, resultTimer = 0, lastUid = null;
@@ -181,8 +183,7 @@
   }
 
   function start(){
-    view('vLoading'); const who = me.fullName || String(me.email).split('@')[0];
-    $('tWho').textContent = 'Signed in as ' + who; $('tWho2').textContent = who;
+    view('vLoading');
     Promise.all([KC.listClasses(GAME), KC.adminListStudents(), KC.listAttendance().catch(() => [])]).then(([cl, st, att]) => {
       allClasses = cl; students = st.filter(s => !isStaffAccount(s)); attendance = att;
       const keep = store.get(CLASS_KEY), c = myClasses().find(x => x.id === keep);
@@ -196,7 +197,7 @@
   function showPicker(){
     today = isoDate(new Date()); $('pickDate').textContent = niceDay(today); $('hDate').textContent = '📅 ' + niceDay(today); $('hClass').hidden = true;
     const list = myClasses();
-    $('classList').innerHTML = list.length ? list.map(c => '<button class="cls" type="button" data-c="' + esc(c.id) + '">🏫<span>' + esc(c.name) + '<small>' + members(c).length + ' student' + (members(c).length === 1 ? '' : 's') + (me.role !== 'teacher' && c.teacherName ? ' · ' + esc(c.teacherName) : '') + '</small></span><span class="go">→</span></button>').join('')
+    $('classList').innerHTML = list.length ? list.map(c => '<button class="cls" type="button" data-c="' + esc(c.id) + '">🏫<span>' + esc(c.name) + '<small>' + members(c).length + ' student' + (members(c).length === 1 ? '' : 's') + '</small></span><span class="go">→</span></button>').join('')
       : '<p class="muted">You have no Tuhfatul Atfaal class yet. Create one in the Teacher portal → Classes, then come back.</p>';
     $('classList').querySelectorAll('[data-c]').forEach(b => b.onclick = () => enter(allClasses.find(c => c.id === b.dataset.c)));
     view('vClass');
