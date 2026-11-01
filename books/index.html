@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
-<title>Seeraa Quest Books — Diin Islaam</title>
-<meta name="description" content="Seeraa Quest: illustrated Seerah books for children and families. Book One, From Arabia Before Islam to the First Revelation, is free to read online or download.">
+<title>Books by Feysel Reshid — Diin Islaam</title>
+<meta name="description" content="Islamic books by Feysel Reshid for adults, families and children: A House in Paradise, Stories for a Steady Heart, Seeraa Quest and Moonlight Stories of the Prophets.">
 <link rel="canonical" href="https://diinislaam.com/books/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,6 +161,43 @@
   .maps li span{ color:#8a7654; }
   .soon-badge{ display:inline-block; font-family:'Marcellus'; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
     color:#6b5a3f; background:#efe6cc; border:1px solid var(--gold-soft); border-radius:999px; padding:3px 10px; margin-bottom:10px; align-self:flex-start; }
+  .chips{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin:22px auto 0; }
+  .chips a{ text-decoration:none; font-family:'Marcellus'; font-size:14px; letter-spacing:.04em; color:var(--green-dark);
+    border:1.5px solid var(--gold-soft); border-radius:999px; padding:7px 16px; background:var(--parchment); }
+  .chips a:hover{ background:var(--green-bg); }
+  .shelf{ max-width:var(--maxw); margin:0 auto; padding:0 20px 70px; scroll-margin-top:90px; }
+  .shelf-head{ text-align:center; margin:0 0 28px; }
+  .shelf-head h2{ font-family:'Marcellus'; font-size:clamp(24px,3vw,32px); color:var(--ink-navy); margin:0 0 8px; }
+  .shelf-head p{ font-size:18px; color:#6b5a3f; line-height:1.55; max-width:640px; margin:0 auto; }
+  .shelf .apps-grid{ padding:0; }
+  .feature{ display:grid; grid-template-columns:220px 1fr; gap:30px; align-items:start; background:var(--parchment);
+    border:1.5px solid var(--gold-soft); border-radius:16px; padding:26px; margin:0 0 26px; box-shadow:0 6px 18px rgba(60,45,20,.08); }
+  .feature img, .book-card img.cover-img{ width:100%; height:auto; display:block; border-radius:6px; box-shadow:0 10px 24px rgba(20,20,40,.28); }
+  .feature h3{ font-family:'Marcellus'; font-size:26px; color:var(--ink-navy); margin:0 0 4px; }
+  .feature .sub{ font-style:italic; font-size:18px; color:#6b5a3f; margin:0 0 6px; }
+  .feature .by{ font-size:15px; color:var(--gold); margin:0 0 14px; }
+  .feature p{ font-size:17px; color:#5a4a33; line-height:1.6; margin:0 0 14px; }
+  .feature ul{ margin:0 0 18px; padding-inline-start:20px; font-size:16px; color:#5a4a33; line-height:1.55; }
+  .feature li{ margin:3px 0; }
+  .facts{ font-size:14px; color:#8a7654; margin:12px 0 0; }
+  a.btn.btn-primary.buy.is-soon{ background:#f3ecd8!important; color:#6b5a3f!important; box-shadow:none!important; border:1.5px dashed var(--gold-soft); cursor:default; padding:8.5px 20px; }
+  .buy.is-soon:hover{ transform:none; }
+  .book-card img.cover-img{ margin:0 auto 18px; max-width:300px; }
+  .moon-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:22px; }
+  .moon-card{ background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:14px; padding:14px 14px 18px;
+    display:flex; flex-direction:column; box-shadow:0 6px 18px rgba(60,45,20,.08); }
+  .moon-card img{ width:100%; height:auto; aspect-ratio:1/1; display:block; border-radius:8px; margin:0 0 12px; }
+  .moon-card .num{ font-family:'Marcellus'; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin:0; }
+  .moon-card h3{ font-family:'Marcellus'; font-size:19px; color:var(--ink-navy); margin:2px 0 6px; }
+  .moon-card p{ font-size:15px; color:#6b5a3f; line-height:1.45; margin:0 0 14px; flex:1; }
+  .moon-card .btn{ font-size:15px; padding:8px 16px; }
+  .moon-card .buy.is-soon{ padding:6.5px 14px; }
+  .saw{ font-family:'Amiri', serif; }
+  .moon-card .num{ margin:0!important; flex:none; } .moon-card h3{ margin:2px 0 6px!important; min-height:0; }
+  @media (max-width:640px){
+    .feature{ grid-template-columns:1fr; padding:20px; }
+    .feature img{ max-width:230px; margin:0 auto; }
+  }
 </style>
 <link rel="stylesheet" href="/inside-theme.css?v=20261021-1">
 </head>
@@ -187,37 +224,147 @@
 
 <div class="page-head">
   <p class="eyebrow">Diin Islaam Books</p>
-  <h1>Seeraa Quest Books</h1>
-  <p>Illustrated Seerah books for children and families: maps, stories and lessons to put into practice.</p>
-  <p class="about">Read online or download for free.</p>
+  <h1>Books by Feysel Reshid</h1>
+  <p>Islamic books for adults, families and children: true stories from the Qur'an, the Sunnah and our history, written to be read slowly and lived.</p>
+  <nav class="chips" aria-label="Book collections">
+    <a href="#adults">For adults &amp; families</a>
+    <a href="#seeraa">Seeraa Quest</a>
+    <a href="#moonlight">Moonlight Stories</a>
+  </nav>
 </div>
 
-<div class="apps-grid">
+<section class="shelf" id="adults">
+  <div class="shelf-head">
+    <h2>For Adults &amp; Families</h2>
+    <p>Warm, honest chapters with practical lessons, questions for reflection and a prayer in every chapter.</p>
+  </div>
 
-  <div class="app-card book-card">
-    <div class="app-body">
-      <div class="cover"><b>Seeraa Quest</b><small>Book One</small><em>From Arabia Before Islam<br>to the First Revelation</em></div>
-      <h3>Book One</h3>
+  <article class="feature">
+    <img src="covers/a-house-in-paradise.webp" alt="A House in Paradise — front cover" width="480" height="720" loading="lazy">
+    <div>
+      <h3>A House in Paradise</h3>
+      <p class="sub">Stories of Good Wives and Bad Wives from the Qur'an, the Sunnah and Islamic History</p>
       <p class="by">by Feysel Reshid</p>
-      <p>Nine maps. Thirty-six stories. Read, reflect and put good lessons into practice, from Arabia before Islam to the first revelation.</p>
-      <details class="maps"><summary>The nine maps</summary><ol><li>Arabia Before Islam <span>· page 6</span></li><li>The Prophet's Family <span>· page 16</span></li><li>The Year of the Elephant <span>· page 27</span></li><li>A Blessed Birth <span>· page 37</span></li><li>Growing Up in Makkah <span>· page 47</span></li><li>A Young Man of Honour <span>· page 57</span></li><li>Trade and Marriage <span>· page 67</span></li><li>Before the Message <span>· page 77</span></li><li>The First Revelation <span>· page 87</span></li></ol></details>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="/Seeraa_Quest_Book_1_Interior_KDP_100pp%20(1).pdf" target="_blank" rel="noopener">Read online</a>
-        <a class="btn btn-ghost" href="/Seeraa_Quest_Book_1_Interior_KDP_100pp%20(1).pdf" download="Seeraa_Quest_Book_One.pdf">Download PDF</a>
-      </div>
-      <p class="app-note">100 pages · PDF · about 23 MB. Free. It opens in your browser's PDF viewer.</p>
+      <p>Two wives lived in the homes of prophets, and were lost. One lived in Pharaoh's palace, and is among the best women who ever lived. Twenty chapters on what makes a wife a blessing to her home, from the wives of Nuh and Lut to Asiyah, Hajar, Khadijah, 'A'ishah and Umm Sulaym.</p>
+      <ul>
+        <li>Stories from the Qur'an, authentic hadith and the seerah, with every source listed</li>
+        <li>A "For Husbands Too" section in every chapter, and a whole chapter for husbands</li>
+        <li>A meaningful gift for brides, newlyweds and every Muslim home</li>
+      </ul>
+      <div class="btn-row"><a class="btn btn-primary buy" data-book="house" href="#">Coming soon on Amazon</a></div>
+      <p class="facts">Paperback, 6 × 9 in, 123 pages · Kindle eBook</p>
     </div>
-  </div>
+  </article>
 
-  <div class="app-card book-card soon">
-    <div class="app-body">
-      <span class="soon-badge">Coming soon</span>
-      <div class="cover"><b>Seeraa Quest</b><small>Books Two to Five</small><em>The next stages of the<br>Seerah journey</em></div>
-      <h3>Books Two to Five</h3>
-      <p>More maps and stories are on the way. Each book will be added here, free to read online, when it is ready.</p>
+  <article class="feature">
+    <img src="covers/stories-for-a-steady-heart.webp" alt="Stories for a Steady Heart — front cover" width="480" height="721" loading="lazy">
+    <div>
+      <h3>Stories for a Steady Heart</h3>
+      <p class="sub">23 Lessons from the Prophets, the Sahabah and the Tabi'in for a Life of Purpose, Mercy and Hope</p>
+      <p class="by">by Feysel Reshid</p>
+      <p>A prophet calls out from the darkness inside a whale. A former slave whispers "One, One" under a burning rock. An old scholar loses his leg and his son on one journey, and still says, "If You have taken, You have also left." Twenty-three chapters on grief, patience, forgiveness, family and hope.</p>
+      <ul>
+        <li>Each chapter: a story from the Qur'an, the life of the Prophet <span class="saw">ﷺ</span>, the Sahabah and the Tabi'in</li>
+        <li>Practical wisdom, a weekly practice, questions and a prayer</li>
+        <li>For readers, families and study circles</li>
+      </ul>
+      <div class="btn-row"><a class="btn btn-primary buy" data-book="steady-heart" href="#">Coming soon on Amazon</a></div>
+      <p class="facts">Paperback, 6 × 9 in, 170 pages · Kindle eBook</p>
+    </div>
+  </article>
+</section>
+
+<section class="shelf" id="seeraa">
+  <div class="shelf-head">
+    <h2>Seeraa Quest</h2>
+    <p>Illustrated Seerah books for children and families: maps, stories and lessons to put into practice.</p>
+  </div>
+  <div class="apps-grid">
+    <div class="app-card book-card">
+      <div class="app-body">
+        <img class="cover-img" src="covers/seeraa-quest-book-1.webp" alt="Seeraa Quest Book One — front cover" width="480" height="621" loading="lazy">
+        <h3>Book One</h3>
+        <p class="by">From Arabia Before Islam to the First Revelation · by Feysel Reshid</p>
+        <p>Nine maps. Thirty-six stories. Read, reflect and put good lessons into practice, from Arabia before Islam to the first revelation.</p>
+        <details class="maps"><summary>The nine maps</summary><ol><li>Arabia Before Islam <span>· page 6</span></li><li>The Prophet's Family <span>· page 16</span></li><li>The Year of the Elephant <span>· page 27</span></li><li>A Blessed Birth <span>· page 37</span></li><li>Growing Up in Makkah <span>· page 47</span></li><li>A Young Man of Honour <span>· page 57</span></li><li>Trade and Marriage <span>· page 67</span></li><li>Before the Message <span>· page 77</span></li><li>The First Revelation <span>· page 87</span></li></ol></details>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/Seeraa_Quest_Book_1_Interior_KDP_100pp%20(1).pdf" target="_blank" rel="noopener">Read online</a>
+          <a class="btn btn-ghost" href="/Seeraa_Quest_Book_1_Interior_KDP_100pp%20(1).pdf" download="Seeraa_Quest_Book_One.pdf">Download PDF</a>
+        </div>
+        <div class="btn-row" style="margin-top:10px"><a class="btn btn-primary buy" data-book="seeraa-1" href="#">Coming soon on Amazon</a></div>
+        <p class="app-note">Free to read online: 100 pages · PDF · about 23 MB. It opens in your browser's PDF viewer. The printed colour paperback is coming to Amazon.</p>
+      </div>
+    </div>
+
+    <div class="app-card book-card soon">
+      <div class="app-body">
+        <span class="soon-badge">Coming soon</span>
+        <div class="cover"><b>Seeraa Quest</b><small>Books Two to Five</small><em>The next stages of the<br>Seerah journey</em></div>
+        <h3>Books Two to Five</h3>
+        <p>More maps and stories are on the way. Each book will be added here, free to read online, when it is ready.</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
+
+<section class="shelf" id="moonlight">
+  <div class="shelf-head">
+    <h2>Moonlight Stories of the Prophets</h2>
+    <p>Gentle goodnight stories for Muslim children aged 3 to 8. Ten stories in every book, one for each night, with a little lesson, a sleepy question and the Prophet's <span class="saw">ﷺ</span> bedtime du'a. The prophets and angels are never pictured.</p>
+  </div>
+  <div class="moon-grid">
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-1.webp" alt="Moonlight Stories of the Prophets, Book 1: From Adam to Ibrahim — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 1</p>
+      <h3>From Adam to Ibrahim</h3>
+      <p>Adam, Nuh and the ark, Hud, Salih's camel, and young Ibrahim.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-1" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-2.webp" alt="Moonlight Stories of the Prophets, Book 2: Ibrahim's Family — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 2</p>
+      <h3>Ibrahim's Family</h3>
+      <p>Zamzam, the Ka'bah, the call to Hajj, Lut, Ishaq and Ya'qub.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-2" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-3.webp" alt="Moonlight Stories of the Prophets, Book 3: Yusuf and His Dream — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 3</p>
+      <h3>Yusuf and His Dream</h3>
+      <p>The whole story of Yusuf, told gently over ten nights.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-3" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-4.webp" alt="Moonlight Stories of the Prophets, Book 4: Musa and the Sea — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 4</p>
+      <h3>Musa and the Sea</h3>
+      <p>The basket on the river, the burning bush, Pharaoh and the parting of the sea.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-4" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-5.webp" alt="Moonlight Stories of the Prophets, Book 5: Kings, Whales and Wise Men — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 5</p>
+      <h3>Kings, Whales and Wise Men</h3>
+      <p>Shu'ayb, Dawud, Sulayman and the ant, Yunus, Ayyub and Luqman.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-5" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-6.webp" alt="Moonlight Stories of the Prophets, Book 6: Maryam and 'Isa — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 6</p>
+      <h3>Maryam and 'Isa</h3>
+      <p>Maryam's mother, Zakariyya, Yahya, the palm tree and baby 'Isa.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-6" href="#">Coming soon on Amazon</a>
+    </div>
+    <div class="moon-card">
+      <img src="covers/moonlight-stories-book-7.webp" alt="Moonlight Stories of the Prophets, Book 7: Our Prophet Muhammad — front cover" width="480" height="480" loading="lazy">
+      <p class="num">Book 7</p>
+      <h3>Our Prophet Muhammad <span class="saw">ﷺ</span></h3>
+      <p>Ten gentle stories from his life, from the Year of the Elephant to his bedtime du'a.</p>
+      <a class="btn btn-primary buy" data-book="moonlight-7" href="#">Coming soon on Amazon</a>
+    </div>
+  </div>
+  <p class="facts" style="text-align:center;margin-top:22px">Colour paperbacks, 8.5 × 8.5 in, 26 pages each.</p>
+</section>
 
 <footer>
   <div class="flinks">
@@ -244,6 +391,27 @@ mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   mainNav.classList.remove('open');
   menuBtn.setAttribute('aria-expanded', 'false');
 }));
+</script>
+<script>
+/* Amazon links: paste each book's Amazon address between the quotes when it goes live.
+   Until then the button shows "Coming soon on Amazon". */
+const AMAZON = {
+  "house": "",
+  "steady-heart": "",
+  "seeraa-1": "",
+  "moonlight-1": "", "moonlight-2": "", "moonlight-3": "", "moonlight-4": "",
+  "moonlight-5": "", "moonlight-6": "", "moonlight-7": ""
+};
+document.querySelectorAll('a.buy').forEach(a => {
+  const url = AMAZON[a.dataset.book];
+  if (url) {
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = 'Buy on Amazon';
+  } else {
+    a.classList.add('is-soon'); a.removeAttribute('href');
+    a.setAttribute('aria-disabled', 'true');
+  }
+});
 </script>
 <script src="/cursor.js" defer></script>
 </body>
