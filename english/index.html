@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>English Adventure for Kids | Learn English Free – diinislaam.com</title>
+<meta name="description" content="English Adventure is a free, fun, game-style English course for kids. Journey through 11 worlds with a final boss: parts of speech, nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, interjections and sentences. Play quizzes, bubble pop, memory match and lightning rounds, then earn stars, XP, badges and certificates.">
+<link rel="canonical" href="https://diinislaam.com/english/">
+<meta name="theme-color" content="#4cc9f0">
+<meta property="og:title" content="English Adventure – a fun English game for kids">
+<meta property="og:description" content="11 worlds, a boss level, quizzes, stars, badges and certificates. Learn parts of speech and sentences the fun way.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://diinislaam.com/english/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b2d42;--card:#fff;--sky:#4cc9f0;--sun:#ffd166;--good:#2ecc71;--bad:#ef476f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Baloo 2',ui-rounded,'Nunito','Segoe UI',system-ui,sans-serif;color:var(--ink);min-height:100vh;
+ background:radial-gradient(circle at 15% 5%,#fff9 0 8%,transparent 9%),radial-gradient(circle at 85% 12%,#fff9 0 6%,transparent 7%),linear-gradient(#bfe9ff,#fff7e0 55%,#d6f5c4);background-attachment:fixed;font-size:18px}
+.wrap{max-width:600px;margin:0 auto;padding:12px 14px 90px}
+h1,h2,h3{margin:.2em 0;line-height:1.1}
+button{font:inherit;cursor:pointer;color:inherit}
+.card{background:var(--card);border-radius:26px;padding:16px;box-shadow:0 6px 0 #0000001a;margin:12px 0}
+.big{display:block;width:100%;border:none;border-radius:22px;padding:14px 18px;font-size:1.25rem;font-weight:800;color:#fff;background:linear-gradient(#34d399,#10b981);box-shadow:0 6px 0 #0a7d5a;margin-top:12px;transition:transform .08s}
+.big:active{transform:translateY(4px);box-shadow:0 2px 0 #0a7d5a}
+.big.alt{background:linear-gradient(#60a5fa,#3b82f6);box-shadow:0 6px 0 #1d4ed8}
+.big.alt:active{box-shadow:0 2px 0 #1d4ed8}
+.big.ghost{background:#fff;color:var(--ink);box-shadow:0 6px 0 #0002;border:3px solid #e5e7eb}
+.hide{display:none!important}
+.hero{text-align:center;padding:18px 0 4px}
+.hero h1{font-size:2.3rem;color:#3a0ca3;text-shadow:0 3px 0 #fff}
+.owl{font-size:84px;animation:bob 2.4s ease-in-out infinite;display:inline-block}
+.sub{margin:4px 0;font-weight:600}
+@keyframes bob{50%{transform:translateY(-10px) rotate(3deg)}}
+input#nm{width:100%;font:inherit;font-size:1.3rem;padding:12px 16px;border-radius:18px;border:3px solid #cbd5e1;outline:none;text-align:center}
+input#nm:focus{border-color:var(--sky)}
+.avs,.plist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.av{font-size:2rem;width:58px;height:58px;border-radius:50%;border:4px solid #e5e7eb;background:#fff}
+.av.on{border-color:#3b82f6;background:#dbeafe;transform:scale(1.1)}
+.pl{display:flex;align-items:center;gap:8px;border:none;background:#fff;border-radius:22px;padding:8px 16px 8px 10px;font-weight:800;font-size:1.15rem;box-shadow:0 5px 0 #0002}
+.pl span{font-size:2rem}
+.foot{text-align:center;font-size:.9rem;margin-top:22px}
+.foot a{color:#3a0ca3}
+/* header */
+.hdr{position:sticky;top:0;z-index:5;background:#ffffffee;backdrop-filter:blur(6px);margin:0 -14px;padding:8px 14px;display:flex;align-items:center;gap:10px;border-bottom:3px solid #e0f2fe}
+.hdr .me{font-size:2rem;background:none;border:none;padding:0}
+.lv{flex:1;min-width:0}
+.lv b{display:block;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:12px;background:#e5e7eb;border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#fbbf24,#f97316);border-radius:9px;transition:width .6s}
+.pill{background:#fff7ed;border:2px solid #fed7aa;border-radius:16px;padding:2px 9px;font-weight:800;font-size:.95rem;white-space:nowrap}
+.ib{border:none;background:#f1f5f9;border-radius:14px;width:38px;height:38px;font-size:1.1rem}
+/* map */
+.map{padding-top:6px}
+.node{display:flex;align-items:center;gap:12px;width:84%;padding:12px 14px;border-radius:28px;color:#fff;border:none;text-align:left;box-shadow:0 7px 0 #0003;position:relative;margin:0;transition:transform .1s}
+.node:active{transform:translateY(4px)}
+.node.r{margin-left:auto}
+.node .em{font-size:2.6rem;background:#fff3;border-radius:50%;width:66px;height:66px;display:grid;place-items:center;flex:none}
+.node b{display:block;font-size:1.25rem;line-height:1.1}
+.node small{opacity:.95;font-weight:600}
+.stars{letter-spacing:2px;font-size:1.15rem}
+.node.lock{background:#94a3b8!important;filter:saturate(.3)}
+.node.lock .em{opacity:.7}
+.node.next::after{content:"START";position:absolute;right:-6px;top:-10px;background:#fff;color:#ef476f;font-weight:800;font-size:.75rem;padding:2px 10px;border-radius:12px;box-shadow:0 3px 0 #0002;animation:pop 1s infinite}
+@keyframes pop{50%{transform:scale(1.15)}}
+.dots{height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.dots i{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 2px 0 #0002}
+.banner{background:linear-gradient(90deg,#fde68a,#fbcfe8);border-radius:22px;padding:10px 14px;font-weight:700;text-align:center;margin-top:10px}
+/* lesson */
+.lesson .ico{font-size:3rem;text-align:center}
+.lesson h2{text-align:center;color:#3a0ca3}
+.lesson p{font-size:1.15rem;line-height:1.4;margin:.4em 0}
+.exl{list-style:none;padding:0;margin:8px 0}
+.exl li{background:#f0f9ff;border-left:8px solid var(--c,#38bdf8);border-radius:14px;padding:8px 12px;margin:7px 0;font-weight:600}
+.dotsrow{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.dotsrow i{width:11px;height:11px;border-radius:50%;background:#cbd5e1}
+.dotsrow i.on{background:#3b82f6;transform:scale(1.3)}
+.spk{border:none;background:#e0f2fe;border-radius:50%;width:38px;height:38px;font-size:1.1rem;vertical-align:middle}
+/* quiz */
+.qhead{display:flex;align-items:center;gap:10px;margin:10px 0}
+.qhead .x{border:none;background:#fff;border-radius:50%;width:40px;height:40px;font-size:1.1rem;box-shadow:0 3px 0 #0002}
+.qhead .bar{flex:1;height:16px}
+.qhead .bar i{background:linear-gradient(90deg,#34d399,#10b981)}
+.qtext{font-size:1.4rem;font-weight:800;line-height:1.25;margin:4px 0 10px}
+.blank{display:inline-block;min-width:60px;border-bottom:4px dashed #3b82f6;text-align:center;color:#3b82f6}
+.opts{display:grid;gap:10px}
+.opt{border:none;background:#fff;border:4px solid #e2e8f0;border-radius:20px;padding:13px;font-size:1.3rem;font-weight:800;box-shadow:0 5px 0 #0002;transition:transform .08s}
+.opt:active{transform:translateY(3px)}
+.opt.ok{background:#d1fae5;border-color:var(--good);animation:hop .4s}
+.opt.no{background:#ffe4e6;border-color:var(--bad);animation:shake .4s;pointer-events:none;opacity:.7}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes hop{50%{transform:scale(1.07)}}
+.sent{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{border:none;background:#fff;border:4px solid #e2e8f0;border-radius:16px;padding:8px 14px;font-size:1.4rem;font-weight:800;box-shadow:0 4px 0 #0002}
+.chip.ok{background:#d1fae5;border-color:var(--good)}
+.chip.no{background:#ffe4e6;border-color:var(--bad);animation:shake .4s}
+.chip.used{opacity:.25;pointer-events:none}
+.bigword{font-size:2.6rem;font-weight:800;text-align:center;background:#fffbe6;border:4px dashed var(--sun);border-radius:24px;padding:14px;margin:10px 0;animation:hop .4s}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.bk{border:none;border-radius:20px;padding:14px 8px;font-size:1.1rem;font-weight:800;color:#fff;box-shadow:0 5px 0 #0003}
+.bk:nth-child(1){background:#f97316}.bk:nth-child(2){background:#8b5cf6}.bk:nth-child(3){background:#0ea5e9}
+.slot{min-height:64px;border:4px dashed #cbd5e1;border-radius:20px;padding:8px;display:flex;flex-wrap:wrap;gap:8px;background:#f8fafc}
+.fb{margin-top:12px;border-radius:20px;padding:10px 14px;font-weight:700;display:flex;gap:10px;align-items:center}
+.fb.g{background:#d1fae5;color:#065f46}.fb.b{background:#ffe4e6;color:#9f1239}
+.fb span{font-size:2.2rem}
+/* result */
+.res{text-align:center}
+.res .st{font-size:3.4rem;letter-spacing:6px}
+.res .st i{display:inline-block;font-style:normal;animation:starin .6s both}
+@keyframes starin{from{transform:scale(0) rotate(-180deg);opacity:0}}
+.gain{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.gain div{background:#fff7ed;border:3px solid #fed7aa;border-radius:18px;padding:6px 14px;font-weight:800}
+/* modal */
+.ov{position:fixed;inset:0;background:#0007;z-index:20;display:grid;place-items:center;padding:14px;overflow:auto}
+.modal{background:#fff;border-radius:28px;padding:18px;max-width:560px;width:100%;max-height:92vh;overflow:auto}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.bd{text-align:center;background:#f8fafc;border-radius:18px;padding:8px 4px;font-size:.85rem;font-weight:700}
+.bd i{display:block;font-size:2.2rem;font-style:normal}
+.bd.off{filter:grayscale(1);opacity:.4}
+.cert{border:10px double #b8860b;border-radius:12px;padding:22px 14px;text-align:center;background:#fffdf5;background-image:radial-gradient(#f5e6b8 1px,transparent 1px);background-size:14px 14px}
+.cert h2{font-size:1.9rem;color:#92400e;margin:0}
+.cert .nm{font-size:2.4rem;color:#3a0ca3;font-weight:800;border-bottom:3px solid #b8860b;display:inline-block;padding:0 18px;margin:8px 0}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#3a0ca3;color:#fff;padding:10px 18px;border-radius:20px;font-weight:800;z-index:40;box-shadow:0 6px 0 #0004;animation:drop .4s;max-width:92vw;text-align:center}
+@keyframes drop{from{transform:translate(-50%,-80px)}}
+.conf{position:fixed;top:-40px;font-size:1.8rem;z-index:30;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.tfb{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.tfb .opt{font-size:1.5rem}
+.tfb .opt.t{border-color:#6ee7b7}.tfb .opt.f{border-color:#fca5a5}
+.bubs{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0}
+.bub{border:none;border-radius:34px;padding:14px 20px;font-size:1.3rem;font-weight:800;color:#075985;background:radial-gradient(circle at 30% 25%,#fff,#bae6fd 60%,#7dd3fc);box-shadow:inset 0 -4px 0 #0ea5e955,0 5px 0 #0002;animation:float 3s ease-in-out infinite}
+.bub:nth-child(2n){animation-delay:-1s}.bub:nth-child(3n){animation-delay:-2s}
+@keyframes float{50%{transform:translateY(-9px)}}
+.bub.pop{animation:popb .35s forwards;pointer-events:none}
+@keyframes popb{to{transform:scale(1.7);opacity:0}}
+.bub.no{animation:shake .4s;background:#ffe4e6}
+.mgrid{display:grid;gap:10px;margin:12px 0}
+.mc{min-height:78px;border:none;border-radius:18px;font-size:1.05rem;font-weight:800;padding:6px;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;box-shadow:0 5px 0 #0003;word-break:break-word}
+.mc.up{background:#fff;color:var(--ink);border:4px solid #c7d2fe}
+.mc.done{background:#d1fae5;color:#065f46;border:4px solid var(--good);pointer-events:none}
+.stg{display:flex;align-items:center;gap:12px;width:100%;border:none;background:#fff;border-radius:22px;padding:12px 14px;margin:10px 0;text-align:left;box-shadow:0 5px 0 #0002}
+.stg .em{font-size:2rem;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#f1f5f9;flex:none}
+.stg.dn .em{background:#d1fae5}
+.stg b{display:block;font-size:1.15rem}.stg small{opacity:.75;font-weight:600}
+.stg .rt{margin-left:auto;font-size:1rem;white-space:nowrap}
+.stg.lock{opacity:.55}
+.stg.go{background:linear-gradient(135deg,#fef3c7,#fde68a)}
+@media print{body>*:not(#ov){display:none!important}#ov{position:static;background:none;padding:0}.modal{box-shadow:none;max-height:none}.noprint{display:none!important}body{background:#fff}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div id="ov" class="ov hide"></div>
+
+<script>
+/* ============ COURSE DATA ============ */
+const WORLDS=[
+{id:"parts",name:"Word Castle Gate",emoji:"🚪",c:"#0891b2",c2:"#22d3ee",badge:"🗝️",bname:"Key Keeper",
+ learn:[
+  {i:"🧩",h:"8 parts of speech (1–4)",p:"Every word in English has a job. These jobs are called parts of speech.",ex:["1. Noun → names a person, place, thing or idea. Example: book","2. Pronoun → replaces a noun. Example: he","3. Verb → shows action or state. Example: run","4. Adjective → describes a noun. Example: beautiful"]},
+  {i:"🧩",h:"8 parts of speech (5–8)",p:"Here are the other four jobs.",ex:["5. Adverb → describes a verb, adjective or adverb. Example: quickly","6. Preposition → shows relation of place, time or direction. Example: under","7. Conjunction → joins words or clauses. Example: and","8. Interjection → shows sudden feeling. Example: wow!"]}],
+ q:[
+  {t:"mcq",q:"Which part of speech names a person, place, thing or idea?",o:["Noun","Verb","Adverb","Conjunction"],a:0,why:"Nouns are naming words. Example: book."},
+  {t:"mcq",q:"Which part of speech replaces a noun?",o:["Adjective","Pronoun","Preposition","Interjection"],a:1,why:"Pronouns replace nouns. Example: he."},
+  {t:"mcq",q:"Which part of speech shows action or state?",o:["Verb","Noun","Conjunction","Pronoun"],a:0,why:"Verbs show action or state. Example: run."},
+  {t:"mcq",q:"Which part of speech describes a noun?",o:["Adverb","Verb","Adjective","Preposition"],a:2,why:"Adjectives describe nouns. Example: beautiful."},
+  {t:"mcq",q:"Which part of speech describes a verb, an adjective or an adverb?",o:["Adverb","Noun","Pronoun","Interjection"],a:0,why:"Adverbs describe verbs, adjectives and adverbs. Example: quickly."},
+  {t:"mcq",q:"Which part of speech shows the relation of place, time or direction?",o:["Conjunction","Preposition","Verb","Adjective"],a:1,why:"Prepositions show place, time and direction. Example: under."},
+  {t:"mcq",q:"Which part of speech joins words or clauses?",o:["Conjunction","Interjection","Noun","Adverb"],a:0,why:"Conjunctions join. Example: and."},
+  {t:"mcq",q:"Which part of speech shows a sudden feeling?",o:["Pronoun","Verb","Interjection","Preposition"],a:2,why:"Interjections show sudden feelings. Example: wow!"},
+  {t:"sort",q:"Noun, verb or adjective?",b:["Noun","Verb","Adjective"],i:[["book",0],["run",1],["beautiful",2],["teacher",0],["write",1],["tall",2]],why:"Naming, doing, describing!"},
+  {t:"sort",q:"Adverb, preposition or conjunction?",b:["Adverb","Preposition","Conjunction"],i:[["quickly",0],["under",1],["and",2],["softly",0],["into",1],["but",2]],why:"Great sorting!"}]},
+
+{id:"nouns",name:"Noun Village",emoji:"🏡",c:"#ef5350",c2:"#ff8a65",badge:"🏅",bname:"Noun Ninja",
+ learn:[
+  {i:"🏷️",h:"What is a noun?",p:"A noun is a naming word. It names a person, a place, a thing or an idea.",ex:["person → teacher, Yusuf","place → school, Makkah","thing → book, apple","idea → joy, peace"]},
+  {i:"🧩",h:"5 kinds of nouns",p:"Nouns come in different families.",ex:["Proper → a SPECIFIC name: Melbourne, Aisha","Common → a general name: city, girl","Collective → a group: team, bunch","Abstract → idea or feeling: honesty, love","Material → a substance: gold, water"]},
+  {i:"💬",h:"Nouns in sentences",p:"Spot the nouns in these sentences.",ex:["Riya lives in India. (proper nouns)","The girl walked to the city. (common nouns)","Our team won the match. (collective noun)","A bunch of grapes is on the table. (collective noun)","Honesty is the best policy. (abstract noun)","Love makes us kind. (abstract noun)","This ring is made of gold. (material noun)","Please drink some water. (material noun)"]}],
+ q:[
+  {t:"mcq",q:"Which word is a noun?",o:["run","book","quickly","under"],a:1,why:"A book is a thing, so it is a noun!"},
+  {t:"tap",q:"Tap a PROPER noun:",w:["Yusuf","lives","in","Melbourne."],a:[0,3],why:"Proper nouns name a specific person or place, and start with a capital letter."},
+  {t:"sort",q:"Is it a proper or a common noun?",b:["Proper","Common"],i:[["Melbourne",0],["city",1],["Aisha",0],["girl",1],["Ramadan",0],["mosque",1]],why:"Proper = special name. Common = general name."},
+  {t:"mcq",q:"“Team” is what kind of noun?",o:["Proper","Collective","Abstract","Material"],a:1,why:"A team is a group of people, so it is a collective noun."},
+  {t:"mcq",q:"“Honesty” is what kind of noun?",o:["Collective","Material","Abstract","Proper"],a:2,why:"You cannot touch honesty. It is an idea, so it is abstract."},
+  {t:"sort",q:"Which family does the noun belong to?",b:["Collective","Abstract","Material"],i:[["gold",2],["flock",0],["kindness",1],["water",2],["bunch",0],["love",1]],why:"Group → collective. Feeling → abstract. Substance → material."},
+  {t:"mcq",q:"Which one is a MATERIAL noun?",o:["happiness","gold","class","Bilal"],a:1,why:"Gold is a substance you can touch."},
+  {t:"mcq",q:"A ___ of birds flew over the mosque.",o:["flock","honesty","silver","Maryam"],a:0,why:"A group of birds is a flock."}]},
+
+{id:"pronouns",name:"Pronoun Park",emoji:"🎠",c:"#ec4899",c2:"#f472b6",badge:"🎖️",bname:"Pronoun Pro",
+ learn:[
+  {i:"🔁",h:"What is a pronoun?",p:"A pronoun takes the place of a noun so we do not repeat the same name again and again.",ex:["Amina is kind. She helps everyone.","Bilal lost his ball. He is sad."]},
+  {i:"🎈",h:"5 kinds of pronouns",p:"Meet the pronoun family:",ex:["Personal → I, you, she, they","Demonstrative → this, that, these, those","Reflexive → myself, himself","Interrogative → who, what, which","Possessive → mine, yours, hers"]},
+  {i:"💬",h:"Pronouns in sentences",p:"Tap each sentence to hear it.",ex:["I am happy. · You are kind. · She is my sister. · They are playing. (personal)","This is my book. · That is your bag. · These are fresh apples. · Those are tall trees. (demonstrative)","He taught himself. · I made it myself. (reflexive)","Who is at the door? · What is your name? · Which one do you like? (interrogative)","This pen is mine. · Is that bag yours? · The red scarf is hers. (possessive)"]}],
+ q:[
+  {t:"mcq",q:"A pronoun takes the place of a ___.",o:["noun","verb","sound","number"],a:0,why:"Pronoun = replaces a noun."},
+  {t:"mcq",q:"Amina is kind. ___ helps everyone.",o:["She","Hers","Himself","This"],a:0,why:"“She” takes the place of Amina."},
+  {t:"sort",q:"Personal or possessive pronoun?",b:["Personal","Possessive"],i:[["I",0],["mine",1],["she",0],["yours",1],["they",0],["hers",1]],why:"Possessive pronouns show ownership."},
+  {t:"mcq",q:"Which pronoun points something out?",o:["this","myself","who","mine"],a:0,why:"This, that, these and those point things out."},
+  {t:"mcq",q:"Yusuf hurt ___ at football.",o:["himself","hers","those","what"],a:0,why:"Reflexive pronouns refer back to the subject."},
+  {t:"mcq",q:"Which pronoun is used to ask a question?",o:["who","those","hers","I"],a:0,why:"Who, what and which start questions."},
+  {t:"mcq",q:"This pen belongs to me. This pen is ___.",o:["mine","myself","who","they"],a:0,why:"Mine shows ownership."},
+  {t:"tap",q:"Tap the pronoun:",w:["She","reads","a","book."],a:[0],why:"“She” stands for a girl or woman."}]},
+
+{id:"verbs",name:"Verb Volcano",emoji:"🌋",c:"#f97316",c2:"#fbbf24",badge:"🔥",bname:"Verb Master",
+ learn:[
+  {i:"🏃",h:"What is a verb?",p:"A verb shows an action or a state. Every sentence needs a verb. Without a verb there is no action or meaning!",ex:["run, eat, write, jump","is, seem, become"]},
+  {i:"🧰",h:"3 kinds of verbs",p:"Verbs have three jobs.",ex:["Action verbs → what someone does: run, eat, write","Linking verbs → connect the subject to a description: is, seem, become","Helping verbs → help the main verb: is, have, will, can"]},
+  {i:"💬",h:"Verbs in sentences",p:"Find the verb in each sentence.",ex:["Children run in the park. (action)","We eat dinner together. (action)","I write a letter. (action)","The sky is blue. (linking)","He seems tired. (linking)","She became a doctor. (linking)","I have finished my homework. (helping)","They will come tomorrow. (helping)","💡 Tip: Every sentence needs a verb. Without a verb, there is no action or meaning!"]}],
+ q:[
+  {t:"mcq",q:"Which word is an action verb?",o:["tree","run","happy","blue"],a:1,why:"Run is something you do!"},
+  {t:"tap",q:"Tap the verb:",w:["Bilal","writes","a","letter."],a:[1],why:"Writes is the action."},
+  {t:"sort",q:"Action, linking or helping verb?",b:["Action","Linking","Helping"],i:[["run",0],["seem",1],["will",2],["jump",0],["become",1],["can",2]],why:"Action = do. Linking = connect. Helping = assist the main verb."},
+  {t:"mcq",q:"Linking verbs connect the subject with a ___.",o:["description","shout","number","place"],a:0,why:"The soup is tasty: “is” links soup and tasty."},
+  {t:"mcq",q:"She ___ walking to school.",o:["is","tree","red","soft"],a:0,why:"“is” helps the main verb “walking”."},
+  {t:"mcq",q:"Which one is a full sentence (it has a verb)?",o:["Fatima reads.","The red ball.","Under the table","Very happy"],a:0,why:"Only “Fatima reads.” has a verb."},
+  {t:"mcq",q:"The soup ___ tasty.",o:["seems","jumps","eats","writes"],a:0,why:"“seems” is a linking verb."},
+  {t:"mcq",q:"Every sentence needs a ___.",o:["verb","picture","comma","number"],a:0,why:"No verb, no meaning!"}]},
+
+{id:"adjectives",name:"Adjective Meadow",emoji:"🌸",c:"#22c55e",c2:"#86efac",badge:"🌈",bname:"Adjective Artist",
+ learn:[
+  {i:"🎨",h:"What is an adjective?",p:"An adjective describes a noun. It tells us what something is like.",ex:["a beautiful flower","the tall boy","a big house"]},
+  {i:"📏",h:"Comparing things",p:"Adjectives have 3 degrees: positive, comparative, superlative.",ex:["tall → taller → tallest","happy → happier → happiest (y changes to i)","nice → nicer → nicest (just add r / st)","beautiful → more beautiful → most beautiful (long words use more / most)"]},
+  {i:"💬",h:"All the degrees in sentences",p:"Positive → Comparative → Superlative",ex:["1) tall: Ram is tall. Shyam is taller than Ram. Amit is the tallest in the class.","2) big: This is a big house. This house is bigger than that one. This is the biggest house in the city.","3) small: This box is small. This box is smaller than that one. This is the smallest box among all.","4) beautiful: She is beautiful. She is more beautiful than her sister. She is the most beautiful girl in school.","5) interesting: The movie is interesting. This movie is more interesting than that one. This is the most interesting movie I have ever seen.","6) happy: I am happy today. I am happier today than yesterday. This is the happiest moment of my life."]},
+  {i:"📌",h:"Rules to remember",p:"Four easy rules for comparing.",ex:["Short adjectives (1 syllable): add -er and -est","Ends in e: add -r / -st (nice → nicer → nicest)","Consonant + y: change y to i, then add -er / -est (happy → happier → happiest)","Long adjectives (2+ syllables): use more / most (beautiful → more beautiful → most beautiful)"]}],
+ q:[
+  {t:"mcq",q:"Which word describes a noun?",o:["beautiful","run","quickly","under"],a:0,why:"Beautiful tells us what a thing is like."},
+  {t:"tap",q:"Tap the adjective:",w:["The","tall","boy","smiled."],a:[1],why:"Tall describes the boy."},
+  {t:"mcq",q:"tall → ___ → tallest",o:["tallest","taller","more tall","tallier"],a:1,why:"Short word: add -er."},
+  {t:"mcq",q:"big → bigger → ___",o:["biggest","bigest","most big","bigger"],a:0,why:"Double the g, then add -est."},
+  {t:"mcq",q:"beautiful → more beautiful → ___",o:["beautifulest","most beautiful","more beautifuler","beautifuller"],a:1,why:"Long adjectives use more / most."},
+  {t:"mcq",q:"happy → ___ → happiest",o:["happyer","happier","more happy","happiyer"],a:1,why:"Change y to i, then add -er."},
+  {t:"mcq",q:"nice → ___ → nicest",o:["nicer","nicier","niceer","more nice"],a:0,why:"Ends in e, so just add r."},
+  {t:"sort",q:"Which way do we compare it?",b:["Add -er / -est","Use more / most"],i:[["small",0],["interesting",1],["fast",0],["beautiful",1],["tall",0],["delicious",1]],why:"Short words add -er/-est. Long words use more/most."}]},
+
+{id:"adverbs",name:"Adverb Bay",emoji:"🏖️",c:"#0ea5e9",c2:"#67e8f9",badge:"🐬",bname:"Adverb Explorer",
+ learn:[
+  {i:"🚤",h:"What is an adverb?",p:"An adverb describes a verb, an adjective or another adverb.",ex:["She ran quickly.","He is very kind."]},
+  {i:"🧭",h:"5 questions adverbs answer",p:"Adverbs tell us…",ex:["How? (manner) → quickly, softly","When? (time) → today, yesterday","Where? (place) → here, outside","How often? (frequency) → always, sometimes","How much? (degree) → very, too"]},
+  {i:"💬",h:"Adverbs in sentences",p:"Tap a sentence to hear it.",ex:["How? She ran quickly. · He spoke softly.","When? I finished my work today. · We met yesterday.","Where? The book is here. · Let's play outside.","How often? I always wake up early. · She sometimes helps her brother.","How much? He is very kind. · The bag is too heavy."]}],
+ q:[
+  {t:"mcq",q:"An adverb can describe a verb, an adjective or another ___.",o:["adverb","noun","name","number"],a:0,why:"Adverbs are flexible helpers."},
+  {t:"tap",q:"Tap the adverb:",w:["She","ran","quickly."],a:[2],why:"Quickly tells us HOW she ran."},
+  {t:"sort",q:"Manner, time or place?",b:["How","When","Where"],i:[["softly",0],["today",1],["here",2],["yesterday",1],["outside",2],["carefully",0]],why:"How = manner. When = time. Where = place."},
+  {t:"mcq",q:"I ___ wake up early. (every day)",o:["always","quick","under","tall"],a:0,why:"Always tells how often."},
+  {t:"mcq",q:"In “He is very kind”, what does “very” tell us?",o:["How much","Where","When","Who"],a:0,why:"Very is an adverb of degree."},
+  {t:"mcq",q:"She ___ helps her brother. (not every time)",o:["sometimes","soft","beautiful","under"],a:0,why:"Sometimes = adverb of frequency."},
+  {t:"tap",q:"Tap the adverb of PLACE:",w:["Let's","play","outside","today."],a:[2],why:"Outside tells WHERE."},
+  {t:"mcq",q:"Which word is an adverb of time?",o:["yesterday","softly","here","very"],a:0,why:"Yesterday tells WHEN."}]},
+
+{id:"prepositions",name:"Preposition Peak",emoji:"🏔️",c:"#8b5cf6",c2:"#c4b5fd",badge:"⛰️",bname:"Preposition Climber",
+ learn:[
+  {i:"📍",h:"What is a preposition?",p:"A preposition shows the relation of a noun to another word: its place, time or direction.",ex:["Place → in, on, under","Time → at, on, in","Direction → to, into, towards"]},
+  {i:"✏️",h:"See it in sentences",p:"Prepositions are little words with big jobs.",ex:["The cat is under the table.","School starts at 8 o'clock.","She walked into the room."]},
+  {i:"💬",h:"More examples",p:"Place, time and direction in action.",ex:["Place: The keys are in the bag. · The book is on the table.","Time: See you in July. · We pray Jumu'ah on Fridays. · School starts at 8 o'clock.","Direction: He walked to school. · The bird flew towards the tree. · She walked into the room."]}],
+ q:[
+  {t:"mcq",q:"The cat is ___ the table.",o:["under","tall","quickly","and"],a:0,why:"Under shows the cat's place."},
+  {t:"mcq",q:"School starts ___ 8 o'clock.",o:["at","into","under","towards"],a:0,why:"We use “at” for exact times."},
+  {t:"mcq",q:"She walked ___ the room.",o:["into","under","since","before"],a:0,why:"Into shows movement."},
+  {t:"sort",q:"Place, time or direction?",b:["Place","Time","Direction"],i:[["under",0],["since",1],["into",2],["towards",2],["before",1],["behind",0]],why:"Great sorting!"},
+  {t:"mcq",q:"A preposition shows the relation of place, time or ___.",o:["direction","colour","taste","sound"],a:0,why:"Place, time, direction."},
+  {t:"tap",q:"Tap the preposition:",w:["The","book","is","on","the","shelf."],a:[3],why:"On shows where the book is."},
+  {t:"mcq",q:"I wake up ___ the morning.",o:["in","into","under","towards"],a:0,why:"We say “in the morning”."},
+  {t:"mcq",q:"The ball rolled ___ the goal.",o:["towards","under","at noon","since"],a:0,why:"Towards shows direction."}]},
+
+{id:"conjunctions",name:"Conjunction Bridge",emoji:"🌉",c:"#14b8a6",c2:"#5eead4",badge:"🔗",bname:"Bridge Builder",
+ learn:[
+  {i:"🔗",h:"What is a conjunction?",p:"A conjunction joins words or clauses together, like a bridge. Remember the secret code: FANBOYS!",ex:["F → For","A → And","N → Nor","B → But","O → Or","Y → Yet","S → So"]},
+  {i:"🌉",h:"What each one does",p:"Each bridge has a different job.",ex:["For → reason: I stayed home, for it was raining.","And → adds: I like tea, and I like milk.","Nor → negative choice: I don't like tea, nor coffee.","But → contrast: I wanted to go, but I was tired.","Or → choice: tea or coffee?","Yet → surprise: It was late, yet we continued.","So → result: It was raining, so we stayed inside."]},
+  {i:"💡",h:"Comma tip",p:"When a FANBOYS word joins two full sentences, put a comma before it.",ex:["I like tea, and I like coffee.","I don't like tea, nor coffee.","Would you like tea, or coffee?","It was late, yet we continued."]}],
+ q:[
+  {t:"mcq",q:"FANBOYS: For, And, Nor, But, Or, Yet, ___",o:["So","Go","Do","Now"],a:0,why:"S is for So!"},
+  {t:"mcq",q:"I like tea, ___ I like milk.",o:["and","but","nor","yet"],a:0,why:"And adds information."},
+  {t:"mcq",q:"I wanted to go, ___ I was tired.",o:["but","and","so","for"],a:0,why:"But shows contrast."},
+  {t:"mcq",q:"Would you like tea ___ juice?",o:["or","so","yet","for"],a:0,why:"Or shows a choice."},
+  {t:"mcq",q:"It was raining, ___ we stayed inside.",o:["so","or","nor","yet"],a:0,why:"So shows the result."},
+  {t:"mcq",q:"I stayed home, ___ it was raining.",o:["for","so","or","and"],a:0,why:"For gives the reason."},
+  {t:"mcq",q:"It was late, ___ we continued.",o:["yet","so","or","for"],a:0,why:"Yet shows something unexpected."},
+  {t:"sort",q:"What is the conjunction's job?",b:["Adds","Contrast","Result"],i:[["and",0],["but",1],["so",2],["yet",1]],why:"And adds, but/yet contrast, so gives a result."}]},
+
+{id:"interjections",name:"Interjection Carnival",emoji:"🎪",c:"#eab308",c2:"#fde047",badge:"🎉",bname:"Feeling Star",
+ learn:[
+  {i:"😲",h:"What is an interjection?",p:"Interjections are words that express sudden feelings or emotions. We usually write ! after them.",ex:["Oh! → surprise or realisation","Wow! → amazement","Alas! → sadness or regret"]},
+  {i:"🎊",h:"More feeling words",p:"Pick the one that fits the feeling.",ex:["Hurray! → joy","Oops! → a mistake","Bravo! → approval","SubhanAllah! → amazed at Allah's creation","Alhamdulillah! → thankful"]},
+  {i:"💬",h:"Interjections in sentences",p:"Tap each one and say it with feeling!",ex:["Oh! I didn't see you there.","Wow! That's incredible!","Alas! We missed the train.","Hurray! We won the match!","Oops! I dropped the cup.","Bravo! You did a great job!"]}],
+ q:[
+  {t:"mcq",q:"Which interjection shows amazement?",o:["Wow!","Alas!","Oops!","Hmm."],a:0,why:"Wow! Amazing!"},
+  {t:"mcq",q:"___! We missed the train. (sadness)",o:["Alas","Hurray","Bravo","Wow"],a:0,why:"Alas shows sadness or regret."},
+  {t:"mcq",q:"___! We won the match! (joy)",o:["Hurray","Alas","Oops","Oh"],a:0,why:"Hurray shows joy."},
+  {t:"mcq",q:"___! I dropped the cup. (a mistake)",o:["Oops","Bravo","Hurray","Wow"],a:0,why:"Oops shows a mistake."},
+  {t:"mcq",q:"___! You did a great job! (approval)",o:["Bravo","Alas","Oops","Oh"],a:0,why:"Bravo shows approval."},
+  {t:"mcq",q:"Interjections show sudden ___.",o:["feelings","numbers","places","verbs"],a:0,why:"Sudden feelings and emotions."},
+  {t:"tap",q:"Tap the interjection:",w:["Wow!","That","is","incredible!"],a:[0],why:"Wow! is the feeling word."},
+  {t:"mcq",q:"___! I didn't see you there. (surprise)",o:["Oh","Bravo","Alas","Hurray"],a:0,why:"Oh shows surprise."},
+  {t:"mcq",q:"You see a beautiful rainbow. What do we say?",o:["SubhanAllah!","Alas!","Oops!","Hmm."],a:0,why:"SubhanAllah! We admire Allah's creation."}]},
+
+{id:"sentences",name:"Sentence Castle",emoji:"🏰",c:"#6366f1",c2:"#a5b4fc",badge:"👑",bname:"Sentence Champion",
+ learn:[
+  {i:"📜",h:"4 types of sentences",p:"Every sentence has a job.",ex:["Declarative → makes a statement. She is my friend.","Interrogative → asks a question. Where are you going?","Imperative → gives a command or request. Please open the door.","Exclamatory → shows strong feeling. What a beautiful day!"]},
+  {i:"🧱",h:"Build a sentence",p:"A sentence starts with a capital letter and ends with . ? or !  Put the words in the right order to make it make sense.",ex:["She is my friend.","Where are you going?"]},
+  {i:"✍️",h:"Endings matter",p:"The end mark tells us the sentence type.",ex:["Declarative → ends with a full stop: She is my friend.","Interrogative → ends with a question mark: Where are you going?","Imperative → ends with a full stop (or !): Please open the door.","Exclamatory → ends with an exclamation mark: What a beautiful day!"]}],
+ q:[
+  {t:"mcq",q:"“She is my friend.” is a ___ sentence.",o:["declarative","interrogative","imperative","exclamatory"],a:0,why:"It makes a statement."},
+  {t:"mcq",q:"“Where are you going?” is a ___ sentence.",o:["interrogative","declarative","imperative","exclamatory"],a:0,why:"It asks a question."},
+  {t:"mcq",q:"“Please open the door.” is a ___ sentence.",o:["imperative","interrogative","declarative","exclamatory"],a:0,why:"It gives a request or command."},
+  {t:"mcq",q:"“What a beautiful day!” is a ___ sentence.",o:["exclamatory","imperative","declarative","interrogative"],a:0,why:"It shows strong feeling."},
+  {t:"sort",q:"Statement, question or command?",b:["Statement","Question","Command"],i:[["The sky is blue.",0],["Is it raining?",1],["Wash your hands.",2],["Amina loves reading.",0],["What is your name?",1],["Sit down, please.",2]],why:"Statements tell, questions ask, commands tell you what to do."},
+  {t:"order",q:"Build the sentence:",w:["She","is","my","friend."],why:"She is my friend."},
+  {t:"order",q:"Build the question:",w:["Where","are","you","going?"],why:"Where are you going?"},
+  {t:"order",q:"Build the request:",w:["Please","open","the","door."],why:"Please open the door."}]}
+];
+
+/* Grand Challenge: final boss mixes questions from every world */
+(function(){const q=[];WORLDS.forEach(w=>{q.push(...w.q.filter(x=>x.t==="mcq"||x.t==="tap").sort(()=>Math.random()-.5).slice(0,2))});
+ WORLDS.push({id:"boss",name:"Grand Challenge",emoji:"🐉",c:"#be123c",c2:"#fb7185",badge:"🐲",bname:"Dragon Slayer",
+  learn:[{i:"🐉",h:"The Grand Challenge!",p:"A friendly dragon guards the end of the map. Questions from every world are mixed together. Use everything you learned!",ex:["Nouns, pronouns, verbs and adjectives","Adverbs, prepositions, conjunctions and interjections","Sentence types","Take a deep breath, say Bismillah, and begin!"]}],
+  q:q.sort(()=>Math.random()-.5).slice(0,15)})})();
+
+/* ============ EXTRA ACTIVITIES (bank → bubble pop + lightning round, pairs → memory match, more → sentence practice) ============ */
+const EXTRA={
+parts:{
+ bank:{noun:["teacher","mosque","apple"],pronoun:["he","she","they"],verb:["run","write","pray"],adjective:["beautiful","tall","happy"],adverb:["quickly","softly","always"],preposition:["under","into","behind"],conjunction:["and","but","or"],interjection:["wow","oops","bravo"]},
+ pairs:[["book","Noun"],["he","Pronoun"],["run","Verb"],["beautiful","Adjective"],["quickly","Adverb"],["under","Preposition"],["and","Conjunction"],["wow!","Interjection"]],
+ more:[
+  {t:"mcq",q:"In “The tall boy runs quickly.”, which word is the verb?",o:["runs","tall","quickly","boy"],a:0,why:"Runs is the action."},
+  {t:"tap",q:"Tap the noun:",w:["The","mosque","is","beautiful."],a:[1],why:"Mosque names a place."},
+  {t:"tap",q:"Tap the adjective:",w:["She","wore","a","red","scarf."],a:[3],why:"Red describes the scarf."},
+  {t:"mcq",q:"“Oops!” is a(n) ___.",o:["interjection","noun","verb","preposition"],a:0,why:"It shows a sudden feeling."},
+  {t:"mcq",q:"In “We play under the tree.”, “under” is a ___.",o:["preposition","adverb","conjunction","pronoun"],a:0,why:"It shows place."},
+  {t:"tap",q:"Tap the conjunction:",w:["I","like","tea","and","milk."],a:[3],why:"And joins tea and milk."},
+  {t:"tf",q:"“Quickly” is an adjective.",a:false,why:"Quickly is an adverb. It tells how."},
+  {t:"order",q:"Build the sentence:",w:["The","boy","reads","a","book."],why:"The boy reads a book."}]},
+nouns:{
+ bank:{"proper noun":["Makkah","Yusuf","Ramadan","Melbourne"],"common noun":["city","boy","mosque","school"],"collective noun":["team","flock","bunch","crowd"],"abstract noun":["honesty","kindness","joy","peace"],"material noun":["gold","water","wood","silver"]},
+ pairs:[["Proper","Makkah"],["Common","girl"],["Collective","flock"],["Abstract","love"],["Material","gold"],["Common","city"]].map(([a,b])=>[b,a]),
+ more:[
+  {t:"tap",q:"Tap a noun:",w:["The","teacher","has","a","book."],a:[1,4],why:"Teacher is a person and book is a thing."},
+  {t:"mcq",q:"Which sentence has a PROPER noun?",o:["Bilal visited Makkah.","The boy kicked the ball.","We eat lunch.","It is sunny today."],a:0,why:"Bilal and Makkah are special names."},
+  {t:"mcq",q:"The ___ of students listened. (a group)",o:["class","happiness","water","Ali"],a:0,why:"A class is a group of students."},
+  {t:"mcq",q:"Kindness is a ___ noun.",o:["abstract","proper","collective","material"],a:0,why:"Kindness is a quality, so it is abstract."},
+  {t:"tf",q:"“Mosque” is a proper noun.",a:false,why:"Mosque is a general name, so it is a common noun."},
+  {t:"mcq",q:"Which word is a COLLECTIVE noun?",o:["team","gold","love","Yusuf"],a:0,why:"A team is a group."},
+  {t:"order",q:"Build the sentence:",w:["The","teacher","reads","a","book."],why:"The teacher reads a book."},
+  {t:"mcq",q:"“Water” is a ___ noun.",o:["material","proper","abstract","collective"],a:0,why:"Water is a substance."}]},
+pronouns:{
+ bank:{"personal pronoun":["I","you","she","they","we"],"possessive pronoun":["mine","yours","hers","ours"],"demonstrative pronoun":["this","that","these","those"],"reflexive pronoun":["myself","himself","herself","themselves"],"interrogative pronoun":["who","what","which","whose"]},
+ pairs:[["I","Personal"],["these","Demonstrative"],["himself","Reflexive"],["who","Interrogative"],["hers","Possessive"],["they","Personal"]],
+ more:[
+  {t:"mcq",q:"The book on the table is ___.",o:["hers","she","herself","who"],a:0,why:"Hers shows ownership."},
+  {t:"mcq",q:"I made the cake by ___.",o:["myself","mine","hers","who"],a:0,why:"Myself refers back to I."},
+  {t:"tap",q:"Tap the pronoun:",w:["They","are","playing","football."],a:[0],why:"They replaces the players."},
+  {t:"mcq",q:"___ is knocking at the door?",o:["Who","Those","Himself","Mine"],a:0,why:"Who asks a question."},
+  {t:"mcq",q:"___ are my books, right here next to me.",o:["These","That","Mine","Who"],a:0,why:"These points to things that are near."},
+  {t:"tf",q:"“Hers” is a reflexive pronoun.",a:false,why:"Hers is a possessive pronoun."},
+  {t:"order",q:"Build the sentence:",w:["This","pen","is","mine."],why:"This pen is mine."},
+  {t:"tf",q:"“Himself” is a reflexive pronoun.",a:true,why:"It refers back to the subject."}]},
+verbs:{
+ bank:{"action verb":["run","eat","write","jump","pray","read"],"linking verb":["seem","become","remain"],"helping verb":["will","can","must","should","would"]},
+ pairs:[["run","action"],["eat","action"],["seem","linking"],["become","linking"],["will","helping"],["can","helping"]],
+ more:[
+  {t:"tap",q:"Tap the verb:",w:["Children","play","in","the","park."],a:[1],why:"Play is the action."},
+  {t:"mcq",q:"Which word is the helping verb in “They will visit Makkah.”?",o:["will","visit","Makkah","They"],a:0,why:"Will helps the main verb visit."},
+  {t:"mcq",q:"The flowers ___ beautiful. (linking verb)",o:["look","jump","write","eat"],a:0,why:"Look links flowers to beautiful."},
+  {t:"tap",q:"Tap the linking verb:",w:["He","became","a","doctor."],a:[1],why:"Became links he and doctor."},
+  {t:"tf",q:"“Seem” is an action verb.",a:false,why:"Seem is a linking verb."},
+  {t:"order",q:"Build the sentence:",w:["We","eat","dinner","together."],why:"We eat dinner together."},
+  {t:"mcq",q:"I ___ finished my homework. (helping verb)",o:["have","tree","red","quickly"],a:0,why:"Have helps the verb finished."},
+  {t:"tf",q:"“Write” is an action verb.",a:true,why:"You do it, so it is an action."}]},
+adjectives:{
+ bank:{"positive adjective":["tall","big","small","happy","beautiful"],"comparative adjective":["taller","bigger","smaller","happier","more beautiful"],"superlative adjective":["tallest","biggest","smallest","happiest","most beautiful"]},
+ pairs:[["tall","tallest"],["big","biggest"],["happy","happiest"],["nice","nicest"],["small","smallest"],["beautiful","most beautiful"]],
+ more:[
+  {t:"tap",q:"Tap the adjective:",w:["She","has","a","beautiful","garden."],a:[3],why:"Beautiful describes the garden."},
+  {t:"mcq",q:"This is the ___ day of my life. (happy)",o:["happiest","happier","most happy","happyest"],a:0,why:"Change y to i, then add -est."},
+  {t:"mcq",q:"Ali is ___ than Omar. (tall)",o:["taller","tallest","more tall","tall"],a:0,why:"Comparing two people: -er."},
+  {t:"mcq",q:"This book is ___ than that one. (interesting)",o:["more interesting","most interesting","interestinger","interestingest"],a:0,why:"Long adjective: more."},
+  {t:"tf",q:"The comparative of “nice” is “nicer”.",a:true,why:"Ends in e, so just add r."},
+  {t:"order",q:"Build the sentence:",w:["She","is","the","tallest","girl."],why:"She is the tallest girl."},
+  {t:"mcq",q:"What is the superlative of “big”?",o:["biggest","bigger","more big","bigest"],a:0,why:"Double the g, then add -est."},
+  {t:"tf",q:"“Beautifuller” is the correct comparative of “beautiful”.",a:false,why:"Long adjectives use more: more beautiful."}]},
+adverbs:{
+ bank:{"adverb of manner":["quickly","softly","carefully","slowly"],"adverb of time":["today","yesterday","tomorrow","now"],"adverb of place":["here","outside","inside","there"],"adverb of frequency":["always","sometimes","never","often"],"adverb of degree":["very","too","quite","really"]},
+ pairs:[["quickly","how"],["softly","how"],["today","when"],["yesterday","when"],["here","where"],["always","how often"]],
+ more:[
+  {t:"tap",q:"Tap an adverb:",w:["He","spoke","softly","today."],a:[2,3],why:"Softly tells how. Today tells when."},
+  {t:"mcq",q:"She ___ helps her mother. (every day)",o:["always","under","beautiful","tall"],a:0,why:"Always tells how often."},
+  {t:"mcq",q:"He is ___ kind. (a lot)",o:["very","under","and","tall"],a:0,why:"Very is an adverb of degree."},
+  {t:"tf",q:"“Outside” is an adverb of place.",a:true,why:"It tells where."},
+  {t:"order",q:"Build the sentence:",w:["I","always","wake","up","early."],why:"I always wake up early."},
+  {t:"mcq",q:"Which sentence has an adverb of manner?",o:["She ran quickly.","She ran home.","She ran today.","She is tall."],a:0,why:"Quickly tells how she ran."},
+  {t:"tf",q:"“Yesterday” tells us where.",a:false,why:"Yesterday tells when."},
+  {t:"tf",q:"“Too” is an adverb of degree.",a:true,why:"Too tells how much."}]},
+prepositions:{
+ bank:{"preposition of place":["under","behind","beside","above"],"preposition of time":["before","after","during","since"],"preposition of direction":["into","towards","through","onto"]},
+ pairs:[["under","place"],["behind","place"],["before","time"],["since","time"],["into","direction"],["towards","direction"]],
+ more:[
+  {t:"tap",q:"Tap the preposition:",w:["The","cat","sleeps","under","the","bed."],a:[3],why:"Under shows place."},
+  {t:"mcq",q:"We go to the mosque ___ Fridays.",o:["on","in","under","into"],a:0,why:"We say on Fridays."},
+  {t:"mcq",q:"He jumped ___ the pool.",o:["into","at","since","before"],a:0,why:"Into shows movement."},
+  {t:"tap",q:"Tap the preposition of time:",w:["The","class","starts","at","noon."],a:[3],why:"At noon is a time."},
+  {t:"tf",q:"“Towards” shows direction.",a:true,why:"Towards shows movement."},
+  {t:"order",q:"Build the sentence:",w:["The","book","is","on","the","table."],why:"The book is on the table."},
+  {t:"mcq",q:"The shoes are ___ the door. (next to it)",o:["beside","since","before","during"],a:0,why:"Beside shows place."},
+  {t:"tf",q:"“During” is a preposition of place.",a:false,why:"During shows time."}]},
+conjunctions:{
+ bank:{"conjunction":["and","but","or","nor"],"preposition":["under","into","behind"],"adverb":["quickly","softly","always"],"adjective":["tall","happy","small"]},
+ pairs:[["for","reason"],["and","adds"],["nor","negative choice"],["but","contrast"],["or","choice"],["so","result"],["yet","surprise"]],
+ more:[
+  {t:"mcq",q:"I want to play, ___ I must study first.",o:["but","or","for","nor"],a:0,why:"But shows contrast."},
+  {t:"mcq",q:"Do you want rice ___ pasta?",o:["or","so","yet","nor"],a:0,why:"Or shows a choice."},
+  {t:"mcq",q:"He was hungry, ___ he ate lunch.",o:["so","but","nor","or"],a:0,why:"So shows the result."},
+  {t:"tap",q:"Tap the conjunction:",w:["Amina","and","Bilal","are","friends."],a:[1],why:"And joins two names."},
+  {t:"tf",q:"“So” shows a result.",a:true,why:"So gives a result."},
+  {t:"order",q:"Build the sentence:",w:["I","was","tired,","but","I","finished."],why:"I was tired, but I finished."},
+  {t:"mcq",q:"She did not eat, ___ did she drink.",o:["nor","and","so","but"],a:0,why:"Nor adds a negative choice."},
+  {t:"tf",q:"“But” shows a reason.",a:false,why:"But shows contrast. For shows a reason."}]},
+interjections:{
+ bank:{"interjection":["wow","oops","bravo","hurray","alas","SubhanAllah"],"noun":["teacher","mosque","apple"],"verb":["run","write","pray"],"adjective":["tall","happy","beautiful"]},
+ pairs:[["Wow!","amazement"],["Alas!","sadness"],["Hurray!","joy"],["Oops!","mistake"],["Bravo!","approval"],["Oh!","surprise"]],
+ more:[
+  {t:"mcq",q:"Which sentence has an interjection?",o:["Wow! It is huge!","It is huge.","The huge house.","Is it huge?"],a:0,why:"Wow! shows a sudden feeling."},
+  {t:"tf",q:"“Oops!” shows approval.",a:false,why:"Oops! shows a mistake."},
+  {t:"tf",q:"“Hurray!” shows joy.",a:true,why:"Hurray! is a happy word."},
+  {t:"mcq",q:"You spilled your juice. You say ___!",o:["Oops","Hurray","Bravo","Wow"],a:0,why:"Oops shows a mistake."},
+  {t:"mcq",q:"Your friend passes his exam. You say ___!",o:["Bravo","Alas","Oops","Hmm"],a:0,why:"Bravo shows approval."},
+  {t:"tap",q:"Tap the interjection:",w:["Alas!","We","lost","the","game."],a:[0],why:"Alas! shows sadness."},
+  {t:"mcq",q:"After a good meal we say ___!",o:["Alhamdulillah","Alas","Oops","Hmm"],a:0,why:"Alhamdulillah means thank Allah."},
+  {t:"tf",q:"“Alas!” shows sadness.",a:true,why:"Alas! shows sadness or regret."}]},
+sentences:{
+ bank:{"statement":["She is my friend.","Amina loves reading.","The sky is blue.","We pray at the mosque."],"question":["Where are you going?","Is it raining?","What is your name?","Who is at the door?","Are you ready?"],"command":["Please open the door.","Wash your hands.","Sit down, please.","Close the window."],"exclamation":["What a beautiful day!","What a lovely gift!","How tall he is!"]},
+ pairs:[["She is my friend.","statement"],["Where are you going?","question"],["Please open the door.","command"],["What a beautiful day!","exclamation"],["Is it raining?","question"],["Sit down, please.","command"]],
+ more:[
+  {t:"mcq",q:"“Close the window.” is a ___ sentence.",o:["imperative","interrogative","declarative","exclamatory"],a:0,why:"It gives a command."},
+  {t:"mcq",q:"“Is it raining?” ends with a ___.",o:["question mark","full stop","comma","capital letter"],a:0,why:"Questions end with ?"},
+  {t:"tf",q:"“What a lovely gift!” is an exclamatory sentence.",a:true,why:"It shows strong feeling."},
+  {t:"order",q:"Build the sentence:",w:["Amina","loves","reading","books."],why:"Amina loves reading books."},
+  {t:"order",q:"Build the question:",w:["What","is","your","name?"],why:"What is your name?"},
+  {t:"order",q:"Build the request:",w:["Please","wash","your","hands."],why:"Please wash your hands."},
+  {t:"mcq",q:"Which one is a question?",o:["Where is my bag?","Put your bag down.","My bag is red.","What a big bag!"],a:0,why:"It asks something."},
+  {t:"tf",q:"“The sky is blue.” is an imperative sentence.",a:false,why:"It is a statement (declarative)."}]}
+};
+WORLDS.forEach(w=>Object.assign(w,EXTRA[w.id]||{}));
+
+const AV=["🦁","🐼","🦊","🐯","🐸","🐰","🦄","🐨","🐧","🐙"];
+const TITLES=["Beginner","Explorer","Word Wizard","Grammar Hero","Language Star","English Champion"];
+const CHEER=["MashaAllah! 🌟","Brilliant!","You got it!","Super smart!","Amazing!","Well done!","Fantastic!"];
+const OOPS=["Almost! Try again 💪","Not quite. You can do it!","Oops! Have another go!","Keep going, you are learning!"];
+const BADGES=[
+ {id:"first",i:"👣",n:"First Steps",d:"Finish your first world",f:p=>Object.keys(p.stars).length>=1},
+ {id:"perfect",i:"💎",n:"Perfect!",d:"Get 3 stars",f:p=>Object.values(p.stars).some(s=>s>=3)},
+ {id:"streak3",i:"🔥",n:"3-Day Streak",d:"Learn 3 days in a row",f:p=>p.streak>=3},
+ {id:"xp300",i:"⚡",n:"XP Hero",d:"Earn 300 XP",f:p=>p.xp>=300},
+ {id:"half",i:"🧭",n:"Half-way!",d:"Finish 5 worlds",f:p=>Object.keys(p.stars).length>=5},
+ {id:"all",i:"🏆",n:"World Master",d:"Finish every world and the Grand Challenge",f:p=>Object.keys(p.stars).length>=WORLDS.length},
+ {id:"super",i:"🌟",n:"Super Scholar",d:"3 stars in every world",f:p=>WORLDS.every(w=>(p.stars[w.id]||0)>=3)},
+ {id:"games",i:"🎮",n:"Game On",d:"Finish a mini-game",f:p=>Object.values(p.done||{}).some(d=>d.pop||d.match||d.tf)},
+ {id:"cert",i:"🎓",n:"Certified!",d:"Earn a certificate",f:p=>WORLDS.some(w=>complete(p,w))}
+];
+
+/* ============ STORAGE ============ */
+const KEY="diinislaam_english_v1";
+let DB=null,mem=null;
+function load(){try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){DB=mem}
+ if(!DB||!DB.players)DB={players:{},cur:null,sound:true}}
+function save(){mem=DB;try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}}
+const P=()=>DB.players[DB.cur];
+const lvl=x=>Math.floor(x/120)+1;
+const totalStars=p=>Object.values(p.stars).reduce((a,b)=>a+b,0);
+const unlocked=(i,p)=>i===0||(p.stars[WORLDS[i-1].id]||0)>=1;
+const today=()=>new Date().toLocaleDateString("en-CA");
+const STAGES=[
+ {id:"quiz",n:"Quiz",e:"🎯",d:"Test what you learned"},
+ {id:"q2",n:"Sentence Practice",e:"✍️",d:"More sentences to explore"},
+ {id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right words"},
+ {id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},
+ {id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}];
+const stagesOf=w=>w.bank?STAGES:[STAGES[0]];
+const stageStars=(p,w,s)=>s==="quiz"?(p.stars[w.id]||0):((p.done&&p.done[w.id]&&p.done[w.id][s])||0);
+const isDone=(p,w,s)=>stageStars(p,w,s)>0;
+const complete=(p,w)=>stagesOf(w).every(s=>isDone(p,w,s.id));
+const art=l=>/^[aeiou]/i.test(l)?"an":"a";
+function popList(w){const L=Object.keys(w.bank);
+ return shuffle(L.filter(l=>w.bank[l].length>=3)).slice(0,3).map(l=>{
+  const tg=shuffle(w.bank[l]).slice(0,4);const others=shuffle(L.filter(x=>x!==l).flatMap(x=>w.bank[x])).slice(0,Math.max(4,9-tg.length));
+  return {t:"pop",q:"Pop every "+l+"!",w:shuffle([...tg.map(x=>[x,1]),...others.map(x=>[x,0])]),why:"You found them all: "+tg.join(", ")+"."}})}
+function tfList(w){const L=Object.keys(w.bank);const all=L.flatMap(l=>w.bank[l].map(x=>[x,l]));
+ return shuffle(shuffle(all).slice(0,10).map(([x,l],i)=>{const truth=i%2===0;const wl=truth?l:pick(L.filter(y=>y!==l));
+  return {t:"tf",q:"“"+x+"” is "+art(wl)+" "+wl+".",a:truth,why:"“"+x+"” is "+art(l)+" "+l+"."}}))}
+function buildList(w,st){return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):tfList(w)}
+
+/* ============ HELPERS ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=a=>a[Math.random()*a.length|0];
+const app=$("#app");
+function view(h){app.innerHTML=h;window.scrollTo(0,0);closeOv()}
+function closeOv(){const o=$("#ov");o.classList.add("hide");o.innerHTML=""}
+function openOv(h){const o=$("#ov");o.innerHTML=`<div class="modal">${h}</div>`;o.classList.remove("hide");
+ o.onclick=e=>{if(e.target===o)closeOv()}}
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
+function confetti(n=45){const E=["🎉","⭐","✨","🌟","🎈","🌙","💫"];for(let i=0;i<n;i++){const s=document.createElement("span");s.className="conf";s.textContent=pick(E);
+ s.style.left=Math.random()*100+"vw";s.style.animationDuration=(2+Math.random()*2.5)+"s";s.style.animationDelay=Math.random()*.6+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),5500)}}
+
+/* sound + speech */
+let AC;
+function tone(f,t,d,type="sine",v=.14){if(!DB.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+ const s=AC.currentTime+t;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d)}catch(e){}}
+const sfx={ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.22))},no(){tone(240,0,.2,"triangle");tone(190,.13,.3,"triangle")},
+ win(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i*.11,.3,"square",.07))},tap(){tone(700,0,.05)}};
+function say(t){if(!DB.sound)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/___/g," blank ").replace(/→/g,"is"));u.lang="en-US";u.rate=.85;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+
+/* ============ WELCOME ============ */
+function viewWelcome(){
+ const ids=Object.keys(DB.players);let av=AV[0];
+ view(`<div class="hero"><div class="owl">🦉</div><h1>English Adventure</h1><p class="sub">Bismillah! Let's explore the Land of Words with Noor the owl.</p></div>
+ ${ids.length?`<h3 style="text-align:center">Who is playing?</h3><div class="plist">${ids.map(id=>`<button class="pl" data-id="${id}"><span>${DB.players[id].avatar}</span>${esc(DB.players[id].name)}</button>`).join("")}</div>`:""}
+ <div class="card"><h3 style="text-align:center">${ids.length?"New player":"What is your name?"}</h3>
+ <input id="nm" maxlength="14" placeholder="Type your name" autocomplete="off">
+ <p class="sub" style="text-align:center">Choose your buddy:</p>
+ <div class="avs">${AV.map((a,i)=>`<button class="av${i?"":" on"}" data-a="${a}" aria-label="avatar ${a}">${a}</button>`).join("")}</div>
+ <button class="big" id="go">Let's go! 🚀</button></div>
+ <p class="foot"><a href="https://diinislaam.com">← diinislaam.com</a></p>`);
+ app.querySelectorAll(".pl").forEach(b=>b.onclick=()=>{DB.cur=b.dataset.id;save();sfx.tap();viewMap()});
+ app.querySelectorAll(".av").forEach(b=>b.onclick=()=>{av=b.dataset.a;app.querySelectorAll(".av").forEach(x=>x.classList.toggle("on",x===b));sfx.tap()});
+ $("#go").onclick=()=>{const n=$("#nm").value.trim();if(!n){toast("Please type your name 🙂");return}
+  const id="p"+Date.now();DB.players[id]={name:n,avatar:av,xp:0,stars:{},streak:0,last:"",badges:[]};DB.cur=id;save();sfx.ok();confetti(25);viewMap()};
+}
+
+/* ============ MAP ============ */
+function header(){const p=P(),l=lvl(p.xp),into=p.xp%120;
+ return `<div class="hdr"><button class="me" id="me" aria-label="Switch player">${p.avatar}</button>
+ <div class="lv"><b>${esc(p.name)} · Lv ${l} ${TITLES[Math.min(l-1,TITLES.length-1)]}</b><div class="bar"><i style="width:${into/120*100}%"></i></div></div>
+ <span class="pill">⭐ ${totalStars(p)}</span><span class="pill">🔥 ${p.streak||0}</span>
+ <button class="ib" id="trophy" aria-label="Badges">🏆</button><button class="ib" id="snd" aria-label="Sound">${DB.sound?"🔊":"🔇"}</button></div>`}
+function bindHeader(){
+ $("#me").onclick=()=>{DB.cur=null;save();viewWelcome()};
+ $("#trophy").onclick=showTrophies;
+ $("#snd").onclick=()=>{DB.sound=!DB.sound;save();$("#snd").textContent=DB.sound?"🔊":"🔇";if(DB.sound)sfx.tap()};
+}
+function viewMap(){
+ const p=P();const nxt=WORLDS.findIndex((w,i)=>unlocked(i,p)&&!(p.stars[w.id]));
+ view(`${header()}<div class="map">
+ <div class="banner">🦉 ${nxt<0?"You finished the whole adventure! Replay worlds to win 3 stars.":`Assalamu alaikum, ${esc(p.name)}! Ready for ${WORLDS[nxt].name}?`}</div>
+ <button class="big ghost" id="lib" style="margin:10px 0 4px">📚 Cheat sheets · all examples</button>
+ ${WORLDS.map((w,i)=>{const s=p.stars[w.id]||0,open=unlocked(i,p);
+  return `${i?`<div class="dots"><i></i><i></i><i></i></div>`:""}
+  <button class="node ${i%2?"r":""} ${open?"":"lock"} ${i===nxt?"next":""}" data-i="${i}" style="background:linear-gradient(135deg,${w.c},${w.c2})">
+   <span class="em">${open?w.emoji:"🔒"}</span><span><b>${i+1}. ${w.name}</b><small>${open?(()=>{const g=stagesOf(w),d=g.filter(x=>isDone(p,w,x.id)).length;return (complete(p,w)?"🎓 ":"")+d+"/"+g.length+" activities"})():"Finish the world before"}</small><br><span class="stars">${"⭐".repeat(s)}${"☆".repeat(3-s)}</span></span></button>`}).join("")}
+ </div><p class="foot"><a href="https://diinislaam.com">← diinislaam.com</a></p>`);
+ bindHeader();$("#lib").onclick=showLibrary;
+ app.querySelectorAll(".node").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(!unlocked(i,p)){sfx.no();toast("🔒 Finish the world before first!");return}sfx.tap();viewHub(i)});
+}
+function hearable(root){root.querySelectorAll(".exl li").forEach(li=>{li.style.cursor="pointer";li.title="Tap to hear";li.onclick=()=>say(li.textContent)})}
+function showLibrary(){
+ openOv(`<h2 style="text-align:center">📚 Cheat Sheets</h2><p class="sub" style="text-align:center">Every lesson and example in one place. Tap an example to hear it.</p>
+ ${WORLDS.filter(w=>w.id!=="boss").map(w=>`<details class="card" style="margin:8px 0;--c:${w.c}"><summary style="font-weight:800;font-size:1.2rem;cursor:pointer">${w.emoji} ${esc(w.name)}</summary>
+ ${w.learn.map(c=>`<h3>${c.i} ${esc(c.h)}</h3><p>${esc(c.p)}</p><ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>`).join("")}</details>`).join("")}
+ <button class="big alt" id="cl">Close</button>`);
+ $("#cl").onclick=closeOv;hearable($("#ov"))}
+function showTrophies(){const p=P();
+ openOv(`<h2 style="text-align:center">🏆 My Trophies</h2><h3>Badges</h3><div class="badges">${BADGES.map(b=>`<div class="bd ${p.badges.includes(b.id)?"":"off"}"><i>${b.i}</i>${b.n}<br><small>${b.d}</small></div>`).join("")}</div>
+ <h3>World medals</h3><div class="badges">${WORLDS.map(w=>`<div class="bd ${complete(p,w)?"":"off"}"><i>${w.badge}</i>${w.bname}<br><small>${complete(p,w)?"🎓 certified":"—"}</small></div>`).join("")}</div>
+ <button class="big alt" id="cl">Close</button>`);$("#cl").onclick=closeOv}
+
+/* ============ LESSON ============ */
+function viewLesson(wi,ci){
+ const w=WORLDS[wi],c=w.learn[ci],last=ci===w.learn.length-1;
+ view(`<div class="qhead"><button class="x" id="back" aria-label="Back to map">✕</button><div class="bar"><i style="width:${(ci+1)/(w.learn.length+1)*100}%"></i></div></div>
+ <div class="card lesson" style="--c:${w.c}"><div class="ico">${c.i}</div><h2>${esc(c.h)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></h2>
+ <p>${esc(c.p)}</p><ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>
+ <div class="dotsrow">${w.learn.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
+ <div style="display:flex;gap:10px">${ci?`<button class="big ghost" id="prev">◀ Back</button>`:""}<button class="big" id="nx">${last?"Play the quiz! 🎮":"Next ▶"}</button></div>`);
+ $("#back").onclick=()=>viewHub(wi);$("#spk").onclick=()=>say(c.h+". "+c.p+" "+c.ex.join(". "));hearable(app);
+ app.querySelector(".exl").insertAdjacentHTML("afterend",`<p style="font-size:.9rem;opacity:.7;text-align:center">👆 Tap an example to hear it</p>`);
+ if($("#prev"))$("#prev").onclick=()=>viewLesson(wi,ci-1);
+ $("#nx").onclick=()=>{sfx.tap();last?startQuiz(wi,"quiz"):viewLesson(wi,ci+1)};
+}
+
+/* ============ QUIZ ============ */
+let Q;
+function startQuiz(wi,st){st=st||"quiz";Q={wi,stage:st,list:buildList(WORLDS[wi],st),i:0,mist:0,xp:0,flag:false,done:false};showQ()}
+function goStage(wi,st){st==="match"?viewMatch(wi):startQuiz(wi,st)}
+function fmtQ(t){return esc(t).replace(/___/g,'<span class="blank">&nbsp;&nbsp;&nbsp;</span>')}
+function showQ(){
+ const w=WORLDS[Q.wi],q=Q.list[Q.i];Q.flag=false;Q.done=false;
+ let body="";
+ if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
+ else if(q.t==="pop"){Q.popLeft=q.w.filter(x=>x[1]).length;body=`<div class="bubs">${q.w.map((x,i)=>`<button class="bub" data-i="${i}">${esc(x[0])}</button>`).join("")}</div>`}
+ else if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
+ else if(q.t==="tap"){body=`<div class="sent">${q.w.map((x,i)=>`<button class="chip" data-i="${i}">${esc(x)}</button>`).join("")}</div>`}
+ else if(q.t==="sort"){Q.items=shuffle(q.i);Q.si=0;body=`<div id="sortbody"></div>`}
+ else if(q.t==="order"){Q.pool=shuffle(q.w.map((t,i)=>({t,i})));Q.ans=[];body=`<div class="slot" id="slot"></div><div class="sent" id="pool"></div><button class="big alt" id="chk">Check ✔</button>`}
+ view(`<div class="qhead"><button class="x" id="back" aria-label="Quit">✕</button><div class="bar"><i style="width:${Q.i/Q.list.length*100}%"></i></div><span class="pill">${Q.i+1}/${Q.list.length}</span></div>
+ <div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
+ <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
+ $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
+ $("#spk").onclick=()=>say(q.q+(q.t==="tap"?" "+q.w.join(" "):""));
+ if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
+}
+function wrong(){if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();$("#fb").innerHTML=`<div class="fb b"><span>🦉</span>${pick(OOPS)}</div>`}
+function right(q){if(!Q.flag)Q.xp+=10;Q.done=true;sfx.ok();
+ $("#fb").innerHTML=`<div class="fb g"><span>🦉</span><div>${pick(CHEER)}<br><small>${esc(q.why||"")}</small></div></div>`;
+ const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()};
+ n.scrollIntoView({behavior:"smooth",block:"center"})}
+function bindTf(q){app.querySelectorAll(".tfb .opt").forEach(b=>b.onclick=()=>{if(Q.done)return;
+ if((b.dataset.v==="1")===q.a){b.classList.add("ok");app.querySelectorAll(".tfb .opt").forEach(x=>x.style.pointerEvents="none");right(q)}else{b.classList.add("no");wrong()}})}
+function bindPop(q){app.querySelectorAll(".bub").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("pop"))return;
+ if(q.w[+b.dataset.i][1]){b.classList.add("pop");sfx.tap();Q.popLeft--;if(Q.popLeft<=0){Q.done=true;setTimeout(()=>{Q.done=false;right(q)},400)}}
+ else{b.classList.add("no");setTimeout(()=>b.classList.remove("no"),450);wrong()}})}
+function bindMcq(q){app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(Q.done)return;const o=Q.opts[+b.dataset.i];
+ if(o.ok){b.classList.add("ok");app.querySelectorAll(".opt").forEach(x=>x.style.pointerEvents="none");right(q)}else{b.classList.add("no");wrong()}})}
+function bindTap(q){app.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{if(Q.done)return;
+ if(q.a.includes(+b.dataset.i)){b.classList.add("ok");app.querySelectorAll(".chip").forEach(x=>x.style.pointerEvents="none");right(q)}else{b.classList.add("no");wrong()}})}
+function showSort(q){const el=$("#sortbody");const it=Q.items[Q.si];Q.itemWrong=false;
+ el.innerHTML=`<div class="dotsrow">${Q.items.map((_,i)=>`<i class="${i<=Q.si?"on":""}"></i>`).join("")}</div><div class="bigword">${esc(it[0])}</div>
+ <div class="buckets">${q.b.map((b,i)=>`<button class="bk" data-i="${i}">${esc(b)}</button>`).join("")}</div>`;
+ say(it[0]);
+ el.querySelectorAll(".bk").forEach(b=>b.onclick=()=>{if(Q.done)return;
+  if(+b.dataset.i===it[1]){sfx.ok();Q.si++;if(Q.si>=Q.items.length){el.innerHTML=`<div class="bigword">✅ All sorted!</div>`;right(q)}else showSort(q)}
+  else{wrong()}})}
+function bindOrder(q){
+ const draw=()=>{$("#slot").innerHTML=Q.ans.map((x,k)=>`<button class="chip" data-k="${k}">${esc(x.t)}</button>`).join("")||`<span style="opacity:.5">Tap the words in order…</span>`;
+  $("#pool").innerHTML=Q.pool.map((x,k)=>`<button class="chip" data-k="${k}">${esc(x.t)}</button>`).join("");
+  $("#slot").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{if(Q.done)return;Q.pool.push(Q.ans.splice(+b.dataset.k,1)[0]);sfx.tap();draw()});
+  $("#pool").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{if(Q.done)return;Q.ans.push(Q.pool.splice(+b.dataset.k,1)[0]);sfx.tap();draw()})};
+ draw();
+ $("#chk").onclick=()=>{if(Q.done)return;if(Q.ans.length<q.w.length){toast("Use all the words first 🙂");return}
+  if(Q.ans.map(x=>x.t).join(" ")===q.w.join(" ")){$("#chk").classList.add("hide");$("#slot").querySelectorAll(".chip").forEach(c=>c.classList.add("ok"));right(q);say(q.why)}
+  else{wrong();Q.pool=Q.pool.concat(Q.ans);Q.ans=[];draw()}}}
+
+/* ============ RESULT ============ */
+function finish(){
+ const wi=Q.wi,w=WORLDS[wi],p=P(),st=Q.stage,S=STAGES.find(x=>x.id===st);
+ const stars=Q.stars||(Q.mist<=1?3:Q.mist<=3?2:1);
+ const gain=Q.xp+stars*10,lb=lvl(p.xp);p.xp+=gain;
+ if(st==="quiz"){if(stars>(p.stars[w.id]||0))p.stars[w.id]=stars}
+ else{p.done=p.done||{};const d=p.done[w.id]=p.done[w.id]||{};if(stars>(d[st]||0))d[st]=stars}
+ const t=today(),y=new Date(Date.now()-864e5).toLocaleDateString("en-CA");
+ if(p.last!==t){p.streak=p.last===y?(p.streak||0)+1:1;p.last=t}
+ const nb=BADGES.filter(b=>!p.badges.includes(b.id)&&b.f(p));nb.forEach(b=>p.badges.push(b.id));save();
+ const la=lvl(p.xp),stg=stagesOf(w),dn=stg.filter(x=>isDone(p,w,x.id)).length,next=stg.find(x=>!isDone(p,w,x.id)),comp=dn===stg.length;
+ const nextOk=wi+1<WORLDS.length&&(p.stars[w.id]||0)>=1;
+ const msg=stars===3?"Perfect! You are a superstar!":stars===2?"Great job! Almost perfect!":"Good work! Try again for more stars.";
+ view(`<div class="card res"><div class="owl" style="font-size:64px">${comp?"🎓":S.e}</div><h2>${comp?esc(w.name)+" complete!":esc(S.n)+" done!"}</h2>
+ <div class="st">${[1,2,3].map(n=>n<=stars?`<i style="animation-delay:${n*.3}s">⭐</i>`:`<i style="opacity:.25">⭐</i>`).join("")}</div>
+ <p class="sub">🦉 ${msg}</p>
+ <div class="gain"><div>+${gain} XP</div><div>Mistakes: ${Q.mist}</div>${la>lb?`<div>⬆️ Level ${la}!</div>`:""}</div>
+ ${nb.length?`<div class="banner">New badge: ${nb.map(b=>b.i+" "+b.n).join(", ")}</div>`:""}
+ <p class="sub">${dn}/${stg.length} activities finished in this world</p>
+ ${next?`<button class="big" id="ns">Next: ${next.e} ${esc(next.n)} ➜</button>`:""}
+ ${comp?`<button class="big" id="ct">🎓 Get my certificate</button>`:`<p class="sub">🔒 Finish every activity to unlock your certificate</p>`}
+ ${nextOk?`<button class="big alt" id="nw">Next world: ${esc(WORLDS[wi+1].name)} ${WORLDS[wi+1].emoji}</button>`:""}
+ <button class="big ghost" id="rt">🔁 Play again</button><button class="big ghost" id="hb">📋 World menu</button><button class="big ghost" id="mp">🗺️ Back to map</button></div>`);
+ sfx.win();confetti(comp?70:stars*20);
+ if(la>lb||nb.length){setTimeout(()=>toast(la>lb?`🎉 Level up! You are now Level ${la}`:`🏅 ${nb[0].n}!`),700)}
+ if($("#ns"))$("#ns").onclick=()=>goStage(wi,next.id);
+ if($("#ct"))$("#ct").onclick=()=>showCert(wi);
+ if($("#nw"))$("#nw").onclick=()=>viewHub(wi+1);
+ $("#rt").onclick=()=>goStage(wi,st);$("#hb").onclick=()=>viewHub(wi);$("#mp").onclick=viewMap;
+}
+function showCert(wi){const w=WORLDS[wi],p=P();if(!complete(p,w)){toast("🔒 Finish every activity first!");return}const d=new Date().toLocaleDateString("en-AU",{day:"numeric",month:"long",year:"numeric"});
+ openOv(`<div class="cert"><div style="font-size:2.6rem">${w.badge}</div><h2>Certificate of Achievement</h2><p>Bismillah — this proudly certifies that</p>
+ <div class="nm">${esc(p.name)}</div><p>has completed all ${stagesOf(w).length} activities of <b>${esc(w.name)}</b> in<br><b>English Adventure</b></p>
+ <div style="font-size:2rem">${"⭐".repeat(p.stars[w.id]||1)}</div><p><b>${esc(w.bname)}</b><br>MashaAllah, keep learning!</p><p style="font-size:.9rem">${d} · diinislaam.com/english</p></div>
+ <div class="noprint"><button class="big" id="pr">🖨️ Print or save as PDF</button><button class="big ghost" id="cl">Close</button></div>`);
+ $("#pr").onclick=()=>window.print();$("#cl").onclick=closeOv}
+
+/* ============ WORLD HUB ============ */
+function viewHub(wi){
+ const p=P(),w=WORLDS[wi],stg=stagesOf(w),dn=stg.filter(x=>isDone(p,w,x.id)).length,comp=dn===stg.length;
+ const first=stg.find(x=>!isDone(p,w,x.id));
+ view(`${header()}<div class="card" style="border-top:10px solid ${w.c}"><div style="text-align:center"><span style="font-size:3.4rem">${w.emoji}</span><h2>${esc(w.name)}</h2>
+ <div class="bar"><i style="width:${dn/stg.length*100}%"></i></div><p class="sub">${dn}/${stg.length} activities done</p></div>
+ <button class="stg ${stageStars(p,w,"quiz")?"":"go"}" data-s="learn"><span class="em">📖</span><span><b>Lesson</b><small>Learn with examples</small></span></button>
+ ${stg.map(x=>`<button class="stg ${isDone(p,w,x.id)?"dn":(first&&first.id===x.id&&stageStars(p,w,"quiz")?"go":"")}" data-s="${x.id}"><span class="em">${isDone(p,w,x.id)?"✅":x.e}</span><span><b>${x.n}</b><small>${x.d}</small></span><span class="rt">${"⭐".repeat(stageStars(p,w,x.id))}</span></button>`).join("")}
+ <button class="stg ${comp?"go":"lock"}" data-s="cert"><span class="em">🎓</span><span><b>Certificate</b><small>${comp?"You earned it! Tap to open":"Finish every activity to unlock"}</small></span><span class="rt">${comp?"":"🔒"}</span></button></div>
+ <button class="big ghost" id="mp">🗺️ Back to map</button>`);
+ bindHeader();$("#mp").onclick=viewMap;
+ app.querySelectorAll(".stg").forEach(b=>b.onclick=()=>{const s=b.dataset.s;sfx.tap();
+  if(s==="learn")viewLesson(wi,0);else if(s==="cert"){comp?showCert(wi):(sfx.no(),toast("🔒 Finish every activity first!"))}else goStage(wi,s)});
+}
+
+/* ============ MEMORY MATCH ============ */
+let M;
+function viewMatch(wi){
+ const w=WORLDS[wi],n=w.pairs.length;
+ const cards=shuffle(w.pairs.flatMap(([a,b],i)=>[{t:a,k:b,s:"a"},{t:b,k:b,s:"b"}]));
+ M={cards,open:[],lock:false,found:0,n};
+ Q={wi,stage:"match",mist:0,xp:0,list:[]};
+ const cols=cards.length>12?4:3;
+ view(`<div class="qhead"><button class="x" id="back" aria-label="Quit">✕</button><div class="bar"><i id="mb" style="width:0%"></i></div><span class="pill" id="mm">0/${n}</span></div>
+ <div class="card"><div class="qtext">🃏 Flip two cards. Match each word with its partner!</div>
+ <div class="mgrid" style="grid-template-columns:repeat(${cols},1fr)">${cards.map((c,i)=>`<button class="mc" data-i="${i}" aria-label="card">❓</button>`).join("")}</div></div>`);
+ $("#back").onclick=()=>{if(confirm("Leave this game?"))viewHub(wi)};
+ app.querySelectorAll(".mc").forEach(b=>b.onclick=()=>flip(b));
+}
+function flip(b){
+ if(M.lock||b.classList.contains("up")||b.classList.contains("done"))return;
+ const i=+b.dataset.i,c=M.cards[i];b.classList.add("up");b.textContent=c.t;sfx.tap();M.open.push(i);
+ if(M.open.length<2)return;
+ const [x,y]=M.open.map(k=>M.cards[k]),bs=[...app.querySelectorAll(".mc")],pair=M.open.slice();M.lock=true;
+ if(x.k===y.k&&x.s!==y.s){setTimeout(()=>{pair.forEach(k=>{bs[k].classList.remove("up");bs[k].classList.add("done")});M.open=[];M.lock=false;M.found++;Q.xp+=5;sfx.ok();
+  $("#mm").textContent=M.found+"/"+M.n;$("#mb").style.width=M.found/M.n*100+"%";
+  if(M.found===M.n){Q.stars=Q.mist<=M.n?3:Q.mist<=M.n*2?2:1;setTimeout(finish,700)}},400)}
+ else{Q.mist++;setTimeout(()=>{pair.forEach(k=>{bs[k].classList.remove("up");bs[k].textContent="❓"});M.open=[];M.lock=false;sfx.no()},900)}
+}
+
+/* ============ START ============ */
+load();
+if(DB.cur&&DB.players[DB.cur])viewMap();else{DB.cur=null;viewWelcome()}
+</script>
+</body>
+</html>
