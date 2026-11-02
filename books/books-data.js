@@ -10,6 +10,10 @@ window.DI_BOOKS = {
     title: "Stories for a Steady Heart", sub: "23 Lessons from the Prophets, the Sahabah and the Tabi'in",
     cover: "stories-for-a-steady-heart.webp", shape: "tall", preview: { pages: 13, total: 171 }, amazon: ""
   },
+  "forgive": {
+    title: "The Heart That Forgives", sub: "Stories of Forgiveness from the Qur'an, the Sunnah and the Salaf",
+    cover: "the-heart-that-forgives.webp", shape: "tall", preview: { pages: 14, total: 117 }, amazon: ""
+  },
   "seeraa-1": {
     title: "Seeraa Quest, Book One", sub: "From Arabia Before Islam to the First Revelation",
     cover: "seeraa-quest-book-1.webp", shape: "tall", amazon: ""
@@ -21,7 +25,18 @@ window.DI_BOOKS = {
   "moonlight-5": { title: "Kings, Whales and Wise Men", series: "Moonlight Stories of the Prophets · Book 5", cover: "moonlight-stories-book-5.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-6": { title: "Maryam and 'Isa", series: "Moonlight Stories of the Prophets · Book 6", cover: "moonlight-stories-book-6.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-7": { title: "Our Prophet Muhammad ﷺ", series: "Moonlight Stories of the Prophets · Book 7", cover: "moonlight-stories-book-7.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
-  "sahabah-1": { title: "Friends of the Prophet ﷺ", series: "Moonlight Stories of the Sahabah · Book 1", cover: "moonlight-sahabah-book-1.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" }
+  "sahabah-1": { title: "Friends of the Prophet ﷺ", series: "Moonlight Stories of the Sahabah · Book 1", cover: "moonlight-sahabah-book-1.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-2": { title: "Brave and Kind Women", series: "Moonlight Stories of the Sahabah · Book 2", cover: "moonlight-sahabah-book-2.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-3": { title: "Young Hearts", series: "Moonlight Stories of the Sahabah · Book 3", cover: "moonlight-sahabah-book-3.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-4": { title: "The Helpers of Madinah", series: "Moonlight Stories of the Sahabah · Book 4", cover: "moonlight-sahabah-book-4.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-5": { title: "They Left Everything", series: "Moonlight Stories of the Sahabah · Book 5", cover: "moonlight-sahabah-book-5.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-6": { title: "Friends of the Qur'an", series: "Moonlight Stories of the Sahabah · Book 6", cover: "moonlight-sahabah-book-6.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-7": { title: "Open Hands", series: "Moonlight Stories of the Sahabah · Book 7", cover: "moonlight-sahabah-book-7.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-8": { title: "From Faraway Lands", series: "Moonlight Stories of the Sahabah · Book 8", cover: "moonlight-sahabah-book-8.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-9": { title: "Gentle Heroes", series: "Moonlight Stories of the Sahabah · Book 9", cover: "moonlight-sahabah-book-9.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-10": { title: "Camels, Horses and Little Birds", series: "Moonlight Stories of the Sahabah · Book 10", cover: "moonlight-sahabah-book-10.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-11": { title: "Ramadan and Eid with the Companions", series: "Moonlight Stories of the Sahabah · Book 11", cover: "moonlight-sahabah-book-11.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-12": { title: "The Ten Promised Paradise", series: "Moonlight Stories of the Sahabah · Book 12", cover: "moonlight-sahabah-book-12.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" }
 };
 
 /* Turn every  <a class="buy" data-book="...">  into a live Amazon button, or a quiet "coming soon" one. */
