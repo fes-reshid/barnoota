@@ -164,6 +164,17 @@ input#nm:focus{border-color:var(--sky)}
 .mcell.hit{background:#22c55e;color:#fff}
 .mcell.miss{background:#ef4444;color:#fff}
 .mprog{text-align:center;font-weight:800;font-size:1.1rem}
+.fall{position:relative;height:320px;border-radius:18px;background:linear-gradient(#bae6fd,#e0f2fe);overflow:hidden;margin:10px 0}
+.fi{position:absolute;top:-60px;min-width:60px;height:50px;padding:0 12px;border:0;border-radius:26px;background:#fff;font:inherit;font-weight:800;font-size:1.05rem;color:#1f2937;box-shadow:0 3px 0 #94a3b8;animation:fall var(--dur,5s) linear infinite;animation-delay:var(--dl,0s);white-space:nowrap;cursor:pointer}
+@keyframes fall{from{top:-60px}to{top:100%}}
+.fi.got{animation:none;opacity:0;pointer-events:none}
+.fi.no{background:#fecaca}
+.battle{display:flex;align-items:center;gap:10px;background:#fee2e2;border-radius:16px;padding:8px 12px;margin-bottom:10px}
+.battle .mon{font-size:2.6rem}
+.hp{flex:1;height:16px;background:#fecaca;border-radius:10px;overflow:hidden}
+.hp i{display:block;height:100%;background:#ef4444;transition:width .4s}
+.tmr{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin:0 0 10px}
+.tmr i{display:block;height:100%;width:100%;background:#f59e0b}
 </style>
 </head>
 <body>
@@ -706,6 +717,9 @@ const STAGES=[
  {id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right words"},
  {id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right words"},
  {id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right words fast"},
+ {id:"catch",n:"Falling Catch",e:"🧺",d:"Catch the right words"},
+ {id:"battle",n:"Monster Battle",e:"👾",d:"Defeat the monster"},
+ {id:"speed",n:"Speed Round",e:"⏱️",d:"Beat the clock"},
  {id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},
  {id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}];
 const stagesOf=w=>w.bank?STAGES:[STAGES[0]];
@@ -723,7 +737,15 @@ function tfList(w){const L=Object.keys(w.bank);const all=L.flatMap(l=>w.bank[l].
 function shootList(w){const out=popList(w).map(p=>({t:"shoot",q:p.q.replace("Pop","Shoot"),w:p.w,why:p.why}));
  shuffle([...(w.q||[]),...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,2).forEach(x=>out.push({t:"shoot",q:x.q,w:x.o.map((t,j)=>[t,j===x.a?1:0]),why:x.why}));return out}
 function moleList(w){return popList(w).slice(0,2).map(p=>({t:"mole",q:p.q.replace("Pop","Whack"),w:p.w,need:5,why:p.why}))}
-function buildList(w,st){return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):st==="shoot"?shootList(w):st==="mole"?moleList(w):tfList(w)}
+function buildLessons(w){const out=[...w.learn];if(!w.bank)return out;
+ out.push({i:"🧰",h:"Word bank",p:"More words to remember. Tap a line to hear it.",ex:Object.keys(w.bank).map(k=>`${k}: ${w.bank[k].join(", ")}`)});
+ const mc=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,5);
+ if(mc.length>=2)out.push({i:"✏️",h:"Worked examples",p:"Read each question and its answer.",ex:mc.map(x=>`${x.q.replace(/___/g,x.o[x.a])} → ${x.o[x.a]}. ${x.why||""}`)});
+ if(w.pairs&&w.pairs.length)out.push({i:"🔗",h:"Matching pairs",p:"These pairs appear in the memory game.",ex:w.pairs.slice(0,6).map(p=>`${p[0]} ↔ ${p[1]}`)});
+ return out}
+function battleList(w){return shuffle([...w.q,...(w.more||[])]).slice(0,8)}
+function speedList(w){const m=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,8);return m.length>=5?m:[...m,...tfList(w).slice(0,6-m.length)]}
+function buildList(w,st){if(st==="catch")return popList(w).slice(0,2).map(p=>({t:"catch",q:p.q.replace("Pop","Catch"),w:p.w,why:p.why}));if(st==="battle")return battleList(w);if(st==="speed")return speedList(w);return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):st==="shoot"?shootList(w):st==="mole"?moleList(w):tfList(w)}
 
 /* ============ HELPERS ============ */
 const $=s=>document.querySelector(s);
@@ -733,7 +755,7 @@ const pick=a=>a[Math.random()*a.length|0];
 const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const app=$("#app");
 let GT=[];
-function view(h){GT.forEach(clearInterval);GT=[];app.innerHTML=h;window.scrollTo(0,0);closeOv()}
+function view(h){GT.forEach(t=>{clearInterval(t);clearTimeout(t)});GT=[];app.innerHTML=h;window.scrollTo(0,0);closeOv()}
 function closeOv(){const o=$("#ov");o.classList.add("hide");o.innerHTML=""}
 function openOv(h){const o=$("#ov");o.innerHTML=`<div class="modal">${h}</div>`;o.classList.remove("hide");
  o.onclick=e=>{if(e.target===o)closeOv()}}
@@ -804,11 +826,11 @@ function showTrophies(){const p=P();
 
 /* ============ LESSON ============ */
 function viewLesson(wi,ci){
- const w=WORLDS[wi],c=w.learn[ci],last=ci===w.learn.length-1;
- view(`<div class="qhead"><button class="x" id="back" aria-label="Back to map">✕</button><div class="bar"><i style="width:${(ci+1)/(w.learn.length+1)*100}%"></i></div></div>
+ const w=WORLDS[wi],cards=lessonCards(wi,ci),c=cards[ci],last=ci===cards.length-1;
+ view(`<div class="qhead"><button class="x" id="back" aria-label="Back to map">✕</button><div class="bar"><i style="width:${(ci+1)/(cards.length+1)*100}%"></i></div></div>
  <div class="card lesson" style="--c:${w.c}"><div class="ico">${c.i}</div><h2>${esc(c.h)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></h2>
  <p>${esc(c.p)}</p><ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>
- <div class="dotsrow">${w.learn.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
+ <div class="dotsrow">${cards.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
  <div style="display:flex;gap:10px">${ci?`<button class="big ghost" id="prev">◀ Back</button>`:""}<button class="big" id="nx">${last?"Play the quiz! 🎮":"Next ▶"}</button></div>`);
  $("#back").onclick=()=>viewHub(wi);$("#spk").onclick=()=>say(c.h+". "+c.p+" "+c.ex.join(". "));hearable(app);
  app.querySelector(".exl").insertAdjacentHTML("afterend",`<p style="font-size:.9rem;opacity:.7;text-align:center">👆 Tap an example to hear it</p>`);
@@ -824,26 +846,39 @@ function fmtQ(t){return esc(t).replace(/___/g,'<span class="blank">&nbsp;&nbsp;&
 function showQ(){
  const w=WORLDS[Q.wi],q=Q.list[Q.i];Q.flag=false;Q.done=false;
  let body="";
+ const hud=Q.stage==="battle"?`<div class="battle"><span class="mon">${MON[Q.wi%MON.length]}</span><div class="hp"><i style="width:${Math.round(100-Q.i/Q.list.length*100)}%"></i></div><span>${"❤️".repeat(Math.max(0,3-Q.mist))||"💔"}</span></div>`:Q.stage==="speed"?`<div class="tmr"><i id="tmr"></i></div>`:"";
  if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
  else if(q.t==="pop"){Q.popLeft=q.w.filter(x=>x[1]).length;body=`<div class="bubs">${q.w.map((x,i)=>`<button class="bub" data-i="${i}">${esc(x[0])}</button>`).join("")}</div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
+ else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
  else if(q.t==="tap"){body=`<div class="sent">${q.w.map((x,i)=>`<button class="chip" data-i="${i}">${esc(x)}</button>`).join("")}</div>`}
  else if(q.t==="sort"){Q.items=shuffle(q.i);Q.si=0;body=`<div id="sortbody"></div>`}
  else if(q.t==="order"){Q.pool=shuffle(q.w.map((t,i)=>({t,i})));Q.ans=[];body=`<div class="slot" id="slot"></div><div class="sent" id="pool"></div><button class="big alt" id="chk">Check ✔</button>`}
  view(`<div class="qhead"><button class="x" id="back" aria-label="Quit">✕</button><div class="bar"><i style="width:${Q.i/Q.list.length*100}%"></i></div><span class="pill">${Q.i+1}/${Q.list.length}</span></div>
- <div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
+ ${hud}<div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
  $("#spk").onclick=()=>say(q.q+(q.t==="tap"?" "+q.w.join(" "):""));
- if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
+ if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="catch")bindCatch(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
+ if(Q.stage==="speed"&&q.t==="mcq"){const bar=$("#tmr");if(bar){requestAnimationFrame(()=>{bar.style.transition="width 15s linear";bar.style.width="0%"});GT.push(setTimeout(()=>timeUp(q),15000))}}
 }
 function wrong(){if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();$("#fb").innerHTML=`<div class="fb b"><span>🦉</span>${pick(OOPS)}</div>`}
 function right(q){if(!Q.flag)Q.xp+=10;Q.done=true;sfx.ok();
  $("#fb").innerHTML=`<div class="fb g"><span>🦉</span><div>${pick(CHEER)}<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()};
  n.scrollIntoView({behavior:"smooth",block:"center"})}
+const MON=["👾","🐉","👹","🦖","🧟","🐙","🦂","🕷️","🦈","👻"];
+let LESS=null;
+function lessonCards(wi,ci){if(!LESS||LESS.wi!==wi||ci===0)LESS={wi,cards:buildLessons(WORLDS[wi])};return LESS.cards}
+function bindCatch(q){app.querySelectorAll(".fi").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("got"))return;
+ if(q.w[+b.dataset.i][1]){b.classList.add("got");sfx.tap();Q.popLeft--;if(Q.popLeft<=0){Q.done=true;setTimeout(()=>{Q.done=false;right(q)},400)}}
+ else{b.classList.add("no");setTimeout(()=>b.classList.remove("no"),450);wrong()}})}
+function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();
+ app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
+ $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
+ const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);
