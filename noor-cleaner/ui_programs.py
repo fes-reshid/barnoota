@@ -6,16 +6,20 @@ from tkinter import ttk
 
 import programs_core as programs
 import scanner_core as core
+import usage_core as usage
 from i18n import _
-from ui_base import clear_tree, human_size, make_tree, open_location
+from ui_base import clear_tree, human_size, is_admin, make_tree, open_location
 
 
 class ProgramsMixin:
     def _programs_view(self):
-        self.handlers.update({"programs_done": self._show_programs, "startup_done": self._show_startup})
+        self.handlers.update({"programs_done": self._show_programs, "startup_done": self._show_startup,
+                              "unused_done": self._show_unused})
+        self.installed_cache = None   # the last list of installed programs, so "unused" does not read it again
         view = self._view("programs", _("Programs"), _("See which programs take the most space, uninstall the ones you "
                                                        "no longer use, and choose what starts with Windows."))
         self._segments(view, [("installed", _("Installed programs"), self._installed_page),
+                              ("unused", _("Not used for a long time"), self._unused_page),
                               ("startup", _("Startup programs"), self._startup_page)])
 
     # ------------------------------------------------------------------ installed
@@ -50,6 +54,7 @@ class ProgramsMixin:
         self._start_worker(lambda: self.events.put(("programs_done", programs.list_installed_programs())))
 
     def _show_programs(self, found):
+        self.installed_cache = found
         tree = self.programs_tree
         clear_tree(tree)
         for p in found:
@@ -162,3 +167,93 @@ class ProgramsMixin:
             open_location(target)
         else:
             self.info(_("The program file could not be found. It may already have been removed."))
+
+    # ------------------------------------------------------------------ not used for a long time
+
+    def _unused_page(self, parent):
+        import tkinter as tk
+        px = self.theme.px
+        card = self._card(parent)
+        top = self._row(card, pady=(0, px(6)))
+        self._button(top, _("Find unused programs"), self.load_unused, style="Primary.TButton", gap=12)
+        ttk.Label(top, text=_("Not used for:"), style="Card.TLabel").pack(side=self.L, padx=self.pad(0, px(8)))
+        self.unused_months = tk.IntVar(value=6)
+        for months, label in ((3, _("3 months")), (6, _("6 months")), (12, _("1 year"))):
+            ttk.Radiobutton(top, text=label, value=months, variable=self.unused_months,
+                            style="Card.TRadiobutton").pack(side=self.L, padx=self.pad(0, px(14)))
+        self.unused_status = self._status_label(card, _("Programs with no sign of use, biggest first. Remove the ones "
+                                                        "you do not need to free space."))
+        self.unused_status.pack(anchor=self.W, pady=(0, px(8)))
+        frame, self.unused_tree = make_tree(card, [("name", _("Program"), 260), ("size", _("Size"), 90),
+                                                   ("last", _("Last seen in use"), 130),
+                                                   ("installed", _("Installed on"), 110), ("why", _("Why listed"), 330)])
+        bar = self._row(card, side="bottom", pady=(px(10), 0))
+        self._button(bar, _("Uninstall"), lambda: self.uninstall_from(self.unused_tree, "unused"),
+                     style="Danger.TButton")
+        self._button(bar, _("Open install folder"), lambda: self.open_folder_of(self.unused_tree))
+        frame.pack(fill="both", expand=True)
+        note = self._card(card, style="Note.TFrame", fill="x", side="bottom", pady=(px(10), 0))
+        self._bullets(note, (_("This is a guess from the records Windows keeps. A program started by another program, "
+                               "from a right-click menu or only at sign-in may show no record even though you use it."),
+                             _("Nothing is removed without you: check each one, then uninstall.")))
+        return card
+
+    def load_unused(self):
+        if self._busy():
+            return
+        months = self.unused_months.get()
+        self.unused_status.config(text=_("Looking (this takes a minute)..."))
+        cached = self.installed_cache
+
+        def work():
+            found = cached if cached is not None else programs.list_installed_programs()
+            ua = usage.read_userassist()
+            history = usage.read_prefetch()
+            report = usage.unused_report(found, ua, history, months)
+            self.events.put(("unused_done", found, report, bool(history), bool(ua)))
+
+        self._start_worker(work)
+
+    def _show_unused(self, found, report, have_prefetch, have_history):
+        self.installed_cache = found
+        tree = self.unused_tree
+        clear_tree(tree)
+        for u in report:
+            p = u.program
+            iid = tree.insert("", "end", values=(p.name, human_size(p.size) if p.size else "-",
+                                                 usage.format_date(u.last_used) if u.last_used else _("No record"),
+                                                 p.installed or "-", u.note))
+            tree.items[iid] = p
+            tree.sizes[iid] = p.size
+        total = sum(u.program.size for u in report)
+        if not have_history:
+            text = _("Windows has no run history for this user yet, so nothing can be judged.")
+        elif report:
+            text = _("Possibly unused: {count} ({size} could be freed)").format(count=len(report), size=human_size(total))
+        else:
+            text = _("No programs found that have been unused for that long.")
+        if have_history and not have_prefetch and core.IS_WINDOWS and not is_admin():
+            text += "  " + _("Run as administrator for more complete results.")
+        self.unused_status.config(text=text)
+
+    def uninstall_from(self, tree, kind):
+        chosen = self._selected_items(tree)
+        if not chosen:
+            self.info(_("Select a program first."))
+            return
+        program = chosen[0]
+        if not self.ask(_("Uninstall {name}?").format(name=program.name) + "\n\n"
+                        + _("Its own uninstaller will open. Follow its steps, then press 'Find unused programs' "
+                            "again to refresh the list."), danger=True):
+            return
+        try:
+            programs.uninstall_program(program)
+        except Exception as exc:
+            self.error(str(exc))
+
+    def open_folder_of(self, tree):
+        chosen = self._selected_items(tree)
+        if not chosen or not chosen[0].location or not os.path.isdir(chosen[0].location):
+            self.info(_("The install folder of this program is not known."))
+            return
+        open_location(chosen[0].location, select=False)

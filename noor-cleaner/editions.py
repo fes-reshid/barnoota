@@ -19,7 +19,7 @@ class Edition:
 
 CLEANER = Edition(
     "cleaner", "NoorCleaner", "نور كلينر", "NoorCleaner",
-    ("scan", "space", "junk", "dups", "programs", "corrupt", "health", "files", "recover", "quarantine", "settings"),
+    ("scan", "space", "junk", "dups", "programs", "speed", "corrupt", "health", "files", "recover", "quarantine", "settings"),
     "NoorCleanerReminder")
 
 GUARD = Edition(

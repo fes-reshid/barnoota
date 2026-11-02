@@ -37,12 +37,13 @@ from ui_privacy import PrivacyMixin
 from ui_security import SecurityMixin
 from ui_programs import ProgramsMixin
 from ui_recover import RecoverMixin
+from ui_speed import SpeedMixin
 from ui_settings import SettingsMixin, choose_language_first_run
 
 MAX_LISTED_FILES = 5000  # rows shown at once in "All files"; search narrows it down
 
 
-class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, SecurityMixin,
+class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, NetworkMixin, SecurityMixin,
               PrivacyMixin, SettingsMixin):
     def __init__(self, root, config, edition=editions.CLEANER, start_hidden=False):
         self.root = root
@@ -112,7 +113,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, S
         self.theme.set_direction(self.rtl)
         every_page = {"scan": _("Scan") if self.cleaner else _("Virus scan"),
                       "space": _("What's using space"), "junk": _("Junk files"), "dups": _("Duplicates"),
-                      "programs": _("Programs"), "threats": _("Viruses & threats"), "corrupt": _("Corrupted files"),
+                      "programs": _("Programs"), "speed": _("What's slowing your PC"), "threats": _("Viruses & threats"), "corrupt": _("Corrupted files"),
                       "health": _("Disk health"), "network": _("Network & ports"), "security": _("Security check"),
                       "privacy": _("Privacy tools"), "files": _("All files"), "recover": _("Recover deleted files"),
                       "quarantine": _("Quarantine"), "settings": _("Settings")}
@@ -162,6 +163,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, HealthMixin, NetworkMixin, S
             self._junk_view()
             self._duplicates_view()
             self._programs_view()
+            self._speed_view()
             self.corrupt_tree = self._findings_view(
                 "corrupt", _("Corrupted files"),
                 _("Files that are damaged, cut off or unreadable. Broken Windows files should be repaired, not "

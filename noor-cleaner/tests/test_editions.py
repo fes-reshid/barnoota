@@ -23,7 +23,7 @@ class EditionTests(unittest.TestCase):
         self.assertEqual(cleaner & guard, {"scan", "quarantine", "settings"})  # only what both truly need
 
     def test_every_page_is_known_to_the_window(self):
-        known = {"scan", "space", "junk", "dups", "programs", "threats", "corrupt", "health", "network", "security",
+        known = {"scan", "space", "junk", "dups", "programs", "speed", "threats", "corrupt", "health", "network", "security",
                  "privacy", "files", "recover", "quarantine", "settings"}
         for edition in editions.EDITIONS.values():
             self.assertLessEqual(set(edition.pages), known)
