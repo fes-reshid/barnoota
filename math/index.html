@@ -192,6 +192,17 @@ input#nm:focus{border-color:var(--sky)}
 .mcell.hit{background:#22c55e;color:#fff}
 .mcell.miss{background:#ef4444;color:#fff}
 .mprog{text-align:center;font-weight:800;font-size:1.1rem}
+.fall{position:relative;height:320px;border-radius:18px;background:linear-gradient(#bae6fd,#e0f2fe);overflow:hidden;margin:10px 0}
+.fi{position:absolute;top:-60px;min-width:60px;height:50px;padding:0 12px;border:0;border-radius:26px;background:#fff;font:inherit;font-weight:800;font-size:1.05rem;color:#1f2937;box-shadow:0 3px 0 #94a3b8;animation:fall var(--dur,5s) linear infinite;animation-delay:var(--dl,0s);white-space:nowrap;cursor:pointer}
+@keyframes fall{from{top:-60px}to{top:100%}}
+.fi.got{animation:none;opacity:0;pointer-events:none}
+.fi.no{background:#fecaca}
+.battle{display:flex;align-items:center;gap:10px;background:#fee2e2;border-radius:16px;padding:8px 12px;margin-bottom:10px}
+.battle .mon{font-size:2.6rem}
+.hp{flex:1;height:16px;background:#fecaca;border-radius:10px;overflow:hidden}
+.hp i{display:block;height:100%;background:#ef4444;transition:width .4s}
+.tmr{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin:0 0 10px}
+.tmr i{display:block;height:100%;width:100%;background:#f59e0b}
 </style>
 </head>
 <body>
@@ -573,7 +584,7 @@ const timeWr=(m)=>[m+10,m-10,m+60,m-5].map(tfmt);
 const mmA=d=>{const c=R(1,d<.5?9:19),pay=pick([10,20,50].filter(v=>v>c));return G(`You buy a toy for $${c} and pay with $${pay}. Your change is $▢`,pay-c,wn(pay-c,[1,2,5]),`${pay} − ${c} = ${pay-c}.`)};
 const mmB=d=>{const x=R(120,d<.5?900:2400),y=R(110,d<.5?800:1900),plus=Math.random()<.6;
  if(plus)return G(`$${f2(x)} + $${f2(y)} = $▢`,f2(x+y),[f2(x+y+10),f2(x+y-10),f2(x+y+100),f2(x+y-100)],`Line up the dots: $${f2(x)} + $${f2(y)} = $${f2(x+y)}.`,{num:false});
- const a=Math.max(x,y)+R(0,50),b=Math.min(x,y);return G(`$${f2(a)} − $${f2(b)} = $▢`,f2(a-b),[f2(a-b+10),f2(a-b-10),f2(a-b+100),f2(a-b+5)],`Line up the dots: $${f2(a)} − $${f2(b)} = $${f2(a-b)}.`,{num:false})};
+ const a=Math.max(x,y)+R(0,50),b=Math.min(x,y);return G(`$${f2(a)} − $${f2(b)} = $▢`,f2(a-b),[f2(a-b+10),f2(a-b+20),f2(a-b+100),f2(a-b+5)],`Line up the dots: $${f2(a)} − $${f2(b)} = $${f2(a-b)}.`,{num:false})};
 const mmC=d=>{const [u,v,f]=pick([["m","cm",100],["kg","g",1000],["L","mL",1000],["cm","mm",10],["km","m",1000]]),n=R(2,9);
  if(d>.5&&Math.random()<.5)return G(`${cm(n*f)} ${v} = ▢ ${u}`,n,wn(n,[1,2]),`${f} ${v} = 1 ${u}, so ${cm(n*f)} ${v} = ${n} ${u}.`);
  return G(`${n} ${u} = ▢ ${v}`,n*f,wn(n*f,[f,10]),`1 ${u} = ${f} ${v}, so ${n} × ${f} = ${n*f}.`)};
@@ -704,7 +715,7 @@ const dcA=d=>{const a=digs(3),n=`${a[0]}.${a[1]}${a[2]}`,p=R(0,2),dg=a[p];return
 const dcB=d=>{const a=R(1,9)/10,b=R(11,99)/100;if(Math.abs(a-b)<.001)return dcB(d);const x=a.toFixed(1),y=b.toFixed(2),big=a>b?x:y,sm=a>b?y:x;
  return G(`Which number is bigger, ${x} or ${y}?`,big,[sm],`Compare place by place: ${big} > ${sm}.`,{num:false,s:v=>`${v} is bigger than ${v===big?sm:big}.`})};
 const dcC=d=>{const p=R(11,99),q=R(11,60);if(Math.random()<.6){const r=(p+q)/10;return G(`${(p/10).toFixed(1)} + ${(q/10).toFixed(1)} = ▢`,r.toFixed(1),[(r+.1).toFixed(1),(r-.1).toFixed(1),(r+1).toFixed(1),(r-1).toFixed(1)],`Line up the dots: ${r.toFixed(1)}.`,{num:false})}
- const a=Math.max(p,q)+R(0,9),b=Math.min(p,q),r=(a-b)/10;return G(`${(a/10).toFixed(1)} − ${(b/10).toFixed(1)} = ▢`,r.toFixed(1),[(r+.1).toFixed(1),(r-.1).toFixed(1),(r+1).toFixed(1),Math.abs(r-1).toFixed(1)],`Line up the dots: ${r.toFixed(1)}.`,{num:false})};
+ const a=Math.max(p,q)+R(0,9),b=Math.min(p,q),r=(a-b)/10;return G(`${(a/10).toFixed(1)} − ${(b/10).toFixed(1)} = ▢`,r.toFixed(1),[(r+.1).toFixed(1),(r+.2).toFixed(1),(r+1).toFixed(1),(r+.5).toFixed(1)],`Line up the dots: ${r.toFixed(1)}.`,{num:false})};
 const dcD=d=>{const k=R(0,3);if(k===0){const p=R(11,99);return G(`${p/10} × 10 = ▢`,p,wn(p,[1,10,9]),`Move each digit one place left: ${p}.`)}
  if(k===1){const p=R(101,999);return G(`${p/100} × 100 = ▢`,p,wn(p,[1,10,100]),`Move each digit two places left: ${p}.`)}
  if(k===2){const n=R(11,999);return G(`${n} ÷ 10 = ▢`,String(n/10),[String(n/100),String(n*10),String(n/10+1)],`Move each digit one place right: ${n/10}.`,{num:false})}
@@ -1175,7 +1186,7 @@ const BADGES=[
  {id:"super",i:"🌟",n:"Super Scholar",d:"3 stars in every quiz",f:p=>WORLDS.every(w=>(p.stars[w.id]||0)>=3)}];
 const GAMES={collect:["Basket Catch","🧺","Tap to collect"],addpair:["Make the Sum","🧩","Tap two numbers"],subcross:["Cookie Crunch","🍪","Take them away"],subpair:["Difference Duel","⚔️","Find the gap"],mularr:["Array Builder","🧱","Rows and columns"],mulmix:["Times Table Race","🏁","Fast multiplying"],divshare:["Fair Share","🍰","Share equally"],divfam:["Fact Family","👨‍👩‍👧","Link × and ÷"],divrem:["Left Overs","🍱","Find the remainder"],mix:["Mix Master","🎲","Any operation!"],sequence:["Pattern Pilot","🌌","Sequences and rules"],fusion:["Fusion Lab","🧪","Mix fractions"],million:["Million Quest","🏔️","Big number challenges"],negative:["Below Zero","🧊","Negative numbers"],ratio:["Ratio Rush","🚣","Ratios and rates"],volume:["Box Builder","📦","Area and volume"],angle:["Angle Hunt","📏","Find the angles"],power:["Power Up","⚡","Powers and roots"],prob:["Chance Challenge","🎲","Probability puzzles"],coord:["Map Master","🗺️","Coordinates and lines"],equation:["Equation Climb","🧗","Solve for x"],speed:["Speed Run","🚀","Speed, distance and time"],factor:["Factor Hunt","🔍","Find the factors"],decimal:["Decimal Dash","🏃","Decimal challenges"],percent:["Percent Race","💯","Percent puzzles"],shape:["Shape Quest","🔷","Shapes and angles"],data:["Data Detective","🕵️","Solve the data"],algebra:["Mystery Number","🔮","Find the unknown"],digits:["Digit Builder","🔢","Build big and small numbers"],pizza:["Pizza Slicer","🍕","Cut and eat fractions"],shop:["Shop Keeper","🛒","Coins and prices"]};
 function stagesOf(w){const q={id:"quiz",n:"Quiz",e:"🎯",d:"Test what you learned"};if(w.id==="boss")return[q];const g=GAMES[w.gameKey];
- return[q,{id:"word",n:"Story Problems",e:"📝",d:"Math in real life"},{id:"game",n:g[0],e:g[1],d:g[2]},{id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right answers"},{id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right answers"},{id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right ones fast"},{id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},{id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}]}
+ return[q,{id:"word",n:"Story Problems",e:"📝",d:"Math in real life"},{id:"game",n:g[0],e:g[1],d:g[2]},{id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right answers"},{id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right answers"},{id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right ones fast"},{id:"catch",n:"Falling Catch",e:"🧺",d:"Catch the right ones"},{id:"battle",n:"Monster Battle",e:"👾",d:"Defeat the monster"},{id:"speed",n:"Speed Round",e:"⏱️",d:"Beat the clock"},{id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},{id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}]}
 const stageStars=(p,w,s)=>s==="quiz"?(p.stars[w.id]||0):((p.done&&p.done[w.id]&&p.done[w.id][s])||0);
 const isDone=(p,w,s)=>stageStars(p,w,s)>0;
 const complete=(p,w)=>stagesOf(w).every(s=>isDone(p,w,s.id));
@@ -1191,6 +1202,15 @@ function shootList(w){const out=[],u=[];
   if(q.t==="inp"){const o=numOpts(q.v,10),L=o.o.map((x,j)=>[x,j===o.a?1:0]);return{t:"shoot",q:q.q,vis:q.vis,w:L,why:q.why}}}
   return fromPop()};
  [fromQ(1),fromQ(2),fromPop(),fromQ(4),fromQ(5),fromPop()].forEach(x=>out.push(x));return out}
+function buildLessons(w){const out=[...w.learn];if(!w.quiz)return out;
+ const ans=q=>q.t==="mcq"?q.o[q.a]:q.t==="inp"?q.v:null;
+ const line=q=>{const a=ans(q);if(a===null)return null;return(q.q.includes("▢")?q.q.replace("▢",a):`${q.q} → ${a}`)+"   ✔ "+(q.why||"")};
+ const mk=(f,idx)=>idx.map(i=>{try{return line(f(i,8))}catch(e){return null}}).filter(Boolean);
+ const a=mk(w.quiz,[1,2,3,4]),b=mk(w.quiz,[5,6,7,7]),c=mk(w.word,[1,3,5]);
+ if(a.length>=2)out.push({i:"📝",h:"Worked examples",p:"Watch how these are solved. Tap a line to hear it.",ex:a});
+ if(b.length>=2)out.push({i:"🚀",h:"Harder examples",p:"Ready for a challenge? Here are tougher ones, with answers.",ex:b});
+ if(c.length>=2)out.push({i:"📖",h:"Story problems",p:"Real life uses the same maths. Read how each story is solved.",ex:c});
+ return out}
 function buildList(w,st){if(w.id==="boss")return bossList();
  const mk=(n,f)=>Array.from({length:n},(_,i)=>f(i,n));
  if(st==="quiz")return mk(8,(i,n)=>w.quiz(i,n));
@@ -1198,6 +1218,9 @@ function buildList(w,st){if(w.id==="boss")return bossList();
  if(st==="game")return mk(5,(i,n)=>w.gameQ(i,n));
  if(st==="pop"){const u=[];return mk(3,()=>w.popQ(u))}
  if(st==="shoot")return shootList(w);
+ if(st==="catch"){const u=[];return mk(2,()=>{const p=w.popQ(u);return{t:"catch",q:p.q.replace("Pop","Catch"),w:p.w,why:p.why}})}
+ if(st==="battle")return mk(8,(i,n)=>w.quiz(i,n));
+ if(st==="speed")return mk(8,(i,n)=>{for(let t=0;t<20;t++){const q=w.quiz(i,n);if(q.t==="mcq")return q;if(q.t==="inp"){const o=numOpts(q.v,10);return{t:"mcq",q:q.q,vis:q.vis,o:o.o,a:o.a,why:q.why}}}return w.quiz(1,n)})
  if(st==="mole"){const u=[];return mk(2,()=>{const p=w.popQ(u);return{t:"mole",q:p.q.replace("Pop","Whack"),w:p.w,need:5,why:p.why}})}
  return mk(10,(i,n)=>w.tf(i,n))}
 
@@ -1212,7 +1235,7 @@ const P=()=>DB.players[DB.cur];
 /* ============ UI HELPERS ============ */
 const app=$("#app");
 let GT=[];
-function view(h){GT.forEach(clearInterval);GT=[];document.onkeydown=null;app.innerHTML=h;window.scrollTo(0,0);closeOv()}
+function view(h){GT.forEach(t=>{clearInterval(t);clearTimeout(t)});GT=[];document.onkeydown=null;app.innerHTML=h;window.scrollTo(0,0);closeOv()}
 function closeOv(){const o=$("#ov");o.classList.add("hide");o.innerHTML=""}
 function openOv(h){const o=$("#ov");o.innerHTML=`<div class="modal">${h}</div>`;o.classList.remove("hide");o.onclick=e=>{if(e.target===o)closeOv()}}
 function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
@@ -1291,12 +1314,12 @@ function viewHub(wi){
 
 /* ============ LESSON ============ */
 function viewLesson(wi,ci){
- const w=WORLDS[wi],c=w.learn[ci],last=ci===w.learn.length-1;
- view(`<div class="qhead"><button class="x" id="back" aria-label="Back">✕</button><div class="bar"><i style="width:${(ci+1)/(w.learn.length+1)*100}%"></i></div></div>
+ const w=WORLDS[wi],cards=lessonCards(wi,ci),c=cards[ci],last=ci===cards.length-1;
+ view(`<div class="qhead"><button class="x" id="back" aria-label="Back">✕</button><div class="bar"><i style="width:${(ci+1)/(cards.length+1)*100}%"></i></div></div>
  <div class="card lesson" style="--c:${w.c}"><div class="ico">${c.i}</div><h2>${esc(c.h)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></h2>
  <p>${esc(c.p)}</p><ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>
  <p style="font-size:.9rem;opacity:.7;text-align:center">👆 Tap an example to hear it</p>
- <div class="dotsrow">${w.learn.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
+ <div class="dotsrow">${cards.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
  <div style="display:flex;gap:10px">${ci?`<button class="big ghost" id="prev">◀ Back</button>`:""}<button class="big" id="nx">${last?"Play the quiz! 🎮":"Next ▶"}</button></div>`);
  $("#back").onclick=()=>viewHub(wi);$("#spk").onclick=()=>say(c.h+". "+c.p+" "+c.ex.join(". "));hearable(app);
  if($("#prev"))$("#prev").onclick=()=>viewLesson(wi,ci-1);
@@ -1308,7 +1331,8 @@ let Q;
 function startQuiz(wi,st){st=st||"quiz";Q={wi,stage:st,list:buildList(WORLDS[wi],st),i:0,mist:0,xp:0,flag:false,done:false};showQ()}
 function goStage(wi,st){st==="match"?viewMatch(wi):startQuiz(wi,st)}
 function showQ(){
- const w=WORLDS[Q.wi],q=Q.list[Q.i];Q.flag=false;Q.done=false;let body="";const vis=q.vis||"";
+ const w=WORLDS[Q.wi],q=Q.list[Q.i];Q.flag=false;Q.done=false;let body="";
+ const hud=Q.stage==="battle"?`<div class="battle"><span class="mon">${MON[Q.wi%MON.length]}</span><div class="hp"><i style="width:${Math.round(100-Q.i/Q.list.length*100)}%"></i></div><span>${"❤️".repeat(Math.max(0,3-Q.mist))||"💔"}</span></div>`:Q.stage==="speed"?`<div class="tmr"><i id="tmr"></i></div>`:"";const vis=q.vis||"";
  if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`${vis}<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
  else if(q.t==="inp"){body=`${vis}<div class="npd"><div class="disp" id="disp">&nbsp;</div><div class="keys">${["1","2","3","4","5","6","7","8","9","⌫","0","✔"].map(k=>`<button class="key ${k==="✔"?"go":k==="⌫"?"del":""}" data-k="${k}">${k}</button>`).join("")}</div></div>`}
  else if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
@@ -1316,14 +1340,17 @@ function showQ(){
  else if(q.t==="pair"){body=`<div class="bigword">${q.target}</div><div class="sent">${q.nums.map((x,i)=>`<button class="chip" data-i="${i}">${x}</button>`).join("")}</div>`}
  else if(q.t==="cross"){body=`<div class="vis items">${Array.from({length:q.n},(_,i)=>`<button class="it" data-i="${i}" aria-label="item">${q.e}</button>`).join("")}</div><div id="ans"></div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`${vis}<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
+ else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="share"){body=`<div class="vis" id="pool"></div><div class="frs" id="frs"></div>`}
  view(`<div class="qhead"><button class="x" id="back" aria-label="Quit">✕</button><div class="bar"><i style="width:${Q.i/Q.list.length*100}%"></i></div><span class="pill">${Q.i+1}/${Q.list.length}</span></div>
- <div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
+ ${hud}<div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
  $("#spk").onclick=()=>say(q.q);
- ({mcq:bindMcq,inp:bindInp,tf:bindTf,pop:bindPop,pair:bindPair,cross:bindCross,share:bindShare,shoot:bindShoot,mole:bindMole})[q.t](q);
+ ({mcq:bindMcq,inp:bindInp,tf:bindTf,pop:bindPop,pair:bindPair,cross:bindCross,share:bindShare,shoot:bindShoot,mole:bindMole,catch:bindCatch})[q.t](q);
+ if(Q.stage==="speed"&&q.t==="mcq"){const bar=$("#tmr");if(bar){requestAnimationFrame(()=>{bar.style.transition="width 15s linear";bar.style.width="0%"});GT.push(setTimeout(()=>timeUp(q),15000))}}
+
 }
 function wrong(){if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();$("#fb").innerHTML=`<div class="fb b"><span>🦉</span>${pick(OOPS)}</div>`}
 function right(q){if(!Q.flag)Q.xp+=10;Q.done=true;sfx.ok();document.onkeydown=null;
@@ -1363,6 +1390,16 @@ function bindCross(q){let k=0;const items=[...app.querySelectorAll(".it")];
    $("#ans").innerHTML=`<div class="opts">${q.o.map((t,i)=>`<button class="opt" data-i="${i}">${esc(t)}</button>`).join("")}</div>`;
    $("#ans").querySelectorAll(".opt").forEach(o=>o.onclick=()=>{if(Q.done)return;
     if(+o.dataset.i===q.a){o.classList.add("ok");$("#ans").querySelectorAll(".opt").forEach(x=>x.style.pointerEvents="none");right(q)}else{o.classList.add("no");wrong()}})}})}
+const MON=["👾","🐉","👹","🦖","🧟","🐙","🦂","🕷️","🦈","👻"];
+let LESS=null;
+function lessonCards(wi,ci){if(!LESS||LESS.wi!==wi||ci===0)LESS={wi,cards:buildLessons(WORLDS[wi])};return LESS.cards}
+function bindCatch(q){app.querySelectorAll(".fi").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("got"))return;
+ if(q.w[+b.dataset.i][1]){b.classList.add("got");sfx.tap();Q.popLeft--;if(Q.popLeft<=0){Q.done=true;setTimeout(()=>{Q.done=false;right(q)},400)}}
+ else{b.classList.add("no");setTimeout(()=>b.classList.remove("no"),450);wrong()}})}
+function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();
+ app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
+ $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
+ const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);
@@ -1454,7 +1491,6 @@ function showCert(wi){const w=WORLDS[wi],p=P();if(!complete(p,w)){toast("🔒 Fi
 /* ============ START ============ */
 load();
 if(DB.cur&&DB.players[DB.cur])viewMap();else{DB.cur=null;viewWelcome()}
-
 </script>
 </body>
 </html>
