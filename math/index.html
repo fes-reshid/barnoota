@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Math Adventure for Kids | Learn Maths Free – diinislaam.com</title>
-<meta name="description" content="Math Adventure is a free, fun, game-style maths course for kids. 31 worlds plus a Grand Challenge: counting, addition, subtraction, multiplication and division, each with its own games. Earn stars, XP, badges and certificates.">
+<meta name="description" content="Math Adventure is a free, fun, game-style maths course for kids. 45 worlds plus a Grand Challenge: counting, addition, subtraction, multiplication and division, each with its own games. Earn stars, XP, badges and certificates.">
 <link rel="canonical" href="https://diinislaam.com/math/">
 <meta name="theme-color" content="#4cc9f0">
 <meta property="og:title" content="Math Adventure – a fun maths game for kids">
-<meta property="og:description" content="31 worlds and a boss level: counting, + − × ÷, games, stars, badges and certificates.">
+<meta property="og:description" content="45 worlds and a boss level: counting, + − × ÷, games, stars, badges and certificates.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://diinislaam.com/math/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -231,6 +231,7 @@ function subArgs(c,d){let a,b,t=0;
  while(t<80&&(b>=a||(c.borrow&&(b%10)<=(a%10)&&Math.random()<.7)));
  if(b>=a)b=a-1;return[a,b]}
 function mulArgs(c,d){
+ if(c.two){let a=R(c.aMin,c.aMax);if(c.three&&d>.6&&Math.random()<.5)a=R(100,300);return[a,R(c.bMin,c.bMax)]}
  if(c.big&&(c.always||(d>.6&&Math.random()<.6))){return[R(c.bigMin||11,c.bigMax||25),R(2,c.bigB||5)]}
  const t=pick(c.tables),b=R(c.bMin||1,sc(c.bMin||1,c.bMax,d));return Math.random()<.5?[t,b]:[b,t]}
 function divArgs(c,d,rem){const f=pick(c.tables),q=R(c.qMin||1,sc(c.qMin||1,c.qMax,d)),r=rem?R(1,f-1):0;return[f*q+r,f,q,r]}
@@ -508,7 +509,7 @@ const pvC=d=>{const u=d<.4?10:d<.75?100:1000;let n=u===10?R(12,999):u===100?R(10
 const pvD=d=>{const n=R(1100,9899),th=Math.floor(n/1000),h=Math.floor(n/100)%10,t=Math.floor(n/10)%10,o=n%10;
  return G(`${cm(n)} = ${th} thousands + ▢ hundreds + ${t} tens + ${o} ones`,h,wn(h,[1,2]),`${cm(n)} has ${h} hundreds.`)};
 const pvE=d=>{const st=d<.4?10:d<.7?100:1000,more=Math.random()<.5;let n=R(1200,8800);const r=more?n+st:n-st;
- return G(`${cm(st)} ${more?"more":"less"} than ${cm(n)} is ▢`,cm(r),[cm(r+st),cm(r-st),cm(r+(more?-1:1)*st*2)],`${cm(n)} ${more?"+":"−"} ${cm(st)} = ${cm(r)}.`,{num:false})};
+ return G(`${cm(st)} ${more?"more":"less"} than ${cm(n)} is ▢`,cm(r),[r+st,r-st,r+(more?-1:1)*st*2,r+2*st].filter(v=>v>=0&&v!==r).map(cm),`${cm(n)} ${more?"+":"−"} ${cm(st)} = ${cm(r)}.`,{num:false})};
 const pvW1=d=>{const u=d<.5?10:100,n=u===10?R(12,999):R(101,9999),n2=n%u===0?n+1:n,r=Math.round(n2/u)*u,[N]=pick(NAMES),[it]=pick(ITEMS);
  return G(`${N}'s school has ${cm(n2)} ${it}. About how many is that to the nearest ${u}? ▢`,cm(r),wn(r,[u,2*u]).map(cm),`${cm(n2)} rounds to ${cm(r)}.`,{num:false,s:v=>`${N}'s school has ${cm(n2)} ${it}, which is about ${v} to the nearest ${u}.`})};
 const pvW2=d=>{const a=digs(4),dg=a[0],p=R(1,3),rest=shuffle(a.slice(1)),arr=[];let ri=0;for(let i=0;i<4;i++)arr.push(i===3-p?dg:rest[ri++]);
@@ -824,6 +825,335 @@ customWorld({id:"alg",name:"Algebra Alley",emoji:"🔮",c:"#9333ea",c2:"#e9d5ff"
   {i:"🪜",h:"Two-step equations",p:"Undo the plus or minus first. Then undo the multiply.",ex:["2x + 3 = 11 → 2x = 8 → x = 4","5x − 2 = 13 → 5x = 15 → x = 3","Check by putting x back in!"]},
   {i:"🌡️",h:"Negative numbers",p:"Numbers below zero are negative. On a number line, the further left, the smaller.",ex:["3 − 5 = −2","−4 is smaller than 1","5°C drops by 8° → −3°C","Function machine: 4 → ×3 → +2 → 14"]}]});
 
+/* ============ LEVELS 32–44 (hardest) ============ */
+const frs=(n,d)=>{const g=gcd(n,d);n/=g;d/=g;if(d===1)return String(n);return n>d?`${Math.floor(n/d)} ${n%d}/${d}`:`${n}/${d}`};
+const SUP={"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹"};
+const sup=n=>String(n).split("").map(c=>SUP[c]).join("");
+const pt=(x,y)=>`(${fmtN(x)}, ${fmtN(y)})`;
+const roman=n=>{const m=[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];let s="";for(const[v,c]of m)while(n>=v){s+=c;n-=v}return s};
+const ONES=["","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"],TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+const w3=n=>{let s="";const h=Math.floor(n/100),r=n%100;if(h)s+=ONES[h]+" hundred";if(r){if(h)s+=" and ";s+=r<20?ONES[r]:TENS[Math.floor(r/10)]+(r%10?"-"+ONES[r%10]:"")}return s};
+const words=n=>{const t=Math.floor(n/1000),r=n%1000;let s="";if(t)s+=w3(t)+" thousand";if(r){if(t)s+=r<100?" and ":" ";s+=w3(r)}return s};
+const ruleRot=(u,rules)=>{const free=rules.map((_,k)=>k).filter(k=>!u.includes(k)),k=free.length?pick(free):R(0,rules.length-1);u.push(k);return rules[k]()};
+const eqBases=(bases,mk)=>u=>{const free=bases.filter((_,k)=>!u.includes(k)),b=free.length?pick(free):pick(bases);u.push(bases.indexOf(b));return mk(b)};
+
+/* ---- 32 Fraction Fusion ---- */
+const ffA=d=>{const d1=pick([2,3,4,5]),m=R(2,3),d2=d1*m,a=R(1,d1-1),c=R(1,d2-1),n=a*m+c;return G(`${a}/${d1} + ${c}/${d2} = ▢`,frs(n,d2),[frs(a+c,d1+d2),frs(n+1,d2),frs(n-1,d2),frs(n,d2+d1)],`Make the bottoms the same: ${a}/${d1} = ${a*m}/${d2}. Then ${a*m} + ${c} = ${n}, so ${frs(n,d2)}.`,{num:false})};
+const ffB=d=>{const d1=pick([2,3,4,5]),m=R(2,3),d2=d1*m,a=R(1,d1-1),c=R(1,a*m-1),n=a*m-c;return G(`${a}/${d1} − ${c}/${d2} = ▢`,frs(n,d2),[frs(a-c>0?a-c:1,d2-d1>0?d2-d1:d2),frs(n+1,d2),frs(n+2,d2),frs(a*m+c,d2)],`Make the bottoms the same: ${a}/${d1} = ${a*m}/${d2}. Then ${a*m} − ${c} = ${n}, so ${frs(n,d2)}.`,{num:false})};
+const ffC=d=>{const b=R(2,6),dd=R(2,6),a=R(1,b-1),c=R(1,dd-1);return G(`${a}/${b} × ${c}/${dd} = ▢`,frs(a*c,b*dd),[frs(a*c,b+dd),frs(a+c,b*dd),frs(a*dd,b*c),frs(a*c+1,b*dd)],`Multiply the tops (${a * c}) and the bottoms (${b * dd}), then simplify.`,{num:false})};
+const ffD=d=>{const b=R(2,6),a=R(1,b-1),n=R(2,9);return G(`${a}/${b} × ${n} = ▢`,frs(a*n,b),[frs(a,b*n),frs(a+n,b),frs(a*n,b+n),frs(a*n+1,b)],`${a} × ${n} = ${a*n}, over ${b}: ${frs(a*n,b)}.`,{num:false})};
+const ffE=d=>{const b=R(2,8),w=R(1,5),a=R(1,b-1);if(Math.random()<.5)return G(`${w} ${a}/${b} as an improper fraction is ▢`,fr(w*b+a,b),[fr(w*b-a,b),fr(w+a,b),fr(w*b+a,b+1),fr(w*a+b,b)],`${w} × ${b} + ${a} = ${w*b+a}, over ${b}.`,{num:false});
+ return G(`${w*b+a}/${b} as a mixed number is ▢`,`${w} ${a}/${b}`,[`${w+1} ${a}/${b}`,`${w} ${b-a}/${b}`,`${w-1>0?w-1:w+2} ${a}/${b}`,`${a} ${w}/${b}`],`${w*b+a} ÷ ${b} = ${w} remainder ${a}.`,{num:false})};
+const ffF=d=>{const k=R(2,9),dd=pick([2,3,4,5,10]);return G(`${k} ÷ 1/${dd} = ▢`,k*dd,wn(k*dd,[dd,k,1]),`How many 1/${dd}s fit in ${k}? ${k} × ${dd} = ${k*dd}.`)};
+const ffW1=d=>{const [N]=pick(NAMES),[M]=pick(NAMES.filter(x=>x[0]!==N)),den=pick([4,6,8,10]),a=R(1,Math.floor(den/2)-0),c=R(1,den-1-a);if(a+c>=den)return ffW1(d);return G(`${N} ate ${a}/${den} of a pizza and ${M} ate ${c}/${den}. How much is left? ▢`,frs(den-a-c,den),[frs(a+c,den),frs(den-a,den),frs(den-c,den),frs(den-a-c+1,den)],`${a} + ${c} = ${a+c} eaten. ${den} − ${a+c} = ${den-a-c} left, so ${frs(den-a-c,den)}.`,{num:false,s:v=>`${N} ate ${a}/${den} of a pizza and ${M} ate ${c}/${den}, leaving ${v}.`})};
+const ffW2=d=>{const a=R(1,3),b=R(2,4),k=R(2,5);if(a>=b)return ffW2(d);return G(`A recipe needs ${a}/${b} cup of flour. How much flour for ${k} batches? ▢ cups`,frs(a*k,b),[frs(a,b*k),frs(a+k,b),frs(a*k+1,b),frs(a*k,b+k)],`${a}/${b} × ${k} = ${frs(a*k,b)}.`,{num:false,s:v=>`A recipe needs ${a}/${b} cup of flour, so ${k} batches need ${v} cups.`})};
+const ffW3=d=>{const [N]=pick(NAMES),dd=pick([2,3,4,5]),k=R(2,8);return G(`${N} has ${k} pizzas and cuts every pizza into ${dd} equal slices. How many slices is that? ▢`,k*dd,wn(k*dd,[dd,k,1]),`${k} ÷ 1/${dd} = ${k} × ${dd} = ${k*dd}.`,{s:v=>`${N} has ${k} pizzas cut into ${dd} equal slices each, which is ${v} slices.`})};
+customWorld({id:"ff",name:"Fraction Fusion",emoji:"🧪",c:"#15803d",c2:"#86efac",badge:"🧪",bname:"Fraction Fusion Master",gameKey:"fusion",
+ gq:[ffA,ffB,ffC,ffD,ffE,ffF],gw:[ffW1,ffW2,ffW3],game:gameFrom([ffA,ffB,ffC,ffD,ffE,ffF]),
+ pop:eqBases([[3,4],[2,3],[5,6],[3,8],[4,5],[7,10]],([a,c])=>{const gd=shuffle([2,3,4,5,6]).slice(0,4).map(m=>fr(a*m,c*m)),bd=new Set();let g=0;
+  while(bd.size<5&&g++<300){const m=R(2,6),num=a*m+pick([-2,-1,1,2]),den=c*m;if(num>=1&&num<den&&num*c!==a*den&&!gd.includes(fr(num,den)))bd.add(fr(num,den))}
+  return popPick(gd,[...bd],`Pop every fraction equal to ${fr(a,c)}!`,`${gd[0]} = ${fr(a,c)}.`)}),
+ pairs:()=>shuffle([["5/2","2 1/2"],["7/4","1 3/4"],["9/4","2 1/4"],["7/3","2 1/3"],["11/5","2 1/5"],["13/6","2 1/6"]]),
+ learn:[
+  {i:"🧪",h:"Add and subtract with different bottoms",p:"Make the bottom numbers the same first (find a common denominator). Then add or subtract the tops.",ex:["1/2 + 1/4 = 2/4 + 1/4 = 3/4","3/4 − 1/8 = 6/8 − 1/8 = 5/8","Always simplify your answer"]},
+  {i:"✖️",h:"Multiplying fractions",p:"Multiply the tops together and the bottoms together. Then simplify.",ex:["1/2 × 1/3 = 1/6","2/3 × 3/4 = 6/12 = 1/2","3/4 × 5 = 15/4 = 3 3/4"]},
+  {i:"🔁",h:"Mixed numbers and dividing",p:"An improper fraction has a top bigger than the bottom. Dividing by a fraction asks how many fit.",ex:["2 1/2 = (2 × 2 + 1)/2 = 5/2","7/4 = 1 3/4","3 ÷ 1/4 = 12 (twelve quarters in 3)"]}]});
+
+/* ---- 33 Million Mountain ---- */
+const mlA=d=>{const a=digs(7),n=+a.join(""),p=R(0,6),dg=+String(n)[6-p],v=dg*10**p;return G(`In ${cm(n)}, the digit ${dg} is worth ▢`,cm(v),[0,1,2,3,4,5,6].filter(j=>j!==p).slice(0,6).map(j=>cm(dg*10**j)),`${dg} is in the ${["ones","tens","hundreds","thousands","ten thousands","hundred thousands","millions"][p]} place: ${cm(v)}.`,{num:false})};
+const mlB=d=>{const u=pick([1000,10000,100000]),n0=R(100001,999999),n=n0%u===0?n0+1:n0,r=Math.round(n/u)*u;return G(`${cm(n)} rounded to the nearest ${cm(u)} is ▢`,cm(r),[cm(r+u),cm(r-u),cm(Math.floor(n/u)*u===r?r+2*u:Math.floor(n/u)*u),cm(r+2*u)],`Look at the digit to the right of the ${cm(u)} place.`,{num:false})};
+const mlC=d=>{const L=uniq(4,()=>R(100000,999999)),big=Math.max(...L);return G(`Which is the biggest: ${L.map(cm).join(", ")}?`,cm(big),L.filter(x=>x!==big).map(cm),`Compare the biggest places first.`,{num:false,s:v=>`${v} is the biggest of ${L.map(cm).join(", ")}.`})};
+const mlD=d=>{const n=R(1,9)*100000+R(0,9)*1000+R(1,9)*100+R(0,5)*10;const m=cm(n);return G(`${words(n)} is written as ▢`,m,[cm(n+1000),cm(n-100>0?n-100:n+100),cm(n+10000),cm(Math.floor(n/10))].filter(x=>x!==m),`Say it slowly and write each part.`,{num:false})};
+const mlE=d=>{const a=R(1,9)*10000+R(1,9)*1000,b=R(1,9)*10000+R(1,9)*1000;if(Math.random()<.5)return G(`${cm(a)} + ${cm(b)} = ▢`,cm(a+b),[cm(a+b+1000),cm(a+b-1000),cm(a+b+10000),cm(a+b-10000)],`Add the thousands: ${cm(a+b)}.`,{num:false});
+ const x=Math.max(a,b)+10000,y=Math.min(a,b);return G(`${cm(x)} − ${cm(y)} = ▢`,cm(x-y),[cm(x-y+1000),cm(x-y-1000),cm(x-y+10000),cm(x+y)],`${cm(x)} − ${cm(y)} = ${cm(x-y)}.`,{num:false})};
+const mlF=d=>{const k=R(11,99),u=pick([10,100,1000]);if(Math.random()<.5)return G(`${k} × ${cm(u)} = ▢`,cm(k*u),[cm(k*u*10),cm(k*u/10),cm(k*u+u),cm(k*u-u)],`Move each digit ${String(u).length-1} places left.`,{num:false});
+ return G(`${cm(k*u*10)} ÷ ${cm(u)} = ▢`,String(k*10),[String(k),String(k*100),String(k*10+10)],`Cancel the zeros.`,{num:false})};
+const mlG=d=>{const n=R(2,d>.6?3999:399);const r=roman(n);return G(`${n} in Roman numerals is ▢`,r,uniq(3,()=>roman(Math.max(1,n+pick([-10,-1,1,5,10,-5,4,9])))).filter(x=>x!==r),`Build it from M = 1000, D = 500, C = 100, L = 50, X = 10, V = 5, I = 1.`,{num:false})};
+const mlW1=d=>{const n=R(100,950)*1000+R(0,9)*100,k=R(2,9)*10000;return G(`A city has ${cm(n)} people. ${cm(k)} more people move in. How many people live there now? ▢`,cm(n+k),[cm(n+k+10000),cm(n+k-10000),cm(n-k),cm(n+k+1000)],`${cm(n)} + ${cm(k)} = ${cm(n+k)}.`,{num:false,s:v=>`A city has ${cm(n)} people and ${cm(k)} more move in, so ${v} people live there.`})};
+const mlW2=d=>{const n=R(100001,999999),n2=n%1000===0?n+1:n,r=Math.round(n2/1000)*1000;return G(`A stadium has ${cm(n2)} seats. About how many is that to the nearest thousand? ▢`,cm(r),[cm(r+1000),cm(r-1000),cm(Math.round(n2/100000)*100000),cm(r+10000)],`Look at the hundreds digit to round.`,{num:false,s:v=>`A stadium has ${cm(n2)} seats, which is about ${v} to the nearest thousand.`})};
+const mlW3=d=>{const y=R(1999,2026);return G(`Which Roman numeral shows the year ${y}?`,roman(y),uniq(3,()=>roman(y+pick([-10,-1,1,5,10,-100,100]))).filter(x=>x!==roman(y)),`Split ${y} into thousands, hundreds, tens and ones.`,{num:false,s:v=>`${v} is the Roman numeral for ${y}.`})};
+customWorld({id:"mil",name:"Million Mountain",emoji:"🏔️",c:"#1d4ed8",c2:"#93c5fd",badge:"🏔️",bname:"Million Master",gameKey:"million",
+ gq:[mlA,mlB,mlC,mlD,mlE,mlF,mlG],gw:[mlW1,mlW2,mlW3],game:gameFrom([mlA,mlB,mlC,mlD,mlG]),
+ pop:u=>ruleRot(u,[
+  ()=>{const X=R(2,9)*100000,g=uniq(4,()=>X-49999+R(0,99998)),b=uniq(5,()=>{const v=R(100000,999999);return Math.abs(v-X)>=50000?v:v+100000>999999?v-100000:v+100000});return popPick(g.map(cm),b.map(cm),`Pop every number that rounds to ${cm(X)} (nearest 100,000)!`,`Numbers from ${cm(X-50000)} to ${cm(X+49999)} round to ${cm(X)}.`)},
+  ()=>{const T=R(3,8)*100000,g=uniq(4,()=>R(T+10000,999999)),b=uniq(5,()=>R(100000,T-10000));return popPick(g.map(cm),b.map(cm),`Pop every number BIGGER than ${cm(T)}!`,`Compare from the biggest place first.`)},
+  ()=>{const dg=R(2,9),g=uniq(4,()=>+(R(1,9)+""+R(0,9)+dg+R(0,9)+R(0,9)+R(0,9))),b=uniq(5,()=>{const v=+(R(1,9)+""+R(0,9)+R(0,9)+R(0,9)+R(0,9)+R(0,9));return Math.floor(v/10000)%10===dg?v+10000:v});return popPick(g.map(cm),b.map(cm),`Pop every number with ${dg} in the ten-thousands place!`,`The ten-thousands digit is the 2nd digit of a 6-digit number.`)}]),
+ pairs:()=>shuffle([["XIV","14"],["XL","40"],["XC","90"],["CD","400"],["MCM","1900"],["MMXXVI","2026"]]),
+ learn:[
+  {i:"🔢",h:"Numbers up to a million",p:"Group digits in threes: ones, thousands, millions. Each place is 10 times bigger than the one to its right.",ex:["3,482,159 = 3 millions + 482 thousands + 159","One million = 1,000,000 = 1,000 thousands","In 5,300,000 the 3 is worth 300,000"]},
+  {i:"🎯",h:"Rounding and ordering",p:"Look at the digit just right of the place you are rounding to. Compare numbers from the biggest place first.",ex:["468,215 → nearest 1,000 is 468,000","468,215 → nearest 100,000 is 500,000","742,019 > 739,990 (compare the ten thousands)"]},
+  {i:"🏛️",h:"Roman numerals",p:"Roman numerals use letters. A smaller letter before a bigger one is taken away.",ex:["I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000","IV = 4, IX = 9, XL = 40, XC = 90","MMXXVI = 2026"]}]});
+
+/* ---- 34 Long Multiplication Lake / 35 Long Division Lagoon ---- */
+Object.assign(CF,{
+ mul6:{op:"×",tables:[2,3,4,5,6,7,8,9],two:true,three:true,aMin:11,aMax:60,bMin:11,bMax:40,bMax2:40,vis:false,xs:[36,48,60,72],game:"mulmix"},
+ div6:{op:"÷",tables:[11,12,13,14,15,16,17,18,19,20,25],qMin:12,qMax:60,rem:true,vis:false,xMin:12,xMax:40,dMax:1500,game:"divrem"}});
+opWorld({id:"lm",name:"Long Multiplication Lake",emoji:"🏞️",c:"#7e22ce",c2:"#d8b4fe",badge:"🌊",bname:"Lake Master",cfg:CF.mul6,
+ learn:[
+  {i:"🧱",h:"Two-digit × two-digit",p:"Multiply by the ones, then by the tens (use a zero as a placeholder), then add.",ex:["23 × 14: 23 × 4 = 92","23 × 10 = 230","92 + 230 = 322"]},
+  {i:"🔲",h:"The grid method",p:"Split both numbers into tens and ones. Fill a grid with four small products and add them up.",ex:["34 × 26 = (30 + 4) × (20 + 6)","30 × 20 = 600, 30 × 6 = 180, 4 × 20 = 80, 4 × 6 = 24","600 + 180 + 80 + 24 = 884"]},
+  {i:"🎯",h:"Estimate to check",p:"Round both numbers first. Your answer should be close.",ex:["48 × 21 ≈ 50 × 20 = 1,000","Exact: 48 × 21 = 1,008 ✓","A 3-digit × 2-digit answer can be 5 digits"]}]});
+opWorld({id:"dl",name:"Long Division Lagoon",emoji:"🌴",c:"#b45309",c2:"#fde68a",badge:"🌴",bname:"Lagoon Master",cfg:CF.div6,
+ learn:[
+  {i:"📚",h:"Long division steps",p:"Divide, multiply, subtract, bring down. Repeat until done.",ex:["156 ÷ 12: 12 goes into 15 once → 15 − 12 = 3","Bring down 6 → 36 ÷ 12 = 3","So 156 ÷ 12 = 13"]},
+  {i:"🧮",h:"Build a table",p:"List the first few multiples of the divisor to help you.",ex:["For ÷ 15: 15, 30, 45, 60, 75, 90","200 ÷ 15 → 13 × 15 = 195, remainder 5","200 ÷ 15 = 13 r 5"]},
+  {i:"✅",h:"Check your answer",p:"Multiply the answer by the divisor and add the remainder. You should get the number you started with.",ex:["13 × 15 + 5 = 195 + 5 = 200 ✓","The remainder is always smaller than the divisor"]}]});
+
+/* ---- 36 Negative Numbers Nook ---- */
+const ngA=d=>{const k=R(0,3);let a,b,r,q;
+ if(k===0){a=R(1,9);b=R(a+1,a+9);r=a-b;q=`${a} − ${b} = ▢`}
+ else if(k===1){a=R(2,9);b=R(a+1,a+9);r=b-a;q=`${fmtN(-a)} + ${b} = ▢`}
+ else if(k===2){a=R(1,9);b=R(1,9);r=-a-b;q=`${fmtN(-a)} − ${b} = ▢`}
+ else{a=R(1,9);b=R(1,9);r=-a+b*0+(-b)*-1;q=`${fmtN(-a)} − ${fmtN(-b)} = ▢`;r=-a+b}
+ const c=[r+1,r-1,r+2,r-2,-r,Math.abs(a)+Math.abs(b)].filter((v,i,x)=>v!==r&&x.indexOf(v)===i).slice(0,3).map(fmtN);
+ return G(q,fmtN(r),c,`${k===3?"Subtracting a negative is the same as adding: ":""}the answer is ${fmtN(r)}.`,{num:false})};
+const ngB=d=>{const a=R(-8,8),k=R(2,9),right=Math.random()<.5,r=right?a+k:a-k;return G(`Start at ${fmtN(a)} on a number line. Move ${k} steps ${right?"right":"left"}. You land on ▢`,fmtN(r),[r+1,r-1,right?a-k:a+k,-r].filter((v,i,x)=>v!==r&&x.indexOf(v)===i).slice(0,3).map(fmtN),`Moving ${right?"right adds":"left subtracts"}: ${fmtN(a)} ${right?"+":"−"} ${k} = ${fmtN(r)}.`,{num:false})};
+const ngC=d=>{const L=uniq(4,()=>R(-9,9)),sm=Math.min(...L);return G(`Which is the smallest: ${L.map(fmtN).join(", ")}?`,fmtN(sm),L.filter(x=>x!==sm).map(fmtN),`The number furthest to the left is the smallest.`,{num:false,s:v=>`${v} is the smallest of ${L.map(fmtN).join(", ")}.`})};
+const ngD=d=>{const t=R(-8,4),k=R(3,12),r=t+k;return G(`It is ${fmtN(t)}°C and the temperature rises by ${k}°C. The new temperature is ▢°C`,fmtN(r),[r+1,r-1,t-k,-r].filter((v,i,x)=>v!==r&&x.indexOf(v)===i).slice(0,3).map(fmtN),`${fmtN(t)} + ${k} = ${fmtN(r)}.`,{num:false})};
+const ngE=d=>{const a=R(2,12);return Math.random()<.5?G(`The opposite of ${fmtN(-a)} is ▢`,a,wn(a,[1,2]),`Opposites are the same distance from zero.`):G(`The distance of ${fmtN(-a)} from zero is ▢`,a,wn(a,[1,2]),`Distance is never negative: |${fmtN(-a)}| = ${a}.`)};
+const ngF=d=>{const a=R(2,9),b=R(2,9),k=R(0,3);if(k===0)return G(`${fmtN(-a)} × ${b} = ▢`,fmtN(-a*b),[String(a*b),fmtN(-a*b-a),fmtN(-a*b+a)],`Positive × negative = negative.`,{num:false});
+ if(k===1)return G(`${fmtN(-a)} × ${fmtN(-b)} = ▢`,String(a*b),[fmtN(-a*b),String(a*b+a),String(a*b-b)],`Negative × negative = positive.`,{num:false});
+ if(k===2)return G(`${fmtN(-a*b)} ÷ ${a} = ▢`,fmtN(-b),[String(b),fmtN(-b-1),fmtN(-b+1)],`Negative ÷ positive = negative.`,{num:false});
+ return G(`${fmtN(-a*b)} ÷ ${fmtN(-a)} = ▢`,String(b),[fmtN(-b),String(b+1),String(b-1)].filter(x=>x!=="0"),`Negative ÷ negative = positive.`,{num:false})};
+const ngW1=d=>{const f=R(-3,6),k=R(2,8),r=f-k;return G(`A lift is at floor ${fmtN(f)} and goes down ${k} floors. Which floor is it at now? ▢`,fmtN(r),[r+1,r-1,f+k,-r].filter((v,i,x)=>v!==r&&x.indexOf(v)===i).slice(0,3).map(fmtN),`${fmtN(f)} − ${k} = ${fmtN(r)}.`,{num:false,s:v=>`A lift at floor ${fmtN(f)} goes down ${k} floors and reaches floor ${v}.`})};
+const ngW2=d=>{const [N]=pick(NAMES),a=R(10,40),b=R(a+5,a+40),r=a-b;return G(`${N} has $${a} and buys something for $${b}. ${N}'s balance is now ▢ dollars.`,fmtN(r),[String(b-a),fmtN(r-5),fmtN(r+5)],`${a} − ${b} = ${fmtN(r)} (the account is overdrawn).`,{num:false,s:v=>`${N} has $${a} and spends $${b}, so the balance is ${v} dollars.`})};
+const ngW3=d=>{const dp=R(5,30),r=R(2,dp+10),res=-dp+r;return G(`A diver is ${dp} m below sea level and swims up ${r} m. The diver is now at ▢ m.`,fmtN(res),[res+1,res-1,res+5,dp+r].filter((v,i,x)=>v!==res&&x.indexOf(v)===i).slice(0,3).map(fmtN),`${fmtN(-dp)} + ${r} = ${fmtN(res)}.`,{num:false,s:v=>`A diver ${dp} m below sea level swims up ${r} m and is at ${v} m.`})};
+customWorld({id:"neg",name:"Negative Numbers Nook",emoji:"🧊",c:"#0e7490",c2:"#a5f3fc",badge:"🧊",bname:"Below Zero Hero",gameKey:"negative",
+ gq:[ngA,ngB,ngC,ngD,ngE,ngF],gw:[ngW1,ngW2,ngW3],game:gameFrom([ngA,ngB,ngC,ngD,ngF]),
+ pop:u=>ruleRot(u,[
+  ()=>popPick(uniq(4,()=>fmtN(-R(1,20))),uniq(5,()=>String(R(0,20))),"Pop every number BELOW zero!","Negative numbers are less than zero."),
+  ()=>{const X=-R(1,6),mk=x=>{const a=R(0,8),b=a-x;return pick([`${a} − ${b}`,`${fmtN(-a-3)} + ${a+3-b+ -x - 0 > 0 ? 0 : 0}`])},g=uniq(4,()=>{const a=R(0,9);const k=R(0,2);return k===0?`${a} − ${a-X}`:k===1?`${fmtN(X-R(1,5))} + ${0}`:`${fmtN(-R(1,4)+X)} + ${0}`});return popPick(g.filter(x=>false).length?[]:[],[],"x","x")},
+  ()=>{const T=-R(2,6),g=uniq(4,()=>R(-12,T-1)),b=uniq(5,()=>R(T+1,10));return popPick(g.map(fmtN),b.map(fmtN),`Pop every number SMALLER than ${fmtN(T)}!`,`Numbers further left on the number line are smaller.`)}].filter((_,i)=>i!==1)),
+ pairs:()=>shuffle([["−3 + 5","2"],["4 − 9","−5"],["−2 − 4","−6"],["−3 × 4","−12"],["−6 ÷ 3","−2"],["−5 × −2","10"]]),
+ learn:[
+  {i:"🧊",h:"Numbers below zero",p:"Negative numbers are less than zero. On a number line, the further left, the smaller.",ex:["−5 < −2 < 0 < 3","3 − 5 = −2","−3°C is colder than −1°C","The opposite of −7 is 7"]},
+  {i:"➕",h:"Adding and subtracting",p:"Moving right adds, moving left subtracts. Subtracting a negative is the same as adding.",ex:["−4 + 7 = 3","−2 − 3 = −5","5 − (−2) = 5 + 2 = 7"]},
+  {i:"✖️",h:"Multiplying and dividing",p:"Same signs give a positive answer. Different signs give a negative answer.",ex:["−3 × 4 = −12","−3 × −4 = 12","12 ÷ −3 = −4","−12 ÷ −3 = 4"]}]});
+
+/* ---- 37 Ratio Rapids ---- */
+const rtA=d=>{const [a,b]=pick([[2,3],[1,2],[3,4],[2,5],[3,5],[1,3],[4,5]]),m=R(2,6);return G(`The ratio ${a*m} : ${b*m} in its simplest form is ▢`,`${a} : ${b}`,[`${b} : ${a}`,`${a*m} : ${b*m}`,`${a+1} : ${b}`,`${a} : ${b+1}`],`Divide both numbers by ${m}.`,{num:false})};
+const rtB=d=>{const [a,b]=pick([[1,2],[2,3],[1,3],[3,4],[2,5],[3,5]]),t=(a+b)*R(2,9)*(d>.5?5:1),sh=t/(a+b);return Math.random()<.5?G(`Share $${t} in the ratio ${a} : ${b}. The bigger share is $▢`,Math.max(a,b)*sh,wn(Math.max(a,b)*sh,[sh,2*sh,5]),`${a} + ${b} = ${a+b} parts. ${t} ÷ ${a+b} = ${sh} per part, and ${Math.max(a,b)} × ${sh} = ${Math.max(a,b)*sh}.`):G(`Share $${t} in the ratio ${a} : ${b}. The smaller share is $▢`,Math.min(a,b)*sh,wn(Math.min(a,b)*sh,[sh,2*sh,5]),`${t} ÷ ${a+b} = ${sh} per part, and ${Math.min(a,b)} × ${sh} = ${Math.min(a,b)*sh}.`)};
+const rtC=d=>{const a=R(1,5),b=R(a+1,8),m=R(2,6);return G(`${a} : ${b} = ▢ : ${b*m}`,a*m,wn(a*m,[1,m,2]),`Multiply both by ${m}: ${a} × ${m} = ${a*m}.`)};
+const rtD=d=>{const n=R(3,9),c=R(2,12),k=R(2,9);return G(`${n} pens cost $${n*c}. ${k} pens cost $▢`,k*c,wn(k*c,[c,n,1]),`1 pen costs ${n*c} ÷ ${n} = ${c}. Then ${k} × ${c} = ${k*c}.`)};
+const rtE=d=>{const s=pick([2,5,10,20,25]),n=R(2,12);return G(`On a map 1 cm stands for ${s} km. ${n} cm on the map is ▢ km.`,n*s,wn(n*s,[s,n,10]),`${n} × ${s} = ${n*s}.`)};
+const rtF=d=>{const c=R(2,6),per=pick([4,6,8,12]),k=R(2,5);return G(`${c} cups of flour make ${per} biscuits. How many cups for ${per*k} biscuits? ▢`,c*k,wn(c*k,[c,k,1]),`${per*k} is ${k} times as many, so ${c} × ${k} = ${c*k} cups.`)};
+const rtW1=d=>{const [N]=pick(NAMES),a=R(2,5),b=R(a+1,7),m=R(2,8);return G(`In ${N}'s class the ratio of girls to boys is ${a} : ${b}. There are ${a*m} girls. How many boys? ▢`,b*m,wn(b*m,[m,b,1]),`${a*m} ÷ ${a} = ${m} per part, and ${b} × ${m} = ${b*m}.`,{s:v=>`In ${N}'s class the ratio of girls to boys is ${a} : ${b}. With ${a*m} girls there are ${v} boys.`})};
+const rtW2=d=>{const [N]=pick(NAMES),a=R(2,4),b=R(1,3),m=R(2,6);if(a===b)return rtW2(d);const t=(a+b)*m;return G(`${N} mixes paint in the ratio ${a} : ${b}. In total ${t} litres are made. How many litres is the first colour? ▢`,a*m,wn(a*m,[m,b,1]),`${a}+${b} = ${a+b} parts, ${t} ÷ ${a+b} = ${m}, so ${a} × ${m} = ${a*m}.`,{s:v=>`${N} mixes paint in the ratio ${a} : ${b} to make ${t} litres, so the first colour is ${v} litres.`})};
+const rtW3=d=>{const p1=R(2,6),k1=R(2,5),p2=R(2,6),k2=R(2,6);const u1=p1,u2=p2;const better=u1<u2?`${k1} kg`:`${k2} kg`;if(u1===u2)return rtW3(d);
+ return G(`Rice A costs $${u1*k1} for ${k1} kg. Rice B costs $${u2*k2} for ${k2} kg. How much per kg is the cheaper rice? $▢`,Math.min(u1,u2),wn(Math.min(u1,u2),[1,2,3]),`A costs ${u1} per kg and B costs ${u2} per kg. The cheaper is ${Math.min(u1,u2)}.`,{s:v=>`Rice A costs $${u1*k1} for ${k1} kg and Rice B costs $${u2*k2} for ${k2} kg. The cheaper rice costs $${v} per kg.`})};
+customWorld({id:"rat",name:"Ratio Rapids",emoji:"🚣",c:"#0369a1",c2:"#7dd3fc",badge:"🚣",bname:"Ratio Racer",gameKey:"ratio",
+ gq:[rtA,rtB,rtC,rtD,rtE,rtF],gw:[rtW1,rtW2,rtW3],game:gameFrom([rtA,rtB,rtC,rtD,rtF]),
+ pop:eqBases([[1,2],[2,3],[3,4],[2,5],[3,5],[4,5]],([a,b])=>{const gd=shuffle([2,3,4,5,6,7]).slice(0,4).map(m=>`${a*m} : ${b*m}`),bd=new Set();let g=0;
+  while(bd.size<5&&g++<300){const m=R(2,7),x=a*m+pick([-1,1,2]),y=b*m;if(x>=1&&x*b!==a*y&&!gd.includes(`${x} : ${y}`))bd.add(`${x} : ${y}`)}
+  return popPick(gd,[...bd],`Pop every ratio equal to ${a} : ${b}!`,`${gd[0]} = ${a} : ${b} (multiply both by the same number).`)}),
+ pairs:()=>shuffle([["4 for $8","$2 each"],["3 for $12","$4 each"],["5 for $15","$3 each"],["6 for $30","$5 each"],["2 for $14","$7 each"],["8 for $8","$1 each"]]),
+ learn:[
+  {i:"⚖️",h:"What is a ratio?",p:"A ratio compares amounts. The order matters. Simplify by dividing both numbers by the same number.",ex:["2 boys to 3 girls is 2 : 3","12 : 18 = 2 : 3 (÷ 6)","The ratio 1 : 4 means 1 part to 4 parts"]},
+  {i:"🍰",h:"Sharing in a ratio",p:"Add the parts, find the value of one part, then multiply.",ex:["Share $60 in the ratio 1 : 4: 1 + 4 = 5 parts","60 ÷ 5 = 12 per part","Shares: $12 and $48"]},
+  {i:"📈",h:"Unit rates and scale",p:"Find the cost of one first (the unit rate). Then multiply.",ex:["5 pens cost $15 → 1 pen costs $3","So 8 pens cost $24","1 cm : 5 km → 4 cm is 20 km"]}]});
+
+/* ---- 38 Area & Volume Valley ---- */
+const avA=d=>{const b=R(2,12)*2,h=R(2,12);return G(`A triangle has base ${b} cm and height ${h} cm. Its area is ▢ cm².`,b*h/2,wn(b*h/2,[h,b/2,1]),`Area = base × height ÷ 2 = ${b} × ${h} ÷ 2 = ${b*h/2}.`)};
+const avB=d=>{const b=R(3,15),h=R(2,12);return G(`A parallelogram has base ${b} cm and height ${h} cm. Its area is ▢ cm².`,b*h,wn(b*h,[b,h,2]),`Area = base × height = ${b*h}.`)};
+const avC=d=>{const a=R(2,9),b=R(2,9),c=R(2,9),e=R(2,9);return G(`An L-shape is made from a ${a} by ${b} rectangle and a ${c} by ${e} rectangle. Its total area is ▢ cm².`,a*b+c*e,wn(a*b+c*e,[a,c,1]),`${a} × ${b} = ${a*b} and ${c} × ${e} = ${c*e}. ${a*b} + ${c*e} = ${a*b+c*e}.`)};
+const avD=d=>{const l=R(2,12),w=R(2,9),h=R(2,8);return G(`A cuboid is ${l} cm by ${w} cm by ${h} cm. Its volume is ▢ cm³.`,l*w*h,wn(l*w*h,[l*w,l,10]),`Volume = ${l} × ${w} × ${h} = ${l*w*h}.`)};
+const avE=d=>{const k=R(0,3);if(k===0)return G(`1 m² = ▢ cm²`,"10,000",["100","1,000","100,000"],`1 m = 100 cm, so 1 m² = 100 × 100 = 10,000 cm².`,{num:false});
+ if(k===1)return G(`1 litre = ▢ cm³`,"1,000",["100","10","10,000"],`1 litre fills a 10 cm × 10 cm × 10 cm cube = 1,000 cm³.`,{num:false});
+ if(k===2){const a=R(2,9);return G(`A tank holds ${a * 1000} cm³ of water. That is ▢ litres.`,a,wn(a,[1,2,10]),`1,000 cm³ = 1 litre.`)}
+ const a=R(2,9);return G(`${a} m³ = ▢ litres`,cm(a*1000),[String(a),cm(a*100),cm(a*10000)],`1 m³ = 1,000 litres.`,{num:false})};
+const avF=d=>{const w=R(2,12),l=R(w+1,14);return G(`A rectangle has area ${l*w} cm² and width ${w} cm. Its length is ▢ cm.`,l,wn(l,[1,2,w]),`${l*w} ÷ ${w} = ${l}.`)};
+const avG=d=>{const s=R(2,9);return G(`A cube has edges of ${s} cm. Its surface area is ▢ cm².`,6*s*s,wn(6*s*s,[s*s,s,6]),`6 faces × ${s} × ${s} = ${6*s*s}.`)};
+const avW1=d=>{const [N]=pick(NAMES),l=R(3,8),h=R(2,4);return G(`${N} paints a wall that is ${l} m long and ${h} m high. What area does ${N} paint? ▢ m²`,l*h,wn(l*h,[l,h,2]),`${l} × ${h} = ${l*h}.`,{s:v=>`${N} paints a wall ${l} m long and ${h} m high, which is ${v} m².`})};
+const avW2=d=>{const l=R(20,50),w=R(10,30),h=R(10,30);return G(`A fish tank is ${l} cm long, ${w} cm wide and ${h} cm high. How many cm³ of water can it hold when full? ▢`,cm(l*w*h),[cm(l*w*h+1000),cm(l*w*h-1000),cm(l*w),cm(l*w*h*2)],`${l} × ${w} × ${h} = ${cm(l*w*h)}.`,{num:false,s:v=>`A fish tank ${l} cm by ${w} cm by ${h} cm holds ${v} cm³ when full.`})};
+const avW3=d=>{const [N]=pick(NAMES),s=R(2,6),n=R(4,12);return G(`${N} covers a floor with square tiles. Each tile is ${s} cm by ${s} cm and there are ${n} tiles. What area do they cover? ▢ cm²`,s*s*n,wn(s*s*n,[s*s,n,s]),`${s} × ${s} = ${s*s} per tile, and ${s*s} × ${n} = ${s*s*n}.`,{s:v=>`${n} square tiles of ${s} cm by ${s} cm cover ${v} cm².`})};
+customWorld({id:"av",name:"Area & Volume Valley",emoji:"📦",c:"#a16207",c2:"#fde047",badge:"📦",bname:"Volume Victor",gameKey:"volume",
+ gq:[avA,avB,avC,avD,avE,avF,avG],gw:[avW1,avW2,avW3],game:gameFrom([avA,avB,avC,avD,avF,avG]),
+ pop:u=>ruleRot(u,[
+  ()=>{const X=pick([24,36,48,60]),all=divs(X).filter(x=>x>1&&x<X&&x<=X/x||x>1&&x<X).filter(x=>x<=X/x),g=all.map(a=>`${a} × ${X/a}`).slice(0,4);const gg=g.length>=3?g:[`2 × ${X/2}`,`3 × ${X/3}`,`4 × ${X/4}`];const b=uniq(5,()=>{const a=R(2,12),c=R(2,12);return a*c===X?`${a+1} × ${c}`:`${a} × ${c}`}).filter(x=>!gg.includes(x));return popPick(gg,b,`Pop every rectangle with area ${X} cm²!`,`${gg[0]} = ${X}.`)},
+  ()=>{const X=pick([24,30,36,48,60]),all=[];for(let a=2;a<=X;a++)for(let b=2;b<=X;b++)for(let c=2;c<=X;c++)if(a*b*c===X)all.push(`${a} × ${b} × ${c}`);
+   const g=shuffle(all).slice(0,4),bad=uniq(6,()=>{const a=R(2,6),b=R(2,6),c=R(2,6);return a*b*c===X?`${a+1} × ${b} × ${c}`:`${a} × ${b} × ${c}`}).filter(x=>!all.includes(x)).slice(0,5);return popPick(g,bad,`Pop every cuboid with volume ${X} cm³!`,`${g[0]} = ${X}.`)},
+  ()=>{const h=R(5,12),g=uniq(4,()=>{const a=R(1,h-1);return`${a} × ${h-a}`}),b=uniq(5,()=>{const a=R(1,12),c=R(1,12);return a+c===h?`${a+1} × ${c}`:`${a} × ${c}`});return popPick(g,b.filter(x=>!g.includes(x)),`Pop every rectangle with perimeter ${2*h} cm!`,`Length + width = ${h}.`)}]),
+ pairs:()=>shuffle([["1 m²","10,000 cm²"],["1 L","1,000 cm³"],["1 cm³","1 mL"],["1 km²","1,000,000 m²"],["1 m³","1,000 L"],["1 cm²","100 mm²"]]),
+ learn:[
+  {i:"△",h:"Area of triangles and parallelograms",p:"A parallelogram has area base × height. A triangle is half of that.",ex:["Parallelogram: 8 × 5 = 40 cm²","Triangle: 8 × 5 ÷ 2 = 20 cm²","Use the PERPENDICULAR height"]},
+  {i:"🧱",h:"Volume",p:"Volume is the space inside a 3D shape, measured in cubic units.",ex:["Cuboid volume = length × width × height","4 × 3 × 2 = 24 cm³","1 cm³ holds 1 mL, and 1,000 cm³ = 1 litre"]},
+  {i:"🎁",h:"Surface area and composite shapes",p:"Surface area is the total area of all the faces. Split an odd shape into rectangles, find each area, then add.",ex:["Cube with edge 3 cm: 6 × 3 × 3 = 54 cm²","L-shape = 6 × 4 + 3 × 5 = 24 + 15 = 39 cm²","1 m² = 10,000 cm²"]}]});
+
+/* ---- 39 Angle Alley ---- */
+const anA=d=>{const a=R(20,160);return G(`Angles on a straight line add up to 180°. One angle is ${a}°, so the other is ▢°`,180-a,wn(180-a,[10,20,90]),`180 − ${a} = ${180-a}.`)};
+const anB=d=>{const a=R(60,150),b=R(40,359-a-60);return G(`Angles around a point add up to 360°. Two angles are ${a}° and ${b}°, so the third is ▢°`,360-a-b,wn(360-a-b,[10,20,30]),`360 − ${a} − ${b} = ${360-a-b}.`)};
+const anC=d=>{const [s,n]=pick([["triangle",3],["quadrilateral",4],["pentagon",5],["hexagon",6],["octagon",8]]);return G(`The angles inside ${s==="octagon"?"an":"a"} ${s} add up to ▢°`,(n-2)*180,[(n-2)*180+180,(n-2)*180-180>0?(n-2)*180-180:360,n*90,360].filter(x=>x!==(n-2)*180),`(${n} − 2) × 180 = ${(n-2)*180}.`)};
+const anD=d=>{const [s,n]=pick([["triangle",3],["square",4],["pentagon",5],["hexagon",6],["octagon",8],["decagon",10]]),a=(n-2)*180/n;return G(`Each angle of a regular ${s} is ▢°`,a,wn(a,[10,12,18]),`((${n} − 2) × 180) ÷ ${n} = ${a}.`)};
+const anE=d=>{const a=R(30,80);return G(`An isosceles triangle has two equal angles of ${a}°. The third angle is ▢°`,180-2*a,wn(180-2*a,[10,20,a]),`180 − ${a} − ${a} = ${180-2*a}.`)};
+const anF=d=>{const a=R(20,160);return G(`Vertically opposite angles are equal. One angle is ${a}°, so the opposite angle is ▢°`,a,wn(a,[10,20,180-a>0?0:5]).filter(x=>x!==a),`They are equal.`)};
+const anG=d=>{const r=R(2,15);return Math.random()<.5?G(`A circle has radius ${r} cm. Its diameter is ▢ cm.`,2*r,wn(2*r,[r,2,4]),`Diameter = 2 × radius = ${2*r}.`):G(`A circle has diameter ${2*r} cm. Its radius is ▢ cm.`,r,wn(r,[r,1,2]),`Radius = diameter ÷ 2 = ${r}.`)};
+const anW1=d=>{const [N]=pick(NAMES),n=pick([4,5,6,8,10,12]);return G(`A circular pizza is cut into ${n} equal slices. What is the angle of each slice at the centre? ▢°`,360/n,wn(360/n,[5,10,15]),`360 ÷ ${n} = ${360/n}.`,{s:v=>`A circular pizza cut into ${n} equal slices has ${v}° at the centre of each slice.`})};
+const anW2=d=>{const [N]=pick(NAMES),k=pick([[1,4,90],[1,2,180],[3,4,270],[1,3,120],[1,6,60],[2,3,240]]);return G(`${N} turns through ${k[0]}/${k[1]} of a full turn. How many degrees is that? ▢°`,k[2],wn(k[2],[30,45,90]),`${k[0]}/${k[1]} of 360 = ${k[2]}.`,{s:v=>`${N} turns through ${k[0]}/${k[1]} of a full turn, which is ${v}°.`})};
+const anW3=d=>{const a=R(60,120),b=R(70,110),c=R(60,120),e=360-a-b-c;if(e<30||e>170)return anW3(d);return G(`Three angles of a quadrilateral are ${a}°, ${b}° and ${c}°. The fourth angle is ▢°`,e,wn(e,[10,20,30]),`360 − ${a} − ${b} − ${c} = ${e}.`)};
+customWorld({id:"ang",name:"Angle Alley",emoji:"📏",c:"#be123c",c2:"#fda4af",badge:"📏",bname:"Angle Ace",gameKey:"angle",
+ gq:[anA,anB,anC,anD,anE,anF,anG],gw:[anW1,anW2,anW3],game:gameFrom([anA,anB,anC,anD,anE]),
+ pop:u=>ruleRot(u,[
+  ()=>{const t=pick([180,360]),g=uniq(4,()=>{const a=R(10,t-10);return`${a}° + ${t-a}°`}),b=uniq(5,()=>{const a=R(10,t-20),c=R(10,t-20);return a+c===t?`${a}° + ${c+10}°`:`${a}° + ${c}°`});return popPick(g,b.filter(x=>!g.includes(x)),`Pop every pair that adds to ${t}°!`,`${g[0]} = ${t}°.`)},
+  ()=>popPick(shuffle(["square","rectangle","kite","rhombus","trapezium","parallelogram"]).slice(0,4),shuffle(["triangle","pentagon","hexagon","octagon","decagon"]).slice(0,5),"Pop every shape whose angles add to 360°!","Every quadrilateral has angles that add to 360°."),
+  ()=>popPick(shuffle(["120°","108°","135°","90°","144°","60°"]).slice(0,4).map(x=>x),["100°","110°","95°","130°","75°"],"Pop every angle that is inside a REGULAR polygon!","Regular polygon angles: 60°, 90°, 108°, 120°, 135°, 144°.")]),
+ pairs:()=>shuffle([["triangle","180°"],["quadrilateral","360°"],["pentagon","540°"],["hexagon","720°"],["octagon","1080°"],["right angle","90°"]]),
+ learn:[
+  {i:"📐",h:"Angle facts",p:"Some angles always add up to the same total.",ex:["Angles on a straight line = 180°","Angles around a point = 360°","Vertically opposite angles are equal","Angles in a triangle = 180°"]},
+  {i:"🔷",h:"Polygons",p:"Split a polygon into triangles from one corner. The angle sum is (n − 2) × 180°.",ex:["Quadrilateral: 2 × 180 = 360°","Pentagon: 3 × 180 = 540°","Regular hexagon: 720 ÷ 6 = 120° each"]},
+  {i:"⭕",h:"Circles",p:"A circle has a centre, a radius, a diameter and a circumference.",ex:["Radius: centre to the edge","Diameter = 2 × radius","Circumference: the distance around","Isosceles triangle: two equal sides, two equal angles"]}]});
+
+/* ---- 40 Power Peaks ---- */
+const pwA=d=>{const b=R(2,d>.5?9:5),e=R(2,b>5?3:4);return G(`${b}${sup(e)} = ▢`,b**e,wn(b**e,[b,b*e,b**(e-1)]),`${Array(e).fill(b).join(" × ")} = ${b**e}.`)};
+const pwB=d=>{const a=R(2,12);if(Math.random()<.5)return G(`√${a*a} = ▢`,a,wn(a,[1,2]),`${a} × ${a} = ${a*a}.`);const c=R(2,6);return G(`∛${c**3} = ▢`,c,wn(c,[1,2]),`${c} × ${c} × ${c} = ${c**3}.`)};
+const pwC=d=>{const a=R(2,12),b=R(2,5),c=R(2,6);return G(`${a} + ${b}² × ${c} = ▢`,a+b*b*c,wn(a+b*b*c,[b*b,b*c,a]),`Powers first: ${b}² = ${b*b}. Then ${b*b} × ${c} = ${b*b*c}. Then + ${a} = ${a+b*b*c}.`)};
+const pwD=d=>{const k=R(0,3),b=R(2,9);if(k===0){const m=R(2,4),n=R(2,4);return G(`${b}${sup(m)} × ${b}${sup(n)} = ${b}^▢`,m+n,wn(m+n,[1,2]),`Add the powers: ${m} + ${n} = ${m+n}.`)}
+ if(k===1){const m=R(4,8),n=R(2,3);return G(`${b}${sup(m)} ÷ ${b}${sup(n)} = ${b}^▢`,m-n,wn(m-n,[1,2]),`Subtract the powers: ${m} − ${n} = ${m-n}.`)}
+ if(k===2)return G(`${b}⁰ = ▢`,1,[0,b,10],`Any number to the power 0 is 1.`);
+ const m=R(2,3),n=R(2,3);return G(`(${b}${sup(m)})${sup(n)} = ${b}^▢`,m*n,wn(m*n,[1,2]),`Multiply the powers: ${m} × ${n} = ${m*n}.`)};
+const pwE=d=>{const a=R(2,9),e=R(2,5);if(Math.random()<.5)return G(`${a} × 10${sup(e)} = ▢`,cm(a*10**e),[cm(a*10**(e-1)),cm(a*10**(e+1)),cm(a*e*10)],`10${sup(e)} = ${cm(10**e)}.`,{num:false});
+ const n=a*10**e;return G(`${cm(n)} = ${a} × 10^▢`,e,wn(e,[1,2]),`${cm(n)} has ${e} zeros after the ${a}.`)};
+const pwF=d=>{const k=pick(["square","cube"]),a=R(2,9),n=k==="square"?a*a:a**3,nn=[];for(let i=2;i<n+10&&nn.length<40;i++)if(i!==n&&Math.round(Math.sqrt(i))**2!==i&&Math.round(Math.cbrt(i))**3!==i)nn.push(i);
+ return G(`Which of these is a ${k} number?`,n,shuffle(nn).slice(0,3),`${n} = ${k==="square"?`${a} × ${a}`:`${a} × ${a} × ${a}`}.`,{num:false,s:v=>`${v} is a ${k} number.`})};
+const pwW1=d=>{const [N]=pick(NAMES),s=R(3,15);return G(`${N}'s square garden has sides of ${s} m. What is its area? ▢ m²`,s*s,wn(s*s,[s,2*s,1]),`${s}² = ${s*s}.`,{s:v=>`${N}'s square garden with sides of ${s} m has an area of ${v} m².`})};
+const pwW2=d=>{const k=R(1,5),h=R(3,6);return G(`There are ${k} bacteria. They double every hour. How many after ${h} hours? ▢`,k*2**h,wn(k*2**h,[k,k*2**(h-1),k*2**(h-2)]),`${k} × 2${sup(h)} = ${k} × ${2**h} = ${k*2**h}.`,{s:v=>`${k} bacteria that double every hour become ${v} after ${h} hours.`})};
+const pwW3=d=>{const s=R(2,6);return G(`A cube has edges of ${s} cm. Its volume is ▢ cm³.`,s**3,wn(s**3,[s*s,s,s**3/ s]),`${s}³ = ${s**3}.`)};
+customWorld({id:"pow",name:"Power Peaks",emoji:"⚡",c:"#ea580c",c2:"#fdba74",badge:"⚡",bname:"Power Player",gameKey:"power",
+ gq:[pwA,pwB,pwC,pwD,pwE,pwF],gw:[pwW1,pwW2,pwW3],game:gameFrom([pwA,pwB,pwC,pwD,pwE]),
+ pop:u=>ruleRot(u,[
+  ()=>popPick(shuffle([4,9,16,25,36,49,64,81,100,121,144]).slice(0,4),shuffle([5,10,15,20,30,40,50,60,70]).slice(0,5),"Pop every square number!","Square numbers are n × n."),
+  ()=>popPick(shuffle([8,27,64,125,216,343,1000]).slice(0,4),shuffle([9,16,25,30,50,100,200,300]).slice(0,5),"Pop every cube number!","Cube numbers are n × n × n."),
+  ()=>{const t=pick([[64,["8²","4³","2⁶","√4096"],["6²","3⁴","2⁵","5²","9²"]],[81,["9²","3⁴","√6561","81¹"],["8²","4³","3³","2⁶","7²"]],[16,["4²","2⁴","√256","16¹"],["3²","2³","5²","2⁵","4³"]]]);return popPick(t[1],t[2],`Pop everything equal to ${t[0]}!`,`${t[1][0]} = ${t[0]}.`)}]),
+ pairs:()=>shuffle([["2³","8"],["3³","27"],["4³","64"],["5²","25"],["10³","1,000"],["2⁵","32"]]),
+ learn:[
+  {i:"⚡",h:"Powers (indices)",p:"A power tells you how many times to multiply a number by itself.",ex:["3² = 3 × 3 = 9 (squared)","2³ = 2 × 2 × 2 = 8 (cubed)","10⁴ = 10,000","Any number⁰ = 1"]},
+  {i:"🌱",h:"Roots",p:"A root undoes a power.",ex:["√49 = 7 because 7² = 49","∛27 = 3 because 3³ = 27","Square numbers: 1, 4, 9, 16, 25, 36 …","Cube numbers: 1, 8, 27, 64, 125 …"]},
+  {i:"📜",h:"Index laws and order of operations",p:"When the base is the same: add powers to multiply, subtract powers to divide. In BIDMAS, powers (indices) come right after brackets.",ex:["2³ × 2² = 2⁵","5⁶ ÷ 5² = 5⁴","3 + 2² × 4 = 3 + 4 × 4 = 19"]}]});
+
+/* ---- 41 Probability Plains ---- */
+const pbA=d=>{const r=R(1,8),b=R(1,8),t=r+b;return G(`A bag has ${r} red and ${b} blue counters. The probability of picking red is ▢`,frs(r,t),[frs(b,t),frs(r+1,t),frs(r,t+1),frs(r,t+b)],`${r} red out of ${t} counters: ${frs(r,t)}.`,{num:false})};
+const pbB=d=>{const [ev,n]=pick([["an even number",3],["a 6",1],["a number greater than 4",2],["a prime number",3],["a number less than 3",2]]);return G(`Rolling a fair die, the probability of getting ${ev} is ▢`,frs(n,6),[frs(n+1,6),frs(6-n,6)===frs(n,6)?"5/6":frs(6-n,6),frs(n,5),frs(n,12)],`${n} favourable outcomes out of 6.`,{num:false})};
+const pbC=d=>{const [ev,a,b]=pick([["a heart",13,52],["a king",4,52],["a red card",26,52],["an ace",4,52],["a spade",13,52]]);return G(`From a pack of 52 cards, the probability of picking ${ev} is ▢`,frs(a,b),[frs(a+1,b),frs(b-a,b),frs(a,b-1),frs(1,a)].filter(x=>x!==frs(a,b)),`${a} out of ${b} simplifies to ${frs(a,b)}.`,{num:false})};
+const pbD=d=>{const [ev,a]=pick([["Rolling a 7 on a normal die","impossible"],["The sun rising tomorrow","certain"],["Getting heads on a fair coin","even chance"],["Rolling a number less than 7 on a die","certain"],["A baby being born at exactly midnight","unlikely"],["Rolling a number less than 6 on a die","likely"]]);return G(`${ev} is ▢`,a,["impossible","unlikely","even chance","likely","certain"].filter(x=>x!==a).slice(0,3),`Think about how many outcomes are favourable.`,{num:false,s:v=>`${ev} is ${v}.`})};
+const pbE=d=>{const n=pick([20,40,60,100,120]),[ev,f]=pick([["heads on a fair coin",2],["a 6 on a fair die",6],["red on a spinner with 4 equal parts, 1 red",4]]);if(n%f)return pbE(d);return G(`If you try ${n} times, about how many times would you expect ${ev}? ▢`,n/f,wn(n/f,[5,10,n/2===n/f?1:n/2]),`${n} × 1/${f} = ${n/f}.`,{s:v=>`In ${n} tries you would expect ${ev} about ${v} times.`})};
+const pbF=d=>{const a=R(2,5),b=R(2,6);const k=R(0,2);if(k===0)return G(`Flipping 2 coins, how many different outcomes are there? ▢`,4,[2,3,6],`HH, HT, TH, TT.`,{s:v=>`Flipping 2 coins has ${v} outcomes.`});
+ if(k===1)return G(`A menu has ${a} starters and ${b} mains. How many different meals (1 starter + 1 main)? ▢`,a*b,wn(a*b,[a,b,1]),`${a} × ${b} = ${a*b}.`,{s:v=>`${a} starters and ${b} mains make ${v} different meals.`});
+ return G(`A coin is flipped and a die is rolled. How many outcomes are there? ▢`,12,[6,8,14],`2 × 6 = 12.`,{s:v=>`A coin flip and a die roll have ${v} outcomes.`})};
+const pbW1=d=>{const [N]=pick(NAMES),g=R(2,9),b=R(2,9),t=g+b;return G(`${N} picks one sweet from a bag with ${g} green and ${b} yellow sweets. The probability of green is ▢`,frs(g,t),[frs(b,t),frs(g,t+1),frs(g+1,t)],`${g} out of ${t}.`,{num:false,s:v=>`${N} picks a sweet from ${g} green and ${b} yellow sweets: the probability of green is ${v}.`})};
+const pbW2=d=>{const p=pick([[1,2],[1,4],[3,4],[1,5],[2,5],[1,10]]),n=pick([20,40,100]);if((n*p[0])%p[1])return pbW2(d);return G(`The probability it rains on a day is ${p[0]}/${p[1]}. In ${n} days, about how many rainy days are expected? ▢`,n*p[0]/p[1],wn(n*p[0]/p[1],[5,10,2]),`${n} × ${p[0]}/${p[1]} = ${n*p[0]/p[1]}.`,{s:v=>`With rain probability ${p[0]}/${p[1]}, about ${v} of ${n} days are rainy.`})};
+const pbW3=d=>{const a=R(1,5),b=R(a+1,9);const t=a+b;return G(`The probability of NOT picking red is ▢ (${a} red and ${b} other counters)`,frs(b,t),[frs(a,t),frs(b-1,t),frs(b,t+1),frs(b+1,t+1)],`${b} out of ${t}: ${frs(b,t)}.`,{num:false,s:v=>`With ${a} red and ${b} other counters, the probability of not picking red is ${v}.`})};
+customWorld({id:"prob",name:"Probability Plains",emoji:"🎲",c:"#7c3aed",c2:"#c4b5fd",badge:"🎲",bname:"Chance Champion",gameKey:"prob",
+ gq:[pbA,pbB,pbC,pbD,pbE,pbF],gw:[pbW1,pbW2,pbW3],game:gameFrom([pbA,pbB,pbC,pbD,pbF]),
+ pop:u=>ruleRot(u,[
+  ()=>popPick(shuffle(["3/6","4/8","2/4","50%","0.5","5/10","10/20"]).slice(0,4),shuffle(["1/3","2/5","3/8","1/4","3/5","0.3","40%"]).slice(0,5),"Pop every probability equal to 1/2!","They are all the same size as one half."),
+  ()=>popPick(shuffle(["2/8","3/12","25%","0.25","4/16","5/20"]).slice(0,4),shuffle(["1/3","2/5","3/8","1/5","0.2","30%","1/2"]).slice(0,5),"Pop every probability equal to 1/4!","They are all the same size as one quarter."),
+  ()=>popPick(shuffle(["0.3","3/4","50%","0","1","2/5","0.99"]).slice(0,4),shuffle(["1.5","−0.2","120%","3/2","2","−1","5/4"]).slice(0,5),"Pop every VALID probability (between 0 and 1)!","A probability is never below 0 or above 1.")]),
+ pairs:()=>shuffle([["impossible","0"],["unlikely","close to 0"],["even chance","1/2"],["likely","close to 1"],["certain","1"],["rolling a 6","1/6"]]),
+ learn:[
+  {i:"🎲",h:"Probability scale",p:"Probability measures how likely something is, from 0 (impossible) to 1 (certain).",ex:["0 = impossible","1/2 = even chance","1 = certain","Probability = favourable outcomes ÷ all possible outcomes"]},
+  {i:"🃏",h:"Counting outcomes",p:"List all the possible outcomes. Then count the ones you want.",ex:["Die: 1, 2, 3, 4, 5, 6 → P(even) = 3/6 = 1/2","Pack of 52 cards: P(heart) = 13/52 = 1/4","Two coins: HH, HT, TH, TT (4 outcomes)"]},
+  {i:"🔮",h:"Expected results",p:"Multiply the probability by the number of tries to predict what should happen.",ex:["P(heads) = 1/2, 100 flips → about 50 heads","P(not red) = 1 − P(red)","3 starters × 4 mains = 12 meals"]}]});
+
+/* ---- 42 Coordinate Canyon ---- */
+const coA=d=>{const x=R(1,9),y=R(1,9),r=R(1,4),dn=R(1,4);return G(`Point A is at ${pt(x,y)}. Move ${r} right and ${dn} down. The new point is ▢`,pt(x+r,y-dn),[pt(x-r,y-dn),pt(x+r,y+dn),pt(x+dn,y-r),pt(x+r,y-dn+1)],`Right adds to x: ${x+r}. Down subtracts from y: ${y-dn}.`,{num:false})};
+const coB=d=>{const x1=R(0,6)*2,y1=R(0,6)*2,x2=x1+R(1,5)*2,y2=y1+R(1,5)*2;return G(`The midpoint of ${pt(x1,y1)} and ${pt(x2,y2)} is ▢`,pt((x1+x2)/2,(y1+y2)/2),[pt(x2-x1,y2-y1),pt((x1+x2)/2+1,(y1+y2)/2),pt((x1+x2)/2,(y1+y2)/2+1),pt(x1+x2,y1+y2)],`Average the x's and the y's.`,{num:false})};
+const coC=d=>{const x=R(-4,6),y1=R(-4,3),y2=y1+R(2,9);return Math.random()<.5?G(`The distance from ${pt(x,y1)} to ${pt(x,y2)} is ▢`,y2-y1,wn(y2-y1,[1,2]),`Same x, so subtract the y's: ${y2} − ${fmtN(y1)} = ${y2-y1}.`):G(`The distance from ${pt(y1,x)} to ${pt(y2,x)} is ▢`,y2-y1,wn(y2-y1,[1,2]),`Same y, so subtract the x's: ${y2-y1}.`)};
+const coD=d=>{const x=R(1,8),y=R(1,8),k=pick(["x","y"]);return k==="x"?G(`Reflect ${pt(x,y)} in the x-axis. The image is ▢`,pt(x,-y),[pt(-x,y),pt(-x,-y),pt(y,x)],`The y value changes sign.`,{num:false}):G(`Reflect ${pt(x,y)} in the y-axis. The image is ▢`,pt(-x,y),[pt(x,-y),pt(-x,-y),pt(y,x)],`The x value changes sign.`,{num:false})};
+const coE=d=>{const m=R(2,5),c=R(0,6),x=R(1,6);return G(`y = ${m}x + ${c}. When x = ${x}, y = ▢`,m*x+c,wn(m*x+c,[m,c,1]),`${m} × ${x} + ${c} = ${m*x+c}.`)};
+const coF=d=>{const x=R(1,7),y=R(1,7),sx=pick([1,-1]),sy=pick([1,-1]),q=sx>0&&sy>0?"1st":sx<0&&sy>0?"2nd":sx<0&&sy<0?"3rd":"4th";return G(`The point ${pt(sx*x,sy*y)} is in the ▢ quadrant.`,q,["1st","2nd","3rd","4th"].filter(v=>v!==q),`x is ${sx>0?"positive":"negative"} and y is ${sy>0?"positive":"negative"}.`,{num:false})};
+const coG=d=>{const m=R(1,5),x1=R(0,3),y1=R(0,5),dx=R(1,3);return G(`The line through ${pt(x1,y1)} and ${pt(x1+dx,y1+m*dx)} has gradient ▢`,m,wn(m,[1,2]),`Gradient = rise ÷ run = ${m*dx} ÷ ${dx} = ${m}.`)};
+const coW1=d=>{const [N]=pick(NAMES),x=R(2,9),y=R(2,9);return G(`${N} walks from the origin ${pt(0,0)} to the treasure at ${pt(x,y)}. How many steps up? ▢`,y,wn(y,[1,2,x]),`The y value tells how far up: ${y}.`,{s:v=>`${N} walks from ${pt(0,0)} to ${pt(x,y)}, which is ${v} steps up.`})};
+const coW2=d=>{const x1=R(1,5),y1=R(1,5),dx=R(2,6),dy=R(2,6);return G(`A rectangle has corners at ${pt(x1,y1)}, ${pt(x1+dx,y1)} and ${pt(x1,y1+dy)}. The fourth corner is ▢`,pt(x1+dx,y1+dy),[pt(x1+dx,y1-dy),pt(x1-dx,y1+dy),pt(x1+dy,y1+dx)],`Use the x of one and the y of the other: ${pt(x1+dx,y1+dy)}.`,{num:false,s:v=>`A rectangle with corners ${pt(x1,y1)}, ${pt(x1+dx,y1)} and ${pt(x1,y1+dy)} has its fourth corner at ${v}.`})};
+const coW3=d=>{const m=R(2,5),c=R(1,8),x=R(2,8);return G(`A taxi charges $${c} plus $${m} for each km. The cost is y = ${m}x + ${c}. How much for ${x} km? $▢`,m*x+c,wn(m*x+c,[m,c,1]),`${m} × ${x} + ${c} = ${m*x+c}.`,{s:v=>`A taxi charging $${c} plus $${m} per km costs $${v} for ${x} km.`})};
+customWorld({id:"coord",name:"Coordinate Canyon",emoji:"🗺️",c:"#0f766e",c2:"#5eead4",badge:"🗺️",bname:"Map Master",gameKey:"coord",
+ gq:[coA,coB,coC,coD,coE,coF,coG],gw:[coW1,coW2,coW3],game:gameFrom([coA,coB,coC,coD,coE,coF]),
+ pop:u=>ruleRot(u,[
+  ()=>{const q=pick([["1st",1,1],["2nd",-1,1],["3rd",-1,-1],["4th",1,-1]]),mk=(sx,sy)=>pt(sx*R(1,9),sy*R(1,9)),g=uniq(4,()=>mk(q[1],q[2])),b=uniq(5,()=>{const o=pick([[1,1],[-1,1],[-1,-1],[1,-1]].filter(z=>z[0]!==q[1]||z[1]!==q[2]));return mk(o[0],o[1])});return popPick(g,b,`Pop every point in the ${q[0]} quadrant!`,`Check the signs of x and y.`)},
+  ()=>{const c=R(1,4),g=uniq(4,()=>{const a=R(0,9);return pt(a,a+c)}),b=uniq(5,()=>{const a=R(0,9);return pt(a,a+c+pick([-2,-1,1,2]))});return popPick(g,b,`Pop every point on the line y = x + ${c}!`,`y is always ${c} more than x.`)},
+  ()=>{const k=R(2,4),g=uniq(4,()=>{const a=R(1,8);return pt(a,k*a)}),b=uniq(5,()=>{const a=R(1,8);return pt(a,k*a+pick([-2,-1,1,2]))});return popPick(g,b,`Pop every point on the line y = ${k}x!`,`y is always ${k} times x.`)}]),
+ pairs:()=>shuffle([["(0, 0)","origin"],["x-axis","horizontal"],["y-axis","vertical"],["(3, 0)","on the x-axis"],["(0, 5)","on the y-axis"],["(−2, −3)","3rd quadrant"]]),
+ learn:[
+  {i:"🗺️",h:"Coordinates",p:"A point is written (x, y). Go along the x-axis first, then up or down the y-axis. The axes cross at the origin (0, 0).",ex:["(3, 4): 3 right, 4 up","(−2, 5): 2 left, 5 up","The four quadrants are numbered anticlockwise: 1st, 2nd, 3rd, 4th"]},
+  {i:"↔️",h:"Moving and reflecting",p:"Add to x to move right, subtract to move left. Reflecting changes a sign.",ex:["(2, 3) + 4 right → (6, 3)","Reflect (3, 4) in the x-axis → (3, −4)","Reflect (3, 4) in the y-axis → (−3, 4)","Midpoint of (2, 4) and (8, 10) is (5, 7)"]},
+  {i:"📈",h:"Straight lines",p:"A rule like y = 2x + 1 makes a straight line. The gradient is how steep it is: rise ÷ run.",ex:["y = 2x + 1: x = 3 gives y = 7","Gradient from (0, 1) to (2, 5) = 4 ÷ 2 = 2","Points on y = x + 3: (1, 4), (2, 5), (3, 6)"]}]});
+
+/* ---- 43 Equation Everest ---- */
+const eqA=d=>{for(let t=0;t<100;t++){const k2=R(1,5),k1=k2+R(1,5),x=R(1,10),b1=R(-9,9);if(!b1)continue;const b2=(k1-k2)*x+b1;if(b2<1||b2>40)continue;
+  return G(`${k1}x ${b1<0?"−":"+"} ${Math.abs(b1)} = ${k2}x + ${b2}. So x = ▢`,x,wn(x,[1,2,k1-k2]),`Take away ${k2}x from both sides, then solve: x = ${x}.`)}
+ return G(`5x = 2x + 9. So x = ▢`,3,[1,2,4],"3x = 9, so x = 3.")};
+const eqB=d=>{const k=R(2,6),b=R(1,8),x=R(1,10);return Math.random()<.5?G(`${k}(x + ${b}) = ${k*(x+b)}. So x = ▢`,x,wn(x,[1,b,k]),`Divide by ${k}: x + ${b} = ${x+b}. So x = ${x}.`):(x>b?G(`${k}(x − ${b}) = ${k*(x-b)}. So x = ▢`,x,wn(x,[1,b,k]),`Divide by ${k}: x − ${b} = ${x-b}. So x = ${x}.`):eqB(d))};
+const eqC=d=>{const k=R(2,8),x=R(2,9);if(Math.random()<.5)return G(`x ÷ ${k} = ${x}. So x = ▢`,x*k,wn(x*k,[k,x,1]),`Multiply both sides by ${k}: x = ${x*k}.`);const b=R(1,8);return G(`x ÷ ${k} + ${b} = ${x+b}. So x = ▢`,x*k,wn(x*k,[k,x,b]),`Take away ${b}: x ÷ ${k} = ${x}. Then x = ${x*k}.`)};
+const eqD=d=>{const k=R(2,5),b=R(1,12),x=R(2,12);return G(`${k} times a number, plus ${b}, makes ${k*x+b}. The number is ▢`,x,wn(x,[1,b,k]),`${k*x+b} − ${b} = ${k*x}, then ÷ ${k} = ${x}.`)};
+const eqE=d=>{const x=R(2,6),k=R(2,5),c=R(1,Math.min(10,k*x*x-1));return G(`If x = ${x}, then ${k}x² − ${c} = ▢`,k*x*x-c,wn(k*x*x-c,[x,c,k]),`${x}² = ${x*x}. ${k} × ${x*x} = ${k*x*x}. Then − ${c} = ${k*x*x-c}.`)};
+const eqF=d=>{if(Math.random()<.5){const b=R(2,9),t=R(b+3,25);return G(`x + ${b} > ${t}. The smallest whole number x can be is ▢`,t-b+1,wn(t-b+1,[1,2]),`x must be bigger than ${t-b}, so the smallest whole number is ${t-b+1}.`)}
+ const k=R(2,5),t=R(8,30);return G(`${k}x < ${t}. The biggest whole number x can be is ▢`,Math.ceil(t/k)-1,wn(Math.ceil(t/k)-1,[1,2]),`x must be less than ${t}/${k}, so the biggest whole number is ${Math.ceil(t/k)-1}.`)};
+const eqG=d=>{const k=R(2,6),b=R(1,9);return G(`Expand ${k}(x + ${b}) = ▢`,`${k}x + ${k*b}`,[`${k}x + ${b}`,`x + ${k*b}`,`${k}x + ${k+b}`],`Multiply both terms inside the bracket by ${k}.`,{num:false})};
+const eqH=d=>{const a=R(2,9),b=R(2,9);return G(`${a}x + ${b}x = ▢`,`${a+b}x`,[`${a*b}x`,`${a+b}x²`,`${a}${b}x`],`Add the x terms: ${a} + ${b} = ${a+b}.`,{num:false})};
+const eqW1=d=>{const n=R(5,20);return G(`The sum of three consecutive numbers is ${3*n+3}. The smallest of the three numbers is ▢`,n,wn(n,[1,2,3]),`${n} + ${n+1} + ${n+2} = ${3*n+3}.`,{s:v=>`Three consecutive numbers starting at ${v} add up to ${3*n+3}.`})};
+const eqW2=d=>{const f=R(2,6),m=R(2,5),k=R(3,12);return G(`A taxi charges $${f} plus $${m} per km. The total is $${f+m*k}. How many km was the trip? ▢`,k,wn(k,[1,2,m]),`${f+m*k} − ${f} = ${m*k}, then ÷ ${m} = ${k}.`,{s:v=>`A taxi charging $${f} plus $${m} per km costs $${f+m*k} for ${v} km.`})};
+const eqW3=d=>{const [N]=pick(NAMES),a=R(5,12),k=R(2,5);return G(`${N} is ${a} years old. ${N}'s father is ${k} times as old plus 2 years. How old is the father? ▢`,a*k+2,wn(a*k+2,[k,a,2]),`${k} × ${a} = ${a*k}, plus 2 = ${a*k+2}.`,{s:v=>`${N} is ${a} and the father is ${k} times as old plus 2, so he is ${v}.`})};
+customWorld({id:"eq",name:"Equation Everest",emoji:"🏔️",c:"#9333ea",c2:"#d8b4fe",badge:"🧗",bname:"Equation Expert",gameKey:"equation",
+ gq:[eqA,eqB,eqC,eqD,eqE,eqF,eqG,eqH],gw:[eqW1,eqW2,eqW3],game:gameFrom([eqA,eqB,eqC,eqD,eqE,eqF]),
+ pop:u=>{let X;do{X=R(2,10)}while(u.includes(X)&&u.length<9);u.push(X);
+  const mk=x=>{const k=R(2,5),b=R(1,8),c=R(1,4);return pick([`${k}(x + ${b}) = ${k*(x+b)}`,`${k+c}x + ${b} = ${c}x + ${(k)*x+b}`,`${k}x − ${b} = ${k*x-b}`,`x ÷ ${k} = ${x/k}`].filter(s=>!/NaN|\./.test(s)))},
+  g=uniq(4,()=>mk(X)),bad=uniq(5,()=>mk(X+pick([-2,-1,1,2,3])));
+  return popPick(g,bad.filter(e=>!g.includes(e)),`Pop every equation where x = ${X}!`,`${g[0]} gives x = ${X}.`)},
+ pairs:()=>shuffle([["2x + 3x","5x"],["4x − x","3x"],["3(x + 2)","3x + 6"],["2(x − 1)","2x − 2"],["x × x","x²"],["5x ÷ 5","x"]]),
+ learn:[
+  {i:"⚖️",h:"Equations with x on both sides",p:"Get all the x terms on one side. Then solve like a normal equation.",ex:["5x − 3 = 2x + 9","Take away 2x: 3x − 3 = 9","Add 3: 3x = 12 → x = 4"]},
+  {i:"🎁",h:"Brackets and fractions",p:"Expand the bracket or divide first. Do the opposite to both sides.",ex:["3(x + 2) = 21 → x + 2 = 7 → x = 5","x ÷ 4 + 1 = 6 → x ÷ 4 = 5 → x = 20","Expand: 3(x + 4) = 3x + 12"]},
+  {i:"🔤",h:"Simplifying, substituting and inequalities",p:"Add like terms. Put a number in for x to evaluate. An inequality (<, >) has many answers.",ex:["2x + 3x = 5x","If x = 3: 2x² − 1 = 2 × 9 − 1 = 17","x + 3 > 10 means x > 7"]}]});
+
+/* ---- Sequence Sky ---- */
+const sqTerm=(a,b,n)=>a*n+b;
+const sqA=d=>{const a=R(2,9),b=R(-3,8),k=R(8,20),L=[1,2,3,4].map(n=>sqTerm(a,b,n)),ans=sqTerm(a,b,k);return G(`The sequence ${L.join(", ")}, … has nth term ${a}n ${b<0?"−":"+"} ${Math.abs(b)}. The ${k}th term is ▢`,ans,wn(ans,[a,b||1,10]),`${a} × ${k} ${b<0?"−":"+"} ${Math.abs(b)} = ${ans}.`)};
+const sqB=d=>{const a=R(2,9),b=R(-4,6),L=[1,2,3,4].map(n=>sqTerm(a,b,n)),f=(x,y)=>`${x}n ${y<0?"−":"+"} ${Math.abs(y)}`,ans=f(a,b);return G(`The nth term of ${L.join(", ")}, … is ▢`,ans,[f(a,b+1),f(a+1,b),f(a,b-1),f(a+2,b)],`The difference is ${a}, so start with ${a}n. Then adjust: ${L[0]} − ${a} = ${fmtN(b)}.`,{num:false})};
+const sqC=d=>{const [x,y]=pick([[1,1],[2,3],[3,4],[1,3],[2,5]]),s=[x,y];for(let i=0;i<5;i++)s.push(s[s.length-1]+s[s.length-2]);const shown=s.slice(0,6),ans=s[6];return G(`${shown.join(", ")}, ▢  (add the two before)`,ans,wn(ans,[1,2,3]),`${s[5]} + ${s[4]} = ${ans}.`)};
+const sqD=d=>{const k=R(5,8),L=Array.from({length:k},(_,i)=>(i+1)*(i+2)/2),n=(k+1)*(k+2)/2;return G(`${L.join(", ")}, ▢  (triangular numbers)`,n,wn(n,[1,k,2]),`The gaps grow by 1 each time: next is ${n}.`)};
+const sqE=d=>{if(Math.random()<.5){const a=R(1,5),m=pick([2,3,4]),L=[0,1,2,3].map(i=>a*m**i),ans=a*m**4;return G(`${L.join(", ")}, ▢  (multiply each time)`,ans,wn(ans,[m,a,10]),`×${m} each time: ${L[3]} × ${m} = ${ans}.`)}
+ const m=pick([2,3]),e=R(2,4),a=m**e*R(1,3),L=[0,1,2].map(i=>a/m**i),ans=a/m**3;if(!Number.isInteger(ans)||ans<1)return sqE(d);return G(`${L.join(", ")}, ▢  (divide each time)`,ans,wn(ans,[1,m,2]),`÷${m} each time: ${L[2]} ÷ ${m} = ${ans}.`)};
+const sqF=d=>{const n=R(5,25);return G(`1 + 2 + 3 + … + ${n} = ▢`,n*(n+1)/2,wn(n*(n+1)/2,[n,10,1]),`Use n(n + 1) ÷ 2 = ${n} × ${n+1} ÷ 2 = ${n*(n+1)/2}.`)};
+const sqG=d=>{const k=R(6,15);return Math.random()<.5?G(`1, 4, 9, 16, 25, … The ${k}th term is ▢`,k*k,wn(k*k,[k,2*k,10]),`The nth term is n², so ${k}² = ${k*k}.`):G(`1, 8, 27, 64, … The ${R(5,8)}th term is ▢`.replace(/The \d+th/,`The ${k<8?k:7}th`),(k<8?k:7)**3,wn((k<8?k:7)**3,[k,10,(k<8?k:7)**2]),`The nth term is n³.`)};
+const sqW1=d=>{const n=R(6,15);return G(`1 square needs 4 matchsticks, 2 squares in a row need 7, and 3 squares need 10. How many matchsticks for ${n} squares? ▢`,3*n+1,wn(3*n+1,[3,n,1]),`The nth term is 3n + 1: 3 × ${n} + 1 = ${3*n+1}.`,{s:v=>`${n} squares in a row need ${v} matchsticks.`})};
+const sqW2=d=>{const [N]=pick(NAMES),a=R(3,8),dd=R(2,5),w=R(8,15),ans=a+dd*(w-1);return G(`${N} saves $${a} in week 1, $${a+dd} in week 2, $${a+2*dd} in week 3 and so on. How much does ${N} save in week ${w}? $▢`,ans,wn(ans,[dd,a,1]),`${a} + ${dd} × ${w-1} = ${ans}.`,{s:v=>`${N} saves $${v} in week ${w}.`})};
+const sqW3=d=>{const f=R(8,14),dd=R(2,4),r=R(10,20),ans=f+dd*(r-1);return G(`A theatre's first row has ${f} seats and every row has ${dd} more seats than the one in front. How many seats are in row ${r}? ▢`,ans,wn(ans,[dd,f,1]),`${f} + ${dd} × ${r-1} = ${ans}.`,{s:v=>`Row ${r} of the theatre has ${v} seats.`})};
+customWorld({id:"seq",name:"Sequence Sky",emoji:"🌌",c:"#4338ca",c2:"#a5b4fc",badge:"🌌",bname:"Pattern Pilot",gameKey:"sequence",
+ gq:[sqA,sqB,sqC,sqD,sqE,sqF,sqG],gw:[sqW1,sqW2,sqW3],game:gameFrom([sqA,sqB,sqC,sqD,sqE,sqF]),
+ pop:u=>ruleRot(u,[
+  ()=>{const k=R(3,9),g=uniq(4,()=>k*R(1,12)),b=uniq(5,()=>{const v=R(1,100);return v%k?v:v+1});return popPick(g,b,`Pop every number in the sequence ${k}, ${2*k}, ${3*k}, …!`,`They are all multiples of ${k}.`)},
+  ()=>{const a=R(2,5),b=R(1,4),g=uniq(4,()=>a*R(1,12)+b),bd=uniq(5,()=>{const v=R(2,70);return (v-b)%a===0?v+1:v});return popPick(g,bd,`Pop every number in the sequence ${a}n + ${b}!`,`Each one is ${a} × something + ${b}.`)},
+  ()=>popPick(shuffle([1,2,3,5,8,13,21,34,55]).slice(0,4),shuffle([4,6,7,9,10,11,12,14,15,20]).slice(0,5),"Pop every Fibonacci number!","Fibonacci: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 …")]),
+ pairs:()=>shuffle([["1, 3, 6, 10","triangular"],["1, 4, 9, 16","square"],["1, 1, 2, 3, 5","Fibonacci"],["2, 4, 8, 16","doubling"],["5, 10, 15, 20","+5 each time"],["1, 8, 27, 64","cube"]]),
+ learn:[
+  {i:"📈",h:"The nth term",p:"The nth term is a rule that gives any term in a sequence. If the difference is 3, the rule starts with 3n.",ex:["5, 8, 11, 14 … has difference 3","nth term = 3n + 2","The 10th term = 3 × 10 + 2 = 32"]},
+  {i:"🌀",h:"Special sequences",p:"Some sequences have famous names.",ex:["Square: 1, 4, 9, 16, 25 (n²)","Triangular: 1, 3, 6, 10, 15","Fibonacci: 1, 1, 2, 3, 5, 8, 13 (add the two before)","Cube: 1, 8, 27, 64 (n³)"]},
+  {i:"✖️",h:"Doubling and sums",p:"In a geometric sequence you multiply or divide by the same number each time. The sum 1 + 2 + … + n equals n(n + 1) ÷ 2.",ex:["3, 6, 12, 24 … (×2)","162, 54, 18, 6 … (÷3)","1 + 2 + … + 10 = 10 × 11 ÷ 2 = 55"]}]});
+
+/* ---- 44 Speed & Rates Summit ---- */
+const spA=d=>{const s=R(3,12)*10,t=R(2,6);return G(`A car travels ${s*t} km in ${t} hours. Its speed is ▢ km/h.`,s,wn(s,[10,t,20]),`Speed = distance ÷ time = ${s*t} ÷ ${t} = ${s}.`)};
+const spB=d=>{const s=R(4,15)*10,t=R(2,6);return G(`A train travels at ${s} km/h for ${t} hours. The distance is ▢ km.`,s*t,wn(s*t,[s,10*t,10]),`Distance = speed × time = ${s} × ${t} = ${s*t}.`)};
+const spC=d=>{const s=R(3,12)*10,t=R(2,7);return G(`A bus travels ${s*t} km at ${s} km/h. The time taken is ▢ hours.`,t,wn(t,[1,2]),`Time = distance ÷ speed = ${s*t} ÷ ${s} = ${t}.`)};
+const spD=d=>{const P=R(2,20)*100,r=pick([2,4,5,10]),n=R(1,5);return G(`Simple interest on $${cm(P)} at ${r}% per year for ${n} year${n>1?"s":""} is $▢`,P*r*n/100,wn(P*r*n/100,[P*r/100,10,P/100]),`${cm(P)} × ${r} × ${n} ÷ 100 = ${P*r*n/100}.`)};
+const spE=d=>{const v=R(1,8)*18;return G(`${v} km/h = ▢ m/s`,v*5/18,wn(v*5/18,[1,2,5]),`Divide km/h by 3.6: ${v} ÷ 3.6 = ${v*5/18}.`)};
+const spF=d=>{const s=pick([20,40,60,80]),t=pick([15,30,45]);return G(`A cyclist rides at ${s} km/h for ${t} minutes. The distance is ▢ km.`,s*t/60,wn(s*t/60,[1,2,5]),`${t} minutes = ${t}/60 of an hour. ${s} × ${t} ÷ 60 = ${s*t/60}.`)};
+const spG=d=>{const a=R(2,6),b=R(a+1,9),ka=R(2,5),kb=R(2,5);if(a===b)return spG(d);const best=Math.min(a,b);return G(`Shop A: ${ka} kg of apples for $${a*ka}. Shop B: ${kb} kg for $${b*kb}. The cheaper price per kg is $▢`,best,wn(best,[1,2,3]),`A is $${a} per kg and B is $${b} per kg.`,{s:v=>`Shop A sells ${ka} kg for $${a*ka} and Shop B sells ${kb} kg for $${b*kb}. The cheaper price is $${v} per kg.`})};
+const spW1=d=>{const [N]=pick(NAMES),s=R(4,9)*10,t=R(2,5);return G(`${N} drives at ${s} km/h for ${t} hours, then stops. How far did ${N} drive? ▢ km`,s*t,wn(s*t,[s,10*t,10]),`${s} × ${t} = ${s*t}.`,{s:v=>`${N} drives at ${s} km/h for ${t} hours and goes ${v} km.`})};
+const spW2=d=>{const D=R(2,6)*60,s=pick([30,40,60,80,120]);if((D%s))return spW2(d);return G(`A journey of ${D} km at ${s} km/h takes ▢ hours.`,D/s,wn(D/s,[1,2]),`${D} ÷ ${s} = ${D/s}.`,{s:v=>`A ${D} km journey at ${s} km/h takes ${v} hours.`})};
+const spW3=d=>{const [N]=pick(NAMES),P=R(5,30)*100,r=pick([2,4,5,10]),n=R(2,4),I=P*r*n/100;return G(`${N} saves $${cm(P)} at ${r}% simple interest per year. After ${n} years the interest earned is $▢`,I,wn(I,[P*r/100,10,P/100]),`${cm(P)} × ${r} × ${n} ÷ 100 = ${I}.`,{s:v=>`${N} saves $${cm(P)} at ${r}% simple interest, earning $${v} in ${n} years.`})};
+customWorld({id:"spd",name:"Speed & Rates Summit",emoji:"🚀",c:"#dc2626",c2:"#fca5a5",badge:"🏆",bname:"Summit Champion",gameKey:"speed",
+ gq:[spA,spB,spC,spD,spE,spF,spG],gw:[spW1,spW2,spW3],game:gameFrom([spA,spB,spC,spD,spE,spF]),
+ pop:u=>ruleRot(u,[
+  ()=>{const X=pick([30,40,50,60,80]),g=uniq(4,()=>{const t=R(1,6);return`${X*t} km in ${t} h`}),b=uniq(5,()=>{const t=R(1,6);return`${X*t+pick([-20,-10,10,20])} km in ${t} h`});return popPick(g,b.filter(x=>!g.includes(x)),`Pop every journey with speed ${X} km/h!`,`Speed = distance ÷ time.`)},
+  ()=>{const X=pick([100,150,200,240,300]),g=[],all=[[50,2],[60,2],[100,1],[75,2],[40,5],[30,5],[20,5],[80,3],[120,2],[150,1],[60,5],[100,3],[50,6],[40,6],[25,12],[25,4],[75,4],[50,3],[30,10]];all.forEach(([s,t])=>{if(s*t===X&&g.length<4)g.push(`${s} km/h for ${t} h`)});
+   const b=[];all.forEach(([s,t])=>{if(s*t!==X&&b.length<5)b.push(`${s} km/h for ${t} h`)});if(g.length<3)return popPick([`50 km/h for 2 h`,`100 km/h for 1 h`,`25 km/h for 4 h`,`20 km/h for 5 h`],[`60 km/h for 2 h`,`40 km/h for 3 h`,`30 km/h for 4 h`,`50 km/h for 3 h`,`80 km/h for 2 h`],"Pop every journey of exactly 100 km!","Distance = speed × time.");return popPick(g,b,`Pop every journey of exactly ${X} km!`,`Distance = speed × time.`)},
+  ()=>{const X=pick([40,60,80,100,120]),g=[],b=[];for(const r of [2,4,5,10])for(const n of [1,2,3,4,5]){const P=X*100/(r*n);if(P%1===0&&P>=100&&g.length<4)g.push(`${r}% of $${cm(P)} for ${n} yr`)}
+   for(let i=0;b.length<5&&i<200;i++){const r=pick([2,4,5,10]),n=R(1,5),P=R(2,20)*100;if(P*r*n/100!==X)b.push(`${r}% of $${cm(P)} for ${n} yr`)}
+   if(g.length<3)return popPick(["60 km/h","60 km/h"].slice(0,0).concat(["2% of $3,000 for 1 yr","5% of $1,200 for 1 yr","10% of $600 for 1 yr","4% of $1,500 for 1 yr"]),["2% of $2,000 for 1 yr","5% of $1,000 for 2 yr","10% of $400 for 1 yr","4% of $500 for 3 yr","5% of $600 for 1 yr"],"Pop every interest amount equal to $60!","Interest = P × r × n ÷ 100.");return popPick(g,uniq(5,()=>b[R(0,b.length-1)]),`Pop every interest amount equal to $${X}!`,`Interest = P × r × n ÷ 100.`)}]),
+ pairs:()=>shuffle([["speed","distance ÷ time"],["distance","speed × time"],["time","distance ÷ speed"],["interest","P × r × n ÷ 100"],["1 m/s","3.6 km/h"],["1 hour","3,600 s"]]),
+ learn:[
+  {i:"🚀",h:"Speed, distance and time",p:"Use the triangle: distance = speed × time. Cover the one you want to find.",ex:["Speed = distance ÷ time","Distance = speed × time","Time = distance ÷ speed","120 km in 2 h → 60 km/h"]},
+  {i:"⏱️",h:"Minutes and units",p:"Change minutes into hours first. To convert km/h to m/s, divide by 3.6.",ex:["30 minutes = 1/2 hour","40 km/h for 15 min = 40 × 15/60 = 10 km","72 km/h = 20 m/s"]},
+  {i:"💵",h:"Simple interest and best buys",p:"Simple interest = principal × rate × years ÷ 100. For best buys, find the price of one unit.",ex:["$500 at 4% for 3 years: 500 × 4 × 3 ÷ 100 = $60","3 kg for $12 → $4 per kg","The smaller price per unit is the better buy"]}]});
+
 WORLDS.push({id:"boss",name:"Grand Challenge",emoji:"🐉",c:"#be123c",c2:"#fb7185",badge:"🐲",bname:"Dragon Slayer",
  learn:[{i:"🐉",h:"The Grand Challenge!",p:"A friendly dragon guards the end of the map. One question from every world, getting harder and harder. Use everything you learned!",ex:["Counting, + − × ÷","Remainders and order of operations","Take a deep breath, say Bismillah, and begin!"]}]});
 
@@ -843,7 +1173,7 @@ const BADGES=[
  {id:"brain",i:"🧠",n:"Brain Buster",d:"Certificate in Brain Busters",f:p=>WORLDS.filter(w=>w.id==="bb").every(w=>complete(p,w))},
  {id:"all",i:"🏆",n:"Math Champion",d:"Finish every world and the Grand Challenge",f:p=>Object.keys(p.stars).length>=WORLDS.length},
  {id:"super",i:"🌟",n:"Super Scholar",d:"3 stars in every quiz",f:p=>WORLDS.every(w=>(p.stars[w.id]||0)>=3)}];
-const GAMES={collect:["Basket Catch","🧺","Tap to collect"],addpair:["Make the Sum","🧩","Tap two numbers"],subcross:["Cookie Crunch","🍪","Take them away"],subpair:["Difference Duel","⚔️","Find the gap"],mularr:["Array Builder","🧱","Rows and columns"],mulmix:["Times Table Race","🏁","Fast multiplying"],divshare:["Fair Share","🍰","Share equally"],divfam:["Fact Family","👨‍👩‍👧","Link × and ÷"],divrem:["Left Overs","🍱","Find the remainder"],mix:["Mix Master","🎲","Any operation!"],factor:["Factor Hunt","🔍","Find the factors"],decimal:["Decimal Dash","🏃","Decimal challenges"],percent:["Percent Race","💯","Percent puzzles"],shape:["Shape Quest","🔷","Shapes and angles"],data:["Data Detective","🕵️","Solve the data"],algebra:["Mystery Number","🔮","Find the unknown"],digits:["Digit Builder","🔢","Build big and small numbers"],pizza:["Pizza Slicer","🍕","Cut and eat fractions"],shop:["Shop Keeper","🛒","Coins and prices"]};
+const GAMES={collect:["Basket Catch","🧺","Tap to collect"],addpair:["Make the Sum","🧩","Tap two numbers"],subcross:["Cookie Crunch","🍪","Take them away"],subpair:["Difference Duel","⚔️","Find the gap"],mularr:["Array Builder","🧱","Rows and columns"],mulmix:["Times Table Race","🏁","Fast multiplying"],divshare:["Fair Share","🍰","Share equally"],divfam:["Fact Family","👨‍👩‍👧","Link × and ÷"],divrem:["Left Overs","🍱","Find the remainder"],mix:["Mix Master","🎲","Any operation!"],sequence:["Pattern Pilot","🌌","Sequences and rules"],fusion:["Fusion Lab","🧪","Mix fractions"],million:["Million Quest","🏔️","Big number challenges"],negative:["Below Zero","🧊","Negative numbers"],ratio:["Ratio Rush","🚣","Ratios and rates"],volume:["Box Builder","📦","Area and volume"],angle:["Angle Hunt","📏","Find the angles"],power:["Power Up","⚡","Powers and roots"],prob:["Chance Challenge","🎲","Probability puzzles"],coord:["Map Master","🗺️","Coordinates and lines"],equation:["Equation Climb","🧗","Solve for x"],speed:["Speed Run","🚀","Speed, distance and time"],factor:["Factor Hunt","🔍","Find the factors"],decimal:["Decimal Dash","🏃","Decimal challenges"],percent:["Percent Race","💯","Percent puzzles"],shape:["Shape Quest","🔷","Shapes and angles"],data:["Data Detective","🕵️","Solve the data"],algebra:["Mystery Number","🔮","Find the unknown"],digits:["Digit Builder","🔢","Build big and small numbers"],pizza:["Pizza Slicer","🍕","Cut and eat fractions"],shop:["Shop Keeper","🛒","Coins and prices"]};
 function stagesOf(w){const q={id:"quiz",n:"Quiz",e:"🎯",d:"Test what you learned"};if(w.id==="boss")return[q];const g=GAMES[w.gameKey];
  return[q,{id:"word",n:"Story Problems",e:"📝",d:"Math in real life"},{id:"game",n:g[0],e:g[1],d:g[2]},{id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right answers"},{id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right answers"},{id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right ones fast"},{id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},{id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}]}
 const stageStars=(p,w,s)=>s==="quiz"?(p.stars[w.id]||0):((p.done&&p.done[w.id]&&p.done[w.id][s])||0);
@@ -1014,7 +1344,7 @@ function bindInp(q){Q.inp="";const disp=$("#disp");
   else if(k==="✔"){if(!Q.inp){toast("Type your answer first 🙂");return}
    if(+Q.inp===q.v){disp.classList.add("okd");right(q)}
    else{wrong();disp.classList.add("shk");setTimeout(()=>{disp.classList.remove("shk");Q.inp="";upd()},500)}return}
-  else if(Q.inp.length<4)Q.inp+=k;
+  else if(Q.inp.length<6)Q.inp+=k;
   upd();sfx.tap()};
  app.querySelectorAll(".key").forEach(b=>b.onclick=()=>press(b.dataset.k));
  document.onkeydown=e=>{if(e.key>="0"&&e.key<="9")press(e.key);else if(e.key==="Backspace")press("⌫");else if(e.key==="Enter")press("✔")}}
