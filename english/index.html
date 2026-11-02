@@ -175,6 +175,18 @@ input#nm:focus{border-color:var(--sky)}
 .hp i{display:block;height:100%;background:#ef4444;transition:width .4s}
 .tmr{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin:0 0 10px}
 .tmr i{display:block;height:100%;width:100%;background:#f59e0b}
+.zt{position:relative;height:340px;border-radius:18px;background:radial-gradient(circle at 30% 10%,#134e4a,#020617);overflow:hidden;margin:10px 0;border-bottom:3px solid #14b8a6;touch-action:manipulation}
+.zen{position:absolute;padding:2px 10px;border-radius:6px;background:rgba(0,0,0,.78);color:#fff;font-weight:800;font-size:1.15rem;letter-spacing:.05em;transform:translateX(-50%);white-space:nowrap}
+.zen b{color:#fb923c}
+.zen.lock{outline:2px solid #fb923c}
+.zen.dead{animation:zdie .3s forwards}
+@keyframes zdie{to{opacity:0;transform:translateX(-50%) scale(1.6)}}
+.zship{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:2rem}
+.zsh{position:absolute;font-size:1rem;transition:all .18s linear;transform:translate(-50%,-50%)}
+.zkb{display:flex;flex-direction:column;gap:6px;align-items:center;background:#0b1f24;border-radius:14px;padding:8px;margin-bottom:8px}
+.zkb div{display:flex;gap:4px;width:100%;justify-content:center}
+.zk{flex:1;max-width:40px;min-width:24px;height:42px;border:0;border-radius:8px;background:#115e59;color:#5eead4;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;touch-action:manipulation}
+.zk:active{background:#14b8a6;color:#042f2e}
 </style>
 </head>
 <body>
@@ -720,6 +732,7 @@ const STAGES=[
  {id:"catch",n:"Falling Catch",e:"🧺",d:"Catch the right words"},
  {id:"battle",n:"Monster Battle",e:"👾",d:"Defeat the monster"},
  {id:"speed",n:"Speed Round",e:"⏱️",d:"Beat the clock"},
+ {id:"type",n:"Word Blaster",e:"⌨️",d:"Type words to blast them"},
  {id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},
  {id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}];
 const stagesOf=w=>w.bank?STAGES:[STAGES[0]];
@@ -745,7 +758,11 @@ function buildLessons(w){const out=[...w.learn];if(!w.bank)return out;
  return out}
 function battleList(w){return shuffle([...w.q,...(w.more||[])]).slice(0,8)}
 function speedList(w){const m=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,8);return m.length>=5?m:[...m,...tfList(w).slice(0,6-m.length)]}
-function buildList(w,st){if(st==="catch")return popList(w).slice(0,2).map(p=>({t:"catch",q:p.q.replace("Pop","Catch"),w:p.w,why:p.why}));if(st==="battle")return battleList(w);if(st==="speed")return speedList(w);return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):st==="shoot"?shootList(w):st==="mole"?moleList(w):tfList(w)}
+function typeWave(w){const all=[...new Set(Object.values(w.bank).flat().map(x=>String(x).toLowerCase()).filter(x=>/^[a-z]{3,10}$/.test(x)))];
+ const sh=shuffle(all.filter(x=>x.length<=6)),lg=shuffle(all);const pickN=pool=>{const o=[];for(const x of pool)if(!o.includes(x)&&o.length<6)o.push(x);return o};
+ let ws=pickN(sh.length>=6?sh:lg);while(ws.length<6)ws.push(all[ws.length%all.length]||"word");
+ return{t:"type",num:false,q:"Type each word to blast it! 🚀",items:ws.map(x=>({s:x,k:x})),why:"Great typing!"}}
+function buildList(w,st){if(st==="catch")return popList(w).slice(0,2).map(p=>({t:"catch",q:p.q.replace("Pop","Catch"),w:p.w,why:p.why}));if(st==="type")return[typeWave(w),typeWave(w)];if(st==="battle")return battleList(w);if(st==="speed")return speedList(w);return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):st==="shoot"?shootList(w):st==="mole"?moleList(w):tfList(w)}
 
 /* ============ HELPERS ============ */
 const $=s=>document.querySelector(s);
@@ -850,6 +867,7 @@ function showQ(){
  if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
  else if(q.t==="pop"){Q.popLeft=q.w.filter(x=>x[1]).length;body=`<div class="bubs">${q.w.map((x,i)=>`<button class="bub" data-i="${i}">${esc(x[0])}</button>`).join("")}</div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
+ else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word.</p>`}
  else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
@@ -861,7 +879,7 @@ function showQ(){
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
  $("#spk").onclick=()=>say(q.q+(q.t==="tap"?" "+q.w.join(" "):""));
- if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="catch")bindCatch(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
+ if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="catch")bindCatch(q);else if(q.t==="type")bindType(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
  if(Q.stage==="speed"&&q.t==="mcq"){const bar=$("#tmr");if(bar){requestAnimationFrame(()=>{bar.style.transition="width 15s linear";bar.style.width="0%"});GT.push(setTimeout(()=>timeUp(q),15000))}}
 }
 function wrong(){if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();$("#fb").innerHTML=`<div class="fb b"><span>🦉</span>${pick(OOPS)}</div>`}
@@ -879,6 +897,27 @@ function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++
  app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
  $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
+function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
+ const sp=()=>window.ZT_SP||1500,base=.5+Math.min(Q.wi,40)*.012;
+ const paint=e=>{const t=e.k.slice(0,e.n);e.el.innerHTML=q.num?`${esc(e.s)} = <b>${esc(t)}</b>${"·".repeat(e.k.length-e.n)}`:`<b>${esc(t)}</b>${esc(e.k.slice(e.n))}`;e.el.classList.toggle("lock",e===tgt)};
+ const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";s.style.left="50%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
+ const reset=()=>{ty="";tgt=null;en.forEach(e=>{e.n=0;paint(e)})};
+ const kill=e=>{e.dead=true;e.el.classList.add("dead");setTimeout(()=>e.el.remove(),320);en=en.filter(x=>x!==e);left--;sfx.tap();ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)});
+  if(left<=0&&!Q.done){Q.done=true;GT.forEach(clearInterval);document.onkeydown=null;setTimeout(()=>{Q.done=false;right(q)},400)}};
+ const press=c=>{if(Q.done)return;const cand=en.filter(e=>e.k.startsWith(ty+c));
+  if(!cand.length){sfx.no();return}
+  ty+=c;const pick=cand.includes(tgt)?tgt:cand.reduce((a,b)=>b.y>a.y?b:a);tgt=pick;en.forEach(e=>{e.n=(e===tgt)?ty.length:0;paint(e)});shot(pick);
+  if(pick.k===ty)kill(pick)};
+ const back=()=>{if(!Q.done)reset()};
+ document.onkeydown=ev=>{if(ev.ctrlKey||ev.metaKey||ev.altKey)return;if(ev.key==="Backspace"){back();return}
+  if(ev.key.length===1&&/[a-z0-9]/i.test(ev.key)){ev.preventDefault();press(ev.key.toLowerCase())}};
+ app.querySelectorAll(".zk").forEach(b=>b.onclick=()=>{const k=b.dataset.k;k==="⌫"?back():press(k)});
+ const spawn=()=>{const it=queue.shift(),el=document.createElement("span");el.className="zen";el.dataset.k=it.k;const x=14+Math.random()*72;el.style.left=x+"%";z.appendChild(el);
+  const e={s:it.s,k:it.k,el,x,y:-10,n:0,dead:false};en.push(e);paint(e)};
+ GT.push(setInterval(()=>{if(Q.done)return;tk++;
+  if(queue.length&&tk*50>=next){next+=sp();spawn()}
+  en.slice().forEach(e=>{e.y+=base;e.el.style.top=e.y+"px";
+   if(e.y>H-40){e.el.remove();en=en.filter(x=>x!==e);if(tgt===e){ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)})}wrong();queue.push({s:e.s,k:e.k})}})},50))}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);

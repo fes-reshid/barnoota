@@ -203,6 +203,18 @@ input#nm:focus{border-color:var(--sky)}
 .hp i{display:block;height:100%;background:#ef4444;transition:width .4s}
 .tmr{height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin:0 0 10px}
 .tmr i{display:block;height:100%;width:100%;background:#f59e0b}
+.zt{position:relative;height:340px;border-radius:18px;background:radial-gradient(circle at 30% 10%,#134e4a,#020617);overflow:hidden;margin:10px 0;border-bottom:3px solid #14b8a6;touch-action:manipulation}
+.zen{position:absolute;padding:2px 10px;border-radius:6px;background:rgba(0,0,0,.78);color:#fff;font-weight:800;font-size:1.15rem;letter-spacing:.05em;transform:translateX(-50%);white-space:nowrap}
+.zen b{color:#fb923c}
+.zen.lock{outline:2px solid #fb923c}
+.zen.dead{animation:zdie .3s forwards}
+@keyframes zdie{to{opacity:0;transform:translateX(-50%) scale(1.6)}}
+.zship{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:2rem}
+.zsh{position:absolute;font-size:1rem;transition:all .18s linear;transform:translate(-50%,-50%)}
+.zkb{display:flex;flex-direction:column;gap:6px;align-items:center;background:#0b1f24;border-radius:14px;padding:8px;margin-bottom:8px}
+.zkb div{display:flex;gap:4px;width:100%;justify-content:center}
+.zk{flex:1;max-width:40px;min-width:24px;height:42px;border:0;border-radius:8px;background:#115e59;color:#5eead4;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;touch-action:manipulation}
+.zk:active{background:#14b8a6;color:#042f2e}
 </style>
 </head>
 <body>
@@ -1186,7 +1198,7 @@ const BADGES=[
  {id:"super",i:"🌟",n:"Super Scholar",d:"3 stars in every quiz",f:p=>WORLDS.every(w=>(p.stars[w.id]||0)>=3)}];
 const GAMES={collect:["Basket Catch","🧺","Tap to collect"],addpair:["Make the Sum","🧩","Tap two numbers"],subcross:["Cookie Crunch","🍪","Take them away"],subpair:["Difference Duel","⚔️","Find the gap"],mularr:["Array Builder","🧱","Rows and columns"],mulmix:["Times Table Race","🏁","Fast multiplying"],divshare:["Fair Share","🍰","Share equally"],divfam:["Fact Family","👨‍👩‍👧","Link × and ÷"],divrem:["Left Overs","🍱","Find the remainder"],mix:["Mix Master","🎲","Any operation!"],sequence:["Pattern Pilot","🌌","Sequences and rules"],fusion:["Fusion Lab","🧪","Mix fractions"],million:["Million Quest","🏔️","Big number challenges"],negative:["Below Zero","🧊","Negative numbers"],ratio:["Ratio Rush","🚣","Ratios and rates"],volume:["Box Builder","📦","Area and volume"],angle:["Angle Hunt","📏","Find the angles"],power:["Power Up","⚡","Powers and roots"],prob:["Chance Challenge","🎲","Probability puzzles"],coord:["Map Master","🗺️","Coordinates and lines"],equation:["Equation Climb","🧗","Solve for x"],speed:["Speed Run","🚀","Speed, distance and time"],factor:["Factor Hunt","🔍","Find the factors"],decimal:["Decimal Dash","🏃","Decimal challenges"],percent:["Percent Race","💯","Percent puzzles"],shape:["Shape Quest","🔷","Shapes and angles"],data:["Data Detective","🕵️","Solve the data"],algebra:["Mystery Number","🔮","Find the unknown"],digits:["Digit Builder","🔢","Build big and small numbers"],pizza:["Pizza Slicer","🍕","Cut and eat fractions"],shop:["Shop Keeper","🛒","Coins and prices"]};
 function stagesOf(w){const q={id:"quiz",n:"Quiz",e:"🎯",d:"Test what you learned"};if(w.id==="boss")return[q];const g=GAMES[w.gameKey];
- return[q,{id:"word",n:"Story Problems",e:"📝",d:"Math in real life"},{id:"game",n:g[0],e:g[1],d:g[2]},{id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right answers"},{id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right answers"},{id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right ones fast"},{id:"catch",n:"Falling Catch",e:"🧺",d:"Catch the right ones"},{id:"battle",n:"Monster Battle",e:"👾",d:"Defeat the monster"},{id:"speed",n:"Speed Round",e:"⏱️",d:"Beat the clock"},{id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},{id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}]}
+ return[q,{id:"word",n:"Story Problems",e:"📝",d:"Math in real life"},{id:"game",n:g[0],e:g[1],d:g[2]},{id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right answers"},{id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right answers"},{id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right ones fast"},{id:"catch",n:"Falling Catch",e:"🧺",d:"Catch the right ones"},{id:"battle",n:"Monster Battle",e:"👾",d:"Defeat the monster"},{id:"speed",n:"Speed Round",e:"⏱️",d:"Beat the clock"},{id:"type",n:"Number Blaster",e:"⌨️",d:"Type answers to blast"},{id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},{id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}]}
 const stageStars=(p,w,s)=>s==="quiz"?(p.stars[w.id]||0):((p.done&&p.done[w.id]&&p.done[w.id][s])||0);
 const isDone=(p,w,s)=>stageStars(p,w,s)>0;
 const complete=(p,w)=>stagesOf(w).every(s=>isDone(p,w,s.id));
@@ -1211,6 +1223,12 @@ function buildLessons(w){const out=[...w.learn];if(!w.quiz)return out;
  if(b.length>=2)out.push({i:"🚀",h:"Harder examples",p:"Ready for a challenge? Here are tougher ones, with answers.",ex:b});
  if(c.length>=2)out.push({i:"📖",h:"Story problems",p:"Real life uses the same maths. Read how each story is solved.",ex:c});
  return out}
+function typeWave(w){const items=[],seen=new Set();
+ for(let t=0;t<300&&items.length<6;t++){let q;try{q=w.quiz(R(1,8),8)}catch(e){continue}
+  const v=q.t==="inp"?String(q.v):(q.t==="mcq"&&/^\d{1,4}$/.test(q.o[q.a]))?q.o[q.a]:null;if(v==null||v.length>4)continue;
+  const s=q.q.replace(/\s*=\s*▢.*$/,"").trim();if(/[▢?<>\n]/.test(s)||s.length>22||!/\d/.test(s)||seen.has(s))continue;seen.add(s);items.push({s,k:v})}
+ while(items.length<6){const a=R(2,9+items.length),b=R(2,9),s=`${a} + ${b}`;if(!seen.has(s)){seen.add(s);items.push({s,k:String(a+b)})}}
+ return{t:"type",num:true,q:"Type each answer to blast the problem! 🚀",items,why:"Fast fingers and fast maths!"}}
 function buildList(w,st){if(w.id==="boss")return bossList();
  const mk=(n,f)=>Array.from({length:n},(_,i)=>f(i,n));
  if(st==="quiz")return mk(8,(i,n)=>w.quiz(i,n));
@@ -1219,6 +1237,7 @@ function buildList(w,st){if(w.id==="boss")return bossList();
  if(st==="pop"){const u=[];return mk(3,()=>w.popQ(u))}
  if(st==="shoot")return shootList(w);
  if(st==="catch"){const u=[];return mk(2,()=>{const p=w.popQ(u);return{t:"catch",q:p.q.replace("Pop","Catch"),w:p.w,why:p.why}})}
+ if(st==="type")return[typeWave(w),typeWave(w)];
  if(st==="battle")return mk(8,(i,n)=>w.quiz(i,n));
  if(st==="speed")return mk(8,(i,n)=>{for(let t=0;t<20;t++){const q=w.quiz(i,n);if(q.t==="mcq")return q;if(q.t==="inp"){const o=numOpts(q.v,10);return{t:"mcq",q:q.q,vis:q.vis,o:o.o,a:o.a,why:q.why}}}return w.quiz(1,n)})
  if(st==="mole"){const u=[];return mk(2,()=>{const p=w.popQ(u);return{t:"mole",q:p.q.replace("Pop","Whack"),w:p.w,need:5,why:p.why}})}
@@ -1340,6 +1359,7 @@ function showQ(){
  else if(q.t==="pair"){body=`<div class="bigword">${q.target}</div><div class="sent">${q.nums.map((x,i)=>`<button class="chip" data-i="${i}">${x}</button>`).join("")}</div>`}
  else if(q.t==="cross"){body=`<div class="vis items">${Array.from({length:q.n},(_,i)=>`<button class="it" data-i="${i}" aria-label="item">${q.e}</button>`).join("")}</div><div id="ans"></div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`${vis}<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
+ else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word.</p>`}
  else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="share"){body=`<div class="vis" id="pool"></div><div class="frs" id="frs"></div>`}
@@ -1348,7 +1368,7 @@ function showQ(){
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
  $("#spk").onclick=()=>say(q.q);
- ({mcq:bindMcq,inp:bindInp,tf:bindTf,pop:bindPop,pair:bindPair,cross:bindCross,share:bindShare,shoot:bindShoot,mole:bindMole,catch:bindCatch})[q.t](q);
+ ({mcq:bindMcq,inp:bindInp,tf:bindTf,pop:bindPop,pair:bindPair,cross:bindCross,share:bindShare,shoot:bindShoot,mole:bindMole,catch:bindCatch,type:bindType})[q.t](q);
  if(Q.stage==="speed"&&q.t==="mcq"){const bar=$("#tmr");if(bar){requestAnimationFrame(()=>{bar.style.transition="width 15s linear";bar.style.width="0%"});GT.push(setTimeout(()=>timeUp(q),15000))}}
 
 }
@@ -1400,6 +1420,27 @@ function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++
  app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
  $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
+function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
+ const sp=()=>window.ZT_SP||1500,base=.5+Math.min(Q.wi,40)*.012;
+ const paint=e=>{const t=e.k.slice(0,e.n);e.el.innerHTML=q.num?`${esc(e.s)} = <b>${esc(t)}</b>${"·".repeat(e.k.length-e.n)}`:`<b>${esc(t)}</b>${esc(e.k.slice(e.n))}`;e.el.classList.toggle("lock",e===tgt)};
+ const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";s.style.left="50%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
+ const reset=()=>{ty="";tgt=null;en.forEach(e=>{e.n=0;paint(e)})};
+ const kill=e=>{e.dead=true;e.el.classList.add("dead");setTimeout(()=>e.el.remove(),320);en=en.filter(x=>x!==e);left--;sfx.tap();ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)});
+  if(left<=0&&!Q.done){Q.done=true;GT.forEach(clearInterval);document.onkeydown=null;setTimeout(()=>{Q.done=false;right(q)},400)}};
+ const press=c=>{if(Q.done)return;const cand=en.filter(e=>e.k.startsWith(ty+c));
+  if(!cand.length){sfx.no();return}
+  ty+=c;const pick=cand.includes(tgt)?tgt:cand.reduce((a,b)=>b.y>a.y?b:a);tgt=pick;en.forEach(e=>{e.n=(e===tgt)?ty.length:0;paint(e)});shot(pick);
+  if(pick.k===ty)kill(pick)};
+ const back=()=>{if(!Q.done)reset()};
+ document.onkeydown=ev=>{if(ev.ctrlKey||ev.metaKey||ev.altKey)return;if(ev.key==="Backspace"){back();return}
+  if(ev.key.length===1&&/[a-z0-9]/i.test(ev.key)){ev.preventDefault();press(ev.key.toLowerCase())}};
+ app.querySelectorAll(".zk").forEach(b=>b.onclick=()=>{const k=b.dataset.k;k==="⌫"?back():press(k)});
+ const spawn=()=>{const it=queue.shift(),el=document.createElement("span");el.className="zen";el.dataset.k=it.k;const x=14+Math.random()*72;el.style.left=x+"%";z.appendChild(el);
+  const e={s:it.s,k:it.k,el,x,y:-10,n:0,dead:false};en.push(e);paint(e)};
+ GT.push(setInterval(()=>{if(Q.done)return;tk++;
+  if(queue.length&&tk*50>=next){next+=sp();spawn()}
+  en.slice().forEach(e=>{e.y+=base;e.el.style.top=e.y+"px";
+   if(e.y>H-40){e.el.remove();en=en.filter(x=>x!==e);if(tgt===e){ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)})}wrong();queue.push({s:e.s,k:e.k})}})},50))}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);
