@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>English Adventure for Kids | Learn English Free – diinislaam.com</title>
-<meta name="description" content="English Adventure is a free, fun, game-style English course for kids. Journey through 11 worlds with a final boss: parts of speech, nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, interjections and sentences. Play quizzes, bubble pop, memory match and lightning rounds, then earn stars, XP, badges and certificates.">
+<meta name="description" content="English Adventure is a free, fun, game-style English course for kids. Journey through 19 worlds with a final boss: parts of speech, nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, interjections and sentences. Play quizzes, bubble pop, memory match and lightning rounds, then earn stars, XP, badges and certificates.">
 <link rel="canonical" href="https://diinislaam.com/english/">
 <meta name="theme-color" content="#4cc9f0">
 <meta property="og:title" content="English Adventure – a fun English game for kids">
-<meta property="og:description" content="11 worlds, a boss level, quizzes, stars, badges and certificates. Learn parts of speech and sentences the fun way.">
+<meta property="og:description" content="19 worlds, a boss level, quizzes, stars, badges and certificates. Learn parts of speech and sentences the fun way.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://diinislaam.com/english/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -149,6 +149,21 @@ input#nm:focus{border-color:var(--sky)}
 .stg.go{background:linear-gradient(135deg,#fef3c7,#fde68a)}
 @media print{body>*:not(#ov){display:none!important}#ov{position:static;background:none;padding:0}.modal{box-shadow:none;max-height:none}.noprint{display:none!important}body{background:#fff}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.arena{position:relative;height:300px;border-radius:18px;background:radial-gradient(circle at 20% 20%,#3730a3,#0f172a);overflow:hidden;margin:10px 0;touch-action:manipulation}
+.tg{position:absolute;left:2%;min-width:64px;height:54px;padding:0 14px;border-radius:30px;border:0;font:inherit;font-weight:800;font-size:1.1rem;background:linear-gradient(#fde047,#f59e0b);color:#1f2937;cursor:crosshair;box-shadow:0 3px 0 #b45309;animation:dr var(--dur,6s) ease-in-out infinite alternate;animation-delay:var(--dl,0s);white-space:nowrap}
+@keyframes dr{from{left:2%}to{left:62%}}
+.tg.boom{animation-play-state:paused;background:#22c55e;transform:scale(1.25);opacity:.35;pointer-events:none;transition:all .4s}
+.tg.no{background:#ef4444;color:#fff}
+.cannon{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);font-size:2.4rem;pointer-events:none}
+.bul{position:absolute;left:50%;bottom:38px;font-size:1.3rem;transition:left .25s linear,bottom .25s linear;pointer-events:none}
+.hint{text-align:center;opacity:.7;margin:0}
+.mgr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.mcell{height:84px;border-radius:50% 50% 18px 18px;background:#78350f;border:0;font:inherit;font-weight:800;font-size:1.05rem;color:#fff;overflow:hidden;box-shadow:inset 0 -8px 0 #451a03}
+.mcell.up{background:linear-gradient(#fbbf24,#f59e0b);color:#1f2937;animation:upx .25s}
+@keyframes upx{from{transform:translateY(30px)}to{transform:none}}
+.mcell.hit{background:#22c55e;color:#fff}
+.mcell.miss{background:#ef4444;color:#fff}
+.mprog{text-align:center;font-weight:800;font-size:1.1rem}
 </style>
 </head>
 <body>
@@ -157,6 +172,11 @@ input#nm:focus{border-color:var(--sky)}
 
 <script>
 /* ============ COURSE DATA ============ */
+const MC=(q,o,a,why)=>({t:"mcq",q,o,a,why});
+const TP=(q,w,a,why)=>({t:"tap",q,w,a,why});
+const TF=(q,a,why)=>({t:"tf",q,a,why});
+const OR=(q,w,why)=>({t:"order",q,w,why});
+const SO=(q,b,i,why)=>({t:"sort",q,b,i,why});
 const WORLDS=[
 {id:"parts",name:"Word Castle Gate",emoji:"🚪",c:"#0891b2",c2:"#22d3ee",badge:"🗝️",bname:"Key Keeper",
  learn:[
@@ -309,7 +329,217 @@ const WORLDS=[
   {t:"sort",q:"Statement, question or command?",b:["Statement","Question","Command"],i:[["The sky is blue.",0],["Is it raining?",1],["Wash your hands.",2],["Amina loves reading.",0],["What is your name?",1],["Sit down, please.",2]],why:"Statements tell, questions ask, commands tell you what to do."},
   {t:"order",q:"Build the sentence:",w:["She","is","my","friend."],why:"She is my friend."},
   {t:"order",q:"Build the question:",w:["Where","are","you","going?"],why:"Where are you going?"},
-  {t:"order",q:"Build the request:",w:["Please","open","the","door."],why:"Please open the door."}]}
+  {t:"order",q:"Build the request:",w:["Please","open","the","door."],why:"Please open the door."}]},
+{id:"plural",name:"Plural Plains",emoji:"🌾",c:"#65a30d",c2:"#bef264",badge:"🌾",bname:"Plural Pro",
+ learn:[
+  {i:"➕",h:"Making plurals",p:"Singular means one. Plural means more than one. Most nouns just add -s.",ex:["book → books","cat → cats","mosque → mosques","boy → boys (vowel + y: just add s)"]},
+  {i:"✨",h:"-es and -ies",p:"Nouns ending in s, x, ch or sh add -es. Nouns ending in consonant + y change the y to -ies.",ex:["box → boxes","bus → buses","dish → dishes","watch → watches","baby → babies","city → cities","story → stories"]},
+  {i:"🎩",h:"Irregular plurals",p:"Some nouns change in special ways. You have to remember them.",ex:["child → children","man → men, woman → women","foot → feet","tooth → teeth","mouse → mice","sheep → sheep","fish → fish"]}],
+ q:[
+  MC("What is the plural of “box”?",["boxes","boxs","boxies","boxen"],0,"Nouns ending in x add -es."),
+  MC("What is the plural of “baby”?",["babies","babys","babyes","babi"],0,"Consonant + y: change y to -ies."),
+  MC("What is the plural of “child”?",["children","childs","childes","childrens"],0,"Child is irregular: children."),
+  MC("What is the plural of “foot”?",["feet","foots","feets","footes"],0,"Foot is irregular: feet."),
+  MC("What is the plural of “boy”?",["boys","boies","boyes","boyz"],0,"Vowel + y: just add -s."),
+  MC("Two ___ ran across the kitchen. (mouse)",["mice","mouses","mousies","mouse"],0,"The plural of mouse is mice."),
+  TP("Tap the plural noun:",["The","children","play","outside."],[1],"Children is the plural of child."),
+  TP("Tap both plural nouns:",["Three","cities","and","two","buses","stopped."],[1,4],"Cities and buses mean more than one."),
+  SO("Which ending? Add -s, -es or -ies.",["-s","-es","-ies"],[["book",0],["box",1],["baby",2],["pen",0],["watch",1],["city",2]],"Plural spelling pro!"),
+  TF("“Sheep” has the same singular and plural form.",true,"One sheep, two sheep.")],
+ bank:{"plural with -s":["cats","books","pens","mosques","boys","days"],"plural with -es":["boxes","buses","dishes","watches","brushes"],"plural with -ies":["babies","cities","stories","flies","ladies"],"irregular plural":["children","men","women","feet","teeth","mice"]},
+ pairs:[["child","children"],["man","men"],["foot","feet"],["tooth","teeth"],["mouse","mice"],["woman","women"],["baby","babies"],["box","boxes"]],
+ more:[
+  MC("One fish, two ___.",["fish","fishs","fishies","fishen"],0,"Fish stays the same."),
+  MC("What is the plural of “leaf”?",["leaves","leafs","leafes","leavs"],0,"Leaf changes to leaves."),
+  TP("Tap the singular noun:",["Many","women","visited","the","mosque."],[4],"Mosque is just one."),
+  OR("Build the sentence:",["The","babies","are","sleeping."],"The babies are sleeping."),
+  TF("The plural of city is citys.",false,"Change y to -ies: cities."),
+  MC("Which word is NOT a plural?",["child","children","men","mice"],0,"Child means one.")]},
+
+{id:"tenses",name:"Time Travel Town",emoji:"⏳",c:"#0ea5e9",c2:"#7dd3fc",badge:"⏳",bname:"Time Traveller",
+ learn:[
+  {i:"🕰️",h:"Present, past and future",p:"Verbs change to show WHEN something happens.",ex:["I walk to school. (present: now)","I walked to school. (past: already happened)","I will walk to school. (future: later)"]},
+  {i:"✅",h:"Regular past tense (-ed)",p:"Add -ed to most verbs to make the past tense. Watch the spelling changes!",ex:["play → played","walk → walked","pray → prayed","stop → stopped (double the p)","study → studied (y becomes ied)"]},
+  {i:"🎩",h:"Irregular past tense",p:"Some verbs change completely. Learn these by heart.",ex:["go → went","eat → ate","write → wrote","see → saw","run → ran","buy → bought","come → came","take → took"]}],
+ q:[
+  MC("Yesterday I ___ to the mosque. (go)",["went","goed","gone","going"],0,"The past of go is went."),
+  MC("She ___ a letter last week. (write)",["wrote","writed","written","writes"],0,"The past of write is wrote."),
+  MC("Tomorrow we ___ visit Makkah.",["will","did","was","had"],0,"Will shows the future."),
+  MC("Which sentence is in the past tense?",["He played football.","He plays football.","He will play football.","He is playing football."],0,"Played already happened."),
+  MC("Which sentence is in the future tense?",["They will travel tomorrow.","They traveled yesterday.","They travel daily.","They are traveling now."],0,"Will travel is future."),
+  MC("What is the past tense of “eat”?",["ate","eated","eaten","eats"],0,"Eat becomes ate."),
+  TP("Tap the past tense verb:",["Aisha","baked","a","cake","yesterday."],[1],"Baked already happened."),
+  TP("Tap the word that shows the future:",["We","will","visit","grandma","tomorrow."],[1],"Will shows the future."),
+  SO("Past, present or future?",["Past","Present","Future"],[["I walked.",0],["I walk.",1],["I will walk.",2],["She ate.",0],["She eats.",1],["She will eat.",2]],"Time travel master!"),
+  OR("Build the past sentence:",["Bilal","went","to","school","yesterday."],"Bilal went to school yesterday.")],
+ bank:{"present tense verb":["walk","plays","eats","writes","goes","reads"],"past tense verb":["walked","played","ate","wrote","went","saw"],"future tense verb":["will walk","will play","will eat","will go","will write"]},
+ pairs:[["go","went"],["eat","ate"],["write","wrote"],["see","saw"],["run","ran"],["buy","bought"],["come","came"],["take","took"]],
+ more:[
+  MC("Last night the baby ___ well. (sleep)",["slept","sleeped","sleeping","sleeps"],0,"Sleep → slept."),
+  MC("We ___ our homework every day. (do)",["do","did","will do","done"],0,"Every day shows the present."),
+  TF("“Bought” is the past tense of buy.",true,"Buy → bought."),
+  TF("“Goed” is the correct past tense of go.",false,"Go → went."),
+  TP("Tap the verb in the past tense:",["The","children","played","happily."],[2],"Played is past."),
+  OR("Build the future sentence:",["We","will","pray","together."],"We will pray together."),
+  MC("What is the past tense of “study”?",["studied","studyed","studed","studies"],0,"Y changes to -ied.")]},
+
+{id:"tenses2",name:"Tense Tower",emoji:"🗼",c:"#6366f1",c2:"#a5b4fc",badge:"🗼",bname:"Tense Master",
+ learn:[
+  {i:"🔄",h:"Continuous tense (-ing)",p:"Use am, is or are + verb-ing for actions happening now. Use was or were + verb-ing for actions that were happening in the past.",ex:["I am reading a book.","She is cooking dinner.","They are playing outside.","We were walking when it rained."]},
+  {i:"🏁",h:"Perfect tenses",p:"Use have or has + the past participle for an action that is finished but matters now. Use had for something finished before another past event.",ex:["I have finished my homework.","She has eaten lunch.","They had left before we arrived."]},
+  {i:"📚",h:"Past participles",p:"The past participle is the special verb form used with have, has and had.",ex:["eat → eaten","write → written","go → gone","see → seen","take → taken","break → broken","do → done","give → given"]}],
+ q:[
+  MC("She ___ reading a book right now.",["is","are","were","has"],0,"She is reading."),
+  MC("They ___ playing outside.",["are","is","has","have"],0,"They are playing."),
+  MC("I ___ finished my homework.",["have","has","is","am"],0,"I have finished."),
+  MC("He ___ eaten his lunch.",["has","have","is","are"],0,"He has eaten."),
+  MC("What is the past participle of “write”?",["written","wrote","writed","writing"],0,"Write → wrote → written."),
+  MC("Which sentence is present continuous?",["The boys are running.","The boys ran.","The boys have run.","The boys will run."],0,"Are running is continuous."),
+  MC("Which sentence is present perfect?",["She has gone home.","She is going home.","She went home.","She will go home."],0,"Has gone is present perfect."),
+  TP("Tap the helping verb:",["We","have","seen","the","moon."],[1],"Have helps the verb seen."),
+  SO("Continuous or perfect?",["Continuous","Perfect"],[["is playing",0],["has played",1],["are eating",0],["have eaten",1],["was walking",0],["had walked",1]],"Tense tower conquered!"),
+  OR("Build the sentence:",["She","has","finished","her","work."],"She has finished her work.")],
+ bank:{"continuous verb":["is playing","are eating","am reading","was walking","were running"],"perfect verb":["has eaten","have played","has gone","had finished","have seen"],"simple past verb":["ate","played","went","finished","saw"]},
+ pairs:[["eat","eaten"],["write","written"],["go","gone"],["see","seen"],["take","taken"],["break","broken"],["do","done"],["give","given"]],
+ more:[
+  MC("We ___ waiting for the bus when it came.",["were","was","are","have"],0,"We were waiting."),
+  MC("I have never ___ snow.",["seen","saw","see","seeing"],0,"Have + seen."),
+  TF("“Has” is used with he, she and it.",true,"He has, she has, it has."),
+  TF("“She have finished” is correct.",false,"It should be: She has finished."),
+  MC("What is the past participle of “break”?",["broken","broke","breaked","breaking"],0,"Break → broke → broken."),
+  OR("Build the sentence:",["They","are","building","a","house."],"They are building a house.")]},
+
+{id:"determiners",name:"Determiner Docks",emoji:"⚓",c:"#0d9488",c2:"#5eead4",badge:"⚓",bname:"Dock Master",
+ learn:[
+  {i:"🅰️",h:"Articles: a, an, the",p:"Use a before a consonant sound and an before a vowel sound. Use the for one particular thing.",ex:["a book, a dog, a university (sounds like “yoo”)","an apple, an egg, an hour (the h is silent)","the sun, the Quran, the teacher we met"]},
+  {i:"🔢",h:"Quantifiers",p:"Many goes with things you can count. Much goes with things you cannot count.",ex:["many books, many children","much water, much milk","a few apples, a little sugar","some / any: I have some. Do you have any?"]},
+  {i:"👉",h:"This, that, these, those",p:"These words point to things. Near or far? One or many?",ex:["this book (near, one)","that mosque (far, one)","these pens (near, many)","those stars (far, many)"]},
+  {i:"🙋",h:"Possessive words",p:"They show who something belongs to.",ex:["my book","your bag","his pen, her scarf","our school","their house"]}],
+ q:[
+  MC("___ apple a day keeps the doctor away.",["An","A","Many","Much"],0,"Apple starts with a vowel sound."),
+  MC("She is ___ honest girl.",["an","a","the","many"],0,"Honest starts with a vowel sound (silent h)."),
+  MC("How ___ water is in the glass?",["much","many","few","these"],0,"Water is uncountable: much."),
+  MC("How ___ books are on the shelf?",["many","much","little","this"],0,"Books can be counted: many."),
+  MC("Look at ___ stars far away in the sky!",["those","that","this","these"],0,"Far away and many: those."),
+  MC("Look at ___ flowers right here next to me!",["these","those","this","that"],0,"Near and many: these."),
+  MC("The girls took ___ bags to school.",["their","there","they","them"],0,"Their shows the bags belong to them."),
+  TP("Tap the article:",["She","ate","an","orange."],[2],"An is an article."),
+  TP("Tap the quantifier:",["There","are","many","students."],[2],"Many tells how much."),
+  SO("a or an?",["a","an"],[["umbrella",1],["book",0],["egg",1],["cat",0],["hour",1],["university",0]],"Great ear for sounds!")],
+ bank:{"article":["a","an","the"],"quantifier":["many","much","few","some","several","little"],"demonstrative":["this","that","these","those"],"possessive word":["my","your","his","her","our","their"]},
+ pairs:[["a","consonant sound"],["an","vowel sound"],["many","countable"],["much","uncountable"],["this","near, one"],["those","far, many"]],
+ more:[
+  MC("I need ___ sugar. (a small amount)",["a little","a few","many","these"],0,"Sugar is uncountable: a little."),
+  MC("___ pen here in my hand is mine.",["This","These","Those","Many"],0,"Near and one: this."),
+  TF("“An” goes before a vowel sound.",true,"An egg, an hour."),
+  TF("We use “much” with things we can count.",false,"Use many for things we can count."),
+  TP("Tap the possessive word:",["Where","is","your","bag?"],[2],"Your shows ownership."),
+  OR("Build the sentence:",["Those","birds","are","singing."],"Those birds are singing.")]},
+
+{id:"punct",name:"Capital Peak",emoji:"🏔️",c:"#e11d48",c2:"#fda4af",badge:"🏔️",bname:"Punctuation Pro",
+ learn:[
+  {i:"🔠",h:"Capital letters",p:"Start with a capital letter for the beginning of a sentence, names, days, months and the word I.",ex:["My name is Yusuf. (names)","We go on Friday. (days)","Ramadan comes after Shaban. (months)","Always write I, never i"]},
+  {i:"❗",h:"End marks",p:"Every sentence needs an end mark.",ex:["It is hot. (full stop for a statement)","Is it hot? (question mark for a question)","It is so hot! (exclamation mark for strong feeling)"]},
+  {i:"✒️",h:"Commas, apostrophes and quotes",p:"These little marks make writing clear.",ex:["I bought apples, oranges, and grapes. (commas in a list)","It’s = it is","Amina’s book (the book belongs to Amina)","Bilal said, “Come here.”"]}],
+ q:[
+  MC("Which sentence is written correctly?",["We go to Makkah in Ramadan.","we go to makkah in ramadan.","We go to makkah in ramadan.","we go to Makkah in Ramadan."],0,"Sentence start, place and month need capitals."),
+  MC("Which end mark? “Where do you live__”",["?",".","!",","],0,"A question ends with ?."),
+  MC("Which end mark? “What a beautiful garden__”",["!","?",".",";"],0,"Strong feeling: !"),
+  MC("Which word needs a capital letter?",["january","month","day","city"],0,"January is a name of a month."),
+  MC("Choose the correct one: ___ book is on the table.",["Sara’s","Saras","Saras’","Sara"],0,"An apostrophe + s shows ownership."),
+  MC("“It’s” means ___.",["it is","it was","it will","itself"],0,"It’s = it is."),
+  MC("Commas separate the items in a ___.",["list","name","verb","day"],0,"Commas go between list items."),
+  TP("Tap the word that needs a capital letter:",["we","went","to","school."],[0],"The first word needs a capital."),
+  TP("Tap the three words that need capitals:",["yusuf","visited","makkah","in","ramadan."],[0,2,4],"Names, places and months."),
+  OR("Build the question:",["What","is","your","name?"],"What is your name?")],
+ bank:{"capital-letter word":["Makkah","Monday","January","Yusuf","Ramadan","Friday"],"small-letter word":["city","month","teacher","river","day","mosque"],"punctuation mark":[".","?","!",","]},
+ pairs:[[".","full stop"],["?","question mark"],["!","exclamation mark"],[",","comma"],["’","apostrophe"],["“ ”","quotation marks"]],
+ more:[
+  MC("The cat licked ___ paw.",["its","it’s","its’","it"],0,"Its shows ownership."),
+  TF("“Friday” starts with a capital letter.",true,"Days of the week need capitals."),
+  MC("Which sentence uses commas correctly?",["I like apples, bananas, and grapes.","I like apples bananas, and grapes.","I like, apples bananas and grapes.","I, like apples bananas and grapes."],0,"Commas go between list items."),
+  TP("Tap the words that need a capital:",["today","is","friday."],[0,2],"Sentence start and day name."),
+  OR("Build the sentence:",["Please","close","the","door."],"Please close the door."),
+  TF("A question ends with a full stop.",false,"A question ends with a question mark.")]},
+
+{id:"meaning",name:"Word Meaning Market",emoji:"🛍️",c:"#f97316",c2:"#fdba74",badge:"🛍️",bname:"Word Wizard",
+ learn:[
+  {i:"🟰",h:"Synonyms",p:"Synonyms are words with the same or almost the same meaning.",ex:["big = large = huge","happy = glad = joyful","small = tiny = little","fast = quick = rapid"]},
+  {i:"↔️",h:"Antonyms",p:"Antonyms are words with opposite meanings.",ex:["hot ↔ cold","brave ↔ afraid","up ↔ down","early ↔ late","honest ↔ dishonest"]},
+  {i:"👂",h:"Homophones",p:"Homophones sound the same but have different spellings and meanings.",ex:["their (belongs to them) / there (a place) / they’re (they are)","to / too / two","write / right","see / sea","no / know"]},
+  {i:"🧱",h:"Prefixes",p:"A prefix goes at the start of a word and changes its meaning.",ex:["un-: happy → unhappy, kind → unkind","dis-: agree → disagree","re-: write → rewrite"]}],
+ q:[
+  MC("Which word is a synonym of “big”?",["large","tiny","thin","cold"],0,"Large means big."),
+  MC("Which word is an antonym of “brave”?",["afraid","strong","bold","loud"],0,"Afraid is the opposite of brave."),
+  MC("I will ___ a letter to my friend.",["write","right","rite","wright"],0,"Write is the action of writing."),
+  MC("The kids played over ___.",["there","their","they’re","thare"],0,"There is a place."),
+  MC("___ going to the park. (they are)",["They’re","Their","There","Thier"],0,"They’re = they are."),
+  MC("I have ___ sisters. (the number 2)",["two","to","too","tue"],0,"Two is the number."),
+  MC("What is the opposite of “early”?",["late","soon","first","quick"],0,"Late is the opposite."),
+  MC("Add “un” to “kind” to make ___.",["unkind","dikind","rekind","inkind"],0,"Unkind means not kind."),
+  TP("Tap the synonym of “happy”:",["sad","glad","angry","tired"],[1],"Glad means happy."),
+  SO("Synonym or antonym of “hot”?",["Synonym","Antonym"],[["boiling",0],["scorching",0],["cold",1],["freezing",1],["warm",0],["chilly",1]],"Word wizard!")],
+ bank:{"synonym of big":["large","huge","giant","enormous"],"synonym of happy":["glad","joyful","cheerful","delighted"],"antonym of brave":["afraid","scared","timid","fearful"],"antonym of hot":["cold","cool","freezing","chilly"]},
+ pairs:[["big","large"],["happy","glad"],["small","tiny"],["fast","quick"],["clever","smart"],["begin","start"],["tired","sleepy"],["pretty","beautiful"]],
+ more:[
+  TF("“Two” and “too” are homophones.",true,"They sound the same."),
+  MC("The opposite of “honest” is ___.",["dishonest","unhonest","inhonest","rehonest"],0,"Dishonest."),
+  MC("Which word means the same as “quick”?",["fast","slow","late","tall"],0,"Fast = quick."),
+  MC("I can ___ the sea from here.",["see","sea","si","c"],0,"See is the verb."),
+  TF("Synonyms are words with opposite meanings.",false,"Synonyms are similar. Antonyms are opposite."),
+  TP("Tap the opposite of “up”:",["down","high","over","above"],[0],"Down is the opposite of up.")]},
+
+{id:"clauses",name:"Clause Cliffs",emoji:"🧗",c:"#7c3aed",c2:"#c4b5fd",badge:"🧗",bname:"Clause Climber",
+ learn:[
+  {i:"✂️",h:"Subject and predicate",p:"The subject is who or what the sentence is about. The predicate says what the subject does.",ex:["Amina | reads a book.","The tall boy | kicked the ball.","Subject = who or what","Predicate = what it does"]},
+  {i:"🧩",h:"Simple, compound and complex sentences",p:"Simple sentences have one idea. Compound sentences join two equal ideas. Complex sentences have a main idea plus an extra idea.",ex:["Simple: Ali ran.","Compound: Ali ran, and Sara walked.","Complex: Ali ran because he was late."]},
+  {i:"🔗",h:"Joining words",p:"Coordinating words join equal clauses. Subordinating words start the extra clause. Relative pronouns link a describing clause to a noun.",ex:["Coordinating: and, but, or, so, yet","Subordinating: because, although, when, if, while, unless","Relative pronouns: who, whom, whose, which"]}],
+ q:[
+  MC("Which sentence is compound?",["I wanted tea, but I drank milk.","I drank milk.","I drank milk because I was thirsty.","When I woke up, I drank milk."],0,"But joins two equal clauses."),
+  MC("Which sentence is complex?",["She smiled because she was happy.","She smiled.","She smiled, and he laughed.","She smiled and waved."],0,"Because starts an extra clause."),
+  MC("In “The little bird sings sweetly.”, the subject is ___.",["The little bird","sings sweetly","sweetly","little"],0,"The subject is who sings."),
+  MC("In “Yusuf reads a book.”, the predicate is ___.",["reads a book","Yusuf","a book","Yusuf reads"],0,"The predicate tells what Yusuf does."),
+  MC("I stayed home ___ it was raining.",["because","but","or","and"],0,"Because gives the reason."),
+  MC("He is tired, ___ he keeps working.",["yet","because","if","unless"],0,"Yet shows a surprising contrast."),
+  MC("The girl ___ won the race is my cousin.",["who","which","whom","whose"],0,"Who refers to a person."),
+  MC("___ it rains, we will stay inside.",["If","But","So","Or"],0,"If starts a condition."),
+  TP("Tap the conjunction:",["We","stayed","home","because","it","rained."],[3],"Because joins the clauses."),
+  SO("Coordinating or subordinating?",["Coordinating","Subordinating"],[["and",0],["because",1],["but",0],["although",1],["or",0],["while",1]],"Clause climber!")],
+ bank:{"coordinating conjunction":["and","but","or","so","yet"],"subordinating conjunction":["because","although","when","if","while","unless"],"relative pronoun":["who","whom","whose","which"]},
+ pairs:[["and","adds"],["but","contrast"],["or","choice"],["because","reason"],["if","condition"],["so","result"]],
+ more:[
+  MC("Which word joins two equal clauses?",["but","because","although","unless"],0,"But is coordinating."),
+  MC("She went out ___ it was cold. (contrast)",["although","because","so","or"],0,"Although shows contrast."),
+  TF("A complex sentence has a main clause and a subordinate clause.",true,"That is the definition."),
+  OR("Build the sentence:",["I","like","tea,","but","he","likes","milk."],"I like tea, but he likes milk."),
+  MC("Which is a complete sentence?",["The dog barked loudly.","Barking loudly at night","Because the dog","The dog in the"],0,"It has a subject and a predicate."),
+  TP("Tap the relative pronoun:",["The","man","who","helped","us","smiled."],[2],"Who links to man.")]},
+
+{id:"voice",name:"Voice Valley",emoji:"🎤",c:"#db2777",c2:"#f9a8d4",badge:"🎤",bname:"Voice Champion",
+ learn:[
+  {i:"🏃",h:"Active voice",p:"In the active voice, the subject does the action.",ex:["Ali kicked the ball.","The cat chased the mouse.","Mum cooked dinner."]},
+  {i:"🔁",h:"Passive voice",p:"In the passive voice, the action happens to the subject. Use a form of be + the past participle.",ex:["The ball was kicked by Ali.","The mouse was chased by the cat.","Dinner was cooked by Mum."]},
+  {i:"💬",h:"Direct and indirect speech",p:"Direct speech repeats the exact words inside quotation marks. Indirect speech tells what was said without quotation marks.",ex:["Direct: Amina said, “I am happy.”","Indirect: Amina said that she was happy.","Quotation marks are only for exact words"]}],
+ q:[
+  MC("Which sentence is passive?",["The cake was baked by Sara.","Sara baked the cake.","Sara is baking.","Sara will bake."],0,"Was baked by shows passive."),
+  MC("Which sentence is active?",["Bilal opened the door.","The door was opened.","The door was opened by Bilal.","The door is opened."],0,"Bilal does the action."),
+  MC("Change to passive: “Ali wrote the letter.”",["The letter was written by Ali.","The letter wrote Ali.","Ali was written by the letter.","The letter is written Ali."],0,"Object becomes the subject."),
+  MC("Change to active: “The window was broken by the boy.”",["The boy broke the window.","The boy was breaking window.","The window broke the boy.","The boy breaks the window."],0,"The boy does the action."),
+  MC("Passive voice uses be + the ___.",["past participle","base verb","-ing form","noun"],0,"For example: was written."),
+  MC("Which sentence is in direct speech?",["She said, “I am tired.”","She said that she was tired.","She said she tired.","She said I am tired."],0,"Direct speech uses quotation marks."),
+  MC("Indirect form of: He said, “I am hungry.”",["He said that he was hungry.","He said that I am hungry.","He said, he was hungry.","He said I’m hungry."],0,"Change I to he and am to was."),
+  TP("Tap the passive verb phrase:",["The","ball","was","kicked","by","Ali."],[2,3],"Was kicked is passive."),
+  SO("Active or passive?",["Active","Passive"],[["Sara cooked rice.",0],["Rice was cooked by Sara.",1],["The dog chased the cat.",0],["The cat was chased.",1],["Ali ate an apple.",0],["An apple was eaten.",1]],"Voice champion!"),
+  OR("Build the passive sentence:",["The","door","was","opened","by","Ali."],"The door was opened by Ali.")],
+ bank:{"active sentence":["Ali ate rice.","Sara sang.","Dogs chase cats.","I opened it."],"passive sentence":["Rice was eaten.","It was opened.","Cats are chased.","Songs were sung."]},
+ pairs:[["Ali ate rice.","Rice was eaten."],["Sara drew it.","It was drawn."],["Mum made tea.","Tea was made."],["Dad fixed it.","It was fixed."],["We saw her.","She was seen."],["I wrote it.","It was written."]],
+ more:[
+  TF("In the passive voice, the subject receives the action.",true,"The ball receives the kick."),
+  MC("“The song was sung by Aisha.” is ___ voice.",["passive","active","direct","future"],0,"Was sung by = passive."),
+  MC("“Aisha sang the song.” is ___ voice.",["active","passive","indirect","perfect"],0,"Aisha does the action."),
+  MC("Direct speech uses ___ marks.",["quotation","question","capital","full"],0,"Quotation marks."),
+  TF("Indirect speech uses quotation marks.",false,"Only direct speech does."),
+  OR("Build the sentence:",["The","lamp","was","broken","by","Omar."],"The lamp was broken by Omar.")]}
 ];
 
 /* Grand Challenge: final boss mixes questions from every world */
@@ -455,7 +685,7 @@ const BADGES=[
  {id:"half",i:"🧭",n:"Half-way!",d:"Finish 5 worlds",f:p=>Object.keys(p.stars).length>=5},
  {id:"all",i:"🏆",n:"World Master",d:"Finish every world and the Grand Challenge",f:p=>Object.keys(p.stars).length>=WORLDS.length},
  {id:"super",i:"🌟",n:"Super Scholar",d:"3 stars in every world",f:p=>WORLDS.every(w=>(p.stars[w.id]||0)>=3)},
- {id:"games",i:"🎮",n:"Game On",d:"Finish a mini-game",f:p=>Object.values(p.done||{}).some(d=>d.pop||d.match||d.tf)},
+ {id:"games",i:"🎮",n:"Game On",d:"Finish a mini-game",f:p=>Object.values(p.done||{}).some(d=>d.pop||d.match||d.tf||d.shoot||d.mole)},
  {id:"cert",i:"🎓",n:"Certified!",d:"Earn a certificate",f:p=>WORLDS.some(w=>complete(p,w))}
 ];
 
@@ -474,6 +704,8 @@ const STAGES=[
  {id:"quiz",n:"Quiz",e:"🎯",d:"Test what you learned"},
  {id:"q2",n:"Sentence Practice",e:"✍️",d:"More sentences to explore"},
  {id:"pop",n:"Bubble Pop",e:"🫧",d:"Pop the right words"},
+ {id:"shoot",n:"Space Shooter",e:"🚀",d:"Blast the right words"},
+ {id:"mole",n:"Whack-a-Mole",e:"🔨",d:"Whack the right words fast"},
  {id:"match",n:"Memory Match",e:"🃏",d:"Find the matching pairs"},
  {id:"tf",n:"Lightning Round",e:"⚡",d:"True or false?"}];
 const stagesOf=w=>w.bank?STAGES:[STAGES[0]];
@@ -488,15 +720,20 @@ function popList(w){const L=Object.keys(w.bank);
 function tfList(w){const L=Object.keys(w.bank);const all=L.flatMap(l=>w.bank[l].map(x=>[x,l]));
  return shuffle(shuffle(all).slice(0,10).map(([x,l],i)=>{const truth=i%2===0;const wl=truth?l:pick(L.filter(y=>y!==l));
   return {t:"tf",q:"“"+x+"” is "+art(wl)+" "+wl+".",a:truth,why:"“"+x+"” is "+art(l)+" "+l+"."}}))}
-function buildList(w,st){return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):tfList(w)}
+function shootList(w){const out=popList(w).map(p=>({t:"shoot",q:p.q.replace("Pop","Shoot"),w:p.w,why:p.why}));
+ shuffle([...(w.q||[]),...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,2).forEach(x=>out.push({t:"shoot",q:x.q,w:x.o.map((t,j)=>[t,j===x.a?1:0]),why:x.why}));return out}
+function moleList(w){return popList(w).slice(0,2).map(p=>({t:"mole",q:p.q.replace("Pop","Whack"),w:p.w,need:5,why:p.why}))}
+function buildList(w,st){return st==="quiz"?w.q:st==="q2"?w.more:st==="pop"?popList(w):st==="shoot"?shootList(w):st==="mole"?moleList(w):tfList(w)}
 
 /* ============ HELPERS ============ */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const pick=a=>a[Math.random()*a.length|0];
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const app=$("#app");
-function view(h){app.innerHTML=h;window.scrollTo(0,0);closeOv()}
+let GT=[];
+function view(h){GT.forEach(clearInterval);GT=[];app.innerHTML=h;window.scrollTo(0,0);closeOv()}
 function closeOv(){const o=$("#ov");o.classList.add("hide");o.innerHTML=""}
 function openOv(h){const o=$("#ov");o.innerHTML=`<div class="modal">${h}</div>`;o.classList.remove("hide");
  o.onclick=e=>{if(e.target===o)closeOv()}}
@@ -589,6 +826,8 @@ function showQ(){
  let body="";
  if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
  else if(q.t==="pop"){Q.popLeft=q.w.filter(x=>x[1]).length;body=`<div class="bubs">${q.w.map((x,i)=>`<button class="bub" data-i="${i}">${esc(x[0])}</button>`).join("")}</div>`}
+ else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
+ else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
  else if(q.t==="tap"){body=`<div class="sent">${q.w.map((x,i)=>`<button class="chip" data-i="${i}">${esc(x)}</button>`).join("")}</div>`}
  else if(q.t==="sort"){Q.items=shuffle(q.i);Q.si=0;body=`<div id="sortbody"></div>`}
@@ -598,13 +837,32 @@ function showQ(){
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
  $("#spk").onclick=()=>say(q.q+(q.t==="tap"?" "+q.w.join(" "):""));
- if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
+ if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
 }
 function wrong(){if(!Q.flag){Q.flag=true;Q.mist++}sfx.no();$("#fb").innerHTML=`<div class="fb b"><span>🦉</span>${pick(OOPS)}</div>`}
 function right(q){if(!Q.flag)Q.xp+=10;Q.done=true;sfx.ok();
  $("#fb").innerHTML=`<div class="fb g"><span>🦉</span><div>${pick(CHEER)}<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()};
  n.scrollIntoView({behavior:"smooth",block:"center"})}
+function bindShoot(q){const ar=$("#arena");
+ app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
+  const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);
+  const a=ar.getBoundingClientRect(),r=b.getBoundingClientRect();
+  requestAnimationFrame(()=>{bu.style.left=(r.left-a.left+r.width/2)+"px";bu.style.bottom=(a.bottom-r.bottom+r.height/2)+"px"});setTimeout(()=>bu.remove(),320);
+  if(q.w[+b.dataset.i][1]){b.classList.add("boom");b.textContent="💥";sfx.tap();Q.popLeft--;
+   if(Q.popLeft<=0){Q.done=true;setTimeout(()=>{Q.done=false;right(q)},450)}}
+  else{b.classList.add("no");setTimeout(()=>b.classList.remove("no"),450);wrong()}})}
+function bindMole(q){const cells=[...app.querySelectorAll(".mcell")];let hits=0;const sp=()=>window.MOLE_MS||850;
+ const clr=c=>{c.classList.remove("up","hit","miss");c.textContent="";c.dataset.ok="";c.dataset.exp="0"};
+ const show=()=>{if(Q.done)return;cells.forEach(c=>{if(c.classList.contains("up")&&Date.now()>+c.dataset.exp)clr(c)});
+  const empty=cells.filter(c=>!c.classList.contains("up")),n=Math.min(empty.length,R(1,2));
+  shuffle(empty).slice(0,n).forEach(c=>{const have=cells.filter(x=>x.dataset.ok==="1").length,ok=Math.random()<(have?.35:.85),it=pick(q.w.filter(x=>!!x[1]===ok));
+   c.textContent=it[0];c.dataset.ok=it[1]?"1":"0";c.dataset.exp=String(Date.now()+sp()*2.4);c.classList.add("up")})};
+ GT.push(setInterval(show,sp()));show();
+ cells.forEach(c=>c.onclick=()=>{if(Q.done||!c.classList.contains("up"))return;
+  if(c.dataset.ok==="1"){hits++;c.classList.add("hit");sfx.tap();$("#mp2").textContent=`Hits: ${hits} / ${q.need}`;setTimeout(()=>clr(c),150);
+   if(hits>=q.need){Q.done=true;GT.forEach(clearInterval);GT=[];setTimeout(()=>{Q.done=false;right(q)},300)}}
+  else{c.classList.add("miss");wrong();setTimeout(()=>clr(c),250)}})}
 function bindTf(q){app.querySelectorAll(".tfb .opt").forEach(b=>b.onclick=()=>{if(Q.done)return;
  if((b.dataset.v==="1")===q.a){b.classList.add("ok");app.querySelectorAll(".tfb .opt").forEach(x=>x.style.pointerEvents="none");right(q)}else{b.classList.add("no");wrong()}})}
 function bindPop(q){app.querySelectorAll(".bub").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("pop"))return;
