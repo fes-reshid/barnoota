@@ -157,6 +157,22 @@ def list_installed_programs(cancel=None, measure=True):
     return programs
 
 
+def is_still_installed(program):
+    """Whether the program's entry is still in the list of installed programs (True when Windows cannot tell)."""
+    if not core.IS_WINDOWS or not program.key:
+        return True
+    for root, view in ((winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_64KEY),
+                       (winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_32KEY), (winreg.HKEY_CURRENT_USER, 0)):
+        try:
+            winreg.CloseKey(winreg.OpenKey(root, program.key, 0, winreg.KEY_READ | view))
+            return True
+        except FileNotFoundError:
+            continue
+        except OSError:
+            return True  # could not look (access, etc.): do not claim it is gone
+    return False
+
+
 def uninstall_program(program):
     """Starts the program's own uninstaller (Windows asks for administrator approval if it needs it)."""
     exe, args = split_command(program.uninstall)
