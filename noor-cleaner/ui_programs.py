@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import time
 from tkinter import ttk
 
 import programs_core as programs
@@ -74,13 +75,58 @@ class ProgramsMixin:
             return
         program = chosen[0]
         if not self.ask(_("Uninstall {name}?").format(name=program.name) + "\n\n"
-                        + _("Its own uninstaller will open. Follow its steps, then press 'Find installed programs' "
-                            "again to refresh the list."), danger=True):
+                        + _("Its own uninstaller will open. Follow its steps; the program disappears from this list "
+                            "by itself when it is gone."), danger=True):
             return
+        self._start_uninstall(program)
+
+    def _start_uninstall(self, program):
+        """Opens the program's own uninstaller, then watches for the program to be gone and drops it from the lists."""
         try:
             programs.uninstall_program(program)
         except Exception as exc:
             self.error(str(exc))
+            return
+        pending = self.__dict__.setdefault("_pending_uninstalls", {})
+        if not pending:
+            self.root.after(3000, self._check_uninstalls)
+        pending[program.key or program.name] = (program, time.monotonic())
+
+    def _check_uninstalls(self):
+        pending = self.__dict__.get("_pending_uninstalls") or {}
+        for key, (program, started) in list(pending.items()):
+            if not programs.is_still_installed(program):
+                del pending[key]
+                self._forget_program(program)
+            elif time.monotonic() - started > 3600:
+                del pending[key]  # an hour is long enough: the user probably cancelled the uninstaller
+        if pending:
+            self.root.after(3000, self._check_uninstalls)
+
+    def _forget_program(self, program):
+        """The program was uninstalled: remove it from the installed and unused lists, and say so."""
+        def same(other):
+            return other is program or (other.key and other.key == program.key) or (
+                other.name == program.name and other.version == program.version)
+        for tree in (self.programs_tree, self.unused_tree):
+            for iid, item in list(tree.items.items()):
+                if same(item):
+                    tree.delete(iid)
+                    del tree.items[iid]
+                    tree.sizes.pop(iid, None)
+        if self.installed_cache:
+            self.installed_cache = [p for p in self.installed_cache if not same(p)]
+            self._owner_cache = None
+            remaining = self.installed_cache
+            self.programs_status.config(text=_("{name} was removed.").format(name=program.name) + "  "
+                                        + _("Installed programs: {count} ({size})").format(
+                                            count=len(remaining), size=human_size(sum(p.size for p in remaining))))
+        else:
+            self.programs_status.config(text=_("{name} was removed.").format(name=program.name))
+        self.unused_status.config(text=_("{name} was removed.").format(name=program.name))
+        if self.startup_tree.get_children("") and not self._job_running():
+            self.load_startup()  # its start-up entry goes with it
+        self.refresh_drives()
 
     def open_program_folder(self):
         chosen = self._selected_items(self.programs_tree)
@@ -244,13 +290,10 @@ class ProgramsMixin:
             return
         program = chosen[0]
         if not self.ask(_("Uninstall {name}?").format(name=program.name) + "\n\n"
-                        + _("Its own uninstaller will open. Follow its steps, then press 'Find unused programs' "
-                            "again to refresh the list."), danger=True):
+                        + _("Its own uninstaller will open. Follow its steps; the program disappears from this list "
+                            "by itself when it is gone."), danger=True):
             return
-        try:
-            programs.uninstall_program(program)
-        except Exception as exc:
-            self.error(str(exc))
+        self._start_uninstall(program)
 
     def open_folder_of(self, tree):
         chosen = self._selected_items(tree)

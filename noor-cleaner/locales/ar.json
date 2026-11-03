@@ -880,5 +880,7 @@
  "Working...": "جارٍ العمل...",
  "{page}: working...": "{page}: جارٍ العمل...",
  "Please wait for the current job to finish, or press Cancel, first.": "يرجى الانتظار حتى تنتهي المهمة الحالية، أو اضغط «إلغاء» أولًا.",
- "Cancelled.": "تم الإلغاء."
+ "Cancelled.": "تم الإلغاء.",
+ "{name} was removed.": "تمت إزالة {name}.",
+ "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "سيُفتح برنامج إلغاء التثبيت الخاص به. اتبع خطواته؛ ويختفي البرنامج من هذه القائمة تلقائيًا بعد إزالته."
 }

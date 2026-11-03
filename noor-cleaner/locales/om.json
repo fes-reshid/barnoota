@@ -880,5 +880,7 @@
  "Working...": "Hojjetaa jira...",
  "{page}: working...": "{page}: hojjetaa jira...",
  "Please wait for the current job to finish, or press Cancel, first.": "Dura hojiin amma jiru hanga xumuramutti eegi, ykn 'Haqi' tuqi.",
- "Cancelled.": "Haqameera."
+ "Cancelled.": "Haqameera.",
+ "{name} was removed.": "{name} haqameera.",
+ "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "Haquun appii mataa isaa ni banama. Tarkaanfii isaa hordofi; appiin yeroo haqamu tarree kana keessaa of-eeggannoodhaan ni bada."
 }
