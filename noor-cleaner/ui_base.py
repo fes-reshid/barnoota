@@ -11,6 +11,7 @@ import os
 import subprocess
 import sys
 import threading
+import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
@@ -19,7 +20,7 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.4.0"
+VERSION = "2.5.0"
 
 
 def set_app_name(name):
@@ -68,6 +69,17 @@ def app_launch_args():
     if getattr(sys, "frozen", False):
         return sys.executable, ""
     return sys.executable, f'"{os.path.abspath(sys.argv[0])}"'
+
+
+def relaunch_as_admin(extra_args=()):
+    """Starts this program again with administrator rights (Windows shows its approval prompt) and returns True
+    when it was started. Returns False when Windows refused or the user said no."""
+    if not core.IS_WINDOWS:
+        return False
+    import ctypes
+    exe, args = app_launch_args()
+    params = " ".join(part for part in (args, *extra_args) if part)
+    return ctypes.windll.shell32.ShellExecuteW(None, "runas", exe, params or None, None, 1) > 32
 
 
 NUMERIC_COLUMNS = ("size", "files", "share", "modified", "deleted", "date", "installed", "pixels")
@@ -276,6 +288,31 @@ class BaseApp:
         if danger:
             return messagebox.askyesno(APP_NAME, message, icon="warning", default="no")
         return messagebox.askyesno(APP_NAME, message)
+
+    def owner_index(self):
+        """Which installed program each file belongs to (the list of programs is read once in a while)."""
+        import ownership
+        import programs_core
+        cached = getattr(self, "_owner_cache", None)
+        if cached and time.monotonic() - cached[0] < 300:
+            return cached[1]
+        found = getattr(self, "installed_cache", None)
+        if found is None and core.IS_WINDOWS:
+            self.root.config(cursor="watch")
+            self.root.update_idletasks()
+            try:
+                found = programs_core.list_installed_programs(measure=False)
+            finally:
+                self.root.config(cursor="")
+        index = ownership.OwnerIndex(found or [])
+        self._owner_cache = (time.monotonic(), index)
+        return index
+
+    def confirm_files(self, title, intro, items, button, danger=True, notes=()):
+        """A pop-up that lists the files, says which program each belongs to, and asks before they are removed.
+        items: [(path, size)]. True when the user confirms."""
+        import ui_confirm
+        return ui_confirm.confirm_files(self, title, intro, items, button, danger, notes)
 
     def _browse_into(self, variable):
         folder = filedialog.askdirectory(title=_("Choose a folder"), initialdir=variable.get() or None)

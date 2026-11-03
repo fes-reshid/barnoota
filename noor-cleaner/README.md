@@ -59,9 +59,14 @@ and shows a small notice if there is more than 300 MB to clean. It never deletes
   [Inno Setup 6](https://jrsoftware.org/isinfo.php) installed it also builds the installer.
 * **Without building:** `pip install pillow pystray`, then `python noor_cleaner.py` or `python noor_guard.py`.
 
-The installer installs for the current user (no administrator prompt). Right-click NoorCleaner >
-**Run as administrator** (or use *Run as admin* in the sidebar) for protected folders, Windows junk,
-disk health details and all-users startup programs.
+The installer installs for the current user (no administrator prompt to install). Both programs always
+start **as administrator** (Windows asks for approval each time): without it they cannot check the whole
+PC, other users' folders, or delete files. Start-up at sign-in (the tray, the junk reminder) uses a
+scheduled task with the highest privileges, because Windows does not start an administrator program from
+the usual start-up list.
+
+Before any file is removed, a pop-up lists the files and says which program (or Windows) each one belongs
+to; files that belong to programs also need a tick saying you understand.
 
 Windows SmartScreen may warn about a new, unsigned app: choose *More info > Run anyway*.
 

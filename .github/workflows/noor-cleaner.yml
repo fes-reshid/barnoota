@@ -50,7 +50,7 @@ jobs:
       - run: python -m pip install pyinstaller==6.11.1 pillow==11.0.0 pystray==0.19.5
       - run: python -m unittest discover -s tests -v
       - name: Build ${{ matrix.name }}.exe
-        run: python -m PyInstaller --noconfirm --onefile --windowed --name ${{ matrix.name }} --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" ${{ matrix.entry }}
+        run: python -m PyInstaller --noconfirm --onefile --windowed --uac-admin --name ${{ matrix.name }} --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" ${{ matrix.entry }}
       - name: Check the exe starts
         shell: pwsh
         run: |
