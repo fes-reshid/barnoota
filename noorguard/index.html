@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="window" aria-hidden="false">
-        <div class="titlebar"><img src="img/logo.svg" alt="">NoorGuard 2.3<span class="controls"><span>&#8212;</span><span>&#9633;</span><span>&#10005;</span></span></div>
+        <div class="titlebar"><img src="img/logo.svg" alt="">NoorGuard 2.5<span class="controls"><span>&#8212;</span><span>&#9633;</span><span>&#10005;</span></span></div>
         <img class="shot" src="img/network.webp" width="1858" height="1229" alt="NoorGuard showing open ports and a possible attack" data-zoom>
       </div>
     </div>
@@ -197,7 +197,6 @@
     </div>
   </section>
 
-
   <section id="how">
     <div class="wrap">
       <div class="section-head reveal">
@@ -240,7 +239,7 @@
         </div>
         <div class="req">
           <h3 data-i18n="req_title">Requirements</h3>
-          <ul class="ticks"><li data-i18n="req1">Windows 10 or 11 (64-bit)</li><li data-i18n="req2">No administrator rights needed to install</li><li data-i18n="req3">Run as administrator to block, fix settings and read failed sign-ins</li><li data-i18n="req4">Internet only for the options you switch on</li></ul>
+          <ul class="ticks"><li data-i18n="req1">Windows 10 or 11 (64-bit)</li><li data-i18n="req2">No administrator rights needed to install</li><li data-i18n="req3">Runs as administrator (Windows asks each time): needed to block, fix settings and read failed sign-ins</li><li data-i18n="req4">Internet only for the options you switch on</li></ul>
         </div>
       </div>
     </div>
@@ -264,7 +263,7 @@
         <details><summary data-i18n="q3">Is it an antivirus?</summary><p data-i18n="a3">Not on its own. It adds its own checks and can run Microsoft Defender's full scan for you, but you should keep Windows Security turned on.</p></details>
         <details><summary data-i18n="q4">Does it work in Arabic and Afaan Oromoo?</summary><p data-i18n="a4">Yes. Choose the language when you install, or later in Settings. The translations are new, so corrections are welcome.</p></details>
         <details><summary data-i18n="q5">Does it send my data anywhere?</summary><p data-i18n="a5">No, unless you switch on an option that needs the internet. The country lookup sends only an attacker's public address to ipwho.is, and the password check sends only the first 5 characters of a fingerprint (hash) to the Have I Been Pwned service. Both are off or on request.</p></details>
-        <details><summary data-i18n="q6">Do I need administrator rights?</summary><p data-i18n="a6">To install, no. To block a port or address, switch protections on, change the hosts file or read the failed sign-in log, yes. NoorGuard tells you when it is not running as administrator and offers to restart as one.</p></details>
+        <details><summary data-i18n="q6">Do I need administrator rights?</summary><p data-i18n="a6">NoorGuard always runs as administrator, so Windows asks for your approval each time it starts. You do not need administrator rights to install it. It needs them to block a port or address, switch protections on, change the hosts file or read the failed sign-in log.</p></details>
         <details><summary data-i18n="q8">Does it protect me if the window is closed?</summary><p data-i18n="a8">Yes, if you switched on live protection: closing the window keeps NoorGuard in the tray, and it can start with Windows. It cannot protect a PC while the program is not running.</p></details>
         <details><summary data-i18n="q7">How do I uninstall it?</summary><p data-i18n="a7">Like any app: Windows Settings, then Apps, then NoorGuard, then Uninstall.</p></details>
       </div>
@@ -398,7 +397,7 @@ const T = {
   "download_note": "قد يقول ويندوز «Windows protected your PC» لأن التطبيق جديد وغير موقّع بعد. انقر «More info» ثم «Run anyway».",
   "req1": "ويندوز 10 أو 11 (64 بت)",
   "req2": "لا حاجة إلى صلاحيات المسؤول للتثبيت",
-  "req3": "شغّله كمسؤول للحظر وإصلاح الإعدادات وقراءة محاولات الدخول الفاشلة",
+  "req3": "يعمل كمسؤول (يطلب ويندوز موافقتك كل مرة): لازم للحظر وإصلاح الإعدادات وقراءة محاولات الدخول الفاشلة",
   "req4": "الإنترنت فقط للخيارات التي تفعّلها",
   "q1": "هل نور جارد مجاني؟",
   "a1": "نعم. لا حساب ولا اشتراك ولا إعلانات داخل التطبيق.",
@@ -409,7 +408,7 @@ const T = {
   "q5": "هل يرسل بياناتي إلى أي مكان؟",
   "a5": "لا، ما لم تفعّل خيارًا يحتاج إلى الإنترنت. بحث الدولة يرسل فقط عنوان المهاجم العام إلى ipwho.is، وفحص كلمة المرور يرسل فقط أول 5 خانات من بصمتها (hash) إلى خدمة Have I Been Pwned. وكلاهما مُعطّل أو عند الطلب.",
   "q6": "هل أحتاج إلى صلاحيات المسؤول؟",
-  "a6": "للتثبيت لا. لحظر منفذ أو عنوان أو تفعيل الحمايات أو تغيير ملف hosts أو قراءة سجل محاولات الدخول الفاشلة نعم. ينبّهك نور جارد عندما لا يعمل كمسؤول ويعرض إعادة التشغيل كمسؤول.",
+  "a6": "يعمل نور جارد دائمًا كمسؤول، لذا يطلب ويندوز موافقتك في كل مرة يبدأ فيها. لا تحتاج إلى صلاحيات المسؤول لتثبيته. لكنه يحتاجها لحظر منفذ أو عنوان أو تفعيل الحمايات أو تغيير ملف hosts أو قراءة سجل محاولات الدخول الفاشلة.",
   "q8": "هل يحميني إذا أُغلقت النافذة؟",
   "a8": "نعم، إذا فعّلت الحماية المباشرة: إغلاق النافذة يُبقي نور جارد في منطقة الإشعارات، ويمكنه البدء مع ويندوز. ولا يستطيع حماية الجهاز عندما لا يكون البرنامج قيد التشغيل.",
   "more_title": "من نورسوفت أيضًا",
@@ -524,7 +523,7 @@ const T = {
   "download_note": "Windows \"Windows protected your PC\" jechuu danda'a sababni isaa appiin haaraa fi hin mallatteeffamne. \"More info\", achiis \"Run anyway\" tuqi.",
   "req1": "Windows 10 ykn 11 (64-bit)",
   "req2": "Fe'uuf mirgi bulchaa hin barbaachisu",
-  "req3": "Dhorkuu, qindaa'ina suphuu fi yaalii seensa kufe dubbisuuf akka bulchaatti hojjechiisi",
+  "req3": "Akka bulchaatti hojjeta (Windows yeroo hundaa gaafata): dhorkuu, qindaa'ina suphuu fi yaalii seensa kufe dubbisuuf barbaachisa",
   "req4": "Interneetiin filannoo ati banuuf qofa",
   "q1": "NoorGuard bilisaa dhaa?",
   "a1": "Eeyyee. Akaawuntiin, kaffaltiin ykn beeksisni appii keessa hin jiru.",
@@ -535,7 +534,7 @@ const T = {
   "q5": "Daataa koo bakka kamittuu ergaa?",
   "a5": "Lakki, filannoo interneetii barbaadu yoo banne malee. Barbaachi biyyaa teessoo ifaa weeraraa qofa gara ipwho.is erga, sakatta'iinsi jecha icciitii arfii 5 jalqabaa mallattoo (hash) qofa tajaajila Have I Been Pwned'tti erga. Lamaanuu cufaa ykn gaaffiin qofa.",
   "q6": "Mirga bulchaa nan barbaadaa?",
-  "a6": "Fe'uuf hin barbaachisu. Poortii ykn teessoo dhorkuuf, eegumsa banuuf, faayilii hosts jijjiiruuf ykn galmee seensa kufe dubbisuuf ni barbaachisa. NoorGuard akka bulchaatti yeroo hin hojjenne sitti himee akka bulchaatti irra deebi'ee jalqabuu dhiyeessa.",
+  "a6": "NoorGuard yeroo hundaa akka bulchaatti hojjeta, kanaaf Windows yeroo hundaa jalqabu eeyyama kee gaafata. Fe'uuf mirga bulchaa hin barbaadu. Poortii ykn teessoo dhorkuuf, eegumsa banuuf, faayilii hosts jijjiiruuf ykn galmee seensa kufe dubbisuuf ni barbaada.",
   "q8": "Foddaan yoo cufame na eegaa?",
   "a8": "Eeyyee, eegumsa yeroo dhugaa yoo bante: foddaa cufuun NoorGuard tray keessa akka jiraatu godha, Windows waliin jalqabuus danda'a. Sagantaan yeroo hin hojjetin kompiitara eegu hin danda'u.",
   "more_title": "Noorsoft irraa kan biraa",
