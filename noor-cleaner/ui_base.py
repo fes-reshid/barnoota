@@ -20,7 +20,7 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.5.0"
+VERSION = "2.6.0"
 
 
 def set_app_name(name):

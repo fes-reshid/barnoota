@@ -59,11 +59,13 @@ and shows a small notice if there is more than 300 MB to clean. It never deletes
   [Inno Setup 6](https://jrsoftware.org/isinfo.php) installed it also builds the installer.
 * **Without building:** `pip install pillow pystray`, then `python noor_cleaner.py` or `python noor_guard.py`.
 
-The installer installs for the current user (no administrator prompt to install). Both programs always
-start **as administrator** (Windows asks for approval each time): without it they cannot check the whole
-PC, other users' folders, or delete files. Start-up at sign-in (the tray, the junk reminder) uses a
-scheduled task with the highest privileges, because Windows does not start an administrator program from
-the usual start-up list.
+The installer installs for the current user (no administrator prompt to install). When a program starts it
+asks whether to **run as administrator (recommended) or as a standard user**, and can remember the answer
+(change it any time in Settings). Administrator rights let it check the whole PC, other users' folders and
+delete files Windows protects; a standard user only sees and changes what belongs to them, and the programs
+say so when an action needs more. Start-up at sign-in (the tray, the junk reminder) is a scheduled task that
+runs with the highest privileges only when administrator was chosen, because Windows does not start an
+administrator program from the usual start-up list.
 
 Before any file is removed, a pop-up lists the files and says which program (or Windows) each one belongs
 to; files that belong to programs also need a tick saying you understand.

@@ -54,6 +54,17 @@ class SettingsMixin:
         self._button(self._row(language, pady=(px(12), 0)), _("Save and restart NoorCleaner"), self.save_language,
                      style="Primary.TButton")
 
+        run = self._card(view, _("How to run"), fill="x", **self._gap())
+        self._text(run, _("Administrator rights let {name} check the whole PC, every user's folders, and delete files "
+                          "Windows protects. A standard user only sees what belongs to them.").format(
+                              name=self.edition.name), pady=(0, px(8)))
+        self.run_mode_var = tk.StringVar(value=self.config.get("run_mode") or "ask")
+        row = self._row(run)
+        for value, label in (("ask", _("Ask me each time")), ("admin", _("Always as administrator")),
+                             ("standard", _("Always as a standard user"))):
+            ttk.Radiobutton(row, text=label, value=value, variable=self.run_mode_var, style="Card.TRadiobutton",
+                            command=self.save_run_mode).pack(side=self.L, padx=self.pad(0, px(28)))
+
         effects = self._card(view, _("Scan sound"), fill="x", **self._gap())
         self.sound_var = tk.BooleanVar(value=bool(self.config.get("scan_sound", True)))
         ttk.Checkbutton(effects, text=_("Play soft computer sounds while scanning"), variable=self.sound_var,
@@ -120,6 +131,14 @@ class SettingsMixin:
             reminder.set_tray_autostart(on, self.edition.run_value)
         except OSError as exc:
             self.error(str(exc))
+
+    def save_run_mode(self):
+        self.config["run_mode"] = self.run_mode_var.get()
+        settings.save(self.config)
+        import threading
+        threading.Thread(target=reminder.ensure_tasks, args=(self.config, self.edition.key),
+                         kwargs={"force": True}, daemon=True).start()  # sign-in tasks follow the choice
+        self.info(_("Saved. It applies the next time {name} starts.").format(name=self.edition.name))
 
     def save_sound(self):
         on = self.sound_var.get()

@@ -60,9 +60,10 @@ Source: "..\dist\{#AppName}.exe"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppName}.exe"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppName}.exe"; Tasks: desktopicon
 
-; NoorCleaner and NoorGuard always run as administrator, and Windows does not start such a program from the
-; Run key at sign-in. So the sign-in choices (tray, reminder) are left in installer.txt (see the [Code] section)
-; and the program creates its own scheduled task the first time it runs. Nothing is written to the registry here.
+; The program asks at start-up whether to run as administrator or as a standard user, and Windows does not start an
+; administrator program from the Run key at sign-in. So the sign-in choices (tray, reminder) are left in installer.txt
+; (see the [Code] section) and the program creates its own scheduled task the first time it runs. Nothing is written
+; to the registry here.
 
 [Run]
 Filename: "{app}\{#AppName}.exe"; Description: "Open {#AppName}"; Flags: nowait postinstall skipifsilent shellexec
