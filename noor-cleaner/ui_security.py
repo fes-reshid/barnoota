@@ -423,10 +423,13 @@ class SecurityMixin:
 
         def work():
             try:
-                paths = sec.find_program_files(folders)
+                paths = sec.find_program_files(folders, cancel=self.current_cancel())
                 self.events.put(("sec_sig_progress", 0, len(paths)))
                 result = {}
+                cancel = self.current_cancel()
                 for start in range(0, len(paths), 120):
+                    if cancel is not None and cancel.is_set():
+                        break
                     result.update(sec.check_signatures(paths[start:start + 120]))
                     self.events.put(("sec_sig_progress", min(start + 120, len(paths)), len(paths)))
                 self.events.put(("sec_sigs", paths, result, None))

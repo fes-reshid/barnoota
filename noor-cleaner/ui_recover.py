@@ -251,7 +251,7 @@ class RecoverMixin:
         clear_tree(self.points_tree)
         self.points_status.config(text=_("Comparing with the restore point..."))
         self._start_worker(lambda: self.events.put(("missing_done", recovery.find_missing_files(
-            snapshot, folder,
+            snapshot, folder, cancel=self.current_cancel(),
             on_progress=lambda s, m: self.events.put(("points_progress", s, m)) if s % 200 < 20 else None))))
 
     def _points_progress(self, seen, missing):

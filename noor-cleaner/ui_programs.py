@@ -51,7 +51,8 @@ class ProgramsMixin:
         if self._busy():
             return
         self.programs_status.config(text=_("Looking..."))
-        self._start_worker(lambda: self.events.put(("programs_done", programs.list_installed_programs())))
+        self._start_worker(lambda: self.events.put(("programs_done", programs.list_installed_programs(
+            self.current_cancel()))))
 
     def _show_programs(self, found):
         self.installed_cache = found
@@ -206,7 +207,7 @@ class ProgramsMixin:
         cached = self.installed_cache
 
         def work():
-            found = cached if cached is not None else programs.list_installed_programs()
+            found = cached if cached is not None else programs.list_installed_programs(self.current_cancel())
             ua = usage.read_userassist()
             history = usage.read_prefetch()
             report = usage.unused_report(found, ua, history, months)

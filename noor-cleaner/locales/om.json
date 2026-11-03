@@ -876,5 +876,9 @@
  "Always as administrator": "Yeroo hundaa akka bulchaatti",
  "Always as a standard user": "Yeroo hundaa akka fayyadamaa idileetti",
  "Administrator rights let {name} check the whole PC, every user's folders, and delete files Windows protects. A standard user only sees what belongs to them.": "Mirgi bulchaa {name} kompiitara guutuu, foldaroota fayyadamtoota hundaa sakatta'uu fi faayiloota Windows eegu haquu dandeessisa. Fayyadamaan idilee wanta kan isaa ta'e qofa arga.",
- "Saved. It applies the next time {name} starts.": "Kuufameera. {name} yeroo itti aanu yeroo jalqabu hojii irra oola."
+ "Saved. It applies the next time {name} starts.": "Kuufameera. {name} yeroo itti aanu yeroo jalqabu hojii irra oola.",
+ "Working...": "Hojjetaa jira...",
+ "{page}: working...": "{page}: hojjetaa jira...",
+ "Please wait for the current job to finish, or press Cancel, first.": "Dura hojiin amma jiru hanga xumuramutti eegi, ykn 'Haqi' tuqi.",
+ "Cancelled.": "Haqameera."
 }
