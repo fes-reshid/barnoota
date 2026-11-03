@@ -215,7 +215,20 @@ input#nm:focus{border-color:var(--sky)}
 .zkb div{display:flex;gap:4px;width:100%;justify-content:center}
 .zk{flex:1;max-width:40px;min-width:24px;height:42px;border:0;border-radius:8px;background:#115e59;color:#5eead4;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;touch-action:manipulation}
 .zk:active{background:#14b8a6;color:#042f2e}
-.zship{transition:left .15s}.zt.lost{filter:grayscale(1) brightness(.6)}</style>
+.zship{transition:left .15s}.zt.lost{filter:grayscale(1) brightness(.6)}.colbox{background:#0f172a;border-radius:16px;padding:12px;margin:10px 0;color:#fff;text-align:center}
+.colb{position:relative;margin:0 auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:800;font-size:1.7rem;--w:1.3em;--h:1.7em;width:calc(var(--n)*var(--w));height:calc(var(--rw)*var(--h))}
+.cc{position:absolute;width:var(--w);height:var(--h);line-height:var(--h);text-align:center;left:calc(var(--c)*var(--w));top:calc(var(--r)*var(--h));opacity:0;transform:translateY(-10px) scale(.5);transition:all .35s}
+.cc.on{opacity:1;transform:none}
+.cc.ans.on{color:#4ade80}
+.cc.mk{font-size:.55em;color:#fb923c}
+.cc.mk2.on{color:#fb923c}
+.cc.hl{background:rgba(250,204,21,.28);border-radius:8px}
+.ln{position:absolute;border-top:4px solid #fff;left:calc(var(--c1)*var(--w));width:calc((var(--c2) - var(--c1) + 1)*var(--w));top:calc(var(--r)*var(--h) + var(--h)/2);opacity:0;transition:opacity .35s}
+.ln.on{opacity:1}
+.colsay{min-height:4.2em;margin-top:10px;color:#fde68a;font-size:1rem;font-weight:700;line-height:1.35;font-family:inherit}
+.colbtn{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.colbtn button{flex:1;max-width:180px;padding:10px;font-size:.95rem;font-weight:800;background:#334155;color:#fff;border:0;border-radius:12px;cursor:pointer}.colbtn button:active{background:#475569}
+</style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -1215,6 +1228,7 @@ function shootList(w){const out=[],u=[];
   return fromPop()};
  [fromQ(1),fromQ(2),fromPop(),fromQ(4),fromQ(5),fromPop()].forEach(x=>out.push(x));return out}
 function buildLessons(w){const out=[...w.learn];if(!w.quiz)return out;
+ if(w.cfg&&["+","−","×","÷"].includes(w.cfg.op)){const op=w.cfg.op,wi=WORLDS.indexOf(w);LESS={wi,cards:[]};out.splice(1,0,colCard(op,1),colCard(op,2))}
  const ans=q=>q.t==="mcq"?q.o[q.a]:q.t==="inp"?q.v:null;
  const line=q=>{const a=ans(q);if(a===null)return null;return(q.q.includes("▢")?q.q.replace("▢",a):`${q.q} → ${a}`)+"   ✔ "+(q.why||"")};
  const mk=(f,idx)=>idx.map(i=>{try{return line(f(i,8))}catch(e){return null}}).filter(Boolean);
@@ -1332,15 +1346,102 @@ function viewHub(wi){
 }
 
 /* ============ LESSON ============ */
+const PLACE=["ones","tens","hundreds","thousands","ten-thousands","hundred-thousands"];
+function colPlan(op,a,b){
+ const A=String(a),B=String(b),cells=[],lines=[],steps=[];
+ const C=(r,c,t,cls)=>{cells.push({r,c,t,cls:cls||""});return cells.length-1};
+ const Ln=(r,c1,c2)=>{lines.push({r,c1,c2});return lines.length-1};
+ const S=(say,c,l,hi)=>steps.push({say,c:c||[],l:l||[],hi:hi||[]});
+ const dig=(s,i)=>i<s.length?+s[s.length-1-i]:0;
+ if(op==="+"||op==="−"){
+  const L=Math.max(A.length,B.length),n=L+1,col=i=>n-1-i,res=op==="+"?a+b:a-b,R_=String(res);
+  const ta=[...A].map((d,k)=>C(1,col(A.length-1-k),d)),tb=[...B].map((d,k)=>C(2,col(B.length-1-k),d)),o=C(2,0,op);
+  const ln=Ln(3,0,n-1);
+  S(`Write ${a} on top and ${b} underneath. Line up the digits: ones under ones, tens under tens. Draw a line.`,[...ta,...tb,o],[ln]);
+  let carry=0;
+  for(let i=0;i<L;i++){const da=dig(A,i),db=dig(B,i),nm=PLACE[i];const ids=[];let say;
+   if(op==="+"){const s=da+db+carry;say=`${nm[0].toUpperCase()+nm.slice(1)}: ${da} + ${db}${carry?` + ${carry} (carried)`:""} = ${s}.${s>=10?` Write ${s%10} and carry 1 to the next column.`:` Write ${s}.`}`;
+    if(i<R_.length&&!(i===L-1&&s>=10&&false))ids.push(C(4,col(i),String(s%10),"ans"));
+    carry=s>=10?1:0;if(carry&&i<L-1)ids.push(C(0,col(i+1),"1","mk"));}
+   else{const d0=da-carry;let nb=0,r;let t=`${nm[0].toUpperCase()+nm.slice(1)}: `;
+    if(carry)t+=`${da} lent 1 away, so it is ${d0}. `;
+    if(d0<db){nb=1;r=d0+10-db;t+=`${d0} is too small for ${db}, so borrow 1 from the next column: ${d0+10} − ${db} = ${r}.`}else{r=d0-db;t+=`${d0} − ${db} = ${r}.`}
+    say=t;if(i<R_.length)ids.push(C(4,col(i),String(r),"ans"));if(nb&&i<L-1)ids.push(C(0,col(i+1),"−1","mk"));carry=nb}
+   S(say,ids,[],[col(i)])}
+  if(op==="+"&&carry){S(`Bring down the carried 1. Write it on the left.`,[C(4,0,"1","ans")])}
+  S(`The answer is ${res}! ${a} ${op} ${b} = ${res}.`,[]);
+  return{n,rows:5,cells,lines,steps,hiRows:[1,2]}}
+ if(op==="×"&&B.length===1){
+  const P=String(a*b),n=Math.max(A.length+1,P.length)+1,col=i=>n-1-i;
+  const ta=[...A].map((d,k)=>C(1,col(A.length-1-k),d)),o=C(2,0,"×"),tb=C(2,n-1,B),ln=Ln(3,0,n-1);
+  S(`Write ${a} on top and ${b} underneath. Draw a line. We multiply each digit of ${a} by ${b}, starting from the right.`,[...ta,o,tb],[ln]);
+  let carry=0;
+  for(let i=0;i<A.length;i++){const da=dig(A,i),p=da*b+carry,nm=PLACE[i];const ids=[C(4,col(i),String(p%10),"ans")];
+   const say=`${nm[0].toUpperCase()+nm.slice(1)}: ${da} × ${b}${carry?` + ${carry} (carried)`:""} = ${p}. ${p>=10&&i===A.length-1?`This is the last digit, so write all of ${p}.`:`Write ${p%10}${p>=10?` and carry ${Math.floor(p/10)}`:""}.`}`;
+   const last=i===A.length-1;carry=Math.floor(p/10);
+   if(last&&carry>0){ids.pop();ids.push(C(4,col(i),String(p%10),"ans"),C(4,col(i+1),String(carry),"ans"))}
+   else if(carry>0)ids.push(C(0,col(i+1),String(carry),"mk"));
+   S(say,ids,[],[col(i)])}
+  S(`The answer is ${a*b}! ${a} × ${b} = ${a*b}.`,[]);
+  return{n,rows:5,cells,lines,steps,hiRows:[1,2]}}
+ if(op==="×"&&B.length===2&&A.length<=3){
+  const p1=a*dig(B,0),p2=a*dig(B,1)*10,P=String(a*b),n=P.length+1,col=i=>n-1-i;
+  const ta=[...A].map((d,k)=>C(1,col(A.length-1-k),d)),o=C(2,0,"×"),tb=[...B].map((d,k)=>C(2,col(B.length-1-k),d)),l1=Ln(3,0,n-1),l2=Ln(6,0,n-1);
+  S(`Write ${a} on top and ${b} underneath. Draw a line. We multiply by the ones digit first, then by the tens digit.`,[...ta,o,...tb],[l1]);
+  const r1=[...String(p1)].map((d,k)=>C(4,col(String(p1).length-1-k),d,"ans"));
+  S(`Multiply by the ones digit: ${a} × ${dig(B,0)} = ${p1}. Write it under the line.`,r1);
+  const s2=String(p2),r2=[...s2].map((d,k)=>C(5,col(s2.length-1-k),d,k===s2.length-1?"mk2":"ans"));
+  S(`Now multiply by the tens digit: ${a} × ${dig(B,1)} = ${a*dig(B,1)}. Put a 0 in the ones place first (because it is tens), so we write ${p2}.`,r2);
+  const r3=[...P].map((d,k)=>C(7,col(P.length-1-k),d,"ans"));
+  S(`Draw a line and add the two rows: ${p1} + ${p2} = ${a*b}.`,r3,[l2]);
+  S(`The answer is ${a*b}! ${a} × ${b} = ${a*b}.`,[]);
+  return{n,rows:8,cells,lines,steps,hiRows:[]}}
+ if(op==="÷"&&b<10&&b>1){
+  const n=2+A.length,r=3+2*A.length;
+  const dv=C(2,0,B),br=C(2,1,")"),dd=[...A].map((d,k)=>C(2,2+k,d)),ov=Ln(1,2,n-1);
+  S(`${a} ÷ ${b}: write ${b} outside the bracket and ${a} inside. We work from the left, one digit at a time.`,[dv,br,...dd],[ov]);
+  let rem=0,q="",skipped=false;
+  for(let j=0;j<A.length;j++){const d=+A[j],cur=rem*10+d,qd=Math.floor(cur/b),prod=qd*b,newRem=cur-prod;
+   if(q===""&&qd===0){rem=cur;S(`${cur} is smaller than ${b}, so we take the next digit too.`,[],[],[]);skipped=true;continue}
+   q+=qd;const ids=[C(0,2+j,String(qd),"ans")];const ps=String(prod);
+   [...ps].forEach((c,k)=>ids.push(C(3+2*j,2+j-(ps.length-1-k),c,"ans")));
+   ids.push(C(4+2*j,2+j,String(newRem),"ans"));
+   let say=`How many ${b}s in ${cur}? ${qd}, because ${qd} × ${b} = ${prod}. Write ${qd} on top. Subtract: ${cur} − ${prod} = ${newRem}.`;
+   if(j<A.length-1){ids.push(C(4+2*j,3+j,A[j+1],"mk2"));say+=` Bring down the ${A[j+1]}.`}
+   S(say,ids,[],[]);rem=newRem}
+  S(`The answer is ${q}${rem?" remainder "+rem:""}! ${a} ÷ ${b} = ${q}${rem?" r "+rem:""}.`,[]);
+  return{n,rows:r,cells,lines,steps,hiRows:[]}}
+ return null}
+function colNums(op){
+ const ok=(a,b)=>a>=10&&b>=2&&({"+":a<100000&&b<100000,"−":a>b,"×":(b<10||(b>=10&&b<100&&a<1000))&&a*b<1000000,"÷":b<10&&a%b===0&&a<1000}[op]);
+ const w=WORLDS[LESS.wi];
+ for(let t=0;t<80;t++){let q;try{q=w.quiz(R(1,8),8)}catch(e){continue}
+  const m=String(q.q).match(/^(\d+) ([+−×÷]) (\d+) = ▢$/);if(m&&m[2]===op&&ok(+m[1],+m[3]))return[+m[1],+m[3]]}
+ return {"+":[47,38],"−":[83,48],"×":[34,6],"÷":[84,4]}[op]}
+function colCard(op,kind){let [a,b]=colNums(op);
+ if(kind===2&&op==="×"&&WORLDS[LESS.wi].cfg&&b<10&&a<1000&&Math.random()<.0){}
+ const nm={"+":"addition","−":"subtraction","×":"multiplication","÷":"division"}[op];
+ return{i:"🎬",h:`Watch: column ${nm}`,p:op==="÷"?"Long division: work from the left, one digit at a time. Watch the animation and tap Next step to go slowly.":"Put one number on top of the other, draw a line, and work from the RIGHT: ones first, then tens. Watch the animation!",ex:["Tap ▶ Play to watch it again","Tap Next step to go one step at a time",op==="÷"?"Divide, multiply, subtract, bring down!":"Work from the right: ones, tens, hundreds..."],col:{op,a,b}}}
+function colHtml(pl){return `<div class="colbox"><div class="colb" id="colb" style="--n:${pl.n};--rw:${pl.rows}">${pl.lines.map(l=>`<div class="ln" style="--r:${l.r};--c1:${l.c1};--c2:${l.c2}"></div>`).join("")}${pl.cells.map(c=>`<span class="cc ${c.cls}" style="--r:${c.r};--c:${c.c}">${esc(c.t)}</span>`).join("")}</div><div class="colsay" id="colsay"></div><div class="colbtn"><button class="ghost" id="cplay">▶ Play</button><button class="ghost" id="cnext">Next step ⏭</button></div></div>`}
+function bindCol(pl){const box=$("#colb"),sayEl=$("#colsay"),cells=[...box.querySelectorAll(".cc")],lns=[...box.querySelectorAll(".ln")],last=pl.steps.length-1;let k=-1,tm=null;
+ const go=i=>{if(!$("#colb"))return;k=i;cells.forEach(e=>e.classList.remove("on","hl"));lns.forEach(e=>e.classList.remove("on"));
+  for(let s=0;s<=i;s++){pl.steps[s].c.forEach(id=>cells[id].classList.add("on"));pl.steps[s].l.forEach(id=>lns[id].classList.add("on"))}
+  pl.steps[i].hi.forEach(c=>cells.forEach((e,id)=>{if(pl.cells[id].c===c&&pl.hiRows.includes(pl.cells[id].r)&&e.classList.contains("on"))e.classList.add("hl")}));
+  sayEl.textContent=pl.steps[i].say;sfx.tap()};
+ const stop=()=>{if(tm){clearInterval(tm);tm=null}$("#cplay").textContent="▶ Play"};
+ const play=()=>{stop();if(k>=last)k=-1;$("#cplay").textContent="⏸ Pause";go(k+1);tm=setInterval(()=>{if(k>=last){stop();$("#cplay").textContent="↺ Replay";return}go(k+1)},2600);GT.push(tm)};
+ $("#cplay").onclick=()=>{tm?stop():play()};
+ $("#cnext").onclick=()=>{stop();go(k>=last?0:k+1)};
+ GT.push(setTimeout(()=>{if($("#colb"))play()},500))}
 function viewLesson(wi,ci){
- const w=WORLDS[wi],cards=lessonCards(wi,ci),c=cards[ci],last=ci===cards.length-1;
+ const w=WORLDS[wi],cards=lessonCards(wi,ci),c=cards[ci],last=ci===cards.length-1,pl=c.col?colPlan(c.col.op,c.col.a,c.col.b):null;
  view(`<div class="qhead"><button class="x" id="back" aria-label="Back">✕</button><div class="bar"><i style="width:${(ci+1)/(cards.length+1)*100}%"></i></div></div>
  <div class="card lesson" style="--c:${w.c}"><div class="ico">${c.i}</div><h2>${esc(c.h)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></h2>
- <p>${esc(c.p)}</p><ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>
+ <p>${esc(c.p)}</p>${pl?colHtml(pl):""}<ul class="exl">${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>
  <p style="font-size:.9rem;opacity:.7;text-align:center">👆 Tap an example to hear it</p>
  <div class="dotsrow">${cards.map((_,i)=>`<i class="${i===ci?"on":""}"></i>`).join("")}</div></div>
  <div style="display:flex;gap:10px">${ci?`<button class="big ghost" id="prev">◀ Back</button>`:""}<button class="big" id="nx">${last?"Play the quiz! 🎮":"Next ▶"}</button></div>`);
- $("#back").onclick=()=>viewHub(wi);$("#spk").onclick=()=>say(c.h+". "+c.p+" "+c.ex.join(". "));hearable(app);
+ $("#back").onclick=()=>viewHub(wi);$("#spk").onclick=()=>say(c.h+". "+c.p+" "+c.ex.join(". "));hearable(app);if(pl)bindCol(pl);
  if($("#prev"))$("#prev").onclick=()=>viewLesson(wi,ci-1);
  $("#nx").onclick=()=>{sfx.tap();last?startQuiz(wi,"quiz"):viewLesson(wi,ci+1)};
 }
