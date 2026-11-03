@@ -62,7 +62,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.scanner = None
         self.scan_thread = None
         self.worker = None            # background job other than the scan
-        self.events = queue.Queue()
+        self.events = ui_base.JobQueue()
         self.handlers = {}            # event kind -> method, filled in as pages are built
         self.all_files = []           # FileEntry for every file seen (appended by the scan thread)
         self.findings = {}            # path -> Finding
@@ -148,6 +148,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.content.pack(side=self.L, fill="both", expand=True)
         self.content.rowconfigure(0, weight=1)
         self.content.columnconfigure(0, weight=1)
+        self._build_job_strip()
 
         self.handlers.update({"finding": self._add_finding, "status": self._set_status, "done": self._scan_done,
                               "junk_size": self._show_junk_size, "junk_done": self._junk_done,
@@ -182,6 +183,35 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
             self._privacy_view()
         self._quarantine_view()
         self._settings_view()
+
+    def _build_job_strip(self):
+        """A bar under the pages that shows while something is running, with a Cancel button."""
+        px = self.theme.px
+        self.job_strip = tk.Frame(self.content, bg=theme.SURFACE_2, highlightthickness=1,
+                                  highlightbackground=theme.LINE)
+        inner = tk.Frame(self.job_strip, bg=theme.SURFACE_2)
+        inner.pack(fill="x", padx=px(18), pady=px(8))
+        self.job_bar = ttk.Progressbar(inner, mode="indeterminate", length=px(120), style="Green.Horizontal.TProgressbar")
+        self.job_bar.pack(side=self.L, padx=self.pad(0, px(14)))
+        self.job_label = tk.Label(inner, text="", bg=theme.SURFACE_2, fg=theme.INK, font=(theme.FONT, 10),
+                                  anchor="w", justify=self.JUSTIFY)
+        self.job_label.pack(side=self.L, fill="x", expand=True)
+        ttk.Button(inner, text=_("Cancel"), style="Danger.TButton", command=self.cancel_job).pack(side=self.R)
+        self._job_shown = False
+
+    def _update_job_strip(self):
+        running = self._job_running()
+        if running and not self._job_shown:
+            self.job_strip.grid(row=1, column=0, sticky="ew")
+            self.job_bar.start(12)
+            self._job_shown = True
+        elif not running and self._job_shown:
+            self.job_strip.grid_remove()
+            self.job_bar.stop()
+            self._job_shown = False
+        if running:
+            page = self.nav_titles.get(getattr(self.worker, "page", None) or ("scan" if self.scan_thread else None), "")
+            self.job_label.config(text=_("{page}: working...").format(page=page) if page else _("Working..."))
 
     def _worker_error(self, message):
         self.warn(_("Something went wrong:") + "\n\n" + message)
@@ -660,6 +690,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
                     self._update_eta(elapsed, scanned)
             self.side_status.config(text=_("Scanning... {files} files  ·  {minutes}m {seconds}s").format(
                 files=f"{self.scanner.files_seen:,}", minutes=elapsed // 60, seconds=f"{elapsed % 60:02d}"))
+        self._update_job_strip()
         self.root.after(150, self.poll)
 
     def _add_finding(self, finding):
@@ -809,7 +840,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         def work():
             for cat in self.junk:
                 try:
-                    size, files = storage.measure_junk(cat)
+                    size, files = storage.measure_junk(cat, self.current_cancel())
                 except OSError:
                     size, files = 0, 0
                 self.events.put(("junk_size", cat.key, size, files))
@@ -870,7 +901,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
             freed = deleted = skipped = 0
             for cat in chosen:
                 try:
-                    f, d, s = storage.clean_junk(cat)
+                    f, d, s = storage.clean_junk(cat, self.current_cancel())
                 except OSError:
                     continue
                 freed, deleted, skipped = freed + f, deleted + d, skipped + s
@@ -974,7 +1005,8 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.dup_status.config(text=_("Comparing files..."))
         clear_tree(self.dup_tree)
         self._start_worker(lambda: self.events.put(("dup_done", storage.find_duplicates(
-            files, on_progress=lambda d, t: self.events.put(("dup_progress", d, t)) if d % 50 == 0 else None))))
+            files, cancel=self.current_cancel(),
+            on_progress=lambda d, t: self.events.put(("dup_progress", d, t)) if d % 50 == 0 else None))))
 
     def _dup_progress(self, done, total):
         self.dup_status.config(text=_("Comparing files... {done} of {total} size groups").format(
@@ -1012,7 +1044,8 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.photo_status.config(text=_("Looking at your photos..."))
         clear_tree(self.photo_tree)
         self._start_worker(lambda: self.events.put(("photos_done", photos.find_similar_photos(
-            files, on_progress=lambda d, t: self.events.put(("photo_progress", d, t))))))
+            files, cancel=self.current_cancel(),
+            on_progress=lambda d, t: self.events.put(("photo_progress", d, t))))))
 
     def _photo_progress(self, done, total):
         self.photo_status.config(text=_("Looking at your photos... {done} of {total}").format(

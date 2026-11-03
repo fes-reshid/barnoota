@@ -232,7 +232,8 @@ class PrivacyMixin:
         def work():
             try:
                 done, problems = privacy.shred_paths(
-                    paths, passes, on_progress=lambda d, t: self.events.put(("priv_shred_progress", d, t)))
+                    paths, passes, cancel=self.current_cancel(),
+                    on_progress=lambda d, t: self.events.put(("priv_shred_progress", d, t)))
             except privacy.ShredError as exc:
                 self.events.put(("priv_shred", 0, [str(exc)], ""))
                 return

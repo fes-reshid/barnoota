@@ -8,6 +8,7 @@ for pack sides, self.W/self.E for anchors and self.col() for grid columns.
 """
 
 import os
+import queue
 import subprocess
 import sys
 import threading
@@ -20,7 +21,7 @@ import scanner_core as core
 from i18n import _
 
 APP_NAME = "NoorCleaner"
-VERSION = "2.6.0"
+VERSION = "2.6.1"
 
 
 def set_app_name(name):
@@ -142,6 +143,16 @@ def clear_tree(tree):
     tree.items.clear()
 
 
+class JobQueue(queue.Queue):
+    """The window's event queue. A background job that was cancelled can no longer report anything: its late
+    results are dropped here, so they cannot appear on a page the user has already moved on from."""
+
+    def put(self, item, block=True, timeout=None):
+        if getattr(threading.current_thread(), "cancelled", False):
+            return
+        super().put(item, block, timeout)
+
+
 class BaseApp:
     """Layout and dialog helpers shared by every page."""
 
@@ -257,21 +268,64 @@ class BaseApp:
 
     # ------------------------------------------------------------------ background jobs
 
+    def _job_running(self):
+        return bool(self.scan_thread and self.scan_thread.is_alive() or self.worker and self.worker.is_alive())
+
     def _busy(self):
-        if self.scan_thread and self.scan_thread.is_alive() or self.worker and self.worker.is_alive():
-            self.info(_("Please wait for the current job to finish (or press Stop) first."))
+        if self._job_running():
+            self.info(_("Please wait for the current job to finish, or press Cancel, first."))
             return True
         return False
 
     def _start_worker(self, work):
-        """Runs work() on a background thread; it reports back with self.events.put((kind, ...))."""
+        """Runs work() on a background thread; it reports back with self.events.put((kind, ...)).
+        The job can be cancelled with the Cancel button: engines that accept a `cancel` event get
+        self.current_cancel(), and anything a cancelled job reports later is dropped."""
         def run():
             try:
                 work()
             except Exception as exc:  # never let a background job fail silently
                 self.events.put(("worker_error", str(exc)))
-        self.worker = threading.Thread(target=run, daemon=True)
-        self.worker.start()
+        thread = threading.Thread(target=run, daemon=True)
+        thread.cancelled = False
+        thread.cancel_event = threading.Event()
+        thread.page = getattr(self, "current_view", None)
+        self.worker = thread
+        thread.start()
+
+    @staticmethod
+    def current_cancel():
+        """The cancel event of the background job this code is running in (None outside a job)."""
+        return getattr(threading.current_thread(), "cancel_event", None)
+
+    def cancel_job(self):
+        """Stops what is running: the scan stops itself; any other job is told to stop, and whatever it still
+        reports is ignored, so the window is free again at once."""
+        if self.scan_thread and self.scan_thread.is_alive():
+            self.stop_scan()
+        worker = self.worker
+        if worker and worker.is_alive():
+            worker.cancelled = True
+            worker.cancel_event.set()
+            self.worker = None
+            self._mark_cancelled(getattr(worker, "page", None))
+
+    def _mark_cancelled(self, page):
+        """Pages show 'Looking...' style status text while a job runs: replace it, since no result will come."""
+        view = self.views.get(page)
+        if view is None:
+            return
+        stack = [view]
+        while stack:
+            widget = stack.pop()
+            stack.extend(widget.winfo_children())
+            if isinstance(widget, ttk.Label):
+                try:
+                    text = str(widget.cget("text"))
+                except tk.TclError:
+                    continue
+                if text.rstrip().endswith("...") and len(text) < 120:
+                    widget.config(text=_("Cancelled."))
 
     # ------------------------------------------------------------------ dialogs
 
