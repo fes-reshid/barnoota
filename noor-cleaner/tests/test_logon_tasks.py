@@ -9,14 +9,18 @@ import reminder  # noqa: E402
 class LogonTaskTests(unittest.TestCase):
     def test_creating_and_removing_a_task(self):
         calls = []
-        self.assertTrue(reminder.logon_task("NoorGuard tray", "--tray", True, runner=lambda a: calls.append(a) or 0))
+        self.assertTrue(reminder.logon_task("NoorGuard tray", "--tray", True, runner=lambda a: calls.append(a) or 0, elevated=True))
         args = calls[0]
         self.assertEqual(args[:2], ["/create", "/tn"])
         self.assertEqual(args[2], "NoorGuard tray")
         self.assertTrue(args[4].endswith("--tray"))
         for expected in ("/sc", "onlogon", "/rl", "highest", "/f"):
             self.assertIn(expected, args)
-        self.assertFalse(reminder.logon_task("x", "--tray", True, runner=lambda a: 1))  # refused: caller falls back
+        self.assertFalse(reminder.logon_task("x", "--tray", True, runner=lambda a: 1, elevated=True))  # refused
+        calls.clear()
+        reminder.logon_task("y", "--tray", True, runner=lambda a: calls.append(a) or 0, elevated=False)
+        self.assertIn("limited", calls[0])  # a standard user's task never asks for more rights
+        self.assertNotIn("highest", calls[0])
         calls.clear()
         self.assertTrue(reminder.logon_task("x", "--tray", False, runner=lambda a: calls.append(a) or 0))
         self.assertEqual(calls[0], ["/delete", "/tn", "x", "/f"])

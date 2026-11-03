@@ -16,7 +16,7 @@ import sys
 import threading
 import time
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import filedialog, messagebox, ttk
 
 import cleaner_core as storage
 import editions
@@ -28,6 +28,7 @@ import scanner_core as core
 import settings
 import theme
 import tray
+import ui_runmode
 from i18n import _
 import ui_base
 from ui_base import (VERSION, BaseApp, clear_tree, human_size, is_admin, make_tree, open_location, share_text)
@@ -1362,8 +1363,6 @@ def main(edition=editions.CLEANER):
         return
     if edition.key == "cleaner" and "--tray" in sys.argv:
         return  # NoorCleaner 2.2 could watch the network from the tray; that is NoorGuard's job now
-    if core.IS_WINDOWS and not is_admin() and ui_base.relaunch_as_admin(sys.argv[1:]):
-        return  # the installed program asks for administrator rights itself; this is for a copy run from source
     if core.IS_WINDOWS:
         try:
             import ctypes
@@ -1381,7 +1380,27 @@ def main(edition=editions.CLEANER):
         config["language"] = choose_language_first_run(root, edition.name)
         settings.save(config)
     i18n.set_language(config["language"])
-    NoorApp(root, config, edition, start_hidden="--tray" in sys.argv)
+    background = "--tray" in sys.argv
+    action = ui_runmode.start_action(config.get("run_mode"), is_admin() or not core.IS_WINDOWS, background)
+    if action == "ask":
+        answer = ui_runmode.ask_run_mode(root, edition.name, theme.get_style(root))
+        if answer is None:
+            root.destroy()
+            return
+        choice, remember = answer
+        if remember:
+            config["run_mode"] = choice
+            settings.save(config)
+        action = "elevate" if choice == ui_runmode.ADMIN else "run"
+    if action == "elevate":
+        if ui_base.relaunch_as_admin(sys.argv[1:]):
+            root.destroy()
+            return
+        messagebox.showinfo(edition.name, _("Windows did not give administrator rights, so {name} will run as a "
+                                            "standard user this time.").format(name=edition.name))
+    for child in root.winfo_children():
+        child.destroy()  # nothing may be left from the question
+    NoorApp(root, config, edition, start_hidden=background)
     if core.IS_WINDOWS:  # the sign-in tasks the settings ask for, created in the background (this is slow-ish)
         import reminder
         threading.Thread(target=reminder.ensure_tasks, args=(config, edition.key), daemon=True).start()

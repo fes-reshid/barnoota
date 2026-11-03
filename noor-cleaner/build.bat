@@ -12,7 +12,7 @@ exit /b 0
 
 :build
 for /f "tokens=1-3 delims=:" %%A in ("%~1") do (set NAME=%%A& set ENTRY=%%B& set KEY=%%C)
-python -m PyInstaller --noconfirm --onefile --windowed --uac-admin --name %NAME% --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" %ENTRY% || exit /b 1
+python -m PyInstaller --noconfirm --onefile --windowed --name %NAME% --hidden-import pystray._win32 --icon assets\icon.ico --add-data "signatures.txt;." --add-data "assets\icon.ico;assets" --add-data "locales;locales" %ENTRY% || exit /b 1
 set ISCC="%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
 if exist %ISCC% (
   for /f %%V in ('python -c "import ui_base; print(ui_base.VERSION)"') do set VERSION=%%V

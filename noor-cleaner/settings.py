@@ -17,6 +17,7 @@ DEFAULTS = {
     "last_reminder": 0,        # unix time the reminder last ran
     "old_download_days": 90,
     "scan_sound": True,        # soft sounds while scanning
+    "run_mode": "ask",         # ask, admin or standard: how to start (see ui_runmode.py)
     "live_monitor": False,     # watch for network attacks while the app is open
     "country_lookup": False,   # ask an online service which country an attacker is in (opt-in)
     "router_password_changed": "",  # date the user ticked "I changed my router password"
@@ -81,3 +82,12 @@ def save(data):
     os.replace(tmp, SETTINGS_FILE)
     if loaded is not None:
         data.loaded = {k: data.get(k, v) for k, v in DEFAULTS.items()}
+
+
+def run_mode():
+    """The saved 'run as' choice (ask, admin or standard), read straight from the file."""
+    try:
+        with open(SETTINGS_FILE, encoding="utf-8") as f:
+            return json.load(f).get("run_mode") or "ask"
+    except (OSError, ValueError, AttributeError):
+        return "ask"
