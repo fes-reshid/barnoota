@@ -18,6 +18,12 @@ window.DI_BOOKS = {
     title: "Seeraa Quest, Book One", sub: "From Arabia Before Islam to the First Revelation",
     cover: "seeraa-quest-book-1.webp", shape: "tall", amazon: ""
   },
+  "seeraa-2": { title: "Seeraa Quest, Book Two", sub: "From the First Believers to the First Pledge of 'Aqabah", cover: "seeraa-quest-book-2.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
+  "seeraa-3": { title: "Seeraa Quest, Book Three", sub: "From the Second Pledge to the New Home in Madinah", cover: "seeraa-quest-book-3.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
+  "seeraa-4": { title: "Seeraa Quest, Book Four", sub: "From the Battle of Badr to the Battle of Uhud", cover: "seeraa-quest-book-4.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
+  "seeraa-5": { title: "Seeraa Quest, Book Five", sub: "From the Days After Uhud to the Battle of the Trench", cover: "seeraa-quest-book-5.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
+  "seeraa-6": { title: "Seeraa Quest, Book Six", sub: "From the Treaty of Hudaybiyah to the Opening of Makkah", cover: "seeraa-quest-book-6.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
+  "seeraa-7": { title: "Seeraa Quest, Book Seven", sub: "From Hunayn to the Farewell Pilgrimage", cover: "seeraa-quest-book-7.webp", shape: "tall", preview: { pages: 8, total: 74 }, amazon: "" },
   "moonlight-1": { title: "From Adam to Ibrahim", series: "Moonlight Stories of the Prophets · Book 1", cover: "moonlight-stories-book-1.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-2": { title: "Ibrahim's Family", series: "Moonlight Stories of the Prophets · Book 2", cover: "moonlight-stories-book-2.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
   "moonlight-3": { title: "Yusuf and His Dream", series: "Moonlight Stories of the Prophets · Book 3", cover: "moonlight-stories-book-3.webp", shape: "square", preview: { pages: 7, total: 26 }, amazon: "" },
