@@ -224,7 +224,7 @@
           <ul>
             <li data-i18n="h1">Nothing is deleted unless you select it and confirm. Quarantined files can be restored.</li>
             <li data-i18n="h5">Before any file is removed, a pop-up lists the files and which program (or Windows) each one belongs to, and asks you to confirm.</li>
-            <li data-i18n="h6">NoorCleaner always runs as administrator, so Windows asks for your approval each time it starts. That is how it can look at the whole PC.</li>
+            <li data-i18n="h6">NoorCleaner asks whether to run as administrator (recommended) or as a standard user. Administrator lets it look at the whole PC; a standard user only sees what belongs to them.</li>
             <li data-i18n="h2">NoorCleaner does not look for viruses. For virus protection use Windows Security, or our security program NoorGuard.</li>
             <li data-i18n="h7">The 'not used for a long time' list is a guess from the records Windows keeps. Check each program before you uninstall it.</li>
             <li data-i18n="h3">Recovering permanently deleted files is never guaranteed, especially on SSDs. The sooner you try, the better.</li>
@@ -249,7 +249,7 @@
         </div>
         <div class="req">
           <h3 data-i18n="req_title">Requirements</h3>
-          <ul class="ticks"><li data-i18n="req1">Windows 10 or 11 (64-bit)</li><li data-i18n="req2">No administrator rights needed to install</li><li data-i18n="req3">Runs as administrator (Windows asks each time): needed to check the whole PC, other users' folders and to delete files</li><li data-i18n="req4">No internet connection needed</li></ul>
+          <ul class="ticks"><li data-i18n="req1">Windows 10 or 11 (64-bit)</li><li data-i18n="req2">No administrator rights needed to install</li><li data-i18n="req3">Administrator (recommended) or standard user: administrator is needed to check the whole PC, other users' folders and to delete protected files</li><li data-i18n="req4">No internet connection needed</li></ul>
         </div>
       </div>
     </div>
@@ -270,7 +270,7 @@
       <div class="faq">
         <details><summary data-i18n="q1">Is NoorCleaner free?</summary><p data-i18n="a1">Yes. There is no account, no subscription and no advertising inside the app.</p></details>
         <details><summary data-i18n="q2">Will it delete anything by itself?</summary><p data-i18n="a2">No. It only lists what it finds. You choose what to remove, and a pop-up shows the files and which program each belongs to before anything is removed. The junk reminder only tells you; it never cleans by itself.</p></details>
-        <details><summary data-i18n="q8">Why does it ask for administrator rights?</summary><p data-i18n="a8">To look at the whole PC, including other users' folders and protected folders, and to delete files Windows protects. Without it some checks would be incomplete and some deletions would fail. It still removes nothing without your confirmation.</p></details>
+        <details><summary data-i18n="q8">Why does it ask whether to run as administrator?</summary><p data-i18n="a8">Administrator rights let it look at the whole PC, including other users' folders and protected folders, and delete files Windows protects. As a standard user it only sees what belongs to you, so some checks are incomplete and some files cannot be deleted. The choice is yours, and you can change it in Settings. Either way it removes nothing without your confirmation.</p></details>
         <details><summary data-i18n="q3">Does it find viruses?</summary><p data-i18n="a3">No. NoorCleaner is about storage and damaged files. For virus scanning, network protection and security checks, use NoorGuard, our free security program.</p></details>
         <details><summary data-i18n="q4">Does it work in Arabic and Afaan Oromoo?</summary><p data-i18n="a4">Yes. Choose the language when you install, or later in Settings. The translations are new, so corrections are welcome.</p></details>
         <details><summary data-i18n="q5">Can it recover files I deleted permanently?</summary><p data-i18n="a5">Sometimes. It sets up Microsoft's free Windows File Recovery for you. It works best straight after deleting; on SSDs the data is often wiped quickly.</p></details>
@@ -393,7 +393,7 @@ const T = {
   "req_title": "المتطلبات",
   "req1": "ويندوز 10 أو 11 (64 بت)",
   "req2": "لا يحتاج صلاحيات المسؤول للتثبيت",
-  "req3": "يعمل كمسؤول (يطلب ويندوز موافقتك كل مرة): لازم لفحص الجهاز كله ومجلدات المستخدمين الآخرين وحذف الملفات",
+  "req3": "مسؤول (موصى به) أو مستخدم عادي: المسؤول لازم لفحص الجهاز كله ومجلدات المستخدمين الآخرين وحذف الملفات المحمية",
   "req4": "لا يحتاج اتصالًا بالإنترنت",
   "faq_title": "أسئلة",
   "q1": "هل نور كلينر مجاني؟",
@@ -431,10 +431,10 @@ const T = {
   "tab_causes": "الأسباب المحتملة",
   "tab_busy": "البرامج المشغولة",
   "h5": "قبل إزالة أي ملف تعرض نافذة منبثقة الملفات والبرنامج (أو ويندوز) الذي يتبعه كل ملف وتطلب تأكيدك.",
-  "h6": "يعمل نور كلينر دائمًا كمسؤول، لذا يطلب ويندوز موافقتك في كل مرة يبدأ فيها. بهذا يستطيع فحص الجهاز كله.",
+  "h6": "يسألك نور كلينر هل تشغّله كمسؤول (موصى به) أم كمستخدم عادي. صلاحيات المسؤول تتيح له فحص الجهاز كله، أما المستخدم العادي فلا يرى إلا ما يخصه.",
   "h7": "قائمة «غير مستخدمة منذ مدة طويلة» تقدير من سجلات يحتفظ بها ويندوز. افحص كل برنامج قبل إلغاء تثبيته.",
-  "q8": "لماذا يطلب صلاحيات المسؤول؟",
-  "a8": "ليتمكن من فحص الجهاز كله، بما في ذلك مجلدات المستخدمين الآخرين والمجلدات المحمية، وحذف الملفات التي يحميها ويندوز. من دونها تكون بعض الفحوصات ناقصة وتفشل بعض عمليات الحذف. ومع ذلك لا يزيل شيئًا من دون تأكيدك."
+  "q8": "لماذا يسأل هل يعمل كمسؤول؟",
+  "a8": "صلاحيات المسؤول تتيح له فحص الجهاز كله، بما في ذلك مجلدات المستخدمين الآخرين والمجلدات المحمية، وحذف الملفات التي يحميها ويندوز. وكمستخدم عادي لا يرى إلا ما يخصك، فتكون بعض الفحوصات ناقصة وبعض الملفات لا يمكن حذفها. الاختيار لك ويمكنك تغييره من الإعدادات. وفي الحالتين لا يزيل شيئًا من دون تأكيدك."
  },
  "om": {
   "nav_features": "Amaloota",
@@ -528,7 +528,7 @@ const T = {
   "req_title": "Kan barbaachisu",
   "req1": "Windows 10 ykn 11 (64-bit)",
   "req2": "Fe'uuf mirgi bulchaa hin barbaachisu",
-  "req3": "Akka bulchaatti hojjeta (Windows yeroo hundaa gaafata): kompiitara guutuu, foldaroota fayyadamtoota biroo ilaaluu fi faayiloota haquuf barbaachisa",
+  "req3": "Bulchaa (kan gorfamu) ykn fayyadamaa idilee: bulchaan kompiitara guutuu, foldaroota fayyadamtoota biroo ilaaluu fi faayiloota eegaman haquuf barbaachisa",
   "req4": "Walqunnamtiin interneetii hin barbaachisu",
   "faq_title": "Gaaffilee",
   "q1": "NoorCleaner bilisaa?",
@@ -566,10 +566,10 @@ const T = {
   "tab_causes": "Sababoota tilmaamaman",
   "tab_busy": "Appiiwwan hojii irra jiran",
   "h5": "Osoo faayiliin tokko illee hin haqamin dura foddaan ba'u faayiloota fi appii (ykn Windows) isaan kan ta'an agarsiisee mirkaneessuu si gaafata.",
-  "h6": "NoorCleaner yeroo hundaa akka bulchaatti hojjeta, kanaaf Windows yeroo hundaa jalqabu eeyyama kee gaafata. Kompiitara guutuu ilaaluu kan danda'u kanaani.",
+  "h6": "NoorCleaner akka bulchaatti (kan gorfamu) ykn akka fayyadamaa idileetti hojjechiisuu akka barbaaddu si gaafata. Bulchaan kompiitara guutuu ilaaluu danda'a; fayyadamaan idilee wanta kan isaa ta'e qofa arga.",
   "h7": "Tarreen 'yeroo dheeraaf hin fayyadamamne' galmee Windows eegu irraa tilmaama. Osoo hin haqin dura appii tokkoon tokkoon ilaali.",
-  "q8": "Maaliif mirga bulchaa gaafata?",
-  "a8": "Kompiitara guutuu ilaaluuf, foldaroota fayyadamtoota biroo fi foldaroota eegaman dabalatee, fi faayiloota Windows eegu haquuf. Isaan malee sakatta'iinsi tokko tokko hin guutamu, haquun tokko tokko ni kufa. Ammallee eeyyama kee malee homtuu hin haqu."
+  "q8": "Maaliif akka bulchaatti hojjechuu akka qabu gaafata?",
+  "a8": "Mirgi bulchaa kompiitara guutuu, foldaroota fayyadamtoota biroo fi foldaroota eegaman dabalatee ilaaluu fi faayiloota Windows eegu haquu dandeessisa. Akka fayyadamaa idileetti wanta kan kee ta'e qofa arga, kanaaf sakatta'iinsi tokko tokko hin guutamu, faayiloonni tokko tokko hin haqaman. Filannoon kan kee dha, Qindaa'ina keessatti jijjiiruu dandeessa. Haala lamaanuunuu eeyyama kee malee homtuu hin haqu."
  }
 };
 </script>
