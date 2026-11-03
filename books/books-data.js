@@ -36,7 +36,10 @@ window.DI_BOOKS = {
   "sahabah-9": { title: "Gentle Heroes", series: "Moonlight Stories of the Sahabah · Book 9", cover: "moonlight-sahabah-book-9.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
   "sahabah-10": { title: "Camels, Horses and Little Birds", series: "Moonlight Stories of the Sahabah · Book 10", cover: "moonlight-sahabah-book-10.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
   "sahabah-11": { title: "Ramadan and Eid with the Companions", series: "Moonlight Stories of the Sahabah · Book 11", cover: "moonlight-sahabah-book-11.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
-  "sahabah-12": { title: "The Ten Promised Paradise", series: "Moonlight Stories of the Sahabah · Book 12", cover: "moonlight-sahabah-book-12.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" }
+  "sahabah-12": { title: "The Ten Promised Paradise", series: "Moonlight Stories of the Sahabah · Book 12", cover: "moonlight-sahabah-book-12.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-13": { title: "The Gentle Teacher", series: "Moonlight Stories of the Sahabah · Book 13", cover: "moonlight-sahabah-book-13.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-14": { title: "Stories the Prophet ﷺ Told", series: "Moonlight Stories of the Sahabah · Book 14", cover: "moonlight-sahabah-book-14.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" },
+  "sahabah-15": { title: "Little Manners, Big Hearts", series: "Moonlight Stories of the Sahabah · Book 15", cover: "moonlight-sahabah-book-15.webp", shape: "square", preview: { pages: 7, total: 56 }, amazon: "" }
 };
 
 /* Turn every  <a class="buy" data-book="...">  into a live Amazon button, or a quiet "coming soon" one. */
