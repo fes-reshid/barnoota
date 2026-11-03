@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>English Adventure for Kids | Learn English Free – diinislaam.com</title>
-<meta name="description" content="English Adventure is a free, fun, game-style English course for kids. Journey through 19 worlds with a final boss: parts of speech, nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, interjections and sentences. Play quizzes, bubble pop, memory match and lightning rounds, then earn stars, XP, badges and certificates.">
+<meta name="description" content="English Adventure is a free, fun, game-style English course for kids. Journey through 39 worlds with a final boss: parts of speech, nouns, pronouns, verbs, adjectives, adverbs, prepositions, conjunctions, interjections and sentences. Play quizzes, bubble pop, memory match and lightning rounds, then earn stars, XP, badges and certificates.">
 <link rel="canonical" href="https://diinislaam.com/english/">
 <meta name="theme-color" content="#4cc9f0">
 <meta property="og:title" content="English Adventure – a fun English game for kids">
-<meta property="og:description" content="19 worlds, a boss level, quizzes, stars, badges and certificates. Learn parts of speech and sentences the fun way.">
+<meta property="og:description" content="39 worlds, a boss level, quizzes, stars, badges and certificates. Learn parts of speech and sentences the fun way.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://diinislaam.com/english/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -187,7 +187,7 @@ input#nm:focus{border-color:var(--sky)}
 .zkb div{display:flex;gap:4px;width:100%;justify-content:center}
 .zk{flex:1;max-width:40px;min-width:24px;height:42px;border:0;border-radius:8px;background:#115e59;color:#5eead4;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;touch-action:manipulation}
 .zk:active{background:#14b8a6;color:#042f2e}
-</style>
+.zship{transition:left .15s}.zt.lost{filter:grayscale(1) brightness(.6)}.passage{background:#fffbeb;border-left:5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:10px;line-height:1.55;font-size:1.02rem;color:#1f2937}</style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -565,8 +565,552 @@ const WORLDS=[
   OR("Build the sentence:",["The","lamp","was","broken","by","Omar."],"The lamp was broken by Omar.")]}
 ];
 
+/* Modal verbs, reading, writing and extra topics */
+WORLDS.push(
+{id:"mod1",name:"Can & Could Canyon",emoji:"🏜️",c:"#dc2626",c2:"#fca5a5",badge:"💪",bname:"Can-Do Kid",
+ learn:[
+  {i:"💪",h:"Can",p:"Can talks about present ability, permission and general possibility.",ex:["I can swim. (ability)","Can I come in? (permission)","It can get cold at night. (possibility)"]},
+  {i:"🕰️",h:"Could",p:"Could talks about past ability, polite requests and possibility.",ex:["She could dance at age five. (past ability)","Could you help me? (polite request)","It could rain today. (possibility)"]},
+  {i:"📌",h:"Important points",p:"Remember these four rules about can and could.",ex:["Can expresses present ability; could often expresses past ability.","Could is generally more polite than can when making requests.","Use the base form of the verb after can and could.","Do not use “to” after can or could."]}],
+ q:[
+  MC("Which sentence shows PRESENT ability?",["I can swim.","I could swim at five.","Could you swim?","I might swim."],0,"Can shows present ability."),
+  MC("“She ___ dance at age five.” (past ability)",["could","can","shall","must"],0,"Could shows past ability."),
+  MC("Which request is more polite?",["Could you help me?","Help me now!","You can help me.","I help you."],0,"Could is more polite than can."),
+  MC("Which sentence is correct?",["I can swim.","I can to swim.","I can swimming.","I can swims."],0,"Use the base form: can swim."),
+  MC("“Can I come in?” asks for ___.",["permission","past ability","a promise","a rule"],0,"Can is used to ask permission."),
+  MC("“It could rain today.” shows ___.",["possibility","a past habit","a duty","courage"],0,"Could can show possibility."),
+  TP("Tap the modal verb:",["She","could","dance","well."],[1],"Could is the modal verb."),
+  TP("Tap the word that should NOT be there:",["I","can","to","swim."],[2],"Do not use “to” after can."),
+  TF("Do not use “to” after can or could.",true,"Can and could take the base verb with no “to”."),
+  SO("Which modal is in each sentence?",["Can","Could"],[["It can get cold at night.",0],["She could dance at five.",1],["Can I come in?",0],["Could you help me?",1],["I can run fast.",0],["He could read at four.",1]],"Can = now; could = past or polite.")],
+ bank:{"modal verb":["can","could","may","might","must","should"],"base form verb":["swim","help","dance","read","run","jump"],"wrong form after a modal":["swimming","helped","dances","reads","running"]},
+ pairs:[["can","present ability"],["could","past ability"],["Can I come in?","permission"],["Could you help me?","polite request"],["It can get cold","general possibility"],["It could rain","possibility today"],["I can swim","ability now"]],
+ more:[
+  MC("Which sentence is correct?",["Could you help me?","Could you to help me?","Could you helping me?","Could you helped me?"],0,"Base form after could."),
+  TF("Could often expresses past ability.",true,"She could dance at age five."),
+  OR("Build the sentence:",["She","could","dance","at","age","five."],"She could dance at age five."),
+  MC("“It can get cold at night.” shows general ___.",["possibility","permission","politeness","a promise"],0,"Can shows general possibility."),
+  TP("Tap the base form verb:",["I","can","swim","fast."],[2],"Swim is the base form."),
+  TF("“Can” always shows past ability.",false,"Can is present; could is often past.")]},
+
+{id:"mod2",name:"May & Might Mountain",emoji:"⛰️",c:"#7c3aed",c2:"#c4b5fd",badge:"🌦️",bname:"Maybe Master",
+ learn:[
+  {i:"🌤️",h:"May",p:"May talks about possibility, permission and polite requests.",ex:["It may rain today. (possibility)","May I come in? (permission)","You may use my pen. (permission)","He may be at home. (possibility)"]},
+  {i:"🌥️",h:"Might",p:"Might talks about LESS possibility than may, and polite requests in a more formal way.",ex:["It might rain tomorrow.","Might I ask a question? (formal)","She might be busy.","We might go to the park."]},
+  {i:"📌",h:"Important points",p:"Remember these rules.",ex:["May shows possibility in the present or future; might shows weaker possibility.","Both may and might are used for permission; might is more polite and formal.","Both are followed by the base form of the verb (without “to”).","Might can also talk about a possible situation in the past, but we are not sure."]}],
+ q:[
+  MC("“It ___ rain today.” (possibility)",["may","must","ought","dare"],0,"May shows possibility."),
+  MC("Which modal shows LESS possibility than may?",["might","must","can","shall"],0,"Might is weaker than may."),
+  MC("“May I come in?” asks for ___.",["permission","ability","a rule","a habit"],0,"May asks permission."),
+  MC("Which request is more formal and polite?",["Might I ask a question?","I ask a question.","Ask a question.","Question now."],0,"Might is more polite and formal."),
+  MC("Which sentence is correct?",["You may use my pen.","You may to use my pen.","You may using my pen.","You may uses my pen."],0,"Base form after may."),
+  MC("“He may be at home.” shows ___.",["possibility","a past habit","a duty","courage"],0,"May can show possibility."),
+  TP("Tap the modal verb:",["She","might","be","busy."],[1],"Might is the modal verb."),
+  TP("Tap the word that should NOT be there:",["We","might","to","go","home."],[2],"Do not use “to” after might."),
+  TF("Might shows a weaker possibility than may.",true,"Might means less possible."),
+  SO("What does the modal show?",["Permission","Possibility"],[["May I come in?",0],["You may use my pen.",0],["Might I ask a question?",0],["It may rain today.",1],["She might be busy.",1],["He may be at home.",1]],"Permission = asking or allowing; possibility = maybe.")],
+ bank:{"modal verb":["may","might","can","could","shall","will"],"base form verb":["rain","come","use","ask","stay","wait"],"wrong form after a modal":["raining","came","uses","asked","waiting"]},
+ pairs:[["may","possibility or permission"],["might","less possibility"],["May I come in?","permission"],["It may rain today","present possibility"],["Might I ask?","formal request"],["She might be busy","weak possibility"],["We might go","maybe we will"]],
+ more:[
+  MC("Might can also talk about a possible situation in the ___, but we are not sure.",["past","future only","present only","never"],0,"Might can refer to the past."),
+  OR("Build the sentence:",["It","might","rain","tomorrow."],"It might rain tomorrow."),
+  TF("Both may and might are followed by the base form of the verb.",true,"No “to” and no -ing."),
+  MC("For polite requests in formal situations, ___ is preferred.",["might","dare","need","ought"],0,"Might is more formal."),
+  MC("Which sentence is correct?",["She might be busy.","She might is busy.","She might being busy.","She might to be busy."],0,"Might + base form."),
+  TP("Tap the base form verb:",["We","might","go","home."],[2],"Go is the base form.")]},
+
+{id:"mod3",name:"Shall & Should Shore",emoji:"🏖️",c:"#0891b2",c2:"#a5f3fc",badge:"🐚",bname:"Shore Star",
+ learn:[
+  {i:"🤝",h:"Shall",p:"Shall is used to make suggestions and offers, to seek permission, and to talk about future action — mainly with I and We.",ex:["Shall we go now? (suggestion)","I shall help you. (offer)","We shall meet tomorrow. (future)","Shall I open the door? (offer)"]},
+  {i:"🧭",h:"Should",p:"Should gives advice, expresses duty, suggestion and expectation, and talks about what is right or probable.",ex:["You should study regularly.","We should respect our parents.","You should see a doctor.","She should be on time.","You should not waste time."]},
+  {i:"📌",h:"Important points",p:"Remember these rules.",ex:["Shall is mainly used with I and We. Should is used with all subjects.","Shall = suggestions or offers. Should = advice or duty.","Should can also talk about a probable situation in the present or future.","Both are followed by the base form of the verb (without “to”)."]}],
+ q:[
+  MC("Which modal is mainly used with I and We?",["shall","should","might","must"],0,"Shall goes mainly with I and we."),
+  MC("“___ we go now?” (a suggestion)",["Shall","Should","Might","Dare"],0,"Shall we...? makes a suggestion."),
+  MC("“You ___ see a doctor.” (advice)",["should","shall","can","dare"],0,"Should gives advice."),
+  MC("Should can be used with ___.",["all subjects","only I and we","only you","only he"],0,"I, we, you, he, she, it, they."),
+  MC("Which sentence is correct?",["I shall help you.","I shall to help you.","I shall helping you.","I shall helps you."],0,"Shall + base form."),
+  MC("“Shall I open the door?” is an ___.",["offer","order","excuse","ending"],0,"Shall I...? offers help."),
+  TP("Tap the modal verb:",["We","should","respect","our","parents."],[1],"Should is the modal verb."),
+  TF("Shall is mainly used with I and We.",true,"I shall, we shall."),
+  TF("Should can also talk about a probable situation.",true,"She should be on time."),
+  SO("Shall or should?",["Shall","Should"],[["Shall we go now?",0],["I shall help you.",0],["We shall win the match.",0],["You should study regularly.",1],["She should be on time.",1],["You should not waste time.",1]],"Shall = offers/suggestions; should = advice.")],
+ bank:{"modal verb":["shall","should","can","may","will","must"],"base form verb":["go","help","meet","open","study","respect"],"wrong form after a modal":["going","helped","meets","opening","studies"]},
+ pairs:[["shall","offer or suggestion"],["should","advice or duty"],["Shall we go?","suggestion"],["I shall help you","offer"],["You should see a doctor","advice"],["She should be on time","probable"],["We should respect parents","duty"]],
+ more:[
+  OR("Build the sentence:",["Shall","I","open","the","door?"],"Shall I open the door?"),
+  MC("Should is used to give ___.",["advice","spelling","nothing","only orders"],0,"Should gives advice."),
+  TP("Tap the subject that shall is mainly used with:",["Shall","we","go","now?"],[1],"Shall goes with I and we."),
+  TF("Both shall and should are followed by the base form of the verb.",true,"No “to”."),
+  MC("Which sentence is correct?",["You should not waste time.","You should not wasting time.","You should not to waste time.","You should not wasted time."],0,"Should not + base form."),
+  MC("“We ___ meet tomorrow.” (future action)",["shall","dare","need","ought"],0,"Shall shows future action with we.")]},
+
+{id:"mod4",name:"Will & Would Woods",emoji:"🌲",c:"#15803d",c2:"#86efac",badge:"🌳",bname:"Woodland Wizard",
+ learn:[
+  {i:"🔮",h:"Will",p:"Will talks about future actions, willingness, promises, offers, requests and predictions.",ex:["I will help you.","We will go tomorrow.","She will come on time.","I will try my best.","Will you open the door?"]},
+  {i:"🎩",h:"Would",p:"Would talks about past habits, polite requests, willingness, imaginary situations and conditional situations.",ex:["I would help you.","She would come every day. (past habit)","Would you please help me?","I would like a cup of tea.","If I had time, I would go."]},
+  {i:"📌",h:"Important points",p:"Remember these rules.",ex:["Will shows future action; would shows past habit or polite request.","Would is used in imaginary or conditional situations: If I were rich, I would travel the world.","Will and would are used with all subjects.","Both are followed by the base form (without “to”).","Would is more polite than will when making requests."]}],
+ q:[
+  MC("Which modal shows a past habit?",["would","will","shall","must"],0,"She would come every day."),
+  MC("“She ___ come every day.” (past habit)",["would","will","shall","need"],0,"Would shows a past habit."),
+  MC("Which request is more polite?",["Would you please help me?","Will you help me?","Help me.","You help me."],0,"Would is more polite than will."),
+  MC("“If I had time, I ___ go.”",["would","will","shall","must"],0,"Would is used in conditional situations."),
+  MC("“We ___ go tomorrow.” (future action)",["will","would","dare","need"],0,"Will shows future action."),
+  MC("“I ___ like a cup of tea.” (polite)",["would","will","can","shall"],0,"I would like... is polite."),
+  TP("Tap the modal verb:",["I","would","like","tea."],[1],"Would is the modal verb."),
+  TF("Will and would are used with all subjects.",true,"I, we, you, he, she, it, they."),
+  TF("Will shows a past habit.",false,"Would shows past habit; will shows future action."),
+  SO("Will or would?",["Will","Would"],[["I will help you.",0],["We will go tomorrow.",0],["I will try my best.",0],["Would you please help me?",1],["She would come every day.",1],["If I had time, I would go.",1]],"Will = future; would = polite or imaginary.")],
+ bank:{"modal verb":["will","would","can","could","shall","should"],"base form verb":["help","come","try","open","travel","go"],"wrong form after a modal":["helping","came","tries","opened","traveled"]},
+ pairs:[["will","future action"],["would","past habit"],["I will try my best","promise"],["Would you please help?","polite request"],["If I were rich, I would travel","imaginary"],["She would come every day","habit in the past"],["Will you open the door?","request"]],
+ more:[
+  OR("Build the sentence:",["If","I","were","rich,","I","would","travel","the","world."],"If I were rich, I would travel the world."),
+  MC("Both will and would are followed by the ___ form of the verb.",["base","-ing","past","plural"],0,"Base form, no “to”."),
+  MC("Would is used in imaginary or ___ situations.",["conditional","plural","spelling","noun"],0,"If... would..."),
+  TP("Tap the base form verb:",["She","will","come","on","time."],[2],"Come is the base form."),
+  MC("Which sentence is correct?",["I will try my best.","I will trying my best.","I will to try my best.","I will tried my best."],0,"Will + base form."),
+  TF("Would is more polite than will when making requests.",true,"Would you please...?")]},
+
+{id:"mod5",name:"Must & Ought Mesa",emoji:"🏜️",c:"#b45309",c2:"#fcd34d",badge:"📏",bname:"Rule Keeper",
+ learn:[
+  {i:"🚦",h:"Must",p:"Must talks about necessity, strong obligation, rules and also strong advice.",ex:["You must study hard.","I must go now.","We must follow the rules.","You must wear a seat belt.","He must tell the truth."]},
+  {i:"🤲",h:"Ought to",p:"Ought to talks about moral duty, good advice and what is right and proper. It is weaker than must.",ex:["You ought to be polite.","I ought to help others.","We ought to keep our school clean.","You ought to take rest.","He ought to respect his parents."]},
+  {i:"📌",h:"Important points",p:"Remember these rules.",ex:["Must is stronger than ought to.","Must is used for rules, laws and urgent necessity. Ought to is used for advice and moral responsibility.","Both are followed by the base form of the verb (without extra “to”).","Must = strong advice; ought to = weak advice."]}],
+ q:[
+  MC("Which is stronger?",["must","ought to","both the same","neither"],0,"Must is stronger than ought to."),
+  MC("“You ___ wear a seat belt.” (a rule)",["must","ought","dare","might"],0,"Rules and laws use must."),
+  MC("Which one expresses moral duty and good advice?",["ought to","must","will","can"],0,"Ought to = moral duty."),
+  MC("“You ___ to be polite.”",["ought","must","should","need"],0,"Ought is followed by to."),
+  MC("Must is used for rules, laws and urgent ___.",["necessity","spelling","habit","plurals"],0,"Must shows necessity."),
+  MC("Which sentence is correct?",["You must study hard.","You must to study hard.","You must studying hard.","You must studies hard."],0,"Must + base form."),
+  TP("Tap the two words that make the modal:",["He","ought","to","respect","his","parents."],[1,2],"Ought to is the modal."),
+  TF("Must is weaker than ought to.",false,"Must is stronger."),
+  TF("Both must and ought to are followed by the base form of the verb.",true,"Must go; ought to go."),
+  SO("Must or ought to?",["Must (strong)","Ought to (weaker)"],[["You must wear a seat belt.",0],["We must follow the rules.",0],["I must go now.",0],["You ought to be polite.",1],["I ought to help others.",1],["You ought to take rest.",1]],"Must = rules; ought to = duty and advice.")],
+ bank:{"modal verb":["must","ought","should","can","may","will"],"base form verb":["study","follow","wear","tell","help","respect"],"wrong form after a modal":["studying","followed","wears","telling","helped"]},
+ pairs:[["must","strong obligation"],["ought to","moral duty"],["You must wear a seat belt","rule"],["You ought to be polite","good manners"],["We must follow the rules","necessity"],["He ought to respect parents","right and proper"],["You must study hard","strong advice"]],
+ more:[
+  MC("Must is used for strong advice, while ought to is used for ___ advice.",["weak","no","loud","past"],0,"Ought to is weaker."),
+  OR("Build the sentence:",["He","must","tell","the","truth."],"He must tell the truth."),
+  MC("Which sentence shows a moral duty?",["He ought to respect his parents.","He ran to school.","The sky is blue.","It is raining."],0,"Ought to = moral duty."),
+  TF("Must is used for rules and laws.",true,"We must follow the rules."),
+  TP("Tap the base form verb:",["We","must","follow","the","rules."],[2],"Follow is the base form."),
+  MC("“We ___ to keep our school clean.” (moral duty)",["ought","must","will","may"],0,"We ought to keep it clean.")]},
+
+{id:"mod6",name:"Need & Dare Dunes",emoji:"🌵",c:"#be185d",c2:"#f9a8d4",badge:"🦁",bname:"Brave Heart",
+ learn:[
+  {i:"🧰",h:"Need",p:"Need expresses necessity. It is a semi-modal because it can be used as a modal verb AND as a main verb.",ex:["I need to study.","You need not worry. (modal)","She needs help. (main verb)","We need to go now.","He need not come today."]},
+  {i:"🦸",h:"Dare",p:"Dare expresses courage or willingness to do something difficult or risky. It is also a semi-modal verb.",ex:["I dare to speak the truth.","He dares to climb the hill.","She dare not go alone.","We dare not take risks.","Do you dare to try?"]},
+  {i:"📌",h:"Important points",p:"Remember these rules.",ex:["Need as a main verb: needs, needed, needing. Dare as a main verb: dares, dared, daring.","Need and dare are followed by the base form of the verb (without “to”) when used as modals.","Negative form: need not / dare not + base verb."]}],
+ q:[
+  MC("Need is used to express ___.",["necessity","courage","past habit","possibility"],0,"Need = necessity."),
+  MC("Dare is used to express courage or ___ to do something difficult.",["willingness","spelling","sadness","plurals"],0,"Dare = courage or willingness."),
+  MC("Which sentence is correct?",["You need not worry.","You need not to worry.","You need not worrying.","You need not worried."],0,"Need not + base form."),
+  MC("“She ___ not go alone.” (courage)",["dare","needs","ought","shall"],0,"She dare not go alone."),
+  MC("Which word is a main-verb form of need?",["needs","need not","dare not","must"],0,"Needs, needed, needing."),
+  MC("Negative form: ___ + base verb.",["need not / dare not","need no / dare no","not need / not dare","needs not / dares not"],0,"Need not, dare not."),
+  TP("Tap the two words that make the negative modal:",["We","dare","not","take","risks."],[1,2],"Dare not = the negative modal."),
+  TF("Need and dare are semi-modal verbs.",true,"They can be modal or main verbs."),
+  TF("Dare can also be used as a main verb (dares, dared, daring).",true,"He dares to climb the hill."),
+  SO("Need or dare?",["Need","Dare"],[["I need to study.",0],["She needs help.",0],["He need not come today.",0],["I dare to speak the truth.",1],["He dares to climb the hill.",1],["We dare not take risks.",1]],"Need = necessity; dare = courage.")],
+ bank:{"modal verb":["need","dare","must","shall","should","would"],"base form verb":["study","worry","come","climb","speak","try"],"wrong form after a modal":["studying","worried","comes","climbing","spoke"]},
+ pairs:[["need","necessity"],["dare","courage"],["You need not worry","not necessary"],["We dare not take risks","too risky"],["She needs help","main verb need"],["He dares to climb","main verb dare"],["Do you dare to try?","a challenge"]],
+ more:[
+  MC("“Do you ___ to try?”",["dare","dares","daring","dared"],0,"Do you dare to try?"),
+  OR("Build the sentence:",["We","need","to","go","now."],"We need to go now."),
+  MC("“You need not worry” means you ___ worry.",["don’t have to","must","always","ought to"],0,"It is not necessary."),
+  TF("In “You need not worry”, worry is the base form of the verb.",true,"Need not + base form."),
+  TP("Tap the main-verb form of need:",["She","needs","help."],[1],"Needs is the main verb."),
+  MC("Which sentence is correct?",["He dares to climb the hill.","He dares climbing the hill.","He daring to climb the hill.","He dare climbs the hill."],0,"Dares to climb is correct.")]}
+
+);
+(function(){
+const A=(p,q)=>({...q,p});
+const P1="Amina has a small garden behind her house. She grows tomatoes, carrots and mint. Every morning, she waters the plants before school. On Saturday, she picks the ripe tomatoes and gives some to her neighbour.";
+const P2="Omar’s family went to the beach on Friday afternoon. The sun was hot, so they sat under a big umbrella. Omar built a sandcastle with his sister Hana. A wave washed it away, and they laughed. They went home at sunset.";
+const P3="The school library opens at eight o’clock and closes at four. Students can borrow two books for one week. If a book is late, the student must tell the librarian. The library is quiet, so everyone should whisper.";
+const P4="Yusuf found a lost kitten in the park. It was cold and hungry. Yusuf gave the kitten some milk and wrapped it in his scarf. Then he asked his father for help. Together, they found the kitten’s owner, a kind old lady, who thanked them with a big smile.";
+const P5="Long ago, a farmer had a goose that laid one golden egg every day. The farmer became rich, but he wanted more. He cut open the goose to get all the gold at once. Inside, there was nothing. The farmer had lost his goose and his golden eggs.";
+const P6="Rain began to fall as the class walked to the mosque. Bilal opened his umbrella and shared it with his friend Zayd, who had forgotten his. By the time they arrived, both boys were wet but smiling.";
+const P7="When Sara came home, the door was open and muddy footprints led to the kitchen. A trail of crumbs went along the floor. From the garden, she heard a soft bark. Sara smiled and said, “Naughty Biscuit! You found the cookies again!”";
+const P8="The desert is a dry place with very little rain. Camels live there because their bodies are built to save water. A camel’s hump stores fat, not water, and its thick eyelashes keep sand out of its eyes. Because of this, camels can travel many days without a drink.";
+const P9="Nadia was nervous before her first speech. Her hands shook and her voice was quiet. Her teacher said, “Take a deep breath.” Nadia tried it, stood tall, and began to speak. When she finished, everyone clapped, and she felt proud.";
+const P10="Water is one of the most important things on Earth. People need it to drink, cook and wash. Plants need water to grow, and animals need it to stay alive. However, clean water is not always easy to find. In some places, people walk for hours to reach a well. That is why we should never waste water. Turning off the tap while brushing our teeth and fixing leaking pipes are simple ways to save it.";
+const P11="In 1969, three astronauts flew to the Moon. Neil Armstrong was the first person to step onto its surface. The astronauts collected rocks, took photos and planted a flag. Then they returned safely to Earth, where people around the world welcomed them as heroes.";
+const P12="Ibn al-Haytham was a famous scientist from the Islamic Golden Age. He studied light and how our eyes see. He explained that we see objects because light bounces off them into our eyes. Many people call him the father of modern optics. His careful experiments still inspire scientists today.";
+WORLDS.push(
+{id:"read1",name:"Reading Nook",emoji:"📚",c:"#ea580c",c2:"#fdba74",badge:"📖",bname:"Bookworm",
+ learn:[
+  {i:"👀",h:"Read carefully",p:"Read the passage slowly. Then read the question and look back at the passage to find the answer.",ex:["Read the whole passage first","Underline who, what, where and when","Look back at the text before you answer","The answer is always in the passage"]},
+  {i:"❓",h:"Question words",p:"Question words tell you what to look for.",ex:["Who → a person or character","What → a thing or an event","Where → a place","When → a time","Why → a reason (look for “because” or “so”)"]},
+  {i:"✍️",h:"Answering in a sentence",p:"When you answer a question, use words from the question and the passage.",ex:["Q: Where is Amina’s garden?","A: Amina’s garden is behind her house.","Start with a capital letter and end with a full stop."]}],
+ q:[
+  A(P1,MC("Where is Amina’s garden?",["behind her house","at school","in the mosque","on the roof"],0,"“A small garden behind her house.”")),
+  A(P1,MC("When does Amina water the plants?",["every morning before school","every night","only on Saturday","every afternoon"],0,"“Every morning, she waters the plants before school.”")),
+  A(P1,MC("Which plant does Amina NOT grow?",["cucumbers","tomatoes","carrots","mint"],0,"She grows tomatoes, carrots and mint.")),
+  A(P1,MC("What does Amina do on Saturday?",["picks tomatoes and shares them","plants mint","goes to the beach","cleans her room"],0,"She picks ripe tomatoes and gives some to her neighbour.")),
+  A(P1,TF("Amina gives some tomatoes to her neighbour.",true,"She gives some to her neighbour.")),
+  A(P2,MC("When did Omar’s family go to the beach?",["Friday afternoon","Saturday morning","Sunday night","Monday evening"],0,"“On Friday afternoon.”")),
+  A(P2,MC("Who built the sandcastle?",["Omar and Hana","Omar’s father","Hana alone","Omar’s teacher"],0,"Omar built it with his sister Hana.")),
+  A(P2,MC("Why did they sit under an umbrella?",["The sun was hot.","It was raining.","It was night.","They were cold."],0,"“The sun was hot, so they sat under a big umbrella.”")),
+  A(P2,MC("What happened to the sandcastle?",["A wave washed it away.","It was finished.","A dog ate it.","The wind blew it."],0,"A wave washed it away.")),
+  A(P2,MC("When did they go home?",["at sunset","at noon","at midnight","at breakfast"],0,"“They went home at sunset.”"))],
+ bank:{"place word":["garden","beach","library","house","school","kitchen"],"plant or food word":["tomatoes","carrots","mint","milk","cookies","bread"],"time word":["morning","afternoon","sunset","evening","Friday","Saturday"]},
+ pairs:[["garden","place for plants"],["library","place for books"],["beach","sand and sea"],["umbrella","protects from sun or rain"],["tomato","red vegetable"],["sunset","end of the day"],["neighbour","lives next door"]],
+ more:[
+  A(P3,MC("How many books can students borrow?",["two","four","eight","one hundred"],0,"“Students can borrow two books.”")),
+  A(P3,MC("When does the library close?",["at four o’clock","at eight o’clock","at noon","at six o’clock"],0,"“Opens at eight and closes at four.”")),
+  A(P3,MC("What should students do in the library?",["whisper","shout","run","sing"],0,"“Everyone should whisper.”")),
+  A(P3,TF("The library opens at nine o’clock.",false,"It opens at eight o’clock.")),
+  A(P1,TF("Amina grows cucumbers.",false,"She grows tomatoes, carrots and mint.")),
+  A(P2,TF("Hana is Omar’s sister.",true,"“His sister Hana.”"))]},
+
+{id:"read2",name:"Story Station",emoji:"🚂",c:"#0d9488",c2:"#5eead4",badge:"🎫",bname:"Story Traveller",
+ learn:[
+  {i:"🎯",h:"Main idea",p:"The main idea is what the whole text is mostly about. Ask: What is the most important thing the writer wants me to know?",ex:["Read the first and last sentences","Do not choose a tiny detail","The main idea covers the whole passage"]},
+  {i:"🔢",h:"Sequence",p:"Sequence means the order things happen. Look for clue words.",ex:["first, next, then, after that, finally","Ask: What happened first? What happened next?","Put the events in order"]},
+  {i:"🎭",h:"Characters and setting",p:"Characters are the people or animals in a story. The setting is where and when it happens. Notice how characters feel and act.",ex:["Character: Yusuf, the kind boy","Setting: the park","A character’s actions show what they are like"]}],
+ q:[
+  A(P4,MC("What is the main idea of this story?",["Yusuf helped a lost kitten find its owner.","Yusuf likes milk.","The park is big.","An old lady has a scarf."],0,"The whole story is about helping the kitten.")),
+  A(P4,MC("What did Yusuf do after wrapping the kitten in his scarf?",["asked his father for help","went to sleep","lost the kitten","bought a toy"],0,"“Then he asked his father for help.”")),
+  A(P4,MC("Who was the kitten’s owner?",["a kind old lady","Yusuf’s father","a teacher","a shopkeeper"],0,"“The kitten’s owner, a kind old lady.”")),
+  A(P4,MC("How did the old lady show she was happy?",["She thanked them with a big smile.","She ran away.","She shouted.","She cried loudly."],0,"She thanked them with a big smile.")),
+  A(P4,TF("At first, the kitten was warm and full.",false,"It was cold and hungry.")),
+  A(P5,MC("What is the story mainly about?",["a farmer who was too greedy","a goose that could swim","a farm in winter","a rich king"],0,"The farmer wanted more and lost everything.")),
+  A(P5,MC("Why did the farmer cut open the goose?",["He wanted all the gold at once.","He was hungry.","The goose was sick.","He wanted a pet."],0,"“To get all the gold at once.”")),
+  A(P5,MC("What was inside the goose?",["nothing","gold","eggs","a key"],0,"“Inside, there was nothing.”")),
+  A(P5,MC("Which lesson does the story teach?",["Do not be greedy.","Geese are rich.","Always cut things open.","Farmers are lazy."],0,"Greed made him lose everything.")),
+  A(P5,OR("Put the story events in order:",["The goose laid a golden egg.","The farmer became rich.","He cut open the goose.","He lost everything."],"Egg, rich, cut, lost."))],
+ bank:{"character word":["farmer","kitten","goose","lady","father","teacher"],"feeling word":["hungry","happy","proud","nervous","angry","scared"],"story part word":["beginning","middle","ending","problem","solution","setting"]},
+ pairs:[["beginning","who, where, when"],["problem","what goes wrong"],["solution","how it is fixed"],["character","person in a story"],["setting","where and when"],["moral","lesson of a story"],["sequence","order of events"]],
+ more:[
+  A(P6,MC("Where does this story take place?",["on the way to the mosque in the rain","in a library","at the beach","in a garden"],0,"The class walked to the mosque in the rain.")),
+  A(P6,MC("What was Zayd’s problem?",["He had forgotten his umbrella.","He was lost.","He was late.","He was hungry."],0,"Zayd had forgotten his umbrella.")),
+  A(P6,MC("What kind of friend is Bilal?",["kind","greedy","lazy","rude"],0,"He shared his umbrella.")),
+  A(P6,TF("Both boys stayed completely dry.",false,"They were wet but smiling.")),
+  A(P6,TP("Tap the names of the two boys:",["Bilal","and","Zayd","walked","in","rain."],[0,2],"Bilal and Zayd.")),
+  A(P4,OR("Put the events in order:",["Yusuf found a kitten.","He gave it milk.","He asked his father for help.","They found the owner."],"Found, milk, help, owner."))]},
+
+{id:"read3",name:"Detective Library",emoji:"🔎",c:"#4338ca",c2:"#a5b4fc",badge:"🕵️",bname:"Word Detective",
+ learn:[
+  {i:"🧩",h:"Making inferences",p:"An inference is a smart guess from clues in the text plus what you already know. The writer does not always say everything.",ex:["Clue: soft bark + muddy paw prints","Knowledge: dogs bark and have paws","Inference: a dog was in the house"]},
+  {i:"🔗",h:"Cause and effect",p:"A cause is WHY something happens. An effect is WHAT happens. Look for because, so, therefore and as a result.",ex:["Because it rained, the ground was wet.","Cause: it rained. Effect: the ground was wet."]},
+  {i:"📖",h:"Words in context",p:"If you do not know a word, read the sentences around it for clues to its meaning.",ex:["Nadia was nervous. Her hands shook.","Clue: shaking hands → nervous means worried or scared."]}],
+ q:[
+  A(P7,MC("Who is Biscuit?",["the dog","Sara’s brother","a cat","a neighbour"],0,"The bark and Sara’s words show Biscuit is a dog.")),
+  A(P7,MC("What clue shows Biscuit was in the kitchen?",["muddy footprints led to the kitchen","the door was closed","Sara was asleep","it was night"],0,"The footprints went to the kitchen.")),
+  A(P7,MC("What did Biscuit probably eat?",["the cookies","a book","the carpet","a flower"],0,"Sara says he found the cookies.")),
+  A(P7,MC("How did Sara feel?",["amused","terrified","bored","furious"],0,"She smiled, so she was amused.")),
+  A(P7,MC("In this passage, a “trail” of crumbs means ___.",["a line of crumbs left behind","a train","a pile of cake","a clean floor"],0,"A trail is a line of marks or bits left behind.")),
+  A(P8,MC("What does a camel’s hump store?",["fat","water","sand","food from the desert"],0,"“Stores fat, not water.”")),
+  A(P8,MC("Why can camels travel many days without a drink?",["Their bodies save water.","They drink from the hump.","Deserts have lots of rain.","They never get thirsty."],0,"Their bodies are built to save water.")),
+  A(P8,MC("What do thick eyelashes do?",["keep sand out of the eyes","help camels run","store water","keep camels cool"],0,"They keep sand out.")),
+  A(P8,MC("The word “dry” in the first sentence means ___.",["with no water","very hot","cold and wet","full of rain"],0,"The desert has very little rain.")),
+  A(P8,TF("Camels live in the desert because their bodies save water.",true,"“Because their bodies are built to save water.”"))],
+ bank:{"reading skill word":["infer","predict","summarize","compare","question","visualize"],"clue word":["because","so","therefore","since","reason","result"],"feeling word":["amused","nervous","proud","worried","curious","surprised"]},
+ pairs:[["infer","guess from clues"],["cause","why it happens"],["effect","what happens"],["because","clue word for a reason"],["context","words around a word"],["predict","guess what comes next"],["summary","short retelling"]],
+ more:[
+  A(P9,MC("How did Nadia feel at first?",["nervous","bored","angry","sleepy"],0,"Her hands shook and her voice was quiet.")),
+  A(P9,MC("What helped Nadia?",["taking a deep breath","running away","reading silently","drinking water"],0,"Her teacher said to take a deep breath.")),
+  A(P9,MC("How did Nadia feel at the end?",["proud","scared","sad","cross"],0,"“She felt proud.”")),
+  A(P9,MC("The word “nervous” is closest in meaning to ___.",["worried","brave","sleepy","hungry"],0,"Shaking hands and a quiet voice show worry.")),
+  A(P9,TF("Nobody clapped when Nadia finished.",false,"“Everyone clapped.”")),
+  A(P9,MC("Why did everyone clap?",["She gave a good speech.","She sat down.","The bell rang.","It was lunch."],0,"People clap when they like something."))]},
+
+{id:"read4",name:"Comprehension Castle",emoji:"🏰",c:"#9f1239",c2:"#fda4af",badge:"🏰",bname:"Castle Reader",
+ learn:[
+  {i:"🧠",h:"Longer passages",p:"Longer texts need a plan. Read once for the main idea, then again for details.",ex:["Skim the text first","Find the topic of each paragraph","Underline key facts","Answer easy questions first"]},
+  {i:"🎯",h:"Author’s purpose",p:"Writers write for a reason: to inform (give facts), to persuade (change your mind), or to entertain (tell a story).",ex:["Inform → a report or science text","Persuade → an advert or a speech","Entertain → a story or a poem"]},
+  {i:"📝",h:"Summarising",p:"A summary tells the main points in a few short sentences, in your own words.",ex:["Keep only the important ideas","Leave out small details","Keep the order of events"]}],
+ q:[
+  A(P10,MC("What is the main idea of the passage?",["Water is precious and we should save it.","Plants are green.","Wells are deep.","Brushing teeth is boring."],0,"The whole passage is about the importance of water.")),
+  A(P10,MC("What is the author’s main purpose?",["to inform and encourage people to save water","to tell a funny story","to sell bottled water","to describe a mountain"],0,"It gives facts and advice.")),
+  A(P10,MC("Why do animals need water?",["to stay alive","to build nests","to learn","to sleep"],0,"“Animals need it to stay alive.”")),
+  A(P10,MC("Which is a way to save water?",["turn off the tap while brushing teeth","leave the tap running","wash the car daily","water the road"],0,"Turning off the tap saves water.")),
+  A(P10,MC("The word “However” shows ___.",["a contrast","a time","a list","a question"],0,"It introduces an opposite idea.")),
+  A(P10,TF("Clean water is easy to find everywhere.",false,"“Clean water is not always easy to find.”")),
+  A(P11,MC("Who was the first person to step onto the Moon?",["Neil Armstrong","Ibn Sina","A pilot","The captain"],0,"Neil Armstrong.")),
+  A(P11,MC("Which sentence is the best summary?",["In 1969 astronauts landed on the Moon and returned safely.","The Moon is far away.","Astronauts like rocks.","A flag is colourful."],0,"A summary gives the main events briefly.")),
+  A(P11,MC("“Welcomed them as heroes” means they were ___.",["greatly admired","ignored","sent away","scolded"],0,"Heroes are admired.")),
+  A(P11,OR("Put the events in order:",["They flew to the Moon.","Armstrong stepped out.","They collected rocks.","They returned to Earth."],"Flew, stepped, collected, returned."))],
+ bank:{"text type":["story","report","poem","letter","article","recipe"],"purpose word":["inform","persuade","entertain","explain","describe","teach"],"contrast or reason word":["however","because","although","therefore","but","while"]},
+ pairs:[["inform","give facts"],["persuade","change someone’s mind"],["entertain","amuse the reader"],["summary","main points only"],["however","shows contrast"],["therefore","shows a result"],["main idea","what it is mostly about"]],
+ more:[
+  A(P12,MC("What did Ibn al-Haytham study?",["light and how our eyes see","the Moon","plants","the sea"],0,"He studied light and sight.")),
+  A(P12,MC("According to him, why do we see objects?",["Light bounces off them into our eyes.","Our eyes send out light.","Objects glow by themselves.","We only see in the dark."],0,"Light bounces off objects into our eyes.")),
+  A(P12,MC("“Inspire” most nearly means ___.",["encourage","frighten","confuse","tire"],0,"His experiments encourage scientists.")),
+  A(P12,TF("Ibn al-Haytham lived in the Islamic Golden Age.",true,"“A famous scientist from the Islamic Golden Age.”")),
+  A(P12,MC("What is the main idea?",["He was a great scientist who explained how we see.","Eyes are small.","Light is hot.","Experiments are easy."],0,"The passage is about his work on light and sight.")),
+  A(P12,TF("He studied only plants.",false,"He studied light and sight."))]}
+);
+})();
+
+WORLDS.push(
+{id:"write1",name:"Sentence Workshop",emoji:"🔨",c:"#0369a1",c2:"#7dd3fc",badge:"🛠️",bname:"Sentence Builder",
+ learn:[
+  {i:"🧱",h:"What is a sentence?",p:"A sentence is a group of words that makes complete sense. It needs a subject (who or what) and a verb (the action).",ex:["The boy reads a book. (subject: the boy, verb: reads)","Hana smiles.","A group of words with no subject or no verb is a fragment: “Under the big tree”"]},
+  {i:"✍️",h:"Writing it correctly",p:"Start with a capital letter. End with a full stop (.), question mark (?) or exclamation mark (!).",ex:["my brother plays football → My brother plays football.","where is the mosque → Where is the mosque?","What a lovely day!"]},
+  {i:"🔗",h:"Joining sentences",p:"Use and, but, so or because to join short sentences into longer ones.",ex:["I like tea. I like milk. → I like tea and milk.","It was raining, so we stayed inside.","She was tired but she kept working."]}],
+ q:[
+  MC("Which is a complete sentence?",["The boy reads a book.","The boy","Reads a book","On the table"],0,"It has a subject and a verb."),
+  MC("Which is a fragment (not a sentence)?",["Under the big tree","I like apples.","She runs.","We pray."],0,"It has no subject and verb."),
+  MC("“my brother plays football” needs ___.",["a capital letter and a full stop","a question mark","nothing","only a comma"],0,"Start with a capital, end with a full stop."),
+  MC("Which sentence has the correct word order?",["The cat drinks milk.","Drinks milk the cat.","Milk the drinks cat.","Cat milk the drinks."],0,"Subject, verb, object."),
+  MC("Join these: “I like tea. I like milk.”",["I like tea and milk.","I like tea but milk.","I like tea because milk.","I like tea so milk."],0,"And joins similar ideas."),
+  MC("Which end mark fits? “Where is the mosque___”",["?",".","!",","],0,"A question ends with a question mark."),
+  TP("Tap the subject:",["Hana","reads","stories."],[0],"Hana is who does the action."),
+  TP("Tap the verb:",["The","bird","sings","sweetly."],[2],"Sings is the action."),
+  OR("Build the sentence:",["The","children","play","in","the","park."],"The children play in the park."),
+  SO("Sentence or fragment?",["Sentence","Fragment"],[["The sun shines.",0],["Under the bed",1],["We eat dinner.",0],["Running very fast",1],["Birds fly.",0],["Because it rained",1]],"A sentence has a subject and a verb and makes sense.")],
+ bank:{"sentence part":["subject","verb","object","predicate","sentence","fragment"],"punctuation mark":["comma","colon","dash","hyphen","apostrophe","semicolon"],"linking word":["and","but","because","so","then","also"]},
+ pairs:[["subject","who or what"],["verb","action word"],["capital letter","starts a sentence"],["full stop","ends a statement"],["question mark","ends a question"],["fragment","incomplete sentence"],["exclamation mark","shows strong feeling"]],
+ more:[
+  OR("Build the sentence:",["She","goes","to","school","every","day."],"She goes to school every day."),
+  MC("Which sentence is a question?",["Where do you live?","You live here.","Live here!","I live here."],0,"It asks something."),
+  TF("A sentence begins with a capital letter.",true,"Always."),
+  MC("Choose the best joining word: “It was raining, ___ we stayed inside.”",["so","but","or","although"],0,"So shows a result."),
+  TP("Tap the word that needs a capital letter: “yesterday we went home.”",["yesterday","we","went","home."],[0],"The first word of a sentence."),
+  OR("Build the sentence:",["We","should","always","tell","the","truth."],"We should always tell the truth.")]},
+
+{id:"write2",name:"Paragraph Palace",emoji:"🏯",c:"#a21caf",c2:"#f0abfc",badge:"📜",bname:"Paragraph Prince",
+ learn:[
+  {i:"🏷️",h:"Topic sentence",p:"A paragraph is a group of sentences about ONE main idea. The first sentence, the topic sentence, tells the reader what the paragraph is about.",ex:["Ramadan is a special month. (topic sentence)","We fast from dawn to sunset. (detail)","Families share iftar together. (detail)"]},
+  {i:"🔗",h:"Linking words",p:"Linking words connect your ideas and show order.",ex:["Order: first, next, then, after that, finally","Adding: also, and, too","Contrast: but, however","Reason: because, so"]},
+  {i:"🏁",h:"Conclusion",p:"End with a concluding sentence that wraps up the idea.",ex:["So, Ramadan is a time for kindness and patience.","In short, reading is a wonderful habit."]}],
+ q:[
+  MC("The sentence that tells the main idea of a paragraph is the ___.",["topic sentence","title only","last word","full stop"],0,"The topic sentence states the main idea."),
+  MC("___, wash your hands. Next, dry them. (shows order)",["First","However","Because","Although"],0,"First starts a sequence."),
+  MC("I like tea, ___ I do not like coffee.",["but","and","so","then"],0,"But shows contrast."),
+  MC("Best concluding sentence for a paragraph about reading?",["So, reading is a great habit for everyone.","I have a cat.","The sky is blue.","Pizza is tasty."],0,"A conclusion wraps up the main idea."),
+  MC("Which sentence does NOT belong in a paragraph about the mosque?",["My dog likes bones.","We pray in the mosque.","The mosque is clean.","The imam leads the prayer."],0,"It is off topic."),
+  MC("Which linking word adds another idea?",["Also","However","Finally","First"],0,"Also adds."),
+  OR("Put the paragraph in order:",["First, I wake up early.","Next, I make wudu.","Then, I pray Fajr.","Finally, I eat breakfast."],"Wake, wudu, pray, breakfast."),
+  TP("Tap the linking word:",["Then","we","went","home."],[0],"Then shows order."),
+  TF("A paragraph is about one main idea.",true,"Keep to one topic."),
+  SO("Topic sentence or detail?",["Topic sentence","Detail"],[["Ramadan is a special month.",0],["We fast from dawn to sunset.",1],["Families share iftar together.",1],["Healthy habits help us grow.",0],["We should eat fruit and vegetables.",1],["Sleep is important too.",1]],"A topic sentence is general; details give facts.")],
+ bank:{"linking word":["first","next","then","finally","also","however"],"paragraph part":["topic","detail","example","conclusion","title","indent"],"time word":["morning","evening","tomorrow","yesterday","today","tonight"]},
+ pairs:[["topic sentence","main idea"],["detail","supports the idea"],["conclusion","ends the paragraph"],["first","starts a sequence"],["finally","ends a sequence"],["however","shows contrast"],["also","adds an idea"]],
+ more:[
+  OR("Put the sentences in order:",["Plants need water.","They also need sunlight.","Without them, plants cannot grow.","So we must take care of plants."],"Topic, detail, detail, conclusion."),
+  MC("A good paragraph begins with ___.",["a topic sentence","a conclusion","nothing","a joke only"],0,"Start with the main idea."),
+  MC("He was tired, ___ he kept working.",["but","because","so","then"],0,"But shows contrast."),
+  TF("Every sentence in a paragraph should be about a different topic.",false,"They should all support one idea."),
+  TP("Tap the concluding linking word:",["In","short,","reading","is","great."],[0,1],"In short wraps up."),
+  MC("Which word shows a reason? “I stayed home ___ I was ill.”",["because","but","then","also"],0,"Because gives the reason.")]},
+
+{id:"write3",name:"Letter Lane",emoji:"✉️",c:"#0f766e",c2:"#99f6e4",badge:"💌",bname:"Letter Writer",
+ learn:[
+  {i:"📮",h:"Parts of a letter",p:"A letter has a date, a greeting, a body, a closing and your name.",ex:["Dear Aisha, (greeting)","I hope you are well. (body)","Your friend, (closing)","Hana (signature)"]},
+  {i:"👔",h:"Formal and informal",p:"Write formally to teachers, managers and people you do not know. Write informally to friends and family.",ex:["Formal: Dear Sir or Madam, … Yours faithfully,","Formal (known name): Dear Mr Khan, … Yours sincerely,","Informal: Hi Sam! … See you soon, Hana"]},
+  {i:"📧",h:"Emails and invitations",p:"An email needs a clear subject line. An invitation says what, when and where.",ex:["Subject: Birthday party on Saturday","Please come to my party on Saturday at 3 pm at my house.","Always say please and thank you."]}],
+ q:[
+  MC("A letter to a friend usually begins with ___.",["Dear Hana,","To whom it may concern,","Yours faithfully,","Subject:"],0,"A friendly greeting."),
+  MC("Which closing is best for a friend?",["Your friend,","Yours faithfully,","To whom it may concern","Dear Sir,"],0,"Informal closing."),
+  MC("Which greeting is formal when you do not know the name?",["Dear Sir or Madam,","Hey you!","Hi mate,","Yo!"],0,"Formal greeting."),
+  MC("Which closing matches “Dear Sir or Madam”?",["Yours faithfully,","Love,","Bye!","See ya"],0,"Dear Sir or Madam → Yours faithfully."),
+  MC("An email’s ___ tells the reader what it is about.",["subject line","stamp","envelope","signature only"],0,"The subject line."),
+  MC("Which sentence is more polite?",["Could you please send me the form?","Send me the form.","I want the form now.","Give form."],0,"Please and could are polite."),
+  TP("Tap the closing words:",["Best","wishes,","Zayd"],[0,1],"Best wishes is the closing."),
+  OR("Put the letter parts in order:",["Dear Aisha,","Thank you for the lovely gift.","I hope to see you soon.","Your friend, Hana"],"Greeting, body, body, closing."),
+  TF("A formal letter should use slang.",false,"Use polite, correct language."),
+  SO("Formal or informal?",["Formal","Informal"],[["Dear Sir or Madam,",0],["Yours faithfully,",0],["I would like to apply for the position.",0],["Hi Sam!",1],["Hope you’re well!",1],["See you soon, Hana",1]],"Formal for managers; informal for friends.")],
+ bank:{"letter part":["greeting","closing","signature","address","date","body"],"polite word":["please","thank","sorry","kindly","excuse","welcome"],"writing type":["letter","email","invitation","postcard","note","message"]},
+ pairs:[["Dear Aisha,","greeting"],["Yours faithfully,","formal closing"],["Your friend,","informal closing"],["Subject:","email topic line"],["Please","polite request word"],["Thank you","shows thanks"],["Invitation","says when and where"]],
+ more:[
+  MC("A thank-you letter should include ___.",["thanks for something","a complaint","a joke only","nothing"],0,"Say what you are thankful for."),
+  OR("Put the invitation in order:",["Dear Ali,","Please come to my birthday party.","It is on Saturday at 3 pm.","From Omar"],"Greeting, what, when, from."),
+  TF("An invitation should say when and where.",true,"Always."),
+  MC("Choose the best opening: “___ I am writing to invite you to my birthday.”",["Dear Ali,","Yours truly,","Goodbye,","Subject:"],0,"Start with a greeting."),
+  TP("Tap the greeting word:",["Dear","Mr","Khan,"],[0],"Dear starts a letter."),
+  MC("Which is the best subject line?",["Meeting on Monday at 9 am","Hi","Important!!!","asdf"],0,"Clear and specific.")]},
+
+{id:"write4",name:"Story Studio",emoji:"🎬",c:"#c2410c",c2:"#fdba74",badge:"🎭",bname:"Storyteller",
+ learn:[
+  {i:"🧭",h:"Beginning, middle, end",p:"Every story has three parts.",ex:["Beginning: meet the characters and the setting","Middle: a problem happens and grows","End: the problem is solved"]},
+  {i:"🎨",h:"Descriptive words",p:"Use adjectives, similes and strong verbs to paint a picture with words.",ex:["The golden sun slowly rose over the quiet village.","as brave as a lion (a simile)","Suddenly, later, finally (time words)"]},
+  {i:"💬",h:"Dialogue",p:"When characters speak, use quotation marks and a comma before the closing quotation mark.",ex:["“Come here,” said Mum.","“Where are you going?” asked Hana."]}],
+ q:[
+  MC("The part that introduces characters and setting is the ___.",["beginning","middle","ending","title"],0,"The beginning."),
+  MC("The problem in a story usually happens in the ___.",["middle","title","date","last word"],0,"The middle."),
+  MC("Which is a simile?",["as brave as a lion","The lion is brave.","Lions roar.","He is a lion tamer."],0,"A simile compares using like or as."),
+  MC("Which sentence has the best description?",["The golden sun slowly rose over the quiet village.","The sun rose.","It was a day.","Sun up."],0,"Details paint a picture."),
+  MC("Which dialogue is punctuated correctly?",["“Come here,” said Mum.","Come here, said Mum.","“Come here” said, Mum.","Come here said “Mum”."],0,"Quotation marks and a comma."),
+  MC("A good story ending usually ___.",["solves the problem","adds a new topic","has no words","repeats the title"],0,"It wraps things up."),
+  TP("Tap the descriptive adjective:",["The","tiny","bird","sang."],[1],"Tiny describes the bird."),
+  OR("Put the story in order:",["Once, a boy found a map.","He followed it to a cave.","Inside, he found a treasure chest.","He shared the treasure with his village."],"Beginning, middle, end."),
+  TF("A story needs characters.",true,"Who is in the story?"),
+  SO("Setting or character?",["Setting","Character"],[["a dark forest",0],["a busy market",0],["a school in the morning",0],["a clever fox",1],["a kind teacher",1],["a brave girl named Maryam",1]],"Setting = where and when; character = who.")],
+ bank:{"story part":["beginning","middle","ending","problem","solution","character"],"descriptive word":["tiny","golden","gloomy","sparkling","enormous","quiet"],"time word":["suddenly","later","finally","meanwhile","yesterday","soon"]},
+ pairs:[["beginning","introduces characters"],["middle","the problem grows"],["ending","solves the problem"],["simile","compares with like or as"],["setting","where and when"],["character","who is in the story"],["dialogue","words people say"]],
+ more:[
+  MC("Which opening is the most exciting?",["Suddenly, the ground began to shake!","It was a day.","There is a boy.","This story is about a boy."],0,"A strong opening hooks the reader."),
+  TF("A story should have a beginning, a middle and an end.",true,"Three parts."),
+  OR("Build the sentence:",["The","brave","girl","climbed","the","tall","tree."],"The brave girl climbed the tall tree."),
+  TP("Tap the time word:",["Suddenly,","the","lights","went","out."],[0],"Suddenly is a time word."),
+  MC("Words like “suddenly” and “later” are ___ words.",["time","colour","number","animal"],0,"They show when."),
+  MC("Which is a better verb? “The boy ___ across the field.”",["sprinted","went","did","was"],0,"Strong verbs make writing exciting.")]}
+);
+
+WORLDS.push(
+{id:"compare",name:"Comparison Cove",emoji:"🌊",c:"#2563eb",c2:"#93c5fd",badge:"⚖️",bname:"Comparison Captain",
+ learn:[
+  {i:"➕",h:"Comparing two things",p:"Add -er to short adjectives, or use more with long ones, and then say than.",ex:["tall → taller (Ali is taller than Omar.)","happy → happier","beautiful → more beautiful"]},
+  {i:"🏆",h:"The most of all",p:"For three or more things use -est or most, with the.",ex:["tall → the tallest","big → the biggest (double the g)","beautiful → the most beautiful"]},
+  {i:"🎩",h:"Irregular forms",p:"Some adjectives change completely.",ex:["good → better → best","bad → worse → worst","far → farther → farthest"]}],
+ q:[
+  MC("tall → ___ (comparing two)",["taller","tallest","more tall","tallier"],0,"Add -er."),
+  MC("big → ___ (the most of all)",["biggest","bigest","most big","bigger"],0,"Double the g and add -est."),
+  MC("good → better → ___",["best","goodest","most good","gooder"],0,"Good is irregular."),
+  MC("beautiful → ___ (comparing two)",["more beautiful","beautifuller","most beautiful","beautifuler"],0,"Long adjectives use more."),
+  MC("This is the ___ book in the library.",["most interesting","more interesting","interestinger","interestingest"],0,"Use the most with long adjectives."),
+  MC("happy → ___",["happier","more happy","happyer","happyest"],0,"Change y to i, add -er."),
+  TP("Tap the superlative:",["Hana","is","the","fastest","runner."],[3],"Fastest = the most of all."),
+  TF("We use -est to compare three or more things.",true,"The tallest of all."),
+  TF("“Gooder” is correct.",false,"The comparative of good is better."),
+  SO("Comparative or superlative?",["Comparative","Superlative"],[["taller",0],["biggest",1],["smaller",0],["happiest",1],["better",0],["best",1]],"-er/better = two things; -est/best = three or more.")],
+ bank:{"comparative":["taller","bigger","happier","better","worse","smaller"],"superlative":["tallest","biggest","happiest","best","worst","smallest"],"base adjective":["tall","big","happy","good","bad","small"]},
+ pairs:[["tall","tallest"],["big","biggest"],["happy","happiest"],["good","best"],["bad","worst"],["small","smallest"],["far","farthest"]],
+ more:[
+  OR("Build the sentence:",["Ali","is","taller","than","Omar."],"Ali is taller than Omar."),
+  MC("The mountain is ___ than the hill.",["higher","highest","most high","more highest"],0,"Comparing two things."),
+  MC("bad → worse → ___",["worst","baddest","most bad","badest"],0,"Bad is irregular."),
+  TF("“More careful” is a comparative form.",true,"Long adjectives use more."),
+  MC("Which sentence is correct?",["She is smarter than me.","She is smarter then me.","She is smartest than me.","She is more smart then me."],0,"Use than to compare."),
+  TP("Tap the comparative:",["This","tea","is","hotter","than","that."],[3],"Hotter compares two.")]},
+
+{id:"homo",name:"Homophone Harbor",emoji:"⚓",c:"#0e7490",c2:"#67e8f9",badge:"🔔",bname:"Sound-Alike Sailor",
+ learn:[
+  {i:"👂",h:"Same sound, different word",p:"Homophones sound the same but have different spellings and meanings.",ex:["hear (with ears) / here (this place)","write (with a pen) / right (correct, or the opposite of left)","sun (in the sky) / son (a boy child)"]},
+  {i:"🔀",h:"Their, there, they’re",p:"These three confuse many people.",ex:["their = belongs to them (their house)","there = a place (over there)","they’re = they are (They’re kind.)"]},
+  {i:"🔢",h:"To, too, two",p:"Three different words.",ex:["to = towards (to the shop)","too = also or very (me too, too hot)","two = the number 2"]}],
+ q:[
+  MC("___ going to the park. (They are)",["They’re","Their","There","Thier"],0,"They’re = they are."),
+  MC("This is ___ house. (it belongs to them)",["their","there","they’re","thair"],0,"Their shows ownership."),
+  MC("I will go ___ the shop.",["to","too","two","tow"],0,"To = towards."),
+  MC("She is ___ tired to walk.",["too","to","two","tou"],0,"Too = very."),
+  MC("I have ___ brothers.",["two","to","too","tue"],0,"Two = the number 2."),
+  MC("Can you ___ the birds singing?",["hear","here","hare","heer"],0,"Hear = with your ears."),
+  MC("Come ___, please.",["here","hear","hare","heer"],0,"Here = in this place."),
+  MC("The ___ is warm today.",["sun","son","sin","sunn"],0,"The sun is in the sky."),
+  TP("Tap the word that means the star in the sky:",["son","sun","sin"],[1],"Sun."),
+  SO("To, too or two?",["to","too","two"],[["go to the shop",0],["too hot",1],["two apples",2],["to the park",0],["me too",1],["two eyes",2]],"Direction, also/very, or the number 2.")],
+ bank:{"homophone":["their","there","hear","here","write","right"],"pronoun":["they","we","you","she","him","them"],"number word":["two","three","four","five","six","seven"]},
+ pairs:[["their","belongs to them"],["there","a place"],["they’re","they are"],["to","towards"],["too","also or very"],["two","the number 2"],["hear","use your ears"],["here","in this place"]],
+ more:[
+  MC("___ is a cat on the roof.",["There","Their","They’re","Thare"],0,"There is a place or position."),
+  MC("Please ___ your name here.",["write","right","rite","wright"],0,"Write with a pen."),
+  MC("Turn ___ at the corner. (the opposite of left)",["right","write","rite","wrote"],0,"Right is the opposite of left."),
+  TF("“Its” shows ownership; “it’s” means “it is”.",true,"The dog wagged its tail. It’s happy."),
+  MC("I ___ the answer.",["know","no","now","knoe"],0,"Know = to have knowledge."),
+  OR("Build the sentence:",["Their","dog","is","over","there."],"Their dog is over there.")]},
+
+{id:"wh",name:"Question Quest",emoji:"❓",c:"#7e22ce",c2:"#d8b4fe",badge:"🧐",bname:"Question Master",
+ learn:[
+  {i:"🙋",h:"Wh- question words",p:"Question words start questions and ask for information.",ex:["Who → a person","What → a thing","Where → a place","When → a time","Why → a reason","Which → a choice","Whose → ownership","How → the way or amount"]},
+  {i:"🔁",h:"Making questions",p:"Put the helping verb before the subject.",ex:["You live here. → Where do you live?","She is kind. → Is she kind?","They went home. → When did they go home?"]},
+  {i:"🏷️",h:"Question tags",p:"A short question at the end of a statement. If the statement is positive, the tag is negative, and the other way round.",ex:["You like tea, don’t you?","She is kind, isn’t she?","They aren’t late, are they?"]}],
+ q:[
+  MC("___ is your name? (a thing)",["What","Who","Where","When"],0,"What asks about a thing."),
+  MC("___ is the teacher? (a person)",["Who","What","Why","How"],0,"Who asks about a person."),
+  MC("___ do you live? (a place)",["Where","When","Whose","Why"],0,"Where asks about a place."),
+  MC("___ is the party? — Tomorrow. (a time)",["When","Where","Who","Whose"],0,"When asks about time."),
+  MC("___ are you late? — Because of traffic. (a reason)",["Why","Who","Where","Which"],0,"Why asks for a reason."),
+  MC("___ bag is this? — It’s mine. (ownership)",["Whose","Who","Which","Where"],0,"Whose asks about ownership."),
+  MC("___ much does it cost? (price)",["How","What","Who","When"],0,"How much asks about amount."),
+  TP("Tap the question word:",["Where","do","you","pray?"],[0],"Where is the question word."),
+  TF("A question ends with a question mark.",true,"?"),
+  SO("What does each word ask about?",["a person","a place","a time"],[["Who",0],["Whom",0],["Where",1],["Which place",1],["When",2],["What time",2]],"Who = person; where = place; when = time.")],
+ bank:{"question word":["what","who","where","when","why","which"],"answer word":["because","tomorrow","here","mine","yesterday","there"],"question tag":["isn’t","doesn’t","aren’t","didn’t","won’t","can’t"]},
+ pairs:[["Who","asks about a person"],["What","asks about a thing"],["Where","asks about a place"],["When","asks about time"],["Why","asks for a reason"],["Whose","asks about ownership"],["How","asks about the way"]],
+ more:[
+  OR("Build the question:",["Where","do","you","live?"],"Where do you live?"),
+  MC("You like tea, ___?",["don’t you","aren’t you","isn’t it","do you"],0,"Positive statement → negative tag."),
+  MC("She is kind, ___?",["isn’t she","doesn’t she","is she","aren’t she"],0,"Is → isn’t."),
+  MC("Which sentence is a question?",["Where is the mosque?","The mosque is big.","Go to the mosque.","What a big mosque!"],0,"It asks for information."),
+  TF("“How” can ask about the way something is done.",true,"How do you make tea?"),
+  TP("Tap the helping verb that starts the question:",["Did","you","pray","Fajr?"],[0],"Did starts the question.")]},
+
+{id:"cond",name:"Conditional Cave",emoji:"🕳️",c:"#475569",c2:"#cbd5e1",badge:"🔦",bname:"If-Explorer",
+ learn:[
+  {i:"🔬",h:"Facts: zero conditional",p:"If + present, present. It is always true.",ex:["If you heat ice, it melts.","If you mix red and blue, you get purple."]},
+  {i:"🌧️",h:"Real possibility: first conditional",p:"If + present, will + base verb. It may really happen.",ex:["If it rains, we will stay home.","If she studies, she will pass."]},
+  {i:"🦄",h:"Imaginary: second conditional",p:"If + past (were), would + base verb. It is imaginary or unlikely.",ex:["If I were rich, I would travel the world.","If I had wings, I would fly.","Use “were” for I/he/she in formal English."]}],
+ q:[
+  MC("If it rains, we ___ stay home. (real future)",["will","would","did","had"],0,"First conditional uses will."),
+  MC("If I ___ rich, I would travel the world.",["were","am","will be","is"],0,"Second conditional uses were."),
+  MC("If you heat ice, it ___.",["melts","will melting","melted","would melts"],0,"Facts use the present."),
+  MC("If she studies, she ___ pass.",["will","would","did","has"],0,"First conditional."),
+  MC("If I had time, I ___ help you.",["would","will","am","can’t"],0,"Second conditional."),
+  MC("Which sentence is a real possibility?",["If it rains, we will stay home.","If I were a bird, I would fly.","If I had wings, I would soar.","If I were king, I would rule."],0,"Real possibilities use will."),
+  TP("Tap the “if” word:",["If","you","study,","you","will","pass."],[0],"If starts the condition."),
+  TF("The second conditional talks about imaginary situations.",true,"If I were rich..."),
+  TF("The first conditional uses “would” in the result.",false,"It uses will."),
+  SO("Real or imaginary?",["Real (will)","Imaginary (would)"],[["If it rains, we will stay in.",0],["If you hurry, you will catch the bus.",0],["If he studies, he will pass.",0],["If I were rich, I would travel.",1],["If I had wings, I would fly.",1],["If she knew, she would tell us.",1]],"Will = real; would = imaginary.")],
+ bank:{"if-clause verb":["rains","studies","works","hurries","tries","asks"],"result modal":["will","would","could","might","should","can"],"imaginary form":["were","had","knew","lived","owned","went"]},
+ pairs:[["If you heat ice","it melts"],["If it rains","we will stay in"],["If you study","you will pass"],["If I were rich","I would travel"],["If I had wings","I would fly"],["If you hurry","you will catch the bus"]],
+ more:[
+  OR("Build the sentence:",["If","it","rains,","we","will","stay","home."],"If it rains, we will stay home."),
+  MC("If you mix red and blue, you ___ purple.",["get","will getting","got","would gets"],0,"A fact: present tense."),
+  MC("If he ___ hard, he will succeed.",["works","worked","working","work"],0,"If + present."),
+  TF("A comma follows the if-clause when it comes first.",true,"If it rains, we will go in."),
+  MC("If I ___ you, I would apologise.",["were","am","was being","be"],0,"Use were in the second conditional."),
+  TP("Tap the word that shows a real future result:",["If","it","rains,","we","will","go."],[4],"Will shows a real result.")]},
+
+{id:"phrasal",name:"Phrasal Verb Playground",emoji:"🛝",c:"#d97706",c2:"#fde68a",badge:"🎢",bname:"Phrasal Pro",
+ learn:[
+  {i:"🧩",h:"Verb + small word",p:"A phrasal verb is a verb plus a small word (a particle). Together they have a new meaning.",ex:["give up = stop trying","look after = take care of","turn off = stop a machine"]},
+  {i:"🔌",h:"On and off",p:"Many phrasal verbs use on and off.",ex:["turn on / turn off the light","put on / take off your coat","switch on / switch off the TV"]},
+  {i:"🔎",h:"More useful ones",p:"Learn these everyday phrasal verbs.",ex:["wake up, get up","look for = search","look up = find in a book","pick up = lift","run out of = have none left","come back = return"]}],
+ q:[
+  MC("Please ___ the light. (stop it shining)",["turn off","turn up","turn into","turn for"],0,"Turn off = switch off."),
+  MC("“Give up” means ___.",["stop trying","start","win","share"],0,"Give up = stop trying."),
+  MC("I need to ___ early for school. (leave your bed)",["get up","get over","get off","get into"],0,"Get up = leave your bed."),
+  MC("She will ___ her baby sister while Mum is out.",["look after","look up","look for","look out"],0,"Look after = take care of."),
+  MC("I am ___ my keys. (searching)",["looking for","looking after","looking up","looking out"],0,"Look for = search."),
+  MC("Please ___ your shoes before entering.",["take off","put on","pick up","give up"],0,"Take off = remove."),
+  MC("Put ___ your coat. It is cold.",["on","off","for","after"],0,"Put on = wear."),
+  TP("Tap the two words of the phrasal verb:",["Please","wake","up","now."],[1,2],"Wake up."),
+  TF("“Run out of” means to have none left.",true,"We ran out of milk."),
+  SO("Start/wear or stop/remove?",["Start / wear","Stop / remove"],[["turn on",0],["put on",0],["switch on",0],["turn off",1],["take off",1],["switch off",1]],"On = start or wear; off = stop or remove.")],
+ bank:{"phrasal verb":["wake up","give up","turn off","pick up","take off","look after"],"particle":["off","out","down","away","back","over"],"main verb":["wake","give","turn","pick","take","look"]},
+ pairs:[["turn on","start a machine"],["turn off","stop a machine"],["give up","stop trying"],["look after","take care of"],["pick up","lift something"],["wake up","stop sleeping"],["take off","remove clothes"]],
+ more:[
+  OR("Build the sentence:",["Please","pick","up","your","toys."],"Please pick up your toys."),
+  MC("We have ___ of milk. (none left)",["run out","run up","run down","run on"],0,"Run out of = none left."),
+  MC("“Look up” a word means to ___.",["find it in a dictionary","stare at it","hide it","spell it wrongly"],0,"Look up = search in a book."),
+  TF("“Come back” means to return.",true,"I will come back soon."),
+  MC("He ___ his old toys to charity. (donated)",["gave away","gave in","gave off","gave out"],0,"Give away = donate."),
+  TP("Tap the particle in “turn off”:",["turn","off"],[1],"Off is the particle.")]},
+
+{id:"spell",name:"Spelling Bee Hive",emoji:"🐝",c:"#ca8a04",c2:"#fef08a",badge:"🐝",bname:"Spelling Bee",
+ learn:[
+  {i:"🔤",h:"I before E",p:"Write i before e, except after c, when the sound is “ee”.",ex:["believe, friend, field (ie)","receive, ceiling (cei)","Exceptions: weird, seize"]},
+  {i:"✌️",h:"Doubling and changing",p:"Short words with one vowel and one end consonant double it before -ing or -ed. Change y to i before most endings.",ex:["run → running, stop → stopped","happy → happily, happiness","carry → carried"]},
+  {i:"🤫",h:"Silent letters",p:"Some letters are written but not said.",ex:["knee, knife, know (silent k)","write, wrong (silent w)","lamb, climb (silent b)"]}],
+ q:[
+  MC("Choose the correct spelling.",["receive","recieve","receeve","receve"],0,"i before e, except after c."),
+  MC("Choose the correct spelling.",["friend","freind","frend","fiend"],0,"F-R-I-E-N-D."),
+  MC("Choose the correct spelling.",["because","becuase","becouse","becawse"],0,"B-E-C-A-U-S-E."),
+  MC("Which word has a silent k?",["knee","key","kite","kind"],0,"Knee: the k is silent."),
+  MC("Choose the correct spelling.",["beautiful","beutiful","beautifull","butiful"],0,"Beautiful."),
+  MC("Choose the correct spelling.",["separate","seperate","separete","seprate"],0,"There is “a rat” in separate."),
+  MC("run + ing = ___",["running","runing","runeing","runninng"],0,"Double the n."),
+  MC("happy + ly = ___",["happily","happyly","happly","happiely"],0,"Change y to i."),
+  TP("Tap the misspelled word:",["I","recieve","a","letter."],[1],"Receive has ei after c."),
+  SO("ie or ei?",["ie","ei"],[["believe",0],["friend",0],["field",0],["receive",1],["ceiling",1],["eight",1]],"i before e, except after c.")],
+ bank:{"correct spelling":["receive","friend","because","beautiful","separate","necessary"],"silent letter word":["knee","write","knife","wrong","lamb","climb"],"word ending":["ful","less","ness","ment","able","ing"]},
+ pairs:[["knee","silent k"],["write","silent w"],["lamb","silent b"],["receive","ei after c"],["running","double the consonant"],["happily","y changes to i"],["friend","ie spelling"]],
+ more:[
+  MC("Choose the correct spelling.",["different","diffrent","diferent","diffirent"],0,"Dif-fer-ent."),
+  MC("Which word has a silent w?",["write","water","window","wall"],0,"Write: the w is silent."),
+  MC("Choose the correct spelling.",["library","libary","liberry","librery"],0,"Li-brar-y."),
+  TF("“Definately” is the correct spelling.",false,"It is spelled definitely."),
+  MC("stop + ed = ___",["stopped","stoped","stopt","stoppd"],0,"Double the p."),
+  TF("“Necessary” has one c and two s.",true,"N-E-C-E-S-S-A-R-Y.")]}
+);
+
 /* Grand Challenge: final boss mixes questions from every world */
-(function(){const q=[];WORLDS.forEach(w=>{q.push(...w.q.filter(x=>x.t==="mcq"||x.t==="tap").sort(()=>Math.random()-.5).slice(0,2))});
+(function(){const q=[];WORLDS.forEach(w=>{q.push(...w.q.filter(x=>(x.t==="mcq"||x.t==="tap")&&!x.p).sort(()=>Math.random()-.5).slice(0,2))});
  WORLDS.push({id:"boss",name:"Grand Challenge",emoji:"🐉",c:"#be123c",c2:"#fb7185",badge:"🐲",bname:"Dragon Slayer",
   learn:[{i:"🐉",h:"The Grand Challenge!",p:"A friendly dragon guards the end of the map. Questions from every world are mixed together. Use everything you learned!",ex:["Nouns, pronouns, verbs and adjectives","Adverbs, prepositions, conjunctions and interjections","Sentence types","Take a deep breath, say Bismillah, and begin!"]}],
   q:q.sort(()=>Math.random()-.5).slice(0,15)})})();
@@ -748,17 +1292,19 @@ function tfList(w){const L=Object.keys(w.bank);const all=L.flatMap(l=>w.bank[l].
  return shuffle(shuffle(all).slice(0,10).map(([x,l],i)=>{const truth=i%2===0;const wl=truth?l:pick(L.filter(y=>y!==l));
   return {t:"tf",q:"“"+x+"” is "+art(wl)+" "+wl+".",a:truth,why:"“"+x+"” is "+art(l)+" "+l+"."}}))}
 function shootList(w){const out=popList(w).map(p=>({t:"shoot",q:p.q.replace("Pop","Shoot"),w:p.w,why:p.why}));
- shuffle([...(w.q||[]),...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,2).forEach(x=>out.push({t:"shoot",q:x.q,w:x.o.map((t,j)=>[t,j===x.a?1:0]),why:x.why}));return out}
+ shuffle([...(w.q||[]),...(w.more||[])].filter(x=>x.t==="mcq"&&!x.p)).slice(0,2).forEach(x=>out.push({t:"shoot",q:x.q,w:x.o.map((t,j)=>[t,j===x.a?1:0]),why:x.why}));return out}
 function moleList(w){return popList(w).slice(0,2).map(p=>({t:"mole",q:p.q.replace("Pop","Whack"),w:p.w,need:5,why:p.why}))}
 function buildLessons(w){const out=[...w.learn];if(!w.bank)return out;
  out.push({i:"🧰",h:"Word bank",p:"More words to remember. Tap a line to hear it.",ex:Object.keys(w.bank).map(k=>`${k}: ${w.bank[k].join(", ")}`)});
- const mc=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,5);
+ const mc=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq"&&!x.p)).slice(0,5);
  if(mc.length>=2)out.push({i:"✏️",h:"Worked examples",p:"Read each question and its answer.",ex:mc.map(x=>`${x.q.replace(/___/g,x.o[x.a])} → ${x.o[x.a]}. ${x.why||""}`)});
  if(w.pairs&&w.pairs.length)out.push({i:"🔗",h:"Matching pairs",p:"These pairs appear in the memory game.",ex:w.pairs.slice(0,6).map(p=>`${p[0]} ↔ ${p[1]}`)});
  return out}
 function battleList(w){return shuffle([...w.q,...(w.more||[])]).slice(0,8)}
-function speedList(w){const m=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq")).slice(0,8);return m.length>=5?m:[...m,...tfList(w).slice(0,6-m.length)]}
-function typeWave(w){const all=[...new Set(Object.values(w.bank).flat().map(x=>String(x).toLowerCase()).filter(x=>/^[a-z]{3,10}$/.test(x)))];
+function speedList(w){const m=shuffle([...w.q,...(w.more||[])].filter(x=>x.t==="mcq"&&!x.p)).slice(0,8);return m.length>=5?m:[...m,...tfList(w).slice(0,6-m.length)]}
+function typeWave(w){const ok=x=>/^[a-z]{3,10}$/.test(x),bk=Object.values(w.bank).flat().map(x=>String(x).toLowerCase());
+ let all=[...new Set(bk.filter(ok))];
+ if(all.length<8)all=[...new Set([...all,...bk.flatMap(x=>x.split(/[^a-z]+/)).filter(ok),...[...w.q,...(w.more||[])].flatMap(x=>x.t==="order"?x.w:[]).map(x=>x.toLowerCase().replace(/[^a-z]/g,"")).filter(ok)])];
  const sh=shuffle(all.filter(x=>x.length<=6)),lg=shuffle(all);const pickN=pool=>{const o=[];for(const x of pool)if(!o.includes(x)&&o.length<6)o.push(x);return o};
  let ws=pickN(sh.length>=6?sh:lg);while(ws.length<6)ws.push(all[ws.length%all.length]||"word");
  return{t:"type",num:false,q:"Type each word to blast it! 🚀",items:ws.map(x=>({s:x,k:x})),why:"Great typing!"}}
@@ -867,7 +1413,7 @@ function showQ(){
  if(q.t==="tf"){body=`<div class="tfb"><button class="opt t" data-v="1">✅ True</button><button class="opt f" data-v="0">❌ False</button></div>`}
  else if(q.t==="pop"){Q.popLeft=q.w.filter(x=>x[1]).length;body=`<div class="bubs">${q.w.map((x,i)=>`<button class="bub" data-i="${i}">${esc(x[0])}</button>`).join("")}</div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
- else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word.</p>`}
+ else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word. Do not let anything reach the ground!</p>`}
  else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="mcq"){Q.opts=shuffle(q.o.map((t,i)=>({t,ok:i===q.a})));body=`<div class="opts">${Q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div>`}
@@ -875,10 +1421,10 @@ function showQ(){
  else if(q.t==="sort"){Q.items=shuffle(q.i);Q.si=0;body=`<div id="sortbody"></div>`}
  else if(q.t==="order"){Q.pool=shuffle(q.w.map((t,i)=>({t,i})));Q.ans=[];body=`<div class="slot" id="slot"></div><div class="sent" id="pool"></div><button class="big alt" id="chk">Check ✔</button>`}
  view(`<div class="qhead"><button class="x" id="back" aria-label="Quit">✕</button><div class="bar"><i style="width:${Q.i/Q.list.length*100}%"></i></div><span class="pill">${Q.i+1}/${Q.list.length}</span></div>
- ${hud}<div class="card"><div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
+ ${hud}<div class="card">${q.p?`<div class="passage">${esc(q.p)}</div>`:""}<div class="qtext">${fmtQ(q.q)} <button class="spk" id="spk" aria-label="Read aloud">🔊</button></div>${body}
  <div id="fb"></div></div><button class="big hide" id="next">Next ➜</button>`);
  $("#back").onclick=()=>{if(confirm("Leave this activity?"))viewHub(Q.wi)};
- $("#spk").onclick=()=>say(q.q+(q.t==="tap"?" "+q.w.join(" "):""));
+ $("#spk").onclick=()=>say((q.p?q.p+" ":"")+q.q+(q.t==="tap"?" "+q.w.join(" "):""));
  if(q.t==="tf")bindTf(q);else if(q.t==="pop")bindPop(q);else if(q.t==="shoot")bindShoot(q);else if(q.t==="mole")bindMole(q);else if(q.t==="catch")bindCatch(q);else if(q.t==="type")bindType(q);else if(q.t==="mcq")bindMcq(q);else if(q.t==="tap")bindTap(q);else if(q.t==="sort")showSort(q);else bindOrder(q);
  if(Q.stage==="speed"&&q.t==="mcq"){const bar=$("#tmr");if(bar){requestAnimationFrame(()=>{bar.style.transition="width 15s linear";bar.style.width="0%"});GT.push(setTimeout(()=>timeUp(q),15000))}}
 }
@@ -897,10 +1443,10 @@ function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++
  app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
  $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
-function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
- const sp=()=>window.ZT_SP||1500,base=.5+Math.min(Q.wi,40)*.012;
+function bindType(q){const z=$("#zt"),H=Math.max(320,Math.round(window.innerHeight-380));z.style.height=H+"px";const ship=z.querySelector(".zship");let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
+ const sp=()=>window.ZT_SP||1500,base=(H/340)*(.5+Math.min(Q.wi,40)*.012);
  const paint=e=>{const t=e.k.slice(0,e.n);e.el.innerHTML=q.num?`${esc(e.s)} = <b>${esc(t)}</b>${"·".repeat(e.k.length-e.n)}`:`<b>${esc(t)}</b>${esc(e.k.slice(e.n))}`;e.el.classList.toggle("lock",e===tgt)};
- const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";s.style.left="50%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
+ const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";ship.style.left=e.x+"%";s.style.left=e.x+"%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
  const reset=()=>{ty="";tgt=null;en.forEach(e=>{e.n=0;paint(e)})};
  const kill=e=>{e.dead=true;e.el.classList.add("dead");setTimeout(()=>e.el.remove(),320);en=en.filter(x=>x!==e);left--;sfx.tap();ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)});
   if(left<=0&&!Q.done){Q.done=true;GT.forEach(clearInterval);document.onkeydown=null;setTimeout(()=>{Q.done=false;right(q)},400)}};
@@ -914,10 +1460,13 @@ function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x
  app.querySelectorAll(".zk").forEach(b=>b.onclick=()=>{const k=b.dataset.k;k==="⌫"?back():press(k)});
  const spawn=()=>{const it=queue.shift(),el=document.createElement("span");el.className="zen";el.dataset.k=it.k;const x=14+Math.random()*72;el.style.left=x+"%";z.appendChild(el);
   const e={s:it.s,k:it.k,el,x,y:-10,n:0,dead:false};en.push(e);paint(e)};
+ const lose=()=>{if(Q.done)return;Q.done=true;Q.mist++;GT.forEach(clearInterval);document.onkeydown=null;sfx.no();z.classList.add("lost");
+  $("#fb").innerHTML='<div class="fb b"><span>💥</span><div>A word reached the ground — you lost this round! Try again.</div></div>';
+  const n=$("#next");n.classList.remove("hide");n.textContent="Try again 🔁";n.onclick=()=>{sfx.tap();showQ()};n.scrollIntoView({behavior:"smooth",block:"center"})};
  GT.push(setInterval(()=>{if(Q.done)return;tk++;
   if(queue.length&&tk*50>=next){next+=sp();spawn()}
   en.slice().forEach(e=>{e.y+=base;e.el.style.top=e.y+"px";
-   if(e.y>H-40){e.el.remove();en=en.filter(x=>x!==e);if(tgt===e){ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)})}wrong();queue.push({s:e.s,k:e.k})}})},50))}
+   if(e.y>H-40){lose();return}})},50))}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);

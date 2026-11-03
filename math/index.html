@@ -215,7 +215,7 @@ input#nm:focus{border-color:var(--sky)}
 .zkb div{display:flex;gap:4px;width:100%;justify-content:center}
 .zk{flex:1;max-width:40px;min-width:24px;height:42px;border:0;border-radius:8px;background:#115e59;color:#5eead4;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;touch-action:manipulation}
 .zk:active{background:#14b8a6;color:#042f2e}
-</style>
+.zship{transition:left .15s}.zt.lost{filter:grayscale(1) brightness(.6)}</style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -1359,7 +1359,7 @@ function showQ(){
  else if(q.t==="pair"){body=`<div class="bigword">${q.target}</div><div class="sent">${q.nums.map((x,i)=>`<button class="chip" data-i="${i}">${x}</button>`).join("")}</div>`}
  else if(q.t==="cross"){body=`<div class="vis items">${Array.from({length:q.n},(_,i)=>`<button class="it" data-i="${i}" aria-label="item">${q.e}</button>`).join("")}</div><div id="ans"></div>`}
  else if(q.t==="shoot"){Q.popLeft=q.w.filter(x=>x[1]).length;const L=shuffle(q.w);body=`${vis}<div class="arena" id="arena">${L.map((x,i)=>`<button class="tg" data-i="${q.w.indexOf(x)}" style="top:${6+(i%4)*21}%;--dur:${(4+Math.random()*4).toFixed(1)}s;--dl:-${(Math.random()*5).toFixed(1)}s">${esc(x[0])}</button>`).join("")}<span class="cannon">🚀</span></div><p class="hint">Tap a target to shoot it!</p>`}
- else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word.</p>`}
+ else if(q.t==="type"){const rows=q.num?["1234567890"]:["qwertyuiop","asdfghjkl","zxcvbnm"];body=`<div class="zt" id="zt"><span class="zship">🚀</span></div><div class="zkb">${rows.map((r,ri)=>`<div>${[...r].map(k=>`<button class="zk" data-k="${k}">${k.toUpperCase()}</button>`).join("")}${ri===rows.length-1?`<button class="zk" data-k="⌫" aria-label="Clear">⌫</button>`:""}</div>`).join("")}</div><p class="hint">Type on your keyboard or tap the keys. Typos are ignored; ⌫ restarts a word. Do not let anything reach the ground!</p>`}
  else if(q.t==="catch"){Q.popLeft=q.w.filter(x=>x[1]).length;const rk=shuffle(q.w.map((_,i)=>i));body=`<div class="fall" id="fall">${q.w.map((x,i)=>`<button class="fi" data-i="${i}" style="left:${2+Math.round(rk[i]*(76/q.w.length))}%;--dur:${(3.5+Math.random()*3).toFixed(1)}s;--dl:-${(Math.random()*4).toFixed(1)}s">${esc(x[0])}</button>`).join("")}</div><p class="hint">Tap the right ones as they fall!</p>`}
  else if(q.t==="mole"){body=`<div class="mprog" id="mp2">Hits: 0 / ${q.need}</div><div class="mgr">${Array.from({length:9},(_,i)=>`<button class="mcell" data-ok="" data-exp="0" data-i="${i}" aria-label="hole"></button>`).join("")}</div>`}
  else if(q.t==="share"){body=`<div class="vis" id="pool"></div><div class="frs" id="frs"></div>`}
@@ -1420,10 +1420,10 @@ function timeUp(q){if(Q.done)return;Q.done=true;if(!Q.flag){Q.flag=true;Q.mist++
  app.querySelectorAll(".opt").forEach(b=>{b.style.pointerEvents="none";if(Q.opts&&Q.opts[+b.dataset.i]&&Q.opts[+b.dataset.i].ok)b.classList.add("ok")});
  $("#fb").innerHTML=`<div class="fb b"><span>⏰</span><div>Time is up!<br><small>${esc(q.why||"")}</small></div></div>`;
  const n=$("#next");n.classList.remove("hide");n.textContent=Q.i===Q.list.length-1?"Finish! 🎉":"Next ➜";n.onclick=()=>{sfx.tap();Q.i++;Q.i>=Q.list.length?finish():showQ()}}
-function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
- const sp=()=>window.ZT_SP||1500,base=.5+Math.min(Q.wi,40)*.012;
+function bindType(q){const z=$("#zt"),H=Math.max(320,Math.round(window.innerHeight-380));z.style.height=H+"px";const ship=z.querySelector(".zship");let en=[],queue=q.items.map(x=>({s:x.s,k:x.k})),left=q.items.length,tgt=null,ty="",tk=0,next=0;
+ const sp=()=>window.ZT_SP||1500,base=(H/340)*(.5+Math.min(Q.wi,40)*.012);
  const paint=e=>{const t=e.k.slice(0,e.n);e.el.innerHTML=q.num?`${esc(e.s)} = <b>${esc(t)}</b>${"·".repeat(e.k.length-e.n)}`:`<b>${esc(t)}</b>${esc(e.k.slice(e.n))}`;e.el.classList.toggle("lock",e===tgt)};
- const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";s.style.left="50%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
+ const shot=e=>{const s=document.createElement("span");s.className="zsh";s.textContent="✨";ship.style.left=e.x+"%";s.style.left=e.x+"%";s.style.top=(H-30)+"px";z.appendChild(s);requestAnimationFrame(()=>{s.style.left=e.x+"%";s.style.top=e.y+"px"});setTimeout(()=>s.remove(),230)};
  const reset=()=>{ty="";tgt=null;en.forEach(e=>{e.n=0;paint(e)})};
  const kill=e=>{e.dead=true;e.el.classList.add("dead");setTimeout(()=>e.el.remove(),320);en=en.filter(x=>x!==e);left--;sfx.tap();ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)});
   if(left<=0&&!Q.done){Q.done=true;GT.forEach(clearInterval);document.onkeydown=null;setTimeout(()=>{Q.done=false;right(q)},400)}};
@@ -1437,10 +1437,13 @@ function bindType(q){const z=$("#zt"),H=340;let en=[],queue=q.items.map(x=>({s:x
  app.querySelectorAll(".zk").forEach(b=>b.onclick=()=>{const k=b.dataset.k;k==="⌫"?back():press(k)});
  const spawn=()=>{const it=queue.shift(),el=document.createElement("span");el.className="zen";el.dataset.k=it.k;const x=14+Math.random()*72;el.style.left=x+"%";z.appendChild(el);
   const e={s:it.s,k:it.k,el,x,y:-10,n:0,dead:false};en.push(e);paint(e)};
+ const lose=()=>{if(Q.done)return;Q.done=true;Q.mist++;GT.forEach(clearInterval);document.onkeydown=null;sfx.no();z.classList.add("lost");
+  $("#fb").innerHTML='<div class="fb b"><span>💥</span><div>A word reached the ground — you lost this round! Try again.</div></div>';
+  const n=$("#next");n.classList.remove("hide");n.textContent="Try again 🔁";n.onclick=()=>{sfx.tap();showQ()};n.scrollIntoView({behavior:"smooth",block:"center"})};
  GT.push(setInterval(()=>{if(Q.done)return;tk++;
   if(queue.length&&tk*50>=next){next+=sp();spawn()}
   en.slice().forEach(e=>{e.y+=base;e.el.style.top=e.y+"px";
-   if(e.y>H-40){e.el.remove();en=en.filter(x=>x!==e);if(tgt===e){ty="";tgt=null;en.forEach(x=>{x.n=0;paint(x)})}wrong();queue.push({s:e.s,k:e.k})}})},50))}
+   if(e.y>H-40){lose();return}})},50))}
 function bindShoot(q){const ar=$("#arena");
  app.querySelectorAll(".tg").forEach(b=>b.onclick=()=>{if(Q.done||b.classList.contains("boom"))return;
   const bu=document.createElement("span");bu.className="bul";bu.textContent="✨";ar.appendChild(bu);
