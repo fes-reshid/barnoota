@@ -60,19 +60,17 @@ Source: "..\dist\{#AppName}.exe"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppName}.exe"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppName}.exe"; Tasks: desktopicon
 
-[Registry]
-#if AppKey == "guard"
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "NoorGuardTray"; ValueData: """{app}\NoorGuard.exe"" --tray"; Tasks: tray; Flags: uninsdeletevalue
-; Also removes the tray start-up entry if it was switched on later from Settings.
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "NoorGuardTray"; Flags: uninsdeletevalue
-#else
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "NoorCleanerReminder"; ValueData: """{app}\NoorCleaner.exe"" --remind"; Tasks: reminder; Flags: uninsdeletevalue
-; Also removes a reminder switched on later from Settings when NoorCleaner is uninstalled.
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "NoorCleanerReminder"; Flags: uninsdeletevalue
-#endif
+; NoorCleaner and NoorGuard always run as administrator, and Windows does not start such a program from the
+; Run key at sign-in. So the sign-in choices (tray, reminder) are left in installer.txt (see the [Code] section)
+; and the program creates its own scheduled task the first time it runs. Nothing is written to the registry here.
 
 [Run]
-Filename: "{app}\{#AppName}.exe"; Description: "Open {#AppName}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#AppName}.exe"; Description: "Open {#AppName}"; Flags: nowait postinstall skipifsilent shellexec
+
+[UninstallRun]
+; Removes the sign-in tasks the program created (best effort: this uninstaller does not run as administrator).
+Filename: "{sys}\schtasks.exe"; Parameters: "/delete /tn ""{#AppName} tray"" /f"; Flags: runhidden; RunOnceId: "DelTrayTask"
+Filename: "{sys}\schtasks.exe"; Parameters: "/delete /tn ""NoorCleaner reminder"" /f"; Flags: runhidden; RunOnceId: "DelRemindTask"
 
 [Code]
 var

@@ -202,8 +202,16 @@ class PrivacyMixin:
             if not paths:
                 self.info(_("Add files or folders to wipe first."))
             return
-        if not self.ask(_("Permanently wipe {count} item(s)? Nothing can bring them back.").format(count=len(paths)),
-                        danger=True):
+        items = []
+        for path in paths:
+            try:
+                size = os.path.getsize(path) if os.path.isfile(path) else 0
+            except OSError:
+                size = 0
+            items.append((path, size))
+        if not self.confirm_files(_("Wipe these files so they can never be recovered?"),
+                                  _("Permanently wipe {count} item(s)? Nothing can bring them back.").format(
+                                      count=len(paths)), items, _("Wipe now"), True):
             return
         flash = []
         if core.IS_WINDOWS:

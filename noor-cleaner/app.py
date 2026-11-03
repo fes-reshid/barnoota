@@ -849,11 +849,19 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
             self.info(_("Tick at least one kind of junk to clean."))
             return
         known = sum(self.junk_sizes.get(c.key, 0) for c in chosen)
-        question = (_("Delete these junk files ({size})?").format(size=human_size(known)) if self.junk_sizes
-                    else _("Delete these junk files?"))
-        question += "\n\n" + "\n".join("  - " + c.name for c in chosen) + "\n\n" + _(
-            "This cannot be undone. Files in use are skipped.")
-        if not self.ask(question, danger=True):
+        items = []
+        for c in chosen:
+            folders = c.existing_folders()
+            if folders:
+                items += [(f, 0) for f in folders]
+            else:  # the Recycle Bin has no folder of its own to list
+                items.append((c.name, self.junk_sizes.get(c.key, 0)))
+        intro = (_("About {size} will be deleted from the places below.").format(size=human_size(known))
+                 if self.junk_sizes else _("The places below will be cleaned."))
+        names = ", ".join(c.name for c in chosen)
+        if not self.confirm_files(_("Delete these junk files?"), intro, items, _("Delete permanently"), True,
+                                  (_("Kinds of junk: {names}").format(names=names),
+                                   _("This cannot be undone. Files in use are skipped."))):
             return
         self.junk_status.config(text=_("Cleaning..."))
 
@@ -1140,8 +1148,21 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
 
     def delete_quarantined(self):
         chosen = self._selected_quarantine()
-        if not chosen or not self.ask(_("Permanently delete {count} quarantined file(s)? This cannot be undone.").format(
-                count=len(chosen)), danger=True):
+        if not chosen:
+            return
+        items = []
+        for iid in self.q_tree.selection():
+            if iid in self.q_tree.items:
+                stored = self.q_tree.items[iid]
+                try:
+                    size = os.path.getsize(stored)
+                except OSError:
+                    size = 0
+                items.append((self.q_tree.item(iid, "values")[3], size))
+        if not self.confirm_files(_("Delete these quarantined files for good?"),
+                                  _("{count} file(s) will be deleted for good. This cannot be undone.").format(
+                                      count=len(chosen)), items, _("Delete permanently"), True,
+                                  (_("The list shows where each file came from."),)):
             return
         errors = []
         for stored in chosen:
@@ -1186,20 +1207,23 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
                         return
                     break
 
-        listing = "\n".join(os.path.basename(p) for p in paths[:10])
-        if len(paths) > 10:
-            listing += "\n" + _("...and {count} more").format(count=len(paths) - 10)
-        size = human_size(sum(tree.sizes.get(iid, 0) for iid, p in selected if p in paths))
-        questions = {
-            "quarantine": _("Move {count} file(s) ({size}) to quarantine?").format(count=len(paths), size=size)
-                          + f"\n\n{listing}\n\n" + _("They will be locked away and can be restored from Quarantine."),
-            "recycle": _("Move {count} file(s) ({size}) to the Recycle Bin?").format(count=len(paths), size=size)
-                       + f"\n\n{listing}\n\n" + _("You can still restore them. They keep using space until you "
-                                                 "empty the Recycle Bin (Junk files)."),
-            "delete": _("PERMANENTLY delete {count} file(s) ({size})?").format(count=len(paths), size=size)
-                      + f"\n\n{listing}\n\n" + _("This cannot be undone."),
+        items = [(p, tree.sizes.get(iid, 0)) for iid, p in selected if p in paths]
+        size = human_size(sum(sz for _p, sz in items))
+        count = len(paths)
+        asks = {
+            "quarantine": (_("Quarantine these files?"),
+                           _("{count} file(s) ({size}) will be locked away. You can restore them from "
+                             "Quarantine.").format(count=count, size=size), _("Quarantine"), False),
+            "recycle": (_("Move these files to the Recycle Bin?"),
+                        _("{count} file(s) ({size}). You can still restore them, but they keep using space until you "
+                          "empty the Recycle Bin (Junk files).").format(count=count, size=size),
+                        _("Move to Recycle Bin"), False),
+            "delete": (_("Permanently delete these files?"),
+                       _("{count} file(s) ({size}) will be deleted for good. This cannot be undone.").format(
+                           count=count, size=size), _("Delete permanently"), True),
         }
-        if not self.ask(questions[mode], danger=True):
+        title, intro, button, danger = asks[mode]
+        if not self.confirm_files(title, intro, items, button, danger):
             return
 
         done, failed = [], []
@@ -1336,16 +1360,10 @@ def main(edition=editions.CLEANER):
         import reminder
         reminder.run_reminder()
         return
-    if edition.key == "cleaner":
-        # NoorCleaner 2.2 could watch the network from the tray; that is NoorGuard's job now. Drop the old
-        # start-up entry so it does not pop up at sign-in, and ignore a leftover --tray start.
-        try:
-            import reminder
-            reminder.set_tray_autostart(False, "NoorCleanerTray")
-        except (OSError, ImportError):
-            pass
-        if "--tray" in sys.argv:
-            return
+    if edition.key == "cleaner" and "--tray" in sys.argv:
+        return  # NoorCleaner 2.2 could watch the network from the tray; that is NoorGuard's job now
+    if core.IS_WINDOWS and not is_admin() and ui_base.relaunch_as_admin(sys.argv[1:]):
+        return  # the installed program asks for administrator rights itself; this is for a copy run from source
     if core.IS_WINDOWS:
         try:
             import ctypes
@@ -1364,6 +1382,9 @@ def main(edition=editions.CLEANER):
         settings.save(config)
     i18n.set_language(config["language"])
     NoorApp(root, config, edition, start_hidden="--tray" in sys.argv)
+    if core.IS_WINDOWS:  # the sign-in tasks the settings ask for, created in the background (this is slow-ish)
+        import reminder
+        threading.Thread(target=reminder.ensure_tasks, args=(config, edition.key), daemon=True).start()
     root.mainloop()
 
 

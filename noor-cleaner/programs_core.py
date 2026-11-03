@@ -123,8 +123,8 @@ def folder_size(folder, limit=50000):
     return total
 
 
-def list_installed_programs(cancel=None):
-    """Installed desktop programs, biggest first."""
+def list_installed_programs(cancel=None, measure=True):
+    """Installed desktop programs, biggest first. measure=False skips adding up folder sizes (much faster)."""
     if not core.IS_WINDOWS:
         return []
     sources = [(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_64KEY), (winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_32KEY),
@@ -150,7 +150,7 @@ def list_installed_programs(cancel=None):
                 if not program or (program.name.lower(), program.version) in seen:
                     continue
                 seen.add((program.name.lower(), program.version))
-                if not program.size and program.location and os.path.isdir(program.location):
+                if measure and not program.size and program.location and os.path.isdir(program.location):
                     program.size = folder_size(program.location)
                 programs.append(program)
     programs.sort(key=lambda p: p.size, reverse=True)
