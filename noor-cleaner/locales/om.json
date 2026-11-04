@@ -399,9 +399,6 @@
  "{minutes} min": "daqiiqaa {minutes}",
  "{hours} h {minutes} min": "sa'aa {hours} fi daqiiqaa {minutes}",
  "Repairing Windows system files needs administrator rights.": "Faayiloota sirna Windows suphuun mirga bulchaa barbaada.",
- "Working out the time left...": "Yeroo hafe herregaa jira...",
- "{percent}% done  ·  almost finished": "%{percent} xumurame  ·  dhiyootti xumurama",
- "{percent}% done  ·  about {time} left": "%{percent} xumurame  ·  yeroo hafe: kan jiru {time}",
  "NoorCleaner is not running as administrator; use 'Run as admin' (bottom left) to include them.": "NoorCleaner akka bulchaatti hin hojjetu; isaan dabaluuf 'Akka bulchaatti hojjechiisi' (gara aanaa bitaa) fayyadami.",
  "The folder to search must be on the drive {drive}.": "Foldariin keessatti barbaaddu drayivii {drive} irra jiraachuu qaba.",
  "Restart as administrator now? Choose No to carry on without.": "Amma akka bulchaatti irra deebi'ii jalqabdaa? Malee itti fufuuf \"Lakki\" filadhu.",
@@ -882,5 +879,8 @@
  "Please wait for the current job to finish, or press Cancel, first.": "Dura hojiin amma jiru hanga xumuramutti eegi, ykn 'Haqi' tuqi.",
  "Cancelled.": "Haqameera.",
  "{name} was removed.": "{name} haqameera.",
- "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "Haquun appii mataa isaa ni banama. Tarkaanfii isaa hordofi; appiin yeroo haqamu tarree kana keessaa of-eeggannoodhaan ni bada."
+ "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "Haquun appii mataa isaa ni banama. Tarkaanfii isaa hordofi; appiin yeroo haqamu tarree kana keessaa of-eeggannoodhaan ni bada.",
+ "{percent}% done  ·  {left}% left": "%{percent} xumurame  ·  %{left} hafe",
+ "{percent}% done  ·  {left}% left  ·  almost finished": "%{percent} xumurame  ·  %{left} hafe  ·  dhiyootti xumurama",
+ "{percent}% done  ·  {left}% left  ·  about {time} left": "%{percent} xumurame  ·  %{left} hafe  ·  yeroo hafe: kan jiru {time}"
 }
