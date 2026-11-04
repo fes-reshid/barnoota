@@ -589,6 +589,33 @@ section{position:relative;}
 }
 .lightbox .close:hover{background:rgba(255,255,255,.24);}
 
+/* ---------- Nominate a graduate (dialog) ---------- */
+.modal{
+  border:0; padding:0; background:transparent; color:var(--ink);
+  width:min(640px, calc(100vw - 24px)); max-height:calc(100vh - 24px); overflow:visible;
+  margin:auto;
+}
+.modal::backdrop{ background:rgba(4,16,9,.72); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.modal[open]{ animation:fade .25s var(--ease); }
+.modal-card{
+  position:relative; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg); padding:34px 30px 26px; max-height:calc(100vh - 24px); overflow:auto;
+}
+.modal-card h2{ font-size:1.9rem; margin:0 0 6px; }
+.modal-sub{ color:var(--muted); margin:0 0 20px; font-size:.96rem; }
+.modal-close{
+  position:absolute; top:14px; right:14px; width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--line); background:var(--paper); color:var(--ink); font-size:1.5rem; line-height:1;
+  cursor:pointer; display:grid; place-items:center;
+}
+.modal-close:hover{ border-color:var(--leaf); color:var(--leaf); }
+.modal-group{ border:1px solid var(--line); border-radius:var(--r-md); padding:6px 18px 18px; display:grid; gap:14px; min-width:0; }
+.modal-group legend{ font-size:.72rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:var(--red); padding:0 8px; }
+.modal .hint{ font-weight:500; color:var(--muted); }
+.check{ display:flex; gap:12px; align-items:flex-start; font-size:.9rem; color:var(--ink-soft); cursor:pointer; }
+.check input{ margin-top:3px; width:18px; height:18px; flex:none; accent-color:var(--leaf); }
+@media (max-width:620px){ .modal-card{ padding:30px 18px 22px; } .modal-group{ padding:4px 12px 14px; } }
+
 /* ---------- Values / Gadaa ---------- */
 .value{
   padding:30px 26px; border-radius:var(--r-lg); position:relative; overflow:hidden;

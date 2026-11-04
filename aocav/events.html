@@ -104,7 +104,7 @@
       </p>
       <div class="hero-cta mt-m">
         <a class="btn btn-primary" href="events.html#event-graduation-2026">Graduation details</a>
-        <a class="btn btn-light" href="mailto:info@aocav.com?subject=Nominate%20a%20graduate">Nominate a graduate</a>
+        <a class="btn btn-light" href="#nominate" data-nominate>Nominate a graduate</a>
       </div>
     </div>
 
@@ -207,6 +207,88 @@
     </div>
   </div>
 </section>
+
+
+<!-- ======================= NOMINATE A GRADUATE (dialog) ======================= -->
+<dialog class="modal" id="nominate" data-nominate-dialog aria-labelledby="nom-title">
+  <div class="modal-card">
+    <button class="modal-close" type="button" data-nominate-close aria-label="Close">&times;</button>
+    <span class="kicker">Graduation 2026</span>
+    <h2 id="nom-title">Nominate a graduate</h2>
+    <p class="modal-sub">Tell us who finished something this year and we will put their name on the list to be celebrated. It goes straight to the committee.</p>
+
+    <form class="form" data-mailto="info@aocav.com" data-subject="Graduate nomination">
+      <fieldset class="modal-group">
+        <legend>The graduate</legend>
+        <div class="field">
+          <label for="n-grad">Graduate's full name</label>
+          <input id="n-grad" name="Graduate_name" type="text" required autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="n-what">What did they complete?</label>
+          <select id="n-what" name="subject">
+            <option>Year 12 (VCE or VCAL)</option>
+            <option>TAFE or VET certificate or diploma</option>
+            <option>Apprenticeship or traineeship</option>
+            <option>University degree</option>
+            <option>Afaan Oromoo school certificate</option>
+            <option>Another achievement</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="n-inst">School, TAFE or university</label>
+          <input id="n-inst" name="Institution" type="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="n-note">Tell us about their achievement</label>
+          <textarea id="n-note" name="Notes" placeholder="What they studied, what it took, anything we should say about them on the day."></textarea>
+        </div>
+        <div class="field">
+          <label for="n-gcontact">Graduate's phone or email <small class="hint">— optional</small></label>
+          <input id="n-gcontact" name="Graduate_contact" type="text" autocomplete="off">
+        </div>
+      </fieldset>
+
+      <fieldset class="modal-group">
+        <legend>You</legend>
+        <div class="form-row">
+          <div class="field">
+            <label for="n-name">Your name</label>
+            <input id="n-name" name="Name" type="text" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="n-rel">You are their <small class="hint">— optional</small></label>
+            <input id="n-rel" name="Relationship" type="text" placeholder="Parent, teacher, friend…" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="n-email">Email</label>
+            <input id="n-email" name="Email" type="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="n-phone">Phone</label>
+            <input id="n-phone" name="Phone" type="tel" autocomplete="tel">
+          </div>
+        </div>
+      </fieldset>
+
+      <label class="check">
+        <input type="checkbox" name="Graduate_knows" value="Yes" required>
+        <span>The graduate (or their parent or guardian) knows I am nominating them and is happy for AOCAV to contact them.</span>
+      </label>
+
+      <div class="hp" aria-hidden="true" data-cms-ignore>
+        <label for="n-hp">Leave this field empty</label>
+        <input id="n-hp" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn btn-primary" type="submit" data-busy="Sending…">Send nomination</button>
+      <p class="form-note" data-sent="saved" role="status" hidden>Thank you — your nomination is with the committee. We will be in touch before the ceremony.</p>
+      <p class="form-note" data-sent="mail" role="status" hidden>We could not reach our server. <a href="mailto:info@aocav.com" data-mail-link>Open your email app with this nomination ready</a>, or email <a href="mailto:info@aocav.com">info@aocav.com</a> yourself — nothing you typed is lost.</p>
+      <p class="form-note">Details are stored securely, read only by the AOCAV committee, and used only to organise the ceremony.</p>
+    </form>
+  </div>
+</dialog>
 
 </main>
 

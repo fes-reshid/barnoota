@@ -101,11 +101,11 @@ window.AocavCards = (function () {
   // Wording the renderer produces itself, rather than taking from an event.
   var UI = {
     en: { held:'Held', ongoing:'Ongoing', saveDate:'Save the date', upcoming:'Upcoming',
-          ongoingProgram:'Ongoing program', register:'Register',
+          ongoingProgram:'Ongoing program', register:'Register', nominate:'Nominate a graduate',
           addToCalendar:'Add to calendar', viewPoster:'View poster',
           untitled:'Untitled event', poster:'event poster', playFor:'Play the video for' },
     om: { held:'Darbeera', ongoing:'Itti fufaa', saveDate:'Guyyaa qabadhaa', upcoming:'Dhufaa jira',
-          ongoingProgram:'Sagantaa itti fufaa', register:'Galmaa\u2019aa',
+          ongoingProgram:'Sagantaa itti fufaa', register:'Galmaa\u2019aa', nominate:'Eebbifamaa dhiyeessaa',
           addToCalendar:'Kaalendaritti dabalaa', viewPoster:'Poostara ilaalaa',
           untitled:'Taatee maqaa hin qabne', poster:'poostara taatee', playFor:'Viidiyoo kana taphachiisi:' }
   };
@@ -271,7 +271,10 @@ window.AocavCards = (function () {
     if (ev.theme === 'culture') cls.push('is-culture');
     if (ev.past) cls.push('is-past');
     if (!opts || !opts.preview) cls.push('reveal');
-    return '<article class="' + cls.join(' ') + '" id="event-' + esc(ev.id) + '">' +
+    // The featured event is drawn twice on the events page — as the banner and
+    // again in the calendar — and an id must be unique, so the calendar's copy
+    // of it takes a different one. Links to #event-<id> land on the banner.
+    return '<article class="' + cls.join(' ') + '" id="' + (ev.featured ? 'cal-' : 'event-') + esc(ev.id) + '">' +
       '<div class="ev-top"><div class="ev-top-row">' + dateBadge(ev) + chip(ev) + '</div>' +
       '<h3 class="ev-title">' + esc(L(ev, 'title') || T('untitled')) + '</h3></div>' +
       '<div class="ev-body">' + metaList(ev, false) +
@@ -308,7 +311,12 @@ window.AocavCards = (function () {
       (preview ? '' :
         '<div class="ev-actions" style="margin-top:28px">' +
         (ev.rsvp ? '<a class="btn btn-light" href="' + esc(safeUrl(ev.rsvp)) + '">' + esc(L(ev, 'rsvpLabel') || T('register')) + ICON.arrow + '</a>' : '') +
+        // The graduation banner also takes nominations: a link that opens the
+        // form on the events page, and goes there from any other page.
+        (ev.category === 'graduation' && !ev.past ? '<a class="btn btn-light" href="events.html#nominate" data-nominate>' + esc(T('nominate')) + '</a>' : '') +
         (ev.startDate ? '<button class="btn btn-light" type="button" data-ics="' + esc(ev.id) + '">' + ICON.cal + esc(T('addToCalendar')) + '</button>' : '') +
+        (ev.flyer ? '<button class="btn btn-light" type="button" data-zoom="' + esc(safeUrl(ev.flyer)) +
+          '" data-zoom-alt="' + esc(plain(L(ev, 'title'))) + ' ' + esc(T('poster')) + '">' + esc(T('viewPoster')) + '</button>' : '') +
         '</div>') +
       '</div><div class="feature-side">' + (videoBlock(ev) || capArt()) + '</div></div>';
   }

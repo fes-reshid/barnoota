@@ -40,36 +40,34 @@ window.AOCAV_EVENTS = [
   {
     id: 'graduation-2026',
     titleOm: "Ayyaana Eebbaa fi Milkaa'inaa Waggaa",
-    descOm: "Guyyaa waggaatti itti caalaa boonnu. Hawaasni guutuun walitti dhufee Oromoo-Awustiraaliyaa kutaa 12, TAFE, leenjii ogummaa, digrii yunivarsiitii yookaan ragaa mana barumsaa Afaan Oromoo xumure hunda ni kabaja. Haasaa eebbifamtootaa, sirna bunaa aadaa, walaloo fi nyaata waliinii kan hamma maatiin dhumaa deemutti itti fufu ni jiraata.",
+    descOm: "Guyyaa waggaatti itti caalaa boonnu. Milkaa'ina, cimina hojii fi injifannoo ijoollee fi dargaggoota keenyaa kabajuuf walitti dhufna — kutaa 12, TAFE, leenjii ogummaa, digrii yunivarsiitii yookaan ragaa mana barumsaa Afaan Oromoo kan xumuran hundaaf.",
     costOm: "Bilisa — maatiin fi hiriyoonni baga nagaan dhuftan",
-    rsvpLabelOm: "Eebbifamaa dhiyeessaa",
+    rsvpLabelOm: "Amma galmaa'aa",
     highlightsOm: [
-      "Eebbifamaa hundaaf kofiyyaa fi ragaa",
-      "Eebba maanguddootaa fi ibsaa Odaa qabsiisuu",
-      "Sirna bunaa fi irbaata hawaasaa waliinii",
-      "Dhiyeessa aadaa dargaggoota keenyaan",
-      "Suuraa maatii iddoo biqiltuu keessatti"
+      "Ragaa eebbifamtootaaf dhiyeessuu",
+      "Haasaa ofitti amantummaa kennu",
+      "Dhiyeessa aadaa",
+      "Maatii fi hawaasa walitti hidhuu"
     ],
     title: 'Annual Graduation & Achievement Ceremony',
-    start: '2026-12-06T13:00',
-    end: '2026-12-06T17:30',
-    status: 'save-date',
+    start: '2026-12-19T13:00',
+    status: 'confirmed',
     theme: 'grad',
     category: 'graduation',
     featured: true,
-    venue: 'Oromo Resource Centre',
-    address: '664–678 Downing St, Mount Cottrell VIC 3024',
+    venue: 'Flemington Community Centre',
+    address: '25 Mount Alexander Road, Flemington VIC 3031',
+    flyer: 'images/graduation-2026-flyer.jpg',
     cost: 'Free — families and friends warmly welcome',
-    desc: 'Our proudest day of the year. The whole community gathers to cap and congratulate every Oromo-Australian who finished Year 12, TAFE, an apprenticeship, a university degree or an Afaan Oromoo school certificate. Expect speeches from our graduates, a traditional coffee ceremony, poetry and a shared meal that runs until the last family leaves.',
+    desc: 'Our proudest day of the year. Join us as we come together to celebrate the achievements, hard work and success of our children and young people — everyone who finished Year 12, TAFE, an apprenticeship, a university degree or an Afaan Oromoo school certificate.',
     highlights: [
-      'Capping and certificates for every graduate',
-      'Elders’ blessing and the lighting of the Odaa candle',
-      'Buna (coffee) ceremony and shared community dinner',
-      'Cultural performance by our young people',
-      'Family photographs in the garden'
+      'Certificate presentations',
+      'Inspirational speeches',
+      'Cultural performances',
+      'Family and community connections'
     ],
-    rsvp: 'mailto:info@aocav.com?subject=Graduation%20Ceremony%202026&body=Hello%20AOCAV%2C%0A%0AI%20would%20like%20to%20register%20for%20the%20Annual%20Graduation%20%26%20Achievement%20Ceremony.%0A%0AGraduate%20name%3A%0AQualification%20completed%3A%0AInstitution%3A%0ANumber%20of%20guests%3A%0AContact%20phone%3A%0A%0AThank%20you.',
-    rsvpLabel: 'Nominate a graduate'
+    rsvp: 'https://docs.google.com/forms/d/e/1FAIpQLSciLY8MRJzIb2bRiHsT-BekGaKP73IA7VebGfuA-3akE_ICMA/viewform',
+    rsvpLabel: 'Register now'
   },
 
   {

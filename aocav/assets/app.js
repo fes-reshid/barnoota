@@ -370,6 +370,29 @@
     }
   });
 
+  /* ------------------------------------------------- nominate a graduate */
+  // Any [data-nominate] link opens the form on this page; from another page it
+  // is a plain link to events.html#nominate, which opens it on arrival.
+  var nom = $('[data-nominate-dialog]');
+  if (nom && typeof nom.showModal === 'function') {
+    var openNom = function () { if (!nom.open) nom.showModal(); };
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('[data-nominate]');
+      if (t) { e.preventDefault(); openNom(); }
+    });
+    $$('[data-nominate-close]', nom).forEach(function (b) { b.addEventListener('click', function () { nom.close(); }); });
+    // a click on the dimmed backdrop lands on the <dialog> itself, not the card
+    nom.addEventListener('click', function (e) { if (e.target === nom) nom.close(); });
+    nom.addEventListener('close', function () {
+      $$('[data-sent]', nom).forEach(function (n) { n.hidden = true; });
+      if (location.hash === '#nominate' && window.history && history.replaceState) {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    });
+    if (location.hash === '#nominate') openNom();
+    window.addEventListener('hashchange', function () { if (location.hash === '#nominate') openNom(); });
+  }
+
   /* --------------------------------------------------------------- forms */
   // Enquiries are saved to Firebase, where the committee reads them in the
   // admin page and exports them as a spreadsheet. If Firebase is not set up
