@@ -13,6 +13,8 @@
   <url><loc>https://diinislaam.com/salah/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://diinislaam.com/durus.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://diinislaam.com/durus-course.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://diinislaam.com/fiqh.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://diinislaam.com/umdatul-ahkaam</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://diinislaam.com/nahw-course.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://diinislaam.com/hisnul-muslim/index.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://diinislaam.com/kids.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>

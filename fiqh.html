@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7778012722329637" crossorigin="anonymous"></script>
+<title>Fiqh Courses — Diin Islaam</title>
+<meta name="description" content="Fiqh courses from Diin Islaam: Fiqh of Salah and ʿUmdat al-Aḥkām.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,500&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-navy:#1c2b46; --ink-brown:#3c2f26;
+    --parchment:#faf3e0; --parchment-deep:#f2e6c9;
+    --gold:#a97c25; --gold-soft:#d3ac5c;
+    --green:#2e6b58; --green-dark:#1f4f40; --green-bg:#e4efe6;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; padding:0; background:#e9e2cd; font-family:'Cormorant Garamond', serif;
+    color:var(--ink-brown); -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .arabic{ font-family:'Amiri', serif; }
+  .container{ max-width:var(--maxw); margin:0 auto; padding:0 20px; }
+
+  #bg-canvas{ position:fixed; inset:0; width:100%; height:100%; z-index:-1; pointer-events:none; }
+
+  header.site{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,243,224,.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--gold-soft);
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; max-width:var(--maxw); margin:0 auto;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center;
+    color:#faf3e0; font-family:'Amiri'; font-size:19px; flex:none;
+  }
+  .brand-text{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); line-height:1.1; }
+  .brand-text small{ display:block; font-family:'Amiri'; font-size:13px; color:var(--gold); font-weight:400; }
+  nav.main-links{ display:flex; align-items:center; gap:28px; }
+  nav.main-links a{
+    text-decoration:none; font-size:17px; color:var(--ink-brown); font-weight:600;
+    padding:6px 2px; border-bottom:2px solid transparent; transition:color .15s, border-color .15s;
+  }
+  nav.main-links a:hover{ color:var(--green); border-color:var(--gold-soft); }
+  nav.main-links a.active{ color:var(--green); border-color:var(--green); }
+  .menu-btn{ display:none; }
+
+  @media (max-width:820px){
+    nav.main-links{
+      display:none; position:absolute; top:100%; left:0; right:0; flex-direction:column; align-items:stretch;
+      background:var(--parchment); border-bottom:1px solid var(--gold-soft);
+      padding:10px 20px 18px; gap:4px; box-shadow:0 12px 20px rgba(60,45,20,.12);
+    }
+    nav.main-links.open{ display:flex; }
+    nav.main-links a{ padding:10px 4px; border-bottom:1px solid rgba(169,124,37,.15); }
+    .menu-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border-radius:8px; border:1px solid var(--gold-soft);
+      background:#fff; cursor:pointer; flex-direction:column; gap:4px; padding:0;
+    }
+    .menu-btn span{ width:20px; height:2px; background:var(--ink-brown); display:block; }
+  }
+
+  .page-head{ text-align:center; padding:64px 20px 12px; }
+  .eyebrow{
+    font-family:'Marcellus'; color:var(--gold); font-size:14px; letter-spacing:.12em;
+    text-transform:uppercase; margin:0 0 8px;
+  }
+  .page-head h1{ font-family:'Marcellus'; font-size:clamp(28px,4vw,42px); color:var(--ink-navy); margin:0 0 14px; }
+  .page-head p{ font-size:19px; color:#6b5a3f; line-height:1.6; max-width:640px; margin:0 auto; }
+
+  .course-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:26px;
+    max-width:var(--maxw); margin:0 auto; padding:44px 20px 90px;
+  }
+  .course-card{
+    background:var(--parchment); border:1.5px solid var(--gold-soft); border-radius:16px;
+    padding:30px 26px; position:relative; display:flex; flex-direction:column;
+    box-shadow:0 6px 18px rgba(60,45,20,.08); transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .course-card:hover{ transform:translateY(-4px); box-shadow:0 16px 30px rgba(60,45,20,.15); }
+  .soon-tag{
+    position:absolute; top:22px; right:22px; background:var(--gold-soft); color:#fff;
+    font-family:'Marcellus'; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    padding:4px 10px; border-radius:20px;
+  }
+  .live-tag{
+    position:absolute; top:22px; right:22px; background:var(--green); color:#fff;
+    font-family:'Marcellus'; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    padding:4px 10px; border-radius:20px;
+  }
+  .course-card.live{ border-color:var(--green); border-width:2px; }
+  .btn-primary{ background:var(--green); color:#faf3e0; }
+  .btn-primary:hover{ background:var(--green-dark); }
+  .course-icon{
+    width:56px; height:56px; border-radius:14px; background:var(--green-bg); color:var(--green);
+    display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:18px;
+  }
+  .course-card h3{ font-family:'Marcellus'; font-size:22px; color:var(--ink-navy); margin:0 0 4px; }
+  .course-card .subtitle{ font-size:15px; color:var(--gold); margin:0 0 14px; }
+  .course-card p{ font-size:16px; color:#6b5a3f; line-height:1.6; margin:0 0 22px; flex:1; }
+  .btn{
+    display:inline-block; text-align:center; text-decoration:none; font-family:'Cormorant Garamond', serif;
+    font-weight:700; font-size:16px; padding:11px 24px; border-radius:26px;
+    transition:transform .15s ease, background .15s ease; align-self:flex-start;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-disabled{ background:#e6ddc4; color:#8a7a5c; cursor:default; }
+  .btn-disabled:hover{ transform:none; }
+
+  footer{ background:var(--ink-navy); color:#c9d2e0; padding:36px 20px 24px; text-align:center; }
+  footer .flinks{ display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin:0 0 16px; font-size:15px; }
+  footer .flinks a{ text-decoration:none; color:#c9d2e0; }
+  footer .flinks a:hover{ color:#faf3e0; }
+  footer .fine{ font-size:13px; color:#8b96ab; margin:0; }
+</style>
+<link rel="stylesheet" href="/inside-theme.css?v=20261021-1">
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="/">
+      <span class="brand-mark arabic">د</span>
+      <span class="brand-text">Diin Islaam<small>دين الإسلام · Learn with purpose</small></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-links" id="mainNav">
+      <a href="quran.html">Qur'ān</a>
+      <a href="hadeeth.html">Ḥadīth</a>
+      <a href="fiqh.html" class="active">Fiqh</a>
+      <a href="arabic.html">Arabic</a>
+      <a href="kids.html">Kids</a>
+      <a href="apps.html">Apps</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-head">
+  <p class="eyebrow">Islamic Jurisprudence</p>
+  <h1>Fiqh Courses</h1>
+  <p>Learn the rulings of worship step by step — from the conditions of prayer to the ḥadīths on which the rulings are built.</p>
+</div>
+
+<div class="course-grid">
+
+  <div class="course-card live">
+    <span class="live-tag">Ongoing Course</span>
+    <div class="course-icon arabic">ع</div>
+    <h3>ʿUmdat al-Aḥkām</h3>
+    <p class="subtitle">عمدة الأحكام — Bilingual (English &amp; Arabic)</p>
+    <p>The famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, studied chapter by chapter with the key rulings and a quiz each week.</p>
+    <a class="btn btn-primary" href="umdatul-ahkaam">Start Learning</a>
+  </div>
+
+  <div class="course-card live">
+    <span class="live-tag">Course</span>
+    <div class="course-icon arabic">ص</div>
+    <h3>Fiqh of Salah</h3>
+    <p class="subtitle">شروط الصلاة — Conditions of Prayer</p>
+    <p>An interactive journey through the nine conditions that must be fulfilled before prayer, with quizzes and a printable certificate.</p>
+    <a class="btn btn-primary" href="salah.html">Start Learning</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="flinks">
+    <a href="quran.html">Qur'ān</a>
+    <a href="hadeeth.html">Ḥadīth</a>
+    <a href="salah.html">Fiqh Of Salah</a>
+    <a href="arabic.html">Arabic</a>
+    <a href="kids.html">Kids</a>
+    <a href="apps.html">Apps</a>
+    <a href="mailto:fesbackups@gmail.com">Contact</a>
+  </div>
+  <p class="fine">© <span id="year"></span> Diin Islaam · diinislaam.com</p>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+const menuBtn = document.getElementById('menuBtn');
+const mainNav = document.getElementById('mainNav');
+menuBtn.addEventListener('click', () => {
+  const open = mainNav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  mainNav.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}));
+
+(function(){
+  var canvas = document.getElementById('bg-canvas');
+  if(!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var LETTERS = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر'];
+  var COLORS = ['169,124,37', '46,107,88', '28,43,70'];
+  var letters = [], particles = [];
+  var W = 0, H = 0;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function rand(min, max){ return min + Math.random() * (max - min); }
+
+  function resize(){
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  function makeLetters(){
+    letters = [];
+    var count = Math.max(12, Math.round((W * H) / 60000));
+    for(var i = 0; i < count; i++){
+      letters.push({
+        ch: LETTERS[Math.floor(Math.random() * LETTERS.length)],
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        x: rand(0, W), y: rand(0, H),
+        size: rand(34, 78),
+        vx: rand(-0.06, 0.06), vy: rand(-0.10, -0.03),
+        rot: rand(0, Math.PI * 2), vr: rand(-0.0015, 0.0015),
+        alpha: rand(0.05, 0.13)
+      });
+    }
+  }
+
+  function makeParticles(){
+    particles = [];
+    var count = Math.max(30, Math.round((W * H) / 16000));
+    for(var i = 0; i < count; i++){
+      particles.push({
+        x: rand(0, W), y: rand(0, H),
+        r: rand(0.8, 2.4),
+        vy: rand(-0.25, -0.08), vx: rand(-0.05, 0.05),
+        phase: rand(0, Math.PI * 2), speed: rand(0.01, 0.03),
+        baseAlpha: rand(0.15, 0.45)
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    letters.forEach(function(l){
+      l.x += l.vx; l.y += l.vy; l.rot += l.vr;
+      if(l.y < -100){ l.y = H + 100; l.x = rand(0, W); }
+      if(l.x < -100) l.x = W + 100;
+      if(l.x > W + 100) l.x = -100;
+      ctx.save();
+      ctx.translate(l.x, l.y);
+      ctx.rotate(l.rot);
+      ctx.font = l.size + 'px Amiri, serif';
+      ctx.fillStyle = 'rgba(' + l.color + ',' + l.alpha + ')';
+      ctx.fillText(l.ch, 0, 0);
+      ctx.restore();
+    });
+
+    particles.forEach(function(p){
+      p.phase += p.speed;
+      p.y += p.vy;
+      p.x += p.vx + Math.sin(p.phase) * 0.15;
+      if(p.y < -10){ p.y = H + 10; p.x = rand(0, W); }
+      var tw = (Math.sin(p.phase) + 1) / 2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(46,107,88,' + (p.baseAlpha * (0.5 + 0.5 * tw)) + ')';
+      ctx.fill();
+    });
+  }
+
+  function loop(){
+    draw();
+    if(!reduceMotion) requestAnimationFrame(loop);
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      resize(); makeLetters(); makeParticles();
+    }, 200);
+  });
+
+  resize();
+  makeLetters();
+  makeParticles();
+  draw();
+  if(!reduceMotion) requestAnimationFrame(loop);
+})();
+</script>
+<script src="/cursor.js" defer></script>
+</body>
+</html>
