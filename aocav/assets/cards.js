@@ -282,6 +282,15 @@ window.AocavCards = (function () {
       videoBlock(ev) + galleryBlock(ev) + actions(ev, opts) + '</div></article>';
   }
 
+  // The event's own poster, shown large beside the banner; tap to enlarge.
+  function flyerBlock(ev) {
+    var src = safeUrl(ev.flyer);
+    if (!src) return '';
+    var alt = plain(L(ev, 'title')) + ' ' + T('poster');
+    return '<figure class="flyer" data-zoom="' + esc(src) + '" data-zoom-alt="' + esc(alt) + '">' +
+      '<img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy" width="1024" height="1536"></figure>';
+  }
+
   function capArt() {
     return '<svg class="cap-art" viewBox="0 0 220 180" role="img" aria-label="Graduation cap illustration">' +
       '<defs><linearGradient id="capg" x1="0" y1="0" x2="1" y2="1">' +
@@ -318,7 +327,7 @@ window.AocavCards = (function () {
         (ev.flyer ? '<button class="btn btn-light" type="button" data-zoom="' + esc(safeUrl(ev.flyer)) +
           '" data-zoom-alt="' + esc(plain(L(ev, 'title'))) + ' ' + esc(T('poster')) + '">' + esc(T('viewPoster')) + '</button>' : '') +
         '</div>') +
-      '</div><div class="feature-side">' + (videoBlock(ev) || capArt()) + '</div></div>';
+      '</div><div class="feature-side">' + (videoBlock(ev) || flyerBlock(ev) || capArt()) + '</div></div>';
   }
 
   /* ------------------------------------------------- calendar (.ics) */

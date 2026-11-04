@@ -563,6 +563,7 @@ section{position:relative;}
   background:rgba(0,0,0,.2); border-left:1px solid rgba(255,255,255,.12);
 }
 @media (max-width:900px){ .feature-side{border-left:0; border-top:1px solid rgba(255,255,255,.12);} }
+.feature-side .flyer{ width:min(100%,400px); margin:0; border-color:rgba(255,255,255,.22); }
 .cap-art{width:min(100%,260px); filter:drop-shadow(0 20px 40px rgba(0,0,0,.45));}
 
 /* flyer */
