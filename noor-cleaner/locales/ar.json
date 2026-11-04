@@ -399,9 +399,6 @@
  "{minutes} min": "{minutes} دقيقة",
  "{hours} h {minutes} min": "{hours} ساعة و{minutes} دقيقة",
  "Repairing Windows system files needs administrator rights.": "إصلاح ملفات نظام ويندوز يحتاج إلى صلاحيات المسؤول.",
- "Working out the time left...": "جارٍ حساب الوقت المتبقي...",
- "{percent}% done  ·  almost finished": "اكتمل {percent}%  ·  على وشك الانتهاء",
- "{percent}% done  ·  about {time} left": "اكتمل {percent}%  ·  يتبقى نحو {time}",
  "NoorCleaner is not running as administrator; use 'Run as admin' (bottom left) to include them.": "نور كلينر لا يعمل كمسؤول؛ استخدم «تشغيل كمسؤول» (أسفل اليسار) لتضمينها.",
  "The folder to search must be on the drive {drive}.": "يجب أن يكون المجلد المراد البحث فيه على القرص {drive}.",
  "Restart as administrator now? Choose No to carry on without.": "هل تريد إعادة التشغيل كمسؤول الآن؟ اختر «لا» للمتابعة دون ذلك.",
@@ -882,5 +879,8 @@
  "Please wait for the current job to finish, or press Cancel, first.": "يرجى الانتظار حتى تنتهي المهمة الحالية، أو اضغط «إلغاء» أولًا.",
  "Cancelled.": "تم الإلغاء.",
  "{name} was removed.": "تمت إزالة {name}.",
- "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "سيُفتح برنامج إلغاء التثبيت الخاص به. اتبع خطواته؛ ويختفي البرنامج من هذه القائمة تلقائيًا بعد إزالته."
+ "Its own uninstaller will open. Follow its steps; the program disappears from this list by itself when it is gone.": "سيُفتح برنامج إلغاء التثبيت الخاص به. اتبع خطواته؛ ويختفي البرنامج من هذه القائمة تلقائيًا بعد إزالته.",
+ "{percent}% done  ·  {left}% left": "اكتمل {percent}%  ·  متبقٍ {left}%",
+ "{percent}% done  ·  {left}% left  ·  almost finished": "اكتمل {percent}%  ·  متبقٍ {left}%  ·  على وشك الانتهاء",
+ "{percent}% done  ·  {left}% left  ·  about {time} left": "اكتمل {percent}%  ·  متبقٍ {left}%  ·  يتبقى نحو {time}"
 }

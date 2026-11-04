@@ -29,6 +29,7 @@ import settings
 import theme
 import tray
 import ui_runmode
+from block_progress import BlockProgress, percent_parts
 from i18n import _
 import ui_base
 from ui_base import (VERSION, BaseApp, clear_tree, human_size, is_admin, make_tree, open_location, share_text)
@@ -236,7 +237,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.status_pill = ttk.Label(status, text=_("Ready"), style="Pill.TLabel")
         self.status_pill.pack(anchor=self.W)
         self.status_detail = self._text(status, self._idle_text(), wrap=520, pady=(px(10), px(8)))
-        self.progress = ttk.Progressbar(status, mode="indeterminate", style="Green.Horizontal.TProgressbar")
+        self.progress = BlockProgress(status, px=px)
         self.progress.pack(fill="x", pady=(0, px(6)))
         self.eta_label = ttk.Label(status, text="", style="Hint.TLabel", justify=self.JUSTIFY)
         self.eta_label.pack(anchor=self.W, pady=(0, px(8)))
@@ -583,7 +584,7 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self._eta_smooth = None
         if self.scan_total:  # whole drives: the bar can show real progress
             self.progress.config(mode="determinate", maximum=100, value=0)
-            self.eta_label.config(text=_("Working out the time left..."))
+            self.eta_label.config(text=_("{percent}% done  ·  {left}% left").format(percent=0, left=100))
         else:
             self.progress.config(mode="indeterminate")
             self.progress.start(12)
@@ -621,15 +622,17 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         """Progress is the share of the used space already read; the time left follows from the speed so far."""
         share = min(scanned / self.scan_total, 0.99)
         self.progress.config(value=share * 100)
+        done, left = percent_parts(share * 100, 100)
         if elapsed < 8 or share < 0.01:
+            self.eta_label.config(text=_("{percent}% done  ·  {left}% left").format(percent=done, left=left))
             return
         remaining = elapsed * (1 - share) / share
         self._eta_smooth = remaining if self._eta_smooth is None else 0.7 * self._eta_smooth + 0.3 * remaining
         if share >= 0.98:
-            text = _("{percent}% done  ·  almost finished").format(percent=int(share * 100))
+            text = _("{percent}% done  ·  {left}% left  ·  almost finished").format(percent=done, left=left)
         else:
-            text = _("{percent}% done  ·  about {time} left").format(percent=int(share * 100),
-                                                                     time=self._format_duration(self._eta_smooth))
+            text = _("{percent}% done  ·  {left}% left  ·  about {time} left").format(
+                percent=done, left=left, time=self._format_duration(self._eta_smooth))
         self.eta_label.config(text=text)
 
     def _fx_tick(self):
@@ -732,7 +735,9 @@ class NoorApp(BaseApp, RecoverMixin, ProgramsMixin, SpeedMixin, HealthMixin, Net
         self.progress.stop()
         if self.scan_total and not self.scanner.cancel.is_set():
             self.progress.config(value=100)
-        self.eta_label.config(text="")
+            self.eta_label.config(text=_("{percent}% done  ·  {left}% left").format(percent=100, left=0))
+        else:
+            self.eta_label.config(text="")
         self.start_btn.config(state="normal")
         self.stop_btn.config(state="disabled")
         s = self.scanner
