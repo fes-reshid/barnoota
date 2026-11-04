@@ -101,7 +101,8 @@ class CleanerTests(unittest.TestCase):
         b = self.write("Backup/trip copy.mp4", big)
         c = self.write("Desktop/trip.mp4", big)
         # same size and same first/last 64 KB, different middle: not a duplicate
-        self.write("Other/almost.mp4", big[:150000] + b"!" + big[150001:])
+        changed = bytes([(big[150000] + 1) % 256])  # always differs from the original byte
+        self.write("Other/almost.mp4", big[:150000] + changed + big[150001:])
         self.write("Small/1.txt", b"same")
         self.write("Small/2.txt", b"same")
         other = os.urandom(200 * 1024)
