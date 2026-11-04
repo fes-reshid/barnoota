@@ -49,12 +49,22 @@ for(let i=0;i<5;i++){const x=((i*270-offset*.34)%(W+300)+W+300)%(W+300)-100,y=gr
 ctx.fillStyle=world.ground;ctx.fillRect(0,groundY,W,H-groundY);ctx.fillStyle=world.grass;ctx.fillRect(0,groundY-11,W,16);ctx.fillStyle='#fff6d92b';ctx.fillRect(0,groundY+15,W,5);for(let i=0;i<22;i++){const x=((i*67-offset)%(W+100)+W+100)%(W+100)-40;ellipse(x,groundY+38+(i%3)*16,4+i%4,2,'#9d79592b');if(i%4===0){ctx.fillStyle='#edf2bc';ctx.fillRect(x,groundY-18,2,9);ellipse(x+1,groundY-21,4,4,'#fff0b0')}}
 for(const o of objects){if(o.kind==='star'){ellipse(o.x+2,o.y+4,19,19,'#af85371c');ellipse(o.x,o.y,18,18,'#ffedab');star(o.x,o.y,13,'#dfa637')}else{ctx.fillStyle='#8f6547';ctx.beginPath();ctx.roundRect(o.x-27,groundY-35,54,35,12);ctx.fill();ellipse(o.x+19,groundY-18,10,16,'#bd9368');ellipse(o.x+19,groundY-18,5,9,'#ddb485');ctx.strokeStyle='#bc9369';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(o.x-22,groundY-23);ctx.lineTo(o.x+4,groundY-27);ctx.stroke()}}
 drawHero();for(const p of particles){ctx.globalAlpha=Math.max(0,Math.min(1,p.life));ellipse(p.x,p.y,4,4,p.color)}ctx.globalAlpha=1;if(flash>0){ctx.fillStyle='#fff6dd66';ctx.fillRect(0,0,W,H)}}
+// Arm outlines in source-image coordinates keep Mahir’s original crayon marks.
+const heroArms=[
+ {pivot:[.51,.445],points:[[.015,.325],[.13,.345],[.23,.39],[.30,.405],[.39,.42],[.54,.435],[.55,.465],[.43,.477],[.31,.473],[.29,.515],[.18,.52],[.04,.48]]},
+ {pivot:[.665,.468],points:[[.655,.45],[.71,.463],[.75,.447],[.80,.413],[.86,.365],[.92,.365],[.92,.405],[.89,.43],[.97,.411],[.99,.475],[.97,.56],[.89,.572],[.82,.54],[.755,.568],[.70,.54],[.70,.499],[.655,.485]]}
+];
+function armOutline(arm,w,h){const points=arm.points;ctx.moveTo(points[0][0]*w,points[0][1]*h);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0]*w,points[i][1]*h);ctx.closePath()}
 function drawHero(){const size=H>900?240:Math.min(192,H*.39),w=size*.77,h=size,x=heroX-w*.5,y=groundY-h-jumpY;ellipse(heroX,groundY+4,45*(1-jumpY/700),8,'#284b4224');if(!hero.complete||!hero.naturalWidth)return;const running=state==='run'&&jumpY===0,t=running?totalTime*15:0,bob=running?Math.abs(Math.sin(t))*5:0;
-ctx.save();ctx.translate(x+w*.5,y+h*.58-bob);ctx.rotate(jumpY>0?-.12:running?-.06:0);ctx.translate(-w*.5,-h*.58);
-// Animate two sections of the actual crayon drawing at the hips.
+ctx.save();ctx.translate(x+w*.5,y+h*.58-bob);ctx.rotate(jumpY>0?.12:running?.06:0);
+// The original drawing looks left: mirror the whole rig to face the rightward run.
+ctx.scale(-1,1);ctx.translate(-w*.5,-h*.58);
 const sw=hero.naturalWidth,sh=hero.naturalHeight,split=.61;
-ctx.drawImage(hero,0,0,sw,sh*split,0,0,w,h*split);
+// Remove the resting arms from the torso before rendering their swinging poses.
+ctx.save();ctx.beginPath();ctx.rect(0,0,w,h*split);for(const arm of heroArms)armOutline(arm,w,h);ctx.clip('evenodd');ctx.drawImage(hero,0,0,sw,sh*split,0,0,w,h*split);ctx.restore();
 for(let leg=0;leg<2;leg++){ctx.save();const pivotX=w*(leg?.56:.37),pivotY=h*split;ctx.translate(pivotX,pivotY);ctx.rotate(running?Math.sin(t+(leg?Math.PI:0))*.22:jumpY>0?(leg?-.28:.25):0);ctx.drawImage(hero,sw*(leg?.47:0),sh*split,sw*(leg?.53:.47),sh*(1-split),w*(leg?.47:0)-pivotX,0,w*(leg?.53:.47),h*(1-split));ctx.restore()}
+for(let i=0;i<heroArms.length;i++){const arm=heroArms[i],px=arm.pivot[0]*w,py=arm.pivot[1]*h;ctx.save();ctx.translate(px,py);ctx.rotate(running?Math.sin(t+(i?Math.PI:0))*.32:jumpY>0?(i?.27:-.27):0);ctx.translate(-px,-py);ctx.beginPath();armOutline(arm,w,h);ctx.clip();ctx.drawImage(hero,0,0,w,h);ctx.restore()}
 ctx.restore();if(running){ctx.strokeStyle='#fff9dc90';ctx.lineWidth=3;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(x-8-i*10,y+h*.5+i*13);ctx.lineTo(x-25-i*14,y+h*.5+i*13);ctx.stroke()}}}
+
 function frame(ts){const dt=Math.min((ts-last)/1000||0,.033);last=ts;if(state==='run')update(dt);if(state!=='home'){if(state==='run'||state==='finish'){for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=220*dt;p.life-=dt}particles=particles.filter(p=>p.life>0)}draw()}requestAnimationFrame(frame)}requestAnimationFrame(frame);
 })();
