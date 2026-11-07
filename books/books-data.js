@@ -14,6 +14,10 @@ window.DI_BOOKS = {
     title: "The Heart That Forgives", sub: "Stories of Forgiveness from the Qur'an, the Sunnah and the Salaf",
     cover: "the-heart-that-forgives.webp", shape: "tall", preview: { pages: 14, total: 117 }, amazon: ""
   },
+  "tuhfah": {
+    title: "Tuhfatul Atfaal", sub: "The Interactive Tajweed Book",
+    cover: "tuhfatul-atfaal-tajweed-book.webp", shape: "tall", amazon: ""
+  },
   "seeraa-1": {
     title: "Seeraa Quest, Book One", sub: "From Arabia Before Islam to the First Revelation",
     cover: "seeraa-quest-book-1.webp", shape: "tall", amazon: ""
