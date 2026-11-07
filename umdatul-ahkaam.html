@@ -611,6 +611,23 @@
   .fb{margin-top:8px;font-size:calc(13.5px * var(--scale));font-weight:700;}
   .fb.ok{color:var(--green);} .fb.no{color:var(--red);}
   .week-select-btn.done::after{content:' ✓';}
+  .ar-block{font-family:'Amiri',serif;direction:rtl;text-align:right;}
+  ul.ar-block{padding-inline-start:0;padding-inline-end:20px;margin-top:10px;}
+  .rule-box ul.ar-block li{font-size:calc(16px * var(--scale));}
+  h1.ar-block{font-size:calc(26px * var(--scale));color:var(--gold);margin:6px 0 0;text-align:center;}
+  body.both-active .wsb-ar{display:block !important;font-size:.95em;opacity:.9;}
+  #h-desc{white-space:pre-line;}
+  .sec-head{display:flex;align-items:center;gap:10px;font-family:'Marcellus','Amiri',serif;font-size:calc(17px * var(--scale));color:var(--ink-navy);margin:26px 0 10px;}
+  .sec-head .sn{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#fff8ea;display:inline-flex;align-items:center;justify-content:center;font-size:.8em;flex:none;}
+  .lesson-count{text-align:center;color:var(--gold);font-weight:700;font-size:calc(13px * var(--scale));margin:0 0 6px;}
+  .week-obj{background:var(--green-bg);border:2px solid var(--green);border-radius:14px;padding:14px 18px;margin:0 0 16px;font-size:calc(14.5px * var(--scale));}
+  .week-obj ul{margin:8px 0 0;padding-inline-start:20px;} .week-obj li{margin-bottom:5px;}
+  #syllabus{max-width:520px;margin:34px auto 0;}
+  .syl-title{font-family:'Marcellus','Amiri',serif;text-align:center;color:var(--ink-navy);font-size:calc(20px * var(--scale));margin:0 0 14px;}
+  .syl-week{background:#fff;border:1.5px solid var(--gold-soft);border-radius:12px;padding:12px 16px;margin:0 0 12px;}
+  .syl-wk-name{font-weight:700;color:var(--green);font-size:calc(15px * var(--scale));margin-bottom:6px;}
+  .syl-week ol{margin:0;padding-inline-start:22px;font-size:calc(14px * var(--scale));} .syl-week li{margin-bottom:3px;}
+  .syl-no{color:var(--gold);font-size:.85em;}
   .disclaimer{font-size:calc(13px * var(--scale));color:var(--ink-brown);opacity:.85;}
 </style>
 </head>
@@ -647,6 +664,7 @@
     </span>
     <button class="lang-pill" id="lang-en-btn">English</button>
     <button class="lang-pill" id="lang-ar-btn">العربية</button>
+    <button class="lang-pill" id="lang-both-btn" title="English + Arabic">EN + عربي</button>
   </div>
 </div>
 
@@ -680,6 +698,8 @@
     <p class="week-select-lead">Choose where you'd like to start · اختر من أين تريد أن تبدأ</p>
     <div class="week-select-grid" id="week-grid"></div>
   </div>
+
+  <div id="syllabus"></div>
 
   <div id="main-content" style="display:none;">
     <div class="step-progress-row"><span id="step-progress-text"></span><div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div></div>
@@ -898,11 +918,28 @@ var lang=state.lang||'en', scale=state.scale||1.27;
 var STEPS=[]; COURSE.forEach(function(w){w.steps.forEach(function(s,i){STEPS.push({w:w,s:s,i:i,key:w.id+'-'+i});});});
 var cur=0;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function L(en,ar){return lang==='ar'?ar:en;}
+function L(en,ar){return lang==='ar'?ar:lang==='both'?en+' / '+ar:en;}
+function LH(en,ar){return lang==='ar'?ar:lang==='both'?en+'<div class="ar-block">'+ar+'</div>':en;}
+var OBJ={
+ F:{en:['Know who wrote ʿUmdat al-Aḥkām and what it contains','Understand why intention comes first in every act of worship'],ar:['معرفة مؤلف «عمدة الأحكام» ومحتوى الكتاب','فهم سبب تقديم النية في كل عبادة']},
+ W1:{en:['Know that wuḍūʾ is a condition for prayer','Learn the virtue of a complete wuḍūʾ','Understand why every part must be washed fully'],ar:['معرفة أن الوضوء شرط لصحة الصلاة','التعرّف على فضل الوضوء التام','فهم وجوب تعميم الأعضاء بالغسل']},
+ W2:{en:['Learn the etiquettes that accompany wuḍūʾ','Know the sunnah of starting with the right','Know the ruling and merit of the siwāk'],ar:['تعلّم الآداب المصاحبة للوضوء','معرفة سنة التيمن','معرفة حكم السواك وفضله']},
+ W3:{en:['Learn the supplication and etiquettes of relieving oneself','Know how to honour the qiblah and the right hand','Protect water from pollution'],ar:['تعلّم دعاء الخلاء وآدابه','معرفة تكريم القبلة واليمين','حفظ الماء من التلوث']},
+ W4:{en:['Know the five acts of fiṭrah','Apply the rule “certainty is not removed by doubt”','Know when ghusl is obligatory'],ar:['معرفة خصال الفطرة الخمس','تطبيق قاعدة «اليقين لا يزول بالشك»','معرفة موجبات الغسل']},
+ W5:{en:['Know the ruling and condition of wiping over the khuffs','Distinguish al-madhy and what it requires','Learn how impurity in a masjid is removed'],ar:['معرفة حكم المسح على الخفين وشرطه','التمييز بين المذي وما يجب فيه','تعلّم كيفية إزالة النجاسة من المسجد']}
+};
+function bi(en,ar,tag){tag=tag||'div';
+  if(lang==='ar') return '<'+tag+' class="ar-block">'+esc(ar)+'</'+tag+'>';
+  if(lang==='both') return '<'+tag+'>'+esc(en)+'</'+tag+'><'+tag+' class="ar-block">'+esc(ar)+'</'+tag+'>';
+  return '<'+tag+'>'+esc(en)+'</'+tag+'>';}
+function objectivesHTML(w){var o=OBJ[w.id]; if(!o) return '';
+  function ul(a,c){return '<ul'+(c?' class="'+c+'"':'')+'>'+a.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';}
+  var inner=lang==='ar'?ul(o.ar,'ar-block'):lang==='both'?ul(o.en)+ul(o.ar,'ar-block'):ul(o.en);
+  return '<div class="week-obj"><b>'+L('🎯 In this week you will…','🎯 في هذا الأسبوع ستتعلّم…')+'</b>'+inner+'</div>';}
 function save(){state.lang=lang;state.scale=scale;lsSet(state);}
 function applyScale(){document.documentElement.style.setProperty('--scale',scale.toFixed(2));document.getElementById('font-size-readout').textContent=Math.round(scale/1.27*100)+'%';}
 
-function introHTML(){return L(
+function introHTML(){return LH(
 '<div class="hero"><p class="hero-eyebrow">عُمْدَةُ الْأَحْكَامِ</p><h1 class="en-title">Welcome to ʿUmdat al-Aḥkām</h1><p>A concise collection of ḥadīths on the rulings of worship and daily life, memorised and studied by students of fiqh for centuries.</p></div>'+
 '<div class="section"><h2 class="section-title"><span class="num">1</span>About the Book</h2><div class="def-card murab"><h3>The Author</h3><p>Al-Ḥāfiẓ Taqī al-Dīn ʿAbd al-Ghanī ibn ʿAbd al-Wāḥid al-Maqdisī (541–600 AH), a Ḥanbalī scholar of ḥadīth from Jammāʿīl in Palestine who settled in Damascus.</p></div>'+
 '<div class="rule-box"><ul><li><b>Only authentic ḥadīths.</b> He included only ḥadīths agreed upon by al-Bukhārī and Muslim.</li><li><b>Organised by fiqh chapters,</b> beginning with Purification and moving through Prayer, Zakāh, Fasting, Ḥajj, trade and more.</li><li><b>Many commentaries</b> have been written on it, including those of Shaykh Muḥammad ibn Ṣāliḥ al-ʿUthaymīn and Shaykh ʿAbdullāh ibn ʿAbd al-Raḥmān al-Jibrīn.</li></ul></div></div>'+
@@ -914,23 +951,30 @@ function introHTML(){return L(
 '<div class="section"><h2 class="section-title"><span class="num">٢</span>كيف نسير في الدورة</h2><div class="sub-rules"><div class="sub-rule"><span class="srnum">١</span><div class="srbody">نقرأ الحديث بالعربية ومعناه.</div></div><div class="sub-rule"><span class="srnum">٢</span><div class="srbody">نتعلّم الأحكام والفوائد المستنبطة منه.</div></div><div class="sub-rule"><span class="srnum">٣</span><div class="srbody">نجيب عن اختبار قصير في نهاية كل أسبوع.</div></div></div>'+
 '<div class="note-box"><p class="note-title">تنبيه</p><p class="disclaimer">نصوص الأحاديث وفق «عمدة الأحكام»، وروجعت دروس عدة (المرقّمة) على شرح الشيخ ابن عثيمين لكتاب الطهارة. والشروح ملخّصات موجزة وليست ترجمة حرفية لشرح بعينه. يُرجى مطابقة الألفاظ على طبعة مطبوعة والتلقي عن أهل العلم.</p></div></div>');}
 
-function hadithHTML(h){
-  var pts=(lang==='ar'?h.ptsAr:h.ptsEn).map(function(p){return '<li>'+esc(p)+'</li>';}).join('');
+function hadithHTML(h,st){
+  function lis(a){return a.map(function(p){return '<li>'+esc(p)+'</li>';}).join('');}
+  var pts=lang==='ar'?'<ul class="ar-block">'+lis(h.ptsAr)+'</ul>':lang==='both'?'<ul>'+lis(h.ptsEn)+'</ul><ul class="ar-block">'+lis(h.ptsAr)+'</ul>':'<ul>'+lis(h.ptsEn)+'</ul>';
   var numTag=h.num?'<p class="hero-eyebrow">'+L('Ḥadīth no. '+h.num,'الحديث رقم '+h.num)+'</p>':'';
-  return '<div class="hero">'+numTag+'<h1 class="'+(lang==='ar'?'':'en-title')+'">'+esc(L(h.titleEn,h.titleAr))+'</h1></div>'+
+  var wk=st?'<p class="lesson-count">'+esc(L(st.w.en,st.w.ar))+'</p>':'';
+  var intro=(st&&st.i===0)?objectivesHTML(st.w):'';
+  var title=lang==='both'?'<h1 class="en-title">'+esc(h.titleEn)+'</h1><h1 class="ar-block">'+esc(h.titleAr)+'</h1>':'<h1 class="'+(lang==='ar'?'':'en-title')+'">'+esc(L(h.titleEn,h.titleAr))+'</h1>';
+  return wk+intro+'<div class="hero">'+numTag+title+'</div>'+
+  '<h3 class="sec-head"><span class="sn">1</span>'+L('The Text','النص')+'</h3>'+
   '<div class="hadith-card"><p class="hadith-nar">'+esc(L(h.narEn,h.narAr))+'</p><p class="hadith-ar">'+esc(h.ar)+'</p>'+
-  (lang==='ar'?'':'<p class="hadith-en">'+esc(h.en)+'</p>')+
   '<p class="hadith-src">'+esc(L(SRC_EN,SRC_AR))+'</p></div>'+
-  '<div class="rule-box"><b>'+L('Key Lessons','أبرز الفوائد')+'</b><ul>'+pts+'</ul></div>';
+  (lang==='ar'?'':'<h3 class="sec-head"><span class="sn">2</span>'+L('The Meaning','المعنى')+'</h3><div class="hadith-card"><p class="hadith-en" style="margin:0">'+esc(h.en)+'</p></div>')+
+  '<h3 class="sec-head"><span class="sn">'+(lang==='ar'?'2':'3')+'</span>'+L('Key Lessons','أبرز الفوائد')+'</h3>'+
+  '<div class="rule-box">'+pts+'</div>';
 }
 
 var quizState={};
 function quizHTML(st){
   var qs=st.s.qs, ls=lang==='ar'?['أ','ب','ج','د']:['A','B','C','D'];
-  var h='<div class="hero"><h1 class="'+(lang==='ar'?'':'en-title')+'">'+L('Quiz · '+st.w.en,'اختبار · '+st.w.ar)+'</h1></div><div class="quiz-shell">';
+  function opt(q,i){return lang==='ar'?q.oAr[i]:lang==='both'?(q.oEn[i]===q.oAr[i]?q.oEn[i]:q.oEn[i]+' · '+q.oAr[i]):q.oEn[i];}
+  var h='<div class="hero"><h1 class="'+(lang==='ar'?'':'en-title')+'">'+L('Quiz · '+st.w.en,'اختبار · '+st.w.ar)+'</h1><p class="lesson-count">'+L('Answer all questions — your best score is saved on this phone.','أجب عن جميع الأسئلة — تُحفظ أفضل نتيجة على هذا الهاتف.')+'</p></div><div class="quiz-shell">';
   qs.forEach(function(q,qi){
-    h+='<div class="q-block" data-q="'+qi+'"><div class="q-head"><span class="q-num">'+(qi+1)+'</span><span class="q-text">'+esc(L(q.qEn,q.qAr))+'</span></div><div class="q-options">';
-    (lang==='ar'?q.oAr:q.oEn).forEach(function(o,oi){h+='<div class="q-option" data-o="'+oi+'"><span class="letter">'+ls[oi]+'</span><span>'+esc(o)+'</span></div>';});
+    h+='<div class="q-block" data-q="'+qi+'"><div class="q-head"><span class="q-num">'+(qi+1)+'</span><span class="q-text">'+esc(lang==='both'&&q.qEn===q.qAr?q.qEn:L(q.qEn,q.qAr))+'</span></div><div class="q-options">';
+    [0,1,2,3].forEach(function(oi){h+='<div class="q-option" data-o="'+oi+'"><span class="letter">'+ls[oi]+'</span><span>'+esc(opt(q,oi))+'</span></div>';});
     h+='</div><div class="fb"></div></div>';
   });
   h+='<div id="quiz-result" style="text-align:center;font-weight:700;"></div></div>';
@@ -938,7 +982,7 @@ function quizHTML(st){
 }
 function wireQuiz(st){
   var qs=st.s.qs, ans={}, vp=document.getElementById('step-viewport');
-  var best=state.scores[st.key]; if(best!=null){document.getElementById('quiz-result').textContent=L('Best score: ','أفضل نتيجة: ')+best+'%';}
+  var best=state.scores[st.key]; if(best!=null){document.getElementById('quiz-result').textContent=(lang==='both'?'Best score / أفضل نتيجة: ':L('Best score: ','أفضل نتيجة: '))+best+'%';}
   vp.querySelectorAll('.q-block').forEach(function(b){
     var qi=+b.dataset.q;
     b.querySelectorAll('.q-option').forEach(function(opt){
@@ -954,7 +998,8 @@ function wireQuiz(st){
           var pct=Math.round(c/qs.length*100);
           if(best==null||pct>best){state.scores[st.key]=pct;}
           state.done[st.key]=1; save();
-          document.getElementById('quiz-result').textContent=(state.name?L('Well done, ','أحسنت يا ')+state.name+'! ':'')+L('Score: ','النتيجة: ')+c+' / '+qs.length+' ('+pct+'%)';
+          var sc=c+' / '+qs.length+' ('+pct+'%)', nm=state.name||'';
+          document.getElementById('quiz-result').textContent=lang==='ar'?(nm?'أحسنت يا '+nm+'! ':'')+'النتيجة: '+sc:lang==='both'?(nm?'Well done, '+nm+'! / أحسنت! ':'')+'Score / النتيجة: '+sc:(nm?'Well done, '+nm+'! ':'')+'Score: '+sc;
         }
       });
     });
@@ -964,9 +1009,9 @@ function wireQuiz(st){
 function render(i){
   cur=i; var st=STEPS[i], vp=document.getElementById('step-viewport');
   vp.style.animation='none'; void vp.offsetWidth; vp.style.animation='';
-  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='hadith'?hadithHTML(st.s):quizHTML(st);
+  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='hadith'?hadithHTML(st.s,st):quizHTML(st);
   if(st.s.type==='quiz') wireQuiz(st); else { state.done[st.key]=1; save(); }
-  document.getElementById('step-progress-text').textContent=L('Step ','الخطوة ')+(i+1)+' / '+STEPS.length;
+  document.getElementById('step-progress-text').textContent=(lang==='ar'?'الخطوة ':'Step ')+(i+1)+' / '+STEPS.length;
   document.getElementById('step-progress-fill').style.width=((i+1)/STEPS.length*100)+'%';
   var b=document.getElementById('step-back-btn'), n=document.getElementById('step-next-btn');
   b.classList.toggle('show',i>0); b.textContent=L('Back','السابق');
@@ -984,22 +1029,38 @@ function renderGrid(){
     g.appendChild(b);
   });
 }
+function renderSyllabus(){
+  var el=document.getElementById('syllabus'); if(!el) return;
+  var h='<h2 class="syl-title">'+L('Course Outline','فهرس الدورة')+'</h2>';
+  COURSE.forEach(function(w){
+    var hs=w.steps.filter(function(x){return x.type==='hadith';});
+    h+='<div class="syl-week"><div class="syl-wk-name">'+esc(L(w.en,w.ar))+'</div><ol>';
+    hs.forEach(function(x){h+='<li>'+esc(L(x.titleEn,x.titleAr))+(x.num?' <span class="syl-no">#'+x.num+'</span>':'')+'</li>';});
+    h+='</ol></div>';
+  });
+  el.innerHTML=h;
+}
 function show(w){
   document.getElementById('week-select').style.display=w==='weeks'?'block':'none';
   document.getElementById('main-content').style.display=w==='main'?'':'none';
   document.getElementById('back-btn').style.display=w==='main'?'flex':'none';
   document.getElementById('course-hero-section').style.display=w==='main'?'none':'';
-  if(w==='weeks') renderGrid();
+  document.getElementById('syllabus').style.display=w==='weeks'?'block':'none';
+  if(w==='weeks'){ renderGrid(); renderSyllabus(); }
 }
 function setLang(l){
-  lang=l; document.body.classList.toggle('rtl-active',l==='ar'); document.documentElement.lang=l;
+  lang=l; document.body.classList.toggle('rtl-active',l==='ar'); document.body.classList.toggle('both-active',l==='both'); document.documentElement.lang=l==='ar'?'ar':'en';
   document.getElementById('lang-en-btn').classList.toggle('active',l==='en');
   document.getElementById('lang-ar-btn').classList.toggle('active',l==='ar');
-  document.getElementById('h-desc').textContent=l==='ar'?'دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.':'A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
-  save(); if(typeof showName==='function') showName(); if(document.getElementById('main-content').style.display!=='none') render(cur); else renderGrid();
+  document.getElementById('lang-both-btn').classList.toggle('active',l==='both');
+  var D_EN='A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
+  var D_AR='دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.';
+  document.getElementById('h-desc').textContent=l==='both'?D_EN+'\n'+D_AR:l==='ar'?'دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.':'A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
+  save(); if(typeof showName==='function') showName(); if(document.getElementById('main-content').style.display!=='none') render(cur); else { renderGrid(); renderSyllabus(); }
 }
 document.getElementById('lang-en-btn').onclick=function(){setLang('en');};
 document.getElementById('lang-ar-btn').onclick=function(){setLang('ar');};
+document.getElementById('lang-both-btn').onclick=function(){setLang('both');};
 document.getElementById('step-next-btn').onclick=function(){if(cur<STEPS.length-1)render(cur+1);};
 document.getElementById('step-back-btn').onclick=function(){if(cur>0)render(cur-1);};
 document.getElementById('back-btn').onclick=function(){show('weeks');window.scrollTo({top:0,behavior:'smooth'});};
