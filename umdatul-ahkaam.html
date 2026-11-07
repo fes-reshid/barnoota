@@ -669,7 +669,6 @@
     </span>
     <button class="lang-pill" id="lang-en-btn">English</button>
     <button class="lang-pill" id="lang-ar-btn">العربية</button>
-    <button class="lang-pill" id="lang-both-btn" title="English + Arabic">EN + عربي</button>
   </div>
 </div>
 
@@ -1163,7 +1162,7 @@ function lsSet(o){try{localStorage.setItem(LS,JSON.stringify(o));}catch(e){}}
 var state=lsGet();
 if(!state.name&&!state.lang){try{var old=JSON.parse(localStorage.getItem('umdah_v1'))||{};state.name=old.name;state.lang=old.lang;state.scale=old.scale;}catch(e){}}
 state.done=state.done||{}; state.scores=state.scores||{};
-var lang=state.lang||'en', scale=state.scale||1.27;
+var lang=(state.lang==='ar'?'ar':'en'), scale=state.scale||1.27;
 var STEPS=[]; COURSE.forEach(function(w){w.steps.forEach(function(s,i){STEPS.push({w:w,s:s,i:i,key:w.id+'-'+i});});});
 var cur=0;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -1405,7 +1404,6 @@ function setLang(l){
   lang=l; document.body.classList.toggle('rtl-active',l==='ar'); document.body.classList.toggle('both-active',l==='both'); document.documentElement.lang=l==='ar'?'ar':'en';
   document.getElementById('lang-en-btn').classList.toggle('active',l==='en');
   document.getElementById('lang-ar-btn').classList.toggle('active',l==='ar');
-  document.getElementById('lang-both-btn').classList.toggle('active',l==='both');
   var D_EN='A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
   var D_AR='دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.';
   document.getElementById('h-desc').textContent=l==='both'?D_EN+'\n'+D_AR:l==='ar'?'دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.':'A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
@@ -1413,7 +1411,6 @@ function setLang(l){
 }
 document.getElementById('lang-en-btn').onclick=function(){setLang('en');};
 document.getElementById('lang-ar-btn').onclick=function(){setLang('ar');};
-document.getElementById('lang-both-btn').onclick=function(){setLang('both');};
 document.getElementById('step-next-btn').onclick=function(){if(cur<STEPS.length-1)render(cur+1);};
 document.getElementById('step-back-btn').onclick=function(){if(cur>0)render(cur-1);};
 document.getElementById('back-btn').onclick=function(){show('weeks');window.scrollTo({top:0,behavior:'smooth'});};
