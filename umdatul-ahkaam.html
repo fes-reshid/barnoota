@@ -703,8 +703,6 @@
     <div class="week-select-grid" id="week-grid"></div>
   </div>
 
-  <div id="syllabus"></div>
-
   <div id="main-content" style="display:none;">
     <div class="step-progress-row"><span id="step-progress-text"></span><div class="step-progress-track"><div class="step-progress-fill" id="step-progress-fill"></div></div></div>
     <div id="step-viewport"></div>
@@ -1380,25 +1378,12 @@ function renderGrid(){
     g.appendChild(b);
   });
 }
-function renderSyllabus(){
-  var el=document.getElementById('syllabus'); if(!el) return;
-  var h='<h2 class="syl-title">'+L('Course Outline','فهرس الدورة')+'</h2>';
-  COURSE.forEach(function(w){
-    var hs=w.steps.filter(function(x){return x.type==='hadith';});
-    if(!hs.length){ h+='<div class="syl-week"><div class="syl-wk-name">'+esc(L(w.en,w.ar))+'</div></div>'; return; }
-    h+='<div class="syl-week"><div class="syl-wk-name">'+esc(L(w.en,w.ar))+'</div><ol>';
-    hs.forEach(function(x){h+='<li>'+esc(L(x.titleEn,x.titleAr))+(x.num?' <span class="syl-no">#'+x.num+'</span>':'')+'</li>';});
-    h+='</ol></div>';
-  });
-  el.innerHTML=h;
-}
 function show(w){
   document.getElementById('week-select').style.display=w==='weeks'?'block':'none';
   document.getElementById('main-content').style.display=w==='main'?'':'none';
   document.getElementById('back-btn').style.display=w==='main'?'flex':'none';
   document.getElementById('course-hero-section').style.display=w==='main'?'none':'';
-  document.getElementById('syllabus').style.display=w==='weeks'?'block':'none';
-  if(w==='weeks'){ renderGrid(); renderSyllabus(); }
+  if(w==='weeks') renderGrid();
 }
 function setLang(l){
   lang=l; document.body.classList.toggle('rtl-active',l==='ar'); document.body.classList.toggle('both-active',l==='both'); document.documentElement.lang=l==='ar'?'ar':'en';
@@ -1407,7 +1392,7 @@ function setLang(l){
   var D_EN='A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
   var D_AR='دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.';
   document.getElementById('h-desc').textContent=l==='both'?D_EN+'\n'+D_AR:l==='ar'?'دورة فقهية في كتاب «عمدة الأحكام» للحافظ عبد الغني المقدسي، وهو مجموعة من الأحاديث المتفق عليها بين البخاري ومسلم. في كل درس نص الحديث ومعناه وأهم الأحكام والفوائد، ثم اختبار قصير. وتُضاف أسابيع جديدة بانتظام.':'A fiqh course through the famous collection of ḥadīths agreed upon by al-Bukhārī and Muslim, compiled by al-Ḥāfiẓ ʿAbd al-Ghanī al-Maqdisī. Each lesson gives the Arabic text, its English meaning, and the key rulings and lessons — followed by a short quiz. New weeks are added regularly.';
-  save(); if(typeof showName==='function') showName(); if(document.getElementById('main-content').style.display!=='none') render(cur); else { renderGrid(); renderSyllabus(); }
+  save(); if(typeof showName==='function') showName(); if(document.getElementById('main-content').style.display!=='none') render(cur); else renderGrid();
 }
 document.getElementById('lang-en-btn').onclick=function(){setLang('en');};
 document.getElementById('lang-ar-btn').onclick=function(){setLang('ar');};
