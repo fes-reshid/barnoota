@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuhfatul Atfaal: The Interactive Tajweed Book · Diin Islaam</title>
+<meta name="description" content="Tuhfat al-Atfal, line by line: listen to each line, see every tajweed rule coloured in real Qur'an examples, and test yourself. Collected by Feysel Reshid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fredoka:wght@500;600&family=Nunito:ital,wght@0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'AQ';src:url('AmiriQuran-Regular.ttf') format('truetype');font-display:swap}
+:root{--navy:#17324d;--ink:#2b2a28;--cream:#fffdf7;--paper:#faf3e0;--gold:#b8862e;--line:#eadfc3;--muted:#6b5a3f}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Nunito',sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+[lang=ar]{font-family:'Amiri',serif}
+.ara{font-family:'Amiri',serif;unicode-bidi:isolate}
+.saw{font-family:'Amiri',serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+header.top{background:radial-gradient(ellipse at 50% 20%,#1d3561 0%,#0d1b3a 75%);color:#fff;text-align:center;padding:22px 16px 26px}
+header.top .back{display:block;text-align:left;max-width:860px;margin:0 auto 6px;font-weight:700;color:#f3c85f;text-decoration:none;font-size:14px}
+.h-ar{font:700 40px/1.3 'Amiri';color:#f3c85f;margin:4px 0 0}
+header.top h1{font:600 38px/1.1 'Fredoka';margin:2px 0 8px}
+.badge{display:inline-block;background:#ef4f74;color:#fff;font:800 12px 'Nunito';letter-spacing:.08em;text-transform:uppercase;padding:5px 16px;border-radius:20px}
+.by{margin:12px 0 0;color:#e6dcc6;font-size:15px}.by b{color:#fff}
+.legendbar{position:sticky;top:0;z-index:20;background:rgba(255,253,247,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.lgrow{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:860px;margin:0 auto;scrollbar-width:thin}
+.lgchip{flex:none;border:2px solid transparent;border-radius:16px;padding:4px 10px;font:800 12px 'Nunito';color:#fff;cursor:pointer;opacity:.95}
+.lgchip.off{opacity:.3}
+.lgchip.all{background:#fff;color:var(--navy);border-color:var(--line)}
+.progress{max-width:860px;margin:0 auto;padding:0 16px 8px;display:flex;align-items:center;gap:10px;font:700 12px 'Nunito';color:var(--muted)}
+.bar{flex:1;height:8px;background:#efe5cc;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2e7d32,#1f7a8c);transition:width .4s}
+.intro{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:18px 0;line-height:1.55}
+.intro h2{font:600 20px 'Fredoka';color:var(--navy);margin:0 0 6px}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin:12px 0 0}
+.toc a{display:flex;gap:10px;align-items:center;text-decoration:none;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font:600 14px 'Fredoka';color:var(--navy)}
+.toc a span{width:12px;height:12px;border-radius:50%;flex:none}
+.chap{margin:34px 0 0}
+.chead{border-radius:20px;color:#fff;padding:18px 20px;position:relative;overflow:hidden}
+.chead::after{content:"";position:absolute;inset:0;opacity:.12;background-image:radial-gradient(circle at 16px 16px,#fff 2px,transparent 2.5px);background-size:32px 32px;pointer-events:none}
+.chead .k{margin:0;font:800 12px 'Nunito';letter-spacing:.12em;text-transform:uppercase;opacity:.9}
+.chead .a{margin:4px 0 0;font:700 26px/1.4 'Amiri';text-align:right}
+.chead h2{margin:0;font:600 28px/1.15 'Fredoka'}
+.chead p{margin:8px 0 0;font-size:15px;line-height:1.5}
+.lesson{background:var(--cream);border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin:16px 0;scroll-margin-top:70px}
+.lhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.chip{display:inline-block;padding:3px 10px;border-radius:14px;color:#fff;font:800 11px 'Nunito';letter-spacing:.08em;text-transform:uppercase}
+.lesson h3{margin:6px 0 0;font:600 24px/1.15 'Fredoka';color:var(--navy)}
+.lar{margin:2px 0 0;font:700 20px 'Amiri'}
+.done{flex:none;display:flex;align-items:center;gap:6px;font:800 12px 'Nunito';color:var(--muted);cursor:pointer;user-select:none;border:2px solid var(--line);border-radius:14px;padding:6px 10px;background:#fff}
+.done input{width:18px;height:18px;accent-color:#2e7d32}
+.done.on{border-color:#2e7d32;color:#2e7d32}
+.poem{margin:12px 0;border-radius:16px;padding:6px 12px}
+.verse{display:grid;grid-template-columns:30px 1fr;gap:4px 10px;align-items:center;padding:8px 0}
+.verse+.verse{border-top:1px dashed rgba(0,0,0,.12)}
+.vn{grid-row:span 2;width:28px;height:28px;border-radius:50%;color:#fff;font:800 12px/28px 'Nunito';text-align:center}
+.vh{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 14px;font:700 22px/1.7 'Amiri';color:var(--navy)}
+.half{display:inline-flex;align-items:center;gap:6px}
+.play{border:0;width:30px;height:30px;border-radius:50%;cursor:pointer;color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.play.playing{animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.12)}}
+.star{font-size:12px;opacity:.6}
+.ven{grid-column:2;margin:0;text-align:center;font:italic 14px/1.45 'Nunito';color:#5b5547}
+.expl p{margin:0 0 8px;line-height:1.6;font-size:16px}
+.expl .ara{font-size:19px}
+.remember{margin:10px 0;padding:10px 14px;border-left:5px solid;background:#fff;border-radius:0 14px 14px 0;font-size:15.5px;line-height:1.5}
+.how{margin:0 0 10px;font-size:15px;line-height:1.5}
+.sub{font:600 17px 'Fredoka';color:var(--navy);margin:14px 0 8px}
+.exs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.ex{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:6px 12px 10px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.ex:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.exq{font:34px/1.8 'AQ';color:#222;direction:rtl}
+.ex.plain .exq span[class^=t-]{color:inherit!important}
+.exr{font:700 12px 'Nunito';color:#8a7a5a}
+.rl{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:12px;color:#fff;font:800 11px 'Nunito'}
+.exn{margin:4px 0 0;font-size:13.5px;line-height:1.35;color:#5b5547}
+.hint{font:700 12px 'Nunito';color:#8a7a5a;margin:0 0 6px}
+.dim .exq span[class^=t-]:not(.keep){color:inherit!important}
+.table{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tr{background:#fff;border:1.5px solid var(--line);border-radius:12px;display:flex;align-items:center;gap:6px;padding:2px 10px}
+.tr .l{font:700 24px 'Amiri';color:#ef6c00;width:26px;text-align:center}.tr .q{flex:1;font:27px/1.7 'AQ';text-align:center;direction:rtl}.tr .r{font:700 11px 'Nunito';color:#8a7a5a}
+.turn{border:2px dashed #c9b88d;border-radius:18px;background:#fffaf0;padding:10px 14px;margin-top:12px}
+.turn h4{margin:0 0 6px;font:600 17px 'Fredoka';color:#6b4f16}
+.tcard{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:6px 12px 12px;margin:8px 0;text-align:center}
+.tcard .exq{font-size:32px}
+.opts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px}
+.opt{border:2px solid var(--line);background:#fff;border-radius:14px;padding:6px 12px;font:800 13px 'Nunito';cursor:pointer;color:var(--navy)}
+.opt:hover{border-color:#c9b88d}
+.opt.right{background:#2e7d32;border-color:#2e7d32;color:#fff}.opt.wrong{background:#fde7e7;border-color:#e53935;color:#b71c1c;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.fb{margin:6px 0 0;font:800 14px 'Nunito'}.fb.ok{color:#2e7d32}.fb.no{color:#b71c1c}
+.quiz{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px 18px;margin:16px 0}
+.quiz h3{margin:0 0 4px;font:600 22px 'Fredoka';color:var(--navy)}
+.qq{margin:12px 0 6px;font:600 16px/1.4 'Fredoka';color:var(--navy)}
+.qopts{display:flex;flex-wrap:wrap;gap:6px}
+.qopts .opt{font-weight:700}
+.score{margin:12px 0 0;font:800 15px 'Nunito';color:var(--navy)}
+.sortg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:8px}
+.again{border:0;background:var(--navy);color:#fff;border-radius:14px;padding:8px 16px;font:800 13px 'Nunito';cursor:pointer;margin-top:10px}
+footer{text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:14px}
+footer a{color:var(--gold);font-weight:700}
+.toTop{position:fixed;right:14px;bottom:14px;width:44px;height:44px;border-radius:50%;border:0;background:var(--navy);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+.toTop.show{opacity:1;pointer-events:auto}
+@media(max-width:520px){header.top h1{font-size:30px}.h-ar{font-size:32px}.vh{font-size:19px}.exq{font-size:30px}.lesson{padding:14px 12px}.lhead{flex-direction:column}.done{align-self:flex-start}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="/books/">← All books</a>
+  <p class="h-ar" lang="ar" dir="rtl">تُحْفَةُ الْأَطْفَالِ</p>
+  <h1>Tuhfatul Atfaal</h1>
+  <span class="badge">The Interactive Tajweed Book</span>
+  <p class="by">The poem of Imam al-Jamzuri, line by line, with colour-coded Qur'an examples<br>Collected by <b>Feysel Reshid</b></p>
+</header>
+<div class="legendbar"><div class="lgrow" id="legend"></div><div class="progress"><span id="ptext">0 of 35 lessons done</span><div class="bar"><i id="pbar"></i></div></div></div>
+<main class="wrap">
+  <section class="intro">
+    <h2>How to use this book</h2>
+    <p>🔊 Tap a speaker to hear each half of a line. 🎨 Every rule has its own colour: tap a colour at the top to show only that rule in the examples. 👆 Tap any Qur'an example to switch its colours off and on. ✏️ In “Your turn”, choose the rule and the colours will appear. ✅ Tick each lesson when you can recite it. Your progress is saved on this device.</p>
+    <div class="toc" id="toc"></div>
+  </section>
+  <div id="book"></div>
+</main>
+<footer>
+  <p>Tajweed is learned by listening and reciting to a qualified teacher. Use this book with your teacher.</p>
+  <p>The printed colour book is coming to Amazon. · <a href="/books/">More books by Feysel Reshid</a></p>
+  <p>Arabic Qur'an text: Khaled Hosny's Quran data, in the Amiri Quran font. Recordings: Diin Islaam Tajweed Quest.</p>
+</footer>
+<button class="toTop" id="toTop" aria-label="Back to top">↑</button>
+<script>
+(function(){
+const AUDIO_MAX=31, AUD='/tuhfatul-atfaal/assets/audio/';
+const KEY='diin-tuhfa-book-v1';
+let store={};try{store=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const tx=s=>esc(s).replace(/ﷺ/g,'<span class="saw">ﷺ</span>').replace(/([؀-ۿ](?:[؀-ۿً-ٰٟۖ-ۭ\s·→،]*[؀-ۿً-ٰٟ])?)/g,'<span class="ara" lang="ar" dir="rtl">$1</span>');
+let audio=null,playingBtn=null;
+function play(btn,src){
+  if(audio){audio.pause();if(playingBtn)playingBtn.classList.remove('playing')}
+  if(playingBtn===btn){playingBtn=null;return}
+  audio=new Audio(src);playingBtn=btn;btn.classList.add('playing');
+  audio.onended=()=>{btn.classList.remove('playing');playingBtn=null};
+  audio.play().catch(()=>{btn.classList.remove('playing');playingBtn=null});
+}
+fetch('data.json').then(r=>r.json()).then(D=>{
+  const R=D.rules, P=D.poem, SPLIT=D.split;
+  const lg=document.getElementById('legend');
+  const shown=new Set(Object.keys(R));
+  lg.innerHTML='<button class="lgchip all" data-r="all">All colours</button>'+Object.entries(R).filter(([k])=>k!=='letter').map(([k,v])=>`<button class="lgchip" data-r="${k}" style="background:${v[2]}" title="${esc(v[1])}">${esc(v[0])}</button>`).join('');
+  lg.onclick=e=>{const b=e.target.closest('.lgchip');if(!b)return;const r=b.dataset.r;
+    document.querySelectorAll('.lgchip').forEach(c=>c.classList.remove('off'));
+    if(r==='all'){document.body.classList.remove('dim');document.querySelectorAll('.keep').forEach(s=>s.classList.remove('keep'));return}
+    document.body.classList.add('dim');
+    document.querySelectorAll('.lgchip:not(.all)').forEach(c=>{if(c.dataset.r!==r)c.classList.add('off')});
+    document.querySelectorAll('.exq span[class^=t-]').forEach(s=>s.classList.toggle('keep',s.classList.contains('t-'+r)));
+  };
+  const css=document.createElement('style');css.textContent=Object.entries(R).map(([k,v])=>`.t-${k}{color:${v[2]}}`).join('')+'.t-silent{color:#a5a5a5}';document.head.appendChild(css);
+  let total=0;const book=document.getElementById('book'),toc=document.getElementById('toc');
+  D.chapters.forEach(ch=>{
+    const head=ch.n===0?'Introduction':ch.n===9?'Conclusion':'Chapter '+ch.n;
+    toc.insertAdjacentHTML('beforeend',`<a href="#ch${ch.n}"><span style="background:${ch.color}"></span>${head}: ${esc(ch.title)}</a>`);
+    let h=`<section class="chap" id="ch${ch.n}"><div class="chead" style="background:${ch.color}"><p class="k">${head}</p><p class="a" lang="ar" dir="rtl">${esc(ch.ar)}</p><h2>${esc(ch.title)}</h2><p>${tx(ch.intro)}</p></div>`;
+    ch.lessons.forEach(l=>{
+      total++;
+      const verses=l.lines.map(n=>{const w=P[n].ar.split(/\s+/),c=SPLIT[n]||Math.ceil(w.length/2);const nn=String(n).padStart(2,'0');
+        const btn=(x)=>n<=AUDIO_MAX?`<button class="play" style="background:${ch.color}" data-src="${AUD}line-${nn}${x}.mp3" aria-label="Play">🔊</button>`:'';
+        return `<div class="verse"><span class="vn" style="background:${ch.color}">${n}</span><div class="vh" lang="ar" dir="rtl"><span class="half">${esc(w.slice(0,c).join(' '))}${btn('a')}</span><span class="star">✦</span><span class="half">${esc(w.slice(c).join(' '))}${btn('b')}</span></div><p class="ven">${tx(P[n].en)}</p></div>`}).join('');
+      const exs=l.examples.map(e=>`<div class="ex"><div class="exq">${e.html}</div><span class="exr">${esc(e.ref)}</span>${e.rule!=='letter'?`<br><span class="rl" style="background:${R[e.rule][2]}">${esc(R[e.rule][0])}</span>`:''}${e.note?`<p class="exn">${tx(e.note)}</p>`:''}</div>`).join('');
+      const table=l.table.length?`<div class="table">${l.table.map(x=>`<div class="tr"><span class="l">${x.letter}</span><span class="q">${x.html}</span><span class="r">${x.ref}</span></div>`).join('')}</div>`:'';
+      const rulesHere=[...new Set(ch.lessons.flatMap(z=>z.examples.map(e=>e.rule)).filter(r=>r!=='letter'))];
+      const turn=l.turn.length?`<div class="turn"><h4>✏️ Your turn! Which rule is it?</h4>${l.turn.map((t,i)=>{const opts=[...new Set([t.rule,...rulesHere])].filter(r=>R[r]&&r!=='letter').sort();return `<div class="tcard" data-ans="${t.rule}"><div class="ex plain" style="border:0;cursor:default;padding:0"><div class="exq">${t.html}</div></div><span class="exr">${esc(t.ref)}</span><div class="opts">${t.rule==='letter'?'':opts.map(r=>`<button class="opt" data-r="${r}">${esc(R[r][0])}</button>`).join('')}</div><p class="fb"></p></div>`}).join('')}</div>`:'';
+      h+=`<article class="lesson" id="${l.id}"><div class="lhead"><div><span class="chip" style="background:${ch.color}">${head} · Lesson ${l.id.slice(1)}</span><h3>${esc(l.title)}</h3><p class="lar" lang="ar" dir="rtl" style="color:${ch.color}">${esc(l.ar)}</p></div><label class="done ${store[l.id]?'on':''}"><input type="checkbox" data-id="${l.id}" ${store[l.id]?'checked':''}> I can recite ${l.lines.length>1?'these lines':'this line'}</label></div>
+      <div class="poem" style="background:${ch.color}14;border:1.5px solid ${ch.color}55">${verses}</div>
+      <div class="expl">${l.explain.map(p=>`<p>${tx(p)}</p>`).join('')}</div>
+      <div class="remember" style="border-color:${ch.color}"><b>Remember:</b> ${tx(l.remember)}</div>${l.how?`<p class="how"><b>How to read it:</b> ${tx(l.how)}</p>`:''}
+      ${exs?`<p class="sub">From the Qur'an</p><p class="hint">Tap an example to switch its colours off and on.</p><div class="exs">${exs}</div>`:''}${table}${turn}</article>`;
+    });
+    if(ch.quiz&&ch.quiz.length){
+      h+=`<section class="quiz" data-ch="${ch.n}"><h3>⭐ ${head} Quest Check</h3>${ch.quiz.map((q,i)=>`<div class="qblock" data-ans="${q[2]}"><p class="qq">${i+1}. ${tx(q[0])}</p><div class="qopts">${q[1].map((o,k)=>`<button class="opt" data-k="${k}">${tx(o)}</button>`).join('')}</div><p class="fb"></p></div>`).join('')}
+      ${ch.sort&&ch.sort.length?`<p class="qq">🧩 Sort it! Choose the rule for each phrase.</p><div class="sortg">${ch.sort.map(s=>{const opts=[...new Set(ch.sort.map(z=>z.rule))];return `<div class="tcard" data-ans="${s.rule}"><div class="ex plain" style="border:0;cursor:default;padding:0"><div class="exq">${s.html}</div></div><span class="exr">${s.ref}</span><div class="opts">${opts.map(r=>`<button class="opt" data-r="${r}">${esc(R[r][0])}</button>`).join('')}</div><p class="fb"></p></div>`}).join('')}</div>`:''}
+      <p class="score"></p><button class="again">Try again</button></section>`;
+    }
+    book.insertAdjacentHTML('beforeend',h+'</section>');
+  });
+  const upd=()=>{const n=Object.values(store).filter(Boolean).length;document.getElementById('ptext').textContent=`${n} of ${total} lessons done`;document.getElementById('pbar').style.width=(100*n/total)+'%'};upd();
+  document.addEventListener('change',e=>{if(e.target.matches('.done input')){store[e.target.dataset.id]=e.target.checked;e.target.parentElement.classList.toggle('on',e.target.checked);save();upd()}});
+  document.addEventListener('click',e=>{
+    const pb=e.target.closest('.play');if(pb){play(pb,pb.dataset.src);return}
+    const ex=e.target.closest('.exs .ex');if(ex){ex.classList.toggle('plain');return}
+    const o=e.target.closest('.tcard .opt');
+    if(o){const card=o.closest('.tcard');if(card.dataset.done)return;const ok=o.dataset.r===card.dataset.ans;const fb=card.querySelector('.fb');
+      if(ok){o.classList.add('right');card.dataset.done=1;card.querySelector('.ex').classList.remove('plain');fb.className='fb ok';fb.textContent='Correct! The rule letters are now coloured.';scoreFor(card)}
+      else{o.classList.add('wrong');setTimeout(()=>o.classList.remove('wrong'),400);fb.className='fb no';fb.textContent='Not quite. Look at the letter after the noon, meem or lam, and try again!';card.dataset.miss=1}
+      return}
+    const q=e.target.closest('.qblock .opt');
+    if(q){const b=q.closest('.qblock');if(b.dataset.done)return;const ok=Number(q.dataset.k)===Number(b.dataset.ans);const fb=b.querySelector('.fb');
+      if(ok){q.classList.add('right');b.dataset.done=1;fb.className='fb ok';fb.textContent='Correct! Well done.';scoreFor(b)}else{q.classList.add('wrong');setTimeout(()=>q.classList.remove('wrong'),400);b.dataset.miss=1;fb.className='fb no';fb.textContent='Try again!'}
+      return}
+    const ag=e.target.closest('.again');if(ag){const s=ag.closest('.quiz');s.querySelectorAll('[data-done],[data-miss]').forEach(x=>{delete x.dataset.done;delete x.dataset.miss});s.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong'));s.querySelectorAll('.fb').forEach(x=>x.textContent='');s.querySelectorAll('.tcard .ex').forEach(x=>x.classList.add('plain'));s.querySelector('.score').textContent='';return}
+  });
+  function scoreFor(el){const s=el.closest('.quiz');if(!s)return;const items=s.querySelectorAll('.qblock,.tcard');const done=[...items].filter(x=>x.dataset.done);if(done.length===items.length){const first=done.filter(x=>!x.dataset.miss).length;s.querySelector('.score').textContent=`🏆 ${first} of ${items.length} right the first time! ${first===items.length?'MashaAllah, perfect!':'Keep practising!'}`}}
+  if(location.hash){const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),50)}
+});
+const tt=document.getElementById('toTop');addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>900));tt.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+})();
+</script>
+</body>
+</html>
