@@ -628,6 +628,11 @@
   .syl-wk-name{font-weight:700;color:var(--green);font-size:calc(15px * var(--scale));margin-bottom:6px;}
   .syl-week ol{margin:0;padding-inline-start:22px;font-size:calc(14px * var(--scale));} .syl-week li{margin-bottom:3px;}
   .syl-no{color:var(--gold);font-size:.85em;}
+  .gl-table{width:100%;border-collapse:collapse;background:#fff;}
+  .gl-table td{padding:10px 14px;border-bottom:1px solid var(--parchment-deep);font-size:calc(14.5px * var(--scale));vertical-align:top;}
+  .gl-table .gl-term{font-weight:700;color:var(--green);white-space:nowrap;width:1%;}
+  .info-box p{margin:0 0 12px;font-size:calc(15.5px * var(--scale));line-height:1.7;}
+  .info-box .ar-block p{font-size:calc(17px * var(--scale));}
   .disclaimer{font-size:calc(13px * var(--scale));color:var(--ink-brown);opacity:.85;}
 </style>
 </head>
@@ -714,206 +719,445 @@
 </div>
 
 <script>
+var AR={"1": "عَنْ عُمَرَ بْنِ الْخَطَّابِ رَضِيَ اللَّهُ عَنْهُ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ: إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ (وَفِي رِوَايَةٍ بِالنِّيَّةِ) وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ فَهِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ وَمَنْ كَانَتْ هِجْرَتُهُ إِلَى دُنْيَا يُصِيبُهَا أَوِ امْرَأَةٍ يَتَزَوَّجُهَا فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ", "2": "عَنْ أَبِي هُرَيْرَةَ رَضِيَ اللَّهُ عَنْهُ قَالَ: قَالَ رَسُولُ اللَّهِ ﷺ: لَا يَقْبَلُ اللَّهُ صَلَاةَ أَحَدِكُمْ إِذَا أَحْدَثَ حَتَّى يَتَوَضَّأَ", "3": "عَنْ عَبْدِ اللَّهِ بْنِ عَمْرِو بْنِ الْعَاصِ وَأَبِي هُرَيْرَةَ وَعَائِشَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: وَيْلٌ لِلْأَعْقَابِ مِنَ النَّارِ", "4": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: إِذَا تَوَضَّأَ أَحَدُكُمْ فَلْيَجْعَلْ فِي أَنْفِهِ مَاءً ثُمَّ لِيَسْتَنْثِرْ وَمَنِ اسْتَجْمَرَ فَلْيُوتِرْ وَإِذَا اسْتَيْقَظَ أَحَدُكُمْ مِنْ نَوْمِهِ فَلْيَغْسِلْ يَدَيْهِ قَبْلَ أَنْ يُدْخِلَهُمَا فِي الْإِنَاءِ ثَلَاثًا فَإِنَّ أَحَدَكُمْ لَا يَدْرِي أَيْنَ بَاتَتْ يَدُهُ. وَفِي لَفْظٍ لِمُسْلِمٍ: فَلْيَسْتَنْشِقْ بِمَنْخِرَيْهِ مِنَ الْمَاءِ. وَفِي لَفْظٍ: مَنْ تَوَضَّأَ فَلْيَسْتَنْشِقْ", "5": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: لَا يَبُولَنَّ أَحَدُكُمْ فِي الْمَاءِ الدَّائِمِ الَّذِي لَا يَجْرِي ثُمَّ يَغْتَسِلُ فِيهِ. وَلِمُسْلِمٍ: لَا يَغْتَسِلْ أَحَدُكُمْ فِي الْمَاءِ الدَّائِمِ وَهُوَ جُنُبٌ", "6": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: إِذَا شَرِبَ الْكَلْبُ فِي إِنَاءِ أَحَدِكُمْ فَلْيَغْسِلْهُ سَبْعًا. وَلِمُسْلِمٍ: أُولَاهُنَّ بِالتُّرَابِ. وَلَهُ فِي حَدِيثِ عَبْدِ اللَّهِ بْنِ مُغَفَّلٍ أَنَّ النَّبِيَّ ﷺ قَالَ: إِذَا وَلَغَ الْكَلْبُ فِي الْإِنَاءِ فَاغْسِلُوهُ سَبْعًا وَعَفِّرُوهُ الثَّامِنَةَ بِالتُّرَابِ", "7": "عَنْ حُمْرَانَ مَوْلَى عُثْمَانَ بْنِ عَفَّانَ أَنَّ عُثْمَانَ دَعَا بِوَضُوءٍ فَأَفْرَغَ عَلَى يَدَيْهِ مِنْ إِنَائِهِ فَغَسَلَهُمَا ثَلَاثَ مَرَّاتٍ ثُمَّ أَدْخَلَ يَمِينَهُ فِي الْوَضُوءِ ثُمَّ تَمَضْمَضَ وَاسْتَنْشَقَ وَاسْتَنْثَرَ ثُمَّ غَسَلَ وَجْهَهُ ثَلَاثًا وَيَدَيْهِ إِلَى الْمِرْفَقَيْنِ ثَلَاثًا ثُمَّ مَسَحَ بِرَأْسِهِ ثُمَّ غَسَلَ كِلْتَا رِجْلَيْهِ ثَلَاثًا ثُمَّ قَالَ: رَأَيْتُ النَّبِيَّ ﷺ تَوَضَّأَ نَحْوَ وُضُوئِي هَذَا ثُمَّ قَالَ: مَنْ تَوَضَّأَ نَحْوَ وُضُوئِي هَذَا ثُمَّ صَلَّى رَكْعَتَيْنِ لَا يُحَدِّثُ فِيهِمَا نَفْسَهُ غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ", "8": "عَنْ عَمْرِو بْنِ يَحْيَى الْمَازِنِيِّ عَنْ أَبِيهِ قَالَ: شَهِدْتُ عَمْرَو بْنَ أَبِي حَسَنٍ سَأَلَ عَبْدَ اللَّهِ بْنَ زَيْدٍ عَنْ وُضُوءِ رَسُولِ اللَّهِ ﷺ فَدَعَا بِتَوْرٍ مِنْ مَاءٍ فَتَوَضَّأَ لَهُمْ وُضُوءَ رَسُولِ اللَّهِ ﷺ فَأَكْفَأَ عَلَى يَدِهِ مِنَ التَّوْرِ فَغَسَلَ يَدَيْهِ ثَلَاثًا ثُمَّ أَدْخَلَ يَدَهُ فِي التَّوْرِ فَمَضْمَضَ وَاسْتَنْشَقَ وَاسْتَنْثَرَ ثَلَاثًا بِثَلَاثِ غَرْفَاتٍ ثُمَّ أَدْخَلَ يَدَهُ فَغَسَلَ وَجْهَهُ ثَلَاثًا ثُمَّ أَدْخَلَ يَدَهُ فِي التَّوْرِ فَغَسَلَ يَدَيْهِ مَرَّتَيْنِ إِلَى الْمِرْفَقَيْنِ ثُمَّ أَدْخَلَ يَدَهُ فِي التَّوْرِ فَمَسَحَ رَأْسَهُ فَأَقْبَلَ بِهِمَا وَأَدْبَرَ مَرَّةً وَاحِدَةً ثُمَّ غَسَلَ رِجْلَيْهِ إِلَى الْكَعْبَيْنِ. وَفِي رِوَايَةٍ: بَدَأَ بِمُقَدَّمِ رَأْسِهِ حَتَّى ذَهَبَ بِهِمَا إِلَى قَفَاهُ ثُمَّ رَدَّهُمَا حَتَّى رَجَعَ إِلَى الْمَكَانِ الَّذِي بَدَأَ مِنْهُ. وَفِي رِوَايَةٍ: أَتَانَا رَسُولُ اللَّهِ ﷺ فَأَخْرَجْنَا لَهُ مَاءً فِي تَوْرٍ مِنْ صُفْرٍ", "9": "عَنْ عَائِشَةَ قَالَتْ: كَانَ النَّبِيُّ ﷺ يُعْجِبُهُ التَّيَمُّنُ فِي تَنَعُّلِهِ وَتَرَجُّلِهِ وَطُهُورِهِ وَفِي شَأْنِهِ كُلِّهِ", "10": "عَنْ نُعَيْمٍ الْمُجْمِرِ عَنْ أَبِي هُرَيْرَةَ عَنِ النَّبِيِّ ﷺ أَنَّهُ قَالَ: إِنَّ أُمَّتِي يُدْعَوْنَ يَوْمَ الْقِيَامَةِ غُرًّا مُحَجَّلِينَ مِنْ آثَارِ الْوُضُوءِ فَمَنِ اسْتَطَاعَ مِنْكُمْ أَنْ يُطِيلَ غُرَّتَهُ فَلْيَفْعَلْ. وَفِي لَفْظٍ لِمُسْلِمٍ: رَأَيْتُ أَبَا هُرَيْرَةَ يَتَوَضَّأُ فَغَسَلَ وَجْهَهُ وَيَدَيْهِ حَتَّى كَادَ يَبْلُغُ الْمَنْكِبَيْنِ ثُمَّ غَسَلَ رِجْلَيْهِ حَتَّى رَفَعَ إِلَى السَّاقَيْنِ ثُمَّ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ: إِنَّ أُمَّتِي يُدْعَوْنَ يَوْمَ الْقِيَامَةِ غُرًّا مُحَجَّلِينَ مِنْ آثَارِ الْوُضُوءِ فَمَنِ اسْتَطَاعَ مِنْكُمْ أَنْ يُطِيلَ غُرَّتَهُ وَتَحْجِيلَهُ فَلْيَفْعَلْ. وَفِي لَفْظٍ لِمُسْلِمٍ: سَمِعْتُ خَلِيلِي ﷺ يَقُولُ: تَبْلُغُ الْحِلْيَةُ مِنَ الْمُؤْمِنِ حَيْثُ يَبْلُغُ الْوُضُوءُ", "11": "عَنْ أَنَسِ بْنِ مَالِكٍ أَنَّ النَّبِيَّ ﷺ كَانَ إِذَا دَخَلَ الْخَلَاءَ قَالَ: اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ", "12": "عَنْ أَبِي أَيُّوبَ الْأَنْصَارِيِّ قَالَ: قَالَ رَسُولُ اللَّهِ ﷺ: إِذَا أَتَيْتُمُ الْغَائِطَ فَلَا تَسْتَقْبِلُوا الْقِبْلَةَ بِغَائِطٍ وَلَا بَوْلٍ وَلَا تَسْتَدْبِرُوهَا وَلَكِنْ شَرِّقُوا أَوْ غَرِّبُوا. قَالَ أَبُو أَيُّوبَ: فَقَدِمْنَا الشَّامَ فَوَجَدْنَا مَرَاحِيضَ قَدْ بُنِيَتْ نَحْوَ الْكَعْبَةِ فَنَنْحَرِفُ عَنْهَا وَنَسْتَغْفِرُ اللَّهَ عَزَّ وَجَلَّ", "13": "عَنْ عَبْدِ اللَّهِ بْنِ عُمَرَ قَالَ: رَقِيتُ يَوْمًا عَلَى بَيْتِ حَفْصَةَ فَرَأَيْتُ النَّبِيَّ ﷺ يَقْضِي حَاجَتَهُ مُسْتَقْبِلَ الشَّامِ مُسْتَدْبِرَ الْكَعْبَةِ. وَفِي رِوَايَةٍ: مُسْتَقْبِلًا بَيْتَ الْمَقْدِسِ", "14": "عَنْ أَنَسِ بْنِ مَالِكٍ أَنَّهُ قَالَ: كَانَ النَّبِيُّ ﷺ يَدْخُلُ الْخَلَاءَ فَأَحْمِلُ أَنَا وَغُلَامٌ نَحْوِي مَعِي إِدَاوَةً مِنْ مَاءٍ وَعَنَزَةً فَيَسْتَنْجِي بِالْمَاءِ", "15": "عَنْ أَبِي قَتَادَةَ الْحَارِثِ بْنِ رِبْعِيٍّ الْأَنْصَارِيِّ أَنَّ النَّبِيَّ ﷺ قَالَ: لَا يُمْسِكَنَّ أَحَدُكُمْ ذَكَرَهُ بِيَمِينِهِ وَهُوَ يَبُولُ وَلَا يَتَمَسَّحْ مِنَ الْخَلَاءِ بِيَمِينِهِ وَلَا يَتَنَفَّسْ فِي الْإِنَاءِ", "16": "عَنْ عَبْدِ اللَّهِ بْنِ عَبَّاسٍ قَالَ: مَرَّ النَّبِيُّ ﷺ بِقَبْرَيْنِ فَقَالَ: إِنَّهُمَا لَيُعَذَّبَانِ وَمَا يُعَذَّبَانِ فِي كَبِيرٍ أَمَّا أَحَدُهُمَا فَكَانَ لَا يَسْتَتِرُ مِنَ الْبَوْلِ وَأَمَّا الْآخَرُ فَكَانَ يَمْشِي بِالنَّمِيمَةِ فَأَخَذَ جَرِيدَةً رَطْبَةً فَشَقَّهَا نِصْفَيْنِ فَغَرَزَ فِي كُلِّ قَبْرٍ وَاحِدَةً فَقَالُوا: يَا رَسُولَ اللَّهِ لِمَ فَعَلْتَ هَذَا؟ قَالَ: لَعَلَّهُ يُخَفَّفُ عَنْهُمَا مَا لَمْ يَيْبَسَا", "17": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ بِالسِّوَاكِ عِنْدَ كُلِّ صَلَاةٍ", "18": "عَنْ حُذَيْفَةَ بْنِ الْيَمَانِ قَالَ: كَانَ النَّبِيُّ ﷺ إِذَا قَامَ مِنَ اللَّيْلِ يَشُوصُ فَاهُ بِالسِّوَاكِ", "19": "عَنْ عَائِشَةَ قَالَتْ: دَخَلَ عَبْدُ الرَّحْمَنِ بْنُ أَبِي بَكْرٍ الصِّدِّيقِ عَلَى النَّبِيِّ ﷺ وَأَنَا مُسْنِدَتُهُ إِلَى صَدْرِي وَمَعَ عَبْدِ الرَّحْمَنِ سِوَاكٌ رَطْبٌ يَسْتَنُّ بِهِ فَأَبَدَّهُ رَسُولُ اللَّهِ ﷺ بَصَرَهُ فَأَخَذْتُ السِّوَاكَ فَقَضَمْتُهُ وَنَفَضْتُهُ وَطَيَّبْتُهُ ثُمَّ دَفَعْتُهُ إِلَى النَّبِيِّ ﷺ فَاسْتَنَّ بِهِ فَمَا رَأَيْتُ النَّبِيَّ ﷺ اسْتَنَّ اسْتِنَانًا أَحْسَنَ مِنْهُ فَمَا عَدَا أَنْ فَرَغَ رَسُولُ اللَّهِ ﷺ رَفَعَ يَدَهُ أَوْ إِصْبَعَهُ ثُمَّ قَالَ: فِي الرَّفِيقِ الْأَعْلَى ثَلَاثًا ثُمَّ قَضَى وَكَانَتْ تَقُولُ: مَاتَ بَيْنَ حَاقِنَتِي وَذَاقِنَتِي. وَفِي لَفْظٍ: فَرَأَيْتُهُ يَنْظُرُ إِلَيْهِ فَعَرَفْتُ أَنَّهُ يُحِبُّ السِّوَاكَ فَقُلْتُ: آخُذُهُ لَكَ فَأَشَارَ بِرَأْسِهِ أَنْ نَعَمْ. هَذَا لَفْظُ الْبُخَارِيِّ وَلِمُسْلِمٍ نَحْوُهُ", "20": "عَنْ أَبِي مُوسَى الْأَشْعَرِيِّ قَالَ: أَتَيْتُ النَّبِيَّ ﷺ وَهُوَ يَسْتَاكُ بِسِوَاكٍ رَطْبٍ قَالَ: وَطَرَفُ السِّوَاكِ عَلَى لِسَانِهِ وَهُوَ يَقُولُ: أُعْ أُعْ وَالسِّوَاكُ فِي فِيهِ كَأَنَّهُ يَتَهَوَّعُ", "21": "عَنِ الْمُغِيرَةِ بْنِ شُعْبَةَ قَالَ: كُنْتُ مَعَ النَّبِيِّ ﷺ فِي سَفَرٍ فَأَهْوَيْتُ لِأَنْزِعَ خُفَّيْهِ فَقَالَ: دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا طَاهِرَتَيْنِ فَمَسَحَ عَلَيْهِمَا", "22": "عَنْ حُذَيْفَةَ بْنِ الْيَمَانِ قَالَ: كُنْتُ مَعَ النَّبِيِّ ﷺ فَبَالَ وَتَوَضَّأَ وَمَسَحَ عَلَى خُفَّيْهِ. مُخْتَصَرًا", "23": "عَنْ عَلِيِّ بْنِ أَبِي طَالِبٍ قَالَ: كُنْتُ رَجُلًا مَذَّاءً فَاسْتَحْيَيْتُ أَنْ أَسْأَلَ النَّبِيَّ ﷺ لِمَكَانِ ابْنَتِهِ مِنِّي فَأَمَرْتُ الْمِقْدَادَ بْنَ الْأَسْوَدِ فَسَأَلَهُ فَقَالَ: يَغْسِلُ ذَكَرَهُ وَيَتَوَضَّأُ. وَلِلْبُخَارِيِّ: اغْسِلْ ذَكَرَكَ وَتَوَضَّأْ. وَلِمُسْلِمٍ: تَوَضَّأْ وَانْضَحْ فَرْجَكَ", "24": "عَنْ عَبَّادِ بْنِ تَمِيمٍ عَنْ عَبْدِ اللَّهِ بْنِ زَيْدِ بْنِ عَاصِمٍ الْمَازِنِيِّ قَالَ: شُكِيَ إِلَى النَّبِيِّ ﷺ الرَّجُلُ يُخَيَّلُ إِلَيْهِ أَنَّهُ يَجِدُ الشَّيْءَ فِي الصَّلَاةِ فَقَالَ: لَا يَنْصَرِفْ حَتَّى يَسْمَعَ صَوْتًا أَوْ يَجِدَ رِيحًا", "25": "عَنْ أُمِّ قَيْسٍ بِنْتِ مِحْصَنٍ الْأَسَدِيَّةِ أَنَّهَا أَتَتْ بِابْنٍ لَهَا صَغِيرٍ لَمْ يَأْكُلِ الطَّعَامَ إِلَى رَسُولِ اللَّهِ ﷺ فَأَجْلَسَهُ فِي حِجْرِهِ فَبَالَ عَلَى ثَوْبِهِ فَدَعَا بِمَاءٍ فَنَضَحَهُ عَلَى ثَوْبِهِ وَلَمْ يَغْسِلْهُ. وَفِي حَدِيثِ عَائِشَةَ أُمِّ الْمُؤْمِنِينَ أَنَّ النَّبِيَّ ﷺ أُتِيَ بِصَبِيٍّ فَبَالَ عَلَى ثَوْبِهِ فَدَعَا بِمَاءٍ فَأَتْبَعَهُ إِيَّاهُ. وَلِمُسْلِمٍ: فَأَتْبَعَهُ بَوْلَهُ وَلَمْ يَغْسِلْهُ", "26": "عَنْ أَنَسِ بْنِ مَالِكٍ قَالَ: جَاءَ أَعْرَابِيٌّ فَبَالَ فِي طَائِفَةِ الْمَسْجِدِ فَزَجَرَهُ النَّاسُ فَنَهَاهُمُ النَّبِيُّ ﷺ فَلَمَّا قَضَى بَوْلَهُ أَمَرَ النَّبِيُّ ﷺ بِذَنُوبٍ مِنْ مَاءٍ فَأُهْرِيقَ عَلَيْهِ", "27": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: الْفِطْرَةُ خَمْسٌ: الْخِتَانُ وَالِاسْتِحْدَادُ وَقَصُّ الشَّارِبِ وَتَقْلِيمُ الْأَظْفَارِ وَنَتْفُ الْإِبْطِ", "28": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ لَقِيَهُ فِي بَعْضِ طُرُقِ الْمَدِينَةِ وَهُوَ جُنُبٌ قَالَ: فَانْخَنَسْتُ مِنْهُ فَذَهَبْتُ فَاغْتَسَلْتُ ثُمَّ جِئْتُ فَقَالَ: أَيْنَ كُنْتَ يَا أَبَا هُرَيْرَةَ؟ قَالَ: كُنْتُ جُنُبًا فَكَرِهْتُ أَنْ أُجَالِسَكَ وَأَنَا عَلَى غَيْرِ طَهَارَةٍ فَقَالَ: سُبْحَانَ اللَّهِ إِنَّ الْمُسْلِمَ لَا يَنْجُسُ", "29": "عَنْ عَائِشَةَ قَالَتْ: كَانَ النَّبِيُّ ﷺ إِذَا اغْتَسَلَ مِنَ الْجَنَابَةِ غَسَلَ يَدَيْهِ ثُمَّ تَوَضَّأَ وُضُوءَهُ لِلصَّلَاةِ ثُمَّ اغْتَسَلَ ثُمَّ يُخَلِّلُ بِيَدَيْهِ شَعْرَهُ حَتَّى إِذَا ظَنَّ أَنَّهُ قَدْ أَرْوَى بَشَرَتَهُ أَفَاضَ عَلَيْهِ الْمَاءَ ثَلَاثَ مَرَّاتٍ ثُمَّ غَسَلَ سَائِرَ جَسَدِهِ. وَكَانَتْ تَقُولُ: كُنْتُ أَغْتَسِلُ أَنَا وَرَسُولُ اللَّهِ ﷺ مِنْ إِنَاءٍ وَاحِدٍ نَغْتَرِفُ مِنْهُ جَمِيعًا", "30": "عَنْ مَيْمُونَةَ بِنْتِ الْحَارِثِ زَوْجِ النَّبِيِّ ﷺ أَنَّهَا قَالَتْ: وَضَعْتُ لِرَسُولِ اللَّهِ ﷺ وُضُوءَ الْجَنَابَةِ فَأَكْفَأَ بِيَمِينِهِ عَلَى يَسَارِهِ مَرَّتَيْنِ أَوْ ثَلَاثًا ثُمَّ غَسَلَ فَرْجَهُ ثُمَّ ضَرَبَ يَدَهُ بِالْأَرْضِ أَوِ الْحَائِطِ مَرَّتَيْنِ أَوْ ثَلَاثًا ثُمَّ تَمَضْمَضَ وَاسْتَنْشَقَ وَغَسَلَ وَجْهَهُ وَذِرَاعَيْهِ ثُمَّ أَفَاضَ عَلَى رَأْسِهِ الْمَاءَ ثُمَّ غَسَلَ جَسَدَهُ ثُمَّ تَنَحَّى فَغَسَلَ رِجْلَيْهِ فَأَتَيْتُهُ بِخِرْقَةٍ فَلَمْ يُرِدْهَا فَجَعَلَ يَنْفُضُ الْمَاءَ بِيَدِهِ", "31": "عَنْ عَبْدِ اللَّهِ بْنِ عُمَرَ بْنِ الْخَطَّابِ أَنَّ عُمَرَ قَالَ لِلنَّبِيِّ ﷺ: يَا رَسُولَ اللَّهِ أَيَرْقُدُ أَحَدُنَا وَهُوَ جُنُبٌ؟ قَالَ: نَعَمْ إِذَا تَوَضَّأَ أَحَدُكُمْ فَلْيَرْقُدْ", "32": "عَنْ أُمِّ سَلَمَةَ قَالَتْ: جَاءَتْ أُمُّ سُلَيْمٍ امْرَأَةُ أَبِي طَلْحَةَ إِلَى النَّبِيِّ ﷺ فَقَالَتْ: يَا رَسُولَ اللَّهِ إِنَّ اللَّهَ لَا يَسْتَحْيِي مِنَ الْحَقِّ فَهَلْ عَلَى الْمَرْأَةِ مِنْ غُسْلٍ إِذَا هِيَ احْتَلَمَتْ؟ قَالَ: نَعَمْ إِذَا هِيَ رَأَتِ الْمَاءَ", "33": "عَنْ عَائِشَةَ قَالَتْ: كُنْتُ أَغْسِلُ الْجَنَابَةَ مِنْ ثَوْبِ رَسُولِ اللَّهِ ﷺ فَيَخْرُجُ إِلَى الصَّلَاةِ وَإِنَّ بُقَعَ الْمَاءِ فِي ثَوْبِهِ. وَفِي لَفْظِ مُسْلِمٍ: لَقَدْ كُنْتُ أَفْرُكُهُ مِنْ ثَوْبِ رَسُولِ اللَّهِ ﷺ فَرْكًا فَيُصَلِّي فِيهِ", "34": "عَنْ أَبِي هُرَيْرَةَ أَنَّ النَّبِيَّ ﷺ قَالَ: إِذَا جَلَسَ بَيْنَ شُعَبِهَا الْأَرْبَعِ ثُمَّ جَهَدَهَا فَقَدْ وَجَبَ الْغُسْلُ. وَفِي لَفْظٍ لِمُسْلِمٍ: وَإِنْ لَمْ يُنْزِلْ", "35": "عَنْ أَبِي جَعْفَرٍ مُحَمَّدِ بْنِ الْحُسَيْنِ بْنِ عَلِيِّ بْنِ أَبِي طَالِبٍ أَنَّهُ كَانَ هُوَ وَأَبُوهُ عِنْدَ جَابِرِ بْنِ عَبْدِ اللَّهِ وَعِنْدَهُ قَوْمٌ فَسَأَلُوهُ عَنِ الْغُسْلِ فَقَالَ: يَكْفِيكَ صَاعٌ فَقَالَ رَجُلٌ: مَا يَكْفِينِي؟ فَقَالَ جَابِرٌ: كَانَ يَكْفِي مَنْ هُوَ أَوْفَى مِنْكَ شَعْرًا وَخَيْرًا مِنْكَ يُرِيدُ رَسُولَ اللَّهِ ﷺ ثُمَّ أَمَّنَا فِي ثَوْبٍ. وَفِي لَفْظٍ: كَانَ النَّبِيُّ ﷺ يُفْرِغُ عَلَى رَأْسِهِ ثَلَاثًا", "36": "عَنْ عِمْرَانَ بْنِ حُصَيْنٍ أَنَّ النَّبِيَّ ﷺ رَأَى رَجُلًا مُعْتَزِلًا لَمْ يُصَلِّ فِي الْقَوْمِ فَقَالَ: يَا فُلَانُ مَا مَنَعَكَ أَنْ تُصَلِّيَ فِي الْقَوْمِ؟ فَقَالَ: يَا رَسُولَ اللَّهِ أَصَابَتْنِي جَنَابَةٌ وَلَا مَاءَ فَقَالَ: عَلَيْكَ بِالصَّعِيدِ فَإِنَّهُ يَكْفِيكَ", "37": "عَنْ عَمَّارِ بْنِ يَاسِرٍ قَالَ: بَعَثَنِي النَّبِيُّ ﷺ فِي حَاجَةٍ فَأَجْنَبْتُ فَلَمْ أَجِدِ الْمَاءَ فَتَمَرَّغْتُ فِي الصَّعِيدِ كَمَا تَتَمَرَّغُ الدَّابَّةُ ثُمَّ أَتَيْتُ النَّبِيَّ ﷺ فَذَكَرْتُ لَهُ ذَلِكَ فَقَالَ: إِنَّمَا كَانَ يَكْفِيكَ أَنْ تَقُولَ بِيَدَيْكَ هَكَذَا ثُمَّ ضَرَبَ بِيَدَيْهِ الْأَرْضَ ضَرْبَةً وَاحِدَةً ثُمَّ مَسَحَ الشِّمَالَ عَلَى الْيَمِينِ وَظَاهِرَ كَفَّيْهِ وَوَجْهَهُ", "38": "عَنْ جَابِرِ بْنِ عَبْدِ اللَّهِ أَنَّ النَّبِيَّ ﷺ قَالَ: أُعْطِيتُ خَمْسًا لَمْ يُعْطَهُنَّ أَحَدٌ مِنَ الْأَنْبِيَاءِ قَبْلِي: نُصِرْتُ بِالرُّعْبِ مَسِيرَةَ شَهْرٍ وَجُعِلَتْ لِيَ الْأَرْضُ مَسْجِدًا وَطَهُورًا فَأَيُّمَا رَجُلٍ مِنْ أُمَّتِي أَدْرَكَتْهُ الصَّلَاةُ فَلْيُصَلِّ وَأُحِلَّتْ لِيَ الْغَنَائِمُ وَلَمْ تَحِلَّ لِأَحَدٍ قَبْلِي وَأُعْطِيتُ الشَّفَاعَةَ وَكَانَ النَّبِيُّ يُبْعَثُ إِلَى قَوْمِهِ خَاصَّةً وَبُعِثْتُ إِلَى النَّاسِ عَامَّةً", "39": "عَنْ عَائِشَةَ أَنَّ فَاطِمَةَ بِنْتَ أَبِي حُبَيْشٍ سَأَلَتِ النَّبِيَّ ﷺ فَقَالَتْ: إِنِّي أُسْتَحَاضُ فَلَا أَطْهُرُ أَفَأَدَعُ الصَّلَاةَ؟ قَالَ: لَا إِنَّ ذَلِكِ عِرْقٌ وَلَكِنْ دَعِي الصَّلَاةَ قَدْرَ الْأَيَّامِ الَّتِي كُنْتِ تَحِيضِينَ فِيهَا ثُمَّ اغْتَسِلِي وَصَلِّي. وَفِي رِوَايَةٍ: وَلَيْسَتْ بِالْحَيْضَةِ فَإِذَا أَقْبَلَتِ الْحَيْضَةُ فَاتْرُكِي الصَّلَاةَ فِيهَا فَإِذَا ذَهَبَ قَدْرُهَا فَاغْسِلِي عَنْكِ الدَّمَ وَصَلِّي", "40": "عَنْ عَائِشَةَ أَنَّ أُمَّ حَبِيبَةَ اسْتُحِيضَتْ سَبْعَ سِنِينَ فَسَأَلَتِ النَّبِيَّ ﷺ فَأَمَرَهَا أَنْ تَغْتَسِلَ قَالَتْ: فَكَانَتْ تَغْتَسِلُ لِكُلِّ صَلَاةٍ", "41": "عَنْ عَائِشَةَ قَالَتْ: كُنْتُ أَغْتَسِلُ أَنَا وَرَسُولُ اللَّهِ ﷺ مِنْ إِنَاءٍ وَاحِدٍ كِلَانَا جُنُبٌ وَكَانَ يَأْمُرُنِي فَأَتَّزِرُ فَيُبَاشِرُنِي وَأَنَا حَائِضٌ وَكَانَ يُخْرِجُ رَأْسَهُ إِلَيَّ وَهُوَ مُعْتَكِفٌ فَأَغْسِلُهُ وَأَنَا حَائِضٌ", "42": "عَنْ عَائِشَةَ قَالَتْ: كَانَ النَّبِيُّ ﷺ يَتَّكِئُ فِي حِجْرِي فَيَقْرَأُ الْقُرْآنَ وَأَنَا حَائِضٌ", "43": "عَنْ مُعَاذَةَ قَالَتْ: سَأَلْتُ عَائِشَةَ فَقُلْتُ: مَا بَالُ الْحَائِضِ تَقْضِي الصَّوْمَ وَلَا تَقْضِي الصَّلَاةَ؟ فَقَالَتْ: أَحَرُورِيَّةٌ أَنْتِ؟ فَقُلْتُ: لَسْتُ بِحَرُورِيَّةٍ وَلَكِنِّي أَسْأَلُ. فَقَالَتْ: كَانَ يُصِيبُنَا ذَلِكَ فَنُؤْمَرُ بِقَضَاءِ الصَّوْمِ وَلَا نُؤْمَرُ بِقَضَاءِ الصَّلَاةِ"};
 var SRC_EN = 'Agreed upon (Bukhari & Muslim)';
 var SRC_AR = 'متفق عليه';
+function H(n,tEn,tAr,nEn,nAr,tr,pEn,pAr,gl){
+  return {type:'hadith',num:n,titleEn:tEn,titleAr:tAr,narEn:nEn,narAr:nAr,ar:AR[n],en:tr,ptsEn:pEn,ptsAr:pAr,gl:gl||[]};
+}
+function Q(qEn,qAr,oEn,oAr,a){return {qEn:qEn,qAr:qAr,oEn:oEn,oAr:oAr||oEn,a:a||0};}
+function INFO(tEn,tAr,pEn,pAr){return {type:'info',titleEn:tEn,titleAr:tAr,pEn:pEn,pAr:pAr};}
+
 var COURSE = [
-{
- id:'F', en:'Foundations · The Book & Intention', ar:'التمهيد · الكتاب والنية',
+/* ===================== FOUNDATIONS ===================== */
+{ id:'F', en:'Foundations · The Book & Its Author', ar:'التمهيد · الكتاب ومؤلفه',
  steps:[
  { type:'intro' },
- { type:'hadith', titleEn:'Actions Are By Intentions', titleAr:'الأعمال بالنيات',
-   narEn:'Narrated by ʿUmar ibn al-Khaṭṭāb (may Allah be pleased with him)', narAr:'عن أمير المؤمنين أبي حفص عمر بن الخطاب رضي الله عنه',
-   ar:'إِنَّمَا الْأَعْمَالُ بِالنِّيَّةِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى، فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ فَهِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ، وَمَنْ كَانَتْ هِجْرَتُهُ لِدُنْيَا يُصِيبُهَا أَوِ امْرَأَةٍ يَنْكِحُهَا فَهِجْرَتُهُ إِلَى مَا هَاجَرَ إِلَيْهِ',
-   en:'Actions are only by intentions, and every person will only have what they intended. So whoever\'s emigration was for Allah and His Messenger, their emigration is for Allah and His Messenger; and whoever\'s emigration was for some worldly gain or a woman to marry, their emigration is for whatever they emigrated for.',
-   ptsEn:['The intention is what separates an act of worship from a mere habit — washing to cool down is not the same as washing as wuḍūʾ.','The reward of an action depends on the sincerity behind it; two people can do the same deed with very different outcomes.','This is why scholars open their books with this ḥadīth: every chapter of fiqh that follows depends on a sound intention.','The intention is in the heart; it is not pronounced aloud.'],
-   ptsAr:['النية هي التي تميّز العبادة عن العادة، فالغسل للتبرّد ليس كالغسل للطهارة.','ثواب العمل مرتبط بإخلاص صاحبه، فقد يعمل اثنان العمل نفسه ويتفاوت الجزاء.','لهذا افتتح العلماء كتبهم بهذا الحديث، فكل أبواب الفقه بعده مبنية على صحة النية.','محل النية القلب، ولا يُتلفَّظ بها.'] },
+ INFO('The Book, the Author and the Method','الكتاب والمؤلف ومنهج الدرس',
+  [`ʿUmdat al-Aḥkām min Kalām Khayr al-Anām (“The Pillar of the Rulings, from the Words of the Best of Mankind ﷺ”) was compiled by al-Ḥāfiẓ ʿAbd al-Ghanī ibn ʿAbd al-Wāḥid al-Maqdisī.`,
+   `He was born in Jammāʿīl, in the mountains of Nābulus, in 541 AH. He travelled widely seeking knowledge, especially ḥadīth, and died in Egypt in 600 AH. He was buried in al-Qarāfah.`,
+   `At the request of a brother in faith he abridged a group of ḥadīths of legal rulings, taking only those on which the two Imāms agreed: al-Bukhārī and Muslim.`,
+   `Shaykh Muḥammad ibn Ṣāliḥ al-ʿUthaymīn explained the book in “Tanbīh al-Afhām”. For each ḥadīth he gave: a short biography of the narrator, (A) the subject of the ḥadīth, (B) the meaning of the words, (C) a summary, (D) the benefits, and (E) any needed clarification, such as the reason for the ḥadīth or how it fits with other ḥadīths.`,
+   `This course follows that same order of ḥadīths and chapters. Lessons here are concise bilingual summaries; for the full commentary, study the book itself.`],
+  [`«عمدة الأحكام من كلام خير الأنام ﷺ» من تأليف الحافظ عبد الغني بن عبد الواحد المقدسي رحمه الله.`,
+   `وُلد في جمّاعيل من جبال نابلس سنة ٥٤١هـ، ورحل في طلب العلم وخاصة الحديث، وتوفي بمصر سنة ٦٠٠هـ ودُفن في القرافة.`,
+   `اختصر بطلب أحد إخوانه جملةً من أحاديث الأحكام مما اتفق عليه الإمامان: البخاري ومسلم.`,
+   `وشرحه الشيخ محمد بن صالح العثيمين في «تنبيه الأفهام»، فيذكر لكل حديث: ترجمةً موجزة للراوي، ثم (أ) موضوع الحديث، (ب) شرح المفردات، (ج) المعنى الإجمالي، (د) فوائد الحديث، (هـ) ما يحتاج إلى بيان كسبب الحديث أو الجمع بينه وبين غيره.`,
+   `وتسير هذه الدورة على ترتيب الأحاديث والأبواب نفسه، وفيها ملخصات ثنائية اللغة؛ وللشرح الكامل يُرجع إلى الكتاب.`]),
+ INFO('Why Begin with Purification?','لماذا نبدأ بكتاب الطهارة؟',
+  [`At-Tahārah linguistically means cleanliness. In the Sharīʿah it means removing ḥadath (what nullifies the state of ritual purity) and removing najas (ritual impurity). It also names the act of purifying itself.`,
+   `It is used for physical purity and for spiritual purity too: purity of belief, character and deeds. Allāh says: “Take from their wealth charity by which you purify them and cause them increase” (at-Tawbah 103), and: “Indeed the polytheists are but impure” (at-Tawbah 28).`,
+   `Scholars begin their books of fiqh and ḥadīth with purification because it is the key to prayer, the greatest pillar of Islām after the two testimonies. There is no prayer without purification.`,
+   `There is also a lesson for the student: begin your studies by purifying the heart and making the intention sincerely for Allāh, seeking His Face and the Hereafter, protecting the Sharīʿah, spreading it, and removing ignorance so that people worship Allāh upon insight.`],
+  [`الطهارة لغةً: النظافة، وشرعًا: رفع الحدث وزوال النجس، وتُطلق على فعل التطهّر نفسه.`,
+   `وتُطلق كذلك على الطهارة المعنوية: طهارة الاعتقاد والخلق والعمل، كقوله تعالى: ﴿خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِمْ بِهَا﴾ وقوله: ﴿إِنَّمَا الْمُشْرِكُونَ نَجَسٌ﴾.`,
+   `ابتدأ أهل الفقه والحديث كتبهم بالطهارة لأنها مفتاح الصلاة، وهي أعظم أركان الإسلام بعد الشهادتين، فلا صلاة بغير طهارة.`,
+   `وفيها تنبيه لطالب العلم أن يبدأ بتطهير قلبه وإخلاص نيته لله، يريد وجهه والدار الآخرة، وحفظ الشريعة ونشرها ودفع الجهل عن نفسه وعن الناس.`])
+ ]
+},
+
+/* ===================== BOOK OF TAHARAH 1-5 ===================== */
+{ id:'W1', en:'Week 1 · Intention & the Conditions of Wuḍūʾ', ar:'الأسبوع الأول · النية وأحكام الوضوء',
+ steps:[
+ H(1,'Actions Are by Intentions','الأعمال بالنيات',
+   'ʿUmar ibn al-Khaṭṭāb (may Allāh be pleased with him)','عمر بن الخطاب رضي الله عنه',
+   `I heard the Messenger of Allāh ﷺ say: “Deeds are only by intentions (in one narration: by the intention), and every person will have only what they intended. So whoever's emigration was to Allāh and His Messenger, his emigration is to Allāh and His Messenger; and whoever's emigration was for some worldly gain he may acquire, or a woman he may marry, his emigration is to that for which he emigrated.”`,
+   [`Acceptance of deeds and the reward for them depend on the intention.`,`Be sincere for Allāh, and beware of seeking worldly gain through deeds of the Hereafter.`,`People differ in their intentions, and each gets what they intended.`,`Purification is a deed, so it too counts only with the intention — this is why the book opens with this ḥadīth.`,`The Prophet's ﷺ teaching method: he states the principle, then clarifies it with examples.`],
+   [`قَبول الأعمال والثواب عليها مبنيٌّ على النية.`,`الحثّ على الإخلاص لله والتحذير من إرادة الدنيا بأعمال الآخرة.`,`الناس يتفاوتون في نياتهم، ولكل امرئٍ ما نوى.`,`الطهارة عملٌ فلا تصحّ إلا بنية، وهذا وجه إيراد الحديث في أول الكتاب.`,`من حسن تعليم النبي ﷺ أنه يذكر القاعدة ثم يبيّنها بالمثال.`],
+   [['Hijrah','Emigration for the sake of Allāh','الهجرة: الانتقال إلى الله ورسوله']]),
+ H(2,'No Prayer Without Wuḍūʾ','لا صلاة بغير وضوء',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Messenger of Allāh ﷺ said: “Allāh does not accept the prayer of any of you when he has broken his wuḍūʾ (aḥdatha) until he performs wuḍūʾ.”`,
+   [`A prayer that agrees with the Sharīʿah is accepted; one that does not is rejected — the same is true of every act of worship.`,`Every prayer — obligatory, voluntary, even the funeral prayer — is invalid without wuḍūʾ, even if the person forgot; the same applies to someone in janābah who has not made ghusl.`,`Seeking nearness to Allāh by something He does not accept is opposition to Him.`,`If you make wuḍūʾ for one prayer and the next prayer's time comes while you are still pure, you need not repeat wuḍūʾ.`,`This shows the great importance of prayer: Allāh does not accept it without purification.`],
+   [`الصلاة منها المقبول وهو الموافق للشرع، ومنها المردود وهو المخالف له، وكذلك سائر العبادات.`,`لا تصحّ صلاة فرضٍ أو نفلٍ أو جنازةٍ ممن أحدث حتى يتوضأ، ولو نسي، وكذلك الجُنُب قبل الغسل.`,`التقرّب إلى الله بما لا يقبله مخالفةٌ له.`,`من توضأ لصلاة ثم دخل وقت صلاة أخرى وهو على طهارته فلا يجب عليه وضوء جديد.`,`فيه عِظَم شأن الصلاة، فلا تُقبل إلا بطهارة.`],
+   [['Aḥdatha','To break one\'s wuḍūʾ','أحدث: نقض وضوءه']]),
+ H(3,'Woe to the Heels from the Fire','ويل للأعقاب من النار',
+   'ʿAbdullāh ibn ʿAmr, Abū Hurayrah and ʿĀʾishah (may Allāh be pleased with them)','عبد الله بن عمرو وأبو هريرة وعائشة رضي الله عنهم',
+   `The Prophet ﷺ said: “Woe to the heels from the Fire.”`,
+   [`The limbs of wuḍūʾ must be washed completely.`,`There is a warning for whoever neglects any part of that.`,`Neglecting any part of purification is counted a major sin.`,`Washing the feet is obligatory when they are uncovered.`,`Recompense matches the deed.`],
+   [`يجب تعميم أعضاء الوضوء بالغسل.`,`فيه وعيدٌ لمن قصّر في شيء من ذلك.`,`التقصير في شيءٍ من أعضاء الطهارة من كبائر الذنوب.`,`غسل القدمين في الوضوء واجب إذا كانتا مكشوفتين.`,`الجزاء من جنس العمل.`],
+   [['Al-ʿaqib (pl. aʿqāb)','The heel, the back of the foot','العَقِب: مؤخّر القدم']]),
+ H(4,'Rinsing the Nose, Istijmār & Washing the Hands After Sleep','الاستنثار والاستجمار وغسل اليدين بعد النوم',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “When one of you performs wuḍūʾ, let him put water in his nose and then blow it out. Whoever cleans himself with stones, let him use an odd number. And when one of you wakes from sleep, let him wash his hands three times before putting them into the vessel, for none of you knows where his hand spent the night.” In a wording of Muslim: “…let him snuff water into his nostrils.” And in another: “Whoever performs wuḍūʾ, let him snuff water.”`,
+   [`Snuffing water into the nose and blowing it out is part of wuḍūʾ; it comes before washing the face and is obligatory like it.`,`Istijmār (cleaning with stones) ends on an odd number, though what is obligatory is that the place is clean.`,`Whoever wakes from sleep must wash his hands three times before putting them into a vessel of water.`,`The wisdom: a sleeper does not know where his hand has been.`,`The Prophet ﷺ often attached the wisdom to the ruling, which strengthens faith and shows the perfection of the Sharīʿah.`],
+   [`الاستنشاق والاستنثار في الوضوء، وموضعهما قبل غسل الوجه وهما واجبان كغسل الوجه.`,`الاستجمار يكون وترًا، والواجب هو الإنقاء.`,`من استيقظ من نومه غسل يديه ثلاثًا قبل إدخالهما في إناء الماء.`,`الحكمة: أن النائم لا يدري أين باتت يده.`,`من حسن تعليمه ﷺ أنه يقرن الحكم بحكمته فيزداد المؤمن إيمانًا ويظهر كمال الشريعة.`],
+   [['Istinthār','Blowing water out of the nose','الاستنثار: إخراج الماء من الأنف'],['Istijmār','Cleaning after relieving oneself with stones or the like','الاستجمار: التنظف بالأحجار ونحوها']]),
+ H(5,'Still Water','الماء الدائم',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “None of you should urinate in still water that does not flow and then bathe in it.” In Muslim: “None of you should bathe in still water while in janābah.”`,
+   [`Urinating in still water is forbidden if people use it, and disliked otherwise; faeces is worse than urine.`,`Urinating in flowing water is permitted, unless someone downstream uses it.`,`Bathing for janābah in still water is likewise forbidden if it spoils it for others, and disliked otherwise; in flowing water it is permitted.`,`The Sharīʿah guards purity and prevents what causes harm.`],
+   [`النهي عن البول في الماء الدائم الراكد: للتحريم إن كان الناس ينتفعون به وإلا فللكراهة، والغائط مثله بل أشد.`,`يجوز البول في الماء الجاري لأن البول يجري معه، إلا إن كان أحد يستعمله أسفل منه.`,`النهي عن الاغتسال من الجنابة في الماء الدائم: للتحريم إن أفسده على الناس وإلا فللكراهة، ويجوز في الجاري.`,`عناية الشريعة بالطهارة ودفع الأضرار.`],
+   [['Al-māʾ ad-dāʾim','Still, non-flowing water','الماء الدائم: الراكد الذي لا يجري']]),
  { type:'quiz', qs:[
-   { qEn:'Who compiled ʿUmdat al-Aḥkām?', qAr:'من مؤلف كتاب «عمدة الأحكام»؟', oEn:['ʿAbd al-Ghanī al-Maqdisī','Imam al-Nawawī','Ibn Ḥajar al-ʿAsqalānī','Imam Mālik'], oAr:['عبد الغني المقدسي','الإمام النووي','ابن حجر العسقلاني','الإمام مالك'], a:0 },
-   { qEn:'What kind of ḥadīths does the book contain?', qAr:'ما نوع الأحاديث التي يضمها الكتاب؟', oEn:['Only those agreed upon by al-Bukhārī and Muslim','Weak narrations only','Only Qudsī ḥadīths','Statements of the Companions only'], oAr:['ما اتفق عليه البخاري ومسلم','الأحاديث الضعيفة فقط','الأحاديث القدسية فقط','أقوال الصحابة فقط'], a:0 },
-   { qEn:'What does the ḥadīth of ʿUmar teach about intention?', qAr:'ماذا يعلّمنا حديث عمر عن النية؟', oEn:['It distinguishes worship from habit and decides the reward','It must be said aloud','It is not needed for acts of worship','It only matters for Ḥajj'], oAr:['تميّز العبادة عن العادة وتحدد الأجر','يجب النطق بها','لا تلزم في العبادات','تلزم في الحج فقط'], a:0 }
+   Q('Who narrated the ḥadīth “Deeds are only by intentions”?','من راوي حديث «إنما الأعمال بالنيات»؟',['ʿUmar ibn al-Khaṭṭāb','Abū Hurayrah','ʿĀʾishah','Anas'],['عمر بن الخطاب','أبو هريرة','عائشة','أنس']),
+   Q('Complete the Arabic text: «إِنَّمَا الْأَعْمَالُ ____»','أكمل الحديث: «إِنَّمَا الْأَعْمَالُ ____»',['بِالنِّيَّاتِ','بِالْخَوَاتِيمِ','بِالْأَقْوَالِ','بِالْأَمْوَالِ']),
+   Q('What is the ruling on prayer without wuḍūʾ by someone who has broken it?','ما حكم صلاة من أحدث بلا وضوء؟',['It is not accepted until he performs wuḍūʾ','It is accepted if he forgot','It is accepted at night only','It is only disliked'],['لا تُقبل حتى يتوضأ','تُقبل إن نسي','تُقبل في الليل فقط','مكروهة فقط']),
+   Q('Complete: «وَيْلٌ لِلْأَعْقَابِ ____»','أكمل: «وَيْلٌ لِلْأَعْقَابِ ____»',['مِنَ النَّارِ','مِنَ الْمَاءِ','مِنَ الْبَرْدِ','مِنَ الْأَرْضِ']),
+   Q('How many times must one wash the hands after waking, before putting them in the vessel?','كم مرة يغسل يديه بعد القيام من النوم قبل إدخالهما الإناء؟',['Three','Once','Seven','Not required'],['ثلاثًا','مرة','سبعًا','لا يجب']),
+   Q('When is urinating in still water forbidden (not merely disliked)?','متى يكون البول في الماء الدائم محرّمًا؟',['When people use that water','Never','Only in summer','Only at night'],['إذا كان الناس ينتفعون به','أبدًا','في الصيف فقط','في الليل فقط']),
+   Q('Why wash the hands after waking from sleep?','لماذا يُغسل اليدان بعد النوم؟',['One does not know where the hand spent the night','Because sleep breaks wuḍūʾ of the hands only','To save water','It is not a ruling'],['لأنه لا يدري أين باتت يده','لأن النوم ينقض وضوء اليدين فقط','لتوفير الماء','ليس حكمًا'])
  ]}
  ]
 },
-{
- id:'W1', en:'Week 1 · Wuḍūʾ: Its Condition & Reward', ar:'الأسبوع الأول · الوضوء: شرطه وفضله',
+
+/* ===================== BOOK OF TAHARAH 6-10 ===================== */
+{ id:'W2', en:'Week 2 · The Wuḍūʾ of the Prophet ﷺ', ar:'الأسبوع الثاني · وضوء النبي ﷺ',
  steps:[
- { type:'hadith', titleEn:'No Prayer Without Purification', titleAr:'لا صلاة بغير طهارة',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'لَا تُقْبَلُ صَلَاةُ مَنْ أَحْدَثَ حَتَّى يَتَوَضَّأَ',
-   en:'The prayer of one who has broken their wuḍūʾ (ḥadath) is not accepted until they perform wuḍūʾ.',
-   ptsEn:['Wuḍūʾ is a condition for the validity of prayer.','"Ḥadath" means whatever breaks wuḍūʾ — such as passing wind, urine or stool.','If a person prays without wuḍūʾ, the prayer is not valid and must be repeated.'],
-   ptsAr:['الوضوء شرط لصحة الصلاة.','المراد بالحدث ما ينقض الوضوء كالريح والبول والغائط.','من صلى بغير وضوء لم تصحّ صلاته ووجب عليه إعادتها.'] },
- { type:'hadith', titleEn:'The Virtue of a Complete Wuḍūʾ', titleAr:'فضل الوضوء',
-   narEn:'Narrated by ʿUthmān ibn ʿAffān (may Allah be pleased with him)', narAr:'عن عثمان بن عفان رضي الله عنه',
-   ar:'مَنْ تَوَضَّأَ نَحْوَ وُضُوئِي هَذَا ثُمَّ صَلَّى رَكْعَتَيْنِ لَا يُحَدِّثُ فِيهِمَا نَفْسَهُ غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ',
-   en:'Whoever performs wuḍūʾ like this wuḍūʾ of mine, then prays two rakʿahs without letting their mind wander in them, will have their previous sins forgiven.',
-   ptsEn:['ʿUthmān demonstrated the Prophet\'s ﷺ wuḍūʾ to teach it by example.','The reward is tied to a good wuḍūʾ followed by a prayer with presence of heart.','Distracting thoughts that come on their own are forgiven; the point is not to indulge them deliberately.'],
-   ptsAr:['توضأ عثمان أمام الناس ليعلّمهم وضوء النبي ﷺ بالفعل.','الأجر مرتبط بإحسان الوضوء ثم الصلاة بحضور القلب.','ما يعرض من الخواطر دون قصد معفوٌّ عنه، والمطلوب ألّا يسترسل فيها المصلي.'] },
- { type:'hadith', titleEn:'Woe to the Heels', titleAr:'ويل للأعقاب من النار',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'وَيْلٌ لِلْأَعْقَابِ مِنَ النَّارِ',
-   en:'Woe to the heels from the Fire.',
-   ptsEn:['The Prophet ﷺ said this to people who were hurrying and left the heels dry.','Every part of the limbs that must be washed has to be washed completely.','Wiping over the feet instead of washing them is not enough when no leather socks (khuffs) are worn.'],
-   ptsAr:['قال النبي ﷺ ذلك لقوم تعجّلوا في الوضوء فتركوا أعقابهم لم يصبها الماء.','يجب تعميم الأعضاء المفروض غسلها بالماء.','لا يكفي المسح على القدمين بدل الغسل إذا لم يكن عليهما خفّان.'] },
- { type:'hadith', num:10, titleEn:'Ghurran Muḥajjalīn — Shining from Wuḍūʾ', titleAr:'غرًّا محجَّلين من آثار الوضوء',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'إِنَّ أُمَّتِي يُدْعَوْنَ يَوْمَ الْقِيَامَةِ غُرًّا مُحَجَّلِينَ مِنْ آثَارِ الْوُضُوءِ، فَمَنِ اسْتَطَاعَ مِنْكُمْ أَنْ يُطِيلَ غُرَّتَهُ فَلْيَفْعَلْ',
-   en:'Indeed my nation will be summoned on the Day of Resurrection ghurran muḥajjalīn (with light on their faces and limbs) from the traces of wuḍūʾ; so whoever among you is able to lengthen his radiance, let him do so.',
-   ptsEn:['The believers will be recognised on the Day of Resurrection by the light of wuḍūʾ on their faces, arms and feet.','This is a great virtue of wuḍūʾ and a special mark of this Ummah.','Washing a little beyond the required limits is encouraged, in the understanding of the scholars who take "lengthening the radiance" this way.'],
-   ptsAr:['يُعرف المؤمنون يوم القيامة بنور الوضوء في وجوههم وأيديهم وأرجلهم.','وفي ذلك فضل عظيم للوضوء وخصوصية لهذه الأمة.','أخذ بعض أهل العلم من «إطالة الغرة» استحباب الزيادة قليلًا على الحدّ الواجب في الغسل.'] },
+ H(6,'When a Dog Licks a Vessel','ولوغ الكلب',
+   'Abū Hurayrah and ʿAbdullāh ibn Mughaffal (may Allāh be pleased with them)','أبو هريرة وعبد الله بن مغفل رضي الله عنهما',
+   `The Prophet ﷺ said: “When a dog drinks from the vessel of one of you, let him wash it seven times.” In Muslim: “The first of them with soil.” And from ʿAbdullāh ibn Mughaffal: “When a dog licks in a vessel, wash it seven times and scour it the eighth time with soil.”`,
+   [`The saliva of the dog is impure, and so is everything in its body such as urine and sweat; its impurity is the heaviest.`,`A vessel it has licked is washed seven times, one of them with soil — better as the first.`,`If the saliva requires this, its urine and faeces are even more clearly impure.`,`The ḥadīth is explicit that soil is used along with water; it is not replaced by anything else unless soil is unavailable.`,`A sign of the Prophet's ﷺ truthfulness: modern science confirms the harm of dog saliva.`],
+   [`لعاب الكلب نجس، وكذلك ما في بدنه من بول وعرق ونحوهما، ونجاسته أغلظ النجاسات.`,`يجب غسل الإناء الذي ولغ فيه سبع مرات إحداها بالتراب، والأفضل أن تكون الأولى.`,`إذا وجب هذا في الولوغ ففي بوله وروثه ونحوهما من باب أولى.`,`الحديث نصٌّ على وجوب التراب مع الماء فلا يُستبدل بغيره إلا عند تعذّره.`,`فيه علَمٌ من أعلام نبوته ﷺ إذ أقرّ العلم الحديث بخطر لعاب الكلب.`],
+   [['Wulūgh','A dog drinking or licking with its tongue','الولوغ: شرب الكلب بلسانه'],['ʿAffirūhu','Scour it, rub it with soil','عفّروه: دلّكوه بالتراب']]),
+ H(7,'The Wuḍūʾ of the Prophet ﷺ — as Taught by ʿUthmān','وضوء النبي ﷺ كما علّمه عثمان',
+   'Ḥumrān, the freed slave of ʿUthmān, from ʿUthmān ibn ʿAffān (may Allāh be pleased with him)','حمران مولى عثمان عن عثمان بن عفان رضي الله عنه',
+   `ʿUthmān called for water for wuḍūʾ. He poured water over his hands from his vessel and washed them three times. Then he put his right hand into the water, rinsed his mouth, snuffed water and blew it out. Then he washed his face three times, and his arms to the elbows three times. Then he wiped his head. Then he washed both feet three times. Then he said: “I saw the Prophet ﷺ perform wuḍūʾ like this wuḍūʾ of mine,” and he said: “Whoever performs wuḍūʾ like this wuḍūʾ of mine, then prays two rakʿahs without speaking to himself in them, will have his previous sins forgiven.”`,
+   [`The virtue of ʿUthmān and his eagerness to spread knowledge and the Sunnah.`,`A teacher should use the easiest means to make the knowledge understood; teaching others does not reduce one's sincerity.`,`The sequence of wuḍūʾ: hands three times; rinse mouth, snuff and blow the nose; face three times; arms to the elbows three times; wipe the head; feet three times.`,`The order of the limbs must be observed.`,`Two rakʿahs after wuḍūʾ without distracting thoughts earn forgiveness of past sins — the minor sins according to the majority of scholars.`],
+   [`فضل عثمان رضي الله عنه وحرصه على نشر العلم والسنة.`,`ينبغي للمعلّم أن يستعمل أيسر الوسائل للتفهيم، ولا ينقص إخلاصه تعليمه الناس.`,`صفة الوضوء: غسل الكفين ثلاثًا، ثم المضمضة والاستنشاق والاستنثار، ثم الوجه ثلاثًا، ثم اليدين إلى المرفقين ثلاثًا، ثم مسح الرأس، ثم غسل الرجلين ثلاثًا.`,`مراعاة الترتيب بين أعضاء الوضوء.`,`فضل ركعتين بعد الوضوء لا يحدّث المصلي فيهما نفسه، وثوابهما مغفرة ما تقدم من الذنوب، والمراد الصغائر عند الجمهور.`],
+   [['Maḍmaḍah','Rinsing the mouth','المضمضة'],['Istinshāq','Sniffing water into the nose','الاستنشاق']]),
+ H(8,'The Wuḍūʾ of the Prophet ﷺ — ʿAbdullāh ibn Zayd','وضوء النبي ﷺ كما رواه عبد الله بن زيد',
+   'ʿAmr ibn Yaḥyā al-Māzinī from his father; the narration of ʿAbdullāh ibn Zayd (may Allāh be pleased with him)','عمرو بن يحيى المازني عن أبيه، عن عبد الله بن زيد رضي الله عنه',
+   `ʿAmr ibn Abī Ḥasan asked ʿAbdullāh ibn Zayd about the wuḍūʾ of the Messenger of Allāh ﷺ. He called for a brass pot of water and performed wuḍūʾ for them as the Messenger of Allāh ﷺ did: he tipped water over his hand and washed his hands three times; then he put his hand into the pot, rinsed his mouth, snuffed and blew out three times with three handfuls; then washed his face three times; then washed his arms twice to the elbows; then wiped his head, bringing his hands forward and back once; then washed his feet to the ankles. In another narration: he began with the front of his head and took his hands to the nape, then brought them back to where he started.`,
+   [`This ḥadīth adds detail to ʿUthmān's description: washing the arms twice here, three times there — so the obligation is once, and twice or three times is Sunnah.`,`Rinsing and snuffing may be done with the same handful.`,`Wiping the head: hands go forward to the nape and back, once.`,`Wuḍūʾ with a brass vessel is permissible.`,`The narrator mentioned what shows certainty about his narration.`],
+   [`يزيد هذا الحديث تفصيلًا على حديث عثمان: غسل اليدين هنا مرتين وهناك ثلاثًا، فالواجب مرة واحدة، وما زاد إلى الثلاث سنة.`,`يجوز الجمع بين المضمضة والاستنشاق في غَرفة واحدة.`,`مسح الرأس: تُذهب اليدان إلى القفا ثم تُردّان إلى موضع البدء مرة واحدة.`,`جواز الوضوء من آنية النحاس.`,`ذكر الراوي ما يدل على ضبطه لما رواه.`],
+   [['Tawr','A pot or basin of brass','التَّوْر: إناء من نحاس يُتوضأ منه'],['Ghurfah','A handful of water','الغَرفة: ملء الكفّ من الماء']]),
+ H(9,'Starting with the Right','التيمن في الطهور',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `The Prophet ﷺ liked to begin with the right in putting on his shoes, combing his hair, his purification, and in all his affairs.`,
+   [`Start with the right in wuḍūʾ and ghusl: right arm and foot before the left.`,`Start with the right foot when putting on shoes, khuffs, socks and clothes.`,`Start with the right of the head when combing or shaving.`,`The rule holds for everything, except what the Sharīʿah says to start on the left: entering the bathroom, removing something offensive, taking off shoes and clothes.`,`The completeness of the Sunnah, even in grooming and cleanliness.`],
+   [`يُشرع البدء باليمين في الوضوء والغسل: اليد اليمنى والرجل اليمنى قبل اليسرى.`,`ويُبدأ باليمنى عند لبس النعل والخف والجورب والثياب.`,`ويُبدأ بالشق الأيمن من الرأس عند الترجّل والحلق.`,`القاعدة عامة في كل شيء إلا ما ورد الشرع بالبدء فيه باليسار كدخول الخلاء وإزالة الأذى وخلع النعل والثياب.`,`كمال السنة في العناية بالنظافة والترجّل وغيرها.`],
+   [['Tayammun','Starting with the right side','التيمن: البدء بجهة اليمين'],['Tarajjul','Combing and tidying the hair','الترجّل: تسريح الشعر']]),
+ H(10,'Ghurran Muḥajjalīn — Shining from Wuḍūʾ','غرًّا محجَّلين من آثار الوضوء',
+   'Nuʿaym al-Mujmir from Abū Hurayrah (may Allāh be pleased with him)','نعيم المجمر عن أبي هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “My nation will be called on the Day of Resurrection ghurran muḥajjalīn (bright of face and limbs) from the traces of wuḍūʾ. So whoever among you can lengthen his radiance, let him do so.” In a wording of Muslim, Abū Hurayrah washed his face and arms until he almost reached the shoulders, and his feet until he reached the shins, then said he heard the Prophet ﷺ say this. And in another: “The adornment of the believer will reach as far as wuḍūʾ reaches.”`,
+   [`Affirmation of the Resurrection, the reckoning and the recompense.`,`The excellence of this Ummah: marked by light from wuḍūʾ on face, arms and feet.`,`Wuḍūʾ is a great virtue, and the believer's adornment in Paradise will reach as far as wuḍūʾ reached.`,`Some scholars take “lengthen his radiance” as encouragement to wash a little beyond the obligatory limits; others say that phrase is Abū Hurayrah's own words, so one should not go beyond the limits except slightly, for caution.`],
+   [`إثبات البعث والحساب والجزاء يوم القيامة.`,`فضل هذه الأمة إذ تأتي يوم القيامة بنور في الوجوه والأيدي والأرجل من آثار الوضوء.`,`فضل الوضوء، وأن حِلية المؤمن في الجنة تبلغ حيث يبلغ الوضوء.`,`اختلف العلماء في «إطالة الغرة»: فقيل تُستحب الزيادة على الحدّ الواجب، وقيل هي من قول أبي هريرة فلا يزيد إلا قليلًا احتياطًا.`],
+   [['Ghurrah','Brightness of the face','الغرّة: بياض الوجه ونوره'],['Taḥjīl','Brightness of the arms and legs','التحجيل: بياض اليدين والرجلين']]),
  { type:'quiz', qs:[
-   { qEn:'What does the ḥadīth "The prayer of one who has ḥadath is not accepted until they perform wuḍūʾ" show?', qAr:'ما الذي يدل عليه حديث «لا تقبل صلاة من أحدث حتى يتوضأ»؟', oEn:['Wuḍūʾ is a condition for prayer','Wuḍūʾ is only recommended','Prayer is valid without wuḍūʾ if one is in a hurry','Wuḍūʾ is only for ʿĪd prayers'], oAr:['الوضوء شرط لصحة الصلاة','الوضوء مستحب فقط','تصح الصلاة بلا وضوء عند الاستعجال','الوضوء خاص بصلاة العيد'], a:0 },
-   { qEn:'Who demonstrated the wuḍūʾ of the Prophet ﷺ in the ḥadīth about forgiveness of sins?', qAr:'من الصحابي الذي علّم وضوء النبي ﷺ في حديث غفران الذنوب؟', oEn:['ʿUthmān ibn ʿAffān','Abū Bakr','ʿAlī','Anas'], oAr:['عثمان بن عفان','أبو بكر','علي','أنس'], a:0 },
-   { qEn:'Why did the Prophet ﷺ say "Woe to the heels from the Fire"?', qAr:'لماذا قال النبي ﷺ «ويل للأعقاب من النار»؟', oEn:['Because some left their heels unwashed in wuḍūʾ','Because heels are impure','Because of walking barefoot','Because of wearing sandals'], oAr:['لأن بعضهم ترك غسل أعقابهم في الوضوء','لأن الأعقاب نجسة','بسبب المشي حافيًا','بسبب لبس النعال'], a:0 },
-   { qEn:'Complete the Arabic text: «لَا تُقْبَلُ صَلَاةُ مَنْ أَحْدَثَ حَتَّى ____»', qAr:'أكمل الحديث: «لَا تُقْبَلُ صَلَاةُ مَنْ أَحْدَثَ حَتَّى ____»', oEn:['يَتَوَضَّأَ','يَنَامَ','يَأْكُلَ','يَسْجُدَ'], oAr:['يَتَوَضَّأَ','يَنَامَ','يَأْكُلَ','يَسْجُدَ'], a:0 },
-   { qEn:'Complete: «وَيْلٌ لِلْأَعْقَابِ ____»', qAr:'أكمل الحديث: «وَيْلٌ لِلْأَعْقَابِ ____»', oEn:['مِنَ النَّارِ','مِنَ الْبَرْدِ','مِنَ الشَّمْسِ','مِنَ الْمَاءِ'], oAr:['مِنَ النَّارِ','مِنَ الْبَرْدِ','مِنَ الشَّمْسِ','مِنَ الْمَاءِ'], a:0 },
-   { qEn:'What does "ghurran muḥajjalīn" refer to?', qAr:'ما المراد بـ«غُرًّا مُحَجَّلِينَ»؟', oEn:['The light of wuḍūʾ on the faces and limbs on the Day of Resurrection','Being dressed in white','Walking barefoot','The beauty of the face only'], oAr:['نور الوضوء في الوجه والأطراف يوم القيامة','لبس الثياب البيض','المشي حافيًا','جمال الوجه فقط'], a:0 }
+   Q('How many times is a vessel washed after a dog licks it?','كم مرة يُغسل الإناء من ولوغ الكلب؟',['Seven, one with soil','Three','Once','Ten'],['سبعًا إحداها بالتراب','ثلاثًا','مرة واحدة','عشرًا']),
+   Q('Complete the Arabic text: «إِذَا شَرِبَ الْكَلْبُ فِي إِنَاءِ أَحَدِكُمْ فَلْيَغْسِلْهُ ____»','أكمل الحديث: «إِذَا شَرِبَ الْكَلْبُ فِي إِنَاءِ أَحَدِكُمْ فَلْيَغْسِلْهُ ____»',['سَبْعًا','ثَلَاثًا','مَرَّةً','عَشْرًا']),
+   Q('What does ʿUthmān\'s ḥadīth promise after wuḍūʾ and two rakʿahs without distraction?','ماذا وعد حديث عثمان لمن توضأ وصلى ركعتين لا يحدث فيهما نفسه؟',['Forgiveness of previous sins','Wealth','Long life','Nothing'],['غفران ما تقدم من ذنبه','المال','طول العمر','لا شيء']),
+   Q('How is the head wiped in the ḥadīth of ʿAbdullāh ibn Zayd?','كيف يُمسح الرأس في حديث عبد الله بن زيد؟',['Hands go forward to the nape and back, once','Only the front','Three times from the back','Only with a cloth'],['تُذهب اليدان إلى القفا ثم تُردّان مرة','المقدّم فقط','ثلاثًا من الخلف','بخرقة فقط']),
+   Q('With which side does one begin in wuḍūʾ, ghusl and putting on shoes?','بأي جهة يُبدأ في الوضوء والغسل ولبس النعل؟',['The right','The left','Either','The back'],['اليمين','اليسار','أيهما شاء','الخلف']),
+   Q('Complete: «يُعْجِبُهُ التَّيَمُّنُ فِي تَنَعُّلِهِ وَتَرَجُّلِهِ وَ____»','أكمل: «يُعْجِبُهُ التَّيَمُّنُ فِي تَنَعُّلِهِ وَتَرَجُّلِهِ وَ____»',['طُهُورِهِ','نَوْمِهِ','سَفَرِهِ','كَلَامِهِ']),
+   Q('What does “ghurran muḥajjalīn” mean?','ما معنى «غرًّا محجَّلين»؟',['Bright of face and limbs from the traces of wuḍūʾ','Dressed in white','Barefoot','With long hair'],['بيض الوجوه والأطراف من آثار الوضوء','لابسين البياض','حفاة','طوال الشعر'])
  ]}
  ]
 },
-{
- id:'W2', en:'Week 2 · Details & Etiquettes of Wuḍūʾ', ar:'الأسبوع الثاني · آداب الوضوء وتفاصيله',
+
+/* ===================== TOILET ===================== */
+{ id:'W3', en:'Week 3 · Entering the Place of Relieving Oneself', ar:'الأسبوع الثالث · باب الخلاء وآداب قضاء الحاجة',
  steps:[
- { type:'hadith', titleEn:'Snuffing Water, Odd Stones, Washing the Hands', titleAr:'الاستنثار والاستجمار وغسل اليدين',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'إِذَا تَوَضَّأَ أَحَدُكُمْ فَلْيَجْعَلْ فِي أَنْفِهِ مَاءً ثُمَّ لِيَنْثُرْ، وَمَنِ اسْتَجْمَرَ فَلْيُوتِرْ، وَإِذَا اسْتَيْقَظَ أَحَدُكُمْ مِنْ نَوْمِهِ فَلْيَغْسِلْ يَدَهُ قَبْلَ أَنْ يُدْخِلَهَا فِي وَضُوئِهِ، فَإِنَّ أَحَدَكُمْ لَا يَدْرِي أَيْنَ بَاتَتْ يَدُهُ',
-   en:'When one of you performs wuḍūʾ, let them put water in their nose and then blow it out; whoever cleans themselves with stones, let them use an odd number; and when one of you wakes from sleep, let them wash their hand before putting it into the water of wuḍūʾ, for none of you knows where their hand spent the night.',
-   ptsEn:['Rinsing the nose (istinshāq) and blowing it out (istinthār) are part of wuḍūʾ.','Istijmār — cleaning with stones or the like — should be done with an odd number of wipes.','After waking from sleep, wash the hands (three times) before dipping them into a vessel.'],
-   ptsAr:['الاستنشاق والاستنثار من أفعال الوضوء.','الاستجمار بالأحجار ونحوها يكون وترًا.','يُغسل اليدان عند القيام من النوم ثلاثًا قبل إدخالهما في الإناء.'] },
- { type:'hadith', titleEn:'Starting with the Right', titleAr:'التيمن في الطهور',
-   narEn:'Narrated by ʿĀʾishah (may Allah be pleased with her)', narAr:'عن عائشة رضي الله عنها',
-   ar:'كَانَ النَّبِيُّ ﷺ يُعْجِبُهُ التَّيَمُّنُ فِي تَنَعُّلِهِ وَتَرَجُّلِهِ وَطُهُورِهِ وَفِي شَأْنِهِ كُلِّهِ',
-   en:'The Prophet ﷺ liked to begin with the right in putting on his shoes, combing his hair, his purification, and in all his affairs.',
-   ptsEn:['Starting with the right is a sunnah in acts of honour and good: wuḍūʾ, dressing, eating.','The opposite — starting with the left — is for removing things or dealing with filth.','This shows the completeness of the Prophet\'s ﷺ guidance even in small daily matters.'],
-   ptsAr:['البدء باليمين سنة فيما كان من باب التكريم والخير: الوضوء واللباس والأكل.','وأما ما كان من باب الإزالة والأذى فيُبدأ فيه باليسار.','وفي ذلك كمال هدي النبي ﷺ حتى في صغار الأمور.'] },
- { type:'hadith', titleEn:'The Siwāk', titleAr:'السواك',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ بِالسِّوَاكِ مَعَ كُلِّ صَلَاةٍ',
-   en:'Were it not that I would be placing a hardship on my Ummah, I would have commanded them to use the siwāk with every prayer.',
-   ptsEn:['Siwāk is a strongly recommended sunnah, especially at the time of prayer.','It was not made obligatory out of mercy for the Ummah.','A command is understood as obligation unless something shows otherwise — here the ḥadīth itself shows it is not obligatory.'],
-   ptsAr:['السواك سنة مؤكدة، ويتأكد عند الصلاة.','لم يفرضه النبي ﷺ رحمةً بأمته.','الأصل في الأمر الوجوب، لكن الحديث نفسه دلّ على عدم وجوب السواك.'] },
+ H(11,'The Supplication on Entering the Khalāʾ','دعاء دخول الخلاء',
+   'Anas ibn Mālik (may Allāh be pleased with him)','أنس بن مالك رضي الله عنه',
+   `When the Prophet ﷺ entered the toilet, he would say: “O Allāh, I seek refuge in You from the male and female evil beings (al-khubuth wal-khabāʾith).”`,
+   [`The Sharīʿah covers every good manner, even the etiquette of the toilet.`,`It is Sunnah to supplicate when entering the place prepared for relieving oneself.`,`All creation needs Allāh to ward off what harms and offends it.`],
+   [`شمول الشريعة لكل الآداب.`,`يُشرع الدعاء عند دخول مكان قضاء الحاجة بهذا الذكر.`,`حاجة الخلق كلهم إلى الله في دفع ما يؤذيهم ويضرّهم.`],
+   [['Al-khalāʾ','The place where one relieves oneself','الخلاء: مكان قضاء الحاجة'],['Al-khubuth wal-khabāʾith','Male and female evil beings (devils)','الخبث والخبائث: ذكران الشياطين وإناثهم']]),
+ H(12,'Facing the Qiblah While Relieving Oneself','استقبال القبلة واستدبارها',
+   'Abū Ayyūb al-Anṣārī (may Allāh be pleased with him)','أبو أيوب الأنصاري رضي الله عنه',
+   `The Messenger of Allāh ﷺ said: “When you go to relieve yourselves, do not face the qiblah with faeces or urine, and do not turn your backs to it; rather face east or west.” Abū Ayyūb said: “We came to ash-Shām and found toilets built facing the Kaʿbah, so we would turn away from it and seek Allāh's forgiveness.”`,
+   [`Facing the qiblah or turning one's back to it while urinating or defecating is forbidden, according to the majority of scholars.`,`The prohibition applies in the open and in buildings.`,`It honours the Kaʿbah.`,`When he forbade something, the Prophet ﷺ pointed to what is permitted.`,`There is nothing wrong with facing the sun or moon.`],
+   [`النهي عن استقبال القبلة أو استدبارها عند البول أو الغائط، وهو للتحريم عند الجمهور.`,`النهي عام في الفضاء والبنيان.`,`فيه تعظيم الكعبة واحترامها.`,`من حسن تعليمه ﷺ أنه إذا نهى أرشد إلى المباح.`,`لا حرج في استقبال الشمس أو القمر.`],
+   [['Al-ghāʾiṭ','Low ground; the place of relieving oneself','الغائط: المكان المنخفض ومكان قضاء الحاجة']]),
+ H(13,'Relieving Oneself in Buildings','قضاء الحاجة في البنيان',
+   'ʿAbdullāh ibn ʿUmar (may Allāh be pleased with him)','عبد الله بن عمر رضي الله عنهما',
+   `One day I climbed onto Ḥafṣah's house and saw the Prophet ﷺ relieving himself facing ash-Shām with his back to the Kaʿbah. In another narration: facing Bayt al-Maqdis.`,
+   [`It is permissible to climb onto a relative's house and the like, if you know they will not mind.`,`Allude to what is embarrassing by using other expressions.`,`Turning the back to the qiblah inside buildings is permissible.`,`Facing Bayt al-Maqdis while relieving oneself is permissible.`],
+   [`جواز الصعود على بيت القريب ونحوه ما لم يُعلم كراهته لذلك.`,`الكناية عمّا يُستحيا من ذكره.`,`جواز استدبار القبلة عند قضاء الحاجة في البنيان.`,`جواز استقبال بيت المقدس عند قضاء الحاجة.`],
+   [['Raqītu','I climbed up','رقيتُ: صعدتُ']]),
+ H(14,'Istinjāʾ with Water','الاستنجاء بالماء',
+   'Anas ibn Mālik (may Allāh be pleased with him)','أنس بن مالك رضي الله عنه',
+   `When the Prophet ﷺ entered the toilet, a boy and I would carry a skin of water and a short spear (ʿanazah) for him, and he would clean himself with the water.`,
+   [`The virtue of Anas for serving the Prophet ﷺ.`,`It is permissible to take help from others in matters of purification.`,`Istinjāʾ with water, after urine or faeces, is permissible.`,`One should prepare water and what is needed for purification in advance.`],
+   [`فضل أنس رضي الله عنه في خدمة النبي ﷺ.`,`جواز الاستعانة بالغير في أمور الطهارة.`,`جواز الاستنجاء بالماء من البول والغائط.`,`الاستعداد للطهارة بتجهيز ما تحتاجه.`],
+   [['Istinjāʾ','Cleaning oneself after urine or faeces with water','الاستنجاء: إزالة الأذى بالماء'],['Idāwah','A small leather water-skin','الإداوة: إناء صغير من جلد للماء'],['ʿAnazah','A short spear','العَنَزة: رمح قصير']]),
+ H(15,'The Right Hand and the Vessel','اليمين والإناء',
+   'Abū Qatādah al-Ḥārith ibn Ribʿī al-Anṣārī (may Allāh be pleased with him)','أبو قتادة الحارث بن ربعي الأنصاري رضي الله عنه',
+   `The Prophet ﷺ said: “None of you should hold his private part with his right hand while urinating, nor clean himself with his right hand after relieving himself, nor breathe into the vessel.”`,
+   [`Holding the private part with the right hand while urinating is disliked, according to the majority.`,`Cleaning oneself with the right hand, with stones or with water, is forbidden.`,`This honours the right hand.`,`Breathing into a vessel while drinking is forbidden.`,`The comprehensiveness of the Islamic teachings.`],
+   [`النهي عن إمساك الذكر باليمين حال البول، وهو للكراهة عند الجمهور.`,`النهي عن الاستنجاء باليمين بالأحجار أو بالماء.`,`فضل اليد اليمنى وتكريمها.`,`النهي عن التنفس في الإناء.`,`كمال الشريعة وشمول تعاليمها.`],
+   [['Yatanaffas','To breathe (into the vessel)','يتنفّس: يُخرج نَفَسه في الإناء']]),
+ H(16,'The Two Graves','القبران',
+   'ʿAbdullāh ibn ʿAbbās (may Allāh be pleased with him)','عبد الله بن عباس رضي الله عنهما',
+   `The Prophet ﷺ passed by two graves and said: “They are being punished, and not for something major: one of them did not protect himself from urine, and the other used to go about with slander (namīmah).” Then he took a fresh palm branch, split it in two, and planted one on each grave. They asked: “O Messenger of Allāh, why did you do this?” He said: “Perhaps it will be lightened for them as long as these two do not dry.”`,
+   [`The punishment of the grave is real; slander and not guarding against urine are among its causes.`,`It is obligatory to protect oneself and one's clothes from urine and other impure fluids.`,`Both are major sins; neglecting a condition of prayer is a cause for punishment in the grave.`,`The mercy of the Prophet ﷺ even towards sinners, and the Companions' eagerness to know the wisdom behind his acts.`,`Intercession can be effective for a limited time.`],
+   [`إثبات عذاب القبر، والنميمة وعدم التنزّه من البول من أسبابه.`,`يجب التحرز من البول وسائر النجاسات.`,`الأمران من الكبائر، والتفريط في شرطٍ من شروط الصلاة سبب لعذاب القبر.`,`رحمة النبي ﷺ بأمته حتى العصاة، وحرص الصحابة على معرفة الحكمة من فعله.`,`الشفاعة قد تنفع إلى مدة محددة.`],
+   [['Namīmah','Carrying words between people to cause harm','النميمة: نقل الكلام بين الناس للإفساد'],['Jarīdah','A palm branch','الجريدة: غصن النخل']]),
  { type:'quiz', qs:[
-   { qEn:'How should istijmār (cleaning with stones) be done according to the ḥadīth?', qAr:'كيف يكون الاستجمار في الحديث؟', oEn:['With an odd number','With exactly two','Never','Only with the left hand'], oAr:['وترًا','بحجرين فقط','لا يجوز','باليد اليسرى فقط'], a:0 },
-   { qEn:'Why should one wash the hands after waking from sleep?', qAr:'لماذا يُغسل اليدان بعد القيام من النوم؟', oEn:['One does not know where the hand spent the night','Because sleep breaks wuḍūʾ only for the hands','To save water','It is not required'], oAr:['لأنه لا يدري أين باتت يده','لأن النوم ينقض وضوء اليدين فقط','لتوفير الماء','غير مشروع'], a:0 },
-   { qEn:'What is the ruling on the siwāk at each prayer?', qAr:'ما حكم السواك عند كل صلاة؟', oEn:['A strongly recommended sunnah','Obligatory','Forbidden','Only for Friday'], oAr:['سنة مؤكدة','واجب','محرّم','خاص بيوم الجمعة'], a:0 },
-   { qEn:'With which side does one start in wuḍūʾ and dressing?', qAr:'بأي جهة يبدأ في الوضوء ولبس النعال؟', oEn:['The right','The left','Either','The back'], oAr:['اليمين','اليسار','أيهما شاء','الخلف'], a:0 },
-   { qEn:'Complete the Arabic text: «لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ ____ مَعَ كُلِّ صَلَاةٍ»', qAr:'أكمل الحديث: «لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ ____ مَعَ كُلِّ صَلَاةٍ»', oEn:['بِالسِّوَاكِ','بِالصِّيَامِ','بِالصَّدَقَةِ','بِالتَّسْبِيحِ'], oAr:['بِالسِّوَاكِ','بِالصِّيَامِ','بِالصَّدَقَةِ','بِالتَّسْبِيحِ'], a:0 },
-   { qEn:'Complete: «وَمَنِ اسْتَجْمَرَ فَلْيُ____»', qAr:'أكمل الحديث: «وَمَنِ اسْتَجْمَرَ فَلْيُ____»', oEn:['وتِرْ','سْرِفْ','طِلْ','قَصِّرْ'], oAr:['وتِرْ','سْرِفْ','طِلْ','قَصِّرْ'], a:0 }
+   Q('Complete the Arabic text: «اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَ____»','أكمل الدعاء: «اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَ____»',['الْخَبَائِثِ','الْفِتَنِ','الْهَمِّ','الْكَسَلِ']),
+   Q('What did the Prophet ﷺ say about facing the qiblah while relieving oneself?','ماذا قال النبي ﷺ في استقبال القبلة عند قضاء الحاجة؟',['Do not face it or turn your back to it','It is recommended','It is only for travellers','Nothing'],['لا تستقبلوها ولا تستدبروها','مستحب','للمسافرين فقط','لا شيء']),
+   Q('What did ʿAbdullāh ibn ʿUmar see from the roof of Ḥafṣah\'s house?','ماذا رأى ابن عمر على بيت حفصة؟',['The Prophet ﷺ relieving himself, facing ash-Shām and back to the Kaʿbah','The Prophet ﷺ praying','A caravan','Nothing'],['النبي ﷺ يقضي حاجته مستقبل الشام مستدبر الكعبة','النبي ﷺ يصلي','قافلة','لا شيء']),
+   Q('What did the Prophet ﷺ say about the right hand?','ماذا قال ﷺ عن اليمين؟',['Do not hold the private part or clean yourself with it','Use it for istinjāʾ','Use it only at night','Nothing'],['لا يمسك بها الذكر ولا يستنجي بها','يستنجي بها','في الليل فقط','لا شيء']),
+   Q('Why were the two people in the graves punished?','لماذا عُذِّب صاحبا القبرين؟',['One did not guard against urine; the other spread slander','They stole','They missed Ḥajj','They did not fast'],['أحدهما لا يستتر من البول والآخر يمشي بالنميمة','سرقا','تركا الحج','لم يصوما']),
+   Q('Complete: «فَلَا تَسْتَقْبِلُوا ____ وَلَا تَسْتَدْبِرُوهَا»','أكمل: «فَلَا تَسْتَقْبِلُوا ____ وَلَا تَسْتَدْبِرُوهَا»',['الْقِبْلَةَ','الشَّمْسَ','الْقَمَرَ','النَّاسَ'])
  ]}
  ]
 },
-{
- id:'W3', en:'Week 3 · Relieving Oneself', ar:'الأسبوع الثالث · آداب قضاء الحاجة',
+
+/* ===================== SIWAK ===================== */
+{ id:'W4', en:'Week 4 · The Siwāk', ar:'الأسبوع الرابع · باب السواك',
  steps:[
- { type:'hadith', titleEn:'The Supplication Before Entering', titleAr:'دعاء دخول الخلاء',
-   narEn:'Narrated by Anas ibn Mālik (may Allah be pleased with him)', narAr:'عن أنس بن مالك رضي الله عنه',
-   ar:'كَانَ النَّبِيُّ ﷺ إِذَا دَخَلَ الْخَلَاءَ قَالَ: اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ',
-   en:'When the Prophet ﷺ entered the toilet he would say: "O Allah, I seek refuge in You from the male and female evil beings (jinn)."',
-   ptsEn:['Seek refuge in Allah before entering places where evil beings gather.','Say it before entering (in a built toilet) or before uncovering oneself (in the open).','Being mindful of Allah is part of the Muslim\'s routine, even here.'],
-   ptsAr:['يستعيذ بالله قبل دخول المواضع التي تحضرها الشياطين.','يقولها قبل الدخول في المبنى، أو قبل كشف العورة في الفضاء.','حضور القلب مع الله من شأن المسلم حتى في هذه الحال.'] },
- { type:'hadith', titleEn:'Facing or Turning Away from the Qiblah', titleAr:'استقبال القبلة واستدبارها',
-   narEn:'Narrated by Abū Ayyūb al-Anṣārī (may Allah be pleased with him)', narAr:'عن أبي أيوب الأنصاري رضي الله عنه',
-   ar:'إِذَا أَتَيْتُمُ الْغَائِطَ فَلَا تَسْتَقْبِلُوا الْقِبْلَةَ وَلَا تَسْتَدْبِرُوهَا، وَلَكِنْ شَرِّقُوا أَوْ غَرِّبُوا',
-   en:'When you go to relieve yourselves, do not face the qiblah nor turn your backs to it; rather face east or west.',
-   ptsEn:['This is out of respect for the qiblah.','The instruction was addressed to the people of Madinah, whose qiblah lies to the south; elsewhere, one avoids the direction of the qiblah.','Scholars differ on whether this applies inside built toilets; the safest course is to avoid it where possible.'],
-   ptsAr:['وذلك تعظيمًا للقبلة.','خاطب النبي ﷺ أهل المدينة وقبلتهم جنوبًا، ففي غيرها يُجتنب جهة القبلة.','اختلف العلماء في حكمه داخل البنيان، والأحوط اجتنابه ما أمكن.'] },
- { type:'hadith', titleEn:'The Right Hand', titleAr:'اليمين وقضاء الحاجة',
-   narEn:'Narrated by Abū Qatādah (may Allah be pleased with him)', narAr:'عن أبي قتادة رضي الله عنه',
-   ar:'إِذَا بَالَ أَحَدُكُمْ فَلَا يَأْخُذَنَّ ذَكَرَهُ بِيَمِينِهِ، وَلَا يَسْتَنْجِ بِيَمِينِهِ، وَلَا يَتَنَفَّسْ فِي الْإِنَاءِ',
-   en:'When one of you urinates, let them not hold their private part with their right hand, nor clean themselves with their right hand, nor breathe into the vessel.',
-   ptsEn:['The right hand is honoured and kept for eating and clean acts.','Use the left hand for cleaning after relieving oneself.','Do not breathe into the vessel while drinking; breathe outside it and then drink.'],
-   ptsAr:['اليمين مكرَّمة تُستعمل في الأكل وما شابهه.','يُستنجى باليد اليسرى.','لا يُتنفَّس في الإناء عند الشرب، بل يُبعد عنه ثم يعود.'] },
- { type:'hadith', titleEn:'Still Water', titleAr:'البول في الماء الراكد',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'لَا يَبُولَنَّ أَحَدُكُمْ فِي الْمَاءِ الدَّائِمِ الَّذِي لَا يَجْرِي، ثُمَّ يَغْتَسِلُ فِيهِ',
-   en:'None of you should urinate in standing water that does not flow, and then bathe in it.',
-   ptsEn:['This protects water that others use from becoming polluted and harmful.','It teaches us to protect shared resources and public health.','The prohibition is stronger for small amounts of still water.'],
-   ptsAr:['فيه حماية الماء الذي ينتفع به الناس من التلوث والضرر.','وفيه رعاية المرافق العامة والصحة العامة.','ويشتد النهي في الماء القليل الراكد.'] },
+ H(17,'The Siwāk at Every Prayer','السواك عند كل صلاة',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “Were it not that I would burden my nation, I would have ordered them to use the siwāk at every prayer.”`,
+   [`The siwāk is emphasised at every prayer, obligatory or voluntary, even the funeral prayer.`,`The ḥadīth includes the fasting person after noon, so he too uses it at each prayer.`,`The Prophet's ﷺ consideration for his nation's conditions, and mercy for them.`,`A command of the Prophet ﷺ is binding unless evidence shows it is only recommended — here the ḥadīth itself shows this.`,`It shows the importance of prayer.`],
+   [`يتأكد السواك عند كل صلاة فرضًا كانت أو نفلًا حتى صلاة الجنازة.`,`يشمل الحديث الصائم بعد الزوال، فيُسَنّ له السواك عند كل صلاة.`,`مراعاة النبي ﷺ لأحوال أمته ورحمته بهم.`,`الأمر منه ﷺ للوجوب إلا لقرينة، وهنا دلّ الحديث نفسه على عدم الوجوب.`,`فيه عناية عظيمة بالصلاة.`],
+   [['As-siwāk','A twig (such as arāk) used to clean the teeth; also the act of cleaning','السواك: عود يُتسوَّك به، ويُطلق على الفعل أيضًا']]),
+ H(18,'The Siwāk on Waking at Night','السواك عند القيام من النوم',
+   'Ḥudhayfah ibn al-Yamān (may Allāh be pleased with him)','حذيفة بن اليمان رضي الله عنه',
+   `When the Prophet ﷺ rose from the night, he would rub his mouth with the siwāk.`,
+   [`It is Sunnah to use the siwāk on waking from sleep, thoroughly, especially for one who will pray.`,`It is used whenever the smell of the mouth changes, by analogy to the change caused by sleep.`,`The Sharīʿah cares about cleanliness.`,`The siwāk is for the whole mouth: teeth, gums and tongue.`],
+   [`يُشرع السواك عند الاستيقاظ من النوم والمبالغة فيه، لا سيما لمن يريد الصلاة.`,`ويُشرع كلما تغيّرت رائحة الفم قياسًا على تغيّرها بالنوم.`,`عناية الشريعة بالنظافة.`,`السواك للفم كله: الأسنان واللثة واللسان.`],
+   [['Yashūṣu','To rub and clean (the mouth)','يشوص: يدلك ويُنظّف']]),
+ H(19,'The Last Siwāk of the Prophet ﷺ','سواك النبي ﷺ في آخر لحظاته',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `ʿAbd ar-Raḥmān ibn Abī Bakr entered while I was supporting the Prophet ﷺ against my chest, and he had a fresh siwāk with which he was cleaning his teeth. The Messenger of Allāh ﷺ fixed his gaze on it. I took the siwāk, chewed it, shook it out and softened it, then gave it to the Prophet ﷺ, and he used it — I never saw him use a siwāk better than that. Soon after, he raised his hand or finger and said: “In the Highest Companionship,” three times, and then he passed away. ʿĀʾishah used to say: “He died between my chest and my chin.” In another wording: “I saw him looking at it and knew he loved the siwāk. I said: ‘Shall I take it for you?’ and he nodded yes.”`,
+   [`The Prophet's ﷺ love of the siwāk.`,`It is legislated at all times, since he approved ʿAbd ar-Raḥmān's use of it.`,`It is permissible to use another's siwāk if no harm is feared; cleaning and softening it first is good.`,`A gesture can convey meaning when it is understood.`,`The strength of the Prophet's ﷺ heart: he kept to siwāk and supplication while dying.`,`Affirmation of Allāh's highness above the heavens, and the excellence of ʿĀʾishah, in whose house, on whose day, and between whose chest and chin he died.`],
+   [`محبة النبي ﷺ للسواك.`,`مشروعية السواك في كل وقت لإقراره ﷺ لعبد الرحمن.`,`جواز استعمال سواك الغير إن لم يُخش ضرر، وحسنٌ تنظيفه وتليينه.`,`العمل بالإشارة إذا فُهمت.`,`قوة قلب النبي ﷺ وثباته، إذ لم يترك السواك والدعاء وهو في النزع.`,`إثبات علوّ الله فوق السماوات، وفضل عائشة إذ مات ﷺ في بيتها ويومها وبين سَحْرها ونحرها.`],
+   [['Ar-Rafīq al-aʿlā','The Highest Companionship (the company of the prophets and the righteous in Paradise)','الرفيق الأعلى: رفقة الأنبياء والصالحين في الجنة'],['Qaḍamtuhu','I chewed it (to soften its end)','قضمتُه: مضغتُ طرفه']]),
+ H(20,'Brushing the Tongue','السواك على اللسان',
+   'Abū Mūsā al-Ashʿarī (may Allāh be pleased with him)','أبو موسى الأشعري رضي الله عنه',
+   `I came to the Prophet ﷺ while he was using a fresh siwāk, with the end of the siwāk on his tongue, and he was saying “u‘, u‘” as if he were retching, with the siwāk in his mouth.`,
+   [`It is legislated to use the siwāk on the tongue as on the teeth and gums.`,`It is legislated to go to the utmost in it.`,`It is permissible to use it in front of people.`],
+   [`يُشرع السواك على اللسان كما يُشرع على الأسنان واللثة.`,`يُشرع المبالغة فيه.`,`يجوز استعماله أمام الناس.`],
+   [['Yatahawwaʿ','To make the sound of retching','يتهوّع: يتقيّأ أو يُحدث صوت التقيؤ']]),
  { type:'quiz', qs:[
-   { qEn:'What did the Prophet ﷺ say when entering the toilet?', qAr:'ماذا كان يقول النبي ﷺ عند دخول الخلاء؟', oEn:['"O Allah, I seek refuge in You from the male and female evil beings"','"Bismillah" only','Nothing','"Alhamdulillah"'], oAr:['اللهم إني أعوذ بك من الخبث والخبائث','بسم الله فقط','لم يكن يقول شيئًا','الحمد لله'], a:0 },
-   { qEn:'Which hand should be avoided for istinjāʾ?', qAr:'أي اليدين تُجتنب في الاستنجاء؟', oEn:['The right','The left','Both','Neither'], oAr:['اليمين','اليسار','كلتاهما','لا شيء'], a:0 },
-   { qEn:'What is prohibited regarding still water?', qAr:'ما المنهي عنه في الماء الراكد؟', oEn:['Urinating in it','Drinking from it','Looking at it','Walking by it'], oAr:['البول فيه','الشرب منه','النظر إليه','المرور بجانبه'], a:0 },
-   { qEn:'Why is facing the qiblah while relieving oneself discouraged?', qAr:'لماذا نُهي عن استقبال القبلة عند قضاء الحاجة؟', oEn:['Out of respect for the qiblah','Because of the wind','Because of the sun','There is no reason'], oAr:['تعظيمًا للقبلة','بسبب الريح','بسبب الشمس','لا سبب'], a:0 },
-   { qEn:'Complete the Arabic text: «إِذَا أَتَيْتُمُ الْغَائِطَ فَلَا تَسْتَقْبِلُوا ____ وَلَا تَسْتَدْبِرُوهَا»', qAr:'أكمل الحديث: «إِذَا أَتَيْتُمُ الْغَائِطَ فَلَا تَسْتَقْبِلُوا ____ وَلَا تَسْتَدْبِرُوهَا»', oEn:['الْقِبْلَةَ','الشَّمْسَ','الرِّيحَ','النَّاسَ'], oAr:['الْقِبْلَةَ','الشَّمْسَ','الرِّيحَ','النَّاسَ'], a:0 },
-   { qEn:'Complete: «لَا يَبُولَنَّ أَحَدُكُمْ فِي الْمَاءِ ____»', qAr:'أكمل الحديث: «لَا يَبُولَنَّ أَحَدُكُمْ فِي الْمَاءِ ____»', oEn:['الدَّائِمِ','الْجَارِي','الْكَثِيرِ','الْبَارِدِ'], oAr:['الدَّائِمِ','الْجَارِي','الْكَثِيرِ','الْبَارِدِ'], a:0 }
+   Q('Complete the Arabic text: «لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ بِ____ عِنْدَ كُلِّ صَلَاةٍ»','أكمل الحديث: «لَوْلَا أَنْ أَشُقَّ عَلَى أُمَّتِي لَأَمَرْتُهُمْ بِ____ عِنْدَ كُلِّ صَلَاةٍ»',['السِّوَاكِ','الْوُضُوءِ','الصَّدَقَةِ','الدُّعَاءِ']),
+   Q('What is the ruling on the siwāk at every prayer?','ما حكم السواك عند كل صلاة؟',['A confirmed Sunnah, not obligatory','Obligatory','Forbidden','Only on Fridays'],['سنة مؤكدة غير واجبة','واجب','محرّم','يوم الجمعة فقط']),
+   Q('What did the Prophet ﷺ do on waking at night?','ماذا كان يفعل النبي ﷺ إذا قام من الليل؟',['Rub his mouth with the siwāk','Eat','Go back to sleep','Make ghusl'],['يشوص فاه بالسواك','يأكل','يعود إلى النوم','يغتسل']),
+   Q('What did the Prophet ﷺ say before he passed away, in ʿĀʾishah\'s narration?','ماذا قال النبي ﷺ قبل وفاته في رواية عائشة؟',['In the Highest Companionship','He prayed for his family only','Nothing','Fear Allāh'],['في الرفيق الأعلى','دعا لأهله فقط','لم يقل شيئًا','اتقوا الله']),
+   Q('Which parts of the mouth does the siwāk clean?','ما أجزاء الفم التي يشملها السواك؟',['Teeth, gums and tongue','Teeth only','Tongue only','Lips only'],['الأسنان واللثة واللسان','الأسنان فقط','اللسان فقط','الشفتان فقط'])
  ]}
  ]
 },
-{
- id:'W4', en:'Week 4 · Fiṭrah, Doubts, Vessels & Ghusl', ar:'الأسبوع الرابع · الفطرة والشك والآنية والغسل',
+
+/* ===================== KHUFS ===================== */
+{ id:'W5', en:'Week 5 · Wiping Over the Khuffs', ar:'الأسبوع الخامس · باب المسح على الخفين',
  steps:[
- { type:'hadith', titleEn:'The Five Acts of Fiṭrah', titleAr:'خصال الفطرة',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'الْفِطْرَةُ خَمْسٌ: الْخِتَانُ، وَالِاسْتِحْدَادُ، وَقَصُّ الشَّارِبِ، وَتَقْلِيمُ الْأَظْفَارِ، وَنَتْفُ الْإِبِطِ',
-   en:'The fiṭrah is five: circumcision, shaving the pubic hair, trimming the moustache, clipping the nails, and plucking the underarm hair.',
-   ptsEn:['These are acts of natural cleanliness that Islam encourages.','They should not be left for more than forty days (as in the narration of Muslim).','Cleanliness of body is part of the religion, not merely a matter of taste.'],
-   ptsAr:['هذه الخصال من النظافة الفطرية التي حثّ عليها الإسلام.','لا يُترك فعلها أكثر من أربعين يومًا كما في رواية مسلم.','نظافة البدن جزء من الدين وليست أمرًا شخصيًا فحسب.'] },
- { type:'hadith', titleEn:'Doubt About Wuḍūʾ', titleAr:'الشك في الحدث',
-   narEn:'Narrated by ʿAbdullāh ibn Zayd (may Allah be pleased with him)', narAr:'عن عبد الله بن زيد رضي الله عنه',
-   ar:'شُكِيَ إِلَى النَّبِيِّ ﷺ الرَّجُلُ يُخَيَّلُ إِلَيْهِ أَنَّهُ يَجِدُ الشَّيْءَ فِي الصَّلَاةِ، فَقَالَ: لَا يَنْصَرِفْ حَتَّى يَسْمَعَ صَوْتًا أَوْ يَجِدَ رِيحًا',
-   en:'The Prophet ﷺ was asked about a man who imagines he has passed something during prayer. He said: "Let him not leave until he hears a sound or smells an odour."',
-   ptsEn:['Certainty is not removed by doubt — this is a great principle of fiqh.','If you were in a state of wuḍūʾ and doubt whether you broke it, you remain in wuḍūʾ.','This removes the burden of whisperings (waswās) from the worshipper.'],
-   ptsAr:['اليقين لا يزول بالشك، وهي قاعدة فقهية عظيمة.','من تيقن الطهارة وشك في الحدث فهو على طهارته.','وفي هذا رفع للحرج وقطع للوسواس عن المصلي.'] },
- { type:'hadith', titleEn:'The Dog Licking a Vessel', titleAr:'ولوغ الكلب',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'طَهُورُ إِنَاءِ أَحَدِكُمْ إِذَا وَلَغَ فِيهِ الْكَلْبُ أَنْ يَغْسِلَهُ سَبْعَ مَرَّاتٍ',
-   en:'The purification of a vessel of one of you when a dog has licked in it is to wash it seven times.',
-   ptsEn:['The saliva of a dog is impure and requires special washing.','The vessel is washed seven times; in a narration of Muslim, the first with earth.','Following the instruction is part of obedience, whether or not the wisdom is fully known.'],
-   ptsAr:['لعاب الكلب نجس ويُغسل الإناء منه غسلًا خاصًّا.','يُغسل الإناء سبع مرات، وفي رواية مسلم: أولاهن بالتراب.','الامتثال لأمر الشرع واجب سواء عُلمت الحكمة كاملة أم لا.'] },
- { type:'hadith', titleEn:'When Ghusl Becomes Obligatory', titleAr:'موجب الغسل',
-   narEn:'Narrated by Abū Hurayrah (may Allah be pleased with him)', narAr:'عن أبي هريرة رضي الله عنه',
-   ar:'إِذَا جَلَسَ بَيْنَ شُعَبِهَا الْأَرْبَعِ، ثُمَّ جَهَدَهَا فَقَدْ وَجَبَ الْغُسْلُ',
-   en:'When a man sits between her four limbs and strives, ghusl becomes obligatory. (Muslim adds: "even if no emission occurs.")',
-   ptsEn:['The ḥadīth is a modest, indirect expression for marital relations.','Ghusl becomes obligatory by penetration even without emission.','This teaches decency and respect in how religious matters are expressed.'],
-   ptsAr:['الحديث كناية لطيفة عن الجماع.','يجب الغسل بالإيلاج ولو لم يحصل إنزال.','وفيه تعليم الأدب في التعبير عن الأمور الشرعية.'] },
+ INFO('Wiping Over the Khuffs — An Introduction','المسح على الخفين — تمهيد',
+  [`Wiping over the two khuffs (leather socks) is established from the Prophet ﷺ by tawātur: the narrators among the Companions were counted by some memorisers as eighty. Al-Ḥasan al-Baṣrī said: “Seventy of the Companions narrated it to me.”`,
+   `There was no disagreement among the Companions about it. It is one of the concessions that show the ease of this Sharīʿah, and all praise is due to Allāh.`],
+  [`المسح على الخفين ثابت عن النبي ﷺ بالتواتر، حتى عدّ بعض الحفاظ رواته فبلغوا ثمانين صحابيًا، وقال الحسن البصري: «حدّثني سبعون من الصحابة».`,`ولم يختلف الصحابة في ذلك، وهو من رخص هذه الشريعة وتيسيرها، والحمد لله.`]),
+ H(21,'Wiping Over the Khuffs — al-Mughīrah','المسح على الخفين — حديث المغيرة',
+   'Al-Mughīrah ibn Shuʿbah (may Allāh be pleased with him)','المغيرة بن شعبة رضي الله عنه',
+   `I was with the Prophet ﷺ on a journey and reached down to take off his khuffs. He said: “Leave them, for I put them on while in a state of purity.” Then he wiped over them.`,
+   [`Wiping over the khuffs is permitted instead of washing the feet, and the same for socks and anything that covers the feet.`,`Wiping is better for the one wearing them than taking them off and washing the feet — this shows the ease of the religion.`,`One may wipe only if the khuffs were worn in a state of purity.`,`The excellence of the Prophet's ﷺ teaching: he stopped al-Mughīrah and explained the reason.`,`It is permissible to seek help from others in purification, for example fetching and pouring water.`],
+   [`يجوز المسح على الخفين بدلًا من غسل القدمين، ويقاس عليهما الجوربان وكل ما يغطي القدم.`,`المسح لمن لبسهما أفضل من نزعهما وغسل القدمين، وهذا من كمال الدين ويسر أحكامه.`,`لا يمسح إلا إذا لبسهما على طهارة.`,`حسن تعليم النبي ﷺ إذ منع المغيرة من النزع وبيّن له العلة.`,`جواز الاستعانة بالغير في الطهارة كإحضار الماء وصبّه.`],
+   [['Al-khuff (pl. khifāf)','A leather sock covering the foot','الخف: ما يُلبس في القدم من جلد'],['Ahwaytu','I reached down','أهويتُ: مددتُ يدي إلى أسفل']]),
+ H(22,'Wiping Over the Khuffs at Home','المسح على الخفين في الحضر',
+   'Ḥudhayfah ibn al-Yamān (may Allāh be pleased with him)','حذيفة بن اليمان رضي الله عنه',
+   `I was with the Prophet ﷺ and he urinated, performed wuḍūʾ, and wiped over his khuffs. (Abridged.)`,
+   [`Wiping over the khuffs in wuḍūʾ is permitted as a substitute for washing the feet — part of the completeness and ease of the religion.`,`It is permitted for the resident, not only the traveller.`,`It is permissible to say of a great person that he urinated, when needed.`],
+   [`يجوز المسح على الخفين في الوضوء بدلًا من غسل القدمين، وهذا من كمال الدين ويسره.`,`يجوز المسح في الحضر كما يجوز في السفر.`,`يجوز أن يُقال عن العظيم: بال، إذا دعت الحاجة.`],
+   [['Muqtaṣaran','Abridged (the ḥadīth is longer)','مختصرًا: الحديث أطول من هذا']]),
  { type:'quiz', qs:[
-   { qEn:'How many acts of fiṭrah are mentioned in the ḥadīth?', qAr:'كم عدد خصال الفطرة في الحديث؟', oEn:['Five','Three','Seven','Ten'], oAr:['خمس','ثلاث','سبع','عشر'], a:0 },
-   { qEn:'What great principle of fiqh is shown by the ḥadīth about doubt in wuḍūʾ?', qAr:'ما القاعدة الفقهية في حديث الشك في الحدث؟', oEn:['Certainty is not removed by doubt','Hardship brings ease','Matters are judged by their goals','Harm must be removed'], oAr:['اليقين لا يزول بالشك','المشقة تجلب التيسير','الأمور بمقاصدها','الضرر يزال'], a:0 },
-   { qEn:'How many times is a vessel washed after a dog licks it?', qAr:'كم مرة يُغسل الإناء إذا ولغ فيه الكلب؟', oEn:['Seven','Three','Once','Ten'], oAr:['سبع مرات','ثلاث مرات','مرة واحدة','عشر مرات'], a:0 },
-   { qEn:'When does ghusl become obligatory according to the last ḥadīth?', qAr:'متى يجب الغسل بحسب الحديث الأخير؟', oEn:['After marital relations, even without emission','Only if emission occurs','Only on Friday','Never'], oAr:['بعد الجماع ولو لم يحصل إنزال','فقط إذا حصل إنزال','يوم الجمعة فقط','لا يجب'], a:0 },
-   { qEn:'Complete the Arabic text: «الْفِطْرَةُ خَمْسٌ: الْخِتَانُ، وَالِاسْتِحْدَادُ، وَقَصُّ ____»', qAr:'أكمل الحديث: «الْفِطْرَةُ خَمْسٌ: الْخِتَانُ، وَالِاسْتِحْدَادُ، وَقَصُّ ____»', oEn:['الشَّارِبِ','الشَّعْرِ','الْأَظْفَارِ','اللِّحْيَةِ'], oAr:['الشَّارِبِ','الشَّعْرِ','الْأَظْفَارِ','اللِّحْيَةِ'], a:0 },
-   { qEn:'What does "al-istiḥdād" mean in the ḥadīth of fiṭrah?', qAr:'ما معنى «الاستحداد» في حديث الفطرة؟', oEn:['Shaving the pubic hair','Clipping the nails','Trimming the moustache','Plucking the underarm hair'], oAr:['حلق شعر العانة','تقليم الأظفار','قص الشارب','نتف الإبط'], a:0 }
+   Q('Complete the Arabic text: «دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا ____»','أكمل الحديث: «دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا ____»',['طَاهِرَتَيْنِ','جَدِيدَتَيْنِ','نَظِيفَتَيْنِ','مُبْتَلَّتَيْنِ']),
+   Q('What is the condition for wiping over the khuffs?','ما شرط المسح على الخفين؟',['They were put on while in a state of purity','They must be new','Only on journeys','They must be white'],['أن يُلبسا على طهارة','أن يكونا جديدين','في السفر فقط','أن يكونا أبيضين']),
+   Q('Who narrated the ḥadīth “Leave them, I put them on while pure”?','من راوي حديث «دعهما فإني أدخلتهما طاهرتين»؟',['Al-Mughīrah ibn Shuʿbah','Ḥudhayfah','ʿUmar','Anas'],['المغيرة بن شعبة','حذيفة','عمر','أنس']),
+   Q('Is wiping over the khuffs only for the traveller?','هل المسح على الخفين للمسافر فقط؟',['No, it is also for the resident','Yes','Only at night','Only in winter'],['لا، يجوز للمقيم أيضًا','نعم','ليلًا فقط','في الشتاء فقط']),
+   Q('What does the narration count of the Companions who narrated wiping over the khuffs show?','ماذا يدل عليه تعدد رواة المسح على الخفين؟',['It is established by tawātur','It is weak','It is only an opinion','It was abrogated'],['ثبوته بالتواتر','ضعفه','أنه رأي فقط','أنه منسوخ'])
  ]}
  ]
 },
-{
- id:'W5', en:'Week 5 · Khuffs, Al-Madhy & Cleaning Impurity', ar:'الأسبوع الخامس · المسح على الخفين والمذي وإزالة النجاسة',
+
+/* ===================== MADHY & OTHER THINGS ===================== */
+{ id:'W6', en:'Week 6 · Al-Madhy, Impurities & Fiṭrah', ar:'الأسبوع السادس · المذي وغيره من أحكام الطهارة',
  steps:[
- { type:'hadith', num:21, titleEn:'Wiping Over the Khuffs', titleAr:'المسح على الخفين',
-   narEn:'Narrated by al-Mughīrah ibn Shuʿbah (may Allah be pleased with him)', narAr:'عن المغيرة بن شعبة رضي الله عنه',
-   ar:'كُنْتُ مَعَ النَّبِيِّ ﷺ فِي سَفَرٍ فَأَهْوَيْتُ لِأَنْزِعَ خُفَّيْهِ فَقَالَ: دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا طَاهِرَتَيْنِ فَمَسَحَ عَلَيْهِمَا',
-   en:'I was with the Prophet ﷺ on a journey and reached down to take off his two khuffs. He said: "Leave them, for I put them on while in a state of purity." Then he wiped over them.',
-   ptsEn:['Wiping over the khuffs (leather socks) is established by the Sunnah and is a mercy and an ease in the Sharīʿah.','The condition: the khuffs must be put on after complete purification.','The Companions did not differ about this ruling; narrators of it were counted in the dozens.'],
-   ptsAr:['المسح على الخفين ثابت بالسنة، وفيه رحمة وتيسير في هذه الشريعة.','شرطه أن يلبس الخفين على طهارة كاملة.','لم يختلف الصحابة في هذا الحكم، وقد رواه عدد كبير من الصحابة.'] },
- { type:'hadith', num:23, titleEn:'Al-Madhy', titleAr:'المذي',
-   narEn:'Narrated by ʿAlī ibn Abī Ṭālib (may Allah be pleased with him)', narAr:'عن علي بن أبي طالب رضي الله عنه',
-   ar:'كُنْتُ رَجُلًا مَذَّاءً فَاسْتَحْيَيْتُ أَنْ أَسْأَلَ النَّبِيَّ ﷺ لِمَكَانِ ابْنَتِهِ مِنِّي فَأَمَرْتُ الْمِقْدَادَ بْنَ الْأَسْوَدِ فَسَأَلَهُ فَقَالَ: يَغْسِلُ ذَكَرَهُ وَيَتَوَضَّأُ',
-   en:'I was a man who often had madhy, and I was embarrassed to ask the Prophet ﷺ because of his daughter\'s status with me, so I told al-Miqdād ibn al-Aswad to ask him. He said: "He should wash his private part and make wuḍūʾ."',
-   ptsEn:['Al-madhy is a thin fluid that comes after sexual desire, without gushing and without one feeling it come out.','It is impure and breaks wuḍūʾ, but does not require ghusl.','One washes the private part and makes wuḍūʾ.','It is good manners to feel shy, but one should still have the ruling asked about — ʿAlī sent someone else to ask for him.'],
-   ptsAr:['المذي سائل رقيق يخرج عند الشهوة بلا دفق ولا إحساس بخروجه.','وهو نجس وينقض الوضوء، ولا يوجب الغسل.','يغسل الذكر ويتوضأ.','الحياء من الأدب، لكن لا يمنع من السؤال عن الحكم؛ فقد أرسل علي من يسأل عنه.'] },
- { type:'hadith', num:26, titleEn:'The Bedouin in the Masjid', titleAr:'الأعرابي في المسجد',
-   narEn:'Narrated by Anas ibn Mālik (may Allah be pleased with him)', narAr:'عن أنس بن مالك رضي الله عنه',
-   ar:'جَاءَ أَعْرَابِيٌّ فَبَالَ فِي طَائِفَةِ الْمَسْجِدِ فَزَجَرَهُ النَّاسُ فَنَهَاهُمُ النَّبِيُّ ﷺ فَلَمَّا قَضَى بَوْلَهُ أَمَرَ النَّبِيُّ ﷺ بِذَنُوبٍ مِنْ مَاءٍ فَأُهْرِيقَ عَلَيْهِ',
-   en:'A Bedouin came and urinated in a corner of the masjid, so the people scolded him. The Prophet ﷺ stopped them. When he had finished urinating, the Prophet ﷺ ordered a bucket of water, and it was poured over it.',
-   ptsEn:['The masjid must be cleaned of impurity immediately when it occurs.','Ground is purified by pouring water over the place.','The excellence of the Prophet\'s ﷺ character and his wisdom in teaching an ignorant person gently.'],
-   ptsAr:['يجب تطهير المساجد من النجاسة فورًا إذا وقعت.','تطهر الأرض بصب الماء على موضع النجاسة.','فيه حسن خلق النبي ﷺ وحكمته في تعليم الجاهل بالرفق.'] },
+ INFO('Al-Madhy and Other Things — An Introduction','المذي وغيره — تمهيد',
+  [`Al-madhy is a thin fluid that comes after sexual desire, without gushing and without one sensing it come out. It is also called “madhiy”.`,
+   `The author's words “and other things” mean this chapter also contains ḥadīths on what nullifies wuḍūʾ, on removing impurities, and on the acts of fiṭrah.`],
+  [`المذي: سائل رقيق يخرج بعد الشهوة بلا دفق ولا إحساس بخروجه.`,`وقول المؤلف «وغيره» يعني أن الباب فيه أحاديث في نواقض الوضوء وإزالة النجاسات وخصال الفطرة.`]),
+ H(23,'Al-Madhy','المذي',
+   'ʿAlī ibn Abī Ṭālib (may Allāh be pleased with him)','علي بن أبي طالب رضي الله عنه',
+   `I was a man who often had madhy, and I was too shy to ask the Prophet ﷺ because of his daughter's position with me, so I told al-Miqdād ibn al-Aswad to ask him. He said: “He should wash his private part and perform wuḍūʾ.” In al-Bukhārī: “Wash your private part and perform wuḍūʾ.” In Muslim: “Perform wuḍūʾ and sprinkle your private part with water.”`,
+   [`It is permissible to mention an embarrassing matter about oneself when there is benefit.`,`It is permissible not to ask directly out of shyness; one may ask someone reliable to ask.`,`Good manners: a man should not mention matters of the private parts and desire in front of his wife's relatives.`,`The entire private part must be washed because of madhy, and madhy nullifies wuḍūʾ.`,`The excellence of ʿAlī: shyness did not stop him asking indirectly.`],
+   [`يجوز أن يخبر الإنسان عن نفسه بما يُستحيا منه لمصلحة.`,`يجوز ترك السؤال مباشرة حياءً وتوكيل من يسأل عنه.`,`من الأدب ألّا يذكر الرجل عند أقارب زوجته ما يتعلق بالعورة والشهوة.`,`يجب غسل الذكر كله من المذي، والمذي ينقض الوضوء.`,`فضل علي رضي الله عنه إذ لم يمنعه الحياء من السؤال بالواسطة.`],
+   [['Maddhāʾ','A man who often has madhy','مذّاء: كثير المذي'],['Naḍḥ','Sprinkling with water','النضح: الرش بالماء']]),
+ H(24,'Doubt About Ḥadath','الشك في الحدث',
+   'ʿAbbād ibn Tamīm, from ʿAbdullāh ibn Zayd ibn ʿĀṣim al-Māzinī (may Allāh be pleased with him)','عباد بن تميم عن عبد الله بن زيد بن عاصم المازني رضي الله عنه',
+   `It was mentioned to the Prophet ﷺ about a man who imagines he has passed something during prayer. He said: “Let him not leave until he hears a sound or smells an odour.”`,
+   [`If a person was pure and doubts whether he broke wuḍūʾ, he need not repeat wuḍūʾ until he is certain.`,`It is not permissible to leave the prayer on mere doubt.`,`Passing wind breaks wuḍūʾ, whether known by sound, smell or otherwise.`,`Good manners: avoid expressions that cause embarrassment.`,`The rule: the original state remains, and certainty is not removed by doubt.`],
+   [`من كان على طهارة وشك في الحدث فلا يجب عليه الوضوء حتى يتيقن.`,`لا يجوز ترك الصلاة لمجرد الشك.`,`خروج الريح ينقض الوضوء سواء علمه بالسماع أو الشمّ أو غيرهما.`,`من الأدب اجتناب العبارات التي يُستحيا منها.`,`الأصل بقاء الشيء على ما كان، واليقين لا يزول بالشك.`],
+   [['Yukhayyalu ilayhi','He imagines','يخيّل إليه: يتوهم']]),
+ H(25,'Urine of a Nursing Baby Boy','بول الصبي الرضيع',
+   'Umm Qays bint Miḥṣan al-Asadiyyah, and ʿĀʾishah (may Allāh be pleased with them)','أم قيس بنت محصن الأسدية وعائشة رضي الله عنهما',
+   `Umm Qays brought her young son, who did not yet eat food, to the Messenger of Allāh ﷺ. He sat him in his lap and the boy urinated on his garment. He called for water, sprinkled it on the garment, and did not wash it. In ʿĀʾishah's narration the Prophet ﷺ was brought a baby who urinated on his garment, so he called for water and followed the urine with it. In Muslim: “He followed it with water and did not wash it.”`,
+   [`The Prophet's ﷺ excellent character.`,`The urine of a baby boy who does not eat solid food is cleaned by sprinkling water over it, without washing.`,`His faeces must be washed like other impurities.`,`It is better to clean impurity right away.`],
+   [`حُسن خلق النبي ﷺ.`,`بول الصبي الذي لم يأكل الطعام يُطهَّر بالنضح دون غسل.`,`أما غائطه فيجب غسله كسائر النجاسات.`,`الأفضل المبادرة بإزالة النجاسة فورًا.`],
+   [['Ḥijr','Lap','الحِجر: الحِضن'],['Naḍḥ','Sprinkling water over the area until it is covered','النضح: رش الماء على الموضع حتى يعمّه']]),
+ H(26,'The Bedouin in the Masjid','الأعرابي في المسجد',
+   'Anas ibn Mālik (may Allāh be pleased with him)','أنس بن مالك رضي الله عنه',
+   `A Bedouin came and urinated in a corner of the masjid, so the people shouted at him. The Prophet ﷺ stopped them. When the man had finished, the Prophet ﷺ ordered a bucket of water, and it was poured over it.`,
+   [`Take care of the masjids and keep them free of urine and filth.`,`Impurity in the masjid must be removed at once.`,`Ground is purified by pouring water over the impure place, without repetition — unless an impure substance remains, in which case remove it first, then pour water.`,`The Prophet's ﷺ gentle character and wisdom in teaching and removing the wrong.`],
+   [`العناية بالمساجد وصونها من البول والأقذار.`,`يجب تطهير المسجد من النجاسة فور وقوعها.`,`تُطهَّر الأرض بصبّ الماء على موضع النجاسة دون تكرار، إلا إن بقي عين النجاسة فتُزال أولًا ثم يُصبّ الماء.`,`حسن خلق النبي ﷺ وحكمته في التعليم وإزالة المنكر.`],
+   [['Dhanūb','A large bucket of water','الذَّنوب: الدلو العظيمة المملوءة ماء']]),
+ H(27,'The Acts of Fiṭrah','خصال الفطرة',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “The fiṭrah is five: circumcision, shaving the pubic hair, trimming the moustache, clipping the nails, and plucking the underarm hair.”`,
+   [`These five acts are legislated because they are from the fiṭrah, the natural disposition.`,`Best is trimming the moustache, plucking the underarm hair, and shaving the pubic hair; if plucking is hard, remove it by any means.`,`The completeness of the Sharīʿah: it agrees with the natural disposition and cares for cleanliness.`],
+   [`تُشرع هذه الخمس لأنها من الفطرة.`,`الأفضل قصّ الشارب ونتف الإبط وحلق العانة، فإن شقّ النتف أزاله بأي وسيلة.`,`كمال الشريعة إذ توافق الفطرة وتعتني بالنظافة.`],
+   [['Al-istiḥdād','Shaving the pubic hair','الاستحداد: حلق شعر العانة'],['Al-khitān','Circumcision','الختان']]),
  { type:'quiz', qs:[
-   { qEn:'Complete the Arabic text: «دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا ____»', qAr:'أكمل الحديث: «دَعْهُمَا فَإِنِّي أَدْخَلْتُهُمَا ____»', oEn:['طَاهِرَتَيْنِ','مُبْتَلَّتَيْنِ','جَدِيدَتَيْنِ','مُسْرِعًا'], oAr:['طَاهِرَتَيْنِ','مُبْتَلَّتَيْنِ','جَدِيدَتَيْنِ','مُسْرِعًا'], a:0 },
-   { qEn:'What is the condition for wiping over the khuffs, from the ḥadīth of al-Mughīrah?', qAr:'ما شرط المسح على الخفين من حديث المغيرة؟', oEn:['They were put on while in a state of purity','They must be new','Only on journeys of three days','They must be white'], oAr:['أن يُلبسا على طهارة','أن يكونا جديدين','في سفر ثلاثة أيام فقط','أن يكونا أبيضين'], a:0 },
-   { qEn:'What is al-madhy?', qAr:'ما هو المذي؟', oEn:['A thin fluid after desire, without gushing','A thick fluid that requires ghusl','Blood','Urine'], oAr:['سائل رقيق بعد الشهوة بلا دفق','سائل غليظ يوجب الغسل','دم','بول'], a:0 },
-   { qEn:'What did the Prophet ﷺ say a person with madhy should do?', qAr:'ماذا يفعل من خرج منه المذي؟', oEn:['Wash his private part and make wuḍūʾ','Make ghusl','Nothing','Repeat the prayer only'], oAr:['يغسل ذكره ويتوضأ','يغتسل','لا شيء عليه','يعيد الصلاة فقط'], a:0 },
-   { qEn:'Why did ʿAlī send al-Miqdād to ask the Prophet ﷺ?', qAr:'لماذا أرسل علي المقداد ليسأل النبي ﷺ؟', oEn:['He was shy because of his wife Fāṭimah, the Prophet\'s daughter','He was unwell','He was travelling','He did not know the Prophet'], oAr:['استحيا لمكان ابنة النبي ﷺ منه','كان مريضًا','كان مسافرًا','لم يكن يعرف النبي ﷺ'], a:0 },
-   { qEn:'What did the Prophet ﷺ order to be done with the Bedouin\'s urine in the masjid?', qAr:'بماذا أمر النبي ﷺ في بول الأعرابي في المسجد؟', oEn:['A bucket of water to be poured over it','The ground to be dug and removed','The masjid to be closed','Nothing'], oAr:['أن يُصبّ عليه دلو من ماء','أن تُحفر الأرض وتُنقل','أن يُغلق المسجد','لا شيء'], a:0 },
-   { qEn:'How did the Prophet ﷺ treat the Bedouin?', qAr:'كيف تعامل النبي ﷺ مع الأعرابي؟', oEn:['He stopped the people and taught him gently','He rebuked him harshly','He ignored him','He had him expelled'], oAr:['نهى الناس وعلّمه بالرفق','وبّخه بشدة','تجاهله','أمر بإخراجه'], a:0 }
+   Q('What should one do for madhy?','ماذا يجب عند خروج المذي؟',['Wash the private part and make wuḍūʾ','Make ghusl','Nothing','Only change clothes'],['يغسل ذكره ويتوضأ','يغتسل','لا شيء','يغيّر ثيابه فقط']),
+   Q('Complete the Arabic text: «لَا يَنْصَرِفْ حَتَّى يَسْمَعَ ____ أَوْ يَجِدَ رِيحًا»','أكمل الحديث: «لَا يَنْصَرِفْ حَتَّى يَسْمَعَ ____ أَوْ يَجِدَ رِيحًا»',['صَوْتًا','كَلَامًا','أَذَانًا','قُرْآنًا']),
+   Q('Which principle does the ḥadīth about doubt show?','أي قاعدة يدل عليها حديث الشك؟',['Certainty is not removed by doubt','Hardship brings ease','Deeds are by intentions','Harm is removed'],['اليقين لا يزول بالشك','المشقة تجلب التيسير','الأعمال بالنيات','الضرر يُزال']),
+   Q('How is the urine of a baby boy who does not yet eat solid food cleaned?','كيف يُطهَّر بول الصبي الذي لم يأكل الطعام؟',['By sprinkling water over it','By washing seven times','By burning the cloth','By soil only'],['بالنضح','بالغسل سبعًا','بحرق الثوب','بالتراب فقط']),
+   Q('What did the Prophet ﷺ order for the Bedouin\'s urine in the masjid?','بماذا أمر النبي ﷺ في بول الأعرابي في المسجد؟',['A bucket of water to be poured over it','To dig up the ground','To close the masjid','Nothing'],['دلو من ماء يُصبّ عليه','حفر الأرض','إغلاق المسجد','لا شيء']),
+   Q('Complete: «الْفِطْرَةُ خَمْسٌ: الْخِتَانُ وَالِاسْتِحْدَادُ وَقَصُّ ____»','أكمل: «الْفِطْرَةُ خَمْسٌ: الْخِتَانُ وَالِاسْتِحْدَادُ وَقَصُّ ____»',['الشَّارِبِ','الْوَجْهِ','الْأَظَافِرِ فَقَطْ','الْحَاجِبِ']),
+   Q('How did the Prophet ﷺ treat the Bedouin?','كيف تعامل النبي ﷺ مع الأعرابي؟',['He stopped the people and taught him gently','He rebuked him harshly','He ignored him','He had him expelled'],['نهى الناس وعلّمه بالرفق','وبّخه بشدة','تجاهله','أمر بإخراجه'])
+ ]}
+ ]
+},
+
+/* ===================== GHUSL ===================== */
+{ id:'W7', en:'Week 7 · Ghusl from Janābah', ar:'الأسبوع السابع · باب الغسل من الجنابة',
+ steps:[
+ H(28,'Is the Believer Ever Impure?','المؤمن لا ينجس',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ met him on one of the roads of Madīnah while he was in janābah. Abū Hurayrah said: “I slipped away, went and made ghusl, then came back.” He asked: “Where were you, Abū Hurayrah?” He said: “I was in janābah and disliked to sit with you while not pure.” He said: “Subḥān Allāh! The believer does not become impure.”`,
+   [`It is permissible to speak of oneself, when there is benefit, about what is embarrassing.`,`The Prophet's ﷺ concern for his Companions and for checking on them; and their reverence for him.`,`Say “Subḥān Allāh” when surprised.`,`A person in janābah does not become impure, because the believer is pure; it is permissible to sit with him.`,`The disbeliever is impure, but his impurity is spiritual, because of his evil belief.`],
+   [`يجوز أن يتحدث الإنسان عن نفسه بما يُستحيا منه لمصلحة.`,`اهتمام النبي ﷺ بأصحابه وتفقّده لهم، وتعظيم الصحابة له.`,`مشروعية قول «سبحان الله» عند التعجب.`,`الجُنُب لا ينجس لأن المؤمن طاهر، ويجوز مجالسته.`,`الكافر نجس نجاسة معنوية بسبب عقيدته الفاسدة.`],
+   [['Janābah','The state after intercourse or emission requiring ghusl','الجنابة: حال من أجنب بجماع أو إنزال يوجب الغسل'],['Fa-nkhanastu','I slipped away quietly','فانخنست: تواريتُ واختفيت']]),
+ H(29,'Ghusl from Janābah — ʿĀʾishah\'s Description','صفة غسل الجنابة — رواية عائشة',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `When the Prophet ﷺ made ghusl from janābah, he washed his hands, then performed wuḍūʾ as for prayer, then made ghusl: he ran his fingers through his hair until he thought the skin was wet, poured water over it three times, then washed the rest of his body. And she used to say: “The Messenger of Allāh ﷺ and I would make ghusl from one vessel, scooping from it together.”`,
+   [`The way to make ghusl from janābah: wash the hands; perform full wuḍūʾ; run wet hands through the hair; pour water over the head three times; then wash the whole body.`,`The major ḥadath is greater than the minor: it requires washing the entire body, even the head.`,`A man and his wife may make ghusl together from one vessel.`,`The one in janābah may scoop from the vessel he bathes from.`,`The Prophet's ﷺ good character with his family.`],
+   [`صفة الغسل: غسل اليدين، ثم الوضوء الكامل، ثم تخليل الشعر بالماء، ثم إفاضة الماء على الرأس ثلاثًا، ثم غسل سائر الجسد.`,`الحدث الأكبر أعظم من الأصغر، إذ يجب فيه غسل البدن كله حتى الرأس.`,`يجوز اغتسال الرجل وزوجته من إناء واحد.`,`يجوز للجُنُب الاغتراف من الإناء الذي يغتسل منه.`,`حسن عشرة النبي ﷺ لأهله.`],
+   [['Yukhallilu','To run the fingers through (the hair)','يخلّل: يُدخل أصابعه بين الشعر'],['Arwā basharatahu','Wet his skin','أروى بشرته: بلّ جلد رأسه']]),
+ H(30,'Ghusl from Janābah — Maymūnah\'s Description','صفة غسل الجنابة — رواية ميمونة',
+   'Maymūnah bint al-Ḥārith, wife of the Prophet ﷺ (may Allāh be pleased with her)','ميمونة بنت الحارث رضي الله عنها',
+   `I set out water for the Messenger of Allāh ﷺ for ghusl from janābah. He tipped water with his right hand over his left two or three times, then washed his private part, then struck his hand on the ground or the wall two or three times, then rinsed, snuffed, washed his face and forearms, then poured water over his head, then washed his body. Then he moved aside and washed his feet. I brought him a cloth but he did not want it, and he began to shake the water off with his hand.`,
+   [`Another way to make ghusl from janābah: wash the hands outside the vessel, then the private part; rub the hand on the ground or wall; do wuḍūʾ except the feet; pour water over the head; wash the body; then wash the feet in another place.`,`Washing the body is not repeated.`,`The virtue of Maymūnah in honouring and serving the Prophet ﷺ.`,`Drying the limbs after purification is permissible, since the Prophet ﷺ shook off the water and did not forbid drying.`],
+   [`صفة أخرى لغسل الجنابة: غسل اليدين خارج الإناء ثم الفرج، ودلك اليد بالأرض أو الحائط، ثم وضوء كامل إلا القدمين، ثم إفاضة الماء على الرأس، ثم غسل الجسد، ثم غسل القدمين في موضع آخر.`,`لا يُكرَّر غسل البدن.`,`فضل ميمونة في إكرام النبي ﷺ وخدمته.`,`جواز تنشيف الأعضاء بعد الطهارة، فقد نفض الماء بيده ولم ينه عن التنشيف.`],
+   [['Akfaʾa','To tip over (pour out)','أكفأ: أمال الإناء فصبّ الماء'],['Khirqah','A cloth or towel','الخِرقة: قطعة قماش']]),
+ H(31,'Sleeping in a State of Janābah','نوم الجنب',
+   'ʿAbdullāh ibn ʿUmar (may Allāh be pleased with him)','عبد الله بن عمر رضي الله عنهما',
+   `ʿUmar asked the Prophet ﷺ: “O Messenger of Allāh, may one of us sleep while in janābah?” He said: “Yes, if one of you performs wuḍūʾ, let him sleep.”`,
+   [`The Companions' eagerness to ask about what they needed.`,`It is permissible for one in janābah to sleep after making wuḍūʾ.`,`It is more complete not to sleep until one has made ghusl.`],
+   [`حرص الصحابة على السؤال عما يحتاجون إليه.`,`يجوز للجنب النوم إذا توضأ.`,`الأكمل ألّا ينام حتى يغتسل.`],
+   [['Yarqudu','To sleep, lie down','يرقد: ينام']]),
+ H(32,'Ghusl After a Wet Dream — Umm Sulaym','غسل المرأة من الاحتلام',
+   'Umm Salamah (may Allāh be pleased with her)','أم سلمة رضي الله عنها',
+   `Umm Sulaym, the wife of Abū Ṭalḥah, came to the Prophet ﷺ and said: “O Messenger of Allāh, Allāh is not shy of the truth. Must a woman make ghusl if she has a wet dream?” He said: “Yes, if she sees the fluid.”`,
+   [`The excellence of Umm Sulaym: her eagerness to understand the religion and her good manner in prefacing her question.`,`Allāh is not shy of the truth — this is from His perfect justice and mercy.`,`A woman can have a wet dream and emit fluid.`,`Ghusl is obligatory for the one who has a wet dream and sees the fluid.`,`Shyness must not prevent one from learning the truth; one may preface the question, or have someone else ask.`],
+   [`فضل أم سليم في حرصها على فقه الدين وحسن أدبها في تقديم ما يمهّد لعذرها.`,`نفي الاستحياء عن الله من الحق، وذلك لكمال عدله ورحمته.`,`إثبات أن المرأة تحتلم وينزل منها المني.`,`وجوب الغسل على من احتلم ورأى الماء.`,`لا ينبغي للحياء أن يمنع من تعلّم الحق والسؤال عنه، ويمكنه تقديم ما يمهّد عذره أو توكيل من يسأل عنه.`],
+   [['Iḥtalamat','She had a wet dream','احتلمت: رأت في نومها ما يوجب الغسل']]),
+ H(33,'Semen on Clothing','المني على الثياب',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `I used to wash janābah from the garment of the Messenger of Allāh ﷺ and he would go out to prayer with water marks still on his garment. In Muslim: “I used to scrape it off the garment of the Messenger of Allāh ﷺ, and he would pray in it.”`,
+   [`Semen is pure — if it were impure it would not be cleaned by rubbing.`,`It is legislated to remove its traces: wash it if wet, scrape it if dry; washing a dry one is also permissible.`,`The excellence of ʿĀʾishah in serving the Prophet ﷺ.`],
+   [`المني طاهر، لأنه لو كان نجسًا لما كفى فيه الفرك.`,`يُشرع إزالة أثره: يُغسل إن كان رطبًا ويُفرك إن كان يابسًا، ولو غسله جاز.`,`فضل عائشة رضي الله عنها في خدمة النبي ﷺ.`],
+   [['Farak','To rub or scrape off dry semen','الفرك: الدلك والحتّ لإزالة المني اليابس'],['Buqaʿ','Spots, patches','بُقَع: آثار وبقع']]),
+ H(34,'When Ghusl Becomes Obligatory','متى يجب الغسل',
+   'Abū Hurayrah (may Allāh be pleased with him)','أبو هريرة رضي الله عنه',
+   `The Prophet ﷺ said: “When he sits between her four limbs and strives, ghusl has become obligatory.” In Muslim: “even if no emission occurs.”`,
+   [`Intercourse makes ghusl obligatory on both man and woman, whether or not there is ejaculation.`,`An allusion to a wisdom: the body regains its energy after exertion.`,`Use allusion when an explicit mention is embarrassing.`],
+   [`الجماع يوجب الغسل على الرجل والمرأة سواء أنزل أم لم ينزل.`,`إشارة إلى حكمة وجوب الغسل: ليعود البدن نشاطه بعد الجهد.`,`استعمال الكناية فيما يُستحيا من التصريح به.`],
+   [['Shuʿabuhā al-arbaʿ','Her four limbs (an allusion to marital relations)','شعبها الأربع: كناية عن الجماع'],['Jahadahā','Strove, exerted himself','جهدها: بالغ في الجماع']]),
+ H(35,'The Amount of Water for Ghusl','مقدار الماء في الغسل',
+   'Abū Jaʿfar Muḥammad ibn ʿAlī (al-Bāqir), from Jābir ibn ʿAbdillāh (may Allāh be pleased with them)','أبو جعفر محمد الباقر عن جابر بن عبد الله رضي الله عنهما',
+   `He and his father were with Jābir ibn ʿAbdillāh when some people asked about ghusl. Jābir said: “A ṣāʿ is enough for you.” A man said: “It is not enough for me.” Jābir said: “It was enough for one with more hair than you and better than you,” meaning the Messenger of Allāh ﷺ. Then he led us in prayer in one garment. In another wording: “The Prophet ﷺ would pour water over his head three times.”`,
+   [`The predecessors' eagerness to follow the Sunnah, even in the amount of water.`,`A ṣāʿ of water is enough for ghusl from janābah.`,`Pouring water three times over the head in ghusl is Sunnah.`,`Firmness is permitted in answering someone who opposes the Sunnah, when there is benefit.`,`Praying in one garment is permissible when it covers sufficiently, even for the imām.`],
+   [`حرص السلف على اتباع السنة حتى في مقدار ماء الطهارة.`,`يكفي صاعٌ من الماء في الغسل من الجنابة.`,`يُشرع صبّ الماء على الرأس ثلاثًا في الغسل.`,`جواز الشدة في الرد على من خالف السنة إذا اقتضت المصلحة.`,`جواز الصلاة في ثوب واحد إذا حصل الستر الكافي حتى للإمام.`],
+   [['Ṣāʿ','A measure of volume (about four double handfuls)','الصاع: مكيال يساوي أربعة أمداد']]),
+ { type:'quiz', qs:[
+   Q('What did the Prophet ﷺ say about a person in janābah?','ماذا قال النبي ﷺ في الجنب؟',['The believer does not become impure','He is impure','He must not enter any house','He must not speak'],['إن المسلم لا ينجس','نجس','لا يدخل بيتًا','لا يتكلم']),
+   Q('Complete the Arabic text: «سُبْحَانَ اللَّهِ إِنَّ الْمُسْلِمَ لَا ____»','أكمل الحديث: «سُبْحَانَ اللَّهِ إِنَّ الْمُسْلِمَ لَا ____»',['يَنْجُسُ','يَغْتَسِلُ','يَنَامُ','يَأْكُلُ']),
+   Q('How did the Prophet ﷺ begin ghusl from janābah in ʿĀʾishah\'s description?','بماذا بدأ النبي ﷺ غسل الجنابة في رواية عائشة؟',['He washed his hands, then performed wuḍūʾ','He poured water on his feet','He dried himself','He entered the water'],['غسل يديه ثم توضأ','صبّ الماء على قدميه','تنشّف','دخل الماء']),
+   Q('Is a woman required to make ghusl after a wet dream?','هل يجب الغسل على المرأة إذا احتلمت؟',['Yes, if she sees the fluid','No','Only if married','Only in Ramaḍān'],['نعم إذا رأت الماء','لا','للمتزوجة فقط','في رمضان فقط']),
+   Q('What is the ruling on semen?','ما حكم المني؟',['Pure; it is rubbed or washed off','Impure like urine','Heavily impure','Forbidden to touch'],['طاهر يُفرك أو يُغسل','نجس كالبول','نجس مغلّظ','محرّم لمسه']),
+   Q('When does ghusl become obligatory according to the ḥadīth?','متى يجب الغسل في الحديث؟',['After intercourse, even without emission','Only with emission','Never','Only on Friday'],['بعد الجماع ولو بلا إنزال','بالإنزال فقط','لا يجب','يوم الجمعة فقط']),
+   Q('How much water suffices for ghusl according to Jābir?','كم من الماء يكفي للغسل عند جابر؟',['A ṣāʿ','Ten ṣāʿs','A cup only','A bucket'],['صاع','عشرة آصع','كوب فقط','دلو'])
+ ]}
+ ]
+},
+
+/* ===================== TAYAMMUM ===================== */
+{ id:'W8', en:'Week 8 · Tayammum', ar:'الأسبوع الثامن · باب التيمم',
+ steps:[
+ H(36,'Tayammum for Janābah','التيمم للجنابة',
+   'ʿImrān ibn Ḥuṣayn (may Allāh be pleased with him)','عمران بن حصين رضي الله عنه',
+   `The Prophet ﷺ saw a man standing apart who had not prayed with the people. He said: “O so-and-so, what prevented you from praying with the people?” He said: “O Messenger of Allāh, I am in janābah and there is no water.” He said: “Use clean soil (aṣ-ṣaʿīd), for it is enough for you.”`,
+   [`Travelling does not cancel the congregation.`,`Ask the one who stays apart why he does so.`,`Tayammum is permissible for janābah when there is no water; it substitutes for water until water is found.`,`If someone prayed with tayammum and then finds water, he must use it for purification (ghusl) from then on.`,`The ease of the Sharīʿah: one prays with tayammum and does not repeat the prayer.`,`The Prophet's ﷺ care for his Companions.`],
+   [`السفر لا يُسقط الجماعة.`,`يُسأل المعتزل عن سبب اعتزاله.`,`يجوز التيمم للجنابة عند فقد الماء، وهو بدل عنه إلى أن يوجد.`,`من تيمم لعدم الماء ثم وجده وجب عليه الغسل به.`,`يسر الشريعة: يصلي بالتيمم ولا يعيد.`,`عناية النبي ﷺ بأصحابه.`],
+   [['Aṣ-ṣaʿīd','The surface of the earth (clean soil, sand, rocks)','الصعيد: وجه الأرض']]),
+ H(37,'How to Perform Tayammum','صفة التيمم',
+   'ʿAmmār ibn Yāsir (may Allāh be pleased with him)','عمار بن ياسر رضي الله عنه',
+   `The Prophet ﷺ sent me on an errand and I became junub and found no water, so I rolled in the soil as an animal rolls. Then I came to the Prophet ﷺ and told him, and he said: “It would have been enough for you to do like this,” and struck the ground with his hands once, then wiped the left over the right, the backs of his hands and his face.`,
+   [`The Prophet ﷺ sent out military detachments to spread Islām and fight its enemies.`,`It is permissible to speak explicitly of what is embarrassing when needed.`,`Tayammum for janābah is the same as for minor ḥadath: strike the ground once with both hands; wipe the face and the backs of the hands.`,`One who makes sincere ijtihād and errs is not required to repeat.`],
+   [`بعث النبي ﷺ السرايا لنشر الإسلام ومقاتلة أعدائه.`,`جواز التصريح بما يُستحيا منه عند الحاجة.`,`صفة التيمم للجنابة كصفته للحدث الأصغر: يضرب الأرض بيديه ضربة واحدة ثم يمسح وجهه وظاهر كفيه.`,`من اجتهد فأخطأ في الاجتهاد لم يلزمه الإعادة.`],
+   [['Tamarraghtu','I rolled around','تمرّغتُ: تقلّبتُ']]),
+ H(38,'Five Things Given to the Prophet ﷺ','خصائص النبي ﷺ وأمته',
+   'Jābir ibn ʿAbdillāh (may Allāh be pleased with him)','جابر بن عبد الله رضي الله عنهما',
+   `The Prophet ﷺ said: “I have been given five things no prophet before me was given: I was made victorious by fear (cast into the enemy) from a month's distance; the earth was made for me a place of prayer and a means of purification, so wherever a man of my nation is overtaken by prayer, let him pray; spoils of war were made lawful for me and were not lawful for anyone before me; I was given intercession; and every prophet used to be sent to his people only, while I was sent to all of mankind.”`,
+   [`It is permissible to mention Allāh's favours to give thanks, not to boast.`,`One means of victory is casting fear into the enemy's hearts.`,`It is permissible to pray anywhere on earth, except where the Sharīʿah excludes: graveyards, impure places, bathrooms, camel resting places.`,`Tayammum is permissible on all pure earth: soil, sand or rock.`,`Prayer must be performed in its time in any situation, doing what one can of its conditions, pillars and obligations.`,`Spoils of war are lawful, distributed as the Book and Sunnah direct; the Prophet ﷺ has the greatest intercession; and his message is for all people until the Day of Resurrection.`],
+   [`يجوز ذكر نعم الله على سبيل الشكر لا الفخر.`,`من أسباب النصر إلقاء الرعب في قلوب الأعداء.`,`يجوز الصلاة في كل بقعة من الأرض إلا ما استثناه الشرع كالمقبرة والمكان النجس والحمّام وأعطان الإبل.`,`يجوز التيمم بكل أرض طاهرة سواء كانت تراب أو رمل أو حجارة.`,`وجوب أداء الصلاة في وقتها بأي حال، فيفعل ما يقدر عليه من شروطها وأركانها وواجباتها.`,`حِلّ الغنائم وتقسيمها وفق الكتاب والسنة، واختصاصه ﷺ بالشفاعة العظمى، وعموم رسالته إلى الناس كافة إلى يوم القيامة.`],
+   [['Ar-ruʿb','Fear cast into the hearts of enemies','الرعب: الخوف يُقذف في قلوب الأعداء'],['Ash-shafāʿah','Intercession','الشفاعة']]),
+ { type:'quiz', qs:[
+   Q('What did the Prophet ﷺ tell the man in janābah who found no water?','ماذا قال النبي ﷺ لمن أصابته جنابة ولا ماء؟',['Use clean soil, it is enough for you','Do not pray','Wait until you find water','Fast'],['عليك بالصعيد فإنه يكفيك','لا تصلِّ','انتظر حتى تجد الماء','صم']),
+   Q('How many strikes on the ground in ʿAmmār\'s tayammum ḥadīth?','كم ضربة على الأرض في حديث عمار؟',['One','Two','Three','Four'],['ضربة واحدة','ضربتان','ثلاث','أربع']),
+   Q('What does one wipe in tayammum, according to ʿAmmār\'s ḥadīth?','ما الذي يُمسح في التيمم في حديث عمار؟',['The face and the backs of the hands','The head and feet','The arms to the elbows','The whole body'],['الوجه وظاهر الكفين','الرأس والقدمان','الذراعان إلى المرفقين','الجسد كله']),
+   Q('Complete the Arabic text: «وَجُعِلَتْ لِيَ الْأَرْضُ مَسْجِدًا وَ____»','أكمل الحديث: «وَجُعِلَتْ لِيَ الْأَرْضُ مَسْجِدًا وَ____»',['طَهُورًا','سَقْفًا','بَيْتًا','فِرَاشًا']),
+   Q('How many things were the Prophet ﷺ given that no prophet before him was given?','كم خصلة أُعطيها النبي ﷺ لم يُعطها أحد من الأنبياء قبله؟',['Five','Three','Seven','Ten'],['خمسًا','ثلاثًا','سبعًا','عشرًا']),
+   Q('Which is not a place where one may pray?','أي هذه الأماكن لا تجوز الصلاة فيها؟',['A graveyard','A field','A mosque','A house'],['المقبرة','الحقل','المسجد','البيت'])
+ ]}
+ ]
+},
+
+/* ===================== MENSTRUATION ===================== */
+{ id:'W9', en:'Week 9 · Menstruation & Istiḥāḍah', ar:'الأسبوع التاسع · باب الحيض',
+ steps:[
+ H(39,'The Woman with Constant Bleeding','المستحاضة — حديث فاطمة بنت أبي حبيش',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `Fāṭimah bint Abī Ḥubaysh asked the Prophet ﷺ: “I suffer from istiḥāḍah and never become pure. Shall I leave the prayer?” He said: “No, that is a vein (ʿirq). But leave the prayer for the number of days you used to menstruate, then make ghusl and pray.” In another narration: “It is not the menstrual period. When the menses come, leave the prayer; when its length has passed, wash the blood from yourself and pray.”`,
+   [`The Companions, men and women, were eager to learn and understand the religion.`,`Istiḥāḍah is a constant flow of blood from a woman.`,`A menstruating woman does not pray; menstrual blood is the normal flow, not blood from a vein.`,`Menstrual blood is impure; any amount of it must be washed.`,`The woman with istiḥāḍah sits (refrains from prayer) for the number of days of her usual cycle, then washes the blood, makes ghusl and prays.`,`The Prophet's ﷺ method: ruling with its wisdom, so that belief and assurance increase.`],
+   [`حرص الصحابة رجالًا ونساءً على التفقه في الدين.`,`الاستحاضة: جريان الدم المستمر من المرأة.`,`الحائض لا تصلي، ودم الحيض هو الدم المعتاد لا دم العرق.`,`دم الحيض نجس يجب غسل قليله وكثيره.`,`المستحاضة تجلس قدر أيام عادتها ثم تغسل الدم وتغتسل وتصلي.`,`من حسن تعليمه ﷺ أنه يذكر الحكم مع حكمته فيزداد المؤمن يقينًا.`],
+   [['Istiḥāḍah','Continuous bleeding outside the menstrual period','الاستحاضة: دم يستمر خارج وقت الحيض'],['ʿIrq','A blood vessel (a vein)','العِرق: عِرق في الجسد']]),
+ H(40,'Istiḥāḍah and Ghusl','المستحاضة — حديث أم حبيبة',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `Umm Ḥabībah suffered istiḥāḍah for seven years and asked the Prophet ﷺ, so he ordered her to make ghusl. ʿĀʾishah said: “So she would make ghusl for every prayer.”`,
+   [`The Companions' eagerness to learn and understand the religion.`,`The woman with istiḥāḍah must make ghusl once, at the end of her usual period.`,`Istiḥāḍah can end, and the woman can be cured of it.`],
+   [`حرص الصحابة على التفقه في الدين.`,`يجب على المستحاضة الغسل عند انتهاء مدة حيضها.`,`قد تنقطع الاستحاضة وتُشفى المرأة منها.`],
+   [['Ustuḥīḍat','She suffered istiḥāḍah','استُحيضت: أصابها الاستحاضة']]),
+ H(41,'Touching a Menstruating Woman','ملامسة الحائض',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `The Messenger of Allāh ﷺ and I would make ghusl from one vessel, both in janābah. He would order me to wear a wrapper and then be close to me while I was menstruating. He would put his head out to me while in iʿtikāf, and I would wash it while I was menstruating.`,
+   [`A woman and her husband may make ghusl from one vessel together.`,`The body of a menstruating woman is pure.`,`Contact with her is permitted except for intercourse, and it is better to wear a wrapper.`,`It is permissible to mention what is embarrassing, when it brings benefit.`,`The person in iʿtikāf may wash his head, and extending part of the body outside the masjid does not break iʿtikāf.`,`The Prophet's ﷺ good relations with his family.`],
+   [`يجوز اغتسال المرأة وزوجها من إناء واحد.`,`بدن الحائض طاهر.`,`تجوز مباشرة الحائض عدا الجماع، والأفضل أن تتزر.`,`يجوز ذكر ما يُستحيا منه لمصلحة.`,`للمعتكف أن يغسل رأسه، وإخراج بعض بدنه من المسجد لا يبطل اعتكافه.`,`حسن عشرة النبي ﷺ لأهله.`],
+   [['Iʿtikāf','Staying in the masjid for worship','الاعتكاف: لزوم المسجد للعبادة'],['Izār','A wrapper worn around the waist','الإزار: ثوب يُشدّ على الوسط']]),
+ H(42,'Reciting Qur\'ān in the Lap of a Menstruating Woman','القراءة في حجر الحائض',
+   'ʿĀʾishah (may Allāh be pleased with her)','عائشة رضي الله عنها',
+   `The Prophet ﷺ would lean in my lap and recite the Qur'ān while I was menstruating.`,
+   [`The excellence of the Prophet's ﷺ character and his relationship with his family.`,`A man may lean in his wife's lap.`,`It is permissible to recite Qur'ān in the lap of, and in the presence of, a menstruating woman, and for her to listen.`],
+   [`حسن خلق النبي ﷺ وعشرته لأهله.`,`جواز اتكاء الرجل في حجر زوجته.`,`جواز قراءة القرآن في حجر الحائض وبحضورها واستماعها له.`],
+   [['Yattakiʾu','To lean back, recline','يتّكئ: يستند ويميل']]),
+ H(43,'Making Up the Fast but Not the Prayer','قضاء الصوم لا الصلاة',
+   'Muʿādhah (may Allāh have mercy on her), asking ʿĀʾishah','معاذة العدوية رحمها الله',
+   `I asked ʿĀʾishah: “Why does the menstruating woman make up the fast but not the prayer?” She said: “Are you a Ḥarūriyyah?” I said: “I am not a Ḥarūriyyah, I am only asking.” She said: “That would befall us, and we were ordered to make up the fast and were not ordered to make up the prayer.”`,
+   [`The predecessors' eagerness to research knowledge and learn the wisdom of the legislation.`,`The menstruating woman must make up the fast, not the prayer.`,`It is enough to mention the legislated proof without having to mention the wisdom; the believer is convinced because the Sharīʿah always contains wisdom.`,`When there is a reason for a command but no command is given, that shows it is not obligatory.`],
+   [`حرص السلف على البحث عن العلم ومعرفة حكمة التشريع.`,`الحائض تقضي الصوم ولا تقضي الصلاة.`,`يكفي ذكر الدليل الشرعي دون الحاجة إلى ذكر الحكمة، فالمؤمن مقتنع لأن الشريعة لا تخلو من حكمة.`,`عدم الأمر بالشيء مع وجود المقتضي له دليل على عدم وجوبه.`],
+   [['Ḥarūriyyah','A woman of the Khawārij, who were known for harsh questioning of the Sunnah','الحرورية: نسبة إلى الخوارج، وكانوا يشدّدون ويسألون سؤال تعنّت']]),
+ { type:'quiz', qs:[
+   Q('What is istiḥāḍah?','ما الاستحاضة؟',['Continuous bleeding outside the menstrual period','Normal menstruation','Postnatal bleeding only','A skin condition'],['دم مستمر خارج وقت الحيض','الحيض العادي','النفاس فقط','مرض جلدي']),
+   Q('Complete the Arabic text: «إِنَّ ذَلِكِ ____ وَلَكِنْ دَعِي الصَّلَاةَ قَدْرَ الْأَيَّامِ الَّتِي كُنْتِ تَحِيضِينَ فِيهَا»','أكمل الحديث: «إِنَّ ذَلِكِ ____ وَلَكِنْ دَعِي الصَّلَاةَ قَدْرَ الْأَيَّامِ الَّتِي كُنْتِ تَحِيضِينَ فِيهَا»',['عِرْقٌ','مَرَضٌ','عَذَابٌ','حَيْضٌ']),
+   Q('What should a woman with istiḥāḍah do after her usual period ends?','ماذا تفعل المستحاضة بعد انتهاء أيام عادتها؟',['Wash the blood, make ghusl and pray','Stop praying','Wait for a month','Pray without ghusl'],['تغسل الدم وتغتسل وتصلي','تترك الصلاة','تنتظر شهرًا','تصلي بلا غسل']),
+   Q('Is the body of a menstruating woman pure?','هل بدن الحائض طاهر؟',['Yes','No','Only her hands','Only after ghusl'],['نعم','لا','يداها فقط','بعد الغسل فقط']),
+   Q('What did the Prophet ﷺ do in ʿĀʾishah\'s lap while she was menstruating?','ماذا كان يفعل النبي ﷺ في حجر عائشة وهي حائض؟',['Recite the Qur\'ān','Fast','Travel','Sleep only'],['يقرأ القرآن','يصوم','يسافر','ينام فقط']),
+   Q('What must a menstruating woman make up?','ماذا تقضي الحائض؟',['The fast, not the prayer','The prayer, not the fast','Both','Neither'],['الصوم لا الصلاة','الصلاة لا الصوم','كلاهما','لا شيء']),
+   Q('Complete: «فَنُؤْمَرُ بِقَضَاءِ ____ وَلَا نُؤْمَرُ بِقَضَاءِ الصَّلَاةِ»','أكمل: «فَنُؤْمَرُ بِقَضَاءِ ____ وَلَا نُؤْمَرُ بِقَضَاءِ الصَّلَاةِ»',['الصَّوْمِ','الْحَجِّ','الزَّكَاةِ','الْعُمْرَةِ'])
  ]}
  ]
 }
 ];
 
-var LS='umdah_v1';
+var LS='umdah_v2';
 function lsGet(){try{return JSON.parse(localStorage.getItem(LS))||{};}catch(e){return {};}}
 function lsSet(o){try{localStorage.setItem(LS,JSON.stringify(o));}catch(e){}}
-var state=lsGet(); state.done=state.done||{}; state.scores=state.scores||{};
+var state=lsGet();
+if(!state.name&&!state.lang){try{var old=JSON.parse(localStorage.getItem('umdah_v1'))||{};state.name=old.name;state.lang=old.lang;state.scale=old.scale;}catch(e){}}
+state.done=state.done||{}; state.scores=state.scores||{};
 var lang=state.lang||'en', scale=state.scale||1.27;
 var STEPS=[]; COURSE.forEach(function(w){w.steps.forEach(function(s,i){STEPS.push({w:w,s:s,i:i,key:w.id+'-'+i});});});
 var cur=0;
@@ -921,12 +1165,17 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function L(en,ar){return lang==='ar'?ar:lang==='both'?en+' / '+ar:en;}
 function LH(en,ar){return lang==='ar'?ar:lang==='both'?en+'<div class="ar-block">'+ar+'</div>':en;}
 var OBJ={
- F:{en:['Know who wrote ʿUmdat al-Aḥkām and what it contains','Understand why intention comes first in every act of worship'],ar:['معرفة مؤلف «عمدة الأحكام» ومحتوى الكتاب','فهم سبب تقديم النية في كل عبادة']},
- W1:{en:['Know that wuḍūʾ is a condition for prayer','Learn the virtue of a complete wuḍūʾ','Understand why every part must be washed fully'],ar:['معرفة أن الوضوء شرط لصحة الصلاة','التعرّف على فضل الوضوء التام','فهم وجوب تعميم الأعضاء بالغسل']},
- W2:{en:['Learn the etiquettes that accompany wuḍūʾ','Know the sunnah of starting with the right','Know the ruling and merit of the siwāk'],ar:['تعلّم الآداب المصاحبة للوضوء','معرفة سنة التيمن','معرفة حكم السواك وفضله']},
- W3:{en:['Learn the supplication and etiquettes of relieving oneself','Know how to honour the qiblah and the right hand','Protect water from pollution'],ar:['تعلّم دعاء الخلاء وآدابه','معرفة تكريم القبلة واليمين','حفظ الماء من التلوث']},
- W4:{en:['Know the five acts of fiṭrah','Apply the rule “certainty is not removed by doubt”','Know when ghusl is obligatory'],ar:['معرفة خصال الفطرة الخمس','تطبيق قاعدة «اليقين لا يزول بالشك»','معرفة موجبات الغسل']},
- W5:{en:['Know the ruling and condition of wiping over the khuffs','Distinguish al-madhy and what it requires','Learn how impurity in a masjid is removed'],ar:['معرفة حكم المسح على الخفين وشرطه','التمييز بين المذي وما يجب فيه','تعلّم كيفية إزالة النجاسة من المسجد']}
+ F:{en:['Know who compiled ʿUmdat al-Aḥkām and the method of the commentary','Understand what purification (aṭ-ṭahārah) means and why fiqh books begin with it'],ar:['معرفة مؤلف «عمدة الأحكام» ومنهج الشرح','فهم معنى الطهارة وسبب البدء بها في كتب الفقه']},
+ W1:{en:['Understand the role of intention in every deed','Know that purification is a condition for prayer','Learn the rulings of rinsing the nose, istijmār and still water'],ar:['فهم أثر النية في كل عمل','معرفة أن الطهارة شرط للصلاة','تعلّم أحكام الاستنثار والاستجمار والماء الدائم']},
+ W2:{en:['Learn the impurity of the dog and how a vessel is purified','Learn the full description of the Prophet\'s ﷺ wuḍūʾ from two Companions','Know the sunnah of starting with the right and the virtue of wuḍūʾ'],ar:['تعلّم نجاسة الكلب وكيفية تطهير الإناء','تعلّم صفة وضوء النبي ﷺ من روايتين','معرفة سنة التيمن وفضل الوضوء']},
+ W3:{en:['Learn the supplication and etiquettes of the toilet','Know the rulings on the qiblah, the right hand and istinjāʾ','Understand the warning from the two graves'],ar:['تعلّم دعاء الخلاء وآدابه','معرفة أحكام القبلة واليمين والاستنجاء','فهم الوعيد في حديث القبرين']},
+ W4:{en:['Know the ruling and merit of the siwāk','Learn when the siwāk is emphasised','Learn from the Prophet\'s ﷺ last siwāk'],ar:['معرفة حكم السواك وفضله','معرفة مواطن تأكّد السواك','الاستفادة من سواك النبي ﷺ في آخر لحظاته']},
+ W5:{en:['Know the ruling and the condition of wiping over the khuffs','Know that it applies to the resident and the traveller'],ar:['معرفة حكم المسح على الخفين وشرطه','معرفة أنه للمقيم والمسافر']},
+ W6:{en:['Know al-madhy and what it requires','Apply the rule “certainty is not removed by doubt”','Learn how to purify urine, the masjid floor, and the acts of fiṭrah'],ar:['معرفة المذي وما يجب فيه','تطبيق قاعدة «اليقين لا يزول بالشك»','تعلّم تطهير البول والأرض والمسجد وخصال الفطرة']},
+ W7:{en:['Learn the two descriptions of ghusl from janābah','Know that the believer is never impure and that semen is pure','Know when ghusl is obligatory and how much water suffices'],ar:['تعلّم صفتي الغسل من الجنابة','معرفة أن المؤمن لا ينجس وأن المني طاهر','معرفة موجب الغسل ومقدار الماء']},
+ W8:{en:['Learn when tayammum is allowed and how it is performed','Know the five things given to the Prophet ﷺ'],ar:['تعلّم متى يُشرع التيمم وكيفيته','معرفة الخصال الخمس التي أُعطيها النبي ﷺ']},
+ W9:{en:['Understand menstruation and istiḥāḍah and their rulings','Know what a menstruating woman must and need not make up','Learn the permissible contact with a menstruating woman']
+ ,ar:['فهم الحيض والاستحاضة وأحكامهما','معرفة ما تقضيه الحائض وما لا تقضيه','معرفة ما يجوز من مخالطة الحائض']}
 };
 function bi(en,ar,tag){tag=tag||'div';
   if(lang==='ar') return '<'+tag+' class="ar-block">'+esc(ar)+'</'+tag+'>';
@@ -944,13 +1193,24 @@ function introHTML(){return LH(
 '<div class="section"><h2 class="section-title"><span class="num">1</span>About the Book</h2><div class="def-card murab"><h3>The Author</h3><p>Al-Ḥāfiẓ Taqī al-Dīn ʿAbd al-Ghanī ibn ʿAbd al-Wāḥid al-Maqdisī (541–600 AH), a Ḥanbalī scholar of ḥadīth from Jammāʿīl in Palestine who settled in Damascus.</p></div>'+
 '<div class="rule-box"><ul><li><b>Only authentic ḥadīths.</b> He included only ḥadīths agreed upon by al-Bukhārī and Muslim.</li><li><b>Organised by fiqh chapters,</b> beginning with Purification and moving through Prayer, Zakāh, Fasting, Ḥajj, trade and more.</li><li><b>Many commentaries</b> have been written on it, including those of Shaykh Muḥammad ibn Ṣāliḥ al-ʿUthaymīn and Shaykh ʿAbdullāh ibn ʿAbd al-Raḥmān al-Jibrīn.</li></ul></div></div>'+
 '<div class="section"><h2 class="section-title"><span class="num">2</span>How This Course Works</h2><div class="sub-rules"><div class="sub-rule"><span class="srnum">1</span><div class="srbody">Read the ḥadīth in Arabic and its English meaning.</div></div><div class="sub-rule"><span class="srnum">2</span><div class="srbody">Study the key rulings and benefits drawn from it.</div></div><div class="sub-rule"><span class="srnum">3</span><div class="srbody">Take the short quiz at the end of each week.</div></div></div>'+
-'<div class="note-box"><p class="note-title">Note</p><p class="disclaimer">The ḥadīth texts follow ʿUmdat al-Aḥkām, and several lessons (marked with the ḥadīth number) were checked against Shaykh al-ʿUthaymīn’s commentary on the Book of aṭ-Ṭahārah. The explanations are concise summaries, not a verbatim translation of any commentary. Please check the wording against a printed edition and study with a teacher.</p></div></div>',
+'<div class="note-box"><p class="note-title">Note</p><p class="disclaimer">The Arabic ḥadīth texts, their order and numbering follow Shaykh al-ʿUthaymīn’s “Arousing the Intellects: Explanation of ʿUmdat al-Aḥkām — The Book of aṭ-Ṭahārah” (43 ḥadīths). The English translations and the lesson summaries here are our own concise rewording of what that commentary teaches, not a copy of it. Please study the full book with a teacher.</p></div></div>',
 '<div class="hero"><p class="hero-eyebrow">عُمْدَةُ الْأَحْكَامِ</p><h1>مرحبًا بك في عمدة الأحكام</h1><p>مجموعة مختصرة من الأحاديث في أحكام العبادات والمعاملات، اعتنى بها طلبة العلم حفظًا ودراسة على مرّ القرون.</p></div>'+
 '<div class="section"><h2 class="section-title"><span class="num">١</span>نبذة عن الكتاب</h2><div class="def-card murab"><h3>المؤلف</h3><p>الحافظ تقي الدين عبد الغني بن عبد الواحد المقدسي (٥٤١–٦٠٠هـ)، من علماء الحديث الحنابلة، وُلد في جمّاعيل بفلسطين وسكن دمشق.</p></div>'+
 '<div class="rule-box"><ul><li><b>أحاديث صحيحة فقط:</b> اقتصر على ما اتفق عليه البخاري ومسلم.</li><li><b>مرتب على أبواب الفقه:</b> يبدأ بالطهارة ثم الصلاة والزكاة والصيام والحج والبيوع وغيرها.</li><li><b>له شروح كثيرة</b> منها شرح الشيخ محمد بن صالح العثيمين وشرح الشيخ عبد الله بن عبد الرحمن الجبرين.</li></ul></div></div>'+
 '<div class="section"><h2 class="section-title"><span class="num">٢</span>كيف نسير في الدورة</h2><div class="sub-rules"><div class="sub-rule"><span class="srnum">١</span><div class="srbody">نقرأ الحديث بالعربية ومعناه.</div></div><div class="sub-rule"><span class="srnum">٢</span><div class="srbody">نتعلّم الأحكام والفوائد المستنبطة منه.</div></div><div class="sub-rule"><span class="srnum">٣</span><div class="srbody">نجيب عن اختبار قصير في نهاية كل أسبوع.</div></div></div>'+
-'<div class="note-box"><p class="note-title">تنبيه</p><p class="disclaimer">نصوص الأحاديث وفق «عمدة الأحكام»، وروجعت دروس عدة (المرقّمة) على شرح الشيخ ابن عثيمين لكتاب الطهارة. والشروح ملخّصات موجزة وليست ترجمة حرفية لشرح بعينه. يُرجى مطابقة الألفاظ على طبعة مطبوعة والتلقي عن أهل العلم.</p></div></div>');}
+'<div class="note-box"><p class="note-title">تنبيه</p><p class="disclaimer">نصوص الأحاديث وترتيبها وأرقامها وفق شرح الشيخ ابن عثيمين «تنبيه الأفهام بشرح عمدة الأحكام — كتاب الطهارة» (٤٣ حديثًا). والترجمة الإنجليزية والملخصات هنا من صياغتنا المختصرة لما يقرره الشرح وليست نسخًا منه. يُرجى دراسة الكتاب كاملًا على يد أهل العلم.</p></div></div>');}
 
+function glossHTML(h,n){
+  if(!h.gl||!h.gl.length) return '';
+  var rows=h.gl.map(function(g){return '<tr><td class="gl-term">'+esc(g[0])+'</td><td>'+(lang==='ar'?'':esc(g[1]))+(lang==='both'?'<div class="ar-block">'+esc(g[2])+'</div>':lang==='ar'?'<span class="ar-block">'+esc(g[2])+'</span>':'')+'</td></tr>';}).join('');
+  return '<h3 class="sec-head"><span class="sn">'+(lang==='ar'?'3':'4')+'</span>'+L('Key Words','المفردات')+'</h3><div class="table-wrap"><table class="gl-table">'+rows+'</table></div>';
+}
+function infoHTML(x){
+  var pe=x.pEn.map(function(p){return '<p>'+esc(p)+'</p>';}).join(''), pa=x.pAr.map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
+  var title=lang==='both'?'<h1 class="en-title">'+esc(x.titleEn)+'</h1><h1 class="ar-block">'+esc(x.titleAr)+'</h1>':'<h1 class="'+(lang==='ar'?'':'en-title')+'">'+esc(L(x.titleEn,x.titleAr))+'</h1>';
+  var body=lang==='ar'?'<div class="ar-block">'+pa+'</div>':lang==='both'?pe+'<div class="ar-block">'+pa+'</div>':pe;
+  return '<div class="hero">'+title+'</div><div class="rule-box info-box">'+body+'</div>';
+}
 function hadithHTML(h,st){
   function lis(a){return a.map(function(p){return '<li>'+esc(p)+'</li>';}).join('');}
   var pts=lang==='ar'?'<ul class="ar-block">'+lis(h.ptsAr)+'</ul>':lang==='both'?'<ul>'+lis(h.ptsEn)+'</ul><ul class="ar-block">'+lis(h.ptsAr)+'</ul>':'<ul>'+lis(h.ptsEn)+'</ul>';
@@ -964,17 +1224,19 @@ function hadithHTML(h,st){
   '<p class="hadith-src">'+esc(L(SRC_EN,SRC_AR))+'</p></div>'+
   (lang==='ar'?'':'<h3 class="sec-head"><span class="sn">2</span>'+L('The Meaning','المعنى')+'</h3><div class="hadith-card"><p class="hadith-en" style="margin:0">'+esc(h.en)+'</p></div>')+
   '<h3 class="sec-head"><span class="sn">'+(lang==='ar'?'2':'3')+'</span>'+L('Key Lessons','أبرز الفوائد')+'</h3>'+
-  '<div class="rule-box">'+pts+'</div>';
+  '<div class="rule-box">'+pts+'</div>'+glossHTML(h,lang==='ar'?'4':'4');
 }
 
 var quizState={};
+function perm(key,qi){var str=key+':'+qi,h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}
+  var a=[0,1,2,3];for(var i=3;i>0;i--){h=Math.imul(h^(h>>>15),2246822519)>>>0;var j=h%(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function quizHTML(st){
   var qs=st.s.qs, ls=lang==='ar'?['أ','ب','ج','د']:['A','B','C','D'];
   function opt(q,i){return lang==='ar'?q.oAr[i]:lang==='both'?(q.oEn[i]===q.oAr[i]?q.oEn[i]:q.oEn[i]+' · '+q.oAr[i]):q.oEn[i];}
   var h='<div class="hero"><h1 class="'+(lang==='ar'?'':'en-title')+'">'+L('Quiz · '+st.w.en,'اختبار · '+st.w.ar)+'</h1><p class="lesson-count">'+L('Answer all questions — your best score is saved on this phone.','أجب عن جميع الأسئلة — تُحفظ أفضل نتيجة على هذا الهاتف.')+'</p></div><div class="quiz-shell">';
   qs.forEach(function(q,qi){
     h+='<div class="q-block" data-q="'+qi+'"><div class="q-head"><span class="q-num">'+(qi+1)+'</span><span class="q-text">'+esc(lang==='both'&&q.qEn===q.qAr?q.qEn:L(q.qEn,q.qAr))+'</span></div><div class="q-options">';
-    [0,1,2,3].forEach(function(oi){h+='<div class="q-option" data-o="'+oi+'"><span class="letter">'+ls[oi]+'</span><span>'+esc(opt(q,oi))+'</span></div>';});
+    perm(st.key,qi).forEach(function(oi,di){h+='<div class="q-option" data-o="'+oi+'"><span class="letter">'+ls[di]+'</span><span>'+esc(opt(q,oi))+'</span></div>';});
     h+='</div><div class="fb"></div></div>';
   });
   h+='<div id="quiz-result" style="text-align:center;font-weight:700;"></div></div>';
@@ -991,7 +1253,7 @@ function wireQuiz(st){
         var oi=+opt.dataset.o, ok=oi===qs[qi].a; ans[qi]=ok;
         b.querySelector('.q-options').classList.add('locked');
         opt.classList.add(ok?'opt-correct':'opt-wrong');
-        if(!ok) b.querySelectorAll('.q-option')[qs[qi].a].classList.add('opt-correct');
+        if(!ok) b.querySelector('.q-option[data-o="'+qs[qi].a+'"]').classList.add('opt-correct');
         var fb=b.querySelector('.fb'); fb.className='fb '+(ok?'ok':'no'); fb.textContent=ok?L('Correct ✓','صحيح ✓'):L('Not quite — the correct answer is highlighted.','ليست صحيحة — الإجابة الصحيحة مظلّلة.');
         if(Object.keys(ans).length===qs.length){
           var c=0; for(var k in ans){if(ans[k])c++;}
@@ -1009,8 +1271,9 @@ function wireQuiz(st){
 function render(i){
   cur=i; var st=STEPS[i], vp=document.getElementById('step-viewport');
   vp.style.animation='none'; void vp.offsetWidth; vp.style.animation='';
-  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='hadith'?hadithHTML(st.s,st):quizHTML(st);
+  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='info'?infoHTML(st.s):st.s.type==='hadith'?hadithHTML(st.s,st):quizHTML(st);
   if(st.s.type==='quiz') wireQuiz(st); else { state.done[st.key]=1; save(); }
+  if(st.i===0&&st.s.type!=='hadith'){ vp.insertAdjacentHTML('afterbegin',objectivesHTML(st.w)); }
   document.getElementById('step-progress-text').textContent=(lang==='ar'?'الخطوة ':'Step ')+(i+1)+' / '+STEPS.length;
   document.getElementById('step-progress-fill').style.width=((i+1)/STEPS.length*100)+'%';
   var b=document.getElementById('step-back-btn'), n=document.getElementById('step-next-btn');
