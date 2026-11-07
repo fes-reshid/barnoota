@@ -97,6 +97,19 @@ header.top h1{font:600 38px/1.1 'Fredoka';margin:2px 0 8px}
 .qopts{display:flex;flex-wrap:wrap;gap:6px}
 .qopts .opt{font-weight:700}
 .score{margin:12px 0 0;font:800 15px 'Nunito';color:var(--navy)}
+.chal{border:2.5px solid var(--ac);border-radius:18px;background:#fff;padding:10px 14px 12px;margin-top:14px}
+.chal h4{margin:0 0 4px;font:600 18px 'Fredoka';color:var(--ac)}
+.chal .task{margin:0 0 4px;font:700 15px/1.45 'Nunito';color:var(--navy)}
+.chq{font:30px/2.2 'AQ';text-align:center;direction:rtl;margin:4px 0}
+.cw{cursor:pointer;border-radius:10px;padding:0 3px;transition:background .15s}
+.cw:hover{background:#f6efdc}.cw.sel{background:#ffe9a8;box-shadow:0 0 0 2px #e0b84a inset}
+.chal .exr{display:block;text-align:center}
+.chbtns{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.chbtns button{border:2px solid var(--ac);background:#fff;color:var(--navy);border-radius:14px;padding:6px 16px;font:800 14px 'Nunito';cursor:pointer}
+.chbtns .chk{background:var(--ac);color:#fff}
+.cw.nope{background:#fde7e7;box-shadow:0 0 0 2px #e53935 inset;animation:shake .35s}
+.chlab{margin:8px 0 0;padding:0;list-style:none;text-align:center;font:700 14px 'Nunito';color:#4a4636}
+.chlab li{display:inline-block;margin:3px 4px;padding:2px 10px;border-radius:12px;color:#fff}
 .sortg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:8px}
 .again{border:0;background:var(--navy);color:#fff;border-radius:14px;padding:8px 16px;font:800 13px 'Nunito';cursor:pointer;margin-top:10px}
 footer{text-align:center;padding:30px 16px 50px;color:var(--muted);font-size:14px}
@@ -118,7 +131,7 @@ footer a{color:var(--gold);font-weight:700}
 <main class="wrap">
   <section class="intro">
     <h2>How to use this book</h2>
-    <p>🔊 Tap a speaker to hear each half of a line. 🎨 Every rule has its own colour: tap a colour at the top to show only that rule in the examples. 👆 Tap any Qur'an example to switch its colours off and on. ✏️ In “Your turn”, choose the rule and the colours will appear. ✅ Tick each lesson when you can recite it. Your progress is saved on this device.</p>
+    <p>🔊 Tap a speaker to hear each half of a line. 🎨 Every rule has its own colour: tap a colour at the top to show only that rule in the examples. 👆 Tap any Qur'an example to switch its colours off and on. 🔍 At the end of each lesson, find the rule in a full ayah. ✏️ In “Your turn”, choose the rule and the colours will appear. ✅ Tick each lesson when you can recite it. Your progress is saved on this device.</p>
     <div class="toc" id="toc"></div>
   </section>
   <div id="book"></div>
@@ -158,7 +171,7 @@ fetch('data.json').then(r=>r.json()).then(D=>{
     document.querySelectorAll('.exq span[class^=t-]').forEach(s=>s.classList.toggle('keep',s.classList.contains('t-'+r)));
   };
   const css=document.createElement('style');css.textContent=Object.entries(R).map(([k,v])=>`.t-${k}{color:${v[2]}}`).join('')+'.t-silent{color:#a5a5a5}';document.head.appendChild(css);
-  let total=0;const book=document.getElementById('book'),toc=document.getElementById('toc');
+  const CHAL={};let total=0;const book=document.getElementById('book'),toc=document.getElementById('toc');
   D.chapters.forEach(ch=>{
     const head=ch.n===0?'Introduction':ch.n===9?'Conclusion':'Chapter '+ch.n;
     toc.insertAdjacentHTML('beforeend',`<a href="#ch${ch.n}"><span style="background:${ch.color}"></span>${head}: ${esc(ch.title)}</a>`);
@@ -172,11 +185,14 @@ fetch('data.json').then(r=>r.json()).then(D=>{
       const table=l.table.length?`<div class="table">${l.table.map(x=>`<div class="tr"><span class="l">${x.letter}</span><span class="q">${x.html}</span><span class="r">${x.ref}</span></div>`).join('')}</div>`:'';
       const rulesHere=[...new Set(ch.lessons.flatMap(z=>z.examples.map(e=>e.rule)).filter(r=>r!=='letter'))];
       const turn=l.turn.length?`<div class="turn"><h4>✏️ Your turn! Which rule is it?</h4>${l.turn.map((t,i)=>{const opts=[...new Set([t.rule,...rulesHere])].filter(r=>R[r]&&r!=='letter').sort();return `<div class="tcard" data-ans="${t.rule}"><div class="ex plain" style="border:0;cursor:default;padding:0"><div class="exq">${t.html}</div></div><span class="exr">${esc(t.ref)}</span><div class="opts">${t.rule==='letter'?'':opts.map(r=>`<button class="opt" data-r="${r}">${esc(R[r][0])}</button>`).join('')}</div><p class="fb"></p></div>`}).join('')}</div>`:'';
+      const AD=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+      const c=l.challenge;if(c)CHAL[l.id]=c;
+      const chal=c?`<div class="chal" style="--ac:${ch.color}" data-id="${l.id}"><h4>🔍 Ayah Challenge</h4><p class="task">${tx(c.task)}</p><p class="hint">Tap the word or words, then press Check.</p><div class="chq" lang="ar" dir="rtl">${c.words.map((w,i)=>`<span class="cw" data-i="${i}">${esc(w)}</span>`).join(' ')}\u00a0\u06DD${AD(c.num)}</div><span class="exr">${esc(c.ref)}</span><div class="chbtns"><button class="chk">Check</button><button class="shw">Show the answer</button></div><p class="fb"></p><ul class="chlab"></ul></div>`:'';
       h+=`<article class="lesson" id="${l.id}"><div class="lhead"><div><span class="chip" style="background:${ch.color}">${head} · Lesson ${l.id.slice(1)}</span><h3>${esc(l.title)}</h3><p class="lar" lang="ar" dir="rtl" style="color:${ch.color}">${esc(l.ar)}</p></div><label class="done ${store[l.id]?'on':''}"><input type="checkbox" data-id="${l.id}" ${store[l.id]?'checked':''}> I can recite ${l.lines.length>1?'these lines':'this line'}</label></div>
       <div class="poem" style="background:${ch.color}14;border:1.5px solid ${ch.color}55">${verses}</div>
       <div class="expl">${l.explain.map(p=>`<p>${tx(p)}</p>`).join('')}</div>
       <div class="remember" style="border-color:${ch.color}"><b>Remember:</b> ${tx(l.remember)}</div>${l.how?`<p class="how"><b>How to read it:</b> ${tx(l.how)}</p>`:''}
-      ${exs?`<p class="sub">From the Qur'an</p><p class="hint">Tap an example to switch its colours off and on.</p><div class="exs">${exs}</div>`:''}${table}${turn}</article>`;
+      ${exs?`<p class="sub">From the Qur'an</p><p class="hint">Tap an example to switch its colours off and on.</p><div class="exs">${exs}</div>`:''}${table}${turn}${chal}</article>`;
     });
     if(ch.quiz&&ch.quiz.length){
       h+=`<section class="quiz" data-ch="${ch.n}"><h3>⭐ ${head} Quest Check</h3>${ch.quiz.map((q,i)=>`<div class="qblock" data-ans="${q[2]}"><p class="qq">${i+1}. ${tx(q[0])}</p><div class="qopts">${q[1].map((o,k)=>`<button class="opt" data-k="${k}">${tx(o)}</button>`).join('')}</div><p class="fb"></p></div>`).join('')}
@@ -189,6 +205,19 @@ fetch('data.json').then(r=>r.json()).then(D=>{
   document.addEventListener('change',e=>{if(e.target.matches('.done input')){store[e.target.dataset.id]=e.target.checked;e.target.parentElement.classList.toggle('on',e.target.checked);save();upd()}});
   document.addEventListener('click',e=>{
     const pb=e.target.closest('.play');if(pb){play(pb,pb.dataset.src);return}
+    const cw=e.target.closest('.chal .cw');if(cw){if(!cw.closest('.chal').dataset.done)cw.classList.toggle('sel');return}
+    const cb=e.target.closest('.chal .chk,.chal .shw');
+    if(cb){const box=cb.closest('.chal');if(box.dataset.done)return;const c=CHAL[box.dataset.id];const fb=box.querySelector('.fb');
+      const sel=[...box.querySelectorAll('.cw.sel')].map(x=>+x.dataset.i);const key=new Set(c.answers.flatMap(a=>a.words));
+      const reveal=msg=>{box.dataset.done=1;box.querySelector('.chq').innerHTML=c.html+'\u00a0\u06DD'+String(c.num).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+        box.querySelector('.chlab').innerHTML=[...new Map(c.answers.map(a=>[a.label,a.rule])).entries()].map(([lb,r])=>`<li style="background:${R[r][2]}">${tx(lb)}</li>`).join('');fb.className='fb ok';fb.textContent=msg};
+      if(cb.classList.contains('shw')){reveal('Here is the answer. The rule letters are coloured.');return}
+      const wrong=sel.filter(i=>!key.has(i)),found=c.answers.filter(a=>a.words.some(i=>sel.includes(i))).length;
+      if(!sel.length){fb.className='fb no';fb.textContent='Tap a word in the ayah first.'}
+      else if(wrong.length){fb.className='fb no';fb.textContent='One of the words you chose does not have this rule. Look again!';wrong.forEach(i=>{const w=box.querySelector(`.cw[data-i="${i}"]`);w.classList.remove('sel');w.classList.add('nope');setTimeout(()=>w.classList.remove('nope'),500)})}
+      else if(found<c.answers.length){fb.className='fb no';fb.textContent=`Good! You found ${found} of ${c.answers.length}. There is more to find.`}
+      else reveal(c.answers.length>1?`MashaAllah! You found all ${c.answers.length}.`:'MashaAllah, correct!');
+      return}
     const ex=e.target.closest('.exs .ex');if(ex){ex.classList.toggle('plain');return}
     const o=e.target.closest('.tcard .opt');
     if(o){const card=o.closest('.tcard');if(card.dataset.done)return;const ok=o.dataset.r===card.dataset.ans;const fb=card.querySelector('.fb');
