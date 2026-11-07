@@ -1149,6 +1149,11 @@ var COURSE = [
    Q('Complete: «فَنُؤْمَرُ بِقَضَاءِ ____ وَلَا نُؤْمَرُ بِقَضَاءِ الصَّلَاةِ»','أكمل: «فَنُؤْمَرُ بِقَضَاءِ ____ وَلَا نُؤْمَرُ بِقَضَاءِ الصَّلَاةِ»',['الصَّوْمِ','الْحَجِّ','الزَّكَاةِ','الْعُمْرَةِ'])
  ]}
  ]
+},
+
+/* ===================== FINAL EXAM ===================== */
+{ id:'EX', en:'Final Exam · 50 Questions', ar:'الاختبار النهائي · ٥٠ سؤالًا',
+ steps:[ { type:'exam', n:50, pass:70 } ]
 }
 ];
 
@@ -1174,6 +1179,7 @@ var OBJ={
  W6:{en:['Know al-madhy and what it requires','Apply the rule “certainty is not removed by doubt”','Learn how to purify urine, the masjid floor, and the acts of fiṭrah'],ar:['معرفة المذي وما يجب فيه','تطبيق قاعدة «اليقين لا يزول بالشك»','تعلّم تطهير البول والأرض والمسجد وخصال الفطرة']},
  W7:{en:['Learn the two descriptions of ghusl from janābah','Know that the believer is never impure and that semen is pure','Know when ghusl is obligatory and how much water suffices'],ar:['تعلّم صفتي الغسل من الجنابة','معرفة أن المؤمن لا ينجس وأن المني طاهر','معرفة موجب الغسل ومقدار الماء']},
  W8:{en:['Learn when tayammum is allowed and how it is performed','Know the five things given to the Prophet ﷺ'],ar:['تعلّم متى يُشرع التيمم وكيفيته','معرفة الخصال الخمس التي أُعطيها النبي ﷺ']},
+ EX:{en:['Test yourself on all nine weeks: 50 questions drawn from the whole course','Score 70% or more to pass; review the questions you missed and retake as often as you like'],ar:['اختبر نفسك في الأسابيع التسعة: ٥٠ سؤالًا من الدورة كلها','حقّق ٧٠٪ فأكثر للنجاح، وراجع ما أخطأت فيه وأعد المحاولة متى شئت']},
  W9:{en:['Understand menstruation and istiḥāḍah and their rulings','Know what a menstruating woman must and need not make up','Learn the permissible contact with a menstruating woman']
  ,ar:['فهم الحيض والاستحاضة وأحكامهما','معرفة ما تقضيه الحائض وما لا تقضيه','معرفة ما يجوز من مخالطة الحائض']}
 };
@@ -1268,11 +1274,94 @@ function wireQuiz(st){
   });
 }
 
+/* ===================== FINAL EXAM ===================== */
+var exam=null;
+function examPool(){var pool=[];COURSE.forEach(function(w){w.steps.forEach(function(x){if(x.type==='quiz'){x.qs.forEach(function(q){pool.push({q:q,w:w});});}});});return pool;}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function examStart(def){
+  var pool=shuffle(examPool()), n=Math.min(def.n,pool.length);
+  exam={def:def,items:pool.slice(0,n).map(function(it){return {q:it.q,w:it.w,perm:shuffle([0,1,2,3]),ans:null};}),i:0,done:false};
+}
+function examHTML(st){
+  var def=st.s, best=state.scores.EXAM;
+  var total=Math.min(def.n,examPool().length);
+  if(!exam){
+    return '<div class="hero"><h1 class="'+(lang==='ar'?'':'en-title')+'">'+L('Final Exam','الاختبار النهائي')+'</h1></div>'+
+      '<div class="rule-box"><ul><li>'+L(total+' questions drawn from all nine weeks, shown one at a time.',total+' سؤالًا من الأسابيع التسعة، تُعرض سؤالًا سؤالًا.')+'</li><li>'+L('Pass mark: '+def.pass+'%.','درجة النجاح: '+def.pass+'٪.')+'</li><li>'+L('Each attempt reshuffles the questions and answers.','تتغير الأسئلة والأجوبة في كل محاولة.')+'</li><li>'+L('Your best score is saved on this phone.','تُحفظ أفضل نتيجة على هذا الهاتف.')+'</li></ul></div>'+
+      (best!=null?'<p class="lesson-count">'+L('Best score: ','أفضل نتيجة: ')+best+'%</p>':'')+
+      '<div style="text-align:center;margin-top:18px;"><button class="qbtn solid" id="exam-start-btn">'+L('Start the Exam','ابدأ الاختبار')+'</button></div>';
+  }
+  return '<div id="exam-area"></div>';
+}
+function examQuestionHTML(){
+  var it=exam.items[exam.i], q=it.q, ls=lang==='ar'?['أ','ب','ج','د']:['A','B','C','D'];
+  function opt(k){return lang==='ar'?q.oAr[k]:lang==='both'?(q.oEn[k]===q.oAr[k]?q.oEn[k]:q.oEn[k]+' · '+q.oAr[k]):q.oEn[k];}
+  var pct=Math.round(exam.i/exam.items.length*100);
+  var h='<div class="quiz-shell"><div class="quiz-progress-row"><span>'+(lang==='ar'?'السؤال ':'Question ')+(exam.i+1)+' / '+exam.items.length+'</span><div class="quiz-bar-track"><div class="quiz-bar-fill" style="width:'+pct+'%"></div></div></div>'+
+    '<p class="lesson-count" style="margin:0 0 8px">'+esc(L(it.w.en,it.w.ar))+'</p>'+
+    '<div class="q-head"><span class="q-num">'+(exam.i+1)+'</span><span class="q-text">'+esc(lang==='both'&&q.qEn===q.qAr?q.qEn:L(q.qEn,q.qAr))+'</span></div><div class="q-options'+(it.ans!=null?' locked':'')+'">';
+  it.perm.forEach(function(k,di){
+    var cls='q-option';
+    if(it.ans!=null){ if(k===q.a) cls+=' opt-correct'; else if(k===it.ans) cls+=' opt-wrong'; }
+    h+='<div class="'+cls+'" data-o="'+k+'"><span class="letter">'+ls[di]+'</span><span>'+esc(opt(k))+'</span></div>';
+  });
+  h+='</div><div class="fb'+(it.ans!=null?(it.ans===q.a?' ok':' no'):'')+'">'+(it.ans!=null?(it.ans===q.a?L('Correct ✓','صحيح ✓'):L('Not quite — the correct answer is highlighted.','ليست صحيحة — الإجابة الصحيحة مظلّلة.')):'')+'</div>'+
+    '<div style="text-align:center;margin-top:14px;"><button class="qbtn solid" id="exam-next-btn" '+(it.ans==null?'disabled':'')+'>'+(exam.i===exam.items.length-1?L('Finish','إنهاء'):L('Next question','السؤال التالي'))+'</button></div></div>';
+  return h;
+}
+function examResultHTML(){
+  var c=exam.items.filter(function(it){return it.ans===it.q.a;}).length, n=exam.items.length, pct=Math.round(c/n*100), pass=pct>=exam.def.pass;
+  var nm=state.name||'';
+  var h='<div class="quiz-shell"><div class="quiz-summary show"><p class="score-title">'+(pass?L('Congratulations'+(nm?', '+nm:'')+'! You passed.','مبارك'+(nm?' يا '+nm:'')+'! لقد نجحت.'):L('Keep going'+(nm?', '+nm:'')+' — you can do it.','واصل'+(nm?' يا '+nm:'')+' — يمكنك النجاح.'))+'</p><p class="score-pct">'+pct+'%</p><p class="score-msg">'+c+' / '+n+' · '+L('Pass mark: ','درجة النجاح: ')+exam.def.pass+'%</p></div>';
+  var wrong=exam.items.filter(function(it){return it.ans!==it.q.a;});
+  if(wrong.length){
+    h+='<h3 class="sec-head" style="margin-top:6px">'+L('Review: questions to revisit','مراجعة: أسئلة تحتاج إلى مراجعة')+'</h3>';
+    wrong.forEach(function(it){
+      var q=it.q;
+      function opt(k){return lang==='ar'?q.oAr[k]:lang==='both'?(q.oEn[k]===q.oAr[k]?q.oEn[k]:q.oEn[k]+' · '+q.oAr[k]):q.oEn[k];}
+      h+='<div class="rule-box" style="margin:0 0 10px"><b>'+esc(L(q.qEn,q.qAr))+'</b><p class="disclaimer" style="margin:6px 0 0">'+esc(L(it.w.en,it.w.ar))+'</p><p style="margin:6px 0 0">'+L('Your answer: ','إجابتك: ')+esc(it.ans==null?L('(none)','(لا شيء)'):opt(it.ans))+'<br>'+L('Correct answer: ','الإجابة الصحيحة: ')+'<b>'+esc(opt(q.a))+'</b></p></div>';
+    });
+  }
+  h+='<div style="text-align:center;margin-top:14px;"><button class="qbtn solid" id="exam-retake-btn">'+L('Retake the Exam','أعد الاختبار')+'</button></div></div>';
+  return h;
+}
+function wireExam(st){
+  var vp=document.getElementById('step-viewport');
+  var sb=document.getElementById('exam-start-btn');
+  if(sb){ sb.onclick=function(){examStart(st.s);renderExam(st);}; return; }
+  renderExam(st);
+}
+function renderExam(st){
+  var vp=document.getElementById('step-viewport');
+  var area=document.getElementById('exam-area');
+  if(!exam){ vp.innerHTML=examHTML(st); wireExam(st); return; }
+  if(!area){ vp.innerHTML='<div class="hero"><h1 class="'+(lang==='ar'?'':'en-title')+'">'+L('Final Exam','الاختبار النهائي')+'</h1></div><div id="exam-area"></div>'; area=document.getElementById('exam-area'); }
+  if(exam.done){
+    area.innerHTML=examResultHTML();
+    document.getElementById('exam-retake-btn').onclick=function(){exam=null;renderExam(st);window.scrollTo({top:0,behavior:'smooth'});};
+    return;
+  }
+  area.innerHTML=examQuestionHTML();
+  var it=exam.items[exam.i];
+  area.querySelectorAll('.q-option').forEach(function(o){
+    o.onclick=function(){ if(it.ans!=null) return; it.ans=+o.dataset.o; renderExam(st); };
+  });
+  document.getElementById('exam-next-btn').onclick=function(){
+    if(exam.i<exam.items.length-1){ exam.i++; renderExam(st); window.scrollTo({top:0,behavior:'smooth'}); }
+    else{
+      exam.done=true;
+      var c=exam.items.filter(function(x){return x.ans===x.q.a;}).length, pct=Math.round(c/exam.items.length*100);
+      if(state.scores.EXAM==null||pct>state.scores.EXAM) state.scores.EXAM=pct;
+      state.done[st.key]=1; save(); renderExam(st); window.scrollTo({top:0,behavior:'smooth'});
+    }
+  };
+}
+
 function render(i){
   cur=i; var st=STEPS[i], vp=document.getElementById('step-viewport');
   vp.style.animation='none'; void vp.offsetWidth; vp.style.animation='';
-  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='info'?infoHTML(st.s):st.s.type==='hadith'?hadithHTML(st.s,st):quizHTML(st);
-  if(st.s.type==='quiz') wireQuiz(st); else { state.done[st.key]=1; save(); }
+  vp.innerHTML = st.s.type==='intro'?introHTML():st.s.type==='exam'?examHTML(st):st.s.type==='info'?infoHTML(st.s):st.s.type==='hadith'?hadithHTML(st.s,st):quizHTML(st);
+  if(st.s.type==='exam') wireExam(st); else if(st.s.type==='quiz') wireQuiz(st); else { state.done[st.key]=1; save(); }
   if(st.i===0&&st.s.type!=='hadith'){ vp.insertAdjacentHTML('afterbegin',objectivesHTML(st.w)); }
   document.getElementById('step-progress-text').textContent=(lang==='ar'?'الخطوة ':'Step ')+(i+1)+' / '+STEPS.length;
   document.getElementById('step-progress-fill').style.width=((i+1)/STEPS.length*100)+'%';
@@ -1297,6 +1386,7 @@ function renderSyllabus(){
   var h='<h2 class="syl-title">'+L('Course Outline','فهرس الدورة')+'</h2>';
   COURSE.forEach(function(w){
     var hs=w.steps.filter(function(x){return x.type==='hadith';});
+    if(!hs.length){ h+='<div class="syl-week"><div class="syl-wk-name">'+esc(L(w.en,w.ar))+'</div></div>'; return; }
     h+='<div class="syl-week"><div class="syl-wk-name">'+esc(L(w.en,w.ar))+'</div><ol>';
     hs.forEach(function(x){h+='<li>'+esc(L(x.titleEn,x.titleAr))+(x.num?' <span class="syl-no">#'+x.num+'</span>':'')+'</li>';});
     h+='</ol></div>';
