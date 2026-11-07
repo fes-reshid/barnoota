@@ -120,7 +120,7 @@ header.top h1{font:600 38px/1.1 'Fredoka';margin:2px 0 8px}
 .mqen{font-size:16px;line-height:1.65;margin:0 0 10px}
 .mqq{margin:8px 0 12px;padding:8px 14px;border-left:4px solid #f3c85f;background:#fff8e6;border-radius:0 12px 12px 0}
 .mqq p{margin:0;font-style:italic;line-height:1.55}.mqq cite{display:block;margin-top:3px;font:700 12px 'Nunito';color:#8a7a5a;font-style:normal}
-.mqsign{text-align:right;font:600 18px 'Fredoka';color:#1b2540;margin:10px 0 14px}
+.mqsig{margin:18px 0 16px auto;width:max-content;max-width:100%;text-align:center}.mqsig p{margin:0}.sga{font:700 20px/1.9 'Amiri';color:#6b5a3f}.sge{font:italic 13px 'Nunito';color:#6b5a3f}.sgn{font:600 22px 'Fredoka';color:#1b2540;margin-top:4px!important}.sgna{font:700 22px/1.7 'Amiri';color:#b8862e}.sgd{font:700 12px 'Nunito';color:#8a7a5a}
 .chlab{margin:8px 0 0;padding:0;list-style:none;text-align:center;font:700 14px 'Nunito';color:#4a4636}
 .chlab li{display:inline-block;margin:3px 4px;padding:2px 10px;border-radius:12px;color:#fff}
 .sortg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:8px}
@@ -185,7 +185,7 @@ fetch('data.json').then(r=>r.json()).then(D=>{
   };
   const css=document.createElement('style');css.textContent=Object.entries(R).map(([k,v])=>`.t-${k}{color:${v[2]}}`).join('')+'.t-silent{color:#a5a5a5}';document.head.appendChild(css);
   const CHAL={};let total=0;const book=document.getElementById('book'),toc=document.getElementById('toc');
-  if(D.muqaddimah){book.insertAdjacentHTML('beforeend',`<details class="muq" id="muqaddimah"><summary>📜 Muqaddimah: the collector's introduction</summary>${D.muqaddimah}</details>`);toc.insertAdjacentHTML('beforeend','<a href="#muqaddimah"><span style="background:#b8862e"></span>Muqaddimah</a>')}
+  if(D.muqaddimah){book.insertAdjacentHTML('beforeend',`<details class="muq" id="muqaddimah"><summary>📜 Muqaddimah (Introduction)</summary>${D.muqaddimah}</details>`);toc.insertAdjacentHTML('beforeend','<a href="#muqaddimah"><span style="background:#b8862e"></span>Muqaddimah</a>')}
   D.chapters.forEach(ch=>{
     const head=ch.n===0?'Introduction':ch.n===9?'Conclusion':'Chapter '+ch.n;
     toc.insertAdjacentHTML('beforeend',`<a href="#ch${ch.n}"><span style="background:${ch.color}"></span>${head}: ${esc(ch.title)}</a>`);
