@@ -633,6 +633,10 @@
   .gl-table .gl-term{font-weight:700;color:var(--green);white-space:nowrap;width:1%;}
   .info-box p{margin:0 0 12px;font-size:calc(15.5px * var(--scale));line-height:1.7;}
   .info-box .ar-block p{font-size:calc(17px * var(--scale));}
+  .week-select-btn.exam-btn{background:var(--green);}
+  .week-select-btn.exam-btn:hover{background:var(--green-dark);}
+  #exam-start-btn,#exam-retake-btn{background:var(--green);}
+  #exam-start-btn:hover,#exam-retake-btn:hover{background:var(--green-dark);}
   .disclaimer{font-size:calc(13px * var(--scale));color:var(--ink-brown);opacity:.85;}
 </style>
 </head>
@@ -1372,7 +1376,7 @@ function renderGrid(){
   COURSE.forEach(function(w){
     var idx=STEPS.findIndex(function(s){return s.w===w;});
     var all=STEPS.filter(function(s){return s.w===w;}), d=all.every(function(s){return state.done[s.key];});
-    var b=document.createElement('button'); b.className='week-select-btn'+(d?' done':'');
+    var b=document.createElement('button'); b.className='week-select-btn'+(w.id==='EX'?' exam-btn':'')+(d?' done':'');
     b.innerHTML='<span class="wsb-en">'+esc(w.en)+'</span><span class="wsb-ar">'+esc(w.ar)+'</span>';
     b.addEventListener('click',function(){show('main');render(idx);});
     g.appendChild(b);
