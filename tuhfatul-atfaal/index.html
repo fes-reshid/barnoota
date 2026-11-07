@@ -843,9 +843,13 @@ function buildMapQuiz(worldIndex){
 const worldStarts=[];let tally=0;worlds.forEach(w=>{worldStarts.push(tally);tally+=w.lessons.length});
 const key='tajweed-quest-progress-v3',GAME_KEY='tuhfatul-atfaal',COURSE_VERSION=5,MAP_QUIZ_TOTAL=15,MAP_QUIZ_PASS=12,AVATARS=['🧒','👧','👦','🧕','👳','🦁','🐯','🐼','🦊','🐨','🐧','🦉'];function freshProfile(name='Explorer'){return{name,avatar:'🧒',courseVersion:COURSE_VERSION,unlocked:1,stars:Array(TOTAL_LESSONS).fill(0),coins:0,vocabDone:Array(worlds.length).fill(false),memoryDone:Array(TOTAL_LESSONS).fill(false),teacherAssessments:Array(worlds.length).fill(null),mapQuizScores:Array(worlds.length).fill(null)}}let profile=freshProfile(),cloudUser=null,authMode='signin',authWired=false;let viewWorld=0,current=0,step=0,wrong=0,quizMistakes=0,hintReturn=false,answered=false,soundOn=true,selectedVocab=null,audioCtx=null,signatureDirty=false,lessonQuizQuestions=[],lessonQuizIndex=0,lessonQuizCorrect=0,mapQuizQuestions=[],mapQuizIndex=0,mapQuizCorrect=0;
 window.TAJWEED_AUDIO=window.TAJWEED_AUDIO||{};
-/* Recorded recitation: tuhfatul-atfaal/assets/audio/line-NNa.mp3 (first half) and line-NNb.mp3 (second half). Raise this when more lines are uploaded. */
-const RECORDED_LINES=31;
-Array.from({length:RECORDED_LINES},(_,i)=>i+1).forEach(n=>['a','b'].forEach(h=>{const k='line-'+String(n).padStart(2,'0')+h;if(!window.TAJWEED_AUDIO[k])window.TAJWEED_AUDIO[k]='/tuhfatul-atfaal/assets/audio/'+k+'.mp3'}));
+/* Recorded recitation: tuhfatul-atfaal/assets/audio/line-NNa.mp3 (first half) and line-NNb.mp3 (second half), for all 61 lines.
+   Lines 1-31 are uploaded. For later lines the app first checks that the file is there, so a line that is not uploaded yet
+   keeps using the device voice, and starts using the recording as soon as its file is uploaded. */
+const RECORDED_LINES=61,UPLOADED_LINES=31;
+Array.from({length:RECORDED_LINES},(_,i)=>i+1).forEach(n=>['a','b'].forEach(h=>{const k='line-'+String(n).padStart(2,'0')+h;if(window.TAJWEED_AUDIO[k])return;const url='/tuhfatul-atfaal/assets/audio/'+k+'.mp3';
+  if(n<=UPLOADED_LINES){window.TAJWEED_AUDIO[k]=url;return}
+  fetch(url,{method:'HEAD',cache:'no-cache'}).then(r=>{if(r.ok&&!/text\/html/.test(r.headers.get('content-type')||''))window.TAJWEED_AUDIO[k]=url}).catch(()=>{})}));
 /* Wherever the app reads Arabic aloud (Line Match cards, word games, hints…),
    a whole recorded line or half-line plays the teacher's recording instead
    of the device voice. Anything else still uses the device voice. */
