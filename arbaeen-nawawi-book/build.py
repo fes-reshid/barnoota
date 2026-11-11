@@ -19,6 +19,7 @@ from figures import FIGURES  # noqa: E402
 from english import layout as en_layout, PB, REF  # noqa: E402
 import narrators  # noqa: E402
 import tests  # noqa: E402
+from background import BACKGROUND  # noqa: E402
 import front  # noqa: E402
 
 CONTENT = {}
@@ -223,6 +224,10 @@ def hadith_html(n):
         out.append("</section>")
         return "\n".join(out)
     out.append(narrator_html(n))
+    if n in BACKGROUND:
+        bg = BACKGROUND[n]
+        out.append('<div class="block bg"><div class="keep">' + sec_head("book", "Background of the Hadith", "سَبَبُ الوُرُود") + f"<p>{esc(bg['paras'][0])}</p></div>"
+                   + "".join(f"<p>{esc(x)}</p>" for x in bg["paras"][1:]) + f'<p class="bg-src">Source: {esc(bg["source"])}</p></div>')
     # Note
     out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{esc(c['note'][0])}</p></div>")
     out.extend(f"<p>{esc(x)}</p>" for x in c["note"][1:])

@@ -75,12 +75,10 @@ NARRATORS = {
 
 # A line about the occasion of the hadith, where it adds something.
 CONTEXT = {
-1: "ʿUmar narrated this hadith from the pulpit of the Prophet’s Mosque.",
 2: "ʿUmar was present in the gathering and saw the visit of Jibrīl in the form of a man.",
 16: "In a narration of Aḥmad, the man who asked is named as Jāriyah ibn Qudāmah.",
 22: "The man who asked is named in Muslim as an-Nuʿmān ibn Qawqal.",
 24: "When the Successor Abū Idrīs al-Khawlānī narrated this hadith, he would kneel down out of respect for it.",
-34: "Abū Saʿīd narrated this when Marwān gave the Eid sermon before the prayer, against the Sunnah, and a man objected.",
 40: "The Prophet ﷺ took Ibn ʿUmar by the shoulder to draw his full attention.",
 44: "This was said when ʿĀ’ishah’s foster-uncle Aflaḥ asked permission to enter her house.",
 46: "Abū Burdah, who narrates it from his father, was a Successor and later a judge of Kūfah.",

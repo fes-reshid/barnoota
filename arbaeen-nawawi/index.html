@@ -176,6 +176,9 @@ textarea:focus,select:focus,input:focus{outline:2px solid var(--gold2);outline-o
 .who label{display:flex;flex-direction:column;gap:4px;font-size:13.5px;font-weight:600;color:var(--muted)}.who label b{color:var(--bad)}.who small{font-weight:400}
 .who input{font:16px 'Lora',serif;padding:9px 11px;border:1px solid var(--line);border-radius:8px}
 @media(max-width:600px){.who{grid-template-columns:1fr}}
+/* background */
+.bgbox{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 16px}
+.bgbox p{margin:0 0 10px;font-size:15.5px}.bgbox .bgsrc{font-size:13px;color:var(--muted);font-style:italic;margin:0}
 /* results */
 .res .ring{--p:0;width:150px;height:150px;border-radius:50%;margin:14px auto 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:radial-gradient(closest-side,#fffdf8 78%,transparent 79% 100%),conic-gradient(var(--accent) calc(var(--p)*1%),#eadfc3 0)}
@@ -318,6 +321,7 @@ function chapter(n){
      (st?'<button class="more" aria-expanded="false" data-lab="'+(c.see?"Read the full story":"Read more")+'">'+(c.see?"Read the full story":"Read more")+' <span>▾</span></button><div class="story" hidden><h4>The story of '+c.name+'</h4>'+
        st.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="sl"><b>What we learn from this life</b><ul>'+st.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div></div>':"")+'</div>'});
   if(h.narr.context)o+='<p class="ctx">'+h.narr.context+'</p>';
+  if(h.bg)o+='<div class="sec"><i>❖</i>Background of the Hadith<small class="tap" lang="ar" style="font-family:Amiri;font-style:normal;font-size:17px">سَبَبُ الوُرُود</small></div><div class="bgbox">'+h.bg.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<p class="bgsrc">Source: '+h.bg.src+'</p></div>';
   o+='<div class="sec"><i>✎</i>Explanatory Note</div><div class="note">'+h.note.map(function(x){return "<p>"+x+"</p>"}).join("")+'</div>';
   if(h.fig){var hot=h.fig.svg.indexOf('class="hot"')>=0;
     o+='<div class="sec"><i>▣</i>Picture'+(hot?'<small class="tap">tap any part to learn more</small>':'')+'</div><div class="fig'+(hot?' clickable':'')+'">'+h.fig.svg+'</div><div class="cap">'+h.fig.cap+'</div>'+(hot?'<div class="finfo" id="finfo" hidden></div>':'');}

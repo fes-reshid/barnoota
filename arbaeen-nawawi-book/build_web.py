@@ -15,6 +15,7 @@ from build import CONTENT, PARTS, ARABIC, EXTRA, FIGURES, esc  # noqa: E402
 import narrators, tests  # noqa: E402
 from stories import STORIES  # noqa: E402
 from figinfo import INFO  # noqa: E402
+from background import BACKGROUND  # noqa: E402
 
 
 def plain_ar(n):
@@ -74,6 +75,7 @@ def main():
             "arTitle": build.ar_title(n), "theme": esc(c.get("theme", "")),
             "ar": ar, "arSrc": src, "en": en_body, "enRef": (esc(en_tail) + " · " if en_tail else "") + esc(ref), "enUrl": url,
             "extra": extra, "narr": narr(n), "note": [esc(x) for x in c["note"]], "fig": fig,
+            "bg": ({"paras": [esc(x) for x in BACKGROUND[n]["paras"]], "src": esc(BACKGROUND[n]["source"])} if n in BACKGROUND else None),
             "lessons": [esc(x) for x in c["lessons"]], "steps": steps_list(c),
             "questions": [esc(x) for x in c["questions"]], "todo": [esc(x) for x in c["todo"]],
             "sayAr": plain_ar(n), "sayEn": plain_en(en),
