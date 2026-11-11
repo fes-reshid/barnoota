@@ -14,6 +14,7 @@ import build  # noqa: E402  (loads content, texts, figures, narrators, tests)
 from build import CONTENT, PARTS, ARABIC, EXTRA, FIGURES, esc  # noqa: E402
 import narrators, tests  # noqa: E402
 from stories import STORIES  # noqa: E402
+from figinfo import INFO  # noqa: E402
 
 
 def plain_ar(n):
@@ -83,14 +84,18 @@ def main():
     for k in range(1, 6):
         lefts, rights, key = tests.shuffled_match(k)
         tdata[k] = {
-            "mcq": [{"q": esc(q), "o": [esc(x) for x in o], "a": a} for q, o, a in tests.shuffled_mcq(k)],
-            "match": {"left": [esc(x) for x in lefts], "right": [esc(x) for x in rights], "key": key},
+            "mcq": [{"q": esc(q), "o": [esc(x) for x in o], "a": a, "h": h}
+                    for (q, o, a), h in zip(tests.shuffled_mcq(k), tests.MCQ_HADITH[k])],
+            "match": {"left": [esc(x) for x in lefts], "right": [esc(x) for x in rights], "key": key,
+                      "h": list(range(PARTS[k - 1][0], PARTS[k - 1][0] + 10))},
             "short": [{"q": esc(q), "a": esc(a)} for q, a in tests.TESTS[k]["short"]],
             "critical": [esc(q) for q in tests.TESTS[k]["critical"]],
         }
     data = {"hadith": hadith, "parts": parts, "tests": tdata,
             "audio": {"ar": audio_files("ar"), "en": audio_files("en")},
             "lantern": FIGURES["lantern"],
+            "figinfo": {k: {"ar": v["ar"], "title": esc(v["title"]), "meaning": esc(v["meaning"]),
+                            "points": [esc(x) for x in v["points"]], "verse": list(v["verse"]), "hadith": v["hadith"]} for k, v in INFO.items()},
             "stories": {k: {"paras": [esc(x) for x in v["paras"]], "lessons": [esc(x) for x in v["lessons"]]} for k, v in STORIES.items()}}
     os.makedirs(WEB, exist_ok=True)
     with open(os.path.join(WEB, "data.js"), "w", encoding="utf-8") as f:

@@ -32,13 +32,20 @@ for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"
 
 # EDITION=kdp builds the Amazon KDP black-and-white interior: white paper, greyscale,
 # mirrored margins (wide on the binding side), no cover inside.
+# EDITION=kdp-color builds the Amazon colour interior: US Letter 8.5 x 11 in (KDP standard colour), white paper.
 EDITION = os.environ.get("EDITION", "color")
-KDP = EDITION == "kdp"
+KDP = EDITION in ("kdp", "kdp-color")
+GREY = EDITION == "kdp"
+LETTER = EDITION == "kdp-color"
 OUT_PDF = os.path.join(ROOT, "Forty-Hadith-Nawawi-Study-Book.pdf")
 BUILD = os.path.join(ROOT, ".build")
-if KDP:
+if GREY:
     OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-BW.pdf")
     BUILD = os.path.join(ROOT, ".build-kdp")
+if LETTER:
+    OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-Color.pdf")
+    BUILD = os.path.join(ROOT, ".build-kdp-color")
+PAGE_H_MM = 279.4 if LETTER else 297.0
 os.makedirs(BUILD, exist_ok=True)
 
 AR_ORD = ["الأَوَّلُ", "الثَّانِي", "الثَّالِثُ", "الرَّابِعُ", "الخَامِسُ", "السَّادِسُ", "السَّابِعُ", "الثَّامِنُ", "التَّاسِعُ", "العَاشِرُ"]
@@ -292,9 +299,9 @@ def test_html(k):
     out.append("</ol></div>")
     # B. matching
     lefts, rights, _ = tests.shuffled_match(k)
-    rows = "".join(f'<tr><td class="mn">{i + 1}</td><td>{esc(l)}</td><td class="mb"><i></i></td><td class="ml">{LET_10[i]}</td><td>{esc(r)}</td></tr>'
+    rows = "".join(f'<tr><td class="mn">{i + 1}</td><td class="mar" lang="ar" dir="rtl">{esc(l)}</td><td class="mb"><i></i></td><td class="ml">{LET_10[i]}</td><td>{esc(r)}</td></tr>'
                    for i, (l, r) in enumerate(zip(lefts, rights)))
-    out.append(f'<div class="t-sec"><h3 class="t-h"><span>B</span>Matching <em>Write the letter of the matching title · 10 marks</em></h3>'
+    out.append(f'<div class="t-sec"><h3 class="t-h"><span>B</span>Matching <em>Write the letter of the English meaning next to each Arabic phrase · 10 marks</em></h3>'
                f'<table class="match">{rows}</table></div>')
     # C. short answer
     out.append('<div class="t-sec"><h3 class="t-h"><span>C</span>Short Answer <em>Answer in one or two sentences · 10 marks</em></h3><ol class="sa">')
@@ -370,6 +377,8 @@ def build_html(pages):
     css = open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()
     if KDP:
         css += open(os.path.join(ROOT, "src", "kdp.css"), encoding="utf-8").read()
+    if LETTER:
+        css += open(os.path.join(ROOT, "src", "kdp-letter.css"), encoding="utf-8").read()
     parts = [front.title_page(), front.copyright_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
              front.about_nawawi(), front.about_translation()]
     for n in range(1, 51):
@@ -380,7 +389,7 @@ def build_html(pages):
     doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''
-    return to_grey(doc) if KDP else doc
+    return to_grey(doc) if GREY else doc
 
 
 # ---------------------------------------------------------------- render
@@ -410,14 +419,17 @@ def find_pages(pdf_path):
 
 def underlay(n_pages, path):
     from reportlab.pdfgen import canvas
-    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.pagesizes import A4, LETTER as LTR
     from reportlab.lib.colors import HexColor
-    W, H = A4
-    c = canvas.Canvas(path, pagesize=A4)
+    size = LTR if LETTER else A4
+    W, H = size
+    c = canvas.Canvas(path, pagesize=size)
     paper, gold, ink = HexColor("#fbf6ea"), HexColor("#c9a14a"), HexColor("#0f4c45")
     head_col = HexColor("#8c7a55")
-    if KDP:
+    if GREY:
         paper, gold, ink, head_col = HexColor("#ffffff"), HexColor("#8a8a8a"), HexColor("#333333"), HexColor("#666666")
+    elif KDP:
+        paper = HexColor("#ffffff")
     mm = 72 / 25.4
     for i in range(1, n_pages + 1):
         if not KDP:
@@ -486,8 +498,8 @@ def compose(body_pdf, cover_pdf, out_pdf):
 NOTES_PLAN = {}            # hadith -> (number of lines, own page?)
 MM = 72 / 25.4
 LINE_MM = 8.0              # height of one ruled line (book.css)
-BOTTOM_PT = (297 - 19) * MM  # bottom of the text area
-FULL_LINES = 29            # lines on a page of its own
+BOTTOM_PT = (PAGE_H_MM - 19) * MM  # bottom of the text area
+FULL_LINES = int((PAGE_H_MM - 38 - 20) // LINE_MM)  # lines on a page of its own
 
 
 def plan_notes(pdf_path):

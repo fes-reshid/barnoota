@@ -83,36 +83,43 @@ def intention():
 
 # ------------------------------------------------------------------ H2 levels
 def levels():
-    b = f'<circle cx="190" cy="140" r="122" class="sf" stroke="{GOLD}" stroke-width="2"/>'
-    b += f'<circle cx="190" cy="158" r="84" fill="#fff" class="acs" stroke-width="2"/>'
-    b += f'<circle cx="190" cy="178" r="44" class="ac" stroke="{GOLD}" stroke-width="2"/>'
-    b += t(190, 42, "ISLAM", 15, 700, fam="Cinzel", extra='class="act"') + t(190, 92, "IMAN", 15, 700, fam="Cinzel", extra='class="act"')
-    b += t(190, 176, "IHSAN", 13, 700, fill="#fff", fam="Cinzel") + t(190, 192, "the summit", 10, fill="#fff", italic=True)
-    rows = [("Islam — the outward deeds", "5 pillars: Shahadah, Salah, Zakah, Sawm, Hajj"),
-            ("Iman — the inward beliefs", "6 pillars: Allah, angels, books, messengers, Last Day, qadar"),
-            ("Ihsan — the highest level", "Worship Allah as if you see Him; He surely sees you")]
+    b = f'<g class="hot" data-info="islam"><circle cx="190" cy="140" r="122" class="sf" stroke="{GOLD}" stroke-width="2"/>'
+    b += t(190, 42, "ISLAM", 15, 700, fam="Cinzel", extra='class="act"') + '</g>'
+    b += f'<g class="hot" data-info="iman"><circle cx="190" cy="158" r="84" fill="#fff" class="acs" stroke-width="2"/>'
+    b += t(190, 92, "IMAN", 15, 700, fam="Cinzel", extra='class="act"') + '</g>'
+    b += f'<g class="hot" data-info="ihsan"><circle cx="190" cy="178" r="44" class="ac" stroke="{GOLD}" stroke-width="2"/>'
+    b += t(190, 176, "IHSAN", 13, 700, fill="#fff", fam="Cinzel") + t(190, 192, "the summit", 10, fill="#fff", italic=True) + '</g>'
+    rows = [("islam", "Islam — the outward deeds", "5 pillars: Shahadah, Salah, Zakah, Sawm, Hajj"),
+            ("iman", "Iman — the inward beliefs", "6 pillars: Allah, angels, books, messengers, Last Day, qadar"),
+            ("ihsan", "Ihsan — the highest level", "Worship Allah as if you see Him; He surely sees you")]
     y = 52
-    for h, d in rows:
-        b += f'<rect x="338" y="{y - 18}" width="250" height="62" rx="8" fill="#fff" stroke="{GOLD}"/>'
+    for key, h, d in rows:
+        b += f'<g class="hot" data-info="{key}"><rect x="338" y="{y - 18}" width="250" height="62" rx="8" fill="#fff" stroke="{GOLD}"/>'
         b += t(350, y + 2, h, 13, 700, "start", extra='class="act"') + t(350, y + 22, d[:40], 10.5, anchor="start", fill=MUTED)
         if len(d) > 40:
             b += t(350, y + 36, d[40:].strip(), 10.5, anchor="start", fill=MUTED)
+        b += '</g>'
         y += 80
     return svg(600, 280, b)
 
 
 # ------------------------------------------------------------------ H3 pillars
 def pillars():
-    b = f'<polygon points="60,92 300,18 540,92" class="ac" stroke="{GOLD}" stroke-width="2"/>'
-    b += t(300, 74, "ISLAM", 22, 700, fill="#fff", fam="Cinzel") + ar(300, 52, "الإِسْلَام", 15, "#f3e6c4")
+    # parts marked class="hot" are clickable in the online book (see figinfo.py)
+    b = '<g class="hot" data-info="islam">'
+    b += f'<polygon points="60,92 300,18 540,92" class="ac" stroke="{GOLD}" stroke-width="2"/>'
+    b += t(300, 74, "ISLAM", 22, 700, fill="#fff", fam="Cinzel") + ar(300, 52, "الإِسْلَام", 15, "#f3e6c4") + '</g>'
     b += f'<rect x="70" y="92" width="460" height="14" fill="{GOLD}"/>'
-    names = [("Shahadah", "الشَّهَادَة"), ("Salah", "الصَّلَاة"), ("Zakah", "الزَّكَاة"), ("Hajj", "الحَجّ"), ("Sawm", "الصَّوْم")]
-    for i, (e, a) in enumerate(names):
+    names = [("Shahadah", "الشَّهَادَة", "shahadah"), ("Salah", "الصَّلَاة", "salah"), ("Zakah", "الزَّكَاة", "zakah"),
+             ("Hajj", "الحَجّ", "hajj"), ("Sawm", "الصَّوْم", "sawm")]
+    for i, (e, a_, key) in enumerate(names):
         x = 92 + i * 92
+        b += f'<g class="hot" data-info="{key}">'
+        b += f'<rect x="{x - 14}" y="106" width="76" height="160" fill="transparent"/>'
         b += f'<rect x="{x}" y="106" width="48" height="122" fill="#fff" class="acs" stroke-width="2"/>'
         b += f'<rect x="{x - 6}" y="106" width="60" height="8" class="ac"/><rect x="{x - 6}" y="222" width="60" height="8" class="ac"/>'
         b += f'<text x="{x + 24}" y="168" text-anchor="middle" fill="{INK}" style="font:600 12px Lora" transform="rotate(-90 {x + 24} 168)">{e}</text>'
-        b += ar(x + 24, 252, a, 14, MUTED)
+        b += ar(x + 24, 252, a_, 14, MUTED) + '</g>'
     b += f'<rect x="50" y="230" width="500" height="6" fill="{GOLD}"/>'
     return svg(600, 262, b)
 

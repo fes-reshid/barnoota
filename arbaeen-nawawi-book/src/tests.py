@@ -2,7 +2,7 @@
 """End-of-part review tests.
 
 Each part: 25 multiple choice (question, [A, B, C, D], index of correct answer),
-10 matching pairs (left, right) — the right column is shuffled in print,
+10 matching pairs (Arabic phrase from the hadith, its English meaning) — the meanings are shuffled,
 10 short-answer questions (with a model answer for the key),
 5 critical-thinking questions.
 """
@@ -39,16 +39,16 @@ mcq=[
 ("In Hadith 10, why was the traveller’s du‘a not answered?", ["He did not raise his hands", "His food, drink and clothing were haram", "He was not in Makkah", "He prayed too quickly"], 1),
 ],
 match=[
-("Hadith 1", "Actions are by intentions"),
-("Hadith 2", "Islam, Īmān and Iḥsān"),
-("Hadith 3", "Islam is built on five"),
-("Hadith 4", "Stages of creation and destiny"),
-("Hadith 5", "Rejecting innovations"),
-("Hadith 6", "Halal, haram and doubtful matters"),
-("Hadith 7", "The religion is sincere advice"),
-("Hadith 8", "The sanctity of a Muslim"),
-("Hadith 9", "Do what you are able"),
-("Hadith 10", "Allah accepts only what is good"),
+('إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ', 'Actions are only by intentions.'),
+('أَنْ تَعْبُدَ اللَّهَ كَأَنَّكَ تَرَاهُ', 'That you worship Allah as though you see Him.'),
+('بُنِيَ الإِسْلَامُ عَلَى خَمْسٍ', 'Islam is built upon five.'),
+('يُجْمَعُ خَلْقُهُ فِي بَطْنِ أُمِّهِ', 'His creation is gathered in his mother’s womb.'),
+('مَنْ أَحْدَثَ فِي أَمْرِنَا هَذَا مَا لَيْسَ مِنْهُ فَهُوَ رَدٌّ', 'Whoever introduces into this matter of ours what is not from it, it is rejected.'),
+('إِنَّ الحَلَالَ بَيِّنٌ وَإِنَّ الحَرَامَ بَيِّنٌ', 'The lawful is clear and the unlawful is clear.'),
+('الدِّينُ النَّصِيحَةُ', 'The religion is sincere advice.'),
+('وَحِسَابُهُمْ عَلَى اللَّهِ', 'And their reckoning is with Allah.'),
+('فَأْتُوا مِنْهُ مَا اسْتَطَعْتُمْ', 'Do of it as much as you are able.'),
+('إِنَّ اللَّهَ طَيِّبٌ لَا يَقْبَلُ إِلَّا طَيِّبًا', 'Allah is good and accepts only what is good.'),
 ],
 short=[
 ("What two things does Hadith 1 teach about actions?", "An action is valid only with an intention, and its reward depends on what was intended."),
@@ -101,16 +101,16 @@ mcq=[
 ("“Modesty brings nothing but…”", ["shyness", "good", "difficulty", "silence"], 1),
 ],
 match=[
-("Hadith 11", "Leave what makes you doubt"),
-("Hadith 12", "Leave what does not concern you"),
-("Hadith 13", "Love for your brother what you love for yourself"),
-("Hadith 14", "The sanctity of Muslim life"),
-("Hadith 15", "Speak good, honour neighbour and guest"),
-("Hadith 16", "Do not become angry"),
-("Hadith 17", "Excellence in everything, even slaughter"),
-("Hadith 18", "Taqwā, repentance and good character"),
-("Hadith 19", "Guard Allah and He will guard you"),
-("Hadith 20", "If you feel no shame, do as you wish"),
+('دَعْ مَا يَرِيبُكَ إِلَى مَا لَا يَرِيبُكَ', 'Leave what makes you doubt for what does not make you doubt.'),
+('مِنْ حُسْنِ إِسْلَامِ المَرْءِ تَرْكُهُ مَا لَا يَعْنِيهِ', 'Part of the beauty of a person’s Islam is leaving what does not concern him.'),
+('حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ', 'Until he loves for his brother what he loves for himself.'),
+('لَا يَحِلُّ دَمُ امْرِئٍ مُسْلِمٍ إِلَّا بِإِحْدَى ثَلَاثٍ', 'The blood of a Muslim is not lawful except in one of three cases.'),
+('فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ', 'Let him speak good or keep silent.'),
+('لَا تَغْضَبْ', 'Do not become angry.'),
+('إِنَّ اللَّهَ كَتَبَ الإِحْسَانَ عَلَى كُلِّ شَيْءٍ', 'Allah has prescribed excellence in everything.'),
+('وَأَتْبِعِ السَّيِّئَةَ الحَسَنَةَ تَمْحُهَا', 'Follow a bad deed with a good deed and it will wipe it out.'),
+('احْفَظِ اللَّهَ يَحْفَظْكَ', 'Guard Allah and He will guard you.'),
+('إِذَا لَمْ تَسْتَحِ فَاصْنَعْ مَا شِئْتَ', 'If you feel no shame, then do as you wish.'),
 ],
 short=[
 ("What is the difference between a real doubt and waswās?", "A real doubt has a reason; waswās is a whisper against something one is already certain of."),
@@ -163,16 +163,16 @@ mcq=[
 ("What did the Prophet ﷺ hold when he said ‘Restrain this’?", ["His beard", "His tongue", "His hand", "His sword"], 1),
 ],
 match=[
-("Hadith 21", "Say: I believe in Allah, then be steadfast"),
-("Hadith 22", "The obligations lead to Paradise"),
-("Hadith 23", "Purity is half of faith"),
-("Hadith 24", "O My servants, I have forbidden oppression"),
-("Hadith 25", "Every tasbīḥ is a charity"),
-("Hadith 26", "A charity for every joint"),
-("Hadith 27", "Righteousness is good character"),
-("Hadith 28", "Hold fast to the Sunnah"),
-("Hadith 29", "The head, pillar and peak of the matter"),
-("Hadith 30", "Obligations, limits and what Allah left unmentioned"),
+('قُلْ: آمَنْتُ بِاللَّهِ، ثُمَّ اسْتَقِمْ', 'Say: I believe in Allah, then be steadfast.'),
+('أَأَدْخُلُ الجَنَّةَ؟ قَالَ: نَعَمْ', '“Will I enter Paradise?” He said: “Yes.”'),
+('الطُّهُورُ شَطْرُ الإِيمَانِ', 'Purity is half of faith.'),
+('يَا عِبَادِي، إِنِّي حَرَّمْتُ الظُّلْمَ عَلَى نَفْسِي', 'O My servants, I have forbidden oppression for Myself.'),
+('إِنَّ بِكُلِّ تَسْبِيحَةٍ صَدَقَةً', 'In every tasbīḥ there is a charity.'),
+('وَالكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ', 'And a good word is a charity.'),
+('البِرُّ حُسْنُ الخُلُقِ', 'Righteousness is good character.'),
+('فَعَلَيْكُمْ بِسُنَّتِي', 'So hold to my Sunnah.'),
+('كُفَّ عَلَيْكَ هَذَا', 'Restrain this (your tongue).'),
+('وَسَكَتَ عَنْ أَشْيَاءَ رَحْمَةً لَكُمْ', 'And He was silent about some things out of mercy for you.'),
 ],
 short=[
 ("How did ʿUmar explain istiqāmah?", "Being steadfast in obedience, and not slipping away like foxes."),
@@ -225,16 +225,16 @@ mcq=[
 ("“Be in this world as if you were a stranger or…”", ["a king", "a wayfarer", "a merchant", "a scholar"], 1),
 ],
 match=[
-("Hadith 31", "Renounce the world and Allah will love you"),
-("Hadith 32", "No harm and no returning harm"),
-("Hadith 33", "Proof is on the claimant, the oath on the denier"),
-("Hadith 34", "Change an evil with hand, tongue or heart"),
-("Hadith 35", "Do not envy; be brothers"),
-("Hadith 36", "Relieve a believer’s distress"),
-("Hadith 37", "How good and bad deeds are recorded"),
-("Hadith 38", "Drawing near with obligations, then voluntary deeds"),
-("Hadith 39", "Mistakes, forgetfulness and coercion pardoned"),
-("Hadith 40", "Be like a stranger or a wayfarer"),
+('ازْهَدْ فِي الدُّنْيَا يُحِبَّكَ اللَّهُ', 'Renounce the world and Allah will love you.'),
+('لَا ضَرَرَ وَلَا ضِرَارَ', 'No harm and no returning harm.'),
+('البَيِّنَةُ عَلَى المُدَّعِي', 'The proof is upon the one who makes the claim.'),
+('مَنْ رَأَى مِنْكُمْ مُنْكَرًا فَلْيُغَيِّرْهُ بِيَدِهِ', 'Whoever of you sees an evil, let him change it with his hand.'),
+('وَكُونُوا عِبَادَ اللَّهِ إِخْوَانًا', 'And be, O servants of Allah, brothers.'),
+('وَاللَّهُ فِي عَوْنِ العَبْدِ مَا كَانَ العَبْدُ فِي عَوْنِ أَخِيهِ', 'Allah helps His servant as long as the servant helps his brother.'),
+('كَتَبَهَا اللَّهُ عِنْدَهُ حَسَنَةً كَامِلَةً', 'Allah writes it down with Himself as a complete good deed.'),
+('وَلَا يَزَالُ عَبْدِي يَتَقَرَّبُ إِلَيَّ بِالنَّوَافِلِ حَتَّى أُحِبَّهُ', 'My servant keeps drawing near to Me with voluntary deeds until I love him.'),
+('الخَطَأَ وَالنِّسْيَانَ وَمَا اسْتُكْرِهُوا عَلَيْهِ', 'Mistakes, forgetfulness and what they are forced to do.'),
+('كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ', 'Be in this world as though you are a stranger.'),
 ],
 short=[
 ("Does zuhd mean being poor? Explain.", "No. It means the world is in your hand, not your heart; you leave what does not benefit the Hereafter."),
@@ -287,16 +287,16 @@ mcq=[
 ("In Hadith 50, the man was told to keep his tongue moist with…", ["water", "the remembrance of Allah", "honey", "poetry"], 1),
 ],
 match=[
-("Hadith 41", "Desires that follow the revelation"),
-("Hadith 42", "O son of Adam, I will forgive you"),
-("Hadith 43", "Give the inheritance shares to their people"),
-("Hadith 44", "Fosterage forbids what birth forbids"),
-("Hadith 45", "Forbidden sale of wine, carrion, swine and idols"),
-("Hadith 46", "Every intoxicant is forbidden"),
-("Hadith 47", "One-third food, one-third drink, one-third breath"),
-("Hadith 48", "The four signs of hypocrisy"),
-("Hadith 49", "Reliance on Allah like the birds"),
-("Hadith 50", "A tongue moist with the remembrance of Allah"),
+('حَتَّى يَكُونَ هَوَاهُ تَبَعًا لِمَا جِئْتُ بِهِ', 'Until his desires follow what I have brought.'),
+('إِنَّكَ مَا دَعَوْتَنِي وَرَجَوْتَنِي غَفَرْتُ لَكَ', 'As long as you call on Me and hope in Me, I will forgive you.'),
+('أَلْحِقُوا الفَرَائِضَ بِأَهْلِهَا', 'Give the fixed shares to those entitled to them.'),
+('الرَّضَاعَةُ تُحَرِّمُ مَا تُحَرِّمُ الوِلَادَةُ', 'Breast-feeding makes unlawful what birth makes unlawful.'),
+('إِنَّ اللَّهَ وَرَسُولَهُ حَرَّمَ بَيْعَ الخَمْرِ', 'Allah and His Messenger have forbidden the sale of wine.'),
+('كُلُّ مُسْكِرٍ حَرَامٌ', 'Every intoxicant is forbidden.'),
+('فَثُلُثٌ لِطَعَامِهِ، وَثُلُثٌ لِشَرَابِهِ، وَثُلُثٌ لِنَفَسِهِ', 'A third for his food, a third for his drink and a third for his breath.'),
+('إِذَا حَدَّثَ كَذَبَ، وَإِذَا وَعَدَ أَخْلَفَ', 'When he speaks he lies, and when he promises he breaks it.'),
+('تَغْدُو خِمَاصًا وَتَرُوحُ بِطَانًا', 'They go out hungry in the morning and return full in the evening.'),
+('لَا يَزَالُ لِسَانُكَ رَطْبًا مِنْ ذِكْرِ اللَّهِ', 'Let your tongue remain moist with the remembrance of Allah.'),
 ],
 short=[
 ("What does hawā mean, and why is following it against the Shariah dangerous?", "What the soul desires; following it against revelation is the root of sins and innovations."),
@@ -323,14 +323,27 @@ critical=[
 import random
 
 
+def answer_positions(part, n):
+    """Balanced, mixed positions for the correct answers: each letter about n/4 times, never 3 in a row."""
+    rnd = random.Random(part * 97 + 11)
+    while True:
+        pos = [i % 4 for i in range(n)]
+        rnd.shuffle(pos)
+        if all(not (pos[i] == pos[i - 1] == pos[i - 2]) for i in range(2, n)):
+            return pos
+
+
 def shuffled_mcq(part):
     """Options in a fixed shuffled order (same in print and online); returns list of (q, opts, correct_index)."""
     out = []
-    for i, (q, opts, ans) in enumerate(TESTS[part]["mcq"]):
+    mcq = TESTS[part]["mcq"]
+    targets = answer_positions(part, len(mcq))
+    for i, (q, opts, ans) in enumerate(mcq):
         rnd = random.Random(part * 1000 + i)
-        order = list(range(len(opts)))
-        rnd.shuffle(order)
-        out.append((q, [opts[k] for k in order], order.index(ans)))
+        others = [o for k, o in enumerate(opts) if k != ans]
+        rnd.shuffle(others)
+        t = targets[i]
+        out.append((q, others[:t] + [opts[ans]] + others[t:], t))
     return out
 
 
@@ -346,3 +359,13 @@ def shuffled_match(part):
     rights = [pairs[k][1] for k in order]
     key = [order.index(i) for i in range(len(pairs))]
     return [p[0] for p in pairs], rights, key
+
+
+# Which hadith each multiple-choice question is about (in the order written above), for the online advice.
+MCQ_HADITH = {
+1: [1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6, 6, 7, 7, 8, 8, 9, 9, 10],
+2: [11, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 16, 17, 17, 18, 18, 19, 19, 19, 19, 19, 20, 20],
+3: [21, 21, 21, 22, 22, 23, 23, 23, 23, 23, 23, 24, 24, 24, 25, 25, 26, 26, 26, 27, 27, 28, 28, 29, 29],
+4: [31, 31, 31, 32, 32, 33, 33, 34, 34, 34, 35, 35, 35, 36, 36, 36, 36, 37, 37, 37, 38, 38, 39, 39, 40],
+5: [41, 41, 42, 42, 42, 43, 43, 43, 43, 44, 44, 44, 45, 45, 45, 46, 46, 46, 47, 47, 48, 48, 49, 49, 50],
+}

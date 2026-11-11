@@ -13,8 +13,12 @@ from figures import FIGURES  # noqa: E402
 from pypdf import PdfReader  # noqa: E402
 
 OUT_DIR = os.path.join(ROOT, "amazon-kdp")
-INTERIOR = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Interior-BW.pdf")
-BLEED, TRIM_W, TRIM_H, PER_PAGE = 0.125, 8.27, 11.69, 0.002252
+COLOR = "color" in sys.argv[1:]   # python3 build_kdp_cover.py color  -> US Letter standard-colour edition
+INTERIOR = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Interior-Color.pdf" if COLOR else "Forty-Hadith-KDP-Interior-BW.pdf")
+OUT = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Cover-Color.pdf" if COLOR else "Forty-Hadith-KDP-Cover.pdf")
+BLEED = 0.125
+TRIM_W, TRIM_H = (8.5, 11.0) if COLOR else (8.27, 11.69)
+PER_PAGE = 0.002252  # KDP white paper (black ink) and standard colour
 
 BLURB = [
     "Imam an-Nawawī gathered forty-two short hadith, each one “a great foundation of the religion”. "
@@ -32,6 +36,25 @@ FEATURES = [
     "Five review tests — 250 questions — with answer key",
     "Free online edition with audio and a certificate",
 ]
+
+
+# On US Letter the A4 front design is kept: the frame and arch stretch to the page,
+# and the lettering is scaled evenly (no distortion) and centred.
+SCALE = 11.0 / 11.69
+LETTER_CSS = f"""
+.front .cover > .art {{ width: 100% !important; height: 100% !important; }}
+.front .ov {{ position: absolute; left: 50%; top: 0; width: 210mm; height: 297mm; transform: translateX(-50%) scale({SCALE:.4f}); transform-origin: top center; }}
+.back .in {{ transform: scale(.95); transform-origin: top center; }}
+"""
+
+
+def front_panel(lamp):
+    if not COLOR:
+        return front.cover_html_inner(lamp)
+    inner = front.cover_html_inner(lamp)
+    art_end = inner.index("</svg>") + len("</svg>")
+    # <div class="cover"><svg art/> ...lettering... </div>  ->  art stretched, lettering in a scaled overlay
+    return inner[:art_end] + '<div class="ov">' + inner[art_end:-len("</div>")] + "</div></div>"
 
 
 def html(spine_in):
@@ -75,6 +98,7 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 .spine .t2 {{ font-family: 'Amiri', serif; font-weight: 700; color: #fff; font-size: 11pt; }}
 .spine .t3 {{ font-family: 'Cinzel', serif; color: #d9c79a; font-size: 8.5pt; letter-spacing: .12em; }}
 .front {{ left: {front_x:.4f}in; }}
+{LETTER_CSS if COLOR else ""}
 </style></head><body><div class="wrap">
 <div class="panel back"><div class="bframe"></div><div class="bframe2"></div>
   <div class="in">
@@ -88,7 +112,7 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
   <div class="barcode"></div>
 </div>
 <div class="spine"><div class="st"><span class="t1">The Forty Hadith of Imam an-Nawawi</span><span class="t2" lang="ar">الأربعون النووية</span><span class="t3">Feysel Reshid</span></div></div>
-<div class="panel front">{front.cover_html_inner(lamp)}</div>
+<div class="panel front">{front_panel(lamp)}</div>
 </div></body></html>'''
 
 
@@ -100,7 +124,7 @@ def main():
     hp = os.path.join(ROOT, ".build-kdp", "kdp-cover.html")
     os.makedirs(os.path.dirname(hp), exist_ok=True)
     open(hp, "w", encoding="utf-8").write(html(spine))
-    out = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Cover.pdf")
+    out = OUT
     subprocess.run(["node", os.path.join(ROOT, "render.js"), hp, out], check=True)
     # Chromium rounds the page to whole pixels; trim to the exact KDP size (content is anchored top-left)
     from pypdf import PdfWriter

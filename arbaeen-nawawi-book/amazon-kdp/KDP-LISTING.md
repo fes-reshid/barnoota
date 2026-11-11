@@ -1,4 +1,13 @@
-# Amazon KDP: The Forty Hadith of Imam an-Nawawi (paperback, black and white)
+# Amazon KDP: The Forty Hadith of Imam an-Nawawi (paperback)
+
+There are two editions. Publish each one as a separate paperback in KDP, or start with one.
+
+| Edition | Interior | Cover | Size | Pages |
+|---|---|---|---|---|
+| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 239 |
+| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 256 |
+
+The sections below describe the black-and-white edition. The colour edition's differences are listed at the end.
 
 ## Before you publish: translation permission
 The English translations come from sunnah.com, which presents translations owned by their publishers. Get written permission to use them in a book you sell before you click **Publish**. Then update the credit line on the copyright page:
@@ -74,12 +83,27 @@ At 239 pages, large trim, black ink, the printing cost is about **$1.00 + 239 ×
 
 Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and round it, or set each one yourself.
 
+## Colour edition: what is different
+- **Ink and paper:** Standard color, white paper. KDP does not offer standard colour at A4, which is why this edition is US Letter.
+- **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Glossy shows the colours best; Matte also works.
+- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (256 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.827 × 11.25 in, spine 0.577 in).
+- **Subtitle:** you can add "Full Colour Edition" at the end so readers can tell the two listings apart.
+- **Price:** standard colour printing at large trim is about $1.00 + $0.0402 per page ≈ **$11.29** per copy. Check the exact figure in KDP's calculator.
+
+| List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
+|---|---|---|
+| $22.99 | ≈ $2.50 | — |
+| **$24.99 (suggested)** | **≈ $3.70** | — |
+| $29.99 | ≈ $6.70 | ≈ $0.71 |
+
 ## Rebuilding after any change
 From the `arbaeen-nawawi-book/` folder, run these in order:
 
 ```bash
-EDITION=kdp python3 build.py
-python3 build_kdp_cover.py
+EDITION=kdp python3 build.py          # black and white interior
+python3 build_kdp_cover.py            # its cover
+EDITION=kdp-color python3 build.py    # colour interior
+python3 build_kdp_cover.py color      # its cover
 ```
 
 The cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.**
