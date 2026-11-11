@@ -1,0 +1,5 @@
+/* Amazon KDP black-and-white interior: white paper, wide binding margin on alternate sides.
+   KDP minimums for 151-300 pages: inside 0.5in (12.7mm), outside 0.25in (6.35mm). */
+@page :right { margin: 19mm 15mm 19mm 22mm; }
+@page :left  { margin: 19mm 22mm 19mm 15mm; }
+:root { --paper: #ffffff; --cream: #ffffff; }

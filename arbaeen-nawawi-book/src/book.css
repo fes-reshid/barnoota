@@ -238,3 +238,8 @@ ol.ct .lines i { height: 7.5mm; }
 ol.ak-sa { margin: 0; padding-left: 6mm; font-size: 8.9pt; line-height: 1.45; }
 .toc-t .tt td { font-style: italic; color: var(--accent); }
 .toc-t .tt .tn { background: var(--gold); font-style: normal; }
+
+/* copyright page */
+.copyright { break-before: page; height: 255mm; display: flex; flex-direction: column; justify-content: flex-end; font-size: 9pt; line-height: 1.55; color: #3c372f; }
+.copyright p { text-align: left; margin: 0 0 3.2mm; hyphens: none; }
+.copyright .cp-dua { font-style: italic; color: var(--muted); margin-top: 3mm; }

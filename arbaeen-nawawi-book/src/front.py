@@ -61,12 +61,9 @@ def cover_art():
     return f'<svg class="art" viewBox="0 0 210 297" preserveAspectRatio="none">{b}</svg>'
 
 
-def cover_html(css):
-    lamp = FIGURES["lantern"]
-    return f'''<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css">
-<style>{css}
-@page {{ size: A4; margin: 0; }}</style></head><body>
-<div class="cover">{cover_art()}
+def cover_html_inner(lamp):
+    """The front cover itself (A4, used for the PDF cover and the KDP wrap)."""
+    return f'''<div class="cover">{cover_art()}
   <div class="c-top">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
   <div class="c-lamp">{lamp}</div>
   <div class="c-body">
@@ -78,7 +75,14 @@ def cover_html(css):
   </div>
   <div class="c-author"><span>Compiled by</span>{AUTHOR}</div>
   <div class="c-foot">A Complete Study Edition · 50 Hadith · 50 Weeks</div>
-</div></body></html>'''
+</div>'''
+
+
+def cover_html(css):
+    return f'''<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css">
+<style>{css}
+@page {{ size: A4; margin: 0; }}</style></head><body>
+{cover_html_inner(FIGURES["lantern"])}</body></html>'''
 
 
 # ------------------------------------------------------------------ title & bismillah
@@ -91,6 +95,24 @@ def title_page():
   <div class="t-orn">{FIGURES["lantern"]}</div>
   <div class="t-feat">The Arabic text · English translation from sunnah.com<br>An explanatory note, lessons, pictures and step-by-step guides<br>Questions and a to-do list for every week</div>
   <div class="t-by"><span>Compiled by</span><b>{AUTHOR}</b>A Study Edition · 1448 AH / 2026 CE</div>
+</section>'''
+
+
+# Edit this line once written permission for the English translations has been received.
+TRANSLATION_CREDIT = ("English translations of the hadith are reproduced from sunnah.com and the published "
+                      "translations it presents, with the permission of their copyright holders.")
+
+
+def copyright_page():
+    return f'''<section class="copyright">
+<p><b>The Forty Hadith of Imam an-Nawawi</b><br>with the additions of al-Ḥāfiẓ Ibn Rajab<br>A Study Edition</p>
+<p>Compiled by <b>{AUTHOR}</b></p>
+<p>Copyright © 2026 Feysel Reshid. All rights reserved.</p>
+<p>No part of this book’s notes, lessons, questions, exercises, illustrations or design may be reproduced, stored or transmitted in any form or by any means without the prior written permission of the author, except for brief quotations in reviews and for personal or classroom study.</p>
+<p>The Arabic text of the hadith is in the public domain. {TRANSLATION_CREDIT}</p>
+<p>First edition · 1448 AH / 2026 CE</p>
+<p>Online edition with audio, tests and certificate:<br><b>diinislaam.com/arbaeen-nawawi</b></p>
+<p class="cp-dua">We ask Allah to accept this work and to benefit by it whoever reads it.</p>
 </section>'''
 
 

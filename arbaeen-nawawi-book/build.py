@@ -30,8 +30,15 @@ for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"
     for h in m.HADITH:
         CONTENT[h["n"]] = h
 
+# EDITION=kdp builds the Amazon KDP black-and-white interior: white paper, greyscale,
+# mirrored margins (wide on the binding side), no cover inside.
+EDITION = os.environ.get("EDITION", "color")
+KDP = EDITION == "kdp"
 OUT_PDF = os.path.join(ROOT, "Forty-Hadith-Nawawi-Study-Book.pdf")
 BUILD = os.path.join(ROOT, ".build")
+if KDP:
+    OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-BW.pdf")
+    BUILD = os.path.join(ROOT, ".build-kdp")
 os.makedirs(BUILD, exist_ok=True)
 
 AR_ORD = ["الأَوَّلُ", "الثَّانِي", "الثَّالِثُ", "الرَّابِعُ", "الخَامِسُ", "السَّادِسُ", "السَّابِعُ", "الثَّامِنُ", "التَّاسِعُ", "العَاشِرُ"]
@@ -339,18 +346,41 @@ def toc_html(pages):
     return '<section class="page-sec toc" id="toc"><h1 class="fm-title">Contents</h1><div class="fm-ar" lang="ar" dir="rtl">الفِهْرِس</div><table class="toc-t">' + "".join(rows) + "</table></section>"
 
 
+HEX = re.compile(r"#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b")
+RGBA = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+)")
+
+
+def to_grey(text):
+    """Turn every colour in CSS/SVG/HTML into its grey equivalent (for black-and-white printing)."""
+    def g(r, gg, b):
+        return round(0.299 * r + 0.587 * gg + 0.114 * b)
+
+    def hx(m):
+        h = m.group(1)
+        if len(h) == 3:
+            h = "".join(ch * 2 for ch in h)
+        v = g(int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
+        return "#%02x%02x%02x" % (v, v, v)
+
+    text = HEX.sub(hx, text)
+    return RGBA.sub(lambda m: m.group(0).split("(")[0] + "(%d,%d,%d" % ((g(*map(int, m.groups())),) * 3), text)
+
+
 def build_html(pages):
     css = open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()
-    parts = [front.title_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
+    if KDP:
+        css += open(os.path.join(ROOT, "src", "kdp.css"), encoding="utf-8").read()
+    parts = [front.title_page(), front.copyright_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
              front.about_nawawi(), front.about_translation()]
     for n in range(1, 51):
         parts.append(hadith_html(n))
         if n % 10 == 0:
             parts.append(test_html(n // 10))
     parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), front.closing()]
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+    doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''
+    return to_grey(doc) if KDP else doc
 
 
 # ---------------------------------------------------------------- render
@@ -385,24 +415,35 @@ def underlay(n_pages, path):
     W, H = A4
     c = canvas.Canvas(path, pagesize=A4)
     paper, gold, ink = HexColor("#fbf6ea"), HexColor("#c9a14a"), HexColor("#0f4c45")
+    head_col = HexColor("#8c7a55")
+    if KDP:
+        paper, gold, ink, head_col = HexColor("#ffffff"), HexColor("#8a8a8a"), HexColor("#333333"), HexColor("#666666")
     mm = 72 / 25.4
     for i in range(1, n_pages + 1):
-        c.setFillColor(paper)
-        c.rect(0, 0, W, H, stroke=0, fill=1)
-        if i > 1:
-            m1, m2 = 8 * mm, 9.6 * mm
+        if not KDP:
+            c.setFillColor(paper)
+            c.rect(0, 0, W, H, stroke=0, fill=1)
+        if i > 2:  # no frame on the title page or the copyright page
+            # frame: equal on screen; for print the binding side is wider (odd pages bind on the left)
+            if KDP:
+                inner, outer = 14 * mm, 7.5 * mm
+                left, right = (inner, outer) if i % 2 == 1 else (outer, inner)
+            else:
+                left = right = 8 * mm
+            m1b = 8 * mm
             c.setStrokeColor(gold)
             c.setLineWidth(1.1)
-            c.rect(m1, m1, W - 2 * m1, H - 2 * m1)
+            c.rect(left, m1b, W - left - right, H - 2 * m1b)
             c.setLineWidth(0.4)
-            c.rect(m2, m2, W - 2 * m2, H - 2 * m2)
-            for (x, y) in [(m1, m1), (W - m1, m1), (m1, H - m1), (W - m1, H - m1)]:
+            d = 1.6 * mm
+            c.rect(left + d, m1b + d, W - left - right - 2 * d, H - 2 * m1b - 2 * d)
+            for (x, y) in [(left, m1b), (W - right, m1b), (left, H - m1b), (W - right, H - m1b)]:
                 star(c, x, y, 3.2 * mm, gold, paper)
             # running head
             c.setFont("Times-Roman", 7.2)
-            c.setFillColor(HexColor("#8c7a55"))
-            c.drawString(16 * mm, H - 13.2 * mm, "THE FORTY HADITH OF IMAM AN-NAWAWI")
-            c.drawRightString(W - 16 * mm, H - 13.2 * mm, "STUDY EDITION")
+            c.setFillColor(head_col)
+            c.drawString(left + 8 * mm, H - 13.2 * mm, "THE FORTY HADITH OF IMAM AN-NAWAWI")
+            c.drawRightString(W - right - 8 * mm, H - 13.2 * mm, "STUDY EDITION")
             # page number medallion
             star(c, W / 2, 9.0 * mm + 0.2 * mm, 5.0 * mm, gold, ink)
             c.setFillColor(HexColor("#ffffff"))
@@ -429,8 +470,9 @@ def compose(body_pdf, cover_pdf, out_pdf):
     underlay(len(body.pages), under_path)
     under = PdfReader(under_path)
     w = PdfWriter()
-    for pg in PdfReader(cover_pdf).pages:
-        w.add_page(pg)
+    if cover_pdf:
+        for pg in PdfReader(cover_pdf).pages:
+            w.add_page(pg)
     for i, pg in enumerate(body.pages):
         pg.merge_page(under.pages[i], over=False)
         w.add_page(pg).compress_content_streams()
@@ -467,9 +509,14 @@ def plan_notes(pdf_path):
 
 
 def main():
-    cover = os.path.join(BUILD, "cover.html")
-    open(cover, "w", encoding="utf-8").write(front.cover_html(open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()))
-    render(cover, os.path.join(BUILD, "cover.pdf"))
+    os.makedirs(BUILD, exist_ok=True)
+    os.makedirs(os.path.dirname(OUT_PDF), exist_ok=True)
+    cover_pdf = None
+    if not KDP:  # the KDP cover is a separate wrap file (build_kdp_cover.py)
+        cover = os.path.join(BUILD, "cover.html")
+        open(cover, "w", encoding="utf-8").write(front.cover_html(open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()))
+        cover_pdf = os.path.join(BUILD, "cover.pdf")
+        render(cover, cover_pdf)
     hp = os.path.join(BUILD, "book.html")
     body = os.path.join(BUILD, "body.pdf")
     # pass 0: notes headings without lines, to measure the space left in each chapter
@@ -484,7 +531,7 @@ def main():
         if new == pages:
             break
         pages = new
-    compose(os.path.join(BUILD, "body.pdf"), os.path.join(BUILD, "cover.pdf"), OUT_PDF)
+    compose(os.path.join(BUILD, "body.pdf"), cover_pdf, OUT_PDF)
     missing = [n for n in range(1, 51) if f"h{n}" not in pages]
     print("pages:", len(__import__("pypdf").PdfReader(OUT_PDF).pages), "missing toc:", missing)
 
