@@ -240,9 +240,11 @@ def hadith_html(n):
     out.append("</table>")
     out.append('<div class="memo"><span>Memorised the Arabic?</span><i></i><span>Date:</span><i class="w"></i><span>Teacher / parent:</span><i class="w"></i></div>')
     out.append("</div>")
-    lines = "".join("<i></i>" for _ in range(12))
-    out.append(f'<div class="block mynotes"><div class="keep">{sec_head("pen", "My Notes", "what I learned · questions to ask")}'
-               f'<div class="nlines"><i></i><i></i><i></i></div></div><div class="nlines">{lines}</div></div>')
+    # The notes block never splits: it fills the rest of the page, or takes a page of its own.
+    nl, full = NOTES_PLAN.get(n, (0, False))
+    lines = "".join("<i></i>" for _ in range(nl))
+    out.append(f'<div class="block mynotes{" fullpage" if full else ""}">{front.mk(f"notes{n}")}'
+               f'{sec_head("pen", "My Notes", "what I learned · questions to ask")}<div class="nlines">{lines}</div></div>')
     out.append("</section>")
     return "\n".join(out)
 
@@ -375,16 +377,46 @@ def compose(body_pdf, cover_pdf, out_pdf):
         w.write(f)
 
 
+NOTES_PLAN = {}            # hadith -> (number of lines, own page?)
+MM = 72 / 25.4
+LINE_MM = 8.0              # height of one ruled line (book.css)
+BOTTOM_PT = (297 - 19) * MM  # bottom of the text area
+FULL_LINES = 29            # lines on a page of its own
+
+
+def plan_notes(pdf_path):
+    """Measure where each chapter's notes heading starts and fill the rest of that page."""
+    import logging
+    import pdfplumber
+    logging.getLogger("pdfminer").setLevel(logging.ERROR)
+    plan = {}
+    with pdfplumber.open(pdf_path) as pdf:
+        for pg in pdf.pages:
+            for w in pg.extract_words():
+                m = re.search(r"MK-notes(\d+)-MK", w["text"])
+                if m:
+                    head_bottom = w["top"] + 11.5 * MM       # heading height + its margin
+                    free = BOTTOM_PT - head_bottom - 2 * MM  # small safety margin
+                    lines = int(free // (LINE_MM * MM))
+                    plan[int(m.group(1))] = (lines, False) if lines >= 6 else (FULL_LINES, True)
+    return plan
+
+
 def main():
     cover = os.path.join(BUILD, "cover.html")
     open(cover, "w", encoding="utf-8").write(front.cover_html(open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()))
     render(cover, os.path.join(BUILD, "cover.pdf"))
-    pages = {}
-    for pas in (1, 2):
-        hp = os.path.join(BUILD, "book.html")
+    hp = os.path.join(BUILD, "book.html")
+    body = os.path.join(BUILD, "body.pdf")
+    # pass 0: notes headings without lines, to measure the space left in each chapter
+    open(hp, "w", encoding="utf-8").write(build_html({}))
+    render(hp, body)
+    NOTES_PLAN.update(plan_notes(body))
+    pages = find_pages(body)
+    for _ in range(4):
         open(hp, "w", encoding="utf-8").write(build_html(pages))
-        render(hp, os.path.join(BUILD, "body.pdf"))
-        new = find_pages(os.path.join(BUILD, "body.pdf"))
+        render(hp, body)
+        new = find_pages(body)
         if new == pages:
             break
         pages = new

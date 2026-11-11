@@ -185,7 +185,7 @@ def tracker(titles):
     cells = "".join(f'<div style="--c:{PART_COLORS[(n - 1) // 10]}"><b>{n}</b>{titles.get(n, "")}<i></i></div>' for n in range(1, 51))
     return f'''<section class="page-sec">{mk("tracker")}{head("Memorisation Tracker", "جَدْوَلُ الحِفْظ")}
 <p style="text-align:center">Tick the box when you can recite the Arabic of the hadith from memory. Colours show the five parts of the book.</p>
-<div class="tracker">{cells}</div>
+<div class="tracker tracker-sec">{cells}</div>
 </section>'''
 
 

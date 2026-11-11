@@ -143,8 +143,9 @@ table.todo td.cb span { display: inline-block; width: 4.6mm; height: 4.6mm; bord
 .memo i.w { flex: 1; border: 0; border-bottom: 1px dotted #b9a983; border-radius: 0; height: 4mm; }
 
 /* ---------- back matter ---------- */
-.tracker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2mm; }
-.tracker div { border: 1.2px solid var(--c); border-radius: 2mm; padding: 1.4mm 2mm; background: #fff; font-size: 8pt; line-height: 1.25; height: 18.5mm; position: relative; }
+.tracker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.8mm; }
+.tracker-sec { break-inside: avoid; }
+.tracker div { border: 1.2px solid var(--c); border-radius: 2mm; padding: 1.4mm 2mm; background: #fff; font-size: 8pt; line-height: 1.25; height: 16mm; position: relative; break-inside: avoid; }
 .tracker div b { display: block; font-family: 'Cinzel', serif; color: var(--c); font-size: 12pt; }
 .tracker div i { position: absolute; right: 2mm; bottom: 2mm; width: 4.4mm; height: 4.4mm; border: 1.3px solid var(--c); border-radius: 1mm; }
 .gloss { columns: 2; column-gap: 8mm; font-size: 9.6pt; }
@@ -189,6 +190,7 @@ table.todo td.cb span { display: inline-block; width: 4.6mm; height: 4.6mm; bord
 .nr-ctx { font-size: 9.4pt; font-style: italic; color: var(--muted); margin: 1mm 0 0; padding-left: 1mm; }
 
 /* my notes */
+.mynotes { break-inside: avoid; }
+.mynotes.fullpage { break-before: page; }
 .mynotes .nlines i { display: block; height: 8mm; border-bottom: 1px solid #d9c9a3; }
-.mynotes .keep .nlines i:first-child { border-top: 0; }
 .en-box, .ar-box, .nr-card { break-inside: avoid; }
