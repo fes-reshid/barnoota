@@ -47,6 +47,8 @@ python3 build.py
 
 `../arbaeen-nawawi/` is the online book (diinislaam.com/arbaeen-nawawi/): all 50 hadith with Listen buttons, the five part tests marked automatically, and a certificate that unlocks after passing all five tests with 80% or more. Progress is saved in the reader's browser.
 
+Each narrator card has a **Read more** button that opens a longer life story of the Companion (`src/stories.py`, online edition only). The certificate is drawn in the browser with a background of gold Arabic calligraphy (Hadith 36).
+
 It is generated from the same sources as the PDF:
 
 ```bash

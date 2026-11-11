@@ -96,6 +96,15 @@ button{font:inherit;cursor:pointer}
 .nr .h .a{margin-left:auto;font-family:'Amiri',serif;color:var(--gold);font-size:17px}
 .nr p{margin:6px 0 0;font-size:15px}
 .ctx{font-style:italic;color:var(--muted);font-size:14.5px}
+.more{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:1.5px solid var(--gold);background:#fffaf0;color:#8a6a24;border-radius:20px;padding:5px 14px;font:700 13.5px 'Lora',serif}
+.more:hover{background:var(--gold);color:#fff}
+.story{margin-top:12px;border-top:1px dashed var(--gold2);padding-top:10px;animation:fade .3s ease}
+.story h4{font-family:'Cinzel',serif;color:var(--accent);margin:0 0 8px;font-size:16px}
+.story p{font-size:15.5px;line-height:1.75;margin:0 0 10px}
+.story .sl{background:var(--soft);border-radius:10px;padding:10px 14px;margin-top:6px}
+.story .sl b{color:var(--accent);font-family:'Cinzel',serif;font-size:13.5px}
+.story .sl ul{margin:6px 0 0;padding-left:20px;font-size:15px}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .note p{text-align:justify}
 .fig{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
 .fig svg{width:100%;height:auto}
@@ -257,8 +266,11 @@ function chapter(n){
      h.extra.map(function(x){return '<div class="extra">'+x+'</div>'}).join("")+
      '<div class="enref">'+h.enRef+' · <a href="https://'+h.enUrl+'" target="_blank" rel="noopener">'+h.enUrl+'</a></div></div>';
   o+='<div class="sec"><i>☺</i>About the Narrator'+(h.narr.cards.length>1?"s":"")+'</div>';
-  h.narr.cards.forEach(function(c){o+='<div class="nr"><div class="h"><b>'+c.name+'</b>'+(c.dates?'<span class="d">'+c.dates+'</span>':"")+'<span class="a" lang="ar">'+c.ar+'</span></div>'+
-     (c.see?'<p class="ctx">Biography: see <a href="#h/'+c.see+'">Hadith '+c.see+'</a>.</p>':'<p>'+c.text+'</p>')+'</div>'});
+  h.narr.cards.forEach(function(c){var st=B.stories[c.key];
+     o+='<div class="nr"><div class="h"><b>'+c.name+'</b>'+(c.dates?'<span class="d">'+c.dates+'</span>':"")+'<span class="a" lang="ar">'+c.ar+'</span></div>'+
+     (c.see?'<p class="ctx">Biography: see <a href="#h/'+c.see+'">Hadith '+c.see+'</a>.</p>':'<p>'+c.text+'</p>')+
+     (st?'<button class="more" aria-expanded="false" data-lab="'+(c.see?"Read the full story":"Read more")+'">'+(c.see?"Read the full story":"Read more")+' <span>▾</span></button><div class="story" hidden><h4>The story of '+c.name+'</h4>'+
+       st.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="sl"><b>What we learn from this life</b><ul>'+st.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div></div>':"")+'</div>'});
   if(h.narr.context)o+='<p class="ctx">'+h.narr.context+'</p>';
   o+='<div class="sec"><i>✎</i>Explanatory Note</div><div class="note">'+h.note.map(function(x){return "<p>"+x+"</p>"}).join("")+'</div>';
   if(h.fig)o+='<div class="sec"><i>▣</i>Picture</div><div class="fig">'+h.fig.svg+'</div><div class="cap">'+h.fig.cap+'</div>';
@@ -280,6 +292,9 @@ function chapter(n){
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function bindChapter(n){
   document.querySelectorAll(".listen").forEach(function(b){b.onclick=function(){play(b,b.dataset.l,n)}});
+  document.querySelectorAll(".more").forEach(function(b){var lab=b.dataset.lab;b.onclick=function(){var d=b.nextElementSibling, open=d.hidden;
+    d.hidden=!open;b.setAttribute("aria-expanded",open);b.innerHTML=(open?"Show less":lab)+" <span>"+(open?"▴":"▾")+"</span>";
+    if(!open)b.scrollIntoView({block:"nearest",behavior:"smooth"})}});
   var t;function flash(){var s=$("#saved");s.textContent="Saved on this device";clearTimeout(t);t=setTimeout(function(){s.textContent=""},1500)}
   document.querySelectorAll("textarea[data-a]").forEach(function(ta){ta.oninput=function(){(S.answers[n]=S.answers[n]||[])[+ta.dataset.a]=ta.value;save();flash()}});
   $("#mynotes").oninput=function(){S.notes[n]=this.value;save();flash()};
@@ -333,34 +348,69 @@ function certificate(){
     '<div class="cert-wrap"><canvas id="cv" width="2000" height="1414"></canvas></div></div>';
   return o;
 }
+var lampImg=null;
+function lamp(cb){if(lampImg){cb(lampImg);return}var im=new Image();im.onload=function(){lampImg=im;cb(im)};im.onerror=function(){cb(null)};
+  im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(B.lantern)}
+function frame(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arc(x+w,y,r,Math.PI,Math.PI/2,true);c.lineTo(x+w,y+h-r);
+  c.arc(x+w,y+h,r,-Math.PI/2,Math.PI,true);c.lineTo(x+r,y+h);c.arc(x,y+h,r,0,-Math.PI/2,true);c.lineTo(x,y+r);c.arc(x,y,r,Math.PI/2,0,true);c.closePath()}
 function drawCert(){
-  var cv=$("#cv"); if(!cv)return; var c=cv.getContext("2d"), W=2000, Hh=1414, name=(S.name||"").trim()||"Your Name";
-  var scores=[1,2,3,4,5].map(function(k){return S.tests[k].best}), total=scores.reduce(function(a,b){return a+b},0);
-  var g=c.createRadialGradient(W/2,Hh*0.45,100,W/2,Hh/2,1200);g.addColorStop(0,"#fffdf6");g.addColorStop(1,"#f5ecd6");
+  var cv=$("#cv"); if(!cv)return; lamp(function(im){paintCert(cv,im)});
+}
+function paintCert(cv,im){
+  var c=cv.getContext("2d"), W=cv.width, Hh=cv.height, name=(S.name||"").trim()||"Your Name", GOLD="#b8913f", EM="#0f4c45";
+  var total=[1,2,3,4,5].map(function(k){return S.tests[k].best}).reduce(function(a,b){return a+b},0);
+  c.save();c.clearRect(0,0,W,Hh);
+  // paper
+  var g=c.createLinearGradient(0,0,W,Hh);g.addColorStop(0,"#fbf3e1");g.addColorStop(.5,"#fffaf0");g.addColorStop(1,"#f6ead0");
   c.fillStyle=g;c.fillRect(0,0,W,Hh);
-  c.strokeStyle="#0f4c45";c.lineWidth=26;c.strokeRect(40,40,W-80,Hh-80);
-  c.strokeStyle="#c9a14a";c.lineWidth=5;c.strokeRect(78,78,W-156,Hh-156);c.lineWidth=2;c.strokeRect(96,96,W-192,Hh-192);
-  [[96,96],[W-96,96],[96,Hh-96],[W-96,Hh-96]].forEach(function(p){c.beginPath();c.arc(p[0],p[1],16,0,7);c.fillStyle="#0f4c45";c.fill();c.lineWidth=4;c.strokeStyle="#c9a14a";c.stroke()});
+  // emerald band
+  c.fillStyle=EM;c.fillRect(0,0,W,Hh);c.fillStyle=g;frame(c,46,46,W-92,Hh-92,46);c.fill();
+  // calligraphic background: a line of hadith 36, repeated in faint gold rows
+  c.save();frame(c,70,70,W-140,Hh-140,40);c.clip();
+  var line="مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الجَنَّةِ";
+  c.direction="rtl";c.textAlign="left";c.font="400 46px Amiri";c.fillStyle="rgba(184,145,63,0.20)";
+  var lw=c.measureText(line+"   ◆   ").width;
+  for(var row=0,y=118;y<Hh;row++,y+=74){var x0=-((row%2)?lw/2:0)-40;for(var x=x0;x<W;x+=lw){c.fillText(line+"   ◆   ",x,y)}}
+  c.direction="ltr";
+  // soft glow behind the text so the background stays a texture
+  var v=c.createRadialGradient(W/2,Hh*.5,120,W/2,Hh*.5,W*.55);v.addColorStop(0,"rgba(255,251,242,0.78)");v.addColorStop(.55,"rgba(255,251,242,0.55)");v.addColorStop(1,"rgba(255,251,242,0)");
+  c.fillStyle=v;c.fillRect(0,0,W,Hh);c.restore();
+  // gold frames with concave corners
+  c.strokeStyle=GOLD;c.lineWidth=6;frame(c,70,70,W-140,Hh-140,40);c.stroke();
+  c.lineWidth=2;frame(c,88,88,W-176,Hh-176,30);c.stroke();
+  [[88,88,1,1],[W-88,88,-1,1],[88,Hh-88,1,-1],[W-88,Hh-88,-1,-1]].forEach(function(p){c.save();c.translate(p[0],p[1]);c.scale(p[2],p[3]);
+    c.beginPath();c.moveTo(30,92);c.quadraticCurveTo(30,30,92,30);c.lineWidth=2.5;c.stroke();c.beginPath();c.arc(48,48,7,0,7);c.fillStyle=GOLD;c.fill();c.restore()});
+  // lantern hanging from the top frame
+  c.strokeStyle=GOLD;c.lineWidth=3;c.beginPath();c.moveTo(W/2,70);c.lineTo(W/2,104);c.stroke();
+  if(im)c.drawImage(im,W/2-58,96,116,151);
   c.textAlign="center";
-  c.fillStyle="#b8913f";c.font="44px Amiri";c.fillText("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",W/2,200);
-  c.fillStyle="#0f4c45";c.font="700 92px Cinzel";c.fillText("Certificate of Completion",W/2,330);
-  c.fillStyle="#6d5f45";c.font="italic 38px Lora";c.fillText("This is to certify that",W/2,430);
-  c.fillStyle="#23201b";c.font="700 96px Lora";c.fillText(name,W/2,560);
-  c.strokeStyle="#c9a14a";c.lineWidth=3;c.beginPath();c.moveTo(W/2-520,595);c.lineTo(W/2+520,595);c.stroke();
-  c.fillStyle="#6d5f45";c.font="italic 38px Lora";c.fillText("has studied and completed",W/2,680);
-  c.fillStyle="#b8913f";c.font="700 84px Amiri";c.fillText("الأَرْبَعُونَ النَّوَوِيَّةُ",W/2,800);
-  c.fillStyle="#0f4c45";c.font="700 56px Cinzel";c.fillText("The Forty Hadith of Imam an-Nawawi",W/2,890);
-  c.fillStyle="#6d5f45";c.font="34px Lora";c.fillText("with the additions of Ibn Rajab · fifty hadith · five part tests passed ("+total+"/175)",W/2,955);
-  var d=new Date(), ds=d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
-  c.font="32px Lora";c.fillStyle="#23201b";
-  c.fillText(ds,W/2-520,1150);c.fillText("Feysel Reshid",W/2+520,1150);
-  c.strokeStyle="#6d5f45";c.lineWidth=2;c.beginPath();c.moveTo(W/2-720,1170);c.lineTo(W/2-320,1170);c.moveTo(W/2+320,1170);c.lineTo(W/2+720,1170);c.stroke();
-  c.fillStyle="#6d5f45";c.font="26px Lora";c.fillText("DATE",W/2-520,1210);c.fillText("COMPILER · DIIN ISLAAM",W/2+520,1210);
-  c.beginPath();c.arc(W/2,1170,86,0,7);c.fillStyle="#0f4c45";c.fill();c.lineWidth=8;c.strokeStyle="#c9a14a";c.stroke();
-  c.beginPath();c.arc(W/2,1170,70,0,7);c.lineWidth=2;c.stroke();
-  c.fillStyle="#ecd391";c.font="700 30px Cinzel";c.fillText("50",W/2,1162);c.font="20px Cinzel";c.fillText("HADITH",W/2,1194);
+  c.fillStyle=GOLD;c.font="400 40px Amiri";c.direction="rtl";c.fillText("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",W/2,300);c.direction="ltr";
+  c.fillStyle=EM;c.font="700 86px Cinzel";c.fillText("Certificate of Completion",W/2,405);
+  c.fillStyle="#6d5f45";c.font="italic 36px Lora";c.fillText("This is to certify that",W/2,480);
+  var fs=96;c.font="700 "+fs+"px Lora";while(c.measureText(name).width>W-520&&fs>48){fs-=4;c.font="700 "+fs+"px Lora"}
+  c.fillStyle="#23201b";c.fillText(name,W/2,590);
+  var nw=Math.min(c.measureText(name).width/2+90,560);
+  c.strokeStyle=GOLD;c.lineWidth=2.5;c.beginPath();c.moveTo(W/2-nw,625);c.lineTo(W/2-18,625);c.moveTo(W/2+18,625);c.lineTo(W/2+nw,625);c.stroke();
+  c.save();c.translate(W/2,625);c.rotate(Math.PI/4);c.fillStyle=GOLD;c.fillRect(-8,-8,16,16);c.restore();
+  c.fillStyle="#6d5f45";c.font="italic 36px Lora";c.fillText("has studied, understood and completed",W/2,700);
+  c.fillStyle=GOLD;c.font="700 80px Amiri";c.direction="rtl";c.fillText("الأَرْبَعُونَ النَّوَوِيَّةُ",W/2,812);c.direction="ltr";
+  c.fillStyle=EM;c.font="700 52px Cinzel";c.fillText("The Forty Hadith of Imam an-Nawawi",W/2,893);
+  c.fillStyle="#6d5f45";c.font="31px Lora";c.fillText("with the additions of Ibn Rajab · fifty hadith · all five part tests passed ("+total+"/175)",W/2,950);
+  // the verse
+  c.fillStyle=EM;c.font="700 50px Amiri";c.direction="rtl";c.fillText("﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾",W/2,1036);c.direction="ltr";
+  c.fillStyle="#8c7a55";c.font="italic 25px Lora";c.fillText("“And say: My Lord, increase me in knowledge.” (Ṭā-Hā 20:114)",W/2,1092);
+  // signatures and seal
+  var ds=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  c.font="32px Lora";c.fillStyle="#23201b";c.fillText(ds,W/2-540,1190);c.font="italic 600 36px Lora";c.fillText("Feysel Reshid",W/2+540,1190);
+  c.strokeStyle="#9d8a62";c.lineWidth=2;c.beginPath();c.moveTo(W/2-740,1210);c.lineTo(W/2-340,1210);c.moveTo(W/2+340,1210);c.lineTo(W/2+740,1210);c.stroke();
+  c.fillStyle="#8c7a55";c.font="600 22px Cinzel";c.fillText("DATE",W/2-540,1246);c.fillText("COMPILER · DIIN ISLAAM",W/2+540,1246);
+  c.beginPath();c.arc(W/2,1200,98,0,7);c.fillStyle=EM;c.fill();c.lineWidth=7;c.strokeStyle=GOLD;c.stroke();
+  c.beginPath();c.arc(W/2,1200,84,0,7);c.lineWidth=1.6;c.stroke();
+  c.fillStyle="#ecd391";c.font="700 22px Amiri";c.direction="rtl";c.fillText("خَمْسُونَ حَدِيثًا",W/2,1172);c.direction="ltr";
+  c.font="700 46px Cinzel";c.fillText("50",W/2,1222);c.font="600 16px Cinzel";c.fillText("HADITH",W/2,1248);
   var id=0;for(var i=0;i<name.length;i++)id=(id*31+name.charCodeAt(i))>>>0;
-  c.fillStyle="#9d8a62";c.font="22px Lora";c.fillText("diinislaam.com/arbaeen-nawawi · certificate no. AN-"+(id%1000000).toString().padStart(6,"0")+"-"+d.getFullYear(),W/2,1300);
+  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("diinislaam.com/arbaeen-nawawi · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
+  c.restore();
 }
 function bindCert(){
   var inp=$("#cname");if(!inp)return;
