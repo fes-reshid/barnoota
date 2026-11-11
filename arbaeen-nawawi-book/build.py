@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.join(ROOT, "src"))
 
 from texts import ARABIC, EXTRA  # noqa: E402
 from figures import FIGURES  # noqa: E402
+from english import layout as en_layout, PB, REF  # noqa: E402
+import narrators  # noqa: E402
 import front  # noqa: E402
 
 CONTENT = {}
@@ -87,6 +89,46 @@ def english(n):
     return e["en"], e["ref"], e["url"]
 
 
+def en_html(n, text):
+    """sunnah.com English laid out like the Arabic: paragraphs, Prophetic words coloured."""
+    marked, tail = en_layout(n, text)
+    body = esc(marked)
+    body = REF.sub(lambda m: f'<span class="en-refin">{m.group(0)}</span>', body)
+    # open/close the colour span across paragraph breaks
+    out, inside = [], False
+    for ch in body:
+        if ch == "{":
+            inside = True
+            out.append('<b class="pw">')
+        elif ch == "}":
+            inside = False
+            out.append("</b>")
+        elif ch == PB:
+            out.append(('</b>' if inside else '') + '</p><p>' + ('<b class="pw">' if inside else ''))
+        else:
+            out.append(ch)
+    return "<p>" + "".join(out) + "</p>", tail
+
+
+def narrator_html(n):
+    first = narrators.first_seen()
+    cards = []
+    for k in narrators.NARRATORS.get(n, []):
+        b = narrators.BIO[k]
+        dates = f'<span class="nr-d">{b["dates"]}</span>' if b["dates"] else ""
+        head = (f'<div class="nr-h"><span class="nr-n">{esc(b["name"])}</span>{dates}'
+                f'<span class="nr-ar" lang="ar" dir="rtl">{b["ar"]}</span></div>')
+        if first[k] == n:
+            cards.append(head + f'<p>{esc(b["text"])}</p>')
+        else:
+            cards.append(head + f'<p class="nr-ref">Biography: see Hadith {first[k]}.</p>')
+    ctx = narrators.CONTEXT.get(n)
+    ctx_html = f'<p class="nr-ctx">{esc(ctx)}</p>' if ctx else ""
+    title = "About the Narrators" if len(cards) > 1 else "About the Narrator"
+    return (f'<div class="block narr"><div class="keep">{sec_head("person", title)}<div class="nr-card">{cards[0]}</div></div>'
+            + "".join(f'<div class="nr-card">{c}</div>' for c in cards[1:]) + ctx_html + "</div>")
+
+
 def ar_html(n):
     """Arabic text: {…} marks the Prophetic (or Divine) words, shown in the accent colour."""
     a = ARABIC[n]
@@ -120,6 +162,8 @@ ICONS = {
     "questions": '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 9.3a2.6 2.6 0 1 1 3.6 2.4c-.8.4-1.1.9-1.1 1.8M12 17h.01" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
     "todo": '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     "picture": '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M4 17l5-4 4 3 3-2 4 3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+    "person": '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c1-4.5 4.5-6.5 8-6.5s7 2 8 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+    "pen": '<svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 7l3 3" stroke="currentColor" stroke-width="1.8"/></svg>',
     "book": '<svg viewBox="0 0 24 24"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6v14" stroke="currentColor" stroke-width="1.6"/></svg>',
 }
 
@@ -155,13 +199,15 @@ def hadith_html(n):
     extra = ""
     if n > 42 and EXTRA[n].get("extra_en"):
         extra = "".join(f'<p class="en-extra">{esc(x)}</p>' for x in EXTRA[n]["extra_en"])
-    out.append(f'''<div class="en-box"><p class="en-text"><span class="en-label">English translation <span>· sunnah.com</span></span><br>{esc(en)}</p>{extra}
-  <div class="en-ref">{esc(ref)} — <i>{esc(url)}</i></div></div>''')
+    en_body, en_tail = en_html(n, en)
+    tail = f'{esc(en_tail)} · ' if en_tail else ""
+    out.append(f'''<div class="en-box"><div class="en-label">English Translation <span>sunnah.com</span></div>
+  <div class="en-text">{en_body}</div>{extra}
+  <div class="en-ref">{tail}{esc(ref)} · <i>{esc(url)}</i></div></div>''')
     if not c:
         out.append("</section>")
         return "\n".join(out)
-    if c.get("narrator"):
-        out.append(f'<div class="narrator"><b>The narrator:</b> {esc(c["narrator"])}</div>')
+    out.append(narrator_html(n))
     # Note
     out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{esc(c['note'][0])}</p></div>")
     out.extend(f"<p>{esc(x)}</p>" for x in c["note"][1:])
@@ -193,7 +239,11 @@ def hadith_html(n):
         out.append(f'<tr><td class="d">{d}</td><td>{esc(t)}</td><td class="cb"><span></span></td></tr>')
     out.append("</table>")
     out.append('<div class="memo"><span>Memorised the Arabic?</span><i></i><span>Date:</span><i class="w"></i><span>Teacher / parent:</span><i class="w"></i></div>')
-    out.append("</div></section>")
+    out.append("</div>")
+    lines = "".join("<i></i>" for _ in range(12))
+    out.append(f'<div class="block mynotes"><div class="keep">{sec_head("pen", "My Notes", "what I learned · questions to ask")}'
+               f'<div class="nlines"><i></i><i></i><i></i></div></div><div class="nlines">{lines}</div></div>')
+    out.append("</section>")
     return "\n".join(out)
 
 
@@ -318,7 +368,7 @@ def compose(body_pdf, cover_pdf, out_pdf):
     for i, pg in enumerate(body.pages):
         pg.merge_page(under.pages[i], over=False)
         w.add_page(pg).compress_content_streams()
-    w.compress_identical_objects(remove_identicals=True, remove_unreferenced=True)
+    w.compress_identical_objects(remove_duplicates=True, remove_unreferenced=True)
     w.add_metadata({"/Title": "The Forty Hadith of Imam an-Nawawi — Study Edition",
                     "/Subject": "Arabic text, sunnah.com English translation, notes, lessons, questions and weekly to-do lists"})
     with open(out_pdf, "wb") as f:

@@ -109,11 +109,11 @@ def preface():
 <p class="dropcap">All praise belongs to Allah, Lord of the worlds, and may peace and blessings be upon our Prophet Muhammad, upon his family and all of his Companions. Among the gifts Allah gave His Messenger ﷺ was <i>jawāmiʿ al-kalim</i>: short sentences that carry a great deal of meaning. A few words from him can hold a whole chapter of the religion, and the scholars of every generation have collected such sayings so that Muslims can learn the most with the least effort.</p>
 <p>The most loved of these collections is the <b>Forty Hadith</b> of Imam Yaḥyā ibn Sharaf an-Nawawī (d. 676 AH). He chose forty-two hadith, each of which, in his words, is “a great foundation of the foundations of the religion”. They cover belief, worship, character, dealings with people and the purification of the heart. Some scholars said that the whole of Islam turns on a handful of them: “Actions are by intentions”, “Whoever introduces into this affair of ours…”, “The halal is clear and the haram is clear”, and “Leave what does not concern you”. A century later, al-Ḥāfiẓ Ibn Rajab al-Ḥanbalī (d. 795 AH) wrote his famous commentary <i>Jāmiʿ al-ʿUlūm wa-l-Ḥikam</i> on them and added eight more, bringing the total to fifty. This book follows that fifty-hadith text exactly as it is printed in the source edition.</p>
 <p>This is a <b>study edition</b>. It is meant to be read with a pen in your hand, not only memorised and put on a shelf. Each hadith has its own chapter, and every chapter is built the same way:</p>
-<div class="callout">the <b>Arabic text</b>, fully voweled, with the Prophet’s own words in colour · the <b>English translation</b> from sunnah.com, with its reference · a short word about the <b>narrator</b> · an <b>explanatory note</b> drawn from the classical commentaries of an-Nawawī, Ibn Rajab, Ibn Daqīq al-ʿĪd and later scholars · the <b>lessons</b> of the hadith · a <b>picture</b> wherever a picture makes the meaning clearer · <b>step-by-step guides</b> wherever the hadith asks us to do something · five to seven <b>questions</b> with space to write · and a <b>to-do list for the week</b>, so that the hadith leaves the page and enters your day.</div>
-<p>Fifty hadith fit neatly into a year: one hadith a week, with two weeks left for revision. A family can read one chapter together on the weekend, work through the questions during the week and tick the to-do list each evening. A teacher can use one chapter per lesson. A student can work alone and keep the memorisation tracker at the back of the book.</p>
+<div class="callout">the <b>Arabic text</b>, fully voweled, with the Prophet’s own words in colour · the <b>English translation</b> from sunnah.com, with its reference · a short <b>biography of the Companion</b> who narrated it · an <b>explanatory note</b> drawn from the classical commentaries of an-Nawawī, Ibn Rajab, Ibn Daqīq al-ʿĪd and later scholars · the <b>lessons</b> of the hadith · a <b>picture</b> wherever a picture makes the meaning clearer · <b>step-by-step guides</b> wherever the hadith asks us to do something · five to seven <b>questions</b> with space to write · a <b>to-do list for the week</b>, so that the hadith leaves the page and enters your day, and ruled pages for <b>your own notes</b>.</div>
+<p>Fifty hadith fit neatly into a year: one hadith a week, with two weeks left for revision. A family can read a chapter together at the weekend and tick the to-do list each evening; a teacher can use one chapter per lesson; a student can work alone with the memorisation tracker at the back.</p>
 <p>The notes are brief on purpose: a doorway, not the whole house. Whoever wants more should read the commentaries, above all <i>Jāmiʿ al-ʿUlūm wa-l-Ḥikam</i>, and study with people of knowledge; where scholars differ on a ruling, ask a trusted scholar about your own situation.</p>
 <p>The Companions did not move past ten verses of the Qur’an until they had learned the knowledge and the action in them. Learn the words, understand the meaning, then <b>act</b>. Whatever is correct in this book is from Allah alone, and whatever mistake it contains is from its compiler and from Shayṭān. We ask Allah to make it sincerely for His Face, to benefit its readers, and to forgive whoever reads it and makes du‘a for those who worked on it.</p>
-<p class="sign"><b>Feysel Reshid</b><br>1448 AH / 2026 CE</p>
+<p class="sign" style="margin-top:3mm"><b>Feysel Reshid</b> · 1448 AH / 2026 CE</p>
 </section>'''
 
 
@@ -121,12 +121,13 @@ def preface():
 def how_to_use():
     rows = [
         ("1 · Read the Arabic", "Read the hadith aloud in Arabic, slowly. The Prophet’s ﷺ own words are in colour. Repeat the coloured part until you can say it without looking."),
-        ("2 · Read the translation", "The English is from sunnah.com, with the reference so you can look the hadith up online. Read it twice."),
+        ("2 · Read the translation", "The English is from sunnah.com, with the reference so you can look the hadith up online. The Prophet’s ﷺ words are in colour here too. Then read about the Companion who narrated it."),
         ("3 · Study the note and the picture", "The explanatory note gives the meaning and the background. The picture puts the whole hadith in one drawing — try to redraw it from memory."),
         ("4 · Learn the lessons", "Each numbered lesson is one thing the hadith teaches. Choose one lesson and share it with someone this week."),
         ("5 · Follow the steps", "When a hadith asks you to do something, the ‘Step by Step’ box shows how, in order."),
         ("6 · Answer the questions", "Write your answers in the space given. Some questions test what you understood; the last ones ask you to think about your own life."),
         ("7 · Live the to-do list", "Seven small tasks, one for each day from Saturday to Friday. Tick each box when it is done. At the end of the week, sign the memorisation line."),
+        ("8 · Write your notes", "Use the ‘My Notes’ lines at the end of each chapter for what you learned, questions to ask your teacher, and du‘as to remember."),
     ]
     items = "".join(f'<div class="step"><span class="sn">{i + 1}</span><div><b>{h.split(" · ")[1]}</b><br>{d}</div></div>' for i, (h, d) in enumerate(rows))
     plan = "".join(f"<tr><td><b>{a}</b></td><td>{b}</td></tr>" for a, b in [
@@ -135,7 +136,7 @@ def how_to_use():
         ("Friday", "Revise the hadith from memory, check the to-do list, sign the memorisation line."),
         ("Every 10 weeks", "A revision week: recite the ten hadith of the part and redo the questions you found hardest.")])
     return f'''<section class="page-sec" style="--accent:#0f5a4f;--soft:#e3f0ec">{mk("howto")}{head("How to Use This Book", "كَيْفَ تَسْتَفِيدُ مِنْ هَذَا الكِتَاب")}
-<p>Every chapter follows the same seven parts. Work through them in order. A chapter takes about a week.</p>
+<p>Every chapter follows the same eight parts. Work through them in order. A chapter takes about a week.</p>
 <div class="steps">{items}</div>
 <h3>A suggested weekly rhythm</h3>
 <table class="todo" style="margin-top:2mm">{plan}</table>
