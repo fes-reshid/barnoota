@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Forty Hadith of Imam an-Nawawi · Online Study Book · Diin Islaam</title>
+<meta name="description" content="The Forty Hadith of Imam an-Nawawi with Ibn Rajab's additions: Arabic, English from sunnah.com, audio, notes, lessons, part tests and a certificate. Compiled by Feysel Reshid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#26221c;--muted:#6d5f45;--gold:#b8913f;--gold2:#d9bd7a;--paper:#fffdf8;--cream:#fbf6ea;--emerald:#0f4c45;--accent:#0f5a4f;--soft:#e3f0ec;--line:#eadfc3;--ok:#2e7d4f;--bad:#b23a3a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.65 'Lora',Georgia,serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+[lang=ar],.ar{font-family:'Amiri',serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+/* top bar */
+.top{position:sticky;top:0;z-index:30;background:rgba(11,58,53,.97);color:#fff;border-bottom:2px solid var(--gold)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:54px}
+.top a.home{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.06em;text-decoration:none;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .sp{flex:1}
+.top .pbar{width:120px;height:7px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden}
+.top .pbar i{display:block;height:100%;width:0;background:var(--gold2);transition:width .4s}
+.top .pct{font-size:12px;color:#e8d29a;min-width:34px;text-align:right}
+.top .back{color:#e8d29a;text-decoration:none;font-size:13px}
+@media(max-width:520px){.top .pbar{width:60px}.top .back{display:none}}
+/* hero */
+.hero{background:radial-gradient(ellipse at 50% 35%,#17594f 0%,#0c3d36 55%,#05211d 100%);color:#fff;text-align:center;padding:34px 16px 40px;position:relative;overflow:hidden}
+.hero .arch{max-width:520px;margin:0 auto;border:1.5px solid var(--gold);border-radius:260px 260px 10px 10px;padding:28px 22px 26px;box-shadow:0 0 0 6px rgba(201,161,74,.0),inset 0 0 0 5px #0c3d36,inset 0 0 0 6px rgba(201,161,74,.6)}
+.hero .lamp{width:64px;margin:0 auto 6px}
+.hero .t-ar{font-family:'Amiri',serif;font-weight:700;font-size:44px;line-height:1.3;color:#ecd391}
+.hero h1{font-family:'Cinzel',serif;font-weight:700;font-size:26px;line-height:1.25;margin:6px 0 4px;letter-spacing:.04em}
+.hero .sub{font-style:italic;color:#f3e6c4;font-size:15px}
+.hero .by{margin-top:14px;font-family:'Cinzel',serif;color:#ecd391;letter-spacing:.12em;font-size:15px}
+.hero .by span{display:block;font-family:'Lora',serif;font-style:italic;letter-spacing:0;font-size:12px;color:#d9c79a}
+.hero .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:24px;padding:10px 20px;font-weight:700;text-decoration:none;font-size:15px}
+.btn.gold{background:var(--gold2);color:#0b3a35}
+.btn.ghost{background:transparent;color:#ecd391;border:1.5px solid var(--gold2)}
+.btn.acc{background:var(--accent);color:#fff}
+.btn.line{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:-22px auto 8px;position:relative;z-index:2}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.06)}
+.stat b{display:block;font-family:'Cinzel',serif;font-size:22px;color:var(--emerald)}
+.stat small{color:var(--muted);font-size:12px}
+/* part list */
+.part{margin:28px 0 8px;--accent:var(--pa)}
+.part h2{font-family:'Cinzel',serif;color:var(--accent);font-size:20px;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.part h2 small{font-family:'Lora',serif;font-size:13px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:12px}
+.card{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:10px 12px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.07)}
+.num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--gold)}
+.card .tt{flex:1;min-width:0}
+.card .tt b{display:block;font-size:14.5px;line-height:1.3}
+.card .tt span{font-family:'Amiri',serif;color:var(--muted);font-size:14px}
+.card .ck{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+.card.done .ck{background:var(--ok);border-color:var(--ok)}
+.card.test{border-left-color:var(--gold);background:linear-gradient(90deg,#fffaf0,#fff)}
+.card.test .num{background:var(--gold)}
+.card.cert{border-left-color:var(--emerald)}
+/* chapter */
+.chap{--accent:var(--pa);--soft:var(--ps)}
+.chead{display:flex;align-items:center;gap:16px;padding:22px 0 12px;border-bottom:2px solid var(--accent);margin-bottom:6px}
+.chead .num{width:62px;height:62px;font-size:24px;box-shadow:0 0 0 3px var(--cream),0 0 0 5px var(--gold)}
+.kicker{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.chead h1{font-family:'Cinzel',serif;color:var(--accent);font-size:24px;line-height:1.2;margin:2px 0}
+.chead .art{font-family:'Amiri',serif;font-weight:700;color:var(--muted);font-size:18px}
+.theme{font-style:italic;color:var(--muted);text-align:center;margin:10px 0 16px}
+.box{position:relative;background:var(--paper);border:1.4px solid var(--accent);border-radius:12px;padding:18px 20px 14px;margin:0 0 16px;box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--gold2)}
+.box .lab{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.box .lab .sp{flex:1}
+.listen{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--accent);background:#fff;color:var(--accent);border-radius:20px;padding:4px 12px 4px 8px;font:700 12.5px 'Lora',serif;letter-spacing:0;text-transform:none}
+.listen svg{width:18px;height:18px}
+.listen.on{background:var(--accent);color:#fff}
+.artext{font-family:'Amiri',serif;font-size:25px;line-height:2.05;direction:rtl;text-align:justify;color:#2b2620}
+.artext .pw,.entext .pw{color:var(--accent);font-weight:700}
+.arsrc{font-family:'Amiri',serif;font-size:17px;color:var(--muted);direction:rtl;text-align:right;margin-top:4px}
+.entext{font-size:17px;line-height:1.75}
+.entext p{margin:0 0 10px}
+.entext .en-refin{font-size:13px;color:var(--muted)}
+.enref{font-size:13px;color:var(--muted);text-align:right;border-top:1px solid rgba(0,0,0,.06);padding-top:6px;margin-top:6px}
+.enref a{color:var(--accent)}
+.extra{font-size:14.5px;border-top:1px dashed var(--gold2);padding-top:8px;margin-top:8px;color:#3c372f}
+.sec{margin:22px 0 10px;display:flex;align-items:center;gap:10px;font-family:'Cinzel',serif;color:var(--accent);font-size:17px;font-weight:700;border-bottom:1px solid var(--gold2);padding-bottom:6px}
+.sec i{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:15px}
+.nr{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.nr .h{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.nr .h b{font-family:'Cinzel',serif;color:var(--accent)}
+.nr .h .d{font-size:12px;background:var(--accent);color:#fff;border-radius:10px;padding:0 8px}
+.nr .h .a{margin-left:auto;font-family:'Amiri',serif;color:var(--gold);font-size:17px}
+.nr p{margin:6px 0 0;font-size:15px}
+.ctx{font-style:italic;color:var(--muted);font-size:14.5px}
+.more{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:1.5px solid var(--gold);background:#fffaf0;color:#8a6a24;border-radius:20px;padding:5px 14px;font:700 13.5px 'Lora',serif}
+.more:hover{background:var(--gold);color:#fff}
+.story{margin-top:12px;border-top:1px dashed var(--gold2);padding-top:10px;animation:fade .3s ease}
+.story h4{font-family:'Cinzel',serif;color:var(--accent);margin:0 0 8px;font-size:16px}
+.story p{font-size:15.5px;line-height:1.75;margin:0 0 10px}
+.story .sl{background:var(--soft);border-radius:10px;padding:10px 14px;margin-top:6px}
+.story .sl b{color:var(--accent);font-family:'Cinzel',serif;font-size:13.5px}
+.story .sl ul{margin:6px 0 0;padding-left:20px;font-size:15px}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.note p{text-align:justify}
+.fig{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.fig svg{width:100%;height:auto}
+.fig .ac{fill:var(--accent)}.fig .acs{stroke:var(--accent)}.fig .sf{fill:var(--soft)}.fig .act{fill:var(--accent)}
+.cap{font-style:italic;color:var(--muted);font-size:13.5px;text-align:center;margin-top:6px}
+ol.ls{list-style:none;padding:0;margin:0;counter-reset:l}
+ol.ls li{counter-increment:l;position:relative;padding-left:36px;margin-bottom:8px}
+ol.ls li::before{content:counter(l);position:absolute;left:0;top:2px;width:24px;height:24px;border-radius:7px;background:var(--soft);border:1.3px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.step .sn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step b{color:var(--accent)}
+.qa{margin-bottom:12px}
+.qa .q{font-weight:600}
+textarea{width:100%;min-height:62px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:15px/1.5 'Lora',serif;background:#fff;resize:vertical;margin-top:4px}
+textarea:focus,select:focus,input:focus{outline:2px solid var(--gold2);outline-offset:1px}
+.todo{border:1.3px solid var(--accent);border-radius:12px;overflow:hidden}
+.todo label{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);background:#fff;cursor:pointer}
+.todo label:nth-child(even){background:var(--soft)}
+.todo label:last-child{border-bottom:0}
+.todo .d{flex:none;width:48px;font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:#fff;background:var(--accent);border-radius:6px;text-align:center;padding:2px 0}
+.todo span.t{flex:1}
+.todo input{width:20px;height:20px;accent-color:var(--accent)}
+.todo label.on span.t{color:var(--muted);text-decoration:line-through}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin:28px 0 40px;flex-wrap:wrap}
+.studied{display:flex;justify-content:center;margin:24px 0 0}
+.saved{font-size:12.5px;color:var(--muted);text-align:right;min-height:18px}
+/* test */
+.thead{text-align:center;background:var(--paper);border:1.5px solid var(--accent);border-radius:14px;padding:18px;margin:22px 0 14px;box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--gold2)}
+.thead h1{font-family:'Cinzel',serif;color:var(--accent);margin:2px 0;font-size:26px}
+.thead p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+.mcq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.mcq .q{font-weight:600;margin-bottom:6px}
+.mcq label{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;border-radius:8px;cursor:pointer}
+.mcq label:hover{background:var(--soft)}
+.mcq input{margin-top:5px;accent-color:var(--accent)}
+.mcq label.right{background:#e3f3e8;outline:1.5px solid var(--ok)}
+.mcq label.wrong{background:#fbe9e9;outline:1.5px solid var(--bad)}
+.mtable{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.mtable td.n{width:38px;text-align:center;color:#fff;background:var(--accent);font-weight:700}
+.mtable select{font:15px 'Lora',serif;padding:6px 8px;border-radius:8px;border:1px solid var(--line);max-width:100%;width:100%}
+.mtable tr.right td.n{background:var(--ok)}.mtable tr.wrong td.n{background:var(--bad)}
+.model{display:none;margin-top:6px;font-size:14.5px;background:var(--soft);border-radius:8px;padding:8px 10px}
+.done .model{display:block}
+.result{position:sticky;bottom:10px;z-index:5;background:#0b3a35;color:#fff;border-radius:14px;padding:14px 16px;margin:20px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.result b{font-family:'Cinzel',serif;font-size:22px;color:#ecd391}
+.result .sp{flex:1}
+/* certificate */
+.cert-wrap{text-align:center;margin:22px 0 40px}
+.cert-wrap canvas{width:100%;height:auto;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.18);background:#fff}
+.cert-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.cert-form input{font:17px 'Lora',serif;padding:10px 14px;border-radius:24px;border:1.5px solid var(--accent);min-width:260px;max-width:100%}
+.lock{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin:22px 0}
+.lock li{margin:4px 0}
+.msg{background:#fff6dd;border:1px solid var(--gold2);border-radius:10px;padding:8px 12px;font-size:14px;margin:8px 0}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:24px 16px 40px}
+@media(max-width:600px){.result{position:static}.hero .t-ar{font-size:34px}.hero h1{font-size:21px}.chead h1{font-size:20px}.artext{font-size:22px}.entext{font-size:16px}.stats{grid-template-columns:repeat(3,1fr)}}
+@media print{.top,.navrow,.result,footer,.cert-form,.noprint{display:none!important}body{background:#fff}
+ body.certpage .thead,body.certpage .wrap>p{display:none!important}body.certpage .cert-wrap canvas{box-shadow:none}@page{margin:10mm}}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <a class="home" href="#">The Forty Hadith · an-Nawawi</a><span class="sp"></span>
+  <a class="back" href="/hadeeth.html">Ḥadīth courses</a>
+  <div class="pbar" title="Hadith studied"><i id="pbar"></i></div><span class="pct" id="pct">0%</span>
+</div></div>
+<main id="app"></main>
+<footer>Compiled by Feysel Reshid · English translations from sunnah.com · <a href="/arbaeen-nawawi-book/Forty-Hadith-Nawawi-Study-Book.pdf">Download the printed book (PDF)</a> · Diin Islaam</footer>
+<script src="data.js"></script>
+<script>
+(function(){
+"use strict";
+var B=window.BOOK, H=B.hadith, P=B.parts, T=B.tests;
+var DAYS=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"], L="ABCDEFGHIJ", PASS=0.8;
+var KEY="arbaeen-nawawi.v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+var S=load(); ["studied","todo","notes","answers","tests"].forEach(function(k){S[k]=S[k]||{}});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function $(s,r){return (r||document).querySelector(s)}
+function part(k){return P[k-1]}
+function setPart(el,k){var p=part(k);el.style.setProperty("--pa",p.accent);el.style.setProperty("--ps",p.soft)}
+function studiedCount(){return H.filter(function(h){return S.studied[h.n]}).length}
+function passed(k){var t=S.tests[k];return t&&t.best>=Math.ceil(35*PASS)}
+function progress(){var c=studiedCount();$("#pbar").style.width=(c*2)+"%";$("#pct").textContent=(c*2)+"%"}
+var ICON_PLAY='<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+var ICON_STOP='<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
+
+/* ---------------- audio: recordings first, device voice otherwise ---------------- */
+var audioEl=null, speaking=null;
+function stopAudio(){
+  if(audioEl){audioEl.pause();audioEl=null}
+  try{speechSynthesis.cancel()}catch(e){}
+  if(speaking){speaking.classList.remove("on");speaking.innerHTML=ICON_PLAY+"Listen";speaking=null}
+}
+function chunks(text){
+  var parts=text.split(/(?<=[\.\?!؟،;:])\s+/), out=[], cur="";
+  parts.forEach(function(p){if((cur+" "+p).length>180&&cur){out.push(cur);cur=p}else{cur=cur?cur+" "+p:p}});
+  if(cur)out.push(cur);return out;
+}
+function pickVoice(lang){
+  var vs=[];try{vs=speechSynthesis.getVoices()}catch(e){}
+  return vs.find(function(v){return v.lang&&v.lang.toLowerCase().indexOf(lang)===0})||null;
+}
+function play(btn,lang,n){
+  if(speaking===btn){stopAudio();return}
+  stopAudio();
+  speaking=btn;btn.classList.add("on");btn.innerHTML=ICON_STOP+"Stop";
+  var nn=(n<10?"0":"")+n;
+  if(B.audio[lang].indexOf(n)>=0){
+    audioEl=new Audio("audio/"+lang+"/"+nn+".mp3");audioEl.onended=stopAudio;audioEl.play().catch(stopAudio);return;
+  }
+  if(!("speechSynthesis" in window)){note(btn,"This browser cannot read text aloud.");stopAudio();return}
+  var h=H[n-1], text=lang==="ar"?h.sayAr:h.sayEn, v=pickVoice(lang==="ar"?"ar":"en");
+  if(lang==="ar"&&!v){note(btn,"No Arabic voice is installed on this device. Add an Arabic voice in your device’s text-to-speech settings, or listen on another device.")}
+  var list=chunks(text);
+  list.forEach(function(c,i){
+    var u=new SpeechSynthesisUtterance(c);u.lang=lang==="ar"?"ar-SA":"en-GB";if(v)u.voice=v;u.rate=lang==="ar"?0.8:0.95;
+    if(i===list.length-1)u.onend=function(){if(speaking===btn)stopAudio()};
+    speechSynthesis.speak(u);
+  });
+}
+function note(btn,msg){var box=btn.closest(".box");if(box&&!box.querySelector(".msg")){var d=document.createElement("div");d.className="msg";d.textContent=msg;box.appendChild(d)}}
+try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){}}catch(e){}
+
+/* ---------------- views ---------------- */
+function home(){
+  var c=studiedCount(), tp=[1,2,3,4,5].filter(passed).length;
+  var next=H.find(function(h){return !S.studied[h.n]});
+  var html='<section class="hero"><div class="arch"><div class="lamp">'+B.lantern+'</div>'+
+    '<div class="t-ar" lang="ar">الأَرْبَعُونَ النَّوَوِيَّةُ</div><h1>The Forty Hadith<br>of Imam an-Nawawi</h1>'+
+    '<div class="sub">with the eight additions of Ibn Rajab · an online study book</div>'+
+    '<div class="by"><span>Compiled by</span>Feysel Reshid</div>'+
+    '<div class="btns"><a class="btn gold" href="#h/'+(next?next.n:1)+'">'+(c?"Continue · Hadith "+(next?next.n:50):"Start with Hadith 1")+'</a>'+
+    '<a class="btn ghost" href="/arbaeen-nawawi-book/Forty-Hadith-Nawawi-Study-Book.pdf">Printed book (PDF)</a></div></div></section>'+
+    '<div class="wrap"><div class="stats"><div class="stat"><b>'+c+'/50</b><small>hadith studied</small></div>'+
+    '<div class="stat"><b>'+tp+'/5</b><small>part tests passed</small></div>'+
+    '<div class="stat"><b>'+(tp===5?"✓":"🔒")+'</b><small>certificate</small></div></div>'+
+    '<p style="text-align:center;color:var(--muted);font-size:15px">Each hadith: Arabic and English with audio, the narrator, an explanation, lessons, questions and a to-do list for the week. '+
+    'Pass all five part tests (80% or more) to receive your certificate.</p>';
+  P.forEach(function(p){
+    html+='<section class="part" style="--pa:'+p.accent+'"><h2><small>'+p.label+'</small>'+p.name+'</h2><div class="cards">';
+    for(var n=p.first;n<=p.last;n++){var h=H[n-1];
+      html+='<a class="card'+(S.studied[n]?" done":"")+'" href="#h/'+n+'"><span class="num">'+n+'</span><span class="tt"><b>'+h.title+'</b><span lang="ar">'+h.arTitle+'</span></span><span class="ck">✓</span></a>';}
+    var t=S.tests[p.k];
+    html+='<a class="card test'+(passed(p.k)?" done":"")+'" href="#test/'+p.k+'"><span class="num">✎</span><span class="tt"><b>'+p.label+' Review Test</b><span>'+(t?"Best score "+t.best+"/35":"50 questions · pass 80%")+'</span></span><span class="ck">✓</span></a>';
+    html+='</div></section>';
+  });
+  html+='<section class="part" style="--pa:#0f4c45"><h2><small>Finish</small>Certificate of Completion</h2><div class="cards"><a class="card cert'+(tp===5?" done":"")+'" href="#certificate"><span class="num">★</span><span class="tt"><b>Your certificate</b><span>'+(tp===5?"Ready — add your name":"Pass all five part tests to unlock")+'</span></span><span class="ck">✓</span></a></div></section></div>';
+  return html;
+}
+function chapter(n){
+  var h=H[n-1], p=part(h.part);
+  var o='<div class="wrap chap">';
+  o+='<header class="chead"><span class="num">'+n+'</span><div><div class="kicker">Hadith '+n+' of 50 · '+p.label+'</div><h1>'+h.title+'</h1><div class="art" lang="ar">'+h.arTitle+'</div></div></header>';
+  if(h.theme)o+='<p class="theme">'+h.theme+'</p>';
+  o+='<div class="box"><div class="lab">Arabic text<span class="sp"></span><button class="listen" data-l="ar">'+ICON_PLAY+'Listen</button></div><div class="artext" lang="ar">'+h.ar.replace(/\n/g,"<br>")+'</div>'+(h.arSrc?'<div class="arsrc">'+h.arSrc+'</div>':"")+'</div>';
+  o+='<div class="box"><div class="lab">English translation<span class="sp"></span><button class="listen" data-l="en">'+ICON_PLAY+'Listen</button></div><div class="entext">'+h.en+'</div>'+
+     h.extra.map(function(x){return '<div class="extra">'+x+'</div>'}).join("")+
+     '<div class="enref">'+h.enRef+' · <a href="https://'+h.enUrl+'" target="_blank" rel="noopener">'+h.enUrl+'</a></div></div>';
+  o+='<div class="sec"><i>☺</i>About the Narrator'+(h.narr.cards.length>1?"s":"")+'</div>';
+  h.narr.cards.forEach(function(c){var st=B.stories[c.key];
+     o+='<div class="nr"><div class="h"><b>'+c.name+'</b>'+(c.dates?'<span class="d">'+c.dates+'</span>':"")+'<span class="a" lang="ar">'+c.ar+'</span></div>'+
+     (c.see?'<p class="ctx">Biography: see <a href="#h/'+c.see+'">Hadith '+c.see+'</a>.</p>':'<p>'+c.text+'</p>')+
+     (st?'<button class="more" aria-expanded="false" data-lab="'+(c.see?"Read the full story":"Read more")+'">'+(c.see?"Read the full story":"Read more")+' <span>▾</span></button><div class="story" hidden><h4>The story of '+c.name+'</h4>'+
+       st.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="sl"><b>What we learn from this life</b><ul>'+st.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div></div>':"")+'</div>'});
+  if(h.narr.context)o+='<p class="ctx">'+h.narr.context+'</p>';
+  o+='<div class="sec"><i>✎</i>Explanatory Note</div><div class="note">'+h.note.map(function(x){return "<p>"+x+"</p>"}).join("")+'</div>';
+  if(h.fig)o+='<div class="sec"><i>▣</i>Picture</div><div class="fig">'+h.fig.svg+'</div><div class="cap">'+h.fig.cap+'</div>';
+  o+='<div class="sec"><i>★</i>Lessons from the Hadith</div><ol class="ls">'+h.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ol>';
+  if(h.steps){o+='<div class="sec"><i>↗</i>Step by Step <small style="font-family:Lora;font-weight:400;font-style:italic;color:var(--muted);font-size:13px;margin-left:auto">'+h.steps.title+'</small></div>';
+    h.steps.items.forEach(function(s,i){o+='<div class="step"><span class="sn">'+(i+1)+'</span><div><b>'+s[0]+'</b>'+(s[1]?"<br>"+s[1]:"")+'</div></div>'})}
+  var ans=S.answers[n]||[];
+  o+='<div class="sec"><i>?</i>Questions</div>';
+  h.questions.forEach(function(q,i){o+='<div class="qa"><div class="q">'+(i+1)+'. '+q+'</div><textarea data-a="'+i+'" placeholder="Write your answer…">'+esc(ans[i]||"")+'</textarea></div>'});
+  var td=S.todo[n]||[];
+  o+='<div class="sec"><i>✓</i>To-Do List for the Week</div><div class="todo">';
+  h.todo.forEach(function(t,i){o+='<label class="'+(td[i]?"on":"")+'"><span class="d">'+DAYS[i]+'</span><span class="t">'+t+'</span><input type="checkbox" data-t="'+i+'"'+(td[i]?" checked":"")+'></label>'});
+  o+='</div><div class="sec"><i>✍</i>My Notes</div><textarea id="mynotes" style="min-height:140px" placeholder="What I learned · questions to ask · du‘as to remember">'+esc(S.notes[n]||"")+'</textarea><div class="saved" id="saved"></div>';
+  o+='<div class="studied"><button class="btn '+(S.studied[n]?"line":"acc")+'" id="studied">'+(S.studied[n]?"✓ Studied — tap to undo":"Mark this hadith as studied")+'</button></div>';
+  var nextHref=(n%10===0)?"#test/"+(n/10):"#h/"+(n+1), nextLab=(n%10===0)?p.label+" Review Test →":"Hadith "+(n+1)+" →";
+  o+='<div class="navrow">'+(n>1?'<a class="btn line" href="#h/'+(n-1)+'">← Hadith '+(n-1)+'</a>':'<a class="btn line" href="#">← Contents</a>')+'<a class="btn acc" href="'+nextHref+'">'+nextLab+'</a></div></div>';
+  return o;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function bindChapter(n){
+  document.querySelectorAll(".listen").forEach(function(b){b.onclick=function(){play(b,b.dataset.l,n)}});
+  document.querySelectorAll(".more").forEach(function(b){var lab=b.dataset.lab;b.onclick=function(){var d=b.nextElementSibling, open=d.hidden;
+    d.hidden=!open;b.setAttribute("aria-expanded",open);b.innerHTML=(open?"Show less":lab)+" <span>"+(open?"▴":"▾")+"</span>";
+    if(!open)b.scrollIntoView({block:"nearest",behavior:"smooth"})}});
+  var t;function flash(){var s=$("#saved");s.textContent="Saved on this device";clearTimeout(t);t=setTimeout(function(){s.textContent=""},1500)}
+  document.querySelectorAll("textarea[data-a]").forEach(function(ta){ta.oninput=function(){(S.answers[n]=S.answers[n]||[])[+ta.dataset.a]=ta.value;save();flash()}});
+  $("#mynotes").oninput=function(){S.notes[n]=this.value;save();flash()};
+  document.querySelectorAll("input[data-t]").forEach(function(cb){cb.onchange=function(){(S.todo[n]=S.todo[n]||[])[+cb.dataset.t]=cb.checked;cb.closest("label").classList.toggle("on",cb.checked);save()}});
+  $("#studied").onclick=function(){S.studied[n]=!S.studied[n];save();progress();this.className="btn "+(S.studied[n]?"line":"acc");this.textContent=S.studied[n]?"✓ Studied — tap to undo":"Mark this hadith as studied"};
+}
+function test(k){
+  var p=part(k), t=T[k];
+  var o='<div class="wrap chap"><div class="thead"><div class="kicker">'+p.label+' · Hadith '+p.first+'–'+p.last+'</div><h1>Review Test</h1>'+
+    '<div lang="ar" style="font-family:Amiri;color:var(--muted);font-size:19px">اخْتِبَارُ المُرَاجَعَة</div>'+
+    '<p>Sections A and B are marked automatically (35 marks). Score '+Math.ceil(35*PASS)+' or more to pass. Sections C and D are written answers: compare yours with the model answers after you submit.</p></div>';
+  o+='<div class="sec"><i>A</i>Multiple Choice</div>';
+  t.mcq.forEach(function(m,i){o+='<div class="mcq" data-i="'+i+'"><div class="q">'+(i+1)+'. '+m.q+'</div>'+m.o.map(function(x,j){return '<label><input type="radio" name="m'+i+'" value="'+j+'"><span><b>'+L[j]+'.</b> '+x+'</span></label>'}).join("")+'</div>'});
+  o+='<div class="sec"><i>B</i>Matching</div><table class="mtable">';
+  t.match.left.forEach(function(l,i){o+='<tr data-i="'+i+'"><td class="n">'+(i+1)+'</td><td style="width:32%">'+l+'</td><td><select><option value="">Choose…</option>'+t.match.right.map(function(r,j){return '<option value="'+j+'">'+L[j]+'. '+r+'</option>'}).join("")+'</select></td></tr>'});
+  o+='</table><div class="sec"><i>C</i>Short Answer</div>';
+  t.short.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s.q+'</div><textarea></textarea><div class="model"><b>Model answer:</b> '+s.a+'</div></div>'});
+  o+='<div class="sec"><i>D</i>Critical Thinking</div>';
+  t.critical.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s+'</div><textarea style="min-height:110px"></textarea><div class="model">Answers will vary. A good answer explains its reasoning and uses the hadith of this part as evidence.</div></div>'});
+  o+='<div class="result" id="result"><span>Answer every question in A and B, then submit.</span><span class="sp"></span><button class="btn gold" id="submit">Submit test</button></div>';
+  o+='<div class="navrow"><a class="btn line" href="#h/'+p.last+'">← Hadith '+p.last+'</a>'+(k<5?'<a class="btn acc" href="#h/'+(p.last+1)+'">Hadith '+(p.last+1)+' →</a>':'<a class="btn acc" href="#certificate">Certificate →</a>')+'</div></div>';
+  return o;
+}
+function bindTest(k){
+  var t=T[k];
+  $("#submit").onclick=function(){
+    var score=0, blank=0;
+    t.mcq.forEach(function(m,i){var box=$('.mcq[data-i="'+i+'"]'), sel=box.querySelector("input:checked");
+      box.querySelectorAll("label").forEach(function(l,j){l.classList.remove("right","wrong");if(j===m.a)l.classList.add("right")});
+      if(!sel){blank++;return}if(+sel.value===m.a)score++;else sel.closest("label").classList.add("wrong")});
+    t.match.left.forEach(function(_,i){var tr=$('.mtable tr[data-i="'+i+'"]'), v=tr.querySelector("select").value;
+      tr.classList.remove("right","wrong");if(v===""){blank++;return}if(+v===t.match.key[i]){score++;tr.classList.add("right")}else tr.classList.add("wrong")});
+    document.querySelectorAll(".sa").forEach(function(d){d.classList.add("done")});
+    var prev=S.tests[k]||{best:0};S.tests[k]={best:Math.max(prev.best,score),last:score};save();
+    var ok=score>=Math.ceil(35*PASS);
+    $("#result").innerHTML='<b>'+score+' / 35</b><span>'+(ok?"Passed — well done! ":"Not passed yet — review the chapters and try again. ")+(blank?blank+" left blank. ":"")+'Best: '+S.tests[k].best+'/35</span><span class="sp"></span><button class="btn gold" id="again">Try again</button>';
+    $("#again").onclick=function(){render()};
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+}
+function certificate(){
+  var miss=[1,2,3,4,5].filter(function(k){return !passed(k)});
+  var o='<div class="wrap"><div class="thead"><div class="kicker">The Forty Hadith of Imam an-Nawawi</div><h1>Certificate of Completion</h1></div>';
+  if(miss.length){
+    o+='<div class="lock"><p><b>🔒 Your certificate is locked.</b> Pass these part tests with 80% or more (28/35) to unlock it:</p><ul>'+
+      miss.map(function(k){var t=S.tests[k];return '<li><a href="#test/'+k+'">'+part(k).label+' Review Test</a>'+(t?" — best so far "+t.best+"/35":"")+'</li>'}).join("")+'</ul></div>';
+    return o+'</div>';
+  }
+  o+='<p style="text-align:center">Mā shā’ Allāh — you have passed all five part tests. Type your name as it should appear on the certificate.</p>'+
+    '<div class="cert-form"><input id="cname" maxlength="48" placeholder="Your full name" value="'+esc(S.name||"")+'"><button class="btn acc" id="cdl">Download (PNG)</button><button class="btn line" id="cpr">Print / Save as PDF</button></div>'+
+    '<div class="cert-wrap"><canvas id="cv" width="2000" height="1414"></canvas></div></div>';
+  return o;
+}
+var lampImg=null;
+function lamp(cb){if(lampImg){cb(lampImg);return}var im=new Image();im.onload=function(){lampImg=im;cb(im)};im.onerror=function(){cb(null)};
+  im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(B.lantern)}
+function frame(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arc(x+w,y,r,Math.PI,Math.PI/2,true);c.lineTo(x+w,y+h-r);
+  c.arc(x+w,y+h,r,-Math.PI/2,Math.PI,true);c.lineTo(x+r,y+h);c.arc(x,y+h,r,0,-Math.PI/2,true);c.lineTo(x,y+r);c.arc(x,y,r,Math.PI/2,0,true);c.closePath()}
+function drawCert(){
+  var cv=$("#cv"); if(!cv)return; lamp(function(im){paintCert(cv,im)});
+}
+function paintCert(cv,im){
+  var c=cv.getContext("2d"), W=cv.width, Hh=cv.height, name=(S.name||"").trim()||"Your Name", GOLD="#b8913f", EM="#0f4c45";
+  var total=[1,2,3,4,5].map(function(k){return S.tests[k].best}).reduce(function(a,b){return a+b},0);
+  c.save();c.clearRect(0,0,W,Hh);
+  // paper
+  var g=c.createLinearGradient(0,0,W,Hh);g.addColorStop(0,"#fbf3e1");g.addColorStop(.5,"#fffaf0");g.addColorStop(1,"#f6ead0");
+  c.fillStyle=g;c.fillRect(0,0,W,Hh);
+  // emerald band
+  c.fillStyle=EM;c.fillRect(0,0,W,Hh);c.fillStyle=g;frame(c,46,46,W-92,Hh-92,46);c.fill();
+  // calligraphic background: a line of hadith 36, repeated in faint gold rows
+  c.save();frame(c,70,70,W-140,Hh-140,40);c.clip();
+  var line="مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الجَنَّةِ";
+  c.direction="rtl";c.textAlign="left";c.font="400 46px Amiri";c.fillStyle="rgba(184,145,63,0.20)";
+  var lw=c.measureText(line+"   ◆   ").width;
+  for(var row=0,y=118;y<Hh;row++,y+=74){var x0=-((row%2)?lw/2:0)-40;for(var x=x0;x<W;x+=lw){c.fillText(line+"   ◆   ",x,y)}}
+  c.direction="ltr";
+  // soft glow behind the text so the background stays a texture
+  var v=c.createRadialGradient(W/2,Hh*.5,120,W/2,Hh*.5,W*.55);v.addColorStop(0,"rgba(255,251,242,0.78)");v.addColorStop(.55,"rgba(255,251,242,0.55)");v.addColorStop(1,"rgba(255,251,242,0)");
+  c.fillStyle=v;c.fillRect(0,0,W,Hh);c.restore();
+  // gold frames with concave corners
+  c.strokeStyle=GOLD;c.lineWidth=6;frame(c,70,70,W-140,Hh-140,40);c.stroke();
+  c.lineWidth=2;frame(c,88,88,W-176,Hh-176,30);c.stroke();
+  [[88,88,1,1],[W-88,88,-1,1],[88,Hh-88,1,-1],[W-88,Hh-88,-1,-1]].forEach(function(p){c.save();c.translate(p[0],p[1]);c.scale(p[2],p[3]);
+    c.beginPath();c.moveTo(30,92);c.quadraticCurveTo(30,30,92,30);c.lineWidth=2.5;c.stroke();c.beginPath();c.arc(48,48,7,0,7);c.fillStyle=GOLD;c.fill();c.restore()});
+  // lantern hanging from the top frame
+  c.strokeStyle=GOLD;c.lineWidth=3;c.beginPath();c.moveTo(W/2,70);c.lineTo(W/2,104);c.stroke();
+  if(im)c.drawImage(im,W/2-58,96,116,151);
+  c.textAlign="center";
+  c.fillStyle=GOLD;c.font="400 40px Amiri";c.direction="rtl";c.fillText("بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",W/2,300);c.direction="ltr";
+  c.fillStyle=EM;c.font="700 86px Cinzel";c.fillText("Certificate of Completion",W/2,405);
+  c.fillStyle="#6d5f45";c.font="italic 36px Lora";c.fillText("This is to certify that",W/2,480);
+  var fs=96;c.font="700 "+fs+"px Lora";while(c.measureText(name).width>W-520&&fs>48){fs-=4;c.font="700 "+fs+"px Lora"}
+  c.fillStyle="#23201b";c.fillText(name,W/2,590);
+  var nw=Math.min(c.measureText(name).width/2+90,560);
+  c.strokeStyle=GOLD;c.lineWidth=2.5;c.beginPath();c.moveTo(W/2-nw,625);c.lineTo(W/2-18,625);c.moveTo(W/2+18,625);c.lineTo(W/2+nw,625);c.stroke();
+  c.save();c.translate(W/2,625);c.rotate(Math.PI/4);c.fillStyle=GOLD;c.fillRect(-8,-8,16,16);c.restore();
+  c.fillStyle="#6d5f45";c.font="italic 36px Lora";c.fillText("has studied, understood and completed",W/2,700);
+  c.fillStyle=GOLD;c.font="700 80px Amiri";c.direction="rtl";c.fillText("الأَرْبَعُونَ النَّوَوِيَّةُ",W/2,812);c.direction="ltr";
+  c.fillStyle=EM;c.font="700 52px Cinzel";c.fillText("The Forty Hadith of Imam an-Nawawi",W/2,893);
+  c.fillStyle="#6d5f45";c.font="31px Lora";c.fillText("with the additions of Ibn Rajab · fifty hadith · all five part tests passed ("+total+"/175)",W/2,950);
+  // the verse
+  c.fillStyle=EM;c.font="700 50px Amiri";c.direction="rtl";c.fillText("﴿ وَقُلْ رَبِّ زِدْنِي عِلْمًا ﴾",W/2,1036);c.direction="ltr";
+  c.fillStyle="#8c7a55";c.font="italic 25px Lora";c.fillText("“And say: My Lord, increase me in knowledge.” (Ṭā-Hā 20:114)",W/2,1092);
+  // signatures and seal
+  var ds=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  c.font="32px Lora";c.fillStyle="#23201b";c.fillText(ds,W/2-540,1190);c.font="italic 600 36px Lora";c.fillText("Feysel Reshid",W/2+540,1190);
+  c.strokeStyle="#9d8a62";c.lineWidth=2;c.beginPath();c.moveTo(W/2-740,1210);c.lineTo(W/2-340,1210);c.moveTo(W/2+340,1210);c.lineTo(W/2+740,1210);c.stroke();
+  c.fillStyle="#8c7a55";c.font="600 22px Cinzel";c.fillText("DATE",W/2-540,1246);c.fillText("COMPILER · DIIN ISLAAM",W/2+540,1246);
+  c.beginPath();c.arc(W/2,1200,98,0,7);c.fillStyle=EM;c.fill();c.lineWidth=7;c.strokeStyle=GOLD;c.stroke();
+  c.beginPath();c.arc(W/2,1200,84,0,7);c.lineWidth=1.6;c.stroke();
+  c.fillStyle="#ecd391";c.font="700 22px Amiri";c.direction="rtl";c.fillText("خَمْسُونَ حَدِيثًا",W/2,1172);c.direction="ltr";
+  c.font="700 46px Cinzel";c.fillText("50",W/2,1222);c.font="600 16px Cinzel";c.fillText("HADITH",W/2,1248);
+  var id=0;for(var i=0;i<name.length;i++)id=(id*31+name.charCodeAt(i))>>>0;
+  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("diinislaam.com/arbaeen-nawawi · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
+  c.restore();
+}
+function bindCert(){
+  var inp=$("#cname");if(!inp)return;
+  var redraw=function(){S.name=inp.value;save();drawCert()};
+  inp.oninput=redraw;
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(drawCert);
+  $("#cdl").onclick=function(){var a=document.createElement("a");a.download="Forty-Hadith-Certificate.png";a.href=$("#cv").toDataURL("image/png");a.click()};
+  $("#cpr").onclick=function(){window.print()};
+}
+/* ---------------- router ---------------- */
+function render(){
+  stopAudio();document.body.classList.remove("certpage");
+  var h=location.hash.replace(/^#/,""), app=$("#app"), m;
+  if((m=h.match(/^h\/(\d+)$/))&&+m[1]>=1&&+m[1]<=50){var n=+m[1];app.innerHTML=chapter(n);setPart(app.firstChild,H[n-1].part);bindChapter(n);document.title="Hadith "+n+": "+H[n-1].title.replace(/&[^;]+;/g,"")+" · The Forty Hadith"}
+  else if((m=h.match(/^test\/([1-5])$/))){var k=+m[1];app.innerHTML=test(k);setPart(app.firstChild,k);bindTest(k);document.title=part(k).label+" Review Test · The Forty Hadith"}
+  else if(h==="certificate"){document.body.classList.add("certpage");app.innerHTML=certificate();bindCert();document.title="Certificate · The Forty Hadith"}
+  else{app.innerHTML=home();document.title="The Forty Hadith of Imam an-Nawawi · Online Study Book · Diin Islaam"}
+  progress();window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",render);
+render();
+})();
+</script>
+</body>
+</html>

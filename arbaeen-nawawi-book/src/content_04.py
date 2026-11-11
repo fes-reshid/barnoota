@@ -1,0 +1,361 @@
+# -*- coding: utf-8 -*-
+"""Study content for hadith 31-40."""
+
+HADITH = [
+dict(
+n=31, title="Renounce the World and Allah Will Love You", short="Zuhd",
+theme="The secret of being loved by Allah and by people.",
+narrator="Sahl ibn Saʿd as-Sāʿidī (d. 91 AH), a young Companion of the Anṣār, said to be the last Companion to die in Madinah.",
+note=[
+"A man asked for a deed that would make Allah and people love him. The answer: **zuhd** in the world brings Allah’s love, and **zuhd** in what people have brings people’s love. *Zuhd* does not mean leaving all wealth or living in poverty. Ibn Taymiyyah defined it as **leaving what does not benefit you in the Hereafter**. The Prophet ﷺ and many Companions had wealth, but it was in their hands, not in their hearts.",
+"Zuhd in the world means the heart is not attached to it: you use it to obey Allah, you are not sad over what you lose or overjoyed with what you gain (al-Ḥadīd 57:23), and you prefer the Hereafter. Allah loves such a person because he loves what Allah loves.",
+"Zuhd in what people have means not desiring their wealth, not begging and not envying. People love the one who does not compete with them for their worldly things and who asks only from Allah. The hadith is graded ḥasan by an-Nawawī, though some scholars discussed its chain; its meaning is supported by many other texts."],
+lessons=[
+"Zuhd means leaving what does not benefit you in the Hereafter, not leaving all wealth.",
+"Detachment from the world earns the love of Allah.",
+"Not desiring people’s possessions earns their love.",
+"Seeking Allah’s love is the highest goal; people’s love follows.",
+"A rich person can be a zāhid, and a poor person can be greedy.",
+"Asking only from Allah preserves dignity."],
+steps=("Practising zuhd in daily life", [
+"Check your heart | Do I feel pain when I lose something worldly? Train contentment.",
+"Use, don’t worship | Use your phone, money and clothes for good; let them serve you.",
+"Simplify | Remove one unnecessary thing from your spending.",
+"Do not look at others’ things | Avoid comparing; say ‘mā shā’ Allāh’.",
+"Invest in the Hereafter | Spend some of what you love for Allah."]),
+questions=[
+"What did the man ask for?",
+"Define zuhd in your own words using Ibn Taymiyyah’s definition.",
+"Does zuhd mean being poor? Explain with an example.",
+"Why do people love someone who does not desire what they have?",
+"How does zuhd in the world bring Allah’s love?",
+"What worldly thing is your heart most attached to? How can you loosen that attachment?"],
+todo=[
+"Memorise the hadith.",
+"Give away one thing you do not need.",
+"Do not ask anyone for anything today except Allah.",
+"Avoid buying one unnecessary thing this week.",
+"When you see something nice with someone, say «مَا شَاءَ اللَّهُ، بَارَكَ اللَّهُ».",
+"Read al-Ḥadīd 57:20-23 and reflect.",
+"Spend some time today on something only for the Hereafter."]),
+
+dict(
+n=32, title="No Harm and No Reciprocating Harm", short="No harm",
+theme="A golden rule of Islamic law: harm must be removed.",
+narrator="Abū Saʿīd al-Khudrī, Saʿd ibn Mālik ibn Sinān (d. 74 AH), a young Anṣārī Companion who narrated much hadith and was a jurist among the Companions.",
+note=[
+"This two-word hadith became one of the five great rules of Islamic law: **‘Harm is to be removed.’** *Ḍarar* is to harm someone at all; *ḍirār* is to harm someone in return for harm, more than what is just, or to harm others while benefiting yourself. Both are forbidden.",
+"Many rulings are built on it: a neighbour may not build something that seriously harms his neighbour; a seller may not hide defects; a husband may not keep his wife only to harm her (al-Baqarah 2:231); a person may not make a will to harm his heirs (an-Nisā’ 4:12). Rights that are used to cause harm are restricted. A person may defend himself and take back his right, but without going beyond it.",
+"It also protects our own bodies: a person may not harm himself with drugs, smoking or dangerous behaviour. And it includes harm in words and online: spreading rumours, posting hurtful comments or embarrassing photos. The chain of this hadith has weakness, but its many routes support one another, and the rule is agreed upon by the scholars."],
+lessons=[
+"Harming others is forbidden in Islam.",
+"Responding to harm with greater harm is also forbidden.",
+"Harm must be removed as far as possible.",
+"A right may not be used to cause harm to others.",
+"A person may not harm his own body.",
+"Many rules of Islamic law are built on this hadith."],
+questions=[
+"What is the difference between ḍarar and ḍirār?",
+"Which great legal rule is taken from this hadith?",
+"Give three examples of rulings based on this hadith.",
+"Is it allowed to harm yourself? Give examples.",
+"How can people cause harm online?",
+"Think of something you do that may harm others. How will you change it?"],
+todo=[
+"Memorise the hadith — only four words!",
+"Check that nothing you do bothers your neighbours (noise, parking, rubbish).",
+"Delete any post or message that could hurt someone.",
+"Avoid harming your body: sleep enough, eat well, avoid harmful habits.",
+"When someone wrongs you, respond fairly or forgive — never more.",
+"Remove something that could harm people at home or outside.",
+"Make du‘a for anyone you may have harmed."]),
+
+dict(
+n=33, title="The Burden of Proof Is on the Claimant", short="Proof & oath",
+theme="A basic rule of justice in every court.",
+narrator="ʿAbdullāh ibn ʿAbbās (see Hadith 19).",
+note=[
+"This hadith is a foundation of the Islamic justice system. If people were given whatever they claimed just by claiming it, some would claim other people’s wealth and even their lives. So the Prophet ﷺ set a rule: **the one who makes a claim must bring proof** (*bayyinah*: witnesses or clear evidence), and **the one who denies must take an oath**.",
+"The claimant is the one whose claim goes against the normal state of things, so he needs proof. The defendant keeps what is in his hands unless proof is brought; if there is no proof, he swears an oath and the case is closed. Allah will judge the liar on the Day of Judgement, and a false oath to take someone’s property is a major sin which the Prophet ﷺ warned leads to the Fire.",
+"Outside the courtroom too, the hadith teaches us not to accept accusations without proof, not to believe rumours, and to treat people as innocent until there is clear evidence. A Muslim also should not make claims he cannot prove, and should fear Allah before swearing any oath."],
+lessons=[
+"Claims are not accepted without proof.",
+"The claimant must bring evidence; the denier takes an oath.",
+"This rule protects people’s wealth, lives and honour.",
+"Everyone is innocent until proven otherwise.",
+"A false oath to take someone’s right is a major sin.",
+"Do not accuse anyone or believe rumours without evidence."],
+steps=("Settling a dispute fairly", [
+"Hear both sides | Do not judge after hearing only one person.",
+"Ask the claimant for proof | Witnesses or clear evidence.",
+"If no proof | The one who denies swears an oath.",
+"Judge justly | Even against relatives or friends (an-Nisā’ 4:135).",
+"Encourage reconciliation | Making peace is better (an-Nisā’ 4:128)."]),
+questions=[
+"What would happen if people were given whatever they claimed?",
+"Who must bring proof? Who must take the oath?",
+"What counts as ‘proof’?",
+"What is the sin of a false oath?",
+"How can we apply this hadith in daily life, outside courts?",
+"Why is it important to hear both sides of a story?"],
+todo=[
+"Memorise the hadith.",
+"Do not believe or share any rumour without checking it.",
+"When two friends argue, listen to both sides before judging.",
+"Avoid swearing by Allah except when necessary and truthful.",
+"Read an-Nisā’ 4:135 about justice.",
+"Apologise if you accused someone unfairly.",
+"Keep receipts or written records for any money you lend or borrow (al-Baqarah 2:282)."]),
+
+dict(
+n=34, title="Changing an Evil", short="Change evil",
+theme="Hand, tongue or heart — every believer has a role.",
+narrator="Abū Saʿīd al-Khudrī (see Hadith 32). He narrated this when Marwān began the Eid khuṭbah before the prayer, against the Sunnah, and a man objected.",
+fig=("stairs", "Three levels of changing an evil, according to one’s ability."),
+note=[
+"Enjoining good and forbidding evil is a duty that protects the community. This hadith gives three levels according to ability. **With the hand**: for those who have authority over the matter, such as parents at home, a teacher in class, or the ruler and his officials. **With the tongue**: with wise and gentle words, advice or a reminder. **With the heart**: hating the evil and leaving the place where it happens — this is the minimum, and it is ‘the weakest of faith’.",
+"Changing evil has conditions: having knowledge that it is truly an evil, gentleness, and making sure that changing it does not cause a greater evil. Ordinary people may not use force against others in matters that belong to the authorities, as this leads to chaos. The Prophet ﷺ said: “Gentleness is not in anything except that it beautifies it.”",
+"Whoever does not even hate the evil in his heart is in serious danger, for this is the last level of faith. The hadith also shows that faith increases and decreases, and that actions are part of faith."],
+lessons=[
+"Forbidding evil is a duty for every Muslim according to ability.",
+"There are three levels: hand, tongue and heart.",
+"Using the hand is for those with authority; it must not cause greater harm.",
+"Advice should be gentle, wise and based on knowledge.",
+"Hating evil in the heart is the minimum duty.",
+"Faith increases and decreases; actions are part of faith."],
+steps=("Before you change an evil", [
+"Be sure | Is it clearly forbidden, by agreement of scholars?",
+"Check your ability and role | Am I in authority here? Can I speak?",
+"Weigh the outcome | Will changing it cause a greater harm?",
+"Be gentle | Use kind words, in private if possible.",
+"At least hate it | If you can do nothing, hate it and leave the place."]),
+questions=[
+"What are the three levels of changing an evil?",
+"Who may change an evil with the hand?",
+"What conditions should be met before changing an evil?",
+"Why is hating evil in the heart called ‘the weakest of faith’?",
+"Give an example of changing an evil with the tongue in a wise way.",
+"Describe an evil you see often. What is the right level for you to act?"],
+todo=[
+"Memorise the hadith.",
+"Turn off or leave something haram you see at home, if you have that authority.",
+"Gently advise a friend about one mistake.",
+"Leave a gathering where something wrong is happening.",
+"Encourage one good deed among your friends.",
+"Learn the difference between agreed-upon evils and matters of scholarly difference.",
+"Make du‘a for those who are falling into sins to be guided."]),
+
+dict(
+n=35, title="Be Brothers, O Servants of Allah", short="Brotherhood",
+theme="Five ‘do not’s and the rights of Muslim brotherhood.",
+narrator="Abū Hurayrah (see Hadith 9).",
+note=[
+"This hadith lists diseases that break brotherhood. **Do not envy**: wishing that a blessing be taken from someone. **Do not inflate prices** (*najash*): bidding up a price with no intention to buy, to cheat the buyer. **Do not hate one another** for worldly reasons. **Do not turn your backs** on one another by cutting off. **Do not undercut** another’s sale by offering a buyer a better deal after he has agreed with someone else.",
+"Instead, **be servants of Allah, brothers**. A Muslim is the brother of a Muslim: he does not oppress him, abandon him when he needs help, lie to him, or look down on him. **Taqwā is here**, and the Prophet ﷺ pointed to his chest three times. Taqwā is in the heart, so do not judge people by their appearance or wealth; the one you despise may be better than you before Allah.",
+"It is enough evil for a person to despise his Muslim brother. The hadith ends with a great rule: **everything of a Muslim is sacred to another Muslim: his blood, his wealth and his honour.** This was also declared by the Prophet ﷺ in his farewell sermon."],
+lessons=[
+"Envy, hatred and cutting off destroy brotherhood.",
+"Cheating in trade, like najash and undercutting, is forbidden.",
+"Muslims are brothers and must help, not abandon, one another.",
+"Taqwā is in the heart; do not judge people by looks.",
+"Despising a Muslim is a great evil.",
+"The blood, wealth and honour of a Muslim are sacred."],
+steps=("Treating envy when you feel it", [
+"Recognise | Envy is a disease of the heart; do not act on it.",
+"Make du‘a for them | Ask Allah to bless them more.",
+"Say | «مَا شَاءَ اللَّهُ، لَا قُوَّةَ إِلَّا بِاللَّهِ».",
+"Do good to them | A gift or kind word removes bad feelings.",
+"Ask Allah from His bounty | “Ask Allah of His bounty” (an-Nisā’ 4:32)."]),
+questions=[
+"List the five ‘do not’s in this hadith and explain each one.",
+"What is najash?",
+"What four things must a Muslim never do to his brother?",
+"Where did the Prophet ﷺ point when he said ‘taqwā is here’? What does it teach?",
+"What three things of a Muslim are sacred?",
+"Is there someone you have cut off? What will you do this week?"],
+todo=[
+"Memorise from «وَكُونُوا عِبَادَ اللَّهِ إِخْوَانًا» to «وَلَا يَحْقِرُهُ».",
+"Make du‘a for someone you feel envious of.",
+"Contact someone you have not spoken to for a long time.",
+"Help a Muslim who needs it; do not leave him alone.",
+"Avoid mocking anyone’s appearance, accent or clothes.",
+"Do not speak about anyone’s honour behind their back.",
+"Give a gift to someone to increase love."]),
+
+dict(
+n=36, title="Relieving a Believer’s Distress", short="Help, cover, learn",
+theme="As you treat Allah’s servants, Allah will treat you.",
+narrator="Abū Hurayrah (see Hadith 9).",
+note=[
+"This hadith teaches that **the reward is of the same kind as the deed**. Whoever relieves a believer from a worldly distress, Allah relieves him from a distress of the Day of Judgement. Whoever makes things easy for someone in difficulty — such as giving a debtor more time or forgiving part of the debt — Allah makes things easy for him in both worlds. Whoever covers a Muslim’s fault, Allah covers him in both worlds. Covering means not exposing a private mistake; it does not mean hiding harm that must be stopped or a crime against others.",
+"“Allah helps His servant as long as the servant helps his brother.” Then the hadith turns to **knowledge**: whoever walks a path seeking knowledge, Allah makes easy for him a path to Paradise. And whenever people gather in a house of Allah to recite and study the Qur’an, four gifts come: **tranquillity descends, mercy covers them, angels surround them, and Allah mentions them among those with Him**.",
+"It ends with a powerful warning: **whoever is slowed by his deeds will not be hurried forward by his lineage**. Family, tribe or famous ancestors will not help on the Day of Judgement; only deeds count."],
+lessons=[
+"The reward matches the deed.",
+"Helping people in difficulty brings Allah’s help.",
+"Giving time to a debtor, or forgiving debts, is greatly rewarded.",
+"Covering the private faults of Muslims brings Allah’s covering.",
+"Seeking knowledge is a path to Paradise.",
+"Gatherings for the Qur’an bring tranquillity, mercy, angels and Allah’s mention.",
+"Lineage is worthless without good deeds."],
+steps=("Getting the most from a Qur’an study circle", [
+"Make intention | For Allah, to learn and act.",
+"Come early and clean | With wudu, and sit with good manners.",
+"Recite and listen | Follow the recitation attentively.",
+"Study the meanings | Ask questions and take notes.",
+"Act and share | Apply one lesson and teach it to someone."]),
+questions=[
+"What is the reward for relieving a believer’s distress?",
+"How can you ‘make things easy’ for someone in difficulty?",
+"What does ‘covering a Muslim’ mean, and what does it not mean?",
+"What reward is there for seeking knowledge?",
+"List the four gifts given to those who gather for the Qur’an.",
+"What does ‘lineage will not hurry him forward’ teach us?"],
+todo=[
+"Memorise the first sentence, about relieving distress.",
+"Help someone in difficulty with money, time or effort.",
+"If someone owes you, give them more time or forgive part of it.",
+"Keep a friend’s private mistake secret.",
+"Walk to a class, circle or lecture to seek knowledge.",
+"Sit in a Qur’an circle or recite with your family together.",
+"Do one good deed without relying on who your family is."]),
+
+dict(
+n=37, title="Allah Records Good and Bad Deeds", short="Multiplied rewards",
+theme="The generosity of Allah in how deeds are written.",
+narrator="ʿAbdullāh ibn ʿAbbās (see Hadith 19). This is a ḥadīth qudsī.",
+fig=("multiply", "How deeds are recorded: good is multiplied; evil is recorded only as it is."),
+note=[
+"This *ḥadīth qudsī* shows the great generosity of Allah. **If you intend a good deed and do not do it**, it is written as one complete good deed. **If you intend it and do it**, it is written as ten good deeds up to seven hundred times, and up to many times more. The multiplication depends on sincerity, excellence and the need for the deed.",
+"**If you intend a bad deed and do not do it**, it is written as one complete good deed — if you left it for the sake of Allah. If you left it only because you could not do it, while still trying, you are blamed for your intention. **If you intend it and do it**, it is written as only one bad deed, not multiplied.",
+"Ibn Masʿūd said: ‘Woe to the one whose ones overcome his tens.’ With such mercy, only the one who insists on destroying himself will be destroyed. This hadith should fill us with hope, make us eager to intend much good, and make us leave evil purely for Allah."],
+lessons=[
+"Allah’s mercy is vast in how He records deeds.",
+"A sincere intention of good is rewarded even if not done.",
+"Good deeds are multiplied ten to seven hundred times or more.",
+"Leaving a sin for Allah’s sake is itself a good deed.",
+"A bad deed is recorded only once, not multiplied.",
+"The intention is important in both good and bad deeds."],
+questions=[
+"How is an intended good deed that was not done recorded?",
+"How much can a good deed be multiplied?",
+"When is leaving a bad deed written as a good deed?",
+"How is a bad deed that is done recorded?",
+"Explain Ibn Masʿūd’s saying: ‘Woe to the one whose ones overcome his tens.’",
+"How will this hadith change the way you make intentions?"],
+todo=[
+"Memorise the hadith.",
+"Make many good intentions today (e.g. to give charity, to visit the sick).",
+"Do at least one of the good deeds you intended.",
+"Leave one sin purely for the sake of Allah.",
+"Count: how many good deeds did you do today? Thank Allah.",
+"Tell someone about Allah’s generosity in this hadith.",
+"Say «لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ» when you feel tempted."]),
+
+dict(
+n=38, title="Drawing Near to Allah: The Friends of Allah", short="Awliya’ of Allah",
+theme="Obligations first, then voluntary deeds — until Allah loves you.",
+narrator="Abū Hurayrah (see Hadith 9). This ḥadīth qudsī is recorded by al-Bukhārī.",
+fig=("ladder", "The ladder of nearness: obligations are the base, voluntary deeds the rungs, and Allah’s love the summit."),
+note=[
+"The *awliyā’* (friends) of Allah are “those who believe and have taqwā” (Yūnus 10:62-63) — not people with special powers or strange appearances. Allah declares war on whoever shows enmity to them. Being a walī is open to every believer.",
+"The way to become close to Allah is in two stages. **First, the obligations**: nothing is more beloved to Allah than what He made obligatory — prayer, fasting, zakah, kindness to parents, and avoiding the forbidden. **Then the voluntary deeds** (*nawāfil*): sunnah prayers, extra fasting, charity, Qur’an, dhikr — until Allah loves His servant.",
+"When Allah loves someone, He guides his hearing, sight, hands and feet: he hears, sees, takes and walks only in what pleases Allah. And He answers his du‘a and grants him refuge. This does not mean Allah becomes part of His creation — that is a false belief — but that He guides and protects every limb of the one He loves."],
+lessons=[
+"The friends of Allah are the believers who have taqwā.",
+"Harming the friends of Allah is a declaration of war against Allah.",
+"The obligations are the most beloved deeds to Allah.",
+"Voluntary deeds after the obligations bring Allah’s love.",
+"Allah protects and guides the limbs of the one He loves.",
+"The du‘a of the one Allah loves is answered."],
+steps=("Climbing the ladder of nearness", [
+"Perfect the obligations | Five prayers on time, with focus.",
+"Add the 12 sunnah prayers | 2 before Fajr, 4 before Ẓuhr and 2 after, 2 after Maghrib, 2 after ʿIshā’.",
+"Add voluntary fasting | Mondays and Thursdays, or three days each month.",
+"Add Qur’an and dhikr | A daily portion, however small.",
+"Be consistent | Small and steady is beloved to Allah."]),
+questions=[
+"Who are the friends (awliyā’) of Allah according to the Qur’an?",
+"What is the most beloved way to draw near to Allah?",
+"What comes after the obligations?",
+"What happens when Allah loves a servant?",
+"Does ‘I am his hearing…’ mean Allah enters His creation? Explain the correct meaning.",
+"Which voluntary deed will you add to your life this week?"],
+todo=[
+"Memorise from «وَمَا تَقَرَّبَ إِلَيَّ عَبْدِي…» to «…حَتَّى أُحِبَّهُ».",
+"Pray all 12 sunnah prayers today.",
+"Fast on Monday or Thursday.",
+"Read a page of the Qur’an every day this week.",
+"Do not speak badly of any righteous person.",
+"Make du‘a: «اللَّهُمَّ إِنِّي أَسْأَلُكَ حُبَّكَ وَحُبَّ مَنْ يُحِبُّكَ».",
+"Choose one voluntary deed to keep for life."]),
+
+dict(
+n=39, title="Mistakes, Forgetfulness and Coercion Are Pardoned", short="Mistakes forgiven",
+theme="The mercy of Allah towards this Ummah.",
+narrator="ʿAbdullāh ibn ʿAbbās (see Hadith 19).",
+note=[
+"Allah has lifted from this Ummah the **sin** of three things: **mistakes** (*khaṭa’*), when a person intends one thing and something else happens; **forgetfulness** (*nisyān*), when a person forgets a command or prohibition; and **coercion** (*ikrāh*), when a person is forced by a real threat to do something. This is a special mercy, answering the du‘a at the end of al-Baqarah: “Our Lord, do not take us to task if we forget or make a mistake” (2:286).",
+"Lifting the sin does not always lift the **consequences** in this world. If someone kills by mistake, there is no sin, but blood-money and expiation are due (an-Nisā’ 4:92). If someone forgets a prayer, he must pray it when he remembers. If someone damages property by mistake, he must replace it. But a person who eats forgetfully while fasting completes his fast, and it is valid.",
+"Under coercion, a person may even say words of disbelief to save his life while his heart is at peace with faith (an-Naḥl 16:106). But coercion does not permit killing an innocent person to save oneself. The chain of this hadith has been discussed, but its meaning is confirmed by the Qur’an."],
+lessons=[
+"Allah has lifted the sin of mistakes, forgetfulness and coercion from this Ummah.",
+"This is a special mercy for the followers of Muhammad ﷺ.",
+"Worldly consequences such as compensation may still apply.",
+"A forgotten prayer must be prayed when remembered.",
+"Under real threat, a believer may say words against his belief while his heart is firm.",
+"Coercion never permits killing an innocent person."],
+questions=[
+"What three things are pardoned in this hadith? Define each one.",
+"Which verse of the Qur’an supports this hadith?",
+"If someone forgets a prayer, what should he do?",
+"Is someone who breaks something by mistake free from replacing it? Explain.",
+"What does an-Naḥl 16:106 say about coercion?",
+"How should knowing this hadith affect how we treat other people’s mistakes?"],
+todo=[
+"Memorise the hadith.",
+"Memorise the last verse of al-Baqarah (2:286).",
+"Be gentle with someone who made an honest mistake.",
+"If you forgot something important, make it up as soon as you remember.",
+"Replace or repair anything you broke by accident.",
+"Learn what to do if you eat by mistake while fasting.",
+"Thank Allah for His mercy to this Ummah."]),
+
+dict(
+n=40, title="Be in This World as a Stranger", short="Stranger or traveller",
+theme="Live light, remember the journey, prepare for home.",
+narrator="ʿAbdullāh ibn ʿUmar (see Hadith 3). The Prophet ﷺ took him by the shoulder to draw his full attention.",
+fig=("traveller", "The stranger and the wayfarer: travelling light towards home."),
+note=[
+"The Prophet ﷺ took Ibn ʿUmar by the shoulder — a sign of love and to get his full attention — and said: **Be in this world as if you were a stranger, or a traveller passing on a road.** A stranger does not settle in a foreign land or compete with its people; his heart is with his home. A traveller is even lighter: he takes only what he needs for the journey.",
+"Our true home is Paradise, where our father Ādam lived. This world is a journey back to it. So we should not let the world fill our hearts, build our hopes on it, or forget the destination. This does not mean leaving work or family; it means using everything for the journey.",
+"Ibn ʿUmar lived this advice and added his own: **in the evening, do not wait for the morning; in the morning, do not wait for the evening** — do not delay good deeds or repentance. **Take from your health for your sickness, and from your life for your death**: use your strength and time now, because they will not last."],
+lessons=[
+"This world is a passing journey; the Hereafter is our home.",
+"Do not let the world settle in your heart.",
+"Take from this world only what helps your journey.",
+"Do not delay good deeds and repentance.",
+"Use health before sickness and life before death.",
+"Teachers should use touch and attention to make advice reach the heart."],
+steps=("Living as a traveller", [
+"Remember the destination | Think of death and the Hereafter daily.",
+"Travel light | Do not collect what you do not need.",
+"Do it now | Do not delay a good deed until tomorrow.",
+"Use your strength | Worship and help others while you are healthy.",
+"Write your will | Prepare as a traveller would."]),
+questions=[
+"Why did the Prophet ﷺ take Ibn ʿUmar by the shoulder?",
+"What is the difference between a stranger and a traveller?",
+"Where is our true home?",
+"Does this hadith mean we should leave work and family? Explain.",
+"Explain Ibn ʿUmar’s advice in your own words.",
+"What good deed have you been delaying? When will you do it?"],
+todo=[
+"Memorise the hadith.",
+"Do one good deed today that you have been delaying.",
+"Visit a graveyard or remember death for a few minutes.",
+"Give away something you have not used for a year.",
+"Use your health today: pray standing with long recitation.",
+"Make tawbah now, not later.",
+"Write down your debts and wishes (a simple will)."]),
+]
