@@ -1,0 +1,7 @@
+/* Amazon KDP colour edition: US Letter 8.5 x 11 in (standard colour). Text area height 241.4 mm. */
+@page { size: 8.5in 11in; }
+@page :right { size: 8.5in 11in; margin: 19mm 15mm 19mm 22mm; }
+@page :left  { size: 8.5in 11in; margin: 19mm 22mm 19mm 15mm; }
+.title-page, .bism-page, .copyright { height: 238mm; }
+.part-page { height: 240mm; }
+.tracker div { height: 14.2mm; }

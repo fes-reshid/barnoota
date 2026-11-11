@@ -1,4 +1,13 @@
-# Amazon KDP: The Forty Hadith of Imam an-Nawawi (paperback, black and white)
+# Amazon KDP: The Forty Hadith of Imam an-Nawawi (paperback)
+
+There are two editions. Publish each one as a separate paperback in KDP, or start with one.
+
+| Edition | Interior | Cover | Size | Pages |
+|---|---|---|---|---|
+| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 248 |
+| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 267 |
+
+The sections below describe the black-and-white edition. The colour edition's differences are listed at the end.
 
 ## Before you publish: translation permission
 The English translations come from sunnah.com, which presents translations owned by their publishers. Get written permission to use them in a book you sell before you click **Publish**. Then update the credit line on the copyright page:
@@ -9,8 +18,8 @@ The English translations come from sunnah.com, which presents translations owned
 ## Files to upload
 | File | Use |
 |---|---|
-| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 239 pages, A4, black and white |
-| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.328 × 11.94 in with bleed |
+| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 248 pages, A4, black and white |
+| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.348 × 11.94 in with bleed |
 
 ## Print settings in KDP (Paperback content page)
 - **Print ISBN:** use KDP's free ISBN, or your own
@@ -64,22 +73,37 @@ The English translations come from sunnah.com, which presents translations owned
 - Religion & Spirituality › Religious Studies (or Education › Religious)
 
 ## Price (Amazon.com, paperback)
-At 239 pages, large trim, black ink, the printing cost is about **$1.00 + 239 × $0.017 ≈ $5.06** per copy. KDP's price calculator shows the exact figure.
+At 248 pages, large trim, black ink, the printing cost is about **$1.00 + 248 × $0.017 ≈ $5.22** per copy. KDP's price calculator shows the exact figure.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $14.99 | ≈ $3.93 | ≈ $0.94 |
-| **$16.99 (suggested)** | **≈ $5.13** | ≈ $1.74 |
-| $19.99 | ≈ $6.93 | ≈ $2.94 |
+| $14.99 | ≈ $3.78 | ≈ $0.78 |
+| **$16.99 (suggested)** | **≈ $4.98** | ≈ $1.58 |
+| $19.99 | ≈ $6.78 | ≈ $2.78 |
 
 Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and round it, or set each one yourself.
+
+## Colour edition: what is different
+- **Ink and paper:** Standard color, white paper. KDP does not offer standard colour at A4, which is why this edition is US Letter.
+- **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Glossy shows the colours best; Matte also works.
+- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (267 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.851 × 11.25 in, spine 0.601 in).
+- **Subtitle:** you can add "Full Colour Edition" at the end so readers can tell the two listings apart.
+- **Price:** standard colour printing at large trim is about $1.00 + 267 × $0.0402 ≈ **$11.73** per copy. Check the exact figure in KDP's calculator.
+
+| List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
+|---|---|---|
+| $22.99 | ≈ $2.06 | — |
+| **$24.99 (suggested)** | **≈ $3.26** | — |
+| $29.99 | ≈ $6.26 | ≈ $0.26 |
 
 ## Rebuilding after any change
 From the `arbaeen-nawawi-book/` folder, run these in order:
 
 ```bash
-EDITION=kdp python3 build.py
-python3 build_kdp_cover.py
+EDITION=kdp python3 build.py          # black and white interior
+python3 build_kdp_cover.py            # its cover
+EDITION=kdp-color python3 build.py    # colour interior
+python3 build_kdp_cover.py color      # its cover
 ```
 
 The cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.**

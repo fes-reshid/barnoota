@@ -11,10 +11,10 @@ def mk(key):
 
 
 PAGE_MARKERS = [(k, rf"MK-{k}-MK") for k in ("preface", "howto", "nawawi", "translation", "tracker", "glossary", "answers", "closing",
-                                              "test1", "test2", "test3", "test4", "test5")]
+                                              "test1", "test2", "test3", "test4", "test5", "refs")]
 TOC_FRONT = [("preface", "Preface"), ("howto", "How to Use This Book"), ("nawawi", "The Two Imams: an-Nawawi and Ibn Rajab"),
              ("translation", "About the Arabic Text and the Translation")]
-TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("answers", "Answer Key to the Part Tests"),
+TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("answers", "Answer Key to the Part Tests"), ("refs", "Notes and References"),
             ("closing", "Closing Supplication")]
 
 RULE = ('<div class="fm-rule"><i></i><svg viewBox="0 0 20 20"><g transform="translate(10 10)">'
@@ -185,7 +185,7 @@ def about_nawawi():
 
 
 def about_translation():
-    return f'''<section class="page-sec">{mk("translation")}{head("About the Text and Translation", "عَنِ النَّصِّ وَالتَّرْجَمَة")}
+    return f'''<section class="page-sec compact">{mk("translation")}{head("About the Text and Translation", "عَنِ النَّصِّ وَالتَّرْجَمَة")}
 <h3>The Arabic text</h3>
 <p>The Arabic follows the fifty-hadith text as printed in the source edition (<i>Mutūn Ṭālib al-ʿIlm</i>): an-Nawawī’s forty-two hadith followed by Ibn Rajab’s eight additions. The words of the Prophet ﷺ — and, in the <i>ḥadīth qudsī</i>, the words he relates from his Lord — are printed in the chapter’s accent colour, as in the original. The line under the Arabic gives the compiler’s note on where the hadith is recorded and how strong it is.</p>
 <h3>The English translation</h3>
@@ -194,7 +194,7 @@ def about_translation():
 <p><b>Hadith 1–42:</b> sunnah.com, <i>Forty Hadith of an-Nawawi</i> (sunnah.com/nawawi40), reproduced as published, except that the long English blessing “(peace and blessings of Allah be upon him)” is written with the symbol <b>ﷺ</b> to save space.</p>
 <p><b>Hadith 43–50:</b> sunnah.com does not list Ibn Rajab’s additions as a separate book, so each is given in sunnah.com’s translation from its original collection (Ṣaḥīḥ al-Bukhārī, Ṣaḥīḥ Muslim or Jāmiʿ at-Tirmidhī), with the exact reference. These versions sometimes contain a little more of the story, or put the clauses in a slightly different order, than the wording Ibn Rajab quotes.</p>
 <p style="margin:0"><b>One exception:</b> the narration of Muʿādh ibn Jabal at the end of hadith 50 (from Ibn Ḥibbān) is not on sunnah.com, so it is given in this book’s own translation and is marked as such.</p></div>
-<p>Translations by different people use different spellings (Hurayrah / Huraira, Ramadan / Ramadhan, salah / prayer). They have been left as sunnah.com has them.</p>
+<p>Spellings differ between translators (Hurayrah / Huraira, Ramadan / Ramadhan); they are left as sunnah.com has them.</p>
 <h3>Honorifics</h3>
 <p><b>ﷺ</b> — <i>ṣallā Allāhu ʿalayhi wa sallam</i>: may Allah send blessings and peace upon him (said after the Prophet’s name). <b>(ra)</b> / <span class="ar-in">رَضِيَ اللَّهُ عَنْهُ</span> — may Allah be pleased with him (said after the name of a Companion).</p>
 <h3>Grades used in this book</h3>

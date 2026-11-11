@@ -19,6 +19,9 @@ from figures import FIGURES  # noqa: E402
 from english import layout as en_layout, PB, REF  # noqa: E402
 import narrators  # noqa: E402
 import tests  # noqa: E402
+from background import BACKGROUND  # noqa: E402
+import sources  # noqa: E402
+ENDNOTES = {}
 import front  # noqa: E402
 
 CONTENT = {}
@@ -32,13 +35,20 @@ for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"
 
 # EDITION=kdp builds the Amazon KDP black-and-white interior: white paper, greyscale,
 # mirrored margins (wide on the binding side), no cover inside.
+# EDITION=kdp-color builds the Amazon colour interior: US Letter 8.5 x 11 in (KDP standard colour), white paper.
 EDITION = os.environ.get("EDITION", "color")
-KDP = EDITION == "kdp"
+KDP = EDITION in ("kdp", "kdp-color")
+GREY = EDITION == "kdp"
+LETTER = EDITION == "kdp-color"
 OUT_PDF = os.path.join(ROOT, "Forty-Hadith-Nawawi-Study-Book.pdf")
 BUILD = os.path.join(ROOT, ".build")
-if KDP:
+if GREY:
     OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-BW.pdf")
     BUILD = os.path.join(ROOT, ".build-kdp")
+if LETTER:
+    OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-Color.pdf")
+    BUILD = os.path.join(ROOT, ".build-kdp-color")
+PAGE_H_MM = 279.4 if LETTER else 297.0
 os.makedirs(BUILD, exist_ok=True)
 
 AR_ORD = ["الأَوَّلُ", "الثَّانِي", "الثَّالِثُ", "الرَّابِعُ", "الخَامِسُ", "السَّادِسُ", "السَّابِعُ", "الثَّامِنُ", "التَّاسِعُ", "العَاشِرُ"]
@@ -216,9 +226,17 @@ def hadith_html(n):
         out.append("</section>")
         return "\n".join(out)
     out.append(narrator_html(n))
+    bg_paras, note_paras, fns = sources.annotate(n, BACKGROUND.get(n, {}).get("paras"), c["note"])
+    ENDNOTES[n] = fns
+    fm = lambda t: sources.place_marks(esc(t), lambda k: f'<sup class="fn">{k}</sup>')
+    if bg_paras:
+        out.append('<div class="block bg"><div class="keep">' + sec_head("book", "Background of the Hadith", "سَبَبُ الوُرُود") + f"<p>{fm(bg_paras[0])}</p></div>"
+                   + "".join(f"<p>{fm(x)}</p>" for x in bg_paras[1:]) + "</div>")
     # Note
-    out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{esc(c['note'][0])}</p></div>")
-    out.extend(f"<p>{esc(x)}</p>" for x in c["note"][1:])
+    out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{fm(note_paras[0])}</p></div>")
+    out.extend(f"<p>{fm(x)}</p>" for x in note_paras[1:])
+    if fns:
+        out.append(f'<p class="fn-see">Sources for the footnotes in this chapter: see “Notes and References”, Hadith {n}.</p>')
     out.append("</div>")
     # Picture
     if c.get("fig"):
@@ -292,9 +310,9 @@ def test_html(k):
     out.append("</ol></div>")
     # B. matching
     lefts, rights, _ = tests.shuffled_match(k)
-    rows = "".join(f'<tr><td class="mn">{i + 1}</td><td>{esc(l)}</td><td class="mb"><i></i></td><td class="ml">{LET_10[i]}</td><td>{esc(r)}</td></tr>'
+    rows = "".join(f'<tr><td class="mn">{i + 1}</td><td class="mar" lang="ar" dir="rtl">{esc(l)}</td><td class="mb"><i></i></td><td class="ml">{LET_10[i]}</td><td>{esc(r)}</td></tr>'
                    for i, (l, r) in enumerate(zip(lefts, rights)))
-    out.append(f'<div class="t-sec"><h3 class="t-h"><span>B</span>Matching <em>Write the letter of the matching title · 10 marks</em></h3>'
+    out.append(f'<div class="t-sec"><h3 class="t-h"><span>B</span>Matching <em>Write the letter of the English meaning next to each Arabic phrase · 10 marks</em></h3>'
                f'<table class="match">{rows}</table></div>')
     # C. short answer
     out.append('<div class="t-sec"><h3 class="t-h"><span>C</span>Short Answer <em>Answer in one or two sentences · 10 marks</em></h3><ol class="sa">')
@@ -308,6 +326,24 @@ def test_html(k):
 
 
 LET_10 = "ABCDEFGHIJ"
+
+
+def references_html():
+    """Endnotes for every chapter, then the bibliography."""
+    out = [f'<section class="page-sec refs">{front.mk("refs")}{front.head("Notes and References", "المَصَادِرُ وَالمَرَاجِع")}',
+           '<p class="refs-intro">The small numbers in the chapters refer to these notes. Hadith numbers follow sunnah.com, where every hadith can be read online (for example sunnah.com/bukhari:1). Qur’an references are given as sūrah:verse.</p>']
+    for n in range(1, 51):
+        fns = ENDNOTES.get(n)
+        if not fns:
+            continue
+        items = []
+        for k, ids in enumerate(fns, 1):
+            ar = "".join(f'<div class="ref-ar" lang="ar" dir="rtl">{esc(r["ar"])}</div>' for r in (sources.resolve(i) for i in ids) if r["ar"])
+            items.append(f'<li><span class="rn">{k}</span><div>{esc(sources.label(ids))}{ar}</div></li>')
+        title = CONTENT[n]["title"]
+        out.append(f'<div class="ref-h"><h3>Hadith {n} · {esc(title)}</h3><ol class="ref-l">{"".join(items)}</ol></div>')
+    out.append('<h3 class="bib-h">Bibliography</h3><ul class="bib">' + "".join(f"<li>{esc(b)}</li>" for b in sources.BIBLIOGRAPHY) + "</ul></section>")
+    return "\n".join(out)
 
 
 def answers_html():
@@ -370,17 +406,19 @@ def build_html(pages):
     css = open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()
     if KDP:
         css += open(os.path.join(ROOT, "src", "kdp.css"), encoding="utf-8").read()
+    if LETTER:
+        css += open(os.path.join(ROOT, "src", "kdp-letter.css"), encoding="utf-8").read()
     parts = [front.title_page(), front.copyright_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
              front.about_nawawi(), front.about_translation()]
     for n in range(1, 51):
         parts.append(hadith_html(n))
         if n % 10 == 0:
             parts.append(test_html(n // 10))
-    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), front.closing()]
+    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), references_html(), front.closing()]
     doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''
-    return to_grey(doc) if KDP else doc
+    return to_grey(doc) if GREY else doc
 
 
 # ---------------------------------------------------------------- render
@@ -410,14 +448,17 @@ def find_pages(pdf_path):
 
 def underlay(n_pages, path):
     from reportlab.pdfgen import canvas
-    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.pagesizes import A4, LETTER as LTR
     from reportlab.lib.colors import HexColor
-    W, H = A4
-    c = canvas.Canvas(path, pagesize=A4)
+    size = LTR if LETTER else A4
+    W, H = size
+    c = canvas.Canvas(path, pagesize=size)
     paper, gold, ink = HexColor("#fbf6ea"), HexColor("#c9a14a"), HexColor("#0f4c45")
     head_col = HexColor("#8c7a55")
-    if KDP:
+    if GREY:
         paper, gold, ink, head_col = HexColor("#ffffff"), HexColor("#8a8a8a"), HexColor("#333333"), HexColor("#666666")
+    elif KDP:
+        paper = HexColor("#ffffff")
     mm = 72 / 25.4
     for i in range(1, n_pages + 1):
         if not KDP:
@@ -486,8 +527,8 @@ def compose(body_pdf, cover_pdf, out_pdf):
 NOTES_PLAN = {}            # hadith -> (number of lines, own page?)
 MM = 72 / 25.4
 LINE_MM = 8.0              # height of one ruled line (book.css)
-BOTTOM_PT = (297 - 19) * MM  # bottom of the text area
-FULL_LINES = 29            # lines on a page of its own
+BOTTOM_PT = (PAGE_H_MM - 19) * MM  # bottom of the text area
+FULL_LINES = int((PAGE_H_MM - 38 - 20) // LINE_MM)  # lines on a page of its own
 
 
 def plan_notes(pdf_path):

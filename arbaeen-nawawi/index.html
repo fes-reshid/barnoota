@@ -109,6 +109,22 @@ button{font:inherit;cursor:pointer}
 .fig{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
 .fig svg{width:100%;height:auto}
 .fig .ac{fill:var(--accent)}.fig .acs{stroke:var(--accent)}.fig .sf{fill:var(--soft)}.fig .act{fill:var(--accent)}
+.fig.clickable .hot{cursor:pointer;transition:opacity .2s,filter .2s}
+.fig.clickable .hot:hover{filter:brightness(1.12) drop-shadow(0 2px 4px rgba(0,0,0,.18))}
+.fig.clickable .hot:focus{outline:none}
+.fig.clickable .hot.on{filter:drop-shadow(0 0 6px rgba(201,161,74,.95))}
+.tap{margin-left:auto;font-family:'Lora',serif;font-weight:400;font-style:italic;color:var(--gold);font-size:13px}
+.finfo{position:relative;background:#fff;border:1.5px solid var(--accent);border-radius:14px;padding:16px 18px 12px;margin-top:12px;box-shadow:0 8px 20px rgba(0,0,0,.08);animation:fade .25s ease}
+.finfo .fh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px;padding-right:28px}
+.finfo .far{font-family:'Amiri',serif;font-weight:700;font-size:26px;color:var(--gold)}
+.finfo h3{font-family:'Cinzel',serif;color:var(--accent);margin:0;font-size:18px}
+.finfo p{margin:0 0 8px;font-size:15.5px}
+.finfo ul{margin:0 0 10px;padding-left:20px;font-size:15px}.finfo li{margin-bottom:4px}
+.fverse{background:var(--soft);border-radius:10px;padding:10px 12px;text-align:center;margin-bottom:8px}
+.fverse div{font-family:'Amiri',serif;font-size:22px;color:var(--accent);direction:rtl}
+.fverse p{font-style:italic;font-size:14.5px;margin:4px 0 0}.fverse span{font-style:normal;color:var(--muted);font-size:13px}
+.flinks{font-size:14px;color:var(--muted)}.flinks a{color:var(--accent);font-weight:600}
+.fclose{position:absolute;top:8px;right:10px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--muted);font-size:20px;line-height:1}
 .cap{font-style:italic;color:var(--muted);font-size:13.5px;text-align:center;margin-top:6px}
 ol.ls{list-style:none;padding:0;margin:0;counter-reset:l}
 ol.ls li{counter-increment:l;position:relative;padding-left:36px;margin-bottom:8px}
@@ -145,6 +161,8 @@ textarea:focus,select:focus,input:focus{outline:2px solid var(--gold2);outline-o
 .mtable{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .mtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
 .mtable td.n{width:38px;text-align:center;color:#fff;background:var(--accent);font-weight:700}
+.mtable td.mar{width:40%;font-family:'Amiri',serif;font-size:21px;line-height:1.6;color:var(--accent);direction:rtl;text-align:right}
+@media(max-width:600px){.mtable tr{display:grid;grid-template-columns:38px 1fr}.mtable td.n{grid-row:span 2}.mtable td.mar{width:auto}}
 .mtable select{font:15px 'Lora',serif;padding:6px 8px;border-radius:8px;border:1px solid var(--line);max-width:100%;width:100%}
 .mtable tr.right td.n{background:var(--ok)}.mtable tr.wrong td.n{background:var(--bad)}
 .model{display:none;margin-top:6px;font-size:14.5px;background:var(--soft);border-radius:8px;padding:8px 10px}
@@ -152,6 +170,47 @@ textarea:focus,select:focus,input:focus{outline:2px solid var(--gold2);outline-o
 .result{position:sticky;bottom:10px;z-index:5;background:#0b3a35;color:#fff;border-radius:14px;padding:14px 16px;margin:20px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 10px 24px rgba(0,0,0,.18)}
 .result b{font-family:'Cinzel',serif;font-size:22px;color:#ecd391}
 .result .sp{flex:1}
+.missing{outline:2.5px solid var(--bad)!important;background:#fdeeee!important;border-radius:12px}
+.mtable tr.missing td{background:#fdeeee}
+.who{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 6px}
+.who label{display:flex;flex-direction:column;gap:4px;font-size:13.5px;font-weight:600;color:var(--muted)}.who label b{color:var(--bad)}.who small{font-weight:400}
+.who input{font:16px 'Lora',serif;padding:9px 11px;border:1px solid var(--line);border-radius:8px}
+@media(max-width:600px){.who{grid-template-columns:1fr}}
+/* background */
+.bgbox{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 16px}
+.bgbox p{margin:0 0 10px;font-size:15.5px}.bgbox .bgsrc{font-size:13px;color:var(--muted);font-style:italic;margin:0}
+/* footnotes */
+sup.fnr{cursor:pointer;color:var(--accent);font-weight:700;font-size:.68em;padding:0 2px;border-radius:4px;background:var(--soft);margin-left:1px}
+sup.fnr:hover{background:var(--accent);color:#fff}
+ol.fnl{list-style:none;padding:0;margin:0 0 10px}
+ol.fnl li{display:flex;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:14.5px;transition:background .3s}
+ol.fnl li.hl{background:#fff4d6}
+ol.fnl .fnn{flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ol.fnl a,.ssrc a{color:var(--accent);font-weight:600}
+.fnar{font-family:'Amiri',serif;font-size:19px;line-height:1.9;direction:rtl;text-align:right;color:#2b2620;border-right:3px solid var(--gold2);padding:2px 10px;margin-top:6px}
+.ssrc{margin-top:10px;font-size:14px}.ssrc b{font-family:'Cinzel',serif;color:var(--accent);font-size:13px}.ssrc ol{margin:6px 0 0;padding-left:20px}
+/* results */
+.res .ring{--p:0;width:150px;height:150px;border-radius:50%;margin:14px auto 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(closest-side,#fffdf8 78%,transparent 79% 100%),conic-gradient(var(--accent) calc(var(--p)*1%),#eadfc3 0)}
+.res .ring b{font-family:'Cinzel',serif;font-size:36px;color:var(--accent);line-height:1}.res .ring b small{font-size:16px;color:var(--muted)}
+.res .ring span{font-size:14px;color:var(--muted)}
+.badge{display:inline-block;border-radius:20px;padding:4px 16px;font-weight:700;font-size:14px}
+.badge.pass{background:#e3f3e8;color:var(--ok);border:1.5px solid var(--ok)}.badge.fail{background:#fff4e0;color:#9a6a12;border:1.5px solid #d9a441}
+.brk{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.brk span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:14px;color:var(--muted)}.brk b{color:var(--accent)}
+.adv{background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:14px 16px;margin:16px 0}
+.adv h3{font-family:'Cinzel',serif;color:var(--accent);margin:0 0 6px;font-size:18px}.adv p{margin:0 0 8px}
+.revl{display:grid;gap:6px}.revl a{display:flex;align-items:center;gap:10px;text-decoration:none;background:var(--soft);border-radius:10px;padding:6px 10px;font-weight:600}
+.revl .num{width:30px;height:30px;font-size:13px;box-shadow:none}.revl em{margin-left:auto;font-style:normal;font-weight:400;color:var(--bad);font-size:13px}
+.share{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.share label{display:flex;flex-direction:column;font-size:13.5px;font-weight:600;color:var(--muted);gap:4px}.share label small{font-weight:400}
+.share input[type=text],.share input:not([type]),.share input[type=email]{font:15px 'Lora',serif;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+.share .chk{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px;font-weight:400}
+.sbtns{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}.btn.wa{background:#25d366;color:#fff}
+@media(max-width:600px){.share{grid-template-columns:1fr}}
+.wr{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:15px}
+.wr .q{font-weight:600;margin-bottom:4px}.wr .mar2{font-family:'Amiri',serif;font-size:20px;direction:rtl;text-align:right;color:var(--accent)}
+.wr .yo{color:#8a2f2f}.wr .co{color:var(--ok)}.wr .co a{margin-left:6px;color:var(--accent);font-size:13px}
 /* certificate */
 .cert-wrap{text-align:center;margin:22px 0 40px}
 .cert-wrap canvas{width:100%;height:auto;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.18);background:#fff}
@@ -250,7 +309,7 @@ function home(){
     for(var n=p.first;n<=p.last;n++){var h=H[n-1];
       html+='<a class="card'+(S.studied[n]?" done":"")+'" href="#h/'+n+'"><span class="num">'+n+'</span><span class="tt"><b>'+h.title+'</b><span lang="ar">'+h.arTitle+'</span></span><span class="ck">✓</span></a>';}
     var t=S.tests[p.k];
-    html+='<a class="card test'+(passed(p.k)?" done":"")+'" href="#test/'+p.k+'"><span class="num">✎</span><span class="tt"><b>'+p.label+' Review Test</b><span>'+(t?"Best score "+t.best+"/35":"50 questions · pass 80%")+'</span></span><span class="ck">✓</span></a>';
+    html+='<a class="card test'+(passed(p.k)?" done":"")+'" href="#test/'+p.k+'"><span class="num">✎</span><span class="tt"><b>'+p.label+' Review Test</b><span>'+(t?"Best score "+t.best+"/35 · tap to retake":"50 questions · pass 80%")+'</span></span><span class="ck">✓</span></a>';
     html+='</div></section>';
   });
   html+='<section class="part" style="--pa:#0f4c45"><h2><small>Finish</small>Certificate of Completion</h2><div class="cards"><a class="card cert'+(tp===5?" done":"")+'" href="#certificate"><span class="num">★</span><span class="tt"><b>Your certificate</b><span>'+(tp===5?"Ready — add your name":"Pass all five part tests to unlock")+'</span></span><span class="ck">✓</span></a></div></section></div>';
@@ -270,13 +329,18 @@ function chapter(n){
      o+='<div class="nr"><div class="h"><b>'+c.name+'</b>'+(c.dates?'<span class="d">'+c.dates+'</span>':"")+'<span class="a" lang="ar">'+c.ar+'</span></div>'+
      (c.see?'<p class="ctx">Biography: see <a href="#h/'+c.see+'">Hadith '+c.see+'</a>.</p>':'<p>'+c.text+'</p>')+
      (st?'<button class="more" aria-expanded="false" data-lab="'+(c.see?"Read the full story":"Read more")+'">'+(c.see?"Read the full story":"Read more")+' <span>▾</span></button><div class="story" hidden><h4>The story of '+c.name+'</h4>'+
-       st.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="sl"><b>What we learn from this life</b><ul>'+st.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div></div>':"")+'</div>'});
+       st.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'<div class="sl"><b>What we learn from this life</b><ul>'+st.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul></div>'+
+       '<div class="ssrc"><b>Sources</b><ol>'+st.refs.map(function(r){return "<li>"+(r.url?'<a href="'+r.url+'" target="_blank" rel="noopener">'+r.label+'</a>':r.label)+"</li>"}).join("")+'</ol></div></div>':"")+'</div>'});
   if(h.narr.context)o+='<p class="ctx">'+h.narr.context+'</p>';
+  if(h.bg)o+='<div class="sec"><i>❖</i>Background of the Hadith<small class="tap" lang="ar" style="font-family:Amiri;font-style:normal;font-size:17px">سَبَبُ الوُرُود</small></div><div class="bgbox">'+h.bg.paras.map(function(x){return "<p>"+x+"</p>"}).join("")+'</div>';
   o+='<div class="sec"><i>✎</i>Explanatory Note</div><div class="note">'+h.note.map(function(x){return "<p>"+x+"</p>"}).join("")+'</div>';
-  if(h.fig)o+='<div class="sec"><i>▣</i>Picture</div><div class="fig">'+h.fig.svg+'</div><div class="cap">'+h.fig.cap+'</div>';
+  if(h.fig){var hot=h.fig.svg.indexOf('class="hot"')>=0;
+    o+='<div class="sec"><i>▣</i>Picture'+(hot?'<small class="tap">tap any part to learn more</small>':'')+'</div><div class="fig'+(hot?' clickable':'')+'">'+h.fig.svg+'</div><div class="cap">'+h.fig.cap+'</div>'+(hot?'<div class="finfo" id="finfo" hidden></div>':'');}
   o+='<div class="sec"><i>★</i>Lessons from the Hadith</div><ol class="ls">'+h.lessons.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ol>';
   if(h.steps){o+='<div class="sec"><i>↗</i>Step by Step <small style="font-family:Lora;font-weight:400;font-style:italic;color:var(--muted);font-size:13px;margin-left:auto">'+h.steps.title+'</small></div>';
     h.steps.items.forEach(function(s,i){o+='<div class="step"><span class="sn">'+(i+1)+'</span><div><b>'+s[0]+'</b>'+(s[1]?"<br>"+s[1]:"")+'</div></div>'})}
+  if(h.fn.length){o+='<div class="sec"><i>§</i>Sources<small class="tap">tap a number in the text to jump here</small></div><ol class="fnl">'+
+    h.fn.map(function(refs,i){return '<li id="fn-'+(i+1)+'"><span class="fnn">'+(i+1)+'</span><div>'+refs.map(function(r){return (r.url?'<a href="'+r.url+'" target="_blank" rel="noopener">'+r.label+'</a>':r.label)+(r.ar?'<div class="fnar" lang="ar">'+r.ar+'</div>':'')}).join(" · ")+'</div></li>'}).join("")+'</ol>';}
   var ans=S.answers[n]||[];
   o+='<div class="sec"><i>?</i>Questions</div>';
   h.questions.forEach(function(q,i){o+='<div class="qa"><div class="q">'+(i+1)+'. '+q+'</div><textarea data-a="'+i+'" placeholder="Write your answer…">'+esc(ans[i]||"")+'</textarea></div>'});
@@ -289,9 +353,22 @@ function chapter(n){
   o+='<div class="navrow">'+(n>1?'<a class="btn line" href="#h/'+(n-1)+'">← Hadith '+(n-1)+'</a>':'<a class="btn line" href="#">← Contents</a>')+'<a class="btn acc" href="'+nextHref+'">'+nextLab+'</a></div></div>';
   return o;
 }
+function showInfo(g){
+  var k=g.dataset.info, d=B.figinfo[k], box=$("#finfo"); if(!d||!box)return;
+  document.querySelectorAll(".fig .hot").forEach(function(x){x.classList.toggle("on",x.dataset.info===k)});
+  box.innerHTML='<button class="fclose" aria-label="Close">×</button><div class="fh"><span class="far" lang="ar">'+d.ar+'</span><h3>'+d.title+'</h3></div><p>'+d.meaning+'</p>'+
+    '<ul>'+d.points.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul>'+
+    '<div class="fverse"><div lang="ar">﴿'+d.verse[0]+'﴾</div><p>'+d.verse[1]+' <span>('+d.verse[2]+')</span></p></div>'+
+    '<div class="flinks">Read more in: '+d.hadith.map(function(n){return '<a href="#h/'+n+'">Hadith '+n+'</a>'}).join(" · ")+'</div>';
+  box.hidden=false;box.querySelector(".fclose").onclick=function(){box.hidden=true;document.querySelectorAll(".fig .hot").forEach(function(x){x.classList.remove("on")})};
+  box.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function bindChapter(n){
   document.querySelectorAll(".listen").forEach(function(b){b.onclick=function(){play(b,b.dataset.l,n)}});
+  document.querySelectorAll("sup.fnr").forEach(function(sp){sp.onclick=function(){var li=document.getElementById("fn-"+sp.dataset.fn);if(li){li.scrollIntoView({behavior:"smooth",block:"center"});li.classList.add("hl");setTimeout(function(){li.classList.remove("hl")},1600)}}});
+  document.querySelectorAll(".fig .hot").forEach(function(g){g.setAttribute("tabindex","0");g.setAttribute("role","button");
+    g.onclick=function(){showInfo(g)};g.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showInfo(g)}}});
   document.querySelectorAll(".more").forEach(function(b){var lab=b.dataset.lab;b.onclick=function(){var d=b.nextElementSibling, open=d.hidden;
     d.hidden=!open;b.setAttribute("aria-expanded",open);b.innerHTML=(open?"Show less":lab)+" <span>"+(open?"▴":"▾")+"</span>";
     if(!open)b.scrollIntoView({block:"nearest",behavior:"smooth"})}});
@@ -305,36 +382,126 @@ function test(k){
   var p=part(k), t=T[k];
   var o='<div class="wrap chap"><div class="thead"><div class="kicker">'+p.label+' · Hadith '+p.first+'–'+p.last+'</div><h1>Review Test</h1>'+
     '<div lang="ar" style="font-family:Amiri;color:var(--muted);font-size:19px">اخْتِبَارُ المُرَاجَعَة</div>'+
-    '<p>Sections A and B are marked automatically (35 marks). Score '+Math.ceil(35*PASS)+' or more to pass. Sections C and D are written answers: compare yours with the model answers after you submit.</p></div>';
+    '<p>Answer every question. Sections A and B are marked automatically (35 marks); score '+Math.ceil(35*PASS)+' or more to pass. Sections C and D are written answers that you can send to your teacher. Your result, the correct answers and model answers appear after you submit.</p></div>';
+  o+='<div class="who" id="who"><label>Your name <b>*</b><input id="tsname" maxlength="48" placeholder="Write your full name" value="'+esc(S.name||"")+'"></label>'+
+     '<label>Teacher’s name <small>(optional)</small><input id="ttname" maxlength="48" placeholder="e.g. Ustādh Ahmed" value="'+esc((S.teacher&&S.teacher.name)||"")+'"></label></div>';
   o+='<div class="sec"><i>A</i>Multiple Choice</div>';
   t.mcq.forEach(function(m,i){o+='<div class="mcq" data-i="'+i+'"><div class="q">'+(i+1)+'. '+m.q+'</div>'+m.o.map(function(x,j){return '<label><input type="radio" name="m'+i+'" value="'+j+'"><span><b>'+L[j]+'.</b> '+x+'</span></label>'}).join("")+'</div>'});
-  o+='<div class="sec"><i>B</i>Matching</div><table class="mtable">';
-  t.match.left.forEach(function(l,i){o+='<tr data-i="'+i+'"><td class="n">'+(i+1)+'</td><td style="width:32%">'+l+'</td><td><select><option value="">Choose…</option>'+t.match.right.map(function(r,j){return '<option value="'+j+'">'+L[j]+'. '+r+'</option>'}).join("")+'</select></td></tr>'});
+  o+='<div class="sec"><i>B</i>Matching</div><p style="color:var(--muted);font-size:14.5px;margin:-4px 0 10px">Choose the English meaning of each Arabic phrase from the hadith of this part.</p><table class="mtable">';
+  t.match.left.forEach(function(l,i){o+='<tr data-i="'+i+'"><td class="n">'+(i+1)+'</td><td class="mar" lang="ar" dir="rtl">'+l+'</td><td><select><option value="">Choose…</option>'+t.match.right.map(function(r,j){return '<option value="'+j+'">'+L[j]+'. '+r+'</option>'}).join("")+'</select></td></tr>'});
   o+='</table><div class="sec"><i>C</i>Short Answer</div>';
-  t.short.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s.q+'</div><textarea></textarea><div class="model"><b>Model answer:</b> '+s.a+'</div></div>'});
+  t.short.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s.q+'</div><textarea></textarea></div>'});
   o+='<div class="sec"><i>D</i>Critical Thinking</div>';
-  t.critical.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s+'</div><textarea style="min-height:110px"></textarea><div class="model">Answers will vary. A good answer explains its reasoning and uses the hadith of this part as evidence.</div></div>'});
-  o+='<div class="result" id="result"><span>Answer every question in A and B, then submit.</span><span class="sp"></span><button class="btn gold" id="submit">Submit test</button></div>';
+  t.critical.forEach(function(s,i){o+='<div class="qa sa"><div class="q">'+(i+1)+'. '+s+'</div><textarea style="min-height:110px"></textarea></div>'});
+  o+='<div class="result" id="result"><span>When you have finished, submit to see your result, advice and the option to send it to your teacher.</span><span class="sp"></span><button class="btn gold" id="submit">Submit test</button></div>';
   o+='<div class="navrow"><a class="btn line" href="#h/'+p.last+'">← Hadith '+p.last+'</a>'+(k<5?'<a class="btn acc" href="#h/'+(p.last+1)+'">Hadith '+(p.last+1)+' →</a>':'<a class="btn acc" href="#certificate">Certificate →</a>')+'</div></div>';
   return o;
 }
 function bindTest(k){
   var t=T[k];
+  document.querySelectorAll(".mcq input,.mtable select,.sa textarea").forEach(function(el){
+    el.addEventListener(el.tagName==="TEXTAREA"?"input":"change",function(){var box=el.closest(".mcq,tr,.qa");if(box)box.classList.remove("missing")})});
+  $("#tsname").addEventListener("input",function(){$("#who").classList.remove("missing")});
   $("#submit").onclick=function(){
-    var score=0, blank=0;
-    t.mcq.forEach(function(m,i){var box=$('.mcq[data-i="'+i+'"]'), sel=box.querySelector("input:checked");
-      box.querySelectorAll("label").forEach(function(l,j){l.classList.remove("right","wrong");if(j===m.a)l.classList.add("right")});
-      if(!sel){blank++;return}if(+sel.value===m.a)score++;else sel.closest("label").classList.add("wrong")});
-    t.match.left.forEach(function(_,i){var tr=$('.mtable tr[data-i="'+i+'"]'), v=tr.querySelector("select").value;
-      tr.classList.remove("right","wrong");if(v===""){blank++;return}if(+v===t.match.key[i]){score++;tr.classList.add("right")}else tr.classList.add("wrong")});
-    document.querySelectorAll(".sa").forEach(function(d){d.classList.add("done")});
-    var prev=S.tests[k]||{best:0};S.tests[k]={best:Math.max(prev.best,score),last:score};save();
-    var ok=score>=Math.ceil(35*PASS);
-    $("#result").innerHTML='<b>'+score+' / 35</b><span>'+(ok?"Passed — well done! ":"Not passed yet — review the chapters and try again. ")+(blank?blank+" left blank. ":"")+'Best: '+S.tests[k].best+'/35</span><span class="sp"></span><button class="btn gold" id="again">Try again</button>';
-    $("#again").onclick=function(){render()};
-    window.scrollTo({top:0,behavior:"smooth"});
+    var r={date:new Date().toISOString(),mcq:[],match:[],short:[],crit:[]};
+    t.mcq.forEach(function(m,i){var sel=$('.mcq[data-i="'+i+'"] input:checked');r.mcq.push(sel?+sel.value:null)});
+    t.match.left.forEach(function(_,i){var v=$('.mtable tr[data-i="'+i+'"] select').value;r.match.push(v===""?null:+v)});
+    var tas=document.querySelectorAll(".sa textarea");
+    t.short.forEach(function(_,i){r.short.push(tas[i].value.trim())});
+    t.critical.forEach(function(_,i){r.crit.push(tas[t.short.length+i].value.trim())});
+    // every question must be answered: mark the missing ones in red, show nothing else
+    var miss=[];
+    document.querySelectorAll(".missing").forEach(function(e){e.classList.remove("missing")});
+    var nm=$("#tsname").value.trim();S.name=nm;S.teacher=S.teacher||{};S.teacher.name=$("#ttname").value.trim();save();
+    if(!nm)miss.push($("#who"));
+    r.mcq.forEach(function(x,i){if(x===null)miss.push($('.mcq[data-i="'+i+'"]'))});
+    r.match.forEach(function(x,i){if(x===null)miss.push($('.mtable tr[data-i="'+i+'"]'))});
+    tas.forEach(function(ta){if(!ta.value.trim())miss.push(ta.closest(".qa"))});
+    if(miss.length){
+      miss.forEach(function(e){e.classList.add("missing")});
+      $("#result").innerHTML='<b style="color:#ffb4b4">'+miss.length+'</b><span>question'+(miss.length>1?"s are":" is")+' not answered yet. Please answer the questions marked in red, then submit again.</span><span class="sp"></span><button class="btn gold" id="submit">Submit test</button>';
+      bindTest(k);miss[0].scrollIntoView({behavior:"smooth",block:"center"});return;
+    }
+    r.a=t.mcq.reduce(function(n,m,i){return n+(r.mcq[i]===m.a?1:0)},0);
+    r.b=t.match.key.reduce(function(n,key,i){return n+(r.match[i]===key?1:0)},0);
+    r.score=r.a+r.b;
+    S.results=S.results||{};S.results[k]=r;
+    var prev=S.tests[k]||{best:0};S.tests[k]={best:Math.max(prev.best,r.score),last:r.score};save();
+    location.hash="#result/"+k;
   };
 }
+function advice(pct){
+  if(pct>=90)return ["Excellent — mā shā’ Allāh!","You know this part very well. Keep it strong: recite the Arabic of these hadith from memory once a week, and teach one of them to someone this week — teaching is the best revision."];
+  if(pct>=80)return ["Well done — you passed!","Look at the mistakes below and re-read the hadith listed under ‘Review these hadith’. A short revision now will make the knowledge last."];
+  if(pct>=60)return ["Very close — keep going!","You understand much of this part. Re-read the explanatory note and lessons of the hadith listed below, answer their questions again, then retake the test. You need 28 out of 35 to pass."];
+  return ["Keep going — every step of seeking knowledge is rewarded.","Take this part more slowly: one hadith a day. Read the Arabic and English, the note and the lessons, look at the picture, and answer the chapter questions before trying the test again. Ask your teacher about anything unclear."];
+}
+function shareText(k,r,withWritten){
+  var p=part(k), t=T[k], pct=Math.round(r.score/35*100), ok=r.score>=Math.ceil(35*PASS), tn=(S.teacher&&S.teacher.name)||"";
+  var rev=reviewList(k,r).map(function(x){return x.n}).join(", ");
+  var lines=["Assalāmu ʿalaykum"+(tn?" "+tn:"")+",","","The Forty Hadith of Imam an-Nawawi","*"+p.label+" Review Test* (Hadith "+p.first+"–"+p.last+")",
+    "Student: "+((S.name||"").trim()||"—"),"Date: "+new Date(r.date).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}),"",
+    "*Score: "+r.score+"/35 ("+pct+"%) — "+(ok?"PASSED":"not passed yet")+"*","A. Multiple choice: "+r.a+"/25","B. Matching: "+r.b+"/10"];
+  if(rev)lines.push("Hadith to review: "+rev);
+  if(withWritten){
+    lines.push("","C. Short answers:");t.short.forEach(function(q,i){lines.push((i+1)+". "+strip(q.q),"   → "+(r.short[i]||"(no answer)"))});
+    lines.push("","D. Critical thinking:");t.critical.forEach(function(q,i){lines.push((i+1)+". "+strip(q),"   → "+(r.crit[i]||"(no answer)"))});
+  }
+  lines.push("","Sent from diinislaam.com/arbaeen-nawawi");
+  return lines.join("\n");
+}
+function strip(h){var d=document.createElement("div");d.innerHTML=h;return d.textContent}
+function reviewList(k,r){
+  var t=T[k], c={};
+  t.mcq.forEach(function(m,i){if(r.mcq[i]!==m.a)c[m.h]=(c[m.h]||0)+1});
+  t.match.key.forEach(function(key,i){if(r.match[i]!==key){var h=t.match.h[i];c[h]=(c[h]||0)+1}});
+  return Object.keys(c).map(function(n){return {n:+n,c:c[n]}}).sort(function(a,b){return b.c-a.c||a.n-b.n});
+}
+function result(k){
+  var p=part(k), t=T[k], r=(S.results||{})[k];
+  if(!r)return '<div class="wrap"><div class="lock"><p>No result yet for this test.</p><a class="btn acc" href="#test/'+k+'">Take the '+p.label+' Review Test</a></div></div>';
+  var pct=Math.round(r.score/35*100), ok=r.score>=Math.ceil(35*PASS), adv=advice(pct), rev=reviewList(k,r), tch=S.teacher||{};
+  var o='<div class="wrap chap"><div class="thead res"><div class="kicker">'+p.label+' · Hadith '+p.first+'–'+p.last+'</div><h1>Your Result</h1>'+
+    '<div class="ring" style="--p:'+pct+'"><b>'+r.score+'<small>/35</small></b><span>'+pct+'%</span></div>'+
+    '<div class="badge '+(ok?"pass":"fail")+'">'+(ok?"✓ Passed":"Not passed yet")+'</div>'+
+    '<div class="brk"><span>A. Multiple choice <b>'+r.a+'/25</b></span><span>B. Matching <b>'+r.b+'/10</b></span><span>Best score <b>'+S.tests[k].best+'/35</b></span></div></div>';
+  o+='<div class="adv"><h3>'+adv[0]+'</h3><p>'+adv[1]+'</p>';
+  if(rev.length)o+='<p><b>Review these hadith:</b></p><div class="revl">'+rev.map(function(x){return '<a href="#h/'+x.n+'"><span class="num">'+x.n+'</span>'+H[x.n-1].title+'<em>'+x.c+' mistake'+(x.c>1?"s":"")+'</em></a>'}).join("")+'</div>';
+  o+='</div>';
+  // share
+  o+='<div class="sec"><i>✉</i>Send your result to your teacher</div><div class="share">'+
+    '<label>Your name<input id="sname" value="'+esc(S.name||"")+'" placeholder="Your full name"></label>'+
+    '<label>Teacher’s name<input id="tname" value="'+esc(tch.name||"")+'" placeholder="e.g. Ustādh Ahmed"></label>'+
+    '<label>Teacher’s WhatsApp <small>(with country code, optional)</small><input id="tphone" inputmode="tel" value="'+esc(tch.phone||"")+'" placeholder="+251 9…"></label>'+
+    '<label>Teacher’s email <small>(optional)</small><input id="temail" type="email" value="'+esc(tch.email||"")+'" placeholder="teacher@example.com"></label>'+
+    '<label class="chk"><input type="checkbox" id="wwr" checked> Include my written answers (sections C and D)</label>'+
+    '<div class="sbtns"><a class="btn wa" id="bwa" target="_blank" rel="noopener">WhatsApp</a><a class="btn acc" id="bem">Email</a><button class="btn line" id="bcp">Copy</button><button class="btn line" id="bpr">Print</button></div><div class="saved" id="cpmsg"></div></div>';
+  // mistakes
+  var wrong=[];
+  t.mcq.forEach(function(m,i){if(r.mcq[i]!==m.a)wrong.push('<div class="wr"><div class="q">A'+(i+1)+'. '+m.q+'</div><div class="yo">Your answer: '+(r.mcq[i]===null?"<i>not answered</i>":L[r.mcq[i]]+". "+m.o[r.mcq[i]])+'</div><div class="co">Correct: '+L[m.a]+". "+m.o[m.a]+' <a href="#h/'+m.h+'">Hadith '+m.h+'</a></div></div>')});
+  t.match.key.forEach(function(key,i){if(r.match[i]!==key)wrong.push('<div class="wr"><div class="q mar2" lang="ar">B'+(i+1)+'. '+t.match.left[i]+'</div><div class="yo">Your answer: '+(r.match[i]===null?"<i>not answered</i>":t.match.right[r.match[i]])+'</div><div class="co">Correct: '+t.match.right[key]+' <a href="#h/'+t.match.h[i]+'">Hadith '+t.match.h[i]+'</a></div></div>')});
+  o+='<div class="sec"><i>✎</i>'+(wrong.length?"Your mistakes ("+wrong.length+")":"No mistakes — perfect score in A and B!")+'</div>'+wrong.join("");
+  o+='<div class="sec"><i>C</i>Your short answers</div>'+t.short.map(function(q,i){return '<div class="wr"><div class="q">'+(i+1)+'. '+q.q+'</div><div class="yo">'+(r.short[i]?esc(r.short[i]):"<i>no answer</i>")+'</div><div class="co">Model answer: '+q.a+'</div></div>'}).join("");
+  o+='<div class="sec"><i>D</i>Your critical thinking answers</div>'+t.critical.map(function(q,i){return '<div class="wr"><div class="q">'+(i+1)+'. '+q+'</div><div class="yo">'+(r.crit[i]?esc(r.crit[i]):"<i>no answer</i>")+'</div></div>'}).join("");
+  o+='<div class="navrow"><a class="btn line" href="#test/'+k+'">↻ Try the test again</a>'+(k<5?'<a class="btn acc" href="#h/'+(p.last+1)+'">Hadith '+(p.last+1)+' →</a>':'<a class="btn acc" href="#certificate">Certificate →</a>')+'</div></div>';
+  return o;
+}
+function bindResult(k){
+  var r=(S.results||{})[k]; if(!r)return;
+  var upd=function(){
+    S.name=$("#sname").value;S.teacher={name:$("#tname").value.trim(),phone:$("#tphone").value.trim(),email:$("#temail").value.trim()};save();
+    var txt=shareText(k,r,$("#wwr").checked), ph=S.teacher.phone.replace(/[^0-9]/g,"");
+    $("#bwa").href="https://wa.me/"+(ph||"")+"?text="+encodeURIComponent(txt);
+    $("#bem").href="mailto:"+encodeURIComponent(S.teacher.email)+"?subject="+encodeURIComponent("Forty Hadith — "+part(k).label+" Review Test result: "+r.score+"/35")+"&body="+encodeURIComponent(txt);
+    return txt;
+  };
+  ["sname","tname","tphone","temail","wwr"].forEach(function(id){$("#"+id).oninput=upd;$("#"+id).onchange=upd});
+  upd();
+  $("#bcp").onclick=function(){var txt=upd();var done=function(){$("#cpmsg").textContent="Copied — paste it into any message."};
+    if(navigator.clipboard)navigator.clipboard.writeText(txt).then(done,function(){fallbackCopy(txt);done()});else{fallbackCopy(txt);done()}};
+  $("#bpr").onclick=function(){window.print()};
+}
+function fallbackCopy(txt){var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}ta.remove()}
 function certificate(){
   var miss=[1,2,3,4,5].filter(function(k){return !passed(k)});
   var o='<div class="wrap"><div class="thead"><div class="kicker">The Forty Hadith of Imam an-Nawawi</div><h1>Certificate of Completion</h1></div>';
@@ -344,7 +511,8 @@ function certificate(){
     return o+'</div>';
   }
   o+='<p style="text-align:center">Mā shā’ Allāh — you have passed all five part tests. Type your name as it should appear on the certificate.</p>'+
-    '<div class="cert-form"><input id="cname" maxlength="48" placeholder="Your full name" value="'+esc(S.name||"")+'"><button class="btn acc" id="cdl">Download (PNG)</button><button class="btn line" id="cpr">Print / Save as PDF</button></div>'+
+    '<div class="cert-form"><input id="cname" maxlength="48" placeholder="Your full name" value="'+esc(S.name||"")+'"><input id="ctname" maxlength="48" placeholder="Your teacher’s name" value="'+esc((S.teacher&&S.teacher.name)||"")+'"></div>'+
+    '<div class="cert-form"><button class="btn acc" id="cdl">Download (PNG)</button><button class="btn line" id="cpr">Print / Save as PDF</button></div>'+
     '<div class="cert-wrap"><canvas id="cv" width="2000" height="1414"></canvas></div></div>';
   return o;
 }
@@ -365,16 +533,17 @@ function paintCert(cv,im){
   c.fillStyle=g;c.fillRect(0,0,W,Hh);
   // emerald band
   c.fillStyle=EM;c.fillRect(0,0,W,Hh);c.fillStyle=g;frame(c,46,46,W-92,Hh-92,46);c.fill();
-  // calligraphic background: a line of hadith 36, repeated in faint gold rows
+  // background: one elegant line of Arabic calligraphy (Hadith 36), large and faint, across the middle
   c.save();frame(c,70,70,W-140,Hh-140,40);c.clip();
   var line="مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الجَنَّةِ";
-  c.direction="rtl";c.textAlign="left";c.font="400 46px Amiri";c.fillStyle="rgba(184,145,63,0.20)";
-  var lw=c.measureText(line+"   ◆   ").width;
-  for(var row=0,y=118;y<Hh;row++,y+=74){var x0=-((row%2)?lw/2:0)-40;for(var x=x0;x<W;x+=lw){c.fillText(line+"   ◆   ",x,y)}}
-  c.direction="ltr";
-  // soft glow behind the text so the background stays a texture
-  var v=c.createRadialGradient(W/2,Hh*.5,120,W/2,Hh*.5,W*.55);v.addColorStop(0,"rgba(255,251,242,0.78)");v.addColorStop(.55,"rgba(255,251,242,0.55)");v.addColorStop(1,"rgba(255,251,242,0)");
-  c.fillStyle=v;c.fillRect(0,0,W,Hh);c.restore();
+  c.direction="rtl";c.textAlign="center";var bs=150;c.font="700 "+bs+"px Amiri";
+  while(c.measureText(line).width>W-300&&bs>40){bs-=4;c.font="700 "+bs+"px Amiri"}
+  var lg=c.createLinearGradient(150,0,W-150,0);lg.addColorStop(0,"rgba(184,145,63,0.04)");lg.addColorStop(.5,"rgba(184,145,63,0.16)");lg.addColorStop(1,"rgba(184,145,63,0.04)");
+  c.fillStyle=lg;c.fillText(line,W/2,Hh*0.43);
+  // two fine flourished rules framing the line
+  c.strokeStyle="rgba(184,145,63,0.35)";c.lineWidth=2;
+  [Hh*0.43-bs*0.95,Hh*0.43+bs*0.42].forEach(function(y){c.beginPath();c.moveTo(220,y);c.bezierCurveTo(W*0.35,y-14,W*0.65,y+14,W-220,y);c.stroke()});
+  c.direction="ltr";c.restore();
   // gold frames with concave corners
   c.strokeStyle=GOLD;c.lineWidth=6;frame(c,70,70,W-140,Hh-140,40);c.stroke();
   c.lineWidth=2;frame(c,88,88,W-176,Hh-176,30);c.stroke();
@@ -401,21 +570,23 @@ function paintCert(cv,im){
   c.fillStyle="#8c7a55";c.font="italic 25px Lora";c.fillText("“And say: My Lord, increase me in knowledge.” (Ṭā-Hā 20:114)",W/2,1092);
   // signatures and seal
   var ds=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
-  c.font="32px Lora";c.fillStyle="#23201b";c.fillText(ds,W/2-540,1190);c.font="italic 600 36px Lora";c.fillText("Feysel Reshid",W/2+540,1190);
+  var tn=((S.teacher&&S.teacher.name)||"").trim();
+  c.font="32px Lora";c.fillStyle="#23201b";c.fillText(ds,W/2-540,1190);
+  if(tn){var ts=36;c.font="italic 600 "+ts+"px Lora";while(c.measureText(tn).width>390&&ts>20){ts-=2;c.font="italic 600 "+ts+"px Lora"}c.fillText(tn,W/2+540,1190)}
   c.strokeStyle="#9d8a62";c.lineWidth=2;c.beginPath();c.moveTo(W/2-740,1210);c.lineTo(W/2-340,1210);c.moveTo(W/2+340,1210);c.lineTo(W/2+740,1210);c.stroke();
-  c.fillStyle="#8c7a55";c.font="600 22px Cinzel";c.fillText("DATE",W/2-540,1246);c.fillText("COMPILER · DIIN ISLAAM",W/2+540,1246);
+  c.fillStyle="#8c7a55";c.font="600 22px Cinzel";c.fillText("DATE",W/2-540,1246);c.fillText("TEACHER",W/2+540,1246);
   c.beginPath();c.arc(W/2,1200,98,0,7);c.fillStyle=EM;c.fill();c.lineWidth=7;c.strokeStyle=GOLD;c.stroke();
   c.beginPath();c.arc(W/2,1200,84,0,7);c.lineWidth=1.6;c.stroke();
   c.fillStyle="#ecd391";c.font="700 22px Amiri";c.direction="rtl";c.fillText("خَمْسُونَ حَدِيثًا",W/2,1172);c.direction="ltr";
   c.font="700 46px Cinzel";c.fillText("50",W/2,1222);c.font="600 16px Cinzel";c.fillText("HADITH",W/2,1248);
   var id=0;for(var i=0;i<name.length;i++)id=(id*31+name.charCodeAt(i))>>>0;
-  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("diinislaam.com/arbaeen-nawawi · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
+  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("Compiled by Feysel Reshid · Diin Islaam · diinislaam.com/arbaeen-nawawi · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
   c.restore();
 }
 function bindCert(){
   var inp=$("#cname");if(!inp)return;
-  var redraw=function(){S.name=inp.value;save();drawCert()};
-  inp.oninput=redraw;
+  var redraw=function(){S.name=inp.value;S.teacher=S.teacher||{};S.teacher.name=$("#ctname").value;save();drawCert()};
+  inp.oninput=redraw;$("#ctname").oninput=redraw;
   (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(drawCert);
   $("#cdl").onclick=function(){var a=document.createElement("a");a.download="Forty-Hadith-Certificate.png";a.href=$("#cv").toDataURL("image/png");a.click()};
   $("#cpr").onclick=function(){window.print()};
@@ -426,6 +597,7 @@ function render(){
   var h=location.hash.replace(/^#/,""), app=$("#app"), m;
   if((m=h.match(/^h\/(\d+)$/))&&+m[1]>=1&&+m[1]<=50){var n=+m[1];app.innerHTML=chapter(n);setPart(app.firstChild,H[n-1].part);bindChapter(n);document.title="Hadith "+n+": "+H[n-1].title.replace(/&[^;]+;/g,"")+" · The Forty Hadith"}
   else if((m=h.match(/^test\/([1-5])$/))){var k=+m[1];app.innerHTML=test(k);setPart(app.firstChild,k);bindTest(k);document.title=part(k).label+" Review Test · The Forty Hadith"}
+  else if((m=h.match(/^result\/([1-5])$/))){var k2=+m[1];app.innerHTML=result(k2);setPart(app.firstChild,k2);bindResult(k2);document.title="Result · "+part(k2).label+" · The Forty Hadith"}
   else if(h==="certificate"){document.body.classList.add("certpage");app.innerHTML=certificate();bindCert();document.title="Certificate · The Forty Hadith"}
   else{app.innerHTML=home();document.title="The Forty Hadith of Imam an-Nawawi · Online Study Book · Diin Islaam"}
   progress();window.scrollTo(0,0);
