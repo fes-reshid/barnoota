@@ -42,3 +42,15 @@ python3 build.py
 | `src/figures.py` | The pictures, drawn as SVG |
 | `src/front.py` | Cover, Preface and the other front and back matter |
 | `src/book.css` | The design |
+
+## Online edition
+
+`../arbaeen-nawawi/` is the online book (diinislaam.com/arbaeen-nawawi/): all 50 hadith with Listen buttons, the five part tests marked automatically, and a certificate that unlocks after passing all five tests with 80% or more. Progress is saved in the reader's browser.
+
+It is generated from the same sources as the PDF:
+
+```bash
+python3 build_web.py
+```
+
+To add audio recordings, see `../arbaeen-nawawi/audio/README.md`.

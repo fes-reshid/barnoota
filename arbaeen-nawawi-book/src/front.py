@@ -141,6 +141,8 @@ def how_to_use():
 <div class="steps">{items}</div>
 <h3>A suggested weekly rhythm</h3>
 <table class="todo" style="margin-top:2mm">{plan}</table>
+<h3>The online book: audio and certificate</h3>
+<div class="callout">Visit <b>diinislaam.com/arbaeen-nawawi</b> to <b>listen</b> to every hadith in Arabic and English, take the five part tests with instant marking, and receive your <b>certificate of completion</b> after passing all five tests with 80% or more.</div>
 <h3>For parents and teachers</h3>
 <p>For younger children, read the translation aloud, talk about the picture together and choose two or three of the to-do tasks. Older children and adults can do the whole chapter. Praise effort more than perfection, and act on the hadith yourself first: children learn more from what they see than from what they are told.</p>
 </section>'''
