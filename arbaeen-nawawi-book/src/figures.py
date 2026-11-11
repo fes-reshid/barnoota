@@ -26,12 +26,9 @@ def svg(w, h, body):
 
 
 def star8(cx, cy, r, cls='class="ac"', stroke=GOLD, sw=2):
-    s = r * 0.72
-    out = ""
-    for a in (0, 45):
-        out += (f'<rect x="{cx - s}" y="{cy - s}" width="{2 * s}" height="{2 * s}" {cls} stroke="{stroke}" '
-                f'stroke-width="{sw}" transform="rotate({a} {cx} {cy})"/>')
-    return out
+    """Round medallion (double gold ring) used as a badge in the pictures."""
+    return (f'<circle cx="{cx}" cy="{cy}" r="{r * 0.86:.1f}" {cls} stroke="{stroke}" stroke-width="{sw}"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{r * 0.74:.1f}" fill="none" stroke="{stroke}" stroke-width="{sw * .5}" opacity=".8"/>')
 
 
 def arrow(x1, y1, x2, y2, color=GOLD, w=2.5):
@@ -47,16 +44,29 @@ def box(x, y, w, h, fill="#fff", stroke=GOLD, rx=10, sw=1.6, extra=""):
 
 
 # ------------------------------------------------------------------ rosette
+def lantern(glass='class="ac"', metal=GOLD, glow=True):
+    """A hanging lantern (fanoos) ornament."""
+    b = ('<defs><radialGradient id="lglow"><stop offset="0" stop-color="#ffd97a" stop-opacity=".55"/>'
+         '<stop offset="1" stop-color="#ffd97a" stop-opacity="0"/></radialGradient>'
+         '<linearGradient id="lflame" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff6d6"/>'
+         '<stop offset="1" stop-color="#f2c45a"/></linearGradient></defs>')
+    if glow:
+        b += '<circle cx="50" cy="70" r="48" fill="url(#lglow)"/>'
+    b += f'<line x1="50" y1="0" x2="50" y2="13" stroke="{metal}" stroke-width="1.6"/>'
+    b += f'<circle cx="50" cy="16.5" r="3.2" fill="none" stroke="{metal}" stroke-width="1.6"/>'
+    b += f'<path d="M37 36 Q50 15 63 36 Z" fill="{metal}"/><circle cx="50" cy="22" r="2" fill="{metal}"/>'
+    b += f'<rect x="33" y="35.5" width="34" height="4.5" rx="1.5" fill="{metal}"/>'
+    b += f'<polygon points="36,40 64,40 70,66 64,98 36,98 30,66" {glass} stroke="{metal}" stroke-width="2.2"/>'
+    b += '<path d="M43 94 V66 Q43 52 50 47 Q57 52 57 66 V94 Z" fill="url(#lflame)" opacity=".92"/>'
+    b += f'<path d="M43 94 V66 Q43 52 50 47 Q57 52 57 66 V94 Z" fill="none" stroke="{metal}" stroke-width="1.2"/>'
+    b += f'<line x1="30" y1="66" x2="70" y2="66" stroke="{metal}" stroke-width="1" opacity=".7"/>'
+    b += f'<rect x="33" y="97.5" width="34" height="4.5" rx="1.5" fill="{metal}"/>'
+    b += f'<path d="M37 102 L63 102 L50 121 Z" fill="{metal}"/><circle cx="50" cy="124.5" r="2.4" fill="{metal}"/>'
+    return f'<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">{b}</svg>'
+
+
 def rosette():
-    b = ""
-    for i in range(16):
-        a = i * 22.5
-        b += f'<ellipse cx="100" cy="58" rx="13" ry="40" class="ac" opacity=".16" transform="rotate({a} 100 100)"/>'
-    b += star8(100, 100, 62, 'fill="none"', GOLD, 2.2)
-    b += star8(100, 100, 46, 'class="ac"', GOLD, 2.2)
-    b += f'<circle cx="100" cy="100" r="22" fill="#fffdf8" stroke="{GOLD}" stroke-width="2"/>'
-    b += star8(100, 100, 13, f'fill="{GOLD}"', GOLD, 1)
-    return svg(200, 200, b)
+    return lantern()
 
 
 # ------------------------------------------------------------------ H1 intention
@@ -470,7 +480,7 @@ def rights():
 
 
 FIGURES = {
-    "rosette": rosette(), "intention": intention(), "levels": levels(), "pillars": pillars(), "womb": womb(),
+    "rosette": rosette(), "lantern": lantern('fill="#0f5a4f"'), "intention": intention(), "levels": levels(), "pillars": pillars(), "womb": womb(),
     "conditions": conditions(), "spectrum": spectrum(), "naseeha": naseeha(), "dua": dua(), "anger": anger(),
     "erase": erase(), "guard": guard(), "scale": scale(), "charity": charity(), "tent": tent(), "four": four(),
     "stairs": stairs(), "multiply": multiply(), "ladder": ladder(), "traveller": traveller(), "forgive": forgive(),

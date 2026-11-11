@@ -1,6 +1,8 @@
 # The Forty Hadith of Imam an-Nawawi: Study Edition
 
-`Forty-Hadith-Nawawi-Study-Book.pdf` is an A4 study book of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 183 pages including the cover.
+Compiled by Feysel Reshid.
+
+`Forty-Hadith-Nawawi-Study-Book.pdf` is an A4 study book of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 182 pages including the cover.
 
 Each hadith has its own chapter with:
 

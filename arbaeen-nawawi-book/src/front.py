@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Front and back matter of the book."""
-from figures import FIGURES, star8, svg
+from figures import FIGURES
 
 GOLD = "#c9a14a"
 
@@ -25,29 +25,57 @@ def head(title, ar):
 
 
 # ------------------------------------------------------------------ cover
-def pattern_svg():
-    tiles = ""
-    for r in range(0, 9):
-        for c in range(0, 7):
-            x, y = 15 + c * 30, 16 + r * 34
-            tiles += star8(x * 1, y * 1, 9, 'fill="none"', "#c9a14a", 0.6)
-    return f'<svg class="pat" viewBox="0 0 210 297" preserveAspectRatio="xMidYMid slice">{tiles}</svg>'
+AUTHOR = "Feysel Reshid"
+
+
+def cover_art():
+    """Full-page cover artwork (mm units): frame with concave corners, pointed arch, lantern."""
+    G = "#c9a14a"
+
+    def frame(i, w):
+        r = 7
+        x0, y0, x1, y1 = i, i, 210 - i, 297 - i
+        return (f'<path d="M{x0 + r} {y0} H{x1 - r} A{r} {r} 0 0 0 {x1} {y0 + r} V{y1 - r} A{r} {r} 0 0 0 {x1 - r} {y1} '
+                f'H{x0 + r} A{r} {r} 0 0 0 {x0} {y1 - r} V{y0 + r} A{r} {r} 0 0 0 {x0 + r} {y0} Z" fill="none" stroke="{G}" stroke-width="{w}"/>')
+
+    def arch(d, extra=""):
+        l, r_, top, spring, base = 36 + d, 174 - d, 46 + d * 1.25, 104, 236 - d
+        return (f'<path d="M{l} {base} V{spring} C{l} {spring - 32} {105 - 30 + d * .4} {top + 18} 105 {top} '
+                f'C{105 + 30 - d * .4} {top + 18} {r_} {spring - 32} {r_} {spring} V{base} Z" {extra}/>')
+
+    b = ('<defs><radialGradient id="cbg" cx="50%" cy="42%" r="75%"><stop offset="0" stop-color="#17594f"/>'
+         '<stop offset=".55" stop-color="#0c3d36"/><stop offset="1" stop-color="#05211d"/></radialGradient>'
+         '<radialGradient id="cin" cx="50%" cy="30%" r="80%"><stop offset="0" stop-color="#1b6457"/>'
+         '<stop offset="1" stop-color="#0b3832"/></radialGradient></defs>')
+    b += '<rect width="210" height="297" fill="url(#cbg)"/>'
+    b += frame(9, .9) + frame(11.2, .35)
+    # small leaf flourishes at the corners
+    for (x, y, sx, sy) in [(9, 9, 1, 1), (201, 9, -1, 1), (9, 288, 1, -1), (201, 288, -1, -1)]:
+        b += (f'<g transform="translate({x} {y}) scale({sx} {sy})"><path d="M5 14 Q5 5 14 5" fill="none" stroke="{G}" stroke-width=".5"/>'
+              f'<circle cx="7.2" cy="7.2" r="1.1" fill="{G}"/></g>')
+    b += arch(0, 'fill="url(#cin)" stroke="%s" stroke-width="1"' % G)
+    b += arch(2.6, 'fill="none" stroke="%s" stroke-width=".35"' % G)
+    # base line of the arch with a small step
+    b += f'<rect x="30" y="236" width="150" height="1" fill="{G}"/><rect x="33" y="238.4" width="144" height=".35" fill="{G}"/>'
+    return f'<svg class="art" viewBox="0 0 210 297" preserveAspectRatio="none">{b}</svg>'
 
 
 def cover_html(css):
-    orn = FIGURES["rosette"].replace('class="ac"', 'fill="#0f5a4f"')
+    lamp = FIGURES["lantern"]
     return f'''<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css">
 <style>{css}
 @page {{ size: A4; margin: 0; }}</style></head><body>
-<div class="cover">{pattern_svg()}<div class="frame"></div><div class="frame2"></div>
+<div class="cover">{cover_art()}
   <div class="c-top">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-  <div class="panel">
+  <div class="c-lamp">{lamp}</div>
+  <div class="c-body">
     <div class="c-ar">الأَرْبَعُونَ النَّوَوِيَّةُ</div>
     <div class="c-en">The Forty Hadith<br>of Imam an-Nawawi</div>
     <div class="c-sub">with the eight additions of Ibn Rajab al-Ḥanbalī</div>
-    <div class="c-orn">{orn}</div>
-    <div class="c-feat">Arabic Text · English Translation<br>Notes · Lessons · Pictures<br>Questions · Steps · Weekly To-Do Lists</div>
+    <div class="c-div"><i></i><b></b><i></i></div>
+    <div class="c-feat">Arabic Text · English Translation · Notes<br>Lessons · Pictures · Questions · Weekly To-Do Lists</div>
   </div>
+  <div class="c-author"><span>Compiled by</span>{AUTHOR}</div>
   <div class="c-foot">A Complete Study Edition · 50 Hadith · 50 Weeks</div>
 </div></body></html>'''
 
@@ -59,9 +87,9 @@ def title_page():
   <div class="t-ar" lang="ar" dir="rtl">الأَرْبَعُونَ النَّوَوِيَّةُ</div>
   <div class="t-en">The Forty Hadith of Imam an-Nawawi</div>
   <div class="t-sub">with the additions of al-Ḥāfiẓ Ibn Rajab — fifty hadith in all</div>
-  <div class="t-orn">{FIGURES["rosette"].replace('class="ac"', 'fill="#0f5a4f"')}</div>
+  <div class="t-orn">{FIGURES["lantern"]}</div>
   <div class="t-feat">The Arabic text · English translation from sunnah.com<br>An explanatory note, lessons, pictures and step-by-step guides<br>Questions and a to-do list for every week</div>
-  <div class="t-by">A Study Edition · 1448 AH / 2026 CE</div>
+  <div class="t-by"><span>Compiled by</span><b>{AUTHOR}</b>A Study Edition · 1448 AH / 2026 CE</div>
 </section>'''
 
 
@@ -77,7 +105,7 @@ def bismillah_page():
 
 # ------------------------------------------------------------------ preface
 def preface():
-    return f'''<section class="page-sec">{mk("preface")}{head("Preface", "المُقَدِّمَة")}
+    return f'''<section class="page-sec" style="font-size:10.15pt;line-height:1.5">{mk("preface")}{head("Preface", "المُقَدِّمَة")}
 <p class="dropcap">All praise belongs to Allah, Lord of the worlds, and may peace and blessings be upon our Prophet Muhammad, upon his family and all of his Companions. Among the gifts Allah gave His Messenger ﷺ was <i>jawāmiʿ al-kalim</i>: short sentences that carry a great deal of meaning. A few words from him can hold a whole chapter of the religion, and the scholars of every generation have collected such sayings so that Muslims can learn the most with the least effort.</p>
 <p>The most loved of these collections is the <b>Forty Hadith</b> of Imam Yaḥyā ibn Sharaf an-Nawawī (d. 676 AH). He chose forty-two hadith, each of which, in his words, is “a great foundation of the foundations of the religion”. They cover belief, worship, character, dealings with people and the purification of the heart. Some scholars said that the whole of Islam turns on a handful of them: “Actions are by intentions”, “Whoever introduces into this affair of ours…”, “The halal is clear and the haram is clear”, and “Leave what does not concern you”. A century later, al-Ḥāfiẓ Ibn Rajab al-Ḥanbalī (d. 795 AH) wrote his famous commentary <i>Jāmiʿ al-ʿUlūm wa-l-Ḥikam</i> on them and added eight more, bringing the total to fifty. This book follows that fifty-hadith text exactly as it is printed in the source edition.</p>
 <p>This is a <b>study edition</b>. It is meant to be read with a pen in your hand, not only memorised and put on a shelf. Each hadith has its own chapter, and every chapter is built the same way:</p>
@@ -85,7 +113,7 @@ def preface():
 <p>Fifty hadith fit neatly into a year: one hadith a week, with two weeks left for revision. A family can read one chapter together on the weekend, work through the questions during the week and tick the to-do list each evening. A teacher can use one chapter per lesson. A student can work alone and keep the memorisation tracker at the back of the book.</p>
 <p>The notes are brief on purpose: a doorway, not the whole house. Whoever wants more should read the commentaries, above all <i>Jāmiʿ al-ʿUlūm wa-l-Ḥikam</i>, and study with people of knowledge; where scholars differ on a ruling, ask a trusted scholar about your own situation.</p>
 <p>The Companions did not move past ten verses of the Qur’an until they had learned the knowledge and the action in them. Learn the words, understand the meaning, then <b>act</b>. Whatever is correct in this book is from Allah alone, and whatever mistake it contains is from its compiler and from Shayṭān. We ask Allah to make it sincerely for His Face, to benefit its readers, and to forgive whoever reads it and makes du‘a for those who worked on it.</p>
-<p class="sign">1448 AH / 2026 CE</p>
+<p class="sign"><b>Feysel Reshid</b><br>1448 AH / 2026 CE</p>
 </section>'''
 
 
@@ -187,9 +215,9 @@ def glossary():
 
 
 def certificate():
-    orn = FIGURES["rosette"].replace('class="ac"', 'fill="#0f5a4f"')
+    orn = FIGURES["lantern"]
     return f'''<section class="cert">{mk("certificate")}
-<div style="width:34mm">{orn}</div>
+<div style="width:22mm;margin-bottom:4mm">{orn}</div>
 <div class="c1">Certificate of Completion</div>
 <div class="c2">This is to certify that</div>
 <div class="line"></div><div class="lab">Name</div>
@@ -208,5 +236,5 @@ def closing():
 <div class="ar" lang="ar">اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي، وَعَلِّمْنِي مَا يَنْفَعُنِي، وَزِدْنِي عِلْمًا</div>
 <p style="text-align:center;font-style:italic;color:#6d5f45;max-width:150mm;margin:3mm auto 10mm">“O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.” (Ibn Mājah, at-Tirmidhī)</p>
 <div class="ar" lang="ar">وَصَلَّى اللَّهُ وَسَلَّمَ عَلَى نَبِيِّنَا مُحَمَّدٍ وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ</div>
-<div style="width:30mm;margin:14mm auto 0">{FIGURES["rosette"].replace('class="ac"', 'fill="#0f5a4f"')}</div>
+<div style="width:20mm;margin:12mm auto 0">{FIGURES["lantern"]}</div>
 </section>'''

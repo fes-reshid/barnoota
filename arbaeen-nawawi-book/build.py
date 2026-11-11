@@ -108,11 +108,10 @@ def esc(s):
 
 
 STAR = ('<svg class="star" viewBox="0 0 100 100" aria-hidden="true">'
-        '<g transform="translate(50 50)">'
-        '<rect x="-34" y="-34" width="68" height="68" rx="3" fill="var(--accent)" stroke="#c9a14a" stroke-width="2.4"/>'
-        '<rect x="-34" y="-34" width="68" height="68" rx="3" transform="rotate(45)" fill="var(--accent)" stroke="#c9a14a" stroke-width="2.4"/>'
-        '<circle r="27" fill="none" stroke="#e8d29a" stroke-width="1.2"/>'
-        '</g></svg>')
+        '<circle cx="50" cy="50" r="46" fill="none" stroke="#c9a14a" stroke-width="1.6"/>'
+        '<circle cx="50" cy="50" r="40" fill="var(--accent)" stroke="#c9a14a" stroke-width="2.6"/>'
+        '<circle cx="50" cy="50" r="34" fill="none" stroke="#e8d29a" stroke-width="1"/>'
+        '</svg>')
 
 ICONS = {
     "note": '<svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11h8M8 15h8M8 7h5" stroke="currentColor" stroke-width="1.8"/></svg>',
@@ -289,7 +288,7 @@ def underlay(n_pages, path):
             c.drawString(16 * mm, H - 13.2 * mm, "THE FORTY HADITH OF IMAM AN-NAWAWI")
             c.drawRightString(W - 16 * mm, H - 13.2 * mm, "STUDY EDITION")
             # page number medallion
-            star(c, W / 2, 9.0 * mm + 0.2 * mm, 4.4 * mm, ink, ink)
+            star(c, W / 2, 9.0 * mm + 0.2 * mm, 5.0 * mm, gold, ink)
             c.setFillColor(HexColor("#ffffff"))
             c.setFont("Times-Bold", 8.5 if i < 100 else 7.2)
             c.drawCentredString(W / 2, 9.0 * mm - 1.1 * mm, str(i))
@@ -298,17 +297,12 @@ def underlay(n_pages, path):
 
 
 def star(c, x, y, r, stroke, fill):
+    """Small round ornament: a filled circle with a gold ring."""
     c.saveState()
-    c.translate(x, y)
     c.setStrokeColor(stroke)
     c.setFillColor(fill)
     c.setLineWidth(0.8)
-    for ang in (0, 45):
-        c.saveState()
-        c.rotate(ang)
-        s = r * 0.72
-        c.rect(-s, -s, 2 * s, 2 * s, stroke=1, fill=1)
-        c.restoreState()
+    c.circle(x, y, r * 0.8, stroke=1, fill=1)
     c.restoreState()
 
 
