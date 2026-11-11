@@ -15,6 +15,7 @@ from build import CONTENT, PARTS, ARABIC, EXTRA, FIGURES, esc  # noqa: E402
 import narrators, tests  # noqa: E402
 from stories import STORIES  # noqa: E402
 from figinfo import INFO  # noqa: E402
+import embryo  # noqa: E402
 from background import BACKGROUND  # noqa: E402
 import sources  # noqa: E402
 
@@ -56,6 +57,14 @@ def audio_files(lang):
     if not os.path.isdir(d):
         return []
     return sorted(int(f[:2]) for f in os.listdir(d) if re.fullmatch(r"\d\d\.mp3", f))
+
+
+def img(key):
+    """Image entry for the online book, only if the file is present."""
+    i = embryo.IMG[key]
+    if not os.path.exists(os.path.join(WEB, i["src"])):
+        return None
+    return {"src": i["src"], "cap": esc(i["cap"]), "credit": esc(i["credit"]), "page": i["page"]}
 
 
 def main():
@@ -100,8 +109,17 @@ def main():
     data = {"hadith": hadith, "parts": parts, "tests": tdata,
             "audio": {"ar": audio_files("ar"), "en": audio_files("en")},
             "lantern": FIGURES["lantern"],
-            "figinfo": {k: {"ar": v["ar"], "title": esc(v["title"]), "meaning": esc(v["meaning"]),
-                            "points": [esc(x) for x in v["points"]], "verse": list(v["verse"]), "hadith": v["hadith"]} for k, v in INFO.items()},
+            "figinfo": {**{k: {"ar": v["ar"], "title": esc(v["title"]), "meaning": esc(v["meaning"]),
+                               "points": [esc(x) for x in v["points"]], "verse": list(v["verse"]), "hadith": v["hadith"]} for k, v in INFO.items()},
+                        **{k: {"ar": v["ar"], "title": esc(v["title"]), "meaning": esc(v["meaning"]), "points": [],
+                               "sections": [[esc(h), esc(t)] for h, t in v.get("sections", [])],
+                               "images": [img(i) for i in v.get("images", []) if img(i)],
+                               "verse": list(v["verse"]), "hadith": v["hadith"]} for k, v in embryo.CARDS.items()}},
+            "science": {"4": {"title": esc(embryo.SCIENCE["title"]),
+                              "sections": [[esc(h), esc(t)] for h, t in embryo.SCIENCE["sections"]],
+                              "images": [img(i) for i in embryo.SCIENCE["images"] if img(i)],
+                              "videos": [{"title": esc(v["title"]), "by": esc(v["by"]), "url": v["url"]} for v in embryo.VIDEOS],
+                              "sources": [[esc(l), u] for l, u in embryo.SCIENCE["sources"]]}},
             "stories": {k: {"paras": [esc(x) for x in v["paras"]], "lessons": [esc(x) for x in v["lessons"]],
                             "refs": [{"label": esc(r["label"]), "url": r["url"]} for r in map(sources.resolve, sources.STORY_REFS.get(k, []) + sources.STORY_GENERAL)]}
                         for k, v in STORIES.items()},

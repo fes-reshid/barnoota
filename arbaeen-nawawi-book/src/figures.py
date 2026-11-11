@@ -126,21 +126,25 @@ def pillars():
 
 # ------------------------------------------------------------------ H4 womb timeline
 def womb():
+    # parts marked class="hot" are clickable in the online book (see embryo.py)
     b = ""
-    stages = [("Nutfah", "drop", "نُطْفَة"), ("ʿAlaqah", "clinging clot", "عَلَقَة"), ("Mudghah", "chewed lump", "مُضْغَة")]
-    for i, (e, d, a) in enumerate(stages):
+    stages = [("Nutfah", "drop", "نُطْفَة", "nutfah"), ("ʿAlaqah", "clinging clot", "عَلَقَة", "alaqah"), ("Mudghah", "chewed lump", "مُضْغَة", "mudghah")]
+    for i, (e, d, a, key) in enumerate(stages):
         x = 20 + i * 150
+        b += f'<g class="hot" data-info="{key}">'
         b += f'<rect x="{x}" y="40" width="140" height="70" rx="10" class="sf" stroke="{GOLD}" stroke-width="1.5"/>'
         b += t(x + 70, 30, f"Days {i * 40 + 1}–{i * 40 + 40}", 11, 700, fill=MUTED, fam="Cinzel")
-        b += t(x + 70, 68, e, 15, 700, extra='class="act"') + t(x + 70, 86, d, 11, italic=True, fill=MUTED) + ar(x + 70, 104, a, 13, MUTED, 400)
+        b += t(x + 70, 68, e, 15, 700, extra='class="act"') + t(x + 70, 86, d, 11, italic=True, fill=MUTED) + ar(x + 70, 104, a, 13, MUTED, 400) + '</g>'
     b += arrow(470, 75, 500, 75)
-    b += star8(545, 75, 40) + t(545, 72, "Soul", 13, 700, fill="#fff") + t(545, 88, "breathed in", 9.5, fill="#fff")
-    b += t(300, 150, "The angel is commanded to write four things:", 13, 700, fam="Lora")
+    b += '<g class="hot" data-info="soul">' + star8(545, 75, 40) + t(545, 72, "Soul", 13, 700, fill="#fff") + t(545, 88, "breathed in", 9.5, fill="#fff") + '</g>'
     four = ["Provision (rizq)", "Life-span (ajal)", "Deeds (ʿamal)", "Wretched or happy"]
+    b += '<g class="hot" data-info="writing"><rect x="20" y="132" width="560" height="100" fill="#fff" fill-opacity="0"/>'
+    b += t(300, 150, "The angel is commanded to write four things:", 13, 700, fam="Lora")
     for i, f in enumerate(four):
         x = 30 + i * 140
         b += f'<path d="M{x} 170 h120 a8 8 0 0 1 0 16 v34 a8 8 0 0 1 -8 8 h-112 a8 8 0 0 1 0 -16 v-34 a8 8 0 0 1 0 -8z" fill="#fffdf6" stroke="{GOLD}" stroke-width="1.5"/>'
         b += t(x + 58, 204, f, 11.5, 600)
+    b += '</g>'
     return svg(600, 240, b)
 
 
