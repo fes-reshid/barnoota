@@ -4,8 +4,8 @@ There are two editions. Publish each one as a separate paperback in KDP, or star
 
 | Edition | Interior | Cover | Size | Pages |
 |---|---|---|---|---|
-| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 239 |
-| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 256 |
+| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 238 |
+| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 259 |
 
 The sections below describe the black-and-white edition. The colour edition's differences are listed at the end.
 
@@ -18,8 +18,8 @@ The English translations come from sunnah.com, which presents translations owned
 ## Files to upload
 | File | Use |
 |---|---|
-| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 239 pages, A4, black and white |
-| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.328 × 11.94 in with bleed |
+| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 238 pages, A4, black and white |
+| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.326 × 11.94 in with bleed |
 
 ## Print settings in KDP (Paperback content page)
 - **Print ISBN:** use KDP's free ISBN, or your own
@@ -73,28 +73,28 @@ The English translations come from sunnah.com, which presents translations owned
 - Religion & Spirituality › Religious Studies (or Education › Religious)
 
 ## Price (Amazon.com, paperback)
-At 239 pages, large trim, black ink, the printing cost is about **$1.00 + 239 × $0.017 ≈ $5.06** per copy. KDP's price calculator shows the exact figure.
+At 238 pages, large trim, black ink, the printing cost is about **$1.00 + 238 × $0.017 ≈ $5.05** per copy. KDP's price calculator shows the exact figure.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $14.99 | ≈ $3.93 | ≈ $0.94 |
-| **$16.99 (suggested)** | **≈ $5.13** | ≈ $1.74 |
-| $19.99 | ≈ $6.93 | ≈ $2.94 |
+| $14.99 | ≈ $3.95 | ≈ $0.95 |
+| **$16.99 (suggested)** | **≈ $5.15** | ≈ $1.75 |
+| $19.99 | ≈ $6.95 | ≈ $2.95 |
 
 Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and round it, or set each one yourself.
 
 ## Colour edition: what is different
 - **Ink and paper:** Standard color, white paper. KDP does not offer standard colour at A4, which is why this edition is US Letter.
 - **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Glossy shows the colours best; Matte also works.
-- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (256 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.827 × 11.25 in, spine 0.577 in).
+- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (259 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.833 × 11.25 in, spine 0.583 in).
 - **Subtitle:** you can add "Full Colour Edition" at the end so readers can tell the two listings apart.
-- **Price:** standard colour printing at large trim is about $1.00 + $0.0402 per page ≈ **$11.29** per copy. Check the exact figure in KDP's calculator.
+- **Price:** standard colour printing at large trim is about $1.00 + 259 × $0.0402 ≈ **$11.41** per copy. Check the exact figure in KDP's calculator.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $22.99 | ≈ $2.50 | — |
-| **$24.99 (suggested)** | **≈ $3.70** | — |
-| $29.99 | ≈ $6.70 | ≈ $0.71 |
+| $22.99 | ≈ $2.38 | — |
+| **$24.99 (suggested)** | **≈ $3.58** | — |
+| $29.99 | ≈ $6.58 | ≈ $0.59 |
 
 ## Rebuilding after any change
 From the `arbaeen-nawawi-book/` folder, run these in order:
