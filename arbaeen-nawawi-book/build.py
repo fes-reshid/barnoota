@@ -18,6 +18,7 @@ from texts import ARABIC, EXTRA  # noqa: E402
 from figures import FIGURES  # noqa: E402
 from english import layout as en_layout, PB, REF  # noqa: E402
 import narrators  # noqa: E402
+import tests  # noqa: E402
 import front  # noqa: E402
 
 CONTENT = {}
@@ -263,6 +264,64 @@ def part_page(p):
 </div>'''
 
 
+PART_WORD = {1: "Part One", 2: "Part Two", 3: "Part Three", 4: "Part Four", 5: "Part Five"}
+LET = "ABCD"
+
+
+def test_html(k):
+    p = PARTS[k - 1]
+    t = tests.TESTS[k]
+    st = f'style="--accent:{p[3]};--soft:{p[4]}"'
+    out = [f'<section class="test" {st}>{front.mk(f"test{k}")}',
+           f'<header class="t-head"><div class="t-kick">{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</div><h2>Review Test</h2>'
+           f'<div class="t-ar" lang="ar" dir="rtl">اخْتِبَارُ المُرَاجَعَة</div>'
+           f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div></header>',
+           '<p class="t-intro">Answer from memory first, then check your answers with the chapters. The answer key is at the back of the book.</p>']
+    # A. multiple choice
+    out.append(f'<div class="t-sec"><h3 class="t-h"><span>A</span>Multiple Choice <em>Circle the correct answer · 25 marks</em></h3><ol class="mcq">')
+    for q, opts, _ in tests.shuffled_mcq(k):
+        o = "".join(f'<li><b>{LET[i]}</b>{esc(x)}</li>' for i, x in enumerate(opts))
+        out.append(f'<li><div class="mq">{esc(q)}</div><ol class="opts">{o}</ol></li>')
+    out.append("</ol></div>")
+    # B. matching
+    lefts, rights, _ = tests.shuffled_match(k)
+    rows = "".join(f'<tr><td class="mn">{i + 1}</td><td>{esc(l)}</td><td class="mb"><i></i></td><td class="ml">{LET_10[i]}</td><td>{esc(r)}</td></tr>'
+                   for i, (l, r) in enumerate(zip(lefts, rights)))
+    out.append(f'<div class="t-sec"><h3 class="t-h"><span>B</span>Matching <em>Write the letter of the matching title · 10 marks</em></h3>'
+               f'<table class="match">{rows}</table></div>')
+    # C. short answer
+    out.append('<div class="t-sec"><h3 class="t-h"><span>C</span>Short Answer <em>Answer in one or two sentences · 10 marks</em></h3><ol class="sa">')
+    out.extend(f'<li><div class="q">{esc(q)}</div><div class="lines"><i></i><i></i></div></li>' for q, _ in t["short"])
+    out.append("</ol></div>")
+    # D. critical thinking
+    out.append('<div class="t-sec"><h3 class="t-h"><span>D</span>Critical Thinking <em>Explain your thinking with evidence from the hadith · 5 marks</em></h3><ol class="ct">')
+    out.extend(f'<li><div class="q">{esc(q)}</div><div class="lines">{"<i></i>" * 6}</div></li>' for q in t["critical"])
+    out.append("</ol></div></section>")
+    return "\n".join(out)
+
+
+LET_10 = "ABCDEFGHIJ"
+
+
+def answers_html():
+    out = [f'<section class="page-sec answers">{front.mk("answers")}{front.head("Answer Key", "مَفَاتِيحُ الإِجَابَات")}',
+           '<p style="text-align:center">For teachers and parents. Short answers are a guide: accept any answer with the same meaning. '
+           'Critical-thinking answers will vary; give marks for clear reasoning that uses the hadith.</p>']
+    for k in range(1, 6):
+        p = PARTS[k - 1]
+        mcq = tests.shuffled_mcq(k)
+        _, _, key = tests.shuffled_match(k)
+        cells = "".join(f'<span><b>{i + 1}</b>{LET[a]}</span>' for i, (_, _, a) in enumerate(mcq))
+        mcells = "".join(f'<span><b>{i + 1}</b>{LET_10[key[i]]}</span>' for i in range(10))
+        sa = "".join(f"<li>{esc(a)}</li>" for _, a in tests.TESTS[k]["short"])
+        out.append(f'<div class="ak" style="--accent:{p[3]}"><h3>{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</h3>'
+                   f'<div class="ak-l">A. Multiple choice</div><div class="ak-grid">{cells}</div>'
+                   f'<div class="ak-l">B. Matching</div><div class="ak-grid">{mcells}</div>'
+                   f'<div class="ak-l">C. Short answer</div><ol class="ak-sa">{sa}</ol></div>')
+    out.append("</section>")
+    return "\n".join(out)
+
+
 def toc_html(pages):
     rows = []
     for key, label in front.TOC_FRONT:
@@ -273,6 +332,8 @@ def toc_html(pages):
         for n in range(p[0], p[1] + 1):
             t = CONTENT[n]["title"] if n in CONTENT else ""
             rows.append(f'<tr><td class="tn" style="--accent:{p[3]}">{n}</td><td>{esc(t)}</td><td class="pg">{pages.get(f"h{n}", "")}</td></tr>')
+        k = p[1] // 10
+        rows.append(f'<tr class="tt" style="--accent:{p[3]}"><td class="tn">✎</td><td>{PART_WORD[k]} Review Test</td><td class="pg">{pages.get(f"test{k}", "")}</td></tr>')
     for key, label in front.TOC_BACK:
         rows.append(f'<tr class="tf"><td colspan="2">{esc(label)}</td><td class="pg">{pages.get(key, "")}</td></tr>')
     return '<section class="page-sec toc" id="toc"><h1 class="fm-title">Contents</h1><div class="fm-ar" lang="ar" dir="rtl">الفِهْرِس</div><table class="toc-t">' + "".join(rows) + "</table></section>"
@@ -282,8 +343,11 @@ def build_html(pages):
     css = open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()
     parts = [front.title_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
              front.about_nawawi(), front.about_translation()]
-    parts += [hadith_html(n) for n in range(1, 51)]
-    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), front.certificate(), front.closing()]
+    for n in range(1, 51):
+        parts.append(hadith_html(n))
+        if n % 10 == 0:
+            parts.append(test_html(n // 10))
+    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), front.closing()]
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''
