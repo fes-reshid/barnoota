@@ -11,10 +11,10 @@ def mk(key):
 
 
 PAGE_MARKERS = [(k, rf"MK-{k}-MK") for k in ("preface", "howto", "nawawi", "translation", "tracker", "glossary", "answers", "closing",
-                                              "test1", "test2", "test3", "test4", "test5")]
+                                              "test1", "test2", "test3", "test4", "test5", "refs")]
 TOC_FRONT = [("preface", "Preface"), ("howto", "How to Use This Book"), ("nawawi", "The Two Imams: an-Nawawi and Ibn Rajab"),
              ("translation", "About the Arabic Text and the Translation")]
-TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("answers", "Answer Key to the Part Tests"),
+TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("answers", "Answer Key to the Part Tests"), ("refs", "Notes and References"),
             ("closing", "Closing Supplication")]
 
 RULE = ('<div class="fm-rule"><i></i><svg viewBox="0 0 20 20"><g transform="translate(10 10)">'

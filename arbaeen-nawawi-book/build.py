@@ -20,6 +20,8 @@ from english import layout as en_layout, PB, REF  # noqa: E402
 import narrators  # noqa: E402
 import tests  # noqa: E402
 from background import BACKGROUND  # noqa: E402
+import sources  # noqa: E402
+ENDNOTES = {}
 import front  # noqa: E402
 
 CONTENT = {}
@@ -224,13 +226,17 @@ def hadith_html(n):
         out.append("</section>")
         return "\n".join(out)
     out.append(narrator_html(n))
-    if n in BACKGROUND:
-        bg = BACKGROUND[n]
-        out.append('<div class="block bg"><div class="keep">' + sec_head("book", "Background of the Hadith", "سَبَبُ الوُرُود") + f"<p>{esc(bg['paras'][0])}</p></div>"
-                   + "".join(f"<p>{esc(x)}</p>" for x in bg["paras"][1:]) + f'<p class="bg-src">Source: {esc(bg["source"])}</p></div>')
+    bg_paras, note_paras, fns = sources.annotate(n, BACKGROUND.get(n, {}).get("paras"), c["note"])
+    ENDNOTES[n] = fns
+    fm = lambda t: sources.place_marks(esc(t), lambda k: f'<sup class="fn">{k}</sup>')
+    if bg_paras:
+        out.append('<div class="block bg"><div class="keep">' + sec_head("book", "Background of the Hadith", "سَبَبُ الوُرُود") + f"<p>{fm(bg_paras[0])}</p></div>"
+                   + "".join(f"<p>{fm(x)}</p>" for x in bg_paras[1:]) + "</div>")
     # Note
-    out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{esc(c['note'][0])}</p></div>")
-    out.extend(f"<p>{esc(x)}</p>" for x in c["note"][1:])
+    out.append('<div class="block"><div class="keep">' + sec_head("note", "Explanatory Note") + f"<p>{fm(note_paras[0])}</p></div>")
+    out.extend(f"<p>{fm(x)}</p>" for x in note_paras[1:])
+    if fns:
+        out.append(f'<p class="fn-see">Sources for the footnotes in this chapter: see “Notes and References”, Hadith {n}.</p>')
     out.append("</div>")
     # Picture
     if c.get("fig"):
@@ -322,6 +328,24 @@ def test_html(k):
 LET_10 = "ABCDEFGHIJ"
 
 
+def references_html():
+    """Endnotes for every chapter, then the bibliography."""
+    out = [f'<section class="page-sec refs">{front.mk("refs")}{front.head("Notes and References", "المَصَادِرُ وَالمَرَاجِع")}',
+           '<p class="refs-intro">The small numbers in the chapters refer to these notes. Hadith numbers follow sunnah.com, where every hadith can be read online (for example sunnah.com/bukhari:1). Qur’an references are given as sūrah:verse.</p>']
+    for n in range(1, 51):
+        fns = ENDNOTES.get(n)
+        if not fns:
+            continue
+        items = []
+        for k, ids in enumerate(fns, 1):
+            ar = "".join(f'<div class="ref-ar" lang="ar" dir="rtl">{esc(r["ar"])}</div>' for r in (sources.resolve(i) for i in ids) if r["ar"])
+            items.append(f'<li><span class="rn">{k}</span><div>{esc(sources.label(ids))}{ar}</div></li>')
+        title = CONTENT[n]["title"]
+        out.append(f'<div class="ref-h"><h3>Hadith {n} · {esc(title)}</h3><ol class="ref-l">{"".join(items)}</ol></div>')
+    out.append('<h3 class="bib-h">Bibliography</h3><ul class="bib">' + "".join(f"<li>{esc(b)}</li>" for b in sources.BIBLIOGRAPHY) + "</ul></section>")
+    return "\n".join(out)
+
+
 def answers_html():
     out = [f'<section class="page-sec answers">{front.mk("answers")}{front.head("Answer Key", "مَفَاتِيحُ الإِجَابَات")}',
            '<p style="text-align:center">For teachers and parents. Short answers are a guide: accept any answer with the same meaning. '
@@ -390,7 +414,7 @@ def build_html(pages):
         parts.append(hadith_html(n))
         if n % 10 == 0:
             parts.append(test_html(n // 10))
-    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), front.closing()]
+    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), references_html(), front.closing()]
     doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''

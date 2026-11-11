@@ -196,10 +196,10 @@ lessons=["Those who live upon something often die upon it.",
 "Ask about the rulings you need in daily life."]),
 
 "sahl": dict(paras=[
-"Sahl ibn Saʿd as-Sāʿidī was from the Anṣār of Madinah. He was named Ḥazn, which means ‘sadness’ or ‘rough ground’, but the Prophet ﷺ changed his name to Sahl, meaning ‘ease’. He was about fifteen years old when the Prophet ﷺ passed away.",
+"Sahl ibn Saʿd as-Sāʿidī was from the Anṣār of Madinah, from the clan of Banū Sāʿidah. He was about fifteen years old when the Prophet ﷺ passed away, and he became one of the young Companions who preserved many of his sayings.",
 "He narrated many beautiful hadith, including the story of the man who wanted to marry but had nothing to give, not even an iron ring, and the Prophet ﷺ married him for what he knew of the Qur’an. He also narrated that in Paradise there is a gate called ar-Rayyān, through which only those who fasted will enter.",
 "Sahl lived a long life. Under the tyranny of al-Ḥajjāj he was humiliated for his loyalty to ʿUthmān, but he remained patient. He is said to be the last Companion to die in Madinah, in 91 AH, at about a hundred years old."],
-lessons=["Good names matter; choose names with good meanings.",
+lessons=["Young people can carry the Sunnah to later generations.",
 "The Qur’an is the greatest wealth.",
 "Patience under oppression is honourable."]),
 

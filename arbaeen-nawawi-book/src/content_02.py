@@ -186,7 +186,7 @@ fig=("anger", "Cool the fire of anger with the remedies the Prophet ﷺ taught."
 note=[
 "A man asked for advice, and the Prophet ﷺ said: “Do not become angry.” The man asked again and again, and each time the answer was the same. This shows how much harm anger brings: in anger people curse, hit, divorce, break family ties, and do things they regret for years. Anger is a coal of fire from Shayṭān in the heart.",
 "The advice has two meanings. First: build a character that is **slow to anger** — patient, generous, humble — because good character prevents anger from starting. Second: when anger comes, **do not act upon it**; control your tongue and hands. The Prophet ﷺ said: “The strong person is not the one who wrestles others down; the strong one is he who controls himself when angry.”",
-"Not all anger is wrong. The Prophet ﷺ never became angry for himself, but he became angry when the limits of Allah were violated. Even then, his anger led only to what was right. The remedies he taught include seeking refuge with Allah from Shayṭān, staying silent, changing position, and making wudu. Allah praises “those who restrain anger and pardon people” (Āl ʿImrān 3:134)."],
+"Not all anger is wrong. The Prophet ﷺ never became angry for himself, but he became angry when the limits of Allah were violated. Even then, his anger led only to what was right. The remedies he taught include seeking refuge with Allah from Shayṭān, staying silent and changing position; scholars also advise making wudu, which cools the heat of anger. Allah praises “those who restrain anger and pardon people” (Āl ʿImrān 3:134)."],
 lessons=[
 "Anger is a key to many evils, so avoiding it guards against them.",
 "Real strength is controlling oneself when angry.",

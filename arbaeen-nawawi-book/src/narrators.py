@@ -49,7 +49,7 @@ BIO = {
 "abuthalabah": dict(name="Abū Thaʿlabah al-Khushanī", ar="أَبُو ثَعْلَبَةَ الخُشَنِيُّ رَضِيَ اللَّهُ عَنْهُ", dates="d. 75 AH",
   text="Jurthūm ibn Nāshir gave the Pledge of Riḍwān under the tree and was sent by the Prophet ﷺ to call his own people to Islam, who accepted. He settled in Shām. He used to pray that he would not suffer at death, and he died in sujūd while praying at night in 75 AH."),
 "sahl": dict(name="Sahl ibn Saʿd as-Sāʿidī", ar="سَهْلُ بْنُ سَعْدٍ السَّاعِدِيُّ رَضِيَ اللَّهُ عَنْهُ", dates="d. 91 AH",
-  text="An Anṣārī who was fifteen when the Prophet ﷺ died. His name was Ḥazn (‘sadness’) and the Prophet ﷺ changed it to Sahl (‘ease’). He lived long and is said to be the last Companion to die in Madinah, in 91 AH, at about a hundred years old."),
+  text="An Anṣārī who was fifteen when the Prophet ﷺ died. He narrated many hadith, including that Paradise has a gate called ar-Rayyān for those who fast. He lived long and is said to be the last Companion to die in Madinah, in 91 AH, at about a hundred years old."),
 "abusaid": dict(name="Abū Saʿīd al-Khudrī", ar="أَبُو سَعِيدٍ الخُدْرِيُّ رَضِيَ اللَّهُ عَنْهُ", dates="d. 74 AH",
   text="Saʿd ibn Mālik ibn Sinān al-Anṣārī tried to join Uḥud at thirteen but was sent home for being too young; his father was martyred there. He then joined twelve expeditions. He became one of the jurists among the young Companions and narrated over a thousand hadith. He was known for speaking the truth to rulers, as when he objected to Marwān’s change of the Eid sermon. He died in Madinah in 74 AH."),
 "abdullahibnamr": dict(name="ʿAbdullāh ibn ʿAmr ibn al-ʿĀṣ", ar="عَبْدُ اللَّهِ بْنُ عَمْرٍو رَضِيَ اللَّهُ عَنْهُمَا", dates="d. 65 AH",
