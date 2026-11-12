@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Front and back matter of the book."""
 from figures import FIGURES
+import qr
 
 GOLD = "#c9a14a"
 
@@ -111,7 +112,7 @@ def copyright_page():
 <p>No part of this book’s notes, lessons, questions, exercises, illustrations or design may be reproduced, stored or transmitted in any form or by any means without the prior written permission of the author, except for brief quotations in reviews and for personal or classroom study.</p>
 <p>The Arabic text of the hadith is in the public domain. {TRANSLATION_CREDIT}</p>
 <p>First edition · 1448 AH / 2026 CE</p>
-<p>Online edition with audio, tests and certificate:<br><b>diinislaam.com/arbaeen-nawawi</b></p>
+<div class="cp-online">{qr.block("", "Online edition")}<p>Online edition with audio, tests and certificate:<br><b>diinislaam.com/40hadith</b><br>Scan the code, or type the address into any browser.</p></div>
 <p class="cp-dua">We ask Allah to accept this work and to benefit by it whoever reads it.</p>
 </section>'''
 
@@ -164,7 +165,7 @@ def how_to_use():
 <h3>A suggested weekly rhythm</h3>
 <table class="todo" style="margin-top:2mm">{plan}</table>
 <h3>The online book: audio and certificate</h3>
-<div class="callout">Visit <b>diinislaam.com/arbaeen-nawawi</b> to <b>listen</b> to every hadith in Arabic and English, take the five part tests with instant marking, and receive your <b>certificate of completion</b> after passing all five tests with 80% or more.</div>
+<div class="callout qr-callout">{qr.block("", "Scan me")}<div>Visit <b>diinislaam.com/40hadith</b> to <b>listen</b> to every hadith in Arabic and English, take the five part tests with instant marking, and receive your <b>certificate of completion</b> after passing all five tests with 80% or more. Every chapter and test also has its own code: scan it, or type the address printed under it, such as <b>diinislaam.com/40hadith/4</b> for Hadith 4.</div></div>
 <h3>For parents and teachers</h3>
 <p>For younger children, read the translation aloud, talk about the picture together and choose two or three of the to-do tasks. Older children and adults can do the whole chapter. Praise effort more than perfection, and act on the hadith yourself first: children learn more from what they see than from what they are told.</p>
 </section>'''

@@ -9,6 +9,7 @@ import os, subprocess, sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 import front  # noqa: E402
+import qr  # noqa: E402
 from figures import FIGURES  # noqa: E402
 from pypdf import PdfReader  # noqa: E402
 
@@ -44,7 +45,8 @@ SCALE = 11.0 / 11.69
 LETTER_CSS = f"""
 .front .cover > .art {{ width: 100% !important; height: 100% !important; }}
 .front .ov {{ position: absolute; left: 50%; top: 0; width: 210mm; height: 297mm; transform: translateX(-50%) scale({SCALE:.4f}); transform-origin: top center; }}
-.back .in {{ transform: scale(.95); transform-origin: top center; }}
+.back .in {{ transform: scale(.93); transform-origin: top center; top: 22mm; }}
+.back .quote {{ margin-top: 6mm; }}
 """
 
 
@@ -88,6 +90,10 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 .back .quote .qe {{ font-family: 'Lora', serif; font-style: italic; font-size: 11.5pt; color: #d9c79a; }}
 .back .by {{ position: absolute; left: 22mm; bottom: 20mm; font-family: 'Lora', serif; font-size: 9.5pt; color: #d9c79a; line-height: 1.5; }}
 .back .by b {{ display: block; font-family: 'Cinzel', serif; color: #ecd391; font-size: 13pt; letter-spacing: .1em; }}
+.back .by {{ display: flex; align-items: flex-end; gap: 5mm; }}
+.back .bq {{ display: block; text-align: center; text-decoration: none; }}
+.back .bq .qrsvg {{ display: block; width: 21mm; height: 21mm; margin: 0 auto 1.2mm; border-radius: 1mm; }}
+.back .bq span {{ display: block; font-size: 7.6pt; color: #ecd391; white-space: nowrap; }}
 /* keep clear for the KDP barcode (2in x 1.2in, lower right of the back cover) */
 .back .barcode {{ position: absolute; right: 0.25in; bottom: 0.25in; width: 2in; height: 1.2in; }}
 .spine {{ position: absolute; top: 0; left: {BLEED + TRIM_W}in; width: {spine_in:.4f}in; height: {H:.4f}in;
@@ -108,7 +114,7 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
     <ul>{feats}</ul>
     <div class="quote"><div class="qa" lang="ar" dir="rtl">«إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ»</div><div class="qe">“Actions are only by intentions.” — Hadith 1</div></div>
   </div>
-  <div class="by"><b>Feysel Reshid</b>Compiler · Diin Islaam<br>diinislaam.com/arbaeen-nawawi</div>
+  <div class="by"><a class="bq" href="{qr.url()}">{qr.svg()}<span>diinislaam.com/40hadith</span></a><div><b>Feysel Reshid</b>Compiler · Diin Islaam<br>Scan the code to listen,<br>take the tests and earn<br>a certificate online.</div></div>
   <div class="barcode"></div>
 </div>
 <div class="spine"><div class="st"><span class="t1">The Forty Hadith of Imam an-Nawawi</span><span class="t2" lang="ar">الأربعون النووية</span><span class="t3">Feysel Reshid</span></div></div>

@@ -475,7 +475,7 @@ function shareText(k,r,withWritten){
     lines.push("","C. Short answers:");t.short.forEach(function(q,i){lines.push((i+1)+". "+strip(q.q),"   → "+(r.short[i]||"(no answer)"))});
     lines.push("","D. Critical thinking:");t.critical.forEach(function(q,i){lines.push((i+1)+". "+strip(q),"   → "+(r.crit[i]||"(no answer)"))});
   }
-  lines.push("","Sent from diinislaam.com/arbaeen-nawawi");
+  lines.push("","Sent from diinislaam.com/40hadith");
   return lines.join("\n");
 }
 function strip(h){var d=document.createElement("div");d.innerHTML=h;return d.textContent}
@@ -608,7 +608,7 @@ function paintCert(cv,im){
   c.fillStyle="#ecd391";c.font="700 22px Amiri";c.direction="rtl";c.fillText("خَمْسُونَ حَدِيثًا",W/2,1172);c.direction="ltr";
   c.font="700 46px Cinzel";c.fillText("50",W/2,1222);c.font="600 16px Cinzel";c.fillText("HADITH",W/2,1248);
   var id=0;for(var i=0;i<name.length;i++)id=(id*31+name.charCodeAt(i))>>>0;
-  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("Compiled by Feysel Reshid · Diin Islaam · diinislaam.com/arbaeen-nawawi · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
+  c.fillStyle="#9d8a62";c.font="21px Lora";c.fillText("Compiled by Feysel Reshid · Diin Islaam · diinislaam.com/40hadith · certificate no. AN-"+String(id%1000000).padStart(6,"0")+"-"+new Date().getFullYear(),W/2,1316);
   c.restore();
 }
 function bindCert(){

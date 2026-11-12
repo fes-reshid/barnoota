@@ -4,8 +4,8 @@ There are two editions. Publish each one as a separate paperback in KDP, or star
 
 | Edition | Interior | Cover | Size | Pages |
 |---|---|---|---|---|
-| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 248 |
-| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 267 |
+| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 249 |
+| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 268 |
 
 The sections below describe the black-and-white edition. The colour edition's differences are listed at the end.
 
@@ -18,8 +18,8 @@ The English translations come from sunnah.com, which presents translations owned
 ## Files to upload
 | File | Use |
 |---|---|
-| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 248 pages, A4, black and white |
-| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.348 × 11.94 in with bleed |
+| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 249 pages, A4, black and white |
+| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.351 × 11.94 in with bleed |
 
 ## Print settings in KDP (Paperback content page)
 - **Print ISBN:** use KDP's free ISBN, or your own
@@ -56,7 +56,7 @@ The English translations come from sunnah.com, which presents translations owned
 >
 > Each of the five parts ends with a **review test** (250 questions in all), and an **answer key** for teachers and parents is at the back. A memorisation tracker and a glossary are included.
 >
-> Ideal for families, Islamic schools, weekend classes, study circles and anyone who wants to learn — and live — the most important hadith of the Prophet ﷺ. A free online edition with audio and a certificate of completion accompanies the book at diinislaam.com.
+> Ideal for families, Islamic schools, weekend classes, study circles and anyone who wants to learn — and live — the most important hadith of the Prophet ﷺ. A free online edition with audio and a certificate of completion accompanies the book at diinislaam.com/40hadith, and every chapter has a QR code that opens it online.
 
 ### Keywords (7 boxes)
 1. 40 hadith nawawi arabic english
@@ -73,7 +73,7 @@ The English translations come from sunnah.com, which presents translations owned
 - Religion & Spirituality › Religious Studies (or Education › Religious)
 
 ## Price (Amazon.com, paperback)
-At 248 pages, large trim, black ink, the printing cost is about **$1.00 + 248 × $0.017 ≈ $5.22** per copy. KDP's price calculator shows the exact figure.
+At 249 pages, large trim, black ink, the printing cost is about **$1.00 + 249 × $0.017 ≈ $5.23** per copy. KDP's price calculator shows the exact figure.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
@@ -86,9 +86,9 @@ Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and rou
 ## Colour edition: what is different
 - **Ink and paper:** Standard color, white paper. KDP does not offer standard colour at A4, which is why this edition is US Letter.
 - **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Glossy shows the colours best; Matte also works.
-- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (267 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.851 × 11.25 in, spine 0.601 in).
+- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (268 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.854 × 11.25 in, spine 0.604 in).
 - **Subtitle:** you can add "Full Colour Edition" at the end so readers can tell the two listings apart.
-- **Price:** standard colour printing at large trim is about $1.00 + 267 × $0.0402 ≈ **$11.73** per copy. Check the exact figure in KDP's calculator.
+- **Price:** standard colour printing at large trim is about $1.00 + 268 × $0.0402 ≈ **$11.77** per copy. Check the exact figure in KDP's calculator.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|

@@ -2,7 +2,7 @@
 
 Compiled by Feysel Reshid.
 
-`Forty-Hadith-Nawawi-Study-Book.pdf` is an A4 study book of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 249 pages including the cover.
+`Forty-Hadith-Nawawi-Study-Book.pdf` is an A4 study book of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 250 pages including the cover.
 
 Each hadith has its own chapter with:
 
@@ -27,7 +27,7 @@ The front matter holds the cover, title page, Preface, contents, a guide to usin
 
 ## Building
 
-The build needs Python 3 (with reportlab, pypdf and pdfplumber), Node and Playwright Chromium.
+The build needs Python 3 (with reportlab, pypdf, pdfplumber and segno), Node and Playwright Chromium.
 
 ```bash
 python3 build.py
@@ -45,7 +45,7 @@ python3 build.py
 
 ## Online edition
 
-`../arbaeen-nawawi/` is the online book (diinislaam.com/arbaeen-nawawi/): all 50 hadith with Listen buttons, the five part tests marked automatically, and a certificate that unlocks after passing all five tests with 80% or more. Progress is saved in the reader's browser.
+`../arbaeen-nawawi/` is the online book (diinislaam.com/arbaeen-nawawi/, short address diinislaam.com/40hadith): all 50 hadith with Listen buttons, the five part tests marked automatically, and a certificate that unlocks after passing all five tests with 80% or more. Progress is saved in the reader's browser.
 
 Each narrator card has a **Read more** button that opens a longer life story of the Companion (`src/stories.py`, online edition only). The certificate is drawn in the browser with a background of gold Arabic calligraphy (Hadith 36).
 
@@ -56,3 +56,15 @@ python3 build_web.py
 ```
 
 To add audio recordings, see `../arbaeen-nawawi/audio/README.md`.
+
+## QR codes and short addresses
+
+Every hadith chapter and every review test has a QR code with its address printed under it, so a reader can open that page of the online book. The copyright page, the "How to Use" page and the back cover of the Amazon editions have a code for the online book's home page.
+
+| Printed address | Opens |
+|---|---|
+| `diinislaam.com/40hadith` | the online book |
+| `diinislaam.com/40hadith/1` … `/50` | that hadith |
+| `diinislaam.com/40hadith/test1` … `/test5` | that review test |
+
+The short addresses are small redirect pages in `../40hadith/`, written by `build_web.py`. The codes are made by `src/qr.py`.

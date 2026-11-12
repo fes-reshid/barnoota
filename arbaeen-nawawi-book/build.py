@@ -23,6 +23,7 @@ from background import BACKGROUND  # noqa: E402
 import sources  # noqa: E402
 ENDNOTES = {}
 import front  # noqa: E402
+import qr  # noqa: E402
 
 CONTENT = {}
 for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"):
@@ -209,6 +210,7 @@ def hadith_html(n):
     <h2>{esc(c["title"]) if c else "…"}</h2>
     <div class="ar-title" lang="ar" dir="rtl">{ar_title(n)}</div>
   </div>
+  {qr.block(str(n), "Listen &amp; study online")}
 </header>''')
     if c and c.get("theme"):
         out.append(f'<p class="theme">{esc(c["theme"])}</p>')
@@ -300,7 +302,7 @@ def test_html(k):
     out = [f'<section class="test" {st}>{front.mk(f"test{k}")}',
            f'<header class="t-head"><div class="t-kick">{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</div><h2>Review Test</h2>'
            f'<div class="t-ar" lang="ar" dir="rtl">اخْتِبَارُ المُرَاجَعَة</div>'
-           f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div></header>',
+           f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div>{qr.block(f"test{k}", "Take this test online", "qr t-qr")}</header>',
            '<p class="t-intro">Answer from memory first, then check your answers with the chapters. The answer key is at the back of the book.</p>']
     # A. multiple choice
     out.append(f'<div class="t-sec"><h3 class="t-h"><span>A</span>Multiple Choice <em>Circle the correct answer · 25 marks</em></h3><ol class="mcq">')
