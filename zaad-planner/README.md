@@ -7,7 +7,7 @@ There are two editions, built from the same content:
 | Edition | File | Pages | Layout |
 |---|---|---|---|
 | Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 186 | One week on two facing pages |
-| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 524 | One page for every day |
+| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 516 | One page for every day |
 
 Both are A5 in full colour, with mirrored margins for binding and a month tab on the outer edge. Each month has its own colour and a full-page illustration: dawn, Ramadan lanterns, the Ka'bah, the road of the Hijrah and others.
 
@@ -29,9 +29,18 @@ The name comes from al-Baqarah 2:197: "And take provision, for the best provisio
 
 The day page changes with the date. Fridays add the Jumu'ah ticks. Mondays, Thursdays and the white days add the sunnah fast. Ramadan, the last ten nights, the two Eids, the ten days of Dhul-Hijjah, 'Arafah, the days of Tashriq and 'Ashura each have their own badge, ticks and hadith. No fast is suggested on the Eids or the days of Tashriq.
 
+## The Arabic and the references
+
+Every hadith is printed in Arabic and English. The Arabic is taken from the source collections (the editions of github.com/fawazahmed0/hadith-api) by `tools/fetch_arabic.py`, which finds each hadith by its opening and closing words and saves the result in `src/arabic.json`.
+
+- **Checked against the source:** the text of all 93 hadith, and the hadith numbers cited from al-Bukhari, at-Tirmidhi and Abu Dawud.
+- **Not checked by number:** the Muslim numbers. They follow the numbering used on sunnah.com, which the source files do not carry. Each text was found in Sahih Muslim.
+- **Typed by hand:** the hadith of Surat al-Kahf (al-Hakim), the dua of Laylat al-Qadr (at-Tirmidhi 3513), the saying of 'Umar, the closing dua, and the 53 names of Allah. The six adhkar come from the Hisnul Muslim data in this repository.
+- **The English** is worded for a planner and is not a published translation.
+
 ## Before printing
 
-- **Check the hadith.** The texts and reference numbers were written from memory, not checked against sunnah.com (the site could not be reached from the build environment). Have someone verify each one in `src/content.py` against its source.
+- Have someone who knows the texts read the hand-typed items above and the English wording.
 - **Check the Hijri dates.** They follow the Umm al-Qura calendar through the `hijridate` package. Local moon sighting can move a date by a day. The planner says so and gives a "Local" tick for each date.
 
 ## Building
@@ -58,4 +67,5 @@ The first builds the daily edition and the second the weekly one. The third buil
 | `src/art.py` | The cover and month illustrations and the prayer icons, drawn as SVG |
 | `src/planner.css` | The design |
 | `build.py` | Dates, page layouts and assembly. Change `YEAR` for another year |
+| `tools/fetch_arabic.py` | Fetches the Arabic of each hadith into `src/arabic.json` (only needed when a hadith is added) |
 | `render.js` | HTML to PDF with Chromium |

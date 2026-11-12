@@ -314,3 +314,26 @@ sup { font-family: 'Inter', sans-serif; font-size: 5pt; color: var(--gold); font
 .callout.dua { text-align: center; padding: 2.4mm 4mm; } .callout.dua em { font-family: 'Inter', sans-serif; font-style: normal; font-size: 5.6pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
 .callout.dua .ar { font-style: normal; font-size: 17pt; line-height: 1.8; color: var(--emerald); } .callout.dua .tr { font-size: 7.6pt; color: var(--muted); margin-bottom: .6mm; }
 .callout.dua em { display: block; margin-bottom: 1.6mm; }
+
+/* ======================= Arabic for every hadith ======================= */
+p.ar { font-family: 'Amiri', serif; font-style: normal; direction: rtl; text-align: right; }
+.evi p.ar { font-size: 12.5pt; line-height: 1.75; color: var(--emerald); text-align: right; margin: .3mm 0 .8mm; }
+.evi { padding: 1.8mm 0; } .evi p { font-size: 8pt; }
+.callout p.ar { font-size: 13pt; line-height: 1.8; color: var(--emerald); margin-bottom: .6mm; text-align: center; }
+.wkb-q p.ar { text-align: center; font-size: 14pt; line-height: 1.8; color: var(--gold2); margin-bottom: 1.4mm; }
+.wkb-q .q { font-size: 9pt; }
+.wkb-q.l2 p.ar { font-size: 12pt; line-height: 1.72; } .wkb-q.l2 .q { font-size: 8.3pt; line-height: 1.42; }
+.wkb-q.l3 p.ar { font-size: 10.6pt; line-height: 1.66; } .wkb-q.l3 .q { font-size: 7.6pt; line-height: 1.38; } .wkb-q.l3 { padding-left: 7mm; padding-right: 7mm; }
+.wkb.sm { height: 70mm; } .week.wk2 .in { top: 73mm; } .week.wk2 .dbk { height: 37mm; } .wk2 .act { margin-bottom: 1.6mm; }
+.wkb.sm .wkb-q p.ar { font-size: 12.5pt; line-height: 1.7; margin-bottom: .8mm; } .wkb.sm .wkb-q .q { font-size: 8.2pt; }
+.wkb.sm .wkb-q.l2 p.ar { font-size: 10.6pt; line-height: 1.62; } .wkb.sm .wkb-q.l2 .q { font-size: 7.5pt; line-height: 1.36; }
+.wkb.sm .wkb-q.l3 p.ar { font-size: 9pt; line-height: 1.55; } .wkb.sm .wkb-q.l3 .q { font-size: 6.7pt; line-height: 1.32; } .wkb.sm .wkb-q.l3 { padding: 4mm 5mm 2mm; }
+.rem { height: 25mm; align-items: center; } .rem > div { flex: 1; min-width: 0; }
+.rem p.ar { font-size: 11pt; line-height: 1.6; color: var(--emerald); text-align: right; }
+.blk .ln { height: 4.05mm; } .blk > span { margin-top: .35mm; } .top3 .ln { height: 5mm; } .blk i.cb { width: 2.5mm; height: 2.5mm; }
+.gap { flex: 1; }
+.center p.ayah { text-align: center; direction: rtl; }
+.week.wk2 .dbk { height: 38mm; } .week.wk2 .dr .ln { height: 5.9mm; } .week.wk2 .tk3 p { line-height: 1; } .week.wk2 .pr { padding-bottom: .5mm; margin-bottom: .5mm; }
+.wkb.sm { height: 68.5mm; } .week.wk2 .in { top: 71.5mm; }
+.rem p.ar { font-size: 10.2pt; line-height: 1.5; } .rem p { font-size: 6.7pt; line-height: 1.22; } .rem { height: 25.6mm; }
+.week.wk2 .dbk { margin-bottom: 1.9mm; } .rem { height: 26.6mm; } .eve .ln { height: 4.6mm; }

@@ -39,7 +39,7 @@ EVIDENCE = [
      "“Make Witr the last of your prayer at night.”",
      "al-Bukhari 998, Muslim 751"),
     ("qiyam", "Night prayer",
-     "“The best prayer after the obligatory prayers is prayer in the depth of the night.”",
+     "“The best prayer after the obligatory prayer is the night prayer.”",
      "Muslim 1163"),
     ("istighfar", "Istighfar",
      "“By Allah, I seek Allah's forgiveness and turn to Him in repentance more than seventy times a day.”",
@@ -59,7 +59,7 @@ EVIDENCE = [
      "“Whoever believes in Allah and the Last Day, let him speak good or remain silent.”",
      "al-Bukhari 6018, Muslim 47"),
     ("siwak", "Siwak",
-     "“Were it not that I would burden my ummah, I would have ordered them to use the siwak at every prayer.”",
+     "“Were it not that I would burden my ummah, or the people, I would have ordered them to use the siwak at every prayer.”",
      "al-Bukhari 887, Muslim 252"),
     ("sleep", "Sleeping with wudu, on the right side",
      "“When you go to your bed, perform wudu as you do for prayer, then lie down on your right side.”",
@@ -127,8 +127,9 @@ SEASONAL = [
      "year.”",
      "Muslim 1164"),
     ("tendays", "The first ten days of Dhul-Hijjah",
-     "“There are no days in which righteous deeds are more beloved to Allah than these ten days.”",
-     "al-Bukhari 969; Abu Dawud 2438"),
+     "“There are no days in which righteous deeds are more beloved to Allah than these days,” meaning the first "
+     "ten days of Dhul-Hijjah.",
+     "Abu Dawud 2438; al-Bukhari 969"),
     ("arafah", "Fasting 'Arafah and 'Ashura",
      "“Fasting the day of 'Arafah, I hope from Allah that it expiates the year before it and the year after it. "
      "Fasting the day of 'Ashura, I hope from Allah that it expiates the year before it.”",
@@ -212,8 +213,9 @@ WEEKLY = [
      "at-Tirmidhi 2518, an-Nasa'i",
      "Drop one doubtful thing from your income, food or habits."),
     ("Purity is half of faith",
-     "“Purity is half of faith. <i>Alhamdulillah</i> fills the scale. Prayer is light, charity is proof, "
-     "patience is illumination, and the Qur'an is a proof for you or against you.”",
+     "“Purity is half of faith. <i>Alhamdulillah</i> fills the scale. <i>Subhan Allah wal-hamdulillah</i> fill "
+     "what is between the heavens and the earth. Prayer is light, charity is proof, patience is illumination, "
+     "and the Qur'an is a proof for you or against you.”",
      "Muslim 223",
      "Stay in wudu as much as you can, and renew it with care."),
     ("A traveller in this world",
@@ -230,8 +232,9 @@ WEEKLY = [
      "Muslim 2664",
      "Build strength: one habit for the body, one for the heart."),
     ("The ten best days",
-     "“There are no days in which righteous deeds are more beloved to Allah than these ten days.”",
-     "al-Bukhari 969",
+     "“There are no days in which righteous deeds are more beloved to Allah than these days,” meaning the first "
+     "ten days of Dhul-Hijjah.",
+     "Abu Dawud 2438; al-Bukhari 969",
      "Fill the ten days with takbir, fasting, charity and Qur'an."),
     ("Two blessings",
      "“There are two blessings which many people lose out on: health and free time.”",
@@ -315,7 +318,7 @@ WEEKLY = [
      "al-Bukhari 6021, Muslim 1005",
      "Count seven small kindnesses, one for each day."),
     ("The branches of faith",
-     "“Faith has seventy-odd branches. The highest is saying <i>La ilaha illa Allah</i>, the lowest is removing "
+     "“Faith has seventy-odd, or sixty-odd, branches. The highest is saying <i>La ilaha illa Allah</i>, the lowest is removing "
      "something harmful from the path, and modesty is a branch of faith.”",
      "Muslim 35",
      "Remove a harm from someone's path, in the street or in life."),
@@ -330,8 +333,8 @@ WEEKLY = [
      "al-Bukhari 33, Muslim 59",
      "Keep every promise and return every trust, however small."),
     ("Beware of suspicion",
-     "“Beware of suspicion, for suspicion is the most false of speech. Do not spy on one another, do not envy "
-     "one another, do not hate one another. Be servants of Allah, as brothers.”",
+     "“Beware of suspicion, for suspicion is the most false of speech. Do not pry, do not spy, do not envy one "
+     "another, do not turn your backs on one another, do not hate one another. Be servants of Allah, as brothers.”",
      "al-Bukhari 6064, Muslim 2563",
      "Give seventy excuses before you believe one bad thought."),
     ("What backbiting is",
@@ -520,3 +523,11 @@ NAMES = [
     ("Ar-Ra'uf", "الرَّؤُوف", "The Most Kind"), ("Al-Ghaniyy", "الغَنِيّ", "The Self-Sufficient"),
     ("Al-Awwal, Al-Akhir", "الأَوَّلُ وَالآخِر", "The First and the Last"),
 ]
+
+
+# Arabic that is not taken from the hadith-api editions (see tools/fetch_arabic.py for the rest).
+ARABIC_MANUAL = {
+    "kahf": "مَنْ قَرَأَ سُورَةَ الْكَهْفِ فِي يَوْمِ الْجُمُعَةِ أَضَاءَ لَهُ مِنَ النُّورِ مَا بَيْنَ الْجُمُعَتَيْنِ",
+    "afuww": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+    "umar": "حَاسِبُوا أَنْفُسَكُمْ قَبْلَ أَنْ تُحَاسَبُوا",
+}
