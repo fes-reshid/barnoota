@@ -19,7 +19,12 @@ import art  # noqa: E402
 YEAR = 2027
 SAMPLE = bool(os.environ.get("SAMPLE"))
 BUILD = os.path.join(ROOT, ".build")
-OUT = os.path.join(ROOT, "Zaad-Planner-2027-sample.pdf" if SAMPLE else "Zaad-Muslim-Daily-Planner-2027.pdf")
+# EDITION=weekly builds the slim edition: one week on two facing pages instead of one page per day.
+WEEKLY_ED = os.environ.get("EDITION") == "weekly"
+OUT = os.path.join(ROOT, "Zaad-Planner-2027-sample.pdf" if SAMPLE else
+                   "Zaad-Muslim-Weekly-Planner-2027.pdf" if WEEKLY_ED else "Zaad-Muslim-Daily-Planner-2027.pdf")
+# Pages left out of the weekly edition, by page title.
+WEEKLY_SKIP = ("Goals in six areas", "Memorisation and revision", "Sadaqah and zakah", "Knowledge log", "Next year, in sha Allah")
 os.makedirs(BUILD, exist_ok=True)
 
 TITLE = "Zaad"
@@ -122,6 +127,8 @@ PAGES = []  # (html, classes, accent, soft, tab_index, toc_label)
 
 def add(html, cls="", month=None, toc=None, nofoot=False, band=""):
     """band: full-bleed HTML placed behind / above the page content (cover art, day and week headers)."""
+    if WEEKLY_ED and any(f"<h1>{t}</h1>" in html for t in WEEKLY_SKIP):
+        return
     PAGES.append(dict(html=html, cls=cls, month=month, toc=toc, nofoot=nofoot, band=band))
 
 
@@ -759,6 +766,89 @@ def day_page(d):
     return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom, band
 
 
+# ---------------------------------------------------------------------------
+# Weekly edition: one week on two facing pages
+# ---------------------------------------------------------------------------
+SHORT = {"Ghusl, best clothes, early to Jumu'ah": "Ghusl, go early", "Dua in the last hour after 'Asr": "Last-hour dua",
+         "Iftar on time, with dua": "Iftar on time", "Tarawih / night prayer": "Tarawih", "A fast of the six of Shawwal": "Shawwal fast",
+         "Takbir, tahlil and tahmid often": "Takbir often", "Fasted (first nine days)": "Fasted", "Zakat al-Fitr given before the prayer": "Zakat al-Fitr",
+         "Takbir, ghusl and the Eid prayer": "Eid prayer", "Sacrifice (udhiyah)": "Udhiyah", "Fast of the ninth (with 'Ashura)": "Fast of the 9th",
+         "White-day fast (13 · 14 · 15)": "White-day fast", "Sunnah fast (Monday / Thursday)": "Sunnah fast", "Takbir after each prayer": "Takbir after prayers"}
+MINI_TICKS = [("Morning adhkar", "adhkar"), ("Evening adhkar", "adhkar"), ("Qur'an", "quran"), ("Dhikr after prayers", "tasbih"),
+              ("Istighfar ×100", "istighfar"), ("Salawat", "salawat"), ("Sadaqah", "sadaqah"), ("Sleep adhkar", "kursi")]
+
+
+def day_block(d):
+    hy, hm, hd = hij(d)
+    badges, extra, _r = day_info(d)
+    bh = "".join(f'<span class="badge">{b}</span>' for b in badges)
+    pr = "".join(f"<span>{art.ICON[PICON[p]]}{O}<em>{p}</em></span>" for p, _s in PRAYERS)
+    pr += '<i class="sep"></i>' + "".join(f"<span>{O}<em>{t}</em></span>" for t in ("Duha", "Witr", "Night"))
+    ticks = "".join(f'<p class="sp">{CB}{SHORT.get(t, t)}{ev(k) if k else ""}</p>' for t, k in extra)
+    ticks += "".join(f"<p>{CB}{t}{ev(k)}</p>" for t, k in MINI_TICKS)
+    return (f'<div class="dbk{" fri" if d.weekday() == 4 else ""}"><div class="dbh"><b>{d.day:02d}</b><span class="wd">{DAY_NAMES[d.weekday()]}</span>'
+            f'<span class="hj">{hd} {hname(hm)}</span><span class="ar" lang="ar" dir="rtl">{WEEKDAYS_AR[d.weekday()]}</span>{bh}</div>'
+            f'<div class="dbb"><div class="dl"><div class="pr">{pr}</div><div class="tk3">{ticks}</div></div>'
+            f'<div class="dr">{cblines(4)}<div class="ln lab"><span>Alhamdulillah for</span></div></div></div></div>')
+
+
+def week_spread(n, start, hadith, month):
+    days = [start]
+    while (nx := days[-1] + dt.timedelta(days=1)).weekday() != 0 and nx.year == YEAR:
+        days.append(nx)
+    _body, band = week_page(n, start, hadith)
+    title, text, ref, action = hadith
+    name = NAMES[(n - 1) % len(NAMES)]
+    left = [d for d in days if d.weekday() < 3]
+    right = [d for d in days if d.weekday() >= 3]
+    fill = '<div class="dots"></div>'
+    assert len(PAGES) % 2 == 1, "a week must open on a left-hand page"
+    add(f'<div class="act"><div><b>Live it</b>{action}</div></div>' + "".join(day_block(d) for d in left) + (fill if len(left) < 3 else ""),
+        cls="week wk2", month=month, band=band.replace('class="wkb"', 'class="wkb sm"'))
+    add("".join(day_block(d) for d in right) + (fill if len(right) < 4 else "")
+        + f'<div class="wfoot"><section class="nm"><div class="ar" lang="ar" dir="rtl">{name[1]}</div><div><span class="lb">A name of Allah this week</span>'
+          f'<h3>{name[0]}</h3><p>{name[2]}</p></div></section>'
+        + '<div class="sc s3">' + "".join(f"<div><span>{t}</span><b>__</b></div>" for t in [
+            "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>",
+        cls="wk2", month=month)
+
+
+def month_pages_weekly(m):
+    """Opener, calendar and one combined page: intention, goals and the habit grid."""
+    theme = MONTHS[m - 1][0]
+    month_pages(m)
+    plan, grid = PAGES.pop(-2), PAGES.pop()
+    table = re.search(r'<table class="hb">.*?</table>', grid["html"], re.S).group(0)
+    add(head(f"{MONTH_NAMES[m]}: my month", f"Theme of the month: {theme.lower()}")
+        + box("My intention this month", lines(2))
+        + '<div class="g2">' + box("Goals", cblines(3)) + box("One habit to build, one to leave", lines(3)) + "</div>"
+        + f'<div class="hbs">{table}</div>'
+        + '<p class="fine">Shade one square for each day you keep the habit. The empty rows are yours.</p>', month=m)
+
+
+def build_weekly():
+    front()
+    year_glance()
+    islamic_dates()
+    year_pages()
+    trackers()
+    seasons()
+    adhkar_pages()
+    starts, hw = assign_weeks()
+    cur = 0
+    for n, s in enumerate(starts, 1):
+        if SAMPLE and n > 3:
+            break
+        if s.month != cur:
+            if len(PAGES) % 2 == 1:
+                month_review(cur) if cur else add(notes_html("Notes"))
+            cur = s.month
+            month_pages_weekly(cur)
+        week_spread(n, s, hw[s], cur)
+    month_review(cur)
+    back()
+
+
 def back():
     add(head(f"{YEAR}: my year in review", "Deeds are only judged by their endings", "خِتَام")
         + '<div class="sc">' + "".join(f"<div><span>{t}</span><b>____</b></div>" for t in [
@@ -790,6 +880,14 @@ You. I seek Your forgiveness and I turn to You in repentance.</p>
 # ---------------------------------------------------------------------------
 def build():
     assert len(WEEKLY) >= 53 + 0, len(WEEKLY)
+    if WEEKLY_ED:
+        build_weekly()
+    else:
+        build_daily()
+    render()
+
+
+def build_daily():
     front()
     year_glance()
     islamic_dates()
@@ -815,6 +913,8 @@ def build():
             month_review(d.month)
     back()
 
+
+def render():
     # table of contents
     toc = "".join(f'<tr class="{"m" if p["cls"] == "opener" else ""}"><td>{p["toc"]}</td><td class="pg">{i + 1}</td></tr>'
                   for i, p in enumerate(PAGES) if p["toc"])
@@ -822,6 +922,18 @@ def build():
     for i, p in enumerate(PAGES):
         h = p["html"].replace("@@TOC@@", head("Contents") + f'<table class="toc">{toc}</table>')
         h = h.replace("ﷺ", '<span class="saw">ﷺ</span>')
+        if WEEKLY_ED:
+            for a, b in (("A Muslim's Daily Planner", "A Muslim's Weekly Planner"), ("Reading the day page", "Reading the week pages"),
+                         ("fifty-three weeks, 365 days", "fifty-three weeks, each on two pages"),
+                         ("Live the day around the prayer", "Live each day around the prayer"),
+                         ("The day page is built on the five prayers. Write your\nintention in the morning, plan your tasks between the prayers, and tick each act as you do it.",
+                          "Each week opens flat on two pages, with a block for every day built on the five prayers. Fill a circle for each prayer, tick each sunnah act as you do it, and write your tasks beside it."),
+                         ("Before you sleep, write what you thank Allah for, your\nbest deed, and what you seek forgiveness for. Then sleep with wudu and the adhkar.",
+                          "Before you sleep, write one thing you thank Allah for and seek His forgiveness. At the end of the week, count your prayers, Qur'an, fasts and sadaqah."),
+                         ("The week page gives a hadith to live by and one action\nfor it. Plan the seven days and review the week before.",
+                          "The week opens with a hadith to live by, one action for it, and a name of Allah to call upon."),
+                         ("Every day from Fajr to sleep", "A week on two pages")):
+                h = h.replace(a, b)
         m = p["month"]
         style = f' style="--ac:{MONTHS[m-1][3]};--soft:{MONTHS[m-1][4]}"' if m else ""
         side = "r" if i % 2 == 0 else "l"
