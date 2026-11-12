@@ -311,3 +311,6 @@ sup { font-family: 'Inter', sans-serif; font-size: 5pt; color: var(--gold); font
 .wk2:not(.week) .dbk { height: 40.4mm; }
 .tk3 p { overflow: visible; } .wk2:not(.week) .dbk { height: 39.4mm; }
 .wfoot .nm .ar { font-size: 19pt; line-height: 1.45; } .wfoot .nm .lb { white-space: nowrap; font-size: 4.8pt; letter-spacing: .12em; } .wfoot .nm { gap: 3mm; padding: .6mm 2.5mm; }
+.callout.dua { text-align: center; padding: 2.4mm 4mm; } .callout.dua em { font-family: 'Inter', sans-serif; font-style: normal; font-size: 5.6pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.callout.dua .ar { font-style: normal; font-size: 17pt; line-height: 1.8; color: var(--emerald); } .callout.dua .tr { font-size: 7.6pt; color: var(--muted); margin-bottom: .6mm; }
+.callout.dua em { display: block; margin-bottom: 1.6mm; }

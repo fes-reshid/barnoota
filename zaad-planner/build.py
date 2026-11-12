@@ -485,8 +485,10 @@ def seasons():
             nights += (f'<tr class="{"odd" if odd else ""}"><td><b>{n}</b>{" · odd" if odd else " · if thirty" if n > len(ram) else ""}</td>'
                        f'<td>{d.strftime("%a")} {d.day} {MONTH_NAMES[d.month][:3]}</td>' + f"<td>{CB}</td>" * 5 + "</tr>")
     add(head("The last ten nights", "Seek Laylat al-Qadr in the odd nights", "لَيْلَةُ القَدْر")
-        + '<div class="callout">Say often: <i>Allahumma innaka \'afuwwun tuhibbul-\'afwa fa\'fu \'anni.</i> O Allah, You are Pardoning and '
-          'love to pardon, so pardon me.<span>at-Tirmidhi 3513</span></div>'
+        + '<div class="callout dua"><em>Say often on these nights</em>'
+          '<p class="ar" lang="ar" dir="rtl">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>'
+          '<p class="tr">Allahumma innaka \'afuwwun tuhibbul-\'afwa fa\'fu \'anni</p>'
+          '<p>O Allah, You are Pardoning and love to pardon, so pardon me.</p><span>at-Tirmidhi 3513</span></div>'
         + '<table class="log ram"><tr><th>Night</th><th>Evening of</th><th>\'Isha and Fajr in congregation</th><th>Qiyam</th><th>Qur\'an</th>'
           f'<th>Long dua</th><th>Sadaqah</th></tr>{nights}</table>'
         + box("My dua list for these nights", lines(5))
