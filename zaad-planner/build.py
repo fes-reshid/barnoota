@@ -748,7 +748,8 @@ FOOT = [f for f in [(e[1], e[2], e[3], e[0]) for e in EVIDENCE] + [(w[0], w[1], 
         if len(f[1]) < 215 and ar_len(AR[f[3]]) < 150]
 
 
-def day_page(d):
+def day_page(d, week=None):
+    """One day. week = (number, hadith) on the first day of a week: its hadith takes the place of the day's hadith."""
     hy, hm, hd = hij(d)
     wd = d.weekday()
     badges, extra, remind = day_info(d)
@@ -770,8 +771,8 @@ def day_page(d):
            f'<span>{O}Night prayer{ev("qiyam")}</span></div>')
     ticks = "".join(f'<p class="sp">{CB}{t}{ev(k) if k else ""}</p>' for t, k in extra)
     ticks += "".join(f"<p>{CB}{t}{ev(k)}</p>" for t, k in BASE_TICKS)
-    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk{" dense" if len(extra) >= 4 else ""}">{ticks}</div>', "ticks")
-    plan = "".join(f'<div class="blk"><span>{b}</span><div class="ln cbl">{CB}</div><div class="ln cbl">{CB}</div></div>' for b in BLOCKS)
+    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk{" dense" if len(extra) >= 4 or week else ""}{" xd" if week and len(extra) >= 3 else ""}">{ticks}</div>', "ticks")
+    plan = "".join(f'<div class="blk"><span>{b}</span><div class="ln cbl">{CB}</div>{"" if week else f'<div class="ln cbl">{CB}</div>'}</div>' for b in BLOCKS)
     right = (box("Three that matter most", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), "top3")
              + box("My day between the prayers", plan, "plan"))
     # reminder
@@ -795,6 +796,15 @@ def day_page(d):
               + box("Before I sleep", '<div class="ln lab"><span>Best deed</span></div><div class="ln lab"><span>I seek forgiveness for</span></div>'
                     '<div class="ln lab"><span>Tomorrow, in sha Allah</span></div>') + "</div>"
               + f'<div class="rem">{STAR}<div><b>{label}</b>{arp(akey)}<p>{text} <span>{ref}</span></p></div></div>')
+    if week:
+        n, (title, text, ref, action) = week
+        name = NAMES[(n - 1) % len(NAMES)]
+        size = ar_len(AR.get(title, "")) * 1.3 + len(text)
+        bottom = bottom[:bottom.index('<div class="rem">')] + (
+            f'<div class="rem wkrem{" l2" if size > 330 else ""}{" l3" if size > 520 else ""}"><div><b>Week {n} · Hadith of the week · {title}</b>{arp(title)}'
+            f'<p>{text} <span>{ref}</span></p><p class="live"><i>Live it</i>{action}</p></div>'
+            f'<section class="nmm"><span class="lb">A name of Allah</span><div class="ar" lang="ar" dir="rtl">{name[1]}</div>'
+            f'<h5>{name[0]}</h5><em>{name[2]}</em></section></div>')
     return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom, band
 
 
@@ -932,15 +942,13 @@ def build_daily():
         if d.month > last_month or (SAMPLE and d.day > 10):
             break
         if d.day == 1:
-            month_pages(d.month)
+            month_pages_weekly(d.month)
+        wk = None
         if d in hw:
             wn += 1
-            wb, wband = week_page(wn, d, hw[d])
-            add(wb, cls="week", month=d.month, band=wband)
-        db, dband = day_page(d)
-        add(db, cls="day" + (" fri" if d.weekday() == 4 else ""), month=d.month, band=dband)
-        if d.day == calendar.monthrange(YEAR, d.month)[1]:
-            month_review(d.month)
+            wk = (wn, hw[d])
+        db, dband = day_page(d, wk)
+        add(db, cls="day" + (" fri" if d.weekday() == 4 else "") + (" wkday" if wk else ""), month=d.month, band=dband)
     back()
 
 
@@ -970,6 +978,11 @@ def render():
                          ("The week page gives a hadith to live by and one action\nfor it. Plan the seven days and review the week before.",
                           "The week opens with a hadith to live by, one action for it, and a name of Allah to call upon."),
                          ("Every day from Fajr to sleep", "A week on two pages")):
+                h = h.replace(a, b)
+        else:
+            for a, b in (("The week page gives a hadith to live by and one action\nfor it. Plan the seven days and review the week before.",
+                          "The first day of each week carries the hadith of the week, one action to live it, and a name of Allah to call upon."),
+                         ("a calendar with Hijri dates, a\ngoals page and a habit grid.", "a calendar with Hijri dates, and one page for your intention, goals and habit grid.")):
                 h = h.replace(a, b)
         m = p["month"]
         style = f' style="--ac:{MONTHS[m-1][3]};--soft:{MONTHS[m-1][4]}"' if m else ""

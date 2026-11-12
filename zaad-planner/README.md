@@ -7,7 +7,7 @@ There are two editions, built from the same content:
 | Edition | File | Pages | Layout |
 |---|---|---|---|
 | Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 186 | One week on two facing pages |
-| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 516 | One page for every day |
+| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 438 | One page for every day |
 
 Both are A5 in full colour, with mirrored margins for binding and a month tab on the outer edge. Each month has its own colour and a full-page illustration: dawn, Ramadan lanterns, the Ka'bah, the road of the Hijrah and others.
 
@@ -23,8 +23,8 @@ The name comes from al-Baqarah 2:197: "And take provision, for the best provisio
 - **Trackers:** Qur'an khatmah, memorisation, a year of prayer to colour in, fasting through the year, sadaqah and zakah, a dua list and a knowledge log.
 - **Seasons of worship:** a Ramadan plan, Ramadan day by day, the last ten nights, Eid al-Fitr and Shawwal, and the ten days of Dhul-Hijjah.
 - **Six adhkar to know by heart**, with the Arabic from the Hisnul Muslim data in this repository.
-- **Each month:** an opening page with a theme and an ayah, a calendar with Hijri dates and the white days, a plan page, a habit grid and a review page.
-- **Each week (53):** a hadith of the week with one action, a name of Allah with its meaning, the days of the week, three goals and a short review.
+- **Each month:** an opening page with a theme and an ayah, a calendar with Hijri dates and the white days, and one page for the intention, goals and habit grid.
+- **Each week (53):** a hadith of the week with one action, and a name of Allah with its meaning. In the daily edition they sit at the foot of the first day of the week; in the weekly edition they open the spread.
 - **Each day (365):** Gregorian and Hijri date, intention, a salah table (fard, on time, congregation, sunnah), Duha, Witr and night prayer, the sunnah ticks of the day, three priorities, a plan laid out between the prayers, water, heart and sleep trackers, gratitude, an evening review and one hadith.
 
 The day page changes with the date. Fridays add the Jumu'ah ticks. Mondays, Thursdays and the white days add the sunnah fast. Ramadan, the last ten nights, the two Eids, the ten days of Dhul-Hijjah, 'Arafah, the days of Tashriq and 'Ashura each have their own badge, ticks and hadith. No fast is suggested on the Eids or the days of Tashriq.
