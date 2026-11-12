@@ -2,3 +2,6 @@
 __pycache__/
 .build-kdp/
 .build-kdp-color/
+.build-hc/
+.build-hc-color/
+.build-epub/

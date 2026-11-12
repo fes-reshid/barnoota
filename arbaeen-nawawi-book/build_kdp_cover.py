@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Amazon KDP paperback cover: one wrap-around PDF (back + spine + front) with 0.125in bleed.
+"""Amazon KDP covers: one wrap-around PDF (back + spine + front).
 
-Run after `EDITION=kdp python3 build.py`; the spine width is computed from the interior's page count.
-KDP white paper, black ink: spine = pages x 0.002252 in.
+  python3 build_kdp_cover.py            paperback, black-and-white interior (A4), 0.125in bleed
+  python3 build_kdp_cover.py color      paperback, standard colour (US Letter)
+  python3 build_kdp_cover.py hc         hardcover (case laminate), black-and-white interior, 8.25 x 11 in
+  python3 build_kdp_cover.py hc-color   hardcover, premium colour interior
+
+Run after building the matching interior (EDITION=kdp / kdp-color / hc / hc-color python3 build.py).
+Paperback spine: pages x 0.002252 in (KDP white paper). Hardcover sizes come from KDP's cover calculator
+(kdp.amazon.com/cover-calculator) and are listed in HC_SPINE below; if the page count changes,
+read the new spine width from the calculator and add it there.
 """
 import os, subprocess, sys
 
@@ -14,12 +21,30 @@ from figures import FIGURES  # noqa: E402
 from pypdf import PdfReader  # noqa: E402
 
 OUT_DIR = os.path.join(ROOT, "amazon-kdp")
-COLOR = "color" in sys.argv[1:]   # python3 build_kdp_cover.py color  -> US Letter standard-colour edition
-INTERIOR = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Interior-Color.pdf" if COLOR else "Forty-Hadith-KDP-Interior-BW.pdf")
-OUT = os.path.join(OUT_DIR, "Forty-Hadith-KDP-Cover-Color.pdf" if COLOR else "Forty-Hadith-KDP-Cover.pdf")
-BLEED = 0.125
-TRIM_W, TRIM_H = (8.5, 11.0) if COLOR else (8.27, 11.69)
+MODE = (sys.argv[1:] or ["bw"])[0]
+HC = MODE in ("hc", "hc-color")
+COLOR = MODE == "color"           # paperback, US Letter standard colour
+INTERIOR, OUT = {
+    "bw": ("Forty-Hadith-KDP-Interior-BW.pdf", "Forty-Hadith-KDP-Cover.pdf"),
+    "color": ("Forty-Hadith-KDP-Interior-Color.pdf", "Forty-Hadith-KDP-Cover-Color.pdf"),
+    "hc": ("Forty-Hadith-Hardcover-Interior-BW.pdf", "Forty-Hadith-Hardcover-Cover-BW.pdf"),
+    "hc-color": ("Forty-Hadith-Hardcover-Interior-Color.pdf", "Forty-Hadith-Hardcover-Cover-Color.pdf"),
+}[MODE]
+INTERIOR, OUT = os.path.join(OUT_DIR, INTERIOR), os.path.join(OUT_DIR, OUT)
 PER_PAGE = 0.002252  # KDP white paper (black ink) and standard colour
+if HC:
+    # KDP cover calculator, hardcover 8.25 x 11 in: each board 8.447 x 11.236 in, wrap 0.591 in all round,
+    # hinge 0.394 in beside the spine, keep text 0.125 in inside the board edges, barcode 0.25 in from the hinge
+    # and 0.375 in from the bottom.
+    EDGE, HINGE, TRIM_W, TRIM_H = (12.417 - 11.236) / 2, 0.394, 8.447, 11.236  # full height 12.417 in (wrap ~0.591)
+    BARCODE_SIDE, BARCODE_BOTTOM = HINGE + 0.25, 0.375
+    HC_SPINE = {("hc", 269): 0.795, ("hc-color", 269): 0.82}
+else:
+    EDGE, HINGE = 0.125, 0.0
+    TRIM_W, TRIM_H = (8.5, 11.0) if COLOR else (8.27, 11.69)
+    BARCODE_SIDE, BARCODE_BOTTOM = 0.25, 0.25
+BLEED = EDGE
+DESIGN_W = TRIM_W - HINGE   # the part of each board that stays flat (outside the hinge)
 
 BLURB = [
     "Imam an-Nawawī gathered forty-two short hadith, each one “a great foundation of the religion”. "
@@ -41,7 +66,7 @@ FEATURES = [
 
 # On US Letter the A4 front design is kept: the frame and arch stretch to the page,
 # and the lettering is scaled evenly (no distortion) and centred.
-SCALE = 11.0 / 11.69
+SCALE = TRIM_H / 11.69
 LETTER_CSS = f"""
 .front .cover > .art {{ width: 100% !important; height: 100% !important; }}
 .front .ov {{ position: absolute; left: 50%; top: 0; width: 210mm; height: 297mm; transform: translateX(-50%) scale({SCALE:.4f}); transform-origin: top center; }}
@@ -51,7 +76,7 @@ LETTER_CSS = f"""
 
 
 def front_panel(lamp):
-    if not COLOR:
+    if not (COLOR or HC):
         return front.cover_html_inner(lamp)
     inner = front.cover_html_inner(lamp)
     art_end = inner.index("</svg>") + len("</svg>")
@@ -73,8 +98,8 @@ def html(spine_in):
 html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 .wrap {{ position: relative; width: {W:.4f}in; height: {H:.4f}in; overflow: hidden;
   background: radial-gradient(ellipse at 50% 45%, #145248 0%, #0c3d36 55%, #06231f 100%); }}
-.panel {{ position: absolute; top: {BLEED}in; width: {TRIM_W}in; height: {TRIM_H}in; }}
-.panel .cover {{ width: {TRIM_W}in; height: {TRIM_H}in; background: transparent; }}
+.panel {{ position: absolute; top: {BLEED}in; width: {DESIGN_W:.4f}in; height: {TRIM_H}in; }}
+.panel .cover {{ width: {DESIGN_W:.4f}in; height: {TRIM_H}in; background: transparent; }}
 .back {{ left: {BLEED}in; color: #f3e6c4; }}
 .back .bframe {{ position: absolute; inset: 9mm; border: 1px solid #c9a14a; border-radius: 6mm; }}
 .back .bframe2 {{ position: absolute; inset: 11.2mm; border: .4px solid #c9a14a; border-radius: 5mm; }}
@@ -95,7 +120,7 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 .back .bq .qrsvg {{ display: block; width: 21mm; height: 21mm; margin: 0 auto 1.2mm; border-radius: 1mm; }}
 .back .bq span {{ display: block; font-size: 7.6pt; color: #ecd391; white-space: nowrap; }}
 /* keep clear for the KDP barcode (2in x 1.2in, lower right of the back cover) */
-.back .barcode {{ position: absolute; right: 0.25in; bottom: 0.25in; width: 2in; height: 1.2in; }}
+.back .barcode {{ position: absolute; right: {BARCODE_SIDE - HINGE:.3f}in; bottom: {BARCODE_BOTTOM}in; width: 2in; height: 1.2in; }}
 .spine {{ position: absolute; top: 0; left: {BLEED + TRIM_W}in; width: {spine_in:.4f}in; height: {H:.4f}in;
   background: linear-gradient(90deg, #082b26, #0f4c45 50%, #082b26); border-left: .4px solid #c9a14a; border-right: .4px solid #c9a14a; }}
 .spine .st {{ position: absolute; left: 50%; top: 50%; width: {TRIM_H - 1.2:.2f}in; transform: translate(-50%, -50%) rotate(90deg);
@@ -103,8 +128,8 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 .spine .t1 {{ font-family: 'Cinzel', serif; font-weight: 700; color: #ecd391; font-size: 10pt; letter-spacing: .1em; }}
 .spine .t2 {{ font-family: 'Amiri', serif; font-weight: 700; color: #fff; font-size: 11pt; }}
 .spine .t3 {{ font-family: 'Cinzel', serif; color: #d9c79a; font-size: 8.5pt; letter-spacing: .12em; }}
-.front {{ left: {front_x:.4f}in; }}
-{LETTER_CSS if COLOR else ""}
+.front {{ left: {front_x + HINGE:.4f}in; }}
+{LETTER_CSS if (COLOR or HC) else ""}
 </style></head><body><div class="wrap">
 <div class="panel back"><div class="bframe"></div><div class="bframe2"></div>
   <div class="in">
@@ -124,7 +149,13 @@ html, body {{ margin: 0; width: {W:.4f}in; height: {H:.4f}in; }}
 
 def main():
     pages = len(PdfReader(INTERIOR).pages)
-    spine = pages * PER_PAGE
+    if HC:
+        if (MODE, pages) not in HC_SPINE:
+            sys.exit(f"{MODE}: no hardcover spine width for {pages} pages. Read it from kdp.amazon.com/cover-calculator "
+                     f"(Hardcover, 8.25 x 11 in, {pages} pages) and add it to HC_SPINE.")
+        spine = HC_SPINE[(MODE, pages)]
+    else:
+        spine = pages * PER_PAGE
     W = 2 * BLEED + 2 * TRIM_W + spine
     H = 2 * BLEED + TRIM_H
     hp = os.path.join(ROOT, ".build-kdp", "kdp-cover.html")

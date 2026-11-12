@@ -1,13 +1,18 @@
-# Amazon KDP: The Forty Hadith of Imam an-Nawawi (paperback)
+# Amazon KDP: The Forty Hadith of Imam an-Nawawi
 
-There are two editions. Publish each one as a separate paperback in KDP, or start with one.
+There are five Amazon editions. In KDP, a paperback, a hardcover and a Kindle eBook of the same book can share one title. Each print version needs its own ISBN (KDP gives them free). A black-and-white and a colour version of the same format must be set up as separate books.
 
-| Edition | Interior | Cover | Size | Pages |
+| Edition | Interior / manuscript | Cover | Size | Pages |
 |---|---|---|---|---|
-| **Black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 249 |
-| **Colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 268 |
+| **Paperback, black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 249 |
+| **Paperback, colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 268 |
+| **Hardcover, black and white** | `Forty-Hadith-Hardcover-Interior-BW.pdf` | `Forty-Hadith-Hardcover-Cover-BW.pdf` | 8.25 × 11 in | 269 |
+| **Hardcover, premium colour** | `Forty-Hadith-Hardcover-Interior-Color.pdf` | `Forty-Hadith-Hardcover-Cover-Color.pdf` | 8.25 × 11 in | 269 |
+| **Kindle eBook** | `Forty-Hadith-eBook.epub` | `Forty-Hadith-eBook-Cover.jpg` | reflowable, 1600 × 2560 px cover | — |
 
-The sections below describe the black-and-white edition. The colour edition's differences are listed at the end.
+The A4 study book (`../Forty-Hadith-Nawawi-Study-Book.pdf`, with its cover inside) is for printing at home or at a local printer, and for the website.
+
+The sections below describe the black-and-white paperback. The other editions' differences follow it.
 
 ## Before you publish: translation permission
 The English translations come from sunnah.com, which presents translations owned by their publishers. Get written permission to use them in a book you sell before you click **Publish**. Then update the credit line on the copyright page:
@@ -77,9 +82,9 @@ At 249 pages, large trim, black ink, the printing cost is about **$1.00 + 249 ×
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $14.99 | ≈ $3.78 | ≈ $0.78 |
-| **$16.99 (suggested)** | **≈ $4.98** | ≈ $1.58 |
-| $19.99 | ≈ $6.78 | ≈ $2.78 |
+| $14.99 | ≈ $3.76 | ≈ $0.76 |
+| **$16.99 (suggested)** | **≈ $4.96** | ≈ $1.56 |
+| $19.99 | ≈ $6.76 | ≈ $2.76 |
 
 Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and round it, or set each one yourself.
 
@@ -92,9 +97,41 @@ Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and rou
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $22.99 | ≈ $2.06 | — |
-| **$24.99 (suggested)** | **≈ $3.26** | — |
-| $29.99 | ≈ $6.26 | ≈ $0.26 |
+| $22.99 | ≈ $2.02 | — |
+| **$24.99 (suggested)** | **≈ $3.22** | — |
+| $29.99 | ≈ $6.22 | ≈ $0.22 |
+
+## Hardcover: what is different
+KDP hardcovers are case laminate: the cover is printed and wrapped around 2 mm boards. The largest hardcover size is **8.25 × 11 in**. A4 and 8.5 × 11 in are not offered for hardcover, and standard colour is not available (only black ink or premium colour).
+
+- **Ink and paper:** Black & white with **white paper** (`…-BW` files), or **Premium color** (`…-Color` files)
+- **Trim size:** 8.25 × 11 in (20.96 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Matte or Glossy.
+- **Covers:** made to KDP's cover calculator for 269 pages:
+  - Black and white: **18.87 × 12.417 in**, spine 0.795 in
+  - Premium colour: **18.895 × 12.417 in**, spine 0.82 in
+  - Both: boards 8.447 × 11.236 in, wrap 0.591 in, hinge 0.394 in. Text is kept out of the hinge and the wrap, and the barcode area on the back is left empty.
+- **Subtitle:** you can add "Hardcover Edition" (and "Full Colour" for the colour one).
+- **Price (Amazon.com):** printing cost is the fixed cost plus a cost per page (large trim):
+  - Black and white: $5.65 + 269 × $0.017 ≈ **$10.22**
+  - Premium colour: $5.65 + 269 × $0.080 ≈ **$27.17**. KDP won't accept a list price below printing cost ÷ 60%, so the colour hardcover must be priced at about $45.29 or more.
+
+| Hardcover | List price | Royalty (60% − printing) |
+|---|---|---|
+| Black and white | $24.99 | ≈ $4.77 |
+| Black and white | **$27.99 (suggested)** | **≈ $6.57** |
+| Premium colour | **$49.99 (suggested)** | **≈ $2.82** |
+| Premium colour | $54.99 | ≈ $5.82 |
+
+The premium colour hardcover is expensive to print. Most buyers will choose the colour paperback or the black-and-white hardcover, so publishing the colour hardcover is optional.
+
+## Kindle eBook
+- **Manuscript:** upload `Forty-Hadith-eBook.epub` (KDP accepts EPUB). It is reflowable, so readers can change the font size. It has the Arabic, translations, biographies, notes with tappable footnotes, pictures, lessons, steps, questions, to-do lists, the five tests and the answer key, and links to the online book. It passes EPUBCheck 5.4.
+- **Cover:** upload `Forty-Hadith-eBook-Cover.jpg` (1600 × 2560 px, the size KDP recommends).
+- **ISBN:** not needed for a Kindle eBook.
+- **DRM:** your choice.
+- **Preview:** open the book in the **Kindle Previewer** in KDP and check a few chapters, the tests and the footnotes.
+- **Price:** the 70% royalty applies to prices from $2.99 to $9.99, minus a small delivery fee based on file size (about 2.6 MB). For example, at **$7.99 (suggested)** the royalty is about 70% × ($7.99 − delivery fee) ≈ $5.30. KDP shows the exact figure.
+- **KDP Select** (optional) puts the eBook in Kindle Unlimited, but the eBook can then only be sold on Amazon.
 
 ## Rebuilding after any change
 From the `arbaeen-nawawi-book/` folder, run these in order:
@@ -104,6 +141,12 @@ EDITION=kdp python3 build.py          # black and white interior
 python3 build_kdp_cover.py            # its cover
 EDITION=kdp-color python3 build.py    # colour interior
 python3 build_kdp_cover.py color      # its cover
+EDITION=hc python3 build.py           # hardcover interior, black and white
+python3 build_kdp_cover.py hc         # its cover
+EDITION=hc-color python3 build.py     # hardcover interior, premium colour
+python3 build_kdp_cover.py hc-color   # its cover
+python3 build_epub.py                 # Kindle eBook and its cover
+python3 -m epubcheck amazon-kdp/Forty-Hadith-eBook.epub   # check the eBook (pip install epubcheck)
 ```
 
-The cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.**
+The paperback cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.** For a hardcover, the script stops if the page count is not 269. Read the new spine width from KDP's cover calculator (kdp.amazon.com/cover-calculator) and add it to `HC_SPINE` in `build_kdp_cover.py`.
