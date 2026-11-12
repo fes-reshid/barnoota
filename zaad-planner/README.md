@@ -6,8 +6,8 @@ There are two editions, built from the same content:
 
 | Edition | File | Pages | Layout |
 |---|---|---|---|
-| Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 186 | One week on two facing pages |
-| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 438 | One page for every day |
+| Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 178 | One week on two facing pages |
+| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 430 | One page for every day |
 
 Both are A5 in full colour, with mirrored margins for binding and a month tab on the outer edge. Each month has its own colour and a full-page illustration: dawn, Ramadan lanterns, the Ka'bah, the road of the Hijrah and others.
 
@@ -17,7 +17,7 @@ The name comes from al-Baqarah 2:197: "And take provision, for the best provisio
 
 ## What is inside
 
-- **The hadith behind every tick.** 36 numbered hadith, each with its source. Every tick box in the planner carries the number of its hadith.
+- **Hadith in Arabic and English** at the foot of each day (daily edition) and for each week. The front list "The hadith behind every tick" and the small numbers beside the ticks are switched off (`TICK_LIST` in `build.py`).
 - **A day lived by the Sunnah**, from before Fajr to sleep.
 - **The year:** 2027 at a glance, the Islamic dates of 1448–1449, an intention page and goals in six areas.
 - **Trackers:** Qur'an khatmah, memorisation, a year of prayer to colour in, fasting through the year, sadaqah and zakah, a dua list and a knowledge log.

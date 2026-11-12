@@ -28,6 +28,8 @@ WEEKLY_SKIP = ("Goals in six areas", "Memorisation and revision", "Sadaqah and z
 os.makedirs(BUILD, exist_ok=True)
 
 TITLE = "Zaad"
+# The front list "The hadith behind every tick" and the small numbers that point to it. Off: the list is not printed.
+TICK_LIST = False
 # Arabic of every hadith, taken from the source collections by tools/fetch_arabic.py.
 AR = {k: v["ar"] for k, v in json.load(open(os.path.join(ROOT, "src", "arabic.json"), encoding="utf-8")).items()}
 AR.update(ARABIC_MANUAL)
@@ -177,7 +179,7 @@ def head(title, sub="", ar=""):
 
 
 def box(title, body, cls="", n=None):
-    sup = f"<sup>{n}</sup>" if n else ""
+    sup = f"<sup>{n}</sup>" if n and TICK_LIST else ""
     return f'<section class="bx {cls}"><h4>{title}{sup}</h4>{body}</section>'
 
 
@@ -186,6 +188,8 @@ def notes_html(title="Notes"):
 
 
 def ev(key):
+    if not TICK_LIST:
+        return ""
     """Superscript number that points at the evidence list."""
     if key in EV_NUM:
         return f"<sup>{EV_NUM[key]}</sup>"
@@ -254,7 +258,7 @@ Fear Allah. Indeed, Allah is fully aware of what you do.</p>
 <div class="tp-t">ZAAD</div><div class="tp-s">Provision for the Day</div>
 <div class="cv-r dark"><i></i>{STAR}<i></i></div>
 <p class="tp-d">A Muslim's Daily Planner for 2027<br>1448 – 1449 AH</p>
-<p class="tp-f">Every day from Fajr to sleep · Every tick tied to a hadith<br>Hijri dates · Ramadan and Dhul-Hijjah pages · 53 hadith to live by</p>
+<p class="tp-f">Every day from Fajr to sleep · A hadith in Arabic and English every day<br>Hijri dates · Ramadan and Dhul-Hijjah pages · 53 hadith to live by</p>
 <div class="own"><span>This planner belongs to</span><div class="ln"></div><span>If found, please return it. Contact</span><div class="ln"></div></div>
 <p class="tp-by">Compiled by Feysel Reshid · diinislaam.com</p></div>''', nofoot=True)
 
@@ -297,7 +301,7 @@ best deed, and what you seek forgiveness for. Then sleep with wudu and the adhka
 <div class="keybox"><h4>Reading the day page</h4>
 <p><span class="k">{CB}</span> A tick box. Tick it when the act is done.</p>
 <p><span class="k">{O}</span> A prayer circle. Fill it for each prayer: the obligatory prayer, on time, in congregation, its sunnah.</p>
-<p><span class="k"><sup>7</sup></span> A small number. It points to the hadith for that act on the pages “The hadith behind every tick”.</p>
+{'<p><span class="k"><sup>7</sup></span> A small number. It points to the hadith for that act on the pages “The hadith behind every tick”.</p>' if TICK_LIST else ""}
 <p><span class="k badge">Jumu'ah</span> A badge. It marks a special day and adds the ticks that belong to it.</p>
 </div>''', toc="How to use this planner")
 
@@ -319,9 +323,10 @@ best deed, and what you seek forgiveness for. Then sleep with wudu and the adhka
             add(head("The hadith behind every tick", title_sub + (", continued" if j else ""), "السُّنَّة" if j == 0 and toc else "")
                 + f'<div class="evl">{pg}</div>', toc=toc if j == 0 else None)
 
-    ev_pages(EVIDENCE, 1, "The daily acts", "The hadith behind every tick")
-    ev_pages(SEASONAL[:5], len(EVIDENCE) + 1, "Friday, the week and the month")
-    ev_pages(SEASONAL[5:], len(EVIDENCE) + 6, "Ramadan and the seasons of worship")
+    if TICK_LIST:
+        ev_pages(EVIDENCE, 1, "The daily acts", "The hadith behind every tick")
+        ev_pages(SEASONAL[:5], len(EVIDENCE) + 1, "Friday, the week and the month")
+        ev_pages(SEASONAL[5:], len(EVIDENCE) + 6, "Ramadan and the seasons of worship")
 
     # --- a day by the sunnah timeline ---
     tl = [
@@ -977,7 +982,8 @@ def render():
                           "Before you sleep, write one thing you thank Allah for and seek His forgiveness. At the end of the week, count your prayers, Qur'an, fasts and sadaqah."),
                          ("The week page gives a hadith to live by and one action\nfor it. Plan the seven days and review the week before.",
                           "The week opens with a hadith to live by, one action for it, and a name of Allah to call upon."),
-                         ("Every day from Fajr to sleep", "A week on two pages")):
+                         ("Every day from Fajr to sleep", "A week on two pages"),
+                         ("A hadith in Arabic and English every day", "A hadith in Arabic and English every week")):
                 h = h.replace(a, b)
         else:
             for a, b in (("The week page gives a hadith to live by and one action\nfor it. Plan the seven days and review the week before.",
