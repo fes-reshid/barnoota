@@ -771,7 +771,7 @@ def day_page(d, week=None):
            f'<span>{O}Night prayer{ev("qiyam")}</span></div>')
     ticks = "".join(f'<p class="sp">{CB}{t}{ev(k) if k else ""}</p>' for t, k in extra)
     ticks += "".join(f"<p>{CB}{t}{ev(k)}</p>" for t, k in BASE_TICKS)
-    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk{" dense" if len(extra) >= 4 or week else ""}{" xd" if week and len(extra) >= 3 else ""}">{ticks}</div>', "ticks")
+    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk{" dense" if len(extra) >= 4 or week else ""}{" xd" if week and len(extra) >= 2 else ""}">{ticks}</div>', "ticks")
     plan = "".join(f'<div class="blk"><span>{b}</span><div class="ln cbl">{CB}</div>{"" if week else f'<div class="ln cbl">{CB}</div>'}</div>' for b in BLOCKS)
     right = (box("Three that matter most", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), "top3")
              + box("My day between the prayers", plan, "plan"))
