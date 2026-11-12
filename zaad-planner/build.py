@@ -13,7 +13,7 @@ from hijridate import Gregorian
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 from content import (EVIDENCE, EV_NUM, SEASONAL, SEA, WEEKLY, SEASON_WEEK_TITLES, MONTHS,  # noqa: E402
-                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR, NAMES, ARABIC_MANUAL)
+                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR, NAMES, ARABIC_MANUAL, NARRATOR)
 import art  # noqa: E402
 
 YEAR = 2027
@@ -33,11 +33,22 @@ TICK_LIST = False
 # Arabic of every hadith, taken from the source collections by tools/fetch_arabic.py.
 AR = {k: v["ar"] for k, v in json.load(open(os.path.join(ROOT, "src", "arabic.json"), encoding="utf-8")).items()}
 AR.update(ARABIC_MANUAL)
-AR["arafah_ashura"] = AR["arafah"] + " " + AR["ashura"]
+AR["arafah_ashura"] = AR["arafah"].rstrip(".") + "، " + AR["ashura"]
 AR["qadr_dua"] = AR["qadr"]
 AR["The ten best days"] = AR["tendays"]
 AR["Follow it with six"] = AR["shawwal"]
 AR_KEY = {"arafah": "arafah_ashura"}
+
+
+def nref(key, ref):
+    """The reference with the narrator in front: Abu Hurayrah · al-Bukhari 1."""
+    n = NARRATOR.get(key)
+    return f"{n} · {ref}" if n else ref
+
+
+def week_names(n):
+    """Two names of Allah a week covers all ninety-nine in the year; the last weeks are for revision."""
+    return NAMES[2 * n - 2:2 * n]
 
 
 def ar_len(t):
@@ -156,7 +167,7 @@ def interlude(key="Two blessings"):
     """A full page with one hadith. Used where a page is needed to keep facing pages together."""
     w = next(w for w in WEEKLY if w[0] == key)
     add(f'''<div class="center"><div class="cv-r dark"><i></i>{STAR}<i></i></div>{arp(key, "ayah")}
-<p class="ayah-en">{w[1]}</p><p class="ref">{w[2]}</p></div>''', nofoot=True)
+<p class="ayah-en">{w[1]}</p><p class="ref">{nref(key, w[2])}</p></div>''', nofoot=True)
 
 
 CB = '<i class="cb"></i>'
@@ -186,7 +197,7 @@ def box(title, body, cls="", n=None):
 def hcall(key, lead=""):
     """A quote box with one of the tick hadith in Arabic and English."""
     _k, label, text, ref = next(e for e in EVIDENCE + SEASONAL if e[0] == key)
-    return f'<div class="callout hx">{f"<em>{lead}</em>" if lead else ""}{arp(key)}<p>{text}</p><span>{ref}</span></div>'
+    return f'<div class="callout hx">{f"<em>{lead}</em>" if lead else ""}{arp(key)}<p>{text}</p><span>{nref(key, ref)}</span></div>'
 
 
 def notes_html(title="Notes"):
@@ -322,7 +333,7 @@ best deed, and what you seek forgiveness for. Then sleep with wudu and the adhka
             if used + h > 172 and cur:
                 pages.append(cur); cur, used = "", 0.0
             cur += (f'<div class="evi"><b class="n">{start + i}</b><div><h5>{label}</h5>{arp(k)}'
-                    f'<p>{text}</p><span class="rf">{ref}</span></div></div>')
+                    f'<p>{text}</p><span class="rf">{nref(k, ref)}</span></div></div>')
             used += h
         pages.append(cur)
         for j, pg in enumerate(pages):
@@ -508,7 +519,7 @@ def seasons():
     if len(ram) == 29:
         rows += ('<tr class="l10"><td>30</td><td class="na">if the month is thirty</td>' + f"<td>{CB}</td>" * 3 + "<td></td>"
                  + f"<td>{CB}</td>" * 2 + "</tr>")
-    three = "".join(f'<div>{arp(k)}<p>{SEA[k][2]}</p><span class="rf">{SEA[k][3]}</span></div>' for k in ("suhoor", "iftar", "taraweeh"))
+    three = "".join(f'<div>{arp(k)}<p>{SEA[k][2]}</p><span class="rf">{nref(k, SEA[k][3])}</span></div>' for k in ("suhoor", "iftar", "taraweeh"))
     add(head("Ramadan day by day", "The last ten days are shaded") + f'<table class="log ram r30">{hdr}{rows}</table>'
         + f'<div class="three">{three}</div>')
     nights = ""
@@ -520,9 +531,9 @@ def seasons():
                        f'<td>{d.strftime("%a")} {d.day} {MONTH_NAMES[d.month][:3]}</td>' + f"<td>{CB}</td>" * 5 + "</tr>")
     add(head("The last ten nights", "Seek Laylat al-Qadr in the odd nights", "لَيْلَةُ القَدْر")
         + '<div class="callout dua"><em>Say often on these nights</em>'
-          '<p class="ar" lang="ar" dir="rtl">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>'
+          '<p class="ar" lang="ar" dir="rtl">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ، فَاعْفُ عَنِّي.</p>'
           '<p class="tr">Allahumma innaka \'afuwwun tuhibbul-\'afwa fa\'fu \'anni</p>'
-          '<p>O Allah, You are Pardoning and love to pardon, so pardon me.</p><span>at-Tirmidhi 3513</span></div>'
+          '<p>O Allah, You are Pardoning and love to pardon, so pardon me.</p><span>\'A\'ishah · at-Tirmidhi 3513</span></div>'
         + '<table class="log ram"><tr><th>Night</th><th>Evening of</th><th>\'Isha and Fajr in congregation</th><th>Qiyam</th><th>Qur\'an</th>'
           f'<th>Long dua</th><th>Sadaqah</th></tr>{nights}</table>'
         + box("My dua list for these nights", lines(5))
@@ -584,7 +595,7 @@ def adhkar_pages():
             items = ""
     t = next(e for e in EVIDENCE if e[0] == "tasbih")
     items += (f'<div class="dh"><h5>After every prayer: thirty-three, thirty-three, thirty-three</h5>{arp("tasbih")}'
-              f'<p>{t[2]}</p><span class="rf">{t[3]}</span></div>')
+              f'<p>{t[2]}</p><span class="rf">{nref("tasbih", t[3])}</span></div>')
     add(head("Adhkar to know by heart", "Continued") + f'<div class="dhl">{items}</div>'
         + '<p class="fine">The Arabic of the six supplications is from Hisn al-Muslim by Sa\'id ibn \'Ali al-Qahtani. For the full morning and evening adhkar, '
           'see that book or diinislaam.com/hisnul-muslim.</p>')
@@ -595,6 +606,33 @@ def adhkar_pages():
 # ---------------------------------------------------------------------------
 HABITS = ["Fajr on time", "Five prayers", "In congregation", "12 sunnah rak'ahs", "Morning adhkar", "Evening adhkar",
           "Qur'an", "Witr", "Duha", "Istighfar ×100", "Sadaqah", "Sleep adhkar"]
+
+
+def names_pages():
+    def cell(i):
+        t, a, m = NAMES[i]
+        return (f'<div class="nc{" long" if len(t) > 13 else ""}"><b>{i + 1}</b><div class="ar" lang="ar" dir="rtl">{a}</div><i class="o"></i>'
+                f'<div class="tx"><h5>{t}</h5><em>{m}</em></div></div>')
+
+    steps = [("Memorise", "Two names every week, on your week page. Say them after each prayer until they are firm, then fill the circle."),
+             ("Understand", "Learn what each name means and where it comes in the Qur'an. A name you understand stays with you."),
+             ("Call upon Him", "Begin your dua with the name that fits your need: <i>Ya Ghafur</i> for forgiveness, <i>Ya Razzaq</i> for provision, "
+                               "<i>Ya Latif</i> in hardship, <i>Ya Hafiz</i> in fear, <i>Ya Fattah</i> when a door is closed."),
+             ("Live by them", "He is the Most Merciful, so show mercy. He sees and hears, so guard what you do and say.")]
+    add(head("The ninety-nine names of Allah", "Memorise them, understand them, call upon Him by them", "الأَسْمَاءُ الحُسْنَى")
+        + '<div class="callout hx"><p class="ar" lang="ar" dir="rtl">وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا</p>'
+          '<p>“To Allah belong the most beautiful names, so call upon Him by them.”</p><span>al-A\'raf 7:180</span></div>'
+        + f'<div class="callout hx" style="margin-top:2.4mm">{arp("names99")}<p>“Allah has ninety-nine names, one hundred less one. Whoever preserves them '
+          f'will enter Paradise.”</p><span>{nref("names99", "al-Bukhari 2736, Muslim 2677")}</span></div>'
+        + '<div class="how nh">' + "".join(f"<div><b>{i}</b><div><h3>{a}</h3><p>{b}</p></div></div>" for i, (a, b) in enumerate(steps, 1)) + "</div>"
+        + box("My duas by His names", "".join('<div class="ln lab"><span>Ya</span></div>' for _ in range(4)))
+        + '<p class="fine">The list that follows is the well-known one, reported in at-Tirmidhi 3507. Scholars differ on whether the list '
+          'itself is the words of the Prophet ﷺ or of a narrator, and Allah has names beyond these. The hadith above is agreed upon.</p>',
+        toc="The ninety-nine names of Allah")
+    add(head("The ninety-nine names", "1 to 51 · fill the circle when a name is memorised")
+        + '<div class="ng">' + "".join(cell(i) for i in range(0, 51)) + "</div>")
+    add(head("The ninety-nine names", "52 to 99 · fill the circle when a name is memorised")
+        + '<div class="ng">' + "".join(cell(i) for i in range(51, 99)) + "</div>")
 
 
 def hijri_span(m):
@@ -735,10 +773,10 @@ def week_page(n, start, hadith):
         rows += (f'<tr class="{"fr" if d.weekday() == 4 else ""}"><th>{DAY_NAMES[d.weekday()][:3]}<b>{d.day}</b></th>'
                  f'<td><span>{bd}</span></td></tr>')
     dots = "".join(f"<span>{DAY_NAMES[d.weekday()][0]}{O}</span>" for d in days)
-    name = NAMES[(n - 1) % len(NAMES)]
+    name = (week_names(n) or NAMES[:1])[0]
     band = (f'<div class="wkb">{WEEK_ORN}<div class="wkb-h"><span class="wn">Week {n}</span><h1>{rng}</h1><p>{hr}</p></div>'
             f'<div class="wkb-q"><span class="lb">Hadith of the week</span><h3>{title}</h3>'
-            f'{arp(title)}<p class="q">{text}</p><span class="rf">{ref}</span></div></div>')
+            f'{arp(title)}<p class="q">{text}</p><span class="rf">{nref(title, ref)}</span></div></div>')
     size = ar_len(AR.get(title, "")) * 1.3 + len(text)
     band = band.replace('class="wkb-q"', f'class="wkb-q{" l2" if size > 330 else ""}{" l3" if size > 560 else ""}"')
     body = (f'<div class="act"><div><b>Live it</b>{action}</div><div class="dots7">{dots}</div></div>'
@@ -762,6 +800,17 @@ SEASON_TITLES = set(SEASON_WEEK_TITLES.values())
 # Hadith for the foot of ordinary days: the tick hadith and the shorter weekly ones. (label, text, reference)
 FOOT = [f for f in [(e[1], e[2], e[3], e[0]) for e in EVIDENCE] + [(w[0], w[1], w[2], w[0]) for w in WEEKLY if w[0] not in SEASON_TITLES]
         if len(f[1]) < 215 and ar_len(AR[f[3]]) < 150]
+
+
+def names_card(n, cls):
+    """The names of Allah to memorise this week, each with a circle to fill once it is firm."""
+    names = week_names(n)
+    if not names:
+        return (f'<section class="{cls} rev"><span class="lb">The names of Allah</span><h5>Revise all ninety-nine</h5>'
+                f'<em>Recite them from memory, and call upon Him by them.</em></section>')
+    items = "".join(f'<div class="n1{" long" if len(t) > 13 else ""}"><div class="ar" lang="ar" dir="rtl">{a}</div><h5>{O}{t}</h5><em>{m}</em></div>' for t, a, m in names)
+    return (f'<section class="{cls}"><span class="lb">Memorise this week · names {2 * n - 1}{f" and {2 * n}" if len(names) > 1 else ""} of 99</span>'
+            f'<div class="nrow">{items}</div><span class="lb sub">Call upon Him by them in your dua</span></section>')
 
 
 def day_page(d, week=None):
@@ -811,16 +860,14 @@ def day_page(d, week=None):
               + box("Alhamdulillah for", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), n=EV_NUM["shukr"])
               + box("Before I sleep", '<div class="ln lab"><span>Best deed</span></div><div class="ln lab"><span>I seek forgiveness for</span></div>'
                     '<div class="ln lab"><span>Tomorrow, in sha Allah</span></div>') + "</div>"
-              + f'<div class="rem">{STAR}<div><b>{label}</b>{arp(akey)}<p>{text} <span>{ref}</span></p></div></div>')
+              + f'<div class="rem">{STAR}<div><b>{label}</b>{arp(akey)}<p>{text} <span>{nref(akey, ref)}</span></p></div></div>')
     if week:
         n, (title, text, ref, action) = week
-        name = NAMES[(n - 1) % len(NAMES)]
         size = ar_len(AR.get(title, "")) * 1.3 + len(text)
         bottom = bottom[:bottom.index('<div class="rem')] + (
             f'<div class="rem wkrem{" l2" if size > 330 else ""}{" l3" if size > 520 else ""}"><div><b>Week {n} · Hadith of the week · {title}</b>{arp(title)}'
-            f'<p>{text} <span>{ref}</span></p><p class="live"><i>Live it</i>{action}</p></div>'
-            f'<section class="nmm"><span class="lb">A name of Allah</span><div class="ar" lang="ar" dir="rtl">{name[1]}</div>'
-            f'<h5>{name[0]}</h5><em>{name[2]}</em></section></div>')
+            f'<p>{text} <span>{nref(title, ref)}</span></p><p class="live"><i>Live it</i>{action}</p></div>'
+            + names_card(n, "nmm") + "</div>")
     return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom, band
 
 
@@ -856,7 +903,6 @@ def week_spread(n, start, hadith, month):
         days.append(nx)
     _body, band = week_page(n, start, hadith)
     title, text, ref, action = hadith
-    name = NAMES[(n - 1) % len(NAMES)]
     left = [d for d in days if d.weekday() < 3]
     right = [d for d in days if d.weekday() >= 3]
     fill = '<div class="gap"></div>'
@@ -864,8 +910,7 @@ def week_spread(n, start, hadith, month):
     add(f'<div class="act"><div><b>Live it</b>{action}</div></div>' + "".join(day_block(d) for d in left) + (fill if len(left) < 3 else ""),
         cls="week wk2", month=month, band=band.replace('class="wkb"', 'class="wkb sm"'))
     add("".join(day_block(d) for d in right) + (fill if len(right) < 4 else "")
-        + f'<div class="wfoot"><section class="nm"><div class="ar" lang="ar" dir="rtl">{name[1]}</div><div><span class="lb">A name of Allah this week</span>'
-          f'<h3>{name[0]}</h3><p>{name[2]}</p></div></section>'
+        + '<div class="wfoot">' + names_card(n, "nm n2")
         + '<div class="sc s3">' + "".join(f"<div><span>{t}</span><b>__</b></div>" for t in [
             "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>",
         cls="wk2", month=month)
@@ -892,6 +937,7 @@ def build_weekly():
     trackers()
     seasons()
     adhkar_pages()
+    names_pages()
     starts, hw = assign_weeks()
     cur = 0
     for n, s in enumerate(starts, 1):
@@ -951,6 +997,7 @@ def build_daily():
     trackers()
     seasons()
     adhkar_pages()
+    names_pages()
     starts, hw = assign_weeks()
     wn = 0
     last_month = 12 if not SAMPLE else 1
@@ -981,7 +1028,12 @@ def render():
     for i, p in enumerate(PAGES):
         h = p["html"].replace("@@TOC@@", head("Contents") + f'<table class="toc">{toc}</table>')
         for snippet, key in CALLOUT_AR:
-            h = h.replace('<div class="callout">“' + snippet, '<div class="callout">' + arp(key) + "“" + snippet)
+            if '<div class="callout">“' + snippet in h:
+                i = h.index('<div class="callout">“' + snippet)
+                j = h.index("<span>", i) + 6
+                if NARRATOR.get(key):
+                    h = h[:j] + NARRATOR[key] + " · " + h[j:]
+                h = h[:i] + '<div class="callout">' + arp(key) + h[i + len('<div class="callout">'):]
         h = h.replace("ﷺ", '<span class="saw">ﷺ</span>')
         if WEEKLY_ED:
             for a, b in (("A Muslim's Daily Planner", "A Muslim's Weekly Planner"), ("Reading the day page", "Reading the week pages"),

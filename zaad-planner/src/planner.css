@@ -361,3 +361,45 @@ p.ar { font-family: 'Amiri', serif; font-style: normal; direction: rtl; text-ali
 .log.ram.r30 td { height: 4.25mm; font-size: 6.6pt; } .log.ram.r30 i.cb { width: 2.5mm; height: 2.5mm; } .log.ram.r30 { margin-bottom: 2mm; }
 .tl.tl2 > div { margin-bottom: 2.3mm; } .tl.tl2 p { font-size: 8pt; line-height: 1.36; } .tl.tl2 b { font-size: 9pt; } .tl.tl2 { margin-bottom: 1mm; }
 .callout.hx p.ar { font-size: 10.8pt; line-height: 1.62; } .callout.hx { margin-bottom: 0; }
+
+/* ======================= clearer Arabic: Scheherazade New, open spacing ======================= */
+@font-face { font-family: 'Scheherazade New'; src: url(../fonts/ScheherazadeNew-Regular.ttf); font-weight: 400; }
+@font-face { font-family: 'Scheherazade New'; src: url(../fonts/ScheherazadeNew-Bold.ttf); font-weight: 700; }
+p.ar, .ayah, .dh .ar, .nm .ar, .nmm .ar, .nc .ar, .basm, .callout .ar { font-family: 'Scheherazade New', 'Amiri', serif; word-spacing: .09em; font-style: normal; }
+p.ar .saw, .ayah .saw { font-family: 'Amiri', serif; }
+.ayah { font-size: 17pt; line-height: 2; }
+.evi p.ar { font-size: 13pt; line-height: 1.85; }
+.callout p.ar { font-size: 13pt; line-height: 1.85; } .callout.hx p.ar { font-size: 12pt; line-height: 1.8; } .callout.dua .ar { font-size: 17pt; line-height: 1.9; }
+.dh .ar { font-size: 14pt; line-height: 1.9; }
+.three p.ar { font-size: 11.5pt; line-height: 1.8; }
+.wkb-q p.ar { font-size: 14.5pt; line-height: 1.85; } .wkb-q.l2 p.ar { font-size: 12.5pt; line-height: 1.8; } .wkb-q.l3 p.ar { font-size: 11pt; line-height: 1.75; }
+.wkb.sm .wkb-q p.ar { font-size: 13pt; line-height: 1.8; } .wkb.sm .wkb-q.l2 p.ar { font-size: 11pt; line-height: 1.72; } .wkb.sm .wkb-q.l3 p.ar { font-size: 9.6pt; line-height: 1.66; }
+.rem p.ar { font-size: 11pt; line-height: 1.7; }
+.rem.wkrem p.ar { font-size: 11.6pt; line-height: 1.72; } .rem.wkrem.l2 p.ar { font-size: 10.2pt; line-height: 1.66; } .rem.wkrem.l3 p.ar { font-size: 9.2pt; line-height: 1.6; }
+
+/* names of Allah */
+.nm.n2 { flex-direction: column; align-items: stretch; gap: 0; padding: 1mm 2.5mm; text-align: center; } .nm.n2 .lb { display: block; }
+.nrow { display: flex; justify-content: space-around; gap: 2mm; } .n1 { flex: 1; }
+.nm.n2 .n1 .ar { font-size: 17pt; line-height: 1.5; color: var(--ac); } .n1 h5 { font-family: 'Cinzel', serif; font-size: 7.6pt; letter-spacing: .04em; color: var(--ink); line-height: 1.2; }
+.n1 h5 i.o { width: 2.5mm; height: 2.5mm; margin-right: 1mm; vertical-align: -.35mm; } .n1 em { display: block; font-size: 6.6pt; color: var(--muted); line-height: 1.2; margin: 0; }
+.lb.sub { color: var(--muted) !important; font-weight: 400 !important; letter-spacing: .08em !important; }
+.nm.n2 .lb.sub { margin-top: .5mm; font-size: 4.6pt; } .nm.rev { flex-direction: column; } .nm.rev h5 { font-family: 'Cinzel', serif; font-size: 9pt; }
+.nmm { width: 29mm; } .nmm .nrow { flex-direction: column; gap: .6mm; } .nmm .n1 .ar { font-size: 13.5pt; line-height: 1.45; } .nmm .n1 h5 { font-size: 6.2pt; } .nmm .n1 em { font-size: 5.6pt; }
+.nmm .lb { line-height: 1.3; } .nmm .lb.sub { font-size: 4.2pt; margin-top: .4mm; }
+.ng { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2mm 2mm; flex: 1; grid-auto-rows: 1fr; }
+.nc { position: relative; background: #fff; border: .7px solid color-mix(in srgb, var(--emerald) 28%, #fff); border-radius: 1.4mm; padding: .4mm 1.6mm .6mm 6.4mm; text-align: right; display: flex; flex-direction: column; justify-content: center; }
+.nc b { position: absolute; left: 1.2mm; top: 1mm; font-family: 'Inter', sans-serif; font-size: 5pt; color: var(--gold); } .nc i.o { position: absolute; left: 1.1mm; bottom: 1.2mm; width: 3mm; height: 3mm; border-color: var(--emerald); }
+.nc .ar { font-size: 13pt; line-height: 1.35; color: var(--emerald); } .nc h5 { font-family: 'Cinzel', serif; font-size: 6.6pt; letter-spacing: .03em; text-align: left; line-height: 1.15; }
+.nc em { font-size: 5.9pt; color: var(--muted); text-align: left; line-height: 1.15; display: block; }
+.how.nh > div { margin-bottom: 1.6mm; } .how.nh p { font-size: 7.9pt; line-height: 1.36; } .how.nh > div > b { font-size: 15pt; } .how.nh h3 { font-size: 8.6pt; } .how.nh { margin-top: 2.5mm; }
+.ng { gap: 1.1mm 1.8mm; flex: none; grid-auto-rows: 8.5mm; }
+.nc { flex-direction: row-reverse; align-items: center; justify-content: space-between; padding: 0 1.6mm 0 5.6mm; gap: 1mm; }
+.nc .ar { font-size: 12.5pt; line-height: 1; white-space: nowrap; flex: none; } .nc > div.tx { min-width: 0; }
+.nc b { top: .8mm; } .nc i.o { bottom: .9mm; width: 2.7mm; height: 2.7mm; } .nc h5 { font-size: 6.2pt; white-space: nowrap; } .nc em { font-size: 5.3pt; line-height: 1.1; }
+.nc.long .ar { font-size: 9pt; } .nc.long h5 { font-size: 5.2pt; }
+.rem p.ar { font-size: 10.3pt; line-height: 1.58; } .rem.wkrem.l2 p.ar { font-size: 9.8pt; line-height: 1.6; }
+.three p.ar { font-size: 10.6pt; line-height: 1.7; } .dh .ar { font-size: 13.2pt; line-height: 1.8; } .dh { padding: 2.2mm 0; }
+.nm.n2 .n1 .ar { font-size: 15pt; line-height: 1.4; } .wfoot .nm.n2 { padding: .6mm 2mm; } .nm.n2 .lb { font-size: 4.6pt !important; }
+.rem p.ar { font-size: 10pt; line-height: 1.55; } .rem.wkrem.l2 p.ar { font-size: 9.5pt; line-height: 1.56; } .rem.wkrem.l3 p.ar { font-size: 8.9pt; line-height: 1.52; }
+.three p.ar { font-size: 10.2pt; line-height: 1.66; }
+.n1 .ar { white-space: nowrap; } .nm.n2 .n1.long .ar { font-size: 11pt; line-height: 1.9; } .n1.long h5 { font-size: 6.2pt; white-space: nowrap; } .nmm .n1.long .ar { font-size: 10pt; } .nmm .n1.long h5 { font-size: 5.2pt; }

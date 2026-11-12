@@ -6,8 +6,8 @@ There are two editions, built from the same content:
 
 | Edition | File | Pages | Layout |
 |---|---|---|---|
-| Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 178 | One week on two facing pages |
-| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 430 | One page for every day |
+| Weekly (slim, for the bag) | `Zaad-Muslim-Weekly-Planner-2027.pdf` | 180 | One week on two facing pages |
+| Daily (full) | `Zaad-Muslim-Daily-Planner-2027.pdf` | 432 | One page for every day |
 
 Both are A5 in full colour, with mirrored margins for binding and a month tab on the outer edge. Each month has its own colour and a full-page illustration: dawn, Ramadan lanterns, the Ka'bah, the road of the Hijrah and others.
 
@@ -22,6 +22,7 @@ The name comes from al-Baqarah 2:197: "And take provision, for the best provisio
 - **The year:** 2027 at a glance, the Islamic dates of 1448–1449, an intention page and goals in six areas.
 - **Trackers:** Qur'an khatmah, memorisation, a year of prayer to colour in, fasting through the year, sadaqah and zakah, a dua list and a knowledge log.
 - **Seasons of worship:** a Ramadan plan, Ramadan day by day, the last ten nights, Eid al-Fitr and Shawwal, and the ten days of Dhul-Hijjah.
+- **The ninety-nine names of Allah:** the verse and hadith about them, how to memorise them and make dua by them, a box for your own duas, and all 99 in Arabic with meaning and a circle to fill when memorised. Each week page gives two names to memorise, so the year covers all of them.
 - **Six adhkar to know by heart**, with the Arabic from the Hisnul Muslim data in this repository.
 - **Each month:** an opening page with a theme and an ayah, a calendar with Hijri dates and the white days, and one page for the intention, goals and habit grid.
 - **Each week (53):** a hadith of the week with one action, and a name of Allah with its meaning. In the daily edition they sit at the foot of the first day of the week; in the weekly edition they open the spread.
@@ -33,9 +34,10 @@ The day page changes with the date. Fridays add the Jumu'ah ticks. Mondays, Thur
 
 Every hadith is printed in Arabic and English. The Arabic is taken from the source collections (the editions of github.com/fawazahmed0/hadith-api) by `tools/fetch_arabic.py`, which finds each hadith by its opening and closing words and saves the result in `src/arabic.json`.
 
-- **Checked against the source:** the text of all 93 hadith, and the hadith numbers cited from al-Bukhari, at-Tirmidhi and Abu Dawud.
+- **Checked against the source:** the text of all 94 hadith, the narrator of each (printed before the reference), and the hadith numbers cited from al-Bukhari, at-Tirmidhi and Abu Dawud.
 - **Not checked by number:** the Muslim numbers. They follow the numbering used on sunnah.com, which the source files do not carry. Each text was found in Sahih Muslim.
-- **Typed by hand:** the hadith of Surat al-Kahf (al-Hakim), the dua of Laylat al-Qadr (at-Tirmidhi 3513), the saying of 'Umar, the closing dua, and the 53 names of Allah. The six adhkar come from the Hisnul Muslim data in this repository.
+- **Punctuation** in the Arabic is placed by hand in `tools/fetch_arabic.py`, because the source prints most texts without it.
+- **Typed by hand:** the hadith of Surat al-Kahf (al-Hakim), the dua of Laylat al-Qadr (at-Tirmidhi 3513), the saying of 'Umar, the closing dua, and the 99 names of Allah with their meanings (the well-known list, at-Tirmidhi 3507). The six adhkar come from the Hisnul Muslim data in this repository.
 - **The English** is worded for a planner and is not a published translation.
 
 ## Before printing
@@ -45,7 +47,7 @@ Every hadith is printed in Arabic and English. The Arabic is taken from the sour
 
 ## Building
 
-The build needs Python 3 with `hijridate`, Node, and Playwright Chromium. The fonts are shared with `../arbaeen-nawawi-book/fonts`.
+The build needs Python 3 with `hijridate`, Node, and Playwright Chromium. The fonts are shared with `../arbaeen-nawawi-book/fonts`. The Arabic of the hadith is set in Scheherazade New (`fonts/`, SIL Open Font License) because its vowel marks stay clear at small sizes.
 
 ```bash
 python3 build.py

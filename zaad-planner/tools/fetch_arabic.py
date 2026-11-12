@@ -139,6 +139,7 @@ SPECS = [
     # --- elsewhere in the book ---
     ("firstaccount", "tirmidhi", 413, "إن أول ما يحاسب به العبد يوم القيامة", "من عمله صلاته"),
     ("charity_short", "muslim", None, "ما نقصت صدقة", "من مال"),
+    ("names99", "bukhari", 2736, "إن لله تسعة وتسعين اسما", "دخل الجنة"),
 ]
 
 BOOKS = {}
@@ -174,6 +175,82 @@ def cut(row, a, b, last):
     return clean(t[idx[i]:end])
 
 
+# Punctuation. The source prints most of these texts without it, so each mark is placed here by hand:
+# (mark, words it goes before). A mark is added before every place those words begin.
+C, CO, Q = "،", ":", "؟"
+PUNCT = {
+    "ontime": [(Q, "قال الصلاة"), (CO, "الصلاة على وقتها")],
+    "rawatib": [(C, "بني له")],
+    "tasbih": [(C, "وحمد الله"), (C, "وكبر الله"), (C, "فتلك تسعة"), (C, "وقال تمام"), (CO, "لا إله إلا الله وحده"), (C, "له الملك"),
+               (C, "وهو على كل"), (C, "غفرت خطاياه")],
+    "adhkar": [(CO, "سبحان الله وبحمده"), (C, "إلا أحد قال")],
+    "quran": [(C, "فإنه يأتي")],
+    "duha": [(CO, "صيام ثلاثة")],
+    "salawat": [(C, "صلى الله عليه عشرا")],
+    "tongue": [(C, "فليقل خيرا")],
+    "baqarah": [(C, "كفتاه")],
+    "smile": [(C, "ولو أن تلقى")],
+    "names99": [(C, "مائة إلا واحدا"), (C, "من أحصاها")],
+    "shukr": [(C, "إن أمره"), (C, "وليس ذاك"), (C, "إن أصابته"), (C, "وإن أصابته")],
+    "monthu": [(C, "فأحب")],
+    "white": [(C, "إذا صمت"), (C, "فصم ثلاث"), (C, "وأربع عشرة"), (C, "وخمس عشرة")],
+    "ramadan": [(C, "غفر له")], "taraweeh": [(C, "غفر له")], "Seek the Night of Decree": [(C, "غفر له")],
+    "suhoor": [(C, "فإن في السحور")],
+    "shawwal": [(C, "كان كصيام")],
+    "arafah": [(C, "والسنة التي بعده")],
+    "The five pillars": [(CO, "شهادة أن")],
+    "Do not become angry": [(CO, "أوصني"), (CO, "لا تغضب")],
+    "The gates are opened": [(C, "وغلقت"), (C, "وصفدت")],
+    "Taqwa wherever you are": [(C, "وأتبع السيئة"), (C, "وخالق الناس")],
+    "Be mindful of Allah": [(C, "احفظ الله تجده"), (C, "إذا سألت"), (C, "وإذا استعنت")],
+    "Purity is half of faith": [(C, "والحمد لله تملأ"), (C, "والصلاة نور"), (C, "والصدقة برهان"), (C, "والصبر ضياء"), (C, "والقرآن حجة")],
+    "The strong believer": [(C, "وفي كل خير"), (C, "احرص على"), (C, "واستعن بالله"), (C, "ولا تعجز")],
+    "The path of knowledge": [(C, "سهل الله")],
+    "Two rewards": [(C, "والذي يقرأ"), (C, "له أجران")],
+    "Three that continue": [(CO, "إلا من صدقة"), (C, "أو علم"), (C, "أو ولد")],
+    "Charity does not decrease wealth": [(C, "وما زاد الله"), (C, "وما تواضع")],
+    "One body": [(C, "إذا اشتكى")],
+    "Hearts and deeds": [(C, "ولكن ينظر")],
+    "Best in character": [(C, "وخياركم")],
+    "Best to his family": [(C, "وأنا خيركم")],
+    "The merciful are shown mercy": [(C, "ارحموا من")],
+    "Your mother": [(Q, "قال أمك"), (Q, "قال ثم أبوك"), (CO, "أمك"), (CO, "ثم من"), (CO, "ثم أبوك")],
+    "The branches of faith": [(C, "فأفضلها"), (C, "وأدناها"), (C, "والحياء")],
+    "Truthfulness": [(C, "وإن البر"), (C, "وإن الرجل")],
+    "Three signs": [(CO, "إذا حدث")],
+    "What backbiting is": [(CO, "الله ورسوله"), (CO, "ذكرك أخاك")],
+    "Gentleness": [(C, "ولا ينزع")],
+    "Look at those below you": [(C, "ولا تنظروا"), (C, "فهو أجدر")],
+    "As the birds are provided for": [(C, "لرزقتم"), (C, "تغدو خماصا")],
+    "The living and the dead": [(C, "مثل الحي")],
+    "The last third of the night": [(C, "حين يبقى"), (CO, "من يدعوني"), (C, "من يسألني"), (C, "من يستغفرني")],
+    "The best of those who err": [(C, "وخير الخطائين")],
+    "Asked about four": [(C, "وعن علمه"), (C, "وعن ماله"), (C, "وعن جسمه")],
+}
+# Sentence marks inside the source text that read better as another mark: (key, old, new), first one only.
+REPLACE = {"What backbiting is": [(".", "؟")], "adhkar": [(".", "،")], "Purity is half of faith": [(".", "،")],
+           "Fasting is for Allah": [(".", "،")]}
+
+
+def punctuate(key, t):
+    for old, new in REPLACE.get(key, []):
+        assert old in t, (key, old)
+        t = t.replace(old, new, 1)
+    for mark, phrase in PUNCT.get(key, []):
+        n, idx = norm_map(t)
+        ph, pos, i = norm(phrase), [], 0
+        while (i := n.find(ph, i)) >= 0:
+            if i == 0 or n[i - 1] == " ":
+                pos.append(idx[i])
+            i += 1
+        assert pos or key == "x", f"punctuation: '{phrase}' not found in {key}"
+        for p in reversed(pos):
+            head = t[:p].rstrip()
+            if head and head[-1] not in "،:؟.؛":
+                t = head + mark + " " + t[p:]
+    return t + "."
+
+
 out, bad = {}, 0
 for spec in SPECS:
     key, bk, cited, a, b = spec[:5]
@@ -187,8 +264,8 @@ for spec in SPECS:
     pick = next((h for h in hits if h[0] == cited), None) or min(hits, key=lambda h: len(h[1]))
     flag = "" if cited in (None, pick[0]) else f"   <-- cited {cited}, found at {sorted(h[0] for h in hits)[:8]}"
     print(f"{key} | {bk} {pick[0]}{flag}\n    {pick[1]}")
-    out[key] = {"ar": pick[1], "book": bk, "number": pick[0]}
+    out[key] = {"ar": punctuate(key, pick[1]), "book": bk, "number": pick[0]}
 # Muslim gives the words "and remembrance of Allah" as an addition in the narration that follows this one.
-out["tashriq"]["ar"] += " وَذِكْرٍ لِلَّهِ"
+out["tashriq"]["ar"] = out["tashriq"]["ar"].rstrip(".") + " وَذِكْرٍ لِلَّهِ."
 json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(f"\n{len(out)} written, {bad} not found")
