@@ -486,3 +486,37 @@ ADHKAR = [
      "In Your name, O Allah, I die and I live.",
      "al-Bukhari 6324", ""),
 ]
+
+# ---------------------------------------------------------------------------
+# A name of Allah for each week. (transliteration, Arabic, meaning)
+# "Allah has ninety-nine names. Whoever preserves them will enter Paradise." al-Bukhari 2736, Muslim 2677
+# ---------------------------------------------------------------------------
+NAMES = [
+    ("Ar-Rahman", "الرَّحْمٰن", "The Most Merciful"), ("Ar-Rahim", "الرَّحِيم", "The Bestower of Mercy"),
+    ("Al-Malik", "المَلِك", "The King"), ("Al-Quddus", "القُدُّوس", "The Most Holy"),
+    ("As-Salam", "السَّلَام", "The Source of Peace"), ("Al-Mu'min", "المُؤْمِن", "The Giver of Security"),
+    ("Al-Muhaymin", "المُهَيْمِن", "The Guardian over all"), ("Al-'Aziz", "العَزِيز", "The Almighty"),
+    ("Al-Jabbar", "الجَبَّار", "The Compeller, the Restorer"), ("Al-Khaliq", "الخَالِق", "The Creator"),
+    ("Al-Bari'", "البَارِئ", "The Originator"), ("Al-Musawwir", "المُصَوِّر", "The Fashioner"),
+    ("Al-Ghaffar", "الغَفَّار", "The Ever-Forgiving"), ("Al-Wahhab", "الوَهَّاب", "The Giver of Gifts"),
+    ("Ar-Razzaq", "الرَّزَّاق", "The Provider"), ("Al-Fattah", "الفَتَّاح", "The Opener"),
+    ("Al-'Alim", "العَلِيم", "The All-Knowing"), ("As-Sami'", "السَّمِيع", "The All-Hearing"),
+    ("Al-Basir", "البَصِير", "The All-Seeing"), ("Al-Latif", "اللَّطِيف", "The Subtle, the Kind"),
+    ("Al-Khabir", "الخَبِير", "The All-Aware"), ("Al-Halim", "الحَلِيم", "The Forbearing"),
+    ("Al-'Azim", "العَظِيم", "The Magnificent"), ("Al-Ghafur", "الغَفُور", "The All-Forgiving"),
+    ("Ash-Shakur", "الشَّكُور", "The Most Appreciative"), ("Al-'Aliyy", "العَلِيّ", "The Most High"),
+    ("Al-Kabir", "الكَبِير", "The Most Great"), ("Al-Hafiz", "الحَفِيظ", "The Preserver"),
+    ("Al-Karim", "الكَرِيم", "The Most Generous"), ("Ar-Raqib", "الرَّقِيب", "The Watchful"),
+    ("Al-Mujib", "المُجِيب", "The One who Answers"), ("Al-Wasi'", "الوَاسِع", "The All-Encompassing"),
+    ("Al-Hakim", "الحَكِيم", "The All-Wise"), ("Al-Wadud", "الوَدُود", "The Most Loving"),
+    ("Al-Majid", "المَجِيد", "The Glorious"), ("Ash-Shahid", "الشَّهِيد", "The Witness"),
+    ("Al-Haqq", "الحَقّ", "The Truth"), ("Al-Wakil", "الوَكِيل", "The Trustee"),
+    ("Al-Qawiyy", "القَوِيّ", "The All-Strong"), ("Al-Matin", "المَتِين", "The Firm"),
+    ("Al-Waliyy", "الوَلِيّ", "The Protecting Friend"), ("Al-Hamid", "الحَمِيد", "The Praiseworthy"),
+    ("Al-Hayy", "الحَيّ", "The Ever-Living"), ("Al-Qayyum", "القَيُّوم", "The Sustainer of all"),
+    ("Al-Ahad", "الأَحَد", "The One"), ("As-Samad", "الصَّمَد", "The Eternal Refuge"),
+    ("Al-Qadir", "القَدِير", "The All-Powerful"), ("Al-Barr", "البَرّ", "The Source of all Goodness"),
+    ("At-Tawwab", "التَّوَّاب", "The Acceptor of Repentance"), ("Al-'Afuww", "العَفُوّ", "The Pardoner"),
+    ("Ar-Ra'uf", "الرَّؤُوف", "The Most Kind"), ("Al-Ghaniyy", "الغَنِيّ", "The Self-Sufficient"),
+    ("Al-Awwal, Al-Akhir", "الأَوَّلُ وَالآخِر", "The First and the Last"),
+]

@@ -13,7 +13,8 @@ from hijridate import Gregorian
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 from content import (EVIDENCE, EV_NUM, SEASONAL, SEA, WEEKLY, SEASON_WEEK_TITLES, MONTHS,  # noqa: E402
-                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR)
+                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR, NAMES)
+import art  # noqa: E402
 
 YEAR = 2027
 SAMPLE = bool(os.environ.get("SAMPLE"))
@@ -119,8 +120,9 @@ def day_info(d):
 PAGES = []  # (html, classes, accent, soft, tab_index, toc_label)
 
 
-def add(html, cls="", month=None, toc=None, nofoot=False):
-    PAGES.append(dict(html=html, cls=cls, month=month, toc=toc, nofoot=nofoot))
+def add(html, cls="", month=None, toc=None, nofoot=False, band=""):
+    """band: full-bleed HTML placed behind / above the page content (cover art, day and week headers)."""
+    PAGES.append(dict(html=html, cls=cls, month=month, toc=toc, nofoot=nofoot, band=band))
 
 
 def recto():
@@ -181,9 +183,25 @@ def pattern_svg(color, op=.16, sw=.7):
             f'<rect width="100%" height="100%" fill="url(#p8)"/></svg>')
 
 
+def band_orn(cols, rows, size=9.0):
+    """A strip of eight-pointed star tiles, drawn as plain vector paths."""
+    t = ""
+    for r in range(rows):
+        for c in range(cols):
+            t += f'<use href="#gt" x="{c * 40}" y="{r * 40}"/>'
+    return (f'<svg class="orn" width="{cols * size}mm" height="{rows * size}mm" viewBox="0 0 {cols * 40} {rows * 40}">{t}</svg>')
+
+
+GT_DEF = ('<svg width="0" height="0" style="position:absolute"><defs><g id="gt" fill="none" stroke="#e7c873" stroke-width=".9">'
+          '<rect x="8.3" y="8.3" width="23.4" height="23.4"/><rect x="8.3" y="8.3" width="23.4" height="23.4" transform="rotate(45 20 20)"/>'
+          '<path d="M0 20h3.4M36.6 20H40M20 0v3.4M20 36.6V40M0 0l8.3 8.3M40 0l-8.3 8.3M0 40l8.3-8.3M40 40l-8.3-8.3"/>'
+          '<circle cx="20" cy="20" r="5.2"/></g></defs></svg>')
+DAY_ORN = band_orn(6, 3, 8.8)
+WEEK_ORN = band_orn(10, 6, 14.8)
+
+
 def cover():
-    return f'''{pattern_svg("#e7c873", .22)}
-<div class="cv-arch"><div class="cv-in">
+    return f'''<div class="cv-arch"><div class="cv-in">
   <div class="cv-moon"><svg viewBox="0 0 60 60"><path d="M40 6a25 25 0 1 0 14 38A21 21 0 0 1 40 6z" fill="#e7c873"/>
     <path d="M46 20l1.9 4.4 4.8.4-3.7 3.1 1.2 4.7-4.2-2.6-4.2 2.6 1.2-4.7-3.7-3.1 4.8-.4z" fill="#e7c873"/></svg></div>
   <div class="cv-ar" lang="ar" dir="rtl">زَادُ اليَوْم</div>
@@ -193,12 +211,12 @@ def cover():
   <div class="cv-d">A Muslim's Daily Planner<br>lived by the Sunnah</div>
   <div class="cv-y">2027</div>
   <div class="cv-h">1448 – 1449 AH</div>
-</div></div>
-<div class="cv-q">“And take provision, for the best provision is taqwa.”<span>al-Baqarah 2:197</span></div>'''
+<div class="cv-q">“And take provision, for the best<br>provision is taqwa.”<span>al-Baqarah 2:197</span></div>
+</div></div>'''
 
 
 def front():
-    add(cover(), cls="cover", nofoot=True)
+    add(cover(), cls="cover", nofoot=True, band=art.cover_art())
     add('''<div class="center">
 <div class="basm" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
 <div class="ayah" lang="ar" dir="rtl">يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَلْتَنظُرْ نَفْسٌ مَّا قَدَّمَتْ لِغَدٍ ۖ وَاتَّقُوا اللَّهَ ۚ إِنَّ اللَّهَ خَبِيرٌ بِمَا تَعْمَلُونَ</div>
@@ -395,6 +413,16 @@ def trackers():
         + box("Fasts I owe from Ramadan", '<div class="mk">' + "".join(f"{CB}" for _ in range(30)) + "</div>"
               '<p class="fine">Make them up before the next Ramadan.</p>')
         + box("Six days of Shawwal", '<div class="mk">' + CB * 6 + "</div>", n=ev_n("shawwal")))
+    blank = '<table class="fy px"><tr><th></th>' + "".join(f"<th>{n}</th>" for n in range(1, 32)) + "</tr>"
+    for m in range(1, 13):
+        nd = calendar.monthrange(YEAR, m)[1]
+        blank += f"<tr><th>{MONTH_NAMES[m][:3]}</th>" + "".join(f'<td class="{"x" if n > nd else ""}"></td>' for n in range(1, 32)) + "</tr>"
+    add(head("My year of prayer", "Colour one square each night", "الصَّلَاة") + blank + "</table>"
+        + '<div class="lg px"><span><i style="background:#0f5a4f"></i>All five on time</span><span><i style="background:#7fb5a6"></i>All five, some late</span>'
+          '<span><i style="background:#e7c873"></i>Missed one, made it up</span><span><i></i>A day to repent for</span></div>'
+        + '<div class="callout">“The first thing a servant will be called to account for on the Day of Resurrection is his prayer.”'
+          '<span>at-Tirmidhi 413, an-Nasa\'i 465</span></div>'
+        + '<div class="g2">' + box("What helps me pray on time", lines(2)) + box("What gets in the way", lines(2)) + "</div>")
     row = "<tr>" + "<td></td>" * 4 + "</tr>"
     add(head("Sadaqah and zakah", "What the right hand gives", "الصَّدَقَة")
         + '<div class="zk"><div><span>Zakah due date</span><div class="ln"></div></div><div><span>Wealth above nisab</span><div class="ln"></div></div>'
@@ -541,12 +569,12 @@ def month_pages(m):
     theme, ayah, ref, ac, soft = MONTHS[m - 1]
     en, ar = hijri_span(m)
     recto()
-    add(f'''{pattern_svg(ac, .13)}<div class="mo">
+    add(f'''<div class="mo">
 <div class="mo-n">{m:02d}</div><div class="mo-t">{MONTH_NAMES[m]}</div><div class="mo-y">{YEAR}</div>
-<div class="mo-h">{en}</div><div class="mo-ar" lang="ar" dir="rtl">{ar}</div>
-<div class="cv-r dark"><i></i>{STAR}<i></i></div>
+<div class="mo-ar" lang="ar" dir="rtl">{ar}</div><div class="mo-h">{en}</div>
 <div class="mo-th">{theme}</div>
-<p class="mo-a">“{ayah}”</p><p class="ref">{ref}</p></div>''', cls="opener", month=m, toc=MONTH_NAMES[m], nofoot=True)
+<p class="mo-a">“{ayah}”</p><p class="mo-r">{ref}</p></div>''', cls="opener", month=m, toc=MONTH_NAMES[m], nofoot=True,
+        band=art.scene(m, ac))
 
     # calendar
     cal = '<table class="cal"><tr>' + "".join(f'<th class="{"fr" if i == 4 else ""}">{n[:3]}</th>' for i, n in enumerate(DAY_NAMES)) + "</tr>"
@@ -662,14 +690,18 @@ def week_page(n, start, hadith):
         rows += (f'<tr class="{"fr" if d.weekday() == 4 else ""}"><th>{DAY_NAMES[d.weekday()][:3]}<b>{d.day}</b></th>'
                  f'<td><span>{bd}</span></td></tr>')
     dots = "".join(f"<span>{DAY_NAMES[d.weekday()][0]}{O}</span>" for d in days)
-    return (f'<div class="wk-h"><div><span class="wn">Week {n}</span><h1>{rng}</h1></div><p>{hr}</p></div>'
-            f'<div class="hw"><span class="lb">Hadith of the week</span><h3>{title}</h3>'
-            f'<p class="q">{text}</p><span class="rf">{ref}</span></div>'
-            f'<div class="act"><div><b>Live it</b>{action}</div><div class="dots7">{dots}</div></div>'
-            f'<table class="wkt">{rows}</table>'
-            + '<div class="g2">' + box("Three goals for this week", cblines(3))
+    name = NAMES[(n - 1) % len(NAMES)]
+    band = (f'<div class="wkb">{WEEK_ORN}<div class="wkb-h"><span class="wn">Week {n}</span><h1>{rng}</h1><p>{hr}</p></div>'
+            f'<div class="wkb-q"><span class="lb">Hadith of the week</span><h3>{title}</h3>'
+            f'<p class="q">{text}</p><span class="rf">{ref}</span></div></div>')
+    body = (f'<div class="act"><div><b>Live it</b>{action}</div><div class="dots7">{dots}</div></div>'
+            f'<div class="wkc"><table class="wkt">{rows}</table><div class="wkr">'
+            f'<section class="nm"><span class="lb">A name of Allah this week</span><div class="ar" lang="ar" dir="rtl">{name[1]}</div>'
+            f'<h3>{name[0]}</h3><p>{name[2]}</p><em>Call upon Him by it in your dua (al-A\'raf 7:180)</em></section>'
+            + box("Three goals for this week", cblines(3))
             + box("Last week, honestly", '<div class="sc s2">' + "".join(f"<div><span>{t}</span><b>__</b></div>" for t in [
-                "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div>") + "</div>")
+                "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div>") + "</div></div>")
+    return body, band
 
 
 BASE_TICKS = [("Morning adhkar", "adhkar"), ("Qur'an: from ______ to ______", "quran"), ("Dhikr after every prayer", "tasbih"),
@@ -677,8 +709,12 @@ BASE_TICKS = [("Morning adhkar", "adhkar"), ("Qur'an: from ______ to ______", "q
               ("Parents and kin: call, serve, dua", "kin"), ("Guarded my tongue", "tongue"), ("Evening adhkar", "adhkar"),
               ("Ayat al-Kursi, end of al-Baqarah", "kursi"), ("Slept with wudu, on my right", "sleep")]
 PRAYERS = [("Fajr", "2"), ("Dhuhr", "4+2"), ("'Asr", ""), ("Maghrib", "2"), ("'Isha", "2")]
+PICON = {"Fajr": "fajr", "Dhuhr": "dhuhr", "'Asr": "asr", "Maghrib": "maghrib", "'Isha": "isha"}
 BLOCKS = ["After Fajr", "Morning", "After Dhuhr", "After 'Asr", "After Maghrib", "After 'Isha"]
-REMIND_KEYS = [e[0] for e in EVIDENCE if e[0] != "tasbih"]
+SEASON_TITLES = set(SEASON_WEEK_TITLES.values())
+# Hadith for the foot of ordinary days: the tick hadith and the shorter weekly ones. (label, text, reference)
+FOOT = ([(e[1], e[2], e[3]) for e in EVIDENCE if e[0] != "tasbih"]
+        + [(w[0], w[1], w[2]) for w in WEEKLY if w[0] not in SEASON_TITLES and len(w[1]) < 215])
 
 
 def day_page(d):
@@ -687,23 +723,23 @@ def day_page(d):
     badges, extra, remind = day_info(d)
     yday = d.timetuple().tm_yday
     bh = "".join(f'<span class="badge">{b}</span>' for b in badges)
-    hdr = (f'<div class="dh1"><div class="dn">{d.day:02d}</div><div class="dw"><h1>{DAY_NAMES[wd]}</h1>'
-           f'<p>{MONTH_NAMES[d.month]} {YEAR} · day {yday}</p></div>'
-           f'<div class="dj"><span class="ar" lang="ar" dir="rtl">{WEEKDAYS_AR[wd]} · {str(hd).translate(AR_DIG)} {HIJRI_MONTHS[hm-1][1]}</span>'
-           f'<p>{hd} {hname(hm)} {hy}</p></div></div>'
-           f'<div class="niy"><span>My intention today</span><i></i>{bh}</div>')
+    band = (f'<div class="db">{DAY_ORN}<div class="dn">{d.day:02d}</div><div class="dw"><h1>{DAY_NAMES[wd]}</h1>'
+            f'<p>{MONTH_NAMES[d.month]} {YEAR} · day {yday} of 365</p></div>'
+            f'<div class="dj"><span class="ar" lang="ar" dir="rtl">{WEEKDAYS_AR[wd]} · {str(hd).translate(AR_DIG)} {HIJRI_MONTHS[hm-1][1]}</span>'
+            f'<p>{hd} {hname(hm)} {hy}</p></div></div>')
+    hdr = f'<div class="niy"><span>My intention today</span><i></i>{bh}</div>'
     # salah table
     st = ('<table class="sal"><tr><th></th><th>Fard</th><th>On time' + ev("ontime") + '</th><th>Jama\'ah' + ev("jamaah")
           + '</th><th>Sunnah' + ev("rawatib") + '</th></tr>')
     for p, s in PRAYERS:
-        st += (f"<tr><th>{p}</th><td>{O}</td><td>{O}</td><td>{O}</td>"
+        st += (f"<tr><th>{art.ICON[PICON[p]]}{p}</th><td>{O}</td><td>{O}</td><td>{O}</td>"
                + (f"<td>{O}<em>{s}</em></td>" if s else '<td class="na">–</td>') + "</tr>")
     st += "</table>"
     st += (f'<div class="xtra"><span>{O}Duha{ev("duha")}</span><span>{O}Witr{ev("witr")}</span>'
            f'<span>{O}Night prayer{ev("qiyam")}</span></div>')
     ticks = "".join(f'<p class="sp">{CB}{t}{ev(k) if k else ""}</p>' for t, k in extra)
     ticks += "".join(f"<p>{CB}{t}{ev(k)}</p>" for t, k in BASE_TICKS)
-    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk">{ticks}</div>', "ticks")
+    left = box("Salah", st, "salah") + box("Sunnah of the day", f'<div class="tk{" dense" if len(extra) > 4 else ""}">{ticks}</div>', "ticks")
     plan = "".join(f'<div class="blk"><span>{b}</span><div class="ln cbl">{CB}</div><div class="ln cbl">{CB}</div></div>' for b in BLOCKS)
     right = (box("Three that matter most", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), "top3")
              + box("My day between the prayers", plan, "plan"))
@@ -711,15 +747,16 @@ def day_page(d):
     if remind:
         _k, label, text, ref = SEA[remind]
     else:
-        key = REMIND_KEYS[(yday * 7) % len(REMIND_KEYS)]
-        _k, label, text, ref = EVIDENCE[EV_NUM[key] - 1]
+        label, text, ref = FOOT[(yday * 29) % len(FOOT)]
     text = re.sub(r"\s+", " ", text)
-    bottom = ('<div class="g2 eve">'
+    strip = (f'<div class="strip"><span>Water</span><b>{art.ICON["drop"] * 8}</b><span>My heart today</span>'
+             f'<b>{art.ICON["heart"] * 5}</b><span>Sleep</span><u></u><span>h</span></div>')
+    bottom = (strip + '<div class="g2 eve">'
               + box("Alhamdulillah for", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), n=EV_NUM["shukr"])
               + box("Before I sleep", '<div class="ln lab"><span>Best deed</span></div><div class="ln lab"><span>I seek forgiveness for</span></div>'
                     '<div class="ln lab"><span>Tomorrow, in sha Allah</span></div>') + "</div>"
-              + f'<div class="rem"><b>{label}</b><p>{text} <span>{ref}</span></p></div>')
-    return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom
+              + f'<div class="rem">{STAR}<div><b>{label}</b><p>{text} <span>{ref}</span></p></div></div>')
+    return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom, band
 
 
 def back():
@@ -770,8 +807,10 @@ def build():
             month_pages(d.month)
         if d in hw:
             wn += 1
-            add(week_page(wn, d, hw[d]), cls="week", month=d.month)
-        add(day_page(d), cls="day" + (" fri" if d.weekday() == 4 else ""), month=d.month)
+            wb, wband = week_page(wn, d, hw[d])
+            add(wb, cls="week", month=d.month, band=wband)
+        db, dband = day_page(d)
+        add(db, cls="day" + (" fri" if d.weekday() == 4 else ""), month=d.month, band=dband)
         if d.day == calendar.monthrange(YEAR, d.month)[1]:
             month_review(d.month)
     back()
@@ -786,12 +825,12 @@ def build():
         m = p["month"]
         style = f' style="--ac:{MONTHS[m-1][3]};--soft:{MONTHS[m-1][4]}"' if m else ""
         side = "r" if i % 2 == 0 else "l"
-        tab = f'<div class="tab" style="top:{12 + (m - 1) * 15.5}mm">{MONTH_NAMES[m][:3]}</div>' if m and p["cls"] != "opener" else ""
+        tab = f'<div class="tab" style="top:{29 + (m - 1) * 14.4:.1f}mm">{MONTH_NAMES[m][:3]}</div>' if m and p["cls"] != "opener" else ""
         foot = "" if p["nofoot"] else f'<div class="pf"><span>{TITLE} · {YEAR}</span><b>{i + 1}</b></div>'
-        body.append(f'<div class="page {side} {p["cls"]}"{style}><div class="in">{h}</div>{tab}{foot}</div>')
+        body.append(f'<div class="page {side} {p["cls"]}"{style}>{p["band"]}<div class="in">{h}</div>{tab}{foot}</div>')
     css = open(os.path.join(ROOT, "src", "planner.css"), encoding="utf-8").read()
     html = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{TITLE}: Provision for the Day {YEAR}</title>'
-            f'<link rel="stylesheet" href="../../arbaeen-nawawi-book/fonts/fonts.css"><style>{css}</style></head><body>'
+            f'<link rel="stylesheet" href="../../arbaeen-nawawi-book/fonts/fonts.css"><style>{css}</style></head><body>' + GT_DEF
             + "".join(body) + "</body></html>")
     hp = os.path.join(BUILD, "planner.html")
     open(hp, "w", encoding="utf-8").write(html)
