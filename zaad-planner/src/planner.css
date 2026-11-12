@@ -350,3 +350,14 @@ p.ar { font-family: 'Amiri', serif; font-style: normal; direction: rtl; text-ali
 .nmm .ar { font-family: 'Amiri', serif; font-size: 17pt; line-height: 1.65; color: var(--ac); } .nmm h5 { font-family: 'Cinzel', serif; font-size: 7pt; letter-spacing: .04em; } .nmm em { font-size: 6.4pt; color: var(--muted); line-height: 1.2; }
 .wkday .sal td { height: 4.6mm; } .wkday .xtra { padding-top: .8mm; } .wkday .tk.xd p { font-size: 6.3pt; line-height: 1; } .wkday .tk.xd i.cb { width: 2.1mm; height: 2.1mm; } .wkday .tk.dense:not(.xd) p { font-size: 7pt; line-height: 1.12; }
 .wkday .top3 .ln { height: 4.7mm; }
+
+/* the six hadith placed back inside */
+.callout.hx { font-style: normal; text-align: center; padding: 2.2mm 3.5mm; } .callout.hx p:not(.ar) { font-style: italic; font-size: 7.8pt; line-height: 1.36; }
+.callout.hx p.ar { font-size: 11.5pt; line-height: 1.7; } .callout.hx em { display: block; font-family: 'Inter', sans-serif; font-style: normal; font-size: 5.6pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: .6mm; }
+.dh p.ar { text-align: right; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4mm; margin-top: 1mm; } .three > div { background: var(--soft); border-top: 2px solid var(--gold); border-radius: 0 0 1.6mm 1.6mm; padding: 1.6mm 2mm; text-align: center; }
+.three p.ar { text-align: center; font-size: 11pt; line-height: 1.65; color: var(--emerald); } .three p:not(.ar) { font-style: italic; font-size: 6.9pt; line-height: 1.3; } .three .rf { font-size: 5pt; }
+.rem.lg p.ar { font-size: 8.6pt; line-height: 1.42; } .rem.lg p { font-size: 6.1pt; line-height: 1.16; } .rem.lg b { font-size: 4.9pt; }
+.log.ram.r30 td { height: 4.25mm; font-size: 6.6pt; } .log.ram.r30 i.cb { width: 2.5mm; height: 2.5mm; } .log.ram.r30 { margin-bottom: 2mm; }
+.tl.tl2 > div { margin-bottom: 2.3mm; } .tl.tl2 p { font-size: 8pt; line-height: 1.36; } .tl.tl2 b { font-size: 9pt; } .tl.tl2 { margin-bottom: 1mm; }
+.callout.hx p.ar { font-size: 10.8pt; line-height: 1.62; } .callout.hx { margin-bottom: 0; }

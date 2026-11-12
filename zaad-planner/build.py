@@ -82,7 +82,7 @@ def day_info(d):
         badges.append(f"Ramadan · day {hd}")
         ticks += [("Suhoor", "suhoor"), ("Fasted today", "ramadan"), ("Iftar on time, with dua", "iftar"),
                   ("Tarawih / night prayer", "taraweeh")]
-        remind = "ramadan"
+        remind = ("ramadan", "suhoor", "iftar", "taraweeh")[hd % 4]
         if hd >= 20 and (hd + 1) % 2 == 1 and hd + 1 <= 29:
             badges.append(f"Tonight: the {hd + 1}{'st' if hd + 1 == 21 else 'rd' if hd + 1 == 23 else 'th'} night")
             remind = "qadr"
@@ -181,6 +181,12 @@ def head(title, sub="", ar=""):
 def box(title, body, cls="", n=None):
     sup = f"<sup>{n}</sup>" if n and TICK_LIST else ""
     return f'<section class="bx {cls}"><h4>{title}{sup}</h4>{body}</section>'
+
+
+def hcall(key, lead=""):
+    """A quote box with one of the tick hadith in Arabic and English."""
+    _k, label, text, ref = next(e for e in EVIDENCE + SEASONAL if e[0] == key)
+    return f'<div class="callout hx">{f"<em>{lead}</em>" if lead else ""}{arp(key)}<p>{text}</p><span>{ref}</span></div>'
 
 
 def notes_html(title="Notes"):
@@ -340,7 +346,7 @@ best deed, and what you seek forgiveness for. Then sleep with wudu and the adhka
         ("Before sleep", "Take account of your day. Wudu. Ayat al-Kursi, the last two verses of al-Baqarah, the three Quls. Lie on your right side."),
     ]
     add(head("A day lived by the Sunnah", "From waking to sleep, built on the five prayers", "يَوْمُ المُسْلِم")
-        + '<div class="tl">' + "".join(f'<div><b>{a}</b><p>{b}</p></div>' for a, b in tl) + '</div>',
+        + '<div class="tl tl2">' + "".join(f'<div><b>{a}</b><p>{b}</p></div>' for a, b in tl) + '</div>' + hcall("jumuah", "And on Friday"),
         toc="A day lived by the Sunnah")
 
 
@@ -502,7 +508,9 @@ def seasons():
     if len(ram) == 29:
         rows += ('<tr class="l10"><td>30</td><td class="na">if the month is thirty</td>' + f"<td>{CB}</td>" * 3 + "<td></td>"
                  + f"<td>{CB}</td>" * 2 + "</tr>")
-    add(head("Ramadan day by day", "The last ten days are shaded") + f'<table class="log ram">{hdr}{rows}</table>')
+    three = "".join(f'<div>{arp(k)}<p>{SEA[k][2]}</p><span class="rf">{SEA[k][3]}</span></div>' for k in ("suhoor", "iftar", "taraweeh"))
+    add(head("Ramadan day by day", "The last ten days are shaded") + f'<table class="log ram r30">{hdr}{rows}</table>'
+        + f'<div class="three">{three}</div>')
     nights = ""
     for i, d in enumerate(ram):
         n = i + 2  # the night after day i+1 is night i+2
@@ -574,8 +582,11 @@ def adhkar_pages():
             add(head("Adhkar to know by heart", "Six short supplications for every day", "الأَذْكَار") + f'<div class="dhl">{items}</div>',
                 toc="Adhkar to know by heart")
             items = ""
+    t = next(e for e in EVIDENCE if e[0] == "tasbih")
+    items += (f'<div class="dh"><h5>After every prayer: thirty-three, thirty-three, thirty-three</h5>{arp("tasbih")}'
+              f'<p>{t[2]}</p><span class="rf">{t[3]}</span></div>')
     add(head("Adhkar to know by heart", "Continued") + f'<div class="dhl">{items}</div>'
-        + '<p class="fine">The Arabic is from Hisn al-Muslim by Sa\'id ibn \'Ali al-Qahtani. For the full morning and evening adhkar, '
+        + '<p class="fine">The Arabic of the six supplications is from Hisn al-Muslim by Sa\'id ibn \'Ali al-Qahtani. For the full morning and evening adhkar, '
           'see that book or diinislaam.com/hisnul-muslim.</p>')
 
 
@@ -805,7 +816,7 @@ def day_page(d, week=None):
         n, (title, text, ref, action) = week
         name = NAMES[(n - 1) % len(NAMES)]
         size = ar_len(AR.get(title, "")) * 1.3 + len(text)
-        bottom = bottom[:bottom.index('<div class="rem">')] + (
+        bottom = bottom[:bottom.index('<div class="rem')] + (
             f'<div class="rem wkrem{" l2" if size > 330 else ""}{" l3" if size > 520 else ""}"><div><b>Week {n} · Hadith of the week · {title}</b>{arp(title)}'
             f'<p>{text} <span>{ref}</span></p><p class="live"><i>Live it</i>{action}</p></div>'
             f'<section class="nmm"><span class="lb">A name of Allah</span><div class="ar" lang="ar" dir="rtl">{name[1]}</div>'
@@ -902,8 +913,8 @@ def back():
             "Khatmahs of the Qur'an", "Ayat memorised", "Days fasted", "Books finished", "Habits built", "Habits left"]) + "</div>"
         + box("The greatest gifts Allah gave me this year", lines(4))
         + box("My hardest test, and what it taught me", lines(4))
-        + box("The deed I most hope Allah accepts", lines(3))
-        + box("What I must repair before next year", lines(3)), toc="Year in review and notes")
+        + box("The deed I most hope Allah accepts", lines(2))
+        + box("What I must repair before next year", lines(2)) + hcall("shukr"), toc="Year in review")
     add(head("Next year, in sha Allah", "Carry forward what is constant")
         + box("Habits I will keep", cblines(4)) + box("Goals I carry forward", cblines(4))
         + box("A new intention", lines(5))
