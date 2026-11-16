@@ -67,6 +67,37 @@ def img(key):
     return {"src": i["src"], "cap": esc(i["cap"]), "credit": esc(i["credit"]), "page": i["page"]}
 
 
+SHORT = os.path.join(os.path.dirname(ROOT), "40hadith")
+
+
+def redirect_page(target, title, keep_hash=False):
+    js = f'"{target}"' + ('+(location.hash||"")' if keep_hash else "")
+    return f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title} · The Forty Hadith</title><meta name="robots" content="noindex">
+<link rel="canonical" href="https://diinislaam.com{target}">
+<script>location.replace({js})</script>
+<meta http-equiv="refresh" content="0;url={target}">
+<style>body{{font-family:Georgia,serif;background:#fbf6ea;color:#123f37;text-align:center;padding:40px 16px}}a{{color:#0f5a4f}}</style>
+</head><body><p>Opening <a href="{target}">{title}</a>…</p></body></html>
+"""
+
+
+def short_links():
+    """diinislaam.com/40hadith, /40hadith/1 … /40hadith/50 and /40hadith/test1 … test5 (printed under the QR codes)."""
+    pages = {"": ("/arbaeen-nawawi/", "The Forty Hadith online", True)}
+    for n in range(1, 51):
+        pages[str(n)] = (f"/arbaeen-nawawi/#h/{n}", f"Hadith {n}", False)
+    for k in range(1, 6):
+        pages[f"test{k}"] = (f"/arbaeen-nawawi/#test/{k}", f"Review Test {k}", False)
+    for sub, (target, title, keep) in pages.items():
+        d = os.path.join(SHORT, sub)
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
+            f.write(redirect_page(target, title, keep))
+    return len(pages)
+
+
 def main():
     hadith = []
     for n in range(1, 51):
@@ -130,6 +161,7 @@ def main():
         f.write("window.BOOK = " + json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n")
     print("data.js:", os.path.getsize(os.path.join(WEB, "data.js")) // 1024, "KB;",
           "audio ar", data["audio"]["ar"], "en", data["audio"]["en"])
+    print("short links in /40hadith:", short_links())
 
 
 if __name__ == "__main__":

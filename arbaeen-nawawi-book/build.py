@@ -23,6 +23,7 @@ from background import BACKGROUND  # noqa: E402
 import sources  # noqa: E402
 ENDNOTES = {}
 import front  # noqa: E402
+import qr  # noqa: E402
 
 CONTENT = {}
 for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"):
@@ -36,18 +37,21 @@ for mod in ("content_01", "content_02", "content_03", "content_04", "content_05"
 # EDITION=kdp builds the Amazon KDP black-and-white interior: white paper, greyscale,
 # mirrored margins (wide on the binding side), no cover inside.
 # EDITION=kdp-color builds the Amazon colour interior: US Letter 8.5 x 11 in (KDP standard colour), white paper.
+# EDITION=hc / hc-color build the Amazon hardcover interiors: 8.25 x 11 in (the largest KDP hardcover size),
+# black ink (greyscale) or premium colour, white paper.
 EDITION = os.environ.get("EDITION", "color")
-KDP = EDITION in ("kdp", "kdp-color")
-GREY = EDITION == "kdp"
-LETTER = EDITION == "kdp-color"
+KDP = EDITION in ("kdp", "kdp-color", "hc", "hc-color")
+GREY = EDITION in ("kdp", "hc")
+HC = EDITION in ("hc", "hc-color")
+LETTER = EDITION == "kdp-color" or HC   # 11 in tall pages
+PAGE_W_IN = 8.25 if HC else 8.5
 OUT_PDF = os.path.join(ROOT, "Forty-Hadith-Nawawi-Study-Book.pdf")
 BUILD = os.path.join(ROOT, ".build")
-if GREY:
-    OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-BW.pdf")
-    BUILD = os.path.join(ROOT, ".build-kdp")
-if LETTER:
-    OUT_PDF = os.path.join(ROOT, "amazon-kdp", "Forty-Hadith-KDP-Interior-Color.pdf")
-    BUILD = os.path.join(ROOT, ".build-kdp-color")
+OUTS = {"kdp": "Forty-Hadith-KDP-Interior-BW.pdf", "kdp-color": "Forty-Hadith-KDP-Interior-Color.pdf",
+        "hc": "Forty-Hadith-Hardcover-Interior-BW.pdf", "hc-color": "Forty-Hadith-Hardcover-Interior-Color.pdf"}
+if KDP:
+    OUT_PDF = os.path.join(ROOT, "amazon-kdp", OUTS[EDITION])
+    BUILD = os.path.join(ROOT, ".build-" + ("kdp" if EDITION == "kdp" else EDITION))
 PAGE_H_MM = 279.4 if LETTER else 297.0
 os.makedirs(BUILD, exist_ok=True)
 
@@ -209,6 +213,7 @@ def hadith_html(n):
     <h2>{esc(c["title"]) if c else "…"}</h2>
     <div class="ar-title" lang="ar" dir="rtl">{ar_title(n)}</div>
   </div>
+  {qr.block(str(n), "Listen &amp; study online")}
 </header>''')
     if c and c.get("theme"):
         out.append(f'<p class="theme">{esc(c["theme"])}</p>')
@@ -300,7 +305,7 @@ def test_html(k):
     out = [f'<section class="test" {st}>{front.mk(f"test{k}")}',
            f'<header class="t-head"><div class="t-kick">{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</div><h2>Review Test</h2>'
            f'<div class="t-ar" lang="ar" dir="rtl">اخْتِبَارُ المُرَاجَعَة</div>'
-           f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div></header>',
+           f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div>{qr.block(f"test{k}", "Take this test online", "qr t-qr")}</header>',
            '<p class="t-intro">Answer from memory first, then check your answers with the chapters. The answer key is at the back of the book.</p>']
     # A. multiple choice
     out.append(f'<div class="t-sec"><h3 class="t-h"><span>A</span>Multiple Choice <em>Circle the correct answer · 25 marks</em></h3><ol class="mcq">')
@@ -408,6 +413,8 @@ def build_html(pages):
         css += open(os.path.join(ROOT, "src", "kdp.css"), encoding="utf-8").read()
     if LETTER:
         css += open(os.path.join(ROOT, "src", "kdp-letter.css"), encoding="utf-8").read()
+    if HC:
+        css += open(os.path.join(ROOT, "src", "kdp-hardcover.css"), encoding="utf-8").read()
     parts = [front.title_page(), front.copyright_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
              front.about_nawawi(), front.about_translation()]
     for n in range(1, 51):
@@ -450,7 +457,7 @@ def underlay(n_pages, path):
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import A4, LETTER as LTR
     from reportlab.lib.colors import HexColor
-    size = LTR if LETTER else A4
+    size = (PAGE_W_IN * 72, 11 * 72) if LETTER else A4
     W, H = size
     c = canvas.Canvas(path, pagesize=size)
     paper, gold, ink = HexColor("#fbf6ea"), HexColor("#c9a14a"), HexColor("#0f4c45")
