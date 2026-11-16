@@ -1235,12 +1235,14 @@ let isSignUp = false;
 let myEmail = '';
 let myRole = '';
 const GAME_KEY = 'tuhfatul-atfaal';
+/* [name, lines, first lesson, lessons] — the same names the student app shows on each map */
 const MAPS = [
-  ['Beginnings','1–5',0,5],['Four Rules','6–8',5,3],['Izhar Letters','9–11',8,3],['Idgham','12–13',11,2],
-  ['Idgham Types','14–16',13,3],['Iqlab','17',16,1],['Ikhfa','18–20',17,3],['Noon & Meem','21–23',20,3],
-  ['Meem Rules','24–29',23,6],['Laam Rules','30–34',29,5],['Madd','35–41',34,7],['Madd Types','42–47',41,6],
-  ['More Madd','48–52',47,5],['Waqf','53–57',52,5],['Completion','57–61',57,5]
+  ['Beginnings','1–5',0,5],['Four Rules','6–8',5,3],['Izhar & Idgham','9–11',8,3],['Iqlab','12–13',11,2],
+  ['Ikhfa','14–16',13,3],['Ghunnah','17',16,1],['Meem Sakinah','18–20',17,3],['Shafawi Rules','21–23',20,3],
+  ['Lam Rules','24–29',23,6],['Letter Relations','30–34',29,5],['Madd Foundations','35–41',34,7],['Madd Types','42–47',41,6],
+  ['Madd Lazim','48–52',47,5],['Opening Letters','53–57',52,5],['Final Mastery','57–61',57,5]
 ];
+const MAP_NAMES = MAPS.map(m => m[0]);
 const TOTAL_LESSONS = 62;
 let studentsCache = [], quizzesCache = [], activeStudent = null, selectedMap = 0, signatureDirty = false;
 let studentFilter = 'all', editingQuiz = null, pendingAssign = null, noteDraft = null;
@@ -1284,6 +1286,16 @@ function ageFrom(dob){
   const now = new Date(); let a = now.getFullYear() - d.getFullYear();
   if(now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) a--;
   return a >= 0 ? a + ' yrs' : '';
+}
+/* A teacher may rename a map in the student app (✏️ Edit Map N); use the same name here. */
+function shortMapName(t){ return String(t || '').replace(/^\s*Map\s*\d+\s*[·:.\-]\s*/i, '').replace(/^\s*Lines?\s*[\d–\-]+\s*[·:.\-]\s*/i, '').trim(); }
+function loadMapNames(){
+  if(!window.KidsCloud.listContent) return Promise.resolve();
+  return window.KidsCloud.listContent(GAME_KEY).then(list => {
+    let changed = false;
+    MAPS.forEach((m, i) => { const e = list.find(d => d.id === GAME_KEY + '_map_' + i), want = (e && shortMapName(e.mapTitle)) || MAP_NAMES[i]; if(m[0] !== want){ m[0] = want; changed = true; } });
+    if(changed){ renderAll(); if(activeStudent) renderMapManager(); }
+  }).catch(() => {});
 }
 function mapLabel(i){ return i === -1 || i == null ? 'All maps' : 'Map ' + (i + 1) + ' · ' + MAPS[i][0]; }
 function resizePhotoFile(file){
@@ -3153,6 +3165,7 @@ function showDashboard(info){
   loadAnnouncements();
   loadThreads();
   loadAdmins();
+  loadMapNames();
 }
 function showLogin(){
   $('login-screen').classList.remove('hidden');
