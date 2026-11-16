@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Forty Hadith: Teacher page · Diin Islaam</title>
+<script>if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.add('embedded')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Marcellus&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c2b46;--brown:#3c2f26;--paper:#faf3e0;--deep:#f2e6c9;--gold:#a97c25;--gold2:#d3ac5c;--green:#2e6b58;--green2:#1f4f40;--bad:#a3352b;--ok:#2e7d4f;--warn:#b7791f;--line:#e6d7b4}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--brown);font:17px/1.5 'Cormorant Garamond',Georgia,serif;-webkit-font-smoothing:antialiased}
+.hidden{display:none!important}
+header.site{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fffaf0;border-bottom:2px solid var(--gold2)}
+header.site a{color:var(--ink);text-decoration:none;font:19px Marcellus,serif}
+header.site .sp{flex:1}
+html.embedded header.site{display:none}
+main{max-width:1100px;margin:0 auto;padding:16px 14px 60px}
+h1,h2,h3{font-family:Marcellus,serif;color:var(--ink);margin:0}
+.btn{border:0;border-radius:12px;padding:9px 16px;background:var(--green);color:var(--paper);font:16px Marcellus,serif;cursor:pointer;box-shadow:0 3px 0 var(--green2)}
+.btn.line{background:#fff;color:var(--brown);border:1.5px solid var(--gold2);box-shadow:none}
+.btn.bad{background:#fff;color:var(--bad);border:1.5px solid #e2b4ae;box-shadow:none}
+.btn.sm{padding:5px 11px;font-size:14px}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,.th:focus-visible,tr[data-uid]:focus-visible{outline:3px solid #2d6cdf;outline-offset:2px}
+.card{background:#fff;border:1.5px solid var(--gold2);border-radius:16px;padding:16px 18px;box-shadow:0 6px 18px rgba(60,45,20,.07)}
+.login{max-width:430px;margin:40px auto;text-align:center}
+.login label,.form label{display:grid;gap:3px;text-align:left;font:14px Marcellus,serif;color:var(--ink);margin:0 0 10px}
+input,select,textarea{font:16px system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:9px 11px;border:1.5px solid #d8c395;border-radius:10px;background:#fff;color:var(--ink);width:100%}
+.msg{min-height:20px;font:15px Marcellus,serif;margin:8px 0 0}.msg.error{color:var(--bad)}.msg.ok{color:var(--ok)}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.bar select{width:auto;min-width:200px;max-width:100%}
+.bar .sp{flex:1}
+.who{font:14px Marcellus,serif;color:#8a7654}
+.chead{display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.code{font:700 34px Marcellus,serif;letter-spacing:.25em;color:var(--green2);background:var(--paper);border:2px dashed var(--gold2);border-radius:12px;padding:4px 16px;display:inline-block}
+.muted{color:#7a6a4f}.small{font-size:14.5px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.stat{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;text-align:center}
+.stat b{display:block;font:700 28px Marcellus,serif;color:var(--green2)}.stat span{font-size:14px;color:#7a6a4f}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}.code{font-size:28px}}
+.two h3{font-size:18px;margin-bottom:6px}
+.two ul{margin:0;padding-left:20px}.two li{margin:3px 0}
+.tag{display:inline-block;border-radius:999px;padding:1px 9px;font:13px Marcellus,serif;background:var(--deep);color:var(--brown)}
+.tag.ok{background:#e3f1e8;color:var(--ok)}.tag.bad{background:#f8e4e1;color:var(--bad)}.tag.warn{background:#fbefd2;color:var(--warn)}
+.tw{overflow-x:auto;background:#fff;border:1.5px solid var(--gold2);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;font-size:16px}
+th{font:14px Marcellus,serif;color:var(--ink);background:var(--deep);white-space:nowrap}
+th.th{cursor:pointer;user-select:none}
+tr[data-uid]{cursor:pointer}tr[data-uid]:hover{background:#fff8e6}
+td.c,th.c{text-align:center}
+.pb{height:9px;background:var(--deep);border-radius:6px;overflow:hidden;min-width:70px}.pb i{display:block;height:100%;background:var(--green)}
+.sc{font:15px Marcellus,serif}.sc.pass{color:var(--ok)}.sc.fail{color:var(--bad)}.sc.none{color:#b9a982}
+dialog{border:2px solid var(--gold2);border-radius:18px;padding:0;max-width:880px;width:calc(100% - 20px);background:var(--paper);color:var(--brown)}
+dialog::backdrop{background:rgba(20,30,40,.45)}
+.dh{display:flex;gap:10px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:#fffaf0;position:sticky;top:0;z-index:1}
+.dh h2{flex:1;font-size:22px}
+.db{padding:14px 18px 20px}
+.grid50{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin:8px 0 14px}
+.grid50 span{text-align:center;border-radius:6px;padding:4px 0;font:14px Marcellus,serif;background:#eee6d1;color:#9a8b66}
+.grid50 span.on{color:#fff;background:var(--c,var(--green))}
+.test{border:1px solid var(--line);border-radius:12px;background:#fff;margin:8px 0}
+.test>summary{cursor:pointer;padding:8px 12px;font:16px Marcellus,serif;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.test .in{padding:4px 14px 12px;border-top:1px solid var(--line)}
+.qa{margin:10px 0}.qa .q{font-weight:600}.qa .a{background:#fffaf0;border-left:3px solid var(--gold2);padding:5px 10px;white-space:pre-wrap;margin-top:3px}
+.qa .a.empty{color:#b9a982;font-style:italic}.qa details{margin-top:3px}.qa details summary{cursor:pointer;color:var(--green2);font-size:14.5px}
+.marks{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--deep);border-radius:12px;padding:10px 12px;margin-top:10px}
+.marks label{display:grid;gap:2px;font:14px Marcellus,serif;margin:0}.marks input[type=number]{width:84px}.marks .note{flex:1;min-width:200px}.marks .note input{width:100%}
+.empty-state{text-align:center;padding:30px 10px}
+.foot{margin-top:18px;font-size:14px;color:#7a6a4f}
+@media print{header.site,.bar,.noprint,.btn,.row,dialog{display:none!important}body{background:#fff;font-size:12pt}.tw{border:0}.card{box-shadow:none}.printonly{display:block!important}table{min-width:0}}
+.printonly{display:none}
+</style>
+</head>
+<body>
+<header class="site"><a href="/teacher/">📚 Teacher Portal</a><span class="sp"></span><span class="who" id="who"></span><button class="btn line sm hidden" id="out" type="button">Sign out</button></header>
+<main>
+  <div class="hidden" id="loading" style="text-align:center;padding:50px">Loading…</div>
+
+  <section class="card login hidden" id="login">
+    <div style="font-size:36px">🔑</div>
+    <h1>Forty Hadith: teacher sign in</h1>
+    <p class="muted small">Use the same teacher login as the rest of the Teacher Portal.</p>
+    <form id="loginForm">
+      <label>Teacher username<input id="lu" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username-teacher"></label>
+      <label>Password<input id="lp" type="password" autocomplete="current-password"></label>
+      <button class="btn" style="width:100%" type="submit" id="lgo">Sign in</button>
+      <p class="msg" id="lmsg" role="status" aria-live="polite"></p>
+    </form>
+    <p class="small muted">New teacher? <a href="/teacher/">Create an account</a> in the Teacher Portal. An admin must approve it first.</p>
+  </section>
+
+  <section class="card login hidden" id="wait">
+    <div style="font-size:36px">⏳</div><h1>Awaiting approval</h1>
+    <p class="muted">An admin must approve this teacher account before it can see student records.</p>
+    <button class="btn line" type="button" id="wout">Sign out</button>
+  </section>
+
+  <div class="hidden" id="app">
+    <div class="bar noprint">
+      <label class="small" for="clsSel" style="font-family:Marcellus,serif">Class</label>
+      <select id="clsSel"></select>
+      <button class="btn sm" type="button" id="newCls">+ New class</button>
+      <span class="sp"></span>
+      <button class="btn line sm" type="button" id="refresh">Refresh</button>
+    </div>
+    <div id="view"></div>
+    <p class="foot noprint">Students sign in on the <a href="/40hadith/">online book</a>, enter the class code, and their progress appears here. Their private notes never leave their device. Marks you give for the written answers are shown to the student in the book.</p>
+  </div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dlgT"><div class="dh"><h2 id="dlgT"></h2><button class="btn line sm" type="button" id="dlgX">Close</button></div><div class="db" id="dlgB"></div></dialog>
+
+<script type="module" src="/kids-quest-cloud.js?v=34"></script>
+<script src="meta.js"></script>
+<script>
+(function(){
+"use strict";
+var M = window.ANMETA, GAME = "arbaeen-nawawi", FB = "arbaeen-nawawi-teacher", PASS = M.pass, TOTAL = M.total;
+var KC = null, me = null, classes = [], students = {}, sel = "", sort = { k: "name", d: 1 }, unwatch = null, timer = null;
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function show(which){ ["loading","login","wait","app"].forEach(function(k){ $(k).classList.toggle("hidden", k !== which); }); $("out").classList.toggle("hidden", which !== "app"); }
+function friendly(err){
+  var c = (err && err.code) || "";
+  if(/wrong-password|invalid-credential|user-not-found/.test(c)) return "Wrong username or password.";
+  if(c.indexOf("too-many-requests") >= 0) return "Too many tries. Wait a bit and try again.";
+  if(c.indexOf("network") >= 0) return "No connection. Check the internet and try again.";
+  if(c.indexOf("permission") >= 0) return "You are not allowed to do that. Ask an admin to check your teacher account.";
+  return (err && err.message) || "Something went wrong.";
+}
+
+/* ---------------- data about one student ---------------- */
+function nameOf(s){ return (s.fullName || (s.progress && s.progress[GAME] && s.progress[GAME].name) || s.displayName || s.username || "Student").trim(); }
+function info(s){
+  var p = (s.progress && s.progress[GAME]) || null, fb = (s.progress && s.progress[FB] && s.progress[FB].marks) || {};
+  var tests = {}, best = 0, passed = 0, results = (p && p.results) || {};
+  for(var k = 1; k <= 5; k++){
+    var t = p && p.tests && p.tests[k];
+    var m = fb[k];
+    tests[k] = t ? { best: t.best, last: t.last, tries: t.tries || 1, pass: t.best >= PASS, r: results[k] || null, m: m || null } : { none: true, m: m || null };
+    if(t){ best += t.best; if(t.best >= PASS) passed++; }
+  }
+  var last = p ? (p.updated || "") : "";
+  Object.keys(results).forEach(function(k){ if(results[k].date && String(results[k].date) > last) last = results[k].date; });
+  return { p: p, studied: p ? (p.studied || []).length : 0, studiedList: p ? (p.studied || []) : [], tests: tests, passed: passed, best: best,
+    complete: !!(p && p.complete), last: last, started: !!p, fb: fb, todo: p ? Object.keys(p.todo || {}).length : 0 };
+}
+function days(iso){ if(!iso) return null; var d = (Date.now() - new Date(iso).getTime()) / 864e5; return isNaN(d) ? null : d; }
+function ago(iso){
+  var d = days(iso); if(d == null) return "never";
+  if(d < 1) return "today"; if(d < 2) return "yesterday"; if(d < 30) return Math.floor(d) + " days ago";
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+function cls(){ return classes.filter(function(c){ return c.id === sel; })[0] || null; }
+function roster(){
+  var c = cls(); if(!c) return [];
+  return (c.studentUids || []).map(function(uid){
+    var s = students[uid];
+    return s ? Object.assign({ uid: uid }, s) : { uid: uid, hidden: true, displayName: "Joined (record not shared with you yet)" };
+  });
+}
+
+/* ---------------- views ---------------- */
+function render(){
+  var sSel = $("clsSel");
+  sSel.innerHTML = classes.length ? classes.map(function(c){ return '<option value="' + esc(c.id) + '"' + (c.id === sel ? " selected" : "") + ">" + esc(c.name) + " (" + (c.studentUids || []).length + ")</option>"; }).join("") : '<option value="">No classes yet</option>';
+  var c = cls(), v = $("view");
+  if(!c){
+    v.innerHTML = '<div class="card empty-state"><div style="font-size:38px">🎓</div><h2>Create your first class</h2><p class="muted">Give the class a name. You get a 6-letter code and a link to send to your students. They join from the online book and their progress appears here.</p><button class="btn" type="button" id="newCls2">+ New class</button></div>';
+    $("newCls2").onclick = newClass; return;
+  }
+  var list = roster(), infos = list.map(function(s){ return info(s); });
+  var started = infos.filter(function(i){ return i.started; }), n = list.length;
+  var avg = started.length ? Math.round(started.reduce(function(a, i){ return a + i.studied; }, 0) / started.length * 10) / 10 : 0;
+  var done = infos.filter(function(i){ return i.complete; }).length;
+  var link = "https://diinislaam.com/40hadith/?class=" + c.id;
+  var h = '<div class="card"><div class="chead"><div><h2>' + esc(c.name) + '</h2><div class="muted small">Teacher name shown to students: <b>' + esc(c.teacherName || "not set") + '</b></div></div>' +
+    '<div class="code" aria-label="Class code">' + esc(c.id) + '</div></div>' +
+    '<div class="row noprint"><button class="btn sm" type="button" id="cpCode">Copy code</button><button class="btn sm" type="button" id="cpLink">Copy invite link</button>' +
+    '<a class="btn sm" id="wa" target="_blank" rel="noopener" style="text-decoration:none" href="https://wa.me/?text=' + encodeURIComponent("Assalāmu ʿalaykum. Join our Forty Hadith class \"" + c.name + "\" here: " + link + "\nClass code: " + c.id) + '">Share on WhatsApp</a>' +
+    '<button class="btn line sm" type="button" id="edCls">Edit class</button><button class="btn bad sm" type="button" id="delCls">Delete class</button></div>' +
+    '<p class="small muted noprint" style="margin:8px 0 0">Invite link: <span style="word-break:break-all">' + esc(link) + '</span></p></div>';
+  h += '<div class="stats"><div class="stat"><b>' + n + '</b><span>students</span></div><div class="stat"><b>' + avg + '</b><span>average hadith studied (of 50)</span></div>' +
+    '<div class="stat"><b>' + infos.filter(function(i){ return i.passed >= 1; }).length + '</b><span>passed at least one test</span></div><div class="stat"><b>' + done + '</b><span>completed all 5 tests</span></div></div>';
+  // insights
+  var need = [], miss = {};
+  list.forEach(function(s, i){
+    var inf = infos[i], why = [];
+    if(s.hidden) return;
+    if(!inf.started) why.push("has not started"); else if(!inf.complete && (days(inf.last) == null || days(inf.last) >= 7)) why.push("no activity for " + (days(inf.last) == null ? "a while" : Math.floor(days(inf.last)) + " days"));
+    for(var k = 1; k <= 5; k++){ var t = inf.tests[k]; if(t && !t.none && !t.pass && t.tries >= 1) why.push("Part " + k + ": " + t.best + "/" + TOTAL); }
+    if(why.length) need.push({ s: s, why: why });
+    for(var k2 = 1; k2 <= 5; k2++){ var r = inf.tests[k2] && inf.tests[k2].r; if(r && r.review) r.review.forEach(function(x){ miss[x[0]] = (miss[x[0]] || 0) + x[1]; }); }
+  });
+  var hard = Object.keys(miss).map(function(k){ return [+k, miss[k]]; }).sort(function(a, b){ return b[1] - a[1]; }).slice(0, 6);
+  h += '<div class="two"><div class="card"><h3>Needs attention</h3>' + (need.length ? "<ul>" + need.slice(0, 8).map(function(x){ return '<li><a href="#" data-open="' + esc(x.s.uid) + '">' + esc(nameOf(x.s)) + "</a> · " + esc(x.why.join(", ")) + "</li>"; }).join("") + "</ul>" : '<p class="muted">Nobody needs attention right now.</p>') + "</div>" +
+    '<div class="card"><h3>Hadith to revise with the class</h3>' + (hard.length ? "<ul>" + hard.map(function(x){ var t = M.hadith[x[0] - 1]; return "<li>Hadith " + x[0] + ": " + esc(t ? t.title : "") + ' <span class="muted">(' + x[1] + " missed)</span></li>"; }).join("") + "</ul>" : '<p class="muted">Shows up after students take the part tests.</p>') + "</div></div>";
+  // table
+  var rows = list.map(function(s, i){ return { s: s, i: infos[i] }; });
+  rows.sort(function(a, b){
+    var x, y;
+    if(sort.k === "name"){ x = nameOf(a.s).toLowerCase(); y = nameOf(b.s).toLowerCase(); }
+    else if(sort.k === "studied"){ x = a.i.studied; y = b.i.studied; }
+    else if(sort.k === "best"){ x = a.i.best; y = b.i.best; }
+    else { x = a.i.last || ""; y = b.i.last || ""; }
+    return (x < y ? -1 : x > y ? 1 : 0) * sort.d;
+  });
+  var arrow = function(k){ return sort.k === k ? (sort.d > 0 ? " ▲" : " ▼") : ""; };
+  h += '<div class="printonly"><h2>' + esc(c.name) + " · Forty Hadith class report</h2><p>" + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) + "</p></div>";
+  h += '<div class="tw"><table><thead><tr><th class="th" tabindex="0" data-sort="name">Student' + arrow("name") + '</th><th class="th" tabindex="0" data-sort="studied">Hadith studied' + arrow("studied") + "</th>";
+  for(var k = 1; k <= 5; k++) h += '<th class="c" title="Part ' + k + ' test, out of ' + TOTAL + '">Test ' + k + "</th>";
+  h += '<th class="c">Certificate</th><th class="th" tabindex="0" data-sort="last">Last active' + arrow("last") + "</th></tr></thead><tbody>";
+  if(!rows.length) h += '<tr><td colspan="9" class="muted" style="padding:18px">No students have joined yet. Send them the class code or invite link above.</td></tr>';
+  rows.forEach(function(r){
+    var s = r.s, i = r.i;
+    h += '<tr data-uid="' + esc(s.uid) + '"' + (s.hidden ? "" : ' tabindex="0"') + "><td><b>" + esc(nameOf(s)) + "</b>" + (s.username ? '<div class="muted small">' + esc(s.username) + "</div>" : "") + "</td>";
+    h += "<td>" + (i.started ? '<div class="pb" title="' + i.studied + ' of 50"><i style="width:' + i.studied * 2 + '%"></i></div><span class="small">' + i.studied + "/50</span>" : '<span class="tag">not started</span>') + "</td>";
+    for(var j = 1; j <= 5; j++){
+      var t = i.tests[j];
+      h += '<td class="c">' + (t && !t.none ? '<span class="sc ' + (t.pass ? "pass" : "fail") + '">' + t.best + "/" + TOTAL + "</span>" + (t.r && !t.m ? '<div class="tag warn" title="Written answers waiting for your marks">to mark</div>' : "") : '<span class="sc none">–</span>') + "</td>";
+    }
+    h += '<td class="c">' + (i.complete ? '<span class="tag ok">✓ earned</span>' : '<span class="muted">–</span>') + '</td><td class="small">' + esc(i.started ? ago(i.last) : "–") + "</td></tr>";
+  });
+  h += "</tbody></table></div>";
+  h += '<div class="row noprint"><button class="btn" type="button" id="csv">Download CSV (Excel)</button><button class="btn line" type="button" id="json">Download JSON</button><button class="btn line" type="button" id="print">Print report</button></div>';
+  v.innerHTML = h;
+  bindView(c, link);
+}
+function bindView(c, link){
+  var copy = function(t, b){ var done = function(){ var o = b.textContent; b.textContent = "Copied ✓"; setTimeout(function(){ b.textContent = o; }, 1500); };
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(done, function(){ prompt("Copy this:", t); }); else prompt("Copy this:", t); };
+  $("cpCode").onclick = function(){ copy(c.id, this); };
+  $("cpLink").onclick = function(){ copy(link, this); };
+  $("edCls").onclick = editClass; $("delCls").onclick = delClass;
+  $("csv").onclick = exportCsv; $("json").onclick = exportJson; $("print").onclick = function(){ window.print(); };
+  document.querySelectorAll("[data-sort]").forEach(function(th){
+    var go = function(){ var k = th.dataset.sort; sort = { k: k, d: sort.k === k ? -sort.d : (k === "name" ? 1 : -1) }; render(); };
+    th.onclick = go; th.onkeydown = function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); go(); } };
+  });
+  document.querySelectorAll("tr[data-uid]").forEach(function(tr){
+    var go = function(){ openStudent(tr.dataset.uid); };
+    tr.onclick = go; tr.onkeydown = function(e){ if(e.key === "Enter"){ go(); } };
+  });
+  document.querySelectorAll("[data-open]").forEach(function(a){ a.onclick = function(e){ e.preventDefault(); openStudent(a.dataset.open); }; });
+}
+
+/* ---------------- one student ---------------- */
+function openStudent(uid){
+  var s = students[uid]; if(!s) return;
+  var i = info(s), c = cls(), col = {};
+  M.parts.forEach(function(p){ for(var n = p.first; n <= p.last; n++) col[n] = p.accent; });
+  $("dlgT").textContent = nameOf(s);
+  var h = '<p class="muted small">' + (s.username ? "Username: <b>" + esc(s.username) + "</b> · " : "") + "Last active: " + esc(i.started ? ago(i.last) : "never") + (c ? " · Class: " + esc(c.name) : "") + "</p>";
+  if(!i.started){ $("dlgB").innerHTML = h + '<p>This student has joined the class but has not opened the book while signed in yet.</p>' + removeBtn(uid); bindDlg(uid); $("dlg").showModal(); return; }
+  h += '<h3>Hadith studied: ' + i.studied + "/50</h3><div class=\"grid50\">";
+  for(var n = 1; n <= 50; n++){ h += '<span class="' + (i.studiedList.indexOf(n) >= 0 ? "on" : "") + '" style="--c:' + col[n] + '" title="' + esc("Hadith " + n + ": " + M.hadith[n - 1].title) + '">' + n + "</span>"; }
+  h += "</div>";
+  h += "<h3>Part tests</h3>";
+  for(var k = 1; k <= 5; k++){
+    var t = i.tests[k], p = M.parts[k - 1];
+    if(t.none){ h += '<details class="test"><summary><b>' + esc(p.label) + '</b> <span class="muted">Hadith ' + p.first + "–" + p.last + '</span> <span class="tag">not taken</span></summary></details>'; continue; }
+    var r = t.r, m = t.m, tot = m ? t.best + (+m.c || 0) + (+m.d || 0) : null;
+    h += '<details class="test"' + (r && !m ? " open" : "") + "><summary><b>" + esc(p.label) + '</b> <span class="muted">Hadith ' + p.first + "–" + p.last + '</span> <span class="tag ' + (t.pass ? "ok" : "bad") + '">' + (t.pass ? "passed" : "not passed") + "</span> <span>best " + t.best + "/" + TOTAL + "</span> <span class=\"muted\">" + t.tries + (t.tries === 1 ? " attempt" : " attempts") + "</span>" +
+      (m ? ' <span class="tag ok">marked · total ' + tot + "/50</span>" : (r ? ' <span class="tag warn">to mark</span>' : "")) + "</summary><div class=\"in\">";
+    if(r){
+      h += '<p class="small">Latest attempt (' + esc(new Date(r.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })) + "): multiple choice <b>" + r.a + "/25</b>, matching <b>" + r.b + "/10</b>.</p>";
+      if(r.review && r.review.length) h += '<p class="small">Hadith to review: ' + r.review.map(function(x){ return "H" + x[0] + " (" + esc(M.hadith[x[0] - 1].title) + ") ×" + x[1]; }).join("; ") + ".</p>";
+      h += "<h4 style=\"margin:10px 0 0\">C. Short answers</h4>";
+      M.tests[k].short.forEach(function(q, j){ var a = (r.short || [])[j]; h += '<div class="qa"><div class="q">' + (j + 1) + ". " + esc(q.q) + '</div><div class="a' + (a ? "" : " empty") + '">' + (a ? esc(a) : "no answer") + "</div><details><summary>Model answer</summary><div class=\"a\">" + esc(q.a) + "</div></details></div>"; });
+      h += "<h4 style=\"margin:10px 0 0\">D. Critical thinking</h4>";
+      M.tests[k].critical.forEach(function(q, j){ var a = (r.crit || [])[j]; h += '<div class="qa"><div class="q">' + (j + 1) + ". " + esc(q) + '</div><div class="a' + (a ? "" : " empty") + '">' + (a ? esc(a) : "no answer") + "</div></div>"; });
+      h += '<div class="marks" data-k="' + k + '"><label>C: short answers (0–10)<input type="number" min="0" max="10" step="0.5" class="mc" value="' + (m ? esc(m.c) : "") + '"></label>' +
+        '<label>D: critical thinking (0–5)<input type="number" min="0" max="5" step="0.5" class="md" value="' + (m ? esc(m.d) : "") + '"></label>' +
+        '<label class="note">Comment for the student (optional)<input class="mn" maxlength="300" value="' + (m ? esc(m.note || "") : "") + '"></label><button class="btn sm save" type="button">Save marks</button><span class="msg ok" style="margin:0"></span></div>';
+    } else { h += '<p class="muted small">The written answers for this test have not been sent yet.</p>'; }
+    h += "</div></details>";
+  }
+  h += removeBtn(uid);
+  $("dlgB").innerHTML = h; bindDlg(uid); $("dlg").showModal();
+}
+function removeBtn(uid){ return '<div class="row"><button class="btn bad sm" type="button" id="rm">Remove from this class</button></div>'; }
+function bindDlg(uid){
+  document.querySelectorAll("#dlgB .marks").forEach(function(box){
+    box.querySelector(".save").onclick = function(){
+      var k = box.dataset.k, cV = box.querySelector(".mc").value, dV = box.querySelector(".md").value, note = box.querySelector(".mn").value.trim();
+      var msg = box.querySelector(".msg"), b = this;
+      var cn = parseFloat(cV), dn = parseFloat(dV);
+      if(isNaN(cn) || isNaN(dn) || cn < 0 || cn > 10 || dn < 0 || dn > 5){ msg.className = "msg error"; msg.textContent = "Enter C from 0 to 10 and D from 0 to 5."; return; }
+      var s = students[uid], marks = Object.assign({}, (s.progress && s.progress[FB] && s.progress[FB].marks) || {});
+      marks[k] = { c: cn, d: dn, note: note, at: new Date().toISOString(), by: (me && me.fullName) || (me && me.email) || "" };
+      b.disabled = true; msg.className = "msg"; msg.textContent = "Saving…";
+      KC.adminUpdateStudentGameProgress(uid, FB, { marks: marks }).then(function(){
+        s.progress = s.progress || {}; s.progress[FB] = { marks: marks };
+        msg.className = "msg ok"; msg.textContent = "Saved ✓ The student sees it in the book."; render();
+        var d = $("dlg"); /* keep the dialog open on the same test */
+      }).catch(function(e){ msg.className = "msg error"; msg.textContent = friendly(e); }).finally(function(){ b.disabled = false; });
+    };
+  });
+  var rm = $("rm");
+  if(rm) rm.onclick = function(){
+    var c = cls(); if(!c || !confirm("Remove " + nameOf(students[uid] || {}) + " from " + c.name + "?")) return;
+    KC.adminUpdateClass(c.id, { studentUids: (c.studentUids || []).filter(function(u){ return u !== uid; }) }).then(function(){
+      c.studentUids = (c.studentUids || []).filter(function(u){ return u !== uid; }); $("dlg").close(); render();
+    }).catch(function(e){ alert(friendly(e)); });
+  };
+}
+
+/* ---------------- classes ---------------- */
+function teacherDefault(){ return (me && (me.fullName || String(me.email || "").split("@")[0])) || ""; }
+function newClass(){
+  var name = prompt("Class name (for example “Year 7 Forty Hadith”):"); if(!name || !name.trim()) return;
+  var tn = prompt("Teacher name shown to students (and on their certificates):", teacherDefault()); if(tn === null) return;
+  KC.adminCreateClass({ name: name.trim(), game: GAME, teacherName: (tn || "").trim() }).then(function(code){ return loadClasses().then(function(){ sel = code; render(); }); }).catch(function(e){ alert(friendly(e)); });
+}
+function editClass(){
+  var c = cls(); if(!c) return;
+  var name = prompt("Class name:", c.name); if(name === null) return;
+  var tn = prompt("Teacher name shown to students:", c.teacherName || teacherDefault()); if(tn === null) return;
+  KC.adminUpdateClass(c.id, { name: name.trim() || c.name, teacherName: tn.trim() }).then(function(){ c.name = name.trim() || c.name; c.teacherName = tn.trim(); render(); }).catch(function(e){ alert(friendly(e)); });
+}
+function delClass(){
+  var c = cls(); if(!c) return;
+  if(!confirm("Delete the class “" + c.name + "”? Students keep their progress, but the code stops working.")) return;
+  KC.adminDeleteClass(c.id).then(function(){ classes = classes.filter(function(x){ return x.id !== c.id; }); sel = classes[0] ? classes[0].id : ""; render(); }).catch(function(e){ alert(friendly(e)); });
+}
+function loadClasses(){
+  return KC.listClasses(GAME).then(function(list){
+    classes = (list || []).filter(function(c){ return me.role !== "teacher" || String(c.teacherEmail || "").toLowerCase() === String(me.email || "").toLowerCase(); });
+    if(!classes.some(function(c){ return c.id === sel; })) sel = classes[0] ? classes[0].id : "";
+  });
+}
+
+/* ---------------- exports ---------------- */
+function download(name, type, text){
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function exportRows(){
+  var c = cls();
+  return roster().map(function(s){
+    var i = info(s), o = { class: c.name, class_code: c.id, student: nameOf(s), username: s.username || "", hadith_studied: i.studied, hadith_numbers: i.studiedList.join(" ") };
+    for(var k = 1; k <= 5; k++){ var t = i.tests[k]; o["part" + k + "_best_of_35"] = t && !t.none ? t.best : ""; o["part" + k + "_passed"] = t && !t.none ? (t.pass ? "yes" : "no") : ""; o["part" + k + "_attempts"] = t && !t.none ? t.tries : ""; o["part" + k + "_written_C_of_10"] = t && t.m ? t.m.c : ""; o["part" + k + "_written_D_of_5"] = t && t.m ? t.m.d : ""; }
+    o.tests_passed = i.passed; o.certificate_earned = i.complete ? "yes" : "no"; o.last_active = i.last ? i.last.slice(0, 10) : "";
+    return o;
+  });
+}
+function exportCsv(){
+  var rows = exportRows(); if(!rows.length){ alert("There are no students in this class yet."); return; }
+  var cols = Object.keys(rows[0]), q = function(v){ v = String(v == null ? "" : v); if(/^[=+\-@]/.test(v) && isNaN(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+  var text = "﻿" + cols.join(",") + "\r\n" + rows.map(function(r){ return cols.map(function(k){ return q(r[k]); }).join(","); }).join("\r\n");
+  download("forty-hadith-" + cls().id + "-" + new Date().toISOString().slice(0, 10) + ".csv", "text/csv;charset=utf-8", text);
+}
+function exportJson(){
+  var c = cls();
+  download("forty-hadith-" + c.id + "-" + new Date().toISOString().slice(0, 10) + ".json", "application/json", JSON.stringify({ course: "The Forty Hadith of Imam an-Nawawi", exported: new Date().toISOString(), class: { id: c.id, name: c.name, teacher: c.teacherName }, students: exportRows() }, null, 2));
+}
+
+/* ---------------- start ---------------- */
+function startApp(){
+  show("loading");
+  loadClasses().then(function(){
+    return KC.adminListStudents();
+  }).then(function(list){
+    students = {}; list.forEach(function(s){ students[s.uid] = s; });
+    show("app"); render();
+    if(unwatch){ try { unwatch(); } catch(e){} }
+    try { unwatch = KC.watchStudents(function(ch){ ch.forEach(function(s){ students[s.uid] = s; }); if(!$("dlg").open) render(); }, function(){}); } catch(e){}
+    clearInterval(timer); timer = setInterval(function(){ if(!$("dlg").open) loadClasses().then(render).catch(function(){}); }, 60000);
+  }).catch(function(e){ show("app"); $("view").innerHTML = '<div class="card"><h2>Could not load</h2><p class="muted">' + esc(friendly(e)) + "</p></div>"; });
+}
+function wire(){
+  KC = window.KidsCloud;
+  $("clsSel").onchange = function(){ sel = this.value; render(); };
+  $("newCls").onclick = newClass;
+  $("refresh").onclick = function(){ var b = this; b.disabled = true; loadClasses().then(function(){ return KC.adminListStudents(); }).then(function(l){ students = {}; l.forEach(function(s){ students[s.uid] = s; }); render(); }).finally(function(){ b.disabled = false; }); };
+  $("dlgX").onclick = function(){ $("dlg").close(); render(); };
+  $("dlg").addEventListener("click", function(e){ if(e.target === this){ this.close(); render(); } });
+  $("loginForm").onsubmit = function(e){
+    e.preventDefault();
+    var u = $("lu").value.trim(), p = $("lp").value;
+    if(!u || !p){ $("lmsg").className = "msg error"; $("lmsg").textContent = "Enter your teacher username and password."; return; }
+    $("lgo").disabled = true; $("lmsg").className = "msg"; $("lmsg").textContent = "Signing you in…";
+    var a; try { a = KC.teacherSignIn(u, p); } catch(err){ a = Promise.reject(err); }
+    a.then(function(){ $("lmsg").textContent = ""; }).catch(function(err){ $("lmsg").className = "msg error"; $("lmsg").textContent = friendly(err); }).finally(function(){ $("lgo").disabled = false; });
+  };
+  var out = function(){ KC.adminSignOut(); };
+  $("out").onclick = out; $("wout").onclick = out;
+  KC.onAdminAuth(function(a){
+    if(!a){ me = null; if(unwatch){ try { unwatch(); } catch(e){} unwatch = null; } clearInterval(timer); $("who").textContent = ""; show("login"); return; }
+    me = a; $("who").textContent = a.fullName || String(a.email || "").split("@")[0]; $("lp").value = "";
+    if(!a.role){ show("wait"); return; }
+    startApp();
+  });
+}
+show("loading");
+if(window.KidsCloud) wire(); else window.addEventListener("kidscloud-ready", wire);
+})();
+</script>
+</body>
+</html>

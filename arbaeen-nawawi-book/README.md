@@ -81,3 +81,36 @@ Every hadith chapter and every review test has a QR code with its address printe
 | `diinislaam.com/40hadith/test1` … `/test5` | that review test |
 
 The short addresses are small redirect pages in `../40hadith/`, written by `build_web.py`. The codes are made by `src/qr.py`.
+
+## Teachers and classes
+
+The online book can be used in a class. Students keep working without an account if they prefer; with one, the teacher sees their progress.
+
+**For the teacher:** open `diinislaam.com/teacher/` and choose the **Forty Hadith** tab (or go straight to `/arbaeen-nawawi-admin/`). It uses the same teacher login and approval as the other courses. A teacher can:
+
+- create a class (a 6-letter code and an invite link such as `diinislaam.com/40hadith/?class=ABC123`, with a WhatsApp share button)
+- see every student's hadith studied (of 50), part-test scores (pass is 28 of 35), certificate status and last activity
+- see who needs attention (no activity for 7 days, or a failed test) and which hadith the class misses most
+- open a student to read the written answers of each test next to the model answers, and give marks for section C (out of 10) and D (out of 5) with a comment. The student sees the marks in the book.
+- download the class as CSV (opens in Excel) or JSON, or print a report. This is how to move results into another school system.
+
+**For the student:** on the book's home page, "My class" lets them sign in (the same Diin Islaam / Kids Quest username as the quest games) or create an account, then enter the class code. Their progress saves automatically.
+
+**How it is built:** it reuses the existing Kids Quest accounts, classes and teacher links (`kids-quest-cloud.js`, Firestore project `diinislaam-8fdeb`).
+
+| Data | Where | Who can read it |
+|---|---|---|
+| Progress, scores, written answers | `kids_quest_students/{uid}.progress["arbaeen-nawawi"]` | the student, and teachers linked to that student by joining their class |
+| Teacher marks and comments | `kids_quest_students/{uid}.progress["arbaeen-nawawi-teacher"]` | the same |
+| Classes | `kids_quest_classes/{code}` with `game: "arbaeen-nawawi"` | as for the other courses |
+
+"My Notes" and the chosen multiple-choice answers never leave the student's device. No new Firestore rules are needed if the rules already allow what Tuhfatul Atfaal and Seeraa do (students write their own record and join classes; teachers read their linked students and write `progress`). If your rules limit `game` names or `progress` keys, add `arbaeen-nawawi` and `arbaeen-nawawi-teacher`.
+
+| File | Contents |
+|---|---|
+| `../arbaeen-nawawi/class.js` | the student's "My class" card and the cloud sync |
+| `../arbaeen-nawawi-admin/index.html` | the teacher page |
+| `../arbaeen-nawawi-admin/meta.js` | hadith titles and written questions for the teacher page (made by `build_web.py`) |
+| `tests/` | a simulated cloud and an end-to-end test of the whole flow |
+
+To run the test: start a web server in the repository root (`python3 -m http.server 8765`), then `node tests/classes-flow.js`. It needs Playwright. The simulated cloud stands in for Firebase, so also try the real thing once with a teacher and a student account.

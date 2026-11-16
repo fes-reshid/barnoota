@@ -75,6 +75,7 @@
   <nav class="tp-switch hidden" id="tpSwitch" role="tablist" aria-label="Course">
     <button type="button" role="tab" id="tab-tuhfatul-atfaal" data-course="tuhfatul-atfaal" aria-selected="true" aria-controls="tpFrames">📜 <span>Tuhfatul<span class="tp-long"> Atfaal</span></span></button>
     <button type="button" role="tab" id="tab-seeraa" data-course="seeraa" aria-selected="false" aria-controls="tpFrames" tabindex="-1">🌙 <span>Seeraa</span></button>
+    <button type="button" role="tab" id="tab-arbaeen-nawawi" data-course="arbaeen-nawawi" aria-selected="false" aria-controls="tpFrames" tabindex="-1">📖 <span>Forty<span class="tp-long"> Hadith</span></span></button>
   </nav>
   <div class="tp-right">
     <span class="tp-who" id="tpWho"></span>
@@ -89,8 +90,8 @@
   <div class="tp-card">
     <div class="tp-icon" aria-hidden="true">🔑</div>
     <h1 id="tpTitle">Teacher sign in</h1>
-    <p id="tpLead">One login for both courses. After you sign in, switch between them at the top.</p>
-    <div class="tp-courses" aria-hidden="true"><span>📜 Tuhfatul Atfaal</span><span>🌙 Seeraa</span></div>
+    <p id="tpLead">One login for all courses. After you sign in, switch between them at the top.</p>
+    <div class="tp-courses" aria-hidden="true"><span>📜 Tuhfatul Atfaal</span><span>🌙 Seeraa</span><span>📖 Forty Hadith</span></div>
     <div class="tp-field"><label for="tpUser">Teacher username</label>
       <input type="text" id="tpUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="username-teacher"></div>
     <div class="tp-field"><label for="tpPass">Password</label>
@@ -122,7 +123,8 @@
    asks again. */
 const COURSES = {
   'tuhfatul-atfaal': { name: 'Tuhfatul Atfaal', src: '/tuhfatul-atfaal-admin/?embed=1&v=shared-teacher-2' },
-  'seeraa': { name: 'Seeraa', src: '/seeraa-admin/?embed=1&v=shared-teacher-2' }
+  'seeraa': { name: 'Seeraa', src: '/seeraa-admin/?embed=1&v=shared-teacher-2' },
+  'arbaeen-nawawi': { name: 'Forty Hadith', src: '/arbaeen-nawawi-admin/?embed=1&v=1' }
 };
 const $ = id => document.getElementById(id);
 let course = firstCourse(), signUp = false, signedIn = false;

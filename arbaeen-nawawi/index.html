@@ -248,8 +248,9 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:24px 16px 40p
   <div class="pbar" title="Hadith studied"><i id="pbar"></i></div><span class="pct" id="pct">0%</span>
 </div></div>
 <main id="app"></main>
-<footer>Compiled by Feysel Reshid · English translations from sunnah.com · <a href="/arbaeen-nawawi-book/Forty-Hadith-Nawawi-Study-Book.pdf">Download the printed book (PDF)</a> · Diin Islaam</footer>
+<footer>Compiled by Feysel Reshid · English translations from sunnah.com · <a href="/arbaeen-nawawi-book/Forty-Hadith-Nawawi-Study-Book.pdf">Download the printed book (PDF)</a> · <a href="/arbaeen-nawawi-admin/">For teachers</a> · Diin Islaam</footer>
 <script src="data.js"></script>
+<script type="module" src="/kids-quest-cloud.js?v=34"></script>
 <script>
 (function(){
 "use strict";
@@ -258,7 +259,7 @@ var DAYS=["Sat","Sun","Mon","Tue","Wed","Thu","Fri"], L="ABCDEFGHIJ", PASS=0.8;
 var KEY="arbaeen-nawawi.v1";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 var S=load(); ["studied","todo","notes","answers","tests"].forEach(function(k){S[k]=S[k]||{}});
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(window.ANclass)ANclass.onSave()}
 function $(s,r){return (r||document).querySelector(s)}
 function part(k){return P[k-1]}
 function setPart(el,k){var p=part(k);el.style.setProperty("--pa",p.accent);el.style.setProperty("--ps",p.soft)}
@@ -319,7 +320,7 @@ function home(){
     '<div class="stat"><b>'+tp+'/5</b><small>part tests passed</small></div>'+
     '<div class="stat"><b>'+(tp===5?"✓":"🔒")+'</b><small>certificate</small></div></div>'+
     '<p style="text-align:center;color:var(--muted);font-size:15px">Each hadith: Arabic and English with audio, the narrator, an explanation, lessons, questions and a to-do list for the week. '+
-    'Pass all five part tests (80% or more) to receive your certificate.</p>';
+    'Pass all five part tests (80% or more) to receive your certificate.</p><div id="classcard"></div>';
   P.forEach(function(p){
     html+='<section class="part" style="--pa:'+p.accent+'"><h2><small>'+p.label+'</small>'+p.name+'</h2><div class="cards">';
     for(var n=p.first;n<=p.last;n++){var h=H[n-1];
@@ -454,7 +455,7 @@ function bindTest(k){
     r.b=t.match.key.reduce(function(n,key,i){return n+(r.match[i]===key?1:0)},0);
     r.score=r.a+r.b;
     S.results=S.results||{};S.results[k]=r;
-    var prev=S.tests[k]||{best:0};S.tests[k]={best:Math.max(prev.best,r.score),last:r.score};save();
+    var prev=S.tests[k]||{best:0};S.tests[k]={best:Math.max(prev.best,r.score),last:r.score,tries:(prev.tries||0)+1};save();
     location.hash="#result/"+k;
   };
 }
@@ -627,12 +628,26 @@ function render(){
   else if((m=h.match(/^test\/([1-5])$/))){var k=+m[1];app.innerHTML=test(k);setPart(app.firstChild,k);bindTest(k);document.title=part(k).label+" Review Test · The Forty Hadith"}
   else if((m=h.match(/^result\/([1-5])$/))){var k2=+m[1];app.innerHTML=result(k2);setPart(app.firstChild,k2);bindResult(k2);document.title="Result · "+part(k2).label+" · The Forty Hadith"}
   else if(h==="certificate"){document.body.classList.add("certpage");app.innerHTML=certificate();bindCert();document.title="Certificate · The Forty Hadith"}
-  else{app.innerHTML=home();document.title="The Forty Hadith of Imam an-Nawawi · Online Study Book · Diin Islaam"}
+  else{app.innerHTML=home();if(window.ANclass)ANclass.mount($("#classcard"));document.title="The Forty Hadith of Imam an-Nawawi · Online Study Book · Diin Islaam"}
   progress();window.scrollTo(0,0);
 }
+/* bridge for class.js (optional teacher/class features) */
+function isHome(){return !location.hash.replace(/^#/,"")}
+window.AN={
+  get:function(){return S},
+  part:part,
+  passed:passed,
+  review:function(k,r){return reviewList(k,r).map(function(x){return [x.n,x.c]})},
+  merge:function(fn){
+    var key=function(){return JSON.stringify([S.studied,S.tests,S.name,S.teacher])}, before=key();
+    fn(S);save();
+    if(key()!==before){progress();if(isHome()){var y=window.scrollY;render();window.scrollTo(0,y)}}
+  }
+};
 window.addEventListener("hashchange",render);
 render();
 })();
 </script>
+<script src="class.js?v=2"></script>
 </body>
 </html>
