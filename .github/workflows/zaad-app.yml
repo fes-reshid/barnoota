@@ -70,9 +70,9 @@ jobs:
       - run: flutter pub get
       - name: Build the test APK
         run: flutter build apk --debug
-      # Only keep the APK when run by hand, so routine runs don't use Actions storage.
+      # Keep the APK for pull requests and hand runs (a few days), but not for every push to main.
       - uses: actions/upload-artifact@v4
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
         with:
           name: zaad-android-test
           path: zaad_app/build/app/outputs/flutter-apk/app-debug.apk
