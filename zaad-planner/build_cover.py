@@ -45,7 +45,7 @@ def back_cover(edition, ramadan):
 {gift}
 <p class="bk-q">“And take provision, for the best provision is taqwa.”<span>al-Baqarah 2:197</span></p>
 <div class="bk-bar"><span>Barcode / ISBN area</span></div>
-<p class="bk-by">Compiled by Feysel Reshid · diinislaam.com</p></div>'''
+<p class="bk-by">Compiled by Feysel Reshid · <span style="text-transform:none;letter-spacing:.08em">diinislaam.com/planner</span></p></div>'''
 
 
 def build(edition, ramadan):

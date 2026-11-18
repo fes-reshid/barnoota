@@ -303,7 +303,7 @@ Fear Allah. Indeed, Allah is fully aware of what you do.</p>
 <p class="tp-d">A Muslim's Daily Planner for 2027<br>1448 – 1449 AH</p>
 <p class="tp-f">Every day from Fajr to sleep · A hadith in Arabic and English every day<br>Hijri dates · Ramadan and Dhul-Hijjah pages · 53 hadith to live by</p>
 <div class="own"><span>This planner belongs to</span><div class="ln"></div><span>If found, please return it. Contact</span><div class="ln"></div></div>
-<p class="tp-by">Compiled by Feysel Reshid · diinislaam.com</p></div>''', nofoot=True)
+<p class="tp-by">Compiled by Feysel Reshid · <span class="url">diinislaam.com/planner</span></p></div>''', nofoot=True)
 
     add(f'''<div class="center gift"><div class="cv-r dark"><i></i>{STAR}<i></i></div>
 <p class="gt">A gift</p>
@@ -973,10 +973,10 @@ def week_spread(n, start, hadith, month):
     assert len(PAGES) % 2 == 1, "a week must open on a left-hand page"
     add(f'<div class="act"><div><b>Live it</b>{action}</div></div>' + "".join(day_block(d) for d in left) + (fill if len(left) < 3 else ""),
         cls="week wk2", month=month, band=band.replace('class="wkb"', 'class="wkb sm"'))
-    add("".join(day_block(d) for d in right) + (fill if len(right) < 4 else "")
-        + '<div class="wfoot">' + names_card(n, "nm n2")
+    add('<div class="wfoot">' + names_card(n, "nm n2")
         + '<div class="sc s3">' + "".join(f"<div><span>{t}</span><b>__</b></div>" for t in [
-            "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>",
+            "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>"
+        + "".join(day_block(d) for d in right) + (fill if len(right) < 4 else ""),
         cls="wk2", month=month)
 
 
@@ -1018,7 +1018,7 @@ each with its own picture and theme, every day of 2027 with its Hijri date, the 
 the ninety-nine names with two to memorise each week, and a hadith in Arabic and English for every week.</p>
 <p class="ayah-en" style="max-width:100mm;margin-top:4mm">It comes as a weekly edition, one week on two pages, to carry in your bag,
 and a daily edition with a page for every day.</p>
-<p class="ref" style="margin-top:8mm">diinislaam.com</p></div>''', nofoot=True)
+<p class="ref" style="margin-top:8mm"><span class="url" style="font-size:11pt">diinislaam.com/planner</span></p></div>''', nofoot=True)
 
 
 def build_weekly():
@@ -1076,7 +1076,7 @@ def back():
 <p class="ayah-en">Glory be to You, O Allah, and praise. I bear witness that none has the right to be worshipped but
 You. I seek Your forgiveness and I turn to You in repentance.</p>
 <p class="ref">The supplication at the end of a gathering · at-Tirmidhi 3433</p>
-<p class="tp-by" style="margin-top:22mm">{TITLE}: Provision for the Day · {YEAR}<br>diinislaam.com</p></div>''', nofoot=True)
+<p class="tp-by" style="margin-top:22mm">{TITLE}: Provision for the Day · {YEAR}<br><span class="url">diinislaam.com/planner</span></p></div>''', nofoot=True)
 
 
 # ---------------------------------------------------------------------------

@@ -446,3 +446,6 @@ p.ar .saw, .ayah .saw { font-family: 'Amiri', serif; }
 .rem.wkrem { height: 38mm; } .tk.dense p { line-height: 1.1; } .cal td { height: 16.3mm; }
 .rem.wkrem.l3 p.ar { font-size: 8.2pt; line-height: 1.42; } .rem.wkrem.l3 p { font-size: 5.9pt; line-height: 1.15; } .rem.wkrem.l2 p.ar { font-size: 9.2pt; }
 .rem .live i { font-style: italic; }
+.wfoot { margin: 0 0 2.6mm; }
+.wfoot { margin: 0 0 .4mm; } .wfoot .nm.n2 { padding-top: .4mm; padding-bottom: .4mm; }
+.url { text-transform: none; letter-spacing: .08em; }
