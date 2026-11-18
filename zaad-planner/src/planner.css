@@ -344,7 +344,7 @@ p.ar { font-family: 'Amiri', serif; font-style: normal; direction: rtl; text-ali
 .rem.wkrem b { color: var(--ac); } .rem.wkrem p.ar { font-size: 11.2pt; line-height: 1.6; margin: .3mm 0; } .rem.wkrem p { font-size: 7.1pt; line-height: 1.28; }
 .rem.wkrem.l2 p.ar { font-size: 9.8pt; line-height: 1.52; } .rem.wkrem.l2 p { font-size: 6.6pt; line-height: 1.22; }
 .rem.wkrem.l3 p.ar { font-size: 8.8pt; line-height: 1.46; } .rem.wkrem.l3 p { font-size: 6.2pt; line-height: 1.18; }
-.rem .live { font-style: normal; margin-top: .8mm; color: var(--ink); } .rem .live i { font-family: 'Inter', sans-serif; font-style: normal; font-size: 4.8pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: var(--gold); border-radius: 3mm; padding: .3mm 1.6mm; margin-right: 1.4mm; vertical-align: .2mm; }
+.rem .live { font-style: normal; margin-top: .8mm; color: var(--ink); } .rem .live > i:first-child { font-family: 'Inter', sans-serif; font-style: normal; font-size: 4.8pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: var(--gold); border-radius: 3mm; padding: .3mm 1.6mm; margin-right: 1.4mm; vertical-align: .2mm; }
 .nmm { width: 25mm; flex: none; border-left: .7px dotted var(--gold); padding-left: 2.2mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .nmm .lb { font-family: 'Inter', sans-serif; font-size: 4.4pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
 .nmm .ar { font-family: 'Amiri', serif; font-size: 17pt; line-height: 1.65; color: var(--ac); } .nmm h5 { font-family: 'Cinzel', serif; font-size: 7pt; letter-spacing: .04em; } .nmm em { font-size: 6.4pt; color: var(--muted); line-height: 1.2; }
@@ -403,3 +403,46 @@ p.ar .saw, .ayah .saw { font-family: 'Amiri', serif; }
 .rem p.ar { font-size: 10pt; line-height: 1.55; } .rem.wkrem.l2 p.ar { font-size: 9.5pt; line-height: 1.56; } .rem.wkrem.l3 p.ar { font-size: 8.9pt; line-height: 1.52; }
 .three p.ar { font-size: 10.2pt; line-height: 1.66; }
 .n1 .ar { white-space: nowrap; } .nm.n2 .n1.long .ar { font-size: 11pt; line-height: 1.9; } .n1.long h5 { font-size: 6.2pt; white-space: nowrap; } .nmm .n1.long .ar { font-size: 10pt; } .nmm .n1.long h5 { font-size: 5.2pt; }
+
+
+/* ======================= name of the day, prayer times, month page, gift, bookmarks, stickers ======================= */
+.db { height: 30.5mm; padding-bottom: 8mm; } .day .in { top: 33.5mm; }
+.db > .dnm { position: absolute; left: 0; right: 0; bottom: 0; height: 8mm; display: flex; align-items: center; gap: 2.6mm; background: rgba(0,0,0,.32); border-top: .6px solid rgba(231,200,115,.55); }
+.page.r .dnm { padding-left: 15mm; padding-right: 10mm; } .page.l .dnm { padding-left: 10mm; padding-right: 15mm; }
+.dnm .ar { font-family: 'Scheherazade New', 'Amiri', serif; font-size: 15pt; line-height: 1.05; color: var(--gold2); min-width: 19mm; text-align: center; flex: none; }
+.dnm .nt { width: 35mm; flex: none; line-height: 1.12; } .dnm small { display: block; font-family: 'Inter', sans-serif; font-size: 4.2pt; letter-spacing: .14em; text-transform: uppercase; color: var(--gold2); }
+.dnm b { display: block; font-family: 'Cinzel', serif; font-size: 7.2pt; color: #fff; letter-spacing: .04em; } .dnm em { display: block; font-size: 5.8pt; color: var(--gold2); }
+.dnm > i { flex: 1; font-style: italic; font-size: 6.4pt; line-height: 1.28; color: #fff; border-left: .6px solid rgba(231,200,115,.55); padding-left: 2.4mm; }
+.cal td { height: 17mm; } .lg { margin: 1mm 0 2mm; }
+.pt { width: 100%; border-collapse: collapse; table-layout: fixed; } .pt th { font-family: 'Inter', sans-serif; font-size: 5pt; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: .4mm 0; }
+.pt tr th:first-child { width: 11mm; text-align: left; color: var(--ac); } .pt td { border: .6px solid var(--rule); height: 4.8mm; background: #fff; }
+.bx h4 em { text-transform: none; }
+.hbs .hb td { height: 4.9mm; }
+.sunw .sw { display: flex; align-items: center; gap: 2mm; border-bottom: .7px dotted #a99f88; min-height: 6.2mm; padding: .6mm 0; }
+.sunw .sw b { width: 14mm; flex: none; font-family: 'Inter', sans-serif; font-size: 5.6pt; letter-spacing: .08em; text-transform: uppercase; color: var(--ac); line-height: 1.15; } .sunw .sw b em { display: block; font-style: normal; font-weight: 400; color: var(--muted); letter-spacing: .02em; }
+.sunw .sw span { font-size: 7.6pt; line-height: 1.25; } .sunw .sw i { font-family: 'Inter', sans-serif; font-style: normal; font-size: 5pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-left: 1.4mm; }
+.gift .gt, .center .gt { font-family: 'Cinzel', serif; font-size: 24pt; letter-spacing: .12em; color: var(--ac); margin: 3mm 0 1mm; text-transform: uppercase; }
+.gift .ayah { margin-top: 2mm; }
+.gf { width: 92mm; margin-top: 10mm; text-align: left; } .gf span { font-family: 'Inter', sans-serif; font-size: 5.8pt; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 3.2mm; } .gf .ln { height: 6.6mm; }
+.bms { display: flex; justify-content: space-between; margin: 5mm 0 4mm; }
+.bmk { position: relative; width: 38mm; height: 150mm; border: 1.1px dashed #7a6a4a; border-radius: 19mm 19mm 2mm 2mm; background: linear-gradient(180deg, var(--bc), color-mix(in srgb, var(--bc) 55%, #000)); color: #fff; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 11mm 3.5mm 0; }
+.bmk .hole { position: absolute; top: 5mm; width: 4mm; height: 4mm; border: .9px dashed rgba(255,255,255,.8); border-radius: 50%; }
+.bmk svg { width: 8mm; height: 8mm; fill: #e7c873; margin: 6mm 0 8mm; overflow: visible; }
+.bar { font-family: 'Scheherazade New', serif; font-size: 17pt; line-height: 2.1; color: #f6e3a8; } .ben { font-style: italic; font-size: 8.4pt; line-height: 1.4; margin-top: 8mm; }
+.bref { font-family: 'Inter', sans-serif; font-size: 5.6pt; letter-spacing: .14em; text-transform: uppercase; color: #e7c873; margin-top: 4mm; } .bz { margin-top: auto; padding-bottom: 6mm; font-family: 'Cinzel', serif; font-size: 7pt; letter-spacing: .24em; color: rgba(255,255,255,.75); }
+.stks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.6mm 2.4mm; margin-top: 2mm; }
+.stk { background: var(--sc); color: #fff; border-radius: 3mm; height: 10.4mm; display: flex; align-items: center; justify-content: center; gap: 1.4mm; font-family: 'Inter', sans-serif; font-size: 6.2pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; box-shadow: inset 0 0 0 .5mm rgba(255,255,255,.35); }
+.stk .ico { width: 3.6mm; height: 3.6mm; vertical-align: 0; color: #f6e3a8; }
+/* fitting the name-of-the-day band */
+.db { height: 29.6mm; } .db > .dnm { height: 7.4mm; } .day .in { top: 32.4mm; }
+.sal td { height: 4.6mm; } .top3 .ln { height: 4.5mm; } .blk .ln { height: 3.7mm; } .blk > span { margin-top: .25mm; }
+.niy { height: 6.6mm; margin-bottom: 1.8mm; } .rem { height: 25mm; } .eve .ln { height: 4.3mm; } .tk p { line-height: 1.15; }
+.hbs .hb td { height: 4mm; } .sunw .sw { min-height: 5.6mm; padding: .4mm 0; }
+.rem.lg p.ar { font-size: 9.2pt; line-height: 1.45; } .rem.lg p { font-size: 6.2pt; line-height: 1.2; } .rem.lg b { font-size: 4.9pt; }
+.tk.dense p { line-height: 1.02; font-size: 6.9pt; } .tk.dense i.cb { width: 2.4mm; height: 2.4mm; }
+.hbs .hb td { height: 3.8mm; } .hbs .hb th:first-child { font-size: 5.8pt; }
+.tk.dense p { line-height: .98; font-size: 6.8pt; } .sunw .sw { min-height: 5.3mm; } .hbs .hb td { height: 3.7mm; }
+.day.fri .sal td { height: 4.3mm; } .sunw .sw { min-height: 5mm; padding: .3mm 0; } .hbs .hb td { height: 3.6mm; }
+.rem.wkrem { height: 38mm; } .tk.dense p { line-height: 1.1; } .cal td { height: 16.3mm; }
+.rem.wkrem.l3 p.ar { font-size: 8.2pt; line-height: 1.42; } .rem.wkrem.l3 p { font-size: 5.9pt; line-height: 1.15; } .rem.wkrem.l2 p.ar { font-size: 9.2pt; }
+.rem .live i { font-style: italic; }

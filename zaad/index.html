@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zaad Today: a name of Allah and a hadith for the day · Diin Islaam</title>
+<meta name="description" content="Today's name of Allah and how to live by it, a hadith in Arabic and English with its narrator, and the Sunnah of the week. From Zaad, a Muslim's planner for 2027.">
+<link rel="stylesheet" href="../arbaeen-nawawi-book/fonts/fonts.css">
+<style>
+  @font-face { font-family: 'Scheherazade New'; src: url(fonts/ScheherazadeNew-Regular.ttf); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Scheherazade New'; src: url(fonts/ScheherazadeNew-Bold.ttf); font-weight: 700; font-display: swap; }
+  :root { --ink:#25221c; --muted:#6d5f45; --gold:#b8913f; --gold2:#e7c873; --green:#0f5a4f; --deep:#072a26; --paper:#fdfbf5; --soft:#e3f0ec; }
+  @media (prefers-color-scheme: dark) { :root { --ink:#efe8d6; --muted:#b9ac8c; --paper:#0d1a18; --soft:#14302b; --green:#6fc2ae; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Lora', Georgia, serif; line-height: 1.55; }
+  .ar { font-family: 'Scheherazade New', 'Amiri', serif; direction: rtl; }
+  header { background: radial-gradient(ellipse at 50% 0%, #17695e, var(--deep) 75%); color: #f6edd4; text-align: center; padding: 38px 20px 30px; border-bottom: 3px solid var(--gold2); }
+  header .t { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(30px, 8vw, 44px); letter-spacing: .26em; padding-left: .26em; color: var(--gold2); }
+  header .a { font-family: 'Scheherazade New', serif; font-size: 28px; color: var(--gold2); line-height: 1.5; }
+  header p { margin: 4px 0 0; font-style: italic; }
+  .date { margin-top: 16px; font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: #fff; }
+  .date b { display: block; font-family: 'Scheherazade New', serif; font-size: 24px; letter-spacing: 0; text-transform: none; color: var(--gold2); font-weight: 400; margin-top: 2px; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  section { background: var(--soft); border-left: 4px solid var(--gold); border-radius: 0 12px 12px 0; padding: 18px 20px; margin: 0 0 18px; }
+  h2 { margin: 0 0 6px; font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  .name { text-align: center; }
+  .name .ar { font-size: 56px; line-height: 1.5; color: var(--green); }
+  .name h3 { margin: 0; font-family: 'Cinzel', serif; letter-spacing: .06em; font-size: 22px; }
+  .name .m { font-style: italic; color: var(--muted); }
+  .live { display: inline-block; margin-top: 10px; font-size: 17px; }
+  .live::before { content: 'Live it'; font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: var(--gold); border-radius: 10px; padding: 2px 9px; margin-right: 8px; vertical-align: 2px; }
+  .had .ar { font-size: 28px; line-height: 2; color: var(--green); text-align: right; }
+  .had p { margin: 8px 0 0; font-size: 17px; font-style: italic; }
+  .had .ref { font-family: 'Inter', sans-serif; font-style: normal; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .sun p { margin: 0; font-size: 18px; } .sun .ref { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .dua { text-align: center; } .dua .ar { font-size: 24px; line-height: 1.9; color: var(--green); }
+  .get { text-align: center; margin-top: 26px; }
+  .get a { display: inline-block; margin: 6px; padding: 11px 20px; border-radius: 26px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-decoration: none; }
+  .get .p { background: var(--green); color: #fff; } .get .s { border: 1.5px solid var(--green); color: var(--green); }
+  .note { font-size: 13px; color: var(--muted); text-align: center; margin-top: 18px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="t">ZAAD</div><div class="a" lang="ar" dir="rtl">زَادُ اليَوْم</div>
+  <p>Provision for the Day</p>
+  <div class="date"><span id="greg"></span><b class="ar" id="hij" lang="ar"></b></div>
+</header>
+<main>
+  <section class="name"><h2>Name of Allah for today · <span id="nno"></span> of 99</h2>
+    <div class="ar" id="nar" lang="ar"></div><h3 id="nen"></h3><div class="m" id="nme"></div><div class="live" id="nlv"></div></section>
+  <section class="had"><h2 id="hlb"></h2><div class="ar" id="har" lang="ar"></div><p id="hen"></p><p class="ref" id="hrf"></p></section>
+  <section class="sun"><h2>Sunnah of the week · week <span id="wno"></span></h2><p id="sut"></p><p class="ref" id="sur"></p></section>
+  <section class="dua"><h2>Call upon Him by His names</h2>
+    <div class="ar" lang="ar">وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا</div>
+    <p style="margin:6px 0 0;font-style:italic">“To Allah belong the most beautiful names, so call upon Him by them.” <span style="font-family:Inter,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">al-A'raf 7:180</span></p></section>
+  <div class="get">
+    <a class="p" href="Zaad-Free-Sample-2027.pdf">Free sample: February 1448 (PDF)</a>
+    <a class="s" href="../contact.html">Ask for the full planner</a>
+  </div>
+  <p class="note">The name and the Sunnah follow the weeks of Zaad, a Muslim's planner for 2027 (1448 – 1449 AH). The names are the well-known list reported in at-Tirmidhi 3507; Allah has names beyond these. The Hijri date follows the Umm al-Qura calendar and may differ from your local moon sighting by a day.</p>
+</main>
+<script src="data.js"></script>
+<script>
+(function () {
+  var d = new Date(), y = d.getFullYear(), day = new Date(y, d.getMonth(), d.getDate());
+  var $ = function (id) { return document.getElementById(id); };
+  var MS = 86400000, jan1 = new Date(y, 0, 1);
+  var yday = Math.round((day - jan1) / MS) + 1;
+  // Weeks run Monday to Sunday; week 1 starts on 1 January (the same rule as the planner).
+  var mon0 = new Date(y, 0, 1 - ((jan1.getDay() + 6) % 7));
+  var wk = Math.floor(Math.round((day - mon0) / MS) / 7) + 1;
+  var wStart = new Date(Math.max(jan1, new Date(mon0.getTime() + (wk - 1) * 7 * MS)));
+  var wEnd = new Date(Math.min(new Date(y, 11, 31), new Date(mon0.getTime() + (wk * 7 - 1) * MS)));
+  var len = Math.round((wEnd - wStart) / MS) + 1, pos = Math.round((day - wStart) / MS);
+  var ni;
+  if (2 * wk - 2 >= 99) ni = (yday * 5) % 99;                       // the last weeks revise all ninety-nine
+  else if (2 * wk - 1 >= 99 || pos < Math.floor((len + 1) / 2)) ni = 2 * wk - 2;
+  else ni = 2 * wk - 1;
+  var n = ZAAD.names[ni];
+  $('nno').textContent = ni + 1; $('nar').textContent = n[1]; $('nen').textContent = n[0]; $('nme').textContent = n[2]; $('nlv').textContent = n[3];
+
+  var hm = 0, hd = 0;
+  try {
+    var parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' }).formatToParts(d);
+    parts.forEach(function (p) { if (p.type === 'month') hm = +p.value; if (p.type === 'day') hd = +p.value; });
+    $('hij').textContent = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+  } catch (e) { $('hij').textContent = ''; }
+  $('greg').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+  var h, list;
+  if (hm === 9) list = ZAAD.ramadan, h = list[hd % list.length];
+  else if (d.getDay() === 5) list = ZAAD.friday, h = list[wk % list.length];
+  else list = ZAAD.foot, h = list[(yday * 29) % list.length];
+  $('hlb').textContent = 'Hadith for today · ' + h.label; $('har').textContent = h.ar; $('hen').innerHTML = h.en; $('hrf').textContent = h.ref;
+
+  var s = ZAAD.sunnah[(wk - 1) % ZAAD.sunnah.length];
+  $('wno').textContent = wk; $('sut').textContent = s[0]; $('sur').textContent = s[1];
+})();
+</script>
+</body>
+</html>

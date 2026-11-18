@@ -13,16 +13,20 @@ from hijridate import Gregorian
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 from content import (EVIDENCE, EV_NUM, SEASONAL, SEA, WEEKLY, SEASON_WEEK_TITLES, MONTHS,  # noqa: E402
-                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR, NAMES, ARABIC_MANUAL, NARRATOR)
+                     HIJRI_MONTHS, WEEKDAYS_AR, ADHKAR, NAMES, ARABIC_MANUAL, NARRATOR, NAME_LIVE, SUNNAH_WEEK)
 import art  # noqa: E402
 
 YEAR = 2027
 SAMPLE = bool(os.environ.get("SAMPLE"))
+FREE_SAMPLE = bool(os.environ.get("FREE_SAMPLE"))      # a free preview: front matter, the names, and February (Ramadan)
+RAMADAN_COVER = os.environ.get("COVER") == "ramadan"   # the Ramadan 1448 gift edition cover
 BUILD = os.path.join(ROOT, ".build")
 # EDITION=weekly builds the slim edition: one week on two facing pages instead of one page per day.
-WEEKLY_ED = os.environ.get("EDITION") == "weekly"
-OUT = os.path.join(ROOT, "Zaad-Planner-2027-sample.pdf" if SAMPLE else
+WEEKLY_ED = os.environ.get("EDITION") == "weekly" or FREE_SAMPLE
+OUT = os.path.join(ROOT, "Zaad-Planner-2027-sample.pdf" if SAMPLE else "Zaad-Free-Sample-2027.pdf" if FREE_SAMPLE else
                    "Zaad-Muslim-Weekly-Planner-2027.pdf" if WEEKLY_ED else "Zaad-Muslim-Daily-Planner-2027.pdf")
+if RAMADAN_COVER:
+    OUT = OUT.replace(".pdf", "-Ramadan.pdf")
 # Pages left out of the weekly edition, by page title.
 WEEKLY_SKIP = ("Goals in six areas", "Memorisation and revision", "Sadaqah and zakah", "Knowledge log", "Next year, in sha Allah")
 os.makedirs(BUILD, exist_ok=True)
@@ -44,6 +48,27 @@ def nref(key, ref):
     """The reference with the narrator in front: Abu Hurayrah · al-Bukhari 1."""
     n = NARRATOR.get(key)
     return f"{n} · {ref}" if n else ref
+
+
+JAN1 = dt.date(YEAR, 1, 1)
+
+
+def week_of(d):
+    """(week number, first day, number of days) for the week that contains d. Weeks run Monday to Sunday; week 1 starts on 1 January."""
+    mon0 = JAN1 - dt.timedelta(days=JAN1.weekday())
+    n = (d - mon0).days // 7 + 1
+    start = max(JAN1, mon0 + dt.timedelta(days=7 * (n - 1)))
+    end = min(dt.date(YEAR, 12, 31), mon0 + dt.timedelta(days=7 * n - 1))
+    return n, start, (end - start).days + 1
+
+
+def name_for(d):
+    """Index of the name of Allah for a day: the first name of the week for the first half of the week, the second for the rest."""
+    n, start, ln = week_of(d)
+    names = week_names(n)
+    if not names:                                   # the last weeks revise all ninety-nine
+        return (d.timetuple().tm_yday * 5) % 99
+    return 2 * n - 2 + (0 if (d - start).days < (ln + 1) // 2 or len(names) == 1 else 1)
 
 
 def week_names(n):
@@ -255,7 +280,7 @@ def cover():
   <div class="cv-t">ZAAD</div>
   <div class="cv-s">Provision for the Day</div>
   <div class="cv-r"><i></i>{STAR}<i></i></div>
-  <div class="cv-d">A Muslim's Daily Planner<br>lived by the Sunnah</div>
+  <div class="cv-d">{"A Muslim's Planner<br>Ramadan 1448 Edition" if RAMADAN_COVER else "A Muslim's Daily Planner<br>lived by the Sunnah"}</div>
   <div class="cv-y">2027</div>
   <div class="cv-h">1448 – 1449 AH</div>
 <div class="cv-q">“And take provision, for the best<br>provision is taqwa.”<span>al-Baqarah 2:197</span></div>
@@ -263,7 +288,8 @@ def cover():
 
 
 def front():
-    add(cover(), cls="cover", nofoot=True, band=art.cover_art())
+    add(cover(), cls="cover" + (" ramadan" if RAMADAN_COVER else ""), nofoot=True,
+        band=art.scene(2, MONTHS[1][3]) if RAMADAN_COVER else art.cover_art())
     add('''<div class="center">
 <div class="basm" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
 <div class="ayah" lang="ar" dir="rtl">يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَلْتَنظُرْ نَفْسٌ مَّا قَدَّمَتْ لِغَدٍ ۖ وَاتَّقُوا اللَّهَ ۚ إِنَّ اللَّهَ خَبِيرٌ بِمَا تَعْمَلُونَ</div>
@@ -278,6 +304,14 @@ Fear Allah. Indeed, Allah is fully aware of what you do.</p>
 <p class="tp-f">Every day from Fajr to sleep · A hadith in Arabic and English every day<br>Hijri dates · Ramadan and Dhul-Hijjah pages · 53 hadith to live by</p>
 <div class="own"><span>This planner belongs to</span><div class="ln"></div><span>If found, please return it. Contact</span><div class="ln"></div></div>
 <p class="tp-by">Compiled by Feysel Reshid · diinislaam.com</p></div>''', nofoot=True)
+
+    add(f'''<div class="center gift"><div class="cv-r dark"><i></i>{STAR}<i></i></div>
+<p class="gt">A gift</p>
+<div class="ayah" lang="ar" dir="rtl">{AR["jazak"]}</div>
+<p class="ayah-en">“Whoever has a good done to him and says to the one who did it, <i>Jazakallahu khayran</i> (may Allah reward you with good),
+has done his utmost in praise.”</p><p class="ref">{nref("jazak", "at-Tirmidhi 2035")}</p>
+<div class="gf"><span>To</span><div class="ln"></div><span>From</span><div class="ln"></div><span>Date</span><div class="ln"></div>
+<span>My dua for you</span><div class="ln"></div><div class="ln"></div><div class="ln"></div></div></div>''', nofoot=True)
 
     add(head("Before you begin", "Three notes on what is printed here") + '''
 <div class="prose">
@@ -306,8 +340,8 @@ you read his name.</p>
 <div class="how">
 <div><b>1</b><div><h3>Set the year</h3><p>Write your intention and your goals in six areas of life on the “My year”
 pages. Mark the Islamic dates. Choose your Qur'an plan.</p></div></div>
-<div><b>2</b><div><h3>Open each month</h3><p>Each month has a theme and an ayah, a calendar with Hijri dates, a
-goals page and a habit grid. Shade one square in the grid for each day you keep a habit.</p></div></div>
+<div><b>2</b><div><h3>Open each month</h3><p>Each month has a theme and an ayah, a calendar with Hijri dates and
+a place for your prayer times, and one page for your goals, your habits and a Sunnah for each week. Shade one square in the grid for each day you keep a habit.</p></div></div>
 <div><b>3</b><div><h3>Start each week with one hadith</h3><p>The week page gives a hadith to live by and one action
 for it. Plan the seven days and review the week before.</p></div></div>
 <div><b>4</b><div><h3>Live the day around the prayer</h3><p>The day page is built on the five prayers. Write your
@@ -635,6 +669,23 @@ def names_pages():
         + '<div class="ng">' + "".join(cell(i) for i in range(51, 99)) + "</div>")
 
 
+def extras_pages():
+    marks = [("رَبِّ زِدْنِي عِلْمًا", "My Lord, increase me in knowledge.", "Ta-Ha 20:114", MONTHS[0][3]),
+             ("إِنَّ مَعَ الْعُسْرِ يُسْرًا", "Indeed, with hardship comes ease.", "ash-Sharh 94:6", MONTHS[1][3]),
+             ("فَاذْكُرُونِي أَذْكُرْكُمْ", "Remember Me, and I will remember you.", "al-Baqarah 2:152", MONTHS[4][3])]
+    bm = "".join(f'<div class="bmk" style="--bc:{c}"><i class="hole"></i>{STAR}<div class="bar" lang="ar" dir="rtl">{a}</div>'
+                 f'<div class="ben">{e}</div><div class="bref">{r}</div><div class="bz">ZAAD · {YEAR}</div></div>' for a, e, r, c in marks)
+    add(head("Bookmarks", "Cut along the dotted line, and punch a hole for a tassel", "فَاصِلُ الكِتَاب") + f'<div class="bms">{bm}</div>'
+        + '<p class="fine" style="text-align:center">Print on thick paper or card. Keep one in this planner and give the others away.</p>', toc="Bookmarks and stickers")
+    items = [("Fajr", "fajr", 0), ("Dhuhr", "dhuhr", 0), ("'Asr", "asr", 0), ("Maghrib", "maghrib", 0), ("'Isha", "isha", 0),
+             ("Qur'an", "", 1), ("Dhikr", "", 1), ("Dua", "", 1), ("Sadaqah", "", 1), ("Duha", "", 1), ("Witr", "", 1), ("Tahajjud", "", 1),
+             ("Fasting", "", 2), ("White day", "", 2), ("Ramadan", "", 2), ("Jumu\'ah", "", 2), ("Eid", "", 2), ("'Arafah", "", 2),
+             ("Family", "", 3), ("Study", "", 3), ("Work", "", 3), ("Goal", "", 3), ("Done", "", 3), ("Make up", "", 3)]
+    cols = ["#0f5a4f", "#5b3a8c", "#8a5a1d", "#1d4e7a"]
+    st = "".join(f'<div class="stk" style="--sc:{cols[k]}">{art.ICON[i] if i else ""}{t}</div>' for t, i, k in items * 2)
+    add(head("Stickers", "Print on sticker paper, cut and use anywhere in the planner", "مُلْصَقَات") + f'<div class="stks">{st}</div>')
+
+
 def hijri_span(m):
     first, last = dt.date(YEAR, m, 1), dt.date(YEAR, m, calendar.monthrange(YEAR, m)[1])
     a, b = hij(first), hij(last)
@@ -647,6 +698,15 @@ def hijri_span(m):
     en = " · ".join(hname(mm) for _y, mm in seq) + f" {a[0]}" + (f" – {b[0]}" if b[0] != a[0] else "")
     ar = " · ".join(HIJRI_MONTHS[mm - 1][1] for _y, mm in seq)
     return en, ar
+
+
+def prayer_strip(m):
+    """A blank table for the prayer times of your city: four days of the month."""
+    nd = calendar.monthrange(YEAR, m)[1]
+    days = ("1st", "10th", "20th", f"{nd}th")
+    head_ = "".join(f"<th>{p}</th>" for p in ("Fajr", "Sunrise", "Dhuhr", "'Asr", "Maghrib", "'Isha"))
+    rows = "".join(f"<tr><th>{lbl}</th>" + "<td></td>" * 6 + "</tr>" for lbl in days)
+    return box('Prayer times <em>My city ____________</em>', f'<table class="pt"><tr><th></th>{head_}</tr>{rows}</table>')
 
 
 def month_pages(m):
@@ -688,7 +748,7 @@ def month_pages(m):
         + '<div class="lg"><span><i class="wd"></i>White day (13 · 14 · 15)</span><span><i class="fr"></i>Jumu\'ah</span>'
           '<span><i class="ram"></i>Ramadan</span><span><i class="big"></i>Special day</span></div>'
         + (f'<p class="spd">{" &nbsp;·&nbsp; ".join(notes)}</p>' if notes else "")
-        + box("Dates to remember", lines(4 if notes else 5)), month=m)
+        + prayer_strip(m) + box("Dates to remember", lines(2)), month=m)
 
     add(head(f"{MONTH_NAMES[m]}: my plan", f"Theme of the month: {theme.lower()}")
         + box("My intention this month", lines(2))
@@ -701,7 +761,7 @@ def month_pages(m):
     hg = '<table class="hb"><tr><th></th>' + "".join(
         f'<th class="{"fr" if dt.date(YEAR, m, n).weekday() == 4 else ""}">{n}</th>' for n in range(1, nd + 1)) + "</tr>"
     hg += '<tr class="wdr"><th></th>' + "".join(f'<th>{"MTWTFSS"[dt.date(YEAR, m, n).weekday()]}</th>' for n in range(1, nd + 1)) + "</tr>"
-    for h in HABITS + [""] * 5:
+    for h in HABITS + [""]:
         hg += f"<tr><th>{h}</th>" + "".join(
             f'<td class="{"fr" if dt.date(YEAR, m, n).weekday() == 4 else ""}"></td>' for n in range(1, nd + 1)) + "</tr>"
     hg += "</table>"
@@ -789,9 +849,9 @@ def week_page(n, start, hadith):
     return body, band
 
 
-BASE_TICKS = [("Morning adhkar", "adhkar"), ("Qur'an: from ______ to ______", "quran"), ("Dhikr after every prayer", "tasbih"),
+BASE_TICKS = [("Morning and evening adhkar", "adhkar"), ("Qur'an: from ______ to ______", "quran"), ("Dhikr after every prayer", "tasbih"),
               ("Istighfar ×100", "istighfar"), ("Salawat on the Prophet", "salawat"), ("Sadaqah or a kind act", "sadaqah"),
-              ("Parents and kin: call, serve, dua", "kin"), ("Guarded my tongue", "tongue"), ("Evening adhkar", "adhkar"),
+              ("Parents and kin: call, serve, dua", "kin"), ("Guarded my tongue", "tongue"),
               ("Ayat al-Kursi, end of al-Baqarah", "kursi"), ("Slept with wudu, on my right", "sleep")]
 PRAYERS = [("Fajr", "2"), ("Dhuhr", "4+2"), ("'Asr", ""), ("Maghrib", "2"), ("'Isha", "2")]
 PICON = {"Fajr": "fajr", "Dhuhr": "dhuhr", "'Asr": "asr", "Maghrib": "maghrib", "'Isha": "isha"}
@@ -799,7 +859,7 @@ BLOCKS = ["After Fajr", "Morning", "After Dhuhr", "After 'Asr", "After Maghrib",
 SEASON_TITLES = set(SEASON_WEEK_TITLES.values())
 # Hadith for the foot of ordinary days: the tick hadith and the shorter weekly ones. (label, text, reference)
 FOOT = [f for f in [(e[1], e[2], e[3], e[0]) for e in EVIDENCE] + [(w[0], w[1], w[2], w[0]) for w in WEEKLY if w[0] not in SEASON_TITLES]
-        if len(f[1]) < 215 and ar_len(AR[f[3]]) < 150]
+        if len(re.sub("<[^>]+>", "", f[1])) < 215 and ar_len(AR[f[3]]) * 1.3 + len(re.sub("<[^>]+>", "", f[1])) < 290]
 
 
 def names_card(n, cls):
@@ -824,6 +884,10 @@ def day_page(d, week=None):
             f'<p>{MONTH_NAMES[d.month]} {YEAR} · day {yday} of 365</p></div>'
             f'<div class="dj"><span class="ar" lang="ar" dir="rtl">{WEEKDAYS_AR[wd]} · {str(hd).translate(AR_DIG)} {HIJRI_MONTHS[hm-1][1]}</span>'
             f'<p>{hd} {hname(hm)} {hy}</p></div></div>')
+    ni = name_for(d)
+    nt, na, nm = NAMES[ni]
+    band = band[:-6] + (f'<div class="dnm"><span class="ar" lang="ar" dir="rtl">{na}</span>'
+                        f'<div class="nt"><small>Name {ni + 1} of 99</small><b>{nt}</b><em>{nm}</em></div><i>{NAME_LIVE[ni]}</i></div></div>')
     hdr = f'<div class="niy"><span>My intention today</span><i></i>{bh}</div>'
     # salah table
     st = ('<table class="sal"><tr><th></th><th>Fard</th><th>On time' + ev("ontime") + '</th><th>Jama\'ah' + ev("jamaah")
@@ -860,12 +924,12 @@ def day_page(d, week=None):
               + box("Alhamdulillah for", "".join(f'<div class="ln num"><b>{i}</b></div>' for i in (1, 2, 3)), n=EV_NUM["shukr"])
               + box("Before I sleep", '<div class="ln lab"><span>Best deed</span></div><div class="ln lab"><span>I seek forgiveness for</span></div>'
                     '<div class="ln lab"><span>Tomorrow, in sha Allah</span></div>') + "</div>"
-              + f'<div class="rem">{STAR}<div><b>{label}</b>{arp(akey)}<p>{text} <span>{nref(akey, ref)}</span></p></div></div>')
+              + f'<div class="rem{" lg" if ar_len(AR.get(AR_KEY.get(akey, akey), "")) * 1.3 + len(text) > 300 else ""}">{STAR}<div><b>{label}</b>{arp(akey)}<p>{text} <span>{nref(akey, ref)}</span></p></div></div>')
     if week:
         n, (title, text, ref, action) = week
-        size = ar_len(AR.get(title, "")) * 1.3 + len(text)
+        size = ar_len(AR.get(title, "")) * 1.3 + len(re.sub("<[^>]+>", "", text)) + len(re.sub("<[^>]+>", "", action)) * .6
         bottom = bottom[:bottom.index('<div class="rem')] + (
-            f'<div class="rem wkrem{" l2" if size > 330 else ""}{" l3" if size > 520 else ""}"><div><b>Week {n} · Hadith of the week · {title}</b>{arp(title)}'
+            f'<div class="rem wkrem{" l2" if size > 250 else ""}{" l3" if size > 350 else ""}"><div><b>Week {n} · Hadith of the week · {title}</b>{arp(title)}'
             f'<p>{text} <span>{nref(title, ref)}</span></p><p class="live"><i>Live it</i>{action}</p></div>'
             + names_card(n, "nmm") + "</div>")
     return hdr + f'<div class="cols"><div class="c1">{left}</div><div class="c2">{right}</div></div>' + bottom, band
@@ -916,6 +980,21 @@ def week_spread(n, start, hadith, month):
         cls="wk2", month=month)
 
 
+def week_starts():
+    return [JAN1] + [d for d in all_days() if d.weekday() == 0 and d != JAN1]
+
+
+def sunnah_box(m):
+    """A Sunnah to practise in each week that starts in this month."""
+    rows = ""
+    for n, st in enumerate(week_starts(), 1):
+        if st.month == m:
+            text, ref = SUNNAH_WEEK[(n - 1) % len(SUNNAH_WEEK)][:2]
+            rows += (f'<div class="sw"><b>Week {n}<em>{st.day} {MONTH_NAMES[m][:3]}</em></b>{CB}'
+                     f'<span>{text}<i>{ref}</i></span></div>')
+    return box("A Sunnah to practise each week", rows, "sunw")
+
+
 def month_pages_weekly(m):
     """Opener, calendar and one combined page: intention, goals and the habit grid."""
     theme = MONTHS[m - 1][0]
@@ -924,25 +1003,45 @@ def month_pages_weekly(m):
     table = re.search(r'<table class="hb">.*?</table>', grid["html"], re.S).group(0)
     add(head(f"{MONTH_NAMES[m]}: my month", f"Theme of the month: {theme.lower()}")
         + box("My intention this month", lines(2))
-        + '<div class="g2">' + box("Goals", cblines(3)) + box("One habit to build, one to leave", lines(3)) + "</div>"
+        + '<div class="g2">' + box("Goals", cblines(2)) + box("One habit to build, one to leave", lines(2)) + "</div>"
         + f'<div class="hbs">{table}</div>'
-        + '<p class="fine">Shade one square for each day you keep the habit. The empty rows are yours.</p>', month=m)
+        + sunnah_box(m)
+        + box("A day I changed", '<p class="fine" style="margin:0">At the end of the month: one thing I did this month that I did not do last month.</p>' + lines(1)),
+        month=m)
+
+
+def sample_end():
+    add(f'''<div class="center"><div class="cv-r dark"><i></i>{STAR}<i></i></div>
+<p class="gt">Continue the year</p>
+<p class="ayah-en" style="max-width:100mm">This free sample is February 1448, the month of Ramadan. The full planner has all twelve months,
+each with its own picture and theme, every day of 2027 with its Hijri date, the Ramadan and Dhul-Hijjah pages, the trackers,
+the ninety-nine names with two to memorise each week, and a hadith in Arabic and English for every week.</p>
+<p class="ayah-en" style="max-width:100mm;margin-top:4mm">It comes as a weekly edition, one week on two pages, to carry in your bag,
+and a daily edition with a page for every day.</p>
+<p class="ref" style="margin-top:8mm">diinislaam.com</p></div>''', nofoot=True)
 
 
 def build_weekly():
     front()
-    year_glance()
-    islamic_dates()
-    year_pages()
-    trackers()
-    seasons()
-    adhkar_pages()
-    names_pages()
+    if FREE_SAMPLE:
+        adhkar_pages()
+        names_pages()
+    else:
+        year_glance()
+        islamic_dates()
+        year_pages()
+        trackers()
+        seasons()
+        adhkar_pages()
+        names_pages()
+        extras_pages()
     starts, hw = assign_weeks()
     cur = 0
     for n, s in enumerate(starts, 1):
         if SAMPLE and n > 3:
             break
+        if FREE_SAMPLE and s.month != 2:
+            continue
         if s.month != cur:
             if len(PAGES) % 2 == 1:
                 month_review(cur) if cur else interlude()
@@ -950,7 +1049,10 @@ def build_weekly():
             month_pages_weekly(cur)
         week_spread(n, s, hw[s], cur)
     month_review(cur)
-    back()
+    if FREE_SAMPLE:
+        sample_end()
+    else:
+        back()
 
 
 def back():
@@ -998,6 +1100,7 @@ def build_daily():
     seasons()
     adhkar_pages()
     names_pages()
+    extras_pages()
     starts, hw = assign_weeks()
     wn = 0
     last_month = 12 if not SAMPLE else 1
