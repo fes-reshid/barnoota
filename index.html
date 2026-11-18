@@ -30,6 +30,8 @@
     .trustgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.trustitem{padding:24px;border-radius:22px;background:#fff;border:1px solid #e7eee9}.trustitem b{display:block;font-family:"Playfair Display",serif;color:var(--navy);font-size:20px;margin-bottom:7px}.trustitem p{margin:0;color:var(--muted);line-height:1.65}.trustitem a{color:var(--green);font-weight:800}
     .cta{padding-top:20px}.ctabox{border-radius:30px;padding:42px;background:linear-gradient(120deg,#f6ba3a,#ef7652 55%,#8868c5);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:24px;box-shadow:0 18px 45px rgba(167,83,62,.22)}.ctabox h2{font-family:"Playfair Display",serif;font-size:clamp(27px,4vw,42px);margin:0 0 8px}.ctabox p{margin:0;color:#fff7ed}.ctabox .btn{flex:none;background:#fff;color:#633b76}
     footer{margin-top:78px;background:#102e31;color:#cfe3df;padding:54px 0 25px}.footgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px}.footbrand p{max-width:340px;line-height:1.7;color:#a9c6c0}.footbrand .arabic{font-size:24px;color:#ffd35d}.footcol b{display:block;color:#fff;margin:7px 0 14px}.footcol a{display:block;color:#b9d1cc;text-decoration:none;margin:9px 0;font-size:14px}.footcol a:hover{color:#fff}.copyright{border-top:1px solid rgba(255,255,255,.11);margin-top:34px;padding-top:21px;display:flex;justify-content:space-between;gap:16px;font-size:12px;color:#8eb0a9}
+    .planner{padding:8px 0 56px;background:#f3fbf7}.plannerbox{display:flex;align-items:center;gap:34px;background:linear-gradient(120deg,#0b3b35,#12664f 70%);color:#fff;border-radius:30px;padding:34px 40px;box-shadow:0 18px 45px rgba(11,59,53,.25)}.plannerbox img{width:168px;height:auto;flex:none;border-radius:6px;box-shadow:0 12px 28px rgba(0,0,0,.4)}.plannerbox h2{font-family:"Playfair Display",serif;font-size:clamp(26px,4vw,38px);margin:8px 0 10px;color:#fff;line-height:1.15}.plannerbox p{margin:0 0 18px;font-size:17px;line-height:1.6;color:#e6f2ec;max-width:640px}.plannertag{display:inline-block;background:var(--gold);color:#3a2a00;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:5px 13px}.plannerbtns{display:flex;flex-wrap:wrap;gap:12px}.pbtn{display:inline-block;padding:13px 22px;border-radius:30px;font-weight:700;text-decoration:none;font-size:15px}.pbtn1{background:var(--gold);color:#3a2a00}.pbtn2{border:2px solid rgba(255,255,255,.7);color:#fff}
+    @media(max-width:720px){.plannerbox{flex-direction:column;text-align:center;padding:28px 22px}.plannerbox img{width:140px}.plannerbtns{justify-content:center}}
     @media(max-width:950px){.links{gap:13px}.links a{font-size:12px}.quickgrid{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr 1fr}}
     @media(max-width:720px){.topnote{font-size:11px}.nav{min-height:65px}.menu{display:block}.links{display:none;position:absolute;left:0;right:0;top:100%;padding:15px 20px 22px;background:#fffaf0;flex-direction:column;align-items:stretch;box-shadow:0 20px 35px rgba(20,50,50,.15)}.links.open{display:flex}.links a{font-size:15px;padding:9px}.navbtn{text-align:center}.hero{min-height:620px}.heroinner{padding:62px 0 145px}.quick{margin-top:-115px}.quickgrid,.cards,.checks,.featurebox,.trustgrid{grid-template-columns:1fr}.quick a{display:grid;grid-template-columns:50px 1fr;column-gap:13px}.quick .qicon{grid-row:1/3;margin:0}.quick small{grid-column:2}.card{min-height:auto}.ctabox{padding:30px 24px;align-items:flex-start;flex-direction:column}.footgrid{grid-template-columns:1fr 1fr}.footbrand{grid-column:1/-1}.copyright{flex-direction:column}.bism{font-size:30px}}
   </style>
@@ -40,7 +42,7 @@
   <header><div class="wrap nav">
     <a class="brand" href="/"><span class="brandmark arabic">د</span><span><b>Diin Islaam</b><small>دين الإسلام · Learn with purpose</small></span></a>
     <button class="menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button>
-    <nav class="links" id="links" aria-label="Main navigation"><a href="quran.html">Qur'an</a><a href="hadeeth.html">Hadith</a><a href="salah.html">Salah</a><a href="arabic.html">Arabic</a><a href="kids.html">Kids</a><a href="apps.html">Apps</a><a class="navbtn" href="#journeys">Start learning</a></nav>
+    <nav class="links" id="links" aria-label="Main navigation"><a href="quran.html">Qur'an</a><a href="hadeeth.html">Hadith</a><a href="salah.html">Salah</a><a href="arabic.html">Arabic</a><a href="kids.html">Kids</a><a href="apps.html">Apps</a><a href="planner/">Planner</a><a class="navbtn" href="#journeys">Start learning</a></nav>
   </div></header>
 
   <main>
@@ -71,6 +73,16 @@
       </div>
     </div></section>
 
+    <section class="planner" id="planner"><div class="wrap plannerbox">
+      <img src="planner/img/cover.jpg" alt="Cover of Zaad, a Muslim's planner for 2027" width="168" height="238" loading="lazy">
+      <div>
+        <span class="plannertag">New for 2027</span>
+        <h2>Zaad: a Muslim's planner</h2>
+        <p>Every day built around the five prayers, with a hadith in Arabic and English each week, the ninety-nine names of Allah to memorise, Hijri dates and Ramadan pages. Read the first month free.</p>
+        <div class="plannerbtns"><a class="pbtn pbtn1" href="planner/">See the planner →</a><a class="pbtn pbtn2" href="planner/Zaad-Free-Sample-2027.pdf">Free sample (PDF)</a></div>
+      </div>
+    </div></section>
+
     <section class="family"><div class="wrap split">
       <div><p class="eyebrow" style="color:#ffd35d">Made for real learning</p><h2>One welcoming place for students, parents and teachers.</h2><p>Diin Islaam combines readable explanations with listening, repetition, quizzes and progress activities. It is built to support home learning and guided classes without making the learner feel overwhelmed.</p><div class="checks"><div class="check">✓ English + Afaan Oromoo</div><div class="check">✓ Mobile-friendly lessons</div><div class="check">✓ Interactive practice</div><div class="check">✓ Free to explore</div></div></div>
       <div class="featurebox"><div class="feature">🧭<strong>Clear pathways</strong><span>Know what to learn next instead of searching through disconnected pages.</span></div><div class="feature">🎧<strong>Listen & repeat</strong><span>Audio-supported learning helps recitation and language practice.</span></div><div class="feature">🏆<strong>Motivating progress</strong><span>Maps, quizzes and achievements keep learners moving forward.</span></div><div class="feature">👨‍👩‍👧‍👦<strong>Family focused</strong><span>Resources for adults and children, with supervision encouraged.</span></div></div>
@@ -88,7 +100,7 @@
   <footer><div class="wrap"><div class="footgrid">
     <div class="footbrand"><a class="brand" href="/"><span class="brandmark arabic">د</span><span><b style="color:#fff">Diin Islaam</b><small style="color:#ffd35d">دين الإسلام</small></span></a><p>Free, interactive Islamic learning for adults, children and families.</p><p class="arabic">وَقُل رَّبِّ زِدْنِي عِلْمًا</p></div>
     <div class="footcol"><b>Learn</b><a href="quran.html">Qur'an</a><a href="hadeeth.html">Hadith</a><a href="arabic.html">Arabic</a><a href="salah.html">Salah</a></div>
-    <div class="footcol"><b>Explore</b><a href="seeraa/">Seeraa Quest</a><a href="kids.html">Kids World</a><a href="apps.html">Apps</a><a href="books/">Books</a></div>
+    <div class="footcol"><b>Explore</b><a href="seeraa/">Seeraa Quest</a><a href="kids.html">Kids World</a><a href="apps.html">Apps</a><a href="planner/">Zaad Planner</a><a href="books/">Books</a></div>
     <div class="footcol"><b>Information</b><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy-policy.html">Privacy</a><a href="cookie-policy.html">Cookies</a><a href="terms.html">Terms</a></div>
   </div><div class="copyright"><span>© <span id="year"></span> Diin Islaam · Melbourne, Australia</span><span>Educational content only · Please verify religious matters with a qualified teacher.</span></div></div></footer>
   <script>document.getElementById('year').textContent=new Date().getFullYear();const m=document.getElementById('menu'),l=document.getElementById('links');m.addEventListener('click',()=>{const o=l.classList.toggle('open');m.setAttribute('aria-expanded',o);m.textContent=o?'✕':'☰'});l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{l.classList.remove('open');m.setAttribute('aria-expanded','false');m.textContent='☰'}));</script>
