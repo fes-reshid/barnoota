@@ -3,9 +3,12 @@ import 'package:material_ui/material_ui.dart';
 import '../app_state.dart';
 import '../core/theme.dart';
 import '../data/store.dart';
+import '../logic/hisnul.dart';
 import '../logic/plan.dart';
 import '../logic/prayer.dart';
+import '../logic/quran.dart';
 import 'dial.dart';
+import 'quran_goal.dart';
 import 'widgets.dart';
 
 /// The day, window by window: the prayer, and what goes with it.
@@ -58,6 +61,7 @@ class _TodayScreenState extends State<TodayScreen> {
       if (times != null && next != null)
         Center(child: DayDial(times: times, now: app.now, isToday: isToday, next: next)),
       if (times != null) _PrayerStrip(times: times, log: log, place: app.place!.name),
+      if (isToday && times != null) _AdhkarNudges(times: times, log: log),
       const SizedBox(height: 6),
       _NamePanel(index: nameIndexFor(date, c.names.length)),
       _AnyCard(tasks: tasks['any']!, log: log, date: date),
@@ -267,6 +271,7 @@ class _AnyCard extends StatelessWidget {
           Text('THROUGH THE DAY', style: label(11, color: tone(context, Zc.green), letter: 1.6, wght: 700)),
         ]),
         const SizedBox(height: 6),
+        _QuranRow(date: date, log: log),
         for (final t in tasks)
           TaskRow(
             task: t.label,
@@ -377,6 +382,14 @@ class _WindowCard extends StatelessWidget {
                     color: def.color,
                     checked: log.done.contains(t.id),
                     hadith: t.hadith == null ? null : app.content.hadith[t.hadith],
+                    extra: _adhkarChapter(t.id) == null
+                        ? null
+                        : IconButton(
+                            visualDensity: VisualDensity.compact,
+                            tooltip: 'Read in Hisnul Muslim',
+                            icon: Icon(Icons.auto_stories, size: 21, color: tone(context, def.color)),
+                            onPressed: () => app.hisnul(_adhkarChapter(t.id)!),
+                          ),
                     onChanged: (v) {
                       v ? log.done.add(t.id) : log.done.remove(t.id);
                       app.store.save();
@@ -479,6 +492,147 @@ class _WeekPanel extends StatelessWidget {
           ]),
         ],
       ]),
+    );
+  }
+}
+
+/// Which chapter of Hisnul Muslim holds the adhkar for a task, if it is one of the adhkar.
+int? _adhkarChapter(String taskId) => switch (taskId) {
+      'adhkar_am' => hisnulMorning,
+      'adhkar_pm' => hisnulEvening,
+      _ => null,
+    };
+
+/// Today's Qur'an reading from the daily goal: the pages, the juz, and a tick.
+class _QuranRow extends StatelessWidget {
+  const _QuranRow({required this.date, required this.log});
+  final DateTime date;
+  final DayLog log;
+
+  @override
+  Widget build(BuildContext context) {
+    final app = AppScope.of(context);
+    final plan = app.store.quran;
+    if (!plan.isSet) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(children: [
+          const Icon(Icons.menu_book, color: Zc.green),
+          const SizedBox(width: 12),
+          Expanded(child: Text('How much Qur\'an can you read each day?', style: serif(15.5))),
+          FilledButton.tonal(onPressed: () => showQuranGoal(context), child: const Text('Set my goal')),
+        ]),
+      );
+    }
+    final r = plan.rangeFor(date)!;
+    final read = log.quranPages > 0;
+    final j1 = juzOfPage(r.from), j2 = juzOfPage(r.to);
+    final where = r.from == r.to ? 'Page ${r.from}' : 'Pages ${r.from} to ${r.to}';
+    return TaskRow(
+      task: "Qur'an: ${where.toLowerCase()}",
+      subtitle: '${j1 == j2 ? 'JUZ $j1' : 'JUZ $j1 TO $j2'} · ${describePages(plan.perDay).toUpperCase()}',
+      checked: read,
+      hadith: app.content.hadith['quran'],
+      extra: IconButton(
+        visualDensity: VisualDensity.compact,
+        tooltip: 'Change my Qur\'an goal',
+        icon: const Icon(Icons.tune, size: 20, color: Zc.muted),
+        onPressed: () => showQuranGoal(context),
+      ),
+      onChanged: (v) => app.store.setQuranRead(date, v),
+    );
+  }
+}
+
+/// Reminds you, on today's page, to read the morning and evening adhkar, and sends you to Hisnul Muslim to read them.
+class _AdhkarNudges extends StatelessWidget {
+  const _AdhkarNudges({required this.times, required this.log});
+  final DayTimes times;
+  final DayLog log;
+
+  @override
+  Widget build(BuildContext context) {
+    final app = AppScope.of(context);
+    final now = app.now;
+    final morning = !now.isBefore(times.fajr) && now.isBefore(times.asr) && !log.done.contains('adhkar_am');
+    final evening = !now.isBefore(times.asr) && !log.done.contains('adhkar_pm');
+    return Column(children: [
+      if (morning)
+        _Nudge(
+          key: const ValueKey('nudge-morning'),
+          icon: Icons.wb_twilight,
+          color: Zc.fajr,
+          title: now.isBefore(times.duhaStart) ? 'Time for your morning adhkar' : 'You have not read your morning adhkar yet',
+          body: now.isBefore(times.duhaStart) ? 'Read them now, while the day is new.' : 'It is not too late. Read them now.',
+          chapter: hisnulMorning,
+          onDone: () {
+            log.done.add('adhkar_am');
+            app.store.save();
+          },
+        ),
+      if (evening)
+        _Nudge(
+          key: const ValueKey('nudge-evening'),
+          icon: Icons.nights_stay_outlined,
+          color: Zc.maghrib,
+          title: now.isBefore(times.maghrib) ? 'Time for your evening adhkar' : 'You have not read your evening adhkar yet',
+          body: now.isBefore(times.maghrib) ? 'Read them before the sun sets.' : 'It is not too late. Read them tonight.',
+          chapter: hisnulEvening,
+          onDone: () {
+            log.done.add('adhkar_pm');
+            app.store.save();
+          },
+        ),
+    ]);
+  }
+}
+
+class _Nudge extends StatelessWidget {
+  const _Nudge({super.key, required this.icon, required this.color, required this.title, required this.body, required this.chapter, required this.onDone});
+  final IconData icon;
+  final Color color;
+  final String title, body;
+  final int chapter;
+  final VoidCallback onDone;
+
+  @override
+  Widget build(BuildContext context) {
+    final app = AppScope.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: .1),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: color, width: 1.6),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            CircleAvatar(radius: 17, backgroundColor: color, child: Icon(icon, size: 19, color: Colors.white)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: serif(15.5, wght: 650)),
+                Text(body, style: serif(13.5, color: Zc.muted)),
+              ]),
+            ),
+          ]),
+          const SizedBox(height: 10),
+          Row(children: [
+            Expanded(
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(backgroundColor: color),
+                onPressed: () => app.hisnul(chapter),
+                icon: const Icon(Icons.auto_stories, size: 18),
+                label: const Text('Read in Hisnul Muslim'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            TextButton(onPressed: onDone, child: Text('I read them', style: TextStyle(color: tone(context, color)))),
+          ]),
+        ]),
+      ),
     );
   }
 }

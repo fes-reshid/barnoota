@@ -68,12 +68,16 @@ class ZChip extends StatelessWidget {
 
 /// A checkbox row for one task, with an (i) that opens the hadith behind it.
 class TaskRow extends StatelessWidget {
-  const TaskRow({super.key, required this.task, required this.checked, required this.onChanged, this.hadith, this.color = Zc.green});
+  const TaskRow({super.key, required this.task, required this.checked, required this.onChanged, this.hadith, this.color = Zc.green, this.extra, this.subtitle});
   final String task;
   final bool checked;
   final ValueChanged<bool> onChanged;
   final Hadith? hadith;
   final Color color;
+
+  /// A button beside the task (for example, to read the adhkar) and a line under it.
+  final Widget? extra;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -95,9 +99,13 @@ class TaskRow extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(task,
-                  style: serif(15.5, wght: 450).copyWith(decoration: checked ? TextDecoration.lineThrough : null, decorationColor: Zc.muted, color: checked ? Zc.muted : null)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(task,
+                    style: serif(15.5, wght: 450).copyWith(decoration: checked ? TextDecoration.lineThrough : null, decorationColor: Zc.muted, color: checked ? Zc.muted : null)),
+                if (subtitle != null) Text(subtitle!, style: label(10.5, color: Zc.muted, letter: .6, wght: 500)),
+              ]),
             ),
+            ?extra,
             if (hadith != null)
               IconButton(
                 visualDensity: VisualDensity.compact,

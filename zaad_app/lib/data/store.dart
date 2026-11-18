@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../logic/plan.dart';
 import '../logic/prayer.dart';
+import '../logic/quran.dart';
 
 class Settings {
   double? lat, lng;
@@ -17,11 +18,17 @@ class Settings {
   bool remindAdhkar = false;
   bool onboarded = false;
 
+  /// The daily Qur'an goal in pages (0 until chosen), whether it is shown as pages or juz, and the pages already read when it began.
+  int quranPerDay = 0;
+  bool quranInJuz = false;
+  int quranOffset = 0;
+
   Place? get place => lat == null || lng == null ? null : Place(placeName.isEmpty ? 'My location' : placeName, lat!, lng!);
 
   Map<String, dynamic> toJson() => {
         'lat': lat, 'lng': lng, 'place': placeName, 'method': method, 'hanafi': hanafi,
         'rp': remindPrayer, 'rb': remindBefore, 'ra': remindAdhkar, 'ob': onboarded,
+        'qpd': quranPerDay, 'qj': quranInJuz, 'qo': quranOffset,
       };
 
   void load(Map<String, dynamic> j) {
@@ -34,6 +41,9 @@ class Settings {
     remindBefore = (j['rb'] ?? false) as bool;
     remindAdhkar = (j['ra'] ?? false) as bool;
     onboarded = (j['ob'] ?? false) as bool;
+    quranPerDay = (j['qpd'] ?? 0) as int;
+    quranInJuz = (j['qj'] ?? false) as bool;
+    quranOffset = (j['qo'] ?? 0) as int;
   }
 }
 
@@ -46,6 +56,9 @@ class DayLog {
   List<String> gratitude = ['', '', ''];
   String bestDeed = '', forgive = '', tomorrow = '';
   int water = 0, hearts = 0;
+
+  /// Pages of the Qur'an read on this day.
+  int quranPages = 0;
 
   bool has(String prayer, int bit) => ((prayers[prayer] ?? 0) & bit) != 0;
   void toggle(String prayer, int bit) {
@@ -68,11 +81,11 @@ class DayLog {
   int get onTimeCount => prayers.values.where((v) => (v & bitOnTime) != 0).length;
   bool get isEmpty =>
       prayers.isEmpty && done.isEmpty && priorities.every((s) => s.isEmpty) && gratitude.every((s) => s.isEmpty) &&
-      bestDeed.isEmpty && forgive.isEmpty && tomorrow.isEmpty && water == 0 && hearts == 0;
+      bestDeed.isEmpty && forgive.isEmpty && tomorrow.isEmpty && water == 0 && hearts == 0 && quranPages == 0;
 
   Map<String, dynamic> toJson() => {
         'p': prayers, 'd': done.toList(), 'pr': priorities, 'g': gratitude,
-        'b': bestDeed, 'f': forgive, 't': tomorrow, 'w': water, 'h': hearts,
+        'b': bestDeed, 'f': forgive, 't': tomorrow, 'w': water, 'h': hearts, 'q': quranPages,
       };
 
   factory DayLog.fromJson(Map<String, dynamic> j) {
@@ -90,6 +103,7 @@ class DayLog {
     l.tomorrow = (j['t'] ?? '') as String;
     l.water = (j['w'] ?? 0) as int;
     l.hearts = (j['h'] ?? 0) as int;
+    l.quranPages = (j['q'] ?? 0) as int;
     return l;
   }
 }
@@ -118,8 +132,6 @@ class AppStore extends ChangeNotifier {
   final settings = Settings();
   final Map<String, DayLog> logs = {};
   final Map<int, NameProgress> names = {};
-  final Set<int> juz = {};
-  int khatmahs = 0;
   final List<DuaItem> duas = [];
   Timer? _timer;
 
@@ -143,8 +155,6 @@ class AppStore extends ChangeNotifier {
       final m = v as Map<String, dynamic>;
       names[int.parse(k)] = NameProgress(m['b'] as int, m['d'] as String);
     });
-    juz.addAll(((j['juz'] ?? []) as List).cast<int>());
-    khatmahs = (j['khatmahs'] ?? 0) as int;
     for (final d in (j['duas'] ?? []) as List) {
       final m = d as Map<String, dynamic>;
       duas.add(DuaItem(m['t'] as String, m['s'] as String, answered: (m['a'] ?? false) as bool));
@@ -156,8 +166,6 @@ class AppStore extends ChangeNotifier {
         'settings': settings.toJson(),
         'logs': {for (final e in logs.entries) if (!e.value.isEmpty) e.key: e.value.toJson()},
         'names': {for (final e in names.entries) '${e.key}': {'b': e.value.box, 'd': e.value.due}},
-        'juz': juz.toList(),
-        'khatmahs': khatmahs,
         'duas': [for (final d in duas) {'t': d.text, 's': d.since, 'a': d.answered}],
       };
 
@@ -170,7 +178,6 @@ class AppStore extends ChangeNotifier {
       if (j['v'] != 1) return false;
       logs.clear();
       names.clear();
-      juz.clear();
       duas.clear();
       _load(j);
       save();
@@ -199,6 +206,27 @@ class AppStore extends ChangeNotifier {
   Future<void> flush() async {
     _timer?.cancel();
     await _prefs.setString(_key, jsonEncode(toJson()));
+  }
+
+  // -- the Qur'an ----------------------------------------------------------
+  QuranPlan get quran => QuranPlan(
+        perDay: settings.quranPerDay,
+        offset: settings.quranOffset,
+        pagesByDate: {for (final e in logs.entries) if (e.value.quranPages > 0) e.key: e.value.quranPages},
+      );
+
+  /// Tick or un-tick the day's reading. Ticking records the pages of the plan for that day.
+  void setQuranRead(DateTime day, bool read) {
+    final log = logFor(day);
+    log.quranPages = read ? quran.pagesFor(day) : 0;
+    save();
+  }
+
+  /// Carry on from [page] (the next page to read), for someone who is already part way through.
+  void setQuranPosition(int page) {
+    final total = quran.totalRead;
+    settings.quranOffset = (((page.clamp(1, mushafPages) - 1) - total) % mushafPages + mushafPages) % mushafPages;
+    save();
   }
 
   // -- names ---------------------------------------------------------------

@@ -7,7 +7,9 @@ A phone app for Android and iPhone. It is the companion to the printed Zaad plan
 - **Special days** change the day by themselves: Fridays, Ramadan (suhoor, fasting, iftar, tarawih, the last ten nights), the two Eids, the first ten days of Dhul-Hijjah, 'Arafah, 'Ashura, the white days and Mondays and Thursdays.
 - **99 Names of Allah:** two to memorise each week, with flashcards that bring back the ones you miss sooner (spaced repetition), and one line a day on how to live by the name.
 - **Qibla:** a compass with the Ka'bah on it.
-- **Journey:** streaks, the last seven days, a Hijri calendar coloured by your prayers, a Qur'an juz tracker and a list of your duas.
+- **Journey:** streaks, the last seven days, a Hijri calendar coloured by your prayers, your Qur'an progress and a list of your duas.
+- **Daily Qur'an:** choose pages or juz a day (or a time to finish in); Zaad plans each day's pages from where you stopped, with a tick and a finish date.
+- **Adhkar and Hisnul Muslim:** morning and evening adhkar ticks; if not read, a reminder (and the reminder notification) opens the Hisnul Muslim app on Android (package `com.diinislaam.hisnulmuslim`, falling back to the web version at the right chapter), or the web version on iPhone. The Android app opens at its home screen; it has no deep link to a chapter.
 - **Reminders:** at each prayer time, ten minutes before, and for morning and evening adhkar. Scheduled on the phone.
 - **Private:** no account, no ads, no server, works without internet. Location is used on the phone only to work out the prayer times. A backup can be copied and pasted.
 

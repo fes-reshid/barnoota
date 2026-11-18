@@ -4,6 +4,8 @@ import '../app_state.dart';
 import '../core/theme.dart';
 import '../data/store.dart';
 import '../logic/plan.dart';
+import '../logic/quran.dart';
+import 'quran_goal.dart';
 import 'widgets.dart';
 
 class JourneyScreen extends StatefulWidget {
@@ -76,7 +78,7 @@ class _JourneyScreenState extends State<JourneyScreen> {
         ]),
       ),
       const _Title('Qur\'an'),
-      const _QuranPanel(),
+      _QuranPanel(month: month),
       const _Title('My duas'),
       const _DuaPanel(),
     ]);
@@ -198,44 +200,43 @@ class _MonthGrid extends StatelessWidget {
 }
 
 class _QuranPanel extends StatelessWidget {
-  const _QuranPanel();
+  const _QuranPanel({required this.month});
+  final DateTime month;
+
   @override
   Widget build(BuildContext context) {
     final app = AppScope.of(context);
-    final s = app.store;
+    final plan = app.store.quran;
+    if (!plan.isSet) {
+      return Panel(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('How much can you read each day? Choose pages or juz, or how long you want to take to finish, and Zaad plans every day for you.', style: serif(15)),
+          const SizedBox(height: 10),
+          FilledButton.icon(onPressed: () => showQuranGoal(context), icon: const Icon(Icons.menu_book), label: const Text('Set my daily Qur\'an')),
+        ]),
+      );
+    }
+    final fin = plan.finish(app.today)!;
+    final last = DateTime(month.year, month.month + 1, 0);
+    final readDays = plan.daysRead(DateTime(month.year, month.month, 1), last);
     return Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Expanded(child: Text('Khatmah ${s.khatmahs + 1}: ${s.juz.length} of 30 juz', style: serif(16, wght: 600))),
-          if (s.khatmahs > 0) Text('${s.khatmahs} finished', style: label(11, color: Zc.gold, letter: .6)),
+          Expanded(child: Text('Next: page ${plan.nextPage} · Juz ${juzOfPage(plan.nextPage)}', style: serif(16.5, wght: 650))),
+          TextButton(onPressed: () => showQuranGoal(context), child: const Text('Change')),
         ]),
-        const SizedBox(height: 10),
-        Wrap(spacing: 6, runSpacing: 6, children: [
-          for (var j = 1; j <= 30; j++)
-            GestureDetector(
-              onTap: () {
-                s.juz.contains(j) ? s.juz.remove(j) : s.juz.add(j);
-                if (s.juz.length == 30) {
-                  s.khatmahs++;
-                  s.juz.clear();
-                }
-                s.save();
-              },
-              child: Container(
-                width: 38,
-                height: 38,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: s.juz.contains(j) ? Zc.green : Colors.transparent,
-                  borderRadius: BorderRadius.circular(9),
-                  border: Border.all(color: Zc.green, width: 1.3),
-                ),
-                child: Text('$j', style: label(12, color: s.juz.contains(j) ? Colors.white : Zc.green, letter: 0)),
-              ),
-            ),
+        const SizedBox(height: 6),
+        ClipRRect(borderRadius: BorderRadius.circular(8), child: LinearProgressIndicator(value: (plan.nextPage - 1) / mushafPages, minHeight: 10)),
+        const SizedBox(height: 6),
+        Text('${plan.nextPage - 1} of $mushafPages pages · ${describePages(plan.perDay)}', style: serif(13.5, color: Zc.muted)),
+        const SizedBox(height: 4),
+        Text('At this pace you finish around ${fin.date.day} ${monthNames[fin.date.month - 1]} ${fin.date.year}, in sha Allah.', style: serif(13.5, color: Zc.muted)),
+        const Divider(height: 24),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          _Mini('${plan.khatmahs}', plan.khatmahs == 1 ? 'khatmah\nfinished' : 'khatmahs\nfinished'),
+          _Mini('$readDays', 'days read in\n${monthNames[month.month - 1]}'),
+          _Mini('${plan.totalRead}', 'pages read\nwith Zaad'),
         ]),
-        const SizedBox(height: 8),
-        Text('Tap a juz when you finish it. At thirty a khatmah is counted.', style: serif(13, color: Zc.muted)),
       ]),
     );
   }

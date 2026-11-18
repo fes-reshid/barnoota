@@ -8,13 +8,14 @@ import 'package:zaad/app_state.dart';
 import 'package:zaad/data/content.dart';
 import 'package:zaad/data/store.dart';
 import 'package:zaad/logic/plan.dart';
+import 'package:zaad/logic/hisnul.dart';
 import 'package:zaad/logic/reminders.dart';
 import 'package:zaad/main.dart';
 import 'support.dart';
 
 Content loadContent() => Content.fromJson(jsonDecode(File('assets/data/content.json').readAsStringSync()) as Map<String, dynamic>);
 
-Future<AppState> setup({DateTime? now}) async {
+Future<AppState> setup({DateTime? now, List<int>? hisnul}) async {
   SharedPreferences.setMockInitialValues({});
   final store = await AppStore.open();
   store.settings
@@ -23,7 +24,9 @@ Future<AppState> setup({DateTime? now}) async {
     ..lat = -37.8136
     ..lng = 144.9631;
   final n = now ?? DateTime(2026, 11, 18, 14, 30);
-  return AppState(store, loadContent(), Reminders(), fixedNow: n, headings: Stream.value(null))..selected = dayOnly(n);
+  return AppState(store, loadContent(), Reminders(),
+      fixedNow: n, headings: Stream.value(null), hisnul: hisnul == null ? openHisnul : (c) async => hisnul.add(c))
+    ..selected = dayOnly(n);
 }
 
 void main() {
@@ -103,7 +106,9 @@ void main() {
     a.store.logFor(DateTime(2026, 11, 18)).toggle('fajr', bitOnTime);
     a.store.logFor(DateTime(2026, 11, 18)).priorities[0] = 'Call my mother';
     a.store.startName(3, DateTime(2026, 11, 18));
-    a.store.juz.addAll([1, 2]);
+    a.store.settings.quranPerDay = 7;
+    a.store.setQuranPosition(100);
+    a.store.logFor(DateTime(2026, 11, 18)).quranPages = 7;
     a.store.duas.add(DuaItem('Ease', '2026-11-18'));
     final backup = a.store.exportJson();
     final b = await setup();
@@ -113,7 +118,9 @@ void main() {
     expect(b.store.peek(DateTime(2026, 11, 18))!.has('fajr', bitOnTime), isTrue);
     expect(b.store.peek(DateTime(2026, 11, 18))!.priorities[0], 'Call my mother');
     expect(b.store.boxOf(3), 1);
-    expect(b.store.juz, {1, 2});
+    expect(b.store.settings.quranPerDay, 7);
+    expect(b.store.quran.pagesByDate['2026-11-18'], 7);
+    expect(b.store.quran.nextPage, a.store.quran.nextPage);
     expect(b.store.duas.single.text, 'Ease');
   });
 
@@ -183,5 +190,98 @@ void main() {
       final w = times.windowAt(s.now);
       expect(windowsInOrder.firstWhere((x) => x.id == w).name, window, reason: 'at $hour:00');
     }
+  });
+
+  group('morning and evening adhkar send you to Hisnul Muslim', () {
+    Future<void> show(WidgetTester t, AppState s) async {
+      t.view.devicePixelRatio = 2;
+      t.view.physicalSize = const Size(780, 4800);
+      addTearDown(t.view.resetPhysicalSize);
+      await t.pumpWidget(ZaadApp(state: s));
+      await t.pump();
+    }
+
+    testWidgets('morning: a reminder appears until you read, opens chapter 27, and goes when ticked', (t) async {
+      final calls = <int>[];
+      final s = await setup(now: DateTime(2026, 11, 18, 9, 0), hisnul: calls);
+      await show(t, s);
+      expect(find.byKey(const ValueKey('nudge-morning')), findsOneWidget);
+      expect(find.byKey(const ValueKey('nudge-evening')), findsNothing);
+      await t.tap(find.descendant(of: find.byKey(const ValueKey('nudge-morning')), matching: find.text('Read in Hisnul Muslim')));
+      await t.pump();
+      expect(calls, [hisnulMorning]);
+      await t.tap(find.descendant(of: find.byKey(const ValueKey('nudge-morning')), matching: find.text('I read them')));
+      await t.pump();
+      expect(find.byKey(const ValueKey('nudge-morning')), findsNothing);
+      expect(s.store.peek(DateTime(2026, 11, 18))!.done, contains('adhkar_am'));
+      await t.pump(const Duration(seconds: 2));
+    });
+
+    testWidgets('evening: appears after Asr, opens the evening chapter', (t) async {
+      final calls = <int>[];
+      final s = await setup(now: DateTime(2026, 11, 18, 17, 30), hisnul: calls);
+      await show(t, s);
+      // morning is still not read at this hour, so that one shows too, until the evening begins
+      expect(find.byKey(const ValueKey('nudge-evening')), findsOneWidget);
+      expect(find.byKey(const ValueKey('nudge-morning')), findsNothing);
+      await t.tap(find.descendant(of: find.byKey(const ValueKey('nudge-evening')), matching: find.text('Read in Hisnul Muslim')));
+      await t.pump();
+      expect(calls, [hisnulEvening]);
+    });
+
+    testWidgets('no reminder before Fajr, when already read, or on another day', (t) async {
+      final s = await setup(now: DateTime(2026, 11, 18, 3, 0));
+      await show(t, s);
+      expect(find.byKey(const ValueKey('nudge-morning')), findsNothing);
+      final s2 = await setup(now: DateTime(2026, 11, 18, 9, 0));
+      s2.store.logFor(DateTime(2026, 11, 18)).done.add('adhkar_am');
+      await show(t, s2);
+      expect(find.byKey(const ValueKey('nudge-morning')), findsNothing);
+      final s3 = await setup(now: DateTime(2026, 11, 18, 9, 0));
+      s3.selectDay(DateTime(2026, 11, 17));
+      await show(t, s3);
+      expect(find.byKey(const ValueKey('nudge-morning')), findsNothing);
+    });
+
+    testWidgets('the adhkar tasks have their own button that opens Hisnul Muslim', (t) async {
+      final calls = <int>[];
+      final s = await setup(now: DateTime(2026, 11, 18, 5, 0), hisnul: calls); // the Fajr window is open
+      await show(t, s);
+      await t.tap(find.byTooltip('Read in Hisnul Muslim').first);
+      await t.pump();
+      expect(calls, [hisnulMorning]);
+    });
+  });
+
+  group("the daily Qur'an goal", () {
+    Future<void> show(WidgetTester t, AppState s) async {
+      t.view.devicePixelRatio = 2;
+      t.view.physicalSize = const Size(780, 4800);
+      addTearDown(t.view.resetPhysicalSize);
+      await t.pumpWidget(ZaadApp(state: s));
+      await t.pump();
+    }
+
+    testWidgets('choose a goal from the sheet, then the day shows the pages and ticking moves on', (t) async {
+      final s = await setup();
+      await show(t, s);
+      expect(find.text('Set my goal'), findsOneWidget);
+      await t.tap(find.text('Set my goal'));
+      await t.pumpAndSettle();
+      await t.tap(find.textContaining('30 days'));
+      await t.pump();
+      expect(find.textContaining('finish in 29 days'), findsOneWidget);
+      await t.tap(find.text('Save my goal'));
+      await t.pumpAndSettle();
+      expect(s.settings.quranPerDay, 21);
+      expect(find.text("Qur'an: pages 1 to 21"), findsOneWidget);
+      await t.tap(find.text("Qur'an: pages 1 to 21"));
+      await t.pump();
+      expect(s.store.peek(DateTime(2026, 11, 18))!.quranPages, 21);
+      await t.tap(find.byTooltip('Next day'));
+      await t.pump();
+      expect(find.text("Qur'an: pages 22 to 42"), findsOneWidget);
+      await t.pump(const Duration(seconds: 2));
+    });
   });
 }
