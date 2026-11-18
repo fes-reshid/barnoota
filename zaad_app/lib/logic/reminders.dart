@@ -6,6 +6,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../data/content.dart';
 import '../data/store.dart';
+import 'hisnul.dart';
 import 'plan.dart';
 import 'prayer.dart';
 
@@ -14,6 +15,9 @@ import 'prayer.dart';
 class Reminders {
   final _plugin = FlutterLocalNotificationsPlugin();
   bool _ready = false;
+
+  /// Called with a reminder's payload when it is tapped (for example 'hisnul:27' for the morning adhkar).
+  void Function(String payload)? onTap;
 
   bool get supported => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
 
@@ -31,8 +35,16 @@ class Reminders {
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         iOS: DarwinInitializationSettings(requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
       ),
+      onDidReceiveNotificationResponse: (response) {
+        final p = response.payload;
+        if (p != null) onTap?.call(p);
+      },
     );
     _ready = true;
+    // the app was closed and a reminder opened it
+    final launch = await _plugin.getNotificationAppLaunchDetails();
+    final p = launch?.notificationResponse?.payload;
+    if ((launch?.didNotificationLaunchApp ?? false) && p != null) onTap?.call(p);
   }
 
   /// Ask for permission to show notifications. Returns whether it was granted.
@@ -81,15 +93,15 @@ class Reminders {
         }
       }
       if (s.remindAdhkar) {
-        await _at(id++, t.sunrise.add(const Duration(minutes: 10)), now, 'Morning adhkar', 'Begin the day with the remembrance of Allah.', 'adhkar');
-        await _at(id++, t.asr.add(const Duration(minutes: 10)), now, 'Evening adhkar', 'Say them before the sun sets.', 'adhkar');
+        await _at(id++, t.sunrise.add(const Duration(minutes: 10)), now, 'Morning adhkar', 'Tap to read them in Hisnul Muslim.', 'adhkar', payload: 'hisnul:$hisnulMorning');
+        await _at(id++, t.asr.add(const Duration(minutes: 10)), now, 'Evening adhkar', 'Tap to read them in Hisnul Muslim.', 'adhkar', payload: 'hisnul:$hisnulEvening');
       }
     }
   }
 
   String _clock(DateTime d) => '${two(d.hour)}:${two(d.minute)}';
 
-  Future<void> _at(int id, DateTime when, DateTime now, String title, String body, String channel) async {
+  Future<void> _at(int id, DateTime when, DateTime now, String title, String body, String channel, {String? payload}) async {
     if (!when.isAfter(now)) return;
     final details = NotificationDetails(
       android: AndroidNotificationDetails(
@@ -109,6 +121,7 @@ class Reminders {
         body: body,
         scheduledDate: at,
         notificationDetails: details,
+        payload: payload,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (_) {
@@ -120,6 +133,7 @@ class Reminders {
           body: body,
           scheduledDate: at,
           notificationDetails: details,
+          payload: payload,
           androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         );
       } catch (_) {}

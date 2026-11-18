@@ -216,7 +216,6 @@ DayInfo dayInfo(DateTime d) {
 const baseTasks = [
   Task('qiyam', 'Night prayer, even two rak\'ahs', wNight, hadith: 'qiyam'),
   Task('adhkar_am', 'Morning adhkar', wFajr, hadith: 'adhkar'),
-  Task('quran', "Qur'an: a few pages", wFajr, hadith: 'quran'),
   Task('duha', 'Duha prayer', wDuha, hadith: 'duha'),
   Task('adhkar_pm', 'Evening adhkar', wAsr, hadith: 'adhkar'),
   Task('kin', 'Parents and kin: call, serve, dua', wMaghrib, hadith: 'kin'),

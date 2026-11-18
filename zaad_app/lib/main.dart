@@ -15,6 +15,13 @@ Future<void> main() async {
   final content = await Content.load();
   final reminders = Reminders();
   final state = AppState(store, content, reminders);
+  // tapping a morning or evening adhkar reminder opens Hisnul Muslim at that chapter
+  reminders.onTap = (payload) {
+    if (payload.startsWith('hisnul:')) {
+      final chapter = int.tryParse(payload.substring(7));
+      if (chapter != null) state.hisnul(chapter);
+    }
+  };
   runApp(ZaadApp(state: state));
   // reminders are set up after the first screen is up, so a slow permission dialog never delays the app
   reminders.init().then((_) => reminders.reschedule(store.settings, content));

@@ -4,13 +4,14 @@ import 'package:material_ui/material_ui.dart';
 
 import 'data/content.dart';
 import 'data/store.dart';
+import 'logic/hisnul.dart';
 import 'logic/plan.dart';
 import 'logic/prayer.dart';
 import 'logic/reminders.dart';
 
 /// Shared by every screen: the saved data, the content, the reminders and the clock.
 class AppState extends ChangeNotifier {
-  AppState(this.store, this.content, this.reminders, {DateTime? fixedNow, this.headings}) {
+  AppState(this.store, this.content, this.reminders, {DateTime? fixedNow, this.headings, this.hisnul = openHisnul}) {
     now = fixedNow ?? DateTime.now();
     store.addListener(notifyListeners);
     if (fixedNow == null) {
@@ -27,6 +28,9 @@ class AppState extends ChangeNotifier {
 
   /// The compass heading in degrees. Null in the app, which then reads the phone's compass; tests give their own.
   final Stream<double?>? headings;
+
+  /// Sends the reader to Hisnul Muslim (tests give their own).
+  final HisnulOpener hisnul;
   Timer? _timer;
   late DateTime now;
 

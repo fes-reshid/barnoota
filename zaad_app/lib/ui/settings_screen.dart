@@ -3,9 +3,12 @@ import 'package:material_ui/material_ui.dart';
 
 import '../app_state.dart';
 import '../core/theme.dart';
+import '../logic/hisnul.dart';
 import '../logic/location.dart';
 import '../logic/prayer.dart';
+import '../logic/quran.dart';
 import 'place_picker.dart';
+import 'quran_goal.dart';
 import 'widgets.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -52,6 +55,48 @@ class SettingsScreen extends StatelessWidget {
               s.hanafi = v;
               app.settingsChanged();
             },
+          ),
+        ]),
+      ),
+      const _T("Qur'an"),
+      Panel(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: ListTile(
+          leading: const Icon(Icons.menu_book, color: Zc.green),
+          title: Text('Daily goal', style: serif(15.5)),
+          subtitle: Text(
+            app.store.quran.isSet
+                ? '${describePages(s.quranPerDay)} · next page ${app.store.quran.nextPage}'
+                : 'Choose how much you can read each day',
+            style: serif(13.5, color: Zc.muted),
+          ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => showQuranGoal(context),
+        ),
+      ),
+      const _T('Hisnul Muslim'),
+      Panel(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Column(children: [
+          ListTile(
+            leading: const Icon(Icons.wb_twilight, color: Zc.green),
+            title: Text('Morning adhkar', style: serif(15.5)),
+            subtitle: Text('Opens your Hisnul Muslim app', style: serif(13.5, color: Zc.muted)),
+            onTap: () => app.hisnul(hisnulMorning),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.nights_stay_outlined, color: Zc.green),
+            title: Text('Evening adhkar', style: serif(15.5)),
+            subtitle: Text('Opens your Hisnul Muslim app', style: serif(13.5, color: Zc.muted)),
+            onTap: () => app.hisnul(hisnulEvening),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.shop, color: Zc.green),
+            title: Text('Get the Hisnul Muslim app', style: serif(15.5)),
+            subtitle: Text('On Google Play', style: serif(13.5, color: Zc.muted)),
+            onTap: openHisnulStore,
           ),
         ]),
       ),

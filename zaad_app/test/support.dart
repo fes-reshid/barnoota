@@ -63,8 +63,11 @@ Future<AppState> makeState({bool onboarded = true, bool withData = true, double?
     for (final i in [0, 1, 2, 3, 4, 5, 6]) {
       store.names[i] = NameProgress(i < 4 ? 5 : 2, '2026-11-18');
     }
-    store.juz.addAll([1, 2, 3, 4, 5, 6, 7]);
-    store.khatmahs = 1;
+    // a Qur'an goal of five pages a day, with the last nine days read
+    store.settings.quranPerDay = 5;
+    for (var i = 1; i <= 9; i++) {
+      store.logFor(DateTime(2026, 11, 18 - i)).quranPages = 5;
+    }
     store.duas.add(DuaItem('Ease for my family', '2026-11-01'));
     store.duas.add(DuaItem('A good job', '2026-10-01', answered: true));
   }
