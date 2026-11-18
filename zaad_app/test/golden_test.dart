@@ -45,4 +45,29 @@ void main() {
     addTearDown(t.platformDispatcher.clearPlatformBrightnessTestValue);
     await shoot(t, await makeState(), 'today_dark', height: 1500);
   });
+
+  // phone-sized pictures for the web page about the app
+  Future<void> phone(WidgetTester t, AppState s, String name, {double scroll = 0}) async {
+    t.view.devicePixelRatio = 2;
+    t.view.physicalSize = const Size(390 * 2, 844 * 2);
+    addTearDown(t.view.resetPhysicalSize);
+    await t.pumpWidget(ZaadApp(state: s));
+    await t.pump(const Duration(milliseconds: 500));
+    if (scroll != 0) {
+      await t.drag(find.byType(ListView).first, Offset(0, -scroll));
+      await t.pump(const Duration(milliseconds: 500));
+    }
+    await expectLater(find.byType(ZaadApp), matchesGoldenFile('goldens/shot_$name.png'));
+  }
+
+  testWidgets('shot today', (t) async => phone(t, await makeState(), 'today'));
+  testWidgets('shot windows', (t) async => phone(t, await makeState(), 'windows', scroll: 1150));
+  testWidgets('shot names', (t) async => phone(t, await makeState()..tab = 1, 'names'));
+  testWidgets('shot qibla', (t) async => phone(t, await makeState(heading: 40)..tab = 2, 'qibla'));
+  testWidgets('shot journey', (t) async => phone(t, await makeState()..tab = 3, 'journey'));
+  testWidgets('shot dark', (t) async {
+    t.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    addTearDown(t.platformDispatcher.clearPlatformBrightnessTestValue);
+    await phone(t, await makeState(), 'dark');
+  });
 }

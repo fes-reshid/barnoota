@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zaad: your day, prayer by prayer · the app for Android and iPhone · Diin Islaam</title>
+<meta name="description" content="Zaad works out the five prayers for where you are and builds your day around them, with the hadith behind every act, the 99 names of Allah to memorise, a Qibla compass and prayer reminders. No account, no ads, works offline. Coming soon for Android and iPhone.">
+<link rel="canonical" href="https://diinislaam.com/app/">
+<meta property="og:title" content="Zaad: your day, prayer by prayer">
+<meta property="og:description" content="The five prayers worked out for where you are, and your whole day built around them. No account, no ads, works offline.">
+<meta property="og:image" content="https://diinislaam.com/app/img/today.webp">
+<meta name="theme-color" content="#071b1f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#071b1f; --bg2:#0b3b35; --card:rgba(255,255,255,.055); --line:rgba(255,255,255,.12); --text:#e9f1ee; --muted:#9db8b0; --gold:#e7c873; --teal:#5fd0b6; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: var(--text); line-height: 1.6; background: var(--bg);
+    background-image: radial-gradient(900px 500px at 85% -5%, rgba(95,208,182,.16), transparent 60%), radial-gradient(700px 500px at 0% 30%, rgba(231,200,115,.08), transparent 60%); }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+  .ar { font-family: 'Amiri', serif; direction: rtl; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .logo { font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: .28em; color: var(--gold); text-decoration: none; font-size: 18px; }
+  nav .links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+  nav .links a { text-decoration: none; } nav .links a:hover { color: #fff; }
+
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 30px 0 70px; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--teal); }
+  h1 { font-family: 'Cinzel', serif; font-weight: 700; font-size: clamp(38px, 6vw, 64px); line-height: 1.05; margin: 12px 0 18px; letter-spacing: .01em; }
+  h1 em { font-style: normal; color: var(--gold); }
+  .lead { font-size: 18px; color: #c8dad4; max-width: 520px; margin: 0 0 22px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+  .chip { font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 20px; border: 1px solid var(--line); background: var(--card); color: #d6e6e1; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 22px; border-radius: 14px; font-weight: 600; font-size: 15px; text-decoration: none; }
+  .btn.p { background: var(--gold); color: #1c1a15; } .btn.s { border: 1px solid var(--line); background: var(--card); }
+  .stores { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .store { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border: 1px dashed rgba(255,255,255,.25); border-radius: 12px; font-size: 13px; color: var(--muted); }
+  .store b { display: block; color: #fff; font-size: 14px; }
+  .store small { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+
+  .phone { position: relative; width: 100%; max-width: 270px; border-radius: 40px; padding: 27px 9px 11px; background: linear-gradient(160deg, #2a3b3a, #0a1112); box-shadow: 0 30px 70px rgba(0,0,0,.55), inset 0 0 0 1.5px rgba(255,255,255,.12); margin: 0 auto; }
+  .phone::before { content: ''; position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 58px; height: 9px; border-radius: 6px; background: #060b0c; }
+  .phone img { width: 100%; height: auto; aspect-ratio: 780/1688; object-fit: cover; border-radius: 28px; display: block; }
+  .hero .phone { transform: rotate(3deg); }
+
+  section { padding: 56px 0; }
+  h2 { font-family: 'Cinzel', serif; font-size: clamp(26px, 4vw, 38px); margin: 8px 0 12px; line-height: 1.15; }
+  .sub { color: var(--muted); max-width: 620px; font-size: 17px; margin: 0 0 30px; }
+
+  .how { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: center; }
+  .steps { counter-reset: s; display: grid; gap: 16px; }
+  .step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
+  .step::before { counter-increment: s; content: counter(s); font-family: 'Cinzel', serif; font-weight: 700; font-size: 20px; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--gold); color: #1c1a15; }
+  .step b { display: block; font-size: 17px; margin-bottom: 2px; } .step span { color: var(--muted); font-size: 15px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { padding: 22px; border-radius: 20px; border: 1px solid var(--line); background: var(--card); }
+  .card .i { font-size: 26px; margin-bottom: 8px; display: block; }
+  .card b { display: block; font-size: 17px; margin-bottom: 4px; } .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  .strip { display: flex; gap: 26px; overflow-x: auto; padding: 14px 4px 30px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .strip figure { margin: 0; flex: 0 0 auto; width: 232px; scroll-snap-align: center; text-align: center; }
+  .strip figcaption { margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .strip figcaption b { display: block; color: #fff; font-size: 15.5px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .panel { padding: 28px; border-radius: 22px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(95,208,182,.1), rgba(255,255,255,.03)); }
+  .panel h3 { font-family: 'Cinzel', serif; margin: 0 0 8px; font-size: 22px; } .panel p { margin: 0 0 14px; color: #c3d6d0; }
+  .panel ul { margin: 0; padding-left: 20px; color: #c3d6d0; } .panel li { margin-bottom: 5px; }
+
+  details { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::after { content: '+'; color: var(--gold); font-size: 22px; line-height: 1; } details[open] summary::after { content: '−'; }
+  details p { margin: 10px 0 0; color: var(--muted); max-width: 720px; }
+
+  .end { text-align: center; padding: 70px 0 40px; }
+  .end .ar { font-size: 34px; color: var(--gold); line-height: 1.7; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 13.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  footer a { text-decoration: none; } footer a:hover { color: #fff; }
+
+  @media (max-width: 860px) {
+    .hero, .how, .split { grid-template-columns: 1fr; } .hero .phone { transform: none; max-width: 250px; }
+    .grid { grid-template-columns: 1fr 1fr; } nav .links { display: none; }
+  }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 38px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="./">ZAAD</a>
+    <div class="links"><a href="#how">How it works</a><a href="#features">Features</a><a href="#faq">Questions</a><a href="../planner/">Printed planner</a></div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <div class="eyebrow">The Zaad app · Android and iPhone</div>
+      <h1>Your day,<br><em>prayer by prayer.</em></h1>
+      <p class="lead">Zaad works out the five prayers for where you are and builds your whole day around them: what to do after Fajr, at Dhuhr, before you sleep, and the hadith behind every act.</p>
+      <div class="chips"><span class="chip">No account</span><span class="chip">No ads</span><span class="chip">Works offline</span><span class="chip">Your data stays on your phone</span></div>
+      <div class="cta">
+        <a class="btn p" href="../contact.html">Tell me when it is ready</a>
+        <a class="btn s" href="#how">See how it works</a>
+      </div>
+      <div class="stores">
+        <div class="store"><div><small>Coming soon</small><b>Google Play</b></div></div>
+        <div class="store"><div><small>Coming soon</small><b>App Store</b></div></div>
+      </div>
+    </div>
+    <div class="phone"><img src="img/today.webp" alt="The Zaad app: a 24-hour ring with the five prayers and the countdown to 'Asr" width="780" height="1688"></div>
+  </header>
+
+  <section id="how">
+    <div class="how">
+      <div class="phone"><img src="img/windows.webp" alt="The Dhuhr window of the day, open, with the prayer chips and the acts that belong to it" loading="lazy" width="780" height="1688"></div>
+      <div>
+        <div class="eyebrow">How a day looks</div>
+        <h2>The day is built on the five prayers</h2>
+        <p class="sub">Not a list to fill in. The app knows where you are in the day and puts the right things in front of you.</p>
+        <div class="steps">
+          <div class="step"><div><b>See where the day stands</b><span>A 24-hour ring shows the five prayers, the part of the day you are in, and the time to the next prayer.</span></div></div>
+          <div class="step"><div><b>Each window has its own acts</b><span>Before Fajr, Fajr, Duha, Dhuhr, 'Asr, Maghrib, 'Isha. Mark the prayer (prayed, on time, in jama'ah, sunnah, dhikr after) and the Sunnahs that belong to that part of the day.</span></div></div>
+          <div class="step"><div><b>Know why you do it</b><span>Tap the book beside any act to read the hadith behind it in Arabic and English, with its narrator and source.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="eyebrow">What is inside</div>
+    <h2>Small habits, kept</h2>
+    <p class="sub">Everything the printed Zaad planner taught, as an app that is with you at the right moment.</p>
+    <div class="grid">
+      <div class="card"><span class="i">📖</span><b>The hadith behind every act</b><p>Each hadith is in Arabic and English with its narrator and source, taken from the books of hadith.</p></div>
+      <div class="card"><span class="i">✨</span><b>99 names, two a week</b><p>Flashcards bring back the names you miss sooner, and each day gives one line on how to live by the name.</p></div>
+      <div class="card"><span class="i">🧭</span><b>Qibla compass</b><p>Turn until the Ka'bah is at the top. It tells you which way to turn and how far.</p></div>
+      <div class="card"><span class="i">🌙</span><b>Special days change the day</b><p>Fridays, Ramadan (suhoor, fasting, iftar, tarawih, the last ten nights), the two Eids, 'Arafah, 'Ashura and the white days.</p></div>
+      <div class="card"><span class="i">📈</span><b>Your journey</b><p>A streak, the last seven days, a Hijri calendar coloured by your prayers, a Qur'an juz tracker and a list of your duas.</p></div>
+      <div class="card"><span class="i">🔔</span><b>Reminders on the phone</b><p>At each prayer time, ten minutes before, and for morning and evening adhkar. Nothing is sent to a server.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Screens</div>
+    <h2>A look at the app</h2>
+    <p class="sub">Light and dark. These are real screens from the app, with sample entries.</p>
+    <div class="strip">
+      <figure><div class="phone"><img src="img/names.webp" alt="The 99 names of Allah with progress and a review button" loading="lazy" width="780" height="1688"></div><figcaption><b>99 Names</b>Two a week, with flashcards</figcaption></figure>
+      <figure><div class="phone"><img src="img/qibla.webp" alt="The Qibla compass" loading="lazy" width="780" height="1688"></div><figcaption><b>Qibla</b>The Ka'bah on a compass</figcaption></figure>
+      <figure><div class="phone"><img src="img/journey.webp" alt="Streak and a Hijri calendar coloured by prayers" loading="lazy" width="780" height="1688"></div><figcaption><b>Journey</b>Streaks and a Hijri calendar</figcaption></figure>
+      <figure><div class="phone"><img src="img/dark.webp" alt="The Today screen in dark mode" loading="lazy" width="780" height="1688"></div><figcaption><b>Dark mode</b>Easy on the eyes at Fajr</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="split">
+      <div class="panel">
+        <h3>Private by design</h3>
+        <p>There is nothing to sign up for and nothing is collected.</p>
+        <ul>
+          <li>Prayer times and the Qibla are worked out on your phone.</li>
+          <li>Your location never leaves the phone.</li>
+          <li>No account, no ads, no tracking.</li>
+          <li>Copy a backup to keep or to move to a new phone.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Prefer paper?</h3>
+        <p>Zaad is also a printed planner for 2027, with a hadith in Arabic and English every week and the 99 names to memorise. It is a different thing: a book you write in.</p>
+        <a class="btn s" href="../planner/">See the printed planner →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="eyebrow">Questions</div>
+    <h2>Before you ask</h2>
+    <details><summary>When can I get it?</summary><p>The app is finished and being tested on phones. It is coming to Google Play and the App Store. Use "Tell me when it is ready" and we will let you know.</p></details>
+    <details><summary>What will it cost?</summary><p>Not decided yet. The price, or that it is free, will be on this page when the app is released.</p></details>
+    <details><summary>Does it need the internet?</summary><p>No. The prayer times, the Qibla, the Hijri dates, the hadith and the names are all inside the app. It works on a plane and in the desert.</p></details>
+    <details><summary>Which prayer-time method does it use?</summary><p>You choose: Muslim World League, North America (ISNA), Umm al-Qura, Egyptian, Karachi, Dubai, Qatar, Kuwait, Singapore, Türkiye or Moonsighting Committee, with the Shafi'i or Hanafi 'Asr. Check the times against your local mosque.</p></details>
+    <details><summary>Which language is it in?</summary><p>English, with the Arabic of the hadith and the names of Allah. More languages are planned.</p></details>
+    <details><summary>Is the Hijri date exact?</summary><p>It follows the Umm al-Qura calendar. The start of a month can differ by a day with your local moon sighting, especially for Ramadan and the Eids.</p></details>
+    <details><summary>Can the app replace a teacher?</summary><p>No. It is for learning and reminders. Please verify religious matters with a qualified teacher.</p></details>
+  </section>
+
+  <div class="end">
+    <div class="ar" lang="ar">وَتَزَوَّدُوا فَإِنَّ خَيْرَ الزَّادِ التَّقْوَىٰ</div>
+    <p style="color:var(--muted);margin:6px 0 0">“And take provision, for the best provision is taqwa.” · al-Baqarah 2:197</p>
+  </div>
+
+  <footer>
+    <span>© Diin Islaam · Melbourne, Australia</span>
+    <span><a href="../">Home</a> · <a href="../planner/">Printed planner</a> · <a href="../contact.html">Contact</a> · <a href="../privacy-policy.html">Privacy</a></span>
+  </footer>
+</div>
+</body>
+</html>
