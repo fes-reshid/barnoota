@@ -448,3 +448,4 @@ p.ar .saw, .ayah .saw { font-family: 'Amiri', serif; }
 .rem .live i { font-style: italic; }
 .wfoot { margin: 0 0 2.6mm; }
 .wfoot { margin: 0 0 .4mm; } .wfoot .nm.n2 { padding-top: .4mm; padding-bottom: .4mm; }
+.url { text-transform: none; letter-spacing: .08em; }
