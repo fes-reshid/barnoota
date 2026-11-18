@@ -973,10 +973,10 @@ def week_spread(n, start, hadith, month):
     assert len(PAGES) % 2 == 1, "a week must open on a left-hand page"
     add(f'<div class="act"><div><b>Live it</b>{action}</div></div>' + "".join(day_block(d) for d in left) + (fill if len(left) < 3 else ""),
         cls="week wk2", month=month, band=band.replace('class="wkb"', 'class="wkb sm"'))
-    add("".join(day_block(d) for d in right) + (fill if len(right) < 4 else "")
-        + '<div class="wfoot">' + names_card(n, "nm n2")
+    add('<div class="wfoot">' + names_card(n, "nm n2")
         + '<div class="sc s3">' + "".join(f"<div><span>{t}</span><b>__</b></div>" for t in [
-            "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>",
+            "Prayers on time /35", "Qur'an pages", "Days fasted", "Days of sadaqah"]) + "</div></div>"
+        + "".join(day_block(d) for d in right) + (fill if len(right) < 4 else ""),
         cls="wk2", month=month)
 
 
