@@ -56,7 +56,7 @@ Every hadith is printed in Arabic and English. The Arabic is taken from the sour
 | `FREE_SAMPLE=1 python3 build.py` | `Zaad-Free-Sample-2027.pdf`: front matter, adhkar, the names, and February 1448 |
 | `COVER=ramadan python3 build.py` | The daily edition with a Ramadan 1448 gift cover (`...-Ramadan.pdf`); add `EDITION=weekly` for the weekly one |
 | `python3 build_cover.py` | The wrap-around covers (back, spine, front, 3 mm bleed) for both editions and both covers |
-| `python3 tools/build_today.py` | Regenerates `../zaad/data.js` for the free web page `../zaad/index.html` |
+| `python3 tools/build_today.py` | Regenerates `../planner/data.js` for the free web page `../planner/index.html` |
 | `python3 tools/check_sunnah.py <editions folder>` | Checks each weekly Sunnah against the source collections |
 
 See `PRINTING-AND-SELLING.md` for what a printer needs and a simple price ladder.

@@ -39,7 +39,7 @@ Suggested pairing: the weekly edition with wire binding or a flexible cover, rib
 
 Work from your quote, not from a guess. A common rule of thumb for printed books is to price at about 2.5 to 3 times the printing cost per copy. Check that against what similar planners sell for where you sell.
 
-1. **Free:** the sample PDF and the web page (`/zaad/`). They bring people in.
+1. **Free:** the sample PDF and the web page (`/planner/`). They bring people in.
 2. **Weekly edition:** the entry price, the one most people will buy.
 3. **Daily edition:** the premium version, priced well above the weekly because it is more than twice the pages.
 4. **Ramadan 1448 gift edition:** the weekly with the gift cover, sold before Ramadan. It has the gift page for a name and a dua.
