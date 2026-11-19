@@ -48,7 +48,7 @@
 </head>
 <body style="margin:0;background:#0b3a35">
   <div id="zaad-loading" style="position:fixed;inset:0;display:grid;place-items:center;text-align:center;color:#e7c873;font-family:Georgia,serif;letter-spacing:.3em;font-size:34px">
-    <div>ZAAD<div style="font-size:13px;letter-spacing:.05em;color:#cfe3dc;margin-top:14px;font-family:system-ui,sans-serif">Loading… the first time can take a few seconds.<br>If this stays here, use a recent Chrome, Edge, Safari or Firefox and refresh.</div></div>
+    <div>ZAAD<div id="zaad-hint" style="font-size:13px;letter-spacing:.05em;color:#cfe3dc;margin-top:14px;font-family:system-ui,sans-serif">Loading… the first time can take a few seconds.<br>If this stays here, use a recent Chrome, Edge, Safari or Firefox and refresh.</div></div>
   </div>
   <!--
     You can customize the "flutter_bootstrap.js" script.
@@ -63,6 +63,12 @@
     window.addEventListener('flutter-first-frame', function () {
       var e = document.getElementById('zaad-loading'); if (e) e.remove();
     });
+    // if it has not started after 20 seconds, say what to try instead of staying blank
+    setTimeout(function () {
+      var e = document.getElementById('zaad-loading'); if (!e) return;
+      var m = document.getElementById('zaad-hint');
+      if (m) m.innerHTML = 'This is taking too long.<br>Try: hold Shift and press refresh, or open this page in a private window.<br>If it still does not start, your browser or network may be blocking WebAssembly.';
+    }, 20000);
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>

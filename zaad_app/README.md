@@ -103,3 +103,11 @@ Open `ios/Runner.xcworkspace` in Xcode once, choose your team under Signing and 
 ## Not in this version
 
 A home-screen widget showing the next prayer, the adhan sound, other languages (the app is in English; the names and hadith carry Arabic), and syncing between phones (use the backup to move data).
+
+## Web version (diinislaam.com/zaadapp/app/)
+
+```bash
+flutter build web --release --base-href /zaadapp/app/ --no-web-resources-cdn --pwa-strategy=none
+```
+
+Copy `build/web` into `zaadapp/app/`, delete `canvaskit/skwasm*`, `canvaskit/wimp*` and `canvaskit/webparagraph` (not used without cross-origin isolation, which GitHub Pages does not offer), and put back the self-removing `zaadapp/app/flutter_service_worker.js` (it clears any older cached copy of the app).
