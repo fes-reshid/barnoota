@@ -58,6 +58,7 @@ class _TodayScreenState extends State<TodayScreen> {
     return ListView(padding: const EdgeInsets.only(bottom: 28), children: [
       _Header(date: date, info: info, isToday: isToday, accent: windowColor(nowWindow)),
       const SizedBox(height: 14),
+      if (!app.store.quran.isSet && !app.settings.quranPromptHidden) const _QuranStart(),
       if (times != null && next != null)
         Center(child: DayDial(times: times, now: app.now, isToday: isToday, next: next)),
       if (times != null) _PrayerStrip(times: times, log: log, place: app.place!.name),
@@ -545,6 +546,36 @@ class _QuranRow extends StatelessWidget {
 }
 
 /// Reminds you, on today's page, to read the morning and evening adhkar, and sends you to Hisnul Muslim to read them.
+/// First thing on Today until a daily Qur'an goal is chosen (or the card is dismissed).
+class _QuranStart extends StatelessWidget {
+  const _QuranStart();
+
+  @override
+  Widget build(BuildContext context) {
+    final app = AppScope.of(context);
+    return Panel(
+      key: const ValueKey('quran-start'),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('QUR\'AN', style: label(11, color: Zc.gold)),
+        const SizedBox(height: 6),
+        Text('How much can you read each day? Choose pages or juz, or how long you want to take to finish, and Zaad plans every day for you.', style: serif(15)),
+        const SizedBox(height: 10),
+        Row(children: [
+          FilledButton.icon(onPressed: () => showQuranGoal(context), icon: const Icon(Icons.menu_book), label: const Text('Set my daily Qur\'an')),
+          const SizedBox(width: 8),
+          TextButton(
+            onPressed: () {
+              app.settings.quranPromptHidden = true;
+              app.store.save();
+            },
+            child: const Text('Not now'),
+          ),
+        ]),
+      ]),
+    );
+  }
+}
+
 class _AdhkarNudges extends StatelessWidget {
   const _AdhkarNudges({required this.times, required this.log});
   final DayTimes times;
