@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Amazon KDP covers: one wrap-around PDF (back + spine + front).
 
-  python3 build_kdp_cover.py            paperback, black-and-white interior (A4), 0.125in bleed
+  python3 build_kdp_cover.py            paperback, black-and-white interior (8.5 x 11 in; SIZE=a4 for A4), 0.125in bleed
   python3 build_kdp_cover.py color      paperback, standard colour (US Letter)
   python3 build_kdp_cover.py hc         hardcover (case laminate), black-and-white interior, 8.25 x 11 in
   python3 build_kdp_cover.py hc-color   hardcover, premium colour interior
@@ -23,7 +23,9 @@ from pypdf import PdfReader  # noqa: E402
 OUT_DIR = os.path.join(ROOT, "amazon-kdp")
 MODE = (sys.argv[1:] or ["bw"])[0]
 HC = MODE in ("hc", "hc-color")
-COLOR = MODE == "color"           # paperback, US Letter standard colour
+# "COLOR" here means: paperback on US Letter (8.5 x 11 in). That is now the colour paperback and, unless SIZE=a4,
+# the black-and-white paperback too.
+COLOR = MODE == "color" or (MODE == "bw" and os.environ.get("SIZE", "letter") == "letter")
 INTERIOR, OUT = {
     "bw": ("Forty-Hadith-KDP-Interior-BW.pdf", "Forty-Hadith-KDP-Cover.pdf"),
     "color": ("Forty-Hadith-KDP-Interior-Color.pdf", "Forty-Hadith-KDP-Cover-Color.pdf"),
@@ -38,7 +40,7 @@ if HC:
     # and 0.375 in from the bottom.
     EDGE, HINGE, TRIM_W, TRIM_H = (12.417 - 11.236) / 2, 0.394, 8.447, 11.236  # full height 12.417 in (wrap ~0.591)
     BARCODE_SIDE, BARCODE_BOTTOM = HINGE + 0.25, 0.375
-    HC_SPINE = {("hc", 269): 0.795, ("hc-color", 269): 0.82}
+    HC_SPINE = {("hc", 266): 0.788, ("hc-color", 266): 0.813}   # from the KDP cover calculator, by interior page count
 else:
     EDGE, HINGE = 0.125, 0.0
     TRIM_W, TRIM_H = (8.5, 11.0) if COLOR else (8.27, 11.69)

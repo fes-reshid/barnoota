@@ -4,13 +4,13 @@ There are five Amazon editions. In KDP, a paperback, a hardcover and a Kindle eB
 
 | Edition | Interior / manuscript | Cover | Size | Pages |
 |---|---|---|---|---|
-| **Paperback, black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | A4, 8.27 × 11.69 in | 249 |
-| **Paperback, colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | US Letter, 8.5 × 11 in | 268 |
-| **Hardcover, black and white** | `Forty-Hadith-Hardcover-Interior-BW.pdf` | `Forty-Hadith-Hardcover-Cover-BW.pdf` | 8.25 × 11 in | 269 |
-| **Hardcover, premium colour** | `Forty-Hadith-Hardcover-Interior-Color.pdf` | `Forty-Hadith-Hardcover-Cover-Color.pdf` | 8.25 × 11 in | 269 |
+| **Paperback, black and white** | `Forty-Hadith-KDP-Interior-BW.pdf` | `Forty-Hadith-KDP-Cover.pdf` | 8.5 × 11 in | 266 |
+| **Paperback, colour** | `Forty-Hadith-KDP-Interior-Color.pdf` | `Forty-Hadith-KDP-Cover-Color.pdf` | 8.5 × 11 in | 266 |
+| **Hardcover, black and white** | `Forty-Hadith-Hardcover-Interior-BW.pdf` | `Forty-Hadith-Hardcover-Cover-BW.pdf` | 8.25 × 11 in | 266 |
+| **Hardcover, premium colour** | `Forty-Hadith-Hardcover-Interior-Color.pdf` | `Forty-Hadith-Hardcover-Cover-Color.pdf` | 8.25 × 11 in | 266 |
 | **Kindle eBook** | `Forty-Hadith-eBook.epub` | `Forty-Hadith-eBook-Cover.jpg` | reflowable, 1600 × 2560 px cover | — |
 
-The A4 study book (`../Forty-Hadith-Nawawi-Study-Book.pdf`, with its cover inside) is for printing at home or at a local printer, and for the website.
+All print editions are **8.5 × 11 in**, the same size as the Tuhfatul Atfaal and Seeraa Quest books, except the hardcover: 8.25 × 11 in is the largest hardcover size KDP offers. The study book (`../Forty-Hadith-Nawawi-Study-Book.pdf`, 8.5 × 11 in with its cover inside, 267 pages) is for printing at home or at a local printer, and for the website. For the old A4 versions, build with `SIZE=a4` (see "Rebuilding").
 
 The sections below describe the black-and-white paperback. The other editions' differences follow it.
 
@@ -23,13 +23,13 @@ The English translations come from sunnah.com, which presents translations owned
 ## Files to upload
 | File | Use |
 |---|---|
-| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 249 pages, A4, black and white |
-| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.351 × 11.94 in with bleed |
+| `Forty-Hadith-KDP-Interior-BW.pdf` | Manuscript (interior): 266 pages, 8.5 × 11 in, black and white |
+| `Forty-Hadith-KDP-Cover.pdf` | Cover: one wrap-around PDF (back, spine and front), 17.849 × 11.25 in with bleed, spine 0.599 in |
 
 ## Print settings in KDP (Paperback content page)
 - **Print ISBN:** use KDP's free ISBN, or your own
 - **Ink and paper:** Black & white interior with **white paper**. The cover's spine width is calculated for white paper.
-- **Trim size:** 8.27 × 11.69 in (21 × 29.7 cm, A4)
+- **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm)
 - **Bleed:** No bleed. Nothing in the interior runs to the page edge.
 - **Cover finish:** Matte (recommended for this design) or Glossy
 - **Manuscript:** upload the interior PDF
@@ -78,49 +78,49 @@ The English translations come from sunnah.com, which presents translations owned
 - Religion & Spirituality › Religious Studies (or Education › Religious)
 
 ## Price (Amazon.com, paperback)
-At 249 pages, large trim, black ink, the printing cost is about **$1.00 + 249 × $0.017 ≈ $5.23** per copy. KDP's price calculator shows the exact figure.
+At 266 pages, large trim, black ink, the printing cost is about **$1.00 + 266 × $0.017 ≈ $5.52** per copy. KDP's price calculator shows the exact figure.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $14.99 | ≈ $3.76 | ≈ $0.76 |
-| **$16.99 (suggested)** | **≈ $4.96** | ≈ $1.56 |
-| $19.99 | ≈ $6.76 | ≈ $2.76 |
+| $14.99 | ≈ $3.47 | ≈ $0.48 |
+| **$16.99 (suggested)** | **≈ $4.67** | ≈ $1.28 |
+| $19.99 | ≈ $6.47 | ≈ $2.48 |
 
 Let KDP convert the price for the other marketplaces (UK, EU, CA, AU…) and round it, or set each one yourself.
 
 ## Colour edition: what is different
-- **Ink and paper:** Standard color, white paper. KDP does not offer standard colour at A4, which is why this edition is US Letter.
+- **Ink and paper:** Standard color, white paper. (KDP does not offer standard colour at A4, so both paperbacks use 8.5 × 11 in.)
 - **Trim size:** 8.5 × 11 in (21.59 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Glossy shows the colours best; Matte also works.
-- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (268 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.854 × 11.25 in, spine 0.604 in).
+- **Files:** `Forty-Hadith-KDP-Interior-Color.pdf` (266 pages) and `Forty-Hadith-KDP-Cover-Color.pdf` (17.849 × 11.25 in, spine 0.599 in).
 - **Subtitle:** you can add "Full Colour Edition" at the end so readers can tell the two listings apart.
-- **Price:** standard colour printing at large trim is about $1.00 + 268 × $0.0402 ≈ **$11.77** per copy. Check the exact figure in KDP's calculator.
+- **Price:** standard colour printing at large trim is about $1.00 + 266 × $0.0402 ≈ **$11.69** per copy. Check the exact figure in KDP's calculator.
 
 | List price | Royalty (60% − printing) | With Expanded Distribution (40% − printing) |
 |---|---|---|
-| $22.99 | ≈ $2.02 | — |
-| **$24.99 (suggested)** | **≈ $3.22** | — |
-| $29.99 | ≈ $6.22 | ≈ $0.22 |
+| $22.99 | ≈ $2.10 | — |
+| **$24.99 (suggested)** | **≈ $3.30** | — |
+| $29.99 | ≈ $6.30 | ≈ $0.31 |
 
 ## Hardcover: what is different
 KDP hardcovers are case laminate: the cover is printed and wrapped around 2 mm boards. The largest hardcover size is **8.25 × 11 in**. A4 and 8.5 × 11 in are not offered for hardcover, and standard colour is not available (only black ink or premium colour).
 
 - **Ink and paper:** Black & white with **white paper** (`…-BW` files), or **Premium color** (`…-Color` files)
 - **Trim size:** 8.25 × 11 in (20.96 × 27.94 cm). **Bleed:** No bleed. **Cover finish:** Matte or Glossy.
-- **Covers:** made to KDP's cover calculator for 269 pages:
-  - Black and white: **18.87 × 12.417 in**, spine 0.795 in
-  - Premium colour: **18.895 × 12.417 in**, spine 0.82 in
+- **Covers:** made to KDP's cover calculator for 266 pages:
+  - Black and white: **18.863 × 12.417 in**, spine 0.788 in
+  - Premium colour: **18.888 × 12.417 in**, spine 0.813 in
   - Both: boards 8.447 × 11.236 in, wrap 0.591 in, hinge 0.394 in. Text is kept out of the hinge and the wrap, and the barcode area on the back is left empty.
 - **Subtitle:** you can add "Hardcover Edition" (and "Full Colour" for the colour one).
 - **Price (Amazon.com):** printing cost is the fixed cost plus a cost per page (large trim):
-  - Black and white: $5.65 + 269 × $0.017 ≈ **$10.22**
-  - Premium colour: $5.65 + 269 × $0.080 ≈ **$27.17**. KDP won't accept a list price below printing cost ÷ 60%, so the colour hardcover must be priced at about $45.29 or more.
+  - Black and white: $5.65 + 266 × $0.017 ≈ **$10.17**
+  - Premium colour: $5.65 + 266 × $0.080 ≈ **$26.93**. KDP won't accept a list price below printing cost ÷ 60%, so the colour hardcover must be priced at about $44.88 or more.
 
 | Hardcover | List price | Royalty (60% − printing) |
 |---|---|---|
-| Black and white | $24.99 | ≈ $4.77 |
-| Black and white | **$27.99 (suggested)** | **≈ $6.57** |
-| Premium colour | **$49.99 (suggested)** | **≈ $2.82** |
-| Premium colour | $54.99 | ≈ $5.82 |
+| Black and white | $24.99 | ≈ $4.82 |
+| Black and white | **$27.99 (suggested)** | **≈ $6.62** |
+| Premium colour | **$49.99 (suggested)** | **≈ $3.06** |
+| Premium colour | $54.99 | ≈ $6.06 |
 
 The premium colour hardcover is expensive to print. Most buyers will choose the colour paperback or the black-and-white hardcover, so publishing the colour hardcover is optional.
 
@@ -145,8 +145,9 @@ EDITION=hc python3 build.py           # hardcover interior, black and white
 python3 build_kdp_cover.py hc         # its cover
 EDITION=hc-color python3 build.py     # hardcover interior, premium colour
 python3 build_kdp_cover.py hc-color   # its cover
+python3 build.py                      # the study book (8.5 x 11 in, cover included)
 python3 build_epub.py                 # Kindle eBook and its cover
 python3 -m epubcheck amazon-kdp/Forty-Hadith-eBook.epub   # check the eBook (pip install epubcheck)
 ```
 
-The paperback cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.** For a hardcover, the script stops if the page count is not 269. Read the new spine width from KDP's cover calculator (kdp.amazon.com/cover-calculator) and add it to `HC_SPINE` in `build_kdp_cover.py`.
+The paperback cover script reads the interior's page count and resizes the spine. **If the page count changes, you must upload the new cover too.** For a hardcover, the script stops if the page count is not 266. Add `SIZE=a4` before `python3` (for example `SIZE=a4 python3 build.py`) for the A4 study book or black-and-white paperback. Read the new spine width from KDP's cover calculator (kdp.amazon.com/cover-calculator) and add it to `HC_SPINE` in `build_kdp_cover.py`.

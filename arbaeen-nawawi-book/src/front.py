@@ -129,7 +129,7 @@ def bismillah_page():
 
 # ------------------------------------------------------------------ preface
 def preface():
-    return f'''<section class="page-sec" style="font-size:10.15pt;line-height:1.5">{mk("preface")}{head("Preface", "المُقَدِّمَة")}
+    return f'''<section class="page-sec preface">{mk("preface")}{head("Preface", "المُقَدِّمَة")}
 <p class="dropcap">All praise belongs to Allah, Lord of the worlds, and may peace and blessings be upon our Prophet Muhammad, upon his family and all of his Companions. Among the gifts Allah gave His Messenger ﷺ was <i>jawāmiʿ al-kalim</i>: short sentences that carry a great deal of meaning. A few words from him can hold a whole chapter of the religion, and the scholars of every generation have collected such sayings so that Muslims can learn the most with the least effort.</p>
 <p>The most loved of these collections is the <b>Forty Hadith</b> of Imam Yaḥyā ibn Sharaf an-Nawawī (d. 676 AH). He chose forty-two hadith, each of which, in his words, is “a great foundation of the foundations of the religion”. They cover belief, worship, character, dealings with people and the purification of the heart. Some scholars said that the whole of Islam turns on a handful of them: “Actions are by intentions”, “Whoever introduces into this affair of ours…”, “The halal is clear and the haram is clear”, and “Leave what does not concern you”. A century later, al-Ḥāfiẓ Ibn Rajab al-Ḥanbalī (d. 795 AH) wrote his famous commentary <i>Jāmiʿ al-ʿUlūm wa-l-Ḥikam</i> on them and added eight more, bringing the total to fifty. This book follows that fifty-hadith text exactly as it is printed in the source edition.</p>
 <p>This is a <b>study edition</b>. It is meant to be read with a pen in your hand, not only memorised and put on a shelf. Each hadith has its own chapter, and every chapter is built the same way:</p>
@@ -173,7 +173,7 @@ def how_to_use():
 
 # ------------------------------------------------------------------ about the imams
 def about_nawawi():
-    return f'''<section class="page-sec">{mk("nawawi")}{head("The Two Imams", "الإِمَامَانِ النَّوَوِيُّ وَابْنُ رَجَب")}
+    return f'''<section class="page-sec imams">{mk("nawawi")}{head("The Two Imams", "الإِمَامَانِ النَّوَوِيُّ وَابْنُ رَجَب")}
 <h3>Imam an-Nawawī (631 – 676 AH)</h3>
 <p><b>Abū Zakariyyā Yaḥyā ibn Sharaf an-Nawawī</b> was born in Muḥarram 631 AH in Nawā, a village in the Ḥawrān region south of Damascus. As a boy he loved the Qur’an so much that, it is reported, when other children forced him to play he would run away from them crying and reciting. At about nineteen his father brought him to Damascus, where he lived in a small room of the Rawāḥiyyah school and studied with remarkable discipline: twelve lessons a day with his teachers, in fiqh, hadith, Arabic grammar, principles and more.</p>
 <p>In a short life of about forty-five years he wrote books that Muslims still read every day: <i>Riyāḍ aṣ-Ṣāliḥīn</i>, <i>al-Adhkār</i>, his commentary on <i>Ṣaḥīḥ Muslim</i>, <i>al-Majmūʿ</i>, <i>Rawḍat aṭ-Ṭālibīn</i>, <i>Minhāj aṭ-Ṭālibīn</i> and the <i>Forty Hadith</i>. He lived simply, never married, ate little, and taught at Dār al-Ḥadīth al-Ashrafiyyah without taking its salary. He spoke the truth to the rulers of his time, and wrote to the Sultan advising him to lift unjust taxes from the people. He died in Rajab 676 AH in his home village, may Allah have mercy on him.</p>

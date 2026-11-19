@@ -2,3 +2,7 @@
 @page { size: 8.25in 11in; }
 @page :right { size: 8.25in 11in; margin: 19mm 15mm 19mm 22mm; }
 @page :left  { size: 8.25in 11in; margin: 19mm 22mm 19mm 15mm; }
+/* narrower page (8.25 in): a touch smaller still */
+.preface { font-size: 9.2pt; }
+.imams { font-size: 9.5pt; line-height: 1.44; }
+.imams h3 { margin-top: 3mm; }

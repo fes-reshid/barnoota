@@ -2,7 +2,7 @@
 
 Compiled by Feysel Reshid.
 
-`Forty-Hadith-Nawawi-Study-Book.pdf` is an A4 study book of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 250 pages including the cover.
+`Forty-Hadith-Nawawi-Study-Book.pdf` is an 8.5 × 11 in study book (the same size as the Tuhfatul Atfaal book) of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 267 pages including the cover.
 
 Each hadith has its own chapter with:
 
@@ -47,8 +47,8 @@ python3 build.py
 
 | Edition | Files | Build |
 |---|---|---|
-| A4 study book (colour, cover included) | `Forty-Hadith-Nawawi-Study-Book.pdf` | `python3 build.py` |
-| Amazon paperback, black and white, A4 | `amazon-kdp/Forty-Hadith-KDP-Interior-BW.pdf`, `…-KDP-Cover.pdf` | `EDITION=kdp python3 build.py`, `python3 build_kdp_cover.py` |
+| Study book, 8.5 × 11 in (colour, cover included) | `Forty-Hadith-Nawawi-Study-Book.pdf` | `python3 build.py` |
+| Amazon paperback, black and white, 8.5 × 11 in | `amazon-kdp/Forty-Hadith-KDP-Interior-BW.pdf`, `…-KDP-Cover.pdf` | `EDITION=kdp python3 build.py`, `python3 build_kdp_cover.py` |
 | Amazon paperback, colour, 8.5 × 11 in | `amazon-kdp/Forty-Hadith-KDP-Interior-Color.pdf`, `…-KDP-Cover-Color.pdf` | `EDITION=kdp-color …`, `build_kdp_cover.py color` |
 | Amazon hardcover, black and white, 8.25 × 11 in | `amazon-kdp/Forty-Hadith-Hardcover-Interior-BW.pdf`, `…-Hardcover-Cover-BW.pdf` | `EDITION=hc …`, `build_kdp_cover.py hc` |
 | Amazon hardcover, premium colour, 8.25 × 11 in | `amazon-kdp/Forty-Hadith-Hardcover-Interior-Color.pdf`, `…-Hardcover-Cover-Color.pdf` | `EDITION=hc-color …`, `build_kdp_cover.py hc-color` |

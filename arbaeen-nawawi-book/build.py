@@ -43,7 +43,10 @@ EDITION = os.environ.get("EDITION", "color")
 KDP = EDITION in ("kdp", "kdp-color", "hc", "hc-color")
 GREY = EDITION in ("kdp", "hc")
 HC = EDITION in ("hc", "hc-color")
-LETTER = EDITION == "kdp-color" or HC   # 11 in tall pages
+# Page size: US Letter 8.5 x 11 in (the size of the Tuhfatul Atfaal / Seeraa Quest books) for every edition except the
+# hardcover (8.25 x 11 in, KDP's largest hardcover). SIZE=a4 builds the old A4 versions of the study book and the
+# black-and-white paperback.
+LETTER = HC or EDITION == "kdp-color" or os.environ.get("SIZE", "letter") == "letter"   # 11 in tall pages
 PAGE_W_IN = 8.25 if HC else 8.5
 OUT_PDF = os.path.join(ROOT, "Forty-Hadith-Nawawi-Study-Book.pdf")
 BUILD = os.path.join(ROOT, ".build")
@@ -412,7 +415,7 @@ def build_html(pages):
     if KDP:
         css += open(os.path.join(ROOT, "src", "kdp.css"), encoding="utf-8").read()
     if LETTER:
-        css += open(os.path.join(ROOT, "src", "kdp-letter.css"), encoding="utf-8").read()
+        css += open(os.path.join(ROOT, "src", "kdp-letter.css" if KDP else "letter.css"), encoding="utf-8").read()
     if HC:
         css += open(os.path.join(ROOT, "src", "kdp-hardcover.css"), encoding="utf-8").read()
     parts = [front.title_page(), front.copyright_page(), front.bismillah_page(), front.preface(), toc_html(pages), front.how_to_use(),
@@ -556,13 +559,26 @@ def plan_notes(pdf_path):
     return plan
 
 
+def letter_cover_html(css):
+    """The A4 cover design on an 8.5 x 11 in page: the artwork stretches to the page, the lettering is scaled evenly."""
+    inner = front.cover_html_inner(FIGURES["lantern"])
+    art_end = inner.index("</svg>") + len("</svg>")
+    panel = inner[:art_end] + '<div class="ov">' + inner[art_end:-len("</div>")] + "</div></div>"
+    extra = (f"@page {{ size: 8.5in 11in; margin: 0; }} html, body {{ margin: 0; }}"
+             f".cover {{ width: 8.5in; height: 11in; }} .cover > .art {{ width: 100% !important; height: 100% !important; }}"
+             f".ov {{ position: absolute; left: 50%; top: 0; width: 210mm; height: 297mm; transform: translateX(-50%) scale({11 / 11.69:.4f}); transform-origin: top center; }}")
+    return (f'<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css"><style>{css}{extra}</style></head>'
+            f"<body>{panel}</body></html>")
+
+
 def main():
     os.makedirs(BUILD, exist_ok=True)
     os.makedirs(os.path.dirname(OUT_PDF), exist_ok=True)
     cover_pdf = None
     if not KDP:  # the KDP cover is a separate wrap file (build_kdp_cover.py)
         cover = os.path.join(BUILD, "cover.html")
-        open(cover, "w", encoding="utf-8").write(front.cover_html(open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()))
+        css = open(os.path.join(ROOT, "src", "book.css"), encoding="utf-8").read()
+        open(cover, "w", encoding="utf-8").write(letter_cover_html(css) if LETTER else front.cover_html(css))
         cover_pdf = os.path.join(BUILD, "cover.pdf")
         render(cover, cover_pdf)
     hp = os.path.join(BUILD, "book.html")

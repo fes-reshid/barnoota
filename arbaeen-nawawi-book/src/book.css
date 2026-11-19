@@ -287,3 +287,6 @@ ul.bib { padding-left: 5mm; margin: 0; } ul.bib li { margin-bottom: 1.2mm; }
 .cp-online { display: flex; gap: 4mm; align-items: center; margin: 3mm 0; }
 .cp-online p { margin: 0; }
 .cp-online .qr .qrsvg { width: 20mm; height: 20mm; }
+
+/* Preface: a little smaller than body text so it fits one page */
+.preface { font-size: 10.15pt; line-height: 1.5; }

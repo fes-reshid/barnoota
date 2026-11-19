@@ -1,0 +1,10 @@
+/* Study book on US Letter 8.5 x 11 in (same size as the Tuhfatul Atfaal and Seeraa Quest books). Text area height 241.4 mm. */
+@page { size: 8.5in 11in; margin: 19mm 18mm 19mm 18mm; }
+.title-page, .bism-page, .copyright { height: 238mm; }
+.part-page { height: 240mm; }
+.tracker div { height: 14.2mm; }
+/* The Letter page is 18 mm shorter than A4: keep the Preface and the Contents on one page each */
+.preface { font-size: 9.45pt; line-height: 1.45; }
+.toc-t { font-size: 9pt; }
+.toc-t td { padding: 1.3px 4px; }
+.toc-t .tp td { padding-top: 6px; }
