@@ -1,0 +1,11 @@
+KDP SETTINGS - Soommana Ramadaanaa
+PAPERBACK
+- Trim size: 6 x 9 in (15.24 x 22.86 cm)
+- Interior: Black & white, WHITE paper, no bleed  -> Paperback_Interior_6x9.pdf (120 pages, fonts embedded)
+- Cover: matte or glossy, with bleed -> Paperback_Cover_Wrap.pdf (12.520 x 9.250 in, 300 dpi; spine 0.270 in for 120 pages white paper)
+- Leave the back-cover bottom-right empty; KDP places the barcode there.
+- If you change the page count or paper type, the spine width changes (white: pages x 0.002252 in).
+EBOOK
+- Upload Ebook_Soommana_Ramadaanaa.epub and Ebook_Cover.jpg (1600 x 2400).
+- Language: Oromo (om) is set in the file; if KDP's list lacks Oromo, pick the closest option in the dashboard - the file is unaffected.
+- Reflowable ebook: page numbers are not used, so the contents list links to chapters instead.
