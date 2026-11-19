@@ -253,6 +253,38 @@ void main() {
     });
   });
 
+  group("the Qur'an card at the start of Today", () {
+    Future<void> show(WidgetTester t, AppState s) async {
+      t.view.devicePixelRatio = 2;
+      t.view.physicalSize = const Size(780, 4800);
+      addTearDown(t.view.resetPhysicalSize);
+      await t.pumpWidget(ZaadApp(state: s));
+      await t.pump();
+    }
+
+    testWidgets('shows first until a goal is set', (t) async {
+      final s = await setup();
+      await show(t, s);
+      expect(find.byKey(const ValueKey('quran-start')), findsOneWidget);
+      expect(find.text("Set my daily Qur'an"), findsOneWidget);
+      s.settings.quranPerDay = 5;
+      s.store.save();
+      await t.pump();
+      expect(find.byKey(const ValueKey('quran-start')), findsNothing);
+      await t.pump(const Duration(seconds: 2));
+    });
+
+    testWidgets('"Not now" hides it and the choice is kept', (t) async {
+      final s = await setup();
+      await show(t, s);
+      await t.tap(find.text('Not now'));
+      await t.pump();
+      expect(find.byKey(const ValueKey('quran-start')), findsNothing);
+      expect(s.settings.quranPromptHidden, isTrue);
+      await t.pump(const Duration(seconds: 2));
+    });
+  });
+
   group("the daily Qur'an goal", () {
     Future<void> show(WidgetTester t, AppState s) async {
       t.view.devicePixelRatio = 2;

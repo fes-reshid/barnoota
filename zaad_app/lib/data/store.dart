@@ -21,6 +21,7 @@ class Settings {
   /// The daily Qur'an goal in pages (0 until chosen), whether it is shown as pages or juz, and the pages already read when it began.
   int quranPerDay = 0;
   bool quranInJuz = false;
+  bool quranPromptHidden = false; // the user chose "Not now" on the goal card at the top of Today
   int quranOffset = 0;
 
   Place? get place => lat == null || lng == null ? null : Place(placeName.isEmpty ? 'My location' : placeName, lat!, lng!);
@@ -28,7 +29,7 @@ class Settings {
   Map<String, dynamic> toJson() => {
         'lat': lat, 'lng': lng, 'place': placeName, 'method': method, 'hanafi': hanafi,
         'rp': remindPrayer, 'rb': remindBefore, 'ra': remindAdhkar, 'ob': onboarded,
-        'qpd': quranPerDay, 'qj': quranInJuz, 'qo': quranOffset,
+        'qpd': quranPerDay, 'qj': quranInJuz, 'qh': quranPromptHidden, 'qo': quranOffset,
       };
 
   void load(Map<String, dynamic> j) {
@@ -43,6 +44,7 @@ class Settings {
     onboarded = (j['ob'] ?? false) as bool;
     quranPerDay = (j['qpd'] ?? 0) as int;
     quranInJuz = (j['qj'] ?? false) as bool;
+    quranPromptHidden = (j['qh'] ?? false) as bool;
     quranOffset = (j['qo'] ?? 0) as int;
   }
 }
