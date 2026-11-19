@@ -1,8 +1,8 @@
 KDP SETTINGS - Soommana Ramadaanaa
 PAPERBACK
 - Trim size: 6 x 9 in (15.24 x 22.86 cm)
-- Interior: Black & white, WHITE paper, no bleed  -> Paperback_Interior_6x9.pdf (106 pages, fonts embedded)
-- Cover: matte or glossy, with bleed -> Paperback_Cover_Wrap.pdf (12.489 x 9.250 in, 300 dpi; spine 0.239 in for 106 pages white paper)
+- Interior: Black & white, WHITE paper, no bleed  -> Paperback_Interior_6x9.pdf (112 pages, fonts embedded)
+- Cover: matte or glossy, with bleed -> Paperback_Cover_Wrap.pdf (12.502 x 9.250 in, 300 dpi; spine 0.252 in for 112 pages white paper)
 - Leave the back-cover bottom-right empty; KDP places the barcode there.
 - If you change the page count or paper type, the spine width changes (white: pages x 0.002252 in).
 EBOOK
