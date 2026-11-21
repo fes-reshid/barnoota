@@ -1,0 +1,112 @@
+/* Teacher & Parent Guide */
+.tg { break-before: page; }
+.tg h1.tg-h { font-family: 'Cinzel', serif; font-weight: 700; color: var(--emerald); font-size: 24pt; letter-spacing: .05em; text-align: center; margin: 3mm 0 0; }
+.tg .lead { font-size: 11.6pt; color: var(--muted); text-align: center; font-style: italic; margin: 0 0 5mm; }
+.tg h3.tg-s, .tg-test h3.tg-s { font-family: 'Cinzel', serif; color: var(--emerald); font-size: 11.6pt; letter-spacing: .05em; margin: 4.5mm 0 1.8mm; border-bottom: 1px solid var(--gold2); padding-bottom: 1mm; break-after: avoid; }
+.tg p, .tg li { font-size: 10.6pt; line-height: 1.48; }
+.tg ul, .tg ol.plain { margin: 0 0 3mm; padding-left: 5mm; }
+.tg li { margin: 0 0 1.4mm; }
+
+/* tables */
+table.tg-t { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 10.2pt; }
+table.tg-t tr { break-inside: avoid; }
+table.tg-t th { background: var(--emerald); color: #fff; font-family: 'Cinzel', serif; font-size: 9.6pt; letter-spacing: .05em; padding: 2.2mm 3mm; text-align: left; font-weight: 700; }
+table.tg-t td { padding: 1.8mm 3mm; border-bottom: 1px solid #e6d7b4; vertical-align: top; background: #fff; line-height: 1.42; }
+table.tg-t tr:nth-child(even) td { background: #f7f1e1; }
+table.tg-t td.k { font-weight: 700; color: var(--emerald); width: 32mm; }
+
+/* callouts */
+.tg-box { background: #fff; border: 1px solid #e6d7b4; border-left: 4px solid var(--gold); border-radius: 6px; padding: 3mm 4mm; margin: 3mm 0; break-inside: avoid; }
+.tg-box.g { border-left-color: var(--accent); background: var(--soft); }
+.tg-box p { margin: 0 0 1.5mm; }
+.tg-box p:last-child { margin: 0; }
+
+/* the 8 teaching habits */
+.tg-habits { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 3mm 0; }
+.tg-habit { background: #fff; border: 1px solid #e6d7b4; border-top: 3px solid var(--gold); border-radius: 6px; padding: 2.5mm 3.5mm; break-inside: avoid; }
+.tg-habit b { display: block; font-family: 'Cinzel', serif; color: var(--emerald); font-size: 10pt; margin-bottom: .6mm; }
+.tg-habit span { font-size: 10pt; line-height: 1.4; display: block; }
+
+/* part overview */
+.tg-part .pl { font-family: 'Cinzel', serif; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); font-size: 10pt; text-align: center; margin-top: 2mm; }
+.tg-part h1 { font-family: 'Cinzel', serif; color: var(--accent); font-size: 23pt; text-align: center; margin: 1mm 0 1mm; line-height: 1.2; }
+.tg-part .rng { text-align: center; color: var(--muted); margin-bottom: 4mm; font-size: 11pt; }
+.tg-part table.tg-t th { background: var(--accent); }
+.tg-part table.tg-t td { font-size: 9.8pt; line-height: 1.38; padding: 1.5mm 2.6mm; }
+.tg-part p { font-size: 10.4pt; }
+.tg-part table.tg-t td.n { width: 11mm; text-align: center; font-weight: 700; color: #fff; background: var(--accent) !important; font-family: 'Cinzel', serif; }
+.tg-part table.tg-t td.t { width: 48mm; font-weight: 700; color: var(--accent); }
+
+/* one hadith = one page */
+.tg-hadith { break-before: page; }
+.tg-hadith .h-head { margin-bottom: 2.6mm; }
+.tg-hadith .medal { width: 15mm; height: 15mm; }
+.tg-hadith .h-head { padding-bottom: 2mm; }
+.tg-hadith .h-titles h2 { font-size: 15.5pt; margin-top: 0; }
+.tg-hadith .h-titles .ar-title { font-size: 14pt; }
+.tg-aim { background: var(--soft); border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.8mm 4mm; margin: 0 0 2.2mm; font-size: 10.4pt; line-height: 1.38; }
+.tg-aim b { font-family: 'Cinzel', serif; letter-spacing: .06em; font-size: 9.6pt; color: var(--accent); display: block; margin-bottom: .6mm; text-transform: uppercase; }
+.tg-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; margin: 0 0 2.4mm; align-items: stretch; }
+.tg-card.care { grid-column: 1 / -1; }
+.tg-card { background: #fff; border: 1px solid #e6d7b4; border-radius: 6px; padding: 1.7mm 3mm 1.7mm 9.4mm; position: relative; break-inside: avoid; }
+.tg-card .ci { position: absolute; left: 2.6mm; top: 2.2mm; width: 5mm; height: 5mm; color: var(--accent); }
+.tg-card .ci svg { width: 100%; height: 100%; }
+.tg-card b { display: block; font-family: 'Cinzel', serif; color: var(--accent); font-size: 9pt; letter-spacing: .05em; text-transform: uppercase; margin-bottom: .4mm; }
+.tg-card p { margin: 0; font-size: 9.6pt; line-height: 1.36; text-align: left; hyphens: none; }
+.tg-card.care { border-left: 4px solid #b7791f; }
+.tg-card.care b, .tg-card.care .ci { color: #8a5a10; }
+ol.tg-ans { list-style: none; margin: 0; padding: 0; counter-reset: a; }
+ol.tg-ans li { counter-increment: a; position: relative; padding: 0 0 0 7.5mm; margin: 0 0 1.1mm; break-inside: avoid; }
+ol.tg-ans li::before { content: "Q" counter(a); position: absolute; left: 0; top: .2mm; font-family: 'Cinzel', serif; font-weight: 700; font-size: 8.6pt; color: var(--gold); }
+ol.tg-ans .q { font-size: 8.9pt; color: var(--muted); font-style: italic; line-height: 1.26; }
+ol.tg-ans .a { font-size: 9.9pt; line-height: 1.36; text-align: left; hyphens: none; }
+ol.tg-ans .a.vary { color: #3a4a40; }
+.tg-foot { margin-top: 1.4mm; font-size: 8.8pt; color: var(--muted); text-align: center; border-top: 1px dotted #d8c79f; padding-top: 1.6mm; }
+
+/* test keys */
+.tg-test { break-before: page; }
+.tg-test h1 { font-family: 'Cinzel', serif; color: var(--accent); font-size: 16pt; text-align: center; margin: 0; }
+.tg-test .kick { text-align: center; font-family: 'Cinzel', serif; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); font-size: 9.6pt; }
+.tg-test h3.tg-s { color: var(--accent); }
+.tg-test h3.tg-s span { font-family: 'Lora', serif; font-size: 9.6pt; letter-spacing: 0; color: var(--muted); font-weight: 400; font-style: italic; margin-left: 2mm; }
+.keymcq { column-count: 2; column-gap: 7mm; margin: 0; padding: 0; list-style: none; }
+.keymcq li { break-inside: avoid; margin: 0 0 .6mm; font-size: 8.7pt; line-height: 1.2; padding-left: 6.5mm; position: relative; text-align: left; }
+.keymcq li b.n { position: absolute; left: 0; font-family: 'Cinzel', serif; color: var(--gold); font-size: 8.6pt; top: .3mm; }
+.keymcq li .qq { color: var(--muted); font-size: 8.2pt; }
+.keymcq li .ans { font-weight: 700; color: var(--accent); }
+table.keymatch { width: 100%; border-collapse: collapse; font-size: 9.2pt; line-height: 1.2; }
+table.keymatch tr { break-inside: avoid; }
+table.keymatch td { padding: .1mm 2mm; border-bottom: 1px solid #e6d7b4; vertical-align: middle; }
+table.keymatch td.n { width: 7mm; color: var(--gold); font-weight: 700; }
+table.keymatch td.ar { width: 62mm; text-align: right; font-size: 10.8pt; direction: rtl; font-family: 'Amiri', serif; color: var(--accent); }
+table.keymatch td.l { width: 8mm; text-align: center; font-weight: 700; color: var(--accent); }
+ol.keysa { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+ol.keysa li { counter-increment: s; position: relative; padding-left: 7mm; margin: 0 0 1mm; break-inside: avoid; font-size: 9.3pt; line-height: 1.28; text-align: left; hyphens: none; }
+ol.keysa li::before { content: counter(s); position: absolute; left: 0; font-family: 'Cinzel', serif; color: var(--gold); font-weight: 700; font-size: 9pt; top: .3mm; }
+ol.keysa .qq { color: var(--muted); font-size: 8.4pt; font-style: italic; display: block; line-height: 1.22; }
+.keymark { margin-top: 3mm; font-size: 10pt; background: var(--soft); border-radius: 6px; padding: 2mm 3.5mm; }
+
+/* class records */
+table.rec { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 9pt; }
+table.rec th, table.rec td { border: 1px solid #b9a982; padding: 0; height: 8.6mm; text-align: center; }
+table.rec th { background: var(--emerald); color: #fff; font-family: 'Cinzel', serif; font-size: 8.4pt; height: 9mm; }
+table.rec td.nm { text-align: left; }
+table.chart th, table.chart td { height: 8.4mm; font-size: 5.8pt; padding: 0; }
+table.chart th { height: 7mm; }
+
+.tg-toc td.pg { text-align: right; width: 12mm; font-weight: 700; color: var(--emerald); }
+
+.tg-test .page2 { break-before: page; }
+.tg-test .page2 h3.tg-s:first-child { margin-top: 0; }
+.tg-test h3.tg-s { margin: 3mm 0 1.2mm; }
+
+/* front-matter pages: a little tighter so each section fits its page */
+.tg table.tg-t td { padding: 1.25mm 2.6mm; font-size: 9.9pt; line-height: 1.36; }
+.tg table.tg-t th { padding: 1.6mm 2.6mm; }
+.tg h3.tg-s { margin: 3.4mm 0 1.3mm; }
+.tg .tg-box { margin: 2.4mm 0; padding: 2.2mm 3.6mm; }
+.tg .lead { margin: 0 0 3mm; font-size: 11pt; }
+.tg .fm-rule { margin-bottom: 4mm; }
+
+/* keep short Arabic phrases on one line */
+.tg-card .ar-in, ol.tg-ans .ar-in { white-space: nowrap; }

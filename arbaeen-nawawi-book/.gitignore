@@ -5,3 +5,4 @@ __pycache__/
 .build-hc/
 .build-hc-color/
 .build-epub/
+.build-teacher/

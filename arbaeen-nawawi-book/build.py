@@ -309,7 +309,7 @@ def test_html(k):
            f'<header class="t-head"><div class="t-kick">{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</div><h2>Review Test</h2>'
            f'<div class="t-ar" lang="ar" dir="rtl">اخْتِبَارُ المُرَاجَعَة</div>'
            f'<div class="t-info"><span>Name: <i></i></span><span>Date: <i class="s"></i></span><span>Score: <i class="s"></i> / 50</span></div>{qr.block(f"test{k}", "Take this test online", "qr t-qr")}</header>',
-           '<p class="t-intro">Answer from memory first, then check your answers with the chapters. The answer key is at the back of the book.</p>']
+           '<p class="t-intro">Answer from memory first, then check your answers with the chapters. Your teacher or parent can mark the test with the Teacher &amp; Parent Guide.</p>']
     # A. multiple choice
     out.append(f'<div class="t-sec"><h3 class="t-h"><span>A</span>Multiple Choice <em>Circle the correct answer · 25 marks</em></h3><ol class="mcq">')
     for q, opts, _ in tests.shuffled_mcq(k):
@@ -424,7 +424,7 @@ def build_html(pages):
         parts.append(hadith_html(n))
         if n % 10 == 0:
             parts.append(test_html(n // 10))
-    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), answers_html(), references_html(), front.closing()]
+    parts += [front.tracker({n: c.get("short", c["title"]) for n, c in CONTENT.items()}), front.glossary(), references_html(), front.closing()]
     doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <link rel="stylesheet" href="../fonts/fonts.css"><style>{css}</style></head>
 <body>{"".join(parts)}</body></html>'''
@@ -448,12 +448,15 @@ def find_pages(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
         for i, pg in enumerate(pdf.pages, 1):
             txt = pg.extract_text() or ""
-            for m in re.finditer(r"(?i)hadith (\d+) of 50", txt):
-                pages.setdefault(f"h{int(m.group(1))}", i)
+            for m in re.finditer(r"(?i)hadith (\d(?: ?\d)?) of 50", txt):   # letter-spaced digits can come out as "1 1"
+                pages.setdefault(f"h{int(m.group(1).replace(' ', ''))}", i)
             for key, pat in front.PAGE_MARKERS:
                 if key not in pages and re.search(pat, txt, re.M):
                     pages[key] = i
     return pages
+
+
+RUN_HEAD_RIGHT = "STUDY EDITION"   # build_teacher.py sets this to its own running head
 
 
 def underlay(n_pages, path):
@@ -491,10 +494,10 @@ def underlay(n_pages, path):
             for (x, y) in [(left, m1b), (W - right, m1b), (left, H - m1b), (W - right, H - m1b)]:
                 star(c, x, y, 3.2 * mm, gold, paper)
             # running head
-            c.setFont("Times-Roman", 7.2)
+            c.setFont("Times-Roman", 8.2)
             c.setFillColor(head_col)
             c.drawString(left + 8 * mm, H - 13.2 * mm, "THE FORTY HADITH OF IMAM AN-NAWAWI")
-            c.drawRightString(W - right - 8 * mm, H - 13.2 * mm, "STUDY EDITION")
+            c.drawRightString(W - right - 8 * mm, H - 13.2 * mm, RUN_HEAD_RIGHT)
             # page number medallion
             star(c, W / 2, 9.0 * mm + 0.2 * mm, 5.0 * mm, gold, ink)
             c.setFillColor(HexColor("#ffffff"))
@@ -514,7 +517,8 @@ def star(c, x, y, r, stroke, fill):
     c.restoreState()
 
 
-def compose(body_pdf, cover_pdf, out_pdf):
+def compose(body_pdf, cover_pdf, out_pdf, title="The Forty Hadith of Imam an-Nawawi — Study Edition",
+            subject="Arabic text, sunnah.com English translation, notes, lessons, questions and weekly to-do lists"):
     from pypdf import PdfReader, PdfWriter
     body = PdfReader(body_pdf)
     under_path = os.path.join(BUILD, "underlay.pdf")
@@ -528,8 +532,7 @@ def compose(body_pdf, cover_pdf, out_pdf):
         pg.merge_page(under.pages[i], over=False)
         w.add_page(pg).compress_content_streams()
     w.compress_identical_objects(remove_duplicates=True, remove_unreferenced=True)
-    w.add_metadata({"/Title": "The Forty Hadith of Imam an-Nawawi — Study Edition",
-                    "/Subject": "Arabic text, sunnah.com English translation, notes, lessons, questions and weekly to-do lists"})
+    w.add_metadata({"/Title": title, "/Subject": subject})
     with open(out_pdf, "wb") as f:
         w.write(f)
 
@@ -559,15 +562,15 @@ def plan_notes(pdf_path):
     return plan
 
 
-def letter_cover_html(css):
+def letter_cover_html(css, inner=None, extra_css=""):
     """The A4 cover design on an 8.5 x 11 in page: the artwork stretches to the page, the lettering is scaled evenly."""
-    inner = front.cover_html_inner(FIGURES["lantern"])
+    inner = inner or front.cover_html_inner(FIGURES["lantern"])
     art_end = inner.index("</svg>") + len("</svg>")
     panel = inner[:art_end] + '<div class="ov">' + inner[art_end:-len("</div>")] + "</div></div>"
     extra = (f"@page {{ size: 8.5in 11in; margin: 0; }} html, body {{ margin: 0; }}"
              f".cover {{ width: 8.5in; height: 11in; }} .cover > .art {{ width: 100% !important; height: 100% !important; }}"
              f".ov {{ position: absolute; left: 50%; top: 0; width: 210mm; height: 297mm; transform: translateX(-50%) scale({11 / 11.69:.4f}); transform-origin: top center; }}")
-    return (f'<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css"><style>{css}{extra}</style></head>'
+    return (f'<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../fonts/fonts.css"><style>{css}{extra}{extra_css}</style></head>'
             f"<body>{panel}</body></html>")
 
 

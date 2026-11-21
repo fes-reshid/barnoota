@@ -40,7 +40,7 @@ if HC:
     # and 0.375 in from the bottom.
     EDGE, HINGE, TRIM_W, TRIM_H = (12.417 - 11.236) / 2, 0.394, 8.447, 11.236  # full height 12.417 in (wrap ~0.591)
     BARCODE_SIDE, BARCODE_BOTTOM = HINGE + 0.25, 0.375
-    HC_SPINE = {("hc", 266): 0.788, ("hc-color", 266): 0.813}   # from the KDP cover calculator, by interior page count
+    HC_SPINE = {("hc", 264): 0.784, ("hc-color", 264): 0.809}   # from the KDP cover calculator, by interior page count
 else:
     EDGE, HINGE = 0.125, 0.0
     TRIM_W, TRIM_H = (8.5, 11.0) if COLOR else (8.27, 11.69)
@@ -61,7 +61,7 @@ FEATURES = [
     "A biography of each narrating Companion",
     "Explanatory notes, lessons and clear illustrations",
     "Step-by-step guides and weekly to-do lists",
-    "Five review tests — 250 questions — with answer key",
+    "Five review tests — 250 questions — for class or home",
     "Free online edition with audio and a certificate",
 ]
 

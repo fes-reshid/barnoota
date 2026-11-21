@@ -4,7 +4,9 @@
 .part-page { height: 240mm; }
 .tracker div { height: 14.2mm; }
 /* The Letter page is 18 mm shorter than A4: keep the Preface and the Contents on one page each */
-.preface { font-size: 9.45pt; line-height: 1.45; }
-.toc-t { font-size: 9pt; }
+.preface { font-size: 9.9pt; line-height: 1.45; }
+.toc-t { font-size: 9.6pt; }
 .toc-t td { padding: 1.3px 4px; }
 .toc-t .tp td { padding-top: 6px; }
+.imams { font-size: 10.2pt; line-height: 1.46; }
+.imams h3 { margin-top: 4mm; }

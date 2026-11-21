@@ -221,7 +221,7 @@ def test_page(k):
     p = PARTS[k - 1]
     t = tests.TESTS[k]
     out = [f'<p class="kick">{PART_WORD[k]} · Hadith {p[0]}–{p[1]}</p><h1 class="np">Review Test</h1>',
-           f'<p class="center">Answer from memory first, then check with the <a href="answers.xhtml#a{k}">answer key</a>. '
+           f'<p class="center">Answer from memory first, then check your answers with the chapters. Your teacher or parent can mark the test with the Teacher and Parent Guide. '
            f'You can also take this test online with instant marking: {link(f"test{k}")}</p>',
            '<h2>A. Multiple Choice (25 marks)</h2><ol>']
     for q, opts, _ in tests.shuffled_mcq(k):
@@ -279,7 +279,7 @@ def how_to_use_ebook():
         ("Follow the steps", "When a hadith asks you to do something, ‘Step by Step’ shows how, in order."),
         ("Answer the questions", "Write your answers in a notebook. The last questions ask you to think about your own life."),
         ("Live the to-do list", "Seven small tasks, one for each day from Saturday to Friday."),
-        ("Take the part tests", "After every ten hadith there is a review test, with an answer key at the back of the book."),
+        ("Take the part tests", "After every ten hadith there is a review test. Your teacher or parent can mark it with the Teacher and Parent Guide."),
     ]
     return ('<h1 class="np">How to Use This Book</h1><p>Every chapter follows the same parts. Work through them in order; a chapter takes about a week.</p><ol>'
             + "".join(f"<li><b>{h}.</b> {d}</li>" for h, d in steps) + "</ol>"
@@ -329,7 +329,6 @@ def chapters():
         ch.append((f"test{k}.xhtml", f"{PART_WORD[k]} Review Test", test_page(k), f"part{k}"))
     gl = "".join(f"<p><b>{a}</b> — {b}</p>" for a, b in front.GLOSS)
     ch.append(("glossary.xhtml", "Glossary of Terms", page("Glossary", f'<h1 class="np">Glossary of Terms</h1>{gl}'), "back"))
-    ch.append(("answers.xhtml", "Answer Key to the Part Tests", answers_page(), "back"))
     ch.append(("notes.xhtml", "Notes and References", notes_page(), "back"))
     ch.append(("closing.xhtml", "Closing Supplication", page("Closing Supplication", front_section(front.closing).replace('<img', '<img')), "back"))
     # contents page

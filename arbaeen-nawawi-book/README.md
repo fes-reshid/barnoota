@@ -2,7 +2,7 @@
 
 Compiled by Feysel Reshid.
 
-`Forty-Hadith-Nawawi-Study-Book.pdf` is an 8.5 × 11 in study book (the same size as the Tuhfatul Atfaal book) of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 267 pages including the cover.
+`Forty-Hadith-Nawawi-Study-Book.pdf` is an 8.5 × 11 in study book (the same size as the Tuhfatul Atfaal book) of the 50-hadith text: an-Nawawi's 42 plus Ibn Rajab's 8 additions. It has 265 pages including the cover.
 
 Each hadith has its own chapter with:
 
@@ -17,7 +17,7 @@ Each hadith has its own chapter with:
 - a to-do list for the week (Saturday to Friday)
 - ruled "My Notes" lines
 
-The front matter holds the cover, title page, Preface, contents, a guide to using the book, short biographies of the two imams, and notes on the text and translation. The back matter holds a memorisation tracker, a glossary, an answer key, the Notes and References (footnote sources, Arabic originals, bibliography) and a closing supplication.
+The front matter holds the cover, title page, Preface, contents, a guide to using the book, short biographies of the two imams, and notes on the text and translation. The back matter holds a memorisation tracker, a glossary, the Notes and References (footnote sources, Arabic originals, bibliography) and a closing supplication.
 
 ## Translations
 
@@ -43,6 +43,10 @@ python3 build.py
 | `src/front.py` | Cover, Preface and the other front and back matter |
 | `src/book.css` | The design |
 
+## The Teacher & Parent Guide
+
+`Forty-Hadith-Teacher-Parent-Guide.pdf` (built by `build_teacher.py`) is the companion for teachers and parents. The Study Edition no longer prints answers; this guide has them. It has one page for every hadith (aim, a way to start the conversation, an activity, a point to take care with, and a model answer to every question), answer keys and a marking guide for the five part tests, lesson and course plans, a guide to sensitive topics and class record sheets. The text is in `src/teach_01.py` to `teach_05.py` and `src/teach_tests.py`, and the design in `src/teacher.css`. It is not published on the website, so that students cannot read the answers.
+
 ## All editions
 
 | Edition | Files | Build |
@@ -52,6 +56,7 @@ python3 build.py
 | Amazon paperback, colour, 8.5 × 11 in | `amazon-kdp/Forty-Hadith-KDP-Interior-Color.pdf`, `…-KDP-Cover-Color.pdf` | `EDITION=kdp-color …`, `build_kdp_cover.py color` |
 | Amazon hardcover, black and white, 8.25 × 11 in | `amazon-kdp/Forty-Hadith-Hardcover-Interior-BW.pdf`, `…-Hardcover-Cover-BW.pdf` | `EDITION=hc …`, `build_kdp_cover.py hc` |
 | Amazon hardcover, premium colour, 8.25 × 11 in | `amazon-kdp/Forty-Hadith-Hardcover-Interior-Color.pdf`, `…-Hardcover-Cover-Color.pdf` | `EDITION=hc-color …`, `build_kdp_cover.py hc-color` |
+| Teacher & Parent Guide, 8.5 × 11 in (colour, own cover) | `Forty-Hadith-Teacher-Parent-Guide.pdf` | `python3 build_teacher.py` |
 | Kindle eBook (EPUB 3) | `amazon-kdp/Forty-Hadith-eBook.epub`, `…-eBook-Cover.jpg` | `python3 build_epub.py` (needs lxml) |
 
 How to upload and price each one: `amazon-kdp/KDP-LISTING.md`.

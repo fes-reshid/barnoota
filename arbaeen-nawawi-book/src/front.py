@@ -15,7 +15,7 @@ PAGE_MARKERS = [(k, rf"MK-{k}-MK") for k in ("preface", "howto", "nawawi", "tran
                                               "test1", "test2", "test3", "test4", "test5", "refs")]
 TOC_FRONT = [("preface", "Preface"), ("howto", "How to Use This Book"), ("nawawi", "The Two Imams: an-Nawawi and Ibn Rajab"),
              ("translation", "About the Arabic Text and the Translation")]
-TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("answers", "Answer Key to the Part Tests"), ("refs", "Notes and References"),
+TOC_BACK = [("tracker", "Memorisation Tracker"), ("glossary", "Glossary of Terms"), ("refs", "Notes and References"),
             ("closing", "Closing Supplication")]
 
 RULE = ('<div class="fm-rule"><i></i><svg viewBox="0 0 20 20"><g transform="translate(10 10)">'
@@ -167,7 +167,7 @@ def how_to_use():
 <h3>The online book: audio and certificate</h3>
 <div class="callout qr-callout">{qr.block("", "Scan me")}<div>Visit <b>diinislaam.com/40hadith</b> to <b>listen</b> to every hadith in Arabic and English, take the five part tests with instant marking, and receive your <b>certificate of completion</b> after passing all five tests with 80% or more. Every chapter and test also has its own code: scan it, or type the address printed under it, such as <b>diinislaam.com/40hadith/4</b> for Hadith 4.</div></div>
 <h3>For parents and teachers</h3>
-<p>For younger children, read the translation aloud, talk about the picture together and choose two or three of the to-do tasks. Older children and adults can do the whole chapter. Praise effort more than perfection, and act on the hadith yourself first: children learn more from what they see than from what they are told.</p>
+<p>For younger children, read the translation aloud, talk about the picture together and choose two or three of the to-do tasks. Older children and adults can do the whole chapter. Praise effort more than perfection, and act on the hadith yourself first: children learn more from what they see than from what they are told. The separate <b>Teacher &amp; Parent Guide</b> has teaching ideas for every hadith, the answers to every question and the answer keys for the part tests.</p>
 </section>'''
 
 
