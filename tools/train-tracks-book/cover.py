@@ -29,6 +29,8 @@ def main():
     ap.add_argument('--paper', default='white')
     ap.add_argument('--puzzles', default='puzzles.json')
     ap.add_argument('--out', default='train-tracks-cover.pdf')
+    ap.add_argument('--isbn', default='', help='13-digit ISBN; draws an EAN-13 barcode. Omit to leave the white box for KDP\'s free ISBN barcode')
+    ap.add_argument('--back-only', action='store_true', help='write only the back cover (6.25 x 9.25 in) instead of the full wrap')
     a = ap.parse_args()
 
     trim_w, trim_h, bleed = 6 * inch, 9 * inch, 0.125 * inch
@@ -38,7 +40,7 @@ def main():
     bx = bleed                          # back cover trim-left
     sx = bleed + trim_w                 # spine left
     fx = sx + spine                     # front cover left
-    cv = canvas.Canvas(a.out, pagesize=(W, H))
+    cv = canvas.Canvas(a.out, pagesize=((trim_w + 2 * bleed) if a.back_only else W, H))
     cv.setTitle('Train Tracks - cover'); cv.setAuthor(a.author)
 
     # background
@@ -121,8 +123,23 @@ def main():
             cv.drawString(bxl + 16, y, ln); y -= 16
         y -= 3
     # barcode area (KDP places the barcode here: 2in x 1.2in)
+    box_x, box_y = bx + trim_w - 0.25 * inch - 2 * inch, bleed + 0.25 * inch + 0.75 * inch
     cv.setFillColorRGB(1, 1, 1)
-    cv.rect(bx + trim_w - 0.25 * inch - 2 * inch, bleed + 0.25 * inch + 0.75 * inch, 2 * inch, 1.2 * inch, stroke=0, fill=1)
+    cv.rect(box_x, box_y, 2 * inch, 1.2 * inch, stroke=0, fill=1)
+    if a.isbn:
+        from reportlab.graphics.barcode.eanbc import Ean13BarcodeWidget
+        from reportlab.graphics.shapes import Drawing
+        from reportlab.graphics import renderPDF
+        d = ''.join(ch for ch in a.isbn if ch.isdigit())
+        assert len(d) == 13 and d[:3] in ('978', '979'), 'ISBN must be 13 digits starting 978 or 979'
+        w = Ean13BarcodeWidget(d, barHeight=0.75 * inch, fontSize=8, humanReadable=True)
+        x0, y0, x1, y1 = w.getBounds()
+        bw_, bh_ = x1 - x0, y1 - y0
+        sc = min((2 * inch - 0.2 * inch) / bw_, (1.2 * inch - 0.35 * inch) / bh_)
+        dr = Drawing(bw_ * sc, bh_ * sc); dr.scale(sc, sc); dr.add(w)
+        renderPDF.draw(dr, cv, box_x + (2 * inch - bw_ * sc) / 2 - x0 * sc, box_y + 0.08 * inch - y0 * sc)
+        cv.setFillColorRGB(0, 0, 0); cv.setFont('Helvetica', 8)
+        cv.drawCentredString(box_x + inch, box_y + 1.2 * inch - 0.15 * inch, f'ISBN {d[:3]}-{d[3]}-{d[4:9]}-{d[9:12]}-{d[12]}')
     cv.save()
     print(f'{a.out}: {W/inch:.3f} x {H/inch:.3f} in, spine {spine/inch:.3f} in ({a.pages} pages, {a.paper})')
 
