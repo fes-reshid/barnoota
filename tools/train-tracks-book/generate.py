@@ -412,8 +412,15 @@ if __name__ == '__main__':
     ap.add_argument('--json', default='puzzles.json')
     ap.add_argument('--title', default='Train Tracks: 200 Logic Puzzles for Adults')
     ap.add_argument('--author', default='Your Name')
+    ap.add_argument('--reuse', action='store_true', help='rebuild the PDF from --json without re-generating puzzles')
     a = ap.parse_args()
-    ps = generate(a.n6, a.n8, a.seed)
-    json.dump(ps, open(a.json, 'w'))
+    if a.reuse:
+        ps = json.load(open(a.json))
+        for p in ps:
+            p['path'] = [tuple(c) for c in p['path']]
+            p['start'] = tuple(p['start']); p['goal'] = tuple(p['goal'])
+    else:
+        ps = generate(a.n6, a.n8, a.seed)
+        json.dump(ps, open(a.json, 'w'))
     build_pdf(ps, a.out, a.title, a.author)
     print(f'{len(ps)} puzzles -> {a.out}')
