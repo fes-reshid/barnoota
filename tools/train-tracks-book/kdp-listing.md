@@ -53,5 +53,5 @@ Feysel Reshid
 - Language: English
 - Trim size: 6 x 9 in, 240 pages, black and white interior, white paper
 - Age range: adult (reading age 13+)
-- Low-content/puzzle book: set "Not adult content" and no AI-image content (cover is drawn from code)
+- Not adult content. KDP asks about AI-generated content: the puzzles come from a verified algorithm, but the description and cover text were written with AI help, so answer that question accordingly (KDP asks you to disclose AI-generated text)
 - Suggested price: check KDP's minimum for 240 pages, then price a little above it
