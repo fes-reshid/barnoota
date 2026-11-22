@@ -2,6 +2,10 @@
    AMAZON LINKS: when a book goes live on Amazon, paste its link between the quotes after  amazon:
    and the buttons change from "Coming soon on Amazon" to "Buy on Amazon" everywhere. */
 window.DI_BOOKS = {
+  "kahf": {
+    title: "Lessons from Surah al-Kahf", sub: "A Companion for the Heart: The Four Trials of Faith, Wealth, Knowledge and Power",
+    cover: "lessons-from-surah-al-kahf.webp", shape: "tall", preview: { pages: 14, total: 118 }, amazon: "https://www.amazon.com/dp/B0HSJ4ZSDQ"
+  },
   "house": {
     title: "A House in Paradise", sub: "Stories of Good Wives and Bad Wives from the Qur'an, the Sunnah and Islamic History",
     cover: "a-house-in-paradise.webp", shape: "tall", preview: { pages: 12, total: 124 }, amazon: "https://www.amazon.com.au/s?k=A+House+in+Paradise+Feysel+Reshid"
