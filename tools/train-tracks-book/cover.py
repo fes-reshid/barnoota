@@ -8,9 +8,35 @@ import argparse, json
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.pdfbase.pdfmetrics import stringWidth
+import generate
 from generate import draw_grid
 
 NAVY = (0.06, 0.24, 0.25); CREAM = (0.96, 0.92, 0.80); ORANGE = (0.91, 0.44, 0.16); DARK = (0.1, 0.1, 0.1)
+
+COVERS = {
+    'rails': dict(bg=NAVY, cream=CREAM, accent=ORANGE, l1='TRAIN', l2='TRACKS', spine='TRAIN TRACKS', stars=False,
+                  head=['Climb aboard your next', 'puzzle obsession.'],
+                  body=('Lay the rails, follow the clues, and bring the train safely home. '
+                        'Each puzzle gives you number clues for every row and column, a few '
+                        'pre-drawn pieces, and one track that must run from the entry to the exit. '
+                        'Every puzzle has exactly one solution, so pure logic is all you need.')),
+    'hijrah': dict(bg=(0.04, 0.27, 0.20), cream=(0.97, 0.94, 0.84), accent=(0.84, 0.68, 0.28), l1='HIJRAH', l2='ROUTE',
+                   spine='HIJRAH ROUTE', stars=True,
+                   head=['Trace the journey from', 'Makkah to Madinah.'],
+                   body=('Inspired by the blessed journey of the Hijrah, these puzzles ask you to find one '
+                         'unbroken route from Makkah to Madinah. Use the number clues for every row and column, '
+                         'plus a few pre-drawn pieces, to work it out. Every puzzle has exactly one solution, '
+                         'so pure logic is all you need.')),
+}
+
+
+def star8(cv, cx, cy, r, fill=False):
+    import math
+    for rot in (0, 45):
+        pts = [(cx + r * math.cos(math.radians(rot + 90 * i + 45)), cy + r * math.sin(math.radians(rot + 90 * i + 45))) for i in range(4)]
+        p = cv.beginPath(); p.moveTo(*pts[0])
+        for q in pts[1:]: p.lineTo(*q)
+        p.close(); cv.drawPath(p, stroke=1, fill=0)
 
 
 def wrap(text, font, size, width):
@@ -24,6 +50,7 @@ def wrap(text, font, size, width):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument('--theme', default='rails', choices=list(COVERS))
     ap.add_argument('--pages', type=int, default=240)
     ap.add_argument('--author', default='Your Name')
     ap.add_argument('--paper', default='white')
@@ -32,6 +59,8 @@ def main():
     ap.add_argument('--isbn', default='', help='13-digit ISBN; draws an EAN-13 barcode. Omit to leave the white box for KDP\'s free ISBN barcode')
     ap.add_argument('--back-only', action='store_true', help='write only the back cover (6.25 x 9.25 in) instead of the full wrap')
     a = ap.parse_args()
+    T = COVERS[a.theme]; NAVY, CREAM, ORANGE = T['bg'], T['cream'], T['accent']
+    generate.set_theme(a.theme)
 
     trim_w, trim_h, bleed = 6 * inch, 9 * inch, 0.125 * inch
     spine = a.pages * (0.002252 if a.paper == 'white' else 0.0025) * inch
@@ -41,7 +70,7 @@ def main():
     sx = bleed + trim_w                 # spine left
     fx = sx + spine                     # front cover left
     cv = canvas.Canvas(a.out, pagesize=((trim_w + 2 * bleed) if a.back_only else W, H))
-    cv.setTitle('Train Tracks - cover'); cv.setAuthor(a.author)
+    cv.setTitle(T['spine'].title() + ' - cover'); cv.setAuthor(a.author)
 
     # background
     cv.setFillColorRGB(*NAVY); cv.rect(0, 0, W, H, stroke=0, fill=1)
@@ -54,13 +83,16 @@ def main():
         cv.setStrokeColorRGB(*CREAM); cv.setLineWidth(2)
         x = x0 + 0.1 * inch
         while x < x1:
-            cv.line(x, y - 0.04 * inch, x, y + 0.22 * inch); x += 0.22 * inch
+            if T['stars']:
+                cv.setLineWidth(1.2); star8(cv, x, y + 0.09 * inch, 0.12 * inch); x += 0.45 * inch
+            else:
+                cv.line(x, y - 0.04 * inch, x, y + 0.22 * inch); x += 0.22 * inch
 
     # ---------------- front
     cx = fx + trim_w / 2
     cv.setFillColorRGB(*CREAM)
-    cv.setFont('Helvetica-Bold', 54); cv.drawCentredString(cx, H - bleed - 1.25 * inch, 'TRAIN')
-    cv.drawCentredString(cx, H - bleed - 1.95 * inch, 'TRACKS')
+    cv.setFont('Helvetica-Bold', 54); cv.drawCentredString(cx, H - bleed - 1.25 * inch, T['l1'])
+    cv.drawCentredString(cx, H - bleed - 1.95 * inch, T['l2'])
     cv.setFillColorRGB(*ORANGE); cv.setFont('Helvetica-Bold', 15)
     cv.drawCentredString(cx, H - bleed - 2.35 * inch, '200 LOGIC PUZZLES FOR ADULTS')
     # puzzle card
@@ -87,7 +119,7 @@ def main():
     cv.translate(sx + spine / 2, H / 2)
     cv.rotate(-90)
     cv.setFillColorRGB(*CREAM); cv.setFont('Helvetica-Bold', 17)
-    cv.drawCentredString(0, -6, 'TRAIN TRACKS')
+    cv.drawCentredString(0, -6, T['spine'])
     cv.setFont('Helvetica', 10); cv.setFillColorRGB(*ORANGE)
     cv.drawString(-trim_h / 2 + 0.4 * inch, -4, a.author)
     cv.drawRightString(trim_h / 2 - 0.4 * inch, -4, '200 LOGIC PUZZLES')
@@ -98,13 +130,10 @@ def main():
     bxl, bw_ = bx + m, trim_w - 2 * m
     y = H - bleed - 0.95 * inch
     cv.setFillColorRGB(*CREAM); cv.setFont('Helvetica-Bold', 21)
-    cv.drawString(bxl, y, 'Climb aboard your next')
-    y -= 27; cv.drawString(bxl, y, 'puzzle obsession.')
+    cv.drawString(bxl, y, T['head'][0])
+    y -= 27; cv.drawString(bxl, y, T['head'][1])
     y -= 30
-    body = ('Lay the rails, follow the clues, and bring the train safely home. '
-            'Each puzzle gives you number clues for every row and column, a few '
-            'pre-drawn pieces, and one track that must run from the entry to the exit. '
-            'Every puzzle has exactly one solution, so pure logic is all you need.')
+    body = T['body']
     cv.setFont('Helvetica', 11.5)
     for ln in wrap(body, 'Helvetica', 11.5, bw_):
         cv.drawString(bxl, y, ln); y -= 16

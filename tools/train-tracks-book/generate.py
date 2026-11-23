@@ -217,6 +217,45 @@ from reportlab.lib.units import inch
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
 PAGE_W, PAGE_H = 6 * inch, 9 * inch
+STYLE = 'rails'            # 'rails' (sleepers) or 'trail' (dashed route)
+LABELS = None              # (start_label, end_label) drawn beside the entry/exit stubs
+
+THEMES = {
+    'rails': dict(
+        style='rails', labels=None, title='TRAIN TRACKS',
+        subtitle='200 Logic Puzzles for Adults', sub2='6x6 and 8x8 Grids',
+        intro=None,
+        rules=['Every puzzle hides one continuous railway track.',
+               '1. The track ENTERS the grid at the short stub on the LEFT edge and LEAVES through the stub on the BOTTOM edge.',
+               '2. The numbers outside the grid tell you how many squares in that row or column contain track.',
+               '3. The grey squares are already drawn for you. Use them as starting clues.',
+               '4. The track moves up, down, left or right. It never crosses or touches itself, and never branches.',
+               '5. Every puzzle has exactly one solution. No guessing is needed: logic is enough.'],
+        part1='6 x 6 Puzzles', part2='8 x 8 Puzzles'),
+    'hijrah': dict(
+        style='trail', labels=('MAKKAH', 'MADINAH'), title='HIJRAH ROUTE',
+        subtitle='200 Logic Puzzles for Adults', sub2='6x6 and 8x8 Grids',
+        intro=['In 622 CE the Prophet Muhammad (peace be upon him) migrated from Makkah to Madinah, '
+               'a journey remembered by Muslims as the Hijrah. He travelled with Abu Bakr (may Allah be '
+               'pleased with him), took shelter in the Cave of Thawr, and arrived in Madinah safely.',
+               'These puzzles are inspired by that journey. Each one asks you to trace a single route '
+               'from Makkah to Madinah using logic alone. The puzzles are a game and do not show the real route.'],
+        rules=['Every puzzle hides one unbroken route from Makkah to Madinah.',
+               '1. The route STARTS at the stub on the LEFT edge (Makkah) and ENDS at the stub on the BOTTOM edge (Madinah).',
+               '2. The numbers outside the grid tell you how many squares in that row or column are on the route.',
+               '3. The grey squares are already drawn for you. Use them as starting clues.',
+               '4. The route moves up, down, left or right. It never crosses or touches itself, and never branches.',
+               '5. Every puzzle has exactly one solution. No guessing is needed: logic is enough.'],
+        part1='Short Routes (6 x 6)', part2='Long Routes (8 x 8)'),
+}
+
+
+def set_theme(name):
+    global STYLE, LABELS, THEME
+    THEME = THEMES[name]; STYLE = THEME['style']; LABELS = THEME['labels']
+
+
+THEME = THEMES['rails']
 GUT, OUT = 0.625 * inch, 0.5 * inch     # inside / outside margins (KDP 150-300 pages)
 
 
@@ -229,6 +268,21 @@ def tpath(cv, cx, cy, s, sides, lw, rails=True):
     import math
     a, b = sides
     cv.setLineWidth(lw)
+    if STYLE == 'trail':
+        cv.setLineWidth(lw * 1.5); cv.setDash(lw * 1.3, lw * 1.5); cv.setLineCap(1)
+        if OPP[a] == b:
+            (x1, y1), (x2, y2) = pt(a), pt(b)
+            cv.line(x1, y1, x2, y2)
+        else:
+            corner = {'U': {'L': (-1, 1), 'R': (1, 1)}, 'D': {'L': (-1, -1), 'R': (1, -1)}}
+            v = a if a in 'UD' else b; h = a if a in 'LR' else b
+            kx, ky = corner[v][h]
+            ox, oy = cx + kx * s / 2, cy + ky * s / 2
+            ang = {(1, 1): 180, (-1, 1): 270, (-1, -1): 0, (1, -1): 90}[(kx, ky)]
+            p = cv.beginPath(); p.arc(ox - s / 2, oy - s / 2, ox + s / 2, oy + s / 2, ang, 90)
+            cv.drawPath(p, stroke=1, fill=0)
+        cv.setDash(); cv.setLineCap(0); cv.setLineWidth(lw)
+        return
     if OPP[a] == b:      # straight
         (x1, y1), (x2, y2) = pt(a), pt(b)
         cv.line(x1, y1, x2, y2)
@@ -290,6 +344,11 @@ def draw_grid(cv, P, x0, y0, size, solution=False, small=False):
                 'D': (cx, cy - s / 2 - s * 0.45, cx, cy - s / 2)}[side]
         cv.setLineWidth(lw); cv.line(*stub)
         cv.setFillColorRGB(0.1, 0.1, 0.1)
+    if LABELS and not small:
+        cv.setFont('Helvetica-Bold', max(6, s * 0.17)); cv.setFillColorRGB(0.1, 0.1, 0.1)
+        scx, scy = cell(*P['start']); ecx, ecy = cell(*P['goal'])
+        cv.drawRightString(scx - s / 2 - s * 0.5, scy - s * 0.06, LABELS[0])
+        cv.drawCentredString(ecx, ecy - s / 2 - s * 0.45 - s * 0.25, LABELS[1])
     path = P['path']
     if solution:
         cv.setStrokeColorRGB(0.1, 0.1, 0.1)
@@ -332,9 +391,9 @@ def build_pdf(puzzles, out, title, author):
         lines.append(cur); return lines
 
     # title page
-    centered(PAGE_H - 2.6 * inch, 'TRAIN TRACKS', size=34)
-    centered(PAGE_H - 3.1 * inch, '200 Logic Puzzles for Adults', 'Helvetica', 16)
-    centered(PAGE_H - 3.5 * inch, '6x6 and 8x8 Grids', 'Helvetica', 14)
+    centered(PAGE_H - 2.6 * inch, THEME['title'], size=34)
+    centered(PAGE_H - 3.1 * inch, THEME['subtitle'], 'Helvetica', 16)
+    centered(PAGE_H - 3.5 * inch, THEME['sub2'], 'Helvetica', 14)
     centered(PAGE_H - 7.5 * inch, author, 'Helvetica', 13)
     newpage()
     # copyright page
@@ -348,13 +407,7 @@ def build_pdf(puzzles, out, title, author):
     newpage()
     # how to play
     centered(PAGE_H - 1 * inch, 'How to Play', size=22)
-    rules = ['Every puzzle hides one continuous railway track.',
-             '1. The track ENTERS the grid at the short stub on the LEFT edge and LEAVES through the stub on the BOTTOM edge.',
-             '2. The numbers outside the grid tell you how many squares in that row or column contain track.',
-             '3. The grey squares are already drawn for you. Use them as starting clues.',
-             '4. The track moves up, down, left or right. It never crosses or touches itself, and never branches.',
-             '5. Every puzzle has exactly one solution. No guessing is needed: logic is enough.',
-             'Tips: A row or column whose number is 0 is empty. If a number equals the squares left, fill them all. Squares that cannot be reached by the track can be crossed out. Pencil in the cells you are unsure of.']
+    rules = THEME['rules'] + ['Tips: A row or column whose number is 0 is empty. If a number equals the squares left, fill them all. Squares that cannot be reached can be crossed out. Pencil in the cells you are unsure of.']
     y = PAGE_H - 1.6 * inch
     for r in rules:
         for ln in wrap(r, 'Helvetica', 11, PAGE_W - GUT - OUT):
@@ -365,7 +418,16 @@ def build_pdf(puzzles, out, title, author):
     draw_grid(cv, ex, (PAGE_W - 6 * sz) / 2 - 0.15 * inch, 0.9 * inch, sz)
     newpage()
     # intro to 6x6
-    sections = [(6, 'PART 1', '6 x 6 Puzzles'), (8, 'PART 2', '8 x 8 Puzzles')]
+    if THEME['intro']:
+        # story page before the puzzles
+        centered(PAGE_H - 1.2 * inch, 'The Journey', size=22)
+        y = PAGE_H - 2.0 * inch
+        for para in THEME['intro']:
+            for ln in wrap(para, 'Helvetica', 12, PAGE_W - GUT - OUT):
+                cv.setFont('Helvetica', 12); cv.drawString(GUT, y, ln); y -= 17
+            y -= 12
+        newpage()
+    sections = [(6, 'PART 1', THEME['part1']), (8, 'PART 2', THEME['part2'])]
     num = 0
     for n, tag, name in sections:
         centered(PAGE_H / 2 + 0.3 * inch, tag, size=16)
@@ -412,8 +474,10 @@ if __name__ == '__main__':
     ap.add_argument('--json', default='puzzles.json')
     ap.add_argument('--title', default='Train Tracks: 200 Logic Puzzles for Adults')
     ap.add_argument('--author', default='Your Name')
+    ap.add_argument('--theme', default='rails', choices=list(THEMES))
     ap.add_argument('--reuse', action='store_true', help='rebuild the PDF from --json without re-generating puzzles')
     a = ap.parse_args()
+    set_theme(a.theme)
     if a.reuse:
         ps = json.load(open(a.json))
         for p in ps:
