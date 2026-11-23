@@ -18,8 +18,11 @@ os.environ.setdefault("EDITION", "")
 import build as B  # noqa: E402
 import art  # noqa: E402
 
-BLEED, W, H = 3.0, 148.0, 210.0
-PAPER_MM = float(os.environ.get("PAPER_MM", "0.05"))
+# KDP=1 builds the Amazon KDP paperback cover: trim 5.83 x 8.27 in, 0.125 in bleed, premium colour paper
+# (0.002347 in a page; confirm the spine in KDP's cover calculator and set SPINE_MM if it differs).
+KDP = os.environ.get("KDP") == "1"
+BLEED, W, H = (3.175, 5.83 * 25.4, 8.27 * 25.4) if KDP else (3.0, 148.0, 210.0)
+PAPER_MM = float(os.environ.get("PAPER_MM", "0.0596" if KDP else "0.05"))
 os.makedirs(B.BUILD, exist_ok=True)
 
 
@@ -44,13 +47,13 @@ def back_cover(edition, ramadan):
 <li>A Sunnah to practise every week; bookmarks and stickers</li></ul>
 {gift}
 <p class="bk-q">“And take provision, for the best provision is taqwa.”<span>al-Baqarah 2:197</span></p>
-<div class="bk-bar"><span>Barcode / ISBN area</span></div>
+{"" if KDP else '<div class="bk-bar"><span>Barcode / ISBN area</span></div>'}
 <p class="bk-by">Compiled by Feysel Reshid · <span style="text-transform:none;letter-spacing:.08em">diinislaam.com/planner</span></p></div>'''
 
 
 def build(edition, ramadan):
     pages = pages_of(f"Zaad-Muslim-{edition}-Planner-2027.pdf")
-    spine = float(os.environ.get("SPINE_MM", round(pages * PAPER_MM, 1)))
+    spine = float(os.environ.get("SPINE_MM", round(pages * PAPER_MM, 3 if KDP else 1)))
     B.RAMADAN_COVER = ramadan
     total_w = BLEED + W + spine + W + BLEED
     total_h = H + 2 * BLEED
@@ -84,15 +87,22 @@ def build(edition, ramadan):
 <div class="bk">{back_scene}{back_cover(edition, ramadan)}</div>
 <div class="spine"><span><b>ZAAD</b> &nbsp;·&nbsp; Provision for the Day &nbsp;·&nbsp; 2027{" &nbsp;·&nbsp; Ramadan 1448" if ramadan else ""}</span></div>
 {front}</div></body></html>'''
-    name = f"Zaad-Cover-Wrap-{edition}{'-Ramadan' if ramadan else ''}"
+    name = f"Zaad-KDP-Cover-{edition}" if KDP else f"Zaad-Cover-Wrap-{edition}{'-Ramadan' if ramadan else ''}"
     hp = os.path.join(B.BUILD, name + ".html")
     open(hp, "w", encoding="utf-8").write(html)
     out = os.path.join(ROOT, name + ".pdf")
     subprocess.run(["node", os.path.join(ROOT, "render.js"), hp, out], check=True)
+    if KDP:   # snap the page to the exact size KDP's cover calculator expects (the renderer rounds to about 0.5 pt)
+        import warnings; warnings.simplefilter("ignore")
+        import pymupdf
+        src_doc = pymupdf.open(out); new = pymupdf.open()
+        pg = new.new_page(width=total_w / 25.4 * 72, height=total_h / 25.4 * 72)
+        pg.show_pdf_page(pg.rect, src_doc, 0, keep_proportion=False)
+        new.save(out + ".tmp", garbage=4, deflate=True); new.close(); src_doc.close(); os.replace(out + ".tmp", out)
     print(f"{name}: {total_w:.1f} x {total_h:.1f} mm, spine {spine} mm ({pages} pages)")
 
 
 if __name__ == "__main__":
     for ed in ("Weekly", "Daily"):
-        for r in (False, True):
+        for r in ((False,) if KDP else (False, True)):
             build(ed, r)
