@@ -462,6 +462,12 @@ def build_pdf(puzzles, out, title, author):
             draw_grid(cv, P, x0, y0, sz, solution=True, small=True)
         footer(cv, 'Solutions', page)
         newpage()
+    if THEME['intro']:          # keeps the page count even for printing
+        centered(PAGE_H - 1.2 * inch, 'Notes', size=22)
+        for i in range(14):
+            cv.setStrokeColorRGB(0.7, 0.7, 0.7)
+            cv.line(GUT, PAGE_H - 2.0 * inch - i * 0.38 * inch, PAGE_W - OUT, PAGE_H - 2.0 * inch - i * 0.38 * inch)
+        newpage()
     cv.save()
 
 

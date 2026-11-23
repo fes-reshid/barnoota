@@ -48,6 +48,6 @@ Feysel Reshid
 - Books > Humor & Entertainment > Puzzles & Games > Puzzle Books
 
 ## Notes
-- Trim 6 x 9 in, 240 pages, black and white interior, white paper; free KDP ISBN
+- Trim 6 x 9 in, 242 pages, black and white interior, white paper; free KDP ISBN
 - Not adult content. Disclose AI-generated text in KDP's AI question (puzzles themselves come from a verified algorithm)
 - Have a knowledgeable person read the Hijrah page before publishing
