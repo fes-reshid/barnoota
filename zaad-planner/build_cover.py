@@ -52,7 +52,7 @@ def back_cover(edition, ramadan):
 
 
 def build(edition, ramadan):
-    pages = pages_of(f"Zaad-Muslim-{edition}-Planner-2027.pdf")
+    pages = pages_of(f"Zaad-Muslim-{edition}-Planner-2027.pdf")  # the Ramadan edition has the same page count
     spine = float(os.environ.get("SPINE_MM", round(pages * PAPER_MM, 3 if KDP else 1)))
     B.RAMADAN_COVER = ramadan
     total_w = BLEED + W + spine + W + BLEED
@@ -87,7 +87,7 @@ def build(edition, ramadan):
 <div class="bk">{back_scene}{back_cover(edition, ramadan)}</div>
 <div class="spine"><span><b>ZAAD</b> &nbsp;·&nbsp; Provision for the Day &nbsp;·&nbsp; 2027{" &nbsp;·&nbsp; Ramadan 1448" if ramadan else ""}</span></div>
 {front}</div></body></html>'''
-    name = f"Zaad-KDP-Cover-{edition}" if KDP else f"Zaad-Cover-Wrap-{edition}{'-Ramadan' if ramadan else ''}"
+    name = f"Zaad-KDP-Cover-{edition}{'-Ramadan' if ramadan else ''}" if KDP else f"Zaad-Cover-Wrap-{edition}{'-Ramadan' if ramadan else ''}"
     hp = os.path.join(B.BUILD, name + ".html")
     open(hp, "w", encoding="utf-8").write(html)
     out = os.path.join(ROOT, name + ".pdf")
@@ -104,5 +104,5 @@ def build(edition, ramadan):
 
 if __name__ == "__main__":
     for ed in ("Weekly", "Daily"):
-        for r in ((False,) if KDP else (False, True)):
+        for r in (False, True):
             build(ed, r)

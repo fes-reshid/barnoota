@@ -6,7 +6,7 @@
 KDP paperback, trim 5.83 x 8.27 in (A5), "my book has bleed": every page is 5.955 x 8.52 in. Page 1 is a right-hand page,
 so its bleed is on the right; left-hand pages have it on the left. The bleed is made by stretching the outermost
 point of each edge out by 0.125 in (the usual way when the artwork has no extra bleed), which is trimmed off in printing.
-Reads Zaad-Muslim-{Weekly,Daily}-Planner-2027.pdf, writes Zaad-KDP-Interior-{Weekly,Daily}.pdf.
+Reads Zaad-Muslim-{Weekly,Daily}-Planner-2027[-Ramadan].pdf, writes Zaad-KDP-Interior-{Weekly,Daily}[-Ramadan].pdf.
 """
 import os, warnings
 warnings.simplefilter("ignore")
@@ -17,8 +17,9 @@ TW, TH, B = 5.83 * 72, 8.27 * 72, 0.125 * 72     # trim width and height, bleed 
 E = 0.4                                          # thickness of the source edge that is stretched (points)
 
 
-def make(edition):
-    src = pymupdf.open(os.path.join(ROOT, f"Zaad-Muslim-{edition}-Planner-2027.pdf"))
+def make(edition, ramadan=False):
+    tag = "-Ramadan" if ramadan else ""
+    src = pymupdf.open(os.path.join(ROOT, f"Zaad-Muslim-{edition}-Planner-2027{tag}.pdf"))
     out = pymupdf.open()
     for i, sp in enumerate(src):
         w, h = sp.rect.width, sp.rect.height
@@ -39,11 +40,13 @@ def make(edition):
             put((0, y0, B, y1), (0, 0, E, h))                    # outer edge, left
             put((0, 0, B, y0), (0, 0, E, E)); put((0, y1, B, y1 + B), (0, h - E, E, h))
         pg.show_pdf_page(pymupdf.Rect(x0, y0, x1, y1), src, i, keep_proportion=False)   # the page itself, on top
-    path = os.path.join(ROOT, f"Zaad-KDP-Interior-{edition}.pdf")
+    path = os.path.join(ROOT, f"Zaad-KDP-Interior-{edition}{tag}.pdf")
     out.save(path, garbage=4, deflate=True)
     print(f"{path}: {len(out)} pages, {(TW + B) / 72:.3f} x {(TH + 2 * B) / 72:.3f} in, {os.path.getsize(path) / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":
     for ed in ("Weekly", "Daily"):
-        make(ed)
+        for r in (False, True):
+            if os.path.exists(os.path.join(ROOT, f"Zaad-Muslim-{ed}-Planner-2027{'-Ramadan' if r else ''}.pdf")):
+                make(ed, r)

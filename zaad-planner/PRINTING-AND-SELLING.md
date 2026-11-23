@@ -32,6 +32,8 @@ KDP prints glued paperbacks only: no spiral or wire binding, no ribbon or elasti
 | `Zaad-KDP-Interior-Daily.pdf` | The same for the 436-page daily edition |
 | `Zaad-KDP-Cover-Weekly.pdf`, `-Daily.pdf` | Back cover, spine and front cover in one sheet, 0.125 in bleed, no barcode box (KDP prints its own at the lower right of the back cover) |
 
+The Ramadan 1448 gift versions have the same names with `-Ramadan` before `.pdf`. Like the other Ramadan files they are not kept in the repository: build them with `COVER=ramadan python3 build.py` (and `EDITION=weekly`), then run the two commands below.
+
 Rebuild: `python3 tools/build_kdp_interior.py` and `KDP=1 python3 build_cover.py`.
 
 In KDP: Create, Paperback. Print options: **Premium colour**, **white paper**, trim **5.83 x 8.27 in (14.81 x 21.01 cm)**, **bleed: "Bleed (PDF only)"**, matte or glossy cover. Upload the interior and the cover. Open the online previewer and look at every page before you submit.
