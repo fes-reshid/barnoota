@@ -727,6 +727,14 @@ function adminSaveQuiz(quiz){
     classId: String(q.classId || ''),
     published: !!q.published,
     questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
+      /* a matching question: pairs of a left item and its match; one point when every pair is right */
+      if(item && item.type === 'match') return {
+        type: 'match',
+        q: String(item.q || '').trim(),
+        pairs: (Array.isArray(item.pairs) ? item.pairs : []).map(function(p){ return { l: String((p && p.l) || '').trim(), r: String((p && p.r) || '').trim() }; }).filter(function(p){ return p.l && p.r; }).slice(0, 8),
+        choices: [], answer: 0,
+        explain: String(item.explain || '').trim()
+      };
       return {
         q: String(item.q || '').trim(),
         choices: (Array.isArray(item.choices) ? item.choices : []).map(function(c){ return String(c || '').trim(); }),

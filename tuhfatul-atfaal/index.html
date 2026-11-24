@@ -1632,6 +1632,56 @@ function finishTeacherQuiz(){
  $('#tqAgain').onclick=()=>startTeacherQuiz(quiz.id);$('#tqMap').onclick=()=>{tqRun=null;renderMap();show('mapScreen')};
  if(pass)happySound();
 }
+/* A matching question from the Teacher portal (type 'match'): the student taps an
+   item, then its match. One point when every pair is right; wrong pairs then show
+   the right match. The answer saved is 0 when all are right (the question's answer). */
+let tqMatch=null;
+function renderTeacherMatch(){
+ const {quiz,index}=tqRun,q=quiz.questions[index],n=q.pairs.length,last=index===quiz.questions.length-1;
+ if(!tqMatch||tqMatch.index!==index){const order=q.pairs.map((_,i)=>i);for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}tqMatch={index,order,pick:Array(n).fill(null),sel:0,checked:false,msg:'',ok:false}}
+ const m=tqMatch,used=new Set(m.pick.filter(v=>v!=null)),dots=quiz.questions.map((_,i)=>`<span class="${i<index?'done':i===index?'now':''}"></span>`).join('');
+ const right=i=>m.pick[i]!=null&&q.pairs[m.pick[i]].r===q.pairs[i].r;
+ $('#tqBody').innerHTML=`<div class="kicker">📝 ${escapeHtml(quiz.title)}</div>${index===0&&quiz.instructions?`<p><i>${escapeHtml(quiz.instructions)}</i></p>`:''}<div class="tq-progress">${dots}</div><p class="kicker">Question ${index+1} of ${quiz.questions.length} · 🧩 Matching</p><div class="tq-q">${escapeHtml(q.q||'Match each item with its pair.')}</div>`
+  +(m.checked?'':'<p class="tqm-hint">Tap an item, then tap its match. Tap an item again to change it.</p>')
+  +`<div class="tqm${m.checked?' checked':''}"><div class="tqm-left">${q.pairs.map((p,i)=>{const v=m.pick[i],ok=m.checked?right(i):null;return `<button type="button" class="tqm-l${m.sel===i&&!m.checked?' sel':''}${v!=null?' done':''}${ok===true?' ok':ok===false?' no':''}" data-tml="${i}"${m.checked?' disabled':''}><span class="tqm-n">${ok===true?'✓':ok===false?'✗':i+1}</span><span class="tqm-t" dir="auto">${escapeHtml(p.l)}</span><span class="tqm-ans" dir="auto">${v!=null?'→ '+escapeHtml(q.pairs[v].r):'→ …'}</span>${ok===false?`<span class="tqm-fix" dir="auto">✓ ${escapeHtml(p.r)}</span>`:''}</button>`}).join('')}</div>`
+  +(m.checked?'':`<div class="tqm-right">${m.order.map(j=>`<button type="button" class="tqm-r${used.has(j)?' used':''}" data-tmr="${j}" dir="auto">${escapeHtml(q.pairs[j].r)}</button>`).join('')}</div>`)
+  +`</div><div class="feedback${m.checked?(m.ok?' good':' bad'):''}" id="tqFeedback" aria-live="polite">${escapeHtml(m.msg)}</div><div id="tqExplain">${m.checked&&q.explain?`<div class="tq-explain">💡 ${escapeHtml(q.explain)}</div>`:''}</div>`;
+ if(!m.checked){
+  document.querySelectorAll('[data-tml]').forEach(b=>b.onclick=()=>{const i=+b.dataset.tml;if(m.sel===i&&m.pick[i]!=null)m.pick[i]=null;m.sel=i;renderTeacherMatch()});
+  document.querySelectorAll('[data-tmr]').forEach(b=>b.onclick=()=>{const j=+b.dataset.tmr,t=m.sel!=null?m.sel:m.pick.findIndex(v=>v==null);if(t<0)return;
+   m.pick=m.pick.map(v=>v===j?null:v);m.pick[t]=j;let next=null;for(let k=1;k<=n;k++){const c=(t+k)%n;if(m.pick[c]==null){next=c;break}}m.sel=next;renderTeacherMatch()});
+  $('#tqActions').innerHTML=`<button class="ghost" id="tqQuit">← Back to map</button><button class="btn green" id="tqCheck"${m.pick.every(v=>v!=null)?'':' disabled'}>Check ✓</button>`;
+  $('#tqQuit').onclick=()=>{if(confirm('Leave this quiz? Your answers so far will not be saved.')){tqRun=null;tqMatch=null;renderMap();show('mapScreen')}};
+  $('#tqCheck').onclick=()=>{if(!m.pick.every(v=>v!=null))return;const good=q.pairs.filter((_,i)=>right(i)).length;m.checked=true;m.ok=good===n;
+   tqRun.answers[index]=m.ok?0:-1;if(m.ok)tqRun.correct++;m.msg=m.ok?'All matched — correct! ⭐':good+' of '+n+' right — the right matches are shown in green.';
+   if(m.ok)happySound();else tryAgainSound();renderTeacherMatch()};
+ }else{
+  $('#tqActions').innerHTML=`<button class="btn green" id="tqNext">${last?'See my score →':'Next question →'}</button>`;
+  $('#tqNext').onclick=()=>{tqMatch=null;if(last)finishTeacherQuiz();else{tqRun.index++;renderTeacherQuizQuestion()}};$('#tqNext').focus();
+ }
+}
+const renderTeacherQuizQuestionBeforeMatch=renderTeacherQuizQuestion;
+renderTeacherQuizQuestion=function(){const q=tqRun&&tqRun.quiz.questions[tqRun.index];if(q&&q.type==='match'&&Array.isArray(q.pairs)&&q.pairs.length>1){tqMatch=null;renderTeacherMatch();return}return renderTeacherQuizQuestionBeforeMatch.apply(this,arguments)};
+document.head.insertAdjacentHTML('beforeend',`<style id="tq-match-style">
+.tqm{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;align-items:start;margin:10px 0 6px;text-align:left}
+.tqm.checked{grid-template-columns:1fr}
+@media(max-width:640px){.tqm{grid-template-columns:1fr}}
+.tqm-left,.tqm-right{display:grid;gap:8px}
+.tqm-l{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;align-items:center;text-align:left;padding:10px 12px;border:2px solid var(--gold2);border-radius:16px;background:#fff;font:inherit;font-size:17px;color:var(--navy);cursor:pointer}
+.tqm-l:disabled{cursor:default;opacity:1}
+.tqm-n{grid-row:span 3;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--paper2);font-weight:800;color:var(--gold)}
+.tqm-t{font-weight:700;overflow-wrap:anywhere}
+.tqm-ans{color:#8a7a62;font-size:15.5px;overflow-wrap:anywhere}
+.tqm-l.done .tqm-ans{color:var(--blue);font-weight:700}
+.tqm-l.sel{border-color:var(--sky);box-shadow:0 0 0 4px #3f9fc933;background:#f6fbff}
+.tqm-l.ok{background:#dff4dd;border-color:#3e9c4a}.tqm-l.ok .tqm-n{background:#3e9c4a;color:#fff}
+.tqm-l.no{background:#ffe9e2;border-color:#d85c38}.tqm-l.no .tqm-n{background:#d85c38;color:#fff}.tqm-l.no .tqm-ans{text-decoration:line-through;color:#a4553e;font-weight:600}
+.tqm-fix{grid-column:2;color:#2e6b58;font-weight:800;font-size:15.5px}
+.tqm-right{align-content:start}
+.tqm-r{padding:12px;border:2px dashed var(--sky);border-radius:14px;background:#f3faff;font:inherit;font-size:16.5px;font-weight:700;color:var(--navy);cursor:pointer;overflow-wrap:anywhere}
+.tqm-r.used{opacity:.45;border-style:solid;background:#fff}
+.tqm-hint{margin:2px 0 4px;color:#6b5d48;font-size:15px}
+</style>`);
 const renderMapBeforeTeacherQuizzes=renderMap;renderMap=function(){renderMapBeforeTeacherQuizzes();renderTeacherQuizzes();loadTeacherQuizzes(false)};
 
 /* Announcements (with a class comment section) and private messages. */

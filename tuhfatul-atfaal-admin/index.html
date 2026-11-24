@@ -303,6 +303,15 @@ if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.a
   .choice-row input[type=text]{flex:1;padding:8px 11px;border:1.5px solid var(--gold-soft);border-radius:10px;font-family:'Cormorant Garamond',serif;font-size:16.5px;background:#fff}
   .choice-row input[type=radio]{width:20px;height:20px;accent-color:var(--green);cursor:pointer}
   .choice-row.correct input[type=text]{border-color:#39965b;background:#effaf1}
+  .match-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:7px}
+  .match-row input[type=text]{min-width:0;padding:8px 11px;border:1.5px solid var(--gold-soft);border-radius:10px;font-family:'Cormorant Garamond',serif;font-size:16.5px;background:#fff}
+  .match-row .letter{font-family:'Marcellus';text-align:center;color:#8a7654}
+  .match-arrow{color:var(--green);font-weight:700}
+  @media(max-width:560px){.match-row{grid-template-columns:22px minmax(0,1fr) auto;}.match-row .match-arrow{display:none}.match-row input[data-pr]{grid-column:2}}
+  .match-preview{display:grid;gap:8px;margin:10px 0}
+  .mp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 10px;border:2px solid var(--gold-soft);border-radius:12px;background:#fff;font-size:16px}
+  .mp-row select{max-width:60%;padding:6px 8px;border-radius:9px;border:1.5px solid var(--gold-soft);font-size:15px}
+  .mp-row.right{background:#dff4dd;border-color:#3e9c4a}.mp-row.wrong{background:#fde3dc;border-color:#d85c38}
   .choice-row .letter{font-family:'Marcellus';width:22px;text-align:center;color:#8a7654}
   .builder-actions{display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;background:#fff;padding:12px 0 2px;border-top:1px dashed var(--gold-soft);margin-top:6px}
   .toggle{display:inline-flex;align-items:center;gap:8px;font-family:'Marcellus';font-size:14.5px;cursor:pointer}
@@ -782,6 +791,7 @@ body{font-variant-numeric:lining-nums}
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn ghost" id="add-question-btn">＋ Add multiple-choice question</button>
               <button class="btn ghost" id="add-tf-btn">＋ Add true / false</button>
+              <button class="btn ghost" id="add-match-btn">＋ Add matching</button>
             </div>
 
             <div class="builder-actions">
@@ -1750,6 +1760,10 @@ function wireSignature(){
 function blankQuestion(tf){
   return tf ? { q:'', choices:['True','False'], answer:0, explain:'' } : { q:'', choices:['','','',''], answer:0, explain:'' };
 }
+/* a matching question: the student matches each left item with its pair */
+function blankMatch(){
+  return { type:'match', q:'Match each item with its pair.', pairs:[{ l:'', r:'' }, { l:'', r:'' }, { l:'', r:'' }], choices:[], answer:0, explain:'' };
+}
 function quizStats(quiz){
   const rows = [];
   studentsCache.forEach(s => {
@@ -1816,15 +1830,21 @@ function renderQuestions(){
   $('question-count').textContent = '(' + qs.length + ')';
   qs.forEach((item, qi) => {
     const card = document.createElement('div'); card.className = 'q-card';
+    const match = item.type === 'match';
+    if(match && !(Array.isArray(item.pairs) && item.pairs.length)) item.pairs = [{ l:'', r:'' }, { l:'', r:'' }];
     card.innerHTML =
-      '<div class="q-num"><span>Question ' + (qi + 1) + '</span><span class="q-tools">' +
+      '<div class="q-num"><span>Question ' + (qi + 1) + (match ? ' · 🧩 Matching' : '') + '</span><span class="q-tools">' +
         '<button data-t="up" title="Move up">↑</button><button data-t="down" title="Move down">↓</button><button data-t="copy" title="Duplicate">⧉</button><button data-t="del" title="Delete">🗑</button></span></div>' +
-      '<div class="field" style="margin-bottom:8px"><textarea data-f="q" placeholder="Type the question… (Arabic is fine too)">' + escapeHtml(item.q) + '</textarea></div>' +
-      item.choices.map((c, ci) => '<div class="choice-row' + (item.answer === ci ? ' correct' : '') + '"><input type="radio" name="ans-' + qi + '" data-ans="' + ci + '"' + (item.answer === ci ? ' checked' : '') + ' title="Mark as the correct answer"><span class="letter">' + 'ABCDEF'[ci] + '</span><input type="text" data-c="' + ci + '" value="' + escapeHtml(c) + '" placeholder="Answer ' + 'ABCDEF'[ci] + (ci > 1 ? ' (optional)' : '') + '">' +
-        (item.choices.length > 2 ? '<button class="btn ghost small" data-rm="' + ci + '" title="Remove option" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
-      (item.choices.length < 6 ? '<button class="linkbtn" data-t="addopt">＋ add another answer</button>' : '') +
+      '<div class="field" style="margin-bottom:8px"><textarea data-f="q" placeholder="' + (match ? 'Instruction, e.g. Match each word with its meaning' : 'Type the question… (Arabic is fine too)') + '">' + escapeHtml(item.q) + '</textarea></div>' +
+      (match
+        ? item.pairs.map((p, pi) => '<div class="match-row"><span class="letter">' + (pi + 1) + '</span><input type="text" dir="auto" data-pl="' + pi + '" value="' + escapeHtml(p.l) + '" placeholder="Left item ' + (pi + 1) + '"><span class="match-arrow" aria-hidden="true">↔</span><input type="text" dir="auto" data-pr="' + pi + '" value="' + escapeHtml(p.r) + '" placeholder="Its match">' +
+            (item.pairs.length > 2 ? '<button class="btn ghost small" data-prm="' + pi + '" title="Remove pair" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
+          (item.pairs.length < 8 ? '<button class="linkbtn" data-t="addpair">＋ add another pair</button>' : '')
+        : item.choices.map((c, ci) => '<div class="choice-row' + (item.answer === ci ? ' correct' : '') + '"><input type="radio" name="ans-' + qi + '" data-ans="' + ci + '"' + (item.answer === ci ? ' checked' : '') + ' title="Mark as the correct answer"><span class="letter">' + 'ABCDEF'[ci] + '</span><input type="text" data-c="' + ci + '" value="' + escapeHtml(c) + '" placeholder="Answer ' + 'ABCDEF'[ci] + (ci > 1 ? ' (optional)' : '') + '">' +
+            (item.choices.length > 2 ? '<button class="btn ghost small" data-rm="' + ci + '" title="Remove option" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
+          (item.choices.length < 6 ? '<button class="linkbtn" data-t="addopt">＋ add another answer</button>' : '')) +
       '<div class="field" style="margin:8px 0 0"><input data-f="explain" placeholder="Explanation shown after answering (optional)" value="' + escapeHtml(item.explain || '') + '"></div>' +
-      '<p class="muted" style="margin:6px 0 0">Tick the circle beside the correct answer.</p>';
+      '<p class="muted" style="margin:6px 0 0">' + (match ? 'Students see the left items in this order and the matches mixed up, and pair each one. Every pair must be right for the point.' : 'Tick the circle beside the correct answer.') + '</p>';
     card.querySelector('[data-f="q"]').oninput = e => { item.q = e.target.value; };
     card.querySelector('[data-f="explain"]').oninput = e => { item.explain = e.target.value; };
     card.querySelectorAll('[data-c]').forEach(inp => inp.oninput = e => { item.choices[+inp.dataset.c] = e.target.value; });
@@ -1834,6 +1854,9 @@ function renderQuestions(){
       if(item.answer === ci) item.answer = 0; else if(item.answer > ci) item.answer--;
       renderQuestions();
     });
+    card.querySelectorAll('[data-pl]').forEach(inp => inp.oninput = e => { item.pairs[+inp.dataset.pl].l = e.target.value; });
+    card.querySelectorAll('[data-pr]').forEach(inp => inp.oninput = e => { item.pairs[+inp.dataset.pr].r = e.target.value; });
+    card.querySelectorAll('[data-prm]').forEach(b => b.onclick = () => { item.pairs.splice(+b.dataset.prm, 1); renderQuestions(); });
     card.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
       const t = b.dataset.t;
       if(t === 'up' && qi > 0){ [qs[qi - 1], qs[qi]] = [qs[qi], qs[qi - 1]]; }
@@ -1841,6 +1864,7 @@ function renderQuestions(){
       else if(t === 'copy'){ qs.splice(qi + 1, 0, JSON.parse(JSON.stringify(item))); }
       else if(t === 'del'){ if(qs.length === 1){ toast('A quiz needs at least one question.'); return; } qs.splice(qi, 1); }
       else if(t === 'addopt'){ item.choices.push(''); }
+      else if(t === 'addpair'){ item.pairs.push({ l:'', r:'' }); }
       renderQuestions();
     });
     box.appendChild(card);
@@ -1852,6 +1876,14 @@ function renderQuestions(){
 function cleanQuestions(){
   const out = [], problems = [];
   editingQuiz.questions.forEach((item, qi) => {
+    if(item.type === 'match'){
+      const pairs = [];
+      (item.pairs || []).forEach((p, pi) => { const l = String(p.l || '').trim(), r = String(p.r || '').trim();
+        if(l && r) pairs.push({ l, r }); else if(l || r) problems.push('Question ' + (qi + 1) + ': pair ' + (pi + 1) + ' needs both sides.'); });
+      if(pairs.length < 2) problems.push('Question ' + (qi + 1) + ' needs at least two complete pairs.');
+      out.push({ type: 'match', q: String(item.q || '').trim() || 'Match each item with its pair.', pairs, choices: [], answer: 0, explain: String(item.explain || '').trim() });
+      return;
+    }
     const kept = [], map = {};
     item.choices.forEach((c, ci) => { if(String(c).trim()){ map[ci] = kept.length; kept.push(String(c).trim()); } });
     if(!String(item.q).trim()) problems.push('Question ' + (qi + 1) + ' has no text.');
@@ -1892,6 +1924,20 @@ function previewQuiz(){
   const body = $('preview-body'); body.innerHTML = editingQuiz.instructions ? '<p><i>' + escapeHtml(editingQuiz.instructions) + '</i></p>' : '';
   questions.forEach((item, qi) => {
     const box = document.createElement('div'); box.className = 'preview-q';
+    if(item.type === 'match'){
+      /* students tap to pair in the app; here each left item has a list to choose its match from */
+      const order = item.pairs.map((_, i) => i).sort(() => Math.random() - .5);
+      box.innerHTML = '<b>' + (qi + 1) + '.</b> ' + escapeHtml(item.q) + ' <span class="muted">(🧩 matching)</span><div class="match-preview">' +
+        item.pairs.map((p, pi) => '<label class="mp-row"><span dir="auto">' + escapeHtml(p.l) + '</span><select data-mp="' + pi + '"><option value="">— choose —</option>' + order.map(j => '<option value="' + j + '">' + escapeHtml(item.pairs[j].r) + '</option>').join('') + '</select></label>').join('') +
+        '</div><button class="btn ghost small" data-check>Check</button><p class="muted" data-exp></p>';
+      box.querySelector('[data-check]').onclick = () => {
+        let right = 0;
+        box.querySelectorAll('[data-mp]').forEach(sel => { const p = item.pairs[+sel.dataset.mp], ok = sel.value !== '' && item.pairs[+sel.value].r === p.r; if(ok) right++; sel.parentElement.classList.toggle('right', ok); sel.parentElement.classList.toggle('wrong', !ok); });
+        box.querySelector('[data-exp]').textContent = right + ' of ' + item.pairs.length + ' right' + (right === item.pairs.length ? ' ✓' : '') + (item.explain ? ' · ' + item.explain : '');
+      };
+      body.appendChild(box);
+      return;
+    }
     box.innerHTML = '<b>' + (qi + 1) + '.</b> ' + escapeHtml(item.q) + '<div class="choices">' + item.choices.map((c, ci) => '<button data-ci="' + ci + '">' + 'ABCDEF'[ci] + '. ' + escapeHtml(c) + '</button>').join('') + '</div><p class="muted" data-exp></p>';
     box.querySelectorAll('[data-ci]').forEach(b => b.onclick = () => {
       box.querySelectorAll('[data-ci]').forEach(x => { x.disabled = true; if(+x.dataset.ci === item.answer) x.classList.add('right'); });
@@ -3246,6 +3292,7 @@ function wire(){
   $('welcome-new-quiz').onclick = () => editQuiz(null);
   $('add-question-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(false)); renderQuestions(); };
   $('add-tf-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(true)); renderQuestions(); };
+  $('add-match-btn').onclick = () => { editingQuiz.questions.push(blankMatch()); renderQuestions(); };
   $('save-quiz-btn').onclick = () => saveQuiz(false);
   $('duplicate-quiz-btn').onclick = () => saveQuiz(true);
   $('cancel-quiz-btn').onclick = () => { pendingAssign = null; editingQuiz = null; renderQuizList(); showQuizPane('quiz-welcome'); };
