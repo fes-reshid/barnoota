@@ -312,6 +312,16 @@ if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.a
   .mp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 10px;border:2px solid var(--gold-soft);border-radius:12px;background:#fff;font-size:16px}
   .mp-row select{max-width:60%;padding:6px 8px;border-radius:9px;border:1.5px solid var(--gold-soft);font-size:15px}
   .mp-row.right{background:#dff4dd;border-color:#3e9c4a}.mp-row.wrong{background:#fde3dc;border-color:#d85c38}
+  .blank-see{display:grid;gap:3px;padding:9px 12px;margin-bottom:8px;border:1.5px dashed var(--gold-soft);border-radius:12px;background:#fffdf7;font-size:17px;line-height:1.6}
+  .blank-see > small{font:600 12px system-ui,sans-serif;color:#8a7654;text-transform:uppercase;letter-spacing:.04em}
+  .blank-gap{display:inline-block;padding:0 4px;color:#2c6aa0;font-weight:700;white-space:nowrap}
+  .blank-keys{display:block;margin-top:3px;font:13.5px/1.5 system-ui,sans-serif;color:#3e7a4a}
+  .blank-bank{display:flex;align-items:center;gap:8px;margin:2px 0;font-size:16px;cursor:pointer}
+  .bp-line{margin:10px 0;font-size:18px;line-height:2.3}
+  .bp-gap{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0 3px;padding:1px 4px;border-radius:9px}
+  .bp-gap input,.bp-gap select{padding:3px 8px;border:1.5px solid var(--gold-soft);border-radius:8px;font-size:16px;max-width:12em}
+  .bp-gap.right{background:#dff4dd}.bp-gap.wrong{background:#fde3dc}
+  .bp-fix{color:#2e6b58;font-weight:700;font-size:15px}
   .choice-row .letter{font-family:'Marcellus';width:22px;text-align:center;color:#8a7654}
   .builder-actions{display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;background:#fff;padding:12px 0 2px;border-top:1px dashed var(--gold-soft);margin-top:6px}
   .toggle{display:inline-flex;align-items:center;gap:8px;font-family:'Marcellus';font-size:14.5px;cursor:pointer}
@@ -791,6 +801,7 @@ body{font-variant-numeric:lining-nums}
               <button class="btn ghost" id="add-question-btn">＋ Add multiple-choice question</button>
               <button class="btn ghost" id="add-tf-btn">＋ Add true / false</button>
               <button class="btn ghost" id="add-match-btn">＋ Add matching</button>
+              <button class="btn ghost" id="add-blank-btn">＋ Add fill in the blank</button>
             </div>
 
             <div class="builder-actions">
@@ -1787,6 +1798,32 @@ function blankQuestion(tf){
 function blankMatch(){
   return { type:'match', q:'Match each item with its pair.', pairs:[{ l:'', r:'' }, { l:'', r:'' }, { l:'', r:'' }], choices:[], answer:0, explain:'' };
 }
+/* fill in the blank: the missing words are in [square brackets] in the sentence; [six/6] = either is right */
+function blankFill(){
+  return { type:'blank', q:'', bank:false, extra:[], choices:[], answer:0, explain:'' };
+}
+function blankGaps(q){
+  return Array.from(String(q || '').matchAll(/\[([^\]]*)\]/g), m => m[1].split('/').map(w => w.trim()).filter(Boolean));
+}
+/* the same lenient check the student apps use: no capitals, tashkeel, accents or ʿ marks; one alef/yaa */
+function blankNorm(s){
+  return String(s || '').normalize('NFD').replace(/[̀-ًͯ-ٰٟۖ-ۭـʻ-ʿ'’‘`]/g, '')
+    .toLowerCase().replace(/[إأآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/[-_\s ]+/g, ' ')
+    .replace(/^[\s.,;:!?؟،؛"()«»“”]+|[\s.,;:!?؟،؛"()«»“”]+$/g, '').trim();
+}
+function blankRight(typed, accepted){ const t = blankNorm(typed); return !!t && accepted.some(a => blankNorm(a) === t); }
+function blankSee(q){
+  const gaps = blankGaps(q);
+  if(!gaps.length) return '<i>Put the missing word in [square brackets].</i>';
+  let gi = 0;
+  return escapeHtml(q).replace(/\[([^\]]*)\]/g, () => '<b class="blank-gap">' + (++gi) + ' ______</b>') +
+    '<small class="blank-keys" dir="ltr">Right answers: ' + gaps.map((g, i) => (i + 1) + '. ' + (g.length ? g.map(a => '<bdi>' + escapeHtml(a) + '</bdi>').join(' or ') : '<b style="color:#a3352b">empty!</b>')).join(' · ') + '</small>';
+}
+function blankEditorHtml(item){
+  return '<div class="blank-see"><small>Students see</small><span data-see dir="auto">' + blankSee(item.q) + '</span></div>' +
+    '<label class="blank-bank"><input type="checkbox" data-f="bank"' + (item.bank ? ' checked' : '') + '> Word bank — students tap a word instead of typing</label>' +
+    (item.bank ? '<div class="field" style="margin:6px 0 0"><input data-f="extra" dir="auto" placeholder="Extra wrong words to mix in, separated by commas (optional)" value="' + escapeHtml((item.extra || []).join(', ')) + '"></div>' : '');
+}
 function quizStats(quiz){
   const rows = [];
   studentsCache.forEach(s => {
@@ -1853,13 +1890,13 @@ function renderQuestions(){
   $('question-count').textContent = '(' + qs.length + ')';
   qs.forEach((item, qi) => {
     const card = document.createElement('div'); card.className = 'q-card';
-    const match = item.type === 'match';
+    const match = item.type === 'match', blank = item.type === 'blank';
     if(match && !(Array.isArray(item.pairs) && item.pairs.length)) item.pairs = [{ l:'', r:'' }, { l:'', r:'' }];
     card.innerHTML =
-      '<div class="q-num"><span>Question ' + (qi + 1) + (match ? ' · 🧩 Matching' : '') + '</span><span class="q-tools">' +
+      '<div class="q-num"><span>Question ' + (qi + 1) + (match ? ' · 🧩 Matching' : blank ? ' · ✏️ Fill in the blank' : '') + '</span><span class="q-tools">' +
         '<button data-t="up" title="Move up">↑</button><button data-t="down" title="Move down">↓</button><button data-t="copy" title="Duplicate">⧉</button><button data-t="del" title="Delete">🗑</button></span></div>' +
-      '<div class="field" style="margin-bottom:8px"><textarea data-f="q" placeholder="' + (match ? 'Instruction, e.g. Match each word with its meaning' : 'Type the question… (Arabic is fine too)') + '">' + escapeHtml(item.q) + '</textarea></div>' +
-      (match
+      '<div class="field" style="margin-bottom:8px"><textarea data-f="q"' + (blank ? ' dir="auto"' : '') + ' placeholder="' + (match ? 'Instruction, e.g. Match each word with its meaning' : blank ? 'Write the sentence with the missing word in [square brackets], e.g. There are [six] Izhar letters.' : 'Type the question… (Arabic is fine too)') + '">' + escapeHtml(item.q) + '</textarea></div>' +
+      (blank ? blankEditorHtml(item) : match
         ? item.pairs.map((p, pi) => '<div class="match-row"><span class="letter">' + (pi + 1) + '</span><input type="text" dir="auto" data-pl="' + pi + '" value="' + escapeHtml(p.l) + '" placeholder="Left item ' + (pi + 1) + '"><span class="match-arrow" aria-hidden="true">↔</span><input type="text" dir="auto" data-pr="' + pi + '" value="' + escapeHtml(p.r) + '" placeholder="Its match">' +
             (item.pairs.length > 2 ? '<button class="btn ghost small" data-prm="' + pi + '" title="Remove pair" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
           (item.pairs.length < 8 ? '<button class="linkbtn" data-t="addpair">＋ add another pair</button>' : '')
@@ -1867,8 +1904,13 @@ function renderQuestions(){
             (item.choices.length > 2 ? '<button class="btn ghost small" data-rm="' + ci + '" title="Remove option" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
           (item.choices.length < 6 ? '<button class="linkbtn" data-t="addopt">＋ add another answer</button>' : '')) +
       '<div class="field" style="margin:8px 0 0"><input data-f="explain" placeholder="Explanation shown after answering (optional)" value="' + escapeHtml(item.explain || '') + '"></div>' +
-      '<p class="muted" style="margin:6px 0 0">' + (match ? 'Students see the left items in this order and the matches mixed up, and pair each one. Every pair must be right for the point.' : 'Tick the circle beside the correct answer.') + '</p>';
-    card.querySelector('[data-f="q"]').oninput = e => { item.q = e.target.value; };
+      '<p class="muted" style="margin:6px 0 0">' + (blank ? 'Put each missing word in [square brackets]. More than one right answer? Separate them with / — e.g. [six/6]. Up to 5 blanks; every blank must be right for the point. Capitals, accents and Arabic tashkeel don’t matter.' : match ? 'Students see the left items in this order and the matches mixed up, and pair each one. Every pair must be right for the point.' : 'Tick the circle beside the correct answer.') + '</p>';
+    card.querySelector('[data-f="q"]').oninput = e => { item.q = e.target.value; if(blank) card.querySelector('[data-see]').innerHTML = blankSee(item.q); };
+    if(blank){
+      card.querySelector('[data-f="bank"]').onchange = e => { item.bank = e.target.checked; renderQuestions(); };
+      const ex = card.querySelector('[data-f="extra"]');
+      if(ex) ex.oninput = e => { item.extra = e.target.value.split(/[,،]/).map(w => w.trim()).filter(Boolean); };
+    }
     card.querySelector('[data-f="explain"]').oninput = e => { item.explain = e.target.value; };
     card.querySelectorAll('[data-c]').forEach(inp => inp.oninput = e => { item.choices[+inp.dataset.c] = e.target.value; });
     card.querySelectorAll('[data-ans]').forEach(r => r.onchange = () => { item.answer = +r.dataset.ans; renderQuestions(); });
@@ -1899,6 +1941,16 @@ function renderQuestions(){
 function cleanQuestions(){
   const out = [], problems = [];
   editingQuiz.questions.forEach((item, qi) => {
+    if(item.type === 'blank'){
+      const q = String(item.q || '').trim(), gaps = blankGaps(q), n = 'Question ' + (qi + 1);
+      if(!q) problems.push(n + ' has no text.');
+      else if(/[\[\]]/.test(q.replace(/\[[^\]]*\]/g, ''))) problems.push(n + ': a [ bracket ] is not closed.');
+      else if(!gaps.length) problems.push(n + ': put the missing word in [square brackets], e.g. There are [six] letters.');
+      else if(gaps.some(g => !g.length)) problems.push(n + ' has an empty [ ] — write the missing word inside it.');
+      else if(gaps.length > 5) problems.push(n + ' has more than 5 blanks — split it into two questions.');
+      out.push({ type: 'blank', q, bank: !!item.bank, extra: item.bank ? (item.extra || []).map(w => String(w).trim()).filter(Boolean).slice(0, 10) : [], choices: [], answer: 0, explain: String(item.explain || '').trim() });
+      return;
+    }
     if(item.type === 'match'){
       const pairs = [];
       (item.pairs || []).forEach((p, pi) => { const l = String(p.l || '').trim(), r = String(p.r || '').trim();
@@ -1947,6 +1999,26 @@ function previewQuiz(){
   const body = $('preview-body'); body.innerHTML = editingQuiz.instructions ? '<p><i>' + escapeHtml(editingQuiz.instructions) + '</i></p>' : '';
   questions.forEach((item, qi) => {
     const box = document.createElement('div'); box.className = 'preview-q';
+    if(item.type === 'blank'){
+      /* students type (or tap a word from the bank) in the app; here each blank is a box or a list */
+      const gaps = blankGaps(item.q);
+      const words = gaps.map(g => g[0]).concat((item.extra || []).filter(w => !gaps.some(g => g.some(a => blankNorm(a) === blankNorm(w))))).sort(() => Math.random() - .5);
+      let gi = 0;
+      box.innerHTML = '<b>' + (qi + 1) + '.</b> <span class="muted">(✏️ fill in the blank' + (item.bank ? ' · word bank' : '') + ')</span><div class="bp-line" dir="auto">' +
+        escapeHtml(item.q).replace(/\[([^\]]*)\]/g, () => { const i = gi++; return '<span class="bp-gap">' + (item.bank
+          ? '<select data-bp="' + i + '"><option value="">— choose —</option>' + Array.from(new Set(words)).map(w => '<option>' + escapeHtml(w) + '</option>').join('') + '</select>'
+          : '<input data-bp="' + i + '" dir="auto" size="9" autocomplete="off">') + '<span class="bp-fix" data-fix="' + i + '"></span></span>'; }) +
+        '</div><button class="btn ghost small" data-check>Check</button><p class="muted" data-exp></p>';
+      box.querySelector('[data-check]').onclick = () => {
+        let right = 0;
+        box.querySelectorAll('[data-bp]').forEach(el => { const i = +el.dataset.bp, ok = blankRight(el.value, gaps[i]); if(ok) right++;
+          el.parentElement.classList.toggle('right', ok); el.parentElement.classList.toggle('wrong', !ok);
+          box.querySelector('[data-fix="' + i + '"]').textContent = ok ? '' : '✓ ' + gaps[i].join(' / '); });
+        box.querySelector('[data-exp]').textContent = right + ' of ' + gaps.length + ' right' + (right === gaps.length ? ' ✓' : '') + (item.explain ? ' · ' + item.explain : '');
+      };
+      body.appendChild(box);
+      return;
+    }
     if(item.type === 'match'){
       /* students tap to pair in the app; here each left item has a list to choose its match from */
       const order = item.pairs.map((_, i) => i).sort(() => Math.random() - .5);
@@ -3252,6 +3324,7 @@ function wire(){
   $('add-question-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(false)); renderQuestions(); };
   $('add-tf-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(true)); renderQuestions(); };
   $('add-match-btn').onclick = () => { editingQuiz.questions.push(blankMatch()); renderQuestions(); };
+  $('add-blank-btn').onclick = () => { editingQuiz.questions.push(blankFill()); renderQuestions(); const all = document.querySelectorAll('#question-list [data-f="q"]'); if(all.length) all[all.length - 1].focus(); };
   $('save-quiz-btn').onclick = () => saveQuiz(false);
   $('duplicate-quiz-btn').onclick = () => saveQuiz(true);
   $('cancel-quiz-btn').onclick = () => { pendingAssign = null; editingQuiz = null; renderQuizList(); showQuizPane('quiz-welcome'); };

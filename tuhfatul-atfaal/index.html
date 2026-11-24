@@ -1682,6 +1682,73 @@ document.head.insertAdjacentHTML('beforeend',`<style id="tq-match-style">
 .tqm-r.used{opacity:.45;border-style:solid;background:#fff}
 .tqm-hint{margin:2px 0 4px;color:#6b5d48;font-size:15px}
 </style>`);
+/* A fill-in-the-blank question from the Teacher portal (type 'blank'): the missing words
+   are in [square brackets] in the sentence ([six/6] = either is right). The student types
+   each word, or taps it from a word bank when the teacher chose one. One point when every
+   blank is right; capitals, accents, Arabic tashkeel and ʿ marks don't matter. */
+let tqBlank=null;
+function tqBlankGaps(s){return Array.from(String(s||'').matchAll(/\[([^\]]*)\]/g),m=>m[1].split('/').map(w=>w.trim()).filter(Boolean))}
+function tqBlankNorm(s){return String(s||'').normalize('NFD').replace(/[̀-ًͯ-ٰٟۖ-ۭـʻ-ʿ'’‘`]/g,'').toLowerCase().replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/[-_\s ]+/g,' ').replace(/^[\s.,;:!?؟،؛"()«»“”]+|[\s.,;:!?؟،؛"()«»“”]+$/g,'').trim()}
+function tqBlankRight(typed,accepted){const t=tqBlankNorm(typed);return !!t&&accepted.some(a=>tqBlankNorm(a)===t)}
+function renderTeacherBlank(){
+ const {quiz,index}=tqRun,q=quiz.questions[index],gaps=tqBlankGaps(q.q),n=gaps.length,last=index===quiz.questions.length-1,bank=!!q.bank;
+ if(!tqBlank||tqBlank.index!==index){
+  let words=[];
+  if(bank){words=gaps.map(g=>g[0]||'');(Array.isArray(q.extra)?q.extra:[]).forEach(w=>{w=String(w||'').trim();if(w&&!gaps.some(g=>g.some(a=>tqBlankNorm(a)===tqBlankNorm(w)))&&!words.some(x=>tqBlankNorm(x)===tqBlankNorm(w)))words.push(w)});
+   for(let i=words.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[words[i],words[j]]=[words[j],words[i]]}}
+  tqBlank={index,vals:Array(n).fill(''),pick:Array(n).fill(null),words,sel:0,checked:false,msg:'',ok:false,good:[]};
+ }
+ const m=tqBlank,val=i=>bank?(m.pick[i]!=null?m.words[m.pick[i]]:''):m.vals[i],filled=()=>gaps.every((_,i)=>String(val(i)).trim());
+ const used=new Set(m.pick.filter(v=>v!=null)),dots=quiz.questions.map((_,i)=>`<span class="${i<index?'done':i===index?'now':''}"></span>`).join('');
+ const size=g=>Math.min(16,Math.max(6,...g.map(a=>a.length+2)));
+ let gi=0;
+ const line=escapeHtml(q.q).replace(/\[([^\]]*)\]/g,()=>{const i=gi++,g=gaps[i]||[];
+  if(m.checked){const ok=m.good[i];return `<span class="tqb-gap ${ok?'ok':'no'}"><span class="tqb-val" dir="auto">${ok?'✓ '+escapeHtml(g.find(a=>tqBlankNorm(a)===tqBlankNorm(val(i)))||val(i)):escapeHtml(String(val(i)).trim())||'—'}</span>${ok?'':`<span class="tqb-fix" dir="auto">✓ ${escapeHtml(g.join(' / '))}</span>`}</span>`}
+  if(bank)return `<button type="button" class="tqb-slot${m.sel===i?' sel':''}${m.pick[i]!=null?' done':''}" data-bs="${i}" dir="auto" aria-label="Blank ${i+1}">${m.pick[i]!=null?escapeHtml(val(i)):`<span class="tqb-num">${n>1?i+1:''}</span>`}</button>`;
+  return `<input class="tqb-in" data-bi="${i}" dir="auto" size="${size(g)}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="${i<n-1?'next':'done'}" aria-label="Blank ${n>1?i+1:''}" value="${escapeHtml(m.vals[i])}">`});
+ $('#tqBody').innerHTML=`<div class="kicker">📝 ${escapeHtml(quiz.title)}</div>${index===0&&quiz.instructions?`<p><i>${escapeHtml(quiz.instructions)}</i></p>`:''}<div class="tq-progress">${dots}</div><p class="kicker">Question ${index+1} of ${quiz.questions.length} · ✏️ Fill in the blank</p>`
+  +(m.checked?'':`<p class="tqb-hint">${bank?(n>1?'Tap a gap, then tap the word that goes there.':'Tap the word that goes in the gap.'):(n>1?'Type the missing words in the boxes.':'Type the missing word in the box.')}</p>`)
+  +`<div class="tq-q tqb-line" dir="auto">${line}</div>`
+  +(bank&&!m.checked?`<div class="tqb-bank">${m.words.map((w,j)=>`<button type="button" class="tqb-chip${used.has(j)?' used':''}" data-bw="${j}" dir="auto">${escapeHtml(w)}</button>`).join('')}</div>`:'')
+  +`<div class="feedback${m.checked?(m.ok?' good':' bad'):''}" id="tqFeedback" aria-live="polite">${escapeHtml(m.msg)}</div><div id="tqExplain">${m.checked&&q.explain?`<div class="tq-explain">💡 ${escapeHtml(q.explain)}</div>`:''}</div>`;
+ if(!m.checked){
+  $('#tqActions').innerHTML=`<button class="ghost" id="tqQuit">← Back to map</button><button class="btn green" id="tqCheck"${filled()?'':' disabled'}>Check ✓</button>`;
+  $('#tqQuit').onclick=()=>{if(confirm('Leave this quiz? Your answers so far will not be saved.')){tqRun=null;tqBlank=null;renderMap();show('mapScreen')}};
+  const check=()=>{if(!filled())return;m.good=gaps.map((g,i)=>tqBlankRight(val(i),g));const good=m.good.filter(Boolean).length;m.checked=true;m.ok=good===n;
+   tqRun.answers[index]=m.ok?0:-1;if(m.ok)tqRun.correct++;
+   m.msg=m.ok?(n>1?'All correct! ⭐':'Correct! ⭐'):(n>1?good+' of '+n+' right — the right words are shown in green.':'Not quite — the right word is shown in green.');
+   if(m.ok)happySound();else tryAgainSound();renderTeacherBlank()};
+  $('#tqCheck').onclick=check;
+  document.querySelectorAll('[data-bi]').forEach(inp=>{
+   inp.oninput=()=>{m.vals[+inp.dataset.bi]=inp.value;$('#tqCheck').disabled=!filled()};
+   inp.onkeydown=e=>{if(e.key!=='Enter')return;e.preventDefault();const nx=document.querySelector(`[data-bi="${+inp.dataset.bi+1}"]`);if(nx)nx.focus();else if(filled())check()}});
+  document.querySelectorAll('[data-bs]').forEach(b=>b.onclick=()=>{const i=+b.dataset.bs;if(m.sel===i&&m.pick[i]!=null)m.pick[i]=null;m.sel=i;renderTeacherBlank()});
+  document.querySelectorAll('[data-bw]').forEach(b=>b.onclick=()=>{const j=+b.dataset.bw,t=m.sel!=null?m.sel:m.pick.findIndex(v=>v==null);if(t<0)return;
+   m.pick=m.pick.map(v=>v===j?null:v);m.pick[t]=j;let next=null;for(let k=1;k<=n;k++){const c=(t+k)%n;if(m.pick[c]==null){next=c;break}}m.sel=next;renderTeacherBlank()});
+ }else{
+  $('#tqActions').innerHTML=`<button class="btn green" id="tqNext">${last?'See my score →':'Next question →'}</button>`;
+  $('#tqNext').onclick=()=>{tqBlank=null;if(last)finishTeacherQuiz();else{tqRun.index++;renderTeacherQuizQuestion()}};$('#tqNext').focus();
+ }
+}
+const renderTeacherQuizQuestionBeforeBlank=renderTeacherQuizQuestion;
+renderTeacherQuizQuestion=function(){const q=tqRun&&tqRun.quiz.questions[tqRun.index];if(q&&q.type==='blank'){tqBlank=null;renderTeacherBlank();return}return renderTeacherQuizQuestionBeforeBlank.apply(this,arguments)};
+document.head.insertAdjacentHTML('beforeend',`<style id="tq-blank-style">
+.tqb-line{line-height:2.25;overflow-wrap:anywhere}
+.tqb-in{font:inherit;font-size:21px;color:var(--blue);font-weight:700;min-width:0;max-width:100%;padding:2px 10px;margin:0 3px;border:0;border-bottom:3px solid var(--sky);border-radius:10px 10px 4px 4px;background:#f3faff;text-align:center;vertical-align:baseline}
+.tqb-in:focus{outline:none;background:#e6f4ff;box-shadow:0 0 0 3px #3f9fc944}
+.tqb-slot{display:inline-flex;align-items:center;justify-content:center;min-width:4.2em;min-height:1.6em;padding:1px 12px;margin:0 3px;border:2px dashed var(--sky);border-radius:12px;background:#f3faff;font:inherit;font-size:20px;font-weight:700;color:var(--blue);cursor:pointer;vertical-align:baseline}
+.tqb-slot.done{border-style:solid;background:#fff}
+.tqb-slot.sel{border-color:var(--gold);box-shadow:0 0 0 4px #e8b54a44;background:#fffaf0}
+.tqb-num{font-size:14px;color:#8a7a62}
+.tqb-bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:4px 0 6px}
+.tqb-chip{padding:10px 16px;border:2px solid var(--gold2);border-radius:999px;background:#fff;font:inherit;font-size:18px;font-weight:700;color:var(--navy);cursor:pointer}
+.tqb-chip.used{opacity:.4;border-style:dashed}
+.tqb-gap{display:inline-flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px;margin:0 3px;padding:0 10px;border-radius:12px;font-weight:700}
+.tqb-gap.ok{background:#dff4dd;color:#287c39}
+.tqb-gap.no{background:#ffe9e2}.tqb-gap.no .tqb-val{color:#a4553e;text-decoration:line-through;font-weight:600}
+.tqb-fix{color:#2e6b58;font-weight:800}
+.tqb-hint{margin:2px 0 4px;color:#6b5d48;font-size:15px}
+</style>`);
 const renderMapBeforeTeacherQuizzes=renderMap;renderMap=function(){renderMapBeforeTeacherQuizzes();renderTeacherQuizzes();loadTeacherQuizzes(false)};
 
 /* Announcements (with a class comment section) and private messages. */

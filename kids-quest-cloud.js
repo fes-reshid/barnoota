@@ -727,6 +727,16 @@ function adminSaveQuiz(quiz){
     classId: String(q.classId || ''),
     published: !!q.published,
     questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
+      /* fill in the blank: the missing words are in [square brackets] in q ([six/6] = either);
+         bank = students tap words (the answers plus the extra wrong words) instead of typing */
+      if(item && item.type === 'blank') return {
+        type: 'blank',
+        q: String(item.q || '').trim(),
+        bank: !!item.bank,
+        extra: (Array.isArray(item.extra) ? item.extra : []).map(function(w){ return String(w || '').trim(); }).filter(Boolean).slice(0, 10),
+        choices: [], answer: 0,
+        explain: String(item.explain || '').trim()
+      };
       /* a matching question: pairs of a left item and its match; one point when every pair is right */
       if(item && item.type === 'match') return {
         type: 'match',
