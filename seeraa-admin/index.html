@@ -312,6 +312,12 @@ if(/[?&]embed=1(&|$)/.test(location.search))document.documentElement.classList.a
   .mp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 10px;border:2px solid var(--gold-soft);border-radius:12px;background:#fff;font-size:16px}
   .mp-row select{max-width:60%;padding:6px 8px;border-radius:9px;border:1.5px solid var(--gold-soft);font-size:15px}
   .mp-row.right{background:#dff4dd;border-color:#3e9c4a}.mp-row.wrong{background:#fde3dc;border-color:#d85c38}
+  .sort-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:6px}
+  .sort-group{border:1.5px dashed var(--gold-soft);border-radius:12px;padding:9px;background:#fffdf7}
+  .sort-head{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:7px;align-items:center;margin-bottom:7px}
+  .sort-head .letter{font-family:'Marcellus';text-align:center;color:#8a7654}
+  .sort-head input{min-width:0;padding:7px 10px;border:1.5px solid var(--gold-soft);border-radius:10px;font-weight:700;font-size:16px;background:#fff}
+  .sort-group textarea{width:100%;box-sizing:border-box;min-height:84px;padding:8px 10px;border:1.5px solid var(--gold-soft);border-radius:10px;font-size:16px;line-height:1.5;background:#fff;resize:vertical}
   .blank-see{display:grid;gap:3px;padding:9px 12px;margin-bottom:8px;border:1.5px dashed var(--gold-soft);border-radius:12px;background:#fffdf7;font-size:17px;line-height:1.6}
   .blank-see > small{font:600 12px system-ui,sans-serif;color:#8a7654;text-transform:uppercase;letter-spacing:.04em}
   .blank-gap{display:inline-block;padding:0 4px;color:#2c6aa0;font-weight:700;white-space:nowrap}
@@ -802,6 +808,7 @@ body{font-variant-numeric:lining-nums}
               <button class="btn ghost" id="add-tf-btn">＋ Add true / false</button>
               <button class="btn ghost" id="add-match-btn">＋ Add matching</button>
               <button class="btn ghost" id="add-blank-btn">＋ Add fill in the blank</button>
+              <button class="btn ghost" id="add-sort-btn">＋ Add drag and drop</button>
             </div>
 
             <div class="builder-actions">
@@ -1799,6 +1806,16 @@ function blankMatch(){
   return { type:'match', q:'Match each item with its pair.', pairs:[{ l:'', r:'' }, { l:'', r:'' }, { l:'', r:'' }], choices:[], answer:0, explain:'' };
 }
 /* fill in the blank: the missing words are in [square brackets] in the sentence; [six/6] = either is right */
+/* drag and drop: 2–4 named boxes, each with the items that belong in it; students drag every item into its box */
+function blankSort(){
+  return { type:'sort', q:'Drag each one into the right box.', groups:[{ name:'', items:[] }, { name:'', items:[] }], choices:[], answer:0, explain:'' };
+}
+function sortEditorHtml(item){
+  return '<div class="sort-groups">' + item.groups.map((g, gi) => '<div class="sort-group"><div class="sort-head"><span class="letter">' + (gi + 1) + '</span><input type="text" dir="auto" data-gn="' + gi + '" value="' + escapeHtml(g.name) + '" placeholder="Box ' + (gi + 1) + ' name, e.g. ' + ['Izhar', 'Idgham', 'Iqlab', 'Ikhfa'][gi] + '">' +
+      (item.groups.length > 2 ? '<button class="btn ghost small" data-grm="' + gi + '" title="Remove box" style="padding:3px 9px">✕</button>' : '') + '</div>' +
+      '<textarea dir="auto" data-gi="' + gi + '" rows="3" placeholder="What goes in this box — one per line">' + escapeHtml((g.items || []).join('\n')) + '</textarea></div>').join('') + '</div>' +
+    (item.groups.length < 4 ? '<button class="linkbtn" data-t="addgroup">＋ add another box</button>' : '');
+}
 function blankFill(){
   return { type:'blank', q:'', bank:false, extra:[], choices:[], answer:0, explain:'' };
 }
@@ -1890,13 +1907,14 @@ function renderQuestions(){
   $('question-count').textContent = '(' + qs.length + ')';
   qs.forEach((item, qi) => {
     const card = document.createElement('div'); card.className = 'q-card';
-    const match = item.type === 'match', blank = item.type === 'blank';
+    const match = item.type === 'match', blank = item.type === 'blank', sort = item.type === 'sort';
+    if(sort && !(Array.isArray(item.groups) && item.groups.length)) item.groups = [{ name:'', items:[] }, { name:'', items:[] }];
     if(match && !(Array.isArray(item.pairs) && item.pairs.length)) item.pairs = [{ l:'', r:'' }, { l:'', r:'' }];
     card.innerHTML =
-      '<div class="q-num"><span>Question ' + (qi + 1) + (match ? ' · 🧩 Matching' : blank ? ' · ✏️ Fill in the blank' : '') + '</span><span class="q-tools">' +
+      '<div class="q-num"><span>Question ' + (qi + 1) + (match ? ' · 🧩 Matching' : blank ? ' · ✏️ Fill in the blank' : sort ? ' · 🖐️ Drag and drop' : '') + '</span><span class="q-tools">' +
         '<button data-t="up" title="Move up">↑</button><button data-t="down" title="Move down">↓</button><button data-t="copy" title="Duplicate">⧉</button><button data-t="del" title="Delete">🗑</button></span></div>' +
-      '<div class="field" style="margin-bottom:8px"><textarea data-f="q"' + (blank ? ' dir="auto"' : '') + ' placeholder="' + (match ? 'Instruction, e.g. Match each word with its meaning' : blank ? 'Write the sentence with the missing word in [square brackets], e.g. There are [six] Izhar letters.' : 'Type the question… (Arabic is fine too)') + '">' + escapeHtml(item.q) + '</textarea></div>' +
-      (blank ? blankEditorHtml(item) : match
+      '<div class="field" style="margin-bottom:8px"><textarea data-f="q"' + (blank ? ' dir="auto"' : '') + ' placeholder="' + (match ? 'Instruction, e.g. Match each word with its meaning' : sort ? 'Instruction, e.g. Drag each word into its rule' : blank ? 'Write the sentence with the missing word in [square brackets], e.g. There are [six] Izhar letters.' : 'Type the question… (Arabic is fine too)') + '">' + escapeHtml(item.q) + '</textarea></div>' +
+      (sort ? sortEditorHtml(item) : blank ? blankEditorHtml(item) : match
         ? item.pairs.map((p, pi) => '<div class="match-row"><span class="letter">' + (pi + 1) + '</span><input type="text" dir="auto" data-pl="' + pi + '" value="' + escapeHtml(p.l) + '" placeholder="Left item ' + (pi + 1) + '"><span class="match-arrow" aria-hidden="true">↔</span><input type="text" dir="auto" data-pr="' + pi + '" value="' + escapeHtml(p.r) + '" placeholder="Its match">' +
             (item.pairs.length > 2 ? '<button class="btn ghost small" data-prm="' + pi + '" title="Remove pair" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
           (item.pairs.length < 8 ? '<button class="linkbtn" data-t="addpair">＋ add another pair</button>' : '')
@@ -1904,7 +1922,7 @@ function renderQuestions(){
             (item.choices.length > 2 ? '<button class="btn ghost small" data-rm="' + ci + '" title="Remove option" style="padding:3px 9px">✕</button>' : '') + '</div>').join('') +
           (item.choices.length < 6 ? '<button class="linkbtn" data-t="addopt">＋ add another answer</button>' : '')) +
       '<div class="field" style="margin:8px 0 0"><input data-f="explain" placeholder="Explanation shown after answering (optional)" value="' + escapeHtml(item.explain || '') + '"></div>' +
-      '<p class="muted" style="margin:6px 0 0">' + (blank ? 'Put each missing word in [square brackets]. More than one right answer? Separate them with / — e.g. [six/6]. Up to 5 blanks; every blank must be right for the point. Capitals, accents and Arabic tashkeel don’t matter.' : match ? 'Students see the left items in this order and the matches mixed up, and pair each one. Every pair must be right for the point.' : 'Tick the circle beside the correct answer.') + '</p>';
+      '<p class="muted" style="margin:6px 0 0">' + (sort ? 'Give each box a name and list what goes in it, one per line. Students see everything mixed up and drag each one into its box (or tap it, then the box). Every item must be in the right box for the point. 2–4 boxes, up to 16 items.' : blank ? 'Put each missing word in [square brackets]. More than one right answer? Separate them with / — e.g. [six/6]. Up to 5 blanks; every blank must be right for the point. Capitals, accents and Arabic tashkeel don’t matter.' : match ? 'Students see the left items in this order and the matches mixed up, and pair each one. Every pair must be right for the point.' : 'Tick the circle beside the correct answer.') + '</p>';
     card.querySelector('[data-f="q"]').oninput = e => { item.q = e.target.value; if(blank) card.querySelector('[data-see]').innerHTML = blankSee(item.q); };
     if(blank){
       card.querySelector('[data-f="bank"]').onchange = e => { item.bank = e.target.checked; renderQuestions(); };
@@ -1922,6 +1940,9 @@ function renderQuestions(){
     card.querySelectorAll('[data-pl]').forEach(inp => inp.oninput = e => { item.pairs[+inp.dataset.pl].l = e.target.value; });
     card.querySelectorAll('[data-pr]').forEach(inp => inp.oninput = e => { item.pairs[+inp.dataset.pr].r = e.target.value; });
     card.querySelectorAll('[data-prm]').forEach(b => b.onclick = () => { item.pairs.splice(+b.dataset.prm, 1); renderQuestions(); });
+    card.querySelectorAll('[data-gn]').forEach(inp => inp.oninput = e => { item.groups[+inp.dataset.gn].name = e.target.value; });
+    card.querySelectorAll('[data-gi]').forEach(inp => inp.oninput = e => { item.groups[+inp.dataset.gi].items = e.target.value.split('\n').map(x => x.trim()).filter(Boolean); });
+    card.querySelectorAll('[data-grm]').forEach(b => b.onclick = () => { item.groups.splice(+b.dataset.grm, 1); renderQuestions(); });
     card.querySelectorAll('[data-t]').forEach(b => b.onclick = () => {
       const t = b.dataset.t;
       if(t === 'up' && qi > 0){ [qs[qi - 1], qs[qi]] = [qs[qi], qs[qi - 1]]; }
@@ -1930,6 +1951,7 @@ function renderQuestions(){
       else if(t === 'del'){ if(qs.length === 1){ toast('A quiz needs at least one question.'); return; } qs.splice(qi, 1); }
       else if(t === 'addopt'){ item.choices.push(''); }
       else if(t === 'addpair'){ item.pairs.push({ l:'', r:'' }); }
+      else if(t === 'addgroup'){ item.groups.push({ name:'', items:[] }); }
       renderQuestions();
     });
     box.appendChild(card);
@@ -1941,6 +1963,20 @@ function renderQuestions(){
 function cleanQuestions(){
   const out = [], problems = [];
   editingQuiz.questions.forEach((item, qi) => {
+    if(item.type === 'sort'){
+      const n = 'Question ' + (qi + 1), groups = (item.groups || []).map(g => ({ name: String(g.name || '').trim(), items: (g.items || []).map(x => String(x).trim()).filter(Boolean) }));
+      groups.forEach((g, gi) => {
+        if(!g.name && g.items.length) problems.push(n + ': box ' + (gi + 1) + ' needs a name.');
+        else if(g.name && !g.items.length) problems.push(n + ': write at least one item for the “' + g.name + '” box.');
+      });
+      const kept = groups.filter(g => g.name && g.items.length), seen = new Set();
+      const dup = kept.flatMap(g => g.items).find(x => { const k = x.toLowerCase(); if(seen.has(k)) return true; seen.add(k); return false; });
+      if(kept.length < 2) problems.push(n + ' needs at least two boxes, each with a name and what goes in it.');
+      else if(dup) problems.push(n + ': “' + dup + '” is written twice — each item can only have one right box.');
+      else if(seen.size > 16) problems.push(n + ' has more than 16 items — split it into two questions.');
+      out.push({ type: 'sort', q: String(item.q || '').trim() || 'Drag each one into the right box.', groups: kept, choices: [], answer: 0, explain: String(item.explain || '').trim() });
+      return;
+    }
     if(item.type === 'blank'){
       const q = String(item.q || '').trim(), gaps = blankGaps(q), n = 'Question ' + (qi + 1);
       if(!q) problems.push(n + ' has no text.');
@@ -1999,6 +2035,20 @@ function previewQuiz(){
   const body = $('preview-body'); body.innerHTML = editingQuiz.instructions ? '<p><i>' + escapeHtml(editingQuiz.instructions) + '</i></p>' : '';
   questions.forEach((item, qi) => {
     const box = document.createElement('div'); box.className = 'preview-q';
+    if(item.type === 'sort'){
+      /* students drag in the app; here each item has a list of the boxes */
+      const all = item.groups.flatMap((g, gi) => g.items.map(t => ({ t, gi }))).sort(() => Math.random() - .5);
+      box.innerHTML = '<b>' + (qi + 1) + '.</b> ' + escapeHtml(item.q) + ' <span class="muted">(🖐️ drag and drop · boxes: ' + item.groups.map(g => escapeHtml(g.name)).join(', ') + ')</span><div class="match-preview">' +
+        all.map((x, xi) => '<label class="mp-row"><span dir="auto">' + escapeHtml(x.t) + '</span><select data-sp="' + xi + '"><option value="">— which box? —</option>' + item.groups.map((g, gi) => '<option value="' + gi + '">' + escapeHtml(g.name) + '</option>').join('') + '</select></label>').join('') +
+        '</div><button class="btn ghost small" data-check>Check</button><p class="muted" data-exp></p>';
+      box.querySelector('[data-check]').onclick = () => {
+        let right = 0;
+        box.querySelectorAll('[data-sp]').forEach(sel => { const ok = sel.value !== '' && +sel.value === all[+sel.dataset.sp].gi; if(ok) right++; sel.parentElement.classList.toggle('right', ok); sel.parentElement.classList.toggle('wrong', !ok); });
+        box.querySelector('[data-exp]').textContent = right + ' of ' + all.length + ' right' + (right === all.length ? ' ✓' : '') + (item.explain ? ' · ' + item.explain : '');
+      };
+      body.appendChild(box);
+      return;
+    }
     if(item.type === 'blank'){
       /* students type (or tap a word from the bank) in the app; here each blank is a box or a list */
       const gaps = blankGaps(item.q);
@@ -3324,6 +3374,7 @@ function wire(){
   $('add-question-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(false)); renderQuestions(); };
   $('add-tf-btn').onclick = () => { editingQuiz.questions.push(blankQuestion(true)); renderQuestions(); };
   $('add-match-btn').onclick = () => { editingQuiz.questions.push(blankMatch()); renderQuestions(); };
+  $('add-sort-btn').onclick = () => { editingQuiz.questions.push(blankSort()); renderQuestions(); const all = document.querySelectorAll('#question-list [data-gn="0"]'); if(all.length) all[all.length - 1].focus(); };
   $('add-blank-btn').onclick = () => { editingQuiz.questions.push(blankFill()); renderQuestions(); const all = document.querySelectorAll('#question-list [data-f="q"]'); if(all.length) all[all.length - 1].focus(); };
   $('save-quiz-btn').onclick = () => saveQuiz(false);
   $('duplicate-quiz-btn').onclick = () => saveQuiz(true);

@@ -727,6 +727,18 @@ function adminSaveQuiz(quiz){
     classId: String(q.classId || ''),
     published: !!q.published,
     questions: (Array.isArray(q.questions) ? q.questions : []).map(function(item){
+      /* drag and drop: 2–4 named boxes, each with the items that belong in it; students drag
+         every item into its box, one point when all are right */
+      if(item && item.type === 'sort') return {
+        type: 'sort',
+        q: String(item.q || '').trim(),
+        groups: (Array.isArray(item.groups) ? item.groups : []).map(function(g){ return {
+          name: String((g && g.name) || '').trim(),
+          items: (Array.isArray(g && g.items) ? g.items : []).map(function(x){ return String(x || '').trim(); }).filter(Boolean).slice(0, 16)
+        }; }).filter(function(g){ return g.name && g.items.length; }).slice(0, 4),
+        choices: [], answer: 0,
+        explain: String(item.explain || '').trim()
+      };
       /* fill in the blank: the missing words are in [square brackets] in q ([six/6] = either);
          bank = students tap words (the answers plus the extra wrong words) instead of typing */
       if(item && item.type === 'blank') return {

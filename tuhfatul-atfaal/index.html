@@ -1642,7 +1642,7 @@ function renderTeacherMatch(){
  const m=tqMatch,used=new Set(m.pick.filter(v=>v!=null)),dots=quiz.questions.map((_,i)=>`<span class="${i<index?'done':i===index?'now':''}"></span>`).join('');
  const right=i=>m.pick[i]!=null&&q.pairs[m.pick[i]].r===q.pairs[i].r;
  $('#tqBody').innerHTML=`<div class="kicker">📝 ${escapeHtml(quiz.title)}</div>${index===0&&quiz.instructions?`<p><i>${escapeHtml(quiz.instructions)}</i></p>`:''}<div class="tq-progress">${dots}</div><p class="kicker">Question ${index+1} of ${quiz.questions.length} · 🧩 Matching</p><div class="tq-q">${escapeHtml(q.q||'Match each item with its pair.')}</div>`
-  +(m.checked?'':'<p class="tqm-hint">Tap an item, then tap its match. Tap an item again to change it.</p>')
+  +(m.checked?'':'<p class="tqm-hint">Drag each match onto its item — or tap an item, then its match. Tap an item again to change it.</p>')
   +`<div class="tqm${m.checked?' checked':''}"><div class="tqm-left">${q.pairs.map((p,i)=>{const v=m.pick[i],ok=m.checked?right(i):null;return `<button type="button" class="tqm-l${m.sel===i&&!m.checked?' sel':''}${v!=null?' done':''}${ok===true?' ok':ok===false?' no':''}" data-tml="${i}"${m.checked?' disabled':''}><span class="tqm-n">${ok===true?'✓':ok===false?'✗':i+1}</span><span class="tqm-t" dir="auto">${escapeHtml(p.l)}</span><span class="tqm-ans" dir="auto">${v!=null?'→ '+escapeHtml(q.pairs[v].r):'→ …'}</span>${ok===false?`<span class="tqm-fix" dir="auto">✓ ${escapeHtml(p.r)}</span>`:''}</button>`}).join('')}</div>`
   +(m.checked?'':`<div class="tqm-right">${m.order.map(j=>`<button type="button" class="tqm-r${used.has(j)?' used':''}" data-tmr="${j}" dir="auto">${escapeHtml(q.pairs[j].r)}</button>`).join('')}</div>`)
   +`</div><div class="feedback${m.checked?(m.ok?' good':' bad'):''}" id="tqFeedback" aria-live="polite">${escapeHtml(m.msg)}</div><div id="tqExplain">${m.checked&&q.explain?`<div class="tq-explain">💡 ${escapeHtml(q.explain)}</div>`:''}</div>`;
@@ -1650,6 +1650,7 @@ function renderTeacherMatch(){
   document.querySelectorAll('[data-tml]').forEach(b=>b.onclick=()=>{const i=+b.dataset.tml;if(m.sel===i&&m.pick[i]!=null)m.pick[i]=null;m.sel=i;renderTeacherMatch()});
   document.querySelectorAll('[data-tmr]').forEach(b=>b.onclick=()=>{const j=+b.dataset.tmr,t=m.sel!=null?m.sel:m.pick.findIndex(v=>v==null);if(t<0)return;
    m.pick=m.pick.map(v=>v===j?null:v);m.pick[t]=j;let next=null;for(let k=1;k<=n;k++){const c=(t+k)%n;if(m.pick[c]==null){next=c;break}}m.sel=next;renderTeacherMatch()});
+  tqDragify('[data-tmr]','[data-tml]',(src,dst)=>{m.sel=+dst.dataset.tml;src.click()});
   $('#tqActions').innerHTML=`<button class="ghost" id="tqQuit">← Back to map</button><button class="btn green" id="tqCheck"${m.pick.every(v=>v!=null)?'':' disabled'}>Check ✓</button>`;
   $('#tqQuit').onclick=()=>{if(confirm('Leave this quiz? Your answers so far will not be saved.')){tqRun=null;tqMatch=null;renderMap();show('mapScreen')}};
   $('#tqCheck').onclick=()=>{if(!m.pick.every(v=>v!=null))return;const good=q.pairs.filter((_,i)=>right(i)).length;m.checked=true;m.ok=good===n;
@@ -1707,7 +1708,7 @@ function renderTeacherBlank(){
   if(bank)return `<button type="button" class="tqb-slot${m.sel===i?' sel':''}${m.pick[i]!=null?' done':''}" data-bs="${i}" dir="auto" aria-label="Blank ${i+1}">${m.pick[i]!=null?escapeHtml(val(i)):`<span class="tqb-num">${n>1?i+1:''}</span>`}</button>`;
   return `<input class="tqb-in" data-bi="${i}" dir="auto" size="${size(g)}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="${i<n-1?'next':'done'}" aria-label="Blank ${n>1?i+1:''}" value="${escapeHtml(m.vals[i])}">`});
  $('#tqBody').innerHTML=`<div class="kicker">📝 ${escapeHtml(quiz.title)}</div>${index===0&&quiz.instructions?`<p><i>${escapeHtml(quiz.instructions)}</i></p>`:''}<div class="tq-progress">${dots}</div><p class="kicker">Question ${index+1} of ${quiz.questions.length} · ✏️ Fill in the blank</p>`
-  +(m.checked?'':`<p class="tqb-hint">${bank?(n>1?'Tap a gap, then tap the word that goes there.':'Tap the word that goes in the gap.'):(n>1?'Type the missing words in the boxes.':'Type the missing word in the box.')}</p>`)
+  +(m.checked?'':`<p class="tqb-hint">${bank?(n>1?'Drag each word into its gap — or tap a gap, then the word.':'Drag the word into the gap — or just tap it.'):(n>1?'Type the missing words in the boxes.':'Type the missing word in the box.')}</p>`)
   +`<div class="tq-q tqb-line" dir="auto">${line}</div>`
   +(bank&&!m.checked?`<div class="tqb-bank">${m.words.map((w,j)=>`<button type="button" class="tqb-chip${used.has(j)?' used':''}" data-bw="${j}" dir="auto">${escapeHtml(w)}</button>`).join('')}</div>`:'')
   +`<div class="feedback${m.checked?(m.ok?' good':' bad'):''}" id="tqFeedback" aria-live="polite">${escapeHtml(m.msg)}</div><div id="tqExplain">${m.checked&&q.explain?`<div class="tq-explain">💡 ${escapeHtml(q.explain)}</div>`:''}</div>`;
@@ -1725,6 +1726,7 @@ function renderTeacherBlank(){
   document.querySelectorAll('[data-bs]').forEach(b=>b.onclick=()=>{const i=+b.dataset.bs;if(m.sel===i&&m.pick[i]!=null)m.pick[i]=null;m.sel=i;renderTeacherBlank()});
   document.querySelectorAll('[data-bw]').forEach(b=>b.onclick=()=>{const j=+b.dataset.bw,t=m.sel!=null?m.sel:m.pick.findIndex(v=>v==null);if(t<0)return;
    m.pick=m.pick.map(v=>v===j?null:v);m.pick[t]=j;let next=null;for(let k=1;k<=n;k++){const c=(t+k)%n;if(m.pick[c]==null){next=c;break}}m.sel=next;renderTeacherBlank()});
+  tqDragify('[data-bw]','[data-bs]',(src,dst)=>{m.sel=+dst.dataset.bs;src.click()});
  }else{
   $('#tqActions').innerHTML=`<button class="btn green" id="tqNext">${last?'See my score →':'Next question →'}</button>`;
   $('#tqNext').onclick=()=>{tqBlank=null;if(last)finishTeacherQuiz();else{tqRun.index++;renderTeacherQuizQuestion()}};$('#tqNext').focus();
@@ -1748,6 +1750,81 @@ document.head.insertAdjacentHTML('beforeend',`<style id="tq-blank-style">
 .tqb-gap.no{background:#ffe9e2}.tqb-gap.no .tqb-val{color:#a4553e;text-decoration:line-through;font-weight:600}
 .tqb-fix{color:#2e6b58;font-weight:800}
 .tqb-hint{margin:2px 0 4px;color:#6b5d48;font-size:15px}
+</style>`);
+/* Dragging for teacher-quiz questions: press on a chip and move it onto a target (mouse,
+   finger or pen). A press without moving stays a normal tap, so tapping still works. */
+let tqDragEnd=0;
+document.addEventListener('click',e=>{if(e.isTrusted&&Date.now()-tqDragEnd<250&&e.target.closest&&e.target.closest('#tqBody')){e.stopPropagation();e.preventDefault()}},true);
+function tqDragify(srcSel,dstSel,onDrop){
+ document.querySelectorAll(srcSel).forEach(src=>{
+  if(src.disabled)return;src.classList.add('tq-draggable');
+  src.addEventListener('pointerdown',e=>{
+   if(e.button>0)return;
+   const sx=e.clientX,sy=e.clientY;let ghost=null,over=null,x=sx,y=sy,raf=0;
+   const hit=()=>{const el=document.elementFromPoint(x,y),t=el&&el.closest(dstSel);if(t!==over){if(over)over.classList.remove('tq-over');over=t;if(over)over.classList.add('tq-over')}};
+   const edge=()=>{if(!ghost)return;const d=y<70?-12:y>innerHeight-70?12:0;if(d){scrollBy(0,d);hit()}raf=requestAnimationFrame(edge)};
+   const move=ev=>{x=ev.clientX;y=ev.clientY;
+    if(!ghost){if(Math.hypot(x-sx,y-sy)<8)return;const r=src.getBoundingClientRect();ghost=src.cloneNode(true);ghost.removeAttribute('id');ghost.classList.add('tq-ghost');ghost.style.width=r.width+'px';ghost.dx=sx-r.left;ghost.dy=sy-r.top;document.body.appendChild(ghost);src.classList.add('tq-dragging');raf=requestAnimationFrame(edge)}
+    ev.preventDefault();ghost.style.transform=`translate(${x-ghost.dx}px,${y-ghost.dy}px) rotate(-2deg)`;hit()};
+   const up=ev=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);
+    if(!ghost)return;cancelAnimationFrame(raf);ghost.remove();src.classList.remove('tq-dragging');if(over)over.classList.remove('tq-over');tqDragEnd=Date.now();
+    if(over&&ev.type==='pointerup')onDrop(src,over)};
+   document.addEventListener('pointermove',move,{passive:false});document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
+  });
+ });
+}
+/* A drag-and-drop question from the Teacher portal (type 'sort'): 2–4 named boxes; the
+   student drags every item into its box (or taps the item, then the box). One point
+   when all are right; wrong ones then show their right box. Answer saved: 0 = all right. */
+let tqSort=null;
+function renderTeacherSort(){
+ const {quiz,index}=tqRun,q=quiz.questions[index],groups=q.groups,last=index===quiz.questions.length-1;
+ const items=groups.flatMap((g,gi)=>(g.items||[]).map(t=>({t,gi}))),n=items.length;
+ if(!tqSort||tqSort.index!==index){const order=items.map((_,i)=>i);for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}tqSort={index,order,place:Array(n).fill(null),sel:null,checked:false,msg:'',ok:false}}
+ const m=tqSort,dots=quiz.questions.map((_,i)=>`<span class="${i<index?'done':i===index?'now':''}"></span>`).join('');
+ const chip=i=>{const ok=m.checked?m.place[i]===items[i].gi:null;return `<button type="button" class="tqs-chip${m.sel===i?' sel':''}${ok===true?' ok':ok===false?' no':''}" data-tsi="${i}" dir="auto"${m.checked?' disabled':''}>${ok===true?'✓ ':ok===false?'✗ ':''}${escapeHtml(items[i].t)}${ok===false?`<small class="tqs-fix" dir="ltr">→ <bdi>${escapeHtml(groups[items[i].gi].name)}</bdi></small>`:''}</button>`};
+ const pool=m.order.filter(i=>m.place[i]==null);
+ $('#tqBody').innerHTML=`<div class="kicker">📝 ${escapeHtml(quiz.title)}</div>${index===0&&quiz.instructions?`<p><i>${escapeHtml(quiz.instructions)}</i></p>`:''}<div class="tq-progress">${dots}</div><p class="kicker">Question ${index+1} of ${quiz.questions.length} · 🖐️ Drag and drop</p><div class="tq-q">${escapeHtml(q.q||'Drag each one into the right box.')}</div>`
+  +(m.checked?'':`<p class="tqb-hint">Drag each one into its box. You can also tap one, then tap the box.</p><div class="tqs-pool${m.sel!=null&&m.place[m.sel]!=null?' drop':''}" data-tsbox="-1">${pool.length?pool.map(chip).join(''):'<span class="tqs-empty">All sorted — press Check ✓</span>'}</div>`)
+  +`<div class="tqs-boxes">${groups.map((g,gi)=>`<div class="tqs-box${m.sel!=null&&!m.checked?' drop':''}" data-tsbox="${gi}" role="button" tabindex="${m.checked?-1:0}"><div class="tqs-name" dir="auto">${escapeHtml(g.name)}</div><div class="tqs-in">${m.order.filter(i=>m.place[i]===gi).map(chip).join('')||(m.checked?'':'<span class="tqs-empty">Drop here</span>')}</div></div>`).join('')}</div>`
+  +`<div class="feedback${m.checked?(m.ok?' good':' bad'):''}" id="tqFeedback" aria-live="polite">${escapeHtml(m.msg)}</div><div id="tqExplain">${m.checked&&q.explain?`<div class="tq-explain">💡 ${escapeHtml(q.explain)}</div>`:''}</div>`;
+ if(!m.checked){
+  const put=(i,box)=>{m.place[i]=box<0?null:box;m.sel=null;renderTeacherSort()};
+  document.querySelectorAll('[data-tsi]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=+b.dataset.tsi;if(m.sel===i){if(m.place[i]!=null)m.place[i]=null;m.sel=null}else m.sel=i;renderTeacherSort()});
+  document.querySelectorAll('[data-tsbox]').forEach(bx=>{bx.onclick=()=>{if(m.sel!=null)put(m.sel,+bx.dataset.tsbox)};bx.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&m.sel!=null){e.preventDefault();put(m.sel,+bx.dataset.tsbox)}}});
+  tqDragify('[data-tsi]','[data-tsbox]',(src,dst)=>put(+src.dataset.tsi,+dst.dataset.tsbox));
+  $('#tqActions').innerHTML=`<button class="ghost" id="tqQuit">← Back to map</button><button class="btn green" id="tqCheck"${pool.length?' disabled':''}>Check ✓</button>`;
+  $('#tqQuit').onclick=()=>{if(confirm('Leave this quiz? Your answers so far will not be saved.')){tqRun=null;tqSort=null;renderMap();show('mapScreen')}};
+  $('#tqCheck').onclick=()=>{if(m.place.some(v=>v==null))return;const good=items.filter((x,i)=>m.place[i]===x.gi).length;m.checked=true;m.ok=good===n;m.sel=null;
+   tqRun.answers[index]=m.ok?0:-1;if(m.ok)tqRun.correct++;m.msg=m.ok?'All in the right boxes — correct! ⭐':good+' of '+n+' right — each wrong one shows its right box.';
+   if(m.ok)happySound();else tryAgainSound();renderTeacherSort()};
+ }else{
+  $('#tqActions').innerHTML=`<button class="btn green" id="tqNext">${last?'See my score →':'Next question →'}</button>`;
+  $('#tqNext').onclick=()=>{tqSort=null;if(last)finishTeacherQuiz();else{tqRun.index++;renderTeacherQuizQuestion()}};$('#tqNext').focus();
+ }
+}
+const renderTeacherQuizQuestionBeforeSort=renderTeacherQuizQuestion;
+renderTeacherQuizQuestion=function(){const q=tqRun&&tqRun.quiz.questions[tqRun.index];if(q&&q.type==='sort'&&Array.isArray(q.groups)&&q.groups.length>1){tqSort=null;renderTeacherSort();return}return renderTeacherQuizQuestionBeforeSort.apply(this,arguments)};
+document.head.insertAdjacentHTML('beforeend',`<style id="tq-sort-style">
+.tq-draggable{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:grab}
+.tq-dragging{opacity:.35}
+.tq-ghost{position:fixed;left:0;top:0;margin:0;z-index:9999;pointer-events:none;opacity:.95;box-shadow:0 12px 26px rgba(30,30,60,.28);cursor:grabbing}
+.tq-over{outline:3px solid var(--gold);outline-offset:2px;background:#fff6dc!important}
+.tqs-pool{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;min-height:56px;padding:10px;margin:6px 0 12px;border:2px dashed #e3d6b3;border-radius:18px;background:#fffdf6}
+.tqs-pool.drop{border-color:var(--sky)}
+.tqs-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px;text-align:left}
+.tqs-box{display:flex;flex-direction:column;min-height:120px;border:3px solid var(--gold2);border-radius:18px;background:#fff;overflow:hidden;cursor:pointer}
+.tqs-box.drop{border-color:var(--sky);box-shadow:0 0 0 4px #3f9fc922}
+.tqs-name{padding:8px 10px;background:var(--paper2);font-weight:800;color:var(--navy);text-align:center;font-size:18px;overflow-wrap:anywhere}
+.tqs-in{flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;gap:7px;padding:9px}
+.tqs-chip{padding:9px 14px;border:2px solid var(--gold2);border-radius:999px;background:#fff;font:inherit;font-size:17px;font-weight:700;color:var(--navy);cursor:pointer;overflow-wrap:anywhere;max-width:100%}
+.tqs-in .tqs-chip{border-color:var(--sky);background:#f3faff;font-size:16px;padding:7px 12px}
+.tqs-chip.sel{border-color:var(--gold);box-shadow:0 0 0 4px #e8b54a55;background:#fffaf0}
+.tqs-chip:disabled{cursor:default;opacity:1}
+.tqs-chip.ok{background:#dff4dd;border-color:#3e9c4a;color:#287c39}
+.tqs-chip.no{background:#ffe9e2;border-color:#d85c38;color:#a4553e}
+.tqs-fix{display:block;color:#2e6b58;font-size:13.5px;font-weight:800}
+.tqs-empty{margin:auto;color:#a99a80;font-size:14.5px}
 </style>`);
 const renderMapBeforeTeacherQuizzes=renderMap;renderMap=function(){renderMapBeforeTeacherQuizzes();renderTeacherQuizzes();loadTeacherQuizzes(false)};
 
