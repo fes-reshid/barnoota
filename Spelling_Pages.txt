@@ -1,0 +1,1505 @@
+SPELLING VARIANTS IN THE BOOK - page numbers (interior PDF, 98 pages)
+Each group = the same word spelled in different ways. Format: spelling (count) -> pages
+
+== fi / FI
+   fi (193) -> p. 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 48, 49, 50, 51, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 76, 77, 78, 81, 82, 84, 96, 97
+   FI (14) -> p. 14, 15, 16, 17, 18, 19, 47, 48, 49, 50, 51, 82, 83, 84
+
+== soommana / SOOMMANA / soommanaa / SOOMMANAA / Soommana / soommana’
+   soommana (62) -> p. 4, 5, 9, 13, 14, 15, 17, 20, 21, 22, 23, 26, 27, 29, 30, 32, 35, 37, 38, 39, 40, 41, 42, 43, 46, 49, 50, 51, 52, 53, 70, 97
+   SOOMMANA (23) -> p. 14, 15, 16, 17, 18, 19, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
+   soommanaa (13) -> p. 5, 9, 10, 14, 15, 22, 26, 31, 38, 40, 96
+   SOOMMANAA (12) -> p. 7, 8, 9, 10, 11, 24, 25, 26, 27, 28, 29, 30
+   Soommana (10) -> p. 15, 19, 20, 32, 39, 40, 49
+   soommana’ (1) -> p. 22
+
+== hin / HIN
+   hin (114) -> p. 4, 5, 8, 9, 13, 14, 15, 18, 19, 21, 22, 23, 24, 25, 26, 28, 29, 32, 34, 35, 37, 38, 41, 42, 43, 44, 45, 46, 48, 52, 53, 55, 58, 61, 62, 65, 66, 67, 68, 71, 74, 75, 76, 77, 80, 81, 82, 84, 97
+   HIN (6) -> p. 41, 42, 43, 44, 45, 46
+
+== isaa / isa / ISAA / Isa / Isaa
+   isaa (83) -> p. 5, 7, 8, 9, 12, 13, 15, 17, 18, 19, 22, 23, 25, 27, 29, 30, 35, 39, 41, 42, 45, 46, 48, 52, 54, 55, 56, 58, 59, 61, 63, 64, 66, 72, 74, 75, 77, 81, 83, 96, 97
+   isa (21) -> p. 5, 11, 20, 27, 28, 30, 41, 46, 62, 63, 73, 77, 78, 80, 81
+   ISAA (7) -> p. 14, 15, 47, 48, 49, 50, 51
+   Isa (3) -> p. 5, 70, 84
+   Isaa (1) -> p. 6
+
+== irraa / irra / IRRAA / Irraa
+   irraa (59) -> p. 5, 9, 10, 13, 14, 15, 17, 18, 20, 21, 22, 23, 26, 28, 29, 30, 37, 39, 42, 43, 47, 49, 50, 53, 56, 60, 62, 64, 65, 66, 71, 72, 77, 81, 83, 84
+   irra (21) -> p. 4, 5, 7, 8, 9, 13, 14, 26, 31, 37, 38, 42, 67, 68, 76, 77
+   IRRAA (4) -> p. 27, 28, 29, 30
+   Irraa (1) -> p. 49
+
+== akka / Akka
+   akka (77) -> p. 4, 5, 6, 7, 8, 12, 20, 22, 23, 26, 27, 28, 29, 30, 35, 38, 39, 40, 44, 45, 46, 47, 48, 50, 52, 58, 61, 62, 63, 64, 65, 68, 70, 72, 73, 74, 75, 77, 78, 80, 81, 82, 83
+   Akka (3) -> p. 14, 27, 70
+
+== kheysatti / KHEYSATTI / keeysatti / kheeysatti / keysatti
+   kheysatti (54) -> p. 4, 5, 7, 8, 10, 12, 14, 15, 16, 19, 22, 23, 24, 25, 26, 29, 30, 32, 37, 55, 56, 59, 61, 64, 65, 68, 69, 70, 72, 73, 74, 80, 81, 96, 97
+   KHEYSATTI (6) -> p. 20, 21, 22, 23, 71, 72
+   keeysatti (3) -> p. 73, 76, 81
+   kheeysatti (1) -> p. 5
+   keysatti (1) -> p. 83
+
+== nama / Nama / NAMA / namaa
+   nama (44) -> p. 4, 8, 10, 13, 16, 17, 28, 29, 30, 34, 37, 40, 41, 42, 44, 45, 47, 48, 60, 61, 63, 64, 65, 66, 73, 77, 84, 97
+   Nama (7) -> p. 5, 13, 14, 17, 26, 63, 83
+   NAMA (6) -> p. 41, 42, 43, 44, 45, 46
+   namaa (3) -> p. 21, 29, 76
+
+== kheysa / kheysaa / KHEYSA / kheeysa / keeysa / kHeYsa
+   kheysa (26) -> p. 8, 9, 18, 20, 22, 23, 24, 28, 29, 43, 51, 54, 58, 60, 61, 62, 68, 74, 78, 84, 97
+   kheysaa (21) -> p. 5, 7, 8, 37, 50, 51, 54, 56, 61, 62, 66, 67, 73, 74, 77, 96, 97
+   KHEYSA (4) -> p. 54, 55, 56, 57
+   kheeysa (2) -> p. 42, 78
+   keeysa (1) -> p. 44
+   kHeYsa (1) -> p. 60
+
+== khan / kan
+   khan (45) -> p. 5, 6, 9, 14, 38, 40, 42, 45, 46, 48, 53, 55, 58, 60, 61, 66, 69, 73, 74, 75, 77, 78, 80, 81, 84, 97
+   kan (9) -> p. 5, 31, 39, 40, 45, 48, 63
+
+== SALAATA / salaata / salaataa / Salaata / Salaataa
+   SALAATA (20) -> p. 54, 55, 56, 57, 67, 68, 79, 80, 81, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95
+   salaata (17) -> p. 5, 15, 20, 25, 43, 50, 51, 54, 62, 66, 68, 80, 97
+   salaataa (8) -> p. 38, 56, 67, 68, 69, 97
+   Salaata (6) -> p. 12, 20, 97
+   Salaataa (2) -> p. 69, 81
+
+== Rabbii / Rabbi
+   Rabbii (32) -> p. 10, 12, 13, 17, 19, 21, 23, 25, 30, 32, 33, 48, 49, 50, 53, 56, 58, 60, 62, 66, 68, 71, 72, 73, 77, 82, 83, 84
+   Rabbi (20) -> p. 7, 8, 9, 11, 13, 14, 17, 27, 50, 73, 74, 75, 76, 84, 96
+
+== ykn / YKN
+   ykn (49) -> p. 7, 8, 10, 13, 15, 21, 22, 32, 34, 35, 37, 38, 40, 41, 42, 43, 45, 48, 61, 62, 64, 66, 67, 73, 74, 75, 76, 77, 81, 82, 83, 84, 97
+   YKN (3) -> p. 79, 80, 81
+
+== guyyaa / Guyyaa / Guyya
+   guyyaa (39) -> p. 4, 15, 19, 21, 28, 31, 33, 35, 36, 37, 40, 48, 49, 50, 51, 59, 63, 65, 66, 71
+   Guyyaa (10) -> p. 11, 18, 32, 33, 34, 42, 50, 53, 71
+   Guyya (1) -> p. 45
+
+== Ramadaanaa / Ramadaana / RAMADAANA / RAMADAANAA / Ramadana
+   Ramadaanaa (20) -> p. 8, 9, 10, 15, 20, 23, 45, 47, 56, 59, 70, 96, 97
+   Ramadaana (13) -> p. 9, 13, 18, 23, 26, 28, 47, 58, 97
+   RAMADAANA (8) -> p. 20, 21, 22, 23, 54, 55, 56, 57
+   RAMADAANAA (6) -> p. 14, 15, 16, 17, 18, 19
+   Ramadana (2) -> p. 96
+
+== Rabbiin / RABBIIN
+   Rabbiin (45) -> p. 6, 7, 8, 9, 10, 12, 17, 19, 20, 22, 23, 25, 27, 30, 37, 48, 49, 56, 64, 70, 72, 74, 75, 77, 78, 81, 82, 83, 97
+   RABBIIN (3) -> p. 73, 74, 75
+
+== Namni / namni
+   Namni (27) -> p. 5, 7, 8, 10, 15, 21, 22, 29, 30, 33, 37, 41, 42, 47, 52, 60, 61, 65, 66, 77, 81, 84
+   namni (19) -> p. 7, 8, 18, 23, 32, 37, 48, 50, 59, 61, 62, 66, 81, 82
+
+== yoo / Yoo
+   yoo (35) -> p. 4, 13, 14, 19, 22, 25, 28, 30, 34, 35, 38, 42, 43, 44, 45, 48, 52, 59, 61, 66, 68, 69, 72, 73, 74, 75, 77, 81
+   Yoo (7) -> p. 15, 24, 35, 49, 52, 81
+
+== tokko / tokkoo / TOKKO
+   tokko (35) -> p. 4, 5, 13, 16, 19, 21, 22, 35, 37, 38, 48, 50, 51, 55, 59, 63, 64, 66, 73, 74, 80, 81, 96
+   tokkoo (2) -> p. 10, 48
+   TOKKO (2) -> p. 12, 13
+
+== dha / DHA
+   dha (34) -> p. 4, 7, 9, 10, 11, 14, 15, 17, 23, 24, 27, 42, 50, 58, 59, 60, 62, 66, 73, 74, 78, 80, 82, 97
+   DHA (5) -> p. 58, 59, 60, 61, 62
+
+== yaroo / Yaroo / YAROO
+   yaroo (26) -> p. 4, 12, 17, 20, 25, 32, 38, 39, 43, 64, 65, 66, 70, 72, 76, 77, 83, 84
+   Yaroo (10) -> p. 16, 18, 19, 21, 66, 78, 80, 81, 82, 83
+   YAROO (3) -> p. 82, 83, 84
+
+== Bukhaarii / Bukharii / Bukhari / Bukhaari
+   Bukhaarii (25) -> p. 13, 15, 16, 17, 18, 22, 24, 28, 32, 38, 54, 55, 59, 64, 66, 68, 71, 76, 77
+   Bukharii (7) -> p. 32, 39, 55, 56, 58, 78
+   Bukhari (5) -> p. 35, 41, 46, 49, 51
+   Bukhaari (1) -> p. 81
+
+== ja’e / ja’ee
+   ja’e (32) -> p. 15, 16, 19, 28, 34, 35, 36, 39, 41, 42, 47, 48, 49, 50, 53, 56, 64, 68, 70, 71, 77, 83
+   ja’ee (6) -> p. 17, 25, 49, 53, 74
+
+== dirqama / dirqamaa / Dirqama
+   dirqama (27) -> p. 7, 9, 10, 12, 14, 15, 20, 22, 27, 43, 61, 63, 64, 66, 97
+   dirqamaa (7) -> p. 35, 52, 59, 62, 70, 80
+   Dirqama (1) -> p. 96
+
+== waan / wan / Waan
+   waan (27) -> p. 8, 10, 17, 30, 39, 40, 41, 64, 65, 70, 73, 77, 80, 81, 82, 83
+   wan (6) -> p. 26, 35, 40, 44, 78
+   Waan (1) -> p. 12
+
+== wantoota / WANTOOTA / Wantoota
+   wantoota (15) -> p. 5, 9, 12, 13, 14, 15, 20, 26, 29, 30, 60, 64, 84, 97
+   WANTOOTA (12) -> p. 20, 21, 22, 23, 39, 40, 41, 42, 43, 44, 45, 46
+   Wantoota (5) -> p. 60, 62, 97
+
+== jiru / jiruu / jirru / jiiru
+   jiru (23) -> p. 4, 5, 7, 8, 9, 15, 18, 19, 37, 49, 59, 61, 62, 71, 73, 74, 77, 82
+   jiruu (4) -> p. 34, 35, 48
+   jirru (2) -> p. 38, 84
+   jiiru (1) -> p. 4
+
+== itti / Itti
+   itti (28) -> p. 5, 7, 14, 18, 25, 31, 36, 40, 41, 42, 43, 47, 49, 50, 51, 59, 63, 65, 66, 70, 82, 96
+   Itti (1) -> p. 55
+
+== haa / Haa
+   haa (28) -> p. 7, 8, 21, 22, 24, 32, 35, 37, 41, 43, 52, 64, 68, 72, 77, 78, 80, 83, 84
+   Haa (1) -> p. 46
+
+== Al / AL / al
+   Al (24) -> p. 8, 18, 27, 31, 36, 37, 50, 63, 64, 65, 66, 68, 69, 70, 78
+   AL (4) -> p. 63, 64, 65, 66
+   al (1) -> p. 70
+
+== tahuu / tahu
+   tahuu (19) -> p. 10, 33, 56, 58, 60, 67, 69, 70, 75, 77, 81, 96, 97
+   tahu (8) -> p. 14, 30, 43, 46, 63, 69, 77, 78
+
+== DU'AA'II / du'aa'ii / du’a’ii / du’aa’ii / du’aa'ii / du'a'i
+   DU'AA'II (17) -> p. 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95
+   du'aa'ii (6) -> p. 24, 77, 81, 84
+   du’a’ii (1) -> p. 25
+   du’aa’ii (1) -> p. 68
+   du’aa'ii (1) -> p. 73
+   du'a'i (1) -> p. 74
+
+== khana / khanna / Khana / kannaa / khannaa / khanaa
+   khana (17) -> p. 4, 5, 6, 8, 10, 25, 29, 40, 43, 68, 76, 81, 82, 83, 84, 96
+   khanna (4) -> p. 13, 17, 29, 83
+   Khana (2) -> p. 13, 23
+   kannaa (1) -> p. 26
+   khannaa (1) -> p. 55
+   khanaa (1) -> p. 72
+
+== Iidaa / Iida / IIDA / IIDAA / iidaa
+   Iidaa (12) -> p. 11, 23, 65, 66, 70, 71, 97
+   Iida (9) -> p. 31, 69, 71, 97
+   IIDA (2) -> p. 67, 68
+   IIDAA (2) -> p. 71, 72
+   iidaa (1) -> p. 5
+
+== tahe / tahee
+   tahe (24) -> p. 7, 10, 12, 20, 21, 27, 30, 32, 37, 42, 45, 56, 63, 64, 71, 77, 81, 84
+   tahee (1) -> p. 64
+
+== Sahiiha / sahiiha
+   Sahiiha (17) -> p. 25, 33, 34, 35, 39, 41, 42, 43, 46, 48, 49, 62, 72, 74, 75
+   sahiiha (7) -> p. 4, 19, 24, 28, 77, 82
+
+== jira / jiraa / jirra
+   jira (22) -> p. 5, 7, 9, 12, 13, 15, 17, 18, 20, 24, 38, 45, 46, 53, 73, 78, 82
+   jiraa (1) -> p. 53
+   jirra (1) -> p. 84
+
+== akkasuma / Akkasuma
+   akkasuma (20) -> p. 5, 15, 42, 44, 47, 55, 58, 60, 61, 62, 65, 66, 70, 74, 75, 77, 78, 81, 96
+   Akkasuma (3) -> p. 51, 62, 84
+
+== Soommanni / soommanni / SOOMMANNI / soomanni
+   Soommanni (11) -> p. 9, 14, 17, 20, 29, 30, 47, 48
+   soommanni (9) -> p. 5, 7, 9, 10, 21, 27, 29, 40, 47
+   SOOMMANNI (2) -> p. 12, 13
+   soomanni (1) -> p. 96
+
+== soommanuu / soommanu
+   soommanuu (16) -> p. 8, 10, 13, 14, 17, 32, 33, 35, 38, 40, 47, 49
+   soommanu (7) -> p. 5, 8, 15, 29, 30, 52, 65
+
+== Yaa / yaa
+   Yaa (22) -> p. 7, 16, 20, 27, 53, 56, 68, 73, 74, 75, 76, 80, 81, 82, 83, 84
+   yaa (1) -> p. 72
+
+== guyyoota / GUYYOOTA / Guyyoota / guyyota
+   guyyoota (12) -> p. 7, 8, 9, 32, 37, 38, 47, 49
+   GUYYOOTA (6) -> p. 31, 32, 33, 34, 35, 36
+   Guyyoota (4) -> p. 7, 31, 36, 50
+   guyyota (1) -> p. 47
+
+== osoo / Osoo
+   osoo (18) -> p. 8, 15, 28, 32, 33, 34, 35, 40, 42, 43
+   Osoo (3) -> p. 40, 42, 45
+
+== qabu / qabuu
+   qabu (13) -> p. 14, 22, 25, 37, 40, 49, 61, 71, 80, 81, 96, 97
+   qabuu (7) -> p. 42, 46, 66
+
+== ati / Ati / ATI
+   ati (10) -> p. 73, 75, 76, 77, 80, 83, 84
+   Ati (6) -> p. 74, 75, 80, 82
+   ATI (4) -> p. 20, 21, 22, 23
+
+== nyaata / nyaataa / Nyaata
+   nyaata (10) -> p. 5, 14, 15, 17, 63, 64, 66
+   nyaataa (5) -> p. 22, 26, 29, 44, 61
+   Nyaata (3) -> p. 13, 39, 44
+
+== baatii / baattii / battii
+   baatii (16) -> p. 14, 32, 38, 40, 43, 47, 49, 60, 62, 68, 70
+   baattii (1) -> p. 33
+   battii (1) -> p. 47
+
+== gara / garaa
+   gara (13) -> p. 4, 10, 16, 43, 49, 58, 61, 67, 81, 84
+   garaa (4) -> p. 29, 38, 74
+
+== naaf / naf
+   naaf (12) -> p. 77, 80, 81, 82
+   naf (5) -> p. 6, 49, 73, 74, 76
+
+== namoota / Namoota / NAMOOTA
+   namoota (13) -> p. 17, 21, 23, 26, 29, 30, 63, 65, 83
+   Namoota (2) -> p. 20, 26
+   NAMOOTA (2) -> p. 37, 38
+
+== ani / Ani
+   ani (12) -> p. 22, 49, 53, 74, 76, 80, 82, 83
+   Ani (5) -> p. 22, 68, 73, 75, 80
+
+== biraa / bira
+   biraa (11) -> p. 5, 16, 18, 53, 61, 76, 81, 97
+   bira (5) -> p. 9, 35, 53, 73, 77
+
+== isin / Isin
+   isin (13) -> p. 7, 8, 15, 27, 53, 70, 72, 83
+   Isin (3) -> p. 7, 8, 37
+
+== dura / DURAA / duraa
+   dura (7) -> p. 7, 9, 15, 50, 66
+   DURAA (6) -> p. 41, 42, 43, 44, 45, 46
+   duraa (3) -> p. 27, 31, 46
+
+== imala / IMALA / imalaa / Imala
+   imala (9) -> p. 7, 8, 9, 14, 37, 82, 83, 84
+   IMALA (3) -> p. 82, 83, 84
+   imalaa (2) -> p. 13, 84
+   Imala (2) -> p. 83, 84
+
+== hanga / Hanga
+   hanga (15) -> p. 7, 9, 13, 14, 17, 18, 32, 44, 45, 46, 70
+   Hanga (1) -> p. 64
+
+== gaarii / Gaarii
+   gaarii (15) -> p. 8, 16, 17, 21, 23, 24, 26, 55, 81, 83
+   Gaarii (1) -> p. 29
+
+== ji'a / ji’a / Ji'a
+   ji'a (8) -> p. 8, 10, 15, 50
+   ji’a (5) -> p. 15, 36, 96
+   Ji'a (3) -> p. 8, 15
+
+== garuu / Garuu
+   garuu (12) -> p. 17, 22, 55, 61, 66, 68, 69, 70, 75, 80
+   Garuu (4) -> p. 9, 46, 66, 71
+
+== khee / kee
+   khee (15) -> p. 16, 20, 26, 67, 73, 74, 75, 76, 80
+   kee (1) -> p. 43
+
+== bakka / Bakka
+   bakka (13) -> p. 4, 7, 39, 44, 59, 61, 69, 71, 76, 83
+   Bakka (2) -> p. 65, 81
+
+== RABBIITTI / Rabbiiti / Rabbitti / Rabbiitti
+   RABBIITTI (5) -> p. 58, 59, 60, 61, 62
+   Rabbiiti (5) -> p. 77, 82
+   Rabbitti (2) -> p. 7, 49
+   Rabbiitti (2) -> p. 59, 62
+
+== sunnaa / SUNNAA / Sunnaa
+   sunnaa (8) -> p. 52, 59, 62
+   SUNNAA (5) -> p. 47, 48, 49, 50, 51
+   Sunnaa (1) -> p. 54
+
+== khitaaba / KHITAABA / Khitaaba / khitaabaa
+   khitaaba (9) -> p. 4, 6, 70, 73
+   KHITAABA (2) -> p. 96, 97
+   Khitaaba (1) -> p. 5
+   khitaabaa (1) -> p. 20
+
+== naamusa / NAAMUSA / naamusaa / Naamusa
+   naamusa (6) -> p. 5, 23, 26, 61, 96, 97
+   NAAMUSA (5) -> p. 24, 25, 26, 52, 53
+   naamusaa (1) -> p. 22
+   Naamusa (1) -> p. 61
+
+== isaan / Isaan
+   isaan (10) -> p. 9, 18, 22, 29, 41, 65, 70
+   Isaan (3) -> p. 18, 29, 38
+
+== akkasumas / Akkasumas
+   akkasumas (12) -> p. 10, 21, 23, 26, 29, 63, 65, 74, 75, 84
+   Akkasumas (1) -> p. 52
+
+== SALAATUU / salaatu / Salaatuu / salaatuu
+   SALAATUU (6) -> p. 54, 55, 56, 57, 67, 68
+   salaatu (5) -> p. 55, 69, 80
+   Salaatuu (1) -> p. 12
+   salaatuu (1) -> p. 12
+
+== hunda / Hunda
+   hunda (12) -> p. 13, 14, 17, 50, 63, 64, 74, 80, 84
+   Hunda (1) -> p. 73
+
+== fayyaa / FAYYAA / Fayyaa
+   fayyaa (6) -> p. 4, 14, 26, 62, 72, 77
+   FAYYAA (3) -> p. 76, 77, 78
+   Fayyaa (3) -> p. 76, 78
+
+== dhugaatii / dhugaati
+   dhugaatii (11) -> p. 5, 13, 14, 15, 22, 26, 39, 45, 46, 61
+   dhugaati (1) -> p. 76
+
+== Fixrii / FIXRII / fixrii
+   Fixrii (7) -> p. 63, 64, 66, 68, 70, 97
+   FIXRII (4) -> p. 63, 64, 65, 66
+   fixrii (1) -> p. 5
+
+== ol / Ol
+   ol (8) -> p. 7, 10, 27, 32, 37, 43, 49, 97
+   Ol (4) -> p. 17, 58, 60, 70
+
+== inni / Inni
+   inni (10) -> p. 8, 9, 11, 12, 24, 35, 58, 74, 83
+   Inni (2) -> p. 50, 72
+
+== jachuun / Jachuun
+   jachuun (9) -> p. 13, 14, 31, 33, 36, 42, 66, 70, 72
+   Jachuun (3) -> p. 27, 50
+
+== booda / boodaa
+   booda (9) -> p. 43, 55, 59, 66, 68, 69, 71, 80, 81
+   boodaa (3) -> p. 56, 58, 59
+
+== TARAWIIHAA / Taraawiihaa
+   TARAWIIHAA (11) -> p. 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95
+   Taraawiihaa (1) -> p. 97
+
+== jalqabaa / jalqaba / JALQABAA / Jalqaba
+   jalqabaa (5) -> p. 4, 68, 69, 74
+   jalqaba (3) -> p. 4, 5, 55
+   JALQABAA (2) -> p. 96, 97
+   Jalqaba (1) -> p. 10
+
+== itikaafa / I’itikaafa / I'itikaafaa / I’itikaafaa
+   itikaafa (4) -> p. 61, 62
+   I’itikaafa (3) -> p. 5, 97
+   I'itikaafaa (3) -> p. 59, 60, 61
+   I’itikaafaa (1) -> p. 4
+
+== ture / turre
+   ture (9) -> p. 4, 10, 55, 59, 67, 68, 74, 80
+   turre (2) -> p. 38, 82
+
+== halkanii / HALKANII
+   halkanii (7) -> p. 5, 50, 54, 55, 97
+   HALKANII (4) -> p. 54, 55, 56, 57
+
+== Zakaa / ZAKAA / zakaa
+   Zakaa (6) -> p. 13, 63, 64, 65, 66
+   ZAKAA (4) -> p. 63, 64, 65, 66
+   zakaa (1) -> p. 13
+
+== halkan / Halkan
+   halkan (9) -> p. 17, 22, 43, 51, 55, 56, 63
+   Halkan (2) -> p. 25, 70
+
+== hasan / Hasan
+   hasan (5) -> p. 4, 17, 82, 83
+   Hasan (5) -> p. 50, 66, 68, 74, 77
+
+== walitti / Walitti
+   walitti (9) -> p. 4, 21, 32, 40, 71
+   Walitti (1) -> p. 71
+
+== Allah / Allaah
+   Allah (8) -> p. 5, 6, 76
+   Allaah (2) -> p. 80, 81
+
+== sadarkaa / SADARKAA / Sadarkaa
+   sadarkaa (4) -> p. 5, 9, 10, 27
+   SADARKAA (4) -> p. 16, 17, 18, 19
+   Sadarkaa (2) -> p. 96, 97
+
+== soommane / soommanee / soommanne
+   soommane (5) -> p. 18, 19, 33, 48, 65
+   soommanee (3) -> p. 7, 28, 47
+   soommanne (2) -> p. 35
+
+== SOOMMANUUN / soommanuun
+   SOOMMANUUN (6) -> p. 31, 32, 33, 34, 35, 36
+   soommanuun (4) -> p. 7, 10, 14, 62
+
+== godhe / godhee
+   godhe (7) -> p. 20, 25, 27, 59, 64, 77, 82
+   godhee (3) -> p. 9, 15, 59
+
+== Qur'ana / Qur'anaa / Qur’ana / Qur’anaa / Qur’aana
+   Qur'ana (4) -> p. 10, 25, 72
+   Qur'anaa (2) -> p. 10
+   Qur’ana (2) -> p. 62, 96
+   Qur’anaa (1) -> p. 68
+   Qur’aana (1) -> p. 73
+
+== Ragaan / ragaan
+   Ragaan (6) -> p. 31, 32, 33, 38, 45
+   ragaan (4) -> p. 15, 32, 71, 75
+
+== dubbii / Dubbii
+   dubbii (9) -> p. 21, 22, 28, 62, 65, 66
+   Dubbii (1) -> p. 62
+
+== raka’aa / Raka’aa / raka'aa
+   raka’aa (8) -> p. 54, 55, 68, 69, 97
+   Raka’aa (1) -> p. 55
+   raka'aa (1) -> p. 80
+
+== guddaa / Guddaa
+   guddaa (5) -> p. 55, 63, 64, 75, 80
+   Guddaa (5) -> p. 77, 82
+
+== san / San
+   san (8) -> p. 4, 56, 59, 65, 77, 84
+   San (1) -> p. 80
+
+== nu / nuu
+   nu (8) -> p. 5, 50, 68, 76, 80, 84
+   nuu (1) -> p. 72
+
+== seera / SEERA / Seera / seeraa
+   seera (4) -> p. 5, 10, 58, 97
+   SEERA (2) -> p. 14, 15
+   Seera (2) -> p. 22, 58
+   seeraa (1) -> p. 14
+
+== khadhadha / kadhadhaa / kadhadha
+   khadhadha (6) -> p. 72, 73, 75, 77, 80
+   kadhadhaa (2) -> p. 72
+   kadhadha (1) -> p. 6
+
+== warra / Warra
+   warra (8) -> p. 7, 9, 27, 43, 72, 74
+   Warra (1) -> p. 7
+
+== caalaa / caala
+   caalaa (7) -> p. 17, 26, 50, 55, 63, 71
+   caala (2) -> p. 8
+
+== wajjiin / wajjin
+   wajjiin (7) -> p. 26, 30, 34, 67, 78, 97
+   wajjin (2) -> p. 22, 84
+
+== Islaamaa / islaamaa / islama
+   Islaamaa (6) -> p. 5, 23, 29, 40, 81, 96
+   islaamaa (1) -> p. 40
+   islama (1) -> p. 62
+
+== mana / manaa / Mana
+   mana (4) -> p. 61, 68, 84
+   manaa (3) -> p. 52, 63
+   Mana (1) -> p. 13
+
+== dhiiga / dhiigaa
+   dhiiga (7) -> p. 14, 38, 43, 60, 62
+   dhiigaa (1) -> p. 25
+
+== seenu / seenuu
+   seenu (6) -> p. 16, 18, 59, 60, 62
+   seenuu (2) -> p. 40, 60
+
+== lama / lamaa
+   lama (6) -> p. 32, 40, 47, 66, 69, 80
+   lamaa (2) -> p. 17, 32
+
+== wagga / waggaa / Wagga
+   wagga (5) -> p. 47, 48, 49
+   waggaa (2) -> p. 19, 48
+   Wagga (1) -> p. 35
+
+== furuu / furu
+   furuu (4) -> p. 21, 23, 45, 50
+   furu (4) -> p. 24, 35, 52
+
+== isii / isi
+   isii (7) -> p. 32, 35, 52, 61, 68
+   isi (1) -> p. 68
+
+== masgiida / Masgiida
+   masgiida (7) -> p. 58, 61, 62, 70
+   Masgiida (1) -> p. 60
+
+== hundarraa / hundarra
+   hundarraa (5) -> p. 74, 76, 77
+   hundarra (3) -> p. 82
+
+== dhuma / DHUMAA
+   dhuma (5) -> p. 4, 55, 74, 81
+   DHUMAA (2) -> p. 96, 97
+
+== akkuma / Akkuma
+   akkuma (5) -> p. 7, 9, 27, 80, 81
+   Akkuma (2) -> p. 28, 83
+
+== isaatii / isaatti / isatti
+   isaatii (3) -> p. 10, 63, 64
+   isaatti (3) -> p. 43, 61, 97
+   isatti (1) -> p. 19
+
+== bahuu / bahu
+   bahuu (5) -> p. 12, 61, 62, 66, 68
+   bahu (2) -> p. 43, 67
+
+== jachuu / jachu
+   jachuu (6) -> p. 13, 14, 42, 50, 56, 59
+   jachu (1) -> p. 44
+
+== jacha / Jacha
+   jacha (6) -> p. 15, 31, 32, 33, 65
+   Jacha (1) -> p. 22
+
+== Sababa / sababaa / sababa
+   Sababa (3) -> p. 20, 21, 23
+   sababaa (2) -> p. 17, 66
+   sababa (2) -> p. 23, 61
+
+== na / Na
+   na (6) -> p. 19, 49, 76, 81
+   Na (1) -> p. 78
+
+== Salaanni / salaanni
+   Salaanni (5) -> p. 20, 55, 69, 97
+   salaanni (2) -> p. 50, 70
+
+== amala / Amala
+   amala (6) -> p. 21, 29
+   Amala (1) -> p. 21
+
+== Dawud / Daawud
+   Dawud (4) -> p. 33, 46, 50
+   Daawud (3) -> p. 25, 66, 68
+
+== MASJIIDA / Masjiida / masjiidaa
+   MASJIIDA (5) -> p. 58, 59, 60, 61, 62
+   Masjiida (1) -> p. 25
+   masjiidaa (1) -> p. 61
+
+== khenya / khenyaa
+   khenya (6) -> p. 26, 68, 83, 84
+   khenyaa (1) -> p. 82
+
+== namarraa / NAMARRAA
+   namarraa (5) -> p. 43, 45, 48
+   NAMARRAA (2) -> p. 39, 40
+
+== harka / harkaa / Harka
+   harka (4) -> p. 51
+   harkaa (2) -> p. 43, 45
+   Harka (1) -> p. 76
+
+== nuuf / nuf
+   nuuf (6) -> p. 53, 82, 84
+   nuf (1) -> p. 76
+
+== DHIHAACHUUF / dhihaachuuf
+   DHIHAACHUUF (5) -> p. 58, 59, 60, 61, 62
+   dhihaachuuf (2) -> p. 58, 60
+
+== TURUU / turuu
+   TURUU (5) -> p. 58, 59, 60, 61, 62
+   turuu (2) -> p. 58, 60
+
+== Dhugumatti / dhugumatti
+   Dhugumatti (4) -> p. 75, 80, 82
+   dhugumatti (3) -> p. 74, 75, 82
+
+== Istikhaaraa / ISTIKHAARAA
+   Istikhaaraa (4) -> p. 80, 81
+   ISTIKHAARAA (3) -> p. 79, 80, 81
+
+== yaada / yaadaa / YAADA
+   yaada (2) -> p. 4
+   yaadaa (2) -> p. 74
+   YAADA (2) -> p. 96, 97
+
+== maqaa / Maqaa
+   maqaa (4) -> p. 32, 75, 81
+   Maqaa (2) -> p. 5, 82
+
+== Faaruun / faaruun
+   Faaruun (5) -> p. 5, 77, 82
+   faaruun (1) -> p. 82
+
+== isaatiis / isaattis
+   isaatiis (5) -> p. 10, 17, 21, 23, 84
+   isaattis (1) -> p. 84
+
+== dhaabuu / dhabuu
+   dhaabuu (3) -> p. 12, 32
+   dhabuu (3) -> p. 23, 26, 62
+
+== niyyaa / Niyyaa
+   niyyaa (5) -> p. 13, 14, 15, 52
+   Niyyaa (1) -> p. 15
+
+== dayuumsaa / dayumsaa
+   dayuumsaa (4) -> p. 14, 38, 60
+   dayumsaa (2) -> p. 43, 62
+
+== gammachuu / Gammachuu
+   gammachuu (5) -> p. 17, 23, 30, 73
+   Gammachuu (1) -> p. 17
+
+== DALAGUUN / dalaguun
+   DALAGUUN (4) -> p. 20, 21, 22, 23
+   dalaguun (2) -> p. 62
+
+== qabne / qabnee
+   qabne (5) -> p. 22, 65, 66, 74
+   qabnee (1) -> p. 66
+
+== Nuti / nuti / nutti / Nutti
+   Nuti (2) -> p. 72, 82
+   nuti (2) -> p. 82, 84
+   nutti (1) -> p. 27
+   Nutti (1) -> p. 38
+
+== tiyya / tiyyaa
+   tiyya (5) -> p. 49, 73, 81, 82
+   tiyyaa (1) -> p. 73
+
+== KEESSA / keessaa
+   KEESSA (5) -> p. 58, 59, 60, 61, 62
+   keessaa (1) -> p. 50
+
+== maatii / Maatii
+   maatii (4) -> p. 55, 63, 84
+   Maatii (2) -> p. 61, 67
+
+== IBAADAAF / ibaadaaf
+   IBAADAAF (5) -> p. 58, 59, 60, 61, 62
+   ibaadaaf (1) -> p. 55
+
+== NIYYACHUUN / niyyachuun
+   NIYYACHUUN (5) -> p. 58, 59, 60, 61, 62
+   niyyachuun (1) -> p. 60
+
+== hadiisa / hadiisaa
+   hadiisa (4) -> p. 4, 46, 77
+   hadiisaa (1) -> p. 4
+
+== barreeysaa / BARREEYSAA
+   barreeysaa (3) -> p. 4
+   BARREEYSAA (2) -> p. 5, 6
+
+== Zakaatul / zakaatul
+   Zakaatul (4) -> p. 64, 65, 97
+   zakaatul (1) -> p. 5
+
+== khannuu / khannu
+   khannuu (4) -> p. 10, 13, 26, 81
+   khannu (1) -> p. 72
+
+== agarsiisa / agarsiisaa
+   agarsiisa (4) -> p. 10, 22, 23, 70
+   agarsiisaa (1) -> p. 53
+
+== fajrii / Fajrii
+   fajrii (4) -> p. 13, 14, 15, 25
+   Fajrii (1) -> p. 54
+
+== godhu / godhuu
+   godhu (3) -> p. 59, 81, 83
+   godhuu (2) -> p. 13, 46
+
+== Muslimaa / Muslima
+   Muslimaa (3) -> p. 20, 27, 59
+   Muslima (2) -> p. 14, 64
+
+== Abu / Abuu
+   Abu (3) -> p. 33, 46, 66
+   Abuu (2) -> p. 25, 68
+
+== akkaan / akkan
+   akkaan (3) -> p. 42, 47, 56
+   akkan (2) -> p. 27, 72
+
+== lamaanii / LAMAANII
+   lamaanii (3) -> p. 31, 69, 97
+   LAMAANII (2) -> p. 67, 68
+
+== Arafaa / Arafa / arafa
+   Arafaa (3) -> p. 31, 34, 48
+   Arafa (1) -> p. 34
+   arafa (1) -> p. 48
+
+== Dubartiin / dubartiin
+   Dubartiin (3) -> p. 32, 35, 52
+   dubartiin (2) -> p. 42, 71
+
+== Dubartii / dubartii
+   Dubartii (3) -> p. 38, 40
+   dubartii (2) -> p. 64, 81
+
+== balleeysan / BALLEEYSAN
+   balleeysan (3) -> p. 39, 62, 97
+   BALLEEYSAN (2) -> p. 39, 40
+
+== soommaneeti / soommanetti
+   soommaneeti (3) -> p. 47, 48
+   soommanetti (2) -> p. 47
+
+== ajaje / ajajje
+   ajaje (4) -> p. 50, 52, 56, 70
+   ajajje (1) -> p. 83
+
+== Suuraa / suuraa
+   Suuraa (4) -> p. 69, 78, 80
+   suuraa (1) -> p. 69
+
+== qabrii / Qabrii
+   qabrii (3) -> p. 71, 72
+   Qabrii (2) -> p. 71, 72
+
+== KONKOLAATAA / konkolaataa
+   KONKOLAATAA (3) -> p. 82, 83, 84
+   konkolaataa (2) -> p. 82, 83
+
+== DU'AA'IIWWAN / du'aa'iiwwan
+   DU'AA'IIWWAN (3) -> p. 76, 77, 78
+   du'aa'iiwwan (1) -> p. 4
+
+== wanni / wani / Wanni
+   wanni (2) -> p. 5
+   wani (1) -> p. 19
+   Wanni (1) -> p. 53
+
+== haqaa / haqa
+   haqaa (2) -> p. 5, 8
+   haqa (2) -> p. 56, 73
+
+== utubaalee / UTUBAALEE
+   utubaalee (2) -> p. 5, 96
+   UTUBAALEE (2) -> p. 12, 13
+
+== Muslimoota / Muslimootaa
+   Muslimoota (2) -> p. 6, 63
+   Muslimootaa (2) -> p. 68, 72
+
+== barbaadu / barbaaduu
+   barbaadu (3) -> p. 8, 16, 17
+   barbaaduu (1) -> p. 6
+
+== lakkoofsa / Lakkoofsa
+   lakkoofsa (3) -> p. 7, 8, 37
+   Lakkoofsa (1) -> p. 8
+
+== gahu / gahuu
+   gahu (3) -> p. 13, 66, 77
+   gahuu (1) -> p. 9
+
+== shari’aan / Shari'aan / shari'aan
+   shari’aan (2) -> p. 58, 97
+   Shari'aan (1) -> p. 10
+   shari'aan (1) -> p. 20
+
+== isaaniis / isaanis
+   isaaniis (3) -> p. 12, 39, 40
+   isaanis (1) -> p. 63
+
+== gabbaruuf / gabbarruuf
+   gabbaruuf (3) -> p. 13, 14, 27
+   gabbarruuf (1) -> p. 20
+
+== fura / furaa
+   fura (3) -> p. 29, 51, 52
+   furaa (1) -> p. 15
+
+== hulaaleen / Hulaaleen
+   hulaaleen (2) -> p. 16
+   Hulaaleen (2) -> p. 16
+
+== torba / torbaa
+   torba (3) -> p. 68, 69, 77
+   torbaa (1) -> p. 17
+
+== qabduu / qabdu
+   qabduu (3) -> p. 33, 38, 45
+   qabdu (1) -> p. 21
+
+== kheeysan / kheysan / kheysaan
+   kheeysan (2) -> p. 21, 31
+   kheysan (1) -> p. 80
+   kheysaan (1) -> p. 97
+
+== ja’u / ja’uu
+   ja’u (3) -> p. 22, 80, 83
+   ja’uu (1) -> p. 84
+
+== QEEBALU / qeebalu
+   QEEBALU (3) -> p. 73, 74, 75
+   qeebalu (1) -> p. 23
+
+== timira / Timira
+   timira (3) -> p. 24, 64
+   Timira (1) -> p. 53
+
+== hoggu / Hogguu / hogguu
+   hoggu (2) -> p. 69
+   Hogguu (1) -> p. 26
+   hogguu (1) -> p. 43
+
+== fiddu / fiduu / fidu
+   fiddu (2) -> p. 77
+   fiduu (1) -> p. 28
+   fidu (1) -> p. 61
+
+== DHOORKAME / dhorkame
+   DHOORKAME (3) -> p. 31, 32, 33
+   dhorkame (1) -> p. 29
+
+== ibn / Ibn
+   ibn (3) -> p. 31, 33, 66
+   Ibn (1) -> p. 66
+
+== Khanaaf / kanaaf / khanaaf
+   Khanaaf (2) -> p. 48, 82
+   kanaaf (1) -> p. 32
+   khanaaf (1) -> p. 61
+
+== dhukkuba / Dhukkuba
+   dhukkuba (3) -> p. 37, 77, 78
+   Dhukkuba (1) -> p. 76
+
+== jatte / jAtte
+   jatte (3) -> p. 38, 42, 61
+   jAtte (1) -> p. 56
+
+== jaartii / Jaartii
+   jaartii (2) -> p. 38, 43
+   Jaartii (2) -> p. 40, 42
+
+== kheetii / kheeti
+   kheetii (3) -> p. 43, 73, 83
+   kheeti (1) -> p. 73
+
+== ffaa / faa
+   ffaa (3) -> p. 48, 49
+   faa (1) -> p. 44
+
+== ja’i / ja’ii
+   ja’i (3) -> p. 76, 82, 83
+   ja’ii (1) -> p. 56
+
+== dubartoota / dubartootaa
+   dubartoota (3) -> p. 63, 68, 71
+   dubartootaa (1) -> p. 97
+
+== DU'AA'IILEE / Du'aa’iillee
+   DU'AA'IILEE (3) -> p. 73, 74, 75
+   Du'aa’iillee (1) -> p. 78
+
+== siif / sif
+   siif (3) -> p. 83
+   sif (1) -> p. 77
+
+== AFAAN / Afaan / afaan
+   AFAAN (1) -> p. 4
+   Afaan (1) -> p. 14
+   afaan (1) -> p. 17
+
+== Murtiin / murtiin
+   Murtiin (2) -> p. 4, 73
+   murtiin (1) -> p. 73
+
+== ibsi / Ibsi
+   ibsi (2) -> p. 5
+   Ibsi (1) -> p. 4
+
+== madda / madaa
+   madda (2) -> p. 4, 73
+   madaa (1) -> p. 28
+
+== gabbaramaan / Gabbaramaan
+   gabbaramaan (2) -> p. 5, 75
+   Gabbaramaan (1) -> p. 74
+
+== gabricha / gabrichaa
+   gabricha (2) -> p. 73
+   gabrichaa (1) -> p. 5
+
+== irrattis / irrattiis
+   irrattis (2) -> p. 5, 7
+   irrattiis (1) -> p. 9
+
+== isarra / isarraa
+   isarra (2) -> p. 6, 72
+   isarraa (1) -> p. 74
+
+== Fedhii / fedhii
+   Fedhii (2) -> p. 17, 61
+   fedhii (1) -> p. 7
+
+== qajeelfama / qajeelfamaa
+   qajeelfama (2) -> p. 8, 11
+   qajeelfamaa (1) -> p. 8
+
+== sobaa / soba
+   sobaa (2) -> p. 22
+   soba (1) -> p. 8
+
+== soddoma / soddomaa
+   soddoma (2) -> p. 15
+   soddomaa (1) -> p. 9
+
+== HADIISOTA / hadiisota
+   HADIISOTA (2) -> p. 69, 70
+   hadiisota (1) -> p. 10
+
+== Nabi / Nabii
+   Nabi (2) -> p. 50
+   Nabii (1) -> p. 10
+
+== ISLAAMUMMAA / Islaamummaa
+   ISLAAMUMMAA (2) -> p. 12, 13
+   Islaamummaa (1) -> p. 97
+
+== Rabbirraa / Rabbirra
+   Rabbirraa (2) -> p. 12, 56
+   Rabbirra (1) -> p. 54
+
+== Qabeenya / qabeenya / qabeenyaa
+   Qabeenya (1) -> p. 13
+   qabeenya (1) -> p. 66
+   qabeenyaa (1) -> p. 84
+
+== dandeeytii / Dandeeytii
+   dandeeytii (2) -> p. 13, 80
+   Dandeeytii (1) -> p. 80
+
+== Hajjii / hajjii
+   Hajjii (2) -> p. 13, 28
+   hajjii (1) -> p. 34
+
+== isarratti / isaarratti
+   isarratti (2) -> p. 13, 52
+   isaarratti (1) -> p. 52
+
+== Hiikkaa / hiikkaa / hiika
+   Hiikkaa (1) -> p. 14
+   hiikkaa (1) -> p. 25
+   hiika (1) -> p. 55
+
+== Sha'abaana / Sha’abaana
+   Sha'abaana (2) -> p. 15
+   Sha’abaana (1) -> p. 49
+
+== Gabaasa / gabaasa
+   Gabaasa (2) -> p. 16
+   gabaasa (1) -> p. 16
+
+== Jannata / Jannataa
+   Jannata (2) -> p. 18, 19
+   Jannataa (1) -> p. 16
+
+== rahmataa / Rahmata / rahmata
+   rahmataa (1) -> p. 16
+   Rahmata (1) -> p. 74
+   rahmata (1) -> p. 97
+
+== ja’een / ja’en
+   ja’een (2) -> p. 17, 43
+   ja’en (1) -> p. 19
+
+== qabadhu / qabaadhu
+   qabadhu (2) -> p. 19
+   qabaadhu (1) -> p. 21
+
+== naan / nan
+   naan (2) -> p. 19
+   nan (1) -> p. 56
+
+== obboleessa / Obboleessa
+   obboleessa (2) -> p. 20, 27
+   Obboleessa (1) -> p. 72
+
+== Faa’idaa / faa’idaa
+   Faa’idaa (2) -> p. 26, 97
+   faa’idaa (1) -> p. 20
+
+== beekhaa / Beekhaa
+   beekhaa (2) -> p. 21, 62
+   Beekhaa (1) -> p. 80
+
+== furre / fure
+   furre (2) -> p. 22, 32
+   fure (1) -> p. 21
+
+== Sababaan / sababaan
+   Sababaan (2) -> p. 23
+   sababaan (1) -> p. 32
+
+== Zikrii / zikrii
+   Zikrii (2) -> p. 25, 36
+   zikrii (1) -> p. 62
+
+== firraa / firra
+   firraa (2) -> p. 45
+   firra (1) -> p. 26
+
+== eeguu / eegu
+   eeguu (2) -> p. 27, 61
+   eegu (1) -> p. 83
+
+== dhiisu / dhiisuu
+   dhiisu (2) -> p. 82, 83
+   dhiisuu (1) -> p. 29
+
+== barsiisa / barsiisaa
+   barsiisa (2) -> p. 29, 30
+   barsiisaa (1) -> p. 80
+
+== Hiyyeeyyii / hiyyeeyyii
+   Hiyyeeyyii (2) -> p. 29, 65
+   hiyyeeyyii (1) -> p. 65
+
+== Ad’haa / Adhaa
+   Ad’haa (2) -> p. 31, 68
+   Adhaa (1) -> p. 31
+
+== nyaatanii / nyaattani
+   nyaatanii (2) -> p. 36, 41
+   nyaattani (1) -> p. 31
+
+== abbaa / Abbaa
+   abbaa (2) -> p. 52, 64
+   Abbaa (1) -> p. 33
+
+== Khamisa / Kamisaa / Khamisaa
+   Khamisa (1) -> p. 34
+   Kamisaa (1) -> p. 49
+   Khamisaa (1) -> p. 49
+
+== Nasaa'ii / Nasa’ii
+   Nasaa'ii (2) -> p. 49, 50
+   Nasa’ii (1) -> p. 35
+
+== FURUUN / furuun
+   FURUUN (2) -> p. 37, 38
+   furuun (1) -> p. 41
+
+== A’ishaan / A’ishan / Aa’ishaan
+   A’ishaan (1) -> p. 38
+   A’ishan (1) -> p. 42
+   Aa’ishaan (1) -> p. 61
+
+== dhufuu / dhufu
+   dhufuu (2) -> p. 38, 48
+   dhufu (1) -> p. 49
+
+== balleeysuu / balleeysu
+   balleeysuu (2) -> p. 39, 40
+   balleeysu (1) -> p. 74
+
+== dhufee / dhufe
+   dhufee (2) -> p. 40, 53
+   dhufe (1) -> p. 72
+
+== amma / Amma
+   amma (2) -> p. 40, 72
+   Amma (1) -> p. 84
+
+== adaba / adabaa
+   adaba (2) -> p. 40, 72
+   adabaa (1) -> p. 40
+
+== rafuu / rafu
+   rafuu (2) -> p. 42, 61
+   rafu (1) -> p. 40
+
+== jirtu / jirtuu
+   jirtu (2) -> p. 81, 83
+   jirtuu (1) -> p. 42
+
+== godhamu / godhamuu
+   godhamu (2) -> p. 43, 46
+   godhamuu (1) -> p. 68
+
+== bishaan / Bishaan
+   bishaan (2) -> p. 43
+   Bishaan (1) -> p. 43
+
+== ija / ijaa
+   ija (2) -> p. 73, 77
+   ijaa (1) -> p. 44
+
+== hadiisni / Hadiisni
+   hadiisni (2) -> p. 46, 83
+   Hadiisni (1) -> p. 70
+
+== FADHII / fadhii
+   FADHII (2) -> p. 52, 53
+   fadhii (1) -> p. 62
+
+== tanaan / taanaan
+   tanaan (2) -> p. 73, 74
+   taanaan (1) -> p. 53
+
+== witrii / Witrii
+   witrii (2) -> p. 56, 67
+   Witrii (1) -> p. 54
+
+== tahuus / tahus
+   tahuus (2) -> p. 55, 64
+   tahus (1) -> p. 97
+
+== adda / aadaa
+   adda (2) -> p. 60, 71
+   aadaa (1) -> p. 71
+
+== bu’uuraa / bu'uura
+   bu’uuraa (2) -> p. 64
+   bu'uura (1) -> p. 81
+
+== dubartoonni / Dubartoonni
+   dubartoonni (2) -> p. 70
+   Dubartoonni (1) -> p. 68
+
+== ARGAMU / argamu
+   ARGAMU (2) -> p. 69, 70
+   argamu (1) -> p. 70
+
+== gooftaa / Gooftaa
+   gooftaa (2) -> p. 76, 84
+   Gooftaa (1) -> p. 77
+
+== hundatti / hundaati
+   hundatti (2) -> p. 81, 83
+   hundaati (1) -> p. 80
+
+== MAXXANSA / maxxansaa
+   MAXXANSA (1) -> p. 4
+   maxxansaa (1) -> p. 4
+
+== khanname / khannamee
+   khanname (1) -> p. 4
+   khannamee (1) -> p. 53
+
+== Kheysaafuu / kheysaafuu
+   Kheysaafuu (1) -> p. 4
+   kheysaafuu (1) -> p. 96
+
+== hijaamaa / Hijaamaa
+   hijaamaa (1) -> p. 4
+   Hijaamaa (1) -> p. 46
+
+== dabarsa / dabarsaa
+   dabarsa (1) -> p. 4
+   dabarsaa (1) -> p. 55
+
+== saniitti / sanitti
+   saniitti (1) -> p. 4
+   sanitti (1) -> p. 39
+
+== Fuulli / fuulli
+   Fuulli (1) -> p. 4
+   fuulli (1) -> p. 4
+
+== barnootaa / barnoota
+   barnootaa (1) -> p. 4
+   barnoota (1) -> p. 25
+
+== khanaatti / Khanatti
+   khanaatti (1) -> p. 4
+   Khanatti (1) -> p. 5
+
+== teenya / tenya
+   teenya (1) -> p. 5
+   tenya (1) -> p. 84
+
+== Haqaan / haqan
+   Haqaan (1) -> p. 5
+   haqan (1) -> p. 18
+
+== ikhlaasa / ikhlaasaa
+   ikhlaasa (1) -> p. 5
+   ikhlaasaa (1) -> p. 29
+
+== godhamee / godhame
+   godhamee (1) -> p. 7
+   godhame (1) -> p. 27
+
+== lakkaawwamoo / lakkaawamoo
+   lakkaawwamoo (1) -> p. 7
+   lakkaawamoo (1) -> p. 9
+
+== Qur'anni / Qur’anni
+   Qur'anni (1) -> p. 8
+   Qur’anni (1) -> p. 96
+
+== ifa / ifaa
+   ifa (1) -> p. 8
+   ifaa (1) -> p. 73
+
+== dhaqabe / dhaqqabe
+   dhaqabe (1) -> p. 8
+   dhaqqabe (1) -> p. 10
+
+== boodarra / Boodarra
+   boodarra (1) -> p. 9
+   Boodarra (1) -> p. 10
+
+== Ulfinaa / ulfina
+   Ulfinaa (1) -> p. 10
+   ulfina (1) -> p. 10
+
+== Bu'uun / bu'uun
+   Bu'uun (1) -> p. 10
+   bu'uun (1) -> p. 10
+
+== sababni / Sababni
+   sababni (1) -> p. 10
+   Sababni (1) -> p. 21
+
+== gadiitti / gaditti
+   gadiitti (1) -> p. 10
+   gaditti (1) -> p. 40
+
+== Dhugaan / dhugaan
+   Dhugaan (1) -> p. 10
+   dhugaan (1) -> p. 75
+
+== khunis / Khunis
+   khunis (1) -> p. 10
+   Khunis (1) -> p. 59
+
+== aayaata / Aayaata
+   aayaata (1) -> p. 10
+   Aayaata (1) -> p. 96
+
+== qabaatee / qabaatte
+   qabaatee (1) -> p. 13
+   qabaatte (1) -> p. 43
+
+== godhatee / godhate
+   godhatee (1) -> p. 13
+   godhate (1) -> p. 77
+
+== godhanii / godhani
+   godhanii (1) -> p. 14
+   godhani (1) -> p. 36
+
+== As / as
+   As (1) -> p. 15
+   as (1) -> p. 16
+
+== Jahannam / jahannam
+   Jahannam (1) -> p. 16
+   jahannam (1) -> p. 72
+
+== baasu / baasuu
+   baasu (1) -> p. 17
+   baasuu (1) -> p. 21
+
+== Anaaf / anaaf
+   Anaaf (1) -> p. 17
+   anaaf (1) -> p. 17
+
+== soommanan / soommanaan
+   soommanan (1) -> p. 18
+   soommanaan (1) -> p. 53
+
+== arrabsuu / arrabsu
+   arrabsuu (1) -> p. 21
+   arrabsu (1) -> p. 22
+
+== khitaaboota / khitaabota
+   khitaaboota (1) -> p. 22
+   khitaabota (1) -> p. 62
+
+== beekhi / Beeki
+   beekhi (1) -> p. 22
+   Beeki (1) -> p. 23
+
+== Suhuura / suhuraa
+   Suhuura (1) -> p. 24
+   suhuraa (1) -> p. 32
+
+== kheyrii / kheeyrii
+   kheyrii (1) -> p. 24
+   kheeyrii (1) -> p. 68
+
+== Khanaafuu / khanaafuu
+   Khanaafuu (1) -> p. 25
+   khanaafuu (1) -> p. 49
+
+== khaasii / khaasi
+   khaasii (1) -> p. 25
+   khaasi (1) -> p. 76
+
+== barii / Baarii
+   barii (1) -> p. 25
+   Baarii (1) -> p. 70
+
+== Firootaa / firoota
+   Firootaa (1) -> p. 26
+   firoota (1) -> p. 26
+
+== jaalatu / jaallatu
+   jaalatu (1) -> p. 26
+   jaallatu (1) -> p. 64
+
+== Soommanatti / soommanatti
+   Soommanatti (1) -> p. 28
+   soommanatti (1) -> p. 41
+
+== danda'u / danda’u
+   danda'u (1) -> p. 28
+   danda’u (1) -> p. 60
+
+== beekhee / beekhe
+   beekhee (1) -> p. 30
+   beekhe (1) -> p. 56
+
+== dhaabuutiin / dhabuutiin
+   dhaabuutiin (1) -> p. 32
+   dhabuutiin (1) -> p. 44
+
+== dhuge / dhugee
+   dhuge (1) -> p. 34
+   dhugee (1) -> p. 41
+
+== jaarsaa / Jaarsa
+   jaarsaa (1) -> p. 35
+   Jaarsa (1) -> p. 38
+
+== imalarra / imalarraa
+   imalarra (1) -> p. 37
+   imalarraa (1) -> p. 84
+
+== midhaan / miidhaan
+   midhaan (1) -> p. 38
+   miidhaan (1) -> p. 76
+
+== Wantoonni / Wantooni
+   Wantoonni (1) -> p. 39
+   Wantooni (1) -> p. 62
+
+== khafaluun / kafaluun
+   khafaluun (1) -> p. 40
+   kafaluun (1) -> p. 42
+
+== Gariin / gaariin
+   Gariin (1) -> p. 40
+   gaariin (1) -> p. 81
+
+== ifiraa / ifirraa
+   ifiraa (1) -> p. 43
+   ifirraa (1) -> p. 44
+
+== Dhiqannaa / dhiqannaa
+   Dhiqannaa (1) -> p. 43
+   dhiqannaa (1) -> p. 43
+
+== ilkee / Ilkee
+   ilkee (1) -> p. 44
+   Ilkee (1) -> p. 45
+
+== gosa / Gosa
+   gosa (1) -> p. 45
+   Gosa (1) -> p. 59
+
+== Qabbaneeyfachuudhaaf / qabbaneeyfachuudhaaf
+   Qabbaneeyfachuudhaaf (1) -> p. 45
+   qabbaneeyfachuudhaaf (1) -> p. 45
+
+== hundaa’uun / hundaa'uun
+   hundaa’uun (1) -> p. 46
+   hundaa'uun (1) -> p. 81
+
+== Shawaala / shawwaalaa
+   Shawaala (1) -> p. 47
+   shawwaalaa (1) -> p. 47
+
+== dabale / dabalee
+   dabale (1) -> p. 47
+   dabalee (1) -> p. 84
+
+== Aashuuraa / Aashuraa
+   Aashuuraa (1) -> p. 48
+   Aashuraa (1) -> p. 48
+
+== niin / nin
+   niin (1) -> p. 49
+   nin (1) -> p. 53
+
+== Guyyaan / guyyaan
+   Guyyaan (1) -> p. 49
+   guyyaan (1) -> p. 49
+
+== Natti / natti
+   Natti (1) -> p. 53
+   natti (1) -> p. 76
+
+== salaate / salaatee
+   salaate (1) -> p. 54
+   salaatee (1) -> p. 59
+
+== godha / godhaa
+   godha (1) -> p. 55
+   godhaa (1) -> p. 58
+
+== Ulaagaalee / ulaagaalee
+   Ulaagaalee (1) -> p. 60
+   ulaagaalee (1) -> p. 97
+
+== uumamaa / uumama
+   uumamaa (1) -> p. 61
+   uumama (1) -> p. 77
+
+== dandaya / dandayaa
+   dandaya (1) -> p. 61
+   dandayaa (1) -> p. 80
+
+== salaatamu / salaatamuu
+   salaatamu (1) -> p. 61
+   salaatamuu (1) -> p. 97
+
+== baay’ee / baayyee
+   baay’ee (1) -> p. 64
+   baayyee (1) -> p. 66
+
+== khadhatu / khadhattu
+   khadhatu (1) -> p. 75
+   khadhattu (1) -> p. 78
+
+== maganfadha’ / maganfadha
+   maganfadha’ (1) -> p. 76
+   maganfadha (1) -> p. 77
+
+== fayyisaa / fayyisa
+   fayyisaa (1) -> p. 76
+   fayyisa (1) -> p. 77
+
+== Deeyma / deeyma
+   Deeyma (1) -> p. 78
+   deeyma (1) -> p. 78
+
+== hundarratti / hundarrati
+   hundarratti (1) -> p. 80
+   hundarrati (1) -> p. 97
+
+== badii / Badii
+   badii (1) -> p. 83
+   Badii (1) -> p. 84
+
+== khenyaatti / khenyatti
+   khenyaatti (1) -> p. 84
+   khenyatti (1) -> p. 84
+
+== khadhanna / khadhannaa
+   khadhanna (1) -> p. 84
+   khadhannaa (1) -> p. 97

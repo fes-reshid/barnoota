@@ -1,0 +1,806 @@
+group,spelling,count,pages
+fi,fi,193,"4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 37, 38, 39, 40, 41, 43, 44, 45, 46, 48, 49, 50, 51, 53, 54, 55, 56, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 76, 77, 78, 81, 82, 84, 96, 97"
+fi,FI,14,"14, 15, 16, 17, 18, 19, 47, 48, 49, 50, 51, 82, 83, 84"
+somana,soommana,62,"4, 5, 9, 13, 14, 15, 17, 20, 21, 22, 23, 26, 27, 29, 30, 32, 35, 37, 38, 39, 40, 41, 42, 43, 46, 49, 50, 51, 52, 53, 70, 97"
+somana,SOOMMANA,23,"14, 15, 16, 17, 18, 19, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53"
+somana,soommanaa,13,"5, 9, 10, 14, 15, 22, 26, 31, 38, 40, 96"
+somana,SOOMMANAA,12,"7, 8, 9, 10, 11, 24, 25, 26, 27, 28, 29, 30"
+somana,Soommana,10,"15, 19, 20, 32, 39, 40, 49"
+somana,soommana’,1,22
+hin,hin,114,"4, 5, 8, 9, 13, 14, 15, 18, 19, 21, 22, 23, 24, 25, 26, 28, 29, 32, 34, 35, 37, 38, 41, 42, 43, 44, 45, 46, 48, 52, 53, 55, 58, 61, 62, 65, 66, 67, 68, 71, 74, 75, 76, 77, 80, 81, 82, 84, 97"
+hin,HIN,6,"41, 42, 43, 44, 45, 46"
+isa,isaa,83,"5, 7, 8, 9, 12, 13, 15, 17, 18, 19, 22, 23, 25, 27, 29, 30, 35, 39, 41, 42, 45, 46, 48, 52, 54, 55, 56, 58, 59, 61, 63, 64, 66, 72, 74, 75, 77, 81, 83, 96, 97"
+isa,isa,21,"5, 11, 20, 27, 28, 30, 41, 46, 62, 63, 73, 77, 78, 80, 81"
+isa,ISAA,7,"14, 15, 47, 48, 49, 50, 51"
+isa,Isa,3,"5, 70, 84"
+isa,Isaa,1,6
+ira,irraa,59,"5, 9, 10, 13, 14, 15, 17, 18, 20, 21, 22, 23, 26, 28, 29, 30, 37, 39, 42, 43, 47, 49, 50, 53, 56, 60, 62, 64, 65, 66, 71, 72, 77, 81, 83, 84"
+ira,irra,21,"4, 5, 7, 8, 9, 13, 14, 26, 31, 37, 38, 42, 67, 68, 76, 77"
+ira,IRRAA,4,"27, 28, 29, 30"
+ira,Irraa,1,49
+aka,akka,77,"4, 5, 6, 7, 8, 12, 20, 22, 23, 26, 27, 28, 29, 30, 35, 38, 39, 40, 44, 45, 46, 47, 48, 50, 52, 58, 61, 62, 63, 64, 65, 68, 70, 72, 73, 74, 75, 77, 78, 80, 81, 82, 83"
+aka,Akka,3,"14, 27, 70"
+keysati,kheysatti,54,"4, 5, 7, 8, 10, 12, 14, 15, 16, 19, 22, 23, 24, 25, 26, 29, 30, 32, 37, 55, 56, 59, 61, 64, 65, 68, 69, 70, 72, 73, 74, 80, 81, 96, 97"
+keysati,KHEYSATTI,6,"20, 21, 22, 23, 71, 72"
+keysati,keeysatti,3,"73, 76, 81"
+keysati,kheeysatti,1,5
+keysati,keysatti,1,83
+nama,nama,44,"4, 8, 10, 13, 16, 17, 28, 29, 30, 34, 37, 40, 41, 42, 44, 45, 47, 48, 60, 61, 63, 64, 65, 66, 73, 77, 84, 97"
+nama,Nama,7,"5, 13, 14, 17, 26, 63, 83"
+nama,NAMA,6,"41, 42, 43, 44, 45, 46"
+nama,namaa,3,"21, 29, 76"
+keysa,kheysa,26,"8, 9, 18, 20, 22, 23, 24, 28, 29, 43, 51, 54, 58, 60, 61, 62, 68, 74, 78, 84, 97"
+keysa,kheysaa,21,"5, 7, 8, 37, 50, 51, 54, 56, 61, 62, 66, 67, 73, 74, 77, 96, 97"
+keysa,KHEYSA,4,"54, 55, 56, 57"
+keysa,kheeysa,2,"42, 78"
+keysa,keeysa,1,44
+keysa,kHeYsa,1,60
+kan,khan,45,"5, 6, 9, 14, 38, 40, 42, 45, 46, 48, 53, 55, 58, 60, 61, 66, 69, 73, 74, 75, 77, 78, 80, 81, 84, 97"
+kan,kan,9,"5, 31, 39, 40, 45, 48, 63"
+salata,SALAATA,20,"54, 55, 56, 57, 67, 68, 79, 80, 81, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95"
+salata,salaata,17,"5, 15, 20, 25, 43, 50, 51, 54, 62, 66, 68, 80, 97"
+salata,salaataa,8,"38, 56, 67, 68, 69, 97"
+salata,Salaata,6,"12, 20, 97"
+salata,Salaataa,2,"69, 81"
+rabi,Rabbii,32,"10, 12, 13, 17, 19, 21, 23, 25, 30, 32, 33, 48, 49, 50, 53, 56, 58, 60, 62, 66, 68, 71, 72, 73, 77, 82, 83, 84"
+rabi,Rabbi,20,"7, 8, 9, 11, 13, 14, 17, 27, 50, 73, 74, 75, 76, 84, 96"
+ykn,ykn,49,"7, 8, 10, 13, 15, 21, 22, 32, 34, 35, 37, 38, 40, 41, 42, 43, 45, 48, 61, 62, 64, 66, 67, 73, 74, 75, 76, 77, 81, 82, 83, 84, 97"
+ykn,YKN,3,"79, 80, 81"
+guya,guyyaa,39,"4, 15, 19, 21, 28, 31, 33, 35, 36, 37, 40, 48, 49, 50, 51, 59, 63, 65, 66, 71"
+guya,Guyyaa,10,"11, 18, 32, 33, 34, 42, 50, 53, 71"
+guya,Guyya,1,45
+ramadana,Ramadaanaa,20,"8, 9, 10, 15, 20, 23, 45, 47, 56, 59, 70, 96, 97"
+ramadana,Ramadaana,13,"9, 13, 18, 23, 26, 28, 47, 58, 97"
+ramadana,RAMADAANA,8,"20, 21, 22, 23, 54, 55, 56, 57"
+ramadana,RAMADAANAA,6,"14, 15, 16, 17, 18, 19"
+ramadana,Ramadana,2,96
+rabin,Rabbiin,45,"6, 7, 8, 9, 10, 12, 17, 19, 20, 22, 23, 25, 27, 30, 37, 48, 49, 56, 64, 70, 72, 74, 75, 77, 78, 81, 82, 83, 97"
+rabin,RABBIIN,3,"73, 74, 75"
+namni,Namni,27,"5, 7, 8, 10, 15, 21, 22, 29, 30, 33, 37, 41, 42, 47, 52, 60, 61, 65, 66, 77, 81, 84"
+namni,namni,19,"7, 8, 18, 23, 32, 37, 48, 50, 59, 61, 62, 66, 81, 82"
+yo,yoo,35,"4, 13, 14, 19, 22, 25, 28, 30, 34, 35, 38, 42, 43, 44, 45, 48, 52, 59, 61, 66, 68, 69, 72, 73, 74, 75, 77, 81"
+yo,Yoo,7,"15, 24, 35, 49, 52, 81"
+toko,tokko,35,"4, 5, 13, 16, 19, 21, 22, 35, 37, 38, 48, 50, 51, 55, 59, 63, 64, 66, 73, 74, 80, 81, 96"
+toko,tokkoo,2,"10, 48"
+toko,TOKKO,2,"12, 13"
+dha,dha,34,"4, 7, 9, 10, 11, 14, 15, 17, 23, 24, 27, 42, 50, 58, 59, 60, 62, 66, 73, 74, 78, 80, 82, 97"
+dha,DHA,5,"58, 59, 60, 61, 62"
+yaro,yaroo,26,"4, 12, 17, 20, 25, 32, 38, 39, 43, 64, 65, 66, 70, 72, 76, 77, 83, 84"
+yaro,Yaroo,10,"16, 18, 19, 21, 66, 78, 80, 81, 82, 83"
+yaro,YAROO,3,"82, 83, 84"
+bukari,Bukhaarii,25,"13, 15, 16, 17, 18, 22, 24, 28, 32, 38, 54, 55, 59, 64, 66, 68, 71, 76, 77"
+bukari,Bukharii,7,"32, 39, 55, 56, 58, 78"
+bukari,Bukhari,5,"35, 41, 46, 49, 51"
+bukari,Bukhaari,1,81
+jae,ja’e,32,"15, 16, 19, 28, 34, 35, 36, 39, 41, 42, 47, 48, 49, 50, 53, 56, 64, 68, 70, 71, 77, 83"
+jae,ja’ee,6,"17, 25, 49, 53, 74"
+dirqama,dirqama,27,"7, 9, 10, 12, 14, 15, 20, 22, 27, 43, 61, 63, 64, 66, 97"
+dirqama,dirqamaa,7,"35, 52, 59, 62, 70, 80"
+dirqama,Dirqama,1,96
+wan,waan,27,"8, 10, 17, 30, 39, 40, 41, 64, 65, 70, 73, 77, 80, 81, 82, 83"
+wan,wan,6,"26, 35, 40, 44, 78"
+wan,Waan,1,12
+wantota,wantoota,15,"5, 9, 12, 13, 14, 15, 20, 26, 29, 30, 60, 64, 84, 97"
+wantota,WANTOOTA,12,"20, 21, 22, 23, 39, 40, 41, 42, 43, 44, 45, 46"
+wantota,Wantoota,5,"60, 62, 97"
+jiru,jiru,23,"4, 5, 7, 8, 9, 15, 18, 19, 37, 49, 59, 61, 62, 71, 73, 74, 77, 82"
+jiru,jiruu,4,"34, 35, 48"
+jiru,jirru,2,"38, 84"
+jiru,jiiru,1,4
+iti,itti,28,"5, 7, 14, 18, 25, 31, 36, 40, 41, 42, 43, 47, 49, 50, 51, 59, 63, 65, 66, 70, 82, 96"
+iti,Itti,1,55
+ha,haa,28,"7, 8, 21, 22, 24, 32, 35, 37, 41, 43, 52, 64, 68, 72, 77, 78, 80, 83, 84"
+ha,Haa,1,46
+al,Al,24,"8, 18, 27, 31, 36, 37, 50, 63, 64, 65, 66, 68, 69, 70, 78"
+al,AL,4,"63, 64, 65, 66"
+al,al,1,70
+tahu,tahuu,19,"10, 33, 56, 58, 60, 67, 69, 70, 75, 77, 81, 96, 97"
+tahu,tahu,8,"14, 30, 43, 46, 63, 69, 77, 78"
+duai,DU'AA'II,17,"79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95"
+duai,du'aa'ii,6,"24, 77, 81, 84"
+duai,du’a’ii,1,25
+duai,du’aa’ii,1,68
+duai,du’aa'ii,1,73
+duai,du'a'i,1,74
+kana,khana,17,"4, 5, 6, 8, 10, 25, 29, 40, 43, 68, 76, 81, 82, 83, 84, 96"
+kana,khanna,4,"13, 17, 29, 83"
+kana,Khana,2,"13, 23"
+kana,kannaa,1,26
+kana,khannaa,1,55
+kana,khanaa,1,72
+ida,Iidaa,12,"11, 23, 65, 66, 70, 71, 97"
+ida,Iida,9,"31, 69, 71, 97"
+ida,IIDA,2,"67, 68"
+ida,IIDAA,2,"71, 72"
+ida,iidaa,1,5
+tahe,tahe,24,"7, 10, 12, 20, 21, 27, 30, 32, 37, 42, 45, 56, 63, 64, 71, 77, 81, 84"
+tahe,tahee,1,64
+sahiha,Sahiiha,17,"25, 33, 34, 35, 39, 41, 42, 43, 46, 48, 49, 62, 72, 74, 75"
+sahiha,sahiiha,7,"4, 19, 24, 28, 77, 82"
+jira,jira,22,"5, 7, 9, 12, 13, 15, 17, 18, 20, 24, 38, 45, 46, 53, 73, 78, 82"
+jira,jiraa,1,53
+jira,jirra,1,84
+akasuma,akkasuma,20,"5, 15, 42, 44, 47, 55, 58, 60, 61, 62, 65, 66, 70, 74, 75, 77, 78, 81, 96"
+akasuma,Akkasuma,3,"51, 62, 84"
+somani,Soommanni,11,"9, 14, 17, 20, 29, 30, 47, 48"
+somani,soommanni,9,"5, 7, 9, 10, 21, 27, 29, 40, 47"
+somani,SOOMMANNI,2,"12, 13"
+somani,soomanni,1,96
+somanu,soommanuu,16,"8, 10, 13, 14, 17, 32, 33, 35, 38, 40, 47, 49"
+somanu,soommanu,7,"5, 8, 15, 29, 30, 52, 65"
+ya,Yaa,22,"7, 16, 20, 27, 53, 56, 68, 73, 74, 75, 76, 80, 81, 82, 83, 84"
+ya,yaa,1,72
+guyota,guyyoota,12,"7, 8, 9, 32, 37, 38, 47, 49"
+guyota,GUYYOOTA,6,"31, 32, 33, 34, 35, 36"
+guyota,Guyyoota,4,"7, 31, 36, 50"
+guyota,guyyota,1,47
+oso,osoo,18,"8, 15, 28, 32, 33, 34, 35, 40, 42, 43"
+oso,Osoo,3,"40, 42, 45"
+qabu,qabu,13,"14, 22, 25, 37, 40, 49, 61, 71, 80, 81, 96, 97"
+qabu,qabuu,7,"42, 46, 66"
+ati,ati,10,"73, 75, 76, 77, 80, 83, 84"
+ati,Ati,6,"74, 75, 80, 82"
+ati,ATI,4,"20, 21, 22, 23"
+nyata,nyaata,10,"5, 14, 15, 17, 63, 64, 66"
+nyata,nyaataa,5,"22, 26, 29, 44, 61"
+nyata,Nyaata,3,"13, 39, 44"
+bati,baatii,16,"14, 32, 38, 40, 43, 47, 49, 60, 62, 68, 70"
+bati,baattii,1,33
+bati,battii,1,47
+gara,gara,13,"4, 10, 16, 43, 49, 58, 61, 67, 81, 84"
+gara,garaa,4,"29, 38, 74"
+naf,naaf,12,"77, 80, 81, 82"
+naf,naf,5,"6, 49, 73, 74, 76"
+namota,namoota,13,"17, 21, 23, 26, 29, 30, 63, 65, 83"
+namota,Namoota,2,"20, 26"
+namota,NAMOOTA,2,"37, 38"
+ani,ani,12,"22, 49, 53, 74, 76, 80, 82, 83"
+ani,Ani,5,"22, 68, 73, 75, 80"
+bira,biraa,11,"5, 16, 18, 53, 61, 76, 81, 97"
+bira,bira,5,"9, 35, 53, 73, 77"
+isin,isin,13,"7, 8, 15, 27, 53, 70, 72, 83"
+isin,Isin,3,"7, 8, 37"
+dura,dura,7,"7, 9, 15, 50, 66"
+dura,DURAA,6,"41, 42, 43, 44, 45, 46"
+dura,duraa,3,"27, 31, 46"
+imala,imala,9,"7, 8, 9, 14, 37, 82, 83, 84"
+imala,IMALA,3,"82, 83, 84"
+imala,imalaa,2,"13, 84"
+imala,Imala,2,"83, 84"
+hanga,hanga,15,"7, 9, 13, 14, 17, 18, 32, 44, 45, 46, 70"
+hanga,Hanga,1,64
+gari,gaarii,15,"8, 16, 17, 21, 23, 24, 26, 55, 81, 83"
+gari,Gaarii,1,29
+jia,ji'a,8,"8, 10, 15, 50"
+jia,ji’a,5,"15, 36, 96"
+jia,Ji'a,3,"8, 15"
+garu,garuu,12,"17, 22, 55, 61, 66, 68, 69, 70, 75, 80"
+garu,Garuu,4,"9, 46, 66, 71"
+ke,khee,15,"16, 20, 26, 67, 73, 74, 75, 76, 80"
+ke,kee,1,43
+baka,bakka,13,"4, 7, 39, 44, 59, 61, 69, 71, 76, 83"
+baka,Bakka,2,"65, 81"
+rabiti,RABBIITTI,5,"58, 59, 60, 61, 62"
+rabiti,Rabbiiti,5,"77, 82"
+rabiti,Rabbitti,2,"7, 49"
+rabiti,Rabbiitti,2,"59, 62"
+suna,sunnaa,8,"52, 59, 62"
+suna,SUNNAA,5,"47, 48, 49, 50, 51"
+suna,Sunnaa,1,54
+kitaba,khitaaba,9,"4, 6, 70, 73"
+kitaba,KHITAABA,2,"96, 97"
+kitaba,Khitaaba,1,5
+kitaba,khitaabaa,1,20
+namusa,naamusa,6,"5, 23, 26, 61, 96, 97"
+namusa,NAAMUSA,5,"24, 25, 26, 52, 53"
+namusa,naamusaa,1,22
+namusa,Naamusa,1,61
+isan,isaan,10,"9, 18, 22, 29, 41, 65, 70"
+isan,Isaan,3,"18, 29, 38"
+akasumas,akkasumas,12,"10, 21, 23, 26, 29, 63, 65, 74, 75, 84"
+akasumas,Akkasumas,1,52
+salatu,SALAATUU,6,"54, 55, 56, 57, 67, 68"
+salatu,salaatu,5,"55, 69, 80"
+salatu,Salaatuu,1,12
+salatu,salaatuu,1,12
+hunda,hunda,12,"13, 14, 17, 50, 63, 64, 74, 80, 84"
+hunda,Hunda,1,73
+faya,fayyaa,6,"4, 14, 26, 62, 72, 77"
+faya,FAYYAA,3,"76, 77, 78"
+faya,Fayyaa,3,"76, 78"
+dhugati,dhugaatii,11,"5, 13, 14, 15, 22, 26, 39, 45, 46, 61"
+dhugati,dhugaati,1,76
+fixri,Fixrii,7,"63, 64, 66, 68, 70, 97"
+fixri,FIXRII,4,"63, 64, 65, 66"
+fixri,fixrii,1,5
+ol,ol,8,"7, 10, 27, 32, 37, 43, 49, 97"
+ol,Ol,4,"17, 58, 60, 70"
+ini,inni,10,"8, 9, 11, 12, 24, 35, 58, 74, 83"
+ini,Inni,2,"50, 72"
+jachun,jachuun,9,"13, 14, 31, 33, 36, 42, 66, 70, 72"
+jachun,Jachuun,3,"27, 50"
+boda,booda,9,"43, 55, 59, 66, 68, 69, 71, 80, 81"
+boda,boodaa,3,"56, 58, 59"
+tarawiha,TARAWIIHAA,11,"85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95"
+tarawiha,Taraawiihaa,1,97
+jalqaba,jalqabaa,5,"4, 68, 69, 74"
+jalqaba,jalqaba,3,"4, 5, 55"
+jalqaba,JALQABAA,2,"96, 97"
+jalqaba,Jalqaba,1,10
+itikafa,itikaafa,4,"61, 62"
+itikafa,I’itikaafa,3,"5, 97"
+itikafa,I'itikaafaa,3,"59, 60, 61"
+itikafa,I’itikaafaa,1,4
+ture,ture,9,"4, 10, 55, 59, 67, 68, 74, 80"
+ture,turre,2,"38, 82"
+halkani,halkanii,7,"5, 50, 54, 55, 97"
+halkani,HALKANII,4,"54, 55, 56, 57"
+zaka,Zakaa,6,"13, 63, 64, 65, 66"
+zaka,ZAKAA,4,"63, 64, 65, 66"
+zaka,zakaa,1,13
+halkan,halkan,9,"17, 22, 43, 51, 55, 56, 63"
+halkan,Halkan,2,"25, 70"
+hasan,hasan,5,"4, 17, 82, 83"
+hasan,Hasan,5,"50, 66, 68, 74, 77"
+waliti,walitti,9,"4, 21, 32, 40, 71"
+waliti,Walitti,1,71
+alah,Allah,8,"5, 6, 76"
+alah,Allaah,2,"80, 81"
+sadarka,sadarkaa,4,"5, 9, 10, 27"
+sadarka,SADARKAA,4,"16, 17, 18, 19"
+sadarka,Sadarkaa,2,"96, 97"
+somane,soommane,5,"18, 19, 33, 48, 65"
+somane,soommanee,3,"7, 28, 47"
+somane,soommanne,2,35
+somanun,SOOMMANUUN,6,"31, 32, 33, 34, 35, 36"
+somanun,soommanuun,4,"7, 10, 14, 62"
+godhe,godhe,7,"20, 25, 27, 59, 64, 77, 82"
+godhe,godhee,3,"9, 15, 59"
+qurana,Qur'ana,4,"10, 25, 72"
+qurana,Qur'anaa,2,10
+qurana,Qur’ana,2,"62, 96"
+qurana,Qur’anaa,1,68
+qurana,Qur’aana,1,73
+ragan,Ragaan,6,"31, 32, 33, 38, 45"
+ragan,ragaan,4,"15, 32, 71, 75"
+dubi,dubbii,9,"21, 22, 28, 62, 65, 66"
+dubi,Dubbii,1,62
+raka,raka’aa,8,"54, 55, 68, 69, 97"
+raka,Raka’aa,1,55
+raka,raka'aa,1,80
+guda,guddaa,5,"55, 63, 64, 75, 80"
+guda,Guddaa,5,"77, 82"
+san,san,8,"4, 56, 59, 65, 77, 84"
+san,San,1,80
+nu,nu,8,"5, 50, 68, 76, 80, 84"
+nu,nuu,1,72
+sera,seera,4,"5, 10, 58, 97"
+sera,SEERA,2,"14, 15"
+sera,Seera,2,"22, 58"
+sera,seeraa,1,14
+kadhadha,khadhadha,6,"72, 73, 75, 77, 80"
+kadhadha,kadhadhaa,2,72
+kadhadha,kadhadha,1,6
+wara,warra,8,"7, 9, 27, 43, 72, 74"
+wara,Warra,1,7
+cala,caalaa,7,"17, 26, 50, 55, 63, 71"
+cala,caala,2,8
+wajin,wajjiin,7,"26, 30, 34, 67, 78, 97"
+wajin,wajjin,2,"22, 84"
+islama,Islaamaa,6,"5, 23, 29, 40, 81, 96"
+islama,islaamaa,1,40
+islama,islama,1,62
+mana,mana,4,"61, 68, 84"
+mana,manaa,3,"52, 63"
+mana,Mana,1,13
+dhiga,dhiiga,7,"14, 38, 43, 60, 62"
+dhiga,dhiigaa,1,25
+senu,seenu,6,"16, 18, 59, 60, 62"
+senu,seenuu,2,"40, 60"
+lama,lama,6,"32, 40, 47, 66, 69, 80"
+lama,lamaa,2,"17, 32"
+waga,wagga,5,"47, 48, 49"
+waga,waggaa,2,"19, 48"
+waga,Wagga,1,35
+furu,furuu,4,"21, 23, 45, 50"
+furu,furu,4,"24, 35, 52"
+isi,isii,7,"32, 35, 52, 61, 68"
+isi,isi,1,68
+masgida,masgiida,7,"58, 61, 62, 70"
+masgida,Masgiida,1,60
+hundara,hundarraa,5,"74, 76, 77"
+hundara,hundarra,3,82
+dhuma,dhuma,5,"4, 55, 74, 81"
+dhuma,DHUMAA,2,"96, 97"
+akuma,akkuma,5,"7, 9, 27, 80, 81"
+akuma,Akkuma,2,"28, 83"
+isati,isaatii,3,"10, 63, 64"
+isati,isaatti,3,"43, 61, 97"
+isati,isatti,1,19
+bahu,bahuu,5,"12, 61, 62, 66, 68"
+bahu,bahu,2,"43, 67"
+jachu,jachuu,6,"13, 14, 42, 50, 56, 59"
+jachu,jachu,1,44
+jacha,jacha,6,"15, 31, 32, 33, 65"
+jacha,Jacha,1,22
+sababa,Sababa,3,"20, 21, 23"
+sababa,sababaa,2,"17, 66"
+sababa,sababa,2,"23, 61"
+na,na,6,"19, 49, 76, 81"
+na,Na,1,78
+salani,Salaanni,5,"20, 55, 69, 97"
+salani,salaanni,2,"50, 70"
+amala,amala,6,"21, 29"
+amala,Amala,1,21
+dawud,Dawud,4,"33, 46, 50"
+dawud,Daawud,3,"25, 66, 68"
+masjida,MASJIIDA,5,"58, 59, 60, 61, 62"
+masjida,Masjiida,1,25
+masjida,masjiidaa,1,61
+kenya,khenya,6,"26, 68, 83, 84"
+kenya,khenyaa,1,82
+namara,namarraa,5,"43, 45, 48"
+namara,NAMARRAA,2,"39, 40"
+harka,harka,4,51
+harka,harkaa,2,"43, 45"
+harka,Harka,1,76
+nuf,nuuf,6,"53, 82, 84"
+nuf,nuf,1,76
+dhihachuf,DHIHAACHUUF,5,"58, 59, 60, 61, 62"
+dhihachuf,dhihaachuuf,2,"58, 60"
+turu,TURUU,5,"58, 59, 60, 61, 62"
+turu,turuu,2,"58, 60"
+dhugumati,Dhugumatti,4,"75, 80, 82"
+dhugumati,dhugumatti,3,"74, 75, 82"
+istikara,Istikhaaraa,4,"80, 81"
+istikara,ISTIKHAARAA,3,"79, 80, 81"
+yada,yaada,2,4
+yada,yaadaa,2,74
+yada,YAADA,2,"96, 97"
+maqa,maqaa,4,"32, 75, 81"
+maqa,Maqaa,2,"5, 82"
+farun,Faaruun,5,"5, 77, 82"
+farun,faaruun,1,82
+isatis,isaatiis,5,"10, 17, 21, 23, 84"
+isatis,isaattis,1,84
+dhabu,dhaabuu,3,"12, 32"
+dhabu,dhabuu,3,"23, 26, 62"
+niya,niyyaa,5,"13, 14, 15, 52"
+niya,Niyyaa,1,15
+dayumsa,dayuumsaa,4,"14, 38, 60"
+dayumsa,dayumsaa,2,"43, 62"
+gamachu,gammachuu,5,"17, 23, 30, 73"
+gamachu,Gammachuu,1,17
+dalagun,DALAGUUN,4,"20, 21, 22, 23"
+dalagun,dalaguun,2,62
+qabne,qabne,5,"22, 65, 66, 74"
+qabne,qabnee,1,66
+nuti,Nuti,2,"72, 82"
+nuti,nuti,2,"82, 84"
+nuti,nutti,1,27
+nuti,Nutti,1,38
+tiya,tiyya,5,"49, 73, 81, 82"
+tiya,tiyyaa,1,73
+kesa,KEESSA,5,"58, 59, 60, 61, 62"
+kesa,keessaa,1,50
+mati,maatii,4,"55, 63, 84"
+mati,Maatii,2,"61, 67"
+ibadaf,IBAADAAF,5,"58, 59, 60, 61, 62"
+ibadaf,ibaadaaf,1,55
+niyachun,NIYYACHUUN,5,"58, 59, 60, 61, 62"
+niyachun,niyyachuun,1,60
+hadisa,hadiisa,4,"4, 46, 77"
+hadisa,hadiisaa,1,4
+bareysa,barreeysaa,3,4
+bareysa,BARREEYSAA,2,"5, 6"
+zakatul,Zakaatul,4,"64, 65, 97"
+zakatul,zakaatul,1,5
+kanu,khannuu,4,"10, 13, 26, 81"
+kanu,khannu,1,72
+agarsisa,agarsiisa,4,"10, 22, 23, 70"
+agarsisa,agarsiisaa,1,53
+fajri,fajrii,4,"13, 14, 15, 25"
+fajri,Fajrii,1,54
+godhu,godhu,3,"59, 81, 83"
+godhu,godhuu,2,"13, 46"
+muslima,Muslimaa,3,"20, 27, 59"
+muslima,Muslima,2,"14, 64"
+abu,Abu,3,"33, 46, 66"
+abu,Abuu,2,"25, 68"
+akan,akkaan,3,"42, 47, 56"
+akan,akkan,2,"27, 72"
+lamani,lamaanii,3,"31, 69, 97"
+lamani,LAMAANII,2,"67, 68"
+arafa,Arafaa,3,"31, 34, 48"
+arafa,Arafa,1,34
+arafa,arafa,1,48
+dubartin,Dubartiin,3,"32, 35, 52"
+dubartin,dubartiin,2,"42, 71"
+dubarti,Dubartii,3,"38, 40"
+dubarti,dubartii,2,"64, 81"
+baleysan,balleeysan,3,"39, 62, 97"
+baleysan,BALLEEYSAN,2,"39, 40"
+somaneti,soommaneeti,3,"47, 48"
+somaneti,soommanetti,2,47
+ajaje,ajaje,4,"50, 52, 56, 70"
+ajaje,ajajje,1,83
+sura,Suuraa,4,"69, 78, 80"
+sura,suuraa,1,69
+qabri,qabrii,3,"71, 72"
+qabri,Qabrii,2,"71, 72"
+konkolata,KONKOLAATAA,3,"82, 83, 84"
+konkolata,konkolaataa,2,"82, 83"
+duaiwan,DU'AA'IIWWAN,3,"76, 77, 78"
+duaiwan,du'aa'iiwwan,1,4
+wani,wanni,2,5
+wani,wani,1,19
+wani,Wanni,1,53
+haqa,haqaa,2,"5, 8"
+haqa,haqa,2,"56, 73"
+utubale,utubaalee,2,"5, 96"
+utubale,UTUBAALEE,2,"12, 13"
+muslimota,Muslimoota,2,"6, 63"
+muslimota,Muslimootaa,2,"68, 72"
+barbadu,barbaadu,3,"8, 16, 17"
+barbadu,barbaaduu,1,6
+lakofsa,lakkoofsa,3,"7, 8, 37"
+lakofsa,Lakkoofsa,1,8
+gahu,gahu,3,"13, 66, 77"
+gahu,gahuu,1,9
+sharian,shari’aan,2,"58, 97"
+sharian,Shari'aan,1,10
+sharian,shari'aan,1,20
+isanis,isaaniis,3,"12, 39, 40"
+isanis,isaanis,1,63
+gabaruf,gabbaruuf,3,"13, 14, 27"
+gabaruf,gabbarruuf,1,20
+fura,fura,3,"29, 51, 52"
+fura,furaa,1,15
+hulalen,hulaaleen,2,16
+hulalen,Hulaaleen,2,16
+torba,torba,3,"68, 69, 77"
+torba,torbaa,1,17
+qabdu,qabduu,3,"33, 38, 45"
+qabdu,qabdu,1,21
+keysan,kheeysan,2,"21, 31"
+keysan,kheysan,1,80
+keysan,kheysaan,1,97
+jau,ja’u,3,"22, 80, 83"
+jau,ja’uu,1,84
+qebalu,QEEBALU,3,"73, 74, 75"
+qebalu,qeebalu,1,23
+timira,timira,3,"24, 64"
+timira,Timira,1,53
+hogu,hoggu,2,69
+hogu,Hogguu,1,26
+hogu,hogguu,1,43
+fidu,fiddu,2,77
+fidu,fiduu,1,28
+fidu,fidu,1,61
+dhorkame,DHOORKAME,3,"31, 32, 33"
+dhorkame,dhorkame,1,29
+ibn,ibn,3,"31, 33, 66"
+ibn,Ibn,1,66
+kanaf,Khanaaf,2,"48, 82"
+kanaf,kanaaf,1,32
+kanaf,khanaaf,1,61
+dhukuba,dhukkuba,3,"37, 77, 78"
+dhukuba,Dhukkuba,1,76
+jate,jatte,3,"38, 42, 61"
+jate,jAtte,1,56
+jarti,jaartii,2,"38, 43"
+jarti,Jaartii,2,"40, 42"
+keti,kheetii,3,"43, 73, 83"
+keti,kheeti,1,73
+fa,ffaa,3,"48, 49"
+fa,faa,1,44
+jai,ja’i,3,"76, 82, 83"
+jai,ja’ii,1,56
+dubartota,dubartoota,3,"63, 68, 71"
+dubartota,dubartootaa,1,97
+duaile,DU'AA'IILEE,3,"73, 74, 75"
+duaile,Du'aa’iillee,1,78
+sif,siif,3,83
+sif,sif,1,77
+afan,AFAAN,1,4
+afan,Afaan,1,14
+afan,afaan,1,17
+murtin,Murtiin,2,"4, 73"
+murtin,murtiin,1,73
+ibsi,ibsi,2,5
+ibsi,Ibsi,1,4
+mada,madda,2,"4, 73"
+mada,madaa,1,28
+gabaraman,gabbaramaan,2,"5, 75"
+gabaraman,Gabbaramaan,1,74
+gabricha,gabricha,2,73
+gabricha,gabrichaa,1,5
+iratis,irrattis,2,"5, 7"
+iratis,irrattiis,1,9
+isara,isarra,2,"6, 72"
+isara,isarraa,1,74
+fedhi,Fedhii,2,"17, 61"
+fedhi,fedhii,1,7
+qajelfama,qajeelfama,2,"8, 11"
+qajelfama,qajeelfamaa,1,8
+soba,sobaa,2,22
+soba,soba,1,8
+sodoma,soddoma,2,15
+sodoma,soddomaa,1,9
+hadisota,HADIISOTA,2,"69, 70"
+hadisota,hadiisota,1,10
+nabi,Nabi,2,50
+nabi,Nabii,1,10
+islamuma,ISLAAMUMMAA,2,"12, 13"
+islamuma,Islaamummaa,1,97
+rabira,Rabbirraa,2,"12, 56"
+rabira,Rabbirra,1,54
+qabenya,Qabeenya,1,13
+qabenya,qabeenya,1,66
+qabenya,qabeenyaa,1,84
+dandeyti,dandeeytii,2,"13, 80"
+dandeyti,Dandeeytii,1,80
+haji,Hajjii,2,"13, 28"
+haji,hajjii,1,34
+isarati,isarratti,2,"13, 52"
+isarati,isaarratti,1,52
+hika,Hiikkaa,1,14
+hika,hiikkaa,1,25
+hika,hiika,1,55
+shabana,Sha'abaana,2,15
+shabana,Sha’abaana,1,49
+gabasa,Gabaasa,2,16
+gabasa,gabaasa,1,16
+janata,Jannata,2,"18, 19"
+janata,Jannataa,1,16
+rahmata,rahmataa,1,16
+rahmata,Rahmata,1,74
+rahmata,rahmata,1,97
+jaen,ja’een,2,"17, 43"
+jaen,ja’en,1,19
+qabadhu,qabadhu,2,19
+qabadhu,qabaadhu,1,21
+nan,naan,2,19
+nan,nan,1,56
+obolesa,obboleessa,2,"20, 27"
+obolesa,Obboleessa,1,72
+faida,Faa’idaa,2,"26, 97"
+faida,faa’idaa,1,20
+beka,beekhaa,2,"21, 62"
+beka,Beekhaa,1,80
+fure,furre,2,"22, 32"
+fure,fure,1,21
+sababan,Sababaan,2,23
+sababan,sababaan,1,32
+zikri,Zikrii,2,"25, 36"
+zikri,zikrii,1,62
+fira,firraa,2,45
+fira,firra,1,26
+egu,eeguu,2,"27, 61"
+egu,eegu,1,83
+dhisu,dhiisu,2,"82, 83"
+dhisu,dhiisuu,1,29
+barsisa,barsiisa,2,"29, 30"
+barsisa,barsiisaa,1,80
+hiyeyi,Hiyyeeyyii,2,"29, 65"
+hiyeyi,hiyyeeyyii,1,65
+adha,Ad’haa,2,"31, 68"
+adha,Adhaa,1,31
+nyatani,nyaatanii,2,"36, 41"
+nyatani,nyaattani,1,31
+aba,abbaa,2,"52, 64"
+aba,Abbaa,1,33
+kamisa,Khamisa,1,34
+kamisa,Kamisaa,1,49
+kamisa,Khamisaa,1,49
+nasai,Nasaa'ii,2,"49, 50"
+nasai,Nasa’ii,1,35
+furun,FURUUN,2,"37, 38"
+furun,furuun,1,41
+aishan,A’ishaan,1,38
+aishan,A’ishan,1,42
+aishan,Aa’ishaan,1,61
+dhufu,dhufuu,2,"38, 48"
+dhufu,dhufu,1,49
+baleysu,balleeysuu,2,"39, 40"
+baleysu,balleeysu,1,74
+dhufe,dhufee,2,"40, 53"
+dhufe,dhufe,1,72
+ama,amma,2,"40, 72"
+ama,Amma,1,84
+adaba,adaba,2,"40, 72"
+adaba,adabaa,1,40
+rafu,rafuu,2,"42, 61"
+rafu,rafu,1,40
+jirtu,jirtu,2,"81, 83"
+jirtu,jirtuu,1,42
+godhamu,godhamu,2,"43, 46"
+godhamu,godhamuu,1,68
+bishan,bishaan,2,43
+bishan,Bishaan,1,43
+ija,ija,2,"73, 77"
+ija,ijaa,1,44
+hadisni,hadiisni,2,"46, 83"
+hadisni,Hadiisni,1,70
+fadhi,FADHII,2,"52, 53"
+fadhi,fadhii,1,62
+tanan,tanaan,2,"73, 74"
+tanan,taanaan,1,53
+witri,witrii,2,"56, 67"
+witri,Witrii,1,54
+tahus,tahuus,2,"55, 64"
+tahus,tahus,1,97
+ada,adda,2,"60, 71"
+ada,aadaa,1,71
+bura,bu’uuraa,2,64
+bura,bu'uura,1,81
+dubartoni,dubartoonni,2,70
+dubartoni,Dubartoonni,1,68
+argamu,ARGAMU,2,"69, 70"
+argamu,argamu,1,70
+gofta,gooftaa,2,"76, 84"
+gofta,Gooftaa,1,77
+hundati,hundatti,2,"81, 83"
+hundati,hundaati,1,80
+maxansa,MAXXANSA,1,4
+maxansa,maxxansaa,1,4
+kaname,khanname,1,4
+kaname,khannamee,1,53
+keysafu,Kheysaafuu,1,4
+keysafu,kheysaafuu,1,96
+hijama,hijaamaa,1,4
+hijama,Hijaamaa,1,46
+dabarsa,dabarsa,1,4
+dabarsa,dabarsaa,1,55
+saniti,saniitti,1,4
+saniti,sanitti,1,39
+fuli,Fuulli,1,4
+fuli,fuulli,1,4
+barnota,barnootaa,1,4
+barnota,barnoota,1,25
+kanati,khanaatti,1,4
+kanati,Khanatti,1,5
+tenya,teenya,1,5
+tenya,tenya,1,84
+haqan,Haqaan,1,5
+haqan,haqan,1,18
+iklasa,ikhlaasa,1,5
+iklasa,ikhlaasaa,1,29
+godhame,godhamee,1,7
+godhame,godhame,1,27
+lakawamo,lakkaawwamoo,1,7
+lakawamo,lakkaawamoo,1,9
+qurani,Qur'anni,1,8
+qurani,Qur’anni,1,96
+ifa,ifa,1,8
+ifa,ifaa,1,73
+dhaqabe,dhaqabe,1,8
+dhaqabe,dhaqqabe,1,10
+bodara,boodarra,1,9
+bodara,Boodarra,1,10
+ulfina,Ulfinaa,1,10
+ulfina,ulfina,1,10
+bun,Bu'uun,1,10
+bun,bu'uun,1,10
+sababni,sababni,1,10
+sababni,Sababni,1,21
+gaditi,gadiitti,1,10
+gaditi,gaditti,1,40
+dhugan,Dhugaan,1,10
+dhugan,dhugaan,1,75
+kunis,khunis,1,10
+kunis,Khunis,1,59
+ayata,aayaata,1,10
+ayata,Aayaata,1,96
+qabate,qabaatee,1,13
+qabate,qabaatte,1,43
+godhate,godhatee,1,13
+godhate,godhate,1,77
+godhani,godhanii,1,14
+godhani,godhani,1,36
+as,As,1,15
+as,as,1,16
+jahanam,Jahannam,1,16
+jahanam,jahannam,1,72
+basu,baasu,1,17
+basu,baasuu,1,21
+anaf,Anaaf,1,17
+anaf,anaaf,1,17
+somanan,soommanan,1,18
+somanan,soommanaan,1,53
+arabsu,arrabsuu,1,21
+arabsu,arrabsu,1,22
+kitabota,khitaaboota,1,22
+kitabota,khitaabota,1,62
+beki,beekhi,1,22
+beki,Beeki,1,23
+suhura,Suhuura,1,24
+suhura,suhuraa,1,32
+keyri,kheyrii,1,24
+keyri,kheeyrii,1,68
+kanafu,Khanaafuu,1,25
+kanafu,khanaafuu,1,49
+kasi,khaasii,1,25
+kasi,khaasi,1,76
+bari,barii,1,25
+bari,Baarii,1,70
+firota,Firootaa,1,26
+firota,firoota,1,26
+jalatu,jaalatu,1,26
+jalatu,jaallatu,1,64
+somanati,Soommanatti,1,28
+somanati,soommanatti,1,41
+dandau,danda'u,1,28
+dandau,danda’u,1,60
+beke,beekhee,1,30
+beke,beekhe,1,56
+dhabutin,dhaabuutiin,1,32
+dhabutin,dhabuutiin,1,44
+dhuge,dhuge,1,34
+dhuge,dhugee,1,41
+jarsa,jaarsaa,1,35
+jarsa,Jaarsa,1,38
+imalara,imalarra,1,37
+imalara,imalarraa,1,84
+midhan,midhaan,1,38
+midhan,miidhaan,1,76
+wantoni,Wantoonni,1,39
+wantoni,Wantooni,1,62
+kafalun,khafaluun,1,40
+kafalun,kafaluun,1,42
+garin,Gariin,1,40
+garin,gaariin,1,81
+ifira,ifiraa,1,43
+ifira,ifirraa,1,44
+dhiqana,Dhiqannaa,1,43
+dhiqana,dhiqannaa,1,43
+ilke,ilkee,1,44
+ilke,Ilkee,1,45
+gosa,gosa,1,45
+gosa,Gosa,1,59
+qabaneyfachudhaf,Qabbaneeyfachuudhaaf,1,45
+qabaneyfachudhaf,qabbaneeyfachuudhaaf,1,45
+hundaun,hundaa’uun,1,46
+hundaun,hundaa'uun,1,81
+shawala,Shawaala,1,47
+shawala,shawwaalaa,1,47
+dabale,dabale,1,47
+dabale,dabalee,1,84
+ashura,Aashuuraa,1,48
+ashura,Aashuraa,1,48
+nin,niin,1,49
+nin,nin,1,53
+guyan,Guyyaan,1,49
+guyan,guyyaan,1,49
+nati,Natti,1,53
+nati,natti,1,76
+salate,salaate,1,54
+salate,salaatee,1,59
+godha,godha,1,55
+godha,godhaa,1,58
+ulagale,Ulaagaalee,1,60
+ulagale,ulaagaalee,1,97
+umama,uumamaa,1,61
+umama,uumama,1,77
+dandaya,dandaya,1,61
+dandaya,dandayaa,1,80
+salatamu,salaatamu,1,61
+salatamu,salaatamuu,1,97
+baye,baay’ee,1,64
+baye,baayyee,1,66
+kadhatu,khadhatu,1,75
+kadhatu,khadhattu,1,78
+maganfadha,maganfadha’,1,76
+maganfadha,maganfadha,1,77
+fayisa,fayyisaa,1,76
+fayisa,fayyisa,1,77
+deyma,Deeyma,1,78
+deyma,deeyma,1,78
+hundarati,hundarratti,1,80
+hundarati,hundarrati,1,97
+badi,badii,1,83
+badi,Badii,1,84
+kenyati,khenyaatti,1,84
+kenyati,khenyatti,1,84
+kadhana,khadhanna,1,84
+kadhana,khadhannaa,1,97
