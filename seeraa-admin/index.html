@@ -795,7 +795,7 @@ body{font-variant-numeric:lining-nums}
               <div class="field" style="flex:2"><label for="quiz-title">Quiz title</label><input id="quiz-title" maxlength="80" placeholder="e.g. Idgham revision"></div>
               <div class="field"><label for="quiz-map">Show under</label><select id="quiz-map"></select></div>
               <div class="field"><label for="quiz-class">For</label><select id="quiz-class" class="class-target"></select></div>
-              <div class="field" style="max-width:130px"><label for="quiz-pass">Pass mark (%)</label><input id="quiz-pass" type="number" min="0" max="100" value="70"></div>
+              <div class="field" style="max-width:130px"><label for="quiz-pass">Pass mark (%)</label><input id="quiz-pass" type="number" min="0" max="100" value="100"></div>
             </div>
             <div class="field"><label for="quiz-instructions">Instructions for students (optional)</label><input id="quiz-instructions" maxlength="200" placeholder="Read each question carefully…"></div>
             <label class="toggle"><input type="checkbox" id="quiz-published"> Published — students can see and take this quiz</label><br>
@@ -1872,7 +1872,7 @@ function showQuizPane(which){
   ['quiz-welcome','quiz-builder','quiz-preview','quiz-results'].forEach(id => $(id).classList.toggle('hidden', id !== which));
 }
 function editQuiz(q){
-  editingQuiz = q ? JSON.parse(JSON.stringify(q)) : { title:'', map:-1, passPercent:70, instructions:'', published:false, questions:[blankQuestion(false)] };
+  editingQuiz = q ? JSON.parse(JSON.stringify(q)) : { title:'', map:-1, passPercent:100, instructions:'', published:false, questions:[blankQuestion(false)] };
   if(!editingQuiz.questions || !editingQuiz.questions.length) editingQuiz.questions = [blankQuestion(false)];
   $('builder-title').textContent = q ? 'Edit quiz' : 'New quiz';
   $('quiz-title').value = editingQuiz.title || '';
@@ -1895,7 +1895,7 @@ function editQuiz(q){
 function readBuilderMeta(){
   editingQuiz.title = $('quiz-title').value;
   editingQuiz.map = Number($('quiz-map').value);
-  editingQuiz.passPercent = Number($('quiz-pass').value) || 70;
+  editingQuiz.passPercent = Number($('quiz-pass').value) || 100;
   editingQuiz.instructions = $('quiz-instructions').value;
   editingQuiz.published = $('quiz-published').checked;
   editingQuiz.audience = $('quiz-personal').checked ? 'assigned' : 'map';
