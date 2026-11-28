@@ -1826,10 +1826,10 @@ document.head.insertAdjacentHTML('beforeend',`<style id="tq-sort-style">
 .tqs-fix{display:block;color:#2e6b58;font-size:13.5px;font-weight:800}
 .tqs-empty{margin:auto;color:#a99a80;font-size:14.5px}
 </style>`);
-/* Teacher quizzes for this map also show as a big button in the middle of the map:
-   "Start quiz" until tried, "Try again" until passed (the quiz's pass mark), and gone
-   once passed. Up to two show (one on a phone); the rest are in "From your teacher". */
-function tqPassed(q){const r=tqResults()[q.id],best=r?(r.best!=null?r.best:r.score):null;return !!(r&&r.total&&best/r.total*100>=(q.passPercent||70))}
+/* Teacher quizzes for this map also show as a big yellow button in the middle of the
+   map: "Start quiz" until tried, then "Try again — you got 7/10" until the student gets
+   full marks (10/10), and gone after that. Up to two show (one on a phone); the rest are in "From your teacher". */
+function tqPassed(q){const r=tqResults()[q.id],best=r?(r.best!=null?r.best:r.score):null;return !!(r&&r.total&&best>=r.total)}
 function renderTeacherQuizMapButton(){
  const frame=document.querySelector('#mapScreen .map-frame')||document.querySelector('.map-frame');if(!frame)return;
  let box=$('#tqMapGo');if(!box){box=document.createElement('div');box.id='tqMapGo';box.className='tq-mapgo';frame.appendChild(box)}
@@ -1839,7 +1839,7 @@ function renderTeacherQuizMapButton(){
  const todo=(mine?[mine]:[]).concat(shared).filter(q=>Array.isArray(q.questions)&&q.questions.length&&!tqPassed(q));
  const max=innerWidth<560?1:2;
  box.innerHTML=todo.slice(0,max).map(q=>{const r=tqResults()[q.id],best=r?(r.best!=null?r.best:r.score):null;
-  return `<button type="button" class="tqmg-btn${r?' try':''}" data-tqgo="${escapeHtml(q.id)}"><span class="tqmg-ic" aria-hidden="true">${r?'↻':'📝'}</span><span class="tqmg-t"><b>${r?'Try again':'Start quiz'}</b><small>${escapeHtml(q.title)}${r?' · best '+best+'/'+r.total:''}</small></span></button>`}).join('')
+  return `<button type="button" class="tqmg-btn${r?' try':''}" data-tqgo="${escapeHtml(q.id)}"><span class="tqmg-ic" aria-hidden="true">${r?'↻':'📝'}</span><span class="tqmg-t">${r?`<b>Try again — you got ${r.score}/${r.total}</b><small>Get ${r.total}/${r.total} to finish${best>r.score?' · your best is '+best+'/'+r.total:''} · ${escapeHtml(q.title)}</small>`:`<b>Start quiz</b><small>${escapeHtml(q.title)}</small>`}</span></button>`}).join('')
   +(todo.length>max?`<button type="button" class="tqmg-more" data-tqmore>+ ${todo.length-max} more quiz${todo.length-max===1?'':'zes'} below ↓</button>`:'');
  box.querySelectorAll('[data-tqgo]').forEach(b=>b.onclick=()=>startTeacherQuiz(b.dataset.tqgo));
  const more=box.querySelector('[data-tqmore]');if(more)more.onclick=()=>{const f=document.querySelector('#teacherQuizList .fold');if(f&&!f.classList.contains('open')){const h=f.querySelector('.fold-head');if(h)h.click()}const t=$('#teacherQuizList');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})};
@@ -1850,14 +1850,14 @@ document.head.insertAdjacentHTML('beforeend',`<style id="tq-mapgo-style">
 .tq-mapgo{position:absolute;z-index:7;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 124px);pointer-events:none}
 .tq-mapgo:empty{display:none}
 .tq-mapgo>*{pointer-events:auto}
-.tqmg-btn{display:flex;align-items:center;gap:10px;max-width:100%;padding:9px 20px 9px 12px;border:3px solid #fff;border-radius:999px;background:var(--green);color:#fff;font:inherit;text-align:left;cursor:pointer;box-shadow:0 8px 22px rgba(15,40,30,.38);animation:tqmgBob 2.4s ease-in-out infinite}
-.tqmg-btn.try{background:var(--coral)}
+.tqmg-btn{display:flex;align-items:center;gap:10px;max-width:100%;padding:9px 20px 9px 12px;border:3px solid #fff;border-radius:999px;background:#ffc107;color:#212529;font:inherit;text-align:left;cursor:pointer;box-shadow:0 0 0 2px #d39e00,0 8px 22px rgba(40,30,0,.38);animation:tqmgBob 2.4s ease-in-out infinite}
+.tqmg-btn.try{background:#ffc107}
 .tqmg-btn:hover{filter:brightness(1.06)}
 .tqmg-btn:focus-visible{outline:3px solid #ffd35a;outline-offset:3px}
-.tqmg-ic{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.22);font-size:22px;font-weight:800}
+.tqmg-ic{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.6);font-size:22px;font-weight:800;color:#7a5200}
 .tqmg-t{min-width:0}
 .tqmg-t b{display:block;font:21px/1.15 Marcellus}
-.tqmg-t small{display:block;margin-top:2px;font-size:13.5px;opacity:.95;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tqmg-t small{display:block;margin-top:2px;font-size:13.5px;font-weight:700;color:#4a3b00;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tqmg-more{border:2px solid #fff;border-radius:999px;background:rgba(255,253,246,.94);color:var(--navy);font:700 14px Nunito,sans-serif;padding:5px 14px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.18)}
 @keyframes tqmgBob{50%{transform:translateY(-5px)}}
 @media(prefers-reduced-motion:reduce){.tqmg-btn{animation:none}}
